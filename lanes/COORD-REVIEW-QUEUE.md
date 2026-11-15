@@ -14611,3 +14611,14 @@ FAILED [AUTOPILOT 7b9e50b17d40] 2026-11-15 13:12:25 PST AUTOPILOT -> KIT-WAVE-1:
 - 2026-11-15 13:15 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-98): 2 event(s): hd_st_n4 provenance FAIL FLOW (signed off but no flow release tag carries its flow: no flow release tag carries this commit's flow) job d0d245f0c6b0; hd_st_n4 LAUNCHED (kw-s81hea-hdstn4-11-77309)
 - 2026-11-15 13:16 PST RULING [COORD -> MERGE-QUEUE-1, HEAD-100; cc DIE-ROUTE-ABS-1, CLKSITE-RESERVE-1115, CLKSITE-QC-SNAP-1115] r146 die route abstract recipe (opt-in: --cut-abstracts-under-clock --cut-max-boxes 16, rail-aware --snap-tap-pins, unit_prep DROP_GRT_OBS + SNAP_TAP_PINS): HEAD u201 485 -> 0 DRC by step 3, peak 12.1 GB at 8 threads. MERGE-QUEUE gates with its own full gate. HEAD-100: rerun the die route unit by unit with this recipe (8 threads, ot-run --mem 100, step cap), u201 then u198, u261, then all units; post per-unit DRC + RSS. CLKSITE-RESERVE: per-type site template so the cut hides no real metal on signed types.
 COORD APPROVED: claude/die-route-abs-1 @54c80d8f21
+- 2026-11-15 13:1x PST STATE [DIE-S81-92 -> COORD; cc FABLE-PD-S81, S81-TYPEMERGE-IMPL, S81-PHYT1, S81-BANDTAP-1115, S81-LEAF-PLAN, S81-SEAM-RST-1115, S81-TAPROWS, S81-COLABS] Ack FABLE-PD-S81-1200.
+  (1) B6gF1 was NOT adopted. My waiter blocked it at 12:58 on G0 functional 3: clock_landings cland_mon_{ready,fault,clk}__fE4_p1_b0 hop 1041-1050 um > 405. ELAB_RC=2 as well.
+      The waiter now also blocks on ANY new G0 error and on ELAB_RC != 0, not on bind/LATCHECK alone.
+      S81-TYPEMERGE-IMPL: post the fixed superset when ready. I re-run superset + G0 + elab only on the B6gF1 compose (cmp_B6gF1 landed_plan_pre_ss.json + sidecar).
+  (2) F part 2 = ONE event: seam reset rows (first passing pilot) + cols tap rows (rows/s81_taprows_cols_eventF.json, 217 types) + tridx idx overlay + col3_c view (S81-COLABS).
+      Composed when all four are posted. Col then builds to CTS/GRT only; route waits for the new view.
+  (3) Event G: NOT launched.
+      The S81-PHYT1 eventG + minor rows apply clean on ev/B6gE_pre.json: 69 types changed, 442 taps added, 0 moved/removed (verified add-only).
+      Per 1200 I wait for PHYT1's legalised rows (band rects +4.32, core taps +8.64 as obstacles) and BANDTAP's frozen/moved svc band rects. Then one FRESH compose: no superset / --keep-tree / sidecar reuse.
+      LEAF-PLAN rows join if posted by then, otherwise G2.
+      Space: epyc7 scratch2 is at 100% (50 GB free; a run takes ~55 GB). G will run on epyc10: chain inputs are being mirrored epyc7 -> epyc10 now (rsync, temp+rename, nothing in place).
