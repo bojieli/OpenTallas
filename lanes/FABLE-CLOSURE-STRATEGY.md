@@ -1,3 +1,249 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-15 03:2x PST: technical closure levers for S81, HEAD, QC, KV
+
+Read-only review. Technical physical design only. HBM is parked and not covered. No job, plan or kit was touched.
+This section replaces the 01:3x review, which is kept unchanged below (section A.5 gives the state of its levers).
+
+Sources: FABLE-TRIAGE-HEADKV sections 15-18, FABLE-TRIAGE-QC (with the CLAND-BIN post), FABLE-KVOVF sections 8-10,
+the queue from 01:15 to 03:15 hub time, `failure_breakdown.py` (03:10), lane handoffs, and my own reads of the run
+directories named below. FABLE-TRIAGE-S81 has no entry after 01:14. FABLE-PD-QC-0300.md does not exist.
+
+MEASURED = read by me tonight from a log, plan or process table. REPORTED = taken from another report, not
+re-measured. INFERENCE is marked. Host file times on epyc7 / epyc8 / epyc9 are UTC (PST + 8 h).
+
+`failure_breakdown.py` technical classes at 03:10: timing after route 3 (S81 slice_station__t47; KV kv3_phy_v1 +1).
+No congestion row is left in the table. All else is "running", "held" or a flow class, so the levers come from the
+run directories.
+
+## 0. Five things the lanes have not seen
+
+1. The die detailed route is fixed for memory, not for time. The HEAD cut-out check has 26 nets and the full die
+   area. Its iteration 0 has used 12.1 CPU-hours without the first 10 % line (lever 2).
+2. S81 has no count-aligned die clock result. The chain ended within 2 seconds on a missing module (lever 1).
+3. The QC die run finished: global route 0 overflow, count-aligned plan and bind pass. Its die STA did not run. It
+   stops on 52 tap-offset rows over half a period, all on the 17 cb types, in S3R, S4c and S4k (lever 3).
+4. The KV kit on the plan of record (p6, kvgeom6) is not running. It failed in 0.5 s on a missing module (lever 6).
+5. The G1 proof is still in global placement (epyc10, 54 min in `3_3_place_gp` at 03:13). No hop census exists yet.
+
+## 1. Levers, ranked by types or dies unblocked
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | One adoption: B6gsh + leaf throat delta + count-aligned bind, before the 350 types regenerate | 350 types, of which 79 leaf, 11 serdes | DIE-S81-92, S81-LEAF-PLAN |
+| 2 | HEAD, KV (then S81, QC) | Die detailed route: time per route box, not per net | the DRC gate of every die | DIE-HEAD-ROUTE-1, DIE-KV-ROUTE-1 |
+| 3 | QC | cb family: tap offsets over half a period block the die STA; ring-to-fabric span needs a planned site | 17 cb types, QC die STA | DIE-QC-103, DIE-QC-GRT0-2, CLAND-BIN |
+| 4 | HEAD | rp21z20NF (hk6) with the lep0N local tree rebuilt and all 26 wrappers republished | 26 types | HEAD-99, HEAD-CLKFEED-1 |
+| 5 | S81 | Leaf throat delta LT2 proved by place + global route on the worst types | 53 leaf types | S81-LEAF-PLAN |
+| 6 | KV | Clock-form start tree on kvgeom6, taps for the 320 pc / phy crossings | KV lane-latency gate, KV die STA | DIE-KV-ROUTE-1, KV-102 |
+| 7 | KV | hg / hgi: chain depth set by span (hops of 520 um are over reach); read the kv3_hg paths | 12 hg / hgi kits | FABLE-KVOVF, TYPE-KVHGI2 |
+| 8 | QC | cb net-zero stations for the bco hop; `r_dly_spread` on the cbf_q01 pair only | cbn_q01 x3, 48 lanes | DIE-QC-103, TYPE-QCCB-GEN |
+
+### Lever 1. S81: one adoption, and the die clock check it lacks
+
+Evidence:
+- MEASURED (epyc7 `/srv/opentallas-scratch2/claude/s81-b3-clk/log`): `B6gb.log`, `B6gp.log`, `B6fb.log` end
+  `BIND_RC=2`. REPORTED (DIE-S81-92, 03:1x): the cause is a missing input file (dead-input re-proof not in the
+  overlay), not a design result. The re-binds `B6gb_rebind2.log` and `B6gp_rebind2.log` were at their first line
+  at 03:08. `B6gsh.log` (B6gs + `phy_pg_macros`) was at `SVCMEM_TIES`.
+- REPORTED: G0 of B6gb, B6gp and B6h is 252 errors, 5 new against the control: seam hops of 454 / 494 / 540 /
+  532 um and the cut `s_6S_L0` at 0.63 against 0.6. B6h has 0 PG-domain errors on the 11 serdes types.
+- MEASURED (epyc8 `/srv/opentallas-scratch2/claude/die-grt0-s81/s81/b3x2d_ca/CHAIN.log`): `CA_OCV 1`,
+  `CA_PLAN 1`, `CA_BIND 1`, `STA_CA SKIPPED`. `ca_ocv.log`: `ModuleNotFoundError: No module named 'clk_aocv'`.
+  The plan and bind steps then failed on the missing output of the step before. Nothing has run since.
+- The only S81 die clock numbers are the legacy half-period form on B3x2d (REPORTED): landed setup -3,126.8 ps,
+  hold unmeasured. That form is on the stop list.
+- HEAD precedent (REPORTED, HEAD-99 delta list): the count-aligned re-bind changed the kit inputs of all 26 HEAD
+  types through K, depth and latency.
+
+Root cause: S81 is adopting a plan for 350 types without the bind that sets K and depth per port on the B6 tap set.
+INFERENCE: if that bind changes K on S81 as it did on HEAD, the 350 types regenerate a second time.
+
+Fix:
+1. DIE-S81-92: add `clk_aocv` to `die-grt0-s81/ca_tools` and rerun `die_chain_ca.sh` now, on B3x2d first (the
+   clock kit exists), to get the first S81 count-aligned numbers: crossings, depth histogram, worst lo / hi,
+   start-skew, no-tap count.
+2. Compare its K and depth per port with the table B6gb binds. Equal: release as planned. Different: put the
+   count-aligned table into the adoption, as HEAD did, before KIT-OPS-5 releases the held rows.
+3. Adopt the highest superset that passes (B6gsh), then LT2 as a leaf-only delta (lever 5). Do not adopt B6gb and
+   B6gsh as two full events.
+4. G1 goes in when its census exists. Rule for the proof: hops over 405 um on the lane-pad last stations fall
+   from the kit's count to 0, and the total over-reach count does not rise (the G2 result on QC shows why the
+   second number matters).
+
+### Lever 2. Die detailed route: the cost is per route box
+
+Evidence (MEASURED):
+- Memory is solved. HEAD full die, small worker (epyc9 `die-head-route-1/head/p16g/drt7_small_full_TT/drt_TT.log`):
+  52,489 nets, 164,794 guides, V8 shapes 37,237,920 (capped), 10.2 GB after track assignment, 29.7 GB in iteration
+  0 at 24 threads. The stock worker held 144 GB on the same database. KV stock-worker baseline (epyc7): 183 GB.
+- Time is not solved. Cut-out check (epyc2 `.../drt7_cut_small_TT/drt_TT.log`): `OT_NETS total=26`, but
+  `Die area: (0 0) (17712000 17556480)` and the same 37,237,920 V8 shapes: the window removed nets, not area.
+  Iteration 0 started 02:20. At 03:16 it had used 12.1 CPU-hours and had not printed "Completing 10 %".
+- The full run printed nothing in its first 12 minutes of iteration 0 (3.7 CPU-hours in all).
+- The two size-7 cut-out runs (stock call and single-step) at 4 threads hold 40-45 GB and have no iteration line after 50 minutes.
+- No run has given a violation count, so the stock-against-size-2 comparison does not exist.
+
+Root cause (INFERENCE from the 26-net run): the router builds and initialises a routing grid for every box on the
+die in iteration 0, whether or not a guide crosses it. At size 2 that is about 666,000 boxes. More than 12.1
+CPU-hours for under 10 % means over 120 CPU-hours for iteration 0, with 26 nets or with 52,489.
+
+Fix:
+1. Now: raise the thread count of the full runs. Memory per thread is small (29.7 GB at 24 threads). epyc9 has 96
+   cores; 96 threads need about 90 GB (INFERENCE from 0.8 GB per thread). This divides the wall time by up to 4.
+2. Read the time of the first 10 % line on the HEAD full run and post the projected iteration 0. Under 4 h: this
+   form is the die gate. Over that: use form 3.
+3. Region databases with the die area cropped. Time follows area only if the database is small; a net filter on
+   the full die changes nothing (the cut-out shows it). One database per clock-region group, fixed shapes of the
+   neighbours kept, one region of overlap, run on all hosts in parallel. I withdrew windows at 02:0x for memory;
+   that still holds. For time they are the only form that scales with hosts. Not built, not measured.
+4. Stop the two 4-thread size-7 cut-out runs and the KV 183 GB baseline when a size-2 run prints its first count.
+   They cannot finish first.
+5. Route the adopted clock kit. HEAD: the route gate must be rerun on the hk6 kit after lever 4. KV: p1 is
+   kvgeom5; the gate needs p6 (lever 6).
+
+### Lever 3. QC cb family: tap offsets over half a period, and the ring-to-fabric span
+
+Evidence:
+- MEASURED (epyc9 `/srv/opentallas-scratch2/claude/die-grt0-qc/qc/s3r_b/CHAIN.log`, plan S3R): global route TT
+  and FF `EXIT 0`, overflow 0 / 0 / 0, wirelength 649.6 m, 17.3 GB. Taps 42,151 in 313 regions, 0 missing, fall
+  rows present. Count-aligned plan: 2,993 crossings, 0 fail, depth 4 on 2,880 and depth 8 on 113, worst lo 104.4
+  ps, worst hi 117.0 ps, 770 start edges clean, 0 violations in 300 chips. `BIND_C 0`.
+- MEASURED: `REG_STA 1` and `STA_C 1`. `reg/sta.log` ends
+  `ValueError: clock.tap_offset.per_port_ps[cbf_q00_s2][clk_c1] {'TT': -459.8, 'FF': -400.8} outside ... |o| <= T/2`.
+- MEASURED (my script over the three plans): `per_port_ps` has 15,286 rows on 130 types. 52 rows exceed 416.5 ps
+  at TT, on exactly 17 types, all cb (cbf_q00 x3, cbf_q01 x2, cbf_q11, cbn_q00 x2, cbn_q01 x3, cbn_q11 x2,
+  cbx_q10 x4). Largest 459.8. The same 52 rows are in S3R, S4c (plan of record) and S4k. No FF value is over.
+- REPORTED (CLAND-BIN, cbf_q01, place only): the G2 hook removes the 1,024 ring-to-`u_bin` hops over 405 um and
+  creates 1,784 `u_bin`-to-fabric hops over 405 um (maximum 850). Whole type: 3,583 -> 4,246.
+- REPORTED: the tile rows have a library clk-to-q of 923 / 938 ps; they pass only with the early-tap credit.
+
+Root cause: the cb types carry a tile whose clock insertion is over 730 ps. Its ports are tapped 420-460 ps early.
+That is past the half period the die STA reader accepts, and it puts over 420 ps of unshared clock on every tile
+boundary path. Separately, the face ring and the fabric station are 720-850 um apart with one register between.
+
+Fix:
+1. DIE-QC-GRT0-2: get the die STA to run. The 52 rows are real plan data, so do not edit them. Read them as a
+   declared early core tap (the form S81 uses for its 450 ps budget) and let the pair slack of the tile boundary
+   paths be the result. A shape check must not hide the first QC die STA.
+2. Report from that STA the cb tile boundary pairs as their own class, with the `port_in` relay seams of the
+   01:3x lever 8.
+3. DIE-QC-103 + CLAND-BIN: the ring-to-fabric span is a plan item. Give the fabric station `u_st` a plan site at
+   most 405 um from its load, then site `u_bin` at the midpoint. No register is added, so no cycle changes.
+   INFERENCE: `u_st` can take a plan site; I did not check the generator.
+4. Keep G2 opt-in until item 3 exists. Default-on raises the over-reach count by 663 on cbf_q01.
+
+### Lever 4. HEAD: rp21z20NF
+
+Evidence (REPORTED, FABLE-TRIAGE-HEADKV sections 17-18, HEAD-CLKFEED-1 handoff):
+- hk6 feed: deepest tap 8,992 -> 7,001 ps TT, feed wire -28 %, 415 of 427 crossings parent-child. Both-edge
+  count-aligned STA 427 of 427, FF worst lo 132.3 ps.
+- lep0N: FF tap spread 271.6 ps over 195 taps (86.7 ps on rp21z16). The other 357 partitions are unchanged.
+  The east half of the region's local tree is 160-272 ps late: the tree was built from the old root.
+- Cohort 10 of 26: the 16 failing wrappers are dated 11-11. LATCHECK host_rx is a checker gap (fixed, @c8b5eecd7d).
+
+Fix (HEAD-99, HEAD-CLKFEED-1): rebuild the lep0N local tree on the NC taps; accept at 92 ps or less with the
+other 357 unchanged. Republish all 26 types. Delete `start_pins`, keep `root_settle_cycles` 88. Adopt NF, not NC
+then NF. Then re-sign hd_mesh_e and hd_ctl_e for the seam hold. No root move; 7.0 ns is the floor of this die.
+
+### Lever 5. S81 leaf throat delta
+
+Evidence (REPORTED, S81-LEAF-PLAN 02:35, epyc7 `s81-leaf-plan/ev/B6gq_lt2.json`): on B6gq 53 leaf types have 182
+slots with `u_station` over 1.0. LT2 bands every such station, moves four core groups by 17.8-18.9 um and gives
+t14 the 34.56 um move. Lanes over 405 um through the changed types: 50 -> 45. The four seam hops become 382.6-402.8
+um. MEASURED: `log/LT2.log` was at `SVCMEM_TIES` (bind) at 03:08. Wave failures since 01:15 in the same family:
+leaf t54 `DRT-0255` on a `u_bin_leafdn` net, leaf t65 and slice_station t28 global-route congestion.
+
+Fix:
+1. Proof before the family regenerates: place + global route on t14, t62, t72, t17 and t54 from LT2; overflow 0
+   within 30 iterations.
+2. The 45 lanes still over 405 um need a station each or a re-site in the same delta. List them by type.
+3. t54 was under 0.5 in my 01:3x table and still fails detail route, so slot use does not explain it. Read its
+   route box (294, 55) um before it is relaunched.
+
+### Lever 6. KV: start tree on the plan of record
+
+Evidence:
+- REPORTED (DIE-KV-ROUTE-1, on kvgeom5 p1): clock-form start tree 0 of 3,915 fail, worst lo +109.4 ps, 185 of
+  185 edges clean, bind simulation 0 violations (was 32). 320 crossings have no fall-edge arrival: the 64
+  pc / phy pairs (`lanes/handoff/KV-NO-TAP-CROSSINGS.tsv`).
+- MEASURED (epyc7 `die-kv-route-1/runs6/p6/CHAIN.log`, `kit.log`): `KIT 1`, `FAIL_KIT` at 10:50:12 UTC after
+  0.48 s: `ModuleNotFoundError: No module named 'signoff_profile'` from `ot_clk.py` in `src_kv_kvgeom6_pgL`.
+  Nothing has run on kvgeom6 since.
+
+Fix: DIE-KV-ROUTE-1 reruns the p6 kit with the module in the tree, then global route, taps and the native
+count-aligned chain on kvgeom6. The clock kit must emit taps for the pc and phy partitions. KV-102 posts the
+start-form change as the plan event from the p6 numbers. kvgeom6 moved 7 kv3_pc taps from 250 to 312 ps, so
+the kvgeom5 margins do not carry over to those ports.
+
+### Lever 7. KV hg / hgi
+
+Evidence (REPORTED, FABLE-KVOVF sections 8-10; MEASURED state on epyc2 `fable-kvovf/forms`):
+- Keep only: kv3_hgi_v2 setup -366 ps at CTS, -431 ps after hold repair with 36,635 hold cells.
+- kv3_hg: -739 ps with the keep, -753 ps merged. The merge is not its limiter. Its worst paths were not read.
+- t_hgi2: 21 of 24 stations placed, longest stage hops 519 and 425 um. MEASURED: t_hgi2 and t_hg were in global
+  placement at 03:13; k_hgi2 has been in global route since 00:10.
+
+Root cause: three stages over a span of about 1,000 um give hops over the 405 um reach.
+
+Fix:
+1. Set the chain depth from the span: n = ceil(span / 380 um), the same n on every front core of a bank so the
+   lane latency stays uniform. Head 3 needs 4 stages. The added cycle is a plan item for KV-102.
+2. kv3_hg: read the 10 worst CTS paths before another form is built.
+3. kv3_hub_Wo landing bands (REPORTED, CLAND-BIN): the 4.32 um window is occupied by ft2 station cells placed
+   first. Reserve the window before stationing; the `OT_LAND_RESERVE` what-if is the test.
+
+### Lever 8. QC cb stations at net zero
+
+Evidence (REPORTED, DIE-QC-103): S4k2 failed the bind with 30 `R8_STALE` + 1 `PARAM_REGEN`, the same signature as
+y_o23 +2. S4k is binding. S4n = S4k + `r_dly_spread` on cbf_q01 and cbf_q01_s2 is binding.
+
+Fix: the bco hop (xstn -> `u_bout_bc_o`, 460-970 um) takes the y_o23 form: one station in, one pad stage out on
+the same join leg. If that leg has no pad to give, split the xstn tap register in the generator (TYPE-QCCB-GEN).
+Adopt S4k alone when it passes.
+
+## 2. Symptoms that came back after a fix (since 01:3x)
+
+| item | what was tried | why it came back | cause to fix |
+|---|---|---|---|
+| Die DRT memory | stripes, capped vias, small worker | each step exposed the next cost | route boxes over the whole die (lever 2) |
+| HEAD cut-out check | 2 x 2 mm net window | the database kept the full die area | crop the area, or drop the check |
+| S81 bind gate | B6f, B6g, B6fb, B6gb, B6gp | schema key, then a missing proof file | one tree per gate chain (01:3x lever 1) |
+| S81 / KV / QC die chains | relaunch | `clk_aocv`, `signoff_profile`, tap-offset check | die chains run from the bind tree |
+| QC cb stations | S4e +2, S4j +1, S4k2 +2 | one collector leg cannot take a net cycle | net-zero form only (lever 8) |
+| QC G2 hook | capture register at the ring | the hop moved to `u_bin` -> fabric | planned `u_st` site (lever 3) |
+| KV hg chains | r_, c_, s_ forms | stages stay at the ring, or the last hop is long | depth by span (lever 7) |
+| HEAD NC | rebind forms | 16 old wrappers; lep0N tree on an old root | republish all; rebuild lep0N (lever 4) |
+
+## 3. Stop list: technical dead ends
+
+New since 01:3x:
+- Die detailed route with the stock worker size on a 10.8 um gcell (144-185 GB). The uncapped M8-M9 via arrays.
+- A net-window "cut-out" on the full-area database as a speed or equivalence check.
+- More threads on a stock-worker run (about 9.6 GB per thread).
+- S81 adoption of B6gb and B6gsh as two full events; releasing the 350 types with no count-aligned bind on B6.
+- Reading the S81 legacy landed -3,127 ps, or the QC `LPO` line (-6,666 ps), as a die clock result.
+- QC: any station that adds a net cycle to one collector leg (S4e, S4j, S4k2 forms). G2 default-on.
+- QC: editing the 52 tap-offset rows to get under 416.5 ps.
+- KV: r_, c_ and s_ chain forms; three-stage chains on spans over 1,140 um; any hg form before the paths are read.
+- KV: die results on kvgeom5 quoted as the gate.
+- HEAD: root move for a 6.0 ns target; the 1.15 factor in the gate; NC adoption before the lep0N tree.
+
+Still in force from 01:3x (section A.3 below): serdes island positions and die-rect shrinks, single-type leaf
+growth, the chain spreader as the col answer, `MAX_COLUMN_PAD` raise, extra hold passes for `port_in`,
+region-origin or partial HEAD re-binds, unchanged relaunch after the same net failed in the same place.
+
+## 4. Not checked
+
+- Why the route box cost is what it is: I did not read the router source. The 120 CPU-hour figure is a lower bound.
+- Results of B6gb / B6gp / B6gsh re-binds, LT2, S4k, S4n, t_hgi2, the G1 proof: all running.
+- Whether the HEAD full route kit (52,489 nets) is the regional hk6 tree or the generic tree of section 18.
+- Whether `u_st` can take a plan site, and whether the wave generator applies the half-period check to cb kits.
+- The S81 K table: I did not compare any count-aligned output with the B6 bind, because none exists.
+- The `OT_LAND_RESERVE` what-if on kv3_hub_Wo, and the three cb hook proofs (their logs end at 00:24).
+
+---
+
+# A. Previous review (01:3x PST), unchanged
+
 # FABLE-CLOSURE-STRATEGY 2026-11-15 01:3x PST: technical closure levers for S81, HEAD, QC, KV
 
 Read-only review. Technical physical design only. HBM is parked and not covered. No job, plan or kit was touched.
