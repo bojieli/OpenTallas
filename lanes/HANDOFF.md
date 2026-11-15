@@ -1,1 +1,2 @@
 - 2026-11-15 00:40 COORD hourly: 320 signed (no change); limit stop recovered; ot_store fixed; Fable triage lanes per die started (owner rule: Fable diagnoses, Sonnet implements)
+- 2026-11-15 02:4x COORD: hourly; 320 unchanged; HEAD ca4 leaf-origin bind ready for rp21z20NC; Fable strategy r57 dispatched; die routes on region-grid PG form
