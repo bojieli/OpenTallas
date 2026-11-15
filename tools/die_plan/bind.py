@@ -1473,7 +1473,7 @@ class Binder:
                     self.param_defaults.get((cell.ytype, cell.module), {})):
                 cnt["proven_dead"] += 1
                 return ("literal", s[1])
-            if self.declared_ties.allows(self.parts[p]["type"], cell.module, pn, i, s[1]):
+            if self.declared_ties.allows(self.parts[p]["type"], cell.module, pn, i, s[1], self.F.cells[ci].path):
                 cnt["declared_tie"] += 1
                 self.declared_tied[(self.parts[p]["type"], cell.module, pn)].append(i)
                 return ("literal", s[1])
