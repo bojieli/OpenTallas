@@ -35,3 +35,15 @@ Tests: tools/die_plan/test_pg_aware.py (+ test_rflow_defaults RFLOW set). No new
 ## Proof (ot-run, intel2 proof dirs /srv/opentallas-scratch2/claude/pg-aware-1/proof/<name>, logs intel2 ~/pg-aware-1/proof-logs/)
 grt resume + pgtt + keepout: coll_n_pgtt, leaf_t69, leaf_t25, slw_hc2. floorplan resume + phase + pgtt + keepout: kv_io_cor_a, ss_t49.
 Scripts intel2 ~/pg-aware-1/{fetch.sh,prep.py,launch_proof.sh}. Status: see RESULT lines below.
+
+## Successor 11-14 19:4x-20:0x (resumed after 19:43 crash)
+- Branch claude/pg-aware-1-1114 @288ada0041 (pushed; localhost /home/ubuntu/wt-pg-aware-1): 8e7457814f + f018f64729 (Fable 630-kit pin rule in
+  landing_contract via tools/die_plan/pg_access.py, default ON for soft types at plan load; OT_PG_FACE_CUT=1 opt-in parent PG stripe cut 1.5 um
+  before macro pin faces, gen_phys.pg_face_cuts/pg_face_cut_tcl) + 288ada0041 (lef_face_pins line scan, regex was 94 s on a 6 MB LEF).
+- Proof set 2 (intel2 ~/pg-aware-1: prep2.py, fetch2.sh, proof2.sh, relaunch2.sh, launch_proof64.sh; tmux pga1-proof2), floorplan resume with
+  phase + keepout + pgtt + WIDE_SPACING: fw_a/fw_b/fw_c (TYPE-QCCOLLN epyc10 fw forms), cbn_c (cbn_q11 c; tile has no M5-M7 face pins = 0 cuts),
+  su_l0 (slw_su_l0__cl1a1c1f8f S3M2 attempt_10 kit, cland_tstart_in 174.9516 -> 167.392, fresh), hd_host_e_ws (HEAD-99 kits21z9 ws + face cut:
+  u_epc W M6 421.86-423.36 x 72.39-539.83, S M5/M7). DO NOT run prep.py twice on a kit (pdn_die_phase is not idempotent); prep2 --skip-prep.
+- Waiter: tmux pga1-waiter (waiter2.sh) -> ~/pg-aware-1/proof-logs/summary.tsv every 10 min, all 12 forms.
+- Launch lesson: ot-run launched with nohup inside a short ssh session died (ssh 255 / systemd scope refused at session end): launch in tmux.
+- Finding: wave su_l0 S3M2 kits still have cland_tstart_in at y 174.9516 (DRC 3 site); M7 phase bug puts 76 su_l0 face pins on M7 stripe tracks (1 with phase fix).
