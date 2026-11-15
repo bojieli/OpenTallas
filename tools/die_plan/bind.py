@@ -5622,6 +5622,20 @@ def kit_landed_ports(btxt):
     return out
 
 
+def kit_rebase_path(p, old_base, new_tree):
+    """an absolute path inside the bind's recorded source base -> the same relative path in the kit's own tree (else unchanged)"""
+    q = Path(p)
+    if not q.is_absolute():
+        return str(p)
+    try:
+        return str(Path(new_tree) / q.resolve().relative_to(Path(old_base).resolve()))
+    except ValueError:
+        try:
+            return str(Path(new_tree) / q.relative_to(Path(old_base)))
+        except ValueError:
+            return str(p)
+
+
 def kit_filelist_outside(files, roots):
     """filelist paths (resolved) that lie in none of the roots"""
     rr = [Path(r).resolve() for r in roots]
@@ -5926,17 +5940,20 @@ def cmd_kit_rtl(a):
     # path baked at bind time (B6gsl: run/b/B6gsl/src, whose ot_dp_clk_landing.sv was stale: GEN_LINT failed on the LOCAL defparam
     # while the kit's src_rel2 copy was right).  --src-tree DIR (env OT_KIT_SRC_TREE) replaces the base; the filelist is then checked.
     src_tree = getattr(a, "src_tree", None) or os.environ.get("OT_KIT_SRC_TREE")
+    old_base = base
+    rebase = lambda p: p
     if src_tree:
         st = Path(src_tree).resolve()
         if not (st / "rtl").is_dir():
             raise BindError(f"kit-rtl {tn}: --src-tree {st} has no rtl/")
         base = str(st)
+        rebase = lambda p: kit_rebase_path(p, old_base, st)       # absolute paths the bind recorded in the old tree (bind.f, extra_lib)
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
-    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
-        rep.get("extra_lib", []) + bindf_prefer(out, base)
+    prefer = [rebase(str(Path(base) / f) if not Path(f).is_absolute() else f) for f in ab0.get("prefer", [])] + \
+        [rebase(x) for x in rep.get("extra_lib", [])] + [rebase(x) for x in bindf_prefer(out, base)]
     E.validate_preferred_files(prefer)
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), [rebase(x) for x in ab0.get("files", [])] + [rebase(x) for x in rep.get("extra_lib", [])], base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})

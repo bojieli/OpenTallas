@@ -53,3 +53,10 @@ def test_kit_rtl_cli_has_src_tree_and_wave_passes_it():
 def test_gen_phys_records_the_kit_source_tree():
     g = (Path(B.__file__).parent / "gen_phys.py").read_text()
     assert "kit_rtl_paths.json" in g and "opentallas.kit_rtl_paths.v1" in g
+
+
+def test_rebase_maps_old_tree_paths_into_the_kit_tree(tmp_path):
+    old, new = tmp_path / "B6gsl" / "src", tmp_path / "kit" / "src"
+    assert B.kit_rebase_path(old / "rtl" / "lib" / "x.sv", old, new) == str(new / "rtl" / "lib" / "x.sv")
+    assert B.kit_rebase_path(str(tmp_path / "other" / "y.sv"), old, new) == str(tmp_path / "other" / "y.sv")
+    assert B.kit_rebase_path("rtl/z.sv", old, new) == "rtl/z.sv"
