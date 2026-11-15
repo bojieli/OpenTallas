@@ -205,6 +205,65 @@ class Daily(unittest.TestCase):
         self.assertIn("== main", put("tools/die_plan/a.py").stdout)
         self.assertIn("refused: not on main", put("--from-main", "tools/die_plan/nope.py", "--apply").stdout)
 
+    def _tree(self, rel, text):
+        for f in (self.src / rel, self.rep(rel)):
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text(text)
+
+    def test_lane_copy_older_than_the_base_merges_on_its_closest_main_version(self):
+        # 06:00 11-15: the KV schema.py lane copy derives from a main version OLDER than the last daily sha; merging on that
+        # sha dropped full_area_hard_ip.  The closest main version is the right base: lane edit + every main addition.
+        pad = "".join(f"P{i} = {i}\n" for i in range(12)); qad = pad.replace("P", "Q")
+        (self.dev / "tools/die_plan/schema.py").write_text(pad + qad)
+        self.commit("v0")
+        self._tree("tools/die_plan/schema.py", "def lane_fn():\n    return 'lane'\n" + pad + qad)
+        (self.dev / "tools/die_plan/schema.py").write_text(pad + "def full_area_hard_ip(t):\n    return 1\n" + qad)
+        base = self.commit("base")
+        (self.d / "mq/src-refresh-last.json").write_text(json.dumps({"qc": base}))
+        (self.dev / "tools/die_plan/schema.py").write_text(pad + "def full_area_hard_ip(t):\n    return 1\n" + qad
+                                                           + "def tap_offset_table():\n    return 2\n")
+        v2 = self.commit("v2")
+        r = self.daily()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        for f in (self.src / "tools/die_plan/schema.py", self.rep("tools/die_plan/schema.py")):
+            t = f.read_text()
+            for name in ("def lane_fn", "def full_area_hard_ip", "def tap_offset_table"):
+                self.assertIn(name, t)
+        self.assertEqual(self.last(), v2)
+
+    def test_merge_that_would_drop_main_code_is_kept_as_conflict(self):
+        # the lane deleted a main function: never decided by the refresh (no whole-file main overwrite, COORD 11-15)
+        pad = "".join(f"P{i} = {i}\n" for i in range(12)); qad = pad.replace("P", "Q")
+        lane = "def lane_fn():\n    return 'lane'\n" + pad + qad
+        self._tree("tools/die_plan/schema.py", lane)
+        (self.dev / "tools/die_plan/schema.py").write_text(pad + "def full_area_hard_ip(t):\n    return 1\n" + qad)
+        base = self.commit("base")
+        (self.d / "mq/src-refresh-last.json").write_text(json.dumps({"qc": base}))
+        (self.dev / "tools/die_plan/schema.py").write_text(pad + "def full_area_hard_ip(t):\n    return 1\n" + qad
+                                                           + "def tap_offset_table():\n    return 2\n")
+        self.commit("v2")
+        r = self.daily()
+        self.assertIn("CONFLICT kept", r.stdout)
+        self.assertIn("full_area_hard_ip", r.stdout)
+        self.assertEqual((self.src / "tools/die_plan/schema.py").read_text(), lane)
+        self.assertEqual(self.rep("tools/die_plan/schema.py").read_text(), lane)
+
+    def test_staged_file_using_an_attribute_the_tree_module_lacks_fails_the_smoke(self):
+        # the tree's schema.py is a lane copy without full_area_hard_ip and is NOT in the batch; main's gen_phys calls it
+        self._tree("tools/die_plan/schema.py", "import os\nX = 1\n")
+        (self.dev / "tools/die_plan/schema.py").write_text("import os\nX = 1\ndef full_area_hard_ip(t):\n    return 1\n")
+        base = self.commit("base")
+        (self.d / "mq/src-refresh-last.json").write_text(json.dumps({"qc": base}))
+        (self.dev / "tools/die_plan/gen_phys.py").write_text("import schema as S\n\ndef f(t, d):\n    return S.full_area_hard_ip(t), "
+                                                             "S.X, d.get(1), S.os\n")
+        self.commit("v2")
+        r = self.daily()
+        self.assertIn("STAGED CHECK FAILED", r.stdout + r.stderr)
+        self.assertIn("S.full_area_hard_ip", r.stdout)
+        self.assertNotIn("S.X", r.stdout)
+        self.assertFalse((self.src / "tools/die_plan/gen_phys.py").exists())
+        self.assertEqual(self.last(), base)
+
     def test_staged_smoke_failure_swaps_nothing(self):
         (self.dev / "tools/die_plan/a.py").write_text("import no_such_module_xyz\nA = 2\n")
         self.commit("v2")
@@ -213,6 +272,16 @@ class Daily(unittest.TestCase):
         self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
         self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 1\n")
         self.assertEqual(self.last(), self.v1)
+
+    def test_lazy_third_party_import_does_not_fail_the_smoke(self):
+        # die_clock.cmd_render imports matplotlib inside the function; the gen hosts have no matplotlib (dry run 11-15)
+        (self.dev / "tools/die_plan/a.py").write_text("A = 2\n\ndef render():\n    import no_such_module_xyz\n"
+                                                      "    return no_such_module_xyz\n")
+        v2 = self.commit("v2")
+        r = self.daily()
+        self.assertNotIn("STAGED CHECK FAILED", r.stdout + r.stderr)
+        self.assertIn("A = 2", (self.src / "tools/die_plan/a.py").read_text())
+        self.assertEqual(self.last(), v2)
 
     def test_replica_drift_refuses_then_put_heals(self):
         (self.src / "tools/die_plan/helper.py").write_text("H = 1\n")   # a lane copied a file to the gen host copy only
