@@ -5,31 +5,18 @@
   {
    "die": "qwen_compute",
    "modules": [
-    "qfd_dv_s5_sc2_leaf",
-    "qfd_dv_s5_sc2_leaf_dn0",
-    "qfd_dv_s5_sc2_leaf_up0",
-    "qfd_dv_s8_crh_rp1",
     "qfd_dv_s8x_vmr",
-    "qfd_qc_su_lane_w_l0",
-    "qfd_qc_su_lane_w_l1",
-    "qfd_qc_su_lane_w_l3"
+    "qfd_qc_su_lane_w_l0"
    ],
    "reason": "no signed-kit config.mk / spec params for this module on any fleet host or in rtx-pro closed_archive + signed-export-1114 (AGIdock /archive not reachable from the HCPARAM-ALL session); owner supplies the record"
   },
   {
    "die": "qwen_kvsys",
    "modules": [
-    "kv3_astk",
     "kv3_pv_pair",
     "qkd_ahub",
-    "qkd_hr_cdc_hi",
-    "qkd_hr_cdc_pc",
-    "qkd_hr_core_guard",
     "qkd_hr_core_peer",
-    "qkd_hr_core_prompt",
-    "qkd_hr_core_queue",
-    "qkd_kvs_pcc",
-    "qkd_kvs_pcf"
+    "qkd_hr_core_prompt"
    ],
    "reason": "no signed-kit config.mk / spec params for this module on any fleet host or in rtx-pro closed_archive + signed-export-1114 (AGIdock /archive not reachable from the HCPARAM-ALL session); owner supplies the record"
   },
@@ -49,8 +36,6 @@
     "dsfd_su_t_rxsf",
     "ot_s81_kp4_dchn",
     "ot_s81c_attn_hcore",
-    "ot_s81sl_egn",
-    "ot_s81sl_ve_m",
     "ot_s81sl_vn_a",
     "ot_s81sl_vn_b",
     "ot_v41_rom_elem_q_qxpq_w10_gb_he",
