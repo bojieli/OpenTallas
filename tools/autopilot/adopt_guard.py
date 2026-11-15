@@ -62,7 +62,76 @@ def sync_missing(miss, hosts, run=sh, log=print):
     return left
 
 
-def guard(cfg, die, check=False, run=sh, log=print):
+TREE_DIRS = ("tools", "rtl", "physical/die_plan", "physical/common_flow")
+TREE_MIN_FRAC = 0.99
+
+
+def tree_stats(host, src, run=sh, dirs=TREE_DIRS):
+    """{dir: (file count, manifest sha12)} of the die src tree on one host (KIT-OPS-6 11-14 item 9b: kvgeom6 passed the per-file check, yet epyc7's
+    tools/ held 1 file against 17,486 and rtl/ was absent).  Manifest = sha256 of the sorted 'relative path size' lines; a missing dir = (0, '')."""
+    out = {}
+    for d in dirs:
+        q = shlex.quote(f"{src}/{d}")
+        cmd = f"test -d {q} && {{ n=$(find {q} -type f | wc -l); m=$(cd {q} && find . -type f -printf '%P %s\\n' | LC_ALL=C sort | sha256sum | cut -c1-12); echo \"$n $m\"; }} || echo '0 -'"
+        rc, txt = run(["bash", "-c", cmd] if host == "localhost" else SSH + [host, cmd])
+        f = txt.split()
+        out[d] = (int(f[0]), f[1] if len(f) > 1 and f[1] != "-" else "") if f and f[0].isdigit() else (0, "")
+    return out
+
+
+def tree_gaps(stats, frac=TREE_MIN_FRAC):
+    """{host: [dir]}: a host whose count of a dir is below frac of the best copy on any host (or that lacks it) has a gap"""
+    gaps = {}
+    for d in TREE_DIRS:
+        best = max((st[d][0] for st in stats.values() if d in st), default=0)
+        if not best:
+            continue
+        for h, st in stats.items():
+            if d in st and st[d][0] < frac * best:
+                gaps.setdefault(h, []).append(d)
+    return gaps
+
+
+def tree_fill(src, stats, gaps, run=sh, log=print):
+    """copy each gap dir from the host with the most files (tar over ssh, --keep-old-files = rsync --ignore-existing); -> still-gapped {host: [dir]}"""
+    left = {}
+    for h, ds in gaps.items():
+        for d in ds:
+            donor = max((g for g in stats if g != h), key=lambda g: stats[g][d][0], default=None)
+            if donor is None or stats[donor][d][0] == 0:
+                left.setdefault(h, []).append(d); continue
+            q = shlex.quote(f"{src}/{d}")
+            pipe = (f"{' '.join(SSH)} {donor} 'cd {shlex.quote(src)} && tar -cf - {shlex.quote(d)}' | "
+                    f"{' '.join(SSH).replace('-n ', '')} {h} 'mkdir -p {shlex.quote(src)} && tar -C {shlex.quote(src)} -xf - --keep-old-files'")
+            rc, _ = run(["bash", "-c", "set -o pipefail; " + pipe], 3600)
+            log(f"ADOPT-GUARD tree copy {donor}:{src}/{d} -> {h} ({stats[h][d][0]} -> {stats[donor][d][0]} files) rc={rc}")
+            if rc:
+                left.setdefault(h, []).append(d)
+    return left
+
+
+def guard_tree(cfg, die, hosts, check=False, run=sh, log=print):
+    src = str((cfg["dies"][die].get("src")) or "")
+    if not src or len(hosts) < 2:
+        return True
+    stats = {h: tree_stats(h, src, run) for h in hosts}
+    gaps = tree_gaps(stats)
+    for h, st in sorted(stats.items()):
+        log(f"ADOPT-GUARD tree {die} {h}: " + " ".join(f"{d}={n}/{m}" for d, (n, m) in st.items()))
+    if gaps and not check:
+        left = tree_fill(src, stats, gaps, run, log)
+        if len(left) < len(gaps) or any(len(v) for v in left.values()) < len(gaps):
+            stats2 = {h: tree_stats(h, src, run) for h in hosts}
+            gaps = tree_gaps(stats2)
+        else:
+            gaps = left
+    for h, ds in sorted(gaps.items()):
+        log(f"ADOPT-GUARD TREE GAP {h}:{src} {' '.join(ds)}")
+    log(f"ADOPT-GUARD tree {die}: {'OK' if not gaps else 'FAIL closed'}")
+    return not gaps
+
+
+def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
     import kit_wave as K
     d = cfg["dies"][die]
     hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
@@ -79,7 +148,8 @@ def guard(cfg, die, check=False, run=sh, log=print):
         for f in v:
             log(f"ADOPT-GUARD MISSING {h}:{f}")
     log(f"ADOPT-GUARD {die}: {'OK' if not left_n else 'FAIL closed: ' + str(left_n) + ' still missing'}")
-    return left_n == 0
+    tree_ok = True if no_tree else guard_tree(cfg, die, hosts, check, run, log)
+    return left_n == 0 and tree_ok
 
 
 if __name__ == "__main__":
@@ -87,5 +157,6 @@ if __name__ == "__main__":
     ap.add_argument("die")
     ap.add_argument("--config", default=os.path.expanduser("~/coord/autopilot/kit_wave.json"))
     ap.add_argument("--check", action="store_true")
+    ap.add_argument("--no-tree", action="store_true", help="skip the whole-src-tree comparison (per-top-dir counts + manifest sha)")
     a = ap.parse_args()
-    sys.exit(0 if guard(json.load(open(a.config)), a.die, a.check) else 1)
+    sys.exit(0 if guard(json.load(open(a.config)), a.die, a.check, no_tree=a.no_tree) else 1)
