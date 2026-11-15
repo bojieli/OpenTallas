@@ -66,8 +66,19 @@ FAIL_MAP = [
 ]
 
 
+LAST = {}   # (die, item) -> latest stage row; filled by main() so label() can see whether a DEDUP twin is live
+
+
 def label(r):
     st = r['status']
+    if st == 'DEDUP':
+        # KIT-OPS-5 11-14 (COORD, TYPE-S81-FLOWERR): a DEDUP row is a held duplicate of a canonical twin, not a failure.  Twin live
+        # (RUNNING/QUEUED) -> 'duplicate (twin running)'; twin not live -> 'dedup orphan' (the stale-record bug, released by a retry key)
+        m = re.search(r'duplicate of (\S+)', (r.get('reason') or '') + ' ' + (r.get('class') or ''))
+        tw = LAST.get((r.get('die'), m.group(1))) if m else None
+        if tw is not None and tw['status'] in ('RUNNING', 'QUEUED', 'ENQUEUED'):
+            return 'duplicate (twin running)'
+        return 'dedup orphan'
     if st in ('RUNNING', 'QUEUED'):
         return 'running'
     if st == 'SIGNED':
@@ -164,6 +175,7 @@ def main():
         f = l.rstrip('\n').split('\t')
         ovr.append((f[0], f[1], f[2]))
 
+    LAST.clear(); LAST.update(last)
     holds = die_holds()
     out = [BEGIN, '## FAILURES · unsigned cores and types by class (auto, %s)' % time.strftime('%Y-%m-%d %H:%M %Z')]
     for die, tag in DIES:
@@ -193,7 +205,8 @@ def main():
             if d != die or is_core_row(item, r, core_mods):
                 continue
             lab = label(r)
-            if lab not in ('running', 'signed (count pending)', 'cancelled (superseded)', 'needs parent receipt (re-sign)') \
+            if lab not in ('running', 'signed (count pending)', 'cancelled (superseded)', 'needs parent receipt (re-sign)',
+                           'duplicate (twin running)') \
                     and held(holds, die, item, r):
                 lab = 'held by die owner (plan event pending)'
             # COORD 11-06: a SIGNED row already in the official count is not "count pending".
