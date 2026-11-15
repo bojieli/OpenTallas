@@ -36,3 +36,28 @@ def test_merge_census_gate_exit(tmp_path):
     assert r.returncode == 0 and "OT_MERGE_CENSUS PASS missing=0" in r.stdout
     r = subprocess.run([sys.executable, str(HERE / "merged_replica_census.py"), str(k), "--gate", "0"], capture_output=True, text=True)
     assert r.returncode == 4
+
+
+def test_gen_kit_flags_write_guards_only_when_set(monkeypatch, tmp_path):
+    """Default kit: no census helpers, no flag files, no manifest.  With the flags: helpers + .on files, run_kit.sh holds both
+    blocks (they only act when the .on file exists) and passes bash -n."""
+    import copy, subprocess
+    import gen_phys, schema
+    from test_g2 import PAIR
+    for k in ("OT_MERGE_CENSUS", "OT_HOP_CENSUS", "OT_HOOK_MANIFEST"):
+        monkeypatch.delenv(k, raising=False)
+    a, b = tmp_path / "a", tmp_path / "b"
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(a), [])
+    k0 = a / "fa"
+    for f in ("merged_replica_census.py", "hop_census.py", "merge_census.on", "hop_census.on", "hooks.manifest"):
+        assert not (k0 / f).exists(), f
+    monkeypatch.setenv("OT_MERGE_CENSUS", "1"); monkeypatch.setenv("OT_HOP_CENSUS", "warn"); monkeypatch.setenv("OT_HOOK_MANIFEST", "1")
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(b), [])
+    k1 = b / "fa"
+    assert (k1 / "merge_census.on").read_text().strip() == "64" and (k1 / "hop_census.on").read_text().strip() == "warn"
+    assert (k1 / "merged_replica_census.py").is_file() and (k1 / "hop_census.py").is_file() and (k1 / "hooks.manifest").is_file()
+    rk = gen_phys.RUN_KIT          # run_kit.sh is written by write_run_kit, the text is the same for every kit
+    (tmp_path / "run_kit.sh").write_text(rk)
+    assert "/work/merge_census.on" in rk and "merged_replica_census.py /work --gate" in rk
+    assert "/work/hop_census.on" in rk and "hop_census.py > /work/hop_census.log" in rk
+    assert subprocess.run(["bash", "-n", str(tmp_path / "run_kit.sh")], capture_output=True).returncode == 0
