@@ -5,3 +5,5 @@
 - Wave config done by KIT-OPS-3 (hard_wrappers+only_items). Private kit: gen recipe /srv/opentallas-scratch2/claude/tl-s81phy/gen.sh (epyc10; copy on intel1 w/ run). Patches: bb params (rtl/*_bb.v, orig bb.orig), macro_place.tcl y 0->4.32 (orig gen/macro_place.tcl.orig).
 - Result: passes lint/preflight/LEC/floorplan/GP; DPL ok; 3_5 exits 241 deterministically (epyc10+intel1). Blocked on plan: outline growth N side, macro origin y>=4.32, bb params. Posted to DIE-S81-92.
 - Next: when plan with growth lands, rerun gen.sh + run_kit.sh route (env OT_NATIVE_RESET_SCOPE=selected OT_PLACE_MAX_FANOUT=64 OT_GRT_NONPORT_HOLD=1 OT_CORE_TAP_REACH_UM=0) on intel1/epyc2; on pass add AUTO-RESIGN row + RESULT.
+## 2026-11-14 19:38 successor
+- Wave attempt_7 placed OK (DPL done) then route chain rc 11 = lec_async migrate on dead pid (infra). Wave attempt_8 full regen in flight (kit_wave a8, epyc8). Private live: intel1 tl-s81phy route (GRT), epyc10 tl-s81phy-a2 and tl-s81phy-x2b-r waiting for memory. Logs intel2 ~/tl-s81phy-route8.log etc. Do not relaunch while these run; next: read verdicts, AUTO-RESIGN row + export if signed.
