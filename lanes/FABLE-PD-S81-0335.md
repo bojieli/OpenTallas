@@ -240,3 +240,58 @@ in compose, band exception list), a reach check and a 2-hour bind; no one can pr
 is idle on these types, and finding the problem types is the slow part. Cost: one extra build wave for up
 to 335 types and a signed count that drops at the re-key. If COORD prefers no superseded records, release
 only the 60 unlanded types now and hold the rest for CA.
+
+## G. Start-hop reach and the strap depth cut, 08:05 PST
+
+(1) START HOPS OVER 405 um: real, but the failure is timing, not routing.
+  What they are: 1-bit die-level nets between start-stage flops that sit beside clock-tree node cells
+  (start_stage_emit.py) and the partition start pins. The die router can repeater them. The planner judges
+  each start edge on the clock phase only (data delay 0) unless --start-data-delay is given.
+  Measured on the form now in bind (ca_f, uncapped, node and tap coordinates of proof_fall):
+    378 start edges; 340 are over 405 um (337 over 453.6); median 1,767 um, 90th percentile 3,951, max 7,556.
+    Room before the sampling boundary on those 340: median 168 ps, minimum 1 ps.
+    At 0.1 / 0.2 / 0.3 ps per um plus 40 ps clock-to-Q the wire delay exceeds that room on 234 / 301 / 315
+    of the 340 (delay figures ASSUMED, not extracted).
+  Consequence: the start bit is sampled a cycle later than planned or inside the aperture, the partition count
+  origin is off by a cycle, and the lane latency is wrong at the die. The RTL LATCHECK cannot see it.
+  The compose check (max hop 379 um) covers partition-to-partition edges only, not these die-level nets.
+
+  RULING: take the capped form (--start-max-hop-um 405) as the start tree of record.
+    capped, no delay model (ca_f_hop):   2,854 edges, 2,425 retime stages, depth 4/8 = 827/166, 0 no-K,
+                                          latency +23 vs +3 (uncapped +13), max path ambiguity 1.
+    capped + delay model (my probe, epyc7 fable-pd-s81/dd, model lo 25 + 0.06/um, hi 70 + 0.22/um, ASSUMED):
+                                          all 2,811 hops at or under 405 um stay CLEAN with their wire delay.
+    So the cap makes 2,811 of 2,859 start hops safe against wire delay. Only the long ones are left.
+  THE 48-49 LONG HOPS (435 to 5,812 um; 33 node-to-node, 16 node-to-partition): gaps where no intermediate
+  clock-tree node gives a clean stage. Origin moves do not help the 33 node-to-node ones. With the delay
+  model they are ambiguous and cost depth downstream: 201 crossings on 52 receiver types change depth
+  (164 from 4 to 8, 37 from 8 to 16), latency +307. List: fable-pd-s81/dd/types_depth_open.json.
+  Fix, in order (DIE-S81-92 with the start_stage_emit owner):
+    a. give each of the 48 its own measured delay: route the start nets in the die clock kit, read launch
+       CLK to capture D at TT and FF, pass them as ports in --start-data-delay. A fixed, measured delay of any
+       length is fine; only an unknown one is ambiguous.
+    b. where the measured window is still unclean, add a start stage on a tap of its own (a leaf buffer off
+       the nearest tree node, placed mid-gap) and re-plan. This is the "relay station" form; it needs the
+       tap in the clock kit, so it is not a same-hour change.
+  WHAT GOES INTO THIS DELTA: the CA bind in flight (uncapped) decides type content only through ring depth
+  and start pins. Capped vs uncapped changes depth on 6 crossings, 3 types (col_h9_r0_p1__t1__pv697f40c9,
+  col_h9_r0_p5__t1__pv8995e794, serdes__t13). So: do not restart the bind. Adopt it for the type release,
+  and make the capped start tree the next die-level delta (start stages, strap ties, those 3 types).
+  Release rule for the 335: release all except the 9 D2 types and those 3; the 52 types in
+  types_depth_open.json are released as AT RISK of one depth re-key (4 to 8) if fix a/b fails for their edge.
+  CHECK BEFORE RELEASE (not done): diff the start pin sets per type (start_pins type_pins) between the
+  uncapped and the capped compose; any type whose pins differ joins the 3.
+
+(2) STRAP-SAFE DEPTH CUT: guard 417 stays; it is not a margin, it is the strap form itself.
+  Every strap margin equals the plain margin shifted by exactly T/2 = 416.5 ps:
+    guard 417:   plain lo 108.7 / hi 522.5   strap lo 525.2 / hi 106.0
+    exemptions:  plain hi 180.7              strap hi -235.8
+  The strap ring reads half a cycle later than the plain ring. The strap-safe depth-4 cut is therefore
+  L_hi <= 2,811 - 416.5 = 2,394.5 ps, which is what guard 417 already applies. No exemption list can pass
+  in this RTL form; drop --depth-guard-exempt for S81.
+  Real lever, next delta, not measured: make the planner strap-aware (pick K against the strap window, which
+  has 416 ps unused on the low side). The 108 promoted buses whose window is narrower than 2,291 ps should
+  then return to depth 4.
+  Band failures: 13 of the 17 are depth-4 buses, so depth is not their cause. The compose re-places bands
+  that the +3 plan already holds at the same 5 flops per bit; keep the existing band rectangles for depth-4
+  buses. The 2 true depth-8 buses (svc_hi_rs t2 attnh_i0, svc_lo_rs t7 hbmrd_i0) need a notched band.
