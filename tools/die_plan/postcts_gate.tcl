@@ -239,3 +239,7 @@ close $fh
 puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s%s" \
   $ot_pg_C $ot_pg_mode $n $mean $ot_pg_bound $dev $ot_pg_tol $ws $hs \
   [expr {$ot_pg_band_verdict eq "ADVISORY" ? "ADVISORY band dev > tol (not a gate, OWNER 11-03) " : ""}] $v]
+# PLAN-READERS-1 11-14: plan min_early_ps rows (rck_early.txt) -- measured lead of each macro clock pin, REPORT ONLY
+if {[file exists /work/rck_early.txt] && [file exists /work/rck_early_report.tcl]} {
+  if {[catch {source /work/rck_early_report.tcl; ot_rck_early_report /work/rck_early.txt $ot_pg_C} ot_pg_re]} { puts "OT_RCK_EARLY report failed (not a gate): $ot_pg_re" }
+}

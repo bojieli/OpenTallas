@@ -411,6 +411,17 @@ SCHEMA = {
                     "rck_band": {"type": "object", "additionalProperties": False, "required": ["inst"],
                                  "properties": {"inst": {"type": "string", "minLength": 1},
                                                 "rows": {"type": "integer", "minimum": 1, "maximum": 8}}},
+                    # PLAN-READERS-1 11-14 (rck_island.py, FABLE-PLAN-B6B 6.4): recovered-clock island.  The std cells of
+                    # inst_re in the fan-out of the pad clock `clock` (plus their combinational logic) go into ONE placement
+                    # fence rect_um for global placement (serdes_lanes.tcl cfg key islands); released before detail placement
+                    # unless release_before_dpl is false.  G0 (Plan): rect inside the outline, holds the sink macros of the
+                    # pad clock (u_chn, SRAMs), overlaps no other macro / PHY PG domain
+                    "rck_island": {"type": "object", "additionalProperties": False, "required": ["rect_um", "clock", "inst_re"],
+                                   "properties": {"rect_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                                                              "items": {"type": "number"}},
+                                                  "clock": {"type": "string", "minLength": 1},
+                                                  "inst_re": {"type": "string", "minLength": 1},
+                                                  "release_before_dpl": {"type": "boolean"}}},
                     # S81-RCK-4 11-07 (gen_phys.reset_relay_full): kit copy of ot_dp_rrelay_nl = one posedge flop
                     "reset_relay_full": {"type": "boolean"},
                     # S81-RCK-4 11-07 (chain_even.tcl): equal hops on register chains after GPL, no netlist change
@@ -714,6 +725,10 @@ SCHEMA = {
                         # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
                         # plan records only (unchanged kits).
                         "core_taps": {"enum": ["early", "internal"]},
+                        # PLAN-READERS-1 11-14: G0 completeness R4 exemption: this type keeps its own insertion_ps (serdes 450),
+                        # the parent prices the offset at the landing; a type with rck_island is exempt without it
+                        "insertion_target_override": {"type": "object", "additionalProperties": False, "required": ["reason"],
+                                                      "properties": {"reason": {"type": "string", "minLength": 1}}},
                         # Explicit selected parent clock endpoint delta; runtime network required before phys.
                         "core_groups": {"type": "array", "items": {"type": "object", "required":
                             ["name", "port", "xy", "members", "insertion_ps", "insertion_ff_ps", "basis", "source"],
@@ -764,6 +779,10 @@ SCHEMA = {
                                            # PLAN-GEN-RULES-1 rule A 11-10: where the tap insertion came from (measured
                                            # view / 12.9d model); documentation only, read by plan_gen_rules.py
                                            "insertion_basis": {"type": "string"},
+                                           # PLAN-READERS-1 11-14: kind core + clock.core_taps early: the core's clock pins must be
+                                           # fed >= this many ps before register arrival (G0: insertion_ps - die common latency
+                                           # must already deliver it); rck_early.txt, measured at the post-CTS gate (report only)
+                                           "min_early_ps": _nonneg,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "merged_clock_ports": {"type": "array", "minItems": 2, "uniqueItems": True, "items": _name},
                                            "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
@@ -1412,7 +1431,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                                                                       "items": {"type": "number"}}},
             "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                           "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}},
-            "evidence": _name}}}
+            "evidence": _name,
+            # PLAN-READERS-1 11-14 (pad_clock.ENTRY_OPT): the entry's macro pins are clocked at least this long before the
+            # earliest register clock pin, no delaybuf chain (u_chn >= 175 ps); rck_early.txt, report only at the post-CTS gate
+            "min_early_ps": {"type": "number", "minimum": 0}}}}
 # S81 LEAF-CLKENTRY-1109 (opt-in): core-clock REGIONAL entries of a tapped type.  Each is the RCK2 trunk form sourced at
 # an existing die-spine tap port (tap: clk / clk_t<k>): stations_um (one cell per station, hops <= 405 um) to an entry
 # driver at xy_um whose net takes the std-cell sinks inside region_um that the nearest-tap split left on any tap port of
@@ -2994,8 +3016,16 @@ def validate(raw):
             import pad_clock as PC
             try:
                 PC.pins(P, tn)
+                if PC.has_min_early(t):
+                    PC.early_rows(P, tn)          # PLAN-READERS-1: min_early_ps sinks resolve, early core taps deliver it
             except (ValueError, KeyError, TypeError) as exc:
                 errs.append(f'type {tn}: {exc}')
+        if t.get('rck_island') is not None:
+            import rck_island as RI               # PLAN-READERS-1 G0: rect inside the outline, holds u_chn + SRAMs
+            try:
+                errs += RI.check(P, tn)
+            except (ValueError, KeyError, TypeError) as exc:
+                errs.append(f'type {tn}: rck_island: {exc}')
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")
