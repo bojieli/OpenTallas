@@ -665,6 +665,28 @@ def test_core_face_rule_core_to_core(tmp_path):
     assert summ["core_faces"]["cores_unchecked"] == 1      # u_b: no connectivity named for it
 
 
+def test_insertion_target_exemption_and_no_typeerror():
+    """PLAN-READERS-1 (COORD item 4): rck_island / clock.insertion_target_override keep their own insertion_ps (serdes 450)."""
+    def f(mut):
+        R, _ = g0(mut)
+        return [i for i in R.errors() if i["check"] == "complete" and i["field"] == "insertion_target"]
+    def ins(v):
+        return lambda p: p["partition_types"]["mid"]["clock"].__setitem__("insertion_ps", v)
+    assert f(ins(450)) and not f(None)
+    def isl(p):
+        p["partition_types"]["mid"]["clock"]["insertion_ps"] = 450
+        p["partition_types"]["mid"]["rck_island"] = dict(rect_um=[0, 0, 1, 1], clock="c", inst_re="x")
+    assert not f(isl)
+    def ovr(p):
+        p["partition_types"]["mid"]["clock"]["insertion_ps"] = 450
+        p["partition_types"]["mid"]["clock"]["insertion_target_override"] = dict(reason="serdes balance 450")
+    assert not f(ovr)
+    def ovr_bad(p):
+        ovr(p)
+        p["partition_types"]["mid"]["clock"]["insertion_target_override"] = dict(reason=" ")
+    assert any("reason" in i["msg"] for i in f(ovr_bad))
+
+
 def test_plan_completeness():
     """PLAN COMPLETENESS (COORD 10-23): a missing field is an ERROR, counted per field in summary.complete."""
     def fields(mut):

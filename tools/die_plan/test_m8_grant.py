@@ -327,21 +327,74 @@ def test_m9_lock_and_lef(_no_m9_env):
     assert m9.count("RECT") == len(tracks(g["type_runs"])) and out.count("RECT 0 0 864 864 ;") == 2
 
 
+def _m9_guide(tmp, boxes, name="die_m9.guide"):
+    """OpenROAD write_guides text: boxes = [(net, layer, x0, y0, x1, y1 um)]"""
+    D = DI.DBU
+    txt = "".join("%s\n(\n%d %d %d %d %s\n)\n" % (n, x0 * D, y0 * D, x1 * D, y1 * D, L) for n, L, x0, y0, x1, y1 in boxes)
+    f = Path(tmp) / name
+    f.write_text(txt)
+    return str(f)
+
+
+def _over_mid(layer="M9", net="ck_r1_0"):
+    x0, y0, x1, y1 = plan().rect(MG.instances(plan(), "mid")[0])
+    return (net, layer, x0 + 10, y0 + 10, x0 + 20, y1 - 10)
+
+
 def test_kit_m9_grant_obstructs_die_m9_and_carries_m8(_no_m9_env):
-    with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
-        f = _files(_kit(a, OT_GEN_M9_GRANT="1"))
+    """PLAN-READERS-1: the M9 grant needs the die clock guides; with them the kit is the WAVE-RECIPE-1 kit plus the die route."""
+    with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as g:
+        guide = _m9_guide(g, [_over_mid()])
+        def on(p):
+            p["die"]["layer_budget"]["type_m9_grant"] = {"enable": True, "guide": guide}
+        f = _files(_kit(a, on))
         assert b"export MAX_ROUTING_LAYER = M9" in f["config.mk"]
         doc = json.loads(f["m8_grant.json"])
         g8, g9 = MG.grants_of(doc)
         assert g8["layer"] == "M8" and g9["layer"] == "M9"
-        assert g9 == MG.grant(plan(), "mid", layer="M9")
+        G, gsha = MG._guides(guide)
+        assert g9 == MG.grant(plan(), "mid", G, "4w", gsha, layer="M9") and g9["die_route_tracks"] > 0
         pdn = f["pdn.tcl"].decode()
         assert "findLayer M8" in pdn and "findLayer M9" in pdn and g9["sha"] in pdn
         assert pdn.count("odb::dbObstruction_create") == len(tracks(g8["die_runs"])) + len(tracks(g9["die_runs"]))
+
+
+def test_m9_grant_without_die_clock_guides_fails_closed(_no_m9_env):
+    """PLAN-READERS-1 (FABLE-PLAN-B6B 6.5): no guide = the grant would subtract the die PG only; refuse with the reason."""
+    def on(p):
+        p["die"]["layer_budget"]["type_m9_grant"] = {"enable": True}
+    with tempfile.TemporaryDirectory() as a, pytest.raises(ValueError, match=r"M9 grant refused.*guide is not set"):
+        _kit(a, on)
+    with tempfile.TemporaryDirectory() as a, pytest.raises(ValueError, match=r"M9 grant refused.*guide is not set"):
+        _kit(a, OT_GEN_M9_GRANT="1")                      # the A/B env opt-in has no guide either
+
+
+@pytest.mark.parametrize("why,boxes,match", [
+    ("m8-clock-only", [_over_mid("M8")], "no M9 clock segment"),
+    ("m9-signal-only", [_over_mid("M9", "sig_a")], "no M9 clock segment"),
+    ("clock-elsewhere", [("ck_far", "M9", 1e5, 1e5, 1e5 + 10, 1e5 + 10)], "carry no M9 clock segment over its instances"),
+    ("empty", [], "guide file is empty")])
+def test_m9_grant_guide_must_be_the_die_clock_over_the_type(_no_m9_env, why, boxes, match):
+    with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as g:
+        guide = _m9_guide(g, boxes)
         def on(p):
-            p["die"]["layer_budget"]["type_m9_grant"] = {"enable": True}
-        f2 = _files(_kit(b, on))                         # plan key = the same kit as the env opt-in
-        assert f2["m8_grant.json"] == f["m8_grant.json"] and f2["pdn.tcl"] == f["pdn.tcl"]
+            p["die"]["layer_budget"]["type_m9_grant"] = {"enable": True, "guide": guide}
+        with pytest.raises(ValueError, match=match):
+            _kit(a, on)
+
+
+def test_m9_grant_refuses_when_no_track_is_left(_no_m9_env, monkeypatch):
+    with tempfile.TemporaryDirectory() as g:
+        guide = _m9_guide(g, [_over_mid()])
+        P = plan(lambda p: p["die"]["layer_budget"].update(type_m9_grant={"enable": True, "guide": guide}))
+        real = MG.grant
+        monkeypatch.setattr(MG, "grant", lambda *a, **k: dict(real(*a, **k), type_tracks=0))
+        with pytest.raises(ValueError, match="no M9 track is left"):
+            MG.kit_grant(P, "mid", "M9")
+
+
+def test_m8_grant_needs_no_clock_guides(_no_m9_env):
+    assert MG.kit_grant(plan(lambda p: p["die"]["layer_budget"].update(type_m8_grant=True)), "mid") is not None
 
 
 def test_kit_m9_off_by_default_byte_identical(_no_m9_env):

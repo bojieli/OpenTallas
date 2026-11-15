@@ -392,6 +392,32 @@ def grant_config(P, layer=LAYER):
     return c if c["enable"] else None
 
 
+def m9_clock_refusal(tn, why):
+    return (f"type {tn}: M9 grant refused (fail closed, PLAN-READERS-1): {why}.  S81 die M9 use is the clock spine + PG and every "
+            "type tap pin sits on M9 (clock.layer M9): name the die route guides that carry the die clock "
+            "(layer_budget.type_m9_grant.guide, OpenROAD write_guides of the die clock route), or do not grant M9")
+
+
+def check_m9_clock(P, tn, G, g, ndr="4w"):
+    """PLAN-READERS-1 11-14: precondition of every M9 grant.  The die route guides `G` must be the die clock route and must
+    agree with this grant: (1) at least one die clock net holds an M9 guide box (else the file is not the clock route);
+    (2) a type whose taps are on M9 (clock.layer M9) sees die M9 clock guides over at least one placed instance (else the
+    guides do not cover its clock entries: the grant would route over the spine legs); (3) tracks remain for the type.
+    ValueError with the reason otherwise."""
+    if not G:
+        raise ValueError(m9_clock_refusal(tn, "the die route guide file is empty"))
+    if not any(L == "M9" and CLOCK_NET_RE.search(net) for net, boxes in G.items() for L, *_ in boxes):
+        raise ValueError(m9_clock_refusal(tn, "the die route guides hold no M9 clock segment (not the die clock route)"))
+    ck = P.types[tn].get("clock", {}) or {}
+    if ck.get("layer") == "M9":
+        _dem, kinds = route_demand(P, tn, G, ndr, layer="M9")
+        if not kinds.get("clock"):
+            raise ValueError(m9_clock_refusal(tn, f"the type's clock taps are on M9 but the die guides carry no M9 clock segment over "
+                                                  f"its instances {instances(P, tn)}"))
+    if g["type_tracks"] <= 0:
+        raise ValueError(m9_clock_refusal(tn, "no M9 track is left for the type after the die PG, reserve and clock route"))
+
+
 def kit_grant(P, tn, layer=LAYER, force=False):
     """the grant a type kit carries on `layer`, or None (grant off, type not selected, ceiling already >= layer, not
     placed).  force=True: the M8 grant an M9 kit needs (an M9 route reaches M9 only through M8, so M8 must be obstructed
@@ -404,6 +430,9 @@ def kit_grant(P, tn, layer=LAYER, force=False):
         return None
     if int(P.layer_budget["partition_signal_max"][1:]) >= int(layer[1:]) or not instances(P, tn):
         return None
+    if layer == "M9" and not c["guide"]:
+        raise ValueError(m9_clock_refusal(tn, "layer_budget.type_m9_grant.guide is not set (no die route guides to prove the M9 "
+                                              "clock use; without them the grant subtracts the die PG straps only)"))
     G, gsha = None, None
     if c["guide"]:
         gp = Path(c["guide"])
@@ -412,7 +441,10 @@ def kit_grant(P, tn, layer=LAYER, force=False):
         if not gp.is_file():
             raise FileNotFoundError(f"type {tn}: layer_budget.{GRANT_KEY[layer]}.guide {gp} missing")
         G, gsha = _guides(str(gp))
-    return grant(P, tn, G, c["ndr"], gsha, layer=layer)
+    g = grant(P, tn, G, c["ndr"], gsha, layer=layer)
+    if layer == "M9":
+        check_m9_clock(P, tn, G, g, c["ndr"])
+    return g
 
 
 

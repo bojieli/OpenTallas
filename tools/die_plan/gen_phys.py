@@ -615,6 +615,20 @@ def rck_band_exports(P, tn):
             f"export OT_RCK_BAND_ROWS = {int(rb.get('rows', 4))}"]
 
 
+def rck_island_exports(P, tn):
+    """PLAN-READERS-1 11-14 (opt-in type key rck_island, rck_island.py, FABLE-PLAN-B6B 6.4): config.mk exports of the recovered-clock
+    island hook (serdes_lanes.tcl, cfg key islands); [] when the key is absent.  ValueError on an invalid island (G0 rules)."""
+    import rck_island
+    return rck_island.exports(P, tn)
+
+
+def rck_early_exports(P, tn):
+    """PLAN-READERS-1 11-14 (optional min_early_ps on pad-clock entries / early core taps, pad_clock.early_rows): OT_RCK_EARLY
+    names the kit's rck_early.txt rows that rck_early_report.tcl measures at the post-CTS gate (report only); [] when none."""
+    import pad_clock as PC
+    return ["export OT_RCK_EARLY = rck_early.txt"] if PC.early_rows(P, tn) else []
+
+
 def logical_strap_names(t):
     """Declared logical strap buses exist independently of optional physical pin sites."""
     from straps import checked
@@ -5335,6 +5349,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += rck_band_exports(P, tn)
+    cfg += rck_island_exports(P, tn)
+    cfg += rck_early_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
     cons = cons_kit_settings()
@@ -5439,6 +5455,19 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("rck_band.tcl"), kd / "rck_band.tcl")
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\n" + RCK_BAND_HOOK + "\n")
+    if t.get("rck_island"):
+        # PLAN-READERS-1 11-14 (type key rck_island): the recovered-clock logic in ONE placement fence for GPL (serdes_lanes.tcl cfg
+        # key islands, sourced after the RCK band), released before DPL (serdes_lanes_release.tcl from face_flops_release.tcl)
+        import rck_island as _RI
+        (kd / "serdes_lanes_cfg.tcl").write_text(_RI.cfg_tcl(P, tn))
+        for f in ("serdes_lanes.tcl", "serdes_lanes_release.tcl"):
+            shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nuplevel #0 {source /work/serdes_lanes.tcl}\n")
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text(hook.read_text() + "\nuplevel #0 {source /work/serdes_lanes_release.tcl}\n")
+    if rck_early_exports(P, tn):
+        shutil.copyfile(Path(__file__).with_name("rck_early_report.tcl"), kd / "rck_early_report.tcl")
     bump_out = [b for b in pad_bumps(P, tn) if b["dir"] == "output"]
     if bump_out:
         # S81-PMATX-DT 11-09 (DIE-S81-85, serdes__t14 a11 G2 u_ptx -> io_pma_tx -249 ps): a macro_pin output pad's die pin

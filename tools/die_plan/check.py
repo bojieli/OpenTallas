@@ -2210,9 +2210,22 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None, plan_dir=None):
         ck = t.get("clock") or {}
         if not ({"tap_um", "taps", "tap_mode"} & set(ck)):
             bad("clock_method", tn, "no clock method (clock.tap_um, clock.taps[] or clock.tap_mode)")
-        if common is not None and "insertion_ps" in ck and abs(float(ck["insertion_ps"]) - float(common)) > EPS:
-            bad("insertion_target", tn, f"clock.insertion_ps {ck['insertion_ps']:g} != die common latency "
-                f"{float(common):g} (R4: one die-wide target)")
+        if common is not None and "insertion_ps" in ck:
+            # PLAN-READERS-1 11-14 (COORD item 4): a type with rck_island (serdes recovered-clock island) or an explicit
+            # clock.insertion_target_override {"reason": str} carries its own insertion_ps; the parent prices the offset at the
+            # landing.  Non-numeric values are reported, never a TypeError.
+            ov = ck.get("insertion_target_override")
+            exempt = bool(t.get("rck_island")) or (isinstance(ov, dict) and isinstance(ov.get("reason"), str) and ov["reason"].strip())
+            if ov is not None and not (isinstance(ov, dict) and isinstance(ov.get("reason"), str) and ov["reason"].strip()):
+                bad("insertion_target", tn, "clock.insertion_target_override needs a nonempty reason")
+            try:
+                ins, com = float(ck["insertion_ps"]), float(common)
+            except (TypeError, ValueError):
+                bad("insertion_target", tn, f"clock.insertion_ps {ck['insertion_ps']!r} / die common latency {common!r} not numeric")
+            else:
+                if abs(ins - com) > EPS and not exempt:
+                    bad("insertion_target", tn, f"clock.insertion_ps {ins:g} != die common latency {com:g} "
+                        "(R4: one die-wide target; exempt: type rck_island or clock.insertion_target_override {reason})")
         if "reset" not in t:
             bad("reset_sync", tn, "no reset synchronizer entry (one per partition)")
         used = {bus for bus, _pid, _ok in ends.get(tn, ())}

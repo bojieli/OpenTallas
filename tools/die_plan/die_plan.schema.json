@@ -994,6 +994,36 @@
        }
       }
      },
+     "rck_island": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "rect_um",
+       "clock",
+       "inst_re"
+      ],
+      "properties": {
+       "rect_um": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": {
+         "type": "number"
+        }
+       },
+       "clock": {
+        "type": "string",
+        "minLength": 1
+       },
+       "inst_re": {
+        "type": "string",
+        "minLength": 1
+       },
+       "release_before_dpl": {
+        "type": "boolean"
+       }
+      }
+     },
      "reset_relay_full": {
       "type": "boolean"
      },
@@ -2332,6 +2362,19 @@
          "internal"
         ]
        },
+       "insertion_target_override": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "reason"
+        ],
+        "properties": {
+         "reason": {
+          "type": "string",
+          "minLength": 1
+         }
+        }
+       },
        "core_groups": {
         "type": "array",
         "items": {
@@ -2611,6 +2654,10 @@
           "insertion_basis": {
            "type": "string"
           },
+          "min_early_ps": {
+           "type": "number",
+           "minimum": 0
+          },
           "insertion_tol_ps": {
            "type": "number",
            "minimum": 0
@@ -2874,6 +2921,10 @@
                "evidence": {
                 "type": "string",
                 "minLength": 1
+               },
+               "min_early_ps": {
+                "type": "number",
+                "minimum": 0
                }
               }
              }
