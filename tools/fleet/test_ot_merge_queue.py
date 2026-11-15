@@ -125,7 +125,7 @@ class EndToEnd(unittest.TestCase):
         (d / "commit.sh").write_text("#!/bin/bash\necho committed \"$@\" >> " + str(d / "commits.log") + "\n")
         self.env = dict(os.environ, MQ_HOME=str(d / "mq"), MQ_REPO=str(d / "repo"), MQ_WT=str(d / "wt"), MQ_COORD=str(d / "coord"),
                         MQ_COORD_COMMIT=str(d / "commit.sh"), MQ_PYTHON=sys.executable, MQ_FALLBACK_REMOTE="", MQ_XDIST="1",
-                        MQ_SYNC_HOOK="", MQ_SPARSE="/*,!/*/,/tools/", GIT_AUTHOR_NAME="q", GIT_AUTHOR_EMAIL="q@q",
+                        MQ_SYNC_HOOK="", MQ_SRC_HOOK="", MQ_SPARSE="/*,!/*/,/tools/", GIT_AUTHOR_NAME="q", GIT_AUTHOR_EMAIL="q@q",
                         GIT_COMMITTER_NAME="q", GIT_COMMITTER_EMAIL="q@q")
 
     def tick(self):

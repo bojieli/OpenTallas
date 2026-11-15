@@ -59,6 +59,10 @@ REF_CAP = int(os.environ.get("MQ_REF_CAP", "40"))
 SYNC_HOOK = os.environ.get("MQ_SYNC_HOOK", str(Path(__file__).resolve().with_name("ot-tools-sync")) + " sync --sha {sha}")
 # rtl/lib + rtl/common: die_plan tools read REPO/rtl/lib/ot_reset_sync.sv etc.; without them test_bind failed on a sparse tree only
 # (pg-aware-1 288ada0041 / 240cf2612f5 false MERGE-FAIL 11-14 20:16 / 20:26)
+# after the rt flip: main's changed tool files into each die's own wave source tree (kit-gen + binds read those, not rt/current)
+# (default only for the production clone: a test queue on its own MQ_REPO must never write the real die trees)
+SRC_HOOK = os.environ.get("MQ_SRC_HOOK", "" if "MQ_REPO" in os.environ else
+                          str(Path(__file__).resolve().with_name("ot-src-refresh")) + " refresh --from {old} --to {new} --apply")
 SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
 TAG_DATE = os.environ.get("MQ_TAG_DATE", "")
 MAX_BLOB = 95 * 1024 * 1024
@@ -759,6 +763,15 @@ def tick(args):
         if r.returncode:
             queue_post(st, "STATE", "COORD", f"ot-tools-sync for main {landed[:11]} failed rc={r.returncode}: "
                                              f"{(r.stderr or r.stdout).strip()[-300:]}; rt/current not moved.")
+    if landed and SRC_HOOK and not DRY:
+        r = run(shlex.split(SRC_HOOK.format(old=base, new=landed)), timeout=3600)
+        out = (r.stdout or "").strip().splitlines()
+        log(f"src refresh hook rc={r.returncode}: {' | '.join(out)[:600]}")
+        held = [l for l in out if re.search(r"\b(CONFLICT|BUSY|LOCAL|ERROR)\b", l)]
+        if r.returncode or held:
+            queue_post(st, "STATE", "COORD", f"src refresh {base[:11]}..{landed[:11]} rc={r.returncode}: {' ; '.join(held or out)[:900]} "
+                                             f"(CONFLICT/LOCAL kept as the die tree has them; BUSY retried after the next merge; "
+                                             f"rows ~/merge-queue/src-refresh.tsv)")
     flush_posts(st)
     save_state(st)
     return 0
