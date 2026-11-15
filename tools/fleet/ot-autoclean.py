@@ -305,6 +305,29 @@ class Paths:
         return out
 
 
+PROTECT_D = os.path.join(os.path.expanduser("~"), ".local/state/wt-reaper/protect.d")
+
+
+def read_protect_d(d=None):
+    """KIT-OPS-6 11-15 (COORD): the live protect lists the wt-reaper already reads, one absolute path per line in <state>/wt-reaper/protect.d/*.txt
+    (kept current from the hub by protect-sync.timer).  -> [(path, 'protect.d/<file>')]; a missing dir = none (the static union still applies)."""
+    d = d or PROTECT_D
+    out = []
+    try:
+        names = sorted(n for n in os.listdir(d) if n.endswith(".txt"))
+    except OSError:
+        return out
+    for n in names:
+        try:
+            for ln in open(os.path.join(d, n), errors="replace"):
+                ln = ln.strip()
+                if ln.startswith("/") and not ln.startswith("//"):
+                    out.append((ln.split("\t")[0].split(" ")[0], f"protect.d/{n}"))
+        except OSError:
+            continue
+    return out
+
+
 class PathSet:
     """members; hit(p): p equals a member, is an ancestor of one, or lies under a member for which deep(member)
     holds (default: any member; citations / queue paths: only members below lane level)"""
@@ -1661,6 +1684,7 @@ class Job:
                     continue
                 keep_rows.append((p, src))
             rows = keep_rows
+        rows = list(rows) + read_protect_d()      # KIT-OPS-6: protect.d/*.txt = the live source (protect-sync), union = the static base
         self.protected = PathSet(rows, canon=self.paths.canon)
 
     def still_referenced(self, p):
