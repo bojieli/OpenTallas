@@ -68,3 +68,12 @@ Not proven: HEAD/QC die (no confirmed-merge generator target there yet), ot_sram
 | hd_host_w (hdw_base vs hdw_keep, intel1) | HEAD | ot_sram_oldread_b64 wdata 553 missing -> 0 (short siblings 1 -> 0) | 30,175 -> 30,760 (+585) | 3_place.odb, no FAIL | not read |
 | slw_su_c__cl19bb38ef (epyc8) | QC | 3,574 missing in 4 modules (vm8q vwr 2,084, twc 1,088, vrd 400, dp_dly 2) -> 2 (dp_dly r:2) | 41,720 -> 46,239 (+4,519) | 3_place.odb, no FAIL | EQUIVALENT, 100,672 compare points proved, 0 differ, exit 0 |
 ot_sram_oldread_b64 is now proven at synth+place (same derivation as ot_sram_oldread_wreg). Residual QC dp_dly r:2 (1 of 354 instances) is not a data replica. Remaining unproven: ti_b by my own run, S81 ot_hdc_* / KV hub_C leftovers unclassified.
+
+## RESULT 11-15 (close-out of the three open items)
+1. HEAD hd_host_w LEC: still RUNNING (async LEC started 07:29 host clock, no result line yet; a watcher is armed). Equivalence not known yet; the line will be appended when it lands.
+2. Leftovers classified (RTL sibling-input test; hub_C is inferred from repo RTL because its kit rtl/netlist are deleted):
+ - S81 ot_hdc_f12_cut:r (nested in fp32_mul_f12, qmul_lat): MERGE, b operand shared by the 4 lanes; already derived by replica_keep. ot_hdc_f12_cut:v (26 valid bits): minor MERGE, not derived (OT_ARST macro hides the reset block). u_sq (a==b), u_scale (const b), u_w: HARMLESS.
+ - KV hub_C ot_hdc_w11_cut:r inside fp32_mul_lat (15 lanes x 34+1): MERGE (shared u_mul .b(rzh), DRST=1). NOT derived: derive drops r because the {W{1'b0}} reset concat fails its staging test. FIX (next generator edit): replica_keep.qual accepts a replicated constant {N{1'bx}} as a constant and accepts the OT_ARST reset block as the async-reset form; then ot_hdc_w11_cut:r, ot_hdc_f12_cut:v and ot_hdc_fp32_add_lat:s1_v,s2_v (valid only, 60 regs) are derived. Until then OT_KEEP_WIRES=ot_hdc_w11_cut:r can go in per-item env.
+ - KV hg_v3 fp32_mul_lat / nearhbm_qmul / fp32_add_lat / w11_cut: HARMLESS (constants from POLY / K_LOG2E prune flops, per-instance operands differ).
+3. claude/merge-census-1115-1 @6f0c8e1765 is IN origin/main (merge-base --is-ancestor true; origin/main b89ba8df4f). No READY re-post needed.
+Unverified: hub_C on a netlist, DRST in the actual build, whether the extra keeps remove the merge.
