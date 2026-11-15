@@ -26,6 +26,59 @@ def leg_price(a, b, rep):
                 model="CLKSITE stamp leg (8.8 ps + 0.24 ps/um per stage)"), L / st
 
 
+def fix_parity(nodes, rep_um, site=None):
+    """A leg laid out by the kit (no physical_leg chain) has nrep = ceil(L / rep) - 1 repeaters; with the node cell the child gets
+    parity(parent) ^ ((nrep + 1) & 1).  Where that differs from the child's recorded inv_parity (kept from the template) one parity
+    node X is inserted on the leg at a fraction that makes both half-legs add up.  nrep is the kit's own (die_trial._leg_layout)
+    when a site map is given.  -> dict(stats, ids of inserted nodes)"""
+    D = None
+    if site is not None:
+        import die_trial as D
+
+    def nrep_of(a_, b_):
+        if D is not None:
+            return D._leg_layout(0, dict(b_, physical_leg=None), a_, site, rep_um, False)[1]
+        return max(0, math.ceil((abs(a_["x"] - b_["x"]) + abs(a_["y"] - b_["y"])) / rep_um) - 1)
+    nx = max(nodes) + 1
+    st = dict(checked=0, inserted=0, unsolved=0)
+    ids = []
+    for c in [i for i, v in list(nodes.items()) if not v.get("physical_leg") and v.get("parent") in nodes]:
+        v = nodes[c]; pr = nodes[v["parent"]]
+        st["checked"] += 1
+        want = (v.get("inv_parity", 0) ^ pr.get("inv_parity", 0)) & 1
+        if (nrep_of(pr, v) + 1) & 1 == want:
+            continue
+        done = False
+        for f in sorted((0.1 + 0.025 * k for k in range(33)), key=lambda q: abs(q - 0.5)):
+            L = abs(pr["x"] - v["x"]) + abs(pr["y"] - v["y"])
+            dx = abs(v["x"] - pr["x"])
+            t = L * f
+            xx = pr["x"] + math.copysign(min(t, dx), v["x"] - pr["x"])
+            yy = pr["y"] + math.copysign(max(0.0, t - dx), v["y"] - pr["y"])
+            if site is not None and not site.legal((round(xx, 3), round(yy, 3))):
+                xx, yy = site.nearest((xx, yy))
+            X = dict(v); X.pop("stamp_leg", None); X.pop("physical_leg", None); X.pop("detour", None)
+            for key in ("region_root", "region_box", "feed_edge", "link_feed"):      # tags belong to the real node, not the parity node
+                X.pop(key, None)
+            X.update(id=nx, x=round(xx, 3), y=round(yy, 3), parent=v["parent"], kids=[c], taps=[], ntaps=0)
+            X["req_xy"] = [X["x"], X["y"]]
+            n1, n2 = nrep_of(pr, X), nrep_of(X, v)
+            X["inv_parity"] = (pr.get("inv_parity", 0) ^ ((n1 + 1) & 1)) & 1
+            if (X["inv_parity"] ^ ((n2 + 1) & 1)) & 1 == v.get("inv_parity", 0) & 1:
+                X["stamp_leg"] = dict(leg_price((pr["x"], pr["y"]), (X["x"], X["y"]), rep_um)[0], note="parity node")
+                v["stamp_leg"] = leg_price((X["x"], X["y"]), (v["x"], v["y"]), rep_um)[0]
+                pr["kids"] = [nx if k == c else k for k in pr["kids"]]
+                v["parent"] = nx
+                nodes[nx] = X
+                ids.append(nx); nx += 1; st["inserted"] += 1; done = True
+                break
+        if not done:
+            st["unsolved"] += 1
+            st.setdefault("unsolved_legs", []).append(dict(node=c, parent=v["parent"], L=round(abs(pr["x"] - v["x"]) + abs(pr["y"] - v["y"]), 1),
+                                                           nrep=nrep_of(pr, v), want=want, at=[v["x"], v["y"]]))
+    return dict(stats=st, ids=ids)
+
+
 def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
     N = {int(k): v for k, v in T["nodes"].items()}
     nb = {int(k): v for k, v in T["node_buf"].items()}
@@ -135,6 +188,14 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
             v["detour"] = v["physical_leg"]["chain"]
         else:
             v.pop("physical_leg", None); v.pop("detour", None)
+        # region tags of the template do not belong to n: nodes of the template's own region get n's tile rect, feed-through nodes
+        # of another region take the tags of their stamped top (set below), top-level keys are set from n's own top
+        other = list(v.get("region", [])) != [round(c, 4) for c in P.rect(t0)] and "region" in v
+        for key in ("region_root", "region_box", "feed_edge", "link_feed"):
+            v.pop(key, None)
+        if "region" in v and not other:
+            v["region"] = list(P.rect(n))
+        v["_other"] = other
         newN[nid] = v
         newnb[nid] = f"b{nid}"
         newsites[newnb[nid]] = [v["x"], v["y"]]
@@ -149,8 +210,27 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
             par = exit_of.get(par, par)
             pn = N.get(par) or newN[par]
             newN[top]["parent"] = par
+            newN[top]["_other"] = False
+            for key in ("feed_edge", "region_root", "region_box", "region", "feed", "link_feed", "corner"):   # region identity of the real instance
+                if key in N[otop]:
+                    newN[top][key] = N[otop][key]
+                else:
+                    newN[top].pop(key, None)
             newN[top]["stamp_leg"], per = leg_price((pn["x"], pn["y"]), (newN[top]["x"], newN[top]["y"]), rep_um)
             rep["legs_over_405"] += int(per > 405)
+        orn = [o for o in inside[n] if N[o].get("region_root") == n]          # the instance's own region root keeps its tags
+        trn = [i for i in inside[tmpl[n]] if N[i].get("region_root") == tmpl[n]]
+        if orn and trn:
+            for key in ("region_root", "region_box", "feed_edge", "feed", "region"):
+                if key in N[orn[0]]:
+                    newN[ids[(n, trn[0])]][key] = N[orn[0]][key]
+        for nid2 in sorted((ids[(n, i)] for i in inside[tmpl[n]]), key=lambda z: newN[z].get("level", 0)):   # feed-through nodes
+            v2 = newN[nid2]
+            if v2.pop("_other", False):
+                pp = newN.get(v2["parent"]) if v2.get("parent") is not None else None
+                src = pp if pp is not None and "region" in pp else None
+                if src is not None:
+                    v2["region"] = src["region"]
         for q, oe in enumerate(exits[n]):
             ne = ids[(n, exits[tmpl[n]][q])]
             for k in N[oe].get("kids", []):
@@ -180,43 +260,21 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
             nodes[v["parent"]]["kids"].append(nid)
     for v in nodes.values():
         v["kids"] = [k for k in v.get("kids", []) if k in nodes]
-    # POLARITY: a re-laid boundary leg (no chain: the kit lays it out with nrep = ceil(L / rep) - 1 repeaters) must give the
-    # child the inverter parity it had in the template.  Where it does not, one parity node X is inserted on the leg at a
-    # fraction that makes both half-legs add up (the "parity site"); node parity = parent ^ ((nrep + 1) & 1) per leg.
-    def nrep_of(a_, b_):
-        return max(0, math.ceil((abs(a_["x"] - b_["x"]) + abs(a_["y"] - b_["y"])) / rep_um) - 1)
-    nx = max(list(nodes) + [nxt]) + 1
-    pfix = dict(checked=0, inserted=0, unsolved=0)
-    for c in [i for i, v in list(nodes.items()) if v.get("stamp_leg") and v.get("parent") in nodes]:
-        v = nodes[c]; pr = nodes[v["parent"]]
-        pfix["checked"] += 1
-        want = (v.get("inv_parity", 0) ^ pr.get("inv_parity", 0)) & 1
-        if (nrep_of(pr, v) + 1) & 1 == want:
-            continue
-        done = False
-        for f in [0.5, 0.45, 0.55, 0.4, 0.6, 0.35, 0.65, 0.3, 0.7, 0.25, 0.75]:
-            L = abs(pr["x"] - v["x"]) + abs(pr["y"] - v["y"])
-            dx = abs(v["x"] - pr["x"])
-            t = L * f
-            xx = pr["x"] + math.copysign(min(t, dx), v["x"] - pr["x"])
-            yy = pr["y"] + math.copysign(max(0.0, t - dx), v["y"] - pr["y"])
-            X = dict(v); X.pop("stamp_leg", None); X.pop("physical_leg", None); X.pop("detour", None)
-            X.update(id=nx, x=round(xx, 3), y=round(yy, 3), parent=v["parent"], kids=[c], taps=[], ntaps=0)
-            X["req_xy"] = [X["x"], X["y"]]
-            n1, n2 = nrep_of(pr, X), nrep_of(X, v)
-            X["inv_parity"] = (pr.get("inv_parity", 0) ^ ((n1 + 1) & 1)) & 1
-            if (X["inv_parity"] ^ ((n2 + 1) & 1)) & 1 == v.get("inv_parity", 0) & 1:
-                X["stamp_leg"] = dict(leg_price((pr["x"], pr["y"]), (X["x"], X["y"]), rep_um)[0], note="parity node")
-                v["stamp_leg"] = leg_price((X["x"], X["y"]), (v["x"], v["y"]), rep_um)[0]
-                pr["kids"] = [nx if k == c else k for k in pr["kids"]]
-                v["parent"] = nx
-                nodes[nx] = X; newN[nx] = X; newnb[nx] = f"b{nx}"
-                newsites[f"b{nx}"] = [X["x"], X["y"]]
-                nx += 1; pfix["inserted"] += 1; done = True
-                break
-        if not done:
-            pfix["unsolved"] += 1
-    rep["parity_nodes"] = pfix
+    # POLARITY: see fix_parity.  With a kit site map the same pass runs again inside die_trial.load_stamped_tree (the kit's own
+    # site map can differ from clock_site(P) when --views is given); here it is the first-order fix and the no-site test path.
+    if site is not None:
+        import die_trial as D0
+        old_delay = {i: v["physical_leg"]["delay_ps"] for i, v in nodes.items() if v.get("physical_leg")}
+        for v in nodes.values():
+            v.setdefault("taps", [])
+        rep["legalize"] = D0.legalize_stamped_nodes(nodes, site)
+        for i, v in nodes.items():                 # a chain dropped by legalisation keeps its price
+            if i in old_delay and not v.get("physical_leg") and not v.get("stamp_leg"):
+                v["stamp_leg"] = dict(delay_ps=old_delay[i], model="kept from the template chain")
+    inserted = fix_parity(nodes, rep_um, site)
+    rep["parity_nodes"] = inserted["stats"]
+    for nid in inserted["ids"]:
+        newN[nid] = nodes[nid]; newnb[nid] = f"b{nid}"; newsites[f"b{nid}"] = [nodes[nid]["x"], nodes[nid]["y"]]
     nbo = {i: s for i, s in nb.items() if i not in drop}; nbo.update(newnb)
     so = {k: v for k, v in sites.items() if k not in {nb[i] for i in drop}}; so.update(newsites)
     for nid, v in newN.items():
