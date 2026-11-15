@@ -278,6 +278,6 @@ def test_head_cores_listed_in_s81_head_contract_and_generator_stages_it(tmp_path
         st = K.stage(kd, m, src)
         assert st and st["edges"] == 64 and (kd / "reset_contract.json").is_file()
     txt = GENERATORS["hbm"].read_text()
-    call = 'kit_reset_contract.stage(kd, module, kit_reset_contract.DIE_CONTRACT["s81_head"], required_source=True)'
+    call = 'kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["s81_head"], required_source=True)'
     assert call in txt
     assert txt.index(call) < txt.index("kit_hash=kit_hash(kd)")
