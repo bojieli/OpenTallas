@@ -2280,6 +2280,20 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def pg_drt0255_cfg():
+    """DRT0255 (FABLE-PD-DRT-1350) opt-in config.mk lines, from the gen environment: OT_PG_TRACK_TRUTH_MODE=region (GRT per-gcell
+    capacity cut on the PG pair rows / columns instead of per-track obstructions) and OT_PG_PAIR_ROW_KEEPOUT=1 (ring / station / face-flop
+    sites skip the std rows under the M6 pair).  Nothing is written without the variable (kits stay byte-equal)."""
+    out = []
+    if os.environ.get("OT_PG_TRACK_TRUTH_MODE", "").strip() == "region":
+        out += ["# DRT0255: GRT capacity cut per gcell over the PG pair rows/columns (pg_track_truth.tcl region mode)",
+                "export OT_PG_TRACK_TRUTH_MODE = region"]
+    if os.environ.get("OT_PG_PAIR_ROW_KEEPOUT", "").strip() == "1":
+        out += ["# DRT0255: ring / ft-station / face-flop sites skip the std rows under the M6 PG pair (face_flops.tcl ff_put_near)",
+                "export OT_PG_PAIR_ROW_KEEPOUT = 1"]
+    return out
+
+
 def pg_cell_keepout_value():
     """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
     v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
@@ -5599,6 +5613,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
+    cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):

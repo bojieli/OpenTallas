@@ -15,6 +15,19 @@
 # A track t is illegal at a stripe [lo, hi] (across the preferred direction) when t + hw + sp > lo and t - hw - sp < hi
 # (hw = half the default wire width, sp = the layer's min spacing; see OT_PG_TRACK_TRUTH_WIDE_SPACING).  Geometry-generic: it reads the
 # stripes and the track grids of the kit, so it applies to any PDN.  OT_PG_TRACK_TRUTH=0 (or unset) turns it off.
+# DRT0255 (FABLE-PD-DRT-1350, class A): with OT_PG_TRACK_TRUTH_MODE=region the per-track obstructions above are replaced by a
+# per-gcell capacity cut: set_global_routing_region_adjustment (100 %) on the PG layer over the illegal-track span of every stripe
+# (pair rows of M6, pair columns of M5 / M7).  GRT then cannot lay a guide of that layer through a gcell row whose DRT-legal
+# tracks are 0 or 1 (the obstruction form still routed 56-70 um M6 guides there).  The adjustment lives in the router, so there is
+# nothing to remove before 5_1_grt.odb (ot_pgtt_remove is a no-op); geometry, PG and sign-off are unchanged.  Default (unset or
+# "obs") = the obstruction form, byte-identical.
+proc ot_pgtt_illegal_span {lo hi hw sp} {
+  # the coordinate span (dbu) in which a track centre is illegal next to a stripe [lo, hi]: wire edge within sp of the stripe
+  return [list [expr {$lo - $hw - $sp}] [expr {$hi + $hw + $sp}]]
+}
+proc ot_pgtt_region_mode {} {
+  return [expr {[info exists ::env(OT_PG_TRACK_TRUTH_MODE)] && $::env(OT_PG_TRACK_TRUTH_MODE) eq "region"}]
+}
 proc ot_pgtt_add {} {
   if {![info exists ::env(OT_PG_TRACK_TRUTH)] || $::env(OT_PG_TRACK_TRUTH) ne "1"} { return }
   if {[info exists ::ot_pgtt_obs] && [llength $::ot_pgtt_obs]} { return }
@@ -29,7 +42,7 @@ proc ot_pgtt_add {} {
   if {[info exists ::env(OT_PG_TRACK_TRUTH_MIN_LEVEL)] && $::env(OT_PG_TRACK_TRUTH_MIN_LEVEL) ne ""} {
     set minl $::env(OT_PG_TRACK_TRUTH_MIN_LEVEL)
   }
-  array set cnt {}; array set ntr {}; array unset ::ot_pgtt_grid
+  array set cnt {}; array set ntr {}; array unset ::ot_pgtt_grid; array unset ::ot_pgtt_seen; set ::ot_pgtt_regions {}
   foreach net [$blk getNets] {
     if {![$net isSpecial]} { continue }
     set st [$net getSigType]
@@ -66,6 +79,20 @@ proc ot_pgtt_add {} {
         if {[info exists ::env(OT_PG_TRACK_TRUTH_WIDE_SPACING)] && $::env(OT_PG_TRACK_TRUTH_WIDE_SPACING) eq "1"} {
           if {![catch {$L getSpacing [expr {$hi - $lo}] [expr {$a1 - $a0}]} sw_sp] && $sw_sp > $sp} { set sp $sw_sp }
         }
+        if {[ot_pgtt_region_mode]} {
+          # per-gcell capacity cut over the illegal-track span (whole stripe length); one call per stripe, deduplicated
+          lassign [ot_pgtt_illegal_span $lo $hi $hw $sp] s0 s1
+          set kmin [expr {[lsearch -sorted -integer -bisect $g [expr {$lo - $hw - $sp}]] + 1}]
+          set kmax [lsearch -sorted -integer -bisect $g [expr {$hi + $hw + $sp - 1}]]
+          if {$kmax < $kmin || $kmax < 0} { continue }     # no track of this layer is illegal here: nothing to cut
+          if {$dir eq "HORIZONTAL"} { set reg [list $a0 $s0 $a1 $s1] } else { set reg [list $s0 $a0 $s1 $a1] }
+          if {[info exists ::ot_pgtt_seen($ln,$reg)]} { continue }
+          set ::ot_pgtt_seen($ln,$reg) 1
+          lappend ::ot_pgtt_regions [list $ln $reg]
+          if {![info exists cnt($ln)]} { set cnt($ln) 0; set ntr($ln) 0 }
+          incr cnt($ln); incr ntr($ln) [expr {$kmax - $kmin + 1}]
+          continue
+        }
         # illegal tracks: lo - hw - sp < t < hi + hw + sp
         set kmin [expr {[lsearch -sorted -integer -bisect $g [expr {$lo - $hw - $sp}]] + 1}]
         set kmax [lsearch -sorted -integer -bisect $g [expr {$hi + $hw + $sp - 1}]]
@@ -81,6 +108,18 @@ proc ot_pgtt_add {} {
         incr cnt($ln); incr ntr($ln) [expr {$kmax - $kmin + 1}]
       }
     }
+  }
+  if {[ot_pgtt_region_mode]} {
+    set dbu [$blk getDbUnitsPerMicron]
+    foreach r $::ot_pgtt_regions {
+      lassign $r ln reg
+      set um [lmap v $reg {expr {double($v) / $dbu}}]
+      set_global_routing_region_adjustment $um -layer $ln -adjustment 1.0
+    }
+    set per {}
+    foreach ln [lsort [array names cnt]] { lappend per "$ln=$cnt($ln)/$ntr($ln)" }
+    puts "OT_PG_TRACK_TRUTH region [llength $::ot_pgtt_regions] GRT capacity cuts, 100 % per gcell (layer=stripes/tracks) [join $per { }]"
+    return
   }
   set per {}
   foreach ln [lsort [array names cnt]] { lappend per "$ln=$cnt($ln)/$ntr($ln)" }
