@@ -30,5 +30,16 @@
 - Driver C/cs_drive.sh: place -> plain GRT probe of 3_place (M2-M7, uniform 0.25, 50 it) -> kit grt (CTS + GRT).
 - Compare: overflow per layer (M6 first, COORD ruling), cell count place vs GRT, post-CTS estimate; reference attempt_7.
 
+## 11-15 00:1x restart after limit
+- First A/B gens (B6e0 plan + B3x2b bound out) BOTH failed in gen.py phys: "physical collector_tree differs from captured
+  bound reset identity" (plan/bind mismatch, baseline too: not the street delta). B6e bind itself ended BIND_RC=1 (no out).
+- Rebased: base = B3x2b's own plan (C/plan_base_B3x2b.json a68fa6ace27a) + B3x2b sidecar; street = same seed on it
+  (C/plan_street_p2v4.json, core_place applied True, identical metrics). Gens relaunched unpinned (--dir B3x2b, --stage C);
+  logs intel2 ~/cs/gen2_{base,street}.log. Then cs_drive.sh per kit (logs ~/cs/run_{base,street}.log).
+- p2 seed applied to all 12 col_h9_r0_p2 types (C/v3all): applied True on 12; 5 report e3.u_w 'no legal spot' (fixed
+  taps differ per pv) -> needs per-pv check before B6f.
+- Generic S-gravity compaction (C/gravity.py) gains only 8.6 um on p2 (taps + link limits): generalisation = one hand
+  seed per layout. 216 col types = 12 families but only 7 distinct core layouts (p3=p1, p4=p5=p6 share).
+
 ## Next
 - If street wins: generalise (seed rules per col family, 216 types), B6f delta to DIE-S81-92 with G0, then PLAN-READERS-1 audit.
