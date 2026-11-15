@@ -145,3 +145,21 @@ Fix = view v2, see verdict (c). su_c proof run 4 (KIT-OPS-6, receipt placed besi
 ## 5. What I ran
 
 One read-only STA (ot-run, epyc7, 8 threads, about 3 min) on a copy of the stm_v1 proof kit: `/srv/opentallas-scratch2/claude/fable-triage-qc/stm_v1/` (`whatif.tcl`, `whatif.log`). Two table diffs on epyc9 (`/srv/opentallas-scratch2/claude/fable-triage-qc/r8diff*.py`). No kit, plan or owner checkout was changed.
+
+## 6. Addendum 01:0x PST: y_o23 stations against the collector tree (COORD question)
+
+Short answer: +1 is not balanceable either. No column pad of any size balances an added cycle on y_o23 alone, so raising `MAX_COLUMN_PAD` above 9 does nothing. Close the hop with no net cycle.
+
+MEASURED (`qc_fabric_transport.py`, the S4E derived R8 table, `latcheck_s29q103S4ER.tsv`):
+- The lane is `u_t_2_3.n_y -> u_t_1_2.n_b`, the `n_b` leg of the level-3 join hosted at `u_t_1_2` (`HOST[(3,1)]`). That join merges columns {0,1} with columns {2,3} for rows 2-3. The join at `u_t_2_2` (`HOST[(3,0)]`) merges the same column groups for rows 0-1.
+- `_column_pads` has one pad per column, shared by all rows and by the near and far cluster. Both level-3 joins therefore need the same value of pad(cols 0,1) - pad(cols 2,3). Before S4e they agreed. A shift d on the rows 2-3 leg only makes them differ by d. For any d other than 0 there is no solution at any pad limit. This is by the code, not by a run: S4j (+1) should end with the same PARAM_REGEN.
+- The 30 R8_STALE lines are the same lane (bound 11 against table 9); they go away with it.
+- Lane make-up today (S3R3b): 9 stages = source stations 0 + destination landing pad 4 (`dst_lpad`, `nb_i12` in cbn_q01 / cbf_q01_s2) + landing 3 + the two boundary registers. S4e made it 11 by adding 2 source stations.
+
+Options, in order:
+1. **Net zero (recommended).** One FIRM station on y_o23 in cbn_q11 x2 / cbf_q11 (the hop is about 680 um, so one station gives two hops of about 340 um, under 405) and `dst_lpad` 4 -> 3 on `nb_i12`. Bound stays 9: no R8 change, no PARAM_REGEN, no latency regeneration, 0 cycles. Condition to check first from the plan or a placed cbn_q01: the longest `nb_i12` pad hop times 4/3 stays under 405 um. If the pad can give two stages (longest hop times 2 under 405), the two-station form of S4e also works at net zero.
+2. **Keep +d and compensate the tree.** Add the same d on the sibling leg `u_t_1_3.n_y -> u_t_1_2.n_a` (inside the q01 types) and on `u_t_2_2.n_y -> u_t_0_0.n_a` (crossing q11 -> q00, level 4). Cost: 2 legs x 514 bits x 48 clusters = 49,344 flops per cycle (98,688 for +2), the root of every cluster moves by d, and the q01 leg is an RTL / parameter change. Only if option 1 fails its hop check.
+3. **Raise the pad limit / rebalance column lanes:** no. Column pads cannot separate rows.
+4. Moving the `u_t23` `n_y` pins is a core change (signed tile, pins on the E face under MY); not needed.
+
+Same check for S4g: its +2 is on column corridor lanes (`c_*_01__bcf*`). Column pads can absorb a shift that is uniform per column, but look for PARAM_REGEN in the S4g bind before calling it ready.
