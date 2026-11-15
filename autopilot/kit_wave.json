@@ -7205,7 +7205,8 @@
     "ot_s81sl_leaf__t25__cl431c660f@14",
     "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@10",
     "ot_s81sl_leaf__t69@9",
-    "slice_station__t49@4"
+    "slice_station__t49@4",
+    "ot_s81sl_leaf__t23@13"
    ],
    "take_states": [
     "*"
@@ -33519,7 +33520,8 @@
     "hd_mesh_e@1",
     "hd_host_e@9",
     "hd_host_w@6",
-    "hd_lep0N@16"
+    "hd_lep0N@16",
+    "hd_spn_end@9"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -34457,7 +34459,8 @@
     "queue_src": "claude/head-94-heads-1112@9ddabba952d9"
    },
    "stage_resume_off": [
-    "hd_serdes"
+    "hd_serdes",
+    "hd_spn_end"
    ],
    "plan_sha256": "e4484c62745d5b45926a8dd8177583dd647c5116a73c13f6f25da62740b32f45",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
@@ -36426,7 +36429,8 @@
     "sle_stm_v1__clbe630b9c@5",
     "sle_stm_v3@4",
     "slw_fe_v1__clfe325744__cl08d14f0d@13",
-    "slw_stm_v2__cl9beb65e6@4"
+    "slw_stm_v2__cl9beb65e6@4",
+    "slw_su_l0__cl1a1c1f8f@5"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -45346,7 +45350,8 @@
     "sle_stm_v1__clbe630b9c",
     "sle_stm_v3",
     "slw_fe_v1__clfe325744__cl08d14f0d",
-    "slw_stm_v2__cl9beb65e6"
+    "slw_stm_v2__cl9beb65e6",
+    "slw_su_l0__cl1a1c1f8f"
    ]
   },
   "hbm": {
