@@ -255,6 +255,7 @@ src, ov, files, entry = job["src"], job.get("overlay") or "", job["files"], job[
 roots = ([ov] if ov else []) + [src]
 path = [os.path.join(r, d) for r in roots for d in ("tools/die_plan", "tools")]
 bad = []
+EXTERNAL = {"odb", "openroad"}   # OpenROAD's embedded modules: scripts run under openroad -python import them
 def local(m):
     return any(os.path.exists(os.path.join(p, m + ".py")) or os.path.isdir(os.path.join(p, m)) for p in path)
 for r in roots[::-1]:
@@ -277,7 +278,8 @@ for rel in files:
         ms = [a.name.split(".")[0] for a in n.names] if isinstance(n, ast.Import) else \
              [n.module.split(".")[0]] if isinstance(n, ast.ImportFrom) and n.module and not n.level else []
         for m in ms:
-            if not (local(m) or m in sys.builtin_module_names or m in sys.stdlib_module_names or importlib.util.find_spec(m)):
+            if not (local(m) or m in EXTERNAL or m in sys.builtin_module_names or m in sys.stdlib_module_names
+                    or importlib.util.find_spec(m)):
                 bad.append(f"{rel} imports {m}: not in the tree")
 present = [m for m in entry if local(m)]
 code = "import sys; sys.path[:0] = %r\nfor m in %r:\n    __import__(m)\n" % (path, present)
@@ -389,6 +391,56 @@ def fmt_diffs(diffs, ref, n=12):
         out.append(f"{r} (differs on {','.join(odd)} vs {ref}; newest {newest} "
                    f"{datetime.datetime.fromtimestamp(v[newest][1]).strftime('%m-%d %H:%M') if v[newest][1] else '-'})")
     return out + ([f"... +{len(diffs) - n} more"] if len(diffs) > n else [])
+
+
+def _imports(code):
+    """top-level module names a .py imports (absolute imports only), as the smoke reads them"""
+    import ast
+    try:
+        t = ast.parse(code)
+    except SyntaxError:
+        return set()
+    out = set()
+    for n in ast.walk(t):
+        if isinstance(n, ast.Import):
+            out |= {a.name.split(".")[0] for a in n.names}
+        elif isinstance(n, ast.ImportFrom) and n.module and not n.level:
+            out.add(n.module.split(".")[0])
+    return out
+
+
+def missing_deps(host, src, paths, new):
+    """in-scope main modules that the batch's .py files import (transitively) but the host's tree lacks -> add them (ADD).
+    03:46 11-15 dry run: main bind.py / kit_istations.py import bind_strict_src, native_source_banks, split_bind_routes,
+    split_source_guard, all on main before the last daily base but never copied into the die trees; changed-since-base alone
+    staged an importer without its module and the smoke stopped every die."""
+    files = [p for p in git("ls-tree", "-r", "--name-only", new, "--", "tools").split("\n") if p.endswith(".py") and in_scope(p)]
+    mod = {}
+    for d in ("tools/die_plan/", "tools/"):          # the smoke's (and gen's) path order: tools/die_plan first
+        for p in files:
+            if p.startswith(d) and "/" not in p[len(d):]:
+                mod.setdefault(p[len(d):-3], p)
+    have, seen, out = set(paths), set(paths), []
+    level = [p for p in paths if p.endswith(".py")]
+    while level:
+        cand = []
+        for p in level:
+            b = blob_at(new, p)
+            for m in _imports(b or b""):
+                r = mod.get(m)
+                if r and r not in seen:
+                    seen.add(r); cand.append(r)
+        if not cand:
+            break
+        q = "import json, os, sys; print(json.dumps([r for r in %r if not os.path.exists(os.path.join(%r, r))]))" % (cand, _root(host, src))
+        pr = S.run(_cmd(host, q), capture_output=True, text=True, timeout=300)
+        try:
+            miss = json.loads(pr.stdout.strip().splitlines()[-1])
+        except (ValueError, IndexError):
+            miss = []
+        out += [r for r in miss if r not in have]
+        level = miss
+    return out
 
 
 def _cmd(host, py):
@@ -560,6 +612,10 @@ def daily(new, apply_, only):
             last[die] = new
             continue
         src, (gen, reps) = d["src"], die_hosts(cfg, die)
+        deps = missing_deps(gen, src, paths, new)
+        if deps:
+            paths = paths + deps
+            out_lines.append(f"{die}: + {len(deps)} module(s) the batch imports, missing in the tree, added from main: {', '.join(deps[:12])}")
         hosts = [gen] + [h for h in reps if "error" not in run_remote(h, {"src": src, "apply": False, "mode": "dry", "stamp": stamp,
                                                                             "to": new, "files": []})]
         # 0. the replicas must already be identical (tools/ + physical/): a lane that copied a file to some of them shows here

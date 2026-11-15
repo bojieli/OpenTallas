@@ -167,6 +167,23 @@ class Daily(unittest.TestCase):
         self.assertIn("daily die-tree refresh", (self.d / "coord/lanes/COORD-REVIEW-QUEUE.md").read_text())
         self.assertFalse((self.src / ".mq-stage").exists() and any((self.src / ".mq-stage").iterdir()))
 
+    def test_missing_dependency_from_before_base_is_added_and_odb_allowed(self):
+        (self.dev / "tools/die_plan/dep.py").write_text("import dep2\nD = 1\n")    # on main before the base, never in the trees
+        (self.dev / "tools/die_plan/dep2.py").write_text("D2 = 1\n")
+        v1b = self.commit("v1b")
+        (self.d / "mq/src-refresh-last.json").write_text(json.dumps({"qc": v1b}))
+        (self.dev / "tools/die_plan/a.py").write_text("import dep\nA = 2\n")
+        (self.dev / "tools/die_plan/hop.py").write_text("import os, odb\nH = 1\n")   # OpenROAD script: odb only inside openroad
+        v2 = self.commit("v2")
+        r = self.daily()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertNotIn("FAILED", r.stdout + r.stderr)
+        for rel in ("tools/die_plan/dep.py", "tools/die_plan/dep2.py", "tools/die_plan/hop.py"):
+            self.assertTrue((self.src / rel).exists(), rel)
+            self.assertTrue(self.rep(rel).exists(), rel)
+        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "import dep\nA = 2\n")
+        self.assertEqual(self.last(), v2)
+
     def test_staged_smoke_failure_swaps_nothing(self):
         (self.dev / "tools/die_plan/a.py").write_text("import no_such_module_xyz\nA = 2\n")
         self.commit("v2")
