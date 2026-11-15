@@ -7231,7 +7231,8 @@
     "s81p_slice_station__t51_ot_s81_station_t51_native_e": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
     "s81p_slice_station__t51_ot_s81_station_t51_native_w": "KW-FIX-43 12:3x T51 switch: new plan block (t51 native hard child); DIE-S81-85 owns it (native_e signed, native_w rebuilding sealed on epyc4); wave does not build it. DIE-S81-85/COORD releases.",
     "dsdv_slice_kv512_C__t1": "B2-HOLD-1113 (KIT-OPS-2 2026-11-13 18:55 PST S81 UPDATE B1 swap (COORD ruling 18:3x; DIE-S81-90 READY 18:30; PROFILE-1 digest-keep live 18:24)): stays on its current rows until S81 UPDATE B2 (r0/h10 frame forms, joint216 re-floor, DSDV g4 with HARD-S81-DSDV-1). Lift = delete this key.",
-    "col_h10_r2__t1__*": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch from the take_states * change. Lift = delete this key.",
+    "col_h10_r2__t1__cl1f5d6c2a__pvf1512c16": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch from the take_states * change. Lift = delete this key. (glob expanded KIT-OPS-5 11-14: col_h10_r2__t1__cl99efd374__pv9ae398c2 released, COORD approved, S81-COL-INHERIT representative)",
+    "col_h10_r2__t1__cl99efd374__pv4c1f67ff": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch from the take_states * change. Lift = delete this key. (glob expanded KIT-OPS-5 11-14: col_h10_r2__t1__cl99efd374__pv9ae398c2 released, COORD approved, S81-COL-INHERIT representative)",
     "col_h10_r1__t1__cl95b37463__pv0713a75a": "S81-COL-INHERIT 11-14 (OWNER-approved via COORD): sibling pv identity of a (family, clock class) layout; the representative builds and this identity inherits its sign-off (tools record). Lift = delete this key (lane handoff S81-COL-INHERIT.md).",
     "col_h10_r1__t1__cl95b37463__pv1a6ec9c2": "S81-COL-INHERIT 11-14 (OWNER-approved via COORD): sibling pv identity of a (family, clock class) layout; the representative builds and this identity inherits its sign-off (tools record). Lift = delete this key (lane handoff S81-COL-INHERIT.md).",
     "col_h10_r1__t1__cl95b37463__pv69c7e9a6": "S81-COL-INHERIT 11-14 (OWNER-approved via COORD): sibling pv identity of a (family, clock class) layout; the representative builds and this identity inherits its sign-off (tools record). Lift = delete this key (lane handoff S81-COL-INHERIT.md).",
@@ -7361,7 +7362,6 @@
     "col_h10_r2__t1__cl1f5d6c2a__pvec003743": "COL-INHERIT 11-14 (OWNER type reduction, KIT-OPS-5): sibling pv build held; representative col_h10_r2__t1__cl1f5d6c2a__pvf1512c16 keeps running. Lift = delete this key.",
     "col_h10_r2__t1__cl99efd374__pv1619ecc6": "COL-INHERIT 11-14 (OWNER type reduction, KIT-OPS-5): sibling pv build held; representative col_h10_r2__t1__cl99efd374__pv4c1f67ff keeps running. Lift = delete this key.",
     "col_h10_r2__t1__cl99efd374__pv7a8a5452": "COL-INHERIT 11-14 (OWNER type reduction, KIT-OPS-5): sibling pv build held; representative col_h10_r2__t1__cl99efd374__pv4c1f67ff keeps running. Lift = delete this key.",
-    "col_h10_r2__t1__cl99efd374__pv9ae398c2": "COL-INHERIT 11-14 (OWNER type reduction, KIT-OPS-5): sibling pv build held; representative col_h10_r2__t1__cl99efd374__pv4c1f67ff keeps running. Lift = delete this key.",
     "ot_s81sl_leaf__t34": "S81-LEAF-PLAN 11-14 (COORD approved): M8 dead-end leaf kit held until B6 adopts (FABLE-HARD-S81), KIT-OPS-5. Lift = delete this key.",
     "ot_s81sl_leaf__t75": "S81-LEAF-PLAN 11-14 (COORD approved): M8 dead-end leaf kit held until B6 adopts (FABLE-HARD-S81), KIT-OPS-5. Lift = delete this key.",
     "ot_s81sl_leaf__t9": "S81-LEAF-PLAN 11-14 (COORD approved): M8 dead-end leaf kit held until B6 adopts (FABLE-HARD-S81), KIT-OPS-5. Lift = delete this key.",
@@ -7419,7 +7419,9 @@
     "col_h9_r0_p6__t1__pvb38a9d6c": "S81-COL-INHERIT 11-14 (COORD FABLE-CLOSURE-STRATEGY #1): sibling pv identity of a col_h9_r0 / col_h10_r0 layout (family, clock class, clock key); the layout representative builds and this identity inherits its sign-off (record: LEC + via-mask DRC + image/LEF/lib shas). Lift = delete this key (handoff S81-COL-INHERIT.md).",
     "col_h9_r0_p6__t1__pvbdbd69f2": "S81-COL-INHERIT 11-14 (COORD FABLE-CLOSURE-STRATEGY #1): sibling pv identity of a col_h9_r0 / col_h10_r0 layout (family, clock class, clock key); the layout representative builds and this identity inherits its sign-off (record: LEC + via-mask DRC + image/LEF/lib shas). Lift = delete this key (handoff S81-COL-INHERIT.md).",
     "col_h9_r0_p6__t1__pvde240d6d": "S81-COL-INHERIT 11-14 (COORD FABLE-CLOSURE-STRATEGY #1): sibling pv identity of a col_h9_r0 / col_h10_r0 layout (family, clock class, clock key); the layout representative builds and this identity inherits its sign-off (record: LEC + via-mask DRC + image/LEF/lib shas). Lift = delete this key (handoff S81-COL-INHERIT.md).",
-    "col_h9_r0_p6__t1__pvea45abf3": "S81-COL-INHERIT 11-14 (COORD FABLE-CLOSURE-STRATEGY #1): sibling pv identity of a col_h9_r0 / col_h10_r0 layout (family, clock class, clock key); the layout representative builds and this identity inherits its sign-off (record: LEC + via-mask DRC + image/LEF/lib shas). Lift = delete this key (handoff S81-COL-INHERIT.md)."
+    "col_h9_r0_p6__t1__pvea45abf3": "S81-COL-INHERIT 11-14 (COORD FABLE-CLOSURE-STRATEGY #1): sibling pv identity of a col_h9_r0 / col_h10_r0 layout (family, clock class, clock key); the layout representative builds and this identity inherits its sign-off (record: LEC + via-mask DRC + image/LEF/lib shas). Lift = delete this key (handoff S81-COL-INHERIT.md).",
+    "col_h10_r2__t1__cl8b686b3e": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch (glob expanded by KIT-OPS-5 to release only pv9ae398c2). Lift = delete this key.",
+    "col_h10_r2__t1__clac068e56": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch (glob expanded by KIT-OPS-5 to release only pv9ae398c2). Lift = delete this key."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -33271,7 +33273,10 @@
     "WAIT-PARENT"
    ],
    "note_s81stale1": "S81-STALE-RELAUNCH 11-14: take_states * (WF-1 default). ROUTING parent rows (col_h* base with a live class) were not in take_states, so select() only expanded released retries; 83 col_h pv classes cancelled 09:17 as superseded had no row on the current key and never relaunched.",
-   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens"
+   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens",
+   "hold_items_lifted_kitops5_colh10r2": {
+    "col_h10_r2__t1__cl99efd374__pv9ae398c2": "COORD 11-14 S81-COL-INHERIT lever 1: sub-layout representative, 4_cts on epyc10; glob col_h10_r2__t1__* expanded to explicit keys without it"
+   }
   },
   "s81_head": {
    "enabled": true,
