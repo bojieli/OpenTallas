@@ -15,3 +15,6 @@ Next: after relaunch, drive to R-MINIMAL; add AUTO-RESIGN.tsv row on pass.
 ## 2026-11-14 19:35 PST successor
 - Live: i1 route 80 intel1 pid 2538819 (5_1_grt repair, setup -455..-576 u_ptx, TX distance). Waiter DONE-route2 on intel1 i1/gen. No relaunch.
 - Next: SERDES-TXPIPE fixed t14 kit/bind with TXPIPE RTL -> one fresh route 80; pass -> AUTO-RESIGN + export. t3 waits for DIE-S81-92 event.
+
+## 19:58 resumed after crash
+- i1 route still alive, waiter alive. No new forms (Fable: clock-island event is the fix). Waits for DIE-S81-92 clock event + TXPIPE kit.
