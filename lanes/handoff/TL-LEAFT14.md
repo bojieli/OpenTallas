@@ -5,3 +5,4 @@
 - Needs: KIT-OPS-3 retry of s81 rows failed with this GEN_LINT error (t14@4 first).
 - 19:25 successor: live forms wave attempt_5 (epyc7 GRT pid 356408) + private r1 (epyc10 GRT pid 802561); both GRT extra iters; waiter on localhost scratchpad w14.sh. Do not relaunch.
 - 01:10 successor: wave a5 gone (watchdog), r1 epyc10 still GRT; ASK Fable PD review posted; no relaunch.
+- 01:35 r1 cancelled; r2 (u_vs +34.56, ft5 last stn (150,412)) place+GRT launched, log coord/lanes/tl-leaft14-logs/r2.log; next: post overflow after, hand delta to DIE-S81-92 if converges.
