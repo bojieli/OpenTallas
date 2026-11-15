@@ -41,8 +41,8 @@ Scripts: epyc7 /tmp/fable_tm_a*.py, /tmp/fable_tm_b*.py (python3 -I, read-only o
 ## 3. Type count after normalizing (b) and (c), CA in place
 | family | now | R1 ROM image + names | R2 strap width | R3a monitor sites | R3b one reset form | R4 taps | floor |
 |---|---|---|---|---|---|---|---|
-| col_h9 | 180 | 30 | 22 | 14 | 11 | 9 | 9 |
-| col_h10 | 36 | 13 | 11 | 6 | 5 | 5 | 4 |
+| col_h9 | 180 | 30 | 22 | 13 | 11 | 9 | 9 |
+| col_h10 | 36 | 13 | 11 | 7 | 5 | 5 | 4 |
 | leaf | 75 | 75 | 75 | 75 | 75 | 75 | 74 |
 | station | 46 | 46 | 46 | 46 | 46 | 45 | 44 |
 | serdes | 11 | 11 | 11 | 11 | 11 | 11 | 9 |
