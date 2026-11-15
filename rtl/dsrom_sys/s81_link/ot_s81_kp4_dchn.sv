@@ -32,8 +32,26 @@ module ot_s81_kp4_dchn #(parameter integer MUT = 0, parameter integer ROOT_COUNT
     ot_s81_kp4_rst #(.NL(2)) u_rst (.clk(clk), .rst_n(rst_n), .rs_n(rs_n));
     integer i, q;
     genvar gk, gb, gi, gu;
+`ifdef OT_S81_DCHN_FACE
+    // S81-RESIGN-DEEP 11-15 (FABLE-TRIAGE-HEADKV M6): input face register on all 320 input bits inside the tile
+    // (k_v 4, k_lo 310, k_L 5, k_any 1).  The pin arc clk->q + setup (760 ps) no longer reaches 620 flops through
+    // the k_v select and the constant multipliers; the whole tile runs one cycle later (+1 on every output).  The
+    // decoder must delay the received words one more cycle: ot_s81_kp4_ddly DD 55 -> 56 under the same define.
+    (* keep *) reg [3:0]   f_kv;
+    (* keep *) reg [309:0] f_klo;
+    (* keep *) reg [4:0]   f_kL;
+    (* keep *) reg         f_kany;
+    always @(posedge clk) begin f_kv <= k_v; f_klo <= k_lo; f_kL <= k_L; f_kany <= k_any; end
+    wire [309:0] lsel = f_klo;
+    wire [3:0]   cl = f_kv;
+    wire [4:0]   kL_i = f_kL;
+    wire         kany_i = f_kany;
+`else
     wire [309:0] lsel = k_lo;
     wire [3:0]   cl = k_v;
+    wire [4:0]   kL_i = k_L;
+    wire         kany_i = k_any;
+`endif
     reg  [9:0] Rl [0:NRL-1][0:15];
     reg  [9:0] Ro [0:NRL-1][0:NT/2-1];
     generate for (gi = 0; gi < 16; gi = gi + 1) begin : g_rl
@@ -61,7 +79,7 @@ module ot_s81_kp4_dchn #(parameter integer MUT = 0, parameter integer ROOT_COUNT
     reg        ce3_9;                    // chunk 9 at the root accumulator (T + 55)
     (* keep *) reg [9:0] cw_s [0:NRW-1]; // ce1 delayed: the corr-word select at E2, NRW copies
     always @(posedge clk) begin
-        if (cl[0]) begin cL <= k_L; c_bad <= (k_L > 5'd15); c_any <= k_any; end
+        if (cl[0]) begin cL <= kL_i; c_bad <= (kL_i > 5'd15); c_any <= kany_i; end
         if (cc[9]) begin fin_L <= cL; fin_bad <= c_bad; fin_any <= c_any; end
     end
     always @(posedge clk)
