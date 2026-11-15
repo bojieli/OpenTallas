@@ -55,7 +55,8 @@ def main(argv=None):
     argv = argv if argv is not None else sys.argv[1:]
     if len(argv) != 2:
         sys.exit(__doc__)
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import os
+    sys.path.insert(0, os.environ.get("HCP_TOOLS") or str(Path(__file__).resolve().parent))   # HCP_TOOLS: another tree's tools/die_plan
     import bind
     E = bind.E
     plan = json.load(open(argv[0]))
