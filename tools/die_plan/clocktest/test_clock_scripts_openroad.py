@@ -35,7 +35,7 @@ def test_stb_inverted_sink_is_measured_on_the_same_source_edge():
 
 
 def test_harness_files_exist():
-    for f in ("stb_known.tcl", "stb_known.v", "ps_known.tcl", "ps_known.v", "run_openroad.sh"):
+    for f in ("stb_known.tcl", "stb_known.v", "ps_known.tcl", "ps_known.v", "ct_known.tcl", "ct_known.v", "run_openroad.sh"):
         assert (HERE / f).is_file()
     assert "source /tools/subtree_balance.tcl" in (HERE / "stb_known.tcl").read_text()
 
@@ -53,3 +53,14 @@ def test_pair_skew_raw_pair_matches_the_measured_clock_arrival_difference():
     setup, hold, diff = float(pair.group(1)), float(pair.group(2)), float(arr.group(3))
     assert 15.0 < diff < 40.0
     assert abs(hold - diff) <= 1.5 and setup < 0 and abs(setup + hold) <= 3.0
+
+
+@needs_or
+def test_clock_taps_early_core_tap_and_nearest_grid_tap_split():
+    """clock_taps.tcl (CP2 early core taps + the nearest-tap split): fcore's clock pin leaves clk for the core tap clk_c0 (OT_CORE_TAPS), fc (next to
+    clk_t1) moves to clk_t1, fa and fb stay on clk; no flop is ever moved onto the core tap."""
+    out = run("ct_known.tcl")
+    assert "OT_CLOCK_TAPS core tap clk_c0 <- fcore/CLK: 1 clock pin(s)" in out, out[-700:]
+    nets = dict(re.findall(r"CT_NET (\w+) \S+ (\w+)", out))
+    assert nets == {"fa": "clk", "fb": "clk", "fc": "clk_t1", "fcore": "clk_c0"}, nets
+    assert "OT_CLOCK_TAPS 2 taps, 1 sinks moved off clk" in out
