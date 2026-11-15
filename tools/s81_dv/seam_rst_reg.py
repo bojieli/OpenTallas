@@ -9,19 +9,20 @@ import os, re, sys
 PAT = re.compile(r'\bot_pl_seam_w_plr(\s*#\([^;]*?\.RSREG\(1\))')
 
 
-def rewrite(text):
-    return PAT.subn(lambda m: 'ot_pl_seam_w_plrc' + m.group(1), text)
+def rewrite(text, form='plrc'):
+    return PAT.subn(lambda m: 'ot_pl_seam_w_' + form + m.group(1), text)
 
 
 def main(argv):
-    for f in argv:
+    form = 'plrs' if '--sync' in argv else 'plrc'
+    for f in [a for a in argv if a != '--sync']:
         txt = open(f).read()
-        new, n = rewrite(txt)
+        new, n = rewrite(txt, form)
         if n:
             tmp = f + '.srr.tmp'
             open(tmp, 'w').write(new)
             os.replace(tmp, f)
-        print(f'{f}: {n} ot_pl_seam_w_plr RSREG(1) -> ot_pl_seam_w_plrc')
+        print(f'{f}: {n} ot_pl_seam_w_plr RSREG(1) -> ot_pl_seam_w_' + form)
 
 
 if __name__ == '__main__':

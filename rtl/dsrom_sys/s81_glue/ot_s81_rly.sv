@@ -127,9 +127,15 @@ module ot_s81_rly_rq #(
     output wire q
 );
     (* keep *) reg rq;
+`ifdef OT_S81_RLY_RQSYNC
+    // S81-SEAM-RST-1115 form pe (default OFF): plain registered clear, no async pin; rq <= rs.  Release edge identical
+    // (rs rises -> rq rises one edge later, as with the async form); assertion one edge later.
+    always @(posedge ck) rq <= rs;
+`else
     always @(posedge ck or negedge rs)
         if (!rs) rq <= 1'b0;
         else rq <= 1'b1;
+`endif
     assign q = rq;
 endmodule
 `endif

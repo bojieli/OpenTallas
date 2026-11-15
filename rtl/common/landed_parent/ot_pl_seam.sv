@@ -257,6 +257,31 @@ module ot_pl_seam_w_plrc #(
     end endgenerate
 endmodule
 
+// ot_pl_seam_w_plrs: ot_pl_seam_w_plr with a SYNCHRONOUS registered clear per chunk (S81-SEAM-RST-1115, form pe).
+// c[k] <= rsi[k] & rse (one plain flop per chunk, no async pin, placeable in the chunk next to the station flops it
+// clears, so its clock tap is theirs); clr_n[k] = c[k].  rsi(t-1)&rse(t-1) = same as the original rsi(t)&e(t) when both
+// leaves move together: release is the SAME edge as ot_pl_seam_w_plr; assertion is one edge LATER (sync).  Costs the +1
+// assert cycle (rst_n held >= 64 clk at boot covers it).  RSREG = 0 keeps the combinational gate.
+module ot_pl_seam_w_plrs #(
+    parameter integer W = 1073, CHUNK_BITS = 24,
+    parameter integer RSREG = 1,
+    parameter integer CHUNKS = (W + CHUNK_BITS - 1) / CHUNK_BITS
+) (
+    input  wire              ck,
+    input  wire [CHUNKS-1:0] rsi,
+    input  wire              rse,
+    input  wire [W-1:0]      ir,
+    output wire [W-1:0]      q
+);
+    generate if (RSREG != 0) begin : g_reg
+        reg [CHUNKS-1:0] c;
+        always @(posedge ck) c <= rsi & {CHUNKS{rse}};
+        ot_pl_seam_cq #(.W(W), .CHUNK_BITS(CHUNK_BITS)) u_y_w (.ck(ck), .clr_n(c), .d(ir), .q(q));
+    end else begin : g_nr
+        ot_pl_seam_cq #(.W(W), .CHUNK_BITS(CHUNK_BITS)) u_y_w (.ck(ck), .clr_n(rsi & {CHUNKS{rse}}), .d(ir), .q(q));
+    end endgenerate
+endmodule
+
 // one seam station: W data flops, chunk c asynchronously cleared by clr_n[c] (a registered control flop)
 module ot_pl_seam_cq #(
     parameter integer W = 1073, CHUNK_BITS = 24,
