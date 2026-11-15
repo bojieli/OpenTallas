@@ -15,3 +15,8 @@ epyc8 bash /srv/opentallas-scratch2/claude/dkv99/bind_e.sh vN2i PLAN SIDECAR (tr
 - Packaging note: plan_package.py package refuses this folder (main already carries abs paths: bind9_asbuilt.json.gz 139887, plan_c.original 684, kv1200_cut, PLAN-ROUTE-1 receipts); plan: refresh PACKAGE.json entries for the 4 changed files + verify.
 ## UPDATE 2026-11-12 17:13
 - vN2i bind RC 0 (only the 6 known +1 lanes differ; flag ON). Committed claude/kv-vn2-event-1112@3b18004662, pushed. READY + PLAN-EVENT posted. Lane DONE.
+
+## 2026-11-14 19:25 PST successor
+- vN2 plan event DONE, merged (train 20, main 66e6607e3f0e). Remaining scope = hg/hgi pilots on vN2, owned by TYPE-KVHGI2/3 (forms) and KV-HGI-REFLOOR (Fable GRT-only test; re-floor parked). Nothing launched here (no duplicate of live forms).
+- Live: Fable test fh2 A/C on intel1 (logs intel2 ~/kvhgr/fh2_A.log fh2_C.log). First run fh_A/fh_C (18:53) died in 11 s: OT_GRT_NONPORT needs OT_VCLK_CORNER=ff CORNER=BC; relaunched as fh2, in DRT init 19:22. typekv forms fd04/fdC3/v1a r3 (intel1), routeB2 (epyc9).
+- Next: read fh2 A vs C (congested gcells in core boxes, DRT), relay to KV-HGI-REFLOOR / TYPE-KVHGI2.
