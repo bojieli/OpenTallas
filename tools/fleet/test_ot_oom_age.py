@@ -7,6 +7,18 @@ M = importlib.util.module_from_spec(importlib.util.spec_from_loader("ot_oom_age"
 loader.exec_module(M)
 
 
+def spawn_openroad(ignore_term=False):
+    """a stand-in build process whose comm is `openroad` regardless of argv[0] (a renamed /bin/sleep is a coreutils multicall binary that refuses to run on some hosts)"""
+    d = tempfile.mkdtemp(); exe = os.path.join(d, "openroad")
+    open(exe, "w").write("#!%s\nimport signal, sys, time\n%ssys.stdout.write('ready\\n'); sys.stdout.flush()\ntime.sleep(120)\n" % (
+        sys.executable, "signal.signal(signal.SIGTERM, signal.SIG_IGN)\n" if ignore_term else ""))
+    os.chmod(exe, 0o755)
+    p = subprocess.Popen([exe, "60"], stdout=subprocess.PIPE, text=True)
+    p.stdout.readline()
+    time.sleep(0.3)     # start times have 10 ms resolution: keep `now` clearly after the start
+    return p, d
+
+
 class Age(unittest.TestCase):
     def test_target_decays_100_per_hour_to_zero(self):
         self.assertEqual([M.target_adj(s) for s in (0, 3599, 3600, 7200, 8 * 3600, 20 * 3600)], [800, 800, 700, 600, 0, 0])
@@ -15,11 +27,10 @@ class Age(unittest.TestCase):
         self.assertTrue(M.managed(0) and M.managed(800) and M.managed(300))
         self.assertFalse(M.managed(-999) or M.managed(900) or M.managed(1000))
 
+    @unittest.skipIf(os.geteuid() != 0, "lowering oom_score_adj needs CAP_SYS_RESOURCE (root)")
     def test_dummy_pair_young_vs_aged(self):
-        d = tempfile.mkdtemp(); exe = os.path.join(d, "openroad"); shutil.copy("/bin/sleep", exe)
-        a = subprocess.Popen([exe, "60"]); b = subprocess.Popen([exe, "60"])
+        (a, _), (b, _) = spawn_openroad(), spawn_openroad()
         try:
-            time.sleep(0.2)
             # raising own children above their current adj needs no privilege; lowering does, so start both at 800 and age one
             for p in (a, b):
                 open(f"/proc/{p.pid}/oom_score_adj", "w").write("800")
@@ -27,9 +38,8 @@ class Age(unittest.TestCase):
             M.main(["--pid", str(b.pid), "--comm", "openroad"])                              # b is new -> stays 800
             ja, jb = int(open(f"/proc/{a.pid}/oom_score_adj").read()), int(open(f"/proc/{b.pid}/oom_score_adj").read())
             self.assertEqual(jb, 800)
-            if os.geteuid() == 0:
-                self.assertEqual(ja, 600)
-                self.assertGreater(int(open(f"/proc/{b.pid}/oom_score").read()), int(open(f"/proc/{a.pid}/oom_score").read()))
+            self.assertEqual(ja, 600)
+            self.assertGreater(int(open(f"/proc/{b.pid}/oom_score").read()), int(open(f"/proc/{a.pid}/oom_score").read()))
         finally:
             a.kill(); b.kill()
 
@@ -83,12 +93,10 @@ class Escalate(unittest.TestCase):
         self.assertEqual(M.parse_sigterms(txt), {7: (100.5, "openroad", "openroad -x")})
 
     def test_survivor_gets_one_sigkill_with_guards(self):
-        d = tempfile.mkdtemp(); exe = os.path.join(d, "openroad"); shutil.copy("/bin/sleep", exe)
-        p = subprocess.Popen([exe, "60"])
+        p, d = spawn_openroad(ignore_term=True)     # ignores SIGTERM like the stuck victims, so only SIGKILL ends it
         try:
-            time.sleep(0.2)
             now = time.time(); hz = os.sysconf("SC_CLK_TCK"); sent = []
-            log = os.path.join(d, "kills.log"); cmd = f"{exe} 60"
+            log = os.path.join(d, "kills.log"); cmd = open(f"/proc/{p.pid}/cmdline").read().replace("\0", " ").strip()
             t_old = now - 120; later = now + 100     # t_old predates the process (a reused pid); `later` makes a SIGTERM at `now` 100 s old
             # process started AFTER the logged SIGTERM (pid reused) -> no kill
             self.assertEqual(M.escalate({p.pid: (t_old, "openroad", cmd)}, now, hz, kill=lambda *a: sent.append(a), log=log), 0)
@@ -103,7 +111,7 @@ class Escalate(unittest.TestCase):
             self.assertEqual(sent, [])
             self.assertEqual(M.escalate({p.pid: (now, "openroad", cmd)}, later, hz, log=log), 1)
             p.wait(timeout=5)
-            self.assertEqual(p.returncode, -9)
+            self.assertEqual(p.returncode, -9)     # SIGKILL, not the ignored SIGTERM
             self.assertIn("SIGKILL", open(log).read())
             # gone now -> nothing more
             self.assertEqual(M.escalate({p.pid: (now, "openroad", cmd)}, later, hz, log=log), 0)
