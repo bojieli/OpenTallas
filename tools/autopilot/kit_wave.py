@@ -2674,6 +2674,11 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             "roam_hosts": roam_hosts(cfg, die, item),
             "src": item_in.get("src") or d["src"], "src_sha": item_in.get("src_sha") or d.get("src_sha", ""), "src_base": d.get("src_base", ""), "src_overlay": d.get("_src_overlay", ""), "queue_src": item_in.get("queue_src") or d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": item_kr, "dedup_group": dedup_group(cfg, die, item),
+            # SRC-TREE-1115 (FABLE-FLOW-1000 classes 4/5): src tree manifest policy.  die/global option src_manifest: "off" |
+            # "verify" (default: a tree with a manifest must verify, one without is noted) | "require" (no manifest = refuse);
+            # src_manifest_hash = the manifest hash adoption pinned (item_inputs may pin its own).
+            "src_manifest": str(opt_get(cfg, die, "src_manifest") or "verify"),
+            "src_manifest_hash": str(item_in.get("src_manifest_hash") or d.get("src_manifest_hash") or ""),
             # KIT-OVERLAY-1: item_inputs {item: {type_overlay: <path>}} = positions-only intra-type overlay (type_overlay.py) on
             # the die plan of record; gen phys --type-overlay + the overlaid plan for station preparation.  Absent = unchanged.
             **({"type_overlay": str(item_in["type_overlay"]), "type_overlay_sha": overlay_sha(item_in["type_overlay"])}
@@ -4070,7 +4075,8 @@ def counted_now(cfg, st, die, item, block=None):
 INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "roam_hosts", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
-              "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group"}
+              "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
+              "src_manifest", "src_manifest_hash"}
 
 
 def input_hash(sp, prov_key=None):
@@ -5031,6 +5037,42 @@ def geom_result_line(txt):
                  if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
+SRC_MANIFEST_PY = Path(__file__).with_name("src_manifest.py")
+
+
+def src_manifest_cmd(sp):
+    """SRC-TREE-1115: shell command (on the gen host) verifying the die src tree against its manifest; None = off.
+    The verifier is shipped inline (python3 -I -c), so the gen host needs no copy of it."""
+    mode = str(sp.get("src_manifest") or "verify")
+    if mode == "off" or not str(sp.get("src") or "").startswith("/"):
+        return None
+    try:
+        script = SRC_MANIFEST_PY.read_text()
+    except OSError:
+        return None
+    cmd = f"python3 -I -c {shlex.quote(script)} verify {shlex.quote(sp['src'])}"
+    if sp.get("src_manifest_hash"):
+        cmd += f" --expect {shlex.quote(sp['src_manifest_hash'])}"
+    if mode == "require":
+        cmd += " --ro"
+    return cmd
+
+
+def src_manifest_verdict(sp, rc, txt):
+    """-> (refuse_text or '', note).  A tree whose manifest does not verify is refused before any gen, naming the drifted
+    file(s); no manifest is a note ('verify') or a refusal ('require', or when adoption pinned a hash)."""
+    mode = str(sp.get("src_manifest") or "verify")
+    txt = txt or ""
+    missing = "SRC_MANIFEST MISSING" in txt
+    if rc == 0 and not missing:
+        return "", ""
+    if missing and mode != "require" and not sp.get("src_manifest_hash"):
+        return "", f"KW_NOTE src_manifest: {sp.get('src')} has no manifest (not a built tree); not judged in mode {mode}"
+    lines = [ln for ln in txt.splitlines() if ln.startswith("SRC_MANIFEST")] or [txt[-600:] or f"verifier rc {rc}"]
+    return (f"SRC_MANIFEST FAIL {sp.get('src')}: tree is not main {sp.get('src_sha', '')[:12]} + its overlay manifest "
+            f"({len(lines)} finding(s); first: {lines[0][:300]})\n" + "\n".join(lines[:20])), ""
+
+
 SRC_SKEW_ADVISORY_DIES = {"qwen_compute"}   # KIT-OPS-5 11-14 (COORD): src_skew is logged, not judged, for these dies until the queue lint is refreshed
 
 
@@ -5539,6 +5581,15 @@ def run_item(spec_path):
     rc, txt = run("mkdir", idempotent=True, argv=remote(f"mkdir -p {q(W)}/logs {q(sp['root'])} && rm -rf {q(W)}/gen {q(W)}/rtl {q(W)}/geom"))
     if rc:
         return fail("mkdir", txt)
+    _smc = src_manifest_cmd(sp)                          # SRC-TREE-1115: refuse a src tree that drifted from its manifest, before any gen
+    if _smc:
+        _mrc, _mtxt = run("src_manifest", remote(_smc), idempotent=True)
+        _why, _note = src_manifest_verdict(sp, _mrc, _mtxt)
+        if _note:
+            print(_note, flush=True)
+        if _why:
+            return fail("src_manifest", _why, f"{G}:{src}")
+        print("KW_SRC_MANIFEST ok " + (_mtxt or "")[-200:].strip(), flush=True)
     plan0 = plan                                          # the die's plan of record (shared die bind prep, kit RTL)
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
