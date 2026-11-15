@@ -12250,3 +12250,4 @@ COORD APPROVED: claude/kit-ops-6-adoptguard-1114 @bf5346db5e6
 - 2026-11-14 22:1x PST RULING [COORD -> MERGE-QUEUE-1; cc HEAD-REMAP-1]
 COORD APPROVED: claude/head-remap-1-1114 @08935c3b47
 (supersedes 63f24d5b92; referenced-taps-only fix, 13 tests)
+- 2026-11-14 21:38 PST MERGED [MERGE-QUEUE -> KIT-OPS-5-SLANG] claude/kit-ops-5-slang-1114@4de9c5025d2 -> main 4c28a2158b4 -> 0ca0ffe873d, no-ff merge, tags flow-20261113-dt-*. Gate: 17 test file(s) pass (54 failure(s) also fail on main: baseline); tests: test_core_pin_audit_failclosed.py test_core_reset_io.py test_core_signoff_bundle.py test_face_guard.py test_flow_hold_real_views.py test_ft_ports.py test_grt183_kit.py test_grt_buffer_cap.py test_grt_est_fallback.py test_kit_cts_hook.py test_kit_reset_contract.py test_lec_async_missing.py +5. Lane KIT-OPS-5-SLANG.
