@@ -19,3 +19,6 @@ reg_fanout (old 11-05 attempts) and BIND_STALE (old bind) do not reproduce on li
 
 ## 09:33
 Private builds: intel2 ~/svcmem/<item>/ (run-item PIDs 2660709 2662150 2663954 2666128 2668687), work /srv/opentallas-scratch2/claude/type-svcmem/<item>/attempt_p1 on epyc8/epyc9. Check result.json per item. Cancel loser vs wave attempt by exact unit/PID.
+
+## 19:40 (successor)
+ANSWERED DIE-S81-92: -DOT_SVC_ATT_MEM_MACRO value-less; svc_hi rs t1-t6 + pvso t1/t2 (+lo t1-t7, rs_w same RTL). Next: after B6 verify bound file has dsdv_svc_mem_*; watch live t-kits; bridge gen_vec only if B6 slips.
