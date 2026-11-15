@@ -222,6 +222,41 @@ module ot_pl_seam_w_plr #(
     ot_pl_seam_cq #(.W(W), .CHUNK_BITS(CHUNK_BITS)) u_y_w (.ck(ck), .clr_n(rsi & {CHUNKS{e}}), .d(ir), .q(q));
 endmodule
 
+// ot_pl_seam_w_plrc: ot_pl_seam_w_plr with the clear REGISTERED per chunk (S81-SEAM-RST-1115, lever 3).  Same ports, same
+// station u_y_w.  The NOR2 (rsi & e) driving CHUNK_BITS async pins is replaced by one control flop per chunk,
+//     c[k]: async clear by rsi[k] (assert stays asynchronous), c <= rse otherwise (deassert synchronous in ck),
+// and clr_n[k] = c[k] straight from the flop (clocked on the station's own tap).  rsi[k] has ONE load (the c flop, placed
+// with u_y_w) instead of a gate with CHUNK_BITS loads.  rq is dropped: c <= rse is the same one-edge registration
+// (e(t) = rse(t-1)).  Release: same edge as the original when rsi and rse release together (same d14 leaf age); later
+// rsi than rse -> one edge later.  Assertion: rsi fall clears at once; an rse-only fall clears one edge later (declared +1).
+// RSREG = 0 keeps the combinational rse gate (W <= 24 stations seen so far, one chunk).
+module ot_pl_seam_w_plrc #(
+    parameter integer W = 1073, CHUNK_BITS = 24,
+    parameter integer RSREG = 1,
+    parameter integer CHUNKS = (W + CHUNK_BITS - 1) / CHUNK_BITS
+) (
+    input  wire              ck,
+    input  wire [CHUNKS-1:0] rsi,
+    input  wire              rse,
+    input  wire [W-1:0]      ir,
+    output wire [W-1:0]      q
+);
+    generate if (RSREG != 0) begin : g_reg
+        wire [CHUNKS-1:0] c;
+        genvar k;
+        for (k = 0; k < CHUNKS; k = k + 1) begin : g_c
+            reg cr;
+            always @(posedge ck or negedge rsi[k])
+                if (!rsi[k]) cr <= 1'b0;
+                else cr <= rse;
+            assign c[k] = cr;
+        end
+        ot_pl_seam_cq #(.W(W), .CHUNK_BITS(CHUNK_BITS)) u_y_w (.ck(ck), .clr_n(c), .d(ir), .q(q));
+    end else begin : g_nr
+        ot_pl_seam_cq #(.W(W), .CHUNK_BITS(CHUNK_BITS)) u_y_w (.ck(ck), .clr_n(rsi & {CHUNKS{rse}}), .d(ir), .q(q));
+    end endgenerate
+endmodule
+
 // one seam station: W data flops, chunk c asynchronously cleared by clr_n[c] (a registered control flop)
 module ot_pl_seam_cq #(
     parameter integer W = 1073, CHUNK_BITS = 24,
