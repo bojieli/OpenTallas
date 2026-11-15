@@ -481,6 +481,14 @@ def clock_taps(P):
 
 
 # ------------------------------------------------------------------------------------- tree cell site legality (opt-in)
+TAP_PIN_SNAP = False      # kit --snap-tap-pins (set from the CLI)
+
+
+def snap_track(v, pitch=0.08, offset=0.04):
+    """nearest M8/M9 track centre (platform tracks: offset 0.04, pitch 0.08, plan make_tracks.tcl)"""
+    return round((v - offset) / pitch) * pitch + offset
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -3879,6 +3887,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     root = nodes[0]
     tcl.append(f"place_pin -pin_name root -layer M9 -location {{{root['x']:.3f} {root['y']:.3f}}} -pin_size {sz9}")
     for tp, x, y, *_ in tap_ports:
+        if TAP_PIN_SNAP:      # DIE-ROUTE-ABS-1: on-track terminal (M9 x track, M8 y track) -> no off-track M8 jog / min step
+            x, y = snap_track(x), snap_track(y)
         tcl.append(f"place_pin -pin_name {tp} -layer M9 -location {{{x:.3f} {y:.3f}}} -pin_size {sz9}")
     for inst, x, y in place:
         tcl.append(f"place_inst -name {inst} -location {{{max(0.0, x):.3f} {max(0.0, y):.3f}}} -status PLACED")
@@ -5222,7 +5232,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
               cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False,
-              cut_abstracts=None):
+              cut_abstracts=None, cut_max_boxes=None):
     _kit_stage("plan load")
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
@@ -5325,7 +5335,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["clock_tree"] = cm
     if cut_abstracts is not None:     # DIE-ROUTE-ABS-1 opt-in: open the abstract OBS over placed die clock cells
         import abstract_cutout
-        rep = abstract_cutout.run(plan_path, out, cut_abstracts)
+        rep = abstract_cutout.run(plan_path, out, cut_abstracts, max_boxes=cut_max_boxes)
         meta["abstract_cutout"] = {k: v for k, v in rep.items() if k != "per_type"}
     reserve = reserve_rects(segs, leaf_legs, P)
     # grt
@@ -6134,6 +6144,12 @@ def main(argv=None):
                    help="DIE-ROUTE-ABS-1 opt-in: after the clock tree is placed, cut the partition abstract OBS (M1-M7) and "
                         "the M7 PG pin over every die clock cell inside a partition (margin um, default 0.25); "
                         "writes abstract_cutout.json; originals kept as .lef.precut")
+    k.add_argument("--cut-max-boxes", type=int, default=None, metavar="N",
+                   help="with --cut-abstracts-under-clock: merge the cut windows per type to at most N boxes "
+                        "(abstract_cutout.coarsen_windows); fewer OBS rectangles = less detail-route memory")
+    k.add_argument("--snap-tap-pins", action="store_true",
+                   help="DIE-ROUTE-ABS-1: place the die clock tap terminals on the M9 x / M8 y track grid (removes the "
+                        "off-track 7 nm M8 min-step stubs at every tap)")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
     k.add_argument("--reset-infra", action="store_true",
                    help="Export native registered reset output pins and real neighbor wavefront nets; raw reset "
@@ -6324,10 +6340,11 @@ def main(argv=None):
         return 0
     if a.cmd == "kit":
         globals()["BAND_SHARE_FORM"] = a.band_share_form
+        globals()["TAP_PIN_SNAP"] = a.snap_tap_pins
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,
-                      reset_infra=a.reset_infra, cut_abstracts=a.cut_abstracts_under_clock,
+                      reset_infra=a.reset_infra, cut_abstracts=a.cut_abstracts_under_clock, cut_max_boxes=a.cut_max_boxes,
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},

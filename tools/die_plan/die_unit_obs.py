@@ -42,6 +42,44 @@ def drop_grt_obstructions(block, rects, destroy):
     return dict(total=len(drop) + keep, dropped=len(drop), kept=keep)
 
 
+_TAP = re.compile(r"^t_.+__clk(_t\d+)?$")
+
+
+def snap_pin_rect(rect, dbu=1000, pitch_um=0.08, offset_um=0.04):
+    """move a pin rectangle (dbu) so its centre lies on the M9 x / M8 y track grid (offset 0.04, pitch 0.08 um); size kept"""
+    p, o = int(round(pitch_um * dbu)), int(round(offset_um * dbu))
+    x0, y0, x1, y1 = rect
+    def one(lo, hi):
+        c2 = lo + hi                                   # twice the centre, keeps integers
+        t = int(round(((c2 / 2.0) - o) / p)) * p + o
+        d = t * 2 - c2
+        return lo + d // 2, hi + d // 2
+    nx0, nx1 = one(x0, x1)
+    ny0, ny1 = one(y0, y1)
+    return nx0, ny0, nx1, ny1
+
+
+def snap_tap_pins(block, odb_mod, dbu=1000):
+    """die clock tap terminals (t_<part>__clk_tN): re-create each pin box on the track grid.  -> dict(pins, moved)"""
+    pins = moved = 0
+    for bt in list(block.getBTerms()):
+        if not _TAP.match(bt.getName()):
+            continue
+        boxes = [(b.getTechLayer(), (b.xMin(), b.yMin(), b.xMax(), b.yMax())) for bp in bt.getBPins() for b in bp.getBoxes()]
+        if not boxes:
+            continue
+        pins += 1
+        for bp in list(bt.getBPins()):
+            odb_mod.dbBPin.destroy(bp)
+        nbp = odb_mod.dbBPin.create(bt)
+        for lay, r in boxes:
+            n = snap_pin_rect(r, dbu)
+            moved += n != r
+            odb_mod.dbBox.create(nbp, lay, *n)
+        nbp.setPlacementStatus("FIRM")
+    return dict(pins=pins, moved=moved)
+
+
 def main(argv):
     import odb
     src, obs, dst = argv
