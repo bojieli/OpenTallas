@@ -616,3 +616,58 @@ with its gcell size (size = round(75 um / gcell / 20), at least 1); 10.8 um gcel
 Not verified by me: the exact stock numbers of the iteration table in this build (take them from the FlexDR
 source of the image's OpenROAD commit), and the small-worker run itself.
 Owners: DIE-HEAD-ROUTE-1 (cut-out check, then HEAD), DIE-KV-ROUTE-1 (shared script, KV).
+
+## 17. rp21z20NC: cohort 10 of 26 and LATCHECK host_rx (02:4x PST)
+
+**(a) Cohort FAIL is a prep defect, not the sidecar.** MEASURED (epyc7 head-99/prep21z20NC/prep/published,
+head-bind-1/run/z20nc/cohort.json):
+- The 16 DIFF types are exactly the 16 whose published wrapper is dated 11-11 13:40. The 10 EQUAL types are exactly
+  the 10 that this prep republished (11-15 10:03-10:16: hd_tile, lep0N, mesh, host_e, host_w, spn_end,
+  spn_eshim_tx, st_n3_transit, st_str, turn_a). prep21z20NC.sh republishes only its TYPES list.
+- The differences are generator age, not the new bind. Example ctl_estrip: the 11-11 file has `ot_dp_landing_relay`
+  and `rst_start_raw_0/1` ports; today's generator writes `ot_dp_landing_relay_rep #(.N(5))` and no such ports.
+  The rp21z18d_c run, which passed 26 of 26 on the old sidecar, generated the same text as z20nc for that module.
+  hd_ctl differs because its 11-11 file is from before the tap moves (clk_t1 at (124, 17) against (146, 17)).
+- Fix: republish all 26 types in prep21z20NC, then rerun cohort. Check before the run that no file in
+  prep/published is older than the prep start. Expected 26 of 26.
+
+**Sidecar composition.** The bind table of ca4 is sound: bind passes, count-aligned STA PASS in TT and FF, 427
+crossings at depth 4, 18 freg ports, start-skew 0 of 1,787, 1,788 origins and 0 relays. Compose it like this:
+
+| key | take from | why |
+|---|---|---|
+| top level regions, ports, granularity, collector, codex_serdes_geometry | plan of record | physical 327-region map; identical in both |
+| count_aligned.ports, regions, parts, start_ports (+ schema, root, pad, strap_form, start_tree, relay_stages) | ca4 regions_ca.json | one consistent bind |
+| count_aligned.frame_clock_regions | plan of record | 358 partitions to clock regions; partitions unchanged |
+| count_aligned.start_pins | NEITHER: delete it and let compose rebuild it | it is derived from start_ports (clock_landings.start_pins) |
+| count_aligned.root_settle_cycles | 88 (plan of record) until recomputed | ca4 carries the default 64 |
+
+- start_pins as spliced is stale (MEASURED): 1,608 ports against 1,787 start_ports, and 357 of its 358
+  die_outputs name start stages that do not exist in the new tree. After the rebuild check: ports 1,787,
+  die_outputs 358, type_pins 26, and reset_inputs still 1,126. If reset_inputs come back empty, the START reset
+  wiring has to be regenerated on the ca4 stages by the head_start_sources path (as DIE-HEAD-36 did on 10-29).
+- root_settle_cycles: 88 is 64 plus the 24-cycle reset guard that head_start_local_reset computed on the old
+  stage sites. Dropping to 64 removes that guard silently. Keep 88 now; recompute it on ca4's start_stages.json
+  when that step is rerun. INFERENCE: the guard is of the same size on the new stages; not recomputed by me.
+- ca4 does not need to be regenerated for the sidecar. The emit failure ("no free legal row segment (4 flops)
+  within 40 rows of (6724.08, 8429.94)") is in the physical placement of the start stages; the bind table does
+  not read it. The wide rerun placed 1,430 stages / 5,493 flops / 358 die outputs with at most 18.4 um from
+  cell to stage. Rerun only the emit with KIT-OPS-6's start_stage_emit (@6140b34a0b5) once it is merged, for the
+  die kit, and confirm the same three counts.
+
+**(b) LATCHECK host_rx is a checker accounting gap; nothing is missing in hd_ctl.** MEASURED
+(head-bind-1/run/z20nc/latcheck.json, plans):
+- Delivered 58 = source face 1 + ft 38 + landing 17 + receiver face 1 + receiver kit station 1. The hd_ctl
+  REGS station IS observed (kit_ist 1). Table 59 = 57 natural + fixed_cycles 2, where the 2 are one in-core cycle
+  (there since rp21z16, where the row passed with delta -1) and the REGS station priced as +1.
+- So the real latency is 58 observed + 1 in-core = 59 = table. The landing sum went 18 -> 17 with the new bind
+  (host_rx__1 4 -> 3, __2 3 -> 4, __4 2 -> 1) and the table followed.
+- `gen_lane_latcheck.reclassify` passes a fixed-in-core lane only when delta == -fixed_cycles. Here one of the
+  two fixed cycles is now an observable kit station, so delta is -1, not -2, and the row falls to FAIL / OTHER.
+- Fix in the checker, no plan or RTL change: with --fixed-in-core, PASS when
+  delta == -(fixed_cycles - min(fixed_cycles, observed stations)), observed stations = source and receiver
+  kit_ist + bound_ist. It gives -1 here, 0 on the 34 priced station lanes, -2 on coll_HOST1_d (no station).
+  Add one test with this row. Owner HEAD-BIND-1.
+
+Order: HEAD-99 deletes start_pins, sets root_settle_cycles 88, republishes all 26, reruns prep, cohort and
+LATCHECK with the patched checker. DIE-HEAD-ROUTE-1 keeps ca4 as is.
