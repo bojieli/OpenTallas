@@ -3062,6 +3062,9 @@
        "pregrt_ff_hold": {
         "type": "boolean"
        },
+       "tap_reset_affinity": {
+        "type": "boolean"
+       },
        "pregrt_hold_guard_ps": {
         "type": "number",
         "minimum": 0,

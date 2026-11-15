@@ -5621,6 +5621,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += _pregrt_ff_hold.config_lines(t)
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
+        cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += rck_band_exports(P, tn)
