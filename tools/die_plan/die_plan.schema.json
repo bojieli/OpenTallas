@@ -5604,6 +5604,31 @@
        }
       }
      },
+     "reset_replicate": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
+        "driver": {
+         "type": "string"
+        },
+        "driver_re": {
+         "type": "string"
+        },
+        "region_re": {
+         "type": "string"
+        },
+        "grid_um": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        },
+        "optional": {
+         "type": "boolean"
+        }
+       }
+      }
+     },
      "realize_internal_stations": {
       "type": "boolean"
      },
