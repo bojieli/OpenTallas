@@ -4217,7 +4217,8 @@
     "OT_MAX_BUFFER_PERCENT": "100",
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
-    "OT_GRT_ALLOW_CONGESTION": "1"
+    "OT_GRT_ALLOW_CONGESTION": "1",
+    "OT_CLAND_STRIP_DENS": "1.0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -5473,7 +5474,8 @@
    "src_follow_removed_1114": {
     "root": "/srv/opentallas-scratch2/claude/source-follow-kv64-pv2",
     "by": "KIT-OPS-5 per COORD ruling relayed by CLEAN-I1"
-   }
+   },
+   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens"
   },
   "s81": {
    "enabled": true,
@@ -23120,7 +23122,8 @@
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
-    "OT_CONS_MAX_LAYER": "M9"
+    "OT_CONS_MAX_LAYER": "M9",
+    "OT_CLAND_STRIP_DENS": "1.0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -33191,7 +33194,8 @@
     "SIGNED",
     "WAIT-PARENT"
    ],
-   "note_s81stale1": "S81-STALE-RELAUNCH 11-14: take_states * (WF-1 default). ROUTING parent rows (col_h* base with a live class) were not in take_states, so select() only expanded released retries; 83 col_h pv classes cancelled 09:17 as superseded had no row on the current key and never relaunched."
+   "note_s81stale1": "S81-STALE-RELAUNCH 11-14: take_states * (WF-1 default). ROUTING parent rows (col_h* base with a live class) were not in take_states, so select() only expanded released retries; 83 col_h pv classes cancelled 09:17 as superseded had no row on the current key and never relaunched.",
+   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens"
   },
   "s81_head": {
    "enabled": true,
@@ -34237,7 +34241,8 @@
     "OT_PREGRT_FF_HOLD_AUTO": "100",
     "OT_MAX_BUFFER_PERCENT": "100",
     "OT_GRT_POST_MAX_S": "0",
-    "OT_HOLD_STOP_PS": "-1000000"
+    "OT_HOLD_STOP_PS": "-1000000",
+    "OT_CLAND_STRIP_DENS": "1.0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -35179,7 +35184,8 @@
     "plan": "/srv/opentallas-scratch2/claude/head-99/prep21z15/prep/source_plan.json",
     "plan_sha256": "c36475c38bac8c143481fd6dc313e642fc313984eab9efb742860d651ff2b680",
     "hold_lep0N": "HEAD-98 11-13: rp21z5 carries the PHYS-KVHEAD lep0N relayout; held until PHYS-KVHEAD private route (epyc7 unit oth-ubuntu-3770468-1794622103, intel2 ~/tmp/pkh_lep0N_route.log) is DRC-clean, then release (HEAD-99)."
-   }
+   },
+   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens"
   },
   "qwen_compute": {
    "enabled": true,
@@ -43947,7 +43953,8 @@
     "OT_MAX_BUFFER_PERCENT": "100",
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
-    "OT_GRT_ALLOW_CONGESTION": "1"
+    "OT_GRT_ALLOW_CONGESTION": "1",
+    "OT_CLAND_STRIP_DENS": "1.0"
    },
    "item_inputs_prev_kw45_s28a": {
     "cbf_q00__cl1b5a6458": null,
@@ -45027,7 +45034,8 @@
      "--clock-landing",
      "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S3M2.json"
     ]
-   }
+   },
+   "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens"
   },
   "hbm": {
    "enabled": true,
