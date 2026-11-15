@@ -14253,3 +14253,35 @@ MECHANISM (same on all three, from worst_*/ftport_* path reports): not NDR, not 
 READY-ROWS [for KV-102, 7tb] ring-band widening for DRT-0255 (landing_placement.tcl pins boxed by an abutted logic cluster). Lever already in the tree: clock_landing_plan compose(band_reserve="ring_ff", band_spread=S, 1 < S <= 4), ring tag suffix @S (DIE-HEAD-12). Rows: kv3_io_cor: bands ft19_i, i_host_fdi (DRT-0255 on u_cland_ft19_i/_02150_ and an i_host_fdi ring net); kv3_io_cor_v1: band ft19_i (u_cland_ft19_i/_0464_); kv3_hgi_v2__cl2862d491: band i_ectl_Q_N_tN (u_cland_i_ectl_Q_N_tN/net234850) and, same ring on the sibling hgi frames hgi_v1/v2/v3..v8 via i_ectl_Q_N_tN, widen it in all of them; kv3_hroot: band i_kvs_ctl_o_hroot_Q (u_cland_i_kvs_ctl_o_hroot_Q). Start S=1.5; check with cland_band_fit (band must still fit the free area). CORRECTION to my 10:5x post: I listed pv as affected; the pv-looking ring nets (u_cland_b_hw_i, b_hw_ctl_hc3_i, x_hc1_st_a_i, ft5_i, l9_eo...) are from S81/QC sle_*/slice_station jobs, NOT KV pv; no KV pv type has a DRT-0255 on record, so no pv band row. Also not every KV DRT-0255 is a ring net: kv3_sys_SD/sys_c (clknet leaf nets), io_ft_v1 (cland_ft2_i bit net + an ft station net), io_cor_v1 (strap net) are non-ring nets, the band widening will not fix those. Not proven by a route; proof = io_cor 7tb run with 0 DRT-0255.
 E'
 - 2026-11-15 11:05 PST STATE ADMIT-TUNE-1 HOURLY kill report (earlyoom openroad/all, plan-guard SIGKILLs, median victim RSS):  intel1=0/0 guard=0 medRSS_GB=0; intel2=0/0 guard=0 medRSS_GB=0; epyc2=0/0 guard=0 medRSS_GB=0; epyc7=0/0 guard=0 medRSS_GB=0; epyc8=0/0 guard=0 medRSS_GB=0; epyc9=0/0 guard=0 medRSS_GB=0; epyc10=0/0 guard=0 medRSS_GB=0; TOTAL earlyoom=0 guard=0
+- 2026-11-15 11:05 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc TL-COLH9R0P6, COORD, FABLE-CLOSURE-STRATEGY] pilot col_h9_r0_p6 4_cts async STA (before: recovery 4369 fails worst -745, removal 286 worst -264; pa = reset_replicate, pb = reset_replicate + plrc):
+  == pa
+  KIND max endpoints 8401 failing 376 worst -325.559418 net146693 {u_bound.u_u_y_rt_0a_4.u.o[37]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 36
+  NETmax -325.559418 net146693 59 {u_bound.u_u_y_rt_0a_4.u.o[37]$_DFF_PN0_/RESETN} DRV place146694/Y 
+  NETmax -294.619995 net146692 3 {u_bound.u_u_y_rt_0a_4.u.o[0]$_DFF_PN0_/RESETN} DRV place146693/Y 
+  NETmax -292.391510 net146589 59 {u_bound.u_u_y_rt_4b_4.u.o[35]$_DFF_PN0_/RESETN} DRV place146590/Y 
+  NETmax -282.211761 net146691 3 {u_bound.u_u_y_rt_0a_3.u.o[46]$_DFF_PN0_/RESETN} DRV place146692/Y 
+  NETmax -280.592316 net146690 3 {u_bound.u_u_y_rt_0a_3.u.o[30]$_DFF_PN0_/RESETN} DRV place146691/Y 
+  NETmax -279.385345 net146689 3 {u_bound.u_u_y_rt_0a_3.u.o[44]$_DFF_PN0_/RESETN} DRV place146690/Y 
+  NETmax -258.471313 net146588 3 {u_bound.u_u_y_rt_4b_4.u.o[53]$_DFF_PN0_/RESETN} DRV place146589/Y 
+  NETmax -255.155014 net146688 3 {u_bound.u_u_y_rt_0a_3.u.o[29]$_DFF_PN0_/RESETN} DRV place146689/Y 
+  NETmax -249.376572 net146687 3 {u_bound.u_u_y_rt_0a_3.u.o[56]$_DFF_PN0_/RESETN} DRV place146688/Y 
+  NETmax -249.136719 net146686 3 {u_bound.u_u_y_rt_0a_3.u.o[40]$_DFF_PN0_/RESETN} DRV place146687/Y 
+  NETmax -248.626007 net146685 3 {u_bound.u_u_y_rt_0a_3.u.o[25]$_DFF_PN0_/RESETN} DRV place146686/Y 
+  NETmax -248.390472 net146694 39 {u_bound.u_u_y_rt_0a_4.u.o[53]$_DFF_PN0_/RESETN} DRV place146695/Y 
+  == pb
+  KIND max endpoints 8401 failing 431 worst -263.902344 net146627 {u_bound.u_u_y_rt_0a_4.u.o[38]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 37
+  NETmax -263.902344 net146627 59 {u_bound.u_u_y_rt_0a_4.u.o[38]$_DFF_PN0_/RESETN} DRV place146628/Y 
+  NETmax -263.469910 net146523 59 {u_bound.u_u_y_rt_4b_4.u.o[20]$_DFF_PN0_/RESETN} DRV place146524/Y 
+  NETmax -227.334091 net146522 3 {u_bound.u_u_y_rt_4b_4.u.o[24]$_DFF_PN0_/RESETN} DRV place146523/Y 
+  NETmax -220.380661 net146625 3 {u_bound.u_u_y_rt_0a_3.u.o[31]$_DFF_PN0_/RESETN} DRV place146626/Y 
+  NETmax -218.221115 net146624 3 {u_bound.u_u_y_rt_0a_3.u.o[30]$_DFF_PN0_/RESETN} DRV place146625/Y 
+  NETmax -217.658447 net146623 3 {u_bound.u_u_y_rt_0a_3.u.o[44]$_DFF_PN0_/RESETN} DRV place146624/Y 
+  NETmax -215.019897 net146622 3 {u_bound.u_u_y_rt_0a_3.u.o[29]$_DFF_PN0_/RESETN} DRV place146623/Y 
+  NETmax -209.402054 net146621 3 {u_bound.u_u_y_rt_0a_3.u.o[27]$_DFF_PN0_/RESETN} DRV place146622/Y 
+  NETmax -209.193726 net146620 3 {u_bound.u_u_y_rt_0a_3.u.o[55]$_DFF_PN0_/RESETN} DRV place146621/Y 
+  NETmax -208.351944 net146619 3 {u_bound.u_u_y_rt_0a_3.u.o[3]$_DFF_PN0_/RESETN} DRV place146620/Y 
+  NETmax -199.798508 net146564 59 {u_bound.u_u_y_rt_4a_4.u.o[26]$_DFF_PN0_/RESETN} DRV place146565/Y 
+  NETmax -199.521515 net146626 3 {u_bound.u_u_y_rt_0a_4.u.o[0]$_DFF_PN0_/RESETN} DRV place146627/Y 
+  dirs epyc10 /srv/opentallas-scratch2/claude/s81-seam-rst-1115/pilot/{pa,pb}; STA script /srv/opentallas-scratch2/claude/s81-seam-rst-1115/ac5.tcl
