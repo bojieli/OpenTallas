@@ -719,8 +719,7 @@
     "kv3_pc_v1__cl4ea58a5c": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
     "kv3_io_cor": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
     "kv3_io_cor_v1": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
-    "kv3_hroot": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key.",
-    "kv3_pc_v1__cl23f6a148": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key"
+    "kv3_hroot": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5691,8 +5690,7 @@
     "kv3_pv_v4n": "lane_ready:KV-101",
     "kv3_pv_v6": "lane_ready:KV-101",
     "kv3_pv_v6n": "lane_ready:KV-101",
-    "kv3_hroot": "lane_result:DRT0255-PROOF flags READY",
-    "kv3_pc_v1__cl23f6a148": "lane_ready:KITRTL-FAIL-1115"
+    "kv3_hroot": "lane_result:DRT0255-PROOF flags READY"
    },
    "prev_wavehold1115_kvgeom6": {
     "event": "kvgeom6",
@@ -7700,11 +7698,7 @@
     "bk_sel__t2": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt: bk_sel__t2 u_tx param mismatch, released with the TRIDX delta. Lift = delete this key.",
     "col_*": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
     "svc_*": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key.",
-    "dsdv_slice_lepw_mu_LP__t2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slice_station__t25": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slice_station__t8": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "dsdv_slice_lepe_mu_LP__t2": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): released 12:29 without its new view. Running attempts finish. Lift = delete this key.",
-    "*": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): die-level hold on FRESH S81 launches: wave passes --src-tree to a tree bind.py that does not know it (110 S81 fails in the 14:01 tick). Until claude/kitrtl-fail-1115 merges and a smoke kit_rtl passes on the B6gE tree. Running attempts finish. Lift = delete this key.",
     "slice_station__t22": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "slice_station__t24__cleece78ec": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "slice_station__t26": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
@@ -34463,11 +34457,7 @@
     "bk_sel__t2": "event_adopt:TRIDX delta (S81-TAPROWS)",
     "col_*": "event_adopt:Event F + lane_ready:S81-COLABS-1115 new view",
     "svc_*": "lane_result:S81-SVC-SYNTH-1115 pilot PASS + event_adopt:Event G",
-    "dsdv_slice_lepw_mu_LP__t2": "lane_ready:KITRTL-FAIL-1115",
-    "slice_station__t25": "lane_ready:KITRTL-FAIL-1115",
-    "slice_station__t8": "lane_ready:KITRTL-FAIL-1115",
     "dsdv_slice_lepe_mu_LP__t2": "lane_ready:new view posted",
-    "*": "merge:claude/kitrtl-fail-1115 + lane_result:smoke kit_rtl pass on the B6gE tree",
     "slice_station__t22": "lane_ready:SIGNED-TERMINAL-1115 posts",
     "slice_station__t24__cleece78ec": "lane_ready:SIGNED-TERMINAL-1115 posts",
     "slice_station__t26": "lane_ready:SIGNED-TERMINAL-1115 posts",
@@ -36929,32 +36919,8 @@
     "sle_st_a_v1__cl989804f6__cl18eece69": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
     "sl?_hc0*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption.",
     "sl?_hc1*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption.",
-    "cbf_q00__cl1b5a6458": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbf_q00__cl870de686": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbf_q00_s2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbn_q00__cl622f65d2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbn_q00__cld7bf7197": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbn_q00__cldbcda913": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbn_q01__clab6e67f2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbn_q01__cldd6ea846": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbn_q11__cl49ae4555": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbn_q11__cl5cc92dfe": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbx_q10__cl89936551": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbx_q10__cl94a12200": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "cbx_q10__cl94a12200_h": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "sle_fe_v3": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "sle_hc1__cl22c1ff36": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "sle_hc2__cl9c4c4509__clf60c5152": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "sle_sc_v1__cl115da35f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "sle_st_a_v2__pv30dda31f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "sle_st_a_v2__pv4242de79": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slw_sc_v2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slw_st_a_v2__cl9f076a5c": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slw_st_a_v2__clf4365a62": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
-    "slw_su_l0__cl1a1c1f8f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "slw_su_l1__cla2a78701": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
     "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
-    "*": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): die-level hold on FRESH QC S4Q3C launches (9 src-tree kit_rtl fails since 13:30; KITRTL tree install not verified). Until claude/kitrtl-fail-1115 merges and a smoke kit_rtl passes on the S4Q3C tree. Running attempts finish. Lift = delete this key.",
     "sle_su_l0__cl086d85ba": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
     "slw_su_l0__cl1e5219ea": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key."
    },
@@ -47225,32 +47191,8 @@
     "sle_st_a_v1__cl989804f6__cl18eece69": "event_adopt:S4q3d",
     "sl?_hc0*": "event_adopt:S4q5",
     "sl?_hc1*": "event_adopt:S4q5",
-    "cbf_q00__cl1b5a6458": "lane_ready:KITRTL-FAIL-1115",
-    "cbf_q00__cl870de686": "lane_ready:KITRTL-FAIL-1115",
-    "cbf_q00_s2": "lane_ready:KITRTL-FAIL-1115",
-    "cbn_q00__cl622f65d2": "lane_ready:KITRTL-FAIL-1115",
-    "cbn_q00__cld7bf7197": "lane_ready:KITRTL-FAIL-1115",
-    "cbn_q00__cldbcda913": "lane_ready:KITRTL-FAIL-1115",
-    "cbn_q01__clab6e67f2": "lane_ready:KITRTL-FAIL-1115",
-    "cbn_q01__cldd6ea846": "lane_ready:KITRTL-FAIL-1115",
-    "cbn_q11__cl49ae4555": "lane_ready:KITRTL-FAIL-1115",
-    "cbn_q11__cl5cc92dfe": "lane_ready:KITRTL-FAIL-1115",
-    "cbx_q10__cl89936551": "lane_ready:KITRTL-FAIL-1115",
-    "cbx_q10__cl94a12200": "lane_ready:KITRTL-FAIL-1115",
-    "cbx_q10__cl94a12200_h": "lane_ready:KITRTL-FAIL-1115",
-    "sle_fe_v3": "lane_ready:KITRTL-FAIL-1115",
-    "sle_hc1__cl22c1ff36": "lane_ready:KITRTL-FAIL-1115",
-    "sle_hc2__cl9c4c4509__clf60c5152": "lane_ready:KITRTL-FAIL-1115",
-    "sle_sc_v1__cl115da35f": "lane_ready:KITRTL-FAIL-1115",
-    "sle_st_a_v2__pv30dda31f": "lane_ready:KITRTL-FAIL-1115",
-    "sle_st_a_v2__pv4242de79": "lane_ready:KITRTL-FAIL-1115",
-    "slw_sc_v2": "lane_ready:KITRTL-FAIL-1115",
-    "slw_st_a_v2__cl9f076a5c": "lane_ready:KITRTL-FAIL-1115",
-    "slw_st_a_v2__clf4365a62": "lane_ready:KITRTL-FAIL-1115",
-    "slw_su_l0__cl1a1c1f8f": "lane_ready:KITRTL-FAIL-1115",
     "slw_su_l1__cla2a78701": "lane_result:DRT0255-PROOF flags READY",
     "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY",
-    "*": "merge:claude/kitrtl-fail-1115 + lane_result:smoke kit_rtl pass on the B6gE tree",
     "sle_su_l0__cl086d85ba": "lane_ready:SIGNED-TERMINAL-1115 posts",
     "slw_su_l0__cl1e5219ea": "lane_ready:SIGNED-TERMINAL-1115 posts"
    }
@@ -65339,5 +65281,83 @@
  "note_kitops3_e8back": "KIT-OPS-3 00:4x (COORD: epyc8 scratch 2.6 TB free): epyc8 restored to hosts/place_prefer/gen_hosts from *_prev_kitops3_e8all / gen_hosts_prev_kitops3_e8.",
  "note_kitops3_lb": "KIT-OPS-3 01:xx LIMIT-BIND-1 overlay deployed on die srcs; die_gen_env OT_CORE_TAP_REACH_UM=0 all dies (old in die_gen_env_prev_kitops3_lb); retry keys for tap/cap-limit failures + hd_serdes.",
  "note_kitops4_hosts": "KIT-OPS-4 11-14 05:3x COORD: epyc4 added to retired_hosts (terminated 11-13; SUBSTEP-1 and other host loops skip it, was ssh timeout every tick); hbm die src_probe false (HBM parked: no SRC-INCOMPLETE lines). No active host/gen_hosts/place_prefer list names epyc4/5/6 (only the stash_epyc4_kw46_srcloss history).",
- "restage_place_waiters": true
+ "restage_place_waiters": true,
+ "hold_items_lifted_wavehold1115_kitrtl_r175": {
+  "qwen_kvsys": {
+   "keys": [
+    "kv3_pc_v1__cl23f6a148"
+   ],
+   "reasons": {
+    "kv3_pc_v1__cl23f6a148": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key"
+   }
+  },
+  "s81": {
+   "keys": [
+    "*",
+    "dsdv_slice_lepw_mu_LP__t2",
+    "slice_station__t25",
+    "slice_station__t8"
+   ],
+   "reasons": {
+    "dsdv_slice_lepw_mu_LP__t2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "slice_station__t25": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "slice_station__t8": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "*": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): die-level hold on FRESH S81 launches: wave passes --src-tree to a tree bind.py that does not know it (110 S81 fails in the 14:01 tick). Until claude/kitrtl-fail-1115 merges and a smoke kit_rtl passes on the B6gE tree. Running attempts finish. Lift = delete this key."
+   }
+  },
+  "qwen_compute": {
+   "keys": [
+    "*",
+    "cbf_q00__cl1b5a6458",
+    "cbf_q00__cl870de686",
+    "cbf_q00_s2",
+    "cbn_q00__cl622f65d2",
+    "cbn_q00__cld7bf7197",
+    "cbn_q00__cldbcda913",
+    "cbn_q01__clab6e67f2",
+    "cbn_q01__cldd6ea846",
+    "cbn_q11__cl49ae4555",
+    "cbn_q11__cl5cc92dfe",
+    "cbx_q10__cl89936551",
+    "cbx_q10__cl94a12200",
+    "cbx_q10__cl94a12200_h",
+    "sle_fe_v3",
+    "sle_hc1__cl22c1ff36",
+    "sle_hc2__cl9c4c4509__clf60c5152",
+    "sle_sc_v1__cl115da35f",
+    "sle_st_a_v2__pv30dda31f",
+    "sle_st_a_v2__pv4242de79",
+    "slw_sc_v2",
+    "slw_st_a_v2__cl9f076a5c",
+    "slw_st_a_v2__clf4365a62",
+    "slw_su_l0__cl1a1c1f8f"
+   ],
+   "reasons": {
+    "cbf_q00__cl1b5a6458": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbf_q00__cl870de686": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbf_q00_s2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbn_q00__cl622f65d2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbn_q00__cld7bf7197": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbn_q00__cldbcda913": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbn_q01__clab6e67f2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbn_q01__cldd6ea846": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbn_q11__cl49ae4555": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbn_q11__cl5cc92dfe": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbx_q10__cl89936551": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbx_q10__cl94a12200": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "cbx_q10__cl94a12200_h": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "sle_fe_v3": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "sle_hc1__cl22c1ff36": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "sle_hc2__cl9c4c4509__clf60c5152": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "sle_sc_v1__cl115da35f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "sle_st_a_v2__pv30dda31f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "sle_st_a_v2__pv4242de79": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "slw_sc_v2": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "slw_st_a_v2__cl9f076a5c": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "slw_st_a_v2__clf4365a62": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key",
+    "slw_su_l0__cl1a1c1f8f": "KITRTL-FAIL-1115 11-15 13:5x (COORD r147): @kit_rtl class (stale die-tree bind.py lacks --src-tree; KW_ROAM note masked it) - no relaunch until the wave kit_rtl fix is merged; lift = delete this key | + WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): SIGNED-UNVERSIONED item (archived R-MINIMAL signed record, no flow tag): no relaunch until the SIGNED-TERMINAL-1115 terminal test lands. Running attempts finish. Lift = delete this key.",
+    "*": "WAVE-HOLDS-1115 2026-11-15 14:04 PST (COORD r152, FABLE-FLOW-1350): die-level hold on FRESH QC S4Q3C launches (9 src-tree kit_rtl fails since 13:30; KITRTL tree install not verified). Until claude/kitrtl-fail-1115 merges and a smoke kit_rtl passes on the S4Q3C tree. Running attempts finish. Lift = delete this key."
+   }
+  }
+ }
 }
