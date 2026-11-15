@@ -247,3 +247,135 @@ S81-CORES-2: same read on bksel_q (652 ps) before choosing its form; if its face
 2026-11-15 DLY-SPREAD (G8 mismatch, col_h9_r1 u_d10_6_Y): FABLE-GENBUG says 9 stages over 1,695 um, worst hop 1,268 um (ideal 170). Measured on col_h9_r1__t1__cl49d7a23e__pv11c696bc 3_place.odb: the 9 stages chain by connectivity with max hop 302 um; the last stage drives 1,317 loads and the 1,268 um is stage -> farthest load. A chain spreader cannot move it (centroid of 1,317 loads). It is a fan-out/copy problem (R-REACH-1): needs register copies per load region, not more stage spacing. Not guessed further. Same what-if: over-reach 4493 -> 4242 only; remaining col hops are ring -> u_bin (G2) and last pad stage (G1).
 
 2026-11-15 DLY-SPREAD (COORD note, do not re-diagnose): the col_h9_r1 u_d10_6_Y 1,317-load fan-out is the case COLGEN cg2 reset_replicate targets (driver_re u_d\d+_\d+_Y, 300 um grid), in B6g now. dly_spread leaves it alone by design.
+
+## 7. serdes island vs PHY PG domain (11-15, FABLE-S81-ISLAND; answers DIE-S81-92 / COORD)
+
+Read: epyc7 /srv/opentallas-scratch2/claude/s81-b3-clk/b6e_work/tools/die_plan/gen_phys.py (phy_pg_domains 3400, pg_placed_blocks
+3358, phy_pg_west_notch 3333, phy_pg_clip 3381, phy_pg_pdn 3865), rck_island.py (check 73, domain_patch 175), die_io.py
+check_pg_domains 602; plans ev/B6d1, B6f5d, B6f5e, B6f5f. What-if run on B6f5d (script epyc7 /tmp/fable_isl_d3.py). No build.
+
+### 7.1 What grows the domain (numbers)
+
+The type-frame PHY region is NOT grown from the die rect. It is built in three steps:
+1. rt = die.pg.domains rect clipped to the instance, in the type frame. For the S81 serdes types this is far larger than the PMA:
+   it is the old 2.4 mm2 PHY window + 63.64 guard. Type-frame floor (y0) of that rect, by type:
+   238.76 (t14, t2, t1 x2) | 452.316 (t3) | 681.372 (t13, t15 x2, t16, t4) | 840.4 (t12). Top is 1226.88 for all.
+2. EVERY placed block (hard core or physical part, pg_placed_blocks) that overlaps rt is taken as a domain macro. A block that
+   is only partly inside raises "straddles". There is no test of what supply the block is on.
+3. phy_pg_south_notch_um 4.32 and phy_pg_clip_um 10 then cut rt down to the bounding box of THOSE macros.
+In B6d1 the only blocks above the die floor are the two PMA macros (u_prx y0 951.48 / 952.56), so the floor is
+951.48 - 4.32 = 947.16 (948.24 for the 314-x family). u_chn and the two SRAMs sat below the die floor on purpose
+(t14: u_chn top 233.28 < 238.76; t13: SRAM top 662.05 < 681.372).
+The island move puts u_chn + u_dmem + u_cmem at y 650..914, inside the die rect, so step 2 counts them as PHY macros and
+step 3 clips to them: t14/t2 floor = SRAM y0 650.172 - 4.32 = 645.84; t13 class floor = die floor 681.372 (u_chn y0 683.64
+is 2.27 above it); t1 x2 / t3 678.24 (u_chn 682.56 - 4.32).
+
+### 7.2 Why both positions fail
+
+- B6f4d/B6f5d: island [245, 640, 1005, 944] vs region floor 645.84 -> 298.16 of the 304 um of island height is inside the
+  region. Same for all 11 types (t12 does not even report: see 7.5).
+- B6f5f is geometrically the SAME plan. b6f5f.py reads the floor on B6f5e, where the macros are still at the B6d1 sites
+  (island None, floor 947.16), sets the island top to 947.16 - 3.16 = 944 = the derive() rect, then moves the macros in, and the
+  floor drops to 645.84 again. B6f5f island rects are identical to B6f5d on all 11 types.
+- No "below the floor" position exists as a class: the floor follows the macros until they leave the DIE rect. A 304-um
+  island below the die floor: t14/t2/t1 impossible (238.76 < 304); t3 y 148..452 (492 um lower); t13 class y 377..681 (264
+  lower); t12 y 536..840 (105 lower). That breaks the reason for the island (rck pad at y 1090.8, island right under the PMA).
+- The check is right to fail. With the B6f5d region, phy_pg_pdn would (a) put a hard placement blockage over 98 % of the
+  island, and (b) global-connect VDD of u_chn and both SRAMs to VDDPHY and give them the VDDPHY macro grid.
+
+### 7.3 Fix: (a), by declared membership. Not (b), (c), (d)
+
+A supply domain is defined by the instances on that supply, not by which blocks happen to lie in a rectangle (UPF
+create_power_domain -elements). The PMA macros are the only VDDPHY loads; u_chn and the SRAMs are core-VDD blocks.
+- (b) island inside the PHY domain: wrong supply for u_chn/SRAM/std cells, or a nested cut-out = more geometry for the same result.
+- (c) move: no class position (7.2).
+- (d) multi-rect: not needed, the clipped PMA box is one rect.
+- Shrinking the 14 die rects (domain_patch) is the 41-error path: G0 wants the die rect to cover the io window, or a
+  phy_macro_binding body (only ES0/ES1 have one). Keep the B6d1 die rects.
+
+What-if (pg_placed_blocks filtered to the PMA macros, plan B6f5d unchanged): all 11 types pass rck_island.check with 0 errors.
+Region back to the B6d1 value, members [u_prx, u_ptx], gap island top -> region floor 3.16 um on every type, no core macro inside
+the region:
+  t14, t2, t3: floor 947.16, island top 944 | t1 x2: 947.16 / 944 (island x1 1197.29) | t13, t16, t4: 948.24 / 945.08 |
+  t15 x2: 948.24 / 945.08 | t12: 948.24 / 945.08 (region [59.184, 948.24, 2319.948, 1226.88]).
+
+### 7.4 Tool change (Sonnet lane, gen_phys.py + schema.py + rck_island.py; opt-in, key absent = bytes unchanged)
+
+1. schema: new type key `phy_pg_macros`: array of physical instance names, minItems 1.
+2. phy_pg_domains: when the key is present, only listed blocks enter mac / mac_x0 / mac_y0 / mac_box and the straddle test.
+   After notch + clip: ValueError if a listed name was not found inside the die rect; ValueError if any unlisted placed block
+   overlaps the FINAL rt ("core macro X inside PHY PG region"). Unlisted blocks elsewhere in the die rect are core supply.
+3. rck_island.check: do not swallow ValueError from phy_pg_domains; report it as a check error.
+4. rck_island.domain_patch: remove from plan_patch output (it is the die-rect shrink) and fix its docstring.
+5. Tests next to test_phy_pg_clip.py: key absent unchanged; key present with a core macro in the die rect -> region = PMA box;
+   core macro overlapping the final region -> error; listed name missing -> error.
+No consumer change: phy_pg_pdn, core_pg_grids, core_pg_published, check.py core_pg all read d[4], so u_chn and the SRAMs
+fall to the core grid and core_pg_connect by themselves. rck_band_exports is unaffected (u_prx stays in exactly one domain).
+
+### 7.5 Plan change (DIE-S81-92)
+
+- Base B6f5d (island at the derive() rect, 14 die rects at B6d1). Drop B6f5f. No coordinate changes.
+- Add to the 11 serdes types: "phy_pg_macros": ["u_bound.u_core.u_prx", "u_bound.u_core.u_ptx"].
+- Accept: rck_island.check 0 errors on 11 types; phy_pg_domains floor 947.16 / 948.24 with 2 macros; G0 pg_domain errors 0.
+- t12 today shows check [] only because the error is swallowed: phy_pg_domains raises "macro u_dmem straddles PG domain
+  phy_lk_WS3 [0, 840.4, 2437.32, 1226.88]", so its kit generation would stop. The key fixes it too.
+
+Not verified: no kit generated or built with the key; die-level IR of the island (core supply under the die VDDPHY rect comes
+laterally through the tile core grid, as for every core cell at y 238..947 in the signed B6d1 forms; advisory under the
+academic profile). A later cleanup could bind all 14 domains (phy_macro_binding) and shrink the die rects; not needed now.
+
+## 8. leaf t14 GRT never converges (11-15, FABLE-S81-ISLAND; for TL-LEAFT14, DIE-S81-92)
+
+Source: epyc10 /srv/opentallas-scratch2/claude/tl-leaft14/r1/ot_s81sl_leaf__t14 (kit of wave attempt_5; GRT pid 802561, 10 h 20
+min, 20 GB). Read-only: 5_1_grt.tmp.log, congestion-20.rpt (08:19) and congestion-5.rpt (08:51), macro_place.tcl, pins.json,
+ft_stations.txt, ft_track_use.json. The report has no per-layer overflow (GRT writes "Layer -"); layers below are inferred from
+the gcell capacity (gcell 0.57 um). Placement itself not opened.
+
+### 8.1 Overflow map
+
+Outline 1442.88 x 1278.72, 27 macros, movable std area 31,384 um2 (the type is macros + ft). Total overflow 5,751 at iteration
+20 of pass 6 (12,954 at iteration 5 of pass 7). 92.5 % is in one 185 x 50 um patch in the SW macro cluster:
+
+| region | H ov | V ov | share | cap/gcell H, V | reading |
+|---|---|---|---|---|---|
+| first 20 um over u_vs south edge (x 173..346, y 406..426) | 626 | 2829 | 60.1 % | 6.6, 5.5 | over-macro: M8 H, M7 V only |
+| channel ve_m/ve_s top -> u_vs bottom (x 150..356, y 380.2..406.1) | 1805 | 58 | 32.4 % | 24.0, 5.4 | H full |
+| over ve_m | 207 | 24 | 4.0 % | 6.7, 2.5 | M8 over macro (ft0) |
+| over ve_s | 65 | 26 | 1.6 % | 7.5, 2.4 | |
+| 8.6-um slot ve_s/ve_m (x 207.5..216.1, y 35..380) | 0 | 85 | 1.5 % | -, 23.6 | |
+| rest of the die | 1 | 25 | 0.5 % | | |
+
+Nets in the overflowed gcells: u_ft_ft5_o_3 (ft5 last station) 31,570 mentions, anonymous buffers 17,173, ft2_o 1,868; clock
+nets under 1.5 %. Macro boxes: ve_s [34.7, 34.6, 207.5, 380.2], ve_m [216.1, 43.2, 388.9, 388.8], u_vs [172.9, 406.1, 345.7,
+578.9], u_vq [354.4, 423.4, 527.2, 553.0].
+
+### 8.2 Structural cause
+
+Three ft bundles cross in the one gap between ve_m/ve_s and u_vs, and ft5 turns there:
+- ft5: 1104 bits, in S (x 406..646), out W (y 247.5..487.1). Stations (525.6, 287.4) -> (499.7, 369.0) -> (212.4, 365.7): the last
+  hop runs W through the gap, and the last station sits in the 8.6-um slot between ve_s and ve_m.
+- ft2: 668 bits N->S at x 128.7..273.6, station (201.6, 384.9), in the same gap. ft4: 597 bits S->N at x 275.2..401.1, station
+  (339.8, 392.2), same gap. Together 2,369 station flops and their buffers.
+- The gap is 17.3 um high over x 216..346 (388.8 -> 406.1): 30 gcells x 24 = about 728 H tracks. ft5 alone needs 1104 through it
+  = 152 %. What does not fit goes up to M7/M8 over the u_vs edge, where capacity is 5.5 / 6.6 per gcell: that is the 60 % row.
+- The kit said so at generation: ft_track_use.json ft5 u_station 0.79 against target 0.5 (advisory).
+Not a layer-budget or pin-spread problem: M8 is already the ceiling, pins are on M4-M7 at the faces, and 99.5 % of the overflow
+is at this one throat. Same class as FABLE-LEAF-FTSLOT (leaf cores too close to faces/each other, "one 17-um gap" on t34).
+
+### 8.3 Fix (plan geometry, one event for leaf__t14; estimate, not built)
+
+1. Open the throat: move u_vs north by 34.56 um (origin y 406.116 -> 440.676, top 613.476; still 21.6 um under rxsf 635.076
+   and 60.5 under u_vsw 673.956). Gap 17.3 -> 51.8 um over x 216..346 = about 2,180 H tracks; ft5 1104 = 51 %.
+2. Take the ft5 last station out of the 8.6-um slot: put it in the open area west of u_vs (x 130..170, y 385..440), so its
+   outputs fan N/S along the W strip to the pins at y 247.5..487.1 and no longer share sites with the ft2 station.
+3. Keep ft2 (201.6, 384.9) and ft4 (339.8, 392.2) in the widened gap, at least 20 um apart in y from the ft5 row.
+If the leaf block-shift form of FABLE-LEAF-FTSLOT sec 4 is applied to t14, apply 1 as a relative move of u_vs inside it.
+Check before any full build: place + GRT only on a private copy; pass = overflow 0 inside 30 iterations, B-row H use under 60 %.
+Other leaf types with the ve_m / u_vs pair at the same 17.3 um spacing and an ft that turns W there need the same read (t34).
+
+### 8.4 epyc10 r1: cancel
+
+Yes. It is the same kit as attempt_4 (GRT-0116) and attempt_5. The log shows 7 passes of 30 extra iterations; each failed pass
+only drops the NDR of one clock net (GRT-0273) and starts again, and clock nets are under 1.5 % of the overflow. Overflow is
+not falling between passes (5,751 at iteration 20). It cannot converge on this geometry; cancelling frees 8 threads and 20 GB.
+The owner lane cancels (docker dpkit-ot_s81sl_leaf__t14-4116496); I did not touch it. Do not relaunch t14 unchanged.
