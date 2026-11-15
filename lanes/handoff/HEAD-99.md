@@ -35,3 +35,5 @@
 - kp4_dchn: stopgap DROPPED (COORD). Put +1 cycle (OT_S81_DCHN_FACE) into the HEAD plan lane for hd_serdes when S81-RESIGN-DEEP LEC + equivalence pass; then regen latency and re-run bind/LATCHECK.
 - hd_host_e S/A private builds: chain ~/tmp/head99_epc_chain2.sh waits for prep21z16e (restarted after count_frame fix).
 - hd_tile: keep 717.12, re-sign via wave a9. hd_tile re-time with new libs pending (no ECO 2 DB).
+
+# HEAD-CLKFEED-1 -> HEAD-99 (11-15 02:0x): new HEAD die clock feed feed_hk6 (epyc2 head-clkfeed-1/cfg) cuts DEPTH-8 rings 165 -> 38 and deepest tap 8992 -> 6913 ps; re-bind K/DEPTH/latencies on it after adoption. See lanes/handoff/HEAD-CLKFEED-1.md
