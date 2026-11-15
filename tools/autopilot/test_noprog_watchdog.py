@@ -229,3 +229,11 @@ def test_estimated_line_times_get_a_longer_window():
     anc = [(NOW - 8.4 * H, 0), (NOW - 6.5 * H, 200), (NOW, 225)]
     assert nw.judge(res, anc, NOW)[0] != "NO-PROGRESS"
     assert nw.judge(res, anc, NOW, exact=True)[0] == "NO-PROGRESS"
+
+
+def test_standalone_lec_without_scope_is_cancellable_only_when_lec_only():
+    r = row("happy_hodgkin", None, "CANCEL-NOW")
+    r["lec_only"] = True
+    assert nw.decide([r], {"happy_hodgkin": 0}, NOW, True) == [None]
+    r2 = row("flow", None, "CANCEL-NOW")
+    assert nw.decide([r2], {"flow": 0}, NOW, True) == []

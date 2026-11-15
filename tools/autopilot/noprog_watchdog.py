@@ -430,7 +430,8 @@ def decide(rows, reported, now, act):
         if not bad:
             continue
         healthy = [r for r in rs if r["verdict"] not in ("NO-PROGRESS", "CANCEL-NOW")]
-        if healthy or unit is None:
+        standalone = unit is None and all(r.get("lec_only") for r in bad) and not healthy
+        if healthy or (unit is None and not standalone):
             for r in bad:
                 r["action"] = "REPORT-ONLY: " + ("no ot-heavy scope" if unit is None else "sibling healthy: " + ",".join(h["container"] for h in healthy))
         elif all(r["key"] in reported and now - reported[r["key"]] >= MIN_REPORT_AGE_S for r in bad):
@@ -516,7 +517,9 @@ def scan(now=None, act=False, probe_s=4):
             if kind == "lec" and now - started > LEC_MAX_S:
                 # COORD 11-14: LEC is advisory under R-MINIMAL.  A LEC-only job (the route result exists) older than 24 h goes,
                 # alive or not; a LEC whose route stage has not produced its result is never cancelled here.
-                if route_done(work):
+                cmd_text = " ".join(c["Config"].get("Cmd") or [])
+                row["lec_only"] = "lec.py" in cmd_text and "make DESIGN_CONFIG" not in cmd_text      # a standalone LEC container: no flow behind it
+                if row["lec_only"] or route_done(work):
                     v, why = "CANCEL-NOW", "LEC >24h, advisory"
                 else:
                     v, why = "PROGRESS", "LEC >24h but the route result is not there yet: kept"
@@ -539,7 +542,7 @@ def scan(now=None, act=False, probe_s=4):
             r["why"] += " (cpu idle: hung)"
     reported = state.setdefault("reported", {})
     cancel_units = decide(rows, reported, now, act)
-    actions = [do_cancel(u, [r for r in rows if r["unit"] == u], now) for u in cancel_units] if act else []
+    actions = [do_cancel(u, [r for r in rows if r["unit"] == u and r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW")] if u is None else [r for r in rows if r["unit"] == u], now) for u in cancel_units] if act else []
     for r in rows:
         if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW") and not r.get("action", "").startswith("REPORT-ONLY"):
             reported.setdefault(r["key"], now)
@@ -562,6 +565,16 @@ def scan(now=None, act=False, probe_s=4):
 def do_cancel(unit, rs, now):
     """ot-heavy-stop for the scope: --match <kit dir> after a dry run that hits exactly this unit, else --unit"""
     kit = rs[0]["kit"] or ""
+    if unit is None:        # standalone LEC container (no ot-heavy scope): docker stop of that exact container after a cmdline check
+        res = ""
+        for r in rs:
+            top = sh("docker", "top", r["container"], "-eo", "args", timeout=30)
+            if "/work/lec.py" in top and "make DESIGN_CONFIG" not in top:
+                res += sh("docker", "stop", "-t", "20", r["container"], timeout=120)
+        return {"t": now, "host": rs[0]["host"], "unit": "-", "how": "docker stop (lec.py only)", "result": res.strip()[-300:],
+                "containers": [r["container"] for r in rs], "type": rs[0]["type"], "stage": rs[0]["stage"], "metric": rs[0].get("detail", ""),
+                "kit": kit, "why": rs[0]["why"], "verdict": rs[0]["verdict"], "gb": round(sum(r["gb"] for r in rs), 1),
+                "cores": sum(r["threads"] for r in rs), "cores_busy": round(sum(r.get("cores_now") or 0 for r in rs), 1)}
     out = sh("ot-heavy-stop", "--dry-run", "--match", kit, timeout=120) if kit else ""
     args = ["--match", kit] if kit and re.findall(r"ot-heavy-stop: (oth-[\w-]+):", out) == [unit] else ["--unit", unit]
     res = sh("ot-heavy-stop", *args, timeout=300)
