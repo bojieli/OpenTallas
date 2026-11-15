@@ -620,7 +620,7 @@ class TypeModel:
             b0 = self.llen(q)
             self.base_len.append(b0)
             if q in st:
-                lim = (st[q] + 1) * reach * 0.8
+                lim = (st[q] + 1 + (1 if self.cfg.get("take_regs") else 0)) * reach * 0.8
             elif q in self.lreg:
                 lim = 2 * reach * 0.8      # --link-reg: this direct link may take one register (+1 cycle)
             elif q in self.breg:
@@ -1088,6 +1088,11 @@ def face_clear_legalise(M, log):
                             break
                 if best:
                     break
+            if best is None and first is not None and M.cfg.get("take_regs"):
+                # --take-regs: move anyway; stretched links / stations pay +1 register (write_type / link-reg)
+                M.cpos[k] = first[1]
+                M.cfg.setdefault("_taken", []).append(M.inst[M.CL[k][0]])
+                continue
             if best is None:      # no spot keeps every incident link within its timing limit: the rule fails here
                 bad.append(M.inst[M.CL[k][0]])
                 continue
@@ -1467,6 +1472,9 @@ def write_type(M, t_new, cfg, log):
             rep["regs_new"] += nold
             s["note"] = (s.get("note", "") + " | CORE-PLACE-1 re-sited (%s, %s um, %d regs kept)" %
                          (r["kind"], r["length_um"], nold))
+        elif r is not None and len(r["regs"]) > nold and cfg.get("take_regs") and take_class(s) is not None:
+            rep.setdefault("_take", set()).add(take_class(s))
+            rep["regs_new"] += nold
         elif r is not None and len(r["regs"]) > nold:
             rep["need_more_regs"] += 1
             rep["need_more_idx"].append(st.index(s))
@@ -1491,6 +1499,8 @@ def write_type(M, t_new, cfg, log):
             rep["regs_new"] += nold
             if regs_free:
                 rep["kept_old_regs"] += 1
+    if rep.get("_take"):
+        take_regs_write(st, R, cfg, rep)
     if cfg.get("detour_fix"):
         detour_fix(R, st, cfg, rep)
     if cfg.get("ft_resite"):
@@ -1500,6 +1510,42 @@ def write_type(M, t_new, cfg, log):
     if M.breg:
         bus_reg_write(M, t_new, R, cfg, rep)
     return rep
+
+
+def take_class(s):
+    """core class of an internal_stations row that --take-regs may deepen (None: bus rows, H lanes, unknown)."""
+    import kit_istations as KI
+    if "conn" not in s or s["conn"].startswith("bus:") or s.get("launch", "").startswith("bus:"):
+        return None
+    c = KI.core_class(s)[0]
+    return None if c in (None, "cs") or c in KI.H_CLASSES else c
+
+
+def take_regs_write(st, R, cfg, rep):
+    """--take-regs (B6): every row of a class that has a station needing one more register is re-routed with d+1
+    registers (one RTL chain per class: all rows carry the same count, leaf_cs_depth.plan_depths).  +1 cycle on the
+    class; rep["take_reg"] = {class: rows}.  A row that cannot be routed at d+1 counts need_more_regs (not applied)."""
+    import hub_repack as HR
+    rep["take_reg"] = {}
+    for c in sorted(rep.pop("_take")):
+        rows = [s for s in st if take_class(s) == c]
+        ds = {len(s.get("regs_um") or []) for s in rows}
+        if len(ds) != 1:
+            rep["need_more_regs"] += 1
+            rep["need_more_idx"].append("class %s depths %s" % (c, sorted(ds)))
+            continue
+        d = ds.pop()
+        for s in rows:
+            r = HR.route_station(R, tuple(s["from_um"]), tuple(s["to_um"]), d + 1, cfg["reach"])
+            if r is None or len(r["regs"]) != d + 1:
+                rep["need_more_regs"] += 1
+                rep["need_more_idx"].append(st.index(s))
+                continue
+            s["regs_um"] = [list(p) for p in r["regs"]]
+            s["note"] = (s.get("note", "") + " | B6 take-regs (COORD 11-14): class %s %d -> %d registers (+1 cycle)"
+                         % (c, d, d + 1))
+        rep["take_reg"][c] = len(rows)
+        rep["regs_new"] += len(rows)
 
 
 def bus_reg_write(M, t_new, R, cfg, rep):
@@ -2042,6 +2088,10 @@ def main(argv=None):
                     help="B4L4: clock taps / added taps off cores do not pin cores (tapleg re-legalises them after)")
     ap.add_argument("--ft-resite", action="store_true",
                     help="B4L4: ft-station registers + bit sites no longer pin cores; covered ones are re-sited with the same count")
+    ap.add_argument("--take-regs", action="store_true",
+                    help="B6 (COORD/FABLE-CLOSURE-STRATEGY 11-14): a --face-clear core with no timing-clean spot takes the "
+                         "nearest space-legal spot; a station that then needs one more register gets +1 register on "
+                         "EVERY row of its core class (+1 cycle, cycles pre-approved; H lanes / bus rows excluded)")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
@@ -2071,7 +2121,7 @@ def main(argv=None):
                flips_only=a.flips_only,
                gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
                face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
-               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix,
+               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix, take_regs=a.take_regs,
                link_reg=[c for x in a.link_reg for c in x.split(",") if c])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
@@ -2263,7 +2313,7 @@ def main(argv=None):
         if ok:
             Q["partition_types"][tn] = tnew
         rows.append(dict(type=tn, cores=M.n, clusters=M.m, links=len(M.L), stations=len(M.stations),
-                         model=M.model, intrinsic=icut, seeded=bool(tn in seeds), seed_legalised=seeded, face_clear_moved=fc_moved, face_clear_failed=fc_failed, face_clear_end=M.clear_viol(),
+                         model=M.model, intrinsic=icut, seeded=bool(tn in seeds), seed_legalised=seeded, face_clear_moved=fc_moved, face_clear_failed=fc_failed, face_clear_taken=M.cfg.pop("_taken", []), face_clear_end=M.clear_viol(),
                          slot_clear_moved=sc_moved if cfg.get("slot_clear") else None, slot_clear_failed=sc_failed if cfg.get("slot_clear") else None,
                          slot_clear_end=[dict(a=M.inst[M.CL[k_][0]], b=M.inst[M.CL[j_][0]], gap_um=round(g_, 2)) for k_, j_, g_ in slot_pairs(M)] if cfg.get("slot_clear") else None,
                          timing_over=[dict(a=str(M.L[q][0]), b=str(M.L[q][1]), bits=M.L[q][2], kind=M.L[q][3],
