@@ -270,3 +270,8 @@ Elapsed time: 20:03.74[h:]min:sec. CPU time: user 990.75 sys 4.72 (82%). Peak me
 make[1]: *** [Makefile:548: do-4_1_cts] Error 1
 make: *** [Makefile:548: /work/run/results/asap7/dp_kv3_hg_v1/base/4_1_cts.odb] Error 2
  | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kv102sem_ftgrid/items/kv3_hg_v1/attempt_3/gen/kv3_hg_v1 src main@66e6607e3f0e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-14 16:22:13 PST AUTOPILOT -> KIT-WAVE-1: FAILED 0e29fb877454 qwen_kvsys/kv3_hgi_v1__cl141fc26e (CRASH/flow-error): c3919ec9474b577e1
+cp /work/run/results/asap7/dp_kv3_hgi_v1__cl141fc26e/base/4_1_cts.odb /work/run/results/asap7/dp_kv3_hgi_v1__cl141fc26e/base/4_cts.odb
+/work/grt183_make.sh: line 243: unexpected EOF while looking for matching `"'
+/work/grt183_make.sh: line 244: syntax error: unexpected end of file
+ | kit epyc2:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom4/items/kv3_hgi_v1__cl141fc26e/attempt_7/gen/kv3_hgi_v1__cl141fc26e src main@66e6607e3f0e | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
