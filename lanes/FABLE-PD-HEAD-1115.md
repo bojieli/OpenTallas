@@ -63,7 +63,7 @@ Reviewer FABLE-PD-HEAD-1115, read-only. Kit read: epyc10
 | # | Change | Numbers | Owner |
 |---|--------|---------|-------|
 | F1 | item_env hd_spn: OT_PG_DIE_PHASE=1, OT_PG_TRACK_TRUTH=1, OT_PG_CELL_KEEPOUT=1, OT_PG_PIN_CHECK=warn; regenerate the kit fresh (stage_resume_off already lists hd_spn) | M7 straps move 4.32 um; 172 pins under straps -> 0 expected (INFERENCE); pins unchanged, so no plan event and no neighbour change | KIT-OPS-5 |
-| F2 | Accept check before route: in the new kit, pdn.tcl M7 line must read -offset 8.448 or 4.128 from frame (pair at 3.984-4.656 mod 8.64) and the PIN_CHECK print must report 0 bad M7 pins | gate = 0 of 1,942 | KIT-OPS-5, HEAD-100 reads |
+| F2 | Accept check before route: in the new kit, pdn.tcl M7 line must read -offset 8.448 (= (4.128 - 4.32) mod 8.64 from the core edge; pair at 3.984-4.656 mod 8.64 in the type frame) and the PIN_CHECK print must report 0 bad M7 pins | gate = 0 of 1,942 | KIT-OPS-5, HEAD-100 reads |
 | F3 | Same flags for the other unsigned HEAD types with M7 N/S or M6/M7 face pins (hd_spn_end first: same b/au/ad face coordinates by abutment) | 17 eligible types | KIT-OPS-5, list from HEAD-100 |
 | F4 | Die decision: M7 strap phase across abutment. A die-phase hd_spn has M7 straps 4.32 um off the straps of core-phase neighbours (9 signed types). PG continuity is advisory under the academic profile; record it on the open list, do not hold F1 for it | 4.32 um offset, 68 pairs per 587.52 um | HEAD-100 |
 | F5 | Generator: schema.py:2932 should test both origins like gen_phys.py:987, or the band table should come from the kit PDN text, so a core-phase kit can never put pins under M7 straps again | 1 line | HEAD-100 -> a Sonnet fix lane, via merge queue |
