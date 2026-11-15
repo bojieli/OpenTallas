@@ -1405,8 +1405,11 @@ _LP_D = {"type": "integer", "minimum": 1, "maximum": 4}
 _LP_RUN = {"type": "object", "additionalProperties": False, "required": ["D", "bits"], "properties": {
     "D": _LP_D, "bits": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}}}}
 SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"] = {
-    "type": "object", "additionalProperties": False, "required": ["modules"],
+    "type": "object", "additionalProperties": False, "anyOf": [{"required": ["modules"]}, {"required": ["sources"]}],
     "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {
+                       "type": "object", "minProperties": 1, "additionalProperties": {"anyOf": [
+                           _LP_D, _LP_RUN, {"type": "array", "minItems": 1, "items": _LP_RUN}]}}},
+                   "sources": {"type": "object", "minProperties": 1, "additionalProperties": {
                        "type": "object", "minProperties": 1, "additionalProperties": {"anyOf": [
                            _LP_D, _LP_RUN, {"type": "array", "minItems": 1, "items": _LP_RUN}]}}},
                    "all": {"type": "boolean"}, "except": {"type": "array", "uniqueItems": True, "items": _name},
