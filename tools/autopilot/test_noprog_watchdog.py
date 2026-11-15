@@ -244,3 +244,25 @@ def test_standalone_lec_without_scope_is_cancellable_only_when_lec_only():
     assert nw.decide([r], {"happy_hodgkin": 0}, NOW, True) == [None]
     r2 = row("flow", None, "CANCEL-NOW")
     assert nw.decide([r2], {"flow": 0}, NOW, True) == []
+
+
+LEGALIZER = """[INFO GRT-0101] Running extra iterations to remove congestion.
+Iteration | Violations | Moved
+---------------------------------
+        0 |       4000 |  10
+      100 |       3000 |  80
+[INFO RSZ-0034] detailed placement legalizer pass
+"""
+
+
+def test_grt_stage_ignores_the_legalizer_violations_table():
+    """FABLE-PD-KV-1450 fix 7: the detailed-placement legalizer table is not global-route progress in 5_1_grt"""
+    res = nw.extract("grt", LEGALIZER)
+    assert res["series"] == [] and res["name"] is None
+    assert res["growth_idx"] == 0                              # only the GRT-0101 line is global-route news
+    assert nw.extract("other", LEGALIZER)["name"] == "repair_Violations"      # other stages keep the generic reading
+
+
+def test_grt_incremental_activity_counts_as_growth():
+    t = LEGALIZER + "[INFO GRT-0128] incremental global routing: 12 nets\n"
+    assert nw.extract("grt", t)["growth_idx"] == len(t.splitlines()) - 1

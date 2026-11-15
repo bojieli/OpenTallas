@@ -81,9 +81,14 @@ def parse_tables(lines):
     return out
 
 
-def table_series(tbl):
-    """the lower-is-better value column of one repair table -> (name, [(line_idx, value)]) or None"""
+def table_series(tbl, kind=None):
+    """the lower-is-better value column of one repair table -> (name, [(line_idx, value)]) or None.
+    FLOW-HEALTH-1 11-15 (FABLE-PD-KV-1450 fix 7): in a global-route log (5_1_grt) a table whose value column is a bare `Violations`
+    is the detailed-placement legalizer's, not global-route progress: it is not the metric there (Remaining / Viol / TNS of the resizer
+    repair tables still are)."""
     for want in METRIC_COLS:
+        if kind == "grt" and want == "Violations":
+            continue
         for k, c in enumerate(tbl["cols"]):
             if c == want or (want == "TNS" and c in ("TNS", "StTNS")):
                 ser = []
@@ -135,10 +140,15 @@ def extract(kind, text):
         tbls = parse_tables(lines)
         act = tbls[-1] if tbls and not tbls[-1]["final"] else None
         if act is not None:
-            ts = table_series(act)
+            ts = table_series(act, kind)
             if ts:
                 res["name"], res["series"] = "repair_" + ts[0], ts[1]
                 return res
+        if kind == "grt":
+            # global_route's own news: GRT-0xxx lines (iteration / overflow / incremental GRT); a legalizer table filling the log is not growth
+            g = [i for i, ln in enumerate(lines) if re.search(r"\bGRT-0\d+\]", ln) and not NOISE.search(ln)]
+            if g:
+                res["growth_idx"] = g[-1]
         tot = [(i, float(m.group(3))) for i, ln in enumerate(lines) for m in [GRT_TOTAL.match(ln)] if m]
         # GRT-0096 final congestion total (one per global_route call): the metric only while it is the stage's last news
         if tot and kind == "grt" and (not meaningful or tot[-1][0] >= meaningful[-1] - 40):
