@@ -4779,6 +4779,9 @@ def geom_result_line(txt):
                  if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
+SRC_SKEW_ADVISORY_DIES = {"qwen_compute"}   # KIT-OPS-5 11-14 (COORD): src_skew is logged, not judged, for these dies until the queue lint is refreshed
+
+
 def src_skew_check(sp, kit):
     """AUTOBUILD-PIPE-5 10-31 (COORD 04:0x, KIT-WAVE-5 03:47): kit src older than the queue lint.  When the launch spec's
     src_sha has a different copy of the queue's admission lint files than this (hub) checkout, run the hub's own
@@ -5542,6 +5545,10 @@ def run_item(spec_path):
             return fail("sync_hub", txt)
     # AUTOBUILD-PIPE-5 10-31: the queue's own sdc_lint on the hub copy of the kit when the wave src's lint differs
     sk = src_skew_check(sp, K)
+    if sk and sp.get("die") in SRC_SKEW_ADVISORY_DIES:
+        # KIT-OPS-5 11-14 (COORD ruling): src_skew is advisory for these dies (the QC src is ahead of the queue lint copy); logged, never a fail
+        print("KW_SRC_SKEW_ADVISORY " + " | ".join(sk)[:600], flush=True)
+        sk = []
     if sk:
         return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
     def place_and_geom(K, rs):
