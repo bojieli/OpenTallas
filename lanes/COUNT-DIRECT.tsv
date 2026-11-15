@@ -21,3 +21,5 @@ epyc2	/srv/opentallas-scratch3/claude/variants-1/qwen_kvsys/kv3_sys_SD/gen/kv3_s
 AGIdock	/archive/opentallas-signed-1114/qwen_compute/phy_serdes/signoff.json
 AGIdock	/archive/opentallas-signed-1114/qwen_compute/phy_serdes_b/signoff.json
 AGIdock	/archive/opentallas-signed-1114/qwen_compute/phy_ucie_kv/signoff.json
+# COORD ruling 11-14 (loop-gap 18:1x): qwen_kvsys qkd_ahub (hc_qkd_ahub__604_8x440_64) COUNTABLE: R-MINIMAL passes (DRC 0, TT +19.38, FF +1.57, LEC EQUIVALENT); the NOT SIGNED verdict string is only 22 advisory slew drv pins. signoff.json sha 62caf26a3ce2, 6_final.odb sha 39fba597d827 (verified equal on rtx-pro, AGIdock and epyc2 source).
+AGIdock	/archive/opentallas-signed-1114/qwen_kvsys/qkd_ahub/signoff.json
