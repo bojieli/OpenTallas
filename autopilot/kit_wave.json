@@ -45672,7 +45672,7 @@
     ]
    },
    "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens",
-   "note_kitops6_itemview": "KIT-OPS-6 11-14 (COORD item 7): slw_su_c__cl92142dac builds from its own plan zz_s29_qc103_s3r_sucvmrck.json (item_inputs): the 3 qfd_dv_s8x_vmr hard cores take base LEF ft_physical_1106/vmr_ckwin/qfd_dv_s8x_vmr.lef = QC-CORES-HEAD vmr_ckwin.lef sha 604bc938de3c; proof build only, die-wide plan and LEF unchanged; backup kit_wave.json.bak-kitops6-itemplan",
+   "note_kitops6_itemview": "KIT-OPS-6 11-15 (COORD): the item_inputs row of slw_su_c__cl92142dac (private plan with the v2 vmr LEF) was REMOVED; su_c is held until QC-FWST S4fw3 (Fable stations) lands; the private plan file is kept, unused",
    "stage_resume_off": [
     "sle_fw_v1__cl9d029624",
     "sle_stm_v1__clbe630b9c",
