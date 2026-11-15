@@ -582,6 +582,15 @@ SCHEMA = {
                         "die_islands_um": {"type": "array", "items": _rect},
                         # FALLBACK-HEAD-2 (opt-in): reserved site rectangles in the type frame (gen_phys
                         # reserved_sites_tcl): die_clock_tree = hard, landing_ring_bank = GPL-only after the rings
+                        "tap_clear_um": _pos,
+                        "tap_reserved_um": {"type": "array", "items": _rect},
+                        # S81-BANDTAP-1115: tap windows - rects no ring band may cover, so a legal tap site exists for sinks no tap reaches
+                        "band_keepout_um": {"type": "array", "items": _rect},
+                        # S81-BANDTAP-1115 opt-in: ring band points within this L1 reach of a planned tap / band_tap_sites_um
+                        "band_tap_reach_um": _pos,
+                        # S81-BANDTAP-1115: frozen landing bands {bus: band dict with rect_um[/rects_um]}, used verbatim by compose
+                        "band_fixed_um": {"type": "object"},
+                        "band_tap_sites_um": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
                             "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank"]},
                                            "ref": {"type": "string"}}}},
@@ -2610,13 +2619,21 @@ TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step of
 TAP_STEP_UM = 2.16
 
 
-def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=None, legal_axes=None):
+def type_tap_clear(t):
+    """S81-PHYT1 11-15 (FABLE-PD-S81-0850 lever 3): per-type clock.tap_clear_um (default TAP_CLEAR_UM 8.64).  A type whose
+    macro channels are 10.8-17.28 um wide fits no tap with an 8.64 um clear on each side; 4.32 does."""
+    v = (t.get("clock") or {}).get("tap_clear_um")
+    return TAP_CLEAR_UM if v is None else float(v)
+
+
+def tap_clear(t, x, y, taken=(), clear=None, strict=False, *, pin_snap=None, legal_axes=None):
     """S81-P8 10-23 (GEOM-REVIEW5 15:14 condition (b)): an R4 grid tap at a cell centre landed ON a ROM / hard-core
     macro in 4-10 of 10 interior pins of the S81 frame kits (h9_r1: all), so its root buffer sat on a macro.  Move the
     tap to the nearest point (rings of 2.16 um) that is >= `clear` from every hard_cores box of the type (a channel),
     inside the outline by `clear`, and >= `clear` from the taps already placed.  Types without hard cores, or whose
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
+    clear = type_tap_clear(t) if clear is None else clear
     w, h = t["outline_um"]
     # Density clock pins are consumed on PG-safe routing tracks. Their legal
     # candidate axes come from gen_phys, rather than an anchor lattice that

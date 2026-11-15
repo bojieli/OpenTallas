@@ -926,8 +926,8 @@ def explicit_tap_sites(P, tn):
         # same halo/spacing geometry directly; binary 8.64-8.64 subtraction
         # must not trigger a fresh legalizer move (t43 gap 8.639999999999986).
         eps=1e-8
-        clear=schema.TAP_CLEAR_UM
         typ=P.types[tn];w,h=typ["outline_um"]
+        clear=schema.type_tap_clear(typ)
         from placement_obstacles import placement_boxes
         boxes=list(placement_boxes(typ,halo=clear).values())
         boxes += [(a-clear,b-clear,c+clear,d+clear) for a,b,c,d in ck.get("keepouts_um",[])]
@@ -985,7 +985,7 @@ def child_root_tap_sites(P, tn):
     expected = ["clk"] + [f"clk_t{i}" for i in range(1, len(table))]
     if names != expected:
         raise ValueError(f"{tn}: explicit local tap names/order must be {expected}")
-    eps, clear = 1e-8, schema.TAP_CLEAR_UM
+    eps, clear = 1e-8, schema.type_tap_clear(t)
     w, h = t["outline_um"]
     from placement_obstacles import placement_boxes
     others = placement_boxes(t, halo=clear)
@@ -1065,8 +1065,8 @@ def grid_explicit_sites(P, tn):
     if names != expected:
         raise ValueError(f"{tn}: grid+explicit added tap names/order must be {expected}")
     eps = 1e-8
-    clear = schema.TAP_CLEAR_UM
     typ = P.types[tn]
+    clear = schema.type_tap_clear(typ)
     w, h = typ["outline_um"]
     from placement_obstacles import placement_boxes
     boxes = list(placement_boxes(typ, halo=clear).values())
@@ -1294,8 +1294,8 @@ def recentre_displaced(P, tn, grid, moved, iters=12):
         for a in range(int((x1 - x0) / step) + 1):
             for b in range(int((y1 - y0) / step) + 1):
                 px, py = x0 + a * step, y0 + b * step
-                if not (schema.TAP_CLEAR_UM <= px <= w - schema.TAP_CLEAR_UM and
-                        schema.TAP_CLEAR_UM <= py <= h - schema.TAP_CLEAR_UM):
+                _c = schema.TAP_CLEAR_UM
+                if not (_c <= px <= w - _c and _c <= py <= h - _c):
                     continue          # the outline margin (face bands) is not std-cell area for a tap's sinks
                 if not any(q0 < px < q1 and r0 < py < r1 for q0, r0, q1, r1 in boxes):
                     return False
