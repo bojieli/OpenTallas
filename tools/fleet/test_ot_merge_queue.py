@@ -164,6 +164,16 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("nothing to land", q.read_text())
 
+    def test_unfetchable_sha_fails_without_crashing_the_tick(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text(f"- COORD APPROVED: claude/ghost @deadbeef123\n- COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        self.env["MQ_WAIT_TICKS"] = "1"
+        r = self.tick()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        t = q.read_text()
+        self.assertIn("MERGE-FAIL [MERGE-QUEUE -> ", t); self.assertIn("claude/ghost@deadbeef123 NOT landed", t)
+        self.assertRegex(t, r"MERGED \[MERGE-QUEUE -> [^]]+\] claude/good@")
+
 
 if __name__ == "__main__":
     unittest.main()

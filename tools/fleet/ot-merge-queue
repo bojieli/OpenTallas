@@ -643,7 +643,8 @@ def fail(st, it, text, status, detail, base):
     it["status"] = "FAIL"
     it["reason"] = f"{status}: {detail}"
     it["updated"] = stamp()
-    br = f"{it['branch']}@{it['sha_full'][:11]}" if it["branch"] else it["sha_full"][:11]
+    sha = (it.get("sha_full") or it["sha"])[:11]             # an UNFETCHABLE item never got a full sha
+    br = f"{it['branch']}@{sha}" if it["branch"] else sha
     if status == "CONFLICT":
         what = f"conflict with main {base[:11]} in: {', '.join(detail) if isinstance(detail, list) else detail}"
     else:
