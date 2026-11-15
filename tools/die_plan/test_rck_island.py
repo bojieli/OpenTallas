@@ -20,7 +20,7 @@ from test_pad_clock import plan as base_plan  # noqa: E402
 
 CHN = ("u_core.u_dec.u_chn", "ot_s81_kp4_dchn")
 # serdes__t2 B6c1 geometry (type frame): u_chn, the two SRAM sites, the PMA receiver, the io_pma_rck pad
-T2 = dict(chn=[864.0, 95.04], dmem=[1183.68, 62.652], cmem=[1373.76, 62.652], pad=[257.952, 1090.8], top=951.48)
+T2 = dict(chn=[864.0, 95.04], dmem=[1183.68, 62.652], cmem=[1373.76, 62.652], pad=[257.952, 1090.8], top=947.16)
 
 
 def iplan(rect=(40.0, 40.0, 300.0, 240.0), chn=(60.0, 60.0), **over):
@@ -127,6 +127,7 @@ def t2_plan(monkeypatch):
     t["hard_cores"] = [dict(inst=CHN[0], module=CHN[1], origin_um=T2["chn"], outline_um=[276.48, 138.24], orient="R180",
                                track_offset_um=[0, -2.112])]
     t["contents"] = [dict(inst="u_phy", module="ot_pdie_serdes", origin_um=[63.64, 302.4], outline_um=[2608.48, 924.48], physical_parts=[
+        dict(physical_inst="u_prx", physical_master="ot_s81_pma_rxm", origin_um=[244.536, 951.48], outline_um=[2246.4, 129.6]),
         dict(physical_inst="u_dmem", physical_master="ot_sram_1r1w2c_64x546_m1", origin_um=T2["dmem"], outline_um=[178.632, 81.0]),
         dict(physical_inst="u_cmem", physical_master="ot_sram_1r1w_32x546_m1", origin_um=T2["cmem"], outline_um=[177.768, 81.0])])]
     monkeypatch.setattr(GP, "rck_band_exports", lambda P, tn: ["export OT_RCK_BAND_INST = u_prx",
@@ -149,7 +150,7 @@ def test_plan_patch_moves_u_chn_and_the_srams_by_the_t2_vector(monkeypatch):
     pa = RI.plan_patch(p, "mid", rck_buf_cell="BUFx24_ASAP7_75t_R")
     assert pa["shift_um"] == (-583.2, 587.52)      # FABLE-PLAN-B6B 6.4: u_chn plan origin and both SRAM sites
     assert pa["core_moves"] == {CHN[0]: [280.8, 682.56]}      # kit location 280.8, 680.448 = origin + track_offset_um
-    assert pa["sram_moves"] == {"u_dmem": [600.48, 650.172], "u_cmem": [790.56, 650.172]}
+    assert "u_prx" not in pa["sram_moves"] and pa["sram_moves"] == {"u_dmem": [600.48, 650.172], "u_cmem": [790.56, 650.172]}
     isl, chn = pa["entries"]
     assert isl["name"] == "rck_isl" and chn["name"] == "rck_chn" and chn["min_early_ps"] == 175.0
     assert [s["module"] for s in chn["sink_pins"]] == [CHN[1]] and CHN[1] not in {s["module"] for s in isl["sink_pins"]}
@@ -162,7 +163,7 @@ def test_plan_patch_moves_u_chn_and_the_srams_by_the_t2_vector(monkeypatch):
     t["rck_island"] = pa["rck_island"]
     t["hard_cores"][0]["origin_um"] = pa["core_moves"][CHN[0]]
     for part in t["contents"][0]["physical_parts"]:
-        part["origin_um"] = pa["sram_moves"][part["physical_inst"]]
+        part["origin_um"] = pa["sram_moves"].get(part["physical_inst"], part["origin_um"])
     assert RI.check(p, "mid") == []
 
 
@@ -171,6 +172,16 @@ def test_trunk_hops_are_bounded():
     st = RI.trunk([0.0, 0.0], [300.0, 900.0])
     chain = [[0.0, 0.0]] + st + [[300.0, 900.0]]
     assert max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(chain, chain[1:])) <= 400.0
+
+
+def test_domain_patch_keeps_the_phy_domain_floor(monkeypatch):
+    """moving the macros into the island must not let the PHY PG domain grow over them (B6c1 smoke 947.16 -> 645.84)"""
+    p = t2_plan(monkeypatch)
+    inst = sorted(n for n, q in p.parts.items() if q["type"] == "mid")[0]
+    p.die.setdefault("pg", {})["domains"] = [dict(name="phy_x", rect_um=list(p.rect(inst)))]
+    monkeypatch.setattr(GP, "phy_pg_domains", lambda P, tn: [("phy_x", "VDDPHY", "VSS", [240.0, 947.16, 2500.0, 1226.88], ["u_prx"])])
+    assert RI.domain_patch(p, "mid")["phy_x"][1] == 947.16 + p.rect(inst)[1] or RI.domain_patch(p, "mid")["phy_x"][1] > p.rect(inst)[1]
+    assert set(RI.domain_patch(p, "mid")) == {"phy_x"} and "die_pg_domain_rects" in RI.plan_patch(p, "mid")
 
 
 # ---------------------------------------------------------------------------------------------- min_early_ps

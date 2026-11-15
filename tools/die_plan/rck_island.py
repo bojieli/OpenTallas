@@ -12,8 +12,8 @@ detail placement (serdes_lanes_release.tcl: the HARD-S81-SERDES-1 G3 DPL-0033 cl
 pad_clock.py) sits at the island; the u_chn hard core and the SRAM sites of the recovered-clock domain are placed inside it.
 
 Plan check (G0, schema.Plan): rect inside the outline with x0 < x1, y0 < y1; `clock` is a pad clock of the type; every hard core /
-physical part whose module is a sink_pins module of that pad clock lies fully inside the rect (the island holds u_chn and the
-SRAMs); no other hard core / physical part overlaps it; it does not overlap a PHY PG domain of the type.
+physical part whose module is a sink_pins module of that pad clock (except the PMA macros ot_s81_pma*, which stay at the PHY
+edge) lies fully inside the rect (the island holds u_chn and the SRAMs); no other hard core / physical part overlaps it; it does not overlap a PHY PG domain of the type.
 clock.keepouts_um is NOT used: it is the die-clock-cell exclusion (die_clock.py), and on the S81 serdes types it covers the
 whole logic area (serdes__t2 [0, 238.76, 2735.76, 1226.88]).
 
@@ -31,6 +31,7 @@ PAD_TO_X0_UM = 12.952            # io_pma_rck pad x 257.952 -> island x0 245.0
 CHN_OFFSET_UM = (35.8, 40.448)   # u_chn KIT location (origin + track_offset_um) inside the island (t2: 280.8, 680.448 over 245, 640)
 EARLY_CHN_PS = 175.0             # FABLE-SERDES-STRUCT: u_chn view needs 174.59 ps of hold
 KEYS = {"rect_um", "clock", "inst_re", "release_before_dpl"}
+PMA_PREFIX = "ot_s81_pma"         # the PMA macros (u_prx / u_ptx) are the island's source at the PHY edge, never inside it
 
 
 def _num(v):
@@ -90,7 +91,7 @@ def check(P, tn):
     for lab, mod, a, b, c, d in _boxes(t):
         inside = a >= x0 - 1e-6 and b >= y0 - 1e-6 and c <= x1 + 1e-6 and d <= y1 + 1e-6
         hit = a < x1 - 1e-6 and c > x0 + 1e-6 and b < y1 - 1e-6 and d > y0 + 1e-6
-        if mod in mods:
+        if mod in mods and not str(mod).startswith(PMA_PREFIX):
             held += 1
             if not inside:
                 e.append(f"type {tn}: rck_island {rect} must hold {lab} ({mod}, a {r['clock']} sink macro) at [{a:g}, {b:g}, {c:g}, {d:g}]")
@@ -140,10 +141,10 @@ def cfg_tcl(P, tn):
             "  }\n}\n")
 
 
-def derive(P, tn, width=ISLAND_W_UM, height=ISLAND_H_UM, band_gap_um=7.48):
+def derive(P, tn, width=ISLAND_W_UM, height=ISLAND_H_UM, band_gap_um=3.16):
     """island rect [x0, y0, x1, y1] anchored at the type's own recovered-clock pad x, directly under the rck_band top
     (the lower edge of the PHY PG region holding the receiver macro, gen_phys.rck_band_exports) minus band_gap_um
-    (S81 serdes__t2: band top 951.48 -> island top 944).  Raises ValueError when it does not fit the outline."""
+    (S81 serdes__t2: measured band top 947.16 -> island top 944; smoke PLAN-READERS-1).  Raises ValueError when it does not fit the outline."""
     import gen_phys
     t = P.types[tn]
     pads = [p for p in t["clock"]["pad_clock"]["pins"] if p["dir"] == "in"]
@@ -171,9 +172,29 @@ def trunk(a, b, max_hop=400.0):
     return [p for p in pts[:-1] if p != list(a)]
 
 
+def domain_patch(P, tn):
+    """{die domain name: die rect_um} that keeps the die PHY PG domains where they are now.  gen_phys.phy_pg_domains grows a domain
+    to every placed macro inside the die domain rect (macros must not straddle it), so moving u_chn and the SRAMs into the island
+    (under the PMA, still inside the die slot) would swallow them into the PHY domain and lower its floor (serdes__t2 B6c1 smoke:
+    947.16 -> 645.84).  Call BEFORE the moves on the unmoved plan and write the result into die.pg.domains[].rect_um: the die
+    domain then ends at the PHY floor and the island stays on the core supply."""
+    import gen_phys
+    out = {}
+    doms = {d["name"]: d for d in P.die.get("pg", {}).get("domains", []) or []}
+    for inst in sorted(n for n, p in P.parts.items() if p["type"] == tn):
+        a = P.rect(inst)
+        for name, _p, _g, rt, _m in gen_phys.phy_pg_domains(P, tn):
+            for dn, d in doms.items():
+                b = d["rect_um"]
+                if b[0] < a[2] and b[2] > a[0] and b[1] < a[3] and b[3] > a[1]:
+                    u, v = P.to_die(inst, rt[:2]), P.to_die(inst, rt[2:])
+                    out[dn] = [round(min(u[0], v[0]), 3), round(min(u[1], v[1]), 3), round(max(u[0], v[0]), 3), round(max(u[1], v[1]), 3)]
+    return out
+
+
 def plan_patch(P, tn, rect=None, rck_buf_cell=None):
     """the B6c plan data for one serdes type: {"rck_island": ..., "core_moves": {inst: new origin}, "sram_moves": {...},
-    "entries": [rck_isl, rck_chn], "shift_um": (dx, dy)}.  u_chn goes to rect origin + CHN_OFFSET_UM (kit location), keeping its
+    "entries": [rck_isl, rck_chn], "shift_um": (dx, dy), "die_pg_domain_rects": domain_patch}.  u_chn goes to rect origin + CHN_OFFSET_UM (kit location), keeping its
     orientation and shape; every physical part of a rck sink module moves by the same vector (t2: (-583.2, +587.52)).
     rck_isl takes every other sink macro of the pad clock (at the island's NW corner), rck_chn takes u_chn alone (a buffer
     just west of the core, on the row at the clk pin height) with min_early_ps = EARLY_CHN_PS.  Trunks are L-shaped from the
@@ -190,7 +211,7 @@ def plan_patch(P, tn, rect=None, rck_buf_cell=None):
     nx, ny = round(rect[0] + CHN_OFFSET_UM[0] - tox, 3), round(rect[1] + CHN_OFFSET_UM[1] - toy, 3)
     dx, dy = round(nx - ox, 3), round(ny - oy, 3)
     parts = {p["physical_inst"]: [round(p["origin_um"][0] + dx, 3), round(p["origin_um"][1] + dy, 3)]
-             for c in t.get("contents", []) for p in c.get("physical_parts", []) or [] if p.get("physical_master") in mods}
+             for c in t.get("contents", []) for p in c.get("physical_parts", []) or [] if p.get("physical_master") in mods and str(p.get("physical_master")).startswith("ot_sram")}
     pad = clk["xy_um"]
     ci = [round(rect[0] + 12.0, 3), round(rect[3] - 12.0, 3)]
     w, h = chn[0]["outline_um"]
@@ -202,4 +223,5 @@ def plan_patch(P, tn, rect=None, rck_buf_cell=None):
                 sink_pins=[s for s in clk["sink_pins"] if s["module"] == chn[0]["module"]],
                 evidence="FABLE_SERDES_STRUCT_s0_2", min_early_ps=EARLY_CHN_PS)]
     return dict(rck_island=dict(rect_um=list(rect), clock=clk["name"], inst_re="u_core[.](u_dec|u_rxf|u_lrx)", release_before_dpl=True),
-                core_moves={chn[0]["inst"]: [nx, ny]}, sram_moves=parts, shift_um=(dx, dy), entries=ent)
+                core_moves={chn[0]["inst"]: [nx, ny]}, sram_moves=parts, shift_um=(dx, dy), entries=ent,
+                die_pg_domain_rects=domain_patch(P, tn))
