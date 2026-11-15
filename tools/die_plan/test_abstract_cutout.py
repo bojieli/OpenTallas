@@ -105,3 +105,17 @@ def test_run_cuts_kit_lefs(tmp_path, monkeypatch):
     assert new != LEF and "RECT 0.0000 0.0000 20.0000 10.0000" not in new.split("OBS")[1].split("LAYER M8")[0]
     A.run(tmp_path / "plan.json", tmp_path, 0.25)                                            # idempotent
     assert (tmp_path / "abstracts" / "t.lef").read_text() == new
+
+
+def test_coarsen_rows_clusters_and_budget():
+    w = [(0, 0, 1, 1), (2, 0, 3, 1.5), (500, 0, 501, 1), (0, 100, 1, 101), (1000, 100, 1001, 101)]
+    b = A.coarsen_windows(w, gap_y=4.0, gap_x=80.0)
+    assert (0, 0, 3, 1.5) in b and (500, 0, 501, 1) in b and len(b) == 4
+    for r in w:
+        assert any(x[0] <= r[0] and x[1] <= r[1] and x[2] >= r[2] and x[3] >= r[3] for x in b)
+    b2 = A.coarsen_windows(w, max_boxes=2)
+    assert len(b2) == 2 and all(any(x[0] <= r[0] and x[1] <= r[1] and x[2] >= r[2] and x[3] >= r[3] for x in b2) for r in w)
+
+
+def test_coarsen_merges_overlaps():
+    assert A.coarsen_windows([(0, 0, 10, 10), (5, 5, 15, 15)], gap_y=0.0, gap_x=0.0) == [(0, 0, 15, 15)]
