@@ -270,10 +270,12 @@ class TypeModel:
         for e in ck.get("edge_clocks") or []:
             if isinstance(e, dict) and isinstance(e.get("tap_um"), list):
                 fp.append(e["tap_um"][:2])
+        added0 = len(fp)
         for tp in (ck.get("taps") or []) + (ck.get("added_taps") or []):
             if isinstance(tp, dict) and tp.get("xy") and tp.get("kind") != "core":
                 if self.owner(tp["xy"]) is None:
                     fp.append(tp["xy"][:2])
+        added1 = len(fp)
         rs = t.get("reset") or {}
         if isinstance(rs.get("tap_um"), list):
             fp.append(rs["tap_um"][:2])
@@ -282,8 +284,17 @@ class TypeModel:
         keep = [k for k, p in enumerate(fp) if self.owner(p, tol=-0.01) is None]
         if self.cfg.get("ft_resite"):
             # --ft-resite (B4L4): ft-station registers / bit sites are re-sited after the search like internal
-            # stations (write_type), so they no longer pin the cores
-            keep = [k for k in keep if k >= nft]
+            # stations (write_type), so they no longer pin the cores; clock points ON an ft site (collector relays /
+            # added taps of the ft stations) move with it (ft_resite), and a clock point exactly TAP_CLEAR (8.64) off
+            # a core is legal (the 8.65 float guard made such base spots illegal)
+            ftp = np.array([q[:2] for q in fp[:nft]], float).reshape(-1, 2)
+            keep = [k for k in keep if k >= nft and not (len(ftp) and (np.abs(ftp - np.array(fp[k][:2])).max(1) < 0.05).any())]
+            hal = [G if k < nft else 8.64 - 1e-4 for k in range(len(fp))]
+        if self.cfg.get("taps_movable"):
+            # --taps-movable (B4L4): grid / added clock taps off cores are re-legalised after the event (tapleg.py
+            # moves every covered added tap to the nearest legal point, the collector re-publish re-solves the
+            # relays), so they do not pin cores; tap_um / edge clocks / reset tap stay fixed
+            keep = [k for k in keep if not added0 <= k < added1]
         self.FP = np.array([fp[k][:2] for k in keep], float).reshape(-1, 2)
         self.FPH = np.array([hal[k] for k in keep], float)
         rects = [c["rect_um"] for c in t.get("channels") or [] if c.get("rect_um")]
@@ -1384,6 +1395,24 @@ def write_type(M, t_new, cfg, log):
     return rep
 
 
+def follow_clock_points(t, moved):
+    """clock xy points (added_taps / taps / landing collector relays) sitting exactly on a re-sited ft site follow it."""
+    if not moved:
+        return 0
+    n = 0
+    ck = t.get("clock") or {}
+    rows = list((ck.get("taps") or []) + (ck.get("added_taps") or []))
+    rows += list((((ck.get("landing_contract") or {}).get("collector_tree") or {}).get("relays")) or [])
+    for r in rows:
+        xy = r.get("xy") if isinstance(r, dict) else None
+        if isinstance(xy, list) and len(xy) >= 2:
+            nw = moved.get((round(xy[0], 2), round(xy[1], 2)))
+            if nw is not None:
+                r["xy"] = [round(nw[0], 4), round(nw[1], 4)] + list(xy[2:])
+                n += 1
+    return n
+
+
 def link_cls_of(M, q):
     """link class of direct core link q (None for station / bus / face links or outside the S81 leaf map)"""
     if q not in M.Lname:
@@ -1575,6 +1604,16 @@ def ft_resite(M, t_new, R, cfg, rep):
                 bs[gi] = [g_ + list(o[2:]) for g_, o in zip(groups[gi], bs[gi])]
             elif bs[gi]:
                 bs[gi] = groups[gi] + list(bs[gi][2:])
+        moved_pts = {}
+        for j, o in enumerate(f["regs_um"]):
+            if [round(o[0], 4), round(o[1], 4)] != [round(regs[j][0], 4), round(regs[j][1], 4)]:
+                moved_pts[(round(o[0], 2), round(o[1], 2))] = regs[j]
+        bs0 = f.get("bit_sites_um") or []
+        for gi in range(len(bs0)):
+            for o, nw in zip(gpts(bs0[gi]), groups[gi]):
+                if [round(o[0], 4), round(o[1], 4)] != [round(nw[0], 4), round(nw[1], 4)]:
+                    moved_pts.setdefault((round(o[0], 2), round(o[1], 2)), nw)
+        rep["ft_clock_pts_moved"] = rep.get("ft_clock_pts_moved", 0) + follow_clock_points(t_new, moved_pts)
         f["note"] = (f.get("note", "") + " | B4L4 ft-resite: %d regs re-sited, count kept" % sum(
             1 for _ in bad)).lstrip(" |")
 
@@ -1857,6 +1896,8 @@ def main(argv=None):
     ap.add_argument("--link-reg", action="append", default=[], metavar="CLASS",
                     help="B4L4: direct core links of link CLASS (kit_istations CORE_CLASSES, depth 0; 'any') may stretch to "
                          "one register's reach; a class that needs it gets +1 register on all its links (+1 cycle)")
+    ap.add_argument("--taps-movable", action="store_true",
+                    help="B4L4: clock taps / added taps off cores do not pin cores (tapleg re-legalises them after)")
     ap.add_argument("--ft-resite", action="store_true",
                     help="B4L4: ft-station registers + bit sites no longer pin cores; covered ones are re-sited with the same count")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
@@ -1888,7 +1929,7 @@ def main(argv=None):
                flips_only=a.flips_only,
                gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
                face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
-               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite,
+               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable,
                link_reg=[c for x in a.link_reg for c in x.split(",") if c])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
