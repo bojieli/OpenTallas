@@ -662,12 +662,41 @@ proc ff_lane_xy {slot bt ob xy t} {
   return [list [expr {round([lindex $xy 0] + $dx)}] [expr {round([lindex $xy 1] + $dy)}]]
 }
 # per-bit station chain hop record (um): the longest placed station -> station hop of the pass (report only)
+# CLAND-BIN 11-15 (FABLE-GENBUG G6): the hop count was only printed.  ff_lane_hop now also counts hops over reach + 5 %
+# (OT_FT_REACH um, default 405), keeps the worst hop per slot, and ff_lane_disp splits the cause: displacement of a
+# station from its blended lane target (ff_put_near spiral / occupied sites) vs the target pitch itself (plan pitch plus the
+# pin-spread blend).  OT_FT_LANE_GATE=1 turns the over-reach count into a failure; unset it stays advisory (OWNER 11-13).
+proc ff_lane_init {} {
+  foreach {v x} {ff_lane_n_gate 0 ff_lane_slotmax {} ff_lane_cur {} ff_lane_disp_n 0 ff_lane_disp_max 0.0 ff_lane_over_disp 0 ff_lane_last_disp 0.0} {
+    if {![info exists ::$v]} { set ::$v $x }
+  }
+}
+proc ff_lane_reach {} { return [expr {[info exists ::env(OT_FT_REACH)] ? double($::env(OT_FT_REACH)) : 405.0}] }
+proc ff_lane_disp {xy got} {
+  global ff_lane_disp_n ff_lane_disp_max ff_dbu ff_lane_last_disp
+  ff_lane_init
+  set ff_lane_last_disp 0.0
+  if {$got eq "" || [llength $xy] != 2} return
+  set d [expr {(abs([lindex $xy 0] - [lindex $got 0]) + abs([lindex $xy 1] - [lindex $got 1])) / double($ff_dbu)}]
+  set ff_lane_last_disp $d
+  if {$d > $ff_lane_disp_max} { set ff_lane_disp_max $d }
+  if {$d > 50.0} { incr ff_lane_disp_n }
+}
 proc ff_lane_hop {prev got} {
-  global ff_lane_max ff_lane_n405 ff_dbu
+  global ff_lane_max ff_lane_n405 ff_dbu ff_lane_n_gate ff_lane_slotmax ff_lane_cur ff_lane_last_disp ff_lane_over_disp
+  ff_lane_init
   if {$prev eq "" || $got eq ""} return
   set h [expr {(abs([lindex $prev 0] - [lindex $got 0]) + abs([lindex $prev 1] - [lindex $got 1])) / double($ff_dbu)}]
   if {$h > $ff_lane_max} { set ff_lane_max $h }
   if {$h > 405.0} { incr ff_lane_n405 }
+  if {$h > 1.05 * [ff_lane_reach]} {
+    incr ff_lane_n_gate
+    if {[info exists ff_lane_last_disp] && $ff_lane_last_disp > 50.0} { incr ff_lane_over_disp }
+  }
+  if {$ff_lane_cur ne ""} {
+    set o 0.0; if {[dict exists $ff_lane_slotmax $ff_lane_cur]} { set o [dict get $ff_lane_slotmax $ff_lane_cur] }
+    if {$h > $o} { dict set ff_lane_slotmax $ff_lane_cur $h }
+  }
 }
 set ff_st 0; set ff_st_miss 0; set ff_lst 0; set ff_landed_line {}
 set ff_lane_c [ff_lane_centroids $ff_blk]; set ff_lane_max 0.0; set ff_lane_n405 0; set ff_lane_bits 0
@@ -707,6 +736,7 @@ foreach bt [$ff_blk getBTerms] {
       }
       if {$j + 1 < $k} { set got [ff_put_stage $f $slot [expr {$j + 1}] $nm $xy] } else { set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]] }
       if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
+      ff_lane_init; set ff_lane_cur $slot; ff_lane_disp $xy $got
       ff_lane_hop $lprev $got; set lprev $got
       puts $ff_out "[$f getName]\tlst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
       incr ff_lst
@@ -737,6 +767,7 @@ foreach bt [$ff_blk getBTerms] {
     }
     set got [ff_put_stage $f $slot $j $nm $xy]
     if {$got eq ""} { incr ff_st_miss; set lprev ""; continue }
+    ff_lane_init; set ff_lane_cur $slot; ff_lane_disp $xy $got
     ff_lane_hop $lprev $got; set lprev $got
     puts $ff_out "[$f getName]\tst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
     incr ff_st
@@ -798,6 +829,14 @@ close $ff_chain_f; if {$ff_nchain} { puts "OT_FACE_CHAIN pinned $ff_nchain face-
 puts "OT_FACE_FLOPS placed $ff_n pin registers FIRM at their faces ($ff_miss signal ports without a flop within 2 buffers; $ff_ndup cells duplicated for output ports sharing a merged flop); $ff_st ft stations j>=1 FIRM on their routes ($ff_st_miss missing)"
 if {$ff_lst} { puts "OT_FACE_FLOPS landed ft slots: $ff_lst stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k" }
 if {$ff_lane_bits} { puts "OT_FT_LANE [expr {[ff_lane_on] ? "on" : "off (OT_FT_LANE=0)"}]: $ff_lane_bits slot bits, max placed station hop [format %.1f $ff_lane_max] um, $ff_lane_n405 hops > 405 um (plan reach)" }
+if {$ff_lane_bits} {
+  ff_lane_init
+  set ff_lane_worst {}
+  foreach {sl hm} [dict get [dict create {*}[lsort -stride 2 -index 1 -real -decreasing $ff_lane_slotmax]]] { if {$hm > 1.05 * [ff_lane_reach]} { lappend ff_lane_worst "$sl=[format %.0f $hm]" } }
+  set ff_lane_verdict [expr {$ff_lane_n_gate ? "FAIL" : "PASS"}]
+  puts "OT_FT_LANE_GATE $ff_lane_verdict: $ff_lane_n_gate hops > [format %.1f [expr {1.05 * [ff_lane_reach]}]] um (reach [format %.0f [ff_lane_reach]] + 5%), $ff_lane_over_disp of them at a station displaced > 50 um from its lane target, $ff_lane_disp_n stations displaced > 50 um (max [format %.1f $ff_lane_disp_max] um); slots over: [lrange $ff_lane_worst 0 7]"
+  if {$ff_lane_n_gate && [info exists ::env(OT_FT_LANE_GATE)] && $::env(OT_FT_LANE_GATE) eq "1"} { error "OT_FT_LANE_GATE: $ff_lane_n_gate station hops over reach + 5%" }
+}
 # KV-G3 10-24: FIRM plan internal stations + plan-cell sites of a bound kit (tools/die_plan/kit_istations.py)
 if {[file exists /work/istations.tcl]} { source /work/istations.tcl }
 # OWNER RESET RULE 10-24: FIRM reset entry stage + synchronous relay tree (tools/die_plan/reset_tree.py, kit_rsync)
