@@ -48,7 +48,7 @@ Sites as written (um, Manhattan between the points):
 | bc_i20 (cbx_q10) | 387 | 0 | 198 | 196 |
 | bc_i02, bc_i12 (cbf_q01, cbn_q01) | 368, 377 | 0 | 181 | 178-187 |
 
-So 7 of the 12 bus kinds keep a first hop of 426-634 um: 517 bits x 2 buses on 13 of the 16 types. The fix is one point per bus: `u_bin` at route / 4 (cbf_q00 bc_i00: 317.6 um from the ring along the S channel). Hops after the fix: 178-320.
+So 20 of the 32 buses, on 12 of the 16 types, keep a first hop of 426-634 um (517 bits each). Only cbf_q01, cbn_q01 and bc_i20 are under 405. The fix is one point per bus: `u_bin` at route / 4 (cbf_q00 bc_i00: 317.6 um from the ring along the S channel). Hops after the fix: 178-320.
 
 Second source for the same register: the plan `relay_sites` of cbf_q01 holds `u_bin_bc_i02/*` at y 295.9, the sidecar says y 362.9. Keep one. CLAND-BIN's hook should read the sidecar and the plan rows for `u_bin_bc_i*` should go.
 
@@ -119,7 +119,7 @@ Technical class behind the running types (24 QC types with a placed dump): 22 fa
 | 4 | Sidecar reader in the hook, then the cbf_q01 proof on the S4r2 sites; default-on only at 0 hops over 405 | CLAND-BIN | proves 2 and 3 in a placed database |
 | 5 | fw family: sle_fw_v3 station set on the other 10 fw types, one event, equal depth per bus across the family | DIE-QC-103 | 3,700-4,700 hops per type |
 | 6 | st_b family: stations on x_hc*_i, x_st_a_i, x_fe_o in all 11 types | DIE-QC-103 | 680-860 hops per type |
-| 7 | cbf_q00_s2: swap `u_t10` / `u_t01` origins | DIE-QC-103 | 2,042 and 2,485 um routes to 625 and 665 |
+| 7 | cbf_q00_s2: swap `u_t10` / `u_t01` origins | DIE-QC-103 | routes 2,042 and 2,485 um become 1,253 and 665 um, as cbf_q00 |
 | 8 | Spread `u_lpad_nb_i*` and the d-chain | TYPE-QCCB-GEN | 1,350 hops in cbn_q11 |
 | 9 | Read the probe CTS per endpoint family; confirm or replace the cbn_q11 inference | DIE-QC-103 | names -861 |
 
