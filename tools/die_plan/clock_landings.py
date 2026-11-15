@@ -2059,6 +2059,7 @@ class Landings:
             raise LandingError(f'{tn}: origin clock {chosen} is not an existing scalar INPUT in emitted RTL')
         return chosen
 
+    TX_RAW_WARN_UM = 800.0    # a generator-placed flop pair longer than this is reported (WARN, never blocking)
     TX_RAW_RELAY_UM = 600.0   # FABLE-TYPES-QC-WEST cause A: one raw-reset wire may not run farther than this
 
     def _tx_raw(self, tn, key, raw, ca_raw, raw_logic):
@@ -2098,6 +2099,11 @@ class Landings:
                               f"    ot_dp_rrelay u_cland_rst_tx (.clk(clk), .d({best}), .q({new}));"])
             rec.update(relay=True, relay_xy_um=mid, relay_net=new)
             best = new
+        hop = d / 2 if rec["relay"] else d
+        if hop > self.TX_RAW_WARN_UM:   # WARN only (owner: no new blocking gates)
+            rec["warn"] = f"{tn}: tx raw-reset hop {hop:.0f} um > {self.TX_RAW_WARN_UM:.0f} um"
+            import sys
+            print("WARN clock_landings " + rec["warn"], file=sys.stderr)
         self.reset_placements.setdefault(tn, {}).setdefault("count_origin", {})["tx_raw"] = rec
         return best
 

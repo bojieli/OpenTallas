@@ -30,7 +30,10 @@ def vehicle(mutant=None,reset_tree=None):
         # DIE-KV-3/CAORIGIN: b2 shares region h1 with b (origin, tree port p); b2's start is relayed b -> b2
         b2r=cell('b2.u_rst_in','ot_dp_rrelay',{'clk':[bclk],'d':[rst]},{'q':1}).ports['q'][0]
         b2t=cell('b2.u_rrl_0','ot_dp_rrelay',{'clk':[bclk],'d':[b2r]},{'q':1}).ports['q'][0]
-        tx=cell('b.u_cland_rstart_tx','ot_dp_landing_relay',{'clk':[bclk],'rst_raw_n':[bt],'d':[bo]},{'q':1}).ports['q'][0]
+        txr=bt
+        if mutant in ('car_tx_relay','car_tx_relay_bad'):   # FABLE-TYPES-QC-WEST A: tx raw through one ot_dp_rrelay u_cland_rst_tx
+            txr=cell('b.u_cland_rst_tx','ot_dp_rrelay',{'clk':[bclk],'d':[bt if mutant=='car_tx_relay' else rst]},{'q':1}).ports['q'][0]
+        tx=cell('b.u_cland_rstart_tx','ot_dp_landing_relay',{'clk':[bclk],'rst_raw_n':[txr],'d':[bo]},{'q':1}).ports['q'][0]
         rx=cell('b2.u_cland_rstart_rx','ot_dp_landing_relay',{'clk':[bclk],'rst_raw_n':[b2t],'d':[tx if mutant!='car_skip_tx' else bo]},{'q':1}).ports['q'][0]
         cell('b2.u_cland_y2','ot_dp_clk_landing_ca',{'clk':[bclk],'fclk':[aclk],'t_rst_n':[ao],'rst_n':[rx if mutant!='car_ring_origin' else bo],'d':[10,11]},{'q':2,'ready':1,'fault':1})
     if mutant=='fclk':ring.ports['fclk']=[bclk]
@@ -414,3 +417,9 @@ def test_landing_without_local_source_row_refused_by_name():
     # CLAND-SIDECAR-LOCAL-1: was StopIteration (bind.py verify crashed); now a named refusal in the report
     errs=vehicle('no_local_source')['errors']
     assert any('CLAND_SIDECAR_LOCAL_SOURCE_MISSING' in e and 'bus y' in e for e in errs), errs
+
+
+def test_tx_flop_raw_through_midpoint_relay_is_verified():assert vehicle('car_tx_relay')['errors']==[]
+
+
+def test_tx_flop_relay_on_a_wrong_node_still_fails():assert any('nearest-copy tx form' in x for x in vehicle('car_tx_relay_bad')['errors'])

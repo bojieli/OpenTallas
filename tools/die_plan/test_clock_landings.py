@@ -753,3 +753,10 @@ def test_tx_raw_adds_midpoint_relay_over_600um_and_unknown_sites_are_unchanged()
     c2.types[key]["pins"] = []
     c2.types[key]["buses"] = [b for b in c2.types[key]["buses"] if b["name"] != "cland_rstart_out"]
     assert c2._tx_raw("b", key, "raw_x", {"P": "raw_x"}, rl2) == "raw_x" and rl2 == []
+
+
+def test_tx_raw_warns_but_never_blocks_over_800um(capsys):
+    c, key = _tx_vehicle([4000.0, 915.8]); rl = []
+    raw = c._tx_raw("b", key, "raw_far", {"P": "raw_far"}, rl)
+    assert raw == "cland_reset_tx" and "warn" in c.reset_placements["b"]["count_origin"]["tx_raw"]
+    assert "WARN clock_landings" in capsys.readouterr().err
