@@ -194,3 +194,49 @@ MINIMAL PATH (DIE-S81-92):
   4. Release the 350 on that bind with the D1 tree fix.
 NOT CHECKED: that count_align_plan / ca_region_table accept the 98-tag table unchanged (ca_merge.sh and
 ca_merge2.sh exist in die-clk-s81-b6, not read), and the compose result itself.
+
+## F. CA compose failures on the 98-region table, and the release question, 07:10 PST
+
+MEASURED FIRST (ca_e_g417 plan.json, B6gsh clock kit with fall arrivals, the 993 landed crossings):
+the fixed +3 ring is not a valid die form on this clock. 930 of 993 crossings fail the +3 ring margin, 722
+do not have a cycle-fixed latency, 599 have a region-to-region arrival difference above one period
+(max 3,419 ps, worst +3 margin -3,361 ps). LATCHECK 873/873 on +3 is an ideal-clock result. So CA is a
+correctness item, not a latency gain (it costs +13 cycles in total), and it cannot be dropped, only sequenced.
+
+RULINGS for a composable delta
+1. Relay stages over 405 um (134 errors): remove the relays, do not re-place them. The relay is a star from
+   the region origin partition to every other partition of the region (2 registers, up to 7 partitions per
+   region, 75 regions, 135 relay partitions), so its wire spans the region (up to 4.1 mm).
+   Use one start origin per partition: add --start-native-clocks --start-partition-origins to the section-C
+   arguments. PROBED on the same inputs (epyc7 fable-pd-s81/po, guard 417): 993 crossings, 0 no-K, depth
+   4/8 = 833/160, latency total +13 (unchanged), start tree 378/378 clean (min sync distance 105.4 ps),
+   0 relay partitions, plain count_align_bind rc 0 with 0 window violations (lo 108.7 / hi 522.5 ps).
+   NOT RUN: the strap-form bind on this plan (needs the part table) and the compose.
+2. cland_rstart_out used 2-5 times (29 errors): one pin and one launch flop per consumer, no branch on a die
+   wire (point-to-point pins, as every other lane); an absent child leaves its output open. With partition
+   origins all 378 start ports launch from 146 clock-tree retime nodes, fan-out 1 to 9 (43 nodes with 1,
+   52 with 2, 51 with 3 or more), so compose needs this form in any case.
+3. Depth-8 bands that do not fit (17 buses, 11 types): do not resize first. Only 52 of the 160 depth-8
+   crossings need depth 8 on their own window (L_hi above the depth-4 limit 2,811 ps); 108 are guard
+   promotions. Rule: a bus whose band does not fit stays depth 4 if every copy has L_hi <= 2,811 ps
+   (per-bus exception list in place of the global guard, then re-run the strap sim on the whole table);
+   a bus that truly needs 8 gets a notched multi-rect band (leaf_rules bands --densify --max-depth form).
+   My per-type match of the 17 was partial (23 depth-8 crossings found on svc_lo_rs t7, svc_rs t2/t5,
+   pvso_entry t2: 14 guard-only, 9 need 8); DIE-S81-92 must redo it on the compose placement list.
+OPEN RISK, not checked by anyone: physical reach of the 378 start hops (the earlier identity-map run had
+66 start hops over 405 um with --start-max-hop-um). Run the partition-origin plan once with
+--start-max-hop-um 405 and post the count before the compose.
+
+RELEASE DECISION (recommendation; the stop list is COORD's to lift)
+Release now, on B6gsl with the 13 orient rows if it passes, else B6gsh, fixed +3, with the D1 lint tree fix:
+  - the types with no active landing (60 of 395 types): final, the CA delta does not touch them;
+  - the landed types (335 of 395): build to sign-off now as PRE-CA. Their core logic, congestion and timing
+    results carry over; the CA delta changes ring read logic, strap and start pins, and 160 bands at most.
+    At CA adoption they re-key and re-run. Label their records pre-CA and do not report them to the owner
+    as final: the die is not functional on +3.
+  - exclude the 9 D2 types until GENBUG-IMPL fixes the emitter.
+Reason: the CA delta still needs three tool changes (partition-origin strap table, per-consumer start pins
+in compose, band exception list), a reach check and a 2-hour bind; no one can promise it today, the fleet
+is idle on these types, and finding the problem types is the slow part. Cost: one extra build wave for up
+to 335 types and a signed count that drops at the re-key. If COORD prefers no superseded records, release
+only the 60 unlanded types now and hold the rest for CA.
