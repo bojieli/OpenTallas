@@ -5729,22 +5729,25 @@ def run_item(spec_path):
             if rc:
                 return fail("bind", txt, f"{G}:{sp['root']}/bind.log")
         # KITRTL-FAIL-1115: kit-rtl runs the die tree's own bind.py when it knows --src-tree; a tree that predates the flag (bind.py
-        # 'unrecognized arguments', 35 QC/S81/KV FAILs in 1 h) runs the SCHEDULER's tools/die_plan on the tree's data instead:
-        # a staged copy (W/kit_tools/tools/die_plan) whose repo root is a farm of symlinks to the tree's other top-level entries.
+        # 'unrecognized arguments', 35 QC/S81/KV FAILs in 1 h) runs the SCHEDULER's bind.py on the tree's data instead: a staged
+        # W/kit_tools repo root = the tree's own tools/die_plan (its overlays win: the S81 tree's taps.py is newer than main's) plus
+        # main's modules the tree lacks plus main's bind.py, and symlinks to the tree's other top-level entries.
         kt = f"{W}/kit_tools"
         probe = f"cd {q(src)} && python3 -I tools/die_plan/bind.py kit-rtl -h 2>&1 | grep -q -e --src-tree"
         rcp, _tp = run("kit_rtl_probe", remote(probe), idempotent=True)
         kbind = "tools/die_plan/bind.py"
         if rcp:
-            rc, txt = run("kit_tools_dir", remote(f"mkdir -p {q(kt)}/tools/die_plan"), idempotent=True)
+            rc, txt = run("kit_tools_dir", remote(f"mkdir -p {q(kt)}/main_dp"), idempotent=True)
             if rc:
                 return fail("kit_rtl", txt)
-            dest = f"{kt}/tools/die_plan/" if G in ("localhost", hub) else f"{G}:{kt}/tools/die_plan/"
+            dest = f"{kt}/main_dp/" if G in ("localhost", hub) else f"{G}:{kt}/main_dp/"
             rc, txt = run("kit_tools_copy", ["rsync", "-a", "--delete", "-e", "ssh -o BatchMode=yes -o ControlPath=none",
                                              str(Path(__file__).resolve().parents[1] / "die_plan") + "/", dest], idempotent=True)
             if rc:
                 return fail("kit_rtl", txt)
-            farm = (f"cd {q(src)} && for e in * .[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools ] && continue; "
+            farm = (f"rm -rf {q(kt)}/tools && mkdir -p {q(kt)}/tools && cp -a {q(src)}/tools/die_plan {q(kt)}/tools/die_plan && "
+                    f"rsync -a --ignore-existing {q(kt)}/main_dp/ {q(kt)}/tools/die_plan/ && cp -f {q(kt)}/main_dp/bind.py {q(kt)}/tools/die_plan/bind.py && "
+                    f"cd {q(src)} && for e in * .[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools ] && continue; "
                     f"ln -sfn {q(src)}/\"$e\" {q(kt)}/\"$e\"; done; "
                     f"for e in tools/* tools/.[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools/die_plan ] && continue; "
                     f"ln -sfn {q(src)}/\"$e\" {q(kt)}/\"$e\"; done; echo KW_KITRTL_SCHED_BIND {q(kt)}")
