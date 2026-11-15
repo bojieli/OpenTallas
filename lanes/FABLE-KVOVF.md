@@ -203,6 +203,9 @@ the script does not separate that. Not followed up.
   merged; pre-route hold repair sat at iteration 0 for 2 h 10 min (FF hold -290 ps, TNS -1.29M). kv3_hg needs plan
   stations on nine bus families (section 11.2); no kit setting closes it.
 
+- Private stationed chain on kv3_hg alone (t_hg; stopped 05:5x on COORD order). MEASURED: CTS -737 ps / -707k against
+  keep only -739 / -694k. The other bus families of section 11.2 dominate.
+
 ## 9. Update 2026-11-15 01:55 PST
 
 - Keep only: kv3_hgi_v2 CTS -366 ps / -142k (merged -586 / -558k); after pre-route hold repair -431 ps, FF hold +3.7 ps
@@ -323,3 +326,27 @@ MEASURED split (my listing on 4_cts.odb, `fable-kvovf/sta_v_hgi2/`; it reads -25
 - 2 `u_headN_u_score.u_rof.q` (-52, -39); 3 asynchronous and 1 path-delay endpoint under -8 ps.
 All remaining failures are one-bit control broadcasts or a 6-bit register: each needs a relay stage (KV-102 reset / start
 tree), not a bus pipeline. The kit WNS of -414 ps is one of these (`u_cland_fstart_ft0_o`).
+
+## 15. Plan handle for the start / reset broadcast (answer to KV-102, 2026-11-15 05:55 PST)
+
+MEASURED in the kit RTL: `u_cland_rst_ft0_i` is an `ot_dp_rrelay` on the last reset-tree relay (`rst_rl_225`, depth 7,
+at (1274.4, 574.3) on the E face). Its Q is `cland_reset_ft0_i` = `cland_start_raw`, the raw reset of every
+`u_cland_fstart_<bus>` face flop, of `u_cland_origin`, `u_cland_tstart_o` and (through a second relay) `u_cland_raw_reset_o`.
+One flop on the E face feeds flops on all faces.
+
+Read in `tools/die_plan/clock_landings.py` (not run):
+- Plan key `partition_types.<type>.clock.landing_raw_branches` (schema `tools/die_plan/landing_raw_branches.py`: branches
+  with name / base / stages / consumers). Consumer roles the generator honours: `fstart:<bus>` for each
+  `u_cland_fstart_<bus>` (line 1610, `_branch_raw`) and `origin` (line 2165). Each consumer gets a literal copy of the
+  raw relay chain at the same depth, sited next to it: release cycle unchanged, flops only.
+- Tool that writes it for KV types in one event: `tools/die_plan/kv_start_corridor_event.py --types ...`, step `raw`
+  (TYPE-SAFE-2-KV 11-08; data cycles 0, reset depth 0).
+- Second existing handle with the same effect per face: `clock.landing_local_resets`, entries from
+  `tools/die_plan/fstart_reset_leaves.py plan` (HEAD form, DIE-HEAD-76).
+- No handle: `u_cland_tstart_o` takes `cland_start_raw` literally (line 1906) and `u_cland_raw_reset_o` has no role. On
+  v_hgi2 these are -33 ps and -13 ps, inside R-MINIMAL (-42 ps), as are the four `u_cland_origin` flops (-37 ps), so no
+  generator change is needed to pass. If wanted later: two more `_branch_raw` roles in clock_landings.py.
+
+Consumers that need a branch on kv3_hgi_v2 (v_hgi2 CTS): `fstart:ft3_o` (-252 ps), `fstart:ft0_o` (-249),
+`fstart:o_head_Q_N_N__u_fts_s_b` (-107), `fstart:o_hst_Q_N_N_sN_s_b` (-106), `fstart:ft1_o` (-71).
+Not checked: whether the kv3_hgi* plan entries already carry `landing_raw_branches`.
