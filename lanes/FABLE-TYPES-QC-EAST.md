@@ -48,7 +48,7 @@ Port hold is the parent's under R-MINIMAL (sign-off scores "core-owned only"), s
 | sle_fe_v3 (intel1 s29q103S2 a7) | port_in 3,297 @ -118, port_out 1,458 | FALLBACK "no hold gain" | killed in GRT (Error 241) | |
 | cbn_q11 cl5cc92dfe (epyc10 a8) | cross_tap 15,194 @ -214 | FALLBACK "tool error" | GRT-0116 | see C |
 
-So: with the pre-GRT result kept, the GRT step finds 3-73 endpoints and closes in 1-9 minutes on every kit of the group (15 kits in the scan). With it discarded, the same family shows 5,838-8,375 endpoints and needs 6-7 h for one chunk. The stall line then ends the build as HOLD_STRUCTURAL (`failfast_rules.py`), and the wave does not retry it. None of these four types has a structural hold problem: their internal classes are 50-2,100 endpoints and close in one pass.
+So: with the pre-GRT result kept, the GRT step finds 0-161 endpoints and closes in 1-29 minutes on every kit of the group (19 kits in the scan; the largest is su_l1 clc6d66f5b, 161 endpoints, 1,731 s). With it discarded, the same family shows 5,838-8,375 endpoints and needs 6-7 h for one chunk. The stall line then ends the build as HOLD_STRUCTURAL (`failfast_rules.py`), and the wave does not retry it. None of these four types has a structural hold problem: their internal classes are 50-2,100 endpoints and close in one pass.
 
 Why the GRT step is that slow: 14.6 s per buffer on stm_v1 (680 k instances after B), 4.2 s per buffer on fe_v3 (189 k). Cost grows with the netlist; B makes it worse.
 
