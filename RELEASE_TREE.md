@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-15 13:45 PST count (AGIdock archive gate, tree-sum): 320 = s81 36t+62c, head 19t+5c, qc 3t+64c, kv 5t+34c, hbm 1t+91c (flat). S81 B6gE adopted 12:51, wave released 136 keys (first launch 13:35), F1 blocked (G0 3 new cland_mon hops) -> TYPEMERGE fix; QC S4q3c launching, S4q5 NOT adopted (FABLE-PD-QC-1245) -> one combined rows delta + hc b_hw_i strip pilot; KV 7v on pinned gate, q2 clock lane; HEAD die route per unit (r146 recipe); wave 221 launch/30 fail (all @kit_rtl, held+fixing).
+2026-11-15 14:45 PST count (AGIdock archive gate, tree-sum): 326 = s81 40t+62c, head 19t+5c, qc 5t+64c, kv 5t+34c, hbm 1t+91c (+6: 7 signed records archived by SIGNED-TERMINAL). S81 B6gE: Event F part 2 = seam reset (hold repair closes removal, pilot pgh routing) + col taps + TRIDX2 (passed) + col3_c view (proof PASS) + GO-tag sender-core taps (pilot); Event G = PHYT1 v2 taps legal + t14 form R (GRT 0) + BANDTAP svc windows; QC S4q6 one rows delta (set A passed); KV q2 clock + pc pilots; HEAD die route per unit; DRT-0255 root cause = M6 PG pair row, fix proving; S81/QC fresh launches held on kit_rtl fix.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
