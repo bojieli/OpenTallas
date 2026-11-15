@@ -59,10 +59,9 @@ REF_CAP = int(os.environ.get("MQ_REF_CAP", "40"))
 SYNC_HOOK = os.environ.get("MQ_SYNC_HOOK", str(Path(__file__).resolve().with_name("ot-tools-sync")) + " sync --sha {sha}")
 # rtl/lib + rtl/common: die_plan tools read REPO/rtl/lib/ot_reset_sync.sv etc.; without them test_bind failed on a sparse tree only
 # (pg-aware-1 288ada0041 / 240cf2612f5 false MERGE-FAIL 11-14 20:16 / 20:26)
-# after the rt flip: main's changed tool files into each die's own wave source tree (kit-gen + binds read those, not rt/current)
-# (default only for the production clone: a test queue on its own MQ_REPO must never write the real die trees)
-SRC_HOOK = os.environ.get("MQ_SRC_HOOK", "" if "MQ_REPO" in os.environ else
-                          str(Path(__file__).resolve().with_name("ot-src-refresh")) + " refresh --from {old} --to {new} --apply")
+# Die source trees are NOT refreshed per merge (OWNER/COORD 11-15 after the 00:26 gen breakage): ot-src-refresh daily runs once a
+# day at 06:00 (ot-src-refresh.timer), batched, smoke-tested, with rollback.  MQ_SRC_HOOK stays for a manual/debug override only.
+SRC_HOOK = os.environ.get("MQ_SRC_HOOK", "")
 SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
 TAG_DATE = os.environ.get("MQ_TAG_DATE", "")
 MAX_BLOB = 95 * 1024 * 1024

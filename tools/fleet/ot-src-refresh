@@ -13,6 +13,15 @@ Without this step a fix landed on main never reaches a new kit or bind.
         a file that a process on the gen host has open or names in its command line -> BUSY (kept, retried on the next run)
   ot-src-refresh catchup --since DATE [--apply]            the same for every file main changed since DATE (base = the
         earlier main version the tree copy equals; a local edit without a known base is reported LOCAL and kept)
+  ot-src-refresh daily [--apply]   (OWNER/COORD 11-15: the ONLY automatic mode; timer 06:00, never per merge, never mid-wave)
+        one batch of every file main changed since the last good daily run (~/merge-queue/src-refresh-last.json, per die):
+        1. gen host: the merged content is STAGED in SRC/.mq-stage/<stamp>/ (no tree changed) and smoke-tested through that
+           overlay (every .py of tools/die_plan compiles, the gen entry modules import, every import of a staged file resolves);
+           a failing smoke -> nothing swapped for that die;
+        2. swap on the gen host, then the gen host's exact result goes to every dies.<die>.gen_hosts replica (the wave gens on any
+           of them: 00:26 11-15 replicas lacking core_view_sha broke 32 gens); a replica copy that equals the gen host's old copy
+           is replaced, a different one is 3-way merged (kept on conflict);
+        3. the same smoke on every host; any failure -> the die is rolled back on ALL its hosts (backups below) and reported.
 Every write: backup SRC/.mq-refresh-bak/<stamp>/<path> (cp -p), new content to a temp file in the same dir, then os.replace
 (copy+mv: a running bash / Python keeps the old inode).  SRC/MQ_REFRESH.log gets one line per write.  Without --apply: report only.
 Scope: tools/ (not tools/fleet, tools/autopilot: those run from rt/current) + physical/common_flow + rtl/lib + rtl/common; no tests.
@@ -40,6 +49,10 @@ EXCLUDE = ("tools/fleet/", "tools/autopilot/")
 SSH = os.environ.get("OT_SRC_SSH", "timeout 600 ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=20")
 LOCAL_HOSTS = set(os.environ.get("OT_SRC_LOCAL_HOSTS", "").split())      # tests: run these "hosts" in-process
 MAX_HIST = 400
+LOCAL_ROOTS = dict(kv.split("=", 1) for kv in os.environ.get("OT_SRC_LOCAL_ROOTS", "").split() if "=" in kv)   # tests: host=/root
+COORD = Path(os.environ.get("MQ_COORD", HOME / "coord"))
+COMMIT = os.environ.get("MQ_COMMIT", str(COORD / "bin/coord-commit.sh"))
+ENTRY = ("gen_phys", "bind", "check", "schema", "kit_topology", "kit_preflight", "core_view_sha", "gen")
 
 
 def now():
@@ -106,6 +119,8 @@ REMOTE_PY = r'''
 import base64, hashlib, json, os, shutil, subprocess, sys, tempfile
 job = json.loads(sys.stdin.read())
 src, apply_, stamp = job["src"], job["apply"], job["stamp"]
+mode = job.get("mode") or ("apply" if apply_ else "dry")          # dry / stage / apply / rollback
+want = job.get("want_out")
 def bid(b):
     return hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()
 _PROC = None
@@ -135,6 +150,34 @@ def users(path):
 res = []
 if not os.path.isdir(src):
     print(json.dumps({"error": f"no tree {src}"})); sys.exit(0)
+def put(t, data, mode_bits):
+    d = os.path.dirname(t)
+    os.makedirs(d, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(dir=d, prefix=".mqref.")
+    with os.fdopen(fd, "wb") as o:
+        o.write(data)
+    os.chmod(tmp, mode_bits)
+    os.replace(tmp, t)
+if mode == "rollback":                       # undo every write of <stamp> in this tree (newest first)
+    done = []
+    try:
+        lines = [l.split() for l in open(os.path.join(src, "MQ_REFRESH.log")) if l.startswith(stamp + " ")]
+    except OSError:
+        lines = []
+    for l in reversed(lines):
+        st, rel = l[1], l[2]
+        t, bk = os.path.join(src, rel), os.path.join(src, ".mq-refresh-bak", stamp, rel)
+        try:
+            if st == "ADD" and not os.path.exists(bk):
+                os.remove(t)
+            elif os.path.exists(bk):
+                put(t, open(bk, "rb").read(), os.stat(bk).st_mode & 0o7777)
+            done.append(rel)
+        except OSError as e:
+            res.append({"path": rel, "status": "ERROR", "note": str(e)})
+    with open(os.path.join(src, "MQ_REFRESH.log"), "a") as lg:
+        lg.write(f"{stamp}-rb ROLLBACK {len(done)} file(s) of {stamp}\n")
+    print(json.dumps({"results": res, "rolled_back": done})); sys.exit(0)
 for f in job["files"]:
     rel, new = f["path"], base64.b64decode(f["new"])
     base = base64.b64decode(f["base"]) if f.get("base") is not None else None
@@ -167,20 +210,23 @@ for f in job["files"]:
     if u:
         r.update(status="BUSY", note=f"pids {u[:5]}"); res.append(r); continue
     r["status"] = st
-    if apply_:
+    if want:
+        r["out"] = base64.b64encode(out).decode()
+        r["have"] = base64.b64encode(have).decode() if have is not None else None
+    mbits = os.stat(t).st_mode & 0o7777 if have is not None else (0o755 if new.startswith(b"#!") else 0o644)
+    if mode == "stage":
         try:
-            d = os.path.dirname(t)
-            os.makedirs(d, exist_ok=True)
-            mode = os.stat(t).st_mode & 0o7777 if have is not None else (0o755 if new.startswith(b"#!") else 0o644)
+            put(os.path.join(src, ".mq-stage", stamp, rel), out, mbits)
+            r["staged"] = True
+        except OSError as e:
+            r.update(status="ERROR", note=str(e))
+    elif apply_:
+        try:
             if have is not None:
                 bk = os.path.join(src, ".mq-refresh-bak", stamp, rel)
                 os.makedirs(os.path.dirname(bk), exist_ok=True)
                 shutil.copy2(t, bk)
-            fd, tmp = tempfile.mkstemp(dir=d, prefix=".mqref.")
-            with os.fdopen(fd, "wb") as o:
-                o.write(out)
-            os.chmod(tmp, mode)
-            os.replace(tmp, t)
+            put(t, out, mbits)
             with open(os.path.join(src, "MQ_REFRESH.log"), "a") as lg:
                 lg.write(f"{stamp} {st} {rel} -> main {job['to'][:11]} (blob {bid(out)[:12]}; was {bid(have)[:12] if have is not None else '-'})\n")
             r["written"] = True
@@ -191,7 +237,68 @@ print(json.dumps({"results": res}))
 '''
 
 
+SMOKE_PY = r'''
+import ast, importlib.util, json, os, py_compile, subprocess, sys
+job = json.loads(sys.stdin.read())
+src, ov, files, entry = job["src"], job.get("overlay") or "", job["files"], job["entry"]
+roots = ([ov] if ov else []) + [src]
+path = [os.path.join(r, d) for r in roots for d in ("tools/die_plan", "tools")]
+bad = []
+def local(m):
+    return any(os.path.exists(os.path.join(p, m + ".py")) or os.path.isdir(os.path.join(p, m)) for p in path)
+for r in roots[::-1]:
+    dp = os.path.join(r, "tools/die_plan")
+    for f in (os.listdir(dp) if os.path.isdir(dp) else []):
+        if f.endswith(".py"):
+            try:
+                compile(open(os.path.join(dp, f), "rb").read(), f, "exec")
+            except SyntaxError as e:
+                bad.append(f"syntax {f}: {e}")
+for rel in files:
+    if not rel.endswith(".py"):
+        continue
+    f = os.path.join(ov, rel) if ov and os.path.exists(os.path.join(ov, rel)) else os.path.join(src, rel)
+    try:
+        t = ast.parse(open(f, "rb").read())
+    except (OSError, SyntaxError):
+        continue
+    for n in ast.walk(t):
+        ms = [a.name.split(".")[0] for a in n.names] if isinstance(n, ast.Import) else \
+             [n.module.split(".")[0]] if isinstance(n, ast.ImportFrom) and n.module and not n.level else []
+        for m in ms:
+            if not (local(m) or m in sys.builtin_module_names or m in sys.stdlib_module_names or importlib.util.find_spec(m)):
+                bad.append(f"{rel} imports {m}: not in the tree")
+present = [m for m in entry if local(m)]
+code = "import sys; sys.path[:0] = %r\nfor m in %r:\n    __import__(m)\n" % (path, present)
+p = subprocess.run([sys.executable, "-I", "-W", "ignore", "-c", code], cwd=src, capture_output=True, text=True, timeout=300)
+if p.returncode:
+    bad.append("entry import: " + (p.stderr.strip().splitlines() or ["?"])[-1][:300])
+print(json.dumps({"bad": bad}))
+'''
+
+
+def _cmd(host, py):
+    if host in LOCAL_HOSTS:
+        return [sys.executable, "-I", "-c", py]
+    return shlex.split(SSH) + [host, "python3", "-I", "-c", shlex.quote(py)]
+
+
+def _root(host, path):
+    return LOCAL_ROOTS.get(host, "") + path
+
+
+def smoke(host, src, files, overlay=""):
+    """-> list of problems ([] = pass)"""
+    job = {"src": _root(host, src), "overlay": _root(host, overlay) if overlay else "", "files": files, "entry": list(ENTRY)}
+    p = S.run(_cmd(host, SMOKE_PY), input=json.dumps(job), capture_output=True, text=True, timeout=900)
+    try:
+        return json.loads(p.stdout.strip().splitlines()[-1])["bad"]
+    except (ValueError, IndexError, KeyError):
+        return [f"smoke did not run: rc={p.returncode} {(p.stderr or p.stdout).strip()[-200:]}"]
+
+
 def run_remote(host, job):
+    job = dict(job, src=_root(host, job["src"]))
     data = json.dumps(job)
     if host in LOCAL_HOSTS:
         cmd = [sys.executable, "-I", "-c", REMOTE_PY]
@@ -293,6 +400,108 @@ def refresh(paths, old, new, apply_, only=None, label="", catchup=False):
     return rows, summary
 
 
+def post(kind, text):
+    """one line to COORD-REVIEW-QUEUE.md (+ coord-commit.sh when present)"""
+    q = COORD / "lanes/COORD-REVIEW-QUEUE.md"
+    line = f"- {now().strftime('%Y-%m-%d %H:%M %Z')} {kind} [MERGE-QUEUE-1 src-refresh -> COORD] {text}"
+    try:
+        with open(q, "a") as f:
+            f.write(line + "\n")
+        if os.path.exists(COMMIT):
+            S.run(["bash", COMMIT, "MERGE-QUEUE-1 daily src refresh", str(q.relative_to(COORD))], cwd=str(COORD),
+                  capture_output=True, timeout=300)
+    except OSError as e:
+        log(f"post failed: {e}")
+
+
+def die_hosts(cfg, die):
+    d = cfg["dies"][die]
+    g = d["gen_host"]
+    return g, [h for h in dict.fromkeys(d.get("gen_hosts") or []) if h and h != g]
+
+
+def daily(new, apply_, only):
+    """the 06:00 batch (see the module doc)"""
+    cfg = json.loads(CFG.read_text())
+    lastf = MQ / "src-refresh-last.json"
+    try:
+        last = json.loads(lastf.read_text())
+    except (OSError, ValueError):
+        last = {}
+    new = git("rev-parse", new).strip()
+    stamp = now().strftime("%Y%m%d-%H%M%S")
+    out_lines, rows = [], []
+    for die in sorted(cfg.get("dies") or {}):
+        d = cfg["dies"][die]
+        if (only and die not in only) or not isinstance(d, dict) or not d.get("enabled") or not d.get("src"):
+            continue
+        old = last.get(die)
+        if not old:
+            out_lines.append(f"{die}: no last good sha in {lastf.name}; set it once (catch-up first), skipped")
+            continue
+        if old == new:
+            continue
+        paths = changed(old, new)
+        if not paths:
+            last[die] = new
+            continue
+        src, (gen, reps) = d["src"], die_hosts(cfg, die)
+        jobs = file_jobs(paths, old, new, history_blobs(paths))
+        st = run_remote(gen, {"src": src, "apply": False, "mode": "stage", "stamp": stamp, "to": new, "files": jobs, "want_out": True})
+        if "error" in st:
+            out_lines.append(f"{die}: gen host {gen} ERROR {st['error']}"); continue
+        res = {r["path"]: r for r in st["results"]}
+        todo = [r for r in st["results"] if r.get("staged")]
+        held = [f"{r['path']} {r['status']}" for r in st["results"] if r["status"] in ("CONFLICT", "BUSY", "LOCAL", "ERROR", "UNREADABLE")]
+        ovl = f"{src}/.mq-stage/{stamp}"
+        bad = smoke(gen, src, [r["path"] for r in todo], overlay=ovl)
+        S.run(_cmd(gen, f"import shutil; shutil.rmtree({_root(gen, ovl)!r}, ignore_errors=True)"), capture_output=True, timeout=300)
+        if bad:
+            out_lines.append(f"{die}: STAGED SMOKE FAILED on {gen}, nothing swapped: {'; '.join(bad)[:500]}")
+            continue
+        if not apply_:
+            out_lines.append(f"{die}: dry {len(todo)} file(s) would change, staged smoke ok; held {held[:8]}")
+            continue
+        # swap: gen host (its staged result) then every replica (gen host's exact content)
+        gjobs = [{"path": r["path"], "new": r["out"], "base": r.get("have"), "hist": []} for r in todo]
+        hosts_done, fail = [], []
+        for h in [gen] + reps:
+            rr = run_remote(h, {"src": src, "apply": True, "mode": "apply", "stamp": stamp, "to": new, "files": gjobs})
+            if "error" in rr:
+                if "no tree" in rr["error"] and h != gen:
+                    continue
+                fail.append(f"{h}: {rr['error']}"); hosts_done.append(h); break
+            hosts_done.append(h)
+            for r in rr["results"]:
+                rows.append([stamp, "daily", die, h, src, r["path"], r["status"], r.get("note", ""), "applied" if r.get("written") else ""])
+            b = smoke(h, src, [j["path"] for j in gjobs])
+            if b:
+                fail.append(f"{h}: {'; '.join(b)[:400]}"); break
+        if fail:
+            for h in hosts_done:
+                run_remote(h, {"src": src, "apply": True, "mode": "rollback", "stamp": stamp, "to": new, "files": []})
+            out_lines.append(f"{die}: SMOKE FAILED after swap ({' | '.join(fail)}); ROLLED BACK on {', '.join(hosts_done)}")
+            continue
+        last[die] = new
+        cnt = {}
+        for r in todo:
+            cnt[r["status"]] = cnt.get(r["status"], 0) + 1
+        out_lines.append(f"{die}: {old[:11]}..{new[:11]} on {gen}+{len(reps)} replica(s): "
+                         + " ".join(f"{k}={v}" for k, v in sorted(cnt.items())) + (f"; kept {held[:10]}" if held else ""))
+    MQ.mkdir(parents=True, exist_ok=True)
+    if apply_:
+        with open(MQ / "src-refresh.tsv", "a") as f:
+            for r in rows:
+                f.write("\t".join(map(str, r)) + "\n")
+        t = lastf.with_suffix(".tmp"); t.write_text(json.dumps(last, indent=1, sort_keys=True)); os.replace(t, lastf)
+    for l in out_lines:
+        log(f"DAILY {'APPLY' if apply_ else 'DRY'} {l}")
+    if apply_ and out_lines:
+        post("STATE" if not any("FAILED" in l or "ERROR" in l for l in out_lines) else "RESULT",
+             f"daily die-tree refresh to main {new[:11]} (stamp {stamp}): " + " ;; ".join(out_lines))
+    return out_lines
+
+
 def changed(old, new):
     return [p for p in git("diff", "--name-only", "--no-renames", old, new).split("\n") if p and in_scope(p)]
 
@@ -302,12 +511,19 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("refresh"); a.add_argument("--from", dest="old", required=True); a.add_argument("--to", dest="new", required=True)
     c = sub.add_parser("catchup"); c.add_argument("--since", required=True); c.add_argument("--to", dest="new", default=f"{REMOTE}/main")
-    for p in (a, c):
+    dl = sub.add_parser("daily"); dl.add_argument("--to", dest="new", default=f"{REMOTE}/main")
+    for p in (a, c, dl):
         p.add_argument("--apply", action="store_true"); p.add_argument("--dies", default=""); p.add_argument("--show", action="store_true")
     x = ap.parse_args()
     if x.apply and "OT_SRC_CFG" not in os.environ and "MQ_REPO" in os.environ:
         sys.exit("refusing --apply: MQ_REPO is set (a test or side clone) but the die config is the production kit_wave.json")
     only = set(x.dies.split(",")) - {""}
+    if x.cmd == "daily":
+        git("fetch", "-q", REMOTE, "main", check=False)
+        lines = daily(x.new, x.apply, only)
+        for l in lines:
+            print(l)
+        return 1 if any("ERROR" in l for l in lines) else 0
     if x.cmd == "refresh":
         paths = changed(x.old, x.new)
         rows, summ = refresh(paths, x.old, x.new, x.apply, only, f"{x.old[:11]}..{x.new[:11]}")
