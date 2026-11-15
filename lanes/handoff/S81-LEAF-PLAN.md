@@ -3,7 +3,7 @@
 Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.tsv (R-LEAF-1/2/3). All builds private, DO_NOT_COUNT.
 
 ## STATE 2026-11-14 ~17:xx PST (CURRENT; supersedes everything below)
-- Branch claude/s81-leaf-plan-1114 head 59db85fea3 pushed (+ core_place --ft-resite / --link-reg, test_core_place_b4l4.py 4/4). Uncommitted in wt/: --taps-movable, ft clock points follow, exact group box check, 48-step search (commit next).
+- Branch claude/s81-leaf-plan-1114 head 07782f9157 pushed (core_place --ft-resite / --link-reg / --taps-movable, test_core_place_b4l4.py 4/4); READY posted to ROOT-MERGE-63.
 - G0L3f (B4L3f): 296 errors, identical finding set to G0L2f (and the same count as G0ctl3).
 - B4L4 = ev/B4L4.json 58f4d1f24d2e / side_B4L4.json f97909118cca, 1 type: ot_s81sl_leaf__t21 (partition s_2S_L2).
   - Form: vsw (86.4,302.4), rxsb (319.68,224.64), --window-clear --ft-resite --link-reg swr,rar. Gives R-LEAF-2 0 (was 2, ft2_o/ft3_o under vsw); 2 ft regs re-sited, count kept; 0 timing over; eq OK.
