@@ -32,6 +32,7 @@ class HubSync(unittest.TestCase):
         (seed / "autopilot/kit_wave_state.json").write_text("{\"v\": 1}\n")
         (seed / "lanes/COORD-REVIEW-QUEUE.md").write_text("q1\n")
         (seed / "autopilot/resolved.tsv").write_text("r1\n")
+        (seed / "autopilot/auto_resign.tsv").write_text("a1\n")
         self.git(seed, "add", ".")
         self.git(seed, "commit", "-qm", "base")
         self.git(seed, "remote", "add", "origin", str(self.r / "remote"))
@@ -112,6 +113,18 @@ class HubSync(unittest.TestCase):
         for line in ("l1", "hub lane note", "remote lane note"):
             self.assertEqual(got.count(line), 1, got)
         self.assertFalse([l for l in got if l.startswith(("<<<<<<<", "=======", ">>>>>>>"))], got)
+
+    def test_dirty_auto_resign_tsv_is_an_append_log(self):
+        # KIT-OPS-6 11-14: auto_resign.py appends a row to autopilot/auto_resign.tsv in the hub tree; sync failed
+        # with "non-log local edits: autopilot/auto_resign.tsv" after every row
+        self.append(self.hub, "autopilot/auto_resign.tsv", "hub row")
+        self.remote_commit("autopilot/auto_resign.tsv", "remote row")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        got = self.remote_file("autopilot/auto_resign.tsv").splitlines()
+        for line in ("a1", "hub row", "remote row"):
+            self.assertEqual(got.count(line), 1, got)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
 
     def test_deeper_handoff_path_is_not_an_append_log(self):
         self.git(self.other, "pull", "-q", "--no-rebase", "origin", B)
