@@ -18,3 +18,9 @@ PLAN: private ECO from attempt_4 routed DB with OT_PRD_PROTECT_NETS = nets on po
 - Build C: eco_loop --from grt --hold-margin 40 (reg2reg scope, full DRT, no route-keep), hosts epyc9,epyc10,epyc8, out typekvioft/ecoC, log intel2 ~/typekvioft/ecoC.log. A2/B3 left to finish, no further round on that recipe.
 - earlyoom evidence (journalctl -u earlyoom): epyc2 18:23:42 openroad VmRSS 15.5 GB = form A DRT crash (18:23:46); epyc10 02:35:32 openroad 12.8 GB = B2 crash. FABLE-HARD-KV says Error 241 was a tool crash; both measured crashes here coincide with earlyoom SIGTERM.
 - Bundle note: do NOT rsync with --exclude eco* (drops eco_loop.py).
+
+## 2026-11-14 19:25 update 4 (successor after owner stop)
+- Live and healthy (checked 19:23): ecoC (margin 40, epyc10, 38 min in DRT docker prd-ecoC-i1), ecoA2 (epyc10, 49 min), ecoB3 (epyc9, 42 min). All in detailed route; no relaunch.
+- Waiter ~/typekvioft/waitC.sh (no LLM) logs to ~/typekvioft/waitC.out when eco procs exit / results appear.
+- Structural fix (tap_pair_affinity, extended to pc types) is KV-102 next event per FABLE-PLAN-EVENTS 19:0x; waits for ctscan canary. Not mine.
+- On ecoC result: check R-MINIMAL (DRC0, TT>=-42, internal reg2reg FF>=0), AUTO-RESIGN row, archive AGIdock+rtx-pro.
