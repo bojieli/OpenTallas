@@ -149,6 +149,35 @@ class PlanPrio(unittest.TestCase):
             self.assertEqual(R.waiter_pid(500), 0)
 
 
+    def test_early_admit_after_the_drain_uses_half_the_headroom(self):
+        import contextlib, io
+        e = {"SIMPLE_ADMIT": "1", "SIMPLE_PEAK": "1", "PLAN_PRIO": "1", "INV_HEADROOM_GB": "48", "PEAK_GROWTH_FRAC": "0", "SIMPLE_FRESH_S": "0", "SMALL_JOB_GB": "8",
+             "SMALL_FLOOR_GB": "36", "PLAN_MAX_RUNNING": "1", "PLAN_HOLD_MAX_S": "86400", "PLAN_EARLY_S": "5400"}
+        d = tempfile.mkdtemp()
+        def run(avail, my_age):
+            with patch.dict(os.environ, e), patch.object(R, "D", d), patch.object(R, "classify", return_value="chainR92.sh"), patch.object(R, "sizes", return_value={}), \
+                    patch.object(R, "meminfo", return_value=(1000.0, float(avail))), patch.object(R, "peak_history", return_value={}), \
+                    patch.object(R, "running_units_light", return_value=[]), patch.object(R, "plan_census", return_value=(0, [])), patch.object(R, "waiter_pid", return_value=4242), \
+                    patch.object(R, "rd", side_effect=lambda p: f"{10000 + my_age} 0" if p == "/proc/uptime" else ("4242 (bash) S 1 " + " ".join(["0"] * 17) + " 10000" if p.endswith("/stat") else "")), \
+                    patch.object(R.os, "sysconf", return_value=1):
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    R.gate_locked(96, ["bash", "chainR92.sh"])
+            return out.getvalue()
+        # 96 GB job, floor max(24, 36) = 36: needs avail 132; early after 90 min: floor 36 - 24 = 12 -> avail 108
+        self.assertFalse(run(110, 600).startswith("OK "))                     # 10 min old: normal rule
+        self.assertTrue(run(110, 6000).startswith("OK 96 chainR92.sh | PLAN_PRIO EARLY"))
+        self.assertFalse(run(107, 6000).startswith("OK "))                    # shortfall above half the headroom
+
+    def test_admit_marker_counts_as_a_running_plan_job(self):
+        d = tempfile.mkdtemp()
+        with patch.object(R, "D", d):
+            self.assertEqual(R.plan_census(0)[0], 0)
+            open(os.path.join(d, f"plan.admit.{os.getppid()}"), "w").write("1")        # a live pid with no scope yet
+            self.assertEqual(R.plan_census(0)[0], 1)
+            self.assertEqual(R.plan_census(os.getppid())[0], 0)                          # the admitted job itself is not counted against itself
+
+
 class Fallback(unittest.TestCase):
     def test_no_history_uses_a_share_of_the_request_only_for_running_jobs(self):
         self.assertEqual(R.expected_peak("never", 48, HIST), 48.0)                       # a NEW job without history is charged its request
