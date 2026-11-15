@@ -1,0 +1,345 @@
+{
+ "lane": "QC-HC-STRIP-1115",
+ "rows": {
+  "slw_hc1__cl3449ea95": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     149.04,
+     9.253161,
+     408.24,
+     87.013161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 288.421,
+    "area_reserve_um2": 20155.392,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     108.528,
+     9.253161,
+     380.496,
+     33.54271
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "slw_hc2__cl6bcaba89": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     17.28,
+     9.253161,
+     498.96,
+     52.453161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 299.365,
+    "area_reserve_um2": 20808.576,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     32.4,
+     9.253161,
+     473.04,
+     24.289548
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "sle_hc2__clcc5e3e61": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     17.28,
+     9.253161,
+     498.96,
+     52.453161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 299.365,
+    "area_reserve_um2": 20808.576,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     32.4,
+     9.253161,
+     473.04,
+     24.289548
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "slw_hc1__cl68f9248e__cle683a076": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     149.04,
+     9.253161,
+     408.24,
+     87.013161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 288.421,
+    "area_reserve_um2": 20155.392,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     108.528,
+     9.253161,
+     380.496,
+     33.54271
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "slw_hc1__cl68f9248e__cl144ee7b3": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     149.04,
+     9.253161,
+     408.24,
+     87.013161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 288.421,
+    "area_reserve_um2": 20155.392,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     108.528,
+     9.253161,
+     380.496,
+     33.54271
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "slw_hc2__cla3497502__cl16607c7a": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     17.28,
+     9.253161,
+     498.96,
+     52.453161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 299.365,
+    "area_reserve_um2": 20808.576,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     32.4,
+     9.253161,
+     473.04,
+     24.289548
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "slw_hc2__cla3497502__cldc737267": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     17.28,
+     9.253161,
+     498.96,
+     52.453161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 299.365,
+    "area_reserve_um2": 20808.576,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     32.4,
+     9.253161,
+     473.04,
+     24.289548
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "sle_hc1__cl7d360508": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "area_reserve_um2": 20155.392,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "instance": "u_cland_b_hw_i",
+    "live_data_storage_flops": 7870,
+    "max_pin_to_band_hop_um": 288.421,
+    "padded_data_storage_flops": 8000,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "rect_um": [
+     149.04,
+     9.253161,
+     408.24,
+     87.013161
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "resized_from_um": [
+     108.528,
+     9.253161,
+     380.496,
+     33.54271
+    ],
+    "ring_place": "ff",
+    "ring_width": 1600,
+    "width": 1573
+   }
+  },
+  "sle_hc1__cl22c1ff36": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     125.28,
+     9.253161,
+     408.24,
+     80.533161
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 281.941,
+    "area_reserve_um2": 20169.389,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     17.28,
+     9.253161,
+     289.248,
+     33.54271
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "sle_hc2__cl9c4c4509__cl3edce1b8": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     17.28,
+     12.723097,
+     457.92,
+     58.083097
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 292.851,
+    "area_reserve_um2": 19987.43,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     17.28,
+     12.723097,
+     399.6,
+     30.072774
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  },
+  "sle_hc2__cl9c4c4509__clf60c5152": {
+   "clock.landing_contract.bands.b_hw_i": {
+    "rect_um": [
+     17.28,
+     10.409806,
+     457.92,
+     55.769806
+    ],
+    "width": 1573,
+    "ring_width": 1600,
+    "live_data_storage_flops": 7870,
+    "padded_data_storage_flops": 8000,
+    "clock_roles": {
+     "forwarded_write_flops": 6400,
+     "local_read_flops": 1600
+    },
+    "max_pin_to_band_hop_um": 290.538,
+    "area_reserve_um2": 19987.43,
+    "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+    "instance": "u_cland_b_hw_i",
+    "resized_from_um": [
+     47.52,
+     10.409806,
+     455.76,
+     26.602839
+    ],
+    "resize": "QC-HC-STRIP-1115 F1: b_hw_i strip depth under its S-face pin span for cland_strip_density 0.45 (band fits 1 at 24 um)",
+    "ring_place": "ff"
+   }
+  }
+ },
+ "die_rows": {
+  "budgets.cland_strip_density_types": {
+   "sle_ctl": 1.0,
+   "sle_hc1": 0.45,
+   "slw_hc1": 0.45,
+   "sle_hc2": 0.45,
+   "slw_hc2": 0.45
+  }
+ },
+ "note": "rows = composed band edits (rows_apply refuses composed-only keys: apply with a plain deep-set, as gen_sc/gen_fe do)"
+}
