@@ -643,7 +643,15 @@
    "die_max_inflight": 100000,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
-   "hold_items": {},
+   "hold_items": {
+    "kv3_pc__cl254f2e73": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
+    "kv3_pc_v1__cl4ea58a5c": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
+    "kv3_pc_v1__cl23f6a148": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
+    "kv3_pc__cl5a95b461": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
+    "kv3_pc_v1__cl7f648944": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
+    "kv3_hg_v3": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a13/a14 on two superseded events; release on the current event",
+    "kv3_hgi_v5": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a6 13 h on superseded event kv102sem_ftgrid; release on the current event"
+   },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
@@ -7421,7 +7429,12 @@
     "col_h9_r0_p6__t1__pvde240d6d": "S81-COL-INHERIT 11-14 (COORD FABLE-CLOSURE-STRATEGY #1): sibling pv identity of a col_h9_r0 / col_h10_r0 layout (family, clock class, clock key); the layout representative builds and this identity inherits its sign-off (record: LEC + via-mask DRC + image/LEF/lib shas). Lift = delete this key (handoff S81-COL-INHERIT.md).",
     "col_h9_r0_p6__t1__pvea45abf3": "S81-COL-INHERIT 11-14 (COORD FABLE-CLOSURE-STRATEGY #1): sibling pv identity of a col_h9_r0 / col_h10_r0 layout (family, clock class, clock key); the layout representative builds and this identity inherits its sign-off (record: LEC + via-mask DRC + image/LEF/lib shas). Lift = delete this key (handoff S81-COL-INHERIT.md).",
     "col_h10_r2__t1__cl8b686b3e": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch (glob expanded by KIT-OPS-5 to release only pv9ae398c2). Lift = delete this key.",
-    "col_h10_r2__t1__clac068e56": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch (glob expanded by KIT-OPS-5 to release only pv9ae398c2). Lift = delete this key."
+    "col_h10_r2__t1__clac068e56": "S81-STALE-RELAUNCH 11-14 (COORD scope note): col_h10_r2 classes are owned by S81-COL-INHERIT; no new wave launch (glob expanded by KIT-OPS-5 to release only pv9ae398c2). Lift = delete this key.",
+    "ot_s81sl_leaf__t28": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): slot class, needs the core shift; three copies were running",
+    "ot_s81sl_leaf__t71": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): slot class, needs the core shift; two copies were running",
+    "ot_s81sl_leaf__t13": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): slot class, needs the core shift",
+    "ot_s81sl_leaf__t55": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): leaf route on a kit without OT_PG_CELL_KEEPOUT (a5 21:13 had OT_PG_TRACK_TRUTH only); release when the wave kit carries the keep-out",
+    "serdes__t15__cla2127225": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): recovered-clock structure (DIE-S81-92 clock-island event is the fix); wave copy a28 stopped"
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -33440,7 +33453,9 @@
     "hd_turn_b": "HEAD-99 11-14: SIGNED via extra late ECO (intel1 attempt_3 eco99_b/i1: TT +101.49 FF +2.11 DRC 0, LOCAL_PASS_NEEDS_PARENT; COUNT-DIRECT row). The wave relaunch (attempt_6) reported GEN_NO_KIT although gen wrote the kit dir (epyc7 attempt_6/gen/hd_turn_b); no rebuild needed.",
     "hd_spn_wshim_rx": "HEAD-99 11-14: autopilot CLASSIFY SIGNED 06:22 (R-MINIMAL; late-ECO record TT -12.5 FF -1.46, archived epyc10); wave attempt_4 relaunch not needed.",
     "hd_spn_eshim_rx": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
-    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns"
+    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
+    "hd_serdes": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): unchanged form, rck tree 33 levels, setup -2525; fix is rp21z19; release with that fix",
+    "hd_host_e": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a13 u_epc tap 42 ps vs 442, setup -395; release with the PG-rule-merged rebuild"
    },
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
@@ -35324,7 +35339,15 @@
    "pilot_mode": "queue",
    "hold_items": {
     "coll_s": "ER4-HOLD-1113 (KIT-OPS-2 2026-11-13 18:2x, COORD via EXPERT-REVIEW-4): known-bad form, held out of launch (QC D8 parent / coll_s) until its owner posts a new form. Lift = delete this key.",
-    "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes."
+    "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
+    "cbf_q00__cl1b5a6458": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a24 14 h dead end on s29q103S (FABLE section 3 item 1); release when S3R3b is adopted",
+    "cbf_q00__cl870de686": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a27 dead end on s29q103S2; release when S3R3b is adopted",
+    "cbf_q00_s2": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a11 dead end on s29q103S3M2; release when S3R3b is adopted (DIE-QC-103)",
+    "cbn_q11__cl5cc92dfe": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a9 dead end on s29q103S2; release when S3R3b is adopted",
+    "cbn_q01__cldd6ea846": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a9 (two copies) dead end on s29q103S2; release when S3R3b is adopted",
+    "cbn_q01__clab6e67f2": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a7 dead end on s29q103S; release when S3R3b is adopted",
+    "sle_hc1__cl7d360508": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): launched 21:14 on old event s29q103S; release when S3R3b is adopted",
+    "slw_su_c__*": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): replicas launched 21:07 on s29q103S3R; release when S3R3b is adopted (DIE-QC-103)"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
