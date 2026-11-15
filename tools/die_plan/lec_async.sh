@@ -81,6 +81,10 @@ write_identity() {
 stale_state() {
   local K=$1 DK=${2:-docker} P O c
   [ -f "$K/lec_async.ready" ] || return 0
+  # COORD r128 (FLOW-HEALTH-1 11-15): a kit whose proof was handed to another host (ot-run spill handoff leaves .ot-run-proof-away and the
+  # proof's recorded identity = the netlist / reference shas) keeps its proof state here whatever the local pid / container say: the start
+  # below reuses the proof when the current inputs equal the recorded identity and refuses (exit 11) when they differ.
+  if [ -f "$K/.ot-run-proof-away" ] && [ -s "$K/lec_async.identity" ]; then return 0; fi
   if [ -f "$K/lec_async.kit_path" ] && [ "$(cat "$K/lec_async.kit_path")" != "$(cd "$K" && pwd -P)" ]; then
     echo "LEC_ASYNC stale proof state: kit moved from $(cat "$K/lec_async.kit_path") to $K; proof restarted" >&2
   else

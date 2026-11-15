@@ -236,7 +236,6 @@ class Handoff(base.Spill):
         self.m.ssh_sh = lambda *a, **k: subprocess.CompletedProcess([], 255, "", "no route")
         self.assertTrue(self.m.proof_away("src", [self.kit]))
 
-    @__import__("unittest").skip('QUARANTINED FLOW-HEALTH-1 11-15: red on main; WF-1 11-14 lec_async stale_state restarts a proof whose recorded watcher pid is not in the checked kit dir, which contradicts the spill handoff proof reuse; needs a COORD ruling which side wins')
     def test_route_on_src_reuses_the_proof_by_identity_and_waits_for_the_verdict(self):
         """the real lec_async.sh of a kit generated before this fix: start = reuse (no second proof, no docker),
         cts/grt do not wait, route/finish wait for lec_async.done and take the stop rc"""
@@ -257,7 +256,6 @@ class Handoff(base.Spill):
         write(k + "/lec_async.done")
         self.assertEqual(p.communicate(timeout=20)[0].strip(), "5", "a NOT EQUIVALENT proof stops the kit before sign-off")
 
-    @__import__("unittest").skip('QUARANTINED FLOW-HEALTH-1 11-15: red on main; WF-1 11-14 lec_async stale_state restarts a proof whose recorded watcher pid is not in the checked kit dir, which contradicts the spill handoff proof reuse; needs a COORD ruling which side wins')
     def test_changed_proof_input_on_src_is_still_refused(self):
         self.run_place()
         self.assertTrue(self.handoff(), self.say)

@@ -84,7 +84,7 @@ class GateTrim(unittest.TestCase):
 
 
 class Umbrella(unittest.TestCase):
-    @__import__("unittest").skip('QUARANTINED FLOW-HEALTH-1 11-15: red on main; the umbrella child reap reaps nothing in the fixture (DF unchanged, TOTAL 0.0) after the 11-14 reaper edits; needs the CLEAN lane to re-derive the fixture')
+    @unittest.skip('QUARANTINED FLOW-HEALTH-1 11-15: red on main; the umbrella child reap reaps nothing in the fixture (DF unchanged, TOTAL 0.0) after the 11-14 reaper edits; CLEAN-INTEL2-1115 to re-derive the fixture')
     def test_children_aged_one_by_one(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td) / "claude"
