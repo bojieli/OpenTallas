@@ -34,3 +34,6 @@ Gen breakage 00:26 fixed (cause: refresh wrote gen_host only; replicas mixed). P
 
 ## 11-15 01:46 update
 READY f9028d6ecf7 (daily all-copies + identical hashes + drift timer + put). Timers enabled on intel2: ot-src-refresh (06:00), ot-src-drift (:25); both run rt/current copy (need the sha on main). Code drift 0 on 4 dies after put of postcts_gate.tcl (+8 QC epyc2 files). QC 116 physical data files differ (flag only). Open: token for f9028d6ecf7, wave-balance-1-1114-main @7766f2431cd.
+
+## 11-15 02:02 update
+kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_composed_src refused_row: ROUTE-HELD vs FAIL/FLOW); posted to KIT-OPS-5. Waiter ~/merge-queue/curplan_wait.sh (pid 913804, log ~/merge-queue/curplan-wait.log) lands the next curplan token at once via tick --only and copies the MERGED/MERGE-FAIL line. Autopilot runs rt/current (no refresh needed). READY 26bd253bfdf (parser accepts the word branch).
