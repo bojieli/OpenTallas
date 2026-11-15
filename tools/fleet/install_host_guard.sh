@@ -21,12 +21,21 @@ sudo -n systemctl restart earlyoom
 # kill the youngest first; root timer every 2 min.
 sudo -n install -m 755 "$(dirname "$0")/ot-oom-age" /usr/local/bin/ot-oom-age
 printf '[Unit]\nDescription=ot-oom-age\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/ot-oom-age\n' | sudo -n tee /etc/systemd/system/ot-oom-age.service >/dev/null
-printf '[Unit]\nDescription=ot-oom-age every 2 min\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=2min\nAccuracySec=10s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-oom-age.timer >/dev/null
+printf '[Unit]\nDescription=ot-oom-age every minute\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=1min\nAccuracySec=10s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-oom-age.timer >/dev/null
 sudo -n systemctl daemon-reload; sudo -n systemctl enable --now ot-oom-age.timer >/dev/null 2>&1
 # MEMGROW_1114 (ADMIT-TUNE-1): ot-mem-grow raises a build container docker cap by 50 percent (max 2x the request) when it is above 85 percent and the host
 # can pay for it, every minute (cap kills at 28.7 of 32 GB on slice_station t28/t30/t8).
 sudo -n install -m 755 "$(dirname "$0")/ot-mem-grow" /usr/local/bin/ot-mem-grow
-printf '[Unit]\nDescription=ot-mem-grow\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/ot-mem-grow\n' | sudo -n tee /etc/systemd/system/ot-mem-grow.service >/dev/null
+printf '[Unit]\nDescription=ot-mem-grow\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/ot-mem-grow --passes 4 --interval 15\n' | sudo -n tee /etc/systemd/system/ot-mem-grow.service >/dev/null
 printf '[Unit]\nDescription=ot-mem-grow every minute\n[Timer]\nOnBootSec=2min\nOnUnitActiveSec=1min\nAccuracySec=5s\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-mem-grow.timer >/dev/null
 sudo -n systemctl daemon-reload; sudo -n systemctl enable --now ot-mem-grow.timer >/dev/null 2>&1
+# TMPFSCLEAN_1114 (ADMIT-TUNE-1): ot-tmpfs-clean removes idle (24 h) unused top-level dirs of /dev/shm (and a tmpfs /tmp) hourly (a 240 GB ROOT-MERGE-57 ramdisk starved epyc8).
+sudo -n install -m 755 "$(dirname "$0")/ot-tmpfs-clean" /usr/local/bin/ot-tmpfs-clean
+printf '[Unit]\nDescription=ot-tmpfs-clean\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/ot-tmpfs-clean\n' | sudo -n tee /etc/systemd/system/ot-tmpfs-clean.service >/dev/null
+printf '[Unit]\nDescription=ot-tmpfs-clean hourly\n[Timer]\nOnBootSec=10min\nOnUnitActiveSec=1h\nRandomizedDelaySec=300\n[Install]\nWantedBy=timers.target\n' | sudo -n tee /etc/systemd/system/ot-tmpfs-clean.timer >/dev/null
+sudo -n systemctl daemon-reload; sudo -n systemctl enable --now ot-tmpfs-clean.timer >/dev/null 2>&1
+# MEMGROW_OUTCOME_1114: follows docker events and logs "OUTCOME <name> <id> exit=<code> <class>" for each container ot-mem-grow raised (docker --rm hides it)
+sudo -n install -m 755 "$(dirname "$0")/ot-mem-grow-outcome" /usr/local/bin/ot-mem-grow-outcome
+printf '[Unit]\nDescription=ot-mem-grow-outcome\n[Service]\nExecStart=/usr/local/bin/ot-mem-grow-outcome\nRestart=always\nRestartSec=5\n[Install]\nWantedBy=multi-user.target\n' | sudo -n tee /etc/systemd/system/ot-mem-grow-outcome.service >/dev/null
+sudo -n systemctl daemon-reload; sudo -n systemctl enable --now ot-mem-grow-outcome.service >/dev/null 2>&1  # revert: systemctl disable --now ot-mem-grow-outcome
 echo "HOST_GUARD_OK $(hostname) earlyoom=$(systemctl is-active earlyoom) ot-heavy=$(command -v ot-heavy) $(cat /etc/ot-heavy.conf | tr '\n' ' ')"

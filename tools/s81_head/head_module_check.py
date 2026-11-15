@@ -19,8 +19,30 @@ KEYWORDS = {'module', 'input', 'output', 'wire', 'reg', 'assign', 'always', 'if'
 _DEFS = {}
 
 
+MODDEF = re.compile(r'^\s*(\(\*.*\*\)\s*)?module\s+([A-Za-z_]\w*)', re.M)
+WORKTREE = 'WORKTREE'
+
+
+def worktree_defs(root):
+    """HEAD-BIND-1: module definitions of the checked-out files (a hardlinked code snapshot has no .git): the same
+    filter as the git grep (.sv/.v, not results/ docs/ or *_bb.v)."""
+    d = {}
+    root = Path(root)
+    for top in sorted(x for x in root.iterdir() if x.is_dir() and x.name not in ('results', 'docs', '.git')):
+        for f in sorted(top.rglob('*')):
+            if f.suffix not in ('.sv', '.v') or f.name.endswith('_bb.v') or not f.is_file():
+                continue
+            rel = str(f.relative_to(root))
+            for m in MODDEF.finditer(f.read_text(errors='replace')):
+                d.setdefault(m.group(2), []).append(rel)
+    return d
+
+
 def defined(rev, name):
-    """One git grep of all module definitions in REV (cached), never one grep per module."""
+    """One git grep of all module definitions in REV (cached), never one grep per module.  rev WORKTREE (or a ROOT
+    without .git, e.g. a cp -al code snapshot) reads the checked-out files instead."""
+    if rev not in _DEFS and (rev == WORKTREE or not (ROOT / '.git').exists()):
+        _DEFS[rev] = worktree_defs(ROOT)
     if rev not in _DEFS:
         r = subprocess.run(['git', '-C', str(ROOT), 'grep', '-n', '-E', r'^\s*(\(\*.*\*\)\s*)?module\s+[A-Za-z_]\w*', rev, '--',
                             '*.sv', '*.v', ':!results/**', ':!*_bb.v', ':!docs/**'], capture_output=True, text=True)

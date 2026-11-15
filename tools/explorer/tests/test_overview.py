@@ -56,3 +56,13 @@ def test_overview_theme_repaints_thumbs(page):
     page.get_by_test_id('theme').click(); page.wait_for_timeout(500)
     b = canvas_signature(page, sel)
     assert a['hash'] != b['hash'], 'thumbnail did not repaint on theme change'
+
+
+def test_overview_counts_signed_packs_apart_from_unsigned_views(page):
+    ds = api('dies')['dies']; idx = {d['id']: d for d in ds}
+    uns = sum(d['packs_unsigned']['type'] + d['packs_unsigned']['core'] for d in ds); allp = sum(d['packs']['type'] + d['packs']['core'] for d in ds)
+    assert all(d['packs_unsigned']['type'] <= d['packs']['type'] and d['packs_unsigned']['core'] <= d['packs']['core'] for d in ds)
+    goto(page, '#/overview')
+    expect(page.get_by_test_id('ov-packs')).to_contain_text('signed-off layout packs')
+    expect(page.get_by_test_id('ov-packs')).to_contain_text('%d unsigned build views' % uns if uns < 1000 else 'unsigned build views')
+    assert str(allp - uns) in page.get_by_test_id('ov-packs').inner_text().replace(',', '')

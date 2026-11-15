@@ -415,6 +415,11 @@ class Classify(unittest.TestCase):
         cases = [
             ("place", "ot-run: NOT RUN (no memory within --max-wait)", "INFRA"),
             ("place", "docker: exit 137 OOMKilled", "INFRA"),
+            # KIT-OPS-5 11-14: stale admission bundle refuses the late ECO; the route FAIL text rides along but INFRA wins
+            # KIT-OPS-5 11-14: stale lec_async proof state (exit 11) is infrastructure, not a design verdict
+            ("place", "LEC_ASYNC cannot migrate: [Errno 3] No such process\nrc 11", "INFRA"),
+            ("route", "late-ECO exhausted (1 it, 98.6 s): iteration 1: staged late-ECO hook lacks the runtime scope "
+                      "postcondition; refused before physical repair | hold_ff: FAIL WNS -168.51 ps, 4436 endpoints", "INFRA"),
             ("place", "FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)", "RTL"),
             ("place", "FACE_GUARD FAIL shared 7645 bits", "PLAN"),
             ("place", "[ERROR ORD-2013] instance u_m LEF master ot_sram_1r1w_32x64_m1 not found", "PLAN"),
@@ -1146,3 +1151,10 @@ class ExplicitClassHolds(unittest.TestCase):
         picks, skip = KW.select(rows, c, "qwen_kvsys", {"items": {}}, {"kv3_hg_v1", "kv3_hgi_v1"})
         self.assertEqual([r["item"] for r in picks], ["kv3_hgi_v1"])
         self.assertEqual(skip["die-owned hold: 559k cells; EX cut pending"], ["kv3_hg_v1"])
+
+
+class SrcSkewAdvisory(unittest.TestCase):
+    def test_qc_src_skew_is_advisory_not_a_gen_lint_fail(self):
+        # KIT-OPS-5 11-14 (COORD): the QC src runs ahead of the queue lint copy; src_skew is logged for qwen_compute, never a fail
+        self.assertIn("qwen_compute", KW.SRC_SKEW_ADVISORY_DIES)
+        self.assertNotIn("s81", KW.SRC_SKEW_ADVISORY_DIES)

@@ -14,6 +14,11 @@ from pathlib import Path
 # Proofs depend only on these exact captured bytes. Every call still verifies
 # all files and the actual parent's selected views before consulting the memo.
 _PROOFS = {}
+CA_BASES = ('ot_dp_clk_landing_ca', 'ot_dp_clk_landing_cas')
+# CLAND-MACRO-1 11-14: the plain forwarded-clock ring (ot_dp_clk_landing, fixed DEPTH 4 ot_meso_ring) as a hard child:
+# no START port (t_rst_n), no strap; its land_slots declaration is d {D 4, hold_mux} only.
+PLAIN_BASE = 'ot_dp_clk_landing'
+PLAIN_DEPTH = 4
 
 
 def digest(path):
@@ -55,18 +60,22 @@ def prove(directory):
         if digest(d.parents[1] / name) != digest(d / name):
             raise ValueError('parent macro view differs from the proved child view')
     land = F.kit_land(d / 'land_slots.json')
+    plain = m.get('base') == PLAIN_BASE
     if land.get('d') != {'D': m['D'], 'form': 'hold_mux'}:
         raise ValueError('hard landing child depth/form mismatch')
-    if land.get('t_rst_n') != {'form': 'ring_start', 'ring': 'd'}:
+    if plain:
+        if set(land) != {'d'}:
+            raise ValueError('plain hard landing child declares more than its d ring')
+    elif land.get('t_rst_n') != {'form': 'ring_start', 'ring': 'd'}:
         raise ValueError('hard landing child START contract missing')
     key = digest(d / 'manifest.json')
     if key in _PROOFS:
         return m, _PROOFS[key]
     result = F.guard((d / 'netlist.v').read_text(), top=master,
-                     clocks=['clk', 'fclk'], straps=['strap_k'], land=land)
+                     clocks=['clk', 'fclk'], straps=[] if plain else ['strap_k'], land=land)
     ring = result.get('ring_start', {}).get('t_rst_n', {})
     if (result['verdict'] != 'PASS' or result.get('land_mux_bits') != m['width']
-            or ring.get('ring_clock') != ['fclk'] or not ring.get('writer_flops')):
+            or (not plain and (ring.get('ring_clock') != ['fclk'] or not ring.get('writer_flops')))):
         raise ValueError(f'hard landing actual child proof failed: {result.get("fails")}')
     _PROOFS[key] = result
     return m, result
@@ -80,7 +89,8 @@ def emit(t, land, kit, root):
     out = copy.deepcopy(land)
     for c in t.get('hard_cores', []):
         wrap = c.get('param_wrap', {})
-        if wrap.get('base') not in ('ot_dp_clk_landing_ca', 'ot_dp_clk_landing_cas'):
+        base = wrap.get('base')
+        if base not in CA_BASES and base != PLAIN_BASE:
             continue
         inst = c.get('physical_inst', c['inst'])
         match = re.fullmatch(r'(?:\w+\.)*u_cland_(\w+)', inst)
@@ -89,8 +99,10 @@ def emit(t, land, kit, root):
         bus = match[1]
         spec = out['buses'][bus]
         params = wrap['params']
-        if (spec != {'D': params['DEPTH'], 'form': 'hold_mux'}
-                or params.get('WREG') != 1 or params.get('WFALL') != 1):
+        depth = PLAIN_DEPTH if base == PLAIN_BASE else params.get('DEPTH')
+        # CLAND-MACRO-1 11-14: the writer edge (WFALL / WNEG) is the child's own signed timing, not a contract term:
+        # HEAD rings are rising-edge WREG rings.  The count-aligned START contract still needs the registered writer.
+        if spec != {'D': depth, 'form': 'hold_mux'} or (base != PLAIN_BASE and params.get('WREG') != 1):
             raise ValueError(f'{inst}: selected hard landing does not match declared ring')
         master = c.get('physical_master', c['module'])
         lef, lib = (cores.resolve(c[k], root) for k in ('lef', 'lib'))
@@ -104,7 +116,7 @@ def emit(t, land, kit, root):
                     raise ValueError('invalid portable hard landing evidence path')
                 shutil.copyfile(portable / name, dest / name)
         else:
-            capture(lef, lib, master, params['DEPTH'], params['W'], dest)
+            capture(lef, lib, master, depth, params['W'], dest, base=base)
         # These are already staged by gen_phys; also support the standalone
         # contract emission used to diagnose an immutable parent kit.
         for path in (lef, lib):
@@ -112,7 +124,7 @@ def emit(t, land, kit, root):
             if not selected.exists():
                 shutil.copyfile(path, selected)
         prove(dest)
-        row = dict(form='hard_child', D=params['DEPTH'], instance=inst,
+        row = dict(form='hard_child', D=depth, instance=inst,
                    master=master, port='d', width=params['W'], clock_pin='fclk',
                    clock_port='fclk_in_' + bus,
                    evidence=str(dest.relative_to(kit)))
@@ -123,7 +135,7 @@ def emit(t, land, kit, root):
     return out
 
 
-def capture(lef, lib, master, depth, width, dest):
+def capture(lef, lib, master, depth, width, dest, base='ot_dp_clk_landing_cas'):
     """Copy immutable inputs only; callers MUST prove before consuming them.
 
     The resulting directory can be retained as a view's landing_evidence, so a
@@ -156,6 +168,7 @@ def capture(lef, lib, master, depth, width, dest):
     for name, path in paths.items():
         shutil.copyfile(path, dest / name)
     manifest = dict(schema='hard_landing/1', master=master, D=depth, width=width,
+                    **({'base': base} if base == PLAIN_BASE else {}),
                     lef=lef.name, lib=lib.name, netlist_source=str(net),
                     sha256={name: digest(dest / name) for name in paths})
     (dest / 'manifest.json').write_text(json.dumps(manifest, indent=1) + '\n')

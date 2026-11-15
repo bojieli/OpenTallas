@@ -9,6 +9,7 @@ import json
 import re
 from pathlib import Path
 import bind_elab as E
+from native_mem2reg import mark_mem2reg
 
 # $mem_v2 / $shiftx (Codex 861); TOK-SCHED 10-25 adds the remaining combinational word-level primitives that the
 # current S81 dissolved parents (ot_s81sl_vp, dsdv_svc_att, dsdv_svc_rs_c, ot_hdc_v41x_attn_s) carry and _glue does not
@@ -100,6 +101,12 @@ class NativeGlue:
                             [self.directory], mem_gb=2)
             except E.ElabError as exc:
                 raise NativeGlueError(str(exc)) from exc
+            if cell.ytype == "$mem_v2":
+                # write_verilog expands every per-bit write enable into its own statement (S81 svc hi: 4096 $memwr on one
+                # 256 x 40 memory); register-ise such arrays before Yosys's superlinear memory passes (exact, see native_mem2reg)
+                text, marked = mark_mem2reg(sv.read_text())
+                if marked:
+                    sv.write_text(text)
             self.cache[key] = module
             self.files.append(sv)
         actual = [f".{p}({connections[p]})" for p, width in widths.items() if width and p in exposed]

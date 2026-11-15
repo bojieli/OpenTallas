@@ -193,3 +193,14 @@ def test_element_fit_ruler_keys(page):
     page.keyboard.press('r'); expect(b).to_have_attribute('aria-pressed', 'false')
     page.evaluate('otx.eng.setCam(10, 10, 6)'); page.get_by_test_id('el-fit').click()
     page.wait_for_function('() => otx.eng.cam().z < 5', timeout=20000)
+
+
+def test_element_unsigned_build_view_is_tagged(page):
+    # BUILDING_TYPE has a pack cut from a wave run that is not signed off: shown, tagged, never counted
+    n = api('node/' + BUILDING_TYPE)['node']
+    assert (n.get('layout') or {}).get('store') and n['status']['state'] not in ('signed', 'pending archive'), 'BUILDING_TYPE is signed now or lost its pack; pick another'
+    goto(page, '#/element/' + BUILDING_TYPE, engine=True)
+    expect(page.get_by_test_id('el-unsigned')).to_be_visible()
+    expect(page.get_by_test_id('el-unsigned')).to_contain_text('Unsigned build view')
+    goto(page, '#/element/' + ROUTED_TYPE, engine=True)
+    expect(page.get_by_test_id('el-unsigned')).to_be_hidden()

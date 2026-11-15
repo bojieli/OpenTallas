@@ -81,7 +81,18 @@ def _eval(expr, env):
         e = e2
     e = re.sub(r"(\d+)'[sS]?[dD](\d+)", r"\2", e)
     e = e.replace("$clog2", "C")
-    if not re.fullmatch(r"[\dC\s+\-*/()%<>]*", e) or re.search(r"C(?!\s*\()", e):
+    # HEAD-BIND-1 11-14: parenthesised ternaries (ot_dp_clk_landing_cas rst_xn [(RSTREP > 0 ? RSTREP : 1)-1:0]),
+    # innermost first, into Python conditionals; comparisons < > <= >= == != are allowed in the condition
+    tern = re.compile(r"\(([^()?:]*)\?([^()?:]*):([^()?:]*)\)")
+    for _ in range(8):
+        e = re.sub(r"\(\s*(\d+)\s*\)", r"\1", e)          # (19) -> 19 so the ternary groups carry no parens
+        e2 = tern.sub(lambda m: f"(({m.group(2)}) if ({m.group(1)}) else ({m.group(3)}))", e)
+        if e2 == e:
+            break
+        e = e2
+    bare = re.sub(r"\b(if|else)\b", " ", e)
+    if not re.fullmatch(r"[\dC\s+\-*/()%<>=!]*", bare) or re.search(r"C(?!\s*\()", bare) \
+            or re.search(r"(?<![<>=!])=(?!=)", bare) or re.search(r"!(?!=)", bare):
         raise ValueError(expr)
     return int(eval(e.replace("/", "//"), {"__builtins__": {}}, {"C": _clog2}))
 
@@ -171,7 +182,11 @@ def _width(rng, env):
     """'[A:B]' -> |A-B|+1 under env; '' -> 1"""
     if not rng:
         return 1
-    a, b = rng.strip()[1:-1].split(":", 1)
+    inner = rng.strip()[1:-1]
+    cut = [i for i, c in enumerate(inner) if c == ":" and _balanced(inner[:i])]   # the range colon is top-level
+    if len(cut) != 1:
+        raise ValueError(rng)
+    a, b = inner[:cut[0]], inner[cut[0] + 1:]
     return abs(_eval(a, env) - _eval(b, env)) + 1
 
 
@@ -212,7 +227,7 @@ def _expr_width_atom(e, decl):
     return 1 if m.group(3) is None else abs(int(m.group(2)) - int(m.group(3))) + 1
 
 
-def nested_check(wrapper_texts, source_texts, max_list=40, defines=("SYNTHESIS",)):
+def nested_check(wrapper_texts, source_texts, max_list=40, defines=("SYNTHESIS",), optional_ports=()):
     """HEAD-BIND-4 10-27 (COORD ruling on HEAD-CORE-R13 ASK4 gap d): the die-top port-bind (tools/die_port_bind.py) checks
     the partition instances of the die top only; a generated wrapper whose LEAF instance leaves ports open (hd_serdes
     u_phy: only .rx/.tx bound, clk/rst/st/pma_* open, 514-b coll_o0_d into a 512-b rx) passed it silently.  This walks
@@ -220,6 +235,9 @@ def nested_check(wrapper_texts, source_texts, max_list=40, defines=("SYNTHESIS",
     type sources): every master port connected to a non-empty expression, no port the master lacks, and the connected
     expression's width == the port width under the instance parameters.  A width it cannot resolve FAILs (closed).
     wrapper_texts: {name: text} of the generated wrappers; source_texts: [text] of every manifest source.
+    optional_ports (HEAD-BIND-1): [(master, port, param, value)] = the master's declared contract that the port is unused
+    when its parameter evaluates to value (ot_dp_clk_landing_cas rst_xn at RSTREP 0: "0 = rst_xn unused, identical
+    logic"); such an open port is recorded under optional_open, never unbound.  Any other open port still fails.
     -> dict(verdict, instances, unbound, unknown, width_mismatch, unresolved, examples)"""
     import sys as _sys
     _sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -228,6 +246,8 @@ def nested_check(wrapper_texts, source_texts, max_list=40, defines=("SYNTHESIS",
     wrapper_texts = {k: preprocess(t, defines) for k, t in wrapper_texts.items()}
     lib = "\n".join(list(source_texts) + list(wrapper_texts.values()))
     hdr_cache, rec = {}, dict(instances=0, unbound=[], unknown=[], width_mismatch=[], unresolved=[], no_master=[])
+    opt_open = []
+    opt = {(m, pt): (pa, int(v)) for m, pt, pa, v in optional_ports}
     for wn, text in sorted(wrapper_texts.items()):
         for mm in re.finditer(r"(?ms)^module\s+(\w+)\s*\((?P<hdr>.*?)\);(?P<body>.*?)^endmodule\b", text):
             wmod, region = mm.group(1), mm.group("hdr") + "\n" + mm.group("body")
@@ -258,7 +278,12 @@ def nested_check(wrapper_texts, source_texts, max_list=40, defines=("SYNTHESIS",
                 conns = _conns(im.group("body"))
                 for pn in sorted(ports):
                     if not conns.get(pn):
-                        rec["unbound"].append(f"{where}.{pn}")
+                        o = opt.get((mst, pn))
+                        try:
+                            ok = o is not None and _eval(str(env.get(o[0], o[0])), env) == o[1]
+                        except Exception:
+                            ok = False
+                        (opt_open if ok else rec["unbound"]).append(f"{where}.{pn}")
                 for pn in sorted(set(conns) - set(ports)):
                     rec["unknown"].append(f"{where}.{pn}")
                 for pn, ex in sorted(conns.items()):
@@ -274,9 +299,12 @@ def nested_check(wrapper_texts, source_texts, max_list=40, defines=("SYNTHESIS",
                     elif pw != ew:
                         rec["width_mismatch"].append(f"{where}.{pn}: port {pw} b <- {ex} {ew} b")
     bad = {k: v for k, v in rec.items() if k != "instances" and v}
-    return dict(verdict="PASS" if not bad and rec["instances"] else "FAIL", instances=rec["instances"],
-                **{k: len(v) for k, v in rec.items() if k != "instances"},
-                examples={k: v[:max_list] for k, v in bad.items()})
+    out = dict(verdict="PASS" if not bad and rec["instances"] else "FAIL", instances=rec["instances"],
+               **{k: len(v) for k, v in rec.items() if k != "instances"},
+               examples={k: v[:max_list] for k, v in bad.items()})
+    if opt_open:
+        out.update(optional_open=len(opt_open), optional_open_examples=opt_open[:max_list])
+    return out
 
 
 def main(argv=None):

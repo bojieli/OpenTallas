@@ -118,7 +118,64 @@ class PlanPrio(unittest.TestCase):
         r = ["bash", "run_kit.sh", "route"]
         self.assertTrue(self.gate(500, r, waiting=[600], mem=48, cls="route").startswith("NO 48 route | PLAN-FIRST"))
         self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[8000], mem=48, cls="route"))
+        self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[300], mem=48, cls="route", env={"PLAN_DRAIN_S": "600"}))      # PLAN_DRAIN_S: 5 min does not drain yet
+        self.assertTrue(self.gate(500, r, waiting=[900], mem=48, cls="route", env={"PLAN_DRAIN_S": "600"}).startswith("NO 48 route | PLAN-FIRST"))
         self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[600], mem=4, cls="gen"))          # small jobs are never held
+
+
+    def test_older_plan_waiter_goes_first(self):
+        self.assertTrue(R.older_plan_waiting(100.0, [5000.0]))
+        self.assertFalse(R.older_plan_waiting(5000.0, [100.0]))
+        self.assertFalse(R.older_plan_waiting(100.0, [120.0]))                    # within the 30 s margin
+        self.assertFalse(R.older_plan_waiting(100.0, []))
+
+
+    def test_waiter_pid_climbs_past_the_timeout_wrapper(self):
+        # gate process 500 -> `timeout 30` 400 -> waiting ot-heavy bash 300 -> ssh session 200 (the self-hold bug: getppid() was 400, age 0)
+        stat = {500: "500 (python3) S 400 ", 400: "400 (timeout) S 300 ", 300: "300 (bash) S 200 ", 200: "200 (sshd) S 1 "}
+        cmd = {400: "timeout\0" "30\0" "x\0" "y\0", 300: "/bin/bash\0/usr/local/bin/ot-heavy\0--mem\0" "60\0--tag\0t\0--\0true\0", 200: "sshd\0"}
+        def fake_rd(path):
+            pid = int(path.split("/")[2])
+            return stat.get(pid, "") if path.endswith("/stat") else cmd.get(pid, "")
+        with patch.object(R, "rd", side_effect=fake_rd):
+            self.assertEqual(R.waiter_pid(500), 300)
+        # the command substitution forks a subshell with the SAME command line: the topmost match (the real waiter) must win
+        stat2 = {500: "500 (python3) S 450 ", 450: "450 (timeout) S 310 ", 310: "310 (bash) S 300 ", 300: "300 (bash) S 200 ", 200: "200 (sshd) S 1 "}
+        olh = "/bin/bash\0/usr/local/bin/ot-heavy\0--mem\0" "60\0--tag\0t\0--\0true\0"
+        cmd2 = {450: "timeout\0" "30\0" "x\0" "y\0", 310: olh, 300: olh, 200: "sshd\0"}
+        with patch.object(R, "rd", side_effect=lambda path: (stat2 if path.endswith("/stat") else cmd2).get(int(path.split("/")[2]), "")):
+            self.assertEqual(R.waiter_pid(500), 300)
+        with patch.object(R, "rd", return_value=""):
+            self.assertEqual(R.waiter_pid(500), 0)
+
+
+    def test_early_admit_after_the_drain_uses_half_the_headroom(self):
+        import contextlib, io
+        e = {"SIMPLE_ADMIT": "1", "SIMPLE_PEAK": "1", "PLAN_PRIO": "1", "INV_HEADROOM_GB": "48", "PEAK_GROWTH_FRAC": "0", "SIMPLE_FRESH_S": "0", "SMALL_JOB_GB": "8",
+             "SMALL_FLOOR_GB": "36", "PLAN_MAX_RUNNING": "1", "PLAN_HOLD_MAX_S": "86400", "PLAN_EARLY_S": "5400"}
+        d = tempfile.mkdtemp()
+        def run(avail, my_age):
+            with patch.dict(os.environ, e), patch.object(R, "D", d), patch.object(R, "classify", return_value="chainR92.sh"), patch.object(R, "sizes", return_value={}), \
+                    patch.object(R, "meminfo", return_value=(1000.0, float(avail))), patch.object(R, "peak_history", return_value={}), \
+                    patch.object(R, "running_units_light", return_value=[]), patch.object(R, "plan_census", return_value=(0, [])), patch.object(R, "waiter_pid", return_value=4242), \
+                    patch.object(R, "rd", side_effect=lambda p: f"{10000 + my_age} 0" if p == "/proc/uptime" else ("4242 (bash) S 1 " + " ".join(["0"] * 17) + " 10000" if p.endswith("/stat") else "")), \
+                    patch.object(R.os, "sysconf", return_value=1):
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    R.gate_locked(96, ["bash", "chainR92.sh"])
+            return out.getvalue()
+        # 96 GB job, floor max(24, 36) = 36: needs avail 132; early after 90 min: floor 36 - 24 = 12 -> avail 108
+        self.assertFalse(run(110, 600).startswith("OK "))                     # 10 min old: normal rule
+        self.assertTrue(run(110, 6000).startswith("OK 96 chainR92.sh | PLAN_PRIO EARLY"))
+        self.assertFalse(run(107, 6000).startswith("OK "))                    # shortfall above half the headroom
+
+    def test_admit_marker_counts_as_a_running_plan_job(self):
+        d = tempfile.mkdtemp()
+        with patch.object(R, "D", d):
+            self.assertEqual(R.plan_census(0)[0], 0)
+            open(os.path.join(d, f"plan.admit.{os.getppid()}"), "w").write("1")        # a live pid with no scope yet
+            self.assertEqual(R.plan_census(0)[0], 1)
+            self.assertEqual(R.plan_census(os.getppid())[0], 0)                          # the admitted job itself is not counted against itself
 
 
 class Fallback(unittest.TestCase):

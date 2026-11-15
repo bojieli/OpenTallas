@@ -3,6 +3,8 @@ import { h, clear, fmt, fmtAge, fmtTime, STATES, STATE_LABEL, stateCls, dieShort
 import { stateBar, stateLegend } from '../shell/inspector.js';
 import { drawDiePlan, fitTransform } from '../engine/plan-canvas.js';
 
+const unsg = (d) => ((d.packs_unsigned || {}).type || 0) + ((d.packs_unsigned || {}).core || 0);   // packs of designs that are not signed off: views only
+
 export default {
   id: 'overview', title: 'Overview', icon: 'overview', datasets: ['design_index', 'plan_now', 'store'],
   async mount(ctx) {
@@ -17,7 +19,7 @@ export default {
       h('div.card', { style: { marginBottom: '14px' } }, h('div.pair', { style: { gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))' } },
         h('div', h('div.big', fmt(allT.signed), h('small', `of ${fmt(nTypes)} types signed off`))),
         h('div', h('div.big', fmt(tot('core', 'signed')), h('small', `of ${fmt(nCores)} cores signed off`))),
-        h('div', h('div.big', fmt(r.dies.reduce((a, d) => a + d.packs.type + d.packs.core, 0)), h('small', 'routed layout packs'))),
+        h('div', { testid: 'ov-packs' }, h('div.big', fmt(r.dies.reduce((a, d) => a + d.packs.type + d.packs.core - unsg(d), 0)), h('small', `signed-off layout packs (+${fmt(r.dies.reduce((a, d) => a + unsg(d), 0))} unsigned build views, not counted)`))),
         h('div', h('div.big', fmt(allT.failed), h('small', 'types failed')))), stateBar(allT), stateLegend(allT)));
     const cards = h('div.cards'); page.append(cards);
     const thumbs = [];
@@ -30,7 +32,7 @@ export default {
         h('div.pair', h('div', h('div.big', `${d.counts.type.signed || 0}`, h('small', `/ ${d.types} types`))), h('div', h('div.big', fmt(100 * signedArea, 0) + '%', h('small', 'of die area signed')))),
         stateBar(d.counts.type), stateLegend(d.counts.type),
         h('dl.kv', h('dt', 'plan'), h('dd', h('b.mono', d.plan.sha), ' · ', String(d.plan.date || '').slice(0, 10)), h('dt', 'outline'), h('dd', `${fmt(d.outline[0] / 1000, 2)} × ${fmt(d.outline[1] / 1000, 2)} mm · ${d.partitions} partitions`),
-          h('dt', 'cores'), h('dd', `${d.counts.core.signed || 0} of ${d.cores} signed off`), h('dt', 'routed packs'), h('dd', `${d.packs.type} types, ${d.packs.core} cores`)),
+          h('dt', 'cores'), h('dd', `${d.counts.core.signed || 0} of ${d.cores} signed off`), h('dt', 'routed packs'), h('dd', { title: 'packs of signed-off designs; unsigned build views (wave runs, any stage) are shown in the explorer but not counted' }, `${d.packs.type - ((d.packs_unsigned || {}).type || 0)} types, ${d.packs.core - ((d.packs_unsigned || {}).core || 0)} cores signed off`, unsg(d) ? h('span.muted', ` + ${unsg(d)} unsigned views`) : '')),
         d.release_header ? h('p.note', { style: { margin: 0 } }, d.release_header) : null,
         h('div.acts', h('a.btn.sm', { href: store.href({ view: 'plan', node: d.id }), dataset: { testid: 'open-plan-' + d.id } }, 'Plan'), h('a.btn.sm', { href: store.href({ view: 'layout', node: d.id }), dataset: { testid: 'open-layout-' + d.id } }, 'Routed die map'),
           h('a.btn.sm', { href: store.href({ view: 'closure', node: d.id }), dataset: { testid: 'open-closure-' + d.id } }, 'Closure'), h('a.btn.sm', { href: store.href({ view: 'dataflow', node: d.id }) }, 'Dataflow'))));

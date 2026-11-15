@@ -1393,6 +1393,55 @@ def dedup_credit(die, st, tm, rows):
     return done
 
 
+INHERIT_FILE = pathlib.Path(os.environ.get('OT_COUNT_INHERIT') or COORD_DIR / 'autopilot' / 'inherit_members.tsv')
+INHERIT_SCHEMA = 'opentallas.col_inherit.v1'
+
+
+def inherit_rows(path=None):
+    """autopilot/inherit_members.tsv (S81-COL-INHERIT 11-14): die, member type, representative type, record json path, record sha256.  -> [dict]"""
+    out = []
+    try:
+        for l in pathlib.Path(path or INHERIT_FILE).read_text().splitlines():
+            f = l.split('\t')
+            if len(f) < 4 or not f[0] or f[0].startswith('#') or f[0] in ('die', 'time'): continue
+            out.append(dict(die=f[0], member=f[1], rep=f[2], record=f[3], sha=f[4] if len(f) > 4 else ''))
+    except OSError:
+        pass
+    return out
+
+
+def inherit_record_ok(row):
+    """the inherited record a row names must exist, match its sha when given, and say: this schema, this sibling and representative,
+    credit true (representative gates passed, LEF/lib/ROM-image checks equal, no failed LEC).  -> (ok, why)"""
+    try:
+        raw = pathlib.Path(row['record']).read_bytes()
+        rec = json.loads(raw)
+    except (OSError, ValueError) as e:
+        return False, 'record unreadable: %s' % e
+    if row.get('sha') and hashlib.sha256(raw).hexdigest() != row['sha']:
+        return False, 'record sha256 differs from the row'
+    if rec.get('schema') != INHERIT_SCHEMA: return False, 'wrong schema'
+    if rec.get('sibling') != row['member'] or rec.get('representative') != row['rep']: return False, 'record names another identity'
+    if rec.get('credit') is not True: return False, 'record credit is not true: %s' % (rec.get('credit_blockers') or 'unspecified')
+    return True, ''
+
+
+def inherit_credit(die, st, tm, rows, ok=inherit_record_ok):
+    """S81-COL-INHERIT (OWNER via COORD 11-14): a sibling pv identity counts when its representative counts and its inherited record
+    (tools/fleet/col_inherit.py: gates of the representative's signoff.json, param-set sha, ROM image sha list, LEF/lib sha equal,
+    via-mask DRC, LEC) says credit.  st {type: [refs]} (mutated), tm {type: module}.  The ref is the representative's with
+    'via inherit <rep>' appended.  -> [members credited].  A member with its own record keeps it."""
+    done = []
+    for r in rows:
+        m, o = r['member'], r['rep']
+        if r['die'] != die or m in st or m not in tm or not st.get(o): continue
+        good, _why = ok(r)
+        if not good: continue
+        st[m] = [x + ' via inherit %s (record %s)' % (o, (r.get('sha') or '')[:12] or r['record']) for x in st[o]]
+        done.append(m)
+    return done
+
+
 def refresh(log=lambda *a: None, old=None):
     errs = []
     for g in sweep_stale_tmp():
@@ -1526,6 +1575,10 @@ def refresh(log=lambda *a: None, old=None):
                 ent['dedup_credited'] = dedup_credit(ent['die'], st, tm, dedup_rows())
             except Exception as e:
                 errs.append('DEDUP credit %s: %s' % (d, e))
+            try:
+                ent['inherit_credited'] = inherit_credit(ent['die'], st, tm, inherit_rows())
+            except Exception as e:
+                errs.append('INHERIT credit %s: %s' % (d, e))
             ent['signed_types'] = st; ent['signed_cores'] = sc
             if ent.get('designs') is not None:
                 rp = fetch_rec_pins([r_ for m in core_recs for _, r_ in core_recs[m]], log) if core_recs else {}

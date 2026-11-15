@@ -794,6 +794,19 @@ def direct_job():
     return os.environ.get("OT_RUN_DIRECT") == "1"
 
 
+PLAN_CMD_RE = re.compile(r'''(?i)(?:^|[/\s_.=-])(?:bind[A-Za-z0-9_]*|run_gate[A-Za-z0-9_]*|chain[A-Za-z0-9_]*|latcheck[A-Za-z0-9_]*|g0)(?:\.sh|\.py|\.tcl)?(?=$|[\s/_.-])''')
+
+
+def plan_cmd_ok(words):
+    """PLANBYPASS_1114 (COORD 19:5x): --priority plan only for a die-plan bind / LATCHECK / G0 / chain script (bind*, run_gate*, chain*, latcheck*, g0), or OT_RUN_PLAN_OK=1 (plan marker)"""
+    return os.environ.get("OT_RUN_PLAN_OK") == "1" or bool(PLAN_CMD_RE.search(" ".join(words)))
+
+
+def plan_job():
+    """PLANBYPASS_1114 (OWNER 11-14 19:40): ot-run --priority plan"""
+    return "OT_HEAVY_PRIO=plan" in os.environ.get("OT_RUN_PRIO_ENV", "")
+
+
 def choose(res, mem, threads=THREADS, die=False):
     """res: host -> --free row (hosts that qualify by disk/dir only).  Returns (host, will_queue).
     die: prefer normal hosts among those admitting now, otherwise keep every admitting host eligible; any other job gets
@@ -802,6 +815,8 @@ def choose(res, mem, threads=THREADS, die=False):
     ok = {h: r for h, r in res.items() if r and not r.get("error") and r.get("ncpu") and physically_capable(r, mem)}
     if not ok:
         return None, False
+    if plan_job():      # PLANBYPASS_1114 (OWNER 11-14 19:40): a plan-connectivity job starts at once on the listed host with the most MemAvailable; ot-heavy bypasses its gate
+        return max(ok, key=lambda h: ok[h].get("avail_gb", 0)), False
     if direct_job():    # DIRECT_1107: the host with the most real free memory; only MemAvailable >= mem + headroom counts
         fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB and not load_gated(ok[h])]
         return max(fit or ok, key=lambda h: ok[h].get("avail_gb", 0)), not fit
@@ -1516,6 +1531,8 @@ def main():
             if prio not in ("die", "plan"): sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials) or 'plan' (plan-event jobs: strict bind, G0, die-proto)")
             os.environ["OT_RUN_PRIO_ENV"] = f"OT_HEAVY_PRIO={prio} "   # PLAN_PRIO_1114
         else: sys.exit(__doc__)
+    if os.environ.get("OT_RUN_PRIO_ENV", "").startswith("OT_HEAVY_PRIO=plan") and not plan_cmd_ok(a[1:]):
+        sys.exit("ot-run: --priority plan is for die-plan bind / LATCHECK / G0 scripts only (bind*, run_gate*, chain*, latcheck*, g0; OT_RUN_PLAN_OK=1 for a plan marker); type builds do not bypass memory admission")
     cmd = ro_source_binds(a[1:])
     if job:
         cmd = job_wrap(cmd, job)

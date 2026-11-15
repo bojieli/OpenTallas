@@ -36,7 +36,7 @@ class Heavy(unittest.TestCase):
         (d / 'bin').mkdir()
         def w(name, body):
             p = d / 'bin' / name; p.write_text('#!/bin/bash\n' + body + '\n'); p.chmod(0o755); return p
-        self.rec = w('reconcile', '[ "$1" = --is-die ] && exit 1; echo "OK 4 cls | need 4, available 100 GB, growth charged 0 GB"')
+        self.rec = w('reconcile', '[ "$1" = --is-die ] && exit 1; [ "$1" = --is-plan ] && exit 1; echo "OK 4 cls | need 4, available 100 GB, growth charged 0 GB"')
         self.prot = w('protect', '[ "$1" = --pid ] && { echo "$2" > "$OUT_ARGS.prot"; exit 0; }; [ -n "${DIE_TEST:-}" ]')
         w('systemd-run', 'printf "%s\\n" "$@" > "$OUT_ARGS"')
         w('nproc', 'echo 10')
@@ -170,7 +170,7 @@ class Heavy(unittest.TestCase):
 
     def test_crit_job_keeps_the_ram_admission(self):
         (self.d / 'conf').write_text('LOAD_CAP_FACTOR=0\n')
-        self.rec.write_text('#!/bin/bash\n[ "$1" = --is-die ] && exit 1; echo "NO 4 cls | need 4, available 1 GB"; exit 1\n')
+        self.rec.write_text('#!/bin/bash\n[ "$1" = --is-die ] && exit 1; [ "$1" = --is-plan ] && exit 1; echo "NO 4 cls | need 4, available 1 GB"; exit 1\n')
         r, a = self.run_('15', crit=True)
         self.assertIsNone(a)
 

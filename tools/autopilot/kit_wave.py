@@ -1894,6 +1894,16 @@ GPL_PROBE_AWK = (r"""awk '/GPL-1010/{print "KW_GPL " l; print "KW_GPL " $0; l=""
 RULES = [
     # WF-1 11-14: a chosen child view that is missing everywhere is infrastructure (sync / re-export), never a design verdict
     ("INFRA", None, r"INFRA-VIEW-MISSING", "infra (INFRA-VIEW-MISSING: the die-owner / counted child view is not on any host)"),
+    # KIT-OPS-5 11-14 (COORD class fix): a job whose submit-time admission bundle predates the late-ECO scope postcondition
+    # refuses its ECO (eco_loop: "staged late-ECO hook lacks the runtime scope postcondition") before any repair.  That is a stale
+    # bundle, not a design verdict: the INFRA auto-retry re-admits the attempt, which pins the current bundle.  Before the hold_ff
+    # / timing rows, because the refusal rides in the same reason as the route FAIL it failed to repair.
+    ("INFRA", None, r"staged late-ECO hook lacks the runtime scope postcondition",
+     "infra (stale admission bundle: late-ECO hook lacks the scope postcondition; re-attempt pins the current bundle)"),
+    # KIT-OPS-5 11-14 (COORD class fix): lec_async.sh exit 11 "LEC_ASYNC cannot migrate: [Errno 3] No such process" is a stale
+    # proof state carried into a resumed / copied kit (pid of the previous attempt's watcher is dead), never a design verdict.
+    # lec_async.sh (WF-1, main) clears that state itself on the next start, so the INFRA auto-retry heals it with no lane action.
+    ("INFRA", None, r"LEC_ASYNC cannot migrate", "infra (stale lec_async proof state, exit 11; the retry starts the proof afresh)"),
     # KIT-FIX-F 11-13 (option kit_snap): first, because the reason quotes input paths whose words later rules key on
     # (outline, blocked, ...).  A named input that no die host holds is FLOW (never the INFRA auto-retry loop).
     ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
@@ -1932,6 +1942,9 @@ RULES = [
     ("INFRA", None, r"ot-run: interrupted \(signal 15|cancellation requested on|stopped by operator|"
                     r"below the (?:gen |scratch |root )?disk floor|scratch floor|disk floor",
      "infra (unit stopped from outside / disk floor wait: no design result)"),
+    # OOMKILL_1114 (OWNER 11-14 19:00, Fable fix 3): a host OOM victim (earlyoom SIGTERM -> make 'Error 241', SIGKILL -> 'Error 247', rc 137 / 143, 'exit -15') is booked
+    # as OOM, not as the exit 2 make prints last; class INFRA, so the free INFRA retry (KILL_RE: 'earlyoom') relaunches it on another host
+    ("INFRA", None, r"\] Error 24[17]\b|\bearlyoom\b|\brc[ =]+1(?:37|43)\b|\bexit -(?:9|15)\b|\bterminated by signal (?:9|15)\b", "OOM (host earlyoom SIGTERM/SIGKILL victim, make Error 241/247 / rc 137/143: not a design result, auto-retried as INFRA)"),
     ("INFRA", None, r"ot-run: NOT RUN|ot-job: NOT RUN: input [^\n]*not in the store, not on this host|ot-run: NOT COMPLETED|exit 1(?:37|43)\b|Out of memory|oom-kill|OOMKilled|"
                     r"No space left on device|rsync error|Cannot connect to the Docker daemon|"
                     r"yosys elaboration failed rc[ =]+1(?:25|37|43)\b|"
@@ -4769,6 +4782,9 @@ def geom_result_line(txt):
                  if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
 
 
+SRC_SKEW_ADVISORY_DIES = {"qwen_compute"}   # KIT-OPS-5 11-14 (COORD): src_skew is logged, not judged, for these dies until the queue lint is refreshed
+
+
 def src_skew_check(sp, kit):
     """AUTOBUILD-PIPE-5 10-31 (COORD 04:0x, KIT-WAVE-5 03:47): kit src older than the queue lint.  When the launch spec's
     src_sha has a different copy of the queue's admission lint files than this (hub) checkout, run the hub's own
@@ -5532,6 +5548,10 @@ def run_item(spec_path):
             return fail("sync_hub", txt)
     # AUTOBUILD-PIPE-5 10-31: the queue's own sdc_lint on the hub copy of the kit when the wave src's lint differs
     sk = src_skew_check(sp, K)
+    if sk and sp.get("die") in SRC_SKEW_ADVISORY_DIES:
+        # KIT-OPS-5 11-14 (COORD ruling): src_skew is advisory for these dies (the QC src is ahead of the queue lint copy); logged, never a fail
+        print("KW_SRC_SKEW_ADVISORY " + " | ".join(sk)[:600], flush=True)
+        sk = []
     if sk:
         return fail("gen_lint", "GEN_LINT FAIL src_skew\n" + "\n".join(sk), f"{G}:{K}")
     def place_and_geom(K, rs):
@@ -6465,7 +6485,10 @@ def resume_source(AP, prev):
                              # stopped, not failed: a queued volume released or a cancelled attempt has no failure a
                              # same-input run would repeat (KW6-CLASS 11-04, S81 slice_station__t23/t44)
                              or prev.get("status") == "CANCELLED" or prev.get("class") == "VOLUME"
-                             or _refused_class(jd) == "VOLUME"}
+                             or _refused_class(jd) == "VOLUME"
+                             # KIT-OPS-5 11-14 (FABLE-WAVE-REVIEW FIX 2): the attempt was KILLED (make Error 241 / PASS exit -15 / earlyoom),
+                             # not failed on a design verdict: resume the same checkpoint (GRT done -> detail route) with no input change
+                             or bool(KILL_RE.search(str(prev.get("reason") or ""))) or "PASS exit -15" in str(prev.get("reason") or "")}
     try:
         out["gen_end"] = (jd / "gen.log").stat().st_mtime
     except OSError:

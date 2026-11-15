@@ -31,12 +31,16 @@ HEAD-BIND-4 (10-27, COORD ruling on HEAD-CORE-R13 ASK4):
 7. NESTED leaf-pin check (tools/die_plan/port_bind_gate.py nested_check): every instance inside every generated wrapper
    against its master header (every port bound, no unknown port, widths equal).  die_port_bind sees only the die-top
    partition pins, so an open leaf pin inside a wrapper (hd_serdes u_phy .rx/.tx only, 10-26) passed it silently.
+HEAD-BIND-1 (11-14): --clock-landing SIDECAR passes the landed plan's sidecar to gen.py rtl (the landed wrappers =
+   the kit cohort: rings, collectors, landing relays); without it the die top is the unlanded composition (as before).
+   The nested check reads the landing closure too (its cells are the landed wrappers' masters).
 Exit 0 iff module check 0 missing AND die_port_bind PASS AND tie audit PASS AND nested check PASS."""
 import argparse, json, re, subprocess, sys
 from pathlib import Path
 
 ap = argparse.ArgumentParser(description=__doc__)
 ap.add_argument('plan'); ap.add_argument('--out', required=True)
+ap.add_argument('--clock-landing', help='landed plan sidecar (gen.py rtl --clock-landing)')
 a = ap.parse_args()
 out = Path(a.out)
 if out.is_absolute():
@@ -48,8 +52,8 @@ missing = json.loads((out / 'module_check.json').read_text())['missing_modules']
 print('MODULE_CHECK missing=%s rc=%d' % (missing, mc.returncode))
 gen = out / 'gen'
 gen.mkdir(parents=True, exist_ok=True)
-g = subprocess.run([sys.executable, 'tools/die_plan/gen.py', 'rtl', a.plan, '--out', str(gen), '--rtl-root', '.'],
-                   capture_output=True, text=True)
+g = subprocess.run([sys.executable, 'tools/die_plan/gen.py', 'rtl', a.plan, '--out', str(gen), '--rtl-root', '.']
+                   + (['--clock-landing', a.clock_landing] if a.clock_landing else []), capture_output=True, text=True)
 (out / 'gen_rtl.log').write_text(g.stdout + g.stderr)
 if g.returncode:
     print('GEN_RTL FAIL rc', g.returncode); sys.exit(g.returncode)
@@ -119,7 +123,8 @@ r = subprocess.run([sys.executable, 'tools/die_port_bind.py', str(top), '--top',
 (out / 'port_bind_strict.txt').write_text(r.stdout + r.stderr)
 print(r.stdout[-3000:], r.stderr[-1000:])
 nest = PBG.nested_check({p.name: p.read_text() for p in sorted(gen.glob('*.sv')) if p.name != 's81_head_top.sv'},
-                        [Path(x).read_text(errors='replace') for x in src + extra])
+                        [Path(x).read_text(errors='replace') for x in src + extra + land],
+                        optional_ports=[('ot_dp_clk_landing_cas', 'rst_xn', 'RSTREP', 0)])
 (out / 'nested_portbind.json').write_text(json.dumps(nest, indent=1) + '\n')
 print('PORT_BIND_NESTED', nest['verdict'], json.dumps({k: v for k, v in nest.items() if k != 'examples'}))
 for k, v in nest.get('examples', {}).items():

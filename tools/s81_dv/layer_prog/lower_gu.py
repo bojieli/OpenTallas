@@ -106,12 +106,14 @@ RT_LAT_BASE_N, RT_LAT_BASE_S = 62, 60  # -> ids row on vo_n / vo_s with the bf c
 #   OT_GUNIT_BF_M1REG  gf3: u_m1 first exchange registered (c1r)                    +1  (DIE-S81-80 11-08)
 #   OT_GUNIT_BF_C1REG  gf4: fold / candidate compares registered at the compare site +1  (GUNIT-CORE-1 11-13)
 #   OT_GUNIT_BF_SVREG gf5: local SV/CTL cut + paired A bias snapshot; select +1, gather +0
+#   OT_GUNIT_BF_FWPIPE gf5b (TYPE-GUNIT-L1F 11-14, needs SVREG): select cone cut (whf/wdf/rdb/cfwc regs) + same stage on SV meta + one more
+#                      A bias snapshot stage; select +1 more, gather +0 (the gather reply does not traverse the cone)
 # run_gu_bench.sh compiles the bench with the same define set (bf_defines()) and asserts the total.  An OT_GUNIT_BF_*
 # define without a row here fails closed: a new bf form adds its row with the delta its bench measures.
-RT_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1), ('OT_GUNIT_BF_SVREG', 1))
+RT_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1), ('OT_GUNIT_BF_SVREG', 1), ('OT_GUNIT_BF_FWPIPE', 1))
 # GF5 SV/paired-bias stage is on the select path, not the independent gather reply.
 # Keep the feedback budget separate: gf2/3/4 remain byte-for-byte the same prices.
-RW_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1), ('OT_GUNIT_BF_SVREG', 0))
+RW_FORM_DELTAS = (('OT_GUNIT_BF_M1REG', 1), ('OT_GUNIT_BF_C1REG', 1), ('OT_GUNIT_BF_SVREG', 0), ('OT_GUNIT_BF_FWPIPE', 0))
 BF_RECIPE = 'physical/die_plan/s81/cores/legacy/recipes.json'
 BF_CORE = 'dsdv_gunit_l1f_bf'
 BF_DEFINES_ENV = 'OT_GUNIT_BF_DEFINES'   # bench / what-if override: comma or space separated, "" = gf2 (no define)

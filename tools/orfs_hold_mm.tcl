@@ -847,7 +847,11 @@ proc ot_repair_hold_guarded {rt_args} {
     if {$w1 >= $hm} { break }
     if {$w1 >= 0 && $dw < 1.0} { puts "OT_HOLD_GUARD: hold met (ws [format %.2f $w1] >= 0); margin chase stalled, stop"; break }
     if {$dw < 1.0 && $gain < $mingain} { ot_hold_window_report "stalled: chunk $k gained [format %.2f $dw] ps / [format %.1f $gain]% TNS" $hist; break }
-    if {[clock seconds] - $t0 > $maxs} { ot_hold_window_report "hold repair over [expr {$maxs / 3600.0}] h" $hist; break }
+    if {[clock seconds] - $t0 > $maxs && ![info exists ::ot_hold_timelogged]} {
+      # WF-1 11-14 (OWNER: delete the conservative limits): the hold repair wall cap no longer ends the repair; logged once
+      set ::ot_hold_timelogged 1
+      puts "OT_HOLD_TIMELOG hold repair over [expr {$maxs / 3600.0}] h: NO CAP, repair continues"
+    }
     set prev $cur
   }
   # tolerate_flow_errors zeroes the chunk-cap RSZ-0060 errors only when this line follows the last one

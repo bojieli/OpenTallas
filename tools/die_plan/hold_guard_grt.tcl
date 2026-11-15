@@ -95,9 +95,10 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
         }
         set wt $now; set wstat $cur
       }
-      if {$now - $t0 >= $maxs} {
-        puts [format "OT_HOLD_STALL NEEDS_RTL stage=grt reason=hold repair over %g h (ws %.2f tns %.1f viol %d)" [expr {$maxs / 3600.0}] {*}$cur]
-        break
+      if {$now - $t0 >= $maxs && ![info exists ::ot_hg_timelogged]} {
+        # WF-1 11-14 (OWNER: delete the conservative limits): the hold repair wall cap no longer ends the repair; the line is logged once
+        set ::ot_hg_timelogged 1
+        puts [format "OT_HOLD_TIMELOG stage=grt hold repair over %g h (ws %.2f tns %.1f viol %d): NO CAP, repair continues" [expr {$maxs / 3600.0}] {*}$cur]
       }
       set nb [expr {min($bmax, max($bmin, double($added) / $dt * $cs))}]
     }

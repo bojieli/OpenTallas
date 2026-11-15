@@ -411,7 +411,13 @@ module dsdv_gunit_l1f_acore #(
 `ifdef OT_GUNIT_BF_SVREG
     // GF5: preserve the original SRAM read snapshot while F SV/CTL gains one stage.
     (* keep *) reg [NL*32-1:0] s_bias_svreg;
+`ifdef OT_GUNIT_BF_FWPIPE
+    // FWPIPE: F SV/CTL is one stage later again; the bias snapshot follows (same read-edge value, pure delay line).
+    (* keep *) reg [NL*32-1:0] s_bias_fwp;
+    always @(posedge clk) begin s_bias_fwp <= s_bias; s_bias_svreg <= s_bias_fwp; end
+`else
     always @(posedge clk) s_bias_svreg <= s_bias;
+`endif
 `endif
     wire       s_v = ctl[0], s_f = ctl[1], s_l = ctl[2];
     wire [2:0] s_bn = ctl[5:3];
@@ -628,11 +634,32 @@ module dsdv_gunit_l1f_bf (
         end
     endgenerate
     wire [NL*32-1:0] svn;
+`ifdef OT_GUNIT_BF_FWPIPE
+`ifndef OT_GUNIT_BF_SVREG
+    `error "OT_GUNIT_BF_FWPIPE requires OT_GUNIT_BF_SVREG"
+`endif
+    // TYPE-GUNIT-L1F 11-14 (gf5 + FWPIPE): GF5 routed TT -250.9 ps on arc -> dec64 -> wdec8 -> whf -> mux8 select ->
+    // svreg_data in ONE cycle.  The select (cfwc & whf), the forward data (wdf) and the read data (rdb) are registered
+    // together ahead of the mux8; every metadata bit that rides with svreg_data (v, f, l, bn, lv) gets the same extra
+    // stage.  +1 PIN CYCLE on SV/CTL and everything behind them (A sort, merge, o_v/o_f/o_l/o_d); the gather reply does not
+    // traverse this cone (+0).  The A bias snapshot gets one more stage (s_bias_fwp) so bias and SV stay paired.
+    (* keep *) reg [4*NL-1:0] whf_q; (* keep *) reg [NL*32-1:0] wdf_q, rdb_q; (* keep *) reg [3:0] cfwc_q;
+    always @(posedge clk) begin whf_q <= whf; wdf_q <= wdf; rdb_q <= rdb; cfwc_q <= cfwc; end
+`define GU_WHF whf_q
+`define GU_WDF wdf_q
+`define GU_RDB rdb_q
+`define GU_CFW cfwc_q
+`else
+`define GU_WHF whf
+`define GU_WDF wdf
+`define GU_RDB rdb
+`define GU_CFW cfwc
+`endif
     generate
         for (l = 0; l < NL; l = l + 1) begin : g_fw
             for (h = 0; h < 4; h = h + 1) begin : g_y
-                (* keep = 1 *) dsdv_l1f_mux8 u_m (.s(cfwc[2 * (h / 2) + l / 8] && whf[4 * l + h]), .a(wdf[32 * l + 8 * h +: 8]),
-                                                  .b(rdb[32 * l + 8 * h +: 8]), .y(svn[32 * l + 8 * h +: 8]));
+                (* keep = 1 *) dsdv_l1f_mux8 u_m (.s(`GU_CFW[2 * (h / 2) + l / 8] && `GU_WHF[4 * l + h]), .a(`GU_WDF[32 * l + 8 * h +: 8]),
+                                                  .b(`GU_RDB[32 * l + 8 * h +: 8]), .y(svn[32 * l + 8 * h +: 8]));
             end
         end
     endgenerate
@@ -648,6 +675,17 @@ module dsdv_gunit_l1f_bf (
     (* keep *) reg [2:0] svreg_bn;
     (* keep *) reg [NL-1:0] svreg_lv;
     integer svreg_k;
+`ifdef OT_GUNIT_BF_FWPIPE
+    reg pq_v, pq_f, pq_l; reg [2:0] pq_bn; reg [NL-1:0] pq_lv;
+    always @(posedge clk or negedge rq[5])
+        if (!rq[5]) begin pq_v <= 1'b0; svreg_v <= 1'b0; end else begin pq_v <= cgo; svreg_v <= pq_v; end
+    always @(posedge clk) begin
+        svreg_data <= svn;
+        pq_f <= cfwc[0]; pq_l <= cl; pq_bn <= cbc[2:0];
+        for (svreg_k = 0; svreg_k < NL; svreg_k = svreg_k + 1) pq_lv[svreg_k] <= svreg_k < clv;
+        svreg_f <= pq_f; svreg_l <= pq_l; svreg_bn <= pq_bn; svreg_lv <= pq_lv;
+    end
+`else
     always @(posedge clk or negedge rq[5])
         if (!rq[5]) svreg_v <= 1'b0; else svreg_v <= cgo;
     always @(posedge clk) begin
@@ -655,6 +693,7 @@ module dsdv_gunit_l1f_bf (
         svreg_f <= cfwc[0]; svreg_l <= cl; svreg_bn <= cbc[2:0];
         for (svreg_k = 0; svreg_k < NL; svreg_k = svreg_k + 1) svreg_lv[svreg_k] <= svreg_k < clv;
     end
+`endif
     always @(posedge clk or negedge rq[5])
         if (!rq[5]) begin s_v <= 1'b0; s_vh <= 1'b0; end else begin s_v <= svreg_v; s_vh <= svreg_v; end
     always @(posedge clk) begin

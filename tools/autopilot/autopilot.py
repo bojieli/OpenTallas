@@ -2285,10 +2285,24 @@ def resign_carry(j, cache=None, probe=None, budget=None):
 def retry_unversioned(st):
     """an archived SIGNED-UNVERSIONED run is promoted once a flow release tag carries exactly its flow, or (KW-FIX-4
     11-03) once a valid RE-SIGN of its same routed DB on a released flow tag exists (resign_carry)"""
+    # WF-1 11-14 (#4): resolve_provenance (git rev-parse / fetch / flow-tag diffs) is per (src, flow, die), not per job, and its
+    # git calls are independent: resolve each distinct key once, on a small thread pool, then walk the jobs
+    from concurrent.futures import ThreadPoolExecutor
+    keys = sorted({(j["src"], j.get("flow", ""), j.get("die")) for j in st["jobs"].values()
+                   if j.get("status") == "SIGNED-UNVERSIONED" and j.get("archive")}, key=str)
+    provs = {}
+    if keys:
+        def _one(k):
+            try:
+                return k, resolve_provenance(*k)
+            except Exception as e:                      # a failed lookup is retried next tick
+                return k, {"src_commit": "", "flow_tag": "", "error": f"{type(e).__name__}: {e}"[:200]}
+        with ThreadPoolExecutor(max_workers=6) as ex:
+            provs = dict(ex.map(_one, keys))
     for j in st["jobs"].values():
         if j.get("status") != "SIGNED-UNVERSIONED" or not j.get("archive"):
             continue
-        prov = resolve_provenance(j["src"], j.get("flow", ""), j.get("die"))
+        prov = dict(provs[(j["src"], j.get("flow", ""), j.get("die"))])
         if prov.get("error"):
             j["prov_error"] = prov["error"]
             if apply_legacy(j):
@@ -3076,22 +3090,38 @@ def minimal_rejudge_candidate(j):
             and SP.judge(so)["verdict"] == "SIGNED")
 
 
+RP_T = {}                    # WF-1 11-14: seconds / calls per retry_pending branch, logged by the tick
+
+
+def _rp(name, t0):
+    a = RP_T.setdefault(name, [0, 0.0])
+    a[0] += 1
+    a[1] += time.time() - t0
+
+
 def retry_pending(st):
     released = failure_resolutions()
     budget = MINIMAL_REJUDGE_PER_TICK
+    _t = time.time()
     for j in list(st["jobs"].values()):
         if budget > 0 and not DRY and minimal_rejudge_candidate(j) and not hub_procs(j["path"]):
             budget -= 1
             j["minimal_rejudged"] = time.time()
+            _t = time.time()
             c = probe_job(j)
+            _rp("rejudge_probe", _t)
             so = (c or {}).get("signoff") or {}
             if so and SP.judge(so)["verdict"] == "SIGNED":
                 log(f"MINIMAL-REJUDGE {j['id']} {j['die']}/{j['type']}: {j.get('status')} -> re-finish under R-MINIMAL")
                 finish(st, j, c, {"minimal_rejudge": True})
+            _t = time.time()
             save_state(st)
+            _rp("save_state", _t)
             continue
         if j.get("status") == "SIGNED" and not DRY:
+            _t = time.time()
             after_class(st, j)                         # trial check (rule 1) before an archive retry
+            _rp("after_class", _t)
         elif j.get("status") == "DONE-CRASH" and j.get("kind") == "proof-oom":
             if hub_procs(j["path"]):
                 continue
@@ -3102,7 +3132,9 @@ def retry_pending(st):
         elif j.get("status") == "WAIT-PARENT":
             if hub_procs(j["path"]):
                 continue
+            _t = time.time()
             c = probe_job(j)
+            _rp("wait_parent_probe", _t)
             so = (c or {}).get("signoff") or {}
             if so and (so.get("verdict") != "LOCAL_PASS_NEEDS_PARENT"
                        or (SP.is_minimal() and SP.judge(so)["verdict"] == "SIGNED")):
@@ -3155,14 +3187,21 @@ def tick(args):
     apply_evac(st)
     poll_running(st)
     _mark("poll_running")
+    _t = time.time()
     poll_reviews(st)
+    _rp("poll_reviews", _t)
+    _t = time.time()
     retry_pending(st)
+    _rp("retry_pending_total", _t)
+    _t = time.time()
     # WF-1 11-14 (COORD/OWNER: the commit / flow-tag tie is removed from counting; COUNT-FRICTION-1 credits SIGNED-UNVERSIONED
     # directly): promoting unversioned records only to get provenance cost 476 s of a 1033 s tick, so it is OFF by default.
     # AP_RETRY_UNVERSIONED=1 (or the marker autopilot/RETRY-UNVERSIONED) turns it back on.
     if os.environ.get("AP_RETRY_UNVERSIONED") == "1" or (AP_DIR / "RETRY-UNVERSIONED").exists():
         retry_unversioned(st)
+    _rp("retry_unversioned", _t)
     _mark("reviews_retry")
+    log("RETRY-PENDING-TIMES " + " ".join(f"{k}={v[0]}x/{v[1]:.0f}s" for k, v in RP_T.items()))
     submitted = admit_new(st, rows)
     save_state(st)
     _mark("admit_new")
@@ -3183,9 +3222,9 @@ def tick(args):
         except Exception as e:                         # the next tick admits these rows anyway
             log(f"ADMIT-AFTER-WAVE failed: {type(e).__name__}: {e}")
     _mark("kit_wave_step+admit")
-    # WF-1 11-14 (#4): auto-resign has its own lock and state file and no tick state; while autopilot/AUX-RESIGN exists it runs in
-    # its own timer (autopilot-aux.timer: autopilot.py aux) instead of serially here (164 s of the tick).  Remove the marker to put
-    # it back into the tick.
+    # WF-1 11-14 (#4): auto-resign has its own lock and state file and no tick state; when autopilot/AUX-RESIGN exists it runs in its
+    # own timer (autopilot-aux.timer: autopilot.py aux) instead of serially here (measured 164 s of a 1033 s tick).  Remove the marker to
+    # put it back into the tick.
     if os.environ.get("AP_AUTO_RESIGN", "1") != "0" and not (AP_DIR / "AUX-RESIGN").exists():   # FLOW-29 owner 11-04: signed runs re-signed on the newest tag, no agent
         try:
             AR.step(sys.modules[__name__])

@@ -49,17 +49,18 @@ def test_hold_structural_at_cts(tmp_path):
             "OT_HOLD_GUARD chunk 2: buffer cap 4000 reached (RSZ-0060), continuing\nEOF\nsleep 60\n")
     p = run(k, s, fake(tmp_path, body.replace("sleep 60", "sleep 4")), "cts", env=FAST)
     assert p.returncode == 0 and "OT_HOLD_STRUCTURAL" not in p.stdout          # cap clause off by default
-    p = run(k, s, fake(tmp_path, body), "cts", env=dict(FAST, OT_FF_HOLD_CAPS="2"))
-    assert p.returncode == 21, p.stdout + p.stderr
+    # WF-1 11-14 (OWNER: delete the conservative limits): a hold-structural verdict is logged, never a stop
+    p = run(k, s, fake(tmp_path, body.replace("sleep 60", "sleep 4")), "cts", env=dict(FAST, OT_FF_HOLD_CAPS="2"))
+    assert p.returncode == 0, p.stdout + p.stderr
     assert any(x.startswith("OT_HOLD_STRUCTURAL stage=cts failfast class=HOLD_STRUCTURAL") for x in p.stdout.splitlines())
-    assert "OT_GRT_STOP hold_structural" in p.stdout
+    assert "OT_HOLD_STRUCTURAL_LOGGED" in p.stdout and "OT_GRT_STOP" not in p.stdout
 
 
-def test_hold_stall_line_stops(tmp_path):
+def test_hold_stall_line_is_logged_not_a_stop(tmp_path):
     k, r, l, s = with_rules(tmp_path)
-    body = "echo 'OT_HOLD_STALL NEEDS_RTL (hold repair over 3 h): R2R=9@-101' > $L/5_1_grt.tmp.log\nsleep 60\n"
+    body = "echo 'OT_HOLD_STALL NEEDS_RTL (hold repair over 3 h): R2R=9@-101' > $L/5_1_grt.tmp.log\nsleep 4\n"
     p = run(k, s, fake(tmp_path, body), "grt", env=FAST)
-    assert p.returncode == 21 and "OT_HOLD_STRUCTURAL stage=grt failfast" in p.stdout
+    assert p.returncode == 0 and "OT_HOLD_STRUCTURAL_LOGGED" in p.stdout and "OT_GRT_STOP" not in p.stdout
 
 
 def test_opt_outs_and_no_rules_file(tmp_path):

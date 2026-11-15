@@ -1081,7 +1081,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 return 'forwarded clock is not an actual SDC clock input'
             res.setdefault('hard_landings', {})[bus] = dict(instance=spec['instance'], master=spec['master'],
                 port=spec['port'], width=width, clock_port=clock,
-                child_landing_bits=proof['land_mux_bits'], child_start=proof['ring_start']['t_rst_n'])
+                child_landing_bits=proof['land_mux_bits'], child_start=proof.get('ring_start', {}).get('t_rst_n'))
         except (KeyError, ValueError, OSError) as e:
             return f'hard landing evidence rejected: {e}'
         return None
