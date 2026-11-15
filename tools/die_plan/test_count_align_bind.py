@@ -275,3 +275,16 @@ def test_ocv_parts_fail_closed_on_missing_or_conflicting_endpoints():
     with pytest.raises(CB.BindError, match="port ab rows disagree"):
         CB.ocv_parts(rows + [dict(rows[0], src_part="a2")])
     assert CB.ocv_parts(rows + [dict(rows[0])]) == {"ab": ("a", "b"), "bc": ("b", "c")}   # same pair per corner: OK
+
+
+def test_freg_ring_is_carried_through_the_bind():
+    """KIT-OPS-6 11-15 (DIE-HEAD-ROUTE-1): the plan's crossing freg field reached no bind port, so the FREG-DECL-1 check failed any freg ring"""
+    rows = [row("a_b", "A", "B", 100.0, 20, 20)]
+    p = plan(rows)
+    assert all(int(o.get("freg", 0)) == 0 for o in p["crossings"])
+    assert CB.bind(p)["ports"]["a_b"]["freg"] == 0                  # no freg: unchanged, explicit 0
+    for o in p["crossings"]:
+        if o["port"] == "a_b":
+            o["freg"] = 1
+    b = CB.bind(p)
+    assert b["ports"]["a_b"]["freg"] == 1
