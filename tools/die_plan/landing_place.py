@@ -641,9 +641,13 @@ def _status_reset_groups(t):
 
 
 def _source_node(s):
-    """collector tree node of a local source: rst_n_t<tap> for a tapped source; a hard-tree source (tap None, e.g. the KV
-    modeled-PHY wrappers whose collector tree is only cland_h* relays) names its relay in 'node'"""
-    if s.get('tap') is None and s.get('node'):
+    """collector tree node of a local source: its 'node' when the row names one (the node landing_collector.build_local,
+    collector_reach and collector_reattach all use: the emitted RTL), else rst_n_t<tap>.  GENBUG D2: B6gsh leaf t8 t12 t17 t33
+    t52 t59 t68 t72 and kv_leaf t3 carry a node (rst_n_t20 / t18) beside a different tap (46 / 47); the old tap-first rule here
+    expected u_cland_collect_rst_n_t46 while the bound RTL holds rst_n_t20, so the plan scan and the placement hook disagreed
+    with the emitter.  A hard-tree source (tap None, e.g. the KV modeled-PHY wrappers whose collector tree is only cland_h*
+    relays) names its relay in 'node' as before."""
+    if s.get('node'):
         return s['node']
     return f"rst_n_t{s['tap']}"
 
