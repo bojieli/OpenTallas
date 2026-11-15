@@ -56,7 +56,11 @@ def sibling_groups(plan):
 
 def _norm(o, name):
     if isinstance(o, dict):
-        return {k: _norm(v, name) for k, v in o.items() if k not in SKIP_KEYS}
+        out = {k: _norm(v, name) for k, v in o.items() if k not in SKIP_KEYS}
+        if "collector_children" in out:   # the child die instance name (fE0_p3_b0) is not layout
+            out["collector_children"] = [{k: v for k, v in c.items() if k != "part"} if isinstance(c, dict) else c
+                                         for c in out["collector_children"]]
+        return out
     if isinstance(o, list):
         return [_norm(v, name) for v in o]
     if isinstance(o, str):

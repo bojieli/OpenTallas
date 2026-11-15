@@ -71,3 +71,14 @@ def test_merge_classes_groups_across_clock_class():
     assert len(g) == 1
     only = next(iter(g.values()))
     assert len(only["members"]) == 3 and only["verdict"] == "OK"
+
+
+def test_layout_hash_ignores_collector_child_instance_name():
+    plan = mkplan()
+    new, _ = TM.retap(plan)
+    names = list(TM.col_types(new))
+    for i, n in enumerate(names):
+        new["partition_types"][n]["clock"]["landing_contract"]["collector_children"] = [dict(part="fE%d_p3_b0" % i, xy_um=[1, 2], node="rst_n_t4")]
+    assert len(TM.layout_groups(new)) == 1
+    new["partition_types"][names[0]]["clock"]["landing_contract"]["collector_children"][0]["xy_um"] = [9, 9]
+    assert len(TM.layout_groups(new)) == 2
