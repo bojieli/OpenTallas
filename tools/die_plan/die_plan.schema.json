@@ -559,6 +559,13 @@
        "type": "string",
        "pattern": "^M[1-9]$"
       },
+      "pin_band_origins_um": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "number"
+       }
+      },
       "bumps": {
        "type": "object",
        "additionalProperties": false,
