@@ -1,5 +1,5 @@
-# CLAND-GEOM handoff (2026-11-14 04:3x PST)
-Problem: OT_CLAND no legal row/site persists after EDGE2 (QC sle_su_l1__cl5ea486db, slw_su_l1__clcc9d0155, sle_fe_v1__cl1cbb7497; KV kv3_hgi_v6/v8).
-Cause (class): START-relay stages (clock.landing_writer_start / landing_reader_start branches) are sited toward the cland_fstart_out_* face pin, so the last stages sit on the core-boundary line (outline-4.32), tails of a shared trunk 0.4-1.7 um apart (KV hgi ft13..19_o, ft2..12_o), and corners (QC x_sc_o).
-Fix: new tool tools/die_plan/cland_stage_inset.py (plan -> plan): edge stages go inside one inset (25.92 in x from W/E, 8.64 in y from N/S, never a corner), clusters spread on a 25.92 x 8.64 lattice, hard cores avoided, hop guard 400 um. Only stage xy_um moves: stage count, branches, pins, contract unchanged (cycles/lane latency rows by construction).
-Work dir epyc9 /srv/opentallas-scratch2/claude/cland-geom: zz_s29_qc103_s3.json (= s29q103S2 + delta, 6 QC types), plan_c_kvgeom.json (= kv102sem_ftgrid plan_c + delta, hgi_v6/v8), reports qc_s3_report.json kv_report.json; runs run_qc.sh (g0/g0c/schema/station_lint + strict bind tag s29q103G3 + LATCHECK) and run_kv.sh (g0 + strict bind + LATCHECK), logs bind_qc.out kv_run.out. Waiter armed.
+# CLAND-GEOM handoff (2026-11-14 19:2x PST, successor)
+STATUS: no open work, no live jobs on epyc7/epyc9 (checked 19:16).
+Delivered: cland_stage_inset.py (patch CLAND-GEOM-stage-inset-1114; QC 7-type s4 delta folded into DIE-QC-103 S3M bind CLEAN 11:25; KV plan_c_kvgeom2 G0 PASS, bind 0 err, LATCHECK 2404/2404, folded in KV-102 kvgeom4). CLAND-TIE-1 on main 3720a54da27. CLAND-TIE-2 ddb4f6a10db0 APPROVED by COORD 10:4x, merged in train BB.
+Remaining pre-existing, not CLAND-GEOM: QC G0 face pin density (2 errors, follow-on s3n); S81 G0 274 baseline errors.
+Work dir epyc9 /srv/opentallas-scratch2/claude/cland-geom; S81 cg/ on epyc7+epyc8 s81-b3-clk.
