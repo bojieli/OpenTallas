@@ -39,6 +39,7 @@ HOSTS = ["intel1", "intel2", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10"]
 STATE_DIR = os.path.expanduser(os.environ.get("NOPROG_DIR", "~/.local/state/noprog"))
 COORD = os.path.expanduser(os.environ.get("OT_COORD_DIR", "~/coord"))
 MAX_SAMPLES = 80
+LEC_MAX_S = 24 * 3600
 MIN_REPORT_AGE_S = 1000        # a job is cancelled only when an earlier pass (>= 2 ticks ago) listed it, so the hub has posted it
 
 # ---------------------------------------------------------------- parsing (pure)
@@ -154,6 +155,11 @@ def judge_activity(last_t, start_t, now, what, window=WINDOW_S):
     if age >= window:
         return "NO-PROGRESS", f"no new {what} file/log write for {age / 3600:.1f} h", detail
     return "PROGRESS", f"{what} still writing", detail
+
+
+def route_done(work):
+    """the kit's routed database exists (5_route / 5_2_route / 6_final odb under run/results)"""
+    return bool(work) and any(glob.glob(f"{work}/run/results/*/*/*/{n}") for n in ("5_route.odb", "5_2_route.odb", "6_final.odb"))
 
 
 def lec_activity(work, started):
@@ -424,7 +430,8 @@ def decide(rows, reported, now, act):
         if not bad:
             continue
         healthy = [r for r in rs if r["verdict"] not in ("NO-PROGRESS", "CANCEL-NOW")]
-        if healthy or unit is None:
+        standalone = unit is None and all(r.get("lec_only") for r in bad) and not healthy
+        if healthy or (unit is None and not standalone):
             for r in bad:
                 r["action"] = "REPORT-ONLY: " + ("no ot-heavy scope" if unit is None else "sibling healthy: " + ",".join(h["container"] for h in healthy))
         elif all(r["key"] in reported and now - reported[r["key"]] >= MIN_REPORT_AGE_S for r in bad):
@@ -493,9 +500,7 @@ def scan(now=None, act=False, probe_s=4):
         elif is_hbm(ident):
             row.update(verdict="CANCEL-NOW", why="HBM is parked")
         elif sup:
-            # 11-14 first run: 35 live col_h9/h10 and kv3_hub_Eo builds matched.  kit_wave_stages rows do not prove that the running
-            # container is stale, so this is listed for COORD and never cancelled by the watchdog.
-            row.update(verdict="SUPERSEDED?", why="kit_wave_stages lists this kit dir as superseded: COORD to confirm (not auto-cancelled)")
+            row.update(verdict="CANCEL-NOW", why="SUPERSEDED: kit plan sha is not a live adopted plan (kit_wave_stages)")
         elif not log:
             row.update(verdict="NO-DATA", why="no log found")
         else:
@@ -509,6 +514,15 @@ def scan(now=None, act=False, probe_s=4):
             anchors.append((max(mt, anchors[-1][0] + 1), res["n"]))
             exact = len(st["samples"]) > 0 and now - st["samples"][0][0] >= WINDOW_S
             v, why, detail = judge_activity(mt, started, now, "LEC") if kind == "lec" else judge(res, anchors, now, exact=exact)
+            if kind == "lec" and now - started > LEC_MAX_S:
+                # COORD 11-14: LEC is advisory under R-MINIMAL.  A LEC-only job (the route result exists) older than 24 h goes,
+                # alive or not; a LEC whose route stage has not produced its result is never cancelled here.
+                cmd_text = " ".join(c["Config"].get("Cmd") or [])
+                row["lec_only"] = "lec.py" in cmd_text and "make DESIGN_CONFIG" not in cmd_text      # a standalone LEC container: no flow behind it
+                if row["lec_only"] or route_done(work):
+                    v, why = "CANCEL-NOW", "LEC >24h, advisory"
+                else:
+                    v, why = "PROGRESS", "LEC >24h but the route result is not there yet: kept"
             row.update(verdict=v, why=why, detail=detail, metric=res["name"] or "growth", stage_age_h=round((now - lbirth) / 3600, 1),
                        log_age_h=round((now - mt) / 3600, 1), lines=res["n"])
             st["samples"].append([now, res["n"], cpu_a])
@@ -528,7 +542,7 @@ def scan(now=None, act=False, probe_s=4):
             r["why"] += " (cpu idle: hung)"
     reported = state.setdefault("reported", {})
     cancel_units = decide(rows, reported, now, act)
-    actions = [do_cancel(u, [r for r in rows if r["unit"] == u], now) for u in cancel_units] if act else []
+    actions = [do_cancel(u, [r for r in rows if r["unit"] == u and r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW")] if u is None else [r for r in rows if r["unit"] == u], now) for u in cancel_units] if act else []
     for r in rows:
         if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW") and not r.get("action", "").startswith("REPORT-ONLY"):
             reported.setdefault(r["key"], now)
@@ -551,6 +565,16 @@ def scan(now=None, act=False, probe_s=4):
 def do_cancel(unit, rs, now):
     """ot-heavy-stop for the scope: --match <kit dir> after a dry run that hits exactly this unit, else --unit"""
     kit = rs[0]["kit"] or ""
+    if unit is None:        # standalone LEC container (no ot-heavy scope): docker stop of that exact container after a cmdline check
+        res = ""
+        for r in rs:
+            top = sh("docker", "top", r["container"], "-eo", "args", timeout=30)
+            if "/work/lec.py" in top and "make DESIGN_CONFIG" not in top:
+                res += sh("docker", "stop", "-t", "20", r["container"], timeout=120)
+        return {"t": now, "host": rs[0]["host"], "unit": "-", "how": "docker stop (lec.py only)", "result": res.strip()[-300:],
+                "containers": [r["container"] for r in rs], "type": rs[0]["type"], "stage": rs[0]["stage"], "metric": rs[0].get("detail", ""),
+                "kit": kit, "why": rs[0]["why"], "verdict": rs[0]["verdict"], "gb": round(sum(r["gb"] for r in rs), 1),
+                "cores": sum(r["threads"] for r in rs), "cores_busy": round(sum(r.get("cores_now") or 0 for r in rs), 1)}
     out = sh("ot-heavy-stop", "--dry-run", "--match", kit, timeout=120) if kit else ""
     args = ["--match", kit] if kit and re.findall(r"ot-heavy-stop: (oth-[\w-]+):", out) == [unit] else ["--unit", unit]
     res = sh("ot-heavy-stop", *args, timeout=300)
@@ -562,7 +586,7 @@ def do_cancel(unit, rs, now):
 
 
 # ---------------------------------------------------------------- hub
-ORDER = {"NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "SUPERSEDED?": 1, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
+ORDER = {"NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
 
 
 def md_table(reports):
@@ -583,17 +607,22 @@ def run_host(host, cmd, inp=None, timeout=60):
 
 
 def derive_superseded(path):
-    """kit dirs of kit_wave_stages whose EVERY row is SUPERSEDED (status or class).  A kit path is shared by the stages of one
-    attempt (geom / route / signoff), so a single CANCELLED-SUPERSEDED geom row must not condemn a live route job."""
-    rows = {}
+    """kit dirs whose plan is no longer the adopted one: every kit_wave_stages row of that kit dir carries a plan_sha that is not
+    among the plan shas the same die has with plan_current=yes (the live adopted plans).  Shared by the stages of one attempt
+    (geom / route / signoff), so one row alone never decides."""
+    rows, live = {}, {}
     try:
         for ln in open(path):
             f = ln.rstrip("\n").split("\t")
-            if len(f) > 10 and f[0] != "die" and ":" in f[9]:
-                rows.setdefault(f[9].split(":", 1)[1].strip().rstrip("/"), []).append("SUPERSEDED" in (f[7], f[8]))
+            if len(f) < 13 or f[0] == "die":
+                continue
+            if f[12] == "yes" and f[3]:
+                live.setdefault(f[0], set()).add(f[3])
+            if ":" in f[9] and f[3]:
+                rows.setdefault(f[9].split(":", 1)[1].strip().rstrip("/"), []).append((f[0], f[3]))
     except OSError:
         pass
-    return sorted(p for p, v in rows.items() if all(v) and p.count("/") > 4)
+    return sorted(p for p, v in rows.items() if p.count("/") > 4 and live.get(v[0][0]) and all(sha not in live[d] for d, sha in v))
 
 
 def hub(now=None, post=True):
