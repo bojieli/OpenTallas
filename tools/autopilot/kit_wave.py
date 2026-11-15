@@ -1900,6 +1900,10 @@ RULES = [
     # / timing rows, because the refusal rides in the same reason as the route FAIL it failed to repair.
     ("INFRA", None, r"staged late-ECO hook lacks the runtime scope postcondition",
      "infra (stale admission bundle: late-ECO hook lacks the scope postcondition; re-attempt pins the current bundle)"),
+    # KIT-OPS-5 11-14 (COORD class fix): lec_async.sh exit 11 "LEC_ASYNC cannot migrate: [Errno 3] No such process" is a stale
+    # proof state carried into a resumed / copied kit (pid of the previous attempt's watcher is dead), never a design verdict.
+    # lec_async.sh (WF-1, main) clears that state itself on the next start, so the INFRA auto-retry heals it with no lane action.
+    ("INFRA", None, r"LEC_ASYNC cannot migrate", "infra (stale lec_async proof state, exit 11; the retry starts the proof afresh)"),
     # KIT-FIX-F 11-13 (option kit_snap): first, because the reason quotes input paths whose words later rules key on
     # (outline, blocked, ...).  A named input that no die host holds is FLOW (never the INFRA auto-retry loop).
     ("FLOW", r"^kit_snap$", r"KIT_INPUT_MISSING[^\n]*", "KIT_INPUT_MISSING: a kit input exists on no die host; restore it or repoint the die config"),
