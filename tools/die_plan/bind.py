@@ -45,6 +45,7 @@ Construction rules:
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import re
@@ -5621,6 +5622,17 @@ def kit_landed_ports(btxt):
     return out
 
 
+def kit_filelist_outside(files, roots):
+    """filelist paths (resolved) that lie in none of the roots"""
+    rr = [Path(r).resolve() for r in roots]
+    bad = []
+    for f in files:
+        p = Path(f).resolve()
+        if not any(p == r or r in p.parents for r in rr):
+            bad.append(str(p))
+    return bad
+
+
 def cmd_kit_rtl(a):
     """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
     The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
@@ -5910,6 +5922,15 @@ def cmd_kit_rtl(a):
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)
+    # GENBUG (COORD r107): kit-rtl resolves every source against the kit's OWN source tree.  The plan's asbuilt.base is an absolute
+    # path baked at bind time (B6gsl: run/b/B6gsl/src, whose ot_dp_clk_landing.sv was stale: GEN_LINT failed on the LOCAL defparam
+    # while the kit's src_rel2 copy was right).  --src-tree DIR (env OT_KIT_SRC_TREE) replaces the base; the filelist is then checked.
+    src_tree = getattr(a, "src_tree", None) or os.environ.get("OT_KIT_SRC_TREE")
+    if src_tree:
+        st = Path(src_tree).resolve()
+        if not (st / "rtl").is_dir():
+            raise BindError(f"kit-rtl {tn}: --src-tree {st} has no rtl/")
+        base = str(st)
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
@@ -6005,6 +6026,11 @@ def cmd_kit_rtl(a):
             BRC.stage(kd, bound_reset_source, bound_reset)
         except (ValueError, gen_rtl.GenError) as exc:
             raise BindError(f"kit-rtl {tn}: native reset export: {exc}") from exc
+    if src_tree:
+        outside = kit_filelist_outside(fl, [Path(base), out, kd])
+        if outside:
+            raise BindError(f"kit-rtl {tn}: {len(outside)} filelist path(s) outside the kit source tree {base} (and the bind "
+                            f"out / kit dir): {outside[:5]}")
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
     tree_mix = kit_tree_mix(tn, kd)
     # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
@@ -6012,7 +6038,7 @@ def cmd_kit_rtl(a):
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
                asbuilt_manifest=str(Path(a.asbuilt).resolve()) if a.asbuilt else None,
-               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
+               variants=variants, bind_out=str(out), src_tree=str(base) if src_tree else None, instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
                **({"dead_inputs": dead_doc} if dead_doc else {}),
                plan_buses_unbound=missing, **(dict(unbound_input_buses=unbound_inputs) if unbound_inputs else {}),
                bound_only_pins=extra, defines=kit_defines, files=[str(x) for x in fl],
@@ -6108,6 +6134,8 @@ def main(argv=None):
     k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
     k.add_argument("--asbuilt")
     k.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
+    k.add_argument("--src-tree", help="the kit's own source tree (src_rel2 copy): every kit source resolves against it, not the "
+                                      "plan's baked asbuilt.base; the filelist must lie inside it (env OT_KIT_SRC_TREE)")
     k.add_argument("--library-profile", help="explicit hash-pinned candidate library (kit_library_profile.v1): replaces "
                                              "captured sources in the kit closure; the captured bind stays unchanged")
     c = sub.add_parser("component-proof", help="read-only local source/port/reset checks; preserve global bind failure")

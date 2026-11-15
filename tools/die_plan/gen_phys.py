@@ -7293,6 +7293,11 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         if kit_rtl and tn in kit_rtl:
             import count_strap_evidence
             count_strap_evidence.write_for_kit(kits[-1], P.types[tn], Path(kit_rtl[tn]).with_name("kit_rtl.json"))
+            # GENBUG (COORD r107): the kit records the source tree it was generated from and the kit-rtl filelist, so
+            # kit_gen_lint can reject a source path outside that tree (a stale B6gsl/src beside the kit's own src_rel2 copy)
+            (Path(kits[-1]) / "kit_rtl_paths.json").write_text(json.dumps(dict(
+                schema="opentallas.kit_rtl_paths.v1", src_tree=str(Path(root).resolve()), filelist=str(Path(kit_rtl[tn]).resolve()),
+                files=[str(x) for x in mine]), indent=1) + "\n")
         if kit_rtl and tn in kit_rtl and (Path(kit_rtl[tn]).parent/'kit_topology.json').is_file():
             import kit_topology
             kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1],top=t['module'])
