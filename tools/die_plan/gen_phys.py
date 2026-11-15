@@ -2009,22 +2009,32 @@ def pg_face_cut_on(t):
 
 
 def lef_face_pins(path, layers=tuple(FACE_CUT_LAYERS), tol=FACE_PIN_TOL_UM):
-    """([(layer, (x0, y0, x1, y1))], (w, h)): macro-frame rects of SIGNAL/CLOCK pins on `layers` within tol of an edge."""
-    text = Path(path).read_text(errors="replace")
-    w, h = map(float, re.search(r"SIZE\s+([-\d.]+)\s+BY\s+([-\d.]+)", text).groups())
-    out = []
-    for m in re.finditer(r"\n\s*PIN\s+(\S+)(.*?)\n\s*END\s+\1\b", text, re.S):
-        body = m.group(2)
-        u = re.search(r"USE\s+(\w+)", body)
-        if (u.group(1) if u else "SIGNAL") not in ("SIGNAL", "CLOCK"):
+    """([(layer, (x0, y0, x1, y1))], (w, h)): macro-frame rects of SIGNAL/CLOCK pins on `layers` within tol of an edge.
+    Line scan (a 6 MB tile LEF took 94 s with the PIN ... END <pin> regex)."""
+    w = h = None
+    out, pin, use, layer, rects = [], None, "SIGNAL", None, []
+    for line in Path(path).read_text(errors="replace").splitlines():
+        tok = line.split()
+        if not tok:
             continue
-        for lm in re.finditer(r"LAYER\s+(\w+)\s*;(.*?)(?=LAYER|\bEND\b)", body, re.S):
-            if lm.group(1) not in layers:
-                continue
-            for r in re.finditer(r"RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", lm.group(2)):
-                x0, y0, x1, y1 = map(float, r.groups())
-                if min(x0, y0, w - x1, h - y1) < tol:
-                    out.append((lm.group(1), (x0, y0, x1, y1)))
+        k = tok[0]
+        if k == "SIZE" and w is None and len(tok) >= 4:
+            w, h = float(tok[1]), float(tok[3])
+        elif k == "PIN" and pin is None and len(tok) >= 2:
+            pin, use, layer, rects = tok[1], "SIGNAL", None, []
+        elif pin is None:
+            continue
+        elif "USE" in tok[:-1]:
+            use = tok[tok.index("USE") + 1].rstrip(";")
+        elif k == "LAYER" and len(tok) >= 2:
+            layer = tok[1].rstrip(";")
+        elif k == "RECT" and layer in layers and len(tok) >= 5:
+            rects.append((layer, tuple(float(v) for v in tok[1:5])))
+        elif k == "END" and len(tok) >= 2 and tok[1] == pin:
+            if use in ("SIGNAL", "CLOCK"):
+                out += rects
+            pin = None
+    out = [(ln, r) for ln, r in out if min(r[0], r[1], w - r[2], h - r[3]) < tol]
     return out, (w, h)
 
 
