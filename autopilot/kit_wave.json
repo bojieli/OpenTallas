@@ -669,7 +669,8 @@
     "kv3_hgi_v5": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a6 13 h on superseded event kv102sem_ftgrid; release on the current event",
     "kv3_pv_v1n*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1546 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1160 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-641 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key."
+    "kv3_hgi_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-641 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
+    "*": "KV-GEN-HOLD 11-15 (COORD): no KV kit generation or relaunch until MERGE-QUEUE-1 posts DONE (53 full_area_hard_ip schema fails = src skew). Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
