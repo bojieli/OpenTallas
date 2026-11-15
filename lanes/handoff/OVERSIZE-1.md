@@ -58,3 +58,4 @@ Correction: serdes__t1 is 72% flattened <top> logic, u_core is only 30k (9.5%); 
 - Corrected size attributions (anon ABC cells by net vote, attr.py): hub_C u_pvfin 267k (54%); serdes__t1 u_dec 172k + u_enc 68k (RTL split exists: OT_S81_RCK_REFORM); sle_hc0 xh0 56k + 8x xl0 27-31k. PLAN-ASKs posted to KV-102 (u_pvfin plan row needed before kit), DIE-QC-103 (hc lane masters), DIE-S81-92 (adopt RCK_REFORM + RCK core lane).
 - QC stm/fw: per FABLE-TYPES-QC-EAST cause B, re-measure after relay_bay.py fix before any split.
 - On SIGNED: export_view.py + archive AGIdock /archive/opentallas-signed-1114 + rtx-pro /home/ubuntu/signed-export-1114 (not done yet for the 4 KV rings).
+- 20:17 u_pvfin: kv3_pvfin_s kit epyc9 oversize-1/kvr (generator mk_pvfin.py), slot from KV-102 kvgeom6 (1296,48) 501.12^2; waiter watch4.sh.
