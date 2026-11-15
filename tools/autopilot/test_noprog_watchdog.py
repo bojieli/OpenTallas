@@ -164,6 +164,13 @@ def test_hbm_detection_and_type_names():
     assert nw.is_hbm("/srv/x/hbm-collect-1/ptwc3/kit")
     assert nw.is_hbm("trialhbm-fabric-3957235")
     assert not nw.is_hbm("dpkit-ot_s81sl_leaf__t1-4093762")
+    # KIT-OPS-6 11-14: a HEAD core built by the HBM core-kit generator is not HBM (die metadata decides, not the generator name)
+    head = ("hbmcore-kit_elemA_1-4093762 /srv/opentallas-scratch2/claude/type-hdcore-elemab/elemA/kit_elemA "
+            "/srv/opentallas-scratch2/claude/type-hdcore-elemab/elemA/kit_elemA/run bash run_kit_hbm.sh")
+    assert not nw.is_hbm(head)
+    # an HBM-die kit is still HBM, with or without the generator name
+    assert nw.is_hbm("hbmcore-kit_x-1 /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/ev/items/PHY_NE/gen/k run_kit_hbm.sh")
+    assert nw.is_hbm("dpkit-PHY_NE-1 /srv/x/claude/kit-ops-1/hbm_pEv11c/kit")
     assert nw.base_type("dpkit-col_h9_r0_p5__t1__pvb22875c0-1143335") == "col_h9_r0_p5__t1"
     assert nw.base_type("dpkit-serdes__t2-3945605-lec") == "serdes__t2"
     assert nw.base_type("dpkit-sle_sc_v1__cl64543eaf__cl5e017c6f-3460358") == "sle_sc_v1"
