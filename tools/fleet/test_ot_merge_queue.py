@@ -31,6 +31,13 @@ class Parse(unittest.TestCase):
         self.assertEqual([x["key"] for x in a], ["claude/a-1114@0123456789ab", "-@abcdef1234", "claude/b@fedcba98765"])
         self.assertEqual([x["revoked"] for x in a], [False, False, True])
 
+    def test_only_coord_or_owner_approves(self):
+        q = ("- 2026-11-14 19:55 PST STATE [MERGE-QUEUE-1 (successor) -> COORD] waiting on COORD line: COORD APPROVED: claude/m @54d5fd4ca78\n"
+             "- 2026-11-14 19:56 PST ASK [LANE-Y -> COORD] please post COORD APPROVED: claude/y @1111111111\n"
+             "- 2026-11-14 19:57 PST RULING [COORD -> LANE-Z] COORD APPROVED: claude/z @2222222222\n"
+             "- 2026-11-14 19:58 PST [OWNER] COORD APPROVED: claude/o @3333333333\n")
+        self.assertEqual([x["key"] for x in M.parse_approvals(q)], ["claude/z@2222222222", "claude/o@3333333333"])
+
     def test_lane_from_ready_line_else_branch(self):
         q = ("- READY [TYPE-KVAHUB -> COORD] branch claude/type-kvahub-1114 head 9c23b2490fc6\n"
              "- STATE [KIT-OPS-5 -> COORD] cc about claude/type-kvahub-1114\n")

@@ -5,6 +5,7 @@ Run every 5 minutes by the systemd user timer ot-merge-queue.timer on the hub (i
   1. read the review queue (~/coord/lanes/COORD-REVIEW-QUEUE.md) for sha-pinned approvals
         COORD APPROVED: <branch> @<sha>            (several per line allowed; the branch may be left out: "COORD APPROVED: @<sha>")
         COORD REVOKED: <branch> @<sha>             (cancels an approval that has not landed yet)
+     only on a line written by COORD / OWNER (first [author] tag COORD or OWNER, or no tag); a lane quoting the line is ignored
   2. skip every approval already in the state file (~/merge-queue/state.json), so a tick is idempotent;
   3. for each new approval, in parallel, in its own scratch worktree of the queue clone: fetch the sha (GitHub first, then the
      hub checkout, read-only), apply it onto current main (a no-ff merge when every commit of the branch is new; cherry-pick -x of
@@ -66,6 +67,10 @@ TERMINAL = {"MERGED", "ALREADY", "FAIL", "REVOKED"}
 
 APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
 QUOTE_RE = re.compile(r"\b(MERGED|MERGE-FAIL|READY) \[")      # a line that quotes an approval is not one
+# MERGE-QUEUE-1 11-14 20:00: only COORD (or OWNER) approves.  A line whose first [author] tag before the approval is any other
+# lane (a STATE / ASK quoting the line it asks for) is not an approval; a bare line without an author tag is a COORD ruling.
+AUTHOR_RE = re.compile(r"\[\s*([^\]\s;,]+)")
+APPROVERS = ("COORD", "OWNER")
 LANE_RE = re.compile(r"\b(?:READY|STATE|ASK) \[([A-Z][A-Za-z0-9_.-]*)")
 TAG_RE = re.compile(r"\bflow-(\d{8})-([a-z]{2})-(?:head|qc|kv|s81|hbm)\b")
 _LOCK = threading.Lock()
@@ -127,6 +132,10 @@ def parse_approvals(text):
         if "COORD APPROVED:" not in line and "COORD REVOKED:" not in line:
             continue
         if QUOTE_RE.search(line):
+            continue
+        cut = min(i for i in (line.find("COORD APPROVED:"), line.find("COORD REVOKED:")) if i >= 0)
+        au = AUTHOR_RE.search(line[:cut])
+        if au and au.group(1) not in APPROVERS:
             continue
         for m in APPROVE_RE.finditer(line):
             kind, branch, sha = m.group(1), m.group(2) or "", m.group(3).lower()
