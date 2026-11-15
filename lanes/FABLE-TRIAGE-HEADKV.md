@@ -303,8 +303,8 @@ flops on clock-tree nodes and one start port per clock-tree edge.
 - Count-aligned STA on that bind (same directory, sta_clk; MEASURED): start-skew fail 0 of 193 in TT and in FF,
   crossings fail 0, slot-read 0, guard 0, worst lo 190.0 / 203.7 ps. The verdict line still says FAIL for one
   remaining reason: 320 crossings have no STA tap pair ("no taps 320", the phy-side ports; they fail closed).
-  That is a proof coverage gap in the clock kit, not a timing result: the die clock kit must emit taps for those
-  partitions (owner DIE-KV-ROUTE-1).
+  CORRECTED in section 21: this is not a missing-tap gap in the clock kit. The taps exist; the interval builder
+  skips these 320 crossings because both ends are in one clock region.
 - Owner: KV-102 (plan event: start form clock, start ports and retime stages via start_stage_emit; the plan
   already carries start_i / start_o ports); DIE-KV-ROUTE-1 switches ca_p1.sh to `--start-tree clock` and reruns.
 - Not recommended: shortening the 10 feeds or padding per edge; it treats 14 rows and leaves the form.
@@ -820,3 +820,39 @@ fixed context. Then every DRC that a unit reports is a true die DRC, and nothing
 Not verified by me: the special-wire conversion of routed nets, `drt::check_drc`'s argument list and its memory
 on a 2.2 mm tile, and all runtimes.
 Owners: DIE-HEAD-ROUTE-1 (script and HEAD), DIE-KV-ROUTE-1 (KV).
+
+## 21. KV: the 320 crossings without a measured interval (kvgeom6, epyc10 runs6/p6/gate_native), 04:4x PST
+
+**Why they get no interval: a crossing class the builder skips.** MEASURED:
+- All 320 are the pc <-> phy crossings of the 32 pc/phy partition pairs: 4 buses pc -> phy (`o_kvpc_Q_N_pc__po`,
+  `_d1.._d3`) and 6 buses phy -> pc (`o_phy_Q__sN_fhN`, `_rhN`, `_piN`, `_piN_d1.._d3`), 10 x 32.
+- KV has 160 partitions in 128 clock regions; the 32 regions that hold two partitions are exactly these pairs.
+  For all 320 ports the source and destination taps hang from the same clock-tree node.
+- `die_sta_related.build_pairs` (line 1458) puts a tap pair into the class "seam" when both taps share that
+  node, and into "landed" otherwise. `count_align_port_intervals` is fed the landed pairs only. So a count-aligned
+  port whose two partitions are in one region never receives a tap pair and is reported as "no taps". The planner
+  uses the same function, which is why its 320 rows keep the model interval and have no measured fall.
+- Not unmapped pins, not port naming, not a different clock net, and not missing taps. My line in section 7.3
+  ("the clock kit must emit taps") was wrong and is corrected there.
+
+**Fix (tool, one place).** In die_sta_related, give `count_align_port_intervals` the landed pairs plus every
+seam pair whose partition pair is named by a count-aligned port, and take those pairs out of the single-cycle
+seam class (they are ring crossings; they are judged twice today, once wrongly). Planner and gate share the
+function, so both are fixed together. Add a test with one same-region ring. Expect "no taps 0" and 3,915 rows.
+Owner KIT-OPS-6 (with the die_chain_ca tool); DIE-KV-ROUTE-1 reruns plan, bind and STA.
+INFERENCE: the 19 seam-contract failures of this run (window needed 200.96 against 180, worst
+phy_EN_7 -> pc_EN_7 on the early core tap clk_c2) are among these same pairs and leave the seam class with them.
+
+**Are the 320 safe now? Yes, by a static bound.** My computation on the p6 proof (tap_arrivals TT and FF,
+bind.json):
+- For each port: phase d between every register tap of the destination and every register tap of the source,
+  both corners, common path removed at the shared region node, the full late/early split kept on the unshared
+  local trees (about 630 ps late / 550 ps early), core taps excluded. This is wider than the real tap pairs.
+- Result: |d| is at most 263.8 ps over all 320. The planned intervals lie within +-207.3 ps; the bound exceeds
+  a port's planned interval by at most 212.4 ps.
+- Margins after subtracting that excess: low side at least 130.4 ps (worst pc_WN_6 -> phy_WN_6, plan 282.1),
+  high side at least 1,796 ps. 0 ports below 100 ps, 0 below 0. All 320 are at depth 4.
+- So the count-aligned part of the KV die gate can be judged now: 3,595 crossings measured PASS (TT worst
+  +162.8 / +877.3, FF +203.7 / +804.3, start-skew 0 of 187) and 320 same-region crossings bounded at
+  +130 ps or better. Report it that way; the verdict line keeps printing FAIL until the tool fix is in.
+- Limit: the bound is on die clock arrivals with declared partition insertion, like the rest of this gate.
