@@ -936,10 +936,6 @@ class Binder:
             if r["new_unconnected_ports"]:
                 self.errors.append(f"PARENT_VARIANT_NEW {r['inst']} -> {r['variant']}: ports not in the as-built "
                                    f"instance: {r['new_unconnected_ports'][:8]}")
-        # FABLE-PD-QCC-0740: a plan hard-core param_wrap row must equal the bound instance (module + parameters)
-        import hard_core_param
-        for _m in hard_core_param.mismatches(plan, self.F.cells, self.R.part_of, self.R.local_of, self.param_defaults):
-            self.errors.append(f"HARD_CORE_PARAM_WRAP {_m}")
         if self.ab.get("reducers_keep_plan_contents"):
             # asbuilt.reducers_keep_plan_contents: a reducer instance (fault OR ...) that the plan lists in its
             # partition type's `contents` stays a leaf there instead of being dissolved and re-emitted per sink
@@ -3293,6 +3289,10 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
+            # FABLE-PD-QCC-0740: a plan hard-core param_wrap row must equal the instance this bind just emitted (module + params)
+            import hard_core_param
+            for _m in hard_core_param.check_bound_text(tn, f.read_text(), t.get("hard_cores")):
+                self.errors.append(f"HARD_CORE_PARAM_WRAP {_m}")
             # KV-98 11-12 (COORD): port_relays apply AFTER station materialization so a relay can name a native u_ist_* flop
             # (the kit_istations stations only exist in the file once materialize has run).
             port_relays = t.get("reset", {}).get("port_relays")
