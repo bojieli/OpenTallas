@@ -34,3 +34,17 @@ def test_wt_reaper_refuses_a_tree_that_contains_a_listed_source(tmp_path):
                       listed=[(str(wt / "views" / "m"), "kit_wave.json prov_view_sources")])
     assert why and "listed source" in why
     assert W.protected(str(wt), str(tmp_path / "admin"), str(tmp_path / "common"), listed=[]) is None
+
+
+def test_autoclean_reads_protect_d(tmp_path):
+    """KIT-OPS-6 11-15: ot-autoclean's protection also comes from protect.d/*.txt (one live source of truth with wt-reaper)"""
+    A = load("ot_autoclean_mod2", "ot-autoclean.py")
+    (tmp_path / "hub-kit-wave-live.txt").write_text("/srv/opentallas-scratch2/claude/qct13/views/m\n# c\n\nnot a path\n")
+    (tmp_path / "other.json").write_text("/srv/x\n")
+    rows = A.read_protect_d(str(tmp_path))
+    assert rows == [("/srv/opentallas-scratch2/claude/qct13/views/m", "protect.d/hub-kit-wave-live.txt")]
+    assert A.read_protect_d(str(tmp_path / "none")) == []
+    ps = A.PathSet(rows)
+    assert ps.hit("/srv/opentallas-scratch2/claude/qct13") .startswith("holds ")
+    src = (HERE / "ot-autoclean.py").read_text()
+    assert "rows = list(rows) + read_protect_d()" in src
