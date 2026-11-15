@@ -118,7 +118,16 @@ class PlanPrio(unittest.TestCase):
         r = ["bash", "run_kit.sh", "route"]
         self.assertTrue(self.gate(500, r, waiting=[600], mem=48, cls="route").startswith("NO 48 route | PLAN-FIRST"))
         self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[8000], mem=48, cls="route"))
+        self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[300], mem=48, cls="route", env={"PLAN_DRAIN_S": "600"}))      # PLAN_DRAIN_S: 5 min does not drain yet
+        self.assertTrue(self.gate(500, r, waiting=[900], mem=48, cls="route", env={"PLAN_DRAIN_S": "600"}).startswith("NO 48 route | PLAN-FIRST"))
         self.assertNotIn("PLAN-FIRST", self.gate(500, r, waiting=[600], mem=4, cls="gen"))          # small jobs are never held
+
+
+    def test_older_plan_waiter_goes_first(self):
+        self.assertTrue(R.older_plan_waiting(100.0, [5000.0]))
+        self.assertFalse(R.older_plan_waiting(5000.0, [100.0]))
+        self.assertFalse(R.older_plan_waiting(100.0, [120.0]))                    # within the 30 s margin
+        self.assertFalse(R.older_plan_waiting(100.0, []))
 
 
 if __name__ == "__main__":
