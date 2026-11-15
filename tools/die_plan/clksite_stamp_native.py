@@ -180,6 +180,43 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
             nodes[v["parent"]]["kids"].append(nid)
     for v in nodes.values():
         v["kids"] = [k for k in v.get("kids", []) if k in nodes]
+    # POLARITY: a re-laid boundary leg (no chain: the kit lays it out with nrep = ceil(L / rep) - 1 repeaters) must give the
+    # child the inverter parity it had in the template.  Where it does not, one parity node X is inserted on the leg at a
+    # fraction that makes both half-legs add up (the "parity site"); node parity = parent ^ ((nrep + 1) & 1) per leg.
+    def nrep_of(a_, b_):
+        return max(0, math.ceil((abs(a_["x"] - b_["x"]) + abs(a_["y"] - b_["y"])) / rep_um) - 1)
+    nx = max(list(nodes) + [nxt]) + 1
+    pfix = dict(checked=0, inserted=0, unsolved=0)
+    for c in [i for i, v in list(nodes.items()) if v.get("stamp_leg") and v.get("parent") in nodes]:
+        v = nodes[c]; pr = nodes[v["parent"]]
+        pfix["checked"] += 1
+        want = (v.get("inv_parity", 0) ^ pr.get("inv_parity", 0)) & 1
+        if (nrep_of(pr, v) + 1) & 1 == want:
+            continue
+        done = False
+        for f in [0.5, 0.45, 0.55, 0.4, 0.6, 0.35, 0.65, 0.3, 0.7, 0.25, 0.75]:
+            L = abs(pr["x"] - v["x"]) + abs(pr["y"] - v["y"])
+            dx = abs(v["x"] - pr["x"])
+            t = L * f
+            xx = pr["x"] + math.copysign(min(t, dx), v["x"] - pr["x"])
+            yy = pr["y"] + math.copysign(max(0.0, t - dx), v["y"] - pr["y"])
+            X = dict(v); X.pop("stamp_leg", None); X.pop("physical_leg", None); X.pop("detour", None)
+            X.update(id=nx, x=round(xx, 3), y=round(yy, 3), parent=v["parent"], kids=[c], taps=[], ntaps=0)
+            X["req_xy"] = [X["x"], X["y"]]
+            n1, n2 = nrep_of(pr, X), nrep_of(X, v)
+            X["inv_parity"] = (pr.get("inv_parity", 0) ^ ((n1 + 1) & 1)) & 1
+            if (X["inv_parity"] ^ ((n2 + 1) & 1)) & 1 == v.get("inv_parity", 0) & 1:
+                X["stamp_leg"] = dict(leg_price((pr["x"], pr["y"]), (X["x"], X["y"]), rep_um)[0], note="parity node")
+                v["stamp_leg"] = leg_price((X["x"], X["y"]), (v["x"], v["y"]), rep_um)[0]
+                pr["kids"] = [nx if k == c else k for k in pr["kids"]]
+                v["parent"] = nx
+                nodes[nx] = X; newN[nx] = X; newnb[nx] = f"b{nx}"
+                newsites[f"b{nx}"] = [X["x"], X["y"]]
+                nx += 1; pfix["inserted"] += 1; done = True
+                break
+        if not done:
+            pfix["unsolved"] += 1
+    rep["parity_nodes"] = pfix
     nbo = {i: s for i, s in nb.items() if i not in drop}; nbo.update(newnb)
     so = {k: v for k, v in sites.items() if k not in {nb[i] for i in drop}}; so.update(newsites)
     for nid, v in newN.items():
