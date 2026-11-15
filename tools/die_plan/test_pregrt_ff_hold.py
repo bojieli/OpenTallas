@@ -108,7 +108,7 @@ def test_fail_safe_conditions(tmp_path):
     _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     assert "TT setup loss" in t and "no hold gain" in t and "tool error" in t
-    assert "proc pg_verdict" in t and "[pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]" in t
+    assert "proc pg_verdict" in t and "[pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1 [sta::endpoint_violation_count min]]" in t
 
 
 def _verdict(tmp_path, args, env=None):
@@ -136,6 +136,8 @@ def _verdict(tmp_path, args, env=None):
     ((-100.0, 4.9, 100, -20.0, -80.0), False),         # 60 ps loss through the gate: still rejected
     ((-84.15, -84.15, 515, -562.4, -562.4), False),    # no hold gain
     ((0.0, 0.0, 0, -50.0, -50.0), True),               # no debt, nothing changed
+    ((-110.69, -110.69, 9000, -5.0, -6.0, 2400), True),   # HOLD-GRT-2: setup-locked worst port, endpoints 9000 -> 2400 = gain
+    ((-110.69, -110.69, 9000, -5.0, -6.0, 9000), False),  # same WNS, nothing closed
 ])
 def test_accept_verdict(tmp_path, args, ok):
     v = _verdict(tmp_path, args)

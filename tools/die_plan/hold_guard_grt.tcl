@@ -18,11 +18,33 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     (![info exists ::env(OT_HOLD_GUARD)] || $::env(OT_HOLD_GUARD) ne "0")} {
   rename ::repair_timing_helper ::ot_hg_rth_orig
   proc ::ot_hg_num {k d} { expr {[info exists ::env($k)] && [string is double -strict $::env($k)] ? $::env($k) : $d} }
+  # HOLD-GRT-2 11-15 (FABLE-TRIAGE-QC M3): the stall judge reads the endpoints the repair can move = every hold path that does
+  # not start at an input port.  A port_in endpoint whose pad needs more setup room than the contract leaves (relay inputs
+  # -max 676 / -min -85) is printed as PORT_SEAM (advisory, judged by die STA) and never stalls the kit.  OT_HOLD_PORT_SEAM=0
+  # restores the all-endpoint stats.
   proc ::ot_hg_stats {} {
+    if {![info exists ::env(OT_HOLD_PORT_SEAM)] || $::env(OT_HOLD_PORT_SEAM) ne "0"} {
+      if {![catch {
+        set ps [find_timing_paths -path_delay min -from [all_registers -clock_pins] -group_path_count 3000000 -endpoint_path_count 1 -slack_max 0]
+        set w 1.0e9; set t 0.0
+        foreach pe $ps { set sl [sta::time_sta_ui [$pe slack]]; if {$sl < $w} { set w $sl }; set t [expr {$t + $sl}] }
+      } msg]} {
+        if {![llength $ps]} { set w 1.0e3 }
+        return [list $w $t [llength $ps]]
+      }
+      puts "OT_HOLD_GUARD_GRT: movable-class stats unavailable ($msg); all-endpoint stats"
+    }
     set w [worst_slack -min]
     set t [total_negative_slack -min]
     set n -1; catch { set n [sta::endpoint_violation_count min] }
     return [list $w $t $n]
+  }
+  proc ::ot_hg_port_seam {} {
+    if {[catch {
+      set ps [find_timing_paths -path_delay min -from [all_inputs -no_clocks] -group_path_count 3000000 -endpoint_path_count 1 -slack_max 0]
+      set w 0.0; foreach pe $ps { set sl [sta::time_sta_ui [$pe slack]]; if {$sl < $w} { set w $sl } }
+      puts [format "OT_PORT_SEAM stage=grt port_in hold endpoints %d ws %.2f (advisory: die STA judges the seam, not the kit stall)" [llength $ps] $w]
+    } msg]} { puts "OT_PORT_SEAM unavailable ($msg)" }
   }
   proc ::ot_hg_strip {args_in flag {val 0}} {
     set out {}
@@ -102,6 +124,7 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
       }
       set nb [expr {min($bmax, max($bmin, double($added) / $dt * $cs))}]
     }
+    ::ot_hg_port_seam
     if {$capped} { puts "OT_HOLD_GUARD_GRT: chunk buffer caps reached (RSZ-0060 caught per chunk); continuing on the repaired design" }
   }
   puts "OT_HOLD_GUARD_GRT installed (single-mode GRT hold repair progress/time bound)"

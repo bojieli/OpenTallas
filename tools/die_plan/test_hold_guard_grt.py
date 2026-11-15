@@ -133,3 +133,16 @@ def test_hooks_source_guard():
     assert "hold_guard_grt.tcl" in (HERE / "grt_pre.tcl").read_text()
     for f in ("gen_phys.py", "core_flow.py"):
         assert '"hold_guard_grt.tcl"' in (HERE / f).read_text(), f
+
+
+def test_port_seam_stats_and_line_present_and_tcl_complete():
+    """HOLD-GRT-2: the stall judge reads non-port-start hold paths; port_in residue is an advisory OT_PORT_SEAM line."""
+    t = (HERE / "hold_guard_grt.tcl").read_text()
+    assert "OT_HOLD_PORT_SEAM" in t and "proc ::ot_hg_port_seam" in t and "OT_PORT_SEAM stage=grt" in t
+    assert "-from [all_registers -clock_pins]" in t and "-from [all_inputs -no_clocks]" in t
+    import shutil, subprocess
+    tclsh = shutil.which("tclsh")
+    if tclsh:
+        r = subprocess.run([tclsh], input="set f [open %s]; set t [read $f]; close $f; puts [info complete $t]" % (HERE / "hold_guard_grt.tcl"),
+                           capture_output=True, text=True)
+        assert r.stdout.strip() == "1", r.stdout + r.stderr

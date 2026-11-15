@@ -98,12 +98,15 @@ if {$pg_auto >= 0} {
 # WNS is already far below the gate (hc0 -515.45 -> -518.27, stm_v1 -8.12 -> -9.62): a worst path no hold cell sits on moves a
 # few ps with every legalized cell, and the GRT setup repair owns that term.  Hold: a gain of >= 1 ps on a kit with hold debt.
 # Returns "" (accept) or the FALLBACK reason.
-proc pg_verdict {w0 w1 n0 s0 s1} {
+proc pg_verdict {w0 w1 n0 s0 s1 {n1 -1}} {
   set gate -42.0; set tol 5.0
   if {[info exists ::env(OT_PREGRT_SETUP_GATE)] && [string is double -strict $::env(OT_PREGRT_SETUP_GATE)]} { set gate $::env(OT_PREGRT_SETUP_GATE) }
   if {[info exists ::env(OT_PREGRT_SETUP_TOL)] && [string is double -strict $::env(OT_PREGRT_SETUP_TOL)]} { set tol $::env(OT_PREGRT_SETUP_TOL) }
   if {$s1 < $gate && $s1 < [expr {min($s0, 0.0) - $tol}]} { return [format "TT setup loss %.2f -> %.2f (gate %.1f, tol %.1f)" $s0 $s1 $gate $tol] }
-  if {$w1 < $w0 + 1.0 && $n0 > 0} { return [format "no hold gain %.2f -> %.2f" $w0 $w1] }
+  # HOLD-GRT-2 11-15 (FABLE-TRIAGE-QC M3): the hold arm credits the repair for what it moved, not for the kit WNS.  A kit whose
+  # worst endpoint is a setup-locked relay input port (stm_v1 q[208]: needs 98 ps of pad, 72 ps of setup room) keeps its WNS
+  # while thousands of other endpoints close; the endpoint count n1 < n0 is the gain then (stm_v1 cl2774 -110.69 -> -110.69).
+  if {$w1 < $w0 + 1.0 && $n0 > 0 && !($n1 >= 0 && $n1 < $n0)} { return [format "no hold gain %.2f -> %.2f (endpoints %d -> %d)" $w0 $w1 $n0 $n1] }
   return ""
 }
 proc pg_hold {} { return [sta::time_sta_ui [sta::worst_slack_cmd min]] }
@@ -261,7 +264,7 @@ if {[catch {
 foreach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }
 if {$pg_fail eq ""} {
   set pg_w1 [pg_hold]; set pg_s1 [pg_setup]
-  set pg_fail [pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]
+  set pg_fail [pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1 [sta::endpoint_violation_count min]]
 }
 if {$pg_fail ne ""} {
   puts "OT_PREGRT_FF_HOLD FALLBACK $pg_fail: 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt"
