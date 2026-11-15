@@ -35,7 +35,7 @@ def data_set(c):
     return tuple(sorted(p["name"] for p in c["pins"] if not is_mon(p["name"])))
 
 
-def build(plan, side, fam_re=None):
+def build(plan, side, fam_re=None, collector_only=False, keep_tree=False):
     P = plan["partition_types"]; rep = {}
     fam = collections.defaultdict(list)
     for k in P:
@@ -88,7 +88,7 @@ def build(plan, side, fam_re=None):
                 b = copy.deepcopy(bandsrc[key]); b["instance"] = f"u_cland_monitor_{i}"; bands[f"monitor_{i}"] = b
             if key[1] and key in clksrc:
                 e = copy.deepcopy(clksrc[key]); e["port"] = f"fclk_in_cland_dn_{i}"; ecl.append(e)
-        members = [k for k in ks if k not in outliers]
+        members = [k for k in (L if collector_only else ks) if k not in outliers]   # collector_only: plain tiles keep their form (no R3b)
         base = P[members[0]]["clock"].get("added_taps", []); first = int(re.sub(r"\D", "", base[0]["name"])) if base else 16
         seen = []
         for k in members:
@@ -103,6 +103,8 @@ def build(plan, side, fam_re=None):
             lc.update(pins=copy.deepcopy(newpins), collector_children=copy.deepcopy(rows), bands=copy.deepcopy(bands),
                       tieable_children=copy.deepcopy(tie), registered_monitor=True)
             if any(r["seam"] for r in rows): lc["forwarded_clock_only_inputs"] = True
+            if keep_tree and "collector_tree" in (ck.get("landing_contract") or {}):
+                lc["collector_tree"] = ck["landing_contract"]["collector_tree"]   # the member own tree (from compose), not the template copy
             ck["landing_contract"] = lc; ck["edge_clocks"] = copy.deepcopy(ecl); ck["added_taps"] = copy.deepcopy(taps)
             if ss: ck["sink_sites_um"] = [list(x) for x in ss]
             if stT is not None:
@@ -139,11 +141,11 @@ def identities(plan, rx=r"^col_", ignore=("param_set", "module", "note", "param_
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("plan"); ap.add_argument("side"); ap.add_argument("oplan"); ap.add_argument("oside")
-    ap.add_argument("--fam"); ap.add_argument("--report")
+    ap.add_argument("--fam"); ap.add_argument("--report"); ap.add_argument("--collector-only", action="store_true"); ap.add_argument("--keep-tree", action="store_true")
     a = ap.parse_args()
     plan = json.load(open(a.plan)); side = json.load(open(a.side))
     before = len(identities(plan))
-    rep = build(plan, side, a.fam)
+    rep = build(plan, side, a.fam, a.collector_only, a.keep_tree)
     after = identities(plan)
     geo = identities(plan, ignore=("param_set", "module", "note", "param_base_type", "hard_cores"))
     cl = collections.defaultdict(int)
