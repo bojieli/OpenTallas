@@ -52,8 +52,9 @@ def check_bound_text(tn, text, hard_cores):
                 got = param_wrap.bound_strap_value(pw["base"], have, k)
                 if got is None or got != int(v):
                     out.append(f"{where} ({inst}): strap {k} ties {v}, bound {param_wrap.strap_param(k)} is {got}")
+        skip = param_wrap.strapped_params(straps) if straps else set()
         for k, v in pw["params"].items():
-            if straps and k in param_wrap.SKEW_KEYS:
+            if k in skip:
                 continue
             got = have.get(k)
             if got is None or _int(got) != int(v):

@@ -58,3 +58,29 @@ def test_rows_without_straps_behave_as_before():
     assert "m_w u_u_r0 (" in b and "strap" not in b and "strap" not in s["m_w"]
     with pytest.raises(ValueError, match="plan says"):
         PW.wrap_bound(_bound("#(.SKEW_N(9))"), [row])
+
+
+# ---- s2 master: HI_PAD strapped too (strap_hi_pad[4:0]) ----
+S2 = {"strap_skew_n": 9, "strap_skew_s": 11, "strap_hi_pad": 18}
+
+
+def test_hi_pad_strap_ties_and_is_not_matched():
+    b, r, s = PW.wrap_bound(_bound("#(.HI_PAD(18), .SKEW_N(9), .SKEW_S(11))"), [_row(S2, params={})])
+    assert ".strap_skew_n(5'd9), .strap_skew_s(5'd11), .strap_hi_pad(5'd18)," in b
+    t = s["sta_region_strap_s2"] if "sta_region_strap_s2" in s else s["sta_region_strap_s1"]
+    assert "strap_hi_pad" in t and t.count("input  wire [4:0] strap_") == 3
+    # a row that still lists HI_PAD in params: it is a strap now, so the plan value is not matched in the text
+    PW.wrap_bound(_bound("#(.HI_PAD(18), .SKEW_N(9), .SKEW_S(11))"), [_row(S2, params={"HI_PAD": 5})])
+    # the skew-only row (s1 form) still compares HI_PAD in the text
+    with pytest.raises(ValueError, match="plan says"):
+        PW.wrap_bound(_bound("#(.HI_PAD(17), .SKEW_N(8), .SKEW_S(9))"), [_row()])
+
+
+def test_hi_pad_strap_range_and_required_pair():
+    with pytest.raises(ValueError, match="does not fit 5 bits"):
+        PW.wrap_bound(_bound("#()"), [_row(dict(S2, strap_hi_pad=32), params={})])
+    with pytest.raises(ValueError, match="must include"):
+        PW.wrap_bound(_bound("#()"), [_row({"strap_hi_pad": 3}, params={})])
+    assert PW.bound_strap_value(NB0, {}, "strap_hi_pad") == 0          # HI_PAD default 0
+    assert PW.bound_strap_value(NB0, {"SKEW": "12"}, "strap_skew_n") == 12
+    assert PW.bound_strap_value(NB0, {"SKEW": "12", "HI_PAD": "7"}, "strap_hi_pad") == 7

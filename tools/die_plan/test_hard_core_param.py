@@ -54,3 +54,12 @@ def test_strap_value_differing_from_bound_skew_is_error():
     assert len(r) == 2 and "strap strap_skew_n ties 8, bound SKEW_N is 9" in r[0] and "strap_skew_s ties 9, bound SKEW_S is 10" in r[1]
     r = H.check_bound_text("T", _nb0("#(.HI_PAD(17), .SKEW_N(8), .SKEW_S(9))"), [SROW])
     assert len(r) == 1 and "HI_PAD bound 17, plan param_wrap 18" in r[0]
+
+
+def test_hi_pad_strap_checked_against_bound_hi_pad():
+    row = dict(SROW, param_wrap=dict(base=NB0, params={}, straps={"strap_skew_n": 9, "strap_skew_s": 11, "strap_hi_pad": 18}))
+    assert H.check_bound_text("T", _nb0("#(.HI_PAD(18), .SKEW_N(9), .SKEW_S(11))"), [row]) == []
+    r = H.check_bound_text("T", _nb0("#(.HI_PAD(17), .SKEW_N(9), .SKEW_S(11))"), [row])
+    assert len(r) == 1 and "strap strap_hi_pad ties 18, bound HI_PAD is 17" in r[0]
+    row0 = dict(row, param_wrap=dict(row["param_wrap"], straps={"strap_skew_n": 14, "strap_skew_s": 14, "strap_hi_pad": 0}))
+    assert H.check_bound_text("T", _nb0(""), [row0]) == []                  # all module defaults: SKEW 14, HI_PAD 0
