@@ -45,3 +45,9 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 - r64 genbug chain MERGED in order: fable-genbug 64d6a174f5d, genbug-impl def02ae19f6, dly-spread a7a198aeb79, dly-spread-list ad22c56cc3b (cherry-pick, 2 already in main).
 - r65 s81-phypg-1 @e31f9ccd5c: was hub-only; fetched from hub + pushed to origin (no force); MERGED a55cbe3c34d.
 - Open: 06:00 daily refresh (ot-src-refresh.timer) + hourly drift; QC gen_phys.py / HEAD check.py conflicts from 00:24 still with DIE-QC-103 / HEAD-99.
+
+## 2026-11-15 04:0x
+- ot-src-refresh installed at ~/.local/bin/ot-src-refresh on all 7 hosts. On intel2 it is a wrapper that runs rt/current's copy, falling back to ot-src-refresh.main. On the 6 gen hosts it is a wrapper that runs it on intel2 over ssh (kit_wave.json, ~/merge-queue and coord-commit live only there). Not on non-interactive PATH, so call it by full path.
+- The 03:46 dry daily with the main tool failed the staged smoke on all 4 dies. Fix: branch claude/src-refresh-deps-1115 @33dde953101 (READY posted 04:0x): missing_deps() ADDs imported main modules; smoke allows odb/openroad. The dry run with the fix passes on every host.
+- If it is not landed by 06:00, the daily swaps nothing (safe). After it lands, run it by hand: systemctl --user start ot-src-refresh.service on intel2 (only between waves).
+- Die trees vs main list: intel2:/srv/opentallas-scratch2/claude/mq1/tmp/vsmain-0400.out (script vsmain.py beside it).
