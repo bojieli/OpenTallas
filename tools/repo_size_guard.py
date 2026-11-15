@@ -15,7 +15,7 @@ Usage:
   repo_size_guard.py --range BASE..HEAD        objects of the range (full or blob:none clone; CI, merge queue)
   repo_size_guard.py --staged                  the index (pre-commit hook)
   repo_size_guard.py --paths F [F ...]         working-tree files
-Exit 1 when any file is rejected; prints one line per rejection.  stdlib only, python3 -I.
+WARN-ONLY (COORD 11-14, no procedural gates): prints one line per rejection and exits 0; --strict exits 1.  stdlib only, python3 -I.
 """
 import argparse, fnmatch, os, re, subprocess as S, sys
 
@@ -100,6 +100,7 @@ def main(argv=None):
     ap.add_argument("--max-mb", type=float, default=5.0)
     ap.add_argument("--gen-mb", type=float, default=1.0)
     ap.add_argument("--hard-mb", type=float, default=95.0)
+    ap.add_argument("--strict", action="store_true", help="exit 1 when any file is rejected (default: warn only)")
     ap.add_argument("--allowlist", default=os.path.join(HERE, "repo_size_allowlist.txt"))
     a = ap.parse_args(argv)
     allow = load_allow(a.allowlist)
@@ -121,7 +122,7 @@ def main(argv=None):
             print(f"REJECT {p}: {why}")
     print(f"repo_size_guard: {len(rows)} files checked, {bad} rejected"
           + ("" if not bad else " (archive them and commit a manifest, or add a reviewed glob to tools/repo_size_allowlist.txt)"))
-    return 1 if bad else 0
+    return 1 if (bad and a.strict) else 0
 
 
 if __name__ == "__main__":

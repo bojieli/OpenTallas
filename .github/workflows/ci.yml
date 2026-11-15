@@ -143,7 +143,9 @@ jobs:
         with:
           fetch-depth: 0
           filter: blob:none
+      # WARN-ONLY (COORD 11-14: no procedural gates): reports, never fails the build.
       - name: New files over 5 MB / generated types outside the allowlist
+        continue-on-error: true
         env:
           BEFORE: ${{ github.event.before }}
           BASE: ${{ github.event.pull_request.base.sha }}

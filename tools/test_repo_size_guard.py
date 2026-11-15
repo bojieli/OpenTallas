@@ -12,7 +12,7 @@ def git(d, *a):
 
 
 def guard(d, *a):
-    return S.run([sys.executable, "-I", str(GUARD), *a], cwd=d, capture_output=True, text=True)
+    return S.run([sys.executable, "-I", str(GUARD), "--strict", *a], cwd=d, capture_output=True, text=True)
 
 
 def repo():
@@ -65,3 +65,12 @@ def test_hard_cap_ignores_allowlist():
     assert guard(d, "--range", "HEAD~1..HEAD", "--allowlist", str(d / "allow.txt")).returncode == 0
     r = guard(d, "--range", "HEAD~1..HEAD", "--allowlist", str(d / "allow.txt"), "--hard-mb", "1")
     assert r.returncode == 1 and "hard cap" in r.stdout
+
+
+def test_default_is_warn_only():
+    d = repo()
+    (d / "x.odb").write_bytes(b"odb")
+    git(d, "add", "."); git(d, "commit", "-qm", "c")
+    r = S.run([sys.executable, "-I", str(GUARD), "--range", "HEAD~1..HEAD", "--allowlist", str(d / "none")],
+              cwd=d, capture_output=True, text=True)
+    assert r.returncode == 0 and "REJECT x.odb" in r.stdout
