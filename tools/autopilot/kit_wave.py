@@ -6721,6 +6721,14 @@ def killed_attempt(prev):
         str((prev.get("q_class") if q else prev.get("class")) or "") in ("INFRA", "FLOW", "") or bool(WRAPPER_END_RE.search(txt)))
 
 
+def prev_on_current_plan(prev, d):
+    """KIT-OPS-5 11-15 (OWNER via COORD: no old-plan kit relaunches): True when the previous attempt belongs to the die's current plan event
+    (or carries no event).  A resume / kill-pin onto an attempt of an older plan event would run the old kit inputs again; such an item
+    is generated fresh on the current plan instead (digest rule)."""
+    ev = (prev or {}).get("event")
+    return not ev or not d.get("event") or str(ev) == str(d.get("event"))
+
+
 def kill_pin(prev, sp):
     """pin sp's source inputs to the killed attempt's spec (in place) -> '' or why not pinned (spec unreadable / incomplete)"""
     try:
@@ -6875,7 +6883,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         # [items] relaunches those items as a FRESH attempt (regenerated kit, no resume), and a resume source whose attempt
         # dir is gone on the hub is never used
         if (opt(cfg, die, "stage_resume") is not False and prev.get("dir") and Path(prev["dir"]).is_dir()
-                and r["item"] not in (cfg["dies"][die].get("stage_resume_off") or [])):
+                and r["item"] not in (cfg["dies"][die].get("stage_resume_off") or [])
+                and prev_on_current_plan(prev, cfg["dies"][die])):
             sp["resume_from"] = resume_source(AP, prev)
             if not arm and opt_get(cfg, die, "kill_pin") is not False and killed_attempt(prev):
                 _pw = kill_pin(prev, sp)                # WAVE-RECIPE-1 FIX 2: same inputs -> resume at the checkpoint
@@ -8316,9 +8325,32 @@ def enqueue_src(AP, pinned, d):
     return f"{label}@{sha}"
 
 
+def enqueue_skip_reason(cfg, rec):
+    """KIT-OPS-5 11-15 (OWNER via COORD: stop old-plan kits from relaunching): -> (tag, text) when the row must not be enqueued for route,
+    else None.  SKIP-HELD: the item matches a die hold_items pattern (a hold only gated new picks, so a row already past gen / geom was
+    enqueued anyway: cbn_q11 cl49ae4555 on 11-15 01:04).  SKIP-OLDPLAN: the row's plan event is not the die's current one.  Rows already
+    ENQUEUED / running in a container are not touched (enqueue_pass returns for them first)."""
+    import fnmatch
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    for pat, why in (d.get("hold_items") or {}).items():
+        if fnmatch.fnmatchcase(str(rec.get("item", "")), pat):
+            return "SKIP-HELD", f"item held ({pat}): {str(why)[:160]}"
+    ev, cur = rec.get("event"), d.get("event")
+    if ev and cur and str(ev) != str(cur):
+        return "SKIP-OLDPLAN", f"attempt of plan event {ev}, the die's current plan event is {cur}"
+    return None
+
+
 def enqueue_pass(AP, cfg, st, rec, notices):
     # An already submitted row is immutable here, even if a hold is added later.
     if rec.get("status") == "ENQUEUED":
+        return
+    skip = enqueue_skip_reason(cfg, rec)
+    if skip:
+        tag, text = skip
+        if rec.get("status") != "ROUTE-HELD" or rec.get("route_hold") != f"{tag}: {text}":
+            AP.log(f"KIT-WAVE {tag} {rec['die']}/{rec['item']}@{rec.get('attempt')}: {text}")
+        rec.update(status="ROUTE-HELD", route_hold=f"{tag}: {text}", reason=f"ROUTE hold: {tag}: {text}", updated=time.time())
         return
     why = route_hold_reason(cfg, rec)
     if why:

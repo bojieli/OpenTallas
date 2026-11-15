@@ -97,7 +97,7 @@ class Composed(unittest.TestCase):
 
     def rec(self, qs, sha, reason=KW.SRC_REFUSED + "\n", **over):
         (self.spec / "spec.json").write_text(json.dumps(dict(queue_src=qs, src_sha=sha)))
-        r = dict(die="qwen_kvsys", item="kv3_hg_v1", attempt=2, dir=str(self.spec), event="e", geom_dir="/g", kit="intel1:/k/x",
+        r = dict(die="qwen_kvsys", item="kv3_hg_v1", attempt=2, dir=str(self.spec), event="event28w_c", geom_dir="/g", kit="intel1:/k/x",
                  cells=100, status="FAIL", reason=reason, stage="geom")
         r["class"] = "FLOW"
         r.update(over)
