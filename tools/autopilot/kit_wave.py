@@ -6482,7 +6482,10 @@ def resume_source(AP, prev):
                              # stopped, not failed: a queued volume released or a cancelled attempt has no failure a
                              # same-input run would repeat (KW6-CLASS 11-04, S81 slice_station__t23/t44)
                              or prev.get("status") == "CANCELLED" or prev.get("class") == "VOLUME"
-                             or _refused_class(jd) == "VOLUME"}
+                             or _refused_class(jd) == "VOLUME"
+                             # KIT-OPS-5 11-14 (FABLE-WAVE-REVIEW FIX 2): the attempt was KILLED (make Error 241 / PASS exit -15 / earlyoom),
+                             # not failed on a design verdict: resume the same checkpoint (GRT done -> detail route) with no input change
+                             or bool(KILL_RE.search(str(prev.get("reason") or ""))) or "PASS exit -15" in str(prev.get("reason") or "")}
     try:
         out["gen_end"] = (jd / "gen.log").stat().st_mtime
     except OSError:
