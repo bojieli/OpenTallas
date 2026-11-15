@@ -30,3 +30,5 @@ slice_station__t6__cl0755c26e still unstarted; escalated 11:10 to KIT-OPS-5, no 
 
 ## Sweep 6 (12:10 PST, final, run on COORD go-ahead)
 Failed / not built: s81 25/148, head 0/1, QC 0/4, KV 1/0 (same as sweep 5). Wave launched 78/60 min. Unowned: 0 after COORD assignment: serdes__t3 -> TL-SERDEST14, kv3_hgi -> TYPE-KVHGI2, slice_station__t6__cl0755c26e -> TYPE-SLICE-HOLD (private attempt 3 at place), serdes__t2 -> TL-SERDEST14 family. QC/HEAD not-built = WAIT-CHILD/dsdv cores owned by DIE-QC-103/TYPE lanes. Relaunched over the 6 sweeps: none (no infra kills found).
+
+## Method change 18:10 (COORD): unowned = lanes/STALE.tsv row (no live job, >=6 h) AND item not named in a non-automated queue post or a handoff <6 h old. Script: lanes/handoff/UNOWNED-SWEEP-stale_sweep.py. Wave state ignored. Live ps/systemd check is inherited from STALE.tsv (not re-run).
