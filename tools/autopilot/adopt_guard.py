@@ -30,9 +30,15 @@ def missing_by_host(files, hosts, run=sh):
     """{host: [missing file]} ('' host list entry 'localhost' runs locally); a host that cannot be reached is reported with every file"""
     out = {}
     for h in hosts:
-        cmd = " ; ".join(f"test -e {shlex.quote(f)} || echo {shlex.quote(f)}" for f in files)
-        rc, txt = run((["bash", "-c", cmd] if h == "localhost" else SSH + [h, cmd]))
-        out[h] = sorted(set(txt.split())) if rc == 0 or txt else list(files)
+        got, ok = set(), True
+        for i in range(0, len(files), 100):            # chunks: one ssh command line must stay below ARG_MAX (S81 has thousands of sources)
+            cmd = " ; ".join(f"test -e {shlex.quote(f)} || echo {shlex.quote(f)}" for f in files[i:i + 100])
+            rc, txt = run(["bash", "-c", cmd] if h == "localhost" else SSH + [h, cmd])
+            if rc != 0 and not txt:
+                ok = False
+                break
+            got |= set(txt.split())
+        out[h] = sorted(got) if ok else list(files)
     return out
 
 
