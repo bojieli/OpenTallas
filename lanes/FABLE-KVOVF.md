@@ -1,0 +1,187 @@
+# FABLE-KVOVF: KV hg / hgi routing overflow (owner lane, Fable) 2026-11-14
+
+Scope: the 9 qwen_kvsys types kv3_hgi, kv3_hgi_v1 (2 classes), kv3_hgi_v2 (2 classes), kv3_hgi_v3 / v4 / v5, kv3_hg.
+MEASURED = read from the named log, database or file. INFERRED = my reading, not run.
+
+## 1. Verdict
+
+The global-route overflow is a symptom. The family has a synthesis defect that breaks timing and inflates the routing
+problem; the router then adds two accounting effects on top.
+
+| # | Finding | Status | Fix | Owner |
+|---|---|---|---|---|
+| F1 | yosys merges the duplicated per-head 1559-bit `ti` pipeline banks: 6 banks in RTL, 3 in the netlist. One chain feeds both head columns. CTS setup -556 to -753 ps. | MEASURED | `override export OT_KEEP_WIRES = ti_b` in config.mk (existing hook) | KIT-OPS-5 (wave env), KV-102 (generator default) |
+| F1b | The last stage (`u_hstN_t2`) is one bank feeding four front cores spread over 770 um; with keep alone CTS setup is still -366 ps | MEASURED | one last-stage copy per front core (as-built RTL) | KV-102; proof forms r_* |
+| F2 | EST-0005: `repair_antennas` without `-allow_congestion` clears the router's allow-congestion state | MEASURED | add `repair_antennas` to the WF-1 wrapper in grt183_make.sh, or `SKIP_ANTENNA_REPAIR = 1` | KIT-OPS-5 |
+| F3 | 2D overflow markers (what raises GRT-0115/0116) are capacity-0 cells inside head cores; the last one is the centre clk/rst_n pin cluster | MEASURED | allow-congestion; optional M7 core close | forms decide |
+| F4 | The M5-M8 "total congestion" numbers are layer assignment only (direct core-to-core buses); 2D capacity is not exceeded there | MEASURED on kv3_hg | none needed | - |
+
+## 2. F1: merged pipeline registers (the structural cause)
+
+Design intent (kv3_hgi_v2 `_bound.sv`, as-built stations): the 1559-bit word from the `i_ectl_Q_N_tN` landing ring goes to
+each head column through its own three register stages:
+- head 2: `u_hst2_g` -> `u_hst2_t1` -> `u_hst2_t2` -> cores `u_head2_e*`
+- head 3: `u_hst3_g` -> `u_head2_u_ftg` -> `u_hst3_t2` -> cores `u_head3_e*`
+
+Both chains carry the same data, so yosys `opt_merge` folds them. `qkh_head_tstage` declares plain `reg`s (no keep).
+
+MEASURED (`1_2_yosys.v`, flops named `u_bound.<inst>.u_reg.ti_b[*]`):
+
+| type, kit | gather stages in RTL | `ti_b` banks in netlist | CTS setup WNS / TNS |
+|---|---|---|---|
+| kv3_hgi_v2__cl2862d491, fdC3 (intel1) | 6 | 3 (hst2_g, head2_u_ftg, hst2_t2) | -586 ps / -558k |
+| same, kvgeom5 attempt_13 (epyc10) | 6 | 3 | placement -556 ps / -558k |
+| same, kvgeom4 attempt_11 (epyc8) | 6 | 3 | - |
+| kv3_hgi_v2__cle0015330, kvgeom4 a7 | 6 | 3 | - |
+| kv3_hgi, kvgeom4 a8 | 6 | 3 | - |
+| kv3_hgi_v1__cl141fc26e, kvgeom4 a8 | 6 | 3 | - |
+| kv3_hgi_v1__cl42bc8b12, kvgeom4 a9 | 6 | 3 | -572 ps |
+| kv3_hg, kv102sem_ftgrid a14 (epyc2) | 6 | 3 (head1_u_ftg, hst0_g, hst0_t2) | -753 ps / -969k |
+
+Not checked: kv3_hgi_v3 / v4 / v5 (no netlist found on the hosts I scanned). Same module family; INFERRED same.
+
+Effect, MEASURED (fdC3 `4_cts_final.rpt`): worst path `u_hst2_t2.u_reg.ti_b[1349]` -> `u_head3_e0/g_front_0_u_front__q_data_in[302]`,
+data arrival 1363 ps through about 20 repair buffers with 80 ps wire hops; required 777 ps (core tap -130 ps, setup 74 ps).
+The flop bank sits at head 2 and drives head 3, about 1.1 mm away. The running control forms (fdC3_r3, fd04_r3, v1a_r3) are
+in GRT setup repair at -480 to -540 ps on 1192 to 1349 endpoints, all `u_head3_e0 ... q_data_in[*]`: they cannot reach
+R-MINIMAL even if they route.
+
+Effect on routing, MEASURED: `u_hst2_t2.ti_b[*]` nets and the `u_cland_i_ectl_Q_N_tN` ring nets are the nets named in the
+fh2 congestion reports (form A iteration 30: `ti_b[285]`, `[291]`, `[292]`, `[460]`, `[461]` at the top edge of head2_e2).
+INFERRED: a 1559-bit bus stretched from one head column to the other is the demand that crosses the cores.
+
+Why no gate caught it: reg_fanout flags registers with more than 64 loads; a merged bank here has 2 to 8 loads. LEC passes
+(the netlist is equivalent). The bind checks latency, which is unchanged.
+
+Fix: `override export OT_KEEP_WIRES = ti_b` in the kit config.mk. `ot_keep_regs.tcl` (SYNTH_CANONICALIZE_TCL, already in
+every kit) then keeps every flop that drives a wire named `ti_b`. No RTL, generator or tool change.
+MEASURED on form k_hgi2: `OT_KEEP_WIRES: keep on wires named ti_b`; 6 x 1559 `ti_b` flops in `1_2_yosys.v`; registers
+32,599 -> 37,276; standard cells 105,305 -> 114,659; reg_fanout PASS.
+
+## 3. F2: what EST-0005 is
+
+MEASURED (Tcl body of `repair_antennas` in opentallas/orfs:asap7lock-grtoff, OpenROAD 6cb3f2b704):
+`repair_antennas` has its own `-allow_congestion` flag and always runs `grt::set_allow_congestion [info exists flags(-allow_congestion)]`.
+ORFS `global_route.tcl` calls `repair_antennas -iterations N` without the flag, so the allow state set by `global_route
+-allow_congestion` becomes 0. `GlobalRouter::haveRoutes()` returns `!routes.empty() && !(is_congested && !allow_congestion)`,
+so it is now false, and `estimate_parasitics -global_routing` raises EST-0005. The step itself does nothing on ASAP7
+(`GRT-0246 No diode`).
+
+The same reset is why the r2 forms died with `GRT-0232 -> EST-0165 -> EST-0104` inside repair. The WF-1 hook
+(grt183_make.sh, `grt_allow_cong.tcl`) fixed that for `global_route`, `repair_timing` and `repair_design`. It does not wrap
+`repair_antennas`.
+
+Fix (KIT-OPS-5): add `repair_antennas` to the wrapped commands in `grt_allow_cong.tcl`, re-asserting
+`grt::set_allow_congestion 1` after the call. Until then `export SKIP_ANTENNA_REPAIR = 1` on allow-congestion kits.
+
+## 4. F3 / F4: where the overflow sits
+
+Source: kv3_hg attempt_14 `5_1_grt-failed.odb` (epyc2), per-gcell capacity and usage of M2-M8 dumped with OpenROAD
+(`fable-kvovf/dump_hg`), and the fh2 A / C congestion reports of kv3_hgi_v2 (intel1).
+
+2D markers (they raise GRT-0115 / GRT-0116):
+- fh2 control C: 2171 -> 43 cells over 30 iterations; all 43 inside head cores, 42 with capacity 0.
+- fh2 form A (M7 closed over the cores): 12288 -> 1 cell, net149942 at the centre of head2_e0.
+- kv3_hg a14: 2 cells. One is net274613 to `g_t_1_u_stk__rst_n[0]` at the centre of head1_e0; the other is a landing-ring net
+  61 um inside head0_e2.
+- Over a head core the horizontal capacity (M6 + M8; M2 and M4 are full OBS) is zero in 20 to 32 % of the gcells. These
+  cells form vertical streaks: wherever the core LEF has an M7 shape, M6 and M8 show no free track. M7 itself keeps about
+  5 of 9 tracks. A net that enters over a core on M7 can go straight but cannot shift sideways without crossing a zero cell.
+- Centre pins: each core has 7 clk and 7 rst_n M5 pins within 2.7 um (two gcell columns), under the core's own M6 / M7
+  clock shapes. Those columns have 3 to 4 free M7 tracks and no horizontal capacity, so at least one of the 14 nets needs a
+  sideways step in a zero cell. This is the residual cell in form A and in kv3_hg. The LEF leaves room (8 thin M6 shapes
+  in the 8 x 8 um centre box; pin access completed with no warning), so this is a router-model limit. INFERRED: detail
+  route can do it; no form has reached detail route yet.
+
+"Total congestion" per layer (kv3_hg: M5 96 / M6 246 / M7 73 / M8 87), MEASURED:
+- All of it lies in one L-shaped path next to head1_e0: one gcell row at y = 245.1 (x 809 to 860, M6 and M8) and one
+  column at x = 877.2 (M5 and M7), outside the core.
+- The nets are two direct core-to-core buses: `w_head1_e2_g_t_5_u_stk_kp_o[*]` (e2 south face to e0 north face, 55 um
+  sideways) and `w_head1_e0_g_front_0_u_front_f_t2[*]` (e0 east face to e1 west face, 135 um along the face), plus
+  `u_ft_ft2_o_3` hops.
+- 15 nets share a row that has 43 tracks over four layers. The 2D router sees no overflow; layer assignment stacks the
+  wires on the layers next to the pin layer. It does not raise GRT-0115 and is not a capacity problem.
+
+Why closing M7 moved overflow to M5 (form A: M5 158 / M7 488 against C: M5 6 / M7 576). INFERRED from the kv3_hg data, not
+measured on kv3_hgi_v2 (form A wrote no database): these counts are the layer-assignment kind. With M7 shut over the
+cores, north-south runs move to the street columns beside the cores, where pin-layer wires are assigned to M5 and M7
+alike. The 2D marker count fell from 43 to 1 in the same run.
+
+Cost of the M7 close, MEASURED: wirelength 8.755 M um -> 8.837 M um (+0.9 %), M7 demand 658k -> 374k.
+
+## 5. Forms
+
+All from synth on the kvgeom5 kits, goal route, `ot-run --mem 56 --threads 12`, launched 22:56 PST on epyc2 (copies on
+epyc10, epyc7, epyc9). Dirs `/srv/opentallas-scratch2/claude/fable-kvovf/forms/<form>/<type>`, logs intel2
+`~/kvovf/<form>.log`, status `bash ~/kvovf/st.sh` on intel2.
+
+| form | type | settings |
+|---|---|---|
+| k_hgi2 | kv3_hgi_v2__cl2862d491 | OT_KEEP_WIRES=ti_b, allow-congestion, SKIP_ANTENNA_REPAIR |
+| k_hgi2_m7 | kv3_hgi_v2__cl2862d491 | same + M7 closed over the head cores (16 um centre column open) |
+| k_hg | kv3_hg | as k_hgi2 |
+| k_hg_m7 | kv3_hg | as k_hgi2_m7 |
+| r_hgi2 | kv3_hgi_v2__cl2862d491 | k_hgi2 + per-core copies of the last stage (rep_t2.py), launched 00:37 |
+| r_hg | kv3_hg | same |
+
+TYPE-KVHGI2 keeps m7a (kv3_hgi_v2, intel1) and m7hg_g (kv3_hg GRT only): merged netlists, useful for the route answer only.
+
+Judge: (1) placement / CTS setup WNS against -556 / -753 ps; (2) GRT markers; (3) DRT DRC 0; (4) signoff.json TT setup >= -42 ps, FF hold >= 0.
+
+## 6. Results
+
+State 2026-11-15 00:45 PST. Nothing has reached detail route yet; no form is proven.
+
+| form | stage reached | setup WNS / TNS | note |
+|---|---|---|---|
+| control (merged), kvgeom5 a13 | placement | -556 ps / -558k | wave kit |
+| control fdC3 | CTS | -586 ps / -558k | GRT setup repair stuck near -480..-540 ps |
+| k_hgi2, k_hgi2_m7 (keep) | CTS done 00:10, GRT running | placement -594 ps / -189k; CTS -366 ps / -142k | TNS 3.9x better, WNS still far out |
+| k_hg, k_hg_m7 (keep) | global placement | - | |
+| r_hgi2, r_hg (keep + per-core last stage) | launched 00:37 from synth | - | RTL elaborates (yosys hierarchy -check) |
+| m7a (TYPE-KVHGI2, merged + M7 close) | GRT iteration 25/30 at 00:10 | - | route answer only |
+| m7hg_g (TYPE-KVHGI2, kv3_hg GRT only) | GRT iteration 15/30 at 00:05 | - | route answer only |
+
+### 6.1 Second structural finding (F1b): the last stage is one bank for four cores 770 um apart
+
+MEASURED on k_hgi2 `4_cts.odb` (`fable-kvovf/pos_hgi2/pos.txt`):
+- The q_data part (512 bits) of ALL stage banks sits at y = 980..1008 next to the top front core: `u_hst2_g`, `u_hst2_t1`,
+  `u_hst2_t2`, `u_hst3_g`, `u_head2_u_ftg` at x median 172..209; only `u_hst3_t2` moved to head 3 (x median 761).
+  The three stages are a chain in one spot; they do not step toward the cores.
+- The loads of the last stage are the `g_front_*__q_data_in` pins of four cores per head: e0 at y = 233, e2 at y = 337,
+  e4 at y = 683, e6 at y = 1002. One bank cannot be near all four.
+- Worst path now: `u_hst2_t2.ti_b[1557]` -> `u_head2_e0 q_data_in[510]`, own head, arrival 1144 ps, required 778 ps. Launch
+  clock arrives at 309 ps, the core captures on the early tap (-130 ps), so the wire budget is about 240 ps
+  (INFERRED: about 260 um at the 110-um repair hops seen in the path). The path is 760 um.
+
+Fix under test (forms r_*): one copy of the last stage per front core (`u_hstN_t2r_eK`, 4 per head), same data, same
+latency. `fable-kvovf/bin/rep_t2.py` edits the kit `_bound.sv`; `OT_KEEP_WIRES = ti_b` keeps the copies apart. The copy
+at each core then needs only a short hop; the stage before it (flop to flop, about 690 ps) covers the distance.
+Cost in this form: 4 x 1575 flops per head where 1 x 1575 was declared (the generator should emit only the bits each core
+reads). This is an as-built RTL change, so the real fix belongs to the KV-102 generator; the kit edit is the proof.
+
+### 6.2 Other types with the same merge (sweep of the newest kits on epyc2 and epyc10)
+
+`fable-kvovf/bin/sweep.py`: same-module instances whose flop count is under half of their best sibling.
+MEASURED `qkh_head_gather_stage: 3 of 6 below half` on kv3_hg, kv3_hg_v1p2, kv3_hg_v1p5, kv3_hg_v3, kv3_hgi,
+kv3_hgi_v1 (both classes), kv3_hgi_v2__cle0015330, kv3_hgi_v5. So the ring-class hg_v1p* / hg_v3 types carry it too.
+The `ot_dp_dly` rows of that sweep (pv, hub, pc, S81 col) are NOT findings: instances there differ in width parameter;
+the script does not separate that. Not followed up.
+
+
+## 7. Class fix (to apply when a form passes)
+
+0. KV-102: per-front-core last stage in the as-built generator for every hg / hgi type (section 6.1), if r_* proves it.
+1. KIT-OPS-5: qwen_kvsys item env for the 9 types -> kit config.mk `override export OT_KEEP_WIRES = ti_b`; relaunch from
+   synth (the netlist changes; no stage resume).
+2. KIT-OPS-5: `repair_antennas` in the WF-1 allow-congestion wrapper (all dies).
+3. Only if the keep forms still need it: `m7_core_close.tcl` sourced from `grt_pre_nonport.tcl` for kits with
+   `kv3_head_eighth_*` cores.
+4. KV-102: make the keep the generator default for replicated station registers, and add a kit gate: an as-built stage
+   instance with fewer flops than its siblings fails before floorplan.
+
+## 8. Dead ends, do not repeat
+
+- hgi re-floor, density / routability forms, soft blockages (fd03, fd04, fdC2, fdC3, planB, v0, v1): all on the merged netlist.
+- Any form without OT_KEEP_WIRES: setup stays near -500 ps.
+- Counting the per-layer "total congestion" as the blocker: only the 2D markers gate.
