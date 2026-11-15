@@ -1,0 +1,108 @@
+"""FLOW-HEALTH-1 11-15: hourly flow report (no LLM).   python3 -m pytest -q tools/autopilot/test_flow_health.py"""
+import hashlib
+import json
+import tempfile
+import time
+import unittest
+from pathlib import Path
+
+import flow_guard as FG
+import flow_health as FH
+from test_flow_guard import local_rpy
+
+NOW = time.mktime(time.strptime("2026-11-15 07:30:00", "%Y-%m-%d %H:%M:%S"))
+LOG = """\
+2026-11-15 06:05:55 PST AUTOPILOT: KIT-WAVE LAUNCH qwen_kvsys/a (type, 2 replicas) event-key k
+2026-11-15 06:06:41 PST AUTOPILOT: KIT-WAVE LAUNCH qwen_compute/b (type, 24 replicas) event-key k
+2026-11-15 06:33:50 PST AUTOPILOT: KIT-WAVE FAIL qwen_kvsys/a INFRA: infra (python exception) @gen: AttributeError: module 'schema' has no attribute 'full_area_hard_ip'
+2026-11-15 06:33:51 PST AUTOPILOT: KIT-WAVE FAIL qwen_kvsys/c INFRA: infra (python exception) @gen: AttributeError: module 'schema' has no attribute 'full_area_hard_ip'
+2026-11-15 06:44:09 PST AUTOPILOT: KIT-WAVE FAIL s81/t24 FLOW: unclassified failure @place (see log): KW_PLACE_RC=0
+2026-11-15 06:54:00 PST AUTOPILOT: KIT-WAVE FAIL s81/t26 PLAN: plan geometry / site @place: GRTM mode
+2026-11-15 06:44:04 PST AUTOPILOT: KIT-WAVE ENQUEUE s81/x epyc7:/srv/a geom AP_AUTO_GEOM
+2026-11-15 07:01:00 PST AUTOPILOT: KIT-WAVE LAUNCH qwen_kvsys/d (type, 2 replicas) event-key k
+2026-11-15 07:02:00 PST AUTOPILOT: KIT-WAVE FAIL qwen_compute/e FLOW: kit-RTL bind of record names HDL sources that are gone @kit_rtl: bind: ERROR preferred HDL source missing: /srv/x/y.sv
+2026-11-10 07:02:00 PST AUTOPILOT: KIT-WAVE LAUNCH old/old (type) too old
+2026-11-15 07:03:00 PST AUTOPILOT: KIT-WAVE RETRY-IGNORED not a counted line
+"""
+
+
+class Hourly(unittest.TestCase):
+    def test_counts_per_hour(self):
+        h = FH.hourly(LOG.splitlines(), 48, now=NOW)
+        self.assertEqual(sorted(h), ["2026-11-15 06", "2026-11-15 07"])
+        a, b = h["2026-11-15 06"], h["2026-11-15 07"]
+        self.assertEqual((a["launch"], a["pass"]), (2, 1))
+        self.assertEqual(sum(a["pre"].values()), 2)
+        self.assertEqual(dict(a["pr"]), {"place": 2})
+        self.assertEqual((b["launch"], sum(b["pre"].values()), sum(b["pr"].values())), (1, 1, 0))
+
+    def test_render_has_class_and_stage_columns(self):
+        h = FH.hourly(LOG.splitlines(), 48, now=NOW)
+        rows = FH.render(h, {"2026-11-15 07": 3}, ["CLASS-X"], now=NOW)
+        self.assertEqual(rows[0].split("\t"), FH.HEAD)
+        r6 = rows[1].split("\t")
+        self.assertIn("2x INFRA", r6[3])
+        self.assertIn("2x place", r6[5].replace("place=2", "2x place"))
+        r7 = rows[2].split("\t")
+        self.assertEqual((r7[7], r7[8]), ("3", "CLASS-X"))
+
+    def test_state_info(self):
+        st = {"flow_guard": {"refused": [[NOW, "k", "d/i"], [NOW, "k", "d/j"]], "open": {"cls": {}}}}
+        ref, op = FH.state_info(st)
+        self.assertEqual((ref["2026-11-15 07"], op), (2, ["cls"]))
+
+
+class Hostnames(unittest.TestCase):
+    def test_link_local_only_is_not_ok(self):
+        self.assertFalse(FH.resolve_ok(["fe80::1"]))
+        self.assertFalse(FH.resolve_ok([]))
+        self.assertTrue(FH.resolve_ok(["127.0.1.1", "fe80::1"]))
+
+    def test_section_flags_bad_host(self):
+        fake = lambda h, code, args, timeout=0: {"host": h, "ips": ["fe80::2"]} if h == "bad" else {"host": h, "ips": ["127.0.1.1"]}  # noqa: E731
+        rows = FH.hostname_section(fake, ("good", "bad"))
+        self.assertIn("good\tgood\t127.0.1.1\tyes", rows)
+        self.assertIn("bad\tbad\tfe80::2\tNO", rows)
+        self.assertEqual(FH.RESOLVE_PY.count("AP_JSON"), 1)
+
+
+class Skew(unittest.TestCase):
+    def test_section_lists_differing_modules(self):
+        files = {"tools/die_plan/gen.py": b"import gen_phys\n", "tools/die_plan/gen_phys.py": b"import schema\n", "tools/die_plan/schema.py": b"X=1\n",
+                 "tools/die_plan/bind.py": b"import json\n"}
+        tree = Path(tempfile.mkdtemp()) / "src"
+        for rel, b in files.items():
+            (tree / rel).parent.mkdir(parents=True, exist_ok=True)
+            (tree / rel).write_bytes(b)
+        (tree / "tools/die_plan/schema.py").write_bytes(b"X=0\n")
+        cfg = {"dies": {"kv": {"enabled": True, "gen_host": "h1", "gen_hosts": ["h1"], "src": str(tree), "item_inputs": {}}}}
+        out = FH.skew_section(cfg, rpy=local_rpy, blob=lambda rel: files.get(rel), compare_mod=None, now=NOW)
+        txt = "\n".join(out)
+        self.assertIn("# SKEW 2026-11-15 07:30", txt)
+        self.assertIn("kv\th1\t" + str(tree) + "\t1\ttools/die_plan/schema.py", txt)
+        (tree / "tools/die_plan/schema.py").write_bytes(b"X=1\n")
+        out = FH.skew_section(cfg, rpy=local_rpy, blob=lambda rel: files.get(rel), compare_mod=None, now=NOW)
+        self.assertIn("matches main", "\n".join(out))
+
+    def test_compare_module_used_for_cross_host_diffs(self):
+        class Mod:
+            @staticmethod
+            def compare(hosts, src):
+                return [], {"tools/die_plan/gen_phys.py": {}, "physical/x.json": {}}
+        files = {"tools/die_plan/gen.py": b"import gen_phys\n", "tools/die_plan/gen_phys.py": b"\n"}
+        cfg = {"dies": {"kv": {"enabled": True, "gen_host": "h1", "gen_hosts": ["h1", "h2"], "src": "/nonexistent/tree", "item_inputs": {}}}}
+        out = FH.skew_section(cfg, rpy=lambda *a, **k: {"error": "x"}, blob=lambda rel: files.get(rel), compare_mod=Mod, now=NOW)
+        self.assertTrue(any(l.startswith("kv\t/nonexistent/tree\tok\t1\ttools/die_plan/gen_phys.py") for l in out), out)
+
+    def test_main_writes_file_without_commit(self):
+        d = Path(tempfile.mkdtemp())
+        (d / "log.txt").write_text(LOG)
+        FH.LOG = d / "log.txt"
+        FH.STATE = d / "none.json"
+        out = d / "out.tsv"
+        FH.main(["--out", str(out), "--no-skew", "--hours", "100000"])
+        self.assertTrue(out.read_text().startswith("hour\tlaunches"))
+
+
+if __name__ == "__main__":
+    unittest.main()

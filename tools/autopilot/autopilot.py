@@ -154,7 +154,31 @@ def now_s():
     return time.strftime("%Y-%m-%d %H:%M:%S %Z")
 
 
+_LOG_SEEN = {}                 # message -> [last written time, suppressed count]
+LOG_DEDUP_S = float(os.environ.get("AP_LOG_DEDUP_S", "900"))
+
+
+def log_dedup(msg, now=None):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1000 class 10: 1,791 of 3,023 log lines were repeats): a message identical to one written in the last
+    LOG_DEDUP_S seconds is not written again; the next write of it carries '(+N identical suppressed)'.  -> the text to write, or None"""
+    now = time.time() if now is None else now
+    if LOG_DEDUP_S <= 0 or len(msg) > 2000:
+        return msg
+    e = _LOG_SEEN.get(msg)
+    if e and now - e[0] < LOG_DEDUP_S:
+        e[1] += 1
+        return None
+    n = e[1] if e else 0
+    if len(_LOG_SEEN) > 5000:
+        _LOG_SEEN.clear()
+    _LOG_SEEN[msg] = [now, 0]
+    return msg + (f" (+{n} identical suppressed)" if n else "")
+
+
 def log(msg):
+    msg = log_dedup(msg)
+    if msg is None:
+        return
     line = f"{now_s()} AUTOPILOT: {msg}"
     print(("[dry] " if DRY else "") + line, flush=True)
     if DRY:
