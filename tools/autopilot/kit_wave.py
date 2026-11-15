@@ -1966,6 +1966,8 @@ GPL_PROBE_AWK = (r"""awk '/GPL-1010/{print "KW_GPL " l; print "KW_GPL " $0; l=""
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
 RULES = [
     # WF-1 11-14: a chosen child view that is missing everywhere is infrastructure (sync / re-export), never a design verdict
+    # KIT-OPS-5 11-15 (FABLE-TRIAGE-QC, FLOW-OTSTORE): a kit whose python cannot import ot_store died of the host / sync, not of the design
+    ("INFRA", None, r"ModuleNotFoundError: No module named 'ot_store'", "infra (ot_store module missing on the run host: sync / env, not a design failure)"),
     ("INFRA", None, r"INFRA-VIEW-MISSING", "infra (INFRA-VIEW-MISSING: the die-owner / counted child view is not on any host)"),
     # KIT-OPS-5 11-14 (COORD class fix): a job whose submit-time admission bundle predates the late-ECO scope postcondition
     # refuses its ECO (eco_loop: "staged late-ECO hook lacks the runtime scope postcondition") before any repair.  That is a stale
