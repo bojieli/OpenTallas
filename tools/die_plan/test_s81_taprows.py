@@ -61,3 +61,14 @@ def test_reference_comes_from_the_signed_record(tmp_path):
     f = tmp_path / "signoff.json"
     f.write_text(json.dumps(dict(verdict="SIGNED", core_latency=dict(contract=dict(io_reference_ps=dict(tt=465.39, ff=361.26))))))
     assert TR._ref(f)["tt"] == 465.39
+
+
+def test_bksel_q_rows_take_the_b1c_reference(tmp_path):
+    p = plan(tmp_path)
+    ck = p["partition_types"]["bk_sel__t2"]
+    ck["hard_cores"].append(dict(inst="u_bk_sel.u_sel.g_q[0].u_q", module="dsdv_bksel_q", lib=str(tmp_path / "half_tt.lib")))
+    ck["clock"]["taps"].append(dict(name="u_bk_sel.u_sel.g_q[0].u_q.ck", kind="core", xy=[7, 7], insertion_ps=651.6, insertion_ff_ps=527.5))
+    rep = TR.apply(p, REFS, root=str(tmp_path), bksel=dict(tt=790.1, ff=640.0, basis="x"))
+    by = {t["name"]: t for t in ck["clock"]["taps"]}
+    q = by["u_bk_sel.u_sel.g_q[0].u_q.ck"]
+    assert (q["insertion_ps"], q["insertion_ff_ps"]) == (790.1, 640.0) and ck["clock"]["insertion_ps"] == 450 and len(rep["bksel_q"]) == 1
