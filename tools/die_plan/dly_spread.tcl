@@ -222,10 +222,10 @@ dict for {nm head} $ds_cand {
     lassign [ds_fwd $o] tb tl
   }
   lappend segb $tb
-  if {![llength $tl]} { incr ds_nskip; continue }
+  if {![llength $tl]} { incr ds_nskip; if {[info exists ::env(OT_DLY_SPREAD_DEBUG)] && [string match $::env(OT_DLY_SPREAD_DEBUG) $nm]} { puts "OT_DLY_SPREAD DEBUG $nm no loads" }; continue }
   # source: the driver of the head's D (through repeaters); a driver that is not a flop/port/core pin (logic) is a plan item: skip
   lassign [ds_back $head] hb src srcinst
-  if {$src eq {}} { incr ds_nskip; continue }
+  if {$src eq {}} { incr ds_nskip; if {[info exists ::env(OT_DLY_SPREAD_DEBUG)] && [string match $::env(OT_DLY_SPREAD_DEBUG) $nm]} { puts "OT_DLY_SPREAD DEBUG $nm stages $n no source (logic driver)" }; continue }
   set sx 0; set sy 0
   foreach l $tl { lassign [ds_xy $l] x y; set sx [expr {$sx+$x}]; set sy [expr {$sy+$y}] }
   set T [list [expr {$sx/[llength $tl]}] [expr {$sy/[llength $tl]}]]
@@ -271,6 +271,7 @@ dict for {nm head} $ds_cand {
     set wa 0; for {set k 1} {$k < [llength $P]} {incr k} { set wa [expr {max($wa, [ds_md [lindex $P [expr {$k-1}]] [lindex $P $k]])}] }
   }
   set ds_ha [expr {max($ds_ha, $wa)}]; if {$wa > $ds_min} { incr ds_oa }
+  if {[info exists ::env(OT_DLY_SPREAD_DEBUG)] && [string match $::env(OT_DLY_SPREAD_DEBUG) $nm]} { puts "OT_DLY_SPREAD DEBUG [ds_clean $nm] stages $n loads [llength $tl] hops [format %.0f [expr {$wb/double($ds_dbu)}]] -> [format %.0f [expr {$wa/double($ds_dbu)}]] um" }
   set ideal [expr {(($wb <= $ds_min) ? [ds_md $src $T] : $rlen) / double($n + 1)}]   ;# route length: a detour around a core is not a defect
   if {$ideal > 0} {
     set r [expr {$wa / $ideal}]
