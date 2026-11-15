@@ -243,3 +243,5 @@ Owners: S81-RESIGN-DEEP builds idxC (core RTL port `ck_face`, SDC with two clock
 tap and the 344 early tap to bk_sel__t2 and the bind row (clock split only: both pins are the same parent clock, no cycle
 change). PLAN-READERS-1: the audit must read `ck_face` as the boundary pin and not fail `ck` for having no pin registers.
 S81-CORES-2: same read on bksel_q (652 ps) before choosing its form; if its face spread is also over 80, use the same split.
+
+2026-11-15 DLY-SPREAD (G8 mismatch, col_h9_r1 u_d10_6_Y): FABLE-GENBUG says 9 stages over 1,695 um, worst hop 1,268 um (ideal 170). Measured on col_h9_r1__t1__cl49d7a23e__pv11c696bc 3_place.odb: the 9 stages chain by connectivity with max hop 302 um; the last stage drives 1,317 loads and the 1,268 um is stage -> farthest load. A chain spreader cannot move it (centroid of 1,317 loads). It is a fan-out/copy problem (R-REACH-1): needs register copies per load region, not more stage spacing. Not guessed further. Same what-if: over-reach 4493 -> 4242 only; remaining col hops are ring -> u_bin (G2) and last pad stage (G1).
