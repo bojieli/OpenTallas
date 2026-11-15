@@ -210,6 +210,9 @@ def directed_tree(rows, regions):
 # COORD 11-13 11:54 (QC-CLKGATE-1): DEPTH 16 on an explicit per-crossing allow-list (--depth16-allow), not a global
 # cap raise; every other crossing keeps max_depth.  Set by main() for one run; empty = unchanged.
 DEPTH16_ALLOW = frozenset()
+# FABLE-PD-S81-0335 B(c) opt-in guarded depth: a crossing takes the next depth when L_hi is within DEPTH_GUARD_PS of
+# its depth limit (default 0 = unchanged).  Set by main() for one run.
+DEPTH_GUARD_PS = 0.0
 
 
 def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edge_pad=None, start_skew=(0.0, 0.0),
@@ -422,7 +425,7 @@ def plan(rows, T=833.0, ap=833.0 / 8, wander_frac=0.05, sync_ap=26.5, pad=0, edg
         L_lo, L_hi = k_eff * T + rel_lo, k_eff * T + rel_hi
         nh = max(ap, 100.0 + smax) if (skew_clean and kind == "tree_ambiguous") else ap
         dep = next((dd for dd in (4, 8, 16) if (dd <= max_depth or (dd == 16 and r["port"] in DEPTH16_ALLOW))
-                    and L_hi <= (dd - 0.5) * T - nh + 1e-9), None)
+                    and L_hi <= (dd - 0.5) * T - nh - DEPTH_GUARD_PS + 1e-9), None)
         old_vals = interval_boundaries(r["lo"], r["hi"], T, T / 2) + 1
         if r.get("src_part") is not None and r.get("dst_part") is not None and r.get("_named"):
             out_parts = dict(src_part=r["src_part"], dst_part=r["dst_part"])
@@ -1544,6 +1547,7 @@ def main(argv=None):
     ap.add_argument("--depth16-allow", metavar="JSON",
                     help="COORD 11-13 11:54 opt-in: JSON list of crossing ids that may take DEPTH 16 (RTL proof "
                          "results/die_s81_11_1028/D16.md); every other crossing keeps --max-depth")
+    ap.add_argument("--depth-guard-ps", type=float, default=0.0, help="FABLE-PD-S81-0335 B(c) opt-in: promote to the next depth when L_hi is within this many ps of the depth limit (0 = unchanged)")
     ap.add_argument("--max-depth", type=int, choices=(8, 16), default=8,
                     help="DIE-S81-11 / 12.16 b(iii) opt-in: largest standard ring DEPTH (16 needs its RTL proof; default 8)")
     add_start_tree_args(ap)
@@ -1551,7 +1555,8 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--cases", help="TSV for the Verilator bench: port DEPTH L_ps (lo / mid / hi per crossing)")
     a = ap.parse_args(argv)
-    global DEPTH16_ALLOW
+    global DEPTH16_ALLOW, DEPTH_GUARD_PS
+    DEPTH_GUARD_PS = float(a.depth_guard_ps or 0.0)
     allow = frozenset(json.load(open(a.depth16_allow))) if a.depth16_allow else frozenset()
     DEPTH16_ALLOW = allow
     try:
