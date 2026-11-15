@@ -15,3 +15,5 @@ Tests: test_dly_spread.py, test_forest.py pass on epyc9.
 Next: GENBUG-IMPL to install, set budgets.r_dly_spread in QC cb / S81 plans; a full re-place of one kit to confirm DPL keeps the spread.
 
 11-15 update: branch pushed to hub:OpenTallas claude/dly-spread-1115-1 @47010b3510. Messages sent: GENBUG-IMPL (install on 4 trees after merge), DIE-QC-103 (r_dly_spread on cbf_q01 family, S4k/S4k2), DIE-S81-92 (r_dly_spread on c1x + OT_DLY_SPREAD=warn for the 58 short chains).
+
+11-15 COORD decision: QC and S81 use the global budgets.r_dly_spread with OT_DLY_SPREAD=warn. Merge sha stays claude/dly-spread-1115-1 @47010b3510 (hub:OpenTallas). The list form (r_dly_spread = [type base names], warn into config.mk) is parked on claude/dly-spread-list-1115-1 @601fa7d5e1, not for merge.
