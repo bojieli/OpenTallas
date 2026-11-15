@@ -43,3 +43,10 @@
 
 ## Next
 - If street wins: generalise (seed rules per col family, 216 types), B6f delta to DIE-S81-92 with G0, then PLAN-READERS-1 audit.
+
+## 2026-11-15 COORD ruling: hand p2 delta to DIE-S81-92 (no reset-keep bypass)
+- epyc7 /srv/opentallas-scratch2/claude/s81-col-street/f5/plan.json (sha1 2974f3b3c634) = ev/B6f5e.json (7bf9e6e35780) + p2 family moves; only the 12 col_h9_r0_p2 partition_types differ.
+- p2-only delta rows: delta_p2_B6f5e.json (sha1 bec71a2a21cf). core_place applied True on all 12; cl9f71e63d cutV 0.887->0.544, 30 cores; cl0045af7b ->0.487, 28 cores.
+- Second 130 um street and W-face clearance: NOT in delta. They cannot be legalised with frozen core shapes: between E1 top 437 and R3 the two streets share a fixed span (now 129/114), and moving E1 breaks the E1->cf link limits. W face: fixed glue tap clk_t33 (572.6,636.6) and clk_t23 (8.75,739.8) pin it.
+- Reset-keep bypass dropped (COORD). OT_GEN_M8_GRANT left as is.
+- Next: street kit from DIE-S81-92 bound plan; base-vs-street proof then.
