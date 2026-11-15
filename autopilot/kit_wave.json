@@ -4216,7 +4216,8 @@
     "OT_PREGRT_FF_HOLD_AUTO": "100",
     "OT_MAX_BUFFER_PERCENT": "100",
     "OT_GRT_POST_MAX_S": "0",
-    "OT_HOLD_STOP_PS": "-1000000"
+    "OT_HOLD_STOP_PS": "-1000000",
+    "OT_GRT_ALLOW_CONGESTION": "1"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -23109,7 +23110,9 @@
     "OT_TAP_MAX_SINKS": "100000",
     "OT_MAX_BUFFER_PERCENT": "100",
     "OT_GRT_POST_MAX_S": "0",
-    "OT_HOLD_STOP_PS": "-1000000"
+    "OT_HOLD_STOP_PS": "-1000000",
+    "OT_GRT_ALLOW_CONGESTION": "1",
+    "OT_CONS_MAX_LAYER": "M9"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -43930,7 +43933,8 @@
     "OT_PREGRT_FF_HOLD_AUTO": "100",
     "OT_MAX_BUFFER_PERCENT": "100",
     "OT_GRT_POST_MAX_S": "0",
-    "OT_HOLD_STOP_PS": "-1000000"
+    "OT_HOLD_STOP_PS": "-1000000",
+    "OT_GRT_ALLOW_CONGESTION": "1"
    },
    "item_inputs_prev_kw45_s28a": {
     "cbf_q00__cl1b5a6458": null,
