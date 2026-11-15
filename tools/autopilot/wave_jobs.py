@@ -9,12 +9,30 @@ A job's identity comes from its kit-wave path, also under a wave root such as co
 Attempts compare only within one (die, event, item).  A variant or form has another item name or event, so it is never
 superseded by the other (owner: in-flight variants may finish).
 """
-import csv, json, os, re, shlex
+import csv, json, os, re, shlex, time
 from concurrent.futures import ThreadPoolExecutor
 
 FLEET = [h for h in os.environ.get('OT_FLEET_HOSTS', 'intel2,epyc2,intel1,epyc4').split(',') if h]
 WAVE_RX = re.compile(r'/kit-wave/([^/\s]+)/([^/\s]+)/items/([^/\s]+)(?:/attempt_(\d+))?(?=[/\s]|$)')
 LIVE = ('RUNNING', 'LAUNCHING', 'ENQUEUED')
+# WAVE-TICK-PAR 11-14: a host whose ssh CONNECT failed (epyc4 terminated: 'Connection timed out' after the 15 s ConnectTimeout) is skipped
+# for DEAD_TTL_S in this process, so one dead fleet host no longer costs 15 s on every cancel / stop-survivor / reap call of a tick
+# (measured: 35 finished jobs x 15 s = ~520 s of a 1256 s tick).  Only transport failures (ssh rc 255) mark a host dead.
+DEAD_TTL_S = 600
+_DEAD = {}
+_CONN_RX = re.compile(r'timed out|refused|No route|Could not resolve|unreachable|Connection closed|banner exchange', re.I)
+
+
+def host_dead(h, now=None):
+    t = _DEAD.get(h)
+    return bool(t and (now or time.time()) < t)
+
+
+def note_conn_failure(h, rc, err, now=None):
+    if rc == 255 and _CONN_RX.search(err or ''):
+        _DEAD[h] = (now or time.time()) + DEAD_TTL_S
+        return True
+    return False
 
 
 def wave_id(paths):
@@ -155,9 +173,12 @@ def stop_on_fleet(sh, hub, roots, hosts=None, dry=False):
         cmd = ['python3', '-I', '-', args] if h in ('localhost', hub, os.uname().nodename) else \
             ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', h,
              'python3', '-I', '-', shlex.quote(args)]
+        if host_dead(h):
+            return h, {'error': 'skipped, ssh connect failed within the last %d s' % DEAD_TTL_S}
         try:
             rc, out, err = sh(cmd, timeout=240, input=STOP_KIT)
             if rc != 0 or not (out or '').strip():
+                note_conn_failure(h, rc, err)
                 return h, {'error': 'rc %s %s' % (rc, (err or '')[-160:])}
             return h, json.loads(out.strip().splitlines()[-1])
         except Exception as e:  # noqa: the watchdog is the safety net for a host missed here

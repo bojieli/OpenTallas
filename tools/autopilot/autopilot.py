@@ -39,6 +39,7 @@ is skipped when the id is already in the file, ot-run clients run in their own t
     autopilot.py classify HOST:KIT [--since EPOCH]   read-only classification of a kit (debug / dry tests)
 """
 import argparse
+import copy
 import datetime
 import fcntl
 import fnmatch
@@ -178,13 +179,57 @@ def ssh_host(host):
 
 def rpy(host, code, args, timeout=600):
     """run python code on host (read-mostly probes) with JSON args on argv; returns parsed JSON or {'error': ...}"""
+    key = (ssh_host(host), hashlib.sha1(code.encode()).hexdigest(), json.dumps(args, sort_keys=True))
+    cache = _RPY_CACHE
+    if cache is not None and key in cache:               # WAVE-TICK-PAR 11-14: same probe, same host, same tick -> one ssh
+        return copy.deepcopy(cache[key])
     cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", "-o", "ControlPath=none", ssh_host(host),
            "python3", "-I", "-", shlex.quote(json.dumps(args))]
     rc, out, err = sh(cmd, timeout=timeout, input=code)
+    res = None
     for line in reversed(out.splitlines()):
         if line.startswith("AP_JSON "):
-            return json.loads(line[8:])
-    return {"error": f"probe rc {rc}: {(err or out).strip()[-400:]}"}
+            res = json.loads(line[8:])
+            break
+    if res is None:
+        res = {"error": f"probe rc {rc}: {(err or out).strip()[-400:]}"}
+    if cache is not None:
+        cache[key] = copy.deepcopy(res)
+    return res
+
+
+_RPY_CACHE = None                                        # dict while a tick phase memoises its probes, else None
+PROBE_POOL = int(os.environ.get("AP_PROBE_POOL", "8"))
+
+
+def prefetch_probes(st, pool=None):
+    """WAVE-TICK-PAR 11-14 (poll_running 558 s of a 1256 s tick: one serial ssh probe per job, 15 s connect timeouts on a dead host): run
+    the probes poll_running will need for every RUNNING / ORPHAN job in a bounded thread pool, so the serial pass (which still mutates
+    state in order) finds them in the per-tick rpy cache.  A job whose unit is still active needs no probe."""
+    from concurrent.futures import ThreadPoolExecutor
+    todo = []
+    for j in st["jobs"].values():
+        if j.get("status") not in ("RUNNING", "ORPHAN"):
+            continue
+        if j.get("goal") in ("cts", "grt") or j.get("adopted"):
+            todo.append(("kit", j))
+        elif j.get("unit") and not unit_active(j["unit"]):
+            todo.append(("classify", j))
+
+    def one(item):
+        kind, j = item
+        try:
+            if kind == "kit":
+                host = j.get("probe") or j.get("ran_on") or j["host"]
+                rpy(host, PROBE_KIT, {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
+            else:
+                probe_job(j)
+        except Exception:                                # noqa: the serial pass repeats the probe and reports the failure itself
+            pass
+    if len(todo) > 1:
+        with ThreadPoolExecutor(max(1, min(pool or PROBE_POOL, len(todo)))) as ex:
+            list(ex.map(one, todo))
+    return len(todo)
 
 
 def rbash(host, script, timeout=1800):
@@ -2615,6 +2660,19 @@ def orphan_is_dead(j, now=None, procs=None, remote_alive=None):
 
 
 def poll_running(st):
+    global _RPY_CACHE
+    _RPY_CACHE = {}
+    try:
+        if os.environ.get("AP_PREFETCH", "1") != "0":
+            _t = time.time()
+            n = prefetch_probes(st)
+            log(f"POLL-PREFETCH {n} probes in {time.time() - _t:.0f}s (pool {PROBE_POOL})")
+        _poll_running(st)
+    finally:
+        _RPY_CACHE = None
+
+
+def _poll_running(st):
     poll_pending_proofs(st)
     for j in list(st["jobs"].values()):
         if j.get("status") not in ("RUNNING", "ORPHAN"):

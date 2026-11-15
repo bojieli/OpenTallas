@@ -123,6 +123,9 @@ class StopKit(unittest.TestCase):
 
 
 class CancelSuperseded(unittest.TestCase):
+    def setUp(self):
+        WJ._DEAD.clear()                                   # WAVE-TICK-PAR: the dead-host memo is process-wide
+
     def test_cancel_stops_remote_attempt_root(self):
         t = Path(tempfile.mkdtemp())
         (t / 'w').mkdir()
@@ -160,6 +163,9 @@ class CancelSuperseded(unittest.TestCase):
 
 
 class AutopilotResubmit(unittest.TestCase):
+    def setUp(self):
+        WJ._DEAD.clear()                                   # WAVE-TICK-PAR: the dead-host memo is process-wide
+
     """HUNG-1103: CANCEL-SUPERSEDED at 09:30 -> client lost -> CRASH infra-orphan -> resubmit at 09:34 on the same /work"""
 
     def setUp(self):

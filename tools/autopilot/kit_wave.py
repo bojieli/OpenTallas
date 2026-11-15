@@ -8508,6 +8508,23 @@ def _row_live(r, jobs):
     return r.get("status") == "ENQUEUED" and bool(r.get("q_id")) and (jobs.get(r["q_id"]) or {}).get("status") in REAP_LIVE_Q
 
 
+def run_parallel(fn, items, workers=8):
+    """WAVE-TICK-PAR 11-14: map fn over items in a bounded thread pool, results in input order; an exception becomes the item's result"""
+    items = list(items)
+    if len(items) <= 1:
+        return [_safe(fn, x) for x in items]
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max(1, min(workers, len(items)))) as ex:
+        return list(ex.map(lambda x: _safe(fn, x), items))
+
+
+def _safe(fn, x):
+    try:
+        return fn(x)
+    except Exception as e:                           # noqa: one failed stop never stops the others
+        return e
+
+
 def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
     """KW-FIX-45 11-11 (COORD, epyc4 leaf t9 ran four times; 369 zombie ot-job/container instances found across the fleet):
     when the wave replaces or cancels an attempt it must also stop that attempt's started work on the gen host and drop its
@@ -8545,7 +8562,7 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
         for r in rows:
             if r.get("status") == "CANCELLED" and not r.get("reaped") and now - float(r.get("updated") or 0) < 6 * 3600:
                 todo.append((r, "row CANCELLED", False))
-    roots, seen = [], set()
+    roots, seen, acts = [], set(), []
     for r, why, supersede in todo:
         if n >= cap:
             AP.log(f"KIT-WAVE REAP cap {cap} reached; the rest next tick")
@@ -8569,9 +8586,9 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
             continue
         for u in units:
             if u:
-                AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+                acts.append((["systemctl", "--user", "stop", u], 180))
         if kit:                                      # ends the autopilot record so the queue cannot respawn the job
-            AP.sh([OT_RUN, "--cancel-dir", kit, "--reason", "KW-FIX-45 reap: " + why], timeout=60)
+            acts.append(([OT_RUN, "--cancel-dir", kit, "--reason", "KW-FIX-45 reap: " + why], 60))
         root = attempt_root(r)
         if root:
             roots.append(root)
@@ -8582,6 +8599,8 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
         r["reaped"] = now
         AP.log(f"KIT-WAVE REAP {r.get('die')}/{r.get('item')}@{r.get('attempt')}: {why}; units {units}")
         n += 1
+    if acts:                                         # WAVE-TICK-PAR 11-14: the per-row stops are independent; a bounded pool (8) replaces
+        run_parallel(lambda a: AP.sh(a[0], timeout=a[1]), acts, 8)   # 40 serial systemctl/ot-run calls (253 s of one wave pass)
     if roots:
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
         AP.log(f"KIT-WAVE REAP remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
