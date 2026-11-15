@@ -102,8 +102,11 @@ def reclassify(plan, recs, errs, fixed_in_core):
         if r["verdict"] != "FAIL":
             continue
         fx = fixed.get(r["lane"], 0)
-        if fixed_in_core and fx and r["delta"] == -fx and not r.get("problems"):
-            r.update(verdict="PASS", fixed_in_core=fx)
+        # HEAD-99 11-15 (FABLE-TRIAGE-HEADKV s17b): kit stations (kit_ist) on the lane already count in `delivered`; the in-core
+        # fixed cycles that remain unobserved are fx - min(fx, observed kit stations).  delta must equal minus that.
+        obs = int(r.get("source", {}).get("kit_ist", 0) or 0) + int(r.get("receiver", {}).get("kit_ist", 0) or 0)
+        if fixed_in_core and fx and r["delta"] == -(fx - min(fx, obs)) and not r.get("problems"):
+            r.update(verdict="PASS", fixed_in_core=fx, kit_stations_observed=obs)
             r.pop("class", None)
             drop.add(r["lane"])
             continue
