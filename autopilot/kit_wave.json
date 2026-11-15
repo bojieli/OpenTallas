@@ -35668,7 +35668,9 @@
     "coll_ucie": "FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
     "sle_fw_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
     "slw_fw_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
-    "sle_st_b_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-302 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key."
+    "sle_st_b_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-302 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
+    "*_fw_*": "FW-STB-HOLD 11-15 (FABLE-PD-QC-0650 stop list via COORD): no fw (*_fw_*) or st_b (*_st_b_*) QC type goes into route on S4k/S4p; S4x adds 242 fw + 33 st_b station rows. No new launch or retry until S4x is adopted. Running attempts finish. Lift = delete this key.",
+    "*_st_b_*": "FW-STB-HOLD 11-15 (FABLE-PD-QC-0650 stop list via COORD): no fw (*_fw_*) or st_b (*_st_b_*) QC type goes into route on S4k/S4p; S4x adds 242 fw + 33 st_b station rows. No new launch or retry until S4x is adopted. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
