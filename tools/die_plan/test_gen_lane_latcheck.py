@@ -145,9 +145,9 @@ def test_nested_ternary_width_and_optional_port():
     assert r["verdict"] == "FAIL" and r["unbound"] == 1 and r["width_mismatch"] == 0 and r["unresolved"] == 0
 
 
-def _rec(delta, src_kit=0, rcv_kit=0):
+def _rec(delta, src_kit=0, rcv_kit=0, rcv_bound=0):
     return {"lane": "L", "verdict": "FAIL", "delta": delta, "class": ["OTHER"], "problems": [],
-            "source": {"kit_ist": src_kit}, "receiver": {"kit_ist": rcv_kit}}
+            "source": {"kit_ist": src_kit, "bound_ist": 0}, "receiver": {"kit_ist": rcv_kit, "bound_ist": rcv_bound}}
 
 
 def test_fixed_in_core_with_observed_kit_stations():
@@ -158,6 +158,9 @@ def test_fixed_in_core_with_observed_kit_stations():
         recs = [_rec(delta, 0, kit)]
         G.reclassify(plan, recs, ["LANE_ASBUILT L: x"], True)
         assert (recs[0]["verdict"] == "PASS") is ok, (delta, kit)
+    recs = [_rec(-1, 0, 0, 1)]          # z20NC host_rx: the hd_ctl station is realised in the wrapper = bound_ist 1
+    G.reclassify(plan, recs, [], True)
+    assert recs[0]["verdict"] == "PASS"
     recs = [_rec(-1, 0, 1)]
     G.reclassify(plan, recs, [], False)           # not opt-in: still FAIL
     assert recs[0]["verdict"] == "FAIL"
