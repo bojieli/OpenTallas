@@ -87,3 +87,8 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 
 ## 2026-11-15 14:25 PST update
 - READY claude/mq-gate-deps-1115 @af5cfe9eb09 (gate sparse tree gets the sources the selected tests name; MISSING SOURCE -> INFRA). kv-pvgen-1115c @58c1bd939f8 regate with that code: intel2 mq1/tmp/kvpvgen-gate.out (copy omq-deps); gate-cmd runs one at a time (gate-cmd.lock).
+
+## 2026-11-15 15:18 PST update
+- Remote gates: /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote on epyc2+epyc9 (venv mq-gate/venv, clone slots slot0-7 of the lane mirror), driver intel2 mq1/tmp/rg.sh, outputs mq1/tmp/rg/*.out; GREEN records copied to ~/merge-queue/gates/. Usage: ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --dir /srv/opentallas-scratch2/claude/mq-gate -- bash /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote claude/<b>@<sha> 16
+- Needs tokens: claude/mq-gate-deps-1115 @55adcc5c3f2 (gate-record landing, MQ_GATE_PAR, ot-gate-remote, missing-source rerun; drt0255 regates after it), claude/kitrtl-fail-1115 @cf4e05a04fc (GREEN, COORD pre-approved).
+- Still running remote: kv-pvgen-1115c @58c1bd939f8, flow-health-1115b @954e9e33029 (both approved/queued). Hub tick 15:13 gating hold-release-on, qc-cb-gen @0784de12b28, noprog-grt, flow-health @954e, m8-grant.
