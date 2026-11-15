@@ -5,8 +5,9 @@ generated names (landing_remap.py re-maps them at prepare time).
  (b) hd_lep0N: taps in the stack band to y 604.8, tx rows back to back mid corridor (y 529.2 / 558.36, pitch 187.2 from
      x 22.5), rx column +7.2 east -> density taps renumber (forwarded source clk_t218), relays renumber.
  (c) hd_host_e: u_epc early core tap with the pin-referenced input latency (FABLE-HARD-QCHEAD 1: L 330-400 ps, default
-     350, env Z20_EPC_L) beside the core clock pin; partition_types.hd_host_e.pg_face_cut = true (PG-AWARE-1 OT_PG_FACE_CUT:
-     parent M5/M6/M7 stripes stop 1.5 um before the macro pin faces of u_epc, no core re-sign).
+     350, env Z20_EPC_L) beside the core clock pin; the PG cut is a GEN ENVIRONMENT switch, not a plan key (schema rejects
+     it): OT_PG_FACE_CUT=1 for hd_host_e (PG-AWARE-1 @240cf2612f: parent PG stripes stop 1.5 um before the macro pin
+     faces of u_epc, no core re-sign).
 Translations / one tap row only, no reshape.  usage: head_z20_delta.py RP21Z19.json RP21Z20.json [TOOLS_ROOT]"""
 import json
 import os
@@ -107,14 +108,13 @@ if orient in ("MX", "R180"):
     py = h_ - py
 dx, dy = c.get("track_offset_um", [0.0, 0.0])
 taps = he["clock"]["taps"]
-xy = tap_clear(he, c["origin_um"][0] + dx + px, c["origin_um"][1] + dy + py, [t["xy"] for t in taps if t.get("xy")], clear=4.32)
+xy = tap_clear(he, c["origin_um"][0] + dx + px, c["origin_um"][1] + dy + py, [t["xy"] for t in taps if t.get("xy")])
 name = c["inst"] + ".clk"
 assert not any(t.get("name") == name for t in taps)
 taps.append(dict(name=name, kind="core", xy=list(xy), insertion_ps=L, insertion_ff_ps=round(0.81 * L, 3),
                  note="HEAD-REMAP-1 rp21z20 (c) / FABLE-HARD-QCHEAD 1: u_epc tap from the pin-referenced arcs (L 330-400 ps, not the 421 ps largest output latency)"))
 he["clock"]["core_taps"] = "early"
-he["pg_face_cut"] = True
-he["note"] += " | HEAD-REMAP-1 rp21z20 (c): u_epc input-latency core tap (insertion %g ps) + pg_face_cut (parent PG stripes stop before the u_epc pin faces)." % L
+he["note"] += " | HEAD-REMAP-1 rp21z20 (c): u_epc input-latency core tap (insertion %g ps) (PG cut = env OT_PG_FACE_CUT=1 at gen, PG-AWARE-1)." % L
 print("hd_host_e u_epc tap", xy, "L", L)
 
 d["note"] = d["note"].replace("rp21z19 HEAD FINAL", "rp21z20 HEAD FINAL")

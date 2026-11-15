@@ -56,9 +56,9 @@ def tap_refs(t):
     return out
 
 
-def match_taps(old, new, tol_um):
+def match_taps(old, new, tol_um, need=None):
     """old / new: {name: (xy, frozenset(sink keys))}.  -> {old name: (new name, moved_um, overlap)} for every old
-    name; injective; same-name identical group = identity.  Raises RemapError (fail closed) when a name has no
+    name (or every name in `need`: unreferenced taps may vanish); injective; same-name identical group = identity.  Raises RemapError (fail closed) when a name has no
     successor within tol_um."""
     cand = []
     for on, (oxy, og) in old.items():
@@ -74,7 +74,7 @@ def match_taps(old, new, tol_um):
         used.add(nn)
     bad = []
     for on in sorted(old):
-        if on in out:
+        if on in out or (need is not None and on not in need):
             continue
         free = [(_d(old[on][0], v[0]), nn) for nn, v in new.items() if nn not in used]
         if not free or min(free)[0] > tol_um:
@@ -196,7 +196,8 @@ def remap_plan(old_raw, new_raw, root, plan_dir, types=None, keep_anchor=False, 
         if ck.get("tap_mode") != "density":
             rec["skipped"].append(f"{tn}: tap_mode {ck.get('tap_mode')!r} (names are plan-defined)")
             continue
-        m = match_taps(groups_fn(old_raw, tn), groups_fn(new_raw, tn), float(ck.get("tap_radius_um", 200.0)))
+        m = match_taps(groups_fn(old_raw, tn), groups_fn(new_raw, tn), float(ck.get("tap_radius_um", 200.0)),
+                       need={c[k] for c, k in tap_refs(t_new)})
         rows = remap_type_taps(tn, t_new, m)
         if rows:
             rec["taps"].append(dict(type=tn, remaps=rows))

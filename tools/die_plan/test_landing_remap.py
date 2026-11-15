@@ -139,3 +139,11 @@ def test_adopt_by_key_takes_old_names_for_same_port_pin_stage_local():
     ad = LR.adopt_by_key(old, new)
     assert new == old and len(ad) == 6
     assert LR.adopt_by_key(old, new) == []
+
+
+def test_unreferenced_taps_may_vanish():
+    old = _g(("a", (0, 0), {(1, 1)}), ("b", (900, 900), {(5, 5)}))
+    new = _g(("x", (0, 0), {(1, 1)}))
+    with pytest.raises(LR.RemapError):
+        LR.match_taps(old, new, 50)
+    assert LR.match_taps(old, new, 50, need={"a"}) == {"a": ("x", 0, 1)}
