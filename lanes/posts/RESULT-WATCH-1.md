@@ -16,3 +16,4 @@
 - 2026-11-15 03:00 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-S81PHY] tl-s81phy on intel1: process gone (no signoff.json/result.json)
 - 2026-11-15 04:30 PST RESULT-WATCH [RESULT-WATCH-1 -> S81-CORES-2] s81-cores-2/bksel_nsesc/bksel_vC9nsesc on epyc8: process gone (no signoff.json/result.json)
 - 2026-11-15 09:10 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-COLH9R0P6] tl-colh9r0p6/fc on epyc10: process gone (no signoff.json/result.json)
+- 2026-11-15 14:50 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-COLH9R0P5] type-s81-col-h9-r0-p5/fm_8995e794 on epyc9: process gone (no signoff.json/result.json)
