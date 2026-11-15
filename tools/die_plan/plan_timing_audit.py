@@ -240,6 +240,9 @@ def audit_cores(P, root=None, arcs=True):
                     clkq, setup = lib_boundary_arcs(lib)
                 except OSError:
                     pass
+            # a core with a split clock pin (S81 idx_tx_n32: ck_face for the face registers, ck for the rest): the boundary arcs
+            # belong to the face registers, so the arc headroom reads the ck_face insertion and tap; other pins get no arc row.
+            bpin = "ck_face" if "ck_face" in loaded else None
             for pin, val in sorted(loaded.items()):
                 I = float(val["corners"]["tt"]["mean_ps"])
                 tp = _tap_for(t, core["inst"], pin)
@@ -255,7 +258,7 @@ def audit_cores(P, root=None, arcs=True):
                     if abs(I - ti) > tol + EPS:
                         reasons.append(f"early tap declares {ti:.0f} ps, measured depth {I:.0f} ps (|d| {abs(I - ti):.0f} > tol {tol:.0f})")
                 head = None
-                if clkq is not None and setup is not None and (clkq or setup):
+                if clkq is not None and setup is not None and (clkq or setup) and (bpin is None or pin == bpin):
                     # an early tap delivers the core clock earlier than the die common latency, and the liberty arc carries the
                     # core's own insertion (QC-CORES-HEAD 11-15): credit it.  eff clk->q = common + clk->q - tap insertion.
                     eff = clkq if tp is None else common + clkq - float(tp.get("insertion_ps", common))

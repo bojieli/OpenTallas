@@ -187,3 +187,19 @@ def test_early_tap_credits_the_boundary_arc(monkeypatch, tmp_path):
     fake_load(monkeypatch, 100.0)                           # no tap: the old form (6.5) still fails
     (n,) = rows_for(core_plan(lib=lib))
     assert n["verdict"] == "FAIL" and n["arc_headroom_ps"] == 6.5
+
+
+def test_split_clock_pin_reads_ck_face_for_the_boundary_arcs(monkeypatch, tmp_path):
+    lib = tmp_path / "c.lib"
+    lib.write_text(LIB)                                     # clk->q 480.5 + setup 346: headroom 6.5 without a tap credit
+    mk = lambda m: dict(corners=dict(tt=dict(mean_ps=m, basis="pin_register_mean"), ff=dict(mean_ps=m)), signed=True)
+    monkeypatch.setattr(CC, "load", lambda core, root=None, require_signed=True, plan_type=None: {"ck": mk(300.0), "ck_face": mk(533.0)})
+    p = core_plan(lib=lib, tap=dict(insertion_ps=533.0))
+    common = float(p.clock["insertion_ps"])
+    rows = {r["pin"]: r for r in rows_for(p)}
+    assert rows["ck_face"]["tap"] == "early" and rows["ck_face"]["verdict"] == "PASS"
+    assert abs(rows["ck_face"]["arc_headroom_ps"] - (833.0 - (common + 480.5 - 533.0) - 346.0)) < 0.2
+    assert rows["ck"]["arc_headroom_ps"] is None            # the non-face pin carries no boundary-arc row
+    monkeypatch.setattr(CC, "load", lambda core, root=None, require_signed=True, plan_type=None: {"ck": mk(300.0)})
+    (only,) = rows_for(core_plan(lib=lib))                  # no ck_face: the old single-pin form
+    assert only["arc_headroom_ps"] == 6.5
