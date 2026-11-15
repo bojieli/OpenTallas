@@ -264,3 +264,35 @@ def test_tap_fall_merge_reads_both_readout_forms(tmp_path):
     assert (t["a"]["fall_late_ps"], t["a"]["fall_early_ps"]) == (130.0, 120.0)
     assert (t["b"]["fall_late_ps"], t["b"]["fall_early_ps"]) == (250.0, 230.0)
     assert "fall_late_ps" not in t["c"] and (tmp_path / "o" / "droop_regions.json").exists()
+
+
+def _tap(part, port, late, early, node):
+    return {"port": f"t_{part}__{port}", "part": part, "late_ps": late, "early_ps": early, "cppr_node": node, "slew_ps": 20.0}
+
+
+def test_same_region_count_aligned_ring_gets_an_interval():
+    """KIT-OPS-6 11-15 (FABLE-TRIAGE-HEADKV 21, KV 320 'no taps'): two partitions in ONE clock region (same cppr_node) with a count-aligned port:
+    build_pairs classed their tap pairs 'seam' so count_align_port_intervals saw none."""
+    rows = [_tap("phy", "clk_t1", 300.0, 290.0, "r1"), _tap("phy", "clk_t2", 305.0, 295.0, "r1"),
+            _tap("pc", "clk_t1", 310.0, 300.0, "r1"), _tap("pc", "clk_t2", 312.0, 302.0, "r1")]
+    taps = {r["port"]: r for r in rows}
+    plan = {"ports": [{"id": "p0", "src": {"part": "phy", "bus": "b"}, "dst": {"part": "pc", "bus": "b"}, "width": 4}]}
+    ports = {"p0": {"src": "phy", "dst": "pc", "src_part": "phy", "dst_part": "pc"}}
+    old, _ = D.build_pairs(plan, taps)
+    assert len(old["seam"]) == 4 and not old["landed"]                       # the bug: nothing landed
+    iv0, unb0, n0 = D.count_align_port_intervals(ports, old["landed"], taps, {"r1": 1.0})
+    assert "p0" not in iv0 and not n0                                        # -> 'no taps'
+    new, _ = D.build_pairs(plan, taps, D.ca_named_pairs(ports))
+    assert len(new["landed"]) == 4 and new["seam"] == []                      # moved out of the single-cycle seam class
+    iv, unb, n = D.count_align_port_intervals(ports, new["landed"], taps, {"r1": 1.0})
+    assert n == {"p0": 4} and iv["p0"][0] <= iv["p0"][1] and not unb          # 'no taps 0', full pair count
+
+
+def test_unnamed_same_region_pairs_stay_seam_and_default_is_unchanged():
+    rows = [_tap("a", "clk_t1", 300.0, 290.0, "r1"), _tap("b", "clk_t1", 310.0, 300.0, "r1")]
+    taps = {r["port"]: r for r in rows}
+    plan = {"ports": [{"id": "p", "src": {"part": "a", "bus": "x"}, "dst": {"part": "b", "bus": "x"}, "width": 1}]}
+    other = D.ca_named_pairs({"q": {"src": "a", "dst": "c", "src_part": "a", "dst_part": "c"}})
+    p1, _ = D.build_pairs(plan, taps, other)
+    p0, _ = D.build_pairs(plan, taps)
+    assert len(p1["seam"]) == len(p0["seam"]) == 1 and not p1["landed"] and not p0["landed"]
