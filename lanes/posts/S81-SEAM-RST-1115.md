@@ -42,3 +42,29 @@
   recovery fails: before 4369 (worst -745) -> pa 376 (-326) -> pb 431 (-264)
   removal fails:  before 286 (worst -264) -> pa 465 (-229) -> pb 392 (-210)
   So replicate cuts recovery 91 pct (4369 -> 376); plrc does not beat it (pb: recovery +55 fails, removal -73 fails, worst both a little better; no net win) -> rows only; keep plrc on the branch, unused. Not closed: -326/-264 recovery on u_u_y_rt_0a_3/4, rt_4b_4 (59-load nets, one copy per relay name spans the leg chain) and removal -229 on the new copy -> relay rq pin (u_d14_u_cf_rs_r85 -> u_y_x2_1_0 rq: copy flop and rq on different taps). Next measured step: grid_um 300 (per core-tap region, as the r1/r2 rows use) instead of per-relay regions, to put each copy on its sinks' tap. Pilot dirs epyc10 s81-seam-rst-1115/pilot/{pa,pb}; STA script ac5.tcl there.
+- 2026-11-15 11:42 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc COORD] col_h9_r0_p6 4_cts async STA (before: recovery 4369 worst -745, removal 286 worst -264; pa replicate regex: 376/-326, 465/-229). pc = replicate grid_um 300; pc2 = grid 300 + one copy per sink instance; pd = plrc + RSSLICE (async rq per 32); pe = sync registered clear per chunk (plrs on seam writers, relay rq <= rs via RSSLICE+RQSYNC), d14 chain unchanged; pf = pe + replicate grid 300:
+  == pc
+  KIND max endpoints 8401 failing 423 worst -327.906250 net146618 {u_bound.u_u_y_rt_0a_4.u.o[45]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 37
+  KIND min endpoints 8401 failing 352 worst -180.178040 {u_bound.d14_u_cf_rs_r62[0]} {u_bound.u_u_y_rt_6b_0.u.g_rsreg.rq$_DFF_PN0_/RESETN}
+  KIND min failing_nets 33
+  == pc2
+  KIND max endpoints 8422 failing 0 worst 103.754448 net172146 {u_bound.u_u_lpl_9_w.u_y_w.g_chunk[9].r[15]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 0
+  KIND min endpoints 8422 failing 579 worst -237.905197 {u_bound.d14_u_cf_rs_r77[0]} {u_bound.u_u_y_rt_2b_1.u.g_rsreg.rq$_DFF_PN0_/RESETN}
+  KIND min failing_nets 35
+  == pd
+  KIND max endpoints 8573 failing 170 worst -599.784912 net146657 {u_bound.u_u_y_rt_0a_2.u.g_rsslice.g_s[1].u_rq/q$_DFF_PN0_/RESETN}
+  KIND max failing_nets 35
+  KIND min endpoints 8573 failing 242 worst -202.830612 {u_bound.u_u_lpl_0_r.g_chunk[2].wr} {u_bound.u_u_lpl_0_r.u_y_q.g_chunk[2].r[3]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 22
+  == pe
+  KIND max endpoints 8379 failing 393 worst -324.429382 net168902 {u_bound.u_u_y_es_p2_0.u.o[0]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 44
+  KIND min endpoints 8379 failing 373 worst -417.964050 {u_bound.u_u_y_rt_6a_1.u.g_rsslice.g_s[0].q} {u_bound.u_u_y_rt_6a_1.u.o[11]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 33
+  == pf
+  KIND max endpoints 8379 failing 0 worst 43.519188 net179081 {u_bound.u_u_y_rt_4b_2.u.o[37]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 0
+  KIND min endpoints 8379 failing 993 worst -380.318176 net179092 {u_bound.u_u_y_rt_8a_0.u.o[17]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 86

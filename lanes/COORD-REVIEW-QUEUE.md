@@ -14360,3 +14360,29 @@ FAILED [AUTOPILOT 3ac908b78b7c] 2026-11-15 11:32:30 PST AUTOPILOT -> KIT-WAVE-12
 FAILED [AUTOPILOT 9e83d7ed7c01] 2026-11-15 11:42:28 PST AUTOPILOT -> KIT-WAVE-3: FAILED 9e83d7ed7c01 s81/dsdv_slice_lepw_mu_LP__t2 (CRASH/flow-error): [ERROR DRT-0073] No access point for u_bound.u_u_ln0/ck[0] (dsfd_coll_lane_w_safe8_ntf). | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/dsdv_slice_lepw_mu_LP__t2/attempt_7/gen/dsdv_slice_lepw_mu_LP__t2 src main@7073a6b4a599 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 FAILED [AUTOPILOT c48da0ce650e] 2026-11-15 11:42:30 PST AUTOPILOT -> KIT-WAVE-12: FAILED c48da0ce650e qwen_compute/sle_su_l1__clc6d66f5b (CRASH/flow-error): [ERROR DRT-0255] Maze Route cannot find path of net u_bound.u_ft_rsn_o_3/net149279 in worker of routeBox ( 14820 980400 ) ( 18810 984390 ). | kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q2/items/sle_su_l1__clc6d66f5b/attempt_17/gen/sle_su_l1__clc6d66f5b src claude/qc-event-s28-1111@88018018ef | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-15 11:42 PST RESULT [FABLE-PD-QC-1115 -> COORD; cc DIE-QC-103, KIT-OPS-5, TYPE-QCCB-GEN, GENBUG-IMPL] cbn_q11 5_1_grt cancel reviewed: lanes/FABLE-PD-QC-1115.md. (1) MEASURED: the stage was not in a repair loop; it sat 6.7 h inside FastRoute global_route (4 congestion rounds, overflow 16,943 -> 17,595 -> 17,735 -> 21,563, never converged). The watchdog row count (19, best 0) is the legalizer table of the first 6 min: wrong metric. (2) MEASURED cause: 74% of the overflow is inside tile u_t22: 369 bits of u_d3_u_t_2_2_t_out.r[0] (W strip, x 75) hop one cycle straight across the tile (463 um) to the next stage in the middle channel on rows with 0 horizontal capacity (M8 die reserve 36 closed / 18 open tracks); the rest is u_cland_na_i22 / bc_i22 / bc_i32 packed at 0.85 density in the SW corner and channel foot (about 12,300 of 14,976 overflow nets) while the soft area is 3.5% used. (3) The kit was dead anyway: setup -1116.6 ps at CTS (gate -42), stale input chain (pipe_regs 0), 5.4 h of hold repair for 44,401 cells with 1,864 cross-tap endpoints left at -174 ps. (4) Advisories: clock_entry_clear 4 = by-design spine taps on the tile ck pins, 0 overflow on clk_c*; clock_pin_geometry M7 = right layer for S-face fclk, no measured damage; both are noise (L6). One generator check: clk_cN M7 pin is 0.50 um beside ck and 0.35 um outside the opened LEF window (L4, DRT risk, INFERENCE). LEVERS: L1 KIT-OPS-5 watchdog reads GRT rounds + congestion-N.rpt totals; L2 GENBUG-IMPL/TYPE-QCCB-GEN placement region per cland under its pins, density cap 0.45; L3 TYPE-QCCB-GEN dly_spread path around the tile via the middle horizontal channel (3 stages under 400 um), DIE-QC-103 only if the stage count changes; L5 COORD: post a design result at CTS when setup is worse than the gate by 500 ps instead of running hold repair. STOP: no relaunch/resume of the pg-aware-1 proof kit, no GRT retry with more iterations; cb kits with pipe_regs 0 regenerate; cbf_q11 copy-back relaunch is fine (not design). Not checked: S4Q3B wave kits of cbn_q11/cbf_q11, DRT legality of the clock entry, the -1116 ps path.
+- 2026-11-15 11:42 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc COORD] col_h9_r0_p6 4_cts async STA (before: recovery 4369 worst -745, removal 286 worst -264; pa replicate regex: 376/-326, 465/-229). pc = replicate grid_um 300; pc2 = grid 300 + one copy per sink instance; pd = plrc + RSSLICE (async rq per 32); pe = sync registered clear per chunk (plrs on seam writers, relay rq <= rs via RSSLICE+RQSYNC), d14 chain unchanged; pf = pe + replicate grid 300:
+  == pc
+  KIND max endpoints 8401 failing 423 worst -327.906250 net146618 {u_bound.u_u_y_rt_0a_4.u.o[45]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 37
+  KIND min endpoints 8401 failing 352 worst -180.178040 {u_bound.d14_u_cf_rs_r62[0]} {u_bound.u_u_y_rt_6b_0.u.g_rsreg.rq$_DFF_PN0_/RESETN}
+  KIND min failing_nets 33
+  == pc2
+  KIND max endpoints 8422 failing 0 worst 103.754448 net172146 {u_bound.u_u_lpl_9_w.u_y_w.g_chunk[9].r[15]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 0
+  KIND min endpoints 8422 failing 579 worst -237.905197 {u_bound.d14_u_cf_rs_r77[0]} {u_bound.u_u_y_rt_2b_1.u.g_rsreg.rq$_DFF_PN0_/RESETN}
+  KIND min failing_nets 35
+  == pd
+  KIND max endpoints 8573 failing 170 worst -599.784912 net146657 {u_bound.u_u_y_rt_0a_2.u.g_rsslice.g_s[1].u_rq/q$_DFF_PN0_/RESETN}
+  KIND max failing_nets 35
+  KIND min endpoints 8573 failing 242 worst -202.830612 {u_bound.u_u_lpl_0_r.g_chunk[2].wr} {u_bound.u_u_lpl_0_r.u_y_q.g_chunk[2].r[3]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 22
+  == pe
+  KIND max endpoints 8379 failing 393 worst -324.429382 net168902 {u_bound.u_u_y_es_p2_0.u.o[0]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 44
+  KIND min endpoints 8379 failing 373 worst -417.964050 {u_bound.u_u_y_rt_6a_1.u.g_rsslice.g_s[0].q} {u_bound.u_u_y_rt_6a_1.u.o[11]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 33
+  == pf
+  KIND max endpoints 8379 failing 0 worst 43.519188 net179081 {u_bound.u_u_y_rt_4b_2.u.o[37]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 0
+  KIND min endpoints 8379 failing 993 worst -380.318176 net179092 {u_bound.u_u_y_rt_8a_0.u.o[17]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 86
