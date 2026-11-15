@@ -121,3 +121,76 @@ sites and GEOM), the bind/RTL side of dedicated start ports (count_align_bind.py
 run), and the B6 clock kit (this is B3x2d).
 DECISION: use the third row as the S81 CA plan form. Run count_align_bind (plain + strap) on it now with the 6
 edges listed as open; fix them by the fall dump in parallel. No plan re-floor and no station equalisation.
+
+## D. Leaf kit generation failures on the adopted B6gsh (S81-LEAF-PLAN cp27 control), 06:15 PST
+
+All three reproduce from the B6gsh tree and plan alone; none is the leaf delta, none is the kit env flags.
+The release wave WOULD hit all three if it is repointed to run/b/B6gsh/src + ev/B6gsh.json as is.
+
+D1. sdc_lint core tap window (t14, t54 x2). KIT SETUP (stale lint in the bound tree), not plan, not generator.
+  B6 is the first S81 plan with clock.tap_offset rows (R-CLOCK-7): 395 of 395 types have rows, 334 of them on
+  core taps (clk_cN), tol 0 everywhere; the wave plan B3x2b has 0 rows. gen_phys writes the offset form
+  (-early o-u / -late o+u). The lint that accepts this form is main 1ab1a16c27f; the wave tree B3x2b/src has
+  it (sdc_lint sha1 5d78ad92, installed 11-15 06:20 UTC), but overlay ovl_b6h ships the older sdc_lint b38eb379
+  (11-14 02:39) and B6gsh/src and LT2/src carry that copy. Same drift on gen_phys.py (B3x2b 210e9b8f 11:43 vs
+  B6gsh 2a22a996 09:59) and bind.py.
+  Hits: 334 types certain (core-tap rows), expected all 395 (every type has offset rows; the old lint also
+  rejects grid-port offsets); t17/t72/t62 only fail earlier on D2/D3.
+  Fix (KIT-OPS-5 with DIE-S81-92): wave src for the release = B6gsh/src + the wave overlay set, with
+  tools/die_plan/sdc_lint.py = main (5d78ad92 or newer); remove sdc_lint.py from ovl_b6h; run
+  hook_manifest.py check on the tree before the tick. NOT RUN: I did not regenerate t14 with the new lint.
+  Advisory: tol 0 on all rows means every tap is timed at an exact offset; R-CLOCK-7 intends a tolerance u.
+
+D2. Reset collectors differ from the bound RTL (t17, t72). PLAN (stale collector publish), 9 types.
+  Scan of all 395 types with the same comparison the generator makes (epyc7 fable-pd-s81/collscan.py B6gsh):
+  326 match, 60 inactive, 9 MISMATCH: leaf t8 t12 t17 t33 t52 t59 t68 t72 and kv_leaf t3.
+  Not a stale sidecar: sidecar_new.json, the bind output bind_clock_landings.json and the plan
+  collector_tree / collector_local_sources all agree with each other and all disagree with the emitted RTL.
+  t17: the plan publishes landing source ft1_i on reset tap 46 and ft2_i on tap 47; the bound RTL collects
+  ft1_i at rst_n_t20 and ft2_i at rst_n_t18 (bands moved in B6, the contract tap of the source did not).
+  Fix (DIE-S81-92): collector_reattach.py + stage_sidecar_collector_sync.py on those 9 types in the next
+  delta, regenerate sidecar_new.json, re-run collscan.py until 0. The bound RTL already has the right taps,
+  so the RTL should not change; confirm by the delta bind. If reattach reproduces taps 46/47, it is the bind
+  emitter (GENBUG-IMPL), not the plan: say so at once. NOT CLOSED: I did not run reattach.
+
+D3. t62 ORIENT-OFF-TRACK. PLAN (introduced in B6), 13 types.
+  ot_dsrom_su_hcpost_lane_pr in an x-mirrored orient has no on-track origin (M3 and M5 pin phases;
+  LEAF-DRT73-1). B6gsh holds 8 R180 + 5 MY lanes, one each in 13 types: leaf t4 t7 t25__cl431c660f t33 t37
+  t45 t46 t53__clb66fa5cb t58 t62 t67 t73 and kv_leaf t3. Wave plan B3x2b: 0. B6gsl (LT2): the same 13.
+  Fix (S81-LEAF-PLAN): orient_realize.py --types on those 13 (R180 -> MX, MY -> R0), re-derive taps and lane
+  ends on swapped faces, hand the type rows to DIE-S81-92 for the same delta as D2; add the orient check to
+  core_place so a move cannot bring it back. NOT CONFIRMED BY TOOL: the whole-plan dry run did not finish in
+  560 s; the count is a plan scan of this master only (the 5 MY by the rule in the tool header), other
+  masters unscanned.
+
+Union D2 + D3: 20 distinct leaf types need a plan row change (t33 and kv_leaf t3 are in both).
+
+## E. CA delta compose (phy_hbm 8 landings, 5.6M flops), 06:15 PST
+
+(a) 5.6M is a formula total, not a net add and not a bug. requirements.json: 2,330 crossings, 1,120,119 bits,
+  and 5 flops per bit (clock_landing_plan.py: live storage = 5 x (width + epoch), depth-blind; the same line
+  prices HEAD and KV, so the per-bit cost is identical there; their totals were not measured).
+  The +3 form of today already has 993 crossings, 447,111 bits = 2.24M storage flops.
+(b) The real problem is the REGION MAP, not the CA form. The compose used the identity map (398 regions = one
+  per partition). The adopted plan has 98 clock regions; partitions in one region are plain synchronous
+  neighbours with no landing. Split of the 2,330 (depths from ca_g3f plan_nohop.json):
+    cross-region, landed today:    508 at depth 4 (232,742 bits) + 485 at depth 8 (214,369 bits)
+    same region, no landing today: 869 at depth 4 (388,373 bits) + 468 at depth 8 (284,635 bits)
+  The 1,337 same-region crossings (673,008 bits, 3.4M flops at 5/bit, 4.5M at depth + 1) are pure cost:
+  the fixed +3 does not exist there either, and die STA times them directly.
+  RULE: CA applies only where a landing exists today, the 993 cross-region crossings. Depth-4 rings replace
+  the +3 rings one for one (0 added flops); the 485 depth-8 crossings add 4 flops/bit = 857,476 flops.
+  Re-plan them with --depth-guard-ps 208 instead of 833 (the table is now on the B6 kit, the large guard is
+  no longer needed); NOT MEASURED how many drop back to depth 4.
+(c) phy_hbm: neither multi-landing nor a dfi merge. All 17 phy_hbm crossings (dfi_i0..7, hbmrd, flt) are
+  inside region hard_phy_hbm, shared with eng and svc_2/4/6/8/10/12. On the 98-region map phy_hbm has 0
+  landings, as in the adopted plan, and the compose restriction never triggers.
+MINIMAL PATH (DIE-S81-92):
+  1. Region table = the 98 tags of B6gsh sidecar_new.json regions[] (tag -> parts), in place of
+     regions_part.json; rebuild regions_ca_strap.json on ca_g3f (fall arrivals, strap form).
+  2. Re-plan (same args as section C, guard 208); expect 993 crossings. Check 0 no-K and 0 unclean start
+     edges again: the start tree changes with the region set.
+  3. ca_compose.sh -> run_bind_ca.sh -> LATCHECK; fold D2 + D3 rows into the same delta.
+  4. Release the 350 on that bind with the D1 tree fix.
+NOT CHECKED: that count_align_plan / ca_region_table accept the 98-tag table unchanged (ca_merge.sh and
+ca_merge2.sh exist in die-clk-s81-b6, not read), and the compose result itself.
