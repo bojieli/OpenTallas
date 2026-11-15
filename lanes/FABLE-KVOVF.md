@@ -188,6 +188,13 @@ the script does not separate that. Not followed up.
 - Per-core last-stage copy only (forms r_hgi2, r_hg; stopped 01:5x on COORD order). MEASURED r_hgi2: the copies sit at
   their cores, but the two stages before them stay at the ring (y about 993), so the long hop moves one stage upstream
   (755 um in head 2, about 1,000 um in head 3). CTS setup -365 ps / TNS -277k against -366 ps / -142k for keep only.
+- Private chains without stationing (forms c_hgi2, c_hg; stopped 03:0x on COORD order). MEASURED c_hgi2: placement
+  -600 ps / -303k, CTS -495 ps / TNS -379k (keep only: -366 / -142k). Global placement does not spread a linear register
+  chain: the kit relay hook found the 24 chain groups and stationed 0, because the ring that drives them is not fixed yet
+  when the hook runs.
+- relay_mid.tcl as shipped on these chains (forms s_hgi2, s_hg; stopped 02:3x by me, superseded by t_*): stations at
+  1/4, 2/4, 3/4 leave a last hop of 310-400 um on head 3, and the last station stops on the near side of a core whose
+  pins face away.
 
 ## 9. Update 2026-11-15 01:55 PST
 
@@ -204,3 +211,16 @@ the script does not separate that. Not followed up.
 - m7a (TYPE-KVHGI2, merged netlist + M7 close): first global route total congestion 234 (M5 2 / M6 1 / M7 231) against 624
   in the control; the first incremental route passed without GRT-0232.
 - Running: k_hgi2, k_hgi2_m7 (global route), k_hg, k_hg_m7 (CTS), c_hgi2, c_hg.
+
+## 10. Update 2026-11-15 03:05 PST
+
+Forms t_hgi2 / t_hg (launched 02:35 from synth, epyc2; copies on epyc7/9/10): private three-stage chain per front core
+(rep_chain.py) + keep + the kit copy of relay_mid.tcl with three edits (`fable-kvovf/bin/relay_deep.tcl`, `mk_s.sh`, `mk_t.sh`):
+1. a chain head with soft drivers takes its source from a deeper backward trace to fixed points, sampled evenly over the bank;
+2. `OT_RELAY_MID_TAIL_AT_SINK = 1`: stations at L*j/n, so the last stage is at the sink;
+3. the last station searches rings around the sink pins, not along the line. `OT_RELAY_MID_MAX_HOP_UM = 520`.
+
+MEASURED t_hgi2 stationing log: 21 of 24 stations, 16,707 flops FIRM (the 3 left to placement are the head-2 e6 chain,
+span under 200 um). Source centroids (128-137, 890-980). Last stations at y 262 / 303 / 648 / 968 for pins at
+233 / 337 / 683 / 1002, both heads. Longest stage hops about 520 um (head 3: source -> g 519, ftg -> t2 425).
+Timing: pending (CTS report).
