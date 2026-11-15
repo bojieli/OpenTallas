@@ -93,8 +93,32 @@ def in_scope(p):
     return not (b.startswith("test_") or "/tests/" in p or b.endswith((".pyc",)))
 
 
+_BLOBS = {}
+
+
+def read_blobs(oids):
+    """{oid: bytes} through ONE git cat-file --batch (a git show per file costs ~1 s in this repo: main_names took 35+ min)"""
+    want = sorted({o for o in oids if o and o not in _BLOBS})
+    if want:
+        p = S.run(["git", "cat-file", "--batch"], cwd=str(REPO), input=("\n".join(want) + "\n").encode(),
+                  capture_output=True, timeout=1800)
+        buf, i = p.stdout, 0
+        while i < len(buf):
+            j = buf.index(b"\n", i)
+            head = buf[i:j].split()
+            i = j + 1
+            if len(head) < 3 or head[1] == b"missing":
+                continue
+            n = int(head[2])
+            _BLOBS[head[0].decode()] = buf[i:i + n]
+            i += n + 1
+    return {o: _BLOBS.get(o) for o in oids if o}
+
+
 def blob_at(rev, path):
-    p = S.run(["git", "show", f"{rev}:{path}"], cwd=str(REPO), capture_output=True, timeout=300)
+    if path is None and rev in _BLOBS:
+        return _BLOBS[rev]
+    p = S.run(["git", "show", f"{rev}:{path}" if path else rev], cwd=str(REPO), capture_output=True, timeout=300)
     return p.stdout if p.returncode == 0 else None
 
 
@@ -109,6 +133,80 @@ def history_blobs(paths, since="2026-10-01"):
         if len(f) >= 6 and line.startswith(":"):
             out.setdefault(f[5], set()).add(f[3])
     return out
+
+
+def prefetch(oids):
+    """fetch every missing blob of a partial clone in ONE request (a lazy git show fetches one blob per round trip: the
+    11-15 dry runs timed out after 20-50 min on that)"""
+    oids = sorted({o for o in oids if o})
+    if not oids:
+        return 0
+    env = dict(os.environ, GIT_NO_LAZY_FETCH="1")
+    p = S.run(["git", "cat-file", "--batch-check"], cwd=str(REPO), input="\n".join(oids) + "\n", capture_output=True,
+              text=True, env=env, timeout=600)
+    miss = [l.split()[0] for l in p.stdout.splitlines() if l.endswith(" missing")]
+    for i in range(0, len(miss), 2000):
+        S.run(["git", "-c", "fetch.negotiationAlgorithm=noop", "fetch", "-q", "--no-tags", "--no-write-fetch-head",
+               "--filter=blob:none", REMOTE, *miss[i:i + 2000]], cwd=str(REPO), capture_output=True, timeout=1800)
+    return len(miss)
+
+
+def tree_blobs(rev, paths=("tools",)):
+    """{path: blob id} at rev under paths"""
+    out = {}
+    for line in git("ls-tree", "-r", rev, "--", *paths, check=False).splitlines():
+        meta, _, path = line.partition("\t")
+        f = meta.split()
+        if len(f) == 3 and f[1] == "blob":
+            out[path] = f[2]
+    return out
+
+
+def _numstat(a, b):
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        x, y = os.path.join(td, "x"), os.path.join(td, "y")
+        open(x, "wb").write(a); open(y, "wb").write(b)
+        o = S.run(["git", "diff", "--no-index", "--numstat", x, y], capture_output=True, text=True).stdout.split()
+    return int(o[0]) + int(o[1]) if len(o) >= 2 and o[0].isdigit() else (0 if a == b else 10 ** 9)
+
+
+def closest_bases(host, src, paths, hist):
+    """{path: base bytes}: for each tree copy that is a LOCAL edit (no main version equals it), the main version (from
+    hist) closest to it.  06:00 11-15 the merge base was the last daily sha; the KV schema.py lane copy predates it, so
+    everything main added before that sha read as a local deletion and the clean merge dropped full_area_hard_ip."""
+    code = ("import base64, json, os\nsrc = %r\nout = {}\nfor r in %r:\n    p = os.path.join(src, r)\n"
+            "    out[r] = base64.b64encode(open(p, 'rb').read()).decode() if os.path.isfile(p) else None\nprint(json.dumps(out))\n"
+            % (_root(host, src), list(paths)))
+    p = S.run(_cmd(host, code), capture_output=True, text=True, timeout=600)
+    try:
+        got = json.loads(p.stdout.strip().splitlines()[-1])
+    except (ValueError, IndexError):
+        return {}
+    out = {}
+    for r, v in got.items():
+        if v is None or not hist.get(r):
+            continue
+        have = base64.b64decode(v)
+        cands = sorted(hist[r])
+        if any(bid_local(have) == c for c in cands):
+            continue                                     # an earlier main version: REPLACE, no merge needed
+        read_blobs(cands[-MAX_HIST:])
+        best = None
+        for c in cands[-MAX_HIST:]:
+            b = blob_at(c, None)
+            if b is None:
+                continue
+            d = _numstat(b, have)
+            if best is None or d < best[0]:
+                best = (d, b)
+        if best:
+            out[r] = best[1]
+    return out
+
+
+def bid_local(b):
+    return hashlib.sha1(b"blob %d\0" % len(b) + b).hexdigest()
 
 
 def targets(cfg):
@@ -127,8 +225,46 @@ def targets(cfg):
 
 # ---------------------------------------------------------------- remote part (runs on the gen host, python3 -I, stdin = JSON)
 
+NAMES_PY = r'''
+def top_names(code, rel):
+    """top-level defs/classes (.py) or proc names (.tcl); None = cannot judge"""
+    import ast, re
+    if rel.endswith(".tcl"):
+        return set(re.findall(rb"^\s*proc\s+(\S+)", code, re.M))
+    if not rel.endswith(".py"):
+        return None
+    try:
+        t = ast.parse(code)
+    except SyntaxError:
+        return None
+    return {n.name for n in t.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))}
+def mod_names(code):
+    """every name a module binds anywhere (defs, classes, assignments, imports, globals); None = dynamic (star import, __getattr__)"""
+    import ast
+    try:
+        t = ast.parse(code)
+    except SyntaxError:
+        return None
+    out, star = set(), False
+    for n in ast.walk(t):
+        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            out.add(n.name)
+        elif isinstance(n, (ast.Assign, ast.AnnAssign, ast.AugAssign)):
+            for tg in (n.targets if isinstance(n, ast.Assign) else [n.target]):
+                out |= {x.id for x in ast.walk(tg) if isinstance(x, ast.Name)}
+        elif isinstance(n, ast.Import):
+            out |= {(a.asname or a.name).split(".")[0] for a in n.names}
+        elif isinstance(n, ast.ImportFrom):
+            star = star or any(a.name == "*" for a in n.names)
+            out |= {a.asname or a.name for a in n.names if a.name != "*"}
+        elif isinstance(n, ast.Global):
+            out |= set(n.names)
+    return None if star or "__getattr__" in out else out
+'''
+
 REMOTE_PY = r'''
 import base64, hashlib, json, os, shutil, subprocess, sys, tempfile
+__NAMES__
 job = json.loads(sys.stdin.read())
 src, apply_, stamp = job["src"], job["apply"], job["stamp"]
 mode = job.get("mode") or ("apply" if apply_ else "dry")          # dry / stage / apply / rollback
@@ -218,6 +354,15 @@ for f in job["files"]:
             if p.returncode != 0:
                 r.update(status="CONFLICT", note=f"{p.returncode} conflict hunk(s)"); res.append(r); continue
             out, st = p.stdout, "MERGE"
+            # 06:00 11-15: KV schema.py was a lane copy from before the merge base; everything main had added before the base
+            # read as a local deletion and the clean merge dropped full_area_hard_ip (53 KV gens failed).  A merge that loses
+            # a top-level def/class/proc main's version has -> wrong base: take main's version (the tree copy stays in the backup).
+            nn, mn = top_names(new, rel), top_names(out, rel)
+            lost = sorted(x if isinstance(x, str) else x.decode(errors="replace") for x in (nn - mn)) if nn is not None and mn is not None else []
+            if lost:                                     # wrong base or a real lane deletion: never decide it here
+                r.update(status="CONFLICT", note="merge would drop main's " + ", ".join(lost[:8]) + (" ..." if len(lost) > 8 else "")
+                         + " (kept; the die lane merges it)")
+                res.append(r); continue
     else:
         r.update(status="LOCAL", note="local edit, no known base"); res.append(r); continue
     u = users(t) if have is not None else []
@@ -253,6 +398,7 @@ print(json.dumps({"results": res}))
 
 SMOKE_PY = r'''
 import ast, importlib.util, json, os, py_compile, subprocess, sys
+__NAMES__
 job = json.loads(sys.stdin.read())
 src, ov, files, entry = job["src"], job.get("overlay") or "", job["files"], job["entry"]
 roots = ([ov] if ov else []) + [src]
@@ -277,13 +423,66 @@ for rel in files:
         t = ast.parse(open(f, "rb").read())
     except (OSError, SyntaxError):
         continue
-    for n in ast.walk(t):
+    # module-level imports only (if/with/else bodies included): a function-level or try-guarded import is lazy, e.g.
+    # die_clock.cmd_render's matplotlib, absent on the gen hosts (11-15 dry run flagged it on every die)
+    top, todo = [], list(t.body)
+    while todo:
+        n = todo.pop()
+        if isinstance(n, (ast.Import, ast.ImportFrom)):
+            top.append(n)
+        elif isinstance(n, (ast.If, ast.With)):
+            todo += n.body + getattr(n, "orelse", [])
+    for n in top:
         ms = [a.name.split(".")[0] for a in n.names] if isinstance(n, ast.Import) else \
              [n.module.split(".")[0]] if isinstance(n, ast.ImportFrom) and n.module and not n.level else []
         for m in ms:
             if not (local(m) or m in EXTERNAL or m in sys.builtin_module_names or m in sys.stdlib_module_names
                     or importlib.util.find_spec(m)):
                 bad.append(f"{rel} imports {m}: not in the tree")
+# attribute check: a file that is staged or imports a staged module must find every alias.attr / from-import name of a
+# local module that MAIN's version of that module defines (job main_names); names main also lacks are not judged
+mainn = {k: set(v) for k, v in (job.get("main_names") or {}).items()}
+def modfile(m):
+    for p in path:
+        f = os.path.join(p, m + ".py")
+        if os.path.isfile(f):
+            return f
+_nm = {}
+def tree_names(m):
+    if m not in _nm:
+        f = modfile(m)
+        _nm[m] = mod_names(open(f, "rb").read()) if f else None
+    return _nm[m]
+if mainn:
+    staged_mods = {os.path.basename(r)[:-3] for r in files if r.endswith(".py")}
+    seen_f = {}
+    for r in roots:
+        dp = os.path.join(r, "tools/die_plan")
+        for f in (os.listdir(dp) if os.path.isdir(dp) else []):
+            if f.endswith(".py") and not f.startswith("test_") and f not in seen_f:
+                seen_f[f] = os.path.join(dp, f)
+    for f, fp in sorted(seen_f.items()):
+        try:
+            t = ast.parse(open(fp, "rb").read())
+        except (OSError, SyntaxError):
+            continue
+        alias, refs = {}, []
+        for n in ast.walk(t):
+            if isinstance(n, ast.Import):
+                for a in n.names:
+                    if "." not in a.name and a.name in mainn:
+                        alias[a.asname or a.name] = a.name
+            elif isinstance(n, ast.ImportFrom) and n.module and not n.level and n.module in mainn:
+                refs += [(n.module, a.name, f"from {n.module} import {a.name}") for a in n.names if a.name != "*"]
+        for n in ast.walk(t):
+            if isinstance(n, ast.Attribute) and isinstance(n.value, ast.Name) and n.value.id in alias and isinstance(n.ctx, ast.Load):
+                refs.append((alias[n.value.id], n.attr, f"{n.value.id}.{n.attr}"))
+        if f[:-3] not in staged_mods and not any(m in staged_mods for m, _, _ in refs):
+            continue
+        for m, attr, txt in refs:
+            tn = tree_names(m)
+            if tn is not None and attr in mainn[m] and attr not in tn:
+                bad.append(f"{f}: {txt}: {m}.py in the tree lacks it (main has it)")
 present = [m for m in entry if local(m)]
 code = "import sys; sys.path[:0] = %r\nfor m in %r:\n    __import__(m)\n" % (path, present)
 p = subprocess.run([sys.executable, "-I", "-W", "ignore", "-c", code], cwd=src, capture_output=True, text=True, timeout=300)
@@ -291,6 +490,10 @@ if p.returncode:
     bad.append("entry import: " + (p.stderr.strip().splitlines() or ["?"])[-1][:300])
 print(json.dumps({"bad": bad}))
 '''
+
+
+REMOTE_PY = REMOTE_PY.replace("__NAMES__", NAMES_PY)
+SMOKE_PY = SMOKE_PY.replace("__NAMES__", NAMES_PY)
 
 
 MANIFEST_PY = r'''
@@ -446,6 +649,27 @@ def missing_deps(host, src, paths, new):
     return out
 
 
+exec(NAMES_PY)
+
+
+def main_names(rev):
+    """{module: [names]} of main's tools/die_plan + tools top-level modules (the smoke's attribute reference)"""
+    tb = tree_blobs(rev)
+    prefetch(tb.values())
+    files = [p for p in tb
+             if p.endswith(".py") and in_scope(p) and p.count("/") == (2 if p.startswith("tools/die_plan/") else 1)]
+    got = read_blobs([tb[p] for p in files])
+    out = {}
+    for d in ("tools/die_plan/", "tools/"):
+        for p in files:
+            m = p[len(d):-3]
+            if p.startswith(d) and "/" not in p[len(d):] and m not in out:
+                nm = mod_names(got.get(tb[p]) or b"")
+                if nm is not None:
+                    out[m] = sorted(nm)
+    return out
+
+
 def _cmd(host, py):
     if host in LOCAL_HOSTS:
         return [sys.executable, "-I", "-c", py]
@@ -456,9 +680,10 @@ def _root(host, path):
     return LOCAL_ROOTS.get(host, "") + path
 
 
-def smoke(host, src, files, overlay=""):
-    """-> list of problems ([] = pass)"""
-    job = {"src": _root(host, src), "overlay": _root(host, overlay) if overlay else "", "files": files, "entry": list(ENTRY)}
+def smoke(host, src, files, overlay="", mnames=None):
+    """-> list of problems ([] = pass); mnames = main_names(new) turns on the attribute check"""
+    job = {"src": _root(host, src), "overlay": _root(host, overlay) if overlay else "", "files": files, "entry": list(ENTRY),
+           "main_names": mnames or {}}
     p = S.run(_cmd(host, SMOKE_PY), input=json.dumps(job), capture_output=True, text=True, timeout=900)
     try:
         return json.loads(p.stdout.strip().splitlines()[-1])["bad"]
@@ -600,6 +825,7 @@ def daily(new, apply_, only):
     new = git("rev-parse", new).strip()
     stamp = now().strftime("%Y%m%d-%H%M%S")
     out_lines, rows = [], []
+    mnames = main_names(new)
     for die in sorted(cfg.get("dies") or {}):
         d = cfg["dies"][die]
         if (only and die not in only) or not isinstance(d, dict) or not d.get("enabled") or not d.get("src"):
@@ -632,12 +858,21 @@ def daily(new, apply_, only):
             out_lines.append(f"{die}: note {len(diffs)} plan/data file(s) under physical/ differ across copies (flagged, not blocking): "
                              + "; ".join(fmt_diffs(diffs, gen, 4)))
         # 1. stage on the gen host (merge), then the gen host's exact result staged on every replica
-        jobs = file_jobs(paths, old, new, history_blobs(paths))
+        hist = history_blobs(paths)
+        prefetch([b for p in paths for b in hist.get(p, ())] + [tree_blobs(new, paths).get(p) for p in paths])
+        jobs = file_jobs(paths, old, new, hist)
+        cb = closest_bases(gen, src, paths, hist)
+        for j in jobs:
+            if j["path"] in cb:
+                j["base"] = base64.b64encode(cb[j["path"]]).decode()
         st = run_remote(gen, {"src": src, "apply": False, "mode": "stage", "stamp": stamp, "to": new, "files": jobs, "want_out": True})
         if "error" in st:
             out_lines.append(f"{die}: gen host {gen} ERROR {st['error']}"); continue
         todo = [r for r in st["results"] if r.get("staged")]
         held = [f"{r['path']} {r['status']}" for r in st["results"] if r["status"] in ("CONFLICT", "BUSY", "LOCAL", "ERROR", "UNREADABLE")]
+        dropped = [f"{r['path']} ({r.get('note', '')})" for r in st["results"] if "would drop" in r.get("note", "")]
+        if dropped:
+            out_lines.append(f"{die}: CONFLICT kept (the merge would drop main code; the die lane merges these): " + "; ".join(dropped[:10]))
         gjobs = [{"path": r["path"], "new": r["out"], "base": r.get("have"), "hist": []} for r in todo]
         ovl = f"{src}/.mq-stage/{stamp}"
         for h in hosts[1:]:
@@ -652,7 +887,7 @@ def daily(new, apply_, only):
         bad = pb + ([f"staged trees differ: {'; '.join(fmt_diffs(diffs, gen))}"] if diffs else [])
         if not bad:
             for h in hosts:
-                b = smoke(h, src, [r["path"] for r in todo], overlay=ovl)
+                b = smoke(h, src, [r["path"] for r in todo], overlay=ovl, mnames=mnames)
                 if b:
                     bad.append(f"{h}: {'; '.join(b)[:400]}"); break
         unstage()
@@ -677,7 +912,7 @@ def daily(new, apply_, only):
             fail += pb + ([f"trees differ after swap: {'; '.join(fmt_diffs(diffs, gen))}"] if diffs else [])
         if not fail:
             for h in hosts:
-                b = smoke(h, src, [j["path"] for j in gjobs])
+                b = smoke(h, src, [j["path"] for j in gjobs], mnames=mnames)
                 if b:
                     fail.append(f"{h}: {'; '.join(b)[:400]}"); break
         if fail:
