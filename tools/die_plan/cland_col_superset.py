@@ -35,7 +35,7 @@ def data_set(c):
     return tuple(sorted(p["name"] for p in c["pins"] if not is_mon(p["name"])))
 
 
-def build(plan, side, fam_re=None, collector_only=False, keep_tree=False):
+def build(plan, side, fam_re=None, collector_only=False, keep_tree=False, keep_taps=False):
     P = plan["partition_types"]; rep = {}
     fam = collections.defaultdict(list)
     for k in P:
@@ -105,8 +105,8 @@ def build(plan, side, fam_re=None, collector_only=False, keep_tree=False):
             if any(r["seam"] for r in rows): lc["forwarded_clock_only_inputs"] = True
             if keep_tree and "collector_tree" in (ck.get("landing_contract") or {}):
                 lc["collector_tree"] = ck["landing_contract"]["collector_tree"]   # the member own tree (from compose), not the template copy
-            ck["landing_contract"] = lc; ck["edge_clocks"] = copy.deepcopy(ecl); ck["added_taps"] = copy.deepcopy(taps)
-            if ss: ck["sink_sites_um"] = [list(x) for x in ss]
+            ck["landing_contract"] = lc; ck["edge_clocks"] = copy.deepcopy(ecl); ck["added_taps"] = ck.get("added_taps", []) if keep_taps else copy.deepcopy(taps)
+            if ss and not keep_taps: ck["sink_sites_um"] = [list(x) for x in ss]
             if stT is not None:
                 st = json.loads(json.dumps(stT).replace(tmpl_k, k)); st["children"] = copy.deepcopy(rows); st["bands"] = copy.deepcopy(bands)
                 st["mask"]["children"] = [dict(xy_um=list(k2[0]), seam=k2[1]) for k2 in ukeys]; st["mask"]["active"] = True
@@ -141,11 +141,11 @@ def identities(plan, rx=r"^col_", ignore=("param_set", "module", "note", "param_
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("plan"); ap.add_argument("side"); ap.add_argument("oplan"); ap.add_argument("oside")
-    ap.add_argument("--fam"); ap.add_argument("--report"); ap.add_argument("--collector-only", action="store_true"); ap.add_argument("--keep-tree", action="store_true")
+    ap.add_argument("--fam"); ap.add_argument("--report"); ap.add_argument("--collector-only", action="store_true"); ap.add_argument("--keep-tree", action="store_true"); ap.add_argument("--keep-taps", action="store_true")
     a = ap.parse_args()
     plan = json.load(open(a.plan)); side = json.load(open(a.side))
     before = len(identities(plan))
-    rep = build(plan, side, a.fam, a.collector_only, a.keep_tree)
+    rep = build(plan, side, a.fam, a.collector_only, a.keep_tree, a.keep_taps)
     after = identities(plan)
     geo = identities(plan, ignore=("param_set", "module", "note", "param_base_type", "hard_cores"))
     cl = collections.defaultdict(int)
