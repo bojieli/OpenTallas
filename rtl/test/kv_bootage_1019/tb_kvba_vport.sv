@@ -1,3 +1,4 @@
+// KV-PVGEN 11-15: also run by tools/die_plan/test_pvgen_vport_selrep.py (comment only; touching this file puts its directory in the merge-queue sparse set).
 `timescale 1ns/1ps
 // KV-BOOTAGE 2026-10-19: lockstep bench qkd_pv16_vport_b (boot ages cfg_age = {DQ, RT}) vs the closed r6 module
 // qkd_pv16_vport #(.DQ(D), .RT(R)).  Every output is compared on every edge.
