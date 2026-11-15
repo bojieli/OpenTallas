@@ -777,7 +777,7 @@ def core_input_pipe(plan, tn, module, port=None):
     return int(cfg.get("pipe") or 0)
 
 
-def core_link_pipe_spec(plan, tn, module, port):
+def core_link_pipe_spec(plan, tn, module, port, key="modules"):
     """KV-PVGEN 11-15 (OWNER pre-approved added cycles): the plan's register stages on the named INPUT port of a bound
     leaf/core of type tn, as a list of (D, lo, hi) bit runs (hi None = to the top bit); [] = none.  This is the
     generator stage for core<->core hops the plan cannot station (KV kv3_pv_v1n pair -> join, join -> T relay): each run is
@@ -797,7 +797,7 @@ def core_link_pipe_spec(plan, tn, module, port):
             return []
     elif tn not in set(cfg.get("types") or []):
         return []
-    v = ((cfg.get("modules") or {}).get(module) or {}).get(port)
+    v = ((cfg.get(key) or {}).get(module) or {}).get(port)
     if not v:
         return []
     rows = v if isinstance(v, list) else [v]
@@ -828,6 +828,17 @@ def core_link_pipe_bits(plan, tn, module, port, width):
                 raise BindError(f"core_link_pipe {tn}/{module}.{port}: bit {b} listed twice")
             d[b] = depth
     return d
+
+
+def core_link_src_depth(plan, tn, module, port, bit):
+    """KV-PVGEN family 4: depth of the SOURCE-side link pipe on output bit `bit` of a bound leaf port (plan
+    clock.core_link_pipe.sources {leaf module: {output port: D | {D, bits} | [runs]}}), 0 = none.  Applied at every
+    internal sink the bit feeds (the sink gets its own ot_dp_dly, declared per sink bit), so a source net that
+    several cores read needs no port-level pipe on the readers (whose port also carries other lane-timed nets)."""
+    for depth, lo, hi in core_link_pipe_spec(plan, tn, module, port, "sources"):
+        if bit >= lo and (hi is None or bit <= hi):
+            return depth
+    return 0
 
 
 def ft_hop_lockup_cell():
@@ -4124,6 +4135,19 @@ class Binder:
                         e = [lk]
                     lpd = core_link_pipe_bits(self.plan, tn, c.module, pn, len(bits)) \
                         if core_link_pipe(self.plan, tn, c.module, pn) else None
+                    if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources"):
+                        sd = []
+                        for i_ in range(len(bits)):
+                            dd_ = self.sinks[(ci, pn, i_)]
+                            sd.append(core_link_src_depth(self.plan, tn, F.cells[dd_[1]].module, dd_[2], dd_[3])
+                                      if dd_[0] == "int" else 0)
+                        if any(sd):
+                            lpd = lpd or [0] * len(bits)
+                            for i_, x_ in enumerate(sd):
+                                if x_ and lpd[i_]:
+                                    raise BindError(f"core_link_pipe {tn}/{c.module}.{pn}[{i_}]: port-level and source-level "
+                                                    "pipe on the same sink")
+                                lpd[i_] = lpd[i_] or x_
                     if lpd and any(lpd):
                         e = list(e)
                         for k_, depth in enumerate(sorted(set(lpd) - {0})):
