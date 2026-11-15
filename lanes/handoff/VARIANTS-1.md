@@ -16,3 +16,5 @@ Incident: serdes__t2 was deployed twice by my script (kit re-extracted over its 
 - Only 1 reached route+signoff: qwen_kvsys/kv3_sys_SD (DRC 0, antenna 0, setup_tt WNS -44.16 ps (misses -42 by 2 ps), hold_ff -17.64 ps / 37 endpoints) -> NOT SIGNED. Next recipe: hold class (pregrt_ff_hold + NONPORT_HOLD) + setup ECO.
 - Most others stopped before route: ~45 logs end exit 2/21 (mostly killed or spill-copy trouble: ot-run spill tar errors, DRT logs cut mid-run, 2 hosts as localhost) - infrastructure, not design verdicts; kv3_hgi/kv3_hgi_v1 stopped at GRT congestion (GRT max 98-100%, GRT-0232); 1 FF hold gate FAIL -331 ps; 2 PLACE_NOCONVERGE; 1 dont_use_check; 1 rtl_lint killed.
 - Density-only recipe weak as COORD said; a follow-up batch must use per-failure-class recipes and avoid ot-run spill (keep kits on one host, run with --hosts).
+
+## 2026-11-14 19:29 PST successor: fleet saturated (load>cores everywhere, mem 52-200 GB free); nothing launched. Resume only with structural per-class forms.
