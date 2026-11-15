@@ -28,7 +28,14 @@
 // is read one word EARLIER (address ptr - (DD - RQ)) and r_d is that read registered, so r_d carries the same word on the
 // same cycle (DD >= 2 + RQ: the word was written before the earlier read and is not overwritten for 64 - DD cycles):
 // ZERO added cycles.  It cuts the macro clk->q + 546-bit wire to the landing ring banks into two register hops.
-module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT, parameter integer RQ = 0) (
+// S81-RESIGN-DEEP 11-15 (FABLE-TRIAGE-HEADKV M6): ot_s81_kp4_dchn registers its 320 inputs inside the tile under
+// OT_S81_DCHN_FACE (+1 cycle), so the received words wait one more cycle.
+`ifdef OT_S81_DCHN_FACE
+`define OT_S81_KP4_DD_FACE 1
+`else
+`define OT_S81_KP4_DD_FACE 0
+`endif
+module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT + `OT_S81_KP4_DD_FACE, parameter integer RQ = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [543:0]  w_d,

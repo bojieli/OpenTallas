@@ -9,7 +9,7 @@ R=$(cd "$(dirname "$0")/../.." && pwd); L=$R/rtl/dsrom_sys/s81_link; M=$R/physic
 case $mode in base) g="";; dmut) g="-GDMUT=2";; amut) g="-GDMUT=3";; seam) g="-GSEAMMUT=1";; preg) g="-GPREGMUT=1";; *) echo "KP4_EQ BAD_MODE $mode"; exit 2;; esac
 python3 "$R/tools/s81_link/rs544.py" vectors "$out/vec.hex" --n 16 --seed 5 > /dev/null
 verilator --binary --timing -j ${KP4_J:-8} -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style -Wno-UNOPTFLAT -Wno-MULTITOP +incdir+$L \
-  --top-module tb_s81_kp4_eq $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" "$L/ot_s81_kp4_bm.sv" \
+  --top-module tb_s81_kp4_eq ${KP4_DEFS:-} $g --Mdir "$out/obj" -o tb "$L/ot_s81_kp4_common.sv" "$L/ot_s81_kp4_enc.sv" "$L/ot_s81_kp4_bm.sv" \
   "$L/ot_s81_kp4_dsyn.sv" "$L/ot_s81_kp4_ddly.sv" "$L/ot_s81_kp4_dchn.sv" "$L/ot_s81_kp4_dout.sv" "$L/ot_s81_kp4_dec.sv" \
   "$L/ref/ot_s81_kp4_dec_r33.sv" "$M/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v" "$M/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v" \
   "$L/tb_s81_kp4_eq.sv" > "$out/build.log" 2>&1 || { echo "KP4_EQ BUILD_FAIL $mode"; tail -5 "$out/build.log"; exit 2; }
