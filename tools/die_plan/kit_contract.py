@@ -316,7 +316,11 @@ def _partition_clock_pin_geometry(kd, bud):
                                for v in xy)):
                     err.append("landing_contract.json: invalid physical clock pin declaration")
                     continue
-                if pin.get("layer") != top:
+                # QC-CB-GEN-1115 L6 (FABLE-PD-QC-1115 point 4): an N/S-face fclk_in_* entry is a VERTICAL pin; the partition top layer
+                # (M8) is horizontal, so the by-design layer is the top vertical layer one below it (M7).  Accepted only for a
+                # landing-contract clock pin whose layer is exactly one below the top; anything else still fails.
+                top_n = int(top[1:]) if isinstance(top, str) and re.fullmatch(r"M\d+", top) else None
+                if pin.get("layer") != top and not (top_n and pin.get("layer") == f"M{top_n - 1}"):
                     err.append(f"landing_contract.json: clock {name} on {pin.get('layer')}, not {top}")
                     continue
                 want = tuple(float(v) for v in xy)

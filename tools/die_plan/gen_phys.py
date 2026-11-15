@@ -576,6 +576,7 @@ def reset_relay_full(rtl_dir):
 
 CHAIN_EVEN_HOOK = "source /work/chain_even_cfg.tcl\nsource /work/chain_even.tcl"
 DLY_SPREAD_HOOK = "source /work/dly_spread.tcl"
+MACRO_CROSS_HOOK = "source /work/macro_cross_check.tcl"
 
 
 def dly_spread_mode(budgets, tn):
@@ -1059,7 +1060,7 @@ def core_tap_pins(P, tn):
     out = []
     for n, x, y, _ in taps:
         explicit = any(c.get("clock_entry_access") and any(
-            q == n and i == c["inst"] and pin == c["clock_entry_access"]["pin"]
+            q == n and _core_is(c, i) and pin == c["clock_entry_access"]["pin"]
             for q, i, pin, _, _ in core_tap_rows(P, tn)) for c in P.types[tn].get("hard_cores", []))
         if explicit:
             # An interior real-pin stack must not be shifted away by generic PG
@@ -1078,6 +1079,12 @@ def core_tap_pins(P, tn):
             sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), port_blocks, pg)
         out.append((n, sx, sy))
     return out
+
+
+def _core_is(core, inst):
+    """QC-CB-GEN-1115 L4/L6: True when `inst` names the hard core by its logical plan inst (u_t22) or its kit-physical inst
+    (u_bound.u_t22): core_tap_rows returns the physical name once physical_inst is declared."""
+    return inst is not None and inst in (core.get("inst"), core.get("physical_inst"))
 
 
 ENTRY_CLEAR_MAX_UM = 2.0       # an entry is moved off a macro edge by snapping distance only, never re-planned
@@ -1181,7 +1188,7 @@ def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
         access = c.get("clock_entry_access")
         if access and port is not None:
             matched = [(n, i, pin) for n, i, pin, _, _ in core_tap_rows(P, tn)
-                       if n == port and i == c["inst"] and pin == access["pin"]]
+                       if n == port and _core_is(c, i) and pin == access["pin"]]
             if matched:
                 from lef_clock_entry import validate_access
                 # DIE-QC-97: judged on the access abstract the kit stages (stage_clock_entry_lefs), not the blanket
@@ -5773,6 +5780,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("dly_spread.tcl"), kd / "dly_spread.tcl")
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + DLY_SPREAD_HOOK + "\n")
+        # MACRO-CROSS (QC-CB-GEN-1115, FABLE-PD-QC-1115 L3): advisory count of 2-pin nets > 300 um over a macro, after the spread
+        shutil.copyfile(Path(__file__).with_name("macro_cross_check.tcl"), kd / "macro_cross_check.tcl")
+        hook.write_text(hook.read_text() + MACRO_CROSS_HOOK + "\n")
         if dly_mode == "warn":
             # list form: the listed types keep the stage-shortfall chains they have (plan item) as a log line, not a stop
             mk = (kd / "config.mk").read_text()
@@ -5961,7 +5971,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
     # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
     for row in bud["clock"]["core_taps"]:
-        core = next((c for c in t.get("hard_cores", []) if c["inst"] == row["inst"]), None)
+        # QC-CB-GEN-1115 L4/L6: core_tap_rows names the PHYSICAL instance (u_bound.u_t22) once the kit declares physical_inst, the plan core the
+        # logical one (u_t22): a lookup on c["inst"] alone dropped clock_entry_access from budget.json and the pin snapped 0.45 um off the access footprint
+        core = next((c for c in t.get("hard_cores", []) if _core_is(c, row["inst"])), None)
         if core and core.get("clock_entry_access"):
             if row["pin"] != core["clock_entry_access"]["pin"]:
                 raise ValueError("clock entry access pin differs from core tap")
