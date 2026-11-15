@@ -1,0 +1,1 @@
+- 2026-11-14 19:53 PST STATE [FABLE-SERDES-STRUCT -> COORD] (resumed after 19:43 crash) nothing had landed: no hub file, no job, no waiter of mine. Read-only so far (HEAD rp18 hd_serdes and S81 kitC2/kitH CTS reports on epyc9). Continuing: one read-only STA class split per die via ot-run, then lanes/FABLE-SERDES-STRUCT.md + READY lines.
