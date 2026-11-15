@@ -99,7 +99,7 @@ def staging_regs(body):
             continue
         pure_spans.append((m.start(), m.end()))
     # async-reset blocks whose only conditional is the reset itself: if (!rn) ... else ... (reset values are constants)
-    for m in re.finditer(r"\balways\s*@\s*\(\s*posedge\s+\w+\s+or\s+negedge\s+\w+\s*\)(.*?)(?=\balways\b|\bassign\b|\bgenerate\b|\binitial\b|\bendmodule\b|\Z)", hdr_and_body, re.S):
+    for m in re.finditer(r"\balways\s*@\s*\(\s*posedge\s+\w+\s*(?:or\s+negedge\s+\w+|`OT_ARST\s*\(\s*\w+\s*\))\s*\)(.*?)(?=\balways\b|\bassign\b|\bgenerate\b|\binitial\b|\bendmodule\b|\Z)", hdr_and_body, re.S):
         blk = m.group(1)
         conds = re.findall(r"\bif\s*\(([^)]*)\)", blk)
         if re.search(r"\b(?:case|casez|casex|for|while)\b", blk) or len(conds) != 1 or not re.fullmatch(r"\s*[!~]\s*\w+\s*", conds[0]):
@@ -147,6 +147,8 @@ def staging_regs(body):
                 return False
             ra, rb = qual(a, depth + 1), qual(b, depth + 1)
             return False if (ra is False or rb is False) else (True if (ra or rb) else None)
+        if re.fullmatch(r"\{\s*[\w\s+\-*()]+\{\s*(?:\d+)?'[sS]?[bdhBDH]\s*[0-9a-fA-FxzXZ_]+\s*\}\s*\}", r):
+            return None                      # replicated constant {W{1'b0}} (reset value)
         if r.startswith("{") and r.endswith("}"):
             parts = re.split(r",(?![^\[\]{}()]*[\]\}\)])", r[1:-1])
             res = [qual(p, depth + 1) for p in parts]
