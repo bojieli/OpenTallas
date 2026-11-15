@@ -34332,6 +34332,7 @@
    "plan_sha256": "e4484c62745d5b45926a8dd8177583dd647c5116a73c13f6f25da62740b32f45",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_head.json",
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
