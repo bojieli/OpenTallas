@@ -1,4 +1,6 @@
-# TYPE-HDCTL-REGS handoff (11-14 successor)
-- Base plan rp21z18d: epyc7 /srv/opentallas-scratch2/claude/type-hdctl-regs/base.json (sha 32af9289b04f).
-- Mechanism: plan internal_stations conn bus:NAME bit_route per_bit leaf_um regs_um; realize_internal_stations true (see hd_spn). Latency via gen.py latency.
-- Buses: h_tx_o, h_rx_i, lepk_o0, n_rx_i + landing monitors. State: delta script not yet written.
+# TYPE-HDCTL-REGS handoff (11-14 successor) -> HEAD-99
+- DELTA: lanes/overlays/HDCTL-REGS-delta.py PLAN_IN PLAN_OUT (translations of rp21z18d: hd_ctl internal_stations on h_tx_o 277b, h_rx_i 276b, lepk_o0 1104b, n_rx_i 64b; one per_bit station each, realize_internal_stations; lanes host_tx/host_rx/kd/m7N_rx +1 fixed cycle, latency table matches gen.py latency --inplace).
+- Plan: epyc7 /srv/opentallas-scratch2/claude/type-hdctl-regs/rp21z18e.json (base z18d sha 32af9289b04f); prepared tree prepR/prep (sha 6a8528eda2eb), kit outR/g_hd_ctl/hd_ctl (istations.tcl has 4 is_bits). rp21z18f.json = same + wrapfix re-pin (exports unchanged, moved 0.0).
+- Hops: one station per bus, worst hop ~290 um (<=550). lepk_o0 stage sits W of the leaf (150,300)->face.
+- G0 (--priority plan, epyc7): rp21z18e = 580 errors, IDENTICAL to z18d baseline (0 new/0 removed findings; the 580 are pre-existing clock_landings/reset/pin_sites). g0_e / g0_b under the dir above.
+- NOT DONE: strict bind + die LATCHECK: no HEAD asbuilt/die-top driver on main yet (HEAD-BIND-1 authoring it, 19:45 STATE). Run it on rp21z18e when HEAD-BIND-1 lands; landing monitors (16 flops) not covered by a station (no bus: they are internal pairs) - open.
