@@ -133,7 +133,9 @@ for f in $ML_FF; do
   case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
   test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
 done
-if ! grep -q '^# OT_PRD post-route drive repair' $OUT/config.mk; then
+# KV-ECTLK-RL 11-15: the marker is the block's own PRE_GLOBAL_ROUTE_TCL line, not the comment: a kit that carries the
+# comment text (KV-50 / KV-51 note) made prd_mk skip the whole block (eco_grt_pre.tcl, eco_post.tcl): NO-OP ECO, no clk_freeze_pre.tsv
+if ! grep -q '^override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl$' $OUT/config.mk; then
 cat >> $OUT/config.mk <<CFG
 # OT_PRD post-route drive repair (tools/die_plan/post_route_drv, variant $V)
 override export POST_GLOBAL_ROUTE_TCL = /work/eco_post.tcl
@@ -149,7 +151,8 @@ echo 'override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl' >> $OUT/conf
 # FLOW-9 10-30: DRT of the ECO'd GRT DB clears stale special-net guides / a mixed pin-access catalog (no-op otherwise);
 # a kit's own PRE_DETAIL_ROUTE hook still runs after it (OT_ECO_DRT_PRE_CHAIN).
 KPRE=$(sed -n 's/^\(override \)\{0,1\}export PRE_DETAIL_ROUTE_TCL *?\{0,1\}= *//p' $OUT/config.mk | tail -n 1)
-test -z "$KPRE" || echo "override export OT_ECO_DRT_PRE_CHAIN = $KPRE" >> $OUT/config.mk
+# KV-ECTLK-RL 11-15: a kit that already routes through eco_drt_pre.tcl must not chain it to itself (detail_route.tcl: too many nested evaluations)
+test -z "$KPRE" -o "$KPRE" = /work/eco_drt_pre.tcl || echo "override export OT_ECO_DRT_PRE_CHAIN = $KPRE" >> $OUT/config.mk
 cat >> $OUT/config.mk <<CFG
 override export PRE_DETAIL_ROUTE_TCL = /work/eco_drt_pre.tcl
 export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES) $ML_TT
