@@ -4658,8 +4658,10 @@ def input_digest(cfg, die):
     plan block (kept apart: it is per item): plan sha, die src_sha, source content hash, kit tools digest, gen env / kit_rtl form"""
     d = (cfg.get("dies") or {}).get(die) or {}
     try:
-        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("_src_overlay"), rt_tools_digest(),
-                d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
+        # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1350): rt_tools_digest() and the source overlay hash change with every merge / hand patch, so
+        # cbn_q01__cldd6ea846 was BLOCKED at attempts 6, 9 and 12 and relaunched each time (the digest "changed", the count restarted,
+        # kit_wave_blocked.tsv stayed empty).  Only the die's plan / src / kit form / event release a block; the owner's unblock list does the rest.
+        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
         return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
     except (TypeError, ValueError):
         return ""
@@ -8147,8 +8149,9 @@ def collect(AP, cfg, st, notices):
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
-            if _stg in PRE_PR_STAGES or FG.pf_kind(_key):
-                FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"))
+            if cls != "INFRA":
+                FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
+                               legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg)
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
                     AP.log(f"KIT-WAVE FLOW-GUARD CLASS-BREAKER open '{_k}'")
                     AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", _line)

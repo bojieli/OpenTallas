@@ -488,13 +488,28 @@ def refusal_key(kind, bad):
 
 # ---------------------------------------------------------------- circuit breaker
 
-def record_fail(st, die, item, cls, why, evidence="", now=None):
+CLASS_N = 10                 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1350): fails per hour of one (die, stage, class), counted across items
+CLASS_WINDOW_S = 3600
+
+
+def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, stage=""):
     """called once per KIT-WAVE FAIL; returns the class key.  Opens the breaker at BREAKER_N fails in BREAKER_WINDOW_S
     (PROBATION_N while the class is on probation)"""
     now = time.time() if now is None else now
     g = fg_state(st)
     key = norm_class(cls, why)
     g["last"][f"{die}/{item}"] = key
+    # class breaker over (die, stage, class) across items: >= CLASS_N in CLASS_WINDOW_S holds the class's items (half-open after the cooldown)
+    k2 = f"CLASS {die}|{stage or fail_stage(why) or '-'}|{key}"[:200]
+    g.setdefault("last2", {})[f"{die}/{item}"] = k2
+    g["fails2"] = [f for f in g.get("fails2", []) if now - f[0] <= CLASS_WINDOW_S] + [[now, k2, f"{die}/{item}", evidence]]
+    m2 = [f for f in g["fails2"] if f[1] == k2]
+    if k2 in g["open"]:
+        g["open"][k2]["n"] = max(g["open"][k2].get("n", 0), len(m2)); g["open"][k2]["last_fail"] = now
+    elif len(m2) >= CLASS_N:
+        g["open"][k2] = {"t": now, "n": len(m2), "first": m2[0][3] or evidence, "posted": 0, "kind": "", "last_fail": now}
+    if not legacy:
+        return key
     g["fails"] = [f for f in g["fails"] if now - f[0] <= BREAKER_WINDOW_S]
     g["fails"].append([now, key, f"{die}/{item}", evidence])
     mine = [f for f in g["fails"] if f[1] == key]
@@ -513,7 +528,10 @@ def held_key(st, die, item):
     """the open class an item's last fail belongs to, or ''"""
     g = st.get("flow_guard") or {}
     k = (g.get("last") or {}).get(f"{die}/{item}")
-    return k if k and k in (g.get("open") or {}) else ""
+    if k and k in (g.get("open") or {}):
+        return k
+    k2 = (g.get("last2") or {}).get(f"{die}/{item}")
+    return k2 if k2 and k2 in (g.get("open") or {}) else ""
 
 
 def breaker_tick(st, now=None):
