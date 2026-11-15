@@ -35,3 +35,13 @@ timed out every call so live_on_fleet() returned None ("fleet probe unreadable (
     reap_stale_attempts retries a stop that could not reach a host (reaped only on a clean stop; window 24 h).
     orphan_sweep (host scan, ot-heavy-stop --unit): scopes of an attempt older than a newer attempt that started after it. Default = log "would stop"; orphan_sweep_live true enables.
 Not covered: two instances of the SAME attempt (ap job a1 and a2 both running, the t47 case) - the autopilot resubmit must stop a1 first; listed here for KIT-OPS.
+
+## Branch / tests / deploy
+Branch claude/wave-longrun-1-1115 @aebd557980 (off main 3fa87b84b18), pushed to hub; built on epyc7 ~/wl1-repo (worktree of a shared clone; a clone under /srv/.../claude/wl1 was deleted by cleanup mid-fetch).
+Tests: tools/autopilot/test_wave_longrun.py 16 OK (python3 tools/autopilot/test_wave_longrun.py); test_kit_wave_reap_dead, test_kit_wave_hung_watch (one assertion adapted to the new fleet size), test_wave_jobs and 95 other kit_wave/autopilot test files pass.
+Pre-existing failures, identical on main and on the branch (same FAIL/ERROR sets): test_autopilot 11, test_kit_wave 2, class_retry 1, issues_reject 3, prov 1, qfail 1, verdict_form 7, visual_signoff 7.
+Deploy = merge + copy+mv to rt between ticks. Config after merge, kit_wave.json via copy+mv + coord-commit.sh:
+  supersede_pending_plan_holds true (only on COORD YES for the 45 held scopes), orphan_sweep_live true (after one clean log-only tick: "KIT-WAVE ORPHAN would stop" lines), hung_dead_cpu_min 30 (default on).
+Effect on first tick after deploy: stop/probe reaches epyc7/8/9/10; epyc4 skipped (retired_hosts); REAP-DEAD SILENT lines turn into R2 / HUNG (DEAD) / "unreadable: <host>".
+
+## After the sweep (08:3x probe): 79 openroad processes > 6 h remain (was 90 at 07:53; includes the 45 held scopes and 58 private jobs).
