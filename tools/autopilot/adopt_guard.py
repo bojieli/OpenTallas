@@ -110,6 +110,34 @@ def tree_fill(src, stats, gaps, run=sh, log=print):
     return left
 
 
+def plan_sha_check(cfg, die, hosts, run=sh, log=print):
+    """KIT-OPS-6 11-14 (item 9c): the kvgeom6 switch left dies.<die>.plan_sha256 at the kvgeom5 value; the wave logged PLAN_SHA_MISMATCH and
+    launched nothing for ~15 min.  Compare the declared plan_sha256 with the sha256 of the plan file on every wave host; fail loud with the exact fix.
+    -> True when equal everywhere (or nothing is declared)"""
+    d = cfg["dies"][die]
+    want = str(d.get("plan_sha256") or "").lower()
+    plan = str(d.get("plan") or "")
+    if not want or not plan:
+        return True
+    ok = True
+    seen = {}
+    for h in hosts:
+        rc, txt = run(["bash", "-c", f"sha256sum {shlex.quote(plan)}"] if h == "localhost" else SSH + [h, f"sha256sum {shlex.quote(plan)}"])
+        got = (txt.split() or [""])[0].lower() if rc == 0 else ""
+        seen[h] = got
+        if got and got != want:
+            ok = False
+            log(f"ADOPT-GUARD PLAN_SHA_MISMATCH {die} {h}: declared plan_sha256 {want[:12]} != sha of {plan} {got[:12]}")
+        elif not got:
+            ok = False
+            log(f"ADOPT-GUARD PLAN_MISSING {die} {h}: {plan} unreadable")
+    if not ok:
+        good = {g for g in seen.values() if g}
+        fix = sorted(good)[0] if len(good) == 1 else "<the sha of the intended plan file>"
+        log(f"ADOPT-GUARD FIX {die}: set dies.{die}.plan_sha256 to {fix} in kit_wave.json (coord-commit.sh), or point dies.{die}.plan at the file with sha {want[:12]}")
+    return ok
+
+
 def guard_tree(cfg, die, hosts, check=False, run=sh, log=print):
     src = str((cfg["dies"][die].get("src")) or "")
     if not src or len(hosts) < 2:
@@ -149,7 +177,8 @@ def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
             log(f"ADOPT-GUARD MISSING {h}:{f}")
     log(f"ADOPT-GUARD {die}: {'OK' if not left_n else 'FAIL closed: ' + str(left_n) + ' still missing'}")
     tree_ok = True if no_tree else guard_tree(cfg, die, hosts, check, run, log)
-    return left_n == 0 and tree_ok
+    sha_ok = plan_sha_check(cfg, die, hosts, run, log)
+    return left_n == 0 and tree_ok and sha_ok
 
 
 if __name__ == "__main__":
