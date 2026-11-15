@@ -13,3 +13,5 @@ W=/srv/opentallas-scratch2/claude/die-grt0-s81: src = hardlink copy of B3v/src w
 Prior runs: kit ~66 min, GRT ~11 min at 18.7 GB RSS, STA ~15-25 min.
 ## Read results
 $W/s81/b3x2d/CHAIN.log; grt_st_TT/combo_TT.log (overflow table, Maximum resident set size); sta/ summary; kitwin.json; typepairs.json.
+
+Update 22:0x: moved to epyc8 (unit oth-ubuntu-3985401-1794721449, --mem 32); epyc10 queue entry cancelled; run dir epyc8 same path.
