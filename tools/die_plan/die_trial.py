@@ -5221,7 +5221,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False,
+              cut_abstracts=None):
     _kit_stage("plan load")
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
@@ -5322,6 +5323,10 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                               if region_dme_early_merge_only else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
+    if cut_abstracts is not None:     # DIE-ROUTE-ABS-1 opt-in: open the abstract OBS over placed die clock cells
+        import abstract_cutout
+        rep = abstract_cutout.run(plan_path, out, cut_abstracts)
+        meta["abstract_cutout"] = {k: v for k, v in rep.items() if k != "per_type"}
     reserve = reserve_rects(segs, leaf_legs, P)
     # grt
     _kit_stage("grt netlist")
@@ -6125,6 +6130,10 @@ def main(argv=None):
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
+    k.add_argument("--cut-abstracts-under-clock", type=float, nargs="?", const=0.25, default=None, metavar="MARGIN_UM",
+                   help="DIE-ROUTE-ABS-1 opt-in: after the clock tree is placed, cut the partition abstract OBS (M1-M7) and "
+                        "the M7 PG pin over every die clock cell inside a partition (margin um, default 0.25); "
+                        "writes abstract_cutout.json; originals kept as .lef.precut")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
     k.add_argument("--reset-infra", action="store_true",
                    help="Export native registered reset output pins and real neighbor wavefront nets; raw reset "
@@ -6318,7 +6327,7 @@ def main(argv=None):
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,
-                      reset_infra=a.reset_infra,
+                      reset_infra=a.reset_infra, cut_abstracts=a.cut_abstracts_under_clock,
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
