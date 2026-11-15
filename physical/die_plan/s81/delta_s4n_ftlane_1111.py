@@ -72,6 +72,11 @@ CUT_MARGIN = 8.0
 GUARD = 2.0
 TYPES = ("ot_s81sl_leaf__t43", "ot_s81sl_leaf__t44__clf6cf8492", "ot_s81sl_leaf__t52", "ot_s81sl_leaf__t53__cl958451dd")
 EC_NOTE = "source-forwarded ring write clock; actual source-export/window STA required"
+# one lane move: the crossings j0..j0+2 of `lane` become `chain` (chain[1] = new, replacing old); E1 / E2 the new edges
+DN = dict(event=EVENT, lane=LANE, old=OLD, new=NEW, chain=CHAIN, slots=SLOTS, j0=0, e1=E1, e2=E2, faces=("E", "N"),
+          path=["s_4N_C", "s_4N_L1", OLD, "s_5N_L3", "s_5N_L4"], clip="e1", clip_lo=CUT_LO + CUT_MARGIN,
+          clip_hi=CUT_HI - CUT_MARGIN, types=TYPES)
+FREE_Y = {"s_4N_L1": (None, CUT_HI - CUT_MARGIN), "s_5N_L1": (CUT_LO + CUT_MARGIN, None)}
 
 
 def sha(text):
@@ -233,7 +238,10 @@ def scalar_point(P, t, bus):
     return list(GP._snap_tap(P, *point))
 
 
-def derive(pin_path, base_sha):
+def derive(pin_path, base_sha, spec=DN):
+    EVENT, LANE, OLD, NEW = spec["event"], spec["lane"], spec["old"], spec["new"]
+    CHAIN, SLOTS, TYPES, j0 = spec["chain"], spec["slots"], spec["types"], spec["j0"]
+    E1, E2 = spec["e1"], spec["e2"]
     text = open(pin_path).read()
     assert sha(text) == base_sha, f"base sha {sha(text)[:12]} != {base_sha[:12]}"
     assert json.dumps(json.loads(text)) + "\n" == text, "base is not in the compact json.dumps form"
@@ -250,24 +258,29 @@ def derive(pin_path, base_sha):
     ports = {p["id"]: p for p in raw["ports"]}
     lane = next(l for l in raw["lanes"] if l["id"] == LANE)
     pid = lane["ports"]
-    assert [ports[q]["src"]["part"] for q in pid] == ["s_4N_C", "s_4N_L1", OLD, "s_5N_L3", "s_5N_L4"], "lane path moved"
+    assert [ports[q]["src"]["part"] for q in pid] == spec["path"], "lane path moved"
     nat0 = P.lane_natural(LANE)
-    slot0 = {s: P.slot(p, s) for p, s in zip(["s_4N_L1", OLD, "s_5N_L3"], SLOTS)}
+    slot0 = {s: P.slot(p, s) for p, s in zip([CHAIN[0], OLD, CHAIN[2]], SLOTS)}
     K = sum(int(s["stations"]) for s in slot0.values())
     width = int(ports[pid[0]]["width"])
     rep = dict(event=EVENT, base_plan_sha256=base_sha, lane=LANE, width=width,
-               old_chain=["s_4N_L1", OLD, "s_5N_L3"], new_chain=CHAIN, stations_total_x1_x3=K,
+               old_chain=[CHAIN[0], OLD, CHAIN[2]], new_chain=CHAIN, stations_total_x1_x3=K,
                old_slots={s: dict(in_face=v["in_face"], out_face=v["out_face"], stations=v["stations"],
                                   in_window_um=v["in_window_um"], out_window_um=v["out_window_um"]) for s, v in slot0.items()},
                lane_natural_before=nat0)
 
     # ---- windows on the two new edges
-    p_in = P.port_point(pid[0])                      # C -> L1 (S face of s_4N_L1): unchanged
-    p_out = P.port_point(pid[3])                     # s_5N_L3 -> s_5N_L4 (N face of s_5N_L3): unchanged
-    df1, w1, lay1 = alloc(P, *E1, width, prefer=(CUT_LO + CUT_HI) / 2,
-                          lo_clip=CUT_LO + CUT_MARGIN, hi_clip=CUT_HI - CUT_MARGIN)
-    df2, w2, lay2 = alloc(P, *E2, width, prefer=p_out[0])
-    assert (df1, df2) == ("E", "N"), (df1, df2)
+    p_in = P.port_point(pid[j0])                     # unchanged entry port of the moved crossings
+    p_out = P.port_point(pid[j0 + 3])                # unchanged exit port
+    mid, clip = spec.get("prefer", (CUT_LO + CUT_HI) / 2), dict(lo_clip=spec["clip_lo"], hi_clip=spec["clip_hi"])
+    if spec["clip"] == "e1":
+        df1, w1, lay1 = alloc(P, *E1, width, prefer=mid, **clip)
+        df2, w2, lay2 = alloc(P, *E2, width, prefer=p_out[0] if LA.shared_edge(P, *E2)[0] in "NS" else p_out[1])
+    else:
+        df1, w1, lay1 = alloc(P, *E1, width, prefer=spec.get("prefer1") or
+                              (p_in[0] if LA.shared_edge(P, *E1)[0] in "NS" else p_in[1]))
+        df2, w2, lay2 = alloc(P, *E2, width, prefer=mid, **clip)
+    assert (df1, df2) == tuple(spec["faces"]), (df1, df2)
     rep["windows_die"] = {f"{E1[0]}|{E1[1]}": dict(face=df1, window_um=w1, layers=lay1),
                           f"{E2[0]}|{E2[1]}": dict(face=df2, window_um=w2, layers=lay2)}
 
@@ -287,26 +300,34 @@ def derive(pin_path, base_sha):
     s3.update(in_face=tf3, in_window_um=tw3, in_layers=list(lay2), in_order="lsb_high" if fl3 else "lsb_low")
     t_old["ft_slots"] = [s for s in t_old["ft_slots"] if s["name"] != SLOTS[1]]
     # in-face key order of an in-face change keeps the slot's own key order (dict.update keeps positions)
-    ports[pid[1]]["dst"]["part"] = NEW
-    ports[pid[2]]["src"]["part"] = NEW
+    assert ports[pid[j0 + 1]]["dst"]["part"] == OLD and ports[pid[j0 + 2]]["src"]["part"] == OLD
+    ports[pid[j0 + 1]]["dst"]["part"] = NEW
+    ports[pid[j0 + 2]]["src"]["part"] = NEW
     edges = {e["id"]: e for e in raw["clock"]["landing_network"]["edges"]}
-    edges["cland_clk__" + pid[1]]["dst"]["part"] = NEW
-    edges["cland_clk__" + pid[2]]["src"]["part"] = NEW
+    edges["cland_clk__" + pid[j0 + 1]]["dst"]["part"] = NEW
+    edges["cland_clk__" + pid[j0 + 2]]["src"]["part"] = NEW
 
     # ---- stations: K over x1..x3, exact count solve, re-solved shorter until the mandatory-pin hops pass
     P1 = S.Plan(copy.deepcopy(raw), ppath)
     reach = min(float(P1.lanes[LANE].get("reach_um", P1.reach)), P1.reach)
     smax = C.station_max(P1)
-    pins = [P1.port_point(pid[0]), P1.port_point(pid[1]), P1.port_point(pid[2]), P1.port_point(pid[3])]
-    x4 = P1.slot("s_5N_L4", "dn_s_4N_L0x4")
-    x4r0 = P1.to_die("s_5N_L4", tuple(x4["regs_um"][0]))
-    end_budget = reach - (abs(x4r0[0] - pins[3][0]) + abs(x4r0[1] - pins[3][1]))
-    frees = [part_free(P1, CHAIN[0], yhi=CUT_HI - CUT_MARGIN), part_free(P1, CHAIN[1], ylo=CUT_LO + CUT_MARGIN),
-             part_free(P1, CHAIN[2])]
+    pins = [P1.port_point(pid[j0 + i]) for i in range(4)]
+    xing = P1.lane_crossings(LANE)
+    start_budget = reach
+    if j0 > 0:                                       # previous crossing's last FF -> the entry pin
+        pp, ps = xing[j0 - 1][:2]
+        r_ = P1.to_die(pp, tuple(P1.slot(pp, ps)["regs_um"][-1]))
+        start_budget = reach - (abs(r_[0] - pins[0][0]) + abs(r_[1] - pins[0][1])) - 1e-3
+    end_budget = reach + 1e-3
+    if j0 + 3 < len(pid) - 1:                        # the exit pin -> next crossing's first FF
+        np_, ns = xing[j0 + 3][:2]
+        x4r0 = P1.to_die(np_, tuple(P1.slot(np_, ns)["regs_um"][0]))
+        end_budget = reach - (abs(x4r0[0] - pins[3][0]) + abs(x4r0[1] - pins[3][1]))
+    frees = [part_free(P1, p, *FREE_Y.get(p, (None, None))) for p in CHAIN]
     got = None
     tried = []
     for split in (0.5, 0.4, 0.6, 0.3, 0.7):
-        sol = solve_chain(P1, frees, pins, (reach, end_budget - 1e-3), K, reach, split)
+        sol = solve_chain(P1, frees, pins, (start_budget, end_budget - 1e-3), K, reach, split)
         if sol is None:
             tried.append((split, "no solve"))
             continue
@@ -317,7 +338,8 @@ def derive(pin_path, base_sha):
         pts, regs, xs = C.lane_geometry(Pt, LANE)
         hops = C.lane_pin_hops(Pt, LANE, regs)
         r3 = max(x["len_um"] / x["stations"] for x in xs)
-        tried.append((split, [len(s) for s in sol], round(max(hops), 1), round(r3, 1)))
+        tried.append((split, [len(s) for s in sol], round(max(hops), 1), round(r3, 1)) +
+                     (() if r3 <= smax + 1e-6 else (tuple((x["slot"], x["len_um"], x["stations"]) for x in xs),)))
         if max(hops) <= reach + 1e-6 and r3 <= smax + 1e-6:
             got = (sol, hops, xs)
             break
@@ -446,9 +468,9 @@ def derive(pin_path, base_sha):
         if k != "edges":
             assert raw["clock"]["landing_network"][k] == orig["clock"]["landing_network"][k], k
     ch_e = [e["id"] for e, o in zip(raw["clock"]["landing_network"]["edges"], orig["clock"]["landing_network"]["edges"]) if e != o]
-    assert ch_e == ["cland_clk__" + pid[1], "cland_clk__" + pid[2]] and len(raw["clock"]["landing_network"]["edges"]) == len(orig["clock"]["landing_network"]["edges"]), ch_e
+    assert sorted(ch_e) == sorted(["cland_clk__" + pid[j0 + 1], "cland_clk__" + pid[j0 + 2]]) and len(raw["clock"]["landing_network"]["edges"]) == len(orig["clock"]["landing_network"]["edges"]), ch_e
     ch_p = [p["id"] for p, o in zip(raw["ports"], orig["ports"]) if p != o]
-    assert ch_p == [pid[1], pid[2]] and len(raw["ports"]) == len(orig["ports"]), ch_p
+    assert sorted(ch_p) == sorted([pid[j0 + 1], pid[j0 + 2]]) and len(raw["ports"]) == len(orig["ports"]), ch_p
     assert list(raw["partition_types"]) == list(orig["partition_types"])
     for t_ in raw["partition_types"]:
         if t_ not in TYPES:
@@ -484,29 +506,29 @@ def derive(pin_path, base_sha):
     rep["lane_natural_after"] = nat1
     rep["eq_gate"] = dict(rtl_change=False, pin_cycle_change=False, outline_change=False, core_position_change=False,
                           lane_cycles_identical=True, other_lanes_natural_identical=True,
-                          changed_paths=[f"ports.{pid[1]}.dst.part", f"ports.{pid[2]}.src.part",
-                                         f"clock.landing_network.edges.cland_clk__{pid[1]}.dst.part",
-                                         f"clock.landing_network.edges.cland_clk__{pid[2]}.src.part"] +
+                          changed_paths=[f"ports.{pid[j0 + 1]}.dst.part", f"ports.{pid[j0 + 2]}.src.part",
+                                         f"clock.landing_network.edges.cland_clk__{pid[j0 + 1]}.dst.part",
+                                         f"clock.landing_network.edges.cland_clk__{pid[j0 + 2]}.src.part"] +
                                         [f"partition_types.{t_}.(ft_slots|clock.landing_contract|clock.edge_clocks)" for t_ in TYPES],
                           kit_input_types=list(TYPES))
     rep["new_slots"] = {SLOTS[0]: s1, SLOTS[1]: s2, SLOTS[2]: s3}
     return out_text, rep
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+def main(spec=DN, base_sha=BASE_SHA, doc=__doc__):
+    ap = argparse.ArgumentParser(description=doc, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--check", action="store_true")
-    ap.add_argument("--base-sha", default=BASE_SHA)
+    ap.add_argument("--base-sha", default=base_sha)
     ap.add_argument("plan_in")
     ap.add_argument("plan_out")
     ap.add_argument("report", nargs="?")
     a = ap.parse_args()
     if a.check:
-        text, _ = derive(a.plan_in, a.base_sha)
+        text, _ = derive(a.plan_in, a.base_sha, spec)
         assert open(a.plan_out).read() == text, "output differs from re-derivation"
         print("CHECK PASS", sha(text))
         return
-    text, rep = derive(a.plan_in, a.base_sha)
+    text, rep = derive(a.plan_in, a.base_sha, spec)
     open(a.plan_out, "w").write(text)
     rep["output_plan_sha256"] = sha(text)
     if a.report:
