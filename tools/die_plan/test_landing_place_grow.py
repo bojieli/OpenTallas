@@ -91,5 +91,5 @@ def test_opt_out_restores_the_plain_path():
 
 def test_dispatch_routes_only_start_tags_to_the_start_grow():
     assert ("elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} "
-            "{ cland_put_start $i $rect $tag } else { cland_put $i $rect $tag }") in TCL
+            "{ cland_avoid_rings $prefix {cland_put_start $i $rect $tag} } else { cland_put $i $rect $tag }") in TCL
     assert "if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq \"local-reset\"}" in TCL
