@@ -20,7 +20,7 @@ Run every 5 minutes by the systemd user timer ot-merge-queue.timer on the hub (i
   6. after a push, the sync hook (MQ_SYNC_HOOK, default ot-tools-sync) materializes main@sha as the pinned tools tree rt/<sha>.
 Log ~/merge-queue/log; lock ~/merge-queue/lock (a tick that finds it held exits 0).
 
-usage: ot-merge-queue [tick] [--dry-run] [--only SHA] | ot-merge-queue status | ot-merge-queue parse
+usage: ot-merge-queue [tick] [--dry-run] [--only SHA] | status | parse | gate <branch>[@<sha>] | known-red
 """
 import argparse
 import concurrent.futures as CF
@@ -496,12 +496,101 @@ def gate(it, wt, base):
         still = rerun_serial(wt, new, it["id"])
         flaky = [f for f in new if f not in still]
         new = [f for f in new if f in still]
+    tos = [f for f in new if f.startswith("TIMEOUT")]
+    if tos:
+        # FABLE-FLOW-1000 class 7: a fleet test file that hit its timeout under parallel load (epyc2-scratch3 08:59, 600 s;
+        # the same file ran in <10 s alone) is rerun once alone; only a second timeout, or a failure main does not have, is RED
+        new = [f for f in new if not f.startswith("TIMEOUT")]
+        for t in tos:
+            files = t.split(":", 1)[1].split()
+            if not files or not all((wt / f).is_file() for f in files):
+                new.append(t)
+                continue
+            rc, fl, _tail = pytest(wt, files, f"{it['id']}-t", 1)
+            if rc == 124:
+                new.append(t)
+                continue
+            fl = {f for f in fl if f not in base_f}
+            if fl:
+                bt = baseline(base, fl, it.get("extra", ()), it["id"] + "-t")
+                wt_drop(f"base-{base[:12]}-{it['id']}-t")
+                base_f |= bt
+                fl -= bt
+            new += sorted(fl)
+            flaky.append(t)
+    known_red(base_f, base)
     if new:
         return "RED", (f"{len(new)} new failure(s) (not failing on main {base[:11]}; still failing on a serial rerun of the branch): "
                        f"{', '.join(new[:8])}" + (f"; {len(flaky)} more passed on the serial rerun (flaky)" if flaky else ""))
     note = f"{len(tests)} test file(s) pass" + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "") + \
         (f" ({len(flaky)} order/load-flaky failure(s) passed on a serial rerun: {', '.join(flaky[:4])})" if flaky else "")
     return "GREEN", note
+
+
+def known_red(fails, base):
+    """FABLE-FLOW-1000 class 7: every failure a gate found red on main too goes to ~/merge-queue/known-red.json (first/last
+    seen, main sha, count).  FLOW-HEALTH-1 drives it to zero; `ot-merge-queue known-red` lists what failed in the last 24 h."""
+    if DRY or not fails:
+        return
+    with _LOCK:
+        p = MQ / "known-red.json"
+        try:
+            kr = json.loads(p.read_text())
+        except (OSError, ValueError):
+            kr = {}
+        t = now().strftime("%Y-%m-%d %H:%M")
+        for f in fails:
+            e = kr.setdefault(f, {"first": t, "n": 0})
+            e.update(last=t, main=base[:11], n=e.get("n", 0) + 1)
+        tmp = p.with_suffix(".tmp")
+        tmp.write_text(json.dumps(kr, indent=1, sort_keys=True))
+        os.replace(tmp, p)
+
+
+def known_red_cmd(hours=24):
+    try:
+        kr = json.loads((MQ / "known-red.json").read_text())
+    except (OSError, ValueError):
+        kr = {}
+    cut = (now() - datetime.timedelta(hours=hours)).strftime("%Y-%m-%d %H:%M")
+    live = {k: v for k, v in kr.items() if v.get("last", "") >= cut}
+    for k, v in sorted(live.items()):
+        print(f"{v['last']}  main {v.get('main', '-')}  x{v.get('n', 0):<3} {k}")
+    print(f"{len(live)} test(s) red on main in the last {hours} h (known-red baseline; FLOW-HEALTH-1 drives it to 0)")
+    return 0
+
+
+def gate_cmd(spec):
+    """`ot-merge-queue gate <branch>[@<sha>]`: the queue's OWN gate (same test selection, baseline, serial rerun) on current
+    GitHub origin/main; prints the READY stamp.  FABLE-FLOW-1000 class 7: lanes ran their touched files only, the queue ran
+    up to 140 files, so 40 READYs went MERGE-FAIL on 11-15.  One gate at a time (flock); nothing is pushed or posted."""
+    branch, _, sha = spec.partition("@")
+    MQ.mkdir(parents=True, exist_ok=True)
+    lockf = open(MQ / "gate-cmd.lock", "w")
+    fcntl.flock(lockf, fcntl.LOCK_EX)
+    base = fetch_main()
+    if not sha:
+        git("fetch", "-q", "--no-tags", REMOTE, f"+refs/heads/{branch}:refs/mq/{REMOTE}/{branch}", check=False, timeout=300)
+        sha = rev(f"refs/mq/{REMOTE}/{branch}")
+        if not sha:
+            print(f"branch {branch} not on {REMOTE} (push it to the lane mirror first: ot-lane-clone)")
+            return 2
+    it = {"key": f"{branch}@{sha[:11]}", "branch": branch, "sha": sha, "id": f"gc-{sha[:10]}"}
+    try:
+        res, note = prepare(it, base)
+    finally:
+        wt_drop(it["id"])
+    if res == "GREEN":
+        n = max(1, len(it.get("tests", [])))
+        stamp_ = f"GATE main={base[:11]} pass={n}/{n}"
+        rec = MQ / "gates"
+        rec.mkdir(exist_ok=True)
+        (rec / f"{it['sha_full']}.json").write_text(json.dumps(dict(main=base, branch=branch, tests=it.get("tests", []),
+                                                                    note=note, at=stamp()), indent=1))
+        print(f"GREEN {it['key']}: {note}\n{stamp_}")
+        return 0
+    print(f"{res} {it['key']} on main {base[:11]}: {note}")
+    return 1
 
 
 def rerun_serial(wt, ids, tag):
@@ -885,7 +974,8 @@ def status():
 def main():
     global DRY
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse"])
+    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red"])
+    ap.add_argument("target", nargs="?", default="", help="gate: <branch>[@<sha>]")
     ap.add_argument("--dry-run", action="store_true", help="test only: no push, no tag, no post, no state write")
     ap.add_argument("--only", default="", help="only the approval of this sha")
     ap.add_argument("--keep", action="store_true", help="keep worktrees of finished items")
@@ -893,6 +983,12 @@ def main():
     DRY = a.dry_run
     if a.cmd == "status":
         return status()
+    if a.cmd == "known-red":
+        return known_red_cmd()
+    if a.cmd == "gate":
+        if not a.target:
+            ap.error("gate needs <branch>[@<sha>]")
+        return gate_cmd(a.target)
     if a.cmd == "parse":
         text = (COORD / QUEUE_REL).read_text(errors="replace")
         st = load_state().get("items", {})

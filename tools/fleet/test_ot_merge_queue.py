@@ -206,6 +206,36 @@ class EndToEnd(unittest.TestCase):
         self.tick()
         self.assertEqual(q.read_text().count("BOUNCE"), n)   # each READY judged once
 
+    def test_gate_command_prints_the_stamp_for_green_and_touches_no_state(self):
+        g = subprocess.run([sys.executable, "-I", P, "gate", "claude/good"], env=self.env, capture_output=True, text=True, timeout=600)
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        main = sh("git", "rev-parse", "main", cwd=self.d / "origin.git")
+        self.assertIn(f"GATE main={main[:11]} pass=1/1", g.stdout)
+        self.assertTrue((self.d / "mq/gates" / f"{self.shas['good']}.json").is_file())
+        r = subprocess.run([sys.executable, "-I", P, "gate", f"claude/red@{self.shas['red'][:10]}"], env=self.env, capture_output=True,
+                           text=True, timeout=600)
+        self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+        self.assertIn("RED", r.stdout); self.assertNotIn("GATE main=", r.stdout)
+        self.assertFalse((self.d / "mq/state.json").exists())                   # no queue state, nothing posted
+        self.assertFalse((self.d / "commits.log").exists())
+        self.assertEqual(sh("git", "rev-parse", "main", cwd=self.d / "origin.git"), main)
+
+    def test_fleet_test_timeout_under_load_is_rerun_alone_once(self):
+        mark = self.d / "slow.mark"
+        mark.write_text("")
+        sh(*self.g, "checkout", "-q", "-b", "claude/slow", "main", cwd=self.dev)
+        (self.dev / "tools/fleet").mkdir(parents=True, exist_ok=True)
+        (self.dev / "tools/fleet/test_slow.py").write_text(
+            "import os, pathlib, time\n\ndef test_x():\n    m = pathlib.Path(os.environ['MQ_TEST_SLOWMARK'])\n"
+            "    if m.exists():\n        m.unlink()\n        time.sleep(60)\n")
+        sh(*self.g, "add", "tools/fleet/test_slow.py", cwd=self.dev); sh(*self.g, "commit", "-qm", "slow", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "claude/slow", cwd=self.dev)
+        env = dict(self.env, MQ_FLEET_TIMEOUT="8", MQ_TEST_SLOWMARK=str(mark), MQ_SPARSE="/*,!/*/,/tools/")
+        g = subprocess.run([sys.executable, "-I", P, "gate", "claude/slow"], env=env, capture_output=True, text=True, timeout=600)
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("GATE main=", g.stdout)
+        self.assertIn("TIMEOUT", g.stdout)                                       # reported as load-flaky, not RED
+
     def test_ready_for_an_approved_or_landed_sha_is_not_bounced(self):
         q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
         q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n")
