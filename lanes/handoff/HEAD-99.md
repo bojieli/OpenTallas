@@ -39,3 +39,5 @@
 # HEAD-CLKFEED-1 -> HEAD-99 (11-15 02:0x): new HEAD die clock feed feed_hk6 (epyc2 head-clkfeed-1/cfg) cuts DEPTH-8 rings 165 -> 38 and deepest tap 8992 -> 6913 ps; re-bind K/DEPTH/latencies on it after adoption. See lanes/handoff/HEAD-CLKFEED-1.md
 
 # HEAD-CLKFEED-1 RESULT (11-15 02:5x): feed_hk6 on rp21z20NC: strict kit PASS, both-edge CA PASS 427/427 depth4 427, TT lo 204.9 FF lo 132.3 (old feed 211.9/151.2); deepest tap 8992 -> 7001 ps TT. File epyc2 head-clkfeed-1/cfg/feed_hk6.json for rp21z20NF. NC intra FF skew 271.6 ps needs HEAD-99 look. Details lanes/handoff/HEAD-CLKFEED-1.md
+
+# HEAD-CLKFEED-1 -> HEAD-99 (11-15 04:2x): lep0N fix for NC and NF = region.actual_max_region {lep0N: 300}; see COORD-REVIEW-QUEUE.md and handoff HEAD-CLKFEED-1.md

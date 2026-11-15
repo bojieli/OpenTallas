@@ -25,3 +25,19 @@ epyc2 head-clkfeed-1/: cfg/feed_hk{5,6}.json, head/p16f (hk5 chain), head/p16g (
    - NC intra-contract (not feed related? unverified): FF intra skew 271.6 ps, kit-contract need 271.6 vs W 92, 53,550 violations; p16g on rp21z16 shows 106.6 / 44,303. NC local trees differ (lep0N/mesh taps moved); no old-feed run on NC exists to separate cause. Owner: HEAD-99 / DIE-HEAD-ROUTE-1.
 3. For HEAD-99 parallel variant rp21z20NF: feed file /srv/opentallas-scratch3/claude/head-clkfeed-1/cfg/feed_hk6.json (copy to epyc7 head-99 on request), ot_clk config cfg/head_nc.yaml (inputs: plan, regions_hp1.json, feed), CA result head/nc/ca4/out/{bind.json,plan_fz.json,regions_ca.json}. Bind latencies total lat_cycles 1,061 (old feed 1,063): K/latency table essentially unchanged, so rebind needs no re-sign beyond what NC already carries. Adopt the first to pass.
 4. Stage model: 1.15 late scale NOT written to registry (per COORD). Root-move question (6.0 ns) with Fable.
+
+## RESULT 3 (11-15 04:2x PST) -- lep0N rebuild + sp5/sp2 (COORD sections 18, 19)
+Root cause note: the NC lep0N tree is not an H-tree/DME-algorithm issue. An H-tree rebuild gave the same 233 ps FF spread (ncl, ncl4: independent of feed). The DME region tree of lep0N has one 1,932 um physical leg (node 7866, Manhattan 1,553 um, routed detour chain) priced 71 ps too fast by the stage model; legs priced on a 405 um stage bound accumulate this. Lever that works: per-region physical stage bound `region.actual_max_region: {lep0N: 300}` (config line only; cfg/head_la300.yaml on epyc2 head-clkfeed-1; all other region trees unchanged).
+Variants (NC plan rp21z20NC, feed hk6, strict kit passes on all):
+| lep0N rebuild | FF spread | TT spread |
+| NC as is (actual_max 405) | 246.1 | 262.4 |
+| H-tree, centroid=2 (ncl) | 233.0 | 266.1 |
+| actual_max_region 250 | 90.6 | 96.1 |
+| actual_max_region 200 | 76.8 | 84.8 |
+| actual_max_region 300 (la300) | 63.1 | 75.1 |
+Accepted: la300 (FF 63.1 <= 92). Other 357 partitions: 350 within 0.5 ps; 7 (lk_WN1, lk_WN2, nst1, nst2, nst3_transit, nst3_turn, nst4: the subtree hung from the lep0N root) shift 9.6-10.9 ps (common-path, rigid). Die STA on la300: FF intra skew 271.6 -> 128.6 ps, contract violations 53,550 -> 44,176 (p16g/rp21z16: 106.6 / 44,303), seam unchanged (FF 80.9, TT 91.2). Both-edge --count-align on la300 (ca4 flow): 427/427 PASS, DEPTH 4 on 427, TT worst lo 164.4 / hi 1,089.6, FF lo 132.3 / hi 1,086.0, 0 below 100, 0 start hops over 405 um (nc: TT lo 204.9). Same config line applies to NC (old feed hk4) and NF (hk6): ncl4 shows the lep0N result is feed independent; the old-feed NC variant of la300 was not built.
+sp5 / sp2 (section 19), nc baseline: sp5 spine (68 taps) mean arrives 24.3 ps TT / 22.8 ps FF after the west shim (17 taps); spread 74.2 / 66.6; sp2 spine vs west shim 5.0 / 4.4 ps, spread 72.7 / 68.0. Seam skew die STA TT 91.2, FF 80.9.
+- merge_parts [sp5, sp2] (one DME tree per region): REJECTED: sp2 arrival moves up 120-155 ps and 203 partitions shift (rigid downstream), seam TT 94.5 (worse), FF 77.1.
+- merge_parts [sp5] (mp5): sp5 partition means 14.3 ps TT / 10.1 ps FF apart (was 24.3/22.8); region spread 75.7 / 66.7 (unchanged: intra scatter); seam skew TT 91.2 -> 83.7, FF 80.9 -> 75.7. 49 partitions of the sp5 subtree (host, sst*, lk_HOST) shift up to 72 ps (rigid). Does NOT reach the <= 70 ps target; not combined with la300, CA not run on it. Spread of 20 ps per region is below the 66-75 ps intra scatter of the sp5 spine itself, so partition-mean alignment alone cannot reach it; needs a leg-scatter fix inside the spine tree (open).
+- sp2: leave unchanged (partition means already within 5 ps; the scatter 72.7 ps is intra).
+Per-region damage before -> after (seam skew, die STA): TT 91.2 -> 83.7 (mp5), FF 80.9 -> 75.7 (mp5). lep0N: FF spread 246.1 -> 63.1, TT 262.4 -> 75.1 (la300).
