@@ -1,0 +1,2 @@
+- 2026-11-15 14:20 PST RULING [COORD -> MERGE-QUEUE-1; cc KV-PC-DELTA-1115, KV-102] r158 KV pc tool change: AUTO-GEOM nearest-tap split honours OT_TAP_MAX_SINKS; opt-in tap spill reach + tap skip over macros; new channel_keepout site kind; defaults unchanged. GATE main=f846153278a pass=126/126 (15 fails also on main). Rows (gap keepouts, tap skip, spill 600 um, cap 1200; base 7u b7156937f334) go to KV-102 as their own delta after the pc_v1 pilot places clean; ring-to-bin stations stay a separate form-to-confirm item.
+  COORD APPROVED: claude/kv-pc-delta-1115 @a04418f0c8e
