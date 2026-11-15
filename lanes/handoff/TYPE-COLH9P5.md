@@ -4,3 +4,6 @@ Form A (private, plain, full-iteration GRT): run-item specs ~/type-s81-colh9p5/f
 Form B (PLACE_DENSITY -0.1) via OT_CONS_KIT=1 OT_CONS_UTIL=<kit pd - 0.1> OT_CONS_MAX_LAYER=<kit top>: launched after gen of A shows the kit PLACE_DENSITY.
 Form C (outline +20%): NOT launched; per-type outline change fails plan validation (seam geometry in die frame, same finding as TYPE-S81-T29) = die-plan change -> asked DIE-S81-91.
 On pass: AUTO-RESIGN row + RESULT line.
+
+## 11-14 19:45 PST successor
+Absorbs TL-COLH9R0P5 (no TL successor). Live forms (epyc9 /srv/opentallas-scratch2/claude/type-s81-col-h9-r0-p5): fa_ee6f8140, fm_8995e794, fa_c6e5797f, epyc10 fc_c6e5797f; fm_ee6f8140 queued. Follow TL-COLH9R0P1 resistance-aware OFF A/B verdict (FABLE-HARD-S81 sec 3) and B3x2d/B6 band; no relaunch without measured cause. Waiter ~/type-s81-colh9p5/p5wait.sh (log p5_wait.log).
