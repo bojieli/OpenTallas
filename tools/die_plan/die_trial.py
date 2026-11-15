@@ -3697,7 +3697,30 @@ def clock_edge_readout(verilog, path, period=str(die_sta.PERIOD_PS), cells="b*",
             "close $fh"]
 
 
-def load_stamped_tree(path, site=None):
+def legalize_stamped_nodes(nodes, site):
+    """the kit's own legal-site map decides: an illegal node moves to the nearest legal site and every leg with an illegal
+    point (or ends that no longer meet its parent / node) loses its chain, so the kit lays the leg out itself"""
+    st = dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    for i, v in nodes.items():
+        if not site.legal((v["x"], v["y"])):
+            q = site.nearest((v["x"], v["y"]))
+            v["x"], v["y"] = round(q[0], 3), round(q[1], 3)
+            v["req_xy"] = [v["x"], v["y"]]
+            st["moved"] += 1
+    for i, v in nodes.items():
+        pl = v.get("physical_leg")
+        if not pl:
+            continue
+        p = nodes.get(v.get("parent"))
+        ends_ok = (p is not None and _man(pl["chain"][0], (p["x"], p["y"])) < 1e-6 and
+                   _man(pl["chain"][-1], (v["x"], v["y"])) < 1e-6)
+        if not ends_ok or any(not site.legal(tuple(q)) for q in pl["chain"]):
+            v.pop("physical_leg", None); v.pop("detour", None)
+            st["chains_dropped"] += 1
+    return st
+
+
+def load_stamped_tree(path, site=None, rep_um=150.0):
     """CLKSITE-RESERVE-1115: tree.json (tools/die_plan/clksite_stamp_native.py) -> (nodes {int id: node}, taps [(part, port, x, y)]),
     the shape tree_netlist takes.  Names are re-derived by tree_netlist from the node ids (b<id>, r<id>_<k>, q<id>_<tap>)."""
     T = json.loads(Path(path).read_text())
@@ -3708,24 +3731,10 @@ def load_stamped_tree(path, site=None):
     for i, v in nodes.items():
         v["taps"] = by.get(i, [])
         v["kids"] = list(v.get("kids", []))
-    st = dict(nodes=len(nodes), moved=0, chains_dropped=0)
-    if site is not None:       # the kit's own legal-site map decides: an illegal node moves to the nearest legal site and every
-        for i, v in nodes.items():     # leg with an illegal point loses its chain (the kit then lays the leg out itself)
-            if not site.legal((v["x"], v["y"])):
-                q = site.nearest((v["x"], v["y"]))
-                v["x"], v["y"] = round(q[0], 3), round(q[1], 3)
-                v["req_xy"] = [v["x"], v["y"]]
-                st["moved"] += 1
-        for i, v in nodes.items():
-            pl = v.get("physical_leg")
-            if not pl:
-                continue
-            p = nodes.get(v.get("parent"))
-            ends_ok = (p is not None and _man(pl["chain"][0], (p["x"], p["y"])) < 1e-6 and
-                       _man(pl["chain"][-1], (v["x"], v["y"])) < 1e-6)
-            if not ends_ok or any(not site.legal(tuple(q)) for q in pl["chain"]):
-                v.pop("physical_leg", None); v.pop("detour", None)
-                st["chains_dropped"] += 1
+    st = legalize_stamped_nodes(nodes, site) if site is not None else dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    if site is not None:          # exact parity fix on the kit's own site map (clksite_stamp_native.fix_parity)
+        import clksite_stamp_native as _csn
+        st["parity"] = _csn.fix_parity(nodes, rep_um, site)["stats"]
     print("STAMPED-TREE", json.dumps(st))
     return nodes, [(t["part"], t["port"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
 
@@ -3904,7 +3913,7 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     elif tap_pad and "sites" in tap_pad:
         tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
     if STAMPED_TREE_JSON:        # CLKSITE-RESERVE-1115: the stamped tree replaces the one built above (same node/tap shape)
-        nodes, taps = load_stamped_tree(STAMPED_TREE_JSON, locals().get("site"))
+        nodes, taps = load_stamped_tree(STAMPED_TREE_JSON, locals().get("site"), rep_um)
     v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites,
                                                             **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
     if tap_pad:
