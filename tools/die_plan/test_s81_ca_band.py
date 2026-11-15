@@ -24,7 +24,7 @@ def blocked(monkeypatch):
 
 def test_fallback_land_cli_passes_band_multi_rect():
     src = (Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py").read_text()
-    assert '"--band-multi-rect"' in src and "band_multi_rect=a.band_multi_rect" in src
+    assert '"--band-multi-rect"' in src and "band_multi_rect=getattr(a, \"band_multi_rect\", False)" in src
 
 
 def test_compose_monitor_band_has_multi_rect_fallback():
@@ -51,7 +51,7 @@ def test_staged_rects_fit_a_two_bit_band_when_single_band_does_not(blocked):
 def test_cli_band_order_and_use_max_reach_compose():
     src = (Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py").read_text()
     assert '"--band-order"' in src and '"--band-use-max"' in src
-    assert '{"*": a.band_order} if a.band_order != "name" else {}' in src and "band_use_max=a.band_use_max" in src
+    assert '{"*": a.band_order} if getattr(a, "band_order", "name") != "name" else {}' in src and 'getattr(a, "band_use_max", 0.5)' in src
 
 
 def test_band_order_star_applies_to_every_type():
@@ -68,4 +68,4 @@ def test_band_use_type_override_wired():
 
 def test_band_order_type_wired():
     cli = (Path(__file__).resolve().parents[1] / "s81_head" / "fallback_land.py").read_text()
-    assert '"--band-order-type"' in cli and "a.band_order_type" in cli
+    assert '"--band-order-type"' in cli and "band_order_type" in cli

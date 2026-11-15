@@ -170,6 +170,13 @@ def cmd_plan(a):
     return 0
 
 
+def _band_orders(a):
+    """S81-CA-BAND: --band-order (every type, '*') and --band-order-type TYPE=ORDER overrides"""
+    o = {"*": a.band_order} if getattr(a, "band_order", "name") != "name" else {}
+    o.update(x.split("=", 1) for x in (getattr(a, "band_order_type", None) or []))
+    return o
+
+
 def cmd_compose(a):
     import clock_landings as CL
     import clock_landing_plan as CLP
@@ -196,10 +203,10 @@ def cmd_compose(a):
         raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer,
                                observer=observer, monitor=a.monitor, band_reserve=a.band_reserve,
                                band_spread=a.band_spread, band_ring=a.band_ring,
-                               band_multi_rect=a.band_multi_rect,
-                               band_order_by_type=({"*": a.band_order} if a.band_order != "name" else {}) | dict(x.split("=", 1) for x in (a.band_order_type or [])) or None,
-                               band_use_max=a.band_use_max,
-                               band_use_max_by_type=dict((k, float(v)) for k, v in (x.split("=", 1) for x in (a.band_use_type or [])))or None)
+                               band_multi_rect=getattr(a, "band_multi_rect", False),
+                               band_order_by_type=_band_orders(a) or None,
+                               band_use_max=getattr(a, "band_use_max", 0.5),
+                               band_use_max_by_type=dict((k, float(v)) for k, v in (x.split("=", 1) for x in (getattr(a, "band_use_type", None) or []))) or None)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
