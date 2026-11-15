@@ -4218,7 +4218,7 @@
     "epyc7",
     "epyc2"
    ],
-   "plan_sha256": "8301f154d3b223af3a44ce573276b8356091ea8d81fd0812a7e31dd5ee2a4f10",
+   "plan_sha256": "caf6cdfe391303e5ecc0d8b0570fb43984b00589a5267e03693aee5324b6f1cc",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
@@ -5514,7 +5514,8 @@
     "kv3_pc_v1__cl23f6a148": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
     "kv3_pc__cl5a95b461": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441",
     "kv3_pc_v1__cl7f648944": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): kvgeom5 has no early core taps (0 of 8 core pins in window), FF hold -385..-441"
-   }
+   },
+   "plan_sha256_prev_kitops5": "8301f154d3b223af3a44ce573276b8356091ea8d81fd0812a7e31dd5ee2a4f10"
   },
   "s81": {
    "enabled": true,
