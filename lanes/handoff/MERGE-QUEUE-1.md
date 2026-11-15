@@ -40,3 +40,8 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
 
 ## 11-15 02:42 update
 19-token audit done (9 landed, 3 RED dly-spread/dly-spread-list/genbug-impl on kit byte-identity, 6 superseded marked REVOKED in state.json, curplan skipped). Parser fix 26bd253bfdf on main; daily refresh + drift timers now effective (rt/current has them). curplan waiter stopped.
+
+## 2026-11-15 03:3x
+- r64 genbug chain MERGED in order: fable-genbug 64d6a174f5d, genbug-impl def02ae19f6, dly-spread a7a198aeb79, dly-spread-list ad22c56cc3b (cherry-pick, 2 already in main).
+- r65 s81-phypg-1 @e31f9ccd5c: was hub-only; fetched from hub + pushed to origin (no force); MERGED a55cbe3c34d.
+- Open: 06:00 daily refresh (ot-src-refresh.timer) + hourly drift; QC gen_phys.py / HEAD check.py conflicts from 00:24 still with DIE-QC-103 / HEAD-99.
