@@ -1397,6 +1397,7 @@ foreach spec $cland_groups {
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
 }
+# CLAND-BIN BEGIN
 # CLAND-BIN 11-15 (FABLE-GENBUG G2, brief 4.1): the capture register behind a landing ring (u_bin_<bus>) had no site.
 # Ring flops are FIRM at their pins; the register that first captures a ring read output is not named by any plan key,
 # so global placement pulled it to its loads and ring -> capture became a zero-logic hop of up to 2,183 um (c1x_C__t1
@@ -1404,7 +1405,14 @@ foreach spec $cland_groups {
 # BUF/INV/HB only to the first non-ring flop D pin (match by master, never by name); that flop is placed FIRM on the
 # nearest free site to its ring flop (the same occupancy the ring used), recorded in ot_face_flops.txt (released for DPL
 # with the ring) and reported as OT_CLAND_BIN bus <b> placed N of W.  Fewer than 95 % placed fails the kit.
-# OT_CLAND_BIN=0 turns it off, =warn reports without failing; OT_CLAND_BIN_REACH=<um> (default 100) bounds the search.
+# OPT-IN (FABLE-PD-QC-0300 11-15: beside the ring alone only relocates the long hop, cbf_q01 over-reach 3,583 -> 4,246):
+#   OT_CLAND_BIN unset or 0  off (global placement sites the capture register, as before)
+#   OT_CLAND_BIN=1           beside the ring flop (the form measured above)
+#   OT_CLAND_BIN=eq          equal-hop form: the capture register is station 0 of the chain ring -> anchored load, sited on
+#                            the ring -> anchor line at OT_CLAND_BIN_FRAC (default 0.5) of the span.  Anchored load = the
+#                            first FIRM flop or hard-core pin reached forward through BUF/INV and at most two unplaced
+#                            register ranks; none found -> left to global placement (counted, not a failure).
+# OT_CLAND_BIN_WARN=1 reports a shortfall without failing; OT_CLAND_BIN_REACH=<um> (default 100) bounds the site search.
 proc cland_bin_row_x {ranges tx w lo hi x0 sw} {
  # ranges: merged occupied [l u) of one row, sorted; returns {x cost} of the free x (site grid) nearest tx (centre), or {}
  set best {}; set prev $lo; set segs {}
@@ -1482,10 +1490,55 @@ proc cland_bin_sinks {ff} {
  }
  return $out
 }
+proc cland_bin_point {rx ry ax ay frac} {
+ return [list [expr {$rx+($ax-$rx)*$frac}] [expr {$ry+($ay-$ry)*$frac}]]
+}
+proc cland_bin_anchor {s} {
+ # forward from capture flop s through BUF/INV and up to 2 unplaced flop ranks: {x y ranks} of the nearest anchor (a hard
+ # core pin, or a FIRM/LOCKED flop), averaged over the anchors found at the smallest rank; {} when there is none
+ set cur {}
+ foreach it [$s getITerms] { if {[$it isOutputSignal] && [$it getNet] ne "NULL"} { lappend cur [$it getNet] } }
+ for {set rank 1} {$rank <= 3 && [llength $cur]} {incr rank} {
+  set nxt {}; set seen {}; set pts {}
+  for {set d 0} {$d < 8 && [llength $cur]} {incr d} {
+   set step {}
+   foreach net $cur {
+    if {[dict exists $seen [$net getName]]} continue
+    dict set seen [$net getName] 1
+    foreach it [$net getITerms] {
+     if {![$it isInputSignal]} continue
+     set i [$it getInst]; set mn [[$i getMaster] getName]
+     if {[[$i getMaster] isBlock]} {
+      set b [$it getBBox]; lappend pts [list [expr {([$b xMin]+[$b xMax])/2.0}] [expr {([$b yMin]+[$b yMax])/2.0}]]
+     } elseif {[regexp {^(BUF|INV|HB)} $mn]} {
+      foreach o [$i getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend step [$o getNet] } }
+     } elseif {[regexp {DFF|DHL|DLL|SDF} $mn] && [[$it getMTerm] getName] eq "D"} {
+      if {[$i getPlacementStatus] in {FIRM LOCKED}} {
+       set b [$i getBBox]; lappend pts [list [expr {([$b xMin]+[$b xMax])/2.0}] [expr {([$b yMin]+[$b yMax])/2.0}]]
+      } else {
+       foreach o [$i getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend nxt [$o getNet] } }
+      }
+     }
+    }
+   }
+   set cur $step
+  }
+  if {[llength $pts]} {
+   set sx 0.0; set sy 0.0
+   foreach p $pts { set sx [expr {$sx+[lindex $p 0]}]; set sy [expr {$sy+[lindex $p 1]}] }
+   return [list [expr {$sx/[llength $pts]}] [expr {$sy/[llength $pts]}] [expr {$rank-1}]]
+  }
+  set cur $nxt
+ }
+ return {}
+}
 proc cland_bin_place {} {
  global ff_blk ff_dbu cland_groups cland_done cland_fh
- set mode [expr {[info exists ::env(OT_CLAND_BIN)] ? $::env(OT_CLAND_BIN) : 1}]
- if {$mode eq "0"} { puts "OT_CLAND_BIN off (OT_CLAND_BIN=0)"; return {} }
+ set mode [expr {[info exists ::env(OT_CLAND_BIN)] ? $::env(OT_CLAND_BIN) : 0}]
+ if {$mode ni {1 eq}} { puts "OT_CLAND_BIN off (opt-in: OT_CLAND_BIN=1 beside the ring, =eq equal-hop)"; return {} }
+ set frac [expr {[info exists ::env(OT_CLAND_BIN_FRAC)] ? double($::env(OT_CLAND_BIN_FRAC)) : 0.5}]
+ set warn [expr {[info exists ::env(OT_CLAND_BIN_WARN)] && $::env(OT_CLAND_BIN_WARN) eq "1"}]
+ set nunanch 0; set hmax 0.0
  set rad [expr {round(([info exists ::env(OT_CLAND_BIN_REACH)] ? $::env(OT_CLAND_BIN_REACH) : 100.0)*$ff_dbu)}]
  set seen_prefix {}; set moved {}; set stat {}
  foreach spec $cland_groups {
@@ -1503,8 +1556,16 @@ proc cland_bin_place {} {
    foreach s [cland_bin_sinks $ff] {
     set sn [$s getName]
     if {[cland_ours $sn] || [dict exists $cland_done $sn] || [$s getPlacementStatus] in {FIRM LOCKED} || [[$s getMaster] isBlock]} continue
+    set tx $rx; set ty $ry
+    if {$mode eq "eq"} {
+     set anc [cland_bin_anchor $s]
+     if {![llength $anc]} { incr nunanch; continue }
+     lassign [cland_bin_point $rx $ry [lindex $anc 0] [lindex $anc 1] $frac] tx ty
+     set span [expr {(abs([lindex $anc 0]-$rx)+abs([lindex $anc 1]-$ry))/double($ff_dbu)}]
+     set hh [expr {$span*max($frac,1.0-$frac)}]; if {$hh > $hmax} { set hmax $hh }
+    }
     incr nfound
-    set site [cland_bin_site $s $rx $ry $rad]
+    set site [cland_bin_site $s $tx $ty $rad]
     if {![llength $site]} continue
     lassign $site x y cost fw
     if {[$s getPlacementStatus] eq "FIRM"} { $s setPlacementStatus PLACED }
@@ -1517,17 +1578,18 @@ proc cland_bin_place {} {
    }
   }
   if {$nfound == 0} { continue }
-  puts "OT_CLAND_BIN bus $bus placed $nplaced of $nfound (ring flops $nring, ring $prefix, max [format %.1f $dmax] um from its ring flop)"
+  puts "OT_CLAND_BIN bus $bus placed $nplaced of $nfound (mode $mode, ring flops $nring, ring $prefix, max [format %.1f $dmax] um from its target, unanchored $nunanch)"
   if {$nplaced < 0.95*$nfound} { lappend stat "bus $bus placed $nplaced of $nfound" }
  }
- puts "OT_CLAND_BIN total [llength $moved] capture registers FIRM beside their ring flops"
+ puts "OT_CLAND_BIN total [llength $moved] capture registers FIRM (mode $mode), $nunanch without an anchored load left to global placement, longest planned hop [format %.1f $hmax] um[expr {$hmax > 405.0 ? " OVER 405 (span left to the plan)" : ""}]"
  if {[llength $stat]} {
   set msg "OT_CLAND_BIN under 95%: [join $stat {; }]"
-  if {$mode eq "warn"} { puts "$msg (OT_CLAND_BIN=warn)" } else { error $msg }
+  if {$warn} { puts "$msg (OT_CLAND_BIN_WARN=1)" } else { error $msg }
  }
  return $moved
 }
 set cland_bin_moved [cland_bin_place]
+# CLAND-BIN END
 close $cland_fh
 puts "OT_CLAND placed $cland_n actual mapped cells FIRM in nonoverlapping reserved bands/relay sites"
 # DIE-HEAD-42 V1: landed stations of plan-siteless bits follow their now-placed ring fan-in (face_flops.tcl)

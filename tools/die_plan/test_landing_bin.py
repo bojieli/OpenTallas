@@ -84,7 +84,25 @@ def test_block_runs_after_every_ring_and_releases_with_them():
     assert 'puts $cland_fh "$sn\\tcland:bin:$bus' in TCL          # face_flops_release.tcl frees every name in this file
     assert "OT_CLAND_BIN bus $bus placed $nplaced of $nfound" in TCL
     assert "$nplaced < 0.95*$nfound" in TCL
-    assert "OT_CLAND_BIN=0" in TCL and "OT_CLAND_BIN=warn" in TCL or '"warn"' in TCL
+    assert "OT_CLAND_BIN_WARN" in TCL
+
+
+def test_opt_in_default_is_off():
+    assert "[info exists ::env(OT_CLAND_BIN)] ? $::env(OT_CLAND_BIN) : 0" in TCL
+    assert "if {$mode ni {1 eq}}" in TCL
+
+
+def test_equal_hop_point_is_on_the_ring_to_anchor_line():
+    body = _procs("cland_bin_point") + "puts [cland_bin_point 0 0 640000 100000 0.5]\nputs [cland_bin_point 10 10 110 410 0.25]\n"
+    out = _run(body)
+    assert out[0] == "320000.0 50000.0" and out[1] == "35.0 110.0"
+
+
+def test_anchor_walk_is_by_master_and_bounded():
+    body = _procs("cland_bin_anchor")
+    assert "$rank <= 3" in body and "[[$i getMaster] isBlock]" in body and "FIRM LOCKED" in body
+    assert "u_bin" not in body and "u_st" not in body
+    assert TCL.index("# CLAND-BIN BEGIN") < TCL.index("proc cland_bin_row_x") < TCL.index("# CLAND-BIN END")
 
 
 def test_sinks_are_matched_by_master_not_name():
