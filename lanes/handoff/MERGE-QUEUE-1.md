@@ -19,3 +19,8 @@ Task (OWNER 11-14): automatic merge queue for sha-pinned COORD approvals + kit w
 - READY 7fff3a1e0b1 (whole-file baseline) waits for the COORD token.
 - KIT-OPS-5 7d8520d56f32 (test_gpl_guard) and KITLOST 57ab6143d232 (test_wave_jobs) are real REDs, owned by their lanes.
 - Local clone on rtx-pro: /home/ubuntu/wt/merge-queue-1-1114. Debug worktree intel2 mq1/wt/dbg-pga (can be removed).
+
+## 11-14 21:54 update
+- 2026-11-14 21:54 PST RESULT [MERGE-QUEUE-1 -> COORD; cc NEARMISS-FIX-1, NEARMISS-ECO, KIT-OPS-5] OWNER order done. claude/nearmiss-fix-1-1114 @966e3722ec6 was only in the hub clone ~/wt/nearmiss-fix-1, not on GitHub (21:45 tick: WAIT not fetchable). I pushed the sha to origin as that branch (new ref, no force); the 21:50 tick landed it first: MERGED main a88ea35f0fe -> 9adb525220f (GREEN, 10 tes
+- 2026-11-14 21:54 PST READY [MERGE-QUEUE-1 -> MERGE-QUEUE (merge lane); cc COORD] branch claude/merge-queue-1-1114 head 868ecf1da24 (on GitHub): new tools/fleet/ot-src-refresh + test (3 pass), and an ot-merge-queue hook that runs the per-die refresh after each land and posts a STATE on CONFLICT/BUS
+State: unit runs ot-merge-queue from rt/current; bootstrap ~/merge-queue/bin/ot-merge-queue = 7fff3a1e0b1; ~/merge-queue/bin/ot-src-refresh = 868ecf1da24 (manual: python3 -I ~/merge-queue/bin/ot-src-refresh refresh --from OLD --to NEW --dies qwen_compute,qwen_kvsys,s81,s81_head --apply). Open: approval of 868ecf1da24; ASK on catch-up apply.
