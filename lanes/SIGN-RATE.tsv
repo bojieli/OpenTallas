@@ -649,3 +649,4 @@ time	die	signed_types	signed_cores
 2026-11-14 13:3x	315 archived	s81=62c+36t head=2c+19t qc=62c+4t kv=34c+4t hbm=91c+1t	forced 13:35; -1 is HEAD plan_sha256 missing -> pinned l48uo fallback (real 316 flat); BK+BL landed main 677abe5b039; BM gating, BN 6 fixes queued
 2026-11-14 14:3x	316 archived	s81=62c+36t head=3c+19t qc=62c+4t kv=34c+4t hbm=91c+1t	forced 14:34; flat; +2 pending count (nb0 core, coll_ft type); BP+BQ landed main 3ded33acfba; 240 GB stale ramdisk freed on epyc8
 2026-11-14 15:3x	318 archived	s81=62c+36t head=3c+19t qc=64c+4t kv=34c+4t hbm=91c+1t	forced 15:34; +2 QC cores via null-top counter fix (f638d8a7746); BH explorer in Playwright, BR queued
+2026-11-14 16:3x	318 archived	s81=62c+36t head=3c+19t qc=64c+4t kv=34c+4t hbm=91c+1t	forced 16:35; flat; kv3_sys_SD archived pending credit; main c797a8af1e5
