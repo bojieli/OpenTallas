@@ -390,10 +390,53 @@ def pick_charge_gb(cfg, die, item):
     return int(round(base * max(f, 1.0)))
 
 
+HUB_DISK_PATHS = ("/srv/opentallas-scratch2", "/")
+
+
+def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1200 item 2): '' or why the hub cannot take new work.  A hub ENOSPC killed 28 units at once; the tick
+    launches nothing while the hub's scratch2 or root has less than hub_free_min_gb (default 64) free.  Running units are untouched."""
+    try:
+        floor = float(cfg.get("hub_free_min_gb", 64))
+    except (TypeError, ValueError):
+        floor = 64.0
+    if floor <= 0:
+        return ""
+    low = []
+    for p in paths:
+        try:
+            s = statvfs(p)
+        except OSError:
+            continue                                         # a path this host does not have is not a reason
+        free = s.f_bavail * s.f_frsize / 2**30
+        if free < floor:
+            low.append(f"{p} {free:.0f} GB free < {floor:g} GB")
+    return "hub disk low: " + "; ".join(low) if low else ""
+
+
+def hub_disk_gate(AP, cfg, st, now=None):
+    """called once per tick: sets cfg['_hub_disk_low'] and posts one STATE line when the condition starts (one more when it ends)"""
+    why = hub_disk_low(cfg)
+    cfg["_hub_disk_low"] = why
+    g = st.setdefault("hub_disk", {})
+    if why and not g.get("since"):
+        g["since"] = time.time() if now is None else now
+        AP.log(f"KIT-WAVE HUB-DISK launch refused: {why}")
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} STATE [FLOW-HEALTH-1 -> COORD] kit wave launches nothing: {why} "
+                        "(a hub ENOSPC killed 28 units on 11-15; running units untouched; free the hub disk, the next tick resumes)")
+    elif not why and g.get("since"):
+        AP.log("KIT-WAVE HUB-DISK launches resume: hub disk above the floor again")
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} STATE [FLOW-HEALTH-1 -> COORD] kit wave launches resume: hub disk above the floor again")
+        g.clear()
+    return why
+
+
 def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
         return cfg["error"]
+    if cfg.get("_hub_disk_low"):
+        return cfg["_hub_disk_low"]
     if (ap_dir / "kit_wave.stop").exists():
         return "global stop file kit_wave.stop"
     if not cfg.get("enabled"):
@@ -4600,6 +4643,10 @@ def fail_signature(cls, why, stage=""):
         return None
     head, _, rest = why.partition(" @")
     stg = (rest.split(":", 1)[0].strip() if rest else "") or str(stage or "")
+    if stg:
+        # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1200 item 6): the key is (item, stage, class), not the free text of the last log line; a fail
+        # text that alternates ("KW_ROAM ..." / "bind.py: error ...") at the same stage kept resetting the 3x count (slice_station__t8 ran 27 attempts)
+        return (cls or "FLOW"), f"{cls}|{stg}"
     norm = re.sub(r"(?:[\w.-]+:)?/[^\s,;'\")]+", "<path>", head)
     norm = re.sub(r"\b(?:epyc|intel)\d+\b|\b[0-9a-f]{7,}\b|\d+", "#", norm)
     norm = re.sub(r"\s+", " ", norm).strip()[:200]
@@ -9379,6 +9426,10 @@ def _step(AP, ap_dir):
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
+    try:
+        hub_disk_gate(AP, cfg, st)
+    except Exception as e:                                       # unknown = launch
+        AP.log(f"KIT-WAVE hub disk check skipped: {type(e).__name__}: {e}")
     try:
         config_drift(AP, st)
     except Exception as e:
