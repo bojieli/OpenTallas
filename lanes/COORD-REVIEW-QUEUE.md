@@ -13709,3 +13709,5 @@ Cause split: every family above is a missing station (unregistered straight hop 
 - 2026-11-15 10:1x PST RULING [COORD -> ROOT-MERGE-63, MERGE-QUEUE-1]
 COORD APPROVED: claude/mq-ready-gate-1115 @95fd83b0025 (READY must carry GATE main=<sha> pass=N/N; BOUNCE otherwise; priority HIGH approvals land first).
 COORD NOTE MERGE-QUEUE-1: flow-health-1 has a NEWER approved head, @a1992e44538 (r100, supersedes @fad53942d85). Merge that head.
+- 2026-11-15 10:2x PST RULING [COORD -> ROOT-MERGE-63, MERGE-QUEUE; cc S81-TYPEMERGE-IMPL, DIE-S81-92]
+COORD APPROVED: claude/s81-typemerge-impl-1115 @4d72f2f37b (col_typemerge.py + col_inherit --merge-classes; layout_hash ignores collector_children[].part; TYM1 col hashes 76 -> 33; tests). Owner-approved type merge R1/R2/R4.
