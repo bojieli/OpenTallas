@@ -171,7 +171,7 @@ class RefusedSource(unittest.TestCase):
         return dict(row(225, 62.0, 256), disk_gb=gb, scratch_disk="/srv/opentallas-scratch", scratch_disk_gb=gb)
 
     def place(self, probes, disk=20):
-        with patch.object(self.m, "probe", side_effect=lambda h, d: (h, probes[h][1])), \
+        with patch.object(self.m, "probe", side_effect=lambda h, d, spill_ok=False: (h, probes[h][1])), \
              patch.object(self.m, "trigger_reaper", return_value=False), contextlib.redirect_stderr(io.StringIO()):
             return self.m.place(list(probes), self.D, disk, 48, quiet=True)
 
