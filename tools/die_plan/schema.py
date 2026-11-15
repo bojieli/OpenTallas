@@ -584,7 +584,8 @@ SCHEMA = {
                         # reserved_sites_tcl): die_clock_tree = hard, landing_ring_bank = GPL-only after the rings
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
                             "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank"]},
-                                           "ref": {"type": "string"}}}},
+                                           "ref": {"type": "string"},
+                                           "route_layers": {"type": "string"}}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
