@@ -82,6 +82,12 @@ class T(unittest.TestCase):
                 nrep = max(0, math.ceil((abs(p["x"] - v["x"]) + abs(p["y"] - v["y"])) / 150.0) - 1)
                 self.assertEqual((nrep + 1) & 1, (v["inv_parity"] ^ p["inv_parity"]) & 1, (i, nrep))
 
+    def test_class_by_counts_merges_classes(self):
+        out, rep = N.stamp_tree(FakeP(), tree(), "t", max_slide=0.0, class_by="counts")
+        self.assertEqual(rep["stamped"], 2)
+        self.assertEqual(len(rep["classes"]), 1)
+        self.assertEqual(len(out["taps"]), 4)
+
     def test_taps_follow_by_name_and_top_priced(self):
         by = {(t["part"], t["tap"]): t for t in self.out["taps"]}
         self.assertEqual(set(by), {("A", "clk_t0"), ("A", "clk_t1"), ("B", "clk_t0"), ("B", "clk_t1")})

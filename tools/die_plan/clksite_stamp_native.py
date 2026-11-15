@@ -79,7 +79,7 @@ def fix_parity(nodes, rep_um, site=None):
     return dict(stats=st, ids=ids)
 
 
-def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
+def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None, class_by="sides"):
     N = {int(k): v for k, v in T["nodes"].items()}
     nb = {int(k): v for k, v in T["node_buf"].items()}
     sites, po = T["sites"], T["parent_of"]
@@ -111,6 +111,8 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
     classes = {}
     for n in inst:
         key = (len(tops[n]), len(exits[n]), tuple(side(n, i) for i in tops[n]), tuple(side(n, i) for i in exits[n]))
+        if class_by == "counts":        # coarse: instances with the same number of tops and exits share a template
+            key = (key[0], key[1], (), ())
         classes.setdefault(key, []).append(n)
     tmpl = {}                      # instance -> its template instance
     cls_of = {}
@@ -170,6 +172,15 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
         return dev[k]
     stamped = [n for n in inst if n in tmpl]
     drop = set().union(*[inside[n] for n in stamped]) if stamped else set()
+
+    def path_delay0(nds, i):
+        s_ = 0.0
+        while i is not None:
+            pl = nds[i].get("physical_leg") or nds[i].get("stamp_leg")
+            s_ += pl["delay_ps"] if pl else 0.0
+            i = nds[i].get("parent")
+        return s_
+    before = {(t["part"], t["tap"]): path_delay0(N, t["node"]) for t in T["taps"] if t["node"] in drop}   # before N is rewired
     ids, nxt = {}, max(N) + 1
     for n in stamped:
         for i in sorted(inside[tmpl[n]]):
@@ -290,7 +301,6 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
             s += pl["delay_ps"] if pl else 0.0
             i = nds[i].get("parent")
         return s
-    before = {(t["part"], t["tap"]): path_delay(N, t["node"]) for t in T["taps"] if t["node"] in drop}
     after = {(t["part"], t["tap"]): path_delay(nodes, t["node"]) for t in new_taps}
     common = [k for k in after if k in before]
     dl = sorted(after[k] - before[k] for k in common)
@@ -322,11 +332,12 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan"); ap.add_argument("tree"); ap.add_argument("type"); ap.add_argument("out")
     ap.add_argument("--max-slide", type=float, default=1.7); ap.add_argument("--rep-um", type=float, default=150.0)
+    ap.add_argument("--class-by", choices=("sides", "counts"), default="sides")
     a = ap.parse_args(argv)
     import schema as S
     P = S.Plan(S.load(a.plan), Path(a.plan))
     import die_trial as D
-    out, rep = stamp_tree(P, json.load(open(a.tree)), a.type, a.max_slide, a.rep_um, site=D.clock_site(P))
+    out, rep = stamp_tree(P, json.load(open(a.tree)), a.type, a.max_slide, a.rep_um, site=D.clock_site(P), class_by=a.class_by)
     json.dump(out, open(a.out, "w"))
     json.dump(rep, open(a.out + ".report.json", "w"), indent=1)
     print(json.dumps(rep))
