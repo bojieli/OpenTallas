@@ -375,6 +375,7 @@ def pytest(wt, items, tag, n):
     bt = WT / "bt" / tag
     tmp = WT / "tmp" / tag
     shutil.rmtree(bt, ignore_errors=True)
+    bt.parent.mkdir(parents=True, exist_ok=True)
     tmp.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", TMPDIR=str(tmp))
     env.pop("PYTHONPATH", None)
