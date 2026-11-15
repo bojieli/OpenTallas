@@ -308,7 +308,7 @@ def test_freg_survives_annotate_table_ports():
 
 def test_annotate_table_accepts_partition_origin_bind():
     """KIT-OPS-6 11-15 (FABLE-PD-S81-0335 F, --start-partition-origins): bind crossings name partitions (src == src_part); the table keys are region tags"""
-    b = {"schema": "s", "period_ps": 833.0, "root": "r", "pad": 0, "parts": {q: {"region": q, "role": "root", "src": None, "stages": 0} for q in ("A", "B")}, "regions": {},
+    b = {"schema": "s", "period_ps": 833.0, "root": "r", "pad": 0, "relay_stages": 0, "parts": {q: {"region": q, "role": "root", "src": None, "stages": 0} for q in ("A", "B")}, "regions": {},
          "ports": {"p0": {"src": "A", "dst": "B", "src_part": "A", "dst_part": "B", "K": 1, "depth": 4, "sched_lat": 2, "tree": False}}}
     t = {"ports": [{"port": "p0", "src": "A", "dst": "B", "src_region": "std_bg_1", "dst_region": "std_bg_2"}], "regions": []}
     out = CB.annotate_table(t, b)
