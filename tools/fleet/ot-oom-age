@@ -74,6 +74,35 @@ def save_state(path, first, now):
         pass
 
 
+LATE_RE = re.compile(r"/(detail_route|detailed_route|fillcell|final_report|route_cleanup)\.tcl\b")      # past GRT: routing / fill / final: most sunk work
+GRT_RE = re.compile(r"/global_route\.tcl\b")
+GRT_CAP = 300
+YOUNG_S = 3 * 3600          # VICTIM_RSS_1114: younger than this, the LARGEST process dies first
+YOUNG_BASE, YOUNG_SPAN, YOUNG_PER_GB = 520, 279, 10
+
+
+def stage_adj(cmdline, age_adj):
+    """STAGEADJ (COORD 11-14): the job that loses the least work dies first.  Jobs in DRT or past GRT (detail_route / fillcell / final_report) get 0 -- the
+    lowest score; a job inside GRT is scaled to GRT_CAP/STARTADJ of its age value (800 -> 300); everything earlier keeps the age-based value."""
+    if LATE_RE.search(cmdline):
+        return FLOOR
+    if GRT_RE.search(cmdline):
+        return age_adj * GRT_CAP // STARTADJ        # scaled, not clipped: young GRT jobs still die before older ones
+    return age_adj
+
+
+def victim_adj(cmdline, age_s, rss_gb):
+    """VICTIM_RSS_1114 (COORD 11-14): killing a 4 GB job frees nothing, so earlyoom kept killing small young jobs until it reached a big one (10 h of victims: 40 percent
+    of openroad kills under 8 GB, 115 of 156 young).  Early-stage jobs younger than YOUNG_S get adj 520 + 10 per GB of RSS (max 799): the largest young process dies first and
+    a job under 8 GB (adj <= 599) never goes before a larger young one; older early-stage jobs decay from 500 by age.  Late stages (0) and GRT (scaled) keep STAGEADJ."""
+    age_adj = target_adj(age_s)
+    if LATE_RE.search(cmdline) or GRT_RE.search(cmdline):
+        return stage_adj(cmdline, age_adj)
+    if age_s < YOUNG_S:
+        return YOUNG_BASE + min(YOUNG_SPAN, int(max(0.0, rss_gb) * YOUNG_PER_GB))
+    return min(500, age_adj)
+
+
 PLAN_DIR = "/var/tmp/ot-heavy"
 PLAN_ADJ = -1000
 PLAN_EXTRA = {"python3", "python"}      # PLANBYPASS_1114: a plan job's helper processes are protected too
@@ -207,7 +236,12 @@ def main(argv=None):
                 continue
             age = proc_age(p, now, hz)
             key = item_key(names.get(container_id(p) or ""))
-            want = target_adj(credited_age(first, key, age, now))
+            _age = credited_age(first, key, age, now)
+            try:
+                _rss = int(re.search(r"VmRSS:\s+(\d+)", open(f"/proc/{p}/status").read()).group(1)) / 1048576
+            except (OSError, AttributeError, ValueError):
+                _rss = 0.0
+            want = victim_adj(open(f"/proc/{p}/cmdline").read().replace("\0", " "), _age, _rss)
             seen += 1
             if want != cur:
                 if not a.dry_run:
