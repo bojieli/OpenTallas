@@ -18,10 +18,13 @@ TINY = json.loads((HERE / "examples" / "tiny_plan.json").read_text())
 LIB = """library (x) { time_unit : "1ps";
  cell (core) { pin (clk) { clock : true; }
   pin (d) { timing () { related_pin : "clk"; timing_type : setup_rising;
-      rise_constraint (t) { values ("10, 346.0", "20, 100"); } fall_constraint (t) { values ("5, 7"); } } }
+      rise_constraint (t) { values ("300, 346.0, 346.0", "346.0, 400, 900"); } fall_constraint (t) { values ("5, 7"); } } }
   pin (q) { timing () { related_pin : "clk"; timing_type : rising_edge;
-      cell_rise (t) { values ("100, 480.5"); } cell_fall (t) { values ("90, 400"); } } } } }
+      cell_rise (t) { values ("100, 480.5, 480.5, 900"); } cell_fall (t) { values ("90, 400"); } } } } }
 """
+
+
+LIB_OK = LIB.replace("480.5", "100").replace("900", "100").replace("346.0", "50").replace("400", "50")
 
 
 def plan(mut=None):
@@ -34,7 +37,7 @@ def plan(mut=None):
 def test_lib_boundary_arcs(tmp_path):
     f = tmp_path / "core_tt.lib"
     f.write_text(LIB)
-    assert PTA.lib_boundary_arcs(f) == (480.5, 346.0)
+    assert PTA.lib_boundary_arcs(f) == (480.5, 346.0)   # median of each table (typical point), max over tables
     f2 = tmp_path / "ns.lib"
     f2.write_text(LIB.replace('"1ps"', '"1ns"'))
     assert PTA.lib_boundary_arcs(f2) == (480500.0, 346000.0)
@@ -83,7 +86,7 @@ def rows_for(p, **kw):
 
 def test_core_deeper_than_budget_without_early_tap_fails(monkeypatch, tmp_path):
     lib = tmp_path / "c.lib"
-    lib.write_text(LIB.replace("480.5", "100").replace("346.0", "50"))
+    lib.write_text(LIB_OK)
     fake_load(monkeypatch, 271.0)                           # S81 col: 271 ps inside a 250 ps budget
     (r,) = rows_for(core_plan(lib=lib))
     assert r["verdict"] == "FAIL" and r["depth_ps"] == 271.0 and r["budget_ps"] == 250.0 and r["over_ps"] == 21.0
@@ -94,7 +97,7 @@ def test_core_deeper_than_budget_without_early_tap_fails(monkeypatch, tmp_path):
 
 def test_early_tap_must_match_the_measured_depth(monkeypatch, tmp_path):
     lib = tmp_path / "c.lib"
-    lib.write_text(LIB.replace("480.5", "100").replace("346.0", "50"))
+    lib.write_text(LIB_OK)
     fake_load(monkeypatch, 533.0)
     ok = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=533.0)))
     assert ok[0]["verdict"] == "PASS" and ok[0]["tap"] == "early"
@@ -118,11 +121,15 @@ def test_unmeasured_core_fails_closed(monkeypatch):
     monkeypatch.setattr(CC, "load", boom)
     (r,) = rows_for(core_plan())
     assert r["verdict"] == "UNMEASURED" and "no measured clock depth" in r["reasons"][0]
+    assert r["basis"] is None or r["basis"] == "LIB"        # LIB fallback depth, never a failure
+    R = check.Report()
+    s = PTA.g0(core_plan(), R, mode="error")
+    assert not R.errors() and s["unmeasured_rows"] == 1 and s["failing_types"] == 0
 
 
 def test_type_budget_follows_the_type_clock(monkeypatch, tmp_path):
     lib = tmp_path / "c.lib"
-    lib.write_text(LIB.replace("480.5", "100").replace("346.0", "50"))
+    lib.write_text(LIB_OK)
     fake_load(monkeypatch, 271.0)
     p = core_plan(lib=lib)
     p.types["mid"]["clock"]["insertion_ps"] = 450.0        # HEAD / serdes budget
@@ -151,5 +158,7 @@ def test_check_run_wires_the_audit():
     raw = copy.deepcopy(TINY)
     R, summ = check.run(raw, timing_audit="warn")
     assert "timing_audit" in summ
-    R, summ = check.run(copy.deepcopy(TINY))
+    R, summ = check.run(copy.deepcopy(TINY), timing_audit="off")
     assert "timing_audit" not in summ
+    R, summ = check.run(copy.deepcopy(TINY))                  # COORD 11-15: default warn
+    assert "timing_audit" in summ

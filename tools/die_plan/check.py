@@ -2703,7 +2703,7 @@ def _plan_geom_default():
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
-        street_rule="off", r8_strap_pads=False, timing_audit="off", repo_root=None):
+        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2899,10 +2899,10 @@ def main(argv=None):
                          "R-STREET (RULEBOOK-1113): the same check also raises face_street (a macro behind the type's own "
                          "pin face keeps max(43.2, shadowed pins / (37.5 x open ends)) um, cap 129.6) and station_alley "
                          "(>= 16 station bits in a macro slot < 43.2 um); street_rule.py legalize is the auto-fix")
-    ap.add_argument("--timing-audit", choices=("warn", "error", "off"), default="off",
+    ap.add_argument("--timing-audit", choices=("warn", "error", "off"), default="warn",
                     help="PLAN TIMING AUDIT (plan_timing_audit.py): lane hops priced in ps against period - setup - 150, and the "
                          "MEASURED core clock depth / boundary arcs against the type clock budget; warn = WARN per failing type, "
-                         "error = ERROR (an unmeasured core also fails: fail closed); default off")
+                         "error = ERROR (UNMEASURED cores never fail; reported with the LIB fallback depth); default warn (COORD 11-15; flip to error per die after its next plan event)")
     ap.add_argument("--repo-root", help="checkout holding the core views for --timing-audit (default: this checkout)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)

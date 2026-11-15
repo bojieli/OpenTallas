@@ -17,7 +17,8 @@
                         from the plan and is listed as a note, never assumed.
       - boundary arcs:  clk->q max + setup max of the core's liberty (zero wire, timing_type rising_edge / setup_rising) against
                         the cycle: headroom = period - clkq - setup; FAIL when headroom < MARGIN_PS.
-      - no measurement: UNMEASURED = FAIL (fail closed): the core has no clock contract / signoff / insertion.json.
+      - no measurement: UNMEASURED (COORD 11-15: does NOT fail): the core has no clock contract / signoff / insertion.json;
+                        reported with the liberty-derived fallback depth (basis LIB) and counted per die.
 Output: per-die table of failing types with the numbers (tsv / json).  G0: check.py --timing-audit {off,warn,error}.
 
 Not covered (listed gaps): reset / start relay chains (built by reset_tree with relay reach <= 405 um by construction; the QC
@@ -99,8 +100,9 @@ _ARC_CACHE = {}
 
 
 def lib_boundary_arcs(path):
-    """(clkq_max_ps, setup_max_ps) of a liberty: max over timing groups with timing_type rising_edge (cell_rise / cell_fall
-    values) and setup_rising (rise / fall constraint values).  Upper bounds (every table entry), in ps."""
+    """(clkq_max_ps, setup_max_ps) of a liberty: max over timing groups of the MEDIAN table entry for timing_type rising_edge (cell_rise / cell_fall)
+    and setup_rising (rise / fall constraint), in ps (a typical slew / load point; the table corner is an upper bound that
+    overstates the arcs, e.g. kp4 clk->q 609 corner vs ~480 typical)."""
     key = str(path)
     if key in _ARC_CACHE:
         return _ARC_CACHE[key]
@@ -120,16 +122,15 @@ def lib_boundary_arcs(path):
             tabs = re.findall(r"(?:rise|fall)_constraint\s*\([^)]*\)\s*\{(.*?)\}", chunk, flags=re.S)
         else:
             continue
-        vals = []
         for tb in tabs:
             v = re.search(r"values\s*\((.*?)\)\s*;", tb, flags=re.S)
-            if v:
-                vals += [float(x) for x in re.findall(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?", v.group(1))]
-        if vals:
-            if typ == "rising_edge":
-                clkq = max(clkq, max(vals) * k)
-            else:
-                setup = max(setup, max(vals) * k)
+            vals = sorted(float(x) for x in re.findall(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?", v.group(1))) if v else []
+            if vals:
+                med = vals[len(vals) // 2] * k              # median of the table: a typical slew / load point, not the corner
+                if typ == "rising_edge":
+                    clkq = max(clkq, med)
+                else:
+                    setup = max(setup, med)
     _ARC_CACHE[key] = (clkq, setup)
     return _ARC_CACHE[key]
 
@@ -176,12 +177,29 @@ def audit_cores(P, root=None, arcs=True):
                     loaded_cache[key0] = CC.load(core, root, require_signed=False, plan_type=t)
                 loaded = loaded_cache[key0]
             except (CC.ContractError, OSError, ValueError) as exc:
-                k = (tn, mod, "-", "unmeasured")
+                # COORD 11-15: UNMEASURED does not fail.  Reported with the liberty-derived fallback depth (basis LIB: the lib's
+                # max_clock_tree_path TT, a library arc, NOT a measurement) and what it would decide.
+                lib_depth = None
+                try:
+                    import cores as C
+                    ck = C.clock_pins(core, root)
+                    if ck:
+                        lib_depth = max(max(v["rise"], v["fall"]) for v in ck.values())
+                except Exception:
+                    lib_depth = None
+                tp0 = _tap_for(t, core["inst"], "clk")
+                k = (tn, mod, "-", "unmeasured", lib_depth)
                 if k in fold:
                     fold[k]["n_inst"] += 1
                     continue
-                fold[k] = dict(type=tn, module=mod, inst=core["inst"], pin="-", n_inst=1, budget_ps=T, depth_ps=None,
-                               basis=None, signed=None, tap=None, verdict="UNMEASURED", reasons=[f"no measured clock depth: {str(exc)[:160]}"])
+                would = None if not lib_depth else (lib_depth > T - DEPTH_MARGIN_PS + EPS if tp0 is None else
+                                                    abs(lib_depth - float(tp0.get("insertion_ps", 0.0))) > float(tp0.get("insertion_tol_ps", DEFAULT_TOL_PS)) + EPS)
+                fold[k] = dict(type=tn, module=mod, inst=core["inst"], pin="-", n_inst=1, budget_ps=T,
+                               depth_ps=None if not lib_depth else round(lib_depth, 1),
+                               over_ps=None if not lib_depth else round(lib_depth - T, 1), basis="LIB" if lib_depth else None,
+                               signed=None, tap="early" if tp0 else "grid", verdict="UNMEASURED", lib_would_fail=would,
+                               reasons=[f"no measured clock depth ({str(exc)[:110]}); LIB fallback depth "
+                                        f"{'%.0f' % lib_depth + ' ps' if lib_depth else 'n/a'} (library arc, not a measurement)"])
                 continue
             clkq = setup = None
             if arcs and core.get("lib"):
@@ -235,7 +253,7 @@ def run(P, root=None, arcs=True, geo=None):
         for tn in r["types"]:
             bad_types[tn]["reach"].append(r)
     for r in cores:
-        if r["verdict"] != "PASS":
+        if r["verdict"] == "FAIL":
             bad_types[r["type"]]["cores"].append(r)
     return dict(reach=reach, cores=cores, failing_types=sorted(bad_types), by_type=dict(bad_types),
                 params=dict(ps_per_um=PS_PER_UM, clkq_ps=CLKQ_PS, setup_ps=SETUP_PS, margin_ps=MARGIN_PS, depth_margin_ps=DEPTH_MARGIN_PS))
@@ -248,7 +266,7 @@ def tables(res, label="die"):
     out.append("lane\thop_um\thop_ps\tlimit_ps\tover_ps\ttypes")
     for r in res["reach"][:200]:
         out.append(f"{r['lane']}\t{r['hop_um']}\t{r['hop_ps']}\t{r['limit_ps']}\t{r['over_ps']}\t{','.join(r['types'])}")
-    out.append("-- (b) core boundary: FAIL / UNMEASURED cores (per type, module, pin)")
+    out.append("-- (b) core boundary: FAIL / UNMEASURED cores (per type, module, pin); UNMEASURED rows carry the LIB fallback depth")
     out.append("type\tmodule\tpin\tn_inst\tbudget_ps\tdepth_ps\tover_ps\ttap\tclkq\tsetup\theadroom\tverdict\treasons")
     for r in sorted((c for c in res["cores"] if c["verdict"] != "PASS"), key=lambda c: (c["type"], c["module"], c["pin"])):
         out.append("\t".join(str(x) for x in (r["type"], r["module"], r["pin"], r["n_inst"], r["budget_ps"], r.get("depth_ps"), r.get("over_ps"),
@@ -262,7 +280,10 @@ def summary(res):
     for r in res["cores"]:
         c[r["verdict"]] += 1
     n_types = len({r["type"] for r in res["cores"]})
+    lib = [r for r in res["cores"] if r["verdict"] == "UNMEASURED"]
     return dict(reach_failing_lanes=len(res["reach"]), core_rows=dict(c), failing_types=len(res["failing_types"]),
+                unmeasured_rows=len(lib), unmeasured_types=len({r["type"] for r in lib}), unmeasured_instances=sum(r["n_inst"] for r in lib),
+                unmeasured_lib_would_fail=sum(1 for r in lib if r.get("lib_would_fail")),
                 core_types=n_types, worst_reach_over_ps=(res["reach"][0]["over_ps"] if res["reach"] else 0.0),
                 worst_core_over_ps=max((r.get("over_ps") or 0.0 for r in res["cores"] if r["verdict"] == "FAIL"), default=0.0))
 
@@ -283,7 +304,11 @@ def g0(P, R, root=None, mode="warn", arcs=True, geo=None):
             w = max(d["cores"], key=lambda c: (c["verdict"] == "UNMEASURED", c.get("over_ps") or 0.0))
             parts.append(f"cores: {len(d['cores'])} row(s), e.g. {w['module']}.{w['pin']} {w['verdict']}: {'; '.join(w['reasons'])[:200]}")
         emit("timing_audit", f"type {tn}: " + " | ".join(parts), type=tn)
-    return summary(res)
+    sm = summary(res)
+    if sm["unmeasured_rows"]:
+        R.warn("timing_audit", f"{sm['unmeasured_rows']} core row(s) in {sm['unmeasured_types']} type(s) ({sm['unmeasured_instances']} instances) have "
+               f"no measured clock depth (UNMEASURED, not a failure); LIB fallback would fail {sm['unmeasured_lib_would_fail']}")
+    return sm
 
 
 def main(argv=None):
