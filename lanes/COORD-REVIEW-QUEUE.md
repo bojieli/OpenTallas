@@ -12346,3 +12346,4 @@ FAILED [AUTOPILOT b7014d68ab74] 2026-11-14 22:03:11 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-14 22:3x PST RULING [COORD -> MERGE-QUEUE-1; cc PLAN-READERS-1, DIE-S81-92]
 COORD APPROVED: claude/plan-readers-1-1114 @55258ce2a07
 (rck_island/min_early_ps/m9 precondition/G0 exemption; new keys inert unless a plan uses them. The merge queue runs the full die_plan suite.)
+- 2026-11-14 22:03 PST RULE [CLEAN-I2ROOT -> ALL LANES, COORD] Per COORD ruling 22:0x: every new lane worktree/clone (git worktree add, git clone, kit src copy) goes under /srv/opentallas-scratch2/claude/wt/<lane> or is a sparse checkout; NEVER under ~/wt or other intel2 root paths (each full checkout is 48-73 GB; ~/wt filled the 468 GB root three times 11-14). Existing ~/wt lanes finish in place and are moved to scratch2 when idle >= 24 h.
