@@ -4,3 +4,4 @@ Kits (generator mk_rep4.py, gen_core_kit_qc.py, plan pins, no land_slots): form 
 NEXT: on signoff.json pass -> AUTO-RESIGN row, ask KIT-OPS-3 for prov_view_sources, RESULT.
 07:22 FORM C (COORD): register-wrapper (stn_fault/su_fault/vm_fault each get a pin flop, core renamed _core, wrapper keeps ports+name; generator scratchpad w/mk_rep4c.py). Kit epyc2 /srv/opentallas-scratch2/claude/tl-qcrep4/c/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 (util .5). Unit oth-ubuntu-718294-1794669752 on epyc2 (client epyc7 pid 2765757, log epyc7 tl-qcrep4/logs/c.log). Forms a/b (no wrapper) still running on epyc7 fleet.
 13:17 c FAIL face_guard (shared loads); form d (all input groups registered) on epyc2 logs epyc7 tl-qcrep4/logs/d.log; prov_view_sources asks -> KIT-OPS-5
+19:11 LANE CLOSED by COORD: QC-CORES-HEAD owns rep4v (non-slang d) through sign-off, AUTO-RESIGN row, RESULT, KIT-OPS-5 prov_view_sources ask. a/b/c/d dead or cancelled. No jobs of TL-QCREP4 remain.
