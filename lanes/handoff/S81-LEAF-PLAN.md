@@ -2,6 +2,23 @@
 
 Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.tsv (R-LEAF-1/2/3). All builds private, DO_NOT_COUNT.
 
+## STATE 2026-11-14 ~17:xx PST (CURRENT; supersedes everything below)
+- Branch claude/s81-leaf-plan-1114 head 59db85fea3 pushed (+ core_place --ft-resite / --link-reg, test_core_place_b4l4.py 4/4). Uncommitted in wt/: --taps-movable, ft clock points follow, exact group box check, 48-step search (commit next).
+- G0L3f (B4L3f): 296 errors, identical finding set to G0L2f (and the same count as G0ctl3).
+- B4L4 = ev/B4L4.json 58f4d1f24d2e / side_B4L4.json f97909118cca, 1 type: ot_s81sl_leaf__t21 (partition s_2S_L2).
+  - Form: vsw (86.4,302.4), rxsb (319.68,224.64), --window-clear --ft-resite --link-reg swr,rar. Gives R-LEAF-2 0 (was 2, ft2_o/ft3_o under vsw); 2 ft regs re-sited, count kept; 0 timing over; eq OK.
+  - CYCLE DELTA: t21 link class rar (u_rxsb.o_f/o_r/o_v -> u_vs ra_fi/ra_ri/ra_vi, return path) CS_RAR_D 0 -> 1 = +1 cycle inside leaf s_2S_L2. That is 5 internal_stations rows (note "B4L4 link-reg"). No die lane changes in the plan latency table; LATCHECK on the bind confirms it.
+  - LF_CS netlist: die_b178_lfcs.v re-staged by stage_lfcs_netlist from B4L4 = cp4/lfcs_B4L4.v 78800271b594. Only diff: u_s_2S LF_CS_RAR_D 20'h10000 -> 20'h10100. It ships in overlay ovl_l4 (= ovl_l + that file) on epyc7 and epyc8. Re-staging B4L3f reproduces the current file byte for byte.
+  - G0L4 running on epyc7 (log/G0L4.log).
+  - Twin strict binds: intel2 bind_leafplan_w7.sh (epyc7, B4L4) and bind_leafplan_e84.sh (epyc8, B4L48). Race: race_leafplan_r3b.sh. Watcher: adopt_watch_leafplan_a2.sh, which posts READY+ADOPT to KIT-OPS-5 on BIND_RC=0 + LATCHECK_RC=0.
+  - Compose script: cp4/compose_b4l4_leafplan.sh (pick list cp4/pick.txt).
+- Race fix: race_leafplan_r1/r2 never matched the clients, which were started as ./bind_leafplan_*.sh, so a loser twin would not have been killed. Replaced by r1b/r2b/r3b (pattern accepts ./ or the full path); the old r1/r2 were killed by exact PID.
+- Not in B4L4 (open):
+  - t73 / t9: ve_m/ve_s 34.6 um off S. The S 86.4 face-clear needs vs/vq moved up too. Seeds cp4/seed_t9.json and cp4/seed_t73.json are space-legal after --taps-movable, but stations then stretch (tv 22/24, ft6/ft8 re-site fails).
+  - t75: ve_m/ve_s have no legal W+S spot even with ft-resite + link-reg (ve/ver/rar classes would take +1).
+  - Next form for all three: move the ve pair and its N neighbours as one block, with link-reg on station classes.
+- COORD GEOM advisory t39 (a9 3_place, ~25 um channel x 985-1000, tap clk_t6 4577 sinks): no t39 GRT/DRT result exists yet (searched epyc7/8/9). In B4L3f the vn_a|E-lane channel is 37-58 um (vn_a ends x 969.8, ln_15/13/10 start 1006-1028). If t39 GRT/DRT struggles, widen it to >= 60 um and split clk_t6 as COORD describes. Not done in B4L4.
+
 ## Where things are
 - epyc7 L=/srv/opentallas-scratch2/claude/s81-leaf-plan: wt/ (own clone, tools/die_plan/leaf_rules.py + side_band_sync.py uncommitted), tree/ (cp -al of kw45 src_s81_main_7073a6b4a5 + ovl_b3y + DIE-S81-92 cg tie files; NEVER edit files in place there, hardlinks), ovl_l/ (= ovl_b3y + cg tie files + leaf_rules.py; overlay for my binds), run_bind_l.sh (copy of s81-b3-clk/run_bind_b3.sh, F=$L/run, STOP_G0 option), ev/, log/, cp/ (core_place trials).
 - epyc9 $L/k/{t32,t2,t61,t75}: private kit copies with the B4L bands written into landing_placement.tcl (bin/prep_proof_leafplan.py), runner leafplan_run.sh (3_3..3_place re-place + Fable proof2.tcl GRT M2-M8 adj 0.25, 30 it); outputs k/<t>/leafplan_place.log, k/<t>/proof/grt.log. Launched from intel2 ~/s81-leaf-plan/proofs_leafplan_w1.sh (ot-run --hosts epyc9 --mem 32, logs ~/s81-leaf-plan/proof_<t>.log).
