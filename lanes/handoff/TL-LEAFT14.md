@@ -4,3 +4,4 @@
 - Fix 11-14: replaced rtl/common/{ot_dp_clk_landing,ot_dp_clk_landing_ca,ot_dp_dly_cnt,ot_meso_fifo}.sv in B3v/src with origin/main versions (new inodes; backup epyc9 /srv/opentallas-scratch2/claude/tl-leaft14/bak). Defaults identical logic.
 - Needs: KIT-OPS-3 retry of s81 rows failed with this GEN_LINT error (t14@4 first).
 - 19:25 successor: live forms wave attempt_5 (epyc7 GRT pid 356408) + private r1 (epyc10 GRT pid 802561); both GRT extra iters; waiter on localhost scratchpad w14.sh. Do not relaunch.
+- 01:10 successor: wave a5 gone (watchdog), r1 epyc10 still GRT; ASK Fable PD review posted; no relaunch.
