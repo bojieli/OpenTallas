@@ -14,7 +14,11 @@
 # one commit on origin's tip that carries ONLY this call's own file changes (unchanged upstream -> our version; pure
 # append -> our appended lines on top of upstream; anything else -> no replay) in a private index, pushes it, and
 # leaves the shared worktree and index untouched (the local HEAD merges it cleanly later: same change on both sides).
-set -e
+# FLOW-HEALTH-1 11-15 (COORD): the script always ends with one status line on stdout: "PUSHED <sha>" (origin/$B holds the commit) or
+# "FAILED <reason>" (exit 1; also stderr).  3 attempts with backoff 3/12/27 s.  A dirty or untracked file outside the named paths never
+# blocks a post: when the merge in the shared tree is refused, only this call's own changes are replayed onto origin in a private index.
+set -eE
+trap 'rc=$?; echo "FAILED unexpected command failure (exit $rc) at line $LINENO: $BASH_COMMAND" | tee /dev/stderr; exit 1' ERR
 C=${COORD_DIR:-/home/ubuntu/coord}; B=${COORD_BRANCH:-coord/state}
 cd "$C"
 msg="$1"; shift
@@ -146,38 +150,50 @@ if on_origin "$R" || git push -q origin "$R:refs/heads/$B"; then
 fi
 return 1
 }
+succeed() { echo "PUSHED $( [ -n "$OWN" ] && git rev-parse "$OWN" || git rev-parse HEAD )"; exit 0; }
+LASTWHY="no attempt completed"; E=$(mktemp); trap 'rm -f "$E"' EXIT
+firstline() { head -c 300 "$E" | tr '\n' ' '; }
 on_origin() { git merge-base --is-ancestor "$1" "origin/$B" 2>/dev/null; }
 # done when origin holds our own commit; with no commit of our own, when origin holds HEAD (our lines, if committed by
 # preserve_append_logs here or by an earlier holder, are in HEAD)
 done_now() { if [ -n "$OWN" ]; then on_origin "$OWN"; else on_origin "$(git rev-parse HEAD)"; fi; }
-for i in 1 2 3 4 5 6; do
+for i in 1 2 3; do
   t=$(now); flock 8; W8=$(echo "$W8+$(now)-$t" | bc)
   # coalesce: an earlier pusher already carried our commit
-  if [ -n "$OWN" ] && git fetch -q origin "$B" && on_origin "$OWN"; then tlog coalesced; exit 0; fi
+  if [ -n "$OWN" ] && git fetch -q origin "$B" && on_origin "$OWN"; then tlog coalesced; succeed; fi
   t=$(now); flock 9; W9=$(echo "$W9+$(now)-$t" | bc)
   ok=0
   merged=1
-  discard_generated; preserve_append_logs && git fetch -q origin "$B" && { git merge -q --no-edit "origin/$B" || { git merge --abort 2>/dev/null; merged=0; false; }; } && restore_own "$@" && ok=1 || true
+  discard_generated
+  if ! preserve_append_logs 2>"$E"; then LASTWHY="preserving concurrent append journals failed: $(firstline)"
+  elif ! git fetch -q origin "$B" 2>"$E"; then LASTWHY="fetch of origin/$B failed: $(firstline)"
+  elif ! git merge -q --no-edit "origin/$B" >"$E" 2>&1; then
+    LASTWHY="merge of origin/$B refused in the shared tree (dirty files overlap upstream changes?): $(firstline)"
+    git merge --abort 2>/dev/null || true; merged=0
+  elif ! restore_own "$@" 2>"$E"; then LASTWHY="re-applying own commit after merge failed: $(firstline)"
+  else ok=1; fi
   P=$(git rev-parse HEAD)
   flock -u 9
   if [ $ok = 0 ] && [ $merged = 0 ] && [ -n "$OWN" ]; then
     t=$(now)
-    if replay_own; then TP=$(echo "$TP+$(now)-$t" | bc); if done_now; then tlog replayed; exit 0; fi; fi
+    if replay_own 2>"$E"; then TP=$(echo "$TP+$(now)-$t" | bc); if done_now; then tlog replayed; succeed; fi
+    else LASTWHY="$LASTWHY; replay of own files onto origin/$B failed (an in-place edit upstream also changed, a deletion, or fetch/push failed): $(firstline)"; fi
     TP=$(echo "$TP+$(now)-$t" | bc)
   fi
   if [ $ok = 1 ]; then
-    if done_now; then tlog coalesced; exit 0; fi
+    if done_now; then tlog coalesced; succeed; fi
     t=$(now)
-    if git push -q origin "$P:refs/heads/$B"; then
+    if git push -q origin "$P:refs/heads/$B" 2>"$E"; then
       TP=$(echo "$TP+$(now)-$t" | bc)
       git fetch -q origin "$B" || true
-      if done_now || { [ -z "$OWN" ] && on_origin "$P"; }; then tlog pushed; exit 0; fi
+      if done_now || { [ -z "$OWN" ] && on_origin "$P"; }; then tlog pushed; succeed; fi
     else
+      LASTWHY="push to origin/$B rejected: $(firstline)"
       TP=$(echo "$TP+$(now)-$t" | bc)
     fi
   fi
   flock -u 8
-  sleep 3
+  sleep $((${COORD_COMMIT_BACKOFF:-3} * i * i))
 done
 tlog FAILED
-echo "coord push failed" >&2; exit 1
+echo "FAILED after 3 attempts: $LASTWHY" | tee /dev/stderr; exit 1

@@ -66,6 +66,25 @@ FAIL_MAP = [
 ]
 
 
+def _class_first(reason):
+    """FLOW-HEALTH-1 11-15 (COORD): a stage-table reason written as 'PROVISIONAL[a:x,b:y] resign:z <class text>' (older rows; the wave now
+    writes the class text first) is cut at 240 chars behind that prefix and the class text is lost ('other flow error').  Move
+    the leading tag(s) behind the text so the class patterns see the text first."""
+    tags = []
+    while True:
+        m = re.match(r'\s*((?:PROVISIONAL|GRT-ARM)\[[^\]]*\](?: resign:\S+)?)\s*', reason)
+        if not m:
+            break
+        tags.append(m.group(1))
+        reason = reason[m.end():]
+    return (reason + ' ' + ' '.join(tags)).strip() if tags else reason
+
+
+def signed_type(item, stset):
+    """a type already in the plan's signed_types: never a failure row (kv3_phy / kv3_phy_v1 showed failed while signed)"""
+    return item.split('#')[0] in stset or short(item) in stset
+
+
 LAST = {}   # (die, item) -> latest stage row; filled by main() so label() can see whether a DEDUP twin is live
 
 
@@ -93,7 +112,7 @@ def label(r):
         return 'withdrawn (lane form)'
     if st == 'ROUTE-HELD':
         return 'placed, route held'
-    text = (r.get('class') or '') + ' ' + (r.get('reason') or '')
+    text = (r.get('class') or '') + ' ' + _class_first(r.get('reason') or '')
     if st == 'LINT-ADVISORY':
         if 'without a signed view' in text:
             return 'waits on child core'
@@ -203,6 +222,8 @@ def main():
             # ot_hbm_hc_bank128_pair_core__v7d149b37532c, parent_item ot_hbm_hc_bank128_pair_core); they are
             # cores (counted in CORES via signed_designs), never types.
             if d != die or is_core_row(item, r, core_mods):
+                continue
+            if signed_type(item, stset):             # FLOW-HEALTH-1 11-15 (COORD a): signed types are never in the failure table
                 continue
             lab = label(r)
             if lab not in ('running', 'signed (count pending)', 'cancelled (superseded)', 'needs parent receipt (re-sign)',
