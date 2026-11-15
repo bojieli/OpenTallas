@@ -10,7 +10,7 @@ Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.ts
 - Open: t34 (SW quadrant re-floor; street x 484-553 needs vq +60 east -> 4 bus links over limit), t73/t9/t75 (ve pair), t28/t71/t13/t51/t7/t10/t74/t1 squeeze not cleared; tool cp5/ft_street_leafplan.py (re-route an N<->S ft chain up a street, count kept) ready for the t34 form.
 
 ## STATE 2026-11-14 ~17:xx PST (CURRENT; supersedes everything below)
-- Branch claude/s81-leaf-plan-1114 head 07782f9157 pushed (core_place --ft-resite / --link-reg / --taps-movable, test_core_place_b4l4.py 4/4); READY posted to ROOT-MERGE-63.
+- Branch claude/s81-leaf-plan-1114 head 2bed907db4 pushed (core_place --ft-resite / --link-reg / --taps-movable, leaf_edge_squeeze.py, ft_street.py; tests pass); READY posted to ROOT-MERGE-63.
 - G0L3f (B4L3f): 296 errors, identical finding set to G0L2f (and the same count as G0ctl3).
 - CUMULATIVE (COORD 11-14): B4L4 = Lb+L2+L3+L4 (stacked events). Type list types_event_B4L4.txt = 147 = all types changed vs B3z2 92e2. The separate B4Lb/B4L2/B4L3 binds are cancelled (6 clients, races r1b/r2b, watcher a1 killed by exact PID). Only the twin pair B4L4/B4L48 + race r3b + watcher a2 remain.
 - B4L4 = ev/B4L4.json 58f4d1f24d2e / side_B4L4.json f97909118cca, 1 type: ot_s81sl_leaf__t21 (partition s_2S_L2).
