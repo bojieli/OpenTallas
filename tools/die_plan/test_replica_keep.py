@@ -90,5 +90,5 @@ def test_kit_config_carries_replica_keep(monkeypatch):
 
 def test_hook_accepts_module_scoped_names():
     tcl = (HERE.parents[1] / "physical" / "common_flow" / "ot_keep_regs.tcl").read_text()
-    assert "ot_kwn_m" in tcl and "$paramod*?${ot_kwn_m}?*" in tcl
+    assert "ot_kwn_m" in tcl and "$paramod*?${ot_kwn_m}?*" in tcl and '"\\$paramod*?${ot_kwn_m}"' in tcl   # paramod name without a parameter suffix
     assert "not a wire base name" in tcl            # bare names keep their check
