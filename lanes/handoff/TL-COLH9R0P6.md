@@ -9,3 +9,4 @@
 - 15:5x fa route failed grt (850 units, o0_3 frame channel). fc (orig + ALLOW_CONGESTION=1) launched intel2 ~/tl-colh9r0p6/fc; fb route queued. Next: route fc after geom; check fb.
 - 16:3x o0 placed-vs-plan posted (cells at plan strip; hotspot = wires). fc relaunched with grt_allow_cong hook (src_fc patched gen_phys grt_nonport_hold_chain to copy+source /work/grt_allow_cong.tcl); intel2 ~/tl-colh9r0p6/fc/run2.log
 - 18:4x fb failed grt; fc route launched (fc/route.log).
+- 19:25 successor recovered. fc route live on epyc10 (pid 1321999). Fable B6: p6 needs M8 E-W grant or relay_polylines at front_roots|col3_c; DIE-S81-92 owns B6 (waits on B3zs/B3zk2/B3x2d). Next: read fc GRT/DRT result; on B6 READY+ADOPT run one form on the new plan. Waiter: none (re-check fc each loop).
