@@ -14465,3 +14465,4 @@ COORD APPROVED: claude/hcparam-all-1115-2 @0dc4c83c6f
   KIND max failing_nets 35
   KIND min endpoints 8573 failing 242 worst -202.830612 {u_bound.u_u_lpl_0_r.g_chunk[2].wr} {u_bound.u_u_lpl_0_r.u_y_q.g_chunk[2].r[3]$_DFF_PN0_/RESETN}
   KIND min failing_nets 22
+- 2026-11-15 12:16 PST MERGED [MERGE-QUEUE -> HCPARAM-ALL] claude/hcparam-all-1115-2@0dc4c83c6fe -> main c792e43916c -> dd656c7acb3, no-ff merge, tags flow-20261113-hh-*. Gate: 1 test file(s) pass; tests: test_hard_core_param_all.py. Lane HCPARAM-ALL.
