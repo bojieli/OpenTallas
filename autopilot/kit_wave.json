@@ -37659,7 +37659,11 @@
     "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
      "OT_KW42_CSTART": "9db0ec8d71e",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "sle_ctl__cla4f6f12f": {
      "OT_KW42_CSTART": "9db0ec8d71e",
@@ -45351,7 +45355,8 @@
     "sle_stm_v3",
     "slw_fe_v1__clfe325744__cl08d14f0d",
     "slw_stm_v2__cl9beb65e6",
-    "slw_su_l0__cl1a1c1f8f"
+    "slw_su_l0__cl1a1c1f8f",
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c"
    ]
   },
   "hbm": {
