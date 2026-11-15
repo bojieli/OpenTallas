@@ -46,6 +46,28 @@
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
    {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
     "conn": "bus:x_fe_i",
     "from_um": [
      613.44,
@@ -136,6 +158,28 @@
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
    {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
     "conn": "bus:x_fe_i",
     "from_um": [
      613.44,
@@ -222,6 +266,28 @@
     "bits": 119,
     "launch": "core",
     "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
     "bit_route": "per_bit",
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
@@ -318,6 +384,28 @@
     "capture": "face flop",
     "bit_route": "per_bit",
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    }
   ],
   "slw_sc_v1__cl63e5a7a2": [
@@ -362,6 +450,28 @@
     "bits": 119,
     "launch": "core",
     "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
     "bit_route": "per_bit",
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
@@ -460,6 +570,28 @@
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
    {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
     "conn": "bus:x_fe_i",
     "from_um": [
      613.44,
@@ -550,6 +682,28 @@
     "bits": 119,
     "launch": "core",
     "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
     "bit_route": "per_bit",
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
@@ -648,6 +802,28 @@
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
    {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
     "conn": "bus:x_fe_i",
     "from_um": [
      613.44,
@@ -742,6 +918,28 @@
     "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
    },
    {
+    "conn": "bus:x_ctl_i",
+    "from_um": [
+     108.048,
+     1831.68
+    ],
+    "to_um": [
+     302.4,
+     1499.04
+    ],
+    "regs_um": [
+     [
+      205.224,
+      1665.36
+     ]
+    ],
+    "bits": 160,
+    "launch": "face flop",
+    "capture": "core",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 FABLE-PD-QC-0945 item 5: sc face -> hard-core edge, 1 stations, hop <= 400 um; placed dump slw_sc_v3 a10 x_fe_i 771 um / x_fe_o 790 um / x_ctl_o 511 um"
+   },
+   {
     "conn": "bus:x_fe_i",
     "from_um": [
      613.44,
@@ -794,39 +992,51 @@
  "lane_bumps": {
   "sl_W5_sc__x_sc_fe": 1,
   "sl_W5_sc__x_sc_ctl": 1,
+  "sl_W5_ctl__x_ctl_sc": 1,
   "sl_W5_fe__x_fe_sc": 1,
   "sl_W4_sc__x_sc_fe": 1,
   "sl_W4_sc__x_sc_ctl": 1,
+  "sl_W4_ctl__x_ctl_sc": 1,
   "sl_W4_fe__x_fe_sc": 1,
   "sl_W3_sc__x_sc_fe": 1,
   "sl_W3_sc__x_sc_ctl": 1,
+  "sl_W3_ctl__x_ctl_sc": 1,
   "sl_W3_fe__x_fe_sc": 1,
   "sl_W2_sc__x_sc_fe": 1,
   "sl_W2_sc__x_sc_ctl": 1,
+  "sl_W2_ctl__x_ctl_sc": 1,
   "sl_W2_fe__x_fe_sc": 1,
   "sl_W1_sc__x_sc_fe": 1,
   "sl_W1_sc__x_sc_ctl": 1,
+  "sl_W1_ctl__x_ctl_sc": 1,
   "sl_W1_fe__x_fe_sc": 1,
   "sl_W0_sc__x_sc_fe": 1,
   "sl_W0_sc__x_sc_ctl": 1,
+  "sl_W0_ctl__x_ctl_sc": 1,
   "sl_W0_fe__x_fe_sc": 1,
   "sl_E0_sc__x_sc_fe": 1,
   "sl_E0_sc__x_sc_ctl": 1,
+  "sl_E0_ctl__x_ctl_sc": 1,
   "sl_E0_fe__x_fe_sc": 1,
   "sl_E1_sc__x_sc_fe": 1,
   "sl_E1_sc__x_sc_ctl": 1,
+  "sl_E1_ctl__x_ctl_sc": 1,
   "sl_E1_fe__x_fe_sc": 1,
   "sl_E2_sc__x_sc_fe": 1,
   "sl_E2_sc__x_sc_ctl": 1,
+  "sl_E2_ctl__x_ctl_sc": 1,
   "sl_E2_fe__x_fe_sc": 1,
   "sl_E3_sc__x_sc_fe": 1,
   "sl_E3_sc__x_sc_ctl": 1,
+  "sl_E3_ctl__x_ctl_sc": 1,
   "sl_E3_fe__x_fe_sc": 1,
   "sl_E4_sc__x_sc_fe": 1,
   "sl_E4_sc__x_sc_ctl": 1,
+  "sl_E4_ctl__x_ctl_sc": 1,
   "sl_E4_fe__x_fe_sc": 1,
   "sl_E5_sc__x_sc_fe": 2,
   "sl_E5_sc__x_sc_ctl": 1,
+  "sl_E5_ctl__x_ctl_sc": 1,
   "sl_W5_fe__flt": 2,
   "sl_W4_fe__flt": 2,
   "sl_W3_fe__flt": 2,
@@ -841,6 +1051,16 @@
  },
  "sidecar": {
   "sle_sc_v1__cl115da35f": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,
@@ -863,6 +1083,16 @@
    }
   },
   "sle_sc_v1__cl7479a5ec": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,
@@ -885,6 +1115,16 @@
    }
   },
   "sle_sc_v2": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,
@@ -906,8 +1146,29 @@
     "note": "QC-SC-ROWS u_bin at mid first hop"
    }
   },
-  "sle_sc_v3": {},
+  "sle_sc_v3": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   }
+  },
   "slw_sc_v1__cl63e5a7a2": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,
@@ -930,6 +1191,16 @@
    }
   },
   "slw_sc_v1__cl64543eaf__cl4590432d": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,
@@ -952,6 +1223,16 @@
    }
   },
   "slw_sc_v1__cl64543eaf__cl5e017c6f": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,
@@ -974,6 +1255,16 @@
    }
   },
   "slw_sc_v2": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,
@@ -996,6 +1287,16 @@
    }
   },
   "slw_sc_v3": {
+   "x_ctl_i": {
+    "u_bin": [
+     156.636,
+     1748.52
+    ],
+    "route_um": 526,
+    "plan_stations": 1,
+    "first_hop_um": 263,
+    "note": "QC-SC-ROWS u_bin at mid first hop"
+   },
    "x_fe_i": {
     "u_bin": [
      596.82,

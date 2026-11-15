@@ -1,0 +1,265 @@
+{
+ "rows": {
+  "sle_fe_v1__cl1cbb7497": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     900.104
+    ],
+    "regs_um": [
+     [
+      207.36,
+      910.595
+     ],
+     [
+      103.68,
+      905.349
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations"
+   }
+  ],
+  "sle_fe_v1__cl8210183c": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     900.104
+    ],
+    "regs_um": [
+     [
+      207.36,
+      910.595
+     ],
+     [
+      103.68,
+      905.349
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations"
+   }
+  ],
+  "sle_fe_v2": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     953.248
+    ],
+    "regs_um": [
+     [
+      207.36,
+      928.309
+     ],
+     [
+      103.68,
+      940.779
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1085 um (v2 dump), 2 stations"
+   },
+   {
+    "conn": "bus:st_wi",
+    "from_um": [
+     622.08,
+     828.984
+    ],
+    "to_um": [
+     311.04,
+     915.84
+    ],
+    "regs_um": [
+     [
+      466.56,
+      872.412
+     ]
+    ],
+    "bits": 1087,
+    "launch": "face flop",
+    "capture": "core",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 702 um (v2 dump), 1 stations"
+   }
+  ],
+  "slw_fe_v1__cl95cd1d0c": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     792.136
+    ],
+    "regs_um": [
+     [
+      207.36,
+      874.605
+     ],
+     [
+      103.68,
+      833.371
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations"
+   }
+  ],
+  "slw_fe_v1__clfe325744__cl08d14f0d": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     792.136
+    ],
+    "regs_um": [
+     [
+      207.36,
+      874.605
+     ],
+     [
+      103.68,
+      833.371
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations"
+   }
+  ],
+  "slw_fe_v1__clfe325744__cldb4efe33": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     792.136
+    ],
+    "regs_um": [
+     [
+      207.36,
+      874.605
+     ],
+     [
+      103.68,
+      833.371
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1040 um (v1 dump), 2 stations"
+   }
+  ],
+  "slw_fe_v2__cle312294d": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     833.92
+    ],
+    "regs_um": [
+     [
+      207.36,
+      888.533
+     ],
+     [
+      103.68,
+      861.227
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1085 um (v2 dump), 2 stations"
+   }
+  ],
+  "slw_fe_v2__clf110fab2": [
+   {
+    "conn": "bus:x_fw_p1_o",
+    "from_um": [
+     311.04,
+     915.84
+    ],
+    "to_um": [
+     0,
+     833.92
+    ],
+    "regs_um": [
+     [
+      207.36,
+      888.533
+     ],
+     [
+      103.68,
+      861.227
+     ]
+    ],
+    "bits": 552,
+    "launch": "core",
+    "capture": "face flop",
+    "bit_route": "per_bit",
+    "note": "S4q4 QC-SC-ROWS-1115 fe gap vs placed dump: core leg max 1085 um (v2 dump), 2 stations"
+   }
+  ]
+ },
+ "lane_bumps": {
+  "sl_W5_fe__x_fe_fw_p1": 2,
+  "sl_W4_fe__x_fe_fw_p1": 1,
+  "sl_W3_fe__x_fe_fw_p1": 2,
+  "sl_W2_fe__x_fe_fw_p1": 1,
+  "sl_W1_fe__x_fe_fw_p1": 2,
+  "sl_W0_fe__x_fe_fw_p1": 1,
+  "sl_E0_fe__x_fe_fw_p1": 2,
+  "sl_E1_fe__x_fe_fw_p1": 2,
+  "sl_E2_fe__x_fe_fw_p1": 2,
+  "sl_E3_fe__x_fe_fw_p1": 2,
+  "sl_E4_fe__x_fe_fw_p1": 2,
+  "sl_E2_fw__st_eo_st_wi": 1,
+  "sl_E4_fw__st_eo_st_wi": 1
+ }
+}
