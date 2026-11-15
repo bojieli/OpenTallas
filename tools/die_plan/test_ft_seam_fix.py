@@ -77,3 +77,11 @@ def test_failed_add_restores_the_slot(monkeypatch):
     assert not FS.fix_slot(P, raw, "T", "ft0", 400.0, True, rec)
     s = t["ft_slots"][0]
     assert s["stations"] == 3 and s["regs_um"] == before and raw["latency"]["lanes"]["ln0"]["cycles"] == 5
+
+
+def test_off_macro_moves_a_centre_out_of_the_box():
+    boxes = [(100.0, 100.0, 200.0, 300.0)]
+    assert FS.off_macro(boxes, (50.0, 50.0)) == [50.0, 50.0]
+    q = FS.off_macro(boxes, (105.0, 200.0))          # nearest edge is x0: out by 5 + 2 um gap
+    assert q == [98.0, 200.0]
+    assert FS.off_macro(boxes, (150.0, 296.0)) == [150.0, 302.0]
