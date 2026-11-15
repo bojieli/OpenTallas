@@ -1,0 +1,465 @@
+{
+ "type": "kv3_pv_v8",
+ "families": [
+  {
+   "family": "u_pd#_i_vport_E_N_vo_d#_#.q->u_pvg#_p#",
+   "groups": 2027,
+   "bits": 2027,
+   "stations_per_group_max": 4,
+   "stations_total": 4123,
+   "leg_um_max": 1656,
+   "hop_um_max": 405,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_vport_W_N_vo_d#_#.q->u_pvg#_p#",
+   "groups": 2018,
+   "bits": 2018,
+   "stations_per_group_max": 4,
+   "stations_total": 4227,
+   "leg_um_max": 1947,
+   "hop_um_max": 405,
+   "ring_band": false
+  },
+  {
+   "family": "u_cland_ft#_i/u_ring.dch.u_dsel/y->u_ft_ft#_o_#",
+   "groups": 1,
+   "bits": 1056,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 969,
+   "hop_um_max": 323,
+   "ring_band": true
+  },
+  {
+   "family": "u_pv_u_T#Q#_#_r#.b->u_bout_o_pvw__u_TNQN_N_rN_b_d#",
+   "groups": 3,
+   "bits": 768,
+   "stations_per_group_max": 2,
+   "stations_total": 6,
+   "leg_um_max": 1097,
+   "hop_um_max": 366,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_vport_W_N_vo_#.q->u_pvg#_p#",
+   "groups": 664,
+   "bits": 664,
+   "stations_per_group_max": 4,
+   "stations_total": 1321,
+   "leg_um_max": 1933,
+   "hop_um_max": 405,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_vport_E_N_vo_#.q->u_pvg#_p#",
+   "groups": 404,
+   "bits": 404,
+   "stations_per_group_max": 3,
+   "stations_total": 781,
+   "leg_um_max": 1538,
+   "hop_um_max": 405,
+   "ring_band": false
+  },
+  {
+   "family": "u_bin_i_pvw__u_ctl_cmd->u_pvg#_p#",
+   "groups": 5,
+   "bits": 290,
+   "stations_per_group_max": 4,
+   "stations_total": 13,
+   "leg_um_max": 1736,
+   "hop_um_max": 358,
+   "ring_band": false
+  },
+  {
+   "family": "u_pv_u_T#Q#_#_r#.b->u_bout_o_pvw__u_TNQN_N_rN_b",
+   "groups": 1,
+   "bits": 256,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 838,
+   "hop_um_max": 279,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_pvw_u_ctl_cmd_#.q->u_pvg#_p#",
+   "groups": 100,
+   "bits": 252,
+   "stations_per_group_max": 3,
+   "stations_total": 149,
+   "leg_um_max": 1296,
+   "hop_um_max": 405,
+   "ring_band": false
+  },
+  {
+   "family": "u_cland_i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data/u_ring.dch.u_dsel/y->u_bin_i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "groups": 1,
+   "bits": 183,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 1043,
+   "hop_um_max": 348,
+   "ring_band": true
+  },
+  {
+   "family": "u_cland_i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data/u_ring.dch.u_dsel/y->u_bin_i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data",
+   "groups": 1,
+   "bits": 182,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 1086,
+   "hop_um_max": 362,
+   "ring_band": true
+  },
+  {
+   "family": "u_pd#_i_vport_W_N_vo_d#_#.r->u_pd#_i_vport_W_N_vo_d#_#.q",
+   "groups": 92,
+   "bits": 92,
+   "stations_per_group_max": 1,
+   "stations_total": 92,
+   "leg_um_max": 675,
+   "hop_um_max": 338,
+   "ring_band": false
+  },
+  {
+   "family": "u_bin_i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data->u_pvg#_p#",
+   "groups": 4,
+   "bits": 90,
+   "stations_per_group_max": 2,
+   "stations_total": 7,
+   "leg_um_max": 940,
+   "hop_um_max": 313,
+   "ring_band": false
+  },
+  {
+   "family": "u_bin_i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data->u_pvg#_p#",
+   "groups": 3,
+   "bits": 80,
+   "stations_per_group_max": 2,
+   "stations_total": 6,
+   "leg_um_max": 928,
+   "hop_um_max": 309,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_astk_W_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_#.q->u_pvg#_p#",
+   "groups": 64,
+   "bits": 64,
+   "stations_per_group_max": 2,
+   "stations_total": 128,
+   "leg_um_max": 948,
+   "hop_um_max": 316,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_#.q->u_pvg#_p#",
+   "groups": 64,
+   "bits": 64,
+   "stations_per_group_max": 2,
+   "stations_total": 128,
+   "leg_um_max": 928,
+   "hop_um_max": 309,
+   "ring_band": false
+  },
+  {
+   "family": "u_bin_i_vport_E_N_vo->u_ist_o_vport_E_N_vo_d#_#",
+   "groups": 1,
+   "bits": 36,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 637,
+   "hop_um_max": 319,
+   "ring_band": false
+  },
+  {
+   "family": "u_cland_i_pvw__u_ctl_cmd/u_ring.dch.u_dsel/y->u_bin_i_pvw__u_ctl_cmd",
+   "groups": 1,
+   "bits": 32,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 1083,
+   "hop_um_max": 361,
+   "ring_band": true
+  },
+  {
+   "family": "u_bin_i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data->u_pd#_i_astk_E_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_#.q",
+   "groups": 32,
+   "bits": 32,
+   "stations_per_group_max": 3,
+   "stations_total": 96,
+   "leg_um_max": 1549,
+   "hop_um_max": 387,
+   "ring_band": false
+  },
+  {
+   "family": "u_bin_i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data->u_pd#_i_astk_W_u_strip_g_er_chain_u_er_g_owner_N_u_owner_response_data_#.q",
+   "groups": 32,
+   "bits": 32,
+   "stations_per_group_max": 3,
+   "stations_total": 96,
+   "leg_um_max": 1478,
+   "hop_um_max": 370,
+   "ring_band": false
+  },
+  {
+   "family": "u_rs_ri_pv_u_g#_j_rst_n.b.r->u_pvg#_p#",
+   "groups": 9,
+   "bits": 18,
+   "stations_per_group_max": 3,
+   "stations_total": 16,
+   "leg_um_max": 1220,
+   "hop_um_max": 401,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_vport_W_N_vo_#.r->u_pd#_i_vport_W_N_vo_#.q",
+   "groups": 6,
+   "bits": 6,
+   "stations_per_group_max": 1,
+   "stations_total": 6,
+   "leg_um_max": 635,
+   "hop_um_max": 317,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_u_efault.cnt",
+   "groups": 1,
+   "bits": 4,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 593,
+   "hop_um_max": 297,
+   "ring_band": false
+  },
+  {
+   "family": "u_pv_u_g#_j->u_bout_o_pvw__u_sN_j_y_valid_d#",
+   "groups": 3,
+   "bits": 3,
+   "stations_per_group_max": 6,
+   "stations_total": 15,
+   "leg_um_max": 2610,
+   "hop_um_max": 373,
+   "ring_band": false
+  },
+  {
+   "family": "u_pv_u_g#_j->u_bout_o_pvw__u_sN_j_fault_d#",
+   "groups": 3,
+   "bits": 3,
+   "stations_per_group_max": 4,
+   "stations_total": 10,
+   "leg_um_max": 1970,
+   "hop_um_max": 394,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_vport_W_N_vo_d#/eq",
+   "groups": 3,
+   "bits": 3,
+   "stations_per_group_max": 2,
+   "stations_total": 6,
+   "leg_um_max": 950,
+   "hop_um_max": 317,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_vport_E_N_vo_d#/eq",
+   "groups": 3,
+   "bits": 3,
+   "stations_per_group_max": 2,
+   "stations_total": 5,
+   "leg_um_max": 947,
+   "hop_um_max": 316,
+   "ring_band": false
+  },
+  {
+   "family": "u_rs_ri_pv_u_g#_j_rst_n.b.r->u_pv_u_g#_j",
+   "groups": 2,
+   "bits": 2,
+   "stations_per_group_max": 2,
+   "stations_total": 3,
+   "leg_um_max": 813,
+   "hop_um_max": 398,
+   "ring_band": false
+  },
+  {
+   "family": "u_cland_rst_ft#_i->u_cland_raw_reset_o",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 7,
+   "stations_total": 7,
+   "leg_um_max": 2993,
+   "hop_um_max": 374,
+   "ring_band": false
+  },
+  {
+   "family": "u_pv_u_g#_j->u_bout_o_pvw__u_sN_j_y_valid",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 3,
+   "stations_total": 3,
+   "leg_um_max": 1432,
+   "hop_um_max": 358,
+   "ring_band": false
+  },
+  {
+   "family": "u_bin_i_pvw__u_ctl_cmd->u_pv_u_g#_j",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 1205,
+   "hop_um_max": 402,
+   "ring_band": false
+  },
+  {
+   "family": "u_cland_i_pvw__u_ctl_cmd/u_ring.dch.u_dsel/y->u_bin_i_pvw__u_ctl_cmd/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 973,
+   "hop_um_max": 324,
+   "ring_band": true
+  },
+  {
+   "family": "u_pv_u_g#_j->u_pv_u_T#Q#_#_r#.b",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 944,
+   "hop_um_max": 315,
+   "ring_band": false
+  },
+  {
+   "family": "u_cland_ft#_i/u_ring.dch.u_dsel/y->u_ft_ft#_o_#/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 870,
+   "hop_um_max": 290,
+   "ring_band": true
+  },
+  {
+   "family": "u_cland_i_fch_pv_V_N_q/u_ring.dch.u_dsel/y->u_bin_i_fch_pv_V_N_q/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 864,
+   "hop_um_max": 288,
+   "ring_band": true
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_vport_W_N_vo/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 859,
+   "hop_um_max": 286,
+   "ring_band": false
+  },
+  {
+   "family": "u_pv_u_g#_j->u_d#_pv_u_g#_j_y_valid.r",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 847,
+   "hop_um_max": 282,
+   "ring_band": false
+  },
+  {
+   "family": "u_pv_u_g#_j->u_bout_o_pvw__u_sN_j_fault",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 2,
+   "stations_total": 2,
+   "leg_um_max": 830,
+   "hop_um_max": 277,
+   "ring_band": false
+  },
+  {
+   "family": "u_pd#_i_pvw_u_ctl_cmd_#.q->u_pv_u_g#_j",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 808,
+   "hop_um_max": 404,
+   "ring_band": false
+  },
+  {
+   "family": "u_bin_i_pvw__u_ctl_cmd->u_pd#_i_pvw_u_ctl_cmd_#.q",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 669,
+   "hop_um_max": 335,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_vport_E_N_vo/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 604,
+   "hop_um_max": 302,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_astk_E__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 597,
+   "hop_um_max": 298,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_u_efault.fault",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 593,
+   "hop_um_max": 297,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_astk_W__u_strip_g_er_chain_u_er_g_owner_N__u_owner_response_data/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 588,
+   "hop_um_max": 294,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_fch_pv_V_N_q/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 587,
+   "hop_um_max": 294,
+   "ring_band": false
+  },
+  {
+   "family": "u_rrl_#->u_bin_i_pvw__u_ctl_cmd/eq",
+   "groups": 1,
+   "bits": 1,
+   "stations_per_group_max": 1,
+   "stations_total": 1,
+   "leg_um_max": 586,
+   "hop_um_max": 293,
+   "ring_band": false
+  }
+ ]
+}
