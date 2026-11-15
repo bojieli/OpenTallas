@@ -265,11 +265,27 @@ proc fr_minimax {pts} {
 # L1 minimax point of its tail's loads, stage j of n at j/(n+1); a chain that needs more stages (ceil(L / plan) - 1 > n) or whose
 # loads spread beyond one hop is reported (OT_RESET_CHAIN NEED), the stages are added in RTL.
 set fr_cre [expr {[info exists ::env(OT_RSTCHAIN_RE)] ? $::env(OT_RSTCHAIN_RE) : {^(.*[.]u_(?:lpr_root|lpr_ft[0-9]*|frl_rst))[.]g_reg[.]r\[([0-9]+)\]}}]
+set fr_qre [expr {[info exists ::env(OT_RSTCHAIN_QRE)] ? $::env(OT_RSTCHAIN_QRE) : {^(.*[.]u_(?:lpr_root|lpr_ft[0-9]*|frl_rst))[.]q(?:\[0\])?(?:\$_.*)?$}}]
 set fr_ch {}
 foreach i [$fr_blk getInsts] {
   if {![fr_is_ff $i]} continue
-  if {![regexp $fr_cre [string map {\\ {}} [$i getName]] -> cpfx k]} continue
-  dict set fr_ch $cpfx $k $i
+  set fr_nm [string map {\\ {}} [$i getName]]
+  if {[regexp $fr_cre $fr_nm -> cpfx k]} {
+    dict set fr_ch $cpfx $k $i
+  } elseif {[regexp $fr_qre $fr_nm -> cpfx]} {
+    # G12 (FABLE-GENBUG 11-15): Yosys names the LAST register of an ot_dp_dly / ot_pl_pad after its output port, <inst>.q (or .q[0]),
+    # never <inst>.g_reg.r[D-1] (same naming as G1); it sorts after every r[k] and is renumbered below
+    dict set fr_ch $cpfx 1000000 $i
+  }
+}
+# the q stage becomes stage max(r)+1, so the 0..n-1 index check below holds for a chain whose last stage is named q
+dict for {cpfx stg} $fr_ch {
+  if {[dict exists $stg 1000000]} {
+    set fr_ks [lsort -integer [lsearch -all -inline -not -exact [dict keys $stg] 1000000]]
+    set fr_top [expr {[llength $fr_ks] ? [lindex $fr_ks end] + 1 : 0}]
+    dict set fr_ch $cpfx $fr_top [dict get $stg 1000000]
+    dict unset fr_ch $cpfx 1000000
+  }
 }
 set fr_cn 0; set fr_cneed 0; set fr_cb 0; set fr_ca 0
 proc fr_xy_of {it} {
