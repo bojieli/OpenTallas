@@ -59,7 +59,7 @@ def main(argv=None):
     sys.path.insert(0, os.environ.get("HCP_TOOLS") or str(Path(__file__).resolve().parent))   # HCP_TOOLS: another tree's tools/die_plan
     import bind
     E = bind.E
-    plan = json.load(open(argv[0]))
+    plan = bind.load_plan(argv[0])
     yjs = bind.load_asbuilt_netlist(Path(argv[1]))
     ab = plan["asbuilt"]
     F = E.flatten(yjs, ab["top"], ab.get("substitute_parent", []))
