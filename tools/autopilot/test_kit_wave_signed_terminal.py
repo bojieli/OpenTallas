@@ -38,7 +38,8 @@ def test_queue_fail_with_retry_key_still_relaunches():
     assert _pick("FAIL", ["t1@3"])[0] == ["t1"]
 
 
-def test_minimal_auto_retry_skips_a_signed_unversioned_row():
+def test_minimal_auto_retry_skips_a_signed_unversioned_row(monkeypatch):
+    monkeypatch.delenv("OT_SIGNOFF_PROFILE", raising=False)      # the gate may export legacy; this test needs R-MINIMAL
     # the 11-15 relaunch path: queue_class gave FAIL FLOW -> R-MINIMAL one automatic retry -> LAUNCH
     st = {"items": {}}
     for q in ("FAIL", None):
