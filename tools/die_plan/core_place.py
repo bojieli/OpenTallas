@@ -1609,8 +1609,10 @@ def take_class(s):
 
 
 def bus_take_lanes(Q, tn, bus_take):
-    """F3 lane rows: a leaf bus deepened by one stage adds one cycle to the die lane of that bus on every partition of
-    the type (leafdn_i0 -> dn_<part>, leafup_o0 -> up_<part>): latency.lanes stations / cycles / natural +1."""
+    """F3 lane rows: a leaf bus deepened by k stages adds k cycles to the die lane of that bus on every partition of
+    the type (leafdn_i0 -> dn_<part>, leafup_o0 -> up_<part>).  Leaf bus rows are native stations: the bind checks
+    lanes[].fixed_cycles == source row depth + deepest destination row (native_istations.annotate), so the lane's
+    fixed_cycles and the latency table fixed / cycles / natural all take +k (stations, i.e. ft slot stations, stay)."""
     parts = Q["partitions"]
     it = parts.items() if isinstance(parts, dict) else ((p["name"], p) for p in parts)
     out = []
@@ -1624,8 +1626,11 @@ def bus_take_lanes(Q, tn, bus_take):
                 out.append(dict(lane=ln, missing=True))
                 continue
             inc = int(bus_take[b][1]) - int(bus_take[b][0])
-            for f in ("stations", "cycles", "natural"):
-                r[f] = int(r[f]) + inc
+            for f in ("fixed", "cycles", "natural"):
+                r[f] = int(r.get(f, 0)) + inc
+            for L in Q.get("lanes") or []:
+                if L.get("id") == ln:
+                    L["fixed_cycles"] = int(L.get("fixed_cycles", 0)) + inc
             out.append(dict(lane=ln, cycles=r["cycles"], plus=inc))
     return out
 
@@ -1799,6 +1804,9 @@ def link_reg_write(M, t_new, R, cfg, rep):
                 r = HR.route_station(R, tuple(pa), tuple(pb), nreg, reach)
                 if r is None or len(r["regs"]) != nreg:
                     rep["link_reg_failed"] += 1 if nreg == ((1, 2) if cfg.get("take_regs") else (1,))[-1] else 0
+                    if nreg == ((1, 2) if cfg.get("take_regs") else (1,))[-1]:
+                        rep.setdefault("link_reg_failed_why", []).append(dict(cls=c, link="%s.%s|%s" % (inst, bus, val),
+                                                                             a=[round(v, 2) for v in pa], b=[round(v, 2) for v in pb]))
                     rows = None
                     break
                 rows.append(dict(e, from_um=[round(pa[0], 4), round(pa[1], 4)], to_um=[round(pb[0], 4), round(pb[1], 4)],
@@ -2532,6 +2540,14 @@ def main(argv=None):
     lane_ok = bool(a.take_regs) and any((r.get("stations_report") or {}).get("lane_rows") for r in rows
                                         if isinstance(r.get("stations_report"), dict))
     for k in P:
+        if k == "lanes" and lane_ok:
+            named = {x["lane"] for r in rows if isinstance(r.get("stations_report"), dict)
+                     for x in (r["stations_report"].get("lane_rows") or [])}
+            assert len(P[k]) == len(Q[k])
+            for L0, L1 in zip(P[k], Q[k]):
+                strip = lambda L: {f: v for f, v in L.items() if not (f == "fixed_cycles" and L.get("id") in named)}  # noqa: E731
+                assert json.dumps(strip(L0), sort_keys=True) == json.dumps(strip(L1), sort_keys=True), L0.get("id")
+            continue
         if k == "latency" and lane_ok:
             # F3: only latency.lanes rows named in a type's lane_rows may change, by stations/cycles/natural only
             named = {x["lane"] for r in rows if isinstance(r.get("stations_report"), dict)
@@ -2541,8 +2557,8 @@ def main(argv=None):
                 if ln not in named:
                     assert json.dumps(r0, sort_keys=True) == json.dumps(r1, sort_keys=True), ln
                 else:
-                    assert {f: v for f, v in r0.items() if f not in ("stations", "cycles", "natural")} == \
-                        {f: v for f, v in r1.items() if f not in ("stations", "cycles", "natural")}, ln
+                    assert {f: v for f, v in r0.items() if f not in ("fixed", "cycles", "natural")} == \
+                        {f: v for f, v in r1.items() if f not in ("fixed", "cycles", "natural")}, ln
             assert set(P[k]) == set(Q[k]) and all(json.dumps(P[k][x], sort_keys=True) == json.dumps(Q[k][x], sort_keys=True)
                                                   for x in P[k] if x != "lanes"), "latency"
             continue
