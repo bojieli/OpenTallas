@@ -138,7 +138,7 @@ def bind(plan, T=None, parts=None):
     for o in xs:
         u, v = o["src"], o["dst"]
         ports[o["port"]] = dict(src=u, dst=v, K=int(o["rtl"]["K"]), depth=int(o["rtl"]["DEPTH"]),
-                                sched_lat=int(o["lat_cycles"]), tree=o["port"] in tree_ports, kind=o["kind"],
+                                sched_lat=int(o["lat_cycles"]), freg=int(o.get("freg", 0)), tree=o["port"] in tree_ports, kind=o["kind"],
                                 # TRUE derated lag bounds incl. wander (no aperture), and the plan's derated phase
                                 # d = dst clock - src clock, so die_sta_related --count-align re-derives L from its own
                                 # arrivals: L_sta = L_plan + (d_sta - d_plan)
@@ -465,7 +465,7 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
     tp = {r["port"] for r in t["ports"]}
     t["count_aligned"] = dict(schema=b["schema"], period_ps=b["period_ps"], root=b["root"], pad=b["pad"],
                               root_settle_cycles=root_settle_cycles,
-                              ports={pid: {k: c[k] for k in ("K", "depth", "sched_lat", "tree")}
+                              ports={pid: {k: c[k] for k in ("K", "depth", "sched_lat", "tree", "freg") if k in c}
                                      for pid, c in b["ports"].items() if pid in tp},
                               regions={k: {x: v[x] for x in ("parent", "tree_port", "edge_fall", "pad", "origin_part")
                                            if x in v}
