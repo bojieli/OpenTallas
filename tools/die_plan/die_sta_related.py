@@ -1072,7 +1072,7 @@ def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal=
             cc, _ = resolve_clock_cell(clock_cell, proof, meta)
             meta, taps = apply_clock_cal(meta, taps, c, cc, clock_cal, proof=Path(proof))
             meta, taps = single_arrival(meta, taps, na)
-            pairs, _ = build_pairs(plan, taps)
+            pairs, _ = build_pairs(plan, taps, ca_named_pairs(ports))
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
             ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table,
@@ -1424,8 +1424,21 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
                 verdict="PASS" if ok else "FAIL", rows=rows)
 
 
-def build_pairs(plan, taps):
-    """complete pair sets from the plan ports and the tap table (one corner's rows; ports are corner independent)."""
+def ca_named_pairs(ports):
+    """KIT-OPS-6 11-15 (FABLE-TRIAGE-HEADKV 21): the partition pairs {(src_part, dst_part)} that count-aligned ports name (src_part/dst_part, else src/dst)"""
+    out = set()
+    for c in (ports or {}).values():
+        s_, d_ = c.get("src_part", c.get("src")), c.get("dst_part", c.get("dst"))
+        if s_ is not None and d_ is not None:
+            out.add((s_, d_))
+    return out
+
+
+def build_pairs(plan, taps, ca_pairs=None):
+    """complete pair sets from the plan ports and the tap table (one corner's rows; ports are corner independent).
+    ca_pairs (KIT-OPS-6 11-15, FABLE-TRIAGE-HEADKV 21: KV 320 'no taps' crossings): partition pairs {(src, dst)} that count-aligned ports name.  Their tap pairs
+    of the SAME clock region were classed 'seam' (single-cycle) and never reached count_align_port_intervals, so every CA port inside one region got no
+    interval; those pairs now go to 'landed' (the CA crossing's own class) and leave 'seam'.  None = unchanged."""
     by_part = defaultdict(list)
     # DIE-HEAD-13 10-28: a tap with part None is a die-level start stage (start_stage_emit '__st__<path>' / virtual_tap):
     # it belongs to no partition, so it never forms intra/seam pairs (HEAD: 193 stage taps were grouped as ONE
@@ -1455,7 +1468,8 @@ def build_pairs(plan, taps):
     for (s, t), bits in conn.items():
         for a in by_part[s]:
             for b in by_part[t]:
-                (seam if taps[a]["cppr_node"] == taps[b]["cppr_node"] else landed).append((a, b, f"{s}->{t}"))
+                same = taps[a]["cppr_node"] == taps[b]["cppr_node"]
+                (seam if same and (ca_pairs is None or (s, t) not in ca_pairs) else landed).append((a, b, f"{s}->{t}"))
     return dict(intra=intra, intra_cross_region=straddle, seam=seam, landed=landed), dict(
         partitions_with_taps=len(by_part), connected_part_pairs=len(conn), uncovered_bits=dict(uncovered),
         **({"start_stage_taps_no_pairs": unpart} if unpart else {}))
@@ -3056,7 +3070,7 @@ def main(argv=None):
         rng = clock_cppr_ranges(meta)
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
-        pairs, cov = build_pairs(plan, taps)
+        pairs, cov = build_pairs(plan, taps, ca_named_pairs(json.loads(Path(a.count_align).read_text()).get("ports")) if a.count_align else None)
         views = None
         if ecm is None:
             ecm = early_core_map(plan, taps, plan_path=a.plan)
