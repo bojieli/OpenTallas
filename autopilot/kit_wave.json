@@ -35966,7 +35966,7 @@
     "sle_ctl__cl67434795__v1": "WAVE-QCFIX-0715 hold: last fail class VIEWMISSING; held until class proven past its step (COORD 07:3x)",
     "sle_ctl__cl67434795": "WAVE-QCFIX-0715 hold: last fail class VIEWMISSING; held until class proven past its step (COORD 07:3x)",
     "sle_ctl__cla4f6f12f": "WAVE-QCFIX-0715 hold: last fail class VIEWMISSING; held until class proven past its step (COORD 07:3x)",
-    "sle_st_a_v1__cl989804f6__cled3c1d7b": "WAVE-QCFIX-0715 hold: last fail class PROVNOTSTAGED; held until class proven past its step (COORD 07:3x)",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
     "sle_su_c": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
     "slw_fw_v1__cl51d45468": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
     "slw_fw_v1__clf51c11d8__cl592e3d37": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
@@ -35978,15 +35978,19 @@
     "sle_stm_v3": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
     "slw_fw_v1__clf51c11d8__clc7ddab13": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
     "slw_fw_v2__cl8537f156": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
-    "slw_st_a_v1__clb036e152": "WAVE-QCFIX-0715 hold: last fail class PROVNOTSTAGED; held until class proven past its step (COORD 07:3x)",
-    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": "WAVE-QCFIX-0715 hold: last fail class PROVNOTSTAGED; held until class proven past its step (COORD 07:3x)",
-    "slw_st_a_v1__clfc5867a6__pvf82a6c28": "WAVE-QCFIX-0715 hold: last fail class PROVNOTSTAGED; held until class proven past its step (COORD 07:3x)",
+    "slw_st_a_v1__clb036e152": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
     "slw_su_c__cl92142dac": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
     "sle_st_a_v2__pv30dda31f": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-PD-QC-0945, COORD): S4q3b rows name old signed masters sta_region_nb0_h17_n6_s7 / h18_n6_s7 / h18_n6_s8 (depth 6/7/8) but bound params are 9/10 and 9/11: functional hazard. Hold until DIE-QC-103 renames the rows to the signed n9 masters (h17_n9_s10, h18_n9_s10, h18_n9_s11). Running attempts finish. Lift = delete this key. (was: S4Q3-HOLD)",
     "sle_st_a_v2__pv4242de79": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-PD-QC-0945, COORD): S4q3b rows name old signed masters sta_region_nb0_h17_n6_s7 / h18_n6_s7 / h18_n6_s8 (depth 6/7/8) but bound params are 9/10 and 9/11: functional hazard. Hold until DIE-QC-103 renames the rows to the signed n9 masters (h17_n9_s10, h18_n9_s10, h18_n9_s11). Running attempts finish. Lift = delete this key. (was: S4Q3-HOLD)",
     "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-PD-QC-0945, COORD): S4q3b rows name old signed masters sta_region_nb0_h17_n6_s7 / h18_n6_s7 / h18_n6_s8 (depth 6/7/8) but bound params are 9/10 and 9/11: functional hazard. Hold until DIE-QC-103 renames the rows to the signed n9 masters (h17_n9_s10, h18_n9_s10, h18_n9_s11). Running attempts finish. Lift = delete this key. (was: S4Q3-HOLD)",
     "slw_st_a_v2__clf4365a62": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-PD-QC-0945, COORD): S4q3b rows name old signed masters sta_region_nb0_h17_n6_s7 / h18_n6_s7 / h18_n6_s8 (depth 6/7/8) but bound params are 9/10 and 9/11: functional hazard. Hold until DIE-QC-103 renames the rows to the signed n9 masters (h17_n9_s10, h18_n9_s10, h18_n9_s11). Running attempts finish. Lift = delete this key. (was: S4Q3-HOLD)",
-    "sl?_su_c*": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-PD-QC-0945 (6), COORD): su_c types (slw_su_c__cl19bb38ef, slw_su_c__cl92142dac, sle_su_c, ...) placed at -836 ps on S4q2 (WNS -835.8, TNS -552232, path procdff_60309_q[205] -> u_bout_x_su_l1_o); one register feeds both side faces, no station rows. cl19bb38ef was launched against the hold. Hold until the S4q4 station rows land. Running attempts finish. Lift = delete this key (existing exact su_c keys keep their own reasons)."
+    "sl?_su_c*": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-PD-QC-0945 (6), COORD): su_c types (slw_su_c__cl19bb38ef, slw_su_c__cl92142dac, sle_su_c, ...) placed at -836 ps on S4q2 (WNS -835.8, TNS -552232, path procdff_60309_q[205] -> u_bout_x_su_l1_o); one register feeds both side faces, no station rows. cl19bb38ef was launched against the hold. Hold until the S4q4 station rows land. Running attempts finish. Lift = delete this key (existing exact su_c keys keep their own reasons).",
+    "sle_st_a_v1__cl67389ecd": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+    "sle_st_a_v1__cl989804f6__cl18eece69": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+    "sl?_hc0*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption.",
+    "sl?_hc1*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -46177,7 +46181,17 @@
     "cbx_q10__cl89936551_h": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
     "cbx_q10__cl94a12200": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
     "cbx_q10__cl94a12200_h": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key."
-   }
+   },
+   "hold_items_added_wavehold1115_r139": [
+    "sle_st_a_v1__cl67389ecd",
+    "sle_st_a_v1__cl989804f6__cl18eece69",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b",
+    "slw_st_a_v1__clb036e152",
+    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28",
+    "sl?_hc0*",
+    "sl?_hc1*"
+   ]
   },
   "hbm": {
    "enabled": true,
