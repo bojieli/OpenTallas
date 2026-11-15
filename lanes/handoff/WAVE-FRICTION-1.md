@@ -524,3 +524,5 @@ Tests: test_kit_wave / allowlist / class_retry / no_row_source keep the same pas
 - Re-key list: lanes/handoff/WF1-EXIT21-REKEY.tsv (ASK to KIT-OPS-5, approved by COORD).
 - Open, not done: hd_spn ECO rerun verdict (epyc2 eco_wf1_proof2/eco_loop.json), DEDUP credit-row check (dedup_members.tsv), auto-resign deploy confirmation, rebase if main moves.
 - Rule kept: no in-place patch touches a git checkout, sealed inputs, future_lec pins or the owner checkout (inplace_patch_guard.is_patchable_here).
+
+## 11-14 19:36 successor: autopilot.timer restarted (was inactive after owner stop). Open: parallel tick (poll_running 558 s, wave step 484 s) not started.
