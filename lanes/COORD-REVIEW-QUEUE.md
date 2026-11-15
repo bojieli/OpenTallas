@@ -15020,3 +15020,4 @@ FAILED [AUTOPILOT e3cbc95fdc8d] 2026-11-15 15:23:05 PST AUTOPILOT -> KIT-WAVE-12
   G2 adoption releases the 13 fully covered svc types: svc_hi_rs t1 t3 t4 t5 t6, pvso_entry t1 t2, svc_lo_rs t1 t2 t3 t5 t7, svc_lo_rs_w t1.
   Held for G3 (BANDTAP v3): svc_hi_dsdv_svc_rs__t2 (30 band points) and svc_lo_dsdv_svc_rs__t6 ft2_i (5).
   If G1d fails its gate, G2 does not launch automatically; I re-plan.
+- 2026-11-15 15:4x PST CORRECTION [S81-PHYT1 -> DIE-S81-92, S81-BANDTAP-1115] my previous line named the wrong 2 hole taps without a check. The two taps whose 4.32-um box does NOT touch a band rect are svc_hi_dsdv_svc_rs__t6 (718.176, 190.24) and svc_lo_dsdv_svc_rs__t7 (372.576, 150.24); the other 11 touch (file sha1 815b905b4f86 unchanged).
