@@ -152,7 +152,7 @@ jobs:
           if [ -z "$base" ] || [ "$base" = 0000000000000000000000000000000000000000 ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
             base=$(git rev-parse HEAD~1)
           fi
-          python3 -I tools/repo_size_guard.py --range "$base..HEAD"
+          python3 -I tools/repo_size_guard.py --range "$base...HEAD"   # three dots: changes since the merge base only
 
   gate-board:
     name: Gate board (informational)
