@@ -3533,9 +3533,12 @@ def type_macros(P, tn):
             _VIEW_LEF[k] = PV.select(LO.select(VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve), _CR.resolve),
                                      _CR.resolve)
         return _VIEW_LEF[k]
+    import core_view_sha as _CVS      # KIT-OPS-6 11-14 (TYPE-HDEPC): the signed view, by sha (OT_SIGNED_VIEW_SHA table / plan lib_sha256, lef_sha256)
+    _exp = _CVS.load_expected()
     for c in t.get("hard_cores", []):
         if not c.get("lef"):
             continue
+        _CVS.gate(c, _CR.resolve, _exp)
         ox, oy = c.get("track_offset_um", [0.0, 0.0])
         # DIE-KV-49 10-31: optional kit-only physical identity (content_physical_identity form); default unchanged
         pinst, pmaster = content_physical_identity(c) if ("physical_inst" in c or "physical_master" in c) else \
