@@ -1,6 +1,6 @@
 # FABLE-PD-S81-1515: S81 col element input face (IFN half-cycle) setup
 
-2026-11-15 15:10 PST. Fable PD review for COORD; cc S81-GOTAG-SETUP-1115, DIE-S81-92, S81-TAPROWS.
+2026-11-15 15:02 PST. Fable PD review for COORD; cc S81-GOTAG-SETUP-1115, DIE-S81-92, S81-TAPROWS.
 Types read: col_h9_r0_p6 (pilot pg of S81-SEAM-RST-1115, epyc10) and col_h10_r2 (kw43 attempt_3, epyc10), both at 4_cts.odb, placement parasitics, kit 4_cts.sdc, TT and FF (FF with the kit core_taps_ff.sdc overlay; grid window and vclk as in the TT SDC). Pre hold repair.
 Scripts and outputs: epyc10 /srv/opentallas-scratch2/claude/fable-pd-s81-1515/ (m1..m4.tcl, m*_h9_*.out, m*_h10_*.out). Read-only, nothing written to a kit.
 
