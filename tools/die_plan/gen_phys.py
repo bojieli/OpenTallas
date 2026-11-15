@@ -5280,7 +5280,8 @@ def macro_move_table(t, tn, env=None):
 
 # SERDES-TXPIPE 11-14: a serdes pipe form brings its own placement (txl_mid.tcl face mode), so a type that sets the define
 # in its plan verilog_defines gets the hook without a generation env (wave kits, private kits alike).
-SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE": ("u_rxf", "u_dec.u_face_p_d")}
+SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE": ("u_rxf", "u_dec.u_face_p_d"),
+                     "OT_S81_SERDES_RXNEG": ("u_rxf", "u_dec.u_face_p_d")}
 
 
 def txl_mid_exports(cfg, kd, env=None, defines=()):

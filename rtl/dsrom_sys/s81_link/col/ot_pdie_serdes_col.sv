@@ -208,7 +208,15 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     //      sits at its own PMA q pin (txl_mid.tcl face mode), so u_face_p_d moves to the decoder side and the face wire
     //      gets its own cycle.  No reset on the row (as the face pad): LOCKSAFE holds the column >= 64 edges.
     wire [543:0] r_dp; wire r_vp;
-`ifdef OT_S81_SERDES_RXPIPE
+`ifdef OT_S81_SERDES_RXNEG
+    // S81-SERDES-RXNEG (FIX-S81-SERDES-CLKPART, SERDES-TXPIPE 2026-11-14; opt-in, supersedes RXPIPE when both): RX row 0 u_rxf
+    // captures on the FALLING pma_rck edge (PMA q is launched on the rising edge: half-cycle window, so the pin-vs-row-0
+    // clock insertion offset is absorbed), the decoder face pad then re-times to the next rising edge = the data reaches the
+    // decoder on the SAME rising edge as without the row (latency +0 rck, never more than +1).  No reset (as the face pad).
+    reg [544:0] u_rxf_q;
+    always @(negedge pma_rck) u_rxf_q <= {rn_r, r_d};
+    assign {r_vp, r_dp} = u_rxf_q;
+`elsif OT_S81_SERDES_RXPIPE
     ot_pl_pad #(.W(545), .N(1)) u_rxf (.ck(pma_rck), .d({rn_r, r_d}), .q({r_vp, r_dp}));
 `else
     assign r_dp = r_d; assign r_vp = rn_r;
