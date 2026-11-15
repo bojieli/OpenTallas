@@ -146,7 +146,7 @@ def plan_taps(P):
                     raise ValueError(f"hard type {tn} has an invalid clock.tap_um: {xy}")
                 by_type[tn] = [("clk", x, y, 0.0)]
             else:
-                early = {nm: S.core_tap_early_ps(P, tp) for nm, _, _, tp in S.core_taps(P, tn)}
+                early = {nm: S.core_tap_early_ps(P, tp, 'TT', P.types[tn]) for nm, _, _, tp in S.core_taps(P, tn)}
                 by_type[tn] = [(port, x, y, float(early.get(port, 0.0)))
                                for port, x, y in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
         for port, x, y, early_ps in by_type[tn]:
@@ -164,7 +164,7 @@ def plan_tap_early(P):
     for n, p in sorted(P.parts.items()):
         tn = p["type"]
         if tn not in by_type:
-            by_type[tn] = {port: {c: S.core_tap_early_ps(P, tp, c) for c in ("TT", "FF")}
+            by_type[tn] = {port: {c: S.core_tap_early_ps(P, tp, c, P.types[tn]) for c in ("TT", "FF")}
                            for port, _, _, tp in S.core_taps(P, tn)}
         for port, e in by_type[tn].items():
             out[(n, port)] = e

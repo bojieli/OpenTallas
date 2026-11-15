@@ -73,7 +73,7 @@ def spine_geom(P):
 def tap_ports(P, tn):
     """every clock port of a type [(port, x, y, early_ps)]: the R4 grid / sink taps (early 0) + early core taps."""
     out = [(n, x, y, 0.0) for n, x, y in S.tap_grid(P, tn)]
-    out += [(n, x, y, S.core_tap_early_ps(P, tp)) for n, x, y, tp in S.core_taps(P, tn)]
+    out += [(n, x, y, S.core_tap_early_ps(P, tp, 'TT', P.types[tn])) for n, x, y, tp in S.core_taps(P, tn)]
     return out
 
 

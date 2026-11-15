@@ -415,7 +415,7 @@ def wrapper(P, tn, epochs, rtl_root=None):
     for n, x, y, tp in S.core_taps(P, tn):
         ports.append((f"input  wire {n}", f"EARLY core tap {tp['name']} at ({x:.0f}, {y:.0f}) um (CP2): the kit "
                       "(clock_taps.tcl) hangs the core's clock pins on it; the spine delivers it "
-                      f"{S.core_tap_early_ps(P, tp):g} ps early"))
+                      f"{S.core_tap_early_ps(P, tp, 'TT', P.types[tn]):g} ps early"))
     import reset_tree as RT
     rtree = RT.for_type(P, tn) if RT.delivered(P) else None
     if rtree is None:

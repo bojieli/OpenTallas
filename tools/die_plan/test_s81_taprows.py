@@ -43,7 +43,7 @@ def test_bksel_budget_450_and_idx_tap_at_its_reference(tmp_path):
     p = plan(tmp_path)
     TR.apply(p, REFS, root=str(tmp_path))
     ck = p["partition_types"]["bk_sel__t2"]["clock"]
-    assert ck["insertion_ps"] == 450 and ck["insertion_target_override"]["reason"].strip()
+    assert ck["insertion_ps"] == 450 and ck["insertion_ff_ps"] == 364.5 and ck["insertion_target_override"]["reason"].strip()
     by = {t["name"]: t for t in ck["taps"]}
     assert (by["u_bk_sel.u_tx.ck"]["insertion_ps"], by["u_bk_sel.u_tx.ck"]["insertion_ff_ps"]) == (722.72, 592.8)
     assert by["u_bk_sel.u_c.ck"]["insertion_ps"] == 442.81                     # other cores untouched
@@ -72,3 +72,19 @@ def test_bksel_q_rows_take_the_b1c_reference(tmp_path):
     by = {t["name"]: t for t in ck["clock"]["taps"]}
     q = by["u_bk_sel.u_sel.g_q[0].u_q.ck"]
     assert (q["insertion_ps"], q["insertion_ff_ps"]) == (790.1, 640.0) and ck["clock"]["insertion_ps"] == 450 and len(rep["bksel_q"]) == 1
+
+
+def test_early_is_priced_against_the_type_budget_for_override_types():
+    """COORD r104: tap - TYPE budget (450 / 364.5) on an override type, tap - die common (250 / 202.5) elsewhere"""
+    import schema as S
+    P = S.Plan.__new__(S.Plan)
+    P.clock = {"insertion_ps": 250.0}
+    tp = dict(insertion_ps=722.72, insertion_ff_ps=592.8)
+    ov = {"clock": {"insertion_ps": 450, "insertion_ff_ps": 364.5, "insertion_target_override": {"reason": "x"}}}
+    plain = {"clock": {"insertion_ps": 250}}
+    assert abs(S.core_tap_early_ps(P, tp, "TT", ov) - 272.72) < 1e-6 and abs(S.core_tap_early_ps(P, tp, "FF", ov) - 228.3) < 1e-6
+    assert abs(S.core_tap_early_ps(P, tp, "TT", plain) - 472.72) < 1e-6 and abs(S.core_tap_early_ps(P, tp, "TT") - 472.72) < 1e-6
+    ov_noff = {"clock": {"insertion_ps": 450, "insertion_target_override": {"reason": "x"}}}
+    assert S.common_latency_ps(P, "FF", ov_noff) == 364.5 and S.common_latency_ps(P, "FF") == 202.5
+    assert abs(S.core_tap_early_ps(P, dict(insertion_ps=465.39, insertion_ff_ps=361.26), "TT", ov) - 15.39) < 1e-6
+    assert S.core_tap_early_ps(P, dict(insertion_ps=300.0), "TT", dict(ov, clock=dict(ov["clock"], insertion_target_override={}))) == 50.0

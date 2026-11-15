@@ -89,6 +89,7 @@ def apply(plan, refs, root=None, type_name="bk_sel__t2", idx_module="dsdv_idx_tx
     ck = t["clock"]
     ck["insertion_ps"] = budget
     ck["insertion_target_override"] = {"reason": REASON}
+    ck["insertion_ff_ps"] = round(0.81 * budget, 3)      # COORD r104: 450 TT -> 364.5 FF (schema.FF_TT_INSERTION_RATIO), early taps are priced against it
     r = refs["idx"]
     idx_insts = {c["inst"] for c in t.get("hard_cores", []) if c.get("module") == idx_module}
     for tp in ck.get("taps", []):

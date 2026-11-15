@@ -2517,9 +2517,27 @@ def _corner(corner):
     return c
 
 
-def common_latency_ps(P, corner="TT"):
-    """the die common (pin-register) latency at a corner: TT clock.insertion_ps; FF clock.insertion_ff_ps, absent ->
-    FF_TT_INSERTION_RATIO x TT (250 -> 202.5)."""
+def type_override_clock(t):
+    """S81-TAPROWS 11-15 (COORD r104): the type clock dict when the type carries clock.insertion_target_override and its own
+    insertion_ps (col / leaf / serdes 450 types), else None."""
+    ck = (t or {}).get("clock") or {}
+    ov = ck.get("insertion_target_override")
+    if isinstance(ov, dict) and ov.get("reason") and ck.get("insertion_ps") is not None:
+        return ck
+    return None
+
+
+def common_latency_ps(P, corner="TT", t=None):
+    """the common (pin-register) latency the early taps of a type are priced against, at a corner.  Die: TT clock.insertion_ps;
+    FF clock.insertion_ff_ps, absent -> FF_TT_INSERTION_RATIO x TT (250 -> 202.5).  `t` = a partition type: when it carries
+    clock.insertion_target_override its OWN budget is the basis (TT clock.insertion_ps, FF clock.insertion_ff_ps, absent ->
+    ratio x TT: 450 -> 364.5); otherwise the die value."""
+    ck = type_override_clock(t)
+    if ck is not None:
+        tt = float(ck["insertion_ps"])
+        if _corner(corner) == "TT":
+            return tt
+        return float(ck.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
     tt = float(P.clock["insertion_ps"])
     if _corner(corner) == "TT":
         return tt
@@ -2535,10 +2553,11 @@ def core_tap_insertion_ps(tp, corner="TT"):
     return float(tp.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
 
 
-def core_tap_early_ps(P, tp, corner="TT"):
-    """how early the spine delivers a core tap at a corner: max(0, core insertion - the die common latency), both
-    at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number)."""
-    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner))
+def core_tap_early_ps(P, tp, corner="TT", t=None):
+    """how early the spine delivers a core tap at a corner: max(0, core insertion - the common latency), both
+    at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number).  `t` = the tap's type:
+    an override type (450) is priced against its own budget, not the die 250 (COORD r104)."""
+    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner, t))
 
 
 def full_area_hard_ip(t):
