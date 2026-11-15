@@ -44,3 +44,6 @@ slice_station__t28 | queue | ORPHAN | ORPHAN client gone (relaunch)
 ## Result 18:3x
 Classes: DEDUP 32 (twin running, not failures) · FAIL FLOW tool TypeError 1 (gunit__t1) · PLAN PG-domain 2 (serdes__t4, t15) · ORPHAN-but-live private job 1 (slice_station__t28, typeslicet28 on epyc8).
 Launched: nothing (no design-class item in scope). ASKs to KIT-OPS-5 and NEEDS-PLAN to DIE-S81-92 posted in COORD-REVIEW-QUEUE.md.
+
+## Twin liveness 18:1x
+16 canonical twins: 14 live, 2 dead (col_h9_r0_p6 pv8241ebb8, pvde240d6d). Released for KIT-OPS-5 re-key: 6 DEDUP rows (p6 pv0012ba28, pv082a7609, pv9da72aa7, pvb38a9d6c, pvbdbd69f2, pv87853a7e). Other 26 stay DEDUP.
