@@ -1521,7 +1521,7 @@ def ft_resite(M, t_new, R, cfg, rep):
         for gi, j in owner.items():
             gof[j].append(gi)
 
-        def blocked(j, p=None, dx=0.0, dy=0.0):
+        def blocked(j, p=None, dx=0.0, dy=0.0, groups_too=True):
             p = p or regs[j]
             if not R.free(*p):
                 return True
@@ -1536,13 +1536,14 @@ def ft_resite(M, t_new, R, cfg, rep):
                 if any(gx0 < x1 + HR.HALO - EPS and gx1 > x0 - HR.HALO + EPS and gy0 < y1 + HR.HALO - EPS and
                        gy1 > y0 - HR.HALO + EPS for (x0, y0, x1, y1) in R.rects):
                     return True
-                for ob in allbox:
+                for ob in (allbox if groups_too else ()):
                     if ob == b0:
                         continue
                     if min(b[2], ob[2]) > max(b[0], ob[0]) - 0.5 and min(b[3], ob[3]) > max(b[1], ob[1]) - 0.5:
                         return True
             return False
-        bad = [j for j in range(len(regs)) if blocked(j)]
+        # only registers a core now covers are re-sited; ft groups that already overlap in the base stay as they are
+        bad = [j for j in range(len(regs)) if blocked(j, groups_too=False)]
         if not bad:
             continue
         rep["ft_slots"] += 1
