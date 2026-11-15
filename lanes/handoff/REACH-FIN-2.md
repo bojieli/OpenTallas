@@ -29,3 +29,5 @@
 4. Proof kits paragraph in the R-REACH section is not updated with these numbers.
 
 HANDBACK 2026-11-13 07:28 to RULES-REACH-1
+
+SUCCESSOR 2026-11-14: R-REACH already merged (train 47); no open tool work.
