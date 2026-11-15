@@ -34079,11 +34079,19 @@
     "hd_spn": {
      "OT_IO_HOLD": "sender_min",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_spn_end": {
      "OT_IO_HOLD": "sender_min",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_spn_eshim_rx": {
      "OT_IO_HOLD": "sender_min",
@@ -35849,7 +35857,19 @@
      "--max-wire-um",
      "120"
     ]
-   }
+   },
+   "item_env_prev_wavehold1115_spnpg": {
+    "hd_spn": {
+     "OT_IO_HOLD": "sender_min",
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PLACE_MAX_FANOUT": "32"
+    },
+    "hd_spn_end": {
+     "OT_IO_HOLD": "sender_min",
+     "OT_GEN_M8_GRANT": "1"
+    }
+   },
+   "note_wavehold1115_spnpg": "WAVE-HOLDS-1115 2026-11-15 12:01 PST (COORD, FABLE-PD-HEAD-1115): hd_spn DRT-0255 = M7 face pins under the tile's own M7 PG straps (172/1942 N/S M7 pins). item_env hd_spn + hd_spn_end gain OT_PG_DIE_PHASE=1 OT_PG_TRACK_TRUTH=1 OT_PG_CELL_KEEPOUT=1 OT_PG_PIN_CHECK=warn; fresh gen (stage_resume_off lists both); retry hd_spn@4 and hd_spn_end@5 armed. Stop list: no hd_spn/hd_spn_end kit without OT_PG_DIE_PHASE=1, no route retry from a3 5_1_grt.odb. Accept before route: pdn.tcl M7 line -offset 8.448, pin check 0 bad M7 pins. Revert: item_env_prev_wavehold1115_spnpg."
   },
   "qwen_compute": {
    "enabled": true,
