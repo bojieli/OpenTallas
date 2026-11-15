@@ -145,3 +145,6 @@ Gates = RULEBOOK-1113 R-MINIMAL (DRC 0, TT WNS >= -42, internal FF hold >= 0, bi
 
 ## 2026-11-14 00:45 PST serdes
 - kitI GRT congested (114k) -> kitI3 (island widened to x 1605, on kitI2 synth) queued on epyc9; waiter on kitI3_route.otrun.log. kitI2 will die on the same early stop (waiter bpphcpr61).
+
+## 2026-11-14 19:25 successor
+- Live: bksel m7pg (epyc8), gunit g4 (epyc10). Waiter succ_waiter.sh. See queue STATE 19:25.
