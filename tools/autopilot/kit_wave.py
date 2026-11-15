@@ -2082,6 +2082,7 @@ RULES = [
      "RTL lint at preflight (undriven / check -assert)"),
     # SAFE-STATION-1 11-03: a relay-bay hop below +10% of the period = the station plan (bays / lane length), not the flow
     ("PLAN", None, r"FAIL_PREBUILD relay_bay", "relay-bay pre-build hop table below +10% (station lane plan)"),
+    ("PLAN", None, r"FAIL_POSTCTS SETUP_TRIAGE", "PLAN-TRIAGE: post-CTS TT setup estimate below -150 ps, routing cannot close it (plan item for the die owner, not relaunched)"),
     ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL|FAIL_PREFLOOR face_guard", "face guard (plan pins / landing)"),
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL|FAIL_PREFLOOR port_bind", "port bind (plan pins)"),
     ("PLAN", None, r"LEF master \S+ not found|ORD-2013", "macro not declared in the plan type"),
