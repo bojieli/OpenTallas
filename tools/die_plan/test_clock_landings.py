@@ -724,3 +724,39 @@ def test_monitor_relay_bundle_guards(bad):
     top = "module die_bound_top (rst_n, clk_core);\n    a_mod a (\n        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\nendmodule\n"
     with pytest.raises(LandingError):
         Landings(p, t).top_rtl(top)
+
+
+def _tx_vehicle(tx_xy):
+    p, t = ca_relay_vehicle(); c = Landings(p, t)
+    key = "B"
+    c.types[key]["pins"] = [dict(name="cland_rstart_out", dir="out", xy_um=tx_xy)]
+    c.reset_placements["b"] = {"P": dict(xy_um=[24.8, 1763.1]), "Q": dict(xy_um=[600.0, 900.0])}
+    return c, key
+
+
+def test_tx_raw_uses_nearest_copy_not_first_in_dict_order():
+    """FABLE-TYPES-QC-WEST A: first copy 1.43 mm from the tx flop, second 20 um away -> the second is used, no relay"""
+    c, key = _tx_vehicle([607.0, 915.8]); rl = []
+    raw = c._tx_raw("b", key, "raw_far", {"P": "raw_far", "Q": "raw_near"}, rl)
+    assert raw == "raw_near" and rl == []
+    rec = c.reset_placements["b"]["count_origin"]["tx_raw"]
+    assert rec["relay"] is False and rec["dist_um"] < 600 and rec["first_copy"] == "raw_far"
+
+
+def test_tx_raw_adds_midpoint_relay_over_600um_and_unknown_sites_are_unchanged():
+    c, key = _tx_vehicle([607.0, 915.8]); rl = []
+    raw = c._tx_raw("b", key, "raw_far", {"P": "raw_far"}, rl)
+    assert raw == "cland_reset_tx" and any("ot_dp_rrelay u_cland_rst_tx (.clk(clk), .d(raw_far)" in x for x in rl)
+    rec = c.reset_placements["b"]["count_origin"]["tx_raw"]
+    assert rec["relay"] and rec["relay_xy_um"] == [315.9, 1339.45]
+    c2, key = _tx_vehicle(None); rl2 = []
+    c2.types[key]["pins"] = []
+    c2.types[key]["buses"] = [b for b in c2.types[key]["buses"] if b["name"] != "cland_rstart_out"]
+    assert c2._tx_raw("b", key, "raw_x", {"P": "raw_x"}, rl2) == "raw_x" and rl2 == []
+
+
+def test_tx_raw_warns_but_never_blocks_over_800um(capsys):
+    c, key = _tx_vehicle([4000.0, 915.8]); rl = []
+    raw = c._tx_raw("b", key, "raw_far", {"P": "raw_far"}, rl)
+    assert raw == "cland_reset_tx" and "warn" in c.reset_placements["b"]["count_origin"]["tx_raw"]
+    assert "WARN clock_landings" in capsys.readouterr().err
