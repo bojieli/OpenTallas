@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenTallas hung-job watchdog at :13/:33/:53 (autopilot gap cadence)
+
+[Timer]
+OnCalendar=*-*-* *:13,33,53:00
+Persistent=false
+
+[Install]
+WantedBy=timers.target
