@@ -35660,7 +35660,7 @@
   },
   "qwen_compute": {
    "enabled": true,
-   "event": "s29q103S4P",
+   "event": "s29q103S4Q2",
    "coord_enable": "COORD 00:43 + 01:0x ruling (1) to KIT-WAVE-12: QC on at the collector-fix merge 5346b95c915 (claude/die-qc-58-coll-1031@00452027cbe, strict bind 0)",
    "gate": {
     "g0c": "PASS",
@@ -35668,15 +35668,15 @@
     "clock": "PASS",
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
-   "plan": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4p.json",
+   "plan": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q2.json",
    "gen_host": "epyc9",
    "src": "/srv/opentallas-scratch2/claude/wt/qc-s29-tree2",
    "src_sha": "1e3b302be85085f4c4aca8a0dc93b4e5063d2b55",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_manifest_iso_s29q103S4PQ.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S4PQ",
-    "note": "KIT-OPS-5 QC s29q103S4P (DIE-QC-103 READY+ADOPT: bind S29Q103S4PQ errors 0, R8 changed 0, LATCHECK 1921/1921, G0 baseline only; S4k + 30 changed types) | KIT-OPS-5 QC s29q103S4K R8 rebind S4KQ (DIE-QC-103: bind 0, R8 changed 0, LATCHECK 1921/1921; same plan sha 146326183743) | KIT-OPS-5 QC s29q103S4K (DIE-QC-103 READY+ADOPT 08:05: bind S29Q103S4KR errors 0, LATCHECK 1921/1921, G0 baseline only; S4c + S4h content, 68 changed types) | KIT-OPS-5 QC s29q103S4C (DIE-QC-103 READY+ADOPT 00:25: bind S29Q103S4CR errors 0, LATCHECK 1921/1921, G0 only the 2 baseline errors; S3R3b + D1 su_c cl19bb38ef sink_bins) | KIT-OPS-5 QC s29q103S3R (DIE-QC-103 READY+ADOPT 17:05: bind clean, LATCHECK 1921/1921, plan 7480f383f88e, manifest iso 6e0909df75c7, sidecar c71a3febc5b0, R8 871cc752ca39); type-scoped | KIT-OPS-5 QC s29q103S3M2 (DIE-QC-103 READY+ADOPT 12:58: BIND_RC 0, LATCHECK 1921/1921, plan 28ea2ea6e3ff, asbuilt 64dee41dff0c, sidecar c71a3febc5b0; S3M + station_tail1 pin y958 only); type-scoped | KIT-OPS-5 QC s29q103S3M (DIE-QC-103 READY+ADOPT 11:25: BIND_RC 0, LATCHECK 1921/1921, plan 3d5cb18d1ac3, sidecar c71a3febc5b0, asbuilt a47cfd0bf892); type-scoped | KIT-OPS-3 QC s29q103S2 (DIE-QC-103 READY+ADOPT 05:17: bind rc 0, LATCHECK 1921/1921); bind_matches checked | KIT-OPS-3 03:13 PST QC s29q103S (DIE-QC-103 READY+ADOPT 02:58: strict bind 0, LATCHECK 1921/1921; rings hard + param split); bind_matches checked | KIT-OPS-3 2026-11-13 23:11 PST QC s29 ADOPT swap (DI",
+    "asbuilt": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_manifest_iso_s29q103S4Q2Q.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/qc-s28-hf1c/bind/bind_s29q103S4Q2Q",
+    "note": "KIT-OPS-5 QC s29q103S4Q2 (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q2Q errors 0, LATCHECK 1921/1921, R8 derived; delta over S4p: 35 released, 19 held for S4q3) | KIT-OPS-5 QC s29q103S4P (DIE-QC-103 READY+ADOPT: bind S29Q103S4PQ errors 0, R8 changed 0, LATCHECK 1921/1921, G0 baseline only; S4k + 30 changed types) | KIT-OPS-5 QC s29q103S4K R8 rebind S4KQ (DIE-QC-103: bind 0, R8 changed 0, LATCHECK 1921/1921; same plan sha 146326183743) | KIT-OPS-5 QC s29q103S4K (DIE-QC-103 READY+ADOPT 08:05: bind S29Q103S4KR errors 0, LATCHECK 1921/1921, G0 baseline only; S4c + S4h content, 68 changed types) | KIT-OPS-5 QC s29q103S4C (DIE-QC-103 READY+ADOPT 00:25: bind S29Q103S4CR errors 0, LATCHECK 1921/1921, G0 only the 2 baseline errors; S3R3b + D1 su_c cl19bb38ef sink_bins) | KIT-OPS-5 QC s29q103S3R (DIE-QC-103 READY+ADOPT 17:05: bind clean, LATCHECK 1921/1921, plan 7480f383f88e, manifest iso 6e0909df75c7, sidecar c71a3febc5b0, R8 871cc752ca39); type-scoped | KIT-OPS-5 QC s29q103S3M2 (DIE-QC-103 READY+ADOPT 12:58: BIND_RC 0, LATCHECK 1921/1921, plan 28ea2ea6e3ff, asbuilt 64dee41dff0c, sidecar c71a3febc5b0; S3M + station_tail1 pin y958 only); type-scoped | KIT-OPS-5 QC s29q103S3M (DIE-QC-103 READY+ADOPT 11:25: BIND_RC 0, LATCHECK 1921/1921, plan 3d5cb18d1ac3, sidecar c71a3febc5b0, asbuilt a47cfd0bf892); type-scoped | KIT-OPS-3 QC s29q103S2 (DIE-QC-103 READY+ADOPT 05:17: bind rc 0, LATCHECK 1921/1921); bind_matches checked | KIT-OPS-3 03:13 PST QC s29q103S (DIE-QC-103 READY+ADOPT 02:58: strict bind 0, LATCHECK 1921/1921; rings hard + param split); bind_matches checked | KIT-OPS-3 2026-11-13 23:11 PST QC s29 ADOPT swap (DI",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
    },
@@ -35686,7 +35686,7 @@
     "--max-wire-um",
     "120",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4PQ.json"
+    "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q2Q.json"
    ],
    "kinds": [
     "type"
@@ -35709,12 +35709,12 @@
    "pilot_mode": "queue",
    "hold_items": {
     "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
-    "cbf_q00__cl1b5a6458": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a24 14 h dead end on s29q103S (FABLE section 3 item 1); release when S3R3b is adopted",
-    "cbf_q00__cl870de686": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a27 dead end on s29q103S2; release when S3R3b is adopted",
-    "cbf_q00_s2": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a11 dead end on s29q103S3M2; release when S3R3b is adopted (DIE-QC-103) | COORD 21:4x: cbf_q00_s2 is released at S3R3b adoption; KIT-OPS-5 does the release (remove this hold_items entry)",
-    "cbn_q11__cl5cc92dfe": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a9 dead end on s29q103S2; release when S3R3b is adopted",
-    "cbn_q01__cldd6ea846": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a9 (two copies) dead end on s29q103S2; release when S3R3b is adopted",
-    "cbn_q01__clab6e67f2": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a7 dead end on s29q103S; release when S3R3b is adopted",
+    "cbf_q00__cl1b5a6458": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbf_q00__cl870de686": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbf_q00_s2": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbn_q11__cl5cc92dfe": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbn_q01__cldd6ea846": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbn_q01__clab6e67f2": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
     "sle_fw_v1__cl9d029624": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
     "sle_stm_v1__cl27746664": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
     "sle_stm_v1__clbe630b9c": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
@@ -35725,13 +35725,13 @@
     "slw_stm_v1__cl05fc43f7__cl389df4e9": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
     "slw_stm_v2__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
     "sle_st_b_v1__pv0e7b1dcc": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "cbn_q00__cl622f65d2": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
-    "cbn_q00__cld7bf7197": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
-    "cbn_q00__cldbcda913": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
-    "cbx_q10__cl89936551": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
-    "cbx_q10__cl89936551_h": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
-    "cbx_q10__cl94a12200": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
-    "cbx_q10__cl94a12200_h": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
+    "cbn_q00__cl622f65d2": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbn_q00__cld7bf7197": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbn_q00__cldbcda913": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbx_q10__cl89936551": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbx_q10__cl89936551_h": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbx_q10__cl94a12200": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbx_q10__cl94a12200_h": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
     "coll_ucie": "FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
     "sle_fw_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
     "slw_fw_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
@@ -35757,7 +35757,13 @@
     "slw_st_a_v1__clb036e152": "WAVE-QCFIX-0715 hold: last fail class PROVNOTSTAGED; held until class proven past its step (COORD 07:3x)",
     "slw_st_a_v1__clfc5867a6__pvdf8e5ca4": "WAVE-QCFIX-0715 hold: last fail class PROVNOTSTAGED; held until class proven past its step (COORD 07:3x)",
     "slw_st_a_v1__clfc5867a6__pvf82a6c28": "WAVE-QCFIX-0715 hold: last fail class PROVNOTSTAGED; held until class proven past its step (COORD 07:3x)",
-    "slw_su_c__cl92142dac": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)"
+    "slw_su_c__cl92142dac": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+    "cbn_q01__cld9ff4c40": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "cbn_q11__cl49ae4555": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "sle_st_a_v2__pv30dda31f": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "sle_st_a_v2__pv4242de79": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "slw_st_a_v2__cl9f076a5c": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key.",
+    "slw_st_a_v2__clf4365a62": "S4Q3-HOLD 11-15 (DIE-QC-103 ADOPT S4q2, COORD r96): this type changes under S4q3 (4 st_a_v2 param_wrap types + 15 cb types on budgets.r_dly_spread); no S4p or S4q2 launch or retry until S4q3 is adopted. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -44586,7 +44592,7 @@
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
-   "plan_sha256": "e7aff46e6130c073eb1a0594ab543582219fbd0c574ef79ce4ba74aed1ac1168",
+   "plan_sha256": "6ae0c1c0ce3a67728a501750d41e6bbc6e4f039853447c166d2d463ac5d5a5f9",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_compute.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_PLACE_MAX_FANOUT": "64",
@@ -45282,7 +45288,8 @@
     "s29q103S3M2",
     "s29q103S3R",
     "s29q103S4C",
-    "s29q103S4K"
+    "s29q103S4K",
+    "s29q103S4P"
    ],
    "hold_items_lifted_kitops3_qcs29": {
     "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
@@ -45776,7 +45783,22 @@
     "sle_sc_v1__cl115da35f",
     "sle_sc_v1__cl7479a5ec",
     "slw_st_a_v1__clb036e152",
-    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4"
+    "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+    "sle_hc0__cl05696ed1",
+    "sle_hc2__cl9c4c4509__clf60c5152",
+    "sle_hc2__clcc5e3e61",
+    "sle_st_b_v1__pv0e7b1dcc",
+    "sle_st_b_v1__pvc5a85fd4__pv38472fb8",
+    "sle_st_b_v2__cl14c98df5__pvcd986c42",
+    "sle_st_b_v2__clfde1249e",
+    "slw_hc0__cl1bc59e1c",
+    "slw_hc1__cl68f9248e__cle683a076",
+    "slw_hc2__cla3497502__cl16607c7a",
+    "slw_hc3__clccfc3e6b",
+    "slw_hc3__cld86a7ad4",
+    "slw_st_b_v1__cl6357f1cc__pv6ace3e48",
+    "slw_st_b_v1__cl6357f1cc__pvffd43fdc",
+    "slw_st_b_v2__pva66d0f22"
    ],
    "hold_items_released_kitops5_s4k": [
     "cbf_q01",
