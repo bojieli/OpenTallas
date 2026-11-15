@@ -1,0 +1,5 @@
+# QC-HOLDGRT-1 handoff (11-14)
+Root cause (MEASURED, pregrt_ff_hold.log of failed kits): tools/die_plan/pregrt_ff_hold.py TAIL accept test: reject if pg_s1 < min(pg_s0,0)-1.0 ("TT setup loss", placement-estimate TT WNS, any loss > 1 ps) or hold gain < 1 ps ("no hold gain"). FALLBACK cases: fw_v1 cl9d a7 -305.49->-306.61; slw_stm_v1 cl05fc/cl389 -8.12->-9.62; slw_hc3 cld86 106.23->-2.68; sle_hc0 -515.45->-518.27; fe_v2 clf110 no hold gain (port_in only). The repair itself closed hold on sibling kits (hc2 -98 -> +4.9).
+Fix: pg_verdict proc: setup rejects only if s1 < -42 (OT_PREGRT_SETUP_GATE) AND s1 < min(s0,0)-5 (OT_PREGRT_SETUP_TOL). Branch claude/qc-holdgrt-1-1114 sha f515b601b5ea (worktree intel2 /srv/opentallas-scratch2/claude/qc-holdgrt-1), 30 tests pass.
+Proofs: ot-run logs intel2 ~/qchg1/{fw_v1,hc3,stm_v1}.log; proof dirs <host>:/srv/opentallas-scratch2/claude/qc-holdgrt-1-proof/<name> (replicated intel1+epyc2, epyc8+epyc7), RESULT.txt.
+Open: install into wt/qc-s29-tree2 by copy+mv w/ backup; relaunch via KIT-OPS-5 (owns kit_wave.json).
