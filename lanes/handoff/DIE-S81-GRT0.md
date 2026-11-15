@@ -15,3 +15,5 @@ Prior runs: kit ~66 min, GRT ~11 min at 18.7 GB RSS, STA ~15-25 min.
 $W/s81/b3x2d/CHAIN.log; grt_st_TT/combo_TT.log (overflow table, Maximum resident set size); sta/ summary; kitwin.json; typepairs.json.
 
 Update 22:0x: moved to epyc8 (unit oth-ubuntu-3985401-1794721449, --mem 32); epyc10 queue entry cancelled; run dir epyc8 same path.
+
+M9 guide request (COORD 22:1x): raw guide = epyc8 die-grt0-s81/s81/b3x2d/grt_st_TT/route_TT.guide (write_guides already in combo.tcl); clock-only M8/M9 filtered copy + per-region table after the chain ends.
