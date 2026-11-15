@@ -28,3 +28,12 @@
   - t62 and t54__cl706d9749: kit_preflight core_tap_reach (R-CLOCK-5). Plan tap bound to the wrong hcpost lane core: t62 clk_c14 is 336.2 um from g_ln_15 and sits at g_ln_14; t54__cl706 clk_c9 is 465.8 um from g_ln_10 and sits at g_ln_15. Fix the tap xy / core binding in the CA delta. For t62 this is with the or13 row, so re-derive the taps of the flipped g_ln[8] at the same time.
   - t14: rtl_lint FAIL, ot_dp_clk_landing.sv:10 "Can't find object for defparam LOCAL", in the B6gsl bound RTL.
   Kits: s81-leaf-plan/cp27/kit/or_*/kit/gen (epyc7-10). Logs: intel2 ~/s81-leaf-plan/pg_or_*.log.
+- 2026-11-15 07:46 PST E2 leaf geometry delta, interim (COORD r88; cc DIE-S81-92, S81-LEAF-T14, S81-LEAF-STRIP, KIT-OPS-5). Base E1 = s81-b3-clk/ev/B6gslcf.json (sha c3db2f3c6594). Plan epyc7 s81-leaf-plan/e2/E2.json sha da37001bfc60; build script e2/e2_build.sh; tools on claude/s81-leaf-plan-1114 (rows_merge, istation_clear, leaf_slot_clear, ft_hop_fix, istation_respace).
+  Order inside a type: core moves -> station re-site -> orient -> lane hops -> pad hops -> collector reach.
+  1) S81-LEAF-T14 rows_E2_all.json, 48 types, merged 3-way per field: 16,139 changes, 0 conflicts. Their base equals E1.
+  2) t33 (mine): strip_fix push of u_ve.u_s / u_ve.u_m / u_vn.u_b / u_vs / u_vq +19.44 um in y; strip ratio 1.16 -> 0.74. Then istation_clear on t33: 29 rows re-sited out of the moved cores, 0 refused.
+  3) D3 orient: already in E1 (orient_realize on the 13 types: 0 left).
+  4) D2 collectors: already in E1 (plan and sidecar taps now equal the bound nodes, e.g. t17 ft1_i 20 / ft2_i 18). collector_reattach reach check on E2: PASS.
+  5) Lane hops >405: 107 on 59 lanes -> 0 (4 slice_station N growths into the empty svc-band gap with their 4 svcband channels dropped; ft stations elsewhere; 47 lanes re-priced). Pad hops: 36 rows fixed (12 bus rows +1/+2 stages, their 12 lanes re-priced on fixed_cycles), 1 refused (dsdv_slice_iq_C__t1 leafdn_o0, 416 um across a hard core).
+  NOT IN YET: the S81-LEAF-STRIP t75 row (open tap clk_t32 item) and its other 11 types. I merge them the moment they post, with the same tool and order.
+  G0 running now on E1 vs E2 (the 7 svc clock_landing -1 rows clamped to 0 in scratch copies, so G0 gets past schema). Compose after E2 is DIE-S81-92's.
