@@ -4,3 +4,9 @@ FIX BUILT: detail view of pcf_h_head_p from signed ODB pcfh_k (ss29/resign/pcfh_
 STAGED: epyc9 + epyc10 /srv/opentallas-scratch2/claude/kvpcf-view-1114/qkd_kvs_pcf_h_head_p (lef, libs, pins, core.json, detail_view.lef, detail_receipt.json).
 PDN PROOF (epyc10 probe /srv/opentallas-scratch2/claude/type-kvpcf/probe): baseline 2_3 tapcell odb + pdn.tcl + pdngen reproduces PDN-0006 for u_kvpc0_f; with detail view swapped (DEF round trip) pdngen exits 0, only PDN-0007 partial (2.8-3.9 %) + PDN-0110 notes.
 NEXT: KIT-OPS-3 puts the epyc9/epyc10 entries FIRST in kit_wave.json dies.qwen_kvsys.prov_view_sources.qkd_kvs_pcf_h_head_p + retry keys for the pc types; then follow to R-MINIMAL and add AUTO-RESIGN rows.
+
+## 2026-11-14 16:43 PST status
+- Fix confirmed in real kits: both kv3_pc types passed 2_4_floorplan_pdn with the detailed pcf_h view (PDN-0007 only). Wave cl254f2e73 (a2/a3/a4, view 581413 B) and private cl5a95b461 (epyc2 /srv/opentallas-scratch3/claude/type-kvpcf/cl5a95b461/kv3_pc__cl5a95b461, OT_ALLOW_RESYNTH=1) both reached CTS.
+- cl254f2e73 wave: post-CTS gate lost to earlyoom (infra-oom) twice, attempt 4 launched 16:28. Not a PDN problem.
+- cl5a95b461 private: in 4_1_cts at 16:40; waiter armed for FAIL/signoff. Wave a2 of cl5a95b461 died at PDN-0006 (old view), ignore.
+- AUTO-RESIGN: no row yet (no sign-off).
