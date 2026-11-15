@@ -2206,6 +2206,9 @@ ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b
                        # OWNER 11-03: an advisory check is never the item's error (KW6-CLASS 11-04: "pins_canonical check
                        # could not run: ModuleNotFoundError" hid a place failure on 3 rows)
                        r"KIT_PREFLIGHT ADVISORY\b|"
+                       # KIT-OPS-5 11-15 (FABLE-TRIAGE-S81 class 2): a line that labels itself "(advisory)" (e.g. gen TAP-RADIUS-TARGET ... (advisory),
+                       # which classed col_h10_r0_p1 pvd7af8531 as INFRA @gen) is information, never the item's error
+                       r"[^\n]*\(advisory\)\s*$|"
                        # KW-FIX-8 11-04: the kill of the pre-route LEC beside a stopped flow; its exit 137 read as INFRA and
                        # relaunched 9 KV rows on the same PDN-0006 / OT_CLAND error.  The flow's own error decides.
                        # KW-FIX-24 11-06: a pre-route LEC killed by a signal (docker stop / OOM) is no verdict either
