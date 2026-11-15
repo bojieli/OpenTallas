@@ -295,7 +295,8 @@ def main():
         paths = changed(x.old, x.new)
         rows, summ = refresh(paths, x.old, x.new, x.apply, only, f"{x.old[:11]}..{x.new[:11]}")
     else:
-        paths = sorted({p for p in git("log", x.new, f"--since={x.since}", "--name-only", "--format=").split("\n") if p and in_scope(p)})
+        since = x.since + " 00:00" if re.fullmatch(r"\d{4}-\d\d-\d\d", x.since) else x.since   # git reads a bare date as "now on that day"
+        paths = sorted({p for p in git("log", x.new, f"--since={since}", "--name-only", "--format=").split("\n") if p and in_scope(p)})
         rows, summ = refresh(paths, "", x.new, x.apply, only, f"catchup-since-{x.since}")
     for s in summ:
         print(s)
