@@ -36,6 +36,11 @@ proc ot_cell_census {stage {estimate auto}} {
         set inst [$it getInst]
         if {[$inst getPlacementStatus] in {NONE UNPLACED}} { set ok 0; break }
         lassign [$inst getLocation] x y
+        # 11-15 (S81-PHYT1): a pin of a block (macro) sits at the pin, not at the instance origin.  The origin made every
+        # net of an 8.4 mm macro start at its corner (phy__t1: 101,755 real cells, 1,207,189 reported).
+        if {[[$inst getMaster] isBlock] && ![catch {$it getAvgXY} axy] && [llength $axy] == 3 && [lindex $axy 0]} {
+          lassign $axy - x y
+        }
         lappend xs $x; lappend ys $y
       }
       if {!$ok} { incr nu; continue }

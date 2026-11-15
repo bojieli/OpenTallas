@@ -104,3 +104,22 @@ def test_static_hooks_call_census_or_warn(hook, stage):
 def test_gen_phys_copies_census_and_hooks_place():
     text = (HERE / 'gen_phys.py').read_text()
     assert '"cell_census.tcl"' in text and 'ot_cell_census place' in text
+
+
+def test_macro_pin_measured_at_pin_not_instance_origin(tmp_path):
+    """phy__t1 11-15: a net from a flop to a pin of an 8 mm macro was measured from the macro origin (1.21M reported,
+    101,755 real).  A block pin is measured at getAvgXY; a block without pin data keeps the origin rule."""
+    body = r"""
+pinst a 8050 0
+lappend ::INSTS mac
+proc mac {m} {switch $m {getMaster {return m_mac} getPlacementStatus {return PLACED} getLocation {return {0 0}}}}
+proc it_a {m} {switch $m {getInst {return a}}}
+proc it_mpin {m} {switch $m {getInst {return mac} getAvgXY {return {1 8000000 0}}}}
+proc it_mnopin {m} {switch $m {getInst {return mac}}}
+lappend ::NETS n_pin n_nopin
+proc n_pin {m} {switch $m {getSigType {return SIGNAL} getITerms {return {it_a it_mpin}} getBTerms {return {}}}}
+proc n_nopin {m} {switch $m {getSigType {return SIGNAL} getITerms {return {it_a it_mnopin}} getBTerms {return {}}}}
+"""
+    line, rec = run(tmp_path, body, 'place', 'set ::env(OT_MAXWIRE_UM) 100')
+    # n_pin: flop 50 um from the pin -> 0 repeaters.  n_nopin: origin fallback, 8050 um -> ceil(80.5)-1 = 80.
+    assert rec['maxwire_est'] == 80 and rec['nets_measured'] == 2, (line, rec)
