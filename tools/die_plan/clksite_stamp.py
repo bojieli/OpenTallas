@@ -63,6 +63,22 @@ def stamp(template, size, orients):
     return {n: [orient_rect(r, size, o) for r in template] for n, o in orients.items()}
 
 
+BODY = (1.62, 0.27)
+HALO = (0.54, 0.27)
+
+
+def site_ll(box):
+    """lower-left of the 1.62 x 0.27 cell BODY inside a (die-frame, already oriented) 2.70 x 0.81 box.  The kit tree.json and
+    head_island_template_delta_nf8 take a site as this lower-left point and rebuild the box as
+    (x - 0.54, y - 0.27, x + 1.62 + 0.54, y + 0.27 + 0.27).  Mirroring the BOX (not the node point) and then taking this
+    lower-left is what keeps a MY / MX / R180 site on its island (the +1.62 um MY offset bug)."""
+    return (box[0] + HALO[0], box[1] + HALO[1])
+
+
+def halo_of_site(x, y):
+    return (x - HALO[0], y - HALO[1], x + BODY[0] + HALO[0], y + BODY[1] + HALO[1])
+
+
 def start_stage_rows(stages, cap=7, box=ROW_BOX, size=None):
     """stages: [(x, y)] type-frame positions (or union over instances).  -> at most cap row rects (merged when more)."""
     rects = [cell_box(p, box) for p in sorted(set(map(tuple, stages)))]

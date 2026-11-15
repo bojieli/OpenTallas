@@ -32,6 +32,19 @@ class T(unittest.TestCase):
             self.assertAlmostEqual(ra[2] - ra[0], 2.70)                         # box mirrored, same size
             self.assertEqual(tuple(round(v, 6) for v in S.orient_rect(ra, (W, H), o)), tuple(round(v, 6) for v in a))
 
+    def test_mirrored_site_lands_back_on_island(self):
+        # builder convention: site = body lower-left, island = halo_of_site(site); stamp a box per orientation and
+        # check the island rebuilt from the emitted site equals the oriented box (MY/MX/R180 were +1.62 um off)
+        W, H = 717.12, 1036.8
+        for o in ("R0", "MY", "MX", "R180"):
+            for xy in ((17.226, 337.77), (400.0, 688.5), (700.0, 1000.0)):
+                box = S.cell_box((xy[0] + 0.81, xy[1] + 0.135))          # type frame, from lower-left site xy
+                ob = S.orient_rect(box, (W, H), o)
+                x, y = S.site_ll(ob)
+                got = S.halo_of_site(x, y)
+                for a, b in zip(got, ob):
+                    self.assertAlmostEqual(a, b, places=6)
+
     def test_stamp_same_site_count(self):
         t = [(1, 1, 3.7, 1.81), (50, 60, 52.7, 60.81)]
         s = S.stamp(t, (100, 100), {"i0": "R0", "i1": "MY", "i2": "R180"})

@@ -19,6 +19,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan"); ap.add_argument("tree"); ap.add_argument("stages"); ap.add_argument("type"); ap.add_argument("out")
     ap.add_argument("--entry", default="367.6,688.5")
+    ap.add_argument("--max-slide", type=float, default=1.3)
     a = ap.parse_args(argv)
     import schema as S
     P = S.Plan(S.load(a.plan), Path(a.plan))
@@ -47,13 +48,22 @@ def main(argv=None):
         d = min((math.dist(e, ent) for e in es), default=1e9)
         cand.append((d, -len(inside[n]), n))
     cand.sort()
+
+    def _ctr(ll):      # tree.json site = body lower-left (R0 template): box centre
+        return (ll[0] + 0.81, ll[1] + 0.135)
+
+    def conflicts(n):
+        """sites of instance n (type frame) whose box cannot clear an M7 PG pair within 1.3 um"""
+        return [(m, [round(v, 3) for v in P.to_type(n, sites[m])]) for m in inside[n]
+                if K.slide_off_pg(K.cell_box(_ctr(P.to_type(n, sites[m]))), a.max_slide)[0] is None]
+    scan = {n: len(conflicts(n)) for _, _, n in cand}
     if not cand:
         raise SystemExit("no R0 template instance")
     tpl = cand[0][2]
-    tsites = {m: P.to_type(tpl, sites[m]) for m in inside[tpl]}
+    tsites = {m: _ctr(P.to_type(tpl, sites[m])) for m in inside[tpl]}
     boxes, slid, bad = {}, 0, []
     for m, xy in tsites.items():
-        b, d = K.slide_off_pg(K.cell_box(xy))
+        b, d = K.slide_off_pg(K.cell_box(xy), a.max_slide)
         if b is None:
             bad.append(m); b = K.cell_box(xy)
         else:
@@ -76,20 +86,22 @@ def main(argv=None):
         for i, bx in enumerate(tmpl):
             ox, oy = P.origin(n) if hasattr(P, "origin") else P.parts[n]["origin_um"]
             r = K.orient_rect(bx, size, o)
-            out_sites[f"{n}__s{i}"] = [round(ox + (r[0] + r[2]) / 2, 4), round(oy + (r[1] + r[3]) / 2, 4)]
+            lx, ly = K.site_ll((ox + r[0], oy + r[1], ox + r[2], oy + r[3]))     # body lower-left (builder convention)
+            out_sites[f"{n}__s{i}"] = [round(lx, 4), round(ly, 4)]
     # intra-region edge lengths of the template (preserved exactly by the isometry)
     mem = set(inside[tpl])
     legs = [math.dist(sites[m], sites[parent[m]]) for m in mem if parent.get(m) in mem]
-    entries = [round(math.dist(e, ent), 1) for n in inst for e in entry_of(n)[:1]]
+    entries = [round(min(math.dist(e, ent) for e in entry_of(n)), 1) for n in inst if inside[n] and entry_of(n)]
     Path(a.out).mkdir(parents=True, exist_ok=True)
     meta = dict(schema="ot_clksite_stamped_tree/1", sites_only=True, type=a.type, template=tpl, entry=list(ent))
     json.dump(dict(meta=meta, sites=out_sites), open(Path(a.out) / "STAMPED_TREE.json", "w"))
     extra = {a.type: [list(r) for r in rows]}
     json.dump(extra, open(Path(a.out) / "EXTRA.json", "w"), indent=1)
-    rep = dict(type=a.type, template=tpl, template_sites=len(tmpl), instances=len(inst), slid=slid, no_slide_fit=bad[:10],
+    rep = dict(type=a.type, template=tpl, template_sites=len(tmpl), template_entry_offset_um=round(min((math.dist(e, ent) for e in entry_of(tpl)), default=-1), 1), max_slide_um=a.max_slide, instances=len(inst), slid=slid, no_slide_fit=len(bad), no_slide_fit_list=[[m, [round(v, 3) for v in tsites[m]]] for m in bad],
+               pg_conflicts_per_candidate=dict(sorted(scan.items(), key=lambda kv: kv[1])[:15]), pg_conflicts_median=sorted(scan.values())[len(scan) // 2],
                stamped_sites=len(inst) * len(tmpl), old_site_counts=sorted({len(v) for v in inside.values()}),
                template_leg_max_um=round(max(legs, default=0), 1), template_legs_over_405=sum(l > 405 for l in legs),
-               entry_offset_from_wanted_um=dict(min=min(entries), max=max(entries)), start_stage_rows=len(rows),
+               entry_offset_from_wanted_um=dict(min=min(entries), p50=sorted(entries)[len(entries)//2], max=max(entries)), start_stage_rows=len(rows),
                orients=sorted({P.orient(n) for n in inst}))
     json.dump(rep, open(Path(a.out) / "REPORT.json", "w"), indent=1)
     print(json.dumps(rep))
