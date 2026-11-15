@@ -37,3 +37,6 @@ READY f9028d6ecf7 (daily all-copies + identical hashes + drift timer + put). Tim
 
 ## 11-15 02:02 update
 kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_composed_src refused_row: ROUTE-HELD vs FAIL/FLOW); posted to KIT-OPS-5. Waiter ~/merge-queue/curplan_wait.sh (pid 913804, log ~/merge-queue/curplan-wait.log) lands the next curplan token at once via tick --only and copies the MERGED/MERGE-FAIL line. Autopilot runs rt/current (no refresh needed). READY 26bd253bfdf (parser accepts the word branch).
+
+## 11-15 02:42 update
+19-token audit done (9 landed, 3 RED dly-spread/dly-spread-list/genbug-impl on kit byte-identity, 6 superseded marked REVOKED in state.json, curplan skipped). Parser fix 26bd253bfdf on main; daily refresh + drift timers now effective (rt/current has them). curplan waiter stopped.
