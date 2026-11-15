@@ -14,6 +14,16 @@
 // The cfg word is registered at its pin (cfg_q) and the tap index one edge later (sl_q); both are static after the seal.
 // MUT (bench negative controls): 1-5 as qkd_pv16_vport; 6 = slot tap one edge late (DQ + RT + 2); 7 = DQ tap ignored
 // (the request wait reads tap 0); 8 = range check off.
+// KV-PVGEN 11-15 (R-RTL-2, OWNER pre-approved): define OT_PV_VPORT_SELREP32 (plan type verilog_defines, default OFF = this
+// file's old netlist flop for flop) replaces the single sel_q flop that fans out to ~1,060 loads (1,024 data-row muxes + t0
+// + epoch + control) by 32 kept copies, each holding the SAME value on the SAME edge (0 added cycles): copy g drives data
+// bits [32 g +: 32]; copy 0 also drives the control / t0 / own terms; copy 1 drives the 16 epoch muxes.  Each copy is its own
+// kept-hierarchy flop (qkd_pv16_selcp) so synthesis cannot fold them back into one.  Lock-step bench:
+// rtl/test/kv_bootage_1019/tb_kvba_vport.sv run with and without -DOT_PV_VPORT_SELREP32 (tools/die_plan/test_pvgen_vport_selrep.py).
+(* keep_hierarchy = "yes" *)
+module qkd_pv16_selcp (input wire ck, input wire d, output reg q);
+    always @(posedge ck) q <= d;
+endmodule
 module qkd_pv16_vport_b #(parameter integer MUT = 0, DQ = 15, RT = 63) (
     input wire ck, rst_n,
     input wire [15:0] cfg_age,                                    // {DQ, RT} boot-loaded static schedule ages
@@ -70,7 +80,18 @@ module qkd_pv16_vport_b #(parameter integer MUT = 0, DQ = 15, RT = 63) (
     wire sl_ok = sl_q <= 8'(SLM + 1);
     wire slot = sl_ok && sv[sl_q], sel = sl_ok && ss[sl_q];
     // ---- input pin registers (every port registered) ----
-    reg slot_q, sel_q;
+    reg slot_q;
+`ifdef OT_PV_VPORT_SELREP32
+    wire sel_x = sel ^ ((MUT == 1) ? 1'b1 : 1'b0);
+    wire [31:0] selr;
+    genvar g;
+    generate for (g = 0; g < 32; g = g + 1) begin : g_selcp
+        qkd_pv16_selcp u_cp (.ck(ck), .d(sel_x), .q(selr[g]));
+    end endgenerate
+    wire sel_q = selr[0];
+`else
+    reg sel_q;
+`endif
     reg [1:0] val_q, vf_q;
     reg [27:0] t_q; reg [31:0] e_q;
     reg [2047:0] d_q;
@@ -78,7 +99,9 @@ module qkd_pv16_vport_b #(parameter integer MUT = 0, DQ = 15, RT = 63) (
         if (!rn) begin slot_q <= 1'b0; val_q <= 2'b0; end
         else begin slot_q <= slot; val_q <= {in1_valid, in0_valid}; end
     always @(posedge ck) begin
+`ifndef OT_PV_VPORT_SELREP32
         sel_q <= sel ^ ((MUT == 1) ? 1'b1 : 1'b0);
+`endif
         vf_q <= (MUT == 3) ? 2'b11 : {in1_vflag, in0_vflag};
         t_q <= {in1_t, in0_t}; e_q <= {in1_epoch, in0_epoch}; d_q <= {in1_d, in0_d};
     end
@@ -88,14 +111,26 @@ module qkd_pv16_vport_b #(parameter integer MUT = 0, DQ = 15, RT = 63) (
     wire gv = sel_q ? vw[1] : vw[0];
     wire ov = sel_q ? vw[0] : vw[1];
     wire [13:0] t0 = sel_q ? t_q[27:14] : t_q[13:0];
+`ifdef OT_PV_VPORT_SELREP32
+    wire [1023:0] gd;
+    generate for (g = 0; g < 1024; g = g + 1) begin : g_gd
+        assign gd[g] = selr[g / 32] ? d_q[1024 + g] : d_q[g];
+    end endgenerate
+`else
     wire [1023:0] gd = sel_q ? d_q[2047:1024] : d_q[1023:0];
+`endif
     wire [1023:0] row = (MUT == 2) ? {gd[1023:768], gd[511:256], gd[767:512], gd[255:0]} : gd;
     wire own = t0[0] == sel_q;
     wire bad = (slot_q ? (!gv || ov || !own) : (|vw)) || (pr_v_q && age_bad);
 
+`ifdef OT_PV_VPORT_SELREP32
+    wire selr_e = selr[1];
+`else
+    wire selr_e = sel_q;
+`endif
     // ---- output pin registers ----
     always @(posedge ck or negedge rn)
         if (!rn) begin out_valid <= 1'b0; fault <= 1'b0; end
         else begin out_valid <= slot_q; if (bad) fault <= 1'b1; end
-    always @(posedge ck) begin out_t <= t0; out_epoch <= (sel_q ^ (MUT == 5)) ? e_q[31:16] : e_q[15:0]; {out_v_hi, out_v_lo} <= row; end
+    always @(posedge ck) begin out_t <= t0; out_epoch <= (selr_e ^ (MUT == 5)) ? e_q[31:16] : e_q[15:0]; {out_v_hi, out_v_lo} <= row; end
 endmodule
