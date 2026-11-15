@@ -437,16 +437,18 @@ def baseline(base, fails, extra=(), tag=""):
     name = f"base-{base[:12]}" + (f"-{tag}" if tag else "")
     files = {f.split("::")[0] for f in fails if not f.startswith("TIMEOUT")}
     p = wt_make(name, base, set(extra) | {os.path.dirname(f) for f in files})
-    ids = [f for f in fails if not f.startswith("TIMEOUT") and (p / f.split("::")[0]).is_file()]
-    if not ids:
+    # whole FILES on main, not node ids: one id that main does not have (a new or renamed test) makes pytest exit 4 and run
+    # nothing, so every failure looked new (11-14 21:03 kit-ops-5 68 / pg-aware 57 test_core_reset_io + clock "new" failures)
+    files = sorted(f for f in files if (p / f).is_file())
+    if not files:
         return set()
-    fleet = [i for i in ids if i.startswith("tools/fleet/")]
-    rest = [i for i in ids if i not in fleet]
+    fleet = [f for f in files if f.startswith("tools/fleet/")]
+    rest = [f for f in files if f not in fleet]
     on_main = set()
     if rest:
-        on_main |= pytest(p, rest, name + "-a", min(XDIST, max(2, len(rest))))[1]
-    for f in sorted({i.split("::")[0] for i in fleet}):
-        on_main |= pytest(p, [i for i in fleet if i.split("::")[0] == f], name + "-f", min(4, XDIST))[1]
+        on_main |= pytest(p, rest, name + "-a", min(XDIST, max(2, 4 * len(rest))))[1]
+    for f in fleet:
+        on_main |= pytest(p, [f], name + "-f", min(4, XDIST))[1]
     # a failure on main is baseline when the same nodeid (or its whole file, for a collection ERROR) fails there too
     return {f for f in fails if f in on_main or f.split("::")[0] in on_main}
 
