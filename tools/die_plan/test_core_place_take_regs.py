@@ -49,12 +49,17 @@ def test_take_class_bus_rows():
 
 
 def test_bus_take_lanes_adds_the_depth_delta():
+    # leaf bus rows are native stations: lanes[].fixed_cycles = source depth + deepest destination row
     Q = dict(partitions={"s_3S_L3": dict(type="T"), "s_1N_L0": dict(type="U")},
-             latency=dict(lanes={"dn_s_3S_L3": dict(stations=5, cycles=15, natural=15, param="LAT_DN"),
-                                 "up_s_3S_L3": dict(stations=4, cycles=12, natural=12, param="LAT_UP")}))
+             lanes=[dict(id="dn_s_3S_L3", fixed_cycles=3), dict(id="up_s_3S_L3", fixed_cycles=1),
+                    dict(id="dn_s_1N_L0", fixed_cycles=3)],
+             latency=dict(lanes={"dn_s_3S_L3": dict(stations=5, fixed=3, cycles=15, natural=15, param="LAT_DN"),
+                                 "up_s_3S_L3": dict(stations=4, fixed=1, cycles=12, natural=12, param="LAT_UP")}))
     out = CP.bus_take_lanes(Q, "T", {"leafdn_i0": [1, 3], "leafup_o0": [1, 2]})
     assert {x["lane"]: x["cycles"] for x in out} == {"dn_s_3S_L3": 17, "up_s_3S_L3": 13}
-    assert Q["latency"]["lanes"]["dn_s_3S_L3"]["stations"] == 7 and Q["latency"]["lanes"]["up_s_3S_L3"]["param"] == "LAT_UP"
+    lt = Q["latency"]["lanes"]
+    assert lt["dn_s_3S_L3"]["stations"] == 5 and lt["dn_s_3S_L3"]["fixed"] == 5 and lt["up_s_3S_L3"]["param"] == "LAT_UP"
+    assert [L["fixed_cycles"] for L in Q["lanes"]] == [5, 2, 3]
 
 
 def test_slot_mask_closes_face_to_core_strip():
