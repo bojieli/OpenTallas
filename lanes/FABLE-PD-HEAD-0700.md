@@ -59,7 +59,7 @@ pins cut by a window at every clock cell body (+1.08 um each side; 600 windows, 
 | wi1 windows | 621 | 96 | M1-M7: 0. M8 91 (short 55, spacing 26, min step 10), M9 4, V8 1 |
 
 So the windows remove every M1-M7 marker in two iterations. The 96 left are all M8/M9.
-wi2 (windows + the GRT-only obstructions removed from the route database) is running; result in section 6.
+wi2 (windows + the GRT-only obstructions removed from the route database): 340, 44, 44, 21; see section 6.
 
 Ranked changes:
 1. **Remove the GRT-only obstructions before detail route** (owner DIE-HEAD-ROUTE-1, `unit_prep.py`; KV the same):
@@ -110,3 +110,26 @@ Same cause, three layers instead of seven. On the kvgeom6 route kit (epyc10 `die
 Keep KV units stopped; apply fixes 1 and 2 with KV's region map.
 
 ## 6. Later results
+
+u201, crop form, same guides and step table, violations after iterations 0 / 1 / 2 / 3 / 4:
+
+| run | 0 | 1 | 2 | 3 | 4 | what is left |
+|---|---|---|---|---|---|---|
+| as built (pilot u201_b) | 3,276 | 2,786 | 2,800 | 2,679 | 2,619 | section 1 (2,604 at iteration 9) |
+| wi1: windows at the clock cells | 621 | 96 | 96 | 74 | 73 | M8/M9 only: 61 clock vs die obstruction, 9 min step, 3 clock vs PG |
+| wi2: windows + no GRT-only obstructions | 340 | 44 | 44 | 21 | (stopped, 4 steps asked) | 19 min step on M8 (clock net alone, 7-24 nm steps), 1 short M8 and 1 short M9 clock vs PG |
+
+- **0 was NOT reached** in the 4 steps I ran. wi2 was still falling (44 -> 21 on the first DRC-driven step); the
+  stock table has 21 more steps. The M1-M7 classes are gone in both what-ifs from iteration 1 on.
+- The 19 M8 min-step markers are own-net geometry (a via landing or jog on the M8 clock wire), not a fixed-object
+  conflict. INFERENCE: they clear in the DRC-driven steps; if a residue stays, it is the M7-to-M8 via landing against
+  the clock wire width, to be read from the marker list of a 10-step run.
+- Cost seen: wi1 83 GB and wi2 99 GB peak against 9.4 GB as built. I did not find which of my two changes causes
+  it (the abstract obstruction cut into 548 rectangles per layer, or loading through LEF + DEF instead of the
+  database). Measure on the real fix before volume; it sets units per host.
+- Files: epyc2 `/srv/opentallas-scratch3/claude/fable-pd-head-0700/wi1` and `wi2` (`drt.log`, `drc_TT.rpt`,
+  `lef/ot_s81hd_tile_p.lef` = the windowed abstract, `mklef.py` one level up).
+
+Next step for DIE-HEAD-ROUTE-1: rerun wi2's form for 12 steps on u201 with `-output_drc`; that is the "one unit at
+0" proof of the mechanism. In parallel HEAD-99 + KIT-OPS-5 make the sites real (fix 2), because the windows are not
+valid on the signed tile until the type is empty there.
