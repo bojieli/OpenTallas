@@ -24,3 +24,8 @@ PLAN: private ECO from attempt_4 routed DB with OT_PRD_PROTECT_NETS = nets on po
 - Waiter ~/typekvioft/waitC.sh (no LLM) logs to ~/typekvioft/waitC.out when eco procs exit / results appear.
 - Structural fix (tap_pair_affinity, extended to pc types) is KV-102 next event per FABLE-PLAN-EVENTS 19:0x; waits for ctscan canary. Not mine.
 - On ecoC result: check R-MINIMAL (DRC0, TT>=-42, internal reg2reg FF>=0), AUTO-RESIGN row, archive AGIdock+rtx-pro.
+
+## 2026-11-14 19:58 update 5 (resumed after 19:43 crash)
+- ecoC (margin 40, epyc10) FAILED at 59:48: make do-5_1_grt Error 247 (prd_result route_rc=2), during post-route reg2reg hold repair (3029 endpoints, iteration 0 WNS -30.64, CPU 114%, peak 21.1 GB of 48). No earlyoom entry visible 18:45+ (journal needs sudo, empty); epyc10 had 65 GB available of 1007 at 19:56. Cause UNKNOWN (crash vs wall limit); no timeout string found in prd_run.sh/eco_loop.py.
+- ecoA2 (epyc10, 1h20) and ecoB3 (epyc9, 1h30) still in DRT. waitC.sh still alive on intel2 (waitC.out empty so far).
+- ASK COORD: Fable review (root cause unknown, 3 ECO rounds, ecoC crash).
