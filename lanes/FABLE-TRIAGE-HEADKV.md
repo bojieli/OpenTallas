@@ -387,3 +387,26 @@ artefact as 2(a4), use the sta_ca_fz2 result.
   spN_be_i_shim / spN_xe_o_shim, and mesh7N -> mesh7N_estrip): pass the plan of record's launch-tap selection
   (its start_pins) or allow these 12 after GEOM; (2) the bind needs the partition-keyed table, not ca3's region
   table. Owners: DIE-HEAD-ROUTE-1 (chain), HEAD-99 (re-bind of all 427 and the 18 freg ports from that output).
+
+### 11.1 How the plan of record closes the 12 long start hops: leaf origins, not launch taps
+
+MEASURED in the plan-of-record sidecar (epyc7 head-99/prep21z16e/prep/source_sidecar.json, count_aligned):
+- No partition starts another partition. Every one of the 358 partitions is a LEAF of the virtual clock-node start
+  tree: region sp0_be_i_shim has parent `st:h...` (a clock-tree node, path depth 73), sp0 has its own node (depth 68),
+  mesh7N_estrip its own (depth 109). There is no edge sp0 -> sp0_be_i_shim at all.
+- start_ports: 1,608 = 1,250 node -> node + 358 node -> partition (capture_part set, launch_part null, no retime
+  flag). start_pins: 358 die_outputs (one die-level start stage output per partition), 26 type_pins (one START input
+  pin per type), 1,126 reset_inputs. frame_clock_regions maps the 358 partitions onto their clock regions.
+- So the long hop is never built: the start rides the clock tree to the node next to each partition's own taps and
+  enters through that partition's START pin. This is the planner option `--start-leaf-origins` ("each data START
+  origin is a leaf of the virtual clock-node tree"), used together with `--start-native-clocks
+  --start-partition-origins`. Explicit `--start-launch-taps` / `--start-capture-taps` are a different mechanism;
+  they conflict with the native clock frame and are not what the plan of record used. I withdraw that suggestion
+  from my 01:0x post.
+- Proof on the current clock (my run, epyc2 fable-triage-headkv/po2/plan.json; ca3 inputs, hop bound kept at 405 um,
+  the three flags): plan rc 0, reach_fail 0, 1,787 start edges all clean (1,430 virtual nodes, 1,039 retime nodes,
+  358 partition leaves), minimum start sync distance 130.5 ps, 427 crossings at depth 4, fail 0, worst margin
+  113.3 ps, 2,000 chips 0 violations.
+- Do: DIE-HEAD-ROUTE-1 drops the 1400 um bound and the tap JSONs, adds `--start-leaf-origins` (hop bound 405),
+  runs bind with the partition-keyed table, the 18 freg ports, start_stage_emit and the count-aligned STA. HEAD-99
+  takes count_aligned whole from that output (it then carries start_ports, start_pins, parts, frame_clock_regions).
