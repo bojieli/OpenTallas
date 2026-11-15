@@ -799,14 +799,13 @@ def tick(args):
         return 0
     base = fetch_main()
     log(f"tick: main {base[:11]}, {len(todo)} new approval(s): {', '.join(i['key'] for i in todo)}")
-    res = {}
-    with CF.ThreadPoolExecutor(max_workers=max(1, PAR)) as ex:
-        futs = {ex.submit(prepare, it, base): it["key"] for it in todo}
-        for f in CF.as_completed(futs):
-            res[futs[f]] = f.result()
+    # gates run in parallel; each item LANDS as soon as its own gate and every gate before it are done (COORD 11-15 08:4x:
+    # a 30-min gate of one item held 7 green items behind it).  land() re-tests on the moved main where files overlap.
+    ex = CF.ThreadPoolExecutor(max_workers=max(1, PAR))
+    futs = {it["key"]: ex.submit(prepare, it, base) for it in todo}
     landed = ""
     for it in todo:                                          # serial: priority HIGH approvals first, then queue order
-        status, detail = res[it["key"]]
+        status, detail = futs[it["key"]].result()
         it["tries"] = int(it.get("tries", 0)) + 1
         it["base"] = base
         log(f"{it['key']}: {status}: {detail if isinstance(detail, str) else detail}")
@@ -830,6 +829,7 @@ def tick(args):
         save_state(st)
         if it.get("status") in TERMINAL and not args.keep:
             wt_drop(it["id"])
+    ex.shutdown(wait=True)
     keep = "base-" + fetch_main()[:12]
     for name in [p.name for p in WT.glob("base-*")]:
         if name != keep:
