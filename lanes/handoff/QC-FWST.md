@@ -4,3 +4,5 @@
 - 2026-11-15 QC-FWST WAIT: binds S4FWBR/S4FWFBR (bind_chain2 stage 1) running on epyc9 under load 349/96; G0 g0_s4fw/g0_s4fwf queued. Check: grep ERRORS/r8rc/LATCHECK_RC/ALL_DONE in epyc7 /srv/opentallas-scratch2/claude/qc-fwst/bind_s4fw*.client.log; G0 die-qc-103/g0_s4fw.log. On pass post READY+ADOPT to DIE-QC-103 + KIT-OPS-5 (include 66 sidecar rows: zz_s29_qc103_s4fw.cland_bin_sites.json).
 
 - 2026-11-15 QC-FWST: superseded s4fw/s4fwf by s4fw3/s4fw3f (see COORD-REVIEW-QUEUE STATE). Binds S4FW3BR/BQ + g0_s4fw3 running on epyc9, client logs epyc7 qc-fwst/. Generator epyc9 qc-fwst/gen_fwst.py includes L4 resite + x_stm stations.
+
+- 2026-11-15 QC-FWST: S4fw4b (su_l0 inputs 2 stations) bind+G0 running next to S4fw4; adopt S4fw4b.
