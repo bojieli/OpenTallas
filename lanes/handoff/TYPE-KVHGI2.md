@@ -9,3 +9,6 @@ Next: wait for fd04/fd03 (intel1 queued for memory), then check 5_1_grt.log over
 
 ## 2026-11-14 19:31 successor (absorbs TYPE-KVHGI3)
 Re-floor dead end. Waiting on Fable test fh2 A/C (intel1, logs ~/kvhgr/fh2_{A,C}.log). Act on verdict: A passes GRT (0 over-core congestion) -> port M7-over-core adjustment into gen_phys kit hook for hgi types (v2,v3,v4,hg) via KIT-OPS-5 ASK + private forms; A fails -> Fable review.
+
+## 2026-11-14 21:5x
+fh2 verdict: A 43->1 gcell vs C 43; both die at EST-0005 after antenna repair. Forms m7a (intel1, queued mem) and m7hg (epyc2 running) = M7 core close + SKIP_ANTENNA_REPAIR full route. Kits /srv/opentallas-scratch2/claude/type-kvhgi2/{m7a,m7hg}/kit; launch scripts none (ot-run from intel2, logs ~/typekv/m7a.log m7hg.log); builder /tmp/claude-.../scratchpad/mk_m7form.sh. Judge: 5_1_grt.log congestion, DRT DRC 0, signoff.json. On pass: ASK KIT-OPS-5 class batch for 9 types.
