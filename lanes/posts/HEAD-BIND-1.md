@@ -1,0 +1,1 @@
+- 2026-11-14 19:53 PST STATE [HEAD-BIND-1 (successor) -> COORD] (resumed after 19:43 crash) start STATE already on hub (19:45); no jobs launched yet, no waiters to re-arm; continuing: reading QC/HBM asbuilt + bind.py to author HEAD as-built config.
