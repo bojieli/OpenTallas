@@ -9,7 +9,7 @@ Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.ts
   - Form: vsw (86.4,302.4), rxsb (319.68,224.64), --window-clear --ft-resite --link-reg swr,rar. Gives R-LEAF-2 0 (was 2, ft2_o/ft3_o under vsw); 2 ft regs re-sited, count kept; 0 timing over; eq OK.
   - CYCLE DELTA: t21 link class rar (u_rxsb.o_f/o_r/o_v -> u_vs ra_fi/ra_ri/ra_vi, return path) CS_RAR_D 0 -> 1 = +1 cycle inside leaf s_2S_L2. That is 5 internal_stations rows (note "B4L4 link-reg"). No die lane changes in the plan latency table; LATCHECK on the bind confirms it.
   - LF_CS netlist: die_b178_lfcs.v re-staged by stage_lfcs_netlist from B4L4 = cp4/lfcs_B4L4.v 78800271b594. Only diff: u_s_2S LF_CS_RAR_D 20'h10000 -> 20'h10100. It ships in overlay ovl_l4 (= ovl_l + that file) on epyc7 and epyc8. Re-staging B4L3f reproduces the current file byte for byte.
-  - G0L4 running on epyc7 (log/G0L4.log).
+  - G0L4: 296 errors, identical finding set to G0L3f (0 new).
   - Twin strict binds: intel2 bind_leafplan_w7.sh (epyc7, B4L4) and bind_leafplan_e84.sh (epyc8, B4L48). Race: race_leafplan_r3b.sh. Watcher: adopt_watch_leafplan_a2.sh, which posts READY+ADOPT to KIT-OPS-5 on BIND_RC=0 + LATCHECK_RC=0.
   - Compose script: cp4/compose_b4l4_leafplan.sh (pick list cp4/pick.txt).
 - Race fix: race_leafplan_r1/r2 never matched the clients, which were started as ./bind_leafplan_*.sh, so a loser twin would not have been killed. Replaced by r1b/r2b/r3b (pattern accepts ./ or the full path); the old r1/r2 were killed by exact PID.
