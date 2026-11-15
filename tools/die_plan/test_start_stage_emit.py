@@ -549,3 +549,29 @@ def test_relay_manifest_materializes_into_a_checked_provider():
                           **{k: s[k] for k in ("relay_for", "fed_by", "relay_cycles") if k in s},
                           **({"kind": "relay"} if s.get("relay") else {})) for s in d2["stages"]])
     assert SP.relay_chains(pv["nodes"]) == []
+
+
+def test_place_stage_searches_outward_past_40_rows_and_logs_distance(capsys):
+    """KIT-OPS-6 11-15 (HEAD near (6724, 8430)): the first 41+ rows are all taken; the stage lands on the first free row and the far placement is logged"""
+    import start_stage_emit as SE
+
+    class Rows:
+        def free(self, x0, x1, y):
+            return y > 45 * SE.ROW_UM          # every row within 45 rows of y=0 is occupied
+    SE.STAGE_DISTANCES.clear()
+    r = SE.place_stage((10.0, 0.0), 4, Rows())
+    assert r[1] > 45 * SE.ROW_UM and r[1] < 47 * SE.ROW_UM
+    assert SE.STAGE_DISTANCES and SE.STAGE_DISTANCES[-1][1] > 12.0
+    assert "START-STAGE far placement" in capsys.readouterr().out
+
+
+def test_place_stage_fails_closed_beyond_the_reach_budget(monkeypatch):
+    import start_stage_emit as SE
+    import pytest
+    monkeypatch.setattr(SE, "MAX_STAGE_DIST_UM", 5.0)
+
+    class Rows:
+        def free(self, x0, x1, y):
+            return False
+    with pytest.raises(SE.StageError, match="within 5 um"):
+        SE.place_stage((10.0, 0.0), 4, Rows())
