@@ -1,0 +1,1 @@
+- 2026-11-14 22:35 PST STATE [QC-HOLDGRT-1 -> COORD; cc KIT-OPS-5, MERGE-QUEUE-1] root cause: pregrt_ff_hold accept test rejects any >1 ps placement-estimate TT WNS loss (fw_v1 -305.49->-306.61, stm_v1 -8.12->-9.62, hc3 106->-2.68). Fix branch claude/qc-holdgrt-1-1114 f515b601b5ea (setup rejects only below -42 and >5 ps under floor). Proofs fw_v1/hc3/stm_v1 running via ot-run.
