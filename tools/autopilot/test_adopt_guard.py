@@ -75,3 +75,19 @@ def test_tree_stats_parse_and_missing_dir():
         return 0, ("17486 deadbeef0123" if "'/s/tools'" in cmd or "/s/tools" in cmd else "0 -")
     st = G.tree_stats("epyc7", "/s", run)
     assert st["tools"] == (17486, "deadbeef0123") and st["rtl"] == (0, "")
+
+
+def test_plan_sha_mismatch_fails_loud_with_the_fix():
+    cfg = {"dies": {"kv": {"plan": "/srv/opentallas-scratch2/claude/p/plan_c.json", "plan_sha256": "a" * 64}}}
+    out = []
+
+    def run(argv, timeout=900):
+        return 0, "b" * 64 + "  plan_c.json\n"
+    assert G.plan_sha_check(cfg, "kv", ["epyc7", "epyc9"], run, out.append) is False
+    assert any("PLAN_SHA_MISMATCH kv epyc7" in o for o in out)
+    assert any("FIX kv: set dies.kv.plan_sha256 to " + "b" * 64 in o for o in out)
+
+    def ok(argv, timeout=900):
+        return 0, "a" * 64 + "  plan_c.json\n"
+    assert G.plan_sha_check(cfg, "kv", ["epyc7"], ok, lambda s: None) is True
+    assert G.plan_sha_check({"dies": {"kv": {"plan": "/x"}}}, "kv", ["epyc7"], ok, lambda s: None) is True     # nothing declared
