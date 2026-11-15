@@ -3,7 +3,7 @@ The bind passed with 0 errors while the plan rows said SKEW_N 6 / SKEW_S 7/8 and
 only the kit-rtl step (param_wrap.wrap_bound) looked, one type at a time.  This check runs inside the bind (Binder.__init__)
 on the elaborated as-built cells: for every plan hard-core row that carries param_wrap, every as-built instance the row names
 must be the row's base module with each planned parameter equal (the as-built value after instance overrides and module
-defaults).  usage: python3 tools/die_plan/hard_core_param.py PLAN.json BINDDIR   (report mode: every mismatch, exit 1 if any)"""
+defaults).  usage: python3 tools/die_plan/hard_core_param.py PLAN.json BINDDIR [MANIFEST.json]   (report mode: every mismatch, exit 1 if any)"""
 import json
 import sys
 from pathlib import Path
@@ -53,13 +53,15 @@ def mismatches(plan, cells, part_of, local_of, param_defaults):
 
 def main(argv=None):
     argv = argv if argv is not None else sys.argv[1:]
-    if len(argv) != 2:
+    if len(argv) not in (2, 3):
         sys.exit(__doc__)
     import os
     sys.path.insert(0, os.environ.get("HCP_TOOLS") or str(Path(__file__).resolve().parent))   # HCP_TOOLS: another tree's tools/die_plan
     import bind
     E = bind.E
-    plan = bind.load_plan(argv[0])
+    plan = json.load(open(argv[0]))
+    if len(argv) == 3:                  # the bind manifest (asbuilt section), as `bind.py bind PLAN --manifest M`
+        plan["asbuilt"] = json.load(open(argv[2]))
     yjs = bind.load_asbuilt_netlist(Path(argv[1]))
     ab = plan["asbuilt"]
     F = E.flatten(yjs, ab["top"], ab.get("substitute_parent", []))
