@@ -1844,6 +1844,17 @@
        "band_fixed_um": {
         "type": "object"
        },
+       "band_tap_windows_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        }
+       },
        "band_tap_sites_um": {
         "type": "array",
         "items": {
