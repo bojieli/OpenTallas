@@ -91,14 +91,14 @@ proc mcall {o m args} {
 }
 set ::insts {}
 array set ::M {}
-foreach {mn blk} {DFF 0 BUFx2 0 INVx1 0 ENC 0 PMA 0} { set ::M($mn) [obj master name $mn block $blk] }
+foreach {mn blk} {DFF 0 BUFx2 0 INVx1 0 ENC 0 PMA 0 PMAB 1 ENCB 1} { set ::M($mn) [obj master name $mn block $blk] }
 proc mt {nm io} { return [obj mterm name $nm io $io] }
 proc net {} { return [obj net iterms {}] }
 proc conn {i pin io n} { set t [obj iterm inst $i mterm [mt $pin $io] net $n]; s $i iterms [concat [g $i iterms] $t]; s $n iterms [concat [g $n iterms] $t]; return $t }
 proc cell {name m x y {st PLACED}} { set i [obj inst name $name master $::M($m) x $x y $y status $st iterms {}]; lappend ::insts $i; return $i }
 # one bit of a chain C: ENC@(ax,0) -> INV -> r0 .. r(N-2) -> q -> BUF -> PMA@(bx,0); every hop has an INV left at GPL x=gx
-proc chain {C b N ax bx gx} {
-  set e [cell "$C.enc$b" ENC $ax 0]; set n [net]; conn $e Y OUTPUT $n
+proc chain {C b N ax bx gx {pm PMA} {em ENC}} {
+  set e [cell "$C.enc$b" $em $ax 0]; set n [net]; conn $e Y OUTPUT $n
   set names {}; for {set k 0} {$k < $N-1} {incr k} { lappend names "$C.g_reg.r\\\[$k\\\]\\\[$b\\\]\$_DFF_P_" }; lappend names "$C.q\\\[$b\\\]\$_DFF_P_"
   set out {}; set k 0
   foreach nm $names {
@@ -106,7 +106,7 @@ proc chain {C b N ax bx gx} {
     set f [cell $nm DFF $gx 0]; conn $f D INPUT $n; set n [net]; conn $f QN OUTPUT $n; lappend out $f $v
   }
   set u [cell "$C.buf$b" BUFx2 $gx 0]; conn $u A INPUT $n; set n [net]; conn $u Y OUTPUT $n
-  set p [cell "$C.pma$b" PMA $bx 0]; conn $p D INPUT $n
+  set p [cell "$C.pma$b" $pm $bx 0]; conn $p D INPUT $n
   return [concat $out [list $u]]
 }
 proc ord::get_db_block {} { return $::BLK }
@@ -114,8 +114,9 @@ proc ord::get_db_tech {} { return $::BLK }
 '''
 
 
-def mock_run(tmp_path, body, chains=None):
+def mock_run(tmp_path, body, chains=None, face=None):
     env = 'set ::env(OT_TXL_MID_CHAINS) {%s}\n' % chains if chains is not None else 'array unset ::env OT_TXL_MID_CHAINS\n'
+    env += 'set ::env(OT_TXL_MID_FACE) %s\n' % face if face is not None else 'array unset ::env OT_TXL_MID_FACE\n'
     tail = 'set ::BLK [obj block insts $::insts]\n'
     return run(tmp_path, MOCK + env + body + tail +
                'set r [ot_txl_mid::run]\nforeach i $::insts { puts "POS [g $i name] [g $i x] [g $i y]" }\n')
@@ -158,3 +159,51 @@ def test_hop_cells_move_onto_their_hop(tmp_path):
         assert abs(x - (st[k] + st[k + 1]) / 2) <= 2   # iterm centre vs cell origin: 1-um mock cells
     assert abs(p[f"{C}.buf0"][0] - (st[4] + st[5]) / 2) <= 2   # q -> PMA buffer mid-hop
     assert "hop cells moved 5" in r.stdout
+
+
+# ---- OT_TXL_MID_FACE (SERDES-TXPIPE 11-14): the macro end's row sits at the macro pin ----
+def test_face_targets(tmp_path):
+    r = run(tmp_path, "puts [join [join [ot_txl_mid::face_targets 0 0 900 0 3 snk]]]\n"
+                      "puts [join [join [ot_txl_mid::face_targets 0 0 900 0 3 src]]]\n"
+                      "puts [join [join [ot_txl_mid::face_targets 0 0 900 0 1 snk]]]\n"
+                      "puts [join [join [ot_txl_mid::face_targets 0 0 900 0 3 {}]]]")
+    assert r.returncode == 0, r.stderr
+    l = r.stdout.splitlines()
+    assert nums(l[0]) == [300, 0, 600, 0, 900, 0]
+    assert nums(l[1]) == [0, 0, 300, 0, 600, 0]
+    assert nums(l[2]) == [900, 0]
+    assert nums(l[3]) == [225, 0, 450, 0, 675, 0]
+
+
+FACE_BITS = "chain u_txl 0 4 0 1000 0 PMAB\n"
+
+
+def _rows(p, C="u_txl"):
+    return [p[f"{C}.g_reg.r\\[{k}\\]\\[0\\]$_DFF_P_"][0] for k in range(3)] + [p[f"{C}.q\\[0\\]$_DFF_P_"][0]]
+
+
+def test_face_sink_macro_last_row_at_pin(tmp_path):
+    r = mock_run(tmp_path, FACE_BITS, face="1")
+    assert r.returncode == 0, r.stderr
+    assert "macro-face anchored 1" in r.stdout
+    x = _rows(pos(r.stdout))
+    assert all(abs(a - b) <= 3 for a, b in zip(x[:3], [250, 500, 750]))   # k/4 of enc 0 -> pin 1001
+    assert abs(x[3] - 1001) <= 12 and not (991.36 <= x[3] <= 1010.64)          # at the pin, just outside its 8.64 halo
+
+
+def test_face_off_is_even_rule(tmp_path):
+    a = mock_run(tmp_path, FACE_BITS)
+    b = mock_run(tmp_path, FACE_BITS, face="0")
+    assert a.returncode == 0 and b.returncode == 0, a.stderr + b.stderr
+    assert a.stdout == b.stdout and "macro-face" not in a.stdout
+    x = _rows(pos(a.stdout))
+    assert all(abs(u - v) <= 3 for u, v in zip(x, [200, 400, 600, 800]))   # (k+1)/5, unchanged
+
+
+def test_face_source_macro_first_row_at_pin(tmp_path):
+    r = mock_run(tmp_path, "chain u_rxf 0 4 0 1000 0 PMA ENCB\n", chains="u_rxf", face="1")
+    assert r.returncode == 0, r.stderr
+    assert "macro-face anchored 1" in r.stdout
+    x = _rows(pos(r.stdout), "u_rxf")
+    assert 1 < x[0] <= 12                                                   # at the source macro pin, outside its halo
+    assert all(abs(a - b) <= 4 for a, b in zip(x[1:], [251, 501, 751]))     # k/4 of src pin 1 -> sink 1001
