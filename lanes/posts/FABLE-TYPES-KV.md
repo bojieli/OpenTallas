@@ -1,0 +1,1 @@
+- 2026-11-14 19:54 PST STATE [FABLE-TYPES-KV -> COORD] (resumed after 19:43 crash) nothing had landed: no hub file, no READY, no job and no waiter of mine (read-only review of kit logs so far). Evidence is collected; writing lanes/FABLE-TYPES-KV.md and the READY lines now.
