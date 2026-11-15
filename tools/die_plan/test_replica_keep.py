@@ -1,0 +1,94 @@
+"""MERGE-CENSUS 11-15 (FABLE-GENBUG G5): replica_keep derives the port-staging registers of multiply instantiated modules
+(the registers yosys opt_merge folds between intended copies) and gen_phys exports them scoped by module.
+    python3 -m pytest -q tools/die_plan/test_replica_keep.py"""
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import gen_phys  # noqa: E402
+import replica_keep as RK  # noqa: E402
+import schema  # noqa: E402
+
+TINY = HERE / "examples" / "tiny_plan.json"
+
+FAN = """
+module qkd_seq_fan_s #(parameter integer MUT = 0) (
+    input wire ck, input wire rst_n, input wire [27:0] aqm, input wire [511:0] q, input wire [32:0] kc_i,
+    output wire [32:0] kc, input wire af, output reg af_o);
+    wire rr;
+    reg [27:0] am, am2; reg [511:0] qd, qd2; reg [32:0] kq, kq2; reg a1; reg [7:0] cnt;
+    always @(posedge ck) begin
+        am[26:7] <= aqm[26:7]; am2[26:7] <= am[26:7];
+        qd <= q; qd2 <= qd; kq[31:0] <= kc_i[31:0]; kq2[31:0] <= (MUT == 9) ? kc_i[31:0] : kq[31:0];
+    end
+    always @(posedge ck or negedge rr)
+        if (!rr) begin am[27] <= 1'b0; kq[32] <= 1'b0; a1 <= 1'b0; af_o <= 1'b0; end
+        else begin am[27] <= aqm[27]; kq[32] <= kc_i[32]; a1 <= af; af_o <= a1; end
+    always @(posedge ck) if (af) cnt <= cnt + 1'b1;     // enabled counter: not a staging register
+    assign kc = kq2;
+endmodule
+module wreg (input wire clk, input wire [7:0] wd, output wire [7:0] o);
+    reg [7:0] wdata; always @(posedge clk) wdata <= wd; assign o = wdata;
+endmodule
+module tstage (input wire ck, input wire [3:0] ti_a, output reg [3:0] ti_b);
+    always @(posedge ck) begin ti_b <= ti_a; end
+endmodule
+module single (input wire ck, input wire [3:0] d, output reg [3:0] q);
+    always @(posedge ck) q <= d;
+endmodule
+module top (input wire ck, rst_n, input wire [511:0] q, input wire [3:0] t, output wire [7:0] o0, o1, output wire [3:0] u0, u1, s);
+    qkd_seq_fan_s #(.MUT(0)) f0 (.ck(ck), .rst_n(rst_n), .q(q));
+    qkd_seq_fan_s #(.MUT(0)) f1 (.ck(ck), .rst_n(rst_n), .q(q));
+    genvar i;
+    generate for (i = 0; i < 4; i = i + 1) begin : g
+        wreg w (.clk(ck), .wd(8'd0), .o());
+    end endgenerate
+    tstage a (.ck(ck), .ti_a(t), .ti_b(u0));
+    tstage b (.ck(ck), .ti_a(t), .ti_b(u1));
+    single x (.ck(ck), .d(t), .q(s));
+endmodule
+"""
+
+
+def _rtl(d, text=FAN):
+    (Path(d) / "x.sv").write_text(text)
+    return d
+
+
+def test_replica_pattern_derives_staging_registers():
+    with tempfile.TemporaryDirectory() as d:
+        got = set(RK.derive(_rtl(d)))
+    assert {"qkd_seq_fan_s:qd", "qkd_seq_fan_s:qd2", "qkd_seq_fan_s:kq", "qkd_seq_fan_s:kq2", "qkd_seq_fan_s:am",
+            "qkd_seq_fan_s:am2", "wreg:wdata", "tstage:ti_b"} <= got
+    assert "qkd_seq_fan_s:cnt" not in got          # enable-gated: not a pure stage
+    assert not any(x.startswith("single:") for x in got)   # one instance: nothing to fold
+    assert not any(x.startswith("top:") for x in got)
+
+
+def test_gen_phys_exports_scoped_keep_and_merges_env(monkeypatch):
+    with tempfile.TemporaryDirectory() as d:
+        _rtl(d)
+        monkeypatch.delenv("OT_REPLICA_KEEP", raising=False)
+        w = gen_phys.replica_keep_wires(d, "ti_b,extra_x")
+        assert "wreg:wdata" in w and "ti_b" in w and "extra_x" in w and len(w) == len(set(w))
+        monkeypatch.setenv("OT_REPLICA_KEEP", "0")
+        assert gen_phys.replica_keep_wires(d, "ti_b") == ["ti_b"]
+
+
+def test_kit_config_carries_replica_keep(monkeypatch):
+    monkeypatch.delenv("OT_REPLICA_KEEP", raising=False)
+    P = schema.Plan(json.loads(TINY.read_text()))
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(P, "mid", d, [])
+        assert "OT_KEEP_WIRES" not in (kd / "config.mk").read_text()      # tiny kit has no replicated module
+        (kd / "rtl").mkdir(exist_ok=True)
+    assert gen_phys.replica_keep_wires(HERE / "nonexistent_rtl_dir") == []
+
+
+def test_hook_accepts_module_scoped_names():
+    tcl = (HERE.parents[1] / "physical" / "common_flow" / "ot_keep_regs.tcl").read_text()
+    assert "ot_kwn_m" in tcl and "$paramod*?${ot_kwn_m}?*" in tcl and '"\\$paramod*?${ot_kwn_m}"' in tcl   # paramod name without a parameter suffix
+    assert "not a wire base name" in tcl            # bare names keep their check

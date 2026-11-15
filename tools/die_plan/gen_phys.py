@@ -4530,6 +4530,18 @@ _FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M)
                        (re.compile(r"^\s*module\s+(?:ot_qwen_d2d_recovery|qfd_sys_face_lctx3_core)\b", re.M), ("st",)),)
 
 
+def replica_keep_wires(rtl_dir, extra=None):
+    """MERGE-CENSUS 11-15 (FABLE-GENBUG G5): OT_KEEP_WIRES entries for the port-staging registers of every module the kit
+    instantiates more than once (replica_keep.derive: `Module:reg`), then the per-item env names (commas or spaces),
+    de-duplicated in order.  OT_REPLICA_KEEP=0 omits the derived part (the env names stay)."""
+    names = []
+    if os.environ.get("OT_REPLICA_KEEP", "1").strip() != "0":
+        import replica_keep as _RK
+        names.extend(_RK.derive(rtl_dir))
+    names.extend((extra or "").replace(",", " ").split())
+    return list(dict.fromkeys(names))
+
+
 def fsm_none_wires(rtl_dir, extra=None):
     """Wire base names for OT_FSM_NONE_WIRES: the _FSM_NONE_BY_MODULE wires of every module the kit RTL defines,
     then the per-item env names (commas or spaces), de-duplicated in order."""
@@ -5148,6 +5160,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     fsm_wires = fsm_none_wires(kd / "rtl", os.environ.get("OT_FSM_NONE_WIRES"))
+    keep_wires = replica_keep_wires(kd / "rtl", os.environ.get("OT_KEEP_WIRES"))
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -5474,6 +5487,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # DIE-HEAD-59 11-03: opt-in per item (item_env, commas for spaces): keep these FSM wires in their RTL encoding
            # DIE-HEAD-85/HSPLIT 11-07: plus the module-defined FSM wires (fsm_none_wires, e.g. the s81 gearbox hunt)
            *([f"export OT_FSM_NONE_WIRES = {' '.join(fsm_wires)}"] if fsm_wires else []),
+           # MERGE-CENSUS 11-15 (G5): yosys opt_merge folds intentionally duplicated register banks (ti_b 4,677 flops in
+           # 8 KV kits, qkd_seq_fan_s 1,142, ot_sram_oldread_wreg wdata 1,106): keep the staging registers of every
+           # multiply instantiated module (replica_keep.py), scoped by module
+           *([f"export OT_KEEP_WIRES = {' '.join(keep_wires)}"] if keep_wires else []),
            # KW-FIX-13 11-05: opt-in per item (item_env, commas for spaces), e.g. -noshare where yosys share does not finish
            *([f"export SYNTH_ARGS = {os.environ['OT_SYNTH_ARGS'].replace(',', ' ')}"] if os.environ.get("OT_SYNTH_ARGS") else []),
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
