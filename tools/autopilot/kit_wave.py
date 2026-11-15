@@ -305,6 +305,26 @@ def free_not_run(rec, text, now=None):
     rec["no_host_at"] = now if now is not None else time.time()
     rec["status"] = "RETRY-INFRA"
     return True
+COPYBACK_FREE_MAX = 3
+
+
+def is_place_no_odb(why):
+    return str(why or "").startswith(PLACE_NO_ODB_WHY)
+
+
+def free_place_no_odb(rec, now=None):
+    """WAVE-COPYBACK-1115: a place that ended RC=0 with its odb elsewhere is no attempt: infra_used -> 0 (the next attempt resumes from
+    the odb through resume_source's RAN-host candidate), bounded by COPYBACK_FREE_MAX per row, then the infra budget is charged as
+    before.  True when applied"""
+    if not is_place_no_odb(rec.get("reason")) or int(rec.get("copyback_free") or 0) >= COPYBACK_FREE_MAX:
+        return False
+    rec["copyback_free"] = int(rec.get("copyback_free") or 0) + 1
+    rec["infra_base"] = max(int(rec.get("infra_base") or 0), int(rec.get("attempt") or 0))
+    rec["no_host_at"] = 0
+    rec["status"] = "RETRY-INFRA"
+    return True
+
+
 STATE_FILE = "kit_wave_state.json"
 LOAD_CAP_FACTOR = 1.5                                    # = ot-heavy LOAD_CAP_FACTOR (read here, set there)
 
@@ -1965,7 +1985,21 @@ GPL_PROBE_AWK = (r"""awk '/GPL-1010/{print "KW_GPL " l; print "KW_GPL " $0; l=""
 
 
 # (class, stage regex or None, text regex, reason).  First match wins; stage-specific rules first.
+PLACE_NO_ODB_WHY = "infra (place RC=0 but no 3_place.odb on the probed hosts: ot-run moved the job, no copy-back record; not a design failure)"
+
+
+def place_rc0_no_odb(text):
+    """WAVE-COPYBACK-1115 (FABLE-PD-PLACE-0830 class A): the place stage log ends RC=0 (or the wave's own KW_PLACE_NO_ODB marker) and the
+    place stage still failed = the odb was not where the probe looked.  -> a reason line that quotes no log banner, or ''"""
+    t = text or ""
+    rcs = re.findall(r"(?m)^KW_PLACE_RC=(\d+)\s*$", t)
+    if "KW_PLACE_NO_ODB" in t or (rcs and rcs[-1] == "0"):
+        return "KW_PLACE_RC=0, 3_place.odb not found by the probe"
+    return ""
+
+
 RULES = [
+    ("INFRA", r"^place$", place_rc0_no_odb, PLACE_NO_ODB_WHY),
     # WF-1 11-14: a chosen child view that is missing everywhere is infrastructure (sync / re-export), never a design verdict
     # KIT-OPS-5 11-15 (FABLE-TRIAGE-QC, FLOW-OTSTORE): a kit whose python cannot import ot_store died of the host / sync, not of the design
     ("INFRA", None, r"ModuleNotFoundError: No module named 'ot_store'", "infra (ot_store module missing on the run host: sync / env, not a design failure)"),
@@ -4951,7 +4985,20 @@ def copy_back_host(txt, default):
 SPILL_COPY_BACK = re.compile(r"SPILL: outputs copied back (\S+) -> (\S+)")
 
 
-def copy_back_hosts(txt, default):
+RAN_OK_LINE = re.compile(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]*\))?: exit 0\b")
+
+
+def ran_ok_host(txt, hub=None):
+    """WAVE-COPYBACK-1115 (FABLE-PD-PLACE-0830 class A): the host of the LAST 'ot-run: RAN on H ...: exit 0' line of a stage log, or ''.
+    ot-run's 'INPUT HOLD ... candidates G -> all 6 holders' moves a sealed job off the spec's gen host with no copy-back record; the
+    place that finished with RC=0 left its 3_place.odb on H (hgi_v4 a14: gen epyc10, odb only on epyc8).  'localhost' = the hub."""
+    got = RAN_OK_LINE.findall(txt or "")
+    if not got:
+        return ""
+    return (hub or "localhost") if got[-1] == "localhost" else got[-1]
+
+
+def copy_back_hosts(txt, default, hub=None):
     """WF-1 11-14 (COORD friction 3: false place FAIL when the kit is not where the sealed record says): every host a copy-back
     record names, newest first ('ot-run-sealed: copy-back A -> B' and 'SPILL: outputs copied back A -> B', by position in the text),
     then the gen host.  s81 col_h10_r0_p1__t1__cl911743eb a21: the sealed line said epyc7, the spill copied the outputs back to the
@@ -4962,6 +5009,11 @@ def copy_back_hosts(txt, default):
     for _, h in sorted(found, reverse=True):
         if h not in out:
             out.append(h)
+    # WAVE-COPYBACK-1115: the host that ran the place (last exit-0 RAN line) holds the odb when no record says otherwise: it is the
+    # first candidate without a copy-back record, and follows the recorded copy-back targets (the final place of the kit) otherwise
+    ran = ran_ok_host(txt, hub)
+    if ran and ran not in out:
+        out.insert(0, ran) if not out else out.append(ran)
     if default not in out:
         out.append(default)
     return out
@@ -5236,8 +5288,9 @@ def run_item(spec_path):
     def after_place(K, rc, txt):
         """probe the placed kit on the gen host, AUTO-GEOM it, write result.json (sync PLACE, and an async PLACE
         released by its fresh physical_completion receipt while the original proof owner keeps running)"""
-        kh = copy_back_host(txt, G)      # the host that holds the kit (sealed copy-back record)
-        cands = [kh] + [h for h in copy_back_hosts(txt, G) if h != kh]      # WF-1: other hosts a copy-back / spill record names, then G
+        # WAVE-COPYBACK-1115: no sealed record = the kit is where the place RAN (ot-run INPUT HOLD moved it off the gen host)
+        kh = copy_back_host(txt, ran_ok_host(txt, hub) or G)      # the host that holds the kit (sealed copy-back record, else the RAN host)
+        cands = [kh] + [h for h in copy_back_hosts(txt, G, hub) if h != kh]      # WF-1: other hosts a copy-back / spill record names, then G
         rem = lambda cmd: remote_argv(kh, hub, cmd)
         if kh != G:
             print(f"KW_KIT_HOST {T}: sealed copy-back put the kit on {kh}, not the gen host {G}", flush=True)
@@ -5281,8 +5334,13 @@ def run_item(spec_path):
                     res["cell_check"] = json.loads(m.group(1))
                 except ValueError:
                     pass
+        if odb:
+            res["ran_on"] = kh                      # WAVE-COPYBACK-1115: where the placed kit is (was always the gen host)
         if rc or not odb:
-            return fail("place", txt[-2000:] + "\n" + ptxt, f"{kh}:{K}")
+            # WAVE-COPYBACK-1115: RC=0 and no odb on any named host is INFRA (classify: place_rc0_no_odb); the marker is the last line
+            # so the stored tail keeps it, and the reason never quotes the 'GRTM mode edge_outline' banner of the log
+            return fail("place", txt[-2000:] + "\n" + ptxt + ("" if rc else f"\nKW_PLACE_NO_ODB {T}: RC=0, no 3_place.odb on {','.join(cands)}"),
+                        f"{kh}:{K}")
         if cfg_require_render(sp) and "LAYOUT_PNG" not in ptxt:
             for _i in range(2):      # a spilled place copies its files back at the client's end: look again before failing
                 time.sleep(60)
@@ -6786,6 +6844,12 @@ def resume_source(AP, prev):
     if ":" in kit:
         h, path = kit.split(":", 1)
         out["candidates"].append([h, path])
+        try:                                            # WAVE-COPYBACK-1115: the host that RAN the place holds its odb when ot-run moved the job
+            rh = ran_ok_host((jd / "place.log").read_text(errors="replace"), AP.HUB_NAME)
+        except (OSError, AttributeError):
+            rh = ""
+        if rh and rh != h:
+            out["candidates"].append([rh, path])
         try:
             j = (json.loads((Path(AP.AP_DIR) / "state.json").read_text()).get("jobs") or {}).get(prev.get("q_id") or "") or {}
             ro = j.get("ran_on")
@@ -7858,7 +7922,8 @@ def collect(AP, cfg, st, notices):
             rec["no_host_at"] = time.time()
             rec["status"] = "RETRY-INFRA"
         elif cls == "INFRA":
-            free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
+            if not free_place_no_odb(rec):                 # WAVE-COPYBACK-1115: RC=0 + odb elsewhere is no attempt either
+                free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
         if cls == "INFRA" and KILL_RE.search(why or "") and not NO_HOST.search(why or ""):
             # KIT-OPS-4 11-14 (COORD class fix): an attempt killed from outside (earlyoom rc 143 / Error 241, signal) is retried ONCE,
             # at the next tick, on another host (the killer host is avoided), charge-free and without a retry key.  A second kill on
@@ -9538,6 +9603,10 @@ def reclassify(st, write=False, log=print):
         out.append((key, old, (cls, why)))
         if write:
             rec.update(**{"class": cls}, reason=why, reclassified=now_s())
+            # WAVE-COPYBACK-1115: a recent false place FAIL (RC=0, odb elsewhere) is re-judged, not just relabelled: the row is relaunched
+            # uncharged and resumes from the odb on the host that ran the place (resume_source)
+            if cls == "INFRA" and old[0] != "INFRA" and is_place_no_odb(why) and time.time() - float(rec.get("updated") or 0) < 36 * 3600:
+                free_place_no_odb(rec)
     return out
 
 
