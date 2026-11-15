@@ -188,7 +188,12 @@ proc is_packed_exact_banks {inst W D banks fw fh tag epoch_unobserved} {
     if {![string match "*${inst}\[./\]*" $nm]} continue
     if {![string match "*DFF*" [[$i getMaster] getName]]} continue
     if {![regexp {[/.]r\[([0-9]+)\]\[([0-9]+)\]} $nm -> j bit]} {
-      error "unmapped flop in exact packed bank: $nm"
+      # Yosys names the last stage after the aliased output q[bit] (always for D=1, where r[0] is q).
+      if {[regexp {[/.]q\[([0-9]+)\]\$} $nm -> bit]} {
+        set j [expr {$D - 1}]
+      } else {
+        error "unmapped flop in exact packed bank: $nm"
+      }
     }
     if {$j < 0 || $j >= $D || $bit < 0 || $bit > $W || [dict exists $seen $j $bit]} {
       error "duplicate/out-of-range exact packed bank bit: $nm"
