@@ -3667,16 +3667,23 @@ def phy_pg_domains(P, tn):
     type cannot carry per-instance supply variants); empty for every type without a PHY domain (kits unchanged).
     DIE-HEAD-5 opt-in: a type with "phy_pg_offmodel" (a non-empty note: the PHY body is not part of the partition view,
     e.g. the s81_head analog PMA behind the type pads) may hold a domain with no macro; the region then gets its VDDPHY
-    straps/pins and the hard placement blockage only (no macro grid).  Default (key absent) unchanged: fail closed."""
+    straps/pins and the hard placement blockage only (no macro grid).  Default (key absent) unchanged: fail closed.
+    S81-PHYPG-1 11-15 (FABLE-TRIAGE-S81 7.4, opt-in type key phy_pg_macros = [placed block names]): the domain is defined by
+    its declared members, not by whatever block lies inside the die domain rect.  Only the listed blocks seed the region (macro
+    list, notch / clip box, straddle test).  ValueError if a listed name is not found inside the die rect, or if an unlisted
+    placed block overlaps the FINAL region (a core-supply block must not sit on the VDDPHY grid / hard blockage).  Key absent =
+    every placed block in the die rect is a PHY macro (unchanged)."""
     doms = P.die.get("pg", {}).get("domains", []) or []
     if not doms:
         return []
     insts = [n for n, p in P.parts.items() if p["type"] == tn]
     t = P.types[tn]
+    listed = t.get("phy_pg_macros")
     per = []
     for inst in insts:
         a = P.rect(inst)
         got = []
+        found = set()
         for d in doms:
             b = d["rect_um"]
             r = [max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])]
@@ -3700,6 +3707,10 @@ def phy_pg_domains(P, tn):
                 ov = box[0] < rt[2] and box[2] > rt[0] and box[1] < rt[3] and box[3] > rt[1]
                 if not ov:
                     continue
+                if listed is not None and c["inst"] not in listed and content_physical_identity(c)[0] not in listed:
+                    continue                     # phy_pg_macros: core supply, judged against the final region below
+                if listed is not None:
+                    found |= {c["inst"], content_physical_identity(c)[0]}
                 if not (box[0] >= rt[0] and box[1] >= rt[1] and box[2] <= rt[2] and box[3] <= rt[3]):
                     raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
                 mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
@@ -3710,7 +3721,22 @@ def phy_pg_domains(P, tn):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0, mac_y0)
             rt = phy_pg_clip(t, tn, d["name"], rt, mac_box)
+            if listed is not None:
+                for c in placed:
+                    if "origin_um" not in c or "outline_um" not in c:
+                        continue
+                    if c["inst"] in listed or content_physical_identity(c)[0] in listed:
+                        continue
+                    x0, y0 = c["origin_um"]
+                    cw, ch = c["outline_um"]
+                    if c.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+                        cw, ch = ch, cw
+                    if x0 < rt[2] and x0 + cw > rt[0] and y0 < rt[3] and y0 + ch > rt[1]:
+                        raise ValueError(f"type {tn}: core macro {content_physical_identity(c)[0]} inside PHY PG region "
+                                         f"{d['name']} {rt} (phy_pg_macros lists only its PHY macros)")
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
+        if listed is not None and not set(listed) <= found:
+            raise ValueError(f"type {tn}: phy_pg_macros {sorted(set(listed) - found)} not found inside a die PG domain rect")
         per.append(got)
     # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
     if any(json.dumps([x[1:] for x in g]) != json.dumps([x[1:] for x in per[0]]) for g in per):

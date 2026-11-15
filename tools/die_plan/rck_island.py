@@ -105,7 +105,9 @@ def check(P, tn):
             a, b, c, dd = d[3]
             if a < x1 and c > x0 and b < y1 and dd > y0:
                 e.append(f"type {tn}: rck_island {rect} overlaps PHY PG domain {d[0]} {[a, b, c, dd]}")
-    except (ValueError, KeyError):
+    except ValueError as exc:      # S81-PHYPG-1 11-15: a PG domain error (straddling macro, core macro in the region) is a check error
+        e.append(f"type {tn}: {exc}")
+    except KeyError:
         pass
     return e
 
@@ -173,11 +175,10 @@ def trunk(a, b, max_hop=400.0):
 
 
 def domain_patch(P, tn):
-    """{die domain name: die rect_um} that keeps the die PHY PG domains where they are now.  gen_phys.phy_pg_domains grows a domain
-    to every placed macro inside the die domain rect (macros must not straddle it), so moving u_chn and the SRAMs into the island
-    (under the PMA, still inside the die slot) would swallow them into the PHY domain and lower its floor (serdes__t2 B6c1 smoke:
-    947.16 -> 645.84).  Call BEFORE the moves on the unmoved plan and write the result into die.pg.domains[].rect_um: the die
-    domain then ends at the PHY floor and the island stays on the core supply."""
+    """{die domain name: die rect_um} of the die-rect shrink that keeps the PHY PG domains at the PHY floor.  NOT part of plan_patch
+    any more (S81-PHYPG-1 11-15, FABLE-TRIAGE-S81 7.3): the shrink is the 41-error G0 path.  The island stays on the core supply by
+    declared membership instead: type key phy_pg_macros (gen_phys.phy_pg_domains) lists the PMA macros, so u_chn and the SRAMs moved
+    into the island are never PHY macros and the 14 die rects stay as they are.  Kept as an analysis helper (what the shrink would be)."""
     import gen_phys
     out = {}
     doms = {d["name"]: d for d in P.die.get("pg", {}).get("domains", []) or []}
@@ -194,7 +195,7 @@ def domain_patch(P, tn):
 
 def plan_patch(P, tn, rect=None, rck_buf_cell=None):
     """the B6c plan data for one serdes type: {"rck_island": ..., "core_moves": {inst: new origin}, "sram_moves": {...},
-    "entries": [rck_isl, rck_chn], "shift_um": (dx, dy), "die_pg_domain_rects": domain_patch}.  u_chn goes to rect origin + CHN_OFFSET_UM (kit location), keeping its
+    "entries": [rck_isl, rck_chn], "shift_um": (dx, dy)}.  u_chn goes to rect origin + CHN_OFFSET_UM (kit location), keeping its
     orientation and shape; every physical part of a rck sink module moves by the same vector (t2: (-583.2, +587.52)).
     rck_isl takes every other sink macro of the pad clock (at the island's NW corner), rck_chn takes u_chn alone (a buffer
     just west of the core, on the row at the clk pin height) with min_early_ps = EARLY_CHN_PS.  Trunks are L-shaped from the
@@ -223,5 +224,4 @@ def plan_patch(P, tn, rect=None, rck_buf_cell=None):
                 sink_pins=[s for s in clk["sink_pins"] if s["module"] == chn[0]["module"]],
                 evidence="FABLE_SERDES_STRUCT_s0_2", min_early_ps=EARLY_CHN_PS)]
     return dict(rck_island=dict(rect_um=list(rect), clock=clk["name"], inst_re="u_core[.](u_dec|u_rxf|u_lrx)", release_before_dpl=True),
-                core_moves={chn[0]["inst"]: [nx, ny]}, sram_moves=parts, shift_um=(dx, dy), entries=ent,
-                die_pg_domain_rects=domain_patch(P, tn))
+                core_moves={chn[0]["inst"]: [nx, ny]}, sram_moves=parts, shift_um=(dx, dy), entries=ent)
