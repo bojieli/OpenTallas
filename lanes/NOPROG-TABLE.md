@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-14 19:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-14 19:01 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'CANCEL-NOW': 20, 'NO-PROGRESS': 1, 'YOUNG': 390, 'NO-DATA': 4, 'KEEP': 19, 'EXCLUDED': 20, 'PROGRESS': 96}. Hosts without report: none.
 
@@ -22,7 +22,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'CANCEL-NOW': 20, 'NO
 | intel1 | happy_hodgkin | happy_hodgkin | lec | 26.7 | LEC last write 2.7 h ago | CANCEL-NOW: LEC >24h, advisory | REPORTED (cancel next pass) |
 | intel1 | hbmcore-kit_-3656625 | kit_ | 1_2_yosys | 0.1 |  | CANCEL-NOW: HBM is parked | REPORTED (cancel next pass) |
 | intel1 | hbmcore-kit_-3657683 | kit_ | 1_2_yosys | 0.1 |  | CANCEL-NOW: HBM is parked | REPORTED (cancel next pass) |
-| intel2 | dpkit-kv3_hub_Eo-889182 | kv3_hub_Eo | hold_gate | 10.4 |  | CANCEL-NOW: SUPERSEDED: kit plan sha is not a live adopted plan (kit_wave_stages) | WOULD-CANCEL (report mode) |
+| intel2 | dpkit-kv3_hub_Eo-889182 | kv3_hub_Eo | hold_gate | 10.4 |  | CANCEL-NOW: SUPERSEDED: kit plan sha is not a live adopted plan (kit_wave_stages) | CANCELLED |
 | intel2 | dpkit-sle_st_b_v1__pvc5a85fd4__pv7b7fafb4-3854072 | sle_st_b_v1 | pregrt_ff_hold | 4.8 |  | CANCEL-NOW: SUPERSEDED: kit plan sha is not a live adopted plan (kit_wave_stages) | REPORTED (cancel next pass) |
 | intel2 | dpkit-tt_ctlm-3820779 | tt_ctlm | postcts_gate_TT | 4.8 |  | CANCEL-NOW: SUPERSEDED: kit plan sha is not a live adopted plan (kit_wave_stages) | REPORTED (cancel next pass) |
 | epyc10 | dpkit-col_h10_r0_p4__t1__pv5b623e07-4116680 | col_h10_r0_p4__t1 | 5_1_grt | 4.8 | last meaningful line 0.9 h ago (204/230 lines) | YOUNG: evidence 2.3 h < 7.5 h |  |
@@ -400,21 +400,21 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'CANCEL-NOW': 20, 'NO
 | intel2 | dpkit-col_h9_r1__t1__clf32cde8d__pvd9381c1d-3137678 | col_h9_r1__t1 | 5_1_grt | 9.2 | repair_Remaining best 96218 last 96218 rows 4 | YOUNG: series started inside the last 7.5 h |  |
 | intel2 | dpkit-dsdv_slice_lepw_mus_LP__t2-2604236 | dsdv_slice_lepw_mus_LP__t2 | pregrt_ff_hold | 9.5 | repair_TNS best 2.31713e+06 last 2.31713e+06 rows 1 | YOUNG: series started inside the last 7.5 h |  |
 | intel2 | dpkit-kv3_hub_Eo-2623405 | kv3_hub_Eo | 4_1_cts | 3.2 | last meaningful line 0.2 h ago (6458/6458 lines) | YOUNG: evidence 3.1 h < 7.5 h |  |
-| intel2 | dpkit-ot_s81sl_leaf__t25__cl431c660f-3806869 | ot_s81sl_leaf__t25 | 5_2_route | 4.8 | last meaningful line 0.2 h ago (259/260 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
-| intel2 | dpkit-ot_s81sl_leaf__t31-3191963 | ot_s81sl_leaf__t31 | 5_1_grt | 2.9 | last meaningful line 0.0 h ago (644/644 lines) | YOUNG: evidence 2.9 h < 7.5 h |  |
+| intel2 | dpkit-ot_s81sl_leaf__t25__cl431c660f-3806869 | ot_s81sl_leaf__t25 | 5_2_route | 4.8 | last meaningful line 0.1 h ago (259/260 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| intel2 | dpkit-ot_s81sl_leaf__t31-3191963 | ot_s81sl_leaf__t31 | 5_1_grt | 2.9 | last meaningful line 0.0 h ago (643/643 lines) | YOUNG: evidence 2.9 h < 7.5 h |  |
 | intel2 | dpkit-ot_s81sl_leaf__t40__cl86ea32b3-1951805 | ot_s81sl_leaf__t40 | 2_4_floorplan_pdn | 0.1 | last meaningful line 0.0 h ago (53/53 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | intel2 | dpkit-ot_s81sl_leaf__t45-570205 | ot_s81sl_leaf__t45 | 5_1_grt | 13.2 | repair_Remaining best 25067 last 25067 rows 105 | YOUNG: series started inside the last 7.5 h |  |
-| intel2 | dpkit-ot_s81sl_leaf__t54__cl501e5681-1980543 | ot_s81sl_leaf__t54 | 2_4_floorplan_pdn | 0.0 | last meaningful line 0.0 h ago (53/53 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| intel2 | dpkit-ot_s81sl_leaf__t54__cl501e5681-1980543 | ot_s81sl_leaf__t54 | 2_4_floorplan_pdn | 0.0 | last meaningful line 0.0 h ago (26/26 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | intel2 | dpkit-ot_s81sl_leaf__t65-3802987 | ot_s81sl_leaf__t65 | 5_1_grt | 4.8 | last meaningful line 0.1 h ago (155/155 lines) | YOUNG: evidence 0.3 h < 7.5 h |  |
 | intel2 | dpkit-ot_s81sl_leaf__t69-2690586 | ot_s81sl_leaf__t69 | 5_2_route | 3.1 | last meaningful line 0.1 h ago (267/268 lines) | YOUNG: evidence 1.0 h < 7.5 h |  |
 | intel2 | dpkit-serdes__t12-3200216 | serdes__t12 | 5_1_grt | 2.9 | repair_TNS best 103255 last 103255 rows 27 | YOUNG: evidence 2.8 h < 7.5 h |  |
 | intel2 | dpkit-serdes__t16-3240356 | serdes__t16 | 5_1_grt | 2.9 | last meaningful line 0.0 h ago (860/860 lines) | YOUNG: evidence 2.8 h < 7.5 h |  |
 | intel2 | dpkit-sle_hc2__cl9c4c4509__cl3edce1b8-3139461-lec | sle_hc2 | lec | 0.1 | LEC last write 0.0 h ago | YOUNG: evidence 0.1 h < 6 h |  |
-| intel2 | dpkit-sle_stm_v1__clbe630b9c-2514069 | sle_stm_v1 | 5_2_route | 9.6 | last meaningful line 0.2 h ago (364/365 lines) | YOUNG: evidence 2.6 h < 7.5 h |  |
+| intel2 | dpkit-sle_stm_v1__clbe630b9c-2514069 | sle_stm_v1 | 5_2_route | 9.6 | last meaningful line 0.1 h ago (364/365 lines) | YOUNG: evidence 2.6 h < 7.5 h |  |
 | intel2 | dpkit-sle_su_l1__cl5ea486db-2030248 | sle_su_l1 | port_bind | 0.0 | last meaningful line 0.0 h ago (1/1 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| intel2 | dpkit-slice_station__t22-3138952 | slice_station__t22 | 5_2_route | 2.9 | last meaningful line 0.2 h ago (251/252 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
-| intel2 | dpkit-slice_station__t36-1979935 | slice_station__t36 | 5_2_route | 5.8 | last meaningful line 0.2 h ago (274/275 lines) | YOUNG: evidence 3.0 h < 7.5 h |  |
-| intel2 | dpkit-slice_station__t40__clc8fb2c8c-1871134 | slice_station__t40 | 2_1_floorplan | 0.1 | last meaningful line -0.0 h ago (666/666 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
+| intel2 | dpkit-slice_station__t22-3138952 | slice_station__t22 | 5_2_route | 2.9 | last meaningful line 0.1 h ago (251/252 lines) | YOUNG: evidence 0.8 h < 7.5 h |  |
+| intel2 | dpkit-slice_station__t36-1979935 | slice_station__t36 | 5_2_route | 5.8 | last meaningful line 0.1 h ago (274/275 lines) | YOUNG: evidence 3.0 h < 7.5 h |  |
+| intel2 | dpkit-slice_station__t40__clc8fb2c8c-1871134 | slice_station__t40 | 2_1_floorplan | 0.1 | last meaningful line -0.0 h ago (604/604 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
 | intel2 | dpkit-slw_fe_v1__clfe325744__cldb4efe33-3953156 | slw_fe_v1 | 5_1_grt | 4.8 | repair_TNS best 270980 last 270980 rows 9 | YOUNG: evidence 2.0 h < 7.5 h |  |
 | intel2 | dpkit-slw_fw_v3-2486480 | slw_fw_v3 | 5_2_route | 5.6 | last meaningful line 0.0 h ago (27/27 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | intel2 | dpkit-slw_sc_v1__cl64543eaf__cl5e017c6f-3460358 | slw_sc_v1 | 5_2_route | 4.7 | last meaningful line 0.5 h ago (389/390 lines) | YOUNG: evidence 3.6 h < 7.5 h |  |
@@ -457,7 +457,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'CANCEL-NOW': 20, 'NO
 | intel2 | dpkit-col_h10_r2__t1__cl99efd374__pv4c1f67ff-974254 | col_h10_r2__t1 | 5_1_grt | 10.3 |  | KEEP: col_h10_r2__t1__cl99efd374__pv4c1f67ff	S81-COL-INHERIT	representative (COORD 11- |  |
 | intel2 | dpkit-col_h9_r1__t1__cl49d7a23e__pv62bca836-1878301 | col_h9_r1__t1 | 2_1_floorplan | 0.1 |  | KEEP: col_h9_r1__t1__cl49d7a23e__pv62bca836	S81-COL-INHERIT	representative (COORD 11-1 |  |
 | intel2 | dpkit-col_h9_r1__t1__clf32cde8d__pv48cfde67-3062829 | col_h9_r1__t1 | 5_1_grt | 9.3 |  | KEEP: col_h9_r1__t1__clf32cde8d__pv48cfde67	S81-COL-INHERIT	representative (COORD 11-1 |  |
-| intel2 | dpkit-col_h9_r2__t1__clce45cab5__pv2f87774f-1864189 | col_h9_r2__t1 | 2_3_floorplan_tapcell | 0.1 |  | KEEP: col_h9_r2__t1__clce45cab5__pv2f87774f	S81-COL-INHERIT	representative (COORD 11-1 |  |
+| intel2 | dpkit-col_h9_r2__t1__clce45cab5__pv2f87774f-1864189 | col_h9_r2__t1 | 2_2_floorplan_macro | 0.1 |  | KEEP: col_h9_r2__t1__clce45cab5__pv2f87774f	S81-COL-INHERIT	representative (COORD 11-1 |  |
 | epyc10 | dpkit-cbf_q00__cl1b5a6458-2300669 | cbf_q00 | 5_1_grt | 12.0 | repair_Violations best 0 last 0 rows 22 | PROGRESS: repair_Violations reached 0 |  |
 | epyc10 | dpkit-col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84-3792347 | col_h9_r0_p2__t1 | 5_1_grt | 7.8 | last meaningful line 1.8 h ago (203/240 lines) | PROGRESS: log still growing |  |
 | epyc10 | dpkit-col_h9_r0_p4__t1__clcb2fbfe8__pvec137455-2340315 | col_h9_r0_p4__t1 | 5_1_grt | 12.0 | last meaningful line 4.8 h ago (203/322 lines) | PROGRESS: log still growing |  |
