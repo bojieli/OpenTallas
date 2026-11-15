@@ -274,6 +274,13 @@ ISLAND_GRID_UM = (0.054, 0.27)    # site width / row height (ASAP7 7.5T)
 ISLAND_PG_CUT = ("M7",)           # abstract PG pin layers cut at a window (the pin stack's M7 riser runs there)
 
 
+def reserved_windows(P, tn):
+    """CLKSITE-RESERVE-1115: type-frame die_clock_tree rects of clock.reserved_sites_um that carry route_layers (opt-in).
+    These are the windows cut out of the abstract (plan abstract M1-M3 + M7 PG, closed view M1-M7 + implants + M7 PG)."""
+    return [tuple(r["rect_um"]) for r in (P.types[tn].get("clock") or {}).get("reserved_sites_um", [])
+            if r.get("kind") == "die_clock_tree" and r.get("route_layers")]
+
+
 def load_island_sites(paths):
     """[(xy, source)] die-frame island sites from: a die_tree_plan.json (lattice.nodes + lattice.gate.
     leg_repeater_sites), an ot_clock_sites/1 file (sites[] of kind partition), or a die_clock_mesh build mesh.json
@@ -5261,7 +5268,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False,
+              cut_abstracts=None):
     _kit_stage("plan load")
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
@@ -5308,6 +5316,9 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                        sites_outside_partitions=sum(1 for r in irec if not r["parts"]))
         (out / "island_windows.json").write_text(json.dumps(dict(schema="ot_island_windows/1", meta=meta_iw,
                                                                  windows=iw, sites=irec), indent=1) + "\n")
+    rsv = {tn: reserved_windows(P, tn) for tn in P.types}
+    rsv = {k: v for k, v in rsv.items() if v}
+    iw = {tn: sorted(set(list(iw.get(tn, [])) + rsv.get(tn, []))) for tn in set(iw) | set(rsv)}
     _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
                                                    reset_infra=reset_infra)))
                   for tn, t in sorted(P.types.items())
@@ -5317,13 +5328,17 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
         v = Path(views) / tn / f"{t['module']}.lef" if views else None
         if v and v.is_file():
             txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
+            if iw.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
+                import abstract_cutout
+                txt, cst = abstract_cutout.cut_lef_text(txt, iw[tn])
+                ab[tn] = dict(closed_view_cut=cst)
             if landing_infra:
                 expected = {p['name'] for p in t.get('clock',{}).get('landing_contract',{}).get('pins',[])}
                 found = set(re.findall(r'^\s*PIN\s+(\S+)',txt,re.M))
                 if expected-found:
                     raise ValueError(f'{tn}: closed view omits landing pins: {sorted(expected-found)[:8]}')
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
-            ab[tn] = dict(source="closed view", path=str(v))
+            ab.setdefault(tn, {}).update(source="closed view", path=str(v))
         else:
             txt, st = _abs[tn]
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
@@ -5362,6 +5377,10 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                               if region_dme_early_merge_only else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
+    if cut_abstracts is not None:     # DIE-ROUTE-ABS-1 opt-in: open the abstract OBS over placed die clock cells
+        import abstract_cutout
+        rep = abstract_cutout.run(plan_path, out, cut_abstracts)
+        meta["abstract_cutout"] = {k: v for k, v in rep.items() if k != "per_type"}
     reserve = reserve_rects(segs, leaf_legs, P)
     # grt
     _kit_stage("grt netlist")
@@ -6165,6 +6184,10 @@ def main(argv=None):
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
+    k.add_argument("--cut-abstracts-under-clock", type=float, nargs="?", const=0.25, default=None, metavar="MARGIN_UM",
+                   help="DIE-ROUTE-ABS-1 opt-in: after the clock tree is placed, cut the partition abstract OBS (M1-M7) and "
+                        "the M7 PG pin over every die clock cell inside a partition (margin um, default 0.25); "
+                        "writes abstract_cutout.json; originals kept as .lef.precut")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
     k.add_argument("--reset-infra", action="store_true",
                    help="Export native registered reset output pins and real neighbor wavefront nets; raw reset "
@@ -6358,7 +6381,7 @@ def main(argv=None):
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,
-                      reset_infra=a.reset_infra,
+                      reset_infra=a.reset_infra, cut_abstracts=a.cut_abstracts_under_clock,
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},
