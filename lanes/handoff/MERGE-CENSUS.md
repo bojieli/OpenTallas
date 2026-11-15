@@ -77,3 +77,7 @@ ot_sram_oldread_b64 is now proven at synth+place (same derivation as ot_sram_old
  - KV hg_v3 fp32_mul_lat / nearhbm_qmul / fp32_add_lat / w11_cut: HARMLESS (constants from POLY / K_LOG2E prune flops, per-instance operands differ).
 3. claude/merge-census-1115-1 @6f0c8e1765 is IN origin/main (merge-base --is-ancestor true; origin/main b89ba8df4f). No READY re-post needed.
 Unverified: hub_C on a netlist, DRST in the actual build, whether the extra keeps remove the merge.
+
+## RESULT 11-15 (HEAD hd_host_w LEC, for HEAD-100)
+HEAD hd_host_w with the derived keep (hdw_keep, intel1): async LEC EQUIVALENT, ot_s81hd_host_w_ep cp=82590 proved=82590 differs=0 undecided=0 (39,294 key points matched by name, 32,272 register pairs / merges and 664 constant registers proved inductively), LEC exit 0 at 11:30 PST. Census: ot_sram_oldread_b64 wdata 553 missing -> 0; flops 30,175 -> 30,760; 3_place.odb, no FAIL.
+Also: generator branch is now claude/merge-census-1115-3 @6e33128851 (hdc keep + generate-scoped *.wire fix), READY follows after the S81 hdc census/place.
