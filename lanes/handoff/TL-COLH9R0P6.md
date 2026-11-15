@@ -8,3 +8,4 @@
 - 08:5x hotspot map done (see queue line). fa/fb launched via kit_wave.py run-item (intel2 ~/tl-colh9r0p6/{fa,fb}), work epyc10/epyc7 tl-colh9r0p6. After geom run route (ot-run run_kit.sh route) per COL-SNAP-BUILD practice; credit all 12 pv on pass. Waiter b4gmnfcj8 stopped.
 - 15:5x fa route failed grt (850 units, o0_3 frame channel). fc (orig + ALLOW_CONGESTION=1) launched intel2 ~/tl-colh9r0p6/fc; fb route queued. Next: route fc after geom; check fb.
 - 16:3x o0 placed-vs-plan posted (cells at plan strip; hotspot = wires). fc relaunched with grt_allow_cong hook (src_fc patched gen_phys grt_nonport_hold_chain to copy+source /work/grt_allow_cong.tcl); intel2 ~/tl-colh9r0p6/fc/run2.log
+- 18:4x fb failed grt; fc route launched (fc/route.log).
