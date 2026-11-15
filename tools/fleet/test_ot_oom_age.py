@@ -74,5 +74,43 @@ class Stage(unittest.TestCase):
         self.assertEqual([n for n, _ in order], ["early_young", "grt_young", "early_old", "drt"])
 
 
+class Escalate(unittest.TestCase):
+    def line(self, t, pid, comm, cmd):
+        return f'{t} host earlyoom[1]: sending SIGTERM to process {pid} uid 0 "{comm}": oom_score 1200, oom_score_adj 800, VmRSS 5 MiB, cmdline "{cmd}"'
+
+    def test_parse_keeps_first_sigterm_per_pid(self):
+        txt = self.line(100.5, 7, "openroad", "openroad -x") + "\n" + self.line(110.5, 7, "openroad", "openroad -x") + "\nother line\n"
+        self.assertEqual(M.parse_sigterms(txt), {7: (100.5, "openroad", "openroad -x")})
+
+    def test_survivor_gets_one_sigkill_with_guards(self):
+        d = tempfile.mkdtemp(); exe = os.path.join(d, "openroad"); shutil.copy("/bin/sleep", exe)
+        p = subprocess.Popen([exe, "60"])
+        try:
+            time.sleep(0.2)
+            now = time.time(); hz = os.sysconf("SC_CLK_TCK"); sent = []
+            log = os.path.join(d, "kills.log"); cmd = f"{exe} 60"
+            t_old = now - 120; later = now + 100     # t_old predates the process (a reused pid); `later` makes a SIGTERM at `now` 100 s old
+            # process started AFTER the logged SIGTERM (pid reused) -> no kill
+            self.assertEqual(M.escalate({p.pid: (t_old, "openroad", cmd)}, now, hz, kill=lambda *a: sent.append(a), log=log), 0)
+            # wrong comm / wrong cmdline -> no kill
+            self.assertEqual(M.escalate({p.pid: (now, "yosys", cmd)}, later, hz, kill=lambda *a: sent.append(a), log=log), 0)
+            self.assertEqual(M.escalate({p.pid: (now, "openroad", "other cmd")}, later, hz, kill=lambda *a: sent.append(a), log=log), 0)
+            # SIGTERMed only 30 s ago -> not yet
+            self.assertEqual(M.escalate({p.pid: (now, "openroad", cmd)}, now + 30, hz, kill=lambda *a: sent.append(a), log=log), 0)
+            self.assertEqual(sent, [])
+            # SIGTERM after the start, 100 s old, same comm+cmdline -> killed once; dry run sends nothing
+            self.assertEqual(M.escalate({p.pid: (now, "openroad", cmd)}, later, hz, dry=True, kill=lambda *a: sent.append(a), log=log), 1)
+            self.assertEqual(sent, [])
+            self.assertEqual(M.escalate({p.pid: (now, "openroad", cmd)}, later, hz, log=log), 1)
+            p.wait(timeout=5)
+            self.assertEqual(p.returncode, -9)
+            self.assertIn("SIGKILL", open(log).read())
+            # gone now -> nothing more
+            self.assertEqual(M.escalate({p.pid: (now, "openroad", cmd)}, later, hz, log=log), 0)
+        finally:
+            if p.poll() is None:
+                p.kill()
+
+
 if __name__ == "__main__":
     unittest.main()
