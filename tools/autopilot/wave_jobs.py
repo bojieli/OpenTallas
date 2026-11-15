@@ -12,7 +12,34 @@ superseded by the other (owner: in-flight variants may finish).
 import csv, json, os, re, shlex
 from concurrent.futures import ThreadPoolExecutor
 
-FLEET = [h for h in os.environ.get('OT_FLEET_HOSTS', 'intel2,epyc2,intel1,epyc4').split(',') if h]
+# WAVE-LONGRUN-1 11-15: the default named intel2,epyc2,intel1,epyc4: epyc7/8/9/10 were never probed or stopped (the scopes of
+# CANCELLED rows kept running there) and the terminated epyc4 timed out every call ("epyc4 not checked"), so every REAP-DEAD probe
+# was "unreadable (reported only)".  kit_wave._step now sets the list from kit_wave.json (set_fleet / fleet_from_cfg).
+FLEET = [h for h in os.environ.get('OT_FLEET_HOSTS', 'intel2,intel1,epyc2,epyc7,epyc8,epyc9,epyc10').split(',') if h]
+
+
+def fleet_from_cfg(cfg, hub):
+    """hosts of kit_wave.json (global + every die: hosts, place_prefer, gen_hosts, gen_overflow_hosts) plus the hub, minus
+    retired_hosts and 'localhost'.  -> list; the default FLEET if the config names none"""
+    cfg = cfg or {}
+    retired = set(cfg.get('retired_hosts') or [])
+    names = [hub]
+    lists = [cfg.get(k) for k in ('hosts', 'place_prefer', 'gen_hosts', 'gen_overflow_hosts')]
+    for d in (cfg.get('dies') or {}).values():
+        if isinstance(d, dict):
+            lists += [d.get(k) for k in ('hosts', 'place_prefer', 'gen_hosts', 'gen_overflow_hosts')]
+    for lst in lists:
+        names += [h for h in (lst or []) if isinstance(h, str)]
+    out = [h for h in dict.fromkeys(names) if h and h != 'localhost' and h not in retired]
+    return out if len(out) > 1 else list(FLEET)
+
+
+def set_fleet(hosts):
+    """replace FLEET in place (callers read WJ.FLEET at call time)"""
+    hosts = [h for h in dict.fromkeys(hosts or []) if h]
+    if hosts:
+        FLEET[:] = hosts
+    return list(FLEET)
 WAVE_RX = re.compile(r'/kit-wave/([^/\s]+)/([^/\s]+)/items/([^/\s]+)(?:/attempt_(\d+))?(?=[/\s]|$)')
 LIVE = ('RUNNING', 'LAUNCHING', 'ENQUEUED')
 
@@ -161,6 +188,82 @@ def stop_on_fleet(sh, hub, roots, hosts=None, dry=False):
                 return h, {'error': 'rc %s %s' % (rc, (err or '')[-160:])}
             return h, json.loads(out.strip().splitlines()[-1])
         except Exception as e:  # noqa: the watchdog is the safety net for a host missed here
+            return h, {'error': str(e)[:160]}
+    hosts = list(hosts or FLEET)
+    with ThreadPoolExecutor(max(1, len(hosts))) as ex:
+        return dict(ex.map(one, hosts))
+
+
+# WAVE-LONGRUN-1 11-15: the oth-* scopes of an attempt the wave replaced.  A row keeps only its newest attempt, so the
+# older attempt's running ot-heavy scope (a 17 h GRT of ot_s81sl_leaf__t47 a7 while a8 existed) is named by no row and by no
+# root list.  This host script reads DATA = {"die|event|item": [[attempt, started_epoch, status], ...]} (kit_wave rows) and
+# stops, with ot-heavy-stop --unit (containers first), every scope that is older than ORPHAN_MIN_AGE_S and whose kit-wave path
+# names an attempt N for which a NEWER attempt of the same (die, event, item) STARTED AFTER the scope did.  A scope started
+# after the newer attempt (a lane resume), an attempt the state does not know, and everything outside kit-wave paths are left.
+ORPHAN_SCAN = r'''
+import json, os, re, subprocess, sys, time
+a = json.loads(sys.argv[1]); dry = a.get('dry'); min_age = a.get('min_age', 1800); cap = a.get('cap', 40)
+rx = re.compile(r'/kit-wave/([^/\s]+)/([^/\s]+)/items/([^/\s]+)/attempt_(\d+)(?=[/\s]|$)')
+if not os.environ.get('XDG_RUNTIME_DIR'):
+    os.environ['XDG_RUNTIME_DIR'] = '/run/user/%d' % os.getuid()
+units = [l.split()[0][:-6] for l in subprocess.run(['systemctl', '--user', 'list-units', '--type=scope', '--state=active', '--no-legend', '--plain', 'oth-*'],
+         capture_output=True, text=True).stdout.splitlines() if l.split()]
+out, now = [], time.time()
+for u in units:
+    if len(out) >= cap:
+        break
+    m = re.search(r'-(\d{10})$', u)
+    t0 = float(m.group(1)) if m else 0.0
+    if not t0 or now - t0 < min_age:
+        continue
+    pids = []
+    for root, dirs, files in os.walk('/sys/fs/cgroup/user.slice'):
+        if os.path.basename(root) == u + '.scope':
+            try:
+                pids = [int(x) for x in open(os.path.join(root, 'cgroup.procs')).read().split()]
+            except OSError:
+                pass
+            dirs[:] = []
+    hit = None
+    for p in pids:
+        try:
+            txt = open('/proc/%d/cmdline' % p).read().replace('\0', ' ') + ' ' + os.readlink('/proc/%d/cwd' % p)
+        except OSError:
+            continue
+        hit = rx.search(txt)
+        if hit:
+            break
+    if not hit:
+        continue
+    die, ev, item, n = hit.group(1), hit.group(2), hit.group(3), int(hit.group(4))
+    rows = a['rows'].get('%s|%s|%s' % (die, ev, item))
+    if not rows:
+        continue
+    newer = [r for r in rows if r[0] > n and r[1] > t0]
+    if not newer:
+        continue
+    why = 'attempt %d of %s/%s older than attempt %d started %d s after it' % (n, die, item, max(r[0] for r in newer), int(max(r[1] for r in newer) - t0))
+    if not dry:
+        subprocess.run(['ot-heavy-stop', '--unit', u], capture_output=True, timeout=300)
+    out.append({'unit': u, 'why': why, 'age_h': round((now - t0) / 3600, 1)})
+print(json.dumps({'orphans': out}))
+'''
+
+
+def orphan_scopes(sh, hub, rows, hosts=None, dry=False, min_age=1800, cap=40):
+    """run ORPHAN_SCAN on every fleet host -> {host: {'orphans': [...]} or {'error': ...}}"""
+    args = json.dumps({'rows': rows, 'dry': bool(dry), 'min_age': min_age, 'cap': cap})
+
+    def one(h):
+        cmd = ['python3', '-I', '-', args] if h in ('localhost', hub, os.uname().nodename) else \
+            ['ssh', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=15', '-o', 'ControlPath=none', h,
+             'python3', '-I', '-', shlex.quote(args)]
+        try:
+            rc, out, err = sh(cmd, timeout=600, input=ORPHAN_SCAN)
+            if rc != 0 or not (out or '').strip():
+                return h, {'error': 'rc %s %s' % (rc, (err or '')[-160:])}
+            return h, json.loads(out.strip().splitlines()[-1])
+        except Exception as e:  # noqa: the next tick retries
             return h, {'error': str(e)[:160]}
     hosts = list(hosts or FLEET)
     with ThreadPoolExecutor(max(1, len(hosts))) as ex:

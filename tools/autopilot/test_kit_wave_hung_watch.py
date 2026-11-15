@@ -124,7 +124,7 @@ class Reap(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             st = {"items": {"a": silent_rec(d, 400)}}
             now = time.time()
-            st["items"]["a"]["hung_watch"] = {"cpu": 500.0 + 0.5 * len(KW.WJ.FLEET), "t": now - 500 * 60}
+            st["items"]["a"]["hung_watch"] = {"cpu": 500.0 + 0.5 * (len(set(KW.WJ.FLEET) | {"epyc9"}) - 1), "t": now - 500 * 60}   # probed hosts: the fleet plus the die hosts
             self.assertEqual(KW.reap_dead(AP(cpu=500.0), dict(CFG, hung_watch_min=0), st, {}, now=now), 0)   # off
             self.assertEqual(KW.reap_dead(AP(cpu=500.0, probe_rc=1), CFG, st, {}, now=now), 0)               # unreadable
             ap = AP(cpu=500.0)

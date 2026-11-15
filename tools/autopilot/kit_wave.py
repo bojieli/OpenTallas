@@ -6815,6 +6815,17 @@ def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
         return None
 
 
+def live_attempt_elsewhere(st, die, item, key):
+    """WAVE-LONGRUN-1 11-15 (b): a live attempt of (die, item) under ANOTHER block key: RUNNING / LAUNCHING, or ENQUEUED whose queue job
+    is running.  A launch for this key would run two attempts of one item at once (ot_s81sl_leaf__t47 ran two GRTs on epyc9)."""
+    for k, v in (st.get("items") or {}).items():
+        if k == key or v.get("die") != die or v.get("item") != item:
+            continue
+        if v.get("status") in ("RUNNING", "LAUNCHING") or (v.get("status") == "ENQUEUED" and v.get("q_status") == "RUNNING"):
+            return v
+    return None
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
@@ -6824,6 +6835,11 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     # A stale/repeated launch list must never replace a live producer claim.
     if prev.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD"):
         AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: active producer {prev.get('unit', '')}")
+        return None
+    other = None if arm else live_attempt_elsewhere(st, die, r["item"], key)
+    if other:                                    # WAVE-LONGRUN-1 (b): one live attempt per item, whatever its plan block
+        AP.log(f"KIT-WAVE LAUNCH-KEEP {die}/{r['item']}: one live attempt per item; {other.get('status')} attempt {other.get('attempt')} "
+               f"of block {str(other.get('block_sha') or '')[:12]} ({other.get('unit') or other.get('q_id') or '-'}) still runs")
         return None
     # The attempt dir is per item and event, not per plan block: number across every block's records, or a new block's
     # attempt N lands in an older block's attempt_N, whose results make "make place" a no-op (t14@4, t17@5, COORD 11-04).
@@ -7331,28 +7347,54 @@ print(json.dumps(hit))
 '''
 
 
+class FleetMap(dict):
+    """a per-root fleet probe result; .unreadable = hosts that could not be read after a retry (WAVE-LONGRUN-1)"""
+    unreadable = ()
+
+
+def _probe_host(AP, h, script, args, timeout):
+    """run a probe script on one host (twice before giving up) -> stdout last line or None"""
+    hub = AP.HUB_NAME
+    cmd = ["python3", "-I", "-", args] if h in ("localhost", hub, os.uname().nodename) else \
+        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h, "python3", "-I", "-", shlex.quote(args)]
+    for _try in (0, 1):
+        try:
+            rc, o, e = AP.sh(cmd, timeout=timeout, input=script)
+            if rc == 255 and "Could not resolve hostname" in (e or ""):      # this host's own fleet alias: run it here
+                rc, o, e = AP.sh(["python3", "-I", "-", args], timeout=timeout, input=script)
+            if rc == 0 and (o or "").strip():
+                return o.strip().splitlines()[-1]
+        except Exception:                                    # noqa: retried once, then the host is "unreadable"
+            pass
+    return None
+
+
 def live_on_fleet(AP, roots, hosts=None):
-    """{root: [pid | docker:name]} found on ANY fleet host (process cmdline/cwd or container bind mount naming the root);
-    None when a host could not be read (then nothing is reaped for silence)"""
+    """{root: [pid | docker:name]} found on the readable fleet hosts (process cmdline/cwd or container bind mount naming the root).
+    WAVE-LONGRUN-1 11-15: one unreadable host no longer blanks the whole probe (every REAP-DEAD line read "fleet probe
+    unreadable (reported only)" because the terminated epyc4 timed out): each host is tried twice, the result carries
+    .unreadable (the hosts that failed) and a root that is found nowhere is only "dead" when .unreadable is empty.
+    None only when no host could be read at all."""
     roots = sorted({r for r in roots if r})
     if not roots:
         return {}
     args = json.dumps(roots)
-    hub = AP.HUB_NAME
-    out = {}
+    out, bad, ok = FleetMap(), [], 0
     for h in (hosts or WJ.FLEET):
-        cmd = ["python3", "-I", "-", args] if h in ("localhost", hub, os.uname().nodename) else \
-            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h, "python3", "-I", "-", shlex.quote(args)]
+        line = _probe_host(AP, h, LIVE_PROBE, args, 240)
         try:
-            rc, o, e = AP.sh(cmd, timeout=240, input=LIVE_PROBE)
-            if rc == 255 and "Could not resolve hostname" in (e or ""):      # this host's own fleet alias: run it here
-                rc, o, e = AP.sh(["python3", "-I", "-", args], timeout=240, input=LIVE_PROBE)
-            if rc != 0 or not (o or "").strip():
-                return None
-            for r, v in json.loads(o.strip().splitlines()[-1]).items():
-                out.setdefault(r, []).extend(f"{h}:{x}" for x in v)
-        except Exception:                                    # noqa: an unreadable host reaps nothing
-            return None
+            got = json.loads(line) if line else None
+        except ValueError:
+            got = None
+        if not isinstance(got, dict):
+            bad.append(h)
+            continue
+        ok += 1
+        for r, v in got.items():
+            out.setdefault(r, []).extend(f"{h}:{x}" for x in v)
+    if not ok:
+        return None
+    out.unreadable = tuple(bad)
     return out
 
 
@@ -7462,39 +7504,63 @@ def progress_on_fleet(AP, roots, hosts):
     if not roots:
         return {}
     args = json.dumps(roots)
-    out = {r: {"log": 0.0, "cpu": 0.0, "containers": [], "pids": 0} for r in roots}
+    out = FleetMap({r: {"log": 0.0, "cpu": 0.0, "containers": [], "pids": 0} for r in roots})
+    bad, ok = [], 0
     for h in hosts:
-        cmd = ["python3", "-I", "-", args] if h in ("localhost", AP.HUB_NAME, os.uname().nodename) else \
-            ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h, "python3", "-I", "-", shlex.quote(args)]
+        line = _probe_host(AP, h, HUNG_PROBE, args, 300)
         try:
-            rc, o, e = AP.sh(cmd, timeout=300, input=HUNG_PROBE)
-            if rc == 255 and "Could not resolve hostname" in (e or ""):
-                rc, o, e = AP.sh(["python3", "-I", "-", args], timeout=300, input=HUNG_PROBE)
-            if rc != 0 or not (o or "").strip():
-                return None
-            got = json.loads(o.strip().splitlines()[-1]).get("HUNG_PROBE")
-            if not isinstance(got, dict):
-                return None
-            for r, v in got.items():
-                if r not in out:
-                    continue
-                out[r]["log"] = max(out[r]["log"], float(v.get("log") or 0))
-                out[r]["cpu"] += float(v.get("cpu") or 0)
-                out[r]["pids"] += int(v.get("pids") or 0)
-                out[r]["containers"] += [f"{h}:{n}" for n in v.get("containers") or []]
-        except Exception:                                    # noqa: an unreadable host cancels nothing
-            return None
+            got = json.loads(line).get("HUNG_PROBE") if line else None
+        except (ValueError, AttributeError):
+            got = None
+        if not isinstance(got, dict):
+            bad.append(h)                                    # WAVE-LONGRUN-1: a host that cannot be read is skipped, not fatal
+            continue
+        ok += 1
+        for r, v in got.items():
+            if r not in out:
+                continue
+            out[r]["log"] = max(out[r]["log"], float(v.get("log") or 0))
+            out[r]["cpu"] += float(v.get("cpu") or 0)
+            out[r]["pids"] += int(v.get("pids") or 0)
+            out[r]["containers"] += [f"{h}:{n}" for n in v.get("containers") or []]
+    if not ok:
+        return None
+    out.unreadable = tuple(bad)
     return out
 
 
 HUNG_POST_MIN = 360         # WF-1 11-14 (COORD/OWNER #H): a row with a frozen log but busy CPU is never cancelled; at this age it is only posted
 HUNG_BUSY_FRAC = 0.05       # WF-1 11-14: CPU growth over the window above this fraction of ONE core counts as busy (was a flat 60 CPU-s)
+HUNG_DEAD_CPU_MIN = 30      # WAVE-LONGRUN-1 11-15: processes alive but ~0 CPU growth AND no stage-log output for this long = dead (0 = off)
 
 
-def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None):
+def hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None, dead_min=None):
     """-> (hung, new_watch, why).  prev = the row's hung_watch {'cpu', 't'} (CPU mark and when it was set), prog = this row's
     progress_on_fleet entry.  The CPU mark moves when the CPU grew by >= cpu_s since it (or went down: a restarted process);
-    hung only when the mark is >= minutes old AND the newest stage log (fleet or hub) is >= minutes old."""
+    hung only when the mark is >= minutes old AND the newest stage log (fleet or hub) is >= minutes old.
+    WAVE-LONGRUN-1 11-15 liveness: with dead_min (default HUNG_DEAD_CPU_MIN 30) a second, short mark ('dcpu'/'dt') also
+    declares the row DEAD when its processes grew less than max(HUNG_CPU_S, 5 % of one core) CPU-s in dead_min minutes AND the
+    newest stage log is dead_min old: a unit that burns no CPU for 30 min is reaped; a busy unit is never touched."""
+    pw = dict(prev or {})
+    hung, w, why = _hung_judge(prev, prog, hub_newest, now, minutes, cpu_s)
+    dm = float(dead_min or 0)
+    if dm > 0:
+        cpu = float(prog.get("cpu") or 0)
+        dcpu_s = max(HUNG_CPU_S, HUNG_BUSY_FRAC * dm * 60.0)
+        if "dt" not in pw or cpu - float(pw.get("dcpu", 0)) >= dcpu_s or cpu < float(pw.get("dcpu", 0)):
+            pw["dcpu"], pw["dt"] = cpu, now
+        w["dcpu"], w["dt"] = pw["dcpu"], pw["dt"]
+        dead_m = (now - float(w["dt"])) / 60.0
+        logt = float(w.get("log") or 0)
+        log_m = (now - logt) / 60.0 if logt else float("inf")
+        if not hung and dead_m >= dm and log_m >= dm:
+            hung = True
+            why = (f"DEAD: CPU {cpu:.0f} s grew < {dcpu_s:.0f} s in {dead_m:.0f} min and no stage-log output for {log_m:.0f} min "
+                   f"({prog.get('pids', 0)} processes, containers {','.join(prog.get('containers') or []) or 'none'})")
+    return hung, w, why
+
+
+def _hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None):
     cpu = float(prog.get("cpu") or 0)
     if cpu_s is None:        # busy = more than HUNG_BUSY_FRAC of one core over the watch window (>= HUNG_CPU_S): ~0 CPU only
         cpu_s = max(HUNG_CPU_S, HUNG_BUSY_FRAC * minutes * 60.0)
@@ -7516,7 +7582,10 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
     now = now or time.time()
     minutes = REAP_DEAD_MIN if minutes is None else minutes
     hm = float(cfg.get("hung_watch_min", HUNG_WATCH_MIN) or 0)
+    dm = float(cfg.get("hung_dead_cpu_min", HUNG_DEAD_CPU_MIN) or 0)
     s_min = min(minutes, hm) if hm > 0 else minutes          # HUNG-WATCH looks at rows silent for hung_watch_min already
+    if hm > 0 and dm > 0:
+        s_min = min(s_min, dm)                               # the CPU-liveness mark needs rows silent for dead_min only
     out, silent = [], []
     for key, rec in sorted((st.get("items") or {}).items()):
         s = rec.get("status")
@@ -7561,7 +7630,7 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
                         out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: "
                                                    f"{','.join(live[roots[key]][:3])}; progress probe unreadable (reported only)"))
                     continue
-                hung, w, why = hung_judge(rec.get("hung_watch"), p, now - m * 60.0, now, hm)
+                hung, w, why = hung_judge(rec.get("hung_watch"), p, now - m * 60.0, now, hm, dead_min=dm)
                 if watch_out is not None:
                     watch_out[key] = dict(w, containers=list(p.get("containers") or [])) if hung else w
                 if hung:
@@ -7580,6 +7649,9 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
                 out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: {','.join(live[roots[key]][:3])} (reported only)"))
             elif not roots[key]:
                 out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; no attempt root (reported only)"))
+            elif getattr(live, "unreadable", None):          # WAVE-LONGRUN-1: found nowhere, but a host could not be read
+                out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; not found on the readable hosts, "
+                                           f"unreadable: {','.join(live.unreadable)} (reported only)"))
             else:
                 out.append((key, "R2", f"unit active but no output for {m:.0f} min and no process, container or ot-run command "
                                        f"names {roots[key]} on any fleet host"))
@@ -8725,6 +8797,43 @@ def attempt_root(r):
         return (r.get("kit") or "").partition(":")[2]
 
 
+def hold_protects_running(cfg, d, rec, text):
+    """WAVE-LONGRUN-1 11-15: does this hold_items text keep a RUNNING attempt of its item?  Always yes, except under the option
+    supersede_pending_plan_holds (global or die, default false): the "PENDING-PLAN ... Running attempts finish" clause (OWNER via
+    COORD r50) was written for the period BEFORE the new plan was adopted.  Once the die's event moved on (the row's event is not the
+    die's current event) that clause alone no longer protects a row whose block is gone from the current plan: the result can never
+    count and each such type regenerates on the new plan.  Another clause that names running attempts (finish / keeps running) still protects."""
+    on = d.get("supersede_pending_plan_holds", cfg.get("supersede_pending_plan_holds"))
+    if on is not True:
+        return True
+    ev, cur = str(rec.get("event") or ""), str(d.get("event") or "")
+    clauses = [c.strip() for c in text.split(" | ") if c.strip()]
+    rest = [c for c in clauses if not c.startswith("PENDING-PLAN")]
+    if not ev or not cur or ev == cur or len(rest) == len(clauses):
+        return True
+    return any("running" in c.lower() and ("finish" in c.lower() or "keeps running" in c.lower()) for c in rest)
+
+
+def rekey_adopted(AP, cfg, st):
+    """WAVE-LONGRUN-1 11-15 (a): at plan adoption every live row of the old event either keeps running because its plan block is
+    unchanged (item_key is block-keyed, so the row IS the current key: it is marked event_adopted = the new event, one
+    KIT-WAVE REKEY line) or it is cancelled by cancel_superseded in the same pass (block changed; holds apply as there).
+    -> number of rows re-keyed.  The row's own event field is not rewritten: attempt dirs and wave_jobs identity use it."""
+    cur = current_keys(cfg, st)
+    n = 0
+    for key, r in (st.get("items") or {}).items():
+        die = r.get("die")
+        d = (cfg.get("dies") or {}).get(die)
+        if die not in cur or not isinstance(d, dict) or r.get("status") not in ("RUNNING", "LAUNCHING", "ENQUEUED"):
+            continue
+        new = d.get("event")
+        if key in cur[die] and new and str(r.get("event")) != str(new) and r.get("event_adopted") != new:
+            r["event_adopted"] = new
+            AP.log(f"KIT-WAVE REKEY {die}/{r.get('item')}@{r.get('attempt')}: event {r.get('event')} -> {new}, plan block unchanged, keeps running")
+            n += 1
+    return n
+
+
 def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     """COORD 11-01 18:3x (KV kv3_io_ft pre-fix kits ran GRT 22.5 h after a newer fix superseded them): an attempt
     whose plan block is no longer in the die's current plan of record (plan_current=no) can never count, so it is
@@ -8757,7 +8866,8 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             continue
         if r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED"):
             item = r.get("item") or ""
-            held = next((str(w) for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(item, pat)), None)
+            held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
+                         if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
             same = bool(r.get("block_sha")) and cur_blocks.get(die, {}).get(item) == r.get("block_sha")
             if held is not None or same:
                 why = (f"hold_items: {held[:160]}" if held is not None else
@@ -8801,6 +8911,40 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
         AP.log(f"KIT-WAVE CANCEL-SUPERSEDED remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
                + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
+    return n
+
+
+def orphan_rows(st, now=None, window_h=48):
+    """{"die|event|item": [[attempt, started, status], ...]} of the rows touched in the last window_h h with >= 2 attempts known"""
+    now = now or time.time()
+    by = {}
+    for r in (st.get("items") or {}).values():
+        if now - max(float(r.get("updated") or 0), float(r.get("started") or 0)) > window_h * 3600:
+            continue
+        by.setdefault(f"{r.get('die')}|{r.get('event')}|{r.get('item')}", []).append(
+            [int(r.get("attempt") or 0), float(r.get("started") or 0), r.get("status")])
+    return {k: v for k, v in by.items() if len(v) > 1}
+
+
+def orphan_sweep(AP, cfg, st):
+    """WAVE-LONGRUN-1 11-15: stop the host scopes of attempts the wave replaced (see wave_jobs.ORPHAN_SCAN).  Options: orphan_sweep
+    false = off; orphan_sweep_live true = stop (default: log the would-stop list only, staged enable like reap_stale_attempts);
+    orphan_max_per_tick (default 40) per host.  -> number of orphan scopes found"""
+    if cfg.get("orphan_sweep") is False:
+        return 0
+    live = cfg.get("orphan_sweep_live") is True and not AP.DRY
+    rows = orphan_rows(st)
+    if not rows:
+        return 0
+    res = WJ.orphan_scopes(AP.sh, AP.HUB_NAME, rows, dry=not live, cap=int(cfg.get("orphan_max_per_tick") or 40))
+    n = 0
+    for h, v in sorted(res.items()):
+        if v.get("error"):
+            AP.log(f"KIT-WAVE ORPHAN {h} not checked: {v['error']}")
+            continue
+        for o in v.get("orphans") or []:
+            n += 1
+            AP.log(f"KIT-WAVE ORPHAN {'stopped' if live else 'would stop'} {h} {o['unit']} ({o['age_h']} h): {o['why']}")
     return n
 
 
@@ -8849,9 +8993,9 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
                 if float(r.get("started") or 0) < float(live[-1].get("started") or 0):
                     todo.append((r, f"superseded by attempt {live[-1].get('attempt')} of the same item", True))
         for r in rows:
-            if r.get("status") == "CANCELLED" and not r.get("reaped") and now - float(r.get("updated") or 0) < 6 * 3600:
+            if r.get("status") == "CANCELLED" and not r.get("reaped") and now - float(r.get("updated") or 0) < float(cfg.get("reap_window_h") or 24) * 3600:
                 todo.append((r, "row CANCELLED", False))
-    roots, seen = [], set()
+    roots, seen, marked = [], set(), []
     for r, why, supersede in todo:
         if n >= cap:
             AP.log(f"KIT-WAVE REAP cap {cap} reached; the rest next tick")
@@ -8886,12 +9030,16 @@ def reap_stale_attempts(AP, cfg, st, notices, ap_dir=None):
                      reason=f"{why}: its units, containers and queue job stopped (KW-FIX-45 reap)")
             notices.setdefault(r.get("die"), []).append(f"{r.get('item')}@{r.get('attempt')} SUPERSEDED: {why}")
         r["reaped"] = now
+        marked.append(r)
         AP.log(f"KIT-WAVE REAP {r.get('die')}/{r.get('item')}@{r.get('attempt')}: {why}; units {units}")
         n += 1
     if roots:
         res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
         AP.log(f"KIT-WAVE REAP remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
                + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
+        if any(v.get("error") for v in res.values()):    # WAVE-LONGRUN-1: a host that could not be reached means "not stopped": retry next tick
+            for r in marked:
+                r.pop("reaped", None)
     return n
 
 
@@ -8964,6 +9112,7 @@ def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
     merge_auto_views(cfg, ap_dir, AP.log)                # KW-FIX-35-CV: counted child views overlay (hub sidecar)
     merge_src_overlay(cfg, AP.HUB_NAME, AP.log)          # KW-FIX-44: spec field for in-place source overlays
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
@@ -9004,7 +9153,15 @@ def _step(AP, ap_dir):
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    try:
+        rekey_adopted(AP, cfg, st)                           # WAVE-LONGRUN-1 (a): adoption re-keys unchanged live rows
+    except Exception as e:
+        AP.log(f"KIT-WAVE REKEY skipped: {type(e).__name__}: {e}")
     reap_stale_attempts(AP, cfg, st, notices, ap_dir)      # KW-FIX-45: stop the gen-host work of replaced/cancelled attempts
+    try:
+        orphan_sweep(AP, cfg, st)                            # WAVE-LONGRUN-1: scopes of older attempts nobody tracks
+    except Exception as e:
+        AP.log(f"KIT-WAVE ORPHAN skipped: {type(e).__name__}: {e}")
     try:                                        # KW-FIX-44 GRTARM_1111: arm arbitration / stop rule / class stop
         grt_arm_step(AP, cfg, st, notices, ap_dir)
     except Exception as e:                      # an arm problem never stops the wave
