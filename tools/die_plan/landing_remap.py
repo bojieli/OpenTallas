@@ -165,7 +165,8 @@ def _xy_snapshot(t):
 
 def _xy_restore(t, snap, max_um):
     """reset_resel moves an export row and its landing pin onto the re-selected relay; HEAD pins are fixed interface sites
-    (face / core pins): put the recorded xy back (rename only) and return the rows whose relay is farther than max_um"""
+    (face / core pins): put the recorded PIN xy back and return the rows whose relay is farther than max_um.  The export
+    row xy_um is the relay site and stays at the rebuilt tree position."""
     far = []
     for e in t.get("reset_start_raw_exports") or []:
         o = snap["exports"].get(e.get("port"))
@@ -173,7 +174,9 @@ def _xy_restore(t, snap, max_um):
             d = _d(o, e["xy_um"])
             if d > max_um:
                 far.append(f"{e['port']} relay {e.get('instance')} {d:.0f} um")
-            e["xy_um"] = o
+            # HEAD-99 11-15: the export row xy_um IS the registered raw relay site (landing_contract._typed_raw_reset_output
+            # compares it with the rebuilt reset tree to 1e-6): keep the xy reset_resel wrote.  Only the landing PIN (a fixed
+            # interface site) is restored below.  Restoring the row left 41 stale xy rows when the relays moved (G0 rp21z20).
     for p in ((t.get("clock") or {}).get("landing_contract") or {}).get("pins") or []:
         o = snap["pins"].get(p.get("name"))
         if o is not None:

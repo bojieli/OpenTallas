@@ -161,7 +161,8 @@ def test_resel_keeps_pin_sites_and_fails_closed_on_far_relay():
     old, new = mk(), mk()
     LR.remap_plan(old, new, HERE, HERE, resets="resel", resel_fn=moving)
     t = new["partition_types"]["T"]
-    assert t["reset_start_raw_exports"][0]["xy_um"] == [0.0, 0.0] and t["reset_start_raw_exports"][0]["instance"] == "b"
+    # export row xy_um = relay site of the rebuilt tree (HEAD-99: 41 stale rows in G0 rp21z20); the landing pin stays put
+    assert t["reset_start_raw_exports"][0]["xy_um"] == [300.0, 0.0] and t["reset_start_raw_exports"][0]["instance"] == "b"
     assert t["clock"]["landing_contract"]["pins"][0]["xy_um"] == [1.0, 1.0]
     with pytest.raises(LR.RemapError):
         LR.remap_plan(mk(), mk(), HERE, HERE, resets="resel", resel_fn=moving, max_um=100.0)
