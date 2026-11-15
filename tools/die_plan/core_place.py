@@ -1452,6 +1452,8 @@ def write_type(M, t_new, cfg, log):
     rects = [(M.core_origin(i)[0], M.core_origin(i)[1], M.core_origin(i)[0] + M.dim[i, 0],
               M.core_origin(i)[1] + M.dim[i, 1]) for i in range(M.n)]
     R = HR.Raster(W, H, rects)
+    if cfg.get("slot_ft"):
+        rep["slot_cells"] = slot_mask(R, rects, W, H, cfg["slot_ft"])
     for s, (a, b, mv) in zip(st, ends):
         nold = len(s.get("regs_um") or [])
         rep["stations"] += 1
@@ -1510,6 +1512,31 @@ def write_type(M, t_new, cfg, log):
     if M.breg:
         bus_reg_write(M, t_new, R, cfg, rep)
     return rep
+
+
+def slot_mask(R, rects, W, H, um):
+    """--slot-ft UM (B6, FABLE-HARD-S81 11-14): no station / ft register in a face-to-core slot under UM: for every
+    core whose near edge is < UM from a face, the strip between that face and the core (over the core's span) is
+    marked not free, so registers there count as covered and are re-sited (same count) by the station / ft-resite
+    passes.  Returns the number of lattice cells masked."""
+    import math as _m
+    n0 = int(R.f.sum())
+    for (x0, y0, x1, y1) in rects:
+        strips = []
+        if x0 < um:
+            strips.append((0.0, y0, x0, y1))
+        if W - x1 < um:
+            strips.append((x1, y0, W, y1))
+        if y0 < um:
+            strips.append((x0, 0.0, x1, y0))
+        if H - y1 < um:
+            strips.append((x0, y1, x1, H))
+        for (a0, b0, a1, b1) in strips:
+            i0, i1 = max(0, int(_m.floor(a0 / G))), min(R.nx - 1, int(_m.ceil(a1 / G)))
+            j0, j1 = max(0, int(_m.floor(b0 / G))), min(R.ny - 1, int(_m.ceil(b1 / G)))
+            if i0 <= i1 and j0 <= j1:
+                R.f[i0:i1 + 1, j0:j1 + 1] = False
+    return n0 - int(R.f.sum())
 
 
 def take_class(s):
@@ -2092,6 +2119,9 @@ def main(argv=None):
                     help="B6 (COORD/FABLE-CLOSURE-STRATEGY 11-14): a --face-clear core with no timing-clean spot takes the "
                          "nearest space-legal spot; a station that then needs one more register gets +1 register on "
                          "EVERY row of its core class (+1 cycle, cycles pre-approved; H lanes / bus rows excluded)")
+    ap.add_argument("--slot-ft", type=float, default=0.0, metavar="UM",
+                    help="B6 (FABLE-HARD-S81 11-14): no station / ft register in a face-to-core slot under UM um; "
+                         "registers there are re-sited with the same count (with --ft-resite for ft slots)")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
@@ -2121,7 +2151,7 @@ def main(argv=None):
                flips_only=a.flips_only,
                gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
                face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
-               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix, take_regs=a.take_regs,
+               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix, take_regs=a.take_regs, slot_ft=a.slot_ft,
                link_reg=[c for x in a.link_reg for c in x.split(",") if c])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
