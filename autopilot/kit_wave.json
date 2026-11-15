@@ -11649,6 +11649,7 @@
      }
     ],
     "ot_s81sl_vsw": [
+     {"host": "epyc7", "dir": "/srv/opentallas-scratch2/claude/kit-ops-6/s81views/ot_s81sl_vsw", "job": "COUNTED ot_s81sl_vsw (counter record signed views, KIT-OPS-6 11-14: the counted dir libs were arcs 27-227 ps off the counter record; copy of the count-archive-2 dir with the counter kit views _tt/_ff libs)"},
      {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81sl_vsw",
@@ -11656,6 +11657,7 @@
      }
     ],
     "dsfd_su_t_rxsf": [
+     {"host": "epyc7", "dir": "/srv/opentallas-scratch2/claude/kit-ops-6/s81views/dsfd_su_t_rxsf", "job": "COUNTED dsfd_su_t_rxsf (counter record signed views, KIT-OPS-6 11-14: the counted dir libs were arcs 27-227 ps off the counter record; copy of the count-archive-2 dir with the counter kit views _tt/_ff libs)"},
      {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/dsfd_su_t_rxsf",
@@ -11677,6 +11679,7 @@
      }
     ],
     "ot_s81_cfg7_seq_bfp": [
+     {"host": "epyc7", "dir": "/srv/opentallas-scratch2/claude/kit-ops-6/s81views/ot_s81_cfg7_seq_bfp", "job": "COUNTED ot_s81_cfg7_seq_bfp (counter record signed views, KIT-OPS-6 11-14: the counted dir libs were arcs 27-227 ps off the counter record; copy of the count-archive-2 dir with the counter kit views _tt/_ff libs)"},
      {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/count-archive-2/s81views_v20261110/views/s81/ot_s81_cfg7_seq_bfp",
@@ -23207,6 +23210,7 @@
    "plan_sha256": "2aab0d3f149331c6b9c630d4f172a9e27f8757a20cfb078ee540842e31a262ba",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_s81.json",
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
