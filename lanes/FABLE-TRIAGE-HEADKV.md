@@ -753,3 +753,70 @@ Data: epyc2 die-head-route-1/head/p20nc_gate/sta_dump/die_sta_related.json and p
 rebuild (18.2), which is needed anyway before adoption; the receiver constraint goes into the hd_spn_end build
 that is still open. The seam becomes a gate only when hd_spn, hd_spn_end and the shims have real views; until
 then report it as "contract PASS, margin 9 ps, UNMEASURED on views", not as 8,095 violations.
+
+## 20. Region-parallel die DRT: the exact rule (04:0x PST)
+
+Why now: memory is fixed by the small worker (28-37 GiB), but one full-die iteration 0 is at least 4 h on 13-29
+shared threads for the generic kit's 4,972 clock nets (section 16). That is about 2.5 thread-seconds per worker
+that holds a net (INFERENCE from 2.47 m of wire in 21.6 um boxes). The adopted regional clock has about 45
+thousand nets, nine times more. One process cannot use more than one host, so the work has to be split by net.
+
+Principle: never cut a net and never put a pin on a crop edge. A unit is a set of whole nets; everything else is
+fixed context. Then every DRC that a unit reports is a true die DRC, and nothing can hide at a boundary.
+
+**Rule**
+1. Unit = one clock region (HEAD 327, KV 128). Its nets are the die-top nets whose DRIVER pin lies in the region
+   box. Every routable net is in exactly one unit (check: the unit net counts add up to the routable total).
+2. Reach R = the kit's leg bound (actual_max 405 um) plus two worker boxes (43.2 um) = 448.2 um, rounded up to
+   gcells: 453.6 um (42 gcells). No net of a unit leaves its region box bloated by R. Check per unit from the
+   guides; a unit that fails the check is merged with the neighbour it reaches into.
+3. Passes. Two units may run at the same time only if their region boxes are at least 2 R = 907.2 um apart.
+   Colour the "closer than 2 R" graph greedily. On the tile lattice (717 x 1,037 um) that is 3 colours in x times
+   2 in y = 6 passes; the spine regions fit into the same six. Passes run one after another; units inside a pass
+   run in parallel on any hosts.
+4. Context of one unit run:
+   - own nets: normal nets, routed by DRT (small worker, section 16 table);
+   - nets routed in earlier passes: present with their routed shapes (wires and vias, metal and cut layers) as
+     fixed special wires of the same net;
+   - all other nets (later passes, other units of this pass): marked special, no shapes;
+   - everything else as in the die database: all partitions as LEF abstracts, PG region grids with the capped
+     vias, obstructions, tracks, the die guides.
+   Two builds of this context are allowed, and they give the same count:
+   (a) full-die database with the net marking above. Nothing is cropped; the halo is the whole die. Cost per run:
+       the die load (about 8-13 GB; pin access 14 s; track assignment is 11 min for all nets and drops with the
+       net count). This is the reference form.
+   (b) geometric crop, to cut the load time: crop box = region box bloated by R, snapped out to gcells; keep
+       every instance and every fixed shape that intersects the crop (macros whole, stripes clipped at the crop
+       edge); guides of own nets only. No boundary pins: by item 2 no own net reaches the crop edge.
+       The first three units built this way must be run in form (a) as well and give the same violation list.
+5. A unit is done when its DRT count is 0. Its result is the routed wires of its own nets only.
+6. Merge. After each pass add the units' own-net routes to the master as fixed special shapes (item 4, second
+   bullet) for the next pass. After the last pass build the final database from the die GRT database plus every
+   unit's own-net wires as normal routed nets: write_def per unit, take the own nets' NETS statements, put them
+   into one DEF, read it into a fresh database. Checks: every routable net has exactly one wire; no net appears
+   in two units; wire count per net equals the unit's.
+7. Die gate = one whole-die DRC on that final database, all nets normal: `drt::check_drc` (present in this image;
+   take its arguments from `info args drt::check_drc_cmd`) over the die in tiles of about 2.2 mm that overlap by
+   43.2 um, markers de-duplicated by layer, box and rule. Gate: 0. The separate "seam-strip DRC" is not needed:
+   the tiled whole-die check covers every strip, and by item 3 two units of one pass cannot have shapes within
+   reach of each other. If the whole-die check finds a marker, re-run the owning unit of the later pass with the
+   final context.
+
+**Expected runtime (INFERENCE, to be replaced by the first three units)**
+- A tile region has about 137 nets (45 thousand over 327) of about 68 um each (3.08 m of clock wire), so roughly
+  550 to 1,500 worker boxes with a net. At 2.5 thread-seconds each, one rip-up-all iteration is 0.4 to 1.0
+  thread-hours; three of them plus the DRC-driven ones: about 3.5 thread-hours per unit.
+- Per unit at 8 threads: 30-40 min in form (a), less in form (b); 10-13 GB in form (a).
+- Per pass: about 55 units x 8 threads = 440 threads: about 40 min when the fleet gives them; 6 passes: 4-6 h
+  wall, about 1,150 thread-hours in total. The same work in one process is about 9 x 4 h per iteration.
+- Spine regions (1,382 x 2,074 um, more nets) take about 4 times a tile unit.
+
+**Order**
+1. Build the unit list, reach check and colouring on the ADOPTED clock kit (regional tree with the hk6 feed), not
+   on p16g's generic tree.
+2. Run three units of pass 1 in both forms; post nets, workers with nets, minutes, peak RSS, violations.
+3. Then volume. KV uses the same script with its own region map.
+
+Not verified by me: the special-wire conversion of routed nets, `drt::check_drc`'s argument list and its memory
+on a 2.2 mm tile, and all runtimes.
+Owners: DIE-HEAD-ROUTE-1 (script and HEAD), DIE-KV-ROUTE-1 (KV).
