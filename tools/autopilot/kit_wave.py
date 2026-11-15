@@ -70,6 +70,7 @@ from pathlib import Path
 import plan_block_identity as BI
 import kit_resume as KR
 import wave_jobs as WJ
+import kit_wave_roam as ROAM
 
 # A main merge can happen during a long tick. Never release a merged fix with
 # older in-memory launch logic; the next ordinary tick imports the new package.
@@ -2606,6 +2607,18 @@ def spec_retired(cfg, sp):
     return retired_src_hit(cfg, [sp.get("src"), sp.get("plan")] + abs_paths(sp.get("kit_rtl") or {}))
 
 
+def roam_hosts(cfg, die, item=None):
+    """WAVE-BALANCE-1 11-14 (OWNER: never pin a kit to one host): the hosts a stage of this item may run on = the die's gen
+    hosts that hold its src and are not under the work-root floor or SPILL-marked; [] (stage pinned to the gen host) when
+    cfg roam_stages is false"""
+    if cfg.get("roam_stages") is False:
+        return []
+    bad, low = cfg.get("_src_incomplete") or {}, cfg.get("_workroot_low") or {}
+    marked, lane = cfg.get("_spill_marked") or {}, lane_root(opt(cfg, die, "work_root"))
+    return [h for h in gen_hosts(cfg, die, item) if die not in bad.get(h, {}) and die not in low.get(h, {})
+            and lane not in marked.get(h, ())]
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
@@ -2618,6 +2631,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     return {"die": die, "item": item, "kind": kind, "event": d["event"], "plan": item_in.get("plan") or d["plan"],
             "gen_host": pick_gen_host(cfg, die, take=pick_charge_gb(cfg, die, item),
                                       threads=int(opt(cfg, die, "place_threads")), item=item),
+            "roam_hosts": roam_hosts(cfg, die, item),
             "src": item_in.get("src") or d["src"], "src_sha": item_in.get("src_sha") or d.get("src_sha", ""), "src_base": d.get("src_base", ""), "src_overlay": d.get("_src_overlay", ""), "queue_src": item_in.get("queue_src") or d.get("queue_src", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": item_kr, "dedup_group": dedup_group(cfg, die, item),
             # KIT-OVERLAY-1: item_inputs {item: {type_overlay: <path>}} = positions-only intra-type overlay (type_overlay.py) on
@@ -4013,7 +4027,7 @@ def counted_now(cfg, st, die, item, block=None):
 # source tree, so a new source counts as a change for every row of the die.
 # src_base (KW-FIX-44 11-10, COORD): the commit a wave source tree actually started from; src_sha names the commit its
 # switch inputs came from, and the tree was never at it.  A record of provenance, so not an input.
-INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
+INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", "gen_host", "roam_hosts", "work", "root", "hosts", "hub", "place_prefer", "place_mem_gb",
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group"}
@@ -5143,12 +5157,28 @@ def run_item(spec_path):
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
     logs = []
 
+    def roam_sh(host, cmd):                              # WAVE-BALANCE-1: (rc, text) of one command on a fleet host
+        a = _ssh(host, hub)
+        p = subprocess.run((a + [cmd]) if a else ["bash", "-c", cmd], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                           text=True, timeout=600)
+        return p.returncode, p.stdout or ""
+
+    roamer = ROAM.Roamer(ROAM.Ops(roam_sh), W, G, sp.get("roam_hosts") or [], hub_names=("localhost", hub),
+                         max_mb=int(sp.get("roam_max_mb") or ROAM.MAX_MB))
+
     def run(stage, argv, timeout=None, idempotent=False):
         """idempotent: the stage may be rerun after any ssh rc 255 (mkdir/probes); every stage is rerun when ot-run
         says NOT RUN or the ssh transport dropped before 'RAN on' (the command never started)"""
         res["stage"] = stage
-        print(f"KW_STAGE {stage} {now_s()} :: {' '.join(shlex.quote(a) for a in argv)[:600]}", flush=True)
         txt_all = ""
+        roam = isinstance(argv, ROAM.RoamArgv)
+        if roam:                                         # replicate the small attempt dir to every candidate host first
+            argv.set_hosts(roamer.before(stage))
+            for ln in roamer.log:
+                print(ln, flush=True)
+                txt_all += ln + "\n"
+            roamer.log.clear()
+        print(f"KW_STAGE {stage} {now_s()} :: {' '.join(shlex.quote(a) for a in argv)[:600]}", flush=True)
         for i in range(SSH_RETRIES + 1):
             # stderr streams to <stage>.live.log so the tick can see whether ot-run already started the command
             # ('ot-heavy: admitted on') or it still waits in the memory queue (cancel_class_volume)
@@ -5165,10 +5195,19 @@ def run_item(spec_path):
             print(f"KW_SSH_RETRY {stage} try {i + 2} in {wait:.0f} s (transport drop before the command ran)", flush=True)
             txt_all += f"\nKW_SSH_RETRY {stage}: transport drop, retry {i + 2}\n"
             time.sleep(wait)
+        rc_out = p.returncode
+        if roam:                                         # the host that ran it copies the outputs home (G stays the home dir)
+            ok, note = roamer.after(stage, txt_all)
+            if note:
+                print(note, flush=True)
+                txt_all += "\n" + note + "\n"
+                txt += "\n" + note + "\n"
+            if not ok and rc_out == 0:
+                rc_out = 1
         (out / f"{stage}.log").write_text(txt_all)
         logs.append(stage)
-        print(f"KW_STAGE_RC {stage} {p.returncode}", flush=True)
-        return p.returncode, txt
+        print(f"KW_STAGE_RC {stage} {rc_out}", flush=True)
+        return rc_out, txt
 
     def remote(cmd):                                     # ssh joins argv with spaces: send ONE quoted command
         return _ssh(G, hub) + ["bash -c " + shlex.quote(cmd)] if _ssh(G, hub) else ["bash", "-c", cmd]
@@ -5177,8 +5216,11 @@ def run_item(spec_path):
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
-        return [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
+        argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
             + heavy_args(sp) + ["--", "bash", "-c", cmd]
+        if d == W and hosts == [G] and not allow_hub and roamer.others:     # WAVE-BALANCE-1: any synced host may run it
+            return ROAM.RoamArgv(argv)
+        return argv
 
     def fail(stage, txt, evidence=""):
         res.update(stage=stage, verdict="FAIL", tail=txt[-3000:], errors=error_lines(txt), evidence=evidence or f"{G}:{W}")
