@@ -1,0 +1,7 @@
+# HEAD-CLKFEED-1 handoff (2026-11-15 00:3x PST)
+## STATE
+- Feed v2 built: epyc2 /srv/opentallas-scratch3/claude/head-clkfeed-1/cfg/feed_hk5.json. Rows re-parented along the data ring sp -> o0..oN -> turnA | turnB <- bN..b0 <- sp; taps = straight Manhattan legs. Non-tree landing edges 144 -> 12 (turnXa->turnXb, one per row side); median feed wire per hop 1050 -> 717 um (= pitch); max root path (Manhattan) 16900 -> 16706 um = die-corner lower bound from root sp3. 132 parent edges changed. Feed regions identical (327), so the feed is plan-independent for rp21z20 except lep0N/mesh tap centroids.
+- Run p16f (plan rp21z16 copy, new feed): epyc2 head-clkfeed-1/head/p16f (ot-run unit oth-ubuntu-3826319). CA runs: run_ca_p16r.sh (baseline) and run_ca_p16f.sh (rise-only driver from FABLE-PD-HEAD-CLK; --count-align is not yet in proto_die.sh).
+- Stage model refit on p16r (lever 5): the per-leg model is NOT 17 pct optimistic on balancing (early) arrivals: feed legs measured/model 1.005 TT, 0.981 FF; all legs 1.023 / 1.004. The 0.343 ps/um is LATE arrival over routed wire (146971 ps / 428k um); late/early = 1.15 TT. Refit (placed stages, TT): d0 12.78, k1 0.1662, k2 0.0002, kf 7.16 (head-clkfeed-1/refit/ps.json). No registry change proposed; use a late factor 1.15 for unshared-path estimates.
+## Next
+1 read p16f CHAIN (deepest tap, per-hop wire) and both CA plan.json; 2 check rp21z20N partition boxes against the region map; 3 queue line to HEAD-99: new feed changes K/DEPTH latencies, re-bind after adoption.
