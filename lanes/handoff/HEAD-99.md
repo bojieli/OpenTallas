@@ -15,3 +15,6 @@
 - Form B (r220, target 950 = more taps): epyc7 /srv/opentallas-scratch2/claude/type-hdserdes/r220/g_hd_serdes/hd_serdes (copy of pd3 post-place, CTS and later removed), log intel2 ~/tmp/hdserdes_r220_route.log; queued on epyc7 load gate.
 - Overlay for the wave src: lanes/overlays/HEAD-SERDES-SECONDARY (README, apply.sh, gen_phys patch).
 - When A or B passes (DRC0, TT>=-42, internal hold>=0): AUTO-RESIGN row + RESULT line.
+
+# HEAD-99 successor 11-14 19:55
+- hd_spn_end attempt_6 cancelled (exact scope). z18d prep running epyc7 head-99/prep21z18 (prep21z14.sh PW=prep21z18). TODO: die bind driver for HEAD (none exists), u_epc input-latency tap + PG cut, hd_mesh_e +10 percent, HDCTL-REGS stations, then z19 event.
