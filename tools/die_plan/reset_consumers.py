@@ -81,7 +81,11 @@ def localize(text, declarations, tree, native_roles=None):
             visited.add(net)
             r = published[net]
             c = calls.get(r.get('name'))
-            if not c or c['module'] not in ('ot_dp_rrelay', 'ot_dp_rrelay_nl'):
+            # QC-S4Z: a mission-role consumer tap rst_n_t<k> is the gated leaf relay ot_dp_rgate[_drive] (reset AND run,
+            # same release depth as a plain relay). Only the LEAF node (first step) may be one; its d is the raw parent net.
+            gated_leaf = bool(c and c['module'] in ('ot_dp_rgate', 'ot_dp_rgate_drive') and net == first
+                              and re.fullmatch(r'rst_n_t\d+', net) and 'run' in c['ports'])
+            if not c or (c['module'] not in ('ot_dp_rrelay', 'ot_dp_rrelay_nl') and not gated_leaf):
                 raise ResetConsumerError(f'{net}: not an actual registered reset relay')
             ps = c['ports']
             if any(k not in ps for k in ('clk', 'd', 'q')) or ps['clk'][0] != clock:

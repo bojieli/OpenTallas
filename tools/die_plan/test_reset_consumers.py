@@ -65,3 +65,26 @@ def test_duplicate_and_extra_keys_rejected():
 def test_unknown_tree_and_combinational_reset_rejected():
     with pytest.raises(ResetConsumerError):localize(TEXT,[ROW],None)
     with pytest.raises(ResetConsumerError):localize(TEXT.replace('wire rst_n = rst_n_t5','wire rst_n = ~rst_n_t5'),[ROW],TREE)
+
+# QC-S4Z: mission-role consumer taps rst_n_t<k> are ot_dp_rgate (reset AND run); only the leaf may be gated.
+GTEXT = TEXT.replace("ot_dp_rrelay a1 (.clk(clk), .d(a0), .q(rst_n_t5));", "ot_dp_rgate a1 (.clk(clk), .d(a0), .run(rn_a0), .q(rst_n_t5));").replace(
+    "ot_dp_rrelay b1 (.clk(clk), .d(b0), .q(rst_n_t14));", "ot_dp_rgate b1 (.clk(clk), .d(b0), .run(rn_b0), .q(rst_n_t14));")
+
+def test_gated_leaf_taps_accepted_equal_depth():
+    txt, rs = localize(GTEXT, [ROW], TREE)
+    assert ".rst_n(rst_n_t14)" in txt and rs[0]["depth"] == 2 and rs[0]["cycles_added"] == 0
+
+def test_gated_leaf_without_run_rejected():
+    with pytest.raises(ResetConsumerError, match="registered reset relay"):
+        localize(GTEXT.replace(".run(rn_b0), ", ""), [ROW], TREE)
+
+def test_gated_intermediate_relay_rejected():
+    s = GTEXT.replace("ot_dp_rrelay b (.clk(clk), .d(rst_root_n), .q(b0));", "ot_dp_rgate b (.clk(clk), .d(rst_root_n), .run(rn_r), .q(b0));")
+    with pytest.raises(ResetConsumerError, match="registered reset relay"):
+        localize(s, [ROW], TREE)
+
+def test_gated_non_tap_name_rejected():
+    t = copy.deepcopy(TREE)
+    s = GTEXT.replace("rst_n_t14", "rst_x_t14"); t["relays"][-1]["q"] = "rst_x_t14"
+    with pytest.raises(ResetConsumerError):
+        localize(s, [dict(ROW, new_reset="rst_x_t14")], t)
