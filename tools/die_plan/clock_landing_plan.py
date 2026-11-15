@@ -1129,6 +1129,8 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                 clone["note"]=clone.get("note","")+f";clock landing cohort from{base} (exact local monitor children)"
                 raw["partition_types"][name]=clone
                 if "in_um" in W["types"].get(tn,{}):raw["reset"]["in_sites"][name]=W["types"][tn]["in_um"]
+                ko=raw["reset"].get("keep_outs") or {}
+                if tn in ko:ko[name]=list(ko[tn])    # S81-TYPEMERGE R3a: a cohort clone keeps the family union of reset outs
                 for p in raw["partitions"]:
                     if p["name"] in names:p["type"]=name
         if not split:break
