@@ -247,8 +247,15 @@ def is_plan(env_prio, text):
     return env_prio == "plan" or bool(PLAN_RE.search(B64.sub(" ", text)))
 
 
+# KIT-OPS-6 11-14 (COORD item 8): 20:46 the watchdog killed HEAD elemA/elemB core builds (intel1 A1/B1) because HEAD cores use the HBM
+# core-kit generator: container hbmcore-kit_*, command run_kit_hbm.sh.  The generator name says nothing about the die.  HBM is decided
+# from the die metadata the ident carries (kit dir / work dir / type name under an hbm die: .../runs/hbm/..., hbm-*, ot_hbm_*, trialhbm-*),
+# after the generator tokens are removed.
+GENERATOR_RE = re.compile(r"(?i)(?:^|(?<=[\s/]))hbmcore-|run_kit_hbm\.sh")
+
+
 def is_hbm(text):
-    return bool(HBM_RE.search(text))
+    return bool(HBM_RE.search(GENERATOR_RE.sub(" ", text)))
 
 
 def base_type(name):
