@@ -57,7 +57,9 @@ WAIT_TICKS = int(os.environ.get("MQ_WAIT_TICKS", "6"))
 INFRA_TRIES = int(os.environ.get("MQ_INFRA_TRIES", "3"))
 REF_CAP = int(os.environ.get("MQ_REF_CAP", "40"))
 SYNC_HOOK = os.environ.get("MQ_SYNC_HOOK", str(Path(__file__).resolve().with_name("ot-tools-sync")) + " sync --sha {sha}")
-SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/").split(",")
+# rtl/lib + rtl/common: die_plan tools read REPO/rtl/lib/ot_reset_sync.sv etc.; without them test_bind failed on a sparse tree only
+# (pg-aware-1 288ada0041 / 240cf2612f5 false MERGE-FAIL 11-14 20:16 / 20:26)
+SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
 TAG_DATE = os.environ.get("MQ_TAG_DATE", "")
 MAX_BLOB = 95 * 1024 * 1024
 DIES = ("head", "qc", "kv", "s81", "hbm")
