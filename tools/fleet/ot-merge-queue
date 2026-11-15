@@ -428,13 +428,15 @@ def run_tests(wt, tests, tag):
     return fails, infra, tails
 
 
-def baseline(base, fails):
-    """the failures that also fail on main@base (by file existence + rerun) -> set"""
+def baseline(base, fails, extra=(), tag=""):
+    """the failures that also fail on main@base (by file existence + rerun) -> set.  The main tree gets the SAME sparse set as
+    the candidate (extra = the candidate's extra dirs) and is private to the item: a test that reads a file outside the sparse
+    set then fails on both sides alike (11-14 20:51: test_core_reset_io read physical/die_plan/* that a shared base tree had)."""
     if not fails:
         return set()
-    name = f"base-{base[:12]}"
+    name = f"base-{base[:12]}" + (f"-{tag}" if tag else "")
     files = {f.split("::")[0] for f in fails if not f.startswith("TIMEOUT")}
-    p = wt_make(name, base, {os.path.dirname(f) for f in files})
+    p = wt_make(name, base, set(extra) | {os.path.dirname(f) for f in files})
     ids = [f for f in fails if not f.startswith("TIMEOUT") and (p / f.split("::")[0]).is_file()]
     if not ids:
         return set()
@@ -465,7 +467,8 @@ def gate(it, wt, base):
     fails, infra, tails = run_tests(wt, tests, it["id"])
     if infra and not fails:
         return "INFRA", f"pytest rc {infra}: {' / '.join(tails)[:300]}"
-    base_f = baseline(base, fails)
+    base_f = baseline(base, fails, it.get("extra", ()), it["id"])
+    wt_drop(f"base-{base[:12]}-{it['id']}")
     new = sorted(fails - base_f)
     flaky = []
     if new:
@@ -583,7 +586,8 @@ def land(it, text, st):
         cur = fetch_main()
         if cur != it["base"]:
             moved = changed_files(wt, it["base"], cur) if is_ancestor(it["base"], cur, cwd=wt) else ["<main rewritten>"]
-            wt_make(it["id"], cur, {os.path.dirname(f) for f in it.get("changed", [])})
+            it["extra"] = sorted({os.path.dirname(f) for f in it.get("changed", [])})
+            wt_make(it["id"], cur, it["extra"])
             status, detail = apply(wt, cur, it["sha_full"], it["branch"])
             if status == "ALREADY":
                 return finish(st, it, "ALREADY", f"landed meanwhile: {detail}", cur)
@@ -659,7 +663,8 @@ def prepare(it, base):
         if is_ancestor(full, base):
             return "ALREADY", f"{full[:11]} is an ancestor of main {base[:11]}"
         mb = git("merge-base", base, full).stdout.strip()
-        wt = wt_make(it["id"], base, {os.path.dirname(f) for f in changed_files(REPO, mb, full)})
+        it["extra"] = sorted({os.path.dirname(f) for f in changed_files(REPO, mb, full)})
+        wt = wt_make(it["id"], base, it["extra"])
         status, detail = apply(wt, base, full, it["branch"])
         if status != "OK":
             return status, detail
