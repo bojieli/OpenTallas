@@ -15,7 +15,7 @@ Per instance (104 instances, 26 col_h9/h10 types):
   collector_tree.core_resets  <inst> -> <inst>.u_w + <inst>.u_e on the same reset tap (one reset leaf drives both
               halves' rst_n, which the split wrapper ties together), pin_um / xy at each half's rst_n pin.
 Bind (asbuilt): the 2 substitute_inst rows (qxpq_w10 leaf -> _gb) go; the col frame RTL instantiates the split wrapper
-(dissolved) with OLAT 1 (the signed halves' parameter; IFN 1 is the wrapper default), the halves are the leaves;
+(dissolved) with OLAT 1 and IFN 0 (S81-GOTAG-SETUP-1115 r171: every face pin is core-driven; IFN 1 is the wrapper default), the halves are the leaves;
 instance_path_params moves from the qxpq_w10 leaf to the two halves.
 The plan text is edited in place (each changed JSON value keeps its own line style), so the diff is only these blocks.
     python3 -I delta_romq_split_1106.py PLAN ASBUILT HALVES_JSON REPORT     (cwd = repo root)
@@ -329,7 +329,7 @@ def main():
             cnt += 1
             body, k = re.subn(r"\.xs_sv\(\{[^}]*\}\), ", "", m.group(3))
             assert k == 1, m.group(2)
-            return f"{m.group(1)}{SPLIT} #(.OLAT(1)) {m.group(2)}{body}"
+            return f"{m.group(1)}{SPLIT} #(.OLAT(1), .IFN(0)) {m.group(2)}{body}"
 
         src2 = pat.sub(fix, src)
         assert src2.count("\n") == n_lines and cnt == 16, (f, cnt)

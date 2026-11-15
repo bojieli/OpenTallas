@@ -1,6 +1,6 @@
 `timescale 1ps/1ps
 // S81-PLAN-1 D (11-10): tb_native_go_pair.sv + a third DUT leg = the candidate's ot_v41_rom_elem_q_qxpq_w10_gb_split
-// #(.OLAT(1)) (its plan-kit call; IFN 1 default), and a per-station contract delay: +dd posedge stages on the WHOLE element
+// #(.OLAT(1), .IFN(0)) (its plan-kit call, r171 IFN 0), and a per-station contract delay: +dd posedge stages on the WHOLE element
 // input bundle (cfg, go, tag, x streams; the as-built station inputs are all equal added edges, frame_return_plan asserts
 // it) and +dd on the bank_free/sh_free feedback back to station/cfg7.  dd = station X age - 2 (e0 of the 11-01 bench).
 // leg 0 = original direct GB0 _gb, 1 = current GB1 _gb, 2 = candidate gb_split GB1.  skew=1 (MUTANT): x streams one
@@ -86,7 +86,7 @@ module tb_native_go_split;
  .walking(wk1),.bank_free(bf1),.sh_free(sf1),.busy(busy1),.fault(qf1),
  .pv(pv1),.pval(val1),.prow(row1),.pseg(seg1),.pnseg(n1),.perr(err1),.ppos(pos1));
  wire[1:0]pv2,err2;wire[63:0]val2;wire[31:0]row2;wire[9:0]seg2,n2;wire[5:0]pos2;
- ot_v41_rom_elem_q_qxpq_w10_gb_split #(.OLAT(1),.INSTANCE("u_f_0L01.u_r0.u_e0")) q2(
+ ot_v41_rom_elem_q_qxpq_w10_gb_split #(.OLAT(1),.IFN(0),.INSTANCE("u_f_0L01.u_r0.u_e0")) q2(
  .clk(clk),.rst_n(crs),.cfg_v(dcfg[53]),.cfg_a(dcfg[4:0]),.cfg_d(dcfg[52:5]),.go(dog),.go_tag(dtag),
  .xs_v(dxa[282]),.xs_p(dxa[276:269]),.xs_b(dxa[268:266]),.xs_pos(dxa[279:277]),
  .xs_q0(dxa[255:0]),.xs_e0(dxa[265:256]),.xs_q1(dxb[255:0]),.xs_e1(dxb[265:256]),

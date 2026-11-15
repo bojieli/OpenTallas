@@ -135,7 +135,7 @@ def main():
                verdict='PASS' if len(passed) == len(res) else 'FAIL',
                ruling='COORD 11-10: regenerated L0 field + gb_split leg on the candidate exact bytes + six X ages + '
                       'second-macro row + must-fail mutants per contract; sha-bound record read by lower_xs per station',
-               element=dict(module='ot_v41_rom_elem_q_qxpq_w10_gb_split', call='#(.OLAT(1)) (plan-kit call; IFN 1 default)',
+               element=dict(module='ot_v41_rom_elem_q_qxpq_w10_gb_split', call='#(.OLAT(1), .IFN(0)) (plan-kit call; r171 IFN 0)',
                             source=split, sha256=provider[split]),
                required_go_issue_advance_edges=1, go_boundary_edges=1, qualified_x_ages=passed,
                contracts=res, first_tag_authority=dict(OPTAG=gold['first_operation_tag'],
