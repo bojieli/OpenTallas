@@ -85,10 +85,13 @@ if {[llength [info commands ::grt::set_allow_congestion]] && ![llength [info com
     ::grt::set_allow_congestion 1
     return -options $opts $res
   }
-  foreach c {repair_timing repair_design} {
+  # KIT-OPS-5 11-14 (FABLE-KVOVF, measured): repair_antennas without -allow_congestion clears the router's allow-congestion state, so the
+  # next estimate_parasitics -global_routing fails EST-0005.  repair_antennas joins the wrapped commands and every wrapped command
+  # re-arms the state AFTER it returns too (not only before).
+  foreach c {repair_timing repair_design repair_antennas} {
     if {[llength [info commands ::$c]]} {
       rename ::$c ::ot_ac_${c}_orig
-      proc ::$c {args} [format {::grt::set_allow_congestion 1; uplevel 1 [list ::ot_ac_%s_orig {*}$args]} $c]
+      proc ::$c {args} [format {::grt::set_allow_congestion 1; set rc [catch {uplevel 1 [list ::ot_ac_%s_orig {*}$args]} res opts]; ::grt::set_allow_congestion 1; return -options $opts $res} $c]
     }
   }
   ::grt::set_allow_congestion 1
