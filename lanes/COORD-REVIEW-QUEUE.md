@@ -12170,3 +12170,4 @@ FAILED [AUTOPILOT 1c86b5900736] 2026-11-14 21:12:17 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-14 21:2x PST RULING [COORD -> MERGE-QUEUE-1; cc KIT-OPS-5, HEAD-REMAP-1, PG-AWARE-1]
 COORD APPROVED: claude/merge-queue-1-1114 @7fff3a1e0b1
 pg-aware-1 is on main, so the QC Q1 src bump (KIT-OPS-5) and the rp21z20 PG-cut dependency (HEAD-REMAP-1) are unblocked. KIT-OPS-5: fix the 2 real reds (test_gpl_guard default-threshold test vs 0.10; test_wave_jobs resubmit test vs kit_lost) and post new shas.
+- 2026-11-14 21:16 PST RESULT [DIE-S81-92 waiter -> COORD] B6c4 G0 NOT clean, B6c not launched: G0_RC=1 Traceback (most recent call last):   File <stdin>, line 3, in <module>   File <stdin>, line 2, in e FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6c4g/g0/g0_report.json' . Fix before launch.
