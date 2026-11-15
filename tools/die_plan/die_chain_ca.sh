@@ -9,9 +9,9 @@ PROOF=$1; PLAN=$2; OUT=$3; CC=${4:-inv2}; shift $(( $# > 3 ? 4 : $# ))
 HERE=$(cd "$(dirname "$0")" && pwd); T=${CA_TOOLS:-$HERE}; H=$T/../s81_head
 mkdir -p "$OUT"; log(){ echo "$1 $(date '+%F %T')" >> "$OUT/CHAIN.log"; }
 rc=0
-python3 -s "$H/landed_phase_ocv.py" "$PLAN" "$PROOF" --tools "$T/.." --clock-cell "$CC" --out "$OUT/landed_phase_ocv.json" > "$OUT/ca_ocv.log" 2>&1; r=$?; log "CA_OCV $r"; [ $r -ne 0 ] && rc=1
-python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
-python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
+python3 -s "$H/landed_phase_ocv.py" "$PLAN" "$PROOF" --tools "$T" --clock-cell "$CC" --out "$OUT/landed_phase_ocv.json" > "$OUT/ca_ocv.log" 2>&1; r=$?; log "CA_OCV $r"; [ $r -ne 0 ] && rc=1
+python3 -s "$T/count_align_plan.py" "$OUT/landed_phase_ocv.json" ${CA_PLAN_ARGS:-} --out "$OUT/count_align_plan.json" > "$OUT/ca_plan.log" 2>&1; r=$?; log "CA_PLAN $r"; [ $r -ne 0 ] && rc=1
+python3 -s "$T/count_align_bind.py" "$OUT/count_align_plan.json" ${CA_BIND_ARGS:-} --out "$OUT/count_align_bind.json" > "$OUT/ca_bind.log" 2>&1; r=$?; log "CA_BIND $r"; [ $r -ne 0 ] && rc=1
 if [ $rc -eq 0 ]; then
   ( cd "$T" && python3 -s die_sta_related.py "$PROOF" --plan "$PLAN" --out "$OUT/sta_ca" --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell "$CC" \
       --count-align "$OUT/count_align_bind.json" --count-align-key part "$@" ) > "$OUT/sta_ca.log" 2>&1; log "STA_CA $?"

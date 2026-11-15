@@ -884,7 +884,13 @@ class Landings:
         self.forwarded_clock_only_inputs = {}
         self.emitted_top = False
         self.reset_placements = {}
+        declared = table.get("part_region")   # DIE-S81-92 ca_region_table.py: declared regions, boxes may overlap
         for pn, p in self.parts.items():
+            if declared is not None:
+                if pn not in declared:
+                    raise LandingError(f"clock landing {pn}: not in the table part_region declaration")
+                self.region[pn] = declared[pn]
+                continue
             w, h = self.types[p["type"]]["outline_um"]
             x, y = p["origin_um"][0] + w / 2, p["origin_um"][1] + h / 2
             candidates = [r["tag"] for r in table["regions"]
