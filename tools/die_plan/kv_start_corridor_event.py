@@ -237,6 +237,37 @@ def _free_point(p, obs):
     return (round(x, 3), round(y, 3))
 
 
+def _core_free_point(p, obs, W, H, margin=CLEAR_UM):
+    """KV-RAWFIX 11-15 (raw rule part 3): p itself when it is free and inside the core area [margin, W-margin] x
+    [margin, H-margin]; else the nearest point that is inside the core area and outside every clearance-grown obstacle
+    (candidates: the four edges of each grown box containing p, projected, plus the core-area corners; Manhattan
+    nearest).  None if the core area has no such point near p."""
+    g = [(a - CLEAR_UM, b - CLEAR_UM, c + CLEAR_UM, d + CLEAR_UM) for a, b, c, d in obs]
+    lo_x, lo_y, hi_x, hi_y = margin, margin, W - margin, H - margin
+
+    def clip(q):
+        return (min(max(q[0], lo_x), hi_x), min(max(q[1], lo_y), hi_y))
+
+    def ok(q):
+        return lo_x <= q[0] <= hi_x and lo_y <= q[1] <= hi_y and not any(
+            x[0] < q[0] < x[2] and x[1] < q[1] < x[3] for x in g)
+
+    p = tuple(p)
+    if ok(p):
+        return p
+    q0 = clip(p)
+    cand = [q0] if ok(q0) else []
+    for x in g:
+        if x[0] < q0[0] < x[2] and x[1] < q0[1] < x[3]:
+            cand += [clip((x[0], q0[1])), clip((x[2], q0[1])), clip((q0[0], x[1])), clip((q0[0], x[3]))]
+    cand = [q for q in cand if ok(q)]
+    if not cand:
+        r = _free_point(q0, obs)
+        return r if ok(r) else None   # (_free_point rounds; only used when no edge candidate exists)
+    best = min(cand, key=lambda q: abs(q[0] - p[0]) + abs(q[1] - p[1]))
+    return best      # unrounded: a point exactly on a grown box edge must not round into the box
+
+
 def istations_type(t, margin, min_um):
     """existing internal_stations chains with a site inside a macro (+halo): same count, sites re-laid on a
     macro-free corridor from_um -> to_um (ends pulled to the nearest free point).  Exact-bank / bit_route entries and
@@ -333,7 +364,7 @@ def start_type(P, tn, t, margin, min_um):
             pts = [list(o)] + st + [list(tgt)]
             sub[b] = dict(corridor_um=round(length(r), 1), max_hop_um=round(max(man(a, c) for a, c in zip(pts, pts[1:])), 1))
         if fails:
-            raise SystemExit(f"kv_start_corridor_event start {tn}: no legal relay sites: {fails[:4]}")
+            raise SystemExit(f"kv_start_corridor_event start {tn}: no legal relay sites: {fails}")
         cfg = dict(depth=depth, branches=branches)
         if key == "landing_reader_start":
             cfg["origin_rect_um"] = [round(o[0] - 8.64, 3), 6.48, round(o[0] + 8.64, 3), 19.44]
@@ -357,6 +388,13 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
         raise SystemExit(f"kv_start_corridor_event raw {tn}: no cland_start_raw in {f}")
     raw = m.group(1)
     by_q = {q: dict(d=d, depth=int(dep), xy=(float(x), float(y))) for _, d, q, dep, x, y in REL.findall(text)}
+    if raw not in by_q:
+        # KV-RAWFIX 11-15 (rule part 1): cland_start_raw of a type without a START plan is the default ring reset relay
+        # u_cland_rst_<bus>; the emitter writes it without a "depth N @ (x, y)" comment, so the chain was one node long
+        # and no consumer had a base.  It takes depth = driver depth + 1 and the driver's site (never used as a base).
+        m2 = re.search(r"ot_dp_rrelay\s+\w+\s*\(\.clk\(clk\),\s*\.d\((\w+)\),\s*\.q\(" + re.escape(raw) + r"\)\);", text)
+        if m2 and m2.group(1) in by_q:
+            by_q[raw] = dict(d=m2.group(1), depth=by_q[m2.group(1)]["depth"] + 1, xy=by_q[m2.group(1)]["xy"])
     chain = [raw]
     while chain[-1] in by_q and by_q[chain[-1]]["d"] in by_q:
         chain.append(by_q[chain[-1]]["d"])
@@ -367,8 +405,17 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
     for n, xy in sorted(pins.items()):
         if n.startswith("cland_fstart_out_"):
             cons["fstart:" + n[len("cland_fstart_out_"):]] = tuple(xy)
+    # KV-RAWFIX 11-15 (rule part 2): the origin row (pin x, EDGE_Y) can lie under a macro that corridor_obstacles closes to
+    # the core edge (kv3_hgi*: head cores 12.96 um from the S edge, cland_tstart_in an interior pin): fall back to the pin.
+    if _core_free_point(cons["origin"], obs, W, H, margin) != tuple(cons["origin"]):
+        cons["origin"] = tuple(pins["cland_tstart_in"])
     branches, rep, fails = [], {}, []
-    for role, xy in cons.items():
+    for role, pin_xy in cons.items():
+        # rule part 3: a target inside a keepout or outside the core area moves to the nearest free point inside it
+        xy = _core_free_point(pin_xy, obs, W, H, margin)
+        if xy is None:
+            fails.append(role)
+            continue
         occupied = [x for x in bands if not (x[0] <= xy[0] <= x[2] and x[1] <= xy[1] <= x[3])]
         done = None
         for k in range(len(chain) - 2, -1, -1):          # deepest base first = fewest copies
@@ -392,8 +439,11 @@ def raw_type(P, tn, t, rtl_dir, margin, min_um):
         pts = [list(by_q[base]["xy"])] + st + [list(xy)]
         rep[role] = dict(base=base, copies=n, corridor_um=round(length(r), 1),
                          max_hop_um=round(max(man(a, c) for a, c in zip(pts, pts[1:])), 1))
+        if tuple(xy) != tuple(pin_xy):
+            rep[role]["target_um"] = [round(v, 3) for v in xy]
+            rep[role]["pin_offset_um"] = round(man(xy, pin_xy), 1)
     if fails:
-        raise SystemExit(f"kv_start_corridor_event raw {tn}: no corridor with hops <= {MAX_HOP_UM}: {fails[:4]}")
+        raise SystemExit(f"kv_start_corridor_event raw {tn}: no corridor with hops <= {MAX_HOP_UM}: {fails}")
     ck["landing_raw_branches"] = branches
     return dict(raw=raw, chain_depth=len(chain), branches=len(branches),
                 copies=sum(len(b["stages"]) for b in branches), consumers=rep)
