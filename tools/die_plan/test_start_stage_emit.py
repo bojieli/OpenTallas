@@ -549,3 +549,43 @@ def test_relay_manifest_materializes_into_a_checked_provider():
                           **{k: s[k] for k in ("relay_for", "fed_by", "relay_cycles") if k in s},
                           **({"kind": "relay"} if s.get("relay") else {})) for s in d2["stages"]])
     assert SP.relay_chains(pv["nodes"]) == []
+
+
+class _Site:
+    """legal everywhere except a blocked box (a core + halo)"""
+    def __init__(self, box):
+        self.box = box
+
+    def legal(self, q):
+        b = self.box
+        return not (b[0] < q[0] < b[2] and b[1] < q[1] < b[3])
+
+
+def test_place_stage_far_fallback_and_unplaced_listed():
+    """S81-START-CAP: beside-the-cell search blocked by a core -> nearest legal segment in 2-D; none in range -> listed."""
+    v, t = _tree()
+    # block every row within +-12 um of y 60 and x 0..200 -> beside search fails, nearest legal is above/below that band
+    site = _Site((0.0, 48.0, 200.0, 72.0))
+    doc, sv, v2, t2 = E.emit(_bind(), _meta(), v, t, site=site, die_wh=(300.0, 300.0))
+    for s in doc["stages"]:
+        assert s["placed"] and s["cell_to_stage_um"] >= 11.0 and s["cell_to_stage_um"] <= 150.0
+        assert site.legal(s["rect_um"][:2]) and site.legal(s["rect_um"][2:])
+        assert f"place_pin -pin_name {s['clock_port']} -layer M9 -location {{{s['rect_um'][0]:.3f} {s['rect_um'][1]:.3f}}}" in t2
+    assert doc["unplaced_stages"] == [] and set(doc["stage_distances_um"]) == {"b1", "b2"}
+    # nothing in 150 um: not fatal, listed, tap pin at the node cell, counts say so
+    big = _Site((-1000.0, -1000.0, 1000.0, 1000.0))
+    d2, sv2, v3, t3 = E.emit(_bind(), _meta(), v, t, site=big, die_wh=(300.0, 300.0))
+    assert sorted(d2["unplaced_stages"]) == sorted([f"st:{P_ROOT}", f"st:{P_L}"]) and d2["counts"]["unplaced"] == 2
+    assert all(not s["placed"] and s["cell_to_stage_um"] is None for s in d2["stages"])
+    assert "u_st_b2" in sv2 and "t_st_b2__clk" in v3
+    # radius 0 keeps the old fatal behaviour
+    with pytest.raises(E.StageError):
+        E.emit(_bind(), _meta(), v, t, site=site, die_wh=(300.0, 300.0), far_radius=0)
+
+
+def test_place_stage_far_nearest():
+    rows = E.Rows()
+    site = _Site((0.0, 0.0, 100.0, 10.0))
+    r = E.place_stage_far((50.0, 5.0), 4, rows, site, 300.0, 300.0, radius=30.0)
+    assert r is not None and r[1] >= 10.0 and abs(r[0] - 50.0) + abs(r[1] - 5.0) <= 30.0
+    assert E.place_stage_far((50.0, 5.0), 4, rows, site, 300.0, 300.0, radius=2.0) is None

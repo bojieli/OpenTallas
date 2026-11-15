@@ -38,6 +38,8 @@ CLK_CELL_W_UM = 1.62    # die clock cell footprint (BUFx24 / CKINVDCx16, LEF SIZ
 ROW_UM = 0.27
 GAP_UM = 0.54           # two sites between the node cell and the stage
 MAX_ROW_TRIES = 40
+FAR_RADIUS_UM = 150.0   # FABLE-PD-S81-0335 H: 2-D fallback radius when no segment beside the node cell is legal
+FAR_STEP_UM = 1.08      # fallback x step (4 sites)
 STAGE_MODULE = "ot_dp_landing_origin"
 ROOT_MODULE = "ot_dp_landing_root"
 ROOT_SETTLE = 64        # count_align_bind --root-settle default (root_settle_cycles)
@@ -125,6 +127,30 @@ def polarity(cells, inst):
     return n
 
 
+def place_stage_far(xy, n_flops, rows, site=None, W=None, H=None, radius=FAR_RADIUS_UM):
+    """S81-START-CAP (FABLE-PD-S81-0335 H): nearest free legal n_flops row segment in 2-D within `radius` um (Manhattan
+    distance of the segment's lower-left corner from xy); None when nothing is in range.  Same legality as place_stage."""
+    w = n_flops * FLOP_W_UM
+    x, y = xy
+    nx, ny = int(radius // FAR_STEP_UM), int(radius // ROW_UM)
+    cand = sorted((abs(i * FAR_STEP_UM) + abs(j * ROW_UM), i, j)
+                  for i in range(-nx, nx + 1) for j in range(-ny, ny + 1))
+    for d, i, j in cand:
+        if d > radius:
+            break
+        x0, yy = x + i * FAR_STEP_UM, y + j * ROW_UM
+        x1 = x0 + w
+        if x0 < 0 or yy < 0 or (W is not None and x1 > W) or (H is not None and yy + ROW_UM > H):
+            continue
+        if not rows.free(x0, x1, yy):
+            continue
+        if site is not None and not (site.legal((x0, yy)) and site.legal((x1, yy + ROW_UM))
+                                     and site.legal(((x0 + x1) / 2, yy))):
+            continue
+        return [round(x0, 3), round(yy, 3), round(x1, 3), round(yy + ROW_UM, 3)]
+    return None
+
+
 def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     """row segment for n_flops beside a clock cell at xy (lower-left): right, left, then rows +-k"""
     w = n_flops * FLOP_W_UM
@@ -144,7 +170,8 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_ROW_TRIES} rows of {xy}")
 
 
-def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False, data_manifest=None):
+def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False, data_manifest=None,
+         far_radius=FAR_RADIUS_UM):
     """-> (stages json dict, start_stages.sv text, patched ctree.v, patched ctree.tcl)"""
     settle = int(root_settle if root_settle is not None else bind.get("root_settle_cycles", ROOT_SETTLE))
     if settle < 1:
@@ -206,7 +233,18 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         nf = stage_flops(r, settle if root else None)
         reset_ff = (2 + int(bool(r.get("edge_fall")))) if reset_wave and not root else 0
         nf += reset_ff
-        rect = place_stage(cxy[key], nf, rows, site, *die_wh)
+        try:
+            rect = place_stage(cxy[key], nf, rows, site, *die_wh)
+        except StageError:
+            if not far_radius:
+                raise
+            rect = place_stage_far(cxy[key], nf, rows, site, *die_wh, radius=far_radius)
+        if rect is None:
+            # nothing legal in range: listed, not fatal; no tap measures it, its edge keeps the model delay
+            cx, cy = cxy[key]
+            rect, placed = [cx, cy, cx, cy], False
+        else:
+            placed = True
         inv = polarity(cells, key) % 2
         # an inverting tree (die_trial --clock-cell inv/inv2): a node cell with inverted output -> the stage takes the
         # cell's INPUT net (true polarity, one cell earlier); the measured proof (subcommand proof) times it as built
@@ -222,7 +260,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
                 raise StageError(f"stage {x}: clock driver {source} absent from node_cell")
             source_path = path_by_cell[source]
             source_stages = int(meta["node_stages"][source_path])
-        rows.add(rect[0], rect[2], rect[1])
+        if placed:
+            rows.add(rect[0], rect[2], rect[1])
         tp = into.get(x)
         if r.get("parent") is not None and tp is None:
             raise StageError(f"stage {x}: has a parent but no start port into it")
@@ -231,7 +270,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             clock_source_path=source_path, clock_source_cell=source, clock_source_root=source_root,
             clock_source_stages=source_stages,
             clock_net=net, clock_from="A" if inv else "Y", clock_port=f"t_st_{ids[x]}__clk", clock_pin_xy_um=[rect[0], rect[1]],
-            rect_um=rect, flops=nf, pad=int(r.get("pad", 0) or 0), edge_fall=bool(r.get("edge_fall")),
+            rect_um=rect, placed=placed,
+            cell_to_stage_um=round(abs(rect[0] - cxy[key][0]) + abs(rect[1] - cxy[key][1]), 3) if placed else None, flops=nf, pad=int(r.get("pad", 0) or 0), edge_fall=bool(r.get("edge_fall")),
             root=root, module=ROOT_MODULE if root else STAGE_MODULE, settle=settle if root else None, start_port_in=tp, parent=r.get("parent"),
             start_ports_out=sorted(outof.get(x, [])), children=sorted(sp[q]["dst"] for q in outof.get(x, []))))
     by_region = {s["region"]: s for s in stages}
@@ -355,8 +395,11 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
                        reset_rule="ordinary timed relay flops, no async controls or false paths; cold/warm flush + START lead proven separately") if reset_wave else {}),
                counts=dict(stages=len(stages), flops=sum(s["flops"] for s in stages), die_inputs=len(ins),
                            die_outputs=len(outs), direct_ports=len(direct),
-                           max_cell_to_stage_um=max(abs(s["rect_um"][0] - cxy[s["node_cell"]][0]) +
-                                                    abs(s["rect_um"][1] - cxy[s["node_cell"]][1]) for s in stages)))
+                           unplaced=sum(1 for s in stages if not s["placed"]),
+                           far_placed=sum(1 for s in stages if s["placed"] and s["cell_to_stage_um"] > CLK_CELL_W_UM + GAP_UM + 8 * ROW_UM + 4 * FLOP_W_UM),
+                           max_cell_to_stage_um=max([s["cell_to_stage_um"] for s in stages if s["placed"]] or [0.0])),
+               unplaced_stages=[s["region"] for s in stages if not s["placed"]],
+               stage_distances_um={s["id"]: s["cell_to_stage_um"] for s in stages})
     rendered = "\n".join(sv) + "\n"
     if data_manifest is not None:
         import start_data_emit as SD
@@ -572,6 +615,8 @@ def proof_with_stages(proof, stages_doc, arrs, out, clock_netlist=None):
         meta = d
         have = {t["port"] for t in d["taps"]}
         for s in st:
+            if s.get("placed") is False:
+                continue
             identity = s["region"][3:]
             placement_path = identity.split("@", 1)[0]
             if "clock_source_path" not in s and s.get("clock_from") == "A":
@@ -627,6 +672,7 @@ def main(argv=None):
     e.add_argument("--path-encoding", choices=("unicode", "base36"), default="unicode",
                    help="declared tree path alphabet; die_trial/trial_tap_arrivals use base36")
     e.add_argument("--data-manifest", help="opt-in literal START/RAW BUF8 homes and routes; complete graph required")
+    e.add_argument("--far-radius", type=float, default=FAR_RADIUS_UM, help="2-D fallback radius um when no row beside the node cell is legal (0 = fatal as before)")
     e.add_argument("--out", required=True)
     e.add_argument("--root-settle", type=int, help="root counter SETTLE cycles (default: bind root_settle_cycles, else 64)")
     rl = sub.add_parser("relays", help="R-REACH-1: emit the plan's START relay stages into an emitted stage dir")
@@ -652,7 +698,7 @@ def main(argv=None):
             site, wh = DT.SiteMap(P), (P.W, P.H)
         doc, sv, v, t = emit(bind, meta, (cd / "ctree.v").read_text(), (cd / "ctree.tcl").read_text(), site, wh,
                             a.root_settle, a.path_encoding, a.reset_wave,
-                            json.loads(Path(a.data_manifest).read_text()) if a.data_manifest else None)
+                            json.loads(Path(a.data_manifest).read_text()) if a.data_manifest else None, a.far_radius)
         o = Path(a.out)
         o.mkdir(parents=True, exist_ok=True)
         (o / "start_stages.json").write_text(json.dumps(doc, indent=1))
@@ -664,6 +710,9 @@ def main(argv=None):
             (o / "start_data_manifest.json").write_text(json.dumps(dm, indent=2)+"\n")
         (o / "ctree.v").write_text(v)
         (o / "ctree.tcl").write_text(t)
+        for sid, d in sorted(doc["stage_distances_um"].items(), key=lambda q: -(q[1] if q[1] is not None else 1e9)):
+            if d is None or d > CLK_CELL_W_UM + GAP_UM + 4 * FLOP_W_UM + 2 * ROW_UM:
+                print(f"STAGE_DIST {sid} {d if d is not None else 'UNPLACED'}")
         print(json.dumps(doc["counts"]))
     elif a.cmd == "relays":
         d = Path(a.stages_dir)
