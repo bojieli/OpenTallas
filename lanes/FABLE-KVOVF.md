@@ -196,6 +196,9 @@ the script does not separate that. Not followed up.
   1/4, 2/4, 3/4 leave a last hop of 310-400 um on head 3, and the last station stops on the near side of a core whose
   pins face away.
 
+- Three-stage chains on spans over 1,140 um (COORD 03:2x, FABLE-CLOSURE-STRATEGY lever 7): chain depth is
+  ceil(span / 380 um); head 3 of kv3_hgi_v2 needs 4 stages.
+
 ## 9. Update 2026-11-15 01:55 PST
 
 - Keep only: kv3_hgi_v2 CTS -366 ps / -142k (merged -586 / -558k); after pre-route hold repair -431 ps, FF hold +3.7 ps
@@ -224,3 +227,40 @@ MEASURED t_hgi2 stationing log: 21 of 24 stations, 16,707 flops FIRM (the 3 left
 span under 200 um). Source centroids (128-137, 890-980). Last stations at y 262 / 303 / 648 / 968 for pins at
 233 / 337 / 683 / 1002, both heads. Longest stage hops about 520 um (head 3: source -> g 519, ftg -> t2 425).
 Timing: pending (CTS report).
+
+## 11. Update 2026-11-15 03:30 PST
+
+### 11.1 k_hgi2 first global route (keep only, no M7 close): MEASURED
+3 congested gcells, total congestion 171 (M4 4 / M6 3 / M7 157 / M8 7); control on the merged netlist: 43 gcells, 624.
+m7a (merged + M7 close): 234. All 3 cells have capacity 0 inside a head core: (193.8, 123.1) at the centre clk/rst_n pin
+cluster of head2_e0; (171.6, 688.6) and (245.7, 688.0) just inside the bottom edge of head2_e4. Wirelength 8.89 M um
+(control 8.76 M). So keeping the banks apart removes most of the over-core demand without closing M7. Setup going into
+repair is -431 ps: this form answers the route question only.
+
+### 11.2 kv3_hg critical paths (k_hg 4_cts.odb, TT, placement parasitics; `fable-kvovf/sta_k_hg/`): MEASURED
+4,915 violating endpoints in group clk, WNS -705 ps, TNS -741k; 28 asynchronous (reset) endpoints to -496 ps.
+Every family is a single-cycle hop of 0.75 to 2.1 mm straight line. The head chain is one family of nine.
+
+| family (endpoints, worst slack) | from -> to | straight / path um |
+|---|---|---|
+| `u_bin_i_slg_Q_N_krsp/q` (912, -568) | landing ring at (124, 281) -> input register at (293, 1411) | 1299 / 1736 |
+| astk owner `response_data` (232, -601) | owner logic at (659, 589) -> (1250, 1510) | 1512 / 1566 |
+| head0 e0 / e2 `q_data_in` (853, -494) | `u_hst0_t2` at (236, 992) -> core pins at (143, 233) | 853 / 1254 |
+| `u_hst0_g`, `u_hst1_g` D (568, -428) | ectl core q0 `t0` at (188, 1322) -> stage at (173, 238) | 1099 / 1587 |
+| head1 e0 / e2 `q_data_in` (820, -254) | `u_hst1_t2` at (720, 991) -> (713, 233) | 766 / 1056 |
+| astk `eq_p` (80, -509) | astk ex core at (1175, 627) -> (316, 1444) | 1676 / 1692 |
+| ectl q3 / q2 `rsp_data` (494, -302) | `u_bin_i_slg` register at (301, 1290) -> core q3 at (976, 1368) | 752 / 1128 |
+| head e0 `u_kt__kp_in` (297, -343) | core head1_e7 `kp_o` at (1170, 1002) -> core head1_e0 at (862, 233), no register | 1077 / 1269 |
+| `u_bin_i_hst_*`, `u_bin_i_head_*`, `u_bout_o_ectl_*` (about 150, -559 to -633) | ring or ectl core -> face register | 1733 to 2030 |
+| reset relay -> ectl q3 `rst_n`, astk owner RESETN (29, -629) | relay at (630, 760) -> (1085, 1408) / (961, 1512) | 1083 to 1103 |
+
+Reading: kv3_hg has no stations on the buses between the ectl columns (top), the astk strip (middle), the head cores
+and the faces. The private-chain fix addresses two of these families (head q_data and the g stage). The rest need
+plan stations (KV-102): one or two register stages per bus, the same rule as section 6.1, plus a registered hop for the
+core-to-core `kp` bus (770 um between cores). t_hg will show the chain families only; its WNS will stay near -600 ps.
+INFERRED: the same holds for kv3_hg_v1p* / hg_v3 (same floorplan family); not measured.
+
+### 11.3 Next form if t_hgi2 misses on its 520-um hops
+u_hgi2: chain depth = ceil(span / 380 um) (4 stages on head 3). Caveat to settle with KV-102 before it counts: a fourth
+stage adds one cycle on that chain, so either every chain of the type gets the same depth (+1 cycle of lane latency for
+the type, a plan change) or the bind latency check fails. The kit form can prove timing first.
