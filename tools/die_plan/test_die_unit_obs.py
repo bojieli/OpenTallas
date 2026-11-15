@@ -56,3 +56,18 @@ def test_unit_prep_wires_the_drop():
     txt = (Path(__file__).resolve().parent / "unit_prep.py").read_text()
     assert "DROP_GRT_OBS" in txt and "die_unit_obs.drop_grt_obstructions" in txt
     assert txt.index("DROP_GRT_OBS") < txt.index("odb.write_db(db,os.environ")      # before the unit database is written
+
+
+def test_unit_prep_env_names_are_strings_not_bare_names():
+    """HEAD-100: unit_prep.py shipped os.environ.get(SNAP_TAP_PINS) / print(TAP_PIN_SNAP, ...) / DROP_GRT_OBS / GRT_OBS_DROP as bare
+    names -> NameError at the first unit prep with either opt-in set (11-15).  unit_prep needs openroad odb, so check the module AST:
+    no Name load of the four identifiers, and the env keys are read as string constants."""
+    import ast
+    from pathlib import Path
+    src = (Path(__file__).parent / "unit_prep.py").read_text()
+    tree = ast.parse(src)
+    names = {n.id for n in ast.walk(tree) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)}
+    for ident in ("SNAP_TAP_PINS", "TAP_PIN_SNAP", "DROP_GRT_OBS", "GRT_OBS_DROP"):
+        assert ident not in names, ident + " used as a bare name"
+    consts = {n.value for n in ast.walk(tree) if isinstance(n, ast.Constant) and isinstance(n.value, str)}
+    assert {"SNAP_TAP_PINS", "DROP_GRT_OBS", "TAP_PIN_SNAP", "GRT_OBS_DROP"} <= consts
