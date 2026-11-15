@@ -1492,7 +1492,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                                               "note": {"type": "string"}}}}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] = {"type": "boolean"}   # R-REACH-5 default chains (gen_phys)
-SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"type": "boolean"}   # DLY-SPREAD G8 (gen_phys dly_spread.tcl)
+SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]}   # DLY-SPREAD G8: true | [type base names] (gen_phys dly_spread.tcl)
 # W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;
 # every receiving crossing binds K+W-R. Default absent = byte-identical.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_writer_start"] = {

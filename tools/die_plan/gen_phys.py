@@ -576,6 +576,17 @@ def reset_relay_full(rtl_dir):
 
 CHAIN_EVEN_HOOK = "source /work/chain_even_cfg.tcl\nsource /work/chain_even.tcl"
 DLY_SPREAD_HOOK = "source /work/dly_spread.tcl"
+
+
+def dly_spread_mode(budgets, tn):
+    """budgets.r_dly_spread: true = the hook in every type, gate fails closed; [type base names] = the hook only in the types whose
+    name starts with a listed base, with OT_DLY_SPREAD=warn (DIE-S81-92: c1x has 58 stage-shortfall chains); absent/false/[] = off"""
+    v = budgets.get("r_dly_spread", False)
+    if v is True:
+        return "gate"
+    if isinstance(v, list) and tn and any(b and str(tn).startswith(b) for b in v):
+        return "warn"
+    return None
 # R-REACH-5 (RULEBOOK 11-13, RULES-REACH-1): the generated zero-logic register chains every kit has -- landing bin ->
 # lane pad stages (u_lpad_<bus> r[k] / q, u_pd<n>_<bus>) -> their consumer -- get equal hops after GPL when a hop is over
 # the reach.  Evidence: S81 leaf t21 u_bin_leafdn_i0 -> u_lpad q 587 um (104 captures), KV hub_Eo u_lpad r -> q 824 um,
@@ -5449,13 +5460,18 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n# R-REACH-5: zero-logic bin -> pad chains re-spaced when over the reach\n"
                         + CHAIN_EVEN_HOOK + "\n")
-    if P.budgets.get("r_dly_spread", False):
+    dly_mode = dly_spread_mode(P.budgets, tn)
+    if dly_mode:
         # DLY-SPREAD (FABLE-GENBUG G8, brief 4.3): every generated zero-logic register pipe without a plan site (ot_dp_dly u_d<N>
         # transport pipes, ot_pl_pad) is spread on driver -> load centroid after GPL, LAST in the release hook (after chain_even);
         # stage identity by connectivity, fails closed when a chain keeps a hop over 1.5 x its ideal hop (OT_DLY_SPREAD=warn)
         shutil.copyfile(Path(__file__).with_name("dly_spread.tcl"), kd / "dly_spread.tcl")
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + DLY_SPREAD_HOOK + "\n")
+        if dly_mode == "warn":
+            # list form: the listed types keep the stage-shortfall chains they have (plan item) as a log line, not a stop
+            mk = (kd / "config.mk").read_text()
+            (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport OT_DLY_SPREAD = warn\n")
     if core_input_place(P.raw, tn):
         for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl"):
             shutil.copyfile(Path(__file__).with_name(f_), kd / f_)

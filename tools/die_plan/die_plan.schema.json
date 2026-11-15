@@ -7632,7 +7632,18 @@
      "type": "boolean"
     },
     "r_dly_spread": {
-     "type": "boolean"
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
+     ]
     }
    }
   },

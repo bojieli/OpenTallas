@@ -162,8 +162,16 @@ def test_dly_spread_budget_key_installs_the_hook():
     import gen_phys
     import schema
     g = (HERE / "gen_phys.py").read_text()
-    assert 'P.budgets.get("r_dly_spread", False)' in g and "dly_spread.tcl" in g
+    assert "dly_spread_mode(P.budgets, tn)" in g and "dly_spread.tcl" in g
     assert gen_phys.DLY_SPREAD_HOOK == "source /work/dly_spread.tcl"
-    assert schema.SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] == {"type": "boolean"}
+    sch = schema.SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"]
     on_disk = json.loads((HERE / "die_plan.schema.json").read_text())
-    assert on_disk["properties"]["budgets"]["properties"]["r_dly_spread"] == {"type": "boolean"}
+    assert on_disk["properties"]["budgets"]["properties"]["r_dly_spread"] == sch
+    assert {"type": "boolean"} in sch["anyOf"] and any(x.get("type") == "array" for x in sch["anyOf"])
+    # true: every type, gate; list of type base names: listed types only, warn; else off
+    m = gen_phys.dly_spread_mode
+    assert m({"r_dly_spread": True}, "any__t1") == "gate"
+    assert m({"r_dly_spread": ["dsdv_slice_c1x_C"]}, "dsdv_slice_c1x_C__t1") == "warn"
+    assert m({"r_dly_spread": ["dsdv_slice_c1x_C"]}, "cbf_q01") is None
+    assert m({"r_dly_spread": []}, "cbf_q01") is None and m({}, "cbf_q01") is None and m({"r_dly_spread": False}, "x") is None
+    assert "export OT_DLY_SPREAD = warn" in (HERE / "gen_phys.py").read_text()
