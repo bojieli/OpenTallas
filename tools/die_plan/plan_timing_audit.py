@@ -43,6 +43,7 @@ SETUP_PS = 25.0
 MARGIN_PS = 150.0          # REACH-M89 setup uncertainty 60 + skew 90
 DEPTH_MARGIN_PS = 50.0     # FABLE-METHOD lever 2
 DEFAULT_TOL_PS = 40.0
+IO_REF_TOL_PS = 1.0        # a row against the signed io reference is exact (rounding only), not a band
 EPS = 1e-6
 
 
@@ -178,7 +179,7 @@ def _tap_for(t, inst, pin):
     return None
 
 
-def audit_cores(P, root=None, arcs=True):
+def audit_cores(P, root=None, arcs=True, records=None):
     """one row per (type, core module, clock pin, tap kind): the measured depth vs the type budget + boundary arcs.
     Rows carry verdict PASS | FAIL | UNMEASURED and the failing reasons.  Instances of one module in one type with the same
     tap decision are folded (n_inst)."""
@@ -186,7 +187,7 @@ def audit_cores(P, root=None, arcs=True):
     period = float(P.die["period_ps"]) if "period_ps" in P.die else 833.0
     common = float(P.clock["insertion_ps"])
     rows, fold = [], {}
-    loaded_cache, _clk_cache = {}, {}
+    loaded_cache, _clk_cache, ref_cache = {}, {}, {}
     for tn, t in P.types.items():
         if t.get("hard"):
             continue
@@ -194,17 +195,34 @@ def audit_cores(P, root=None, arcs=True):
         for core in t.get("hard_cores", []) or []:
             mod = core.get("module", core["inst"])
             key0 = (mod, core.get("lib"))            # one liberty parse per core view, not per type (S81: 334 types x one lib)
+            # S81-TAPROWS 11-15 (FABLE-PD-S81C-0730 rule 4): a core with a signed record carrying an io reference is judged against
+            # THAT frame (what its IO was closed in); the routed pin-register mean stays in the row as information.
+            if key0 not in ref_cache:
+                ref_cache[key0] = None
+                try:
+                    r0 = CC.io_reference_of_core(core, root, records)
+                    pins0 = sorted(__import__("cores").clock_pins(core, root)) if r0 else []
+                    if r0 and len(pins0) == 1:           # one clock pin: the reference is that pin's; split-pin cores keep the measured rows
+                        ref_cache[key0] = (r0, pins0[0])
+                except Exception:
+                    ref_cache[key0] = None
+            rc = ref_cache[key0]
             try:
-                if key0 in loaded_cache and isinstance(loaded_cache[key0], Exception):
-                    raise loaded_cache[key0]
-                if key0 not in loaded_cache:
-                    try:
-                        loaded_cache[key0] = CC.load(core, root, require_signed=False, plan_type=t)
-                        _shared_dir_guard(loaded_cache[key0])
-                    except (CC.ContractError, OSError, ValueError) as e0:
-                        loaded_cache[key0] = e0
-                        raise
-                loaded = loaded_cache[key0]
+                if rc:
+                    r0, p0 = rc
+                    loaded = {p0: dict(corners=dict(tt=dict(mean_ps=r0["tt"], basis="io_reference"), ff=dict(mean_ps=r0["ff"], basis="io_reference")),
+                                       signed=True, contract_source=r0["record"], signoff_source=r0["record"])}
+                else:
+                    if key0 in loaded_cache and isinstance(loaded_cache[key0], Exception):
+                        raise loaded_cache[key0]
+                    if key0 not in loaded_cache:
+                        try:
+                            loaded_cache[key0] = CC.load(core, root, require_signed=False, plan_type=t)
+                            _shared_dir_guard(loaded_cache[key0])
+                        except (CC.ContractError, OSError, ValueError) as e0:
+                            loaded_cache[key0] = e0
+                            raise
+                    loaded = loaded_cache[key0]
             except (CC.ContractError, OSError, ValueError) as exc:
                 # COORD 11-15: UNMEASURED does not fail.  Reported with the liberty-derived fallback depth (basis LIB: the lib's
                 # max_clock_tree_path TT, a library arc, NOT a measurement) and what it would decide.
@@ -247,6 +265,12 @@ def audit_cores(P, root=None, arcs=True):
                 I = float(val["corners"]["tt"]["mean_ps"])
                 tp = _tap_for(t, core["inst"], pin)
                 reasons = []
+                by_ref = val["corners"]["tt"]["basis"] == "io_reference"
+                # FABLE-CLOSURE-STRATEGY lever 3: one row per core clock, every early row carries an FF value
+                twins = [x for x in (t.get("clock") or {}).get("taps", []) or []
+                         if x.get("kind") == "core" and not x.get("merged_clock_ports") and (x["name"] == core["inst"] or x["name"].startswith(core["inst"] + "."))]
+                if len(twins) > 1 and tp is not None:
+                    reasons.append(f"{len(twins)} tap rows on one core clock ({', '.join(x['name'] for x in twins)}): one row per core, on the view's pin name")
                 if tp is None:
                     kind = "grid"
                     if I > T - DEPTH_MARGIN_PS + EPS:
@@ -254,9 +278,14 @@ def audit_cores(P, root=None, arcs=True):
                 else:
                     kind = "early"
                     ti = float(tp.get("insertion_ps", 0.0))
-                    tol = float(tp.get("insertion_tol_ps", DEFAULT_TOL_PS))
+                    tol = float(tp.get("insertion_tol_ps", IO_REF_TOL_PS if by_ref else DEFAULT_TOL_PS))
+                    what = "signed io reference" if by_ref else "measured depth"
                     if abs(I - ti) > tol + EPS:
-                        reasons.append(f"early tap declares {ti:.0f} ps, measured depth {I:.0f} ps (|d| {abs(I - ti):.0f} > tol {tol:.0f})")
+                        reasons.append(f"early tap declares {ti:.2f} ps, {what} {I:.2f} ps (|d| {abs(I - ti):.1f} > tol {tol:.0f})")
+                    if tp.get("insertion_ff_ps") is None:
+                        reasons.append("early tap row has no insertion_ff_ps (FF would be priced at 0.81 x TT)")
+                    elif by_ref and abs(float(tp["insertion_ff_ps"]) - float(val["corners"]["ff"]["mean_ps"])) > tol + EPS:
+                        reasons.append(f"early tap FF {float(tp['insertion_ff_ps']):.2f} ps, signed io reference FF {float(val['corners']['ff']['mean_ps']):.2f} ps")
                 head = None
                 if clkq is not None and setup is not None and (clkq or setup) and (bpin is None or pin == bpin):
                     # an early tap delivers the core clock earlier than the die common latency, and the liberty arc carries the
@@ -281,9 +310,9 @@ def audit_cores(P, root=None, arcs=True):
 
 
 # ------------------------------------------------------------------------------------------------- report
-def run(P, root=None, arcs=True, geo=None, reach_on=True):
+def run(P, root=None, arcs=True, geo=None, reach_on=True, records=None):
     reach = audit_reach(P, geo) if reach_on else []
-    cores = audit_cores(P, root, arcs)
+    cores = audit_cores(P, root, arcs, records)
     bad_types = defaultdict(lambda: dict(reach=[], cores=[]))
     for r in reach:
         for tn in r["types"]:
@@ -357,10 +386,13 @@ def main(argv=None):
     ap.add_argument("--tsv")
     ap.add_argument("--json")
     ap.add_argument("--no-core-arcs", action="store_true")
+    ap.add_argument("--signed-record", action="append", default=[], metavar="MODULE=SIGNOFF.json",
+                    help="signed record whose io reference is the tap basis of MODULE (default: signoff.json beside the selected liberty)")
     ap.add_argument("--no-reach", action="store_true", help="skip (a); cores only (fast)")
     a = ap.parse_args(argv)
     P = S.Plan(S.load(a.plan), path=a.plan)
-    res = run(P, a.root, not a.no_core_arcs, reach_on=not a.no_reach)
+    records = dict(x.split('=', 1) for x in a.signed_record)
+    res = run(P, a.root, not a.no_core_arcs, reach_on=not a.no_reach, records=records)
     txt = tables(res, a.label)
     print(txt + json.dumps(summary(res)))
     if a.tsv:

@@ -99,11 +99,11 @@ def test_early_tap_must_match_the_measured_depth(monkeypatch, tmp_path):
     lib = tmp_path / "c.lib"
     lib.write_text(LIB_OK)
     fake_load(monkeypatch, 533.0)
-    ok = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=533.0)))
+    ok = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=533.0, insertion_ff_ps=430.0)))
     assert ok[0]["verdict"] == "PASS" and ok[0]["tap"] == "early"
-    bad = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=450.0)))
+    bad = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=450.0, insertion_ff_ps=360.0)))
     assert bad[0]["verdict"] == "FAIL" and "declares 450" in bad[0]["reasons"][0]
-    assert rows_for(core_plan(lib=lib, tap=dict(insertion_ps=450.0, insertion_tol_ps=100)))[0]["verdict"] == "PASS"
+    assert rows_for(core_plan(lib=lib, tap=dict(insertion_ps=450.0, insertion_ff_ps=360.0, insertion_tol_ps=100)))[0]["verdict"] == "PASS"
 
 
 def test_boundary_arcs_eat_the_cycle(monkeypatch, tmp_path):
@@ -179,7 +179,7 @@ def test_early_tap_credits_the_boundary_arc(monkeypatch, tmp_path):
     lib = tmp_path / "c.lib"
     lib.write_text(LIB)                                     # clk->q 480.5 + setup 346: headroom 6.5 without a tap
     fake_load(monkeypatch, 533.0)
-    p = core_plan(lib=lib, tap=dict(insertion_ps=533.0))
+    p = core_plan(lib=lib, tap=dict(insertion_ps=533.0, insertion_ff_ps=430.0))
     common = float(p.clock["insertion_ps"])
     (r,) = rows_for(p)
     assert r["tap"] == "early" and r["verdict"] == "PASS"
@@ -194,7 +194,7 @@ def test_split_clock_pin_reads_ck_face_for_the_boundary_arcs(monkeypatch, tmp_pa
     lib.write_text(LIB)                                     # clk->q 480.5 + setup 346: headroom 6.5 without a tap credit
     mk = lambda m: dict(corners=dict(tt=dict(mean_ps=m, basis="pin_register_mean"), ff=dict(mean_ps=m)), signed=True)
     monkeypatch.setattr(CC, "load", lambda core, root=None, require_signed=True, plan_type=None: {"ck": mk(300.0), "ck_face": mk(533.0)})
-    p = core_plan(lib=lib, tap=dict(insertion_ps=533.0))
+    p = core_plan(lib=lib, tap=dict(insertion_ps=533.0, insertion_ff_ps=430.0))
     common = float(p.clock["insertion_ps"])
     rows = {r["pin"]: r for r in rows_for(p)}
     assert rows["ck_face"]["tap"] == "early" and rows["ck_face"]["verdict"] == "PASS"
@@ -203,3 +203,64 @@ def test_split_clock_pin_reads_ck_face_for_the_boundary_arcs(monkeypatch, tmp_pa
     monkeypatch.setattr(CC, "load", lambda core, root=None, require_signed=True, plan_type=None: {"ck": mk(300.0)})
     (only,) = rows_for(core_plan(lib=lib))                  # no ck_face: the old single-pin form
     assert only["arc_headroom_ps"] == 6.5
+
+
+# ------------------------------------------------------------------ S81-TAPROWS 11-15: the signed io reference is the tap basis
+def signed_view(tmp_path, tt=465.39, ff=361.26, with_ref=True, mean=555.0):
+    """a view dir: one liberty + the signed record of the core (core_latency measured mean 555 TT, typed reference 465.39 / 361.26)"""
+    d = tmp_path / "view"
+    d.mkdir(exist_ok=True)
+    (d / "core_tt.lib").write_text(LIB_OK)
+    cl = dict(measured=dict(tt=dict(mean=mean, n=673), ff=dict(mean=mean * 0.81, n=673)))
+    if with_ref:
+        cl["contract"] = dict(io_reference_ps=dict(tt=tt, ff=ff, basis="typed reference", kind="plan_declared"))
+    (d / "signoff.json").write_text(json.dumps(dict(verdict="SIGNED", core_latency=cl)))
+    return d / "core_tt.lib"
+
+
+def test_io_reference_reads_the_typed_reference_then_the_band_bound():
+    rec = dict(verdict="SIGNED", core_latency=dict(contract=dict(io_reference_ps=dict(tt=465.39, ff=361.26))),
+               insertion_band=dict(corners=dict(tt=dict(bound_ps=400.0), ff=dict(bound_ps=324.0))))
+    assert CC.io_reference(rec)["tt"] == 465.39 and CC.io_reference(rec)["source"] == "core_latency.contract.io_reference_ps"
+    del rec["core_latency"]
+    r = CC.io_reference(rec)                                  # idx_tx_n32: no typed reference, the kit vclk bound the IO closed against
+    assert (r["tt"], r["ff"]) == (400.0, 324.0) and r["source"] == "insertion_band.corners.bound_ps"
+    assert CC.io_reference(dict(rec, verdict="FAIL")) is None and CC.io_reference({}) is None
+
+
+def test_audit_takes_the_io_reference_not_the_routed_mean(monkeypatch, tmp_path):
+    lib = signed_view(tmp_path)
+    fake_load(monkeypatch, 555.0)                             # the routed pin-register mean (he 555.02): NOT the basis
+    ok = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=465.39, insertion_ff_ps=361.26)))
+    assert ok[0]["verdict"] == "PASS" and ok[0]["basis"] == "io_reference" and ok[0]["depth_ps"] == 465.4
+    for ins in (532.99, 553.18, 437.41):                      # liberty max rows and the stale midpoint: all fail against the reference
+        bad = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=ins, insertion_ff_ps=361.26)))
+        assert bad[0]["verdict"] == "FAIL" and "signed io reference" in bad[0]["reasons"][0], ins
+    ff = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=465.39, insertion_ff_ps=300.0)))
+    assert ff[0]["verdict"] == "FAIL" and "FF" in ff[0]["reasons"][-1]
+
+
+def test_early_row_without_ff_fails(monkeypatch, tmp_path):
+    lib = signed_view(tmp_path)
+    (r,) = rows_for(core_plan(lib=lib, tap=dict(insertion_ps=465.39)))
+    assert r["verdict"] == "FAIL" and any("no insertion_ff_ps" in x for x in r["reasons"])
+
+
+def test_two_rows_on_one_core_clock_fail(monkeypatch, tmp_path):
+    lib = signed_view(tmp_path)
+    p = core_plan(lib=lib, tap=dict(insertion_ps=465.39, insertion_ff_ps=361.26))
+    p.types["mid"]["clock"]["taps"] = [dict(name="u_c.clk", xy=[20.0, 20.0], kind="core", insertion_ps=465.39, insertion_ff_ps=361.26),
+                                       dict(name="u_c.ck", xy=[30.0, 20.0], kind="core", insertion_ps=437.41, insertion_ff_ps=348.7)]
+    (r,) = rows_for(p)
+    assert r["verdict"] == "FAIL" and any("2 tap rows on one core clock" in x for x in r["reasons"])
+
+
+def test_explicit_signed_record_wins_over_the_view_dir(tmp_path):
+    lib = signed_view(tmp_path, with_ref=False)               # the view dir record has no reference ...
+    rec = tmp_path / "gb_hw_signoff.json"
+    rec.write_text(json.dumps(dict(verdict="SIGNED", core_latency=dict(contract=dict(io_reference_ps=dict(tt=465.39, ff=361.26))))))
+    p = core_plan(lib=lib, tap=dict(insertion_ps=465.39, insertion_ff_ps=361.26))
+    r = [x for x in PTA.audit_cores(p, None, records={"core": str(rec)}) if x["type"] == "mid"]
+    assert r[0]["verdict"] == "PASS" and r[0]["basis"] == "io_reference"
+    CC_none = CC.io_reference_of_core(p.types["mid"]["hard_cores"][0], None)
+    assert CC_none is None                                    # ... and without the explicit record the core is not judged by a reference

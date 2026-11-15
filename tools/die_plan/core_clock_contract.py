@@ -112,6 +112,52 @@ def _validate(raw, lib, pins, source, release):
     return out
 
 
+def _pos(x):
+    return float(x) if isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) and x > 0 else None
+
+
+def io_reference(record):
+    """The frame a SIGNED core's IO was closed in (S81-TAPROWS 11-15, FABLE-PD-S81C-0730): the parent tap of an early core row
+    subtracts THIS, never the liberty max_clock_tree_path, an ETM midpoint or the routed pin-register mean.  Order:
+    core_latency.contract.io_reference_ps {tt, ff} (the typed reference the IO constraints were generated from), else
+    insertion_band.corners.{tt,ff}.bound_ps (the vclk bound the kit closed the IO against).  None when the record has neither,
+    or is not SIGNED."""
+    if not isinstance(record, dict) or record.get('verdict') not in SIGNED_VERDICTS:
+        return None
+    ref = ((record.get('core_latency') or {}).get('contract') or {}).get('io_reference_ps')
+    if isinstance(ref, dict):
+        tt, ff = _pos(ref.get('tt')), _pos(ref.get('ff'))
+        if tt and ff:
+            return dict(tt=tt, ff=ff, source='core_latency.contract.io_reference_ps', basis=ref.get('basis'))
+    corners = (record.get('insertion_band') or {}).get('corners') or {}
+    tt, ff = _pos((corners.get('tt') or {}).get('bound_ps')), _pos((corners.get('ff') or {}).get('bound_ps'))
+    if tt and ff:
+        return dict(tt=tt, ff=ff, source='insertion_band.corners.bound_ps', basis='kit vclk bound the IO was closed against')
+    return None
+
+
+def io_reference_of_core(core, root=None, records=None):
+    """io_reference of a plan hard core: `records` {module: signoff.json path} (explicit, wins) else the signoff.json beside the
+    selected liberty.  A directory shared by several core libraries is not attributable to one core: None.  Never raises."""
+    try:
+        mod = core.get('module')
+        if records and mod in records:
+            path = Path(records[mod])
+        elif core.get('lib'):
+            lib = C.resolve(core['lib'], root)
+            if len(list(lib.parent.glob('*_tt.lib'))) > 1:
+                return None
+            path = lib.parent / 'signoff.json'
+        else:
+            return None
+        ref = io_reference(json.loads(path.read_text()))
+        if ref:
+            ref['record'] = str(path)
+        return ref
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
 def plan_budget(t, core, pins):
     """{pin: {tt, ff, source}} declared by the plan's explicit parent_budget core taps of this core inst
     (insertion_ps TT, insertion_ff_ps FF).  KIT-TRIAGE-1/G3 11-01: the estimate form of a core whose selected view
