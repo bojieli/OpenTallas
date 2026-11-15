@@ -93,3 +93,6 @@ Proofs:
 Old hook (before *.wire fix) kept 0 hdc cells on the same kit: 2,675 missing unchanged.
 Not shown: S81 place/route result of the hdc kit (run was relaunched with the fixed hook; place status in ~/mc_proof_s81hdc.log on intel2), real hub_C kit, the residual `q` rows are classified only by the agent's RTL argument.
 Until merged: WAVE-HOLDS-1115 asked (post fcfa-time) to set OT_KEEP_WIRES=ot_hdc_w11_cut:r on kv3_hub_C items; with this fix the Module:wire form also reaches g_r.r.
+
+## S81 hdc proof place result 11-15
+ot_s81sl_kv_leaf__t1 with the fixed hook (claude/merge-census-1115-4 logic): ot-run exit 0, 3_place.odb produced, no FAIL file, async LEC exit 0 (12:26 PST). Completes the S81 row of the READY table (census +3,428 flops, place passed).
