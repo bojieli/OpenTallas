@@ -199,3 +199,47 @@ So the label is right for the worst path and incomplete as a class: more than ha
 - Mechanisms 3.10, 3.12, 3.13 (no log or path read).
 - Whether the serdes kit STA passes at `k_v`.
 - 2026-11-15 09:35 UTC [S81-RESIGN-DEEP -> FABLE-TRIAGE-S81] RESULT idx_tx_n32 pin-register CK insertion on stopped 4_cts.odb (kit postcts_gate.tcl, placement parasitics, n=853; ps): idxA tt n 853 mean 568.79 min 202.08 max 633.92 bound 400.0; idxA ff n 853 mean 475.44 min 99.63 max 531.54 bound 324.0; idxB tt n 853 mean 543.99 min 190.76 max 607.41 bound 340.0; idxB ff n 853 mean 455.36 min 93.28 max 509.92 bound 275.4;  signed base ref 722.7 TT / 592.8 FF mean (signoff core_latency: TT mean 677 max 817, FF mean 562 max 679). So shallower CTS cut mean only ~110-135 TT / ~90-105 FF vs signed; min 190-200 TT (a few early pin regs) makes spread ~400 TT; hold_est -299..-332 TT. Targets 400/340 not reached (mean 569/544). Evidence epyc9 s81-resign-deep/idx{A,B}/postcts_gate_{tt,ff}.json
+
+## 6. Addendum 01:0x PST: dsdv_idx_tx_n32 form (answers COORD; replaces 2.2 step 3)
+
+Measured by S81-RESIGN-DEEP on the stopped `4_cts.odb` (853 face registers, placement RC):
+
+| form | TT mean / min / max | FF mean / min / max | spread TT | target TT |
+|---|---|---|---|---|
+| signed base | 677 | 562 | - | - |
+| idxA | 568.8 / 202 / 634 | 475.4 / 99.6 / 531.5 | 432 | 400 |
+| idxB | 544.0 / 190.8 / 607.4 | 455.4 / 93.3 / 509.9 | 417 | 340 |
+
+Correction to 2.2: my slack arithmetic (645 / 587 FF) was 75-115 ps too deep. The conclusion stands: the forms gained
+108-133 ps of 277-337 wanted, and the pad demand is the remainder.
+
+What the numbers rule out:
+- One early tap at the measured mean: NO. The tap would be 544-569 ps, beyond T/2 = 416.5 (gen_phys tap-offset limit), and
+  the face registers spread 417-432 ps against a tap tolerance of 40.
+- Per-group taps on this tree: NO. The spread is inside the one tree; grouping does not remove it.
+- An RTL face register like kp4: already there (`g_face.vo_f`, 853 flops). The boundary is registered; only its clock is deep.
+- More CTS arguments: NO. Two forms moved the mean by 25 ps between them.
+
+Chosen form idxC: split the clock pin (precedent: ot_s81sl_capc5r has `ck_cw` / `ck_rn`).
+1. New core pin `ck_face` for the 853 face registers only. Own shallow tree, target TT 200 (the shallowest face registers
+   are already at 191-202, so the floorplan reaches it; INFERENCE that all 853 can). Fed by an ordinary parent grid tap.
+2. Existing `ck` keeps the idxB tree for the other 10.7 k registers and the 10 SRAM pins. Parent feeds it through an early
+   tap of (internal mean - face mean): about 544 - 200 = 344 ps TT, about 455 - 160 = 295 ps FF. Both are under 416.5.
+3. At the parent the core then looks like a 200 ps block: audit depth 200 <= 250 - 50 passes without a budget override;
+   clk->q about 200 + 185 (= 1014.1 - 829.1 today) = 385, headroom 448 against 150; input hold pad 0-1 HB4 instead of 9.
+4. Build the leaf repeaters before the latency balance (the CB50 way: `-distance_between_buffers 50`), not after it; the
+   49-52 post-balance repeaters are the likely source of the 153-230 ps CTS skew (INFERENCE).
+
+Gates at CTS, before GRT (same read S81-RESIGN-DEEP just did):
+- `ck_face`: mean 200 within 40, max - min <= 80, TT and FF.
+- `ck` registers that talk to face registers: mean minus the early tap within 40 of the face mean at TT and at FF.
+- Core-internal hold WNS before repair above -100 ps; cap stays 7.
+If the FF and TT offsets (295 / 344) cannot both be met within 40 by one die tap, report the residual; do not pad it.
+
+Fallback if the pin split is refused: 8 clock pins (11.5 k sinks / 1,500 per tap, 208 um pitch), each tree at 250, the
+form every S81 type already uses. More pins and plan rows, no early tap at all.
+
+Owners: S81-RESIGN-DEEP builds idxC (core RTL port `ck_face`, SDC with two clocks, kit). DIE-S81-92 adds the pin, the grid
+tap and the 344 early tap to bk_sel__t2 and the bind row (clock split only: both pins are the same parent clock, no cycle
+change). PLAN-READERS-1: the audit must read `ck_face` as the boundary pin and not fail `ck` for having no pin registers.
+S81-CORES-2: same read on bksel_q (652 ps) before choosing its form; if its face spread is also over 80, use the same split.
