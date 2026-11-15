@@ -233,7 +233,21 @@ def file_jobs(paths, old, new, hist):
     return jobs
 
 
-def refresh(paths, old, new, apply_, only=None, label=""):
+def src_base(cfg, die):
+    """catch-up merge base of a die tree: its kit_wave.json src_sha, if the queue clone has (or can fetch) that commit"""
+    sha = str(((cfg.get("dies") or {}).get(die) or {}).get("src_sha") or "")
+    if not re.fullmatch(r"[0-9a-f]{7,40}", sha):
+        return ""
+    for attempt in (0, 1):
+        r = S.run(["git", "rev-parse", "--verify", "-q", f"{sha}^{{commit}}"], cwd=str(REPO), capture_output=True, text=True)
+        if r.returncode == 0:
+            return r.stdout.strip()
+        if attempt == 0 and len(sha) == 40:
+            S.run(["git", "fetch", "-q", REMOTE, sha], cwd=str(REPO), capture_output=True, timeout=600)
+    return ""
+
+
+def refresh(paths, old, new, apply_, only=None, label="", catchup=False):
     cfg = json.loads(CFG.read_text())
     stamp = now().strftime("%Y%m%d-%H%M%S")
     pend = load_pending()
@@ -245,7 +259,10 @@ def refresh(paths, old, new, apply_, only=None, label=""):
         if not mine:
             continue
         jobs = []
-        for j in file_jobs(mine, old, new, hist):
+        dbase = src_base(cfg, die) if catchup else ""
+        if catchup:
+            log(f"catchup base {die} {src}: {dbase[:11] or 'none (local edits kept as LOCAL)'}")
+        for j in file_jobs(mine, dbase or old, new, hist):
             pk = f"{host}|{src}|{j['path']}"
             if pk in pend and j["path"] not in paths:        # retry of a BUSY file: base = the version it waited on
                 ob = blob_at(pend[pk]["base"], j["path"]) if pend[pk].get("base") else None
@@ -297,7 +314,7 @@ def main():
     else:
         since = x.since + " 00:00" if re.fullmatch(r"\d{4}-\d\d-\d\d", x.since) else x.since   # git reads a bare date as "now on that day"
         paths = sorted({p for p in git("log", x.new, f"--since={since}", "--name-only", "--format=").split("\n") if p and in_scope(p)})
-        rows, summ = refresh(paths, "", x.new, x.apply, only, f"catchup-since-{x.since}")
+        rows, summ = refresh(paths, "", x.new, x.apply, only, f"catchup-since-{x.since}", catchup=True)
     for s in summ:
         print(s)
     if x.show:

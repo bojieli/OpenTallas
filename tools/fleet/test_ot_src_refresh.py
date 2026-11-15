@@ -100,6 +100,16 @@ class Refresh(unittest.TestCase):
         self.assertEqual(self.rd("tools/die_plan/conf.py"), "x = 'local'\n")
         self.assertIn("LOCAL", r.stdout)
 
+    def test_catchup_with_src_sha_base_merges_local_edits(self):
+        cfg = json.loads(pathlib.Path(self.env["OT_SRC_CFG"]).read_text())
+        cfg["dies"]["qc"]["src_sha"] = self.v1
+        pathlib.Path(self.env["OT_SRC_CFG"]).write_text(json.dumps(cfg))
+        r = self.run_("catchup", "--since", "2000-01-01", "--apply", "--show")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(self.rd("tools/die_plan/merge.py"), "a\nLOCAL\nc\nd\ne\nf\nMAIN\n")
+        self.assertEqual(self.rd("tools/die_plan/conf.py"), "x = 'local'\n")
+        self.assertIn("CONFLICT", r.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
