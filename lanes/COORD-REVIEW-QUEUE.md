@@ -12496,3 +12496,4 @@ KIT-OPS-6: regenerate the 6 non-HBM missing view dirs the same way (vmr, nk_a0c,
 COORD APPROVED: claude/plan-timing-audit-1115 @a5505562907 (plan timing audit; G0 default warn; stacked on plan-readers-1 @55258ce2a07, already approved)
 COORD APPROVED: @a192501ee99b (QC clock landing: nearest copy + relay fallback; deploys with QC adoption)
 COORD APPROVED: @426728e16ed (KV clock_taps.tcl cap pass skips isBlock clock pins)
+- 2026-11-14 22:50 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-COLH9R1] type-colh9r1/h1 on epyc8: process gone (no signoff.json/result.json)
