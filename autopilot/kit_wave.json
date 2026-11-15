@@ -606,7 +606,28 @@
     "kv3_hub_C@10",
     "kv3_pv@7",
     "kv3_hg_v1@12",
-    "kv3_pv_v1n@8"
+    "kv3_pv_v1n@8",
+    "kv3_hgi_v1__cl42bc8b12@16",
+    "kv3_hgi_v4@11",
+    "kv3_hgi_v6@16",
+    "kv3_hgi_v7@11",
+    "kv3_hgi_v8@14",
+    "kv3_hgi@18",
+    "kv3_hroot@8",
+    "kv3_io_cor_v1@12",
+    "kv3_io_ft_v1@15",
+    "kv3_pc__cl254f2e73@17",
+    "kv3_pc_v1__cl23f6a148@18",
+    "kv3_pc_v1__cl4ea58a5c@10",
+    "kv3_pc_v1__cl7f648944@9",
+    "kv3_pv_v2n@15",
+    "kv3_pv_v2@13",
+    "kv3_pv_v3n@14",
+    "kv3_pv_v3@16",
+    "kv3_pv_v4@13",
+    "kv3_pv_v5@8",
+    "kv3_pv_v6@19",
+    "kv3_pv_v7@14"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -5455,7 +5476,8 @@
     "kv3_pv_v1",
     "kv3_pv_v5n",
     "kv3_pv_v5",
-    "kv3_io_ft"
+    "kv3_io_ft",
+    "kv3_hgi_v1__cl42bc8b12"
    ],
    "prev_kitops3_kvgeom4": {
     "event": "kv102sem_ftgrid",
@@ -35639,7 +35661,8 @@
     "cbx_q10__cl89936551": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
     "cbx_q10__cl89936551_h": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
     "cbx_q10__cl94a12200": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
-    "cbx_q10__cl94a12200_h": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key."
+    "cbx_q10__cl94a12200_h": "COORD freeze 11-15 (FABLE-TRIAGE-QC): QC cb class: no relaunch until TYPE-QCCB-GEN's proofs land (known blocking class, no fix installed). Lift = delete this key.",
+    "coll_ucie": "FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
