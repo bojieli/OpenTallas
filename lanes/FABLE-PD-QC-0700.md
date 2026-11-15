@@ -185,3 +185,38 @@ Lane latency: LATCHECK is PASS 1,921 / 1,921 on S4x, S4w, S4v, S4v2, S4r2 as bou
 6. No S4z bind chain before the cbn_q11 probe names its endpoint, and none on a plan other than the merged one.
 7. S4w (on S4k) can be dropped: S4x is the same set on the plan of record.
 8. Still in force: 0650 stop list 3 (no stations on cbf_q00_s2 alone) and 6.
+
+## 5. coll_s (COORD addition): structural hold -268.69 ps, held ER4-HOLD-1113
+
+Evidence state: the two failing kits are gone (hcut1111 attempt_2 was on epyc4, terminated; efdb36e864 attempt_19 on epyc2 is deleted). Read instead: PHYS-QC's 11-13 17:56 read of the attempt_2 report (queue line 8881), the surviving kit of the same pre-merge form (epyc2 `kw26-wave-1106/.../efdb36e864/items/coll_s/attempt_16`: RTL, `constraint.sdc`, placed dump), the S4p plan and the S4p bound RTL. So the -268.69 path list is second-hand; the mechanism below is MEASURED on attempt_16 and S4p.
+
+### 5.1 Root cause
+
+- The pre-merge kit has three clock roots that the SDC treats as one synchronous clock: `create_clock` on `clk` (+ `clk_t1..t5`), on `clk_coll` and on `clk_serdes`, all 833 ps, same source latency (-30 / 0), no clock group and no common insertion target (`constraint.sdc` lines 4-9, 23-28; RTL lines 29-30, 113-114).
+- CTS builds each root on its own. PHYS-QC's read: `clk` sinks at 200 ps, `clk_serdes` at 560 ps (edge chain + 20 delay buffers). Every clk -> clk_serdes / clk_coll path then carries 360 ps of skew: -257 to -365 ps on 4,138 endpoints, FF. That is a clock-structure error, not a data path, so no hold buffer pass or ECO closes it (stop was -245).
+- The die does not have this skew: in the die these domains ride the core clock.
+
+### 5.2 State on the plan of record
+
+- S4p (and every s29 plan) carries `clock_merge` coll_s {coll: core, serdes: core}. The S4p bound `qfd_qc_coll_s_part.sv` has `clk` only: 0 occurrences of `clk_serdes` / `clk_coll`; the io_serdes_1 boundary registers (`u_bin_io_collective__serdes_*_from_io_serdes_1`, 599 bits) are on `clk`.
+- So the cause is already removed in the plan. **No coll_s kit has ever been built on a merged-clock plan:** the last rows are hcut1111 (11-12) and efdb36e864 (11-13), and ER4-HOLD-1113 has kept it out of the wave since. The hold item now blocks the build that tests the fix.
+
+### 5.3 What else the next form needs (attempt_16 placed dump, 21,176 zero-logic hops, 1,148 over 405 um)
+
+| family | hops | max um | S4p | fix |
+|---|---|---|---|---|
+| `u_face.u_rx.o_data` -> `u_bout_rec_rx_s1/s2` | 324 | 547 | 0 stations | +1 station on rec_rx_s1 / s2 |
+| ring -> `u_bin_rec_tx_s1/s2_i` | 237 | 602 | 0 stations | `u_bin` sited mid-route (sidecar), or +1 |
+| codec bank `dout` -> `u_ctl.q_pin` | 269 | 658 | inside the face | move the bank output register or the ctl capture next to the SRAM bank (face core) |
+| `u_tx.r_rst_n` -> rx / cal flags, `u_rrl` -> codec ctl | 243 | 692 | reset | local reset relays in the face |
+| `fault_cause` -> `u_bout_fltv_o` | 16 | 840 | 0 stations | +2 on fltv_o (25 bits) |
+
+coll_s has no `internal_stations` in S4p and 3 clock taps. The old dump also had fill 0.038, empty 0.84, 2,486 sinks on one tap, relay_collapse 795; these are the likely content of the visual ISSUES verdict (the verdict text is not on disk any more), and are advisory under the academic profile.
+
+### 5.4 Fix and owner
+
+1. KIT-OPS-5: remove coll_s from ER4-HOLD-1113 now. DIE-QC-103 launches it on S4p to sign-off. Expected: the 4,138 cross-clock endpoints are gone; what is left is the same-clock hold of the tap window.
+2. DIE-QC-103, next cb / fw delta: rec_rx_s1 / s2 +1, fltv_o +2, rec_tx `u_bin` sites in the sidecar (lanes `coll_s__crec_rx_s*`, `coll_s__fltv`, both 21 cycles today, to coll_core).
+3. One own lane for the type (TYPE-QC-COLLS, Sonnet) for the face-internal items of 5.3 and the first S4p result.
+4. Stop: no rebuild of any pre-merge form, no hold ECO, no per-port tap windows for `clk_serdes` / `clk_coll` (the 11-13 proposal): those clocks no longer exist in the type.
+5. Open, not verified here: the die-level seam coll_s <-> io_serdes_1 (2-cycle direct lanes, 598 + 599 bits). If the PHY side is not on the core regional clock, the seam hold is real at die STA; `die_sta_related` on S4p decides.
