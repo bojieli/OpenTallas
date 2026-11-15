@@ -6679,6 +6679,14 @@ def killed_attempt(prev):
         str((prev.get("q_class") if q else prev.get("class")) or "") in ("INFRA", "FLOW", "") or bool(WRAPPER_END_RE.search(txt)))
 
 
+def prev_on_current_plan(prev, d):
+    """KIT-OPS-5 11-15 (OWNER via COORD: no old-plan kit relaunches): True when the previous attempt belongs to the die's current plan event
+    (or carries no event).  A resume / kill-pin onto an attempt of an older plan event would run the old kit inputs again; such an item
+    is generated fresh on the current plan instead (digest rule)."""
+    ev = (prev or {}).get("event")
+    return not ev or not d.get("event") or str(ev) == str(d.get("event"))
+
+
 def kill_pin(prev, sp):
     """pin sp's source inputs to the killed attempt's spec (in place) -> '' or why not pinned (spec unreadable / incomplete)"""
     try:
@@ -6833,7 +6841,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         # [items] relaunches those items as a FRESH attempt (regenerated kit, no resume), and a resume source whose attempt
         # dir is gone on the hub is never used
         if (opt(cfg, die, "stage_resume") is not False and prev.get("dir") and Path(prev["dir"]).is_dir()
-                and r["item"] not in (cfg["dies"][die].get("stage_resume_off") or [])):
+                and r["item"] not in (cfg["dies"][die].get("stage_resume_off") or [])
+                and prev_on_current_plan(prev, cfg["dies"][die])):
             sp["resume_from"] = resume_source(AP, prev)
             if not arm and opt_get(cfg, die, "kill_pin") is not False and killed_attempt(prev):
                 _pw = kill_pin(prev, sp)                # WAVE-RECIPE-1 FIX 2: same inputs -> resume at the checkpoint
