@@ -143,3 +143,11 @@ def test_u_bin_only_plan_entry_is_taken_without_a_u_st_site():
     assert 'set bsite [cland_bin_site_of $sites "${bus}:bin" $bit]' in TCL
     assert "u_bin-only entry" in TCL
     assert TCL.index("set bsite [cland_bin_site_of") < TCL.index("u_bin-only entry") < TCL.index("incr nbplan")
+
+
+def test_site_file_is_loaded_at_global_level(tmp_path):
+    f = tmp_path / "cland_bin_sites.tcl"
+    f.write_text("set cland_bin_sites {\n bc_i02 {1.0 2.0}\n bc_i02:bin {3.0 4.0}\n}\n")
+    out = _run(_procs("cland_bin_load_sites") + "puts [dict size [cland_bin_load_sites %s]]\nputs [cland_bin_load_sites %s/none.tcl]\n" % (f, tmp_path))
+    assert out[0] == "2"
+    assert _run(_procs("cland_bin_load_sites") + "puts [llength [cland_bin_load_sites /nonexistent]]\n")[0] == "0"

@@ -1540,6 +1540,13 @@ proc cland_bin_anchor {s} {
  }
  return {}
 }
+proc cland_bin_load_sites {path} {
+ # the plan-site table: ::cland_bin_sites when a caller set it, else the kit file (sourced at global level, never in
+ # this proc's frame: a plain source here made the table a local and silently dropped every site)
+ if {![info exists ::cland_bin_sites] && [file exists $path]} { uplevel #0 [list source $path] }
+ if {[info exists ::cland_bin_sites]} { return $::cland_bin_sites }
+ return {}
+}
 proc cland_bin_loads {s} {
  # the unplaced flops one register rank forward of flop s, through BUF/INV/HB only: {inst ...}
  set out {}; set seen {}; set cur {}
@@ -1576,7 +1583,7 @@ proc cland_bin_place {} {
  set frac [expr {[info exists ::env(OT_CLAND_BIN_FRAC)] ? double($::env(OT_CLAND_BIN_FRAC)) : 0.5}]
  set warn [expr {[info exists ::env(OT_CLAND_BIN_WARN)] && $::env(OT_CLAND_BIN_WARN) eq "1"}]
  set nunanch 0; set hmax 0.0; set nust 0; set nsited 0; set nbplan 0
- set sites {}; if {[info exists ::cland_bin_sites]} { set sites $::cland_bin_sites } elseif {[file exists /work/cland_bin_sites.tcl]} { source /work/cland_bin_sites.tcl; if {[info exists ::cland_bin_sites]} { set sites $::cland_bin_sites } }
+ set sites [cland_bin_load_sites /work/cland_bin_sites.tcl]
  if {[dict size $sites]} { puts "OT_CLAND_BIN plan sites: [dict size $sites] keys" }
  set rad [expr {round(([info exists ::env(OT_CLAND_BIN_REACH)] ? $::env(OT_CLAND_BIN_REACH) : 100.0)*$ff_dbu)}]
  set seen_prefix {}; set moved {}; set stat {}
@@ -1663,6 +1670,10 @@ if {[info exists ff_landed_line] && [llength $ff_landed_line] && [llength [info 
 # AUTOBUILD-PIPE-2 (AUTOBUILD-GATE-1 handoff, S81 slice_station t14/t26 r2r 580-677 um): reset_taps.tcl re-pointed every
 # FIRM flop's reset to its nearest tap BEFORE the landed line moved stations s0..s<k-2> (eq epoch flops went ~580 um
 # from their reset leaf u_rrl_<k>).  Re-point only the moved stations again, now at their final sites.
+if {[llength $cland_bin_moved]} {
+  if {![info exists ff_landed_moved]} { set ff_landed_moved {} }
+  foreach n $cland_bin_moved { lappend ff_landed_moved $n }
+}
 if {[llength $cland_bin_moved]} {
   if {![info exists ff_landed_moved]} { set ff_landed_moved {} }
   foreach n $cland_bin_moved { lappend ff_landed_moved $n }
