@@ -24,7 +24,7 @@ Reset and clock landing: no new class in either candidate (landing contract 0 er
 They stack in one bind only as rows on the pre-compose plan, with one compose last. Conflicts measured:
 - TYM3 R4 and tr4 edit the same rows: 24 col types, 132 half `.ck` taps moved by R4 are among the 1,728 rows tr4 deletes (22 -> 14 taps per type). Apply tr4, then re-run R4.
 - TYM3 as built lacks or13 (13 leaf hard_cores) and uses the old table: proof only.
-- TYM3 keep_outs (7 -> 165, reset tree of col types) and E2 (83 types: 43 leaf, 8 station, 12 col_h10_r0 taps only) share no key. PHYT1 touches phy__t1 only.
+- TYM3 keep_outs (7 -> 165, reset tree of col types) and E2 (83 types: 43 leaf, 8 station, 12 col_h10_r0) share no key. PHYT1 touches phy__t1 only.
 
 Order: (1) adopt the winner; (2) one event on `B6gsl_or13_rp`: tr4 + idx overlay -> PHYT1 row -> TYM3 keep_outs, R2, R4 re-run -> E2 rows via rows_merge -> compose (ca_swm, form J, chain_ca_band93 guards) -> superset -> G0, bind, LATCHECK, bind_reset diff. (3) svc tap rows of section 5 in the same pre-compose step.
 
@@ -33,7 +33,7 @@ Order: (1) adopt the winner; (2) one event on `B6gsl_or13_rp`: tr4 + idx overlay
 2. Any further build on B6gslcf / B6gshcf, including E2 G0 copies with clamped lanes.
 3. Row patches on a composed plan (E2 form, TYM2 superset: bind fails on added tap clk_t40 halo).
 4. Do not stop TRIDX (B6gslsw sidecar, valid) or the B6gslsw / B6gslswrp chains.
-5. If B6gslsw wins the race, adopt it for the 324 unaffected types and take B6gslswrp as the next delta at once; do not release the 11 band-less types from B6gslsw.
+5. If B6gslsw wins the race, adopt it for the types without a failed band and take B6gslswrp as the next delta at once; do not release the 11 band-less types from B6gslsw.
 
 ## 5. Ruling: svc types with no legal tap site (COORD question)
 MEASURED on B6gslsw, 8 types: macros cover 70-73 % of the outline (117 or 138 boxes); no sink is inside a macro box. Channel widths (t3): x 11.0-15.1 um on 98 of 105 gaps, y 10.8-17.28 um. `TAP_CLEAR_UM` is 8.64 per side, so a channel under 17.28 um holds no legal tap. Sinks farther than 200 um from a legal site: hi t1 11,720 of 38,984 (max 624 um), t3 393, t4 393, t5 4,014, t6 497, lo t1 7,780, lo t7 1,734, lo_w t1 2,570.
