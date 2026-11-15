@@ -282,6 +282,8 @@ def auto_min():
     silent, but the kit tcl runs it only when the post-CTS FF hold has >= N register-to-register violators (internal debt).
     None when unset/0.  A plan clock.pregrt_ff_hold false/true always wins."""
     v = os.environ.get("OT_PREGRT_FF_HOLD_AUTO", "").strip()
+    if v == "-1":      # KIT-OPS-5 11-14 (COORD class order, TYPE-HDCTLN): always run the build (port/ft hold counts too)
+        return -1
     if not v.isdigit() or int(v) <= 0:
         return None
     return 100 if v == "1" else int(v)

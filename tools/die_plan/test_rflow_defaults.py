@@ -22,7 +22,7 @@ def _clean_env(monkeypatch):
         monkeypatch.delenv(k, raising=False)
 
 
-def kit(d, die="s81_head", **kw):
+def kit(d, die="s81", **kw):
     raw = copy.deepcopy(TINY)
     if die is not None:
         raw["die"]["name"] = die
@@ -57,8 +57,8 @@ def test_gpl_plain_kit_has_no_keep_overflow():
 
 def test_only_proven_kit_classes_take_the_defaults(tmp_path, monkeypatch):
     # per kit class: a die plan without its own same-netlist proof build keeps the old kit (QC until coll_ftc, HBM)
-    assert set(gen_phys.RFLOW_DIES) == {"s81", "s81_head", "qwen_kvsys", "qwen_compute"}
-    for die in ("hbm", "some_new_die"):
+    assert set(gen_phys.RFLOW_DIES) == {"s81", "qwen_kvsys", "qwen_compute"}
+    for die in ("hbm", "s81_head", "some_new_die"):
         assert not gen_phys.rflow_on(die)
         _, c = kit(tmp_path / die, die=die)
         assert "SLEW_MARGIN" not in c and "OT_MAXWIRE_UM" not in c and "OT_PLACE_MAX_FANOUT" not in c
