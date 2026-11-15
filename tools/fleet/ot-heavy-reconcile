@@ -886,7 +886,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
-                SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=1.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1254,6 +1254,11 @@ def stage_growth(table, look, frac=1.0, procs=None):
     return frac * g, len(procs)
 
 
+def first_stage_peak(table):
+    """a new job is charged its FIRST stage p90 (floorplan .. global_place), its later growth is charged by stage_growth once it runs"""
+    return max([table.get(x, 0.0) for x in STAGE_ORDER[:6]] or [0.0])
+
+
 def load_stage_table(path=None):
     try:
         return {k: float(v) for k, v in json.loads(rd(path or STAGE_TABLE) or "{}").items()}
@@ -1270,6 +1275,13 @@ def peak_reserve(units, hist, frac, pct=0.9, min_n=3, fallback=1.0):
 
 PLAN_DEFAULT_RE = re.compile(r"(?i)(strict[-_ ]?bind|bind[-_]?strict|die[-_]?proto|(?:^|[/_ -])g0(?:[/_. -]|$)|chain[A-Za-z]*\d*\.sh|kit[-_]gen[-_]proof|late[-_]?eco|(?:^|[/_ -])eco[A-Za-z0-9_]*\.sh|eco_loop\.py|eco\b.*--from[ =]grt|--from[ =]grt\b.*eco)")   # LATEECO_1114: a late ECO is one step from sign-off
 PLAN_FILE = f"{D}/prio_plan.re"
+PLAN_BYPASS_RE = re.compile(r'''(?i)(?:^|[/\s_.=-])(?:bind[A-Za-z0-9_]*|run_gate[A-Za-z0-9_]*|chain[A-Za-z0-9_]*|latcheck[A-Za-z0-9_]*|g0)(?:\.sh|\.py|\.tcl)?(?=$|[\s/_.-])''')   # PLANBYPASS_1114 (COORD 19:5x): only die-plan bind / LATCHECK / G0 / chain scripts bypass admission, never a type build (eco_loop.py, kit-gen proof)
+
+
+def bypass_like(argv, environ=()):
+    """a plan connectivity job: OT_HEAVY_PRIO=plan (ot-run validated its command) or a bind*/run_gate*/chain*/latcheck*/g0 script on the command line"""
+    return "OT_HEAVY_PRIO=plan" in environ or bool(PLAN_BYPASS_RE.search(" ".join(argv)))
+
 
 
 def plan_like(argv, cwd="", environ=()):
@@ -1384,7 +1396,7 @@ def gate_locked(mem, argv):
     a = admit_size(mem, cls, table, argv)
     res, note = (a[0], a[1]) if a else (mem, "")       # CHARGEMAX_1111: a specific uncapped class peak may raise the charge
     total, avail = meminfo()
-    if conf("PLAN_BYPASS") and plan_like(argv, os.getcwd(), [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []):
+    if conf("PLAN_BYPASS") and bypass_like(argv, [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []):
         # PLANBYPASS_1114 (OWNER 11-14 19:40): plan connectivity jobs (die-plan bind, LATCHECK, G0) are admitted at once: no headroom, growth reserve, peak table, drain wait or PLAN_MAX_RUNNING cap
         print(f"OK {mem} {cls} | PLAN_BYPASS: plan job admitted immediately (MemAvailable {avail:.0f} GB, no headroom / reserve / cap); revert: PLAN_BYPASS=0 in /etc/ot-heavy.conf")
         return
@@ -1453,6 +1465,10 @@ def gate_locked(mem, argv):
                 except (OSError, ValueError, IndexError):
                     pass
             _sg, _sn = (stage_growth(load_stage_table(), conf("STAGE_LOOKAHEAD"), conf("STAGE_PEAK_FRAC")) if conf("STAGE_PEAK") else (0.0, 0))
+            if conf("STAGE_PEAK"):
+                _fs = first_stage_peak(load_stage_table())
+                if _fs > 0:
+                    _need = min(_need, math.ceil(_fs))
             _grow += _sg    # STAGE_PEAK_1114: every running build is charged its measured stage peak (current + next stage), not its RSS now
             _free = avail - conf("INV_HEADROOM_GB") - _grow - _young
             _ok = _free >= _need
@@ -2175,7 +2191,7 @@ if __name__ == "__main__":
         sys.exit(0 if os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(sys.argv[3:], os.getcwd()) else 1)
     if sys.argv[1:2] == ["--is-plan"]:     # PLANBYPASS_1114: classifier query for ot-heavy
         _e = [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []
-        sys.exit(0 if plan_like(sys.argv[3:], os.getcwd(), _e) else 1)
+        sys.exit(0 if bypass_like(sys.argv[3:], _e) else 1)
     if sys.argv[1:2] == ["--exit-report"]:
         sys.exit(exit_report(*sys.argv[2:7]))
     if sys.argv[1:2] == ["--admit"]:

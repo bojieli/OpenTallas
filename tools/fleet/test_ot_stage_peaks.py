@@ -33,6 +33,11 @@ class Charge(unittest.TestCase):
         self.assertEqual((g, n), ((40 - 12) + (40 - 38) + 0, 3))
         self.assertEqual(R.stage_growth(TAB, 1, 0.5, procs)[0], 15.0)
 
+    def test_new_job_is_charged_its_first_stage_peak(self):
+        self.assertEqual(R.first_stage_peak({"floorplan.tcl": 2.0, "global_place.tcl": 21.8, "global_route.tcl": 30.0}), 21.8)
+        self.assertEqual(R.first_stage_peak({}), 0.0)
+        self.assertEqual(R.DEFAULTS["STAGE_LOOKAHEAD"], 0.0)
+
     def test_table_loads_and_survives_garbage(self):
         d = tempfile.mkdtemp(); p = d + "/t.json"
         open(p, "w").write(json.dumps(TAB)); self.assertEqual(R.load_stage_table(p)["cts.tcl"], 14.0)

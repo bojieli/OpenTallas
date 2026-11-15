@@ -37,6 +37,21 @@ class Bypass(unittest.TestCase):
         conf = dict(PLAN_BYPASS=0, SIMPLE_ADMIT=1, PLAN_PRIO=1, PLAN_MAX_RUNNING=1, INV_HEADROOM_GB=64, SMALL_FLOOR_GB=36, SIMPLE_PEAK=1, PEAK_PCT=0.9, PEAK_MIN_N=3, SIMPLE_FRESH_S=0)
         self.assertNotIn("PLAN_BYPASS", self.gate(3.0, ["bash", "chainR92.sh"], conf))
 
+    def test_type_builds_do_not_bypass(self):
+        conf = dict(PLAN_BYPASS=1, SIMPLE_ADMIT=1, PLAN_PRIO=1, PLAN_MAX_RUNNING=1, INV_HEADROOM_GB=64, SMALL_FLOOR_GB=36, SIMPLE_PEAK=1, PEAK_PCT=0.9, PEAK_MIN_N=3, SIMPLE_FRESH_S=0)
+        eco = ["bash", "-c", "cd /x/typekvioft/bundle/die_plan && python3 -I eco_loop.py r"]
+        self.assertNotIn("PLAN_BYPASS", self.gate(3.0, eco, conf))
+
+    def test_ot_run_rejects_priority_plan_for_a_type_build(self):
+        self.assertTrue(RUN.plan_cmd_ok(["bash", "/x/s81-b3-clk/chainD92.sh"]))
+        self.assertTrue(RUN.plan_cmd_ok(["bash", "bindB4L4_leafplan.sh"]))
+        self.assertTrue(RUN.plan_cmd_ok(["bash", "/x/kv-hgi-refloor/run_gate.sh", "r3"]))
+        self.assertTrue(RUN.plan_cmd_ok(["python3", "latcheck_kv.py"]))
+        self.assertFalse(RUN.plan_cmd_ok(["bash", "-c", "cd /x/typekvioft && python3 -I eco_loop.py r"]))
+        self.assertFalse(RUN.plan_cmd_ok(["bash", "run_kit.sh"]))
+        with patch.dict(os.environ, {"OT_RUN_PLAN_OK": "1"}):
+            self.assertTrue(RUN.plan_cmd_ok(["bash", "run_kit.sh"]))
+
     def test_ot_run_places_a_plan_job_on_the_listed_host_with_the_most_memavailable(self):
         res = {h: dict(free_gb=1, admit_gb=1, avail_gb=a, ncpu=96, load1=1, total_gb=1007) for h, a in (("epyc7", 40), ("epyc8", 107), ("epyc9", 65))}
         with patch.dict(os.environ, {"OT_RUN_PRIO_ENV": "OT_HEAVY_PRIO=plan "}), patch.object(RUN, "reserved", side_effect=lambda h, r: r), \
