@@ -162,3 +162,14 @@ def test_check_run_wires_the_audit():
     assert "timing_audit" not in summ
     R, summ = check.run(copy.deepcopy(TINY))                  # COORD 11-15: default warn
     assert "timing_audit" in summ
+
+
+def test_shared_directory_measurement_is_not_attributed(tmp_path):
+    """S81 romq_split_1106: gb_he and gb_hw libs in one directory share one insertion.json -> refused, never one core's depth for another"""
+    (tmp_path / "a_tt.lib").write_text("x")
+    (tmp_path / "b_tt.lib").write_text("x")
+    one = dict(clk=dict(corners=dict(tt=dict(mean_ps=410.0, basis="pin_register_mean")), signed=False, contract_source=str(tmp_path / "insertion.json")))
+    with pytest.raises(CC.ContractError, match="shared by 2 core libraries"):
+        PTA._shared_dir_guard(one)
+    (tmp_path / "b_tt.lib").unlink()
+    PTA._shared_dir_guard(one)

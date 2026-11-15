@@ -46,7 +46,7 @@ def best_record(paths, module):
 
 def build(module, pin, rec, path):
     c = rec.get("corners") or {}
-    out = dict(lib_clock_pin=pin, raw_source=True, parasitics="spef")
+    out = dict(lib_clock_pin=pin, module=module, raw_source=True, parasitics="spef")
     for corner in ("tt", "ff"):
         item = c.get(corner) or {}
         st = item.get("insertion_pinflops") or {}
@@ -87,6 +87,8 @@ def main(argv=None):
                 rows.append((mod, str(lib), "NO-LIB", "")); continue
             if any((d / n).is_file() for n in ("clock_contract.json", "signoff.json", "insertion.json")):
                 rows.append((mod, str(lib), "EXISTS", "")); continue
+            if len(list(d.glob("*_tt.lib"))) > 1:
+                rows.append((mod, str(lib), "SHARED-DIR", f"{len(list(d.glob('*_tt.lib')))} core libs share this directory: one insertion.json cannot be attributed")); continue
             pins = sorted(C.clock_pins(core, a.root))
             if len(pins) != 1:
                 rows.append((mod, str(lib), "MULTI-CLOCK" if pins else "NO-CLOCK", ",".join(pins))); continue

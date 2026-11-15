@@ -143,6 +143,19 @@ def lib_boundary_arcs(path):
     return _ARC_CACHE[key]
 
 
+def _shared_dir_guard(loaded):
+    """an insertion.json / clock_contract.json / signoff.json measures ONE core; when its directory holds the liberties of several
+    cores (S81 romq_split_1106: gb_he + gb_hw) core_clock_contract.load cannot tell whose number it is, so the measurement is not
+    attributable: refuse it (UNMEASURED) instead of judging one core by another's depth."""
+    import core_clock_contract as CC
+    for v in loaded.values():
+        src = Path(str(v.get("contract_source") or ""))
+        if src.name in ("insertion.json", "clock_contract.json", "signoff.json") and src.parent.is_dir():
+            n = len(list(src.parent.glob("*_tt.lib")))
+            if n > 1:
+                raise CC.ContractError(f"{src}: shared by {n} core libraries in one directory (measurement not attributable to one core)")
+
+
 def type_budget(P, tn):
     ck = P.types[tn].get("clock") or {}
     if ck.get("insertion_ps") is not None:
@@ -186,6 +199,7 @@ def audit_cores(P, root=None, arcs=True):
                 if key0 not in loaded_cache:
                     try:
                         loaded_cache[key0] = CC.load(core, root, require_signed=False, plan_type=t)
+                        _shared_dir_guard(loaded_cache[key0])
                     except (CC.ContractError, OSError, ValueError) as e0:
                         loaded_cache[key0] = e0
                         raise
