@@ -137,6 +137,29 @@ def group_at(t, s, stage, delta, base=None):
     return new
 
 
+def macro_boxes(t):
+    """the boxes check_station_macro tests station centres against (placed macros + probe blockages)."""
+    from placement_obstacles import probe_blockages
+    boxes = dict(S.placed_macro_boxes(t))
+    for c in probe_blockages(t):
+        x, y = c["origin_um"]; w, h = c["outline_um"]
+        boxes.setdefault(c["inst"], (x, y, x + w, y + h))
+    return list(boxes.values())
+
+
+def off_macro(boxes, xy, gap=2.0):
+    """xy, or the nearest point gap um outside the macro box whose interior holds it (centre-only stations)."""
+    x, y = xy
+    for _ in range(4):
+        hit = next((b for b in boxes if b[0] < x < b[2] and b[1] < y < b[3]), None)
+        if hit is None:
+            return [round(x, 4), round(y, 4)]
+        x0, y0, x1, y1 = hit
+        c = min(((x - x0 + gap, -1, 0), (x1 - x + gap, 1, 0), (y - y0 + gap, 0, -1), (y1 - y + gap, 0, 1)))
+        x, y = x + c[1] * c[0], y + c[2] * c[0]
+    return None
+
+
 def first_hop_ok(P, tn, s):
     from die_hop_scan import first_internal_hops
     return max((d for _, d in first_internal_hops(P, tn, s)), default=0.0) <= C.SIGNAL_REACH_UM if hasattr(C, "SIGNAL_REACH_UM") \
@@ -159,6 +182,8 @@ def fix_slot(P, raw, tn, sn, lim, add, rec):
         for f in STEPS:
             q = r0 + (tgt - r0) * f
             regs[-1] = [round(float(q[0]), 4), round(float(q[1]), 4)]
+            if not has_sites and off_macro(macro_boxes(t), regs[-1], 0.0) != regs[-1]:
+                continue
             touch, allw = max_slot_hop(P, lids, tn, sn)
             if touch > lim + 1e-6 or (k == 2 and not first_hop_ok(P, tn, s)):
                 continue
@@ -233,13 +258,15 @@ def fix_slot(P, raw, tn, sn, lim, add, rec):
     s.clear(); s.update(json.loads(keep))
     if not has_sites and k >= 2:
         # centre-only slot: re-space S1..S(k-1+n) evenly from S0 to the out face point (S0 stays), n = 0..MAX_ADD
-        regs = s["regs_um"]; r0 = np.array(regs[0], dtype=float)
+        regs = s["regs_um"]; r0 = np.array(regs[0], dtype=float); mb = macro_boxes(t)
         d = tgt - r0; L1 = float(abs(d).sum())
         end = tgt - d * (4.32 / L1) if L1 > 4.32 else tgt          # last station one cell pitch inside the out face
         for n in range(0, MAX_ADD + 1):
             m = k + n
-            s["regs_um"] = [list(regs[0])] + [[round(float(v), 4) for v in r0 + (end - r0) * (j / (m - 1))]
-                                              for j in range(1, m)]
+            pts = [off_macro(mb, r0 + (end - r0) * (j / (m - 1))) for j in range(1, m)]
+            if any(q is None for q in pts):
+                continue
+            s["regs_um"] = [list(regs[0])] + pts
             s["stations"] = m
             touch, _ = max_slot_hop(P, lids, tn, sn)
             if touch <= lim + 1e-6:
