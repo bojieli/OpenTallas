@@ -52,6 +52,37 @@ def respace(t, e, n, boxes):
     return out
 
 
+def bus_depth(raw, tn, bus):
+    rows = [e for e in raw["partition_types"].get(tn, {}).get("internal_stations", []) if e.get("conn") == "bus:" + bus]
+    return max((len(e.get("regs_um") or []) for e in rows), default=0)
+
+
+def reprice(old, raw):
+    """lane fixed_cycles = source + destination pad stages (native_istations): every lane whose end bus changed depth
+    takes the delta on lanes[].fixed_cycles and on latency fixed / cycles / natural.  Returns {lane: delta}."""
+    import schema as S
+    P = S.Plan(raw)
+    lat = raw.get("latency", {}).get("lanes", {})
+    out = {}
+    for L in raw.get("lanes", []):
+        ps = [P.ports[p] for p in L.get("ports", [])]
+        if not ps:
+            continue
+        ends = [(P.parts[ps[0]["src"]["part"]]["type"], ps[0]["src"]["bus"]),
+                (P.parts[ps[-1]["dst"]["part"]]["type"], ps[-1]["dst"]["bus"])]
+        d = sum(bus_depth(raw, *e) - bus_depth(old, *e) for e in ends)
+        if not d:
+            continue
+        L["fixed_cycles"] = int(L.get("fixed_cycles", 0)) + d
+        r = lat.get(L["id"])
+        if r is not None:
+            for f in ("fixed", "cycles", "natural"):
+                if f in r:
+                    r[f] = int(r[f]) + d
+        out[L["id"]] = d
+    return out
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan"); ap.add_argument("out"); ap.add_argument("ledger")
@@ -93,11 +124,13 @@ def main(argv=None):
                 e["note"] = (e.get("note", "") + " | istation_respace 11-15: equal-arc re-space, %d->%d stages, max hop "
                              "%.1f->%.1f um" % (n0, n, h0, max(hops(e)))).strip(" |")
                 led["rows"].append(dict(type=tn, row=i, conn=e.get("conn"), stages=[n0, n], hop=[h0, round(max(hops(e)), 1)]))
+    led["repriced"] = reprice(json.loads(Path(a.plan).read_text()), raw)
     Path(a.out).write_text(json.dumps(raw) + "\n")
     Path(a.ledger).write_text(json.dumps(led, indent=1) + "\n")
     add = [r for r in led["rows"] if r["stages"][1] > r["stages"][0]]
-    print("ISTATION_RESPACE rows %d (stage adds %d), refused %d, worst after %.1f" % (
-        len(led["rows"]), len(add), len(led["refused"]), max([r["hop"][1] for r in led["rows"]] or [0])))
+    print("ISTATION_RESPACE rows %d (stage adds %d), refused %d, worst after %.1f, lanes re-priced %d" % (
+        len(led["rows"]), len(add), len(led["refused"]), max([r["hop"][1] for r in led["rows"]] or [0]),
+        len(led["repriced"])))
     return 0 if not led["refused"] else 1
 
 

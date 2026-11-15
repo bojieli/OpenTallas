@@ -11,6 +11,7 @@ import istation_respace as IR  # noqa: E402
 def run(tmp_path, monkeypatch, regs, to):
     monkeypatch.setattr(IR.SF, "macro_boxes", lambda t: [])
     monkeypatch.setattr(IR.SF, "off_macro", lambda boxes, xy: tuple(xy))
+    monkeypatch.setattr(IR, "reprice", lambda old, raw: {})
     raw = dict(partition_types={"T": dict(internal_stations=[dict(conn="core:a|core:b", from_um=[0.0, 0.0],
                                                                    regs_um=regs, to_um=to)])})
     p = tmp_path / "p.json"; p.write_text(json.dumps(raw))
