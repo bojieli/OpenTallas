@@ -1,0 +1,75 @@
+master	die	base	orient	W	param_wrap.params (order = bind text)	outline_um	instances	types
+kv_cland_w1045_ns_ddbeb	qwen_kvsys	ot_dp_clk_landing_cas	ns	1045	W=1045, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=35	163.296x57.024	3	kv3_hgi_v6 kv3_hgi_v7 kv3_hgi_v8
+kv_cland_w1057_ew_94a44	qwen_kvsys	ot_dp_clk_landing_cas	ew	1057	W=1057, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=35	43.632x217.728	28	kv3_hg_v1p3 kv3_hg_v1p4 kv3_hg_v1p6 kv3_hgi_v6 kv3_hgi_v7 kv3_hgi_v8 kv3_pv_v12 kv3_pv_v2 kv3_pv_v2n kv3_pv_v3 kv3_pv_v3n kv3_pv_v4 kv3_pv_v4n kv3_pv_v5 kv3_pv_v5n kv3_pv_v6n kv3_pv_v7
+kv_cland_w1057_ns_94a44	qwen_kvsys	ot_dp_clk_landing_cas	ns	1057	W=1057, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=35	165.024x57.024	12	kv3_pv_v12 kv3_pv_v3 kv3_pv_v3n kv3_pv_v5 kv3_pv_v5n kv3_pv_v7
+kv_cland_w1063_ew_dbe00	qwen_kvsys	ot_dp_clk_landing_cas	ew	1063	W=1063, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=35	43.2x219.024	3	kv3_hg_v1p3 kv3_hg_v1p4 kv3_hg_v1p6
+kv_cland_w1119_ew_86ca8	qwen_kvsys	ot_dp_clk_landing_cas	ew	1119	W=1119, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=37	43.632x230.256	2	kv3_hub_Wo
+kv_cland_w1560_ew_0433f	qwen_kvsys	ot_dp_clk_landing_cas	ew	1560	W=1560, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=51	44.064x317.52	3	kv3_hgi_v6 kv3_hgi_v7 kv3_hgi_v8
+kv_cland_w257_ew_69586	qwen_kvsys	ot_dp_clk_landing_cas	ew	257	W=257, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=11	41.04x59.616	5	kv3_hgi_v8 kv3_pv_v12 kv3_pv_v7
+kv_cland_w257_ns_69586	qwen_kvsys	ot_dp_clk_landing_cas	ns	257	W=257, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=11	46.224x49.68	21	kv3_hg_v1p3 kv3_hg_v1p4 kv3_hg_v1p6 kv3_pv_v2 kv3_pv_v2n kv3_pv_v3 kv3_pv_v3n kv3_pv_v4 kv3_pv_v4n kv3_pv_v5 kv3_pv_v5n kv3_pv_v6n
+kv_cland_w257_ew_aee53	qwen_kvsys	ot_dp_clk_landing_cas	ew	257	W=257, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	41.04x59.616	1	kv3_hub_Wo
+kv_cland_w259_ns_fce84	qwen_kvsys	ot_dp_clk_landing_cas	ns	259	W=259, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=11	46.656x49.68	44	kv3_pv_v12 kv3_pv_v2 kv3_pv_v2n kv3_pv_v3 kv3_pv_v3n kv3_pv_v4 kv3_pv_v4n kv3_pv_v5 kv3_pv_v5n kv3_pv_v6n kv3_pv_v7
+kv_cland_w268_ns_87877	qwen_kvsys	ot_dp_clk_landing_cas	ns	268	W=268, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=11	47.952x50.112	3	kv3_hg_v1p3 kv3_hg_v1p4 kv3_hg_v1p6
+kv_cland_w268_ns_6081a	qwen_kvsys	ot_dp_clk_landing_cas	ns	268	W=268, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	47.952x50.112	2	kv3_hub_Wo
+kv_cland_w272_ns_1229f	qwen_kvsys	ot_dp_clk_landing_cas	ns	272	W=272, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	48.384x50.112	2	kv3_pc kv3_pc_v1
+kv_cland_w288_ns_ad575	qwen_kvsys	ot_dp_clk_landing_cas	ns	288	W=288, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=11	50.544x50.976	6	kv3_pv_v6n
+kv_cland_w292_ew_abd47	qwen_kvsys	ot_dp_clk_landing_cas	ew	292	W=292, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	41.04x66.096	2	kv3_hub_Wo
+kv_cland_w292_ns_abd47	qwen_kvsys	ot_dp_clk_landing_cas	ns	292	W=292, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	51.408x50.976	2	kv3_pc kv3_pc_v1
+kv_cland_w300_ew_ebc75	qwen_kvsys	ot_dp_clk_landing_cas	ew	300	W=300, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	41.04x67.824	2	kv3_hub_Wo
+kv_cland_w300_ns_ebc75	qwen_kvsys	ot_dp_clk_landing_cas	ns	300	W=300, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	52.272x51.408	1	kv3_pc_v1
+kv_cland_w397_ns_ba458	qwen_kvsys	ot_dp_clk_landing_cas	ns	397	W=397, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=15	66.96x53.136	12	kv3_pv_v2 kv3_pv_v2n
+kv_cland_w416_ns_b8e9d	qwen_kvsys	ot_dp_clk_landing_cas	ns	416	W=416, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=15	69.552x53.568	8	kv3_pv_v5 kv3_pv_v5n
+kv_cland_w523_ew_23deb	qwen_kvsys	ot_dp_clk_landing_cas	ew	523	W=523, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	41.472x112.32	2	kv3_hgi_v8 kv3_pv_v12
+kv_cland_w523_ns_23deb	qwen_kvsys	ot_dp_clk_landing_cas	ns	523	W=523, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	85.536x54.432	3	kv3_hg_v1p3 kv3_hg_v1p4 kv3_hg_v1p6
+kv_cland_w524_ns_52911	qwen_kvsys	ot_dp_clk_landing_cas	ns	524	W=524, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	85.968x54.432	3	kv3_hgi_v6 kv3_hgi_v7 kv3_hgi_v8
+kv_cland_w525_ns_4e51a	qwen_kvsys	ot_dp_clk_landing_cas	ns	525	W=525, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	85.968x54.432	8	kv3_pv_v3 kv3_pv_v3n
+kv_cland_w544_ns_695d2	qwen_kvsys	ot_dp_clk_landing_cas	ns	544	W=544, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	88.56x54.864	8	kv3_pv_v4 kv3_pv_v4n
+kv_cland_w549_ns_ebde9	qwen_kvsys	ot_dp_clk_landing_cas	ns	549	W=549, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	89.424x54.864	3	kv3_hgi_v6 kv3_hgi_v7 kv3_hgi_v8
+kv_cland_w550_ns_45e4b	qwen_kvsys	ot_dp_clk_landing_cas	ns	550	W=550, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	89.424x54.864	3	kv3_hgi_v6 kv3_hgi_v7 kv3_hgi_v8
+kv_cland_w553_ns_b2e63	qwen_kvsys	ot_dp_clk_landing_cas	ns	553	W=553, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	89.856x54.864	3	kv3_hgi_v6 kv3_hgi_v7 kv3_hgi_v8
+kv_cland_w573_ns_a0a9f	qwen_kvsys	ot_dp_clk_landing_cas	ns	573	W=573, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=19	92.88x55.296	3	kv3_hg_v1p3 kv3_hg_v1p4 kv3_hg_v1p6
+kv_cland_w652_ns_2a350	qwen_kvsys	ot_dp_clk_landing_cas	ns	652	W=652, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=23	104.976x55.296	3	kv3_hg_v1p3 kv3_hg_v1p4 kv3_hg_v1p6
+kv_cland_w653_ns_304c2	qwen_kvsys	ot_dp_clk_landing_cas	ns	653	W=653, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=23	104.976x55.728	8	kv3_pv_v4 kv3_pv_v4n
+kv_cland_w672_ns_3ae78	qwen_kvsys	ot_dp_clk_landing_cas	ns	672	W=672, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=23	107.568x55.728	4	kv3_pv_v3 kv3_pv_v3n
+kv_cland_w781_ns_9f2d9	qwen_kvsys	ot_dp_clk_landing_cas	ns	781	W=781, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=27	123.984x56.16	4	kv3_pv_v5 kv3_pv_v5n
+kv_cland_w781_ns_8522d	qwen_kvsys	ot_dp_clk_landing_cas	ns	781	W=781, DEPTH=4, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=27	123.984x56.16	2	kv3_pc kv3_pc_v1
+kv_cland_w800_ns_d4b51	qwen_kvsys	ot_dp_clk_landing_cas	ns	800	W=800, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=27	126.576x56.592	4	kv3_pv_v2 kv3_pv_v2n
+kv_cland_w909_ns_e56d0	qwen_kvsys	ot_dp_clk_landing_cas	ns	909	W=909, DEPTH=4, CONTROL_STATUS_COPY=1, STATUS_REG=1, GUARD_REG=1, WFALL=1, WREG=1, DSREP=8, RSTREP=31	142.992x56.592	2	kv3_pv_v6n
+s81_cland_w1105_ew_a49fe	s81	ot_dp_clk_landing	ew	1105	W=1105, DSREP=8, LOCAL=1, WNEG=1	44.928x219.024	2	slice_station__t36
+s81_cland_w1105_ew_2a0b3	s81	ot_dp_clk_landing	ew	1105	W=1105, DSREP=8, WNEG=1	44.928x219.024	54	col_h10_r0_p1__t1 col_h9_r0_p1__t1 col_h9_r0_p3__t1 col_h9_r0_p5__t1 dsdv_slice_c1x_C__t1 dsdv_slice_c1x_C__t3 dsdv_slice_c1x_C__t4 dsdv_slice_c1x_C__t5 dsdv_slice_lepw_mus_C__t1 ot_s81sl_leaf__t70 ot_s81sl_leaf__t8
+s81_cland_w1105_ns_2a0b3	s81	ot_dp_clk_landing	ns	1105	W=1105, DSREP=8, WNEG=1	165.888x59.616	6	ot_s81sl_kv_leaf__t2 ot_s81sl_leaf__t66 ot_s81sl_leaf__t9
+s81_cland_w1369_ns_ba12c	s81	ot_dp_clk_landing	ns	1369	W=1369, DSREP=8, WNEG=1	203.904x60.048	1	eng__t1
+s81_cland_w1608_ns_b6578	s81	ot_dp_clk_landing	ns	1608	W=1608, DSREP=8, WNEG=1	238.464x60.048	3	svc_hi_dsdv_svc_rs__t2 svc_hi_dsdv_svc_rs__t3 svc_hi_dsdv_svc_rs__t4
+s81_cland_w2134_ns_8c69f	s81	ot_dp_clk_landing	ns	2134	W=2134, DSREP=8, WNEG=1	314.064x60.48	2	svc_hi_dsdv_svc_rs__t2 svc_hi_dsdv_svc_rs__t3
+s81_cland_w259_ns_bcf16	s81	ot_dp_clk_landing	ns	259	W=259, DSREP=8, LOCAL=1, WNEG=1	44.064x52.704	3	dsdv_slice_lepw_mu_LP__t2 slice_station__t37 slice_station__t49
+s81_cland_w265_ns_7e205	s81	ot_dp_clk_landing	ns	265	W=265, DSREP=8, WNEG=1	44.928x52.704	1	eng__t1
+s81_cland_w277_ns_b971b	s81	ot_dp_clk_landing	ns	277	W=277, DSREP=8, LOCAL=1, WNEG=1	46.656x53.136	7	bk_sel__t2 dsdv_slice_lepw_mu_LP__t2 slice_station__t41 slice_station__t43
+s81_cland_w277_ew_5c898	s81	ot_dp_clk_landing	ew	277	W=277, DSREP=8, WNEG=1	41.472x60.048	4	dsdv_slice_c1x_C__t3 svc_lo_dsdv_svc_rs__t6
+s81_cland_w277_ns_5c898	s81	ot_dp_clk_landing	ns	277	W=277, DSREP=8, WNEG=1	46.656x53.136	39	dsdv_slice_c1x_C__t4 dsdv_slice_c1x_C__t5 eng__t1 ot_s81sl_kv_leaf__t2 ot_s81sl_leaf__t14 ot_s81sl_leaf__t15 ot_s81sl_leaf__t16 ot_s81sl_leaf__t24 ot_s81sl_leaf__t25 ot_s81sl_leaf__t26 ot_s81sl_leaf__t32 ot_s81sl_leaf__t40 ot_s81sl_leaf__t43 ot_s81sl_leaf__t44 ot_s81sl_leaf__t5 ot_s81sl_leaf__t50 ot_s81sl_leaf__t55 ot_s81sl_leaf__t56 ot_s81sl_leaf__t57 ot_s81sl_leaf__t58 ot_s81sl_leaf__t62 ot_s81sl_leaf__t66 ot_s81sl_leaf__t68 ot_s81sl_leaf__t70 svc_lo_dsdv_svc_rs__t6
+s81_cland_w2939_ew_6bc7f	s81	ot_dp_clk_landing	ew	2939	W=2939, DSREP=8, WNEG=1	46.224x571.104	2	svc_hi_dsdv_svc_rs__t3 svc_hi_dsdv_svc_rs__t4
+s81_cland_w513_ns_f15b2	s81	ot_dp_clk_landing	ns	513	W=513, DSREP=8, LOCAL=1, WNEG=1	80.784x56.592	10	slice_station__t24 slice_station__t36 slice_station__t43
+s81_cland_w513_ns_1243e	s81	ot_dp_clk_landing	ns	513	W=513, DSREP=8, WNEG=1	80.784x56.592	3	svc_hi_dsdv_svc_rs__t2 svc_hi_dsdv_svc_rs__t3 svc_hi_dsdv_svc_rs__t4
+s81_cland_w514_ns_fa978	s81	ot_dp_clk_landing	ns	514	W=514, DSREP=8, LOCAL=1, WNEG=1	80.784x57.024	1	slice_station__t36
+s81_cland_w514_ns_ee9bc	s81	ot_dp_clk_landing	ns	514	W=514, DSREP=8, WNEG=1	80.784x57.024	2	ot_s81sl_leaf__t32
+s81_cland_w515_ns_05ae7	s81	ot_dp_clk_landing	ns	515	W=515, DSREP=8, LOCAL=1, WNEG=1	80.784x57.024	14	slice_station__t27 slice_station__t37 slice_station__t41 slice_station__t49
+s81_cland_w515_ns_7bf17	s81	ot_dp_clk_landing	ns	515	W=515, DSREP=8, WNEG=1	80.784x57.024	2	dsdv_slice_lepe_nh_mus_LP__t1
+s81_cland_w563_ew_fb485	s81	ot_dp_clk_landing	ew	563	W=563, DSREP=8, WNEG=1	43.632x114.912	2	svc_hi_dsdv_svc_rs__t3 svc_hi_dsdv_svc_rs__t4
+s81_cland_w572_ns_294da	s81	ot_dp_clk_landing	ns	572	W=572, DSREP=8, WNEG=1	88.992x57.456	1	ot_s81sl_leaf__t5
+s81_cland_w595_ns_1996a	s81	ot_dp_clk_landing	ns	595	W=595, DSREP=8, WNEG=1	92.448x57.456	4	ot_s81sl_kv_leaf__t2 ot_s81sl_leaf__t32
+s81_cland_w596_ew_75b27	s81	ot_dp_clk_landing	ew	596	W=596, DSREP=8, WNEG=1	44.064x121.392	1	ot_s81sl_leaf__t52
+s81_cland_w596_ns_75b27	s81	ot_dp_clk_landing	ns	596	W=596, DSREP=8, WNEG=1	92.448x57.456	25	ot_s81sl_kv_leaf__t2 ot_s81sl_leaf__t11 ot_s81sl_leaf__t15 ot_s81sl_leaf__t24 ot_s81sl_leaf__t40 ot_s81sl_leaf__t44 ot_s81sl_leaf__t53 ot_s81sl_leaf__t55 ot_s81sl_leaf__t57 ot_s81sl_leaf__t66 ot_s81sl_leaf__t68 ot_s81sl_leaf__t9
+s81_cland_w605_ew_dfdbd	s81	ot_dp_clk_landing	ew	605	W=605, DSREP=8, WNEG=1	44.064x123.12	1	ot_s81sl_leaf__t55
+s81_cland_w669_ns_acc1f	s81	ot_dp_clk_landing	ns	669	W=669, DSREP=8, WNEG=1	103.248x57.888	23	dsdv_slice_c1x_C__t1 dsdv_slice_c1x_C__t3 dsdv_slice_c1x_C__t4 dsdv_slice_c1x_C__t5 dsdv_slice_lepw_mus_C__t1 ot_s81sl_kv_leaf__t2 ot_s81sl_leaf__t14 ot_s81sl_leaf__t43 ot_s81sl_leaf__t52 ot_s81sl_leaf__t54 ot_s81sl_leaf__t56 ot_s81sl_leaf__t58 ot_s81sl_leaf__t62 ot_s81sl_leaf__t8
+s81_cland_w683_ns_b477b	s81	ot_dp_clk_landing	ns	683	W=683, DSREP=8, WNEG=1	104.976x58.32	1	svc_lo_dsdv_svc_rs__t6
+s81_cland_w806_ns_f6f39	s81	ot_dp_clk_landing	ns	806	W=806, DSREP=8, WNEG=1	122.688x58.752	1	svc_lo_dsdv_svc_rs__t6
+hd_cland_w1107_ew_34b9e	s81_head	ot_dp_clk_landing_cas	ew	1107	W=1107, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=37	43.632x227.664	1	hd_ctl
+hd_cland_w279_ns_5c30d	s81_head	ot_dp_clk_landing_cas	ns	279	W=279, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	49.248x50.544	3	hd_ctl hd_spn hd_spn_end
+hd_cland_w280_ns_8b778	s81_head	ot_dp_clk_landing_cas	ns	280	W=280, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=11	49.68x50.544	2	hd_spn hd_spn_end
+hd_cland_w515_ew_1359a	s81_head	ot_dp_clk_landing_cas	ew	515	W=515, DEPTH=4, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, FREG=1, RSTREP=19	41.472x110.592	2	hd_st_n4
+hd_cland_w515_ns_58cef	s81_head	ot_dp_clk_landing_cas	ns	515	W=515, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=19, PLACEREP=1	84.672x54.432	1	hd_serdes
+hd_cland_w517_ew_bcc30	s81_head	ot_dp_clk_landing_cas	ew	517	W=517, DEPTH=4, WFALL=1, WREG=1, DSREP=8, WRITE_CHUNK=16, FREG=1, RSTREP=19	41.472x111.024	2	hd_st_n4
+hd_cland_w517_ew_6f85e	s81_head	ot_dp_clk_landing_cas	ew	517	W=517, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=19	41.472x111.024	2	hd_host_w hd_mesh
+hd_cland_w517_ns_6f85e	s81_head	ot_dp_clk_landing_cas	ns	517	W=517, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=19	84.672x54.432	2	hd_host_e hd_mesh
+hd_cland_w568_ns_b3270	s81_head	ot_dp_clk_landing_cas	ns	568	W=568, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=19	92.016x55.296	4	hd_ctl hd_spn hd_spn_end
+hd_cland_w568_ew_ba231	s81_head	ot_dp_clk_landing_cas	ew	568	W=568, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=19, PLACEREP=1	41.904x120.96	2	hd_spn_eshim_rx hd_spn_wshim_rx
+hd_cland_w568_ns_ba231	s81_head	ot_dp_clk_landing_cas	ns	568	W=568, DEPTH=4, WREG=1, DSREP=8, WRITE_CHUNK=16, RSTREP=19, PLACEREP=1	92.016x55.296	1	hd_turn_b

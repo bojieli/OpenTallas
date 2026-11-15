@@ -1,4 +1,7 @@
 # CLAND-MACRO-1 handoff (FABLE-WAVE-REVIEW fix 7, S1 landing ring)
-Started 2026-11-14 18:27 PST. Branch claude/cland-macro-1-1114, clone intel2 /srv/opentallas-scratch2/claude/cland-macro-1/wt (no git in ~/OpenTallas).
-(1) STOP-GAP: queue ASK 2026-11-14 18:27 PST to WAVE-RECIPE-1/KIT-OPS-5: die_gen_env OT_CLAND_STRIP_DENS=1.0 on s81, qwen_kvsys, qwen_compute, s81_head. Status: posted.
-(2) STRUCTURAL: inventory of soft landing rings per die -> hard macro per config (QC recipe: QC-CORES.md DIE-QC-103 hand-off, gen_core_kit_qc.py, tools/die_plan/hard_landing.py emit). Status: inventory in progress.
+Updated 2026-11-14 18:47 PST. Branch claude/cland-macro-1-1114 head 5260b8afa42 (pushed), clone intel2 /srv/opentallas-scratch2/claude/cland-macro-1/wt (no git in ~/OpenTallas).
+(1) STOP-GAP: queue ASK to WAVE-RECIPE-1/KIT-OPS-5: die_gen_env OT_CLAND_STRIP_DENS=1.0 on s81, qwen_kvsys, qwen_compute, s81_head. Posted; not yet applied by them (check kit_wave.json die_gen_env).
+(2) INVENTORY: lanes/handoff/CLAND-MACRO-1-inventory.tsv (74 configs W>=250) + CLAND-MACRO-1-plan-<die>.tsv. Scan scripts: intel2 /srv/opentallas-scratch2/claude/cland-macro-1/{mkmacro.py,configs.json}; scan source = wave gen dirs items/*/gen/* (rtl u_cland_* instances, pins.json faces).
+(3) GENERATOR: READY posted to ROOT-MERGE-63 (param_wrap plain base + rst_xn, hard_landing plain + WFALL relax, face_guard).
+(4) MACROS: 74 kits /srv/opentallas-scratch2/claude/cland-macro-1/rk/<m>/kits/<m>_synth0 (rsynced to epyc7, epyc8, epyc10, intel1, epyc2); launched from epyc7: bash /srv/opentallas-scratch2/claude/cland-macro-1/launch.sh <m..> (skips signed); logs epyc7 /srv/opentallas-scratch2/claude/cland-macro-1/logs/<m>.log (the log names the host). Sign-off = kit signoff/signoff.json verdict SIGNED (DRC 0, TT >= -42, FF hold >= 0) on the host that ran it.
+(5) ON SIGN: AUTO-RESIGN row + archive like QC cores; post SIGNED + lef/lib paths to the die owner. Die plan asks posted 2026-11-14 18:47 PST (DIE-S81-92, KV-102, HEAD-99).

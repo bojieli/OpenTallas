@@ -1,0 +1,23 @@
+type_item	bus	physical_inst	master(module=physical_master)	param_wrap.base	param_wrap.params	outline_um	bus_face	orient(d face toward bus pins)
+hd_ctl	b_i	u_bound.u_cland_b_i	hd_cland_w568_ns_b3270	ot_dp_clk_landing_cas	{"W": 568, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	92.016x55.296	S	R0
+hd_ctl	h_rx_i	u_bound.u_cland_h_rx_i	hd_cland_w279_ns_5c30d	ot_dp_clk_landing_cas	{"W": 279, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 11}	49.248x50.544	S	R0
+hd_ctl	lepk_i0	u_bound.u_cland_lepk_i0	hd_cland_w1107_ew_34b9e	ot_dp_clk_landing_cas	{"W": 1107, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 37}	43.632x227.664	W	R0
+hd_host_e	coll_i1	u_bound.u_cland_coll_i1	hd_cland_w517_ns_6f85e	ot_dp_clk_landing_cas	{"W": 517, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	84.672x54.432	S	R0
+hd_host_w	coll_i0	u_bound.u_cland_coll_i0	hd_cland_w517_ew_6f85e	ot_dp_clk_landing_cas	{"W": 517, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	41.472x111.024	W	R0
+hd_mesh	coll_ia	u_bound.u_cland_coll_ia	hd_cland_w517_ns_6f85e	ot_dp_clk_landing_cas	{"W": 517, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	84.672x54.432	N	MX
+hd_mesh	coll_ib	u_bound.u_cland_coll_ib	hd_cland_w517_ew_6f85e	ot_dp_clk_landing_cas	{"W": 517, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	41.472x111.024	W	R0
+hd_serdes	coll_i0	u_bound.u_cland_coll_i0	hd_cland_w515_ns_58cef	ot_dp_clk_landing_cas	{"W": 515, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19, "PLACEREP": 1}	84.672x54.432	S	R0
+hd_spn	b_i	u_bound.u_cland_b_i	hd_cland_w568_ns_b3270	ot_dp_clk_landing_cas	{"W": 568, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	92.016x55.296	S	R0
+hd_spn	hd_i	u_bound.u_cland_hd_i	hd_cland_w280_ns_8b778	ot_dp_clk_landing_cas	{"W": 280, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 11}	49.68x50.544	N	MX
+hd_spn	hu_i	u_bound.u_cland_hu_i	hd_cland_w279_ns_5c30d	ot_dp_clk_landing_cas	{"W": 279, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 11}	49.248x50.544	S	R0
+hd_spn	x_i	u_bound.u_cland_x_i	hd_cland_w568_ns_b3270	ot_dp_clk_landing_cas	{"W": 568, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	92.016x55.296	N	MX
+hd_spn_end	hd_i	u_bound.u_cland_hd_i	hd_cland_w280_ns_8b778	ot_dp_clk_landing_cas	{"W": 280, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 11}	49.68x50.544	N	MX
+hd_spn_end	hu_i	u_bound.u_cland_hu_i	hd_cland_w279_ns_5c30d	ot_dp_clk_landing_cas	{"W": 279, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 11}	49.248x50.544	S	R0
+hd_spn_end	x_i	u_bound.u_cland_x_i	hd_cland_w568_ns_b3270	ot_dp_clk_landing_cas	{"W": 568, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19}	92.016x55.296	N	MX
+hd_spn_eshim_rx	link_i	u_bound.u_cland_link_i	hd_cland_w568_ew_ba231	ot_dp_clk_landing_cas	{"W": 568, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19, "PLACEREP": 1}	41.904x120.96	W	R0
+hd_spn_wshim_rx	link_i	u_bound.u_cland_link_i	hd_cland_w568_ew_ba231	ot_dp_clk_landing_cas	{"W": 568, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19, "PLACEREP": 1}	41.904x120.96	W	R0
+hd_st_n4	d1_i	u_bound.u_cland_d1_i	hd_cland_w515_ew_1359a	ot_dp_clk_landing_cas	{"W": 515, "DEPTH": 4, "WFALL": 1, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "FREG": 1, "RSTREP": 19}	41.472x110.592	E	MY
+hd_st_n4	d2_i	u_bound.u_cland_d2_i	hd_cland_w515_ew_1359a	ot_dp_clk_landing_cas	{"W": 515, "DEPTH": 4, "WFALL": 1, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "FREG": 1, "RSTREP": 19}	41.472x110.592	E	MY
+hd_st_n4	u1_i	u_bound.u_cland_u1_i	hd_cland_w517_ew_bcc30	ot_dp_clk_landing_cas	{"W": 517, "DEPTH": 4, "WFALL": 1, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "FREG": 1, "RSTREP": 19}	41.472x111.024	W	R0
+hd_st_n4	u2_i	u_bound.u_cland_u2_i	hd_cland_w517_ew_bcc30	ot_dp_clk_landing_cas	{"W": 517, "DEPTH": 4, "WFALL": 1, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "FREG": 1, "RSTREP": 19}	41.472x111.024	W	R0
+hd_turn_b	t_i	u_bound.u_cland_t_i	hd_cland_w568_ns_ba231	ot_dp_clk_landing_cas	{"W": 568, "DEPTH": 4, "WREG": 1, "DSREP": 8, "WRITE_CHUNK": 16, "RSTREP": 19, "PLACEREP": 1}	92.016x55.296	N	MX
