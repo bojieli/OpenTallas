@@ -1567,6 +1567,7 @@
    "note_codex_source": "CODEX scoped KV cadence faecd/flow-y-kv: immutable current source staged ep4/5/6;33historicalpins417objects available. Active old2c kits untouched. Current SYS_C reviewed82533 geometry uses101 literal flops/23branches, samephase, emitted fresh fromcurrentplan. Wi/PHYv1 retainholds pending typedviews/ownerevent; hubC soleprivate trial stillheld.",
    "prov_view_sources": {
     "qkd_ahub": [
+     {"host": "epyc2", "dir": "/srv/opentallas-scratch2/claude/kit-ops-6/kvviews/qkd_ahub", "job": "R-MINIMAL qkd_ahub (counter record dkv73/ahub_l signed views, KIT-OPS-6 11-14: view_detail dir copy with the counter kit libs; old libs 54 ps off)", "detailed_lef": "detail_view.lef", "detailed_receipt": "detail_receipt.json", "detail_bloat_factor": 1},
      {
       "host": "epyc2",
       "dir": "/srv/opentallas-scratch2/claude/type-kvahub/view_detail/qkd_ahub",
@@ -4213,6 +4214,7 @@
    "plan_sha256": "8301f154d3b223af3a44ce573276b8356091ea8d81fd0812a7e31dd5ee2a4f10",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
