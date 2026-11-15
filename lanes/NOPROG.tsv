@@ -24,3 +24,4 @@ time	host	type	stage	last_metric	kit_dir	containers	why	gb_freed	cores_reserved	
 2026-11-14 22:30:01	intel1	happy_hodgkin	lec	LEC last write 0.0 h ago	/srv/opentallas-scratch2/claude/hard-s81-serdes-1/kitH2_lec128/gen/serdes__t2	happy_hodgkin	LEC >24h, advisory	18.2	1	1.0
 2026-11-14 22:45:00	intel1	happy_hodgkin	lec	LEC last write 0.3 h ago	/srv/opentallas-scratch2/claude/hard-s81-serdes-1/kitH2_lec128/gen/serdes__t2	happy_hodgkin	LEC >24h, advisory	18.1	1	1.0
 2026-11-14 23:45:00	epyc7	ot_s81sl_leaf__t62	5_1_grt	last meaningful line 8.0 h ago (206/281 lines)	/srv/opentallas-scratch2/claude/tl-leaft62/gen	dpkit-ot_s81sl_leaf__t62-1351543	no new non-iteration log line for 8.0 h	16.9	16	1.0
+2026-11-15 00:15:13	epyc2	ot_s81sl_kv_leaf__t4	5_1_grt	repair_Remaining best 112319 last 112319 rows 238 | before-window best 112319, window best -	/srv/opentallas-scratch3/claude/type-s81-grtcap/gen	dpkit-ot_s81sl_kv_leaf__t4-3958471	no new repair_Remaining row in 6 h	24.2	8	1.0
