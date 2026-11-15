@@ -81,3 +81,15 @@ Unverified: hub_C on a netlist, DRST in the actual build, whether the extra keep
 ## RESULT 11-15 (HEAD hd_host_w LEC, for HEAD-100)
 HEAD hd_host_w with the derived keep (hdw_keep, intel1): async LEC EQUIVALENT, ot_s81hd_host_w_ep cp=82590 proved=82590 differs=0 undecided=0 (39,294 key points matched by name, 32,272 register pairs / merges and 664 constant registers proved inductively), LEC exit 0 at 11:30 PST. Census: ot_sram_oldread_b64 wdata 553 missing -> 0; flops 30,175 -> 30,760; 3_place.odb, no FAIL.
 Also: generator branch is now claude/merge-census-1115-3 @6e33128851 (hdc keep + generate-scoped *.wire fix), READY follows after the S81 hdc census/place.
+
+## READY 11-15 (hdc keep fix) -- GATE main=dd656c7acb39b9df25ba511bf302f412ee022131
+Branch claude/merge-census-1115-4 @5f235e68e04837ea078cc8c6c82c091c3b046761 (on the lane mirror; replaces -2/-3, same two commits rebased on main). FULL working tree (sparse-checkout disabled): tools/die_plan/test_replica_keep.py + test_kit_keep_gpl.py + test_kit_contract.py all pass (0 failures).
+Change: replica_keep.qual takes a replicated constant {W{1'b0}} as a constant and accepts the `OT_ARST(rst_n) async-reset block; ot_keep_regs.tcl `Module:wire` also matches generate-scoped regs (*.wire, e.g. ot_hdc_w11_cut g_r.r). Derives ot_hdc_w11_cut:r, ot_hdc_f12_cut:r/v, ot_hdc_fp32_add_lat:s1_v/s2_v.
+Proofs:
+| proof | before -> after |
+|---|---|
+| S81 ot_s81sl_kv_leaf__t1 (intel1, ot-run to place) | flops 49,875 -> 53,303 (+3,428); missing-in-short-siblings 14,328 -> 6,815; OT_KEEP_REGS 5,593 cells; f12_cut r (2,675 missing) now 0 on r, residual rows are `q:` (1,704 / 1,164 / 557 / 469) = pruned/different-operand bits, not r replicas |
+| KV hub_C proxy: qkd_pv_fin_s module synth (epyc2, ot-run) | kept cells 0 -> 750; flops 42,910 -> 43,760 (+850). No real hub_C kit exists (cleaned, reports only), so this is a module-level proof, not a kit |
+Old hook (before *.wire fix) kept 0 hdc cells on the same kit: 2,675 missing unchanged.
+Not shown: S81 place/route result of the hdc kit (run was relaunched with the fixed hook; place status in ~/mc_proof_s81hdc.log on intel2), real hub_C kit, the residual `q` rows are classified only by the agent's RTL argument.
+Until merged: WAVE-HOLDS-1115 asked (post fcfa-time) to set OT_KEEP_WIRES=ot_hdc_w11_cut:r on kv3_hub_C items; with this fix the Module:wire form also reaches g_r.r.
