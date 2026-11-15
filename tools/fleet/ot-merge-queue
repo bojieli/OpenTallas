@@ -70,7 +70,8 @@ ME = "MERGE-QUEUE"
 CO_AUTHOR = "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 TERMINAL = {"MERGED", "ALREADY", "FAIL", "REVOKED"}
 
-APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
+APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:branch\s+)?(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
+# ("branch " before the name is accepted: COORD wrote 'COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef' 11-15)
 QUOTE_RE = re.compile(r"\b(MERGED|MERGE-FAIL|READY) \[")      # a line that quotes an approval is not one
 # MERGE-QUEUE-1 11-14 20:00: only COORD (or OWNER) approves.  A line whose first [author] tag before the approval is any other
 # lane (a STATE / ASK quoting the line it asks for) is not an approval; a bare line without an author tag is a COORD ruling.
