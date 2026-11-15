@@ -1,6 +1,7 @@
 """FLOW-HEALTH-1 11-15: flow_guard preflight (paths, tree skew, count frames), class circuit-breaker, skew report, kit_wave gate.
     python3 -m pytest -q tools/autopilot/test_flow_guard.py"""
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -102,7 +103,9 @@ class Paths(unittest.TestCase):
     def test_broken_link_below_lane_dir(self):
         lane = Path(self.tmp) / "srv" / "x" / "claude" / "lane" / "tree"      # LANE regex: /srv/<d>/claude/<l>/<t>
         # emulate the regex with a replaced pattern for /tmp
-        code = FG.PATHS_PY.replace(r'"^/srv/[^/]+/claude/[^/]+/[^/]+"', r'"^/tmp/.+"')
+        orig = r'LANE = re.compile(r"^/srv/[^/]+/claude/[^/]+/[^/]+")'
+        self.assertIn(orig, FG.PATHS_PY)
+        code = FG.PATHS_PY.replace(orig, 'LANE = re.compile(r"^' + re.escape(str(self.a)) + '")')      # wherever TMPDIR is
         (self.a / "d").mkdir()
         (self.a / "d/l").symlink_to(self.a / "gone")
         r = local_rpy("a", code, {"paths": [str(self.a / "d")]})
