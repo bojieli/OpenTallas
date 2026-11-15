@@ -176,3 +176,10 @@ Launcher intel2 ~/s81colinh/launch_form.py + batch.sh (copy of the representativ
  c (RULEBOOK streets / pin spread): NOT launched. R-STREET legalize moves cores = plan event + strict re-bind, so it cannot be a copy of a built kit; fold into B4 (DIE-S81-92).
 ## Open
 inheritance tool + counter change + tests: branch claude/s81-col-inherit-1114 (in progress); archive dirs on AGIdock/rtx-pro after the first representative signs.
+
+## Update 11-14 ~19:0x
+- Branch claude/s81-col-inherit-1114 head 98fe669e3d2 pushed, READY posted to ROOT-MERGE-63. Intel2 worktree /srv/opentallas-scratch2/claude/s81-col-inherit-wt (own clone, sparse).
+- 18 private forms (a, b) launched for the 9 representatives; c and the streets form need a plan event (not launched). Cancel losers by exact PID after the first sign-off of a representative.
+- FINDING: inheritance is plan dependent (collector_tree differs per pv in B3x2b for 2 and B3z2 for 6 of 13 layouts); see the STATE line in COORD-REVIEW-QUEUE.md. The 9 representatives are valid on B3t/B3x2b except cl99efd374 (h10_r2) and clc9ad8f7e (h9_r2) on B3x2b.
+- NEXT when a representative signs: python3 -I tools/fleet/col_inherit.py record --plan PLAN --rep REP --sibling S... --signoff <its signoff.json> --repo SRC --rom-dir <viamap dir> --out DIR --netlist 1_2_yosys.v --sibling-rtl <kit rtl> --blackbox <hard-core _bb.v...> --members-tsv ~/coord/autopilot/inherit_members.tsv; then archive --records ... --rtx-root /home/ubuntu/signed-export-1114 --agi-root /archive/opentallas-signed-1114 --agi-ssh "ssh -i ~/.ssh/agidock_ot -o IdentitiesOnly=yes -o ControlPath=none -o BatchMode=yes ubuntu@155.103.253.53". Where the ROM viamap hex files live (OT_ROM_DIR) was not located: pass it with --rom-dir; a missing image blocks credit.
+- KIT-OPS-5: cancel list ready (patches/S81-COL-INHERIT/cancel_siblings.tsv); not executed, waiting for COORD.
