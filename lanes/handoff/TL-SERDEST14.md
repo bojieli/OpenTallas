@@ -11,3 +11,7 @@ Next: after relaunch, drive to R-MINIMAL; add AUTO-RESIGN.tsv row on pass.
 - t3: cause = phy_lk_WN0 PG domain y0 25646.556 vs u_prx type y 951.48 (domain must start <= 25601.4; sibling value 25433.0). Private fixed kit gen OK (epyc10 /srv/opentallas-scratch2/claude/tl-serdest14/t3/gen/serdes__t3); route got through place + LEC, stopped at 4_1_cts OT_CELL_BUDGET (435,524 movable cells, cell_census.tcl). Resume attempts route2/3/4 all died on RESYNTH-GUARD on spill hosts (config.mk newer than restored 1_2_yosys.v after spill copy); STOPPED per COORD: fresh kits from current main (cell budget advisory) once the DIE-S81-92 serdes event lands.
 - Plan numbers for the event are in the queue: (A) ptx path, (B) four sliver PG domains (WN3 t4, EN0 t15, EN1 t16, EN2 t13: y0 25875.612 -> 25876.8) and (C) phy_lk_WN0 delta.
 - Private units/logs on intel2: ~/serdest14-*.log; systemd units tl-serdest14-*; kits under /srv/opentallas-scratch2/claude/tl-serdest14 (epyc9, epyc10, intel1 i1, epyc2 scratch3) and attempt_2 kit copies on epyc2/epyc10.
+
+## 2026-11-14 19:35 PST successor
+- Live: i1 route 80 intel1 pid 2538819 (5_1_grt repair, setup -455..-576 u_ptx, TX distance). Waiter DONE-route2 on intel1 i1/gen. No relaunch.
+- Next: SERDES-TXPIPE fixed t14 kit/bind with TXPIPE RTL -> one fresh route 80; pass -> AUTO-RESIGN + export. t3 waits for DIE-S81-92 event.
