@@ -139,3 +139,19 @@ Decision
 2. Form B1g = b1c + ETM landing: hist_bank and pk2 clk pins tap a level-4 buffer of the register tree in their region (leaf minus about 140 TT; not run).
 3. Reference = b1c mean 790.1 TT (FF from the same read) in kit vclk and plan row. Early 340.1 at bk_sel__t2 budget 450; at 250 it is 540 and cannot bind.
 4. CTS gate at that vclk: p1-p99 <= 110; ETM pins 130-190 before their registers; FF hold above -150 on <= 2,000 endpoints, ports included.
+
+## 8. Follow-up 11-15 16:5x: bksel B1g (answer to COORD)
+
+MEASURED (my read of a copy of b1g 4_cts.odb, epyc8 `fable-pd-s81c/bkB1g`, parasitics on)
+- No port shift. b1g `4_cts.sdc` line 15 still has vclk TT 975 (stale stage SDC; `constraint.sdc` has 790.1). FF used 635.0. The TT read is in the old frame.
+- TT at 975: 187 endpoints. Ports: input -15.7, output +261.3; at 790.1 that is +169 / +76 (arithmetic, not rerun). Internal worst -215.0: pk2 to fq SRAM `r_addr`, 15 endpoints.
+- FF: 3,501 of 3,888 endpoints are macro pins. -177.6 is pk2 `c*_p` (592, median -149.5): pk2 clk lands 48 ps after its registers; hf bank[2] 32 after. Others 387: 18 `ot_fcap` inputs at -92.0 (pad, as on he), rest above -51.
+- `b1g_class.tcl` has no parasitics and no `vclk_ff.sdc`: its 1,533 / 565 "reg" counts are not valid.
+
+Rows (DIE-S81-92), unchanged port budget
+- in 166.6 / -40, out 166.6 / 0. Tap: insertion_ps 790.1, insertion_ff_ps 635.0, type budget 450, early 340.1.
+
+Next
+1. (a): patch the stage SDC to 790.1 first, else GRT repairs in the 975 frame.
+2. (b): gate = every ETM pin >= 100 TT ahead, none negative; pk2 and hf bank[2] first.
+3. (c): stop; 975 cannot bind.
