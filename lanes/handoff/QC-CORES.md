@@ -1,4 +1,4 @@
-# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 14:19 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
+# QC-CORES (QC-CORES-HEAD single table, refreshed 11-14 16:00 PST). 29 s29q103S hard cores with no routed view (plan zz_s29_qc103_s2.json).
 columns: core | lane | form | host | unit/kit | stage | verdict | view path (signoff) | registered (AUTO-RESIGN / prov_view_sources)
 
 | core | lane | form | host | kit | stage | verdict | view path | registered |
@@ -40,7 +40,8 @@ columns: core | lane | form | host | unit/kit | stage | verdict | view path (sig
 | qfd_dv_s8_tap_bounded[e] | TL-QCTAPB | qfd_dv e (TL-QCTAPB) | epyc9 | /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0 | signoff | SIGNED DRC 0 TT 15.26 FFhold 7.13 PASS | /srv/opentallas-scratch2/claude/tl-qcstap/rk/e/kits/qfd_dv_s8_tap_bounded_synth0/signoff | no |
 | qfd_dv_s5_ctl_repair4_leaf[a] | TL-QCREP4 | qfd_dv a util.5 | intel1 | /srv/opentallas-scratch2/claude/tl-qcrep4/a/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
 | qfd_dv_s5_ctl_repair4_leaf[b] | TL-QCREP4 | qfd_dv b util.3 | intel1 | /srv/opentallas-scratch2/claude/tl-qcrep4/b/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
-| qfd_dv_s5_ctl_repair4_leaf[c] | TL-QCREP4 | qfd_dv c (TL-QCREP4) | epyc2 | /srv/opentallas-scratch2/claude/tl-qcrep4/c/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
+| qfd_dv_s5_ctl_repair4_leaf[c] | TL-QCREP4 | qfd_dv c (FAILED face_guard) | epyc2 | /srv/opentallas-scratch2/claude/tl-qcrep4/c/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
+| qfd_dv_s5_ctl_repair4_leaf[d] | TL-QCREP4 | qfd_dv d all input groups registered | epyc2 | /srv/opentallas-scratch2/claude/tl-qcrep4/d/kits/qfd_dv_s5_ctl_repair4_leaf_synth0 | running | - |  | no |
 | sta_region_nb0[w] | QC-CORES-HEAD | region 5xSRAM w/ flt pin regs | epyc10 | /srv/opentallas-scratch2/claude/qc-cores-head/rk/sta_region_nb0/kits/sta_region_nb0_synth0 | signoff | NOT SIGNED DRC 0 TT 15.39 FFhold -3.12 FAIL | /srv/opentallas-scratch2/claude/qc-cores-head/rk/sta_region_nb0/kits/sta_region_nb0_synth0/signoff | no |
 | sta_region_nb0[rw] | TL-QCSTAV2 | rw util.5 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rw/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
 | sta_region_nb0[rwb] | TL-QCSTAV2 | rwb util.4 flt regs | epyc2 | /srv/opentallas-scratch2/claude/tl-qcstav2/rwb/sta_region_nb0/kits/sta_region_nb0_synth0 | running | - |  | no |
