@@ -15,28 +15,28 @@
  "dies": {
   "qwen_kvsys": {
    "enabled": true,
-   "event": "kvgeom6",
+   "event": "kvgeom7u",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
     "evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7u/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7u",
    "src_sha": "96f13b36a258e3b6121497ff52a7a31e9add3131",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_kvgeom6/out",
-    "note": "KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft, kv3_io_ft_v1, 6 kv3_pc; plan_aff) | KIT-OPS-5 KV kvgeom5 (KV-102 READY+ADOPT 19:01: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom4 + kv3_io_cor i_host_fdi band +43.2 um) | KIT-OPS-3 KV kvgeom4 (KV-102 READY+ADOPT 07:44: G0 0, strict bind 0, LATCHECK 2404/2404); bind_matches checked | KIT-OPS-3 01:44 PST KV-102 ADOPT kv102sem_1113 (semantic R8; strict bind 0, LATCHECK 2404/2404, trunk replay 128/128); bind_matches 56/56 0 stale on src_kv_kvgeom4_pgL | KIT-OPS-3 2026-11-13 19:40 PST"
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7u/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_kvgeom7u/out",
+    "note": "WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft, kv3_io_ft_v1, 6 kv3_pc; plan_aff) | KIT-OPS-5 KV kvgeom5 (KV-102 READY+ADOPT 19:01: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom4 + kv3_io_cor i_host_fdi band +43.2 um) | KIT-OPS-3 KV kvgeom4 (KV-102 READY+ADOPT 07:44: G0 0, strict bind 0, LATCHECK 2404/2404); bind_matches checked | KIT-OPS-3 01:44 PST KV-102 ADOPT kv102sem_1113 (semantic R8; strict bind 0, LATCHECK 2404/2404, trunk replay 128/128); bind_matches 56/56 0 stale on src_kv_kvgeom4_pgL | KIT-OPS-3 2026-11-13 19:40 PST"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7u/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -679,11 +679,9 @@
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
    "hold_items": {
-    "kv3_hg_v3": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a13/a14 on two superseded events; release on the current event",
     "kv3_hgi_v5": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a6 13 h on superseded event kv102sem_ftgrid; release on the current event",
     "kv3_pv_v1n*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1546 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1160 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-641 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
     "kv3_hg": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
     "kv3_hg_v1": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
     "kv3_hg_v1p3": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
@@ -696,15 +694,12 @@
     "kv3_hgi": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v1__cl141fc26e": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v1__cl42bc8b12": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v2__cl2862d491": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v2__cle0015330": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v3": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v4": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v6": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v7": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v8": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pc__cl254f2e73": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pc__cl5a95b461": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_pv": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_pv_v1": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_pv_v12": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
@@ -4295,7 +4290,7 @@
     "epyc7",
     "epyc2"
    ],
-   "plan_sha256": "caf6cdfe391303e5ecc0d8b0570fb43984b00589a5267e03693aee5324b6f1cc",
+   "plan_sha256": "b7156937f3349ed25a270819d09b7e77bdfa4a2b47c81c7ee158f100542c7885",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
@@ -5659,32 +5654,27 @@
     "kv3_pc_v1__cl4ea58a5c": "event_adopt:KV pc delta",
     "kv3_io_cor": "lane_result:DRT0255-PROOF io_cor proof route",
     "kv3_io_cor_v1": "lane_result:DRT0255-PROOF io_cor proof route",
-    "kv3_hg_v3": "event_adopt:KV current event",
     "kv3_hgi_v5": "event_adopt:KV current event",
     "kv3_pv_v1n*": "event_adopt:kvgeom7",
-    "kv3_hgi_v3*": "event_adopt:kvgeom7",
-    "kv3_hgi_v2*": "event_adopt:kvgeom7",
-    "kv3_hg": "event_adopt:kvgeom7",
-    "kv3_hg_v1": "event_adopt:kvgeom7",
-    "kv3_hg_v1p3": "event_adopt:kvgeom7",
-    "kv3_hg_v1p4": "event_adopt:kvgeom7",
+    "kv3_hgi_v3*": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hg": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hg_v1": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hg_v1p3": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hg_v1p4": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
     "kv3_pc_v3": "lane_ready:KV owner source fix",
     "kv3_hub_C": "lane_ready:KV owner source fix",
-    "kv3_hg_v1p2": "event_adopt:kvgeom7j",
-    "kv3_hg_v1p5": "event_adopt:kvgeom7j",
-    "kv3_hg_v1p6": "event_adopt:kvgeom7j",
-    "kv3_hgi": "event_adopt:kvgeom7j",
-    "kv3_hgi_v1__cl141fc26e": "event_adopt:kvgeom7j",
-    "kv3_hgi_v1__cl42bc8b12": "event_adopt:kvgeom7j",
-    "kv3_hgi_v2__cl2862d491": "event_adopt:kvgeom7j",
-    "kv3_hgi_v2__cle0015330": "event_adopt:kvgeom7j",
-    "kv3_hgi_v3": "event_adopt:kvgeom7j",
-    "kv3_hgi_v4": "event_adopt:kvgeom7j",
-    "kv3_hgi_v6": "event_adopt:kvgeom7j",
-    "kv3_hgi_v7": "event_adopt:kvgeom7j",
-    "kv3_hgi_v8": "event_adopt:kvgeom7j",
-    "kv3_pc__cl254f2e73": "event_adopt:kvgeom7j",
-    "kv3_pc__cl5a95b461": "event_adopt:kvgeom7j",
+    "kv3_hg_v1p2": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hg_v1p5": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hg_v1p6": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v1__cl141fc26e": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v1__cl42bc8b12": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v2__cle0015330": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v3": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v4": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v6": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v7": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
+    "kv3_hgi_v8": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
     "kv3_pv": "event_adopt:kvgeom7j",
     "kv3_pv_v1": "event_adopt:kvgeom7j",
     "kv3_pv_v12": "event_adopt:kvgeom7j",
@@ -5703,7 +5693,31 @@
     "kv3_pv_v6n": "lane_ready:KV-101",
     "kv3_hroot": "lane_result:DRT0255-PROOF flags READY",
     "kv3_pc_v1__cl23f6a148": "lane_ready:KITRTL-FAIL-1115"
-   }
+   },
+   "prev_wavehold1115_kvgeom6": {
+    "event": "kvgeom6",
+    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "plan_sha256": "caf6cdfe391303e5ecc0d8b0570fb43984b00589a5267e03693aee5324b6f1cc",
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL",
+    "gen_args": [
+     "--hold-ff-margin",
+     "0",
+     "--clock-landing",
+     "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    ],
+    "kit_rtl": {
+     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_kvgeom6/out"
+    },
+    "hold_items_released": {
+     "kv3_hgi_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-641 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
+     "kv3_hgi_v2__cl2862d491": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
+     "kv3_hg_v3": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a13/a14 on two superseded events; release on the current event",
+     "kv3_pc__cl254f2e73": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
+     "kv3_pc__cl5a95b461": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key."
+    }
+   },
+   "note_wavehold1115_kvgeom7u": "WAVE-HOLDS-1115 2026-11-15 15:19 PST: wave switched to kvgeom7u in one commit; pilots released: kv3_hgi_v2__cl2862d491 and kv3_hg_v3 (smallest non-kv3_hg hg frame by last measured cells 264,620; kv3_hg itself is not a pilot per TYPES-KV-FAIL-1115). Other hg/hgi stay held. pc 7J-PENDING keys released: ['kv3_pc__cl254f2e73', 'kv3_pc__cl5a95b461']."
   },
   "s81": {
    "enabled": true,
@@ -11875,15 +11889,6 @@
       "detail_pg_layer": true
      },
      {
-      "host": "epyc4",
-      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
-      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
-      "detailed_lef": "detail_view.lef",
-      "detailed_receipt": "detail_receipt.json",
-      "detail_bloat_factor": 1,
-      "detail_pg_layer": true
-     },
-     {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
       "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
@@ -11893,9 +11898,40 @@
       "detail_pg_layer": true
      },
      {
-      "host": "epyc4",
-      "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/de834643996f/dsfd_coll_lane_e_safe8_ntf",
-      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
      }
     ],
     "dsfd_coll_lane_w_safe8_ntf": [
@@ -11909,15 +11945,6 @@
       "detail_pg_layer": true
      },
      {
-      "host": "epyc4",
-      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
-      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
-      "detailed_lef": "detail_view.lef",
-      "detailed_receipt": "detail_receipt.json",
-      "detail_bloat_factor": 1,
-      "detail_pg_layer": true
-     },
-     {
       "host": "epyc7",
       "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
       "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
@@ -11927,9 +11954,40 @@
       "detail_pg_layer": true
      },
      {
-      "host": "epyc4",
-      "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/4eaba3b86b89/dsfd_coll_lane_w_safe8_ntf",
-      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+      "host": "epyc2",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
      }
     ],
     "dsdv_eng_rr_e": [
@@ -34390,7 +34448,78 @@
     "svc_lo_dsdv_svc_rs__t7",
     "svc_lo_dsdv_svc_rs_w__t1"
    ],
-   "note_wavehold1115_b6ge": "WAVE-HOLDS-1115 2026-11-15 13:32 PST: B6gE adopted in one commit (plan/src/bind/sidecar; 136 hold keys released, 252 kept as typed holds; OT_TAP_MAX_SINKS deleted for 44 items; -noshare on 8 svc). WAVE SRC CAVEAT: B6gE/src bind.py does not know --src-tree (kit_rtl FAIL until SRC-TREE-1115 wave fix). Revert: prev_wavehold1115_b6ge + hold_items_released_wavehold1115_b6ge."
+   "note_wavehold1115_b6ge": "WAVE-HOLDS-1115 2026-11-15 13:32 PST: B6gE adopted in one commit (plan/src/bind/sidecar; 136 hold keys released, 252 kept as typed holds; OT_TAP_MAX_SINKS deleted for 44 items; -noshare on 8 svc). WAVE SRC CAVEAT: B6gE/src bind.py does not know --src-tree (kit_rtl FAIL until SRC-TREE-1115 wave fix). Revert: prev_wavehold1115_b6ge + hold_items_released_wavehold1115_b6ge.",
+   "prov_view_sources_prev_wavehold1115_r163": {
+    "dsfd_coll_lane_e_safe8_ntf": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/de834643996f/dsfd_coll_lane_e_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_e_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/e/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ],
+    "dsfd_coll_lane_w_safe8_ntf": [
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch2/claude/die-hbm-97-drt73-pa/view_detail/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 ck access, same signed ODB)",
+      "detailed_lef": "detail_view.lef",
+      "detailed_receipt": "detail_receipt.json",
+      "detail_bloat_factor": 1,
+      "detail_pg_layer": true
+     },
+     {
+      "host": "epyc4",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/s81/4eaba3b86b89/dsfd_coll_lane_w_safe8_ntf",
+      "job": "COUNTED dsfd_coll_lane_w_safe8_ntf epyc4:/srv/opentallas-scratch2/claude/codex-colle-exact-hold-1106/w/cert1_bh/signoff/signoff.json (KW-FIX-32 export_view)"
+     }
+    ]
+   },
+   "hold_items_added_wavehold1115_sdclint": []
   },
   "s81_head": {
    "enabled": true,
