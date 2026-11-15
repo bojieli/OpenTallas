@@ -184,6 +184,27 @@ class Daily(unittest.TestCase):
         self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "import dep\nA = 2\n")
         self.assertEqual(self.last(), v2)
 
+    def test_put_reports_vs_main_and_from_main_writes_every_copy(self):
+        (self.dev / "tools/die_plan/a.py").write_text("A = 2\nT = 'tap_offset_table'\n")   # main moved, both trees still A = 1
+        self.commit("v2")
+        def put(*a):
+            return subprocess.run([sys.executable, "-I", P, "put", "--die", "qc", *a], env=self.env, capture_output=True,
+                                  text=True, timeout=300)
+        u = put("tools/die_plan/a.py", "--apply")                 # 05:22 11-15: plain put syncs the gen host copy, says SAME
+        self.assertIn("DIFFERS from main", u.stdout)
+        self.assertIn("--from-main", u.stdout)
+        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 1\n")
+        dry = put("--from-main", "tools/die_plan/a.py")
+        self.assertIn("a.py=REPLACE", dry.stdout)
+        self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
+        u = put("--from-main", "tools/die_plan/a.py", "--apply")
+        self.assertEqual(u.returncode, 0, u.stdout + u.stderr)
+        for f in (self.src / "tools/die_plan/a.py", self.rep("tools/die_plan/a.py")):
+            self.assertEqual(f.read_text(), "A = 2\nT = 'tap_offset_table'\n")
+        self.assertTrue(list((self.src / ".mq-refresh-bak").rglob("a.py")))
+        self.assertIn("== main", put("tools/die_plan/a.py").stdout)
+        self.assertIn("refused: not on main", put("--from-main", "tools/die_plan/nope.py", "--apply").stdout)
+
     def test_staged_smoke_failure_swaps_nothing(self):
         (self.dev / "tools/die_plan/a.py").write_text("import no_such_module_xyz\nA = 2\n")
         self.commit("v2")
