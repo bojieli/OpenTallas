@@ -11,6 +11,11 @@
 #   OT_PRD_POST=0: skip the kit runner's GOAL=post sign-off after do-finish (default 1 = unchanged)
 # Result: D/prd_result.json (per pass: rc, clk check, TC/BC slew + cap counts, sink masters restored; final dir).
 set -uo pipefail
+# NEARMISS-FIX-1 11-14: this script runs under ot-run, so its stdout is a pipe to a remote client.  When the client died
+# (ssh drop, earlyoom, lane restart) the first status echo after the 1-2 h route killed the script with SIGPIPE (rc -13)
+# BEFORE addres wrote prd_result.json: 3 of 5 NEARMISS-ECO runs ended ERROR with passes [] although route, clock-freeze
+# check and TC/BC counts had passed.  Ignore SIGPIPE: a failed echo is not a design result.
+trap '' PIPE
 D0=$(cd "$1" && pwd); CPUS=${2:-8}; MEM=${3:-32}; MAXP=${4:-2}
 HERE=$(cd "$(dirname "$0")" && pwd)
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
