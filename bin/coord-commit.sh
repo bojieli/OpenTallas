@@ -8,6 +8,12 @@
 # an earlier holder pushed it, or committed its lines through preserve_append_logs -- it exits 0 without merge or push.
 # Safety kept: KW-FIX-25 re-apply (restore_own), KW-FIX-17 merge abort, append preservation, generated-file discard,
 # never rebase/stash/reset. Env (tests only): COORD_DIR, COORD_BRANCH. Timing log: ~/.local/state/coord-commit-times.log
+# REPO-STATE-1 11-14: (1) a commit that names lanes/posts/<LANE>.md (bin/post.sh) also runs tools/queue_view.py under fd 9
+# and commits the lanes/COORD-REVIEW-QUEUE.md view with it. (2) when the merge of origin conflicts (on a file this call
+# did not touch, e.g. another clone's edit), the call no longer retries the same merge 6x and fails: replay_own builds
+# one commit on origin's tip that carries ONLY this call's own file changes (unchanged upstream -> our version; pure
+# append -> our appended lines on top of upstream; anything else -> no replay) in a private index, pushes it, and
+# leaves the shared worktree and index untouched (the local HEAD merges it cleanly later: same change on both sides).
 set -e
 C=${COORD_DIR:-/home/ubuntu/coord}; B=${COORD_BRANCH:-coord/state}
 cd "$C"
@@ -22,6 +28,11 @@ exec 9>"$C/.coord.lock"
 exec 8>"$C/.coord.push.lock"
 t=$(now); flock 9; W9=$(echo "$(now)-$t" | bc)
 git add -- "$@"
+for a in "$@"; do case "$a" in lanes/posts/*.md)
+  if [ -f "$C/tools/queue_view.py" ] && [ "$*" != "lanes/COORD-REVIEW-QUEUE.md" ]; then
+    COORD_DIR="$C" timeout 120 python3 -I "$C/tools/queue_view.py" --coord "$C" --apply >/dev/null 2>&1 || true
+    git diff --quiet -- lanes/COORD-REVIEW-QUEUE.md || { set -- "$@" lanes/COORD-REVIEW-QUEUE.md; git add -- lanes/COORD-REVIEW-QUEUE.md; }
+  fi; break;; esac; done
 own_before=$(git rev-parse HEAD)
 git commit -q -m "$msg" -- "$@" || true
 # KW-FIX-25 11-06: a lane's own `git reset --keep origin/coord/state` in this shared tree does not take our lock. Between our
@@ -90,6 +101,51 @@ if [ -f "$HOME/.config/systemd/user/autopilot.service" ]; then
   done
 fi
 }
+# REPO-STATE-1 11-14: replay only this call's own changes (OWN~1..OWN) onto origin/$B in a private index and push it.
+replay_own() {
+[ -n "$OWN" ] || return 1
+git fetch -q origin "$B" || return 1
+R=$(OWN="$OWN" UP="origin/$B" MSG="$msg (replayed own files on origin)" python3 -I - <<'PY_REPLAY'
+import os, subprocess as S, sys, tempfile
+own, up, msg = os.environ["OWN"], os.environ["UP"], os.environ["MSG"]
+def g(*a, inp=None, env=None):
+    r = S.run(["git", *a], input=inp, capture_output=True, env=env)
+    if r.returncode: raise SystemExit(1)
+    return r.stdout
+def blob(rev, f):
+    r = S.run(["git", "cat-file", "blob", f"{rev}:{f}"], capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+files = [f for f in g("diff", "--name-only", "-z", own + "~1", own).decode().split("\0") if f]
+put = {}
+for f in files:
+    base, mine, cur = blob(own + "~1", f), blob(own, f), blob(up, f)
+    if mine is None: raise SystemExit(1)                     # deletions are not replayed
+    if cur == base or cur == mine: put[f] = mine; continue
+    if base is not None and mine.startswith(base) and cur is not None:
+        add = mine[len(base):]
+        if add and add in cur: put[f] = cur; continue          # already carried upstream
+        put[f] = cur + (b"" if cur.endswith(b"\n") or not cur else b"\n") + add; continue
+    if base is None and cur is not None and mine.startswith(cur): put[f] = mine; continue
+    raise SystemExit(1)                                      # an in-place edit that upstream also changed: no replay
+with tempfile.TemporaryDirectory() as d:
+    env = dict(os.environ, GIT_INDEX_FILE=os.path.join(d, "index"))
+    g("read-tree", up, env=env)
+    for f, data in put.items():
+        h = g("hash-object", "-w", "--stdin", inp=data).decode().strip()
+        mode = "100755" if os.access(f, os.X_OK) else "100644"
+        g("update-index", "--add", "--cacheinfo", f"{mode},{h},{f}", env=env)
+    tree = g("write-tree", env=env).decode().strip()
+    if tree == g("rev-parse", up + "^{tree}").decode().strip():
+        print(g("rev-parse", up).decode().strip()); sys.exit(0)  # nothing left to carry
+    print(g("commit-tree", tree, "-p", up, "-m", msg).decode().strip())
+PY_REPLAY
+) || return 1
+[ -n "$R" ] || return 1
+if on_origin "$R" || git push -q origin "$R:refs/heads/$B"; then
+  git fetch -q origin "$B" || true; OWN="$R"; return 0
+fi
+return 1
+}
 on_origin() { git merge-base --is-ancestor "$1" "origin/$B" 2>/dev/null; }
 # done when origin holds our own commit; with no commit of our own, when origin holds HEAD (our lines, if committed by
 # preserve_append_logs here or by an earlier holder, are in HEAD)
@@ -100,9 +156,15 @@ for i in 1 2 3 4 5 6; do
   if [ -n "$OWN" ] && git fetch -q origin "$B" && on_origin "$OWN"; then tlog coalesced; exit 0; fi
   t=$(now); flock 9; W9=$(echo "$W9+$(now)-$t" | bc)
   ok=0
-  discard_generated; preserve_append_logs && git fetch -q origin "$B" && { git merge -q --no-edit "origin/$B" || { git merge --abort 2>/dev/null; false; }; } && restore_own "$@" && ok=1 || true
+  merged=1
+  discard_generated; preserve_append_logs && git fetch -q origin "$B" && { git merge -q --no-edit "origin/$B" || { git merge --abort 2>/dev/null; merged=0; false; }; } && restore_own "$@" && ok=1 || true
   P=$(git rev-parse HEAD)
   flock -u 9
+  if [ $ok = 0 ] && [ $merged = 0 ] && [ -n "$OWN" ]; then
+    t=$(now)
+    if replay_own; then TP=$(echo "$TP+$(now)-$t" | bc); if done_now; then tlog replayed; exit 0; fi; fi
+    TP=$(echo "$TP+$(now)-$t" | bc)
+  fi
   if [ $ok = 1 ]; then
     if done_now; then tlog coalesced; exit 0; fi
     t=$(now)
