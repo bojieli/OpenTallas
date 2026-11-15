@@ -1,0 +1,646 @@
+epyc2	MRGSUM	cbn_q00__cldbcda913	flops 38740	instances 548	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	coll_ft__cl78c7b300	flops 9000	instances 810	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	coll_ft__cla4a25d77	flops 9143	instances 756	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	sle_fe_v2	flops 51322	instances 2485	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	sle_fw_v1__cl9d029624	flops 35821	instances 2898	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	sle_fw_v2__cl6740750e	flops 35819	instances 2827	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	sle_fw_v2__cl69f5e854	flops 35816	instances 2961	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	kv3_hg_v1p2	flops 57940	instances 2448	modules_with_short_siblings 19	flops_missing_in_short_siblings 10584
+epyc2	MRG	kv3_hg_v1p2	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst1_t2.u_reg
+epyc2	MRG	kv3_hg_v1p2	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst1_g
+epyc2	MRG	kv3_hg_v1p2	$paramod\ot_hdc_fp32_add_lat\LAT=s32'000	insts 9	short 8	full_flops 598	missing 272	regs q:251,s1_v:7,s2_v:7	e.g. trip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[6].u_a.u
+epyc2	MRG	kv3_hg_v1p2	$p\ot_hdc_w11_cut	insts 9	short 8	full_flops 119	missing 230	regs q:230	e.g. u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[6].u_a.u.u_ca
+epyc2	MRG	kv3_hg_v1p2	$paramod\ot_qwen_nearhbm_qmul\LAT=s32'00	insts 7	short 6	full_flops 822	missing 197	regs s1_rows:120,q:71,valid_out:6	e.g. _astk_u_strip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.m_t
+epyc2	MRG	kv3_hg_v1p2	$paramod\ot_hdc_fp32_mul_lat\LAT=s32'000	insts 7	short 6	full_flops 822	missing 197	regs s1_rows:120,q:71,valid_out:6	e.g. trip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[5].u_m.u
+epyc2	MRGSUM	kv3_hg_v3	flops 58492	instances 2431	modules_with_short_siblings 19	flops_missing_in_short_siblings 10584
+epyc2	MRG	kv3_hg_v3	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst1_t2.u_reg
+epyc2	MRG	kv3_hg_v3	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst1_g
+epyc2	MRG	kv3_hg_v3	$paramod\ot_hdc_fp32_add_lat\LAT=s32'000	insts 9	short 8	full_flops 598	missing 272	regs q:251,s1_v:7,s2_v:7	e.g. trip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[6].u_a.u
+epyc2	MRG	kv3_hg_v3	$p\ot_hdc_w11_cut	insts 9	short 8	full_flops 119	missing 230	regs q:230	e.g. u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[6].u_a.u.u_ca
+epyc2	MRG	kv3_hg_v3	$paramod\ot_qwen_nearhbm_qmul\LAT=s32'00	insts 7	short 6	full_flops 822	missing 197	regs s1_rows:120,q:71,valid_out:6	e.g. _astk_u_strip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.m_t
+epyc2	MRG	kv3_hg_v3	$paramod\ot_hdc_fp32_mul_lat\LAT=s32'000	insts 7	short 6	full_flops 822	missing 197	regs s1_rows:120,q:71,valid_out:6	e.g. trip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[5].u_m.u
+epyc2	MRGSUM	kv3_hgi	flops 19369	instances 1376	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc2	MRG	kv3_hgi	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc2	MRG	kv3_hgi	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc2	MRG	kv3_hgi	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc2	MRGSUM	kv3_hgi_v1__cl42bc8b12	flops 19166	instances 1151	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc2	MRG	kv3_hgi_v1__cl42bc8b12	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc2	MRG	kv3_hgi_v1__cl42bc8b12	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc2	MRG	kv3_hgi_v1__cl42bc8b12	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc2	MRGSUM	kv3_hgi_v2__cle0015330	flops 20552	instances 1471	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc2	MRG	kv3_hgi_v2__cle0015330	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc2	MRG	kv3_hgi_v2__cle0015330	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc2	MRG	kv3_hgi_v2__cle0015330	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc2	MRGSUM	kv3_hgi_v3	flops 27543	instances 2591	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc2	MRG	kv3_hgi_v3	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc2	MRG	kv3_hgi_v3	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc2	MRG	kv3_hgi_v3	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc2	MRGSUM	kv3_hgi_v6	flops 37661	instances 3027	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc2	MRG	kv3_hgi_v6	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc2	MRG	kv3_hgi_v6	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc2	MRG	kv3_hgi_v6	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc2	MRGSUM	kv3_hgi_v8	flops 41419	instances 3014	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc2	MRG	kv3_hgi_v8	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc2	MRG	kv3_hgi_v8	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc2	MRG	kv3_hgi_v8	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc2	MRGSUM	kv3_hroot	flops 15850	instances 1838	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	kv3_hub_Eo	flops 73041	instances 4704	modules_with_short_siblings 1	flops_missing_in_short_siblings 1142
+epyc2	MRG	kv3_hub_Eo	$paramod\qkd_seq_fan_s\MUT=s32'000000000	insts 2	short 1	full_flops 1151	missing 1142	regs qd2:512,qd:512,kc:32	e.g. u_bound.u_seq_g_fan_3_u_fan
+epyc2	MRGSUM	kv3_hub_Wo	flops 76897	instances 4701	modules_with_short_siblings 1	flops_missing_in_short_siblings 1142
+epyc2	MRG	kv3_hub_Wo	$paramod\qkd_seq_fan_s\MUT=s32'000000000	insts 2	short 1	full_flops 1151	missing 1142	regs qd2:512,qd:512,kc:32	e.g. u_bound.u_seq_g_fan_1_u_fan
+epyc2	MRGSUM	kv3_io_cor	flops 19207	instances 1833	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	kv3_io_cor_v1	flops 8562	instances 1871	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	kv3_io_ft_v1	flops 3512	instances 707	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	kv3_pc__cl254f2e73	flops 53050	instances 1271	modules_with_short_siblings 5	flops_missing_in_short_siblings 982
+epyc2	MRG	kv3_pc__cl254f2e73	$p\ot_async_fifo	insts 5	short 4	full_flops 1165	missing 788	regs mem:768,reset_pipe:8,rd_online:4	e.g. u_bound.u_slg.u_core.u_bcdcf.u_fifo
+epyc2	MRG	kv3_pc__cl254f2e73	$p\ot_dp_dly	insts 3	short 2	full_flops 127	missing 112	regs q:112	e.g. u_bound.u_d1_slg_o_pc2
+epyc2	MRG	kv3_pc__cl254f2e73	qkd_host_pc_slice_die	insts 3	short 2	full_flops 5592	missing 36	regs sdi_q:3,sdo:3,sfi_q:3	e.g. u_bound.u_hsl1
+epyc2	MRG	kv3_pc__cl254f2e73	qkd_host_ingest_station	insts 4	short 3	full_flops 602	missing 31	regs fod:289,ao:6,aq:6	e.g. u_bound.u_hsl2.u_slice.u_station
+epyc2	MRG	kv3_pc__cl254f2e73	$p\qkd_static_kv_boot_cdc	insts 4	short 3	full_flops 1241	missing 15	regs reset_pipe:6,rd_online:3,wr_online_r1:3	e.g. u_bound.u_slg.u_core.u_bcdc1
+epyc2	MRGSUM	kv3_pc__cl5a95b461	flops 54098	instances 1301	modules_with_short_siblings 5	flops_missing_in_short_siblings 926
+epyc2	MRG	kv3_pc__cl5a95b461	$p\ot_async_fifo	insts 5	short 4	full_flops 1165	missing 788	regs mem:768,reset_pipe:8,rd_online:4	e.g. u_bound.u_slg.u_core.u_bcdcf.u_fifo
+epyc2	MRG	kv3_pc__cl5a95b461	$p\ot_dp_dly	insts 2	short 1	full_flops 127	missing 56	regs q:56	e.g. u_bound.u_d1_slg_o_pc3
+epyc2	MRG	kv3_pc__cl5a95b461	qkd_host_pc_slice_die	insts 3	short 2	full_flops 5592	missing 36	regs sdi_q:3,sdo:3,sfi_q:3	e.g. u_bound.u_hsl1
+epyc2	MRG	kv3_pc__cl5a95b461	qkd_host_ingest_station	insts 4	short 3	full_flops 602	missing 31	regs fod:289,ao:6,aq:6	e.g. u_bound.u_hsl2.u_slice.u_station
+epyc2	MRG	kv3_pc__cl5a95b461	$p\qkd_static_kv_boot_cdc	insts 4	short 3	full_flops 1241	missing 15	regs reset_pipe:6,rd_online:3,wr_online_r1:3	e.g. u_bound.u_slg.u_core.u_bcdc1
+epyc2	MRGSUM	kv3_pc_v1__cl23f6a148	flops 65027	instances 1792	modules_with_short_siblings 3	flops_missing_in_short_siblings 859
+epyc2	MRG	kv3_pc_v1__cl23f6a148	$p\ot_async_fifo	insts 5	short 4	full_flops 1165	missing 788	regs mem:768,reset_pipe:8,rd_online:4	e.g. u_bound.u_slg.u_core.u_bcdcf.u_fifo
+epyc2	MRG	kv3_pc_v1__cl23f6a148	$p\ot_dp_dly	insts 2	short 1	full_flops 127	missing 56	regs q:56	e.g. u_bound.u_d1_slg_o_pc3
+epyc2	MRG	kv3_pc_v1__cl23f6a148	$p\qkd_static_kv_boot_cdc	insts 4	short 3	full_flops 1241	missing 15	regs reset_pipe:6,rd_online:3,wr_online_r1:3	e.g. u_bound.u_slg.u_core.u_bcdc1
+epyc2	MRGSUM	kv3_pc_v1__cl7f648944	flops 65142	instances 1771	modules_with_short_siblings 3	flops_missing_in_short_siblings 915
+epyc2	MRG	kv3_pc_v1__cl7f648944	$p\ot_async_fifo	insts 5	short 4	full_flops 1165	missing 788	regs mem:768,reset_pipe:8,rd_online:4	e.g. u_bound.u_slg.u_core.u_bcdcf.u_fifo
+epyc2	MRG	kv3_pc_v1__cl7f648944	$p\ot_dp_dly	insts 3	short 2	full_flops 127	missing 112	regs q:112	e.g. u_bound.u_d1_slg_o_pc2
+epyc2	MRG	kv3_pc_v1__cl7f648944	$p\qkd_static_kv_boot_cdc	insts 4	short 3	full_flops 1241	missing 15	regs reset_pipe:6,rd_online:3,wr_online_r1:3	e.g. u_bound.u_slg.u_core.u_bcdc1
+epyc2	MRGSUM	kv3_pv	flops 85148	instances 4914	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc2	MRG	kv3_pv	qkd_rlyi_258s	insts 8	short 4	full_flops 257	missing 4	regs b:4	e.g. u_bound.u_pv_u_T0Q1_0_r0
+epyc2	MRG	kv3_pv	$p\ot_dp_dly	insts 4	short 2	full_flops 514	missing 4	regs q:2,r:2	e.g. u_bound.u_d2_pv_u_T0Q1_0_r0_b
+epyc2	MRGSUM	kv3_pv_v2	flops 92072	instances 6616	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc2	MRG	kv3_pv_v2	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_15_r0
+epyc2	MRGSUM	kv3_pv_v3	flops 93468	instances 6854	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc2	MRG	kv3_pv_v3	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_21_r0
+epyc2	MRGSUM	kv3_pv_v3n	flops 90238	instances 6724	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc2	MRG	kv3_pv_v3n	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_21_r0
+epyc2	MRGSUM	kv3_pv_v5	flops 82993	instances 7124	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc2	MRG	kv3_pv_v5	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_33_r0
+epyc2	MRGSUM	kv3_pv_v6	flops 67168	instances 6598	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc2	MRG	kv3_pv_v6	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_39_r0
+epyc2	MRGSUM	kv3_pv_v8	flops 84088	instances 4771	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc2	MRG	kv3_pv_v8	qkd_rlyi_258s	insts 8	short 4	full_flops 257	missing 4	regs b:4	e.g. u_bound.u_pv_u_T0Q1_0_r0
+epyc2	MRG	kv3_pv_v8	$p\ot_dp_dly	insts 4	short 2	full_flops 514	missing 4	regs q:2,r:2	e.g. u_bound.u_d2_pv_u_T0Q1_0_r0_b
+epyc2	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv36da905c	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	ot_s81sl_leaf__t35	flops 10121	instances 598	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc2	MRG	ot_s81sl_leaf__t35	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc2	MRGSUM	ot_s81sl_leaf__t68	flops 10688	instances 825	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	serdes__t14	flops 31108	instances 588	modules_with_short_siblings 1	flops_missing_in_short_siblings 26
+epyc2	MRG	serdes__t14	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc2	MRGSUM	serdes__t1__clb45db5be	flops 31253	instances 700	modules_with_short_siblings 2	flops_missing_in_short_siblings 28
+epyc2	MRG	serdes__t1__clb45db5be	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc2	MRG	serdes__t1__clb45db5be	$p\ot_pl_land_w	insts 3	short 2	full_flops 2183	missing 2	regs rq:2	e.g. u_bound.u_core.u_dec.u_lpl_0_w
+epyc2	MRGSUM	serdes__t2	flops 31108	instances 607	modules_with_short_siblings 1	flops_missing_in_short_siblings 26
+epyc2	MRG	serdes__t2	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc2	MRGSUM	slice_station__t42__cl4bd1432c	flops 1587	instances 856	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	slice_station__t6__cl0755c26e	flops 3051	instances 544	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc2	MRGSUM	hd_spn_eshim_rx	flops 2987	instances 303	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	q_b002	flops 51558	instances 212	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	q_b003	flops 40203	instances 363	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	q_b012	flops 45786	instances 277	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	q_b012__physical_v1	flops 47907	instances 526	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	q_spu1__physical_v1	flops 21106	instances 687	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	cbf_q11	flops 42701	instances 1661	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	cbn_q11__cl49ae4555	flops 45555	instances 1624	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	col_h10_r0_p1__t1__cl911743eb	flops 14057	instances 548	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc7	MRG	col_h10_r0_p1__t1__cl911743eb	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc7	MRG	col_h10_r0_p1__t1__cl911743eb	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_4_r
+epyc7	MRGSUM	col_h10_r2__t1__cl99efd374__pv7a8a5452	flops 14447	instances 452	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	flops 14705	instances 594	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc7	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc7	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv70731479	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc7	MRGSUM	col_h9_r0_p5__t1__pv5c8f2166	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc7	MRG	col_h9_r0_p5__t1__pv5c8f2166	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc7	MRG	col_h9_r0_p5__t1__pv5c8f2166	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc7	MRGSUM	col_h9_r0_p5__t1__pv8995e794	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc7	MRG	col_h9_r0_p5__t1__pv8995e794	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc7	MRG	col_h9_r0_p5__t1__pv8995e794	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc7	MRGSUM	col_h9_r0_p5__t1__pvbca8d846	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc7	MRG	col_h9_r0_p5__t1__pvbca8d846	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc7	MRG	col_h9_r0_p5__t1__pvbca8d846	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc7	MRGSUM	col_h9_r0_p5__t1__pvf71da13a	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc7	MRG	col_h9_r0_p5__t1__pvf71da13a	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc7	MRG	col_h9_r0_p5__t1__pvf71da13a	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc7	MRGSUM	col_h9_r0_p5__t1__pvf731e6ec	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc7	MRG	col_h9_r0_p5__t1__pvf731e6ec	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc7	MRG	col_h9_r0_p5__t1__pvf731e6ec	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc7	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv8aaf8508	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	col_h9_r2__t1__clce45cab5__pv9a22736e	flops 12734	instances 380	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc7	MRG	col_h9_r2__t1__clce45cab5__pv9a22736e	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc7	MRGSUM	col_h9_r2__t1__clce45cab5__pvf57acd2b	flops 12734	instances 380	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc7	MRG	col_h9_r2__t1__clce45cab5__pvf57acd2b	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc7	MRGSUM	dsdv_slice_lepe_nh_mus_LP__t1	flops 30725	instances 690	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc7	MRG	dsdv_slice_lepe_nh_mus_LP__t1	$p\ot_sram_oldread_wreg	insts 2	short 1	full_flops 2038	missing 1	regs wdata:1	e.g. u_bound.u_u_lep.u.g_tx[0].g_safe_write.u_m
+epyc7	MRGSUM	dsdv_slice_lepw_mus_LP__t2	flops 41899	instances 980	modules_with_short_siblings 1	flops_missing_in_short_siblings 1106
+epyc7	MRG	dsdv_slice_lepw_mus_LP__t2	$p\ot_sram_oldread_wreg	insts 4	short 3	full_flops 2038	missing 1106	regs wdata:1106	e.g. u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m
+epyc7	MRGSUM	ot_s81sl_leaf__t14	flops 12653	instances 929	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t14	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf1_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t16	flops 11957	instances 780	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t17	flops 11922	instances 1115	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t24__cl2456157b	flops 10686	instances 873	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t24__cl81374cd8	flops 10541	instances 843	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t25__cl431c660f	flops 9702	instances 486	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t25__cl431c660f	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t25__cl55642d17	flops 9702	instances 466	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t25__cl55642d17	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t26	flops 10881	instances 673	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t26	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t38	flops 10761	instances 846	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t42	flops 9842	instances 326	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t44__clf6cf8492	flops 10227	instances 920	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t44__clf6cf8492	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf3_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t5	flops 10491	instances 621	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t5	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t50	flops 10881	instances 547	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t50	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t51	flops 10298	instances 800	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t51	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf0_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t53__clb66fa5cb	flops 10316	instances 868	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t54__cl706d9749	flops 9573	instances 543	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t54__cl706d9749	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc7	MRGSUM	ot_s81sl_leaf__t58	flops 11792	instances 997	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	ot_s81sl_leaf__t74	flops 11274	instances 641	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc7	MRG	ot_s81sl_leaf__t74	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc7	MRGSUM	serdes__t13	flops 33090	instances 762	modules_with_short_siblings 2	flops_missing_in_short_siblings 28
+epyc7	MRG	serdes__t13	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc7	MRG	serdes__t13	$p\ot_pl_land_w	insts 3	short 2	full_flops 2183	missing 2	regs rq:2	e.g. u_bound.u_core.u_dec.u_lpl_5_w
+epyc7	MRGSUM	slice_station__t24__cl64811a5d	flops 1381	instances 432	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	slice_station__t29__cl2e5c855a	flops 2732	instances 605	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	slice_station__t36	flops 3544	instances 1668	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	slice_station__t45	flops 5242	instances 131	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	hd_spn	flops 9507	instances 2881	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc7	MRGSUM	hd_tile	flops 27573	instances 578	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	q_b003__physical_v1	flops 42088	instances 284	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	q_b013	flops 23785	instances 269	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	cbn_q00__cl622f65d2	flops 43083	instances 1383	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	cbn_q01__clab6e67f2	flops 53876	instances 2453	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	cbn_q01__cldd6ea846	flops 51582	instances 2785	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	sle_hc0__cl05696ed1	flops 72470	instances 1318	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+epyc8	MRG	sle_hc0__cl05696ed1	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl0_1
+epyc8	MRGSUM	sle_hc2__clcc5e3e61	flops 78883	instances 2446	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+epyc8	MRG	sle_hc2__clcc5e3e61	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl2_1
+epyc8	MRGSUM	sle_stm_v2__cl55be2264	flops 52985	instances 3025	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+epyc8	MRG	sle_stm_v2__cl55be2264	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+epyc8	MRGSUM	sle_su_l1__cl5ea486db	flops 16451	instances 1543	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slw_fe_v2__cle312294d	flops 50706	instances 2286	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slw_stm_v1__cl05fc43f7__cl2086fa2c	flops 51626	instances 2910	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+epyc8	MRG	slw_stm_v1__cl05fc43f7__cl2086fa2c	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+epyc8	MRGSUM	slw_stm_v3	flops 51082	instances 2896	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+epyc8	MRG	slw_stm_v3	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+epyc8	MRGSUM	slw_su_c__cl19bb38ef	flops 41720	instances 3364	modules_with_short_siblings 4	flops_missing_in_short_siblings 3574
+epyc8	MRG	slw_su_c__cl19bb38ef	qfd_dv_s8_vm8q_rp1_vwr	insts 3	short 2	full_flops 1042	missing 2084	regs q:2084	e.g. u_bound.u_u_suvm_u_vm8q_u_vwb
+epyc8	MRG	slw_su_c__cl19bb38ef	qfd_dv_s8_vm8q_rp1_twc	insts 4	short 3	full_flops 539	missing 1088	regs q:1088	e.g. u_bound.u_u_suvm_u_vm8q_u_twh1
+epyc8	MRG	slw_su_c__cl19bb38ef	qfd_dv_s8_vm8q_rp1_vrd	insts 7	short 2	full_flops 200	missing 400	regs q:400	e.g. u_bound.u_u_suvm_u_vm8q_u_crl1
+epyc8	MRG	slw_su_c__cl19bb38ef	$p\ot_dp_dly	insts 354	short 1	full_flops 17	missing 2	regs r:2	e.g. u_bound.u_pd17_x_su_l0_i_26
+epyc8	MRGSUM	col_h10_r1__t1__cl95b37463__pv799da6f8	flops 21667	instances 470	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	col_h9_r0_p1__t1__pv8c197f8e	flops 14563	instances 1031	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc8	MRG	col_h9_r0_p1__t1__pv8c197f8e	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc8	MRG	col_h9_r0_p1__t1__pv8c197f8e	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc8	MRGSUM	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	flops 14562	instances 653	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc8	MRG	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc8	MRG	col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc8	MRGSUM	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	flops 14562	instances 659	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc8	MRG	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc8	MRG	col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc8	MRGSUM	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	flops 12351	instances 983	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc8	MRG	col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_lpl_14_r
+epyc8	MRGSUM	col_h9_r0_p5__t1__pvb22875c0	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc8	MRG	col_h9_r0_p5__t1__pvb22875c0	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc8	MRG	col_h9_r0_p5__t1__pvb22875c0	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc8	MRGSUM	col_h9_r0_p5__t1__pvc6e5797f	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc8	MRG	col_h9_r0_p5__t1__pvc6e5797f	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc8	MRG	col_h9_r0_p5__t1__pvc6e5797f	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc8	MRGSUM	col_h9_r0_p6__t1__pv082a7609	flops 12142	instances 440	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc8	MRG	col_h9_r0_p6__t1__pv082a7609	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_lpl_14_r
+epyc8	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv62bca836	flops 16833	instances 483	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv637e5d47	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	col_h9_r1__t1__cl49d7a23e__pvac06e607	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	col_h9_r1__t1__clf32cde8d__pv48cfde67	flops 16836	instances 496	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	flops 12737	instances 397	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc8	MRG	col_h9_r2__t1__clb8d86cd5__pvb2cd22a7	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc8	MRGSUM	col_h9_r2__t1__clb8d86cd5__pvf0595d0f	flops 12737	instances 397	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc8	MRG	col_h9_r2__t1__clb8d86cd5__pvf0595d0f	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc8	MRGSUM	eng__t1	flops 4441	instances 715	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	ot_s81sl_kv_leaf__t4	flops 48994	instances 1720	modules_with_short_siblings 18	flops_missing_in_short_siblings 14314
+epyc8	MRG	ot_s81sl_kv_leaf__t4	$p\ot_hdc_f12_cut	insts 46	short 42	full_flops 180	missing 2671	regs r:2645,v:26	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k5
+epyc8	MRG	ot_s81sl_kv_leaf__t4	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_sq
+epyc8	MRG	ot_s81sl_kv_leaf__t4	$paramod\ot_hdc_fp32_mul_f12\CUTS=8'0110	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. vn_u_b.u_g.g_lane[3].u_sq.genblk1.genblk1.g_l5.u.u
+epyc8	MRG	ot_s81sl_kv_leaf__t4	$p\ot_hdc_f12_cut	insts 29	short 25	full_flops 152	missing 1741	regs r:1724,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k3
+epyc8	MRG	ot_s81sl_kv_leaf__t4	$p\ot_hdc_f12_cut	insts 37	short 33	full_flops 76	missing 1416	regs r:1399,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k1
+epyc8	MRG	ot_s81sl_kv_leaf__t4	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 8	short 4	full_flops 561	missing 787	regs r:787	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_xr
+epyc8	MRGSUM	ot_s81sl_leaf__t15	flops 10120	instances 638	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t15	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf3_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t21	flops 11498	instances 425	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	ot_s81sl_leaf__t22	flops 11443	instances 1356	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	ot_s81sl_leaf__t30	flops 9495	instances 356	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t30	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t40__cl86ea32b3	flops 9702	instances 417	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t40__cl86ea32b3	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t44__clf4ea6d4b	flops 10300	instances 774	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t44__clf4ea6d4b	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf3_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t45	flops 11580	instances 513	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t45	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t53__cl958451dd	flops 10459	instances 911	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	ot_s81sl_leaf__t54__cl501e5681	flops 9369	instances 377	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t54__cl501e5681	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t56	flops 16770	instances 1208	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t56	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t60	flops 11798	instances 870	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	ot_s81sl_leaf__t66	flops 11616	instances 1427	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t66	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf0_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t7	flops 10802	instances 929	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc8	MRG	ot_s81sl_leaf__t7	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf0_u_vp_hsi_q
+epyc8	MRGSUM	ot_s81sl_leaf__t8	flops 12398	instances 1732	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	serdes__t12	flops 30901	instances 492	modules_with_short_siblings 2	flops_missing_in_short_siblings 28
+epyc8	MRG	serdes__t12	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc8	MRG	serdes__t12	$p\ot_pl_land_w	insts 3	short 2	full_flops 2183	missing 2	regs rq:2	e.g. u_bound.u_core.u_dec.u_lpl_0_w
+epyc8	MRGSUM	serdes__t3	flops 31325	instances 1320	modules_with_short_siblings 2	flops_missing_in_short_siblings 28
+epyc8	MRG	serdes__t3	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc8	MRG	serdes__t3	$p\ot_pl_land_w	insts 3	short 2	full_flops 2183	missing 2	regs rq:2	e.g. u_bound.u_core.u_dec.u_lpl_5_w
+epyc8	MRGSUM	slice_station__t26	flops 2279	instances 589	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slice_station__t28	flops 2136	instances 545	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slice_station__t40__cl1ea9de02	flops 1585	instances 904	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slice_station__t41	flops 2976	instances 1164	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slice_station__t42__clcf44e680	flops 1730	instances 936	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slice_station__t52	flops 2978	instances 1156	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slice_station__t6__cl54a9ceeb	flops 2931	instances 546	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc8	MRGSUM	slice_station__t8	flops 2687	instances 870	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	PHY_NC	flops 4648	instances 262	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	PHY_NW	flops 6064	instances 216	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	q_b013__physical_v1	flops 21810	instances 219	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	q_spb1	flops 2532	instances 200	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	q_spu0__physical_v1	flops 26525	instances 790	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	q_spu1	flops 22410	instances 695	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	q_su00	flops 113723	instances 5234	modules_with_short_siblings 3	flops_missing_in_short_siblings 19860
+epyc9	MRG	q_su00	ot_hnx_su_exp__rst3__p18split__fcore	insts 8	short 7	full_flops 1382	missing 9674	regs g_compose_m2_q:9674	e.g. u_bound.u_u_su_Q0_lane_exp8.u_fcore
+epyc9	MRG	q_su00	ot_hnx_su_exp__rst3__p18split	insts 8	short 7	full_flops 1382	missing 9674	regs g_compose_m2_q:9674	e.g. u_bound.u_u_su_Q0_lane_exp10
+epyc9	MRG	q_su00	$p\ot_hdc_delay	insts 4	short 2	full_flops 256	missing 512	regs q:512	e.g. u_bound.u_u_sfu_Q0.u_leaf.g_bank[0].u_rrd
+epyc9	MRGSUM	q_su00__physical_v1	flops 117879	instances 5808	modules_with_short_siblings 3	flops_missing_in_short_siblings 19860
+epyc9	MRG	q_su00__physical_v1	ot_hnx_su_exp__rst3__p18split__fcore	insts 8	short 7	full_flops 1382	missing 9674	regs g_compose_m2_q:9674	e.g. u_bound.u_u_su_Q0_lane_exp8.u_fcore
+epyc9	MRG	q_su00__physical_v1	ot_hnx_su_exp__rst3__p18split	insts 8	short 7	full_flops 1382	missing 9674	regs g_compose_m2_q:9674	e.g. u_bound.u_u_su_Q0_lane_exp10
+epyc9	MRG	q_su00__physical_v1	$p\ot_hdc_delay	insts 4	short 2	full_flops 256	missing 512	regs q:512	e.g. u_bound.u_u_sfu_Q0.u_leaf.g_bank[0].u_rrd
+epyc9	MRGSUM	q_su21	flops 45153	instances 1318	modules_with_short_siblings 2	flops_missing_in_short_siblings 8292
+epyc9	MRG	q_su21	ot_hnx_su_plain4__lid9_rst3__l1split__co	insts 4	short 3	full_flops 1382	missing 4146	regs g_compose_m10_q:4146	e.g. u_bound.u_u_su_Q2_lanes4_7.u_fcore.u_core
+epyc9	MRG	q_su21	ot_hnx_su_plain4__lid9_rst3__l1split	insts 4	short 3	full_flops 1382	missing 4146	regs g_compose_m10_q:4146	e.g. u_bound.u_u_su_Q2_lanes20_23
+epyc9	MRGSUM	q_su21__physical_v1	flops 12479	instances 189	modules_with_short_siblings 2	flops_missing_in_short_siblings 8292
+epyc9	MRG	q_su21__physical_v1	ot_hnx_su_plain4__lid9_rst3__l1split__co	insts 4	short 3	full_flops 1382	missing 4146	regs g_compose_m10_q:4146	e.g. u_bound.u_u_su_Q2_lanes4_7.u_fcore.u_core
+epyc9	MRG	q_su21__physical_v1	ot_hnx_su_plain4__lid9_rst3__l1split	insts 4	short 3	full_flops 1382	missing 4146	regs g_compose_m10_q:4146	e.g. u_bound.u_u_su_Q2_lanes20_23
+epyc9	MRGSUM	q_su30__physical_v1	flops 11399	instances 310	modules_with_short_siblings 2	flops_missing_in_short_siblings 5528
+epyc9	MRG	q_su30__physical_v1	ot_hnx_su_plain4__lid9_rst3__l1split__co	insts 3	short 2	full_flops 1382	missing 2764	regs g_compose_m10_q:2764	e.g. u_bound.u_u_su_Q3_lanes24_27.u_fcore.u_core
+epyc9	MRG	q_su30__physical_v1	ot_hnx_su_plain4__lid9_rst3__l1split	insts 3	short 2	full_flops 1382	missing 2764	regs g_compose_m10_q:2764	e.g. u_bound.u_u_su_Q3_lanes16_19
+epyc9	MRGSUM	vsN1	flops 2530	instances 197	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	vsN4	flops 7030	instances 377	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	cbf_q01	flops 49383	instances 1822	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	sle_fe_v3	flops 10990	instances 2332	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	sle_fw_v1__clf58b4dfb	flops 36846	instances 3004	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	sle_st_b_v1__pv0e7b1dcc	flops 43831	instances 27222	modules_with_short_siblings 2	flops_missing_in_short_siblings 342
+epyc9	MRG	sle_st_b_v1__pv0e7b1dcc	$p\qfd_dv_s8_station_tail1_orq3	insts 4	short 3	full_flops 5300	missing 276	regs r:150,cfg_payload0:57,cfg_payload1:57	e.g. u_bound.u_u_r5
+epyc9	MRG	sle_st_b_v1__pv0e7b1dcc	$p\qfd_dv_s8_pad	insts 4	short 3	full_flops 22	missing 66	regs r:60,q:6	e.g. u_bound.u_u_r7.u_nb_in_pad_c
+epyc9	MRGSUM	sle_su_l1__clc6d66f5b	flops 16449	instances 1698	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	slw_fe_v1__clfe325744__cl08d14f0d	flops 48456	instances 4132	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	slw_fw_v1__clf51c11d8__cl592e3d37	flops 35963	instances 3227	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	slw_fw_v1__clf51c11d8__clc7ddab13	flops 35956	instances 3304	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	slw_fw_v2__cl8537f156	flops 35813	instances 2951	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	slw_fw_v2__cl8f84514c	flops 35820	instances 2850	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	slw_stm_v1__cl05fc43f7__cl389df4e9	flops 51621	instances 2871	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+epyc9	MRG	slw_stm_v1__cl05fc43f7__cl389df4e9	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+epyc9	MRGSUM	slw_su_c__cl92142dac	flops 41861	instances 3758	modules_with_short_siblings 4	flops_missing_in_short_siblings 3574
+epyc9	MRG	slw_su_c__cl92142dac	qfd_dv_s8_vm8q_rp1_vwr	insts 3	short 2	full_flops 1042	missing 2084	regs q:2084	e.g. u_bound.u_u_suvm_u_vm8q_u_vwb
+epyc9	MRG	slw_su_c__cl92142dac	qfd_dv_s8_vm8q_rp1_twc	insts 4	short 3	full_flops 539	missing 1088	regs q:1088	e.g. u_bound.u_u_suvm_u_vm8q_u_twh1
+epyc9	MRG	slw_su_c__cl92142dac	qfd_dv_s8_vm8q_rp1_vrd	insts 7	short 2	full_flops 200	missing 400	regs q:400	e.g. u_bound.u_u_suvm_u_vm8q_u_crl1
+epyc9	MRG	slw_su_c__cl92142dac	$p\ot_dp_dly	insts 354	short 1	full_flops 17	missing 2	regs r:2	e.g. u_bound.u_pd17_x_su_l0_i_26
+epyc9	MRGSUM	slw_su_l0__cl1e5219ea	flops 12314	instances 976	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	slw_su_l0__cl76fb247e	flops 12312	instances 980	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	col_h10_r2__t1__cl1f5d6c2a__pvec003743	flops 14444	instances 442	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	flops 14705	instances 594	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc9	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc9	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc9	MRGSUM	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	flops 14705	instances 594	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc9	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc9	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv91095415	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc9	MRGSUM	col_h9_r0_p5__t1__pvc1b82625	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc9	MRG	col_h9_r0_p5__t1__pvc1b82625	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc9	MRG	col_h9_r0_p5__t1__pvc1b82625	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc9	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv152ea348	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	col_h9_r2__t1__clce45cab5__pve171243a	flops 12734	instances 380	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc9	MRG	col_h9_r2__t1__clce45cab5__pve171243a	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc9	MRGSUM	iqf__t1	flops 5729	instances 1117	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	ot_s81sl_kv_leaf__t5	flops 48957	instances 1470	modules_with_short_siblings 18	flops_missing_in_short_siblings 14334
+epyc9	MRG	ot_s81sl_kv_leaf__t5	$p\ot_hdc_f12_cut	insts 46	short 42	full_flops 180	missing 2675	regs r:2649,v:26	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k5
+epyc9	MRG	ot_s81sl_kv_leaf__t5	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_sq
+epyc9	MRG	ot_s81sl_kv_leaf__t5	$paramod\ot_hdc_fp32_mul_f12\CUTS=8'0110	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. vn_u_b.u_g.g_lane[3].u_sq.genblk1.genblk1.g_l5.u.u
+epyc9	MRG	ot_s81sl_kv_leaf__t5	$p\ot_hdc_f12_cut	insts 29	short 25	full_flops 152	missing 1741	regs r:1724,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k3
+epyc9	MRG	ot_s81sl_kv_leaf__t5	$p\ot_hdc_f12_cut	insts 37	short 33	full_flops 76	missing 1416	regs r:1399,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k1
+epyc9	MRG	ot_s81sl_kv_leaf__t5	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 8	short 4	full_flops 561	missing 787	regs r:787	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_xr
+epyc9	MRGSUM	ot_s81sl_leaf__t10	flops 11274	instances 639	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc9	MRG	ot_s81sl_leaf__t10	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc9	MRGSUM	ot_s81sl_leaf__t2	flops 21102	instances 1211	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	ot_s81sl_leaf__t28	flops 12421	instances 711	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	ot_s81sl_leaf__t32	flops 12103	instances 1060	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	ot_s81sl_leaf__t39	flops 12206	instances 739	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	ot_s81sl_leaf__t47	flops 12152	instances 1190	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	ot_s81sl_leaf__t52	flops 11416	instances 1066	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc9	MRG	ot_s81sl_leaf__t52	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf1_u_vp_hsi_q
+epyc9	MRGSUM	ot_s81sl_leaf__t61	flops 12291	instances 1166	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	ot_s81sl_leaf__t65	flops 10919	instances 1335	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc9	MRG	ot_s81sl_leaf__t65	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc9	MRGSUM	ot_s81sl_leaf__t71	flops 10622	instances 848	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc9	MRGSUM	hd_turn_a	flops 3554	instances 176	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	cbx_q10__cl94a12200_h	flops 44464	instances 1445	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	sle_fe_v1__cl1cbb7497	flops 51861	instances 4341	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	sle_fw_v3	flops 42421	instances 5571	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	sle_hc2__cl9c4c4509__cl3edce1b8	flops 79026	instances 2471	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+epyc10	MRG	sle_hc2__cl9c4c4509__cl3edce1b8	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl2_1
+epyc10	MRGSUM	sle_hc2__cl9c4c4509__clf60c5152	flops 79021	instances 2466	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+epyc10	MRG	sle_hc2__cl9c4c4509__clf60c5152	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl2_1
+epyc10	MRGSUM	sle_st_b_v2__cl14c98df5__pvcd986c42	flops 38798	instances 27111	modules_with_short_siblings 1	flops_missing_in_short_siblings 204
+epyc10	MRG	sle_st_b_v2__cl14c98df5__pvcd986c42	$p\qfd_dv_s8_station_tail1_nb0_orq	insts 4	short 3	full_flops 4373	missing 204	regs r:84,cfg_payload0:57,cfg_payload1:57	e.g. u_bound.u_u_r5
+epyc10	MRGSUM	sle_su_l0__cl7a55c676	flops 13702	instances 1036	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slw_fe_v1__cl95cd1d0c	flops 48593	instances 4107	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slw_fe_v2__clf110fab2	flops 49085	instances 3843	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slw_stm_v1__cle34a73c3	flops 51768	instances 2938	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+epyc10	MRG	slw_stm_v1__cle34a73c3	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+epyc10	MRGSUM	slw_su_l1__cla2a78701	flops 4185	instances 608	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slw_su_l1__clcc9d0155	flops 4187	instances 597	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	kv3_hgi_v2__cl2862d491	flops 20552	instances 1440	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc10	MRG	kv3_hgi_v2__cl2862d491	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc10	MRG	kv3_hgi_v2__cl2862d491	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc10	MRG	kv3_hgi_v2__cl2862d491	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc10	MRGSUM	kv3_hgi_v4	flops 27199	instances 2357	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+epyc10	MRG	kv3_hgi_v4	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+epyc10	MRG	kv3_hgi_v4	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+epyc10	MRG	kv3_hgi_v4	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+epyc10	MRGSUM	kv3_hub_C	flops 132621	instances 8739	modules_with_short_siblings 11	flops_missing_in_short_siblings 1235
+epyc10	MRG	kv3_hub_C	$paramod\ot_hdc_fp32_mul_lat\LAT=s32'000	insts 16	short 15	full_flops 783	missing 537	regs q:540	e.g. u_bound.u_pvfin.g_lane[0].u_mul
+epyc10	MRG	kv3_hub_C	$p\ot_hdc_w11_cut	insts 16	short 15	full_flops 70	missing 510	regs q:510	e.g. u_bound.u_pvfin.g_lane[14].u_mul.u_c1
+epyc10	MRG	kv3_hub_C	$paramod\ot_hdc_fp32_add_lat\LAT=s32'000	insts 16	short 15	full_flops 595	missing 57	regs q:60	e.g. u_bound.u_pvfin.g_lane[0].u_add
+epyc10	MRG	kv3_hub_C	$p\ot_qwen_tp8_pv_wide_ctl_tbf	insts 2	short 1	full_flops 736	missing 37	regs epoch_r:15,ctx_r:13,nq:8	e.g. u_bound.u_pvS_u_ctl
+epyc10	MRG	kv3_hub_C	$p\ot_hdc_w11_cut	insts 16	short 15	full_flops 70	missing 15	regs q:15	e.g. u_bound.u_pvfin.g_lane[14].u_add.u_cc
+epyc10	MRG	kv3_hub_C	$p\ot_hdc_w11_cut	insts 16	short 15	full_flops 42	missing 15	regs q:15	e.g. u_bound.u_pvfin.g_lane[14].u_mul.u_c3
+epyc10	MRGSUM	kv3_pc_v1__cl4ea58a5c	flops 64271	instances 1755	modules_with_short_siblings 3	flops_missing_in_short_siblings 915
+epyc10	MRG	kv3_pc_v1__cl4ea58a5c	$p\ot_async_fifo	insts 5	short 4	full_flops 1165	missing 788	regs mem:768,reset_pipe:8,rd_online:4	e.g. u_bound.u_slg.u_core.u_bcdcf.u_fifo
+epyc10	MRG	kv3_pc_v1__cl4ea58a5c	$p\ot_dp_dly	insts 3	short 2	full_flops 127	missing 112	regs q:112	e.g. u_bound.u_d1_slg_o_pc2
+epyc10	MRG	kv3_pc_v1__cl4ea58a5c	$p\qkd_static_kv_boot_cdc	insts 4	short 3	full_flops 1241	missing 15	regs reset_pipe:6,rd_online:3,wr_online_r1:3	e.g. u_bound.u_slg.u_core.u_bcdc1
+epyc10	MRGSUM	kv3_pv_v12	flops 69696	instances 6844	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc10	MRG	kv3_pv_v12	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_45_r0
+epyc10	MRGSUM	kv3_pv_v2n	flops 91620	instances 6655	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc10	MRG	kv3_pv_v2n	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_15_r0
+epyc10	MRGSUM	kv3_pv_v4	flops 84760	instances 6923	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc10	MRG	kv3_pv_v4	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_27_r0
+epyc10	MRGSUM	kv3_pv_v6n	flops 65602	instances 6594	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc10	MRG	kv3_pv_v6n	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_39_r0
+epyc10	MRGSUM	kv3_pv_v7	flops 61762	instances 6432	modules_with_short_siblings 1	flops_missing_in_short_siblings 2
+epyc10	MRG	kv3_pv_v7	qkd_rlyi_258s	insts 8	short 2	full_flops 258	missing 2	regs b:2	e.g. u_bound.u_pv_u_T0Q0_45_r0
+epyc10	MRGSUM	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	flops 14264	instances 1059	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc10	MRG	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc10	MRG	col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_4_r
+epyc10	MRGSUM	col_h10_r2__t1__cl1f5d6c2a__pvf1512c16	flops 14444	instances 442	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	col_h10_r2__t1__cl99efd374__pv9ae398c2	flops 14447	instances 452	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	flops 12352	instances 996	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc10	MRG	col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_lpl_14_r
+epyc10	MRGSUM	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	flops 14705	instances 608	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc10	MRG	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc10	MRG	col_h9_r0_p4__t1__clcb2fbfe8__pvec137455	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc10	MRGSUM	col_h9_r0_p5__t1__pvee6f8140	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+epyc10	MRG	col_h9_r0_p5__t1__pvee6f8140	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+epyc10	MRG	col_h9_r0_p5__t1__pvee6f8140	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+epyc10	MRGSUM	col_h9_r1__t1__cl49d7a23e__pve3f8a86c	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	col_h9_r1__t1__cl49d7a23e__pvebe696ff	flops 16833	instances 483	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	flops 12880	instances 396	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc10	MRG	col_h9_r2__t1__clc9ad8f7e__pv45d0c698	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc10	MRGSUM	col_h9_r2__t1__clce45cab5__pv843b0fff	flops 12734	instances 380	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc10	MRG	col_h9_r2__t1__clce45cab5__pv843b0fff	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc10	MRGSUM	col_h9_r2__t1__clce45cab5__pva8c07948	flops 12734	instances 380	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+epyc10	MRG	col_h9_r2__t1__clce45cab5__pva8c07948	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+epyc10	MRGSUM	dsdv_slice_lepe_mu_LP__t2	flops 43937	instances 504	modules_with_short_siblings 1	flops_missing_in_short_siblings 1106
+epyc10	MRG	dsdv_slice_lepe_mu_LP__t2	$p\ot_sram_oldread_wreg	insts 4	short 3	full_flops 2038	missing 1106	regs wdata:1106	e.g. u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m
+epyc10	MRGSUM	dsdv_slice_lepw_mu_LP__t2	flops 45479	instances 637	modules_with_short_siblings 1	flops_missing_in_short_siblings 1106
+epyc10	MRG	dsdv_slice_lepw_mu_LP__t2	$p\ot_sram_oldread_wreg	insts 4	short 3	full_flops 2038	missing 1106	regs wdata:1106	e.g. u_bound.u_u_lep.u.g_tx[1].g_safe_write.u_m
+epyc10	MRGSUM	ot_s81sl_leaf__t11	flops 11244	instances 567	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc10	MRG	ot_s81sl_leaf__t11	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+epyc10	MRGSUM	ot_s81sl_leaf__t37	flops 10316	instances 427	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc10	MRG	ot_s81sl_leaf__t37	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc10	MRGSUM	ot_s81sl_leaf__t46	flops 11855	instances 1509	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc10	MRG	ot_s81sl_leaf__t46	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf0_u_vp_hsi_q
+epyc10	MRGSUM	ot_s81sl_leaf__t57	flops 10514	instances 1143	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc10	MRG	ot_s81sl_leaf__t57	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf0_u_vp_hsi_q
+epyc10	MRGSUM	ot_s81sl_leaf__t70	flops 10953	instances 1154	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+epyc10	MRG	ot_s81sl_leaf__t70	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_vp_hsi_q
+epyc10	MRGSUM	ot_s81sl_leaf__t72	flops 12398	instances 1729	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	seqhost__t1	flops 37501	instances 554	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	serdes__t15__cla2127225	flops 31110	instances 899	modules_with_short_siblings 2	flops_missing_in_short_siblings 28
+epyc10	MRG	serdes__t15__cla2127225	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc10	MRG	serdes__t15__cla2127225	$p\ot_pl_land_w	insts 3	short 2	full_flops 2183	missing 2	regs rq:2	e.g. u_bound.u_core.u_dec.u_lpl_5_w
+epyc10	MRGSUM	serdes__t1__clfe1f0815	flops 31180	instances 957	modules_with_short_siblings 2	flops_missing_in_short_siblings 28
+epyc10	MRG	serdes__t1__clfe1f0815	$p\ot_pl_land_w	insts 2	short 1	full_flops 26	missing 26	regs b:20,vld:4,wc:2	e.g. u_bound.u_core.u_dec.u_lpl_9_w
+epyc10	MRG	serdes__t1__clfe1f0815	$p\ot_pl_land_w	insts 3	short 2	full_flops 2183	missing 2	regs rq:2	e.g. u_bound.u_core.u_dec.u_lpl_5_w
+epyc10	MRGSUM	slice_station__t17	flops 630	instances 175	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slice_station__t22	flops 3290	instances 869	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slice_station__t24__cl66b71008	flops 1381	instances 393	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slice_station__t25	flops 2487	instances 1048	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	slice_station__t29__clc7772371	flops 2660	instances 422	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	hd_host_e	flops 15342	instances 418	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	hd_host_w	flops 30175	instances 850	modules_with_short_siblings 1	flops_missing_in_short_siblings 553
+epyc10	MRG	hd_host_w	$p\ot_sram_oldread_b64	insts 2	short 1	full_flops 2108	missing 553	regs wdata:553	e.g. u_core.u_lane0.u_ln.u.u_ep.g_rb_safe.u_m
+epyc10	MRGSUM	hd_lep0N	flops 53676	instances 3088	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	hd_serdes	flops 25396	instances 795	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+epyc10	MRGSUM	hd_st_n4	flops 6404	instances 1327	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	vsN2	flops 2530	instances 158	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	cbf_q00_s2	flops 58545	instances 3111	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	cbf_q01_s2	flops 55207	instances 2671	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	cbn_q00__cld7bf7197	flops 49526	instances 2618	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	cbx_q10__cl89936551	flops 44609	instances 1475	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	cbx_q10__cl89936551_h	flops 44609	instances 1416	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	coll_core	flops 52248	instances 1706	modules_with_short_siblings 3	flops_missing_in_short_siblings 329
+intel1	MRG	coll_core	qfd_static_ch546	insts 4	short 2	full_flops 2044	missing 193	regs o_data:64,rd_stage:64,wd:64	e.g. u_bound.u_io_collective_u_io_g_face_1_u_face.u_tx
+intel1	MRG	coll_core	$paramod\ot_qkvd_llr_replay_sram_leaf\W=	insts 8	short 6	full_flops 414	missing 126	regs dout:36,dq:36,dqq:36	e.g. _g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store
+intel1	MRG	coll_core	$p\ot_coll_lcal_tx	insts 2	short 1	full_flops 36	missing 10	regs sr:10	e.g. bound.u_io_collective_u_io_g_face_0_u_face.u_txcal
+intel1	MRGSUM	coll_ftc	flops 21669	instances 2101	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	coll_n	flops 12655	instances 318	modules_with_short_siblings 2	flops_missing_in_short_siblings 16
+intel1	MRG	coll_n	$paramod\ot_qkvd_llr_replay_sram_leaf\W=	insts 4	short 3	full_flops 414	missing 15	regs hit_age0:3,hit_age1:3,wq:3	e.g. u_bound.u_core.g_codec.u_codec.g_bank[1].u_store
+intel1	MRG	coll_n	qfd_static_ch546	insts 2	short 1	full_flops 2044	missing 1	regs w_fault:1	e.g. u_bound.u_core.u_tx
+intel1	MRGSUM	coll_ucie	flops 32860	instances 425	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	sle_fe_v1__cl8210183c	flops 52439	instances 4435	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	sle_hc0__cl929603c0__cl38badc56	flops 72465	instances 1415	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	sle_hc0__cl929603c0__cl38badc56	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl0_1
+intel1	MRGSUM	sle_hc1__cl22c1ff36	flops 81456	instances 2969	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	sle_hc1__cl22c1ff36	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl1_1
+intel1	MRGSUM	sle_hc1__cl7d360508	flops 81451	instances 3041	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	sle_hc1__cl7d360508	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl1_1
+intel1	MRGSUM	sle_sc_v1__cl7479a5ec	flops 27670	instances 3126	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	sle_stm_v1__cl27746664	flops 52805	instances 3071	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+intel1	MRG	sle_stm_v1__cl27746664	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+intel1	MRGSUM	sle_stm_v2__cl7b3062fa	flops 52988	instances 3302	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+intel1	MRG	sle_stm_v2__cl7b3062fa	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+intel1	MRGSUM	sle_su_c	flops 43253	instances 3817	modules_with_short_siblings 4	flops_missing_in_short_siblings 3574
+intel1	MRG	sle_su_c	qfd_dv_s8_vm8q_rp1_vwr	insts 3	short 2	full_flops 1042	missing 2084	regs q:2084	e.g. u_bound.u_u_suvm_u_vm8q_u_vwb
+intel1	MRG	sle_su_c	qfd_dv_s8_vm8q_rp1_twc	insts 4	short 3	full_flops 539	missing 1088	regs q:1088	e.g. u_bound.u_u_suvm_u_vm8q_u_twh1
+intel1	MRG	sle_su_c	qfd_dv_s8_vm8q_rp1_vrd	insts 7	short 2	full_flops 200	missing 400	regs q:400	e.g. u_bound.u_u_suvm_u_vm8q_u_crl1
+intel1	MRG	sle_su_c	$p\ot_dp_dly	insts 354	short 1	full_flops 17	missing 2	regs r:2	e.g. u_bound.u_pd17_x_su_l0_i_26
+intel1	MRGSUM	sle_su_l0__cl086d85ba	flops 13561	instances 1012	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slw_fe_v1__clfe325744__cldb4efe33	flops 48451	instances 4049	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slw_fw_v1__cl51d45468	flops 35960	instances 3342	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slw_hc0__cl1bc59e1c	flops 72606	instances 1137	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	slw_hc0__cl1bc59e1c	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl0_1
+intel1	MRGSUM	slw_hc0__cl4f54b7a3	flops 72613	instances 1133	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	slw_hc0__cl4f54b7a3	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl0_1
+intel1	MRGSUM	slw_hc1__cl3449ea95	flops 81452	instances 2975	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	slw_hc1__cl3449ea95	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl1_1
+intel1	MRGSUM	slw_hc1__cl68f9248e__cle683a076	flops 81452	instances 3013	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	slw_hc1__cl68f9248e__cle683a076	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl1_1
+intel1	MRGSUM	slw_hc2__cla3497502__cl16607c7a	flops 78884	instances 2570	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	slw_hc2__cla3497502__cl16607c7a	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl2_1
+intel1	MRGSUM	slw_hc2__cla3497502__cldc737267	flops 78881	instances 2466	modules_with_short_siblings 1	flops_missing_in_short_siblings 2628
+intel1	MRG	slw_hc2__cla3497502__cldc737267	$p\ot_qfd_xs_leaf	insts 8	short 6	full_flops 6972	missing 2628	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl2_1
+intel1	MRGSUM	slw_hc3__cld86a7ad4	flops 39998	instances 8626	modules_with_short_siblings 2	flops_missing_in_short_siblings 5264
+intel1	MRG	slw_hc3__cld86a7ad4	$paramod\ot_qfd_xs_leaf_fo32\MUT=s32'000	insts 8	short 6	full_flops 3350	missing 2632	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl3_6.u_leaf
+intel1	MRG	slw_hc3__cld86a7ad4	$p\ot_qfd_xs_leaf_fo32_w	insts 8	short 6	full_flops 3350	missing 2632	regs wo_d:2048,wctl:216,wo_ctl:216	e.g. u_bound.u_u_xl3_7
+intel1	MRGSUM	slw_sc_v1__cl64543eaf__cl4590432d	flops 27155	instances 3054	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slw_sc_v3	flops 26869	instances 2770	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slw_st_b_v2__pvc2ec5bfb	flops 33210	instances 27044	modules_with_short_siblings 1	flops_missing_in_short_siblings 204
+intel1	MRG	slw_st_b_v2__pvc2ec5bfb	$p\qfd_dv_s8_station_tail1_nb0_orq_mrep	insts 4	short 3	full_flops 2966	missing 204	regs r:84,cfg_payload0:57,cfg_payload1:57	e.g. u_bound.u_u_r5
+intel1	MRGSUM	slw_stm_v2__cl1ca9c415	flops 51082	instances 2886	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+intel1	MRG	slw_stm_v2__cl1ca9c415	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+intel1	MRGSUM	slw_stm_v2__cl9beb65e6	flops 51075	instances 2872	modules_with_short_siblings 1	flops_missing_in_short_siblings 8
+intel1	MRG	slw_stm_v2__cl9beb65e6	$p\ot_dp_dly	insts 2	short 1	full_flops 888	missing 8	regs r:6,q:2	e.g. u_bound.u_lpad_x_su_l1_i
+intel1	MRGSUM	kv3_hg_v1	flops 58871	instances 2716	modules_with_short_siblings 19	flops_missing_in_short_siblings 10584
+intel1	MRG	kv3_hg_v1	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst1_t2.u_reg
+intel1	MRG	kv3_hg_v1	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst1_g
+intel1	MRG	kv3_hg_v1	$paramod\ot_hdc_fp32_add_lat\LAT=s32'000	insts 9	short 8	full_flops 598	missing 272	regs q:251,s1_v:7,s2_v:7	e.g. trip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[6].u_a.u
+intel1	MRG	kv3_hg_v1	$p\ot_hdc_w11_cut	insts 9	short 8	full_flops 119	missing 230	regs q:230	e.g. u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[6].u_a.u.u_ca
+intel1	MRG	kv3_hg_v1	$paramod\ot_qwen_nearhbm_qmul\LAT=s32'00	insts 7	short 6	full_flops 822	missing 197	regs s1_rows:120,q:71,valid_out:6	e.g. _astk_u_strip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.m_t
+intel1	MRG	kv3_hg_v1	$paramod\ot_hdc_fp32_mul_lat\LAT=s32'000	insts 7	short 6	full_flops 822	missing 197	regs s1_rows:120,q:71,valid_out:6	e.g. trip_u_strip_g_ep_p_g_ex_0_u_ex.u_exp.g_h[5].u_m.u
+intel1	MRGSUM	kv3_hgi_v1__cl141fc26e	flops 19166	instances 1227	modules_with_short_siblings 3	flops_missing_in_short_siblings 9356
+intel1	MRG	kv3_hgi_v1__cl141fc26e	qkh_head_tstage	insts 6	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst3_t2.u_reg
+intel1	MRG	kv3_hgi_v1__cl141fc26e	qkh_head_gather_stage	insts 5	short 3	full_flops 1575	missing 4677	regs ti_b:4677	e.g. u_bound.u_hst2_t1
+intel1	MRG	kv3_hgi_v1__cl141fc26e	$paramod\ot_qkh_head_score4_native\MUT=s	insts 2	short 1	full_flops 37	missing 2	regs sync_q:2	e.g. u_bound.u_head3_u_score
+intel1	MRGSUM	kv3_sys_SD_v1	flops 16101	instances 211	modules_with_short_siblings 1	flops_missing_in_short_siblings 6
+intel1	MRG	kv3_sys_SD_v1	$p\ot_async_fifo	insts 2	short 1	full_flops 5787	missing 6	regs rd_online:1,rd_online_w1:1,rd_online_w2:1	e.g. u_bound.u_core.u_fdi_cdc.u_tx
+intel1	MRGSUM	col_h10_r0_p1__t1__cl574cc59d__pv67036687	flops 14264	instances 1071	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h10_r0_p1__t1__cl574cc59d__pv67036687	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h10_r0_p1__t1__cl574cc59d__pv67036687	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_4_r
+intel1	MRGSUM	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	flops 14264	instances 1066	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h10_r0_p1__t1__cl574cc59d__pvf60ac9dc	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_4_r
+intel1	MRGSUM	col_h10_r1__t1__cl95b37463__pv86f5e3b9	flops 21667	instances 470	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h10_r1__t1__cl95b37463__pva3a8bfd1	flops 21667	instances 478	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r0_p1__t1__pvb3e2a60a	flops 14563	instances 1031	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p1__t1__pvb3e2a60a	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p1__t1__pvb3e2a60a	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p1__t1__pvb49c16c8	flops 14563	instances 1031	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p1__t1__pvb49c16c8	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p1__t1__pvb49c16c8	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	flops 14707	instances 663	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	flops 14562	instances 653	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	flops 12351	instances 983	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r0_p3__t1__cl0cd90c0e__pv13474472	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	flops 12351	instances 983	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	flops 14705	instances 594	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	flops 14705	instances 608	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p5__t1__pv35382794	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p5__t1__pv35382794	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p5__t1__pv35382794	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p5__t1__pveda1ecc9	flops 14560	instances 742	modules_with_short_siblings 2	flops_missing_in_short_siblings 8
+intel1	MRG	col_h9_r0_p5__t1__pveda1ecc9	$p\ot_s81_rly	insts 8	short 7	full_flops 277	missing 7	regs rq:7	e.g. u_bound.u_u_r0_u_y_xo0_1
+intel1	MRG	col_h9_r0_p5__t1__pveda1ecc9	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_r0_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p6__t1__pvb38a9d6c	flops 12142	instances 440	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r0_p6__t1__pvb38a9d6c	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_lpl_14_r
+intel1	MRGSUM	col_h9_r0_p6__t1__pvde240d6d	flops 12142	instances 440	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r0_p6__t1__pvde240d6d	$p\ot_pl_seam_r_plq	insts 2	short 1	full_flops 76	missing 1	regs rq:1	e.g. u_bound.u_u_lpl_14_r
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv047ea3b3	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv0a45e191	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv0bdbc3f3	flops 16833	instances 490	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv11c696bc	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv3a0a8b60	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv4108910d	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv49636389	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv4bd36c74	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv534ef85e	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv58f6356d	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv5bdf9f51	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv70f04488	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv7466df46	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pv87d52780	flops 16833	instances 488	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pvadb6c679	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pvbb600efe	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pvc25aad1b	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pve273b259	flops 16833	instances 481	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r1__t1__cl49d7a23e__pvf0f1ccb2	flops 16833	instances 490	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	col_h9_r2__t1__cl87f3ff59	flops 12882	instances 414	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r2__t1__cl87f3ff59	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+intel1	MRGSUM	col_h9_r2__t1__clc9ad8f7e__pvf079625b	flops 12880	instances 397	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r2__t1__clc9ad8f7e__pvf079625b	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+intel1	MRGSUM	col_h9_r2__t1__clce45cab5__pv1aac64f0	flops 12734	instances 388	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r2__t1__clce45cab5__pv1aac64f0	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+intel1	MRGSUM	col_h9_r2__t1__clce45cab5__pv40e9fb5a	flops 12734	instances 380	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r2__t1__clce45cab5__pv40e9fb5a	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+intel1	MRGSUM	col_h9_r2__t1__clce45cab5__pv4937edd4	flops 12734	instances 380	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r2__t1__clce45cab5__pv4937edd4	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+intel1	MRGSUM	col_h9_r2__t1__clce45cab5__pvb6ec679e	flops 12734	instances 386	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r2__t1__clce45cab5__pvb6ec679e	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+intel1	MRGSUM	col_h9_r2__t1__clce45cab5__pvb7e88dd2	flops 12734	instances 382	modules_with_short_siblings 1	flops_missing_in_short_siblings 1
+intel1	MRG	col_h9_r2__t1__clce45cab5__pvb7e88dd2	$p\ot_s81_rly	insts 2	short 1	full_flops 39	missing 1	regs rq:1	e.g. u_bound.u_u_y_ga_e13_f_prog_0.u
+intel1	MRGSUM	dsdv_slice_c1x_C__t10	flops 50852	instances 1095	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	dsdv_slice_c1x_C__t9	flops 60774	instances 931	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	dsdv_slice_lepe_nh_mus_C__t1	flops 56599	instances 1149	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	gunit__t1	flops 1719	instances 422	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	ot_s81sl_kv_leaf__t1	flops 49874	instances 1406	modules_with_short_siblings 18	flops_missing_in_short_siblings 14312
+intel1	MRG	ot_s81sl_kv_leaf__t1	$p\ot_hdc_f12_cut	insts 46	short 42	full_flops 180	missing 2674	regs r:2648,v:26	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k5
+intel1	MRG	ot_s81sl_kv_leaf__t1	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_sq
+intel1	MRG	ot_s81sl_kv_leaf__t1	$paramod\ot_hdc_fp32_mul_f12\CUTS=8'0110	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. vn_u_b.u_g.g_lane[3].u_sq.genblk1.genblk1.g_l5.u.u
+intel1	MRG	ot_s81sl_kv_leaf__t1	$p\ot_hdc_f12_cut	insts 29	short 25	full_flops 152	missing 1741	regs r:1724,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k3
+intel1	MRG	ot_s81sl_kv_leaf__t1	$p\ot_hdc_f12_cut	insts 37	short 33	full_flops 76	missing 1416	regs r:1399,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k1
+intel1	MRG	ot_s81sl_kv_leaf__t1	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 8	short 4	full_flops 561	missing 787	regs r:787	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_xr
+intel1	MRGSUM	ot_s81sl_kv_leaf__t3	flops 48997	instances 1783	modules_with_short_siblings 18	flops_missing_in_short_siblings 14312
+intel1	MRG	ot_s81sl_kv_leaf__t3	$p\ot_hdc_f12_cut	insts 46	short 42	full_flops 180	missing 2672	regs r:2646,v:26	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k5
+intel1	MRG	ot_s81sl_kv_leaf__t3	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_sq
+intel1	MRG	ot_s81sl_kv_leaf__t3	$paramod\ot_hdc_fp32_mul_f12\CUTS=8'0110	insts 21	short 20	full_flops 431	missing 2592	regs r:2716	e.g. vn_u_b.u_g.g_lane[3].u_sq.genblk1.genblk1.g_l5.u.u
+intel1	MRG	ot_s81sl_kv_leaf__t3	$p\ot_hdc_f12_cut	insts 29	short 25	full_flops 152	missing 1741	regs r:1724,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k3
+intel1	MRG	ot_s81sl_kv_leaf__t3	$p\ot_hdc_f12_cut	insts 37	short 33	full_flops 76	missing 1416	regs r:1399,v:17	e.g. q.g_aqx.u_aq.u_scale.genblk1.genblk1.g_l5.u.u.u_k1
+intel1	MRG	ot_s81sl_kv_leaf__t3	$paramod\ot_hdc_qmul_lat\LAT=s32'0000000	insts 8	short 4	full_flops 561	missing 787	regs r:787	e.g. u_bound.u_u_vn_u_b.u_g.g_lane[0].u_xr
+intel1	MRGSUM	ot_s81sl_leaf__t12	flops 12192	instances 976	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	ot_s81sl_leaf__t13	flops 10229	instances 883	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+intel1	MRG	ot_s81sl_leaf__t13	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf0_u_vp_hsi_q
+intel1	MRGSUM	ot_s81sl_leaf__t29	flops 14082	instances 548	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	ot_s81sl_leaf__t34	flops 10877	instances 865	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	ot_s81sl_leaf__t36	flops 12492	instances 856	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+intel1	MRG	ot_s81sl_leaf__t36	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+intel1	MRGSUM	ot_s81sl_leaf__t4	flops 9627	instances 771	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+intel1	MRG	ot_s81sl_leaf__t4	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf3_u_vp_hsi_q
+intel1	MRGSUM	ot_s81sl_leaf__t41	flops 11680	instances 953	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	ot_s81sl_leaf__t55	flops 11528	instances 954	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	ot_s81sl_leaf__t59	flops 9919	instances 773	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+intel1	MRG	ot_s81sl_leaf__t59	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf3_u_vp_hsi_q
+intel1	MRGSUM	ot_s81sl_leaf__t67	flops 11938	instances 1601	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	ot_s81sl_leaf__t69	flops 10888	instances 522	modules_with_short_siblings 1	flops_missing_in_short_siblings 10
+intel1	MRG	ot_s81sl_leaf__t69	ot_bind_native_24076fd5ce13e3ea617f1ab3	insts 2	short 1	full_flops 20	missing 10	regs \native_memory:10	e.g. u_bound.g_u_lf4_u_vp_hsi_q
+intel1	MRGSUM	ot_s81sl_leaf__t73	flops 18318	instances 1023	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	phy__t1	flops 2492	instances 19	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slice_station__t21	flops 487	instances 328	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slice_station__t24__cleece78ec	flops 1238	instances 372	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slice_station__t30__cl1653104c	flops 1339	instances 272	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slice_station__t40__clc8fb2c8c	flops 1730	instances 889	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slice_station__t43	flops 2976	instances 1188	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	slice_station__t49	flops 2226	instances 897	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	hd_ctl	flops 39627	instances 1510	modules_with_short_siblings 1	flops_missing_in_short_siblings 117
+intel1	MRG	hd_ctl	$paramod\ot_dsrom_mtp_ltx\W=s32'00000000	insts 2	short 1	full_flops 216	missing 117	regs l_data:118	e.g. u_core.u_logic.u_ltr
+intel1	MRGSUM	hd_mesh_e	flops 483	instances 96	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	hd_spn_end	flops 9509	instances 2310	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	hd_spn_wshim_rx	flops 2987	instances 479	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	hd_spn_wshim_tx	flops 578	instances 55	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
+intel1	MRGSUM	hd_turn_b	flops 2987	instances 290	modules_with_short_siblings 0	flops_missing_in_short_siblings 0
