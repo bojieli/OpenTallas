@@ -2498,6 +2498,7 @@ DME_STREET_GAP_UM = 200.0
 # M7, ~2x the modelled leg delay).  DME_STREET_VGAPS = sorted gap centres (set from the plan in clock_kit).
 DME_STREET_COLUMN = False
 DME_STREET_VLAYER = None
+STAMPED_TREE_JSON = None      # CLKSITE-RESERVE-1115 opt-in (kit --tree-json): replace the built die clock tree by a stamped tree.json
 DME_STREET_VGAPS = None
 # HBM-CLKLOC-5: half width of the narrowest PG-free gap of DME_STREET_VLAYER (M9 on HBM d44f: 17.28-um stripe pitch,
 # 12.96-um stripes -> 4.32-um gaps, half 2.16).  A snake on a vertical leg that runs ON a gap column keeps every buffer
@@ -3674,6 +3675,39 @@ def clock_edge_readout(verilog, path, period=str(die_sta.PERIOD_PS), cells="b*",
             "close $fh"]
 
 
+def load_stamped_tree(path, site=None):
+    """CLKSITE-RESERVE-1115: tree.json (tools/die_plan/clksite_stamp_native.py) -> (nodes {int id: node}, taps [(part, port, x, y)]),
+    the shape tree_netlist takes.  Names are re-derived by tree_netlist from the node ids (b<id>, r<id>_<k>, q<id>_<tap>)."""
+    T = json.loads(Path(path).read_text())
+    nodes = {int(k): dict(v) for k, v in T["nodes"].items()}
+    by = {}
+    for t in T["taps"]:
+        by.setdefault(t["node"], []).append((t["part"], t["port"], t["xy"][0], t["xy"][1]))
+    for i, v in nodes.items():
+        v["taps"] = by.get(i, [])
+        v["kids"] = list(v.get("kids", []))
+    st = dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    if site is not None:       # the kit's own legal-site map decides: an illegal node moves to the nearest legal site and every
+        for i, v in nodes.items():     # leg with an illegal point loses its chain (the kit then lays the leg out itself)
+            if not site.legal((v["x"], v["y"])):
+                q = site.nearest((v["x"], v["y"]))
+                v["x"], v["y"] = round(q[0], 3), round(q[1], 3)
+                v["req_xy"] = [v["x"], v["y"]]
+                st["moved"] += 1
+        for i, v in nodes.items():
+            pl = v.get("physical_leg")
+            if not pl:
+                continue
+            p = nodes.get(v.get("parent"))
+            ends_ok = (p is not None and _man(pl["chain"][0], (p["x"], p["y"])) < 1e-6 and
+                       _man(pl["chain"][-1], (v["x"], v["y"])) < 1e-6)
+            if not ends_ok or any(not site.legal(tuple(q)) for q in pl["chain"]):
+                v.pop("physical_leg", None); v.pop("detour", None)
+                st["chains_dropped"] += 1
+    print("STAMPED-TREE", json.dumps(st))
+    return nodes, [(t["part"], t["port"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
+
+
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
@@ -3847,6 +3881,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 raise ValueError(f"--tap-pad sites {port}: count does not match pad buffers")
     elif tap_pad and "sites" in tap_pad:
         tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
+    if STAMPED_TREE_JSON:        # CLKSITE-RESERVE-1115: the stamped tree replaces the one built above (same node/tap shape)
+        nodes, taps = load_stamped_tree(STAMPED_TREE_JSON, locals().get("site"))
     v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites,
                                                             **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
     if tap_pad:
@@ -6181,6 +6217,8 @@ def main(argv=None):
                         "construction, no tap parity inverters. Default buf")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
+    k.add_argument("--tree-json", help="CLKSITE-RESERVE-1115 opt-in: use this stamped tree.json (clksite_stamp_native.py) as the die "
+                   "clock tree instead of the built one; the clock kit netlist, placement and tree.json follow it")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
@@ -6378,6 +6416,7 @@ def main(argv=None):
         return 0
     if a.cmd == "kit":
         globals()["BAND_SHARE_FORM"] = a.band_share_form
+        globals()["STAMPED_TREE_JSON"] = a.tree_json
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,
