@@ -11,3 +11,4 @@
 - 2026-11-14 21:10 PST RESULT-WATCH [RESULT-WATCH-1 -> DIE-QC-103] die-qc-103/g0_s3r3 on epyc9: log done: G0_DONE rc=$?
 - 2026-11-14 22:30 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81LEAF29] type-s81leaf29/t25bf on epyc10: process gone (no signoff.json/result.json)
 - 2026-11-14 22:50 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-COLH9R1] type-colh9r1/h1 on epyc8: process gone (no signoff.json/result.json)
+- 2026-11-14 22:50 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-COLH9R1] type-colh9r1/g2 on epyc10: process gone (no signoff.json/result.json)
