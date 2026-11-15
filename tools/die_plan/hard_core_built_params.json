@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.hard_core_built_params.v1",
+ "note": "HCPARAM-ALL: the parameters a hardened core view was built with, for views whose repo directory carries no config.mk / kit spec. Source of truth is the signed record named in `source`; hard_core_param_all.py prefers this file over a view-dir record.",
+ "entries": [
+  {
+   "module": "dsdv_idx_tx_n32",
+   "lib_contains": "closed_import/dsdv_idx_tx_n32",
+   "params": {"V": 276, "IK": 4, "EK": 5, "UID": 92, "D": 8192, "IB": 64, "SRAM_MACRO": 1, "MUT": 0, "RDL": 1, "WDL": 1, "WDC": 1, "SCS": 1, "RIL": 1, "RHP": 1, "FACE": 2, "LKL": 0, "MLK": 0, "PDC": 1},
+   "source": "signed vb kit config.mk VERILOG_TOP_PARAMS, intel2:/srv/opentallas-scratch2/claude/s81-idx-b5/vg/eco_vg/i1/config.mk (RE-SIGN PROVENANCE kl_dsdv_idx_tx_n32_vb flow-20261106-cp-s81; S81-IDX-B6 READY-COUNT 11-06 22:49)"
+  }
+ ]
+}
