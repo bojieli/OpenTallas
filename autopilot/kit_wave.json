@@ -4230,11 +4230,7 @@
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
-    "OT_CLAND_STRIP_DENS": "1.0",
-    "OT_PG_CELL_KEEPOUT": "1",
-    "OT_PG_DIE_PHASE": "1",
-    "OT_PG_TRACK_TRUTH": "1",
-    "OT_PG_PIN_CHECK": "warn"
+    "OT_CLAND_STRIP_DENS": "1.0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -9000,7 +8996,11 @@
      "OT_CONS_KIT": "1",
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_CONS_STRIP_ROWS": "1"
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "ot_s81sl_leaf__t44__clf4ea6d4b": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -9236,7 +9236,11 @@
      "OT_CONS_KIT": "1",
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_CONS_STRIP_ROWS": "1"
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "ot_s81sl_leaf__t41": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9340,7 +9344,11 @@
      "OT_CONS_KIT": "1",
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_CONS_STRIP_ROWS": "1"
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "ot_s81sl_leaf__t70": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9499,7 +9507,11 @@
      "OT_CONS_KIT": "1",
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_CONS_STRIP_ROWS": "1"
+     "OT_CONS_STRIP_ROWS": "1",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "ot_s81sl_leaf__t30": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -10241,7 +10253,11 @@
      "OT_CONS_KIT": "1",
      "OT_CONS_UTIL": "0.35",
      "OT_CONS_MAX_LAYER": "M9",
-     "OT_GRT_ALLOW_CONGESTION": "1"
+     "OT_GRT_ALLOW_CONGESTION": "1",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "slice_station__t50__cl39451317": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -23325,11 +23341,7 @@
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
     "OT_CONS_MAX_LAYER": "M9",
-    "OT_CLAND_STRIP_DENS": "1.0",
-    "OT_PG_CELL_KEEPOUT": "1",
-    "OT_PG_DIE_PHASE": "1",
-    "OT_PG_TRACK_TRUTH": "1",
-    "OT_PG_PIN_CHECK": "warn"
+    "OT_CLAND_STRIP_DENS": "1.0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -34459,11 +34471,7 @@
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_CLAND_STRIP_DENS": "1.0",
-    "OT_RFLOW": "0",
-    "OT_PG_CELL_KEEPOUT": "1",
-    "OT_PG_DIE_PHASE": "1",
-    "OT_PG_TRACK_TRUTH": "1",
-    "OT_PG_PIN_CHECK": "warn"
+    "OT_RFLOW": "0"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -37700,7 +37708,11 @@
     "sle_fw_v1__cl9d029624": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "sle_hc0__cl929603c0__cl38badc56": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -37816,12 +37828,20 @@
     "sle_stm_v1__clbe630b9c": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "slw_fe_v1__clfe325744__cl08d14f0d": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "slw_hc1__cl3449ea95": {
      "OT_GRT_TRANSITION_MODE": "edge_outline",
@@ -37932,7 +37952,11 @@
     },
     "sle_stm_v3": {
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "slw_fe_v1__cl95cd1d0c": {
      "OT_GEN_M8_GRANT": "1",
@@ -38014,7 +38038,11 @@
     },
     "slw_stm_v2__cl9beb65e6": {
      "OT_GEN_M8_GRANT": "1",
-     "OT_CLAND_STRIP_DENS": "1.0"
+     "OT_CLAND_STRIP_DENS": "1.0",
+     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "tt_ctlm": {
      "OT_GEN_M8_GRANT": "1",
@@ -44231,11 +44259,7 @@
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
-    "OT_CLAND_STRIP_DENS": "1.0",
-    "OT_PG_CELL_KEEPOUT": "1",
-    "OT_PG_DIE_PHASE": "1",
-    "OT_PG_TRACK_TRUTH": "1",
-    "OT_PG_PIN_CHECK": "warn"
+    "OT_CLAND_STRIP_DENS": "1.0"
    },
    "item_inputs_prev_kw45_s28a": {
     "cbf_q00__cl1b5a6458": null,
