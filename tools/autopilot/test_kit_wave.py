@@ -1151,3 +1151,10 @@ class ExplicitClassHolds(unittest.TestCase):
         picks, skip = KW.select(rows, c, "qwen_kvsys", {"items": {}}, {"kv3_hg_v1", "kv3_hgi_v1"})
         self.assertEqual([r["item"] for r in picks], ["kv3_hgi_v1"])
         self.assertEqual(skip["die-owned hold: 559k cells; EX cut pending"], ["kv3_hg_v1"])
+
+
+class SrcSkewAdvisory(unittest.TestCase):
+    def test_qc_src_skew_is_advisory_not_a_gen_lint_fail(self):
+        # KIT-OPS-5 11-14 (COORD): the QC src runs ahead of the queue lint copy; src_skew is logged for qwen_compute, never a fail
+        self.assertIn("qwen_compute", KW.SRC_SKEW_ADVISORY_DIES)
+        self.assertNotIn("s81", KW.SRC_SKEW_ADVISORY_DIES)
