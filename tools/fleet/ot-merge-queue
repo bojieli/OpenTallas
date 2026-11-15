@@ -153,7 +153,9 @@ def parse_approvals(text):
 def lane_for(text, branch, sha):
     """the lane that posted READY for this branch / sha (newest line first, READY before STATE/ASK); else a name from the branch"""
     probes = [p for p in (sha[:9], branch) if p]
-    lines = [l for l in reversed(text.splitlines()) if any(p in l for p in probes) and "COORD APPROVED" not in l]
+    # a READY line often quotes the approval it asks for: keep it; drop only the approval rulings themselves
+    lines = [l for l in reversed(text.splitlines()) if any(p in l for p in probes)
+             and ("COORD APPROVED" not in l or re.search(r"\bREADY \[", l))]
     for want in ("READY", None):
         for line in lines:
             for m in LANE_RE.finditer(line):

@@ -43,6 +43,10 @@ class Parse(unittest.TestCase):
              "- STATE [KIT-OPS-5 -> COORD] cc about claude/type-kvahub-1114\n")
         self.assertEqual(M.lane_for(q, "claude/type-kvahub-1114", "9c23b2490fc6"), "TYPE-KVAHUB")
         self.assertEqual(M.lane_for("", "claude/admit-tune-30-1114", "76948b1b43"), "ADMIT-TUNE-30")
+        q2 = ("- READY [WAVE-RECIPE-1 -> MERGE-QUEUE-1] branch claude/w-1114 @3d69f0eb0c5 asks COORD APPROVED: claude/w-1114 @3d69f0eb0c5\n"
+              "- RULING [COORD -> MERGE-QUEUE-1] COORD APPROVED: claude/w-1114 @3d69f0eb0c5\n"
+              "- STATE [MERGE-QUEUE-1 -> COORD] about 3d69f0eb0c5\n")
+        self.assertEqual(M.lane_for(q2, "claude/w-1114", "3d69f0eb0c5"), "WAVE-RECIPE-1")
 
     def test_next_tag_follows_newest_series(self):
         names = ["abc\trefs/tags/flow-20261113-cu-kv", "abc\trefs/tags/flow-20261113-ct-hbm", "x\trefs/tags/flow-20261112-zz-qc"]
