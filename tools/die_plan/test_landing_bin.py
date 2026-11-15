@@ -115,3 +115,20 @@ def test_sinks_are_matched_by_master_not_name():
 def test_moved_capture_registers_get_their_reset_re_pointed():
     assert "foreach n $cland_bin_moved { lappend ff_landed_moved $n }" in TCL
     assert TCL.index("foreach n $cland_bin_moved") < TCL.index("source /work/reset_taps.tcl")
+
+
+def test_plan_site_lookup_prefers_the_bit_key_then_the_bus_key():
+    body = _procs("cland_bin_site_of") + \
+        "set s [dict create bc_i02 {1 2} {bc_i02[7]} {3 4}]\n" \
+        "puts [cland_bin_site_of $s bc_i02 7]\nputs [cland_bin_site_of $s bc_i02 8]\nputs [cland_bin_site_of $s bc_i02 {}]\nputs [llength [cland_bin_site_of $s nb_i12 7]]\n"
+    assert _run(body)[:4] == ["3 4", "1 2", "1 2", "0"]
+
+
+def test_plan_site_form_places_ust_and_takes_the_bit_from_the_capture_name():
+    body = _procs("cland_bin_loads")
+    assert "[[$it getMTerm] getName] eq \"D\"" in body and "u_st" not in body
+    m = re.search(r'regexp \{(q[^}]*)\} \$sn -> bit', TCL)
+    assert m
+    out = _run('puts [regexp {%s} {u_bound.u_bin_bc_i02/q\\[42\\]$_DFF_P_} -> b]; puts $b\n' % m.group(1))
+    assert out[:2] == ["1", "42"]
+    assert "cland:bin-ust:" in TCL and "/work/cland_bin_sites.tcl" in TCL
