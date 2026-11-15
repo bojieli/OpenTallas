@@ -59,10 +59,9 @@ REF_CAP = int(os.environ.get("MQ_REF_CAP", "40"))
 SYNC_HOOK = os.environ.get("MQ_SYNC_HOOK", str(Path(__file__).resolve().with_name("ot-tools-sync")) + " sync --sha {sha}")
 # rtl/lib + rtl/common: die_plan tools read REPO/rtl/lib/ot_reset_sync.sv etc.; without them test_bind failed on a sparse tree only
 # (pg-aware-1 288ada0041 / 240cf2612f5 false MERGE-FAIL 11-14 20:16 / 20:26)
-# after the rt flip: main's changed tool files into each die's own wave source tree (kit-gen + binds read those, not rt/current)
-# (default only for the production clone: a test queue on its own MQ_REPO must never write the real die trees)
-SRC_HOOK = os.environ.get("MQ_SRC_HOOK", "" if "MQ_REPO" in os.environ else
-                          str(Path(__file__).resolve().with_name("ot-src-refresh")) + " refresh --from {old} --to {new} --apply")
+# Die source trees are NOT refreshed per merge (OWNER/COORD 11-15 after the 00:26 gen breakage): ot-src-refresh daily runs once a
+# day at 06:00 (ot-src-refresh.timer), batched, smoke-tested, with rollback.  MQ_SRC_HOOK stays for a manual/debug override only.
+SRC_HOOK = os.environ.get("MQ_SRC_HOOK", "")
 SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
 TAG_DATE = os.environ.get("MQ_TAG_DATE", "")
 MAX_BLOB = 95 * 1024 * 1024
@@ -71,7 +70,8 @@ ME = "MERGE-QUEUE"
 CO_AUTHOR = "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 TERMINAL = {"MERGED", "ALREADY", "FAIL", "REVOKED"}
 
-APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
+APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:branch\s+)?(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
+# ("branch " before the name is accepted: COORD wrote 'COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef' 11-15)
 QUOTE_RE = re.compile(r"\b(MERGED|MERGE-FAIL|READY) \[")      # a line that quotes an approval is not one
 # MERGE-QUEUE-1 11-14 20:00: only COORD (or OWNER) approves.  A line whose first [author] tag before the approval is any other
 # lane (a STATE / ASK quoting the line it asks for) is not an approval; a bare line without an author tag is a COORD ruling.
@@ -643,7 +643,8 @@ def fail(st, it, text, status, detail, base):
     it["status"] = "FAIL"
     it["reason"] = f"{status}: {detail}"
     it["updated"] = stamp()
-    br = f"{it['branch']}@{it['sha_full'][:11]}" if it["branch"] else it["sha_full"][:11]
+    sha = (it.get("sha_full") or it["sha"])[:11]             # an UNFETCHABLE item never got a full sha
+    br = f"{it['branch']}@{sha}" if it["branch"] else sha
     if status == "CONFLICT":
         what = f"conflict with main {base[:11]} in: {', '.join(detail) if isinstance(detail, list) else detail}"
     else:

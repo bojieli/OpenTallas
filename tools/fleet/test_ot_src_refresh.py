@@ -100,6 +100,118 @@ class Refresh(unittest.TestCase):
         self.assertEqual(self.rd("tools/die_plan/conf.py"), "x = 'local'\n")
         self.assertIn("LOCAL", r.stdout)
 
+    def test_catchup_with_src_sha_base_merges_local_edits(self):
+        cfg = json.loads(pathlib.Path(self.env["OT_SRC_CFG"]).read_text())
+        cfg["dies"]["qc"]["src_sha"] = self.v1
+        pathlib.Path(self.env["OT_SRC_CFG"]).write_text(json.dumps(cfg))
+        r = self.run_("catchup", "--since", "2000-01-01", "--apply", "--show")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(self.rd("tools/die_plan/merge.py"), "a\nLOCAL\nc\nd\ne\nf\nMAIN\n")
+        self.assertEqual(self.rd("tools/die_plan/conf.py"), "x = 'local'\n")
+        self.assertIn("CONFLICT", r.stdout)
+
+
+
+class Daily(unittest.TestCase):
+    """daily: one batch, staged smoke on the gen host before any swap, then every gen_hosts replica, rollback on failure"""
+    def setUp(self):
+        d = self.d = pathlib.Path(tempfile.mkdtemp())
+        g = self.g = ["git", "-c", "user.name=t", "-c", "user.email=t@t", "-c", "init.defaultBranch=main"]
+        sh(*g, "init", "-q", "--bare", str(d / "origin.git"))
+        sh(*g, "clone", "-q", str(d / "origin.git"), str(d / "dev"))
+        self.dev = d / "dev"
+        (self.dev / "tools/die_plan").mkdir(parents=True)
+        (self.dev / "tools/die_plan/a.py").write_text("A = 1\n")
+        self.v1 = self.commit("v1")
+        self.src = d / "src"
+        for root in (pathlib.Path("/"), d / "rep"):                    # gen host tree and replica tree (same path, own root)
+            t = pathlib.Path(str(root) + str(self.src)) / "tools/die_plan"
+            t.mkdir(parents=True)
+            (t / "a.py").write_text("A = 1\n")
+        sh("git", "clone", "-q", str(d / "origin.git"), str(d / "repo"))
+        cfg = d / "kit_wave.json"
+        cfg.write_text(json.dumps({"dies": {"qc": {"enabled": True, "gen_host": "hostg", "gen_hosts": ["hostg", "hostr"],
+                                                   "src": str(self.src)}}}))
+        (d / "mq").mkdir()
+        (d / "mq/src-refresh-last.json").write_text(json.dumps({"qc": self.v1}))
+        (d / "coord/lanes").mkdir(parents=True)
+        (d / "coord/lanes/COORD-REVIEW-QUEUE.md").write_text("")
+        self.env = dict(os.environ, MQ_REPO=str(d / "repo"), MQ_HOME=str(d / "mq"), OT_SRC_CFG=str(cfg),
+                        OT_SRC_LOCAL_HOSTS="hostg hostr", OT_SRC_LOCAL_ROOTS=f"hostr={d / 'rep'}", MQ_COORD=str(d / "coord"),
+                        MQ_COMMIT=str(d / "none.sh"))
+
+    def commit(self, msg):
+        sh(*self.g, "add", "-A", cwd=self.dev); sh(*self.g, "commit", "-qm", msg, cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        return sh("git", "rev-parse", "HEAD", cwd=self.dev)
+
+    def daily(self):
+        return subprocess.run([sys.executable, "-I", P, "daily", "--apply"], env=self.env, capture_output=True, text=True, timeout=300)
+
+    def rep(self, rel):
+        return pathlib.Path(str(self.d / "rep") + str(self.src / rel))
+
+    def last(self):
+        return json.loads((self.d / "mq/src-refresh-last.json").read_text())["qc"]
+
+    def test_good_batch_reaches_gen_and_replica(self):
+        (self.dev / "tools/die_plan/a.py").write_text("A = 2\n")
+        (self.dev / "tools/die_plan/b.py").write_text("import a\nB = 1\n")
+        v2 = self.commit("v2")
+        r = self.daily()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        for f in (self.src / "tools/die_plan/a.py", self.rep("tools/die_plan/a.py")):
+            self.assertEqual(f.read_text(), "A = 2\n")
+        self.assertTrue(self.rep("tools/die_plan/b.py").exists())
+        self.assertEqual(self.last(), v2)
+        self.assertIn("daily die-tree refresh", (self.d / "coord/lanes/COORD-REVIEW-QUEUE.md").read_text())
+        self.assertFalse((self.src / ".mq-stage").exists() and any((self.src / ".mq-stage").iterdir()))
+
+    def test_staged_smoke_failure_swaps_nothing(self):
+        (self.dev / "tools/die_plan/a.py").write_text("import no_such_module_xyz\nA = 2\n")
+        self.commit("v2")
+        r = self.daily()
+        self.assertIn("STAGED CHECK FAILED", r.stdout + r.stderr)
+        self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
+        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 1\n")
+        self.assertEqual(self.last(), self.v1)
+
+    def test_replica_drift_refuses_then_put_heals(self):
+        (self.src / "tools/die_plan/helper.py").write_text("H = 1\n")   # a lane copied a file to the gen host copy only
+        (self.dev / "tools/die_plan/a.py").write_text("A = 2\n")
+        self.commit("v2")
+        r = self.daily()
+        self.assertIn("REPLICA DRIFT", r.stdout + r.stderr)
+        self.assertIn("tools/die_plan/helper.py", r.stdout)
+        self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
+        self.assertEqual(self.last(), self.v1)
+        e = subprocess.run([sys.executable, "-I", P, "drift", "--post"], env=self.env, capture_output=True, text=True, timeout=300)
+        self.assertIn("helper.py", e.stdout)
+        self.assertIn("REPLICA DRIFT", (self.d / "coord/lanes/COORD-REVIEW-QUEUE.md").read_text())
+        u = subprocess.run([sys.executable, "-I", P, "put", "--die", "qc", "tools/die_plan/helper.py", "--apply"], env=self.env,
+                           capture_output=True, text=True, timeout=300)
+        self.assertEqual(u.returncode, 0, u.stdout + u.stderr)
+        self.assertEqual(self.rep("tools/die_plan/helper.py").read_text(), "H = 1\n")
+        r = self.daily()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 2\n")
+
+    def test_swap_failure_on_one_host_rolls_back_every_host(self):
+        (self.dev / "tools/die_plan/a.py").write_text("A = 2\n")
+        (self.dev / "tools/die_plan/c.py").write_text("C = 1\n")
+        self.commit("v2")
+        rd = self.rep("tools/die_plan")
+        os.chmod(rd, 0o555)                                            # the replica cannot take the swap
+        try:
+            r = self.daily()
+        finally:
+            os.chmod(rd, 0o755)
+        self.assertIn("ROLLED BACK", r.stdout + r.stderr)
+        self.assertEqual((self.src / "tools/die_plan/a.py").read_text(), "A = 1\n")
+        self.assertFalse((self.src / "tools/die_plan/c.py").exists())
+        self.assertEqual(self.rep("tools/die_plan/a.py").read_text(), "A = 1\n")
+        self.assertEqual(self.last(), self.v1)
+
 
 if __name__ == "__main__":
     unittest.main()

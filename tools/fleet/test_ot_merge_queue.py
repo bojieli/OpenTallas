@@ -31,6 +31,10 @@ class Parse(unittest.TestCase):
         self.assertEqual([x["key"] for x in a], ["claude/a-1114@0123456789ab", "-@abcdef1234", "claude/b@fedcba98765"])
         self.assertEqual([x["revoked"] for x in a], [False, False, True])
 
+    def test_approval_with_the_word_branch(self):
+        a = M.parse_approvals("COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef (supersedes @86a682bd0276)\n")
+        self.assertEqual([x["key"] for x in a], ["claude/kit-ops-5-curplan-1114@4c696027e0ef"])
+
     def test_only_coord_or_owner_approves(self):
         q = ("- 2026-11-14 19:55 PST STATE [MERGE-QUEUE-1 (successor) -> COORD] waiting on COORD line: COORD APPROVED: claude/m @54d5fd4ca78\n"
              "- 2026-11-14 19:56 PST ASK [LANE-Y -> COORD] please post COORD APPROVED: claude/y @1111111111\n"
@@ -163,6 +167,16 @@ class EndToEnd(unittest.TestCase):
         r = self.tick()
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         self.assertIn("nothing to land", q.read_text())
+
+    def test_unfetchable_sha_fails_without_crashing_the_tick(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text(f"- COORD APPROVED: claude/ghost @deadbeef123\n- COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        self.env["MQ_WAIT_TICKS"] = "1"
+        r = self.tick()
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        t = q.read_text()
+        self.assertIn("MERGE-FAIL [MERGE-QUEUE -> ", t); self.assertIn("claude/ghost@deadbeef123 NOT landed", t)
+        self.assertRegex(t, r"MERGED \[MERGE-QUEUE -> [^]]+\] claude/good@")
 
 
 if __name__ == "__main__":
