@@ -6631,7 +6631,14 @@ def flow_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     g = FG.fg_state(st)
     hosts = flow_candidate_hosts(cfg, die)
     items = {r["item"]: flow_item_inputs(cfg, die, r["item"]) for r in rows}
-    res = FG.preflight_items(g, items, {i: hosts for i in items}, rpy or AP.rpy, now, local_names=main_module_names(AP))
+    # tick budget: a probe that would start after the deadline answers "unknown" (= launch, never cached) so the tick does not wait
+    # 86-95 s for a cold die; the probes that did finish are cached (TTL) and the next ticks complete the rest.
+    real, deadline = rpy or AP.rpy, time.time() + float(d.get("flow_guard_budget_s", 25))
+    def budgeted(host, code, args, timeout=600):
+        if time.time() > deadline:
+            return {"error": "tick budget"}
+        return real(host, code, args, timeout=min(timeout, 60))
+    res = FG.preflight_items(g, items, {i: hosts for i in items}, budgeted, now, local_names=main_module_names(AP))
     imiss = cfg.setdefault("_item_incomplete", {})
     out = {}
     for item, v in res.items():
