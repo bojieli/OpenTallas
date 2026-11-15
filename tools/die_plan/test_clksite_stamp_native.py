@@ -83,5 +83,17 @@ class T(unittest.TestCase):
         self.assertEqual(self.rep["legs_over_405"], 0)
 
 
+    def test_taps_snapped_by_default_and_flag_disables(self):
+        for t in self.out["taps"]:
+            self.assertAlmostEqual((t["xy"][0] - 0.04) / 0.08, round((t["xy"][0] - 0.04) / 0.08), places=3)
+            y = t["xy"][1]
+            self.assertAlmostEqual((y - 0.04) / 0.08, round((y - 0.04) / 0.08), places=3)
+            self.assertGreaterEqual(abs(y - round(y / 2.16) * 2.16), 0.30 - 1e-6)
+        raw, _ = N.stamp_tree(FakeP(), tree(), "t", max_slide=0.0, snap_tap_pins=False)
+        nodes = {int(k): v for k, v in raw["nodes"].items()}
+        for t in raw["taps"]:
+            self.assertEqual(t["xy"], [nodes[t["node"]]["x"], nodes[t["node"]]["y"]])
+
+
 if __name__ == "__main__":
     unittest.main()

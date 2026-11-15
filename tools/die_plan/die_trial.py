@@ -488,6 +488,28 @@ def clock_taps(P):
 
 
 # ------------------------------------------------------------------------------------- tree cell site legality (opt-in)
+TAP_PIN_SNAP = True       # CLKSITE-QC-SNAP-1115: generator default; kit --no-snap-tap-pins disables (set from the CLI)
+
+
+def snap_track(v, pitch=0.08, offset=0.04):
+    """nearest M8/M9 track centre (platform tracks: offset 0.04, pitch 0.08, plan make_tracks.tcl)"""
+    return round((v - offset) / pitch) * pitch + offset
+
+
+def snap_track_y(v, rails=(2.16, 0.24, 0.06)):
+    """M8 y track nearest to v whose centre is >= rail half width + clearance from every die M8 PG rail centre
+    (rails every 2.16 um, 0.48 wide, VDD/VSS alternate; kit psm/pdn.tcl ot_pg grids).  rails=None: plain snap_track"""
+    t = snap_track(v)
+    if not rails:
+        return t
+    rp, rh, rc = rails
+    k, n = round((t - 0.04) / 0.08), 0
+    while abs(t - round(t / rp) * rp) < rh + rc - 1e-9 and n < 400:
+        n += 1
+        t = (k + ((n + 1) // 2) * (1 if n % 2 else -1)) * 0.08 + 0.04
+    return t
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -3886,6 +3908,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     root = nodes[0]
     tcl.append(f"place_pin -pin_name root -layer M9 -location {{{root['x']:.3f} {root['y']:.3f}}} -pin_size {sz9}")
     for tp, x, y, *_ in tap_ports:
+        if TAP_PIN_SNAP:      # on-track terminal (M9 x track, M8 y track clear of the M8 PG rails) -> no off-track M8 jog / min step
+            x, y = snap_track(x), snap_track_y(y)
         tcl.append(f"place_pin -pin_name {tp} -layer M9 -location {{{x:.3f} {y:.3f}}} -pin_size {sz9}")
     for inst, x, y in place:
         tcl.append(f"place_inst -name {inst} -location {{{max(0.0, x):.3f} {max(0.0, y):.3f}}} -status PLACED")
@@ -6188,6 +6212,11 @@ def main(argv=None):
                    help="DIE-ROUTE-ABS-1 opt-in: after the clock tree is placed, cut the partition abstract OBS (M1-M7) and "
                         "the M7 PG pin over every die clock cell inside a partition (margin um, default 0.25); "
                         "writes abstract_cutout.json; originals kept as .lef.precut")
+    k.add_argument("--snap-tap-pins", dest="snap_tap_pins", action="store_true", default=True,
+                   help="default ON (kept for old command lines): die clock tap terminals on the M9 x / M8 y track grid, "
+                        "M8 y clear of the die M8 PG rails")
+    k.add_argument("--no-snap-tap-pins", dest="snap_tap_pins", action="store_false",
+                   help="disable the tap terminal snap (off-track terminals give 7 nm M8 min-step stubs)")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
     k.add_argument("--reset-infra", action="store_true",
                    help="Export native registered reset output pins and real neighbor wavefront nets; raw reset "
@@ -6378,6 +6407,7 @@ def main(argv=None):
         return 0
     if a.cmd == "kit":
         globals()["BAND_SHARE_FORM"] = a.band_share_form
+        globals()["TAP_PIN_SNAP"] = a.snap_tap_pins
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,

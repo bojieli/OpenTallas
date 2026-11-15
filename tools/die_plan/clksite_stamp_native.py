@@ -9,7 +9,9 @@ template (R0 preferred, most nodes), so the 2-top/2-exit and 3/1 boundary topolo
 with the template's by their sorted type-frame position.  Legs crossing the tile boundary are re-priced (8.8 ps + 0.24 ps/um per
 stage, stage <= --rep-um) in `stamp_leg` and carry NO physical_leg chain: the kit validates every chain point against its
 legal-site map and lays a leg without a chain out itself.
-usage: clksite_stamp_native.py PLAN TREE.json TYPE OUT.json [--max-slide 1.7] [--rep-um 150]
+usage: clksite_stamp_native.py PLAN TREE.json TYPE OUT.json [--max-slide 1.7] [--rep-um 150] [--no-snap-tap-pins]
+Tap terminals (taps[].xy) are SNAPPED by default (CLKSITE-QC-SNAP-1115): M9 x track, M8 y track clear of the die M8 PG rails
+(die_trial.snap_track / snap_track_y); --no-snap-tap-pins keeps the node positions.
 Writes OUT.json and OUT.json.report.json."""
 import argparse, json, math, sys
 from pathlib import Path
@@ -26,7 +28,12 @@ def leg_price(a, b, rep):
                 model="CLKSITE stamp leg (8.8 ps + 0.24 ps/um per stage)"), L / st
 
 
-def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
+def snap_tap_xy(xy):
+    from die_trial import snap_track, snap_track_y     # lazy: die_trial is heavy
+    return [round(snap_track(xy[0]), 4), round(snap_track_y(xy[1]), 4)]
+
+
+def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None, snap_tap_pins=True):
     N = {int(k): v for k, v in T["nodes"].items()}
     nb = {int(k): v for k, v in T["node_buf"].items()}
     sites, po = T["sites"], T["parent_of"]
@@ -187,6 +194,8 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
             newpo[newnb[nid]] = nbo[v["parent"]]
     pbo = {k: v for k, v in po.items() if k in so}; pbo.update(newpo)
     taps_out = [t for t in T["taps"] if t["node"] not in drop] + new_taps
+    if snap_tap_pins:
+        taps_out = [dict(t, xy=snap_tap_xy(t["xy"])) for t in taps_out]
 
     def path_delay(nds, i):
         s = 0.0
@@ -215,7 +224,7 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None):
     rep.update(stamped=len(stamped), insertion_delta_ps=dict(p50=q(dl, .5), p90=q(dl, .9), max=q(dl, 1.0), min=q(dl, 0.0)),
                tile_spread_before_ps=dict(p50=q(sb, .5), max=q(sb, 1.0)), tile_spread_after_ps=dict(p50=q(sa, .5), max=q(sa, 1.0)),
                nodes_before=len(N), nodes_after=len(nodes), taps_before=len(T["taps"]), taps_after=len(taps_out),
-               slid_sites=sum(1 for k, v in slide.items() if tuple(v) != (k[0], k[1])), max_slide_um=max_slide,
+               slid_sites=sum(1 for k, v in slide.items() if tuple(v) != (k[0], k[1])), max_slide_um=max_slide, snap_tap_pins=bool(snap_tap_pins),
                no_legal_slide=illegal_left[0])
     meta = dict(T["meta"], stamped=dict(type=tname, classes=rep["classes"], max_slide_um=max_slide, schema="clksite_stamp_native/2"))
     out = dict(meta=meta, nodes={str(i): v for i, v in nodes.items()}, taps=taps_out,
@@ -227,11 +236,13 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan"); ap.add_argument("tree"); ap.add_argument("type"); ap.add_argument("out")
     ap.add_argument("--max-slide", type=float, default=1.7); ap.add_argument("--rep-um", type=float, default=150.0)
+    ap.add_argument("--no-snap-tap-pins", action="store_true")
     a = ap.parse_args(argv)
     import schema as S
     P = S.Plan(S.load(a.plan), Path(a.plan))
     import die_trial as D
-    out, rep = stamp_tree(P, json.load(open(a.tree)), a.type, a.max_slide, a.rep_um, site=D.clock_site(P))
+    out, rep = stamp_tree(P, json.load(open(a.tree)), a.type, a.max_slide, a.rep_um, site=D.clock_site(P),
+                         snap_tap_pins=not a.no_snap_tap_pins)
     json.dump(out, open(a.out, "w"))
     json.dump(rep, open(a.out + ".report.json", "w"), indent=1)
     print(json.dumps(rep))
