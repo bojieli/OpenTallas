@@ -7,7 +7,7 @@ import re
 
 SRC = Path(__file__).resolve().parents[2] / "physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py"
 TREE = ast.parse(SRC.read_text())
-NAMES = {"PDN", "PDN_MACRO", "macro_pdn", "pg_top_pdn"}
+NAMES = {"PDN", "PDN_MACRO", "macro_pdn", "pg_top_pdn", "NS_ESCAPE_UM", "_m5_ns_signal_pins"}
 BODY = [n for n in TREE.body if (isinstance(n, ast.FunctionDef) and n.name in NAMES) or
         (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id in NAMES for t in n.targets))]
 G = dict(Path=Path, re=re)

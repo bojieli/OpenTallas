@@ -28,6 +28,16 @@ class NativePG(unittest.TestCase):
             self.assertEqual(info['declared_parent_obs_max'],'M7')
             for cap in (None,'M4','M5'):
                 with self.assertRaisesRegex(ValueError,'obs_max'):G.macro_pdn({'hist':[]},d,cap)
+    def test_m5_ns_signal_pins_get_strap_keepout(self):
+        with tempfile.TemporaryDirectory() as td:
+            d=Path(td);self.lef(d,'hist','M5','M5');self.lef(d,'pk','M5','M5')
+            p=d/'pk.lef';s=p.read_text().replace('END pk\n',' PIN a\n DIRECTION INPUT ;\n PORT\n LAYER M5 ;\n RECT 43.632 53.916 43.656 54 ;\n END\n END a\nEND pk\n');p.write_text(s)
+            self.assertTrue(G._m5_ns_signal_pins(s));self.assertFalse(G._m5_ns_signal_pins((d/'hist.lef').read_text()))
+            out,_=G.macro_pdn({'hist':[],'pk':[]},d,'M7')
+            self.assertIn('-name {native_pg_M5} -cells {{^hist$}} -voltage_domains {CORE} -halo {0} -grid_over_boundary',out)
+            self.assertIn('-name {native_pg_M5_nsesc} -cells {{^pk$}} -voltage_domains {CORE} -halo {0 4.32 0 4.32} -grid_over_boundary',out)
+            self.assertIn('-grid {native_pg_M5_nsesc} -layers {M5 M6}',out)
+            base,_=G.macro_pdn({'hist':[]},d,'M7');self.assertNotIn('nsesc',base)
     def test_invalid_pg_interface_fails(self):
         with tempfile.TemporaryDirectory() as td:
             d=Path(td)
