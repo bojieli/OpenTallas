@@ -268,6 +268,9 @@ SCHEMA = {
                     "type_m8_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
                         "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
                         "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
+                        # r153 fix 4 (FABLE-PD-DRT-1350): shift of the die-track reference (um, a multiple of the layer pitch is
+                        # best; rounded to tracks): the die tracks hug the PG band moved by this much; absent / 0 = unchanged
+                        "phase_um": {"type": "number"},
                         "note": {"type": "string"}}},
                     # WAVE-RECIPE-1 11-14 (OWNER ruling: types may use the remaining M8/M9, die infra shapes imported as
                     # obstructions): the same grant on M9 (vertical tracks); an M9 kit also carries the M8 grant
