@@ -59,5 +59,15 @@ class Bypass(unittest.TestCase):
             self.assertEqual(RUN.choose(res, 48), ("epyc8", False))
 
 
+class Reserve(unittest.TestCase):
+    def test_plan_job_remaining_peak_is_held_back_only_for_its_own_units(self):
+        hist = {"bind": [60.0, 70.0, 80.0, 90.0]}
+        units = [("oth-ubuntu-111-1794700000", 120.0, "bind", 30.0), ("oth-ubuntu-222-1794700001", 48.0, "other", 5.0)]
+        r = R.plan_reserve(units, hist, {"111"}, 0.9, 3, 0.5)
+        self.assertAlmostEqual(r, 90.0 - 30.0)                  # p90 of the class minus what it holds now; the other unit is not a plan job
+        self.assertEqual(R.plan_reserve(units, hist, set(), 0.9, 3, 0.5), 0.0)
+        self.assertAlmostEqual(R.plan_reserve([("oth-ubuntu-111-1", 120.0, "new", 20.0)], {}, {"111"}, 0.9, 3, 0.5), 60.0 - 20.0)   # no history: 0.5 x request
+
+
 if __name__ == "__main__":
     unittest.main()

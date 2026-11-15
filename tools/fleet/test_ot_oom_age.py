@@ -159,5 +159,27 @@ class Victim(unittest.TestCase):
         self.assertEqual(M.stage_adj(self.GP, 700), 700)
 
 
+class Guard(unittest.TestCase):
+    def test_victim_is_the_largest_young_non_plan_process_and_never_a_protected_one(self):
+        procs = [(1, "openroad", 564, 568, 4.4), (2, "openroad", 700, 728, 18.0), (3, "openroad", 0, 30, 45.0), (4, "yosys", 599, 608, 7.9),
+                 (5, "openroad", -1000, 0, 90.0), (6, "python3", 800, 820, 20.0)]
+        self.assertEqual(M.guard_victim(procs), 2)              # not the 4 GB one, not adj 0 / -1000 (late stage, plan), not a non-build comm
+        self.assertIsNone(M.guard_victim([(3, "openroad", 0, 30, 45.0)]))
+
+    def test_ancestor_fallback_finds_a_marked_launcher(self):
+        self.assertEqual(M.plan_ancestor(os.getpid(), {str(os.getppid())}), str(os.getppid()))
+        self.assertIsNone(M.plan_ancestor(os.getpid(), {"999999999"}))
+
+    def test_guard_off_or_no_plan_job_kills_nothing(self):
+        from unittest.mock import patch
+        mem = lambda: {"MemAvailable": 10, "MemTotal": 1000}
+        with patch.object(M, "plan_pids", lambda d=None: set()):
+            self.assertEqual(M.guard(0.2, 5.0, kill=lambda *a: self.fail("killed"), sleep=lambda s: time.sleep(0.01), meminfo=mem), 0)
+        with patch.object(M, "plan_pids", lambda d=None: {"1"}):
+            self.assertEqual(M.guard(0.2, 0, kill=lambda *a: self.fail("killed"), sleep=lambda s: time.sleep(0.01), meminfo=mem), 0)
+            hi = lambda: {"MemAvailable": 900, "MemTotal": 1000}
+            self.assertEqual(M.guard(0.2, 5.0, kill=lambda *a: self.fail("killed"), sleep=lambda s: time.sleep(0.01), meminfo=hi), 0)
+
+
 if __name__ == "__main__":
     unittest.main()

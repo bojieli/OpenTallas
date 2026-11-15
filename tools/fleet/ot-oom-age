@@ -142,6 +142,77 @@ def plan_key(pid, names):
     return m.group(1) if m else None
 
 
+def plan_ancestor(pid, plans, depth=12):
+    """a build process spawned by a plan job outside its scope / container (a host-side yosys under a bind): a marked launcher among its ancestors"""
+    p = str(pid)
+    for _ in range(depth):
+        try:
+            p = open(f"/proc/{p}/stat").read().rsplit(")", 1)[1].split()[1]
+        except (OSError, IndexError):
+            return None
+        if p in plans:
+            return p
+        if p in ("0", "1"):
+            return None
+    return None
+
+
+GUARD_PCT_DEFAULT = 5.0
+
+
+def guard_pct():
+    """PLANGUARD_1114: PLAN_GUARD_PCT in /etc/ot-heavy.conf (0 = off)"""
+    try:
+        m = re.findall(r"^PLAN_GUARD_PCT=([0-9.]+)", open("/etc/ot-heavy.conf").read(), re.M)
+        return float(m[-1]) if m else GUARD_PCT_DEFAULT
+    except OSError:
+        return GUARD_PCT_DEFAULT
+
+
+def guard_victim(procs):
+    """procs: [(pid, comm, adj, score, rss_gb)] -> the non-plan build process to kill first (adj in 1..800, highest oom_score = largest young one), or None"""
+    cand = [x for x in procs if 0 < x[2] <= MAXMANAGED and x[1] in COMMS]
+    return max(cand, key=lambda x: (x[3], x[4]))[0] if cand else None
+
+
+def guard(seconds, pct, dry=False, kill=os.kill, log=None, sleep=time.sleep, meminfo=None):
+    """PLANGUARD_1114 (COORD 11-14, B4L4 yosys lost at 2.6 percent free): while a plan job runs on this host and MemAvailable < pct percent, kill the largest young non-plan build
+    process NOW (SIGKILL; earlyoom's SIGTERM line is 3 percent and a victim may need 10+ s to go), one per 10 s, so the plan job's memory growth never reaches the kernel's line"""
+    killed, t_end, log = 0, time.time() + seconds, log or ESC_LOG
+    while pct > 0 and time.time() < t_end:
+        plans = plan_pids()
+        if plans:
+            mi = (meminfo or (lambda: {k: int(v.split()[0]) for k, v in (l.split(":", 1) for l in open("/proc/meminfo"))}))()
+            if mi["MemAvailable"] * 100.0 / mi["MemTotal"] < pct:
+                procs, names = [], container_names()
+                for p in os.listdir("/proc"):
+                    if not p.isdigit():
+                        continue
+                    try:
+                        comm = open(f"/proc/{p}/comm").read().strip()
+                        if comm not in COMMS or plan_key(p, names) in plans or plan_ancestor(p, plans):
+                            continue
+                        rss = int(re.search(r"VmRSS:\s+(\d+)", open(f"/proc/{p}/status").read()).group(1)) / 1048576
+                        procs.append((int(p), comm, int(open(f"/proc/{p}/oom_score_adj").read()), int(open(f"/proc/{p}/oom_score").read()), rss))
+                    except (OSError, ValueError, AttributeError):
+                        continue
+                v = guard_victim(procs)
+                if v is not None:
+                    killed += 1
+                    if not dry:
+                        try:
+                            kill(v, signal.SIGKILL)
+                            os.makedirs(os.path.dirname(log), exist_ok=True)
+                            x = next(t for t in procs if t[0] == v)
+                            open(log, "a").write(f"{time.strftime('%F %T')} GUARD SIGKILL {v} {x[1]} RSS {x[4]*1024:.0f} MiB adj {x[2]}: MemAvailable < {pct:g} percent with a plan job running\n")
+                        except OSError:
+                            pass
+                    sleep(10)
+                    continue
+        sleep(5)
+    return killed
+
+
 ESC_AFTER_S = 60
 ESC_LOG = "/var/tmp/ot-oom-age/kills.log"
 SIGLINE = re.compile(r'^(\d+(?:\.\d+)?) \S+ earlyoom\[\d+\]: sending SIGTERM to process (\d+) uid \d+ "([^"]*)":.*?cmdline "(.*)"\s*$')
@@ -210,6 +281,7 @@ def main(argv=None):
     ap.add_argument("--pid", type=int, nargs="*", default=[])
     ap.add_argument("--state", default=STATE)
     ap.add_argument("--no-escalate", action="store_true")
+    ap.add_argument("--guard-s", type=float, default=0.0, help="PLANGUARD: stay and watch MemAvailable this many seconds (timer service: 50)")
     a = ap.parse_args(argv)
     comms = set(a.comm.split(",")) if a.comm else COMMS
     hz = os.sysconf("SC_CLK_TCK")
@@ -221,7 +293,7 @@ def main(argv=None):
     for p in pids:
         try:
             comm = open(f"/proc/{p}/comm").read().strip()
-            if plans and (comm in comms or comm in PLAN_EXTRA) and plan_key(p, names) in plans:
+            if plans and (comm in comms or comm in PLAN_EXTRA) and (plan_key(p, names) in plans or plan_ancestor(p, plans)):
                 # PLANBYPASS_1114 (OWNER 11-14 19:40): plan connectivity jobs are never the earlyoom / kernel victim while any other job can die instead
                 if int(open(f"/proc/{p}/oom_score_adj").read()) != PLAN_ADJ:
                     if not a.dry_run:
@@ -252,7 +324,8 @@ def main(argv=None):
     if not a.dry_run:
         save_state(a.state, first, now)
     esc = 0 if a.no_escalate or a.pid else escalate(parse_sigterms(earlyoom_journal()), now, hz, a.dry_run)
-    print(f"ot-oom-age: {seen} managed, {changed} {'would change' if a.dry_run else 'changed'}, {esc} SIGKILL escalations")
+    gk = guard(a.guard_s, guard_pct(), a.dry_run) if a.guard_s and not a.pid else 0
+    print(f"ot-oom-age: {seen} managed, {changed} {'would change' if a.dry_run else 'changed'}, {esc} SIGKILL escalations, {gk} plan-guard kills")
     return 0
 
 
