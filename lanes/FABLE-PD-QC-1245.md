@@ -105,3 +105,16 @@ I expect reach / landing errors from F2 and F3, not a clean pass. Nobody else wa
 - The 2 G0 errors of S4q4c and the state of the S4Q3BSAB bind (latcheck log at 20:52 UTC says the bind had not finished
   emitting).
 - No DB was opened; all kit evidence is from logs, congestion reports and smells.json.
+
+## 8. Update 13:50 PST: treeA G0 of S4q5 finished (MEASURED)
+
+`epyc9:/srv/opentallas-scratch2/claude/fable-pd-qc-1245/g0_s4q5A/g0_report.json`: G0 FAIL, 135 errors, 474 warnings.
+- 133 x `clock_landings` (new with S4q5, confirms F3): 36 x `cland_mon_{ready,fault,clk}__c_*_tn_00: actual endpoint hop
+  exceeds 405` (E slices 414.1-416.1 um, W slices 478.9-487.6 um; the hc0 -> cb tn_00 monitor edges across the band top),
+  the rest `start tree: boundary pin geometry mismatch`.
+- 2 x `faces` (`sl_W5_fw.W` / `coll_f4.E`: 72 pins in the 10-um window at 11749.70, 7.20/um > 6): baseline, identical to
+  the 2 errors of g0_s4q4c, not caused by S4q5. This also answers the open item in section 4: S4q4c G0 has only these 2.
+- G0 does NOT flag the stale hc N-face landing pins, face-reach stations or taps of F2 (0 findings on them), nor the
+  bump field / channel rect of F7b. A clean G0 after fixing the start tree would still leave F2 and F7b open: check them
+  by the listed coordinates, not by G0.
+- New warnings against S4q4c: geometry +10, complete +4 (not read line by line).
