@@ -260,6 +260,10 @@ def grow_gaps(P, raw, found, min_gap=1.0):
             t["note"] = (t.get("note", "") + " | ft_hop_fix 11-15 --grow-gaps: +%.2f um on the die %s side to abut "
                          "%s across an empty gap (seam hop %.1f um)" % (gap, side, hi, h)).strip(" |")
             boxes[lo] = full
+            chans = raw.get("die", {}).get("channels", [])
+            keep = [c for c in chans if set(c.get("between", [])) != {lo, hi}]
+            if len(keep) != len(chans):                           # the gap is gone: its declared die channel too
+                raw["die"]["channels"] = keep
             done.add((tn, side)); out.append((tn, side, round(gap, 2), lo, hi))
             break
     return out

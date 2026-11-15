@@ -32,7 +32,8 @@ def test_grow_gaps_abuts_and_moves_face_registers(monkeypatch):
     lo = dict(outline_um=[100.0, 200.0], ft_slots=[dict(name="ft0", in_face="N", out_face="S", stations=2,
                                                         regs_um=[[50.0, 200.0], [50.0, 20.0]])])
     hi = dict(outline_um=[100.0, 200.0], ft_slots=[])
-    raw = dict(partition_types={"LO": lo, "HI": hi})
+    raw = dict(partition_types={"LO": lo, "HI": hi},
+               die=dict(channels=[dict(name="band", between=["a", "b"]), dict(name="other", between=["a", "c"])]))
     P = SimpleNamespace(types=raw["partition_types"],
                         parts={"a": dict(type="LO", origin_um=[0.0, 0.0], orient="R0"),
                                "b": dict(type="HI", origin_um=[0.0, 500.0], orient="R0")})
@@ -41,3 +42,4 @@ def test_grow_gaps_abuts_and_moves_face_registers(monkeypatch):
     assert out == [("LO", "N", 300.0, "a", "b")]
     assert lo["outline_um"] == [100.0, 500.0]
     assert lo["ft_slots"][0]["regs_um"] == [[50.0, 500.0], [50.0, 20.0]]
+    assert [c["name"] for c in raw["die"]["channels"]] == ["other"]
