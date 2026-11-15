@@ -4230,7 +4230,11 @@
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
-    "OT_CLAND_STRIP_DENS": "1.0"
+    "OT_CLAND_STRIP_DENS": "1.0",
+    "OT_PG_CELL_KEEPOUT": "1",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "warn"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -7201,7 +7205,11 @@
     "col_h9_r2__t1__clb8d86cd5__pvf0595d0f@3",
     "col_h9_r2__t1__clce45cab5__pv1aac64f0@2",
     "gunit__t1@32",
-    "svc_hi_dsdv_svc_rs__t5@5"
+    "svc_hi_dsdv_svc_rs__t5@5",
+    "ot_s81sl_leaf__t25__cl431c660f@14",
+    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S@10",
+    "ot_s81sl_leaf__t69@9",
+    "slice_station__t49@4"
    ],
    "take_states": [
     "*"
@@ -7462,7 +7470,66 @@
     "serdes__t15__cla2127225": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): recovered-clock structure (DIE-S81-92 clock-island event is the fix); wave copy a28 stopped",
     "col_h9_*": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): pre-B6 plan, clocks 38-63 core pins off target (266 attempts in 30 h): no new attempts until B6 is adopted; running attempts in route finish",
     "col_h10_*": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): pre-B6 plan, clocks 38-63 core pins off target: no new attempts until B6 is adopted; running attempts in route finish",
-    "ot_s81sl_leaf__*": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)"
+    "ot_s81sl_leaf__t1": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t10": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t11": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t12": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t14": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t15": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t16": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t17": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t2": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t22": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t23": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t24__cl2456157b": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t24__cl81374cd8": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t26": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t27": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t29": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t3": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t30": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t31": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t32": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t33": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t35": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t36": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t37": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t38": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t39": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t4": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t41": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t42": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t43": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t44__clf4ea6d4b": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t44__clf6cf8492": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t45": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t46": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t47": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t5": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t50": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t51": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t52": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t53__cl958451dd": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t53__clb66fa5cb": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t54__cl501e5681": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t54__cl706d9749": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t56": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t57": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t58": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t59": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t6": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t60": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t61": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t62": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t65": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t66": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t67": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t68": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t7": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t70": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t72": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t74": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)",
+    "ot_s81sl_leaf__t8": "FABLE-PD-S81 stop list 21:5x (STOPLIST-2120, COORD): no leaf launch without the PG keep-out + tap-window fix (OT_TAP_WINDOW 68-162 kits); running routes finish; release when the keep-out/tap-window kit rollout lands (after PG-AWARE-1 proof)"
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -23258,7 +23325,11 @@
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
     "OT_CONS_MAX_LAYER": "M9",
-    "OT_CLAND_STRIP_DENS": "1.0"
+    "OT_CLAND_STRIP_DENS": "1.0",
+    "OT_PG_CELL_KEEPOUT": "1",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "warn"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -32739,7 +32810,9 @@
     "ot_s81sl_leaf__t3",
     "ot_s81sl_leaf__t6",
     "ot_s81sl_leaf__t65",
-    "slice_station__t40__cl1ea9de02"
+    "slice_station__t40__cl1ea9de02",
+    "ot_s81sl_leaf__t25__cl431c660f",
+    "slice_station__t49"
    ],
    "type_args_prev_kitops4_aor3": {
     "ot_s81sl_leaf__t62": [
@@ -33333,7 +33406,8 @@
    "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens",
    "hold_items_lifted_kitops5_colh10r2": {
     "col_h10_r2__t1__cl99efd374__pv9ae398c2": "COORD 11-14 S81-COL-INHERIT lever 1: sub-layout representative, 4_cts on epyc10; glob col_h10_r2__t1__* expanded to explicit keys without it"
-   }
+   },
+   "hold_items_released_kitops5_pgkeys": "ot_s81sl_leaf__t69/t25/t21/t40 families released 11-15 (COORD r36 PG keep-out rollout); glob ot_s81sl_leaf__* expanded to explicit keys for the other leaf types"
   },
   "s81_head": {
    "enabled": true,
@@ -34385,7 +34459,11 @@
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_CLAND_STRIP_DENS": "1.0",
-    "OT_RFLOW": "0"
+    "OT_RFLOW": "0",
+    "OT_PG_CELL_KEEPOUT": "1",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "warn"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -36335,7 +36413,12 @@
     "slw_su_l0__cl1a1c1f8f@20",
     "slw_su_l0__cl1e5219ea@15",
     "slw_su_l0__cl76fb247e@11",
-    "tt_ctlm@11"
+    "tt_ctlm@11",
+    "sle_fw_v1__cl9d029624@2",
+    "sle_stm_v1__clbe630b9c@5",
+    "sle_stm_v3@4",
+    "slw_fe_v1__clfe325744__cl08d14f0d@13",
+    "slw_stm_v2__cl9beb65e6@4"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -44148,7 +44231,11 @@
     "OT_GRT_POST_MAX_S": "0",
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
-    "OT_CLAND_STRIP_DENS": "1.0"
+    "OT_CLAND_STRIP_DENS": "1.0",
+    "OT_PG_CELL_KEEPOUT": "1",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "warn"
    },
    "item_inputs_prev_kw45_s28a": {
     "cbf_q00__cl1b5a6458": null,
@@ -45229,7 +45316,14 @@
     ]
    },
    "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens",
-   "note_kitops6_itemview": "KIT-OPS-6 11-14 (COORD item 7): slw_su_c__cl92142dac builds from its own plan zz_s29_qc103_s3r_sucvmrck.json (item_inputs): the 3 qfd_dv_s8x_vmr hard cores take base LEF ft_physical_1106/vmr_ckwin/qfd_dv_s8x_vmr.lef = QC-CORES-HEAD vmr_ckwin.lef sha 604bc938de3c; proof build only, die-wide plan and LEF unchanged; backup kit_wave.json.bak-kitops6-itemplan"
+   "note_kitops6_itemview": "KIT-OPS-6 11-14 (COORD item 7): slw_su_c__cl92142dac builds from its own plan zz_s29_qc103_s3r_sucvmrck.json (item_inputs): the 3 qfd_dv_s8x_vmr hard cores take base LEF ft_physical_1106/vmr_ckwin/qfd_dv_s8x_vmr.lef = QC-CORES-HEAD vmr_ckwin.lef sha 604bc938de3c; proof build only, die-wide plan and LEF unchanged; backup kit_wave.json.bak-kitops6-itemplan",
+   "stage_resume_off": [
+    "sle_fw_v1__cl9d029624",
+    "sle_stm_v1__clbe630b9c",
+    "sle_stm_v3",
+    "slw_fe_v1__clfe325744__cl08d14f0d",
+    "slw_stm_v2__cl9beb65e6"
+   ]
   },
   "hbm": {
    "enabled": true,
