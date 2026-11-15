@@ -15,6 +15,12 @@
 # OT_TXL_MID_CHAINS (default "u_txl"): space-separated ot_pl_pad instance paths (rows <C>.g_reg.r[k][b], last <C>.q[b]) to
 # space the same way, e.g. "u_txl u_dec.u_rck_transport4" (DIE-S81-85 11-10: vC t14 GRT rck_transport4 r0 -> r1 1850 um,
 # TT -412.5 ps at W=180).  Unset = u_txl only, same moves and same log line as before.
+# OT_TXL_MID_FACE=1 (SERDES-TXPIPE 11-14, forms OT_S81_SERDES_TXPIPE / RXPIPE): a chain whose sink (or source) is a HARD
+# MACRO pin keeps that end's row AT the pin (nearest free point to the pin, i.e. just outside the macro halo) and spaces the
+# other rows evenly on the remaining span: sink macro -> rows at k/N (k=1..N-1) of src->pin, last row at the pin; source
+# macro -> first row at the pin, the rest at k/N toward the sink.  serdes__t14: the PMA TX data face (2246 um wide, behind
+# the RX PMA band) and the RX PMA q face are both one register away from their macro.  Unset / 0 = the even rule above
+# for every chain (same moves, same log line).
 namespace eval ot_txl_mid {
   # n points at (k+1)/(n+1) of the segment a->b
   proc targets {ax ay bx by n} {
@@ -24,6 +30,12 @@ namespace eval ot_txl_mid {
       lappend out [list [expr {$ax+($bx-$ax)*$f}] [expr {$ay+($by-$ay)*$f}]]
     }
     return $out
+  }
+  # OT_TXL_MID_FACE: n row targets with the macro end's row at that end (end: snk | src | {} = even)
+  proc face_targets {ax ay bx by n end} {
+    if {$end eq "snk"} { return [concat [targets $ax $ay $bx $by [expr {$n-1}]] [list [list $bx $by]]] }
+    if {$end eq "src"} { return [concat [list [list $ax $ay]] [targets $ax $ay $bx $by [expr {$n-1}]]] }
+    return [targets $ax $ay $bx $by $n]
   }
   # macs: list of {x0 y0 x1 y1} halo boxes
   proc in_halo {x y macs} {
@@ -150,7 +162,8 @@ namespace eval ot_txl_mid {
     set ret {}
     foreach C $chains {
     set clasts [expr {[dict exists $lasts $C] ? [dict get $lasts $C] : {}}]
-    set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0; set hcells 0
+    set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0; set hcells 0; set nface 0
+    set face [expr {[info exists ::env(OT_TXL_MID_FACE)] && $::env(OT_TXL_MID_FACE) eq "1"}]
     foreach q $clasts {
       # rows oldest first, ending with q; src = enc driver output iterm
       set chain [list $q]; set src ""
@@ -165,7 +178,13 @@ namespace eval ot_txl_mid {
       if {$src eq "" || $snk eq ""} { incr skip; continue }
       lassign [ctr $src] ax ay; lassign [ctr $snk] bx by
       set n [llength $chain]
-      set pts [targets $ax $ay $bx $by $n]
+      set end {}
+      if {$face} {
+        set sb [[[$snk getInst] getMaster] isBlock]; set ab [[[$src getInst] getMaster] isBlock]
+        if {$sb && !$ab} { set end snk } elseif {$ab && !$sb} { set end src }
+        if {$end ne ""} { incr nface }
+      }
+      set pts [face_targets $ax $ay $bx $by $n $end]
       set ok 1; set places {}
       foreach p $pts {
         lassign $p tx ty
@@ -196,7 +215,7 @@ namespace eval ot_txl_mid {
       incr moved
     }
     set tag [expr {$chains eq "u_txl" ? "" : " chain $C"}]
-    puts "OT_TXL_MID$tag bits moved $moved of [llength $clasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, hop cells moved $hcells, max hop [format %.0f $hmax] um"
+    puts "OT_TXL_MID$tag bits moved $moved of [llength $clasts], rows $rows, skipped (no enc/PMA endpoint) $skip, no free point $nofree, hop cells moved $hcells, max hop [format %.0f $hmax] um[expr {$face ? ", macro-face anchored $nface" : ""}]"
     lappend ret [list $moved [llength $clasts] $hmax]
     }
     return [expr {[llength $ret] == 1 ? [lindex $ret 0] : $ret}]

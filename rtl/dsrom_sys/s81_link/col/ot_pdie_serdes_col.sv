@@ -12,6 +12,8 @@
 //   rck <-> clk only through u_rm (gray FIFO) and the 2-flop status syncs, as ot_pdie_serdes.
 // Latency vs ot_pdie_serdes (fixed, static schedule; the link layer above skips IDLE beats, the rate matcher absorbs it):
 //   TX +TXL (2 relay rows over the ~1.1 mm enc -> PMA lane, reach 405 um); RX decoder +2 face pads +6 landing edges.
+//   Opt-in forms: OT_S81_SERDES_TXL4 TX +2, OT_S81_SERDES_TXPIPE TX +1 (one more u_txl row), OT_S81_SERDES_RXPIPE RX +1
+//   (u_rxf PMA q face row); each is a fixed latency, valid piped with data.
 // MUT (bench only, 0 in every kit): passed to the landed decoder (1 = landing 0 bypassed, 2 = landing 0 read K+1,
 //   3 = pad 0 short, 4 = syn reset run long); 8 = TX relay one row short (PMA sees the lane one cycle early: no effect on
 //   data, kept as a probe only).
@@ -164,10 +166,24 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     // S81-SERDES-TXL4 (DIE-S81-85 2026-11-09): opt-in, two more u_txl relay rows (TX +2 clk).  Measured on serdes 4_cts/G2 kits:
     // the row 0 -> last row hop spans up to 2.2-2.4 mm and takes data 1020-1514 ps (833 ps period); wirelength-driven GPL
     // leaves the rows at the encoder and at the pad.  Rows 1 and 2 are the hop stations (place at 1/3 and 2/3 of the span).
-    localparam integer TXL_N = TXL + 2;
+    localparam integer TXL_X = 2;
 `else
-    localparam integer TXL_N = TXL;
+    localparam integer TXL_X = 0;
 `endif
+`ifdef OT_S81_SERDES_TXPIPE
+    // S81-SERDES-TXPIPE (SERDES-TXPIPE 2026-11-14): opt-in, ONE more u_txl relay row (TX +1 clk), all 545 bits: the 544 data
+    // bits and the valid d_v ride the same row, so the PMA word / valid alignment is unchanged and no bit sees a different
+    // date.  serdes__t14 wave route 4837cfb49ca5 (epyc2) CTS: u_txl.q[239] -> u_ptx/d[239] 102.7 ck-q + 1199.9 ps of
+    // repeated wire (27 stages) vs a 583.7 ps budget, -718.9 ps (GRT -454.9 after repair, 340 endpoints): the PMA TX data
+    // face (2246 um wide, behind the RX PMA band) is 2.2-2.9 mm of wire from the encoder, more than two 833 ps hops carry.
+    // Placement (tools/die_plan/txl_mid.tcl, enabled by this define at kit generation): the LAST row sits FIRM-near its own
+    // PMA pin (nearest free site below the RX PMA band, ~150 um of M6+ over it), the other rows at even shares of the
+    // encoder -> face span.  No reset on the new row (same as the other rows): LOCKSAFE holds the column >= 64 edges.
+    localparam integer TXL_P = 1;
+`else
+    localparam integer TXL_P = 0;
+`endif
+    localparam integer TXL_N = TXL + TXL_X + TXL_P;
     ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL_N - 1 : TXL_N)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
     // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
     //      TX lane drop), each with ONE clock (tx: the forwarded lane clock; rx: the recovered clock)
@@ -184,6 +200,19 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     ot_s81_pma_txm #(.LAT(PMA_LAT)) u_ptx (.ck(clk), .d_v(l_q[544]), .d(l_q[543:0]), .pma_tx(pma_tx), .pma_tck(pma_tck));
     ot_s81_pma_rxm #(.LAT(PMA_LAT)) u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
 `endif
+    // ---- RX PMA face stage (S81-SERDES-RXPIPE, SERDES-TXPIPE 2026-11-14; opt-in, default = a wire, byte-identical):
+    //      ONE pma_rck row u_rxf between the RX PMA q face and the decoder (RX +1 rck), all 544 bits, and the decoder
+    //      valid p_v (= rn_r) piped by the same row so valid and data keep their alignment (the decoder face pad sees the
+    //      first beat one edge later together with its valid; rst_n stays rn_r).  serdes__t14 CTS: u_face_p_d.q[538] ->
+    //      u_syn.am_ok -350.99 ps: the 2246 um wide PMA q face is one hop from the syn alignment cone.  Placement: u_rxf
+    //      sits at its own PMA q pin (txl_mid.tcl face mode), so u_face_p_d moves to the decoder side and the face wire
+    //      gets its own cycle.  No reset on the row (as the face pad): LOCKSAFE holds the column >= 64 edges.
+    wire [543:0] r_dp; wire r_vp;
+`ifdef OT_S81_SERDES_RXPIPE
+    ot_pl_pad #(.W(545), .N(1)) u_rxf (.ck(pma_rck), .d({rn_r, r_d}), .q({r_vp, r_dp}));
+`else
+    assign r_dp = r_d; assign r_vp = rn_r;
+`endif
     // ---- receive: landed KP4 decoder (4 rck regions) -> rate matcher -> clk
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
 `ifdef OT_S81_RCK_REFORM
@@ -192,7 +221,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
 `else
     ot_s81_kp4_dec_native_flat_lp #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0)) u_dec (
 `endif
-        .rst_n(rn_r), .p_v(rn_r), .p_d(r_d),
+        .rst_n(rn_r), .p_v(r_vp), .p_d(r_dp),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .lock(lock),
         .n_corr(n_corr), .n_unc(n_unc), .n_relock(n_rl),
         .ck_syn(pma_rck), .ck_dly(pma_rck), .ck_chn(pma_rck), .ck_out(pma_rck));
