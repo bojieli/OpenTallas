@@ -1,0 +1,4 @@
+# CORE-GUNIT-1115 (S81 dsdv_gunit_l1f_bf), started 2026-11-15
+Forms found 11-15 12:4x UTC: g3f (epyc7 /srv/opentallas-scratch2/claude/type-gunit-l1f/g3f/dsdv_gunit_l1f_bf_gf5g3f; FWPIPE a769ba16f6 + g3 432x216): routed DRC 0, antenna 0, TT -16.46 (4 ep) PASS, LEC EQUIVALENT 18063/18063, FF hold: 1644 ep -42 are port-start (advisory), 15 reg2reg rdb_q->svreg_data worst -4.82 = the only R-MINIMAL miss. g4 (epyc10 fable-review-cores/gunit_g4): NOT SIGNED TT -128.59/121 ep, hold -57.84, face_guard land_slot 14 (we[*] 17 replicas vs declared 24): dead end. b (epyc7) 02:49 signed-fail older form; g3 older (no FWPIPE).
+Action: AUTO-RESIGN.tsv row added for g3f -> autopilot late-ECO (eco_loop hold repair reg2reg margin 10). Then archive on count: AGIdock + rtx-pro.
+Open: die bind must carry -DOT_GUNIT_BF_FWPIPE (+ lane RT_LAT 66/64 from main 0537bc22c28) for LATCHECK; DIE-S81-92 owns bind.
