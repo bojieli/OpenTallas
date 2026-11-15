@@ -886,7 +886,7 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 GROWTH_CAP_AVAIL_FRAC=0.0, DIE_HEADROOM_GB=64.0,       # OWNER 10-22 20:10: growth reservation 0 %
                 HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0, INV_PAST_PEAK_FACTOR=1.0,
                 PHASE_MARGIN=0.0, SEED_STEM_TOKENS=4.0, PHASE_CAP_AVAIL_FRAC=0.10,
-                SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
+                SIMPLE_ADMIT=0.0, PLAN_BYPASS=0.0, PLAN_RESERVE=0.0, STAGE_PEAK=0.0, STAGE_LOOKAHEAD=0.0, STAGE_PEAK_FRAC=1.0, PLAN_PRIO=0.0, PLAN_MAX_RUNNING=1.0, PLAN_HOLD_MAX_S=7200.0, PLAN_DRAIN_S=0.0, PLAN_EARLY_S=0.0, SMALL_JOB_GB=0.0, SMALL_JOB_MAX=6.0, SMALL_FLOOR_GB=36.0, SIMPLE_PEAK=0.0, PEAK_FALLBACK_SHARE=1.0, PEAK_GROWTH_FRAC=0.05, PEAK_PCT=0.9, PEAK_MIN_N=3.0, SIMPLE_NEED_FACTOR=1.0, SIMPLE_FRESH_S=0.0, REAL_ADMIT=0.0, REQ_PEAK_MULT=1.1, REQ_PEAK_PAD_GB=2.0, CLASS_LOWER_MIN_N=3.0)   # REALMEM_1110 (KW-FIX-44, OWNER/COORD 11-10)  # OWNER 10-22 20:10: PHASE_MARGIN 0                      # v17.4 (coordinator 10-22)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -1267,6 +1267,21 @@ def load_stage_table(path=None):
 
 
 
+def plan_reserve(units, hist, pids, pct=0.9, min_n=3, fallback=0.5):
+    """PLANRESERVE_1114 (COORD 11-14): GB a running plan job (launcher pid in pids) still expects = max(0, expected peak - now), held back from every NON-plan admission on the
+    host.  A unit belongs to the launcher whose pid is in its name (oth-<user>-<pid>-<t>)."""
+    total = 0.0
+    for u, req, cls, now in units:
+        m = re.match(r"oth-.*?-(\d+)-\d+$", u)
+        if m and m.group(1) in pids:
+            total += max(0.0, expected_peak(cls, req, hist, pct, min_n, fallback) - now)
+    return total
+
+
+def live_plan_pids():
+    return {f.rsplit(".", 1)[1] for f in glob.glob(f"{D}/plan.job.*") if f.rsplit(".", 1)[1].isdigit() and os.path.isdir("/proc/" + f.rsplit(".", 1)[1])}
+
+
 def peak_reserve(units, hist, frac, pct=0.9, min_n=3, fallback=1.0):
     """SIMPLE_PEAK: GB the running jobs are still expected to take: frac x sum(max(0, expected peak - now)).  frac < 1 because their
     peaks do not coincide (the plain sum on a 100-job host is 1-2 TB against 120 GB free and would admit nothing)"""
@@ -1400,6 +1415,12 @@ def gate_locked(mem, argv):
         # PLANBYPASS_1114 (OWNER 11-14 19:40): plan connectivity jobs (die-plan bind, LATCHECK, G0) are admitted at once: no headroom, growth reserve, peak table, drain wait or PLAN_MAX_RUNNING cap
         print(f"OK {mem} {cls} | PLAN_BYPASS: plan job admitted immediately (MemAvailable {avail:.0f} GB, no headroom / reserve / cap); revert: PLAN_BYPASS=0 in /etc/ot-heavy.conf")
         return
+    if conf("PLAN_RESERVE"):   # PLANRESERVE_1114 (COORD): while a plan job runs here, its remaining expected peak is not available to non-plan admissions
+        _pp = live_plan_pids()
+        if _pp:
+            _pr = plan_reserve(running_units_light(), peak_history(), _pp, conf("PEAK_PCT") or 0.9, conf("PEAK_MIN_N") or 3, conf("PEAK_FALLBACK_SHARE") or 0.5)
+            avail = avail - _pr
+            print(f"# PLAN_RESERVE: {len(_pp)} plan job(s) running, {_pr:.0f} GB of their remaining expected peak held back", file=sys.stderr)
     if conf("SIMPLE_ADMIT"):   # SIMPLE_ADMIT_1114 ADMIT-TUNE-1 (OWNER 11-14): one check, real MemAvailable - INV_HEADROOM_GB >= class measured RSS (16 GB if unknown); no fresh/past-peak/declared charge; revert: SIMPLE_ADMIT=0 in /etc/ot-heavy.conf
         if conf("PLAN_PRIO"):   # PLAN_PRIO_1114: plan jobs first, ignoring the growth reserve, at most PLAN_MAX_RUNNING per host
             _env = [f"OT_HEAVY_PRIO={os.environ['OT_HEAVY_PRIO']}"] if os.environ.get("OT_HEAVY_PRIO") else []
