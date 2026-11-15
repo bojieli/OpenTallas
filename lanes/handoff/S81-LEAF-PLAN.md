@@ -2,6 +2,12 @@
 
 Input: lanes/handoff/FABLE-REVIEW-CONG.md + FABLE-REVIEW-CONG-leaf-violations.tsv (R-LEAF-1/2/3). All builds private, DO_NOT_COUNT.
 
+## STATE 2026-11-14 ~21:xx PST (successor, newest)
+- COORD rulings: +1 ft approved; ONE S81 plan of record = DIE-S81-92 merged B6 (B6s/B6t are leaf parts, never adopted alone; watcher a5 killed, a6 posts RESULT proof to DIE-S81-92); M9 per-type list to DIE-S81-92 (type_m9_grant).
+- B6t = B6s + t7 ft3 / t53 ft0 +1 ft station (cp16 chain, ft_add_station) + slot-ft forms cp15 t7U/t53U; ev/B6t.json 0319e627dad9 / side_B6t.json b19670cae7df / cp16/lfcs_B6t.v e37ed654e0f5; delta ev/B6t_leaf_delta.json 72e079f4064b; latency.lanes xtier__s_0S_C__s_0N_C 36->37, up_s_1N_L4 18->19. Posted READY to DIE-S81-92.
+- Not cleared after 2 rounds: t34 ft1/3/4, t28 ft2-6/10/11, t75 ft0/1/2/4, t13 ft0/1/2, t71 ft0/1 -> ASK COORD Fable review (face core column < 86.4 closes the face strip end to end). ev/B6t_ft.json (27-slot chain) is a trial, NOT for merge.
+- core_place branch head c92d74c9c3 (whole-slot ft re-route fallback); READY for a7c4842c82 posted, newer head needs a fresh READY after review.
+
 ## FILES FOR DIE-S81-92 MERGED B6 (READY 2026-11-14, newest)
 - B6s leaf part for the single merged S81 B6 (not for separate adoption). Files (identical on epyc7, epyc8, epyc9): plan epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/ev/B6s.json (aa2aa99e499a)
 - sidecar epyc7:/srv/opentallas-scratch2/claude/s81-leaf-plan/ev/side_B6s.json (18941025a5f8)
