@@ -8,3 +8,4 @@
 - 08:5x: waiting on S3E READY+ADOPT from DIE-QC-103 (bg waiter). Then regen + both checks + HARD-IP rows.
 - S3F files posted (contents-delta-s3f.json, c3 patch). pending: private ucie gen validation of declared_bumps change.
 - S3Y exploratory: gen/preflight/floorplan pass, PDN fails (full-area macro); cells + pin-window checks pass; HARD-IP rows wait for S3P bind.
+- HARD-IP views archived (S3P). AUTO-RESIGN rows added. Open: S3P adoption, serdes_b caveat, G0 phy-window confirmation from DIE-QC-103.
