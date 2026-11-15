@@ -389,6 +389,11 @@ if {[info exists ::env(OT_TAP_CHAIN_AFFINITY)] && $::env(OT_TAP_CHAIN_AFFINITY) 
 if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1"} {
  source [file join [file dirname [info script]] tap_pair_affinity.tcl]
 }
+# S81-SEAM-RST-1115 form pg (default off, OT_TAP_RESET_AFFINITY=1): the last reset stage of an async clear takes the clock tap
+# its sinks use (tap_reset_affinity.tcl), so launch and capture of every async pin share one insertion delay.
+if {[info exists ::env(OT_TAP_RESET_AFFINITY)] && $::env(OT_TAP_RESET_AFFINITY) eq "1"} {
+ source [file join [file dirname [info script]] tap_reset_affinity.tcl]
+}
 # QC-EVENT-S26 11-11 (COORD 21:46: a near-empty tap "must not be left to padding"; ring bonding took clk_t84 from 116
 # sinks to 1): OT_TAP_POST_MIN_SINKS (opt-in, plan clock.tap_post_merge_min_sinks) re-runs the small-tap
 # merge AFTER the affinity passes.  A tap left with 0 < n < min sinks moves ALL its clock pins to the nearest tap that

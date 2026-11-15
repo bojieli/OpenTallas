@@ -1479,6 +1479,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
+# S81-SEAM-RST-1115 (default off): the last reset stage of an async clear takes the clock tap of its sinks (tap_reset_affinity.tcl).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_affinity"] = {"type": "boolean"}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {
