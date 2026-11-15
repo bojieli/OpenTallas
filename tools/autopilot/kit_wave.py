@@ -516,8 +516,11 @@ _TOOLS_DIGEST = {}
 
 
 def rt_tools_digest():
-    """stat digest (path, size, mtime_ns) of the kit tools of THIS tools tree: tools/die_plan, physical/common_flow and the
-    kit_*.py files of tools/autopilot (not kit_wave.py itself nor the scheduler: those never change a kit)"""
+    """CONTENT digest (path relative to the tree, sha1 of the bytes) of the kit tools of THIS tools tree: tools/die_plan,
+    physical/common_flow and the kit_*.py files of tools/autopilot (not kit_wave.py itself nor the scheduler: those never
+    change a kit).  MERGE-QUEUE-1 11-14: content, not absolute path + mtime: the wave runs the pinned tree rt/<sha>
+    (ot-tools-sync flips rt/current after each main push), so a new version dir whose kit tools are byte-identical must not
+    re-arm every failed row (rearm reason rt_tools) nor reset the retry counters (input_digest)"""
     if "v" in _TOOLS_DIGEST:
         return _TOOLS_DIGEST["v"]
     root = Path(__file__).resolve().parents[2]
@@ -531,11 +534,14 @@ def rt_tools_digest():
                     continue
                 if rel == "tools/autopilot" and (dp != str(base) or not f.startswith("kit_") or f == "kit_wave.py"):
                     continue
+                p = os.path.join(dp, f)
                 try:
-                    s = os.lstat(os.path.join(dp, f))
+                    with open(p, "rb") as fh:
+                        data = fh.read()
                 except OSError:
                     continue
-                h.update(f"{os.path.join(dp, f)}\0{s.st_size}\0{s.st_mtime_ns}\n".encode())
+                h.update(f"{os.path.relpath(p, root)}\0{len(data)}\0".encode())
+                h.update(hashlib.sha1(data).digest())
     _TOOLS_DIGEST["v"] = h.hexdigest()
     return _TOOLS_DIGEST["v"]
 
