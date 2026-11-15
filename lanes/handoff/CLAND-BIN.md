@@ -18,3 +18,5 @@ Branch claude/cland-bin-1115 @3d2854f4fab on hub (new branch off claude/fable-ge
 1. c1x_C__t1 census when its place ends (log ~/cland-bin-logs/proof_c1x_C__t1.log); kv3_hub_Wo place end.
 2. Decide u_st plan sites (above); then eq default-on only if every hop <= 405 um.
 3. Coordinate: TYPE-QCCB-GEN owns core_input_chain.tcl (untouched here). GENBUG-IMPL: install nothing yet, G2 opt-in; face_flops.tcl G6 change is safe to install.
+
+- 2026-11-15 CLAND-BIN CHECK epyc7: two c1x_C__t1 openroad global_place = two different dirs. PID 839846 container dpkit-dsdv_slice_c1x_C__t1-1935886 mounts /srv/opentallas-scratch2/claude/cland-bin/proof/dsdv_slice_c1x_C__t1 (MINE, the proof, 173% CPU, log growing). PID 161160 container dpkit-dsdv_slice_c1x_C__t1-1525696 mounts the wave kit items/dsdv_slice_c1x_C__t1/attempt_7 (S81 wave, not mine) - left alone. No stray of mine; kv3_hub_Wo on epyc2 at 103% CPU, not hung.
