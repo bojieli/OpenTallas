@@ -68,7 +68,8 @@ def test_illegal_span_is_wire_edge_within_spacing_of_the_stripe():
 def test_region_mode_is_default_off_and_emits_the_adjustment_not_obstructions():
     t = (HERE / "pg_track_truth.tcl").read_text()
     assert 'OT_PG_TRACK_TRUTH_MODE) eq "region"' in t
-    assert "set_global_routing_region_adjustment $um -layer $ln -adjustment 1.0" in t
+    assert "set_global_routing_region_adjustment $um -layer $ln -adjustment [ot_pgtt_region_adj]" in t
+    assert "return {M5 M6 M7}" in t and "OT_PG_TRACK_TRUTH_REGION_MARGIN_DBU" in t     # = DRT0255-PROOF-1115 variant C defaults
     # the obstruction branch is untouched: still created when the mode is not region
     assert t.count("odb::dbObstruction_create") == 2 and t.index("if {[ot_pgtt_region_mode]}") < t.index("odb::dbObstruction_create")
     assert "OT_PG_TRACK_TRUTH removed" in t       # remove proc unchanged
