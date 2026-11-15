@@ -13,31 +13,6 @@
 # p95 +11.4 ps), covered by the hold margin; it is not a binding optimism.
 set ::ot_vmh_dir [file dirname [file normalize [info script]]]
 
-# STB-EDGE-1 (FABLE-KVRING-HOLD 11-14): a clock pin below an odd number of inverters sees the source RISE as its FALL, so the
-# property fallback reads arrival_max_fall there (same source edge as every other sink; rise would add half a period).
-# 1 if the walk from the pin back to the clock port crosses an odd number of INV*/CKINV* cells.
-proc ot_vmh_odd_parity {pin} {
-  set blk [ord::get_db_block]
-  set inst [$blk findInst [regsub {/[^/]+$} [get_full_name $pin] {}]]
-  if {$inst eq "NULL"} { return 0 }
-  set it [$inst findITerm [regsub {^.*/} [get_full_name $pin] {}]]
-  set par 0
-  for {set n 0} {$n < 64 && $it ne "NULL"} {incr n} {
-    set net [$it getNet]
-    if {$net eq "NULL"} break
-    set drv ""
-    foreach t [$net getITerms] { if {[$t isOutputSignal]} { set drv $t; break } }
-    if {$drv eq ""} break
-    set mn [[[$drv getInst] getMaster] getName]
-    if {[[[$drv getInst] getMaster] isBlock] || !([string match "BUF*" $mn] || [string match "INV*" $mn] || [string match "CKINV*" $mn] || [string match "HB*" $mn])} break
-    if {[string match "INV*" $mn] || [string match "CKINV*" $mn]} { set par [expr {!$par}] }
-    set it ""
-    foreach t [[$drv getInst] getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL"} { set it $t; break } }
-    if {$it eq ""} { set it NULL }
-  }
-  return $par
-}
-
 proc ot_vmh_reference {} {
   set py [file join $::ot_vmh_dir vclk_ref.py]
   if {![file isfile $py]} { error "OT_VCLK_MEASURED_HOLD: missing $py (kit predates the measured-frame hold step)" }
@@ -119,7 +94,7 @@ proc ot_vmh_pinreg_mean {} {
       if {[dict size $fwd_roots] && [llength [info commands ot_cf_root]]} { set name [ot_cf_root $name] }
       dict set clocks $name 1
       if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [lindex $cl 0] [expr {[info exists ::ot_ioref_scene] ? $::ot_ioref_scene : ""}]]} }
-      if {$a eq ""} { catch {set a [get_property $p [expr {[ot_vmh_odd_parity $p] ? "arrival_max_fall" : "arrival_max_rise"}]]} }
+      if {$a eq ""} { catch {set a [get_property $p arrival_max_rise]} }
     }
     if {![string is double -strict $a] || [regexp -nocase {inf|nan} $a]} { incr bad; continue }
     set sum [expr {$sum + $a}]; incr n

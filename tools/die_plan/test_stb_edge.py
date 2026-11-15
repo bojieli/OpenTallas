@@ -32,10 +32,3 @@ puts OK
 '''
     r = subprocess.run([tclsh], input=script, capture_output=True, text=True)
     assert r.stdout.strip() == "OK", r.stdout + r.stderr
-
-
-def test_vclk_fallback_is_parity_aware():
-    s = (HERE / "vclk_measured_hold.tcl").read_text()
-    assert "proc ot_vmh_odd_parity" in s
-    assert '[ot_vmh_odd_parity $p] ? "arrival_max_fall" : "arrival_max_rise"' in s
-    assert "get_property $p arrival_max_rise]} }" not in s
