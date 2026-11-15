@@ -1,4 +1,4 @@
-import json, os, re, subprocess, sys, tempfile, unittest
+import json, os, re, shutil, subprocess, sys, tempfile, unittest
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -51,6 +51,27 @@ class QnAlternate(unittest.TestCase):
         a = [l for l in NET.splitlines() if "ot_dp_st " not in l]
         b = [l for l in out.splitlines() if "ot_dp_st" not in l][: len(a)]
         self.assertEqual(a, b)
+
+
+@unittest.skipUnless(shutil.which("yosys"), "yosys not on PATH")
+class QnCutLec(unittest.TestCase):
+    def lec(self, conv_edit=None):
+        with tempfile.TemporaryDirectory() as d:
+            src, dst, rep = (os.path.join(d, n) for n in ("in.sv", "out.sv", "rep.json"))
+            Path(src).write_text(NET)
+            subprocess.run([sys.executable, "-I", str(HERE / "qn_alternate.py"), src, dst, rep], check=True, capture_output=True)
+            if conv_edit:
+                Path(dst).write_text(conv_edit(Path(dst).read_text()))
+            subprocess.run([sys.executable, "-I", str(HERE / "qn_cut_lec.py"), src, dst, os.path.join(d, "o")], capture_output=True)
+            return json.loads(Path(d, "o", "cut_lec.json").read_text())["verdict"]
+
+    def test_rewrite_equivalent(self):
+        self.assertEqual(self.lec(), "EQUIVALENT")
+
+    def test_broken_pair_caught(self):
+        # u_a1 back to a plain station: the a-chain output flips polarity
+        edit = lambda t: re.sub(r"ot_dp_stn (#\(\.W\(8\)\) u_a1 .*?)\.qn\(", r"ot_dp_st \1.q(", t)
+        self.assertEqual(self.lec(edit), "NOT_EQUIVALENT")
 
 
 if __name__ == "__main__":
