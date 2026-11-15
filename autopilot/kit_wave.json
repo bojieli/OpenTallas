@@ -683,7 +683,11 @@
     "kv3_hgi_v5": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a6 13 h on superseded event kv102sem_ftgrid; release on the current event",
     "kv3_pv_v1n*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1546 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1160 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-641 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key."
+    "kv3_hgi_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-641 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
+    "kv3_hg": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
+    "kv3_hg_v1": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
+    "kv3_hg_v1p3": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
+    "kv3_hg_v1p4": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6"
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
