@@ -91,6 +91,17 @@ def test_island_must_not_overlap_a_phy_pg_domain(monkeypatch):
     assert any("PHY PG domain phy_x" in e for e in RI.check(iplan(), "mid"))
 
 
+def test_phy_pg_domain_value_error_surfaces_in_the_check(monkeypatch):
+    """S81-PHYPG-1: check() no longer swallows the ValueError of phy_pg_domains (t12 'u_dmem straddles phy_lk_WS3')"""
+    def boom(P, tn):
+        raise ValueError("type mid: macro u_dmem straddles PG domain phy_lk_WS3 [0, 840.4, 2437.32, 1226.88]")
+    monkeypatch.setattr(GP, "phy_pg_domains", boom)
+    errs = RI.check(iplan(), "mid")
+    assert any("u_dmem straddles PG domain phy_lk_WS3" in e for e in errs), errs
+    with pytest.raises(ValueError, match="straddles"):
+        RI.island(iplan(), "mid")
+
+
 def test_plan_g0_reports_an_invalid_island():
     """schema.validate runs the island check next to the pad-clock check (G0 local consistency)."""
     def errs(rect):
@@ -181,7 +192,8 @@ def test_domain_patch_keeps_the_phy_domain_floor(monkeypatch):
     p.die.setdefault("pg", {})["domains"] = [dict(name="phy_x", rect_um=list(p.rect(inst)))]
     monkeypatch.setattr(GP, "phy_pg_domains", lambda P, tn: [("phy_x", "VDDPHY", "VSS", [240.0, 947.16, 2500.0, 1226.88], ["u_prx"])])
     assert RI.domain_patch(p, "mid")["phy_x"][1] == 947.16 + p.rect(inst)[1] or RI.domain_patch(p, "mid")["phy_x"][1] > p.rect(inst)[1]
-    assert set(RI.domain_patch(p, "mid")) == {"phy_x"} and "die_pg_domain_rects" in RI.plan_patch(p, "mid")
+    assert set(RI.domain_patch(p, "mid")) == {"phy_x"}
+    assert "die_pg_domain_rects" not in RI.plan_patch(p, "mid")      # S81-PHYPG-1: the die-rect shrink is not part of the patch
 
 
 # ---------------------------------------------------------------------------------------------- min_early_ps

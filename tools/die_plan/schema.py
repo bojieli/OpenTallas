@@ -406,6 +406,9 @@ SCHEMA = {
                     # S81-TYPES-6 11-07 (gen_phys.phy_pg_clip, COORD 23:0x (a)): PHY PG region + hard blockage clipped to
                     # the PHY macro bounding box grown by this PG landing margin (um) on all four sides
                     "phy_pg_clip_um": {"type": "number", "minimum": 0},
+                    # S81-PHYPG-1 11-15 (gen_phys.phy_pg_domains, FABLE-TRIAGE-S81 7.4): the placed blocks that are the PHY
+                    # supply loads; only they seed the PHY PG region (key absent = every placed block inside the die domain rect)
+                    "phy_pg_macros": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
                     # S81-RCK-3 11-06 (rck_band.tcl): first-stage capture flops of this receiver macro FIRM on the rows
                     # right under its PHY PG region, at the x of the macro output pin
                     "rck_band": {"type": "object", "additionalProperties": False, "required": ["inst"],
