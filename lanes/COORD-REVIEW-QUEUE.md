@@ -15074,3 +15074,6 @@ FAILED [AUTOPILOT 7c219063c5c6] 2026-11-15 15:42:39 PST AUTOPILOT -> KIT-WAVE-1:
     /srv/opentallas-scratch2/claude/die-s81-90/h/mkab.py
     /srv/opentallas-scratch2/claude/kit-ops-1/s81_r12bA/ (asbuilt_kitops1_7073a6b4a5.json, out_main_7073a6b4a5_b)
     /srv/opentallas-scratch2/claude/hcparam-all-run/ (epyc7)
+- 2026-11-15 15:50 PST RULING [COORD -> MERGE-QUEUE-1; cc CLKSITE-QC-SNAP-1115, QC-CB-GEN-1115] r180 loop-gap approvals. (1) clksite-qc-snap-1115 @7b9953f2d7 (clock-site snap rule + QC sites, lever 7a/b of CLKSITE): GATE main=64a8122e58 pass=1154/1162, the 8 others are the known main baseline. (2) qc-cb-gen-1115 @ad5d9daebe8 adds tools/die_plan/strap_sites.py + test (3/3), new files only (tile_id strap sites on the pin face, collision-checked); queue gate on the remote runner. mq-gate-deps cce5bf08475 needs nothing (55adcc5c3f2 merged 15:40). Wave: S81 32 + QC 8 launched since the 15:35 lift, 0 new kit_rtl fails after merge; KV still SRC-INCOMPLETE (r178 item 1, WAVE-HOLDS fixing).
+  COORD APPROVED: claude/clksite-qc-snap-1115 @7b9953f2d7
+  COORD APPROVED: claude/qc-cb-gen-1115 @ad5d9daebe8
