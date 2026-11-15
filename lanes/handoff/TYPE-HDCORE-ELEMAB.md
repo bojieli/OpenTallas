@@ -24,3 +24,5 @@
 ## 11-14 relaunch 2 (runs2/)
 - Second face_guard FAIL: my regenerated kits had lost the ft_ports.json declaration (a stale local post_kit.py overwrote the fixed one on epyc9). post_kit.py is now complete (ft declare + sdc_lint ft lists + face_guard ft skip + pregrt hook); gen_all.sh regenerates all 4 kits into kits2/. All 4 have ft_ports.json, ft-safe SDC, M4/M5 tracks 0.012.
 - Relaunched A1/B1 (intel1) + A2/B2 (epyc9) from runs2/<form>/kit, client logs intel2 ~/tmp/hdcore2_<form>.log.
+## 11-14 19:25 successor
+- A1/B1 intel1, A2/B2 epyc9 (runs2) alive, waiting memory in ot-heavy. Waiter ~/tmp/hdcore2_waiter.sh logs ~/tmp/hdcore2_waiter.log. Next: on finish pin-match, signoff, archive, AUTO-RESIGN.
