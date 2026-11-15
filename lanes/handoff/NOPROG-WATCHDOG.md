@@ -24,3 +24,7 @@ OWNER ORDER 11-14: "we need a no progress watchdog rather than a time limit."
 
 ## 11-14 18:5x update
 - First act pass cancelled 10 jobs (163.6 GB, 77 reserved cores, ~14 busy): see lanes/NOPROG.tsv.  Superseded kit dirs from kit_wave_stages matched 35 live builds, so they are listed as SUPERSEDED? and NOT auto-cancelled (COORD to confirm).  Branch head now ad0d1cad3a2.  LEC jobs still writing hyp files (serdes t2, seqhost t1, slice_iq_C t1) are alive by rule.
+
+## 11-14 19:2x successor update
+- Both open items are DONE and deployed (md5 50b485b2.. identical on all 7 hosts, timer active): (1) LEC > 24 h advisory cancel (LEC-only, or route result exists; standalone LEC container by exact docker stop); (2) SUPERSEDED auto cancel (kit plan sha not a live adopted plan) with keep list lanes/NOPROG-KEEP.tsv holding the 9 col representatives + /claude/s81-col-inherit/ forms.
+- Branch claude/noprog-watchdog-1114 head 26d5f26641f (on origin, 26 tests pass) is NOT on main yet: READY posted to ROOT-MERGE-63 19:2x.
