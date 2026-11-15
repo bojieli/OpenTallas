@@ -415,6 +415,9 @@ class Classify(unittest.TestCase):
         cases = [
             ("place", "ot-run: NOT RUN (no memory within --max-wait)", "INFRA"),
             ("place", "docker: exit 137 OOMKilled", "INFRA"),
+            # KIT-OPS-5 11-14: stale admission bundle refuses the late ECO; the route FAIL text rides along but INFRA wins
+            ("route", "late-ECO exhausted (1 it, 98.6 s): iteration 1: staged late-ECO hook lacks the runtime scope "
+                      "postcondition; refused before physical repair | hold_ff: FAIL WNS -168.51 ps, 4436 endpoints", "INFRA"),
             ("place", "FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)", "RTL"),
             ("place", "FACE_GUARD FAIL shared 7645 bits", "PLAN"),
             ("place", "[ERROR ORD-2013] instance u_m LEF master ot_sram_1r1w_32x64_m1 not found", "PLAN"),
