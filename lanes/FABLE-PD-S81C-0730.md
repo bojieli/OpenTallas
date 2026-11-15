@@ -126,3 +126,16 @@ Fix, ranked (CORE-BKSEL-1115; CTS-only A/B from the nsesc 3_place.odb, minutes e
 - bksel B1 depth: the 650 precedent is the hq3 build, before the HLAT RTL and the pk2 ETM landing. Not run.
 - idxE estimate (210 ps) and free M5 tracks for the two face pins. Not run.
 - Count of endpoints in my hold reads is from report rows (about 20 / 1,680 / 1,440), pre-repair, placement RC.
+
+## 7. Follow-up 11-15 08:5x: bksel B1 result (answer to COORD)
+
+MEASURED (my STA read of a copy of b1c 4_cts.odb, epyc8 `fable-pd-s81c/bkB1c`)
+- The 2 outliers are the line-51 fold: `f_c_nf[0]`, `lane_nf[348]` (raw 720.9 / 785.9, minus 416.5). Real pin-reg spread: 83 ps.
+- CTS inserted 0 balance buffers, so macros do not set the depth. Register tree = 3 trunk + 17 BUFx24 stages, about 29 ps each.
+- FF hold: 3,400 of 3,781 endpoints are macro data pins (hist_bank, pk2), worst -149.5. B1 dropped the ETM landing: bank clk arrives 47 ps after its launch register, lib hold 125. Other endpoints: about 380, worst -38.5. Ports 0, but vclk is still 975 / 789.8.
+
+Decision
+1. Not B2. The 700 gate is withdrawn: it assumed early <= 250; the bound is 416.5.
+2. Form B1g = b1c + ETM landing: hist_bank and pk2 clk pins tap a level-4 buffer of the register tree in their region (leaf minus about 140 TT; INFERENCE, not run).
+3. Reference = b1c mean 790.1 TT (FF from the same read) in kit vclk and plan row. Early 340.1 at bk_sel__t2 budget 450; at 250 it is 540 and cannot bind.
+4. CTS gate at that vclk: p1-p99 <= 110; ETM pins 130-190 before their registers; FF hold above -150 on <= 2,000 endpoints, ports included.
