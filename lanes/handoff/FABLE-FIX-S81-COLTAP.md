@@ -78,3 +78,10 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - r0 / h10_r1 (84): MAIN = IFN = 0 halves (lane S81-IFN0-HALVES, epyc7 s81-ifn0-halves/hw0, he0), fallback swap-only. Wave 2 pilots run on F2s3 (fallback read) and again on the IFN = 0 delta. I write that delta's rows (views, core tap insertion from the new core latency, .IFN(0)) when the lane posts signed halves.
 - Reset chain hops > 405 um on a pilot -> hop table to FABLE-DIE-S81, site rows in the same next delta.
 - F2s3 bind restarted 17:1x UTC by DIE-S81-92 (bk_sel overlay ovl_F2s3, 26 files; plan 012db35daaea). Pilot gen needs out + src + ovl; ask DIE-S81-92 for the replica paths if not posted.
+
+## 13:3x 11-16: after the second limit
+- F2s3 012db35daaea: BIND_RC 0, LATCHECK 873/873, lint 395/395, hard_core_param 0, ADOPTED (r331). Col keys stay held on col-wave1 / col-wave2.
+- While I was limited Codex (covering DIE-S81-92 and this lane) started a GEN-ONLY job for the five pilots on epyc10: /srv/opentallas-scratch2/claude/fable-fix-s81-coltap/countable_F2s3/gen/<type> (script gen_five_prepared_f2s3_codex.sh, client log intel2 ~/fable-fix-s81-coltap/gen_five_prepared_f2s3_codex.log, tools tools-converge/s81/gen_e37_D2_exec, src kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2). 4 kits done at 21:19Z, r2 last. No route was started by it.
+- Kit check (col_h9_r1 pilot): core_taps early 215.39 / 184.57 / 53.17, sequencers 371.22 (lead 100), window 40, ETAP + SRC tree, tap_balance top-up line present, OT_TT_SETUP_REPAIR both.
+- NEXT (mine): when gen ends, rsync countable_F2s3/gen to the SAME path on epyc7 and epyc8 (epyc10 can ssh them), then from intel2 per kit: ot-run --mem 64 --threads 16 --hosts epyc7,epyc8 --dir <gen> -- bash <gen>/run_kit.sh <gen>/<type> route 64 16. Reads per r310: 4_1_cts.log OT_TAP_CORE, then STA on the reloaded 5_1_grt DB (die RC 1.00) + GRT overflow; post col-wave1 / col-wave2 RESULT; follow to sign-off; export signed records to AGIdock /archive/opentallas-signed-1114 + rtx-pro.
+- S81-IFN0-HALVES: hw1p / he1p clean GRT, TT +2.9 / +0.3 on the GRT DB, FF hold -25 / -13 pre-DRT, face CK 394-398 TT; both in route on epyc7.
