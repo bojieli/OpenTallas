@@ -165,6 +165,7 @@ proc pg_classes {when {open ""}} {
     close $f
   }
 }
+if {[file exists /work/hold_sdc_guard.tcl]} { source /work/hold_sdc_guard.tcl }   ;# HOLD-SDC-1116
 set pg_w0 [pg_hold]; set pg_n0 [sta::endpoint_violation_count min]; set pg_s0 [pg_setup]
 set pg_i0 [llength [$pg_blk getInsts]]; set pg_t0 [clock seconds]
 puts "OT_PREGRT_FF_HOLD before wns $pg_w0 endpoints $pg_n0 insts $pg_i0 setup_wns $pg_s0 scenes [expr {$pg_two ? {TC+BC} : {BC only (no TLIBS: setup guard at FF)}}] guard $pg_guard"

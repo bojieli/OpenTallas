@@ -1,3 +1,5 @@
+# HOLD-SDC-1116: the hold repair sees the sign-off IO constraints (hold_sdc_guard.tcl wraps repair_timing)
+if {[file exists [file join [file dirname [info script]] hold_sdc_guard.tcl]]} { source [file join [file dirname [info script]] hold_sdc_guard.tcl] }
 # HOLD PAD = HB4 (S-NORM 2026-10-15, measured on s81hc_ctfxnt_ref v5 CTS): ORFS asap7 DONT_USE_CELLS '*xp*_ASAP7*' bars
 # every HBnxp67 hold cell from rsz, so repair_timing -hold pads with BUFx2 (FF ~15 ps / 0.0729 um2 per cell).  A strip
 # whose every boundary bit needs ~75 ps of contract hold delay (input min L-50 / output min -L-50, +25 uncertainty,
