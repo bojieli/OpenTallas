@@ -12,8 +12,12 @@ run() { l=$1; shift
 }
 a=$(run base); echo "$a"
 m=$(run mut_stale -DRMRPC_MUT_STALE); echo "$m"
+k=$(run dkreg -GDKREG=1); echo "$k"
+n=$(run dkreg_mut_nodd -GDKREG=1 -DDKREG_MUT_NODD); echo "$n"
 v=PASS
 case "$a" in *" PASS") ;; *) v=FAIL;; esac
 case "$m" in *" FAIL") ;; *) v=FAIL;; esac
+case "$k" in *" PASS") ;; *) v=FAIL;; esac
+case "$n" in *" FAIL") ;; *) v=FAIL;; esac
 echo "PDIE_FANOUT_EQ $v"
 [ $v = PASS ]
