@@ -2796,6 +2796,13 @@ def kit_windows(pc, intra_override=None, plan=None):
         import gen_phys
         from types import SimpleNamespace
         shim = SimpleNamespace(clock=pc, die=(plan or {}).get("die", {"period_ps": float("inf")}))
+        if plan and plan.get("partition_types") is not None:
+            # FABLE-DIE-QC 11-16: a tap_offset row (R-CLOCK-7) makes gen_phys.tap_window_ps read the type's early core taps
+            # (schema.core_taps -> P.types / P.parts); the two-field shim raised AttributeError on every QC plan since S3R,
+            # so the QC die STA never produced a result.  The shim carries the plan's types and partitions too.
+            shim.types = plan["partition_types"]
+            shim.parts = {p["name"]: p for p in plan.get("partitions", [])}
+            shim.raw = plan
         wintra = dict(ps=gen_phys.tap_window_ps(shim), basis="plan clock.tap_window.window_ps (gen_phys."
                       "tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap)")
         # TAPWIN-1109: an unmeasured type's kit charges only the related-pair budget X = min(window_ps,

@@ -848,3 +848,19 @@ def test_multiroot_directional_roots_do_not_invent_boundary_paths(tmp_path):
     assert r['hold_measured']['pairs_measured'] == 1
     assert r['hold_measured']['pairs_unmeasured'] == 0
     assert r['worst_hold']['launch'] == 'a' and r['worst_hold']['capture'] == 'b'
+
+
+def test_kit_windows_per_region_with_tap_offset_rows():
+    """FABLE-DIE-QC 11-16: per_type_ps + a tap_offset row on a type with an early core tap must not raise (QC S3R..S4q9c)."""
+    pc = dict(seam_hold=dict(sender_ps=25, seam_ps=110), tap_window=dict(window_ps=180.0, per_type_ps={"t": 120.0}),
+              insertion_ps=250.0,
+              tap_offset=dict(per_port_ps={"t": {"clk_c0": {"TT": -100.0, "FF": -80.0, "tol": 10.0},
+                                                 "clk": {"TT": 20.0, "FF": 15.0, "tol": 10.0}}}))
+    plan = dict(die=dict(period_ps=833), clock=pc,
+                partition_types={"t": {"clock": {"core_taps": "early", "taps": [
+                    {"kind": "core", "xy": [10.0, 10.0], "core": "u_c", "insertion_ps": 300.0}]}},
+                                 "u": {}},
+                partitions=[dict(name="p0", type="t"), dict(name="p1", type="u")])
+    w = R.kit_windows(pc, None, plan)["intra"]
+    assert w["per_region"]["p0"] == 140.0          # span of the offsets form: (20 + 10) - (-100 - 10)
+    assert w["per_region"]["p1"] == 180.0
