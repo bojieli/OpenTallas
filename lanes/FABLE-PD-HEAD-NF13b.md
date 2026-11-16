@@ -61,11 +61,11 @@ wrapper transport must equal table - fixed: NF13a 18 = 19 - 1 and 12 = 13 - 1 (P
 NF13b wrapper transport is 19 and 13, so the lane delivers 20 and 14 against tables 19 and 13. The checker passes them
 because `lane_asbuilt_latency` accepts delta 0 before `reclassify` looks at fixed cycles: a fixed-in-core lane passes
 at delta 0 and at delta -fx. lat8.py raised only the 8 lanes the checker named. Tell: the summary field
-`fixed_in_core` reads 8 on NF13a; on NF13b these four no longer count in it.
+`fixed_in_core` reads 12 on NF13a (`latcheck.json`) and 8 on the 01:51 NF13b run: these four dropped out of it.
 
 Fix (HEAD-100, this event): raise `latency.lanes[...]` `cycles`, `natural`, `clock_landing` by 1 on coll_EN1_d,
 coll_WS1_d, coll_ES1_d, coll_HOST0_u as well (20, 20, 20, 14). Better: regenerate the table with the tool that wrote
-it instead of the hand edit, and diff: exactly 12 rows +1. Accept test: LATCHECK 329/329 with `fixed_in_core` = 8 and
+it instead of the hand edit, and diff: exactly 12 rows +1. Accept test: LATCHECK 329/329 with `fixed_in_core` = 12 and
 delta -1 on those four rows in `latcheck.tsv`.
 
 ## 3 dsrep 8 on hd_st_turn: CORRECT (MEASURED)
