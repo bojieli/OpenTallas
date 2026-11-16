@@ -1152,6 +1152,7 @@ SCHEMA = {
                                    "type": "object", "additionalProperties": False, "required": ["TT", "FF", "tol"],
                                    "properties": {"TT": {"type": "number"}, "FF": {"type": "number"}, "tol": _nonneg}}}},
                                           "source": {"type": "string"}, "proof": {"type": "string"},
+                                          "schema": {"type": "string"}, "status": {"type": "string"},   # TOOLS-CONVERGE-1116: QC s29 plan carries both (old tree schema was an open object)
                                           "note": {"type": "string"}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
