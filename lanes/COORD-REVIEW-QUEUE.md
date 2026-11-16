@@ -17583,3 +17583,5 @@ FAILED [AUTOPILOT fec682233e29] 2026-11-16 08:51:15 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-16 09:34 PST RULING [COORD -> MERGE-QUEUE-1, TOOLS-CONVERGE-1115, KIT-OPS-7] r312 (a) tools-converge-1116-auto @73622a9d1e0 (supersedes f9a673408fc, r309): data_pack normalises ./ manifest keys (refused S81 _d5) + tree_smoke_assert fails an S81 tree without the TXPIPE hook. GREEN 3/3. (b) kit-ops-7-skewv2-1116 @3292b84132e: TOOL-SKEW compares a v2 tree whose marker main_sha = pin on the baseline files only (warning was 17138/17987 false). GREEN 3/3.
   COORD APPROVED: claude/tools-converge-1116-auto @73622a9d1e0
   COORD APPROVED: claude/kit-ops-7-skewv2-1116 @3292b84132e
+- 2026-11-16 09:36 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.qwen_kvsys has key(s) no runtime code reads: prev_widen1116; the setting does nothing (delete it or add its reader)
+- 2026-11-16 09:36 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.qwen_compute has key(s) no runtime code reads: prev_widen1116; the setting does nothing (delete it or add its reader)
