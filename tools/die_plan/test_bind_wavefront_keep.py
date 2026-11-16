@@ -30,7 +30,7 @@ endmodule
     counts=[]
     for name,defs in [('mutant',cells.replace('keep_hierarchy, keep','keep_hierarchy')),('fixed',cells)]:
         src=tmp_path/(name+'.sv');out=tmp_path/(name+'.json');src.write_text(defs+top)
-        p=subprocess.run([exe,'-Q','-q','-p',f'read_verilog -sv {src}; hierarchy -top top; synth -top top; write_json {out}'],capture_output=True,text=True)
+        p=subprocess.run([exe,'-Q','-q','-p',f'read_verilog -sv {src}; hierarchy -top top; synth -top top; write_json {out}'],capture_output=True,text=True,stdin=subprocess.DEVNULL,timeout=300)
         assert p.returncode==0,p.stdout+p.stderr
         import json
         c=json.loads(out.read_text())['modules']['top']['cells']
