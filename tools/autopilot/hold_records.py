@@ -286,8 +286,8 @@ def compile_holds(cfg, ctx=None):
     released = []
     comp, info = {}, {}
     for die, ks in (cfg.get("_hold_added") or {}).items():          # recompile: drop what an earlier pass added
-        h = ((cfg.get("dies") or {}).get(die) or {}).get("hold_items")
-        for k in ks:
+        for name, k in ks:
+            h = ((cfg.get("dies") or {}).get(die) or {}).get(name)
             if isinstance(h, dict):
                 h.pop(k, None)
     cfg["_hold_added"] = added = {}
@@ -300,9 +300,9 @@ def compile_holds(cfg, ctx=None):
             continue
         cur = plan_id(d)
         lists = d.get("hold_event_items") or {}
-        if not isinstance(d.get("hold_items"), dict):
-            d["hold_items"] = {}
-        hold = d["hold_items"]
+        for name in ("hold_items", "route_hold_items"):
+            if not isinstance(d.get(name), dict):
+                d[name] = {}
         rec_dies.add(die)
         for rec in recs:
             sha = str(rec.get("plan_sha") or "")
@@ -315,13 +315,15 @@ def compile_holds(cfg, ctx=None):
             rel = [str(t) for t in rec.get("release") or [] if str(t).strip()]
             zero = (not rec.get("migrated")) and bool(rec.get("patterns")) and not keys
             held = 0
+            tname = "route_hold_items" if rec.get("route") else "hold_items"       # route: true = a ROUTE-HOLD (place/CTS/GRT still run)
+            hold = d[tname]
             for k in keys:
                 if rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel):
                     released.append((die, k, " + ".join(rel)))
                     continue
                 if k not in hold:
                     hold[k] = rec.get("reason", "")
-                    added.setdefault(die, []).append(k)
+                    added.setdefault(die, []).append((tname, k))
                 comp.setdefault(die, {})[k] = rec.get("id")
                 held += 1
             info.setdefault(die, []).append({"id": rec.get("id"), "plan_sha": sha, "stale": stale, "rebound": rebound,

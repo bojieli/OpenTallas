@@ -248,6 +248,20 @@ class T(unittest.TestCase):
         HR.convert_keys(c, {"hbm": {}})                                           # pruning keeps a switch_only record
         self.assertEqual(len(d["hold_records"]), 1)
 
+    def test_route_record_compiles_into_route_hold_items(self):
+        c = base()
+        d = c["dies"]["s81"]
+        d["route_hold_items"] = {"keep": "legacy"}
+        HR.add_record(c, "s81", rec(id="rt1", route=True, patterns=[], items=["col_a__t1"], release=["event_adopt:B6gG3b"]))
+        HR.compile_holds(c)
+        self.assertEqual(d["route_hold_items"], {"keep": "legacy", "col_a__t1": "why"})
+        self.assertEqual(d["hold_items"], {})
+        HR.compile_holds(c)                                                          # idempotent
+        self.assertEqual(len(d["route_hold_items"]), 2)
+        d["event"], d["plan"] = "B6gG3b", "/x/B6gG3b.json"
+        HR.compile_holds(c, HR.Ctx(event_met=KW._hold_term_met))
+        self.assertEqual(d["route_hold_items"], {"keep": "legacy"})                   # released, legacy key untouched
+
 
 if __name__ == "__main__":
     unittest.main()
