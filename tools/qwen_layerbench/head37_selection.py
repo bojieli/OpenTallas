@@ -89,11 +89,12 @@ def validate(selection,*,component_only=False,require_source_complete_tt_parent=
             pb=source(parent)
             if flag(parent,pb)!=1 or 'qfd_dv_cmd_cal_mu_head37'not in pb or '.HEAD_STAGE37(HEAD_STAGE37)'not in pb:
                 raise ValueError('actual TT parent does not select the candidate stage37 calendar source')
-            window=json.loads(Path(selection['loader_windows']).read_text())
-            if window.get('status')!='COMPLETE_SOURCE_SELECTED_LOCAL4_WINDOWS' or window.get('unresolved'):
-                raise ValueError('actual complete loader-window join is missing')
-            if {(v['slice'],v['user'])for v in window['windows']}!={(x,u)for x in range(12)for u in range(4)}:
-                raise ValueError('all48 source-selected per-user loader windows are required')
+            import head37_windows
+            wp=Path(selection['loader_windows'])
+            window=json.loads(wp.read_text())
+            if window.get('table_mask_receipt_sha256')!=hashlib.sha256(rp.read_bytes()).hexdigest():
+                raise ValueError('loader windows do not select the actual complete table-mask receipt')
+            head37_windows.load(wp,require_all=True)
         if require_source_complete_tt_parent and not selection.get('source_complete_tt_parent_selected',False):
             raise ValueError('actual source-complete TT parent has not selected the candidate CTLM body')
     return dict(schema='opentallas.qc-head37-selection-verdict.v1',status='DEFAULTS_OFF_COMPATIBLE'if not cf else('COMPONENT_PAIR_AND_MASKS_VALID_NOT_INSTALLED'if component_only else'COMPLETE_SOURCE_SELECTION_VALID_NOT_INSTALLED'),
@@ -106,7 +107,7 @@ def validate(selection,*,component_only=False,require_source_complete_tt_parent=
 def resolve(selection,base):
     import copy
     s=copy.deepcopy(selection)
-    for e in [s['ctlm']]+s['loaders']:
+    for e in [s['ctlm']]+s['loaders']+([s['ctlm_parent']]if 'ctlm_parent'in s else[]):
         if not Path(e['source']).is_absolute():e['source']=str((base/e['source']).resolve())
     for k in ['selected_identity','mask_receipt','masks','physical_assignment','native_window','complete_manifest','loader_windows']:
         if k in s and not Path(s[k]).is_absolute():s[k]=str((base/s[k]).resolve())
