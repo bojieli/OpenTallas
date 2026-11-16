@@ -35,3 +35,41 @@
 - hc1 density warning inspected: slw_hc1__cl68f9248e__cle683a076 synth378899/439910um2=.8613 cells/um2, macros0. Actual placed TSV380897 cells sum area52245.23um2=11.876% fill,70.09% empty bins,GRT0. Image lower-middle40-60%,smallSW70%,large empty upper region. No outline growth delta justified. Real risk is placement/reach426 captures >405um,max577.96; follow routed timing. Review results/geom_review/qc_hc1_density_1116.json.
 - New v2 hc2 wave clf60c5152/clcc5e3e61 a2 both in place; confirmed config TT_SETUP_DESIGN1 MARGIN30 PREGRT_FF_HOLD1 GUARD45.
 - FABLE-DIE-QC chain s4q9c epyc2 still clock kit active; PID1173610 measured82.5% CPU,1:05 CPU after1:18 elapsed. Preserve. Derive clock delta only once REG_STA exists as original handoff instructs.
+
+## Codex physical handback — Claude reset, 2026-11-16
+
+Parked immediately on root's reset instruction. No new validation, retries, edits or launches after parking. Leave the following progressing jobs and the one already armed watcher running. These are last observed states, not rechecked at handback. Owner academic gates: DRC 0, TT >= -42 ps, FF >= 0, LEC equivalent; nominal final 833 ps / setup uncertainty 0 / hold 25.
+
+### HC2 sticky-fault P3
+
+- epyc10 unit `oth-ubuntu-1523667-1794852278`, container `dpkit-sle_hc2__cl9c4c4509__clf60c5152-1524332`, plus its `-lec` async container. Hub client 297090; intel2 log `~/fable-fix-qc-hcfe/p3_fault_split.client.log`.
+- Root `/srv/opentallas-scratch2/claude/fable-fix-qc-hcfe/p3_fault_split_1116/gen/sle_hc2__cl9c4c4509__clf60c5152`; main `run_grt.log`. Last observed GRT pin access at 30000 groups. No final GRT/route result yet.
+- Actual pre-GRT FF repair completed: +4.808 ps / zero endpoints, +7517 hold cells, 403328 instances, legalization zero overlaps. Estimated TT remained +29.996 ps. This supersedes the earlier structural-guard PASS label, which alone was not signoff.
+- Async LEC was still CPU-active around three hours; no terminal verdict. Preserve it. Source/model commit `f41d943961254ae76b704e8bf7df54f3fbd9f3da`, pre-route review `a37b2630fc533902e3adfacdac388a9d0f869431`. Actual placed review `src/results/geom_review/qc_hc2_sticky_split_p3_placed_1116.json` remains uncommitted; leave it intact.
+- Paired PG-aware P3 E1 is STAGED, NOT LAUNCHED in `/srv/opentallas-scratch2/claude/fable-fix-qc-hcfe/p3_fault_split_e1_pg_1116`; use existing `bin/fx_run_e1.sh` only after fresh closed `5_1_grt.odb` exists. Start from pre-E1 DB, not damaged kept-TT guides. P2 PG-aware baseline completed at -132.61 ps / one endpoint. Helper is approved 8df7c2f. No new full-shape run is needed for MIF: HC2 has no MIF/read-extra parameter.
+
+### Segmented memory44 head (CBGLUE physical work)
+
+Base `/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44` on epyc2. Exact target ALIGN3 / EXTRA44 / SEG1 / KV1; six 32x64 SRAMs plus two TLS SRAMs. Source cc2 and legal model e061; actual head has no MIF parameter. Final N43 normalizes all external read-loop ages to 43, so one MEM44 profile is intentional; no MEM43 physical variant is needed.
+
+- Live unit `oth-ubuntu-3610370-1794861923`, container `ot-headseg44-kv1-mm`, tool session 29402. Output `runs_mm/headseg44_kv1`, durable `flow.log`, stage logs `work/orfs/logs/asap7/opentallas_qfd_dv_lane_h_su_mem9_asap7_ref_headseg44_kv1/base/`.
+- Last observed detailed-route optimization pass 2/3, roughly 5k intermediate violations and under 10 GB RAM; no terminal route/DRC verdict.
+- Measured first GRT: all layers 0 overflow, 75663 nets, 418912 um wire, 20.31% total routing usage. GRT repair eventually reported no setup violations at conservative implementation 770/60. Actual std 9162.2 um2 + macro 5174.2; 51.0% die / 54.2% core. Eight macros and channels fit. GRT density shows W/S/N peripheral hotspots; review is conditional, no blind growth/reroute.
+- Already ARMED final watcher on toolshost ubuntu/155.103.252.95, session 45147, `/tmp/headseg44_watch_mm_final.sh`; log `/home/ubuntu/fable-fix-qc-cbglue/headseg44_mm_final_gates.client.log`. It waits only for this container, then if complete 6_final.odb exists admits 48 GB / 4 threads to `final_gates_kv1_mm.sh`. It runs one exact 833/0/25 STA and one RTL-vs-final-netlist LEC. No complete DB => no gate launch. Complete DB is checked regardless of conservative implementation status.
+- Results will be `runs_mm/headseg44_kv1/final_nominal833/{corner_sta.json,lec/lec.json,timing_lec_outcome.json,status}`. Preserve strict reporter verdict separately; owner outcome uses TT >= -42 / FF >= 0 and LEC EQUIVALENT. DRC is separate normal route evidence.
+- Earlier failed `runs_full` (four missing exact cc2 Tcl assets) and `runs_cont` (incomplete MM entrypoint profile) are preserved. `helper_overlay_receipt.json` records four restored assets, 29 generated Tcl paths resolved. Complete runtime profile is `ordinary_profile_kv1.sh` plus config_mm; actual libraries are seven TT + seven FF, zero SS. Legacy scene labels ss/WC are aliases, not SS closure.
+
+### Full five-leaf memory44 group
+
+Base is the above headseg44 directory plus `group44`. Source `src_804_complete`, pinned `8047862496c55c12b8b0b87c02de147f959e26de`; actual top qfd_qc_su_lane_w_l0_m44s1, MEM44 / SEG1 / KV1, 760 inputs / 302 outputs.
+
+- Live intel2 client 1094414, epyc2 unit `oth-ubuntu-729807-1794862769`, container `ot-group44-w0-route3`. Output `runs_route3/group44_w0_nominal`, log `flow.log`; intel2 client log `~/coord/tmp/group44-route3.log`.
+- Last observed ordinary FF hold repair: -148.293 ps, TNS improving, about 429 buffers; prior post-CTS TT +2.841 ps / zero endpoints. No terminal TT/FF/DRC verdict.
+- No watcher is armed. `final_ttff.py` and `final_lec.sh` are staged only, NOT launched. Still need final timing/DRC and ONE whole-group RTL-vs-final-netlist LEC.
+- Canonical runtime is 833/0/25/HM0, complete MM TC(actual TT)/BC(actual FF). All 13 preserved 1_*/2_* outputs are marked old to avoid remap. Wrong initial route attempt and rejected route2 remain preserved. Client SIGTERM detached rather than stopping backend; its exact old unit/container were subsequently stopped. Current route3 is the intended live job.
+- Actual unchanged outline 414.72 x 267.84. Eight native macros, ten macro clock pins all net clk. True placed std+physical area 31666.5936 / (core108148.608 - macro5174.16768) = 30.7519%; keep distinct from GPlacer inflated area. Actual floorplan and placed density were personally reviewed; clear macro channels, soft logic distributed, no red corridor wall. Review `results/geom_review/actual_review.json`.
+- Initial FP failure was 12 nm pin-grid offset. Coherent -12 nm snap preserved W faces/order/.144 pitch and macro positions. Failed run intact. Continuation omitted only already measured nongating limited pre-placement sizing pass; ordinary placed repair and all final gates remain. Pinned OpenROAD legacy policy explains prior >1000-iteration no-progress exit; no live job was stopped for that plateau.
+
+### Die-clock C completed and parked
+
+`/srv/opentallas-scratch2/claude/fable-die-qc/delta/ca_pair_diag_1116/planner_fixed/` on epyc2. Source fix `dec8cc442acfcee01c5f3f85fd363db15188ef9e` pushed. Full corrected C planner PASS2993/zero failures; only three hypothetical C counts changed. All 468 changed C rows are same physical region in actual N43 and absent from its 2525 native CA ports. Therefore N43 CA/count/token delta is EMPTY: do not inject phantom rings or +833 ps costs. `ca_row_field_delta.json` and `n43_applicability_receipt.json` preserve exact coverage/schema. Canonical correction pushed `a9c9a5d1d6f68fda02eb6c976a871651147a4aea`; worker parked clean. Separate `delta/clock_c_1116` midrange-offset/window proposal remains unadopted old-view evidence.
