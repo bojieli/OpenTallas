@@ -86,6 +86,17 @@ class PinWire(unittest.TestCase):
         _, new, rep = (lambda L: (L, *A.merge_pin_wires(L, {"M6"})))(LEF.splitlines(keepends=True))
         self.assertEqual(rep["merged_rects"], 0)
 
+    def test_long_net_wire_stays_obs(self):
+        rects = "".join("     RECT  10 %d 10.024 %d ;\n" % (i, i + 1) for i in range(1, 40))
+        lef = LEF.replace("     RECT  10 0.084 10.024 1 ;\n", "     RECT  10 0.084 10.024 1 ;\n" + rects)
+        lines = lef.splitlines(keepends=True)
+        new, rep = A.merge_pin_wires(lines)
+        self.assertEqual(rep["skipped_long"], 1)
+        self.assertNotIn("RECT  10 1 10.024 2", "".join(new).split("PIN q")[0])
+        new, rep = A.merge_pin_wires(lines, max_rects=0)
+        self.assertEqual(rep["skipped_long"], 0)
+        self.assertGreater(rep["merged_rects"], 39)
+
 
 if __name__ == "__main__":
     unittest.main()
