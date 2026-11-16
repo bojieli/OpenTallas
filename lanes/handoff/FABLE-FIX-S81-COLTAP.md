@@ -38,3 +38,8 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - A wave is released when its pilots show post-CTS TT setup >= -42 on the reloaded 4_cts DB and GRT overflow 0, not at sign-off. Post exactly: `RESULT [FABLE-FIX-S81-COLTAP -> COORD] col-wave1 PASS: <numbers>` (and col-wave2). HOLDGEN keys on result:FABLE-FIX-S81-COLTAP:col-wave1 / col-wave2 (+ event_adopt:B6gF2s3 + lint_clean:s81).
 - Still follow every pilot to sign-off; a later-stage failure is posted and COORD re-holds.
 - Reset copies alone below -42 after CTS = not a PASS; post the numbers, COORD decides.
+
+## 07:5x 11-16: reset copies (COORD ruling)
+- Rule kept: no col-wave PASS while reset copies u_d*_Y -> _r<k> miss -42 after CTS.
+- FABLE-DIE-S81 lands reset-copy rows in F2s3 itself (asked 07:5x, numbers + Spec 1 form posted). DIE-S81-92 composes F2s3 once with both row sets. Copy sites must be taken from F2s3_preview.json (my rows move u_s<k> and the halves).
+- Each pilot read carries three class lines: go_tag, ef, reset copies.
