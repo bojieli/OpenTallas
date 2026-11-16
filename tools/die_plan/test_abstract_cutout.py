@@ -119,3 +119,19 @@ def test_coarsen_rows_clusters_and_budget():
 
 def test_coarsen_merges_overlaps():
     assert A.coarsen_windows([(0, 0, 10, 10), (5, 5, 15, 15)], gap_y=0.0, gap_x=0.0) == [(0, 0, 15, 15)]
+
+
+def test_closed_view_size_mismatch_is_refused(tmp_path):
+    """COORD r206: a closed view whose LEF SIZE differs from the plan outline falls back to the plan abstract (all dies)"""
+    import die_trial as D
+
+    class P:
+        types = {"same": dict(outline_um=[20.0, 10.0], module="m_same"), "narrow": dict(outline_um=[20.0, 10.0], module="m_nar"),
+                 "wide": dict(outline_um=[20.0, 10.0], module="m_wide"), "none": dict(outline_um=[5.0, 5.0], module="m_none")}
+    for tn, mod, size in (("same", "m_same", "20.0000 BY 10.0000"), ("narrow", "m_nar", "19.5 BY 10"), ("wide", "m_wide", "20 BY 10.2")):
+        (tmp_path / tn).mkdir()
+        (tmp_path / tn / f"{mod}.lef").write_text(LEF.replace("20.0000 BY 10.0000", size))
+    ok, refused = D.closed_view_candidates(P, tmp_path)
+    assert set(ok) == {"same"} and set(refused) == {"narrow", "wide"}
+    assert refused["narrow"]["view_size_um"] == [19.5, 10.0] and refused["narrow"]["outline_um"] == [20.0, 10.0]
+    assert D.closed_view_candidates(P, None) == ({}, {})

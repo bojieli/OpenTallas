@@ -4795,8 +4795,51 @@ def clear_fail_sig(st, rec):
     (st.get("fail_sigs") or {}).pop(f"{rec.get('die')}|{rec.get('item')}", None)
 
 
+def unfixed_match(cfg, die, cls, why):
+    """KIT-OPS-5 11-15 (COORD: the wave must stop auto-retrying an item whose last failure class is unfixed): the first
+    die option unfixed_classes {regex: reason} whose regex matches 'class|reason' of a FAIL, as (regex, reason), else None.
+    Counted for every class including INFRA, and NOT reset by an input-digest change; released only by deleting the key."""
+    pats = ((cfg.get("dies") or {}).get(die) or {}).get("unfixed_classes") or {}
+    text = f"{cls}|{why}"
+    for pat, reason in pats.items():
+        try:
+            if re.search(pat, text):
+                return pat, str(reason)
+        except re.error:
+            continue
+    return None
+
+
+def note_unfixed(cfg, st, rec, cls, why):
+    """record (or clear) the per die|item unfixed-class marker of a FAIL row; -> the marker or None"""
+    key = f"{rec.get('die')}|{rec.get('item')}"
+    um = st.setdefault("unfixed", {})
+    got = unfixed_match(cfg, rec.get("die"), cls, why)
+    if got is None:
+        um.pop(key, None)
+        return None
+    um[key] = {"pat": got[0], "reason": got[1], "attempt": rec.get("attempt"), "at": time.time()}
+    return um[key]
+
+
+def unfixed_why(cfg, st, die, item):
+    """'' or the BLOCKED-UNFIXED skip reason: the item's last FAIL matched a die unfixed_classes regex that is still listed"""
+    um = st.get("unfixed") or {}
+    m = um.get(f"{die}|{item}")
+    if not m:
+        return ""
+    if m.get("pat") not in (((cfg.get("dies") or {}).get(die) or {}).get("unfixed_classes") or {}):
+        um.pop(f"{die}|{item}", None)                                # the class was declared fixed: key deleted
+        return ""
+    return (f"BLOCKED-UNFIXED: last failure class unfixed ({m.get('pat')}: {str(m.get('reason'))[:160]}); "
+            f"release = delete dies.{die}.unfixed_classes[{m.get('pat')!r}]")
+
+
 def blocked_why(cfg, st, die, item, block=None):
     """'' or the BLOCKED-<class> skip reason of an item at the retry cap that the die's unblock list does not release"""
+    uw = unfixed_why(cfg, st, die, item)
+    if uw:
+        return uw
     c = (st.get("fail_sigs") or {}).get(f"{die}|{item}")
     if not c or int(c.get("n") or 0) < RETRY_CAP:
         return ""
@@ -8424,6 +8467,13 @@ def collect(AP, cfg, st, notices):
             else:
                 rec["infra_key"] = _ik
         c = note_fail_sig(st, rec, cls, why, inp=input_digest(cfg, rec["die"]))
+        _um = note_unfixed(cfg, st, rec, cls, why)
+        if _um:
+            rec["blocked"] = "BLOCKED-UNFIXED"
+            if rec["status"] == "RETRY-INFRA":
+                rec["status"] = "FAIL"                   # an unfixed class never auto-relaunches as infra either
+            AP.log(f"KIT-WAVE BLOCKED-UNFIXED {rec['die']}/{rec['item']}@{rec.get('attempt')}: class '{_um['pat']}' is listed unfixed "
+                   f"({_um['reason'][:160]}); no auto-retry until the key is deleted")
         if c and int(c.get("n") or 0) >= RETRY_CAP and blocked_why(cfg, st, rec["die"], rec["item"]):
             rec["blocked"] = f"BLOCKED-{c.get('cls') or cls}"
             if rec["status"] == "RETRY-INFRA":

@@ -2288,6 +2288,18 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def tt_setup_repair_mode():
+    """effective OT_TT_SETUP_REPAIR of this kit: cts | grt | both | off (the mapping of the step files in write_type_kit)"""
+    return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
+
+
+def tt_setup_repair_cfg():
+    """KIT-OPS-5 11-15 (COORD r214): the effective TT setup repair mode in EVERY kit's config.mk, so a reviewer can tell which kits
+    carry it (the gen env alone is not in the kit).  Exported as cts|grt|both|off; the step files stay gated by their .on flag."""
+    return ["# TT setup repair mode this kit was generated with (OT_TT_SETUP_REPAIR; off = no step)",
+            f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
+
+
 def pg_drt0255_cfg():
     """DRT0255 (FABLE-PD-DRT-1350) opt-in config.mk lines, from the gen environment: OT_PG_TRACK_TRUTH_MODE=region (GRT per-gcell
     capacity cut on the PG pair rows / columns instead of per-track obstructions) and OT_PG_PAIR_ROW_KEEPOUT=1 (ring / station / face-flop
@@ -3218,6 +3230,25 @@ def tap_group_exports(t):
     import re as _re
     _re.compile(rx)
     return [f"export OT_TAP_GROUP_RE = {rx}"]
+
+
+def private_leaf_exports(t):
+    """HEAD-SERDES-1115 11-15: default-off clock.private_leaf [{"like": <anchor instance>, "re": <sink regex>}] ->
+    OT_PRIVATE_LEAF_LIKE / OT_PRIVATE_LEAF_RE (private_leaf.tcl, post-CTS kit step).  The step clones the leaf clock buffer
+    that drives the anchor's clock pin and moves only the sinks matching re onto the clone (clock pins only; fail-open).
+    like = exact instance name (no '#', '$' or whitespace); re = sink regex without '#', '$' or whitespace (config.mk / make)."""
+    rows = t.get("clock", {}).get("private_leaf")
+    if not rows:
+        return []
+    if len(rows) != 1:
+        raise ValueError("clock.private_leaf: exactly one row per type")
+    like, rx = rows[0].get("like", ""), rows[0].get("re", "")
+    for k, v in (("like", like), ("re", rx)):
+        if not v or any(c in v for c in "#$ \t\n"):
+            raise ValueError(f"clock.private_leaf.{k} must be non-empty without '#', '$' or whitespace")
+    import re as _re
+    _re.compile(rx)
+    return [f"export OT_PRIVATE_LEAF_LIKE = {like}", f"export OT_PRIVATE_LEAF_RE = {rx}"]
 
 
 def tap_pair_affinity_exports(t):
@@ -5652,6 +5683,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
     cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
+    cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
@@ -5678,6 +5710,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
+    cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)
     cfg += rck_early_exports(P, tn)
@@ -6073,7 +6106,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # GENBUG-5 (11-15): merged-replica census after synth, placed-database hop census before CTS; both OFF unless the
     # generator env OT_MERGE_CENSUS / OT_HOP_CENSUS is 1 (fail) or warn (log only).  The flag file is read by run_kit.sh.
     # (kits without an opt-in key stay byte-equal: the helpers are copied only with their flag)
+    if t.get("clock", {}).get("private_leaf"):       # HEAD-SERDES-1115: post-CTS private leaf step (run_kit.sh), only with the row
+        shutil.copyfile(Path(__file__).with_name("private_leaf.tcl"), kd / "private_leaf.tcl")
     _tt = {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip())
+    (kd / "kit_effective_env.json").write_text(json.dumps({"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}, indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")
@@ -6690,6 +6726,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         mv -f /work/4_cts_pretapbal.odb \"\$TB\"; echo \"OT_TAPBAL_FALLBACK tapbal_grt.tcl tool crash (rc \$rc: \$(grep -Em1 'Signal [0-9]+ received' \"\$TL\"); \$(grep -Eom1 'sta::[A-Za-z_]+::[A-Za-z_]+' \"\$TL\" | head -1)): 4_cts.odb restored to the CTS result, plain GRT path (no GRT-RC tap pre-pass; crash log kept as /work/4_2_tapbal_grt_crash.log)\" | tee -a /work/tapbal_fallback.log; mv -f \"\$TL\" /work/4_2_tapbal_grt_crash.log; rc=0; fi; \
       rm -f /work/4_cts_pretapbal.odb; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
+    if [ \$rc = 0 ] && [ -f /work/private_leaf.tcl ] && [ $GOAL != cts ]; then PL4=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
+      if [ -n \"\$PL4\" ]; then cp -p \"\$PL4\" /work/4_cts_pre_leaf.odb; ODB=\"\$PL4\" OUT=\"\$PL4.pl\" openroad -exit /work/private_leaf.tcl > /work/private_leaf.log 2>&1; plrc=\$?; grep -h 'OT_PRIVATE_LEAF' /work/private_leaf.log | tail -6; \
+        if [ \$plrc = 0 ] && [ -s \"\$PL4.pl\" ]; then mv -f \"\$PL4.pl\" \"\$PL4\"; else rm -f \"\$PL4.pl\"; if [ \$plrc != 0 ]; then echo \"OT_PRIVATE_LEAF FALLBACK step rc \$plrc (private_leaf.log): 4_cts.odb unchanged\" | tee -a /work/private_leaf_fallback.log; else grep -h 'OT_PRIVATE_LEAF FALLBACK' /work/private_leaf.log | tee -a /work/private_leaf_fallback.log; fi; fi; fi; fi; \
     if [ \$rc = 0 ] && [ -f /work/tt_setup_repair.tcl ] && grep -Eq '^(cts|both)' /work/tt_setup_repair.on 2>/dev/null && [ $GOAL != cts ]; then TC4=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
       if [ -n \"\$TC4\" ]; then cp -p \"\$TC4\" /work/4_cts_pre_tt.odb; ODB=\"\$TC4\" OUT=\"\$TC4.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_repair.log 2>&1; trc=\$?; grep -h 'OT_TT_SETUP_REPAIR' /work/tt_setup_repair.log | tail -3; \
         if [ \$trc = 0 ] && [ -s \"\$TC4.tt\" ]; then mv -f \"\$TC4.tt\" \"\$TC4\"; else rm -f \"\$TC4.tt\"; echo \"OT_TT_SETUP_REPAIR FALLBACK step rc \$trc (tt_setup_repair.log): 4_cts.odb unchanged\" | tee -a /work/tt_setup_repair_fallback.log; fi; fi; fi; \
