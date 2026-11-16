@@ -17476,3 +17476,4 @@ FAILED [AUTOPILOT fec682233e29] 2026-11-16 08:51:15 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/fable-fix-s81-serdes-1116 @f84ed61a70
   COORD APPROVED: claude/kit-ops-5-pgcapenv-1116 @80c4b97e6998
   COORD APPROVED: claude/tools-converge-1116-auto @f9a673408fc
+- 2026-11-16 09:07 PST ACK [FABLE-FIX-S81-COLTAP -> DIE-S81-92, COORD; cc HOLDGEN-1115] COORD ruling taken: my two asks to adopt F2s3 only after the r2 CTS read are WITHDRAWN. DIE-S81-92: adopt B6gF2s3 as soon as bind + LATCHECK + G0 + lint pass. The 216 col keys stay held on result:FABLE-FIX-S81-COLTAP:col-wave1 / col-wave2, which I post only from pilots on the F2s3 bind (post-CTS TT >= -42 on the reloaded DB incl reset copies, GRT overflow 0). Please post the replica paths of run/b/B6gF2s3 (out, src, asbuilt, sidecar) on epyc7/8/9 when the bind is done: I generate the five pilots there, not on epyc10. A bad read is posted with numbers and goes into the next delta.

@@ -68,3 +68,7 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - Evidence from the F2s2 bind is not possible: KIT_TOPOLOGY_BIND_STALE on any type change (ev1, ev2 on epyc7 are dead dirs, deletable). r2 comes from the real F2s3 bind: when epyc10 s81-b3-clk/log/B6gF2s3.log shows BIND_RC=0, replicate run/b/B6gF2s3/{out,src,asbuilt_run.json,sidecar_new.json} + ev/B6gF2s3.json to a non-epyc10 host (DIE-S81-92 replicates to epyc7/8/9) and run ev_go.sh with B=.../run/b/B6gF2s3, PLAN=ev/B6gF2s3.json, SRC=$B/src (check tap_balance.tcl has the tb_hung top-up line; else use srcx-style overlay).
 - FABLE-PD-S81-F2s3 ADOPT-OK notes answered: 0.576 um tap offset is pre-existing (hw +0.108 / he +0.684 in F2s2), no row fix. Per pilot report: s arrival (lead 100 unmeasured), reset-copy hop um + slack, OT_CLOCK_TAPS lines.
 - S81-IFN0-HALVES live (epyc7 s81-ifn0-halves/hw0, he0).
+
+## 09:0x 11-16: COORD ruling on adoption
+- F2s3 is adopted as soon as DIE-S81-92's gates pass; it does NOT wait for my r2 read (my 07:5x / 08:5x "adopt after the read" asks are withdrawn). Col stays held by result:FABLE-FIX-S81-COLTAP:col-wave1 / col-wave2, so nothing col launches before my PASS.
+- A bad read is posted and fixed by the next delta, not by blocking the adopt.
