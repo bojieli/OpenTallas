@@ -115,3 +115,9 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - ROM rd_out -> s q: -57.0, 14 below -42: sequencer lead 100 is too much (my estimate was wrong). Triangle q / go_tag / ef has about +50 total. Variant var_b (epyc7 fable-fix-s81-coltap/var_b/<r2>, s 311.22 = lead 40, ROM lead 285) running to CTS, client log intel2 pilot_r2_varb.log; then stage_sta.sh on it -> choose leads -> row change (core_pin_lead_ps only) to DIE-S81-92.
 - Reset chains (copy_depth 3): hop 1 common flop (989,167) -> _s0 836..1,174 um, -181, 26 below -42. Posted hop table + site ask to FABLE-DIE-S81.
 - TODO: FF hold read (an/ffh.sh needs core_taps_ff.sdc of the kit), col_h10_r2 breakdown, GRT reads.
+
+## 15:4x 11-16: COORD four points
+- (1) reset chains: no plan row exists (no site key; reset_replicate copy_depth assumes GPL spreads the chain, measured false). Fix = flow hook reset_chain_spread.tcl (PRE_RESIZE, env OT_RESET_CHAIN_SPREAD=1; file on epyc7/8 fable-fix-s81-coltap/ and localhost scratchpad ct/). Proof kit var_c (r2 copy up to 3_3 + hook appended to gp_noconverge_gate.tcl + lead 40 / ROM 285). TODO: when proven, put the tcl into tools/die_plan (gen_phys: emit + source it from the PRE_RESIZE hook when the type has reset_replicate copy_depth > 1 or env), test, branch claude/fable-fix-s81-coltap-1116b (trailer Opus 5.5), gate, READY; then item_env row for 216 col.
+- (2) IFN = 0 halves = col form for ALL 216 (COORD). Halves not signed (he FF -24.18 removal class, ECO failed; hw FF -68.88). Worker agent started on S81-IFN0-HALVES (reports to me). Then rows for F2s4b: views, .IFN(0), core tap insertion, sequencer lead 0 (drop the cfg7_seq entry of core_pin_lead_ps).
+- (3) var_b (lead 40 / ROM 285) CTS done; timing read to rerun on epyc8. (4) FF hold read: an/stage_ffh.sh KIT OUT cts|grt + clsh.py.
+- epyc7 thread cap full (184/96): run reads / variants on epyc8 (var_b, var_c, an copied there).
