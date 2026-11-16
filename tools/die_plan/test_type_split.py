@@ -410,3 +410,41 @@ def test_lane_reference_is_published_with_the_piece_groups(tmp_path):
     (tmp_path / "ref.json").write_text(json.dumps(ref))
     with pytest.raises(TS.SplitError, match="exported from the bind of the unsplit base plan"):
         event(dict(lane_reference=str(tmp_path / "ref.json"))).write(tmp_path / "bad", "rel/bad")
+
+
+def test_density_piece_forwarded_clock_sources_follow_the_piece_taps():
+    """bind EMIT '<piece>: forwarded clock source clk_t139 is not a planned physical tap input': the base type's density
+    tap names do not exist in a piece (its taps are re-derived); each forwarded clock pin takes the nearest piece tap"""
+    from types import SimpleNamespace
+    cut = TS.Cut("x", [600.0], 1400.0)
+    pin = lambda name, tap, x: dict(name=name, dir="out", kind="clock", xy_um=[x, 5.0], source_clock_port=tap,
+                                    source_clock_tap=tap)
+    base = dict(clock=dict(tap_mode="density", landing_contract=dict(pins=[
+        pin("fclk_out_a", "clk_t139", 20.0), pin("fclk_out_b", "clk_t3", 900.0), dict(name="cland_up_ready")])))
+    ts = SimpleNamespace(t=base, cut=cut, tnames=["T", "T_x1"])
+    ev = TS.Event.__new__(TS.Event)
+    # the pieces as _clock leaves them: the port keeps the base name, the tap went through the R4 grid map (wrong in
+    # density mode)
+    ev.out = dict(partition_types={
+        "T": dict(clock=dict(landing_contract=dict(pins=[pin("fclk_out_a", "clk_t139", 20.0)]))),
+        "T_x1": dict(clock=dict(landing_contract=dict(pins=[dict(pin("fclk_out_b", "clk_t3", 300.0),
+                                                                 source_clock_tap="clk_t2")])))})
+    old = {"T": [("clk", 10.0, 10.0), ("clk_t3", 950.0, 40.0), ("clk_t139", 30.0, 900.0)]}
+    new = {"T": [("clk", 300.0, 300.0), ("clk_t1", 40.0, 880.0)], "T_x1": [("clk", 345.0, 50.0), ("clk_t1", 100.0, 700.0)]}
+    rep = ev._remap_clock_sources([("T", ts)], old.__getitem__, new.__getitem__)
+    a = ev.out["partition_types"]["T"]["clock"]["landing_contract"]["pins"][0]
+    b = ev.out["partition_types"]["T_x1"]["clock"]["landing_contract"]["pins"][0]
+    assert (a["source_clock_port"], a["source_clock_tap"]) == ("clk_t1", "clk_t1")
+    assert (b["source_clock_port"], b["source_clock_tap"]) == ("clk", "clk")       # old tap 950 -> 350 in piece 1
+    assert rep == {"T": 2, "T_x1": 2}
+    for nm in new:        # every source is now a planned tap of its piece
+        names = {n for n, _x, _y in new[nm]}
+        assert all(q["source_clock_port"] in names for q in ev.out["partition_types"][nm]["clock"]["landing_contract"]["pins"])
+    base["clock"]["landing_contract"]["pins"][0]["source_clock_port"] = "clk_t999"
+    with pytest.raises(TS.SplitError, match="not a tap of the base type"):
+        ev._remap_clock_sources([("T", ts)], old.__getitem__, new.__getitem__)
+    # other tap modes: untouched (the pass selects density types only)
+    ev.ts = {"G": SimpleNamespace(t=dict(clock=dict(tap_mode="grid+explicit")))}
+    ev.rep = {}
+    ev._forwarded_clock_sources()
+    assert "forwarded_clock_sources" not in ev.rep

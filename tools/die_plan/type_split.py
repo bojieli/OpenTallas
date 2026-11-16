@@ -2018,6 +2018,7 @@ class Event:
         self._sidecar()
         self._straps()
         self._tap_repair()
+        self._forwarded_clock_sources()
         self._reset_trees()
         self._asbuilt()
         return raw
@@ -3082,6 +3083,48 @@ class Event:
             except ValueError as e:
                 raise SplitError(f"{tn}: tap repair proof failed: {e}") from None
         self.rep["tap_repair"] = rep
+
+    def _forwarded_clock_sources(self):
+        """density-tap pieces: a forwarded clock pin's source_clock_port / source_clock_tap names a tap of the WHOLE
+        type.  A piece's density taps are re-derived from its own sink bins (other names, other sites), so the old
+        name is absent from the piece or names a far tap (bind EMIT '<type>: forwarded clock source clk_t<n> is not a
+        planned physical tap input').  Each pin takes the piece tap nearest to its old source tap.  Other tap modes
+        keep the tap map of _clock (unchanged)."""
+        todo = [(tn, ts) for tn, ts in self.ts.items() if (ts.t.get("clock") or {}).get("tap_mode") == "density"]
+        if not todo:
+            return
+        import schema as S
+        import taps as TP
+        TP._CACHE.clear()
+        TP._clear_density_cache()
+        Pb = S.Plan(json.loads(json.dumps(self.raw)), self.plan_path)
+        P = S.Plan(json.loads(json.dumps(self.out)), self.plan_path)
+        self.rep["forwarded_clock_sources"] = self._remap_clock_sources(
+            todo, lambda tn: S.tap_grid(Pb, tn), lambda tn: S.tap_grid(P, tn))
+        TP._CACHE.clear()
+        TP._clear_density_cache()
+
+    def _remap_clock_sources(self, todo, old_taps, new_taps):
+        rep = {}
+        for tn, ts in todo:
+            old = {n: (x, y) for n, x, y in old_taps(tn)}
+            base = {p["name"]: p for p in ts.t["clock"].get("landing_contract", {}).get("pins", [])}
+            for i, nm in enumerate(ts.tnames):
+                new, moved = None, 0
+                for q in self.out["partition_types"][nm]["clock"].get("landing_contract", {}).get("pins", []):
+                    p0 = base.get(q["name"], {})
+                    for k in ("source_clock_port", "source_clock_tap"):
+                        if k not in q or k not in p0:
+                            continue
+                        if p0[k] not in old:
+                            raise SplitError(f"{tn}: pin {q['name']} {k} {p0[k]} is not a tap of the base type")
+                        new = new or new_taps(nm)
+                        xy = ts.cut.sh(list(old[p0[k]]), i)
+                        tap = min(new, key=lambda s_: (abs(s_[1] - xy[0]) + abs(s_[2] - xy[1]), s_[0]))[0]
+                        moved += tap != q[k]
+                        q[k] = tap
+                rep[nm] = moved
+        return rep
 
     def _reset_trees(self):
         import schema as S
