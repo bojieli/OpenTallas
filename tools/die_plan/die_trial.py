@@ -2470,11 +2470,16 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                 if not all(0 <= x <= site.W and 0 <= y <= site.H for x, y in raw):
                     continue
                 pts, snap = [pa], 0.0
-                for x in raw[1:-1]:
-                    y = x if site.legal(x) else site.nearest(x)
-                    y = round_legal(site, y)
-                    snap += _man(x, y)
-                    pts.append(y)
+                try:
+                    for x in raw[1:-1]:
+                        y = x if site.legal(x) else site.nearest(x)
+                        y = round_legal(site, y)
+                        snap += _man(x, y)
+                        pts.append(y)
+                except ValueError:
+                    # An optional snake may enter a continuous legal sliver with no native row site.
+                    # Reject this candidate just as physical_leg below rejects an unplaceable chain.
+                    continue
                 pts.append(q)
                 if EVEN_LEGS and (len(pts) - 1) % 2 != _LEG_PAR:
                     continue            # inv2: odd stage count would flip polarity (EDGE_ALT: the leg's parity)

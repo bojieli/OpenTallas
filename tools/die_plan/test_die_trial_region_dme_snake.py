@@ -127,3 +127,34 @@ def test_early_deeper_than_the_tree_gets_a_deeper_root():
     rest = [v for k, v in a.items() if k != t[1]]
     assert abs(sum(rest) / len(rest) - a[t[1]] - e) <= 15.0
     assert max(rest) - min(rest) <= 15.0
+
+
+def test_unplaceable_optional_snake_continues_to_next_candidate(monkeypatch):
+    site, _ = _su_like()
+    pa, q = (100.0, 900.0), (100.0, 1000.0)
+    target = D.leg_ps(100.0, 250.0) + 60.0
+    original = D.round_legal
+    calls = [0]
+
+    def first_candidate_has_no_native_row(site, p, nd=3):
+        calls[0] += 1
+        if calls[0] == 1:
+            raise ValueError("no native R0 row site for physical clock cell")
+        return original(site, p, nd)
+
+    monkeypatch.setattr(D, "round_legal", first_candidate_has_no_native_row)
+    pts, ps, wire = D.snake_leg(site, pa, q, target, 250.0)
+    assert calls[0] > 1 and wire > 0
+    assert abs(ps - target) <= 3.0
+    assert all(site.legal(tuple(p)) for p in pts)
+
+
+def test_all_unplaceable_optional_snakes_return_none(monkeypatch):
+    site, _ = _su_like()
+
+    def no_native_row(*args, **kw):
+        raise ValueError("no native R0 row site for physical clock cell")
+
+    monkeypatch.setattr(D, "round_legal", no_native_row)
+    assert D.snake_leg(site, (100.0, 900.0), (100.0, 1000.0),
+                       D.leg_ps(100.0, 250.0) + 60.0, 250.0) is None
