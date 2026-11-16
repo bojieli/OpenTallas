@@ -8,6 +8,8 @@ HERE = Path(__file__).resolve().parent
 
 
 def load():
+    import os
+    os.environ.pop("MQ_GATE_REMOTE", None)          # the gate itself runs with the queue environment: test the built-in default
     loader = importlib.machinery.SourceFileLoader("otmq_gr", str(HERE / "ot-merge-queue"))
     spec = importlib.util.spec_from_loader(loader.name, loader)
     m = importlib.util.module_from_spec(spec)
