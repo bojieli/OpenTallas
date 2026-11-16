@@ -1,0 +1,178 @@
+{
+ "schema": "opentallas.cland_bin_sites.v1",
+ "frame": "partition type um",
+ "types": {
+  "cbf_q11": {
+   "bc_i22": {
+    "u_bin": [
+     280.8,
+     34.56
+    ],
+    "u_st": [
+     578.88,
+     64.8
+    ],
+    "route_um": 1161.6,
+    "equal_hop_um": 328.3,
+    "hops": [
+     176.6,
+     328.3,
+     328.3,
+     328.3
+    ],
+    "plan_stations": 0,
+    "u_st_more": [
+     [
+      578.88,
+      393.12
+     ]
+    ]
+   },
+   "nb_i22": {
+    "u_bin": [
+     302.4,
+     34.56
+    ],
+    "u_st": [
+     73.44,
+     34.56
+    ],
+    "route_um": 1304.2,
+    "equal_hop_um": 388.8,
+    "hops": [
+     108.4,
+     229.0,
+     194.4,
+     388.8,
+     383.6
+    ],
+    "plan_stations": 2,
+    "u_st_more": [
+     [
+      34.56,
+      190.08
+     ],
+     [
+      34.56,
+      578.88
+     ]
+    ]
+   }
+  },
+  "cbn_q11__cl5cc92dfe": {
+   "bc_i22": {
+    "u_bin": [
+     280.8,
+     34.56
+    ],
+    "u_st": [
+     587.52,
+     60.48
+    ],
+    "route_um": 1170.2,
+    "equal_hop_um": 332.6,
+    "hops": [
+     176.6,
+     332.6,
+     328.3,
+     332.6
+    ],
+    "plan_stations": 0,
+    "u_st_more": [
+     [
+      587.52,
+      388.8
+     ]
+    ]
+   },
+   "nb_i22": {
+    "u_bin": [
+     302.4,
+     34.56
+    ],
+    "u_st": [
+     82.08,
+     34.56
+    ],
+    "route_um": 1304.2,
+    "equal_hop_um": 388.8,
+    "hops": [
+     108.4,
+     220.3,
+     203.0,
+     388.8,
+     383.6
+    ],
+    "plan_stations": 2,
+    "u_st_more": [
+     [
+      34.56,
+      190.08
+     ],
+     [
+      34.56,
+      578.88
+     ]
+    ]
+   }
+  },
+  "cbn_q11__cl49ae4555": {
+   "bc_i22": {
+    "u_bin": [
+     280.8,
+     34.56
+    ],
+    "u_st": [
+     587.52,
+     60.48
+    ],
+    "route_um": 1170.2,
+    "equal_hop_um": 332.6,
+    "hops": [
+     176.6,
+     332.6,
+     328.3,
+     332.6
+    ],
+    "plan_stations": 0,
+    "u_st_more": [
+     [
+      587.52,
+      388.8
+     ]
+    ]
+   },
+   "nb_i22": {
+    "u_bin": [
+     302.4,
+     34.56
+    ],
+    "u_st": [
+     82.08,
+     34.56
+    ],
+    "route_um": 1304.2,
+    "equal_hop_um": 388.8,
+    "hops": [
+     108.4,
+     220.3,
+     203.0,
+     388.8,
+     383.6
+    ],
+    "plan_stations": 2,
+    "u_st_more": [
+     [
+      34.56,
+      190.08
+     ],
+     [
+      34.56,
+      578.88
+     ]
+    ]
+   }
+  }
+ },
+ "rule": "ring -> u_bin (inside its own band, at the edge facing the route) -> u_st.. -> tile tap pin: equal-hop sites on the route; plan stations already on the bus are counted first; every hop <= 405 um (tools/die_plan/cland_bin_sites.py)"
+}
