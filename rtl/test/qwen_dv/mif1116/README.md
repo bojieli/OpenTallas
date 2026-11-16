@@ -10,7 +10,7 @@ Admit the runner with `ot-run`; provide a fresh scratch path. The same executabl
 The compiler can consume the composed native profile directly. From the repository root:
 
 ```bash
-env -u DV_SU_TRANSPORT DV2_S8DIE1=1 \
+env -u DV_SU_TRANSPORT DV2_S8DIE=1 \
   DV_LOWER_VFLAGS='-DOT_QC_SRAM_MIF -DOT_S8_CROM_ALIGN' \
   DV_SU_AGES=results/rtl/qc_mif_native_1116/composed_base_3_1/slice_ages.json \
   DV_VEC_AGES=results/rtl/qc_mif_native_1116/composed_base_3_1/vec_ages.json \

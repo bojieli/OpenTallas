@@ -62,7 +62,7 @@ def compose(su,static,head,red):
     red_first=prefix+sampled(ssq,'mif_first')+base+2+3+1
     ps=[red_first+sc+16*j for j in range(3)]
     root_cfg=4 # fixed compiler command guard; independent of SU memory-read age
-    scalar={'schema':'opentallas.qwen.dv-slice-ages.v1','memory_profile':PROFILE,'ssq_psum_out':ps,'root_cfg_lead':root_cfg,
+    scalar={'schema':'opentallas.qwen.dv-slice-ages.v1','memory_profile':PROFILE,'slice_rtl':'s8','ssq_psum_out':ps,'root_cfg_lead':root_cfg,
             'per_slice':{str(s['slice']):ps[:s['FP32_words']//128] for s in head['slices']}}
     def dd_array(a):
         first=sampled(a,'mif_first')+prefix+dd; last=sampled(a,'mif_last')+prefix+dd
@@ -79,7 +79,7 @@ def compose(su,static,head,red):
     d2d['readback']=dd_array(dynamic(static,'residual_readback3',3))
     xs=[x['offset']+prefix for x in max(head['slices'],key=lambda x:x['FP32_words'])['BF16_receiver_beats']]
     silu_first=sampled(silu,'mif_first')+11+prefix
-    vector={'schema':'opentallas.qwen.dv-slice-vec-ages.v1','memory_profile':PROFILE,'add_psum_out':ps,'xs_out':xs,
+    vector={'schema':'opentallas.qwen.dv-slice-vec-ages.v1','memory_profile':PROFILE,'slice_rtl':'s8','add_psum_out':ps,'xs_out':xs,
             'silu_out':[silu_first,silu_first+8],'red_vm':red_first+7,'root_cfg_lead':root_cfg,'d2d':d2d}
     note={'schema':'opentallas.qc.memory-profile-composition.v1','status':'PASS_COMPOSED_COMPONENTS','memory_profile':PROFILE,
           'origin':'actual flat cmd_i sampling posedge to receiver sampling posedge; final bound lane transport remains separate',

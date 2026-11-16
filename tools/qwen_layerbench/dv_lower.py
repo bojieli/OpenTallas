@@ -451,6 +451,10 @@ def apply_su_transport(ages):
 
 
 def check_memory_profile(ages, path, expected=None):
+    measured_slice = ages.get('slice_rtl')
+    if measured_slice is not None and measured_slice != SLICE_RTL:
+        raise LowerError(f'{path}: measured slice_rtl {measured_slice!r} does not match RTL {SLICE_RTL!r}; '
+                         'select DV2_S8DIE=1 for native S8 profiles')
     expected = memory_profile() if expected is None else expected
     expected = {k: v for k, v in expected.items() if k != 'su_parent_transport'}
     measured = ages.get('memory_profile')
