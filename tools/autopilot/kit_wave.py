@@ -503,16 +503,38 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     return HR.Ctx(is_merged=is_merged or _git_is_merged, event_met=_hold_term_met, digest_fn=input_digest,
                   kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")),
                   cells_fn=lambda die, item: cells.get((die, item)),
-                  proof_fn=lambda name: any(re.search(r"(?<![A-Za-z0-9_.-])" + re.escape(name) + r"(?![A-Za-z0-9_.-])", ln) for ln in proofs),
+                  proof_fn=proof_pass_fn(proofs),
                   tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item))
 
 
+RESULT_POST = r"^\s*-?\s*\d{4}-\d\d-\d\d\s+\S+\s+[A-Za-z]{2,4}\s+RESULT\s*\["        # a post OF TYPE RESULT: "- 2026-11-16 07:18 PST RESULT [LANE ->"
+
+
+def result_posts(lines):
+    """the queue lines that are posts of type RESULT (the type word sits right after the timestamp).  A RULING / READY / ASK line that
+    quotes 'RESULT [LANE -> COORD] tag PASS' as an instruction is NOT a result (r297 did, and released 14 svc keys + hd_serdes at 07:32)."""
+    rx = re.compile(RESULT_POST)
+    return [ln for ln in lines if rx.match(ln)]
+
+
 def result_pass_fn(lines):
-    """result:<lane>:<tag>: true when a RESULT line whose header names the lane as its sender ('RESULT [LANE ->') carries '<tag>' followed
-    within 60 characters by PASS (a lane that writes 'svc-ready NOT yet, FAIL' does not release; a line that only cc's the lane does not)."""
+    """result:<lane>:<tag>: true when a RESULT post sent by the lane (header 'RESULT [LANE ->') carries '<tag>' followed within 60
+    characters by PASS (a lane that writes 'svc-ready NOT yet, FAIL' does not release; a post that only cc's the lane does not)."""
+    posts = result_posts(lines)
+
     def f(lane, tag):
-        pat = re.compile(r"\bRESULT\s*\[" + re.escape(lane) + r"\s*->[^\n]*?(?<![\w.-])" + re.escape(tag) + r"(?![\w.-])[^\n]{0,60}?\bPASS\b")
-        return any(pat.search(ln) for ln in lines)
+        pat = re.compile(RESULT_POST + re.escape(lane) + r"\s*->[^\n]*?(?<![\w.-])" + re.escape(tag) + r"(?![\w.-])[^\n]{0,60}?\bPASS\b")
+        return any(pat.match(ln) for ln in posts)
+    return f
+
+
+def proof_pass_fn(lines):
+    """proof:<name>: a RESULT post (any lane) with '<name>' followed within 60 characters by PASS."""
+    posts = result_posts(lines)
+
+    def f(name):
+        pat = re.compile(r"(?<![\w.-])" + re.escape(name) + r"(?![\w.-])[^\n]{0,60}?\bPASS\b")
+        return any(pat.search(ln) for ln in posts)
     return f
 
 
@@ -10564,9 +10586,9 @@ def _step(AP, ap_dir):
                 _s = _lf.setdefault(_r["die"], set())
                 (_s.add if _bad else _s.discard)(_r["item"])
         cfg["_lint_fail"] = _lf
-        _q = [ln for ln in AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines() if " RESULT " in ln]
+        _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
-        cfg["_proof_lines"] = [ln for ln in _q if "PASS" in ln][-3000:]
+        cfg["_proof_lines"] = _q[-3000:]
         _before = len(cfg.get("_hold_auto_released") or [])
         _tf, _mf = tree_gate(AP, cfg)
         compile_hold_records(cfg, None, _tf, _mf)

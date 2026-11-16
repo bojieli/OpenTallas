@@ -358,6 +358,19 @@ class T(unittest.TestCase):
         self.assertFalse(KW.result_pass_fn(lines[2:])("SVC-LANE", "svc-ready"))
         self.assertFalse(KW.result_pass_fn([lines[0].replace("-> COORD]", "-> COORD; cc SVC-LANE]").replace("[SVC-LANE", "[X")])("SVC-LANE", "svc-ready"))
 
+    def test_instruction_text_in_a_ruling_is_not_a_result(self):
+        ruling = ("- 2026-11-16 07:00 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-FIX-S81-SVC] r297: FABLE-FIX-S81-SVC: post exactly "
+                  "RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready PASS: <evidence> when ready; HEAD-SERDES-O proves head-serdes-fanout PASS later")
+        ready = "- 2026-11-16 06:59 PST READY [HOLDGEN-1115 -> COORD] a RESULT [LANE -> x] line with tag PASS releases"
+        real = "- 2026-11-16 09:00 PST RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready PASS: closure ref_1116 applied 16/16"
+        self.assertFalse(KW.result_pass_fn([ruling, ready])("FABLE-FIX-S81-SVC", "svc-ready"))
+        self.assertFalse(KW.proof_pass_fn(KW.result_posts([ruling, ready]))("head-serdes-fanout"))
+        self.assertTrue(KW.result_pass_fn([ruling, real])("FABLE-FIX-S81-SVC", "svc-ready"))
+        self.assertTrue(KW.result_pass_fn(["  - 2026-11-16 09:00 UTC RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready: PASS"])("FABLE-FIX-S81-SVC", "svc-ready"))
+        rp = "- 2026-11-16 09:01 PST RESULT [HEAD-SERDES-O -> COORD] head-serdes-fanout PASS: gate TT -30"
+        self.assertTrue(KW.proof_pass_fn(KW.result_posts([rp]))("head-serdes-fanout"))
+        self.assertFalse(KW.proof_pass_fn(KW.result_posts([rp]))("head-serdes"))
+
 
 if __name__ == "__main__":
     unittest.main()
