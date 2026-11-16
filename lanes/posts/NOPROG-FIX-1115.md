@@ -47,3 +47,6 @@
 - 2026-11-16 12:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 12:52 PST: 111 running jobs, PROGRESSING 100, SLOW 9, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 kit drt_TT stage 34.7 h job 34.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.0%; stagnant 15.2 h; last event 3.0 h ago, log write 1.1 h ago (1556 lines)
   NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 10.6 h job 10.7 h: no new meaningful log line for 7.5 h; last: 15.42. Extracting gate netlist of module `\s81p_svc_hi_dsdv_svc_rs__t3' to `<abc-temp-dir>/input.bli
+- 2026-11-16 13:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 13:52 PST: 131 running jobs, PROGRESSING 122, SLOW 7, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 35.7 h job 35.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.0%; stagnant 16.2 h; last event 2.0 h ago, log write 0.5 h ago (1558 lines)
+  NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 11.6 h job 11.7 h: no new meaningful log line for 8.5 h; last: 15.42. Extracting gate netlist of module `\s81p_svc_hi_dsdv_svc_rs__t3' to `<abc-temp-dir>/input.bli
