@@ -1428,7 +1428,7 @@ def ca_named_pairs(ports):
     """KIT-OPS-6 11-15 (FABLE-TRIAGE-HEADKV 21): the partition pairs {(src_part, dst_part)} that count-aligned ports name (src_part/dst_part, else src/dst)"""
     out = set()
     for c in (ports or {}).values():
-        s_, d_ = c.get("src_part", c.get("src")), c.get("dst_part", c.get("dst"))
+        s_, d_ = c.get("src_part") or c.get("src"), c.get("dst_part") or c.get("dst")
         if s_ is not None and d_ is not None:
             out.add((s_, d_))
     return out
