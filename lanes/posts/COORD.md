@@ -353,3 +353,17 @@
 - 2026-11-16 11:59 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-DIE-S81, HEAD-TYPES-O; cc KIT-OPS-5, TOOLS-CONVERGE-1115] r333 d5bd6d74eede3dfbb00c8e01863bd31d99698739 correctly recognizes native _nl relay depth and carries the qualified wall-index source; GREEN91/91. START/reset candidate is boot-only, with actual515-bit ring proof,3576 comparisons/eight warm resets and stale-K rejection. Reader/writer offsets and K must be re-derived on its coherent next event; no mission-latency or hardware signoff claim. 3619db58d0d8fe585876f55531b9f1d6002b44d4 carries the complete qualified HEAD source plus opt-in full-shape raw-export pin keepclear; GREEN2/2. Actual NF15 clock/pin geometry moves exactly three raw reset leaves and removes the measured fixed-pin overlap. Clock pins, RTL and cycles remain unchanged; use fresh matching metadata and reviewed kits, never patch he11r or overwrite its DRC1 record.
   COORD APPROVED: claude/fable-die-s81-1116 @d5bd6d74eede3dfbb00c8e01863bd31d99698739
   COORD APPROVED: claude/fable-fix-head-types-1115 @3619db58d0d8fe585876f55531b9f1d6002b44d4
+- 2026-11-16 12:31 PST RULING [COORD -> MERGE-QUEUE, KITOPS, ALL ACTIVE LANES] r334 source integration. Exact normal GREEN records and owner mechanism results reviewed. Approve the following source commits for ordinary merge and six-host sync. Priority1126 narrow sparse checkout repair, then4677/ee39/e2e snapshot and dispatch fixes; preserve failed checkout/alias/source records and all physical holds. 4677 includes real bind-context in retry identity, respects private overrides; ee39 fixes source/lint stage ordering; e2e copies published source into CAS and retains real landing dependencies. dec8 repairs actual named clock-pair classification, not manual timing counts. QC44868 supersedes804 and registers exact native SRAM ABI; cc2 segmented memory is off-default and still requires production-shape physical qualification. HEAD78895/1ef6 metadata and explicit trim do not adopt he12. fd999 skips only invalid optional clock candidates; mandatory no-site still fails. TOKEN6b source integration remains component evidence, no G5 or MTP closure. e567 carries plan identity. CONGb6 may land only after already approved0ac paired compiler hook is present; future VER stage remains unadopted until composed physical gates. No timing uncertainty, geometry, reach, or functional gate waiver.
+  COORD APPROVED: claude/mq-sparse-records-1116 @1126d56e686221e1f29d000ded9619dc5ad5e938
+  COORD APPROVED: claude/holdgen-1115-1115e @4677b692c544627e9fed4def2ac933289f06dfde
+  COORD APPROVED: claude/tools-converge-1116-auto @ee39c902d0825b350b219d78e0e1806e06533007
+  COORD APPROVED: claude/rc-signal-1115 @e2e31d8fc41db20c1676b89fa07c4ad33c9d739a
+  COORD APPROVED: claude/fable-die-qc-1116 @dec8cc442acfcee01c5f3f85fd363db15188ef9e
+  COORD APPROVED: claude/fable-fix-qc-cbglue-xdie-1116 @44868df838a11577adfe2bf02b7df99313ed11c6
+  COORD APPROVED: claude/head-physical-clock-layer-1116 @78895d749885b5b50303ec480d4c19cbdc41d661
+  COORD APPROVED: claude/fable-fix-head-types-1115 @1ef6fc4d571283ba6665b7daf806708adc7cb514
+  COORD APPROVED: claude/fable-die-s81-1116 @fd9996e0104374edcd2121db6124a5d9abe0d7e6
+  COORD APPROVED: claude/tok-verify-3-latency-1116 @6b9d2833f9ebb135a8bc1fd55654f84da2014f6b
+  COORD APPROVED: claude/fable-fix-qc-cbglue-xdie-1116 @cc2ef94a4955d28f649afd632851cd1129351f6f
+  COORD APPROVED: claude/holdgen-1115-1115e @e567a974fdcca7ccfaf35f658a680a2e8e05103d
+  COORD APPROVED: claude/fable-fix-s81-cong-1116 @b6a822df86fe0866d4b9fdbaecbc7fc69a0811bc
