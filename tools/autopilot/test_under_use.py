@@ -31,7 +31,7 @@ class UnderUse(unittest.TestCase):
         self.assertEqual(c["tree_switch"], 3)           # two held ENQUEUED rows + one ROUTE-HELD naming tree_switch
         self.assertEqual(c["hold_items:WAVE-HOLDS-1115"], 1)
         self.assertEqual(c["route_hold:WAIT-VISUAL"], 1)
-        self.assertEqual(c["enqueued_not_held"], 1)
+        self.assertEqual(c["gate:q_no_queue_status"], 1)
         self.assertEqual(sum(c.values()), 6)            # RUNNING / FAIL rows are not counted
 
     def test_line(self):
@@ -47,7 +47,7 @@ class UnderUse(unittest.TestCase):
         logs = []
 
         class AP:
-            AP_DIR = "/nonexistent-ap-dir"
+            AP_DIR = __import__("tempfile").mkdtemp()
             OT_RUN = "ot-run"
             log = staticmethod(logs.append)
 

@@ -563,13 +563,19 @@ def _blocks(e, key, item, claim):
     records it as the probe), every other item of that family stays held until the probe passes the class's stage"""
     if e.get("state") != "probe":
         return key
-    fam = family_of(item)
     pr = e.setdefault("probe", {})
-    if fam not in pr:
+    cur = probe_item(e)
+    if not cur:                                  # PROBE-ONE-1116 (COORD): exactly ONE probe for the whole class, not one per family
         if claim:
-            pr[fam] = item
+            pr["*"] = item
         return ""
-    return "" if pr[fam] == item else key
+    return "" if cur == item else key
+
+
+def probe_item(e):
+    """the class's single probe item ('' = none claimed yet); a state written with per-family claims (before PROBE-ONE-1116) counts its first claim"""
+    pr = e.get("probe") or {}
+    return pr.get("*") or next(iter(pr.values()), "")
 
 
 def held_key(st, die, item, claim=False):
@@ -597,20 +603,19 @@ def held_key(st, die, item, claim=False):
 
 def probe_result(st, die, item, stage, passed):
     """the probe launch of a family finished.  passed (it got past the class's stage, or was enqueued): the family leaves the class, the class closes
-    when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)"""
+    when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)
+    PROBE-ONE-1116 (COORD 11-16): the class has ONE probe; when it passes the failing stage EVERY family of the class is released in the same
+    tick (the class closes at once).  A family that fails again reopens the class by the normal breaker rule."""
     g = fg_state(st)
     out = []
-    fam = family_of(item)
     for key, e in list(g["open"].items()):
-        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or (e.get("probe") or {}).get(fam) != item:
+        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or probe_item(e) != item:
             continue
         if passed:
-            e["fams"] = [x for x in e.get("fams", []) if x != fam]
-            e["probe"].pop(fam, None)
-            out.append((key, f"probe {item} passed {e.get('stage') or 'the stage'}: family {fam} released"))
-            if not e["fams"]:
-                close(st, key)
-                out.append((key, "all families released: class closed"))
+            fams = list(e.get("fams", []))
+            out.append((key, f"probe {item} passed {e.get('stage') or 'the stage'}: family {family_of(item)} released"))
+            close(st, key)
+            out.append((key, f"all {len(fams)} famil{'y' if len(fams) == 1 else 'ies'} released in the same tick ({', '.join(fams[:12])}): class closed"))
         else:
             e["state"], e["probe"] = "shut", {}
             e["inp"] = e.get("inp_probe") or e.get("inp")

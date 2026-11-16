@@ -4098,6 +4098,56 @@ def sync_item_inputs(AP, cfg, run=None):
     return done
 
 
+SRC_SYNC_BATCH = 100
+
+
+def sync_die_inputs(AP, cfg, run=None):
+    """SRC-HEAL-1116 (COORD 11-16: epyc9 lacked bind_cells.sv + the cb*.sv bind files, the rows were dropped as BIND-STALE): a die input file
+    that the SRC-INCOMPLETE probe lists as missing on a gen host is copied from a gen host of the same die whose probe for that die is
+    whole (its required list, incl. the bind manifest and hashes, verifies there): tar over ssh, existing files kept (--keep-old-files),
+    no delete, only absolute /srv/opentallas-scratch*/claude paths, no size limit.  The caller re-probes afterwards.
+    Die option or global src_sync: false turns it off.  Returns [(host, die, n_files, src_host)]."""
+    if cfg.get("src_sync") is False:
+        return []
+    inc = cfg.get("_src_incomplete") or {}
+    done = []
+    if run is None:
+        def run(argv, inp=None):
+            return AP.sh(argv, timeout=1800)[0]
+    ssh = ["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
+    for h in sorted(inc):
+        for die, why in sorted(inc[h].items()):
+            d = (cfg.get("dies") or {}).get(die) or {}
+            if d.get("src_sync") is False:
+                continue
+            paths = sorted({p[:-len(" missing")].strip() for p in str(why).split("; ")
+                            if p.endswith(" missing") and ": " not in p})
+            paths = [p for p in paths if _ITEM_SYNC_OK.match(p) and ".." not in p.split("/")]
+            if not paths:
+                continue
+            hosts = [x for x in list(d.get("gen_hosts") or []) + [d.get("gen_host")] if x]
+            src = next((g for g in sorted(set(hosts)) if g != h and die not in (inc.get(g) or {})), None)
+            if not src:
+                continue                                         # no host whose copy verifies: nothing to copy from
+            ok = 0
+            for i in range(0, len(paths), SRC_SYNC_BATCH):
+                part = paths[i:i + SRC_SYNC_BATCH]
+                names = " ".join(shlex.quote(p.lstrip("/")) for p in part)
+                pipe = (f"{' '.join(ssh)} {src} 'cd / && for f in {names}; do test -e \"$f\" || exit 3; done; tar -C / -cf - {names}' | "
+                        f"{' '.join(ssh).replace('-n ', '')} {h} 'tar -C / -xf - --keep-old-files'")
+                try:
+                    rc = run(["bash", "-c", "set -o pipefail; " + pipe])
+                except Exception as e:
+                    AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: skipped: {e}")
+                    continue
+                if rc in (0, 2):                                 # tar --keep-old-files returns 2 when a file already exists
+                    ok += len(part)
+            if ok:
+                AP.log(f"KIT-WAVE SRC-SYNC {die}: {ok} missing input file(s) copied {src}->{h} (self-heal SRC-HEAL-1116: its probe is whole there); re-probe follows")
+                done.append((h, die, ok, src))
+    return done
+
+
 def workroot_low(AP, cfg, run=None):
     """KW-FIX-30 11-07 (COORD 13:21): {host: {die: free GB}} for the gen hosts where the disk that really holds the
     die's work_root has less than gen_disk_min_gb free.  GEN-DISK-LOW reads ot-run's scratch disk (scratch2), but the
@@ -6182,12 +6232,11 @@ def run_item(spec_path):
             # the die's strict bind of record: read-only, never rebuilt here; it must report 0 errors
             bind = kr["bind_out"]
             # KW-SELFCONT-2 (COORD 11-12): a gen host that lacks the bind dir of record gets it copied in (same absolute path, so the
-            # recipe's reference is unchanged) from the first other host of the die that holds it, <= 4 GB, before the report check
+            # recipe's reference is unchanged) from the first other host of the die that holds it (no size limit: BINDFETCH-1116 removed the 4 GB skip that left S81's 6.8 GB bind missing), before the report check
             _oth = " ".join(shlex.quote(h) for h in (sp.get("hosts") or []) if h not in (G, "localhost", hub))
             _fetch = (f"B={q(bind)}; if [ ! -f \"$B/bind_report.json\" ]; then for h in {_oth}; do "
                       f"if ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 $h \"test -f $B/bind_report.json\"; then "
-                      f"kb=$(ssh -o BatchMode=yes -o ControlPath=none $h \"du -sk $B | cut -f1\"); "
-                      f"if [ \"${{kb:-0}}\" -le 4194304 ]; then mkdir -p \"$B\" && rsync -a -e \"ssh -o BatchMode=yes -o ControlPath=none\" $h:$B/ $B/ && echo KW_BIND_COPIED $h $kb KB; fi; break; fi; done; fi; ")
+                      f"mkdir -p \"$B\" && rsync -a -e \"ssh -o BatchMode=yes -o ControlPath=none\" $h:$B/ $B/ && echo KW_BIND_COPIED $h; break; fi; done; fi; ")
             rcf, tf = run("bind_fetch", remote(_fetch + "true"), idempotent=True)
             chk = (f"python3 -c \"import json,sys;r=json.load(open('{bind}/bind_report.json'));e=r.get('errors');"
                    f"n=len(e) if isinstance(e,list) else e;print('BIND errors', n);sys.exit(0 if n == 0 else 3)\"")
@@ -7066,7 +7115,7 @@ BIND_PREFLIGHT_TTL_S = 1800
 def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     """{item: why} for type rows whose kit_topology prepare-stations would raise KIT_TOPOLOGY_BIND_STALE (kit_rtl mode
     bind, canonical topology preparation on).  One probe per (src, plan, bind_out, asbuilt, reset scope) on the die's
-    gen_host, cached in st for BIND_PREFLIGHT_TTL_S; a probe error or an unreadable input = unknown = launch (fail open).
+    gen_host, cached in st for BIND_PREFLIGHT_TTL_S; a probe error or an unreadable input = unknown = NOT launched (fail closed, FAILCLOSED-1116).
     Die option bind_preflight false turns it off."""
     d = cfg["dies"][die]
     if d.get("bind_preflight") is False or d.get("canonical_topology_prepare", True) is False:
@@ -7102,8 +7151,10 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
             p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=sorted(set(items))), timeout=600)
             if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
                 if AP:
-                    AP.log(f"KIT-WAVE bind preflight {die} skipped (unknown = launch): "
+                    AP.log(f"KIT-WAVE bind preflight {die} UNKNOWN (fail closed, rows not launched): "
                            f"{(p or {}).get('error') if isinstance(p, dict) else p}"[:400])
+                for item in items:                       # FAILCLOSED-1116: an unreadable probe blocks the launch, never passes it (not cached: retried next tick)
+                    out[item] = "BIND_PREFLIGHT_UNKNOWN: the bind probe could not run on the gen host; not launched until it can"
                 continue
             c = cache[key] = {"t": now, "checked": sorted(set(items)), "stale": p["stale"]}
         for item in items:
@@ -8855,7 +8906,7 @@ def collect(AP, cfg, st, notices):
                                inp=breaker_inputs(cfg, rec["die"]))
                 for _k, _what in FG.probe_result(st, rec["die"], rec["item"], _stg, passed=FG.stage_rank(_stg) > FG.stage_rank(
                         next((e.get("stage") for e in (st.get("flow_guard") or {}).get("open", {}).values() if e.get("die") == rec["die"] and e.get("state") == "probe"
-                              and (e.get("probe") or {}).get(FG.family_of(rec["item"])) == rec["item"]), ""))):
+                              and FG.probe_item(e) == rec["item"]), ""))):
                     AP.log(f"KIT-WAVE FLOW-GUARD PROBE {rec['die']}/{rec['item']}: {_what}")
                 note_fail_key(cfg, st, rec, cls, why)
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
@@ -9075,6 +9126,8 @@ def breaker_inputs(cfg, die):
     d = (cfg.get("dies") or {}).get(die) or {}
     try:
         body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("_src_overlay"), d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
+        if d.get("breaker_fix"):                 # PROBE-ONE-1116: a config change naming the class (dies.<die>.breaker_fix = any text) opens the probe window
+            body.append(d["breaker_fix"])
         return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
     except (TypeError, ValueError):
         return ""
@@ -10500,6 +10553,14 @@ def _step(AP, ap_dir):
         for h, ds in sorted(cfg["_src_incomplete"].items()):
             for die, why in sorted(ds.items()):
                 AP.log(f"KIT-WAVE SRC-INCOMPLETE {h} {die}: {why} (not a gen host for the die until its copy is whole)")
+        try:                                    # SRC-HEAL-1116: copy missing die inputs (bind dir) from a host where the probe is whole, re-probe
+            if sync_die_inputs(AP, cfg):
+                st.pop("bind_preflight", None)  # a BIND-STALE verdict cached from the incomplete copy is void
+                cfg["_src_incomplete"] = src_incomplete(AP, cfg)
+                st["src_incomplete_last"] = {"t": time.time(), "dies": cfg["_src_incomplete"],
+                                             "items": cfg.get("_item_incomplete") or {}}
+        except Exception as e:
+            AP.log(f"KIT-WAVE src sync skipped: {type(e).__name__}: {e}")
         try:                                    # FIX-SELFCONT: copy item inputs held by one gen host to the others
             sync_item_inputs(AP, cfg)
         except Exception as e:
