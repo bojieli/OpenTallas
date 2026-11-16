@@ -155,3 +155,38 @@ class NoprogDrift(unittest.TestCase):
         out = json.loads([l for l in r.stdout.splitlines() if l.startswith("AP_JSON ")][-1][8:])
         self.assertEqual(out["noprog_stage.py"], None)
         self.assertEqual(len(out["noprog_watchdog.py"]), 40)
+
+
+class CountGap(unittest.TestCase):
+    def test_uncredited_archived_rows_are_listed(self):
+        tsv = ("qwen_compute\tcore_a\tcore\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-BOTH\tnote a\\n"
+               "qwen_compute\tcore_b\tcore\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-BOTH\\n"
+               "qwen_compute\tcore_c\tcore\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-RTX\\n"
+               "hbm\ttype_x\ttype\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-BOTH\\n")
+        listing = {"agidock_index_tsv": tsv.replace("\\\\n", "\\n")}
+        cache = {"plans": {"p1": {"die": "qwen_compute", "signed_cores": {"core_b": ["r"]}}, "p2": {"die": "hbm", "signed_types": {"type_x": ["r"]}}}}
+        rows = FH.count_gap_rows(listing, cache)
+        self.assertEqual([(r[0], r[1]) for r in rows], [("qwen_compute", "core_a")])
+
+    def test_unreadable_inputs_are_not_a_crash(self):
+        self.assertTrue(FH.count_gap_section("/nonexistent", "/nonexistent")[0].startswith("# COUNT-GAP not computed"))
+
+
+class LocalHost(unittest.TestCase):
+    def test_is_local_host_by_hostname_and_fleet_table(self):
+        d = Path(tempfile.mkdtemp())
+        tab = d / "fleet_hosts.tsv"
+        tab.write_text("# c\nintel2\ttolerant-swine\t1.2.3.4\tno\nepyc9\trenewed-glider\t1.2.3.5\tyes\n")
+        self.assertTrue(FH.is_local_host("intel2", str(tab), "tolerant-swine"))
+        self.assertTrue(FH.is_local_host("tolerant-swine", str(tab), "tolerant-swine.example"))
+        self.assertTrue(FH.is_local_host("localhost", str(tab), "x"))
+        self.assertFalse(FH.is_local_host("epyc9", str(tab), "tolerant-swine"))
+        self.assertFalse(FH.is_local_host("epyc9", str(d / "none"), "tolerant-swine"))
+
+    def test_ssh_rpy_runs_the_script_here_for_this_host(self):
+        import unittest.mock as mock
+        code = 'import json,sys\nprint("AP_JSON " + json.dumps({"args": json.loads(sys.argv[1])}))\n'
+        with mock.patch.object(FH, "is_local_host", lambda h, *a, **k: h == "me"):
+            self.assertEqual(FH.ssh_rpy("me", code, {"x": 1}), {"args": {"x": 1}})
+            r = FH.ssh_rpy("other-host-that-does-not-exist.invalid", code, {"x": 1}, timeout=20)
+        self.assertIn("error", r)                      # a remote host still goes through ssh

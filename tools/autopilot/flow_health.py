@@ -104,8 +104,28 @@ def render(hours_data, refused, open_now, now=None):
 
 # ---------------------------------------------------------------- skew
 
+def is_local_host(h, fleet_table=os.path.join(str(COORD), "tools/fleet_hosts.tsv"), nodename=None):
+    """FLOW-HEALTH-1 11-15 (COORD): True when `h` (fleet alias, cherry name, localhost) names this machine: a per-host scan of it reads locally
+    instead of `ssh <itself>` (intel2 does not resolve on intel2)."""
+    me = nodename or os.uname().nodename
+    me = {me, me.split(".")[0]}
+    if h in ("local", "localhost") or h in me:
+        return True
+    try:
+        for ln in open(fleet_table).read().splitlines():
+            f = ln.split("\t")
+            if len(f) >= 2 and not ln.startswith("#") and f[0] == h and f[1] in me:
+                return True
+    except OSError:
+        pass
+    return False
+
+
 def ssh_rpy(host, code, args, timeout=180):
-    cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", "-o", "ControlPath=none", host, "python3", "-I", "-", shlex.quote(json.dumps(args))]
+    if is_local_host(host):
+        cmd = [sys.executable, "-I", "-", json.dumps(args)]
+    else:
+        cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20", "-o", "ControlPath=none", host, "python3", "-I", "-", shlex.quote(json.dumps(args))]
     try:
         p = subprocess.run(cmd, input=code, capture_output=True, text=True, timeout=timeout)
     except (OSError, subprocess.TimeoutExpired) as e:
@@ -319,6 +339,41 @@ def noprog_drift_section(blob=None, rpy=None, hosts=NOPROG_HOSTS):
     return out
 
 
+LISTING = os.path.expanduser("~/.local/state/fleet-viz/agidock_archive_index.json")
+COUNT_CACHE = os.path.expanduser("~/.local/state/fleet-viz/release_tree_plan_cache.json")
+
+
+def count_gap_rows(listing, cache):
+    """FLOW-HEALTH-1 11-15 (FABLE-CENSUS-1815 class 10): INDEX.tsv rows of the AGIdock archive (ARCHIVED-BOTH core / type) whose die's count does
+    not credit the name.  -> [(die, name, kind, state, note)].  3 QC n9 cores sat here for 5 h before anybody noticed."""
+    credited = {}
+    for e in (cache.get("plans") or {}).values():
+        s = credited.setdefault(e.get("die"), set())
+        for a in ("signed_types", "signed_cores", "signed_designs"):
+            s.update((e.get(a) or {}).keys())
+    out = []
+    for ln in (listing.get("agidock_index_tsv") or "").splitlines():
+        f = ln.split("\t")
+        if len(f) < 11 or ln.startswith("#"):
+            continue
+        die, name, kind, state = f[0], f[1], f[2], f[10]
+        if state != "ARCHIVED-BOTH" or kind not in ("core", "type", "design"):
+            continue
+        if name not in credited.get(die, set()):
+            out.append((die, name, kind, state, (f[11] if len(f) > 11 else "")[:100]))
+    return out
+
+
+def count_gap_section(listing_path=LISTING, cache_path=COUNT_CACHE):
+    try:
+        rows = count_gap_rows(json.load(open(listing_path)), json.load(open(cache_path)))
+    except (OSError, ValueError) as e:
+        return ["# COUNT-GAP not computed: %s" % type(e).__name__]
+    out = ["# COUNT-GAP archived (AGIdock INDEX.tsv ARCHIVED-BOTH) but not credited by the count: %d" % len(rows), "\t".join(["die", "name", "kind", "state", "note"])]
+    out += ["\t".join(r) for r in rows]
+    return out
+
+
 def load_src_refresh(path=SRC_REFRESH):
     if not os.path.isfile(path):
         return None
@@ -346,6 +401,10 @@ def build(args, now=None):
         except Exception as e:
             rows += ["", f"# SKEW not computed: {type(e).__name__}: {str(e)[:200]}"]
     if not args.no_skew:
+        try:
+            rows += [""] + count_gap_section()
+        except Exception as e:
+            rows += ["", f"# COUNT-GAP not computed: {type(e).__name__}"]
         try:
             rows += [""] + noprog_drift_section()
         except Exception as e:
