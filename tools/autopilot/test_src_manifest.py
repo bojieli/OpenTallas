@@ -374,3 +374,36 @@ class DropOverlay(Base):
         nm = SM.delta_apply(self.t + "/p1", old, self.t + "/new")
         self.assertEqual(open(self.t + "/new/tools/die_plan/b.py").read(), "B=9\n")
         self.assertNotIn("tools/die_plan/b.py", nm["overlay"])
+
+
+class Retire(Base):
+    def test_older_dn_deleted_unless_referenced_or_in_use_base_kept(self):
+        d = self.t + "/trees"
+        os.makedirs(d)
+        for n in ("base", "base_d1", "base_d2", "base_d3", "other_d1"):
+            os.makedirs(f"{d}/{n}/x")
+        refs = self.t + "/kit_wave.json"
+        open(refs, "w").write('{"src": "%s/base_d2"}' % d)
+        c = dict((os.path.basename(p), w) for p, w in SM.retire_candidates(d + "/base_d3", [refs]))
+        self.assertEqual(c, {"base_d2": "REFERENCED", "base_d1": "DELETE"})        # base and other_d1 are never candidates
+        SM.retire(d + "/base_d3", [refs])
+        self.assertEqual(sorted(os.listdir(d)), ["base", "base_d2", "base_d3", "other_d1"])
+
+    def test_keep_n_and_dry_run_and_non_dn_tree(self):
+        d = self.t + "/trees"
+        os.makedirs(d)
+        for n in ("t_d1", "t_d2", "t_d3", "t_d4"):
+            os.makedirs(f"{d}/{n}")
+        self.assertEqual(len(SM.retire(d + "/t_d4", [], keep=1, dry=True)), 2)      # d3 kept, d2 d1 candidates
+        self.assertEqual(len(os.listdir(d)), 4)
+        self.assertEqual(SM.retire_candidates(d + "/nodn", []), [])
+
+    def test_publish_retires_after_clean_publish(self):
+        d = self.t + "/trees"
+        os.makedirs(d + "/old_d1")
+        out = d + "/old_d2"
+        m = SM.build(self.repo, self.sha, None, ["tools"], out, main_ref="")
+        SM.publish(out)
+        SM.retire(out, [])
+        self.assertFalse(os.path.exists(d + "/old_d1"))
+        self.assertTrue(os.path.exists(out))
