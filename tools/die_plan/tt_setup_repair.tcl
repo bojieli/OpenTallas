@@ -10,7 +10,7 @@
 if {[file exists /work/config.mk]} {
   set fh [open /work/config.mk]
   foreach ln [split [read $fh] "\n"] {
-    if {[regexp {^export\s+(OT_VCLK_TT|LAYER_PARASITICS_FILE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} { set ::env($k) $v }
+    if {[regexp {^export\s+(OT_VCLK_TT|LAYER_PARASITICS_FILE|OT_RC_SIGNAL|OT_RC_SIGNAL_SCALE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} { set ::env($k) $v }
   }
   close $fh
 }
@@ -56,6 +56,8 @@ if {$w0 < $mg} {
   # GRT-RC mode works on a routed-guide DB: route the changed nets incrementally (as ORFS wraps repair_timing in the GRT stage) so every
   # new buffer / resized net keeps a guide for detail route; -allow_congestion = the kit's own GRT policy (GRT-0232 class)
   if {$ot_tt_rc eq "grt"} { global_route -start_incremental -allow_congestion }
+  # r249: with the signal RC table the estimate sees the routed caps, so max slew / cap / fanout violations show up; repair them first
+  if {[info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1"} { catch {repair_design} dm; puts "OT_TT_SETUP_REPAIR repair_design: $dm" }
   repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra
   detailed_placement
   if {$ot_tt_rc eq "grt"} {

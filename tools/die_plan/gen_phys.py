@@ -2315,6 +2315,26 @@ def tt_setup_repair_cfg():
             f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
 
 
+def rc_signal_cfg(P_name, flow="type"):
+    """r222/r228 (GENBUG-IMPL): config.mk lines that turn on the signal-net RC table (rc_signal_adjust.tcl) for this kit.  The scale is
+    per die and flow (rc_signal_scales.json, validated populations only); gen env OT_RC_SIGNAL=0 turns it off, OT_RC_SIGNAL_SCALE overrides.
+    A die with no entry gets nothing (kit table, byte-equal)."""
+    import re
+    if os.environ.get("OT_RC_SIGNAL", "").strip() == "0":
+        return []
+    tab = json.loads(Path(__file__).with_name("rc_signal_scales.json").read_text())
+    sc = tab["core"] if flow == "core" else tab["type"].get(P_name)
+    ov = os.environ.get("OT_RC_SIGNAL_SCALE", "").strip()
+    if ov:
+        if not re.fullmatch(r"\d+(\.\d+)?", ov):
+            raise SystemExit(f"OT_RC_SIGNAL_SCALE={ov!r}: not a number")
+        sc = float(ov)
+    if sc is None:
+        return []
+    return ["# r222/r228: signal-net unit C x scale in the GRT estimate (postcts_gate.tcl, tt_setup_repair.tcl); rc_signal_scales.json",
+            "export OT_RC_SIGNAL = 1", f"export OT_RC_SIGNAL_SCALE = {sc:g}"]
+
+
 def pg_drt0255_cfg():
     """DRT0255 (FABLE-PD-DRT-1350) opt-in config.mk lines, from the gen environment: OT_PG_TRACK_TRUTH_MODE=region (GRT per-gcell
     capacity cut on the PG pair rows / columns instead of per-track obstructions) and OT_PG_PAIR_ROW_KEEPOUT=1 (ring / station / face-flop
@@ -5701,6 +5721,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
     cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
+    cfg += rc_signal_cfg(P.name)   # r222/r228 signal-net RC table (per die; OT_RC_SIGNAL=0 off)
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
@@ -5746,7 +5767,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f

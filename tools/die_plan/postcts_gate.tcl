@@ -11,7 +11,7 @@ set C $::env(OT_CORNER)
 if {[file exists /work/config.mk]} {
   set fh [open /work/config.mk]
   foreach ln [split [read $fh] "\n"] {
-    if {[regexp {^export\s+(OT_VCLK_TT|OT_VCLK_FF|LAYER_PARASITICS_FILE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} {
+    if {[regexp {^export\s+(OT_VCLK_TT|OT_VCLK_FF|LAYER_PARASITICS_FILE|OT_RC_SIGNAL|OT_RC_SIGNAL_SCALE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} {
       set ::env($k) $v
     }
   }
