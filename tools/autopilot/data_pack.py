@@ -42,7 +42,19 @@ def rebase_asbuilt_map(data, src_file, old_tree, new_tree, rules):
     base = data.get("base") or old_tree
     if not os.path.isabs(base):
         base = os.path.join(parent, base)
-    candidates = [value] if os.path.isabs(value) else [os.path.join(parent, value), os.path.join(base, value), os.path.join(old_tree, value)]
+    candidates = [value] if os.path.isabs(value) else [os.path.join(parent, value)]
+    if not os.path.isabs(value):
+        # The payload may contain only the manifest; an unchanged sibling map
+        # remains in the baseline tree. Resolve its manifest-relative location
+        # at the mapped destination, then look for that exact baseline input.
+        for source, target in rules:
+            if src_file == source or src_file.startswith(source + "/"):
+                packed_file = target + src_file[len(source):]
+                packed_map = os.path.normpath(os.path.join(os.path.dirname(packed_file), value))
+                if os.path.commonpath([packed_map, new_tree]) == os.path.normpath(new_tree):
+                    candidates.append(os.path.join(old_tree, os.path.relpath(packed_map, new_tree)))
+                break
+        candidates.extend([os.path.join(base, value), os.path.join(old_tree, value)])
     resolved = next((os.path.normpath(q) for q in candidates if os.path.isfile(q)), None)
     if resolved is None:
         raise ValueError(f"asbuilt map_file does not exist: {src_file}: {value}")
