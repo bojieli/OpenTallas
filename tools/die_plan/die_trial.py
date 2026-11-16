@@ -1081,11 +1081,18 @@ def reach_place(site, poly, reach, nmin=0, even=False, step=0.54):
     best = list(best)
     while len(best) < need:             # split the largest span at the legal point nearest its middle
         ch = [0.0] + best + [L]
-        k = max(range(len(ch) - 1), key=lambda i: ch[i + 1] - ch[i])
-        m = (ch[k] + ch[k + 1]) / 2
-        inside = [t for t in ok if ch[k] + 1e-9 < t < ch[k + 1] - 1e-9]
-        if not inside:
+        # The longest span may be an unavoidable macro overflight with no
+        # legal interior site. Add parity/minimum-count stages to the largest
+        # splittable span instead of rejecting a physically legal chain.
+        split = []
+        for k in range(len(ch) - 1):
+            inside = ok[bisect.bisect_right(ok, ch[k] + 1e-9):bisect.bisect_left(ok, ch[k + 1] - 1e-9)]
+            if inside:
+                split.append((ch[k + 1] - ch[k], k, inside))
+        if not split:
             return None
+        _, k, inside = max(split, key=lambda item: (item[0], -item[1]))
+        m = (ch[k] + ch[k + 1]) / 2
         best = sorted(best + [min(inside, key=lambda t: abs(t - m))])
     q = [(round(pts[t][0], 3), round(pts[t][1], 3)) for t in best]
     if max(chain_spans([poly[0]] + q + [poly[-1]])) > reach + 1e-6:
