@@ -37,6 +37,8 @@ import ctlm_image as CI      # noqa: E402
 import dv_lower as D         # noqa: E402
 import dv_lower_mat as M     # noqa: E402
 import dv_lower_vec as V     # noqa: E402
+import segment_calendar as SEG  # noqa: E402
+import programme_store as PS  # noqa: E402
 
 ROOT = D.ROOT
 N = D.NSLICE
@@ -144,6 +146,7 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         return at + C['ISSUE_TO_ROM'] + R['R_HR']
 
     tile_note = []
+    ar_messages = []
 
     def mv_land(name, at, done):
         """VM-destination matvec: the column tiles deliver the far words; with tile_first the DV tail is lowered, the
@@ -179,6 +182,9 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         coll = M.ar_collisions(low, ages)
         if coll:
             gaps.append(f'{name}: AR outbound lane collisions {coll[:2]}')
+        if native_s8_ages:
+            framed = M.ar_framed(low['expected_ar'], x)
+            ar_messages.append((x, framed))
         last_in = t0 + 255
         first_out = last_in + Q8['E'] + (Q8['ls_bi'] - Q8['ls_rec'])
         return low, ch, x, t0, first_out
@@ -307,9 +313,16 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
             kk = (k[0], k[1], k[2] + dl) if k[0] in ('sc', 'x') else (k[0], k[1] + dl)
             occ.setdefault(kk, []).extend((key,) + tuple(x) for x in v)
     occ_clash = sorted((str(k), v) for k, v in occ.items() if len({x[0] for x in v}) > 1)
-    for p in plan:
-        if p['kind'] == 'SEG':
-            put(p['at'] - C['LOC_EDGES'] + R['R_CMD'], CI.cmdw(1, 2, p['base'], 14), f'SEG base {p["base"]}', 'ctlm')
+    segment_placements = []
+    if native_s8_ages:
+        segment_placements = SEG.place_segments(plan, C, R, ev)
+        for segment in segment_placements:
+            put(segment['edge_w5'], CI.cmdw(1, 2, segment['base'], 14),
+                f'SEG base {segment["base"]}', 'ctlm')
+    else:
+        for p in plan:
+            if p['kind'] == 'SEG':
+                put(p['at'] - C['LOC_EDGES'] + R['R_CMD'], CI.cmdw(1, 2, p['base'], 14), f'SEG base {p["base"]}', 'ctlm')
     events = sorted((e, c, l) for e, (c, l, _) in ev.items())
     try:
         dec = CI.cal_entries(events, C['CAL_S'], C)
@@ -333,12 +346,40 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
                boot_entries_est=len(ssq_boot) + 8, table_words=dict(prog=vec_prog, btab=btab_words,
                crom_per_layer=crom_layer, crom_rope_per_token=crom_rope), pw_needed=need_pw,
                fits=need_pw <= CI.CMD_CEIL)
-    if not cap['fits']:
-        gaps.append(f'IMAGE CAPACITY: the full layer needs {need_pw} PW words (calendar {2 * n_ent} + tables '
-                    f'{16 * (vec_prog + btab_words + crom_layer)} = (PROG {vec_prog} + BTAB {btab_words} + CROM '
-                    f'{crom_layer}) x 16) > CMD_CEIL {CI.CMD_CEIL}: tt_ctlm cannot hold one layer\'s slice tables + '
-                    'calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream '
-                    '(ROM-resident slice tables or a table DMA) is needed')
+    if native_s8_ages:
+        legacy_shared_pw = cap
+        # Native CALR and LOCAL4 are separate physical stores. This is a
+        # count check of the newly compiled decode fragment and reserved
+        # stage slots, not proof that genuine masks were installed.
+        native_entries = len(dec) if dec else len(events)
+        table_slots = (PS.STAGES + 1) * PS.STRIDE
+        calr_capacity = (1 << 10) - 1  # actual qfd_dv_cmd_cal_mu NENT1023, 10-bit descriptor
+        cap = dict(vehicle='native_s8_separate_stores',
+                   fits=native_entries <= calr_capacity and table_slots <= PS.DEPTH,
+                   fits_scope='decode fragment and reserved layer/HEAD table slots only',
+                   CALR=dict(usable_entries=calr_capacity, compiled_decode_entries=native_entries,
+                             ROM_banks=2, physical_rows=4096, physical_width=266,
+                             whole_native_event_image_complete=False, installed_entry_count=None),
+                   LOCAL4=dict(logical_capacity=PS.DEPTH, reserved_records=table_slots,
+                               layer_stage_count=PS.STAGES, records_per_stage=PS.STRIDE,
+                               stage36_base=(PS.STAGES-1)*PS.STRIDE,
+                               HEAD37_base=PS.STAGES*PS.STRIDE, HEAD37_end=table_slots-1,
+                               ROM_banks=4, physical_width=PS.WIDTH,
+                               masks_installed=False, actual_TSLICE_assignment_qualified=False,
+                               HEAD_STAGE37_enabled=False),
+                   legacy_shared_pw_estimate=legacy_shared_pw)
+        if not cap['fits']:
+            gaps.append('NATIVE STORE CAPACITY: decode fragment or stage-slot reservation exceeds selected native stores')
+        gaps.append('NATIVE IMAGE INSTALLATION: CALR decode count and LOCAL4 stage-slot layout fit separate stores; '
+                    'actual whole event image, genuine nonempty masks, distinct TSLICE instance assignment and '
+                    'HEAD_STAGE37 selection are not qualified by this analytical compile')
+    else:
+        if not cap['fits']:
+            gaps.append(f'IMAGE CAPACITY: the full layer needs {need_pw} PW words (calendar {2 * n_ent} + tables '
+                        f'{16 * (vec_prog + btab_words + crom_layer)} = (PROG {vec_prog} + BTAB {btab_words} + CROM '
+                        f'{crom_layer}) x 16) > CMD_CEIL {CI.CMD_CEIL}: tt_ctlm cannot hold one layer\'s slice tables + '
+                        'calendar; and CROM post-scales / norm gains differ per layer (36 x) -> a per-layer table stream '
+                        '(ROM-resident slice tables or a table DMA) is needed')
     if clash:
         gaps.append(f'CALENDAR: {len(clash)} W5 command-edge clashes between families (first {clash[:2]})')
     if occ_clash:
@@ -352,9 +393,24 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
         'block b at M0 + 8 b + j - 26 - 2 s) are a contract no tool compiles into the ME / xhead calendar',
         'PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image '
         'blocks only (no producer of the per-token row on the die)',
-        'AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the '
-        'message last word; slice2 sends tag = row address, last per STN op (fault_code[2])',
     ]
+    ar_framing = None
+    if native_s8_ages:
+        M.ar_framer_order(ar_messages)
+        source = 'rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv'
+        source_sha = at_lw['ages']['composition']['static_source_sha256'].get(source)
+        if not source_sha:
+            raise D.LowerError('native AR framer source identity is absent from the measured profile')
+        ar_framing = dict(status='PASS_SOURCE_COMPOSED', module='qfd_dv_s8_fdn_arf1', source=source,
+                          source_sha256=source_sha, message_order_checked=True,
+                          messages=[dict(tag=x['cc_word'] & 0xffffffff, words=len(words),
+                                         first=words[0]['edge'], last=words[-1]['edge'],
+                                         last_flags=sum(w['last'] for w in words)) for x,words in ar_messages])
+    else:
+        gaps.append('AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last '
+                    'only on the message last word; slice2 sends tag = row address, last per STN op (fault_code[2])')
+    if native_s8_ages:
+        gaps = [g.replace('PER-TOKEN RoPE ROW: cos / sin of the position must reach CROM ROPE every token; TLOAD plays static image blocks only (no producer of the per-token row on the die)', 'PER-TOKEN RoPE JOIN: selected native59 ROPE1 producer exists (EMB_RT_CODE13/EMB_RT_SCALE14); its current shared-calendar dates, position context and immutable ROM payload have not been joined by this analytical layer compiler') for g in gaps]
     # XC order: the production decode calendar is THIS spliced calendar (ctlm_image's XC after END is the priced plan
     # only and is not emitted here).  Check every lowered XC is in it, XC_TO_WORD0 + xc_cc edges before its word 0.
     xc_bad = []
@@ -386,11 +442,11 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
             priced_plan_period=p_period, l0_cold=l0_cold, l0_cold_rule='embedding 256 words landed + x stream (resid XS span) + PC15->PC16 gap + layer (qkv issue .. residual-2 x stream end)', l0_cold_priced=p_emb + p_end,
             embed_stage0=dict(cycles=emb_cycles, priced=p_emb, rule=emb['rule']), xs_span=xs_span, tile=tile_note, tile_mode=tile_mode,
             lowered_minus_priced=t_r2 - p_end),
-        calendar=dict(model=model, entries=len(events), clashes=clash[:20], occupancy_clashes=occ_clash[:20],
+        calendar=dict(model=model, entries=len(events), clashes=clash[:20], segment_placements=segment_placements, occupancy_clashes=occ_clash[:20],
                       shifts=shifts, families={k: sum(1 for v in ev.values() if v[2] == k)
                                                for k in ('ssq', 'mat', 'qk', 'attn', 'resid1', 'silu', 'resid2',
                                                          'ctlm')}),
-        capacity=cap, gaps=gaps, notes=notes,
+        capacity=cap, ar_framing=ar_framing, gaps=gaps, notes=notes,
         events=[dict(edge_w5=e + R['R_CMD'], cmd=f'{c:029x}', label=l) for e, c, l in events])
     if correct_residual2:
         out['native_residual2_operand'] = 'PS2'
