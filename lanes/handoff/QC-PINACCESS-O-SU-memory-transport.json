@@ -1,0 +1,199 @@
+{
+  "schema": "opentallas.qc_su_transport_diagnosis.v1",
+  "verdict": "FUNCTIONAL_LATENCY_MISMATCH",
+  "bind": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/bind/bind_s29q103S4Q9JBQL",
+  "samples": {
+    "E0": {
+      "request": {
+        "sink_port": "d",
+        "sink_bits": [
+          [
+            192,
+            192
+          ]
+        ],
+        "source": "dvs_E0.u_core.u_sub.u_lrly0.va_re",
+        "source_bits": [
+          [
+            0,
+            0
+          ]
+        ],
+        "asbuilt_stages": 0,
+        "bound_stages": 22,
+        "landed_stages": 22,
+        "lane": "sl_E0_su_l0__x_su_l0_su_c"
+      },
+      "reply": {
+        "sink_port": "va_q",
+        "sink_bits": [
+          [
+            0,
+            31
+          ]
+        ],
+        "source": "dvs_E0.u_core.u_sub.u_suvm.u_vm8q.u_oa.q",
+        "source_bits": [
+          [
+            0,
+            31
+          ]
+        ],
+        "asbuilt_stages": 0,
+        "bound_stages": 21,
+        "landed_stages": 21,
+        "lane": "sl_E0_su_c__x_su_c_su_l0_p1"
+      },
+      "command": [
+        {
+          "sink_port": "gb",
+          "sink_bits": [
+            [
+              0,
+              255
+            ]
+          ],
+          "source": "dvs_E0.u_core.u_sub.u_suvm.$procdff$60309.Q",
+          "source_bits": [
+            [
+              0,
+              255
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 19,
+          "landed_stages": 19,
+          "lane": "sl_E0_su_c__x_su_c_su_l0"
+        },
+        {
+          "sink_port": "gb",
+          "sink_bits": [
+            [
+              256,
+              499
+            ]
+          ],
+          "source": "dvs_E0.u_core.u_sub.u_suvm.u_su8.gb",
+          "source_bits": [
+            [
+              0,
+              243
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 19,
+          "landed_stages": 19,
+          "lane": "sl_E0_su_c__x_su_c_su_l0"
+        }
+      ],
+      "transport": 43,
+      "required_MEMORY_READ_EXTRA": 44,
+      "required_outer_ML": 52,
+      "required_inner_tag_ring_D": 58,
+      "tag_early_by_cycles": 35
+    },
+    "W0": {
+      "request": {
+        "sink_port": "d",
+        "sink_bits": [
+          [
+            192,
+            192
+          ]
+        ],
+        "source": "dvs_W0.u_core.u_sub.u_lrly0.va_re",
+        "source_bits": [
+          [
+            0,
+            0
+          ]
+        ],
+        "asbuilt_stages": 0,
+        "bound_stages": 22,
+        "landed_stages": 22,
+        "lane": "sl_W0_su_l0__x_su_l0_su_c"
+      },
+      "reply": {
+        "sink_port": "va_q",
+        "sink_bits": [
+          [
+            0,
+            31
+          ]
+        ],
+        "source": "dvs_W0.u_core.u_sub.u_suvm.u_vm8q.u_oa.q",
+        "source_bits": [
+          [
+            0,
+            31
+          ]
+        ],
+        "asbuilt_stages": 0,
+        "bound_stages": 20,
+        "landed_stages": 20,
+        "lane": "sl_W0_su_c__x_su_c_su_l0_p1"
+      },
+      "command": [
+        {
+          "sink_port": "gb",
+          "sink_bits": [
+            [
+              0,
+              255
+            ]
+          ],
+          "source": "dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q",
+          "source_bits": [
+            [
+              0,
+              255
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 19,
+          "landed_stages": 19,
+          "lane": "sl_W0_su_c__x_su_c_su_l0"
+        },
+        {
+          "sink_port": "gb",
+          "sink_bits": [
+            [
+              256,
+              499
+            ]
+          ],
+          "source": "dvs_W0.u_core.u_sub.u_suvm.u_su8.gb",
+          "source_bits": [
+            [
+              0,
+              243
+            ]
+          ],
+          "asbuilt_stages": 0,
+          "bound_stages": 19,
+          "landed_stages": 19,
+          "lane": "sl_W0_su_c__x_su_c_su_l0"
+        }
+      ],
+      "transport": 42,
+      "required_MEMORY_READ_EXTRA": 43,
+      "required_outer_ML": 51,
+      "required_inner_tag_ring_D": 57,
+      "tag_early_by_cycles": 34
+    }
+  },
+  "source": {
+    "rtl/physical/qfd_dv_lane_h_su_mem9.sv": "d15c058784c847a05bac469dc58d68c3963d9eb8cd06181f0702158acd2bee4f",
+    "tools/die_plan/qc_su_lane_cut.py": "38ff71f9bb4168c3b4a3b7cb20c78eba6abfc7d7c1371bee1e0aff6f7fbbf0ba",
+    "tools/die_plan/qc_su_mem9_event.py": "cb853db4d1f7a37808c4d0d4036e48d104fd6aad9cc729f0b485c565858b0862",
+    "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+    "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/bind/bind_s29q103S4Q9JBQL/bus_groups.json": "4115b80fca64c69f7316e23ff2b244db1c7481a1752e844e728da96bbd5d78a9",
+    "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/bind/bind_s29q103S4Q9JBQL/rtl/qfd_qc_su_lane_w_l0.sv": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c"
+  },
+  "reason": "Grouped head MEMORY_READ_EXTRA=9 is inherited QC53 request5+answer4, not current transport. Equal command travel delays request launch and metadata launch together and cancels from their difference; memory roundtrip remains additive.",
+  "native_MIF1_outer_ML": 9,
+  "group_outer_ML": 17,
+  "group_inner_tag_ring_D": 23,
+  "supported_tag_ring_max_D": 33,
+  "prescription": "Compose native MIF1 extra1 plus current request+reply transport once; normalize per-master roundtrip across instances/operand buses or introduce priced distinct masters. Rebuild/requalify structural tag delay for resulting profile; do not simply raise MAX_EXTRA or carry old signed grouped view."
+}
