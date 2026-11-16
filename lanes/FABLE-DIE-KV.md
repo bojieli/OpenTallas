@@ -117,7 +117,20 @@ to the out pin inside the sending type.
 | tap slew | max 138.9 ps, 0 over 150 |
 | count-aligned gate | 3,915 / 3,915 TT and FF; worst lo +193.9 / +131.1 ps, hi +818.0 / +763.5; bind sim_window_violations 0, min margin +118.5 |
 | die clock gate verdict | BLOCKED(kits): hold on real views unmeasured (section 4) |
-| strict bind + LATCHECK | first try REFUSED by plan_gate_pre INPUT-MISSING: my plan copy sat outside a tree (my setup, not the plan). Rerun in a link tree: epyc2 fable-die-kv/gate2/gate.out, running |
+| strict bind + LATCHECK | not obtained on this plan: first try REFUSED by plan_gate_pre INPUT-MISSING (my plan copy sat outside a tree), the rerun waited on epyc2 disk. The same rows pass both on HG1B (section 6b) |
+
+## 6b. KV-HG1 as composed (13:40 PST; composed and gated by FABLE-FIX-KV-PVHUB / Codex with these rows and scripts)
+
+- kvgeom7yhr is adopted (r322, 10:27). HG1A = 7yhr + v25hv + k2r + row A (13 START rows), plan 08d352df7ef0:
+  pre 0, G0 0 errors, strict bind 0, LATCHECK 2404 / 2404 (REPORTED, epyc10 fable-fix-kv-pvhub/hg1/gate/gate.out).
+- Die run on HG1A with kv_7yhr.yaml + the refit model (epyc10 hg1/runs/c1), MEASURED by me from its outputs:
+  33,360 inverters, GRT0 0 overflow (use 2.48 %), setup TT +482.8 intra / +510.6 seam, slew max 128.4 ps (0 over 150),
+  count-aligned 3,915 / 3,915 TT and FF (worst lo +177.7 / +210.0). Against the old flat windows it still shows
+  376 intra + 8 seam contract pairs: that is the input of row C, as on 7yhr (127 + 8).
+- HG1B = HG1A + rows B (9,286 rects, 51 types) + C (per-port windows, seam 200) regenerated from the c1 tree, plan
+  b78d8aa38797: pre 0, G0 0, bind 0, LATCHECK 2404 / 2404 (REPORTED, hg1/gateB/gate.out). No die run on HG1B itself;
+  the same step on 7yhr (section 6) gave 0 / 0 contract pairs and 0 overflow with the windows cut.
+- My own strict bind + LATCHECK of 5cfab111c977 (epyc2 gate2) is redundant after HG1B and still running; not a gate.
 
 ## 7. Not checked
 

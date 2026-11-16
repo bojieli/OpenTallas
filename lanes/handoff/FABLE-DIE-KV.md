@@ -22,3 +22,12 @@ shared/chain_direct.sh ENV TAG = kit_direct.sh (ot_clk argv of the yaml, stage c
 3. After the KV-HG1 type compose: row A, die clock kit with kv_7yhr.yaml, regenerate rows B / C from that tree, die proof.
 4. Signed PHY under the clock (2,024 cells): row B2 + PHY rebuild, with FABLE-FIX-KV-PVHUB.
 5. QC-KV d2d +3 stations: take the KV row file from FABLE-FIX-QC-CBGLUE when it exists (requested 09:3x); 15 lanes L341..L355.
+
+## UPDATE 13:40 PST
+- 7yhr adopted. HG1A (plan 08d352df7ef0) and HG1B (b78d8aa38797 = A + fresh site rows + per-port windows) both pass pre / G0 / bind / LATCHECK
+  on epyc10 fable-fix-kv-pvhub/hg1 (composed by FABLE-FIX-KV-PVHUB / Codex with my rows + die_rows.py + kv_7yhr.yaml). Die run on HG1A: hg1/runs/c1.
+- Delta rows file: lanes/handoff/KV-102-delta-die1.tsv. Row F (QC d2d) withdrawn: no KV plan row.
+- Still open, mine: (1) die run on HG1B itself (chain_direct on treeB plan, 25 min) to show contract 0 / 0 on the adopted plan;
+  (2) die hold on real views (PVHUB C1 attempt: 20-view pack refused for missing sidecars, 18-view derived timing running: read it, do not duplicate);
+  (3) row B2 / PHY rebuild; (4) rect count per type (max 366, target 100).
+- epyc2 gate2 (bind of 5cfab111c977) is redundant; let it end, do not relaunch.
