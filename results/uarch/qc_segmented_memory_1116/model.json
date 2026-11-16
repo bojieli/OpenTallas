@@ -31,21 +31,21 @@
   "macro_body_area_um2_total": 318186.45504000003,
   "slot_um": [
     151.2,
-    183.6
+    185.76
   ],
   "baseline_slot_um": [
     151.2,
     129.6
   ],
-  "outline_area_delta_um2_per_head": 8164.799999999999,
-  "outline_area_delta_um2_per_four_head_parent": 32659.199999999997,
+  "outline_area_delta_um2_per_head": 8491.391999999998,
+  "outline_area_delta_um2_per_four_head_parent": 33965.56799999999,
   "parent_slot_um": [
     622.08,
     1399.68
   ],
   "parent_outline_delta_um2": 0,
-  "packing": "two columns, four rows; >=20um edge and inter-macro channels; actual route pending",
-  "macro_body_fraction_of_slot": 0.1193949579831933,
+  "packing": "two columns, four rows; on-track origins; >=20um core edge and inter-macro channels; actual route pending",
+  "macro_body_fraction_of_slot": 0.11800664451827245,
   "retained_tls_macros_per_head": 2,
   "retained_tls_macro": "ot_sram_1r1w2c_128x64_m1",
   "full_head_macro_count": 8,
@@ -66,5 +66,6 @@
   "added_compute_edges": 0,
   "boot_warmup_edges": 60,
   "token_latency_note": "parent43 is charged once; compiler must use fresh actual profile, no rate credit",
-  "qualification": "minimum actual one-head native loop and full-shape physical gate pending"
+  "qualification": "native one-head E0/W0 COPY exact128/128 each; full-shape physical gate pending",
+  "component_proof_commit": "6b9d2833f9ebb135a8bc1fd55654f84da2014f6b"
 }
