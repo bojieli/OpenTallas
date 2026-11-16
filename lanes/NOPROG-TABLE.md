@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 14:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 14:45 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 1, 'YOUNG': 9, 'NO-DATA': 5, 'EXCLUDED': 13, 'KEEP': 1, 'PROGRESS': 4}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 1, 'YOUNG': 10, 'NO-DATA': 5, 'EXCLUDED': 13, 'KEEP': 1, 'PROGRESS': 4}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -19,6 +19,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-PROGRESS': 1, 'YO
 | intel1 | dpkit-slw_fe_v1__clfe325744__cldb4efe33-2596195 | slw_fe_v1 | postcts_gate_TT | 44.4 | last meaningful line 0.0 h ago (16/16 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | intel1 | so_50761_ff_3625 | so_50761_ff_3625 | signoff | 0.0 |  | NO-DATA: empty log |  |
 | intel1 | so_50761_tt_3625 | so_50761_tt_3625 | signoff | 0.0 |  | NO-DATA: empty log |  |
+| intel2 | dpkit-serdes__t13-2676926 | serdes__t13 | 1_2_yosys | 0.1 | last meaningful line 0.0 h ago (191/191 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | epyc2 | dpkit-cbn_q01__clab6e67f2-2229149 | cbn_q01 | 5_1_grt | 12.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 12.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 2.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
