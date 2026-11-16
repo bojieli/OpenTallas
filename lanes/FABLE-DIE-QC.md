@@ -109,3 +109,22 @@ set of 3 or more instances. Branch head @dd7250845f3 writes the mid-range (gate 
 Delta b = `clock.tap_offset.per_port_ps` (52 of 130 types change), `clock.tap_window.per_port_ps`, `seam_hold.seam_ps` 110 -> 180.
 Cost: the 52 changed types get a new kit SDC; seam hold repair covers 180 ps instead of 110. Hold on real views stays
 BLOCKED(kits) until types are signed.
+
+## 7. Proof on the plan of record S4q9c (die chain, epyc2 `fable-die-qc/chain/qc/s4q9c`, 11-16 08:36 - 11:56 PST)
+
+| gate | result |
+|---|---|
+| die GRT0, TT and FF, 50 it | **PASS**: overflow 0 / 0 / 0, 649.6 m, usage 4.06 % |
+| routed taps | 42,256 TT and FF, 0 missing, 313 regions |
+| die STA, plan rows | TT setup +362.0 intra / +540.4 seam; FF contract hold -114.9 / -59.2; TAP-OFFSET-GATE FAIL 5,014 of 84,302 |
+| die STA, re-derived clock rows (`ck/b`) | **TAP-OFFSET-GATE PASS 0 of 84,512; FF contract hold intra 0.00, seam +10.8**; TT setup unchanged |
+| count-align plan C / D | 2,993 crossings, FAIL 0, depth 8 on 113 and 4 on 2,880, worst margin 104.4 ps, 300-chip MC 0 violations |
+| die STA with the count-align bind | **3 of 2,993 crossings FAIL**: io_serdes_2 -> c_W5_bf_01 (rx_flit_serdes_rx, rx_v_serdes_rx_valid, tx_up_serdes_up), depth 4, margin lo -107.1 TT / -67.0 FF, hi +1,968 |
+| hold on real views | BLOCKED(kits): 0 pairs measured |
+
+Open finding: the 3 serdes-PHY crossings. The planner (ca_C) passes them and the STA with its bind does not, so either the PHY
+tap is priced differently in the two tools or K on these 3 ports is one cycle short (hi margin +1,968 leaves room for +1).
+Not resolved by me; it sits at the M8 hotspot corner (1,890, 2,538). Owner: the QC event lane, before a die clock freeze.
+
+Clock rows for the event: `lanes/handoff/FABLE-DIE-QC-clock-rows.json.gz` (sha of the JSON bff5d72cc996; 52 of 130 types change,
+seam_ps 180) + `FABLE-DIE-QC-clock_rows_apply.py` (refuses a plan whose clock ports differ from the proof).
