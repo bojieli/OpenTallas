@@ -116,3 +116,8 @@ First clean route -> QC-PINACCESS-O posts RESULT PASS proof:DRT0255 -> HOLDGEN r
 - Pending in S4q9k: (b) FABLE-DIE-QC clock rows re-run on S4q9j (requested 13:5x; apply to clock.* then re-run on the k plan), (c) st_a_v1 HI_PAD / SKEW
   against the six hardened views (checker 3db14d42 says the 24 rows were "unsigned" false positives: confirm from the signed config.mk), (d) faces rows.
 - I removed the stray plan_of_record/gen/ dir that gen.py latency --inplace created in treeJ (2 files, mine, created 13:32).
+
+## CLAUDE 14:1x PST
+- S4q9k = fe-only form: plan zz_s29_qc103_s4q9kf.json sha a826abb3a3fd (9 fe types, 12 lanes); chain bin/chain_s4q9k.sh s4q9kf, log L/log/chain_s4q9kf.log, tags S4Q9KFBR -> derive (gates/r8_s29q103S4Q9KF.derived.json) -> S4Q9KFBQ. The 15-row s4q9k.json (c73c) is withdrawn; its KBR stub is not evidence.
+- S4q9l COMPOSED (not bound): zz_s29_qc103_s4q9l.json sha 50d472e1a81f = K + clock rows (clock.* only, 52 types). Bind after K gates: chain_s4q9k.sh pattern, single bind with R8 seed = the K derived table.
+- (c): st_a_v1 real mismatch, needs 4 tail1 masters (17,9,10) (16,9,10) (15,9,10) (16,9,11) + param_wrap rows; NEEDS-LANE posted. (d): faces rows not composed (slw_fw_v3 W / coll_ftc E window run at local y ~172).
