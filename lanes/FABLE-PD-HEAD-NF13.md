@@ -34,12 +34,12 @@ hd_tile and hd_st_n4 closed views in the die kit are STALE builds of older outli
   ...; 28 names not in the tree, all 12 shared names at a different xy). The 46 islands reserve the old tree. MEASURED.
   Harmless to the type build (100 um2), useless for the die. hd_host_e: 11 taps match within 0.5 um, the NF11 early
   core tap u_epc.clk has no tree leaf. hd_serdes 22 = 22.
-- B. Edge cells: 28 islands lie within 0.81 um of a partition face (spn_end 5, k5 4, lep0N 2, ctl 1, ctl_n 3,
-  host_n 2, host_w 1, n3_turn 4; ctl_n has 1 more at 5.1), 8 of them inside an M5/M7 face-pin bus window
+- B. Edge cells: 22 islands lie within 0.81 um of a partition face (spn_end 5, k5 4, lep0N 2, ctl 1, ctl_n 3,
+  host_n 2, host_w 1, n3_turn 4; ctl_n has 1 more at 5.1), 7 of them inside an M5/M7 face-pin bus window
   (hd_spn_end x_i, b_o, hu; hd_ctl h_rx_i at x 353.2-355.9 y 0.27-1.08, the DRT-0255 face of FABLE-PD-HEAD-1650;
   hd_lep0N coll_o0; hd_st_k5 d; hd_host_n ad). MEASURED positions; that the M1-M8 stack of such a cell meets a face
   pin is INFERENCE (no pin rect read).
-- C. 17 interior M7 pins (rst_start_raw_* 16, cland_tstart_in 1 on hd_host_w) lie inside or within 1 um of an
+- C. 16 interior M7 pins (rst_start_raw_* 15, cland_tstart_in 1 on hd_host_w) lie inside or within 1 um of an
   island in 9 types. They exist unchanged in NF12; the pin stays reachable from M6. Advisory.
 - D. Two tree cells are half a site off the 0.054 grid: b51241 (lep0N x 1010.529) and b51242 (ctl_n x 785.781), the
   two inserted parity nodes. The island covers a 0.027 shift. Fix in the stamp.
@@ -120,7 +120,7 @@ Check before NF13b binds for those types: one placed-DB read per type, cell VDD 
 | 2 | Rebuild hd_st_n4 at 993.6 and hd_tile at 717.12 under the adopted plan; register the new views | section 2, 3 | HEAD-100 rows, KIT-OPS-5 launch |
 | 3 | NF13b: hd_host_w islands from a tree built on the 40-tap plan (and the hd_host_e core-tap leaf); until then drop the 46 hd_host_w rects or accept them as dead holes | 12 vs 40 taps MEASURED | CLKSITE-RESERVE-1115 -> HEAD-100 |
 | 4 | NF13b form (b), tree follows template; MX/R180 rail check first | section 4 | CLKSITE-RESERVE-1115 |
-| 5 | Stamp: face keep-out (no die cell within 6 um of a face inside a bus pin window: 8 cells today, 28 within 0.81 um of a face), the 2 parity nodes on the site grid, PG slide on the pdn phase each kit really uses | 1B, 1D MEASURED; 1E INFERENCE | CLKSITE-RESERVE-1115 |
+| 5 | Stamp: face keep-out (no die cell within 6 um of a face inside a bus pin window: 7 cells today, 22 within 0.81 um of a face), the 2 parity nodes on the site grid, PG slide on the pdn phase each kit really uses | 1B, 1D MEASURED; 1E INFERENCE | CLKSITE-RESERVE-1115 |
 | 6 | place_lines outline-aligned as a proof aid only, with the window generator kept on the plan width; re-prep the 144 MY units | section 3 | HEAD-MYTILE-1115 |
 | 7 | First kit of each of the 12 types on NF13a: read `OT_DIE_ISLANDS blockages=N` = island count and the DPL result (islands inside landing bands: hd_ctl 73, lep0N 63) | counts MEASURED; DPL risk INFERENCE | KIT-OPS-5 |
 
@@ -140,7 +140,7 @@ Check before NF13b binds for those types: one placed-DB read per type, cell VDD 
 
 - No signed DB opened (die-head-route-1/signed is gone from epyc10): real cells under the 751 new sites, and core
   positions inside the hd_tile view, are not measured.
-- Pin rects of face pins next to the 28 edge cells; the stamp's actual PG clearance criterion; stamp code.
+- Pin rects of face pins next to the 22 edge cells; the stamp's actual PG clearance criterion; stamp code.
 - Whether the type kit places landing ring flops before or after the island blockages.
 - G0 / bind / LATCHECK were not re-run by me; the 233 warnings were not read.
 - MY-tile M9 tap pins vs die M9 straps after the 8.64 shift; MX/R180 rail polarity on any placed DB.
