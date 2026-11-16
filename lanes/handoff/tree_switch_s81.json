@@ -1,41 +1,42 @@
 {
- "die": "s81",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6",
- "smoke": "PASS",
- "smoke_detail": "F2s2 data pack (d6) on v3: hidden-folder smoke 5/5 RC0 with all lane folders hidden; tree_smoke_assert OK; nlink 1; v3 base kit_rtl 14/14",
- "src_manifest_sha": "5b629e4e02d9b3cc928870b03a116b51b3bec2af615a2fb3cc74f10e1279dcfb",
- "tools_sha": "41bb1dcfd10a",
- "hosts": [
-  "epyc10",
-  "epyc2",
-  "epyc7"
- ],
- "hosts_verified": "hash + links OK on epyc10, epyc2, epyc7 (d6 delta applied locally); F2s2 bind of record on epyc10, epyc2, epyc9 (epyc7 bind copy in progress)",
- "die_gen_env": {
-  "OT_PG_DIE_PHASE": "1",
-  "OT_PGCAP": "1",
-  "OT_TT_SETUP_REPAIR": "both",
-  "OT_PG_TRACK_TRUTH": "1",
-  "OT_PG_PIN_CHECK": "1"
- },
- "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 09:37:22 PST",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/B6gF2s2_B6gF2sv.json",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/asbuilt_run.json",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/sidecar_new.json",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_41bb1dcfd10a_d6/out",
- "data_pack": "done (F2s2: plan, as-built, sidecar, ROM hard_params, 10 col3_c/plan_h2 data files in tree)",
- "hidden_folder_smoke": "PASS 5/5",
- "hosts_pending": {
-  "epyc9": "d6 applied, 2.5 GB free (CLEAN-ALL), verify after it has room",
-  "epyc8": "near floor",
-  "intel1": "near floor"
- },
- "supersedes": "v3 (41bb1dcfd10a, hosts epyc10/9/7/2) - keep v3 as fallback until d6 is on the hosts",
- "note": "set dies.s81.src, plan (ev/B6gF2s2_B6gF2sv.json = in-tree copy sha1 a623deec2d38), gen_args --clock-landing=sidecar, kit_rtl.bind_out and asbuilt to these paths; F2s3 follows as v4 (main with the TXPIPE hook + ovl_F2s3)",
- "v4": {
-  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s2",
-  "hash": "101afba43b97d2edbc62c597803393b9e7b0115a3e8fc0c417251308802d79c6",
-  "state": "published, tree_smoke_assert OK (carries TXPIPE hook); strict bind + LATCHECK running; NOT for waves until marker says so"
- }
+  "die": "s81",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6",
+  "smoke": "PASS",
+  "smoke_detail": "F2s2 data pack (d6) on v3: hidden-folder smoke 5/5 RC0 with all lane folders hidden; tree_smoke_assert OK; nlink 1; v3 base kit_rtl 14/14",
+  "src_manifest_sha": "5b629e4e02d9b3cc928870b03a116b51b3bec2af615a2fb3cc74f10e1279dcfb",
+  "tools_sha": "41bb1dcfd10a",
+  "hosts": [
+    "epyc10",
+    "epyc2",
+    "epyc7"
+  ],
+  "hosts_verified": "hash + links OK on epyc10, epyc2, epyc7 (d6 delta applied locally); F2s2 bind of record on epyc10, epyc2, epyc9 (epyc7 bind copy in progress)",
+  "die_gen_env": {
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PGCAP": "1",
+    "OT_TT_SETUP_REPAIR": "both",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "1"
+  },
+  "written_by": "TOOLS-CONVERGE-1115",
+  "time": "2026-11-16 09:37:22 PST",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/B6gF2s2_B6gF2sv.json",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/asbuilt_run.json",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/sidecar_new.json",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_41bb1dcfd10a_d6/out",
+  "data_pack": "done (F2s2: plan, as-built, sidecar, ROM hard_params, 10 col3_c/plan_h2 data files in tree)",
+  "hidden_folder_smoke": "PASS 5/5",
+  "hosts_pending": {
+    "epyc9": "d6 applied, 2.5 GB free (CLEAN-ALL), verify after it has room",
+    "epyc8": "near floor",
+    "intel1": "near floor"
+  },
+  "supersedes": "v3 (41bb1dcfd10a, hosts epyc10/9/7/2) - keep v3 as fallback until d6 is on the hosts",
+  "note": "set dies.s81.src, plan (ev/B6gF2s2_B6gF2sv.json = in-tree copy sha1 a623deec2d38), gen_args --clock-landing=sidecar, kit_rtl.bind_out and asbuilt to these paths; F2s3 follows as v4 (main with the TXPIPE hook + ovl_F2s3)",
+  "v4": {
+    "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s2",
+    "hash": "101afba43b97d2edbc62c597803393b9e7b0115a3e8fc0c417251308802d79c6",
+    "state": "published, tree_smoke_assert OK (carries TXPIPE hook); strict bind + LATCHECK running; NOT for waves until marker says so"
+  },
+  "manifest_hash": "5b629e4e02d9b3cc928870b03a116b51b3bec2af615a2fb3cc74f10e1279dcfb"
 }
