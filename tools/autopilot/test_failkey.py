@@ -87,7 +87,7 @@ def test_p4_family_breaker_holds_unfailed_siblings_and_releases_by_probe():
     rel = FG.breaker_tick(st, now=6000, inputs={"s81": "digest-2"})
     assert rel and "PROBE" in rel[0][1]
     assert FG.held_key(st, "s81", "slice_station__t7", claim=True) == ""             # the probe
-    assert FG.held_key(st, "s81", "slice_station__t8", claim=True)                   # the rest of the family waits
+    assert FG.held_key(st, "s81", "slice_station__t8", claim=True)                   # the rest of the family waits (PROBE-ONE-1116: and every other family of the class)
     assert FG.held_key(st, "s81", "serdes__t4") == ""
     # the probe fails again at the same stage: shut until the inputs change again
     out = FG.probe_result(st, "s81", "slice_station__t7", "gen", passed=False)
