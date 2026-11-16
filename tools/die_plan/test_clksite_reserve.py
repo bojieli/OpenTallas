@@ -63,6 +63,30 @@ class T(unittest.TestCase):
         self.assertEqual(st["walls"], 0)
         self.assertTrue(all(o[2] - o[0] <= C.EDGE_MAX_LEN_UM for o in out))
 
+    def test_point_blocks_merge_without_core_edge_wall(self):
+        rs = [(0, 0, 1, 1), (8, 0, 9, 1)]
+        point = (4, .2, 4.5, .8)
+        out, _ = C.merge_rects(rs, 1, point_blockers=[point])
+        self.assertEqual(out, rs)
+        # Unlike a hard core, a nearby point does not impose the 5-um wall rule.
+        near = [(0, 2, 1, 3), (20, 2, 21, 3)]
+        out, _ = C.merge_rects(near, 1, point_blockers=[point])
+        self.assertEqual(out, [(0, 2, 21, 3)])
+
+    def test_native_origin_reservation_covers_body_and_avoids_left_fixed_cell(self):
+        import die_trial as D
+        class P:
+            parts = {"p": {"type": "t"}}
+            types = {"t": {"outline_um": [100, 100]}}
+            def rect(self, n): return (0, 0, 100, 100)
+            def to_type(self, n, q): return q
+        # Native body [10,10,11.62,10.27], fixed FT cell ends at x=9.4.
+        old, _ = D.island_windows(P(), [((10, 10), "clock")], snap=0)
+        new, _ = D.island_windows(P(), [((10, 10), "clock")], snap=0, native_origins=True)
+        self.assertLess(old["t"][0][0], 9.4)
+        self.assertGreater(new["t"][0][0], 9.4)
+        self.assertGreaterEqual(new["t"][0][2], 11.62)
+
 
 if __name__ == "__main__":
     unittest.main()

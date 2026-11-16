@@ -317,13 +317,15 @@ def _snap_out(v, g, up):
     return round((math.ceil(k - 1e-6) if up else math.floor(k + 1e-6)) * g, 4)
 
 
-def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
+def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM, native_origins=False):
     """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
     rects = {n: P.rect(n) for n in P.parts}
     by_type, recs = defaultdict(set), []
     for site in sites:
         (x, y), src = site[0], site[1]
         c = site[2] if len(site) > 2 else cell      # per-site body size (opt-in), else the planned clock body
+        if native_origins:                       # physical tree sites are native lower-left origins
+            x, y = x + c[0] / 2, y + c[1] / 2
         hx = c[0] / 2 + snap + margin
         hy = c[1] + snap + margin          # the cell row may lie above or below the site's row line
         w = (x - hx, y - hy, x + hx, y + hy)

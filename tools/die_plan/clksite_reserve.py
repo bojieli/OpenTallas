@@ -41,7 +41,28 @@ def _area(r):
     return (r[2] - r[0]) * (r[3] - r[1])
 
 
+class _RectIndex:
+    """Spatial lookup for the production-shape fixed FT-cell columns."""
+    def __init__(self, rects, pitch=50.0):
+        import math
+        self.pitch, self.rows = pitch, {}
+        for r in rects:
+            for i in range(math.floor(r[0] / pitch), math.floor(r[2] / pitch) + 1):
+                for j in range(math.floor(r[1] / pitch), math.floor(r[3] / pitch) + 1):
+                    self.rows.setdefault((i, j), []).append(r)
+
+    def hits(self, r):
+        import math
+        for i in range(math.floor(r[0] / self.pitch), math.floor(r[2] / self.pitch) + 1):
+            for j in range(math.floor(r[1] / self.pitch), math.floor(r[3] / self.pitch) + 1):
+                if _hits(r, self.rows.get((i, j), ())):
+                    return True
+        return False
+
+
 def _hits(r, blockers):
+    if isinstance(blockers, _RectIndex):
+        return blockers.hits(r)
     return any(r[0] < b[2] - 1e-9 and b[0] < r[2] - 1e-9 and r[1] < b[3] - 1e-9 and b[1] < r[3] - 1e-9 for b in blockers)
 
 
@@ -81,28 +102,31 @@ def _wall(bb, blockers, gap=EDGE_GAP_UM, max_len=EDGE_MAX_LEN_UM):
     return _hits((bb[0] - gap, bb[1] - gap, bb[2] + gap, bb[3] + gap), blockers)
 
 
-def _bad(bb, blockers, gap):
-    return _hits(bb, blockers) or _wall(bb, blockers, gap)
+def _bad(bb, blockers, gap, point_blockers=()):
+    return _hits(bb, blockers) or _hits(bb, point_blockers) or _wall(bb, blockers, gap)
 
 
-def _bucket(rects, s, blockers, gap=EDGE_GAP_UM):
+def _bucket(rects, s, blockers, gap=EDGE_GAP_UM, point_blockers=()):
     buckets = {}
     for r in rects:
         buckets.setdefault((int(((r[0] + r[2]) / 2) // s), int(((r[1] + r[3]) / 2) // s)), []).append(r)
     out = []
     for g in buckets.values():
         bb = _bbox(g)
-        out += [bb] if (len(g) == 1 or not _bad(bb, blockers, gap)) else g
+        out += [bb] if (len(g) == 1 or not _bad(bb, blockers, gap, point_blockers)) else g
     return out
 
 
-def merge_rects(rects, max_rects=100, blockers=(), pre_n=1500, max_waste_um2=None, edge_gap_um=EDGE_GAP_UM):
+def merge_rects(rects, max_rects=100, blockers=(), pre_n=1500, max_waste_um2=None, edge_gap_um=EDGE_GAP_UM, point_blockers=()):
     """-> (merged rects sorted, stats).  1) bbox of every overlap cluster; 2) if still > pre_n, small grid buckets
     (4 um, doubling) as a speed pre-pass; 3) greedy agglomeration: repeatedly merge the pair with the LEAST wasted area
     (bbox - a - b) until <= max_rects or the waste budget max_waste_um2 is spent (then the cap is exceeded, reported as over_cap).  A merge whose bbox touches a blocker (hard core) is never formed, and
     neither is one that would run more than EDGE_MAX_LEN_UM along a blocker within edge_gap_um of it (a wall on the
-    core's pin edge): there the fine site rects stay and the cap gives way (edge_gap_um=0 restores the old merge)."""
+    core's pin edge): there the fine site rects stay and the cap gives way (edge_gap_um=0 restores the old merge).
+    Optional point_blockers prevent merge padding over register sites without applying the core-edge wall rule."""
     import heapq
+    if point_blockers and not isinstance(point_blockers, _RectIndex):
+        point_blockers = _RectIndex(point_blockers)
     rects = [tuple(r) for r in rects]
     base_area = sum(_area(r) for r in rects)
     # stage 1 (lossless): drop duplicates and rects contained in another
@@ -116,7 +140,7 @@ def merge_rects(rects, max_rects=100, blockers=(), pre_n=1500, max_waste_um2=Non
     s = 4.0
     while len(out) > pre_n and s < 1e5:        # speed pre-pass for very large sets, its waste is charged to the budget
         before = sum(_area(r) for r in out)
-        out = _bucket(out, s, blockers, edge_gap_um)
+        out = _bucket(out, s, blockers, edge_gap_um, point_blockers)
         pre_waste = max(0.0, sum(_area(r) for r in out) - before)
         s *= 2
     out = sorted(out)
@@ -128,7 +152,7 @@ def merge_rects(rects, max_rects=100, blockers=(), pre_n=1500, max_waste_um2=Non
 
         def push(i, j):
             bb = _bbox([live[i], live[j]])
-            if not _bad(bb, blockers, edge_gap_um):
+            if not _bad(bb, blockers, edge_gap_um, point_blockers):
                 heapq.heappush(heap, (_area(bb) - _area(live[i]) - _area(live[j]), i, j))
         ids = sorted(live)
         for x, i in enumerate(ids):
@@ -156,7 +180,7 @@ def merge_rects(rects, max_rects=100, blockers=(), pre_n=1500, max_waste_um2=Non
 
 
 def plan_rows(plan, windows, max_rects=100, layers=LAYERS, lane="CLKSITE-RESERVE-1115", delete_islands=False,
-              max_waste_frac=0.002, edge_gap_um=EDGE_GAP_UM):
+              max_waste_frac=0.002, edge_gap_um=EDGE_GAP_UM, protect_points=False):
     """plan: schema.Plan (needs .types, core_obs via die_trial); windows {type: [rect]} -> (row file dict, report)"""
     import die_trial as D
     rows, rep = {}, {}
@@ -166,7 +190,17 @@ def plan_rows(plan, windows, max_rects=100, layers=LAYERS, lane="CLKSITE-RESERVE
         blockers = [(x0, y0, x1, y1) for (x0, y0, x1, y1, *_r) in D.core_obs(t)]
         rs = [(max(0.0, a), max(0.0, b), min(w, c), min(h, d)) for a, b, c, d in rs]
         rs = [r for r in rs if r[2] > r[0] and r[3] > r[1] and not _hits(r, blockers)]
-        merged, st = merge_rects(rs, max_rects, blockers, max_waste_um2=max_waste_frac * w * h, edge_gap_um=edge_gap_um)
+        point_blockers = []
+        if protect_points:
+            import clksite_points as CP
+            point_blockers = list(D.fixed_ft_rects(t))
+            for cls, container, index, _ in CP.points(t):
+                if cls != "ft_bit":
+                    x, y = container[index]
+                    g = CP.CLEAR_UM
+                    point_blockers.append((x - g, y - g, x + g, y + g))
+        merged, st = merge_rects(rs, max_rects, blockers, max_waste_um2=max_waste_frac * w * h,
+                                edge_gap_um=edge_gap_um, point_blockers=point_blockers)
         keep = [r for r in (t.get("clock") or {}).get("reserved_sites_um", []) if r.get("kind") != "die_clock_tree"]
         new = keep + [dict(rect_um=list(m), kind="die_clock_tree", route_layers=layers) for m in merged]
         rows[tn] = {"clock.reserved_sites_um": new}
@@ -185,6 +219,8 @@ def main(argv=None):
     ap.add_argument("--max-rects", type=int, default=100)
     ap.add_argument("--max-waste-frac", type=float, default=0.002, help="merge waste budget per type, fraction of the outline area")
     ap.add_argument("--margin-um", type=float, default=0.25)
+    ap.add_argument("--native-origins", action="store_true", help="tree sites are native cell lower-left origins")
+    ap.add_argument("--protect-points", action="store_true", help="merged boxes cannot cover fixed FT cells or planned register points")
     ap.add_argument("--edge-gap-um", type=float, default=EDGE_GAP_UM,
                     help="no merged rect longer than %g um within this distance of a hard core (0 = old merge)" % EDGE_MAX_LEN_UM)
     ap.add_argument("--layers", default=LAYERS)
@@ -202,12 +238,12 @@ def main(argv=None):
     else:
         import abstract_cutout as AC
         sites = [s for p in a.tree for s in AC.tree_sites(p)]
-        win, _ = D.island_windows(P, sites, snap=0.0, margin=a.margin_um)
+        win, _ = D.island_windows(P, sites, snap=0.0, margin=a.margin_um, native_origins=a.native_origins)
     if a.types:
         keep = set(a.types.split(","))
         win = {k: v for k, v in win.items() if k in keep}
     rows, rep = plan_rows(P, win, a.max_rects, a.layers, a.lane, delete_islands=a.from_islands, max_waste_frac=a.max_waste_frac,
-                          edge_gap_um=a.edge_gap_um)
+                          edge_gap_um=a.edge_gap_um, protect_points=a.protect_points)
     Path(a.out).write_text(json.dumps(rows, indent=1) + "\n")
     tot = dict(types=len(rep), rects_in=sum(r["rects_in"] for r in rep.values()),
                rects_out=sum(r["rects_out"] for r in rep.values()),
