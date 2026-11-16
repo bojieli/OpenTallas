@@ -323,6 +323,20 @@ def test_corner_scoped_macro_libs(tmp_path):
     assert signoff.macro_libs(kit, "ff")[1]  # missing FF remains blocking
 
 
+def test_macro_libs_orfs_tc_bc_suffix(tmp_path):
+    """S81-CORES-1115: ORFS _tc/_BC macro libs; unscoped ADDITIONAL_LIBS _tc entry is not missing at FF when BC_LIB_FILES has _BC."""
+    kit = tmp_path / "kit"; (kit / "macros").mkdir(parents=True)
+    (kit / "macros/pk2_tc.lib").write_text("library(a) {}")
+    (kit / "macros/pk2_BC.lib").write_text("library(a) {}")
+    (kit / "config.mk").write_text("export ADDITIONAL_LIBS = /work/macros/pk2_tc.lib\n"
+        "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) /work/macros/pk2_tc.lib\n"
+        "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/pk2_BC.lib\n")
+    assert signoff.macro_libs(kit, "tt") == ([str(kit / "macros/pk2_tc.lib")], [])
+    assert signoff.macro_libs(kit, "ff") == ([str(kit / "macros/pk2_BC.lib")], [])
+    (kit / "macros/pk2_BC.lib").unlink()
+    assert signoff.macro_libs(kit, "ff")[1]  # a really missing FF lib stays blocking
+
+
 def test_corner_scoped_generic_lib_name(tmp_path):
     (tmp_path / "ff").mkdir(); (tmp_path / "ff/core.lib").write_text("library(c) {}")
     (tmp_path / "config.mk").write_text("export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/ff/core.lib\n")
