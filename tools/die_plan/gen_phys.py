@@ -6282,6 +6282,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Signal grants/CONS may raise routing above the unchanged physical clock-pin layer.
+    # No extra metadata for ordinary kits: preserve their existing budget bytes.
+    if top != P.layer_budget["partition_signal_max"]:
+        bud["clock"]["pin_layer"] = P.layer_budget["partition_signal_max"]
     # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
     for row in bud["clock"]["core_taps"]:
         # QC-CB-GEN-1115 L4/L6: core_tap_rows names the PHYSICAL instance (u_bound.u_t22) once the kit declares physical_inst, the plan core the
