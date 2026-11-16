@@ -1,0 +1,23 @@
+	Command being timed: "venv/bin/python tools/qwen_code_rom/recover_table_banks.py --snapshot checkpoint/b968826d9c46dd6066d109eabc6255188de91218 --rank 0 --banks banks --layers 0 --skip-head --receipt pilot_receipt.json"
+	User time (seconds): 81.26
+	System time (seconds): 90.31
+	Percent of CPU this job got: 86%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:18.08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4143076
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1329
+	Minor (reclaiming a frame) page faults: 28488496
+	Voluntary context switches: 102771
+	Involuntary context switches: 68758
+	Swaps: 0
+	File system inputs: 30587648
+	File system outputs: 117248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

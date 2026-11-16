@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.qwen.raw-table-bank-recovery.v1",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "source_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "rank": 0,
+  "complete_raw_rank": false,
+  "layers": [
+    {
+      "layer": 0,
+      "metadata": "banks/images/layer0/die0/layer0_rom.json",
+      "reused": false
+    }
+  ],
+  "head_included": false,
+  "code_masks_generated": false,
+  "next_pass": "tools/qwen_layerbench/checkpoint_table_streams.py using actual selected attention owners",
+  "scope": "Genuine emitted data recovery only; no programme installation or RTL verdict"
+}

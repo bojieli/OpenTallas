@@ -1,0 +1,32 @@
+{
+  "reference": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0/results/arch/qwen_tp8_native_dispatch_1014/actual_checkpoint_layer0/die0/layer0_rom.json",
+  "reference_sha256": "56b77bcb4abfc27638205728650414be4a7806d87adc444c79910dd2cc213251",
+  "checkpoint_equal": true,
+  "images": {
+    "matrix_int8.hex": {
+      "new": "8f48f3f41c02b861fba7ea5a1632b760c29b9f98bcaa4f1b757903f6070aba32",
+      "reference": "8f48f3f41c02b861fba7ea5a1632b760c29b9f98bcaa4f1b757903f6070aba32",
+      "equal": true
+    },
+    "matrix_scale_bf16.hex": {
+      "new": "fd7b94a8fa5ff9a34d66baeb901407257ee331e2abcbe64a938a930342fc43e0",
+      "reference": "fd7b94a8fa5ff9a34d66baeb901407257ee331e2abcbe64a938a930342fc43e0",
+      "equal": true
+    },
+    "crom.hex": {
+      "new": "bbcb28143ffe62f1850ee5a5e05d87650c07271002baba5f520588fcd514a164",
+      "reference": "bbcb28143ffe62f1850ee5a5e05d87650c07271002baba5f520588fcd514a164",
+      "equal": true
+    },
+    "program.hex": {
+      "new": "4b7eb02ca6ebfe77bbb32aa4d613bb73dc83f2166e8a0b1ae6aa10eb747303d5",
+      "reference": "44e0e715c33b14b6d630325e832c8fb94f7427c895c05df9b2be4207bd345dce",
+      "equal": false
+    },
+    "segments.hex": {
+      "new": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+      "reference": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+      "equal": false
+    }
+  }
+}
