@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Admit with ot-run; measure native RED timing only, leaving arithmetic outputs unobserved.
 set -euo pipefail
-[[ $# == 2 ]] || { echo "usage: $0 SOURCE_ROOT FRESH_WORKDIR" >&2; exit 2; }
+[[ $# == 2 || $# == 3 ]] || { echo "usage: $0 SOURCE_ROOT FRESH_WORKDIR [valid|payload]" >&2; exit 2; }
 source_root=$(realpath "$1")
 work_dir=$(realpath -m "$2")
 bench_dir=$(cd -- "$(dirname -- "$0")" && pwd)
@@ -9,7 +9,12 @@ mkdir "$work_dir"
 for name in qfd_dv_s5_red2_leaf.sv qfd_dv_s5_red2_k79.sv qfd_dv_s5_red2_k79_helpers.sv; do
   cp "$source_root/rtl/qwen_dv/s5/$name" "$work_dir/$name"
 done
-cp "$bench_dir/tb.sv" "$work_dir/tb.sv"
+case "${3:-valid}" in
+  valid) bench_file=tb.sv;;
+  payload) bench_file=tb_payload.sv;;
+  *) echo INVALID_MODE >&2; exit 2;;
+esac
+cp "$bench_dir/$bench_file" "$work_dir/tb.sv"
 cd "$work_dir"
 cat > sources.sha256 <<'HASHES'
 1eeef8d0eb9de3f0544c1446b116dbc68a70d249ebbb9fcd4c236ec07ef221b2  qfd_dv_s5_red2_leaf.sv

@@ -1,0 +1,6 @@
+RED_OUTPUT cycle=154 start=45 age=109 addr=c00000 data=44000000 fault=0
+NATIVE_RED_AGE_PASS rows=1 elements=128 value=512
+- tb.sv:24: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 217ns; walltime 5.329 s; speed 40.693 ns/s
+- Verilator: cpu 5.328 s on 1 threads; allocated 102 MB
