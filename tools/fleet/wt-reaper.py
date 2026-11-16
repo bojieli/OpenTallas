@@ -43,9 +43,21 @@ import shutil
 import socket
 import subprocess
 import sys
+
 import tempfile
 import time
 from pathlib import Path
+
+try:
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ot_delete_guard as _dg
+except ImportError:
+    _dg = None
+
+
+def _guard_refuse(path):
+    return "ot_delete_guard module missing (fail closed)" if _dg is None else _dg.refuse(path)
+
 
 HOME = Path.home()
 DEFAULT_ROOTS = ["/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch/claude", str(HOME / "wt"),
@@ -782,6 +794,10 @@ def main(argv=None):
             fresh = live_refs(sudo=not a.no_sudo)
             again = referenced(wt, *fresh, roots=a.roots) or \
                 closure_ref(wt, reference_closure(live_seeds(*fresh, roots), roots, a.ref_depth) if a.ref_depth > 0 else [])
+            if not again:
+                _gr = _guard_refuse(wt)                       # CLEAN-ALL-1115 shared delete guard (whole tree only, markers, kit_wave.json src)
+                if _gr:
+                    again = "delete guard: " + _gr
             if again:
                 verdict, reason = "KEEP", "became live: " + again
             else:
