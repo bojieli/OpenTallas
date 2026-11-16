@@ -98,3 +98,9 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - Fix rows: epyc10 fable-fix-s81-coltap/rows_F2s4_colfix.json 1f35a4225f75 (copies on epyc7/8): 366 pairs one half +-4.32 um, 6 pairs (col_h10_r0_p4) unswapped. Asked DIE-S81-92 to fold into the next col event + rebind; col holds must be re-keyed to it.
 - Evidence reruns: kit_colfix.py ROWS KIT patches macro_place.tcl of a STOPPED kit (backup macro_place.tcl.f2s3). r2 + col_h10_r2 relaunched on epyc7 (logs pilot_col_h9_r2_.log, pilot_col_h10_r2_.log; first tries *.try1.log). TODO: when col_h9_r1 / col_h9_r0_p2 (epyc8) and col_h10_r0_p1 (epyc7) stop with MPL-0041: patch + relaunch the same way.
 - These runs are evidence only. PASS needs kits generated on the corrected bind (regenerate the five then).
+
+## 14:2x 11-16
+- All five evidence pilots relaunched with the corrected halves (kit_colfix.py); r2 + col_h10_r2 in 4_1_cts (epyc7), col_h10_r0_p1 (epyc7), col_h9_r1 + col_h9_r0_p2 (epyc8) behind.
+- DIE-S81-92 folded rows_F2s4_colfix into B6gF2s4 (sha256 28a6fe4fec53254f, epyc10 s81-b3-clk/ev/B6gF2s4.json); bind queued; col holds key on event_adopt:B6gF2s4.
+- Checked B6gF2s4: 954 plan-outline overlaps all clear at kit offsets (498 hw|he gap 0.036; 456 col3_c|bf16_half MY gap 0.000). Kit offsets: hw +0.108, he +0.684, bf16_half MY +0.996, everything else +0.108 (cfg7_seq MY -0.108).
+- NEXT: CTS read r2 / h10_r2; GRT-stage STA; when the F2s4 bind passes regenerate the five kits on it (countable) on the D2-successor tree and rerun; PASS only from those.
