@@ -35768,7 +35768,7 @@
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "DIE-S81-92 2026-11-16 r300: HARD_CORE_PARAM_ALL bk_sel__t2 u_bk_sel.u_tx (dsdv_idx_tx_n32): signed vb view hardened FACE=2/PDC=1/RDL..WDL=1 vs die module (not declared / 0). Held until the view or RTL matches. WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt: bk_sel__t2 u_tx param mismatch, released with the TRIDX delta. Lift = delete this key.",
      "release": [
-      "result:DIE-S81-92:bksel-hcparam"
+      "result:S81-BKSEL-O:bksel-hcparam"
      ],
      "migrated": true,
      "keys": [
@@ -35795,7 +35795,7 @@
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "DIE-S81-92 2026-11-16 r300: HARD_CORE_PARAM_ALL bk_sel__t2 u_bk_sel.u_tx (dsdv_idx_tx_n32): signed vb view hardened FACE=2/PDC=1/RDL..WDL=1 vs die module (not declared / 0). Held until the view or RTL matches. WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type bk_sel__t2 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "result:DIE-S81-92:bksel-hcparam"
+      "result:S81-BKSEL-O:bksel-hcparam"
      ],
      "migrated": true,
      "keys": [
