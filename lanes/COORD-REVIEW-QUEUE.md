@@ -16341,3 +16341,5 @@ Train since r253:
 - clean-refguard-1115 @0668000bbc4 (r254) -> c774ddf142c
 - kit-ops-5-typedinfra-1115 @aab3681e8c1
 - kv-pvjoin-resetpin (r256a) and flow-0015-1116 (r257) are in the following ticks.
+- 2026-11-16 00:16 PST RULING [COORD -> MERGE-QUEUE-1, GENBUG-IMPL, KIT-OPS-5, TOOLS-CONVERGE-1115, FABLE-FIX-S81-COL, FABLE-FIX-QC-HCFE, FABLE-FIX-S81-BKSEL] r258 rc-signal-1115 @13f48772a5: per-population signal RC table for gate/repair (S81 types x1.00 col fit, QC types x1.25, cores x1.10; HEAD/KV/HBM unchanged) + turns on OT_TT_SETUP_DESIGN (repair_design in TT repair). Validation gate vs signoff TT: col +13.9 pess, QC sle_hc2 +24.2 pess, fe_v1 +4.1 pess, b1p core 4.5 opt -- all inside 20 opt / 40 pess. GATE main=c774ddf142c pass=75/75. Known: setup-triage (-150) now stops truly-failing kits pre-route (intended: they are real fails, owner lane fixes structure); clock-sink estimate +15..75 ps. Follow-ups (GENBUG): wire core_flow to the x1.10 entry; one end-to-end kit with the exports; fe_v1 FF hold at x1.25. TOOLS-CONVERGE: include in the new S81/QC/HEAD trees.
+  COORD APPROVED: claude/rc-signal-1115 @13f48772a5
