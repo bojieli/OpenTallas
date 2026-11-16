@@ -5,7 +5,8 @@
   "manifest_hash": "aed3b3e059b20904d0125d0b89e6c8d0c0ce561247674c237df75a8db2d3d8a3",
   "src_manifest_sha": "aed3b3e059b20904d0125d0b89e6c8d0c0ce561247674c237df75a8db2d3d8a3",
   "hosts": [
-    "epyc10"
+    "epyc10",
+    "epyc9"
   ],
   "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
   "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2/physical/die_plan/s81/plan_inputs/run/B6gF2s3.json",
@@ -41,5 +42,6 @@
   "event": "B6gF2s3",
   "written_by": "CODEX TOOLS-CONVERGE-1115",
   "time": "2026-11-16T19:48:59.895245+00:00",
-  "supersedes": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6"
+  "supersedes": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6",
+  "hosts_verified": "Both source aed3 + portablectx2 verified; durable full_ok both-host receipt bb0b45526412afbc"
 }

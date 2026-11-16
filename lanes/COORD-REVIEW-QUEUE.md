@@ -17939,3 +17939,4 @@ FAILED [AUTOPILOT fa435a33bd7b] 2026-11-16 10:57:10 PST AUTOPILOT -> KIT-WAVE-5:
   COORD APPROVED: claude/fable-fix-head-types-1115 @506b984ba466cbad7f1b54fce0cff64e42e14926
   COORD APPROVED: claude/s81-t51-native-1116b @d8c855b766a71435c82d8bde1b84e70378051afd
   COORD APPROVED: claude/merge-queue-records-1116 @a2ca4c5fe4e356f8b62a61fee4176614eff66957
+- 2026-11-16 11:50 PST F2s3 r331 ep9 now added to canonical source marker and gen_hosts after source+portable ctx2 actual checks and exact both-host durable guard bb0b45526412afbc full_ok:true (ep9 full verification once; ep10 actual publication receipt). This distributes eligible GEN across ep9/10 under existing admission; all physicalholds preserved.
