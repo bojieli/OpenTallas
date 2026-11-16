@@ -7,9 +7,10 @@
  "manifest_hash": "4312921fd6bbda17280ed8e071f308455f2637e8b09f74a3b0eec37b9bbe88e9",
  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
-  "epyc9"
+  "epyc9",
+  "epyc10"
  ],
- "hosts_verified": "epyc9 src_manifest.publish full hash + read-only + LINKS0 passed; epyc10 same delta publication pending (do not add host yet)",
+ "hosts_verified": "epyc9 and epyc10 independently src_manifest.publish full hash + read-only + LINKS0 passed, identical manifest4312921fd6bb; same rebased bind_out exists on both",
  "die_gen_env": {
   "OT_PG_DIE_PHASE": "1",
   "OT_PGCAP": "1",
