@@ -1,49 +1,39 @@
-# FABLE-FIX-S81-CONG handoff (owner of S81 routing congestion closure; directs S81-STRIP-O, inherits S81-RINGS-O open items)
+# FABLE-FIX-S81-CONG handoff (owner of S81 routing congestion closure; S81-STRIP-O silent since 05:42 PST, S81-RINGS-O done)
 
-Updated 2026-11-16 ~06:30 PST.
+Updated 2026-11-16 ~09:45 PST (17:45 UTC).
 
-## Root cause (MEASURED)
-- Ring class (t65, t68, 13 y-slot kits): lost `ring_place: ff` key. Fixed by r282 (S81-RINGS-O). A_t65 (B6gE rects + ff, E/W face) GRT 0.
-- Strip class (what is left): ft bundles stacked in one strip between a face and an M7 core. t34: all six slots
-  (ft0-ft5, 2,360 bits) have stations in the W strip x 0..48 beside u_ve.u_m (M7, x 48..220, y 78..423).
-- t34 base kit b_t34 does NOT converge: one global_route call, it15 = 63 / 48 / 67 in three rounds. At about it15-17
-  GRT prints `GRT-0273 Disabled NDR ... clknet_0_clk_tNN` (one clock net per round) and restarts from ~12k.
-  4 rounds in 80 min, residual unchanged; it is H overflow at x 40..60, y 120..180 on ft2_o / ft3_i / ft5_o / ft0_o
-  station nets, not clock. it5/it10/it15 of one round is not a convergence proof: count `Disabled NDR` lines.
+## Root cause
+- Ring class: lost `ring_place: ff` (fixed r282).  Strip class: ft bundles stacked between a face and an M7 core.
+- Judge a kit by FINAL overflow + count of `GRT-0273 Disabled NDR` restarts, never by it5/10/15 of one round.
 
-## Fix in flight
-- t34 ft5 (597 bits, S->N, window x 396..523) straight band x 486..552: the only full-height column free of every core
-  (vsw ends 484, rxsf ends 477, vq starts 553, vn_a 570). corr2.py: 7 hops 201..207 um, 0 sites in M7 cores,
-  0 collisions with kept slots. Takes 25 % of the bits out of the W strip.
-  - rows: epyc7 /srv/opentallas-scratch2/claude/fable-fix-s81-cong/t34_rows.json; plan fx_t34.json (= fx0 + rows)
-  - kit: same dir kit/c_t34 (GEN_LINT PASS, KIT_PREFLIGHT PASS), replicated to epyc8/9
-  - run: intel2 ~/fable-fix-s81-cong/launch.sh c_t34 t34 grt (launched 14:2x UTC); log run_c_t34_grt.log
-  - accept: GRT Final congestion 0 with 0 `Disabled NDR` restarts. Then launch.sh c_t34 t34 route, and READY-ROWS to DIE-S81-92.
-  - if residual remains: next slot is ft2 (668 bits, stations (20,294),(52,9) in the same strip).
-
-## Other types (S81-STRIP-O keeps the builds)
-| type | base (ff) | row kit | decision |
+## Strip types (all on fx0 = B6gE + ff; proof kits, old tree, evidence only)
+| type | row | kit | GRT |
 |---|---|---|---|
-| t47 | plateau 17.7k (4 NDR restarts) | c_t47 GRT FINAL 0 in 772 s | adopt t47_rows.json; route c_t47 |
-| t43 | 7 at it25, H only | c_t43 plateau 3.7k | no row; base to route when GRT ends 0 |
-| t62 | plateau 52.8k x2 (ft0/ft1/ft7, S strip x 400..600) | c_t62 in place | wait |
-| t28 | 128k at it10 | c_t28 (sp2 core push) in place | wait |
-| t75 | 83.5k at it15, 21 NDR lines | rows built 13:50 UTC | STRIP-O |
-| t8 | 71k at it10 | t8c rows 14:01 UTC | STRIP-O |
-| t72 | GRT extra iterations started 13:09 UTC | | wait |
-| t65 A_t65 | GRT 0 | | route: post-GRT repair, 108k of 274k rows at 13:48 UTC (epyc9) |
+| t34 | ft5 band x 486..552 (epyc7 fable-fix-s81-cong/t34_rows.json) | c_t34 epyc8 | FINAL 0, 0 restarts |
+| t43 | ft5 only, band x 440..600 (same dir t43_rows.json) | c_t43b epyc9 | FINAL 0, 0 restarts |
+| t47 | epyc7 s81-strip-o/t47_rows.json | c_t47 epyc8 | FINAL 0 |
+| t62 | epyc7 s81-strip-o/t62_rows.json | c_t62 epyc8 | FINAL 0 |
+| t75 | STRIP-O ft3/ft5 rows: plateau 38k. Mine: + ft1 north detour y 700 (t75_rows.json, plan fx_t75.json) | c_t75b gen on epyc7, chain intel2 chain_gen_launch.sh -> epyc9 | pending |
+| t28 | sp2 core push not enough (102k at it10); W strip 35 um holds 10 slots -> needs strip widen | c_t28 epyc8 running | open |
+| t8 | STRIP-O t8c row tripled placement buffers (801k cells), withdrawn | none | open |
+| t72 | none | b_t72 epyc8, GRT iteration 3 after 2.6 h | open |
+READY-ROWS for t34/t43/t47/t62 posted (52fedbf) for F2s3 (DIE-S81-92).  Sign-off needs kits regenerated from the v2 tree
+after adoption; nothing is routed or signed off.
 
-## Inherited from S81-RINGS-O
-- svc: 82 frozen bands without ff. Tool fix on main (r282). For the composed F2s plan: epyc10
-  fable-fix-s81-rings/stamp/B6gF2s_svcff.json sha1 4c163bdc1625 (ring_ff_stamp.py). DIE-S81-92 adopts + lifts the svc
-  exemption in chain_f2s.sh RINGFF accept. Asked in post 06:3x.
-- t68 ft5_i band beside its pin window: advisory, no action.
+## Post-GRT repair stall (flow fix)
+- Measured: post-GRT `OT_MAXWIRE repair_design` (100 um) = 20-40k repeaters; each parasitics refresh legalizes and re-routes
+  the touched nets in single-thread incremental FastRoute (perf 82 % mazeRouteMSMDSequential). A_t68 5.6 h between two rows.
+- Tried: pitch pass BEFORE global_route (m_t34): 287 s, but full route ends at overflow 30 (c_t34: 0). Residual in the 18-um
+  channel ve_m/vs/vsw where repeaters of nets crossing the 225-um vsw core land. So pre-pass is opt-in only (OT_MAXWIRE_PRE=1).
+- Branch claude/fable-fix-s81-cong-1116 @a7fe627571f (lane clone epyc8 fable-fix-s81-cong/lane): grt183_make.sh prints
+  OT_GRT_REPAIR_PASS every 600 s, stops a repair flat 1800 s and re-runs once with marker 5_1_grt.repair_nostall.json;
+  grt_maxwire.tcl then skips the post-GRT repair (full-route result kept, stage continues). 40 related tests pass.
+- Gate: intel2 ~/fable-fix-s81-cong/gate_a7fe627.log (ot-merge-queue gate). Proof: m_t34 on epyc8 with the new scripts,
+  log run_m_t34_grt3.log; accept = OT_GRT_REPAIR_NO_PROGRESS attempt 2 rc 0 and FINAL overflow 0 in attempt 2. Then READY.
+- Open design question: OT_MAXWIRE_UM 100 < core width; nets over wide M5 cores cannot be repeated at pitch.
 
-## Next
-1. Read c_t34 GRT (expect ~16:00 UTC). 2. Route goal on GRT-0 kits (c_t34, c_t47, b_t43, A_t65), sign-off, export
-to AGIdock /archive/opentallas-signed-1114 + rtx-pro. 3. READY-ROWS per type to DIE-S81-92.
+## Stuck in the old repair (alive, will hit the 12 h line): c_t34, c_t47, c_t62 (epyc8), A_t65 route (epyc9, flat since 12:00 UTC).
+Relaunch their grt goal with the merged flow instead of waiting.
 
-## 15:0x UTC result
-- c_t34 GRT FINAL 0 / 0 / 0 (it5 134, it10 7, no NDR restart). READY-ROWS posted (f9fa845).
-- Route goal chained: intel2 ~/fable-fix-s81-cong/chain_route.sh (pid 3359681) waits for grt ot-run pid 723045, then run_kit.sh route on epyc8; log run_c_t34_route.log. Next owner: read DRC / TT setup / FF hold, sign-off, export to AGIdock + rtx-pro.
-- Still open: DIE-S81-92 adoption of t34/t47 rows + svc stamp; t62/t28/t75/t8 row kits (STRIP-O); A_t65 route.
+## Cleanup done
+epyc8: b_t47, b_t62, b_t75, b_t28, b_t8, c_t43 stopped (exact PID + unit) and removed.
