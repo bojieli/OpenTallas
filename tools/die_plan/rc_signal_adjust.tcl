@@ -45,3 +45,24 @@ proc ot_rc_signal_adjust {} {
     }
     puts [format "OT_RC_SIGNAL adjusted %d signal nets, +%.1f fF wire load (signal C M4 %.3f M5 %.3f M6 %.3f M7 %.3f fF/um vs table)" $n $tot $csig(M4) $csig(M5) $csig(M6) $csig(M7)]
 }
+
+# TABLE mode (OT_RC_SIGNAL_MODE=table, the default of the callers): set_load -wire_load REPLACES the estimated net parasitic
+# (measured 11-16 on col pv7a260fc0: +496 pF as wire loads moved TT setup -149 -> -93 and hold +18 -> -77, i.e. the nets got LESS
+# cap), so the per-net form above is not usable.  Table mode swaps the signal unit C into the per-layer table (R unchanged) and
+# estimates again; set_layer_rc has no per-class form, so clock nets move too (rc_calib header: +3..+15 ps clock-sink estimate).
+proc ot_rc_signal_table {} {
+    array set csig {M2 0.186 M3 0.131 M4 0.209 M5 0.175 M6 0.207 M7 0.181}
+    if {[info exists ::env(OT_RC_SIGNAL_C)]} { array set csig $::env(OT_RC_SIGNAL_C) }
+    set f ""
+    if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} { set f $::env(LAYER_PARASITICS_FILE) }
+    if {$f eq ""} { puts "OT_RC_SIGNAL table: no LAYER_PARASITICS_FILE"; return }
+    set fh [open $f]
+    while {[gets $fh ln] >= 0} {
+        if {[regexp {^set_layer_rc\s+-layer\s+(M\d)\s+-resistance\s+(\S+)\s+-capacitance\s+\S+} $ln -> L r] && [info exists csig($L)]} {
+            set_layer_rc -layer $L -resistance $r -capacitance $csig($L)
+        }
+    }
+    close $fh
+    estimate_parasitics -global_routing
+    puts "OT_RC_SIGNAL table: signal unit C M2-M7 swapped into the layer table, estimate_parasitics -global_routing re-run"
+}

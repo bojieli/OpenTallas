@@ -199,7 +199,7 @@ set ot_pg_mode placement
 if {[info exists ::env(OT_POSTCTS_GRT)] && $::env(OT_POSTCTS_GRT) && ![catch {estimate_parasitics -global_routing}]} {
   set ot_pg_mode global_routing
   # r222 (opt-in OT_RC_SIGNAL=1): signal nets priced at the routed-RCX signal unit C (rc_signal_adjust.tcl); clock nets untouched
-  if {[info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1" && [file exists /work/rc_signal_adjust.tcl]} { source /work/rc_signal_adjust.tcl; ot_rc_signal_adjust }
+  if {[info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1" && [file exists /work/rc_signal_adjust.tcl]} { source /work/rc_signal_adjust.tcl; ot_rc_signal_table }
 } else {
   estimate_parasitics -placement
 }

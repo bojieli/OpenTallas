@@ -41,7 +41,7 @@ proc ot_tt_est {} {
 }
 ot_tt_est
 # r222 (opt-in OT_RC_SIGNAL=1, GRT basis only): signal nets at the routed-RCX signal unit C (rc_signal_adjust.tcl)
-if {$ot_tt_rc eq "grt" && [info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1" && [file exists /work/rc_signal_adjust.tcl]} { source /work/rc_signal_adjust.tcl; ot_rc_signal_adjust }
+if {$ot_tt_rc eq "grt" && [info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1" && [file exists /work/rc_signal_adjust.tcl]} { source /work/rc_signal_adjust.tcl; ot_rc_signal_table }
 puts "OT_TT_SETUP_REPAIR rc basis $ot_tt_rc"
 proc ot_tt_wns {tag} {
   set w [sta::worst_slack -max]; set t [sta::total_negative_slack -max]
