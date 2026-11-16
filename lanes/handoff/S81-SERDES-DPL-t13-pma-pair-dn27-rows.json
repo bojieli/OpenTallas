@@ -1,0 +1,127 @@
+{
+  "partition_types": {
+    "serdes__t13": {
+      "contents": [
+        {
+          "inst": "u_phy",
+          "module": "ot_pdie_serdes",
+          "status": "rework",
+          "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1667.96 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations); DIE-S81-44 10-31 (delta_serdes_lots_1031): lot = full-width shore band (form of t15/t16) so the PMA pair lies along the shore (OWNER 10-29); + PMA abstracts u_ptx/u_prx + KP4 decoder SRAMs (delta_pma_views_1031 / delta_kp4_srams_1031 placement functions)",
+          "origin_um": [
+            63.64,
+            745.012
+          ],
+          "outline_um": [
+            2758.48,
+            481.868
+          ],
+          "physical_parts": [
+            {
+              "physical_inst": "u_bound.u_core.u_ptx",
+              "physical_master": "ot_s81_pma_txm",
+              "lef": "physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm.lef",
+              "lib": "physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_tt.lib",
+              "origin_um": [
+                319.272,
+                1065.96
+              ],
+              "outline_um": [
+                2246.4,
+                129.6
+              ],
+              "orient": "MX",
+              "obs_max": "M5"
+            },
+            {
+              "physical_inst": "u_bound.u_core.u_prx",
+              "physical_master": "ot_s81_pma_rxm",
+              "lef": "physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm.lef",
+              "lib": "physical/asap7_memory_macros/ot_s81_pma_rxm/ot_s81_pma_rxm_tt.lib",
+              "origin_um": [
+                319.272,
+                925.56
+              ],
+              "outline_um": [
+                2246.4,
+                129.6
+              ],
+              "orient": "MX",
+              "obs_max": "M5"
+            },
+            {
+              "physical_inst": "u_bound.u_core.u_dec.u_dly.u_dmem",
+              "physical_master": "ot_sram_1r1w2c_64x546_m1",
+              "lef": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+              "lib": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+              "origin_um": [
+                1258.848,
+                581.052
+              ],
+              "outline_um": [
+                178.632,
+                81.0
+              ],
+              "orient": "R0"
+            },
+            {
+              "physical_inst": "u_bound.u_core.u_dec.u_out.u_cmem",
+              "physical_master": "ot_sram_1r1w_32x546_m1",
+              "lef": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+              "lib": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+              "origin_um": [
+                1448.928,
+                581.052
+              ],
+              "outline_um": [
+                177.768,
+                81.0
+              ],
+              "orient": "R0"
+            }
+          ]
+        }
+      ],
+      "clock": {
+        "pad_clock": {
+          "pins": [
+            {
+              "name": "io_pma_rck",
+              "dir": "in",
+              "cdc": "synchronized",
+              "cdc_evidence": "ot_pdie_serdes.sv: pma_rck -> clk only through ot_s81_rate_match (8-deep gray-pointer FIFO, 2-flop gray pointer synchronisers both ways; KP4 SRAM 1r1w2c wclk=pma_rck rclk=clk is its storage), per-domain reset synchronisers (rs_r), 2-flop status synchronisers (lk_s/uf_s); 300 ppm two-die bench tb_pdie_ucie_col; S81.RESET: the column reset is held by ot_pdie_pma_reset_hold on pma_rck (async assert on rst low or io_pma_lock low, 2-flop release synchroniser + 64-edge count), then the per-domain rs_t/rs_r synchronisers",
+              "period_ps": 833.0,
+              "source": "far-die PMA TX clock as recovered by the rxm CDR (ot_pdie_serdes.sv pma_rck), plesiochronous to the die clock at the die period",
+              "layer": "M7",
+              "xy_um": [
+                332.704,
+                1063.8
+              ],
+              "sink_pins": [
+                {
+                  "module": "ot_s81_kp4_dchn",
+                  "pin": "clk"
+                },
+                {
+                  "module": "ot_s81_pma_rxm",
+                  "pin": "pma_rck"
+                },
+                {
+                  "module": "ot_sram_1r1w2c_64x546_m1",
+                  "pin": "wclk"
+                },
+                {
+                  "module": "ot_sram_1r1w2c_64x546_m1",
+                  "pin": "rclk"
+                },
+                {
+                  "module": "ot_sram_1r1w_32x546_m1",
+                  "pin": "clk"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
