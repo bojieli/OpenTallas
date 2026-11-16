@@ -18,5 +18,8 @@
   "OT_GPL_SPARSE_UTIL": "0.10"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 07:00:44 PST"
+ "time": "2026-11-16 07:00:44 PST",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1/physical/die_plan/s81_head/prep/NF13a/source_plan.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1/physical/die_plan/s81_head/prep/NF13a/source_sidecar.json",
+ "note": "plan, sidecar and every native_domains / sink_bins / eco99 input are IN the tree (data_pack, digests re-issued in wave_prepare.json): set dies.s81_head.plan and gen_args --clock-landing to these paths; HEAD-100 to confirm the two digests"
 }
