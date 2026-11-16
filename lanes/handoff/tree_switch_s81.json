@@ -6,9 +6,11 @@
  "src_manifest_sha": "5b629e4e02d9b3cc928870b03a116b51b3bec2af615a2fb3cc74f10e1279dcfb",
  "tools_sha": "41bb1dcfd10a",
  "hosts": [
-  "epyc10"
+  "epyc10",
+  "epyc2",
+  "epyc7"
  ],
- "hosts_verified": "src_manifest hash+ro at copy, links check after",
+ "hosts_verified": "hash + links OK on epyc10, epyc2, epyc7 (d6 delta applied locally); F2s2 bind of record on epyc10, epyc2, epyc9 (epyc7 bind copy in progress)",
  "die_gen_env": {
   "OT_PG_DIE_PHASE": "1",
   "OT_PGCAP": "1",
@@ -25,10 +27,15 @@
  "data_pack": "done (F2s2: plan, as-built, sidecar, ROM hard_params, 10 col3_c/plan_h2 data files in tree)",
  "hidden_folder_smoke": "PASS 5/5",
  "hosts_pending": {
-  "epyc9": "d6 delta + bind copying",
-  "epyc7": "d6 delta + bind copying",
-  "epyc2": "d6 delta + bind copying"
+  "epyc9": "d6 applied, 2.5 GB free (CLEAN-ALL), verify after it has room",
+  "epyc8": "near floor",
+  "intel1": "near floor"
  },
  "supersedes": "v3 (41bb1dcfd10a, hosts epyc10/9/7/2) - keep v3 as fallback until d6 is on the hosts",
- "note": "set dies.s81.src, plan (ev/B6gF2s2_B6gF2sv.json = in-tree copy sha1 a623deec2d38), gen_args --clock-landing=sidecar, kit_rtl.bind_out and asbuilt to these paths; F2s3 follows as v4 (main with the TXPIPE hook + ovl_F2s3)"
+ "note": "set dies.s81.src, plan (ev/B6gF2s2_B6gF2sv.json = in-tree copy sha1 a623deec2d38), gen_args --clock-landing=sidecar, kit_rtl.bind_out and asbuilt to these paths; F2s3 follows as v4 (main with the TXPIPE hook + ovl_F2s3)",
+ "v4": {
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s2",
+  "hash": "101afba43b97d2edbc62c597803393b9e7b0115a3e8fc0c417251308802d79c6",
+  "state": "published, tree_smoke_assert OK (carries TXPIPE hook); strict bind + LATCHECK running; NOT for waves until marker says so"
+ }
 }
