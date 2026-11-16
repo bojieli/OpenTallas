@@ -45,5 +45,27 @@ class T(unittest.TestCase):
             self.assertEqual(SM.shared_inodes(new), [])
 
 
+class Dot(unittest.TestCase):
+    def test_reldir_dot_gives_normalised_keys(self):
+        with tempfile.TemporaryDirectory() as t:
+            repo = t + "/repo"
+            os.makedirs(repo + "/tools")
+            g = lambda *a: subprocess.run(["git", "-C", repo, "-c", "user.name=t", "-c", "user.email=t@t"] + list(a), check=True, capture_output=True, text=True).stdout.strip()
+            g("init", "-q")
+            open(repo + "/tools/a.py", "w").write("A=1\n")
+            g("add", "."); g("commit", "-qm", "m")
+            SM.CACHE_DIR = t + "/cache"
+            old = t + "/old"
+            SM.build(repo, g("rev-parse", "HEAD"), None, ["tools"], old, main_ref="")
+            st = t + "/stage/physical/x"
+            os.makedirs(st)
+            open(st + "/f.json", "w").write("{}")
+            new = t + "/new"
+            DP.make(old, new, t + "/pack", [(t + "/stage", ".")])
+            SM.delta_apply(t + "/pack", old, new)
+            SM.publish(new)
+            self.assertEqual(SM.verify(new, ro=True, full=True)[0], [])
+
+
 if __name__ == "__main__":
     unittest.main()

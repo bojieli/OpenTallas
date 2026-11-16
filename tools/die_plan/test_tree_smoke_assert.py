@@ -12,7 +12,7 @@ def mk(tmp, scales, keep=True, wired=True):
     (d / "tt_setup_repair.tcl").write_text("x")
     if keep:
         (d / "tt_setup_keep.py").write_text("x")
-    (d / "gen_phys.py").write_text("import tt_setup_keep\n" if wired else "pass\n")
+    (d / "gen_phys.py").write_text(("import tt_setup_keep\nSERDES_PIPE_CHAINS = {\"OT_S81_SERDES_RXNEG\": (\"u_rxf\",)}\n") if wired else "pass\n")
     (d / "rc_signal_scales.json").write_text(json.dumps(scales))
     return tmp
 
@@ -36,3 +36,11 @@ def test_stale_trees_fail_with_named_reason(tmp_path):
 def test_wrong_scale_fails(tmp_path):
     bad = {"type": dict(GOOD["type"], s81_head=1.0), "core": 1.1}
     assert any("s81_head = x1, expect x1.13" in p for p in T.check(mk(tmp_path, bad)))
+
+
+def test_s81_tree_without_txpipe_hook_fails(tmp_path):
+    t = mk(tmp_path, GOOD)
+    (t / "tools/die_plan/gen_phys.py").write_text("import tt_setup_keep\n")          # keep wired, drop the hook
+    probs = T.check(t, ["s81"])
+    assert any("TXPIPE hook" in p for p in probs)
+    assert not any("TXPIPE" in p for p in T.check(t, ["s81_head"]))                  # only S81 serdes needs it

@@ -16,6 +16,9 @@ EXPECT_RC = {"s81": 1.0, "qwen_compute": 1.25, "s81_head": 1.13, "qwen_kvsys": 1
 EXPECT_CORE = 1.10
 REQUIRED_FILES = ("tools/die_plan/tt_setup_keep.py", "tools/die_plan/tt_setup_repair.tcl")
 WIRED = (("tools/die_plan/gen_phys.py", "tt_setup_keep"),)
+# FABLE-CLOSURE-1143 r309: S81 serdes types build only from a tree that carries the TXPIPE placement hook (f84ed61a70, main 8b9258eb3ce):
+# SERDES_PIPE_CHAINS (gen_phys) names the pipe chains whose placement txl_mid.tcl face mode takes, and its RXNEG entry is the new one
+HOOK_S81 = (("tools/die_plan/gen_phys.py", '"OT_S81_SERDES_RXNEG": ("u_rxf"'), ("tools/die_plan/gen_phys.py", "SERDES_PIPE_CHAINS"))
 
 
 def check(tree, dies=None):
@@ -31,6 +34,13 @@ def check(tree, dies=None):
                 out.append(f"STALE-TREE {rel} does not reference {word}")
         except OSError:
             out.append(f"STALE-TREE missing {rel}")
+    if dies is None or "s81" in dies:
+        for rel, word in HOOK_S81:
+            try:
+                if word not in (tree / rel).read_text(errors="replace"):
+                    out.append(f"STALE-TREE {rel} lacks the S81 serdes TXPIPE hook ({word}; main 8b9258eb3ce, f84ed61a70)")
+            except OSError:
+                pass
     try:
         tab = json.loads((tree / "tools/die_plan/rc_signal_scales.json").read_text())
     except (OSError, ValueError) as e:
