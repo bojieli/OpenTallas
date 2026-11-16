@@ -517,6 +517,15 @@ def apply_tree_switches(cfg, ctx):
                     if env.get(k) != v:
                         env[k] = v
                         ch.append(f"die_gen_env.{k}")
+                # The tree base is source identity; tools_sha can legitimately
+                # name a different tooling revision. Apply defaults before the
+                # marker explicit config, so composed identities stay explicit.
+                main_sha = str(m.get("_validated_main_sha") or "")
+                if re.fullmatch(r"[0-9a-f]{40}", main_sha):
+                    for k, v in (("src_sha", main_sha), ("queue_src", "main@" + main_sha)):
+                        if k not in (m.get("config") or {}) and d.get(k) != v:
+                            d[k] = v
+                            ch.append(k)
                 for k, v in (m.get("config") or {}).items():
                     before = json.dumps(d.get(k), sort_keys=True, default=str)
                     if isinstance(v, dict) and isinstance(d.get(k), dict):

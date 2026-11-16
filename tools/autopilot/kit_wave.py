@@ -438,18 +438,40 @@ def tree_gate(AP, cfg):
             m = json.loads(AP.read_coord(_HR.tree_marker_rel(die)) or "null")
         except ValueError:
             return None
-        return m if isinstance(m, dict) else None
+        if not isinstance(m, dict):
+            return None
+        # Published-tree markers use src_manifest_sha; older hold markers call
+        # the same digest manifest_hash. Normalize the existing contract.
+        if not m.get("manifest_hash") and m.get("src_manifest_sha"):
+            m["manifest_hash"] = m["src_manifest_sha"]
+        # Only a completed manifest verification supplies identity. Never trust
+        # a private field copied into a hand-written marker or its tools_sha.
+        m.pop("_validated_main_sha", None)
+        key = (die, m.get("tree"), str(m.get("manifest_hash") or ""), tuple(hosts_of(die)))
+        ent = _TREE_CACHE.get(key) or {}
+        if ent.get("state") == "ok" and ent.get("main_sha"):
+            m["_validated_main_sha"] = ent["main_sha"]
+        return m
 
     def host_has(h, tree, want):
-        cmd = ["cat", f"{tree}/.src-manifest.sha256"]
+        # Read the base identity alongside the existing cheap hash probe. The
+        # full manifest check below validates it before marker() exposes it.
+        script = ("import json, pathlib, sys; p=pathlib.Path(sys.argv[1]); "
+                  "print((p / '.src-manifest.sha256').read_text().strip()); "
+                  "f=p / '.src-manifest.json'; "
+                  "print(json.loads(f.read_text()).get('main_sha', '') if f.is_file() else '')")
+        cmd = ["python3", "-I", "-c", script, tree]
         try:
             if h in ("localhost", hub):
                 r = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
             else:
-                r = subprocess.run(_ssh(h, hub) + cmd, capture_output=True, text=True, timeout=30)
-            return r.returncode == 0 and r.stdout.strip() == want
+                r = subprocess.run(_ssh(h, hub) + [" ".join(shlex.quote(x) for x in cmd)], capture_output=True, text=True, timeout=30)
+            lines = r.stdout.splitlines()
+            ok = r.returncode == 0 and bool(lines) and lines[0].strip() == want
+            main = lines[1].strip() if len(lines) > 1 else ""
+            return ok, main if re.fullmatch(r"[0-9a-f]{40}", main) else ""
         except (OSError, subprocess.SubprocessError):
-            return False
+            return False, ""
 
     def run_bg(ent, hosts, tree, want, links_only):
         def job():
@@ -488,8 +510,11 @@ def tree_gate(AP, cfg):
             return False
         from concurrent.futures import ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=len(hosts)) as ex:
-            have = all(ex.map(lambda h: host_has(h, tree, want), hosts))
-        ent = _TREE_CACHE[key] = {"t": now, "state": "cheap" if have else "absent", "running": False}
+            probes = list(ex.map(lambda h: host_has(h, tree, want), hosts))
+        have = all(ok for ok, _main in probes)
+        mains = {main for ok, main in probes if ok and main}
+        ent = _TREE_CACHE[key] = {"t": now, "state": "cheap" if have else "absent", "running": False,
+                                  "main_sha": next(iter(mains)) if len(mains) == 1 else ""}
         if have:
             run_bg(ent, hosts, tree, want, False)                # switch time: src_manifest hosts --expect <hash>
         return ent.get("state") == "ok"
