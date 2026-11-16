@@ -262,6 +262,30 @@ class T(unittest.TestCase):
         HR.compile_holds(c, HR.Ctx(event_met=KW._hold_term_met))
         self.assertEqual(d["route_hold_items"], {"keep": "legacy"})                   # released, legacy key untouched
 
+    def test_proof_record_never_holds_its_proof_items(self):
+        c = base()
+        d = c["dies"]["s81"]
+        d["proof_items"] = {"DRT0255": ["col_a__t1", "ser_x"]}
+        with self.assertRaises(ValueError):
+            HR.add_record(c, "s81", rec(release=["proof:DRT0255"], patterns=[], items=["ser_x"]))
+        HR.add_record(c, "s81", rec(release=["proof:DRT0255"], patterns=["col_a__*"], items=["col_b__t1"]))
+        HR.compile_holds(c)
+        self.assertEqual(sorted(d["hold_items"]), ["col_a__t2", "col_b__t1"])            # col_a__t1 (the proof) carved out
+        self.assertEqual(HR.audit(c), [])
+        # a migrated glob key that covers a proof item is expanded against the item list, minus the proof items
+        c = base()
+        d = c["dies"]["s81"]
+        d["proof_items"] = {"DRT0255": ["col_a__t1"]}
+        d["hold_items"] = {"col_a__*": "r", "other": "r"}
+        d["hold_release_on"] = {"col_a__*": "proof:DRT0255", "other": "proof:DRT0255"}
+        HR.migrate_cfg(c)
+        c["_item_names"] = {"s81": ["col_a__t1", "col_a__t2", "zz"]}
+        HR.compile_holds(c)
+        self.assertEqual(sorted(d["hold_items"]), ["col_a__t2", "other"])
+        del c["_item_names"]
+        HR.compile_holds(c)                                                           # no item list: pattern kept, audit names it
+        self.assertEqual(sorted(HR.summarize(HR.audit(c)).items()), [("PROOF-HELD", 1)])
+
 
 if __name__ == "__main__":
     unittest.main()

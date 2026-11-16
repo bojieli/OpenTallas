@@ -478,7 +478,7 @@ def hold_audit_step(AP, cfg, st, t0):
     found = HR.audit(cfg, launched)
     summ = HR.summarize(found)
     AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
-           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH")))
+           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD")))
     sig = hashlib.sha1(json.dumps([(f["code"], f["die"], f["id"], f["detail"], f["n"], sorted(map(str, f["items"]))[:50]) for f in found],
                                   default=str).encode()).hexdigest()[:12]
     if found and st.get("hold_audit_sig") != sig:
@@ -10315,6 +10315,11 @@ def _step(AP, ap_dir):
     try:                                                 # HOLDGEN-1115 r252: proof: / census_lt: terms need the queue and the rows
         cfg["_item_cells"] = {(r.get("die"), r.get("item")): int(float(r["cells"])) for r in (st.get("items") or {}).values()
                               if str(r.get("cells") or "").replace(".", "", 1).isdigit()}
+        _names = {}
+        for _r in (st.get("items") or {}).values():          # item names per die: a pattern hold key that covers a proof item is carved
+            if _r.get("die") and _r.get("item"):
+                _names.setdefault(_r["die"], set()).add(_r["item"])
+        cfg["_item_names"] = {d_: sorted(v) for d_, v in _names.items()}
         cfg["_proof_lines"] = [ln for ln in AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines()
                                if " RESULT " in ln and "PASS" in ln][-3000:]
         _before = len(cfg.get("_hold_auto_released") or [])
