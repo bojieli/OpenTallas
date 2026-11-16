@@ -7944,7 +7944,10 @@
     "serdes__t4__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): serdes__t4 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
     "slice_station__t45__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): slice_station__t45 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
     "slice_station__t46__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): slice_station__t46 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
-    "slice_station__t47__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): slice_station__t47 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key."
+    "slice_station__t47__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): slice_station__t47 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
+    "slice_station__*": "WAVE-HOLDS-1115 2026-11-15 20:20 PST (COORD r198 (2) + urgent 20:1x): slice_station__*, serdes__* and ot_s81sl_kv_leaf__t2 stay held until G3b adopts: the 58 non-col types keep per-port offset tables that fail sdc_lint at gen (SdcLintError). Release only types that lint 0 on G3b. Running attempts finish. Lift = delete this key.",
+    "serdes__*": "WAVE-HOLDS-1115 2026-11-15 20:20 PST (COORD r198 (2) + urgent 20:1x): slice_station__*, serdes__* and ot_s81sl_kv_leaf__t2 stay held until G3b adopts: the 58 non-col types keep per-port offset tables that fail sdc_lint at gen (SdcLintError). Release only types that lint 0 on G3b. Running attempts finish. Lift = delete this key.",
+    "ot_s81sl_kv_leaf__t2*": "WAVE-HOLDS-1115 2026-11-15 20:20 PST (COORD r198 (2) + urgent 20:1x): slice_station__*, serdes__* and ot_s81sl_kv_leaf__t2 stay held until G3b adopts: the 58 non-col types keep per-port offset tables that fail sdc_lint at gen (SdcLintError). Release only types that lint 0 on G3b. Running attempts finish. Lift = delete this key."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -34832,7 +34835,10 @@
     "serdes__t4__*": "event_adopt:B6gG1d",
     "slice_station__t45__*": "event_adopt:B6gG1d",
     "slice_station__t46__*": "event_adopt:B6gG1d",
-    "slice_station__t47__*": "event_adopt:B6gG1d"
+    "slice_station__t47__*": "event_adopt:B6gG1d",
+    "slice_station__*": "event_adopt:B6gG3b + lane_result:sdc_lint 0 on the G3b gen",
+    "serdes__*": "event_adopt:B6gG3b + lane_result:sdc_lint 0 on the G3b gen",
+    "ot_s81sl_kv_leaf__t2*": "event_adopt:B6gG3b + lane_result:sdc_lint 0 on the G3b gen"
    },
    "item_env_deleted_tap_max_sinks_wavehold1115": [
     "dsdv_slice_lepe_mu_C__t1",
@@ -35094,7 +35100,16 @@
     "slice_station__t45__*",
     "slice_station__t46__*",
     "slice_station__t47__*"
-   ]
+   ],
+   "hold_items_added_wavehold1115_g3b": {
+    "family_keys": [
+     "slice_station__*",
+     "serdes__*",
+     "ot_s81sl_kv_leaf__t2*"
+    ],
+    "extra_items": [],
+    "failing_items_seen": 48
+   }
   },
   "s81_head": {
    "enabled": true,
