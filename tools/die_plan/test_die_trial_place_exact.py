@@ -45,4 +45,4 @@ def test_no_six_digit_coordinate_text_left():
     assert not re.search(r'ot_place \{sv\(n\)\} \{ox:g\}', src)
     assert not re.search(r'ot_pad \{net\} \{k\} \{x:g\}', src)
     assert '{{{x:g}*$bump_dbu}}' not in src
-    assert 'place_lines(P' in inspect.getsource(D.grt_tcl) and 'place_lines(P' in inspect.getsource(D.psm_tcl)
+    assert 'place_lines(P)' in inspect.getsource(D.grt_tcl) and 'place_lines(P)' in inspect.getsource(D.psm_tcl)

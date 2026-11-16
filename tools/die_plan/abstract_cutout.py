@@ -189,26 +189,17 @@ def apply_to_kit(P, kit_dir, windows_by_type, smod, dry_run=False, max_boxes=Non
     return res
 
 
-def lef_sizes(P, kit_dir, smod, tol=1e-3):
-    """{type: (w, h)} where the kit abstract LEF SIZE differs from the plan outline (die_trial.lef_sizes); place_lines puts
-    mirrored masters flush with the far outline edge, island_windows maps with the same offset."""
-    import die_trial as D
-    return D.lef_sizes(P, Path(kit_dir) / "abstracts", smod, tol)
-
-
 def run(plan, kit_dir, margin_um=0.25, dry_run=False, max_boxes=None):
     import die_trial as D
     import schema as S
     P = S.Plan(S.load(plan), Path(plan))
     smod = D.standin_module_names(P)
-    sizes = lef_sizes(P, kit_dir, smod)
     sites = tree_sites(Path(kit_dir) / "clock" / "tree.json")
     # sites are PLACED cells: no plan-site snap slack, only the margin
-    win, recs = D.island_windows(P, sites, snap=0.0, margin=margin_um, sizes=sizes)
+    win, recs = D.island_windows(P, sites, snap=0.0, margin=margin_um)
     res = apply_to_kit(P, kit_dir, win, smod, dry_run, max_boxes)
     rep = dict(schema="ot_abstract_cutout/1", sites=len(sites), margin_um=margin_um, max_boxes=max_boxes, types_with_windows=len(win),
                windows=sum(len(v) for v in win.values()),
-               lef_size_types={k: list(v) for k, v in sorted(sizes.items())},
                sites_under_partition=sum(1 for r in recs if r["parts"]),
                sites_outside_partitions=sum(1 for r in recs if not r["parts"]),
                in_core=sum(1 for r in recs for h in r["parts"] if h["in_core"]), per_type=res)

@@ -317,61 +317,9 @@ def _snap_out(v, g, up):
     return round((math.ceil(k - 1e-6) if up else math.floor(k + 1e-6)) * g, 4)
 
 
-def mirror_offset(orient, outline, size):
-    """(dx, dy) um from the plan origin to the lower-left of a placed master whose SIZE differs from the plan outline.
-    HEAD-MYTILE-1115: every plan-frame tool (island sites, core avoidance, die_core_rects, ft bands, pin planning) mirrors
-    a MY/MX/R180 instance about the OUTLINE (Wp), but ot_place used to put the master lower-left at the origin, so the
-    master mirrored about its own SIZE (Wm): hd_tile 708.48 vs 717.12 left every MY tile 8.64 um off the plan (13 clock
-    cells of tE0b3 over real hard cores, u042/u046/u065/u068/u131/u134/u156).  A mirrored axis therefore places the master
-    flush with the far outline edge: lower-left = origin + (outline - size); R0 axes keep the origin."""
-    dx = outline[0] - size[0] if orient in ("MY", "R180") else 0.0
-    dy = outline[1] - size[1] if orient in ("MX", "R180") else 0.0
-    return dx, dy
-
-
-def lef_sizes(P, abstracts_dir, smod, tol=1e-3):
-    """{type: (w, h) um} for the types whose kit abstract LEF SIZE differs from the plan outline_um (closed views carry their
-    own SIZE).  A .lef.precut (abstract_cutout original) is read in preference to the cut file; the SIZE is the same."""
-    out = {}
-    for tn, ty in P.types.items():
-        f = Path(abstracts_dir) / f"{smod[tn]}.lef"
-        pre = f.with_suffix(".lef.precut")
-        f = pre if pre.is_file() else f
-        if not f.is_file():
-            continue
-        m = re.search(r"\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;", f.read_text())
-        if not m:
-            continue
-        wh = (float(m.group(1)), float(m.group(2)))
-        w, h = ty["outline_um"]
-        if abs(wh[0] - w) > tol or abs(wh[1] - h) > tol:
-            out[tn] = wh
-    return out
-
-
-def placed_size_frame(P, part, wh, pt=None):
-    """(placed master rect, type-frame point) of `part` whose master has size wh (um) instead of the plan outline; the
-    master sits where place_lines puts it (mirror_offset).  The type-frame point is in the master frame, which for a mirrored
-    axis equals the plan frame (outline - (x - origin))."""
-    ox, oy = P.parts[part]["origin_um"]
-    o = P.orient(part)
-    dx, dy = mirror_offset(o, P.types[P.parts[part]["type"]]["outline_um"], wh)
-    w, h = wh
-    rect = (ox + dx, oy + dy, ox + dx + w, oy + dy + h)
-    if pt is None:
-        return rect, None
-    x, y = pt[0] - ox - dx, pt[1] - oy - dy
-    return rect, {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
-
-
-def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM,
-                   sizes=None):
-    """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list.
-    sizes (HEAD-MYTILE-1115): {type: (w, h) um} PLACED master size where it differs from the plan outline (a closed view
-    LEF has its own SIZE: HEAD hd_tile 708.48 vs outline 717.12).  Mirrored instances then map die -> type frame about
-    the master size; without it every MY/R180 window of such a type lands (outline - SIZE) um off."""
-    sizes = sizes or {}
-    rects = {n: (placed_size_frame(P, n, sizes[p["type"]])[0] if p["type"] in sizes else P.rect(n)) for n, p in P.parts.items()}
+def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
+    """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
+    rects = {n: P.rect(n) for n in P.parts}
     by_type, recs = defaultdict(set), []
     for site in sites:
         (x, y), src = site[0], site[1]
@@ -385,11 +333,8 @@ def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=IS
             if c <= a + 1e-9 or d <= b + 1e-9:
                 continue
             tn = P.parts[n]["type"]
-            tw, th = sizes.get(tn) or P.types[tn]["outline_um"]
-            if tn in sizes:
-                (u0, v0), (u1, v1) = (placed_size_frame(P, n, sizes[tn], q)[1] for q in ((a, b), (c, d)))
-            else:
-                (u0, v0), (u1, v1) = P.to_type(n, (a, b)), P.to_type(n, (c, d))
+            tw, th = P.types[tn]["outline_um"]
+            (u0, v0), (u1, v1) = P.to_type(n, (a, b)), P.to_type(n, (c, d))
             u0, u1 = sorted((u0, u1))
             v0, v1 = sorted((v0, v1))
             tr = (max(0.0, _snap_out(u0, grid[0], False)), max(0.0, _snap_out(v0, grid[1], False)),
@@ -4798,24 +4743,16 @@ PLACE_PROC = ("proc ot_place {n x y o} { set b [ord::get_db_block]; set i [$b fi
               "$i setPlacementStatus FIRM }")
 
 
-def place_lines(P, sizes=None):
+def place_lines(P):
     """ot_place line per partition at its EXACT plan origin.  FLOW-7 10-30 (DIE-QC-45): the old '{ox:g}' text kept 6
     significant digits, so every origin >= 1000 um with 3+ (>= 10000 um with 2+) decimals was rounded to 0.1/0.01 um
     (16390.08 -> 16390.1): 221/377 QC partitions sat 20-40 nm off their plan origin and 438,159 port bits did not
-    abut.  gen_phys._um prints 4 decimals (0.1 nm), the same text gen_phys uses for die placement (ba99259d8).
-    sizes (HEAD-MYTILE-1115): {type: (w, h)} master SIZE where it differs from the outline (lef_sizes); a mirrored axis then
-    places the master flush with the far outline edge (mirror_offset) so it mirrors about the plan outline."""
-    sizes = sizes or {}
-    out = []
-    for n, p in sorted(P.parts.items()):
-        o = p.get("orient", "R0")
-        tn = p.get("type")
-        dx, dy = mirror_offset(o, P.types[tn]["outline_um"], sizes[tn]) if tn in sizes else (0.0, 0.0)
-        out.append(f"ot_place {sv(n)} {gen_phys._um(p['origin_um'][0] + dx)} {gen_phys._um(p['origin_um'][1] + dy)} {o}")
-    return out
+    abut.  gen_phys._um prints 4 decimals (0.1 nm), the same text gen_phys uses for die placement (ba99259d8)."""
+    return [f"ot_place {sv(n)} {gen_phys._um(p['origin_um'][0])} {gen_phys._um(p['origin_um'][1])} {p.get('orient', 'R0')}"
+            for n, p in sorted(P.parts.items())]
 
 
-def grt_tcl(P, out, coarse, lefs, reserve, adjust, sizes=None):
+def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     W, H = P.W, P.H
     t = [f"# GENERATED by tools/die_plan/die_trial.py: die global route on abstracts, die {P.name}.",
          "set t0 [clock seconds]",
@@ -4828,7 +4765,7 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust, sizes=None):
     rp = {n: (x, y, L) for n, L, x, y in gen_phys.die_root_pins(P)}
     x, y, L = rp["rst_n"]
     t.append(f"place_pin -pin_name rst_n -layer {L} -location {{{x:.4f} {y:.4f}}} -pin_size {{0.32 0.04}}")
-    t += place_lines(P, sizes)
+    t += place_lines(P)
     t.append("puts \"OT_T placed [expr {[clock seconds]-$t0}]\"")
     t.append("source /work/grt/obs.tcl")
     t.append("puts \"OT_T obs [expr {[clock seconds]-$t0}]\"")
@@ -4878,7 +4815,7 @@ def io_windows(P, plan_dir):
     return io
 
 
-def psm_tcl(P, lefs, power, bumps, sizes=None):
+def psm_tcl(P, lefs, power, bumps):
     W, H = P.W, P.H
     t = [f"# GENERATED by tools/die_plan/die_trial.py: die PDN + PDNSim on abstracts, die {P.name}.",
          "set t0 [clock seconds]", f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}"]
@@ -4887,7 +4824,7 @@ def psm_tcl(P, lefs, power, bumps, sizes=None):
           "read_verilog /work/psm/psm.v", f"link_design {sv(P.name)}_psm",
           f"initialize_floorplan -die_area {{0 0 {gen_phys._um(W)} {gen_phys._um(H)}}} -core_area {{0 0 {gen_phys._um(W)} {gen_phys._um(H)}}} -site asap7sc7p5t",
           "source /work/grt/tracks.tcl", PLACE_PROC]
-    t += place_lines(P, sizes)
+    t += place_lines(P)
     t += ["puts \"OT_T placed [expr {[clock seconds]-$t0}]\"", "source /work/psm/pdn.tcl", "pdngen",
           "puts \"OT_T pdngen [expr {[clock seconds]-$t0}]\"",
           "write_db /work/psm/pdn_grid.odb",
@@ -5395,6 +5332,31 @@ exit $rc
 """
 
 
+VIEW_SIZE_TOL_UM = 1e-3
+
+
+def closed_view_candidates(P, views):
+    """({type: view LEF path}, {type: refusal record}) for the closed views under `views`.  HEAD-MYTILE-1115 (COORD r206):
+    a closed view whose LEF SIZE differs from the plan outline is REFUSED and the kit falls back to the plan abstract.
+    ot_place puts a master lower-left at the plan origin, so a view narrower/wider than the outline mirrors (MY/MX/R180)
+    about its own size while every plan-frame tool mirrors about the outline: HEAD hd_tile view 708.48 vs outline 717.12
+    (stale pre-11-13 tile) left 132 MY tiles 8.64 um off (13 clock cells per tile over real cores, u042 u046 u065 u068
+    u131 u134 u156 = 218-262 DRC each).  Re-sign the type at the outline size to use its view again."""
+    ok, refused = {}, {}
+    for tn, t in P.types.items():
+        v = Path(views) / tn / f"{t['module']}.lef" if views else None
+        if not (v and v.is_file()):
+            continue
+        m = re.search(r"\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;", v.read_text())
+        W, H = t["outline_um"]
+        if m and (abs(float(m.group(1)) - W) > VIEW_SIZE_TOL_UM or abs(float(m.group(2)) - H) > VIEW_SIZE_TOL_UM):
+            refused[tn] = dict(view=str(v), view_size_um=[float(m.group(1)), float(m.group(2))], outline_um=[W, H],
+                               why="closed view SIZE differs from the plan outline: plan abstract used")
+        else:
+            ok[tn] = v
+    return ok, refused
+
+
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
@@ -5451,14 +5413,18 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     rsv = {tn: reserved_windows(P, tn) for tn in P.types}
     rsv = {k: v for k, v in rsv.items() if v}
     iw = {tn: sorted(set(list(iw.get(tn, [])) + rsv.get(tn, []))) for tn in set(iw) | set(rsv)}
+    view_ok, view_refused = closed_view_candidates(P, views)
+    for tn_, r_ in sorted(view_refused.items()):
+        print(f"CLOSED_VIEW_REFUSED {tn_}: view SIZE {r_['view_size_um']} != outline {r_['outline_um']}: plan abstract used", flush=True)
+    meta["closed_views_refused"] = view_refused
     _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
                                                    reset_infra=reset_infra)))
                   for tn, t in sorted(P.types.items())
-                  if not (views and (Path(views) / tn / f"{t['module']}.lef").is_file())]
+                  if tn not in view_ok]
     _abs = dict(zip([tn for tn, _ in _abs_calls], kit_map([c for _, c in _abs_calls])))
     for tn, t in sorted(P.types.items()):
-        v = Path(views) / tn / f"{t['module']}.lef" if views else None
-        if v and v.is_file():
+        v = view_ok.get(tn)
+        if v:
             txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
             if iw.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
                 import abstract_cutout
@@ -5536,7 +5502,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     ca = P.layer_budget.get("cut_avail", {"M8": 0.6, "M9": 0.6})
     adjust = [(L, round(1 - ftf[0], 3)) for L in ("M4", "M5", "M6", "M7")] + \
              [(L, round(1 - ca.get(L, 0.6), 3)) for L in ("M8", "M9")]
-    (out / "grt" / "grt.tcl").write_text(grt_tcl(P, out / "grt", coarse, lefs, reserve, adjust, sizes=lef_sizes(P, out / "abstracts", smod)))
+    (out / "grt" / "grt.tcl").write_text(grt_tcl(P, out / "grt", coarse, lefs, reserve, adjust))
     meta["grt"] = dict(ft_bits=nft, ft_slot_instances=len(ft_nets(P)), reset_taps=len(P.parts),
                        adjust=dict(adjust), coarse_m123_um=coarse, gcell_um=GCELL_UM, clock_reserve_rects=len(reserve),
                        pg_stripes=len(pg_stripes(P)))
@@ -5581,7 +5547,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     (out / "psm" / "bumps.tcl").write_text(bumps_tcl(P, bumps))
     (out / "psm" / "power.tcl").write_text("\n".join(f"set_pdnsim_inst_power -inst {sv(n)} -power {w:.6f}"
                                                      for n, w in sorted(power.items())) + "\n")
-    (out / "psm" / "psm.tcl").write_text(psm_tcl(P, lefs, power, bumps, sizes=lef_sizes(P, out / "abstracts", smod)))
+    (out / "psm" / "psm.tcl").write_text(psm_tcl(P, lefs, power, bumps))
     (out / "psm" / "power.json").write_text(json.dumps(dict(density_w_mm2=density, total_w=round(sum(power.values()), 3),
                                                             parts=power), indent=0) + "\n")
     meta["psm"] = dict(density_w_mm2=density, total_w=round(sum(power.values()), 2), bumps=len(bumps),
