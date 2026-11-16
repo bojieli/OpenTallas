@@ -54,6 +54,28 @@ class NativeBaseTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "inside its declared native base"):
             kit_topology.native_contract(raw, self.manifest, self.plan)
 
+    def test_absolute_live_table_reroots_into_snapshot(self):
+        live = self.root / "srv" / "tree"
+        snap = self.root / "snaps" / "abc" / "root"
+        mirror = snap / live.relative_to(live.anchor)
+        (mirror / "runtime").mkdir(parents=True)
+        (mirror / "runtime" / "landing.json").write_text('{"collector":{"types":{}}}')
+        live_table = live / "runtime" / "landing.json"          # absolute live path, as the iso manifests write it
+        raw = {"partition_types": {"t": {"buses": []}}, "asbuilt": {}}
+        self.manifest.write_text(json.dumps({"base": str(mirror), "clock_landing_table": str(live_table)}))
+        got = kit_topology.native_contract(raw, self.manifest, self.plan)
+        self.assertIsNotNone(got["clock_table_sha256"])
+        self.manifest.write_text(json.dumps({"base": str(mirror), "clock_landing_table": "runtime/landing.json"}))
+        self.assertEqual(got, kit_topology.native_contract(raw, self.manifest, self.plan))
+
+    def test_absolute_table_without_snapshot_copy_still_refused(self):
+        outside = self.root / "elsewhere" / "landing.json"
+        outside.parent.mkdir()
+        outside.write_text("{}")
+        self.manifest.write_text(json.dumps({"base": str(self.native), "clock_landing_table": str(outside)}))
+        with self.assertRaisesRegex(ValueError, "inside its declared native base"):
+            kit_topology.native_contract({"partition_types": {}, "asbuilt": {}}, self.manifest, self.plan)
+
 
 if __name__ == "__main__":
     unittest.main()
