@@ -22,8 +22,10 @@
   "preservation": "Requires new view version; keeps kit provenance and requested_pins.json bytes; final_physical records primary source hashes; loader uses explicit final contract",
   "verification": {
     "focused_tests": "4 PASS",
-    "log": "intel2:~/tmp/fdkv/codex_final_physical_tests_v2_1116.log",
+    "log": "intel2:~/tmp/fdkv/codex_final_physical_tests_v3_1116.log",
     "first_fixture_failure": "Preserved /tmp/fdkv/codex_final_physical_tests_1116.log; fake ETM lacked clock-tree arcs, isolated loader from unrelated arithmetic parser"
   },
-  "actual_export_and_related_hold": "PENDING current signed source export/consumer; no hold PASS inferred"
+  "actual_export_and_related_hold": "Actual original r37 signed q2 export COMPLETE; TT and FF physical-pin registration canonical PASS1957, ETMs byte-identical. Die related hold remains separately measured/covered; no hold PASS inferred.",
+  "actual_result": "actual_result.json",
+  "api_return": "Final source returns effective physical pins hash; first actual_result retains earlier requested-hash display, while final_physical consumer already passed."
 }
