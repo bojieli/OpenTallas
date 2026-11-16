@@ -36033,11 +36033,60 @@
      "carry": true
     },
     {
-     "id": "s81-mig-001-k1-k2-k1",
+     "id": "s81-mig-005-k5-k6-k2-k1",
+     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
+     "release": [
+      "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave2",
+      "lint_clean:s81"
+     ],
+     "migrated": true,
+     "keys": [
+      "col_h10_r0_p1__t1__cl574cc59d",
+      "col_h10_r0_p4__t1",
+      "col_h10_r1__t1__cl95b37463",
+      "col_h9_r0_p1__t1",
+      "col_h9_r0_p2__t1__cl0045af7b",
+      "col_h9_r0_p2__t1__cl9f71e63d",
+      "col_h9_r0_p3__t1__cl0cd90c0e",
+      "col_h9_r0_p3__t1__cl8ce97bcb",
+      "col_h9_r0_p4__t1__cl8ef405e8",
+      "col_h9_r0_p4__t1__clcb2fbfe8",
+      "col_h9_r0_p5__t1",
+      "col_h9_r0_p6__t1"
+     ],
+     "carry": true
+    },
+    {
+     "id": "s81-mig-005-k5-k6-k2-k2",
+     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
+     "release": [
+      "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave1",
+      "lint_clean:s81"
+     ],
+     "migrated": true,
+     "keys": [
+      "col_h10_r2__t1__cl1f5d6c2a",
+      "col_h10_r2__t1__cl99efd374",
+      "col_h9_r1__t1__cl49d7a23e",
+      "col_h9_r1__t1__clf32cde8d",
+      "col_h9_r2__t1__cl774acf45",
+      "col_h9_r2__t1__clb8d86cd5",
+      "col_h9_r2__t1__clc9ad8f7e",
+      "col_h9_r2__t1__clce45cab5"
+     ],
+     "carry": true
+    },
+    {
+     "id": "s81-mig-001-k1-k2-k1-k3",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
      "release": [
       "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave2",
       "lint_clean:s81"
      ],
      "migrated": true,
@@ -36078,7 +36127,6 @@
       "col_h9_r0_p1__t1__pvb3e2a60a",
       "col_h9_r0_p1__t1__pv8c197f8e",
       "col_h9_r0_p1__t1__pva2e3974f",
-      "col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97",
       "col_h10_r0_p1__t1__cl574cc59d__pv67036687",
       "col_h10_r0_p1__t1__cl574cc59d__pvb095fa2f",
       "col_h10_r0_p1__t1__cl574cc59d__pvd7af8531",
@@ -36096,18 +36144,6 @@
       "col_h10_r1__t1__cl95b37463__pve28d14fa",
       "col_h10_r1__t1__cl95b37463__pv6a7ae122",
       "col_h10_r1__t1__cld01bb4ae",
-      "col_h10_r2__t1__clac068e56",
-      "col_h10_r2__t1__cl8b686b3e",
-      "col_h10_r2__t1__cl99efd374__pv1619ecc6",
-      "col_h10_r2__t1__cl99efd374__pv7a8a5452",
-      "col_h10_r2__t1__cl99efd374__pv9ae398c2",
-      "col_h10_r2__t1__cl99efd374__pv4c1f67ff",
-      "col_h10_r2__t1__cl1f5d6c2a__pvec003743",
-      "col_h10_r2__t1__cl1f5d6c2a__pv0c1de895",
-      "col_h10_r2__t1__cl1f5d6c2a__pv16277ca6",
-      "col_h10_r2__t1__cl1f5d6c2a__pvcd889288",
-      "col_h10_r2__t1__cl1f5d6c2a__pvf1512c16",
-      "col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0",
       "col_h9_r0_p2__t1__cl9f71e63d__pv5752c4ff",
       "col_h9_r0_p2__t1__cl9f71e63d__pva4376595",
       "col_h9_r0_p2__t1__cl9f71e63d__pv2744f675",
@@ -36115,11 +36151,53 @@
       "col_h9_r0_p2__t1__cl9f71e63d__pvabc9823e",
       "col_h9_r0_p2__t1__cl9f71e63d__pv11b73b67",
       "col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84",
-      "col_h9_r0_p2__t1__cl0045af7b__pv622a6f97",
       "col_h9_r0_p2__t1__cl0045af7b__pve183b536",
       "col_h9_r0_p2__t1__cl0045af7b__pva2793873",
       "col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a",
       "col_h9_r0_p2__t1__cl0045af7b__pv6882e5ea",
+      "col_h9_r0_p3__t1__cl31d0dc4b",
+      "col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898",
+      "col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5",
+      "col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba",
+      "col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a",
+      "col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47",
+      "col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8",
+      "col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b",
+      "col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b",
+      "col_h9_r0_p3__t1__cl0cd90c0e__pv13474472",
+      "col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079",
+      "col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760",
+      "col_h9_r0_p4__t1__cl8ef405e8__pv70731479",
+      "col_h9_r0_p4__t1__cl8ef405e8__pv91095415",
+      "col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef",
+      "col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c",
+      "col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31",
+      "col_h9_r0_p4__t1__clcb2fbfe8__pvec137455"
+     ],
+     "carry": true
+    },
+    {
+     "id": "s81-mig-001-k1-k2-k1-k4",
+     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
+     "release": [
+      "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave1",
+      "lint_clean:s81"
+     ],
+     "migrated": true,
+     "keys": [
+      "col_h10_r2__t1__clac068e56",
+      "col_h10_r2__t1__cl8b686b3e",
+      "col_h10_r2__t1__cl99efd374__pv1619ecc6",
+      "col_h10_r2__t1__cl99efd374__pv7a8a5452",
+      "col_h10_r2__t1__cl99efd374__pv9ae398c2",
+      "col_h10_r2__t1__cl99efd374__pv4c1f67ff",
+      "col_h10_r2__t1__cl1f5d6c2a__pvec003743",
+      "col_h10_r2__t1__cl1f5d6c2a__pv16277ca6",
+      "col_h10_r2__t1__cl1f5d6c2a__pvcd889288",
+      "col_h10_r2__t1__cl1f5d6c2a__pvf1512c16",
+      "col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0",
       "col_h9_r1__t1__cl49d7a23e__pvc382fb14",
       "col_h9_r1__t1__cl49d7a23e__pv11dcdcd2",
       "col_h9_r1__t1__cl49d7a23e__pv62bca836",
@@ -36173,7 +36251,6 @@
       "col_h9_r1__t1__cl49d7a23e__pvadb6c679",
       "col_h9_r1__t1__cl49d7a23e__pvc25aad1b",
       "col_h9_r1__t1__cl49d7a23e__pve3f8a86c",
-      "col_h9_r1__t1__cl49d7a23e__pv047ea3b3",
       "col_h9_r1__t1__clf32cde8d__pv63f488e9",
       "col_h9_r1__t1__clf32cde8d__pv387d6579",
       "col_h9_r1__t1__clf32cde8d__pv48cfde67",
@@ -36238,39 +36315,7 @@
       "col_h9_r2__t1__cl774acf45__pvf8d9f9e5",
       "col_h9_r2__t1__cl774acf45__pv858fb2ba",
       "col_h9_r2__t1__cl774acf45__pvea45273b",
-      "col_h9_r2__t1__cl774acf45__pve3ab90e7",
-      "col_h9_r0_p3__t1__cl31d0dc4b",
-      "col_h9_r0_p3__t1__cl8ce97bcb__pv1489a898",
-      "col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5",
-      "col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba",
-      "col_h9_r0_p3__t1__cl8ce97bcb__pvd2159f4a",
-      "col_h9_r0_p3__t1__cl8ce97bcb__pv625eef47",
-      "col_h9_r0_p3__t1__cl0cd90c0e__pv110cabb8",
-      "col_h9_r0_p3__t1__cl0cd90c0e__pv4cfde03b",
-      "col_h9_r0_p3__t1__cl0cd90c0e__pv5b02e93b",
-      "col_h9_r0_p3__t1__cl0cd90c0e__pv13474472",
-      "col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079",
-      "col_h9_r0_p3__t1__cl0cd90c0e__pv8d734760",
-      "col_h9_r0_p4__t1__cl8ef405e8__pv70731479",
-      "col_h9_r0_p4__t1__cl8ef405e8__pv91095415",
-      "col_h9_r0_p4__t1__cl8ef405e8__pv775e5cef",
-      "col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c",
-      "col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31",
-      "col_h9_r0_p4__t1__clcb2fbfe8__pvec137455"
-     ],
-     "carry": true
-    },
-    {
-     "id": "s81-mig-005-k5-k6-k2",
-     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
-     "release": [
-      "event_adopt:B6gF2s3",
-      "lint_clean:s81"
-     ],
-     "migrated": true,
-     "keys": [
-      "col_*"
+      "col_h9_r2__t1__cl774acf45__pve3ab90e7"
      ],
      "carry": true
     }
@@ -36313,7 +36358,20 @@
      "svc_lo_dsdv_svc_rs__t7"
     ],
     "s81-coltap-pilots": [
+     "col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97",
+     "col_h10_r2__t1__cl1f5d6c2a__pv0c1de895",
+     "col_h9_r0_p2__t1__cl0045af7b__pv622a6f97",
+     "col_h9_r1__t1__cl49d7a23e__pv047ea3b3",
      "col_h9_r2__t1__clce45cab5__pv7a260fc0"
+    ],
+    "col-wave1": [
+     "col_h9_r2__t1__clce45cab5__pv7a260fc0",
+     "col_h9_r1__t1__cl49d7a23e__pv047ea3b3",
+     "col_h10_r2__t1__cl1f5d6c2a__pv0c1de895"
+    ],
+    "col-wave2": [
+     "col_h9_r0_p2__t1__cl0045af7b__pv622a6f97",
+     "col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97"
     ]
    },
    "prev_treeswitch1116v2": {
