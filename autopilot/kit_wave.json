@@ -35972,34 +35972,6 @@
      "carry": true
     },
     {
-     "id": "s81-mig-002-k2-k3",
-     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt.",
-     "release": [
-      "event_adopt:B6gF2sv",
-      "lint_clean:s81"
-     ],
-     "migrated": true,
-     "keys": [
-      "svc_lo_dsdv_svc_rs_w__t1",
-      "svc_hi_dsdv_svc_rs__t1",
-      "svc_lo_dsdv_svc_rs__t1",
-      "svc_hi_dsdv_svc_rs__t2",
-      "svc_lo_dsdv_svc_rs__t2",
-      "svc_hi_dsdv_svc_pvso_entry__t1",
-      "svc_lo_dsdv_svc_rs__t3",
-      "svc_hi_dsdv_svc_rs__t3",
-      "svc_hi_dsdv_svc_rs__t4",
-      "svc_lo_dsdv_svc_rs__t5",
-      "svc_hi_dsdv_svc_pvso_entry__t2",
-      "svc_lo_dsdv_svc_rs__t6",
-      "svc_hi_dsdv_svc_rs__t5",
-      "svc_lo_dsdv_svc_rs__t7",
-      "svc_hi_dsdv_svc_rs__t6"
-     ],
-     "carry": true
-    },
-    {
      "id": "s81-mig-003-k3-k4",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): y-slot/x-slot over core, kit inputs unchanged; t14 needs form R (sec2). Running attempts finish. Lift = delete this key on Event G adopt.",
@@ -36050,20 +36022,6 @@
      "migrated": true,
      "keys": [
       "col_*"
-     ],
-     "carry": true
-    },
-    {
-     "id": "s81-mig-006-k6-k7",
-     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key.",
-     "release": [
-      "event_adopt:B6gF2sv",
-      "lint_clean:s81"
-     ],
-     "migrated": true,
-     "keys": [
-      "svc_*"
      ],
      "carry": true
     },
@@ -36290,6 +36248,44 @@
       "ot_s81sl_leaf__t68__*"
      ],
      "carry": true
+    },
+    {
+     "id": "s81-mig-002-k2-k3-k1",
+     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt.",
+     "release": [
+      "result:FABLE-FIX-S81-SVC:svc-ready"
+     ],
+     "migrated": true,
+     "keys": [
+      "svc_lo_dsdv_svc_rs_w__t1",
+      "svc_hi_dsdv_svc_rs__t1",
+      "svc_lo_dsdv_svc_rs__t1",
+      "svc_hi_dsdv_svc_rs__t2",
+      "svc_lo_dsdv_svc_rs__t2",
+      "svc_hi_dsdv_svc_pvso_entry__t1",
+      "svc_lo_dsdv_svc_rs__t3",
+      "svc_hi_dsdv_svc_rs__t4",
+      "svc_lo_dsdv_svc_rs__t5",
+      "svc_hi_dsdv_svc_pvso_entry__t2",
+      "svc_lo_dsdv_svc_rs__t6",
+      "svc_hi_dsdv_svc_rs__t5",
+      "svc_hi_dsdv_svc_rs__t6"
+     ],
+     "carry": true
+    },
+    {
+     "id": "s81-mig-006-k6-k7-k2",
+     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key.",
+     "release": [
+      "result:FABLE-FIX-S81-SVC:svc-ready"
+     ],
+     "migrated": true,
+     "keys": [
+      "svc_lo_dsdv_svc_rs__t4"
+     ],
+     "carry": true
     }
    ],
    "planned_events": [
@@ -36322,7 +36318,13 @@
     "src_manifest": "verify"
    },
    "src_manifest_hash": "e6626b1f72572b4d8020d1ab8d79d81fbb96ba7c408aea8a8ed608e544869d8d",
-   "tools_sha": "e4b9ae9f1c1f"
+   "tools_sha": "e4b9ae9f1c1f",
+   "proof_items": {
+    "svc-ready": [
+     "svc_hi_dsdv_svc_rs__t3",
+     "svc_lo_dsdv_svc_rs__t7"
+    ]
+   }
   },
   "s81_head": {
    "enabled": true,
