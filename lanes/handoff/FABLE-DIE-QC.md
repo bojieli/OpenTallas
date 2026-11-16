@@ -56,3 +56,13 @@ See lanes/FABLE-DIE-QC.md.
 - Own error: 13:27 I stopped my waiting ot-run client with a pgrep pattern loop; it matched only my client (1344960) and my own ssh shell. Use the PID from the client log next time.
 - Next (not started): (1) the 3 serdes crossings; (2) per-type region clock tree template (cb instance spread +-129 ps); (3) writer_start / reader_start reset hops from a placed dump; (4) after plan J/K adopts, re-run bin/chain_f.sh on it (3 h 20 min) and re-derive the rows.
 - epyc2 dir is 13 GB (treeF 11 GB): delete treeF when the chain is not needed again.
+
+## State 2026-11-16 14:2x PST (r361 / r364 work: S4q9m)
+- (2) serdes crossings: cause = ca_named_pairs None fallback; fixed by Codex on this branch @dec8cc442a (in main). Before / after proof RUNNING on epyc2:
+  chain/qc/s4q9c/gate_main (tools src2 = before) and gate_main3 (src3 = after); clients intel2 ~/fable-die-qc/ca_main*.client.log. Read "COUNT-ALIGN TT crossings ... fail N" in sta.log and sta_interval.missing in ca_C.json.
+- (1) comb feed: bin/feed_spt.py + the inline comb generator (epyc2 fable-die-qc/m/feed_comb_fw_3.json: trunk = the 12 sl_*_fw regions, each column an arborescence, fan-out 3).
+  Estimate vs the fwd feed: depth 21 -> 12, feed path max 36.2 -> 28.1 mm, feed path difference between connected regions max 19.7 -> 4.7 mm, unshared p90 16.5 -> 6.8 mm.
+- (3) per-type region tree: branch @2bed6a4a0a6 (die_trial OT_CLK_DME_TEMPLATE=1, +tests), gate running (intel2 ~/fable-die-qc/gate3.client.log).
+- RUNNING die chains on epyc2 (plan S4q9c, 3 h 20 each): chain/qc/s4q9m_comb (comb feed, v2 die_trial, bin/chain_m.sh) and chain/qc/s4q9m_comb_t (comb feed + template, branch die_trial, bin/chain_mt.sh).
+  Read per chain: CHAIN.log (GRT ovf, CA_C FAIL / depth / worst, STA_C), then bin/an1.py on it (insertion max, seam |d|), and reg/kitoffs.json tol per cb type (target: under 20 ps with the template, was 129).
+- If comb + template gate: S4q9m = plan clock.spine.feed -> the comb file + region_form apply / sta (K, DEPTH, sched_lat re-plan, lane latency changes) -> hand to FABLE-FIX-QC-KNEE-HC with new clock rows.
