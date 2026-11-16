@@ -40,7 +40,7 @@ def make(old_tree, new_tree, out, maps, digest=None):
                 sp = os.path.join(dp, f)
                 if os.path.islink(sp) or not os.path.isfile(sp) or SM.skipped(os.path.join(rel, f)):
                     continue   # symlinks and cache/backup names (*.bak*, *.orig, __pycache__) are not tree content
-                r = os.path.join(rel, os.path.relpath(sp, src))
+                r = os.path.normpath(os.path.join(rel, os.path.relpath(sp, src)))   # RELDIR '.' must not leave './' in the manifest key
                 dp2 = os.path.join(stage, r)
                 os.makedirs(os.path.dirname(dp2), exist_ok=True)
                 if f.endswith(TEXT):
