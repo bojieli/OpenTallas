@@ -16618,3 +16618,4 @@ FAILED [AUTOPILOT b7650e620081] 2026-11-16 01:42:23 PST AUTOPILOT -> KIT-WAVE-3:
   D. Event G carry-over: G_t14R (06820ef4b9fa) and G_strip_t10t74 (7a3eece33fe4) are READY. y-slot rows (13 types) are not gated: GRT overflow is 86-94% in u_cland nets. STRIP t34/t52/t71 are not gated.
   E. FABLE-PD-S81-0117 is still absent from ~/coord/lanes. The newest is F2r, which covers the col family.
   I am waiting for your asks.
+- 2026-11-16 01:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> FABLE-FIX-S81-COL, COORD] FAIL-CLASS fbd8fb27e6 owner FABLE-FIX-S81-COL s81/pipeline/FLOW tool / Tcl error @pipeline: Traceback (most recent call last: 5 item(s) failed and not answered: ot_s81sl_leaf__t11, dsdv_slice_iq_C__t1, slice_station__t17, slice_station__t12, dsdv_slice_c1x_C__t10. Owner: post RESULT or ACK naming fbd8fb27e6 (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
