@@ -181,6 +181,23 @@ yosys hierarchy -top @TOP@
 """
 
 
+KIT_SNAP_ROOT = re.compile(r"^.*/snaps/[0-9a-f]{40}/root(/.*)$")
+
+
+def unstage(p, kd):
+    """KV-102 r266 11-16: the wave's kit store (KIT-INPUT-STORE-1 / kit_snap) localizes every kit_rtl.f source to
+    <W>/kit_inputs/<original abs path>, and a snapshot input further to .../snaps/<sha40>/root/<original abs path>;
+    the source-tree check judges the ORIGINAL path, so both staging prefixes are stripped (a path outside them is unchanged)."""
+    s = str(p)
+    for w in [kd] + list(Path(kd).parents)[:3]:
+        ki = str(Path(w).resolve() / "kit_inputs")
+        if s.startswith(ki + "/"):
+            s = s[len(ki):]
+            break
+    m = KIT_SNAP_ROOT.match(s)
+    return Path(m.group(1)) if m else Path(s)
+
+
 def kit_rtl_paths(kd):
     """-> (errors, applies): kit_rtl_paths.json (written by gen_phys.write_phys for a --kit-rtl type) names the kit source tree
     and the filelist; every file must resolve inside the source tree, the bind out dir (kit_rtl.json bind_out) or the filelist dir"""
@@ -193,10 +210,10 @@ def kit_rtl_paths(kd):
     if kj.is_file():
         bo = json.loads(kj.read_text()).get("bind_out")
         if bo:
-            roots.append(Path(bo).resolve())
+            roots.append(unstage(Path(bo).resolve(), kd))
     errs = []
     for x in d.get("files", []):
-        p = Path(x).resolve()
+        p = unstage(Path(x).resolve(), kd)
         if not any(p == r or r in p.parents for r in roots):
             errs.append(f"kit_rtl.f source {p} is outside the kit source tree {roots[0]} (bind out / kit-rtl dir allowed)")
     return errs, True
