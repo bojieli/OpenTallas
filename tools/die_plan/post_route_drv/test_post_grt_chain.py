@@ -185,3 +185,27 @@ def test_data_only_kit_unchanged(tmp_path):
     rec = C.stage(tmp_path)
     assert 'skipped_clock_hooks' not in rec
     assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post_core.tcl\n'
+
+
+def test_final_repair_dropped_anywhere_and_generated_drv_repair_dropped(tmp_path):
+    """S81-CORES-1115: a private line after core_final_repair.tcl (gf5_grt_measure.tcl) must not keep the second incremental GRT."""
+    (tmp_path / 'grt_post_core.tcl').write_text('source /work/grt_post.tcl\nsource /work/subtree_balance.tcl\n'
+                                                'source /work/core_drv_repair.tcl\nsource /work/core_final_repair.tcl\n'
+                                                'source /work/gf5_grt_measure.tcl\n')
+    (tmp_path / 'core_final_repair.tcl').write_text('# x\n')
+    rec = C.stage(tmp_path)
+    assert rec['skipped_final_repair'] and rec['final_repair_dropped_anywhere']
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post.tcl\nsource /work/gf5_grt_measure.tcl\n'
+
+
+def test_final_repair_in_wrapper_without_clock_hooks_is_expanded_and_dropped(tmp_path):
+    (tmp_path / 'grt_post_core.tcl').write_text('source /work/grt_post.tcl\nsource /work/core_final_repair.tcl\nsource /work/x.tcl\n')
+    (tmp_path / 'core_final_repair.tcl').write_text('# x\n')
+    C.stage(tmp_path)
+    assert (tmp_path / 'prd_post_grt_chain.tcl').read_text() == 'source /work/grt_post.tcl\nsource /work/x.tcl\n'
+
+
+def test_eco_post_ends_with_clock_freeze_assert():
+    t = (Path(__file__).with_name('prd_mk.sh')).read_text()
+    last = t.index("{ot_clk_freeze_assert post_chain}")
+    assert t.index("ot_pg_require_bound post_route_drv") < last < t.index("> $OUT/eco_post.tcl")

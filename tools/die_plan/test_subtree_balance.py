@@ -21,8 +21,20 @@ def test_core_kits_balance_before_final_repair(tmp_path):
     post = (tmp_path / "grt_post_core.tcl").read_text().splitlines()
     src = [ln for ln in post if ln.startswith("source ")]
     assert src == ["source /work/kit_post.tcl", "source /work/grt_post.tcl", "source /work/subtree_balance.tcl",
-                   "source /work/core_final_repair.tcl"], post
+                   "source /work/core_drv_repair.tcl", "source /work/core_final_repair.tcl"], post
     assert (tmp_path / "subtree_balance.tcl").read_text() == HOOK.read_text()
+
+
+def test_core_kits_run_repair_design_once_when_incremental_repair_skipped(tmp_path):
+    """S81-CORES-1115: the POST override replaced post_grt_drv.tcl; core_drv_repair.tcl is the one repair_design, self-gated on
+    SKIP_INCREMENTAL_REPAIR=1, staged next to the final repair."""
+    core_flow.apply(tmp_path, core_flow.binding(500.0), "x", rc_cal=False)
+    t = (tmp_path / "core_drv_repair.tcl").read_text()
+    assert t == (HERE / "core_drv_repair.tcl").read_text()
+    assert t.count("repair_design -slew_margin 40 -cap_margin 20") == 1 and t.count("global_route -start_incremental") == 1
+    assert 'SKIP_INCREMENTAL_REPAIR) ne "1"' in t and "repair_timing" not in t.replace("# ", "")
+    post = (tmp_path / "grt_post_core.tcl").read_text().splitlines()
+    assert post.index("source /work/core_drv_repair.tcl") < post.index("source /work/core_final_repair.tcl")
 
 
 def test_partition_pre_pass_sources_it():
