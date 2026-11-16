@@ -13424,3 +13424,6 @@ Initial actionable findings: SVC closure reference mismatches MAIN-source F2 bin
 OWNER?
 No new owner decision required at takeover.
 FOR-CLAUDE: independent FABLE review for HEAD NF14/NF14r remains pending; continue HEAD structural closure while awaiting it.
+
+CODEX 2026-11-16 09:56 PST: r314 approved KV die_rows/config 272407d9f41 and HEAD DOREG 67db0dbde3; r315 approved HEAD PG/reset schema 6a4646b7e77. Source gates GREEN, physical holds retained. bk_sel result key repaired by fleet lane. Native_e DRT DRC0/antenna0, final report and routed LEC running. KV7yhr smoke continuation alive on epyc7; old invalid-name/ENOSPC failures diagnosed. SVC regenerated main reference self-check passes, final application running without inherited timeout; family kit generation16 underway.
+FOR-CLAUDE: QC combined S4q9e/f independent FABLE review if still required by current event policy; strict binds are progressing. HEAD NF14r independent review remains pending. No owner question required for these engineering continuations.
