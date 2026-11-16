@@ -1856,6 +1856,62 @@ def feed_edge_pol(nodes, extra_load=None):
                 feed_edge_max=round(max((abs(E[i]) for i in feed), default=0.0), 3))
 
 
+# FABLE-DIE-QC 11-16 opt-in OT_CLK_DME_TEMPLATE=1 (per-type region clock tree): a region that is ONE partition takes the DME
+# tree of the first region of the same type (same options, same per-port early values), moved by the partition transform
+# (translation; y mirror for an MX / R0 pair), instead of its own embedding.  Every instance of a type then has the same
+# tree topology, leg lengths and stage counts, so its tap offsets differ only by routed RC (QC S4q9c: +-129 ps between
+# the 10 instances of cbn_q01 with one embedding per instance).  A copy is used only if every cell site of the moved
+# tree is legal where the template's was; otherwise the region keeps its own embedding (counted in the stats).
+DME_TEMPLATE = os.environ.get("OT_CLK_DME_TEMPLATE", "0") not in ("", "0")
+DME_TEMPLATE_TYPES = None      # {partition: type}, set by clock_kit
+
+
+def _dme_template_xform(ctaps, itaps, tol=2e-3):
+    """taps [(part, port, x, y)] of the template and of the instance -> (dx, sy, cy) with x' = x + dx, y' = sy * y + cy,
+    or None when the port sets differ or the instance is not a translate / y-mirror image of the template"""
+    c = {t[1]: t for t in ctaps}
+    i = {t[1]: t for t in itaps}
+    if set(c) != set(i) or len(c) != len(ctaps) or len(i) != len(itaps):
+        return None
+    k0 = sorted(c)[0]
+    dx = i[k0][2] - c[k0][2]
+    if any(abs(i[k][2] - c[k][2] - dx) > tol for k in c):
+        return None
+    for sy in (1.0, -1.0):
+        cy = i[k0][3] - sy * c[k0][3]
+        if all(abs(i[k][3] - sy * c[k][3] - cy) <= tol for k in c):
+            return dx, sy, cy
+    return None
+
+
+def _dme_template_copy(site, tree, ctaps, itaps, xf):
+    """the template tree (dme_region_tree result) moved by xf onto the instance taps; None if a moved cell site is illegal"""
+    dn, droot, dst = tree
+    dx, sy, cy = xf
+    imap = {t[1]: t for t in itaps}
+    cpart, ipart = ctaps[0][0], itaps[0][0]
+    mv = lambda x, y: (round(x + dx, 3), round(sy * y + cy, 3))
+    out = []
+    for d in dn:
+        q = mv(d["x"], d["y"])
+        if site.legal((d["x"], d["y"])) and not site.legal(q):
+            return None
+        n = dict(d, x=q[0], y=q[1], kids=list(d["kids"]), taps=[imap[t[1]] for t in d["taps"]])
+        if d.get("part_root") == cpart:
+            n["part_root"] = ipart
+        if d.get("snakes"):
+            n["snakes"] = {k: [list(mv(*pt)) for pt in v] for k, v in d["snakes"].items()}
+            if any(not site.legal(tuple(pt)) for k, v in n["snakes"].items() for pt in v[1:-1]):
+                return None
+        out.append(n)
+    st = json.loads(json.dumps(dst, default=str))
+    for et in st.get("early_taps") or []:
+        if isinstance(et, dict) and et.get("part") == cpart:
+            et["part"] = ipart
+    st["template_of"] = cpart
+    return out, droot, st
+
+
 def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
                       snake=None, early_mode="hang", merge_only=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
@@ -1897,25 +1953,57 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     # DIE-QC-20 opt-in DME_WORKERS > 1: dme_region_tree is a pure function of (site, region taps, options), so the region
     # trees are computed in a fork pool and attached below in the same order (same nodes / ids as the serial loop)
     global _DME_POOL_JOBS
-    if DME_WORKERS > 1 and len(jobs) > 1:
+    # FABLE-DIE-QC opt-in DME_TEMPLATE: jobs whose region is one partition of a type seen before copy that template
+    tmpl = {}                # job index -> (template job index, xform)
+    if DME_TEMPLATE and DME_TEMPLATE_TYPES:
+        npart = defaultdict(int)
+        for _pn, _rn in regions.items():
+            npart[_rn] += 1
+        first = {}
+        for jk, (e, rn, sn, kw) in enumerate(jobs):
+            pn = rt[rn][0][0]
+            ty = DME_TEMPLATE_TYPES.get(pn)
+            if ty is None or npart[rn] != 1 or any(t[0] != pn for t in rt[rn]):
+                continue
+            ev = tuple(sorted((t[1], (early or {}).get((t[0], t[1]))) for t in rt[rn])) if isinstance(early, dict) else None
+            key = (ty, ev, json.dumps({k: v for k, v in kw.items() if k != "early"}, sort_keys=True, default=str))
+            if key not in first:
+                first[key] = jk
+                continue
+            xf = _dme_template_xform(rt[jobs[first[key]][1]], rt[rn])
+            if xf is not None:
+                tmpl[jk] = (first[key], xf)
+    own = [jk for jk in range(len(jobs)) if jk not in tmpl]
+    trees = {}
+    if DME_WORKERS > 1 and len(own) > 1:
         import multiprocessing as mp
-        _DME_POOL_JOBS = [(site, rt[rn], kw, rn) for _, rn, _, kw in jobs]
+        _DME_POOL_JOBS = [(site, rt[jobs[jk][1]], jobs[jk][3], jobs[jk][1]) for jk in own]
         try:
-            with mp.get_context("fork").Pool(min(DME_WORKERS, len(jobs))) as pool:
+            with mp.get_context("fork").Pool(min(DME_WORKERS, len(own))) as pool:
                 # DIE-QC-63/CLK: imap (ordered, chunksize 1) = the same list as pool.map, with one line per collected tree
-                trees = []
                 t0 = time.time()
-                for tr in pool.imap(_dme_pool_job, range(len(jobs)), chunksize=1):
-                    trees.append(tr)
+                for k, tr in enumerate(pool.imap(_dme_pool_job, range(len(own)), chunksize=1)):
+                    trees[own[k]] = tr
                     if dme_log_on():
-                        print(f"[dme] collected {len(trees)}/{len(jobs)} sec={time.time() - t0:.0f}",
+                        print(f"[dme] collected {len(trees)}/{len(own)} sec={time.time() - t0:.0f}",
                               file=sys.stderr, flush=True)
         finally:
             _DME_POOL_JOBS = None
-    else:
-        trees = None
+    tstat = dict(copied=0, illegal=0)
     for jk, (e, rn, sn, kw) in enumerate(jobs):
-        dn, droot, dst = trees[jk] if trees is not None else _dme_timed(site, rt[rn], kw, rn)
+        if jk in tmpl and jk not in trees:
+            cj, xf = tmpl[jk]
+            if cj not in trees:
+                trees[cj] = _dme_timed(site, rt[jobs[cj][1]], jobs[cj][3], jobs[cj][1])
+            cp = _dme_template_copy(site, trees[cj], rt[jobs[cj][1]], rt[rn], xf)
+            if cp is None:
+                tstat["illegal"] += 1
+            else:
+                tstat["copied"] += 1
+                trees[jk] = cp
+        if jk not in trees:
+            trees[jk] = _dme_timed(site, rt[rn], kw, rn)
+        dn, droot, dst = trees[jk]
 
         def attach(j, parent, snake_pts=None):
             d = dn[j]
@@ -1953,7 +2041,11 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                       **({"early_taps": dst["early_taps"]} if dst.get("early_taps") else {}),
                       **({k: dst[k] for k in ("snakes", "snake_wire_um", "snake_buffers")} if sn else {}),
                       **({k: dst[k] for k in ("snake_max_leg_um", "snake_legs_over_cap", "snake_cap_rebuilt") if k in dst}
-                         if sn else {}))
+                         if sn else {}),
+                      **({"template_of": dst["template_of"]} if dst.get("template_of") else {}))
+    if DME_TEMPLATE and DME_TEMPLATE_TYPES and dme_log_on():
+        print(f"[dme] template: {tstat['copied']} regions copied, {tstat['illegal']} kept their own tree (illegal site), "
+              f"{len(jobs) - len(tmpl)} embedded", file=sys.stderr, flush=True)
     return st
 
 
@@ -3744,6 +3836,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
               cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None):
+    global DME_TEMPLATE_TYPES
+    DME_TEMPLATE_TYPES = {n: q["type"] for n, q in P.parts.items()} if DME_TEMPLATE else None
     global EVEN_LEGS, DME_STREET_VGAPS, DME_STREET_VGAP_HALF
     EVEN_LEGS = clock_cell == "inv2"
     if DME_STREET_VLAYER:       # CLKLOC-4 --region-dme-street-vlayer: PG-free vertical gap centres of that layer
