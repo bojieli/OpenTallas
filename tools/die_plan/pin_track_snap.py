@@ -12,7 +12,7 @@ so the kit places exactly the snapped metal.  Pin width, y and the logical ancho
 the metal so it stays inside its rect).
 
   python3 -I pin_track_snap.py KITDIR --layer M7 --names '^clk_' --origin X Y --offset DX DY --orient R0
-                               [--pitch-nm 64 --track-off-nm 16] [--check]     (--check: report only)
+                                [--check]     (--check: report only)
 """
 import argparse
 import json
@@ -20,7 +20,9 @@ import re
 import sys
 from pathlib import Path
 
-TRACKS = {"M7": ("x", 16, 64), "M9": ("x", 20, 80), "M8": ("y", 20, 80)}
+# M7: die/parent lattice (pitch 64, offset 32 nm) = gen_core_kit_legacy.M7_LATTICE = plan die.layers M7 (was 16: stale,
+# every shift was 16 nm off; test_m7_track_matches_gen_lattice pins it to the generator).
+TRACKS = {"M7": ("x", 32, 64), "M9": ("x", 20, 80), "M8": ("y", 20, 80)}
 
 
 def nm(v):
