@@ -1468,7 +1468,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"] = {
     "type": "array", "items": {"type": "object", "additionalProperties": False,
         "properties": {"driver": {"type": "string"}, "driver_re": {"type": "string"}, "region_re": {"type": "string"},
-                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0}}}}
+                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0},
+                       # FABLE-DIE-S81 11-16: private k-flop copy chain per region out of the driver's own depth (0 added cycles)
+                       "copy_depth": {"type": "integer", "minimum": 1}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)

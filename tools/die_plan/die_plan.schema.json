@@ -5790,6 +5790,10 @@
         "min_loads": {
          "type": "integer",
          "minimum": 0
+        },
+        "copy_depth": {
+         "type": "integer",
+         "minimum": 1
         }
        }
       }
