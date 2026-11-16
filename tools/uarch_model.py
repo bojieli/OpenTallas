@@ -32,6 +32,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
+from uarch_model_qwen_native_stn55 import model as qwen_native_stn55_model
+
 
 
 
