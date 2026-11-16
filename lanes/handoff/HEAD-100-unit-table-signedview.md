@@ -1,5 +1,5 @@
-# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 03:06:27 PST by intel2 ~/tmp/head100_utable.sh
-# DONE 70, DONE with DRC>0: 0, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
+# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 03:21:39 PST by intel2 ~/tmp/head100_utable.sh
+# DONE 73, DONE with DRC>0: 0, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
 renewed-glider u038_b DONE drc=0 rss_mb=12099 wall=28:57.10 [INFO DRT-0199]   Number of violations =
 renewed-glider u039_b DONE drc=0 rss_mb=10380 wall=23:03.23 [INFO DRT-0199]   Number of violations =
 renewed-glider u040_b DONE drc=0 rss_mb=10690 wall=31:52.24 [INFO DRT-0199]   Number of violations =
@@ -70,13 +70,16 @@ key-cardinal u148_b DONE drc=0 rss_mb=10675 wall=38:23.08 [INFO DRT-0199]   Numb
 key-cardinal u149_b DONE drc=0 rss_mb=10834 wall=39:18.87 [INFO DRT-0199]   Number of violations =
 key-cardinal u150_b DONE drc=0 rss_mb=9541 wall=38:07.49 [INFO DRT-0199]   Number of violations =
 key-cardinal u151_b DONE drc=0 rss_mb=9087 wall=32:09.71 [INFO DRT-0199]   Number of violations =
-renewed-glider u152_b DRT drc=- rss_mb=- wall=- Completing 30% with 461 violations.
-renewed-glider u153_b DRT drc=- rss_mb=- wall=- Completing 80% with 218 violations.
-renewed-glider u154_b DRT drc=- rss_mb=- wall=- Completing 10% with 0 violations.
-renewed-glider u155_b DRT drc=- rss_mb=- wall=- 
-renewed-glider u156_b DRT drc=- rss_mb=- wall=- 
-renewed-glider u157_b PREP drc=- rss_mb=- wall=- 
-renewed-glider u158_b PREP drc=- rss_mb=- wall=- 
-renewed-glider u181_b DRT drc=- rss_mb=- wall=- Completing 10% with 0 violations.
-renewed-glider u182_b PREP drc=- rss_mb=- wall=- 
-renewed-glider u183_b DRT drc=- rss_mb=- wall=- Completing 30% with 76 violations.
+renewed-glider u152_b DONE drc=0 rss_mb=10815 wall=18:08.70 [INFO DRT-0199]   Number of violations =
+renewed-glider u153_b DONE drc=0 rss_mb=10441 wall=15:31.52 [INFO DRT-0199]   Number of violations =
+renewed-glider u154_b DRT drc=- rss_mb=9982 wall=- [INFO DRT-0199]   Number of violations =
+renewed-glider u155_b DRT drc=- rss_mb=- wall=- Completing 80% with 169 violations.
+renewed-glider u156_b DRT drc=- rss_mb=- wall=- Completing 90% with 307 violations.
+renewed-glider u157_b DRT drc=- rss_mb=- wall=- Completing 80% with 537 violations.
+renewed-glider u158_b DRT drc=- rss_mb=- wall=- Completing 40% with 208 violations.
+renewed-glider u181_b DRT drc=- rss_mb=- wall=- Completing 30% with 551 violations.
+renewed-glider u182_b DRT drc=- rss_mb=- wall=- Completing 80% with 506 violations.
+renewed-glider u183_b DONE drc=0 rss_mb=9892 wall=16:25.25 [INFO DRT-0199]   Number of violations =
+key-cardinal u184_b PREP drc=- rss_mb=- wall=- 
+key-cardinal u185_b PREP drc=- rss_mb=- wall=- 
+key-cardinal u186_b PREP drc=- rss_mb=- wall=- 
