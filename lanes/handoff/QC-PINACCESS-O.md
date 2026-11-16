@@ -1,21 +1,15 @@
 # QC-PINACCESS-O handoff (Opus successor of FABLE-FIX-QC-PINACCESS)
 
-Updated 2026-11-16 03:2x PST.
+Updated 2026-11-16 06:4x PST.
 
-## Scope
-QC detail-route failures. Class A = DRT-0255 (~19 types, expected fixed by C3b on kw45/src_qc_pin_e594a73db756).
-Class B = DRT-0073 pin access (6 types). Also owns FAIL-CLASS 07f8439040 (native clock table outside base) and e21636a9ba (slw_sc_v2).
+## Done
+- r281 kit_topology snapshot re-root: claude/qc-pinaccess-o-1116@79aa99dd618 MERGED (main 12264006dce). Fixes FAIL-CLASS 07f8439040.
+- Class B (DRT-0073): STALE, no code/rows (predecessor RESULT 02:31).
+- coll_n repeat DRT-0255 (RESULT 06:4x): NOT pin access. All 6 failures are old-tree runs. Same net net25397, same box (62.70,653.22)-(66.69,657.21) um, same 12,732 violations after iteration 0. Pin access is clean (NoAp 0). Failing pin = worker-boundary M8 pin inside SRAM g_bank[2] (dense core_pg_M4 macro PG grid). This is the C3b PG-track class. coll_n has never routed on the new tree.
+- ACKed c344a406fe (SELFCONT comment path) and b2d012998c (SRC_MANIFEST v1 tree vs main). Both are fixed by the QC v2 tree marker.
 
-## State
-- Class B: STALE (predecessor RESULT 02:31). Pin access PASS on current S4Q6D views. No code, no rows.
-  Real-route proof: epyc2 /srv/opentallas-scratch2/claude/ot-jobs/{cbn_q00__cld7bf7197,cbn_q01__clab6e67f2,cbn_q01__cldd6ea846,cbn_q11__cl49ae4555,cbx_q10__cl94a12200_h}-route-dear-crayfish-*/work/run_route.log (in 4_1_cts at 02:41). Check for DRT-0073 / DRT-0255 / final violation count in work/run/logs/asap7/dp_<item>/base/5_2_route.log.
-- Class A proof kits (coll_n, sle_sc_v1__cl115da35f/__cl7479a5ec, slw_su_l1__cla2a78701/__clcc9d0155) are BLOCKED at kit_topology by 07f8439040.
-  coll_n old baseline: a19 12,732 DRT violations then DRT-0255.
-- 07f8439040 cause: zz_manifest_iso_s29q103S4Q6DBQ.json clock_landing_table is an absolute live path; with kit_snap the base resolves under kit-store/snaps/<sha>/root -> kit_topology.py:47 raises. All 109 iso manifests are absolute.
-  Fix (a) code: kit_topology.native_contract re-roots an absolute table under the snapshot root (branch claude/qc-pinaccess-o-1116, epyc2 /srv/opentallas-scratch2/claude/qc-pinaccess-o/repo). Needs QC tree re-pin.
-  Fix (b) fast: KIT-OPS-5 kit_snap off for qwen_compute.
-- e21636a9ba slw_sc_v2: stale 11-12 S25-plan attempt interrupted by signal 15; needs a fresh launch.
-
-## Next
-1. DONE: claude/qc-pinaccess-o-1116@79aa99dd618 GATE pass=9/9 GREEN, READY posted. Follow: merge, then TOOLS-CONVERGE QC tree re-pin (or KIT-OPS-5 kit_snap off) and relaunch of the 10 + proof kits.
-2. When a class-A proof routes with no DRT-0255: post RESULT PASS naming proof:DRT0255 so HOLDGEN-1115 releases the hold records.
+## Watch / next
+1. QC v2 marker (lanes/handoff/tree_switch_qwen_compute.json, TOOLS-CONVERGE). Then coll_n + sle_sc_v1__cl115da35f/__cl7479a5ec + slw_su_l1__cla2a78701/__clcc9d0155 relaunch on v2 (KIT-OPS-5).
+2. Proof routes: 5_2_route.log in the kit gen dirs (s29q103S4Q6D/items/<i>/... or ot-jobs/<i>-route-*/work/run/logs/asap7/dp_<i>/base/). A class-A proof that routes with no DRT-0255 -> post "RESULT PASS proof:DRT0255 ..." so HOLDGEN-1115 releases the hold records.
+3. If coll_n fails again at net25397/box on v2: keep the route-input DB and run a PG-over-SRAM A/B (core_pg_M4 connect density / M5 strap pitch over macros).
+4. Class-B real-route proofs: epyc2 /srv/opentallas-scratch2/claude/ot-jobs/{cbn_q00__cld7bf7197,cbn_q01__clab6e67f2,cbn_q01__cldd6ea846,cbn_q11__cl49ae4555,cbx_q10__cl94a12200_h}-route-dear-crayfish-*/work. In 5_1_grt at 06:35. Look for DRT-0073 (class B) and DRT-0255 (old tree, class A expected).
