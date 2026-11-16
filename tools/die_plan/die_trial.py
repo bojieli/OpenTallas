@@ -5332,6 +5332,31 @@ exit $rc
 """
 
 
+VIEW_SIZE_TOL_UM = 1e-3
+
+
+def closed_view_candidates(P, views):
+    """({type: view LEF path}, {type: refusal record}) for the closed views under `views`.  HEAD-MYTILE-1115 (COORD r206):
+    a closed view whose LEF SIZE differs from the plan outline is REFUSED and the kit falls back to the plan abstract.
+    ot_place puts a master lower-left at the plan origin, so a view narrower/wider than the outline mirrors (MY/MX/R180)
+    about its own size while every plan-frame tool mirrors about the outline: HEAD hd_tile view 708.48 vs outline 717.12
+    (stale pre-11-13 tile) left 132 MY tiles 8.64 um off (13 clock cells per tile over real cores, u042 u046 u065 u068
+    u131 u134 u156 = 218-262 DRC each).  Re-sign the type at the outline size to use its view again."""
+    ok, refused = {}, {}
+    for tn, t in P.types.items():
+        v = Path(views) / tn / f"{t['module']}.lef" if views else None
+        if not (v and v.is_file()):
+            continue
+        m = re.search(r"\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;", v.read_text())
+        W, H = t["outline_um"]
+        if m and (abs(float(m.group(1)) - W) > VIEW_SIZE_TOL_UM or abs(float(m.group(2)) - H) > VIEW_SIZE_TOL_UM):
+            refused[tn] = dict(view=str(v), view_size_um=[float(m.group(1)), float(m.group(2))], outline_um=[W, H],
+                               why="closed view SIZE differs from the plan outline: plan abstract used")
+        else:
+            ok[tn] = v
+    return ok, refused
+
+
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
@@ -5388,14 +5413,18 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     rsv = {tn: reserved_windows(P, tn) for tn in P.types}
     rsv = {k: v for k, v in rsv.items() if v}
     iw = {tn: sorted(set(list(iw.get(tn, [])) + rsv.get(tn, []))) for tn in set(iw) | set(rsv)}
+    view_ok, view_refused = closed_view_candidates(P, views)
+    for tn_, r_ in sorted(view_refused.items()):
+        print(f"CLOSED_VIEW_REFUSED {tn_}: view SIZE {r_['view_size_um']} != outline {r_['outline_um']}: plan abstract used", flush=True)
+    meta["closed_views_refused"] = view_refused
     _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
                                                    reset_infra=reset_infra)))
                   for tn, t in sorted(P.types.items())
-                  if not (views and (Path(views) / tn / f"{t['module']}.lef").is_file())]
+                  if tn not in view_ok]
     _abs = dict(zip([tn for tn, _ in _abs_calls], kit_map([c for _, c in _abs_calls])))
     for tn, t in sorted(P.types.items()):
-        v = Path(views) / tn / f"{t['module']}.lef" if views else None
-        if v and v.is_file():
+        v = view_ok.get(tn)
+        if v:
             txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
             if iw.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
                 import abstract_cutout
