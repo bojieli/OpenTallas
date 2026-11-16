@@ -1,0 +1,27 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Before F2 production-shape place; planned4-stage positions over actualC/E endpoint geometry, not finalplacement/signoff",
+  "source_commit": "c8bdcac8a6e",
+  "picture": "intel1:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/rx_transport/planned_rck4.png",
+  "source_db": "epyc7:C/serdes__t14/gen/serdes__t14/run/results/asap7/dp_serdes__t14/base/3_3_place_gp.odb",
+  "findings": [
+    "Viewed fullshape544-lane overlay: PMA data capture band above four relay rows and nativeSYN input flops; dataflow remainslocal and all newstations lie in open softfield belowPMA.",
+    "Actual C SYNx0 endpoints +E capture poses yield maxspan1320.853um, five plannedsegments264.1706um; all4rows clear PMA/cachemacrohalos.",
+    "Payload/valid/AM cohort554bits plus reset555tracks fits48um plannedcorridor at52.956% aggregateutilization; externalpins/macrogeometry/PDN unchanged.",
+    "F2mappedactual fulltop inventoryPASS:2216transport/4reset/9AM/24RPC FFs. 38130totalregisters, fanoutover64=0, faceguard1034/1034.",
+    "F2physicalstage uses parentf762validlocality/c8RCKwrapper, source55guard with originalgeneratedlanding_exports footer, native8banks68regs each, approved8dfPGreplay. No engineRTL change aftersynthesis.",
+    "Clocktap locality and real TT/FF stillmustmeasure. Placegoalfollows; actualnewAM/RCK placement willbeviewedbeforeCTS. No closure/rateclaim."
+  ],
+  "model": {
+    "RX_added_edges": 4,
+    "TX_added_edges": 0,
+    "new_hardcores": 0,
+    "outline_delta": 0,
+    "route_gate": "DRC0 TT>=-42ps FFhold>=0 LECequivalent"
+  },
+  "records": {
+    "mapped_inventory": "intel1:F2/serdes__t14/gen/serdes__t14/F2_mapped_inventory.json",
+    "physical_stage": "intel1:F2/serdes__t14/gen/serdes__t14/F2_physical_stage.json",
+    "model": "tools/uarch_model.py:s81_serdes_rx_transport_model"
+  }
+}
