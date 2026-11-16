@@ -22,21 +22,21 @@
     "clock": "PASS",
     "evidence": "WAVE-HOLDS-1115 2026-11-15 16:26 PST kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168): G0 PASS 0 errors (epyc7, --priority plan); pinned strict bind RC 0 (160/56/2545, 0 errors), R8_RECHECK changed 0; LATCHECK 2404/2404 PASS | prev: KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7uh_c1/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
-   "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7uh_c1",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "gen_host": "epyc10",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0",
    "src_sha": "96f13b36a258e3b6121497ff52a7a31e9add3131",
    "kit_rtl": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7uh_c1/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_kvgeom7uh_c1/out_h1",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0/out_h1",
     "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
    },
    "gen_args": [
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7uh_c1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -730,10 +730,6 @@
     "intel2"
    ],
    "gen_hosts": [
-    "epyc7",
-    "epyc8",
-    "epyc9",
-    "intel1",
     "epyc10"
    ],
    "place_prefer": [
@@ -3876,7 +3872,11 @@
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_GRT_ALLOW_CONGESTION": "1",
     "OT_CLAND_STRIP_DENS": "1.0",
-    "OT_TT_SETUP_REPAIR": "both"
+    "OT_TT_SETUP_REPAIR": "both",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PGCAP": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "1"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -5669,7 +5669,7 @@
     "kv3_hg_v1p5@14",
     "kv3_hg_v1p6@17"
    ],
-   "src_manifest": "verify",
+   "src_manifest": "require",
    "hold_records": [
     {
      "id": "qwen_kvsys-mig-008-k1",
@@ -5874,15 +5874,6 @@
      "reason": "HOLDGEN-1115 2026-11-16 (COORD request): KV hub_Wo / hub_C / pv_v1 / pv_v7 / pv_v12 fail the same way on 7uh; no unchanged relaunch until the kvgeom7yhr event adopts. Running attempts finish. Released automatically by event_adopt:kvgeom7yhr."
     },
     {
-     "id": "qwen_kvsys-tree-switch-01",
-     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-     "switch_only": true,
-     "reason": "HOLDGEN-1115 (COORD): switch-only, holds nothing; the autopilot switches src/die_gen_env when the TOOLS-CONVERGE marker lanes/handoff/tree_switch_qwen_kvsys.json names this tree and it is on all gen hosts",
-     "release": [
-      "tree_ready:qwen_kvsys:/srv/opentallas-scratch2/claude/kw45/src_kv_pin_fa627e234cf7"
-     ]
-    },
-    {
      "id": "qwen_kvsys-hold-pc-sysc-01",
      "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
      "items": [
@@ -5904,7 +5895,29 @@
     "KV-PCV3-R8",
     "KV-PVSPLIT",
     "kvgeom7yhr"
-   ]
+   ],
+   "prev_treeswitch1116": {
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7uh_c1",
+    "src_manifest_hash": null,
+    "tools_sha": null,
+    "gen_host": "epyc9",
+    "gen_hosts": [
+     "epyc7",
+     "epyc8",
+     "epyc9",
+     "intel1",
+     "epyc10"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0/out_h1",
+     "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
+    },
+    "src_manifest": "verify"
+   },
+   "src_manifest_hash": "6dd08c2a09b4d0b044ca214123b1ffe022d41a2e483db1088fa74194407bcedf",
+   "tools_sha": "eb1e73448bd0"
   },
   "s81": {
    "enabled": true,
@@ -36321,12 +36334,12 @@
     "evidence": "KIT-OPS-1 2026-11-13 01:24 rp18r2 = HEAD-96 fix_r2 (claude/head-96-rp18r2-1112@46bb7dfc34e6, train 32 merged 455a69fc3d61): raw plan sha256 cda1ecf604ebe085 (fix_r2/source_plan_rp18r2.json.gz 4cf9862c0887), same sidecar; prepared bdd8a6985f9c, wave plan 6d283b65ff9a; r2 blocks change hd_spn (rst_start_raw_42 -> u_rrl_118) and hd_mesh (lec_hints RBL=1) only. | KIT-OPS-1 2026-11-12 21:28 rp18r1 = HEAD-96 fix_r1 (claude/head-96-rp18fix-1112@eb8a6d68eb, train 28 approved): raw plan sha256 220334aa9b30ef3d (fix_r1/source_plan_rp18r1.json.gz 8440d88a7921), same sidecar; prepared 1fd44cba3c9a, wave plan 0f32a32a3ea8; r1 blocks change hd_spn, hd_spn_end, hd_spn_eshim_rx, hd_spn_wshim_tx, hd_tile, hd_turn_a only. | KIT-OPS-1 2026-11-12 19:57 rp18 = head_rp18_1112 (HEAD-96, COORD 17:19 APPROVED train 21, MERGED 18:39 main 2dd0d8c9fd6c): gen 26/26, G0 1 ERR (native PENDING) 0 new, G0C 0 new ERR, reset 0 new; KIT-OPS-1 prepared tree: kit_rtl export 24/26 (hd_spn, hd_spn_end FAIL: shared raw-export relay, held). | KW-FIX-16 13:1x l48uf I135 tag flow-20261106-d-head (COORD 13:00 GO): prep_uf = repo l48uf unpacked from src_r 79e52bd98b2 (SHA256SUMS OK, plan 69ce0830f6e4, sidecar = l48ue bytes); only hd_tile u_core params + published tile_p differ from prep_ue. | KW-FIX-14 11:2x l48ue I121 9ac2d25b51e tag flow-20261106-a-head, COORD 11:05 GO: prep_ue = repo l48ue unpacked (SHA256SUMS OK, plan 9a2186d89486, sidecar = l48ud bytes), 9 types; hd_host/hd_mesh l48ud rows keep running (only_items_l48ud kept for restore). | KW-FIX-12 08:3x l48ud I107 COORD 08:12 GO. | KW-FIX-8 08:4x COORD 06:51 (3) + 07:34 (3): event l48ua = DIE-HEAD-61 07:09 READY prepared_l48ua (plan f64ad52c1726, sidecar bbdd2f7b5ad1), GATE_EVENTS l48ua merged I34 fe4a38b9337, pilot rows only. | KW-FIX-6 04:4x COORD 04:00: event l48se = l48sd + hd_tile RE-FORM only [CHECKED raw diff], src main I23. | KW-FIX-6 03:4x: event l48sd = DIE-HEAD-59 00:56 READY prepared_l48sd (plan 830b9a799df1, sidecar bbdd2f7b5ad1 unchanged), src dh59/serdes/wt@b65c0e2d46, GATE_EVENTS l48sd merged I18, COORD 00:4x + 03:2x GO; 5 items | KW-FIX-5 01:0x: event l48tc = DIE-HEAD-59 FREG-1 prepared_l48tc (plan e094ebb2b6e8, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48tc merged I16, COORD GO; 2 items | KW-FIX-4 20:12: event l48rc = DH58-RF2 CONSERVATIVE prepared_l48rc (plan 8327f303db76, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48rc (kw-fix-4-l48rc@3c9994a17c0), OWNER directive via DIE-HEAD-58; 4 items; l48tb turn_a/b keep running (cancel_superseded false) | KW-FIX-4 19:04: event l48tb = DH58-TURNB prepared_l48tb (plan f9623a82a239, sidecar there), GATE_EVENTS l48tb merged (kw-fix-4-itemenv@7585347926, RM-27 I4); turn_a/turn_b only (only_items_l48rf kept for restore); running l48rf kits untouched | KW-FIX-4 11:3x: event l48rf = DH58-RFPLAN PREPARED (intel2+epyc4 dh58/rfplan_work/prepared_l48rf, plan 59c391855c18, sidecar bbdd2f7b5ad1 = l48h1), DIE-HEAD-58 GO 11:24, COORD APPROVED 11:27, GATE_EVENTS l48rf 38b86b7486 merged; G0C advisory (0 new errors, 17 warn). cancel_superseded false: the 6 live l48h0 jobs finish on l48h0 (die owner). hd_mesh_e/hd_ctl_e/hd_ctl_n/hd_host_n holds released (l48rf geometry). | prev event l48h0 plan /srv/opentallas-scratch2/claude/dh55/prepared_l48h0/source_plan.json | KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertio"
    },
    "plan": "/srv/opentallas-scratch2/claude/head-99/prep21z20NF13a/prep/source_plan.json",
-   "gen_host": "epyc2",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756",
+   "gen_host": "epyc10",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0",
    "src_sha": "fb5f5a8db87d691b25ba0e93096fb8e07c00ca3b",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
    },
    "gen_args": [
@@ -36462,11 +36475,7 @@
     "hd_host_e@6": "HEAD rp21z10 (HEAD-99 READY+ADOPT 08:03, type-scoped to spn/spn_end/host_w/host_e); host_w launched despite open LEC mismatch (TYPE-HDHOSTW-LEC owns it)."
    },
    "gen_hosts": [
-    "epyc10",
-    "epyc2",
-    "epyc8",
-    "epyc9",
-    "intel1"
+    "epyc10"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": true,
@@ -38484,8 +38493,27 @@
     },
     "src_manifest": "verify"
    },
-   "src_manifest_hash": "2f6af4b15fce5050fbbf5c2ce6f348e46b1cb34f85f379fb650f0c4ef48fe1f9",
-   "tools_sha": "e594a73db756"
+   "src_manifest_hash": "0c12f02501620d423d90b86f293683482afae5bbe89af5ce842498617402bee3",
+   "tools_sha": "eb1e73448bd0",
+   "prev_treeswitch1116": {
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756",
+    "src_manifest_hash": "2f6af4b15fce5050fbbf5c2ce6f348e46b1cb34f85f379fb650f0c4ef48fe1f9",
+    "tools_sha": "e594a73db756",
+    "gen_host": "epyc2",
+    "gen_hosts": [
+     "epyc10",
+     "epyc2",
+     "epyc8",
+     "epyc9",
+     "intel1"
+    ],
+    "kit_rtl": {
+     "mode": "script",
+     "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+     "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+    },
+    "src_manifest": "require"
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -38498,13 +38526,13 @@
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
    "plan": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q6d.json",
-   "gen_host": "epyc2",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_e594a73db756",
+   "gen_host": "epyc10",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0",
    "src_sha": "1e3b302be85085f4c4aca8a0dc93b4e5063d2b55",
    "kit_rtl": {
     "mode": "bind",
     "asbuilt": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_manifest_iso_s29q103S4Q6DBQ.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_e594a73db756/bind_s29q103S4Q6DBQ",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0/bind_s29q103S4Q6DBQ",
     "note": "KIT-OPS-5 QC s29q103S4Q6D (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q6DBQ errors 0, R8 0, LATCHECK 1921/1921; delta over S4q3c, 4 st_a_v2 held by exact key) | WAVE-HOLDS-1115 2026-11-15 13:06 PST QC s29q103S4Q3C (DIE-QC-103 READY+ADOPT 20:0x UTC, COORD r139 GO; bind S29Q103S4Q3CBQ errors 0, LATCHECK 1921/1921; delta over S4q3b: 4 st_a_v2 rows renamed to signed n9 masters). Revert: dies.qwen_compute.prev_wavehold1115_s4q3b | WAVE-HOLDS-1115 2026-11-15 10:52 PST QC s29q103S4Q3B (DIE-QC-103 READY+ADOPT 18:0x UTC, COORD r97: bind S29Q103S4Q3BBQ errors 0, LATCHECK 1921/1921, hard_core_param 0 mismatches; delta over S4q2: 4 st_a_v2 param_wrap rows + budgets.r_dly_spread cb; 35 S4q2 types unchanged). 15 cb types released; the 4 st_a_v2 types stay held (FAB",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
@@ -38559,7 +38587,19 @@
     "slw_st_b_v1__cle6023ec2@7",
     "slw_st_b_v2__pva66d0f22@4",
     "slw_st_b_v2__pvc2ec5bfb@14",
-    "slw_sc_v2@2"
+    "slw_sc_v2@2",
+    "cbf_q11@3",
+    "cbx_q10__cl89936551@3",
+    "coll_n@21",
+    "sle_sc_v1__cl115da35f@1",
+    "sle_sc_v1__cl7479a5ec@1",
+    "slw_fw_v2__cl8f84514c@6",
+    "slw_st_b_v1__cl6357f1cc__pv6ace3e48@10",
+    "slw_st_b_v1__cle6023ec2@8",
+    "slw_st_b_v2__pva66d0f22@5",
+    "slw_st_b_v2__pvc2ec5bfb@15",
+    "slw_su_l1__cla2a78701@21",
+    "slw_su_l1__clcc9d0155@9"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
@@ -39294,8 +39334,7 @@
     "sle_ctl__cla4f6f12f@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch."
    },
    "gen_hosts": [
-    "epyc10",
-    "epyc2"
+    "epyc10"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -49063,35 +49102,6 @@
      "carry": true
     },
     {
-     "id": "qwen_compute-hold-cbglue-tree-01",
-     "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "items": [
-      "cbf_q00__cl1b5a6458",
-      "cbf_q00__cl870de686",
-      "cbf_q00_s2",
-      "cbf_q01",
-      "cbf_q01_s2",
-      "cbf_q11",
-      "cbn_q00__cl622f65d2",
-      "cbn_q00__cld7bf7197",
-      "cbn_q00__cldbcda913",
-      "cbn_q01__clab6e67f2",
-      "cbn_q01__cld9ff4c40",
-      "cbn_q01__cldd6ea846",
-      "cbn_q11__cl49ae4555",
-      "cbn_q11__cl5cc92dfe",
-      "cbx_q10__cl89936551",
-      "cbx_q10__cl89936551_h",
-      "cbx_q10__cl94a12200",
-      "cbx_q10__cl94a12200_h",
-      "glue"
-     ],
-     "release": [
-      "tree_ready:qwen_compute:/srv/opentallas-scratch2/claude/kw45/src_qc_pin_e594a73db756"
-     ],
-     "reason": "HOLDGEN-1115 2026-11-16 (COORD stop list): QC cb/glue types read -158..-1169 ps at post-CTS triage on the old tree. They relaunch only on the main-based tree: released by tree_ready:qwen_compute (TOOLS-CONVERGE writes lanes/handoff/tree_switch_qwen_compute.json). Running attempts finish."
-    },
-    {
      "id": "qwen_compute-file-01",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "tree_ready:qwen_compute v2 (COORD 04:1x): v1 tree src_qc_pin_e594a73db756 fails (1) SELFCONT pg_pair_cap.tcl: its line 1 comment names /srv/opentallas-scratch2/claude/drt0255-proof/tools/pg_pair_cap.tcl, which the kit-copied file carries and selfcontained flags MISSING (no env points there; fix = drop the path from the comment in the tree, v2), (2) SRC_MANIFEST vs current main pin. Hold until the QC v2 tree (src_qc_pin_eb1e73448bd0) is switched in by KIT-OPS-5; the switch deletes these keys. Lift = delete these keys.",
@@ -49118,8 +49128,8 @@
     "S4q7h",
     "S4q8"
    ],
-   "src_manifest_hash": "924f9bd7e20100a5606f267d6631d2102de572e8e4c326404dedace64c6d09c6",
-   "tools_sha": "e594a73db75",
+   "src_manifest_hash": "b5f224c8a61fa2b83953fb3e43639112789aadafc01a0dbcace56241bbfdf01f",
+   "tools_sha": "eb1e73448bd0",
    "only_items_prev_qcpin": [
     "cbf_q01",
     "cbf_q01_s2",
@@ -49265,6 +49275,25 @@
      "slw_su_l1__cla2a78701",
      "slw_su_l1__clcc9d0155"
     ]
+   },
+   "prev_treeswitch1116": {
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_e594a73db756",
+    "src_manifest_hash": "924f9bd7e20100a5606f267d6631d2102de572e8e4c326404dedace64c6d09c6",
+    "tools_sha": "e594a73db75",
+    "gen_host": "epyc2",
+    "gen_hosts": [
+     "epyc10",
+     "epyc2"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "asbuilt": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_manifest_iso_s29q103S4Q6DBQ.json",
+     "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0/bind_s29q103S4Q6DBQ",
+     "note": "KIT-OPS-5 QC s29q103S4Q6D (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q6DBQ errors 0, R8 0, LATCHECK 1921/1921; delta over S4q3c, 4 st_a_v2 held by exact key) | WAVE-HOLDS-1115 2026-11-15 13:06 PST QC s29q103S4Q3C (DIE-QC-103 READY+ADOPT 20:0x UTC, COORD r139 GO; bind S29Q103S4Q3CBQ errors 0, LATCHECK 1921/1921; delta over S4q3b: 4 st_a_v2 rows renamed to signed n9 masters). Revert: dies.qwen_compute.prev_wavehold1115_s4q3b | WAVE-HOLDS-1115 2026-11-15 10:52 PST QC s29q103S4Q3B (DIE-QC-103 READY+ADOPT 18:0x UTC, COORD r97: bind S29Q103S4Q3BBQ errors 0, LATCHECK 1921/1921, hard_core_param 0 mismatches; delta over S4q2: 4 st_a_v2 param_wrap rows + budgets.r_dly_spread cb; 35 S4q2 types unchanged). 15 cb types released; the 4 st_a_v2 types stay held (FAB",
+     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
+     "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
+    },
+    "src_manifest": "require"
    }
   },
   "hbm": {
