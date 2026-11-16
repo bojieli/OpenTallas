@@ -26,5 +26,17 @@
  "sidecar_sha256": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
  "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1",
  "data_pack": "8files (gen_phys+test+plan/r8/asbuilt+2padinputs+existingasbuiltmap); no RTL change, no latency delta",
- "status": "PROPOSAL ONLY: root approval/adoption required; canonical marker and live wave unchanged"
+ "status": "PROPOSAL ONLY: root approval/adoption required; canonical marker and live wave unchanged",
+ "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+ "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
+ "config": {
+  "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1"
+  }
+ }
 }
