@@ -43,3 +43,17 @@ First clean route -> QC-PINACCESS-O posts RESULT PASS proof:DRT0255 -> HOLDGEN r
 ## Open
 - KIT-WAVE TOOL-SKEW 06:51 on the v2 tree ("17138 missing"): likely checked on a host without the tree; verify launches.
 - QC-CBGLUE raw-branch delta (06:43) goes on top of S4q9c as the next event, not into this one.
+
+## 2026-11-16 08:45 PST STATE (supersedes "Fix"/"Adopt criteria" details above)
+- COORD r303: I own the QC plan event. Candidate = S4q9d (S4q9c + FABLE-FIX-QC-CBGLUE start-reset rows on cbf_q01, cbf_q01_s2, glue),
+  plan sha 9c0f8e750f07, in treeE plan_of_record. COMPOSED posted 07:50, correction 08:4x.
+- S4Q9CBQ and S4Q9DBQ: BIND_RC=1, ONE real error: PARAM_REGEN W5 nb_od of region 0 not the latest (qc_fabric_transport.py:183).
+  All HARD_CORE_PARAM_ALL / _WRAP rows are a consequence (regen dropped). r8rc 0, LATCHECK 1921/1921, knee 0, G0 S4q9c = 2 inherited.
+- Fix in flight: bin/chain_e.sh BUMP_FE SUFFIX = rebind S4q9d with pinpad2 fe bump 2 / 3 (tags S4Q9DBQ2, S4Q9DBQ3), elab seeded
+  from bind_s29q103S4Q9CBQ; logs log/chain_s4q9d_fe{2,3}.log. If both still fail on nb_od: try fe 4/5, or ctl 4 if the error flips to r_d.
+- ot-run on epyc9 needs OT_RUN_SCRATCH_DISK_FLOOR_GB=10 (scratch2 32 GB free); binds write 0.5 GB.
+- Adopt (first bind with errors 0 + r8rc 0 + LATCHECK PASS + hcparam 0 + G0 = 2 inherited): post READY+ADOPT with plan, bind dir,
+  asbuilt runtime/zz_manifest_iso_<TAG>.json, sidecar runtime/zz_sidecar_<TAG>.json; TOOLS-CONVERGE data-packs into the QC tree version.
+- Wave (kit_wave.json 4789478d31c): hc TT env on 18 keys; file-01 hold deleted; coll_n attempt 22 placed, in route queue 08:26;
+  sle_hc1 cl7d360508 + slw_hc1 cle683a076 in place on v2. hc2 proof kits clf60c5152 / clcc5e3e61 = proof_items DRT0255.
+- sle_hc2__cl9c4c4509__cl3edce1b8 exported to rtx-pro + AGIdock (sha adcc5123d68a), INDEX rows on both.
