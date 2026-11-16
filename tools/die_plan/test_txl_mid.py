@@ -207,3 +207,41 @@ def test_face_source_macro_first_row_at_pin(tmp_path):
     x = _rows(pos(r.stdout), "u_rxf")
     assert 1 < x[0] <= 12                                                   # at the source macro pin, outside its halo
     assert all(abs(a - b) <= 4 for a, b in zip(x[1:], [251, 501, 751]))     # k/4 of src pin 1 -> sink 1001
+
+
+# Production RXNEG hierarchy: falling-edge vector, not an ot_pl_pad.q array.
+RXNEG = r"""
+for {set bit 0} {$bit < 545} {incr bit} {
+  chain u_bound.u_core.u_rxf $bit 1 0 1000 800 PMA ENCB
+}
+foreach i $::insts {
+  set n [g $i name]
+  if {[string first {u_rxf.q} $n]>=0} {
+    s $i name [string map {{u_rxf.q} {u_rxf_q} {$_DFF_P_} {$_DFF_N_}} $n]
+  }
+}
+"""
+
+
+def test_rxneg_actual_hierarchy_moves_all_545_bits(tmp_path):
+    r = mock_run(tmp_path, RXNEG, chains="u_rxf", face="1")
+    assert r.returncode == 0, r.stderr
+    assert "chain u_rxf bits moved 545 of 545," in r.stdout
+    assert "macro-face anchored 545" in r.stdout
+    p = pos(r.stdout)
+    stations = {k: v for k, v in p.items() if "u_rxf_q" in k}
+    assert len(stations) == 545
+    assert all(1 < xy[0] <= 12 for xy in stations.values())
+
+
+def test_rxneg_missing_valid_bit_refuses_incomplete_width(tmp_path):
+    r = mock_run(tmp_path, RXNEG.replace("$bit < 545", "$bit < 544"),
+                 chains="u_rxf", face="1")
+    assert r.returncode != 0
+    assert "RXNEG face width 544, expected 545" in r.stderr
+
+
+def test_explicit_missing_chain_is_not_silent_zero(tmp_path):
+    r = mock_run(tmp_path, BITS, chains="u_rxf", face="1")
+    assert r.returncode != 0
+    assert "requested chain u_rxf has no register endpoints" in r.stderr

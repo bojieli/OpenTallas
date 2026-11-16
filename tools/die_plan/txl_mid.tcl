@@ -156,12 +156,27 @@ namespace eval ot_txl_mid {
       }
       set nm [$i getName]
       foreach C $chains {
-        if {[string first "$C.q" $nm] >= 0 && [regexp [string cat [string map {. {\.}} $C] {\.q\\?\[[0-9]+\\?\]}] $nm]} { dict lappend lasts $C $i }
+        # RXNEG uses a named falling-edge register vector C_q rather than
+        # an ot_pl_pad instance C.q.  It is the same one-row face station.
+        set cp [string map {. {\.}} $C]
+        set pad [expr {[string first "$C.q" $nm]>=0 && [regexp [string cat $cp {\.q\\?\[[0-9]+\\?\]}] $nm]}]
+        set reg [expr {[string first [string cat $C _q] $nm]>=0 && [regexp [string cat $cp {_q\\?\[[0-9]+\\?\]}] $nm]}]
+        if {$pad || $reg} { dict lappend lasts $C $i }
       }
     }
     set ret {}
     foreach C $chains {
     set clasts [expr {[dict exists $lasts $C] ? [dict get $lasts $C] : {}}]
+    if {![llength $clasts]} {error "OT_TXL_MID requested chain $C has no register endpoints"}
+    if {$C eq "u_rxf"} {
+      set bits {};set rxneg 0
+      foreach i $clasts {
+        set name [$i getName]
+        if {[string first "u_rxf_q" $name]>=0} {set rxneg 1}
+        if {[regexp {\\?\[([0-9]+)\\?\]} $name _ bit]} {dict set bits $bit 1}
+      }
+      if {$rxneg && [dict size $bits] != 545} {error "OT_TXL_MID RXNEG face width [dict size $bits], expected 545 data/valid bits"}
+    }
     set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0; set hcells 0; set nface 0
     set face [expr {[info exists ::env(OT_TXL_MID_FACE)] && $::env(OT_TXL_MID_FACE) eq "1"}]
     foreach q $clasts {
