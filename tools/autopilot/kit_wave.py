@@ -398,8 +398,12 @@ def compile_hold_records(cfg, is_merged=None):
     """HOLDGEN-1115 (COORD r223): die.hold_records (typed release terms, bound to a plan sha) compile into hold_items in memory, before
     the legacy hold_release_on pass.  A die without hold_records is untouched."""
     import hold_records as HR
+    cells = cfg.get("_item_cells") or {}
+    proofs = cfg.get("_proof_lines") or []
     ctx = HR.Ctx(is_merged=is_merged or _git_is_merged, event_met=_hold_term_met, digest_fn=input_digest,
-                 kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")))
+                 kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")),
+                 cells_fn=lambda die, item: cells.get((die, item)),
+                 proof_fn=lambda name: any(re.search(r"(?<![A-Za-z0-9_.-])" + re.escape(name) + r"(?![A-Za-z0-9_.-])", ln) for ln in proofs))
     try:
         return HR.compile_holds(cfg, ctx)
     except Exception as e:                               # a bad record never stops the wave: legacy hold_items still apply
@@ -9832,6 +9836,17 @@ def _step(AP, ap_dir):
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
+    try:                                                 # HOLDGEN-1115 r252: proof: / census_lt: terms need the queue and the rows
+        cfg["_item_cells"] = {(r.get("die"), r.get("item")): int(float(r["cells"])) for r in (st.get("items") or {}).values()
+                              if str(r.get("cells") or "").replace(".", "", 1).isdigit()}
+        cfg["_proof_lines"] = [ln for ln in AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines()
+                               if " RESULT " in ln and "PASS" in ln][-3000:]
+        _before = len(cfg.get("_hold_auto_released") or [])
+        compile_hold_records(cfg)
+        for _die, _key, _cond in (cfg.get("_hold_auto_released") or [])[_before:]:
+            AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release terms met ({_cond})")
+    except Exception as e:                               # unknown cells / proofs = still held
+        AP.log(f"KIT-WAVE hold recompile skipped: {type(e).__name__}: {e}")
     try:
         hub_disk_gate(AP, cfg, st)
     except Exception as e:                                       # unknown = launch
