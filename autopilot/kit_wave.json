@@ -36441,6 +36441,24 @@
           ],
           "carry": true,
           "reason": "Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries."
+        },
+        {
+          "id": "s81-serdes-corrected-route-1116-codex",
+          "plan_sha": "ccc4744caa15c834c4f265cf47d165caafa513425e83c298a8e8b88d9e1a0f7a",
+          "keys": [
+            "serdes__t13",
+            "serdes__t14",
+            "serdes__t15__cla2127225",
+            "serdes__t15__cla3d02796",
+            "serdes__t1__clb45db5be",
+            "serdes__t1__clfe1f0815"
+          ],
+          "release": [
+            "result:FABLE-FIX-S81-SERDES:serdes-corrected"
+          ],
+          "carry": true,
+          "reason": "Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries. Route companion protects already-built old C kits as well as generation.",
+          "route": true
         }
       ],
       "planned_events": [
