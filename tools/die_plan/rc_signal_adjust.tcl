@@ -21,6 +21,9 @@ proc ot_rc_signal_adjust {} {
         }
         close $fh
     }
+    # one pass over the sta nets (get_nets per net is quadratic-slow on 140k nets)
+    array set snet {}
+    foreach sn [get_nets -hierarchical *] { set snet([get_full_name $sn]) $sn }
     set blk [ord::get_db_block]
     set dbu [$blk getDbUnitsPerMicron]
     set n 0; set tot 0.0
@@ -35,7 +38,8 @@ proc ot_rc_signal_adjust {} {
             set d [expr {$d + ($csig($L) - $ctab($L)) * $len}]
         }
         if {$d > 0.0} {
-            set_load -wire_load $d [get_nets -quiet -hierarchical [string map {\[ \\[ \] \\]} [$net getName]]]
+            if {![info exists snet([$net getName])]} continue
+            set_load -wire_load $d $snet([$net getName])
             incr n; set tot [expr {$tot + $d}]
         }
     }
