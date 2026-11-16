@@ -1,0 +1,300 @@
+{
+  "image": "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/pair/new/img_bnd/d2d_cal_image.svh",
+  "image_sha256": "eb8711a2fb9ac00309643e5d4b7481b1f80d61f83ea4e2e1108444752084eb2d",
+  "selected_alias": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144b19/qkd_d2d_cal_seq_bc4_rom64.sv",
+  "alias_sha256": "c5f800fffdfcd7430daaa2b404e349aff24ca4c0830278edf15c75c808bcabd6",
+  "profile": {
+    "START": [
+      0,
+      9639,
+      17651,
+      25663,
+      33675,
+      41687,
+      49699,
+      57711,
+      65723,
+      73735,
+      81747,
+      89759,
+      97771,
+      105783,
+      113795,
+      121807,
+      129819,
+      137831,
+      145843,
+      153855,
+      161867,
+      169879,
+      177891,
+      185903,
+      193915,
+      201927,
+      209939,
+      217951,
+      225963,
+      233975,
+      241987,
+      249999,
+      258011,
+      266023,
+      274035,
+      282047
+    ],
+    "PERIOD": 293376,
+    "TX_SEG1": 2,
+    "RX_SEG1": 4,
+    "TX_SEG2": 10,
+    "RX_SEG2": 11,
+    "ADM_OFS": 72,
+    "ADM_LEN": 1273,
+    "FIRST_OFS": 1349
+  },
+  "old_profile": {
+    "START": [
+      0,
+      9639,
+      17651,
+      25663,
+      33675,
+      41687,
+      49699,
+      57711,
+      65723,
+      73735,
+      81747,
+      89759,
+      97771,
+      105783,
+      113795,
+      121807,
+      129819,
+      137831,
+      145843,
+      153855,
+      161867,
+      169879,
+      177891,
+      185903,
+      193915,
+      201927,
+      209939,
+      217951,
+      225963,
+      233975,
+      241987,
+      249999,
+      258011,
+      266023,
+      274035,
+      282047
+    ],
+    "PERIOD": 293376,
+    "TX_SEG1": 2,
+    "RX_SEG1": 4,
+    "TX_SEG2": 10,
+    "RX_SEG2": 11,
+    "ADM_OFS": 72,
+    "ADM_LEN": 1270,
+    "FIRST_OFS": 1346
+  },
+  "old_profile_mismatch": "selected image/profile mismatch: ADM_LEN,FIRST_OFS",
+  "old_programme_early_edges": 3,
+  "clock_ps": 833,
+  "epochs": 3,
+  "native_epoch": {
+    "original_forward_epoch_sampling_edge": 222,
+    "dcal_epoch_sampling_edge": 222,
+    "source_control_events": {
+      "admission": 298,
+      "token_base_tx": 1571,
+      "token_base_rx": 1572,
+      "first_token": 1574
+    },
+    "d2d_control_sampling_events": {
+      "admission": 298,
+      "token_base_tx": 1571,
+      "token_base_rx": 1572,
+      "first_token": 1574
+    },
+    "feedback_output_capture": 0,
+    "control_input_capture": 0,
+    "cfg_settle_edges": 2,
+    "global_package_epoch_bound": false,
+    "production_qualified": false
+  },
+  "rf_epoch": {
+    "original_forward_epoch_sampling_edge": 222,
+    "dcal_epoch_sampling_edge": 223,
+    "source_control_events": {
+      "admission": 299,
+      "token_base_tx": 1572,
+      "token_base_rx": 1573,
+      "first_token": 1575
+    },
+    "d2d_control_sampling_events": {
+      "admission": 300,
+      "token_base_tx": 1573,
+      "token_base_rx": 1574,
+      "first_token": 1576
+    },
+    "feedback_output_capture": 1,
+    "control_input_capture": 1,
+    "cfg_settle_edges": 2,
+    "global_package_epoch_bound": false,
+    "production_qualified": false
+  },
+  "scope": "Current proposed +3 QC seam pair-image data on native selected BC4 ROM64; exact literal image lockstep, stale actual old profile and lost-base controls; no final bind, full D2D or G5 claim.",
+  "status": "PASS_COMPONENT_ONLY",
+  "summary": {
+    "cycles": 6000,
+    "epochs": 3,
+    "starts": 6,
+    "errors": 0,
+    "stale_differences": 21,
+    "lost_base_errors": 3,
+    "rf_errors": 0,
+    "rf_min_cfg_gap": 2,
+    "first_token": 1573,
+    "stale_first": 1570,
+    "early_by": 3
+  },
+  "observed_epochs": [
+    {
+      "native": {
+        "original_forward_epoch_sampling_edge": 221,
+        "dcal_epoch_sampling_edge": 221,
+        "source_control_events": {
+          "admission": 297,
+          "token_base_tx": 1570,
+          "token_base_rx": 1571,
+          "first_token": 1573
+        },
+        "d2d_control_sampling_events": {
+          "admission": 297,
+          "token_base_tx": 1570,
+          "token_base_rx": 1571,
+          "first_token": 1573
+        },
+        "feedback_output_capture": 0,
+        "control_input_capture": 0,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      },
+      "rf": {
+        "original_forward_epoch_sampling_edge": 221,
+        "dcal_epoch_sampling_edge": 222,
+        "source_control_events": {
+          "admission": 298,
+          "token_base_tx": 1571,
+          "token_base_rx": 1572,
+          "first_token": 1574
+        },
+        "d2d_control_sampling_events": {
+          "admission": 299,
+          "token_base_tx": 1572,
+          "token_base_rx": 1573,
+          "first_token": 1575
+        },
+        "feedback_output_capture": 1,
+        "control_input_capture": 1,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      }
+    },
+    {
+      "native": {
+        "original_forward_epoch_sampling_edge": 2301,
+        "dcal_epoch_sampling_edge": 2301,
+        "source_control_events": {
+          "admission": 2377,
+          "token_base_tx": 3650,
+          "token_base_rx": 3651,
+          "first_token": 3653
+        },
+        "d2d_control_sampling_events": {
+          "admission": 2377,
+          "token_base_tx": 3650,
+          "token_base_rx": 3651,
+          "first_token": 3653
+        },
+        "feedback_output_capture": 0,
+        "control_input_capture": 0,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      },
+      "rf": {
+        "original_forward_epoch_sampling_edge": 2301,
+        "dcal_epoch_sampling_edge": 2302,
+        "source_control_events": {
+          "admission": 2378,
+          "token_base_tx": 3651,
+          "token_base_rx": 3652,
+          "first_token": 3654
+        },
+        "d2d_control_sampling_events": {
+          "admission": 2379,
+          "token_base_tx": 3652,
+          "token_base_rx": 3653,
+          "first_token": 3655
+        },
+        "feedback_output_capture": 1,
+        "control_input_capture": 1,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      }
+    },
+    {
+      "native": {
+        "original_forward_epoch_sampling_edge": 4201,
+        "dcal_epoch_sampling_edge": 4201,
+        "source_control_events": {
+          "admission": 4277,
+          "token_base_tx": 5550,
+          "token_base_rx": 5551,
+          "first_token": 5553
+        },
+        "d2d_control_sampling_events": {
+          "admission": 4277,
+          "token_base_tx": 5550,
+          "token_base_rx": 5551,
+          "first_token": 5553
+        },
+        "feedback_output_capture": 0,
+        "control_input_capture": 0,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      },
+      "rf": {
+        "original_forward_epoch_sampling_edge": 4201,
+        "dcal_epoch_sampling_edge": 4202,
+        "source_control_events": {
+          "admission": 4278,
+          "token_base_tx": 5551,
+          "token_base_rx": 5552,
+          "first_token": 5554
+        },
+        "d2d_control_sampling_events": {
+          "admission": 4279,
+          "token_base_tx": 5552,
+          "token_base_rx": 5553,
+          "first_token": 5555
+        },
+        "feedback_output_capture": 1,
+        "control_input_capture": 1,
+        "cfg_settle_edges": 2,
+        "global_package_epoch_bound": false,
+        "production_qualified": false
+      }
+    }
+  ],
+  "build_time": "elapsed 11.27 maxrss_kb 342620",
+  "runtime": "elapsed 0.01 maxrss_kb 3968",
+  "initial_assumed_example_origin": 222
+}
