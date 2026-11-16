@@ -3710,3 +3710,5 @@ CODEX: 2026-11-16 09:54 PST took over every active lane directly; parallel inher
 CODEX: 2026-11-16 10:08 PST approvals r314-r318; KVdie_rows and HEADDOREG landed main87218eaba92; repaired gunitprovider and sourcepackmap, bksel GRT0, SVC current-source closure PASS/family checking, concrete native_e hold/QCSUL1/HCFault/HEADoutput/t8structural fixes executing; everyactive lane covered.
 
 CODEX: 2026-11-16 11:02 PST KV7yhr adopted; SVCtwo pilots live; native holdrepair positive and identical M7-inventory route retry active; HEAD0cycle he11 route and measured PG replay; QC MIF1/source/R8 coherentbind plusnativeage calibration; S81width-only fullshape packing fitsreticle. r327sourcebatchapproved. See CODEX-LOG/current lane handoffs.
+
+CODEX: 2026-11-16 12:35 PST native_e SIGNED; S81 F2s3 adopted; PLAN4 remains composed-hold. HEAD he12 PLACE/QC production segmented head PNR proceed reviewed; coll_n FFhold fails owned. KV normal package PASS, dispatch/source fixes r334 integrating. Checkpoint recovered, table regeneration and actual programme integration ongoing. Full milestone CODEX-LOG; HBM parked.
