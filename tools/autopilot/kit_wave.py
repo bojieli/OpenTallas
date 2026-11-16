@@ -5468,6 +5468,10 @@ def work_alt_cmd(work, alt_lane):
 FUTURE_LEC_FILES = ("lec.py", "TOOL.json", "kit_resume.py", "run_kit_template.sh", "future_kit_lec.py")
 
 
+_SHOW_CACHE = {}            # (repo, commit, file, text) -> bytes/str of `git show`
+_TEMPLATE_CACHE = {}        # (repo, commit) -> RUN_KIT template of that commit's gen_phys.py
+
+
 def future_lec_snapshot(snapshot, commit=None):
     """write the future-LEC tool snapshot (lec.py, kit_resume.py, the gen_phys RUN_KIT template, future_kit_lec.py and
     TOOL.json) into SNAPSHOT -> meta.  commit None: the scheduler checkout's HEAD, whose working lec.py / kit_resume.py
@@ -5477,8 +5481,16 @@ def future_lec_snapshot(snapshot, commit=None):
     snapshot = Path(snapshot)
     snapshot.mkdir(parents=True, exist_ok=True)   # an attempt whose launch failed before its unit started is taken again
     repo = Path(__file__).resolve().parents[1] / "die_plan"
-    show = lambda c, f, text=False: subprocess.run(["git", "-C", str(repo), "show", f"{c}:{f}"], check=True,
-                                                   capture_output=True, text=text).stdout
+
+    def show(c, f, text=False):
+        # KIT-OPS-5 11-16 (COORD r255b): `git show <commit>:<file>` is immutable for a commit; the launch tick called it (and ast.parse of
+        # the 6000-line gen_phys.py, ~9 s) once per launched attempt: 13 launches = 96 s of a 326 s tick.  Memoized per (repo, commit, file).
+        k = (str(repo), c, f, text)
+        v = _SHOW_CACHE.get(k)
+        if v is None:
+            v = _SHOW_CACHE[k] = subprocess.run(["git", "-C", str(repo), "show", f"{c}:{f}"], check=True,
+                                                capture_output=True, text=text).stdout
+        return v
     if commit is None:
         source = repo / "lec.py"
         payload = source.read_bytes()
@@ -5492,9 +5504,12 @@ def future_lec_snapshot(snapshot, commit=None):
     else:
         payload = show(commit, "tools/die_plan/lec.py")
         resume_helper = show(commit, "tools/autopilot/kit_resume.py")
-    tree = ast.parse(show(commit, "tools/die_plan/gen_phys.py", text=True))
-    template = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)
-        and any(isinstance(t, ast.Name) and t.id == "RUN_KIT" for t in n.targets))
+    _tk = (str(repo), commit)
+    template = _TEMPLATE_CACHE.get(_tk)
+    if template is None:
+        tree = ast.parse(show(commit, "tools/die_plan/gen_phys.py", text=True))
+        template = _TEMPLATE_CACHE[_tk] = next(ast.literal_eval(n.value) for n in tree.body if isinstance(n, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == "RUN_KIT" for t in n.targets))
     (snapshot / "kit_resume.py").write_bytes(resume_helper)
     (snapshot / "run_kit_template.sh").write_text(template)
     meta = dict(commit=commit, sha256=hashlib.sha256(payload).hexdigest(),
@@ -8221,6 +8236,24 @@ def _hung_judge(prev, prog, hub_newest, now, minutes, cpu_s=None):
     return hung, w, why
 
 
+def unit_active_many(AP, units, workers=16):
+    """KIT-OPS-5 11-16 (COORD r255b): {unit: AP.unit_active(unit)} for every unit, probed by a pool of `workers` threads (one `systemctl
+    --user is-active` each, read-only; the wave state is written by the calling thread only).  A probe that raises counts as not active,
+    as the sequential call would have propagated it only from a broken systemctl."""
+    from concurrent.futures import ThreadPoolExecutor
+    units = sorted(set(u for u in units if u))
+    if not units:
+        return {}
+
+    def one(u):
+        try:
+            return u, bool(AP.unit_active(u))
+        except Exception:
+            return u, False
+    with ThreadPoolExecutor(max_workers=max(1, min(workers, len(units)))) as ex:
+        return dict(ex.map(one, units))
+
+
 def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
     """-> [(key, kind, why)] (read-only; watch_out, a dict, receives each judged row's new hung_watch mark)"""
     now = now or time.time()
@@ -8231,12 +8264,14 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
     if hm > 0 and dm > 0:
         s_min = min(s_min, dm)                               # the CPU-liveness mark needs rows silent for dead_min only
     out, silent = [], []
+    active = unit_active_many(AP, [r.get("unit") for r in (st.get("items") or {}).values()
+                                   if r.get("status") in ("RUNNING", "LAUNCHING") and r.get("unit")])
     for key, rec in sorted((st.get("items") or {}).items()):
         s = rec.get("status")
         age_m = (now - max(float(rec.get("updated") or 0), float(rec.get("started") or 0))) / 60.0
         if s in ("RUNNING", "LAUNCHING"):
             unit = rec.get("unit") or ""
-            if unit and AP.unit_active(unit):
+            if unit and active.get(unit, False):
                 try:
                     newest = max((f.stat().st_mtime for f in Path(rec["dir"]).glob("*.log")), default=0)
                 except OSError:
