@@ -5734,7 +5734,8 @@
     "kv3_pc_v1__cl23f6a148",
     "kv3_pc_v1__cl7f648944",
     "kv3_sys_c"
-   ]
+   ],
+   "tool_skew": "warn"
   },
   "s81": {
    "enabled": true,
@@ -35109,7 +35110,8 @@
     ],
     "extra_items": [],
     "failing_items_seen": 48
-   }
+   },
+   "tool_skew": "warn"
   },
   "s81_head": {
    "enabled": true,
@@ -35216,7 +35218,8 @@
     "hd_serdes@5",
     "hd_st_m@1",
     "hd_st_n3_turn@16",
-    "hd_st_turn@11"
+    "hd_st_turn@11",
+    "hd_tile@3"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
@@ -37202,7 +37205,8 @@
     "hd_ctl_n": "lane_result:DRT0255-PROOF",
     "hd_spn": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
     "hd_st_str": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
-   }
+   },
+   "tool_skew": "warn"
   },
   "qwen_compute": {
    "enabled": true,
@@ -47583,7 +47587,8 @@
    },
    "hold_items_released_wavehold1115_r189": {
     "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
-   }
+   },
+   "tool_skew": "warn"
   },
   "hbm": {
    "enabled": true,
@@ -64666,7 +64671,8 @@
     "q_b013__physical_v1": "lane_ready:DIE-HBM-101 (HBM parked)",
     "q_su21__physical_v1": "lane_ready:DIE-HBM-101 (HBM parked)",
     "*": "lane_ready:DIE-HBM-101 (HBM parked)"
-   }
+   },
+   "tool_skew": "warn"
   }
  },
  "place_prefer": [
