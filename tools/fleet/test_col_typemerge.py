@@ -120,3 +120,15 @@ def test_superset_collector_only_keeps_plain_and_own_tree():
     assert [c["xy_um"] for c in a["collector_children"]] == [c["xy_um"] for c in b["collector_children"]] and len(a["collector_children"]) == 2
     assert a["collector_tree"] == "T1" and b["collector_tree"] == "T2"               # trees not copied from the template
     assert [t["index"] for t in a["tieable_children"]] == [0, 1]
+
+
+def test_superset_keeps_member_own_up_pins():
+    import cland_col_superset as SS
+    plan, side = _sup_plan()
+    pt = plan["partition_types"]
+    for i, n in enumerate(("col_h9_r1__t1__cla__pv1", "col_h9_r1__t1__cla__pv2")):
+        pt[n]["clock"]["landing_contract"]["pins"][0]["xy_um"] = [100.0 * (i + 1), 5.0]       # cland_up_ready, own site
+    SS.build(plan, side, collector_only=True, keep_tree=True)
+    xs = [next(q for q in pt[n]["clock"]["landing_contract"]["pins"] if q["name"] == "cland_up_ready")["xy_um"][0]
+          for n in ("col_h9_r1__t1__cla__pv1", "col_h9_r1__t1__cla__pv2")]
+    assert xs == [100.0, 200.0]

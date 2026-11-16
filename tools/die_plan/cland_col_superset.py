@@ -100,7 +100,10 @@ def build(plan, side, fam_re=None, collector_only=False, keep_tree=False, keep_t
         stT = copy.deepcopy(sidetypes.get(tmpl_k))
         for k in members:
             ck = P[k]["clock"]; lc = json.loads(json.dumps(T).replace(tmpl_k, k))
-            lc.update(pins=copy.deepcopy(newpins), collector_children=copy.deepcopy(rows), bands=copy.deepcopy(bands),
+            own_up = {q["name"]: q for q in (ck.get("landing_contract") or {}).get("pins", []) if q["name"] in UP}
+            # the monitor UP pins (cland_up_*, fclk_out_cland_up) stay at the member OWN site: the template site can be >405 um from the parent dn pin
+            pins_k = [copy.deepcopy(own_up.get(q["name"], q)) if q["name"] in UP else copy.deepcopy(q) for q in newpins]
+            lc.update(pins=pins_k, collector_children=copy.deepcopy(rows), bands=copy.deepcopy(bands),
                       tieable_children=copy.deepcopy(tie), registered_monitor=True)
             if any(r["seam"] for r in rows): lc["forwarded_clock_only_inputs"] = True
             if keep_tree and "collector_tree" in (ck.get("landing_contract") or {}):
