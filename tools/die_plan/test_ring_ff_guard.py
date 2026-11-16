@@ -74,3 +74,14 @@ def test_fallback_land_defaults_follow_the_die():
     src = (Path(__file__).resolve().parents[1]/"s81_head"/"fallback_land.py").read_text()
     assert 'band_ring = a.band_ring or ("ff" if s81 else "all")' in src
     assert 'c.add_argument("--band-ring", default=None' in src and 'c.add_argument("--band-reserve", default=None' in src
+
+
+def test_frozen_band_takes_compose_ring_form(monkeypatch):
+    # F2s 11-16: band_fixed_um bands (svc) were copied without ring_place and lost +ff under --band-ring ff
+    fx = {"rect_um": [0, 0, 10, 10], "width": 1882}
+    monkeypatch.setattr(CP, "BAND_RING", "ff")
+    b = CP._frozen_band(fx)
+    assert b["ring_place"] == "ff" and "ring_place" not in fx and b["rect_um"] == fx["rect_um"]
+    assert CP._frozen_band(dict(fx, ring_place="all"))["ring_place"] == "all"
+    monkeypatch.setattr(CP, "BAND_RING", "all")
+    assert "ring_place" not in CP._frozen_band(fx)

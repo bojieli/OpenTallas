@@ -1106,6 +1106,16 @@ def compose(*a,ring_ff_min_bits=None,**k):
     return out
 
 
+# S81-RINGS-O 11-16 (F2s RINGFF accept: 82 svc bands lost ring_place ff under --band-ring ff): a frozen band
+# (clock.band_fixed_um, S81-BANDTAP-1115) keeps its rects, but the ring FORM is the compose's: the frozen dicts were
+# written by composes that ran band_ring "all" and so carry no ring_place key.  Stamp the compose BAND_RING on a frozen
+# band without the key; an explicit ring_place on the frozen band wins.
+def _frozen_band(fx):
+    band=copy.deepcopy(fx)
+    if BAND_RING!="all" and "ring_place" not in band:band["ring_place"]=BAND_RING
+    return band
+
+
 def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
             forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5,band_use_max_by_type=None,band_clock_obstacles=False):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
@@ -1258,7 +1268,7 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
             if fx and fx.get("rect_um"):
                 # S81-BANDTAP-1115 (COORD 11-15 FABLE-PD-S81-1200 A): a frozen band (rows carry the rects composed earlier, or a
                 # moved rect) is taken as is: taps and bands stop chasing each other
-                band=copy.deepcopy(fx)
+                band=_frozen_band(fx)
             try:
                 bp=((t.get("clock") or {}).get("band_place_um") or {}).get(bus)
                 if band is None and bp and band_multi_rect:        # S81-BANDTAP-1115 r186: placement region + minimum area for this bus
