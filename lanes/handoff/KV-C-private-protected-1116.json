@@ -25,10 +25,14 @@
     {
       "host": "epyc2",
       "path": "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/gateC_elab_realS2"
+    },
+    {
+      "host": "epyc2",
+      "path": "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/gateC_elab_attrfix"
     }
   ],
   "source_commit": "13460a0a2c96ce880ce210ed3a6aa436a429cae3 exact23b source bytes",
   "plan_sha256": "6e6140a2c269a32599a8a72ad615f32edd4fc556ecf7e80a74eaf2c611760058",
   "asbuilt_sha256": "972062757875e98f5c95f63c88588461604967cc594e2c3d08386341fddf7935",
-  "authorization": "Root15:xx: readonlyS3source allowed; ALLoutputs/tmp/cache/home/workingdir realS2, normal50GBfloor, requestactual20GB; NO rootwrite exception."
+  "authorization": "Root privateproofretry exactdc6 tooling overlay, readonlytreeC, NEWrealS2 outputs/alltmp/cache, normal48GB8threads8GBreservation60GBfloor; oldELAB2preserved, noROOTwriteexception/globaladopt."
 }
