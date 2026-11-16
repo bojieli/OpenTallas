@@ -151,7 +151,8 @@ class GitError(RuntimeError):
 
 def run(cmd, cwd=None, timeout=600, env=None, check=False):
     try:
-        p = S.run(cmd, cwd=str(cwd) if cwd else None, capture_output=True, text=True, timeout=timeout, env=env)
+        p = S.run(cmd, cwd=str(cwd) if cwd else None, capture_output=True, text=True, timeout=timeout, env=env,
+                  stdin=S.DEVNULL)    # KV-PVGEN 11-15: yosys under an open stdin pipe idles until the 2400 s timeout
     except S.TimeoutExpired as e:
         p = S.CompletedProcess(cmd, 124, e.stdout or "", (e.stderr or "") if isinstance(e.stderr, str) else "timeout")
         if isinstance(p.stdout, bytes):

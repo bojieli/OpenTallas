@@ -242,6 +242,25 @@ class EndToEnd(unittest.TestCase):
         sh(*self.g, "commit", "-qam", name, cwd=self.dev); sh(*self.g, "push", "-q", "origin", name, cwd=self.dev)
         return subprocess.run([sys.executable, "-I", P, "gate", name], env=self.env, capture_output=True, text=True, timeout=600)
 
+    def test_a_test_reading_stdin_does_not_hang_under_an_open_stdin_pipe(self):
+        # KV-PVGEN 11-15: yosys started by tests waits on an inherited open stdin; the gate must hand pytest /dev/null
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        sh(*self.g, "checkout", "-q", "-b", "claude/stdin", "main", cwd=self.dev)
+        (self.dev / "tools/x").mkdir(parents=True, exist_ok=True)
+        (self.dev / "tools/x/test_stdin.py").write_text(
+            "import subprocess\n\ndef test_child_reads_stdin():\n"
+            "    assert subprocess.run(['cat'], capture_output=True, timeout=20).returncode == 0\n")
+        sh(*self.g, "add", "tools/x/test_stdin.py", cwd=self.dev); sh(*self.g, "commit", "-qm", "stdin", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "claude/stdin", cwd=self.dev)
+        p = subprocess.Popen([sys.executable, "-I", P, "gate", "claude/stdin"], env=self.env, stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        try:
+            out = p.stdout.read(); err = p.stderr.read(); p.wait(timeout=600)
+        finally:
+            p.stdin.close()
+        self.assertEqual(p.returncode, 0, out + err)
+        self.assertIn("GATE main=", out)
+
     def test_gate_tree_gets_the_sources_a_selected_test_names(self):
         # the branch touches tools/x/mod.py only; the selected test reads data/fix/input.txt (outside the sparse set)
         g = self._dep_branch("claude/dep", "import os, pathlib, mod\nR = pathlib.Path(__file__).resolve().parents[2]\n\n"
