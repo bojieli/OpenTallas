@@ -82,6 +82,19 @@ class BoundR8(unittest.TestCase):
         self.m['instances']['a']['strap_r8pad_x']['value'] = 32; self.save()
         with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 5)
 
+    def test_mixed_widths_in_one_type(self):
+        # KV-PCV3-R8: kv3_pc_v3 mixes a 5-bit strap (hsl3_fi, bus needs pad > 15) with 4-bit ones (slg_vreq)
+        self.kr['bound_only_pins'] = [dict(port='strap_r8pad_x', dir='input', width=5), dict(port='strap_r8pad_y', dir='input', width=4)]
+        self.m['types']['T'] = {'strap_r8pad_x': dict(width=5, kind='r8pad_strap'), 'strap_r8pad_y': dict(width=4, kind='r8pad_strap')}
+        self.m['instances']['a'] = {'strap_r8pad_x': dict(width=5, value=17, kind='r8pad_strap'), 'strap_r8pad_y': dict(width=4, value=9, kind='r8pad_strap')}
+        self.audit = dict(verdict='PASS', checked_bits=9, errors=[]); self.save()
+        self.assertEqual(declared(self.d/'kit_rtl.json', 5), [dict(name='strap_r8pad_x', width=5), dict(name='strap_r8pad_y', width=4)])
+        self.m['instances']['a']['strap_r8pad_y']['value'] = 16; self.save()
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 5)
+        self.m['instances']['a']['strap_r8pad_y']['value'] = 9
+        self.m['types']['T']['strap_r8pad_y']['width'] = 6; self.kr['bound_only_pins'][1]['width'] = 6; self.save()
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 5)
+
     def test_strap_free_legacy_without_manifest(self):
         self.kr['bound_only_pins'] = []; self.save()
         (self.d/'bind_parent_id_straps.json').unlink()
