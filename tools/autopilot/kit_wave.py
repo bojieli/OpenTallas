@@ -398,16 +398,36 @@ _TREE_CACHE = {}
 _TREE_LOGGED = set()
 
 
+_TREE_SYNC = False        # tests: run the background verifies inline
+
+
+def _src_manifest_hosts(hosts, tree, expect, links_only):
+    """r284 (COORD): `src_manifest.py hosts TREE --hosts h1,h2 --expect HASH [--links-only]` from this tool tree -> (rc, text).  The full
+    hash verify (switch time) can take minutes on a 300k-file tree; --links-only is the stat-only shared-inode check of later ticks."""
+    cmd = [sys.executable, "-I", os.path.join(os.path.dirname(os.path.abspath(__file__)), "src_manifest.py"), "hosts", tree,
+           "--hosts", ",".join(hosts)] + (["--links-only"] if links_only else ["--expect", expect])
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+    except (OSError, subprocess.SubprocessError) as e:
+        return 1, f"{type(e).__name__}: {e}"
+    return r.returncode, (r.stdout + r.stderr).strip()
+
+
 def tree_gate(AP, cfg):
-    """HOLDGEN-1115 (FABLE-FLOW-0445 class 4): -> (tree_fn, marker_fn) for the typed term tree_ready:<die>:<tree>.
+    """HOLDGEN-1115 (FABLE-FLOW-0445 class 4, r284): -> (tree_fn, marker_fn) for the typed term tree_ready:<die>:<tree>.
     marker_fn(die) = lanes/handoff/tree_switch_<die>.json of the coord tree (written by the tree builder, coord-committed):
     {"tree": path, "manifest_hash": ..., "smoke": "PASS", "die_gen_env": {...}, "config": {die keys, dicts merged}}.
-    tree_fn(die, tree) is true when that marker names the tree, smoke is PASS, and on EVERY gen host (cfg hosts minus retired_hosts)
-    <tree>/.src-manifest.sha256 equals the marker's manifest_hash (the publisher renames a tree into place only after verify, so the
-    hash file at the final path = replicated and verified).  A false answer is cached 60 s, a true one 600 s."""
+    tree_fn(die, tree): the marker names the tree with smoke PASS, and on every gen host of the die (die.gen_hosts, else cfg hosts,
+    minus retired_hosts) <tree>/.src-manifest.sha256 equals the marker hash (cheap).  Then, once per tree, `src_manifest hosts --expect
+    <hash>` verifies the files on all those hosts in a background thread (the answer stays False until it passes); afterwards
+    `hosts --links-only` rechecks every 600 s (a tree with shared inodes turns False).  A failed check is retried after 60 / 300 s."""
     import hold_records as _HR
-    hosts = [h for h in (cfg.get("hosts") or []) if h not in (cfg.get("retired_hosts") or [])]
+    retired = cfg.get("retired_hosts") or []
     hub = AP.HUB_NAME
+
+    def hosts_of(die):
+        d = (cfg.get("dies") or {}).get(die) or {}
+        return [h for h in (d.get("gen_hosts") or cfg.get("hosts") or []) if h not in retired]
 
     def marker(die):
         try:
@@ -427,20 +447,48 @@ def tree_gate(AP, cfg):
         except (OSError, subprocess.SubprocessError):
             return False
 
+    def run_bg(ent, hosts, tree, want, links_only):
+        def job():
+            rc, txt = _src_manifest_hosts(hosts, tree, want, links_only)
+            if rc != 0 and links_only and "unrecognized arguments" in txt:
+                rc = 0                                   # rt without r284 yet: no links check available, not a failure
+            ent["t"] = time.time()
+            if rc == 0:
+                ent.update(state="ok", links_t=time.time())
+            else:
+                ent.update(state="bad", why=txt[-300:])
+                AP.log(f"KIT-WAVE TREE-CHECK {'links' if links_only else 'verify'} FAILED {tree}: {txt[-200:]}")
+            ent["running"] = False
+        ent["running"] = True
+        if _TREE_SYNC:
+            job()
+        else:
+            import threading
+            threading.Thread(target=job, daemon=True).start()
+
     def ready(die, tree):
         m = marker(die)
         want = str((m or {}).get("manifest_hash") or "")
+        hosts = hosts_of(die)
         if not m or m.get("tree") != tree or str(m.get("smoke") or "").upper() != "PASS" or not want or not hosts:
             return False
         key, now = (die, tree, want, tuple(hosts)), time.time()
-        hit = _TREE_CACHE.get(key)
-        if hit and now - hit[0] < (600 if hit[1] else 60):
-            return hit[1]
+        ent = _TREE_CACHE.get(key)
+        if ent is not None and ent.get("running"):
+            return ent.get("state") == "ok"
+        if ent is not None and ent.get("state") == "ok":
+            if now - ent.get("links_t", 0) > 600:
+                run_bg(ent, hosts, tree, want, True)             # later ticks: stat-only shared-inode check
+            return ent.get("state") == "ok"
+        if ent is not None and now - ent.get("t", 0) < (300 if ent.get("state") == "bad" else 60):
+            return False
         from concurrent.futures import ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=len(hosts)) as ex:
-            ok = all(ex.map(lambda h: host_has(h, tree, want), hosts))
-        _TREE_CACHE[key] = (now, ok)
-        return ok
+            have = all(ex.map(lambda h: host_has(h, tree, want), hosts))
+        ent = _TREE_CACHE[key] = {"t": now, "state": "cheap" if have else "absent", "running": False}
+        if have:
+            run_bg(ent, hosts, tree, want, False)                # switch time: src_manifest hosts --expect <hash>
+        return ent.get("state") == "ok"
     return ready, marker
 
 

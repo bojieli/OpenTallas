@@ -195,40 +195,65 @@ class T(unittest.TestCase):
 
     def test_kit_wave_tree_gate_and_switch(self):
         import tempfile, os
-        with tempfile.TemporaryDirectory() as td:
-            tree = os.path.join(td, "src1")
-            os.makedirs(tree)
-            marker = {"tree": tree, "manifest_hash": "h1", "smoke": "PASS", "die_gen_env": {"OT_PGCAP": "1"}}
+        calls = []
+        old_fn, old_sync = KW._src_manifest_hosts, KW._TREE_SYNC
+        KW._TREE_SYNC = True
+        KW._src_manifest_hosts = lambda hosts, tree, expect, links_only: (calls.append((tuple(hosts), links_only, expect)) or (0, "ok"))
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                tree = os.path.join(td, "src1")
+                os.makedirs(tree)
+                marker = {"tree": tree, "manifest_hash": "h1", "smoke": "PASS", "die_gen_env": {"OT_PGCAP": "1"}}
 
-            class AP:
-                HUB_NAME = "hub"
-                text = json.dumps(marker)
+                class AP:
+                    HUB_NAME = "hub"
+                    text = json.dumps(marker)
+                    logs = []
 
-                @staticmethod
-                def read_coord(rel):
-                    return AP.text if rel.endswith("tree_switch_s81.json") else ""
-            c = base()
-            c["hosts"] = ["localhost"]
-            c["dies"]["s81"]["src"] = "/old"
-            HR.add_record(c, "s81", rec(release=[f"tree_ready:s81:{tree}"]))
-            KW._TREE_CACHE.clear()
-            tf, mf = KW.tree_gate(AP, c)
-            self.assertFalse(tf("s81", tree))                                    # hash file missing on the host
-            KW._TREE_CACHE.clear()
-            open(os.path.join(tree, ".src-manifest.sha256"), "w").write("h1\n")
-            self.assertTrue(tf("s81", tree))
-            KW._TREE_CACHE.clear()
-            AP.text = json.dumps(dict(marker, smoke="FAIL"))
-            self.assertFalse(tf("s81", tree))                                    # smoke not PASS
-            AP.text = json.dumps(dict(marker, tree="/other"))
-            self.assertFalse(tf("s81", tree))                                    # marker names another tree
-            AP.text = json.dumps(marker)
-            KW._TREE_CACHE.clear()
-            KW.compile_hold_records(c, lambda r: False, tf, mf)
-            self.assertEqual(c["dies"]["s81"]["hold_items"], {})
-            sw = HR.apply_tree_switches(c, KW.hold_ctx(c, lambda r: False, tf, mf))
-            self.assertEqual((c["dies"]["s81"]["src"], c["dies"]["s81"]["die_gen_env"]), (tree, {"OT_PGCAP": "1"}))
-            self.assertEqual(sw[0][1], tree)
+                    @staticmethod
+                    def read_coord(rel):
+                        return AP.text if rel.endswith("tree_switch_s81.json") else ""
+
+                    @staticmethod
+                    def log(m):
+                        AP.logs.append(m)
+                c = base()
+                c["hosts"] = ["epyc9"]
+                c["dies"]["s81"]["gen_hosts"] = ["localhost"]                       # the die's own gen hosts win over cfg hosts
+                c["dies"]["s81"]["src"] = "/old"
+                HR.add_record(c, "s81", rec(release=[f"tree_ready:s81:{tree}"]))
+                KW._TREE_CACHE.clear()
+                tf, mf = KW.tree_gate(AP, c)
+                self.assertFalse(tf("s81", tree))                                    # hash file missing on the host
+                self.assertEqual(calls, [])
+                KW._TREE_CACHE.clear()
+                open(os.path.join(tree, ".src-manifest.sha256"), "w").write("h1\n")
+                self.assertTrue(tf("s81", tree))                                     # switch time: full verify with --expect
+                self.assertEqual(calls, [(("localhost",), False, "h1")])
+                self.assertTrue(tf("s81", tree))
+                self.assertEqual(len(calls), 1)                                      # cached: no second verify within 600 s
+                next(iter(KW._TREE_CACHE.values()))["links_t"] -= 700
+                self.assertTrue(tf("s81", tree))                                     # later tick: --links-only
+                self.assertEqual(calls[-1], (("localhost",), True, "h1"))
+                KW._src_manifest_hosts = lambda hosts, tree, expect, links_only: (1, "NOT-READY 3 files share an inode")
+                next(iter(KW._TREE_CACHE.values()))["links_t"] -= 700
+                self.assertFalse(tf("s81", tree))                                    # shared inodes turn the tree not-ready
+                self.assertTrue(any("FAILED" in m for m in AP.logs))
+                KW._src_manifest_hosts = lambda hosts, tree, expect, links_only: (0, "ok")
+                KW._TREE_CACHE.clear()
+                AP.text = json.dumps(dict(marker, smoke="FAIL"))
+                self.assertFalse(tf("s81", tree))                                    # smoke not PASS
+                AP.text = json.dumps(dict(marker, tree="/other"))
+                self.assertFalse(tf("s81", tree))                                    # marker names another tree
+                AP.text = json.dumps(marker)
+                KW._TREE_CACHE.clear()
+                KW.compile_hold_records(c, lambda r: False, tf, mf)
+                self.assertEqual(c["dies"]["s81"]["hold_items"], {})
+                sw = HR.apply_tree_switches(c, KW.hold_ctx(c, lambda r: False, tf, mf))
+                self.assertEqual((c["dies"]["s81"]["src"], c["dies"]["s81"]["die_gen_env"]), (tree, {"OT_PGCAP": "1"}))
+                self.assertEqual(sw[0][1], tree)
+        finally:
+            KW._src_manifest_hosts, KW._TREE_SYNC = old_fn, old_sync
 
     def test_switch_only_record_holds_nothing_and_switches(self):
         c = base()
