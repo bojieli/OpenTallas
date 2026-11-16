@@ -2916,7 +2916,32 @@ def after_class(st, j):
             record_failure(st, j)
 
 
+ARCHIVE_PERMANENT_RE = re.compile(r"FileNotFoundError|No such file or directory|NotADirectoryError")
+
+
+def archive_backoff(j, err, now=None):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-2000 d): 'ARCHIVE FAILED 3054c87a89d6: probe rc 1: FileNotFoundError' was retried every tick, 243 times on one job
+    whose kit path no longer existed.  From the 3rd consecutive failure the retry backs off (3 min x 2^n, at most 6 h); a permanent error
+    (the kit / sign-off path is gone) is posted once as NEEDS-LANE.  -> True when this failure is the one to post"""
+    now = time.time() if now is None else now
+    n = int(j.get("archive_fail_n") or 0) + 1
+    j["archive_fail_n"] = n
+    j["archive_fail_err"] = str(err)[:300]
+    if n >= 3:
+        j["archive_retry_at"] = now + min(180 * 2 ** (n - 3), 6 * 3600)
+    if ARCHIVE_PERMANENT_RE.search(str(err)) and n >= 3 and not j.get("archive_posted"):
+        j["archive_posted"] = now
+        return True
+    return False
+
+
+def archive_due(j, now=None):
+    return (time.time() if now is None else now) >= float(j.get("archive_retry_at") or 0)
+
+
 def archive(st, j):
+    if not archive_due(j):                                           # backed off after repeated failures (archive_backoff)
+        return
     host = ssh_host(j.get("probe") or j["host"])
     so = j["signoff"]
     sha = j["src"].split("@")[1][:10]
@@ -2946,7 +2971,12 @@ def archive(st, j):
                                   "signoff_dir": os.path.dirname(so["path"]), "record": rec, "view": view},
             timeout=3600)
     if r.get("error") or r.get("errors"):
-        log(f"ARCHIVE FAILED {j['id']}: {r.get('error') or r.get('errors')}; retry next tick")
+        err = r.get("error") or r.get("errors")
+        post = archive_backoff(j, err)
+        log(f"ARCHIVE FAILED {j['id']} (x{j.get('archive_fail_n')}): {err}; " + ("retry next tick" if int(j.get("archive_fail_n") or 0) < 3 else "backed off until %s" % time.strftime("%H:%M", time.localtime(j["archive_retry_at"]))))
+        if post:
+            coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [AUTOPILOT -> COORD] archive of {j['die']}/{j['type']} ({j['id']}) fails permanently: {str(err)[-200:]}; "
+                                                         "the kit path is gone, so the signed record cannot be archived from the host; archive from the AGIdock copy or re-sign")
         set_status(st, j, "SIGNED", "archive pending")
         return
     mhost = MIRROR.get(host, MIRROR_DEFAULT)

@@ -6996,7 +6996,7 @@ def flow_guard_gate(AP, cfg, st, die, go, picks, skip, now=None, rpy=None):
     hp = {}
     for r in held:
         hp.setdefault(FG.held_key(st, die, r["item"]), []).append(r["item"] not in pf)
-    for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now):
+    for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now, {dn: breaker_inputs(cfg, dn) for dn in (cfg.get('dies') or {})}):
         AP.log(f"KIT-WAVE FLOW-GUARD RELEASE '{key}': {why}")
     out = []
     for r in go:
@@ -8451,7 +8451,7 @@ def collect(AP, cfg, st, notices):
                        f"one free retry on another host next tick")
         elif cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
-        if cls == "INFRA" and rec.get("status") == "RETRY-INFRA" and not NO_HOST.search(why or "") and not _TRANSIENT_INFRA.search(why or ""):
+        if cls in ("INFRA", "FLOW") and rec.get("status") in ("RETRY-INFRA", "FAIL") and not NO_HOST.search(why or "") and not _TRANSIENT_INFRA.search(why or ""):
             _ik = infra_key(cfg, rec, cls, why)
             if infra_repeat(st, rec, _ik):
                 # the same (tool sha, src sha, plan sha, error class) failed again: a retry would run the same thing
@@ -8487,7 +8487,8 @@ def collect(AP, cfg, st, notices):
             _key = FG.norm_class(cls, why)
             if not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
-                               legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg)
+                               legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
+                               inp=breaker_inputs(cfg, rec["die"]))
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
                     AP.log(f"KIT-WAVE FLOW-GUARD CLASS-BREAKER open '{_k}'")
                     AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", _line)
@@ -8525,11 +8526,28 @@ KILL_RE = re.compile(r"Error 241|exit 143|rc 143|exit 137|process terminated|ear
 TOOL_INFRA_RE = re.compile(r"python exception|plan-schema|tool or source skew|Traceback|ModuleNotFoundError|AttributeError|ImportError")
 
 
+def breaker_inputs(cfg, die):
+    """digest of what a relaunch on this die would build on, WITHOUT the hub runtime tools (rt/current changed 7 times in a day and made every
+    key new): plan sha, src sha + source content hash, gen env, kit_rtl form, event"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    try:
+        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("_src_overlay"), d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
+        return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
+    except (TypeError, ValueError):
+        return ""
+
+
 def infra_key(cfg, rec, cls, why):
-    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1800 item 1): the inputs an INFRA relaunch would run on: (tool sha, src sha, plan sha, error class).
-    46 of 88 fails on 11-15 were the same key failing again."""
+    """FABLE-FLOW-2000 (a): the inputs this attempt ran on: the KIT's own src sha + source content hash (its spec.json), the plan / block sha of the
+    row, and the normalised error class.  Not the hub runtime digest."""
     d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
-    body = [rt_tools_digest(), d.get("src_sha"), rec.get("plan_sha") or d.get("_plan_sha") or d.get("plan_sha"), FG.norm_class(cls, why)]
+    sp = {}
+    try:
+        sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    body = [sp.get("src_sha") or d.get("src_sha"), sp.get("src_overlay") or d.get("_src_overlay"), sp.get("plan") if False else None,
+            rec.get("block_sha") or rec.get("plan_sha") or d.get("_plan_sha") or d.get("plan_sha"), FG.norm_class(cls, why)]
     return hashlib.sha1(json.dumps(body, default=str).encode()).hexdigest()[:16]
 
 

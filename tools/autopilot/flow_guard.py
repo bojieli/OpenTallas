@@ -52,13 +52,28 @@ PF_MISSING = re.compile(r"HDL source missing|sources that are gone|file missing|
 PF_SKEW = re.compile(r"ModuleNotFoundError|No module named|ImportError|has no attribute|tool or source skew", re.I)
 
 
+_ID = re.compile(r"\b(?=[A-Za-z0-9]*[a-z])[A-Za-z0-9]*_[A-Za-z0-9_]*\b")       # snake_case identifier: an item / module / type / core name
+_ERR_TOK = re.compile(r"(?:Error|Exception|Violation)$")
+_PROGRESS = re.compile(r"KW_ROAM|KW_STAGE|KW_PLACE_RC=\d+\s*$|ran on \S+, outputs copied back")
+
+
 def norm_class(cls, why):
-    """the failure's class key: class + text with paths / hashes / numbers masked, lists of paths collapsed, 150 chars"""
+    """the failure's class key (FLOW-HEALTH-1 11-15, FABLE-FLOW-2000 (c): one error was split into 12 keys by item / module names and numbers):
+    class + the text with paths / hashes / numbers masked, snake_case identifiers (item, type, module, core names) replaced by <id>, lists
+    collapsed, 150 chars.  A progress line (KW_ROAM ... copied back) is never the evidence: a failure whose only text is progress is
+    '<stage> no error line'."""
     s = f"{cls}: {why or ''}".replace("\n", " ")
+    head, sep, evid = s.partition(" @")
+    stage = evid.split(":", 1)[0].strip() if sep else ""
+    rest = evid.split(":", 1)[1] if sep and ":" in evid else evid
+    if sep and _PROGRESS.search(rest) and not re.search(r"Error|error:|Traceback|ERROR|Exception", rest):
+        s = f"{head} @{stage}: no error line (progress text only)"
     s = _P.sub("<P>", s)
     s = re.sub(r"<P>(?:[, ]+<P>)+", "<P>", s)
     s = _H.sub("<H>", s)
     s = _N.sub("N", s)
+    s = _ID.sub(lambda m: m.group(0) if (m.group(0).isupper() or _ERR_TOK.search(m.group(0))) else "<id>", s)
+    s = re.sub(r"<id>(?:[, ]+<id>)+", "<id>", s)
     return re.sub(r"\s+", " ", s).strip()[:150]
 
 
@@ -492,7 +507,7 @@ CLASS_N = 10                 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1350): fails per 
 CLASS_WINDOW_S = 3600
 
 
-def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, stage=""):
+def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, stage="", inp=""):
     """called once per KIT-WAVE FAIL; returns the class key.  Opens the breaker at BREAKER_N fails in BREAKER_WINDOW_S
     (PROBATION_N while the class is on probation)"""
     now = time.time() if now is None else now
@@ -507,7 +522,7 @@ def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, sta
     if k2 in g["open"]:
         g["open"][k2]["n"] = max(g["open"][k2].get("n", 0), len(m2)); g["open"][k2]["last_fail"] = now
     elif len(m2) >= CLASS_N:
-        g["open"][k2] = {"t": now, "n": len(m2), "first": m2[0][3] or evidence, "posted": 0, "kind": "", "last_fail": now}
+        g["open"][k2] = {"t": now, "n": len(m2), "first": m2[0][3] or evidence, "posted": 0, "kind": "", "last_fail": now, "die": die, "inp": inp}
     if not legacy:
         return key
     g["fails"] = [f for f in g["fails"] if now - f[0] <= BREAKER_WINDOW_S]
@@ -534,13 +549,21 @@ def held_key(st, die, item):
     return k2 if k2 and k2 in (g.get("open") or {}) else ""
 
 
-def breaker_tick(st, now=None):
-    """cooldown release of classes the preflight cannot judge; returns [(key, why)] released"""
+def breaker_tick(st, now=None, inputs=None):
+    """release of classes the preflight cannot judge: ONLY when the inputs of the die they opened on changed (FABLE-FLOW-2000 (b): the 19:15
+    cooldown release gave 15 launches and 15 fails of the same unfixed class).  inputs: {die: digest}; returns [(key, why)] released.
+    A class opened without a recorded input digest (older state) keeps the cooldown."""
     now = time.time() if now is None else now
     g = fg_state(st)
     rel = []
     for key, b in list(g["open"].items()):
-        if not b.get("kind") and now - float(b.get("last_fail") or b["t"]) >= BREAKER_COOLDOWN_S:
+        if b.get("kind"):
+            continue
+        if b.get("inp"):
+            cur = (inputs or {}).get(b.get("die"))
+            if cur and cur != b["inp"]:
+                rel.append((key, "the die's inputs (plan / src / kit form) changed since the class opened"))
+        elif now - float(b.get("last_fail") or b["t"]) >= BREAKER_COOLDOWN_S:
             rel.append((key, f"cooldown {BREAKER_COOLDOWN_S // 60} min without a new fail"))
     for key, _ in rel:
         close(st, key, now)

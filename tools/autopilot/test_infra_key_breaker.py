@@ -49,7 +49,7 @@ def test_infra_key_changes_with_tool_src_plan_and_error_class(monkeypatch):
     assert a != KW.infra_key(cfg(), dict(rec, plan_sha="p2"), "INFRA", S81 % 1)  # plan changed
     assert a != KW.infra_key(cfg(), rec, "INFRA", KV)                           # other error class
     monkeypatch.setattr(KW, "rt_tools_digest", lambda: "t2")
-    assert a != KW.infra_key(cfg(), rec, "INFRA", S81 % 1)                      # tool changed: a fix reached the wave
+    assert a == KW.infra_key(cfg(), rec, "INFRA", S81 % 1)                      # the hub runtime digest is NOT in the key (FABLE-FLOW-2000 a)
 
 
 def test_second_failure_of_the_same_key_is_the_repeat():
