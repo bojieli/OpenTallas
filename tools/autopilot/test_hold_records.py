@@ -53,6 +53,11 @@ class T(unittest.TestCase):
         c["dies"]["s81"]["_lint_clean"] = ["col_a__t1"]
         HR.compile_holds(c)
         self.assertEqual(list(c["dies"]["s81"]["hold_items"]), ["col_a__t2"])
+        HR.compile_holds(c, HR.Ctx(lint_fn=lambda die, item: item != "col_a__t2"))      # live path: a known sdc_lint failure holds, the rest releases
+        self.assertEqual(list(c["dies"]["s81"]["hold_items"]), ["col_a__t2"])
+        c["dies"]["s81"]["hold_items"] = {}
+        HR.compile_holds(c, HR.Ctx(lint_fn=lambda die, item: True))
+        self.assertEqual(c["dies"]["s81"]["hold_items"], {})
 
     def test_digest_changed_and_staged_and_snap(self):
         c = base()
@@ -310,6 +315,23 @@ class T(unittest.TestCase):
         del c["_item_names"]
         HR.compile_holds(c)                                                           # no item list: pattern kept, audit names it
         self.assertEqual(sorted(HR.summarize(HR.audit(c)).items()), [("PROOF-HELD", 1)])
+
+    def test_record_is_authority_over_written_back_file_keys_and_legacy_audit(self):
+        c = base()
+        d = c["dies"]["s81"]
+        HR.add_record(c, "s81", rec(release=["event_adopt:B6gG3b"]))
+        d["hold_items"] = {"col_a__t1": "stale prose copy", "loose_key": "prose with no record"}
+        d["event"], d["plan"] = "B6gG3b", "/x/B6gG3b.json"
+        HR.compile_holds(c, HR.Ctx(event_met=KW._hold_term_met))
+        self.assertEqual(d["hold_items"], {"loose_key": "prose with no record"})        # released key not kept alive by its file copy
+        self.assertEqual([(x["code"], x["n"]) for x in HR.audit(c)], [("LEGACY-HOLD", 1)])
+
+    def test_kit_wave_lint_clean_item(self):
+        c = {"_lint_fail": {"s81": {"col_a__t1"}}}
+        self.assertFalse(KW.lint_clean_item(c, "s81", "col_a__t1"))
+        self.assertTrue(KW.lint_clean_item(c, "s81", "col_b__t1"))
+        self.assertFalse(KW.lint_clean_item(c, "s81", "col_a__*"))                       # a glob key is clean only if no covered item failed
+        self.assertTrue(KW.lint_clean_item(c, "hbm", "x"))
 
 
 if __name__ == "__main__":

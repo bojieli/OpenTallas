@@ -504,7 +504,17 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")),
                   cells_fn=lambda die, item: cells.get((die, item)),
                   proof_fn=lambda name: any(re.search(r"(?<![A-Za-z0-9_.-])" + re.escape(name) + r"(?![A-Za-z0-9_.-])", ln) for ln in proofs),
-                  tree_fn=tree_fn, marker_fn=marker_fn)
+                  tree_fn=tree_fn, marker_fn=marker_fn, lint_fn=lambda die, item: lint_clean_item(cfg, die, item))
+
+
+def lint_clean_item(cfg, die, item):
+    """lint_clean:<die> for one hold key: no row of the die (item, or any item the glob key covers) has its latest attempt failed in
+    sdc_lint.  cfg['_lint_fail'][die] = items whose latest row is a FAIL naming sdc_lint (filled each tick from the wave state);
+    an item never linted is clean (the term gates on a known failure, as the release of 'lint decides per item' needs)."""
+    bad = (cfg.get("_lint_fail") or {}).get(die) or ()
+    if any(ch in str(item) for ch in "*?["):
+        return not any(fnmatch.fnmatchcase(b, str(item)) for b in bad)
+    return str(item) not in bad
 
 
 def compile_hold_records(cfg, is_merged=None, tree_fn=None, marker_fn=None):
@@ -10509,6 +10519,13 @@ def _step(AP, ap_dir):
             if _r.get("die") and _r.get("item"):
                 _names.setdefault(_r["die"], set()).add(_r["item"])
         cfg["_item_names"] = {d_: sorted(v) for d_, v in _names.items()}
+        _lf = {}
+        for _r in sorted((st.get("items") or {}).values(), key=lambda r_: float(r_.get("started") or 0)):    # latest row per item wins
+            if _r.get("die") and _r.get("item"):
+                _bad = _r.get("status") == "FAIL" and "sdc_lint" in (str(_r.get("stage")) + " " + str(_r.get("reason")) + " " + str(_r.get("class")))
+                _s = _lf.setdefault(_r["die"], set())
+                (_s.add if _bad else _s.discard)(_r["item"])
+        cfg["_lint_fail"] = _lf
         cfg["_proof_lines"] = [ln for ln in AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines()
                                if " RESULT " in ln and "PASS" in ln][-3000:]
         _before = len(cfg.get("_hold_auto_released") or [])
