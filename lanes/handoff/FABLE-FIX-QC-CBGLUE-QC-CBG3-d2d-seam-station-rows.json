@@ -1,0 +1,725 @@
+{
+ "note": "FABLE-FIX-QC-CBGLUE 11-16 QC glue d2d seam stations (COORD decision B). Base: combined S4q9e sha 00974ed8e7bd. Apply: append glue.reach_homes_add to partition_types.glue.reach_homes, append internal_stations_add to glue.internal_stations, set lanes[].fixed_cycles, replace latency.lanes rows (= reach_fix.sync_fixed_cycles). 17 lanes 4 -> 7. Seam after bind: XDIE_SEAM_C 7,7,7,8,7,7, D2D_TXDP_C 32h14011212 (bind hook regenerates TXDP; regen_constants checks one Delta per bundle). Composer: epyc2 /srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/mk_d2d_south.py.",
+ "base_plan_sha256_12": "00974ed8e7bd",
+ "result_plan_sha256_12": "42b8ae2b7256",
+ "partition_types": {
+  "glue": {
+   "reach_homes_add": [
+    {
+     "name": "d2d",
+     "rect_um": [
+      8.0,
+      120.0,
+      392.0,
+      330.0
+     ],
+     "buses": [
+      "d2d_rom__kv_x3_slot",
+      "d2d_rom__native_rx_slot",
+      "d2d_rom__native_rx_slot_beat",
+      "d2d_rom__native_rx_slot_kind",
+      "d2d_rom__native_rx_v",
+      "d2d_rom__native_tx_slot",
+      "d2d_rom__native_tx_slot_beat",
+      "d2d_rom__native_tx_slot_kind",
+      "d2d_rom__rx_payload",
+      "d2d_rom__rx_user",
+      "d2d_rom__tx_user",
+      "d2d_rom__native_tx_payload",
+      "d2d_rom__native_tx_v",
+      "d2d_rom__obs_native",
+      "d2d_rom__x3",
+      "d2d_rom__x3_generation",
+      "d2d_rom__x3_identity"
+     ]
+    }
+   ],
+   "internal_stations_add": [
+    {
+     "conn": "bus:d2d_rom__kv_x3_slot",
+     "from_um": [
+      12.0,
+      330.0
+     ],
+     "to_um": [
+      12.0,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       12.0,
+       611.7
+      ],
+      [
+       12.0,
+       893.4
+      ],
+      [
+       12.0,
+       1175.1
+      ]
+     ],
+     "bits": 1,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_rx_slot",
+     "from_um": [
+      12.0,
+      330.0
+     ],
+     "to_um": [
+      12.0,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       12.0,
+       611.7
+      ],
+      [
+       12.0,
+       893.4
+      ],
+      [
+       12.0,
+       1175.1
+      ]
+     ],
+     "bits": 1,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_rx_slot_beat",
+     "from_um": [
+      12.0,
+      330.0
+     ],
+     "to_um": [
+      12.0,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       12.0,
+       611.7
+      ],
+      [
+       12.0,
+       893.4
+      ],
+      [
+       12.0,
+       1175.1
+      ]
+     ],
+     "bits": 5,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_rx_slot_kind",
+     "from_um": [
+      12.0,
+      330.0
+     ],
+     "to_um": [
+      12.0,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       12.0,
+       611.7
+      ],
+      [
+       12.0,
+       893.4
+      ],
+      [
+       12.0,
+       1175.1
+      ]
+     ],
+     "bits": 4,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_rx_v",
+     "from_um": [
+      13.12,
+      330.0
+     ],
+     "to_um": [
+      13.12,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       13.12,
+       611.7
+      ],
+      [
+       13.12,
+       893.4
+      ],
+      [
+       13.12,
+       1175.1
+      ]
+     ],
+     "bits": 1,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_tx_slot",
+     "from_um": [
+      129.928,
+      330.0
+     ],
+     "to_um": [
+      129.928,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       129.928,
+       611.7
+      ],
+      [
+       129.928,
+       893.4
+      ],
+      [
+       129.928,
+       1175.1
+      ]
+     ],
+     "bits": 1,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_tx_slot_beat",
+     "from_um": [
+      131.688,
+      330.0
+     ],
+     "to_um": [
+      131.688,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       131.688,
+       611.7
+      ],
+      [
+       131.688,
+       893.4
+      ],
+      [
+       131.688,
+       1175.1
+      ]
+     ],
+     "bits": 5,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_tx_slot_kind",
+     "from_um": [
+      133.872,
+      330.0
+     ],
+     "to_um": [
+      133.872,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       133.872,
+       611.7
+      ],
+      [
+       133.872,
+       893.4
+      ],
+      [
+       133.872,
+       1175.1
+      ]
+     ],
+     "bits": 4,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__rx_payload",
+     "from_um": [
+      207.176,
+      330.0
+     ],
+     "to_um": [
+      207.176,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       207.176,
+       611.7
+      ],
+      [
+       207.176,
+       893.4
+      ],
+      [
+       207.176,
+       1175.1
+      ]
+     ],
+     "bits": 548,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__rx_user",
+     "from_um": [
+      265.632,
+      330.0
+     ],
+     "to_um": [
+      265.632,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       265.632,
+       611.7
+      ],
+      [
+       265.632,
+       893.4
+      ],
+      [
+       265.632,
+       1175.1
+      ]
+     ],
+     "bits": 2,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__tx_user",
+     "from_um": [
+      267.2,
+      330.0
+     ],
+     "to_um": [
+      267.2,
+      1456.8
+     ],
+     "regs_um": [
+      [
+       267.2,
+       611.7
+      ],
+      [
+       267.2,
+       893.4
+      ],
+      [
+       267.2,
+       1175.1
+      ]
+     ],
+     "bits": 2,
+     "capture": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_tx_payload",
+     "from_um": [
+      71.632,
+      1456.8
+     ],
+     "to_um": [
+      71.632,
+      330.0
+     ],
+     "regs_um": [
+      [
+       71.632,
+       1175.1
+      ],
+      [
+       71.632,
+       893.4
+      ],
+      [
+       71.632,
+       611.7
+      ]
+     ],
+     "bits": 548,
+     "launch": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__native_tx_v",
+     "from_um": [
+      135.656,
+      1456.8
+     ],
+     "to_um": [
+      135.656,
+      330.0
+     ],
+     "regs_um": [
+      [
+       135.656,
+       1175.1
+      ],
+      [
+       135.656,
+       893.4
+      ],
+      [
+       135.656,
+       611.7
+      ]
+     ],
+     "bits": 1,
+     "launch": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__obs_native",
+     "from_um": [
+      142.92,
+      1456.8
+     ],
+     "to_um": [
+      142.92,
+      330.0
+     ],
+     "regs_um": [
+      [
+       142.92,
+       1175.1
+      ],
+      [
+       142.92,
+       893.4
+      ],
+      [
+       142.92,
+       611.7
+      ]
+     ],
+     "bits": 60,
+     "launch": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1127 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__x3",
+     "from_um": [
+      323.04,
+      1456.8
+     ],
+     "to_um": [
+      323.04,
+      330.0
+     ],
+     "regs_um": [
+      [
+       298.08,
+       1187.58
+      ],
+      [
+       323.04,
+       918.36
+      ],
+      [
+       323.04,
+       624.18
+      ]
+     ],
+     "bits": 524,
+     "launch": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1177 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__x3_generation",
+     "from_um": [
+      378.88,
+      1456.8
+     ],
+     "to_um": [
+      378.88,
+      330.0
+     ],
+     "regs_um": [
+      [
+       298.08,
+       1215.5
+      ],
+      [
+       378.88,
+       974.2
+      ],
+      [
+       378.88,
+       652.1
+      ]
+     ],
+     "bits": 2,
+     "launch": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1288 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    },
+    {
+     "conn": "bus:d2d_rom__x3_identity",
+     "from_um": [
+      386.272,
+      1456.8
+     ],
+     "to_um": [
+      386.272,
+      330.0
+     ],
+     "regs_um": [
+      [
+       298.08,
+       1219.196
+      ],
+      [
+       298.08,
+       893.4
+      ],
+      [
+       298.08,
+       567.604
+      ]
+     ],
+     "bits": 59,
+     "launch": "face:N",
+     "note": "R-REACH-2 (glue d2d seam stations 11-16): 1303 um window -> reach_home d2d (S end): 3 FIRM station(s), +3 cycle(s), uniform on every d2d N-face bus"
+    }
+   ]
+  }
+ },
+ "lanes_fixed_cycles": {
+  "glue__kv_x3_slot_kv_x3_slot": 3,
+  "glue__native_rx_slot_rx_slot": 3,
+  "glue__native_rx_slot_beat_rx_slot_beat": 3,
+  "glue__native_rx_slot_kind_rx_slot_kind": 3,
+  "glue__native_rx_v_native_rx_v": 3,
+  "glue__native_tx_slot_tx_slot": 3,
+  "glue__native_tx_slot_beat_tx_slot_beat": 3,
+  "glue__native_tx_slot_kind_tx_slot_kind": 3,
+  "glue__rx_payload_native_rx_payload": 3,
+  "glue__rx_user_rx_user": 3,
+  "glue__tx_user_tx_user": 3,
+  "native59__native_tx_payload_native_tx_payload": 3,
+  "native59__native_tx_v_native_tx_v": 3,
+  "native59__obs_native_obs_native": 3,
+  "native59__x3_x3": 3,
+  "native59__x3_generation_x3_generation": 3,
+  "native59__x3_identity_x3_identity": 3
+ },
+ "latency_lanes": {
+  "glue__kv_x3_slot_kv_x3_slot": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__KV_X3_SLOT_KV_X3_SLOT"
+  },
+  "glue__native_rx_slot_rx_slot": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__NATIVE_RX_SLOT_RX_SLOT"
+  },
+  "glue__native_rx_slot_beat_rx_slot_beat": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__NATIVE_RX_SLOT_BEAT_RX_SLOT_BEAT"
+  },
+  "glue__native_rx_slot_kind_rx_slot_kind": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__NATIVE_RX_SLOT_KIND_RX_SLOT_KIND"
+  },
+  "glue__native_rx_v_native_rx_v": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__NATIVE_RX_V_NATIVE_RX_V"
+  },
+  "glue__native_tx_slot_tx_slot": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__NATIVE_TX_SLOT_TX_SLOT"
+  },
+  "glue__native_tx_slot_beat_tx_slot_beat": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__NATIVE_TX_SLOT_BEAT_TX_SLOT_BEAT"
+  },
+  "glue__native_tx_slot_kind_tx_slot_kind": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__NATIVE_TX_SLOT_KIND_TX_SLOT_KIND"
+  },
+  "glue__rx_payload_native_rx_payload": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__RX_PAYLOAD_NATIVE_RX_PAYLOAD"
+  },
+  "glue__rx_user_rx_user": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__RX_USER_RX_USER"
+  },
+  "glue__tx_user_tx_user": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_GLUE__TX_USER_TX_USER"
+  },
+  "native59__native_tx_payload_native_tx_payload": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_NATIVE59__NATIVE_TX_PAYLOAD_NATIVE_TX_PAYLOAD"
+  },
+  "native59__native_tx_v_native_tx_v": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_NATIVE59__NATIVE_TX_V_NATIVE_TX_V"
+  },
+  "native59__obs_native_obs_native": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_NATIVE59__OBS_NATIVE_OBS_NATIVE"
+  },
+  "native59__x3_x3": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_NATIVE59__X3_X3"
+  },
+  "native59__x3_generation_x3_generation": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_NATIVE59__X3_GENERATION_X3_GENERATION"
+  },
+  "native59__x3_identity_x3_identity": {
+   "cycles": 7,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 3,
+   "clock_landing": 2,
+   "natural": 7,
+   "pad": 0,
+   "param": "LAT_NATIVE59__X3_IDENTITY_X3_IDENTITY"
+  }
+ }
+}

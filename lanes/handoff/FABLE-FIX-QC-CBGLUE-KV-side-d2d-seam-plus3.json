@@ -1,0 +1,29 @@
+{
+ "note": "KV side of the QC d2d seam +3 (FABLE-FIX-QC-CBGLUE 11-16). NO KV plan row, NO KV lane cycle, NO KV RTL parameter changes: the stations are inside QC glue, the K seam stages and D2D_TXDP_K stay as bound. What changes on KV is the compiled pair programme only: run_mu833.sh on the final KV bind with CST = XDIE_SEAM_C of the QC bind.",
+ "run": "CST=7,7,7,8,7,7 OT_KV_HEAD_PREP_EDGES=21 OT_KV_COMPUTE_RECORD_TXD=18 OT_KV_CAL_OFS=-2 bash physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh FINAL_KV_BIND OUT",
+ "measured_on": "KV tree kw45/src_kv_pin_eb1e73448bd0, bind kw45/kvbind_pin_eb1e73448bd0/out_h1 (KST 91,91,89,89,89,77,77 HRT 156 EMBRT 147), epyc9 /srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/pair/{ctl,new}",
+ "control": {
+  "CST": "4,4,4,5,4,4",
+  "D2D_TXDP_C": "32h0e01120c",
+  "D2D_TXDP_K": "32h0396a0aa",
+  "service_pad": 104,
+  "token_period": 293376,
+  "image_sha256_12": "555d959cc695"
+ },
+ "new": {
+  "CST": "7,7,7,8,7,7",
+  "D2D_TXDP_C": "32h14011212",
+  "D2D_TXDP_K": "32h0396a0aa",
+  "service_pad": 110,
+  "token_period": 293376,
+  "image_sha256_12": "eb8711a2fb9a"
+ },
+ "kv_boot_targets_changed": [
+  "target1.hex",
+  "target3.hex",
+  "target11.hex",
+  "boot_bundle.json"
+ ],
+ "kv_boot_targets_total": 16,
+ "status": "COMPILED_NOT_QUALIFIED (compile only; the pair co-sim / token gate on both final binds is the proof)"
+}
