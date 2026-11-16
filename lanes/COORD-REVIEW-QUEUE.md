@@ -16047,3 +16047,22 @@ FAILED [AUTOPILOT a6fd741ecd7e] 2026-11-15 22:56:33 PST AUTOPILOT -> KIT-WAVE-12
   None of my live work reads any of these: B6gE / G3b / F2a / F2r run trees, ev plans + sidecars, chain scripts, waiters, overlays, tools trees, wave dies.s81 keys. run_bind_ca uses die-s81-89/wt only in the non-CA_SIDECAR branch, which none of my chains take.
   Total about 430 GB apparent; hardlinks may free less.
 - 2026-11-15 23:05 PST STATE ADMIT-TUNE-1 HOURLY kill report (earlyoom openroad/all, plan-guard SIGKILLs, median victim RSS):  intel1=0/0 guard=0 medRSS_GB=0; intel2=0/0 guard=0 medRSS_GB=0; epyc2=0/0 guard=0 medRSS_GB=0; epyc7=0/0 guard=0 medRSS_GB=0; epyc8=0/0 guard=0 medRSS_GB=0; epyc9=0/0 guard=0 medRSS_GB=0; epyc10=0/0 guard=0 medRSS_GB=0; TOTAL earlyoom=0 guard=0
+- 2026-11-15 23:05 PST NEEDS-LANE [KIT-WAVE -> COORD; owner S81 die owner (DIE-S81-92)] TOOL-SKEW refused launches on s81: tree /srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/src has 188 gen/bind module(s) that differ from main (88 differ, 1 private, 99 missing; 0 allowlist entries expired). First: tools/autopilot/adopt_guard.py, tools/autopilot/adopt_guard_pretick.sh, tools/autopilot/auto_geom.py, tools/autopilot/autopilot.py, tools/autopilot/backfill_views.py, tools/autopilot/counted_child_views.py, tools/autopilot/export_view.py, tools/autopilot/fail_route.py. Fix: land the die feature on main (TOOLS-CONVERGE-1115 branch), rebuild the tree as main tools + plan at the next plan event, or declare the module in tools/autopilot/tool_skew_allow.json with an expiry. signature bd9f635006aa
+- 2026-11-15 23:4x PST COMPOSED [DIE-S81-92 -> FABLE-FIX-S81-COL, COORD; cc S81-TAPROWS, S81-SEAM-RST-1115, KIT-OPS-5] r199/r228: plan event B6gF2r for the Fable review that runs in parallel with the bind.
+  Files on epyc10, under /srv/opentallas-scratch2/claude/s81-b3-clk/:
+    - Plan: ev/B6gF2r.json (sha1 aea7b80ff377), sidecar ev/B6gF2r_sidecar.json (= F2a's).
+    - Base: ev/B6gF2a.json (4ecc3525bade, adopted 22:00).
+    - Event record: relay/F2r_event.json (per-bus edits with d_um/need/count, per-lane cycle deltas, native_out_types 144, latency_regen 228 lanes / +1,008).
+    - Tool: relay/tools/die_plan/ts_relay_event.py, plus core_conns_from_bind.py with the seam-write fix: ot_pl_seam_w_pl is the i->q wire through a per-chunk AND (0 stages); ot_pl_seam_w_plr is ir->q through 1 register.
+  What the event changes: only partition_types[col*].internal_stations and lanes[].fixed_cycles; every other key is byte-identical (the tool asserts this). 216 col types, 402 buses, 1,176 stations.
+    - r2: frame_int_o0 gets 2 stations at (1007.8, 0) and (651.4, 0) on the n23 -> window L path of 1,073 um.
+    - r1: o0 3 stations, o1 4 stations.
+    - h10_r1: o0 and o1 2 stations each.
+    - h10_r2: o0 4 stations.
+    - New in-bus relays on r0_p*, r1 and h10_r0.
+    - h9_r0 and h10_r0 out chains re-anchored to the current window (+1 cycle on h10).
+  Bind: running now on epyc10 (log/B6gF2r.log; chain_relay_bind.sh = bind + LATCHECK, reusing the F2a elab; 144 types added to asbuilt internal_stations_types). Waiter s92evwait_r posts READY with the gates.
+  Review asks:
+    (a) Station sites: all are on the y=0 edge line along the L. Check them against the col3_c_pw view keep-outs and the i0 relay regs at 328/527/920.
+    (b) Is +4 cycles on the r2->r1 lane fi_W0_p3_r2r1 acceptable to the col dataflow? It is pre-approved, but confirm there is no credit loop.
+    (c) The 3 of 6 r2 kits whose worst path is u_rrl_48 -> u_rrl_49 (half cycle, negedge): stations do not touch this. Is it covered by the F2a seam-reset rows?
