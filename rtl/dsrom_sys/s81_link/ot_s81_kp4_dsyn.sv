@@ -8,6 +8,10 @@
 //   and the 3:1 result select.  Out: the received words x_q (to ot_s81_kp4_ddly) and the key-equation result k_* (to
 //   ot_s81_kp4_dchn).  T = the cycle word 0 of a frame sits in x1.  Regional synchronous reset, no datapath reset.
 // MUT 3: the syndrome loop is not restarted at chunk 0 (stale syndromes) -- bench mutant of this tile.
+// NGB0 (FABLE-FIX-HEAD-SERDES 11-16, default 4 = unchanged): PE control groups of the BASE form (no OT_S81_KP4_SYN_LOCAL).
+//   hd_serdes GRT RC TT -55.9: ldr[u][g] -> 3 buffer stages (fanout 14/21/32/41) -> load mux / upd -> GF multiply; one ldr /
+//   gm / dz / kc copy drove 12 PEs.  NGB0 12 = 4 PEs a copy (the kept-copy form of SYN_LOCAL NG 8 / PE_LOCAL 46 without
+//   their pin cycles).  Identical values in every cycle: PIN CYCLES +0.
 // BMTHC (opt-in, default 0): ot_s81_kp4_bm THC (theta_45 reachable form) in the RiBM units.
 // SPCYC (opt-in, default 0; S81-TYPES-9-RCK 11-08, COORD +1 pin cycle on the sc_q -> sp tree): the two syndrome window
 //   matrices are computed as FOUR registered partial products sq0..3 (ot_s81_kp4_syn_mat_q4.svh = the exact mask split of
@@ -16,7 +20,7 @@
 //   unchanged.  The word delay tile must wait one more word: ot_s81_kp4_ddly DD +1 under OT_S81_RCK_RX_SPCYC.
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, parameter integer BMTHC = 0, parameter integer PIN_X = 0,
-    parameter integer SPCYC = 0) (
+    parameter integer SPCYC = 0, parameter integer NGB0 = 4) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
@@ -136,7 +140,7 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     localparam integer NGB = 8;
 `endif
 `else
-    localparam integer NGB = 4;
+    localparam integer NGB = NGB0;  // base form: 4 (unchanged) unless the parent asks for more load copies (NGB0)
 `endif
     (* keep *) reg [NGB-1:0] ldr [0:NBM-1];  // unit load, one copy per PE group
     always @(posedge clk)
@@ -189,8 +193,8 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
 `endif
 `else
     generate for (gu = 0; gu < NBM; gu = gu + 1) begin : g_bm
-        ot_s81_kp4_bm #(.NG(4), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ldr[gu]), .S(S_q),
-            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp(4'd0), .Sp(300'd0));
+        ot_s81_kp4_bm #(.NG(NGB), .NCD(4), .THC(BMTHC)) u_bm (.clk(clk), .rs_n(rs_n[2]), .ld(ldr[gu]), .S(S_q),
+            .lam(u_lam[gu]), .om(u_om[gu]), .L(u_L[gu]), .any(u_any[gu]), .done(u_dn[gu]), .ldp({NGB{1'b0}}), .Sp(300'd0));
     end endgenerate
 `endif
     // ================= result of the unit that is done (to the back tile)

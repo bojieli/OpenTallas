@@ -21,7 +21,10 @@
 // st = {live (FEC locked / UCIe receiving), fault (sticky: uncorrectable frame, rate-match overflow)} (ck domain).
 // rst: the die stream reset (active low), released after the clocks run.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0) (
+module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0,
+    parameter integer DNGB = 4,     // u_dec.u_syn base-form PE groups (ot_s81_kp4_dsyn NGB0); 4 = unchanged
+    parameter integer RMRPC = 1) (  // u_rm read-pointer copies (ot_s81_rate_match RPC); 1 = unchanged
+
     input  wire          clk,
     input  wire          rst,
     input  wire [511:0]  tx,
@@ -55,12 +58,12 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
     wire [543:0] r_d;
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_prx (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(r_d));
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
-    ot_s81_kp4_dec #(.MUT(DMUT)) u_dec (.clk(pma_rck), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .q_v(q_v), .q_d(q_d),
+    ot_s81_kp4_dec #(.MUT(DMUT), .NGB0(DNGB)) u_dec (.clk(pma_rck), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .q_v(q_v), .q_d(q_d),
         .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .lock(lock), .n_corr(n_corr), .n_unc(n_unc),
         .n_relock(n_rl));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;
     wire rm_flt;
-    ot_s81_rate_match u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t_rm), .r_d(rx),
+    ot_s81_rate_match #(.RPC(RMRPC)) u_rm (.wclk(pma_rck), .wrst_n(rn_r), .w_v(q_v), .w_d(q_d), .rclk(clk), .rrst_n(rn_t_rm), .r_d(rx),
         .fault(rm_flt));
     // ---- status (ck)
     reg [1:0] lk_s, uf_s;
@@ -135,7 +138,7 @@ endmodule
 //   ONE rclk edge later, together (no read-side flop sees the old reset); the write side is unchanged.  Base form: use
 //   ot_s81_rate_match_rt (ot_pdie_serdes_col.sv).
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_rate_match #(parameter integer RLEAF = 0) (
+module ot_s81_rate_match #(parameter integer RLEAF = 0, parameter integer RPC = 1) (
     input  wire          wclk, wrst_n,
     input  wire          w_v,
     input  wire [511:0]  w_d,
@@ -363,10 +366,36 @@ module ot_s81_rate_match #(parameter integer RLEAF = 0) (
             if (w_v && full && !idle) flt <= 1'b1;
         end
     wire empty = g2b(wp_g2) == rp;
+    generate if (RPC <= 1) begin : g_rp1
     always @(posedge rclk or negedge rrst_n)
         if (!rrst_n) begin rp <= 0; rp_g <= 0; r_d <= 512'd2; end
         else if (!empty) begin r_d <= mem[rp[2:0]]; rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
         else r_d <= 512'd2;                        // IDLE beat: bit 1 set, no marker, no reverse frame, no slot bits
+    end else begin : g_rpc
+        // RPC > 1 (FABLE-FIX-HEAD-SERDES 11-16, hd_serdes GRT RC TT -52: rp[1] -> 3 buffer stages 390 ps (fanout 26/35/32)
+        // -> 8:1 mux -> r_d, one 3-bit select for 512 mux bits): RPC kept copies of the read select, one per r_d slice of
+        // 512 / RPC bits, each with the same reset and the same increment as rp[2:0], so every copy equals rp[2:0] in
+        // every cycle.  rp / rp_g (empty, gray crossing) are unchanged.  PIN CYCLES +0.
+        localparam integer RSW = (512 + RPC - 1) / RPC;
+        localparam [511:0] RIDLE = 512'd2;
+        always @(posedge rclk or negedge rrst_n)
+            if (!rrst_n) begin rp <= 0; rp_g <= 0; end
+            else if (!empty) begin rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
+        genvar gc;
+        for (gc = 0; gc * RSW < 512; gc = gc + 1) begin : g_c
+            localparam integer LO = gc * RSW, SW = (LO + RSW > 512) ? (512 - LO) : RSW;
+            (* keep *) reg [2:0] rpq;
+            wire [511:0] rw = mem[rpq];
+            always @(posedge rclk or negedge rrst_n)
+                if (!rrst_n) begin rpq <= 3'd0; r_d[LO +: SW] <= RIDLE[LO +: SW]; end
+`ifdef RMRPC_MUT_STALE
+                else if (!empty) begin r_d[LO +: SW] <= rw[LO +: SW]; if (gc != 5 || rp[3]) rpq <= rpq + 3'd1; end  // bench mutant
+`else
+                else if (!empty) begin r_d[LO +: SW] <= rw[LO +: SW]; rpq <= rpq + 3'd1; end
+`endif
+                else r_d[LO +: SW] <= RIDLE[LO +: SW];
+        end
+    end endgenerate
 `endif
     reg f1, f2; always @(posedge rclk or negedge rrn_c) if (!rrn_c) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end
     assign fault = f2;

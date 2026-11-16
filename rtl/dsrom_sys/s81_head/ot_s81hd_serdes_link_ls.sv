@@ -45,7 +45,8 @@ module ot_s81hd_serdes_link_ls #(
         .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
     );
 `else
-    ot_pdie_serdes #(.PMA_LAT(PMA_LAT)) u_link (
+    // FABLE-FIX-HEAD-SERDES 11-16: fanout copies only (KP4 PE groups 4 -> 12, rate-match read select 1 -> 32), +0 pin cycles
+    ot_pdie_serdes #(.PMA_LAT(PMA_LAT), .DNGB(12), .RMRPC(32)) u_link (
         .clk(ck), .rst(core_rst_n), .tx(coll_i0), .rx(rx), .st(st),
         .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
     );

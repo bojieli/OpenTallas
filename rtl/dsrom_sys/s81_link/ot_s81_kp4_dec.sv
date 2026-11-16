@@ -29,7 +29,7 @@
 // MUT 2 (u_chn): Forney error value without the division by Lambda'(X^-1) (wrong correction); MUT 3 (u_syn): the syndrome
 // loop is not restarted at a frame -- bench mutants.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_kp4_dec #(parameter integer MUT = 0) (
+module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NGB0 = 4) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          p_v,
@@ -50,7 +50,7 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0) (
     wire         k_any, o_unc, fs;
     wire [7:0]   apply;
 `ifndef OT_KP4_DEC_HARD
-    ot_s81_kp4_dsyn #(.MUT(MUT)) u_syn (.clk(clk), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
+    ot_s81_kp4_dsyn #(.MUT(MUT), .NGB0(NGB0)) u_syn (.clk(clk), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_relock));
 `else
     // hardened 2x2 parent (s81lk_kp4_dec): the closed child views carry MUT = 0
