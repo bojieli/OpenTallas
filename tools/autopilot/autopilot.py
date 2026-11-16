@@ -680,7 +680,7 @@ if marker:
     if marker and _lost:
         out["gate_lost"] = "; ".join(_lost)
 # KW-FIX-44 11-10 (COORD (3)): grt183_make.sh OT_GRT_CONGESTED_FAIL (full GRT ended congested, overflow over the floor)
-# is the congestion class; OT_GRT_TIMECAP (post-route repair over the stage cap) is its own TIMING kind
+# is the congestion class; historical OT_GRT_TIMECAP is a retired FLOW limit, not a hardware timing verdict
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*|OT_GRT_CONGESTED_FAIL[^\n]*",
        # FAILFAST-1 11-11: failfast_rules.py progress stops (GRT / DRT no progress); a hold stop prints OT_HOLD_STRUCTURAL
        "grt_no_progress": r"OT_GRT_NO_PROGRESS[^\n]*", "drt_no_progress": r"OT_DRT_NO_PROGRESS[^\n]*",
@@ -1106,8 +1106,9 @@ def classify(c, client):
         # OWNER 11-14: GRT overflow is just a FAIL with the numbers, not a STRUCTURAL verdict
         return "FAIL", "grt-overflow", c["congestion"]
     if c.get("grt_timecap"):
-        # KW-FIX-44 11-10 (COORD (3)): GRT stage stopped at its post-route time cap; the line carries the last slack
-        return "STRUCTURAL", "grt-timecap", c["grt_timecap"]
+        # Old pinned wrappers could stop a progressing repair on elapsed time.
+        # Preserve the failure line, but do not call that a hardware verdict.
+        return "FAIL", "grt-timecap", c["grt_timecap"]
     if c.get("gate_fail"):
         # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
         # filed as CRASH because the runner printed the gate line without a FAIL_* marker file

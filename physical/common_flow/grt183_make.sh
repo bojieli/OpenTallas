@@ -167,21 +167,13 @@ restore   # a re-run killed hard left the swap in place; its marker stays, so it
 # repair change.  OT_GRT_STALL_RESUME=0 (env or config.mk export) opts out.
 T0=$(date +%s); stall=0; gstop=""
 stall_off() { [ "${OT_GRT_STALL_RESUME:-1}" = 0 ] || grep -q '^export OT_GRT_STALL_RESUME = 0' "$W/config.mk" 2>/dev/null; }
-# KW-FIX-44 11-10 GRT-INCR-CONGESTED + GRT time cap (COORD rulings 11-10 (3)).  Two stops of the 5_1_grt stage, judged on
-# THIS run's 5_1_grt.tmp.log (mtime >= wrapper start), measured from the end of the full global route (first GRT-0303
-# 'Global routing runtime' line); the full route itself is never cut.
-#  (a) REMOVED 11-14 (OWNER limit-removal): no overflow-based stop remains; the full route always runs all its iterations.
-#  (b) time cap: everything after the full route (repair_design, incremental reroutes, hold repair) may take
-#      OT_GRT_POST_MAX_S (default 43200 = 12 h, OWNER 11-14: the only GRT stop).  t68 a5: full route 4h05, then post-GRT repair_design ran ~13 h (14,000
-#      of 129,591 nets) before an outside kill; slw_fw_v1 cl592e3d37 a16: incremental route silent 6h06 at overflow 0
-#      (neither matched the GRT-STALL rule below: last line was not the bare -end_incremental command).  The hold
-#      guard alone caps hold repair at 3 h (hold_guard_grt.tcl).  Stops the stage and prints OT_GRT_TIMECAP with the
-#      last hold/setup slack the log carries (autopilot: STRUCTURAL grt-timecap -> wave class TIMING).
-#      'export OT_GRT_POST_MAX_S = 0' in config.mk (or env) opts out.
-# The stop: no fresh-process re-run, the stage's rc is replaced by 21.
+# Retired GRT stops: neither overflow nor elapsed repair time terminates GRT.
+# OT_GRT_POST_MAX_S is only an optional diagnostic log threshold (default0).
+# Zero, from config or environment, disables that diagnostic; it never enables
+# a wall-time cap. Progressing pinned jobs keep their work and checkpoints.
 cfg_num() { local v; v=$(sed -n "s/^export $1[[:space:]]*=[[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p" "$W/config.mk" 2>/dev/null | tail -1)
   printf '%s' "${v:-$2}"; }
-POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 43200)}
+POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 0)}
 # Repair progress is advisory: sparse logs never justify cancellation or bypassing max-wire repair.
 RLOG=${OT_GRT_REPAIR_LOG_S:-$(cfg_num OT_GRT_REPAIR_LOG_S 600)}
 rlast=0
@@ -203,13 +195,13 @@ grt_slack() {   # last slack figures the log carries (hold guard chunks / start,
   s=$(grep -oE '(setup|Setup)[^|]*WNS[^0-9-]*-?[0-9.]+' "$1" | tail -1 | grep -oE -- '-?[0-9.]+$')
   printf 'hold_ws_ps=%s setup_wns=%s' "${h:-unmeasured}" "${s:-unmeasured}"; }
 # GRT-EARLY (inside-route overflow stop, rule 15:10000,20:1000) and GRT-INCR-CONGESTED (stop on a congested end of the full route) REMOVED 11-14, OWNER: remove conservative limits; GRT runs its full iterations.
-gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop and stops the stage
+gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; observes post-route diagnostic time; never stops GRT
   local Tl=$1 pid=$2 now last
   [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
   if [ -z "$tpost" ]; then grep -q 'GRT-0303\]' "$Tl" && tpost=$(date +%s) || return 1; fi
   now=$(date +%s); last=$(grep -v '^[[:space:]]*$' "$Tl" | tail -1 | cut -c1-160)
   # WF-1 11-14 (COORD/OWNER: delete the conservative limits; kv3_sys_c b5215b6c8bc0 was killed STRUCTURAL/grt-timecap while converging):
-  # the post-route time cap no longer kills GRT.  The line is logged once past OT_GRT_POST_MAX_S (default 43200 s) and the stage goes on.
+  # the post-route time cap no longer kills GRT.  The line is logged once past OT_GRT_POST_MAX_S (default0: disabled) and the stage goes on.
   if [ -z "${tlogged:-}" ] && [ "$POST_MAX" -gt 0 ] && [ $((now - tpost)) -ge "$POST_MAX" ]; then
     echo "OT_GRT_TIMELOG stage=grt post-route repair over $((now - tpost)) s (log threshold $POST_MAX s, NO CAP: GRT continues) $(grt_slack "$Tl") last='$last' $(date -u '+%F %T')"
     tlogged=1
