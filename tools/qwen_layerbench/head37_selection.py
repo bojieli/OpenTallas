@@ -75,7 +75,14 @@ def validate(selection,*,component_only=False,require_source_complete_tt_parent=
             mp=Path(selection['complete_manifest']);full=json.loads(mp.read_text())
             if hashlib.sha256(mp.read_bytes()).hexdigest()!=r.get('manifest_sha256'):
                 raise ValueError('complete source-table manifest identity differs')
-            P.logical_images(full,head_stage37=True)
+            logical=P.logical_images(full,head_stage37=True)
+            for sid,words in enumerate(logical):
+                if not any(w&((1<<1024)-1)for w in words[:3816]):
+                    raise ValueError('global selection rejects empty transformer prefix')
+                for lane in range(4):
+                    encoded=(''.join(f'{v:0532x}\n'for v in P.physical_rows(words,lane))).encode()
+                    if hashlib.sha256(encoded).hexdigest()!=r['images'][f'table_s{sid}_m{lane}.viamap.hex']:
+                        raise ValueError('global masks do not preserve the complete actual transformer manifest prefix')
             parent=selection.get('ctlm_parent')
             if not parent or not selection.get('source_complete_tt_parent_selected',False):
                 raise ValueError('real source-complete TT parent selection is missing')
