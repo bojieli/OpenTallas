@@ -47,6 +47,7 @@ for d in cands:
     name=d[len(R)+1:]
     if os.path.realpath(d)!=d: why='realpath differs'
     elif d in T or d+'/' in T: why='proc/queue/unit ref'
+    elif any(r==d or r.startswith(d+'/') for r in refs): why='handoff ref'
     elif any(p==d or p.startswith(d+'/') or d.startswith(p+'/') for p in MREF): why='live manifest ref'
     elif CUR.search(name): why='current-plan name'
     else:
