@@ -3171,6 +3171,39 @@
        "pregrt_ff_hold": {
         "type": "boolean"
        },
+       "tap_core_src": {
+        "enum": [
+         "tree"
+        ]
+       },
+       "core_pin_lead_ps": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "module_re",
+          "pin",
+          "lead_ps"
+         ],
+         "properties": {
+          "module_re": {
+           "type": "string",
+           "minLength": 1
+          },
+          "pin": {
+           "type": "string",
+           "minLength": 1
+          },
+          "lead_ps": {
+           "type": "number",
+           "minimum": 0.001,
+           "maximum": 1000
+          }
+         }
+        }
+       },
        "tap_reset_affinity": {
         "type": "boolean"
        },

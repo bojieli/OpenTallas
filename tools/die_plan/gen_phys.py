@@ -4470,6 +4470,41 @@ def core_physical_rows(P, tn, rows):
             for r in rows]
 
 
+def apply_core_pin_lead(P, tn, rows):
+    """S81-COL-CLK-1116 (Spec 0 part 2, default off): clock.core_pin_lead_ps [{module_re, pin, lead_ps}] declares a physical
+    clock pin arrival LEAD for matching hard-core pins (S81 col ROMs: 255 ps; the ROM has no internal tree and its read side
+    launches 270-370 ps after its capture pin).  tap_balance.tcl then hangs the pin at target - lead.  rise_ps/fall_ps (and the
+    mean-contract TT/FF corner means) rise by the lead; FF scales by the type's bound FF/TT insertion ratio.  The SDC is
+    unchanged.  Rows are returned as copies; an absent key leaves the rows (and the kit) byte-identical."""
+    spec = P.types[tn].get("clock", {}).get("core_pin_lead_ps")
+    if not spec or not rows:
+        return rows
+    ratio = None
+    out = []
+    for r in rows:
+        lead = sum(float(sp["lead_ps"]) for sp in spec
+                   if re.fullmatch(sp["module_re"], str(r.get("module", ""))) and sp["pin"] == r["pin"])
+        if not lead:
+            out.append(r)
+            continue
+        if ratio is None:
+            ib = insertion_binding(P, tn)
+            ratio = ib["ff"] / ib["tt"]
+        r = dict(r, rise_ps=round(r["rise_ps"] + lead, 2), lead_ps=lead)
+        if "fall_ps" in r:
+            r["fall_ps"] = round(r["fall_ps"] + lead, 2)
+        if "corners" in r:
+            c = {k: dict(v) for k, v in r["corners"].items()}
+            c["tt"]["mean_ps"] = round(c["tt"]["mean_ps"] + lead, 2)
+            c["ff"]["mean_ps"] = round(c["ff"]["mean_ps"] + lead * ratio, 2)
+            r["corners"] = c
+            r["lead_basis"] = "declared_lead"
+        else:
+            r["basis"] = "declared_lead"
+        out.append(r)
+    return out
+
+
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
     """Write authoritative TT/FF boundary-register mean contracts for hard cores.
 
@@ -4520,6 +4555,7 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
             matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]
             if not matching or any(abs(r["rise_ps"] - insertion) > .01 for r in matching):
                 raise CC.ContractError(f"{tn}/{inst}.{pin}: planned early core tap does not match selected TT mean; regenerate from means")
+    rows = apply_core_pin_lead(P, tn, rows)
     if rows:
         (kd / "core_latency.json").write_text(json.dumps(dict(type=tn, edge="rise", target_ps=P.clock["insertion_ps"],
                                                               rows=rows), indent=1) + "\n")
@@ -5815,6 +5851,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if t.get("clock", {}).get("tap_core_etap"):
         # HEAD-TILE-ETAP as a plan form (DH59-TILE 11-03, opt-in clock.tap_core_etap): tap_balance.tcl early-source core re-hang
         cfg.append("export OT_TAP_CORE_ETAP = 1")
+        if t["clock"].get("tap_core_src") == "tree":
+            # S81-COL-CLK-1116 (Spec 0 part 3): the early-source core re-hang may also take tree buffer outputs
+            cfg.append("export OT_TAP_CORE_SRC = tree")
     # R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13; was HEAD-TILE-PREGRT-HOLD): opt-in, plan clock.pregrt_ff_hold true
     # (COORD 11-13 07:2x, default-preserving); pregrt_ff_hold.py, run_kit.sh step below
     import pregrt_ff_hold as _pregrt_ff_hold
