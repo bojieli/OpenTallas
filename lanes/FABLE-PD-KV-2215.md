@@ -64,11 +64,11 @@ bind (r8 1693daf6da40).
 | krsp -> ectl_q1 | 768 | 374, 272, 270, 206, 84 | 140 |
 | krsp -> ectl_q2 | 768 | 374, 374, 374, 263, 120 | 161 |
 | krsp -> ectl_q3 | 512 | 374, 374, 374, 374, 329 | 160 (farthest pin 244, REPORTED) |
-| rq q0 -> face W | 39 | 366 x 3 + 366 | - |
+| rq q0 -> face W | 39 | 366 x 4 | - |
 
 NON-BLOCKING findings:
 
-1. 11 of 20 krsp hops are 360-374 um: over 340, under the station law used on KV rows (380 in the row notes, 405 in
+1. 10 of 20 krsp hops are 360-374 um: over 340, under the station law used on KV rows (380 in the row notes, 405 in
    G0). q3 has no slack to take a detour: four hops at 374.
 2. The plan is only valid with the four ectlk cores at QK 37 / RL 26. The guard pair CORE_QK / CORE_RL fails
    elaboration against 36/25 views by design (REPORTED KV-ECTLK-RL). I found no post that the cores37 q0-q3 builds
@@ -174,7 +174,7 @@ NON-BLOCKING findings:
 | risk | state |
 |---|---|
 | lane latency | LATCHECK 2404/2404 on 7uh, 7v, 7w, 7p, v20, v21n. 7v: 64 lanes change (+5, +3). 7y will change the pv lanes again (+11 on y). The merged hg plan is unchecked |
-| 340-um hop law | 7uh: 4 start hops at 348. 7v: 11 krsp hops 360-374. v21: 2 clock-pin-to-ring distances 349 / 371, reader start 378 on hgi_v8. All under 405. The stale `max_pin_to_band_hop_um` hides the real data hop per ring. 7p: F2 / F4 fail at D=3 |
+| 340-um hop law | 7uh: 4 start hops at 348. 7v: 10 krsp hops 360-374. v21: 2 clock-pin-to-ring distances 349 / 371, reader start 378 on hgi_v8. All under 405. The stale `max_pin_to_band_hop_um` hides the real data hop per ring. 7p: F2 / F4 fail at D=3 |
 | reset relay reach | raw hops over `relay_um` 300 exist in 7u and stay (hroot 18 of 28; hgi_v8 all). v21 raises the max to 403 on 4 hg types. No event adds a relay stage |
 | clock tap windows | no existing tap moved by any event. hroot limit raised to 1500 sinks; 106 new core taps on hg / hgi. No routed kit on any of these types, so no window is measured |
 | GRT congestion, ring region | 28 channels under 8.64 um next to ring cores; 512-768-bit station columns in the same W street; hard-core share up to 51.9 % |
