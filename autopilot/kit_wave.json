@@ -3599,187 +3599,187 @@
     "epyc9",
     "epyc2"
    ],
-   "plan_prev_kw45_vD": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan_prev_kw45_vD": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "item_inputs_prev_kw45_vD": {
     "kv3_sys_SD": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_sys_SD_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7).",
      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     },
     "kv3_pv_v12": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_pv_v5n": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_pv_v6n": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:1x COORD: KV plan md5 8ca41a6b (SD-PG-FOLLOW + RSTART-RESITE, replaces 82916683; KV-PLAN-2 kv-plan-2/ev/rstart). Dir kw43/kvrs = plan_zbk hardlinks + this plan_c (epyc2 + epyc7)."
     },
     "kv3_pv_v1n": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      }
     },
     "kv3_pv_v7": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note": "KW-FIX-43 13:4x COORD: in place on plan_zbk 1035a005 when KV moved to 92370701; keep running. Re-key onto 92370701 (delete this entry) uncharged ONLY if the running attempt fails.",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      }
     },
     "kv3_sys_c": {
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KW-FIX-43 15:1x COORD 15:0x KV bind9c2 APPROVED (KV-PLAN-2 15:00): strict 0 errors; only RTL change vs bind9 = kv3_sys_c u_d2d_kv .KV_RTT(511); asbuilt plan_zbr2. Plan stays the die plan. Staged epyc2 (origin) + epyc7. | KV-PLAN-2 11-10 (COORD approved one-block fix on frozen 92370701): item plan = plan_kvfix1 (md5 57c77c4b; = plan_sysc1 5a0e15c6 ROM u_bound.u_dcal.u_profile x 302.4->301.536 + 4 D2D SRAMs x 596.16->595.296, plus kv3_hub_C pad / kv3_hub_Wi physical_inst edits that do not touch kv3_sys_c); staged epyc2+epyc7; G0 vs 92370701: 1 new advisory WARN geom_clock_reach 194.16->232.89 (reset relay u_rrl_175), 0 errors added",
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json"
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json"
     },
     "kv3_hg": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p4": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p5": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v1p6": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hg_v3": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v1__cl141fc26e": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v1__cl42bc8b12": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v2__cl2862d491": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v2__cle0015330": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v4": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v6": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v7": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_hgi_v8": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind2/out",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind2/asbuilt_rel.json"
+      "bind_out": "kw45-history:kvbind2/out",
+      "asbuilt": "kw45-history:kvbind2/asbuilt_rel.json"
      },
      "note": "KV-PLAN-2 2026-11-10 16:50 PST COORD (e2 plan_of_record, tag kvp2-e2-bind): e2 signed spread-pin view + taps 237.80/189.25 = view TT/FF mean (plan_e2s2 b4708a02 = kvr2 92370701 + 38 e2 hard_cores + 38 taps); canonical strict bind bind_e2s (RC 0, errors 0, 160 partitions, 2545 crossings, bind_matches 56/56 on epyc7). Live rows hg_v1p3/hgi_v3 a8/hgi_v5 untouched. Revert = delete this entry."
     },
     "kv3_io_cor": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     },
     "kv3_io_cor_v1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+     "plan": "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
      "note_kw43kvrh": "KW-FIX-43 11-11 COORD: KV ring_hold relaunch, fresh gen (synth changes)"
     }
    },
@@ -3910,7 +3910,7 @@
     "gate_events_extra": null,
     "plan": "/srv/opentallas-scratch2/claude/dkv98/vF/plan_c.json",
     "plan_sha256": "3ad01048cacf6a1bd560ed3178ee3c06ffa98619dda7ae78eea1e485d8e27a75",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_40e22dd1d2",
+    "src": "kw45-history:src_kv_main_40e22dd1d2",
     "src_sha": "9446d18f5d9aa656166cf492128986e43529ee89",
     "queue_src": "main@40e22dd1d26c",
     "kit_rtl": {
@@ -3923,7 +3923,7 @@
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "kw45-history:src_kv_main_2041e424bb/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
      "--native-cell-cap",
      "517000"
     ],
@@ -4664,7 +4664,7 @@
     "kv3_pv_v5": "KW-FIX-45 11-11 COORD fail_watch 11:0x: class (b) 'physical collector_tree differs from captured bound reset identity' = plan-vs-bind mismatch, owner DIE-KV-98; held until fixed",
     "kv3_pv_v7": "KW-FIX-43 11-10: kept held when kv3_pv_* was lifted (RETRY-INFRA a17, not a band row; release needs a ruling). Revert: delete this key."
    },
-   "note_kitops1_kvn2": "KIT-OPS-1 2026-11-12 18:05 PST (COORD task 1): KV -> vN2 event kvN2_66e6607: plan main plan_of_record (sha256 cdea77f148ce), src /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f (main 66e6607e3f0e, real dir on epyc7/8/9/intel1 and epyc2 scratch3), bind /srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out, sidecar plan_of_record/eW_sidecar.json; item_inputs (30 vF pins) cleared; OT_CLAND_STRIP_DENS=1.0 on the 11 hgi rows; kv3_sys_SD_v1 builds the vN2 outline (= SD-GROW, DIE-KV-99 08:40). Holds released: kv3_hub_Wo, kv3_pv*, kv3_pv_v1, kv3_pv_v12, kv3_pv_v1n, kv3_pv_v2, kv3_pv_v2n, kv3_pv_v3, kv3_pv_v3n, kv3_pv_v4, kv3_pv_v4n, kv3_pv_v5, kv3_pv_v6n, kv3_pv_v7, kv3_sys_SD. Kept: kv3_hg*/kv3_hgi*/kv3_hg_v1p* (vN2 drawing verdict), hgi_v3/v5/v6 (route_supply check), hgi_v4/v8 (e2/e6), hub_Wi/Ei (qkd_hr children). Unchanged types keep their records (item key = plan block sha). Revert: restore every key from prev_kitops1_kvn2 (and hold_items from it), or the backup autopilot/kit_wave.json.bak-kitops1-kvn2-1112.",
+   "note_kitops1_kvn2": "KIT-OPS-1 2026-11-12 18:05 PST (COORD task 1): KV -> vN2 event kvN2_66e6607: plan main plan_of_record (sha256 cdea77f148ce), src kw45-history:src_kv_main_66e6607e3f (main 66e6607e3f0e, real dir on epyc7/8/9/intel1 and epyc2 scratch3), bind /srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out, sidecar plan_of_record/eW_sidecar.json; item_inputs (30 vF pins) cleared; OT_CLAND_STRIP_DENS=1.0 on the 11 hgi rows; kv3_sys_SD_v1 builds the vN2 outline (= SD-GROW, DIE-KV-99 08:40). Holds released: kv3_hub_Wo, kv3_pv*, kv3_pv_v1, kv3_pv_v12, kv3_pv_v1n, kv3_pv_v2, kv3_pv_v2n, kv3_pv_v3, kv3_pv_v3n, kv3_pv_v4, kv3_pv_v4n, kv3_pv_v5, kv3_pv_v6n, kv3_pv_v7, kv3_sys_SD. Kept: kv3_hg*/kv3_hgi*/kv3_hg_v1p* (vN2 drawing verdict), hgi_v3/v5/v6 (route_supply check), hgi_v4/v8 (e2/e6), hub_Wi/Ei (qkd_hr children). Unchanged types keep their records (item key = plan block sha). Revert: restore every key from prev_kitops1_kvn2 (and hold_items from it), or the backup autopilot/kit_wave.json.bak-kitops1-kvn2-1112.",
    "hosts_prev_kitops2_e4": [
     "epyc8",
     "epyc9",
@@ -4854,21 +4854,21 @@
    "owner_lane_prev_kitops2": "KV die owner (DIE-KV-98)",
    "prev_kitops3_kvadopt": {
     "event": "kvN2_66e6607",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f",
+    "src": "kw45-history:src_kv_main_66e6607e3f",
     "src_sha": "66e6607e3f0ef569f504020569a30817c43278ad",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "plan": "kw45-history:src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
     "plan_sha256": "cdea77f148ce56c5e830cc6e01d9f712c21db9ee1697eaeec290ffbded34b4d0",
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "asbuilt": "kw45-history:src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
      "bind_out": "/srv/opentallas-scratch2/claude/kit-ops-1/kvbind_vN2i/out",
-     "note": "KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f (pure git archive of main 66e6607e3f0e), same command as epyc8 dkv99/bind_e.sh; replaces dkv99/bind_vN2i only because that bind names HDL sources inside the epyc8 lane worktree wt/die-kv-99-e. Mirrored to every KV gen host."
+     "note": "KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src kw45-history:src_kv_main_66e6607e3f (pure git archive of main 66e6607e3f0e), same command as epyc8 dkv99/bind_e.sh; replaces dkv99/bind_vN2i only because that bind names HDL sources inside the epyc8 lane worktree wt/die-kv-99-e. Mirrored to every KV gen host."
     },
     "gen_args": [
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "kw45-history:src_kv_main_66e6607e3f/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
      "--native-cell-cap",
      "517000"
     ],
@@ -4905,20 +4905,20 @@
    },
    "swap_note_kitops3_kvadopt": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): all 56 plan types changed -> new block keys; 17 kvN2 units cancel via cancel_superseded. All other holds (hg/hgi/hub_Ei/Wi) lifted per KV-101 (children views exist). Revert: prev_kitops3_kvadopt, hold_items_lifted_kitops3_kvadopt.",
    "prev_kitops3_pgL": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "src": "kw45-history:src_kv_3465fe9c32",
+    "plan": "kw45-history:src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
     "gen_args": [
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "kw45-history:src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
      "--native-cell-cap",
      "517000"
     ],
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
+     "asbuilt": "kw45-history:src_kv_3465fe9c32/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "kw45-history:kvbind_3465fe9c32/out",
      "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
     }
    },
@@ -4931,21 +4931,21 @@
    },
    "prev_kitops3_kv102": {
     "event": "kv101ns_3465fe9",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL",
+    "src": "kw45-history:src_kv_3465fe9c32_pgL",
     "src_sha": "3465fe9c32fdac1e0ddc5653845a3e81890324c8",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "plan": "kw45-history:src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
     "gen_args": [
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "kw45-history:src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
      "--native-cell-cap",
      "517000"
     ],
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
+     "asbuilt": "kw45-history:src_kv_3465fe9c32_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "kw45-history:kvbind_3465fe9c32/out",
      "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
     },
     "gate_events_extra": [
@@ -4981,22 +4981,22 @@
    "note_kitops3_kvsplit": "KIT-OPS-3 01:xx: all KV split/cap holds removed (KV-CAP closed). Revert: hold_items_lifted_kitops3_kvsplit.",
    "prev_kitops3_kvsem": {
     "event": "kv102fx_e7d0118c2c",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL",
+    "src": "kw45-history:src_kv_e7d0118c2c_pgL",
     "src_sha": "e7d0118c2c0dc83a102fb8770c143b679ea021b0",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "plan": "kw45-history:src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
     "plan_sha256": "2d7f1667a19851a9272162eb5672f07565d7040a2aa54e831a3466ccfaed9035",
     "gen_args": [
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+     "kw45-history:src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
      "--native-cell-cap",
      "517000"
     ],
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_3465fe9c32/out",
+     "asbuilt": "kw45-history:src_kv_e7d0118c2c_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "kw45-history:kvbind_3465fe9c32/out",
      "note": "KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches 56/56 (0 stale); | KIT-OPS-1 2026-11-12 18:05 PST: KV vN2 (KV-VN2-FIN 17:13 plan event, ROOT-MERGE-61 train 20 main 66e6607e3f0e). Strict bind of plan_of_record plan_c.json (vN2i md5 dc4e1207) + asbuilt_vN.json (kit_source_station_pricing ON, r8_kv95_phy3 md5 648c8f44) on the wave src /srv/opentallas-scratch2/claude/k"
     },
     "gate_events_extra": [
@@ -5048,7 +5048,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+    "kw45-history:src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
     "--native-cell-cap",
     "517000"
    ],
@@ -5115,19 +5115,19 @@
    ],
    "prev_kitops3_kvgeom4": {
     "event": "kv102sem_ftgrid",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "src": "kw45-history:src_kv_96f13b36a2_pgL",
+    "plan": "kw45-history:src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
     "plan_sha256": "f9abb1802590c6fefd7583cb32e8d19572a5cc07d98cb986088a22ae1d9efbc2",
     "gen_args": [
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+     "kw45-history:src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
     ],
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_96f13b36a2/out",
+     "asbuilt": "kw45-history:src_kv_96f13b36a2_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "kw45-history:kvbind_96f13b36a2/out",
      "note": "KIT-OPS-3 01:44 PST KV-102 ADOPT kv102sem_1113 (semantic R8; strict bind 0, LATCHECK 2404/2404, trunk replay 128/128); bind_matches 56/56 0 stale on src_kv_96f13b36a2_pgL | KIT-OPS-3 2026-11-13 19:40 PST KV ADOPT swap (KV-101 READY+ADOPT 19:33, strict bind E rc 0, event kv101_ns_1113, COORD 'swap NOW'): strict bind E rc 0 (160 parts/56 types/2545 crossings), bind_matches"
     },
     "gate_events_extra": [
@@ -5201,20 +5201,20 @@
    "note_wr1_1114_ot_cland_strip_dens": "WAVE-RECIPE-1 11-14: die_gen_env OT_CLAND_STRIP_DENS=1.0 (COORD-approved); backup kit_wave.json.bak-wr1-1114-ot_cland_strip_dens",
    "prev_kitops5_kvgeom5": {
     "event": "kvgeom4",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "src": "kw45-history:src_kv_kvgeom4_pgL",
+    "plan": "kw45-history:src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
     "plan_sha256": "bc5799a6d17182e4f79f01138ee93a48fa1dc2784ab76801a8f1e4092935be61",
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_kvgeom4/out",
+     "asbuilt": "kw45-history:src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "kw45-history:kvbind_kvgeom4/out",
      "note": "KIT-OPS-3 KV kvgeom4 (KV-102 READY+ADOPT 07:44: G0 0, strict bind 0, LATCHECK 2404/2404); bind_matches checked | KIT-OPS-3 01:44 PST KV-102 ADOPT kv102sem_1113 (semantic R8; strict bind 0, LATCHECK 2404/2404, trunk replay 128/128); bind_matches 56/56 0 stale on src_kv_kvgeom4_pgL | KIT-OPS-3 2026-11-13 19:40 PST"
     },
     "gen_args": [
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+     "kw45-history:src_kv_kvgeom4_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
     ]
    },
    "hold_items_released_kitops5_kvgeom6": {
@@ -5235,18 +5235,18 @@
    ],
    "prev_wavehold1115_kvgeom6": {
     "event": "kvgeom6",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+    "plan": "kw45-history:src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
     "plan_sha256": "caf6cdfe391303e5ecc0d8b0570fb43984b00589a5267e03693aee5324b6f1cc",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL",
+    "src": "kw45-history:src_kv_kvgeom6_pgL",
     "gen_args": [
      "--hold-ff-margin",
      "0",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+     "kw45-history:src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
     ],
     "kit_rtl": {
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_kvgeom6/out"
+     "asbuilt": "kw45-history:src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "kw45-history:kvbind_kvgeom6/out"
     },
     "hold_items_released": {
      "kv3_hgi_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-641 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
@@ -5900,7 +5900,7 @@
     "kvgeom7yhr"
    ],
    "prev_treeswitch1116": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom7uh_c1",
+    "src": "kw45-history:src_kv_kvgeom7uh_c1",
     "src_manifest_hash": null,
     "tools_sha": null,
     "gen_host": "epyc9",
@@ -5913,8 +5913,8 @@
     ],
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0/out_h1",
+     "asbuilt": "kw45-history:src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+     "bind_out": "kw45-history:kvbind_pin_eb1e73448bd0/out_h1",
      "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
     },
     "src_manifest": "verify"
@@ -25098,8 +25098,8 @@
    "die_owner_prev_kitops2": "DIE-S81-88",
    "owner_lane_prev_kitops2": "S81 die owner (DIE-S81-87)",
    "prev_kitops2_b1": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5/physical/die_plan/s81/plan_h2_2249.json",
+    "src": "kw45-history:src_s81_main_7073a6b4a5",
+    "plan": "kw45-history:src_s81_main_7073a6b4a5/physical/die_plan/s81/plan_h2_2249.json",
     "plan_sha256": "18c864518844f940cdf7df6d8d954ca4b9c1a8208b2b5b6a6e92805763ff81e9",
     "kit_rtl": {
      "mode": "bind",
@@ -25113,7 +25113,7 @@
      "--max-wire-um",
      "100",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/src_s81_main_7073a6b4a5/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json"
+     "kw45-history:src_s81_main_7073a6b4a5/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json"
     ],
     "item_inputs": {
      "slice_station__t27": {
@@ -36542,7 +36542,7 @@
     ]
    },
    "prev_treeswitch1116v2": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f",
+    "src": "kw45-history:src_s81_pin_e4b9ae9f1c1f",
     "src_manifest_hash": "e6626b1f72572b4d8020d1ab8d79d81fbb96ba7c408aea8a8ed608e544869d8d",
     "tools_sha": "e4b9ae9f1c1f",
     "gen_host": "epyc8",
@@ -36554,7 +36554,7 @@
     ],
     "kit_rtl": {
      "mode": "bind",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_eb1e73448bd0/out",
+     "bind_out": "kw45-history:s81bind_pin_eb1e73448bd0/out",
      "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
      "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
     }
@@ -36562,10 +36562,10 @@
    "prev_dies81_92_f2s2": {
     "plan": "/srv/opentallas-scratch2/claude/s81-b3-clk/ev/B6gG3b.json",
     "plan_sha256": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_eb1e73448bd0",
+    "src": "kw45-history:src_s81_pin_eb1e73448bd0",
     "kit_rtl": {
      "mode": "bind",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_eb1e73448bd0/out",
+     "bind_out": "kw45-history:s81bind_pin_eb1e73448bd0/out",
      "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
      "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
     },
@@ -36587,7 +36587,7 @@
      {
       "id": "s81-route-tree-01",
       "release": [
-       "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f"
+       "tree_ready:s81:kw45-history:src_s81_pin_e4b9ae9f1c1f"
       ]
      }
     ],
@@ -36622,7 +36622,7 @@
     ]
    },
    "prev_treeswitch1116d6": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a",
+    "src": "kw45-history:src_s81_pin_41bb1dcfd10a",
     "src_manifest_hash": "3a6408ede9c2c432663c249965824e56988d1af66a175a05fdbcdd6c73309635",
     "tools_sha": "41bb1dcfd10a",
     "gen_host": "epyc9",
@@ -36643,8 +36643,8 @@
     ],
     "kit_rtl": {
      "mode": "bind",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_41bb1dcfd10a_d6/out",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/asbuilt_run.json",
+     "bind_out": "kw45-history:s81bind_pin_41bb1dcfd10a_d6/out",
+     "asbuilt": "kw45-history:src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/asbuilt_run.json",
      "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
     }
    },
@@ -37659,7 +37659,7 @@
     "head_rp21z20NF12",
     "head_rp21z20NF13a"
    ],
-   "plan_prev_kw45_tx": "/srv/opentallas-scratch2/claude/kw45/head_mesh1111/prep/source_plan.json",
+   "plan_prev_kw45_tx": "kw45-history:head_mesh1111/prep/source_plan.json",
    "prov_require_cands": true,
    "hosts_base_prev_kw45_epyc4off": [
     "epyc2",
@@ -37707,7 +37707,7 @@
     "epyc8"
    ],
    "src_prev_m8w1": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_h94_9ddabba952",
+    "src": "kw45-history:src_head_h94_9ddabba952",
     "src_sha": "9ddabba952d94d6e4686fbbc4c62b1d607b4fe54",
     "queue_src": "claude/head-94-heads-1112@9ddabba952d9"
    },
@@ -37783,12 +37783,12 @@
     "event": "l48uj",
     "plan": "/srv/opentallas-scratch2/claude/head-94/g5p/source_plan.json",
     "plan_sha256": "5e0253c7039325a561b576f3bdd3ebfd97b8266a07ab0460b3340bcb4b3150a1",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_main_m8w1_7b84010b1c",
+    "src": "kw45-history:src_head_main_m8w1_7b84010b1c",
     "src_sha": "7b84010b1c6ebc8d3641176abe07221a1a12fcf4",
     "queue_src": "main@7b84010b1c6e",
     "kit_rtl": {
      "mode": "script",
-     "script": "/srv/opentallas-scratch2/claude/kw45/src_head_h94_9ddabba952/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+     "script": "kw45-history:src_head_h94_9ddabba952/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
      "note": "KW-FIX-42 2026-11-09 08:47 PST: l48hp1 src_head_hp1 kit_rtl.sh | KW-FIX-16 12:5x I133 tag flow-20261106-c-head: src_q main 3d13a314805 (hardlink of src_p, schema accepts clock.tap_window.per_port_note), kit_rtl.sh byte-same as src_n. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)"
     },
     "gen_args": [
@@ -37999,7 +37999,7 @@
    "event_prev_h98_rp21z": "head_rp18_1112",
    "plan_prev_h98_rp21z": "/srv/opentallas-scratch2/claude/kit-ops-1/head_rp18r2w/prep/source_plan.json",
    "plan_sha256_prev_h98_rp21z": "6d283b65ff9ab91d2c8c735142fb978cd184e58ad87594713ea2cd8db6b1e46b",
-   "src_prev_h98_rp21z": "/srv/opentallas-scratch2/claude/kw45/src_head_main_2dd0d8c9fd",
+   "src_prev_h98_rp21z": "kw45-history:src_head_main_2dd0d8c9fd",
    "src_sha_prev_h98_rp21z": "2dd0d8c9fd6c525f46b567c778d6e899249630bd",
    "gen_host_prev_h98_rp21z": "epyc9",
    "gen_hosts_prev_h98_rp21z": [
@@ -38012,7 +38012,7 @@
    ],
    "kit_rtl_prev_h98_rp21z": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_main_2dd0d8c9fd/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "kw45-history:src_head_main_2dd0d8c9fd/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "KIT-OPS-1 2026-11-12 19:57: rp18 (train 21) src_head_main_2dd0d8c9fd kit_rtl.sh; prepared tree head_rp18c/prep | KW-FIX-42 2026-11-09 08:47 PST: l48hp1 src_head_hp1 kit_rtl.sh | KW-FIX-16 12:5x I133 tag flow-20261106-c-head: src_q main 3d13a314805 (hardlink of src_p, schema accepts clock.tap_window.per_port_note), kit_rtl.sh byte-same as src_n. | KW-FIX-8 17:0x I52 + opt-in flag: src_v 86bdf758742 (main b54e4943154 + GRT flag, off by default). KW-FIX-8 I46: src_s full clone main c512ffc3a94 | KW-FIX-8 I44 tag: src_r full clone main f8170b8b778, plan+sidecar same | KW-FIX-8 fall tag: kit_rtl from src_q main bf1e2233ce0, plan staged at same path on epyc4 | KW-FIX-8 08:4x: kit_rtl from src kw-fix-8/wt-head main fe4a38b9337. | KW-FIX-4 11-03 09:5x: src = old src + main tools overlay (FLOW-LATCH-1 G11 face_guard/face_flops/lec + XCHECK-1 G9 gen_rtl TX-face latch + HBM PHY 833 ps); every replaced file was an older main version | KW-FIX-3 11-03 05:1x: kit_rtl from my src wt/kw-fix-3-headsrc | KW-FIX-2 11-03 00:3x (COORD 00:2x (a)): kit_rtl from src claude/dh55-headsrc-1102@69e06c8b9 | KIT-WAVE-9 20:0x: head_wave_kit_rtl.py export on prepared l48x dir (DIE-HEAD-52: source plan e63f00ea5740, prepared 6b0b4547b074, sidecar dfe1fd228189, 20 types; export check PASS hd_st_turn/hd_tile/hd_spn CHECKED by DIE-HEAD-52) | KIT-WAVE-5: head_wave_kit_rtl.py export on prepared l47k dir (source die-head-47/head_source_l47k copy; source plan b87c81920f4c = l47, sidecar dfe1fd228189, prepared plan 7919bb9a0f9f, 20 types, wrappers byte-identical to l47); export hd_spn_end + hd_st_m PASS (CHECKED)",
     "receipt_inputs": [
      "/srv/opentallas-scratch2/claude/kit-ops-1/head_rp18r2/prep/wave_prepare.json",
@@ -38373,11 +38373,11 @@
     "hd_st_n3_transit": "HEAD-98 11-13: RE-SIGN onto rp21z4 in flight (same routed DB, kit RTL byte-identical; head-98/resign21z4/hd_st_n3_transit, intel2 ~/tmp/h98_resign_hd_st_n3_transit.log). Release only if the re-sign fails."
    },
    "kit_snap": true,
-   "src_prev_h99_pgcap": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_fb5f5a8db8",
+   "src_prev_h99_pgcap": "kw45-history:src_head_rp21z_fb5f5a8db8",
    "src_sha_prev_h99_pgcap": "fb5f5a8db87d691b25ba0e93096fb8e07c00ca3b",
    "kit_rtl_prev_h99_pgcap": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_fb5f5a8db8/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "kw45-history:src_head_rp21z_fb5f5a8db8/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
    },
    "note_h99_pgcap": "HEAD-99 11-13 (COORD: freeze lifted, apply FLOW-PGCAP-1 now): wave src -> snapshot kw45/src_head_rp21z_pgcap1d724b73 = fb5f5a8 + patch tools/die_plan pg_track_truth/grt_pre/grt_post/gen_phys/core_flow/kit_resume (branch claude/flow-pgcap-1-1113 @1d724b73cc6, OT_PG_TRACK_TRUTH=1 in rflow cfg for s81_head). Same plan/event rp21z5. On gen hosts epyc7/intel1/epyc10.",
@@ -38588,8 +38588,8 @@
      "--hold-ff-margin",
      "0"
     ],
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcap1d724b73",
-    "kit_rtl_script": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcap1d724b73/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+    "src": "kw45-history:src_head_rp21z_pgcap1d724b73",
+    "kit_rtl_script": "kw45-history:src_head_rp21z_pgcap1d724b73/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
    },
    "swap_note_kitops5_rp21z14": "KIT-OPS-5 HEAD rp21z14 + src pgcaplec_c327 (HEAD-99 READY+ADOPT 12:51): hd_host_w/hd_host_e LEC fix (HOLD_REAL(1) on u_ctl_tx + 8 lec_hints); plan sha 2518a262da4a, prep21z14; src_sha basis unchanged. Revert prev_kitops5_rp21z14.",
    "prev_kitops5_rp21z15": {
@@ -38810,7 +38810,7 @@
     ]
    },
    "prev_treeswitch1115": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcaplec_c327",
+    "src": "kw45-history:src_head_rp21z_pgcaplec_c327",
     "src_manifest_hash": null,
     "tools_sha": null,
     "gen_host": "epyc7",
@@ -38821,7 +38821,7 @@
     ],
     "kit_rtl": {
      "mode": "script",
-     "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+     "script": "kw45-history:src_head_pin_e594a73db756/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
      "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
     },
     "src_manifest": "verify"
@@ -38829,7 +38829,7 @@
    "src_manifest_hash": "218139dc0a65773b811ccc840d57c8c69a1e7faf53e421142c13d7fc0ad40011",
    "tools_sha": "eb1e73448bd0",
    "prev_treeswitch1116": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756",
+    "src": "kw45-history:src_head_pin_e594a73db756",
     "src_manifest_hash": "2f6af4b15fce5050fbbf5c2ce6f348e46b1cb34f85f379fb650f0c4ef48fe1f9",
     "tools_sha": "e594a73db756",
     "gen_host": "epyc2",
@@ -38842,13 +38842,13 @@
     ],
     "kit_rtl": {
      "mode": "script",
-     "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+     "script": "kw45-history:src_head_pin_eb1e73448bd0/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
      "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
     },
     "src_manifest": "require"
    },
    "prev_treeswitch1116d1": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0",
+    "src": "kw45-history:src_head_pin_eb1e73448bd0",
     "src_manifest_hash": "0c12f02501620d423d90b86f293683482afae5bbe89af5ce842498617402bee3",
     "plan": "/srv/opentallas-scratch2/claude/head-99/prep21z20NF13a/prep/source_plan.json",
     "gen_args": [
@@ -46590,292 +46590,292 @@
    ],
    "item_inputs_prev_kw45_s20": {
     "sle_fw_v2__cl69f5e854": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "cbx_q10__cl94a12200": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c8"
     },
     "cbx_q10__cl89936551": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c8"
     },
     "slw_fw_v3": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "slw_fw_v2__cl8f84514c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "slw_fw_v2__cl8537f156": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "cbf_q00__cl870de686": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
     },
     "cbf_q00__cl1b5a6458": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
     },
     "cbn_q00__cld7bf7197": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
     },
     "sle_su_l0__cl7a55c676": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "plan": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "kw45-history:src_qc_main_8a8ee85c43",
      "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
      "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s19",
+      "asbuilt": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
     },
     "sle_su_l0__cl086d85ba": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "plan": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "kw45-history:src_qc_main_8a8ee85c43",
      "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
      "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s19",
+      "asbuilt": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
     },
     "sle_su_l1__cl5ea486db": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1"
     },
     "sle_ctl__cl372cea1c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1"
     },
     "slw_su_l0__cl76fb247e": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "plan": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "kw45-history:src_qc_main_8a8ee85c43",
      "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
      "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s19",
+      "asbuilt": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
     },
     "slw_sc_v3": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v1__cl63e5a7a2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v1__cl64543eaf__cl5e017c6f": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v1__cl64543eaf__cl4590432d": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "sle_ctl__cl67434795": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "bind_out": "kw45-history:qcbind/out_s15",
       "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
      },
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 21:2x COORD (2): cand12 44ad2835bc71 one generate (DIE-QC-97 READY 21:02); bind_out unset, strict bind in the wave root; revert item_inputs_prev_kw43s"
     },
     "sle_hc0__cl05696ed1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "bind_out": "kw45-history:qcbind/out_s15",
       "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
      },
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built "
     },
     "sle_hc0__cl929603c0__cl4baa7c9c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "bind_out": "kw45-history:qcbind/out_s15",
       "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
      },
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built "
     },
     "slw_su_l0__cl1a1c1f8f": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "plan": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "kw45-history:src_qc_main_8a8ee85c43",
      "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
      "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s19",
+      "asbuilt": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
     },
     "slw_su_l0__cl1e5219ea": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43",
+     "plan": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s19.json",
+     "src": "kw45-history:src_qc_main_8a8ee85c43",
      "src_sha": "416cdc0630445bed60197cb9ca74c7f0cac9ed87",
      "queue_src": "claude/kw-fix-45-qc-s19-comp-1111@416cdc063044",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s19",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s19",
+      "asbuilt": "kw45-history:src_qc_main_8a8ee85c43/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11 13:5x COORD SU-CH-1 approved: QC s19 (bf5769723c51) channel su_l0, sidecar 0cd376957c97, strict bind rc 0 on main 8a8ee85c4326 tools; needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
     }
    },
-   "plan_prev_kw45_s22": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+   "plan_prev_kw45_s22": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
    "queue_src_prev_kw45_s22": "main@730345725942+genscope@716f40ea7e2c",
    "item_inputs_prev_kw45_s22": {
     "sle_fw_v2__cl69f5e854": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "cbx_q10__cl94a12200": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c8"
     },
     "cbx_q10__cl89936551": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:5x COORD LOOP-GAP 10:5x (2): KIT_TOPOLOGY_BIND_STALE on the nlck plan (282ca18e lineage) vs die bind_pv: item plan now = plan_pv 72b74c8"
     },
     "slw_fw_v3": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "slw_fw_v2__cl8f84514c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "slw_fw_v2__cl8537f156": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 2026-11-09 10:23 PST COORD 09:02 + DIE-QC-97 09:56: cand7 dba131fafa77 (= plan_pv + band resize/START hc1 + strip rows fw); src overlays 826eb4010eec "
     },
     "cbf_q00__cl870de686": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
     },
     "cbf_q00__cl1b5a6458": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
     },
     "cbn_q00__cld7bf7197": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11:2x COORD 11:1x + DIE-QC-97 11:11 (approved LOOP-GAP 11:2x): cand8_class 9f1da1bfddd3 = cand7 dba131fafa77 + na_i00 landing band onto its N-face pin"
     },
     "sle_su_l0__cl7a55c676": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "plan": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "kw45-history:src_qc_main_9618b4d644",
      "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
      "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s20",
+      "asbuilt": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "sle_su_l0__cl086d85ba": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "plan": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "kw45-history:src_qc_main_9618b4d644",
      "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
      "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s20",
+      "asbuilt": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "sle_su_l1__cl5ea486db": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1"
     },
     "sle_ctl__cl372cea1c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 14:3x COORD LOOP-GAP 14:3x + DIE-QC-97 CONG-5 14:28: cand9 fdadb4625355 = cand8_class 9f1da1bfddd3 + budgets.cland_strip_rows_types.sle_ctl__cl372cea1"
     },
     "slw_su_l0__cl76fb247e": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "plan": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "kw45-history:src_qc_main_9618b4d644",
      "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
      "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s20",
+      "asbuilt": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "slw_sc_v3": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v1__cl63e5a7a2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v2": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v1__cl64543eaf__cl5e017c6f": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "slw_sc_v1__cl64543eaf__cl4590432d": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 15:5x E-CHAN-1 (DIE-QC-97 READY 15:05, COORD APPROVED): cand10_class 3c5029bfbda0, fresh NORMAL kit"
     },
     "sle_ctl__cl67434795": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "bind_out": "kw45-history:qcbind/out_s15",
       "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
      },
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 21:2x COORD (2): cand12 44ad2835bc71 one generate (DIE-QC-97 READY 21:02); bind_out unset, strict bind in the wave root; revert item_inputs_prev_kw43s"
     },
     "sle_hc0__cl05696ed1": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "bind_out": "kw45-history:qcbind/out_s15",
       "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
      },
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built "
     },
     "sle_hc0__cl929603c0__cl4baa7c9c": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
+     "plan": "kw45-history:src_qc_main_7303457259/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s15.json",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s15",
+      "bind_out": "kw45-history:qcbind/out_s15",
       "prep_cmd": "cp /srv/opentallas-scratch2/claude/dq97/stb/bind_pv/asbuilt.json {bind}/asbuilt.json && python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict"
      },
      "note": "KW-FIX-45 11-11: repointed to the QC cut plan plan_qc99_1111 (7164829ac234) + bind out (s14 on main 730345725942); prev in item_inputs_prev_kw45_1111; prep_cmd of the 3 hc0/ctl items untouched. | KW-FIX-43 11-10 17:4x COORD (QC hc0 (A), overlay, no merge wait): plan cand23d_fh_hc0bins cf03ac41bfde (DIE-QC-97 17:25 supersedes the void 5d12f649e065; built "
     },
     "slw_su_l0__cl1a1c1f8f": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "plan": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "kw45-history:src_qc_main_9618b4d644",
      "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
      "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s20",
+      "asbuilt": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     },
     "slw_su_l0__cl1e5219ea": {
-     "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644",
+     "plan": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s20.json",
+     "src": "kw45-history:src_qc_main_9618b4d644",
      "src_sha": "9618b4d644f88031abe241c45fa79b68dbb6e4a4",
      "queue_src": "main@9618b4d644f8",
      "kit_rtl": {
-      "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind/out_s20",
-      "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
+      "bind_out": "kw45-history:qcbind/out_s20",
+      "asbuilt": "kw45-history:src_qc_main_9618b4d644/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json"
      },
      "note": "KW-FIX-45 11-11: QC s20 (SU-LAT-1, plan 42478be02a67, sidecar d26ec11a2a5f), strict bind rc 0 / 0 errors on main 9618b4d644f8 tools"
     }
@@ -46940,7 +46940,7 @@
     "epyc8"
    ],
    "src_prev_m8w1": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s25_4e2764d237",
+    "src": "kw45-history:src_qc_s25_4e2764d237",
     "src_sha": "4e2764d237d8",
     "queue_src": "claude/qc-event-s25-1111@4e2764d237d8"
    },
@@ -46950,8 +46950,8 @@
    },
    "kit_rtl_prev_kvbr1": {
     "mode": "bind",
-    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
-    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs27in/bind_plan_qc99_s27",
+    "asbuilt": "kw45-history:src_qc_s27_9024de9d66/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv.json",
+    "bind_out": "kw45-history:qcs27in/bind_plan_qc99_s27",
     "note": "KW-FIX-45 11-12 QC s27 plan_qc99_s27 820f14a689b7 (qc-s27-vis-1111@9024de9d66 on s26), sidecar 27b0eca895ef, DIE-QC-99 strict bind rc 0 (bind_report 58f59cff32bb); bind.f srcs27 paths rewritten to src_qc_s27_9024de9d66 (identical bytes)",
     "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification."
    },
@@ -47443,14 +47443,14 @@
    },
    "prev_kitops3_qcs29": {
     "event": "hcut1111",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef",
+    "src": "kw45-history:src_qc_s28_88018018ef",
     "src_sha": "88018018ef",
-    "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json",
+    "plan": "kw45-history:src_qc_s28_88018018ef/physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s28.json",
     "plan_sha256": "2f0c17d5f1a31e5a73baf57acd263c9924fc96c28e3fa4e8729bc7f1c9e7cf44",
     "kit_rtl": {
      "mode": "bind",
-     "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_s28_88018018ef/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json",
-     "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcs28in/bind_plan_qc99_s28",
+     "asbuilt": "kw45-history:src_qc_s28_88018018ef/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_sw2_pv_bound5ef1.json",
+     "bind_out": "kw45-history:qcs28in/bind_plan_qc99_s28",
      "note": "KW-FIX-45 11-12 QC s28 item 1 (sink bins): plan_qc99_s28 2f0c17d5f1a3 (qc-event-s28-1111@88018018ef on s27), sidecar 38a30992accc, DIE-QC-99 strict bind rc 0 (bind_report 14318a0162a1); bind.f src28b/bind-dir paths rewritten to my tree (identical bytes)",
      "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
      "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
@@ -47461,7 +47461,7 @@
      "--max-wire-um",
      "120",
      "--clock-landing",
-     "/srv/opentallas-scratch2/claude/kw45/qcs28in/sidecar_pv_s28.json"
+     "kw45-history:qcs28in/sidecar_pv_s28.json"
     ],
     "hold_items": {
      "sle_sc_v3": "WAIT DIE-QC-97 core-west plan event, COORD 21:3x: 21:29 relaunch at the old core position (GRT overflow 151,554 in a 19 um channel). Revert: delete this key.",
@@ -49768,7 +49768,7 @@
     ]
    },
    "prev_treeswitch1116": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_e594a73db756",
+    "src": "kw45-history:src_qc_pin_e594a73db756",
     "src_manifest_hash": "924f9bd7e20100a5606f267d6631d2102de572e8e4c326404dedace64c6d09c6",
     "tools_sha": "e594a73db75",
     "gen_host": "epyc2",
@@ -63335,7 +63335,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63346,7 +63346,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63357,7 +63357,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63368,7 +63368,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63379,7 +63379,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63390,7 +63390,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63401,7 +63401,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63412,7 +63412,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63423,7 +63423,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63434,7 +63434,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63445,7 +63445,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63544,7 +63544,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63659,7 +63659,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63670,7 +63670,7 @@
       "asbuilt": "/srv/opentallas-scratch2/claude/hbm-cut-1111/bind/asbuilt_t19.json"
      },
      "note": "KW-FIX-45 11-11 COORD P0: bank-chain fix on the merged istations-2 tools (private overlay of src_hbm_main_fe0002fac6 + kit_istations.py 2c63f916b8d9 + kit_bus_bitgroups.py c930b5f309c4, = main fc5cd3af6f17); DO_NOT_COUNT",
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
+     "src": "kw45-history:src_hbm_bitgrp_fe0002fac6_efdab72dbc13",
      "src_sha": "efdab72dbc13663bfaf3964799419d35887e9511",
      "queue_src": "claude/tools2-istations-bitgroups-2@efdab72dbc13"
     },
@@ -63883,7 +63883,7 @@
      "note": "KW-FIX-43 11-10 COORD 22:5x: pin-cycle core released, builds in the taps batch (counts only after the compiler/scheduler re-run on the new cycles passes)"
     },
     "ot_hgi_sfu_opsb_group": {
-     "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_opsg_fe0002fac6_1b4ef2e1ce",
+     "src": "kw45-history:src_hbm_opsg_fe0002fac6_1b4ef2e1ce",
      "src_sha": "98823e93c3a389113b1a27e0c0a0e37841f99a82",
      "queue_src": "claude/kw-fix-45-hbm-opsg-comp-1111@98823e93c3a3",
      "note": "COORD 13:5x approved per-item private src (cp -al + real copies of 5 named files of main 1b4ef2e1ce97); needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
@@ -63926,7 +63926,7 @@
    ],
    "m8_grant_gen_env_note": "M8-WAVE-1 11-12: OT_GEN_M8_GRANT=1 in item_env of every item of this die (die-level gen env is not a scheduler option; item_env is its gen env)",
    "src_prev_m8w1": {
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_m8w1_7b84010b1c",
+    "src": "kw45-history:src_hbm_main_m8w1_7b84010b1c",
     "src_sha": "7b84010b1c6ebc8d3641176abe07221a1a12fcf4",
     "queue_src": "main@7b84010b1c6e"
    },
@@ -64381,7 +64381,7 @@
     "event": "hcut1111",
     "plan": "/srv/opentallas-scratch2/claude/hbm-vsn-xtap-t39w/plan_t39w/die_plan.json",
     "plan_sha256": "8b4b6e3071c49dee3aa31bf8a0097a4415d617d6c56c0dde22dd70375124f540",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_9fc09952cd_q0g_p18",
+    "src": "kw45-history:src_hbm_main_9fc09952cd_q0g_p18",
     "src_sha": "9fc09952cdc4",
     "queue_src": "main@9fc09952cdc4",
     "kit_rtl": {
@@ -65202,7 +65202,7 @@
       "note": "COORD 13:5x approved per-item private src (cp -al + real copies of 5 named files of main 1b4ef2e1ce97); needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
      },
      "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": {
-      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_rd1_main_9fc09952cd_q0g_p18",
+      "src": "kw45-history:src_hbm_rd1_main_9fc09952cd_q0g_p18",
       "note": "KW-FIX-45 11-11 20:5x COORD vecd4ae counted kit after rd1 merge (52216309aa) + rd1 30-edge EQ SUCCESS (DIE-HBM-97): src_hbm_rd1_nph = src_hbm_nph_fc5cd3af6f + RTL (hfd_vms_bank_native_q0_faces, ot_vms_bank_q0_faces_core/body, ot_vms_ce_counter_pipe) at a918972c2004 + corelat cycles_vecd4ae_rd1_1111.tsv; recipes_b2.json vecd4ae source_commit a918972c, read_at_commit false (tree files authoritative; the src has no .git). NOT a pure main tree: mixed src, uncounted until DIE-HBM-100 accepts. | 20:5x DIE-HBM-97: recipe source_commit re-pointed to the rd1 merge commit 52216309aab0 (body blob b18e3543f70e and corelat TSV 38a728e71c05 identical at a918972c and at the merge; faces_q0 diff empty). | DIE-HBM-100 accepted counting (20:5x): sha256[0:16] of the tree files == main 52216309aab0 content: hfd_vms_bank_native_q0_faces.sv 2a7d478da253fb74, ot_vms_bank_q0_faces_core.sv c55ad634a94838dc, ot_vms_bank_q0_faces_body.sv fcd9b8dde26f7876, ot_vms_ce_counter_pipe.sv de10f3eea0f6b8bb, cycles_vecd4ae_rd1_1111.tsv e4b108339fa6c313. The die-level rd1 bind (hb_coll, FUSED, QUANT) is a SEPARATE event, not a precondition for counting this core (core RTL unchanged by it); its bank pin cycles take effect on the die only when that event merges.",
       "src_sha": "9fc09952cdc4",
       "queue_src": "main@9fc09952cdc4"
@@ -65216,11 +65216,11 @@
       "note": "KW-FIX-45 11-12 DIE-HBM-100: t40w (5129a5aab081 = t39w + l3011 ft_slots, q_hub_nw only), bind_report c05ea45bce68; every other type stays on t39w"
      },
      "ot_svgr_top": {
-      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+      "src": "kw45-history:src_hbm_trainN_aaede",
       "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
      },
      "ot_hgi_dma_back_static_vp4_banks_cp": {
-      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+      "src": "kw45-history:src_hbm_trainN_aaede",
       "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
      }
     }
@@ -65272,7 +65272,7 @@
     "event": "pEv10",
     "plan": "/srv/opentallas-scratch2/claude/kit-ops-1/hbm_pEv10/plan/die_plan.json",
     "plan_sha256": "b334c92f7a8468f01ad06b835428a24418f1bafa7a523264bc9f144c61eaf06c",
-    "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_main_7073a6b4a5",
+    "src": "kw45-history:src_hbm_main_7073a6b4a5",
     "src_sha": "7073a6b4a599c1de9e041896421b3b779045df1d",
     "queue_src": "main@7073a6b4a599",
     "kit_rtl": {
@@ -66130,7 +66130,7 @@
       "note": "COORD 13:5x approved per-item private src (cp -al + real copies of 5 named files of main 1b4ef2e1ce97); needs kit_wave.py with item_inputs.src (claude/kw-fix-45-item-src-1111@b8f177314c73)"
      },
      "hnx_vms_bank_q0_faces__vecd4ae__v512b2172bf16": {
-      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_rd1_main_9fc09952cd_q0g_p18",
+      "src": "kw45-history:src_hbm_rd1_main_9fc09952cd_q0g_p18",
       "note": "KW-FIX-45 11-11 20:5x COORD vecd4ae counted kit after rd1 merge (52216309aa) + rd1 30-edge EQ SUCCESS (DIE-HBM-97): src_hbm_rd1_nph = src_hbm_nph_fc5cd3af6f + RTL (hfd_vms_bank_native_q0_faces, ot_vms_bank_q0_faces_core/body, ot_vms_ce_counter_pipe) at a918972c2004 + corelat cycles_vecd4ae_rd1_1111.tsv; recipes_b2.json vecd4ae source_commit a918972c, read_at_commit false (tree files authoritative; the src has no .git). NOT a pure main tree: mixed src, uncounted until DIE-HBM-100 accepts. | 20:5x DIE-HBM-97: recipe source_commit re-pointed to the rd1 merge commit 52216309aab0 (body blob b18e3543f70e and corelat TSV 38a728e71c05 identical at a918972c and at the merge; faces_q0 diff empty). | DIE-HBM-100 accepted counting (20:5x): sha256[0:16] of the tree files == main 52216309aab0 content: hfd_vms_bank_native_q0_faces.sv 2a7d478da253fb74, ot_vms_bank_q0_faces_core.sv c55ad634a94838dc, ot_vms_bank_q0_faces_body.sv fcd9b8dde26f7876, ot_vms_ce_counter_pipe.sv de10f3eea0f6b8bb, cycles_vecd4ae_rd1_1111.tsv e4b108339fa6c313. The die-level rd1 bind (hb_coll, FUSED, QUANT) is a SEPARATE event, not a precondition for counting this core (core RTL unchanged by it); its bank pin cycles take effect on the die only when that event merges.",
       "src_sha": "9fc09952cdc4",
       "queue_src": "main@9fc09952cdc4"
@@ -66144,11 +66144,11 @@
       "note": "KW-FIX-45 11-12 DIE-HBM-100: t40w (5129a5aab081 = t39w + l3011 ft_slots, q_hub_nw only), bind_report c05ea45bce68; every other type stays on t39w"
      },
      "ot_svgr_top": {
-      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+      "src": "kw45-history:src_hbm_trainN_aaede",
       "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
      },
      "ot_hgi_dma_back_static_vp4_banks_cp": {
-      "src": "/srv/opentallas-scratch2/claude/kw45/src_hbm_trainN_aaede",
+      "src": "kw45-history:src_hbm_trainN_aaede",
       "note": "KW-FIX-45 11-12 COORD train N (main aaede3083e36): private src = HBM die tree + main rtl/, hbm_arch_cores/, hbm/cores/harden/ changes (svgr recipe 86c8b554d4fa, reform_1105b/ot_svgr_split.sv, vp4cp RR_RT=80); tools unchanged"
      }
     }
