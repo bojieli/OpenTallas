@@ -2303,6 +2303,27 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def explicit_pg_cfg(cfg):
+    """Carry explicitly requested PG booleans even when R-FLOW/CONS defaults are off.
+
+    Unset keys add no lines and retain the existing generation fast path/defaults.
+    Do not duplicate values already emitted by the selected kit profile.
+    """
+    keys = ("OT_PG_TRACK_TRUTH", "OT_PG_TRACK_TRUTH_WIDE_SPACING", "OT_PG_CELL_KEEPOUT")
+    requested = {k: os.environ.get(k, "").strip() for k in keys
+                 if os.environ.get(k, "").strip() in ("0", "1")}
+    if not requested:
+        return []
+    import re
+    emitted = {}
+    for line in cfg:
+        m = re.match(r"^export\s+(\w+)\s*=\s*(.*?)\s*$", line)
+        if m:
+            emitted[m[1]] = m[2]
+    out = [f"export {k} = {v}" for k, v in requested.items() if emitted.get(k) != v]
+    return (["# Explicit PG gen intent (independent of R-FLOW/CONS defaults)."] + out) if out else []
+
+
 def tt_setup_repair_mode():
     """effective OT_TT_SETUP_REPAIR of this kit: cts | grt | both | off (the mapping of the step files in write_type_kit)"""
     return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
@@ -5917,6 +5938,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cons = cons_kit_settings()
     if cons:
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
+    cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
@@ -6322,6 +6344,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     (kd / "kit_effective_env.json").write_text(json.dumps(kit_effective_env(), indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
+        shutil.copyfile(Path(__file__).with_name("grt_pg_replay.tcl"), kd / "grt_pg_replay.tcl")
         shutil.copyfile(Path(__file__).with_name("tt_setup_keep.py"), kd / "tt_setup_keep.py")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
@@ -7620,10 +7643,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                        "have no bound RTL (landing kits use the landed wrapper)")
         else:
             gtypes = None          # the landed emitter checks every copy of every type
-    if kit_rtl and gtypes == [] and landing is None:
+    if kit_rtl and gtypes == []:
         # Every selected kit already has its complete bound RTL filelist.
         # Keep the same plan validation, but do not build an unused whole-die
         # top/pad map (including every unrelated partition and reset relay).
+        # With a declaration-only landing sidecar, Landings and the bound RTL
+        # land-slot/collector checks below still validate that exact contract.
         errs = (S.scope_errors_typed(S.validate(raw), types, raw) if overlay_receipt else
                 S.scope_errors(S.validate(raw), types))
         if errs:

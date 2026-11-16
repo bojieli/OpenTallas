@@ -31,17 +31,44 @@ while [ $# -gt 0 ]; do
     *) break ;;
   esac
 done
-cmd="${*: -1}"
 B=$(ls -d $W/run/results/asap7/*/base 2>/dev/null | head -1)
+if [[ "$*" == *"/work/prd_filler_preclean.py"* ]]; then
+  echo preclean >> "$FAKE_LOG.order"
+  [ "${FAKE_PRECLEAN_MODE:-}" != tool-error ] || exit 42
+  python3 -I - "$W" "$B" <<'PY_FAKE_PRECLEAN'
+import os,sys,json,hashlib
+from pathlib import Path
+w,b=map(Path,sys.argv[1:]);source=b/'4_cts_filled.odb';out=b/'4_cts.odb'
+out.write_bytes(source.read_bytes()+b' verified cold no-fillers\n')
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+n=int(os.environ.get('FAKE_PRECLEAN_REMOVED','2'))
+preserved={'nonfiller_instances':1,'ports':0,'nonpg_nets':0,'clock_nets':0,'wire_ops':0}
+for k in ['nonfiller_placement_sha256','ports_sha256','nonpg_net_connectivity_and_exact_wire_sha256','clock_connectivity_and_exact_wire_sha256']:preserved[k]='a'*64
+m={'schema':'opentallas.prd_filler_preclean.v1','status':'DERIVED_FINAL_SEED_READY_NOT_ADOPTED',
+ 'preservation_match':True,'source_sha256':sha(source),'output_sha256':sha(out),'output_bytes':out.stat().st_size,
+ 'tool_sha256':sha(w/'prd_filler_preclean.py'),'instances_before':1+n,'instances_after':1,'removed':n,'allow_empty':True,'preserved':preserved}
+mode=os.environ.get('FAKE_PRECLEAN_MODE','')
+if mode=='bad-preservation':m['preservation_match']=False
+if mode=='bad-source':m['source_sha256']='0'*64
+if mode=='bad-output':m['output_sha256']='0'*64
+if mode=='bad-tool':m['tool_sha256']='0'*64
+if mode=='bad-counts':m['instances_before']+=1
+if mode=='bad-clock':del m['preserved']['clock_connectivity_and_exact_wire_sha256']
+if mode!='missing':(w/'prd_filler_preclean.json').write_text(json.dumps(m))
+PY_FAKE_PRECLEAN
+  exit 0
+fi
+cmd="${*: -1}"
 w() { echo "${1/\/work/$W}"; }
 case "$cmd" in
   *do-route*)
     p=${E[OT_PRD_PASS]}; echo "$W" >> $FAKE_LOG.route
+    echo route >> "$FAKE_LOG.order"
     echo "${E[OT_PRD_PROTECT_NETS]}" >> $FAKE_LOG.protected
     echo "OT_PRD pass $p hook done (sink masters restored ${FAKE_RESTORED:-0})" > $W/run/logs/asap7/$NICK/base/5_1_grt.log
     echo "$p ${E[OT_PRD_FROM]} $(cat $B/4_cts.odb)" >> $FAKE_LOG.from
     for f in 5_1_grt.odb 5_2_route.odb 5_route.odb; do echo "pass $p $f" > $B/$f; done
-    if [ "${E[OT_PRD_FROM]}" = route ]; then   # route-keeping ECO: the pre DB already carries the clock wires
+    if [[ "${E[OT_PRD_FROM]}" = route || "${E[OT_PRD_FROM]}" = final ]]; then   # route-keeping ECO: the pre DB already carries the clock wires
     printf '#CLKDUMP tag pre nets 1 block top\nNET\tclkA\tCLOCK\t2\t64\t0:M3 4:1\nPIN\tclkA\tb0/Y f1/CLK\nINST\tb0\tBUFx4_ASAP7_75t_R\t1\t2\tR0\tLOCKED\n' > $B/clk_freeze_pre.tsv
     else
     printf '#CLKDUMP tag pre nets 1 block top\nNET\tclkA\tCLOCK\t0\t\t\nPIN\tclkA\tb0/Y f1/CLK\nINST\tb0\tBUFx4_ASAP7_75t_R\t1\t2\tR0\tLOCKED\n' > $B/clk_freeze_pre.tsv
@@ -747,3 +774,122 @@ def test_mk_consistent_seed_unchanged(tmp_path):
     g = tmp_path / "g"
     assert "OT_ECO_FROM=grt" in (g / "variant.env").read_text().splitlines()
     assert (g / "run/results/asap7" / NICK / "base/4_cts.odb").read_bytes() == _odb("n1", "n2", "u1", "u2")
+
+
+
+def _final_kit(tmp):
+    kit=make_kit(tmp)
+    base=kit/'run/results/asap7'/NICK/'base'
+    (base/'6_final.odb').write_text('immutable final with fillers\n')
+    return kit
+
+
+def test_mk_preclean_final_keeps_original_seed_and_pins_request(tmp_path):
+    kit=_final_kit(tmp_path);out=tmp_path/'cold'
+    env=env_with_fake(tmp_path,OT_PRD_FROM='final',OT_PRD_PRECLEAN_FINAL=1)
+    result=mk(kit,out,env=env)
+    assert result.returncode==0,result.stdout+result.stderr
+    b=out/'run/results/asap7'/NICK/'base'
+    assert (b/'4_cts_filled.odb').read_text()=='immutable final with fillers\n'
+    assert not (b/'4_cts.odb').exists()
+    assert 'OT_PRD_PRECLEAN_FINAL=1' in (out/'variant.env').read_text()
+    assert json.loads((out/'PRD.json').read_text())['filler_preclean']['requested'] is True
+    for name in ['prd_filler_preclean.py','prd_filler_seed_check.py']:
+        assert (out/name).read_bytes()==(PRD/name).read_bytes()
+
+
+@pytest.mark.parametrize('removed',[0,2])
+def test_preclean_runs_before_route_and_accepts_verified_empty_seed(tmp_path,removed):
+    kit=_final_kit(tmp_path);out=tmp_path/'cold'
+    env=env_with_fake(tmp_path,OT_PRD_FROM='final',OT_PRD_PRECLEAN_FINAL=1,
+                      FAKE_PRECLEAN_REMOVED=removed,FAKE_COUNTS='p1_tc=0,p1_bc=0')
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    result=subprocess.run(['bash',str(PRD/'prd_run.sh'),str(out),'2','4','1'],env=env,capture_output=True,text=True)
+    assert result.returncode==0,result.stdout+result.stderr
+    assert (tmp_path/'log.order').read_text().splitlines()==['preclean','route']
+    receipt=json.loads((out/'prd_filler_preclean_adopted.json').read_text())
+    assert receipt['status']=='VERIFIED_FINAL_SEED' and receipt['removed']==removed
+    b=out/'run/results/asap7'/NICK/'base'
+    assert (b/'4_cts_filled.odb').read_text()=='immutable final with fillers\n'
+    assert 'verified cold no-fillers' in (b/'4_cts.odb').read_text()
+
+
+@pytest.mark.parametrize('mode',['tool-error','missing','bad-preservation','bad-source','bad-output','bad-tool','bad-counts','bad-clock'])
+def test_preclean_failure_never_starts_route_or_finish(tmp_path,mode):
+    kit=_final_kit(tmp_path);out=tmp_path/'cold'
+    env=env_with_fake(tmp_path,OT_PRD_FROM='final',OT_PRD_PRECLEAN_FINAL=1,FAKE_PRECLEAN_MODE=mode)
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    result=subprocess.run(['bash',str(PRD/'prd_run.sh'),str(out),'2','4','1'],env=env,capture_output=True,text=True)
+    assert result.returncode==8,result.stdout+result.stderr
+    assert not (tmp_path/'log.route').exists() and not (tmp_path/'log.finish').exists()
+    assert not (out/'prd_filler_preclean_adopted.json').exists()
+    assert json.loads((out/'prd_result.json').read_text())['passes'][0]['route_rc']=='8'
+
+
+@pytest.mark.parametrize('from_,flag',[('grt',0),('route',0),('final',0),('grt',1),('route',1)])
+def test_preclean_default_or_nonfinal_staging_unchanged(tmp_path,from_,flag):
+    kit=_final_kit(tmp_path);out=tmp_path/'plain'
+    env=env_with_fake(tmp_path,OT_PRD_FROM=from_,OT_PRD_PRECLEAN_FINAL=flag,OT_PRD_SEED_CHECK=0)
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    b=out/'run/results/asap7'/NICK/'base'
+    expected={'grt':'kit grt\n','route':'kit routed\n','final':'immutable final with fillers\n'}[from_]
+    assert (b/'4_cts.odb').read_text()==expected
+    assert not (b/'4_cts_filled.odb').exists()
+    assert 'OT_PRD_PRECLEAN_FINAL' not in (out/'variant.env').read_text()
+    assert 'filler_preclean' not in json.loads((out/'PRD.json').read_text())
+
+
+
+def test_preclean_only_first_final_seed_of_two_passes(tmp_path):
+    kit=_final_kit(tmp_path);out=tmp_path/'cold'
+    env=env_with_fake(tmp_path,OT_PRD_FROM='final',OT_PRD_PRECLEAN_FINAL=1,
+                      FAKE_COUNTS='p1_tc=1,p1_bc=0,p2_tc=0,p2_bc=0')
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    result=subprocess.run(['bash',str(PRD/'prd_run.sh'),str(out),'2','4','2'],env=env,capture_output=True,text=True)
+    assert result.returncode==0,result.stdout+result.stderr
+    assert (tmp_path/'log.order').read_text().splitlines()==['preclean','route','route']
+    second=tmp_path/'cold_p2'
+    assert 'OT_PRD_PRECLEAN_FINAL' not in (second/'variant.env').read_text()
+    assert json.loads((second/'PRD.json').read_text())['from']=='route'
+
+
+
+@pytest.mark.parametrize('from_',['route','final'])
+def test_mk_clock_inventory_is_pinned_after_native_pregrt_chain(tmp_path,from_):
+    kit=_final_kit(tmp_path);out=tmp_path/'inventory'
+    (kit/'native_pre.tcl').write_text('set ::native_seen 1\n')
+    with (kit/'config.mk').open('a') as f:f.write('export PRE_GLOBAL_ROUTE_TCL = /work/native_pre.tcl\n')
+    env=env_with_fake(tmp_path,OT_PRD_FROM=from_,OT_PRD_CLOCK_INVENTORY=1,OT_PRD_SEED_CHECK=0)
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    assert (out/'prd_clock_inventory.tcl').read_bytes()==(PRD/'prd_clock_inventory.tcl').read_bytes()
+    hook=(out/'eco_grt_pre.tcl').read_text()
+    assert hook.startswith((PRD/'eco_grt_pre.tcl').read_text())
+    assert hook.endswith('source /work/prd_clock_inventory.tcl\n')
+    assert 'OT_PRD_CLOCK_INVENTORY=1' in (out/'variant.env').read_text()
+    assert json.loads((out/'PRD.json').read_text())['clock_inventory']['requested'] is True
+    assert 'OT_ECO_GRT_PRE_CHAIN = /work/native_pre.tcl' in (out/'config.mk').read_text()
+    assert 'MAX_CLK_ROUTING_LAYER' not in (out/'config.mk').read_text()
+
+
+@pytest.mark.parametrize('from_,flag',[('grt',0),('route',0),('final',0),('grt',1)])
+def test_mk_clock_inventory_default_or_ordinary_grt_unchanged(tmp_path,from_,flag):
+    kit=_final_kit(tmp_path);out=tmp_path/'plain_inventory'
+    env=env_with_fake(tmp_path,OT_PRD_FROM=from_,OT_PRD_CLOCK_INVENTORY=flag,OT_PRD_SEED_CHECK=0)
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    assert (out/'eco_grt_pre.tcl').read_bytes()==(PRD/'eco_grt_pre.tcl').read_bytes()
+    assert not (out/'prd_clock_inventory.tcl').exists()
+    assert 'OT_PRD_CLOCK_INVENTORY' not in (out/'variant.env').read_text()
+    assert 'clock_inventory' not in json.loads((out/'PRD.json').read_text())
+
+
+def test_clock_inventory_request_survives_second_routekeeping_pass(tmp_path):
+    kit=_final_kit(tmp_path);out=tmp_path/'clock_keep'
+    env=env_with_fake(tmp_path,OT_PRD_FROM='route',OT_PRD_CLOCK_INVENTORY=1,OT_PRD_SEED_CHECK=0,
+                      FAKE_COUNTS='p1_tc=1,p1_bc=0,p2_tc=0,p2_bc=0')
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    result=subprocess.run(['bash',str(PRD/'prd_run.sh'),str(out),'2','4','2'],env=env,capture_output=True,text=True)
+    assert result.returncode==0,result.stdout+result.stderr
+    second=tmp_path/'clock_keep_p2'
+    assert 'OT_PRD_CLOCK_INVENTORY=1' in (second/'variant.env').read_text()
+    hook=(second/'eco_grt_pre.tcl').read_text()
+    assert hook.count('source /work/prd_clock_inventory.tcl')==1

@@ -423,11 +423,15 @@ def tree_gate(AP, cfg):
     {"tree": path, "manifest_hash": ..., "smoke": "PASS", "die_gen_env": {...}, "config": {die keys, dicts merged}}.
     tree_fn(die, tree): the marker names the tree with smoke PASS, and on every gen host of the die (die.gen_hosts, else cfg hosts,
     minus retired_hosts) <tree>/.src-manifest.sha256 equals the marker hash (cheap).  Then, once per tree, `src_manifest hosts --expect
-    <hash>` verifies the files on all those hosts in a background thread (the answer stays False until it passes); afterwards
-    `hosts --links-only` rechecks every 600 s (a tree with shared inodes turns False).  A failed check is retried after 60 / 300 s."""
+    <hash>` verifies the files on all those hosts in an independent user unit (the answer stays False until it passes).
+    Completed publication receipts may supply the existing content verification, with current immutable metadata rechecked.
+    Results survive oneshot tick exit; `hosts --links-only` rechecks every 600 s. Failed checks keep their attempt evidence."""
     import hold_records as _HR
+    import tree_check as _TC
     retired = cfg.get("retired_hosts") or []
     hub = AP.HUB_NAME
+    check_root = Path(getattr(AP, "AP_DIR", cfg.get("_ap_dir") or os.path.expanduser("~/.local/state/opentallas"))) / "tree_checks"
+    checker = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src_manifest.py")
 
     def hosts_of(die):
         d = (cfg.get("dies") or {}).get(die) or {}
@@ -438,20 +442,47 @@ def tree_gate(AP, cfg):
             m = json.loads(AP.read_coord(_HR.tree_marker_rel(die)) or "null")
         except ValueError:
             return None
-        return m if isinstance(m, dict) else None
+        if not isinstance(m, dict):
+            return None
+        # Published-tree markers use src_manifest_sha; older hold markers call
+        # the same digest manifest_hash. Normalize the existing contract.
+        if not m.get("manifest_hash") and m.get("src_manifest_sha"):
+            m["manifest_hash"] = m["src_manifest_sha"]
+        # Only a completed manifest verification supplies identity. Never trust
+        # a private field copied into a hand-written marker or its tools_sha.
+        m.pop("_validated_main_sha", None)
+        key = (die, m.get("tree"), str(m.get("manifest_hash") or ""), tuple(hosts_of(die)))
+        ent = _TREE_CACHE.get(key) or {}
+        if ent.get("state") == "ok" and ent.get("main_sha"):
+            m["_validated_main_sha"] = ent["main_sha"]
+        return m
 
     def host_has(h, tree, want):
-        cmd = ["cat", f"{tree}/.src-manifest.sha256"]
+        # Read the base identity alongside the existing cheap hash probe. The
+        # full manifest check below validates it before marker() exposes it.
+        script = ("import json, pathlib, sys; p=pathlib.Path(sys.argv[1]); "
+                  "print((p / '.src-manifest.sha256').read_text().strip()); "
+                  "f=p / '.src-manifest.json'; "
+                  "print(json.loads(f.read_text()).get('main_sha', '') if f.is_file() else '')")
+        cmd = ["python3", "-I", "-c", script, tree]
         try:
             if h in ("localhost", hub):
                 r = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
             else:
-                r = subprocess.run(_ssh(h, hub) + cmd, capture_output=True, text=True, timeout=30)
-            return r.returncode == 0 and r.stdout.strip() == want
+                r = subprocess.run(_ssh(h, hub) + [" ".join(shlex.quote(x) for x in cmd)], capture_output=True, text=True, timeout=30)
+            lines = r.stdout.splitlines()
+            ok = r.returncode == 0 and bool(lines) and lines[0].strip() == want
+            main = lines[1].strip() if len(lines) > 1 else ""
+            return ok, main if re.fullmatch(r"[0-9a-f]{40}", main) else ""
         except (OSError, subprocess.SubprocessError):
-            return False
+            return False, ""
 
     def run_bg(ent, hosts, tree, want, links_only):
+        if not _TREE_SYNC:
+            # A separate user unit survives this oneshot tick's cgroup. Its
+            # pinned checker and durable result are shared by subsequent ticks.
+            ent.update(_TC.launch(check_root, ent["_identity"], checker, ent.get("main_sha", ""), links_only))
+            return
         def job():
             rc, txt = _src_manifest_hosts(hosts, tree, want, links_only)
             if rc != 0 and links_only and "unrecognized arguments" in txt:
@@ -464,11 +495,7 @@ def tree_gate(AP, cfg):
                 AP.log(f"KIT-WAVE TREE-CHECK {'links' if links_only else 'verify'} FAILED {tree}: {txt[-200:]}")
             ent["running"] = False
         ent["running"] = True
-        if _TREE_SYNC:
-            job()
-        else:
-            import threading
-            threading.Thread(target=job, daemon=True).start()
+        job()                                                 # deterministic inline mode used by unit tests
 
     def ready(die, tree):
         m = marker(die)
@@ -477,19 +504,33 @@ def tree_gate(AP, cfg):
         if not m or m.get("tree") != tree or str(m.get("smoke") or "").upper() != "PASS" or not want or not hosts:
             return False
         key, now = (die, tree, want, tuple(hosts)), time.time()
+        ident = _TC.identity(die, tree, want, hosts, checker)
+        if not _TREE_SYNC:
+            saved = _TC.read(check_root, ident)
+            if saved:
+                _TREE_CACHE[key] = saved
         ent = _TREE_CACHE.get(key)
+        if ent is not None:
+            ent["_identity"] = ident
         if ent is not None and ent.get("running"):
             return ent.get("state") == "ok"
         if ent is not None and ent.get("state") == "ok":
             if now - ent.get("links_t", 0) > 600:
                 run_bg(ent, hosts, tree, want, True)             # later ticks: stat-only shared-inode check
             return ent.get("state") == "ok"
+        if ent is not None and ent.get("full_ok") and ent.get("state") == "bad":
+            if now - ent.get("t", 0) >= 300:
+                run_bg(ent, hosts, tree, want, True)             # retry the failed stat check, not the completed content hash
+            return False
         if ent is not None and now - ent.get("t", 0) < (300 if ent.get("state") == "bad" else 60):
             return False
         from concurrent.futures import ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=len(hosts)) as ex:
-            have = all(ex.map(lambda h: host_has(h, tree, want), hosts))
-        ent = _TREE_CACHE[key] = {"t": now, "state": "cheap" if have else "absent", "running": False}
+            probes = list(ex.map(lambda h: host_has(h, tree, want), hosts))
+        have = all(ok for ok, _main in probes)
+        mains = {main for ok, main in probes if ok and main}
+        ent = _TREE_CACHE[key] = {"t": now, "state": "cheap" if have else "absent", "running": False,
+                                  "main_sha": next(iter(mains)) if len(mains) == 1 else "", "_identity": ident}
         if have:
             run_bg(ent, hosts, tree, want, False)                # switch time: src_manifest hosts --expect <hash>
         return ent.get("state") == "ok"

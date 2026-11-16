@@ -371,3 +371,32 @@ def test_taps_start_um_sites():
     pins = [("z", b, "M4", 100.0, 30.0 + b, "E") for b in range(4)]
     s = taps.per_bit_station_sites(t, pins)
     assert len(s) == 2 * 4 and all(x <= 80.0 + 1e-9 for x, _, _ in s)   # from x = 80 (macro edge) west, not from 100
+
+
+def packed_bound():
+    return BOUND.replace("    wire [3:0] x_q;", "    wire [3:0] x_q;\n    wire [3:0] x_b;\n    wire x_eb;").replace(
+        ".q(x_q), .eq(x_eq));", ".q(x_b), .eq(x_eb));\n    ot_dp_dly #(.W(5), .D(1)) u_lpad_x (.clk(clk), .d({x_eb, x_b}), .q({x_eq, x_q}));", 1)
+
+
+def test_packed_input_driver_is_not_outside_reader(tmp_path):
+    bound = packed_bound()
+    r, bf, _ = run(tmp_path, bound=bound)
+    assert r.returncode == 0, r.stderr
+    txt = bf.read_text()
+    assert "u_lpad_x (.clk(clk), .d({x_eb, x_b}), .q({x_eq, x_q}))" in txt
+    assert re.search(r"u_ist_x__A_0_0 \(.*\.d\(x_q\), \.ea\(x_eq\)", txt)
+    assert "x__A_0_s1_q[1], x__A_0_s1_q[0]" in txt
+
+
+def test_packed_input_still_rejects_outside_reader(tmp_path):
+    bound = packed_bound().replace("endmodule", "    assign unrelated = x_q[0];\nendmodule")
+    r, bf, _ = run(tmp_path, bound=bound)
+    assert r.returncode != 0 and "still read outside" in r.stderr
+    assert bf.read_text() == bound
+
+
+def test_packed_input_malformed_driver_fails(tmp_path):
+    bound = packed_bound().replace(".d({x_eb, x_b})", ".d({x_eb, x_q})")
+    r, bf, _ = run(tmp_path, bound=bound)
+    assert r.returncode != 0 and "does not preserve exact" in r.stderr
+    assert bf.read_text() == bound

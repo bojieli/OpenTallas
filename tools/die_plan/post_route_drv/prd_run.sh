@@ -89,10 +89,33 @@ if [ -n "${OT_PRD_FINAL_ONLY:-}" ]; then
   busfit_prep "$FINAL"
 fi
 while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
-  OT_PRD_FROM=grt; OT_PRD_PROTECT_NETS=; OT_PRD_NARROW_PINS=; OT_PRD_REPAIR_RC=; OT_PRD_AUTO_FANOUT=; OT_HOLD_REPAIR_SCOPE=; . $D/variant.env   # the pinned pass dir decides, not a stray export
+  OT_PRD_FROM=grt; OT_PRD_PROTECT_NETS=; OT_PRD_NARROW_PINS=; OT_PRD_REPAIR_RC=; OT_PRD_AUTO_FANOUT=; OT_HOLD_REPAIR_SCOPE=; OT_PRD_PRECLEAN_FINAL=0; OT_PRD_CLOCK_INVENTORY=0; . $D/variant.env   # the pinned pass dir decides, not a stray export
   NAME=prd-$(basename $(dirname $D) | cut -c1-30)-$(basename $D)-$$
   PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
   busfit_prep "$D"
+  # Final-only cold OpenDB preparation is part of this admitted job, never
+  # an unadmitted OpenROAD session in prd_mk. Original filled seed is retained.
+  if [ "${OT_PRD_PRECLEAN_FINAL:-0}" = 1 ]; then
+    B=$(ls -d "$D"/run/results/asap7/*/base)
+    prep=0
+    if [ "${OT_PRD_FROM:-grt}" != final ]; then
+      echo 'PRD_PRECLEAN_REFUSE: only a final seed may request cold filler removal' > "$D/prd_filler_preclean.log"; prep=2
+    elif [ ! -f "$D/prd_filler_preclean.json" ]; then
+      $DK run --rm --user="$(id -u):$(id -g)" --name "prd-preclean-$$" --cpus=1 --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work "$IMAGE" \
+        /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -python -exit /work/prd_filler_preclean.py \
+        "/work/${B#$D/}/4_cts_filled.odb" "/work/${B#$D/}/4_cts.odb" /work/prd_filler_preclean.json --allow-empty > "$D/prd_filler_preclean.log" 2>&1
+      prep=$?
+    fi
+    if [ "$prep" = 0 ]; then
+      python3 -I "$D/prd_filler_seed_check.py" "$B/4_cts_filled.odb" "$B/4_cts.odb" "$D/prd_filler_preclean.json" \
+        --tool "$D/prd_filler_preclean.py" --receipt "$D/prd_filler_preclean_adopted.json" >> "$D/prd_filler_preclean.log" 2>&1
+      prep=$?
+    fi
+    if [ "$prep" != 0 ]; then
+      echo "PRD_PRECLEAN_REFUSE rc=$prep (see prd_filler_preclean.log); no route started"
+      addres pass=$P dir=$D preclean_rc=$prep route_rc=8; rc=8; break
+    fi
+  fi
   $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
     -e HUID=$(id -u) -e HGID=$(id -g) -e OT_PRD_PASS=$P -e OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} -e OT_PRD_LOCAL_BRANCHES=${OT_PRD_LOCAL_BRANCHES:-} ${OT_PRD_LOCAL_MACRO_HALO_UM:+-e OT_PRD_LOCAL_MACRO_HALO_UM=$OT_PRD_LOCAL_MACRO_HALO_UM} -e OT_PRD_UNFOLD_CHAINS=${OT_PRD_UNFOLD_CHAINS:-0} -e OT_PRD_TARGET_SLEW_PS=${OT_PRD_TARGET_SLEW_PS:-0} -e OT_PRD_TARGET_FANOUT=${OT_PRD_TARGET_FANOUT:-0} -e OT_PRD_AUTO_FANOUT=${OT_PRD_AUTO_FANOUT:-} -e OT_PRD_TIE_SPLIT=${OT_PRD_TIE_SPLIT:-1} -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
     -e OT_SETUP_MARGIN=$OT_SETUP_MARGIN -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
@@ -119,7 +142,7 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   [ "${OT_PRD_FROM:-grt}" = final ] && OT_PRD_FROM=route   # pass p+1 of a final seed: pass p has no post-route edits
   N=${D0}_p$((P + 1))
   OT_SLEW_MARGIN="$OT_SLEW_MARGIN" OT_SETUP_MARGIN="$OT_SETUP_MARGIN" OT_HOLD_ALLOW_SETUP="$OT_HOLD_ALLOW_SETUP" OT_HOLD_MAXBUF="$OT_HOLD_MAXBUF" \
-  OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_UNFOLD_CHAINS=${OT_PRD_UNFOLD_CHAINS:-0} OT_PRD_TARGET_SLEW_PS=${OT_PRD_TARGET_SLEW_PS:-} OT_PRD_TARGET_FANOUT=${OT_PRD_TARGET_FANOUT:-} OT_PRD_AUTO_FANOUT=${OT_PRD_AUTO_FANOUT:-} OT_PRD_TIE_SPLIT=${OT_PRD_TIE_SPLIT:-} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" OT_PRD_NARROW_PINS="${OT_PRD_NARROW_PINS:-}" OT_PRD_REPAIR_RC="${OT_PRD_REPAIR_RC:-}" OT_HOLD_REPAIR_SCOPE="${OT_HOLD_REPAIR_SCOPE:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
+  OT_PRD_CLOCK_INVENTORY="${OT_PRD_CLOCK_INVENTORY:-0}" OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_UNFOLD_CHAINS=${OT_PRD_UNFOLD_CHAINS:-0} OT_PRD_TARGET_SLEW_PS=${OT_PRD_TARGET_SLEW_PS:-} OT_PRD_TARGET_FANOUT=${OT_PRD_TARGET_FANOUT:-} OT_PRD_AUTO_FANOUT=${OT_PRD_AUTO_FANOUT:-} OT_PRD_TIE_SPLIT=${OT_PRD_TIE_SPLIT:-} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" OT_PRD_NARROW_PINS="${OT_PRD_NARROW_PINS:-}" OT_PRD_REPAIR_RC="${OT_PRD_REPAIR_RC:-}" OT_HOLD_REPAIR_SCOPE="${OT_HOLD_REPAIR_SCOPE:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
   D=$N; P=$((P + 1))
 done
 if [ -n "$FINAL" ] && [ "${OT_PRD_FINISH:-1}" = 1 ]; then

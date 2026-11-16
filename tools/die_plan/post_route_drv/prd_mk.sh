@@ -21,6 +21,11 @@
 #           the route seed does not match the SPEF (prd_hook.tcl OT_PRD STAGE_MISMATCH; eco_loop.py retries with final).
 # OT_PRD_PROTECT_NETS = Tcl list of exact measured data nets to preserve during
 # repair; persisted through both passes. Does not waive any signoff checks.
+# OT_PRD_PRECLEAN_FINAL=1: stage an immutable filled final seed; prd_run removes typed PG-only fillers
+# in a separate admitted OpenDB session before DRT initialization, verifies its manifest, then routes normally.
+# Default 0 and non-final seeds keep the prior staging; every physical/signoff check remains required.
+# OT_PRD_CLOCK_INVENTORY=1: route/final seeds register existing CLOCK layers in GRT resources,
+# reject above-ceiling data wires, and retain the signal range and frozen clock metal. Default off.
 set -euo pipefail
 KIT=$(cd "$1" && pwd -P); OUT=$2; V=$3; SO=$(cd "$4" && pwd); SPEF=${5:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -47,6 +52,22 @@ if [ -f $RS/6_final.odb ] && [ $FROM != final ] && [ "${OT_PRD_SEED_CHECK:-1}" !
     *) echo "prd_mk: seed check failed rc $src: $SEEDCHK"; exit 2 ;;
   esac
 fi
+# Cold final-seed removal runs later inside prd_run's admitted memory envelope,
+# before OpenROAD initializes DRT callbacks. The default staging stays unchanged.
+PRECLEAN_FINAL=0
+case ${OT_PRD_PRECLEAN_FINAL:-0} in
+  0) ;;
+  1) [ "$FROM" != final ] || PRECLEAN_FINAL=1 ;;
+  *) echo "prd_mk: OT_PRD_PRECLEAN_FINAL: want 0|1"; exit 2 ;;
+esac
+# Existing routed CLOCK wires can extend above the signal ceiling. Opt-in
+# inventory covers those frozen layers without authorizing higher data routes.
+CLOCK_INVENTORY=0
+case ${OT_PRD_CLOCK_INVENTORY:-0} in
+  0) ;;
+  1) if [ "$FROM" = route ] || [ "$FROM" = final ]; then CLOCK_INVENTORY=1; fi ;;
+  *) echo "prd_mk: OT_PRD_CLOCK_INVENTORY: want 0|1"; exit 2 ;;
+esac
 # Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint (orfs_hold_mm.tcl ot_hold_stage: file EXISTENCE
 # only, the content is never read).  Preserve it through every PRD pass.  DIE-QC-66 11-03 (class fix, tool-input): a
 # routed kit whose 4_1_cts.odb was pruned (scratch reaper / resume-derived kits) still IS past CTS when its 5_1_grt.odb
@@ -85,7 +106,12 @@ rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclu
 chmod -R u+w "$OUT"
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
-cp $RS/$SRC $B/4_cts.odb
+if [ "$PRECLEAN_FINAL" = 1 ]; then
+  cp "$RS/$SRC" "$B/4_cts_filled.odb"
+  for f in prd_filler_preclean.py prd_filler_seed_check.py; do cp --remove-destination "$HERE/$f" "$OUT/"; done
+else
+  cp $RS/$SRC $B/4_cts.odb
+fi
 cp "$RS/$CTS_ID" "$B/4_1_cts.odb"
 cp "$SPEF" $B/6_final.spef
 # DIE-S81-50 11-03: the logic instances the SPEF connects; prd_hook.tcl checks them against the seed (stale staging)
@@ -97,6 +123,12 @@ rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2
 for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp --remove-destination $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp --remove-destination "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
+if [ "$CLOCK_INVENTORY" = 1 ]; then
+  cp --remove-destination "$HERE/prd_clock_inventory.tcl" "$OUT/"
+  # Append after the kit's chained pre-GRT hook. This executes before the first
+  # global_route; the default hook remains byte-identical when the opt-in is off.
+  printf '\nsource /work/prd_clock_inventory.tcl\n' >> "$OUT/eco_grt_pre.tcl"
+fi
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp --remove-destination "$SO/tools/die_plan/$f" $OUT/; done
 chmod u+w "$OUT"/*.tcl "$OUT"/*.py "$OUT"/*.sh 2>/dev/null || true
 MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' $OUT/config.mk | tail -n 1)
@@ -251,5 +283,27 @@ fi
 if [ $CTS_ID != 4_1_cts.odb ]; then
   python3 -I -c 'import json,sys; p=sys.argv[1]; d=json.load(open(p)); d["cts_identity"]=sys.argv[2]; open(p,"w").write(json.dumps(d)+"\n")' \
     $OUT/PRD.json "$RS/$CTS_ID (original 4_1_cts.odb absent)"
+fi
+if [ "$PRECLEAN_FINAL" = 1 ]; then
+  echo 'OT_PRD_PRECLEAN_FINAL=1' >> "$OUT/variant.env"
+  python3 -I - "$OUT/PRD.json" "$B" <<'PY_PRECLEAN_REQUEST'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);b=Path(sys.argv[2]);x=json.loads(p.read_text())
+x['filler_preclean']={'requested':True,'source':str(b/'4_cts_filled.odb'),
+    'output':str(b/'4_cts.odb'),'manifest':str(p.parent/'prd_filler_preclean.json')}
+p.write_text(json.dumps(x,indent=1)+'\n')
+PY_PRECLEAN_REQUEST
+fi
+if [ "$CLOCK_INVENTORY" = 1 ]; then
+  echo 'OT_PRD_CLOCK_INVENTORY=1' >> "$OUT/variant.env"
+  python3 -I - "$OUT/PRD.json" <<'PY_CLOCK_INVENTORY_REQUEST'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);x=json.loads(p.read_text())
+x['clock_inventory']={'requested':True,'hook':'prd_clock_inventory.tcl',
+    'rule':'register preserved CLOCK layers; signal ceiling and clock metal unchanged'}
+p.write_text(json.dumps(x,indent=1)+'\n')
+PY_CLOCK_INVENTORY_REQUEST
 fi
 echo "prd pass dir ready $OUT ($(du -sh $OUT | cut -f1))"

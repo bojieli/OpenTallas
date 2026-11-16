@@ -25,6 +25,47 @@ def sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 
+
+def rebase_asbuilt_map(data, src_file, old_tree, new_tree, rules):
+    """Keep bind.py map_file manifest-relative semantics when packing an as-built file.
+
+    Historical S81 manifests use a tree-relative map_file even after moving the
+    manifest below plan_inputs/run. Resolve an existing manifest-relative path
+    first, then its base and old-tree roots; never invent an input or waive a gate.
+    """
+    if not isinstance(data, dict) or not data.get("top") or not data.get("map_file"):
+        return data
+    value = data["map_file"]
+    if not isinstance(value, str):
+        return data
+    parent = os.path.dirname(src_file)
+    base = data.get("base") or old_tree
+    if not os.path.isabs(base):
+        base = os.path.join(parent, base)
+    candidates = [value] if os.path.isabs(value) else [os.path.join(parent, value)]
+    if not os.path.isabs(value):
+        # The payload may contain only the manifest; an unchanged sibling map
+        # remains in the baseline tree. Resolve its manifest-relative location
+        # at the mapped destination, then look for that exact baseline input.
+        for source, target in rules:
+            if src_file == source or src_file.startswith(source + "/"):
+                packed_file = target + src_file[len(source):]
+                packed_map = os.path.normpath(os.path.join(os.path.dirname(packed_file), value))
+                if os.path.commonpath([packed_map, new_tree]) == os.path.normpath(new_tree):
+                    candidates.append(os.path.join(old_tree, os.path.relpath(packed_map, new_tree)))
+                break
+        candidates.extend([os.path.join(base, value), os.path.join(old_tree, value)])
+    resolved = next((os.path.normpath(q) for q in candidates if os.path.isfile(q)), None)
+    if resolved is None:
+        raise ValueError(f"asbuilt map_file does not exist: {src_file}: {value}")
+    for source, target in rules + [(old_tree.rstrip("/"), new_tree.rstrip("/"))]:
+        if resolved == source or resolved.startswith(source + "/"):
+            resolved = target + resolved[len(source):]
+            break
+    data["map_file"] = resolved
+    return data
+
+
 def make(old_tree, new_tree, out, maps, digest=None):
     m = json.load(open(os.path.join(old_tree, ".src-manifest.json")))
     stage = os.path.join(out, "files")
@@ -47,6 +88,16 @@ def make(old_tree, new_tree, out, maps, digest=None):
                     b = open(sp, "rb").read()
                     for s_, d_ in rules:
                         b = b.replace(s_.encode(), d_.encode())
+                    if f.endswith(".json"):
+                        try:
+                            original = json.loads(open(sp, "rb").read())
+                        except (ValueError, UnicodeError):
+                            original = None
+                        if isinstance(original, dict) and original.get("top") and original.get("map_file"):
+                            fixed = rebase_asbuilt_map(original, sp, old_tree, new_tree, rules)
+                            packed = json.loads(b)
+                            packed["map_file"] = fixed["map_file"]
+                            b = (json.dumps(packed, indent=1) + "\n").encode()
                     open(dp2, "wb").write(b)
                 else:
                     shutil.copyfile(sp, dp2)

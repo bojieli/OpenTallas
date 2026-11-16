@@ -510,6 +510,39 @@ def snap_track_y(v, rails=(2.16, 0.24, 0.06)):
     return t
 
 
+def fixed_ft_rects(t):
+    """Union explicit fixed FT cell envelopes into contiguous column rectangles.
+
+    bit_sites_um are lower-left coordinates; bit_site_cell_um is the checked
+    allocation envelope. Coalescing touching vertical cells preserves their
+    exact occupied region and avoids millions of repeated spatial-index rows.
+    """
+    from ft_bit_sites import validate_slot
+    columns = defaultdict(list)
+    for slot in t.get("ft_slots", []) or []:
+        if "bit_sites_um" not in slot:
+            continue
+        validate_slot(slot)
+        width, height = slot["bit_site_cell_um"]
+        for stage in slot["bit_sites_um"]:
+            for x, y in stage:
+                columns[(x, width)].append((y, y + height))
+    rects = []
+    for (x, width), intervals in sorted(columns.items()):
+        lo, hi = None, None
+        for a, b in sorted(intervals):
+            if lo is None:
+                lo, hi = a, b
+            elif a <= hi + 1e-8:
+                hi = max(hi, b)
+            else:
+                rects.append((x, lo, x + width, hi))
+                lo, hi = a, b
+        if lo is not None:
+            rects.append((x, lo, x + width, hi))
+    return rects
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -532,13 +565,41 @@ class SiteMap:
         # outlines. Keep those sites legal; core and PHY exclusions below still
         # apply, including wherever a channel rectangle crosses either one.
         self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
-                          if ch.get("rect_um"))
+                          if ch.get("rect_um") and ch.get("clock_channel") is not False)
+        # A reserved gap (seal ring / ESD) is not a clock placement island.
+        # The existing explicit flag also excludes native bodies that cross it.
+        for ch in P.die.get("channels", []) or []:
+            if ch.get("clock_channel") is False and ch.get("rect_um"):
+                self.forb.append((*ch["rect_um"], "reserved_channel"))
         if CLOCK_TYPE_KEEPOUTS:                 # DIE-QC-47 opt-in: a type's clock.keepouts_um (e.g. a bare PHY body)
             for n, p in P.parts.items():        # is no die clock-cell site either (same halo as a hard core)
                 for x0, y0, x1, y1 in (P.types[p["type"]].get("clock", {}) or {}).get("keepouts_um", []) or []:
                     a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                     self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
                                       max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "keepout"))
+        if CLOCK_TYPE_KEEPOUTS:                 # FABLE-DIE-S81: landing band rects of every
+            bh = 0.54                           # type are no die clock-cell site (ring-ff fills them); 2-row halo
+            for n, p in P.parts.items():
+                lc = ((P.types[p["type"]].get("clock", {}) or {}).get("landing_contract") or {})
+                for bd in (lc.get("bands") or {}).values():
+                    rs = [bd["rect_um"]] if bd.get("rect_um") else []
+                    for k in ("rects_um", "band_fixed_um", "multi_rect_um"):
+                        v = bd.get(k)
+                        rs += [r for r in (v.values() if isinstance(v, dict) else v or []) if isinstance(r, list) and len(r) == 4]
+                    for x0, y0, x1, y1 in rs:
+                        a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                        self.forb.append((min(a[0], b[0]) - bh, min(a[1], b[1]) - bh,
+                                          max(a[0], b[0]) + bh, max(a[1], b[1]) + bh, "band"))
+        if CLOCK_TYPE_KEEPOUTS:
+            fixed = {}
+            for n, p in P.parts.items():
+                tn = p["type"]
+                if tn not in fixed:
+                    fixed[tn] = fixed_ft_rects(P.types[tn])
+                for x0, y0, x1, y1 in fixed[tn]:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]), min(a[1], b[1]),
+                                      max(a[0], b[0]), max(a[1], b[1]), "ft_fixed"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
@@ -1081,11 +1142,18 @@ def reach_place(site, poly, reach, nmin=0, even=False, step=0.54):
     best = list(best)
     while len(best) < need:             # split the largest span at the legal point nearest its middle
         ch = [0.0] + best + [L]
-        k = max(range(len(ch) - 1), key=lambda i: ch[i + 1] - ch[i])
-        m = (ch[k] + ch[k + 1]) / 2
-        inside = [t for t in ok if ch[k] + 1e-9 < t < ch[k + 1] - 1e-9]
-        if not inside:
+        # The longest span may be an unavoidable macro overflight with no
+        # legal interior site. Add parity/minimum-count stages to the largest
+        # splittable span instead of rejecting a physically legal chain.
+        split = []
+        for k in range(len(ch) - 1):
+            inside = ok[bisect.bisect_right(ok, ch[k] + 1e-9):bisect.bisect_left(ok, ch[k + 1] - 1e-9)]
+            if inside:
+                split.append((ch[k + 1] - ch[k], k, inside))
+        if not split:
             return None
+        _, k, inside = max(split, key=lambda item: (item[0], -item[1]))
+        m = (ch[k] + ch[k + 1]) / 2
         best = sorted(best + [min(inside, key=lambda t: abs(t - m))])
     q = [(round(pts[t][0], 3), round(pts[t][1], 3)) for t in best]
     if max(chain_spans([poly[0]] + q + [poly[-1]])) > reach + 1e-6:
@@ -1175,10 +1243,16 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
     own = [poly] if poly is not None else (
         [[a, b]] if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6 else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]])
     tried = []
-    for kind, cands in (("on_path", own), ("reach_detour", None)):
+    searches = [("on_path", own), ("reach_detour", None)]
+    if DETOUR_ADAPTIVE:
+        # The jump-grid search may miss a legal path, and its fixed local box
+        # cannot escape a wide PHY wall. Reuse the existing site-legal wall
+        # detour, then require the same reach/parity placement proof below.
+        searches.append(("site_detour", None))
+    for kind, cands in searches:
         if cands is None:
-            d = reach_detour(site, a, b, reach)
-            cands = [d] if d is not None else []
+            route = legal_detour(site, a, b) if kind == "site_detour" else reach_detour(site, a, b, reach)
+            cands = [route] if route is not None else []
         res = []
         for q in cands:
             Lq = polyline_points(q, [])[1]
@@ -1189,10 +1263,14 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
         if res:
             nrep, Lq, r, q = min(res, key=lambda t: (t[1], t[0]))
             after = max(chain_spans([a] + r + [b]))
-            return r, q, dict(kind=kind, span_before_um=round(before, 3), span_after_um=round(after, 3),
-                              nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
-                              wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
-                              added_stages=nrep - (len(chain) - 2))
+            info = dict(kind="reach_detour" if kind == "site_detour" else kind,
+                        span_before_um=round(before, 3), span_after_um=round(after, 3),
+                        nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
+                        wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
+                        added_stages=nrep - (len(chain) - 2))
+            if kind == "site_detour":
+                info["route_source"] = "site_legal_adaptive"
+            return r, q, info
     raise ValueError(f"--rep-reach-max {reach:g}: leg to node {nd.get('id')} ({a} -> {b}, span {before:.2f} um) has no "
                      f"legal repeater placement within reach on its path or a reach detour ({tried})")
 

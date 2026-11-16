@@ -1128,6 +1128,9 @@ def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
         for gi, e in enumerate(bes):
             chains.append([f"u_ist_{tags[gi]}_{j}" for j in range(k)])
         if b["dir"] == "in":
+            # A canonical packed receiver drives q/eq; its output connection is not a reader.
+            # Validate the whole instance before exempting it from the reader audit below.
+            packed = packed_input_delay(tn, b, txt, W, k)
             q, eq = (f"{n}_p{pads[-1]}_q", f"{n}_p{pads[-1]}_eq") if pads else (f"{n}_q", f"{n}_eq")
             lines = txt.split("\n")
             for gi, e in enumerate(bes):
@@ -1169,6 +1172,7 @@ def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
             for ln in txt.split("\n"):      # every reader must now be a core chain
                 if (re.search(rf"\b{re.escape(q)}(?:\[\d+\]|(?![\w$\[]))", ln)
                         and not re.search(rf"\bu_ist_{re.escape(n)}__|\bu_bin_{re.escape(n)}(_pad\d+)?\s*\(", ln)
+                        and not (packed and re.search(rf"\b{re.escape(packed['instance'])}\s*\(", ln))
                         and not re.match(r"^\s*(wire|reg|logic)\b", ln)):
                     raise SystemExit(f"kit_istations: {tn} {bus}: {q} still read outside the core chains: {ln.strip()[:120]}")
         else:

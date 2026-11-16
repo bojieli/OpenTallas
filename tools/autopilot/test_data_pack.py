@@ -67,5 +67,74 @@ class Dot(unittest.TestCase):
             self.assertEqual(SM.verify(new, ro=True, full=True)[0], [])
 
 
+class AsbuiltMap(unittest.TestCase):
+    def test_nested_s81_manifest_map_is_resolved_by_real_plan_gate(self):
+        # Actual S81 packed layout: base climbs five levels to the tree, but
+        # map_file still starts physical/. Binder resolves map_file at the JSON.
+        with tempfile.TemporaryDirectory() as t:
+            repo = t + "/repo"
+            os.makedirs(repo + "/physical/die_plan/s81/bind/inputs")
+            g = lambda *a: subprocess.run(["git", "-C", repo, "-c", "user.name=t", "-c", "user.email=t@t"] + list(a), check=True, capture_output=True, text=True).stdout.strip()
+            g("init", "-q")
+            relmap = "physical/die_plan/s81/bind/inputs/map_b178.json"
+            open(repo + "/" + relmap, "w").write("{}")
+            g("add", "physical"); g("commit", "-qm", "map")
+            SM.CACHE_DIR = t + "/cache"
+            old, new = t + "/old", t + "/new"
+            SM.build(repo, g("rev-parse", "HEAD"), None, ["physical"], old, main_ref="")
+            rel = "physical/die_plan/s81/plan_inputs/run"
+            src = t + "/stage/" + rel
+            os.makedirs(src)
+            open(src + "/asbuilt_run.json", "w").write(json.dumps(dict(top="dv_die", base="../../../../..", netlist=[], map_file=relmap)))
+            pack = t + "/pack"
+            DP.make(old, new, pack, [(src, rel)])
+            SM.delta_apply(pack, old, new)
+            abfile = new + "/" + rel + "/asbuilt_run.json"
+            ab = json.load(open(abfile))
+            self.assertEqual(ab["map_file"], new + "/" + relmap)
+            sys.path.insert(0, os.path.join(os.path.dirname(__file__), "../die_plan"))
+            import plan_gate_pre
+            base, paths = plan_gate_pre.manifest_paths(ab, os.path.dirname(abfile), new)
+            maps = [q for key, q, kind in paths if key == "map_file"]
+            self.assertEqual(len(maps), 1)
+            self.assertTrue(maps[0].is_file())
+            SM.publish(new)
+            self.assertEqual(SM.verify(new, ro=True, full=True)[0], [])
+
+    def test_qc_manifest_relative_map_can_stay_in_baseline(self):
+        with tempfile.TemporaryDirectory() as t:
+            repo = t + "/repo"
+            bind = "physical/die_plan/qwen_compute/bind"
+            os.makedirs(repo + "/" + bind)
+            g = lambda *a: subprocess.run(["git", "-C", repo, "-c", "user.name=t", "-c", "user.email=t@t"] + list(a), check=True, capture_output=True, text=True).stdout.strip()
+            g("init", "-q")
+            open(repo + "/" + bind + "/asbuilt_map_p6.json", "w").write("{}")
+            g("add", "physical"); g("commit", "-qm", "map")
+            SM.CACHE_DIR = t + "/cache"
+            old, new = t + "/old", t + "/new"
+            SM.build(repo, g("rev-parse", "HEAD"), None, ["physical"], old, main_ref="")
+            rel = "physical/die_plan/qwen_compute/qc_start_1106/runtime"
+            stage = t + "/stage"
+            os.makedirs(stage + "/" + rel)
+            open(stage + "/" + rel + "/asbuilt_sw2_pv.json", "w").write(json.dumps(dict(top="qfd_die", base="../../../../..", map_file="../../bind/asbuilt_map_p6.json")))
+            pack = t + "/pack"
+            DP.make(old, new, pack, [(stage, ".")])
+            SM.delta_apply(pack, old, new)
+            ab = json.load(open(new + "/" + rel + "/asbuilt_sw2_pv.json"))
+            self.assertEqual(ab["map_file"], new + "/" + bind + "/asbuilt_map_p6.json")
+            self.assertTrue(os.path.isfile(ab["map_file"]))
+            SM.publish(new)
+            self.assertEqual(SM.verify(new, ro=True, full=True)[0], [])
+
+    def test_manifest_relative_map_takes_precedence_and_missing_map_refuses(self):
+        with tempfile.TemporaryDirectory() as t:
+            os.makedirs(t + "/manifest")
+            open(t + "/manifest/map.json", "w").write("{}")
+            d = DP.rebase_asbuilt_map(dict(top="dv_die", map_file="map.json"), t + "/manifest/ab.json", t, t + "/new", [(t + "/manifest", t + "/new/inputs")])
+            self.assertEqual(d["map_file"], t + "/new/inputs/map.json")
+            with self.assertRaises(ValueError):
+                DP.rebase_asbuilt_map(dict(top="dv_die", map_file="missing.json"), t + "/manifest/ab.json", t, t + "/new", [])
+
+
 if __name__ == "__main__":
     unittest.main()
