@@ -18,5 +18,17 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 08:32:36 PST"
+ "time": "2026-11-16 08:32:36 PST",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_41bb1dcfd10a/out",
+ "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
+ "plan_inputs_in_tree": [
+  "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a/physical/die_plan/s81/plan_inputs/B6gF2sv_formA.json",
+  "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a/physical/die_plan/s81/plan_inputs/plan_h2_2249_e_rphase1116.json"
+ ],
+ "data_pack": "pending",
+ "hidden_folder_smoke": "advisory until data_pack: plan, asbuilt, sidecar and views still live in lane folders",
+ "hosts_pending": {
+  "epyc8": "scratch2 22 GB, CLEAN-ALL pruning",
+  "intel1": "copy not yet verified"
+ }
 }
