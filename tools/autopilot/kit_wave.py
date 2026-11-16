@@ -1489,12 +1489,21 @@ def dedup_step(AP, cfg, st, notices, ap_dir):
         jobs = {}
     now = time.time()
     for key, rec in list(items.items()):
-        if rec.get("status") != "DEDUP":
+        if rec.get("status") not in ("DEDUP", "DEDUP-WAIT"):
             continue
         die, owner = rec.get("die"), rec.get("dedup_owner")
         orecs = [r for r in items.values() if r.get("die") == die and r.get("item") == owner and r is not rec]
         orec = max(orecs, key=lambda r: float(r.get("updated") or 0), default=None)
         group, h = f"{die}|{PV_RE.match(rec['item']).group('base')}" if PV_RE.match(rec.get("item", "")) else "", rec.get("dedup_hash")
+        if orec is not None and (orec.get("status") in ("FAIL", "CANCELLED") or orec.get("q_status") in ("FAIL", "CANCELLED")):
+            # FABLE-FLOW-0015 (c): 23 S81 col members were released every tick (12,776 DEDUP RELEASE lines): the owner failed on a stored fail key, the member
+            # relaunched into the same kit identity, got DEDUP again and was released again.  Terminal state DEDUP-WAIT until the owner's key can change.
+            blocked, _why, _chg = fail_key_gate(cfg, st, die, owner, orec.get("block_sha"))
+            if blocked:
+                if rec.get("status") != "DEDUP-WAIT":
+                    rec.update(status="DEDUP-WAIT", updated=now, reason=f"DEDUP-WAIT: owner {owner} failed and its fail key stands ({_why[:160]}); waits for an input change")
+                    AP.log(f"KIT-WAVE DEDUP-WAIT {die}/{rec['item']}: owner {owner} failed with a standing fail key; no release until its inputs change")
+                continue
         if orec is None or orec.get("status") in ("FAIL", "CANCELLED") or orec.get("q_status") in ("FAIL", "CANCELLED"):
             AP.log(f"KIT-WAVE DEDUP RELEASE {die}/{rec['item']}: owner {owner} did not sign off (status "
                    f"{(orec or {}).get('status')}/{(orec or {}).get('q_status')}); relaunches on the normal path")
@@ -8664,9 +8673,41 @@ def note_fail_key(cfg, st, rec, cls, why):
     k = f"{rec['die']}|{rec['item']}"
     prev = store.get(k) or {}
     n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
-    store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160]}
+    store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
+                "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why)}
     rec["fail_key"] = key
     return key
+
+
+_PATH_RE = re.compile(r"/(?:srv|home|tmp|var|mnt)/[^\s\"',;:()\[\]]+")
+PATH_EXISTS = {}
+
+
+def missing_paths(why):
+    """the input paths a KIT_INPUT_MISSING / HDL-source-missing fail names as absent (the 'named by' view files are the ones that exist)"""
+    text = re.sub(r"\(named by[^)]*\)", " ", str(why or ""))
+    return sorted(set(_PATH_RE.findall(text)))[:12]
+
+
+def path_exists_somewhere(cfg, die, p, ttl=300, now=None):
+    """test -e on the die's hosts (cached 5 min); True as soon as one has it"""
+    now = time.time() if now is None else now
+    c = PATH_EXISTS.get((die, p))
+    if c and now - c[0] < ttl:
+        return c[1]
+    d = (cfg.get("dies") or {}).get(die) or {}
+    hosts = [h for h in dict.fromkeys([d.get("gen_host")] + list(d.get("gen_hosts") or [])) if h]
+    ok = os.path.exists(p)
+    for h in ([] if ok else hosts):
+        try:
+            if subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "test", "-e", shlex.quote(p)],
+                              capture_output=True, timeout=20).returncode == 0:
+                ok = True
+                break
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+    PATH_EXISTS[(die, p)] = (now, ok)
+    return ok
 
 
 def fail_key_gate(cfg, st, die, item, block_sha=None):
@@ -8679,7 +8720,16 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
     d = (cfg.get("dies") or {}).get(die) or {}
     now = kit_digest_parts(cfg, die, {"block_sha": block_sha} if block_sha else None)
     old = prev.get("parts") or {}
-    changed = [k for k in ("block", "src", "overlay", "tools") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
+    # FABLE-FLOW-0015 (a): a missing-input fail releases only when what failed changes: the named input appears, or the plan block / src / overlay
+    # (a repointed config) changes.  A tool merge that does not touch it is no reason (slice_station__t51 failed twice on the same missing input
+    # after the 23:29 tool merge re-armed it)
+    miss = prev.get("missing") or []
+    if prev.get("type") == "missing_input" and miss:
+        changed = [k for k in ("block", "src", "overlay") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
+        if not changed and any(path_exists_somewhere(cfg, die, p) for p in miss):
+            changed = ["input"]
+    else:
+        changed = [k for k in ("block", "src", "overlay", "tools") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
     if not changed:
         return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay and the stage tools are "
                       f"unchanged since the last fail: {str(prev.get('why'))[:100]}"), []

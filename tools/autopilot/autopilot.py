@@ -2975,9 +2975,11 @@ def archive(st, j):
         post = archive_backoff(j, err)
         log(f"ARCHIVE FAILED {j['id']} (x{j.get('archive_fail_n')}): {err}; " + ("retry next tick" if int(j.get("archive_fail_n") or 0) < 3 else "backed off until %s" % time.strftime("%H:%M", time.localtime(j["archive_retry_at"]))))
         if post:
+            set_status(st, j, "SIGNED-NOT-ARCHIVED", "archive path gone (permanent): " + str(err)[-160:])      # terminal: archive() only handles SIGNED
             coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [AUTOPILOT -> COORD] archive of {j['die']}/{j['type']} ({j['id']}) fails permanently: {str(err)[-200:]}; "
                                                          "the kit path is gone, so the signed record cannot be archived from the host; archive from the AGIdock copy or re-sign")
-        set_status(st, j, "SIGNED", "archive pending")
+        if j.get("status") != "SIGNED-NOT-ARCHIVED":
+            set_status(st, j, "SIGNED", "archive pending")
         return
     mhost = MIRROR.get(host, MIRROR_DEFAULT)
     pdir = os.path.dirname(dest)

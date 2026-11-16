@@ -190,3 +190,24 @@ class LocalHost(unittest.TestCase):
             self.assertEqual(FH.ssh_rpy("me", code, {"x": 1}), {"args": {"x": 1}})
             r = FH.ssh_rpy("other-host-that-does-not-exist.invalid", code, {"x": 1}, timeout=20)
         self.assertIn("error", r)                      # a remote host still goes through ssh
+
+
+class ParallelSkew(unittest.TestCase):
+    def test_skew_probes_run_in_parallel_and_cover_every_tree(self):
+        import threading, time
+        files = {"tools/die_plan/gen.py": b"x\n"}
+        seen, live, peak = [], [0], [0]
+        lock = threading.Lock()
+
+        def rpy(h, code, args, timeout=0):
+            with lock:
+                live[0] += 1; peak[0] = max(peak[0], live[0]); seen.append((h, args["tree"]))
+            time.sleep(0.05)
+            with lock:
+                live[0] -= 1
+            return {"tools/die_plan/gen.py": "bad"} if h == "h2" else {k: __import__("hashlib").sha1(v).hexdigest() for k, v in files.items()}
+        cfg = {"dies": {"d%d" % i: {"enabled": True, "gen_host": "h1", "gen_hosts": ["h1", "h2"], "src": "/t/%d" % i, "item_inputs": {}} for i in range(6)}}
+        out = FH.skew_section(cfg, rpy=rpy, blob=lambda rel: files.get(rel), compare_mod=None, now=NOW)
+        self.assertEqual(len(seen), 12)
+        self.assertGreater(peak[0], 1)
+        self.assertEqual(len([l for l in out if l.startswith("d") and "\th2\t" in l]), 6)
