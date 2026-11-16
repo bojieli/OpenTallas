@@ -1092,6 +1092,7 @@ def hr_pval(v):
 
 
 def main_hr_plan(a, plan, pdir, t):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     sys.path.insert(0, str(pdir))
     import core_pins_hr as CH
     host = CH.Host(a.hr_elab)
@@ -1144,7 +1145,7 @@ def main_hr_plan(a, plan, pdir, t):
             return str(repo / ('rtl/' + f.split('/rtl/', 1)[1]))
         return f
     fl = [src_of(f) for f in fl]
-    done, summary = set(), []
+    done, summary, records = set(), [], {}
     for h in hcs:
         mod, ci = h['module'], h['inst']
         if mod in done:
@@ -1267,13 +1268,22 @@ def main_hr_plan(a, plan, pdir, t):
                    files=[str(cp_)] + fl)
         if not a.hr_no_lint:
             rec['lint'] = lint([cp_] + fl, mod)
-        (cdir / f'{mod}_core.json').write_text(json.dumps(rec, indent=1) + '\n')
+        record = cdir / f'{mod}_core.json'
+        record.write_text(json.dumps(rec, indent=1) + '\n')
+        records[mod] = str(record)
         s = dict(module=mod, members=sorted(ms.values()), clocks=sorted(ck_used), sameclk=[x['member'] for x in sameclk],
                  pin_bits=len(rtlbits), plan=len(pins), removed=len(removed), added=len(added), holes=len(holes),
                  ck_unknown=len(ck_unknown), lint=rec.get('lint', {}).get('errors'))
         summary.append(s)
         print(json.dumps(s), flush=True)
     (out / 'hr_summary.json').write_text(json.dumps(summary, indent=1) + '\n')
+    if a.hr_parent_module:
+        import hr_parent
+        implementations = json.load(open(a.hr_implementation_map)) if a.hr_implementation_map else None
+        report = hr_parent.emit(host, hcs, core_mem, records, hck, HR_CKMAP, out / 'parent',
+                                a.hr_parent_module, implementations, repo_root=repo, extra_sources=fl)
+        print(json.dumps(dict(hr_parent=report['module'], groups=len(report['groups']),
+                              boundary_bits=report['boundary_bits'], grouping_added_cycles=0)), flush=True)
 
 
 def main():
@@ -1289,6 +1299,8 @@ def main():
     ap.add_argument('--no-consistency', action='store_true')
     ap.add_argument('--hr-wrappers', help='OPT-IN (KV-CORES2): host-cluster wrapper dir; selects the qkd_hr_* cores only')
     ap.add_argument('--hr-filelist', help='with --hr-wrappers: member sources for the lint')
+    ap.add_argument('--hr-parent-module', help='emit a fixed-shape native parent with all planned HR groups and this module name')
+    ap.add_argument('--hr-implementation-map', help='explicit module -> core_json/opaque model contract map for selected whole child implementations')
     ap.add_argument('--hr-elab', help='KV-CORE-RTL/HR: elaborated u_host JSON (core_pins_hr.py host_elab.json); builds the 15 PLAN qkd_hr_* cores (16a clock face)')
     ap.add_argument('--hr-kit-f', help='with --hr-elab: kit filelist (kit_rtl.f of kv3_hub_Wi) for the member sources')
     ap.add_argument('--hr-part', help='with --hr-elab: bound kv3_hub_Wi partition .sv (default <plan dir>/' + HR_PART +

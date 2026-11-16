@@ -1,0 +1,3 @@
+qkd_hr_core_peer r4, DIE-KV-73 11-05, on r3 (results/kv_peer_rf_1104b, branch claude/die-kv-70-peer-1104). Edits by hand from r3; diff against that dir.
+Pin cycles: peer TX frame +1 edge at the coordinator codec, every rank; warm_ready +1 edge on rise. Fault reaction +1 edge on codec fault to rx_ready, tx_valid, warm_ready,
+and on participant, terminal, begin faults to dispatch_valid and grant_valid. Ports unchanged.
