@@ -1890,6 +1890,64 @@
          "maxItems": 4
         }
        },
+       "tap_clear_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "tap_reserved_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        }
+       },
+       "band_keepout_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        }
+       },
+       "band_tap_reach_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "band_fixed_um": {
+        "type": "object"
+       },
+       "band_place_um": {
+        "type": "object"
+       },
+       "band_tap_windows_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        }
+       },
+       "band_tap_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        }
+       },
        "reserved_sites_um": {
         "type": "array",
         "items": {

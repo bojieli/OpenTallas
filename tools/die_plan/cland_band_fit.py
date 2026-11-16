@@ -67,6 +67,7 @@ def obstacles(t, tn, plan_obj, side, lc, skip):
     obs += [list(r) for k, o in lc.get("bands", {}).items() if k != skip and o.get("rect_um")
             for r in (o.get("rects_um") or [o["rect_um"]])]
     obs += [list(r) for r in ck.get("die_islands_um", [])]
+    obs += [list(r) for r in ck.get("tap_reserved_um", [])]   # S81-PHYT1: explicit channel taps
     obs += [list(r["rect_um"]) for r in ck.get("reserved_sites_um", []) if r.get("kind") == "die_clock_tree"]
     for slot in t.get("ft_slots", []):
         cell = slot.get("bit_site_cell_um", [1.404, .27])

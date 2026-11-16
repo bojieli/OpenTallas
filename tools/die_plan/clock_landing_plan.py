@@ -485,7 +485,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
     # step).  An explicit band_spread target (_scale) still sets a larger band.
     if _use is not None and _use>0:area=max(r40*RING_FF_PACK/_use,reserve*scale if _scale is not None else 0.0)
     depth=math.ceil(max(8.64,area/length)/2.16)*2.16
-    obstacles=RT.blockages(t)+used
+    obstacles=RT.blockages(t)+used+_tap_obstacles(t)   # S81-BANDTAP-1115: a single rect never covers a reserved tap site
     if BAND_RESERVE=="ring_ff" or BAND_CLOCK_OBST:
         # the die clock driver islands and die clock-tree cell sites are placement blockages in the kit (die_islands.tcl,
         # reserved_sites.tcl); a band over them loses rows the reserve counted, so ring_ff keeps the band off them
@@ -576,8 +576,39 @@ def _band_reserve_um2(width,has_epoch=True):
     return ((4*(wl+3)+124)*.2916 + 612*math.ceil(wl/64)*.0729)/.40
 
 
+def _tap_obstacles(t):
+    """S81-BANDTAP-1115: clock.tap_reserved_um (explicit channel taps, S81-PHYT1) and clock.band_keepout_um (tap windows a
+    plan row opens in a band: a legal tap site for sinks that no tap reaches) are placement obstacles of EVERY band search,
+    single-rect (_storage_band) and multi-rect (_storage_rects) alike"""
+    ck=t.get("clock") or {}
+    return [list(r) for r in ck.get("tap_reserved_um",[])]+[list(r) for r in ck.get("band_keepout_um",[])]
+
+
+def _tap_reach(t):
+    """S81-BANDTAP-1115 (COORD 11-15, S81-PHYT1 ASK): per-type opt-in clock.band_tap_reach_um = R.  Ring band points must
+    lie within R (L1) of a legal tap site: every planned tap (clock.taps, added_taps) and clock.band_tap_sites_um.  Used for
+    the types whose legal tap sites exist only in channels / at the die edge (svc_lo t6 ft2_i, svc_hi t2 attnh_i0), so a
+    band slides to sinks a tap can reach instead of leaving them without a legal site.  None = off (default, unchanged)"""
+    ck=t.get("clock") or {};R=ck.get("band_tap_reach_um")
+    if not R:return None
+    sites=[tuple(x["xy"]) for x in list(ck.get("taps") or [])+list(ck.get("added_taps") or []) if x.get("xy") and x.get("kind")!="core"]   # core taps feed their own core only
+    sites+=[tuple(x) for x in ck.get("band_tap_sites_um",[])]
+    return (float(R),sites) if sites else None
+
+
+def _reach_mask(shape,g,reach):
+    import numpy as np
+    R,sites=reach;nx,ny=shape;m=np.zeros(shape,bool)
+    xc=(np.arange(nx)+.5)*g;yc=(np.arange(ny)+.5)*g;r=R-g       # cell centre within R - g: the whole 1.08-um cell is within R
+    for sx,sy in sites:
+        i0,i1=max(0,int((sx-R)//g)),min(nx,int((sx+R)//g)+2);j0,j1=max(0,int((sy-R)//g)),min(ny,int((sy+R)//g)+2)
+        if i1<=i0 or j1<=j0:continue
+        m[i0:i1,j0:j1]|=(np.abs(xc[i0:i1,None]-sx)+np.abs(yc[None,j0:j1]-sy))<=r
+    return m
+
+
 def _band_obstacles(t,used,phy=(),resets=()):
-    obstacles=RT.blockages(t)+[list(o) for o in used]+[list(o) for o in phy]+[list(o) for o in resets]
+    obstacles=RT.blockages(t)+[list(o) for o in used]+[list(o) for o in phy]+[list(o) for o in resets]+_tap_obstacles(t)
     if BAND_RESERVE=="ring_ff" or BAND_CLOCK_OBST:
         ck=t.get("clock") or {}
         obstacles+=[list(r) for r in ck.get("die_islands_um",[])]+\
@@ -597,11 +628,30 @@ def _hop(box,px,py):
     return max(abs(x-px)+abs(y-py) for x in(box[0],box[2]) for y in(box[1],box[3]))
 
 
-def _storage_rects(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=24,g=1.08,margin=17.28,reach=405-2.16,
-                   min_w=4,min_h=2):
+def _storage_rects(t,bus,width,used,*,branch=3,depth=2,**kw):
+    """S81-BANDTAP-1115 band defrag: the greedy carve (_storage_rects_one) cuts a channel at every reserved tap site and
+    its first picks decide the piece count (svc_hi t6 attnh_i0 9 -> 16 rects once the 8.64-um tap sites were obstacles).
+    Re-run the same legal carve with the first `depth` picks taken from the `branch` best distinct free rects and keep the
+    result with the FEWEST rects (a tie keeps the plain greedy result); picks=() is the old greedy, so the result never has more
+    pieces than before.  Every piece has the same legality (margin, reach, obstacles incl. tap sites)."""
+    import itertools
+    best=None;err=None
+    for picks in itertools.product(range(branch),repeat=depth):
+        try:b=_storage_rects_one(t,bus,width,used,picks=picks,**kw)
+        except ValueError as e:err=e;continue
+        key=(len(b.get("rects_um") or [1]),)               # strictly fewer pieces only: a tie keeps the greedy rects (no churn)
+        if best is None or key<best[0]:best=(key,b)
+        if key[0]<=1:break
+    if best is None:raise err
+    return best[1]
+
+
+def _storage_rects_one(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=24,g=1.08,margin=17.28,reach=405-2.16,
+                   min_w=4,min_h=2,picks=(),reach_k=1.0,place=None):
     import numpy as np
     w,h=t["outline_um"];px,py=_bus_xy(t,bus);rw=64*math.ceil((width+int(has_epoch))/64)
     reserve=_band_reserve_um2(width,has_epoch);obstacles=_band_obstacles(t,used,phy,resets)
+    if place and place.get("min_area_um2"):reserve=max(reserve,float(place["min_area_um2"]))   # e.g. ring density <= 0.6 (r186)
     nx,ny=int(w//g),int(h//g)
     free=np.ones((nx,ny),bool)
     for o in obstacles:
@@ -612,6 +662,12 @@ def _storage_rects(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=
     xs=np.arange(nx+1)*g;ys=np.arange(ny+1)*g
     dx=np.maximum(np.abs(xs[:-1]-px),np.abs(xs[1:]-px));dy=np.maximum(np.abs(ys[:-1]-py),np.abs(ys[1:]-py))
     free&=(dx[:,None]+dy[None,:])<=reach+1e-9
+    if place and place.get("region_um"):                      # S81-BANDTAP-1115 r186: the band lives inside this region
+        rg=place["region_um"];m_=np.zeros(free.shape,bool)
+        m_[max(0,int(math.ceil(rg[0]/g))):min(nx,int(rg[2]//g)),max(0,int(math.ceil(rg[1]/g))):min(ny,int(rg[3]//g))]=True
+        free&=m_
+    tr=_tap_reach(t) if not (place and place.get("no_reach")) else None
+    if tr:free&=_reach_mask(free.shape,g,(tr[0]*reach_k,tr[1]))               # S81-BANDTAP-1115: band points a legal tap site reaches
     rects=[];left=reserve
     while left>1e-6:
         if len(rects)>=max_rects:break
@@ -630,8 +686,9 @@ def _storage_rects(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=
                     start=si
                 if hh and (not stack or stack[-1][1]<hh):stack.append((start,hh))
         if not cands:break
-        need=left/(g*g);best=None
+        need=left/(g*g);best=None;scored=[]
         for a0,b0,a1,b1 in cands:
+            best=None
             W,H=a1-a0,b1-b0
             opts=[]
             if W*H>=need:
@@ -648,6 +705,8 @@ def _storage_rects(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=
                 box=[(a0+i_lo)*g,(b0+j_lo)*g,(a1+i_lo)*g,(b1+j_lo)*g]
                 key=(1,-W*H,_hop(box,px,py))
                 if best is None or key<best[0]:best=(key,(a0,b0,a1,b1))
+            if best is not None:scored.append(best)
+        scored.sort(key=lambda s:s[0]);best=scored[min(picks[len(rects)] if len(rects)<len(picks) else 0,len(scored)-1)]
         a0,b0,a1,b1=best[1]
         free[a0+i_lo:a1+i_lo,b0+j_lo:b1+j_lo]=False
         box=[round((a0+i_lo)*g,6),round((b0+j_lo)*g,6),round((a1+i_lo)*g,6),round((b1+j_lo)*g,6)]
@@ -1160,13 +1219,34 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
         if band_order=="largest_first":
             landings.sort(key=lambda row:(-int(row[1]["width"]),row[0]))
             info["band_order"]=band_order
+        for fb,fx in sorted(((t.get("clock") or {}).get("band_fixed_um") or {}).items()):   # frozen bands first: moved bands avoid them
+            if fx.get("rect_um"):used+=[list(x) for x in (fx.get("rects_um") or [fx["rect_um"]])]
         for bus,r in landings:
             point=_bus_xy(t,bus)
             if hard:tap=None
             else:
                 tapxy={int(r["q"].split("rst_n_t")[1]):r["xy"] for r in tree["relays"] if r["q"].startswith("rst_n_t")}
                 tap=min(range(RT.consumer_count(tree)),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
-            try:band=_storage_band(t,bus,int(r["width"]),used,phy=phy,resets=resets);used.append(band["rect_um"])
+            band=None
+            fx=((t.get("clock") or {}).get("band_fixed_um") or {}).get(bus)
+            if fx and fx.get("rect_um"):
+                # S81-BANDTAP-1115 (COORD 11-15 FABLE-PD-S81-1200 A): a frozen band (rows carry the rects composed earlier, or a
+                # moved rect) is taken as is: taps and bands stop chasing each other
+                band=copy.deepcopy(fx)
+            try:
+                bp=((t.get("clock") or {}).get("band_place_um") or {}).get(bus)
+                if band is None and bp and band_multi_rect:        # S81-BANDTAP-1115 r186: placement region + minimum area for this bus
+                    try:
+                        band=_storage_rects_staged(t,bus,int(r["width"]),used,phy=phy,resets=resets,place=bp)
+                        band["band_place_um"]=bp;used+=band.get("rects_um") or [band["rect_um"]]
+                    except ValueError:band=None
+                if band is None and _tap_reach(t) and band_multi_rect:      # S81-BANDTAP-1115: tap-reach types take the reach-masked search first
+                    for k in (1.0,1.5,2.0):                     # widest reach last; none = the plain search below
+                        try:
+                            band=_storage_rects_staged(t,bus,int(r["width"]),used,phy=phy,resets=resets,reach_k=k)
+                            band["tap_reach_um"]=round(_tap_reach(t)[0]*k,3);used+=band.get("rects_um") or [band["rect_um"]];break
+                        except ValueError:band=None
+                if band is None:band=_storage_band(t,bus,int(r["width"]),used,phy=phy,resets=resets);used.append(band["rect_um"])
             except ValueError as e:
                 band=None
                 if band_multi_rect:
@@ -1215,7 +1295,10 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                         note="reverse monitor forwarded clock; 2bit landed ring, boot-only cost"))
                 if c["seam"]:
                     monbus=f"cland_dn_ready_{i}"
-                    try:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
+                    fxm=((t.get("clock") or {}).get("band_fixed_um") or {}).get(f"monitor_{i}")   # frozen (S81-BANDTAP-1115)
+                    try:
+                        if fxm and fxm.get("rect_um"):band=copy.deepcopy(fxm)
+                        else:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
                     except ValueError as e:
                         band=None
                         if band_multi_rect:        # S81-CA-BAND: the 2-bit monitor ring takes the same notched band as a landing
