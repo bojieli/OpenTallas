@@ -26,6 +26,34 @@ Scope: process and tooling only.
 4. intel1 scratch2 has 36 GB free (99% used). At 0445 it had 227 GB. kw45 trees take 741 GB in 37 dirs. A
    third S81 pin tree (eb1e73448bd0) was being written there at 04:05.
 
+## Addendum 05:35: the weekly-limit outage, 03:45-05:35
+
+The lanes stopped. COORD posted one ruling (r288, 04:04). The autopilot ran 12 ticks (149-334 s, still about
+every 10 min).
+- 1 LAUNCH in 1 h 50 min (hd_ctl 04:43), 3 FAIL (2 QC SELFCONT on the comment path, class 5; 1 KV ssh 255 at
+  place, INFRA), 9 LAUNCH-REFUSED. The fail keys and holds were correct and nothing acted on them. Every
+  open class needs a lane edit, so an outage stops the fleet. This is class 1 plus class 3 seen from the other side.
+- r287 reached the runtime by 05:27: the UNDER-USE line works. 05:35: `idle 332 of 624 threads (used 47%)`,
+  epyc2 90 idle, epyc8 72, epyc7 71, epyc9 3. Rows not launching: 900, of which tree_switch 383,
+  **enqueued_not_held 318**, PARKED-OWNER 56, WAVE-HOLDS 36, WAIT-FORM 25. Used fell 59% -> 47%; running jobs
+  142 -> 116.
+- New, worst: 318 rows are ENQUEUED with no hold and still do not launch. Nothing names their reason. Fix
+  (KIT-OPS-7): UNDER-USE splits enqueued_not_held by the first launch gate each row fails (fail key, BIND-STALE,
+  SRC-INCOMPLETE, no gen host with disk, CPU admission, dedup). Any row that is unheld and unlaunched for 3 ticks
+  is a bug. It posts NEEDS-ACTION once with its gate.
+- Retry on an unfixed cause, a new instance: kv3_pc_v1__cl23f6a148 and kv3_pc_v1__cl7f648944 were each killed by
+  earlyoom 4 of 4 times (03:42-04:52) and resubmitted every time with `--mem 48 unchanged`. Both ended CRASH
+  infra-oom at 05:22-05:24. Fix (in the REPEAT-STOP of class 3, owner FLOW-HEALTH-1): an OOM resubmit raises
+  --mem to the measured peak x 1.25, or moves to a host with that much free memory. A second identical OOM goes
+  to BLOCKED-REPEAT and is not tried a third time.
+- Disk: intel1 scratch2 fell to 35 GB (04:23), then rose to 54 GB, with GEN-DISK-LOW on every tick. No prune ran.
+- 05:32 ALERT ADOPT-GUARD PLAN_MISSING hbm: the HBM plan points at a lane-private path
+  (`kit-ops-1/hbm_pEv11c/plan/die_plan.json`) that intel1 cannot read. This is the same lane-private-path class as
+  the S81 `src`. Fix: the config load refuses plan and src paths outside the published roots (TOOLS-CONVERGE-1115).
+- Self-running gap. The release paths that need no lane (r278 tree_ready, r280 fail keys, BLOCKED-FLOW) worked.
+  None of them can produce a fix. For an outage, the useful automatic step is the class 3 ledger plus a NEEDS-LANE
+  queue that the first lane to return reads first.
+
 ## Kit wave, 01:43-03:45
 
 | | this window (2 h) | FABLE-FLOW-0445 (2 h 28 min) |
