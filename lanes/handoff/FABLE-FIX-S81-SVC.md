@@ -112,3 +112,10 @@
 - p5 launched 09:33 (intel2 pids svc_hi t3 3591211, svc_lo t7 3591571): v3 tree, plan_inputs/B6gF2sv_formA.json,
   bind_out/asbuilt/sidecar = B6gF2sv/{out,asbuilt_run.json,sidecar_new.json}, gen epyc2. Logs <item>/p5/.
 - If p5 is BIND_STALE again, the 496 contents rows are in the bind fingerprint -> need a bind of the formA plan (F2s3).
+
+## 09:27 PST COORD: F2s3 fallback
+- F2s3 (epyc10 s81-b3-clk/ev/B6gF2s3.json + run/b/B6gF2s3) already carries the 496 svc site rows; rebind running (in G0
+  at 09:25, no out/ yet). If p5 (F2sv bind) is BIND_STALE again: when B6gF2s3/out/bind_report.json shows errors 0, copy
+  out + asbuilt_run.json + sidecar_new.json + src/physical/die_plan/s81/h2_2249 + ev/B6gF2s3.json to epyc2 (same paths)
+  and launch both pilots as p6 with plan = B6gF2s3.json, in parallel with anything still running. svc releases off
+  whichever passes r310 first. p5 is in kit_rtl at 09:25.
