@@ -325,6 +325,32 @@ def migrate_cfg(cfg):
     return n
 
 
+def convert_cfg(cfg, termmap, planned=None):
+    """r238: declare planned_events ({die: [event, ...]}) and retype migrated records.  termmap = {legacy release text (terms joined
+    ' + '): [typed terms]}; a record whose release text is mapped gets the typed terms (each validated with term_error, ValueError on a
+    bad one), the others keep their legacy text.  -> (converted keys, [(die, record id, release text, n keys)] unmapped)"""
+    for die, evs in (planned or {}).items():
+        d = (cfg.get("dies") or {}).get(die)
+        if d is None:
+            raise ValueError(f"planned_events: no die {die!r}")
+        d["planned_events"] = sorted(set(d.get("planned_events") or []) | set(evs))
+    done, left = 0, []
+    for die, d in (cfg.get("dies") or {}).items():
+        for rec in d.get("hold_records") or []:
+            txt = " + ".join(rec.get("release") or [])
+            if txt in termmap:
+                new = list(termmap[txt])
+                for t in new:
+                    e = term_error(t, die, cfg)
+                    if e:
+                        raise ValueError(f"{die}/{rec.get('id')}: {e}")
+                rec["release"] = new
+                done += len(rec.get("keys") or rec.get("items") or [])
+            elif any(unreachable_why(t, die, cfg) for t in rec.get("release") or []) or not rec.get("release"):
+                left.append((die, rec.get("id"), txt, len(rec.get("keys") or rec.get("items") or [])))
+    return done, left
+
+
 # ------------------------------------------------------------------------------------------------ cli
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
@@ -337,6 +363,10 @@ def main(argv=None):
     a_.add_argument("--die", required=True)
     a_.add_argument("--record", required=True)
     a_.add_argument("--out", required=True)
+    cv = sub.add_parser("convert", help="declare planned_events + retype migrated release terms (json: {planned:{die:[ev]}, terms:{legacy:[typed]}})")
+    cv.add_argument("--config", required=True)
+    cv.add_argument("--map", required=True)
+    cv.add_argument("--out", required=True)
     v = sub.add_parser("audit", help="compile + audit a config (no launches known: HELD-BUT-LAUNCHED is per tick in kit_wave)")
     v.add_argument("--config", required=True)
     a = ap.parse_args(argv)
@@ -345,6 +375,17 @@ def main(argv=None):
     if a.cmd == "migrate":
         print("migrated:", migrate_cfg(cfg))
         json.dump(cfg, open(a.out, "w"), indent=1)
+    elif a.cmd == "convert":
+        m = json.load(open(a.map))
+        try:
+            done, left = convert_cfg(cfg, m.get("terms") or {}, m.get("planned") or {})
+        except ValueError as e:
+            print("REJECTED:", e)
+            return 2
+        json.dump(cfg, open(a.out, "w"), indent=1)
+        print(f"retyped {done} keys; unmapped {sum(x[3] for x in left)} keys in {len(left)} records")
+        for x in left:
+            print("UNMAPPED", *x)
     elif a.cmd == "add":
         try:
             add_record(cfg, a.die, json.load(open(a.record)))

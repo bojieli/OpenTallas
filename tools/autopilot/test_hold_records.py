@@ -106,6 +106,18 @@ class T(unittest.TestCase):
         self.assertEqual(list(new["dies"]["s81"]["hold_items"].items()), list(old["dies"]["s81"]["hold_items"].items()))
         self.assertEqual(sorted(old["_hold_auto_released"]), sorted(new["_hold_auto_released"]))
 
+    def test_convert_retypes_and_reports_unmapped(self):
+        c = base()
+        c["dies"]["s81"]["hold_items"] = {"a": "r", "b": "q"}
+        c["dies"]["s81"]["hold_release_on"] = {"a": "event_adopt:B6gG3* (x) + lane_result:sdc_lint 0", "b": "lane_ready:Z"}
+        HR.migrate_cfg(c)
+        done, left = HR.convert_cfg(c, {"event_adopt:B6gG3* (x) + lane_result:sdc_lint 0": ["event_adopt:B6gG3b", "lint_clean:s81"]},
+                                    {"s81": ["B6gG3c"]})
+        self.assertEqual((done, [x[2] for x in left]), (1, ["lane_ready:Z"]))
+        self.assertIn("b6gg3c", HR.known_events(c["dies"]["s81"]))
+        with self.assertRaises(ValueError):
+            HR.convert_cfg(c, {"lane_ready:Z": ["event_adopt:Nope1"]})
+
 
 if __name__ == "__main__":
     unittest.main()
