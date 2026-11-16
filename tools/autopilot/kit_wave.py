@@ -7876,6 +7876,24 @@ def resume_source(AP, prev):
     return out
 
 
+def attempt_gen_host(cfg, die, rec):
+    """GENHOST-REC-1116 (COORD): the host an attempt GENERATED on: its record, else its spec.json, else the host of its recorded kit
+    (host:path); only then the die's current gen_host.  dies.<die>.gen_host moves while units are held, so a later stage that reads
+    the current value looks for the kit on the wrong host."""
+    rec = rec or {}
+    if rec.get("gen_host"):
+        return rec["gen_host"]
+    try:
+        g = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
+        if g:
+            return g
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    if ":" in str(rec.get("kit") or ""):
+        return str(rec["kit"]).split(":", 1)[0]
+    return ((cfg.get("dies") or {}).get(die) or {}).get("gen_host")
+
+
 def bind_restage(cfg, die, prev, sp):
     """the attempt after a RESTAGE runs on the host the move chose, while that host still holds the die's gen inputs"""
     moved = prev.pop("restage_host", None)
@@ -8135,6 +8153,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
            "block_sha": r.get("block_sha"), "plan_sha": cfg["dies"][die].get("_plan_sha"),
            "unit": unit, "dir": str(jd), "volume": r.get("volume") or "",
+           "gen_host": sp.get("gen_host"), "work": sp.get("work"),        # GENHOST-REC-1116: the host this attempt generated on; later stages / controllers read it, never the die's current gen_host
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time(),
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
