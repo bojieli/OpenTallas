@@ -43,54 +43,87 @@ def pg_conflicts(P, T):
     return bad
 
 
-def slide_rest(P, T, site, max_slide):
-    """slide every conflicting in-tile node in x to the nearest die clock site clear of the PG pairs; -> (moved, stuck)"""
-    moved, stuck = 0, []
-    steps = sorted((i * 0.054 for i in range(-int(max_slide / 0.054), int(max_slide / 0.054) + 1)), key=abs)
-    for k, n in pg_conflicts(P, T):
-        v = T["nodes"][str(k)]
-        for d in steps:
-            x, y = round(v["x"] + d, 4), v["y"]
-            if tile_of(P, x, y) != n:
+def slide_rest(P, T, site, max_slide, far_slide=4.32):
+    """slide every conflicting in-tile node in x to the nearest die clock site clear of the PG pairs.
+    Pass 1 <= max_slide; pass 2 (only nodes pass 1 could not clear) <= far_slide (half the 8.64 um PG pitch).  A node whose own
+    position is already NOT a legal kit site is not held to legality at the new position (the kit placed it there).
+    -> (moved, far_moved, stuck)"""
+    moved, far, stuck = 0, 0, []
+    for lim, is_far in ((max_slide, False), (far_slide, True)):
+        steps = sorted((i * 0.054 for i in range(-int(lim / 0.054), int(lim / 0.054) + 1)), key=abs)
+        todo = [k for k, n in pg_conflicts(P, T)] if not is_far else list(stuck)
+        stuck = []
+        for k in todo:
+            v = T["nodes"][str(k)]
+            n = tile_of(P, v["x"], v["y"])
+            was_legal = site is None or site.legal((v["x"], v["y"]))
+            for d in steps:
+                x, y = round(v["x"] + d, 4), v["y"]
+                if tile_of(P, x, y) != n:
+                    continue
+                x0, x1 = type_box_x(P, n, x, y)
+                if K._pg_overlap(x0, x1) is None and (site is None or not was_legal or site.legal((x, y))):
+                    break
+            else:
+                stuck.append(k)
                 continue
-            x0, x1 = type_box_x(P, n, x, y)
-            if K._pg_overlap(x0, x1) is None and (site is None or site.legal((x, y))):
-                break
-        else:
-            stuck.append(k)
-            continue
-        if d:
-            v["x"] = x
-            if "req_xy" in v:
-                v["req_xy"] = [x, y]
-            moved += 1
-            nb = T["node_buf"].get(str(k))
-            if nb in T["sites"]:
-                T["sites"][nb] = [x, y]
-            for t in T["taps"]:
-                if t["node"] == k:
-                    t["xy"] = [x, y]
-    return moved, stuck
+            if d:
+                v["x"] = x
+                if "req_xy" in v:
+                    v["req_xy"] = [x, y]
+                moved += 1
+                far += int(is_far)
+                nb = T["node_buf"].get(str(k))
+                if nb in T["sites"]:
+                    T["sites"][nb] = [x, y]
+                for tp in T["taps"]:
+                    if tp["node"] == k:
+                        tp["xy"] = [x, y]
+    return moved, far, stuck
 
 
-def run(P, T, site, max_slide=1.7, rep_um=150.0, types=None, snap=True):
+def clone(T):
+    """stamp_tree edits node dicts / kids lists of its input in place: give it a private copy so a reverted stamp leaves T intact"""
+    return dict(T, nodes={k: dict(v, kids=list(v.get("kids", []))) for k, v in T["nodes"].items()},
+                taps=[dict(t) for t in T["taps"]], node_buf=dict(T["node_buf"]), parent_of=dict(T["parent_of"]),
+                sites=dict(T["sites"]))
+
+
+def dangling(T):
+    """edges of the tree that point at a missing node or are not mirrored in the kids list -> count"""
+    nd = T["nodes"]
+    bad = 0
+    for k, v in nd.items():
+        p = v.get("parent")
+        if p is not None and (str(p) not in nd or int(k) not in nd[str(p)].get("kids", [])):
+            bad += 1
+        bad += sum(1 for c in v.get("kids", []) if str(c) not in nd)
+    return bad
+
+
+def run(P, T, site, max_slide=1.7, rep_um=150.0, types=None, snap=True, stamp=True):
     cnt = {}
     for n, p in P.parts.items():
         cnt[p["type"]] = cnt.get(p["type"], 0) + 1
-    todo = sorted(t for t, c in cnt.items() if c >= 2 and (types is None or t in types))
+    todo = sorted(t for t, c in cnt.items() if c >= 2 and (types is None or t in types)) if stamp else []
     before = len(pg_conflicts(P, T))
     rep = dict(types_multi=len(todo), stamped_types=0, stamp={}, skipped_types=[])
     for tn in todo:
         try:
-            T, r = NA.stamp_tree(P, T, tn, max_slide, rep_um, site=site, snap_tap_pins=snap)
+            T2, r = NA.stamp_tree(P, clone(T), tn, max_slide, rep_um, site=site, snap_tap_pins=snap)
         except Exception as e:     # a type without in-tile nodes etc.
             rep["skipped_types"].append([tn, repr(e)[:120]])
             continue
+        bad = dangling(T2)
+        if bad:      # a node slid across a tile border into a neighbouring type tile: keep the tree as it was before this type
+            rep["skipped_types"].append([tn, "dangling edges %d after stamp (reverted)" % bad])
+            continue
+        T = T2
         rep["stamped_types"] += 1
         rep["stamp"][tn] = {k: r.get(k) for k in ("instances", "stamped", "no_legal_slide", "legs_over_405", "slid_sites", "unchanged")}
     after_stamp = len(pg_conflicts(P, T))
-    moved, stuck = slide_rest(P, T, site, max_slide)
-    rep.update(pg_conflicts_before=before, pg_conflicts_after_stamp=after_stamp, rest_slid=moved, pg_conflicts_after=len(pg_conflicts(P, T)),
+    moved, far, stuck = slide_rest(P, T, site, max_slide)
+    rep.update(dangling_edges=dangling(T), pg_conflicts_before=before, pg_conflicts_after_stamp=after_stamp, rest_slid=moved, rest_slid_beyond_max_slide=far, pg_conflicts_after=len(pg_conflicts(P, T)),
                stuck_nodes=stuck[:50])
     return T, rep
 
@@ -99,8 +132,10 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("plan"); ap.add_argument("tree"); ap.add_argument("out")
     ap.add_argument("--max-slide", type=float, default=1.7); ap.add_argument("--rep-um", type=float, default=150.0)
-    ap.add_argument("--max-rects", type=int, default=100); ap.add_argument("--types")
+    ap.add_argument("--max-rects", type=int, default=100); ap.add_argument("--max-waste-frac", type=float, default=0.002)
+    ap.add_argument("--types")
     ap.add_argument("--no-snap-tap-pins", action="store_true")
+    ap.add_argument("--no-stamp", action="store_true", help="TREE is already a stamped tree: only slide the rest + rows")
     a = ap.parse_args(argv)
     import schema as S
     import die_trial as D
@@ -110,10 +145,10 @@ def main(argv=None):
     P = S.Plan(S.load(a.plan), Path(a.plan))
     site = D.clock_site(P)
     T, rep = run(P, json.load(open(a.tree)), site, a.max_slide, a.rep_um, set(a.types.split(",")) if a.types else None,
-                 not a.no_snap_tap_pins)
+                 not a.no_snap_tap_pins, not a.no_stamp)
     (out / "STAMPED_TREE.json").write_text(json.dumps(T))
     win, _ = D.island_windows(P, AC.tree_sites(str(out / "STAMPED_TREE.json")), snap=0.0, margin=0.25)
-    rows, rr = C.plan_rows(P, win, a.max_rects, C.LAYERS, "CLKSITE-QC-SNAP-1115", max_waste_frac=0.002)
+    rows, rr = C.plan_rows(P, win, a.max_rects, C.LAYERS, "CLKSITE-QC-SNAP-1115", max_waste_frac=a.max_waste_frac)
     (out / "ROWS.json").write_text(json.dumps(rows, indent=1) + "\n")
     (out / "ROWS.report.json").write_text(json.dumps(rr, indent=1) + "\n")
     rep.update(rows_types=len(rows["rows"]), rects_per_type={t: v["rects_out"] for t, v in rr.items()},

@@ -199,7 +199,7 @@ def stamp_tree(P, T, tname, max_slide=1.7, rep_um=150.0, site=None, snap_tap_pin
 
     def path_delay(nds, i):
         s = 0.0
-        while i is not None:
+        while i is not None and i in nds:
             pl = nds[i].get("physical_leg") or nds[i].get("stamp_leg")
             s += pl["delay_ps"] if pl else 0.0
             i = nds[i].get("parent")

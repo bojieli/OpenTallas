@@ -12,7 +12,7 @@ class T(unittest.TestCase):
         t["nodes"]["2"]["x"] = 4.0           # box x 3.46..6.16 overlaps the M7 pair [3.984, 4.656]
         t["nodes"]["2"]["y"] = 20.0
         self.assertIn((2, "A"), Q.pg_conflicts(P, t))
-        moved, stuck = Q.slide_rest(P, t, None, 1.7)
+        moved, far, stuck = Q.slide_rest(P, t, None, 1.7)
         self.assertGreaterEqual(moved, 1); self.assertEqual(stuck, [])
         self.assertEqual(Q.pg_conflicts(P, t), [])
         self.assertLessEqual(abs(t["nodes"]["2"]["x"] - 4.0), 1.7 + 1e-9)
