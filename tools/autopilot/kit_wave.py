@@ -4771,12 +4771,36 @@ _TRANSIENT_INFRA = re.compile(r"ot-run: NOT RUN|ot-run: NOT COMPLETED|no host qu
                               r"Connection (?:reset|refused|closed)|kex_exchange_identification|Errno 28")
 
 
+# KIT-OPS-5 11-15 (COORD r220, FABLE-FLOWCLASS-RETRY-2030): every KIT-WAVE FAIL line carries a typed stage class instead of the INFRA
+# bucket.  Types: stopped (signal 15 / operator stop: never a failure), sdc_lint, missing_input, stale_view, tool_mix, design:<stage>.
+_TYPED = (("stopped", re.compile(r"interrupted \(signal 15|terminated by signal 15|\bexit -15\b|stopped by operator|cancellation requested|"
+                                 r"stopped by signal 15|^Terminated\b|\nTerminated\b|command exit 143", re.I)),
+          ("sdc_lint", re.compile(r"SdcLintError|sdc_lint", re.I)),
+          ("stale_view", re.compile(r"STALE-CORE-VIEW|stale (?:closed )?view|view .*(?:stale|does not match)", re.I)),
+          ("missing_input", re.compile(r"KIT_INPUT_MISSING|INFRA-VIEW-MISSING|HDL source missing|source missing|not found by the probe|"
+                                       r"No such file or directory|FileNotFoundError|not in the store|KIT_NOT_SELF_CONTAINED|"
+                                       r"captured source cohort lacks|missing (?:lef|lib|input)", re.I)),
+          ("tool_mix", re.compile(r"tool skew|source skew|No module named|plan invalid|unknown key|NameError|ImportError|"
+                                  r"ModuleNotFoundError|TypeError|AttributeError|schema refusal|predates a wave flag", re.I)))
+
+
+def typed_class(cls, stage, why):
+    """'stopped' | 'sdc_lint' | 'stale_view' | 'missing_input' | 'tool_mix' | 'design:<stage>' for one FAIL (first rule wins)"""
+    text = str(why or "")
+    for name, rx in _TYPED:
+        if rx.search(text):
+            return name
+    return "design:" + (str(stage or "").split()[0] if str(stage or "").strip() else "unknown")
+
+
 def fail_signature(cls, why, stage=""):
     """(block class, comparable signature) of a FAIL, or None for a transient host failure (never counted).  Paths, hosts,
     hashes and numbers are dropped, so the same error on another host / tree / attempt is the same signature.  A host-gap
     INFRA (KW-FIX-46: FLOW input missing relabelled INFRA) counts as its original FLOW reason."""
     why = str(why or "")
     cls = str(cls or "")
+    if typed_class(cls, stage, why) == "stopped":     # r220: signal 15 / operator stop never counts as a failure signature
+        return None
     if why.startswith("INFRA host input gap"):
         i = min([why.find(w) for w in HOST_GAP_WHY if w in why] or [-1])
         if i >= 0:
@@ -8514,11 +8538,12 @@ def collect(AP, cfg, st, notices):
             AP.log(f"KIT-WAVE BLOCKED {rec['die']}/{rec['item']}@{rec.get('attempt')} {rec['blocked']}: the same failure "
                    f"{c['n']}x ({c.get('sig', '')[:200]}); owner {die_owner(cfg, rec['die'])[0]}; listed in {BLOCKED_FILE}")
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
-        AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
+        rec["stage_class"] = typed_class(cls, res.get("stage") or rec.get("stage"), why)
+        AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}[{rec['stage_class']}]: {why}")
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
-            if not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
+            if rec.get("stage_class") != "stopped" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))
