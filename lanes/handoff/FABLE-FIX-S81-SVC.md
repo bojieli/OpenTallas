@@ -99,3 +99,8 @@
   tree file, sha1 711c256fc96e = epyc9 lane file; README.fable-fix-s81-svc beside src/). asbuilt_run.json also names
   545 paths under B6gG3b/out (absent on epyc2; kit_rtl did not need them).
 - svc_hi t3 relaunched as p4 (pid 3265257, intel2). svc_lo t7 p3 (pid 2995111) still in kit_rtl, will find the file.
+
+## 09:15 PST COORD r310: svc-ready criteria (binding)
+- Post svc-ready PASS only when BOTH pilots show: GRT overflow 0 AND TT setup >= -42 ps on the GRT-stage read
+  (S81 RC x1.00, reloaded DB); OR post-CTS TT >= +45 ps before GRT. Post-CTS placement-RC under-reads by 51-86 ps,
+  so a post-CTS value between -42 and +45 is NOT a pass. Plus my own: all macros placed at floorplan (148 / 169).
