@@ -1073,11 +1073,37 @@ def clear_generated_landing_infra(raw):
     raw.get('clock',{}).pop('landing_network',None)
 
 
-def compose(*a,**k):
+# FABLE-FIX-S81-RINGS 11-16 (FABLE-PD-S81-0117 lever 3, COORD r268): the S81 CA re-compose of 11-15 ran with the default
+# band_ring="all" and silently dropped ring_place="ff" from all 988 ring bands; every ring then packed FIRM in netlist
+# order (t65: 68,983 FIRM cells) and 13 of 13 leaf kits with a ring of >= 513 bits failed GRT (38k-250k overflow; t68 with
+# the key back on the same rects: 132,927 -> 0).  ring_place_missing lists the ring bands of >= min_bits bits that are not
+# flops-only; compose(ring_ff_min_bits=N) refuses to return a plan that has one (fail closed), and kit_preflight repeats
+# the check on the kit.  Monitor bands, bands without a rect (placement FAIL) and hard ring cores are not judged.
+RING_FF_MIN_BITS=256
+def ring_place_missing(bands,min_bits=RING_FF_MIN_BITS):
+    """[(bus,width)] of the ring bands of >= min_bits bits without ring_place "ff" (bands = landing_contract.bands)"""
+    out=[]
+    for bus,b in sorted((bands or {}).items()):
+        if bus.startswith("monitor_") or not isinstance(b,dict) or not b.get("rect_um") or b.get("hard_core"):continue
+        w=int(b.get("width") or 0)
+        if w>=int(min_bits) and b.get("ring_place")!="ff":out.append((bus,w))
+    return out
+
+
+def compose(*a,ring_ff_min_bits=None,**k):
     global BAND_USE_MAX,BAND_CLOCK_OBST
     saved=(BAND_USE_MAX,BAND_CLOCK_OBST)
-    try:return _compose(*a,**k)
+    try:out=_compose(*a,**k)
     finally:BAND_USE_MAX,BAND_CLOCK_OBST=saved
+    if ring_ff_min_bits:
+        raw=out[0] if isinstance(out,tuple) else out
+        bad=[(tn,bus,w) for tn,t in sorted(raw.get("partition_types",{}).items())
+             for bus,w in ring_place_missing(((t.get("clock") or {}).get("landing_contract") or {}).get("bands"),ring_ff_min_bits)]
+        if bad:
+            raise ValueError(f"RING-FF-GUARD: {len(bad)} landing ring band(s) of >= {int(ring_ff_min_bits)} bits without "
+                             f"ring_place=ff in {len({x[0] for x in bad})} type(s) (compose band_ring=ff / --band-ring ff): "
+                             +", ".join(f"{tn}.{bus}[{w}]" for tn,bus,w in bad[:8]))
+    return out
 
 
 def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",

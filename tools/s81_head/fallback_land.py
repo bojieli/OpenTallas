@@ -200,9 +200,17 @@ def cmd_compose(a):
             raise ValueError("explicit observer spec missing actual binding: " + repr(missing))
         observer = {k: observer[k] for k in required}
     try:
+        # FABLE-FIX-S81-RINGS 11-16 (r268, FABLE-PD-S81-0117 levers 1/3): an S81 compose is flops-only by default
+        # (band_ring ff, bands sized on the flop reserve = band_reserve ring_ff) and refuses a ring band of >= 256 bits
+        # without ring_place=ff.  Other dies keep the old defaults (all / padded / no guard) unless the flags are given.
+        s81 = (plan.get("die") or {}).get("name") == "s81"
+        band_ring = a.band_ring or ("ff" if s81 else "all")
+        band_reserve = a.band_reserve or ("ring_ff" if band_ring == "ff" else "padded")
+        ring_ff_min_bits = a.ring_ff_min_bits if a.ring_ff_min_bits is not None else (CLP.RING_FF_MIN_BITS if s81 else 0)
+        print(f"COMPOSE band_ring={band_ring} band_reserve={band_reserve} ring_ff_min_bits={ring_ff_min_bits}", flush=True)
         raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer,
-                               observer=observer, monitor=a.monitor, band_reserve=a.band_reserve,
-                               band_spread=a.band_spread, band_ring=a.band_ring,
+                               observer=observer, monitor=a.monitor, band_reserve=band_reserve,
+                               band_spread=a.band_spread, band_ring=band_ring, ring_ff_min_bits=ring_ff_min_bits,
                                band_multi_rect=getattr(a, "band_multi_rect", False),
                                band_order_by_type=_band_orders(a) or None,
                                band_use_max=getattr(a, "band_use_max", 0.5),
@@ -332,10 +340,15 @@ def main(argv=None):
     c.add_argument("--band-use-type", action="append", metavar="TYPE=USE",
                    help="S81-CA-BAND: band use floor of ONE composed type (repeatable), e.g. svc_hi_dsdv_svc_rs__t3=1.0; "
                         "every other type keeps --band-use-max")
-    c.add_argument("--band-ring", default="all", choices=["all", "ff"],
-                   help="ring_ff only: ff = place only the ring flops FIRM in bit-major order, ring logic to GPL (DIE-HEAD-13)")
-    c.add_argument("--band-reserve", default="padded", choices=["padded", "live", "ring_ff"],
-                   help="storage band size: padded (default), live, ring_ff (DIE-HEAD-11: ring flop count x mapped footprint)")
+    c.add_argument("--band-ring", default=None, choices=["all", "ff"],
+                   help="ff = place only the ring flops FIRM in bit-major order, ring logic to GPL (DIE-HEAD-13); "
+                        "default: ff on an S81 plan (die.name s81), all elsewhere")
+    c.add_argument("--band-reserve", default=None, choices=["padded", "live", "ring_ff"],
+                   help="storage band size: padded, live, ring_ff (DIE-HEAD-11: ring flop count x mapped footprint); "
+                        "default: ring_ff with band ring ff, else padded")
+    c.add_argument("--ring-ff-min-bits", type=int, default=None,
+                   help="fail closed when a composed ring band of >= N bits lacks ring_place=ff (0 = off); "
+                        "default: 256 on an S81 plan, off elsewhere")
     c.add_argument("--monitor", default="reset", choices=["reset", "dataflow", "region"], help="monitor network: reset-wavefront cohorts (default), uniform dataflow (no type split) or region (dataflow walk incl. same-region links; landed-mask type split)")
     v = sub.add_parser("variant")
     v.add_argument("plan")
