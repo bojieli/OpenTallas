@@ -168,3 +168,13 @@
 
 ### CODEX latest live status (supersedes startup observation above)
 Lo7 Docker startup resolved normally without any retry: b34e72db8af9 / dpkit-svc_lo_dsdv_svc_rs__t7-3032295, synthesis active. BOTH actual F2s3 pilots live; hi3 unit3006868, lo7unit3031332. Measured containers~9.6/11.9GiB against48GiB each, CPU active; scratch~125GBfree. Canonical pair progressing OPT3.8; diagnostic oldF2sv approved-profile hi3 reached ABC15.42, lo7 MEMORY_COLLECT/OPT_CLEAN. No physical gate yet, r310 held. All source, t6 old-job and startup failures have explicit disposition.
+
+## 13:30 PST FABLE back (limit 09:5x-13:2x; Codex covered, notes above)
+- Not duplicating: the two release pilots are the Codex-launched ACTUAL F2s3 kits on epyc9
+  /srv/opentallas-scratch2/claude/fable-fix-s81-svc/f2s3_actual_phys/<type>/gen/<type> (hi3 unit oth-ubuntu-3006868-1794863068,
+  lo7 oth-ubuntu-3031332-1794863108; route goal, 48 GB / 8 thr; intel2 watcher pid 1047974). 13:28: both in 1_2_yosys
+  (hi3 OPT 3.8.175, lo7 3.8.62); macro_place.tcl rows 148 / 169 = plan sites incl. my 31; epyc9 scratch2 119 GB free.
+- Closure on main source solved by Codex (ref "mainref", source 79ca679, 16/16 APPLIED on F2s3). F2s3 adopted (r331).
+- My p1-p5 run-items are all ended (AP_END); epyc9 regen/ dir is evidence only.
+- Next reads, in order: 2_1 floorplan placed macros (148 / 169), GPL, CTS TT, GRT overflow + GRT-stage TT (r310), route.
+  Then: RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready PASS: <evidence>.
