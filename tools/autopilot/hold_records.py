@@ -168,7 +168,7 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
@@ -176,6 +176,7 @@ class Ctx:
         self.kit_snap_fn = kit_snap_fn or (lambda cfg, die: False)
         self.exists_fn = exists_fn or os.path.exists
         self.proof_fn = proof_fn or (lambda name: False)          # name -> a RESULT PASS line names this proof
+        self.lint_fn = lint_fn                                      # (die, item-or-pattern) -> True when no sdc_lint failure is known; None = old _lint_clean list
         self.tree_fn = tree_fn or (lambda die, path: False)       # (die, tree) -> marker + smoke + replication on all gen hosts
         self.marker_fn = marker_fn or (lambda die: None)          # die -> parsed lanes/handoff/tree_switch_<die>.json or None
         self.cells_fn = cells_fn or (lambda die, item: None)      # (die, item) -> measured cell count or None (unknown = held)
@@ -197,6 +198,8 @@ def term_met(term, rec, die, item, cfg, ctx):
             ref = val.split()[0] if val else ""
             return bool(ref) and bool(ctx.is_merged(ref))
         if kind == "lint_clean":
+            if ctx.lint_fn is not None:
+                return bool(ctx.lint_fn(val, item))
             lc = (cfg.get("dies") or {}).get(val, {}).get("_lint_clean")
             return bool(lc) and (item in lc or "*" in lc)
         if kind == "kit_snap":
@@ -337,6 +340,12 @@ def compile_holds(cfg, ctx=None):
             if not isinstance(d.get(name), dict):
                 d[name] = {}
         rec_dies.add(die)
+        owned = set()
+        for rec in recs:                                   # a record is the authority for its keys: a copy of them written into the
+            owned.update(rec_keys(rec, lists.get(str(rec.get("plan_sha") or "")) or lists.get(cur) or []))   # file's hold_items (a dumped
+        for name in ("hold_items", "route_hold_items"):    # config) would outlive a release; drop it, the record re-adds what is held
+            for k in [k for k in d[name] if k in owned and (name == "hold_items" or any(r.get("route") and k in (r.get("keys") or []) for r in recs))]:
+                del d[name][k]
         for rec in recs:
             sha = str(rec.get("plan_sha") or "")
             stale = bool(sha) and bool(cur) and sha != cur
@@ -399,6 +408,12 @@ def audit(cfg, launched=()):
                 why = unreachable_why(t, die, cfg)
                 if why:
                     add("TERM-UNREACHABLE", die, rid, f"{t[:90]}: {why}", n=inf["held"])
+    for die, d in (cfg.get("dies") or {}).items():          # legacy prose keys: a hold_items key with no record has no machine release
+        owned = {k for r in d.get("hold_records") or [] for k in (r.get("keys") or []) + (r.get("items") or [])}
+        loose = [k for k in (d.get("hold_items") or {}) if k not in owned and k not in (cfg.get("_hold_added") or {}).get(die, [])]
+        loose = [k for k in loose if k not in {x for n, x in (cfg.get("_hold_added") or {}).get(die, []) if n == "hold_items"}]
+        if loose and die != "hbm":
+            add("LEGACY-HOLD", die, "-", f"{len(loose)} hold_items key(s) with no record / typed release: {','.join(loose[:4])}", n=len(loose))
     for die, rid, k in cfg.get("_hold_proof_stuck") or []:
         add("PROOF-HELD", die, rid, f"pattern {k!r} still covers a proof item (no item list to carve it)")
     for die, item in launched:
