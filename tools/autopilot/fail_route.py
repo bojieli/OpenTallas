@@ -32,9 +32,14 @@ from zoneinfo import ZoneInfo
 HOME = Path(os.path.expanduser("~"))
 LANE = "FAIL-ROUTE-1115"
 DIE_DEFAULT = {"s81": "DIE-S81-92", "qwen_compute": "DIE-QC-103", "qwen_kvsys": "KV-102", "head": "HEAD-100"}
-DIE_PREFIX = {"s81": ("DIE-S81", "S81-"), "qwen_compute": ("DIE-QC", "QC-"), "qwen_kvsys": ("KV-", "DIE-KV"),
-              "head": ("HEAD-", "DIE-HEAD"), "hbm": ("DIE-HBM", "HBM-")}
+DIE_PREFIX = {"s81": ("DIE-S81", "S81-", "FABLE-FIX-S81"), "qwen_compute": ("DIE-QC", "QC-", "FABLE-FIX-QC"),
+              "qwen_kvsys": ("KV-", "DIE-KV", "FABLE-FIX-KV"), "head": ("HEAD-", "DIE-HEAD", "FABLE-FIX-HEAD"), "hbm": ("DIE-HBM", "HBM-")}
 NOT_OWNER = ("FABLE-", "COORD", "FLOW-HEALTH", "KIT-OPS", "KIT-WAVE", "MERGE-QUEUE", "CLEAN", "PLAN-GATE-PRE", LANE)
+# COORD 11-16: S81 kit items go to the lane that owns their item family; first match wins, else the die default
+S81_RULES = ((r"^col_", "FABLE-FIX-S81-COL"), (r"^(leaf|ring)|_ring", "FABLE-FIX-S81-RINGS"), (r"strip", "FABLE-FIX-S81-STRIP"),
+             (r"serdes|phy", "S81-SERDES-PHY-1116"))
+S81_ONLY = {"FABLE-FIX-S81-COL"}   # never the generic pick for non-col items
+OWNER_OK = ("FABLE-FIX-",)   # fix lanes own failures; other FABLE-* are reviewers
 VERDICT = re.compile(r"did NOT pass|FAIL|REFUSE|Traceback")
 POST = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d \d\d:\d\d) (?:PST|PDT)\s+(?P<tag>[A-Z][A-Z-]*)\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)"
                   r"\s*->\s*(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")
@@ -84,7 +89,7 @@ def live_lanes(posts, now, live_h):
     """lane -> (last post epoch) for lanes that posted within live_h hours; reviewers and infra lanes are not owners."""
     last = {}
     for p in posts:
-        if p["lane"].startswith(NOT_OWNER):
+        if p["lane"].startswith(NOT_OWNER) and not p["lane"].startswith(OWNER_OK):
             continue
         last[p["lane"]] = max(last.get(p["lane"], 0), p["t"])
     return {k: v for k, v in last.items() if now - v <= live_h * 3600}
@@ -93,6 +98,8 @@ def live_lanes(posts, now, live_h):
 def pick_owner(die, fam, live, posts, now, live_h):
     """live owner lane for (die, family) or COORD."""
     pref = DIE_PREFIX.get(die, ())
+    if die == "s81":
+        live = {k: v for k, v in live.items() if k not in S81_ONLY}
     cand = {k: v for k, v in live.items() if k.startswith(pref) or k == DIE_DEFAULT.get(die)}
     if fam:
         named = [p for p in posts if p["lane"] in live and now - p["t"] <= live_h * 3600 and fam in p["text"]
@@ -140,14 +147,16 @@ def build_classes(coord, state, posts, now, window_h, live_h):
     live = live_lanes(posts, now, live_h)
     classes = {}
 
-    def add(die, kind, label, name, fam, t, ckey):
-        c = classes.setdefault(ckey, dict(die=die, kind=kind, label=label, items={}, fams=set()))
+    def add(die, kind, label, name, fam, t, ckey, forced=""):
+        c = classes.setdefault(ckey, dict(die=die, kind=kind, label=label, items={}, fams=set(), forced=forced))
         c["items"][name] = t
         c["fams"].add(fam)
 
     for die, item, cls, stage, reason, n, last in kit_failures(state, now, window_h):
         label = f"{die}/{stage}/{cls}"
-        add(die, "kit", label + " " + mask(reason)[:60], item, family(item), last, f"kit|{die}|{cls}|{stage}|{mask(reason)}")
+        forced = next((ln for rx, ln in S81_RULES if re.search(rx, item)), DIE_DEFAULT["s81"]) if die == "s81" else ""
+        add(die, "kit", label + " " + mask(reason)[:60], item, family(item), last,
+            f"kit|{die}|{cls}|{stage}|{mask(reason)}|{forced}", forced)
     for p in posts:
         if p["tag"] != "RESULT" or p["lane"].startswith(NOT_OWNER) or now - p["t"] > window_h * 3600:
             continue
@@ -158,7 +167,7 @@ def build_classes(coord, state, posts, now, window_h, live_h):
         add(die, "waiter", f"{die}/waiter RESULT FAIL", name, p["lane"], p["t"], f"waiter|{die}")
     for ckey, c in classes.items():
         fam = sorted(c["fams"])[0] if len(c["fams"]) == 1 else None
-        c["owner"] = pick_owner(c["die"], fam, live, posts, now, live_h)
+        c["owner"] = c.get("forced") or pick_owner(c["die"], fam, live, posts, now, live_h)
         c["cid"] = cid_of(ckey)
     return classes
 
