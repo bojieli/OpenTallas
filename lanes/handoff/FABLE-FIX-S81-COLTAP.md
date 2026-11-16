@@ -121,3 +121,8 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - (2) IFN = 0 halves = col form for ALL 216 (COORD). Halves not signed (he FF -24.18 removal class, ECO failed; hw FF -68.88). Worker agent started on S81-IFN0-HALVES (reports to me). Then rows for F2s4b: views, .IFN(0), core tap insertion, sequencer lead 0 (drop the cfg7_seq entry of core_pin_lead_ps).
 - (3) var_b (lead 40 / ROM 285) CTS done; timing read to rerun on epyc8. (4) FF hold read: an/stage_ffh.sh KIT OUT cts|grt + clsh.py.
 - epyc7 thread cap full (184/96): run reads / variants on epyc8 (var_b, var_c, an copied there).
+
+## 16:0x 11-16: variant reads
+- var_b (lead 40, ROM 285) CTS: go_tag +64..70, ef +184..194, q +9, a -42 (s14). Rule: a + q per sequencer is independent of both leads (s14 +44, s12 +64). Fallback = sequencer lead 40, ROM lead 255. Main (IFN0): sequencer lead 0, ROM lead about 200 (inference).
+- FF hold at CTS pre-repair: 654 non-port endpoints, -175 (300 are reset removal). hold script prints slack x 1e12 (divide). Read again on the GRT DB.
+- var_c (reset spread + lead 40 / ROM 285) relaunched on epyc8 after a RESYNTH-GUARD stop (config.mk mtime; touch -r oldest 1_*.v). Client log intel2 pilot_r2_varc.log. Look for OT_RESET_CHAIN lines in 3_4_place_resized.log, then an/stage_sta.sh ... r2c_cts cts.
