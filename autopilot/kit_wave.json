@@ -15,28 +15,28 @@
   "dies": {
     "qwen_kvsys": {
       "enabled": true,
-      "event": "kvgeom7uh",
+      "event": "kvgeom7yhr",
       "gate": {
         "g0c": "PASS",
         "bind": "PASS",
         "clock": "PASS",
         "evidence": "WAVE-HOLDS-1115 2026-11-15 16:26 PST kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168): G0 PASS 0 errors (epyc7, --priority plan); pinned strict bind RC 0 (160/56/2545, 0 errors), R8_RECHECK changed 0; LATCHECK 2404/2404 PASS | prev: KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
       },
-      "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
-      "gen_host": "epyc2",
-      "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0",
-      "src_sha": "96f13b36a258e3b6121497ff52a7a31e9add3131",
+      "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+      "gen_host": "epyc9",
+      "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1",
+      "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0/out_h1",
+        "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1",
         "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
       },
       "gen_args": [
         "--hold-ff-margin",
         "0",
         "--clock-landing",
-        "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+        "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
       ],
       "type_args": {
         "kv3_hub_Ei": [
@@ -683,7 +683,7 @@
       ],
       "plan_items_from_allowlist": true,
       "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
-      "queue_src": "main@66e6607e3f0e",
+      "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
       "hold_items_released": {
         "kv3_pc": "KW-FIX-8 14:1x I46 was: DIE-KV-69 11:07 + COORD: kit_rtl needs prov_stage first; hold until the die option is on the scheduler",
         "kv3_pc_v*": "LIFTED DIE-KV-65 (COORD 01:03 LOOP-GAP (2)): 'release after real child views' defeated provisional views",
@@ -730,11 +730,8 @@
         "intel2"
       ],
       "gen_hosts": [
-        "epyc10",
-        "epyc2",
-        "epyc8",
         "epyc9",
-        "intel1"
+        "epyc10"
       ],
       "place_prefer": [
         "intel1",
@@ -3863,7 +3860,7 @@
         "epyc7",
         "epyc2"
       ],
-      "plan_sha256": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+      "plan_sha256": "723fd5b4b006289fcff161bd10289a8b1191a0a19f799eea27e6ccb6995df691",
       "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
       "die_gen_env": {
         "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
@@ -4644,7 +4641,8 @@
         "kvgeom5",
         "kvgeom6",
         "kvgeom7u",
-        "kvgeom7uh"
+        "kvgeom7uh",
+        "kvgeom7yhr"
       ],
       "hold_items_released_kitops1_kvn2": {
         "kv3_pv*": "KW-FIX-45 11-11 19:3x COORD (fail_watch): whole kv3_hg*/hgi*/pc*/pv* class held by pattern until DIE-KV-98 vF (resize-bands 0.5) binds, then relaunch on vF; CLAND band class (kv3_hg_v1p4 failed 19:18 after launching before the hold)",
@@ -5918,8 +5916,8 @@
         },
         "src_manifest": "verify"
       },
-      "src_manifest_hash": "6dd08c2a09b4d0b044ca214123b1ffe022d41a2e483db1088fa74194407bcedf",
-      "tools_sha": "eb1e73448bd0",
+      "src_manifest_hash": "4312921fd6bbda17280ed8e071f308455f2637e8b09f74a3b0eec37b9bbe88e9",
+      "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
       "prev_widen1116": {
         "gen_host": "epyc10",
         "gen_hosts": [
