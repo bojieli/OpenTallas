@@ -719,7 +719,17 @@
     "kv3_pc_v1__cl4ea58a5c": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
     "kv3_io_cor": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
     "kv3_io_cor_v1": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
-    "kv3_hroot": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key."
+    "kv3_hroot": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key.",
+    "kv3_hg_v3": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_hgi_v2__cl2862d491": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_hub_Ei": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_hub_Eo": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_hub_Wo": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_pc__cl254f2e73": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_pc__cl5a95b461": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_pc_v1__cl23f6a148": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_pc_v1__cl7f648944": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_sys_c": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5691,7 +5701,17 @@
     "kv3_pv_v4n": "lane_ready:KV-101",
     "kv3_pv_v6": "lane_ready:KV-101",
     "kv3_pv_v6n": "lane_ready:KV-101",
-    "kv3_hroot": "lane_result:DRT0255-PROOF flags READY"
+    "kv3_hroot": "lane_result:DRT0255-PROOF flags READY",
+    "kv3_hg_v3": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_hgi_v2__cl2862d491": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_hub_Ei": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_hub_Eo": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_hub_Wo": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_pc__cl254f2e73": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_pc__cl5a95b461": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_pc_v1__cl23f6a148": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_pc_v1__cl7f648944": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_sys_c": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync"
    },
    "prev_wavehold1115_kvgeom6": {
     "event": "kvgeom6",
@@ -5717,7 +5737,19 @@
     }
    },
    "note_wavehold1115_kvgeom7u": "WAVE-HOLDS-1115 2026-11-15 15:19 PST: wave switched to kvgeom7u in one commit; pilots released: kv3_hgi_v2__cl2862d491 and kv3_hg_v3 (smallest non-kv3_hg hg frame by last measured cells 264,620; kv3_hg itself is not a pilot per TYPES-KV-FAIL-1115). Other hg/hgi stay held. pc 7J-PENDING keys released: ['kv3_pc__cl254f2e73', 'kv3_pc__cl5a95b461'].",
-   "prev_wavehold1115_gate_evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
+   "prev_wavehold1115_gate_evidence": "KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS",
+   "hold_items_added_wavehold1115_kitrtl_skew": [
+    "kv3_hg_v3",
+    "kv3_hgi_v2__cl2862d491",
+    "kv3_hub_Ei",
+    "kv3_hub_Eo",
+    "kv3_hub_Wo",
+    "kv3_pc__cl254f2e73",
+    "kv3_pc__cl5a95b461",
+    "kv3_pc_v1__cl23f6a148",
+    "kv3_pc_v1__cl7f648944",
+    "kv3_sys_c"
+   ]
   },
   "s81": {
    "enabled": true,
@@ -7923,7 +7955,12 @@
     "ot_s81sl_leaf__t75__*": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t75 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t8__*": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t8 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t9__*": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t9 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
-    "seqhost__t1__*": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type seqhost__t1 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key."
+    "seqhost__t1__*": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type seqhost__t1 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+    "serdes__t4": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): serdes__t4 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
+    "serdes__t4__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): serdes__t4 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
+    "slice_station__t45__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): slice_station__t45 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
+    "slice_station__t46__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): slice_station__t46 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key.",
+    "slice_station__t47__*": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): slice_station__t47 still fails sdc_lint plan clock.tap_window, outside the tapoffset_drop lists. Held until B6gG1d adopts (DIE-S81-92 to confirm G1d fixes it). Running attempts finish. Lift = delete this key."
    },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
@@ -34806,7 +34843,12 @@
     "ot_s81sl_leaf__t75__*": "event_adopt:B6gG1d",
     "ot_s81sl_leaf__t8__*": "event_adopt:B6gG1d",
     "ot_s81sl_leaf__t9__*": "event_adopt:B6gG1d",
-    "seqhost__t1__*": "event_adopt:B6gG1d"
+    "seqhost__t1__*": "event_adopt:B6gG1d",
+    "serdes__t4": "event_adopt:B6gG1d",
+    "serdes__t4__*": "event_adopt:B6gG1d",
+    "slice_station__t45__*": "event_adopt:B6gG1d",
+    "slice_station__t46__*": "event_adopt:B6gG1d",
+    "slice_station__t47__*": "event_adopt:B6gG1d"
    },
    "item_env_deleted_tap_max_sinks_wavehold1115": [
     "dsdv_slice_lepe_mu_C__t1",
@@ -35061,7 +35103,14 @@
     "col_types": 216,
     "keys_added_noncol": 104,
     "keys_added_col": 0
-   }
+   },
+   "hold_items_added_wavehold1115_loopgap_sdclint": [
+    "serdes__t4",
+    "serdes__t4__*",
+    "slice_station__t45__*",
+    "slice_station__t46__*",
+    "slice_station__t47__*"
+   ]
   },
   "s81_head": {
    "enabled": true,
