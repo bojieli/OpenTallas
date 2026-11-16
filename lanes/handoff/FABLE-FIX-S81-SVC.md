@@ -165,3 +165,6 @@
 - Both routes admitted ep9 48GB8threads, preflight PASS0: hi3 unit oth-ubuntu-3006868-1794863068, Docker11251cfb0840 dpkit-svc_hi_dsdv_svc_rs__t3-3007103 actively synthesizing. Lo7 unit oth-ubuntu-3031332-1794863108, exact Docker request dpkit-svc_lo_dsdv_svc_rs__t7-3032295 still pending startup (client3041140, no container object yet). Preserve both, no duplicate launch.
 - Original path root fable-fix-s81-svc/f2s3_actual_phys/TYPE/gen/TYPE; intel2 f2sv_main/f2s3_route_TYPE.log; watcher1047974 retains terminal results.
 - EP9 scratch dipped46GB, recovered130GB then73GB: unrelated large writes; fleet_flow owns capacity/create-pending diagnosis. Own new kits under150MB. Hi3 progressing synthOPT3.8, lo7 pendingDocker is INFRA observation, not designFAIL.
+
+### CODEX latest live status (supersedes startup observation above)
+Lo7 Docker startup resolved normally without any retry: b34e72db8af9 / dpkit-svc_lo_dsdv_svc_rs__t7-3032295, synthesis active. BOTH actual F2s3 pilots live; hi3 unit3006868, lo7unit3031332. Measured containers~9.6/11.9GiB against48GiB each, CPU active; scratch~125GBfree. Canonical pair progressing OPT3.8; diagnostic oldF2sv approved-profile hi3 reached ABC15.42, lo7 MEMORY_COLLECT/OPT_CLEAN. No physical gate yet, r310 held. All source, t6 old-job and startup failures have explicit disposition.
