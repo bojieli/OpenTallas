@@ -5278,19 +5278,35 @@ def macro_move_table(t, tn, env=None):
     return out
 
 
-def txl_mid_exports(cfg, kd, env=None):
+# SERDES-TXPIPE 11-14: a serdes pipe form brings its own placement (txl_mid.tcl face mode), so a type that sets the define
+# in its plan verilog_defines gets the hook without a generation env (wave kits, private kits alike).
+SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE": ("u_rxf", "u_dec.u_face_p_d"),
+                     "OT_S81_SERDES_RXNEG": ("u_rxf", "u_dec.u_face_p_d")}
+
+
+def txl_mid_exports(cfg, kd, env=None, defines=()):
     """KW-FIX-43 11-10 (DIE-S81-85 serdes TXL4, COORD): opt-in at generation (OT_TXL_MID=1; OT_TXL_MID_CHAINS = instance
     chains, spaces or commas, default u_txl in the hook): copy txl_mid.tcl into the kit and run it as POST_GLOBAL_PLACE_TCL
     (each relay row and its hop buffers / inverters placed evenly from source to sink; placement only, no netlist change).
+    SERDES-TXPIPE 11-14: the type defines OT_S81_SERDES_TXPIPE / OT_S81_SERDES_RXPIPE (defines: the kit VERILOG_DEFINES,
+    bare or -D) turn it on by themselves with their chains (SERDES_PIPE_CHAINS, after any env chains) and the macro-face
+    rule OT_TXL_MID_FACE = 1 (the row next to the PMA macro sits at its pin).
     Unset = no lines, the kit is byte-identical."""
     env = os.environ if env is None else env
-    if env.get("OT_TXL_MID") != "1":
+    names = {d[2:] if d.startswith("-D") else d for d in defines}
+    pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
+    if env.get("OT_TXL_MID") != "1" and not pipe:
         return []
     assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") for c in cfg), "OT_TXL_MID: POST_GLOBAL_PLACE_TCL in use"
-    chains = " ".join(env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split())
+    chains = env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split() if env.get("OT_TXL_MID") == "1" else []
+    if pipe:
+        chains = list(dict.fromkeys(chains + pipe))
+    chains = " ".join(chains)
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
-            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []), "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"]
+            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
+            *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
+            "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"]
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
@@ -5901,7 +5917,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cons = cons_kit_settings()
     if cons:
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
-    cfg += txl_mid_exports(cfg, kd)
+    cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
