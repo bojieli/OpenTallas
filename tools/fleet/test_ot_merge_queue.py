@@ -426,3 +426,50 @@ class Reap(unittest.TestCase):
             for p in (a, b, c):
                 p.kill(); p.wait()
             shutil.rmtree(d, ignore_errors=True)
+
+
+class SparseResultFiles(unittest.TestCase):
+    def test_exact_shallow_records_and_existing_directory_dependencies(self):
+        files = ["results/rtl/new.json", "results/geom_review/review.json",
+                 "results/rtl/deep/body.sv", "tools/fleet/new_helper.py"]
+        entries = M.changed_checkout_entries(files)
+        self.assertIn("file:results/rtl/new.json", entries)
+        self.assertIn("file:results/geom_review/review.json", entries)
+        self.assertIn("results/rtl/deep", entries)
+        self.assertIn("tools/fleet", entries)
+        pats = M.extra_sparse_patterns(entries)
+        self.assertIn("/results/rtl/new.json", pats)
+        self.assertNotIn("/results/rtl/", pats)
+        self.assertIn("/results/rtl/deep/", pats)
+
+    def test_real_git_checkout_keeps_requested_bytes_without_unrelated_siblings(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            repo = root / "repo"
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.name", "sparse fixture"], check=True)
+            subprocess.run(["git", "-C", str(repo), "config", "user.email", "fixture@invalid"], check=True)
+            payloads = {"results/rtl/new.json": '{"exact": true}\n',
+                        "results/rtl/unrelated.v": "not requested\n",
+                        "results/geom_review/review.json": '{"review": true}\n',
+                        "results/geom_review/unrelated.png": "not requested either\n",
+                        "results/rtl/deep/body.sv": "module body; endmodule\n"}
+            for f, text in payloads.items():
+                (repo / f).parent.mkdir(parents=True, exist_ok=True)
+                (repo / f).write_text(text)
+            subprocess.run(["git", "-C", str(repo), "add", "--", *payloads], check=True)
+            subprocess.run(["git", "-C", str(repo), "commit", "-qm", "fixture"], check=True)
+            sha = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+            m = load({"MQ_REPO": str(repo), "MQ_HOME": str(root / "mq"),
+                      "MQ_WT": str(root / "wt"), "MQ_SPARSE": "/*,!/*/"})
+            changed = ["results/rtl/new.json", "results/geom_review/review.json",
+                       "results/rtl/deep/body.sv"]
+            wt = m.wt_make("exact", sha, m.changed_checkout_entries(changed))
+            for f in changed:
+                self.assertEqual((wt / f).read_text(), payloads[f])
+            self.assertFalse((wt / "results/rtl/unrelated.v").exists())
+            self.assertFalse((wt / "results/geom_review/unrelated.png").exists())
+            # Control: the old parent-directory inventory pulls the unrelated siblings.
+            broad = m.wt_make("old-parent-control", sha, {os.path.dirname(f) for f in changed})
+            self.assertTrue((broad / "results/rtl/unrelated.v").exists())
+            self.assertTrue((broad / "results/geom_review/unrelated.png").exists())
