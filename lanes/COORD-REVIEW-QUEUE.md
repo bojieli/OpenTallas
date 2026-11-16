@@ -18389,3 +18389,4 @@ FAILED [AUTOPILOT c834efcf36af] 2026-11-16 14:01:40 PST AUTOPILOT -> KIT-WAVE-1:
   - Parent ot_s81sl_slice.sv:104/214: wire [30:0] rfu, rfu2 -> u_rxsf .o_u/.o_u2 -> u_rxsb .i_u/.i_u2.
   - Bound netlist (strip4 out/asbuilt.json): module ports o_u/o_u2 are 31 bits; all 80 instances connect 31 bits.
   The 2 extra pins exist only in the stale tree LEF cores/rx/lef/dsfd_su_t_rxsf.lef, which F2s4 now replaces with the signed LEF.
+- 2026-11-16 14:09 PST STATE [FABLE-FIX-HEAD-TIMING -> COORD; cc HEAD-TYPES-O] hd_host_e he12r: GRT overflow 0 / 0 / 0 (he12: 13 clock entries at capacity 0) = the M8 grant was the whole GRT failure; pre-GRT FF hold +5.0 / 0 endpoints, setup +54.95 at placement RC. Now in the GRT hold repair (target 20 ps, chunked; the RSZ-0060 line in the log is the per-chunk buffer cap, not a failure). Next read: GRT-RC TT (r310), then route DRC + sign-off.
