@@ -212,7 +212,7 @@ def test_grt_long_branch_repeated_on_routed_length(tmp_path):
     i = log.index(ins[0])
     assert log[i - 2:i] == ["global_route -start_incremental", "dpl"]
     # the new net (found through the moved load pin) is a CLOCK net; then DPL + incremental GRT + GRT parasitics
-    assert log[i + 1:i + 5] == ["setSigType lb_a CLOCK", "dpl", "global_route -end_incremental", "est -global_routing"]
+    assert log[i + 1:i + 7] == ["setSigType lb_a CLOCK", "dpl", "check_placement", "check_placement", "global_route -end_incremental", "est -global_routing"]
     assert "OT_CLK_LEAF_REPEAT grt done: 1 nets repeated, 1 repeaters" in out
     assert "next_sourced" not in log
 
@@ -367,3 +367,25 @@ def test_cts_dpl_args_line_behaviour(tmp_path, kit):
     first = "dpl " + kit if "diamond" in kit else "dpl"
     assert log == [first, "dpl -max_displacement {5 1}"], log      # explicit args always pass through unchanged
     assert ("OT_CTS_DPL_ARGS:" in p.stdout) == ("diamond" in kit)
+
+# HEAD sd8g GRT residue must be repaired and checked before routing is committed.
+def test_grt_clean_legalization_precedes_route_commit(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 0 + GRT_RUN, design=DESIGN)
+    end = log.index("global_route -end_incremental")
+    assert log[end-3:end] == ["dpl", "check_placement", "check_placement -verbose"]
+    assert "OT_DPL_RESIDUAL" not in out
+
+
+def test_grt_residual_gets_bounded_diamond_before_route_commit(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 1 + GRT_RUN, design=DESIGN)
+    end = log.index("global_route -end_incremental")
+    assert log[end-4:end] == ["dpl", "check_placement", "dpl -use_diamond_legalizer", "check_placement -verbose"]
+    assert out.count("OT_DPL_RESIDUAL") == 1
+
+
+def test_grt_illegal_residue_cannot_commit_incremental_route(tmp_path):
+    pre = 'proc check_placement {args} { L check_placement {*}$args; error DPL-0033 }\n'
+    out, log = tcl(tmp_path, pre + 'set rc [catch {\n' + GRT_RUN + '} msg]; puts "RESULT $rc $msg"\n', design=DESIGN)
+    assert "RESULT 1 DPL-0033" in out
+    assert "global_route -end_incremental" not in log
+    assert log.count("dpl -use_diamond_legalizer") == 1

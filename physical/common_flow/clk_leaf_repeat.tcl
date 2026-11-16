@@ -391,7 +391,14 @@ uplevel #0 {
       }
       incr clr_g_nets
     }
-    detailed_placement
+    # HEAD sd8g: GRT is a separate process and must apply the same overlap-aware
+    # legalization policy as CTS before committing the incremental routing scene.
+    detailed_placement {*}[clr_dpl_args]
+    if {[catch {check_placement}]} {
+      puts "OT_DPL_RESIDUAL: GRT leaf-repeat check failed, legalization once more with [clr_dpl_args 1]"
+      detailed_placement {*}[clr_dpl_args 1]
+    }
+    check_placement -verbose
     global_route -end_incremental
     estimate_parasitics -global_routing
   }
