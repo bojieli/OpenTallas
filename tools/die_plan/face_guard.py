@@ -93,13 +93,6 @@ def _reset_spine_landing(F, lds, max_flops=8):
 RING_RESET_RE = r"^rst_xn(\[\d+\])?$"
 
 
-def _ring_reset_replica(F, lds):
-    """RSTXN-GUARD-1115: a replicated ring reset bit rst_xn[k] splits the ring reset fan-out by design (6-9 flops per
-    replica), so the one-load rule does not apply.  True iff the bit has loads and EVERY load is an asynchronous
-    set/reset pin of a flop (no D, clock, logic, buffer or port); any other load keeps the ordinary input check."""
-    return bool(lds) and all(is_ff(F.cells[ci][0]) and pin in ASYNC_RESET_PINS for ci, pin in lds)
-
-
 def is_buf(master):
     m = master.upper()
     return m.startswith(("BUF", "INV", "HB", "$_NOT_", "$_BUF_"))
@@ -843,7 +836,7 @@ def _spare_tie(F, drv, r, limit=16):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=(), seam=None):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=(), seam=None, ring_reset=False):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -894,7 +887,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     spare: declared spare output bits (kit spare_out.json = the bind's kit_rtl.json spare_out_bits, the plan bits the
     kit-rtl wrapper ties to 0): an output bit whose driver chain (single-input buffers / inverters, any fanout on the
     shared tie net) ends at a TIE cell or a constant is recorded (spare_declared, counted ok) instead of failing
-    shared / const.  A declared bit that is anything else takes the ordinary checks unchanged."""
+    shared / const.  A declared bit that is anything else takes the ordinary checks unchanged.
+    ring_reset: the child's plan declares RSTREP (hard_landing.prove passes it when the child has the replicated ring
+    reset port): rst_xn[k] bits are exempt from the one-load rule with any load type (COORD 11-15: the rule protects
+    data-boundary landing, reset timing is STA + LATCHECK).  One check stays: every load lies in the transitive
+    fan-in of a flop D or async set/reset pin and nothing reaches an output port combinationally (class "ring_reset")."""
     # QC-KITS-R1 10-27: extra clock roles of a bound partition (e.g. coll clk_coll / clk_serdes) are clock ports, not
     # face data: the kit SDC create_clock list (generated from the plan) exempts them like clk / clk_tN.
     clocks = [c for c in (clocks or ()) if not re.fullmatch(skip_re, c)]
@@ -978,6 +975,35 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     if spare:
         res["spare_declared"] = []
     claimed = defaultdict(list)
+    out_port_of = {port_root[b]: b for p in T.ports if T.dirs.get(p) == "output" for b in _bits_of(T, p)}
+
+    def ring_reset_cone(root):
+        """'' when every load of net root is in the fan-in of flop D / async set-reset pins only, else the reason."""
+        seen, stack = {root}, [root]
+        if root in out_port_of:
+            return f"wired to output port {out_port_of[root]}"
+        if not loads[root]:
+            return "no load"
+        while stack:
+            for ci, pin in loads[stack.pop()]:
+                m, path, pp = F.cells[ci]
+                if is_ff(m):
+                    if pin != "D" and pin not in ASYNC_RESET_PINS:
+                        return f"reaches {path}.{pin}"
+                    continue
+                if not _std_cell(m):
+                    return f"reaches macro pin {path}.{pin}"
+                for dd, v in pp.values():
+                    if dd != "out":
+                        continue
+                    for bit in v:
+                        n = F.find(bit)
+                        if n in out_port_of:
+                            return f"reaches output port {out_port_of[n]} through {path}"
+                        if n not in seen:
+                            seen.add(n)
+                            stack.append(n)
+        return ""
 
     timed = set(timed or ())
     if timed:
@@ -1960,7 +1986,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 res.setdefault("reset_spine", []).append(b)
                 res["ok"] += 1
                 continue
-            if d == "input" and re.match(RING_RESET_RE, str(b)) and _ring_reset_replica(F, loads[r]):
+            if d == "input" and ring_reset and re.match(RING_RESET_RE, str(b)):
+                why = ring_reset_cone(r)
+                if why:
+                    fail("ring_reset", b, why)
+                    continue
                 res.setdefault("ring_reset_replica", []).append(b)
                 res["ok"] += 1
                 continue

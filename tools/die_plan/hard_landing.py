@@ -72,7 +72,8 @@ def prove(directory):
     if key in _PROOFS:
         return m, _PROOFS[key]
     result = F.guard((d / 'netlist.v').read_text(), top=master,
-                     clocks=['clk', 'fclk'], straps=[] if plain else ['strap_k'], land=land)
+                     clocks=['clk', 'fclk'], straps=[] if plain else ['strap_k'], land=land,
+                     ring_reset=bool(re.search(r"\brst_xn\b", (d / 'netlist.v').read_text())))
     ring = result.get('ring_start', {}).get('t_rst_n', {})
     if (result['verdict'] != 'PASS' or result.get('land_mux_bits') != m['width']
             or (not plain and (ring.get('ring_clock') != ['fclk'] or not ring.get('writer_flops')))):
