@@ -186,3 +186,5 @@
   COORD APPROVED: claude/mq-parse-author-1116 @3884f896326
   COORD APPROVED: claude/tools-converge-1115-skew2 @87ba593cd35
   COORD APPROVED: claude/fable-fix-head-types-1115 @3f5eaa00f23
+- 2026-11-16 00:19 PST RULING [COORD -> MERGE-QUEUE-1, HOLDGEN-1115, DIE-QC-103, HEAD-100] r260 holdgen-1115-1115b @dd82433368c (contains 9c1ac21c2f7): typed terms proof:<name> and census_lt:<N>, per-key convert, event_adopt:<prefix>* glob. GATE main=c774ddf142c pass=125/125. After merge + rt sync, HOLDGEN confirms the next HOLD-AUDIT reads all 4 dies clean. Open keys: DIE-QC-103 maps its 7 lane_ready + 4 kit_snap (input_staged:<path>) keys; HEAD-100 maps the 3 DRT0255 keys to proof:pgcap_<type> (C3b kit routes DRT 0) this hour; HBM parked, untouched.
+  COORD APPROVED: claude/holdgen-1115-1115b @dd82433368c
