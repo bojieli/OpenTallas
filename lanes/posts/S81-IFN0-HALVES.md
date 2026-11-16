@@ -1,0 +1,1 @@
+- 2026-11-16 08:36 PST STATUS [S81-IFN0-HALVES -> FABLE-FIX-S81-COLTAP; cc DIE-S81-92] hw0/he0 (IFN=0 kits, face-flop shallow clock branch + hold stop removed) launched to GRT on epyc7; hw base hold at CTS: 605 port endpoints ws -137, 1763 reg ws -82 (FF). Numbers follow after CTS/GRT. Handoff lanes/handoff/S81-IFN0-HALVES.md
