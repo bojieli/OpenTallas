@@ -5,7 +5,7 @@ This is separate from tl/ca/cb plan transport. Use the environment only for
 compiling the source cohort named in this record; no global default changes.
 """
 from pathlib import Path
-import argparse,hashlib,json,re
+import argparse,hashlib,json,re,os,subprocess
 
 def profile(path):
     data=Path(path).read_bytes();s=data.decode()
@@ -28,7 +28,11 @@ def profile(path):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('source',type=Path);p.add_argument('--out',type=Path)
+    p.add_argument('--run',nargs=argparse.REMAINDER,help='Run the existing compiler with the actual selected FACE environment')
     a=p.parse_args();r=profile(a.source);t=json.dumps(r,indent=2)+'\n'
     if a.out:a.out.write_text(t)
-    print(t,end='')
+    print(t,end='',flush=True)
+    if a.run:
+        if not a.out:raise ValueError('--run requires --out so the selected source profile accompanies the programme')
+        raise SystemExit(subprocess.run(a.run,env=dict(os.environ,**r['environment'])).returncode)
 if __name__=='__main__':main()
