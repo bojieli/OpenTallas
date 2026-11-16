@@ -78,7 +78,7 @@ def norm_class(cls, why):
 
 
 _FAM_SUFFIX = re.compile(r"(?:__(?:cl|pv|t)[0-9a-z]*)+$")
-STAGE_ORDER = ("mkdir", "bind", "bind_fetch", "kit_rtl", "gen", "gen_lint", "kit_topology", "preflight", "prov_views", "lec_tools", "views", "cells",
+STAGE_ORDER = ("mkdir", "src_manifest", "kit_snap", "kit_store", "bind", "bind_fetch", "kit_rtl", "gen", "gen_lint", "kit_topology", "preflight", "prov_views", "lec_tools", "views", "cells",
                "relay_bay", "sync_hub", "pipeline", "selfcontained", "type_overlay", "unit", "place", "cts", "grt", "route", "sta", "signoff")
 
 
@@ -601,9 +601,10 @@ def held_key(st, die, item, claim=False):
     return ""
 
 
-def probe_result(st, die, item, stage, passed):
+def probe_result(st, die, item, stage, passed, failed_stage=False):
     """the probe launch of a family finished.  passed (it got past the class's stage, or was enqueued): the family leaves the class, the class closes
     when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)
+    failed_stage=True judges each class separately against the actual failed stage; unknown stages never prove passage.
     PROBE-ONE-1116 (COORD 11-16): the class has ONE probe; when it passes the failing stage EVERY family of the class is released in the same
     tick (the class closes at once).  A family that fails again reopens the class by the normal breaker rule."""
     g = fg_state(st)
@@ -611,7 +612,9 @@ def probe_result(st, die, item, stage, passed):
     for key, e in list(g["open"].items()):
         if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or probe_item(e) != item:
             continue
-        if passed:
+        stage_passed = (stage in STAGE_ORDER and e.get("stage") in STAGE_ORDER
+                        and stage_rank(stage) > stage_rank(e["stage"])) if failed_stage else passed
+        if stage_passed:
             fams = list(e.get("fams", []))
             out.append((key, f"probe {item} passed {e.get('stage') or 'the stage'}: family {family_of(item)} released"))
             close(st, key)

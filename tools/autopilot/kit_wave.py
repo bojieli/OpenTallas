@@ -589,6 +589,41 @@ def lint_clean_item(cfg, die, item):
     return str(item) not in bad
 
 
+
+def lint_failures(cfg, rows, read_spec=None):
+    """Latest SDC verdict per item in the adopted plan/source context.
+    Known different contexts cannot block this release. Missing legacy identity
+    remains conservative and is never evidence that a failure was repaired.
+    """
+    def spec_of(row):
+        if read_spec is not None:
+            return read_spec(row) or {}
+        try:
+            return json.loads((Path(row.get("dir") or ".") / "spec.json").read_text())
+        except (OSError, ValueError):
+            return {}
+    out = {}
+    for row in sorted(rows, key=lambda r: float(r.get("started") or 0)):
+        die, item = row.get("die"), row.get("item")
+        if not die or not item:
+            continue
+        d = (cfg.get("dies") or {}).get(die) or {}
+        current_plan = d.get("plan_sha256") or d.get("_plan_sha")
+        old_plan = row.get("plan_sha")
+        if current_plan and old_plan and str(current_plan).lower() != str(old_plan).lower():
+            continue
+        sp = spec_of(row) if d.get("src") or d.get("src_sha") else {}
+        # These paths identify immutable published source trees. Missing old
+        # specs keep the legacy verdict in scope.
+        if any(d.get(k) and sp.get(k) and d[k] != sp[k] for k in ("src", "src_sha")):
+            continue
+        bad = row.get("status") == "FAIL" and "sdc_lint" in (
+            str(row.get("stage")) + " " + str(row.get("reason")) + " " + str(row.get("class")))
+        items = out.setdefault(die, set())
+        (items.add if bad else items.discard)(item)
+    return out
+
+
 def compile_hold_records(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     """HOLDGEN-1115 (COORD r223): die.hold_records (typed release terms, bound to a plan sha) compile into hold_items in memory, before
     the legacy hold_release_on pass.  A die without hold_records is untouched."""
@@ -9033,9 +9068,7 @@ def collect(AP, cfg, st, notices):
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))
-                for _k, _what in FG.probe_result(st, rec["die"], rec["item"], _stg, passed=FG.stage_rank(_stg) > FG.stage_rank(
-                        next((e.get("stage") for e in (st.get("flow_guard") or {}).get("open", {}).values() if e.get("die") == rec["die"] and e.get("state") == "probe"
-                              and FG.probe_item(e) == rec["item"]), ""))):
+                for _k, _what in FG.probe_result(st, rec["die"], rec["item"], _stg, passed=False, failed_stage=True):
                     AP.log(f"KIT-WAVE FLOW-GUARD PROBE {rec['die']}/{rec['item']}: {_what}")
                 note_fail_key(cfg, st, rec, cls, why)
                 if not is_host_fail(cls, why) or RS.is_oom(cls, why):          # REPEAT-STOP ledger: gen / kit / route outcomes, OOM kills
@@ -10628,13 +10661,7 @@ def _step(AP, ap_dir):
             if _r.get("die") and _r.get("item"):
                 _names.setdefault(_r["die"], set()).add(_r["item"])
         cfg["_item_names"] = {d_: sorted(v) for d_, v in _names.items()}
-        _lf = {}
-        for _r in sorted((st.get("items") or {}).values(), key=lambda r_: float(r_.get("started") or 0)):    # latest row per item wins
-            if _r.get("die") and _r.get("item"):
-                _bad = _r.get("status") == "FAIL" and "sdc_lint" in (str(_r.get("stage")) + " " + str(_r.get("reason")) + " " + str(_r.get("class")))
-                _s = _lf.setdefault(_r["die"], set())
-                (_s.add if _bad else _s.discard)(_r["item"])
-        cfg["_lint_fail"] = _lf
+        cfg["_lint_fail"] = lint_failures(cfg, (st.get("items") or {}).values())
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
         cfg["_proof_lines"] = _q[-3000:]
