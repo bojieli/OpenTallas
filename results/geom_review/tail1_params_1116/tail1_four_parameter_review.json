@@ -1,0 +1,7 @@
+{
+  "verdict": "PASS-COND",
+  "source_commit": "38f66e2a17baabacfc5977af19ceb2f5f30dcb71",
+  "picture": "results/geom_review/tail1_four_parameter_plans.png",
+  "observed": "Viewed all four actual generated 162x162 plans. Five SRAM macros staggered in two columns with minimum 20.304um gaps, clear 5.4um halos, no interior wall, W input/E output placement follows flow and north clock is central. Same geometry for all parameter rows; source has native fault capture with no extra wrapper register. Clock tree/PDN and routed density remain actual flow measurements.",
+  "routing_authorization": "Fresh physical runs allowed with exact MM TT833/0 setup and FF25 hold; no physical adoption inferred."
+}
