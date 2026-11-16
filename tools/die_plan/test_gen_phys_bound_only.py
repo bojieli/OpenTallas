@@ -75,3 +75,78 @@ def test_mixed_selection_still_emits_generated_wrapper(tmp_path,monkeypatch):
     assert GP.write_phys(raw,tmp_path/'out',types=['mid','sink'],kit_rtl={'mid':str(fl)},trial=True)
     assert seen==[['sink']]
     assert (tmp_path/'out/_rtl/tiny_sink_part.sv').is_file()
+
+
+def landing_fixture(raw):
+    # A real declaration-only sidecar for the four physical partitions. No
+    # boundary crosses regions in this minimum vehicle; invalid declarations
+    # and undeclared bound rings must still fail in Landings/kit_rtl_land_slots.
+    return dict(regions=[dict(tag="all", box_um=[0, 0, 3456, 864])], ports=[])
+
+
+def test_bound_landing_outputs_equal_retained_emitter_path(tmp_path,monkeypatch,record_property):
+    raw,fl=fixture(tmp_path);landing=landing_fixture(raw)
+    emit=GR.write_rtl;calls=[]
+    def tracked(*args,**kwargs):
+        calls.append(args[3]);return emit(*args,**kwargs)
+    monkeypatch.setattr(GR,'write_rtl',tracked)
+    slow=tmp_path/'retained_landing';fast=tmp_path/'bound_landing'
+    start=time.perf_counter()
+    GP.write_phys(raw,slow,types=['src','mid'],kit_rtl={'mid':str(fl)},landing=landing,
+                  trial=True,skip_ir=True,rc_cal=False)
+    retained_s=time.perf_counter()-start
+    start=time.perf_counter()
+    GP.write_phys(raw,fast,types=['mid'],kit_rtl={'mid':str(fl)},landing=landing,
+                  trial=True,skip_ir=True,rc_cal=False)
+    bound_s=time.perf_counter()-start
+    assert calls==[['src']],calls
+    def files(out):
+        return {str(p.relative_to(out/'mid')):p.read_bytes().replace(str(out).encode(),b'<OUT>')
+                for p in (out/'mid').rglob('*') if p.is_file()}
+    assert files(slow)==files(fast)
+    assert (slow/'run_kit.sh').read_bytes()==(fast/'run_kit.sh').read_bytes()
+    assert not (fast/'_rtl').exists()
+    record_property('retained_landing_seconds',retained_s)
+    record_property('bound_landing_seconds',bound_s)
+    print(f'BOUND_LANDING_MEASURE retained={retained_s:.6f}s optimized={bound_s:.6f}s identical')
+
+
+def test_bound_landing_never_emits_unused_wrappers(tmp_path,monkeypatch):
+    raw,fl=fixture(tmp_path)
+    monkeypatch.setattr(GR,'write_rtl',lambda *a,**k:pytest.fail('unused landed die emitter called'))
+    assert GP.write_phys(raw,tmp_path/'out',types=['mid'],kit_rtl={'mid':str(fl)},
+                         landing=landing_fixture(raw),trial=True,skip_ir=True,rc_cal=False)
+
+
+def test_bound_landing_invalid_plan_still_fails_before_kit(tmp_path,monkeypatch):
+    raw,fl=fixture(tmp_path);raw['die']['period_ps']=0
+    monkeypatch.setattr(GP,'write_type_kit',lambda *a,**k:pytest.fail('invalid plan reached kit writer'))
+    with pytest.raises(GR.GenError,match='plan invalid'):
+        GP.write_phys(raw,tmp_path/'out',types=['mid'],kit_rtl={'mid':str(fl)},
+                      landing=landing_fixture(raw),trial=True)
+
+
+def test_bound_landing_stale_sidecar_still_fails(tmp_path):
+    import clock_landings as CL
+    raw,fl=fixture(tmp_path);landing=landing_fixture(raw)
+    landing['collector']={'types':{}}
+    with pytest.raises(CL.LandingError,match='SIDECAR_STALE'):
+        GP.write_phys(raw,tmp_path/'out',types=['mid'],kit_rtl={'mid':str(fl)},
+                      landing=landing,trial=True)
+    assert not (tmp_path/'out/mid').exists()
+
+
+def test_bound_landing_rejects_ring_absent_from_sidecar(tmp_path):
+    raw,fl=fixture(tmp_path);rtl=Path(fl.read_text().strip())
+    rtl.write_text(rtl.read_text().replace('endmodule',
+        "ot_dp_clk_landing_ca #(.W(8), .DEPTH(8)) u_cland_cfg_i ();\nendmodule"))
+    with pytest.raises(GR.GenError,match='bound count-aligned rings not declared'):
+        GP.write_phys(raw,tmp_path/'out',types=['mid'],kit_rtl={'mid':str(fl)},
+                      landing=landing_fixture(raw),trial=True)
+
+
+def test_bound_landing_still_rejects_mixed_unbound_soft_type(tmp_path):
+    raw,fl=fixture(tmp_path)
+    with pytest.raises(GR.GenError,match='have no bound RTL'):
+        GP.write_phys(raw,tmp_path/'out',types=['mid','sink'],kit_rtl={'mid':str(fl)},
+                      landing=landing_fixture(raw),trial=True)
