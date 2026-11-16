@@ -59,7 +59,7 @@ Evidence (MEASURED), gate TT setup -> sign-off TT setup, every routed kit with a
 | QC slw_su_l0 | 2 | +78.4 -> +36.1; +56.9 -> +36.2 | 42; 21 |
 | QC sle_su_l0, sle_fw_v3 | 3 | -4.3 -> -7.6; +8.5 -> +9.1; +50.7 -> +53.1 | 3; 0; 0 |
 | KV kv3_io_ft_v1 | 1 | -22.5 -> -62.7 | 40 |
-| S81 slice_station | 13 | +29..+186 -> +17..+173 | median 12, worst 48 |
+| S81 slice_station | 13 | -70..+186 -> -50..+173 (t22 -69.9 -> -49.9) | median 12, worst 48, best -20 |
 | HEAD (ctl_e, mesh_e, eshim_tx, st_n4, tile, turn_a) | 8 | +60..+206 -> +52..+198 | 8 to -2 |
 
 sle_hc2 path, the same cells at the gate (`postcts_gate_TT.log`) and at sign-off (`signoff/tt/sta.log`), kit
