@@ -1,6 +1,7 @@
 """ot-merge-queue (MERGE-QUEUE-1): approval parsing, lane lookup, tag series, test selection, and one end-to-end tick on a
 throwaway origin: a green branch lands with tags + MERGED, a red one and a conflicting one get MERGE-FAIL, a second tick is a no-op."""
-import importlib.machinery, importlib.util, json, os, pathlib, subprocess, sys, tempfile, unittest
+import importlib.machinery, importlib.util, json, os, pathlib, shutil, subprocess, sys, tempfile, unittest
+from pathlib import Path
 
 P = str(pathlib.Path(__file__).with_name("ot-merge-queue"))
 
@@ -364,3 +365,32 @@ class EndToEnd(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Reap(unittest.TestCase):
+    def test_wt_drop_kills_processes_left_in_the_tree_and_its_basetemp_only(self):
+        import importlib.machinery, importlib.util, tempfile, time
+        d = Path(tempfile.mkdtemp())
+        subprocess.run(["git", "init", "-q", str(d / "repo")], check=True)
+        old = {k: os.environ.get(k) for k in ("MQ_HOME", "MQ_WT", "MQ_REPO")}
+        os.environ.update(MQ_HOME=str(d / "mq"), MQ_WT=str(d / "wt"), MQ_REPO=str(d / "repo"))
+        try:
+            ld = importlib.machinery.SourceFileLoader("omq_reap", P)
+            m = importlib.util.module_from_spec(importlib.util.spec_from_loader("omq_reap", ld)); ld.exec_module(m)
+        finally:
+            for k, v in old.items():
+                os.environ.pop(k, None) if v is None else os.environ.__setitem__(k, v)
+        for x in ("wt/abc", "wt/bt/abc-a", "wt/other"):
+            (d / x).mkdir(parents=True)
+        a = subprocess.Popen(["sleep", "300"], cwd=d / "wt/abc")
+        b = subprocess.Popen(["sleep", "300"], cwd=d / "wt/bt/abc-a")
+        c = subprocess.Popen(["sleep", "300"], cwd=d / "wt/other")
+        try:
+            m.wt_drop("abc")
+            time.sleep(0.5)
+            self.assertIsNotNone(a.poll()); self.assertIsNotNone(b.poll()); self.assertIsNone(c.poll())
+            self.assertFalse((d / "wt/abc").exists())
+        finally:
+            for p in (a, b, c):
+                p.kill(); p.wait()
+            shutil.rmtree(d, ignore_errors=True)

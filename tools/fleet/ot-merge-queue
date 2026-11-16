@@ -342,8 +342,39 @@ def wt_make(name, ref, extra_dirs=()):
     return p
 
 
+def reap(prefixes):
+    """SIGKILL our own processes left running in a dropped gate tree (cwd or a command-line argument under one of the
+    prefixes): detached test children (lec_async.sh watchers, yosys) outlived pytest for hours in deleted trees (CLEAN-ALL
+    11-15 16:3x) -> pids killed"""
+    me, uid, done = os.getpid(), os.getuid(), []
+    skip = {me, os.getppid()}
+    for d in Path("/proc").iterdir():
+        if not d.name.isdigit() or int(d.name) in skip:
+            continue
+        try:
+            if d.stat().st_uid != uid:
+                continue
+            cwd = os.readlink(d / "cwd")
+            argv = (d / "cmdline").read_bytes().split(b"\0")
+        except OSError:
+            continue
+        hit = any(cwd == x or cwd.startswith(x + "/") or cwd.startswith(x + "-") or cwd.startswith(x + " (deleted)")
+                  for x in prefixes)
+        hit = hit or any(a.decode(errors="replace").startswith(tuple(x + "/" for x in prefixes)) for a in argv[1:])
+        if hit:
+            try:
+                os.kill(int(d.name), 9)
+                done.append(int(d.name))
+            except OSError:
+                pass
+    return done
+
+
 def wt_drop(name):
     p = WT / name
+    k = reap([str(p), str(WT / "bt" / name)])
+    if k:
+        log(f"reaped {len(k)} process(es) left in gate tree {name}: {k[:12]}")
     if p.exists():
         with _LOCK, CLONE_LOCK():
             git("worktree", "remove", "--force", str(p), check=False)
