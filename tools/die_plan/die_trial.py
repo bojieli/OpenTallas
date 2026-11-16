@@ -1175,10 +1175,16 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
     own = [poly] if poly is not None else (
         [[a, b]] if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6 else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]])
     tried = []
-    for kind, cands in (("on_path", own), ("reach_detour", None)):
+    searches = [("on_path", own), ("reach_detour", None)]
+    if DETOUR_ADAPTIVE:
+        # The jump-grid search may miss a legal path, and its fixed local box
+        # cannot escape a wide PHY wall. Reuse the existing site-legal wall
+        # detour, then require the same reach/parity placement proof below.
+        searches.append(("site_detour", None))
+    for kind, cands in searches:
         if cands is None:
-            d = reach_detour(site, a, b, reach)
-            cands = [d] if d is not None else []
+            route = legal_detour(site, a, b) if kind == "site_detour" else reach_detour(site, a, b, reach)
+            cands = [route] if route is not None else []
         res = []
         for q in cands:
             Lq = polyline_points(q, [])[1]
@@ -1189,10 +1195,14 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
         if res:
             nrep, Lq, r, q = min(res, key=lambda t: (t[1], t[0]))
             after = max(chain_spans([a] + r + [b]))
-            return r, q, dict(kind=kind, span_before_um=round(before, 3), span_after_um=round(after, 3),
-                              nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
-                              wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
-                              added_stages=nrep - (len(chain) - 2))
+            info = dict(kind="reach_detour" if kind == "site_detour" else kind,
+                        span_before_um=round(before, 3), span_after_um=round(after, 3),
+                        nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
+                        wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
+                        added_stages=nrep - (len(chain) - 2))
+            if kind == "site_detour":
+                info["route_source"] = "site_legal_adaptive"
+            return r, q, info
     raise ValueError(f"--rep-reach-max {reach:g}: leg to node {nd.get('id')} ({a} -> {b}, span {before:.2f} um) has no "
                      f"legal repeater placement within reach on its path or a reach detour ({tried})")
 
