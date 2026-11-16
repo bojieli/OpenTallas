@@ -11,3 +11,5 @@
   NO-PROGRESS epyc10 s81-colgen-1-c4 5_1_grt stage 23.8 h job 24.4 h: no new meaningful log line for 8.4 h; last: global_route -congestion_report_file /work/run/reports/asap7/dp_col_h10_r1__t1__cl95b37463__pv799da6
 - 2026-11-15 23:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-15 23:52 PST: 238 running jobs, PROGRESSING 234, SLOW 3, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc10 s81-colgen-1-c4 5_1_grt stage 24.8 h job 25.4 h: no new meaningful log line for 9.4 h; last: global_route -congestion_report_file /work/run/reports/asap7/dp_col_h10_r1__t1__cl95b37463__pv799da6
+- 2026-11-16 00:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 00:52 PST: 146 running jobs, PROGRESSING 141, SLOW 4, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc10 s81-colgen-1-c4 5_1_grt stage 25.8 h job 26.4 h: no new meaningful log line for 10.4 h; last: global_route -congestion_report_file /work/run/reports/asap7/dp_col_h10_r1__t1__cl95b37463__pv799da6
