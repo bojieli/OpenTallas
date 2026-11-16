@@ -17580,3 +17580,103 @@ def s81_head_lep_vf_stage_calendar_model():
                           'do not qualify vF depths0000/1220/1221/2/3/3/COL02',
         qualification='HEAD private plan event, exact vF source programme/epoch leases, '
                       'native timing and parent pin/clock/reset joins remain required')
+
+
+def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
+                                  span_um=1321.0, corridor_um=48.0,
+                                  dff_body_um2=0.2916):
+    """Size the opt-in native S81 RX transport and local RM selector before build.
+
+    RELAY4 carries payload/valid/AM metadata and the reset calendar together.
+    The conservative DFF body proxy is shared with uarch_model_s81_bf_pinlat;
+    mapped cells, CTS/repair overhead and full-shape throughput remain measured
+    gates. This candidate does not activate any released rate or plan row.
+    """
+    if relay_stages not in (0, 4) or read_pointer_copies not in (1, 8):
+        raise ValueError("only baseline/RELAY4 and baseline/eight local RM copies are qualified candidate shapes")
+    if min(span_um, corridor_um, dff_body_um2) <= 0:
+        raise ValueError("positive physical geometry and DFF proxy required")
+    cohort_bits = 544 + 1 + 9
+    transport_ff = relay_stages * cohort_bits
+    reset_ff = relay_stages
+    metadata_ff = 9 if relay_stages else 0
+    rm_ff = 24 if read_pointer_copies == 8 else 0  # original global pointer remains
+    rm_comb = dict(NOT=71, AND=8, XOR=16, OR=119) if rm_ff else {}
+    total_ff = transport_ff + reset_ff + metadata_ff + rm_ff
+    pitch_um = 0.0458  # existing S81 ft_corridor aggregate track lane rule
+    cut_bits = cohort_bits + 1  # data/valid/AM + matched reset-calendar bit
+    capacity = corridor_um / pitch_um
+    hops = relay_stages + 1
+    return dict(
+        schema="opentallas.s81-serdes-rx-transport.v1",
+        default_off=True, adopted=False, physical_qualified=False,
+        defines=(["OT_S81_KP4_AM_FACE3", "OT_S81_RCK_RELAY4"] if relay_stages else []),
+        clock_ps=833, recovered_clock_ps_nominal=833,
+        MACs_per_cycle=0, added_MACs_per_cycle=0,
+        compute_intensity_MACs_per_byte=0,
+        memory=dict(native_PMA_payload_bytes_per_cycle=68,
+            rate_match_write_bytes_per_wclk=64,
+            rate_match_read_bytes_per_rclk=64,
+            rate_match_words=8, rate_match_word_bits=512,
+            added_ports=0, added_bytes_per_cycle=0),
+        communication=dict(external_payload_bits_per_cycle=544,
+            external_valid_bits_per_cycle=1, external_boundary_delta_bits=0,
+            internal_transport_bits_per_cycle=cohort_bits if relay_stages else 0,
+            internal_transport_bytes_per_cycle=cohort_bits/8 if relay_stages else 0,
+            reset_calendar_bits_per_cycle=1 if relay_stages else 0),
+        replicas=dict(transport_stage_count=relay_stages,
+            transport_lane_bits=cohort_bits, transport_FF=transport_ff,
+            matched_reset_FF=reset_ff, AM_partial_FF=metadata_ff,
+            local_read_pointer_copies=read_pointer_copies,
+            added_read_pointer_FF=rm_ff,
+            generic_read_pointer_comb_cells=rm_comb,
+            generic_read_pointer_comb_cell_count=sum(rm_comb.values()),
+            added_clock_reset_sinks=total_ff),
+        mux_demux_fanout=dict(new_transport_muxes=0, new_demuxes=0,
+            transport_bit_driver_fanout=1,
+            AM_header_input_fanout=2 if relay_stages else 1,
+            read_mux_payload_bits=512,
+            original_read_pointer_bits=3,
+            local_read_pointer_bits=24 if rm_ff else 3,
+            selector_mux_loads_per_bit=64 if rm_ff else 512,
+            memory_write_path_unchanged=True),
+        routing=dict(measured_remaining_span_um=span_um,
+            planned_hops=hops, planned_max_hop_um=span_um/hops,
+            hop_target_um=405, hop_fit=span_um/hops <= 405,
+            tracks_needed_per_transport_cut=cut_bits if relay_stages else 0,
+            aggregate_lane_pitch_um=pitch_um,
+            planned_corridor_um=corridor_um,
+            gross_track_capacity=capacity,
+            track_utilization=cut_bits/capacity if relay_stages else 0,
+            channel_fit=(cut_bits/capacity <= .60) if relay_stages else True,
+            minimum_corridor_at_60pct_um=cut_bits*pitch_um/.60,
+            added_external_tracks=0,
+            placement="E half-cycle face capture remains adjacent to RXNEG; four full-cycle relay rows span to native decoder"),
+        area=dict(DFF_body_proxy_um2=dff_body_um2,
+            DFF_proxy_source="tools/uarch_model_s81_bf_pinlat.py (conservative proxy, not mapped inventory)",
+            transport_added_body_um2=(transport_ff+reset_ff+metadata_ff)*dff_body_um2,
+            read_pointer_added_FF_body_um2=rm_ff*dff_body_um2,
+            read_pointer_comb_conservative_proxy_um2=sum(rm_comb.values())*dff_body_um2,
+            read_pointer_added_body_proxy_um2=(rm_ff+sum(rm_comb.values()))*dff_body_um2,
+            added_FF_total=total_ff,
+            added_FF_body_proxy_um2=total_ff*dff_body_um2,
+            added_body_proxy_um2=(total_ff+sum(rm_comb.values()))*dff_body_um2,
+            comb_proxy_scope='conservative DFF body ceiling per generic gate; mapped gate areas pending',
+            relay_stage_site_area_at_55pct_um2=cohort_bits*dff_body_um2/.55,
+            planned_corridor_site_area_um2=corridor_um*span_um,
+            corridor_utilization_proxy=(total_ff+sum(rm_comb.values()))*dff_body_um2/(corridor_um*span_um),
+            outline_delta_um2=0, new_hard_core_count=0,
+            mapped_CTS_hold_inventory_pending=True),
+        latency=dict(added_RX_recovered_edges=relay_stages,
+            added_RX_ps_nominal=833*relay_stages,
+            added_TX_edges=0, added_rate_match_data_edges=0,
+            reset_calendar_extra_recovered_edges=relay_stages,
+            sustained_words_per_recovered_cycle=1,
+            throughput_budget_tolerance_pct=10,
+            nominal_Oct9_DAG_AR_receive_crossings=375,
+            nominal_Oct9_DAG_AR_cycles=375*relay_stages,
+            nominal_Oct9_DAG_MTP_receive_crossings=401,
+            nominal_Oct9_DAG_MTP_cycles=401*relay_stages,
+            composition="source-profile PHY internal RX term once per S81 receiver; never duplicate as ft lane hops; current REL241 programme must re-solve before any final rate"),
+        exactness="AM face literal golden + reset/data/valid transport lockstep, short-stage mutant; RM local copies preserve global empty protocol and per-bank reset",
+        qualification="candidate only: source-profile/compiler compose, exactness, reviewed full-shape kit, DRC0 TT>=-42ps FFhold>=0 LEC and sustained budget required")
