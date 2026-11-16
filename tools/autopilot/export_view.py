@@ -183,9 +183,49 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
         (vd / f"{mod}.core.json").write_text(json.dumps(view["core"], indent=1))
     (vd / "provenance.json").write_text(json.dumps(prov, indent=1))
     (vd / "gates.json").write_text(json.dumps(gates, indent=1))
+    closure, cprob = close_view(vd, kit, mod, signoff)
+    prov["export"]["closed"] = closure
+    if cprob:
+        problems.extend(cprob)
+        prov["views_status"] = "incomplete: " + "; ".join(problems)
+        gates.update(view_complete=False, view_problems=problems)
+    (vd / "provenance.json").write_text(json.dumps(prov, indent=1))
+    (vd / "gates.json").write_text(json.dumps(gates, indent=1))
     return dict(module=mod, view=str(vd), complete=not problems, problems=problems,
                 pins_sha256=kitblk.get("pins_sha256"), pins_canon_sha256=kitblk.get("pins_canon_sha256"),
                 child_clock_witness=prov.get("child_clock_witness"))
+
+
+def close_view(vd, kit, mod, signoff):
+    """KITPACK-CLOSE-1115 (COORD r221, F1): make the exported view CLOSED: every file a parent's gen reads from it is inside
+    it, so hard_landing.capture() / hard_landing.emit() never follow a path into the build dir (provenance.src,
+    export.signoff stay as history only).  Copies signoff.json into the view and, for a hard landing child (the kit has
+    face_guard.json + land_slots.json), the whole landing receipt into <view>/landing_evidence/ via hard_landing.capture.
+    -> (closure dict, [problems])"""
+    vd, kit = Path(vd), Path(kit)
+    closure, problems = {"signoff.json": sha256(signoff)}, []
+    shutil.copy2(signoff, vd / "signoff.json")
+    fg, ls = kit / "face_guard.json", kit / "land_slots.json"
+    if not (fg.is_file() and ls.is_file()):
+        return closure, problems
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    try:
+        import hard_landing as HL
+        land = (json.loads(ls.read_text()).get("buses") or {})
+        d = land.get("d")
+        depth = d.get("D") if isinstance(d, dict) else d
+        width = json.loads(fg.read_text()).get("land_mux_bits")
+        if depth is None or width is None:
+            return closure, problems                  # not a landing-ring child: nothing more to close
+        base = HL.PLAIN_BASE if set(land) == {"d"} else "ot_dp_clk_landing_cas"
+        ev = vd / "landing_evidence"
+        if ev.exists():
+            shutil.rmtree(ev)
+        man = HL.capture(vd / f"{mod}.lef", vd / f"{mod}_tt.lib", mod, depth, width, ev, base=base)
+        closure["landing_evidence"] = sorted(man["sha256"])
+    except Exception as e:          # a landing child that cannot be closed is not a publishable view
+        problems.append(f"VIEW_NOT_CLOSED {vd}: {type(e).__name__}: {e}")
+    return closure, problems
 
 
 def main(argv=None):

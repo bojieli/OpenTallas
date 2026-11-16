@@ -123,5 +123,69 @@ class TestExportView(unittest.TestCase):
         self.assertTrue(prov["views_status"].startswith("incomplete"))
 
 
+class TestClosedView(unittest.TestCase):
+    """KITPACK-CLOSE-1115 (COORD r221 F1): an exported view is closed; deleting the build dir changes nothing."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def _landing_kit(self, root):
+        kit, _ = mk_run(root)
+        (kit / "face_guard.json").write_text(json.dumps(dict(top="m", verdict="PASS", land_mux_bits=2,
+                                                             netlist=str(kit / "netlist.v"))))
+        (kit / "face_guard.py").write_text("# frozen face tool\n")
+        (kit / "land_slots.json").write_text(json.dumps(dict(schema="land_slots/3", buses=dict(d=dict(D=4, form="hold_mux")))))
+        (kit / "netlist.v").write_text("module m(); endmodule\n")
+        return kit
+
+    def test_view_carries_signoff_and_landing_evidence_after_kit_is_deleted(self):
+        import shutil
+        kit = self._landing_kit(self.tmp.name)
+        out = Path(self.tmp.name) / "views"
+        res = EV.export(str(kit), str(kit / "signoff" / "signoff.json"), str(out), "qwen_compute")
+        self.assertTrue(res["complete"], res["problems"])
+        vd = out / "m"
+        shutil.rmtree(Path(self.tmp.name) / "arch")              # the lane's build dir is gone
+        self.assertEqual(EV.sha256(vd / "signoff.json"), json.loads((vd / "provenance.json").read_text())["export"]["signoff_sha256"])
+        ev = vd / "landing_evidence"
+        man = json.loads((ev / "manifest.json").read_text())
+        self.assertEqual((man["master"], man["D"], man["width"]), ("m", 4, 2))
+        for name, sha in man["sha256"].items():                   # every receipt file is inside the view and hashes right
+            self.assertEqual(EV.sha256(ev / name), sha, name)
+        for name in ("provenance.json", "signoff.json", "face_guard.json", "face_guard_source.py", "land_slots.json", "netlist.v"):
+            self.assertTrue((ev / name).is_file(), name)
+
+    def test_non_landing_kit_still_gets_signoff_copy(self):
+        kit, _ = mk_run(self.tmp.name)
+        out = Path(self.tmp.name) / "views"
+        res = EV.export(str(kit), str(kit / "signoff" / "signoff.json"), str(out), "s81")
+        self.assertTrue((out / "m" / "signoff.json").is_file())
+        self.assertFalse((out / "m" / "landing_evidence").exists())
+        self.assertTrue(res["complete"])
+
+    def test_landing_kit_missing_receipt_file_is_not_a_complete_view(self):
+        kit = self._landing_kit(self.tmp.name)
+        (kit / "netlist.v").unlink()
+        out = Path(self.tmp.name) / "views"
+        res = EV.export(str(kit), str(kit / "signoff" / "signoff.json"), str(out), "qwen_compute")
+        self.assertFalse(res["complete"])
+        self.assertTrue(any(p.startswith("VIEW_NOT_CLOSED") for p in res["problems"]), res["problems"])
+
+    def test_emit_refuses_a_view_without_landing_evidence(self):
+        import hard_landing as HL
+        v = Path(self.tmp.name) / "view"
+        v.mkdir()
+        (v / "m.lef").write_text("x")
+        (v / "m_tt.lib").write_text("x")
+        t = dict(hard_cores=[dict(inst="u_cland_a", module="m", lef=str(v / "m.lef"), lib=str(v / "m_tt.lib"),
+                                  param_wrap=dict(base="ot_dp_clk_landing", params=dict(W=2)))])
+        land = dict(buses=dict(a=dict(D=4, form="hold_mux")))
+        with self.assertRaisesRegex(ValueError, "VIEW_NOT_CLOSED"):
+            HL.emit(t, land, Path(self.tmp.name) / "kit", self.tmp.name)
+
+
 if __name__ == "__main__":
     unittest.main()

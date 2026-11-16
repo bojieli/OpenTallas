@@ -7,6 +7,7 @@ that child's corresponding input and its declared forwarded clock.
 import copy
 import hashlib
 import json
+import os
 import re
 import shutil
 from pathlib import Path
@@ -115,8 +116,11 @@ def emit(t, land, kit, root):
                 if Path(name).name != name:
                     raise ValueError('invalid portable hard landing evidence path')
                 shutil.copyfile(portable / name, dest / name)
+        elif os.environ.get('OT_LANDING_FOLLOW_SRC') == '1':
+            capture(lef, lib, master, depth, params['W'], dest, base=base)   # legacy: follows provenance.src
         else:
-            capture(lef, lib, master, depth, params['W'], dest, base=base)
+            # KITPACK-CLOSE-1115 (COORD r221 F1): a view is closed or it is not a view; never follow a build path
+            raise ValueError(f'VIEW_NOT_CLOSED {lef.parent}: no landing_evidence/ (re-export it with export_view.py)')
         # These are already staged by gen_phys; also support the standalone
         # contract emission used to diagnose an immutable parent kit.
         for path in (lef, lib):
