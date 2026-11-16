@@ -1,0 +1,117 @@
+{
+  "host": "outgoing-giraffe",
+  "time": 1794869703.115371,
+  "removed": [
+    {
+      "unit": "oth-ubuntu-1380706-1794867248",
+      "threads": "16",
+      "scope": "LoadState=not-found\nActiveState=inactive\nControlGroup=",
+      "completion": [
+        "oth-ubuntu-1380706-1794867248",
+        "1794867248",
+        "1794867650",
+        "0"
+      ],
+      "status": "removed only archived terminal thread charge"
+    },
+    {
+      "unit": "oth-ubuntu-1392967-1794867309",
+      "threads": "16",
+      "scope": "LoadState=not-found\nActiveState=inactive\nControlGroup=",
+      "completion": [
+        "oth-ubuntu-1392967-1794867309",
+        "1794867309",
+        "1794867460",
+        "0"
+      ],
+      "status": "removed only archived terminal thread charge"
+    },
+    {
+      "unit": "oth-ubuntu-1248498-1794866534",
+      "threads": "4",
+      "scope": "LoadState=not-found\nActiveState=inactive\nControlGroup=",
+      "completion": [
+        "oth-ubuntu-1248498-1794866534",
+        "1794866535",
+        "1794867177",
+        "1"
+      ],
+      "status": "removed only archived terminal thread charge"
+    },
+    {
+      "unit": "oth-ubuntu-1369153-1794867169",
+      "threads": "4",
+      "scope": "LoadState=not-found\nActiveState=inactive\nControlGroup=",
+      "completion": [
+        "oth-ubuntu-1369153-1794867169",
+        "1794867170",
+        "1794867183",
+        "0"
+      ],
+      "status": "removed only archived terminal thread charge"
+    },
+    {
+      "unit": "oth-ubuntu-1386141-1794867265",
+      "threads": "16",
+      "scope": "LoadState=not-found\nActiveState=inactive\nControlGroup=",
+      "completion": [
+        "oth-ubuntu-1386141-1794867265",
+        "1794867266",
+        "1794867267",
+        "0"
+      ],
+      "status": "removed only archived terminal thread charge"
+    },
+    {
+      "unit": "oth-ubuntu-1369151-1794867169",
+      "threads": "4",
+      "scope": "LoadState=not-found\nActiveState=inactive\nControlGroup=",
+      "completion": [
+        "oth-ubuntu-1369151-1794867169",
+        "1794867170",
+        "1794867181",
+        "0"
+      ],
+      "status": "removed only archived terminal thread charge"
+    },
+    {
+      "unit": "oth-ubuntu-1369155-1794867169",
+      "threads": "16",
+      "scope": "LoadState=not-found\nActiveState=inactive\nControlGroup=",
+      "completion": [
+        "oth-ubuntu-1369155-1794867169",
+        "1794867171",
+        "1794867171",
+        "12"
+      ],
+      "status": "removed only archived terminal thread charge"
+    }
+  ],
+  "kept": [
+    {
+      "unit": "oth-ubuntu-1414396-1794867396",
+      "threads": "16",
+      "scope": "LoadState=loaded\nActiveState=active\nControlGroup=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1414396-1794867396.scope",
+      "completion": [
+        "oth-ubuntu-1414396-1794867396",
+        "1794867397",
+        "",
+        "running"
+      ],
+      "reason": "preserved ambiguous or live"
+    },
+    {
+      "unit": "oth-ubuntu-1461365-1794867610",
+      "threads": "8",
+      "scope": "LoadState=loaded\nActiveState=active\nControlGroup=/user.slice/user-1000.slice/user@1000.service/app.slice/oth-ubuntu-1461365-1794867610.scope",
+      "completion": [
+        "oth-ubuntu-1461365-1794867610",
+        "1794867610",
+        "",
+        "running"
+      ],
+      "reason": "preserved ambiguous or live"
+    }
+  ],
+  "committed_threads_after": 24
+}
