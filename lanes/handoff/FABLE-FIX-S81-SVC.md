@@ -91,3 +91,11 @@
   Lane inputs staged on epyc2: fable-fix-s81-svc/in/B6gF2sv_sidecar.json a3b57fc803bf; asbuilt_run.json was there.
 - p3 passed src_manifest, kit_snap, bind_fetch, bind, kit_rtl_probe; kit_rtl running 09:01.
 - My epyc9 root-disk pilot dir + the root kit-store I created (7.2 GB) are deleted.
+
+## 09:12 PST svc_hi t3 kit_rtl PASS (closure applied on v3 + F2sv plan + v3 bind); kit_topology FAIL = missing lane file
+- p3 svc_hi t3: kit_rtl RC 0 (closure log pmem/pvq/land/stage for ru_rsv_07_), then kit_topology FileNotFound on epyc2:
+  s81-b3-clk/run/b/B6gG3b/src/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json (lane path named by
+  asbuilt_run.json; epyc2 has no s81-b3-clk lane tree). Staged that ONE file on epyc2 at the lane path (copy of the v3
+  tree file, sha1 711c256fc96e = epyc9 lane file; README.fable-fix-s81-svc beside src/). asbuilt_run.json also names
+  545 paths under B6gG3b/out (absent on epyc2; kit_rtl did not need them).
+- svc_hi t3 relaunched as p4 (pid 3265257, intel2). svc_lo t7 p3 (pid 2995111) still in kit_rtl, will find the file.
