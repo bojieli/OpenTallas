@@ -7,7 +7,6 @@ parent must separately select the candidate calendar body before binding.
 import argparse,gzip,hashlib,json,re,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'qwen_tokfunc/current_path'))
-import table_roms as T
 STAGE_SHA='03fa2dcff20b67032c63cf05f92f52454bc3d6bb9700d979a67f69038f482117'
 
 def source(entry):
@@ -30,11 +29,39 @@ def flag(entry,body):
     if type(value)is not int or value not in (0,1):raise ValueError('HEAD_STAGE37 must be literal0 or1')
     return value
 
+def validate_tt_parent(selection,ct,parent):
+    chain=selection.get('ctlm_parent_chain')
+    if chain:
+        if chain[0]!=parent:raise ValueError('actual TT root differs from source-complete parent chain')
+        if [e['master']for e in chain]!=['qfd_tt_ctlm_dv_lpf_hp13_lp','qfd_tt_ctlm_dv_gi_hp13']:
+            raise ValueError('unknown actual frozen TT frontend chain')
+        raw=Path(selection['tt_frontend_receipt']).read_bytes()
+        if hashlib.sha256(raw).hexdigest()!=selection.get('tt_frontend_receipt_sha256'):
+            raise ValueError('actual frozen TT frontend receipt identity differs')
+        fr=json.loads(raw)
+        if fr.get('CALREG')!=1 or fr.get('HEAD_STAGE37_default')!=0 or fr.get('default_off_source_delta_reversible')is not True:
+            raise ValueError('actual TT source successor changed frozen CALREG1/default-off contract')
+        expected={v['path']:v['candidate_sha256']for v in fr['files']}
+        for entry,child in zip(chain,[chain[1]['master'],ct['master']]):
+            pb=source(entry)
+            if flag(entry,pb)!=1 or not re.search(r'\b'+re.escape(child)+r'\s*#\(',pb) or '.HEAD_STAGE37(HEAD_STAGE37)'not in pb:
+                raise ValueError('actual TT source chain does not propagate stage37 to its selected child')
+        for entry in chain+[ct]:
+            if expected.get(entry.get('source_relative'))!=entry['source_sha256']:
+                raise ValueError('TT chain source is not from the exact reconstructed frozen frontend')
+        if ct['master']!='qfd_dv_cmd_cal_mu' or ct['parameters'].get('CALREG')!=1:
+            raise ValueError('actual frozen TT chain requires its CALREG1 FQREG cal alias')
+    else:
+        pb=source(parent)
+        if flag(parent,pb)!=1 or 'qfd_dv_cmd_cal_mu_head37'not in pb or '.HEAD_STAGE37(HEAD_STAGE37)'not in pb:
+            raise ValueError('actual TT parent does not select the candidate stage37 calendar source')
+
 def validate(selection,*,component_only=False,require_source_complete_tt_parent=False):
+    import table_roms as T
     if selection.get('schema')!='opentallas.qc-head37-selection.v1':raise ValueError('wrong selection schema')
     ct=selection['ctlm'];body=source(ct);cf=flag(ct,body)
     if cf:
-        if ct['master']!='qfd_dv_cmd_cal_mu_head37' or 'HEAD_STAGE37 ? 6\'d37 : 6\'d36' not in body:
+        if ct['master']not in ('qfd_dv_cmd_cal_mu_head37','qfd_dv_cmd_cal_mu') or 'HEAD_STAGE37 ? 6\'d37 : 6\'d36' not in body:
             raise ValueError('actual CTLM candidate must implement bounded LOCAL4 stage37 acceptance')
         if any(ct['parameters'].get(k)!=1 for k in ('CALENDAR_ROM','TABLE_ROM')):
             raise ValueError('HEAD37 requires actual CALR and LOCAL4 table-ROM mode')
@@ -86,9 +113,7 @@ def validate(selection,*,component_only=False,require_source_complete_tt_parent=
             parent=selection.get('ctlm_parent')
             if not parent or not selection.get('source_complete_tt_parent_selected',False):
                 raise ValueError('real source-complete TT parent selection is missing')
-            pb=source(parent)
-            if flag(parent,pb)!=1 or 'qfd_dv_cmd_cal_mu_head37'not in pb or '.HEAD_STAGE37(HEAD_STAGE37)'not in pb:
-                raise ValueError('actual TT parent does not select the candidate stage37 calendar source')
+            validate_tt_parent(selection,ct,parent)
             import head37_windows
             wp=Path(selection['loader_windows'])
             window=json.loads(wp.read_text())
@@ -107,9 +132,9 @@ def validate(selection,*,component_only=False,require_source_complete_tt_parent=
 def resolve(selection,base):
     import copy
     s=copy.deepcopy(selection)
-    for e in [s['ctlm']]+s['loaders']+([s['ctlm_parent']]if 'ctlm_parent'in s else[]):
+    for e in [s['ctlm']]+s['loaders']+([s['ctlm_parent']]if 'ctlm_parent'in s else[])+s.get('ctlm_parent_chain',[]):
         if not Path(e['source']).is_absolute():e['source']=str((base/e['source']).resolve())
-    for k in ['selected_identity','mask_receipt','masks','physical_assignment','native_window','complete_manifest','loader_windows']:
+    for k in ['selected_identity','mask_receipt','masks','physical_assignment','native_window','complete_manifest','loader_windows','tt_frontend_receipt']:
         if k in s and not Path(s[k]).is_absolute():s[k]=str((base/s[k]).resolve())
     return s
 
