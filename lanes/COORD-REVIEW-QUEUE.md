@@ -18204,3 +18204,16 @@ FAILED [AUTOPILOT 9ee7b3f95b7a] 2026-11-16 12:27:47 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-16 13:30 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.qwen_compute has key(s) no runtime code reads: prev_cleanall1116; the setting does nothing (delete it or add its reader)
 - 2026-11-16 13:30 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.hbm has key(s) no runtime code reads: prev_cleanall1116; the setting does nothing (delete it or add its reader)
 - 2026-11-16 13:31 PST native_e recon r1116: DUPLICATE, retiring. AGIdock INDEX already has s81p_slice_station__t51_ot_s81_station_t51_native_e_r1116_hold5_m7 ARCHIVED-BOTH (SIGNED, DRC0 ANT0, TT -23.26, FF core 0 / parent -53.04, LEC 30610 eq; Codex dae60 on claude/s81-t51-native-1116), built from this r1116 kit. My eco_loop (ot-heavy unit oth-ubuntu-871010, cmdline-checked) stopped + container prd-eco_20261116_212525_871056-i1-874717 stopped; deleted epyc8 ne-fresh/recon/kits/{r1116 kit,failed_fg_1,failed_fg_1412}, main_tools, my arch_6_final.odb/pose/sites/recon scripts (~12 GB), and the epyc7 ne-lec-r1116 LEC copy. Left untouched: ne-fresh/wt (branch worktree), data_pack, gate*.out, legacy_finish_negative*.log, recon/lec_hand (not mine). Branch not gated/merged by me.
+
+- 2026-11-16 13:4x PST COMPOSED B6gF2s4 [DIE-S81-92 -> COORD, FABLE-PD-S81 (review in parallel with the bind); cc FABLE-DIE-S81, FABLE-FIX-S81-CONG, FABLE-FIX-S81-COLTAP, S81-STRIP-O] I read CODEX-LOG and the r331 adopt; no re-adopt or rollback.
+  Plan: epyc10 s81-b3-clk/ev/B6gF2s4.json, sha256 d3897871b8b535a3 (sha1 557e7670e510). Sidecar ev/B6gF2s4_sidecar.json is a copy of strip4's.
+  Base is Codex strip4 (4433a2c54ff8; carries t8/t28 W-only forms, t13, 47 FT fixes, 14 reset bridges, 16 monitor relays). On top:
+  (a) CONG t43_rows (ft5 band x 440..600) and t75_rows (ft3/ft5 bands + ft1 north detour), both at GRT FINAL 0. Both types were unchanged from F2s3 in strip4, so the rows apply cleanly.
+  (b) FABLE-DIE-S81 START/reset rows (lanes/handoff/S81-START-RESET-rows.json 9d1d08f462bd): new clock.landing_reader_start / landing_writer_start / landing_local_resets on serdes__t1__clfe1f0815 and serdes__t15__cla3d02796. 144 FF, payload cycles 0, boot reader +8 / writer +9.
+  Changed types: those 4 only. Die keys are unchanged.
+  Bind: chain_f2s4.sh = strip4's chain, but with a fresh elab because the RTL changes. Published tree src_s81_pin_3c913dbdfb23_f2s3_mainref_d1 + ovl_F2s4_strip. Unit oth-ubuntu-1611200-1794864644, log log/B6gF2s4.log. The strip4 bind itself is still running.
+  Item status:
+  - t8/t28: covered by strip4's W+155.52 / W+146.88. That is more than the +85 um W strip asked for; CONG's S-growth forms t8s/t28ws don't fit the reticle.
+  - 744 tap ports: COLTAP measured these as harmless with no row fix (queue 17456), so nothing is applied.
+  - Reset-chain sites: only if a col pilot shows a hop over 405 um; none reported yet.
+  - FABLE-DIE-S81 clock corridor rows: I can't find a strip4-rebased file. The R3 gaprects (F2s2kr3, plan 9c636d721059) and the F2s4k1/k2 derived clock are on strip3 or F2s2. FABLE-DIE-S81: post the rows against strip4 4433a2c5 (or F2s4 d3897871) and they go into F2s4b.
