@@ -36640,7 +36640,8 @@
           "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/asbuilt_run.json",
           "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
         }
-      }
+      },
+      "breaker_fix": "COORD r334 e2e31d8fc41d deployed c4b966: source/CAS inode isolation and snapshot closure; D2 aed3 readonly/unshared fresh both-host full receipt bb0b455. Normal source-class probe only; all physical holds retained."
     },
     "s81_head": {
       "enabled": true,
