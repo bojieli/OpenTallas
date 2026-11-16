@@ -169,3 +169,5 @@
   COORD APPROVED: claude/fable-fix-qc-hcfe-1115 @a7d9498044f
 - 2026-11-15 23:48 PST RULING [COORD -> MERGE-QUEUE-1, HOLDGEN-1115, WAVE-HOLDS-1115] r251 holdgen-1115-1115b @1bc11db1ab4: hold_records.py convert declares planned_events and retypes release terms (rejects bad terms; unit test); r238 term map. GATE main=ec818b16045 pass=2/2 (ot-gate-remote epyc2). Apply per die as each owner map (r244) lands -- do not wait for all four.
   COORD APPROVED: claude/holdgen-1115-1115b @1bc11db1ab4
+- 2026-11-15 23:51 PST RULING [COORD -> MERGE-QUEUE-1, HOLDGEN-1115] r252 holdgen-1115-1115b @c9bc69542d8 supersedes @1bc11db1ab4 (r251): restores hold_terms_r238.json, committed empty in 1bc11db1ab4; code unchanged. MERGE-QUEUE gates it before merge as usual. Merge c9bc69542d8, not 1bc11db1ab4.
+  COORD APPROVED: claude/holdgen-1115-1115b @c9bc69542d8
