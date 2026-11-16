@@ -41534,6 +41534,87 @@
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h18_n9_s11",
       "job": "SIGNED sta_region_nb0_h18_n9_s11 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/b/q_h18b_u5/sta_region_nb0_h18_n9_s11/kits/sta_region_nb0_h18_n9_s11_synth0/signoff/signoff.json (S4q2 master q_h18b_u5 util 0.5, signed at first finish, hold +0.26); export_view, outline 162x162, LEC EQUIVALENT; archived rtx-pro + AGIdock opentallas-signed-1114 (CORE-ROWS-1115)"
      }
+    ],
+    "sta_region_nb0_h15_n9_s10": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h15_n9_s10",
+      "job": "SIGNED sta_region_nb0_h15_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h15_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h15_n9_s10",
+      "job": "SIGNED sta_region_nb0_h15_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h15_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h15_n9_s10",
+      "job": "SIGNED sta_region_nb0_h15_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h15_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h15_n9_s10",
+      "job": "SIGNED sta_region_nb0_h15_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h15_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h15_n9_s10",
+      "job": "SIGNED sta_region_nb0_h15_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h15_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     }
+    ],
+    "sta_region_nb0_h16_n9_s10": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s10",
+      "job": "SIGNED sta_region_nb0_h16_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s10",
+      "job": "SIGNED sta_region_nb0_h16_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s10",
+      "job": "SIGNED sta_region_nb0_h16_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s10",
+      "job": "SIGNED sta_region_nb0_h16_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s10",
+      "job": "SIGNED sta_region_nb0_h16_n9_s10 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s10_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     }
+    ],
+    "sta_region_nb0_h16_n9_s11": [
+     {
+      "host": "epyc9",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s11",
+      "job": "SIGNED sta_region_nb0_h16_n9_s11 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s11_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc7",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s11",
+      "job": "SIGNED sta_region_nb0_h16_n9_s11 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s11_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s11",
+      "job": "SIGNED sta_region_nb0_h16_n9_s11 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s11_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "epyc10",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s11",
+      "job": "SIGNED sta_region_nb0_h16_n9_s11 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s11_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     },
+     {
+      "host": "intel1",
+      "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s11",
+      "job": "SIGNED sta_region_nb0_h16_n9_s11 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s11_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
+     }
     ]
    },
    "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
