@@ -67,6 +67,24 @@ class CoreLinkPipe(unittest.TestCase):
         import jsonschema, schema
         jsonschema.validate(p["clock"]["core_link_pipe"], schema.SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"])
 
+    def test_lp_even_hook_selection_and_tcl(self):
+        """FIRM sites for the stages: gen_phys wires lp_even.tcl only for types with core_link_pipe; the Tcl parses"""
+        import shutil, subprocess
+        import gen_phys
+        raw = {"clock": {"core_link_pipe": {"types": ["t"], "modules": {"m": {"a": 1}}}}}
+        self.assertTrue(gen_phys.core_link_pipe_place(raw, "t"))
+        self.assertFalse(gen_phys.core_link_pipe_place(raw, "u"))
+        self.assertFalse(gen_phys.core_link_pipe_place({}, "t"))
+        self.assertTrue(gen_phys.core_link_pipe_place({"clock": {"core_link_pipe": {"all": True, "except": ["u"], "modules": {"m": {"a": 1}}}}}, "t"))
+        d = os.path.dirname(os.path.abspath(__file__))
+        src = open(os.path.join(d, "lp_even.tcl")).read()
+        self.assertIn("u_pc_lp_", src)
+        self.assertIn("(j+1)", src.replace("$j+1", "j+1"))
+        if shutil.which("tclsh"):
+            r = subprocess.run(["tclsh"], input="set f [open " + os.path.join(d, "lp_even.tcl") + "]; set s [read $f]; "
+                               "if {![info complete $s]} {exit 3}", capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr)
+
     def test_schema_validates_forms(self):
         import jsonschema, schema
         node = schema.SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"]

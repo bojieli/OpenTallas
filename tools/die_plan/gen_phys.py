@@ -839,6 +839,21 @@ CORE_INPUT_PLACE_ANCHOR = "\n# QC-NK-HOLD A+P: core-input lockup latches + pipe 
 CORE_INPUT_PLACE_CHAIN = "\n# QC-NK-HOLD A+P: feeding register chains spread to the pipe register (macro-avoiding route)\nsource /work/core_input_chain.tcl\n"
 
 
+LP_EVEN_HOOK = "\n# KV-PVGEN: core_link_pipe stages (u_pc_lp_*) spread to equal hops between their driver and loads\nsource /work/lp_even.tcl\n"
+
+
+def core_link_pipe_place(raw, tn):
+    """KV-PVGEN 11-15 (COORD 11-16): True when plan clock.core_link_pipe puts u_pc_lp_* stages in type tn (bind.core_link_pipe_spec on
+    any module / source).  Then lp_even.tcl (PRE_RESIZE, after GPL) spreads every stage chain evenly between its driver and its
+    loads, so GPL cannot bunch them at one end (R-RTL-6: registers added for reach are sited, never left to wirelength)."""
+    cfg = ((raw or {}).get("clock") or {}).get("core_link_pipe") or {}
+    if not cfg:
+        return False
+    if cfg.get("all"):
+        return tn not in set(cfg.get("except") or [])
+    return tn in set(cfg.get("types") or [])
+
+
 def core_input_place(raw, tn):
     """QC-NK-HOLD 11-11 A+P placement hooks (OWNER 07:39 pipeline cycle, COORD 07:5x APPROVED): True when type tn gets
     declared pipe registers before its core-input lockup latches (bind.core_input_pipe > 0 on any listed module).
@@ -5852,6 +5867,17 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise ValueError(f"core_input_place: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
         else:
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
+    if core_link_pipe_place(P.raw, tn):
+        shutil.copyfile(Path(__file__).with_name("lp_even.tcl"), kd / "lp_even.tcl")
+        mk = (kd / "config.mk").read_text()
+        m_ = re.search(r"^export PRE_RESIZE_TCL = /work/(\S+)\s*$", mk, re.M)
+        if m_ and (kd / m_.group(1)).is_file():
+            with (kd / m_.group(1)).open("a") as f_:
+                f_.write(LP_EVEN_HOOK)
+        elif m_:
+            raise ValueError(f"core_link_pipe_place: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
+        else:
+            (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/lp_even.tcl\n")
     if t.get("reset_relay_full"):
         reset_relay_full(kd / "rtl")
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
