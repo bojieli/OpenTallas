@@ -99,8 +99,8 @@ hold together. More than 0 means the window is still charged twice; that is a cl
 
 ### Lever 3. TT repair: three checks
 
-Evidence (REPORTED): the six kit results of 16:58; guide handover checked by file existence only. MEASURED: every one
-of the 86 kits has `SKIP_CTS_REPAIR_TIMING` in `config.mk`; none has the new flag yet.
+Evidence (REPORTED): the six kit results of 16:58; guide handover checked by file existence only. MEASURED: 244
+of the 250 scanned kit directories have `SKIP_CTS_REPAIR_TIMING` in `config.mk`; none has the new flag yet.
 
 Risks (INFERENCE, each with its check):
 1. Order. cts-mode repair runs before the FF hold repair. The FF session has +124 ps of setup slack where TT has -78
