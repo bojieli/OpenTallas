@@ -1541,7 +1541,36 @@ module ot_s81ph_coll_lane_safe4_hd #(
     // core -> link: credit landing on bank64 SRAM
     wire iv, ir, il; wire [W-1:0] id;
     reg  lk1, up;
+`ifdef OT_HE_EPC_ISLICE
+    // HEAD-EPC-RTL-1 form B (FABLE-PD-HKQ H2): one register slice between the u_ski head (SRAM bank 5-8 read data) and the
+    // endpoint / u_epc in_data bus.  2-entry elastic slice (full rate): the write enables and ir_g come from registered
+    // state only (cnt), the endpoint in_ready only advances rp / cnt.  +1 cycle on the core -> link data path.
+    reg  [1:0] isl_cnt; reg isl_wp, isl_rp;
+    (* keep="true" *) reg [W:0] isl_d0, isl_d1;
+    wire ir_g = up && (isl_cnt != 2'd2);
+    wire isl_take = iv && ir_g;
+    wire isl_pop = (isl_cnt != 2'd0) && ir;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin isl_cnt <= 2'd0; isl_wp <= 1'b0; isl_rp <= 1'b0; end
+        else begin
+            isl_cnt <= isl_cnt + {1'b0, isl_take} - {1'b0, isl_pop};
+            if (isl_take) isl_wp <= ~isl_wp;
+            if (isl_pop) isl_rp <= ~isl_rp;
+        end
+    always @(posedge clk) begin
+        if (isl_take && !isl_wp) isl_d0 <= {il, id};
+        if (isl_take &&  isl_wp) isl_d1 <= {il, id};
+    end
+    wire [W:0] isl_q = isl_rp ? isl_d1 : isl_d0;
+    wire        ep_v = (isl_cnt != 2'd0);
+    wire [W-1:0] ep_d = isl_q[W-1:0];
+    wire        ep_l = isl_q[W];
+`else
     wire ir_g = ir && up;
+    wire        ep_v = iv && up;
+    wire [W-1:0] ep_d = id;
+    wire        ep_l = il;
+`endif
     wire lcf;
     wire lo_vl; wire [W:0] lo_dl;
     generate if (REACH != 0) begin : g_lo2
@@ -1579,7 +1608,7 @@ module ot_s81ph_coll_lane_safe4_hd #(
     end endgenerate
 `ifdef OT_HE_EPC
     ot_s81hd_he_epc u_epc (.clk(clk), .rst_n(rs_n), .ch_b(ch_b),
-        .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
+        .in_valid(ep_v), .in_ready(ir), .in_data(ep_d), .in_last(ep_l),
         .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv0), .r_tx(rt0), .r_rx_v(rrv), .r_rx(rrf),
         .fault(ep_f), .rr_lo(epc_rr_lo), .rr_gb(epc_rr_gb));
@@ -1588,7 +1617,7 @@ module ot_s81ph_coll_lane_safe4_hd #(
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(1), .PIPE(2), .RXPIPE(1), .TOREG(1), .MWR(1),
         .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH != 0 ? 1 : 0), .WRL(REACH >= 2 ? 2 : 0), .RBL(RBL)) u_ep (
         .clk(clk), .rst_v(rr[R_EP +: EP_RN]), .mem_rst_n(rr[R_MEM +: MEM_RST]), .ch_b(ch_b),
-        .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
+        .in_valid(ep_v), .in_ready(ir), .in_data(ep_d), .in_last(ep_l),
         .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv0), .r_tx(rt0), .r_rx_v(rrv), .r_rx(rrf),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),
