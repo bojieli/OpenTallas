@@ -101,3 +101,18 @@ First clean route -> QC-PINACCESS-O posts RESULT PASS proof:DRT0255 -> HOLDGEN r
   rtx-pro + AGIdock. proof:DRT0255 PASS posted by QC-PINACCESS-O 12:14 (coll_n a22 route clean; coll_n NOT signed, FF hold -58.19).
 
 ## CLAUDE 13:5x PST: S4q9j ADOPTED (READY+ADOPT posted; inputs + release / hold lists in that post). Next = S4q9k items (a)-(d) per COORD / FABLE-PD-QC-S4q9e.
+
+## CLAUDE 2026-11-16 13:35 PST: S4q9k item (a) composed, bind chain running
+- Plan epyc2 L/treeJ/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9k.json sha c73c1acfd1ee6f24 = S4q9j + (a). Composer L/bin/mk_s4q9k_a.py,
+  report L/k/s4q9k_a.report.json (L = /srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc).
+- (a) form: stations on the RECEIVING per_bit chains (st_a out faces have only 13-17 um clear strip): bus:x_st_a_i on 9 fe types (+3 E, +5 / +6 W)
+  and 6 ctl types (+3); 15 rows, 24 lanes fixed_cycles += same; latency.lanes regenerated (24 rows, groups unchanged); knee FAIL 0;
+  geometry (station points vs hard cores + 4.32 halo): 0 new sites over a core.
+- Chain L/bin/chain_s4q9k.sh (NO pad pin): plan_gate_pre (baseline S4q9j) -> bind S4Q9KBR (stale seed by design) -> R8 derive -> bind S4Q9KBQ ->
+  R8 check, LATCHECK, hcparam, G0. Log L/log/chain_s4q9k.log, client intel2 ~/fable-fix-qc-knee-hc/chain_s4q9k.client.log. ~1 h 40.
+- RISK to read after DERIVE_DONE: the ctl leg had derived pad 11 (alignment pad). If the derive absorbs the +3 lane cycles into a smaller pad,
+  landed stays 20 and the regen (r_d of region 0 the latest) fails without the ctl pin: compare st_a ctl members bound / pad / landed in
+  gates/r8_s29q103S4Q9K.derived.json against r8_s29q103S4Q9F_seam.derived.json + pin. Fix then = raise what the pad aligns to, or keep ctl pin.
+- Pending in S4q9k: (b) FABLE-DIE-QC clock rows re-run on S4q9j (requested 13:5x; apply to clock.* then re-run on the k plan), (c) st_a_v1 HI_PAD / SKEW
+  against the six hardened views (checker 3db14d42 says the 24 rows were "unsigned" false positives: confirm from the signed config.mk), (d) faces rows.
+- I removed the stray plan_of_record/gen/ dir that gen.py latency --inplace created in treeJ (2 files, mine, created 13:32).
