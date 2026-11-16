@@ -2314,7 +2314,7 @@ def kit_effective_env():
     appear in config.mk).  Sorted; only variables that are set are listed."""
     out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
     for k in sorted(os.environ):
-        if k.startswith(("OT_PG_", "OT_PGCAP_")) and os.environ[k].strip() != "":
+        if (k == "OT_PGCAP" or k.startswith(("OT_PG_", "OT_PGCAP_"))) and os.environ[k].strip() != "":
             out[k] = os.environ[k].strip()
     return out
 
