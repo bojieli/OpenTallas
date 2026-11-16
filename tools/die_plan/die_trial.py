@@ -890,6 +890,18 @@ def _wall_components(site):
     cc = getattr(site, "_wall_cc", None)
     if cc is None:
         rects = list(site.forb)
+        # Fixed FT envelopes can contribute hundreds of thousands of small
+        # rectangles. Discover the same touching/overlapping edges locally,
+        # rather than scanning every pending rectangle for each wall member.
+        bucket = getattr(site, "b", 250.0) / 4.0
+        spatial = defaultdict(list)
+        def buckets(r):
+            for x in range(math.floor(r[0] / bucket), math.floor(r[2] / bucket) + 1):
+                for y in range(math.floor(r[1] / bucket), math.floor(r[3] / bucket) + 1):
+                    yield x, y
+        for i, r in enumerate(rects):
+            for key in buckets(r):
+                spatial[key].append(i)
         pending = set(range(len(rects)))
         cc = []
         while pending:
@@ -897,8 +909,9 @@ def _wall_components(site):
             ids, todo = [first], [first]
             while todo:
                 u = rects[todo.pop()]
-                hit = [i for i in pending if u[0] <= rects[i][2] and rects[i][0] <= u[2] and u[1] <= rects[i][3]
-                       and rects[i][1] <= u[3]]
+                nearby = {i for key in buckets(u) for i in spatial[key]} & pending
+                hit = [i for i in sorted(nearby) if u[0] <= rects[i][2] and rects[i][0] <= u[2] and
+                       u[1] <= rects[i][3] and rects[i][1] <= u[3]]
                 for i in hit:
                     pending.remove(i)
                     ids.append(i)
@@ -917,7 +930,8 @@ def _detour_wall(site, a, b, step, margin, turn_um):
     if not blockers:
         return None
     rects, cc = _wall_components(site)
-    seed = {i for i, r in enumerate(rects) if r in blockers}
+    blocker_set = {tuple(r) for r in blockers}
+    seed = {i for i, r in enumerate(rects) if tuple(r) in blocker_set}
     blockers = [box for ids, box in cc if ids & seed]
     escape = []
     for r in blockers:      # a wall crossing the direct box is bypassed above/below or left/right: nearest outward face

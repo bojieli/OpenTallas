@@ -133,3 +133,17 @@ def test_fixed_ft_envelopes_coalesce_and_keep_native_clock_bodies_clear(monkeypa
     monkeypatch.setattr(D, 'DME_ACTUAL_MAX_UM', None)
     assert D.clock_site(Fixed()).why((81.8, 60.1)) == 'ft_fixed'
     assert D.clock_site(Fixed()).legal((84., 60.1))
+
+
+def test_spatial_wall_components_preserve_touching_transitive_geometry():
+    class Walls:
+        b = 250.
+        forb = [(-20., -5., 0., 5., 'a'), (0., 5., 10., 15., 'b'),
+                (10., 14., 30., 16., 'c'), (62.5, 60., 70., 70., 'd'),
+                (70., 70., 80., 80., 'e'), (200., 200., 210., 210., 'f')]
+    rects, components = D._wall_components(Walls())
+    got = {frozenset(ids): box for ids, box in components}
+    assert rects == Walls.forb
+    assert got == {frozenset([0, 1, 2]): (-20., -5., 30., 16.),
+                   frozenset([3, 4]): (62.5, 60., 80., 80.),
+                   frozenset([5]): (200., 200., 210., 210.)}
