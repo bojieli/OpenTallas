@@ -43,3 +43,16 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - Rule kept: no col-wave PASS while reset copies u_d*_Y -> _r<k> miss -42 after CTS.
 - FABLE-DIE-S81 lands reset-copy rows in F2s3 itself (asked 07:5x, numbers + Spec 1 form posted). DIE-S81-92 composes F2s3 once with both row sets. Copy sites must be taken from F2s3_preview.json (my rows move u_s<k> and the halves).
 - Each pilot read carries three class lines: go_tag, ef, reset copies.
+
+## 07:5x 11-16: FABLE-CLOSURE-0943 lever B answered
+- Swap premise checked on all 12 family geometries (RTL connectivity in col_h9.sv / col_h10.sv + split wrapper; plan JSON distances for every tile). In all 372 swapped tiles u_w was the far half. Rows unchanged after an MX pin-face correction (rows_F2s3.json cc5bd847f1ec, F2s3_preview.json 4b440870a288).
+- Timing is measured on r2 only; r1 / h10_r2 share its tile shapes, the 84 r0 / h10_r1 types have no measured tile.
+- F2s3: compose + bind now, adopt only after the r2 CTS read on the rows.
+- RTL alternative if a swap is ever refused: u_e's sh_free / bank_free are equal to u_w's by construction (split wrapper comment), so ef could be taken from the near half by a wrapper parameter (needs bench + LEC).
+
+## IFN0 brief (lane S81-IFN0-HALVES, asked from COORD 07:5x)
+- Goal: signed IFN = 0 views of ot_v41_rom_elem_q_qxpq_w10_gb_hw and _he for the 84 r0 / h10_r1 col types (all 216 can take them later).
+- Start: branch claude/s81-gotag-setup-1115 @39e537ae34; kits epyc10 /srv/opentallas-scratch2/claude/s81-gotag-setup-1115/core/hwC, heC (stopped in 5_1_grt, OT_HOLD_STRUCTURAL FF -152.00 / 2,705 and -164.56 / 2,846 endpoints; TT +0.8 / -4.7). Input contract in_min -81.26, in_max 617.61 (go_tag in_max +50).
+- Do: copy the kits to a host other than epyc10 (never patch a running kit). (a) input-face flops (first rising-edge flop behind each data input) on a shallow clock branch, insertion 300-370 ps TT (he; hw stays 330-390): pin-register hooks (pin_reg_split.tcl / ot_pin_regs.tcl / pinreg_pad.tcl) or a re-hang of those CK pins on the level-2 clock net before CTS. (b) OT_HOLD_STOP_PS=-1000000, endpoint limit off. (b) alone is not the form (190 ps x 2,800 inputs).
+- Accept per half: DRC 0, TT setup >= -42, FF non-port hold >= 0, lib has setup_rising / hold_rising on every data input, tb_qxpq_go_boundary IFN 0 + mutant PASS, LEC. Then rows to DIE-S81-92, post to FABLE-FIX-S81-COLTAP.
+- Detail: lanes/FABLE-FIX-S81-COL-SPECS.md Spec 3.
