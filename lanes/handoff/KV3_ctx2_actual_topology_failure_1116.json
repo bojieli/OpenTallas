@@ -1,0 +1,38 @@
+[
+ {
+  "item": "kv3_hub_C",
+  "attempt": 2,
+  "constructor_exit": 0,
+  "failed_stage": "kit_topology",
+  "error": "Traceback (most recent call last):\nFileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/kit-store/snaps/550ac5b3a12360150390a7c26d432affefff9d1e/root/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json'",
+  "result": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_hub_C_b8093e506f1a8/a2/result.json",
+  "gen_verdict": "NOT_RUN",
+  "physical_verdict": "NOT_RUN",
+  "snapshot_id": "550ac5b3a12360150390a7c26d432affefff9d1e",
+  "evidence": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom7yhr/items/kv3_hub_C/attempt_2"
+ },
+ {
+  "item": "kv3_hub_Wo",
+  "attempt": 2,
+  "constructor_exit": 0,
+  "failed_stage": "kit_topology",
+  "error": "Traceback (most recent call last):\nFileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/kit-store/snaps/550ac5b3a12360150390a7c26d432affefff9d1e/root/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json'",
+  "result": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_hub_Wo_b599a15f67050/a2/result.json",
+  "gen_verdict": "NOT_RUN",
+  "physical_verdict": "NOT_RUN",
+  "snapshot_id": "550ac5b3a12360150390a7c26d432affefff9d1e",
+  "evidence": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom7yhr/items/kv3_hub_Wo/attempt_2"
+ },
+ {
+  "item": "kv3_pv_v1",
+  "attempt": 26,
+  "constructor_exit": 0,
+  "failed_stage": "kit_topology",
+  "error": "Traceback (most recent call last):\nFileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/kit-store/snaps/550ac5b3a12360150390a7c26d432affefff9d1e/root/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json'",
+  "result": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_pv_v1_b9ba9c7df7c9a/a26/result.json",
+  "gen_verdict": "NOT_RUN",
+  "physical_verdict": "NOT_RUN",
+  "snapshot_id": "550ac5b3a12360150390a7c26d432affefff9d1e",
+  "evidence": "epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom7yhr/items/kv3_pv_v1/attempt_26"
+ }
+]
