@@ -71,6 +71,17 @@ class BoundR8(unittest.TestCase):
         for owners in [[], ['a', 'a']]:
             self.kr['instances'] = owners; self.reject()
 
+    def test_declared_width_follows_strap_pad_width(self):
+        # KV-102 11-14: r8_strap_pad_max 26 -> 5-bit strap; the default stays 4 so a 5-bit declaration is rejected without the width
+        self.kr['bound_only_pins'] = [dict(port='strap_r8pad_x', dir='input', width=5)]
+        self.m['types']['T']['strap_r8pad_x']['width'] = 5
+        self.m['instances']['a']['strap_r8pad_x'] = dict(width=5, value=17, kind='r8pad_strap')
+        self.audit = dict(verdict='PASS', checked_bits=5, errors=[]); self.save()
+        self.assertEqual(declared(self.d/'kit_rtl.json', 5), [dict(name='strap_r8pad_x', width=5)])
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json')
+        self.m['instances']['a']['strap_r8pad_x']['value'] = 32; self.save()
+        with self.assertRaises(ValueError): declared(self.d/'kit_rtl.json', 5)
+
     def test_strap_free_legacy_without_manifest(self):
         self.kr['bound_only_pins'] = []; self.save()
         (self.d/'bind_parent_id_straps.json').unlink()
