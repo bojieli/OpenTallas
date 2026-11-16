@@ -476,6 +476,29 @@ def test_land_mux_positive():
     assert r["verdict"] == "PASS" and r["land_mux_bits"] == 1 and r["land_mux_depth"] == {"1": 4}, r["fails"]
 
 
+def test_land_mux_shared_buffer_on_the_bit_is_wire():
+    """one BUF (or an INV pair) on the landing bit shared by two slot muxes: 3 direct loads for D 4 still proves."""
+    shared = [f"BUFx2{_X} db (.A(d), .Y(dbuf));"]
+    net = _mux_mod(_mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2, src="dbuf") + _mux_slot(3, src="dbuf") + shared)
+    r = _g(net)
+    assert r["verdict"] == "PASS" and r["land_mux_bits"] == 1, r["fails"]
+    inv = [f"INVx1{_X} di (.A(d), .Y(dn));", f"INVx1{_X} dj (.A(dn), .Y(dbuf));"]
+    net = _mux_mod(_mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2, src="dbuf") + _mux_slot(3, src="dbuf") + inv)
+    r = _g(net)
+    assert r["verdict"] == "PASS" and r["land_mux_bits"] == 1, r["fails"]
+
+
+@pytest.mark.parametrize("extra,ports", [
+    ([f"DFFHQNx1{_X} lf (.CLK(fclk), .D(dbuf), .QN(lkq));"], ""),      # the shared buffer also feeds a fifth flop
+    ([f"BUFx2{_X} lb (.A(dbuf), .Y(dout));"], "dout"),                 # ... or leaks to a port
+])
+def test_land_mux_shared_buffer_mutants(extra, ports):
+    body = _mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2, src="dbuf") + _mux_slot(3, src="dbuf") + \
+        [f"BUFx2{_X} db (.A(d), .Y(dbuf));"] + extra
+    r = _g(_mux_mod(body, ports))
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], (r["fail_counts"], r["fails"])
+
+
 def test_land_mux_undeclared_and_icg_declared_still_fail():
     net = _mux_mod(_mux_tc() + _mux_slots4())
     assert "shared" in _g(net, land=None)["fail_counts"]          # default unchanged

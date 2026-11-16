@@ -1419,11 +1419,32 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         atmost_memo[key] = valid
         return valid
 
+    def _through_bufs(ld, seen):
+        """loads with shared BUF/INV cells replaced by the loads of their output net (cells driving a port stay)."""
+        out = []
+        for ci, pin in ld:
+            m, path, pp = F.cells[ci]
+            outs = [F.find(v[0]) for k, (dd_, v) in pp.items() if dd_ == "out" and v]
+            ins = [k for k, (dd_, v) in pp.items() if dd_ != "out" and v]
+            if (is_buf(m) and not is_ff(m) and len(outs) == 1 and len(ins) == 1 and ci not in seen
+                    and outs[0] not in out_port_roots and outs[0] not in roots_ports and loads[outs[0]]):
+                seen.add(ci)
+                out += _through_bufs(loads[outs[0]], seen)
+            else:
+                out.append((ci, pin))
+        return out
+
     def land_mux(b, r, D):
         """(None, flops, depths) = OK, else (failure text, [], [])."""
         ld = loads[r]
         if len(ld) != D:
-            return f"{len(ld)} loads on {r}, declared D {D}", [], []
+            # synthesis may share one BUF/INV on the bit between slot muxes (kv_cland_w652/w653/w672 d[511]: INVx1
+            # feeding two slots, 3 direct loads for D 4).  Such a cell is wire: count the loads behind it.  Only pure
+            # one-output BUF/INV cells that drive no port are expanded; every later proof (one flop per load, own-Q
+            # hold, exclusive writes, no leak) runs on the expanded loads unchanged.
+            ld = _through_bufs(ld, set())
+        if len(ld) != D:
+            return f"{len(loads[r])} loads on {r}, declared D {D}", [], []
         if drv[r]:
             return f"landing bit net also driven by {F.cells[drv[r][0][0]][1]}", [], []
         ffs, per = [], []
