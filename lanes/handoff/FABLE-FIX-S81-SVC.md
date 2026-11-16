@@ -40,3 +40,17 @@
   v2 tree needs ref_1116 + the tool change, or the reference travels in kit_rtl_post.d).
 - Get the (c) rows + (b) stamp into the F2s svc plan, then lift the svc hold and build all 10 F2s svc types to sign-off;
   export signed records to AGIdock /archive/opentallas-signed-1114 and rtx-pro.
+
+## 07:15 PST update (COORD: own svc to sign-off)
+- (c) rows DONE and posted (DELTA-ROWS 07:0x): epyc8 /srv/opentallas-scratch2/claude/fable-fix-s81-svc/formA_sites_B6gG3b.json
+  sha1 10cf7d27bf9f, generator svc_formA_sites.py PLAN OUT. 31/31 placed on 16/16 types, no outline growth.
+  Not checked: composed bands / N-face pin windows in the strip; instance names INFERENCE until a pilot netlist.
+- S81-SVCMEM-1116 06:51: ref_1116 closes svc_hi t3 + svc_lo t7 offline (epyc9 kp/, pt/). Waiting on its commit + gate + READY,
+  then TOOLS-CONVERGE S81 v3 delta tree (v2 + ref_1116 + tools/die_plan/s81_svc_*).
+- DIE-S81-92: asked for ONE svc delta B6gF2sv = 31 rows x svc types + ring ff stamp + drop svc exemption. No ACK yet.
+- Release token: HOLDGEN releases svc on "RESULT FABLE-FIX-S81-SVC svc-ready". Post ONLY after pilots svc_hi rs t3 +
+  svc_lo rs t7 pass floorplan (76 / 97 macros placed), GRT, and look likely to sign off. Pilots are not held.
+- Pilot recipe: private kit_wave.py run-item (pattern intel2 ~/svcmem/<item>/spec.json) or the wave item itself, with
+  plan = F2sv, src = v3 tree, hosts without epyc10. Wave defaults: kit_wave.json dies.s81 (gen_args --hold-ff-margin 0
+  --max-wire-um 100 --clock-landing <sidecar>).
+- Decided NOT to hack a B6gG3b private pilot around the unpublished closure files (duplicates the lane, wrong plan).
