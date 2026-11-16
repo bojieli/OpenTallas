@@ -30,7 +30,7 @@ fi
 git -C $S/repo remote set-url origin "$M"
 git -C $S/repo config user.name "MERGE-QUEUE gate"; git -C $S/repo config user.email "merge-queue@opentallas.invalid"
 git -C $S/repo config extensions.worktreeConfig true
-F=/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-merge-queue
+F=${OT_GATE_CODE:-/srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-merge-queue}
 echo "ot-gate-remote: $(hostname -s) slot ${S##*/} code $(readlink -f /srv/opentallas-scratch2/claude/rt/current | sed 's#.*/##')"
 MQ_HOME=$S/mq MQ_REPO=$S/repo MQ_WT=$S/wt MQ_COORD=$S/coord MQ_PYTHON=$B/venv/bin/python MQ_FALLBACK_REMOTE= MQ_XDIST=$T \
   MQ_GATE_PAR=1 /usr/bin/python3 -I "$F" gate "$1"

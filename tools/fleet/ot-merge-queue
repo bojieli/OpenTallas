@@ -100,6 +100,8 @@ GATE_HOW = ("READY needs a gate stamp: rebase the branch on current main, run it
 PRIORITY_RE = re.compile(r"\bpriority\s*:?\s*HIGH\b", re.I)
 TAG_RE = re.compile(r"\bflow-(\d{8})-([a-z]{2})-(?:head|qc|kv|s81|hbm)\b")
 _LOCK = threading.Lock()
+MISS_ROUNDS = int(os.environ.get("MQ_GATE_MISS_ROUNDS", "3"))     # dir-level rounds for sources a run reports missing
+WHOLE_TOPS = [x for x in os.environ.get("MQ_GATE_WHOLE_TOPS", "rtl").split(",") if x]   # then the whole top dir, these only
 GATE_PAR = int(os.environ.get("MQ_GATE_PAR", "3"))        # `gate` commands at once (11-15 14:3x: 7 lane gates queued behind 1)
 
 
@@ -623,17 +625,26 @@ def gate(it, wt, base):
         it["deps"] = need
     fails, infra, tails = run_tests(wt, tests, it["id"])
     miss = sorted({f for f in fails if f.startswith("MISSING-SOURCE:")})
-    if miss:
-        # paths built at run time (no literal to scan): add the dirs the run reported missing and run once more
-        got = sorted({os.path.dirname(x) for m in miss for x in m.split(":", 1)[1].split()} - {""})
+    for rnd in range(MISS_ROUNDS + 1):
+        if not miss:
+            break
+        # paths built at run time (no literal to scan): add the dirs the run reported missing and run again.  Each round can
+        # expose the next include (drt0255 15:4x: rtl/dsrom_sys, then rtl/hdc, rtl/v41rom ...); the last round adds the whole
+        # top-level dir when it is in WHOLE_TOPS (rtl/ ~0.9 GB; never physical/, 33 GB)
+        paths = {x for m in miss for x in m.split(":", 1)[1].split()}
+        if rnd < MISS_ROUNDS:
+            got = sorted({os.path.dirname(x) for x in paths} - {""})
+        else:
+            got = sorted({x.split("/")[0] for x in paths} & set(WHOLE_TOPS))
         got = [d for d in got if not _covered(d, pats + ["/" + x + "/" for x in need])]
-        if got:
-            git("sparse-checkout", "add", *["/" + d + "/" for d in got], cwd=wt, timeout=1800)
-            need = sorted(set(need) | set(got))
-            it["extra"] = sorted(set(it.get("extra", ())) | set(got))
-            it["deps"] = need
-            fails, infra, tails = run_tests(wt, tests, it["id"] + "-m")
-            miss = sorted({f for f in fails if f.startswith("MISSING-SOURCE:")})
+        if not got:
+            break
+        git("sparse-checkout", "add", *["/" + d + "/" for d in got], cwd=wt, timeout=1800)
+        need = sorted(set(need) | set(got))
+        it["extra"] = sorted(set(it.get("extra", ())) | set(got))
+        it["deps"] = need
+        fails, infra, tails = run_tests(wt, tests, f"{it['id']}-m{rnd}")
+        miss = sorted({f for f in fails if f.startswith("MISSING-SOURCE:")})
     if miss:
         return "INFRA", (f"MISSING SOURCE in the gate's sparse tree (queue defect, not the branch): "
                          f"{' '.join(m.split(':', 1)[1] for m in miss)[:300]}")
