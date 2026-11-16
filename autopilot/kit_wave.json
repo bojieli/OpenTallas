@@ -38507,7 +38507,7 @@
      "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
      "reason": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
      "release": [
-      "lane_result:DRT0255-PROOF"
+      "proof:DRT0255"
      ],
      "migrated": true,
      "keys": [
@@ -38520,8 +38520,7 @@
      "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
      "reason": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_result:DRT0255-PROOF verdict",
-      "proven form in gen env"
+      "proof:DRT0255"
      ],
      "migrated": true,
      "keys": [
@@ -49035,7 +49034,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
      "release": [
-      "lane_ready:DIE-QC-103"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
@@ -49048,7 +49047,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_ready:DIE-QC-103"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
@@ -49061,7 +49060,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_ready:DIE-QC-103"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
@@ -49074,7 +49073,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-302 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_ready:DIE-QC-103"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
@@ -49087,8 +49086,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): KIT_NOT_SELF_CONTAINED: input (sta_cland_w1574_e_s26 build-dir view) exists on epyc2 only, epyc2 is not in the item's roam hosts (attempts 9-14 same path). Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_ready:kit_snap live on QC",
-      "missing input staged on every roam host (FABLE-FLOWCLASS-KITPACK-2030 F1/F3)"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
@@ -49101,8 +49099,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): same input on epyc2 only; no attempt can pass until the F1 backfill. Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_ready:kit_snap live on QC",
-      "missing input staged on every roam host (FABLE-FLOWCLASS-KITPACK-2030 F1/F3)"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
@@ -49116,8 +49113,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): stub view qc_cland_w515_n_d8_local32_codex/provenance.json has export: {}; needs a signed cland w515 view, not a retry. Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_ready:kit_snap live on QC",
-      "missing input staged on every roam host (FABLE-FLOWCLASS-KITPACK-2030 F1/F3)"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
@@ -49130,7 +49126,7 @@
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "WAVE-HOLDS-1115 2026-11-15 21:14 PST (COORD r223, FABLE-FLOWCLASS-HOLDS-2030 5.4): last FAIL INFRA@gen hard landing actual child proof failed: shared rst_xn[i] 8-9 loads (real reset-ring proof failure, 9 attempts). No relaunch until the reset-ring fix. Running attempts finish. Lift = delete this key.",
      "release": [
-      "lane_ready:DIE-QC-103 reset-ring shared rst_xn proof fix"
+      "event_adopt:S4q8"
      ],
      "migrated": true,
      "keys": [
