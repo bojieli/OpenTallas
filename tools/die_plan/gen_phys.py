@@ -1303,7 +1303,7 @@ def view_core_tap_values(P, tp, view_tt_ps, corner="TT", t=None):
     c = "FF" if str(corner).upper().startswith("F") else "TT"
     ins = view_tt_ps if c == "TT" else round(S.FF_TT_INSERTION_RATIO * view_tt_ps, 3)
     lat = S.common_latency_ps(P, c, t)
-    return max(0.0, min(ins - lat, lat)), ins
+    return max(0.0, min(ins - lat + S.core_tap_lead_ps(t, c), lat)), ins
 
 
 def core_tap_view_report(P, tn):
@@ -1321,7 +1321,7 @@ def core_tap_view_report(P, tn):
                 out.append(dict(port=n, inst=c, plan_pin=plan_pin, view_pin=pin,
                                 plan_insertion_ps=S.core_tap_insertion_ps(tp), view_insertion_ps=ins,
                                 plan_early_ps=S.core_tap_early_ps(P, tp, 'TT', P.types[tn]), early_ps=early,
-                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) > early))
+                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) + S.core_tap_lead_ps(P.types[tn]) > early))
             break
     return out
 
@@ -2629,7 +2629,8 @@ def tap_offset_table(P, tn):
         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
         res = {}
         for c in ("TT", "FF"):
-            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, getattr(P, "types", {}).get(tn))) if n in core else 0.0)
+            ty = getattr(P, "types", {}).get(tn)
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, ty) + S.core_tap_lead_ps(ty, c)) if n in core else 0.0)
         if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
             raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row

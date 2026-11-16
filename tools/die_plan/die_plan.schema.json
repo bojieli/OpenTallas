@@ -3204,6 +3204,11 @@
          }
         }
        },
+       "core_tap_lead_ps": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 450
+       },
        "tap_reset_affinity": {
         "type": "boolean"
        },
