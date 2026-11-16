@@ -2,6 +2,8 @@ import os,sys,glob,time,re,subprocess as S
 apply=sys.argv[1]=='apply'; MIN=int(sys.argv[2]); R='/srv/opentallas-scratch2/claude'
 CUR=re.compile(r'B6gslsw|B6gE|B6gF1|B6gErr|TRIDX2|S4Q3B|S4q3c|S4Q3CB|S4q4c|S4Q3BSC|kvgeom6|kvgeom7|7u\b|7r\b|NF6|NF8|b6g|b6-|clk-s81-b6',re.I)
 refs=[l.strip() for l in open('/tmp/scrrefs.txt') if l.strip()]
+MREF=[l.split('\t')[0].replace('/srv/opentallas-scratch/claude','/srv/opentallas-scratch2/claude').replace('/srv/opentallas-scratch3/claude','/srv/opentallas-scratch2/claude').rstrip('/') for l in open('/tmp/refs.tsv')]
+
 me=os.getpid(); T=[]
 for p in glob.glob('/proc/[0-9]*'):
     if int(p[6:])==me: continue
@@ -45,6 +47,7 @@ for d in cands:
     name=d[len(R)+1:]
     if os.path.realpath(d)!=d: why='realpath differs'
     elif d in T or d+'/' in T: why='proc/queue/unit ref'
+    elif any(p==d or p.startswith(d+'/') or d.startswith(p+'/') for p in MREF): why='live manifest ref'
     elif CUR.search(name): why='current-plan name'
     else:
         isdir=os.path.isdir(d+'/.git')
@@ -67,7 +70,8 @@ for d in cands:
                 for x in ign:
                     try: nb+=os.lstat(d+'/'+x).st_size
                     except OSError: pass
-                if nb>200<<20: why='untracked/ignored %d MB'%(nb>>20)
+                if any(os.path.basename(x) in ('signoff.json','PROVENANCE.json') or x.endswith(('.odb','.def.gz','.gds')) for x in oth+ign): why='untracked signed/db files'
+                elif nb>(700<<20 if re.match(r'^(kw3[78]_src|kw41|kw43|kw32|dkv97|dq97|kv-plan-2)/src_',name) else 200<<20): why='untracked/ignored %d MB'%(nb>>20)
                 elif isdir:
                     if len(g(d,'worktree','list').stdout.splitlines())>1: why='hosts worktrees'
                     elif g(d,'rev-parse','--is-bare-repository').stdout.strip()=='true': why='bare'
