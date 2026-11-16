@@ -510,6 +510,39 @@ def snap_track_y(v, rails=(2.16, 0.24, 0.06)):
     return t
 
 
+def fixed_ft_rects(t):
+    """Union explicit fixed FT cell envelopes into contiguous column rectangles.
+
+    bit_sites_um are lower-left coordinates; bit_site_cell_um is the checked
+    allocation envelope. Coalescing touching vertical cells preserves their
+    exact occupied region and avoids millions of repeated spatial-index rows.
+    """
+    from ft_bit_sites import validate_slot
+    columns = defaultdict(list)
+    for slot in t.get("ft_slots", []) or []:
+        if "bit_sites_um" not in slot:
+            continue
+        validate_slot(slot)
+        width, height = slot["bit_site_cell_um"]
+        for stage in slot["bit_sites_um"]:
+            for x, y in stage:
+                columns[(x, width)].append((y, y + height))
+    rects = []
+    for (x, width), intervals in sorted(columns.items()):
+        lo, hi = None, None
+        for a, b in sorted(intervals):
+            if lo is None:
+                lo, hi = a, b
+            elif a <= hi + 1e-8:
+                hi = max(hi, b)
+            else:
+                rects.append((x, lo, x + width, hi))
+                lo, hi = a, b
+        if lo is not None:
+            rects.append((x, lo, x + width, hi))
+    return rects
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -557,6 +590,16 @@ class SiteMap:
                         a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                         self.forb.append((min(a[0], b[0]) - bh, min(a[1], b[1]) - bh,
                                           max(a[0], b[0]) + bh, max(a[1], b[1]) + bh, "band"))
+        if CLOCK_TYPE_KEEPOUTS:
+            fixed = {}
+            for n, p in P.parts.items():
+                tn = p["type"]
+                if tn not in fixed:
+                    fixed[tn] = fixed_ft_rects(P.types[tn])
+                for x0, y0, x1, y1 in fixed[tn]:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]), min(a[1], b[1]),
+                                      max(a[0], b[0]), max(a[1], b[1]), "ft_fixed"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]

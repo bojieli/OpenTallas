@@ -110,3 +110,26 @@ def test_reserved_channel_flag_keeps_clock_bodies_out_of_seal_ring(monkeypatch):
     monkeypatch.setattr(D, 'CLOCK_BODY_SITES', True)
     monkeypatch.setattr(D, 'DME_ACTUAL_MAX_UM', None)
     assert D.clock_site(Channel(False)).why((198.8, 90.)) == 'reserved_channel'
+
+
+def test_fixed_ft_envelopes_coalesce_and_keep_native_clock_bodies_clear(monkeypatch):
+    class Fixed(_P):
+        types = {'ft': {'outline_um': [200., 200.], 'ft_slots': [dict(
+            name='ft0', width=2, stations=3, bit_site_cell_um=[1.404, .27],
+            bit_sites_um=[[[80., 60.], [80., 60.27], [82., 60.]],
+                          [[80., 60.54], [80., 60.81], [82., 60.27]]]) ]}}
+        parts = {'p0': {'type': 'ft', 'origin_um': [0., 0.], 'orient': 'R0'},
+                 'p1': {'type': 'ft', 'origin_um': [200., 0.], 'orient': 'MX'}}
+    assert len(D.fixed_ft_rects(Fixed.types['ft'])) == 2
+    monkeypatch.setattr(D, 'CLOCK_TYPE_KEEPOUTS', False)
+    assert D.SiteMap(Fixed()).forb == []
+    monkeypatch.setattr(D, 'CLOCK_TYPE_KEEPOUTS', True)
+    point = D.SiteMap(Fixed())
+    assert len(point.forb) == 4
+    assert point.why((80.1, 60.1)) == 'ft_fixed'
+    assert point.why((280.1, 139.2)) == 'ft_fixed'  # mirrored footprint
+    assert point.legal((81.8, 60.1))
+    monkeypatch.setattr(D, 'CLOCK_BODY_SITES', True)
+    monkeypatch.setattr(D, 'DME_ACTUAL_MAX_UM', None)
+    assert D.clock_site(Fixed()).why((81.8, 60.1)) == 'ft_fixed'
+    assert D.clock_site(Fixed()).legal((84., 60.1))
