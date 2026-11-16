@@ -109,3 +109,36 @@ def test_gated_taps_same_role_accepted():
 def test_gated_taps_role_mismatch_rejected():
     with pytest.raises(ResetConsumerError, match='tap role'):
         localize(RGTEXT, [ROW], _rgtree(r14='bootstrap'))
+
+
+# QC-SC-ROWS-1115: bind self-check, the published reset tree must be the emitted one.
+from reset_consumers import verify_published
+
+def test_published_equals_emitted_is_clean():
+    assert verify_published(TEXT, TREE) == []
+
+def test_off_by_one_relay_published_vs_emitted_flagged():
+    t = copy.deepcopy(TREE)
+    t['relays'][3]['d'] = 'a0'          # published b1 hangs on a0, the RTL hangs it on b0
+    iss = verify_published(TEXT, t)
+    assert iss and 'b1' in iss[0] and 'published' in iss[0]
+
+def test_raw_tap_net_names_do_not_matter_graph_edges_do():
+    s = TEXT.replace('.q(b0)', '.q(rr_b0)').replace('.d(b0)', '.d(rr_b0)').replace('wire rst_root_n, a0, rst_n_t5, b0,', 'wire rst_root_n, a0, rst_n_t5, rr_b0,')
+    assert verify_published(s, TREE) == []
+
+def test_missing_and_unpublished_relays_flagged():
+    t = copy.deepcopy(TREE); t['relays'].append(dict(name='u_ghost', q='g0', d='rst_root_n', depth=1))
+    assert any('not in the emitted RTL' in i for i in verify_published(TEXT, t))
+    s = TEXT.replace('ot_dp_rrelay b1 (', 'ot_dp_rrelay u_rrl_9 (')
+    t2 = copy.deepcopy(TREE); t2['relays'][-1]['name'] = 'b1'
+    assert any('u_rrl_9' in i and 'not published' in i for i in verify_published(s, t2))
+
+def test_bind_localization_uses_the_emitted_tree():
+    import pathlib
+    src = (pathlib.Path(__file__).parent / 'bind.py').read_text()
+    i = src.index('reset_localization = t.get("reset", {}).get("consumer_localization")')
+    j = src.index('localize(', i)
+    seg = src[i:j]
+    assert seg.index("_emitted_reset_trees") < seg.index("get(\"collector_tree\")")
+    assert 'RCV.verify_published' in src and 'RESET_TREE_SELFCHECK' in src

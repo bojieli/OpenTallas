@@ -3276,7 +3276,11 @@ class Binder:
             if reset_localization:
                 import reset_consumers
                 import reset_tree as RT
-                tree = t.get("clock", {}).get("landing_contract", {}).get("collector_tree")
+                # QC-SC-ROWS-1115 (COORD 11-15): the published reset tree is the tree this bind EMITTED for the type
+                # (reset_tree.for_type at emit_type); the plan collector_tree is a snapshot that can be off by relays.
+                tree = getattr(self, "_emitted_reset_trees", {}).get(tn)
+                if tree is None:
+                    tree = t.get("clock", {}).get("landing_contract", {}).get("collector_tree")
                 if tree is None and self.wavefront_plan() is not None:
                     tree = RT.for_type(self.wavefront_plan(), t.get("split_of", tn))
                 try:
@@ -3318,6 +3322,15 @@ class Binder:
             except (ValueError, KeyError, OSError) as exc:
                 raise BindError(f"HBM SPB native {tn}: {exc}") from exc
             if tn in getattr(self, "_emitted_reset_trees", {}):
+                # BIND SELF-CHECK (QC-SC-ROWS-1115): the tree published below must be the tree the RTL emits
+                import reset_consumers as RCV
+                _iss = RCV.verify_published(f.read_text(), self._emitted_reset_trees[tn])
+                if _iss:
+                    _err = BindError(f"RESET_TREE_SELFCHECK {tn}: published reset tree differs from the emitted RTL "
+                                     f"({len(_iss)}): " + "; ".join(_iss[:3]))
+                    if not getattr(self, "collect_gaps", False):
+                        raise _err
+                    self._gap(_err)
                 import bound_reset_contract as BRC
                 prov_file = out.parent / "provenance_bind.json"
                 prov = json.loads(prov_file.read_text()) if prov_file.is_file() else None

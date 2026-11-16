@@ -154,3 +154,45 @@ def localize(text, declarations, tree, native_roles=None):
     for lo, hi, value in sorted(patches, reverse=True):
         text = text[:lo] + value + text[hi:]
     return text, receipts
+
+_RELAY_MODS = ('ot_dp_rrelay', 'ot_dp_rrelay_nl', 'ot_dp_rgate', 'ot_dp_rgate_drive')
+
+
+def verify_published(text, tree):
+    """BIND SELF-CHECK (QC-SC-ROWS-1115, COORD 11-15): the reset tree a bind PUBLISHES for a type must be the tree its RTL
+    EMITS.  Compared as a graph, so the emitter's raw/run tap net names (rr_t<k> / rn_*) do not matter: every published
+    relay is an emitted instance of the same name whose d is the emitted q of its published parent (or the root), and every
+    emitted u_rrl_<n> relay is published.  RLK-1108 latch form (d = hop lockup latch q) accepted.  Returns mismatch strings."""
+    if not isinstance(tree, dict) or not isinstance(tree.get('relays'), list):
+        return ['no published reset tree']
+    calls = _calls(text)
+    issues, names = [], set()
+    by_q = {r.get('q'): r for r in tree['relays']}
+    for r in tree['relays']:
+        nm = r.get('name')
+        names.add(nm)
+        c = calls.get(nm)
+        if not c:
+            issues.append(f"{nm}: published relay is not in the emitted RTL")
+            continue
+        ps = c['ports']
+        if 'q' not in ps or 'd' not in ps:
+            issues.append(f"{nm}: emitted relay lacks q/d ports")
+            continue
+        par = by_q.get(r.get('d'))
+        if par is not None:
+            pc = calls.get(par.get('name'))
+            want = pc['ports']['q'][0] if pc and 'q' in pc['ports'] else None
+        else:
+            want = r.get('d')
+        dnet = ps['d'][0]
+        if dnet != want:
+            import reset_tree
+            li, lq = reset_tree.lockup_latch_names(nm or '')
+            lc = calls.get(li)
+            if not (dnet == lq and lc and lc['module'] == 'ot_dp_lk' and lc['ports'].get('d', (None,))[0] == want):
+                issues.append(f"{nm}: d {dnet} emitted vs {want} published")
+    for nm, c in calls.items():
+        if c['module'] in _RELAY_MODS and re.fullmatch(r'u_rrl_\d+', nm) and nm not in names:
+            issues.append(f"{nm}: emitted reset relay is not published")
+    return issues
