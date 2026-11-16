@@ -132,3 +132,12 @@
   bound/ = F2sv svc_lo t7 unclosed bound, new/ = main att+rs, old/ = lane regen/old): REFUSED, one token in the residual
   w_u_rsv_14_u_u_att_u_eng_111_Y (paired 5624, residual 1269/2163). Variants with --drop-loc running (regen_try.log).
 - F2s3 pilots would fail the same way: do NOT launch them before a reference that closes the F2sv bound exists.
+
+
+## CODEX notes 2026-11-16 10:26 PST
+- Source fix pushed: claude/s81-svcmem-1116 @79ca679e3e0dd6a7f1164eeffadc05c660d85d6d. New ref_1116_main original self-check12605dc2 PASS, current closure8e3c91c7, exact residual equality; CLOSED16/16 and fresh MAIN/F2sv kit-RTL APPLIED16/16; fit20kedges PASS+5mutantscaught. Oldref/failed evidence preserved,0cycles. READY posted; merge_ops owns one normal source gate. Optional pytest NOT RUN (epyc8 lacks pytest).
+- Coherent private physical shortcut PROVED: canonical kit_topology prepare PASS on F2sv bind+F2sv_formA plan forhi3/lo7 (macro-content site rows do not change native contract), no bypass. Direct prepared kits epyc2 /srv/opentallas-scratch2/claude/fable-fix-s81-svc/direct_main2/<type>/rtl. Signed-view hash table copied exactly fromepyc10 to private in/signed_view_sha_s81.json after missing-path failure; direct_main/failed prep retained.
+- Correct physical GEN includes --cland-pinslot all: clients intel2 490624/490625, logs ~/fable-fix-s81-svc/f2sv_main/genpins_<type>.log, outputs <direct_main2>/<type>/gen_with_pinslot. Earlier gen/ omitted pinslot and is evidence only, never route it. Both reviewed in epyc2 W/results/geom_review/svc_main_formA.{json,png} (148/169 macro/core sites,31newSRAMsites each).
+- Intel2 watcher523030 ~/fable-fix-s81-svc/route_after_gen_main.py waits for both correct GEN exits, checks review, applies owner-removedcellcap0 before firstrun, replicates completed kits toepyc9, launches admitted48GB/8thread routes on epyc2/epyc9. Logs f2sv_main/route_<type>.log and route_watch2.log. Read macro placement148/169, then GRT overflow0 and TT>=-42 (or postCTS>=+45) before svc-ready. FullF2s3release tree/bind stillneeded; fleet_flow builds newref tree, do not duplicate these pilots.
+- Added t6 geometry fix fornextplan: epyc10 W/t6_ft2_stage9_row.json moves ft2 stage9 all277sites and regs[9] +21.6um Y; macro/band intersections0, previous maxhop247.32um,0cycles. Sent s81_plans forF2s4.
+- Old svcsynth t6/merge_test_hi4 remain CPU-active evidence-only superseded nonclosure forms, not release pilots (S81-BKSEL-O diagnosis).
