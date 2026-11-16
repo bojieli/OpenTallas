@@ -1,9 +1,9 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1",
  "smoke": "PASS",
- "smoke_detail": "v2: kit_rtl 12/12 RC0; plan_gate_pre PASS; tree_smoke_assert OK; tree_skew_check OK; nlink 1",
- "src_manifest_sha": "0c12f02501620d423d90b86f293683482afae5bbe89af5ce842498617402bee3",
+ "smoke_detail": "v2+data d1: kit_rtl 12/12 RC0 with all lane folders hidden (bwrap); plan_gate_pre PASS; tree_smoke_assert OK; tree_skew_check OK; nlink 1",
+ "src_manifest_sha": "218139dc0a65773b811ccc840d57c8c69a1e7faf53e421142c13d7fc0ad40011",
  "tools_sha": "eb1e73448bd0",
  "hosts": [
   "epyc10"
@@ -18,5 +18,5 @@
   "OT_GPL_SPARSE_UTIL": "0.10"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 06:07:09 PST"
+ "time": "2026-11-16 07:00:44 PST"
 }
