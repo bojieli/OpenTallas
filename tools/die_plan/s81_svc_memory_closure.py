@@ -288,6 +288,16 @@ def applies(bound_text):
     return all(re.search(r'^\s*' + m + r'\b', bound_text, re.M) for m in NATIVE)
 
 
+
+def kit_has_native_helpers(rtl_dir):
+    """Classify a kit before requiring reference assets; no-helper kits are a true no-op."""
+    rtl = Path(rtl_dir).resolve()
+    kr = json.loads((rtl / 'kit_rtl.json').read_text())
+    bound = rtl / (kr['bound_module'] + '.sv')
+    if not bound.exists(): bound = rtl / ('s81p_%s_bound.sv' % kr['bound_type'])
+    return applies(bound.read_text())
+
+
 def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
@@ -375,6 +385,13 @@ def main():
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--skip-self-check', action='store_true', help='only when the self-check already ran on this tool sha')
     a = ap.parse_args()
+    if a.kit_rtl and not any(kit_has_native_helpers(d) for d in a.kit_rtl):
+        # An already-native macro form needs no transform/reference data. Preserve apply_kit's
+        # idempotent receipt behavior; actual native-helper kits still take the fail-closed path.
+        for d in a.kit_rtl:
+            print(d, json.dumps({k: v for k, v in apply_kit(d, form=a.form).items()
+                                if k in ('status', 'after_sha256')}), flush=True)
+        return
     if a.kit_rtl:
         missing = [str(p) for p in closure_inputs(a.form, a.ref) if not p.exists()]
         if missing: sys.exit('closure inputs missing: ' + ' '.join(missing))
