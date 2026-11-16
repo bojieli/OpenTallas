@@ -1543,28 +1543,28 @@ module ot_s81ph_coll_lane_safe4_hd #(
     reg  lk1, up;
 `ifdef OT_HE_EPC_ISLICE
     // HEAD-EPC-RTL-1 form B (FABLE-PD-HKQ H2): one register slice between the u_ski head (SRAM bank 5-8 read data) and the
-    // endpoint / u_epc in_data bus.  2-entry elastic slice (full rate): the write enables and ir_g come from registered
-    // state only (cnt), the endpoint in_ready only advances rp / cnt.  +1 cycle on the core -> link data path.
-    reg  [1:0] isl_cnt; reg isl_wp, isl_rp;
-    (* keep="true" *) reg [W:0] isl_d0, isl_d1;
-    wire ir_g = up && (isl_cnt != 2'd2);
+    // endpoint / u_epc in_data bus, +1 cycle on the core -> link data path.
+    // FABLE-FIX-HEAD-TYPES 11-16 (he3 routed TT -160 ps: isl_rp -> 2 select buffers (24 + 34 loads) -> OA21 -> 68.7 fF of
+    // wire into u_epc in_data, macro setup 244 ps): registered-output skid form of the same 2-entry slice.  isl_od drives
+    // the u_epc pins directly (no read pointer, no output mux); isl_sd holds the one word that arrives while the endpoint
+    // stalls.  Cycle-exact with the pointer form (same ep_v / ep_d / ep_l / ir_g streams: occupancy = isl_ov + isl_sv, the
+    // head word is always in isl_od), so the lane latency is unchanged.  ir_g still comes from registered state only.
+    reg  isl_ov, isl_sv;
+    (* keep="true" *) reg [W:0] isl_od, isl_sd;
+    wire ir_g = up && !isl_sv;
     wire isl_take = iv && ir_g;
-    wire isl_pop = (isl_cnt != 2'd0) && ir;
+    wire isl_adv = !isl_ov || ir;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin isl_cnt <= 2'd0; isl_wp <= 1'b0; isl_rp <= 1'b0; end
-        else begin
-            isl_cnt <= isl_cnt + {1'b0, isl_take} - {1'b0, isl_pop};
-            if (isl_take) isl_wp <= ~isl_wp;
-            if (isl_pop) isl_rp <= ~isl_rp;
-        end
+        if (!rst_n) begin isl_ov <= 1'b0; isl_sv <= 1'b0; end
+        else if (isl_adv) begin isl_ov <= isl_sv || isl_take; isl_sv <= 1'b0; end
+        else if (isl_take) isl_sv <= 1'b1;
     always @(posedge clk) begin
-        if (isl_take && !isl_wp) isl_d0 <= {il, id};
-        if (isl_take &&  isl_wp) isl_d1 <= {il, id};
+        if (isl_adv) isl_od <= isl_sv ? isl_sd : {il, id};
+        if (!isl_adv && isl_take) isl_sd <= {il, id};
     end
-    wire [W:0] isl_q = isl_rp ? isl_d1 : isl_d0;
-    wire        ep_v = (isl_cnt != 2'd0);
-    wire [W-1:0] ep_d = isl_q[W-1:0];
-    wire        ep_l = isl_q[W];
+    wire        ep_v = isl_ov;
+    wire [W-1:0] ep_d = isl_od[W-1:0];
+    wire        ep_l = isl_od[W];
 `else
     wire ir_g = ir && up;
     wire        ep_v = iv && up;
