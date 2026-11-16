@@ -21,6 +21,11 @@ def scan(top,maxdep):
 for d in sorted(os.listdir(R)):
     p=R+'/'+d
     if os.path.isdir(p) and not os.path.islink(p): scan(p,6)
+PV=os.path.join(os.path.dirname(os.path.abspath(__file__)),'provrefs.txt')
+if os.path.exists(PV):
+    for l in open(PV):
+        l=l.strip()
+        if l: refs.setdefault(l,'provenance-view-source')
 out=open(sys.argv[1],'w')
 for k,v in sorted(refs.items()): out.write(k+'\t'+v+'\n')
 print(len(refs),'referenced paths')
