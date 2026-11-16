@@ -1,17 +1,21 @@
-# TOK-VERIFY-3 lane handoff (2026-11-12 12:46 PST)
-## 1 Scope
-Post-train token checks on main d3f85cdf01a0 (train 9): S81 strict-bind compile + tok/s, Qwen (QC+KV) lane price, r12ng FSA go_tag confirmation. Successor of TOK-VERIFY-2 (read its handoff for scripts).
-## 2 Worktrees
-- intel1 /srv/opentallas-scratch2/claude/wt/tok-verify-2 detached @d3f85cdf01a0.
-- epyc9 /srv/opentallas-scratch2/claude/wt/tok-verify-3-main detached @d3f85cdf01a0 (git worktree of wt/tok-verify-2-gear clone).
-## 3 Running jobs
-None.
-## 4 Results (posted in COORD-REVIEW-QUEUE)
-- S81 main d3f85cdf PASS: CC rc 0 x5, prog json differing 0 x4, AR 769.6 / MTP 2700.0. Run dir intel1 .../tok-verify-2/main_d3f85cdf. Command: TOK-VERIFY-2 handoff 6.3 with name main_d3f85cdf.
-- QW: no RTL recipe; method = tools/token_pass/reform_rebaseline.py --die kv --base OLD plan_c.json --batch NEW plan_c.json (script epyc9 .../tok-verify-2/qw.sh). d767 -> d3f85cdf: 195 lanes, +579 cyc, max +3, BOUND 4403.2 -> 4401.46 tok/s (-0.04 %).
-- FSA r12ng without workaround: rc 0 x3, no go_tag KeyError (epyc9 .../tok-verify-2/fsa3_r12ng). Compile then fails qualify_frame_source (GBQ record lacks r12ng ages [0]); needs an r12ng GB provider qualification record. Command: s81tok_v3.sh fsa3_r12ng $W $LAT with MAN=$T/asbuilt_f_s87r12.json BIND=$T/out_r12ng SRCBS=$T/bsrc4_r12ng.
-## 5 Next
-Re-run S81 per train when rtl/ or tools/s81* change; for r12ng A/B, wait for DIE-S81-88 GBQ for r12ng ages, then rerun gear arms with GBQ pointing at it.
-## 6 Gotchas
-- S81 default inputs (type-safe-5/cand, main_d767/cc) only on intel1; epyc9 has r12ng inputs only. ot-run lives at intel2 ~/.local/bin/ot-run (not on PATH).
-- worktree add of the 57 GB tree on epyc9 took ~10 min.
+# TOK-VERIFY-3 — CODEX takeover 2026-11-16
+
+## Current source and jobs
+- Restored existing token lane clone epyc9 `/srv/opentallas-scratch2/claude/tok-verify-2/repo` from standing lane mirror, branch `claude/tok-verify-3-latency-1116 @9ffad1bf706` (pushed). Normal source gate owned MERGE-QUEUE; no duplicate gate.
+- Native token-owned jobs all terminal. No whole-array/die simulation launched. HBM remains parked.
+
+## Completed current components
+- Proposed QC seam+3 shared image `eb8711a2fb9a`: native selected BC4 ROM64 vs literal image all53publicbits exact over6000edges/3epochs/6starts; stale actual old profile3edges early, lost-base mutant3errors caught. E9 `tok-verify-2/pair_plus3_bc4_1116`, unit `oth-ubuntu-580046-1794851901`, exit0; coord source/results `lanes/TOK-VERIFY-3/pair1116`.
+- Bksel FACE2/PDC1 producer profile: native fullD8192/IB64 transmitter2warmepochs,2522cycles,56074checks,48beats exact when DLY200->197 uses real positive delay budget; staleDLY200 misses firstslotcycle336. All3active transmitter module bodies identical to fixed parent51beecd2. E9 `tok-verify-2/bksel_face2_1116_r3`, unit `oth-ubuntu-764112-1794852581` was r2; actual r3 check via intel2 `tokverify-bksel-face2-1116-r3.service` / log `~/tokverify-bksel-face2-1116-r3.log`. r1bad1ns sampler/r2missingmodel failures retained. Repository evidence `results/token_pass/bk_tx_face2_1116`.
+- Source correction `9ffad1bf706`: defaultOFF `OT_BK_TX_FACE`, source helper `bk_tx_source_profile.py --run` derives selectedFACE/sourceSHA and executes existing compiler. CurrentTX_OFF7->10 forFACE2; first slots stay if DLY>=1, exhaustedreservation fails. Synthetic3die compilerfixture DLY21->18/1622->1619 preservesrootwindow.3unittestsPASS. Transport is separate: F2s2tl56/ca54/cb53 gives839/838legs on729core. AwaitF2s3actualLATCHECKdiff and compilerprofileintake; no fullplanrateclaim.
+- HEAD DOREG source contract committed coord `83ab627cc5c7`, `lanes/TOK-VERIFY-3/head1116/latency_contract.json`: +2pma_rck/1666ps vsbaseline eachHEADRX, noS81defaultchange,0/329HEADlane matches. AR namedhead.hop+head.argmax_merge nominal+4cycles. MTPaggregate draft nodes lack explicitRXmapping; changing globalhead_hop doublecounts calendarhead_ar andhop_head. Candidateonly, sd7physicalpending.
+
+## Next actual work
+1. QC owns Hfreshbind (r301RTL+17d2dstationbusrows), CSTexpected7,7,7,8,7,7; sourceimage presentlyold, explicitlyNOTprogrammequalified. KV owns HG1A full-source G0+strictbind atE10 `fable-fix-kv-pvhub/hg1/gate/bind`. Wait for real coherentbindconstants, do not compile staleintermediate.
+2. Prepared immutable compiler intake E9 `tok-verify-2/pair_final1116.sh ROOT FINAL_KV_BIND CST NEW_OUT` + `pair_extract1116.py` (also canonicalpair1116). It derives KST/HRT/EMBRT, keeps HEAD_PREP21/RECORD_TXD18/CAL_OFS-2, full96wordnativecontract, emits pairtransportrecord andnative64x32profiledelta. Allows only sole knownstale-pairrecorderror asbootstrap; neverqualifiesit. No source mutation.
+3. Swap SAME compiledimage intoQC `rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_qc_pair.svh`; KVtake correspondingnativeROM64viamapcontent under`physical/die_plan/qwen_kvsys/dcal_rom/bind/position2144b19/content`, generated`bind/kvbind1025/pair_image_txdp.json`, andexactfreshnative`target*.hex/boot_bundle.json`. Comparealltargets, notguessed1/3/11only. Bothdiesrebind, actualpairruntimegatepending.
+4. Old `tools/qwen_tokfunc/xdie_bound/run_all.sh` hardcodesOct24bound_r8/bound_pv/seams andsubstitutearithmetic. ItsPASS cannotqualifycurrentfinalprogramme; do not run it blindly.
+5. S81plans must wire actualF2s3profile: `python3 -I $CODE/tools/s81_dv/layer_prog/bk_tx_source_profile.py $F2S3SRC/physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv --out $PROGRAM/bk_tx_profile.json --run python3 -I $CODE/tools/s81_dv/dv_layer_compile.py <existing exact bound arguments>`. CODEneedsmergedprofilehook; legacycommandsunchanged. Do not add3again totransportleg.
+
+## Scope
+Allcurrent-dieG5 gates remainOPEN. Nativeboot/control/compiler/components above are explicitlyscoped; no numericalwhole-token orcurrentphysicalrateclaim. HistoricalNov1/Oct26TOKENjobs arestale/terminal, not restarted. Owner questionsplainCODEX-LOG, no dialogs.
