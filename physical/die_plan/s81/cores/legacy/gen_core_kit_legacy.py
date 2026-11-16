@@ -376,7 +376,8 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   @FF_GRT_STEP@\
   @GRT_GATE_STEP@\
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-finish && \$M do-generate_abstract; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
+  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = place ]; then P=\$(ls /work/run/results/asap7/*/base/3_place.odb | tail -1); ODB=\$P OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py > /work/dump_placed.log 2>&1; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_POSTROUTE pin_audit'; fi; fi; \
