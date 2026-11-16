@@ -6072,7 +6072,13 @@
         "slice_station__t6__cl54a9ceeb@9",
         "slice_station__t7__cl362204c4@6",
         "slice_station__t7__cl503f4913@6",
-        "slice_station__t8@31"
+        "slice_station__t8@31",
+        "serdes__t12@2",
+        "serdes__t15__cla3d02796@6",
+        "serdes__t16@6",
+        "serdes__t1__clb45db5be@6",
+        "serdes__t2@6",
+        "serdes__t3@5"
       ],
       "take_states": [
         "*"
@@ -6402,7 +6408,7 @@
         "ot_s81sl_leaf__t51@5": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
         "ot_s81sl_leaf__t57@8": "KW-FIX-43 11-10 23:5x COORD 23:4x porous release batch (364106cfe616, plan 39eae55ea90a)",
         "seqhost__t1@1": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
-        "serdes__t12@2": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
+        "serdes__t12@2": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases",
         "serdes__t14@1": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
         "serdes__t15__cla2127225@3": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
         "serdes__t15__cla3d02796@3": "S81-RF1 batch (DIE-S81-51/PLAN): RF1 06a3d7e0268 (iqf__t1, 11 serdes, t40 cl86ea32b3/sid5S, t72/t73/t8, 155 CLK7 relay_lockup types) + RF-D + plain-lane budget 721f34fddf0 (166 changed-SDC types, COORD 12:20), merged main 39a2fae866 = wave src kw-fix-4-s81h10; one batch (KW-FIX-4 12:4x) [old-src attempt stopped 15:0x]",
@@ -6661,7 +6667,7 @@
         "serdes__t15__cla3d02796@5": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
         "serdes__t16@5": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
         "serdes__t2@5": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
-        "serdes__t3@5": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
+        "serdes__t3@5": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases",
         "serdes__t4@4": "KW-FIX-17 16:3x: S81 tag flow-20261106-i-s81 7baaf601bbe carries bmpbound 996af5d741a (u_bound.u_core.u_dec.u_chn mapping, I138 'u_core neither an instance nor a generate' preflight class); COORD 16:0x (a) relaunch within 30 min of the tag",
         "ot_s81sl_leaf__t22@9": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
         "ot_s81sl_leaf__t28@10": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
@@ -6727,7 +6733,7 @@
         "serdes__t13@13": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
         "serdes__t15__cla2127225@15": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
         "serdes__t15__cla3d02796@8": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
-        "serdes__t1__clb45db5be@6": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
+        "serdes__t1__clb45db5be@6": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases",
         "serdes__t1__clfe1f0815@6": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
         "serdes__t2@8": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
         "serdes__t3@8": "KW-FIX-19 21:0x GEN-HOST-DEPS: bind sources die-s81-59/wc1/rtl, dq78/wt/rtl + 740 ref paths copied to epyc5/epyc6",
@@ -7296,7 +7302,10 @@
         "slice_station__t50__cl39451317@1": "Actual published _d6 source41bb + PGphase/PGCAP/TTrepair replaces old7073 kit; regenerate, never route old profile",
         "slice_station__t7__cl362204c4@6": "Actual published _d6 source41bb + PGphase/PGCAP/TTrepair replaces old7073 kit; regenerate, never route old profile",
         "slice_station__t7__cl503f4913@6": "Actual published _d6 source41bb + PGphase/PGCAP/TTrepair replaces old7073 kit; regenerate, never route old profile",
-        "slice_station__t8@31": "Actual published _d6 source41bb + PGphase/PGCAP/TTrepair replaces old7073 kit; regenerate, never route old profile"
+        "slice_station__t8@31": "Actual published _d6 source41bb + PGphase/PGCAP/TTrepair replaces old7073 kit; regenerate, never route old profile",
+        "serdes__t15__cla3d02796@6": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases",
+        "serdes__t16@6": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases",
+        "serdes__t2@6": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases"
       },
       "place_spill": true,
       "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
