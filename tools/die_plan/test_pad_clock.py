@@ -160,7 +160,11 @@ def test_cdc_absent_is_byte_identical_and_declared_only_appends_the_crossing_for
     assert PC.cdc_sdc(PC.pins(base, 'mid'), text, GP.t_lib) == ''
     assert 'set_max_delay' not in text and 'set_false_path' not in text
     p = cdc_plan(); decl = GP.sdc(p, 'mid', GP.type_pins(p, 'mid'))
-    assert decl.startswith(text)
+    # Physical source binding runs after the complete SDC, including unchanged CDC policy.
+    footer = PC.PHY_EXPORT_SOURCE_SDC + "\n"
+    text_body, decl_body = text.removesuffix(footer), decl.removesuffix(footer)
+    assert text.endswith(footer) and decl.endswith(footer)
+    assert decl_body.startswith(text_body)
     others = [n for n in PC.sdc_clock_names(decl) if n != 'pma_rck']
     assert {'clk', 'vclk', 'pma_tck'} <= set(others)
     for b in others:
@@ -169,7 +173,7 @@ def test_cdc_absent_is_byte_identical_and_declared_only_appends_the_crossing_for
                    f'set_false_path -hold -from [get_clocks pma_rck] -to [get_clocks {b}]',
                    f'set_false_path -hold -from [get_clocks {b}] -to [get_clocks pma_rck]'):
             assert decl.count(ln + '\n') == 1, ln
-    assert len(decl[len(text):].strip().splitlines()) == 1 + 4 * len(others)
+    assert len(decl_body[len(text_body):].strip().splitlines()) == 1 + 4 * len(others)
     assert 'set_clock_groups' not in decl and 'COORD 10-31 ruling (3)' in decl
     ctx = SL.kit_context(p, 'mid')
     assert ctx['pad_clock_cdc'] == {'pma_rck': 1250}
