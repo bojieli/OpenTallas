@@ -788,6 +788,22 @@ UNREACHABLE = set()   # hosts whose SIGNED scan or pins fetch failed in this ref
 PARTIAL = set()       # hosts whose walk hit SCAN_WALK_S in this refresh: known records read, new ones wait for the next walk
 
 
+def is_local_host(h):
+    """FLOW-HEALTH-1 11-15 (COORD): True when `h` (a fleet alias, a cherry name, 'local' / 'localhost') names the machine this code runs on.  The hub
+    cannot ssh to its own fleet name (intel2 does not resolve on intel2); every per-host scan / probe reads local paths for it instead."""
+    if h in ('local', 'localhost', None): return True
+    try:
+        me = {os.uname().nodename, os.uname().nodename.split('.')[0]}
+        tab = COORD_DIR / 'tools/fleet_hosts.tsv'
+        if tab.is_file():
+            for ln in tab.read_text().splitlines():
+                f = ln.split('\t')
+                if len(f) >= 2 and not ln.startswith('#') and f[0] == h and f[1] in me: return True
+        return h in me
+    except Exception:
+        return False
+
+
 def scan_cmd(roots=None, walk_s=None, prune=None):
     """shell pipeline: known paths on stdin, plus the walk of each distinct root, into SCAN_PY"""
     roots = SCAN_ROOTS if roots is None else roots
@@ -801,12 +817,13 @@ def scan_cmd(roots=None, walk_s=None, prune=None):
 
 def scan_host(h, known=()):
     cmd = scan_cmd()
-    if h == 'local':
+    local = is_local_host(h)
+    if local:
         cmd = ['bash', '-c', cmd]
     else:
         cmd = ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, cmd]
     stdin = ''.join(p + '\n' for p in known)
-    r = sh_ssh(cmd, SCAN_SSH_S, retry_timeout=False, input=stdin) if h != 'local' else sh(cmd, SCAN_SSH_S, input=stdin)
+    r = sh_ssh(cmd, SCAN_SSH_S, retry_timeout=False, input=stdin) if not local else sh(cmd, SCAN_SSH_S, input=stdin)
     if r.returncode != 0 and not r.stdout.strip():
         raise RuntimeError('%s: rc %d %s' % (h, r.returncode, r.stderr.strip()[-200:]))
     lines = r.stdout.strip().splitlines()

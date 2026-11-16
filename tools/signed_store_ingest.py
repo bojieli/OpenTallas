@@ -29,6 +29,11 @@ HOST_TOOL = '~/.local/share/ot-autoclean-auto/ot-autoclean.py'
 LOCK = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest.lock'
 LAST = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest_last.json'
 SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20']
+def host_cmd(h, remote):
+    """ssh to host h, or the command run here when h is this machine (the hub cannot ssh to its own fleet name)"""
+    return ['bash', '-c', remote] if rtp.is_local_host(h) else SSH + [h, remote]
+
+
 AGI_KEY = os.path.expanduser('~/.ssh/agidock_ot')
 AGI = SSH + ['-i', AGI_KEY, 'ubuntu@155.103.253.53']
 ORDER = tuple(h for h in ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2') if h in rtp.HOSTS) + tuple(h for h in rtp.HOSTS if h not in ('local', 'epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
@@ -113,7 +118,7 @@ def marker_sweep(fails, cache=None):
     add = []
     for h, ds in sorted(need.items()):
         try:
-            r = run(SSH + [h, 'python3 -I -c ' + shlex.quote(MARKER_PY)], '\n'.join(sorted(ds)) + '\n', 600)
+            r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(MARKER_PY)), '\n'.join(sorted(ds)) + '\n', 600)
             found = json.loads(r.stdout)
         except Exception as e:
             fails.append([h, '*', 'marker sweep', str(e)[:200]]); continue
@@ -135,7 +140,7 @@ def run(cmd, inp=None, timeout=3600):
 
 def stream(host, base, todo):
     """tar on the host, zstd through localhost, untar on the archive with --skip-old-files.  -> True when both ends exit 0"""
-    p1 = subprocess.Popen(SSH + [host, 'set -o pipefail; nice -n 15 tar -C / --null -T - -cf - | nice -n 15 zstd -q -T2 -3 -c'],
+    p1 = subprocess.Popen(host_cmd(host, 'set -o pipefail; nice -n 15 tar -C / --null -T - -cf - | nice -n 15 zstd -q -T2 -3 -c'),
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     p1.stdin.write(('\0'.join(todo) + '\0').encode()); p1.stdin.close()
     q = shlex.quote(base)
@@ -161,12 +166,12 @@ def host_tool(h):
     ~/.cache/ot-signed-store (a host onboarded with autoclean off has none: epyc7 11-09, probe 'no answer')"""
     import hashlib
     want = hashlib.md5(open(LOCAL_TOOL, 'rb').read()).hexdigest()
-    r = run(SSH + [h, 'md5sum %s %s 2>/dev/null' % (HOST_TOOL, SHIP_TOOL)], None, 60)
+    r = run(host_cmd(h, 'md5sum %s %s 2>/dev/null' % (HOST_TOOL, SHIP_TOOL)), None, 60)
     have = {ln.split()[1]: ln.split()[0] for ln in r.stdout.splitlines() if len(ln.split()) == 2}
     for t in (HOST_TOOL, SHIP_TOOL):
         if have.get(os.path.expanduser(t).replace(os.path.expanduser('~'), '/home/ubuntu')) == want or have.get(t) == want:
             return t
-    c = run(SSH + [h, 'mkdir -p ~/.cache/ot-signed-store && cat > %s.tmp && mv %s.tmp %s' % (SHIP_TOOL, SHIP_TOOL, SHIP_TOOL)], open(LOCAL_TOOL).read(), 120)
+    c = run(host_cmd(h, 'mkdir -p ~/.cache/ot-signed-store && cat > %s.tmp && mv %s.tmp %s' % (SHIP_TOOL, SHIP_TOOL, SHIP_TOOL)), open(LOCAL_TOOL).read(), 120)
     if c.returncode: raise RuntimeError('cannot ship the unit tool to %s: %s' % (h, c.stderr[-200:]))
     return SHIP_TOOL
 
@@ -177,7 +182,7 @@ def archive_host(h, cands, fails):
         tool = host_tool(h)
     except Exception as e:
         fails.append([h, '*', 'tool', str(e)[:200]]); return {}, {}
-    r = run(SSH + [h, 'python3 -I -c ' + shlex.quote(PROBE) + ' ' + tool], '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
+    r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(PROBE) + ' ' + tool), '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
     P = {}
     for ln in r.stdout.splitlines():
         o = json.loads(ln); P[o['path']] = o
@@ -197,7 +202,7 @@ def archive_host(h, cands, fails):
     if todo and not stream(h, base, todo):
         fails.append([h, '*', 'stream failed']); return {}, P
     A = json.loads(run(AGI + [hash_], lst, 7200).stdout)
-    H = json.loads(run(SSH + [h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool], lst, 7200).stdout)
+    H = json.loads(run(host_cmd(h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool), lst, 7200).stdout)
     good = {p: A[p] for p in files if A.get(p) is not None and A.get(p) == H.get(p)}
     bad = [p for p in files if p not in good]
     if bad: say(h, 'hash differs on', len(bad), 'files, first', bad[0])
@@ -237,7 +242,7 @@ def host_pins(h, r):
 def late_pass(late, fails, archive=None, collect=None, pinf=None):
     """archive + verify the unit again (new files only are sent), require every stored file unchanged, then late_provenance"""
     archive = archive or archive_host
-    collect = collect or (lambda h, p: json.loads(run(SSH + [h, 'python3 -I -c ' + shlex.quote(ss.COLLECT_PY)], p + '\n', 300).stdout)[p])
+    collect = collect or (lambda h, p: json.loads(run(host_cmd(h, 'python3 -I -c ' + shlex.quote(ss.COLLECT_PY)), p + '\n', 300).stdout)[p])
     done = []
     byh = collections.defaultdict(list)
     for e, r in late: byh[r['scan_host']].append((e, r))
