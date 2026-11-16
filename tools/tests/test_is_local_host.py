@@ -35,3 +35,12 @@ def test_scan_host_for_this_machine_does_not_ssh(monkeypatch):
     monkeypatch.setattr(rtp, "sh_ssh", lambda *a, **k: (_ for _ in ()).throw(AssertionError("ssh used for the local host")))
     assert rtp.scan_host("intel2") == []
     assert calls and calls[0][0] == "bash"
+
+
+def test_relto_resolves_symlinks(tmp_path, monkeypatch):
+    real = tmp_path / "real"
+    (real / "signed-store/records/ab").mkdir(parents=True)
+    link = tmp_path / "link"
+    link.symlink_to(real)
+    monkeypatch.setattr(ssi, "COORD", real)
+    assert ssi.relto(link / "signed-store/records/ab/x.json.gz") == "signed-store/records/ab/x.json.gz"

@@ -23,6 +23,12 @@ import release_tree_plan as rtp    # noqa: E402
 import signed_store as ss          # noqa: E402
 
 COORD = pathlib.Path(TOOLS).parent
+
+
+def relto(path):
+    """path relative to the coord checkout, symlinks resolved on both sides (~/coord is a link to /srv/.../hub-coord on the hub: the tool runs from
+    the real path while the store paths name ~/coord; relative_to raised after the first host's entries were written and aborted the commit)"""
+    return os.path.relpath(os.path.realpath(str(path)), os.path.realpath(str(COORD)))
 WINDOW_H = float(os.environ.get('OT_INGEST_WINDOW_H', 96))
 RATE = float(os.environ.get('OT_INGEST_MBPS', 40)) * 1e6
 HOST_TOOL = '~/.local/share/ot-autoclean-auto/ot-autoclean.py'
@@ -334,7 +340,7 @@ def main():
             # (the 01:23 pass was killed at 40 min with 84 entries written and none committed)
             fresh = new[committed:]
             if fresh:
-                rel = [str(pathlib.Path(ss.entry_path(e)).relative_to(COORD)) for e in fresh]
+                rel = [relto(ss.entry_path(e)) for e in fresh]
                 c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: hourly ingest %s, %d new entries' % (h, len(rel))] + rel, None, 280)
                 commit = max(commit or 0, c.returncode)
                 if c.returncode: fails.append(['coord', h, 'store commit rc %d' % c.returncode])
@@ -346,7 +352,7 @@ def main():
     if not dry:
         lated = late_pass(late, fails)
         if lated:
-            rel = [str(pathlib.Path(ss.entry_path(i)).relative_to(COORD)) for i in lated]
+            rel = [relto(ss.entry_path(i)) for i in lated]
             c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: late provenance on %d entries' % len(rel)] + rel, None, 280)
             if c.returncode: fails.append(['coord', '*', 'late commit rc %d' % c.returncode])
     holds = [] if dry else marker_sweep(fails)
