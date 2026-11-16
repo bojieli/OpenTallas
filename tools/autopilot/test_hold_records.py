@@ -230,6 +230,24 @@ class T(unittest.TestCase):
             self.assertEqual((c["dies"]["s81"]["src"], c["dies"]["s81"]["die_gen_env"]), (tree, {"OT_PGCAP": "1"}))
             self.assertEqual(sw[0][1], tree)
 
+    def test_switch_only_record_holds_nothing_and_switches(self):
+        c = base()
+        d = c["dies"]["hbm"]
+        d["src"] = "/old"
+        r = {"id": "sw1", "plan_sha": "h" * 64, "reason": "switch", "release": ["tree_ready:hbm:/t/h1"], "switch_only": True}
+        for bad in (dict(r, items=["x"]), dict(r, release=["digest_changed"]), dict(r, release=["tree_ready:s81:/t/h1"])):
+            with self.assertRaises(ValueError):
+                HR.add_record(c, "hbm", bad)
+        HR.add_record(c, "hbm", r)
+        ctx = HR.Ctx(tree_fn=lambda die, p: p == "/t/h1", marker_fn=lambda die: {"manifest_hash": "m"})
+        HR.compile_holds(c, ctx)
+        self.assertEqual(d["hold_items"], {})
+        self.assertEqual([x for x in HR.audit(c) if x["code"] in ("HOLD-ZERO-MATCH", "TERM-UNREACHABLE")], [])
+        self.assertEqual(HR.apply_tree_switches(c, ctx)[0][:2], ("hbm", "/t/h1"))
+        self.assertEqual(d["src"], "/t/h1")
+        HR.convert_keys(c, {"hbm": {}})                                           # pruning keeps a switch_only record
+        self.assertEqual(len(d["hold_records"]), 1)
+
 
 if __name__ == "__main__":
     unittest.main()

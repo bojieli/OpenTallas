@@ -244,14 +244,19 @@ def validate_record(rec, cfg):
         errs.append("record is not bound to a plan_sha")
     if not rec.get("reason"):
         errs.append("record has no reason")
-    if not (rec.get("items") or rec.get("patterns") or rec.get("keys")):
+    if rec.get("switch_only"):
+        if rec.get("items") or rec.get("patterns") or rec.get("keys"):
+            errs.append("a switch_only record holds nothing: no items / patterns / keys")
+        if not any(split_term(t)[0] == "tree_ready" for t in rec.get("release") or []):
+            errs.append("a switch_only record needs a tree_ready release term")
+    elif not (rec.get("items") or rec.get("patterns") or rec.get("keys")):
         errs.append("record selects nothing")
     mig = bool(rec.get("migrated"))
     for t in rec.get("release") or []:
         e = term_error(t, die, cfg, migrated=mig)
         if e:
             errs.append(e)
-    if not mig:
+    if not mig and not rec.get("switch_only"):
         items = (d.get("hold_event_items") or {}).get(rec.get("plan_sha")) or []
         for p in rec.get("patterns") or []:
             if not any(fnmatch.fnmatchcase(i, p) for i in items):
@@ -477,7 +482,7 @@ def convert_keys(cfg, keymap):
             src = next(r for r in recs if r["id"] == rid)
             recs.append({"id": f"{rid}-k{n}", "plan_sha": src["plan_sha"], "reason": src["reason"], "release": list(terms),
                          "migrated": True, "keys": ks, "carry": True})
-        d["hold_records"] = [r for r in recs if r.get("keys") or r.get("items") or r.get("patterns")]
+        d["hold_records"] = [r for r in recs if r.get("keys") or r.get("items") or r.get("patterns") or r.get("switch_only")]
     return ret, drop
 
 
