@@ -7,7 +7,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import adopt_guard as AG  # noqa: E402
-import kit_preflight as KP  # noqa: E402
+import kit_input_preflight as KP  # noqa: E402
 
 
 def local_run(argv, timeout=900):

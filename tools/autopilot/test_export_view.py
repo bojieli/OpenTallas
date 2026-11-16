@@ -174,18 +174,38 @@ class TestClosedView(unittest.TestCase):
         self.assertFalse(res["complete"])
         self.assertTrue(any(p.startswith("VIEW_NOT_CLOSED") for p in res["problems"]), res["problems"])
 
-    def test_emit_refuses_a_view_without_landing_evidence(self):
+    def _emit_unclosed(self):
         import hard_landing as HL
         v = Path(self.tmp.name) / "view"
-        v.mkdir()
+        v.mkdir(exist_ok=True)
         (v / "m.lef").write_text("x")
         (v / "m_tt.lib").write_text("x")
         t = dict(hard_cores=[dict(inst="u_cland_a", module="m", lef=str(v / "m.lef"), lib=str(v / "m_tt.lib"),
                                   param_wrap=dict(base="ot_dp_clk_landing", params=dict(W=2)))])
         land = dict(buses=dict(a=dict(D=4, form="hold_mux")))
-        with self.assertRaisesRegex(ValueError, "VIEW_NOT_CLOSED"):
-            HL.emit(t, land, Path(self.tmp.name) / "kit", self.tmp.name)
+        return HL, t, land
 
+    def test_emit_strict_refuses_a_view_without_landing_evidence(self):
+        HL, t, land = self._emit_unclosed()
+        os.environ["OT_VIEW_CLOSED_MODE"] = "strict"
+        try:
+            with self.assertRaisesRegex(ValueError, "VIEW_NOT_CLOSED"):
+                HL.emit(t, land, Path(self.tmp.name) / "kit", self.tmp.name)
+        finally:
+            del os.environ["OT_VIEW_CLOSED_MODE"]
+
+    def test_emit_default_is_warn_and_does_not_block(self):
+        HL, t, land = self._emit_unclosed()
+        self.assertEqual(HL.VIEW_CLOSED_MODE, "warn")
+        seen = []
+        orig = HL.capture
+        HL.capture = lambda *a, **k: seen.append(a) or (_ for _ in ()).throw(RuntimeError("legacy capture reached"))
+        try:
+            with self.assertRaisesRegex(RuntimeError, "legacy capture reached"):   # the old path ran, no VIEW_NOT_CLOSED refusal
+                HL.emit(t, land, Path(self.tmp.name) / "kit", self.tmp.name)
+        finally:
+            HL.capture = orig
+        self.assertEqual(len(seen), 1)
 
 if __name__ == "__main__":
     unittest.main()

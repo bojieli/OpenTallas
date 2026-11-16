@@ -240,12 +240,14 @@ def tool_smoke(cfg, die, hosts, run=sh, log=print):
 def preflight_all(cfg, die, hosts, files, run=sh, log=print):
     """KITPACK-CLOSE-1115 (COORD r221, F3): after the per-file copy pass, resolve EVERY kit input (src inputs + the closed child
     views the plan names + candidate hosts) on every gen host and refuse with the complete named list, not the first miss"""
-    import kit_preflight as KP
+    import kit_input_preflight as KP
     ents = KP.preflight(cfg, die, hosts, run, src_files=files)
     for ln in (KP.refusal(die, ents).splitlines() if ents else []):
         log("ADOPT-GUARD " + ln)
-    log(f"ADOPT-GUARD preflight {die}: {'OK' if not ents else 'FAIL closed (' + str(len(ents)) + ' unresolved inputs, listed above)'}")
-    return not ents
+    bad = KP.errors(ents)
+    log(f"ADOPT-GUARD preflight {die}: {'OK' if not bad else 'FAIL closed (' + str(len(bad)) + ' unresolved inputs, listed above)'}"
+        + (f" ({len(ents) - len(bad)} unclosed-view warnings)" if len(ents) > len(bad) else ""))
+    return not bad
 
 
 def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):

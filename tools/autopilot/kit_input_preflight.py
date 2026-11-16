@@ -11,7 +11,7 @@ admission (SRC-TREE-1115: one named ROM file hid 398 missing inputs).  This is t
                    landing_evidence/manifest.json (a CLOSED view, export_view.close_view), on every gen host
   * retired_host   a prov_view_sources candidate on a terminated host (epyc4/5/6)
 
-    kit_preflight.py DIE [--config kit_wave.json]       exit 1 + the full list when anything is missing
+    kit_input_preflight.py DIE [--config kit_wave.json]       exit 1 + the full list when anything is missing
 """
 import argparse
 import json
@@ -55,7 +55,10 @@ def view_requirements(plan_path, roots):
             continue
         vd = os.path.dirname(hit)
         pv = os.path.join(vd, "provenance.json")
-        files += [(hit, lef), (pv, lef), (os.path.join(vd, "signoff.json"), lef)]
+        files.append((hit, lef))
+        if not os.path.isfile(pv):
+            continue                         # a library / third-party macro LEF has no provenance: nothing to close or follow
+        files += [(pv, lef), (os.path.join(vd, "signoff.json"), lef)]
         try:
             prov = json.loads(Path(pv).read_text())
         except (OSError, ValueError):
@@ -78,6 +81,22 @@ def retired_candidates(cfg, die):
     return out
 
 
+def closed_mode():
+    """hard_landing.VIEW_CLOSED_MODE ('warn' | 'strict'; OT_VIEW_CLOSED_MODE overrides), read from the source line"""
+    if os.environ.get("OT_VIEW_CLOSED_MODE"):
+        return os.environ["OT_VIEW_CLOSED_MODE"]
+    try:
+        txt = (Path(__file__).resolve().parent.parent / "die_plan" / "hard_landing.py").read_text()
+        m = re.search(r"^VIEW_CLOSED_MODE = '(\w+)'", txt, re.M)
+        return m.group(1) if m else "warn"
+    except OSError:
+        return "warn"
+
+
+def errors(entries):
+    return [e for e in entries if e.get("severity") != "warn"]
+
+
 def preflight(cfg, die, hosts, run=None, src_files=None):
     """-> [entry]: the COMPLETE list of unresolved inputs, each {kind, path, hosts|why}; [] = every input resolves everywhere"""
     import adopt_guard as AG
@@ -96,23 +115,28 @@ def preflight(cfg, die, hosts, run=None, src_files=None):
         for h, miss in AG.missing_by_host(allf, hosts, run).items():
             for f in miss:
                 gaps.setdefault(f, []).append(h)
+        warn = closed_mode() != "strict"
         for f, hs in sorted(gaps.items()):
             kind = "view" if f in by else "src_input"
-            out.append(dict(kind=kind, path=f, hosts=sorted(hs), **({"by": by[f]} if f in by else {})))
+            # a view's CLOSED parts (signoff.json copy, landing_evidence) only warn until hard_landing.VIEW_CLOSED_MODE is strict
+            soft = warn and (f.endswith("/signoff.json") or "/landing_evidence/" in f)
+            out.append(dict(kind=kind, path=f, hosts=sorted(hs), **({"by": by[f]} if f in by else {}),
+                            **({"severity": "warn"} if soft else {})))
     out += retired_candidates(cfg, die)
     return out
 
 
 def refusal(die, entries):
     """the one named list: every miss grouped by kind"""
-    lines = [f"KIT-PREFLIGHT {die}: REFUSED, {len(entries)} unresolved kit inputs"]
+    n_err = len(errors(entries))
+    lines = [f"KIT-PREFLIGHT {die}: {'REFUSED' if n_err else 'OK (warnings only)'}, {n_err} unresolved kit inputs, {len(entries) - n_err} unclosed-view warnings"]
     for kind in ("src_input", "view", "retired_host"):
         rows = [e for e in entries if e["kind"] == kind]
         if rows:
             lines.append(f"  [{kind}] {len(rows)}")
             for e in rows:
                 lines.append("    " + e["path"] + (f"  missing on {','.join(e['hosts'])}" if e.get("hosts") else "")
-                             + (f"  ({e['why']})" if e.get("why") else "") + (f"  by {e['by']}" if e.get("by") else ""))
+                             + (f"  ({e['why']})" if e.get("why") else "") + (f"  by {e['by']}" if e.get("by") else "") + ("  [warn]" if e.get("severity") == "warn" else ""))
     return "\n".join(lines)
 
 
@@ -128,7 +152,7 @@ def main(argv=None):
     _t, files = K.src_inputs(cfg, a.die)
     ents = preflight(cfg, a.die, hosts, src_files=sorted(set(files)))
     print(refusal(a.die, ents) if ents else f"KIT-PREFLIGHT {a.die}: OK")
-    return 1 if ents else 0
+    return 1 if errors(ents) else 0
 
 
 if __name__ == "__main__":
