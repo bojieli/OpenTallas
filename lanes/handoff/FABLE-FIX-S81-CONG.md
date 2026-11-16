@@ -132,3 +132,17 @@ qc_pack holds only hubcontrollers slice_station14a6/45a6/46a7/8a32, actual remot
 - NOT DONE (r341): structural fix (pitch on placement parasitics before ONE full GRT without the overflow-30 regression, or threaded
   incremental GRT); t34 -99 ps at GRT RC; GRT proof of the t28/t8 W-widen forms; t43/t75 rows handed as files (READY-ROWS posted, in
   F2s4strip1 list per DIE-S81-92).
+
+## Update 2026-11-16 ~13:45 PST (COORD r351)
+- Stop branch 827bba3961cc approved (r351); NOT on main at 21:43 UTC. After merge: D2-tree kits for t34/t47/t62/t65 (blocked too by
+  the vsw STALE-CORE-VIEW, handed to TOOLS-CONVERGE-1115, post 5cd86c5).
+- t43: posted row is site-legal; DPL-0033 = stage-3 station in the 9-um vsw/rxsf gap. Fix row epyc7 fable-fix-s81-cong/t43d_rows.json
+  (ft5 band x 440..500), FIX-ROW d45b382 to DIE-S81-92 for B6gF2s4 (strip4 plan is already composed: needs a correction row).
+  Robust form: u_vq -25 um y. Proof kit c_t43d: gen on epyc7, chain intel2 chain_gen_launch.sh (OT_HOSTS=epyc10), log run_c_t43d_grt.log.
+- t34 -99 ps (TT, GRT RC), from postcts_gate_TT.log of m2_t34 (epyc10): launch u_bound.g_u_vp_driver_x_qd_q[12] (std tap clk_t33,
+  insertion 437 ps) -> hard core u_u_vs/x_qd[12] (core tap clk_c6, insertion 149 ps). Skew -288 ps + setup 43 leaves 502 ps;
+  data 687 ps = 7 repeaters on a ~600-um wire from the vp field to vs. Class: std-tap "driver" flop feeding a hard-core input whose
+  clock leads by ~290 ps, flop left at the source. Fix (no cycle): place every *_driver_*_q flop that feeds a core input within
+  ~100 um of its core pin (input-side twin of core_out_land.tcl), so the long wire is flop-to-flop in one tap domain. Fallback:
+  clock those flops from the core tap, or +1 stage at the pin with a LATCHECK row. Only the worst path was read (one path per group).
+- t28/t8 strip4 widen: no GRT proof yet; needs kits from B6gF2s4strip4 (bind running at Codex) on D2. c_t8 (old row, gate off) at CTS on epyc10.
