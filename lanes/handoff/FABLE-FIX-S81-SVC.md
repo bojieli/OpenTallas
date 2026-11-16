@@ -54,3 +54,16 @@
   plan = F2sv, src = v3 tree, hosts without epyc10. Wave defaults: kit_wave.json dies.s81 (gen_args --hold-ff-margin 0
   --max-wire-um 100 --clock-landing <sidecar>).
 - Decided NOT to hack a B6gG3b private pilot around the unpublished closure files (duplicates the lane, wrong plan).
+
+## 08:05 PST update
+- COORD ruling ~08:00: do NOT wait for DIE-S81-92; start svc_hi rs t3 + svc_lo rs t7 as private run-items the moment the
+  S81 v3 marker posts (TOOLS-CONVERGE, build started 07:37, carries B6gF2sv_formA.json 626de2b41910 in-tree), not on
+  epyc8 (disk) / epyc10. DIE-S81-92 folds the 496 rows into F2s3.
+- (b) CLOSED: ev/B6gF2sv.json (= stamped plan 4c163bdc1625) has ring ff on all svc bands.
+- (a): r298 approved (claude/s81-svcmem-1116 @89627948e87); lane private gen svc_hi t3 gen_lint memory_bits PASS.
+- Launcher READY: intel2 ~/fable-fix-s81-svc/launch_pilot.sh ITEM SRC PLAN SIDECAR BIND_OUT ASBUILT [MANIFEST_HASH] [TAG]
+  (spec from the newest S81 wave spec; gen_host epyc9; hosts intel1 epyc9 epyc2 intel2 epyc7; work
+  /srv/opentallas-scratch2/claude/fable-fix-s81-svc/pilot/items/<item>/attempt_<tag>; logs ~/fable-fix-s81-svc/<item>/<tag>/unit.log).
+  Take SRC / plan / sidecar / bind_out / asbuilt / manifest hash from the v3 marker post.
+- Reads: gen_lint + preflight, floorplan placed macros 148 (hi t3) / 169 (lo t7), GPL, CTS, GRT, route, R-MINIMAL gates.
+  Then post exactly: RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready PASS: <evidence>.
