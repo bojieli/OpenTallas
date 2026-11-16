@@ -108,3 +108,10 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 ## 14:4x 11-16: r2 CTS read (evidence kit)
 - tap means 367..468 (was 415..542), 5/79 core pins outside 20. Halves 460 / 468 (was 520 / 542). s10 / s12 452, s11 / s14 421 / 422 (-29), s13 445. ROMs c12_6 +25, c13_2 +32, c13_6 +43. Low taps clk_t10 365, clk_t23 381; clk_t13 max 513.
 - TODO on r2: re-measure per-port windows on this 4_cts DB (tap_window_measure.py --log 4_1_cts.log); GRT-stage STA when 5_1_grt.odb exists.
+
+## 15:0x 11-16: r2 CTS TIMING read (evidence kit, lead 100)
+- an/stage_sta.sh KIT OUT cts|grt (epyc7 fable-fix-s81-coltap/an; cls2.py classifies setup_paths.tsv). r2_cts: 161 endpoints, 40 below -42, WNS -180.8.
+- go_tag +109..+137, ef +118..+151 (were -186 / -160): tile fix MEASURED.
+- ROM rd_out -> s q: -57.0, 14 below -42: sequencer lead 100 is too much (my estimate was wrong). Triangle q / go_tag / ef has about +50 total. Variant var_b (epyc7 fable-fix-s81-coltap/var_b/<r2>, s 311.22 = lead 40, ROM lead 285) running to CTS, client log intel2 pilot_r2_varb.log; then stage_sta.sh on it -> choose leads -> row change (core_pin_lead_ps only) to DIE-S81-92.
+- Reset chains (copy_depth 3): hop 1 common flop (989,167) -> _s0 836..1,174 um, -181, 26 below -42. Posted hop table + site ask to FABLE-DIE-S81.
+- TODO: FF hold read (an/ffh.sh needs core_taps_ff.sdc of the kit), col_h10_r2 breakdown, GRT reads.
