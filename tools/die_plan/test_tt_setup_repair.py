@@ -72,3 +72,16 @@ def test_grt_step_runs_before_the_postcts_gate_reads_tt_and_routes_incrementally
     assert "5_1_grt.odb unchanged" in t
     x = (HERE / "tt_setup_repair.tcl").read_text()
     assert "global_route -start_incremental -allow_congestion" in x and "global_route -end_incremental -allow_congestion" in x and "estimate_parasitics -global_routing" in x
+
+
+def test_effective_mode_is_in_every_kit_config_and_json(tmp_path, monkeypatch):
+    for env, want in (("0", "off"), ("1", "cts"), ("grt", "grt"), ("both", "both")):
+        monkeypatch.setenv("OT_TT_SETUP_REPAIR", env)
+        gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / env), [])
+        k = tmp_path / env / "fa"
+        assert f"export OT_TT_SETUP_REPAIR = {want}" in (k / "config.mk").read_text().splitlines()
+        import json
+        assert json.loads((k / "kit_effective_env.json").read_text()) == {"OT_TT_SETUP_REPAIR": want}
+    monkeypatch.delenv("OT_TT_SETUP_REPAIR", raising=False)
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / "unset"), [])
+    assert "export OT_TT_SETUP_REPAIR = off" in (tmp_path / "unset" / "fa" / "config.mk").read_text().splitlines()
