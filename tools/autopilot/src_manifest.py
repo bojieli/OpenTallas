@@ -549,6 +549,101 @@ def delta_apply(pack, old_tree, out):
     return nm
 
 
+# ---- retire (FLOW-1113 / r343: one base tree per tools sha + small data packs; superseded _dN versions are deleted at publish) ----
+
+import re as _re
+
+_DN = _re.compile(r"^(?P<base>.+?)_d(?P<n>\d+)$")
+
+
+def _in_use(path):
+    """True when any process cmdline or cwd names `path` (a running kit/bind keeps its tree)"""
+    needle = path.rstrip("/").encode()
+    for pid in os.listdir("/proc"):
+        if not pid.isdigit():
+            continue
+        try:
+            if needle in open(f"/proc/{pid}/cmdline", "rb").read():
+                return True
+            if os.readlink(f"/proc/{pid}/cwd").startswith(path.rstrip("/")):
+                return True
+        except OSError:
+            continue
+    return False
+
+
+def retire_candidates(new_tree, refs=(), keep=0):
+    """-> [(path, why)] superseded siblings of new_tree: same base name with a LOWER _dN (the base tree itself is kept: it is the
+    shared base the packs were made from), not named in any refs file, not in use.  keep = how many of the newest older _dN to keep."""
+    new_tree = os.path.abspath(new_tree).rstrip("/")
+    d, name = os.path.dirname(new_tree), os.path.basename(new_tree)
+    m = _DN.match(name)
+    if not m:
+        return []
+    base, n = m.group("base"), int(m.group("n"))
+    text = ""
+    for r in refs:
+        try:
+            text += open(r, errors="ignore").read()
+        except OSError:
+            pass
+    older = []
+    for e in sorted(os.listdir(d)):
+        mm = _DN.match(e)
+        if mm and mm.group("base") == base and int(mm.group("n")) < n and os.path.isdir(os.path.join(d, e)):
+            older.append((int(mm.group("n")), e))
+    older.sort(reverse=True)
+    out = []
+    for i, (k, e) in enumerate(older):
+        path = os.path.join(d, e)
+        if i < keep:
+            continue
+        if _re.search(_re.escape(e) + r"(?![\w])", text):
+            out.append((path, "REFERENCED"))
+        elif _in_use(path):
+            out.append((path, "IN-USE"))
+        else:
+            out.append((path, "DELETE"))
+    return out
+
+
+def _guard():
+    """the ONE shared delete rule (tools/fleet/ot_delete_guard.py, CLEAN-ALL-1115 postmortem): -> module, or None when it cannot be loaded.
+    A missing guard fails CLOSED: nothing is deleted."""
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fleet"))
+        import ot_delete_guard as G
+        return G if hasattr(G, "refuse") else None
+    except Exception:
+        return None
+
+
+def retire(new_tree, refs=(), keep=0, dry=False, guard=None):
+    done = []
+    G = guard if guard is not None else _guard()
+    for path, why in retire_candidates(new_tree, refs, keep):
+        if why != "DELETE":
+            print(f"SRC_MANIFEST RETIRE-KEEP {path} ({why})")
+            continue
+        if G is None:
+            print(f"SRC_MANIFEST RETIRE-REFUSED {path} (ot_delete_guard missing: fail closed)")
+            continue
+        try:
+            reason = G.refuse(path)
+        except Exception as e:                           # a guard that errors is a guard that refuses
+            reason = f"guard error {type(e).__name__}: {e}"
+        if reason:
+            print(f"SRC_MANIFEST RETIRE-REFUSED {path} (ot_delete_guard: {reason})")
+            continue
+        if not dry:
+            for dp, dn, fn in os.walk(path):
+                os.chmod(dp, os.lstat(dp).st_mode | stat.S_IWUSR)
+            shutil.rmtree(path)
+        print(f"SRC_MANIFEST RETIRED {path}" + (" (dry run)" if dry else ""))
+        done.append(path)
+    return done
+
+
 # ---- hosts ----------------------------------------------------------------------------------------------------------
 
 SSH = ["timeout", "900", "ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=20"]
@@ -578,6 +673,7 @@ def main(argv=None):
     pu = sp.add_parser("publish")
     pu.add_argument("tree")
     pu.add_argument("--pointer", default="")
+    pu.add_argument("--retire-refs", nargs="*", default=None, help="after a clean publish, retire superseded _dN siblings (refs = files naming live trees)")
     v = sp.add_parser("verify")
     v.add_argument("tree")
     v.add_argument("--expect", default="")
@@ -596,6 +692,11 @@ def main(argv=None):
     da.add_argument("pack")
     da.add_argument("--old", required=True)
     da.add_argument("--out", required=True)
+    rt = sp.add_parser("retire", help="delete superseded <base>_dN siblings of TREE (older N), unless referenced or in use")
+    rt.add_argument("tree")
+    rt.add_argument("--refs", nargs="*", default=[], help="files that may name a tree (kit_wave.json, handoff markers): a named tree is kept")
+    rt.add_argument("--keep", type=int, default=0)
+    rt.add_argument("--dry", action="store_true")
     lk = sp.add_parser("links", help="stat-only: fail when any file of TREE has another hardlink (a published tree must be unshared)")
     lk.add_argument("tree")
     lk.add_argument("--find-in", nargs="*", default=[], help="dirs to search for the other names (slow)")
@@ -619,6 +720,8 @@ def main(argv=None):
         print(f"SRC_MANIFEST BUILT {a.out} main {m['main_sha'][:12]} overlay {len(m['overlay'])} files {len(m['files'])} hash {m['manifest_hash']}")
     elif a.cmd == "publish":
         info = publish(a.tree, a.pointer)
+        if a.retire_refs is not None:
+            retire(a.tree, a.retire_refs)
         print(f"SRC_MANIFEST PUBLISHED {a.tree} read-only hash {info['manifest_hash']}" + (f" pointer {a.pointer}" if a.pointer else ""))
     elif a.cmd == "verify":
         errs, info = verify(a.tree, a.expect, a.ro, a.full)
@@ -638,6 +741,8 @@ def main(argv=None):
     elif a.cmd == "delta-apply":
         nm = delta_apply(a.pack, os.path.abspath(a.old), a.out)
         print(f"SRC_MANIFEST DELTA-APPLIED {a.out} main {nm['main_sha'][:12]} hash {nm['manifest_hash']} (run publish next)")
+    elif a.cmd == "retire":
+        retire(os.path.abspath(a.tree), a.refs, a.keep, a.dry)
     elif a.cmd == "links":
         errs, n = links_report(os.path.abspath(a.tree), a.find_in)
         if errs:
