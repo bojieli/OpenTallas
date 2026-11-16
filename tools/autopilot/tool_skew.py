@@ -75,6 +75,15 @@ def tree_scope_manifest(tree):
         return scope_manifest(tree)
 
 
+def v2_marker(tree):
+    """MANIFEST-V2-1116: the tree's own .src-manifest.json when it is a v2 manifest (declares main_sha), else None"""
+    try:
+        m = json.loads((Path(tree) / SRC_MANIFEST).read_text())
+    except (OSError, ValueError):
+        return None
+    return m if isinstance(m, dict) and m.get("main_sha") else None
+
+
 def closure_files(root):
     """-> sorted module paths (relative to root, posix) of the gen/bind tool closure under root"""
     root = Path(root)
@@ -177,6 +186,12 @@ def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=No
         if tree_m is None:
             return dict(ok=not strict, measured=False, refused={str(tree): "unreadable"} if strict else {}, allowed={},
                         expired={}, n_closure=len(ref), pin=str(tools_sha)[:12])
+        # MANIFEST-V2-1116 (FABLE-FLOW-0913): a v2 tree's manifest covers the whole source (17987 in-scope files) but the pin's rt manifest is
+        # the v1 baseline (280 files): every other file read as 'only_die' ("17138 of 17987 differ", never a signal).  A v2 tree whose
+        # marker main_sha is the pin is compared on the pin's own files; the files the baseline does not list are main's, not private.
+        mk = v2_marker(tree) if Path(tree).is_dir() else None
+        if mk and str(mk["main_sha"])[:12] == str(tools_sha)[:12]:
+            tree_m = {k: v for k, v in tree_m.items() if k in ref}
         refused, allowed, expired = apply_allow(diff(tree_m, ref), (allow or {}).get(die) or {}, today)
         return dict(ok=not refused, measured=True, refused=refused, allowed=allowed, expired=expired, n_closure=len(ref),
                     pin=str(tools_sha)[:12])
