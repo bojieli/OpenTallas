@@ -1,0 +1,3697 @@
+{
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "candidate": "OT_S81_KP4_AM_FACE3 + OT_S81_RCK_RELAY4",
+  "rx_added_edges": 4,
+  "recovered_clock_period_ps": 833,
+  "rx_added_ps": 3332,
+  "scope": "S81 receive endpoints only; no TX cost and no HEAD wrapper cost",
+  "excluded": [
+    "head.hop",
+    "head.argmax_merge",
+    "token.return"
+  ],
+  "TP_crossings": {
+    "attn.a_allgather": 1,
+    "attn.out_allreduce": 2,
+    "ffn.router_allgather": 1,
+    "ffn.combine_allreduce": 2,
+    "attn.idx.topk_merge": 1,
+    "attn.rows_allgather": 1,
+    "attn.cand.merge": 1
+  },
+  "stage_crossings": {
+    "substage_hop0": 1,
+    "substage_hop1": 1,
+    "unplaced_hops": 62,
+    "hop_in": 1,
+    "wave.hop": 1
+  },
+  "source_grades": "Existing DAG crossing-count sensitivity only; current REL241 pipeline and actual programme intake remain unqualified",
+  "rows": {
+    "ds_rom": {
+      "dag": "results/arch/token_path_20261009/ds_rom.json",
+      "dag_sha256": "7732ac056dd194f81b1a048abefdeb6fb6c03d24c48a6bea7dd6378f2eb19ea4",
+      "critical_S81_RX_crossings": 375,
+      "critical_added_cycles": 1500,
+      "critical_added_ps": 1249500,
+      "terms": [
+        {
+          "id": "L0.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L0.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L0.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L0.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L0.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L1.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L1.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L1.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L1.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L1.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L2.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L2.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L2.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L2.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L2.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L2.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L2.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L2.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L3.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L3.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L3.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L3.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L3.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L4.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L4.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L4.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L4.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L4.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L4.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L5.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L5.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L5.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L5.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L5.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L6.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L6.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L6.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L6.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L6.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L6.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L7.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L7.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L7.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L7.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L7.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L8.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L8.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L8.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L8.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L8.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L8.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L8.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L8.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L9.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L9.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L9.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L9.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L9.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L10.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L10.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L10.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L10.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L10.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L11.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L11.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L11.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L11.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L11.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L11.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L12.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L12.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L12.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L12.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L12.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L13.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L13.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L13.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L13.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L13.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L13.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L14.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L14.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L14.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L14.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L14.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L14.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L14.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L15.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L15.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L15.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L15.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L15.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L15.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L16.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L16.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L16.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L16.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L16.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L17.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L17.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L17.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L17.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L17.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L17.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L18.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L18.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L18.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L18.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L18.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L19.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L19.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L19.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L19.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L19.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L19.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L20.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L20.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L20.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L20.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L20.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L20.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L20.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L21.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L21.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L21.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L21.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L21.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L22.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L22.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L22.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L22.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L22.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L22.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L23.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L23.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L23.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L23.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L23.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L24.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L24.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L24.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L24.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L24.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L24.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L24.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L24.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L25.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L25.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L25.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L25.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L25.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L26.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L26.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L26.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L26.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L26.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L26.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L27.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L27.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L27.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L27.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L27.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L28.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L28.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L28.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L28.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L28.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L28.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L28.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L28.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L29.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L29.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L29.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L29.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L29.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L30.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L30.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L30.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L30.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L30.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L31.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L31.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L31.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L31.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L31.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L31.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L32.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L32.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L32.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L32.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L32.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L32.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L32.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L33.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L33.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L33.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L33.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L33.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L33.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L34.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L34.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L34.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L34.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L34.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L35.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L35.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L35.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L35.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L35.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L35.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L36.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L36.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L36.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L36.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L36.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L36.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L36.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L37.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L37.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L37.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L37.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L37.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L37.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L38.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L38.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L38.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L38.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L38.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L39.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L39.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L39.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L39.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "L39.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "L0.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L1.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L3.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L4.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L5.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L6.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L7.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L9.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L10.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L11.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L12.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L13.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L15.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L16.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L17.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L18.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L19.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L20.attn.cand.merge",
+          "op": "attn.cand.merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L21.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L22.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L23.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L25.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L26.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L27.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L29.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L30.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L31.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L33.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L34.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L35.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L37.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L38.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "L39.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": false
+        },
+        {
+          "id": "unplaced_hops",
+          "op": "unplaced_hops",
+          "crossings": 62,
+          "added_cycles": 248,
+          "critical": true
+        }
+      ]
+    },
+    "ds_rom_mtp": {
+      "dag": "results/arch/token_path_20261009/ds_rom_mtp.json",
+      "dag_sha256": "165d5ff0f84a0fd289ef9cc20b75d9f250613d8be51f2ab72762dd282d05232f",
+      "critical_S81_RX_crossings": 401,
+      "critical_added_cycles": 1604,
+      "critical_added_ps": 1336132,
+      "terms": [
+        {
+          "id": "mtp.0.hop_in",
+          "op": "hop_in",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.0.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.0.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "mtp.0.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.0.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "mtp.1.hop_in",
+          "op": "hop_in",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.1.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.1.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "mtp.1.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.1.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "mtp.2.hop_in",
+          "op": "hop_in",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.2.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.2.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "mtp.2.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "mtp.2.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L0.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L0.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L0.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L0.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L0.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L1.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L1.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L1.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L1.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L1.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L2.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L2.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L2.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L2.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L2.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L2.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L2.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L2.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L3.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L3.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L3.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L3.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L3.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L4.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L4.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L4.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L4.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L4.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L4.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L5.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L5.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L5.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L5.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L5.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L6.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L6.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L6.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L6.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L6.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L6.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L7.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L7.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L7.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L7.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L7.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L8.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L8.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L8.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L8.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L8.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L8.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L8.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L8.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L9.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L9.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L9.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L9.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L9.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L10.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L10.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L10.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L10.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L10.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L11.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L11.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L11.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L11.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L11.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L11.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L12.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L12.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L12.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L12.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L12.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L13.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L13.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L13.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L13.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L13.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L13.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L14.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L14.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L14.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L14.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L14.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L14.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L14.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L15.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L15.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L15.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L15.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L15.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L15.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L16.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L16.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L16.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L16.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L16.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L17.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L17.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L17.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L17.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L17.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L17.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L18.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L18.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L18.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L18.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L18.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L19.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L19.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L19.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L19.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L19.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L19.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L20.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L20.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L20.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L20.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L20.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L20.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L20.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L21.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L21.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L21.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L21.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L21.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L22.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L22.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L22.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L22.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L22.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L22.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L23.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L23.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L23.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L23.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L23.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L24.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L24.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L24.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L24.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L24.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L24.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L24.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L24.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L25.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L25.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L25.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L25.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L25.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L26.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L26.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L26.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L26.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L26.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L26.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L27.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L27.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L27.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L27.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L27.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L28.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L28.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L28.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L28.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L28.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L28.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L28.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L28.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L29.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L29.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L29.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L29.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L29.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L30.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L30.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L30.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L30.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L30.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L31.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L31.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L31.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L31.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L31.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L31.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L32.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L32.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L32.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L32.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L32.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L32.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L32.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L33.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L33.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L33.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L33.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L33.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L33.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L34.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L34.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L34.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L34.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L34.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L35.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L35.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L35.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L35.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L35.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L35.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L36.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L36.attn.idx.topk_merge",
+          "op": "attn.idx.topk_merge",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L36.attn.rows_allgather",
+          "op": "attn.rows_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L36.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L36.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L36.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L36.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L37.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L37.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L37.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L37.substage_hop1",
+          "op": "substage_hop1",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L37.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L37.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L38.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L38.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L38.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L38.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L38.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L39.attn.a_allgather",
+          "op": "attn.a_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L39.attn.out_allreduce",
+          "op": "attn.out_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.L39.substage_hop0",
+          "op": "substage_hop0",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L39.ffn.router_allgather",
+          "op": "ffn.router_allgather",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "V.L39.ffn.combine_allreduce",
+          "op": "ffn.combine_allreduce",
+          "crossings": 2,
+          "added_cycles": 8,
+          "critical": true
+        },
+        {
+          "id": "V.unplaced_hops",
+          "op": "unplaced_hops",
+          "crossings": 62,
+          "added_cycles": 248,
+          "critical": true
+        },
+        {
+          "id": "wave.h2",
+          "op": "wave.hop",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "wave.h3",
+          "op": "wave.hop",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "wave.h4",
+          "op": "wave.hop",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "wave.h5",
+          "op": "wave.hop",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        },
+        {
+          "id": "wave.h6",
+          "op": "wave.hop",
+          "crossings": 1,
+          "added_cycles": 4,
+          "critical": true
+        }
+      ]
+    }
+  }
+}
