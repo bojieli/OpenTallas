@@ -1,21 +1,19 @@
 # S81-BKSEL-O handoff (Opus successor of FABLE-FIX-S81-BKSEL)
 
-Goal: sign off dsdv_bksel_q (last unsigned S81 core). Gates: DRC 0, TT setup >= -42, FF non-port hold >= 0, LEC.
-Work dir: /srv/opentallas-scratch2/claude/fable-fix-bksel/ (epyc8 fx1; epyc2 fx3, fx5).
+Owns: dsdv_bksel_q sign-off (last unsigned S81 core) + S81 type bk_sel__t2 HCPARAM fix.
+Gates: DRC 0, TT setup >= -42, FF non-port hold >= 0, LEC.
 
-## State 2026-11-16 10:45 UTC
-- fx1 epyc8 openroad PID 2767309 (kit fx1/bksel_vC9fx1): fx_repair.tcl post-GRT on calibrated RC (C x1.40 M2-M7).
-  Setup -149.77 -> 0.00; FF hold repair iter 480, -116.5 -> -83.3 (7983 endpoints; pk2 c2_p + hf bank i_dg). Then pass 2, DRT, signoff.py.
-- fx3 epyc2 PID 43933 (fx3/bksel_vC9fx3): same chain, hold iter 430 at -86.9.
-- fx5 epyc2 PID 2269863 (fx5/bksel_vC9fx5): timing-driven GPL form, main GRT.
-- b1q epyc8 PID 91496: reference only, no ECO.
-- LEC: lec_async per kit (fx1 run klegacy-bksel_vC9fx1-2755310 on 1_2_yosys.v); earlier lec.json of same netlist line EQUIVALENT.
-- ETM landing 140 ps already in all fx kits (etm_land.tcl via pin_post_cts.tcl, OT_ETM_EARLY_PS default 140).
+## bksel_q (2026-11-16 15:3x UTC)
+- fx1 epyc8 PID 2767309 + fx3 epyc2 PID 43933: HUNG in GRT FF hold repair (-34.607 / -4669.5 flat since iter ~2930). Stop by exact PID once fx6 runs.
+- Root cause: pk2 clock lands late (tap clkbuf_4_6_1 -> 354 um -> shared leaf clkbuf_leaf_10_ck far side -> 208 um -> pin; 696 TT).
+  811 pk2 inputs FF hold -124; worst TT setup pk2 -> u_fq SRAM r_addr -149.8; pk2 out hold +298 FF. Probes: epyc8 fable-fix-bksel/probe/o_c2p/.
+- fx6 (epyc8 fable-fix-bksel/fx6/bksel_vC9fx6, copy of fx1 up to 3_place): etm_land.tcl = v3 (probe/bkselO_etm_land3.tcl: dedicated BUFx24
+  at each ETM clock pin, measured tap choice, target regs_med - 180), v1 kept as etm_land_v1.tcl; fx_repair.tcl caps hold repair (-max_iterations 2500, OT_FX_HOLD_MAX_ITER).
+- fx5 epyc2 PID 2269863 (placement form): GRT hold repair, still improving.
+- Export (first SIGNED): repo export_view.py -> AGIdock /archive/opentallas-signed-1114/s81/dsdv_bksel_q/ (via intel2 key) + rtx-pro
+  /home/ubuntu/signed-export-1114/s81/dsdv_bksel_q/, INDEX.tsv append, odb sha both sides.
 
-## Verdict source
-KIT/signoff/signoff.json + KIT/signoff.log (written by run_kit.sh after finish).
-
-## Next
-1. First form with SIGNED -> export_view.py -> AGIdock /archive/opentallas-signed-1114/s81/dsdv_bksel_q/ + rtx-pro
-   /home/ubuntu/signed-export-1114/s81/dsdv_bksel_q/, INDEX.tsv, odb sha both sides; stop others by exact PID.
-2. Routed setup miss -> launch OT_ETM_EARLY_PS=160 form and/or latch stage r1_d_l -> c1_p in parallel.
+## bk_sel__t2 HCPARAM (posted READY-RTL 11-16)
+- Wrong side = die RTL frozen copy physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv (cab54e3df937).
+- Fix file sha 51beecd2dc38: intel2 /srv/opentallas-scratch2/claude/s81-bksel-o/idx_hcparam/dsdv_idx_l20s.sv; epyc10 same dir + repo path.
+- Release: next S81 bind with it + OT_HCPARAM_ALL=1 -> 0 mismatches, BIND_RC 0, LATCHECK pass (tl_o +3 edges).
