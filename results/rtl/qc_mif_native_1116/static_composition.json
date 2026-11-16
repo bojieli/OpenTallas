@@ -1,0 +1,518 @@
+{
+  "schema": "opentallas.qc.native_mif.static_composition.v1",
+  "profiles": {
+    "memory_alignment": 3,
+    "mif": 1
+  },
+  "dynamic_cases": [
+    {
+      "fixture": "v_gur",
+      "labels": [
+        "copy",
+        "V128_VM_observe",
+        "ssq",
+        "GUr256"
+      ],
+      "rows": [
+        {
+          "op": 0,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 75,
+          "mif_last": 77,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 0,
+          "base": 80,
+          "mif": 82,
+          "mutant_first": 61,
+          "mutant_last": 76,
+          "mutant_count": 128
+        },
+        {
+          "op": 1,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 75,
+          "mif_last": 77,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 1,
+          "base": 80,
+          "mif": 82,
+          "mutant_first": 61,
+          "mutant_last": 76,
+          "mutant_count": 128
+        },
+        {
+          "op": 2,
+          "base_first": 59,
+          "mif_first": 61,
+          "base_last": 74,
+          "mif_last": 76,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 2,
+          "base": 78,
+          "mif": 80,
+          "mutant_first": 60,
+          "mutant_last": 75,
+          "mutant_count": 128
+        },
+        {
+          "op": 3,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 91,
+          "mif_last": 93,
+          "count0": 256,
+          "count1": 256,
+          "faults": "0/0"
+        },
+        {
+          "op": 3,
+          "base": 96,
+          "mif": 98,
+          "mutant_first": 61,
+          "mutant_last": 92,
+          "mutant_count": 256
+        }
+      ],
+      "pass_verdict": true,
+      "scope": "Actual native lowered opcode mechanism, addresses retargeted to prepared VM and CROM0; no arithmetic golden claim for zeroCROM. V/K RoPE destination retarget VM only for observation; identical ov pipeline, dst2->dst1 gates only finalvm/kv write."
+    },
+    {
+      "fixture": "qn_rope_lo",
+      "labels": [
+        "copy",
+        "QN128",
+        "ssq",
+        "RoPElo64_VM_observe"
+      ],
+      "rows": [
+        {
+          "op": 0,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 75,
+          "mif_last": 77,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 0,
+          "base": 80,
+          "mif": 82,
+          "mutant_first": 61,
+          "mutant_last": 76,
+          "mutant_count": 128
+        },
+        {
+          "op": 1,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 75,
+          "mif_last": 77,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 1,
+          "base": 80,
+          "mif": 82,
+          "mutant_first": 61,
+          "mutant_last": 76,
+          "mutant_count": 128
+        },
+        {
+          "op": 2,
+          "base_first": 59,
+          "mif_first": 61,
+          "base_last": 74,
+          "mif_last": 76,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 2,
+          "base": 78,
+          "mif": 80,
+          "mutant_first": 60,
+          "mutant_last": 75,
+          "mutant_count": 128
+        },
+        {
+          "op": 3,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 67,
+          "mif_last": 69,
+          "count0": 64,
+          "count1": 64,
+          "faults": "0/0"
+        },
+        {
+          "op": 3,
+          "base": 72,
+          "mif": 74,
+          "mutant_first": 61,
+          "mutant_last": 68,
+          "mutant_count": 64
+        }
+      ],
+      "pass_verdict": true,
+      "scope": "Actual native lowered opcode mechanism, addresses retargeted to prepared VM and CROM0; no arithmetic golden claim for zeroCROM. V/K RoPE destination retarget VM only for observation; identical ov pipeline, dst2->dst1 gates only finalvm/kv write."
+    },
+    {
+      "fixture": "rope_hi_v",
+      "labels": [
+        "copy",
+        "RoPEhi64_VM_observe",
+        "ssq",
+        "V128_VM_observe"
+      ],
+      "rows": [
+        {
+          "op": 0,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 75,
+          "mif_last": 77,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 0,
+          "base": 80,
+          "mif": 82,
+          "mutant_first": 61,
+          "mutant_last": 76,
+          "mutant_count": 128
+        },
+        {
+          "op": 1,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 67,
+          "mif_last": 69,
+          "count0": 64,
+          "count1": 64,
+          "faults": "0/0"
+        },
+        {
+          "op": 1,
+          "base": 72,
+          "mif": 74,
+          "mutant_first": 61,
+          "mutant_last": 68,
+          "mutant_count": 64
+        },
+        {
+          "op": 2,
+          "base_first": 59,
+          "mif_first": 61,
+          "base_last": 74,
+          "mif_last": 76,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 2,
+          "base": 78,
+          "mif": 80,
+          "mutant_first": 60,
+          "mutant_last": 75,
+          "mutant_count": 128
+        },
+        {
+          "op": 3,
+          "base_first": 60,
+          "mif_first": 62,
+          "base_last": 75,
+          "mif_last": 77,
+          "count0": 128,
+          "count1": 128,
+          "faults": "0/0"
+        },
+        {
+          "op": 3,
+          "base": 80,
+          "mif": 82,
+          "mutant_first": 61,
+          "mutant_last": 76,
+          "mutant_count": 128
+        }
+      ],
+      "pass_verdict": true,
+      "scope": "Actual native lowered opcode mechanism, addresses retargeted to prepared VM and CROM0; no arithmetic golden claim for zeroCROM. V/K RoPE destination retarget VM only for observation; identical ov pipeline, dst2->dst1 gates only finalvm/kv write."
+    }
+  ],
+  "prefix": {
+    "edges": 3,
+    "parts": {
+      "FDN": 1,
+      "RP": 0,
+      "CTLrepair4": 2
+    },
+    "proof": [
+      {
+        "file": "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv",
+        "lines": [
+          54,
+          56,
+          60
+        ],
+        "statement": "cmd_q sampled from cmd_i"
+      },
+      {
+        "file": "rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv",
+        "lines": [
+          55
+        ],
+        "statement": "ctl_cmd combinational pass for SU"
+      },
+      {
+        "file": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+        "lines": [
+          3191,
+          6474,
+          7443
+        ],
+        "statement": "input command capture then output decoded-command capture"
+      }
+    ]
+  },
+  "native_d2d_suffix": {
+    "edges": 3,
+    "parts": {
+      "CTLrepair4": 2,
+      "FDN": 1
+    },
+    "proof": [
+      {
+        "file": "rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+        "statement": "own_ch547 valid net n4013: output dff u6922 plus input we dff u1094..1101; own_ch89 payload n3571: output u4700 plus input vmdata0 u660 or kvdata0 u218"
+      },
+      {
+        "file": "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv",
+        "lines": [
+          116,
+          119,
+          120
+        ],
+        "statement": "DD half combinational ch_raw then registered ch_dn_o; ARF stages affect AR half only"
+      }
+    ]
+  },
+  "native_sc_psum_suffix": {
+    "edges": 3,
+    "parts": {
+      "K79_face_input": 1,
+      "K79_own_scalar_publication": 1,
+      "K79_face_output": 1,
+      "FDN": 0
+    },
+    "proof": [
+      {
+        "file": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+        "lines": [
+          19321,
+          29310,
+          20497
+        ],
+        "statement": "red_we n297 -> u15391 -> u24657 -> u15844 -> dn_o47 n200, three unconditional captures"
+      },
+      {
+        "file": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+        "lines": [
+          227750,
+          29263,
+          20503
+        ],
+        "statement": "red_data0 n322 -> u222330 -> u24610 -> u15850 -> dn_o0 n153, three unconditional captures"
+      },
+      {
+        "file": "rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+        "lines": [
+          19533,
+          19534,
+          235431
+        ],
+        "statement": "HARD_PINREG data aliases are two inverters after same capture; shared strobe capture factoring adds zero arithmetic edges; RED paths above unconditional"
+      },
+      {
+        "file": "rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv",
+        "lines": [
+          39
+        ],
+        "statement": "assign sc_dn_o=sc_dn_c, zero further edge"
+      }
+    ]
+  },
+  "vm_kv_observation_equivalence": {
+    "scope": "timing only; VM retarget avoids FP8 payload conversion, not a converter exactness claim",
+    "file": "rtl/qwen_dv/qfd_dv_head_safe1.sv",
+    "lines": [
+      864,
+      865,
+      872,
+      397,
+      402
+    ],
+    "statement": "vm_we and kv_we both derive same ov on same edge; dst only chooses strobe. FP8 conversion is combinational into same output captures; KV_WR_PIPE pre/finish split also no added register."
+  },
+  "composed_current_native_d2d": {
+    "copy128": [
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83
+    ],
+    "v128": [
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83
+    ],
+    "qn128": [
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83
+    ],
+    "rope_lo64": [
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75
+    ],
+    "rope_hi64": [
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75
+    ],
+    "gur256": [
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "rsq1": [
+      130
+    ],
+    "sigm1": [
+      194
+    ],
+    "silu128": [
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      209
+    ]
+  },
+  "limits": [
+    "These arrays end at native flat D2D face, before bound lane/physical transport. GUr/SILU measured at VM output with common native-face suffix shown for composition, actual stream path is separate.",
+    "SC suffix ends at flat scalar face. Parent must compose selected RED base plus IN2/OUT3 and native per-row tail.",
+    "CROM timing witnesses use initialized-zero behavioral CROM; HEAD apply witness separately checks nonzero arithmetic.",
+    "No absolute compiler memory_profile is promoted solely by this ledger."
+  ]
+}
