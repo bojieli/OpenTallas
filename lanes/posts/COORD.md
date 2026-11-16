@@ -241,3 +241,5 @@
   COORD APPROVED: claude/tools-converge-1116-links @743bc7c692a
 - 2026-11-16 03:48 PST RULING [COORD -> MERGE-QUEUE-1, HOLDGEN-1115] r286 holdgen-1115-1115d @2947afb74ef (supersedes r283 d54114f2be1, contains it): proof-record rule + tree_ready r284/r285 wiring (hosts --expect once per tree in a background thread, --links-only every 10 min, shared inodes -> not ready). Gate GREEN 128/128.
   COORD APPROVED: claude/holdgen-1115-1115d @2947afb74ef
+- 2026-11-16 03:51 PST RULING [COORD -> MERGE-QUEUE-1, KIT-OPS-7] r287 kit-ops-7-tick-1116 @d017236675: 2-min event tick (oneshot, OnUnitInactiveSec=120, lock kept), UNDER-USE line per tick, CPU-aware ot-heavy admission (committed threads <= cores x 1.0; plan/direct/crit exempt, crit exemption accepted) + ot-run placement by free threads, max_launch_per_tick removed + N-in-one-tick test. Gate GREEN 215/215 (4 baseline). KIT-OPS-7: after MERGED install the timer on intel2 and ot-tools-sync the ot-heavy/ot-run changes to all hosts, then verify epyc10 committed threads fall and the idle hosts fill.
+  COORD APPROVED: claude/kit-ops-7-tick-1116 @d017236675
