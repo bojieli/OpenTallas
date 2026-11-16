@@ -5739,7 +5739,8 @@
     "kv3_pv_v7@17",
     "kv3_hg_v1p5@14",
     "kv3_hg_v1p6@17"
-   ]
+   ],
+   "src_manifest": "verify"
   },
   "s81": {
    "enabled": true,
@@ -35126,7 +35127,8 @@
     "ot_s81sl_leaf__t23@13"
    ],
    "auto_rearm": false,
-   "auto_rearm_note_wavehold1115": "WAVE-HOLDS-1115 2026-11-15 21:14 PST (COORD r223, FABLE-FLOWCLASS-HOLDS-2030 5.3): auto_rearm false until G3b adopts (the adopt gives new plan blocks, rows launch fresh); revert = delete this key or set true."
+   "auto_rearm_note_wavehold1115": "WAVE-HOLDS-1115 2026-11-15 21:14 PST (COORD r223, FABLE-FLOWCLASS-HOLDS-2030 5.3): auto_rearm false until G3b adopts (the adopt gives new plan blocks, rows launch fresh); revert = delete this key or set true.",
+   "src_manifest": "verify"
   },
   "s81_head": {
    "enabled": true,
@@ -37233,7 +37235,8 @@
     "hd_st_n3_turn@16",
     "hd_st_turn@11",
     "hd_tile@3"
-   ]
+   ],
+   "src_manifest": "verify"
   },
   "qwen_compute": {
    "enabled": true,
@@ -47633,7 +47636,8 @@
     "slw_su_l0__cl1e5219ea@8",
     "slw_su_l0__cl76fb247e@12",
     "slw_su_l1__cla2a78701@15"
-   ]
+   ],
+   "src_manifest": "verify"
   },
   "hbm": {
    "enabled": true,
@@ -64719,7 +64723,8 @@
     "PHY_NW@1",
     "vsN2@8",
     "q_spt2@5"
-   ]
+   ],
+   "src_manifest": "verify"
   }
  },
  "place_prefer": [
