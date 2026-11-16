@@ -5923,6 +5923,19 @@
      "release": [
       "tree_ready:qwen_kvsys:/srv/opentallas-scratch2/claude/kw45/src_kv_pin_fa627e234cf7"
      ]
+    },
+    {
+     "id": "qwen_kvsys-hold-pc-sysc-01",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "items": [
+      "kv3_pc*",
+      "kv3_pc_v1*",
+      "kv3_sys_c"
+     ],
+     "release": [
+      "event_adopt:kvgeom7yhr"
+     ],
+     "reason": "HOLDGEN-1115 2026-11-16 (COORD, KITINPUT-1116): the source tree src_kv_kvgeom7uh_c1 is gone, every retry fails (kv3_pc at 27 attempts). Held until event_adopt:kvgeom7yhr. Running attempts finish."
     }
    ],
    "planned_events": [
@@ -38951,8 +38964,24 @@
      "release": [
       "tree_ready:s81_head:/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756"
      ]
+    },
+    {
+     "id": "s81_head-hold-hdserdes-01",
+     "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
+     "items": [
+      "hd_serdes"
+     ],
+     "release": [
+      "proof:head-serdes-fanout"
+     ],
+     "reason": "HOLDGEN-1115 2026-11-16 (COORD stop list): the wave relaunched hd_serdes at 03:04 on unchanged RTL after a -261 ps read. No unchanged relaunch until HEAD-SERDES-O posts a RESULT PASS naming head-serdes-fanout. Running attempts finish."
     }
-   ]
+   ],
+   "proof_items": {
+    "head-serdes-fanout": [
+     "sd5"
+    ]
+   }
   },
   "qwen_compute": {
    "enabled": true,
@@ -49528,6 +49557,35 @@
       "slw_hc3__*"
      ],
      "carry": true
+    },
+    {
+     "id": "qwen_compute-hold-cbglue-tree-01",
+     "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
+     "items": [
+      "cbf_q00__cl1b5a6458",
+      "cbf_q00__cl870de686",
+      "cbf_q00_s2",
+      "cbf_q01",
+      "cbf_q01_s2",
+      "cbf_q11",
+      "cbn_q00__cl622f65d2",
+      "cbn_q00__cld7bf7197",
+      "cbn_q00__cldbcda913",
+      "cbn_q01__clab6e67f2",
+      "cbn_q01__cld9ff4c40",
+      "cbn_q01__cldd6ea846",
+      "cbn_q11__cl49ae4555",
+      "cbn_q11__cl5cc92dfe",
+      "cbx_q10__cl89936551",
+      "cbx_q10__cl89936551_h",
+      "cbx_q10__cl94a12200",
+      "cbx_q10__cl94a12200_h",
+      "glue"
+     ],
+     "release": [
+      "tree_ready:qwen_compute:/srv/opentallas-scratch2/claude/kw45/src_qc_pin_e594a73db756"
+     ],
+     "reason": "HOLDGEN-1115 2026-11-16 (COORD stop list): QC cb/glue types read -158..-1169 ps at post-CTS triage on the old tree. They relaunch only on the main-based tree: released by tree_ready:qwen_compute (TOOLS-CONVERGE writes lanes/handoff/tree_switch_qwen_compute.json). Running attempts finish."
     }
    ],
    "planned_events": [
