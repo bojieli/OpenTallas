@@ -1,6 +1,7 @@
 """ot-merge-queue (MERGE-QUEUE-1): approval parsing, lane lookup, tag series, test selection, and one end-to-end tick on a
 throwaway origin: a green branch lands with tags + MERGED, a red one and a conflicting one get MERGE-FAIL, a second tick is a no-op."""
-import importlib.machinery, importlib.util, json, os, pathlib, subprocess, sys, tempfile, unittest
+import importlib.machinery, importlib.util, json, os, pathlib, shutil, subprocess, sys, tempfile, unittest
+from pathlib import Path
 
 P = str(pathlib.Path(__file__).with_name("ot-merge-queue"))
 
@@ -138,11 +139,11 @@ class EndToEnd(unittest.TestCase):
         (d / "commit.sh").write_text("#!/bin/bash\necho committed \"$@\" >> " + str(d / "commits.log") + "\n")
         self.env = dict(os.environ, MQ_HOME=str(d / "mq"), MQ_REPO=str(d / "repo"), MQ_WT=str(d / "wt"), MQ_COORD=str(d / "coord"),
                         MQ_COORD_COMMIT=str(d / "commit.sh"), MQ_PYTHON=sys.executable, MQ_FALLBACK_REMOTE="", MQ_XDIST="1",
-                        MQ_SYNC_HOOK="", MQ_SRC_HOOK="", MQ_SPARSE="/*,!/*/,/tools/", GIT_AUTHOR_NAME="q", GIT_AUTHOR_EMAIL="q@q",
+                        MQ_SYNC_HOOK="", MQ_SRC_HOOK="", MQ_GATE_REMOTE="", MQ_SPARSE="/*,!/*/,/tools/", GIT_AUTHOR_NAME="q", GIT_AUTHOR_EMAIL="q@q",
                         GIT_COMMITTER_NAME="q", GIT_COMMITTER_EMAIL="q@q")
 
-    def tick(self):
-        return subprocess.run([sys.executable, "-I", P, "tick"], env=self.env, capture_output=True, text=True, timeout=600)
+    def tick(self, env=None):
+        return subprocess.run([sys.executable, "-I", P, "tick"], env=env or self.env, capture_output=True, text=True, timeout=600)
 
     def test_green_lands_red_and_conflict_fail_second_tick_noop(self):
         r = self.tick()
@@ -187,7 +188,7 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("MERGE-FAIL [MERGE-QUEUE -> ", t); self.assertIn("claude/ghost@deadbeef123 NOT landed", t)
         self.assertRegex(t, r"MERGED \[MERGE-QUEUE -> [^]]+\] claude/good@")
 
-    def test_ready_gate_bounces_missing_or_wrong_stamp_only_for_new_lines(self):
+    def test_ready_without_a_usable_stamp_is_gated_not_bounced_only_for_new_lines(self):
         q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
         o = self.d / "origin.git"
         main = sh("git", "rev-parse", "main", cwd=o)
@@ -205,15 +206,15 @@ class EndToEnd(unittest.TestCase):
                     f"- 2026-11-15 08:04 PST READY [LANE-E -> COORD] result line without a branch sha, GATE nothing\n")
         r = self.tick()
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
-        t = q.read_text()
-        self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-A] READY claude/good@", t); self.assertIn("no GATE stamp", t)
-        self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-B]", t); self.assertIn("pass=3/4 is not all-pass", t)
-        self.assertIn("BOUNCE [MERGE-QUEUE -> LANE-C]", t); self.assertIn("is not a commit on main", t)
-        self.assertNotIn("-> LANE-D]", t); self.assertNotIn("-> LANE-E]", t); self.assertNotIn("-> OLD-LANE]", t)
-        self.assertNotIn("ready gate check error", (self.d / "mq/log").read_text())   # a valid stamp is judged, not swallowed
-        n = t.count("BOUNCE")
+        t, log = q.read_text(), (self.d / "mq/log").read_text()
+        self.assertNotIn("BOUNCE", t)                        # COORD r178: never bounce; the queue gates it
+        self.assertRegex(log, r"READY claude/good@\w+ line \d+: no GATE stamp; no remote runner")
+        self.assertIn("pass=3/4 is not all-pass", log); self.assertIn("is not a commit on main", log)
+        self.assertIn("gate stamp ok", log)
+        self.assertNotIn("ready gate check error", log)   # a valid stamp is judged, not swallowed
+        n = log.count("READY claude/")
         self.tick()
-        self.assertEqual(q.read_text().count("BOUNCE"), n)   # each READY judged once
+        self.assertEqual((self.d / "mq/log").read_text().count("READY claude/"), n)   # each READY judged once
 
     def test_gate_command_prints_the_stamp_for_green_and_touches_no_state(self):
         g = subprocess.run([sys.executable, "-I", P, "gate", "claude/good"], env=self.env, capture_output=True, text=True, timeout=600)
@@ -300,6 +301,37 @@ class EndToEnd(unittest.TestCase):
         self.assertIn("gate record from hub", log)
         self.assertIn("MERGED", q.read_text())
 
+    def test_tick_gates_on_the_remote_runner_and_lands_its_record(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n"
+                     f"- 2026-11-15 09:00 PST [COORD] COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        # the "remote" runner is the queue's own gate command; it writes the record the tick then reads
+        d = self.d
+        remote = (f"[ -d {d}/rrepo ] || git clone -q --no-checkout {d}/origin.git {d}/rrepo; MQ_HOME={d}/rmq MQ_REPO={d}/rrepo MQ_WT={d}/rwt {sys.executable} -I {P} gate {{key}}; rc=$?; "
+                  f"mkdir -p {d}/mq/gates; cp {d}/rmq/gates/*.json {d}/mq/gates/; exit $rc")
+        r = self.tick(env=dict(self.env, MQ_GATE_REMOTE=remote, MQ_GATE_REMOTE_TIMEOUT="120"))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("remote gate record from", (self.d / "mq/log").read_text())
+        self.assertIn("MERGED", q.read_text())
+
+    def test_remote_red_is_red_and_a_runner_that_cannot_start_falls_back_to_the_hub(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n"
+                     f"- 2026-11-15 09:00 PST [COORD] COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        r = self.tick(env=dict(self.env, MQ_GATE_REMOTE="echo 'RED claude/good@x on main y: 1 failing: test_z.py'; exit 1"))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("remote: 1 failing: test_z.py", (self.d / "mq/log").read_text())
+        self.assertNotIn("MERGED", q.read_text())
+
+    def test_remote_runner_missing_gates_on_the_hub(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("- 2026-11-15 07:00 PST STATE [X -> COORD] nothing\n"
+                     f"- 2026-11-15 09:00 PST [COORD] COORD APPROVED: claude/good @{self.shas['good'][:10]}\n")
+        r = self.tick(env=dict(self.env, MQ_GATE_REMOTE="/nonexistent/ot-run {key}"))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("remote gate did not run", (self.d / "mq/log").read_text())
+        self.assertIn("MERGED", q.read_text())
+
     def test_parallel_gate_commands_run_together(self):
         procs = [subprocess.Popen([sys.executable, "-I", P, "gate", b], env=self.env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                   text=True) for b in ("claude/good", "claude/clash", "claude/red")]
@@ -352,3 +384,32 @@ class EndToEnd(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Reap(unittest.TestCase):
+    def test_wt_drop_kills_processes_left_in_the_tree_and_its_basetemp_only(self):
+        import importlib.machinery, importlib.util, tempfile, time
+        d = Path(tempfile.mkdtemp())
+        subprocess.run(["git", "init", "-q", str(d / "repo")], check=True)
+        old = {k: os.environ.get(k) for k in ("MQ_HOME", "MQ_WT", "MQ_REPO")}
+        os.environ.update(MQ_HOME=str(d / "mq"), MQ_WT=str(d / "wt"), MQ_REPO=str(d / "repo"))
+        try:
+            ld = importlib.machinery.SourceFileLoader("omq_reap", P)
+            m = importlib.util.module_from_spec(importlib.util.spec_from_loader("omq_reap", ld)); ld.exec_module(m)
+        finally:
+            for k, v in old.items():
+                os.environ.pop(k, None) if v is None else os.environ.__setitem__(k, v)
+        for x in ("wt/abc", "wt/bt/abc-a", "wt/other"):
+            (d / x).mkdir(parents=True)
+        a = subprocess.Popen(["sleep", "300"], cwd=d / "wt/abc")
+        b = subprocess.Popen(["sleep", "300"], cwd=d / "wt/bt/abc-a")
+        c = subprocess.Popen(["sleep", "300"], cwd=d / "wt/other")
+        try:
+            m.wt_drop("abc")
+            time.sleep(0.5)
+            self.assertIsNotNone(a.poll()); self.assertIsNotNone(b.poll()); self.assertIsNone(c.poll())
+            self.assertFalse((d / "wt/abc").exists())
+        finally:
+            for p in (a, b, c):
+                p.kill(); p.wait()
+            shutil.rmtree(d, ignore_errors=True)

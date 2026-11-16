@@ -22,7 +22,23 @@ while [ -z "$S" ]; do
   done
   [ -z "$S" ] && sleep 10
 done
+# reap: our processes still running in this slot's gate trees (cwd under $S/wt, deleted or not) are leftovers of an
+# earlier gate in the slot (CLEAN-ALL 11-15 16:4x: lec_async.sh / yosys ran 2 h in deleted trees of slots 0, 3, 4).
+# We hold the slot lock, so nothing live can be in there.  Run at slot pickup and again at exit.
+reap() {
+  local p d n=0
+  for p in $(ls /proc | grep -E '^[0-9]+$'); do
+    [ "$p" = $$ ] && continue
+    [ -O /proc/$p ] || continue
+    d=$(readlink /proc/$p/cwd 2>/dev/null) || continue
+    case "$d" in "$S"/wt/*) kill -9 "$p" 2>/dev/null && n=$((n + 1));; esac
+  done
+  [ $n -gt 0 ] && echo "ot-gate-remote: reaped $n leftover process(es) in ${S##*/}/wt"
+  return 0
+}
+trap reap EXIT
 mkdir -p $S
+reap
 if [ ! -d $S/repo/.git ]; then
   rm -rf $S/repo
   git clone -q --filter=blob:none --no-checkout "$M" $S/repo || { echo "INFRA clone of $M failed"; exit 3; }
