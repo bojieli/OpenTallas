@@ -31,11 +31,22 @@ import os
 import re
 import sys
 
-TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt")
+TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready")
 LEGACY_OK = ("merge",)          # still evaluated (ancestor of origin/main); accepted in new records too
 GLOB = re.compile(r"[*?\[]")
 PROOF_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
 CENSUS = re.compile(r"^(\d+)(k?)$", re.I)
+
+
+def split_tree(val):
+    """'qwen_compute:/abs/tree' -> ('qwen_compute', '/abs/tree')"""
+    die, _, path = str(val).partition(":")
+    return die.strip(), path.strip()
+
+
+def tree_marker_rel(die):
+    """the builder's switch file, in the coord tree: lanes/handoff/tree_switch_<die>.json"""
+    return f"lanes/handoff/tree_switch_{die}.json"
 
 
 def census_limit(val):
@@ -108,6 +119,13 @@ def term_error(term, die, cfg, migrated=False):
         return None
     if kind == "digest_changed":
         return None if not val else f"{term!r}: digest_changed takes no value"
+    if kind == "tree_ready":
+        td, tp = split_tree(val)
+        if td != die:
+            return f"{term!r}: tree_ready names die {td!r} but the record is die {die!r}"
+        if not tp.startswith("/") or tp.endswith("/") or ".." in tp.split("/"):
+            return f"{term!r}: tree_ready needs <die>:<absolute tree path without trailing slash>"
+        return None
     if kind == "proof":
         return None if PROOF_NAME.match(val) else f"{term!r}: proof needs one name token (a RESULT PASS post naming it)"
     if kind == "census_lt":
@@ -135,6 +153,9 @@ def unreachable_why(term, die, cfg):
         return None if val.startswith("/") else "relative path"
     if kind == "digest_changed":
         return None
+    if kind == "tree_ready":
+        td, tp = split_tree(val)
+        return None if td == die and tp.startswith("/") else "tree_ready die or path malformed"
     if kind == "proof":
         return None if PROOF_NAME.match(val) else "proof name not one token"
     if kind == "census_lt":
@@ -147,7 +168,7 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
@@ -155,6 +176,8 @@ class Ctx:
         self.kit_snap_fn = kit_snap_fn or (lambda cfg, die: False)
         self.exists_fn = exists_fn or os.path.exists
         self.proof_fn = proof_fn or (lambda name: False)          # name -> a RESULT PASS line names this proof
+        self.tree_fn = tree_fn or (lambda die, path: False)       # (die, tree) -> marker + smoke + replication on all gen hosts
+        self.marker_fn = marker_fn or (lambda die: None)          # die -> parsed lanes/handoff/tree_switch_<die>.json or None
         self.cells_fn = cells_fn or (lambda die, item: None)      # (die, item) -> measured cell count or None (unknown = held)
 
 
@@ -180,6 +203,9 @@ def term_met(term, rec, die, item, cfg, ctx):
             return bool(ctx.kit_snap_fn(cfg, val))
         if kind == "input_staged":
             return bool(val) and bool(ctx.exists_fn(val))
+        if kind == "tree_ready":
+            td, tp = split_tree(val)
+            return td == die and bool(ctx.tree_fn(td, tp))
         if kind == "proof":
             return bool(ctx.proof_fn(val))
         if kind == "census_lt":
@@ -218,14 +244,19 @@ def validate_record(rec, cfg):
         errs.append("record is not bound to a plan_sha")
     if not rec.get("reason"):
         errs.append("record has no reason")
-    if not (rec.get("items") or rec.get("patterns") or rec.get("keys")):
+    if rec.get("switch_only"):
+        if rec.get("items") or rec.get("patterns") or rec.get("keys"):
+            errs.append("a switch_only record holds nothing: no items / patterns / keys")
+        if not any(split_term(t)[0] == "tree_ready" for t in rec.get("release") or []):
+            errs.append("a switch_only record needs a tree_ready release term")
+    elif not (rec.get("items") or rec.get("patterns") or rec.get("keys")):
         errs.append("record selects nothing")
     mig = bool(rec.get("migrated"))
     for t in rec.get("release") or []:
         e = term_error(t, die, cfg, migrated=mig)
         if e:
             errs.append(e)
-    if not mig:
+    if not mig and not rec.get("switch_only"):
         items = (d.get("hold_event_items") or {}).get(rec.get("plan_sha")) or []
         for p in rec.get("patterns") or []:
             if not any(fnmatch.fnmatchcase(i, p) for i in items):
@@ -255,8 +286,8 @@ def compile_holds(cfg, ctx=None):
     released = []
     comp, info = {}, {}
     for die, ks in (cfg.get("_hold_added") or {}).items():          # recompile: drop what an earlier pass added
-        h = ((cfg.get("dies") or {}).get(die) or {}).get("hold_items")
-        for k in ks:
+        for name, k in ks:
+            h = ((cfg.get("dies") or {}).get(die) or {}).get(name)
             if isinstance(h, dict):
                 h.pop(k, None)
     cfg["_hold_added"] = added = {}
@@ -269,9 +300,9 @@ def compile_holds(cfg, ctx=None):
             continue
         cur = plan_id(d)
         lists = d.get("hold_event_items") or {}
-        if not isinstance(d.get("hold_items"), dict):
-            d["hold_items"] = {}
-        hold = d["hold_items"]
+        for name in ("hold_items", "route_hold_items"):
+            if not isinstance(d.get(name), dict):
+                d[name] = {}
         rec_dies.add(die)
         for rec in recs:
             sha = str(rec.get("plan_sha") or "")
@@ -284,13 +315,15 @@ def compile_holds(cfg, ctx=None):
             rel = [str(t) for t in rec.get("release") or [] if str(t).strip()]
             zero = (not rec.get("migrated")) and bool(rec.get("patterns")) and not keys
             held = 0
+            tname = "route_hold_items" if rec.get("route") else "hold_items"       # route: true = a ROUTE-HOLD (place/CTS/GRT still run)
+            hold = d[tname]
             for k in keys:
                 if rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel):
                     released.append((die, k, " + ".join(rel)))
                     continue
                 if k not in hold:
                     hold[k] = rec.get("reason", "")
-                    added.setdefault(die, []).append(k)
+                    added.setdefault(die, []).append((tname, k))
                 comp.setdefault(die, {})[k] = rec.get("id")
                 held += 1
             info.setdefault(die, []).append({"id": rec.get("id"), "plan_sha": sha, "stale": stale, "rebound": rebound,
@@ -373,6 +406,54 @@ def migrate_cfg(cfg, only=None):
     return n
 
 
+def _deep_set(dst, src):
+    for k, v in src.items():
+        if isinstance(v, dict) and isinstance(dst.get(k), dict):
+            _deep_set(dst[k], v)
+        else:
+            dst[k] = v
+
+
+def apply_tree_switches(cfg, ctx):
+    """a tree_ready term whose tree is ready switches the die in memory: dies.<die>.src = tree, src_manifest_hash, die_gen_env merged,
+    plus the marker's `config` (die keys, dicts merged, e.g. kit_rtl.bind_out / tools_sha).  The switch does not wait for the
+    record's other terms: the tree is what the owner asked for.  -> [(die, tree, [changed keys])] for the trees that changed anything"""
+    out = []
+    for die, d in (cfg.get("dies") or {}).items():
+        for rec in d.get("hold_records") or []:
+            for t in rec.get("release") or []:
+                kind, val = split_term(t)
+                if kind != "tree_ready":
+                    continue
+                td, tp = split_tree(val)
+                if td != die or not ctx.tree_fn(td, tp):
+                    continue
+                m = ctx.marker_fn(die) or {}
+                ch = []
+                if d.get("src") != tp:
+                    d["src"] = tp
+                    ch.append("src")
+                if m.get("manifest_hash") and d.get("src_manifest_hash") != m["manifest_hash"]:
+                    d["src_manifest_hash"] = m["manifest_hash"]
+                    ch.append("src_manifest_hash")
+                for k, v in (m.get("die_gen_env") or {}).items():
+                    env = d.setdefault("die_gen_env", {})
+                    if env.get(k) != v:
+                        env[k] = v
+                        ch.append(f"die_gen_env.{k}")
+                for k, v in (m.get("config") or {}).items():
+                    before = json.dumps(d.get(k), sort_keys=True, default=str)
+                    if isinstance(v, dict) and isinstance(d.get(k), dict):
+                        _deep_set(d[k], v)
+                    else:
+                        d[k] = v
+                    if json.dumps(d.get(k), sort_keys=True, default=str) != before:
+                        ch.append(k)
+                if ch:
+                    out.append((die, tp, ch))
+    return out
+
+
 def convert_keys(cfg, keymap):
     """per-key retyping: keymap = {die: {hold key: [typed terms] | None}}.  None = release (the key is dropped).  A key's migrated
     record is split so the key sits in a record of its own release terms (keys with equal terms share one new record).  Every term is
@@ -403,7 +484,7 @@ def convert_keys(cfg, keymap):
             src = next(r for r in recs if r["id"] == rid)
             recs.append({"id": f"{rid}-k{n}", "plan_sha": src["plan_sha"], "reason": src["reason"], "release": list(terms),
                          "migrated": True, "keys": ks, "carry": True})
-        d["hold_records"] = [r for r in recs if r.get("keys") or r.get("items") or r.get("patterns")]
+        d["hold_records"] = [r for r in recs if r.get("keys") or r.get("items") or r.get("patterns") or r.get("switch_only")]
     return ret, drop
 
 

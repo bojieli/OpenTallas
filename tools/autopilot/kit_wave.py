@@ -394,16 +394,72 @@ def load_config(text):
     return cfg
 
 
-def compile_hold_records(cfg, is_merged=None):
-    """HOLDGEN-1115 (COORD r223): die.hold_records (typed release terms, bound to a plan sha) compile into hold_items in memory, before
-    the legacy hold_release_on pass.  A die without hold_records is untouched."""
+_TREE_CACHE = {}
+_TREE_LOGGED = set()
+
+
+def tree_gate(AP, cfg):
+    """HOLDGEN-1115 (FABLE-FLOW-0445 class 4): -> (tree_fn, marker_fn) for the typed term tree_ready:<die>:<tree>.
+    marker_fn(die) = lanes/handoff/tree_switch_<die>.json of the coord tree (written by the tree builder, coord-committed):
+    {"tree": path, "manifest_hash": ..., "smoke": "PASS", "die_gen_env": {...}, "config": {die keys, dicts merged}}.
+    tree_fn(die, tree) is true when that marker names the tree, smoke is PASS, and on EVERY gen host (cfg hosts minus retired_hosts)
+    <tree>/.src-manifest.sha256 equals the marker's manifest_hash (the publisher renames a tree into place only after verify, so the
+    hash file at the final path = replicated and verified).  A false answer is cached 60 s, a true one 600 s."""
+    import hold_records as _HR
+    hosts = [h for h in (cfg.get("hosts") or []) if h not in (cfg.get("retired_hosts") or [])]
+    hub = AP.HUB_NAME
+
+    def marker(die):
+        try:
+            m = json.loads(AP.read_coord(_HR.tree_marker_rel(die)) or "null")
+        except ValueError:
+            return None
+        return m if isinstance(m, dict) else None
+
+    def host_has(h, tree, want):
+        cmd = ["cat", f"{tree}/.src-manifest.sha256"]
+        try:
+            if h in ("localhost", hub):
+                r = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
+            else:
+                r = subprocess.run(_ssh(h, hub) + cmd, capture_output=True, text=True, timeout=30)
+            return r.returncode == 0 and r.stdout.strip() == want
+        except (OSError, subprocess.SubprocessError):
+            return False
+
+    def ready(die, tree):
+        m = marker(die)
+        want = str((m or {}).get("manifest_hash") or "")
+        if not m or m.get("tree") != tree or str(m.get("smoke") or "").upper() != "PASS" or not want or not hosts:
+            return False
+        key, now = (die, tree, want, tuple(hosts)), time.time()
+        hit = _TREE_CACHE.get(key)
+        if hit and now - hit[0] < (600 if hit[1] else 60):
+            return hit[1]
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=len(hosts)) as ex:
+            ok = all(ex.map(lambda h: host_has(h, tree, want), hosts))
+        _TREE_CACHE[key] = (now, ok)
+        return ok
+    return ready, marker
+
+
+def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
     proofs = cfg.get("_proof_lines") or []
-    ctx = HR.Ctx(is_merged=is_merged or _git_is_merged, event_met=_hold_term_met, digest_fn=input_digest,
-                 kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")),
-                 cells_fn=lambda die, item: cells.get((die, item)),
-                 proof_fn=lambda name: any(re.search(r"(?<![A-Za-z0-9_.-])" + re.escape(name) + r"(?![A-Za-z0-9_.-])", ln) for ln in proofs))
+    return HR.Ctx(is_merged=is_merged or _git_is_merged, event_met=_hold_term_met, digest_fn=input_digest,
+                  kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")),
+                  cells_fn=lambda die, item: cells.get((die, item)),
+                  proof_fn=lambda name: any(re.search(r"(?<![A-Za-z0-9_.-])" + re.escape(name) + r"(?![A-Za-z0-9_.-])", ln) for ln in proofs),
+                  tree_fn=tree_fn, marker_fn=marker_fn)
+
+
+def compile_hold_records(cfg, is_merged=None, tree_fn=None, marker_fn=None):
+    """HOLDGEN-1115 (COORD r223): die.hold_records (typed release terms, bound to a plan sha) compile into hold_items in memory, before
+    the legacy hold_release_on pass.  A die without hold_records is untouched."""
+    import hold_records as HR
+    ctx = hold_ctx(cfg, is_merged, tree_fn, marker_fn)
     try:
         return HR.compile_holds(cfg, ctx)
     except Exception as e:                               # a bad record never stops the wave: legacy hold_items still apply
@@ -10123,9 +10179,15 @@ def _step(AP, ap_dir):
         cfg["_proof_lines"] = [ln for ln in AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines()
                                if " RESULT " in ln and "PASS" in ln][-3000:]
         _before = len(cfg.get("_hold_auto_released") or [])
-        compile_hold_records(cfg)
+        _tf, _mf = tree_gate(AP, cfg)
+        compile_hold_records(cfg, None, _tf, _mf)
         for _die, _key, _cond in (cfg.get("_hold_auto_released") or [])[_before:]:
             AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release terms met ({_cond})")
+        import hold_records as _HR                       # tree_ready: switch dies.<die>.src / die_gen_env in memory, no lane needed
+        for _die, _tree, _ch in _HR.apply_tree_switches(cfg, hold_ctx(cfg, None, _tf, _mf)):
+            if (_die, _tree, tuple(_ch)) not in _TREE_LOGGED:
+                _TREE_LOGGED.add((_die, _tree, tuple(_ch)))
+                AP.log(f"KIT-WAVE TREE-SWITCH {_die}: tree {_tree} ready on all gen hosts, switched {', '.join(_ch)}")
     except Exception as e:                               # unknown cells / proofs = still held
         AP.log(f"KIT-WAVE hold recompile skipped: {type(e).__name__}: {e}")
     try:
