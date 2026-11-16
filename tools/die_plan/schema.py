@@ -497,6 +497,9 @@ SCHEMA = {
                     # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
                     # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)
                     "pg_island_cut": {"type": "boolean"},
+                    # PG-AWARE-1: force the landing-pin PG access rule on (true) or off (false) for this type, overriding
+                    # the signed-type exemption list pg_pin_rule_signed.json (landing_contract.pg_rule_applies)
+                    "pg_pin_rule": {"type": "boolean"},
                     # DIE-HEAD-17 10-28 (opt-in): register clock spine + local trees + core early-tap branches in PRE_CTS
                     # (gen_phys copies reg_spine.json/.py/.tcl into the kit; spec documented in reg_spine.py)
                     "reg_spine": {"type": "object", "required": ["trunk"], "properties": {
