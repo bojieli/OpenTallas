@@ -17,5 +17,18 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 09:37:22 PST"
+ "time": "2026-11-16 09:37:22 PST",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/B6gF2s2_B6gF2sv.json",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/asbuilt_run.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/sidecar_new.json",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_41bb1dcfd10a_d6/out",
+ "data_pack": "done (F2s2: plan, as-built, sidecar, ROM hard_params, 10 col3_c/plan_h2 data files in tree)",
+ "hidden_folder_smoke": "PASS 5/5",
+ "hosts_pending": {
+  "epyc9": "d6 delta + bind copying",
+  "epyc7": "d6 delta + bind copying",
+  "epyc2": "d6 delta + bind copying"
+ },
+ "supersedes": "v3 (41bb1dcfd10a, hosts epyc10/9/7/2) - keep v3 as fallback until d6 is on the hosts",
+ "note": "set dies.s81.src, plan (ev/B6gF2s2_B6gF2sv.json = in-tree copy sha1 a623deec2d38), gen_args --clock-landing=sidecar, kit_rtl.bind_out and asbuilt to these paths; F2s3 follows as v4 (main with the TXPIPE hook + ovl_F2s3)"
 }
