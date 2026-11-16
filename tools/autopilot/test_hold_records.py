@@ -260,6 +260,74 @@ class T(unittest.TestCase):
         finally:
             KW._src_manifest_hosts, KW._TREE_SYNC = old_fn, old_sync
 
+    def test_published_d6_switch_refreshes_source_identity_not_pinned_attempt(self):
+        import tempfile, os
+        from unittest.mock import patch
+        main = "41bb1dcfd10a88b78ac6296e8209d8783422fcae"
+        old = "7073a6b4a599c1de9e041896421b3b779045df1d"
+        with tempfile.TemporaryDirectory() as td:
+            tree = Path(td) / "src_s81_pin_41bb1dcfd10a_d6"
+            tree.mkdir()
+            (tree / ".src-manifest.sha256").write_text("hash-d6\n")
+            (tree / ".src-manifest.json").write_text(json.dumps(dict(main_sha=main, manifest_hash="hash-d6")))
+            attempt = Path(td) / "attempt"
+            attempt.mkdir()
+            spec = attempt / "spec.json"
+            pinned = json.dumps(dict(src_sha=old, queue_src="main@" + old, src="/old/G3b/src"))
+            spec.write_text(pinned)
+            marker = dict(tree=str(tree), src_manifest_sha="hash-d6", smoke="PASS", tools_sha="f" * 40,
+                          _validated_main_sha="a" * 40, config={"tools_sha": "f" * 40})
+            class AP:
+                HUB_NAME = "hub"
+                read_coord = staticmethod(lambda rel: json.dumps(marker))
+                log = staticmethod(lambda text: None)
+            c = base()
+            d = c["dies"]["s81"]
+            d.update(src=str(tree), src_sha=old, queue_src="main@" + old, gen_hosts=["localhost"])
+            HR.add_record(c, "s81", rec(release=["tree_ready:s81:" + str(tree)]))
+            with patch.object(KW, "_TREE_CACHE", {}), patch.object(KW, "_TREE_SYNC", True), \
+                 patch.object(KW, "_src_manifest_hosts", return_value=(0, "verified")):
+                tf, mf = KW.tree_gate(AP, c)
+                ctx = KW.hold_ctx(c, lambda ref: False, tf, mf)
+                changed = HR.apply_tree_switches(c, ctx)
+                self.assertEqual((d["src_sha"], d["queue_src"], d["tools_sha"]), (main, "main@" + main, "f" * 40))
+                self.assertIn("src_sha", changed[0][2])
+                self.assertEqual(HR.apply_tree_switches(c, ctx), [])
+                self.assertEqual(spec.read_text(), pinned)
+
+    def test_tree_switch_honors_explicit_source_identity_after_validation(self):
+        c = base()
+        HR.add_record(c, "s81", rec(release=["tree_ready:s81:/published"]))
+        explicit = {"src_sha": "b" * 40, "queue_src": "claude/composed@" + "b" * 40}
+        marker = dict(tree="/published", _validated_main_sha="a" * 40, config=explicit)
+        ctx = HR.Ctx(tree_fn=lambda die, path: True, marker_fn=lambda die: marker)
+        HR.apply_tree_switches(c, ctx)
+        self.assertEqual({k:c["dies"]["s81"][k] for k in explicit}, explicit)
+
+    def test_unverified_tree_metadata_never_changes_source_identity(self):
+        import tempfile
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            tree = Path(td) / "candidate"
+            tree.mkdir()
+            (tree / ".src-manifest.sha256").write_text("h1\n")
+            (tree / ".src-manifest.json").write_text(json.dumps(dict(main_sha="a" * 40)))
+            marker = dict(tree=str(tree), manifest_hash="h1", smoke="PASS", _validated_main_sha="c" * 40)
+            class AP:
+                HUB_NAME = "hub"
+                read_coord = staticmethod(lambda rel: json.dumps(marker))
+                log = staticmethod(lambda text: None)
+            c = base()
+            d = c["dies"]["s81"]
+            d.update(src="/old", src_sha="b" * 40, queue_src="main@" + "b" * 40, gen_hosts=["localhost"])
+            HR.add_record(c, "s81", rec(release=["tree_ready:s81:" + str(tree)]))
+            with patch.object(KW, "_TREE_CACHE", {}), patch.object(KW, "_TREE_SYNC", True), \
+                 patch.object(KW, "_src_manifest_hosts", return_value=(1, "manifest drift")):
+                tf, mf = KW.tree_gate(AP, c)
+                self.assertEqual(HR.apply_tree_switches(c, KW.hold_ctx(c, lambda ref: False, tf, mf)), [])
+                self.assertEqual(d["src_sha"], "b" * 40)
+                self.assertNotIn("_validated_main_sha", mf("s81"))
+
     def test_switch_only_record_holds_nothing_and_switches(self):
         c = base()
         d = c["dies"]["hbm"]
