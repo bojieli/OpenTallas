@@ -35,6 +35,24 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def qwen_xhead_sticky_fault_split_model(replicas=1):
+    """Candidate: distribute the existing sticky fault state; no pipeline edge."""
+    if type(replicas) is not int or replicas < 1:
+        raise ValueError('positive actual xhead replica count required')
+    return dict(schema='opentallas.qwen-xhead-sticky-fault-split.v1',
+        opt_in_default=False, qualification='pending full-shape TT/FF route',
+        replicas=replicas, macs_per_cycle=0, memory_bytes_per_cycle=0,
+        added_boundary_bits_per_cycle=0, added_tracks=0,
+        original_sticky_bits=1, candidate_sticky_bits=9,
+        added_flops=8*replicas, candidate_event_fanout=1,
+        largest_new_sticky_group_bits=5, output_reduce_bits=9,
+        output_register='existing fault_r', added_latency_edges=0,
+        token_latency_delta_edges=0, throughput_ratio=1.0,
+        outline_delta_um2=0, area_fit='8 control flops per xhead; verify placement',
+        new_macros=0, added_mux_demux=0,
+        cause='P2 GRT TT -132.61ps: go_bad_bits to shared sticky flt reduction')
+
+
 def qwen_tile_node_native_boundary_model():
     """Output pad correction on the existing 16-lane FP32 node; no schedule credit."""
     return dict(schema="opentallas.qwen-tile-node-native-boundary.v1",
