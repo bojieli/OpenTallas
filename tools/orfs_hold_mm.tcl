@@ -322,9 +322,9 @@ proc ot_rc_cal_hold {body} {
 # CTS / GRT hold repair (it 10k-65k, ~2 buffers per iteration, WNS frozen for thousands of iterations; BF: 48k endpoints at
 # -200 ps).  A window that wide is an RTL / constraint problem (missing pin register, wrong input-min / H1 SDC), not a
 # buffering problem.  ot_repair_timing (called by the patched repair_timing_helper) keeps a setup-only or hold-only call
-# unchanged; a combined call runs setup exactly as before, then hold in chunks of OT_HOLD_CHUNK iterations (default 1000)
+# unchanged; a combined call runs setup exactly as before, then hold in buffer-capped chunks (native iteration options unchanged unless OT_HOLD_CHUNK is explicitly positive)
 # and stops when a chunk improves hold TNS by < OT_HOLD_MIN_GAIN_PCT % (default 2) and WNS by < 1 ps, when hold is
-# already >= 0 and a chunk gains < 1 ps (chasing the margin only), or after OT_HOLD_MAX_HOURS (default 3) of hold repair.
+# already >= 0 and a chunk gains < 1 ps (chasing the margin only). OT_HOLD_MAX_HOURS is informational only, off by default.
 # After an HM-AUTO flood reduction the hold repair first runs at HM 0 and stops once real hold is met (MET-FIRST below).
 # A stall with hold < 0 writes REPORTS_DIR/ot_hold_stall_<stage>.rpt (path classes, pin groups) and logs OT_HOLD_STALL:
 # the closure loop reports it as NEEDS_RTL with that window instead of crawling.  OT_HOLD_GUARD=0 restores the old call.
@@ -792,9 +792,10 @@ proc ot_repair_timing {rt_args} {
 proc ot_repair_hold_guarded {rt_args} {
   set hm 0.0
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
-  set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 1000])}]
+  set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 0])}]
+  set iter_args {}; if {$chunk > 0} { set iter_args [list -max_iterations $chunk] }
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
-  set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
+  set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 0.0] * 3600}]
   ot_hold_structural_gate
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
@@ -837,7 +838,7 @@ proc ot_repair_hold_guarded {rt_args} {
   set j [lsearch -exact $rt_args -max_buffer_percent]; if {$j >= 0} { set tot_pct [lindex $rt_args [expr {$j + 1}]] }
   set capped 0
   set t0 [clock seconds]; set hist [list [lmap x $prev {format %.1f $x}]]
-  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it[expr {$inst0 > 0 ? [format ", <= %.0f buffers of %d instances" [expr {max($cbp * $inst0 / 100.0, $cbmin)}] $inst0] : ""}])"
+  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, native iteration option [expr {$chunk > 0 ? $chunk : "unchanged"}][expr {$inst0 > 0 ? [format ", <= %.0f buffers of %d instances" [expr {max($cbp * $inst0 / 100.0, $cbmin)}] $inst0] : ""}])"
   for {set k 1} {1} {incr k} {
     if {[lindex $prev 0] >= $hm} { break }
     if {$inst0 > 0} {
@@ -847,13 +848,13 @@ proc ot_repair_hold_guarded {rt_args} {
       set last [expr {$nb >= $left}]
       if {$nb < 1} { set nb 1 }
       set pct [format %.6f [expr {100.0 * $nb / $inst}]]
-      if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold -max_iterations $chunk} err opts]} {
+      if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold {*}$iter_args} err opts]} {
         if {$last || ![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
         set capped 1
         puts [format "OT_HOLD_GUARD chunk %d: buffer cap %.0f reached (RSZ-0060), continuing" $k $nb]
       }
     } else {
-      log_cmd repair_timing {*}$rt_args -hold -max_iterations $chunk
+      log_cmd repair_timing {*}$rt_args -hold {*}$iter_args
     }
     set cur [ot_hold_stats]
     lappend hist [lmap x $cur {format %.1f $x}]
@@ -864,7 +865,7 @@ proc ot_repair_hold_guarded {rt_args} {
     if {$w1 >= $hm} { break }
     if {$w1 >= 0 && $dw < 1.0} { puts "OT_HOLD_GUARD: hold met (ws [format %.2f $w1] >= 0); margin chase stalled, stop"; break }
     if {$dw < 1.0 && $gain < $mingain} { ot_hold_window_report "stalled: chunk $k gained [format %.2f $dw] ps / [format %.1f $gain]% TNS" $hist; break }
-    if {[clock seconds] - $t0 > $maxs && ![info exists ::ot_hold_timelogged]} {
+    if {$maxs > 0 && [clock seconds] - $t0 > $maxs && ![info exists ::ot_hold_timelogged]} {
       # WF-1 11-14 (OWNER: delete the conservative limits): the hold repair wall cap no longer ends the repair; logged once
       set ::ot_hold_timelogged 1
       puts "OT_HOLD_TIMELOG hold repair over [expr {$maxs / 3600.0}] h: NO CAP, repair continues"
