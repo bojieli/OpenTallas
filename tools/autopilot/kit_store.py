@@ -316,8 +316,11 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print, dry=False, m
         table = os.path.realpath(os.path.join(base, table))
         if os.path.commonpath([base, table]) != base:
             raise StoreError("KIT-STORE clock_landing_table must be inside asbuilt base")
-        queue.append(({"role": "clock_landing_table", "path": table, "kind": "file",
-                       "required": True, "deep": False, "copy_in_place": moved}, 0))
+        # Process active closure before optional/generic inputs. The same table
+        # may already be named by --clock-landing; its in-place visit must not
+        # win seen-dedup and suppress the required mirrored copy (KV eW).
+        queue.insert(0, ({"role": "clock_landing_table", "path": table, "kind": "file",
+                          "required": True, "deep": False, "copy_in_place": moved}, 0))
     # floor guard: copies (writable or foreign-fs sources) count against the host root floor when the store is on '/'
     root_dev = os.stat("/").st_dev
     on_root = os.stat(store.root).st_dev == root_dev
