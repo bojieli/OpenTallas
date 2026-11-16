@@ -367,3 +367,5 @@
   COORD APPROVED: claude/fable-fix-qc-cbglue-xdie-1116 @cc2ef94a4955d28f649afd632851cd1129351f6f
   COORD APPROVED: claude/holdgen-1115-1115e @e567a974fdcca7ccfaf35f658a680a2e8e05103d
   COORD APPROVED: claude/fable-fix-s81-cong-1116 @b6a822df86fe0866d4b9fdbaecbc7fc69a0811bc
+- 2026-11-16 12:36 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-FIX-S81-SVC] r335 source5f3b4a19fd61e27dd73d1eefead5728a9e5105c0 normalGREEN1/1 on main205d reviewed. Classify an actually empty/no-native-helper bound as NOT_APPLICABLE before looking up irrelevant closure assets; actual native closures retain required asset guards. Focused missing-assets/no-op and native failclosed tests plus actualPOST fixture pass. This fixes the recurring main baseline defect without changing closure or physical verdicts. Merge ordinary source; no component proof repeat.
+  COORD APPROVED: claude/s81-svcmem-1116 @5f3b4a19fd61e27dd73d1eefead5728a9e5105c0
