@@ -2434,8 +2434,10 @@ if {[info exists ::env(OT_PGCAP)] && $::env(OT_PGCAP) eq "1"} {
 
 
 def pgcap_install(kd):
-    """OT_PGCAP=1 only: copy pg_pair_cap.tcl into the kit and append PGCAP_HOOK to the kit's grt_pre.tcl (kits without it stay byte-equal)."""
-    if os.environ.get("OT_PGCAP", "").strip() != "1":
+    """Stage dependencies from the final generated OT_PGCAP value (not the caller environment)."""
+    values = re.findall(r"^\s*(?:override\s+)?export\s+OT_PGCAP\s*(?::=|=)\s*([01])\s*$",
+                        (kd / "config.mk").read_text(), re.M)
+    if not values or values[-1] != "1":
         return False
     shutil.copyfile(Path(__file__).with_name("pg_pair_cap.tcl"), kd / "pg_pair_cap.tcl")
     g = kd / "grt_pre.tcl"
