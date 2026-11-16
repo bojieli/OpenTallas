@@ -1,0 +1,32 @@
+type	band	face	flops	area_now	dens_now	blocked_by(ideal rect hits)	unlocked_by_removing	fix	rect_um	dens_after	hop_um
+cbf_q00__cl870de686	na_i00	N	2983	4572	0.65	station:bus:nb_i00#2;die-edge	core+band+station+edge	regrow/reshape in place	[75.6, 2466.7, 203.0, 2514.2]	0.49	129
+cbf_q00_s2	na_i00	N	2983	4609	0.65	station:bus:nb_i00#2;band:rx_flit_serdes_rx_i;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 2421.4, 82.1, 2514.2]	0.5	232
+cbn_q00__cl622f65d2	bc_i10	S	5426	4623	1.17	core:u_t10;core:cl_bc_i10;die-edge	core+band+station+edge	move to neighbour strip	[572.4, 73.4, 686.9, 168.5]	0.5	286
+cbn_q00__cld7bf7197	bc_i00	S	5426	5504	0.99	core:u_t00;die-edge	core+band+station+edge	regrow/reshape in place	[367.2, 17.3, 596.2, 64.8]	0.5	180
+cbn_q00__cld7bf7197	bc_i10	S	5426	5490	0.99	core:u_t10;die-edge	core+band+station+edge	regrow/reshape in place	[598.3, 17.3, 827.3, 64.8]	0.5	202
+cbn_q00__cld7bf7197	nb_i00	N	5408	4606	1.17	die-edge	core+band+station+edge	regrow/reshape in place	[1105.9, 2451.6, 1218.2, 2548.8]	0.5	195
+cbn_q01__clab6e67f2	a00_i	E	5426	5487	0.99	station:bus:nb_i12#2;band:monitor_1;die-edge	core+band+station+edge	regrow/reshape in place	[1153.4, 1114.6, 1218.2, 1283.0]	0.5	219
+cbn_q01__clab6e67f2	bc_i02	S	5426	5487	0.99	core:u_t02;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 17.3, 82.1, 185.8]	0.5	219
+cbn_q01__clab6e67f2	bc_i12	S	5426	5586	0.97	core:u_t12;die-edge	core+band+station+edge	regrow/reshape in place	[557.3, 17.3, 786.2, 64.8]	0.5	180
+cbn_q01__clab6e67f2	rsf_i	N	2983	4609	0.65	band:monitor_0;die-edge	core+band+station+edge	regrow/reshape in place	[43.2, 2492.6, 241.9, 2522.9]	0.5	148
+cbn_q01__cld9ff4c40	a00_i	E	5426	5487	0.99	station:bus:nb_i12#2;band:monitor_0;die-edge	core+band+station+edge	regrow/reshape in place	[1153.4, 1114.6, 1218.2, 1283.0]	0.5	219
+cbn_q01__cld9ff4c40	bc_i02	S	5426	5487	0.99	core:u_t02;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 17.3, 82.1, 185.8]	0.5	219
+cbn_q01__cld9ff4c40	bc_i12	S	5426	5586	0.97	core:u_t12;die-edge	core+band+station+edge	regrow/reshape in place	[557.3, 17.3, 786.2, 64.8]	0.5	180
+cbn_q01__cldd6ea846	a00_i	E	5426	5487	0.99	station:bus:nb_i12#2;band:monitor_2;die-edge	core+band+station+edge	regrow/reshape in place	[1153.4, 1114.6, 1218.2, 1283.0]	0.5	219
+cbn_q01__cldd6ea846	bc_i02	S	5426	5487	0.99	core:u_t02;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 17.3, 82.1, 185.8]	0.5	219
+cbn_q01__cldd6ea846	bc_i12	S	5426	5586	0.97	core:u_t12;die-edge	core+band+station+edge	regrow/reshape in place	[557.3, 17.3, 786.2, 64.8]	0.5	180
+cbn_q01__cldd6ea846	rsf_i	N	2983	4609	0.65	band:monitor_0;die-edge	core+band+station+edge	regrow/reshape in place	[43.2, 2492.6, 241.9, 2522.9]	0.5	148
+cbn_q11__cl49ae4555	bc_i32	S	5426	5504	0.99	core:u_t32;die-edge	core+band+station+edge	regrow/reshape in place	[548.6, 17.3, 777.6, 64.8]	0.5	180
+cbn_q11__cl5cc92dfe	bc_i32	S	5426	5504	0.99	core:u_t32;die-edge	core+band+station+edge	regrow/reshape in place	[548.6, 17.3, 777.6, 64.8]	0.5	180
+cbx_q10__cl89936551	a22_i	W	5426	5487	0.99	core:u_t21;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 2345.8, 82.1, 2514.2]	0.5	223
+cbx_q10__cl89936551	bc_i20	S	5426	5437	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 17.3, 211.7, 73.4]	0.5	191
+cbx_q10__cl89936551	bc_i30	S	5426	5453	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[565.9, 17.3, 760.3, 73.4]	0.5	171
+cbx_q10__cl89936551_h	a22_i	W	5426	5412	1.0	core:u_t21;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 2380.3, 82.1, 2548.8]	0.5	223
+cbx_q10__cl89936551_h	bc_i20	S	5426	5437	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 17.3, 211.7, 73.4]	0.5	191
+cbx_q10__cl89936551_h	bc_i30	S	5426	5453	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[565.9, 17.3, 760.3, 73.4]	0.5	171
+cbx_q10__cl94a12200	a22_i	W	5426	5487	0.99	core:u_t21;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 2345.8, 82.1, 2514.2]	0.5	223
+cbx_q10__cl94a12200	bc_i20	S	5426	5437	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 17.3, 211.7, 73.4]	0.5	191
+cbx_q10__cl94a12200	bc_i30	S	5426	5453	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[565.9, 17.3, 760.3, 73.4]	0.5	171
+cbx_q10__cl94a12200_h	a22_i	W	5426	5412	1.0	core:u_t21;die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 2380.3, 82.1, 2548.8]	0.5	223
+cbx_q10__cl94a12200_h	bc_i20	S	5426	5437	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[17.3, 17.3, 211.7, 73.4]	0.5	191
+cbx_q10__cl94a12200_h	bc_i30	S	5426	5453	1.0	die-edge	core+band+station+edge	regrow/reshape in place	[565.9, 17.3, 760.3, 73.4]	0.5	171
