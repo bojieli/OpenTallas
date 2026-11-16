@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.qwen.recovered-eight-rank-source-inventory.v1",
+  "status": "COMPLETE_8_RANKS_36_PLUS_HEAD",
+  "complete_ranks": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "missing_ranks": [],
+  "ranks": {
+    "0": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc8",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank0/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "0561600a62b4b3b39ff314097b09f7bc0b5828efc349a5419b86dfd738a8cb9a"
+    },
+    "1": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc8",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank1/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "43195db44149d8ec15ee4195c3b56760f178fb049223833bfc33c4056cfa3b1f"
+    },
+    "3": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc8",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank3/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "841ebbc2981511a74cff0fbbe55745575e993684ce80176d81344efd01500a47"
+    },
+    "2": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc8",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank2/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "2647ddc793309d63e6e8dc6c72383ddf0935c2b822c38f13d23c275da35e1b03"
+    },
+    "7": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc7",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank7/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "dba7c9aea5634354b94713c65bb7064b39ce9c77a058a3e03370520451e2d898"
+    },
+    "5": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc7",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank5/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "9651867a998ec1d44b4a2b7c63b19b874e704b497aefca21b3567bf6e28d24cb"
+    },
+    "4": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc7",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank4/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "3d262d7a6848c10376a3718801a34806c7a735025a91f11cd77fc1c64c2d90ac"
+    },
+    "6": {
+      "status": "COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY",
+      "host": "epyc7",
+      "receipt": "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tables_candidate1116/rank6/receipt.json",
+      "actual_stages": 37,
+      "masks": 48,
+      "manifest_sha256": "0ee700f7fbe6f565fe7faa5cc3bcf52f507d963e4c834d9dfa40412a00c1203a"
+    }
+  },
+  "completion_authority": "actual37-stage inventory per rank, not partial chunk receipt labels",
+  "expected_actual_stage_inventories": 296,
+  "final_bound_adoption": false
+}
