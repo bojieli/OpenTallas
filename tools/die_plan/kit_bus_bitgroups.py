@@ -98,6 +98,24 @@ def flat_of(core):
     return core.replace(".", "_")
 
 
+def native_core_aliases(txt, cores):
+    """Map the plan's generic leaf name to its one actual image prefix; ambiguity is an error."""
+    aliases = {}
+    for core in cores:
+        flat = re.escape(flat_of(core))
+        if not core.startswith("u_lf.") or re.search(rf"\b(?:w_|g_|u_){flat}(?:_|\b)", txt):
+            aliases[core] = core
+            continue
+        tail = re.escape(flat_of(core[len("u_lf."):]))
+        candidates = set(re.findall(rf"\b(?:w_|g_|u_)(u_lf\d+)_{tail}(?:_|\b)", txt))
+        if len(candidates) > 1:
+            raise ValueError("bus bit owners: ambiguous native leaf prefixes for " + core + ": " + ", ".join(sorted(candidates)))
+        aliases[core] = next(iter(candidates)) + core[len("u_lf"):] if candidates else core
+    if len(set(aliases.values())) != len(aliases):
+        raise ValueError("bus bit owners: ambiguous plan cores map to the same native instance")
+    return aliases
+
+
 def match_core(text, cores):
     """core whose flattened name prefixes a wire / reg identifier (w_<flat>_<port>); longest wins"""
     best = None
@@ -134,8 +152,15 @@ class Netlist:
 
     def __init__(self, txt):
         self.width = {d.group(3): (int(d.group(1)) - int(d.group(2)) + 1) if d.group(1) else 1 for d in DECL.finditer(txt)}
-        self.alias = {m.group(1): m.group(2).strip() for m in ASSIGN.finditer(txt) if re.fullmatch(ID, m.group(2).strip())}
         self.src = {}
+        for m in ASSIGN.finditer(txt):
+            its = _items(m.group(2).strip())
+            if its is not None and self.width.get(m.group(1)):
+                widths = [self._w(it) for it in its]
+                in_bounds = all(nm in self.width and (hi is None or max(hi, lo) < self.width[nm])
+                                for nm, hi, lo in its)
+                if in_bounds and all(widths) and sum(widths) == self.width[m.group(1)]:
+                    self.src[m.group(1)] = its
         for ln in txt.split("\n"):
             dm = re.match(r"^\s*ot_dp_dly\s+#\(.*?\)\s+u_\w+\s+\(.*?\.d\(([^()]*)\),\s*\.q\(([^()]*)\)\)\s*;", ln)
             if dm:      # landing-pad delay: a pass-through (same bits, D cycles later), one bit per cell in the bound RTL
@@ -167,7 +192,6 @@ class Netlist:
             return r
         if depth == 0:
             return None
-        ident = self.alias.get(ident, ident)
         its = self.src.get(ident)
         if its is None:
             return None
@@ -192,8 +216,9 @@ def in_bit_owners(txt, n, cores, nl=None):
     nl = nl or Netlist(txt)
     qre = re.compile(rf"^{re.escape(n)}(?:_p\d+|_is\d+)?_q$")
     owners, lines = {}, txt.split("\n")
+    aliases = native_core_aliases(txt, cores)
     for c in cores:
-        inst = "u_" + flat_of(c)
+        inst = "u_" + flat_of(aliases[c])
         for i, ln in enumerate(lines):
             m = INST_START.match(ln)
             if not (m and m.group(3) == inst):
@@ -214,6 +239,9 @@ def in_bit_owners(txt, n, cores, nl=None):
 def out_bit_owners(txt, n, W, cores, nl=None):
     """{bus bit: set(core)} of an out bus: each u_bout .d bit traced back through pass-through regs to a core output wire"""
     nl = nl or Netlist(txt)
+    aliases = native_core_aliases(txt, cores)
+    original = {v: k for k, v in aliases.items()}
+    actual = list(original)
     m = re.search(rf"^\s*ot_dp_ste?\s+#\(\.W\({W}\)\)\s+u_bout_{re.escape(n)}\s*\(.*?\.d\(([^)]*)\),\s*\.ea\(", txt, re.M)
     if not m:
         return None
@@ -228,7 +256,7 @@ def out_bit_owners(txt, n, W, cores, nl=None):
         pos -= w
         off = min(hi, lo) if hi is not None else 0
         for k in range(w):
-            c = nl.back(nm, off + k, lambda a, bit: match_core(a, cores) if match_core(a, cores) else None)
+            c = nl.back(nm, off + k, lambda a, bit: original.get(match_core(a, actual)))
             if c is not None:
                 owners.setdefault(pos + k, set()).add(c)
     return owners if pos == 0 else None
