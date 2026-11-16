@@ -5,3 +5,9 @@ Owner of the 7 open HEAD types: hd_ctl, hd_spn, hd_host_e, hd_host_w, hd_serdes,
 - hd_host_e: wave a2 stopped at SETUP_TRIAGE (post-CTS TT est -225.98, FF +26.59). Private copy of the placed a2 kit: lane he1 (postcts_gate stop off), route running (ot-run epyc10).
 - hd_host_w: wave a1 stopped at SETUP_TRIAGE (-179.04) + epyc7 ENOSPC. Private copy lane hw1 (core-phase pdn 4.128!), route running.
 - hd_serdes a4 (epyc7), hd_lep0N a2, hd_mesh a6 (epyc10 ot-jobs): wave route jobs running; autopilot runs eco_loop on routed kits by itself.
+
+## 11-15 23:55 PST update (scope +hd_st_k5, hd_st_n3_turn, hd_host_n per COORD r249)
+- Class cause: HEAD wave src c327 has no tt_setup_repair/private_leaf/C3b; private kits get main steps via epyc10 fable-fix-head-types/backport_tt.py (tools_2686 = main bundle): --stop-off, --private-leaf LIKE RE, --die-phase (pdn M7 offset 8.448 + TRACK_TRUTH keys), --pgcap (C3b), --start floorplan|cts.
+- Private kits (all ot-run on epyc10, client logs localhost scratchpad <name>.log): he1/hw1 = unrepaired baselines (he1 in route, diag only); he2 (hd_host_e, TT repair, from CTS): cts-mode repair -174 -> -163 placement RC, stuck on SRAM u_ski.u_head rd_out -> u_epc in_data (macro setup 244 ps + wire); hw2 (hd_host_w): -167 -> -132, remaining 5 endpoints = u_hbc loader CRC cone -> owner/ready (RTL); hw3 = hw2 + HEAD-HOST-CLOSE loader pipeline RTL (patch_loader.py, bind+LATCHECK passed 15:2x) + die phase, from synth; sd2 (hd_serdes, private leaf + TT repair): cts-mode -218 -> -47.43; k5a (hd_st_k5), n3t (hd_st_n3_turn, +C3b): die phase from floorplan (builder localhost scratchpad mk_fp.sh).
+- ECO loops: epyc10 lane eco_hd_spn, eco_hd_ctl (t-pass in detail route at 23:45). Export script: localhost scratchpad ffht_export.sh HOST ELDIR BASE SIGNOFF NOTE.
+- RTL to land (ot-lane-clone branch): dsdv_hbc1_loader.sv crc_ok_q/shape_ok_q pipeline once hw3 gate >= -42.
