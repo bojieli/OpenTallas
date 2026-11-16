@@ -40,3 +40,7 @@
 - 2026-11-16 10:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 10:52 PST: 114 running jobs, PROGRESSING 102, SLOW 10, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 kit drt_TT stage 32.7 h job 32.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.0%; stagnant 13.2 h; last event 3.0 h ago, log write 1.1 h ago (1554 lines)
   NO-PROGRESS epyc8 svc_lo_dsdv_svc_rs__t6 1_2_yosys stage 15.5 h job 17.6 h: no new meaningful log line for 12.5 h; last: 3.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+- 2026-11-16 11:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 11:52 PST: 121 running jobs, PROGRESSING 111, SLOW 7, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 33.7 h job 33.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.0%; stagnant 14.2 h; last event 2.0 h ago, log write 0.1 h ago (1556 lines)
+  NO-PROGRESS epyc8 svc_lo_dsdv_svc_rs__t6 1_2_yosys stage 16.5 h job 18.6 h: no new meaningful log line for 13.5 h; last: 3.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+  NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 9.6 h job 9.7 h: no new meaningful log line for 6.5 h; last: 15.42. Extracting gate netlist of module `\s81p_svc_hi_dsdv_svc_rs__t3' to `<abc-temp-dir>/input.bli
