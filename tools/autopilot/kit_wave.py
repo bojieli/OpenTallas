@@ -9109,6 +9109,23 @@ def stage_tools_digest(root=None):
     return _STAGE_TOOLS[k]
 
 
+def bind_context_digest(cfg, die, kit_rtl):
+    """The actual small inputs read by native kit-rtl; relocation alone is no change.
+
+    An unreadable artifact is not evidence of changed inputs. The immutable
+    compiled netlist is represented by its canonical bind receipt, not rehashed.
+    """
+    if not isinstance(kit_rtl, dict) or kit_rtl.get("mode") != "bind":
+        return ""
+    ab, out = kit_rtl.get("asbuilt"), kit_rtl.get("bind_out")
+    if not ab or not out:
+        return ""
+    hashes = [file_sha(cfg, die, str(ab)), file_sha(cfg, die, str(Path(out) / "native_topology.json"))]
+    if not all(hashes):
+        return ""
+    return hashlib.sha1(json.dumps(hashes).encode()).hexdigest()
+
+
 def kit_digest_parts(cfg, die, rec=None):
     """what a (re)launch of an item builds on: plan block sha, src sha, source content hash, the stage tools closure.  From the attempt's own spec.json
     when rec is a failed attempt (what it ran on), else from the die config (what a launch would run on)."""
@@ -9119,9 +9136,17 @@ def kit_digest_parts(cfg, die, rec=None):
             sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
         except (OSError, ValueError, TypeError):
             sp = {}
+    if sp:
+        kr = sp.get("kit_rtl")
+    else:
+        # Match spec_for's effective per-item context; changing only the shared
+        # default must not release an item pinned to its unchanged private bind.
+        ii = (d.get("item_inputs") or {}).get((rec or {}).get("item")) or {}
+        kr = dict(d.get("kit_rtl") or {}, **(ii.get("kit_rtl") or {}))
     return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
             "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
-            "tools": stage_tools_digest()}
+            "tools": stage_tools_digest(),
+            "bind_context": bind_context_digest(cfg, die, kr)}
 
 
 def fail_key(parts, cls, why):
@@ -9298,8 +9323,23 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
     if not prev:
         return False, "", []
     d = (cfg.get("dies") or {}).get(die) or {}
-    now = kit_digest_parts(cfg, die, {"block_sha": block_sha} if block_sha else None)
+    now = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})))
     old = prev.get("parts") or {}
+    # Older failure keys did not record bind context. Recover only from the
+    # exact failed attempt's pinned spec; never treat rollout/missing metadata as
+    # an input change. This scope is the stage that actually consumes the files.
+    old_context = old.get("bind_context")
+    if prev.get("stage") in ("kit_rtl", "kit_topology", "bind", "elab"):
+        if "bind_context" not in old:
+            attempts = [r for r in (st.get("items") or {}).values()
+                        if r.get("die") == die and r.get("item") == item
+                        and r.get("fail_key") == prev.get("key") and r.get("dir")]
+            if attempts:
+                failed = max(attempts, key=lambda r: float(r.get("started") or 0))
+                old_context = kit_digest_parts(cfg, die, failed).get("bind_context")
+        context_changed = bool(old_context and now.get("bind_context") and old_context != now["bind_context"])
+    else:
+        context_changed = False
     # FABLE-FLOW-0015 (a): a missing-input fail releases only when what failed changes: the named input appears, or the plan block / src / overlay
     # (a repointed config) changes.  A tool merge that does not touch it is no reason (slice_station__t51 failed twice on the same missing input
     # after the 23:29 tool merge re-armed it)
@@ -9314,8 +9354,10 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         # on identical text because the key held one hash for the whole die overlay.  With no file named in the error the old rule stands.
         if changed and set(changed) <= {"overlay", "tools"} and prev.get("read_sha"):
             changed = ["read-file"] if reads_changed(cfg, die, prev) else []
+    if context_changed:
+        changed.append("bind_context")
     if not changed:
-        return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay and the stage tools are "
+        return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay, stage tools and measured bind context are "
                       f"unchanged since the last fail: {str(prev.get('why'))[:100]}"), []
     return False, "", changed
 

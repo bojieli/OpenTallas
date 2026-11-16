@@ -512,6 +512,13 @@ def apply_tree_switches(cfg, ctx):
                 if m.get("manifest_hash") and d.get("src_manifest_hash") != m["manifest_hash"]:
                     d["src_manifest_hash"] = m["manifest_hash"]
                     ch.append("src_manifest_hash")
+                # A marker can repoint plan via explicit config below. Carry
+                # its declared digest with that adoption, never calculate a new
+                # declaration from arbitrary plan bytes. Explicit config wins.
+                if m.get("plan_sha256") and "plan_sha256" not in (m.get("config") or {}):
+                    if d.get("plan_sha256") != m["plan_sha256"]:
+                        d["plan_sha256"] = m["plan_sha256"]
+                        ch.append("plan_sha256")
                 for k, v in (m.get("die_gen_env") or {}).items():
                     env = d.setdefault("die_gen_env", {})
                     if env.get(k) != v:

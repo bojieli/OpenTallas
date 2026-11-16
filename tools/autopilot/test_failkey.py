@@ -156,3 +156,49 @@ def test_replay_of_the_day_blocks_the_repeats():
           "after a design / tool fail with a different key %d (%.0f%%: the gate lets them out only when plan block, src, overlay or the stage tools changed)"
           % (launches, blocked, share * 100, justified, justified * 100 / launches, prevfail - blocked, (prevfail - blocked) * 100 / launches))
     assert share >= 0.25
+
+
+def test_native_kit_failure_key_tracks_measured_context_not_paths(tmp_path, monkeypatch):
+    import json, shutil
+    monkeypatch.setattr(KW, "stage_tools_digest", lambda *a, **k: "same-stage-tools")
+    old, new, moved = [tmp_path / x for x in ("old", "new", "moved")]
+    for p in (old, new, moved):
+        p.mkdir()
+    for p, text in ((old, '{"map_file":"/published/map.json"}'), (new, '{"map_file":"../published/map.json"}')):
+        (p / "ab.json").write_text(text)
+        (p / "native_topology.json").write_text(json.dumps({"asbuilt_sha256": text}))
+    for name in ("ab.json", "native_topology.json"):
+        shutil.copyfile(old / name, moved / name)
+    def context(p):
+        return dict(mode="bind", asbuilt=str(p / "ab.json"), bind_out=str(p))
+    c = cfg()
+    c["dies"]["s81"]["kit_rtl"] = context(old)
+    attempt = tmp_path / "attempt"
+    attempt.mkdir()
+    (attempt / "spec.json").write_text(json.dumps(dict(src_sha="s1", src_overlay="o1", kit_rtl=context(old))))
+    r = dict(rec_of("hub_C"), stage="kit_rtl", dir=str(attempt), started=1)
+    st = {"items": {"failed": r}}
+    KW.note_fail_key(c, st, r, "FLOW", "manifest absolute map_file @kit_rtl")
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]
+    c["dies"]["s81"]["kit_rtl"] = context(moved)
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]  # bytes unchanged: no path-only release
+    c["dies"]["s81"]["kit_rtl"] = context(new)
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1") == (False, "", ["bind_context"])
+    # Actual legacy key migration uses the exact failed attempt spec, not current config.
+    del st["fail_keys"]["s81|hub_C"]["parts"]["bind_context"]
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1") == (False, "", ["bind_context"])
+    st["items"] = {}
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]  # unmeasured legacy context cannot release
+    st["items"] = {"failed": r}
+    c["dies"]["s81"]["kit_rtl"] = context(tmp_path / "unreadable")
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]
+    # A shared bind change does not change an item's explicit private bind.
+    c["dies"]["s81"]["kit_rtl"] = context(new)
+    c["dies"]["s81"]["item_inputs"] = {"hub_C": {"kit_rtl": context(old)}}
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]
+    c["dies"]["s81"]["item_inputs"]["hub_C"]["kit_rtl"] = context(new)
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1") == (False, "", ["bind_context"])
+    # A metadata repair is not a timing/route redesign release.
+    c["dies"]["s81"]["kit_rtl"] = context(new)
+    st["fail_keys"]["s81|hub_C"]["stage"] = "route"
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]

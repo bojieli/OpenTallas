@@ -295,6 +295,43 @@ class T(unittest.TestCase):
                 self.assertEqual(HR.apply_tree_switches(c, ctx), [])
                 self.assertEqual(spec.read_text(), pinned)
 
+    def test_switched_plan_carries_only_explicit_marker_declaration(self):
+        import tempfile, hashlib
+        with tempfile.TemporaryDirectory() as td:
+            old, new = Path(td) / "old.json", Path(td) / "B6gF2s3.json"
+            old.write_text('{"event":"F2s2"}\\n')
+            new.write_text('{"event":"F2s3"}\\n')
+            old_sha = hashlib.sha256(old.read_bytes()).hexdigest()
+            new_sha = hashlib.sha256(new.read_bytes()).hexdigest()
+            for declared in (None, new_sha):
+                with self.subTest(marker_declaration=declared):
+                    c = base()
+                    d = c["dies"]["s81"]
+                    d.update(plan=str(old), plan_sha256=old_sha)
+                    HR.add_record(c, "s81", rec(release=["tree_ready:s81:/published"]))
+                    marker = dict(tree="/published", plan=str(new), config={"plan": str(new)})
+                    if declared:
+                        marker["plan_sha256"] = declared
+                    ctx = HR.Ctx(tree_fn=lambda die, path: True, marker_fn=lambda die: marker)
+                    HR.apply_tree_switches(c, ctx)
+                    self.assertEqual(d["plan"], str(new))
+                    self.assertEqual(d["plan_sha256"], declared or old_sha)
+                    mismatch = KW.plan_sha_mismatch(d, {"plan_sha": new_sha})
+                    if declared:
+                        self.assertIsNone(mismatch)
+                    else:
+                        self.assertIn("PLAN_SHA_MISMATCH", mismatch)
+                    self.assertEqual(HR.apply_tree_switches(c, ctx), [])
+
+    def test_tree_switch_honors_explicit_config_plan_declaration(self):
+        c = base()
+        HR.add_record(c, "s81", rec(release=["tree_ready:s81:/published"]))
+        marker = dict(tree="/published", plan_sha256="a" * 64,
+                      config={"plan": "/explicit/plan.json", "plan_sha256": "b" * 64})
+        ctx = HR.Ctx(tree_fn=lambda die, path: True, marker_fn=lambda die: marker)
+        HR.apply_tree_switches(c, ctx)
+        self.assertEqual(c["dies"]["s81"]["plan_sha256"], "b" * 64)
+
     def test_tree_switch_honors_explicit_source_identity_after_validation(self):
         c = base()
         HR.add_record(c, "s81", rec(release=["tree_ready:s81:/published"]))
