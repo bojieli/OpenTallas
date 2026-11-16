@@ -1,0 +1,13 @@
+{
+  "status": "COMPONENT_FIXED_AGE_PASS",
+  "scope": "only candidate S1/S2 native delay mechanism; actual head/VM proof and physical qualification pending",
+  "checked_edges": 1099,
+  "s1_width": 8,
+  "s1_age": 58,
+  "s2_width": 133,
+  "s2_age": 60,
+  "source_sha256": "a078d2924ddde6426b6136ce01aa677eb526b5509ac1a579020feb22046d6e30",
+  "native_macro_path": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+  "negative": "OT_HEAD_RING_AGE_MUT caught S2 mismatch atedge101",
+  "default_enabled": false
+}
