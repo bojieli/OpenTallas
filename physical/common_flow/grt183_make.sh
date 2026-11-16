@@ -182,6 +182,21 @@ stall_off() { [ "${OT_GRT_STALL_RESUME:-1}" = 0 ] || grep -q '^export OT_GRT_STA
 cfg_num() { local v; v=$(sed -n "s/^export $1[[:space:]]*=[[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p" "$W/config.mk" 2>/dev/null | tail -1)
   printf '%s' "${v:-$2}"; }
 POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 43200)}
+# Repair progress is advisory: sparse logs never justify cancellation or bypassing max-wire repair.
+RLOG=${OT_GRT_REPAIR_LOG_S:-$(cfg_num OT_GRT_REPAIR_LOG_S 600)}
+rlast=0
+repair_check() {   # $1 = this run's log; progress observation only
+  local Tl=$1 pid=$2 now a b age row
+  [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
+  a=$(grep -c '^OT_MAXWIRE repair_design' "$Tl"); b=$(grep -c '^OT_MAXWIRE leaf instances' "$Tl")
+  [ "$a" -gt "$b" ] || return 1
+  now=$(date +%s); age=$((now - $(stat -c %Y "$Tl")))
+  row=$(grep -E '^ +[0-9]+ \|' "$Tl" | tail -1 | awk -F'|' '{gsub(/ /,""); print "nets_done=" $1 " buffers=" $4 " remaining=" $6}')
+  if [ "$RLOG" -gt 0 ] && [ $((now - rlast)) -ge "$RLOG" ]; then
+    echo "OT_GRT_REPAIR_PASS post-GRT repair_design ${row:-no table row yet} log_flat_s=$age $(date -u '+%F %T')"; rlast=$now
+  fi
+  return 1
+}
 grt_slack() {   # last slack figures the log carries (hold guard chunks / start, repair_timing tables); never a new STA
   local h s
   h=$(grep -oE 'OT_HOLD_GUARD_GRT (chunk [0-9]+|start): hold ws -?[0-9.]+' "$1" | tail -1 | sed 's/.*hold ws //')
@@ -227,7 +242,7 @@ ff_check() {   # sets gstop, prints the class line
 watch_run() {
   stall=0; gstop=""; tpost=""
   rm -f "$W/run/failfast_state.json" 2>/dev/null
-  if stall_off && [ "$POST_MAX" -le 0 ] && [ ! -f "$FF" ]; then "$@"; return $?; fi
+  if stall_off && [ "$POST_MAX" -le 0 ] && [ ! -f "$FF" ] && [ "$RLOG" -le 0 ]; then "$@"; return $?; fi
   if command -v setsid >/dev/null; then setsid "$@" & else "$@" & fi
   local pid=$! Rw Tl age last
   trap 'kill -TERM -- -$pid 2>/dev/null' TERM INT
@@ -237,6 +252,7 @@ watch_run() {
     Rw=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1); Tl=$(ls "$W"/run/logs/asap7/*/base/5_1_grt.tmp.log 2>/dev/null | head -1)
     if ff_check; then kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null; break; fi
     if [ -n "$Tl" ] && gstop_check "$Tl" $pid; then break; fi
+    if [ -n "$Tl" ] && repair_check "$Tl" $pid; then break; fi
     stall_off && continue
     [ -n "$Rw" ] && [ -n "$Tl" ] && [ -f "$Rw/5_1_grt.stall_resume.odb" ] && [ ! -f "$Rw/5_1_grt.grt183_recovered.json" ] || continue
     [ "$(stat -c %Y "$Rw/5_1_grt.stall_resume.odb")" -ge "$T0" ] || continue      # a save from this run only
