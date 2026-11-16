@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 09:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 09:15 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-DATA': 2, 'YOUNG': 16, 'EXCLUDED': 12, 'KEEP': 1, 'PROGRESS': 4}. Hosts without report: none.
 
