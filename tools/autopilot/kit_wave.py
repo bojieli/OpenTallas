@@ -1483,6 +1483,85 @@ def ident_release(group, h):
 SIGNED_Q = ("SIGNED", "SIGNED-UNVERSIONED", "ARCHIVED", "WAIT-PARENT", "TRIAL-SIGNED")
 
 
+_KEY_SOURCES = {}
+CONFIG_KEY_SKIP = re.compile(r"^(note|_|\#|comment|hold_note)")
+
+
+def runtime_key_universe(tools_dir=None):
+    """every quoted token of the wave's own sources (kit_wave.py, autopilot.py, flow_guard.py, ...): a die key the runtime reads appears in them as a
+    string literal"""
+    root = Path(tools_dir) if tools_dir else Path(__file__).resolve().parent
+    k = str(root)
+    if k not in _KEY_SOURCES:
+        toks = set()
+        for p in root.glob("*.py"):
+            if p.name.startswith("test_"):
+                continue
+            try:
+                toks |= set(re.findall(r"[\"']([A-Za-z_][A-Za-z0-9_]{2,})[\"']", p.read_text(errors="replace")))
+            except OSError:
+                pass
+        _KEY_SOURCES[k] = toks
+    return _KEY_SOURCES[k]
+
+
+def unread_config_keys(cfg, universe=None):
+    """FABLE-FLOW-0445 / 0015 class 2 (a config key with no reader): {die: [keys]} of kit_wave.json die keys the runtime source never mentions.  The key is
+    silently ignored: QC / S81 trees were rebuilt for a flag nothing read.  Keys of per-item maps (hold_items, item_inputs, retry_fix ...) are values, not keys."""
+    uni = runtime_key_universe() if universe is None else universe
+    out = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict):
+            continue
+        bad = sorted(k for k in d if not CONFIG_KEY_SKIP.match(k) and k not in uni)
+        if bad:
+            out[die] = bad
+    return out
+
+
+def config_key_check(AP, cfg, st):
+    """log + one queue line per NEW unread key (state ledger), never every tick"""
+    seen = st.setdefault("unread_keys", {})
+    for die, keys in unread_config_keys(cfg).items():
+        new = [k for k in keys if f"{die}.{k}" not in seen]
+        for k in new:
+            seen[f"{die}.{k}"] = time.time()
+        if new:
+            AP.log(f"KIT-WAVE CONFIG-KEY-UNREAD {die}: {' '.join(new)}: no code in tools/autopilot mentions these keys, they have no effect")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.{die} has key(s) no runtime code "
+                            f"reads: {' '.join(new[:12])}; the setting does nothing (delete it or add its reader)")
+
+
+def name_stuck_retry_infra(AP, cfg, st, now=None, grace_s=1200):
+    """FABLE-FLOW-0445 #5: a RETRY-INFRA row not relaunched within ~2 ticks takes the name of what stops it: SUPERSEDED (its event is not the die's current
+    one: terminal CANCELLED), HELD:<class key> (open breaker class), FAIL-KEY (standing fail key), NO-HOST:<why>, else UNEXPLAINED.  Returns {name: n}."""
+    now = time.time() if now is None else now
+    out = {}
+    for key, r in list((st.get("items") or {}).items()):
+        if r.get("status") != "RETRY-INFRA" or now - float(r.get("updated") or 0) < grace_s:
+            continue
+        die, item = r.get("die"), r.get("item")
+        d = (cfg.get("dies") or {}).get(die) or {}
+        if d.get("event") and r.get("event") and r.get("event") != d.get("event"):
+            name = "SUPERSEDED"
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retry_stop=name, updated=now,
+                     reason=f"SUPERSEDED: RETRY-INFRA row of event {r.get('event')}; the die is on {d.get('event')}")
+        elif FG.held_key(st, die, item):
+            name = "HELD:" + FG.held_key(st, die, item)[:60]
+        elif fail_key_gate(cfg, st, die, item, r.get("block_sha"))[0]:
+            name = "FAIL-KEY"
+        elif r.get("no_host_at"):
+            name = "NO-HOST"
+        else:
+            name = "UNEXPLAINED"
+        if r.get("retry_stop") != name:
+            r["retry_stop"] = name
+            if AP is not None:
+                AP.log(f"KIT-WAVE RETRY-INFRA-STOP {die}/{item}@{r.get('attempt')}: {name}")
+        out[name.split(":")[0]] = out.get(name.split(":")[0], 0) + 1
+    return out
+
+
 def dedup_step(AP, cfg, st, notices, ap_dir):
     """DEDUP members: credit them when their owner signs (signed.tsv / unversioned.tsv clone of the owner row with the member type +
     a dedup_members.tsv record), release them (back to the normal launch path) when the owner failed; cancel in-flight legacy
@@ -1510,8 +1589,12 @@ def dedup_step(AP, cfg, st, notices, ap_dir):
                     AP.log(f"KIT-WAVE DEDUP-WAIT {die}/{rec['item']}: owner {owner} failed with a standing fail key; no release until its inputs change")
                 continue
         if orec is None or orec.get("status") in ("FAIL", "CANCELLED") or orec.get("q_status") in ("FAIL", "CANCELLED"):
-            AP.log(f"KIT-WAVE DEDUP RELEASE {die}/{rec['item']}: owner {owner} did not sign off (status "
-                   f"{(orec or {}).get('status')}/{(orec or {}).get('q_status')}); relaunches on the normal path")
+            sig = f"{(orec or {}).get('status')}/{(orec or {}).get('q_status')}/{(orec or {}).get('attempt')}"
+            led = st.setdefault("dedup_released", {})
+            if (led.get(f"{die}|{rec['item']}") or {}).get("sig") != sig:        # FABLE-FLOW-0445 #5: logged once per owner state, not every tick
+                AP.log(f"KIT-WAVE DEDUP RELEASE {die}/{rec['item']}: owner {owner} did not sign off (status "
+                       f"{(orec or {}).get('status')}/{(orec or {}).get('q_status')}); relaunches on the normal path")
+            led[f"{die}|{rec['item']}"] = {"sig": sig, "owner": owner, "t": now}
             if group and h:
                 ident_release(group, h)
             items.pop(key, None)
@@ -7550,6 +7633,17 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if _hk:
             AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: FLOW-GUARD class open ({_hk[:100]})")
             return None
+        _dr = (st.get("dedup_released") or {}).get(f"{die}|{r.get('item')}")
+        if _dr:
+            _o = max([x for x in (st.get("items") or {}).values() if x.get("die") == die and x.get("item") == _dr.get("owner")],
+                     key=lambda x: float(x.get("updated") or 0), default=None)
+            _sig = f"{(_o or {}).get('status')}/{(_o or {}).get('q_status')}/{(_o or {}).get('attempt')}"
+            if _sig == _dr.get("sig"):
+                if not _dr.get("held_logged"):
+                    _dr["held_logged"] = time.time()
+                    AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: kit identical to {_dr.get('owner')} whose attempt failed ({_sig}); waits for its owner to change (DEDUP terminal)")
+                return None
+            (st.get("dedup_released") or {}).pop(f"{die}|{r.get('item')}", None)
         _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
         if _bl:
             AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: {_why}")
@@ -8763,7 +8857,8 @@ def note_fail_key(cfg, st, rec, cls, why):
     prev = store.get(k) or {}
     n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
     store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
-                "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why)}
+                "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why),
+                "read_sha": {p: file_sha(cfg, rec["die"], p) for p in stage_reads(why)}}
     rec["fail_key"] = key
     return key
 
@@ -8799,6 +8894,46 @@ def path_exists_somewhere(cfg, die, p, ttl=300, now=None):
     return ok
 
 
+FILE_SHA = {}
+
+
+def file_sha(cfg, die, p, ttl=300, now=None):
+    """sha1 of one file on the die's hosts ('' = absent everywhere); cached 5 min"""
+    now = time.time() if now is None else now
+    c = FILE_SHA.get((die, p))
+    if c and now - c[0] < ttl:
+        return c[1]
+    out = ""
+    try:
+        if os.path.isfile(p):
+            out = hashlib.sha1(open(p, "rb").read()).hexdigest()
+    except OSError:
+        out = ""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    for h in ([] if out else [x for x in dict.fromkeys([d.get("gen_host")] + list(d.get("gen_hosts") or [])) if x]):
+        try:
+            r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "sha1sum", shlex.quote(p)],
+                               capture_output=True, text=True, timeout=30)
+            if r.returncode == 0 and r.stdout.split():
+                out = r.stdout.split()[0]
+                break
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+    FILE_SHA[(die, p)] = (now, out)
+    return out
+
+
+def stage_reads(why):
+    """FABLE-FLOW-0445 #3: the files the failed stage names in its error (paths that exist or that it could not find), minus the 'named by' view files"""
+    return missing_paths(why)
+
+
+def reads_changed(cfg, die, prev):
+    """True when one of the files the failed stage read now differs from what it read (or a missing one appeared)"""
+    old = prev.get("read_sha") or {}
+    return any(file_sha(cfg, die, p) != s for p, s in old.items())
+
+
 def fail_key_gate(cfg, st, die, item, block_sha=None):
     """the ONE check every launch path goes through (pick, RETRY-INFRA, re-arm, retry key, breaker release): -> (blocked, why, changed).
     blocked: the last non-HOST fail of this item has the same kit input digest, so the launch would fail the same way.
@@ -8819,6 +8954,10 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
             changed = ["input"]
     else:
         changed = [k for k in ("block", "src", "overlay", "tools") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
+        # FABLE-FLOW-0445 #3: an overlay (or tools) change that did not touch a file the failed stage read is no release: kv3_pv_v1/v7/v12 failed 4 times
+        # on identical text because the key held one hash for the whole die overlay.  With no file named in the error the old rule stands.
+        if changed and set(changed) <= {"overlay", "tools"} and prev.get("read_sha"):
+            changed = ["read-file"] if reads_changed(cfg, die, prev) else []
     if not changed:
         return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay and the stage tools are "
                       f"unchanged since the last fail: {str(prev.get('why'))[:100]}"), []
@@ -10157,6 +10296,11 @@ def _step(AP, ap_dir):
         dedup_step(AP, cfg, st, notices, ap_dir)         # WF-1 11-14 (friction 7): credit / release / cancel duplicates
     except Exception as e:
         AP.log(f"KIT-WAVE DEDUP step skipped: {type(e).__name__}: {e}")
+    try:
+        name_stuck_retry_infra(AP, cfg, st)
+        config_key_check(AP, cfg, st)
+    except Exception as e:
+        AP.log(f"KIT-WAVE retry-infra naming / config-key check skipped: {type(e).__name__}: {e}")
     try:
         visual_reject_discard(AP, cfg, st, notices,
                               json.loads((Path(ap_dir or AP.AP_DIR) / "state.json").read_text()).get("jobs") or {})
