@@ -19,10 +19,12 @@ def _clean(monkeypatch):
 def test_validated_dies_get_their_scale():
     assert gen_phys.rc_signal_cfg("s81")[1:] == ["export OT_RC_SIGNAL = 1", "export OT_RC_SIGNAL_SCALE = 1", "export OT_TT_SETUP_DESIGN = 1"]
     assert gen_phys.rc_signal_cfg("qwen_compute")[2] == "export OT_RC_SIGNAL_SCALE = 1.25"
+    assert gen_phys.rc_signal_cfg("s81_head")[2] == "export OT_RC_SIGNAL_SCALE = 1"
+    assert gen_phys.rc_signal_cfg("qwen_kvsys")[2] == "export OT_RC_SIGNAL_SCALE = 1.1"
     assert gen_phys.rc_signal_cfg("anything", flow="core")[2] == "export OT_RC_SIGNAL_SCALE = 1.1"
 
 
-@pytest.mark.parametrize("die", ["s81_head", "qwen_kvsys", "hbm", "nope"])
+@pytest.mark.parametrize("die", ["hbm", "nope"])
 def test_unvalidated_dies_stay_byte_equal(die):
     assert gen_phys.rc_signal_cfg(die) == []
 
