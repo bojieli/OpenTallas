@@ -1,0 +1,91 @@
+[
+  {
+    "host": "key-cardinal",
+    "before_cpu_config": {
+      "LOAD_GATE_FACTOR": "0",
+      "LOAD_FRESH_S": "0",
+      "OT_HEAVY_SHORT_POOL": "0",
+      "LOAD_CAP_FACTOR": "3"
+    },
+    "time": 1794871206.2088478,
+    "status": "PRESERVED_NO_EXPLICIT_OWNER_OFF_POLICY"
+  },
+  {
+    "host": "tolerant-swine",
+    "before_cpu_config": {
+      "LOAD_GATE_FACTOR": "0",
+      "LOAD_CAP_FACTOR": "0",
+      "LOAD_FRESH_S": "0",
+      "OT_HEAVY_SHORT_POOL": "0"
+    },
+    "time": 1794871223.2820494,
+    "status": "RESTORED_OWNER_CPU_OFF",
+    "backup": "/etc/ot-heavy.conf.bak-r373-1116",
+    "after_thread_cap": "0"
+  },
+  {
+    "host": "dear-crayfish",
+    "before_cpu_config": {
+      "LOAD_GATE_FACTOR": "0",
+      "LOAD_CAP_FACTOR": "0",
+      "LOAD_FRESH_S": "0",
+      "OT_HEAVY_SHORT_POOL": "0"
+    },
+    "time": 1794871223.2521572,
+    "status": "RESTORED_OWNER_CPU_OFF",
+    "backup": "/etc/ot-heavy.conf.bak-r373-1116",
+    "after_thread_cap": "0"
+  },
+  {
+    "host": "loved-redfish",
+    "before_cpu_config": {
+      "LOAD_GATE_FACTOR": "0",
+      "LOAD_CAP_FACTOR": "0",
+      "LOAD_FRESH_S": "0",
+      "OT_HEAVY_SHORT_POOL": "0"
+    },
+    "time": 1794871224.558134,
+    "status": "RESTORED_OWNER_CPU_OFF",
+    "backup": "/etc/ot-heavy.conf.bak-r373-1116",
+    "after_thread_cap": "0"
+  },
+  {
+    "host": "outgoing-giraffe",
+    "before_cpu_config": {
+      "LOAD_GATE_FACTOR": "0",
+      "LOAD_CAP_FACTOR": "0",
+      "LOAD_FRESH_S": "0",
+      "OT_HEAVY_SHORT_POOL": "0"
+    },
+    "time": 1794871223.211265,
+    "status": "RESTORED_OWNER_CPU_OFF",
+    "backup": "/etc/ot-heavy.conf.bak-r373-1116",
+    "after_thread_cap": "0"
+  },
+  {
+    "host": "renewed-glider",
+    "before_cpu_config": {
+      "LOAD_GATE_FACTOR": "0",
+      "LOAD_CAP_FACTOR": "0",
+      "LOAD_FRESH_S": "0",
+      "OT_HEAVY_SHORT_POOL": "0"
+    },
+    "time": 1794871223.2271628,
+    "status": "RESTORED_OWNER_CPU_OFF",
+    "backup": "/etc/ot-heavy.conf.bak-r373-1116",
+    "after_thread_cap": "0"
+  },
+  {
+    "host": "civil-redfish",
+    "before_cpu_config": {
+      "LOAD_GATE_FACTOR": "0",
+      "LOAD_CAP_FACTOR": "0",
+      "LOAD_FRESH_S": "0",
+      "OT_HEAVY_SHORT_POOL": "0"
+    },
+    "time": 1794871223.495785,
+    "status": "RESTORED_OWNER_CPU_OFF",
+    "backup": "/etc/ot-heavy.conf.bak-r373-1116",
+    "after_thread_cap": "0"
+  }
+]
