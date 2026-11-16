@@ -79,3 +79,17 @@ Parent PLAN4 composer has rows/price, plus own channel/PG/reset/control fixes. F
 To avoid holding first ready type behind7 independent preps, actual prepared t8 GEN now running via intel2 client1286711, log gen_component_strip3_t8.log, separate output ep10 F/component_F2s4strip3/ot_s81sl_leaf__t8/gen. Same exact approved strict env/profile, no new RTL variant. Original constructor untouched; no physical duplicate. Early ready components must be transported immediately to7/8/9 (measured headroom), actual generated images LOOKED, normal admitted routedflow; no new physical on overloadedE10. Negative CTS WNS advisory under owner profile, no arbitrary reject/cancel/time limit. Never sign t75/t72 oldproposer from current diagnostic geometry.
 
 Wave29 D2 ed968 source is separate oldF2s3 component tuple. Original CONG8leaf types intersect none; new seam ownership overlaps slice_station14/45/46/8. qc_pack owns targeted reversible controller freezes while exactremoteGEN continues; send actual image review approval for these4 when images ready. No prior byte-identical CONG review exists; current proposalPNG3 does NOT qualify oldwave images. Other25 ownedplans clock_reach. No globalpause, live patches or cancels.
+
+## Update 2026-11-16 ~14:30 PST (after Codex coordination 11:20-13:22)
+- Rows: t34/t47/t62 are in F2s3 (adopted r331, D2 tree). t43b/t75/t28/t8 are in DIE-S81-92's F2s4strip1 (t8/t28 W-only widen composed
+  by Codex). t75 proof: c_t75b (epyc8 /home/ubuntu/ot-scratch/claude/fable-fix-s81-cong/kit/c_t75b) GRT FINAL 0, 0 restarts; rows
+  epyc7 fable-fix-s81-cong/t75_rows.json (READY-ROWS 5192879).
+- Stall branch: merged as 631a6971d8 (claude/fable-fix-s81-cong-1116 @b6a822df86f). Main carries ONLY the observe part:
+  OT_GRT_REPAIR_PASS every 600 s, OT_MAXWIRE_PASS lines, opt-in OT_MAXWIRE_PRE. Codex commits 99618079ab + b6a822df86 REMOVED the
+  30-min no-progress stop and the marker skip ("observe without cancelling or bypassing"). So the 3-6 h silent repair is still
+  there on main; it is only logged. My proof of the stop (m_t34 epyc9, m2_t34 epyc10: attempt 2 rc 0, FINAL 0, ~1 h 50) is for
+  a7fe627571f, not for main. Decision needed from COORD: restore the stop, or accept the long repair.
+- Real lever still open: OT_MAXWIRE_UM 100 on nets crossing 225-um cores (repeaters land in core channels).
+- Live: c_t8 (old t8c row, OT_CELL_BUDGET_GATE=0) epyc10 run_c_t8_grt_e10b.log; c_t75b epyc8 in the old post-GRT repair;
+  c_t34/c_t47/c_t62 (epyc8) and A_t65 (epyc9) were in the old repair at last read (not re-checked after 17:00 UTC).
+- These are all old-tree (B6gE) proof kits: evidence only. Sign-off = wave kits from the D2 tree after F2s3 / F2s4.
