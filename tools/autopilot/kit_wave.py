@@ -10811,13 +10811,39 @@ def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=
     return dr
 
 
+def log_hold_releases(AP, ap_dir, entries, text, reset=False):
+    """HOLD-LOG-1116 (FABLE-FLOW-1113 #7: 12,624 HOLD-AUTO-RELEASE lines for 259 keys): the release is recomputed every tick, so it was logged every
+    tick.  Log one line per (die, key, condition) change: the logged set lives in <ap_dir>/hold_release_logged.json; reset=True (the first call of a
+    tick) first drops the keys that are no longer released, so a key released again later logs again."""
+    p = Path(ap_dir) / "hold_release_logged.json"
+    try:
+        seen = set(json.loads(p.read_text()))
+    except (OSError, ValueError):
+        seen = set()
+    cur = {f"{d}/{k}/{c}" for d, k, c in entries}
+    if reset:
+        seen &= cur
+    new = 0
+    for d, k, c in entries:
+        key = f"{d}/{k}/{c}"
+        if key not in seen:
+            seen.add(key)
+            new += 1
+            AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {d}/{k}: {text} ({c})")
+    if not AP.DRY:
+        try:
+            p.write_text(json.dumps(sorted(seen)))
+        except OSError:
+            pass
+    return new
+
+
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     _t0 = time.time()
-    for _die, _key, _cond in cfg.get("_hold_auto_released") or []:
-        AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release_on met ({_cond})")
+    log_hold_releases(AP, ap_dir, cfg.get("_hold_auto_released") or [], "release_on met", reset=True)
     WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
     merge_auto_views(cfg, ap_dir, AP.log)                # KW-FIX-35-CV: counted child views overlay (hub sidecar)
     merge_src_overlay(cfg, AP.HUB_NAME, AP.log)          # KW-FIX-44: spec field for in-place source overlays
@@ -10841,8 +10867,7 @@ def _step(AP, ap_dir):
         _before = len(cfg.get("_hold_auto_released") or [])
         _tf, _mf = tree_gate(AP, cfg)
         compile_hold_records(cfg, None, _tf, _mf)
-        for _die, _key, _cond in (cfg.get("_hold_auto_released") or [])[_before:]:
-            AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release terms met ({_cond})")
+        log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met")
         import hold_records as _HR                       # tree_ready: switch dies.<die>.src / die_gen_env in memory, no lane needed
         for _die, _tree, _ch in _HR.apply_tree_switches(cfg, hold_ctx(cfg, None, _tf, _mf)):
             if (_die, _tree, tuple(_ch)) not in _TREE_LOGGED:
