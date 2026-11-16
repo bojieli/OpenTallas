@@ -22,3 +22,10 @@ the pv_join RESET_PIN record (file-compared with the gated c1 7yhr tree), so no 
 1. Gate ALL PASS -> copy tree + bind to epyc7/8/10/intel1 (real copy), READY+ADOPT to KIT-OPS-5/7 + HOLDGEN (event kvgeom7yhr).
 2. KV-PVHG-O composes v25hv (and k2 when gated) onto this tree as the next event KV-HG1; pilots hg_v1, hg_v3, pv_v1n.
 3. Read the first hub_C / hub_Wo place on 7yhr (ring_place ff) before any further hub row.
+
+## CODEX takeover 2026-11-16 10:01 PST
+- 7yhr continuation remains active epyc7 fable-fix-kv-pvhub/kvgeom7yhr.gate.tail.out; pv_v7/v12 kit+gen PASS. Do not rerun it.
+- epyc10 source delta sync finished (intel2 client134114 exited clean); source renamed to final by HG1 setup.
+- HG1 compose at epyc10 fable-fix-kv-pvhub/hg1: compose.py merges dictionaries + lanes by ID, refuses overlap; v25hv relative to7uh ->7yhr, then k2r relative to7yhr ->combined, then rows_reach.json. No change to the15 KV d2d lanes. plan_hgpv sha f62f4eb418c5, plan_hg1A carries13 START rows. Final clock sites/windows MUST be regenerated on composed tree.
+- HG1 admitted full-tree setup/pre/G0/bind/LATCHECK: intel2 client185051, tmp/ffkph/codex_hg1_gate.log; epyc10 fable-fix-kv-pvhub/hg1/setup_gate.sh, output gate/. Copy48GB underway. No source edits to published tree or running kits.
+- p1 die proof collected: GRT0 TT/FF; CA3915/3915 PASS, intra/seam TT+482/+510ps, FF kit-contract hold+0.01/+11.52ps, real measured hold0/unproven. p1 strict bind fails standalone qk1 path resolution (INPUT-MISSING x5), not physical design. Full-source HG1 compose resolves source-root cause; no override.
