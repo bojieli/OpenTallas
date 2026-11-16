@@ -78,6 +78,12 @@ proc ot_tt_wns {tag} {
   puts [format "OT_TT_SETUP_REPAIR %s TT setup wns %.2f tns %.2f" $tag $w $t]
   return [list $w $t]
 }
+# r268 (FABLE-FIX-HEAD-TYPES, hd_serdes sd2): OT_TT_SETUP_MEASURE=1 only reads the TT setup wns/tns of ODB in this same frame and exits;
+# the run_kit step uses it on the WRITTEN repaired DB (a fresh session = what every later reader sees) before keeping it.
+if {[info exists ::env(OT_TT_SETUP_MEASURE)] && $::env(OT_TT_SETUP_MEASURE) eq "1"} {
+  ot_tt_wns measure
+  exit 0
+}
 lassign [ot_tt_wns before] w0 t0
 set mg 0; if {[info exists ::env(OT_TT_SETUP_MARGIN)] && $::env(OT_TT_SETUP_MARGIN) ne ""} { set mg $::env(OT_TT_SETUP_MARGIN) }
 set extra {}; if {[info exists ::env(OT_TT_SETUP_ARGS)]} { set extra $::env(OT_TT_SETUP_ARGS) }
@@ -90,6 +96,9 @@ if {$w0 < $mg || $ot_tt_design} {
     repair_design -verbose
     ot_tt_wns after_design
   }
+  # r268: the GRT-stage pass must not rebuild fanouts the place stage split (sd2: 26 buffers removed, 11 pins / 20 fF -> 42 pins / 103 fF = +412 ps);
+  # -skip_buffer_removal unless the caller's OT_TT_SETUP_ARGS already says so
+  if {$ot_tt_rc eq "grt" && [lsearch -exact $extra -skip_buffer_removal] < 0} { lappend extra -skip_buffer_removal }
   repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra
   detailed_placement
   if {$ot_tt_rc eq "grt"} {
