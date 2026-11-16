@@ -16046,3 +16046,4 @@ FAILED [AUTOPILOT a6fd741ecd7e] 2026-11-15 22:56:33 PST AUTOPILOT -> KIT-WAVE-12
     - die-s81-90/ev (139M), die-s81-90/run (63G)
   None of my live work reads any of these: B6gE / G3b / F2a / F2r run trees, ev plans + sidecars, chain scripts, waiters, overlays, tools trees, wave dies.s81 keys. run_bind_ca uses die-s81-89/wt only in the non-CA_SIDECAR branch, which none of my chains take.
   Total about 430 GB apparent; hardlinks may free less.
+- 2026-11-15 23:05 PST STATE ADMIT-TUNE-1 HOURLY kill report (earlyoom openroad/all, plan-guard SIGKILLs, median victim RSS):  intel1=0/0 guard=0 medRSS_GB=0; intel2=0/0 guard=0 medRSS_GB=0; epyc2=0/0 guard=0 medRSS_GB=0; epyc7=0/0 guard=0 medRSS_GB=0; epyc8=0/0 guard=0 medRSS_GB=0; epyc9=0/0 guard=0 medRSS_GB=0; epyc10=0/0 guard=0 medRSS_GB=0; TOTAL earlyoom=0 guard=0
