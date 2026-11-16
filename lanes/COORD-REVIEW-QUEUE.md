@@ -18450,3 +18450,4 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING ORD-0039] .openroad ignored with -python
 PIN_AUDIT FAIL 1057/1057 missing 0 wrong_layer 0 wrong_place 0 extra 1088
  | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF13a/items/hd_serdes/attempt_8/gen/hd_serdes src main@2dd0d8c9fd6c | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-16 14:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (4 new): epyc10: rt/current 96cae5872b92 != hub 9a8f5b50d85f ; epyc7: rt/current 96cae5872b92 != hub 9a8f5b50d85f ; epyc8: rt/current 96cae5872b92 != hub 9a8f5b50d85f ; epyc9: rt/current 96cae5872b92 != hub 9a8f5b50d85f. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
