@@ -2322,8 +2322,29 @@ def kit_effective_env():
 def tt_setup_repair_cfg():
     """KIT-OPS-5 11-15 (COORD r214): the effective TT setup repair mode in EVERY kit's config.mk, so a reviewer can tell which kits
     carry it (the gen env alone is not in the kit).  Exported as cts|grt|both|off; the step files stay gated by their .on flag."""
-    return ["# TT setup repair mode this kit was generated with (OT_TT_SETUP_REPAIR; off = no step)",
-            f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
+    out = ["# TT setup repair mode this kit was generated with (OT_TT_SETUP_REPAIR; off = no step)",
+           f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
+    if tt_setup_repair_mode() == "off":
+        return out
+    # FABLE-FIX-QC-HCFE 11-15 (r228 item 1): opt-in keys of the step, carried in config.mk because tt_setup_repair.tcl reads them there.
+    # OT_TT_SETUP_CSCALE = signal C factor of the GRT-basis session (routed signal nets read 1.4-1.5 x the clock-fit layer table on
+    # QC sle_hc2 / S81 bksel); OT_TT_SETUP_DESIGN=1 = TT repair_design before repair_timing; OT_TT_SETUP_MARGIN ps;
+    # OT_TT_SETUP_CLAYERS = comma list of the scaled layers (default M2..M7 in the step).  Unset = byte-equal kit.
+    checks = {"OT_TT_SETUP_CSCALE": lambda v: float(v) > 0, "OT_TT_SETUP_DESIGN": lambda v: v in ("0", "1"),
+              "OT_TT_SETUP_MARGIN": lambda v: float(v) == float(v),
+              "OT_TT_SETUP_CLAYERS": lambda v: all(x and x.replace("_", "").isalnum() for x in v.split(","))}
+    for k, ok in checks.items():
+        v = os.environ.get(k, "").strip()
+        if v == "":
+            continue
+        try:
+            good = ok(v)
+        except ValueError:
+            good = False
+        if not good:
+            raise ValueError(f"{k}={v!r}: not a valid value")
+        out.append(f"export {k} = {v}")
+    return out
 
 
 def pg_drt0255_cfg():
