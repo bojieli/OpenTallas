@@ -5335,7 +5335,7 @@
     "kv3_sys_c"
    ],
    "tool_skew": "warn",
-   "kit_snap": false,
+   "kit_snap": true,
    "kit_snap_view_refs": "strict",
    "retry_purged_wavehold1115_r223": [
     "qkd_hr_cdc_hi@1",
@@ -33119,7 +33119,7 @@
     "failing_items_seen": 48
    },
    "tool_skew": "warn",
-   "kit_snap": false,
+   "kit_snap": true,
    "kit_snap_view_refs": "strict",
    "retry_purged_wavehold1115_r223": [
     "eng__t1@9",
@@ -47134,7 +47134,7 @@
     "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
    },
    "tool_skew": "warn",
-   "kit_snap": false,
+   "kit_snap": true,
    "kit_snap_view_refs": "strict",
    "retry_purged_wavehold1115_r223": [
     "slw_su_c__cl92142dac@9",
