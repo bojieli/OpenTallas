@@ -9421,10 +9421,11 @@
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
      "OT_CONS_STRIP_ROWS": "1",
-     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
      "OT_PG_DIE_PHASE": "1",
      "OT_PG_TRACK_TRUTH": "1",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
     },
     "ot_s81sl_leaf__t44__clf4ea6d4b": {
      "OT_GRT_ALLOW_CONGESTION": "1",
@@ -9661,10 +9662,11 @@
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
      "OT_CONS_STRIP_ROWS": "1",
-     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
      "OT_PG_DIE_PHASE": "1",
      "OT_PG_TRACK_TRUTH": "1",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
     },
     "ot_s81sl_leaf__t41": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9769,10 +9771,11 @@
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
      "OT_CONS_STRIP_ROWS": "1",
-     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
      "OT_PG_DIE_PHASE": "1",
      "OT_PG_TRACK_TRUTH": "1",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
     },
     "ot_s81sl_leaf__t70": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -9932,10 +9935,11 @@
      "OT_CONS_UTIL": "0.25",
      "OT_CONS_MAX_LAYER": "M9",
      "OT_CONS_STRIP_ROWS": "1",
-     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
      "OT_PG_DIE_PHASE": "1",
      "OT_PG_TRACK_TRUTH": "1",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
     },
     "ot_s81sl_leaf__t30": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -10678,10 +10682,11 @@
      "OT_CONS_UTIL": "0.35",
      "OT_CONS_MAX_LAYER": "M9",
      "OT_GRT_ALLOW_CONGESTION": "1",
-     "OT_PG_CELL_KEEPOUT": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
      "OT_PG_DIE_PHASE": "1",
      "OT_PG_TRACK_TRUTH": "1",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
     },
     "slice_station__t50__cl39451317": {
      "OT_NATIVE_RESET_SCOPE": "selected",
@@ -35383,16 +35388,18 @@
      "OT_PLACE_MAX_FANOUT": "32",
      "OT_PG_DIE_PHASE": "1",
      "OT_PG_TRACK_TRUTH": "1",
-     "OT_PG_CELL_KEEPOUT": "1",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
     },
     "hd_spn_end": {
      "OT_IO_HOLD": "sender_min",
      "OT_GEN_M8_GRANT": "1",
      "OT_PG_DIE_PHASE": "1",
      "OT_PG_TRACK_TRUTH": "1",
-     "OT_PG_CELL_KEEPOUT": "1",
-     "OT_PG_PIN_CHECK": "warn"
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1"
     },
     "hd_spn_eshim_rx": {
      "OT_IO_HOLD": "sender_min",
