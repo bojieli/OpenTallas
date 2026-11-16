@@ -1,0 +1,101 @@
+{
+  "schema": "opentallas.latency_rows.v1",
+  "source_head": "be5ba677c6da641c1cdc89795bb5df282cd7fad0",
+  "row_id": "QC-STM-TLOADCAP",
+  "scope": "private source-component proof; no plan or whole-token adoption",
+  "rows": [
+    {
+      "id": "QC-STM-TLOADCAP",
+      "loader_origin_added_cycles": 1,
+      "stream_origin_added_cycles": 0,
+      "request_spacing_cycles_base": 90,
+      "request_spacing_cycles_capture": 91,
+      "first_write_after_request_base": 3,
+      "first_write_after_request_capture": 4,
+      "last_write_after_request_base": 90,
+      "last_write_after_request_capture": 91,
+      "die_lane_cycles_added": 0,
+      "compile_action": "Use capture-specific loader dates and >=91-edge request spacing when OT_QC_TLOADCAP is enabled. Count extra boot serialization, not a per-token penalty when installed resident."
+    },
+    {
+      "id": "QC-STA-SWREG",
+      "added_cycles": 0
+    }
+  ],
+  "measurements": [
+    {
+      "capture_stage": 0,
+      "request_spacing": 89,
+      "fault": 1,
+      "writes": 332,
+      "done": 4,
+      "first_write": 23,
+      "last_write": 644
+    },
+    {
+      "capture_stage": 0,
+      "request_spacing": 90,
+      "fault": 0,
+      "writes": 664,
+      "done": 8,
+      "first_write": 23,
+      "last_write": 740
+    },
+    {
+      "capture_stage": 0,
+      "request_spacing": 91,
+      "fault": 0,
+      "writes": 664,
+      "done": 8,
+      "first_write": 23,
+      "last_write": 747
+    },
+    {
+      "capture_stage": 0,
+      "request_spacing": 92,
+      "fault": 0,
+      "writes": 664,
+      "done": 8,
+      "first_write": 23,
+      "last_write": 754
+    },
+    {
+      "capture_stage": 1,
+      "request_spacing": 89,
+      "fault": 1,
+      "writes": 332,
+      "done": 4,
+      "first_write": 24,
+      "last_write": 645
+    },
+    {
+      "capture_stage": 1,
+      "request_spacing": 90,
+      "fault": 1,
+      "writes": 332,
+      "done": 4,
+      "first_write": 24,
+      "last_write": 651
+    },
+    {
+      "capture_stage": 1,
+      "request_spacing": 91,
+      "fault": 0,
+      "writes": 664,
+      "done": 8,
+      "first_write": 24,
+      "last_write": 748
+    },
+    {
+      "capture_stage": 1,
+      "request_spacing": 92,
+      "fault": 0,
+      "writes": 664,
+      "done": 8,
+      "first_write": 24,
+      "last_write": 755
+    }
+  ],
+  "negative_control": "CAPTURE_STAGE1 at old spacing90 faults and accepts four of eight requests (332 writes); spacing91 completes all8 (664 writes).",
+  "native_head37_profile": "HEAD_STAGE37 and MONITOR_TAIL explicitly require CAPTURE_STAGE0/LOCAL_CTRL0/WE_COPIES34; capture stage is not supported by that profile. Native37 proof cannot be used as capture qualification."
+}

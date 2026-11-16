@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.svc.phase_contract.v1",
+  "source": "HARD-S81-SVC-1 measured II2 calendar correction",
+  "accepted_edge": "A(t,phi)=t+((phi-t)%2)",
+  "feedback_load_slot_shift": "A(t+n,phi)-A(t,phi)",
+  "pv_added_cycles": "n + feedback_load_slot_shift + 1 merge-register cycle",
+  "phase0_closed_form": "n+2*ceil(n/2)+1",
+  "measured": {
+    "score_shift_n": 9,
+    "pv_shift": 20,
+    "srx": 1
+  },
+  "reference_correction_separate": {
+    "score_first_job": 7,
+    "pv_first_job": 10,
+    "ten_job_cycles_old_invalid": 1224,
+    "ten_job_cycles_new": 1276
+  },
+  "limitation": "Other n values analytic only. Native reference correction is not a POR surcharge. Qualification/adoption remains die-owner scope."
+}

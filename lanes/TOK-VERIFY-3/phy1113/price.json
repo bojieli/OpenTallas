@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.token_sensitivity.v1",
+  "grade": "SERIAL_BOUND_NOT_NATIVE_RTL",
+  "candidate": "KV PHY reach form dd5bd9d99b; private not adopted",
+  "before_plan": "epyc7:/srv/opentallas-scratch2/claude/dkv100/phy/in/plan_c.json",
+  "type_geometry_after": "epyc7:/srv/opentallas-scratch2/claude/dkv100/phy/out/p_clock_canonical.json (requires lane sync)",
+  "cycle_report": "/home/ubuntu/coord/lanes/TOK-VERIFY-3/phy1113/sync_fc.json",
+  "report_sha256": "f317026e5c3ee14a74dc0eb836abe1ef18f9a342959222597b55e01421f9fe05",
+  "changed_lanes": 128,
+  "added_lane_cycles": 256,
+  "max_added_cycles_per_lane": 2,
+  "return_lane_cycles_added": 0,
+  "boot_epoch_cycles_added": 0,
+  "per_token_layer_calls": 36,
+  "serial_class_bound_added_cycles": 72,
+  "T_reference": 272641.0,
+  "tok_reference": 4403.2,
+  "T_private_PHY_sensitivity": 272713.0,
+  "tok_private_PHY_sensitivity": 4402.0374943622055,
+  "rate_delta_pct": -0.026401381672302993,
+  "combined_private_PHY_plus_PVFIN": {
+    "added_cycles_per_token": 108,
+    "T": 272749.0,
+    "tok_s": 4401.456471701088
+  },
+  "limitation": "Incremental sensitivity against standing record only; not full current plan repricing. Four buses across32PHY instances do not multiply serial critical-path charge by128. Current Qwen composer lacks authoritative native selected-source status/SEG integration."
+}

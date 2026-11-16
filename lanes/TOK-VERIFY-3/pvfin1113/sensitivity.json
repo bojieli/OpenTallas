@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.token_sensitivity.v1",
+  "source": "KV-PVFIN-1 f18df44f70 IN_STAGE1",
+  "grade": "BOUND_ONLY_NOT_NATIVE_RTL",
+  "model": "standing reform_rebaseline KV record272641cycles/4403.2tok_s",
+  "per_invocation_added_cycles": 1,
+  "invocations_on_serial_token_bound": 36,
+  "replicas_factor": 1,
+  "reason": "Qwen composer one cold layer +35 chained layers; one attention return per layer; both8lane slices and allbeats concurrently delayed1edge, no perbeat/replica multiplier.",
+  "T_base": 272641.0,
+  "dT": 36.0,
+  "T_new": 272677.0,
+  "tok_base": 4403.2,
+  "tok_new": 4402.618670441585,
+  "rate_delta_pct": -0.01320243364860696,
+  "physical_adoption": false,
+  "current_composer_status": "NOT_RUN: direct attempt FAILS old measured record die_edges boundary keys down_ar,lm_arx,o_ar,token_start against current dv_layer EDGE_POINTS; no key mapping guessed or record silently rewritten.",
+  "ledger": "epyc4:/srv/opentallas-scratch3/claude/kv-pvfin-1/wtc/results/kv-pvfin-1/latency_rows.json"
+}

@@ -1,0 +1,244 @@
+{
+  "grade": "PRICED_ONLY_NOT_NATIVE_RTL",
+  "head": "be5ba677c6da641c1cdc89795bb5df282cd7fad0",
+  "terms": {
+    "attn.scores": 769.0,
+    "attn.pv": 1076.0
+  },
+  "cases": {
+    "srx0_cut0": {
+      "srx": 0,
+      "cut": false,
+      "scores_added_per_pass": 0,
+      "pv_added_per_pass": 0,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1423824.58,
+          "tau": 1.0,
+          "tok_s": 842.8004522860533,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 0.0,
+          "rate_delta_pct": 0.0
+        },
+        "mtp": {
+          "T_cycles": 1839233.83,
+          "tau": 4.159,
+          "tok_s": 2713.521205729453,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 0.0,
+          "rate_delta_pct": 0.0
+        }
+      }
+    },
+    "srx1_cut0": {
+      "srx": 1,
+      "cut": false,
+      "scores_added_per_pass": 4,
+      "pv_added_per_pass": 9,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424344.58,
+          "tau": 1.0,
+          "tok_s": 842.4927625308196,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 520.0,
+          "rate_delta_pct": -0.03650801970965789
+        },
+        "mtp": {
+          "T_cycles": 1839413.83,
+          "tau": 4.159,
+          "tok_s": 2713.2556679754875,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 180.0,
+          "rate_delta_pct": -0.009785726140809636
+        }
+      }
+    },
+    "srx1_cut1": {
+      "srx": 1,
+      "cut": true,
+      "scores_added_per_pass": 6,
+      "pv_added_per_pass": 11,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424504.58,
+          "tau": 1.0,
+          "tok_s": 842.3981339533495,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 680.0,
+          "rate_delta_pct": -0.04773589425735025
+        },
+        "mtp": {
+          "T_cycles": 1839503.83,
+          "tau": 4.159,
+          "tok_s": 2713.1229185861494,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 270.0,
+          "rate_delta_pct": -0.014677871043078383
+        }
+      }
+    },
+    "srx2_cut0": {
+      "srx": 2,
+      "cut": false,
+      "scores_added_per_pass": 5,
+      "pv_added_per_pass": 11,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424464.58,
+          "tau": 1.0,
+          "tok_s": 842.4217891047876,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 640.0,
+          "rate_delta_pct": -0.04492916208558295
+        },
+        "mtp": {
+          "T_cycles": 1839458.83,
+          "tau": 4.159,
+          "tok_s": 2713.189291657047,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 225.0,
+          "rate_delta_pct": -0.012231858431965836
+        }
+      }
+    },
+    "srx2_cut1": {
+      "srx": 2,
+      "cut": true,
+      "scores_added_per_pass": 7,
+      "pv_added_per_pass": 13,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424624.58,
+          "tau": 1.0,
+          "tok_s": 842.3271764691859,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 800.0,
+          "rate_delta_pct": -0.056155145097946946
+        },
+        "mtp": {
+          "T_cycles": 1839548.83,
+          "tau": 4.159,
+          "tok_s": 2713.056548762557,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 315.0,
+          "rate_delta_pct": -0.01712376398292914
+        }
+      }
+    },
+    "srx3_cut0": {
+      "srx": 3,
+      "cut": false,
+      "scores_added_per_pass": 6,
+      "pv_added_per_pass": 13,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424584.58,
+          "tau": 1.0,
+          "tok_s": 842.3508276356606,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 760.0,
+          "rate_delta_pct": -0.05334888575024843
+        },
+        "mtp": {
+          "T_cycles": 1839503.83,
+          "tau": 4.159,
+          "tok_s": 2713.1229185861494,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 270.0,
+          "rate_delta_pct": -0.014677871043078383
+        }
+      }
+    },
+    "srx3_cut1": {
+      "srx": 3,
+      "cut": true,
+      "scores_added_per_pass": 8,
+      "pv_added_per_pass": 15,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424744.58,
+          "tau": 1.0,
+          "tok_s": 842.256230937899,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 920.0,
+          "rate_delta_pct": -0.06457297770523507
+        },
+        "mtp": {
+          "T_cycles": 1839593.83,
+          "tau": 4.159,
+          "tok_s": 2712.9901821860317,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 360.0,
+          "rate_delta_pct": -0.019569537260299974
+        }
+      }
+    },
+    "srx4_cut0": {
+      "srx": 4,
+      "cut": false,
+      "scores_added_per_pass": 7,
+      "pv_added_per_pass": 15,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424704.58,
+          "tau": 1.0,
+          "tok_s": 842.279878120417,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 880.0,
+          "rate_delta_pct": -0.061767191062156446
+        },
+        "mtp": {
+          "T_cycles": 1839548.83,
+          "tau": 4.159,
+          "tok_s": 2713.056548762557,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 315.0,
+          "rate_delta_pct": -0.01712376398292914
+        }
+      }
+    },
+    "srx4_cut1": {
+      "srx": 4,
+      "cut": true,
+      "scores_added_per_pass": 9,
+      "pv_added_per_pass": 17,
+      "workloads": {
+        "ar": {
+          "T_cycles": 1424864.58,
+          "tau": 1.0,
+          "tok_s": 842.1852973564687,
+          "critical_scores": 40,
+          "critical_pv": 40,
+          "delta_cycles": 1040.0,
+          "rate_delta_pct": -0.0729893924375613
+        },
+        "mtp": {
+          "T_cycles": 1839638.83,
+          "tau": 4.159,
+          "tok_s": 2712.923818856335,
+          "critical_scores": 40,
+          "critical_pv": 0,
+          "delta_cycles": 405.0,
+          "rate_delta_pct": -0.022015190883961644
+        }
+      }
+    }
+  }
+}
