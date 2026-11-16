@@ -1,8 +1,4 @@
-"""S81-CONG REPAIR-NOPROGRESS / MAXWIRE-PRE 11-16: (1) grt183_make.sh logs one OT_GRT_REPAIR_PASS line per interval inside the
-post-GRT max-wire repair_design and, when the log is flat OT_GRT_REPAIR_STALL_S, stops the stage and re-runs it once with the
-marker 5_1_grt.repair_nostall.json (continue, not a failure); (2) grt_maxwire.tcl skips the post-GRT repair under that marker; its pre-GRT pitch pass is
-opt-in (OT_MAXWIRE_PRE=1).  Local, no Docker/OpenROAD.
-    python3 -m pytest -q tools/die_plan/test_grt_repair_noprogress.py"""
+"""Repair progress is advisory; no cancellation or repair bypass on a quiet log."""
 import json
 import shutil
 import subprocess
@@ -21,25 +17,15 @@ IN_REPAIR = ('if [ $N = 1 ]; then printf "OT_MAXWIRE repair_design -verbose -max
 OK2 = 'ls $R > $K/ls$N.txt; echo ok > $L/5_1_grt.log; exit 0\n'
 
 
-def test_flat_repair_is_stopped_and_stage_continues_once(tmp_path):
+def test_flat_repair_logs_without_cancellation_or_rerun(tmp_path):
     k, r, l, s = kit(tmp_path)
-    p = run(k, s, fake(tmp_path, IN_REPAIR + OK2), "grt", env=FAST)
-    assert p.returncode == 0, p.stdout + p.stderr                  # not a failure
-    assert len(calls(k)) == 2
+    p = run(k, s, fake(tmp_path, IN_REPAIR.replace("sleep 60", "sleep 6")), "grt", env=FAST)
+    assert p.returncode == 0, p.stdout + p.stderr
+    assert len(calls(k)) == 1
     assert "OT_GRT_REPAIR_PASS post-GRT repair_design nets_done=4000 buffers=1232 remaining=142176" in p.stdout
-    assert "OT_GRT_REPAIR_NO_PROGRESS 5_1_grt.tmp.log flat" in p.stdout and "attempt 2 rc 0" in p.stdout
-    assert "5_1_grt.repair_nostall.json" in (k / "ls2.txt").read_text()   # the re-run sees the marker
-    assert json.loads((r / "5_1_grt.repair_nostall.json").read_text())["schema"] == "opentallas.grt_repair_nostall.v1"
-    assert (l / "5_1_grt.log.repair_attempt1").is_file()
-    assert (r / "4_cts.odb").read_text() == "cts"                  # the stage input is untouched
-
-
-def test_only_one_rerun(tmp_path):
-    k, r, l, s = kit(tmp_path)
-    (r / "5_1_grt.repair_nostall.json").write_text("{}")
-    p = run(k, s, fake(tmp_path, IN_REPAIR.replace("sleep 60", "sleep 6").replace("exit 0", "exit 3")), "grt", env=FAST)
-    assert p.returncode == 3 and len(calls(k)) == 1 and "OT_GRT_REPAIR_NO_PROGRESS" not in p.stdout
-    assert "OT_GRT_REPAIR_PASS" in p.stdout                        # the pass line is still logged
+    assert "OT_GRT_REPAIR_NO_PROGRESS" not in p.stdout
+    assert not (r / "5_1_grt.repair_nostall.json").exists()
+    assert (r / "4_cts.odb").read_text() == "cts"
 
 
 def test_finished_repair_or_other_step_is_not_stopped(tmp_path):
@@ -96,8 +82,8 @@ def test_opt_in_pitch_pass_runs_before_global_route(tmp_path):
 
 
 @needs_tclsh
-def test_marker_skips_post_repair(tmp_path):
+def test_legacy_marker_cannot_skip_post_repair(tmp_path):
     (tmp_path / "5_1_grt.repair_nostall.json").write_text("{}")
     pre, post = tcl(tmp_path).split("HOOK_END")
     assert "repair_design" not in pre
-    assert "OT_MAXWIRE_PASS post skipped" in post and "LOG repair_design" not in post
+    assert "OT_MAXWIRE_PASS post skipped" not in post and "LOG repair_design" in post
