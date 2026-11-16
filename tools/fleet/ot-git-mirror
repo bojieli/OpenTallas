@@ -134,20 +134,36 @@ def sync():
     up = upstream_heads()
     if up is not None:
         todo = []
+        hub_only = set()
+        try:                                               # refs GitHub refuses (file > 100 MB): kept on the hub, never retried
+            hub_only = {ln.strip() for ln in (MIRROR / "hub-only.txt").read_text().splitlines() if ln.strip()}
+        except OSError:
+            pass
         for ref, sha in sorted(mirror_heads().items()):
+            if ref in hub_only or ref[len("refs/heads/"):] in hub_only:
+                continue
             u = up.get(ref)
             if u == sha:
                 continue
             if u is None or (git("cat-file", "-e", u, check=False).returncode == 0 and is_ancestor(u, sha)):
                 todo.append((ref, sha))
-        if todo and git("push", "-q", "origin", *[f"{s}:{r}" for r, s in todo], check=False, timeout=3600).returncode == 0:
+        try:
+            batch = bool(todo) and git("push", "-q", "origin", *[f"{s}:{r}" for r, s in todo], check=False,
+                                       timeout=3600).returncode == 0
+        except S.TimeoutExpired:
+            batch = False
+        if batch:
             for ref, sha in todo:
                 print(f"re-forward {ref[len('refs/heads/'):]} @{sha[:11]}: ok")
             todo = []
         for ref, sha in todo:                              # the batch failed: one by one, so one bad ref blocks only itself
-            p = git("push", "-q", "origin", f"{sha}:{ref}", check=False, timeout=300)
-            print(f"re-forward {ref[len('refs/heads/'):]} @{sha[:11]}: {'ok' if p.returncode == 0 else 'FAILED ' + p.stderr.strip()[-200:]}")
-            rc |= 1 if p.returncode else 0
+            try:
+                p = git("push", "-q", "origin", f"{sha}:{ref}", check=False, timeout=300)
+                why = "ok" if p.returncode == 0 else "FAILED " + p.stderr.strip()[-200:]
+            except S.TimeoutExpired:                       # 16:29 11-15: one timed-out ref killed the whole sync
+                p, why = None, "FAILED push timed out (300 s)"
+            print(f"re-forward {ref[len('refs/heads/'):]} @{sha[:11]}: {why}")
+            rc |= 0 if p is not None and p.returncode == 0 else 1
     stamp = MIRROR / "gc.stamp"
     if not stamp.exists() or time.time() - stamp.stat().st_mtime > GC_EVERY:
         stamp.touch()
