@@ -389,8 +389,46 @@ def load_config(text):
     except ValueError as e:
         return {"error": f"kit_wave.json unreadable: {e}", "dies": {}}
     cfg.setdefault("dies", {})
+    compile_hold_records(cfg)
     apply_hold_release_on(cfg)
     return cfg
+
+
+def compile_hold_records(cfg, is_merged=None):
+    """HOLDGEN-1115 (COORD r223): die.hold_records (typed release terms, bound to a plan sha) compile into hold_items in memory, before
+    the legacy hold_release_on pass.  A die without hold_records is untouched."""
+    import hold_records as HR
+    ctx = HR.Ctx(is_merged=is_merged or _git_is_merged, event_met=_hold_term_met, digest_fn=input_digest,
+                 kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")))
+    try:
+        return HR.compile_holds(cfg, ctx)
+    except Exception as e:                               # a bad record never stops the wave: legacy hold_items still apply
+        cfg["_hold_records_error"] = f"{type(e).__name__}: {e}"
+        return []
+
+
+def hold_audit_step(AP, cfg, st, t0):
+    """HOLDGEN-1115 per-tick audit: held-but-launched, release terms that cannot be reached, holds whose plan sha is superseded,
+    patterns that match nothing.  One log line every tick; a COORD-REVIEW-QUEUE ALERT when the finding set changes."""
+    import hold_records as HR
+    if cfg.get("_hold_records_error"):
+        AP.log(f"KIT-WAVE HOLD-AUDIT compile error: {cfg['_hold_records_error']}")
+    launched = [(r.get("die"), r.get("item")) for r in (st.get("items") or {}).values()
+                if float(r.get("started") or 0) >= t0 and r.get("die") and r.get("item")]
+    found = HR.audit(cfg, launched)
+    summ = HR.summarize(found)
+    AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
+           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH")))
+    sig = hashlib.sha1(json.dumps([(f["code"], f["die"], f["id"], f["detail"], f["n"], sorted(map(str, f["items"]))[:50]) for f in found],
+                                  default=str).encode()).hexdigest()[:12]
+    if found and st.get("hold_audit_sig") != sig:
+        st["hold_audit_sig"] = sig
+        lines = [f"{f['code']} {f['die']}/{f['id']} x{f['n']}: {f['detail']}" + (f" items {','.join(map(str, f['items'][:6]))}" if f["items"] else "")
+                 for f in found]
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [HOLDGEN-1115 -> COORD, WAVE-HOLDS-1115] hold audit {summ}: " + "; ".join(lines)[:1800])
+    elif not found:
+        st.pop("hold_audit_sig", None)
+    return found
 
 
 def _hold_term_met(term, die_cfg, is_merged):
@@ -9785,6 +9823,7 @@ def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    _t0 = time.time()
     for _die, _key, _cond in cfg.get("_hold_auto_released") or []:
         AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release_on met ({_cond})")
     WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
@@ -10003,6 +10042,10 @@ def _step(AP, ap_dir):
     except Exception as e:
         AP.log(f"KIT-WAVE WAIT-CHILD summary skipped: {type(e).__name__}: {e}")
     protect_sources(AP, cfg, st, ap_dir)
+    try:
+        hold_audit_step(AP, cfg, st, _t0)                # HOLDGEN-1115: held-but-launched / unreachable terms / superseded plan sha
+    except Exception as e:                               # an audit never stops the wave
+        AP.log(f"KIT-WAVE HOLD-AUDIT skipped: {type(e).__name__}: {e}")
     if not AP.DRY:
         save_state(st, ap_dir)
         write_stages(st, ap_dir, cfg)
