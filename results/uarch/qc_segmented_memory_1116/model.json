@@ -30,10 +30,14 @@
   "macro_body_area_um2_per_head": 3314.4422400000003,
   "macro_body_area_um2_total": 318186.45504000003,
   "slot_um": [
-    613.44,
-    717.12
+    151.2,
+    129.6
   ],
-  "macro_body_fraction_of_slot": 0.00753436280332598,
+  "macro_body_fraction_of_slot": 0.16914285714285718,
+  "retained_tls_macros_per_head": 2,
+  "retained_tls_macro": "ot_sram_1r1w2c_128x64_m1",
+  "full_head_macro_count": 8,
+  "full_head_macro_body_area_um2": 5174.1676800000005,
   "slot_fit": "body area fits; packing, pin access, PG, channels and TT/FF remain unqualified",
   "memory_ports_per_macro": {
     "read": 1,
