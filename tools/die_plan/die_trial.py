@@ -317,9 +317,27 @@ def _snap_out(v, g, up):
     return round((math.ceil(k - 1e-6) if up else math.floor(k + 1e-6)) * g, 4)
 
 
-def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
-    """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
-    rects = {n: P.rect(n) for n in P.parts}
+def placed_size_frame(P, part, wh, pt=None):
+    """(placed rect, type-frame point) of `part` whose master has size wh (um) instead of the plan outline.  ot_place sets
+    the master's LOWER-LEFT to the plan origin, so MX/MY/R180 mirror about the MASTER size: x_master = Wm - (x - ox)."""
+    ox, oy = P.parts[part]["origin_um"]
+    w, h = wh
+    rect = (ox, oy, ox + w, oy + h)
+    if pt is None:
+        return rect, None
+    x, y = pt[0] - ox, pt[1] - oy
+    o = P.orient(part)
+    return rect, {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[o]
+
+
+def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM,
+                   sizes=None):
+    """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list.
+    sizes (HEAD-MYTILE-1115): {type: (w, h) um} PLACED master size where it differs from the plan outline (a closed view
+    LEF has its own SIZE: HEAD hd_tile 708.48 vs outline 717.12).  Mirrored instances then map die -> type frame about
+    the master size; without it every MY/R180 window of such a type lands (outline - SIZE) um off."""
+    sizes = sizes or {}
+    rects = {n: (placed_size_frame(P, n, sizes[p["type"]])[0] if p["type"] in sizes else P.rect(n)) for n, p in P.parts.items()}
     by_type, recs = defaultdict(set), []
     for site in sites:
         (x, y), src = site[0], site[1]
@@ -333,8 +351,11 @@ def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=IS
             if c <= a + 1e-9 or d <= b + 1e-9:
                 continue
             tn = P.parts[n]["type"]
-            tw, th = P.types[tn]["outline_um"]
-            (u0, v0), (u1, v1) = P.to_type(n, (a, b)), P.to_type(n, (c, d))
+            tw, th = sizes.get(tn) or P.types[tn]["outline_um"]
+            if tn in sizes:
+                (u0, v0), (u1, v1) = (placed_size_frame(P, n, sizes[tn], q)[1] for q in ((a, b), (c, d)))
+            else:
+                (u0, v0), (u1, v1) = P.to_type(n, (a, b)), P.to_type(n, (c, d))
             u0, u1 = sorted((u0, u1))
             v0, v1 = sorted((v0, v1))
             tr = (max(0.0, _snap_out(u0, grid[0], False)), max(0.0, _snap_out(v0, grid[1], False)),

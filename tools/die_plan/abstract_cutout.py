@@ -189,17 +189,40 @@ def apply_to_kit(P, kit_dir, windows_by_type, smod, dry_run=False, max_boxes=Non
     return res
 
 
+def lef_sizes(P, kit_dir, smod, tol=1e-3):
+    """{type: (w, h)} for the types whose kit abstract LEF SIZE differs from the plan outline_um (closed views carry their
+    own SIZE).  ot_place puts the master lower-left at the plan origin, so windows of a mirrored instance must be computed
+    about this size (HEAD-MYTILE-1115: hd_tile 708.48 vs 717.12 put every MY window 8.64 um off -> u042/u046 stacks)."""
+    out = {}
+    for tn, t in P.types.items():
+        f = Path(kit_dir) / "abstracts" / f"{smod[tn]}.lef"
+        pre = f.with_suffix(".lef.precut")
+        f = pre if pre.is_file() else f
+        if not f.is_file():
+            continue
+        m = re.search(r"\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;", f.read_text())
+        if not m:
+            continue
+        wh = (float(m.group(1)), float(m.group(2)))
+        w, h = t["outline_um"]
+        if abs(wh[0] - w) > tol or abs(wh[1] - h) > tol:
+            out[tn] = wh
+    return out
+
+
 def run(plan, kit_dir, margin_um=0.25, dry_run=False, max_boxes=None):
     import die_trial as D
     import schema as S
     P = S.Plan(S.load(plan), Path(plan))
     smod = D.standin_module_names(P)
+    sizes = lef_sizes(P, kit_dir, smod)
     sites = tree_sites(Path(kit_dir) / "clock" / "tree.json")
     # sites are PLACED cells: no plan-site snap slack, only the margin
-    win, recs = D.island_windows(P, sites, snap=0.0, margin=margin_um)
+    win, recs = D.island_windows(P, sites, snap=0.0, margin=margin_um, sizes=sizes)
     res = apply_to_kit(P, kit_dir, win, smod, dry_run, max_boxes)
     rep = dict(schema="ot_abstract_cutout/1", sites=len(sites), margin_um=margin_um, max_boxes=max_boxes, types_with_windows=len(win),
                windows=sum(len(v) for v in win.values()),
+               lef_size_types={k: list(v) for k, v in sorted(sizes.items())},
                sites_under_partition=sum(1 for r in recs if r["parts"]),
                sites_outside_partitions=sum(1 for r in recs if not r["parts"]),
                in_core=sum(1 for r in recs for h in r["parts"] if h["in_core"]), per_type=res)

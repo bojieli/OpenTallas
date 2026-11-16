@@ -119,3 +119,56 @@ def test_coarsen_rows_clusters_and_budget():
 
 def test_coarsen_merges_overlaps():
     assert A.coarsen_windows([(0, 0, 10, 10), (5, 5, 15, 15)], gap_y=0.0, gap_x=0.0) == [(0, 0, 15, 15)]
+
+
+class _SizedPlan:
+    """one type T, plan outline 20 x 10 but placed master 16 x 10 (closed view SIZE); one instance per orient"""
+    OUT, M = (20.0, 10.0), (16.0, 8.0)
+
+    def __init__(self):
+        self.types = {"T": dict(outline_um=list(self.OUT), module="t")}
+        self.parts = {o: dict(type="T", origin_um=[100.0 * (i + 1), 50.0], orient=o) for i, o in enumerate(("R0", "MX", "MY", "R180"))}
+
+    def orient(self, n):
+        return self.parts[n]["orient"]
+
+    def rect(self, n):
+        ox, oy = self.parts[n]["origin_um"]
+        return (ox, oy, ox + self.OUT[0], oy + self.OUT[1])
+
+    def to_type(self, n, pt):
+        x, y = pt[0] - self.parts[n]["origin_um"][0], pt[1] - self.parts[n]["origin_um"][1]
+        w, h = self.OUT
+        return {"R0": (x, y), "MX": (x, h - y), "MY": (w - x, y), "R180": (w - x, h - y)}[self.orient(n)]
+
+
+def _db_point(P, n, u, v):
+    """die point of master-frame point (u, v) as the DB places it: lower-left of the placed master at the plan origin"""
+    ox, oy = P.parts[n]["origin_um"]
+    w, h = P.M
+    o = P.orient(n)
+    return (ox + (w - u if o in ("MY", "R180") else u), oy + (h - v if o in ("MX", "R180") else v))
+
+
+def test_island_windows_mirror_about_master_size_all_orients(monkeypatch):
+    import die_trial as D
+    monkeypatch.setattr(D, "core_obs", lambda t: [])
+    P = _SizedPlan()
+    u, v = 3.0, 2.0                          # one master-frame cell site, same for all four instances
+    sites = [(_db_point(P, n, u, v), n) for n in P.parts]
+    win, _ = D.island_windows(P, sites, snap=0.0, margin=0.25, sizes={"T": _SizedPlan.M})
+    assert len(win["T"]) == 1, win           # every orientation resolves to the SAME master-frame window
+    x0, y0, x1, y1 = win["T"][0]
+    assert x0 <= u <= x1 and y0 <= v <= y1
+    # without the size the MY / R180 windows are (outline - SIZE) = 4 um off and no longer agree
+    bad, _ = D.island_windows(P, sites, snap=0.0, margin=0.25)
+    assert len(bad["T"]) > 1
+
+
+def test_lef_sizes_only_differing_types(tmp_path):
+    P = _SizedPlan()
+    (tmp_path / "abstracts").mkdir()
+    (tmp_path / "abstracts" / "t.lef").write_text(LEF.replace("20.0000 BY 10.0000", "16.0 BY 8.0"))
+    assert A.lef_sizes(P, tmp_path, {"T": "t"}) == {"T": (16.0, 8.0)}
+    (tmp_path / "abstracts" / "t.lef").write_text(LEF)
+    assert A.lef_sizes(P, tmp_path, {"T": "t"}) == {}
