@@ -46,3 +46,7 @@ Goal: sign off hd_serdes (s81_head): DRC 0, TT setup >= -42 ps, FF non-port hold
   place before placement: sd7/hd_serdes/oreg_site.tcl (sourced end of cons_gpl_pre.tcl) puts g_oreg flops FIRM 1.5 um
   outside u_chn on the driving-pin edge; released in face_flops_release.tcl. Check log line OT_OREG_SITE placed N.
   Kit-local; move into gen_phys if sd7 closes.
+
+## CODEX takeover 11-16 10:0x
+- bench3 completed PASS, no-DD DOREG mutant FAIL, link gate PASS. DOREG @67db0dbde3cb66803be3de32629da6e41bc79e4e pushed; remote gate GREEN5/5 main d26d283677ad, READY posted. +2 pma_rck total; no physical PASS yet.
+- sd6 live detail route; sd7 live GPL (expect OT_OREG_SITE count after cons_gpl_pre). Preserve both; next read sd7 placed flop->u_chn distance and GRT TT.

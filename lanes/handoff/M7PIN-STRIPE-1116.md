@@ -33,3 +33,7 @@ No flow change, no gate, no READY (the brief says fix only if confirmed).
 2. QC (QC-PINACCESS-O / KIT-OPS-5): rebuild slw/sle su_l0 on the v2 tree and confirm cland_tstart_in passes down_access.
 3. HEAD-TYPES-O: he6 is expected to leave 26 EOL. The next test is the u_epc abstract: drop or trim pin-continuation OBS in the LEF generator.
 Lane clone epyc10 .../m7pin-stripe-1116/repo: no changes.
+
+## CODEX follow-through 11-16 10:0x
+- PG-aware schema/exemption fix @6a4646b7e77c gate alreadyGREEN; READY posted. NF15pg prepared on NF14r, not adopted/gated.
+- he9/he10 trim-OBS DRC proof and he7/he8 merge proof live, no abstract winner yet; retain M8 pin form fallback if both keep EOL.

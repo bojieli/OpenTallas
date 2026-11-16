@@ -23,3 +23,7 @@ scratchpad fht/ (snap.sh = one-line state of every build; lef_pin_obs_trim.py; p
 ## Others
 - hd_st_k5 k5b SIGNED + exported (s81_head/hd_st_k5__k5b_nf13b); counts on NF13b adopt. hd_ctl + hd_lep0N wait for NF14 sideband rows
   (FABLE-DIE-HEAD / HEAD-100). hd_st_n3_turn, hd_spn_end: pg_pin_rule=true in NF14 (M7PIN-STRIPE-1116).
+
+## CODEX takeover 11-16 10:0x
+- All active candidates retained: sd6 route, sd7 GPL, hw4 FF pre-GRT repair, he9 route(trim DRC), he10 CTS(selective timing). DOREG exactness/gate completed; READY posted to COORD.
+- Next reads retain r310 GRT-RC threshold(-42ps), not CTS placement RC. No additional ECO rounds started.

@@ -20,3 +20,7 @@ Pending: F1 verdict when HEAD-100 posts NF13b COMPOSED (check LATCHECK 329/329, 
 - hd_host_w: eco_hw3 no gain (-80.96). hw4 (epyc10 fable-fix-head-types/hw4, client log intel2 ~/hto/hw4.log) = cs decode 9 copies @7707d785682 (LATCHECK 329/329, tsv equal); post-CTS gate est -62.26, tt repair -29.72 -> -11.93; routing. hold -33 on hw3 still to watch.
 - Commits on claude/fable-fix-head-types-1115: 463b939653 (skid), 7707d78568 (hw cs copies). he5 free-load not committed (he5 failed for other reasons).
 - Checker: localhost scratchpad hto/c2.sh.
+
+## CODEX takeover 11-16 10:0x
+- hw4 live pre-GRT FF hold pass2; pass1 -173.52/949ep after12551buffers, no final verdict. he9(trim abstract DRC test) in route; he10 selective pin-row flop timing form reached CTS.
+- he10 copied tt_setup_repair.log initially contains he9 -129.79; do not collect until mtime/run-stage proves its own repair overwrote it. he7/he8 are merge abstract DRC tests; selective he10 remains the timing form.
