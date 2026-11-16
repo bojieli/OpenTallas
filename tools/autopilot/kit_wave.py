@@ -9136,10 +9136,17 @@ def kit_digest_parts(cfg, die, rec=None):
             sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
         except (OSError, ValueError, TypeError):
             sp = {}
+    if sp:
+        kr = sp.get("kit_rtl")
+    else:
+        # Match spec_for's effective per-item context; changing only the shared
+        # default must not release an item pinned to its unchanged private bind.
+        ii = (d.get("item_inputs") or {}).get((rec or {}).get("item")) or {}
+        kr = dict(d.get("kit_rtl") or {}, **(ii.get("kit_rtl") or {}))
     return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
             "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
             "tools": stage_tools_digest(),
-            "bind_context": bind_context_digest(cfg, die, sp.get("kit_rtl") if sp else d.get("kit_rtl"))}
+            "bind_context": bind_context_digest(cfg, die, kr)}
 
 
 def fail_key(parts, cls, why):
@@ -9316,7 +9323,7 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
     if not prev:
         return False, "", []
     d = (cfg.get("dies") or {}).get(die) or {}
-    now = kit_digest_parts(cfg, die, {"block_sha": block_sha} if block_sha else None)
+    now = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})))
     old = prev.get("parts") or {}
     # Older failure keys did not record bind context. Recover only from the
     # exact failed attempt's pinned spec; never treat rollout/missing metadata as

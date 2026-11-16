@@ -192,6 +192,12 @@ def test_native_kit_failure_key_tracks_measured_context_not_paths(tmp_path, monk
     st["items"] = {"failed": r}
     c["dies"]["s81"]["kit_rtl"] = context(tmp_path / "unreadable")
     assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]
+    # A shared bind change does not change an item's explicit private bind.
+    c["dies"]["s81"]["kit_rtl"] = context(new)
+    c["dies"]["s81"]["item_inputs"] = {"hub_C": {"kit_rtl": context(old)}}
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1")[0]
+    c["dies"]["s81"]["item_inputs"]["hub_C"]["kit_rtl"] = context(new)
+    assert KW.fail_key_gate(c, st, "s81", "hub_C", "b1") == (False, "", ["bind_context"])
     # A metadata repair is not a timing/route redesign release.
     c["dies"]["s81"]["kit_rtl"] = context(new)
     st["fail_keys"]["s81|hub_C"]["stage"] = "route"
