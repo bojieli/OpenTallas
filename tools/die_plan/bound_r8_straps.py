@@ -26,19 +26,22 @@ def declared(kit_rtl_json, width=4):
     for name, row in rows.items():
         if row.get('kind') != 'r8pad_strap':
             continue
-        if not re.fullmatch(r'strap_r8pad_[A-Za-z0-9_]+', name) or row.get('width') != width or ports.get(name) != ('input', width):
+        # KV-PCV3-R8 11-16: each strap carries its OWN bind width, 4 (default) or the type's strap_pad_width when a
+        # bus of that type needs more (kv3_pc_v3: hsl3_fi 5 bits, slg_vreq 4 bits); `width` is the type maximum.
+        w = row.get('width')
+        if w not in (4, width) or not re.fullmatch(r'strap_r8pad_[A-Za-z0-9_]+', name) or ports.get(name) != ('input', w):
             raise ValueError(f'invalid bound R8 count declaration: {name}')
         audit = json.loads((root/'bind_r8pad_strap_audit.json').read_text())
-        if audit.get('verdict') != 'PASS' or audit.get('errors') or audit.get('checked_bits', 0) < width:
+        if audit.get('verdict') != 'PASS' or audit.get('errors') or audit.get('checked_bits', 0) < w:
             raise ValueError(f'R8 count value audit not PASS: {name}')
         owners = kr.get('instances', [])
         if (not isinstance(owners, list) or not owners or any(not isinstance(q, str) for q in owners)
                 or len(set(owners)) != len(owners)):
             raise ValueError(f'R8 count lacks exact owning instances: {name}')
         values = [manifest.get('instances', {}).get(q, {}).get(name, {}) for q in owners]
-        if any(v.get('kind') != 'r8pad_strap' or v.get('width') != width or type(v.get('value')) is not int or not 0 <= v['value'] < (1 << width) for v in values):
+        if any(v.get('kind') != 'r8pad_strap' or v.get('width') != w or type(v.get('value')) is not int or not 0 <= v['value'] < (1 << w) for v in values):
             raise ValueError(f'R8 count owning-instance ties absent/invalid: {name}')
-        result.append({'name': name, 'width': width})
+        result.append({'name': name, 'width': w})
     actual_r8 = {name for name in ports if name.startswith('strap_r8pad_')}
     if actual_r8 != {row['name'] for row in result}:
         raise ValueError('R8 count ports disagree with the declared bind inventory')
