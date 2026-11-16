@@ -6322,6 +6322,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     (kd / "kit_effective_env.json").write_text(json.dumps(kit_effective_env(), indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
+        shutil.copyfile(Path(__file__).with_name("grt_pg_replay.tcl"), kd / "grt_pg_replay.tcl")
         shutil.copyfile(Path(__file__).with_name("tt_setup_keep.py"), kd / "tt_setup_keep.py")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()

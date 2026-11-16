@@ -33,6 +33,7 @@ def test_flag_writes_the_step_files(tmp_path, monkeypatch):
     k = _kit(tmp_path, monkeypatch, True)
     assert (k / "tt_setup_repair.on").read_text().strip() == "cts"
     assert (k / "tt_setup_repair.tcl").read_text() == (HERE / "tt_setup_repair.tcl").read_text()
+    assert (k / "grt_pg_replay.tcl").read_text() == (HERE / "grt_pg_replay.tcl").read_text()
 
 
 def test_run_kit_step_is_flag_gated_fail_open_and_between_cts_and_grt():
