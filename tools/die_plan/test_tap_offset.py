@@ -107,3 +107,19 @@ def test_gate_pass_and_outlier_resign_list():
     o = bad["outliers"][0]
     assert (o["part"], o["port"], o["excess_ps"]) == ("p2", "clk_t2", 4.0)
     assert DSR.tap_offset_gate({"TT": {}}, {"partitions": [], "clock": {}}) is None
+
+
+def test_kit_offset_table_covers_skewed_instances():
+    """FABLE-DIE-QC 11-16: three instances 0 / 0 / 60 of one port: mean 20 +- 30 misses the 60; mid-range 30 +- 30 covers all."""
+    arr = {"TT": {}, "FF": {}}
+    for c in arr:
+        for part, o in (("p1", 0.0), ("p2", 0.0), ("p3", 60.0)):
+            arr[c][(part, "clk")] = 100.0
+            arr[c][(part, "clk_t1")] = 100.0
+            arr[c][(part, "clk_t2")] = 100.0
+            arr[c][(part, "clk_t3")] = 100.0 + o
+    tab = DSR.kit_offset_table(arr, {"partitions": [{"name": n, "type": "t"} for n in ("p1", "p2", "p3")]})
+    r = tab["t"]["clk_t3"]
+    for o in (0.0, 60.0):
+        assert r["TT"] - r["tol"] <= o <= r["TT"] + r["tol"]
+    assert r["TT"] == 30.0 and 30.0 <= r["tol"] <= 30.1

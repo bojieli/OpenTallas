@@ -1643,7 +1643,7 @@ def tap_offset_gate(arr_by_corner, plan):
 
 def kit_offset_table(arr_by_corner, plan, min_tol_ps=10.0):
     """R-CLOCK-7: plan clock.tap_offset.per_port_ps {type: {port: {TT, FF, tol}}}.  o_p (per corner) = the tap's routed arrival
-    minus the median glue tap of its partition (a core tap's arrival already contains its early delivery), averaged over the
+    minus the median glue tap of its partition (a core tap's arrival already contains its early delivery), mid-range over the
     type's instances; tol u = max(min_tol_ps, half the range of o_p over the instances, over corners).  gen_phys.tap_offset_table
     emits set_clock_latency -source -early (o_p - u) / -late (o_p + u) per corner from it."""
     ptype = {q["name"]: q["type"] for q in plan.get("partitions", [])}
@@ -1658,11 +1658,15 @@ def kit_offset_table(arr_by_corner, plan, min_tol_ps=10.0):
             per.setdefault((t, port), {}).setdefault(c, []).append(a - ref[part])
     out = {}
     for (t, port), cc in sorted(per.items()):
+        # FABLE-DIE-QC 11-16: o_p is the MID-RANGE of the instances, not their mean.  mean +- half range does not cover a
+        # skewed set of >= 3 instances (QC S4k: 5,014 of 84,302 taps outside the band their own table was made from, median
+        # excess 4.2 ps); mid-range +- half range covers every instance with the same tol.  tol is rounded up, +0.05 for the
+        # rounding of o_p.  Two instances: mid-range == mean, rows unchanged.
         row, u = {}, min_tol_ps
         for c, v in cc.items():
-            row[c] = round(sum(v) / len(v), 1)
-            u = max(u, (max(v) - min(v)) / 2.0)
-        row["tol"] = round(u, 1)
+            row[c] = round((max(v) + min(v)) / 2.0, 1)
+            u = max(u, (max(v) - min(v)) / 2.0 + 0.05)
+        row["tol"] = math.ceil(u * 10 - 1e-9) / 10.0
         out.setdefault(t, {})[port] = row
     return out
 
@@ -2796,6 +2800,13 @@ def kit_windows(pc, intra_override=None, plan=None):
         import gen_phys
         from types import SimpleNamespace
         shim = SimpleNamespace(clock=pc, die=(plan or {}).get("die", {"period_ps": float("inf")}))
+        if plan and plan.get("partition_types") is not None:
+            # FABLE-DIE-QC 11-16: a tap_offset row (R-CLOCK-7) makes gen_phys.tap_window_ps read the type's early core taps
+            # (schema.core_taps -> P.types / P.parts); the two-field shim raised AttributeError on every QC plan since S3R,
+            # so the QC die STA never produced a result.  The shim carries the plan's types and partitions too.
+            shim.types = plan["partition_types"]
+            shim.parts = {p["name"]: p for p in plan.get("partitions", [])}
+            shim.raw = plan
         wintra = dict(ps=gen_phys.tap_window_ps(shim), basis="plan clock.tap_window.window_ps (gen_phys."
                       "tap_window_ps: kit SDC source -early -W / -late 0 on every tap port, CRPR credits same-tap)")
         # TAPWIN-1109: an unmeasured type's kit charges only the related-pair budget X = min(window_ps,
