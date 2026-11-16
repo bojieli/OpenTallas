@@ -168,7 +168,14 @@ proc ot_serdes_boot_release_local {} {
  if {[llength $tails]!=4 || $max_tail>405.0} {error "OT_BOOT_RELEASE native sync scope/tail mismatch count=[llength $tails] max_um=$max_tail"}
  # Validate the three new sites before changing either authority or relays.
  ot_reset_anchor::run
- foreach v $moves {lassign $v i x y;$i setLocation [expr {int($x)}] [expr {int($y)}];$i setPlacementStatus FIRM}
+ # These are new soft pipeline sites, not boundary authorities. Leave them
+ # PLACED so DPL can choose legal row orientation and resolve local occupancy.
+ # Any pre-existing fixed stage was checked above and remains untouched.
+ foreach v $moves {
+  lassign $v i x y
+  if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} continue
+  $i setLocation [expr {int($x)}] [expr {int($y)}];$i setPlacementStatus PLACED
+ }
  puts "OT_BOOT_RELEASE placed3 kept RCK release stages; model hops316/363/340um; actual native tails_um=$tails max_um=$max_tail; original FIRM authority preserved"
 }
 if {[info exists ::env(OT_SERDES_BOOT_RELEASE_LOCAL)] && $::env(OT_SERDES_BOOT_RELEASE_LOCAL) eq "1"} {ot_serdes_boot_release_local}
