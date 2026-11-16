@@ -5,6 +5,8 @@
 # OT_TT_SETUP_REPAIR=1): open 4_cts.odb with the TC libraries and the kit SDC with the vclk bound for TT (the postcts_gate.tcl frame),
 # repair_timing -setup only (hold repair stays in the FF GRT session; SETUP_SLACK_MARGIN is NOT used: the hold call shares it), legalize,
 # write the repaired 4_cts.odb.  env ODB (input), OUT (output, default = ODB), OT_TT_SETUP_MARGIN (ps, default 0), OT_TT_SETUP_ARGS (extra).
+# env OT_TT_SETUP_RC = placement (default, the CTS stage) | grt (5_1_grt.odb: estimate_parasitics -global_routing, the RC basis the TT gate reads;
+# measured on hd_host_e v1k2 by HEAD-HOST-CLOSE-1115: GRT RC -77.72 -> -30.40 ps, placement RC -23.70 -> -5.80 ps).
 if {[file exists /work/config.mk]} {
   set fh [open /work/config.mk]
   foreach ln [split [read $fh] "\n"] {
@@ -32,7 +34,13 @@ if {[llength $virt] != 1} { error "tt_setup_repair: expected exactly one source-
 if {[info exists ::env(OT_VCLK_TT)]} { set_clock_latency -source $::env(OT_VCLK_TT) $virt }
 set_propagated_clock $real
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} { source $::env(LAYER_PARASITICS_FILE) } else { source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl }
-estimate_parasitics -placement
+set ot_tt_rc placement; if {[info exists ::env(OT_TT_SETUP_RC)] && $::env(OT_TT_SETUP_RC) eq "grt"} { set ot_tt_rc grt }
+proc ot_tt_est {} {
+  global ot_tt_rc
+  if {$ot_tt_rc eq "grt"} { estimate_parasitics -global_routing } else { estimate_parasitics -placement }
+}
+ot_tt_est
+puts "OT_TT_SETUP_REPAIR rc basis $ot_tt_rc"
 proc ot_tt_wns {tag} {
   set w [sta::worst_slack -max]; set t [sta::total_negative_slack -max]
   puts [format "OT_TT_SETUP_REPAIR %s TT setup wns %.2f tns %.2f" $tag $w $t]
@@ -43,9 +51,16 @@ set mg 0; if {[info exists ::env(OT_TT_SETUP_MARGIN)] && $::env(OT_TT_SETUP_MARG
 set extra {}; if {[info exists ::env(OT_TT_SETUP_ARGS)]} { set extra $::env(OT_TT_SETUP_ARGS) }
 set n0 [llength [get_cells *]]
 if {$w0 < $mg} {
+  # GRT-RC mode works on a routed-guide DB: route the changed nets incrementally (as ORFS wraps repair_timing in the GRT stage) so every
+  # new buffer / resized net keeps a guide for detail route; -allow_congestion = the kit's own GRT policy (GRT-0232 class)
+  if {$ot_tt_rc eq "grt"} { global_route -start_incremental -allow_congestion }
   repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra
   detailed_placement
-  estimate_parasitics -placement
+  if {$ot_tt_rc eq "grt"} {
+    global_route -end_incremental -allow_congestion
+    if {[info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }
+  }
+  ot_tt_est
 }
 lassign [ot_tt_wns after] w1 t1
 puts "OT_TT_SETUP_REPAIR cells [expr {[llength [get_cells *]] - $n0}] added; wns [format %.2f $w0] -> [format %.2f $w1] tns [format %.2f $t0] -> [format %.2f $t1]"

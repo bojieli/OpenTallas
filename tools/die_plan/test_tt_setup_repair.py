@@ -31,7 +31,7 @@ def test_default_kit_has_no_tt_step_files(tmp_path, monkeypatch):
 
 def test_flag_writes_the_step_files(tmp_path, monkeypatch):
     k = _kit(tmp_path, monkeypatch, True)
-    assert (k / "tt_setup_repair.on").read_text().strip() == "1"
+    assert (k / "tt_setup_repair.on").read_text().strip() == "cts"
     assert (k / "tt_setup_repair.tcl").read_text() == (HERE / "tt_setup_repair.tcl").read_text()
 
 
@@ -53,3 +53,22 @@ def test_tcl_step_repairs_setup_only_in_the_tt_scene():
 def test_tcl_is_syntactically_complete():
     out = subprocess.run([TCLSH], input=f"set f [open {HERE / 'tt_setup_repair.tcl'}]; puts [info complete [read $f]]\n", capture_output=True, text=True)
     assert out.stdout.strip() == "1"
+
+
+def test_modes_cts_grt_both_write_the_mode_into_the_flag_file(tmp_path, monkeypatch):
+    for env, want in (("1", "cts"), ("cts", "cts"), ("grt", "grt"), ("both", "both")):
+        monkeypatch.setenv("OT_TT_SETUP_REPAIR", env)
+        gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / env), [])
+        assert (tmp_path / env / "fa" / "tt_setup_repair.on").read_text().strip() == want
+    monkeypatch.setenv("OT_TT_SETUP_REPAIR", "0")
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / "off"), [])
+    assert not (tmp_path / "off" / "fa" / "tt_setup_repair.on").exists()
+
+
+def test_grt_step_runs_before_the_postcts_gate_reads_tt_and_routes_incrementally():
+    t = gen_phys.RUN_KIT
+    i = t.index("OT_TT_SETUP_RC=grt")
+    assert t.index("OT_VCLK_CORNER=ff \\$MF grt CORNER=BC") < i < t.index("O5=\\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1)")
+    assert "5_1_grt.odb unchanged" in t
+    x = (HERE / "tt_setup_repair.tcl").read_text()
+    assert "global_route -start_incremental -allow_congestion" in x and "global_route -end_incremental -allow_congestion" in x and "estimate_parasitics -global_routing" in x
