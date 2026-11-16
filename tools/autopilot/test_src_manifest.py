@@ -36,8 +36,16 @@ class Base(unittest.TestCase):
             os.chmod(dp, 0o755)
         shutil.rmtree(self.t, ignore_errors=True)
 
+    def allow(self, hours=6):
+        import datetime
+        f = self.t + "/allow.json"
+        exp = (datetime.datetime.now() + datetime.timedelta(hours=hours)).isoformat()
+        json.dump({"kv": {"tools/die_plan/*": {"branch_sha": "abc", "expires": exp, "why": "test"}}}, open(f, "w"))
+        return f
+
     def build(self):
-        return SM.build(self.repo, self.sha, self.ovj, ["tools"], self.out)
+        # these fixtures overlay tools/ files: legal only with a live allowlist entry (TOOLS-CONVERGE-1115)
+        return SM.build(self.repo, self.sha, self.ovj, ["tools"], self.out, die="kv", allow_file=self.allow(), main_ref="")
 
 
 class Build(Base):
@@ -66,6 +74,41 @@ class Build(Base):
         self.build()
         self.assertNotEqual(os.stat(src).st_ino, os.stat(self.out + "/tools/die_plan/b.py").st_ino)
         self.assertEqual(os.stat(self.out + "/tools/die_plan/b.py").st_nlink, 1)
+
+
+class ToolOverlayRule(Base):
+    def test_tool_overlay_refused_without_allowlist(self):
+        with self.assertRaises(SystemExit) as c:
+            SM.build(self.repo, self.sha, self.ovj, ["tools"], self.out, die="kv", main_ref="")
+        self.assertIn("is a TOOL", str(c.exception))
+        self.assertFalse(os.path.exists(self.out))
+
+    def test_allowlist_wrong_die_or_over_12h_or_no_branch_refused(self):
+        for die, hours in (("s81", 6), ("kv", 20), ("kv", -1)):
+            with self.assertRaises(SystemExit, msg=(die, hours)):
+                SM.build(self.repo, self.sha, self.ovj, ["tools"], self.out, die=die, allow_file=self.allow(hours), main_ref="")
+
+    def test_data_overlay_is_fine(self):
+        json.dump({"files": {"physical/die_plan/kv/plan.json": {"from": "new.json", "sha256": SM.sha256_file(self.t + "/ov/new.json")}}},
+                  open(self.ovj, "w"))
+        m = SM.build(self.repo, self.sha, self.ovj, ["tools", "physical"], self.out, die="kv", main_ref="")
+        self.assertIn("physical/die_plan/kv/plan.json", m["files"])
+
+    def test_pin_must_be_ancestor_of_main(self):
+        git(self.repo, "checkout", "-q", "-b", "lane")
+        open(self.repo + "/tools/die_plan/a.py", "w").write("A=2\n")
+        git(self.repo, "commit", "-qam", "lane")
+        lane = git(self.repo, "rev-parse", "HEAD")
+        git(self.repo, "branch", "-f", "origin_main", self.sha)
+        with self.assertRaises(SystemExit) as c:
+            SM.build(self.repo, lane, None, ["tools"], self.out, main_ref="origin_main")
+        self.assertIn("not an ancestor", str(c.exception))
+        SM.build(self.repo, self.sha, None, ["tools"], self.out, main_ref="origin_main")
+
+    def test_rt_tree_must_exist(self):
+        with self.assertRaises(SystemExit) as c:
+            SM.build(self.repo, self.sha, None, ["tools"], self.out, main_ref="", rt_root=self.t + "/rt")
+        self.assertIn("manifest.json", str(c.exception))
 
 
 class Drift(Base):
@@ -120,7 +163,7 @@ class Publish(Base):
         self.assertEqual(SM.verify(self.out, ro=True, full=True)[0], [])
         # second tree, pointer moves, first tree untouched
         out2 = self.t + "/tree2"
-        SM.build(self.repo, self.sha, None, ["tools"], out2)
+        SM.build(self.repo, self.sha, None, ["tools"], out2, main_ref="")
         SM.publish(out2, ptr)
         self.assertEqual(os.path.realpath(ptr), os.path.realpath(out2))
         self.assertEqual(SM.verify(self.out, ro=True, full=True)[0], [])
@@ -229,3 +272,17 @@ class AdoptGuard(Base):
         self.assertTrue(any("FAIL closed" in l for l in lines))
         cfg["dies"]["d"].pop("src_manifest_hash")
         self.assertTrue(AG.manifest_check(cfg, "d", ["localhost"], log=lines.append))        # no pin: not judged
+
+
+class DefaultRequire(unittest.TestCase):
+    """TOOLS-CONVERGE-1115 (r219): a tree without a manifest is refused unless the die opts down to verify"""
+    def test_no_manifest_refused_by_default(self):
+        sp = {"src": "/x/tree", "src_sha": "a" * 40}
+        why, note = KW.src_manifest_verdict(sp, 1, "SRC_MANIFEST MISSING /x/tree/.src-manifest.json")
+        self.assertIn("SRC_MANIFEST FAIL", why)
+        why, note = KW.src_manifest_verdict(dict(sp, src_manifest="verify"), 1, "SRC_MANIFEST MISSING /x")
+        self.assertEqual(why, "")
+
+    def test_spec_default_is_require(self):
+        cfg = {"dies": {"d": {"src": "/x", "src_sha": "a", "plan": "p", "gen_host": "h", "event": "e"}}}
+        self.assertEqual(KW.opt_get(cfg, "d", "src_manifest") or "require", "require")

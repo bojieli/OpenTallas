@@ -28,6 +28,51 @@ from pathlib import Path
 CLOSURE_DIRS = ("tools/die_plan", "tools/autopilot")
 CLOSURE_EXT = (".py", ".sh", ".tcl")
 ALLOW_REL = "tools/autopilot/tool_skew_allow.json"
+# pin mode (FABLE-FLOWCLASS-TOOLSKEW-2030 section 2.1/4): the reference is the die's pinned tools_sha (rt/<sha12>.manifest.json), over the
+# whole TOOLS scope, not main and not only the die_plan/autopilot closure
+SCOPE = ("tools/", "physical/common_flow/", "rtl/lib/", "rtl/common/")
+RT_ROOT = "/srv/opentallas-scratch2/claude/rt"
+SRC_MANIFEST = ".src-manifest.json"
+
+
+def in_scope(rel):
+    return rel.startswith(SCOPE) and "__pycache__" not in rel and not rel.endswith((".pyc", ".orig", ".rej")) and ".bak" not in rel
+
+
+def scope_manifest(root):
+    """{module: sha256} of every TOOLS-scope file under root (a tree without a src manifest is hashed)"""
+    root = Path(root)
+    m = {}
+    for d in SCOPE:
+        for dp, dn, fn in os.walk(root / d):
+            dn[:] = sorted(x for x in dn if x != "__pycache__")
+            for f in fn:
+                p = Path(dp) / f
+                rel = p.relative_to(root).as_posix()
+                if in_scope(rel):
+                    try:
+                        m[rel] = hashlib.sha256(p.read_bytes()).hexdigest()
+                    except OSError:
+                        pass
+    return m
+
+
+def pin_manifest(tools_sha, rt_root=RT_ROOT):
+    """TOOLS-scope {module: sha256} of rt/<tools_sha[:12]>.manifest.json, or None (no such pin on this host)"""
+    try:
+        files = json.loads((Path(rt_root) / f"{str(tools_sha)[:12]}.manifest.json").read_text())["files"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    return {k: v for k, v in files.items() if in_scope(k)}
+
+
+def tree_scope_manifest(tree):
+    """TOOLS-scope manifest of a tree: its .src-manifest.json when it has one (the tree is read-only and verified at gen), else hashed"""
+    try:
+        files = json.loads((Path(tree) / SRC_MANIFEST).read_text())["files"]
+        return {k: v for k, v in files.items() if in_scope(k)}
+    except (OSError, ValueError, KeyError):
+        return scope_manifest(tree)
 
 
 def closure_files(root):
@@ -115,10 +160,26 @@ def apply_allow(skew, die_allow, today):
     return refused, allowed, expired
 
 
-def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=None, main_m=None):
+def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=None, main_m=None, tools_sha=None,
+              rt_root=RT_ROOT, strict=False):
     """-> dict(ok, measured, refused, allowed, expired, n_closure).  A tree that cannot be read is UNMEASURED and not
     refused (never block a launch on a host that is down); an empty closure (no tools/ in the tree) is a skew."""
     today = today or datetime.date.today().isoformat()
+    if tools_sha:                                        # pin mode: reference = the die's pinned tools_sha, whole TOOLS scope
+        ref = pin_manifest(tools_sha, rt_root)
+        if ref is None:
+            return dict(ok=not strict, measured=False, refused={f"rt/{str(tools_sha)[:12]}": "missing"} if strict else {},
+                        allowed={}, expired={}, n_closure=0, pin=str(tools_sha)[:12])
+        if tree_m is None and Path(tree).is_dir():
+            tree_m = tree_scope_manifest(tree)
+        if tree_m is None and host:
+            tree_m = remote_manifest(host, tree)
+        if tree_m is None:
+            return dict(ok=not strict, measured=False, refused={str(tree): "unreadable"} if strict else {}, allowed={},
+                        expired={}, n_closure=len(ref), pin=str(tools_sha)[:12])
+        refused, allowed, expired = apply_allow(diff(tree_m, ref), (allow or {}).get(die) or {}, today)
+        return dict(ok=not refused, measured=True, refused=refused, allowed=allowed, expired=expired, n_closure=len(ref),
+                    pin=str(tools_sha)[:12])
     main_m = main_m if main_m is not None else manifest(main_root)
     if tree_m is None:
         if host and not Path(tree).is_dir():
