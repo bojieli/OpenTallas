@@ -32,5 +32,10 @@
  "kit_rtl_type": "slice_station__t14",
  "kit_rtl_rc": 0,
  "compiled_asbuilt_sha256": "02a9acbd9408b04a1c60a93b2063d4f0bc49d254cad3c9435ca10a825e45f102",
- "preserve_holds": "col/svc and exact6 failed SerDes unchanged; source coherent does not override physical failures"
+ "preserve_holds": "col/svc and exact6 failed SerDes unchanged; source coherent does not override physical failures",
+ "bind_replica_hosts_verified": [
+  "epyc9",
+  "epyc10"
+ ],
+ "epyc9_bind_replica_proof": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_3c913dbdfb23_f2s3_mainref_pg_d2/epyc9_ctx2_replica_PASS.json"
 }
