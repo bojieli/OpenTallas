@@ -39725,7 +39725,13 @@
    ],
    "cancel_superseded": false,
    "only_items": [
-    "coll_n"
+    "coll_n",
+    "sle_sc_v1__cl115da35f",
+    "sle_sc_v1__cl7479a5ec",
+    "slw_su_l1__cla2a78701",
+    "slw_su_l1__clcc9d0155",
+    "cbf_q11",
+    "cbx_q10__cl89936551"
    ],
    "note_i38": "KW-FIX-8 I38 p-qc: only_items = 22 + 7 movers + failed; stm/coll_ftm wait for fall delta tag; slw_hc3, sle_sc_v3 with DIE-QC-70 forms; running old-plan rows kept by cancel_superseded false (COORD 10:11)",
    "item_env": {
@@ -48031,7 +48037,8 @@
     "slw_sc_v1__cl64543eaf__cl5e017c6f",
     "slw_sc_v2",
     "sle_sc_v1",
-    "slw_su_l1"
+    "slw_su_l1",
+    "slw_su_l1__clcc9d0155"
    ],
    "hold_items_released_kitops5_s4k": [
     "cbf_q01",
