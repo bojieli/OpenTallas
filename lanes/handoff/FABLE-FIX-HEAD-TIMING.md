@@ -38,3 +38,9 @@ scratchpad fht/ (snap.sh = one-line state of every build; lef_pin_obs_trim.py; p
   Form (b) dropped; (a) without DOREG only as follow-up after a sign-off (hooks name g_oreg flops).
 - hd_host_w: hw4 GRT-RC -8.71, in detail route (epyc10), sign-off chained, log intel2 ~/hto/hw4.log.
 - State script: localhost scratchpad fht/snap2.sh. On SIGNED: ffht_export.sh HOST ELDIR BASE SIGNOFF NOTE, then post RESULT.
+
+## UPDATE 11-16 14:5x PST Codex resumed ownership
+- he12r remains the sole active host_e candidate; no duplicate build. Intel2 client1544881, unitoth-ubuntu-2937243-1794864902; initial GRT overflow0 after restored exact M8 grant. Full-scope FF target20 repair is progressing (latest+19.346ps), not terminal. Automatic route/signoff remains chained; no export/count/adopt yet. Existing he12 failed evidence unchanged.
+- Whole WEST reverse-bank fallback offline reference fits:54pins (53data+valid),109existingFF/BUF/INV,18.28332um2,0overlap against48NF15 permanent clock reservations; wholelocalchain<=4.141um; predecessorcenter<=377.784um(+2pinallowance). Explicit historicalhe12 geometry/plot/budget/scripts persisted epyc2 fable-fix-head-timing/he12_west_geom/reference_he12_fit. Analytical TTfloor+111.589/FF+17.482ps under stated clock/slew assumptions;2HB4reserve+0.20412um2 yieldsFFfloor+32.990ps. This is model/geometry only, not current-he12r STA or physical qualification. Image viewed. No newroute if he12rqualifies.
+- Matching currenthe12r read-only3_place probe client2545285 logintel2~/fht-logs/he12r_west_probe.log remains under normal epyc2 thread admission; outputfolder he12_west_geom/current_he12r. Rebind proof to its actual geometry before any future candidate. No admission bypass/duplicateprobe.
+- HEAD-TYPES sourceclone reserved by parent for r365guard/HW followup; our geometry assets live outsideclone and it is untouched.
