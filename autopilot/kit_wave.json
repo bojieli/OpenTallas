@@ -5958,8 +5958,8 @@
     "evidence": "KIT-OPS-1 2026-11-12 21:46: ready12b-A = events/s81_ready12bA_1112 (train 23) + fin rtl (train 25), plan 18c864518844, strict bind rc 0 on main 7073a6b4a599 (KIT-OPS-1 rebind, bound rtl = out_r12bA_dst). | DIE-S81-70 12:4x (COORD 12:1x ftkeep relaunch): plan = main e9eda32d41c plan_h2_2249 (ftcorr/ftkeep a80a1ab90cc, ctree, hcov) + claude/die-s81-70-t24tap-1106@4390efd070 (t24__cl2456157b clk_t20 y 632.88->667.44; strict bind error radius 216.3>200 -> 199.1, grid_explicit_taps PASS) sha256 1cbd9e04577052a4, hardlink sidecars of src_28fc7; vs old wave plan only 10 partition_types differ, no other key; G0C 64/1543 = base, 0 new/0 gone [CHECKED epyc5 die-s81-70/chk_t24]; strict bind on main plan: 1 error = that t24 tap (die-s81-70/kvb2) | prev: KIT-WAVE-12 04:1x PST: main e8cbe5f6c70 plan 381e75b001cd = DIE-S81-46 kva3 407b175146b (COORD 03:16 APPROVED, ROOT-MERGE-AL 03:51): G0C 18 = base, 0 new; die clock GRT 0 ov, TT +49.70, CA 0/2330; strict bind die-s81-46/bind_g3tag2 errors 0 unbound 0 (plan 1064f31a3d21 = 381e minus 22 SDC-only cdc keys, DIE-S81-47 CHECKED) | prev: KIT-WAVE-9 19:5x: main bfdc480ffc7 plan a6320661bc9e = bfe27b2c00be + serdes__t13/serdes__t4 lots (DIE-S81-44 bccb99bde74, G0C 18 = base, 0 new; COORD 16:5x/ROOT-MERGE-AL 17:24; DIE-S81-45 18:03 request); bind = bindm (strict 0) via bindm9 | KIT-WAVE-8 18:0x: main f1a8dcffa6e plan bfe27b2c00be = cb76a9754330 (DIE-S81-43 ring-hold stack 5a/rt4/ringfall, COORD 15:56 (2)) + S81-SERDES-PHY-3 eb964df6dd4 (8 serdes types only; G0C 19/1865 = main, 0 new; block-identity diff CHECKED: only those 8 blocks changed); strict bind bindm BIND_RC 0 (VERIFY died without RC, see lane) | COORD 10-31 08:46 APPROVED DIE-S81-42 claude/die-s81-42-band-1031@e6e75a4ea7e (plan bfa0a6902dd9 -> a83e52c0ae4e, sidecar db92d7423d2c): G0C 19 = base 19, 0 new; strict bind BIND_RC 0 errors 0 + VERIFY_RC 0 (DIE-S81-43 12:18 CHECKED); die clock GRT 0 ov, TT setup +9.22. Merged main 96420e84b92 (ROOT-MERGE-AK). | prev: COORD RULING 10-31 04:07: DIE-S81-39 variant A claude/die-s81-39-geom-1030@54dda45985a (grid+explicit taps, plan 84fc22ab807d -> 7515f32564e8 taps only) APPROVED: G0C 18=18 0 new, strict bind BIND_RC 0 errors 0 (intel1 die-s81-39/gbind), die clock ckclk3 GRT 0 ov, CA PASS; exceptions 1 (57 plan_geom residuals) + 2 (7 pre-existing neg TT setup pairs bk_sel__t2, NOT waived, DIE-S81-41) accepted; COORD 04:4x: S81 plan of record on main = 7515f32564e8 | COORD 10-31: DIE-S81-41 daaa48cc29b per-type station tap window on main 41b02d873, plan bfa0a6902dd9 strict bind BIND_RC 0 errors 0 (intel1 die-s81-41/sbind, DIE-S81-42 07:21). | CODEX1131/root approved composed1cd on mainb1: G0C0 errors, bind_ev2 strict0 11:40, clock GRT0 TT+49.70 CA0/2330 unchanged, 17 reset-safe bands independently rendered/reviewed. Provisional views remain provisional; normal kit physical gates retained."
    },
    "plan": "/srv/opentallas-scratch2/claude/s81-b3-clk/ev/B6gG3b.json",
-   "gen_host": "epyc9",
-   "src": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/src",
+   "gen_host": "epyc8",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f",
    "src_sha": "7073a6b4a599c1de9e041896421b3b779045df1d",
    "kit_rtl": {
     "mode": "bind",
@@ -6112,7 +6112,6 @@
    "bind_mem_gb": 48,
    "hold_items": {
     "col_h9_r2__t1__clce45cab5__pv7a260fc0": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
-    "*": "tree_switch:s81 (COORD r249): the s81 wave tree lacks the die-phase / TT-repair / C3b code, so those keys are no-ops; no NEW launch until TOOLS-CONVERGE posts the die's new tree and KIT-OPS-5 switches it (same tick, this key is deleted). Running kits continue. Lift = delete this key.",
     "dsdv_slice_c1x_C__t1": "DIE-S81-92 2026-11-16 00:5x: RE-HELD. B6gG3b/src tools predate die-phase/TT-repair/C3b gen code, so OT_PG_DIE_PHASE is ignored: G3b kits gen core-phase PDN (pdn.tcl M7 -offset 4.128, no pg_pin_check; slice_station t46 a6, t47 a5). Release on B6gG3c = the same G3b plan + RTL on the TOOLS-CONVERGE S81 tree (die-phase + TT repair), checked on one fresh kit (M7 offset 8.448).",
     "dsdv_slice_c1x_C__t10": "DIE-S81-92 2026-11-16 00:5x: RE-HELD. B6gG3b/src tools predate die-phase/TT-repair/C3b gen code, so OT_PG_DIE_PHASE is ignored: G3b kits gen core-phase PDN (pdn.tcl M7 -offset 4.128, no pg_pin_check; slice_station t46 a6, t47 a5). Release on B6gG3c = the same G3b plan + RTL on the TOOLS-CONVERGE S81 tree (die-phase + TT repair), checked on one fresh kit (M7 offset 8.448).",
     "dsdv_slice_c1x_C__t10__*": "DIE-S81-92 2026-11-16 00:5x: RE-HELD. B6gG3b/src tools predate die-phase/TT-repair/C3b gen code, so OT_PG_DIE_PHASE is ignored: G3b kits gen core-phase PDN (pdn.tcl M7 -offset 4.128, no pg_pin_check; slice_station t46 a6, t47 a5). Release on B6gG3c = the same G3b plan + RTL on the TOOLS-CONVERGE S81 tree (die-phase + TT repair), checked on one fresh kit (M7 offset 8.448).",
@@ -7762,9 +7761,9 @@
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
     "epyc10",
+    "epyc9",
     "epyc8",
-    "epyc7",
-    "epyc9"
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -22472,7 +22471,8 @@
     "OT_PG_TRACK_TRUTH": "1",
     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
     "OT_PG_CELL_KEEPOUT": "0",
-    "OT_PG_PIN_CHECK": "warn"
+    "OT_PG_PIN_CHECK": "1",
+    "OT_PGCAP": "1"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -34855,7 +34855,7 @@
    ],
    "auto_rearm": false,
    "auto_rearm_note_wavehold1115": "WAVE-HOLDS-1115 2026-11-15 21:14 PST (COORD r223, FABLE-FLOWCLASS-HOLDS-2030 5.3): auto_rearm false until G3b adopts (the adopt gives new plan blocks, rows launch fresh); revert = delete this key or set true.",
-   "src_manifest": "verify",
+   "src_manifest": "require",
    "prev_dies81_92_g3b": {
     "plan": "/srv/opentallas-scratch2/claude/s81-b3-clk/ev/B6gE.json",
     "plan_sha256": "1510a6a72050463dbb3fbc95b8b560ec1943e4ab9ff96b7af94457ee89804185",
@@ -36010,19 +36010,6 @@
      "carry": true
     },
     {
-     "id": "s81-mig-023",
-     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "tree_switch:s81 (COORD r249): the s81 wave tree lacks the die-phase / TT-repair / C3b code, so those keys are no-ops; no NEW launch until TOOLS-CONVERGE posts the die's new tree and KIT-OPS-5 switches it (same tick, this key is deleted). Running kits continue. Lift = delete this key.",
-     "release": [
-      "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f"
-     ],
-     "migrated": true,
-     "keys": [
-      "*"
-     ],
-     "carry": true
-    },
-    {
      "id": "s81-mig-024",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "DIE-S81-92 2026-11-16 00:5x: RE-HELD. B6gG3b/src tools predate die-phase/TT-repair/C3b gen code, so OT_PG_DIE_PHASE is ignored: G3b kits gen core-phase PDN (pdn.tcl M7 -offset 4.128, no pg_pin_check; slice_station t46 a6, t47 a5). Release on B6gG3c = the same G3b plan + RTL on the TOOLS-CONVERGE S81 tree (die-phase + TT repair), checked on one fresh kit (M7 offset 8.448).",
@@ -36825,7 +36812,28 @@
     "B6gG3c",
     "B6gG4",
     "B6gSVC"
-   ]
+   ],
+   "prev_treeswitch1115": {
+    "src": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/src",
+    "src_manifest_hash": null,
+    "tools_sha": null,
+    "gen_host": "epyc9",
+    "gen_hosts": [
+     "epyc10",
+     "epyc8",
+     "epyc7",
+     "epyc9"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "bind_out": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/out",
+     "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
+     "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
+    },
+    "src_manifest": "verify"
+   },
+   "src_manifest_hash": "e6626b1f72572b4d8020d1ab8d79d81fbb96ba7c408aea8a8ed608e544869d8d",
+   "tools_sha": "e4b9ae9f1c1f"
   },
   "s81_head": {
    "enabled": true,
@@ -36837,12 +36845,12 @@
     "evidence": "KIT-OPS-1 2026-11-13 01:24 rp18r2 = HEAD-96 fix_r2 (claude/head-96-rp18r2-1112@46bb7dfc34e6, train 32 merged 455a69fc3d61): raw plan sha256 cda1ecf604ebe085 (fix_r2/source_plan_rp18r2.json.gz 4cf9862c0887), same sidecar; prepared bdd8a6985f9c, wave plan 6d283b65ff9a; r2 blocks change hd_spn (rst_start_raw_42 -> u_rrl_118) and hd_mesh (lec_hints RBL=1) only. | KIT-OPS-1 2026-11-12 21:28 rp18r1 = HEAD-96 fix_r1 (claude/head-96-rp18fix-1112@eb8a6d68eb, train 28 approved): raw plan sha256 220334aa9b30ef3d (fix_r1/source_plan_rp18r1.json.gz 8440d88a7921), same sidecar; prepared 1fd44cba3c9a, wave plan 0f32a32a3ea8; r1 blocks change hd_spn, hd_spn_end, hd_spn_eshim_rx, hd_spn_wshim_tx, hd_tile, hd_turn_a only. | KIT-OPS-1 2026-11-12 19:57 rp18 = head_rp18_1112 (HEAD-96, COORD 17:19 APPROVED train 21, MERGED 18:39 main 2dd0d8c9fd6c): gen 26/26, G0 1 ERR (native PENDING) 0 new, G0C 0 new ERR, reset 0 new; KIT-OPS-1 prepared tree: kit_rtl export 24/26 (hd_spn, hd_spn_end FAIL: shared raw-export relay, held). | KW-FIX-16 13:1x l48uf I135 tag flow-20261106-d-head (COORD 13:00 GO): prep_uf = repo l48uf unpacked from src_r 79e52bd98b2 (SHA256SUMS OK, plan 69ce0830f6e4, sidecar = l48ue bytes); only hd_tile u_core params + published tile_p differ from prep_ue. | KW-FIX-14 11:2x l48ue I121 9ac2d25b51e tag flow-20261106-a-head, COORD 11:05 GO: prep_ue = repo l48ue unpacked (SHA256SUMS OK, plan 9a2186d89486, sidecar = l48ud bytes), 9 types; hd_host/hd_mesh l48ud rows keep running (only_items_l48ud kept for restore). | KW-FIX-12 08:3x l48ud I107 COORD 08:12 GO. | KW-FIX-8 08:4x COORD 06:51 (3) + 07:34 (3): event l48ua = DIE-HEAD-61 07:09 READY prepared_l48ua (plan f64ad52c1726, sidecar bbdd2f7b5ad1), GATE_EVENTS l48ua merged I34 fe4a38b9337, pilot rows only. | KW-FIX-6 04:4x COORD 04:00: event l48se = l48sd + hd_tile RE-FORM only [CHECKED raw diff], src main I23. | KW-FIX-6 03:4x: event l48sd = DIE-HEAD-59 00:56 READY prepared_l48sd (plan 830b9a799df1, sidecar bbdd2f7b5ad1 unchanged), src dh59/serdes/wt@b65c0e2d46, GATE_EVENTS l48sd merged I18, COORD 00:4x + 03:2x GO; 5 items | KW-FIX-5 01:0x: event l48tc = DIE-HEAD-59 FREG-1 prepared_l48tc (plan e094ebb2b6e8, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48tc merged I16, COORD GO; 2 items | KW-FIX-4 20:12: event l48rc = DH58-RF2 CONSERVATIVE prepared_l48rc (plan 8327f303db76, sidecar bbdd2f7b5ad1 unchanged), GATE_EVENTS l48rc (kw-fix-4-l48rc@3c9994a17c0), OWNER directive via DIE-HEAD-58; 4 items; l48tb turn_a/b keep running (cancel_superseded false) | KW-FIX-4 19:04: event l48tb = DH58-TURNB prepared_l48tb (plan f9623a82a239, sidecar there), GATE_EVENTS l48tb merged (kw-fix-4-itemenv@7585347926, RM-27 I4); turn_a/turn_b only (only_items_l48rf kept for restore); running l48rf kits untouched | KW-FIX-4 11:3x: event l48rf = DH58-RFPLAN PREPARED (intel2+epyc4 dh58/rfplan_work/prepared_l48rf, plan 59c391855c18, sidecar bbdd2f7b5ad1 = l48h1), DIE-HEAD-58 GO 11:24, COORD APPROVED 11:27, GATE_EVENTS l48rf 38b86b7486 merged; G0C advisory (0 new errors, 17 warn). cancel_superseded false: the 6 live l48h0 jobs finish on l48h0 (die owner). hd_mesh_e/hd_ctl_e/hd_ctl_n/hd_host_n holds released (l48rf geometry). | prev event l48h0 plan /srv/opentallas-scratch2/claude/dh55/prepared_l48h0/source_plan.json | KIT-WAVE-9 20:0x (COORD 19:03 (1)+(3)): HEAD plan of record l48x = l48w + 51 rst_start_raw pin moves (DIE-HEAD-52 a146f75cad3, G0C l48x = l48w 0 new, strict bind PASS); 12.25 gate on l48x variant h + --ca-write-fall TT +252.75 contract 0 BLOCKED(kits); hold_gate contract-relative limit FLOW-19 5751e5a949c merged (main f3e4659f554) | COORD 04:4x (4) + 05:4x: HEAD plan l47k (= l47 plan b87c81920f4c + K re-plan strap ties / sidecar dfe1fd228189; G0C l47k = l47: 1 ERROR reset-wavefront PENDING + 49 WARN, identical, main results/die_head_47_1031/l47k CHECKED); gate code l47k cb8aa342d07 merged main 1904e23afd2 (ROOT-MERGE-AI 05:46). Parent l47: COORD RULING 10-31 01:43: DIE-HEAD-47 l47 (l46a + value-only insertio"
    },
    "plan": "/srv/opentallas-scratch2/claude/head-99/prep21z20NF13a/prep/source_plan.json",
-   "gen_host": "epyc7",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcaplec_c327",
+   "gen_host": "epyc2",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756",
    "src_sha": "fb5f5a8db87d691b25ba0e93096fb8e07c00ca3b",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcaplec_c327/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
     "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
    },
    "gen_args": [
@@ -36975,9 +36983,11 @@
     "hd_host_e@6": "HEAD rp21z10 (HEAD-99 READY+ADOPT 08:03, type-scoped to spn/spn_end/host_w/host_e); host_w launched despite open LEC mismatch (TYPE-HDHOSTW-LEC owns it)."
    },
    "gen_hosts": [
-    "epyc7",
-    "intel1",
-    "epyc10"
+    "epyc10",
+    "epyc2",
+    "epyc8",
+    "epyc9",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "cancel_superseded": true,
@@ -37917,7 +37927,12 @@
     "OT_HOLD_STOP_PS": "-1000000",
     "OT_CLAND_STRIP_DENS": "1.0",
     "OT_RFLOW": "0",
-    "OT_TT_SETUP_REPAIR": "both"
+    "OT_TT_SETUP_REPAIR": "both",
+    "OT_PG_DIE_PHASE": "1",
+    "OT_PGCAP": "1",
+    "OT_PG_TRACK_TRUTH": "1",
+    "OT_PG_PIN_CHECK": "1",
+    "OT_GPL_SPARSE_UTIL": "0.10"
    },
    "kit_self_contained": "copy",
    "stash_epyc5_prev_kw41": {
@@ -38926,7 +38941,7 @@
     "hd_st_turn@11",
     "hd_tile@3"
    ],
-   "src_manifest": "verify",
+   "src_manifest": "require",
    "hold_records": [
     {
      "id": "s81_head-mig-002",
@@ -38957,15 +38972,6 @@
      "carry": true
     },
     {
-     "id": "s81_head-tree-switch-01",
-     "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
-     "switch_only": true,
-     "reason": "HOLDGEN-1115 (COORD): switch-only, holds nothing; the autopilot switches src/die_gen_env when the TOOLS-CONVERGE marker lanes/handoff/tree_switch_s81_head.json names this tree and it is on all gen hosts",
-     "release": [
-      "tree_ready:s81_head:/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756"
-     ]
-    },
-    {
      "id": "s81_head-hold-hdserdes-01",
      "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
      "items": [
@@ -38981,7 +38987,26 @@
     "head-serdes-fanout": [
      "sd5"
     ]
-   }
+   },
+   "prev_treeswitch1115": {
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_head_rp21z_pgcaplec_c327",
+    "src_manifest_hash": null,
+    "tools_sha": null,
+    "gen_host": "epyc7",
+    "gen_hosts": [
+     "epyc7",
+     "intel1",
+     "epyc10"
+    ],
+    "kit_rtl": {
+     "mode": "script",
+     "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+     "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+    },
+    "src_manifest": "verify"
+   },
+   "src_manifest_hash": "2f6af4b15fce5050fbbf5c2ce6f348e46b1cb34f85f379fb650f0c4ef48fe1f9",
+   "tools_sha": "e594a73db756"
   },
   "qwen_compute": {
    "enabled": true,
