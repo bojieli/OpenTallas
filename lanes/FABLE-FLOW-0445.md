@@ -194,7 +194,7 @@ a non-log edit from the file's last post line.
 
 No GEN-DISK-LOW, DISK GUARD or NOT RUN line in the window. Standing: epyc7 root 120 GB (floor 150), hub
 intel2 scratch2 94% used (206 GB free), epyc2 scratch2 135 GB, intel1 scratch2 227 GB. rt keeps a
-2 MB manifest and a tree per merged sha, 24 new ones in this window. The reaper cron still names epyc4.
+2 MB manifest and a tree per synced sha (count of old ones not measured). The reaper cron still names epyc4.
 Owner CLEAN-ALL-1115: prune rt to the shas named by live attempts; drop epyc4 from the cron line.
 
 ## 10. STALE and unowned
