@@ -1,0 +1,39 @@
+{
+ "candidate_sha": "4677b692c544627e9fed4def2ac933289f06dfde",
+ "state_mutated": false,
+ "actual_input_checks": [
+  {
+   "item": "kv3_hub_C",
+   "fail_key": "c7ad2fc0d49f0a76",
+   "failed_attempt": 1,
+   "old_bind_context": "a5d687a6ab57f77b7eda7d2b99ac2130bda5155a",
+   "new_bind_context": "0e8eef636434698b5aae93af1a4ae05f9c4e13f1",
+   "blocked": false,
+   "changed": [
+    "bind_context"
+   ]
+  },
+  {
+   "item": "kv3_hub_Wo",
+   "fail_key": "28fac39d17cee9ea",
+   "failed_attempt": 1,
+   "old_bind_context": "a5d687a6ab57f77b7eda7d2b99ac2130bda5155a",
+   "new_bind_context": "0e8eef636434698b5aae93af1a4ae05f9c4e13f1",
+   "blocked": false,
+   "changed": [
+    "bind_context"
+   ]
+  },
+  {
+   "item": "kv3_pv_v1",
+   "fail_key": "642fa25e37d0bccb",
+   "failed_attempt": 25,
+   "old_bind_context": "a5d687a6ab57f77b7eda7d2b99ac2130bda5155a",
+   "new_bind_context": "0e8eef636434698b5aae93af1a4ae05f9c4e13f1",
+   "blocked": false,
+   "changed": [
+    "bind_context"
+   ]
+  }
+ ]
+}
