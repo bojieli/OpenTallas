@@ -1,6 +1,6 @@
-# HEAD die route units, recipe run nf6r (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-15 19:25:36 PST by intel2 ~/tmp/head100_utable.sh
-# DONE 42, DONE with DRC>0: 10, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
-key-cardinal u002_b DRT drc=- rss_mb=- wall=- Completing 70% with 1181 violations.
+# HEAD die route units, recipe run nf6r (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-15 19:40:48 PST by intel2 ~/tmp/head100_utable.sh
+# DONE 44, DONE with DRC>0: 10, DONE with RSS>20 GB: 2; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
+key-cardinal u002_b DRT drc=- rss_mb=- wall=- Completing 50% with 1158 violations.
 key-cardinal u004_b DONE drc=0 rss_mb=8334 wall=25:14.58 [INFO DRT-0199]   Number of violations =
 renewed-glider u005_b DONE drc=0 rss_mb=8817 wall=8:43.07 [INFO DRT-0199]   Number of violations =
 key-cardinal u006_b DONE drc=0 rss_mb=8055 wall=22:27.03 [INFO DRT-0199]   Number of violations =
@@ -11,15 +11,15 @@ key-cardinal u015_b DONE drc=0 rss_mb=10316 wall=1:34:28 [INFO DRT-0199]   Numbe
 key-cardinal u016_b DONE drc=0 rss_mb=9788 wall=1:21:00 [INFO DRT-0199]   Number of violations =
 key-cardinal u017_b DONE drc=0 rss_mb=10197 wall=1:21:26 [INFO DRT-0199]   Number of violations =
 key-cardinal u018_b DONE drc=1 rss_mb=54191 wall=1:48:21 [INFO DRT-0199]   Number of violations =
-renewed-glider u019_b DRT drc=- rss_mb=- wall=- [INFO DRT-0199]   Number of violations =
+renewed-glider u019_b DONE drc=0 rss_mb=54025 wall=26:18.01 [INFO DRT-0199]   Number of violations =
 key-cardinal u022_b DONE drc=0 rss_mb=9582 wall=1:24:45 [INFO DRT-0199]   Number of violations =
 renewed-glider u023_b DONE drc=0 rss_mb=10088 wall=17:21.59 [INFO DRT-0199]   Number of violations =
-renewed-glider u026_b DRT drc=- rss_mb=- wall=- Completing 60% with 488 violations.
-key-cardinal u027_b DRT drc=- rss_mb=- wall=- Completing 30% with 1 violations.
-renewed-glider u028_b DRT drc=- rss_mb=- wall=- Completing 30% with 445 violations.
-renewed-glider u029_b DRT drc=- rss_mb=- wall=- Completing 10% with 12 violations.
-key-cardinal u030_b DRT drc=- rss_mb=- wall=- Completing 90% with 88 violations.
-renewed-glider u031_b DRT drc=- rss_mb=- wall=- Completing 10% with 381 violations.
+renewed-glider u026_b DRT drc=- rss_mb=- wall=- Completing 90% with 1067 violations.
+key-cardinal u027_b DRT drc=- rss_mb=- wall=- Completing 60% with 1 violations.
+renewed-glider u028_b DRT drc=- rss_mb=- wall=- Completing 80% with 1734 violations.
+renewed-glider u029_b DRT drc=- rss_mb=- wall=- Completing 50% with 2069 violations.
+key-cardinal u030_b DRT drc=- rss_mb=- wall=- Completing 60% with 2 violations.
+renewed-glider u031_b DONE drc=0 rss_mb=9988 wall=19:07.80 [INFO DRT-0199]   Number of violations =
 key-cardinal u042_b DONE drc=218 rss_mb=11289 wall=1:46:02 [INFO DRT-0199]   Number of violations =
 renewed-glider u046_b DONE drc=243 rss_mb=10674 wall=51:43.88 [INFO DRT-0199]   Number of violations =
 renewed-glider u051_b DONE drc=0 rss_mb=9651 wall=20:09.28 [INFO DRT-0199]   Number of violations =
@@ -48,7 +48,7 @@ renewed-glider u260_b DONE drc=0 rss_mb=10939 wall=24:52.75 [INFO DRT-0199]   Nu
 civil-redfish u261_b DONE drc=0 rss_mb=12904 wall=47:48.89 [INFO DRT-0199]   Number of violations =
 renewed-glider u277_b DONE drc=231 rss_mb=11336 wall=40:09.37 [INFO DRT-0199]   Number of violations =
 renewed-glider u282_b DONE drc=0 rss_mb=8712 wall=22:21.73 [INFO DRT-0199]   Number of violations =
-key-cardinal u294_b DRT drc=- rss_mb=- wall=- Completing 80% with 176 violations.
+key-cardinal u294_b DRT drc=- rss_mb=- wall=- Completing 80% with 175 violations.
 civil-redfish u298_b DONE drc=268 rss_mb=11183 wall=47:52.10 [INFO DRT-0199]   Number of violations =
 civil-redfish u308_b PREP drc=- rss_mb=- wall=- 
 renewed-glider u319_b DONE drc=0 rss_mb=8126 wall=8:57.67 [INFO DRT-0199]   Number of violations =
