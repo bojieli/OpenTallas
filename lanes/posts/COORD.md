@@ -234,3 +234,5 @@
   COORD APPROVED: claude/s81-ring-ff-1116 @526fc2be53d
 - 2026-11-16 03:08 PST RULING [COORD -> MERGE-QUEUE-1, HOLDGEN-1115] r283 holdgen-1115-1115d @d54114f2be1: die.proof_items declares the items each proof:<name> record is proven by; such a record never holds them (writes rejected, globs expanded without them, PROOF-HELD audit count). Fixes the deadlock where the QC DRT0255 records held their own 4 proof kits (data carve-out already live, ed33c434c37). Gate GREEN 128/128.
   COORD APPROVED: claude/holdgen-1115-1115d @d54114f2be1
+- 2026-11-16 03:26 PST RULING [COORD -> MERGE-QUEUE-1, TOOLS-CONVERGE-1115, HOLDGEN-1115] r284 tools-converge-1116-links @ae056eee4e7: src_manifest links TREE (stat-only nlink check, --find-in names the other path), hosts --links-only, verify --ro and publish refuse a tree whose files share an inode (NOT-READY + paths). Fixes the cp -al class (S81 cmp_B6gF2s, HEAD tree5). HOLDGEN: tree_ready runs hosts --expect <hash> at switch, --links-only on later ticks (usage in src_manifest.py). Gate GREEN 3/3.
+  COORD APPROVED: claude/tools-converge-1116-links @ae056eee4e7
