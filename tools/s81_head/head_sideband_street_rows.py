@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""FABLE-DIE-HEAD NF14 = NF13b + landing sideband reach rows (FABLE-CLOSURE lever C) on hd_lep0N.
+"""FABLE-DIE-HEAD NF14 = NF13b + landing sideband reach rows (FABLE-CLOSURE lever C) on hd_lep0N and hd_ctl.
 Same plan keys and helpers as tools/s81_head/head_cland_stage_delta.py (local_resets, nearest, rrl_from_rtl, republish);
 the only difference: stage sites follow a street path round the hard cores instead of the straight segment (hd_lep0N has
 four 777.6 x 492.48 cores), every path hop <= HMAX.  0 data cycles; sidecar unchanged.
-usage: head_sideband_street_rows.py TOOLS_ROOT SRC_PREP OUT_PREP [--types hd_lep0N] [--no-republish]
-(hd_ctl uses the region-reset form and is not supported yet.)"""
+usage: head_sideband_street_rows.py TOOLS_ROOT SRC_PREP OUT_PREP [--types hd_lep0N,hd_ctl] [--no-republish]
+Types on the region-reset form (hd_ctl) take the depth of their tap wavefront relay."""
 import sys, json, re, math, heapq, shutil, hashlib
 from pathlib import Path
 _H = Path(__file__).resolve().parent
@@ -76,6 +76,14 @@ def build(tn, T, coll, wrapper):
     rrl = m.rrl_from_rtl(wrapper); dep = {r[0]: r[1] for r in rrl}
     text = Path(wrapper).read_text()
     rd = {b: dep[n] + 1 for b, n in re.findall(r"ot_dp_rrelay u_cland_rst_(\w+) \(\.clk\(clk\), \.d\((\w+)\)", text) if n in dep}
+    if not rd:
+        # region-reset form (hd_ctl): the collects and the FSTART face flops take a timed tap wavefront relay rst_n_t<k>
+        # directly, so the landing-control depth is that relay's own depth (no ring reset relay on top)
+        nets = set(re.findall(r"ot_dp_landing_collect[^;]*?\.rst_n\((rst_n_t\d+)\)", text)) | set(re.findall(r"assign cland_start_raw = (rst_n_t\d+);", text))
+        tdep = {n: int(d) for n, d in re.findall(r"\.q\((rst_n_t\d+)\)\);\s*//[^\n]*?depth (\d+)", text)}
+        rd = {n: tdep[n] for n in sorted(nets)}
+        rep["reset_form"] = "region"
+    assert rd, (tn, "no landing-control reset found")
     depth = max(rd.values()); rep["ring_reset_depths"] = rd
     assert len(set(rd.values())) == 1, (tn, "ring reset depths differ", rd)
     origin = tuple(c["start_capture_um"])
@@ -135,7 +143,7 @@ def build(tn, T, coll, wrapper):
 
 def main(argv):
     ROOT, SRC, OUT = Path(argv[1]), Path(argv[2]), Path(argv[3])
-    TYPES = argv[argv.index("--types") + 1].split(",") if "--types" in argv else ["hd_lep0N"]
+    TYPES = argv[argv.index("--types") + 1].split(",") if "--types" in argv else ["hd_lep0N", "hd_ctl"]
     plan = json.loads((SRC / "source_plan.json").read_text()); side = json.loads((SRC / "source_sidecar.json").read_text())
     report = {}
     for tn in TYPES:
