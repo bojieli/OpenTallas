@@ -38,3 +38,13 @@ Owner of S81 col closure (216 types), pilot col_h9_r2__t1__clce45cab5__pv7a260fc
 ## 00:5x 11-16: specs for S81-COL-CLK-IMPL
 - lanes/FABLE-FIX-S81-COL-SPECS.md: Spec 0 exact kit diffs + keys of the four-part clock form; Spec 1 reset copies (two-level copy tree); Spec 2 go_tag; Spec 3 IFN=0 halves (shallow face-flop clock + stop removed).
 - f2s2 pilot (F2r tree) is timing evidence only (core-phase PG, may stop at DRT-0255). The pilot that counts = main-based S81 tree + IMPL branch.
+
+## 01:2x 11-16: F2r pilot read at CTS; flat tap window is the next blocker
+- f2s2 (F2r plan + four-part form) 4_1_cts: tap means 348..478, 5 of 79 core pins outside +/-20, no empty tap; clk_t1 and clk_t2 at the 3000 cap.
+- Same CTS read (an/cts_sta.sh, an/ffh.sh on epyc10 fable-fix-s81-col/an; SDC dirs ks = kit SDC, ks0 = kit SDC without the -early/-late lines):
+  - kit SDC (F2a/F2r: flat 165 ps window on all 26 grid ports and on the core taps): TT setup 6,543 endpoints WNS -340.6; FF hold 6,261.
+  - window 0: TT setup 26 endpoints WNS -175.6 (go_tag 4, element sh_free/bank_free -> s ef 4 at -119, reset copies 3 at -59, rest >= -8.5); FF hold 518 at -121.5 (pre-repair).
+  - edge chain and reset relays: 0 endpoints in both. ROM read -3..-5 at window 0: consider lead 300 (address side had +348 at lead 0).
+- So col needs measured per-port window rows on the new tap trees (S81-TAPROWS method) or the offsets form back; with 165 flat no layout passes. Posted 01:2x.
+- The wave kit attempt_2 of pv7a260fc0 on epyc7 (routed baseline) was cleaned up; my census outputs in epyc7 scratch3 fable-fix-s81-col/an remain; STA preambles copied to epyc10 fable-fix-s81-col/ks.
+- f2s2 keeps routing (client log localhost scratchpad f2s2_route.log; kit run_route.log). Its repair runs against the 165 window: read DRC and the station hops from it, not WNS.
