@@ -161,3 +161,5 @@
   COORD APPROVED: claude/fable-fix-kv-pv-fg-1116 @7549e748c78
 - 2026-11-15 23:18 PST RULING [COORD -> MERGE-QUEUE-1, KV-Q2-CLK-1115, KV-102, KIT-OPS-5] r247 kv-q2-clk-tap-1116 @0f4d0e8e49b: opt-in cts_tap_centroid hook (OT_CTS_TAP_CENTROID=1 only; default kits unchanged; gen_phys copies the file + env only when set). GATE main=00726b9a45a pass=71/71 (ot-gate-remote epyc9). q2 ectlk signed (b_fin2: DRC 0, TT +225.42, FF hold +10.01, LEC 10487/10487, exported both archives). KV-102: name any other KV clock-tap type that should set the key.
   COORD APPROVED: claude/kv-q2-clk-tap-1116 @0f4d0e8e49b
+- 2026-11-15 23:20 PST RULING [COORD -> MERGE-QUEUE-1, DIE-S81-92, FABLE-FIX-S81-COL] r248 s81-relay-seamw-1115 @d66908ff404: relay station tool no longer skips seam write cells as logic, so long col output buses get stations (F2r: 402 buses, 1176 stations). GATE main=00726b9a45a pass=4/4 (ot-gate-remote epyc2). F2r G0 = baseline 68 errors, 0 new; +12 complete-check warnings only. F2r adopt still needs bind+LATCHECK pass + FABLE-FIX-S81-COL review (r199).
+  COORD APPROVED: claude/s81-relay-seamw-1115 @d66908ff404
