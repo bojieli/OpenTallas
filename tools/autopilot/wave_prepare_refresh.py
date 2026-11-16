@@ -17,6 +17,22 @@ def digest(p):
     return h.hexdigest()
 
 
+def status(prep):
+    """(ok, msg) without writing: a prep dir with no wave_prepare.json is not a prepared HEAD tree (ok); a receipt whose plan or
+    sidecar sha differs from the files on disk is stale (not ok: head_wave_kit_rtl would raise 'prepared plan changed')"""
+    rp = os.path.join(prep, "wave_prepare.json")
+    if not os.path.exists(rp):
+        return True, "no wave_prepare.json (not a prepared tree)"
+    try:
+        rec = json.load(open(rp))
+        plan, side = digest(os.path.join(prep, "source_plan.json")), digest(os.path.join(prep, "source_sidecar.json"))
+    except (OSError, ValueError) as e:
+        return False, f"wave_prepare unreadable: {e}"
+    if (rec.get("prepared_plan_sha256"), rec.get("sidecar_sha256")) == (plan, side):
+        return True, f"wave_prepare current (plan {plan[:12]})"
+    return False, f"wave_prepare STALE: receipt plan {str(rec.get('prepared_plan_sha256'))[:12]} != file {plan[:12]}"
+
+
 def refresh(prep):
     rp = os.path.join(prep, "wave_prepare.json")
     try:
@@ -36,6 +52,8 @@ def refresh(prep):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 2 and sys.argv[2] == "--status":
+        ok, msg = status(sys.argv[1]); print(msg); sys.exit(0 if ok else 1)
     rc, msg = refresh(sys.argv[1])
     print(msg)
     sys.exit(rc)

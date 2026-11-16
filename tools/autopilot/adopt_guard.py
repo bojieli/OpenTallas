@@ -138,6 +138,40 @@ def plan_sha_check(cfg, die, hosts, run=sh, log=print):
     return ok
 
 
+def prepare_check(cfg, die, hosts, check=False, run=sh, log=print):
+    """KIT-OPS-5 11-15 (COORD): head_wave_kit_rtl raises 'prepared plan changed' when the prep tree's plan was edited after prepare
+    (NF10/NF12) and wave_prepare.json was not republished.  For a die whose plan sits in a prepared tree, every wave host's
+    wave_prepare.json must match the plan/sidecar on disk; without --check a stale receipt is refreshed in place
+    (wave_prepare_refresh.py, copy+replace) and re-verified.  -> True when current everywhere (or not a prepared tree)"""
+    plan = str((cfg["dies"][die].get("plan")) or "")
+    if not plan:
+        return True
+    prep = os.path.dirname(plan)
+    mod = Path(__file__).resolve().parent / "wave_prepare_refresh.py"
+    code = mod.read_text().split('if __name__ == "__main__":')[0]      # the functions only, not the CLI block
+
+    def remote(h, flag):
+        body = code + "\nimport sys\n" + (f"ok,m=status({prep!r});print(m);sys.exit(0 if ok else 1)" if flag == "--status" else f"rc,m=refresh({prep!r});print(m);sys.exit(rc)")
+        full = ["bash", "-c", f"python3 -I -c {shlex.quote(body)}"] if h == "localhost" else SSH + [h, f"python3 -I -c {shlex.quote(body)}"]
+        return run(full)
+
+    ok = True
+    for h in hosts:
+        rc, out = remote(h, "--status")
+        if rc == 0:
+            continue
+        log(f"ADOPT-GUARD PREPARE STALE {die} {h}: {out.strip()[:200]}")
+        if check:
+            ok = False
+            continue
+        rc2, out2 = remote(h, "--refresh")
+        rc3, out3 = remote(h, "--status")
+        log(f"ADOPT-GUARD PREPARE REFRESH {die} {h}: {out2.strip()[:160]} -> {'OK' if rc3 == 0 else 'STILL STALE'}")
+        ok = ok and rc3 == 0
+    log(f"ADOPT-GUARD prepare {die}: {'OK' if ok else 'FAIL closed'}")
+    return ok
+
+
 def guard_tree(cfg, die, hosts, check=False, run=sh, log=print):
     src = str((cfg["dies"][die].get("src")) or "")
     if not src or len(hosts) < 2:
@@ -178,7 +212,8 @@ def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
     log(f"ADOPT-GUARD {die}: {'OK' if not left_n else 'FAIL closed: ' + str(left_n) + ' still missing'}")
     tree_ok = True if no_tree else guard_tree(cfg, die, hosts, check, run, log)
     sha_ok = plan_sha_check(cfg, die, hosts, run, log)
-    return left_n == 0 and tree_ok and sha_ok
+    prep_ok = prepare_check(cfg, die, hosts, check, run, log)
+    return left_n == 0 and tree_ok and sha_ok and prep_ok
 
 
 if __name__ == "__main__":
@@ -193,5 +228,5 @@ if __name__ == "__main__":
     if a.plan_only:
         d = cfg["dies"][a.die]
         hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
-        sys.exit(0 if plan_sha_check(cfg, a.die, hosts) else 1)
+        sys.exit(0 if (plan_sha_check(cfg, a.die, hosts) and prepare_check(cfg, a.die, hosts, True)) else 1)
     sys.exit(0 if guard(cfg, a.die, a.check, no_tree=a.no_tree) else 1)
