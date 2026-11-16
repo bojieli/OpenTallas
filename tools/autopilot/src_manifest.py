@@ -402,7 +402,7 @@ def derive(live, repo, sha, scope):
 
 # ---- delta (v2 trees without a rebuild or a 48 GB network copy) --------------------------------------------------------------
 
-def delta_make(repo, old_tree, new_sha, out):
+def delta_make(repo, old_tree, new_sha, out, drop_overlay=()):
     """pack = the paths whose content differs between the tree's main sha and new_sha inside the tree's scope (typically 40-80 files):
     out/delta.json + out/files/<path>.  A changed path that the tree's overlay carries is refused (the overlay wins; re-derive it)."""
     m = load_manifest(old_tree)
@@ -413,7 +413,8 @@ def delta_make(repo, old_tree, new_sha, out):
     nm = subprocess.run(["git", "-C", repo, "diff", "--name-status", "-z", "--no-renames", m["main_sha"], new_sha, "--"] + list(m["scope"]),
                         capture_output=True, text=True, check=True).stdout.split("\0")
     recs = [(nm[i], nm[i + 1]) for i in range(0, len(nm) - 1, 2)]
-    clash = [p for _st, p in recs if p in m["overlay"]]
+    drop = set(drop_overlay)
+    clash = [p for _st, p in recs if p in m["overlay"] and p not in drop]
     if clash:
         raise SystemExit("refuse: paths changed on main are overlaid by the tree: " + ", ".join(clash[:10]))
     if os.path.exists(out):
@@ -432,7 +433,8 @@ def delta_make(repo, old_tree, new_sha, out):
             f.write(blob)
         add[path] = {"sha256": hashlib.sha256(blob).hexdigest(), "exec": mode == "100755", "link": mode == "120000"}
     json.dump({"old_manifest_hash": m["manifest_hash"], "old_main": m["main_sha"], "new_main": new_sha, "scope": m["scope"],
-               "add": add, "delete": delete}, open(os.path.join(out, "delta.json"), "w"), indent=0, sort_keys=True)
+               "add": add, "delete": delete, "overlay_drop": sorted(drop & set(m["overlay"]))},
+              open(os.path.join(out, "delta.json"), "w"), indent=0, sort_keys=True)
     return len(add), len(delete)
 
 
@@ -467,6 +469,8 @@ def delta_apply(pack, old_tree, out):
         os.chmod(dest, 0o755 if e["exec"] else 0o644)
         files[path] = e["sha256"]
     ov = dict(m["overlay"])
+    for k in d.get("overlay_drop") or []:                       # a stale overlay copy of a file main changed: main's version wins
+        ov.pop(k, None)
     ov.update(d.get("overlay_add") or {})                       # data files a data pack adds (data_pack.py): they are overlay, not main
     nm = {"version": 1, "main_sha": d["new_main"], "scope": m["scope"], "overlay": ov, "files": files}
     nm["manifest_hash"] = manifest_hash(nm)
@@ -522,6 +526,7 @@ def main(argv=None):
     dm.add_argument("--repo", required=True)
     dm.add_argument("--sha", required=True)
     dm.add_argument("--out", required=True)
+    dm.add_argument("--drop-overlay", nargs="*", default=[], help="overlay paths whose copy is an OLDER main version: main wins")
     da = sp.add_parser("delta-apply", help="OUT = cp -a of TREE + the pack (run on each host, then publish)")
     da.add_argument("pack")
     da.add_argument("--old", required=True)
@@ -556,7 +561,7 @@ def main(argv=None):
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
     elif a.cmd == "delta-make":
-        n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out)
+        n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out, a.drop_overlay)
         print(f"SRC_MANIFEST DELTA {a.out}: {n} changed/added, {dl} deleted")
     elif a.cmd == "delta-apply":
         nm = delta_apply(a.pack, os.path.abspath(a.old), a.out)
