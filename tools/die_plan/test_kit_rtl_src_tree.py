@@ -47,7 +47,7 @@ def test_kit_rtl_cli_has_src_tree_and_wave_passes_it():
     t = Path(B.__file__).read_text()
     assert '"--src-tree"' in t and "OT_KIT_SRC_TREE" in t and "src_tree=str(base) if src_tree else None" in t
     w = (Path(B.__file__).resolve().parents[1] / "autopilot" / "kit_wave.py").read_text()
-    assert re.search(r"kit-rtl \{q\(plan\)\}.{0,300}--src-tree \{q\(src\)\}", w, re.S)
+    assert re.search(r"kit-rtl \{q\(plan\)\}.{0,500}--src-tree \{q\(src\)\}", w, re.S)
 
 
 def test_gen_phys_records_the_kit_source_tree():

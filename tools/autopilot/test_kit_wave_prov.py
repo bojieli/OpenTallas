@@ -405,6 +405,6 @@ def test_prov_first_builds_overlay_before_kit_rtl():
     src = Path(KW.__file__).read_text()
     body = src[src.index("def run_item(spec_path):"):]
     first = body.index('plan, prc = prov_stage(sp, run, remote, fail, res, jobdir=out)')
-    kitrtl = body.index('run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && python3 {q(kbind)} kit-rtl {q(plan)}')
+    kitrtl = body.index('run("kit_rtl", otrun(8, 2, W, kr_cmd(kbind,')
     later = body.index('if sp.get("prov_views") and not core and not prov_first:')
     assert first < kitrtl < later
