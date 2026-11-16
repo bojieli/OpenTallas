@@ -58,3 +58,29 @@ def test_ot_clk_argv_maps_top_type_keepouts():
     import ot_clk
     src = inspect.getsource(ot_clk)
     assert 'top.get("type_keepouts")' in src and '"--clock-type-keepouts"' in src
+
+
+def test_landing_band_rect_variants_exclude_clock_sites(monkeypatch):
+    class Bands(_P):
+        types = {'band': {'outline_um': [200., 200.], 'clock': {'landing_contract': {'bands': {
+            'a': {'rect_um': [80., 60., 160., 110.]},
+            'b': {'rects_um': [[20., 20., 40., 40.]]},
+            'c': {'band_fixed_um': {'part': [20., 130., 40., 150.]}},
+            'd': {'multi_rect_um': [[170., 20., 190., 40.]]}
+        }}}}}
+        parts = {'p0': {'type': 'band', 'origin_um': [0., 0.], 'orient': 'R0'},
+                 'p1': {'type': 'band', 'origin_um': [200., 0.], 'orient': 'MX'}}
+    monkeypatch.setattr(D, 'CLOCK_TYPE_KEEPOUTS', False)
+    plain = D.SiteMap(Bands())
+    assert plain.forb == [] and plain.legal((100., 90.))
+    monkeypatch.setattr(D, 'CLOCK_TYPE_KEEPOUTS', True)
+    site = D.SiteMap(Bands())
+    assert len(site.forb) == 8 and all(r[4] == 'band' for r in site.forb)
+    for q in [(100., 90.), (30., 30.), (30., 140.), (180., 30.), (300., 120.)]:
+        assert site.why(q) == 'band'
+    # The point is clear, but a native1.62um cell at it overlaps the band.
+    assert site.legal((78.8, 90.))
+    monkeypatch.setattr(D, 'CLOCK_BODY_SITES', True)
+    monkeypatch.setattr(D, 'DME_ACTUAL_MAX_UM', None)
+    assert D.clock_site(Bands()).why((78.8, 90.)) == 'band'
+    assert D.clock_site(Bands()).legal((162., 90.))

@@ -539,6 +539,19 @@ class SiteMap:
                     a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                     self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
                                       max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "keepout"))
+        if CLOCK_TYPE_KEEPOUTS:                 # FABLE-DIE-S81: landing band rects of every
+            bh = 0.54                           # type are no die clock-cell site (ring-ff fills them); 2-row halo
+            for n, p in P.parts.items():
+                lc = ((P.types[p["type"]].get("clock", {}) or {}).get("landing_contract") or {})
+                for bd in (lc.get("bands") or {}).values():
+                    rs = [bd["rect_um"]] if bd.get("rect_um") else []
+                    for k in ("rects_um", "band_fixed_um", "multi_rect_um"):
+                        v = bd.get(k)
+                        rs += [r for r in (v.values() if isinstance(v, dict) else v or []) if isinstance(r, list) and len(r) == 4]
+                    for x0, y0, x1, y1 in rs:
+                        a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                        self.forb.append((min(a[0], b[0]) - bh, min(a[1], b[1]) - bh,
+                                          max(a[0], b[0]) + bh, max(a[1], b[1]) + bh, "band"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
