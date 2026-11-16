@@ -34,3 +34,7 @@ Owner of S81 col closure (216 types), pilot col_h9_r2__t1__clce45cab5__pv7a260fc
 - Read at: 4_1_cts.log OT_TAP_BALANCE done line; then sign-off (signoff/signoff.json). Use an/mk.sh + cls.py for the census.
 - If it misses: go_tag (IFN half cycle; IFN0 halves hwC/heC stopped at OT_HOLD_STRUCTURAL FF -152/-164 on 2,7xx inputs, no owner), reset copies u_d7_6_Y, element sh_free -> s ef nets (need TT repair = main tree).
 - To do for the family: plan rows (reset_relay_full true, drop clock.tap_group + tap_pair_affinity, tap_max_sinks 3000) to DIE-S81-92; tool change on a NEW branch from main: type key for ROM clock lead (core_latency row) and OT_TAP_CORE_ETAP export.
+
+## 00:5x 11-16: specs for S81-COL-CLK-IMPL
+- lanes/FABLE-FIX-S81-COL-SPECS.md: Spec 0 exact kit diffs + keys of the four-part clock form; Spec 1 reset copies (two-level copy tree); Spec 2 go_tag; Spec 3 IFN=0 halves (shallow face-flop clock + stop removed).
+- f2s2 pilot (F2r tree) is timing evidence only (core-phase PG, may stop at DRT-0255). The pilot that counts = main-based S81 tree + IMPL branch.
