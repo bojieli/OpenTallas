@@ -159,3 +159,9 @@
 - Actual plan+captured reset review PASS-COND: ep10 fable-fix-s81-svc/results/geom_review/svc_f2s3_review_reset.{png,json}. Intel2 watcher1047974 route_after_f2s3_actual.py waits GEN0, checks review+profile, copies completed kits to ep9, normal48GB8thread routes. Logs f2sv_main/finalgen_TYPE.log and f2s3_route_TYPE.log.
 - Root-authorized superseded inherited epyc8 t6 STOPPED exact unit oth-ubuntu-952570-1794791581. Sole exact-dir consumer dpkit-svc_lo_dsdv_svc_rs__t6-952645 confirmed, scope inactive and Yosys3335451 gone. Original svcsynth-1115/svc_lo_dsdv_svc_rs__t6 objects/logs preserved plus immutable SUPERSEDED_NONMACRO_1116.json (source SHA/no closure receipt). Not a release pilot.
 - r310 svc-ready physical result remains HELD until actual F2s3 timing/GRT result. Two source-event prerequisites may advance to adopted B6gF2s3; retain physical result hold/history.
+
+### CODEX actual F2s3 physical launch milestone
+- Selected hi3/lo7 GEN BOTH PASS0 (e37/D2); exact canonical closed input identity receipts PASS129/153files at f2s3_actual_phys/TYPE/canonical_rtl_identity.json. Only generated differences are planned hard-core header-only views; reset/datapath exact.
+- Both routes admitted ep9 48GB8threads, preflight PASS0: hi3 unit oth-ubuntu-3006868-1794863068, Docker11251cfb0840 dpkit-svc_hi_dsdv_svc_rs__t3-3007103 actively synthesizing. Lo7 unit oth-ubuntu-3031332-1794863108, exact Docker request dpkit-svc_lo_dsdv_svc_rs__t7-3032295 still pending startup (client3041140, no container object yet). Preserve both, no duplicate launch.
+- Original path root fable-fix-s81-svc/f2s3_actual_phys/TYPE/gen/TYPE; intel2 f2sv_main/f2s3_route_TYPE.log; watcher1047974 retains terminal results.
+- EP9 scratch dipped46GB, recovered130GB then73GB: unrelated large writes; fleet_flow owns capacity/create-pending diagnosis. Own new kits under150MB. Hi3 progressing synthOPT3.8, lo7 pendingDocker is INFRA observation, not designFAIL.
