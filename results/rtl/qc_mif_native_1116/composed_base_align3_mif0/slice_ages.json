@@ -119,6 +119,20 @@
         "path": "/srv/opentallas-scratch2/claude/tok-verify-2/red_valid_age1116/receipt.json",
         "sha256": "c236f77457cb294de9a31421b2b79aa8c6aaa9ce578b5e138951cbaa50107449"
       }
+    },
+    "measured_su_return_boundary": {
+      "signal": "post-LRLY L_vm_we/L_kv_we/L_l_ov and payload tuple",
+      "measured_TB": "rtl/test/qwen_dv/mif1116/tb.sv:15/20 samples a/b.L_vm_we",
+      "component_map": "component.sv:176 maps native u_head0 h0_vm_we into u_lrly0.h_vm_we, then u_lrly0.vm_we to L_vm_we; all8 heads repeat",
+      "already_included_native_lrly_edges": 3,
+      "native_lrly_law": "OREG1 (ovr/odr captures) + RD2 (u_ov/u_od); qfd_dv_s5_leaves.sv:691,747,763-766",
+      "native_lrly_source_sha256": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+      "example": "native3/1 actual direct su_cmd receiver->post-LRLY COPY/V/QN first61; directhead equivalent58. Do not add LRLY3 again.",
+      "native_VM_commit_after_measured_L_vm_receiver": 4,
+      "native_VM_commit_law": "MIF1: u_vw1+VMR4=5; MIF0: u_vw1+VMR3=4. MIF1 +1 already inside VMR4; physical external L adds separately",
+      "DD_law": "measured post-LRLY age + flat command prefix3 + CTL2/FDN1 suffix3; native LRLY is already in the measurement",
+      "RED_law": "existing RED->CTL2+u_vw1+VMR4 base7 is separate; actual bound RED->CTL and CTL->VM external ages must be added separately",
+      "bound_transport_included": false
     }
   }
 }
