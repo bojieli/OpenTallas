@@ -25,16 +25,18 @@ QC event owner (binds, adopts): FABLE-FIX-QC-KNEE-HC, epyc9 fable-fix-qc-knee-hc
   reports delta/s4q9e.report.json, s4q9e.sync.json. Gates: reach_rules glue 0 errors; plan_gate_pre + reach_fix see post.
 - Needs: one bind (lanes change: LATCHECK must show exactly those 3 lane deltas as planned), then a glue kit.
 
-## 3. glue d2d_rom store / reset_regions (-64..-152, ~400 ep): NOT fixed, decision needs the v2 kit
-- WITHDRAWN form (do not redo): moving the 4 d2d store SRAMs to the N band + stations on the 5 FDI buses. FDI +3 cycles
-  changes the PHY hop of the compiled static link calendars (tools/qwen_split/d2d_link_calendar.py --phy / --txl;
-  regen_constants.py has no FDI rule), on both dies. It also broke 40 reader-START raw reset references (reach class 5).
-- The probe ODB is gone (kit cleaned 05:36), endpoints had no coordinates. Next: glue a6 (v2 tree, S4q6d plan, epyc10
-  .../s29q103S4Q6D/items/glue/attempt_6/gen/glue, in synth/LEC at 08:55) -> rerun the probe
-  (epyc2 qc-cbglue-1116/probe/run_probe.sh; fix locof for escaped names so store / reset_regions flops get xy) on its
-  post-CTS ODB. Then choose: (a) item_env OT_TT_SETUP_DESIGN=1 OT_TT_SETUP_MARGIN=30 (hc2 closed -178 -> -32 with it);
-  (b) region rows for u_d2d_rom store flops next to the SRAMs; (c) RTL register (needs bench + LEC + link latency proof).
-- cbn_q00 relay hop -78: read on the v2 kits now running (cbn_q01 a2, cbn_q11 a2 launched 08:2x-08:3x); no row yet.
+## 3. glue d2d_rom store / reset_regions (-64..-152, ~400 ep): cause MEASURED 09:3x, no fix yet
+- v2 glue a6 placement (epyc2 fable-fix-qc-cbglue/probe/place_a6/out/xy.tsv; dump script out/xy.tcl, run via ot-run from
+  localhost --hosts epyc2): d2d_rom spans the whole strip. Native side at y 1,300-1,400 (N face), FDI flops + 4 store
+  SRAMs + dout/dqq/g_hit at y 5-113 (S end), store dq flops smeared y 192-1,316, c_fdi_rx_flit y 112-763, rx_payload
+  y 731-976. 500-1,200 um single-cycle hops = too few stages for 1.4 mm.
+- (A) posted 09:3x: KIT-OPS-5 item_env OT_TT_SETUP_DESIGN=1 OT_TT_SETUP_MARGIN=30 on glue; read the routed TT.
+- (B) if (A) < -42: next event rows = d2d home at the S end + 3 stations on every d2d N-face native bus (uniform per seam
+  bundle; regen_constants XDIE_SEAM_C / D2D_TXDP_C re-derive; link calendars of both dies recompiled). Asked COORD who
+  owns the calendar recompile. NOT the FDI side (--phy hop, no regen rule; my earlier SRAM-move form is withdrawn, it
+  also broke 40 reader-START raw reset refs).
+- cbn / cbx: v1 GRT repair logs show the fabric x-station class (cbn_q01 -270 / 248 ep on u_x_0_2_a_d.r, cbx_q10 _h
+  -949 / 522 on u_st.tap_d): covered by ot_qfd_xcst_rep (r301); re-read on v2 kits with that RTL. cbn_q00 -78 same read.
 
 ## 4. Other lane's RTL (QC-CBGLUE-1116 @5e8855d43fe, r301): cal_fault_go + ot_qfd_xcst_rep, proven, merge priority.
    Its raw-branch generator is NOT used on QC (r303 form = local reset rows).
