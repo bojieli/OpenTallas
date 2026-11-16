@@ -2288,6 +2288,18 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def tt_setup_repair_mode():
+    """effective OT_TT_SETUP_REPAIR of this kit: cts | grt | both | off (the mapping of the step files in write_type_kit)"""
+    return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
+
+
+def tt_setup_repair_cfg():
+    """KIT-OPS-5 11-15 (COORD r214): the effective TT setup repair mode in EVERY kit's config.mk, so a reviewer can tell which kits
+    carry it (the gen env alone is not in the kit).  Exported as cts|grt|both|off; the step files stay gated by their .on flag."""
+    return ["# TT setup repair mode this kit was generated with (OT_TT_SETUP_REPAIR; off = no step)",
+            f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
+
+
 def pg_drt0255_cfg():
     """DRT0255 (FABLE-PD-DRT-1350) opt-in config.mk lines, from the gen environment: OT_PG_TRACK_TRUTH_MODE=region (GRT per-gcell
     capacity cut on the PG pair rows / columns instead of per-track obstructions) and OT_PG_PAIR_ROW_KEEPOUT=1 (ring / station / face-flop
@@ -5671,6 +5683,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
     cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
+    cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
@@ -6096,6 +6109,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if t.get("clock", {}).get("private_leaf"):       # HEAD-SERDES-1115: post-CTS private leaf step (run_kit.sh), only with the row
         shutil.copyfile(Path(__file__).with_name("private_leaf.tcl"), kd / "private_leaf.tcl")
     _tt = {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip())
+    (kd / "kit_effective_env.json").write_text(json.dumps({"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}, indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")
