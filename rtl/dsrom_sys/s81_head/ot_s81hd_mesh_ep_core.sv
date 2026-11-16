@@ -1560,7 +1560,7 @@ module ot_s81ph_coll_lane_safe4_hd #(
         else if (isl_take) isl_sv <= 1'b1;
     always @(posedge clk) begin
         if (isl_adv) isl_od <= isl_sv ? isl_sd : {il, id};
-        if (!isl_adv && isl_take) isl_sd <= {il, id};
+        if (!isl_sv) isl_sd <= {il, id};  // HEAD-TYPES-O he5: free-load while empty (cycle-exact, tb_skid2), takes in_ready off the isl_sd enable
     end
     wire        ep_v = isl_ov;
     wire [W-1:0] ep_d = isl_od[W-1:0];
