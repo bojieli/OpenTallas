@@ -407,3 +407,41 @@ class Retire(Base):
         SM.retire(out, [])
         self.assertFalse(os.path.exists(d + "/old_d1"))
         self.assertTrue(os.path.exists(out))
+
+
+class RetireGuard(Base):
+    def _trees(self):
+        d = self.t + "/trees"
+        os.makedirs(d)
+        for n in ("b_d1", "b_d2", "b_d3"):
+            os.makedirs(f"{d}/{n}")
+        return d
+
+    def test_guard_refusal_and_missing_guard_fail_closed(self):
+        d = self._trees()
+
+        class G:
+            @staticmethod
+            def refuse(p):
+                return "protected" if p.endswith("b_d1") else None
+
+        done = SM.retire(d + "/b_d3", [], guard=G)
+        self.assertEqual([os.path.basename(x) for x in done], ["b_d2"])
+        self.assertTrue(os.path.exists(d + "/b_d1"))                     # the guard said no
+        orig = SM._guard
+        SM._guard = lambda: None                                         # guard module missing
+        try:
+            self.assertEqual(SM.retire(d + "/b_d3", []), [])
+        finally:
+            SM._guard = orig
+        self.assertTrue(os.path.exists(d + "/b_d1"))
+
+    def test_guard_exception_refuses(self):
+        d = self._trees()
+
+        class G:
+            @staticmethod
+            def refuse(p):
+                raise RuntimeError("boom")
+
+        self.assertEqual(SM.retire(d + "/b_d3", [], guard=G), [])

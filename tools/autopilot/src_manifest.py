@@ -607,11 +607,33 @@ def retire_candidates(new_tree, refs=(), keep=0):
     return out
 
 
-def retire(new_tree, refs=(), keep=0, dry=False):
+def _guard():
+    """the ONE shared delete rule (tools/fleet/ot_delete_guard.py, CLEAN-ALL-1115 postmortem): -> module, or None when it cannot be loaded.
+    A missing guard fails CLOSED: nothing is deleted."""
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fleet"))
+        import ot_delete_guard as G
+        return G if hasattr(G, "refuse") else None
+    except Exception:
+        return None
+
+
+def retire(new_tree, refs=(), keep=0, dry=False, guard=None):
     done = []
+    G = guard if guard is not None else _guard()
     for path, why in retire_candidates(new_tree, refs, keep):
         if why != "DELETE":
             print(f"SRC_MANIFEST RETIRE-KEEP {path} ({why})")
+            continue
+        if G is None:
+            print(f"SRC_MANIFEST RETIRE-REFUSED {path} (ot_delete_guard missing: fail closed)")
+            continue
+        try:
+            reason = G.refuse(path)
+        except Exception as e:                           # a guard that errors is a guard that refuses
+            reason = f"guard error {type(e).__name__}: {e}"
+        if reason:
+            print(f"SRC_MANIFEST RETIRE-REFUSED {path} (ot_delete_guard: {reason})")
             continue
         if not dry:
             for dp, dn, fn in os.walk(path):
