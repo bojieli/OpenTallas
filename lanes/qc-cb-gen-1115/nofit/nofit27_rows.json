@@ -1,0 +1,645 @@
+{
+ "cbf_q00__cl1b5a6458": {
+  "clock.landing_contract.bands.bc_i00": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i00",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 218.928,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    17.28,
+    17.28,
+    82.08,
+    185.76
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    17.28,
+    17.28,
+    110.784,
+    75.6
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516
+  },
+  "clock.landing_contract.bands.na_i00": {
+   "rect_um": [
+    17.28,
+    2345.76,
+    82.08,
+    2514.24
+   ],
+   "width": 514,
+   "ring_width": 576,
+   "live_data_storage_flops": 2575,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 307.4,
+   "area_reserve_um2": 10917.504,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "ring_place": "ff",
+   "instance": "u_cland_na_i00",
+   "resized_from_um": [
+    68.72,
+    2481.84,
+    209.12,
+    2514.24
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place"
+  },
+  "clock.landing_contract.bands.nb_i00": {
+   "area_reserve_um2": 10880.179,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i00",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 262.296,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    989.28,
+    2466.72,
+    1218.24,
+    2514.24
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1160.856,
+    2425.392,
+    1212.696,
+    2514.24
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbf_q00__cl870de686": {
+  "clock.landing_contract.bands.bc_i00": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i00",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 218.928,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    17.28,
+    17.28,
+    82.08,
+    185.76
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    17.28,
+    17.28,
+    110.784,
+    75.6
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516
+  },
+  "clock.landing_contract.bands.nb_i00": {
+   "area_reserve_um2": 10880.179,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i00",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 262.296,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    989.28,
+    2466.72,
+    1218.24,
+    2514.24
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1160.856,
+    2425.392,
+    1212.696,
+    2514.24
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbf_q00_s2": {
+  "clock.landing_contract.bands.bc_i00": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i00",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 236.208,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    17.28,
+    17.28,
+    211.68,
+    73.44
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    17.28,
+    17.28,
+    110.784,
+    75.6
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516
+  },
+  "clock.landing_contract.bands.nb_i00": {
+   "area_reserve_um2": 10880.179,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i00",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 262.296,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    989.28,
+    2466.72,
+    1218.24,
+    2514.24
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1160.856,
+    2425.392,
+    1212.696,
+    2514.24
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbf_q01": {
+  "clock.landing_contract.bands.nb_i12": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i12",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 218.976,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    1153.44,
+    2354.4,
+    1218.24,
+    2522.88
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1166.4,
+    2433.792,
+    1218.24,
+    2522.88
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbf_q01_s2": {
+  "clock.landing_contract.bands.bc_i02": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i02",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 218.928,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    17.28,
+    17.28,
+    82.08,
+    185.76
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    22.992,
+    157.815,
+    74.832,
+    263.655
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516
+  },
+  "clock.landing_contract.bands.nb_i12": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i12",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 218.976,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    1049.76,
+    2458.08,
+    1218.24,
+    2522.88
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1166.4,
+    2433.792,
+    1218.24,
+    2522.88
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbf_q11": {
+  "clock.landing_contract.bands.bc_i22": {
+   "area_reserve_um2": 10847.52,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i22",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 334.288,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    73.44,
+    32.4,
+    408.24,
+    64.8
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: move to neighbour strip",
+   "resized_from_um": [
+    19.44,
+    108.288,
+    71.28,
+    214.128
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516
+  },
+  "clock.landing_contract.bands.na_i22": {
+   "area_reserve_um2": 10847.52,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_na_i22",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 374.616,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    38.88,
+    17.28,
+    71.28,
+    352.08
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    19.44,
+    17.28,
+    71.28,
+    106.128
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbn_q00__cl622f65d2": {
+  "clock.landing_contract.bands.bc_i10": {
+   "area_reserve_um2": 10880.179,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i10",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 286.376,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    572.4,
+    73.44,
+    686.88,
+    168.48
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: move to neighbour strip",
+   "resized_from_um": [
+    643.68,
+    17.28,
+    732.864,
+    69.12
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516,
+   "hard_core": "cl_bc_i10"
+  }
+ },
+ "cbn_q00__cld7bf7197": {
+  "clock.landing_contract.bands.bc_i10": {
+   "area_reserve_um2": 10880.179,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i10",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 201.784,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    598.32,
+    17.28,
+    827.28,
+    64.8
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    635.04,
+    17.28,
+    745.552,
+    66.96
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516
+  },
+  "clock.landing_contract.bands.na_i00": {
+   "rect_um": [
+    82.08,
+    2449.44,
+    276.48,
+    2505.6
+   ],
+   "width": 514,
+   "ring_width": 576,
+   "live_data_storage_flops": 2575,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 254.2,
+   "area_reserve_um2": 10917.504,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "ring_place": "ff",
+   "instance": "u_cland_na_i00",
+   "resized_from_um": [
+    68.72,
+    2516.4,
+    209.12,
+    2548.8
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: move to neighbour strip"
+  }
+ },
+ "cbn_q01__clab6e67f2": {
+  "clock.landing_contract.bands.nb_i12": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i12",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 218.976,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    1153.44,
+    2354.4,
+    1218.24,
+    2522.88
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1166.4,
+    2433.792,
+    1218.24,
+    2522.88
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbn_q01__cld9ff4c40": {
+  "clock.landing_contract.bands.nb_i12": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i12",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 218.976,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    1153.44,
+    2354.4,
+    1218.24,
+    2522.88
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1166.4,
+    2433.792,
+    1218.24,
+    2522.88
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbn_q01__cldd6ea846": {
+  "clock.landing_contract.bands.nb_i12": {
+   "area_reserve_um2": 10917.504,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_nb_i12",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 218.976,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    1153.44,
+    2354.4,
+    1218.24,
+    2522.88
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    1166.4,
+    2433.792,
+    1218.24,
+    2522.88
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ },
+ "cbn_q11__cl49ae4555": {
+  "clock.landing_contract.bands.bc_i22": {
+   "rect_um": [
+    73.44,
+    32.4,
+    408.24,
+    64.8
+   ],
+   "width": 516,
+   "ring_width": 576,
+   "live_data_storage_flops": 2585,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 334.288,
+   "area_reserve_um2": 10847.52,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "instance": "u_cland_bc_i22",
+   "resized_from_um": [
+    19.44,
+    108.288,
+    71.28,
+    214.128
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: move to neighbour strip",
+   "ring_place": "ff"
+  },
+  "clock.landing_contract.bands.na_i22": {
+   "rect_um": [
+    38.88,
+    66.96,
+    82.08,
+    317.52
+   ],
+   "width": 514,
+   "ring_width": 576,
+   "live_data_storage_flops": 2575,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 350.856,
+   "area_reserve_um2": 10824.192,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "instance": "u_cland_na_i22",
+   "resized_from_um": [
+    19.44,
+    17.28,
+    71.28,
+    106.128
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "ring_place": "ff"
+  }
+ },
+ "cbn_q11__cl5cc92dfe": {
+  "clock.landing_contract.bands.bc_i22": {
+   "area_reserve_um2": 10847.52,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_bc_i22",
+   "live_data_storage_flops": 2585,
+   "max_pin_to_band_hop_um": 334.288,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    73.44,
+    32.4,
+    408.24,
+    64.8
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: move to neighbour strip",
+   "resized_from_um": [
+    19.44,
+    108.288,
+    71.28,
+    214.128
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 516
+  },
+  "clock.landing_contract.bands.na_i22": {
+   "area_reserve_um2": 10824.192,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "instance": "u_cland_na_i22",
+   "live_data_storage_flops": 2575,
+   "max_pin_to_band_hop_um": 350.856,
+   "padded_data_storage_flops": 2880,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+   "rect_um": [
+    38.88,
+    66.96,
+    82.08,
+    317.52
+   ],
+   "resize": "QC-CB-GEN-1115 nofit: regrow/reshape in place",
+   "resized_from_um": [
+    19.44,
+    17.28,
+    71.28,
+    106.128
+   ],
+   "ring_place": "ff",
+   "ring_width": 576,
+   "width": 514
+  }
+ }
+}

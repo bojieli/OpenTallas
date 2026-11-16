@@ -1,0 +1,22 @@
+cbf_q00__cl1b5a6458|bc_i00|S|5400|56.2|192|die-edge(span -47..145)|regrow/reshape in place|[17.3, 17.3, 82.1, 185.8]|0.49|219
+cbf_q00__cl1b5a6458|na_i00|N|5400|47.5|227|band:monitor_0|regrow/reshape in place|[17.3, 2345.8, 82.1, 2514.2]|0.49|307
+cbf_q00__cl1b5a6458|nb_i00|N|5400|47.5|227|die-edge(span 1073..1300)|regrow/reshape in place|[989.3, 2466.7, 1218.2, 2514.2]|0.5|262
+cbf_q00__cl870de686|bc_i00|S|5400|56.2|192|die-edge(span -47..145)|regrow/reshape in place|[17.3, 17.3, 82.1, 185.8]|0.49|219
+cbf_q00__cl870de686|nb_i00|N|5400|47.5|227|die-edge(span 1073..1300)|regrow/reshape in place|[989.3, 2466.7, 1218.2, 2514.2]|0.5|262
+cbf_q00_s2|bc_i00|S|5400|56.2|192|die-edge(span -47..145)|regrow/reshape in place|[17.3, 17.3, 211.7, 73.4]|0.49|236
+cbf_q00_s2|nb_i00|N|5400|47.5|227|die-edge(span 1073..1300)|regrow/reshape in place|[989.3, 2466.7, 1218.2, 2514.2]|0.5|262
+cbf_q01|nb_i12|E|5400|64.8|167|die-edge(span 2408..2575)|regrow/reshape in place|[1153.4, 2354.4, 1218.2, 2522.9]|0.49|219
+cbf_q01_s2|bc_i02|S|5400|56.2|192|band:serdes_tx_tx_flit_i,die-edge(span -47..145)|regrow/reshape in place|[17.3, 17.3, 82.1, 185.8]|0.49|219
+cbf_q01_s2|nb_i12|E|5400|64.8|167|die-edge(span 2408..2575)|regrow/reshape in place|[1049.8, 2458.1, 1218.2, 2522.9]|0.49|219
+cbf_q11|bc_i22|S|5400|47.5|227|band:na_i22,band:nb_i22|move to neighbour strip|[73.4, 32.4, 408.2, 64.8]|0.5|334
+cbf_q11|na_i22|S|5400|47.5|227|band:nb_i22,die-edge(span -65..162)|regrow/reshape in place|[38.9, 17.3, 71.3, 352.1]|0.5|375
+cbn_q00__cl622f65d2|bc_i10|S|5400|-4.3|-2500|-|move to neighbour strip|[572.4, 73.4, 686.9, 168.5]|0.5|286
+cbn_q00__cld7bf7197|bc_i10|S|5400|47.5|227|-|regrow/reshape in place|[598.3, 17.3, 827.3, 64.8]|0.5|202
+cbn_q00__cld7bf7197|na_i00|N|5400|99.4|109|band:monitor_1|move to neighbour strip|[82.1, 2449.4, 276.5, 2505.6]|0.49|254
+cbn_q01__clab6e67f2|nb_i12|E|5400|64.8|167|die-edge(span 2408..2575)|regrow/reshape in place|[1153.4, 2354.4, 1218.2, 2522.9]|0.49|219
+cbn_q01__cld9ff4c40|nb_i12|E|5400|64.8|167|die-edge(span 2408..2575)|regrow/reshape in place|[1153.4, 2354.4, 1218.2, 2522.9]|0.49|219
+cbn_q01__cldd6ea846|nb_i12|E|5400|64.8|167|die-edge(span 2408..2575)|regrow/reshape in place|[1153.4, 2354.4, 1218.2, 2522.9]|0.49|219
+cbn_q11__cl49ae4555|bc_i22|S|5400|47.5|227|band:na_i22,band:nb_i22|move to neighbour strip|[73.4, 32.4, 408.2, 64.8]|0.5|334
+cbn_q11__cl49ae4555|na_i22|S|5400|47.5|227|band:nb_i22,die-edge(span -65..162)|regrow/reshape in place|[38.9, 67.0, 82.1, 317.5]|0.5|351
+cbn_q11__cl5cc92dfe|bc_i22|S|5400|47.5|227|band:na_i22,band:nb_i22|move to neighbour strip|[73.4, 32.4, 408.2, 64.8]|0.5|334
+cbn_q11__cl5cc92dfe|na_i22|S|5400|47.5|227|band:nb_i22,die-edge(span -65..162)|regrow/reshape in place|[38.9, 67.0, 82.1, 317.5]|0.5|351
