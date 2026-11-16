@@ -19,7 +19,7 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 ## Artifacts
 - Branch claude/fable-fix-s81-coltap-1116 @f2091534ae0 (2 commits: 458be3eb2e4 core_tap_lead_ps, f2091534ae0 tap_balance top-up). GATE main=1c567bf29d4 pass=109/109 (intel2 ~/fable-fix-s81-coltap/gate_f209153.log). Lane clone epyc7 /srv/opentallas-scratch2/claude/fable-fix-s81-coltap/repo.
 - epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-coltap/: col_tile_rows.py (PLAN OUT [--apply PLAN_OUT]), rows_F2s3.json (216 types: moves, tap_swaps, clock keys, tile distances), F2s3_preview.json (F2s2 + rows, validates with 0 errors), ovl/tools/die_plan (v2 tree die_plan + both commits, private copy for a pilot gen before the tree is rebuilt).
-- Commit trailer used: Claude Fable 5.2 (the session attribution rule), not Opus 5.5.
+- Commit trailer: the two pushed commits carry Claude Fable 5.2; COORD 07:2x ruled the Opus 5.5 trailer is the session rule, so every later commit uses it (pushed commits are not rewritten: no force-push).
 
 ## Open / next
 1. MERGE-QUEUE lands f2091534ae0; the S81 build tree must carry it before any col release (v2 eb1e73448bd0 does not).
@@ -28,3 +28,8 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 4. Reset copies Spec 1: needs an implementer lane (asked COORD).
 5. Read FF hold at pilot sign-off (CTS pre-repair 1,515 endpoints, -55.6 with measured windows).
 6. If r0 pilots miss: IFN = 0 halves (Spec 3) is the fallback form (+416 on the input face), needs hw / he core rebuilds.
+
+## 07:3x 11-16: r300
+- COORD approved the branch as r300 (merge priority). HOLDGEN moves the 216 col keys to event_adopt:B6gF2s3 with my pilots as proof_items. FABLE-DIE-S81 owns the reset copies.
+- Pilot items sent to HOLDGEN. Wave 1: col_h9_r2__t1__clce45cab5__pv7a260fc0, col_h9_r1__t1__cl49d7a23e__pv047ea3b3, col_h10_r2__t1__cl1f5d6c2a__pv0c1de895. Wave 2: col_h9_r0_p2__t1__cl0045af7b__pv622a6f97, col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97.
+- I own col through the pilots and the F2s3 adopt to sign-off. Next read: S81-COL-O evidence pilot (r2 CTS), then the F2s3 bind result from DIE-S81-92, then wave 1 sign-off; post RESULT ... PASS per wave for HOLDGEN.
