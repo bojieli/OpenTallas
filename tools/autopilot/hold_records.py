@@ -31,9 +31,17 @@ import os
 import re
 import sys
 
-TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed")
+TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt")
 LEGACY_OK = ("merge",)          # still evaluated (ancestor of origin/main); accepted in new records too
 GLOB = re.compile(r"[*?\[]")
+PROOF_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
+CENSUS = re.compile(r"^(\d+)(k?)$", re.I)
+
+
+def census_limit(val):
+    """'400k' -> 400000, '400000' -> 400000, else None"""
+    m = CENSUS.match(str(val).strip())
+    return int(m.group(1)) * (1000 if m.group(2) else 1) if m else None
 
 
 def plan_id(d):
@@ -60,9 +68,21 @@ def known_events(d):
     return out
 
 
+def event_re(name):
+    """event token pattern: the whole token, or with one trailing '*' the tokens that start with the name (B6gG3* = B6gG3, B6gG3b)"""
+    glob = name.endswith("*")
+    base = name[:-1] if glob else name
+    return re.compile(r"(?<![a-z0-9])" + re.escape(base) + (r"[a-z0-9]*" if glob else "") + r"(?![a-z0-9])")
+
+
+def event_name_ok(name):
+    """3+ characters (before a single trailing '*'), no spaces, no other glob character"""
+    base = name[:-1] if name.endswith("*") else name
+    return len(base) >= 3 and not re.search(r"\s", name) and not GLOB.search(base)
+
+
 def _event_token_in(name, hay):
-    pat = re.compile(r"(?<![a-z0-9])" + re.escape(name) + r"(?![a-z0-9])")
-    return any(pat.search(h) for h in hay)
+    return any(event_re(name).search(h) for h in hay)
 
 
 def term_error(term, die, cfg, migrated=False):
@@ -73,9 +93,9 @@ def term_error(term, die, cfg, migrated=False):
     d = (cfg.get("dies") or {}).get(die) or {}
     if kind == "event_adopt":
         name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
-        if len(name) < 3 or re.search(r"\s", name) or GLOB.search(name):
-            return f"{term!r}: event name must be one token of 3+ characters"
-        if name not in known_events(d) and not any(_event_token_in(name, [e]) for e in known_events(d)):
+        if not event_name_ok(name):
+            return f"{term!r}: event name must be one token of 3+ characters (one trailing * = prefix)"
+        if not any(_event_token_in(name, [e]) for e in known_events(d)):
             return f"{term!r}: no event {name!r} of die {die} (current, previous or planned_events)"
         return None
     if kind in ("lint_clean", "kit_snap"):
@@ -88,6 +108,10 @@ def term_error(term, die, cfg, migrated=False):
         return None
     if kind == "digest_changed":
         return None if not val else f"{term!r}: digest_changed takes no value"
+    if kind == "proof":
+        return None if PROOF_NAME.match(val) else f"{term!r}: proof needs one name token (a RESULT PASS post naming it)"
+    if kind == "census_lt":
+        return None if census_limit(val) else f"{term!r}: census_lt needs a cell count such as 400k"
     if kind in LEGACY_OK:
         return None if val else f"{term!r}: empty ref"
     return f"{term!r}: not a typed release term ({', '.join(TYPED)})"
@@ -99,10 +123,10 @@ def unreachable_why(term, die, cfg):
     d = (cfg.get("dies") or {}).get(die) or {}
     if kind == "event_adopt":
         name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
-        if len(name) < 3 or re.search(r"\s", name):
+        if not event_name_ok(name):
             return "event name not checkable by the code (under 3 chars or free text)"
         ke = known_events(d)
-        if name not in ke and not any(_event_token_in(name, [e]) for e in ke):
+        if not any(_event_token_in(name, [e]) for e in ke):
             return f"no such event {name!r} (not current, previous or planned)"
         return None
     if kind in ("lint_clean", "kit_snap"):
@@ -111,6 +135,10 @@ def unreachable_why(term, die, cfg):
         return None if val.startswith("/") else "relative path"
     if kind == "digest_changed":
         return None
+    if kind == "proof":
+        return None if PROOF_NAME.match(val) else "proof name not one token"
+    if kind == "census_lt":
+        return None if census_limit(val) else "census_lt value is not a cell count"
     if kind in LEGACY_OK:
         return None if val else "empty ref"
     return "free-text term: nothing checks it"
@@ -119,13 +147,15 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
         self.digest_fn = digest_fn or (lambda cfg, die: "")
         self.kit_snap_fn = kit_snap_fn or (lambda cfg, die: False)
         self.exists_fn = exists_fn or os.path.exists
+        self.proof_fn = proof_fn or (lambda name: False)          # name -> a RESULT PASS line names this proof
+        self.cells_fn = cells_fn or (lambda die, item: None)      # (die, item) -> measured cell count or None (unknown = held)
 
 
 def term_met(term, rec, die, item, cfg, ctx):
@@ -136,7 +166,7 @@ def term_met(term, rec, die, item, cfg, ctx):
             if ctx.event_met is not None:
                 return bool(ctx.event_met(term, d, ctx.is_merged))
             name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
-            if len(name) < 3 or " " in name:
+            if not event_name_ok(name):
                 return False
             hay = [str(d.get("event") or "").lower(), os.path.basename(str(d.get("plan") or "")).lower()]
             return _event_token_in(name, hay)
@@ -150,6 +180,11 @@ def term_met(term, rec, die, item, cfg, ctx):
             return bool(ctx.kit_snap_fn(cfg, val))
         if kind == "input_staged":
             return bool(val) and bool(ctx.exists_fn(val))
+        if kind == "proof":
+            return bool(ctx.proof_fn(val))
+        if kind == "census_lt":
+            n, lim = ctx.cells_fn(die, item), census_limit(val)
+            return n is not None and lim is not None and int(n) < lim
         if kind == "digest_changed":
             base = str(rec.get("digest") or "")
             return bool(base) and ctx.digest_fn(cfg, die) not in ("", base)
@@ -219,6 +254,15 @@ def compile_holds(cfg, ctx=None):
     ctx = ctx or Ctx()
     released = []
     comp, info = {}, {}
+    for die, ks in (cfg.get("_hold_added") or {}).items():          # recompile: drop what an earlier pass added
+        h = ((cfg.get("dies") or {}).get(die) or {}).get("hold_items")
+        for k in ks:
+            if isinstance(h, dict):
+                h.pop(k, None)
+    cfg["_hold_added"] = added = {}
+    if cfg.get("_hold_auto_released"):
+        cfg["_hold_auto_released"] = [r for r in cfg["_hold_auto_released"] if r[0] not in (cfg.get("_hold_rec_dies") or ())]
+    rec_dies = set()
     for die, d in (cfg.get("dies") or {}).items():
         recs = d.get("hold_records")
         if not isinstance(recs, list) or not recs:
@@ -228,6 +272,7 @@ def compile_holds(cfg, ctx=None):
         if not isinstance(d.get("hold_items"), dict):
             d["hold_items"] = {}
         hold = d["hold_items"]
+        rec_dies.add(die)
         for rec in recs:
             sha = str(rec.get("plan_sha") or "")
             stale = bool(sha) and bool(cur) and sha != cur
@@ -245,12 +290,13 @@ def compile_holds(cfg, ctx=None):
                     continue
                 if k not in hold:
                     hold[k] = rec.get("reason", "")
+                    added.setdefault(die, []).append(k)
                 comp.setdefault(die, {})[k] = rec.get("id")
                 held += 1
             info.setdefault(die, []).append({"id": rec.get("id"), "plan_sha": sha, "stale": stale, "rebound": rebound,
                                              "zero": zero, "keys": len(keys), "held": held, "release": rel,
                                              "migrated": bool(rec.get("migrated"))})
-    cfg["_hold_compiled"], cfg["_hold_rec_info"] = comp, info
+    cfg["_hold_compiled"], cfg["_hold_rec_info"], cfg["_hold_rec_dies"] = comp, info, rec_dies
     if released:
         cfg["_hold_auto_released"] = list(cfg.get("_hold_auto_released") or []) + released
     return released
@@ -298,11 +344,13 @@ def summarize(findings):
 
 
 # ------------------------------------------------------------------------------------------------ migration
-def migrate_cfg(cfg):
+def migrate_cfg(cfg, only=None):
     """legacy hold_items + hold_release_on -> hold_records, in place, key order kept (consecutive keys with the same reason and
     release become one record).  The legacy dicts are removed (hold_items becomes generated output).  -> {die: n records}"""
     n = {}
     for die, d in (cfg.get("dies") or {}).items():
+        if only and die not in only:
+            continue
         hold = d.get("hold_items")
         if not isinstance(hold, dict) or not hold:
             continue
@@ -325,7 +373,41 @@ def migrate_cfg(cfg):
     return n
 
 
-def convert_cfg(cfg, termmap, planned=None):
+def convert_keys(cfg, keymap):
+    """per-key retyping: keymap = {die: {hold key: [typed terms] | None}}.  None = release (the key is dropped).  A key's migrated
+    record is split so the key sits in a record of its own release terms (keys with equal terms share one new record).  Every term is
+    validated (ValueError).  A key not in any migrated record is an error.  -> (retyped, dropped)"""
+    ret = drop = 0
+    for die, km in (keymap or {}).items():
+        d = (cfg.get("dies") or {}).get(die)
+        if d is None:
+            raise ValueError(f"keymap: no die {die!r}")
+        recs = d.get("hold_records") or []
+        where = {k: r for r in recs if r.get("migrated") for k in r.get("keys") or []}
+        groups = {}
+        for k, terms in km.items():
+            if k not in where:
+                raise ValueError(f"keymap {die}: {k!r} is not a migrated hold key")
+            for t in terms or []:
+                e = term_error(t, die, cfg)
+                if e:
+                    raise ValueError(f"{die}/{k}: {e}")
+            where[k]["keys"].remove(k)
+            if terms is None:
+                drop += 1
+                continue
+            g = groups.setdefault((where[k]["id"], tuple(terms)), [])
+            g.append(k)
+            ret += 1
+        for n, ((rid, terms), ks) in enumerate(groups.items(), 1):
+            src = next(r for r in recs if r["id"] == rid)
+            recs.append({"id": f"{rid}-k{n}", "plan_sha": src["plan_sha"], "reason": src["reason"], "release": list(terms),
+                         "migrated": True, "keys": ks, "carry": True})
+        d["hold_records"] = [r for r in recs if r.get("keys") or r.get("items") or r.get("patterns")]
+    return ret, drop
+
+
+def convert_cfg(cfg, termmap, planned=None, only=None):
     """r238: declare planned_events ({die: [event, ...]}) and retype migrated records.  termmap = {legacy release text (terms joined
     ' + '): [typed terms]}; a record whose release text is mapped gets the typed terms (each validated with term_error, ValueError on a
     bad one), the others keep their legacy text.  -> (converted keys, [(die, record id, release text, n keys)] unmapped)"""
@@ -336,6 +418,8 @@ def convert_cfg(cfg, termmap, planned=None):
         d["planned_events"] = sorted(set(d.get("planned_events") or []) | set(evs))
     done, left = 0, []
     for die, d in (cfg.get("dies") or {}).items():
+        if only and die not in only:
+            continue
         for rec in d.get("hold_records") or []:
             txt = " + ".join(rec.get("release") or [])
             if txt in termmap:
@@ -358,6 +442,7 @@ def main(argv=None):
     m = sub.add_parser("migrate", help="legacy hold_items -> hold_records (writes --out, never the live file)")
     m.add_argument("--config", required=True)
     m.add_argument("--out", required=True)
+    m.add_argument("--die", action="append", help="migrate only this die (repeatable)")
     a_ = sub.add_parser("add", help="validate + append one record (json file) to a config copy")
     a_.add_argument("--config", required=True)
     a_.add_argument("--die", required=True)
@@ -367,18 +452,21 @@ def main(argv=None):
     cv.add_argument("--config", required=True)
     cv.add_argument("--map", required=True)
     cv.add_argument("--out", required=True)
+    cv.add_argument("--die", action="append", help="convert only this die (repeatable)")
     v = sub.add_parser("audit", help="compile + audit a config (no launches known: HELD-BUT-LAUNCHED is per tick in kit_wave)")
     v.add_argument("--config", required=True)
     a = ap.parse_args(argv)
     cfg = json.load(open(a.config))
     cfg.setdefault("dies", {})
     if a.cmd == "migrate":
-        print("migrated:", migrate_cfg(cfg))
+        print("migrated:", migrate_cfg(cfg, a.die))
         json.dump(cfg, open(a.out, "w"), indent=1)
     elif a.cmd == "convert":
         m = json.load(open(a.map))
         try:
-            done, left = convert_cfg(cfg, m.get("terms") or {}, m.get("planned") or {})
+            done, left = convert_cfg(cfg, m.get("terms") or {}, m.get("planned") or {}, a.die)
+            kr, kd = convert_keys(cfg, m.get("keys") or {})
+            print(f"per-key: retyped {kr}, released {kd}")
         except ValueError as e:
             print("REJECTED:", e)
             return 2

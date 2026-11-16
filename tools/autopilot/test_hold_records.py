@@ -29,7 +29,7 @@ class T(unittest.TestCase):
 
     def test_rejects_unknown_event_lane_and_free_text(self):
         for term in ("event_adopt:B6gG1d", "event_adopt:Event F", "lane_ready:HEAD-99", "lint_clean:nodie", "kit_snap:zz",
-                     "input_staged:rel/x", "digest_changed:x", "event_adopt:B6g*"):
+                     "input_staged:rel/x", "digest_changed:x", "event_adopt:B6*"):
             with self.assertRaises(ValueError, msg=term):
                 HR.add_record(base(), "s81", rec(release=[term]))
 
@@ -117,6 +117,56 @@ class T(unittest.TestCase):
         self.assertIn("b6gg3c", HR.known_events(c["dies"]["s81"]))
         with self.assertRaises(ValueError):
             HR.convert_cfg(c, {"lane_ready:Z": ["event_adopt:Nope1"]})
+
+    def test_proof_and_census_terms(self):
+        c = base()
+        d = c["dies"]["s81"]
+        for bad in ("proof:", "proof:a b", "census_lt:abc", "census_lt:"):
+            with self.assertRaises(ValueError, msg=bad):
+                HR.add_record(c, "s81", rec(release=[bad]))
+        HR.add_record(c, "s81", rec(release=["proof:DRT0255", "census_lt:400k"]))
+        HR.compile_holds(c, HR.Ctx(proof_fn=lambda n: n == "DRT0255", cells_fn=lambda die, i: 300000 if i == "col_a__t1" else 500000))
+        self.assertEqual(list(d["hold_items"]), ["col_a__t2"])
+        HR.compile_holds(c, HR.Ctx(proof_fn=lambda n: False, cells_fn=lambda die, i: 1))     # recompile is idempotent, proof unmet
+        self.assertEqual(sorted(d["hold_items"]), ["col_a__t1", "col_a__t2"])
+        HR.compile_holds(c, HR.Ctx(proof_fn=lambda n: True))                                 # cells unknown = held
+        self.assertEqual(sorted(d["hold_items"]), ["col_a__t1", "col_a__t2"])
+
+    def test_convert_keys_splits_records_and_drops(self):
+        c = base()
+        d = c["dies"]["s81"]
+        d["hold_items"] = {"a": "r", "b": "r", "c": "r", "keep": "r"}
+        d["hold_release_on"] = {k: "lane_ready:X" for k in d["hold_items"]}
+        HR.migrate_cfg(c, only=["s81"])
+        HR.convert_cfg(c, {}, {"s81": ["KV-HG1"]})
+        self.assertEqual(HR.convert_keys(c, {"s81": {"a": ["event_adopt:KV-HG1"], "b": ["event_adopt:KV-HG1"], "c": None}}), (2, 1))
+        HR.compile_holds(c)
+        self.assertEqual(sorted(d["hold_items"]), ["a", "b", "keep"])
+        self.assertEqual(sorted(r["id"] for r in d["hold_records"]), ["s81-mig-001", "s81-mig-001-k1"])
+        with self.assertRaises(ValueError):
+            HR.convert_keys(c, {"s81": {"zz": None}})
+        with self.assertRaises(ValueError):
+            HR.convert_keys(c, {"s81": {"keep": ["event_adopt:Nope1"]}})
+
+    def test_migrate_only_one_die(self):
+        c = base()
+        c["dies"]["s81"]["hold_items"] = {"a": "r"}
+        c["dies"]["hbm"]["hold_items"] = {"z": "r"}
+        HR.migrate_cfg(c, only=["s81"])
+        self.assertEqual(c["dies"]["hbm"]["hold_items"], {"z": "r"})
+        self.assertNotIn("hold_records", c["dies"]["hbm"])
+
+    def test_event_prefix_glob(self):
+        c = base()
+        HR.add_record(c, "s81", rec(release=["event_adopt:B6gG3*"]))                      # matches planned B6gG3b / current B6gG3
+        with self.assertRaises(ValueError):
+            HR.add_record(c, "s81", rec(release=["event_adopt:B6gX*"]))                    # no such event
+        with self.assertRaises(ValueError):
+            HR.add_record(c, "s81", rec(release=["event_adopt:B6*g3"]))
+        d = c["dies"]["s81"]
+        d["event"], d["plan"] = "x", "/x/zz_B6gG3b.json"
+        HR.compile_holds(c, HR.Ctx(event_met=KW._hold_term_met))
+        self.assertEqual(d["hold_items"], {})
 
 
 if __name__ == "__main__":
