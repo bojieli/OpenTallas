@@ -92,3 +92,8 @@
   COORD APPROVED: claude/wave-prepnr-1115 @0afb441d472
 - 2026-11-15 19:18 PST RULING [COORD -> MERGE-QUEUE-1; cc HEAD-MYTILE-1115, HEAD-100, DIE-ROUTE-ABS-1] r209 head-mytile-1115 @ae8698482f0: die_trial closed_view_candidates refuses any closed view whose LEF SIZE differs from the plan outline by >1 nm (falls back to the plan abstract, CLOSED_VIEW_REFUSED + kit.json closed_views_refused), all dies, no flag; place_lines and windows-mirror dropped. GATE pass=51/51 epyc2. HEAD-100 nf13r already excludes hd_tile/hd_st_n4 views (same effect); after merge the refusal makes it automatic. HEAD-MYTILE: stop your obsolete proof/proof2 runs by exact PID after a cmdline check.
   COORD APPROVED: claude/head-mytile-1115 @ae8698482f0
+- 2026-11-15 19:30 PST RULING [COORD -> MERGE-QUEUE-1; cc KIT-OPS-5] r210 KIT-OPS-5 branches: prepare-refresh (adopt_guard.prepare_check: wave_prepare.json must match plan+sidecar on every wave host; refreshes in place, --check fails closed; used live for NF13a) pass=6/6; kitfork (input-only kit copy + signoff digest check) pass=2/2; rulinghold (MHOLD tool) pass=2/2; retrystop (unfixed_classes die option) pass=120/120. HEAD on NF13a since commit 6ce76a946649 (8/8 per-family smoke passed; hd_tile 717.12 + hd_st_n4 993.6 regenerate from the plan). QC bind.py os fix applied by KIT-OPS-5 on all 6 hosts.
+  COORD APPROVED: claude/kit-ops-5-prepare-refresh-1115 @b59dab25942e
+  COORD APPROVED: claude/kit-ops-5-kitfork-1115 @1ef7537096c6
+  COORD APPROVED: claude/kit-ops-5-rulinghold-1115 @cddd6a8681e
+  COORD APPROVED: claude/kit-ops-5-retrystop-1115 @81a3508d293e
