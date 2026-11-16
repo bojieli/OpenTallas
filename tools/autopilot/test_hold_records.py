@@ -29,7 +29,7 @@ class T(unittest.TestCase):
 
     def test_rejects_unknown_event_lane_and_free_text(self):
         for term in ("event_adopt:B6gG1d", "event_adopt:Event F", "lane_ready:HEAD-99", "lint_clean:nodie", "kit_snap:zz",
-                     "input_staged:rel/x", "digest_changed:x", "event_adopt:B6g*"):
+                     "input_staged:rel/x", "digest_changed:x", "event_adopt:B6*"):
             with self.assertRaises(ValueError, msg=term):
                 HR.add_record(base(), "s81", rec(release=[term]))
 
@@ -155,6 +155,18 @@ class T(unittest.TestCase):
         HR.migrate_cfg(c, only=["s81"])
         self.assertEqual(c["dies"]["hbm"]["hold_items"], {"z": "r"})
         self.assertNotIn("hold_records", c["dies"]["hbm"])
+
+    def test_event_prefix_glob(self):
+        c = base()
+        HR.add_record(c, "s81", rec(release=["event_adopt:B6gG3*"]))                      # matches planned B6gG3b / current B6gG3
+        with self.assertRaises(ValueError):
+            HR.add_record(c, "s81", rec(release=["event_adopt:B6gX*"]))                    # no such event
+        with self.assertRaises(ValueError):
+            HR.add_record(c, "s81", rec(release=["event_adopt:B6*g3"]))
+        d = c["dies"]["s81"]
+        d["event"], d["plan"] = "x", "/x/zz_B6gG3b.json"
+        HR.compile_holds(c, HR.Ctx(event_met=KW._hold_term_met))
+        self.assertEqual(d["hold_items"], {})
 
 
 if __name__ == "__main__":

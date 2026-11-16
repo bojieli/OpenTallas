@@ -443,10 +443,11 @@ def _hold_term_met(term, die_cfg, is_merged):
     kind, val = kind.strip(), val.strip()
     if kind == "event_adopt":
         name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
-        if len(name) < 3 or " " in name:
+        import hold_records as _HR
+        if not _HR.event_name_ok(name):                  # r252: one trailing * = prefix (B6gG3* = B6gG3, B6gG3b)
             return False
         hay = [str(die_cfg.get("event") or "").lower(), os.path.basename(str(die_cfg.get("plan") or "")).lower()]
-        pat = re.compile(r"(?<![a-z0-9])" + re.escape(name) + r"(?![a-z0-9])")
+        pat = _HR.event_re(name)
         return any(pat.search(h) for h in hay)
     if kind == "merge":
         ref = val.split()[0] if val else ""

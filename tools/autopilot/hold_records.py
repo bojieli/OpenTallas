@@ -68,9 +68,21 @@ def known_events(d):
     return out
 
 
+def event_re(name):
+    """event token pattern: the whole token, or with one trailing '*' the tokens that start with the name (B6gG3* = B6gG3, B6gG3b)"""
+    glob = name.endswith("*")
+    base = name[:-1] if glob else name
+    return re.compile(r"(?<![a-z0-9])" + re.escape(base) + (r"[a-z0-9]*" if glob else "") + r"(?![a-z0-9])")
+
+
+def event_name_ok(name):
+    """3+ characters (before a single trailing '*'), no spaces, no other glob character"""
+    base = name[:-1] if name.endswith("*") else name
+    return len(base) >= 3 and not re.search(r"\s", name) and not GLOB.search(base)
+
+
 def _event_token_in(name, hay):
-    pat = re.compile(r"(?<![a-z0-9])" + re.escape(name) + r"(?![a-z0-9])")
-    return any(pat.search(h) for h in hay)
+    return any(event_re(name).search(h) for h in hay)
 
 
 def term_error(term, die, cfg, migrated=False):
@@ -81,9 +93,9 @@ def term_error(term, die, cfg, migrated=False):
     d = (cfg.get("dies") or {}).get(die) or {}
     if kind == "event_adopt":
         name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
-        if len(name) < 3 or re.search(r"\s", name) or GLOB.search(name):
-            return f"{term!r}: event name must be one token of 3+ characters"
-        if name not in known_events(d) and not any(_event_token_in(name, [e]) for e in known_events(d)):
+        if not event_name_ok(name):
+            return f"{term!r}: event name must be one token of 3+ characters (one trailing * = prefix)"
+        if not any(_event_token_in(name, [e]) for e in known_events(d)):
             return f"{term!r}: no event {name!r} of die {die} (current, previous or planned_events)"
         return None
     if kind in ("lint_clean", "kit_snap"):
@@ -111,10 +123,10 @@ def unreachable_why(term, die, cfg):
     d = (cfg.get("dies") or {}).get(die) or {}
     if kind == "event_adopt":
         name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
-        if len(name) < 3 or re.search(r"\s", name):
+        if not event_name_ok(name):
             return "event name not checkable by the code (under 3 chars or free text)"
         ke = known_events(d)
-        if name not in ke and not any(_event_token_in(name, [e]) for e in ke):
+        if not any(_event_token_in(name, [e]) for e in ke):
             return f"no such event {name!r} (not current, previous or planned)"
         return None
     if kind in ("lint_clean", "kit_snap"):
@@ -154,7 +166,7 @@ def term_met(term, rec, die, item, cfg, ctx):
             if ctx.event_met is not None:
                 return bool(ctx.event_met(term, d, ctx.is_merged))
             name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
-            if len(name) < 3 or " " in name:
+            if not event_name_ok(name):
                 return False
             hay = [str(d.get("event") or "").lower(), os.path.basename(str(d.get("plan") or "")).lower()]
             return _event_token_in(name, hay)
