@@ -333,6 +333,31 @@ class T(unittest.TestCase):
         self.assertFalse(KW.lint_clean_item(c, "s81", "col_a__*"))                       # a glob key is clean only if no covered item failed
         self.assertTrue(KW.lint_clean_item(c, "hbm", "x"))
 
+    def test_result_term_and_its_proof_items(self):
+        c = base()
+        d = c["dies"]["s81"]
+        d["proof_items"] = {"svc-ready": ["col_a__t1"]}
+        for bad in ("result:svc-ready", "result::x", "result:LANE:a b", "result:LANE:"):
+            with self.assertRaises(ValueError, msg=bad):
+                HR.add_record(c, "s81", rec(release=[bad]))
+        HR.add_record(c, "s81", rec(release=["result:SVC-LANE:svc-ready"], patterns=["col_*"]))
+        HR.compile_holds(c)
+        self.assertEqual(sorted(d["hold_items"]), ["col_a__t2", "col_b__t1"])             # the pilot (proof item) is not held
+        HR.compile_holds(c, HR.Ctx(result_fn=lambda lane, tag: (lane, tag) == ("SVC-LANE", "svc-ready")))
+        self.assertEqual(d["hold_items"], {})
+
+    def test_kit_wave_result_fn(self):
+        lines = ["- 2026-11-16 08:00 PST RESULT [SVC-LANE -> COORD] svc-ready PASS: 16/16 closure applied",
+                 "- 2026-11-16 08:01 PST RESULT [OTHER-LANE -> COORD] svc-ready PASS",
+                 "- 2026-11-16 08:02 PST RESULT [SVC-LANE -> COORD] other-tag PASS",
+                 "- 2026-11-16 08:03 PST RESULT [SVC-LANE -> COORD] svc-ready NOT yet, FAIL"]
+        f = KW.result_pass_fn(lines)
+        self.assertTrue(f("SVC-LANE", "svc-ready"))
+        self.assertTrue(f("OTHER-LANE", "svc-ready"))
+        self.assertFalse(f("SVC-LANE", "svc-ready-2"))
+        self.assertFalse(KW.result_pass_fn(lines[2:])("SVC-LANE", "svc-ready"))
+        self.assertFalse(KW.result_pass_fn([lines[0].replace("-> COORD]", "-> COORD; cc SVC-LANE]").replace("[SVC-LANE", "[X")])("SVC-LANE", "svc-ready"))
+
 
 if __name__ == "__main__":
     unittest.main()
