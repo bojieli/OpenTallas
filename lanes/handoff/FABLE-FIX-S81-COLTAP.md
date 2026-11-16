@@ -72,3 +72,9 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 ## 09:0x 11-16: COORD ruling on adoption
 - F2s3 is adopted as soon as DIE-S81-92's gates pass; it does NOT wait for my r2 read (my 07:5x / 08:5x "adopt after the read" asks are withdrawn). Col stays held by result:FABLE-FIX-S81-COLTAP:col-wave1 / col-wave2, so nothing col launches before my PASS.
 - A bad read is posted and fixed by the next delta, not by blocking the adopt.
+
+## 09:2x 11-16: r310
+- PASS test now: TT setup >= -42 on the GRT-stage read (reloaded 5_1_grt DB, die RC 1.00) + GRT overflow 0, every pilot of the wave, incl reset copies; or post-CTS >= +45 while GRT is not read. Post-CTS placement RC under-reads by 51-86 ps.
+- r0 / h10_r1 (84): MAIN = IFN = 0 halves (lane S81-IFN0-HALVES, epyc7 s81-ifn0-halves/hw0, he0), fallback swap-only. Wave 2 pilots run on F2s3 (fallback read) and again on the IFN = 0 delta. I write that delta's rows (views, core tap insertion from the new core latency, .IFN(0)) when the lane posts signed halves.
+- Reset chain hops > 405 um on a pilot -> hop table to FABLE-DIE-S81, site rows in the same next delta.
+- F2s3 bind restarted 17:1x UTC by DIE-S81-92 (bk_sel overlay ovl_F2s3, 26 files; plan 012db35daaea). Pilot gen needs out + src + ovl; ask DIE-S81-92 for the replica paths if not posted.
