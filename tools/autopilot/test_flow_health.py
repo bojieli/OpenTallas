@@ -164,9 +164,12 @@ class CountGap(unittest.TestCase):
                "qwen_compute\tcore_c\tcore\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-RTX\\n"
                "hbm\ttype_x\ttype\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-BOTH\\n")
         listing = {"agidock_index_tsv": tsv.replace("\\\\n", "\\n")}
-        cache = {"plans": {"p1": {"die": "qwen_compute", "signed_cores": {"core_b": ["r"]}}, "p2": {"die": "hbm", "signed_types": {"type_x": ["r"]}}}}
+        cache = {"plans": {"p1": {"die": "qwen_compute", "signed_cores": {"core_b": ["r"]}, "hard_cores": ["core_a", "core_b"]},
+                           "p2": {"die": "hbm", "signed_types": {"type_x": ["r"]}, "plan_types": {"type_x": "m"}}}}
         rows = FH.count_gap_rows(listing, cache)
         self.assertEqual([(r[0], r[1]) for r in rows], [("qwen_compute", "core_a")])
+        cache["plans"]["p1"]["hard_cores"] = ["core_b"]                       # core_a left the plan: a retired master is not a count gap
+        self.assertEqual(FH.count_gap_rows(listing, cache), [])
 
     def test_unreadable_inputs_are_not_a_crash(self):
         self.assertTrue(FH.count_gap_section("/nonexistent", "/nonexistent")[0].startswith("# COUNT-GAP not computed"))

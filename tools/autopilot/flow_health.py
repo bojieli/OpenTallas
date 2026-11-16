@@ -377,11 +377,16 @@ COUNT_CACHE = os.path.expanduser("~/.local/state/fleet-viz/release_tree_plan_cac
 def count_gap_rows(listing, cache):
     """FLOW-HEALTH-1 11-15 (FABLE-CENSUS-1815 class 10): INDEX.tsv rows of the AGIdock archive (ARCHIVED-BOTH core / type) whose die's count does
     not credit the name.  -> [(die, name, kind, state, note)].  3 QC n9 cores sat here for 5 h before anybody noticed."""
-    credited = {}
+    credited, planned = {}, {}
     for e in (cache.get("plans") or {}).values():
         s = credited.setdefault(e.get("die"), set())
+        pl = planned.setdefault(e.get("die"), set())
         for a in ("signed_types", "signed_cores", "signed_designs"):
             s.update((e.get(a) or {}).keys())
+        pl.update(e.get("hard_cores") or [])
+        pt = e.get("plan_types")
+        pl.update(pt.keys() if isinstance(pt, dict) else (pt or []) if not isinstance(pt, int) else [])
+        pl.update((e.get("designs") or {}).keys() if isinstance(e.get("designs"), dict) else [])
     out = []
     for ln in (listing.get("agidock_index_tsv") or "").splitlines():
         f = ln.split("\t")
@@ -390,7 +395,7 @@ def count_gap_rows(listing, cache):
         die, name, kind, state = f[0], f[1], f[2], f[10]
         if state != "ARCHIVED-BOTH" or kind not in ("core", "type", "design"):
             continue
-        if name not in credited.get(die, set()):
+        if name not in credited.get(die, set()) and name in planned.get(die, set()):      # only names of the die's CURRENT plan: retired masters / ring children are not a count gap
             out.append((die, name, kind, state, (f[11] if len(f) > 11 else "")[:100]))
     return out
 
