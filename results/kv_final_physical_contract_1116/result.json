@@ -1,0 +1,29 @@
+{
+  "schema": "kv_final_physical_contract_recovery/1",
+  "scope": "New opt-in export version from signed final DEF and paired LEF; no RTL/interface/timing/re-sign change",
+  "selected_module": "qkd_ectlk_q2",
+  "signed_record": "82959aa7d78e978af9a92e02f0de21cf82ce9487d3ade702b4ebd8cfacc36362",
+  "source_archive": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_ectlk_q2__r37_tap1116",
+  "final_DEF_sha256": "cba73c29394f409c698725bcba8099690838cf518a12cad17bfe080f6c421edb",
+  "selected_plan_pins_sha256": "b158ccd57827c2eb528dbd39c00781b60197dfc2292126ec8e838139fcf1d31c",
+  "actual_outline_um": [
+    243.648,
+    172.8
+  ],
+  "actual_signal_BTerms": 1957,
+  "selected_pin_coordinates_layer_names_differences": 0,
+  "actual_DEF_LEF_full_rect_and_direction_crosscheck": "PASS1957",
+  "historical_requested_outline_um": [
+    233.28,
+    172.8
+  ],
+  "historical_registration": "Preserved; requested pins on edge0 differ from signed placed pins at edge0.096",
+  "new_export_option": "--final-physical-contract",
+  "preservation": "Requires new view version; keeps kit provenance and requested_pins.json bytes; final_physical records primary source hashes; loader uses explicit final contract",
+  "verification": {
+    "focused_tests": "4 PASS",
+    "log": "intel2:~/tmp/fdkv/codex_final_physical_tests_v2_1116.log",
+    "first_fixture_failure": "Preserved /tmp/fdkv/codex_final_physical_tests_1116.log; fake ETM lacked clock-tree arcs, isolated loader from unrelated arithmetic parser"
+  },
+  "actual_export_and_related_hold": "PENDING current signed source export/consumer; no hold PASS inferred"
+}
