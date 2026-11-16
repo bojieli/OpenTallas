@@ -37,3 +37,8 @@ Lane clone epyc10 .../m7pin-stripe-1116/repo: no changes.
 ## CODEX follow-through 11-16 10:0x
 - PG-aware schema/exemption fix @6a4646b7e77c gate alreadyGREEN; READY posted. NF15pg prepared on NF14r, not adopted/gated.
 - he9/he10 trim-OBS DRC proof and he7/he8 merge proof live, no abstract winner yet; retain M8 pin form fallback if both keep EOL.
+
+## CODEX follow-through 11-16 11:5x PDT
+- n3_turn/spn_end NF15pg fresh proofs are running on intel1 with r315 pin-rule source, approved TT PG replay and explicit PG env restored. n3 GRT TT +60.90ps; spn_end FF pre-GRT hold repair is progressing. Do not duplicate or adopt plan before independent Fable review.
+- he7/he8 merged-LEF proofs failed GRT0116; he9 trimmed-LEF proof also failed GRT overflow44. he10 same trimmed-LEF source completed actual DRT with EOL0. It still failed DRC1: fixed reset BPin rst_start_raw_1 overlaps fixed clk_t5 BPin on M7 exactly (93.264,51.624)-(93.296,52.056). This is a separate fixed boundary-port allocation bug, not PG stripes or route tuning. he10 TT-125.19ps and FF-17.01ps also fail. he11r improved whole-bank layout continues; fixed-pin allocator correction is being prepared for a fresh future kit.
+- The original DRT0206 four-net force-rip A/B is live as eco_ab206_rip4/i1t on epyc10, preserving actual PG protections. The earlier eco_ab206 without track truth died DRT0255 and remains inconclusive. Do not infer generic router fix until the current named-net comparison completes.
