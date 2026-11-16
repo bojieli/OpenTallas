@@ -25,3 +25,12 @@ Owner of S81 col closure (216 types), pilot col_h9_r2__t1__clce45cab5__pv7a260fc
 2. When the F2r bind passes: generate the r2 kit from run/b/B6gF2r (bind.py kit-rtl + gen.py phys, wave die_gen_env + item env) into epyc10 fable-fix-s81-col/f2s, apply: reset_relay_full, config.mk tap keys, ROM lead, signal RC x1.45 for repair. Run run_kit.sh to route via ot-run, read at sign-off.
 3. Turn the kit edits into plan rows / tool changes on the branch (clock.core_pin_lead_ps, tap keys per col type, reset_relay_full rows), gate with /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote, post READY, rows to DIE-S81-92.
 4. Reset copies (class 5) and go_tag (class 6) need their own fix; read them first on the F2r kit.
+
+## 00:30 11-16 update
+- X3 result (CTS, same method): setup 1,476 -> 144 endpoints (WNS -380.6 -> -199.8), FF hold non-port 1,712 -> 108 (WNS -137.8 -> -70.6), tap means 387..481. Posted 23:5x.
+- F2r bind 0 / LATCHECK 873/873. Seam-write fix is DIE-S81-92 branch claude/s81-relay-seamw-1115 (r248); my commit 2db85d029e is a duplicate, do not READY it.
+- PILOT RUNNING: epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-col/f2s2/gen/col_h9_r2__t1__clce45cab5__pv7a260fc0, run_kit.sh route 64 GB 16 cpus via ot-run (client log: localhost scratchpad f2s2_route.log; kit log run_route.log). Built by f2s_gen.sh from plan ev/B6gF2r.json + tree run/b/B6gF2r/src (NOT main-based: no OT_TT_SETUP_REPAIR, no die phase; r249 asks for a main tree, none existed at 00:00). Post-gen kit edits: no OT_TAP_GROUP_RE / OT_TAP_PAIR_AFFINITY, OT_TAP_MAX_SINKS 3000, OT_TAP_CORE_ETAP 1 SRC tree, ROM clk lead 255 in core_latency.txt, reset_relay_full applied to rtl/bind_cells.sv.
+- A plan edit of the type (f2s_plan.py) fails kit_topology with KIT_TOPOLOGY_BIND_STALE: type keys must come as a plan event from DIE-S81-92, not a private plan copy.
+- Read at: 4_1_cts.log OT_TAP_BALANCE done line; then sign-off (signoff/signoff.json). Use an/mk.sh + cls.py for the census.
+- If it misses: go_tag (IFN half cycle; IFN0 halves hwC/heC stopped at OT_HOLD_STRUCTURAL FF -152/-164 on 2,7xx inputs, no owner), reset copies u_d7_6_Y, element sh_free -> s ef nets (need TT repair = main tree).
+- To do for the family: plan rows (reset_relay_full true, drop clock.tap_group + tap_pair_affinity, tap_max_sinks 3000) to DIE-S81-92; tool change on a NEW branch from main: type key for ROM clock lead (core_latency row) and OT_TAP_CORE_ETAP export.
