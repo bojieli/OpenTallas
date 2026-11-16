@@ -4,7 +4,7 @@
 # one local tree per tap (radius <= ~300 um) instead of one tree from one interior tap (CP1: 1176 ps, 29-32 levels).
 # QC-A0 10-24: the tap port family is OT_TAP_PORT (default clk: plan partitions clk / clk_t<i>; the A0 hard cores
 # ck / ck_t<i>), so hard-core kits use this tool unchanged instead of private copies.
-global ct_taps ct_k ct_pinned ct_grp ct_blk ct_fre ct_group_owned
+global ct_taps ct_k ct_pinned ct_grp ct_blk ct_fre ct_group_owned ct_fixed ct_fixed_taps
 set ct_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
 set ct_blk [ord::get_db_block]
 set ct_taps {}
@@ -153,6 +153,37 @@ set ct_group_owned {}
 # clock_taps on the same kits: 0 empty taps, hold gate PASS).  Opt in with OT_TAP_GROUP_RE (the station form is
 # OT_TAP_GROUP_RE='(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]') once a variant passes the canaries.
 set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE) : {}}]
+# A declared fixed group shares an existing clock port, e.g. data output
+# registers and the already-declared forwarded output clock. Default off.
+set ct_fixed {}; set ct_fixed_taps {}
+if {[info exists ::env(OT_TAP_GROUP_FIXED)] && $::env(OT_TAP_GROUP_FIXED) ne ""} {
+  if {$ct_gre eq ""} {error "OT_TAP_GROUP_FIXED needs an explicit group regex"}
+  foreach spec [split $::env(OT_TAP_GROUP_FIXED) ,] {
+    set pair [split $spec :]
+    if {[llength $pair] != 2 || [lindex $pair 0] eq "" || [lindex $pair 1] eq ""} {error "OT_TAP_GROUP_FIXED malformed group:port"}
+    dict set ct_fixed [lindex $pair 0] [lindex $pair 1]
+    dict set ct_fixed_taps [lindex $pair 1] 1
+  }
+}
+proc ct_fixed_target {group} {
+  global ct_fixed ct_taps
+  if {![dict exists $ct_fixed $group]} {return {}}
+  set name [dict get $ct_fixed $group]
+  foreach tap $ct_taps {if {[lindex $tap 0] eq $name} {return $tap}}
+  error "OT_TAP_GROUP_FIXED unknown or non-grid clock port: $name"
+}
+proc ct_reassert_fixed_groups {} {
+  global ct_fixed ct_grp ct_pinned ct_group_owned
+  dict for {group name} $ct_fixed {
+    if {![dict exists $ct_grp $group]} {error "OT_TAP_GROUP_FIXED group has no sinks: $group"}
+    set target [ct_fixed_target $group]
+    foreach pin [dict get $ct_grp $group] {
+      if {[$pin getNet] ne [lindex $target 1]} {$pin disconnect; $pin connect [lindex $target 1]}
+      dict set ct_pinned $pin 1
+      dict set ct_group_owned $pin 1
+    }
+  }
+}
 set ct_fre [expr {[info exists ::env(OT_TAP_FOLLOW_RE)] ? $::env(OT_TAP_FOLLOW_RE) : {(?:^|[/.])(u_rrl_[0-9]+)[/.]}}]
 proc ct_tapnets {} { global ct_taps; set d {}; foreach tp $ct_taps { dict set d [[lindex $tp 1] getName] $tp }; return $d }
 proc ct_clk_iterm {inst} {
@@ -227,6 +258,8 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
       set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3])}]
       if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
     }
+    set ct_forced [ct_fixed_target $g]
+    if {[llength $ct_forced]} {set best $ct_forced}
     foreach it $its {
       if {[$it getNet] ne [lindex $best 1]} { $it disconnect; $it connect [lindex $best 1]; incr ct_gmoved }
       dict set ct_pinned $it 1
@@ -293,6 +326,7 @@ if {[llength $ct_taps] >= 2} {
       # on their own nets) that costs the least extra centroid distance to a tap with room for all of it
       set gbest ""; set gbd 0; set gtgt ""
       dict for {g its} $ct_grp {
+        if {[dict exists $ct_fixed $g]} continue
         if {[[lindex $its 0] getNet] ne [lindex $over 1]} continue
         set sx 0.0; set sy 0.0
         foreach it $its { lassign [[$it getInst] getLocation] x y; set sx [expr {$sx + $x}]; set sy [expr {$sy + $y}] }
@@ -376,6 +410,7 @@ if {[llength $ct_taps] >= 2 && $ct_min > 0} {
   set ct_merged {}
   foreach tp [lsort -command {apply {{a b} {global ct_k; expr {[llength [dict get $ct_k [lindex $a 0]]] - [llength [dict get $ct_k [lindex $b 0]]]}}}} $ct_taps] {
     set n [llength [dict get $ct_k [lindex $tp 0]]]
+    if {[dict exists $ct_fixed_taps [lindex $tp 0]]} continue
     if {$n == 0 || $n >= $ct_min} continue
     set best ""; set bd 0
     foreach t2 $ct_taps {
@@ -451,6 +486,7 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_TAP_POST_MIN_SINKS)] && $::
     set its [dict get $ct_pk $nm]
     set n [llength $its]
     if {$n == 0 || $n >= $ct_pmin} continue
+    if {[dict exists $ct_fixed_taps $nm]} {lappend ct_pkept [format {%s(%s):fixed} $nm $n]; continue}
     if {[dict get $ct_pblk $nm]} { lappend ct_pkept "${nm}($n):core"; continue }
     if {$nm eq $ct_port} { lappend ct_pkept "${nm}($n):root"; continue }
     set best ""; set bd 0
@@ -474,6 +510,9 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_TAP_POST_MIN_SINKS)] && $::
   }
   puts "OT_CLOCK_TAPS POST_MIN $ct_pmin sinks/tap (radius [expr {$ct_prad / $ct_dbu}] um): [llength $ct_pmerged] small taps merged [join $ct_pmerged { }]; kept [llength $ct_pkept] [join $ct_pkept { }]"
 }
+# Fixed declared source clocks take priority over automatic affinity heuristics.
+# Reassert before lockup latches follow their launch clocks, not after them.
+ct_reassert_fixed_groups
 # TYPE-SAFE-1 11-06 (OWNER 18:5x, clock follows data): every ft hop lockup latch u_fl_* (gen_rtl.ft_hop_lockup) is
 # clocked from the tap of the station flop that drives its D (the LAUNCH station), after every other assignment pass
 # above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap

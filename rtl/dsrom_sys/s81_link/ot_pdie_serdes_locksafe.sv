@@ -34,6 +34,25 @@ module ot_pdie_pma_reset_hold #(parameter integer HOLD_EDGES = 64) (
     assign core_rst_n = permit && hold_ready;
 endmodule
 
+// Opt-in boot-only local reset transport. Every clear is driven by the preceding
+// local stage, so assertion propagates even when pma_rck has stopped. Release
+// advances exactly one recovered edge per stage. STAGES0 is a wire identity.
+module ot_pdie_pma_release_chain #(parameter integer STAGES = 0) (
+    input wire rst_n, pma_rck,
+    output wire released_n
+);
+    wire [STAGES:0] release_n;
+    assign release_n[0] = rst_n;
+    genvar k;
+    generate for (k=0;k<STAGES;k=k+1) begin : g_stage
+        (* keep = "true", async_reg = "true" *) reg rq;
+        always @(posedge pma_rck or negedge release_n[k])
+            if (!release_n[k]) rq <= 1'b0; else rq <= 1'b1;
+        assign release_n[k+1] = rq;
+    end endgenerate
+    assign released_n = release_n[STAGES];
+endmodule
+
 module ot_pdie_serdes_locksafe #(
     parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64,
     parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0

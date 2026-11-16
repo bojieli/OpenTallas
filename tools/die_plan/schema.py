@@ -583,6 +583,7 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
+                                       "explicit_stage0": {"type": "boolean"},  # opt-in consumer of planned station0
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
@@ -689,7 +690,9 @@ SCHEMA = {
                         # CLOCK-RESET group form): every sink matching re goes with its group (capture 1 = key) to the
                         # tap nearest the group centroid.  KW-FIX-45 11-12: the key was emitted but not in the schema.
                         "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
-                            "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"}}},
+                            "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"},
+                                "fixed_taps": {"type": "object", "propertyNames": {"pattern": "^[A-Za-z0-9_./-]+$"},
+                                    "additionalProperties": _name}}},
                         # Default-off (HEAD-SERDES-1115 11-15, gen_phys.private_leaf_exports -> OT_PRIVATE_LEAF_LIKE/RE,
                         # private_leaf.tcl, run_kit.sh post-CTS step): clone the leaf clock buffer that drives the anchor
                         # instance's clock pin (a macro) and move only the sinks matching re onto the clone: they get the
