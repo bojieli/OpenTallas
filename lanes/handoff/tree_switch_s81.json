@@ -20,5 +20,8 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 07:10:25 PST"
+ "time": "2026-11-16 07:10:25 PST",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_eb1e73448bd0/out",
+ "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
+ "note": "kit_rtl.bind_out = bind_out here (present on every listed host, 6.8 GB); plan/asbuilt/sidecar are still lane-folder inputs (ext_source_check --config reports them): plan copy into the tree is the next data pack"
 }
