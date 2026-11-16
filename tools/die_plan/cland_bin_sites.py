@@ -24,6 +24,7 @@ SLACK = 5.0
 HALO = 4.32
 BGAP = 1.08
 IN_UM = 8.64
+STRIP_ROWS = (34.56, 43.2)         # Z-route fallbacks through the die-edge strip rows / columns when neither L clears a core halo
 
 
 def snap(v):
@@ -71,7 +72,7 @@ def legs(fixed, cores, bands, avoid, via=None):
     out = [fixed[0]]
     new = []
     for a, b in zip(fixed, fixed[1:]):
-        cands = [([a] + list(via) + [b])] if via else ([[a, b]] if (a[0] == b[0] or a[1] == b[1]) else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]])
+        cands = [([a] + list(via) + [b])] if via else ([[a, b]] if (a[0] == b[0] or a[1] == b[1]) else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]] + [[a, (a[0], y), (b[0], y), b] for y in STRIP_ROWS] + [[a, (x, a[1]), (x, b[1]), b] for x in STRIP_ROWS])
         placed, err = None, None
         for seg in cands:
             L = plen(seg)
