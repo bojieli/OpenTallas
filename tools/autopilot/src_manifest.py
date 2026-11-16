@@ -141,6 +141,10 @@ def verify(root, expect="", ro=False, full=False):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
         elif ro and not os.path.islink(p) and os.lstat(p).st_nlink > 1:
             errs.append(f"SRC_MANIFEST DRIFT {rel} (hardlinked, nlink {os.lstat(p).st_nlink}: a write or chmod elsewhere reaches this file)")
+    nshared = sum(1 for e in errs if "hardlinked, nlink" in e)
+    if nshared:
+        errs.insert(0, f"SRC_MANIFEST NOT-READY {nshared} file(s) share an inode with another path (cp -al copy elsewhere): "
+                       f"a published tree must be unshared; run `src_manifest.py links TREE --find-in DIR...` to name the other paths")
     for rel in sorted(set(have) - set(want)):
         errs.append(f"SRC_MANIFEST DRIFT {rel} (extra: not in the manifest)")
     if ro and writable(root):
@@ -155,6 +159,58 @@ def verify(root, expect="", ro=False, full=False):
         except OSError:
             pass
     return errs, info
+
+
+def shared_inodes(root, limit=0):
+    """stat-only scan (no hashing: cheap enough for every tick): [(relpath, nlink)] of every regular file with nlink > 1, i.e. a file
+    another path (a `cp -al` copy in some lane's tree) can change.  A published tree must have none (TOOLS-CONVERGE-1116, 2nd
+    occurrence: S81 cmp_B6gF2s, HEAD fable-fix-head-serdes/tree5)."""
+    out = []
+    for dp, dn, fn in os.walk(root):
+        dn[:] = [d for d in dn if d not in SKIP_DIRS]
+        for f in fn:
+            p = os.path.join(dp, f)
+            try:
+                st = os.lstat(p)
+            except OSError:
+                continue
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1:
+                out.append((os.path.relpath(p, root), st.st_nlink))
+                if limit and len(out) >= limit:
+                    return out
+    return out
+
+
+def links_report(root, find_in=(), show=20):
+    """-> (errors, n): 'SRC_MANIFEST SHARED-INODE <path> (nlink n[, also <path>])'; find_in = dirs searched for the other names"""
+    bad = shared_inodes(root)
+    errs = []
+    inos = {}
+    for rel, n in bad[:show]:
+        inos[os.lstat(os.path.join(root, rel)).st_ino] = rel
+    partners = {}
+    if find_in and inos:
+        for top in find_in:
+            for dp, dn, fn in os.walk(top):
+                if os.path.realpath(dp).startswith(os.path.realpath(root)):
+                    dn[:] = []
+                    continue
+                for f in fn:
+                    pp = os.path.join(dp, f)
+                    try:
+                        i = os.lstat(pp).st_ino
+                    except OSError:
+                        continue
+                    if i in inos and i not in partners:
+                        partners[i] = pp
+                if len(partners) == len(inos):
+                    break
+    for rel, n in bad[:show]:
+        ino = os.lstat(os.path.join(root, rel)).st_ino
+        errs.append(f"SRC_MANIFEST SHARED-INODE {rel} (nlink {n}" + (f", also {partners[ino]}" if ino in partners else "") + ")")
+    if len(bad) > show:
+        errs.append(f"SRC_MANIFEST SHARED-INODE ... and {len(bad) - show} more of {len(bad)}")
+    return errs, len(bad)
 
 
 def report(errs):
@@ -378,10 +434,14 @@ def main(argv=None):
     v.add_argument("--expect", default="")
     v.add_argument("--ro", action="store_true")
     v.add_argument("--full", action="store_true")
+    lk = sp.add_parser("links", help="stat-only: fail when any file of TREE has another hardlink (a published tree must be unshared)")
+    lk.add_argument("tree")
+    lk.add_argument("--find-in", nargs="*", default=[], help="dirs to search for the other names (slow)")
     h = sp.add_parser("hosts")
     h.add_argument("tree")
     h.add_argument("--hosts", required=True)
     h.add_argument("--expect", default="")
+    h.add_argument("--links-only", action="store_true", help="per host: stat-only shared-inode check instead of the full hash verify")
     r = sp.add_parser("replicate")
     r.add_argument("tree")
     r.add_argument("--hosts", required=True)
@@ -403,9 +463,23 @@ def main(argv=None):
             report(errs)
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
+    elif a.cmd == "links":
+        errs, n = links_report(os.path.abspath(a.tree), a.find_in)
+        if errs:
+            report(errs)
+            return 1
+        print(f"SRC_MANIFEST LINKS OK {a.tree}: no file shared with another path")
     elif a.cmd == "hosts":
         bad = 0
         for host in a.hosts.split(","):
+            if a.links_only:
+                script = open(os.path.abspath(__file__)).read()
+                p = subprocess.run(SSH + [host, f"python3 -I -c {shlex.quote(script)} links {shlex.quote(os.path.abspath(a.tree))}"],
+                                   capture_output=True, text=True)
+                txt = (p.stdout + p.stderr).strip()
+                print(f"{host}: " + (txt.splitlines()[-1] if p.returncode == 0 and txt else txt[:1500]))
+                bad |= bool(p.returncode)
+                continue
             rc, txt = remote_verify(host, os.path.abspath(a.tree), a.expect)
             print(f"{host}: " + (txt.splitlines()[-1] if rc == 0 and txt else txt[:2000]))
             bad |= bool(rc)

@@ -286,3 +286,36 @@ class DefaultRequire(unittest.TestCase):
     def test_spec_default_is_require(self):
         cfg = {"dies": {"d": {"src": "/x", "src_sha": "a", "plan": "p", "gen_host": "h", "event": "e"}}}
         self.assertEqual(KW.opt_get(cfg, "d", "src_manifest") or "require", "require")
+
+
+class SharedInodes(Base):
+    def test_cp_al_copy_makes_tree_not_ready_and_is_named(self):
+        self.build()
+        SM.publish(self.out)
+        self.assertEqual(SM.shared_inodes(self.out), [])
+        self.assertEqual(SM.links_report(self.out)[0], [])
+        other = self.t + "/lane_copy"
+        os.makedirs(other + "/tools/die_plan")
+        os.link(self.out + "/tools/die_plan/a.py", other + "/tools/die_plan/a.py")          # someone's cp -al
+        bad = SM.shared_inodes(self.out)
+        self.assertEqual([r for r, n in bad], ["tools/die_plan/a.py"])
+        errs, n = SM.links_report(self.out, [other])
+        self.assertEqual(n, 1)
+        self.assertIn("also " + other + "/tools/die_plan/a.py", errs[0])
+        v, _ = SM.verify(self.out, ro=True, full=True)
+        self.assertIn("NOT-READY", v[0])
+        self.assertTrue(any("tools/die_plan/a.py" in e for e in v))
+
+    def test_publish_refuses_a_linked_tree(self):
+        self.build()
+        os.makedirs(self.t + "/lane_copy")
+        os.link(self.out + "/tools/x.sh", self.t + "/lane_copy/x.sh")
+        with self.assertRaises(SystemExit):
+            SM.publish(self.out)
+
+    def test_cli_links_exit_codes(self):
+        self.build()
+        self.assertEqual(SM.main(["links", self.out]), 0)
+        os.makedirs(self.t + "/lc")
+        os.link(self.out + "/tools/x.sh", self.t + "/lc/x.sh")
+        self.assertEqual(SM.main(["links", self.out]), 1)
