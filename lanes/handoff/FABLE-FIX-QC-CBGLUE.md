@@ -1,6 +1,6 @@
 # FABLE-FIX-QC-CBGLUE handoff (owner of the QC cb / glue family + coll_n)
 
-Updated 2026-11-16 10:1x PST. Commits from here on end with the Opus 5.5 trailer (COORD 08:xx).
+Updated 2026-11-16 13:5x PST. Commits from here on end with the Opus 5.5 trailer (COORD 08:xx).
 Lane dirs: epyc2 /srv/opentallas-scratch2/claude/fable-fix-qc-cbglue (repo = lane clone, branch
 claude/fable-fix-qc-cbglue-1116 @e354fc3e4f6, MERGED to main ed3beac3e9); epyc9 same path (delta/ plans, mk_s4q9e.py).
 QC event owner (binds, adopts): FABLE-FIX-QC-KNEE-HC, epyc9 fable-fix-qc-knee-hc (treeE = v2 tree copy, bin/chain.sh).
@@ -125,3 +125,24 @@ TOKEN also owns LOCAL4/HEAD37 default-off forwarding/paired guards and genuine c
 
 Current policy: canonical latest METHODOLOGY OWNER12.24c exact833ps, setup0unc/hold25unc; academic DRC0/TT>=-42/FF>=0/LECequiv. Related80ps advisory. Keep strict tool fields separate. No TT60 rerun/SS gate.
 
+
+## STATE 13:5x PST (steps 2-4 of form B; retire when glue signs off)
+- QC adopt bind = S4Q9JBQL (epyc2 /srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/{treeJ,bind/bind_s29q103S4Q9JBQL}):
+  carries reset leaves + fault stations + d2d seam stations + r301 RTL. regen_constants PASS: XDIE_SEAM_C 7,7,7,8,7,7,
+  TXDP 14011212 in bound glue; LATCHECK 1921/1921.
+- Co-sim harness: branch claude/fable-fix-qc-cbglue-xdie-1116 @ed74e6f26ae (gate GREEN 4/4, READY posted). Run:
+  from localhost: ot-run --mem 64 --threads 16 --hosts epyc2 --dir TREE -- bash -c "cd TREE && JOBS=4 bash
+  /srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/repo/tools/qwen_tokfunc/xdie_bound/run_binds.sh QC_BIND KV_BIND OUT"
+  (TREE = full source tree, e.g. treeJ; ~8 min). Result on J + KV record bind out_h1: 8/8 expected
+  (epyc2 fable-fix-qc-cbglue/xdie/j_h1). Bench limits: own profile, stand-in endpoints, no HOST/EMB ports.
+- OPEN step 2: final KV bind (7yhr / KV-HG1) does not exist on the fleet (13:30). When it does: run_mu833.sh with
+  CST=7,7,7,8,7,7 (env in section 3) on it -> img_bnd/d2d_cal_image.svh -> swap rtl/qwen_sys/d2d_static_20261015/
+  d2d_cal_image_qc_pair.svh (QC, KNEE-HC) + KV boot targets (FABLE-DIE-KV); rerun run_binds.sh on both final binds.
+- OPEN step 3b: token gate results/rtl/kv_img_mu833_1025/token_gate.sh NOT run (needs the final pair compile dir).
+- OPEN step 4: no glue kit on S4q9j yet (wave on S4q6d at 13:27; asked KIT-OPS-5 to launch glue first at the adopt).
+  r310 read = TT >= -42 at the GRT stage with die RC scale + overflow 0. Watch (FABLE-PD-QC-S4q9e): d2d_rom__x3 station 1
+  0.44 um inside the codes SRAM halo edge -> if placement / congestion fails there, move the x3 sites 20 um west
+  (rerun mk_d2d_south.py with the x3 route shifted, or edit regs_um of bus:d2d_rom__x3 / x3_generation / x3_identity).
+- Baseline glue a6 (S4q6d, v2): epyc10 /srv/opentallas-scratch2/claude/ot-jobs/glue-route-civil-redfish-544246-1794849861
+  in 5_1_grt 13:27; FF-corner setup WNS -324 / 35 ep = START-reset class only.
+- OpenROAD repair table columns: WNS | StTNS | EnTNS | Viol endpoints | worst endpoint.
