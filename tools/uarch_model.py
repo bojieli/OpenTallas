@@ -17710,3 +17710,55 @@ def s81_head_lep_vf_stage_calendar_model():
                           'do not qualify vF depths0000/1220/1221/2/3/3/COL02',
         qualification='HEAD private plan event, exact vF source programme/epoch leases, '
                       'native timing and parent pin/clock/reset joins remain required')
+
+
+def qwen_qc_joint_common_red_model():
+    """Exact prospective common-command/read/normal-write/RED join correction.
+
+    A correctness repair of the actual selected 96-head cohort, off until the
+    normalized source/frame and physical gates pass. No aggregate token-period
+    extrapolation from the diagnostic C clock table or native standalone ages.
+    """
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    packet = root / 'results/uarch/qc_joint_common_red_1116'
+    model = json.loads((packet / 'model.json').read_text())
+    geometry = json.loads((packet / 'geometry.json').read_text())
+    storage = model['storage']
+    categories = storage['by_category']
+    assert len(model['latency']['head_commands']) == 96
+    assert sum(v['delta_ff'] for v in categories.values()) == storage['delta_ff']
+    assert storage['new_fixed_pad_ff'] - storage['old_fixed_pad_ff'] == storage['delta_ff']
+    return dict(
+        schema='opentallas.qwen-qc-joint-common-red-model.v1',
+        enabled_by_default=False, status='prospective_correctness_repair',
+        replicas=dict(slices=12, heads=96, physical_pad_types=12),
+        arithmetic_MACs_per_cycle_delta=0,
+        memory_port_count_delta=0, memory_bytes_per_cycle_delta=0,
+        interpartition_bits_per_cycle_delta=0, interpartition_tracks_delta=0,
+        storage=storage, tracks=model['tracks'],
+        fanout_and_mux='Exact compressed pad-cache union; maximum_VM_receiver_fanout3; '
+                       'no extra memory arbitration or interpartition mux.',
+        latency=model['latency'],
+        head_profile=dict(MEMORY_ALIGNMENT=3, MEMORY_READ_EXTRA=44,
+                          SEGMENTED_MEMORY_DELAY=1, KV_WR_PIPE=1,
+                          normalized_external_read_edges=43),
+        normal_publication_phase=dict(E=47, W=72),
+        head0_retire_command_delta=dict(E=2, W=1),
+        reduction_latest_input_delta_edges=0,
+        scalar_native_suffix_edges=3,
+        scalar_suffix_scope='Already-measured CTL2+FDN1; never charge the CTL input pin twice.',
+        single_user_normal_dependency=dict(
+            E_consumer_issue=198, W_consumer_issue=223,
+            E_common_class_drain=172, W_common_class_drain=199,
+            E_margin_edges=26, W_margin_edges=24),
+        other_programme_dependency_qualified=False,
+        selected_clock_frame=dict(selected_changes=[], added_cycles=0,
+                                  source='177bcb83: actual N43 same-region/CA map'),
+        geometry_reservations=geometry,
+        physical_qualification='Reservation sites clear macros; glue legalization, PDN, '
+                               'clock/hold-buffer cost and full normalized frame remain open.',
+        finite_flow='Masked KV/stream kind/window and final programme integration remain open; '
+                    'normal-write and RED coherent tuples cannot be replaced by compiler waiting.',
+        production_token_period_cycles=None, rate_gain_claim=None,
+        model_packet_sha256=hashlib.sha256((packet / 'model.json').read_bytes()).hexdigest())

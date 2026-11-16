@@ -1,0 +1,977 @@
+{
+ "status": "EXACT_NAMED_PAD_SITE_RESERVATION_NOT_PHYSICAL_QUALIFICATION",
+ "model_delta_ff": 133386,
+ "final_selected_pad_ff": 253890,
+ "unique_type_pad_ff": 81156,
+ "instance_weighted_pad_ff": 253890,
+ "types": {
+  "sle_su_c": {
+   "representative": "sl_E0_su_c",
+   "FF": 5136,
+   "physical_instances": 6,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 1946.95488,
+   "positive_FF_INV_area_um2": 1722.3062400000001,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "RED_join",
+     "target": [
+      857.28,
+      734.4
+     ],
+     "FF": 1242,
+     "bbox_um": [
+      839.5380000000001,
+      708.8850000000001,
+      875.5020000000001,
+      759.9150000000001
+     ]
+    },
+    {
+     "name": "shared_write",
+     "target": [
+      468.0,
+      300.48
+     ],
+     "FF": 3894,
+     "bbox_um": [
+      429.13800000000003,
+      281.20500000000004,
+      506.142,
+      356.535
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.166066480974234,
+   "min_macro_rectangle_clearance_um": 4.724999999999966,
+   "max_pipeline_interstage_manhattan_um": 76.13999999999999,
+   "existing_fixed_sites": 11139,
+   "no_existing_fixed_site_changes": true
+  },
+  "sle_su_l0__cl7a55c676": {
+   "representative": "sl_E0_su_l0",
+   "FF": 1532,
+   "physical_instances": 5,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 580.75056,
+   "positive_FF_INV_area_um2": 513.7408800000001,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads0",
+     "target": [
+      166.08,
+      177.12
+     ],
+     "FF": 194,
+     "bbox_um": [
+      159.138,
+      167.26500000000001,
+      173.502,
+      186.975
+     ]
+    },
+    {
+     "name": "heads0,1,2,3",
+     "target": [
+      166.08,
+      704.16
+     ],
+     "FF": 1006,
+     "bbox_um": [
+      150.498,
+      681.3450000000001,
+      182.142,
+      726.9750000000001
+     ]
+    },
+    {
+     "name": "heads1",
+     "target": [
+      166.08,
+      514.08
+     ],
+     "FF": 194,
+     "bbox_um": [
+      159.138,
+      504.225,
+      173.502,
+      523.9350000000001
+     ]
+    },
+    {
+     "name": "heads2",
+     "target": [
+      166.08,
+      894.24
+     ],
+     "FF": 136,
+     "bbox_um": [
+      161.298,
+      885.4650000000001,
+      171.342,
+      902.4750000000001
+     ]
+    },
+    {
+     "name": "heads3",
+     "target": [
+      166.08,
+      1231.2
+     ],
+     "FF": 2,
+     "bbox_um": [
+      165.618,
+      1231.065,
+      167.022,
+      1231.875
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.172671475377928,
+   "min_macro_rectangle_clearance_um": 16.578000000000003,
+   "max_pipeline_interstage_manhattan_um": 30.780000000000086,
+   "existing_fixed_sites": 2203,
+   "no_existing_fixed_site_changes": true
+  },
+  "sle_su_l1__cl5ea486db": {
+   "representative": "sl_E0_su_l1",
+   "FF": 7660,
+   "physical_instances": 1,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 2903.7528,
+   "positive_FF_INV_area_um2": 2568.7044,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads4",
+     "target": [
+      456.0,
+      203.04
+     ],
+     "FF": 1760,
+     "bbox_um": [
+      437.778,
+      172.125,
+      478.062,
+      233.955
+     ]
+    },
+    {
+     "name": "heads5",
+     "target": [
+      456.0,
+      514.08
+     ],
+     "FF": 1760,
+     "bbox_um": [
+      437.778,
+      483.165,
+      478.062,
+      544.9950000000001
+     ]
+    },
+    {
+     "name": "heads6",
+     "target": [
+      456.0,
+      894.24
+     ],
+     "FF": 1900,
+     "bbox_um": [
+      437.778,
+      861.7050000000002,
+      478.062,
+      926.7750000000001
+     ]
+    },
+    {
+     "name": "heads7",
+     "target": [
+      456.0,
+      1231.2
+     ],
+     "FF": 2240,
+     "bbox_um": [
+      437.778,
+      1195.425,
+      480.22200000000004,
+      1266.975
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.1762220658977176,
+   "min_macro_rectangle_clearance_um": 5.77800000000002,
+   "max_pipeline_interstage_manhattan_um": 41.58000000000021,
+   "existing_fixed_sites": 7373,
+   "no_existing_fixed_site_changes": true
+  },
+  "sle_su_l1__clc6d66f5b": {
+   "representative": "sl_E1_su_l1",
+   "FF": 7660,
+   "physical_instances": 5,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 2903.7528,
+   "positive_FF_INV_area_um2": 2568.7044,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads4",
+     "target": [
+      456.0,
+      203.04
+     ],
+     "FF": 1760,
+     "bbox_um": [
+      437.778,
+      172.125,
+      478.062,
+      233.955
+     ]
+    },
+    {
+     "name": "heads5",
+     "target": [
+      456.0,
+      514.08
+     ],
+     "FF": 1760,
+     "bbox_um": [
+      437.778,
+      483.165,
+      478.062,
+      544.9950000000001
+     ]
+    },
+    {
+     "name": "heads6",
+     "target": [
+      456.0,
+      894.24
+     ],
+     "FF": 1900,
+     "bbox_um": [
+      437.778,
+      861.7050000000002,
+      478.062,
+      926.7750000000001
+     ]
+    },
+    {
+     "name": "heads7",
+     "target": [
+      456.0,
+      1231.2
+     ],
+     "FF": 2240,
+     "bbox_um": [
+      437.778,
+      1195.425,
+      480.22200000000004,
+      1266.975
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.1762220658977176,
+   "min_macro_rectangle_clearance_um": 5.77800000000002,
+   "max_pipeline_interstage_manhattan_um": 41.58000000000021,
+   "existing_fixed_sites": 7373,
+   "no_existing_fixed_site_changes": true
+  },
+  "sle_su_l0__cl086d85ba": {
+   "representative": "sl_E5_su_l0",
+   "FF": 1532,
+   "physical_instances": 1,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 580.75056,
+   "positive_FF_INV_area_um2": 513.7408800000001,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads0",
+     "target": [
+      166.08,
+      177.12
+     ],
+     "FF": 194,
+     "bbox_um": [
+      159.138,
+      167.26500000000001,
+      173.502,
+      186.975
+     ]
+    },
+    {
+     "name": "heads0,1,2,3",
+     "target": [
+      166.08,
+      704.16
+     ],
+     "FF": 1006,
+     "bbox_um": [
+      150.498,
+      681.3450000000001,
+      182.142,
+      726.9750000000001
+     ]
+    },
+    {
+     "name": "heads1",
+     "target": [
+      166.08,
+      514.08
+     ],
+     "FF": 194,
+     "bbox_um": [
+      159.138,
+      504.225,
+      173.502,
+      523.9350000000001
+     ]
+    },
+    {
+     "name": "heads2",
+     "target": [
+      166.08,
+      894.24
+     ],
+     "FF": 136,
+     "bbox_um": [
+      161.298,
+      885.4650000000001,
+      171.342,
+      902.4750000000001
+     ]
+    },
+    {
+     "name": "heads3",
+     "target": [
+      166.08,
+      1231.2
+     ],
+     "FF": 2,
+     "bbox_um": [
+      165.618,
+      1231.065,
+      167.022,
+      1231.875
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.172671475377928,
+   "min_macro_rectangle_clearance_um": 16.578000000000003,
+   "max_pipeline_interstage_manhattan_um": 30.780000000000086,
+   "existing_fixed_sites": 2203,
+   "no_existing_fixed_site_changes": true
+  },
+  "slw_su_c__cl19bb38ef": {
+   "representative": "sl_W0_su_c",
+   "FF": 17004,
+   "physical_instances": 1,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 6445.87632,
+   "positive_FF_INV_area_um2": 5702.12136,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "RED_join",
+     "target": [
+      857.28,
+      734.4
+     ],
+     "FF": 1242,
+     "bbox_um": [
+      839.5380000000001,
+      708.8850000000001,
+      875.5020000000001,
+      759.9150000000001
+     ]
+    },
+    {
+     "name": "shared_write",
+     "target": [
+      468.0,
+      300.48
+     ],
+     "FF": 15762,
+     "bbox_um": [
+      372.978,
+      281.20500000000004,
+      562.3020000000001,
+      417.015
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.1660664809741728,
+   "min_macro_rectangle_clearance_um": 4.724999999999966,
+   "max_pipeline_interstage_manhattan_um": 188.46000000000015,
+   "existing_fixed_sites": 10356,
+   "no_existing_fixed_site_changes": true
+  },
+  "slw_su_l0__cl1a1c1f8f": {
+   "representative": "sl_W0_su_l0",
+   "FF": 1662,
+   "physical_instances": 1,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 630.03096,
+   "positive_FF_INV_area_um2": 557.3350800000001,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads0",
+     "target": [
+      166.08,
+      177.12
+     ],
+     "FF": 257,
+     "bbox_um": [
+      159.138,
+      165.645,
+      173.502,
+      188.595
+     ]
+    },
+    {
+     "name": "heads0,1,2,3",
+     "target": [
+      166.08,
+      704.16
+     ],
+     "FF": 759,
+     "bbox_um": [
+      152.65800000000002,
+      684.0450000000001,
+      179.982,
+      724.2750000000001
+     ]
+    },
+    {
+     "name": "heads1",
+     "target": [
+      166.08,
+      514.08
+     ],
+     "FF": 257,
+     "bbox_um": [
+      159.138,
+      502.605,
+      173.502,
+      525.5550000000001
+     ]
+    },
+    {
+     "name": "heads2",
+     "target": [
+      166.08,
+      894.24
+     ],
+     "FF": 228,
+     "bbox_um": [
+      159.138,
+      883.3050000000001,
+      173.502,
+      905.1750000000001
+     ]
+    },
+    {
+     "name": "heads3",
+     "target": [
+      166.08,
+      1231.2
+     ],
+     "FF": 161,
+     "bbox_um": [
+      159.138,
+      1222.425,
+      171.342,
+      1240.515
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.213919513811596,
+   "min_macro_rectangle_clearance_um": 16.578000000000003,
+   "max_pipeline_interstage_manhattan_um": 26.460000000000065,
+   "existing_fixed_sites": 130,
+   "no_existing_fixed_site_changes": true
+  },
+  "slw_su_l1__cla2a78701": {
+   "representative": "sl_W0_su_l1",
+   "FF": 9321,
+   "physical_instances": 5,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 3533.40468,
+   "positive_FF_INV_area_um2": 3125.7041400000003,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads4",
+     "target": [
+      456.0,
+      263.52
+     ],
+     "FF": 2017,
+     "bbox_um": [
+      437.778,
+      229.90500000000003,
+      480.22200000000004,
+      297.135
+     ]
+    },
+    {
+     "name": "heads4,5,6,7",
+     "target": [
+      456.0,
+      730.08
+     ],
+     "FF": 757,
+     "bbox_um": [
+      442.098,
+      709.4250000000001,
+      469.422,
+      750.7350000000001
+     ]
+    },
+    {
+     "name": "heads5",
+     "target": [
+      456.0,
+      574.56
+     ],
+     "FF": 2017,
+     "bbox_um": [
+      437.778,
+      540.945,
+      480.22200000000004,
+      608.1750000000001
+     ]
+    },
+    {
+     "name": "heads6",
+     "target": [
+      456.0,
+      885.6
+     ],
+     "FF": 2129,
+     "bbox_um": [
+      437.778,
+      850.9050000000001,
+      480.22200000000004,
+      920.2950000000001
+     ]
+    },
+    {
+     "name": "heads7",
+     "target": [
+      456.0,
+      1196.64
+     ],
+     "FF": 2401,
+     "bbox_um": [
+      437.778,
+      1159.2450000000001,
+      482.382,
+      1234.035
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.1600000000001995,
+   "min_macro_rectangle_clearance_um": 5.77800000000002,
+   "max_pipeline_interstage_manhattan_um": 43.74000000000018,
+   "existing_fixed_sites": 5825,
+   "no_existing_fixed_site_changes": true
+  },
+  "slw_su_c__cl92142dac": {
+   "representative": "sl_W1_su_c",
+   "FF": 17004,
+   "physical_instances": 5,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 6445.87632,
+   "positive_FF_INV_area_um2": 5702.12136,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "RED_join",
+     "target": [
+      857.28,
+      734.4
+     ],
+     "FF": 1242,
+     "bbox_um": [
+      839.5380000000001,
+      708.8850000000001,
+      875.5020000000001,
+      759.9150000000001
+     ]
+    },
+    {
+     "name": "shared_write",
+     "target": [
+      468.0,
+      300.48
+     ],
+     "FF": 15762,
+     "bbox_um": [
+      372.978,
+      281.20500000000004,
+      562.3020000000001,
+      417.015
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.1660664809741728,
+   "min_macro_rectangle_clearance_um": 4.724999999999966,
+   "max_pipeline_interstage_manhattan_um": 188.46000000000015,
+   "existing_fixed_sites": 10356,
+   "no_existing_fixed_site_changes": true
+  },
+  "slw_su_l0__cl76fb247e": {
+   "representative": "sl_W1_su_l0",
+   "FF": 1662,
+   "physical_instances": 3,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 630.03096,
+   "positive_FF_INV_area_um2": 557.3350800000001,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads0",
+     "target": [
+      166.08,
+      177.12
+     ],
+     "FF": 257,
+     "bbox_um": [
+      159.138,
+      165.645,
+      173.502,
+      188.595
+     ]
+    },
+    {
+     "name": "heads0,1,2,3",
+     "target": [
+      166.08,
+      704.16
+     ],
+     "FF": 759,
+     "bbox_um": [
+      152.65800000000002,
+      684.0450000000001,
+      179.982,
+      724.2750000000001
+     ]
+    },
+    {
+     "name": "heads1",
+     "target": [
+      166.08,
+      514.08
+     ],
+     "FF": 257,
+     "bbox_um": [
+      159.138,
+      502.605,
+      173.502,
+      525.5550000000001
+     ]
+    },
+    {
+     "name": "heads2",
+     "target": [
+      166.08,
+      894.24
+     ],
+     "FF": 228,
+     "bbox_um": [
+      159.138,
+      883.3050000000001,
+      173.502,
+      905.1750000000001
+     ]
+    },
+    {
+     "name": "heads3",
+     "target": [
+      166.08,
+      1231.2
+     ],
+     "FF": 161,
+     "bbox_um": [
+      159.138,
+      1222.425,
+      171.342,
+      1240.515
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.213919513811596,
+   "min_macro_rectangle_clearance_um": 16.578000000000003,
+   "max_pipeline_interstage_manhattan_um": 26.460000000000065,
+   "existing_fixed_sites": 130,
+   "no_existing_fixed_site_changes": true
+  },
+  "slw_su_l0__cl1e5219ea": {
+   "representative": "sl_W2_su_l0",
+   "FF": 1662,
+   "physical_instances": 2,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 630.03096,
+   "positive_FF_INV_area_um2": 557.3350800000001,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads0",
+     "target": [
+      166.08,
+      177.12
+     ],
+     "FF": 257,
+     "bbox_um": [
+      159.138,
+      165.645,
+      173.502,
+      188.595
+     ]
+    },
+    {
+     "name": "heads0,1,2,3",
+     "target": [
+      166.08,
+      704.16
+     ],
+     "FF": 759,
+     "bbox_um": [
+      152.65800000000002,
+      684.0450000000001,
+      179.982,
+      724.2750000000001
+     ]
+    },
+    {
+     "name": "heads1",
+     "target": [
+      166.08,
+      514.08
+     ],
+     "FF": 257,
+     "bbox_um": [
+      159.138,
+      502.605,
+      173.502,
+      525.5550000000001
+     ]
+    },
+    {
+     "name": "heads2",
+     "target": [
+      166.08,
+      894.24
+     ],
+     "FF": 228,
+     "bbox_um": [
+      159.138,
+      883.3050000000001,
+      173.502,
+      905.1750000000001
+     ]
+    },
+    {
+     "name": "heads3",
+     "target": [
+      166.08,
+      1231.2
+     ],
+     "FF": 161,
+     "bbox_um": [
+      159.138,
+      1222.425,
+      171.342,
+      1240.515
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.213919513811596,
+   "min_macro_rectangle_clearance_um": 16.578000000000003,
+   "max_pipeline_interstage_manhattan_um": 26.460000000000065,
+   "existing_fixed_sites": 130,
+   "no_existing_fixed_site_changes": true
+  },
+  "slw_su_l1__clcc9d0155": {
+   "representative": "sl_W5_su_l1",
+   "FF": 9321,
+   "physical_instances": 1,
+   "cell_envelope_um": [
+    1.404,
+    0.27
+   ],
+   "reserved_envelope_area_um2": 3533.40468,
+   "positive_FF_INV_area_um2": 3125.7041400000003,
+   "grid_pitch_um": [
+    2.16,
+    0.54
+   ],
+   "banks": [
+    {
+     "name": "heads4",
+     "target": [
+      456.0,
+      263.52
+     ],
+     "FF": 2017,
+     "bbox_um": [
+      437.778,
+      229.90500000000003,
+      480.22200000000004,
+      297.135
+     ]
+    },
+    {
+     "name": "heads4,5,6,7",
+     "target": [
+      456.0,
+      730.08
+     ],
+     "FF": 757,
+     "bbox_um": [
+      442.098,
+      709.4250000000001,
+      469.422,
+      750.7350000000001
+     ]
+    },
+    {
+     "name": "heads5",
+     "target": [
+      456.0,
+      574.56
+     ],
+     "FF": 2017,
+     "bbox_um": [
+      437.778,
+      540.945,
+      480.22200000000004,
+      608.1750000000001
+     ]
+    },
+    {
+     "name": "heads6",
+     "target": [
+      456.0,
+      885.6
+     ],
+     "FF": 2129,
+     "bbox_um": [
+      437.778,
+      850.9050000000001,
+      480.22200000000004,
+      920.2950000000001
+     ]
+    },
+    {
+     "name": "heads7",
+     "target": [
+      456.0,
+      1196.64
+     ],
+     "FF": 2401,
+     "bbox_um": [
+      437.778,
+      1159.2450000000001,
+      482.382,
+      1234.035
+     ]
+    }
+   ],
+   "min_new_center_spacing_um": 0.5399999999999636,
+   "min_existing_station_center_spacing_um": 2.1600000000001995,
+   "min_macro_rectangle_clearance_um": 5.77800000000002,
+   "max_pipeline_interstage_manhattan_um": 43.74000000000018,
+   "existing_fixed_sites": 5825,
+   "no_existing_fixed_site_changes": true
+  }
+ },
+ "limitations": [
+  "Plan-grid reservation, pending actual successor legal rows/unlocated glue/PDN/CTS.",
+  "Old hard-core outlines retained only as reservations until actual new masters harden.",
+  "Shared WROM/control/write fanout preserved; wire/buffer timing needs actual future frame kit.",
+  "Model includes exact selected control/read/write and RED joins; KV/stream status remain separate contracts."
+ ]
+}
