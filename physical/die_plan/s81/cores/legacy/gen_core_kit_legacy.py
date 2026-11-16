@@ -596,6 +596,9 @@ def native_m7_phase(native_roots, hc, plan):
         d = (ph - cx) % pn
         if d:
             bad[name] = (d if d <= pn // 2 else d - pn) / 1000.0
+    if bad and __import__("os").environ.get("OT_T51_M7_PHASE_DEFER") == "1":
+        print(f"WARNING {hc['module']}: {len(bad)} native M7 clock root pins off the die M7 lattice; shift deferred to tools/die_plan/pin_track_snap.py on the kit (S81-CORES-1115)", file=sys.stderr)
+        return ph / 1000.0
     if bad:
         ex = ", ".join(f"{k} {v:+.3f}" for k, v in sorted(bad.items())[:6])
         raise SystemExit(f"{hc['module']}: {len(bad)} native M7 clock root pins off the die M7 lattice "
