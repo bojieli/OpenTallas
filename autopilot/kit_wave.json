@@ -35754,12 +35754,7 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
-   "hold_items": {
-    "hd_spn_eshim_rx": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
-    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
-    "hd_spn": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
-    "hd_st_str": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key."
-   },
+   "hold_items": {},
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
     "hd_host_w@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
@@ -37688,12 +37683,6 @@
     "hd_turn_b": "HEAD-99 11-14: SIGNED via extra late ECO (intel1 attempt_3 eco99_b/i1: TT +101.49 FF +2.11 DRC 0, LOCAL_PASS_NEEDS_PARENT; COUNT-DIRECT row). The wave relaunch (attempt_6) reported GEN_NO_KIT although gen wrote the kit dir (epyc7 attempt_6/gen/hd_turn_b); no rebuild needed.",
     "hd_spn_wshim_rx": "HEAD-99 11-14: autopilot CLASSIFY SIGNED 06:22 (R-MINIMAL; late-ECO record TT -12.5 FF -1.46, archived epyc10); wave attempt_4 relaunch not needed."
    },
-   "hold_release_on": {
-    "hd_spn_eshim_rx": "lane_ready:HEAD-99 count",
-    "hd_ctl_n": "lane_result:DRT0255-PROOF",
-    "hd_spn": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
-    "hd_st_str": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
-   },
    "tool_skew": "warn",
    "kit_snap_view_refs": "strict",
    "retry_purged_wavehold1115_r223": [
@@ -37735,7 +37724,37 @@
     "hd_st_turn@11",
     "hd_tile@3"
    ],
-   "src_manifest": "verify"
+   "src_manifest": "verify",
+   "hold_records": [
+    {
+     "id": "s81_head-mig-002",
+     "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
+     "reason": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
+     "release": [
+      "lane_result:DRT0255-PROOF"
+     ],
+     "migrated": true,
+     "keys": [
+      "hd_ctl_n"
+     ],
+     "carry": true
+    },
+    {
+     "id": "s81_head-mig-003",
+     "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+     "release": [
+      "lane_result:DRT0255-PROOF verdict",
+      "proven form in gen env"
+     ],
+     "migrated": true,
+     "keys": [
+      "hd_spn",
+      "hd_st_str"
+     ],
+     "carry": true
+    }
+   ]
   },
   "qwen_compute": {
    "enabled": true,
