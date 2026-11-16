@@ -5913,6 +5913,10 @@ def run_item(spec_path):
             mp, why = kit_store_stage(sp, run, remote, res, W, plan)
         if mp is None:
             return fail("kit_snap" if snap_on else "kit_store", why)
+        if snap_on:                          # COORD r241: every roam stage waits until these snapshots are on its host
+            roamer.snaps = sorted({m.group(1) for v in mp.values()
+                                   for m in [re.match(r"^(.*/snaps/[0-9a-f]{40})/root/", str(v))] if m})
+            roamer.snap_verify = lambda sd: ks_cmd(f"verify {shlex.quote(sd)}")
         plan = plan0 = ks_map(plan, mp)
         kr = ks_map(kr, mp)
         if sp.get("type_overlay"):
