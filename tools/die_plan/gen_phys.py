@@ -4930,6 +4930,21 @@ def _module_header(text, mod):
     return None
 
 
+def _tree_module_headers(rtl_root, mod):
+    """[(header, file)] for every .sv/.v under rtl_root that declares module mod, in sorted path order."""
+    out, key = [], mod.encode()
+    for c in sorted(set(Path(rtl_root).rglob("*.sv")) | set(Path(rtl_root).rglob("*.v"))):
+        try:
+            if not c.is_file() or key not in c.read_bytes():
+                continue
+        except OSError:
+            continue
+        h = _module_header(c.read_text(errors="replace"), mod)
+        if h:
+            out.append((h, c))
+    return out
+
+
 def _header_localparams(text, mod, hdr):
     """DIE-HBM-92-GEN 11-08 (HBM q_b002 GEN_LINT "Identifier NKT is implicitly declared" in ot_hbm_idx_tail_native_bb.v):
     the module-scope `localparam ...;` statements of mod's body (text = its source) that the header's port list uses
@@ -5144,6 +5159,17 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
         hit = next(((h, c) for h, c in ((_module_header(c.read_text(errors="replace"), mod), c) for c in cands
                                         if c.is_file()) if h), None)
+        if hit is None and root:
+            # FABLE-FIX-KV-PVHUB 11-16 (KV pv types with OT_HCPARAM_ALL=1): the bound wrapper instantiates
+            # ot_qwen_tp8_pv_join_t #(.RESET_PIN(1)), and that module is declared in ot_qwen_tp8_pv_wide_pair.sv, a
+            # multi-module source that the kit does not stage (every module in it is a hard core) and that is not named
+            # after the module.  Last resort: the tree file that declares it.  Two different headers stop the kit.
+            found = _tree_module_headers(Path(root) / "rtl", mod)
+            if len({" ".join(h.split()) for h, _c in found}) > 1:
+                raise ValueError(f"macro {mod}: {len(found)} tree files declare it with different headers "
+                                 f"({', '.join(str(c) for _h, c in found[:4])}); stage the one the view was built from")
+            hit = found[0] if found else None
+            cands += [c for _h, c in found]
         hdr = hit[0] if hit else None
         if hdr is None:
             raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "
