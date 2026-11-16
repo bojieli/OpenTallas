@@ -44,6 +44,9 @@ for tn,t in sorted(P['partition_types'].items()):
         name,body=m.group(1),m.group(2); d=re.search(r'\.d\((\w+)\)',body); q=re.search(r'\.q\((\w+)\)',body)
         if d and q: insts[name]=dict(kind='raw',ins=[d.group(1)],rst=None); drv[q.group(1)]=name
     for a,b in re.findall(r'assign\s+(\w+)\s*=\s*(\w+)\s*;',src): drv.setdefault(a,'='+b)
+    ins_xy=(P.get('reset',{}).get('in_sites') or {}).get(tn)
+    if ins_xy:      # the reset / START pin registers sit at the plan reset in-site of the type
+        pos.setdefault('u_rst_in',ins_xy); pos.setdefault('u_run_in',ins_xy)
     def resolve(net,d=0):
         x=drv.get(net)
         while isinstance(x,str) and x.startswith('=') and d<20: net=x[1:]; x=drv.get(net); d+=1
