@@ -7,9 +7,11 @@
  "tools_sha": "41bb1dcfd10a",
  "hosts": [
   "epyc10",
-  "epyc9"
+  "epyc9",
+  "epyc7",
+  "epyc2"
  ],
- "hosts_verified": "src_manifest hash+ro at copy, links check after",
+ "hosts_verified": "hash + links OK on epyc10, epyc9, epyc7, epyc2; v3 bind of record present on all four",
  "die_gen_env": {
   "OT_PG_DIE_PHASE": "1",
   "OT_PGCAP": "1",
@@ -28,7 +30,8 @@
  "data_pack": "pending",
  "hidden_folder_smoke": "advisory until data_pack: plan, asbuilt, sidecar and views still live in lane folders",
  "hosts_pending": {
-  "epyc8": "scratch2 22 GB, CLEAN-ALL pruning",
-  "intel1": "copy not yet verified"
- }
+  "epyc8": "scratch2 near floor, CLEAN-ALL pruning",
+  "intel1": "near floor"
+ },
+ "successor": "src_s81_pin_41bb1dcfd10a_d4 (F2s2 plan/asbuilt/sidecar in tree) after its hidden-folder smoke passes"
 }
