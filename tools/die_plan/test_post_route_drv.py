@@ -106,9 +106,10 @@ def test_mk_stages_two_mode_session_and_keeps_kit_runner(tmp_path):
     assert (p1 / "run_kit_hbm.sh").is_file()
     eco = (p1 / "eco_post.tcl").read_text().splitlines()
     assert eco[:3] == ["source /work/kit_modes_eco.tcl", "source /work/prd_hook.tcl", "kit_modes_eco_done"]
-    assert eco[-3] == "source /work/pg_connect.tcl"
-    assert "OT_PG_STRICT" in eco[-2] and "getGlobalConnects" in eco[-2] and "ot_pg_connect_all post_route_drv" in eco[-2]
-    assert eco[-1] == "ot_pg_require_bound post_route_drv"
+    assert eco[-1] == "if {[llength [info commands ot_clk_freeze_assert]]} {ot_clk_freeze_assert post_chain}"   # S81-CORES-1115
+    assert eco[-4] == "source /work/pg_connect.tcl"
+    assert "OT_PG_STRICT" in eco[-3] and "getGlobalConnects" in eco[-3] and "ot_pg_connect_all post_route_drv" in eco[-3]
+    assert eco[-2] == "ot_pg_require_bound post_route_drv"
     assert (p1 / "pg_connect.tcl").read_text() == (ROOT / "tools/die_plan/pg_connect.tcl").read_text()
     base = p1 / "run/results/asap7" / NICK / "base"
     assert (base / "4_cts.odb").read_text() == "kit grt\n" and (base / "6_final.spef").read_text() == "*SPEF kit routed\n"
@@ -641,7 +642,7 @@ def test_prd_pg_preserves_native_ownership_and_checks_actual_binding(tmp_path, s
     out = tmp_path / 'p1'
     result = mk(kit, out)
     assert result.returncode == 0, result.stdout + result.stderr
-    tail = (out / 'eco_post.tcl').read_text().splitlines()[-2:]
+    tail = (out / 'eco_post.tcl').read_text().splitlines()[-3:-1]
     script = ('namespace eval ord {}\n'
               'proc ord::get_db_block {} {return block}\n'
               'proc block {m} {return {' + ('r1' if rules else '') + '}}\n'
