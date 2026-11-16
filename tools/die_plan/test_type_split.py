@@ -54,6 +54,52 @@ def test_windows_disjoint_nearest_and_segments():
         TS.windows_for([("big", 100000, None)], 100.0, 8.0)
 
 
+def test_relay_tx_sites_one_centre_pin_unless_relays_on_both_sides():
+    """FABLE-FIX-KV-PV-CUT: the 2-way form (and a chain away from an end keep piece) keeps its ONE centre pin; a keep
+    piece with a relay piece on each side gets one tx pin per side, each next to its neighbour's rx pin"""
+    mid = 760.32
+    two = TS.Cut("x", [622.08], 2160.0)
+    assert TS.relay_tx_sites(two, 0, [1], mid) == [("cland_rstart_out", [311.04, 756.0], [1])]
+    assert TS.relay_tx_sites(two, 1, [0], mid) == [("cland_rstart_out", [768.96, 756.0], [0])]
+    three = TS.Cut("x", [622.08, 1537.92], 2160.0)
+    assert TS.relay_tx_sites(three, 0, [1, 2], mid) == [("cland_rstart_out", [311.04, 756.0], [1, 2])]
+    both = TS.relay_tx_sites(three, 1, [0, 2], mid)
+    assert both == [("cland_rstart_out", [2.656, 756.0], [0]), ("cland_rstart_out_1", [913.184, 756.0], [2])]
+    # the neighbour's rx pin sits 2.656 um inside its own cut face at the same offset: both hops are 5.312 um (<= 405)
+    for (_name, tx, (child,)), rx_local in zip(both, (three.ext(0) - 2.656, 2.656)):
+        tx_die, rx_die = three.lo(1) + tx[0], three.lo(child) + rx_local
+        assert abs(tx_die - rx_die) == pytest.approx(5.312)
+    ycut = TS.Cut("y", [449.28, 846.72], 1676.16)
+    assert TS.relay_tx_sites(ycut, 1, [0, 2], 501.12) == [("cland_rstart_out", [496.8, 2.656], [0]),
+                                                           ("cland_rstart_out_1", [496.8, 394.784], [2])]
+    four = TS.Cut("x", [500.0, 1000.0, 1500.0], 2000.0)
+    with pytest.raises(TS.SplitError, match="one adjacent relay piece per side"):
+        TS.relay_tx_sites(four, 1, [0, 2, 3], mid)
+
+
+def test_landing_network_relay_edges_name_the_tx_pin_of_their_side():
+    """each relay piece's cland_relay__ edge leaves the tx pin its coll_link names (default: the one legacy pin)"""
+    class _Ts:
+        keep, cut = 1, None
+        coll_links = [dict(child_piece=0, parent_piece=1, index=0), dict(child_piece=2, parent_piece=1, index=1,
+                                                                         tx="cland_rstart_out_1")]
+    ev = TS.Event.__new__(TS.Event)
+    ev.out = dict(clock=dict(landing_network=dict(edges=[])))
+    ev.pmap, ev.ts, ev.rep = {"p": ["p_s", "p", "p_n"]}, {"T": _Ts()}, {}
+    ev.raw_type = lambda base: "T"
+    ev._landing_network()
+    relay = {e["id"]: (e["src"], e["dst"]) for e in ev.out["clock"]["landing_network"]["edges"]
+             if e["id"].startswith("cland_relay__")}
+    assert relay == {"cland_relay__p_s": (dict(part="p", bus="cland_rstart_out"), dict(part="p_s", bus="cland_rstart_in")),
+                     "cland_relay__p_n": (dict(part="p", bus="cland_rstart_out_1"), dict(part="p_n", bus="cland_rstart_in"))}
+    _Ts.coll_links = [dict(child_piece=0, parent_piece=1, index=0)]     # 2-way: unchanged edge
+    ev.out = dict(clock=dict(landing_network=dict(edges=[])))
+    ev.pmap = {"p": ["p_s", "p"]}
+    ev._landing_network()
+    assert [e["src"] for e in ev.out["clock"]["landing_network"]["edges"] if e["id"] == "cland_relay__p_s"] == [
+        dict(part="p", bus="cland_rstart_out")]
+
+
 class _Ev:
     def __init__(self, raw, spec):
         self.raw, self.spec, self.tag = raw, spec, "T"
@@ -95,6 +141,15 @@ def test_kv_hub_type_split(tn):
     for i in (0, 2):
         pn = {p["name"] for p in T[i]["clock"]["landing_contract"]["pins"]}
         assert "cland_rstart_in" in pn and "cland_up_ready" in pn and "cland_tstart_in" not in pn
+    # relay pieces on both sides of the keep piece: one tx pin per side, each within the hop limit of its rx pin
+    assert "cland_rstart_out_1" in names
+    assert {c["child_piece"]: c.get("tx", "cland_rstart_out") for c in ts.coll_links} == {0: "cland_rstart_out",
+                                                                                          2: "cland_rstart_out_1"}
+    pins = {i: {p["name"]: p["xy_um"] for p in T[i]["clock"]["landing_contract"]["pins"]} for i in range(3)}
+    for child, tx in ((0, "cland_rstart_out"), (2, "cland_rstart_out_1")):
+        a, b = pins[1][tx], pins[child]["cland_rstart_in"]
+        hop = abs(a[0] - b[0]) + abs((ts.cut.lo(1) + a[1]) - (ts.cut.lo(child) + b[1]))
+        assert hop <= 405
     # cut legs: each cut has an out bus on one side and the matching in bus on the other
     for leg in ts.legs:
         for c in leg["cuts"]:

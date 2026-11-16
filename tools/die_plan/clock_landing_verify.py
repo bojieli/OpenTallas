@@ -688,7 +688,7 @@ class Verification:
         finally:new=self.errors;self.errors=saved
         return not new
 
-    def _tx_raw_alt(self,tx,pn,ins,info):
+    def _tx_raw_alt(self,tx,pn,ins,info,sfx=''):
         """FABLE-TYPES-QC-WEST cause A: clock_landings._tx_raw sites the tx flop's raw reset on the NEAREST ring raw copy of
         its partition, and over 600 um adds one ot_dp_rrelay u_cland_rst_tx (a reset level, no lane effect).  Accepted:
         the planned reset node of ANY landed bus of the partition (exact parent/depth walk), directly or through that one
@@ -699,7 +699,7 @@ class Verification:
         ds=self.G.drv.get(bits[0],[])
         if len(ds)==1:
             up=self.F.cells[ds[0][0]]
-            if up.path==ident(pn)+'.u_cland_rst_tx' and up.module=='ot_dp_rrelay' and ds[0][1]=='q':c,port=up,'d'
+            if up.path==ident(pn)+'.u_cland_rst_tx'+sfx and up.module=='ot_dp_rrelay' and ds[0][1]=='q':c,port=up,'d'
         for b in sorted(ins[pn]):
             if self._try(lambda:self.check_reset(c,pn,self.ring_reset_node(pn,b,info),'u_cland_rst_'+b,port=port)):return
         self.fail(tx.path+': raw reset is neither the origin raw nor a planned ring raw copy of the partition (nearest-copy tx form)')
@@ -710,6 +710,7 @@ class Verification:
         "parts", COORD 21:14 ASK 3): the origin partition's u_cland_rstart_tx (d = origin start) drives every relay
         partition's u_cland_rstart_rx (q = that partition's start), both ot_dp_landing_relay on the region clock and the
         partition's raw reset; without "parts" a region must hold exactly one landed partition."""
+        import clock_landings as CL
         ca=self.table['count_aligned'];ins=defaultdict(list);landed=set();cparts=ca.get('parts')
         for r in rows:
             pr=ports[r['port']];ins[r['dst']].append(pr['dst']['bus']);landed.update((r['src'],r['dst']))
@@ -782,19 +783,22 @@ class Verification:
                     self.equal_input(c,'p_start',[self.fstart_net(tp['src'],ports[tp['port']]['src']['bus'])])
             rel=[q for q in ps if q!=pn]
             if not rel:continue
-            tx=self.instance(ident(pn)+'.u_cland_rstart_tx','ot_dp_landing_relay')
-            if tx:
+            # one tx flop per tx pin: cland_rstart_out, plus cland_rstart_out_<n> of a both-sides type split (same D)
+            for sfx in ['']+[s for _pin,s in CL.relay_tx_extra(self.raw['partition_types'].get(self.parts[pn]['type']))]:
+                tx=self.instance(ident(pn)+'.u_cland_rstart_tx'+sfx,'ot_dp_landing_relay')
+                if not tx:continue
                 self.clock(tx,pn)
                 if ca.get('strap_form'):
                     # strap origin (clock_landings._origin_rtl): the tx flop shares the origin's own raw reset (the
                     # selected tree bus / START pin raw, or the root's), the origin's own raw is checked above
                     if not self._try(lambda:self.face_raw(tx,pn,self.byname.get(ident(pn)+'.u_cland_root' if self._strap_root(pn) else path))):
-                        self._tx_raw_alt(tx,pn,ins,info)
+                        self._tx_raw_alt(tx,pn,ins,info,sfx)
                 else:
                     node,relay=self._raw_node(pn,ins,info)
                     if not self._try(lambda:self.check_reset(tx,pn,node,relay,port='rst_raw_n')):
-                        self._tx_raw_alt(tx,pn,ins,info)
+                        self._tx_raw_alt(tx,pn,ins,info,sfx)
                 self.equal_input(tx,'d',[self.output(path,'start')])
+            txpin=CL.relay_tx_pins(self.raw)
             for q in sorted(rel):
                 v=cparts[q]
                 if v.get('src')!=pn or int(v.get('stages',-1))!=2:
@@ -804,7 +808,7 @@ class Verification:
                     qi=self.collector['types'][self.parts[q]['type']]
                     node,relay=self._raw_node(q,ins,qi)
                     self.clock(rx,q);self.check_reset(rx,q,node,relay,port='rst_raw_n')
-                    self.equal_input(rx,'d',[self.output(ident(pn)+'.u_cland_rstart_tx','q')])
+                    self.equal_input(rx,'d',[self.output(ident(pn)+'.u_cland_rstart_tx'+txpin.get(q,CL.RELAY_TX_PIN)[len(CL.RELAY_TX_PIN):],'q')])
 
     def observer_input(self,c,port,bit):
         """Return original input net only after the exact live gate is proved."""

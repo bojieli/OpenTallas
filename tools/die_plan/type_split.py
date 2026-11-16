@@ -178,6 +178,35 @@ def die_face(orient, lf):
 
 
 # ------------------------------------------------------------------------------------------------------------- the split
+def relay_tx_sites(cut, keep, children, mid, tn=""):
+    """START relay tx pins of the keep (region origin) piece: [(pin name, xy_um in the keep piece, [relay pieces])].
+
+    Relay pieces on one side only (every 2-way split, a chain away from an end keep piece): ONE pin cland_rstart_out at
+    the keep piece centre, as before.  Relay pieces on BOTH sides of the keep piece (FABLE-FIX-KV-PV-CUT 11-16): one pin
+    per side on that side's cut face, next to the neighbour's rx pin (cland_rstart_out towards the low pieces,
+    cland_rstart_out_1 towards the high pieces; clock_landings puts one tx flop behind each pin, same D = the origin
+    start, so every relay piece still starts RELAY_STAGES = tx + rx counts after the origin).  A centre pin cannot
+    reach both neighbours within the 405 um hop, and an infrastructure pin drives exactly one edge."""
+    lo, hi = [i for i in children if i < keep], [i for i in children if i > keep]
+    off = rnd(mid - 4.32)
+    if not (lo and hi):
+        tx = [0.0, 0.0]
+        tx[cut.ax] = rnd(round(cut.ext(keep) / 2 / 0.27) * 0.27)
+        tx[1 - cut.ax] = off
+        return [("cland_rstart_out", tx, lo + hi)]
+    out = []
+    for side, nb, name, at in ((lo, keep - 1, "cland_rstart_out", 2.656),
+                               (hi, keep + 1, "cland_rstart_out_1", rnd(cut.ext(keep) - 2.656))):
+        if side != [nb]:
+            raise SplitError(f"{tn}: START relay pin {name} would serve pieces {side}: one adjacent relay piece per "
+                             f"side of the keep piece {keep} (a pin drives one edge within the hop limit)")
+        tx = [0.0, 0.0]
+        tx[cut.ax] = at
+        tx[1 - cut.ax] = off
+        out.append((name, tx, side))
+    return out
+
+
 class TypeSplit:
     def __init__(self, ev, tn):
         self.ev, self.tn = ev, tn
@@ -1440,12 +1469,15 @@ class TypeSplit:
             self.coll_links.append(dict(child_piece=i, parent_piece=nb, index=k, up_xy=up_xy, dn_xy=dn_xy, rx_xy=rx_xy))
         if self.coll_links:
             mid = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
-            tx = [0.0, 0.0]
-            tx[cut.ax] = rnd(round(cut.ext(self.keep) / 2 / 0.27) * 0.27)
-            tx[1 - cut.ax] = rnd(mid - 4.32)
-            L[self.keep]["pins"].append(dict(name="cland_rstart_out", dir="out", kind="ctl", layer="M7", xy_um=tx,
-                                             epoch=False))
-            self.tx_xy = tx
+            for name, tx, kids in relay_tx_sites(cut, self.keep, [c["child_piece"] for c in self.coll_links], mid, self.tn):
+                L[self.keep]["pins"].append(dict(name=name, dir="out", kind="ctl", layer="M7", xy_um=tx,
+                                                 epoch=False))
+                if name == "cland_rstart_out":
+                    self.tx_xy = tx
+                else:
+                    for c in self.coll_links:
+                        if c["child_piece"] in kids:
+                            c["tx"] = name
         self.infra_x = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
 
     # -------------------------------------------------------------- reset
@@ -2620,7 +2652,7 @@ class Event:
                                     dst=dict(part=names[c["parent_piece"]], bus=f"cland_dn_{w}_{c['index']}"),
                                     kind="ctl", width=1,
                                     epoch=False, max_hop_um=405, source_registered=True, capture_registered=True))
-                add.append(dict(id=f"cland_relay__{ch}", src=dict(part=keep, bus="cland_rstart_out"),
+                add.append(dict(id=f"cland_relay__{ch}", src=dict(part=keep, bus=c.get("tx", "cland_rstart_out")),
                                 dst=dict(part=ch, bus="cland_rstart_in"), kind="ctl", width=1, epoch=False,
                                 max_hop_um=405, source_registered=True, capture_registered=True))
         net["edges"] += add
