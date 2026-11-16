@@ -69,6 +69,7 @@ from pathlib import Path
 
 import plan_block_identity as BI
 import kit_resume as KR
+import tool_skew as TS
 import wave_jobs as WJ
 import kit_wave_roam as ROAM
 import flow_guard as FG
@@ -175,7 +176,7 @@ GATE_KEYS = ("bind", "clock")                 # plan event checks that must be P
 # right after gen: a registered relay at every <=300-um hop, extra cycles declared, per-hop table >= +10% of the period
 # or FAIL_PREBUILD before route.  Class default ON; a die opts out with "relay_bay_re": "".
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
-DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["*"],
+DEFAULTS = {"tool_skew": True, "max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["*"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
             "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
@@ -7355,8 +7356,43 @@ def live_attempt_elsewhere(st, die, item, key):
     return None
 
 
+def tool_skew_refuse(AP, cfg, st, die):
+    """TOOLS-CONVERGE-1115 (COORD r203): True = refuse to launch on this die this tick.  A die whose source tree
+    carries gen/bind tool modules that differ from main (tool_skew.py closure) and are not in the reviewed allowlist
+    tools/autopilot/tool_skew_allow.json (with a live expiry) builds nothing; one NEEDS-LANE is posted per die per
+    changed refusal set.  Unreadable tree = UNMEASURED = not refused.  Per-die / global opt `tool_skew`: false opts out,
+    "warn" posts the NEEDS-LANE but launches."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if opt(cfg, die, "tool_skew") is False or not d.get("src"):
+        return False
+    cache = cfg.setdefault("_tool_skew", {})
+    if die not in cache:
+        main_root = Path(d.get("tool_skew_main") or Path(__file__).resolve().parents[2])
+        try:
+            main_m = cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
+            res = TS.check_die(die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
+                               host=d.get("gen_host"), main_m=main_m)
+        except Exception as e:                           # a broken check never stops the wave
+            AP.log(f"KIT-WAVE tool_skew {die} not checked: {type(e).__name__}: {e}")
+            res = dict(ok=True, measured=False, refused={}, allowed={}, expired={}, n_closure=0)
+        cache[die] = res
+        if not res["ok"]:
+            AP.log(f"KIT-WAVE TOOL-SKEW refuse {die}: {len(res['refused'])} module(s) differ from main")
+            posted = st.setdefault("tool_skew_posted", {})
+            sig = TS.signature(res)
+            if posted.get(die) != sig and not AP.DRY:
+                posted[die] = sig
+                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                                f"- {now_s()} " + TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", "")))
+        elif st.get("tool_skew_posted", {}).get(die):
+            st["tool_skew_posted"].pop(die, None)
+    return not cache[die]["ok"] and opt(cfg, die, "tool_skew") != "warn"
+
+
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
+        return None
+    if tool_skew_refuse(AP, cfg, st, die):
         return None
     if FG.held_key(st, die, r.get("item")) and cfg["dies"][die].get("flow_guard") is not False:     # FLOW-HEALTH-1: open class, any launch path
         AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: FLOW-GUARD class open ({FG.held_key(st, die, r.get('item'))[:100]})")
