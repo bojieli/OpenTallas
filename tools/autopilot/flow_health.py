@@ -143,14 +143,31 @@ def main_reader(repo=REPO):
     return blob
 
 
-def trees_of(cfg):
-    """[(die, tree)] and {die: [hosts]} of enabled dies (the die src + every item_inputs src, as ot-src-refresh targets())"""
+def trees_of(cfg, state=None, now=None, live_h=12.0):
+    """[(die, tree)] and {die: [hosts]} of the LIVE wave trees (FABLE-FLOW-0015 b): the die's kit_wave.json src, plus the src named by the spec.json of every
+    wave attempt that was active in the last live_h hours (a row still on an older tree is the skew to see) and the item_inputs src of items with such an
+    attempt.  Old plans' item_inputs trees of finished items are no longer probed."""
+    now = time.time() if now is None else now
     trees, hosts = [], {}
+    live = collections.defaultdict(set)
+    for r in ((state or {}).get("items") or {}).values():
+        if not isinstance(r, dict) or now - float(r.get("updated") or 0) > live_h * 3600:
+            continue
+        if r.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD", "RETRY-INFRA", "ENQUEUED", "FAIL", "PASS") and r.get("dir"):
+            try:
+                s = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("src")
+            except (OSError, ValueError, TypeError):
+                s = None
+            if isinstance(s, str) and s.startswith("/"):
+                live[r.get("die")].add(s)
+            live[(r.get("die"), "items")].add(r.get("item"))
     for die, d in sorted((cfg.get("dies") or {}).items()):
         if not isinstance(d, dict) or not d.get("enabled") or not d.get("gen_host"):
             continue
         hosts[die] = [h for h in dict.fromkeys([d["gen_host"]] + list(d.get("gen_hosts") or [])) if h]
-        srcs = [d.get("src")] + [v.get("src") for v in (d.get("item_inputs") or {}).values() if isinstance(v, dict)]
+        act = live.get((die, "items"))
+        ii = [v.get("src") for k, v in (d.get("item_inputs") or {}).items() if isinstance(v, dict) and (act is None or k in act or state is None)]
+        srcs = [d.get("src")] + sorted(live.get(die, ())) + ii
         for s in dict.fromkeys(x for x in srcs if isinstance(x, str) and x.startswith("/")):
             trees.append((die, s))
     return trees, hosts
@@ -181,7 +198,11 @@ def compare_budget(mod, hosts, src, seconds=240):
 def skew_section(cfg, rpy=ssh_rpy, blob=None, compare_mod=None, now=None):
     now = time.time() if now is None else now
     blob = blob or main_reader()
-    trees, hosts = trees_of(cfg)
+    try:
+        state = json.loads(STATE.read_text())
+    except (OSError, ValueError):
+        state = None
+    trees, hosts = trees_of(cfg, state, now)
     rd = lambda rel: (blob(rel) or b"").decode("utf-8", "replace") if blob(rel) is not None else None   # noqa: E731
     cache = {}
 
