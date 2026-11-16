@@ -44,3 +44,15 @@ def test_s81_tree_without_txpipe_hook_fails(tmp_path):
     probs = T.check(t, ["s81"])
     assert any("TXPIPE hook" in p for p in probs)
     assert not any("TXPIPE" in p for p in T.check(t, ["s81_head"]))                  # only S81 serdes needs it
+
+
+def test_s81_tree_without_f2s4_fixes_fails(tmp_path):
+    t = mk(tmp_path, GOOD)
+    d = t / "tools/die_plan"
+    (d / "clock_landings.py").write_text("x = 1\n")
+    (d / "clock_taps.tcl").write_text("set a 1\n")
+    txt = "\n".join(T.check(t, ["s81"]))
+    assert "d5bd6d74" in txt and "55b26f" in txt
+    (d / "clock_landings.py").write_text("re.search(r'(?:relay|gate)(?:_nl)?')\n")
+    (d / "clock_taps.tcl").write_text("global ct_group_owned\n")
+    assert not any(("d5bd6d74" in p or "55b26f" in p) for p in T.check(t, ["s81"]))
