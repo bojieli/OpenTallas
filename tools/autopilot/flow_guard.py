@@ -722,10 +722,17 @@ def closure_files(read, entry=ENTRY_FILES, search=SEARCH_DIRS):
     return sorted(out)
 
 
+# the kit scripts a die tree carries into every kit (core_flow.stage_grt183 copies them): GRT early stops lived in these and stayed in trees that
+# predate main (FLOW-HEALTH-1 11-16: the S81 tree B6gG3b still stopped GRT at iteration 15 four days after main deleted the rule)
+KIT_SCRIPTS = ("physical/common_flow/grt183_make.sh", "physical/common_flow/grt183_resume.tcl", "physical/common_flow/grt_stall_resume.tcl",
+               "physical/common_flow/failfast_rules.py", "physical/common_flow/hold_guard_grt.tcl")
+
+
 def skew_report(trees, main_sha, read_main, rpy, hosts_of):
     """trees: [(die, tree)]; main_sha(rel) -> sha1 of main's file or None; hosts_of: {die: [hosts]}.
     -> [(die, host, tree, [rel differing from main])] only where something differs (a missing file counts)"""
     files = closure_files(read_main)
+    files += [f for f in KIT_SCRIPTS if f not in files and main_sha(f) is not None]
     want = {r: main_sha(r) for r in files}
     jobs = [(die, h, tree) for die, tree in trees for h in hosts_of.get(die, [])]
 
