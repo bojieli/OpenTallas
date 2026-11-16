@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Actual full-shape t14 post-global-placement image reviewed before CTS; detailed placement and timing remain required",
+  "source_commit": "c8bdcac8a6e",
+  "picture": "intel1:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/rx_transport/actual_gpl/actual_rck4.png",
+  "source_db": "intel1:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/F2/serdes__t14/gen/serdes__t14/run/results/asap7/dp_serdes__t14/base/3_3_place_gp.odb",
+  "findings": [
+    "Viewed actual ODB macro and register geometry: all four transport rows lie in open soft field below the PMA capture band and above native SYN receivers; no new row intersects PMA or cache macro halos.",
+    "All 554 transport bits and 2216 FF placed, all 4 reset FF placed, all 9 AM FF captured. No missing endpoints or blocked sites. Maximum transport hop reported312um; direct FF-to-FF internal maximum311.570um, first data/valid segment310.343um; <=405um model reach.",
+    "AM metadata has3 groups/9FF and107 total fanin cells within17.940um of header anchors. Negative capture to positive face maximum8.116um across all545 data/valid bits.",
+    "Unchanged external pins, macro positions, PDN, clock nets and stage counts. Added RX4 edges, TX0, RPC0 latency. No hard-core reshaping or outline delta.",
+    "Actual fulltop inventory2216 transport +4 reset +9AM +24RPC verified before place. Current source defaults remain off. Reviewed PG8df replay and footer-preserving native clock cohort guard are staged.",
+    "Post-place sizing/legalization is still running. This review permits CTS after place succeeds; related-pair skew and TT/FF timing must be measured. LEC R-MINIMAL preplace was DROPPED and is not an equivalence claim."
+  ],
+  "model": {
+    "RX_added_edges": 4,
+    "TX_added_edges": 0,
+    "maximum_hop_um": 311.57000000000016,
+    "corridor_track_utilization": 0.5295625,
+    "new_hardcores": 0,
+    "outline_delta": 0
+  },
+  "records": {
+    "physical_stage": "F2_physical_stage.json",
+    "mapped_inventory": "F2_mapped_inventory.json",
+    "source": "tools/uarch_model.py:s81_serdes_rx_transport_model"
+  }
+}
