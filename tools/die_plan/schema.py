@@ -1528,6 +1528,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
+# S81-COL-CLK-1116 (Spec 0, both opt-in): tap_core_src "tree" (with tap_core_etap) exports OT_TAP_CORE_SRC = tree; core_pin_lead_ps
+# declares a physical clock-pin arrival lead per hard-core module/pin (ROM clock pins), applied to the core_latency rows.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_src"] = {"enum": ["tree"]}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["core_pin_lead_ps"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["module_re", "pin", "lead_ps"],
+    "properties": {"module_re": {"type": "string", "minLength": 1}, "pin": {"type": "string", "minLength": 1},
+                   "lead_ps": {"type": "number", "minimum": 0.001, "maximum": 1000}}}}
 # S81-SEAM-RST-1115 (default off): the last reset stage of an async clear takes the clock tap of its sinks (tap_reset_affinity.tcl).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_affinity"] = {"type": "boolean"}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
