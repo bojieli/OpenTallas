@@ -35289,7 +35289,12 @@
    "item_env": {
     "hd_ctl": {
      "OT_IO_HOLD": "sender_min",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_ctl_e": {
      "OT_IO_HOLD": "sender_min",
@@ -35313,12 +35318,22 @@
     "hd_lep0N": {
      "OT_IO_HOLD": "sender_min",
      "OT_KW43_FIX": "lep-7c45adfab1d",
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_mesh": {
      "OT_IO_HOLD": "sender_min",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_mesh_e": {
      "OT_IO_HOLD": "sender_min",
@@ -35333,7 +35348,12 @@
      "OT_PLACE_MAX_FANOUT": "32",
      "OT_CONS_MAX_LAYER": "M9",
      "OT_CONS_STRIP_ROWS": "1",
-     "OT_GEN_SECONDARY_CLOCK": "hd_serdes:pma_rck[0]:pma_rck:1000:80:210"
+     "OT_GEN_SECONDARY_CLOCK": "hd_serdes:pma_rck[0]:pma_rck:1000:80:210",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_spn": {
      "OT_IO_HOLD": "sender_min",
@@ -35415,15 +35435,30 @@
     "hd_turn_a": {
      "OT_IO_HOLD": "sender_min",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_turn_b": {
      "OT_IO_HOLD": "sender_min",
      "OT_GEN_M8_GRANT": "1",
-     "OT_PLACE_MAX_FANOUT": "32"
+     "OT_PLACE_MAX_FANOUT": "32",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_host_e": {
-     "OT_GEN_M8_GRANT": "1"
+     "OT_GEN_M8_GRANT": "1",
+     "OT_PG_DIE_PHASE": "1",
+     "OT_PG_TRACK_TRUTH": "1",
+     "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+     "OT_PG_CELL_KEEPOUT": "0",
+     "OT_PG_PIN_CHECK": "warn"
     },
     "hd_host_w": {
      "OT_GEN_M8_GRANT": "1",
