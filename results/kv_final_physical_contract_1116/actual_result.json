@@ -1,0 +1,31 @@
+{
+ "scope": "Exact existing signed q2 actual physical registration, ETMs unchanged; no new physical/timing qualification",
+ "result": {
+  "module": "qkd_ectlk_q2",
+  "view": "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/views20_final_physical_v1/qkd_ectlk_q2",
+  "complete": true,
+  "problems": [],
+  "pins_sha256": "f5b543597085f946dea61b86127fca6e4b407fc368b3176dfc89bc474ba1b2cc",
+  "pins_canon_sha256": "c6282cda9085bf72d660ede839eb7064200b10c011d7f8d66422a807192f6eb7",
+  "child_clock_witness": null
+ },
+ "consumers": [
+  {
+   "corner": "TT",
+   "pins_relation": [
+    "canonical",
+    null
+   ],
+   "etm_sha256": "e59940296623521266648b83f5004577a2239da2f340d04df76bfd85fd864b13"
+  },
+  {
+   "corner": "FF",
+   "pins_relation": [
+    "canonical",
+    null
+   ],
+   "etm_sha256": "c3702a6892bf2923e32539ce0a8723413f5a983cebace9f3973935f2003c548c"
+  }
+ ],
+ "source_signoff_sha256": "82959aa7d78e978af9a92e02f0de21cf82ce9487d3ade702b4ebd8cfacc36362"
+}

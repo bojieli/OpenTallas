@@ -47,6 +47,7 @@ class TestFinalPhysicalContract(unittest.TestCase):
   old=(self.kit/'pins.json').read_bytes();out=self.root/'newview'
   res=E.export(str(self.kit),str(self.kit/'signoff/signoff.json'),str(out),'qwen_kvsys',final_physical_contract=True)
   self.assertTrue(res['complete'],res['problems']);v=out/'m';p=json.loads((v/'provenance.json').read_text())
+  self.assertEqual(res['pins_sha256'],p['final_physical']['pins_sha256'])
   self.assertEqual(p['kit']['outline_um'],[10,8]);self.assertEqual(p['final_physical']['outline_um'],[12,8]);self.assertEqual((v/'requested_pins.json').read_bytes(),old)
   self.assertEqual((self.kit/'pins.json').read_bytes(),old)
   with patch.object(D,'parse_etm',return_value=dict(out_max_ps=1,out_min_ps=0,in_setup_ps=1,in_hold_ps=0)):

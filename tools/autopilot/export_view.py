@@ -214,7 +214,8 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
     (vd / "provenance.json").write_text(json.dumps(prov, indent=1))
     (vd / "gates.json").write_text(json.dumps(gates, indent=1))
     return dict(module=mod, view=str(vd), complete=not problems, problems=problems,
-                pins_sha256=kitblk.get("pins_sha256"), pins_canon_sha256=kitblk.get("pins_canon_sha256"),
+                pins_sha256=(prov.get("final_physical") or kitblk).get("pins_sha256"),
+                pins_canon_sha256=(prov.get("final_physical") or kitblk).get("pins_canon_sha256"),
                 child_clock_witness=prov.get("child_clock_witness"))
 
 
