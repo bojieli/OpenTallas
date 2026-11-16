@@ -8372,6 +8372,21 @@ def collect(AP, cfg, st, notices):
                        f"one free retry on another host next tick")
         elif cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
+        if cls == "INFRA" and rec.get("status") == "RETRY-INFRA" and not NO_HOST.search(why or "") and not _TRANSIENT_INFRA.search(why or ""):
+            _ik = infra_key(cfg, rec, cls, why)
+            if infra_repeat(st, rec, _ik):
+                # the same (tool sha, src sha, plan sha, error class) failed again: a retry would run the same thing
+                cls = "TOOL" if TOOL_INFRA_RE.search(why or "") else "DESIGN"
+                rec.update(status="FAIL", blocked="BLOCKED-INFRA-REPEAT", **{"class": cls},
+                           reason=f"INFRA-KEY repeat ({_ik}): {why}"[:400])
+                AP.log(f"KIT-WAVE INFRA-KEY-REPEAT {rec['die']}/{rec['item']}@{rec.get('attempt')}: same tool/src/plan/error key {_ik} failed again; "
+                       f"reclassified {cls}, no retry")
+                if _ik not in (st.setdefault("infra_posted", {})):
+                    st["infra_posted"][_ik] = time.time()
+                    AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [KIT-WAVE -> COORD] {rec['die']}/{rec['item']}: INFRA failed twice on the "
+                                    f"same (tool sha, src sha, plan sha, error class) key {_ik}; no auto retry, class {cls}: {why[:200]}")
+            else:
+                rec["infra_key"] = _ik
         c = note_fail_sig(st, rec, cls, why, inp=input_digest(cfg, rec["die"]))
         if c and int(c.get("n") or 0) >= RETRY_CAP and blocked_why(cfg, st, rec["die"], rec["item"]):
             rec["blocked"] = f"BLOCKED-{c.get('cls') or cls}"
@@ -8384,7 +8399,7 @@ def collect(AP, cfg, st, notices):
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
-            if cls != "INFRA":
+            if not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg)
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
@@ -8419,6 +8434,27 @@ def cell_check_note(AP, st, rec, res, notices):
 
 
 KILL_RE = re.compile(r"Error 241|exit 143|rc 143|exit 137|process terminated|earlyoom|interrupted \(signal|\bKilled\b")
+
+
+TOOL_INFRA_RE = re.compile(r"python exception|plan-schema|tool or source skew|Traceback|ModuleNotFoundError|AttributeError|ImportError")
+
+
+def infra_key(cfg, rec, cls, why):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1800 item 1): the inputs an INFRA relaunch would run on: (tool sha, src sha, plan sha, error class).
+    46 of 88 fails on 11-15 were the same key failing again."""
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    body = [rt_tools_digest(), d.get("src_sha"), rec.get("plan_sha") or d.get("_plan_sha") or d.get("plan_sha"), FG.norm_class(cls, why)]
+    return hashlib.sha1(json.dumps(body, default=str).encode()).hexdigest()[:16]
+
+
+def infra_repeat(st, rec, key):
+    """True when this (item, key) already failed once: records the key; the second failure of the same key is the repeat"""
+    seen = st.setdefault("infra_seen", {}).setdefault(f"{rec.get('die')}|{rec.get('item')}", [])
+    if key in seen:
+        return True
+    seen.append(key)
+    del seen[:-20]
+    return False
 
 
 def infra_attempts(cfg, die):
