@@ -532,7 +532,12 @@ class SiteMap:
         # outlines. Keep those sites legal; core and PHY exclusions below still
         # apply, including wherever a channel rectangle crosses either one.
         self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
-                          if ch.get("rect_um"))
+                          if ch.get("rect_um") and ch.get("clock_channel") is not False)
+        # A reserved gap (seal ring / ESD) is not a clock placement island.
+        # The existing explicit flag also excludes native bodies that cross it.
+        for ch in P.die.get("channels", []) or []:
+            if ch.get("clock_channel") is False and ch.get("rect_um"):
+                self.forb.append((*ch["rect_um"], "reserved_channel"))
         if CLOCK_TYPE_KEEPOUTS:                 # DIE-QC-47 opt-in: a type's clock.keepouts_um (e.g. a bare PHY body)
             for n, p in P.parts.items():        # is no die clock-cell site either (same halo as a hard core)
                 for x0, y0, x1, y1 in (P.types[p["type"]].get("clock", {}) or {}).get("keepouts_um", []) or []:

@@ -84,3 +84,29 @@ def test_landing_band_rect_variants_exclude_clock_sites(monkeypatch):
     monkeypatch.setattr(D, 'DME_ACTUAL_MAX_UM', None)
     assert D.clock_site(Bands()).why((78.8, 90.)) == 'band'
     assert D.clock_site(Bands()).legal((162., 90.))
+
+
+def test_reserved_channel_flag_keeps_clock_bodies_out_of_seal_ring(monkeypatch):
+    class Channel:
+        W, H = 400., 200.
+        types = {'t': {'outline_um': [200., 200.]}}
+        parts = {'p': {'type': 't', 'origin_um': [0., 0.]}}
+
+        def __init__(self, flag=None):
+            ch = {'rect_um': [200., 0., 400., 200.]}
+            if flag is not None:
+                ch['clock_channel'] = flag
+            self.die = {'channels': [ch]}
+
+        def to_die(self, n, q):
+            return q
+
+    monkeypatch.setattr(D, 'CLOCK_TYPE_KEEPOUTS', False)
+    assert D.SiteMap(Channel()).legal((300., 90.))  # existing default unchanged
+    assert D.SiteMap(Channel(True)).legal((300., 90.))
+    point = D.SiteMap(Channel(False))
+    assert point.why((300., 90.)) == 'reserved_channel'
+    assert point.legal((198.8, 90.))
+    monkeypatch.setattr(D, 'CLOCK_BODY_SITES', True)
+    monkeypatch.setattr(D, 'DME_ACTUAL_MAX_UM', None)
+    assert D.clock_site(Channel(False)).why((198.8, 90.)) == 'reserved_channel'
