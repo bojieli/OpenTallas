@@ -20,7 +20,10 @@ module ot_hdc_v41x_attn_staging #(
     localparam integer ROWW = (D / 32) * 265;
     localparam integer NB = (ROWW + 255) / 256;
     genvar l, b;
-    generate if (SRAM_MACRO && DEPTH == 160 && ROWW == 265) begin : g_macro160
+    // three SIBLING generate ifs (not an else-if chain): an else-if nests in an unnamed block and would rename g_macro / g_behavioural
+    // hierarchically to genblk1.g_*, changing every kit that names those instances
+    localparam bit MACRO160 = SRAM_MACRO && DEPTH == 160 && ROWW == 265;
+    generate if (MACRO160) begin : g_macro160
         // S81 svc staging (D = 32, TROWS = 640, NL = 4): one exact-fit 160 x 265 1R1W macro per lane (15.5k um2 for 4;
         // the 256x256 branch below needs 8 macros = 56.7k um2, the behavioural branch 42,400 flops and fails the ORFS
         // SYNTH_MEMORY_MAX_BITS check).  Same one-cycle old-row read as the other two branches.
@@ -32,7 +35,8 @@ module ot_hdc_v41x_attn_staging #(
                 .wd_in(wr_data[l*ROWW +: ROWW]),
                 .w_mask_in({ROWW{1'b1}}));
         end
-    end else if (SRAM_MACRO) begin : g_macro
+    end
+    if (SRAM_MACRO && !MACRO160) begin : g_macro
         initial begin
             if (DEPTH > 1024 || AW > 10 || D % 32 != 0)
                 $fatal(1, "attention staging macro requires DEPTH<=1024, D%%32=0");
@@ -62,7 +66,8 @@ module ot_hdc_v41x_attn_staging #(
                 end
             end
         end
-    end else begin : g_behavioural
+    end
+    if (!SRAM_MACRO) begin : g_behavioural
         for (l = 0; l < NL; l = l + 1) begin : g_lane
             reg [ROWW-1:0] mem [0:DEPTH-1];
             reg [ROWW-1:0] q;
