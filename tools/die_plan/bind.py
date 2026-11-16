@@ -6245,7 +6245,7 @@ def _plan_expect(B, p, a):
 
 def _plan_gate_pre(a):
     """PLAN-GATE-PRE-1115 (COORD r213): before a die elab/bind, run tools/die_plan/plan_gate_pre.py on THIS tree (schema keys,
-    as-built inputs, tool vintage; rows only when OT_PLAN_GATE_BASELINE names the adopted plan) and refuse on FAIL, in seconds,
+    as-built inputs, tool vintage; rows and station-in-core overlaps only when OT_PLAN_GATE_BASELINE names the adopted plan) and refuse on FAIL, in seconds,
     with a named reason.  OT_PLAN_GATE_PRE=off skips it, =warn prints and continues.  Result stamp out/plan_gate_pre.json lets
     `bind` after `elab` of the same plan and tools skip the repeat.  Returns 0 or the exit code to refuse with."""
     mode = os.environ.get("OT_PLAN_GATE_PRE", "refuse")
@@ -6269,7 +6269,7 @@ def _plan_gate_pre(a):
     except (OSError, ValueError):
         pass
     try:
-        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS",))
+        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"))
     except (OSError, ValueError) as e:
         print(f"bind: plan_gate_pre could not read its inputs: {e}")
         return 0 if mode == "warn" else 2
