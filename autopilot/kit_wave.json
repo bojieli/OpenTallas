@@ -5930,11 +5930,11 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/s81-b3-clk/ev/B6gG3b.json",
    "gen_host": "epyc8",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_eb1e73448bd0",
    "src_sha": "7073a6b4a599c1de9e041896421b3b779045df1d",
    "kit_rtl": {
     "mode": "bind",
-    "bind_out": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/out",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_eb1e73448bd0/out",
     "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
     "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
    },
@@ -36305,8 +36305,8 @@
     },
     "src_manifest": "verify"
    },
-   "src_manifest_hash": "e6626b1f72572b4d8020d1ab8d79d81fbb96ba7c408aea8a8ed608e544869d8d",
-   "tools_sha": "e4b9ae9f1c1f",
+   "src_manifest_hash": "59d562a34e1c22303b580e91eb2c45150638df7358abd28543706bf65874cabe",
+   "tools_sha": "eb1e73448bd0",
    "proof_items": {
     "svc-ready": [
      "svc_hi_dsdv_svc_rs__t3",
@@ -36315,6 +36315,24 @@
     "s81-coltap-pilots": [
      "col_h9_r2__t1__clce45cab5__pv7a260fc0"
     ]
+   },
+   "prev_treeswitch1116v2": {
+    "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f",
+    "src_manifest_hash": "e6626b1f72572b4d8020d1ab8d79d81fbb96ba7c408aea8a8ed608e544869d8d",
+    "tools_sha": "e4b9ae9f1c1f",
+    "gen_host": "epyc8",
+    "gen_hosts": [
+     "epyc10",
+     "epyc9",
+     "epyc8",
+     "intel1"
+    ],
+    "kit_rtl": {
+     "mode": "bind",
+     "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_eb1e73448bd0/out",
+     "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
+     "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
+    }
    }
   },
   "s81_head": {
