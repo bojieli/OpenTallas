@@ -37205,16 +37205,8 @@
    "pilot_mode": "queue",
    "hold_items": {
     "coll_ft__cl78c7b300": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
-    "sle_fw_v1__cl9d029624": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "sle_stm_v1__cl27746664": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "sle_stm_v1__clbe630b9c": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "slw_fe_v1__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "slw_fe_v2__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "slw_hc3__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "slw_stm_v1__cl05fc43f7__cl2086fa2c": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "slw_stm_v1__cl05fc43f7__cl389df4e9": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "slw_stm_v2__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
-    "sle_st_b_v1__pv0e7b1dcc": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+    "slw_stm_v2__*": "WAVE-HOLDS-1115 2026-11-15 19:45 PST (COORD r211, FABLE-PD-QCHOLD-1915): the GRT hold-stall class is stale; type is in a DRT-0255 family (lever 1). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "sle_st_b_v1__pv0e7b1dcc": "WAVE-HOLDS-1115 2026-11-15 19:45 PST (COORD r211, FABLE-PD-QCHOLD-1915): the GRT hold-stall class is stale; type is in a DRT-0255 family (lever 1). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
     "coll_ucie": "FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
     "sle_fw_v2*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
     "slw_fw_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
@@ -47483,16 +47475,8 @@
    },
    "hold_release_on": {
     "coll_ft__cl78c7b300": "lane_ready:HEAD-99 count",
-    "sle_fw_v1__cl9d029624": "lane_ready:DIE-QC-103",
-    "sle_stm_v1__cl27746664": "lane_ready:DIE-QC-103",
-    "sle_stm_v1__clbe630b9c": "lane_ready:DIE-QC-103",
-    "slw_fe_v1__*": "lane_ready:DIE-QC-103",
-    "slw_fe_v2__*": "lane_ready:DIE-QC-103",
-    "slw_hc3__*": "lane_ready:DIE-QC-103",
-    "slw_stm_v1__cl05fc43f7__cl2086fa2c": "lane_ready:DIE-QC-103",
-    "slw_stm_v1__cl05fc43f7__cl389df4e9": "lane_ready:DIE-QC-103",
-    "slw_stm_v2__*": "lane_ready:DIE-QC-103",
-    "sle_st_b_v1__pv0e7b1dcc": "lane_ready:DIE-QC-103",
+    "slw_stm_v2__*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "sle_st_b_v1__pv0e7b1dcc": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
     "coll_ucie": "lane_ready:DIE-QC-103",
     "sle_fw_v2*": "lane_ready:DIE-QC-103",
     "slw_fw_v3*": "lane_ready:DIE-QC-103",
@@ -65895,6 +65879,22 @@
      "kv3_sys_c"
     ]
    ]
+  }
+ },
+ "hold_items_rekeyed_wavehold1115_r211": {
+  "rekeyed_to_drt0255": [
+   "slw_stm_v2__*",
+   "sle_st_b_v1__pv0e7b1dcc"
+  ],
+  "lifted_not_in_drt_family": {
+   "sle_fw_v1__cl9d029624": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+   "sle_stm_v1__cl27746664": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+   "sle_stm_v1__clbe630b9c": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+   "slw_fe_v1__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+   "slw_fe_v2__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+   "slw_hc3__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
+   "slw_stm_v1__cl05fc43f7__cl389df4e9": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key."
   }
  }
 }
