@@ -53,6 +53,7 @@ proc ot_rc_signal_adjust {} {
 proc ot_rc_signal_table {} {
     array set csig {M2 0.186 M3 0.131 M4 0.209 M5 0.175 M6 0.207 M7 0.181}
     if {[info exists ::env(OT_RC_SIGNAL_C)]} { array set csig $::env(OT_RC_SIGNAL_C) }
+    if {[info exists ::env(OT_RC_SIGNAL_SCALE)] && $::env(OT_RC_SIGNAL_SCALE) ne ""} { foreach k [array names csig] { set csig($k) [expr {$csig($k)*$::env(OT_RC_SIGNAL_SCALE)}] } }
     set f ""
     if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} { set f $::env(LAYER_PARASITICS_FILE) }
     if {$f eq ""} { puts "OT_RC_SIGNAL table: no LAYER_PARASITICS_FILE"; return }
