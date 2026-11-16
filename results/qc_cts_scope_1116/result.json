@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.cts_hold_scope_fix.v1",
+  "base_commit": "dfede0ecbc",
+  "cause": "CTS invokes synchronized MM hold repair from 3_place.sdc; the old optimization-scope guard accepted only 4_cts.sdc.",
+  "change": "Honor existing reg2reg/nonport policies in synchronized CTS and GRT; ideal/unsynchronized stages and explicit all-path opt-outs retain their behavior.",
+  "architectural_delta": {
+    "pipeline_edges": 0,
+    "state_registers": 0,
+    "boundary_bits": 0,
+    "arithmetic_changes": false,
+    "clock_policy_changed": false
+  },
+  "future_runtime_profile": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 0,
+    "hold_uncertainty_ps": 25,
+    "hold_margin_ps": 0
+  },
+  "live_jobs_modified": false,
+  "verification": {
+    "real_sta_suite_tests": 10,
+    "real_sta_pass": 10,
+    "dispatch_tests": 10,
+    "dispatch_pass": 10,
+    "old_guard_negative_control_failures": 2,
+    "negative_control": "Actual DIN input paths remain visible during the old CTS repair in both normal/error cases.",
+    "checks": [
+      "internal and clocked-macro paths remain visible",
+      "port paths return after repair",
+      "TT setup reports unchanged during and after scope",
+      "error restores exact FF SDC and entry mode",
+      "explicit all/empty/off opt-outs remain full-path",
+      "unsynced and ideal-placement stages remain full-path"
+    ]
+  },
+  "fixture_image": "openroad/orfs:latest",
+  "fixture_image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+  "physical_context": {
+    "baseline_head_auto_hold": 12289,
+    "baseline_pure_port_hold": 5585,
+    "hotspot_port_hold_area_um2": 41.321,
+    "new_physical_measurement": "NOT RUN; existing jobs preserved"
+  },
+  "coordination": "HEAD and fleet owners confirmed no helper/test source overlap. Root approval and normal remote source gate remain required."
+}

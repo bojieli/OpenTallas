@@ -48,6 +48,10 @@ LIB = ('''library (fixture) {
   current_unit : "1mA";
   capacitive_load_unit (1,pf);
   nom_process : 1; nom_voltage : 1; nom_temperature : 25;
+  input_threshold_pct_rise : 50; output_threshold_pct_rise : 50;
+  slew_lower_threshold_pct_rise : 20; slew_upper_threshold_pct_rise : 80;
+  input_threshold_pct_fall : 50; output_threshold_pct_fall : 50;
+  slew_lower_threshold_pct_fall : 20; slew_upper_threshold_pct_fall : 80;
 ''' + cell("DFF", 1) + cell("CLOCKED_MACRO", 1000) + "}\n")
 NETLIST = '''module top(input CK, DIN, output R2O, MOUT);
 wire qi, qm;
@@ -90,7 +94,8 @@ def production_helper(mm):
 
 @unittest.skipUnless(OPENROAD, "OpenROAD required for functional STA fixture")
 class NonportSTA(unittest.TestCase):
-    def run_graph(self, scope, mm=False, body_error=False, extra_env=None):
+    def run_graph(self, scope, mm=False, body_error=False, extra_env=None,
+                  stage="4_cts.sdc", synced=True):
         with tempfile.TemporaryDirectory(prefix="nonport-sta-") as td:
             d = Path(td)
             (d / "fixture.lib").write_text(LIB)
@@ -113,8 +118,11 @@ set_output_delay -clock clk -min 0.000 [all_outputs]
 set_output_delay -clock clk -max 0.100 [all_outputs]
 '''
             if mm:
-                script += "set_mode tc\nset ::ot_mm_synced 1\nset ::ot_mm_stage 4_cts.sdc\n"
+                script += f"set_mode tc\nset ::ot_mm_stage {stage}\n"
+                if synced:
+                    script += "set ::ot_mm_synced 1\n"
                 script += "proc ot_hold_stats {} {return [sta::worst_slack_cmd min]}\n"
+            script += "unset -nocomplain ::env(OT_HOLD_REPAIR_SCOPE) ::env(OT_HOLD_PORT_SCOPE_OFF)\n"
             script += production_helper(mm)
             if scope:
                 script += f"\nset ::env(OT_HOLD_REPAIR_SCOPE) {scope}\n"
@@ -150,6 +158,8 @@ set_output_delay -clock clk -max 0.100 [all_outputs]
             if mm:
                 self.assertEqual((d / "before.rpt.tc").read_text(), (d / "during.rpt.tc").read_text(),
                                  "TT setup changed while scoping FF repair")
+                self.assertEqual((d / "before.rpt.tc").read_text(), (d / "after.rpt.tc").read_text(),
+                                 "TT setup changed after restoring FF repair scope")
             return reports
 
     def assert_nonport_paths(self, reports):
@@ -184,6 +194,34 @@ set_output_delay -clock clk -max 0.100 [all_outputs]
             self.assertNotRegex(during, r"Endpoint: R2O\b")
             self.assertRegex(during, r"Startpoint: u_macro\b")
             self.assertRegex(during, r"Endpoint: u_macro_capture\b")
+
+    def test_cts_default_and_error_restore_real_paths(self):
+        # CTS repairs after clock creation, but its input checkpoint is still 3_place.sdc.
+        # Scope only the optimization: the full port paths and TT scene must survive it.
+        for body_error in (False, True):
+            with self.subTest(body_error=body_error):
+                before, during, _ = self.run_graph(None, mm=True, body_error=body_error,
+                                                  stage="3_place.sdc")
+                self.assertRegex(before, r"Startpoint: DIN\b")
+                self.assertNotRegex(during, r"Startpoint: DIN\b")
+                self.assertNotRegex(during, r"Endpoint: R2O\b")
+                self.assertRegex(during, r"Startpoint: u_macro\b")
+                self.assertRegex(during, r"Endpoint: u_macro_capture\b")
+
+    def test_cts_nonport_override_keeps_reg_to_output(self):
+        self.assert_nonport_paths(self.run_graph("nonport", mm=True, stage="3_place.sdc"))
+
+    def test_cts_explicit_all_path_opt_outs_survive(self):
+        for env in ("OT_HOLD_PORT_SCOPE_OFF 1", "OT_HOLD_REPAIR_SCOPE all", "OT_HOLD_REPAIR_SCOPE {}"):
+            with self.subTest(env=env):
+                before, during, _ = self.run_graph(None, mm=True, extra_env=env, stage="3_place.sdc")
+                self.assertEqual(before, during, env)
+
+    def test_unsynced_or_ideal_placement_is_not_scoped(self):
+        for stage, synced in (("3_place.sdc", False), ("2_floorplan.sdc", True)):
+            with self.subTest(stage=stage, synced=synced):
+                before, during, _ = self.run_graph(None, mm=True, stage=stage, synced=synced)
+                self.assertEqual(before, during)
 
     def test_opt_out_env_keeps_all_paths(self):
         for env in ("OT_HOLD_PORT_SCOPE_OFF 1", "OT_HOLD_REPAIR_SCOPE all", "OT_HOLD_REPAIR_SCOPE {}"):

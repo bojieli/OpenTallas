@@ -685,10 +685,10 @@ proc ot_hold_structural_gate {} {
   }
   return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
 }
-# HOLD-REPAIR-SCOPE: opt-in FF repair scope. Legacy reg2reg excludes input starts and output endpoints.
+# HOLD-REPAIR-SCOPE: FF optimization scope. reg2reg excludes input starts and output endpoints.
 # nonport excludes input-port starts only, retaining register-to-output and macro/internal paths (OWNER 11-07).
 # This is an optimization scope only: TT setup is untouched, FF constraints replay at full precision in finally,
-# and the original current mode is restored even on a repair error. Default remains the original all-path repair.
+# and the original current mode is restored even on a repair error. The default follows the R-MINIMAL policy below.
 proc ot_hold_scope_read {path} {
   set fh [open $path r]
   try { return [read $fh] } finally { close $fh }
@@ -706,8 +706,11 @@ proc ot_hold_scope_default {} {
 }
 proc ot_hold_repair_scope {body} {
   set scope [ot_hold_scope_default]
+  # CTS enters from 3_place.sdc even after creating/propagating its clocks. ot_mm_sync marks that real FF scene
+  # ready before repair, just as it does for GRT's 4_cts.sdc. Ideal/unsynchronized placement remains untouched.
   if {$scope ni {reg2reg nonport} ||
-      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] ||
+      $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} {
     return [uplevel 1 $body]
   }
   set entry [sta::cmd_mode_name]
