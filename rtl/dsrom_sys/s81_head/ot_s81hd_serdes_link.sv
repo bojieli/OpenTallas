@@ -26,7 +26,9 @@ module ot_s81hd_serdes_link #(
         .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
     );
 `else
-    ot_pdie_serdes #(.PMA_LAT(PMA_LAT)) u_link (
+    // FABLE-FIX-HEAD-SERDES 11-16: fanout copies only (KP4 PE groups 4 -> 12, rate-match read select 1 -> 32), +0 pin cycles
+    // HEAD-SERDES-O 11-16: + k_* seam register in front of the hard tile u_chn (DKREG 1): +1 pma_rck RX latency
+    ot_pdie_serdes #(.PMA_LAT(PMA_LAT), .DNGB(12), .RMRPC(32), .DKREG(1)) u_link (
         .clk(ck), .rst(rst_n), .tx(coll_i0), .rx(rx), .st(st),
         .pma_tx(pma_tx), .pma_tck(pma_tck), .pma_rx(pma_rx), .pma_rck(pma_rck)
     );
