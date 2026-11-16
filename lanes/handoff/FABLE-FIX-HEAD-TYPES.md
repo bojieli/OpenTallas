@@ -1,0 +1,7 @@
+# FABLE-FIX-HEAD-TYPES handoff (started 11-15 22:30 PST)
+Owner of the 7 open HEAD types: hd_ctl, hd_spn, hd_host_e, hd_host_w, hd_serdes, hd_lep0N, hd_mesh. Lane dir epyc10 /srv/opentallas-scratch2/claude/fable-fix-head-types (tools_2686 = hub admission bundle 2686937938be).
+- hd_spn: wave a5 (NF6 block = current) routed DRC 0, TT +20.14, FF non-port hold -11.57 (9 endpoints); autopilot ECO eco_20261115_212433 running inside ot-job intel1 hd_spn-route-key-cardinal-1495359 (i1t pass). Parallel form: my eco_loop on the die-phase proof kit epyc10 drt0255-proof/var/p_hd_spn (TT +50.8, non-port hold -19.06 / 86) -> epyc10 lane eco_hd_spn (client log localhost scratchpad eco_hd_spn.log).
+- hd_ctl: p_hd_ctl (old block, no NF13a islands; rehearsal only) TT -79.86 = sync reset rst_c (u_seq) fan-out tree, 7 weak buffer stages 646 ps, slew 250; eco_loop rehearsal -> lane eco_hd_ctl. Countable record = wave a2 NF13a (intel1 ot-job hd_ctl-route-key-cardinal-3010058, in route).
+- hd_host_e: wave a2 stopped at SETUP_TRIAGE (post-CTS TT est -225.98, FF +26.59). Private copy of the placed a2 kit: lane he1 (postcts_gate stop off), route running (ot-run epyc10).
+- hd_host_w: wave a1 stopped at SETUP_TRIAGE (-179.04) + epyc7 ENOSPC. Private copy lane hw1 (core-phase pdn 4.128!), route running.
+- hd_serdes a4 (epyc7), hd_lep0N a2, hd_mesh a6 (epyc10 ot-jobs): wave route jobs running; autopilot runs eco_loop on routed kits by itself.
