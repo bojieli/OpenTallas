@@ -610,12 +610,13 @@ def _nm(x):
     return int(round(float(x) * 1000))
 
 
-def merge_pin_wires(lines, layers=None):
+def merge_pin_wires(lines, layers=None, max_rects=32):
     """Pin-wire merge (S81-COLABS-1115): a signal pin whose own wire continues as OBS on the same layer (rects that
     touch or overlap the pin shape, directly or through other touching OBS rects) gets that whole wire as pin shape
     and the rects leave OBS.  Touching metal of one layer is one net, so nothing is lost; the router no longer sees a
     pin end butted against foreign-looking metal (Lef58EolKeepOut).  Pin names, USE, DIRECTION and every other
-    line are unchanged.  layers: None = every layer the OBS lists except blanket layers (a rect covering >50% of the
+    line are unchanged.  A pin whose connected OBS wire has more than max_rects rects (default 32) is a net wire,
+    not a stub: it is left in OBS (skipped_long).  layers: None = every layer the OBS lists except blanket layers (a rect covering >50% of the
     SIZE is never merged).  -> (new_lines, report)"""
     head, body, tail = _split(lines)
     if body is None:
@@ -663,7 +664,7 @@ def merge_pin_wires(lines, layers=None):
         oy = min(a[3], b[3]) - max(a[1], b[1])
         return (ox >= 0 and oy >= 0) and (ox > 0 or oy > 0)
 
-    inserts, merged, npins = {}, 0, 0
+    inserts, merged, npins, skipped = {}, 0, 0, 0
     for pname, pd in pins.items():
         if pd["use_pg"]:
             continue
@@ -673,20 +674,26 @@ def merge_pin_wires(lines, layers=None):
             cand = [c for c in obs.get(layer, []) if c[2] and not (big and (c[0][2] - c[0][0]) * (c[0][3] - c[0][1]) > big)]
             if not cand:
                 continue
-            frontier, got = list(ent["rects"]), []
+            frontier, got, taken = list(ent["rects"]), [], []
             while frontier:
                 f = frontier.pop()
                 for c in cand:
                     if c[2] and touch(f, c[0]):
                         c[2] = False
+                        taken.append(c)
                         got.append(c[0])
                         frontier.append(c[0])
+            if max_rects and len(got) > max_rects:   # a net wire (clock / reset tree), not a pin stub: stays OBS
+                for c in taken:
+                    c[2] = True
+                skipped += 1
+                continue
             if got:
                 npins += 1
                 merged += len(got)
                 inserts.setdefault(ent["last"], []).extend(got)
     if not merged:
-        return lines, {"merged_rects": 0, "pins": 0}
+        return lines, {"merged_rects": 0, "pins": 0, "skipped_long": skipped}
     new_head = []
     for i, ln in enumerate(head):
         new_head.append(ln)
@@ -708,7 +715,7 @@ def merge_pin_wires(lines, layers=None):
                 dead[key] -= 1
                 continue
             body_out.append(ln)
-    return new_head + body_out + tail, {"merged_rects": merged, "pins": npins}
+    return new_head + body_out + tail, {"merged_rects": merged, "pins": npins, "skipped_long": skipped}
 
 
 def check(base_lines, new_lines, layers, window=None):
