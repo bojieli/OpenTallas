@@ -285,7 +285,7 @@ def seam_extra_bits(mod, extra):
     return out
 
 
-def bound_seam_depths(plan, master):
+def bound_seam_depths(plan, master, frame_parts=None):
     """{'u_s01': D, ...}: the plan's fi lane depth per band crossing of this master, one value over all instances"""
     ptype = {p['name']: p['type'] for p in plan['partitions']}
     ports = {p['id']: p for p in plan['ports']} if isinstance(plan['ports'], list) else plan['ports']
@@ -296,6 +296,9 @@ def bound_seam_depths(plan, master):
             continue
         st, dt = ptype[ports[ln['ports'][0]]['src']['part']], ptype[ports[ln['ports'][-1]]['dst']['part']]
         if not st.startswith(master + '_r'):
+            continue
+        if frame_parts is not None and (ports[ln['ports'][0]]['src']['part'] not in frame_parts or
+                                        ports[ln['ports'][-1]]['dst']['part'] not in frame_parts):
             continue
         i, j = re.match(master + r'_r(\d)', st).group(1), re.match(master + r'_r(\d)', dt).group(1)
         by[f'u_s{i}{j}'].add(lat[ln['id']]['cycles'])
@@ -492,7 +495,33 @@ def measure(yjs, top, seam_extra=None):
     return res
 
 
-def selected_station_variants(yjs, top, ab, die_text, hard_params):
+def selected_frame_parts(plan, ab, frame, top, die_text):
+    """Resolve one real frame through the binder's selected map; never guess its physical prefix."""
+    if not re.fullmatch(r'[A-Za-z_]\w*', frame):
+        raise ValueError('invalid selected frame instance: ' + frame)
+    actual = set(re.findall(r'\b' + re.escape(top) +
+        r'\s*(?:#\s*\([^;]*?\)\s*)?([A-Za-z_]\w*)\s*\(', die_text))
+    if frame not in actual:
+        raise ValueError('selected frame does not instantiate ' + top + ': ' + frame)
+    map_file = ab.get('map_file')
+    if not isinstance(map_file, str):
+        raise ValueError('per-frame schedule requires the selected binder map_file')
+    mapping = json.loads((sroot() / map_file).read_text())['parts']
+    parts = {p['name']: p['type'] for p in plan['partitions']}
+    chosen = {}
+    master = top.split('_l4_lp_asb_', 1)[0]
+    for k in range(3):
+        key = frame + '.u_r' + str(k)
+        part = mapping.get(key)
+        if part not in parts or not parts[part].startswith(master + '_r' + str(k)):
+            raise ValueError('selected frame band missing or has wrong type: ' + key)
+        chosen['u_r' + str(k)] = part
+    if len(set(chosen.values())) != 3:
+        raise ValueError('selected frame bands are not distinct: ' + frame)
+    return chosen
+
+
+def selected_station_variants(yjs, top, ab, die_text, hard_params, frame_instance=None):
     """Apply the binder's instance-path QX variants to a standalone frame trace.
 
     Binding substitutes leaves AFTER elaboration. A standalone frame has no
@@ -504,6 +533,10 @@ def selected_station_variants(yjs, top, ab, die_text, hard_params):
     rules = [(re.compile(r['inst']), r) for r in ab.get('substitute_inst', [])]
     frames = sorted(set(re.findall(r'\b' + re.escape(top) +
         r'\s*(?:#\s*\([^;]*?\)\s*)?([A-Za-z_]\w*)\s*\(', die_text)))
+    if frame_instance is not None:
+        if frame_instance not in frames:
+            raise ValueError('selected station frame is not an actual instance: ' + frame_instance)
+        frames = [frame_instance]
     if not rules:
         return yjs, []
     if not frames:
@@ -576,7 +609,7 @@ def validate(meas_v, lp_sched):
     return [dict(link=l, lp_schedule=a_, tracer=b_, verdict='PASS' if a_ == b_ else 'FAIL') for l, a_, b_ in rows], fails
 
 
-def plan_lanes(master):
+def plan_lanes(master, frame_parts=None):
     """die plan frame_int lane latencies of this master's frames: {(src band, dst band): sorted set of cycles}"""
     # OT_S81_FRAME_PLAN: the plan being compiled, when it is not die_plan.json (a relay/hold event moves fi_* cycles)
     d = json.loads(Path(os.environ.get('OT_S81_FRAME_PLAN', sroot() / 'physical/die_plan/s81/die_plan.json')).read_text())
@@ -588,6 +621,9 @@ def plan_lanes(master):
         if not ln['id'].startswith('fi_'):
             continue
         p0 = ports[ln['ports'][0]]
+        if frame_parts is not None and (p0['src']['part'] not in frame_parts or
+                                        ports[ln['ports'][-1]]['dst']['part'] not in frame_parts):
+            continue
         st, dt = ptype[p0['src']['part']], ptype[ports[ln['ports'][-1]]['dst']['part']]
         if not st.startswith(master + '_r'):
             continue
@@ -596,7 +632,7 @@ def plan_lanes(master):
     return {k: sorted(v) for k, v in out.items()}
 
 
-def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
+def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha, frame_parts=None):
     """Use direct return depths and validated station deltas; retain every physical plan latency check.
 
     Historical LP return calendars can themselves contain wrong region-crossing assignments (col_h9 has five).
@@ -681,7 +717,7 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha):
     if var == 'x':
         prow('x_i0 -> xo_o0', sorted({x[1] for x in meas_ab['links'].get('->xo', []) if x[0] == 'x'}),
              [le['x_i0_to_xo_o0']], f'{PLAN_MAP.format(m=master)} latency_edges.x_i0_to_xo_o0')
-    lanes = plan_lanes(master)
+    lanes = plan_lanes(master, frame_parts)
     for k, v in sorted(meas_ab['links'].items()):
         mm = re.fullmatch(r'fint (r\d)->(r\d)', k)
         if mm:
@@ -728,6 +764,7 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--work', type=Path)
     ap.add_argument('--mem-gb', type=int, default=24)
+    ap.add_argument('--frame-instance', help='exact selected die instance; requires --bound-plan and binder map')
     ap.add_argument('--bound-plan', type=Path, default=None,
                     help='trace at this plan\'s bound fint seam depths and check against it (relay/type-safe event)')
     ap.add_argument('--control-seam-offset', action='append', default=[], metavar='SEAM=N',
@@ -740,6 +777,8 @@ def main():
                          'layer_prog/frame_root.py from a bind\'s own manifest); --manifest is relative to it. The LP '
                          'validation still archives the LP schedule revision from this git tree.')
     a = ap.parse_args()
+    if a.frame_instance is not None and a.bound_plan is None:
+        ap.error('--frame-instance requires --bound-plan')
     if a.source_root is not None:
         SROOT[0] = a.source_root.resolve()
         own = Path(__file__).resolve().read_bytes()
@@ -756,10 +795,15 @@ def main():
     lp_sched = json.loads((sroot() / LP_SCHED.format(m=m)).read_text())
     plan_map = json.loads((sroot() / PLAN_MAP.format(m=m)).read_text())
     lp_files = list(lp_sched['source_sha256']) + [LP_TWIN.format(m=m)]
+    netlists = ab['netlist'] if isinstance(ab['netlist'], list) else [ab['netlist']]
+    die_text = '\n'.join((sroot() / f).read_text() for f in netlists)
     bound = None
+    frame_parts = None
     if a.bound_plan is not None:
         braw = a.bound_plan.read_bytes()
-        depths = bound_seam_depths(json.loads(braw), m)
+        plan_raw = json.loads(braw)
+        frame_parts = selected_frame_parts(plan_raw, ab, a.frame_instance, ab_top, die_text) if a.frame_instance else None
+        depths = bound_seam_depths(plan_raw, m, set(frame_parts.values()) if frame_parts else None)
         short = {k: d for k, d in depths.items() if d < 2}
         if short:
             raise ValueError(f'bound plan seam shallower than the as-built 2 flops: {short}')
@@ -775,6 +819,7 @@ def main():
         os.environ['OT_S81_FRAME_PLAN'] = str(a.bound_plan.resolve())
         bound = dict(plan=str(a.bound_plan), plan_sha256=hashlib.sha256(braw).hexdigest(), seam_depths=depths,
                      seam_extra_stages=dict(SEAM_EXTRA), control_seam_offset=a.control_seam_offset or None,
+                     frame_instance=a.frame_instance, frame_parts=frame_parts, frame_master=ab_top,
                      basis='as-built s81b_fint seam + (plan depth - 2) whole-bus stages on its q '
                            '(tools/die_plan/ts_relay_miter.py: bound lane == as-built lane delayed by k)')
     # (1) validation: tracer on the LP seam twin at the LP schedule's own revision (all its source hashes match)
@@ -796,13 +841,15 @@ def main():
     selected_json = json.loads(js_ab.read_text())
     netlists = ab['netlist'] if isinstance(ab['netlist'], list) else [ab['netlist']]
     die_text = '\n'.join((sroot() / f).read_text() for f in netlists)
-    selected_json, selected_variants = selected_station_variants(selected_json, ab_top, ab, die_text, HARD_PARAMS())
+    selected_json, selected_variants = selected_station_variants(selected_json, ab_top, ab, die_text, HARD_PARAMS(), a.frame_instance)
     (work / f'{ab_top}.selected.json').write_text(json.dumps(selected_json))
     meas_ab = measure(selected_json, ab_top, dict(SEAM_EXTRA) or None)
     assert 'landing_lk' in meas_ab, ('as-built landing lk is not constant', ab_top)
     for nm, me in (('validate_' + lp_top, meas_v), (lp_top, meas_t), (ab_top, meas_ab)):
         (work / f'{nm}.meas.json').write_text(json.dumps(me, indent=1))
     src = dict(sha_ab)
+    if a.frame_instance:
+        src[ab['map_file']] = sha(ab['map_file'])
     # Bare hard-leaf parameters and selection precedence are part of the elaborated source contract.
     for f in [MANIFEST] + ab.get('hard_params', []) + netlists:
         src[f] = sha(f)
@@ -815,7 +862,7 @@ def main():
     a.out.mkdir(parents=True, exist_ok=True)
     # Return links are measured directly; station deltas still require their historic flat-calendar baseline.
     fails = ['VALIDATION ' + f for f in vfails if '.xs_' in f]
-    sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src)
+    sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src, set(frame_parts.values()) if frame_parts else None)
     sched['selected_station_variants'] = selected_variants
     if bound is not None:
         sched['bound_plan'] = bound
