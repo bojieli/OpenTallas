@@ -193,6 +193,28 @@ def guard_tree(cfg, die, hosts, check=False, run=sh, log=print):
     return not gaps
 
 
+def published_tree_check(cfg, die, handoff=None):
+    """PUBTREE-1116 (COORD r284/r285 structural): a die that pins src_manifest "require" may only run on a PUBLISHED tree: the die's
+    tree_switch_<die>.json marker (TOOLS-CONVERGE) names exactly dies.<die>.src, and its src_manifest_sha is dies.<die>.src_manifest_hash.
+    A lane run copy (cp -al, shared inodes, drifting from main + overlay) never has a marker, so no adopt can point the wave at one again.
+    -> list of error strings ([] = ok or the die is not "require")."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if str(d.get("src_manifest") or "") != "require":
+        return []
+    h = Path(handoff) if handoff else Path(os.path.expanduser("~/coord/lanes/handoff"))
+    mk = h / f"tree_switch_{die}.json"
+    try:
+        m = json.loads(mk.read_text())
+    except (OSError, ValueError):
+        return [f"{die}: no readable published-tree marker {mk} (src {d.get('src')} is not a published tree)"]
+    errs = []
+    if str(m.get("tree") or "") != str(d.get("src") or ""):
+        errs.append(f"{die}: src {d.get('src')} is not the published marker tree {m.get('tree')}")
+    if str(m.get("src_manifest_sha") or "") != str(d.get("src_manifest_hash") or ""):
+        errs.append(f"{die}: src_manifest_hash {str(d.get('src_manifest_hash'))[:12]} != marker {str(m.get('src_manifest_sha'))[:12]}")
+    return errs
+
+
 def manifest_check(cfg, die, hosts, run=sh, log=print):
     """SRC-TREE-1115: when the die pins src_manifest_hash, the tree must verify (hash adopted, every file, read-only, no hardlinks)
     on EVERY gen host before the switch; checked FIRST, before anything is copied.  No pin = not judged (live trees keep working)."""
@@ -254,6 +276,9 @@ def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
     import kit_wave as K
     d = cfg["dies"][die]
     hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
+    for e in published_tree_check(cfg, die):
+        log(f"ADOPT-GUARD PUBTREE {e}")
+        return False
     if not manifest_check(cfg, die, hosts, run, log):
         return False
     if not tool_smoke(cfg, die, hosts, run, log):
@@ -290,5 +315,8 @@ if __name__ == "__main__":
     if a.plan_only:
         d = cfg["dies"][a.die]
         hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
-        sys.exit(0 if (plan_sha_check(cfg, a.die, hosts) and prepare_check(cfg, a.die, hosts, True)) else 1)
+        pub = published_tree_check(cfg, a.die)
+        for e in pub:
+            print(f"MISMATCH PUBTREE {e}")
+        sys.exit(0 if (not pub and plan_sha_check(cfg, a.die, hosts) and prepare_check(cfg, a.die, hosts, True)) else 1)
     sys.exit(0 if guard(cfg, a.die, a.check, no_tree=a.no_tree) else 1)

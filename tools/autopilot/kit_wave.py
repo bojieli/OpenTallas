@@ -7856,6 +7856,14 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         return None
     if tool_skew_refuse(AP, cfg, st, die):
         return None
+    try:                                                    # PUBTREE-1116: a "require" die runs only on its published marker tree
+        import adopt_guard as _AG
+        _pe = _AG.published_tree_check(cfg, die)
+    except Exception:
+        _pe = []
+    if _pe:
+        AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}: PUBTREE {_pe[0][:200]}")
+        return None
     if cfg["dies"][die].get("flow_guard") is not False:                                            # FLOW-HEALTH-1: open class / same fail key, any launch path
         _hk = FG.held_key(st, die, r.get("item"), claim=True)
         if _hk:
