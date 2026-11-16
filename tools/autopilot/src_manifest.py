@@ -466,7 +466,9 @@ def delta_apply(pack, old_tree, out):
         shutil.copyfile(os.path.join(pack, "files", path), dest)
         os.chmod(dest, 0o755 if e["exec"] else 0o644)
         files[path] = e["sha256"]
-    nm = {"version": 1, "main_sha": d["new_main"], "scope": m["scope"], "overlay": m["overlay"], "files": files}
+    ov = dict(m["overlay"])
+    ov.update(d.get("overlay_add") or {})                       # data files a data pack adds (data_pack.py): they are overlay, not main
+    nm = {"version": 1, "main_sha": d["new_main"], "scope": m["scope"], "overlay": ov, "files": files}
     nm["manifest_hash"] = manifest_hash(nm)
     for fn in (MANIFEST, HASHFILE):
         try:
