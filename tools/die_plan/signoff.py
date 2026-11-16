@@ -263,6 +263,7 @@ def macro_libs(kit, corner):
     kit = root
     txt = cfg.read_text(errors="replace").replace("\\\n", " ")
     libs, missing = [], []
+    unscoped_missing, scoped_stems = [], set()
     field = {"tt": "TC_LIB_FILES", "ff": "BC_LIB_FILES", "ss": "WC_LIB_FILES"}[corner]
     for m in re.finditer(r"^[ \t]*(?:export[ \t]+)?(ADDITIONAL_LIBS|TC_LIB_FILES|BC_LIB_FILES|WC_LIB_FILES)[ \t]*[:+?]?=[ \t]*(.*)$", txt, re.M):
         if m.group(1) not in ("ADDITIONAL_LIBS", field):
@@ -284,19 +285,35 @@ def macro_libs(kit, corner):
                 continue
             p = Path(kit) / w[len("/work/"):]
             cand = None
-            mm = re.match(r"^(.*)_(ss|tt|ff|typ)(\.lib(?:\.gz)?)$", p.name)
+            # ORFS abstract suffixes: _tc = TT, _BC = FF, _WC = SS (S81-CORES-1115: ot_s81ph_hq_pk2_tc.lib / _BC.lib)
+            mm = re.match(r"^(.*)_(ss|tt|ff|typ|tc|bc|wc)(\.lib(?:\.gz)?)$", p.name, re.I)
             if mm:
-                for suf in ([corner] if corner != "tt" else ["tt", "typ"]):
-                    q = p.with_name(f"{mm.group(1)}_{suf}{mm.group(3)}")
-                    if q.is_file():
-                        cand = q
+                alias = {"tt": ("tt", "typ", "tc"), "ff": ("ff", "bc"), "ss": ("ss", "wc")}[corner]
+                for suf in alias:
+                    for sx in (suf, suf.upper()):
+                        q = p.with_name(f"{mm.group(1)}_{sx}{mm.group(3)}")
+                        if q.is_file():
+                            cand = q
+                            break
+                    if cand is not None:
                         break
-            elif p.is_file() and (corner == "tt" or scoped):
-                cand = p
+                stem = mm.group(1)
+            else:
+                stem = p.name
+                if p.is_file() and (corner == "tt" or scoped):
+                    cand = p
             if cand is None:
                 missing.append(f"{p.name} ({corner})")
+                if not scoped:
+                    unscoped_missing.append((stem, f"{p.name} ({corner})"))
             else:
                 libs.append(str(cand))
+                if scoped:
+                    scoped_stems.add(stem)
+    # An unscoped ADDITIONAL_LIBS entry is not missing for a corner whose corner-scoped field supplies a lib for the same master.
+    for stem, entry in unscoped_missing:
+        if stem in scoped_stems and entry in missing:
+            missing.remove(entry)
     return list(dict.fromkeys(libs)), missing
 
 
