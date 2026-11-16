@@ -731,7 +731,8 @@
     "kv3_pc_v1__cl7f648944": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
     "kv3_sys_c": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
     "kv3_sys_SD": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
-    "kv3_sys_SD_v1": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key."
+    "kv3_sys_SD_v1": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "*": "WAVE-HOLDS-1115 2026-11-15 17:35 PST (COORD): die-level hold on FRESH KV launches: 24 of 24 KV launches in the last hour failed @kit_rtl with the same tool skew (TypeError core_tap_early_ps args / AttributeError reset_tree.pin_root_copies); items lifted from KV-7J-PENDING at 17:13 hit it too. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs, then everything lifts at once (delete key *). Running attempts finish."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5715,7 +5716,8 @@
     "kv3_pc_v1__cl7f648944": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
     "kv3_sys_c": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
     "kv3_sys_SD": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
-    "kv3_sys_SD_v1": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
+    "kv3_sys_SD_v1": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "*": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync (then lift all KV holds from this event at once)"
    },
    "prev_wavehold1115_kvgeom6": {
     "event": "kvgeom6",
