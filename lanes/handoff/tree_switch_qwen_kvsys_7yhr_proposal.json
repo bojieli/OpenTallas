@@ -25,7 +25,7 @@
  "asbuilt_sha256": "045badbad633e4c3553b5b5b8f35f38a1f80b044f4292e8700ae2d96b80331ff",
  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
  "sidecar_sha256": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx1",
  "data_pack": "8files (gen_phys+test+plan/r8/asbuilt+2padinputs+existingasbuiltmap); no RTL change, no latency delta",
  "status": "PROPOSAL ONLY: root approval/adoption required; canonical marker and live wave unchanged",
  "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
@@ -37,7 +37,8 @@
   "kit_rtl": {
    "mode": "bind",
    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1"
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx1"
   }
- }
+ },
+ "bind_context_relocation": "old/new complete native_contract equal, ABdiff onlymap_file with identical mapbytes; canonical receipt changedonlyasbuilt_sha256; bind_matches4 PASS bothhosts, LATCHECK2404/2404 PASS; proof kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx1_relocation.json"
 }
