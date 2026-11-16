@@ -476,6 +476,29 @@ def test_land_mux_positive():
     assert r["verdict"] == "PASS" and r["land_mux_bits"] == 1 and r["land_mux_depth"] == {"1": 4}, r["fails"]
 
 
+def test_land_mux_shared_buffer_on_the_bit_is_wire():
+    """one BUF (or an INV pair) on the landing bit shared by two slot muxes: 3 direct loads for D 4 still proves."""
+    shared = [f"BUFx2{_X} db (.A(d), .Y(dbuf));"]
+    net = _mux_mod(_mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2, src="dbuf") + _mux_slot(3, src="dbuf") + shared)
+    r = _g(net)
+    assert r["verdict"] == "PASS" and r["land_mux_bits"] == 1, r["fails"]
+    inv = [f"INVx1{_X} di (.A(d), .Y(dn));", f"INVx1{_X} dj (.A(dn), .Y(dbuf));"]
+    net = _mux_mod(_mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2, src="dbuf") + _mux_slot(3, src="dbuf") + inv)
+    r = _g(net)
+    assert r["verdict"] == "PASS" and r["land_mux_bits"] == 1, r["fails"]
+
+
+@pytest.mark.parametrize("extra,ports", [
+    ([f"DFFHQNx1{_X} lf (.CLK(fclk), .D(dbuf), .QN(lkq));"], ""),      # the shared buffer also feeds a fifth flop
+    ([f"BUFx2{_X} lb (.A(dbuf), .Y(dout));"], "dout"),                 # ... or leaks to a port
+])
+def test_land_mux_shared_buffer_mutants(extra, ports):
+    body = _mux_tc() + _mux_slot(0) + _mux_slot(1) + _mux_slot(2, src="dbuf") + _mux_slot(3, src="dbuf") + \
+        [f"BUFx2{_X} db (.A(d), .Y(dbuf));"] + extra
+    r = _g(_mux_mod(body, ports))
+    assert r["verdict"] == "FAIL" and "land_slot" in r["fail_counts"], (r["fail_counts"], r["fails"])
+
+
 def test_land_mux_undeclared_and_icg_declared_still_fail():
     net = _mux_mod(_mux_tc() + _mux_slots4())
     assert "shared" in _g(net, land=None)["fail_counts"]          # default unchanged
@@ -1528,3 +1551,34 @@ def test_land_replica_per_bit_fails_closed(monkeypatch):
 
 def test_replica_plans_v5_provider_tops():
     assert face_guard.REPLICA_PLANS[_RPV5] == ("ot_s81_su_smd_fold2", "ot_s81_su_sml_fold2", "ot_hdc_v41x_attn_tr_x")
+
+
+def _rst_xn_net(n, mid=None, out=False):
+    """replica rst_xn[0] with n loads; mid: gate cell feeding D (sync reset); out: also a port wired through a gate"""
+    c = "".join(f"  AND2x2_ASAP7_75t_R g{i} (.A(rst_xn[0]), .B(d[{i}]), .Y(n{i}));\n"
+                f"  DFFHQNx1_ASAP7_75t_R f{i} (.CLK(clk), .D(n{i}), .QN(q[{i}]));\n" for i in range(n))
+    if out:
+        c += "  AND2x2_ASAP7_75t_R go (.A(rst_xn[0]), .B(d[0]), .Y(o));\n"
+    return (f"module top(clk, d, q, rst_xn{', o' if out else ''});\n  input clk; input [{n-1}:0] d; output [{n-1}:0] q;"
+            f" input [0:0] rst_xn;{' output o;' if out else ''}\n" + c + "endmodule\n")
+
+
+def test_ring_reset_replica_with_nine_sync_loads_passes_when_declared():
+    r = face_guard.guard(_rst_xn_net(9), ring_reset=True)
+    assert "shared" not in r["fail_counts"] and r["ring_reset_replica"] == ["rst_xn[0]"], r
+    assert "shared" in face_guard.guard(_rst_xn_net(9))["fail_counts"]       # undeclared: ordinary one-load rule
+
+
+def test_ring_reset_replica_reaching_output_port_fails():
+    r = face_guard.guard(_rst_xn_net(9, out=True), ring_reset=True)
+    assert r["verdict"] == "FAIL" and "ring_reset" in r["fail_counts"], r
+
+
+def test_ring_reset_replica_on_flop_clock_pin_fails():
+    net = _rst_xn_net(3).replace(".CLK(clk), .D(n1)", ".CLK(rst_xn[0]), .D(n1)", 1)
+    assert "ring_reset" in face_guard.guard(net, ring_reset=True)["fail_counts"]
+
+
+def test_non_ring_reset_bus_with_many_loads_still_shared():
+    net = _rst_xn_net(9).replace("rst_xn", "rst_zz")
+    assert "shared" in face_guard.guard(net, ring_reset=True)["fail_counts"]

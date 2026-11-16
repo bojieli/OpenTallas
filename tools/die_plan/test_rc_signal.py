@@ -17,7 +17,7 @@ def _clean(monkeypatch):
 
 
 def test_validated_dies_get_their_scale():
-    assert gen_phys.rc_signal_cfg("s81")[1:] == ["export OT_RC_SIGNAL = 1", "export OT_RC_SIGNAL_SCALE = 1"]
+    assert gen_phys.rc_signal_cfg("s81")[1:] == ["export OT_RC_SIGNAL = 1", "export OT_RC_SIGNAL_SCALE = 1", "export OT_TT_SETUP_DESIGN = 1"]
     assert gen_phys.rc_signal_cfg("qwen_compute")[2] == "export OT_RC_SIGNAL_SCALE = 1.25"
     assert gen_phys.rc_signal_cfg("anything", flow="core")[2] == "export OT_RC_SIGNAL_SCALE = 1.1"
 
@@ -48,6 +48,6 @@ def test_hooks_read_config_and_repair_design():
     for f in ("postcts_gate.tcl", "tt_setup_repair.tcl"):
         txt = (HERE / f).read_text()
         assert "OT_RC_SIGNAL|OT_RC_SIGNAL_SCALE" in txt and "ot_rc_signal_table" in txt
-    assert "repair_design" in (HERE / "tt_setup_repair.tcl").read_text()
+    assert "OT_TT_SETUP_DESIGN" in (HERE / "tt_setup_repair.tcl").read_text() and "repair_design" in (HERE / "tt_setup_repair.tcl").read_text()
     assert "proc ot_rc_signal_table" in (HERE / "rc_signal_adjust.tcl").read_text()
     assert '"rc_signal_adjust.tcl"' in (HERE / "gen_phys.py").read_text()

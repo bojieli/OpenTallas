@@ -90,6 +90,9 @@ def _reset_spine_landing(F, lds, max_flops=8):
     return len(parents) == 1
 
 
+RING_RESET_RE = r"^rst_xn(\[\d+\])?$"
+
+
 def is_buf(master):
     m = master.upper()
     return m.startswith(("BUF", "INV", "HB", "$_NOT_", "$_BUF_"))
@@ -833,7 +836,7 @@ def _spare_tie(F, drv, r, limit=16):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=(), seam=None):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=(), spare=(), timed=(), seam=None, ring_reset=False):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -884,7 +887,11 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     spare: declared spare output bits (kit spare_out.json = the bind's kit_rtl.json spare_out_bits, the plan bits the
     kit-rtl wrapper ties to 0): an output bit whose driver chain (single-input buffers / inverters, any fanout on the
     shared tie net) ends at a TIE cell or a constant is recorded (spare_declared, counted ok) instead of failing
-    shared / const.  A declared bit that is anything else takes the ordinary checks unchanged."""
+    shared / const.  A declared bit that is anything else takes the ordinary checks unchanged.
+    ring_reset: the child's plan declares RSTREP (hard_landing.prove passes it when the child has the replicated ring
+    reset port): rst_xn[k] bits are exempt from the one-load rule with any load type (COORD 11-15: the rule protects
+    data-boundary landing, reset timing is STA + LATCHECK).  One check stays: every load lies in the transitive
+    fan-in of a flop D or async set/reset pin and nothing reaches an output port combinationally (class "ring_reset")."""
     # QC-KITS-R1 10-27: extra clock roles of a bound partition (e.g. coll clk_coll / clk_serdes) are clock ports, not
     # face data: the kit SDC create_clock list (generated from the plan) exempts them like clk / clk_tN.
     clocks = [c for c in (clocks or ()) if not re.fullmatch(skip_re, c)]
@@ -968,6 +975,35 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
     if spare:
         res["spare_declared"] = []
     claimed = defaultdict(list)
+    out_port_of = {port_root[b]: b for p in T.ports if T.dirs.get(p) == "output" for b in _bits_of(T, p)}
+
+    def ring_reset_cone(root):
+        """'' when every load of net root is in the fan-in of flop D / async set-reset pins only, else the reason."""
+        seen, stack = {root}, [root]
+        if root in out_port_of:
+            return f"wired to output port {out_port_of[root]}"
+        if not loads[root]:
+            return "no load"
+        while stack:
+            for ci, pin in loads[stack.pop()]:
+                m, path, pp = F.cells[ci]
+                if is_ff(m):
+                    if pin != "D" and pin not in ASYNC_RESET_PINS:
+                        return f"reaches {path}.{pin}"
+                    continue
+                if not _std_cell(m):
+                    return f"reaches macro pin {path}.{pin}"
+                for dd, v in pp.values():
+                    if dd != "out":
+                        continue
+                    for bit in v:
+                        n = F.find(bit)
+                        if n in out_port_of:
+                            return f"reaches output port {out_port_of[n]} through {path}"
+                        if n not in seen:
+                            seen.add(n)
+                            stack.append(n)
+        return ""
 
     timed = set(timed or ())
     if timed:
@@ -1383,11 +1419,32 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         atmost_memo[key] = valid
         return valid
 
+    def _through_bufs(ld, seen):
+        """loads with shared BUF/INV cells replaced by the loads of their output net (cells driving a port stay)."""
+        out = []
+        for ci, pin in ld:
+            m, path, pp = F.cells[ci]
+            outs = [F.find(v[0]) for k, (dd_, v) in pp.items() if dd_ == "out" and v]
+            ins = [k for k, (dd_, v) in pp.items() if dd_ != "out" and v]
+            if (is_buf(m) and not is_ff(m) and len(outs) == 1 and len(ins) == 1 and ci not in seen
+                    and outs[0] not in out_port_roots and outs[0] not in roots_ports and loads[outs[0]]):
+                seen.add(ci)
+                out += _through_bufs(loads[outs[0]], seen)
+            else:
+                out.append((ci, pin))
+        return out
+
     def land_mux(b, r, D):
         """(None, flops, depths) = OK, else (failure text, [], [])."""
         ld = loads[r]
         if len(ld) != D:
-            return f"{len(ld)} loads on {r}, declared D {D}", [], []
+            # synthesis may share one BUF/INV on the bit between slot muxes (kv_cland_w652/w653/w672 d[511]: INVx1
+            # feeding two slots, 3 direct loads for D 4).  Such a cell is wire: count the loads behind it.  Only pure
+            # one-output BUF/INV cells that drive no port are expanded; every later proof (one flop per load, own-Q
+            # hold, exclusive writes, no leak) runs on the expanded loads unchanged.
+            ld = _through_bufs(ld, set())
+        if len(ld) != D:
+            return f"{len(loads[r])} loads on {r}, declared D {D}", [], []
         if drv[r]:
             return f"landing bit net also driven by {F.cells[drv[r][0][0]][1]}", [], []
         ffs, per = [], []
@@ -1948,6 +2005,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 # the same class as arst_n into the root synchroniser (SKIP_RE): no face register by design.  Any D,
                 # logic or second-instance load still takes the ordinary input check below.
                 res.setdefault("reset_spine", []).append(b)
+                res["ok"] += 1
+                continue
+            if d == "input" and ring_reset and re.match(RING_RESET_RE, str(b)):
+                why = ring_reset_cone(r)
+                if why:
+                    fail("ring_reset", b, why)
+                    continue
+                res.setdefault("ring_reset_replica", []).append(b)
                 res["ok"] += 1
                 continue
             # S81-SVCRS-3 11-10: an unlisted bit of a per-bit replica bus skips every land branch below and takes the

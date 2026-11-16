@@ -237,6 +237,19 @@ def tool_smoke(cfg, die, hosts, run=sh, log=print):
     return ok
 
 
+def preflight_all(cfg, die, hosts, files, run=sh, log=print):
+    """KITPACK-CLOSE-1115 (COORD r221, F3): after the per-file copy pass, resolve EVERY kit input (src inputs + the closed child
+    views the plan names + candidate hosts) on every gen host and refuse with the complete named list, not the first miss"""
+    import kit_input_preflight as KP
+    ents = KP.preflight(cfg, die, hosts, run, src_files=files)
+    for ln in (KP.refusal(die, ents).splitlines() if ents else []):
+        log("ADOPT-GUARD " + ln)
+    bad = KP.errors(ents)
+    log(f"ADOPT-GUARD preflight {die}: {'OK' if not bad else 'FAIL closed (' + str(len(bad)) + ' unresolved inputs, listed above)'}"
+        + (f" ({len(ents) - len(bad)} unclosed-view warnings)" if len(ents) > len(bad) else ""))
+    return not bad
+
+
 def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
     import kit_wave as K
     d = cfg["dies"][die]
@@ -258,10 +271,11 @@ def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
         for f in v:
             log(f"ADOPT-GUARD MISSING {h}:{f}")
     log(f"ADOPT-GUARD {die}: {'OK' if not left_n else 'FAIL closed: ' + str(left_n) + ' still missing'}")
+    pre_ok = preflight_all(cfg, die, hosts, files, run, log)
     tree_ok = True if no_tree else guard_tree(cfg, die, hosts, check, run, log)
     sha_ok = plan_sha_check(cfg, die, hosts, run, log)
     prep_ok = prepare_check(cfg, die, hosts, check, run, log)
-    return left_n == 0 and tree_ok and sha_ok and prep_ok
+    return left_n == 0 and pre_ok and tree_ok and sha_ok and prep_ok
 
 
 if __name__ == "__main__":

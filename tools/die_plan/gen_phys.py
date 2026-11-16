@@ -2308,11 +2308,43 @@ def tt_setup_repair_mode():
     return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
 
 
+def kit_effective_env():
+    """KIT-OPS-5 11-15 (COORD r228): the generation-time env a reviewer needs to audit a kit: OT_TT_SETUP_REPAIR (cts|grt|both|off) and
+    every OT_PG_* / OT_PGCAP_* variable set in the gen env (they act at gen time, e.g. OT_PG_DIE_PHASE changes pdn.tcl, so they never
+    appear in config.mk).  Sorted; only variables that are set are listed."""
+    out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
+    for k in sorted(os.environ):
+        if k.startswith(("OT_PG_", "OT_PGCAP_")) and os.environ[k].strip() != "":
+            out[k] = os.environ[k].strip()
+    return out
+
+
 def tt_setup_repair_cfg():
     """KIT-OPS-5 11-15 (COORD r214): the effective TT setup repair mode in EVERY kit's config.mk, so a reviewer can tell which kits
     carry it (the gen env alone is not in the kit).  Exported as cts|grt|both|off; the step files stay gated by their .on flag."""
-    return ["# TT setup repair mode this kit was generated with (OT_TT_SETUP_REPAIR; off = no step)",
-            f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
+    out = ["# TT setup repair mode this kit was generated with (OT_TT_SETUP_REPAIR; off = no step)",
+           f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
+    if tt_setup_repair_mode() == "off":
+        return out
+    # FABLE-FIX-QC-HCFE 11-15 (r228 item 1): opt-in keys of the step, carried in config.mk because tt_setup_repair.tcl reads them there.
+    # OT_TT_SETUP_CSCALE = signal C factor of the GRT-basis session (routed signal nets read 1.4-1.5 x the clock-fit layer table on
+    # QC sle_hc2 / S81 bksel); OT_TT_SETUP_DESIGN=1 = TT repair_design before repair_timing; OT_TT_SETUP_MARGIN ps;
+    # OT_TT_SETUP_CLAYERS = comma list of the scaled layers (default M2..M7 in the step).  Unset = byte-equal kit.
+    checks = {"OT_TT_SETUP_CSCALE": lambda v: float(v) > 0, "OT_TT_SETUP_DESIGN": lambda v: v in ("0", "1"),
+              "OT_TT_SETUP_MARGIN": lambda v: float(v) == float(v),
+              "OT_TT_SETUP_CLAYERS": lambda v: all(x and x.replace("_", "").isalnum() for x in v.split(","))}
+    for k, ok in checks.items():
+        v = os.environ.get(k, "").strip()
+        if v == "":
+            continue
+        try:
+            good = ok(v)
+        except ValueError:
+            good = False
+        if not good:
+            raise ValueError(f"{k}={v!r}: not a valid value")
+        out.append(f"export {k} = {v}")
+    return out
 
 
 def rc_signal_cfg(P_name, flow="type"):
@@ -2332,7 +2364,8 @@ def rc_signal_cfg(P_name, flow="type"):
     if sc is None:
         return []
     return ["# r222/r228: signal-net unit C x scale in the GRT estimate (postcts_gate.tcl, tt_setup_repair.tcl); rc_signal_scales.json",
-            "export OT_RC_SIGNAL = 1", f"export OT_RC_SIGNAL_SCALE = {sc:g}"]
+            "export OT_RC_SIGNAL = 1", f"export OT_RC_SIGNAL_SCALE = {sc:g}",
+            "export OT_TT_SETUP_DESIGN = 1"]   # r249: repair_design before repair_timing in the TT repair (main's OT_TT_SETUP_DESIGN)
 
 
 def pg_drt0255_cfg():
@@ -2347,6 +2380,47 @@ def pg_drt0255_cfg():
         out += ["# DRT0255: ring / ft-station / face-flop sites skip the std rows under the M6 PG pair (face_flops.tcl ff_put_near)",
                 "export OT_PG_PAIR_ROW_KEEPOUT = 1"]
     return out
+
+
+def pgcap_cfg():
+    """DRT0255-PROOF-1115 C3b opt-in config.mk lines from the gen environment: OT_PGCAP=1 turns on pg_pair_cap.tcl in grt_pre.tcl
+    (GRT per-gcell capacity cut over every M5/M7 stripe column and M6 stripe row); OT_PGCAP_LAYERS (M-layer names), OT_PGCAP_ADJ
+    (0..1), OT_PGCAP_GCELL_UM / OT_PGCAP_EPS_DBU / OT_PGCAP_MARGIN_DBU (numbers) are passed through when set and valid.
+    Nothing is written without OT_PGCAP=1 (kits stay byte-equal)."""
+    import re
+    if os.environ.get("OT_PGCAP", "").strip() != "1":
+        return []
+    out = ["# DRT0255 C3b: GRT per-gcell capacity cut on the PG pair rows/columns (pg_pair_cap.tcl, sourced last in grt_pre.tcl)",
+           "export OT_PGCAP = 1"]
+    pats = {"OT_PGCAP_LAYERS": r"M[1-9]( M[1-9])*", "OT_PGCAP_ADJ": r"(0(\.\d+)?|1(\.0+)?)",
+            "OT_PGCAP_GCELL_UM": r"\d+(\.\d+)?", "OT_PGCAP_EPS_DBU": r"\d+", "OT_PGCAP_MARGIN_DBU": r"\d+"}
+    for k, pat in pats.items():
+        v = os.environ.get(k, "").strip()
+        if v:
+            if not re.fullmatch(pat, v):
+                raise SystemExit(f"{k}={v!r}: not a valid value")
+            out.append(f'export {k} = {v}' if " " not in v else f'export {k} = "{v}"')
+    return out
+
+
+PGCAP_HOOK = """# DRT0255-PROOF-1115 C3b (class A, internal M6 pair rows; gen env OT_PGCAP=1): per-gcell GRT capacity cut on every M5/M7 stripe
+# column and M6 stripe row, snapped outward to whole gcells and clamped to the die (pg_pair_cap.tcl; OT_PGCAP_LAYERS / _ADJ /
+# _GCELL_UM / _EPS_DBU / _MARGIN_DBU).  Appended LAST, after pg_track_truth, so every earlier hook sees the kit unchanged.
+if {[info exists ::env(OT_PGCAP)] && $::env(OT_PGCAP) eq "1"} {
+  source [file join [file dirname [file normalize [info script]]] pg_pair_cap.tcl]; ot_pgcap_add
+}
+"""
+
+
+def pgcap_install(kd):
+    """OT_PGCAP=1 only: copy pg_pair_cap.tcl into the kit and append PGCAP_HOOK to the kit's grt_pre.tcl (kits without it stay byte-equal)."""
+    if os.environ.get("OT_PGCAP", "").strip() != "1":
+        return False
+    shutil.copyfile(Path(__file__).with_name("pg_pair_cap.tcl"), kd / "pg_pair_cap.tcl")
+    g = kd / "grt_pre.tcl"
+    if "ot_pgcap_add" not in g.read_text():
+        g.write_text(g.read_text() + PGCAP_HOOK)
+    return True
 
 
 def pg_cell_keepout_value():
@@ -5597,6 +5671,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # with the registers they release (async pins), one leaf per group; unset = unchanged
            *(["export OT_HOOK_COVERAGE = warn"] if os.environ.get("OT_HOOK_COVERAGE", "").strip() == "warn" else []),
            *(["export OT_LEAF_AFF_ASYNC = 1"] if os.environ.get("OT_LEAF_AFF_ASYNC", "").strip() == "1" else []),
+           # KV-Q2-CLK-1115: opt-in clock tap-buffer centroid rule (cts_tap_centroid.tcl, sourced by cts_post.tcl); unset = unchanged
+           *(["export OT_CTS_TAP_CENTROID = 1"] if os.environ.get("OT_CTS_TAP_CENTROID", "").strip() == "1" else []),
            # DIE-HEAD-17 reg_spine: the plan balances the spine taps and sizes the core early-tap branches, so the
            # flow tap_balance pass (incl. its core re-hang pass) only reports
            *(["export OT_TAP_REPORT_ONLY = 1"] if reg_spine_spec(P, tn) else []),
@@ -5722,6 +5798,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += rflow_cfg(gpl_plain, P.name)
     cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
     cfg += rc_signal_cfg(P.name)   # r222/r228 signal-net RC table (per die; OT_RC_SIGNAL=0 off)
+    cfg += pgcap_cfg()         # DRT0255 C3b opt-in (gen env OT_PGCAP=1)
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
@@ -5766,7 +5843,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
@@ -5777,6 +5854,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                 reset_prefix += "set rt_consumer_taps_um {" + " ".join(
                     f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
             hook.write_text(reset_prefix + hook.read_text())
+    pgcap_install(kd)          # DRT0255 C3b (OT_PGCAP=1 only): pg_pair_cap.tcl + hook line at the end of grt_pre.tcl
     if edge_split_ports(P, tn):
         for f in ("clock_edge_split.tcl", "clock_edge_balance.tcl"):
             shutil.copyfile(Path(__file__).with_name(f), kd / f)
@@ -6159,7 +6237,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if t.get("clock", {}).get("private_leaf"):       # HEAD-SERDES-1115: post-CTS private leaf step (run_kit.sh), only with the row
         shutil.copyfile(Path(__file__).with_name("private_leaf.tcl"), kd / "private_leaf.tcl")
     _tt = {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip())
-    (kd / "kit_effective_env.json").write_text(json.dumps({"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}, indent=1) + "\n")   # r214 audit
+    (kd / "kit_effective_env.json").write_text(json.dumps(kit_effective_env(), indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")

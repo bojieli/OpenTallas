@@ -40,7 +40,7 @@ def test_pass_stamps_and_second_call_skips(fake, capsys):
     p.write_text('{"a":1}')
     bind._plan_gate_pre(NS(p, out))
     assert len(calls) == 2
-    assert calls[0]["skip"] == ("ROWS",)
+    assert calls[0]["skip"] == ("ROWS", "GEOM")
 
 
 def test_fail_refuses_and_names_reason(fake, capsys):

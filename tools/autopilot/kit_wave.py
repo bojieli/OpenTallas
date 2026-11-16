@@ -389,8 +389,46 @@ def load_config(text):
     except ValueError as e:
         return {"error": f"kit_wave.json unreadable: {e}", "dies": {}}
     cfg.setdefault("dies", {})
+    compile_hold_records(cfg)
     apply_hold_release_on(cfg)
     return cfg
+
+
+def compile_hold_records(cfg, is_merged=None):
+    """HOLDGEN-1115 (COORD r223): die.hold_records (typed release terms, bound to a plan sha) compile into hold_items in memory, before
+    the legacy hold_release_on pass.  A die without hold_records is untouched."""
+    import hold_records as HR
+    ctx = HR.Ctx(is_merged=is_merged or _git_is_merged, event_met=_hold_term_met, digest_fn=input_digest,
+                 kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")))
+    try:
+        return HR.compile_holds(cfg, ctx)
+    except Exception as e:                               # a bad record never stops the wave: legacy hold_items still apply
+        cfg["_hold_records_error"] = f"{type(e).__name__}: {e}"
+        return []
+
+
+def hold_audit_step(AP, cfg, st, t0):
+    """HOLDGEN-1115 per-tick audit: held-but-launched, release terms that cannot be reached, holds whose plan sha is superseded,
+    patterns that match nothing.  One log line every tick; a COORD-REVIEW-QUEUE ALERT when the finding set changes."""
+    import hold_records as HR
+    if cfg.get("_hold_records_error"):
+        AP.log(f"KIT-WAVE HOLD-AUDIT compile error: {cfg['_hold_records_error']}")
+    launched = [(r.get("die"), r.get("item")) for r in (st.get("items") or {}).values()
+                if float(r.get("started") or 0) >= t0 and r.get("die") and r.get("item")]
+    found = HR.audit(cfg, launched)
+    summ = HR.summarize(found)
+    AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
+           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH")))
+    sig = hashlib.sha1(json.dumps([(f["code"], f["die"], f["id"], f["detail"], f["n"], sorted(map(str, f["items"]))[:50]) for f in found],
+                                  default=str).encode()).hexdigest()[:12]
+    if found and st.get("hold_audit_sig") != sig:
+        st["hold_audit_sig"] = sig
+        lines = [f"{f['code']} {f['die']}/{f['id']} x{f['n']}: {f['detail']}" + (f" items {','.join(map(str, f['items'][:6]))}" if f["items"] else "")
+                 for f in found]
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [HOLDGEN-1115 -> COORD, WAVE-HOLDS-1115] hold audit {summ}: " + "; ".join(lines)[:1800])
+    elif not found:
+        st.pop("hold_audit_sig", None)
+    return found
 
 
 def _hold_term_met(term, die_cfg, is_merged):
@@ -2819,7 +2857,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # SRC-TREE-1115 (FABLE-FLOW-1000 classes 4/5): src tree manifest policy.  die/global option src_manifest: "off" |
             # "verify" (default: a tree with a manifest must verify, one without is noted) | "require" (no manifest = refuse);
             # src_manifest_hash = the manifest hash adoption pinned (item_inputs may pin its own).
-            "src_manifest": str(opt_get(cfg, die, "src_manifest") or "verify"),
+            "src_manifest": str(opt_get(cfg, die, "src_manifest") or "require"),
             "src_manifest_hash": str(item_in.get("src_manifest_hash") or d.get("src_manifest_hash") or ""),
             # KIT-OVERLAY-1: item_inputs {item: {type_overlay: <path>}} = positions-only intra-type overlay (type_overlay.py) on
             # the die plan of record; gen phys --type-overlay + the overlaid plan for station preparation.  Absent = unchanged.
@@ -4733,12 +4771,36 @@ _TRANSIENT_INFRA = re.compile(r"ot-run: NOT RUN|ot-run: NOT COMPLETED|no host qu
                               r"Connection (?:reset|refused|closed)|kex_exchange_identification|Errno 28")
 
 
+# KIT-OPS-5 11-15 (COORD r220, FABLE-FLOWCLASS-RETRY-2030): every KIT-WAVE FAIL line carries a typed stage class instead of the INFRA
+# bucket.  Types: stopped (signal 15 / operator stop: never a failure), sdc_lint, missing_input, stale_view, tool_mix, design:<stage>.
+_TYPED = (("stopped", re.compile(r"interrupted \(signal 15|terminated by signal 15|\bexit -15\b|stopped by operator|cancellation requested|"
+                                 r"stopped by signal 15|^Terminated\b|\nTerminated\b|command exit 143", re.I)),
+          ("sdc_lint", re.compile(r"SdcLintError|sdc_lint", re.I)),
+          ("stale_view", re.compile(r"STALE-CORE-VIEW|stale (?:closed )?view|view .*(?:stale|does not match)", re.I)),
+          ("missing_input", re.compile(r"KIT_INPUT_MISSING|INFRA-VIEW-MISSING|HDL source missing|source missing|not found by the probe|"
+                                       r"No such file or directory|FileNotFoundError|not in the store|KIT_NOT_SELF_CONTAINED|"
+                                       r"captured source cohort lacks|missing (?:lef|lib|input)", re.I)),
+          ("tool_mix", re.compile(r"tool skew|source skew|No module named|plan invalid|unknown key|NameError|ImportError|"
+                                  r"ModuleNotFoundError|TypeError|AttributeError|schema refusal|predates a wave flag", re.I)))
+
+
+def typed_class(cls, stage, why):
+    """'stopped' | 'sdc_lint' | 'stale_view' | 'missing_input' | 'tool_mix' | 'design:<stage>' for one FAIL (first rule wins)"""
+    text = str(why or "")
+    for name, rx in _TYPED:
+        if rx.search(text):
+            return name
+    return "design:" + (str(stage or "").split()[0] if str(stage or "").strip() else "unknown")
+
+
 def fail_signature(cls, why, stage=""):
     """(block class, comparable signature) of a FAIL, or None for a transient host failure (never counted).  Paths, hosts,
     hashes and numbers are dropped, so the same error on another host / tree / attempt is the same signature.  A host-gap
     INFRA (KW-FIX-46: FLOW input missing relabelled INFRA) counts as its original FLOW reason."""
     why = str(why or "")
     cls = str(cls or "")
+    if typed_class(cls, stage, why) == "stopped":     # r220: signal 15 / operator stop never counts as a failure signature
+        return None
     if why.startswith("INFRA host input gap"):
         i = min([why.find(w) for w in HOST_GAP_WHY if w in why] or [-1])
         if i >= 0:
@@ -5276,7 +5338,7 @@ def src_manifest_cmd(sp):
     The verifier is shipped inline (python3 -I -c), so the gen host needs no copy of it."""
     if "src_manifest" not in sp:                         # a spec written before SRC-TREE-1115 (old worker spec): unchanged
         return None
-    mode = str(sp.get("src_manifest") or "verify")
+    mode = str(sp.get("src_manifest") or "require")
     if mode == "off" or not str(sp.get("src") or "").startswith("/"):
         return None
     try:
@@ -5294,7 +5356,7 @@ def src_manifest_cmd(sp):
 def src_manifest_verdict(sp, rc, txt):
     """-> (refuse_text or '', note).  A tree whose manifest does not verify is refused before any gen, naming the drifted
     file(s); no manifest is a note ('verify') or a refusal ('require', or when adoption pinned a hash)."""
-    mode = str(sp.get("src_manifest") or "verify")
+    mode = str(sp.get("src_manifest") or "require")
     txt = txt or ""
     missing = "SRC_MANIFEST MISSING" in txt
     if rc == 0 and not missing:
@@ -5851,6 +5913,10 @@ def run_item(spec_path):
             mp, why = kit_store_stage(sp, run, remote, res, W, plan)
         if mp is None:
             return fail("kit_snap" if snap_on else "kit_store", why)
+        if snap_on:                          # COORD r241: every roam stage waits until these snapshots are on its host
+            roamer.snaps = sorted({m.group(1) for v in mp.values()
+                                   for m in [re.match(r"^(.*/snaps/[0-9a-f]{40})/root/", str(v))] if m})
+            roamer.snap_verify = lambda sd: ks_cmd(f"verify {shlex.quote(sd)}")
         plan = plan0 = ks_map(plan, mp)
         kr = ks_map(kr, mp)
         if sp.get("type_overlay"):
@@ -7369,9 +7435,11 @@ def tool_skew_refuse(AP, cfg, st, die):
     if die not in cache:
         main_root = Path(d.get("tool_skew_main") or Path(__file__).resolve().parents[2])
         try:
-            main_m = cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
+            pin = d.get("tools_sha")
+            main_m = None if pin else cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
             res = TS.check_die(die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
-                               host=d.get("gen_host"), main_m=main_m)
+                               host=d.get("gen_host"), main_m=main_m, tools_sha=pin,
+                               rt_root=d.get("tools_rt_root") or TS.RT_ROOT, strict=opt(cfg, die, "tool_skew") == "refuse")
         except Exception as e:                           # a broken check never stops the wave
             AP.log(f"KIT-WAVE tool_skew {die} not checked: {type(e).__name__}: {e}")
             res = dict(ok=True, measured=False, refused={}, allowed={}, expired={}, n_closure=0)
@@ -8474,11 +8542,12 @@ def collect(AP, cfg, st, notices):
             AP.log(f"KIT-WAVE BLOCKED {rec['die']}/{rec['item']}@{rec.get('attempt')} {rec['blocked']}: the same failure "
                    f"{c['n']}x ({c.get('sig', '')[:200]}); owner {die_owner(cfg, rec['die'])[0]}; listed in {BLOCKED_FILE}")
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
-        AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
+        rec["stage_class"] = typed_class(cls, res.get("stage") or rec.get("stage"), why)
+        AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}[{rec['stage_class']}]: {why}")
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
-            if not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
+            if rec.get("stage_class") != "stopped" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))
@@ -9895,6 +9964,7 @@ def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    _t0 = time.time()
     for _die, _key, _cond in cfg.get("_hold_auto_released") or []:
         AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release_on met ({_cond})")
     WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
@@ -10113,6 +10183,10 @@ def _step(AP, ap_dir):
     except Exception as e:
         AP.log(f"KIT-WAVE WAIT-CHILD summary skipped: {type(e).__name__}: {e}")
     protect_sources(AP, cfg, st, ap_dir)
+    try:
+        hold_audit_step(AP, cfg, st, _t0)                # HOLDGEN-1115: held-but-launched / unreachable terms / superseded plan sha
+    except Exception as e:                               # an audit never stops the wave
+        AP.log(f"KIT-WAVE HOLD-AUDIT skipped: {type(e).__name__}: {e}")
     if not AP.DRY:
         save_state(st, ap_dir)
         write_stages(st, ap_dir, cfg)

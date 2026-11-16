@@ -81,7 +81,60 @@ def test_effective_mode_is_in_every_kit_config_and_json(tmp_path, monkeypatch):
         k = tmp_path / env / "fa"
         assert f"export OT_TT_SETUP_REPAIR = {want}" in (k / "config.mk").read_text().splitlines()
         import json
-        assert json.loads((k / "kit_effective_env.json").read_text()) == {"OT_TT_SETUP_REPAIR": want}
+        assert json.loads((k / "kit_effective_env.json").read_text())["OT_TT_SETUP_REPAIR"] == want
     monkeypatch.delenv("OT_TT_SETUP_REPAIR", raising=False)
     gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / "unset"), [])
     assert "export OT_TT_SETUP_REPAIR = off" in (tmp_path / "unset" / "fa" / "config.mk").read_text().splitlines()
+
+
+def test_effective_env_json_lists_the_pg_and_pgcap_keys_that_act_at_gen_time(tmp_path, monkeypatch):
+    import json
+    for k in [k for k in __import__("os").environ if k.startswith(("OT_PG_", "OT_PGCAP_"))]:
+        monkeypatch.delenv(k)
+    monkeypatch.setenv("OT_TT_SETUP_REPAIR", "both")
+    monkeypatch.setenv("OT_PG_DIE_PHASE", "1")
+    monkeypatch.setenv("OT_PG_CELL_KEEPOUT", "0")
+    monkeypatch.setenv("OT_PGCAP_ADJ", "1.0")
+    monkeypatch.setenv("OT_PG_PIN_CHECK", "")          # empty = not set
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path), [])
+    got = json.loads((tmp_path / "fa" / "kit_effective_env.json").read_text())
+    assert got == {"OT_PGCAP_ADJ": "1.0", "OT_PG_CELL_KEEPOUT": "0", "OT_PG_DIE_PHASE": "1", "OT_TT_SETUP_REPAIR": "both"}
+
+
+def test_calibrated_keys_reach_config_only_when_set_and_valid(tmp_path, monkeypatch):
+    """FABLE-FIX-QC-HCFE 11-15: OT_TT_SETUP_CSCALE / _DESIGN / _MARGIN / _CLAYERS ride in config.mk (the step reads them there)."""
+    keys = ("OT_TT_SETUP_CSCALE", "OT_TT_SETUP_DESIGN", "OT_TT_SETUP_MARGIN", "OT_TT_SETUP_CLAYERS")
+    for k in keys:
+        monkeypatch.delenv(k, raising=False)
+    monkeypatch.setenv("OT_TT_SETUP_REPAIR", "both")
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / "plain"), [])
+    assert not any(k in (tmp_path / "plain" / "fa" / "config.mk").read_text() for k in keys)
+    monkeypatch.setenv("OT_TT_SETUP_CSCALE", "1.45")
+    monkeypatch.setenv("OT_TT_SETUP_DESIGN", "1")
+    monkeypatch.setenv("OT_TT_SETUP_MARGIN", "30")
+    monkeypatch.setenv("OT_TT_SETUP_CLAYERS", "M2,M3,M4,M5,M6,M7")
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / "cal"), [])
+    lines = (tmp_path / "cal" / "fa" / "config.mk").read_text().splitlines()
+    for want in ("export OT_TT_SETUP_CSCALE = 1.45", "export OT_TT_SETUP_DESIGN = 1", "export OT_TT_SETUP_MARGIN = 30",
+                 "export OT_TT_SETUP_CLAYERS = M2,M3,M4,M5,M6,M7"):
+        assert want in lines
+    monkeypatch.setenv("OT_TT_SETUP_REPAIR", "0")                                    # no step, no keys
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / "off"), [])
+    assert not any(k in (tmp_path / "off" / "fa" / "config.mk").read_text() for k in keys)
+    monkeypatch.setenv("OT_TT_SETUP_REPAIR", "both")
+    for k, bad in (("OT_TT_SETUP_CSCALE", "0"), ("OT_TT_SETUP_CSCALE", "x"), ("OT_TT_SETUP_DESIGN", "2"), ("OT_TT_SETUP_MARGIN", "a b"),
+                   ("OT_TT_SETUP_CLAYERS", "M2 M3")):
+        monkeypatch.setenv(k, bad)
+        with pytest.raises(ValueError):
+            gen_phys.tt_setup_repair_cfg()
+        monkeypatch.setenv(k, {"OT_TT_SETUP_CSCALE": "1.45", "OT_TT_SETUP_DESIGN": "1", "OT_TT_SETUP_MARGIN": "30",
+                               "OT_TT_SETUP_CLAYERS": "M2,M3,M4,M5,M6,M7"}[k])
+
+
+def test_tcl_scales_layer_c_only_on_the_grt_basis_and_repairs_design_on_request():
+    t = (HERE / "tt_setup_repair.tcl").read_text()
+    assert 'if {$ot_tt_rc eq "grt" && $ot_tt_cs != 1.0}' in t and "-capacitance [expr {$c * $ot_tt_cs}]" in t
+    assert "OT_TT_SETUP_MARGIN|OT_TT_SETUP_CSCALE|OT_TT_SETUP_CLAYERS|OT_TT_SETUP_DESIGN" in t          # read from config.mk
+    i = t.index("global_route -start_incremental -allow_congestion")
+    assert i < t.index("repair_design -verbose") < t.index("repair_timing -setup -setup_margin") < t.index("global_route -end_incremental")
+    assert "if {$w0 < $mg || $ot_tt_design}" in t
