@@ -206,7 +206,9 @@ def cmd_compose(a):
         s81 = (plan.get("die") or {}).get("name") == "s81"
         band_ring = a.band_ring or ("ff" if s81 else "all")
         band_reserve = a.band_reserve or ("ring_ff" if band_ring == "ff" else "padded")
-        ring_ff_min_bits = a.ring_ff_min_bits if a.ring_ff_min_bits is not None else (CLP.RING_FF_MIN_BITS if s81 else 0)
+        ring_ff_min_bits = getattr(a, "ring_ff_min_bits", None)   # callers that build the namespace by hand: the die default
+        if ring_ff_min_bits is None:
+            ring_ff_min_bits = CLP.RING_FF_MIN_BITS if s81 else 0
         print(f"COMPOSE band_ring={band_ring} band_reserve={band_reserve} ring_ff_min_bits={ring_ff_min_bits}", flush=True)
         raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer,
                                observer=observer, monitor=a.monitor, band_reserve=band_reserve,
