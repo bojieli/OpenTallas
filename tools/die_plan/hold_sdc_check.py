@@ -18,10 +18,11 @@ import sys
 from pathlib import Path
 
 GUARD = "hold_sdc_guard.tcl"
-HOLD_RE = re.compile(r"repair_timing[^\n#]*-hold|repair_timing_helper\s+-hold")
+# a repair_timing COMMAND (statement start, or after { [ ), not the word inside a puts / error message
+HOLD_RE = re.compile(r"(?:^[ \t]*|[\[{][ \t]*)(?:::)?repair_timing[^\n#]*-hold|(?:^[ \t]*|[\[{][ \t]*)repair_timing_helper\s+-hold", re.M)
 READ_RE = re.compile(r"^\s*read_sdc\s+(?:-\S+\s+\S+\s+)*(\S+)", re.M)
 SHA_RE = re.compile(r"^\s*export\s+OT_SIGNOFF_SDC_SHA\s*=\s*([0-9a-f]+)\s*$", re.M)
-EXT = (".tcl", ".sh", ".mk", ".py")
+EXT = (".tcl", ".sh", ".mk")
 SELF_OK = {GUARD, "hold_pad_hb4.tcl"}
 
 

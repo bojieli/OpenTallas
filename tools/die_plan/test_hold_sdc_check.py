@@ -88,3 +88,12 @@ if {[catch {repair_timing -hold} err]} { puts "ERR $err" } else { puts "OK rt=$r
 
     def test_hash_mismatch_fails_the_stage(self):
         self.assertIn("ERR HOLD-SDC-MISMATCH", self.run_("badhash"))
+
+
+class Messages(unittest.TestCase):
+    def test_hold_in_a_message_string_is_not_a_stage(self):
+        self.assertEqual(H.kit_findings(kit(stage_body='puts "OT_HOLD_GATE INFO repair_timing -hold stays information only"\n')), [])
+
+    def test_catch_wrapped_stage_is_a_stage(self):
+        f = H.kit_findings(kit(stage_body="if {[catch {repair_timing -hold -hold_margin 1} e]} { puts $e }\n"))
+        self.assertEqual(len(f), 1)
