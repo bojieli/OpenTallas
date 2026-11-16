@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.closed_kit_source_delta.v1",
+  "status": "PRE_ROUTE_ONLY",
+  "base_gen_receipt_sha256": "7f92936ed54587882cf311e41b8353729cc0acf4e8f91c42c4a44907c7dc3984",
+  "source_fix_sha": "8df7c2f39188436136456c1d73d057271c9ee98e",
+  "before": {
+    "config.mk": "781eedd2f96a1b6fa37b21af3c16fda9737d5c43bddab4c81474339bf88b9d42",
+    "grt_pg_replay.tcl": null,
+    "tt_setup_repair.tcl": "76642d12f21a3491fb46d3b8db44ae075e9fd4e6a2713895387b4842ad784f7f"
+  },
+  "after": {
+    "config.mk": "c43110eca3fdcce83324769c89a48f31cb56c340dc26d697591558bc027bb14f",
+    "grt_pg_replay.tcl": "b8878af606094d6c94559215d8e6f0251260087b4e4e55d4bb1b04e71bba314e",
+    "tt_setup_repair.tcl": "36f944e2d0384b52c526891ce77e2783127485e265bcac763ef289535539b07d"
+  },
+  "captured_explicit_pg": {
+    "OT_PGCAP": "1",
+    "OT_PG_TRACK_TRUTH": "1"
+  },
+  "materialized_missing_or_different_exports": {
+    "OT_PG_TRACK_TRUTH": "1"
+  },
+  "reason": "Replay approved shared TT PG constraints; ordinary RFLOW=0 generator records explicit PG intent but omits its exports. Exact captured values only. No RTL or cycle change.",
+  "added_cycles": 0
+}
