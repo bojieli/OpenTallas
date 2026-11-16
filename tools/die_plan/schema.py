@@ -268,6 +268,9 @@ SCHEMA = {
                     "type_m8_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
                         "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
                         "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
+                        # r153 fix 4 (FABLE-PD-DRT-1350): shift of the die-track reference (um, a multiple of the layer pitch is
+                        # best; rounded to tracks): the die tracks hug the PG band moved by this much; absent / 0 = unchanged
+                        "phase_um": {"type": "number"},
                         "note": {"type": "string"}}},
                     # WAVE-RECIPE-1 11-14 (OWNER ruling: types may use the remaining M8/M9, die infra shapes imported as
                     # obstructions): the same grant on M9 (vertical tracks); an M9 kit also carries the M8 grant
@@ -1483,6 +1486,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
+# S81-SEAM-RST-1115 (default off): the last reset stage of an async clear takes the clock tap of its sinks (tap_reset_affinity.tcl).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_affinity"] = {"type": "boolean"}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {

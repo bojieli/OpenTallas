@@ -90,7 +90,7 @@ class DirectPending(unittest.TestCase):
         script = Path(__file__).with_name('ot-heavy').read_text()
         self.assertNotIn('ot-direct-pending', script)
         self.assertIn("_avail=$(awk '/MemAvailable/{print int($2/1048576)}' /proc/meminfo)", script)
-        self.assertIn('_avail - _pend )) -ge $(( MEM + 32 ))', script)
+        self.assertIn('_avail - _pend )) -ge $(( MEM + _dfloor ))', script)
         self.assertIn('[ $_age -lt "${DIRECT_FRESH_S:-300}" ] && _pend=$(( _pend + _m ))', script)
         self.assertIn('echo "$UNIT $MEM" > "$D/direct.$UNIT"', script)
 

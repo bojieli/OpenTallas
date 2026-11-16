@@ -80,7 +80,7 @@ class OtHeavy(unittest.TestCase):
         self.assertEqual(self.block_adj(300, "die"), "300")
 
     def test_repo_and_deployed_layouts_patched(self):
-        self.assertIn(INS.HEAVY_BLOCK + INS.HEAVY_ANCHOR, (HERE / "ot-heavy").read_text())
+        self.assertIn(INS.HEAVY_BLOCK, (HERE / "ot-heavy").read_text())      # later edits (PLANBYPASS_1114) sit between the block and the exec anchor
         f = EVID / "oomadj_999_1022/ot-heavy.ep5.before"
         p = INS.patch_heavy(f.read_text())
         self.assertIn(INS.HEAVY_BLOCK + INS.HEAVY_ANCHOR, p)

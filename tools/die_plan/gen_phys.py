@@ -2287,6 +2287,20 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def pg_drt0255_cfg():
+    """DRT0255 (FABLE-PD-DRT-1350) opt-in config.mk lines, from the gen environment: OT_PG_TRACK_TRUTH_MODE=region (GRT per-gcell
+    capacity cut on the PG pair rows / columns instead of per-track obstructions) and OT_PG_PAIR_ROW_KEEPOUT=1 (ring / station / face-flop
+    sites skip the std rows under the M6 pair).  Nothing is written without the variable (kits stay byte-equal)."""
+    out = []
+    if os.environ.get("OT_PG_TRACK_TRUTH_MODE", "").strip() == "region":
+        out += ["# DRT0255: GRT capacity cut per gcell over the PG pair rows/columns (pg_track_truth.tcl region mode)",
+                "export OT_PG_TRACK_TRUTH_MODE = region"]
+    if os.environ.get("OT_PG_PAIR_ROW_KEEPOUT", "").strip() == "1":
+        out += ["# DRT0255: ring / ft-station / face-flop sites skip the std rows under the M6 PG pair (face_flops.tcl ff_put_near)",
+                "export OT_PG_PAIR_ROW_KEEPOUT = 1"]
+    return out
+
+
 def pg_cell_keepout_value():
     """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
     v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
@@ -5636,6 +5650,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
+    cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
@@ -5658,6 +5673,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += _pregrt_ff_hold.config_lines(t)
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
+        cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += rck_band_exports(P, tn)
@@ -5675,7 +5692,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if os.environ.get("OT_GRT_NONPORT_HOLD") == "1":      # opt-in; chained after any macro-FF wrapper written above
         grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
-              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)

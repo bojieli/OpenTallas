@@ -71,6 +71,7 @@ import plan_block_identity as BI
 import kit_resume as KR
 import wave_jobs as WJ
 import kit_wave_roam as ROAM
+import flow_guard as FG
 
 # A main merge can happen during a long tick. Never release a merged fix with
 # older in-memory launch logic; the next ordinary tick imports the new package.
@@ -474,10 +475,53 @@ def pick_charge_gb(cfg, die, item):
     return int(round(base * max(f, 1.0)))
 
 
+HUB_DISK_PATHS = ("/srv/opentallas-scratch2", "/")
+
+
+def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1200 item 2): '' or why the hub cannot take new work.  A hub ENOSPC killed 28 units at once; the tick
+    launches nothing while the hub's scratch2 or root has less than hub_free_min_gb (default 64) free.  Running units are untouched."""
+    try:
+        floor = float(cfg.get("hub_free_min_gb", 64))
+    except (TypeError, ValueError):
+        floor = 64.0
+    if floor <= 0:
+        return ""
+    low = []
+    for p in paths:
+        try:
+            s = statvfs(p)
+        except OSError:
+            continue                                         # a path this host does not have is not a reason
+        free = s.f_bavail * s.f_frsize / 2**30
+        if free < floor:
+            low.append(f"{p} {free:.0f} GB free < {floor:g} GB")
+    return "hub disk low: " + "; ".join(low) if low else ""
+
+
+def hub_disk_gate(AP, cfg, st, now=None):
+    """called once per tick: sets cfg['_hub_disk_low'] and posts one STATE line when the condition starts (one more when it ends)"""
+    why = hub_disk_low(cfg)
+    cfg["_hub_disk_low"] = why
+    g = st.setdefault("hub_disk", {})
+    if why and not g.get("since"):
+        g["since"] = time.time() if now is None else now
+        AP.log(f"KIT-WAVE HUB-DISK launch refused: {why}")
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} STATE [FLOW-HEALTH-1 -> COORD] kit wave launches nothing: {why} "
+                        "(a hub ENOSPC killed 28 units on 11-15; running units untouched; free the hub disk, the next tick resumes)")
+    elif not why and g.get("since"):
+        AP.log("KIT-WAVE HUB-DISK launches resume: hub disk above the floor again")
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} STATE [FLOW-HEALTH-1 -> COORD] kit wave launches resume: hub disk above the floor again")
+        g.clear()
+    return why
+
+
 def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
         return cfg["error"]
+    if cfg.get("_hub_disk_low"):
+        return cfg["_hub_disk_low"]
     if (ap_dir / "kit_wave.stop").exists():
         return "global stop file kit_wave.stop"
     if not cfg.get("enabled"):
@@ -1779,6 +1823,9 @@ def select(rows, cfg, die, state, plan_types=None):
         elif prov_predecessor(d, die, state, r["item"], rec):
             why = ("PROV-RESIGN: the PROVISIONAL kit of this type re-signs (STA only, no re-route) on the signed child "
                    "views (KW-PROV-1)")
+        elif rec and rec.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
+            # SIGNED-TERMINAL-1115: a signed R-MINIMAL record on this plan block is terminal, flow tag or not, retry key or not
+            why = "signed off on this plan block (terminal; a missing flow tag is bookkeeping, never a build)"
         elif rec and rec.get("status") == "ENQUEUED" and not (
                 rec.get("q_status") == "FAIL" and f"{r['item']}@{rec.get('attempt')}" in retry):
             # KIT-TRIAGE-1 11-01: a kit that FAILED in the autopilot queue (route / sign-off) stays ENQUEUED in the
@@ -4696,6 +4743,10 @@ def fail_signature(cls, why, stage=""):
         return None
     head, _, rest = why.partition(" @")
     stg = (rest.split(":", 1)[0].strip() if rest else "") or str(stage or "")
+    if stg:
+        # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1200 item 6): the key is (item, stage, class), not the free text of the last log line; a fail
+        # text that alternates ("KW_ROAM ..." / "bind.py: error ...") at the same stage kept resetting the 3x count (slice_station__t8 ran 27 attempts)
+        return (cls or "FLOW"), f"{cls}|{stg}"
     norm = re.sub(r"(?:[\w.-]+:)?/[^\s,;'\")]+", "<path>", head)
     norm = re.sub(r"\b(?:epyc|intel)\d+\b|\b[0-9a-f]{7,}\b|\d+", "#", norm)
     norm = re.sub(r"\s+", " ", norm).strip()[:200]
@@ -4707,8 +4758,10 @@ def input_digest(cfg, die):
     plan block (kept apart: it is per item): plan sha, die src_sha, source content hash, kit tools digest, gen env / kit_rtl form"""
     d = (cfg.get("dies") or {}).get(die) or {}
     try:
-        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("_src_overlay"), rt_tools_digest(),
-                d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
+        # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1350): rt_tools_digest() and the source overlay hash change with every merge / hand patch, so
+        # cbn_q01__cldd6ea846 was BLOCKED at attempts 6, 9 and 12 and relaunched each time (the digest "changed", the count restarted,
+        # kit_wave_blocked.tsv stayed empty).  Only the die's plan / src / kit form / event release a block; the owner's unblock list does the rest.
+        body = [d.get("_plan_sha") or d.get("plan_sha"), d.get("src_sha"), d.get("gen_env"), d.get("kit_rtl"), d.get("event")]
         return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:16]
     except (TypeError, ValueError):
         return ""
@@ -6787,6 +6840,138 @@ def sidecar_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     return out
 
 
+# FLOW-HEALTH-1 11-15 (COORD): pre-launch input preflight on every candidate host + class circuit-breaker (flow_guard.py).
+# 11-15 00:00-06:30: 874 of 972 launches failed before place and route on a few unfixed causes (a source dir on one host only, a
+# die tree whose gen_phys.py was newer than its schema.py, ot_store / core_view_sha missing) and the wave retried the same item
+# on the same cause for hours.  Die option flow_guard false turns it off.
+PRE_PR_STAGES = ("mkdir", "bind", "bind_fetch", "kit_rtl", "gen", "gen_lint", "kit_topology", "preflight", "prov_views", "lec_tools",
+                 "views", "cells", "relay_bay", "sync_hub", "pipeline", "selfcontained", "type_overlay", "unit")
+
+
+def flow_item_inputs(cfg, die, item):
+    """{paths, trees, plans} an item's pre-place stages read (kit_rtl / bind / gen inputs, followed on the host by flow_guard)"""
+    d = cfg["dies"][die]
+    ii = (d.get("item_inputs") or {}).get(item) or {}
+    paths = list(deep_inputs(cfg, die))
+    iin = item_inputs(cfg, die)
+    paths += iin.get(item, []) + iin.get(core_module(item), [])
+    src = ii.get("src") or d.get("src")
+    plan = ii.get("plan") or d.get("plan")
+    trees = [src] if isinstance(src, str) and src.startswith("/") else []
+    plans = [plan] if isinstance(plan, str) and plan.startswith("/") and plan.endswith(".json") else []
+    paths += plans
+    return {"paths": list(dict.fromkeys(p for p in paths if p)), "trees": trees, "plans": plans}
+
+
+def flow_candidate_hosts(cfg, die):
+    d = cfg["dies"][die]
+    return [h for h in dict.fromkeys([d.get("gen_host")] + list(d.get("gen_hosts") or [])) if h]
+
+
+_MAIN_NAMES = {"t": 0.0, "names": None}
+
+
+def main_module_names(AP, ttl=3600):
+    """module names (py file stems, no tests) main's tools/ and physical/common_flow hold: the tree probe flags 'No module named X'
+    only for a module main has and the tree lacks (third-party imports are not skew).  None when main cannot be listed."""
+    now = time.time()
+    if _MAIN_NAMES["names"] is not None and now - _MAIN_NAMES["t"] < ttl:
+        return _MAIN_NAMES["names"]
+    repo = getattr(AP, "REPO", None)
+    names = None
+    if repo:
+        try:
+            p = subprocess.run(["git", "-C", str(repo), "ls-tree", "-r", "--name-only", "origin/main", "--", "tools", "physical/common_flow"],
+                               capture_output=True, text=True, timeout=60)
+            if p.returncode == 0:
+                # only the modules the tree's own search path reaches (FG.SEARCH_DIRS, top level of each): a name that lives in
+                # tools/autopilot or tools/fleet is put on sys.path by its importer, which this static probe does not follow
+                names = sorted({Path(x).stem for x in p.stdout.splitlines() if x.endswith(".py") and not Path(x).name.startswith("test_")
+                                and str(Path(x).parent) in FG.SEARCH_DIRS})
+        except (OSError, subprocess.TimeoutExpired):
+            names = None
+    _MAIN_NAMES.update(t=now, names=names or _MAIN_NAMES["names"])
+    return _MAIN_NAMES["names"]
+
+
+def flow_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
+    """{item: (kind, {host: why})} for rows that NO candidate host can serve (not launched).  Hosts that lack an input of an item
+    are written to cfg _item_incomplete (gen_hosts / roam_hosts then leave them out); an unreachable host is unknown = launch."""
+    d = cfg["dies"][die]
+    if d.get("flow_guard") is False or not rows:
+        return {}
+    now = time.time() if now is None else float(now)
+    g = FG.fg_state(st)
+    hosts = flow_candidate_hosts(cfg, die)
+    items = {r["item"]: flow_item_inputs(cfg, die, r["item"]) for r in rows}
+    # tick budget: a probe that would start after the deadline answers "unknown" (= launch, never cached) so the tick does not wait
+    # 86-95 s for a cold die; the probes that did finish are cached (TTL) and the next ticks complete the rest.
+    real, deadline = rpy or AP.rpy, time.time() + float(d.get("flow_guard_budget_s", 25))
+    def budgeted(host, code, args, timeout=600):
+        if time.time() > deadline:
+            return {"error": "tick budget"}
+        return real(host, code, args, timeout=min(timeout, 60))
+    res = FG.preflight_items(g, items, {i: hosts for i in items}, budgeted, now, local_names=main_module_names(AP))
+    imiss = cfg.setdefault("_item_incomplete", {})
+    out = {}
+    for item, v in res.items():
+        for h in hosts:
+            cur = (imiss.get(h) or {}).get(die, {})
+            if h in v["bad"]:
+                imiss.setdefault(h, {}).setdefault(die, {})[item] = v["bad"][h]
+            elif str(cur.get(item, "")).startswith(("PATH-MISSING", "TREE-SKEW")):
+                del cur[item]
+        if v["bad"] and not v["ok"]:
+            out[item] = (v["kind"], v["bad"])
+    return out
+
+
+def flow_guard_gate(AP, cfg, st, die, go, picks, skip, now=None, rpy=None):
+    """the launch gate: breaker-held rows and preflight-refused rows leave `go`; held rows are re-judged by the preflight every
+    tick (the class closes when all of them pass again); one ALERT per opened class and one ASK per refusal class are posted"""
+    now = time.time() if now is None else float(now)
+    g = FG.fg_state(st)
+    held = [r for r in picks if FG.held_key(st, die, r["item"])]
+    seen, ev = set(), []
+    for r in go + held:
+        if r["item"] not in seen:
+            seen.add(r["item"])
+            ev.append(r)
+    pf = flow_preflight(AP, cfg, st, die, ev, now=now, rpy=rpy)
+    hp = {}
+    for r in held:
+        hp.setdefault(FG.held_key(st, die, r["item"]), []).append(r["item"] not in pf)
+    for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now):
+        AP.log(f"KIT-WAVE FLOW-GUARD RELEASE '{key}': {why}")
+    out = []
+    for r in go:
+        hk = FG.held_key(st, die, r["item"])
+        if hk:
+            skip.setdefault(f"FLOW-BREAKER class '{hk[:80]}' open (no launch until it closes)", []).append(r["item"])
+        elif r["item"] in pf:
+            skip.setdefault("FLOW-PREFLIGHT: no host holds every input", []).append(r["item"])
+        else:
+            out.append(r)
+    refused = {}
+    for item, (kind, bad) in pf.items():
+        if any(x["item"] == item for x in go):
+            rk = FG.refusal_key(kind, bad)
+            refused.setdefault(rk, []).append((item, kind, bad))
+            g["refused"].append([now, rk, f"{die}/{item}"])
+    g["refused"] = g["refused"][-3000:]
+    for key in [k for k in g["pf_posted"] if k not in refused and now - g["pf_posted"][k] > 3600]:
+        del g["pf_posted"][key]                      # the class cleared for an hour: a recurrence posts again
+    for key, its in refused.items():
+        if key not in g["pf_posted"]:
+            g["pf_posted"][key] = now
+            AP.log(f"KIT-WAVE PREFLIGHT-REFUSED {die} '{key}': {len(its)} row(s): " + " ".join(i for i, _, _ in its[:20]))
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", FG.refusal_line(now_s(), key, its[0][1], len(its), [i for i, _, _ in its], its[0][2]))
+    for key, line in FG.alert_lines(st, now_s()):
+        AP.log(f"KIT-WAVE FLOW-GUARD CLASS-BREAKER open '{key}'")
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", line)
+    return out
+
+
 def plan_sha_mismatch(d, pn):
     """WAVE-POR guard (CORES-S81-1, COORD 11-12): dies.<die>.plan_sha256 is the declared sha256 of dies.<die>.plan that
     the release-tree counter counts; a plan file that no longer has it (edited in place, or repointed without
@@ -6938,6 +7123,11 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                                 skip.setdefault(scst[r["item"]], []).append(r["item"])
                         go = [r for r in go if r["item"] not in scst]
                         AP.log(f"KIT-WAVE SIDECAR-STALE {die}: {len(scst)} row(s) not launched: " + " ".join(sorted(scst)[:40]))
+                if AP and probe and d.get("flow_guard") is not False and (go or any(FG.held_key(st, die, r["item"]) for r in picks)):
+                    try:
+                        go = flow_guard_gate(AP, cfg, st, die, go, picks, skip)
+                    except Exception as e:                 # a guard never stops the plan (unknown = launch)
+                        AP.log(f"KIT-WAVE flow guard {die} skipped: {type(e).__name__}: {e}")
                 per_die.append([(die, r) for r in go[:n]])
         out.append((die, ok, why, picks, skip))
     # AUTOBUILD-PIPE-2 10-30: round-robin the tick's launches across dies.  Alphabetical fill let S81 (72 queued) take
@@ -7113,6 +7303,9 @@ def live_attempt_elsewhere(st, die, item, key):
 
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
+        return None
+    if FG.held_key(st, die, r.get("item")) and cfg["dies"][die].get("flow_guard") is not False:     # FLOW-HEALTH-1: open class, any launch path
+        AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: FLOW-GUARD class open ({FG.held_key(st, die, r.get('item'))[:100]})")
         return None
     arm = r.get("arm") if isinstance(r.get("arm"), dict) else None      # KW-FIX-44 GRTARM_1111
     key = arm["key"] if arm else item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
@@ -8177,6 +8370,17 @@ def collect(AP, cfg, st, notices):
                    f"{c['n']}x ({c.get('sig', '')[:200]}); owner {die_owner(cfg, rec['die'])[0]}; listed in {BLOCKED_FILE}")
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
         AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}: {why}")
+        try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
+            _stg = FG.fail_stage(why) or str(res.get("stage") or "")
+            _key = FG.norm_class(cls, why)
+            if cls != "INFRA":
+                FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
+                               legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg)
+                for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
+                    AP.log(f"KIT-WAVE FLOW-GUARD CLASS-BREAKER open '{_k}'")
+                    AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", _line)
+        except Exception as e:
+            AP.log(f"KIT-WAVE flow guard record skipped: {type(e).__name__}: {e}")
 
 
 CELL_FLAGS_REL = "lanes/FLAGS-CELLCHECK.tsv"
@@ -8852,7 +9056,12 @@ def queue_class(j):
             return "visual", "RUNNING", "", str(j["visual_gate"])[:300]
         return "archive", "RUNNING", "", "signed off; archive + PROVENANCE pending"
     if stt == "SIGNED-UNVERSIONED":
-        return "provenance", "FAIL", "FLOW", "signed off but no flow release tag carries its flow: " + str(j.get("prov_error") or "")[:200]
+        # SIGNED-TERMINAL-1115 (FABLE-FLOW-1350 class 2; OWNER 11-14: count on the R-MINIMAL record alone, no commit / flow tag /
+        # re-sign): an archived R-MINIMAL sign-off ends the item.  The missing flow tag is bookkeeping (autopilot
+        # retry_unversioned / auto_resign), never a FAIL: a FAIL here was an 'ended' attempt that retry_key_decision released
+        # and the wave relaunched (20 items, 60 relaunches on 11-15).
+        return "count", "SIGNED", "", ("signed off (R-MINIMAL), archived " + str(j.get("archive", "")) +
+                                       "; flow tag pending (bookkeeping, terminal): " + str(j.get("prov_error") or "")[:160])
     if stt in ("RUNNING", "") or stt.startswith("WAIT-") or stt in ("ORPHAN", "TRIAL-SIGNED", "WITHDRAWN", "CANCELLED"):
         return ("route" if stt == "RUNNING" else "queue"), (stt or "QUEUED"), "", str((j.get("history") or [[0, 0, ""]])[-1][-1])[:200]
     if stt == "REJECTED":
@@ -9396,6 +9605,49 @@ def _step_locked(AP, ap_dir):
         lk.close()
 
 
+CFG_REL = "autopilot/kit_wave.json"
+
+
+def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=None):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-0815 item 5): the working kit_wave.json is what this wave runs on, origin/coord/state is what the
+    coordinator and the other hosts see.  A working copy that differs from origin for more than one tick is unpushed config (a failed
+    coord-commit): one ALERT per drifting content, a RESOLVED line when it matches again.  Returns the drift state or None."""
+    now = time.time() if now is None else now
+    g = FG.fg_state(st)
+    dr = g.setdefault("drift", {})
+    coord = Path(getattr(AP, "COORD", "") or "")
+    try:
+        work = (coord / CFG_REL).read_bytes()
+        if read_origin is not None:
+            orig = read_origin()
+        else:
+            p = subprocess.run(["git", "-C", str(coord), "show", f"{origin_ref}:{CFG_REL}"], capture_output=True, timeout=30)
+            orig = p.stdout if p.returncode == 0 else None
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if orig is None:
+        return None                                   # no origin ref to compare with: unknown, no alert
+    if work == orig:
+        if dr.get("alerted"):
+            AP.log(f"KIT-WAVE CONFIG-DRIFT resolved: {CFG_REL} matches {origin_ref} again")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} RESOLVED [FLOW-HEALTH-1 -> COORD] kit_wave.json drift: working copy matches {origin_ref} again")
+        dr.clear()
+        return None
+    sha = hashlib.sha1(work).hexdigest()[:12]
+    if dr.get("sha") != sha:
+        dr.clear()
+        dr.update(sha=sha, first=now, ticks=0)
+    dr["ticks"] = dr.get("ticks", 0) + 1
+    if dr["ticks"] > 1 and not dr.get("alerted"):
+        dr["alerted"] = now
+        age = int((now - dr["first"]) / 60)
+        AP.log(f"KIT-WAVE CONFIG-DRIFT {CFG_REL} differs from {origin_ref} for {dr['ticks']} ticks ({age} min), content {sha}")
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [FLOW-HEALTH-1 -> COORD] kit_wave.json DRIFT: the working {CFG_REL} (sha1 {sha}) differs from "
+                        f"{origin_ref} for {dr['ticks']} ticks ({age} min): the edit is unpushed (failed coord-commit?) and invisible to everything that reads origin. "
+                        f"Fix: bash ~/coord/bin/coord-commit.sh \"kit_wave.json\" {CFG_REL}")
+    return dr
+
+
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
@@ -9408,6 +9660,14 @@ def _step(AP, ap_dir):
     # NEAR-COUNT (COORD 11-01 KIT-WAVE-16 (6)): items in lanes/NEAR-COUNT.tsv launch with --priority die --crit
     cfg["_near_count"] = AP.parse_near_count(AP.read_coord(AP.NEAR_COUNT_FILE)) if hasattr(AP, "parse_near_count") else set()
     st = load_state(ap_dir)
+    try:
+        hub_disk_gate(AP, cfg, st)
+    except Exception as e:                                       # unknown = launch
+        AP.log(f"KIT-WAVE hub disk check skipped: {type(e).__name__}: {e}")
+    try:
+        config_drift(AP, st)
+    except Exception as e:
+        AP.log(f"KIT-WAVE config drift check skipped: {type(e).__name__}: {e}")
     import source_follow
     source_follow.step(AP, cfg, st)
     st.setdefault("items", {})
@@ -9700,6 +9960,14 @@ def protect_sources(AP, cfg, st, ap_dir):
 
 
 STAGES_FILE = "kit_wave_stages.tsv"
+
+
+def reason_tagged(reason, tag, limit=240):
+    """FLOW-HEALTH-1 11-15 (COORD, failure_breakdown): the class text of a stage-table reason comes FIRST and the PROVISIONAL[...] /
+    GRT-ARM[...] tag after it; a long provisional list in front cut the class off at 240 chars and 12 kit_rtl rows read as
+    'other flow error'.  The tag is the part that is cut when the line is too long."""
+    base = re.sub(r"\s+", " ", str(reason or "")).strip()
+    return (base + " " + tag)[:limit] if base else tag[:limit]
 STAGE_COLS = ("die", "item", "parent_item", "plan_sha", "block_sha", "event", "stage", "status", "class", "kit",
               "evidence", "updated", "plan_current", "reason")
 
@@ -9771,12 +10039,12 @@ def write_stages(st, ap_dir, cfg=None):
             v.update(status="SIGNED", **{"class": "COUNTED"},
                      reason=f"counted elsewhere (counted_items), was {v.get('status')} {v.get('class') or ''}: {v.get('reason') or ''}"[:240])
         if isinstance(r.get("arm"), dict):               # KW-FIX-44 GRTARM_1111: the halving-off arm of the row
-            v["reason"] = (f"GRT-ARM[{r['arm'].get('mode')}] " + str(v.get("reason") or ""))[:240]
+            v["reason"] = reason_tagged(v.get("reason"), f"GRT-ARM[{r['arm'].get('mode')}]")
         if r.get("provisional"):
             # KW-PROV-1: built on PROVISIONAL child views (never counted until the STA-only re-sign on the signed libs)
             pv = ",".join(f"{m}:{str(src).split()[0] if src else '?'}" for m, src in sorted(r["provisional"].items()))
             rs = (r.get("prov_resign") or {}).get("status")
-            v["reason"] = (f"PROVISIONAL[{pv}]" + (f" resign:{rs}" if rs else "") + " " + str(v.get("reason") or ""))[:240]
+            v["reason"] = reason_tagged(v.get("reason"), f"PROVISIONAL[{pv}]" + (f" resign:{rs}" if rs else ""))
         rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
     # KW-FIX-4 11-03: gen-time lint verdicts of the current plans (never launched, no build cost)
     for r in sorted((st.get("lint") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
@@ -10190,6 +10458,8 @@ def retry_key_decision(st, die, item, n):
         except (TypeError, ValueError):
             return 0.0
     last = max(recs, key=lambda r: (started(r), int(r.get("attempt") or 0)))
+    if last.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
+        return False, f"{item} is signed off (terminal): {item}@{n} never releases"
     try:
         ln = int(last.get("attempt") or 0)
         nn = int(n)

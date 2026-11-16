@@ -344,6 +344,9 @@
           "8w"
          ]
         },
+        "phase_um": {
+         "type": "number"
+        },
         "note": {
          "type": "string"
         }
@@ -3078,6 +3081,9 @@
         "type": "boolean"
        },
        "pregrt_ff_hold": {
+        "type": "boolean"
+       },
+       "tap_reset_affinity": {
         "type": "boolean"
        },
        "pregrt_hold_guard_ps": {
