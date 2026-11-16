@@ -10278,3 +10278,18 @@ All active inherited lanes covered; HBM parked by latest owner handoff. Workers 
 OWNER?
 No new owner choice needed; work continues.
 FOR-CLAUDE: independent FABLE reviews HEAD NF14/r and current QC combined event where required; no blocking dialog.
+
+## CODEX resumed takeover 2026-11-16 14:31 PST
+Latest r344-r365 read; all inherited scopes reactivated, no new worktrees. HBM parked. Existing physical/source jobs retained; new work follows current measured resource admission and required visual review.
+
+| Scope / inherited worker | Actual current step | Next / owned failure |
+|---|---|---|
+| S81 plans / s81_plans | F2s4 28a6fe4f bind active, five corrected col kits evidence only; IFN actual final/ECO results collected | Fix one new column clock-tap geometry error; repair IFN ECO recursion; complete IFN0 primary family plan and clock contracts |
+| S81 cores / s81_cores | Exact SVC F2s3 synth live; bksel restarted by Claude with cap, live LEC; SerDes I/J/H measured | Diagnose missing8 SVC macros in old diagnostic; all ingress/reset/RM/halfcycle classes owned, preserve actual pilots |
+| S81 CONG / s81_congestion | Full signed vsw cohort _d3 required; original leaf constructor/old jobs collected | Correct trusted cohort, c43 FT overlap, collect t75; trace r345 watchdog policy before propagating guessed deadline |
+| HEAD / head | NF15a adopted; he12r live GRT0/holdrepair; hw4/spn/sd8/p16g results collecting | NF15b FREG K+1 correction on frozen tree, complete PMA source and independent proof, actual failures remain owned |
+| QC / qc | S4q9j adopted, Kfe bind/L composed; head/group/P3 physical live | Four missing tail masters/two G0 faces, N43 emitter, coll_n hold, S4q9m parallel feed and source/phase integration |
+| KV / kv | HG1A adopted; C fresh elab queued; clean snapcopy863/snapkey7d approved | Finish true elab/bind/LAT, HG2 fine clock sites/windows, normal3 retry after source integration |
+| TOKEN / token | Genuine tables/install/tile results complete; current boundary/phase composition | Package actual evidence without rerun, finish thin source integration, exact publication/CB-RS/current image qualification |
+| Fleet / fleet_flow | All19 reviewholds released; TEMP-E9 real disk29GB; deletefreeze active | Integrate2dda guard, real guard-only pass, guarded capacity reclamation; sync/retry approved snapshot stages; two-record count mapping |
+| Queue / merge_ops | ExistingservicePID1207465 active landing7809; currentmain96cae5872b9, deployed631a697 | Inherit r365 MERGE-QUEUE-2 service ownership; diagnose actual CPU/children, drain approved work without duplicategates |
