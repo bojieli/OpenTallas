@@ -5735,7 +5735,9 @@
     "kv3_pc_v1__cl7f648944",
     "kv3_sys_c"
    ],
-   "tool_skew": "warn"
+   "tool_skew": "warn",
+   "kit_snap": true,
+   "kit_snap_view_refs": "strict"
   },
   "s81": {
    "enabled": true,
@@ -35111,7 +35113,9 @@
     "extra_items": [],
     "failing_items_seen": 48
    },
-   "tool_skew": "warn"
+   "tool_skew": "warn",
+   "kit_snap": true,
+   "kit_snap_view_refs": "strict"
   },
   "s81_head": {
    "enabled": true,
@@ -37206,7 +37210,8 @@
     "hd_spn": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
     "hd_st_str": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
    },
-   "tool_skew": "warn"
+   "tool_skew": "warn",
+   "kit_snap_view_refs": "strict"
   },
   "qwen_compute": {
    "enabled": true,
@@ -47588,7 +47593,9 @@
    "hold_items_released_wavehold1115_r189": {
     "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
    },
-   "tool_skew": "warn"
+   "tool_skew": "warn",
+   "kit_snap": true,
+   "kit_snap_view_refs": "strict"
   },
   "hbm": {
    "enabled": true,
