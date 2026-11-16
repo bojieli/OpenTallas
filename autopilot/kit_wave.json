@@ -6081,7 +6081,9 @@
    "only_items_dropped_note": "KIT-WAVE-12 04:1x PST (OWNER 11-01 batches + COORD: relaunch every kit whose last FAIL is on a superseded event in ONE batch): only_items allowlist (180 items) removed, so every S81 NEEDS-KIT/FIX/KIT-PLACED type on the current plan is eligible (pilot gate 12.27a still caps unproven classes).",
    "pilot_mode": "queue",
    "bind_mem_gb": 48,
-   "hold_items": {},
+   "hold_items": {
+    "*": "tree_d4:s81 (COORD 09:1x): bare v3 lacks the ovl_F2s overlay files the F2s2 bind used; no S81 launch until TOOLS-CONVERGE's _d4 tree marker posts and KIT-OPS-5 switches src to it. Running attempts finish. Lift = delete this key."
+   },
    "queue_src": "main@7073a6b4a599",
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
    "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
@@ -38746,7 +38748,9 @@
     "slw_st_b_v2__pva66d0f22@5",
     "slw_st_b_v2__pvc2ec5bfb@15",
     "slw_su_l1__cla2a78701@21",
-    "slw_su_l1__clcc9d0155@9"
+    "slw_su_l1__clcc9d0155@9",
+    "slw_su_l0__cl1a1c1f8f@8",
+    "sle_su_l0__cl7a55c676@21"
    ],
    "queue_src": "claude/qc-event-s28-1111@88018018ef",
    "type_args": {
