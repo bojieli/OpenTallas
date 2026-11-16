@@ -109,3 +109,90 @@ def test_one_bit_vector_keeps_its_range():
             assert '%Error' not in r.stderr, r.stderr
         finally:
             p.unlink(missing_ok=True)
+
+
+def abi_vehicle():
+    import hashlib
+    source=fixture()
+    reference,_,_=cut(source,0)
+    # The new receiver is an explicit bitwise alias. Its physical age is outside
+    # this grouping test; only the exact cut/interface mechanism is exercised.
+    changed=source.replace('    wire [7:0] x_q;', '    wire [7:0] x_q;\n    wire [7:0] pad_q;\n    assign pad_q=x_q;')
+    changed=changed.replace('.x(x_q)', '.x({pad_q[7:4],pad_q[3:0]})')
+    digest=hashlib.sha256(reference.encode()).hexdigest()
+    group=dict(module='qfd_qc_su_lane_w_l0',reference_sha256=digest,
+               sink_leaf='u_exp0',sink_port='x',r8_member_id='exact-member-0',
+               bits=[dict(abi_bit=i,sink_bit=i,original_local=dict(name='x_q',bit=i),
+                          original_frame_expr=f'x_q[{i}]',replacement_frame_expr=f'pad_q[{i}]') for i in range(8)])
+    return changed,dict(reference_rtl=reference,reference_sha256=digest,aliases=[group])
+
+
+def test_explicit_input_abi_preserves_reference_and_only_rewires_frame():
+    source,abi=abi_vehicle()
+    rtl,frame,r=cut(source,0,input_abi=abi)
+    assert rtl==abi['reference_rtl']
+    assert r['input_abi_changed_bits']==8 and r['input_abi_all_leaf_ports_verified']
+    assert '.c_i({pad_q[7], pad_q[6], pad_q[5], pad_q[4], pad_q[3], pad_q[2], pad_q[1], pad_q[0]})' in frame
+    assert 'wire [7:0] pad_q;' not in rtl and '.x(x_q)' in rtl
+
+
+@pytest.mark.parametrize('mutant', ['hash','duplicate','missing','wrong_bit','wrong_sink','module','undeclared','output','internal','reset'])
+def test_explicit_input_abi_rejects_drift(mutant):
+    from copy import deepcopy
+    source,abi=abi_vehicle();abi=deepcopy(abi)
+    if mutant=='hash':abi['reference_sha256']='0'*64
+    if mutant=='duplicate':abi['aliases'][0]['bits'].append(deepcopy(abi['aliases'][0]['bits'][0]))
+    if mutant=='missing':abi['aliases'][0]['bits'].pop()
+    if mutant=='wrong_bit':abi['aliases'][0]['bits'][0]['replacement_frame_expr']='pad_q[1]'
+    if mutant=='wrong_sink':abi['aliases'][0]['sink_leaf']='u_rcp0'
+    if mutant=='module':source=source.replace('leaf u_u_rcp0', 'other u_u_rcp0')
+    if mutant=='undeclared':abi['aliases'][0]['bits'][0]['replacement_frame_expr']='nonexistent[0]'
+    if mutant=='output':source=source.replace('assign y=w_u_lrly0_y;', 'assign y=w_u_rcp0_y;')
+    if mutant=='internal':source=source.replace('.x(w_u_rsq0_y)', '.x(w_u_exp0_y)')
+    if mutant=='reset':source=source.replace('.rst_n(rst_n)', '.rst_n(rst_n_t10)',1)
+    with pytest.raises(ValueError):cut(source,0,input_abi=abi)
+
+
+def test_segmented_delay_is_explicit_and_default_off():
+    source=fixture().replace('leaf u_u_head0 (','qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(0)) u_u_head0 (')
+    normal=cut(source,0,memory_read_extra=9)[0]
+    assert '.SEGMENTED_MEMORY_DELAY(' not in normal
+    rtl,_,r=cut(source,0,memory_read_extra=44,segmented_memory_delay=1)
+    assert '.MEMORY_READ_EXTRA(44)' in rtl and '.SEGMENTED_MEMORY_DELAY(1)' in rtl
+    assert r['segmented_memory_delay']==1
+    with pytest.raises(ValueError,match='explicit MEMORY_READ_EXTRA'):
+        cut(source,0,segmented_memory_delay=1)
+    with pytest.raises(ValueError,match='explicit 0 or 1'):
+        cut(source,0,memory_read_extra=44,segmented_memory_delay=2)
+
+
+def test_reference_module_rename_requires_explicit_retarget():
+    source,abi=abi_vehicle()
+    with pytest.raises(ValueError,match='module differs'):
+        cut(source,0,module='new_group',input_abi=abi)
+    abi['reference_module']='qfd_qc_su_lane_w_l0'
+    with pytest.raises(ValueError,match='retarget must be explicit'):
+        cut(source,0,module='new_group',input_abi=abi)
+    abi['retarget_module']='new_group'
+    rtl,_,_=cut(source,0,module='new_group',input_abi=abi)
+    assert rtl==abi['reference_rtl'].replace('module qfd_qc_su_lane_w_l0 (','module new_group (')
+
+
+def test_input_abi_rejects_mixed_partitions_even_when_bit_aliases_are_disjoint():
+    from copy import deepcopy
+    source,abi=abi_vehicle()
+    group=abi['aliases'][0]
+    group.update(type='t',partition='p0')
+    other=deepcopy(group);other['partition']='p1'
+    group['bits']=group['bits'][:4];other['bits']=other['bits'][4:]
+    abi['aliases'].append(other)
+    with pytest.raises(ValueError,match='mixed type/partition'):
+        cut(source,0,input_abi=abi)
+
+
+def test_segmented_existing_enable_cannot_be_silently_selected_by_default():
+    source=fixture().replace('leaf u_u_head0 (','qfd_dv_lane_h_su_mem9 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(44), .SEGMENTED_MEMORY_DELAY(1)) u_u_head0 (')
+    with pytest.raises(ValueError,match='different SEGMENTED_MEMORY_DELAY'):
+        cut(source,0)
+    with pytest.raises(ValueError,match='different SEGMENTED_MEMORY_DELAY'):
+        cut(source,0,memory_read_extra=44)

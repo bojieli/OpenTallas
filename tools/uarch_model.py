@@ -35,6 +35,55 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+
+def qwen_qc_segmented_memory_candidate_model(replicas=96, external_edges=43):
+    """Bound S4Q9L census; candidate only, no closure or schedule credit."""
+    if type(replicas) is not int or replicas < 1 or not 20 <= external_edges <= 49:
+        raise ValueError("positive physical replicas and measured supported transport required")
+    outer_ml = 5 + 3 + 1 + external_edges  # native MIF1 plus actual parent loop, once
+    s1, s2 = outer_ml + 6, outer_ml + 8
+    def segments(d):
+        n = math.ceil(d / 32)
+        return [d // n + (i < d % n) for i in range(n)]
+    a, b = segments(s1), segments(s2)
+    macros = len(b) * math.ceil(133 / 64)
+    macro_area = 31.968 * 17.280
+    # SRAM used_q flops are 133/segment; 3 independent 5-bit write pointers.
+    state = 8*s1 + 133*len(b) + 15*len(b)
+    legacy_s2 = 133*(s2-16) + 133*15 + 133
+    return dict(schema="opentallas.qc.segmented-memory-candidate.v1",
+        candidate=True, default_enabled=False, physical_replicas=replicas,
+        source_census="QC-PINACCESS-O-SU-transport-census.json",
+        required_field_alignment="all VM/CROM/WROM loops normalized to43; WROM bit0 skew corrected",
+        native_alignment=3, native_mif_extra=1, external_transport_edges=external_edges,
+        outer_ml=outer_ml, s1_width=8, s1_depth=s1, s1_ring_segments=a,
+        s2_width=133, s2_depth=s2, s2_sram_segments=b,
+        sram_macro="ot_sram_1r1w_32x64_m1", sram_macros_per_head=macros,
+        sram_capacity_bits_per_head=macros*2048,
+        live_metadata_bits_per_head=8*s1+133*s2,
+        flop_state_upper_per_head=state+32, legacy_s2_flops_per_head=legacy_s2,
+        macro_body_area_um2_per_head=macros*macro_area,
+        macro_body_area_um2_total=replicas*macros*macro_area,
+        slot_um=[151.2,185.76], baseline_slot_um=[151.2,129.6],
+        outline_area_delta_um2_per_head=151.2*(185.76-129.6),
+        outline_area_delta_um2_per_four_head_parent=4*151.2*(185.76-129.6),
+        parent_slot_um=[622.08,1399.68], parent_outline_delta_um2=0,
+        packing="two columns, four rows; on-track origins; >=20um core edge and inter-macro channels; actual route pending",
+        macro_body_fraction_of_slot=macros*macro_area/(151.2*185.76),
+        retained_tls_macros_per_head=2, retained_tls_macro="ot_sram_1r1w2c_128x64_m1",
+        full_head_macro_count=macros+2, full_head_macro_body_area_um2=macros*macro_area+2*33.720*27.576,
+        slot_fit="body area fits; packing, pin access, PG, channels and TT/FF remain unqualified",
+        memory_ports_per_macro=dict(read=1,write=1), memory_bytes_per_cycle_per_head=2*macros*8,
+        boundary_bits_per_cycle_delta=0, added_macs_per_cycle=0,
+        routing_note="local sequential segment boundaries; no new die crossing; pin-channel capacity requires actual floorplan",
+        max_ring_select_fanout=16, max_ring_pointer_slots=31,
+        sram_pointer_loads_per_segment=3*10,
+        throughput_items_per_cycle=1, added_compute_edges=0,
+        boot_warmup_edges=s2, token_latency_note="parent43 is charged once; compiler must use fresh actual profile, no rate credit",
+        qualification="native one-head E0/W0 COPY exact128/128 each; full-shape physical gate pending",
+        component_proof_commit="6b9d2833f9ebb135a8bc1fd55654f84da2014f6b")
+
+
 def qwen_xhead_sticky_fault_split_model(replicas=1):
     """Candidate: distribute the existing sticky fault state; no pipeline edge."""
     if type(replicas) is not int or replicas < 1:
