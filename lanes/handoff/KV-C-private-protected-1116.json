@@ -1,6 +1,6 @@
 {
   "owner": "FABLE-FIX-KV-PVHUB/Codex",
-  "status": "ACTIVE PROTECTED source, queued elab, exact replica; do not delete",
+  "status": "ACTIVE PROTECTED readonly C replicas and realS2 elaboration outputs; do not delete",
   "roots": [
     {
       "host": "epyc10",
@@ -21,10 +21,14 @@
     {
       "host": "epyc2",
       "path": "/srv/opentallas-scratch3/claude/fable-fix-kv-pvhub/hg1/gateC_elab"
+    },
+    {
+      "host": "epyc2",
+      "path": "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/gateC_elab_realS2"
     }
   ],
   "source_commit": "13460a0a2c96ce880ce210ed3a6aa436a429cae3 exact23b source bytes",
   "plan_sha256": "6e6140a2c269a32599a8a72ad615f32edd4fc556ecf7e80a74eaf2c611760058",
   "asbuilt_sha256": "972062757875e98f5c95f63c88588461604967cc594e2c3d08386341fddf7935",
-  "authorization": "root14:xx measured619GBscratch3; originalrequeststaysuntilreplicaready/unstartedverified"
+  "authorization": "Root15:xx: readonlyS3source allowed; ALLoutputs/tmp/cache/home/workingdir realS2, normal50GBfloor, requestactual20GB; NO rootwrite exception."
 }
