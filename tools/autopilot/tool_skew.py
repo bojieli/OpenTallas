@@ -161,7 +161,7 @@ def apply_allow(skew, die_allow, today):
 
 
 def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=None, main_m=None, tools_sha=None,
-              rt_root=RT_ROOT, strict=False):
+              rt_root=RT_ROOT, strict=False, only=None):
     """-> dict(ok, measured, refused, allowed, expired, n_closure).  A tree that cannot be read is UNMEASURED and not
     refused (never block a launch on a host that is down); an empty closure (no tools/ in the tree) is a skew."""
     today = today or datetime.date.today().isoformat()
@@ -188,6 +188,9 @@ def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=No
             tree_m = manifest(tree)
     if tree_m is None:
         return dict(ok=True, measured=False, refused={}, allowed={}, expired={}, n_closure=len(main_m))
+    if only is not None:                                 # one closure for the wave gate and the FLOW-HEALTH SKEW table (flow_guard.closure_files)
+        main_m = {k: v for k, v in main_m.items() if k in only}
+        tree_m = {k: v for k, v in tree_m.items() if k in only}
     refused, allowed, expired = apply_allow(diff(tree_m, main_m), (allow or {}).get(die) or {}, today)
     return dict(ok=not refused, measured=True, refused=refused, allowed=allowed, expired=expired, n_closure=len(main_m))
 
