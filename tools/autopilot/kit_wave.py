@@ -7436,39 +7436,88 @@ def live_attempt_elsewhere(st, die, item, key):
     return None
 
 
-def tool_skew_refuse(AP, cfg, st, die):
-    """TOOLS-CONVERGE-1115 (COORD r203): True = refuse to launch on this die this tick.  A die whose source tree
-    carries gen/bind tool modules that differ from main (tool_skew.py closure) and are not in the reviewed allowlist
-    tools/autopilot/tool_skew_allow.json (with a live expiry) builds nothing; one NEEDS-LANE is posted per die per
-    changed refusal set.  Unreadable tree = UNMEASURED = not refused.  Per-die / global opt `tool_skew`: false opts out,
-    "warn" posts the NEEDS-LANE but launches."""
+def tool_skew_closure(cfg, main_root):
+    """the import closure of gen.py / gen_phys.py / bind.py in main (flow_guard.closure_files): the ONE module set that both the
+    wave gate and the FLOW-HEALTH SKEW table count (FABLE-FLOW-2200 class 6)"""
+    cache = cfg.setdefault("_tool_skew", {}).setdefault("_closure", {})
+    if str(main_root) not in cache:
+        def read(rel):
+            try:
+                return (Path(main_root) / rel).read_text()
+            except (OSError, UnicodeDecodeError):
+                return None
+        cache[str(main_root)] = set(FG.closure_files(read))
+    return cache[str(main_root)]
+
+
+def tool_skew_measure(AP, cfg, st, die):
+    """measure one die's tree against main (or its tools_sha pin) once per tick; -> result dict, or None when off.  Posts one
+    NEEDS-LANE per die per changed set.  Called for every enabled die each tick (not only on launch)."""
     d = (cfg.get("dies") or {}).get(die) or {}
-    if opt(cfg, die, "tool_skew") is False or not d.get("src"):
-        return False
+    mode = opt(cfg, die, "tool_skew")
+    if mode is False or not d.get("src"):
+        return None
     cache = cfg.setdefault("_tool_skew", {})
-    if die not in cache:
-        main_root = Path(d.get("tool_skew_main") or Path(__file__).resolve().parents[2])
+    if die in cache:
+        return cache[die]
+    main_root = Path(d.get("tool_skew_main") or Path(__file__).resolve().parents[2])
+    try:
+        pin = d.get("tools_sha")
+        main_m = None if pin else cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
+        res = TS.check_die(die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
+                           host=d.get("gen_host"), main_m=main_m, tools_sha=pin,
+                           rt_root=d.get("tools_rt_root") or TS.RT_ROOT, strict=mode == "refuse",
+                           only=None if pin else tool_skew_closure(cfg, main_root))
+    except Exception as e:                               # a broken check never stops the wave
+        AP.log(f"KIT-WAVE tool_skew {die} not checked: {type(e).__name__}: {e}")
+        res = dict(ok=True, measured=False, refused={}, allowed={}, expired={}, n_closure=0)
+    cache[die] = res
+    n, tot = len(res["refused"]), res.get("n_closure", 0)
+    if not res["measured"]:
+        AP.log(f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: tree {d['src']} not readable")
+    elif not res["ok"]:
+        if mode == "warn":
+            AP.log(f"KIT-WAVE TOOL-SKEW WARN {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (warn, launching)")
+        else:
+            AP.log(f"KIT-WAVE TOOL-SKEW REFUSE {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (launches refused)")
+        posted = st.setdefault("tool_skew_posted", {})
+        sig = TS.signature(res)
+        if posted.get(die) != sig and not AP.DRY:
+            posted[die] = sig
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                            f"- {now_s()} " + TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", "")))
+    else:
+        AP.log(f"KIT-WAVE TOOL-SKEW OK {die}: 0 of {tot} import-closure module(s) differ")
+        st.get("tool_skew_posted", {}).pop(die, None)
+    return res
+
+
+def tool_skew_measure_all(AP, cfg, st, ap_dir):
+    """every enabled die, every tick, independent of launches (a held die such as S81 or KV launches nothing and used to have no
+    reading); writes kit_wave_tool_skew.json = the numbers the SKEW table and NEEDS-LANE posts quote"""
+    rows = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("enabled"):
+            continue
+        res = tool_skew_measure(AP, cfg, st, die)
+        if res is None:
+            continue
+        rows[die] = dict(mode=str(opt(cfg, die, "tool_skew")), tree=d.get("src"), measured=res["measured"], n_differ=len(res["refused"]),
+                         n_closure=res.get("n_closure", 0), pin=res.get("pin"), modules=sorted(res["refused"])[:60])
+    if rows and not AP.DRY:
         try:
-            pin = d.get("tools_sha")
-            main_m = None if pin else cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
-            res = TS.check_die(die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
-                               host=d.get("gen_host"), main_m=main_m, tools_sha=pin,
-                               rt_root=d.get("tools_rt_root") or TS.RT_ROOT, strict=opt(cfg, die, "tool_skew") == "refuse")
-        except Exception as e:                           # a broken check never stops the wave
-            AP.log(f"KIT-WAVE tool_skew {die} not checked: {type(e).__name__}: {e}")
-            res = dict(ok=True, measured=False, refused={}, allowed={}, expired={}, n_closure=0)
-        cache[die] = res
-        if not res["ok"]:
-            AP.log(f"KIT-WAVE TOOL-SKEW refuse {die}: {len(res['refused'])} module(s) differ from main")
-            posted = st.setdefault("tool_skew_posted", {})
-            sig = TS.signature(res)
-            if posted.get(die) != sig and not AP.DRY:
-                posted[die] = sig
-                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
-                                f"- {now_s()} " + TS.needs_lane_text(die, d["src"], res, d.get("owner_lane", "")))
-        elif st.get("tool_skew_posted", {}).get(die):
-            st["tool_skew_posted"].pop(die, None)
-    return not cache[die]["ok"] and opt(cfg, die, "tool_skew") != "warn"
+            p = Path(ap_dir or AP.AP_DIR) / "kit_wave_tool_skew.json"
+            p.write_text(json.dumps(dict(time=time.strftime("%Y-%m-%d %H:%M:%S"), dies=rows), indent=1, sort_keys=True))
+        except OSError as e:
+            AP.log(f"KIT-WAVE tool_skew table not written: {e}")
+    return rows
+
+
+def tool_skew_refuse(AP, cfg, st, die):
+    """True = refuse to launch on this die this tick (mode true / "refuse" and a measured skew outside the allowlist; "warn" logs
+    and launches; false = off; an unreadable tree is unmeasured, refused only in "refuse")"""
+    res = tool_skew_measure(AP, cfg, st, die)
+    return bool(res) and not res["ok"] and opt(cfg, die, "tool_skew") != "warn"
 
 
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
@@ -10039,6 +10088,10 @@ def _step(AP, ap_dir):
     import source_follow
     source_follow.step(AP, cfg, st)
     st.setdefault("items", {})
+    try:                                                 # TOOLS-CONVERGE-1115: measure every enabled die each tick, launches or not
+        tool_skew_measure_all(AP, cfg, st, ap_dir)
+    except Exception as e:
+        AP.log(f"KIT-WAVE tool_skew measure skipped: {type(e).__name__}: {e}")
     notices = {}
     prune_stale_retries(cfg, st, notices, AP.log)
     collect(AP, cfg, st, notices)
