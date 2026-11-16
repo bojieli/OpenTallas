@@ -7,7 +7,7 @@ src/ = lane clone, branch claude/fable-die-qc-1116). Client logs intel2 ~/fable-
 - die_sta_related crash fixed in the clone (kit_windows shim had no types; every QC die STA since S3R stopped there) + test.
 - First QC die STA result: an/sta_s4k/sta.log (S4k routed clock proof of die-grt0-qc/qc/s4k).
 - Raw-reset -> FSTART audit of all 130 types on the S4Q9CBR bound RTL: an/raw/audit_s4q9.json, bin/raw_audit.py.
-- S4q9e = S4q9d + landing_local_resets on coll_core, native59, tt_ctlm: delta/zz_s29_qc103_s4q9e.json (+3 sidecars),
+- S4q9e = S4q9d + landing_local_resets on coll_core, native59, tt_ctlm: delta/zz_s29_qc103_s4q9d_dieqc_rst.json (reference only, NOT bound by me; rows handed to FABLE-FIX-QC-KNEE-HC for the one S4q9e) (+3 sidecars),
   rows lanes/handoff/FABLE-DIE-QC-rows.json.
 
 ## Next
@@ -21,6 +21,6 @@ See lanes/FABLE-DIE-QC.md.
 - When REG_STA is written: (1) rerun die_sta_related from the branch head (mid-range rows) on chain/qc/s4q9c/reg/proof to get kitoffs/kitwin;
   (2) python3 -I bin/clock_rows_delta.py SRC PLAN kitoffs kitwin sta/die_sta_related.json OUT REPORT (rows: tap_offset.per_port_ps,
   tap_window.per_port_ps, seam_ps = ceil10(need + 10)); (3) STA again on OUT: TAP-OFFSET-GATE must PASS; (4) compose on S4q9e
-  (delta/zz_s29_qc103_s4q9e.json) and post the DELTA to FABLE-FIX-QC-KNEE-HC as the clock half of the event.
+  (delta/zz_s29_qc103_s4q9d_dieqc_rst.json (reference only, NOT bound by me; rows handed to FABLE-FIX-QC-KNEE-HC for the one S4q9e)) and post the DELTA to FABLE-FIX-QC-KNEE-HC as the clock half of the event.
 - epyc9 scratch2 is under the ot-run disk floor (45 GB): run new work on epyc2 / epyc7.
 - Report: lanes/FABLE-DIE-QC.md. Render: intel2 ~/fable-die-qc/qc_die_s4k.png.
