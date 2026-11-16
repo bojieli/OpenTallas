@@ -2374,7 +2374,7 @@ class Landings:
                 return memo[net]
             if net in seen:
                 raise LandingError(f"{tn}: landing_local_resets: reset loop at {net}")
-            m = re.search(r"\bot_dp_r(?:relay|gate)\s+\w+\s*\(([^;]*?)\.q\(\s*" + re.escape(net) +
+            m = re.search(r"\bot_dp_r(?:relay|gate)(?:_nl)?\s+\w+\s*\(([^;]*?)\.q\(\s*" + re.escape(net) +
                           r"\s*\)\s*\);[ \t]*(?://[^\n]*?\bdepth (\d+)\b)?", allrtl, re.S)
             if m and m.group(2):
                 d = int(m.group(2))
