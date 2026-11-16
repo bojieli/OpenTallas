@@ -19,3 +19,8 @@
   - hc2_tab RC table scan: first run exit 125 (S3R wave kit run data deleted). RELAUNCHED 02:45 on the preserved S3R GRT DB: hc2_tab/base/5_1_grt.odb = hardlink of p0 .../5_1_grt.orig_s3r.odb, /work = P0 kit (same S3R config), runner bin/fx_run_tab.sh, client intel2 ~/fable-fix-qc-hcfe/hc2_tab.client.log, result lines "FX table xS" in hc2_tab/sta.log vs routed -178.75 / 494. Note r276 (rc-signal-1115) already calibrates QC x1.25 on sle_hc2; the scan is a cross-check only.
   - fe_v1: needs qc-src-close-1115 merged (r271(b) NOT yet: rebase + full gate; @c47337411da). Then the routed proof is the first S4q6d/S4q9b wave fe_v1 kit with that guard. Old S4Q3C fe_v1 a17 died DRT-0255 (u_cland_l9 dsel), not a proof.
   - hc proof = first wave hc2 kit after S4q9b adopt with KIT-OPS-5 item_env OT_TT_SETUP_DESIGN=1 OT_TT_SETUP_MARGIN=30.
+- 2026-11-16 05:45 PST QC-HCFE-O STATE (resumed after limit per COORD).
+  - P0 DONE: route DRC 0; signoff setup TT -32.10 / 7 (vs -178.75 / 494 unrepaired) = inside the -42 academic gate; hold FF -36.66 / 289 (old hold guard, not part of proof); DRV TT slew 106 advisory; NOT SIGNED (hold + io_hold NEEDS_PARENT). Posted.
+  - hc2_tab DONE: x0.8 +10.0/0, x0.9 -38.5/6, x1.0 -86.1/88, x1.25 -203.0/597 vs routed -178.75/494 => x1.25 is 24.2 ps pessimistic = r276 QC calibration. Posted.
+  - P2 GRT done (5_1_grt.odb 13:01 UTC). E1 scan on it RUNNING: epyc10 fable-fix-qc-hcfe/p2_e1 (fx_run_e1.sh p2 kit, target -178.75, margin 30, scale 1.5), client intel2 ~/fable-fix-qc-hcfe/p2_e1.client.log. Compare "FX before" with ungrouped -194.29 / 537 and "FX after" with +18.38 / 0 (179 cells).
+  - fe_v1 still waits on qc-src-close-1115 merge (r271(b)).
