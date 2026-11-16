@@ -1381,6 +1381,9 @@
      "pg_island_cut": {
       "type": "boolean"
      },
+     "pg_pin_rule": {
+      "type": "boolean"
+     },
      "reg_spine": {
       "type": "object",
       "required": [
@@ -1713,6 +1716,9 @@
           "minItems": 2,
           "maxItems": 2
          }
+        },
+        "explicit_stage0": {
+         "type": "boolean"
         },
         "bit_sites_um": {
          "type": "array",
@@ -2171,6 +2177,16 @@
          },
          "note": {
           "type": "string"
+         },
+         "fixed_taps": {
+          "type": "object",
+          "propertyNames": {
+           "pattern": "^[A-Za-z0-9_./-]+$"
+          },
+          "additionalProperties": {
+           "type": "string",
+           "minLength": 1
+          }
          }
         }
        },
@@ -5790,6 +5806,10 @@
         "min_loads": {
          "type": "integer",
          "minimum": 0
+        },
+        "copy_depth": {
+         "type": "integer",
+         "minimum": 1
         }
        }
       }
