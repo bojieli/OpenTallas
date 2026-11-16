@@ -67,21 +67,40 @@ def hit(p, cores, bands, sites):
     return any(abs(x - s[0]) < 8.64 and abs(y - s[1]) < 8.64 for s in sites)
 
 
+CH_COLS = ()
+
+
+def channel_cols(cores, W):
+    """x of the free vertical channels: midpoints of the gaps between core x intervals, and the two die-edge strips"""
+    iv = sorted((c[0], c[2]) for c in cores)
+    xs, cur = [34.56, W - 34.56], iv[0][1] if iv else 0
+    for lo, hi in iv[1:]:
+        if lo - cur > 2 * HALO + 8.64:
+            xs.append(snap((cur + lo) / 2))
+        cur = max(cur, hi)
+    return tuple(xs)
+
+
 def legs(fixed, cores, bands, avoid, via=None):
     """fixed: polyline nodes (first = u_bin site) whose consecutive hops may exceed HOP -> (all nodes incl. new stations, hops)"""
     out = [fixed[0]]
     new = []
     for a, b in zip(fixed, fixed[1:]):
-        cands = [([a] + list(via) + [b])] if via else ([[a, b]] if (a[0] == b[0] or a[1] == b[1]) else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]] + [[a, (a[0], y), (b[0], y), b] for y in STRIP_ROWS] + [[a, (x, a[1]), (x, b[1]), b] for x in STRIP_ROWS])
+        cands = [([a] + list(via) + [b])] if via else ([[a, b]] if (a[0] == b[0] or a[1] == b[1]) else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]] + [[a, (a[0], y), (b[0], y), b] for y in STRIP_ROWS] + [[a, (x, a[1]), (x, b[1]), b] for x in STRIP_ROWS]
+                                            + [[a, (a[0], y), (x, y), (x, b[1]), b] for y in STRIP_ROWS for x in CH_COLS]
+                                            + [[a, (x, a[1]), (x, y), (b[0], y), b] for y in STRIP_ROWS for x in CH_COLS])
         placed, err = None, None
         for seg in cands:
             L = plen(seg)
-            k = max(0, math.ceil(L / (HOP - SLACK)) - 1)
-            try:
-                placed = _place(seg, L, k, a, b, cores, bands, avoid + new)
+            k0 = max(0, math.ceil(L / (HOP - SLACK)) - 1)
+            for k in (k0, k0 + 1):                                   # a leg that detours needs one more station when the equal spacing has no legal site
+                try:
+                    placed = _place(seg, L, k, a, b, cores, bands, avoid + new)
+                    break
+                except ValueError as e:
+                    err = e
+            if placed is not None:
                 break
-            except ValueError as e:
-                err = e
         if placed is None:
             raise err
         for p in placed:
@@ -121,6 +140,8 @@ def build(plan, prev, rows, types, buses):
         if types and tn not in types or not re.match(r"^cb[nfx]_", tn):
             continue
         W, H = t["outline_um"]
+        global CH_COLS
+        CH_COLS = channel_cols([[h["origin_um"][0], 0, h["origin_um"][0] + h["outline_um"][0], 0] for h in t.get("hard_cores", [])], W)
         bands = {k: dict(v) for k, v in ((t.get("clock") or {}).get("landing_contract") or {}).get("bands", {}).items() if v.get("rect_um")}
         for key, nb in (rows.get(tn, {}).get("bands") or rows.get(tn) or {}).items():
             if key.startswith("clock.landing_contract.bands."):
