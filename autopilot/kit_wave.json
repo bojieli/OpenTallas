@@ -5914,6 +5914,15 @@
       "kv3_pv_v12"
      ],
      "reason": "HOLDGEN-1115 2026-11-16 (COORD request): KV hub_Wo / hub_C / pv_v1 / pv_v7 / pv_v12 fail the same way on 7uh; no unchanged relaunch until the kvgeom7yhr event adopts. Running attempts finish. Released automatically by event_adopt:kvgeom7yhr."
+    },
+    {
+     "id": "qwen_kvsys-tree-switch-01",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "switch_only": true,
+     "reason": "HOLDGEN-1115 (COORD): switch-only, holds nothing; the autopilot switches src/die_gen_env when the TOOLS-CONVERGE marker lanes/handoff/tree_switch_qwen_kvsys.json names this tree and it is on all gen hosts",
+     "release": [
+      "tree_ready:qwen_kvsys:/srv/opentallas-scratch2/claude/kw45/src_kv_pin_fa627e234cf7"
+     ]
     }
    ],
    "planned_events": [
@@ -21243,9 +21252,7 @@
     "slice_station__t42__cl4bd1432c",
     "slice_station__t8"
    ],
-   "route_hold_items": {
-    "*": "ROUTE-HOLD s81 G3b (COORD 00:1x): core-phase PDN without TT repair, detailed route would mostly die at DRT-0255 after hours; the kit finishes place/CTS/GRT for timing data and waits here, no route enqueue until the die-phase tree + TT repair (TOOLS-CONVERGE tree) is switched in. Admitted jobs are never cancelled. Lift = delete this key."
-   },
+   "route_hold_items": {},
    "route_hold_items_prev_kw43fb_added": [
     "col_h10_r0_p1__t1__cl574cc59d",
     "col_h10_r0_p1__t1__cl911743eb",
@@ -35993,7 +36000,9 @@
      "id": "s81-mig-023",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "tree_switch:s81 (COORD r249): the s81 wave tree lacks the die-phase / TT-repair / C3b code, so those keys are no-ops; no NEW launch until TOOLS-CONVERGE posts the die's new tree and KIT-OPS-5 switches it (same tick, this key is deleted). Running kits continue. Lift = delete this key.",
-     "release": [],
+     "release": [
+      "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f"
+     ],
      "migrated": true,
      "keys": [
       "*"
@@ -36778,6 +36787,20 @@
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t68__*"
+     ],
+     "carry": true
+    },
+    {
+     "id": "s81-route-tree-01",
+     "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+     "route": true,
+     "keys": [
+      "*"
+     ],
+     "migrated": true,
+     "reason": "ROUTE-HOLD s81 G3b (COORD 00:1x): core-phase PDN without TT repair, detailed route would mostly die at DRT-0255 after hours; the kit finishes place/CTS/GRT for timing data and waits here, no route enqueue until the die-phase tree + TT repair (TOOLS-CONVERGE tree) is switched in. Admitted jobs are never cancelled. Lift = delete this key.",
+     "release": [
+      "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f"
      ],
      "carry": true
     }
@@ -38919,6 +38942,15 @@
       "hd_st_str"
      ],
      "carry": true
+    },
+    {
+     "id": "s81_head-tree-switch-01",
+     "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
+     "switch_only": true,
+     "reason": "HOLDGEN-1115 (COORD): switch-only, holds nothing; the autopilot switches src/die_gen_env when the TOOLS-CONVERGE marker lanes/handoff/tree_switch_s81_head.json names this tree and it is on all gen hosts",
+     "release": [
+      "tree_ready:s81_head:/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756"
+     ]
     }
    ]
   },
