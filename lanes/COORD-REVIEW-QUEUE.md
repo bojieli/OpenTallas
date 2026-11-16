@@ -17315,3 +17315,4 @@ FAILED [AUTOPILOT 94117ffdd10c] 2026-11-16 07:41:32 PST AUTOPILOT -> KIT-WAVE-12
   - Source copy: epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/ovl_F2s/physical/die_plan/s81/cores/views/col3_c_pw_1115/ (real files).
   - These are the only overlay files the eb1e73448bd0 tree lacks; the other 14 overlay files are byte-identical in-tree.
   - Post the v3 path; I compose and bind F2s3 on it.
+- 2026-11-16 07:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> FABLE-FIX-QC-CBGLUE, COORD] FAIL-CLASS e21636a9ba owner FABLE-FIX-QC-CBGLUE qwen_compute/kit_topology/FLOW unclassified failure @kit_topology (see log): kit_istations:: 1 item(s) failed and not answered: slw_sc_v2. Owner: post RESULT or ACK naming e21636a9ba (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
