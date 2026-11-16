@@ -33,3 +33,8 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - COORD approved the branch as r300 (merge priority). HOLDGEN moves the 216 col keys to event_adopt:B6gF2s3 with my pilots as proof_items. FABLE-DIE-S81 owns the reset copies.
 - Pilot items sent to HOLDGEN. Wave 1: col_h9_r2__t1__clce45cab5__pv7a260fc0, col_h9_r1__t1__cl49d7a23e__pv047ea3b3, col_h10_r2__t1__cl1f5d6c2a__pv0c1de895. Wave 2: col_h9_r0_p2__t1__cl0045af7b__pv622a6f97, col_h10_r0_p1__t1__cl574cc59d__pv3d0d4d97.
 - I own col through the pilots and the F2s3 adopt to sign-off. Next read: S81-COL-O evidence pilot (r2 CTS), then the F2s3 bind result from DIE-S81-92, then wave 1 sign-off; post RESULT ... PASS per wave for HOLDGEN.
+
+## 07:4x 11-16: early wave release (COORD)
+- A wave is released when its pilots show post-CTS TT setup >= -42 on the reloaded 4_cts DB and GRT overflow 0, not at sign-off. Post exactly: `RESULT [FABLE-FIX-S81-COLTAP -> COORD] col-wave1 PASS: <numbers>` (and col-wave2). HOLDGEN keys on result:FABLE-FIX-S81-COLTAP:col-wave1 / col-wave2 (+ event_adopt:B6gF2s3 + lint_clean:s81).
+- Still follow every pilot to sign-off; a later-stage failure is posted and COORD re-holds.
+- Reset copies alone below -42 after CTS = not a PASS; post the numbers, COORD decides.
