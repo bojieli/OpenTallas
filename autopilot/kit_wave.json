@@ -23,7 +23,7 @@
     "evidence": "WAVE-HOLDS-1115 2026-11-15 16:26 PST kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168): G0 PASS 0 errors (epyc7, --priority plan); pinned strict bind RC 0 (160/56/2545, 0 errors), R8_RECHECK changed 0; LATCHECK 2404/2404 PASS | prev: KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
-   "gen_host": "epyc9",
+   "gen_host": "epyc2",
    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0",
    "src_sha": "96f13b36a258e3b6121497ff52a7a31e9add3131",
    "kit_rtl": {
@@ -38707,7 +38707,7 @@
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
    "plan": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q6d.json",
-   "gen_host": "epyc9",
+   "gen_host": "epyc2",
    "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0",
    "src_sha": "1e3b302be85085f4c4aca8a0dc93b4e5063d2b55",
    "kit_rtl": {
@@ -66760,7 +66760,7 @@
  "note_otrun_kw22": "KW-FIX-22 11-06 10:1x COORD 10:0x (epyc2 admits 638 GB, 0 waiters; batches to epyc2): ot_run kw21 -> kw22 = same wrapper on fleet/kw22-230e562 (230e562aa5c + SPILL_DST_ROOT_FLOOR epyc2 500->200 per owner 11-05 all-disks-scratch, and a spill that writes only on the epyc2 root fs (scratch3 = root there, 452 GB) is no longer refused by the 51-GB scratch2 floor). Async PLACE (--stage, unpinned) waiters now spill to epyc2 via the intel2 relay. epyc2 NOT added to die hosts: the gen->host sync runs from the gen host and epyc5/6 cannot ssh epyc2. Revert: ot_run back to kw21/ot-run.",
  "note_otrun_kw23": "KW-FIX-23 13:5x COORD 13:2x/13:5x (epyc5 14-15 waiters ~800 GB while epyc4/epyc2/epyc6 admit): the kw22 wrapper forced OT_RUN_SCRATCH_DISK_FLOOR_GB=100 for every scratch dir, and only epyc5's scratch disk (139 GB) passes 100 (epyc2 67, epyc4 77, epyc6 71), so every spillable wave PLACE (--stage) re-placed onto epyc5. kw23/ot-run = kw22 with floor 40 for /srv/opentallas-scratch3 dirs (those kits write the root fs, which keeps its own ROOTSCR floor); scratch2 dirs keep 100. Waiting S81 PLACE clients stopped once (exact pids) -> INFRA relaunch. Revert: ot_run back to kw22/ot-run.",
  "note_kw24_epyc6_hold": "KW-FIX-24 COORD 16:3x URGENT: epyc6 scratch2 10-16 GB -> epyc6 out of hosts/place_prefer/gen_hosts (global + every die) so no new launch, restage or resume targets it until its scratch2 >= 80 GB; *_base lists keep epyc6 (restore = copy hosts/place_prefer/gen_hosts back from *_base). Running containers untouched.",
- "gen_disk_min_gb": 70,
+ "gen_disk_min_gb": 100,
  "note_kw24_gendisk": "KW-FIX-24 COORD 16:2x item (b): epyc6 scratch2 44 GB REFUSED -> intel1 added to gen_hosts of qwen_kvsys/hbm/s81_head/qwen_compute (inputs mirrored from epyc6 at the same paths: kw21/src_c926f, kw23/src_e9eda, kw23/bind_kv_q + asbuilt_kv_7da, kv plan_of_record, hbm d44v35/d44v8h/rf1 json, dh55 + kw23/prep_l48ui, kw22/bind_qc_g). ot-run gives a REFUSED host no row, so pick/restage already skip it; gen_disk_min_gb 80 (COORD 16:3x) needs claude/kw-fix-24-gendisk-1106. intel2 not added: its root fs (scratch3 work roots) has 35 GB above the 100-GB keep < the 40-GB scratch3 floor. Revert: drop intel1 from these gen_hosts",
  "note_kw24_no_resume": "KW-FIX-24 COORD 17:5x: kits homed on epyc6 move to the hub at their next autopilot submit (claude/kw-fix-24-evac-1106 e3d732d2cf7; inert before that merge). Drop the epyc6 entry when epyc6 scratch2 >= 80 GB.",
  "note_kw24_queue_push": "KW-FIX-24 11-06 18:48 COORD 18:5x QUEUE PUSH: place hosts + place_prefer epyc4, epyc2 first (scratch3 362/401 GB; kw17 watcher not running), epyc5, intel1; epyc6 stays out (no_resume_hosts); max_launch_per_tick 40 -> 60; retry += infra casualties (5) + HBM queue-rejected (7)",
@@ -68156,5 +68156,6 @@
    "kv3_sys_SD",
    "kv3_sys_SD_v1"
   ]
- }
+ },
+ "gen_disk_min_gb_prev_kitops5": 70
 }
