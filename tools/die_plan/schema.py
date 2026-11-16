@@ -410,6 +410,8 @@ SCHEMA = {
                     "phy_pg_west_notch_um": {"type": "number", "minimum": 0},
                     # S81-RCK-3 11-06: same for the south edge (lowest macro edge minus this halo, row grid)
                     "phy_pg_south_notch_um": {"type": "number", "minimum": 0},
+                    # HEAD-99 rp21z19 (FIX-HEAD-SERDES-BAND): PHY PG region floor (type y, um): region starts at max(domain, this)
+                    "phy_pg_floor_um": {"type": "number", "minimum": 0},
                     # S81-TYPES-6 11-07 (gen_phys.phy_pg_clip, COORD 23:0x (a)): PHY PG region + hard blockage clipped to
                     # the PHY macro bounding box grown by this PG landing margin (um) on all four sides
                     "phy_pg_clip_um": {"type": "number", "minimum": 0},
