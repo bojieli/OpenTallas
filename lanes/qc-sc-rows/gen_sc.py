@@ -17,7 +17,7 @@ for tn in sorted(pt):
     t=pt[tn]; W,H=t["outline_um"]; hc=t["hard_cores"]; assert len(hc)==1
     bx=box(hc[0])
     for b in t["buses"]:
-        if b["name"] not in ("x_fe_i","x_fe_o","x_ctl_o","x_ctl_i","flt_fe_i"): continue   # measured bin/bout<->core zero-logic hops over 405 (slw_sc_v3 a10, sle_sc_v1 a10); other buses: bin sits at the core, ring legs belong to the landing ring
+        if b["name"] not in __import__("os").environ.get("SC_BUSES","x_fe_i,x_fe_o,x_ctl_o,x_ctl_i,flt_fe_i").split(","): continue   # measured bin/bout<->core zero-logic hops over 405 (slw_sc_v3 a10, sle_sc_v1 a10); other buses: bin sits at the core, ring legs belong to the landing ring
         c=cen(b); P={"E":[W,c],"W":[0,c],"N":[c,H],"S":[c,0]}[b["face"]]; P=[round(P[0],3),round(P[1],3)]
         # core connect point = nearest point on the core box to the face pin (hard-core pins sit on the box edge)
         Q=[round(min(max(P[0],bx[0]),bx[2]),3),round(min(max(P[1],bx[1]),bx[3]),3)]
