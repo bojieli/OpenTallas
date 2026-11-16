@@ -2308,6 +2308,17 @@ def tt_setup_repair_mode():
     return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
 
 
+def kit_effective_env():
+    """KIT-OPS-5 11-15 (COORD r228): the generation-time env a reviewer needs to audit a kit: OT_TT_SETUP_REPAIR (cts|grt|both|off) and
+    every OT_PG_* / OT_PGCAP_* variable set in the gen env (they act at gen time, e.g. OT_PG_DIE_PHASE changes pdn.tcl, so they never
+    appear in config.mk).  Sorted; only variables that are set are listed."""
+    out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
+    for k in sorted(os.environ):
+        if k.startswith(("OT_PG_", "OT_PGCAP_")) and os.environ[k].strip() != "":
+            out[k] = os.environ[k].strip()
+    return out
+
+
 def tt_setup_repair_cfg():
     """KIT-OPS-5 11-15 (COORD r214): the effective TT setup repair mode in EVERY kit's config.mk, so a reviewer can tell which kits
     carry it (the gen env alone is not in the kit).  Exported as cts|grt|both|off; the step files stay gated by their .on flag."""
@@ -6138,7 +6149,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if t.get("clock", {}).get("private_leaf"):       # HEAD-SERDES-1115: post-CTS private leaf step (run_kit.sh), only with the row
         shutil.copyfile(Path(__file__).with_name("private_leaf.tcl"), kd / "private_leaf.tcl")
     _tt = {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip())
-    (kd / "kit_effective_env.json").write_text(json.dumps({"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}, indent=1) + "\n")   # r214 audit
+    (kd / "kit_effective_env.json").write_text(json.dumps(kit_effective_env(), indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")

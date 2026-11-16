@@ -81,7 +81,21 @@ def test_effective_mode_is_in_every_kit_config_and_json(tmp_path, monkeypatch):
         k = tmp_path / env / "fa"
         assert f"export OT_TT_SETUP_REPAIR = {want}" in (k / "config.mk").read_text().splitlines()
         import json
-        assert json.loads((k / "kit_effective_env.json").read_text()) == {"OT_TT_SETUP_REPAIR": want}
+        assert json.loads((k / "kit_effective_env.json").read_text())["OT_TT_SETUP_REPAIR"] == want
     monkeypatch.delenv("OT_TT_SETUP_REPAIR", raising=False)
     gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path / "unset"), [])
     assert "export OT_TT_SETUP_REPAIR = off" in (tmp_path / "unset" / "fa" / "config.mk").read_text().splitlines()
+
+
+def test_effective_env_json_lists_the_pg_and_pgcap_keys_that_act_at_gen_time(tmp_path, monkeypatch):
+    import json
+    for k in [k for k in __import__("os").environ if k.startswith(("OT_PG_", "OT_PGCAP_"))]:
+        monkeypatch.delenv(k)
+    monkeypatch.setenv("OT_TT_SETUP_REPAIR", "both")
+    monkeypatch.setenv("OT_PG_DIE_PHASE", "1")
+    monkeypatch.setenv("OT_PG_CELL_KEEPOUT", "0")
+    monkeypatch.setenv("OT_PGCAP_ADJ", "1.0")
+    monkeypatch.setenv("OT_PG_PIN_CHECK", "")          # empty = not set
+    gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path), [])
+    got = json.loads((tmp_path / "fa" / "kit_effective_env.json").read_text())
+    assert got == {"OT_PGCAP_ADJ": "1.0", "OT_PG_CELL_KEEPOUT": "0", "OT_PG_DIE_PHASE": "1", "OT_TT_SETUP_REPAIR": "both"}
