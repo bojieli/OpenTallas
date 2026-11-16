@@ -6073,6 +6073,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     # GENBUG-5 (11-15): merged-replica census after synth, placed-database hop census before CTS; both OFF unless the
     # generator env OT_MERGE_CENSUS / OT_HOP_CENSUS is 1 (fail) or warn (log only).  The flag file is read by run_kit.sh.
     # (kits without an opt-in key stay byte-equal: the helpers are copied only with their flag)
+    _tt = {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip())
+    if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
+        shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
+        (kd / "tt_setup_repair.on").write_text(_tt + "\n")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
     if _mc in ("1", "warn"):
         shutil.copyfile(Path(__file__).with_name("merged_replica_census.py"), kd / "merged_replica_census.py")
@@ -6686,6 +6690,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         mv -f /work/4_cts_pretapbal.odb \"\$TB\"; echo \"OT_TAPBAL_FALLBACK tapbal_grt.tcl tool crash (rc \$rc: \$(grep -Em1 'Signal [0-9]+ received' \"\$TL\"); \$(grep -Eom1 'sta::[A-Za-z_]+::[A-Za-z_]+' \"\$TL\" | head -1)): 4_cts.odb restored to the CTS result, plain GRT path (no GRT-RC tap pre-pass; crash log kept as /work/4_2_tapbal_grt_crash.log)\" | tee -a /work/tapbal_fallback.log; mv -f \"\$TL\" /work/4_2_tapbal_grt_crash.log; rc=0; fi; \
       rm -f /work/4_cts_pretapbal.odb; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
+    if [ \$rc = 0 ] && [ -f /work/tt_setup_repair.tcl ] && grep -Eq '^(cts|both)' /work/tt_setup_repair.on 2>/dev/null && [ $GOAL != cts ]; then TC4=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
+      if [ -n \"\$TC4\" ]; then cp -p \"\$TC4\" /work/4_cts_pre_tt.odb; ODB=\"\$TC4\" OUT=\"\$TC4.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_repair.log 2>&1; trc=\$?; grep -h 'OT_TT_SETUP_REPAIR' /work/tt_setup_repair.log | tail -3; \
+        if [ \$trc = 0 ] && [ -s \"\$TC4.tt\" ]; then mv -f \"\$TC4.tt\" \"\$TC4\"; else rm -f \"\$TC4.tt\"; echo \"OT_TT_SETUP_REPAIR FALLBACK step rc \$trc (tt_setup_repair.log): 4_cts.odb unchanged\" | tee -a /work/tt_setup_repair_fallback.log; fi; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
@@ -6711,6 +6718,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \
         echo \"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\$HM]: expected a finite number\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && [ -f /work/tt_setup_repair.tcl ] && grep -Eq '^(grt|both)' /work/tt_setup_repair.on 2>/dev/null; then TG5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb 2>/dev/null | head -1); \
+    if [ -n \"\$TG5\" ]; then cp -p \"\$TG5\" /work/5_1_grt_pre_tt.odb; OT_TT_SETUP_RC=grt OT_TT_SETUP_GUIDE=\"\$(dirname \"\$TG5\")/route.guide.tt\" ODB=\"\$TG5\" OUT=\"\$TG5.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_repair_grt.log 2>&1; trc=\$?; grep -h 'OT_TT_SETUP_REPAIR' /work/tt_setup_repair_grt.log | tail -3; \
+      if [ \$trc = 0 ] && [ -s \"\$TG5.tt\" ]; then mv -f \"\$TG5.tt\" \"\$TG5\"; [ ! -s \"\$(dirname \"\$TG5\")/route.guide.tt\" ] || mv -f \"\$(dirname \"\$TG5\")/route.guide.tt\" \"\$(dirname \"\$TG5\")/route.guide\"; else rm -f \"\$TG5.tt\" \"\$(dirname \"\$TG5\")/route.guide.tt\"; echo \"OT_TT_SETUP_REPAIR FALLBACK grt step rc \$trc (tt_setup_repair_grt.log): 5_1_grt.odb unchanged\" | tee -a /work/tt_setup_repair_fallback.log; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
     for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
