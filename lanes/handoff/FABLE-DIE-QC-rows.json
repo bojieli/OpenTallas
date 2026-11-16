@@ -1,0 +1,258 @@
+{
+ "coll_core": [
+  {
+   "name": "fstart_0",
+   "raw": "rst_rl_4",
+   "xy_um": [
+    57.734,
+    1587.104
+   ],
+   "consumers": [
+    "u_cland_fstart_io_collective__fault",
+    "u_cland_fstart_io_collective__cmd_free",
+    "u_cland_fstart_fltv_o",
+    "u_cland_fstart_flt_o",
+    "u_cland_fstart_rec_tx_s0"
+   ]
+  },
+  {
+   "name": "fstart_1",
+   "raw": "rst_rl_17",
+   "xy_um": [
+    416.634,
+    1587.104
+   ],
+   "consumers": [
+    "u_cland_fstart_io_collective__out_valid",
+    "u_cland_fstart_io_collective__out_rank",
+    "u_cland_fstart_io_collective__out_last",
+    "u_cland_fstart_io_collective__out_err",
+    "u_cland_fstart_io_collective__out_data"
+   ]
+  },
+  {
+   "name": "fstart_2",
+   "raw": "rst_rl_53",
+   "xy_um": [
+    199.2,
+    198.688
+   ],
+   "consumers": [
+    "u_cland_origin"
+   ]
+  },
+  {
+   "name": "fstart_3",
+   "raw": "rst_rl_55",
+   "xy_um": [
+    358.56,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_rec_tx_s1",
+    "u_cland_fstart_rec_tx_s2"
+   ]
+  },
+  {
+   "name": "fstart_4",
+   "raw": "rst_rl_43",
+   "xy_um": [
+    2.16,
+    208.864
+   ],
+   "consumers": [
+    "u_cland_fstart_shr_p_tx"
+   ]
+  },
+  {
+   "name": "fstart_5",
+   "raw": "rst_rl_43",
+   "xy_um": [
+    2.16,
+    455.136
+   ],
+   "consumers": [
+    "u_cland_fstart_shr_r_tx"
+   ]
+  }
+ ],
+ "native59": [
+  {
+   "name": "fstart_0",
+   "raw": "rst_rl_9",
+   "xy_um": [
+    775.44,
+    177.76
+   ],
+   "consumers": [
+    "u_cland_fstart_dr_o"
+   ]
+  },
+  {
+   "name": "fstart_1",
+   "raw": "rst_rl_107",
+   "xy_um": [
+    124.416,
+    515.744
+   ],
+   "consumers": [
+    "u_cland_fstart_ctx_x_ctx_x_o",
+    "u_cland_fstart_dh_user_dh_user_o",
+    "u_cland_fstart_mufl_o",
+    "u_cland_fstart_native_ret"
+   ]
+  },
+  {
+   "name": "fstart_2",
+   "raw": "rst_rl_102",
+   "xy_um": [
+    296.134,
+    515.744
+   ],
+   "consumers": [
+    "u_cland_fstart_seq_dh_dh_o",
+    "u_cland_fstart_tt_fab_fab_o",
+    "u_cland_fstart_tt_kok_kok_o",
+    "u_cland_fstart_tt_kwd_kwd_o",
+    "u_cland_fstart_tt_pw_pw_o"
+   ]
+  },
+  {
+   "name": "fstart_3",
+   "raw": "rst_rl_44",
+   "xy_um": [
+    97.456,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_fltt_o",
+    "u_cland_fstart_native_tx_payload",
+    "u_cland_fstart_native_tx_v",
+    "u_cland_fstart_obs_native"
+   ]
+  },
+  {
+   "name": "fstart_4",
+   "raw": "rst_rl_97",
+   "xy_um": [
+    196.064,
+    129.568
+   ],
+   "consumers": [
+    "u_cland_origin"
+   ]
+  },
+  {
+   "name": "fstart_5",
+   "raw": "rst_rl_14",
+   "xy_um": [
+    422.528,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_x3",
+    "u_cland_fstart_x3_generation",
+    "u_cland_fstart_x3_identity",
+    "u_cland_fstart_emb_start_core_start_o",
+    "u_cland_fstart_emb_token_core_token_o",
+    "u_cland_fstart_emb_code_addr",
+    "u_cland_fstart_emb_code_re",
+    "u_cland_fstart_emb_scale_addr"
+   ]
+  },
+  {
+   "name": "fstart_6",
+   "raw": "rst_rl_88",
+   "xy_um": [
+    645.293,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_emb_scale_re",
+    "u_cland_fstart_head_descriptor_generation",
+    "u_cland_fstart_head_descriptor_tag",
+    "u_cland_fstart_head_descriptor_v",
+    "u_cland_fstart_fault",
+    "u_cland_fstart_cal_image_ready_seq_cfg_image_ready_o",
+    "u_cland_fstart_dc_seq_dc_o",
+    "u_cland_fstart_cal_descriptor_obs_seq_descriptor_obs_o",
+    "u_cland_fstart_cal_program_obs_seq_program_obs_o",
+    "u_cland_fstart_command_stage_tt_command_stage_o",
+    "u_cland_fstart_control_stores_ready_tt_control_stores_ready_o",
+    "u_cland_fstart_layer_context_v_tt_layer_context_v_o",
+    "u_cland_fstart_native_pos_tt_native_pos_o",
+    "u_cland_fstart_native_tok_tt_native_tok_o",
+    "u_cland_fstart_program_obs_tt_program_obs_o"
+   ]
+  }
+ ],
+ "tt_ctlm": [
+  {
+   "name": "fstart_0",
+   "raw": "rst_rl_10",
+   "xy_um": [
+    775.44,
+    225.184
+   ],
+   "consumers": [
+    "u_cland_fstart_cmd",
+    "u_cland_fstart_hr",
+    "u_cland_fstart_table_req"
+   ]
+  },
+  {
+   "name": "fstart_1",
+   "raw": "rst_rl_98",
+   "xy_um": [
+    775.44,
+    408.864
+   ],
+   "consumers": [
+    "u_cland_fstart_tl"
+   ]
+  },
+  {
+   "name": "fstart_2",
+   "raw": "rst_rl_67",
+   "xy_um": [
+    85.054,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_cal_descriptor_obs",
+    "u_cland_fstart_cal_image_ready",
+    "u_cland_fstart_cal_program_obs",
+    "u_cland_fstart_command_stage__to_native59__command_stage",
+    "u_cland_fstart_command_stage__to_glue__sys_face__tt_command_stage",
+    "u_cland_fstart_control_stores_ready",
+    "u_cland_fstart_dc",
+    "u_cland_fstart_emb_start__to_glue__embed_prov__core_start",
+    "u_cland_fstart_emb_token__to_glue__embed_prov__core_token",
+    "u_cland_fstart_flt_o",
+    "u_cland_fstart_emb_position",
+    "u_cland_fstart_emb_token__to_native59__head_prepare_token",
+    "u_cland_fstart_emb_user",
+    "u_cland_fstart_emb_start__to_native59__head_prepare_v",
+    "u_cland_fstart_layer_context_v__to_native59__layer_context_v",
+    "u_cland_fstart_layer_context_v__to_glue__sys_face__tt_layer_context_v",
+    "u_cland_fstart_native_cmd"
+   ]
+  },
+  {
+   "name": "fstart_3",
+   "raw": "rst_rl_6",
+   "xy_um": [
+    220.139,
+    23.808
+   ],
+   "consumers": [
+    "u_cland_origin",
+    "u_cland_fstart_native_pos__to_glue__sys_face__tt_native_pos",
+    "u_cland_fstart_native_pos__to_native59__native_position",
+    "u_cland_fstart_native_tok__to_glue__sys_face__tt_native_tok",
+    "u_cland_fstart_native_tok__to_native59__native_token",
+    "u_cland_fstart_program_obs"
+   ]
+  }
+ ]
+}
