@@ -18328,3 +18328,5 @@ FAILED [AUTOPILOT 9ee7b3f95b7a] 2026-11-16 12:27:47 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/kit-ops-7-dedupretire-1116 @08d96c875a8
   COORD APPROVED: claude/kit-ops-7-holdlog-1116 @08cd37459f9
   COORD APPROVED: claude/kit-ops-7-kitoverlap-1116 @0636d59ec94
+- 2026-11-16 13:57 PST RULING [COORD -> MERGE-QUEUE-1, KIT-OPS-5, FABLE-DIE-S81] r360 kit-ops-5-genhostrec-1116 @5c0dcdde82e4: attempt records carry gen_host+work; later stages read attempt_gen_host() (record > spec > kit host > die gen_host). Backfill of 3889 records already live. GREEN 134/134. FABLE-DIE-S81 thaw controller reads rec[gen_host], not dies.s81.gen_host, before thawing the 13.
+  COORD APPROVED: claude/kit-ops-5-genhostrec-1116 @5c0dcdde82e4
