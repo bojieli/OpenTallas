@@ -161,7 +161,9 @@ namespace eval ot_txl_mid {
         set cp [string map {. {\.}} $C]
         set pad [expr {[string first "$C.q" $nm]>=0 && [regexp [string cat $cp {\.q\\?\[[0-9]+\\?\]}] $nm]}]
         set reg [expr {[string first [string cat $C _q] $nm]>=0 && [regexp [string cat $cp {_q\\?\[[0-9]+\\?\]}] $nm]}]
-        if {$pad || $reg} { dict lappend lasts $C $i }
+        # Yosys scalarises the one-bit valid pad: C.q$_DFF_P_, no [0].
+        set scalar [expr {[string first "$C.q" $nm]>=0 && [regexp [string cat $cp {\.q(\$|$)}] $nm]}]
+        if {$pad || $reg || $scalar} { dict lappend lasts $C $i }
       }
     }
     set ret {}
@@ -199,7 +201,20 @@ namespace eval ot_txl_mid {
         if {$sb && !$ab} { set end snk } elseif {$ab && !$sb} { set end src }
         if {$end ne ""} { incr nface }
       }
-      set pts [face_targets $ax $ay $bx $by $n $end]
+      # RXNEG launches on the falling edge; face_p_[dv] captures the next
+      # rising edge. Put this half-cycle pair together, leaving the long
+      # decoder span on the following full-cycle leg. Default off.
+      set rxpair [expr {[info exists ::env(OT_TXL_MID_RXNEG_PAIR)] && $::env(OT_TXL_MID_RXNEG_PAIR) eq "1" &&
+                       [string match "u_dec.u_face_p_*" $C] &&
+                       [string first "u_rxf_q" [[$src getInst] getName]]>=0 &&
+                       [string match "DFFL*" [[[$src getInst] getMaster] getName]]}]
+      if {$rxpair} {
+        if {$n != 1} {error "OT_TXL_MID RXNEG half-cycle pair expects exactly one face row"}
+        # Adjacent row below the source; nearest_free also clears the macro halo.
+        set pts [list [list $ax [expr {$ay-2.16*$dbu}]]]
+      } else {
+        set pts [face_targets $ax $ay $bx $by $n $end]
+      }
       set ok 1; set places {}
       foreach p $pts {
         lassign $p tx ty

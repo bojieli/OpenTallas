@@ -245,3 +245,51 @@ def test_explicit_missing_chain_is_not_silent_zero(tmp_path):
     r = mock_run(tmp_path, BITS, chains="u_rxf", face="1")
     assert r.returncode != 0
     assert "requested chain u_rxf has no register endpoints" in r.stderr
+
+
+PHASE_PAIR = r"""
+chain u_dec.u_face_p_d 0 1 100 1000 800
+set ::M(DFFL) [obj master name DFFLQNx2_ASAP7_75t_R block 0]
+foreach i $::insts {
+  if {[g $i name] eq "u_dec.u_face_p_d.enc0"} {
+    s $i name {u_bound.u_core.u_rxf_q\[0\]$_DFF_N_}
+    s $i master $::M(DFFL)
+  }
+}
+"""
+
+
+def test_rxneg_halfcycle_pair_adjacent_when_opted_in(tmp_path):
+    body = "set ::env(OT_TXL_MID_RXNEG_PAIR) 1\n" + PHASE_PAIR
+    r = mock_run(tmp_path, body, chains="u_dec.u_face_p_d", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    src = p[r"u_bound.u_core.u_rxf_q\[0\]$_DFF_N_"]
+    dst = p[r"u_dec.u_face_p_d.q\[0\]$_DFF_P_"]
+    assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
+
+
+def test_rxneg_pair_default_off_preserves_even_placement(tmp_path):
+    r = mock_run(tmp_path, PHASE_PAIR, chains="u_dec.u_face_p_d", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    assert abs(p[r"u_dec.u_face_p_d.q\[0\]$_DFF_P_"][0] - 551) <= 3
+
+
+
+def test_rxneg_valid_scalar_face_row_pairs_like_data(tmp_path):
+    body = ("set ::env(OT_TXL_MID_RXNEG_PAIR) 1\n"
+            + PHASE_PAIR.replace("u_face_p_d", "u_face_p_v")
+            + r"""
+foreach i $::insts {
+  if {[string first {u_face_p_v.q} [g $i name]] >= 0} {
+    s $i name {u_bound.u_core.u_dec.u_face_p_v.q$_DFF_P_}
+  }
+}
+""")
+    r = mock_run(tmp_path, body, chains="u_dec.u_face_p_v", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    src = p[r"u_bound.u_core.u_rxf_q\[0\]$_DFF_N_"]
+    dst = p["u_bound.u_core.u_dec.u_face_p_v.q$_DFF_P_"]
+    assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
