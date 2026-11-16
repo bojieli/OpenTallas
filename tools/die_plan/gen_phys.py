@@ -2329,6 +2329,47 @@ def pg_drt0255_cfg():
     return out
 
 
+def pgcap_cfg():
+    """DRT0255-PROOF-1115 C3b opt-in config.mk lines from the gen environment: OT_PGCAP=1 turns on pg_pair_cap.tcl in grt_pre.tcl
+    (GRT per-gcell capacity cut over every M5/M7 stripe column and M6 stripe row); OT_PGCAP_LAYERS (M-layer names), OT_PGCAP_ADJ
+    (0..1), OT_PGCAP_GCELL_UM / OT_PGCAP_EPS_DBU / OT_PGCAP_MARGIN_DBU (numbers) are passed through when set and valid.
+    Nothing is written without OT_PGCAP=1 (kits stay byte-equal)."""
+    import re
+    if os.environ.get("OT_PGCAP", "").strip() != "1":
+        return []
+    out = ["# DRT0255 C3b: GRT per-gcell capacity cut on the PG pair rows/columns (pg_pair_cap.tcl, sourced last in grt_pre.tcl)",
+           "export OT_PGCAP = 1"]
+    pats = {"OT_PGCAP_LAYERS": r"M[1-9]( M[1-9])*", "OT_PGCAP_ADJ": r"(0(\.\d+)?|1(\.0+)?)",
+            "OT_PGCAP_GCELL_UM": r"\d+(\.\d+)?", "OT_PGCAP_EPS_DBU": r"\d+", "OT_PGCAP_MARGIN_DBU": r"\d+"}
+    for k, pat in pats.items():
+        v = os.environ.get(k, "").strip()
+        if v:
+            if not re.fullmatch(pat, v):
+                raise SystemExit(f"{k}={v!r}: not a valid value")
+            out.append(f'export {k} = {v}' if " " not in v else f'export {k} = "{v}"')
+    return out
+
+
+PGCAP_HOOK = """# DRT0255-PROOF-1115 C3b (class A, internal M6 pair rows; gen env OT_PGCAP=1): per-gcell GRT capacity cut on every M5/M7 stripe
+# column and M6 stripe row, snapped outward to whole gcells and clamped to the die (pg_pair_cap.tcl; OT_PGCAP_LAYERS / _ADJ /
+# _GCELL_UM / _EPS_DBU / _MARGIN_DBU).  Appended LAST, after pg_track_truth, so every earlier hook sees the kit unchanged.
+if {[info exists ::env(OT_PGCAP)] && $::env(OT_PGCAP) eq "1"} {
+  source [file join [file dirname [file normalize [info script]]] pg_pair_cap.tcl]; ot_pgcap_add
+}
+"""
+
+
+def pgcap_install(kd):
+    """OT_PGCAP=1 only: copy pg_pair_cap.tcl into the kit and append PGCAP_HOOK to the kit's grt_pre.tcl (kits without it stay byte-equal)."""
+    if os.environ.get("OT_PGCAP", "").strip() != "1":
+        return False
+    shutil.copyfile(Path(__file__).with_name("pg_pair_cap.tcl"), kd / "pg_pair_cap.tcl")
+    g = kd / "grt_pre.tcl"
+    if "ot_pgcap_add" not in g.read_text():
+        g.write_text(g.read_text() + PGCAP_HOOK)
+    return True
+
+
 def pg_cell_keepout_value():
     """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
     v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
@@ -5701,6 +5742,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
     cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
+    cfg += pgcap_cfg()         # DRT0255 C3b opt-in (gen env OT_PGCAP=1)
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
@@ -5756,6 +5798,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                 reset_prefix += "set rt_consumer_taps_um {" + " ".join(
                     f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
             hook.write_text(reset_prefix + hook.read_text())
+    pgcap_install(kd)          # DRT0255 C3b (OT_PGCAP=1 only): pg_pair_cap.tcl + hook line at the end of grt_pre.tcl
     if edge_split_ports(P, tn):
         for f in ("clock_edge_split.tcl", "clock_edge_balance.tcl"):
             shutil.copyfile(Path(__file__).with_name(f), kd / f)
