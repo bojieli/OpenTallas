@@ -1,194 +1,194 @@
-# FABLE-CLOSURE-STRATEGY 2026-11-15 19:15 PST: DRT-0255 signature measured, C2 dead, C3b alive; eight levers; stop list
+# FABLE-CLOSURE-STRATEGY 2026-11-15 21:15 PST: the gate RC under-read is on QC too (same-path proof), C3b passed, seven levers, stop list
 
-Read-only review by FABLE-CLOSURE-1915. Technical physical design only. HBM parked. Nothing launched, stopped or changed.
-Read: the 17:15 strategy; FABLE-CENSUS-1815; FABLE-PD-S81-1750 / HEAD-NF13 / QC-S4q7ef; rulings r193-r209; queue posts to 19:25;
-`failure_breakdown.py` 19:25; KV-ABSPIN-1115 handoff.
-Measured by me (19:20-19:40 PST): every wave kit on epyc2/7/8/9/10 + intel1 with a log younger than 30 h (214 types, HBM
-excluded): TT setup estimate at the gate, route log class, first `DRT-0255` net, failing access points; the route logs of the
-DRT0255-PROOF variants; sign-off JSON and DRC report of one routed col_h9_r2 kit. Scripts: `lanes/fable-closure-1915/`
-(scan2.py, agg2.py, aps.py; JSON and log text only, no database opened, no STA run).
+Read-only review by FABLE-CLOSURE-2115. Technical physical design only. HBM parked. Nothing launched, stopped or changed.
+Read: the 19:15 strategy; FABLE-PD-KV-1945 / QC-S4q7ef / HEAD-NF13 / S81CORES-1915 / QCHOLD-1915 / S81-1750; rulings
+r199-r224; queue posts to 21:25; `failure_breakdown.py` 21:10.
+Measured by me (21:20-21:30 PST): every wave kit on epyc2/7/8/9/10 + intel1 with a log younger than 30 h (277 kits, 204
+types, HBM excluded): TT setup at the gate (`postcts_gate_tt.json`), `OT_PG_*` keys in `config.mk`, route log class, and
+TT setup in `signoff/signoff.json`; the worst setup path of one QC kit at the gate and at sign-off. JSON and log text only,
+no database opened, no STA run. The scan script was run from my session and is not in the repo.
 MEASURED = read or computed by me. REPORTED = lane post or Fable review. INFERENCE is marked.
-Running Fable reviews, not duplicated here: FABLE-PD-S81CORES-1915 (dsdv_bksel_q, dsdv_gunit_l1f_bf) and FABLE-PD-QCHOLD-1915
-(QC GRT hold-repair stall, 11 types).
 
-`failure_breakdown.py` 19:25: S81 40/394, HEAD 19/26, QC 6/127, KV 5/56. No change since 15:10.
+`failure_breakdown.py` 21:10: S81 41/394 types (62/64 cores), HEAD 19/26, QC 7/127, KV 5/56.
 
-## 0. What changed since 17:15
+## 0. What changed since 19:15, and which 19:15 levers landed
 
-1. **DRT-0255 now has a measured signature and the first proof verdicts.** 78 of 92 failing access points (59 kits, first
-   two per kit) lie at y mod 4.32 um = 1.89 to 2.70, the M6 PG pair row (pdn.tcl: M6 pitch 4.32, offset 1.968, width 0.288,
-   spacing 0.096). Variant C2 (partial cut) FAILED on all three proofs. The die-phase proof p_t49 PASSED its 1st iteration (first
-   proof to do so); variant C3b is past the point where C2 failed. Section lever 3.
-2. **The class grew.** Latest kit per type: 19 types stop with `DRT-0255` (QC 17, HEAD hd_mesh, S81 leaf t54); 12 of the QC
-   17 failed in the last 2.5 h. QC latest routed kits: 17 `DRT-0255`, 5 DRC 0.
-3. **S81 col_h9_r2 routes, and its two failures are now separate and both have a fix on the shelf.** Four kits routed today:
-   DRC 276-281 (Lef58EolKeepOut dominant, the kit still carries the old `ot_v41_bf_col3_c.lef`), gate setup -143 to -149.
-   But routed sign-off TT setup is -267.4 on pv7a260fc0 against -149.5 at its gate: 118 ps lost after the gate (lever 1).
-4. S81 measured per-port window on one h9 type: 10-129 ps against the flat 208 (REPORTED, S81-TAPROWS).
-5. HEAD MY-tile shorts: cause is two stale closed views, not a mirror bug; refusal form approved (r209). 7 of 7 units with
-   more than 200 markers are one MY hd_tile each (REPORTED).
-6. hd_serdes private leaf: -261.0 -> -40.6 on GRT RC (REPORTED). Passes by 1.4 ps.
-7. TT repair is the default since 18:14 (REPORTED). Order check and M6 check PASS (GENBUG-IMPL 18:06: hold unchanged in both
-   scenes, 4 cells added, M6 guide length unchanged). No repaired kit has finished detail route.
-8. S81 G3 release list fails `sdc_lint` on 58 types; G3b drops the 59 tables. svc synthesis still stalls (4,792 per-bit
-   memory writes). QC S4q7f blocking, S4q7g composed. KV head_eighth pins: 0 free M4/M5 in 623 of 1,351 pin gcells.
+| 19:15 lever | state 21:25 |
+|---|---|
+| 1 S81 col Event F2 | NOT landed. F2a compose started 20:2x. The 118 ps loss is explained (routed RC, r222). col3_c view still not in the r2 kits: pvf57acd2b routed again at DRC 276 (21:05). |
+| 2 S81 G3b | B6gG3 gated 20:43 (bind 0, LATCHECK 873/873). 16 svc types held: synthesis pilot FAILED again (canonicalize 125 min, 4,792 per-bit writes). Merge fix in test. |
+| 3 `DRT-0255` | Die phase PROVEN (p_t49 DRC 0; hd_ctl, hd_spn past iteration 1) and live on 7 HEAD types. C3b PASSED iteration 1 at 21:20 (56,402 -> 11,772, 0 x `DRT-0255`). C3b is NOT yet in any gen env. Variant B also failed. |
+| 4 KV | Tree c1 rebuilt 21:19 (one sha, gates pass). Ring split v20 bindable but 27 rings > 340 um; v21 in bind. pv depths merged (r224). q2 cause measured. win1 view built, kit GRT running. |
+| 5 QC events | No adopt posted for S4q6d / S4q7e / S4q7g. Hold stall class closed as stale (r211). |
+| 6 Die route closed views | Refusal approved (r209). hd_tile at 717.12 is already signed (15:22); the die kit still reads the 708.48 view. |
+| 7 HEAD types | private leaf merged (r215); no routed hd_serdes sign-off. |
+| 8 Cores | Diagnosed (r212): bksel = unrepaired slew, gunit = repair outside the clock freeze. ECOs not finished. |
 
-## 1. Levers, ranked by types unblocked
+New since 19:15, MEASURED by me:
 
-| # | dies | lever | unblocks | owner | state 19:40 |
+1. **The gate under-reads setup on QC as well, and on the same path.** sle_hc2__cl9c4c4509__clf60c5152 (S3R attempt_3,
+   epyc10, routed DRC 0): gate +2.48, sign-off -178.75. Same start and end point in both reports
+   (`u_u_xl2_4.g_t[1]...g_c[0].f` -> `u_u_xl2_4.q_bad`). Lever 1.
+2. **Two HEAD types failed `DRT-0255` on NF13a and were relaunched unchanged at 21:05.** hd_st_n3_turn: internal ring net
+   `u_cland_u1_i/u_ring.dch[5].u_dsel/net21745`. hd_host_n: face pin `h_tx_ft_i[23]`. Neither is on the die-phase list.
+3. **QC: 8 more `DRT-0255` stops in 2.5 h**, all with `OT_PG_TRACK_TRUTH=1` and `OT_PG_CELL_KEEPOUT=0` only (coll_n,
+   slw_hc2, sle_fe_v3, sle_hc0, sle_hc2, slw_stm_v3, sle_stm_v2, sle_sc_v1). Latest kit per QC type: 13 `DRT-0255`.
+
+## 1. Levers. Not dispatched first
+
+| # | dies | lever | unblocks | owner | dispatched |
 |---|---|---|---|---|---|
-| 1 | S81 | col Event F2: per-port window + col3_c pinwire view + IFN 0 + ROM tap rows in one kit; r2 first; explain the 118 ps gate-to-route loss | 216 types | DIE-S81-92, S81-TAPROWS, S81-COLABS-1115 | windows for 1 type; 26 layouts measuring |
-| 2 | S81 | G3b: drop 59 tables, per-bit memory write merge for svc, per-port windows for c3x_C / iq_C and the leaf ports | 136 types | DIE-S81-92, GENBUG-IMPL, S81-TAPROWS | G3b composing; svc held |
-| 3 | all 4 | `DRT-0255`: C3b form into the gen env when its 1st iteration ends; die phase for face-pin types | 19 types now; every QC hc / sc / stm / su_l1 / st_b / coll kit | DRT0255-PROOF-1115, GENBUG-IMPL | p_t49 PASSED iteration 1 (19:4x); c3b at 50 % of iteration 1 |
-| 4 | KV | one-sha tree; raw-branch rows that survive a relay renumber; head_eighth pin windows from the signed ODBs | 51 types | KV-102, KV-ABSPIN-1115, GENBUG-IMPL | v19 binding; ODBs not found on fleet |
-| 5 | QC | S4q6d, S4q7e, S4q7g; reset localization on the emitted tree; fw / st_b stations | about 40 held types | DIE-QC-103, QC-CB-GEN-1115 | three binds running |
-| 6 | HEAD, all dies | Die route: refuse closed views whose LEF SIZE differs from the outline; re-sign hd_tile 717.12 and hd_st_n4 993.6 | 144 of 326 units; all later die routes | HEAD-MYTILE-1115, HEAD-100 | approved; nf13r kit building |
-| 7 | HEAD | hd_serdes: RTL replication beside the private leaf; hd_mesh clock leaf in a pair row; hd_host_e / w on NF12 | 4 types | HEAD-SERDES-1115, HEAD-100 | NF12 kits in placement |
-| 8 | S81, QC | cores and hold stall | 2 cores, 11 types | see the two running Fable reviews | running |
+| 1 | QC, S81, KV | Signal-net RC for the gate and for TT repair on ALL dies, not only the 6 S81 r2 kits; QC hc fan-out tree | QC hc / fe families after C3b; S81 col 216 | GENBUG-IMPL; DIE-QC-103 + QC-HC-STRIP-1115 | NO (r222 covers S81 r2 only) |
+| 2 | QC, HEAD, S81 | C3b into the gen env now; class per type (face pin = die phase, internal pair row = C3b); stop unchanged relaunches | 13 QC types + 2 HEAD + S81 leaf t54; 46 slice_station + 11 serdes at launch | GENBUG-IMPL, KIT-OPS-5, DRT0255-PROOF-1115 | PARTLY (r214 item 3 conditional; HEAD hd_st_n3_turn / hd_host_n not) |
+| 3 | S81 | col: stations on the 1 mm edge chains inside F2, not in a later delta | 216 types | DIE-S81-92, S81-TAPROWS, S81-COLABS-1115 | PARTLY (r222 item 2 says "next col delta") |
+| 4 | HEAD | Register the signed hd_tile 717.12 record as the die-kit closed view, after one check of its hold and slew | 144 MY die-route units | HEAD-100, CORE-ROWS-1115, KIT-OPS-5 | NO (found 21:4x by KIT-OPS-5) |
+| 5 | KV | Ring split v21 only; pv D=4 with firm sites; q2 M3 strips; win1 view by kit GRT | 51 types | KV-102, KV-HGSPLIT-1115, KV-PVGEN, KV-Q2-CLK-1115, KV-ABSPIN-1115 | YES (r216, r224) |
+| 6 | QC | S4q6d -> S4q7e -> S4q7g; cross-tap hold guard on core taps only | about 72 held types | DIE-QC-103, QC-SRC-CLOSE-1115 | YES (r207, r211) |
+| 7 | S81 | svc per-bit write merge; bksel slew ECO; gunit ECO inside the clock freeze | 16 types, 2 cores | GENBUG-IMPL, S81-CORES-1115 | YES (r212, r214) |
 
-### Lever 1. S81 col (216 types)
+### Lever 1. Gate RC under-read is cross-die (NOT dispatched)
 
-Evidence (MEASURED): 13 col kits stopped at the gate in the last 3 h: col_h9_r0_p6 -289 to -589 (5 kits), col_h9_r2 -152 to
--231 (4 kits). Four col_h9_r2__clce45cab5 kits passed the -150 triage (-143.0, -145.5, -147.5, -149.5) and routed: DRC 276,
-276, 278, 281. pv7a260fc0: DRC report 288 Lef58EolKeepOut, 28 Metal Spacing, 7 cut spacing, 5 Short; `macros/` holds
-`ot_v41_bf_col3_c.lef` (old view); sign-off TT setup -267.44, TT hold -4.68 (non-port). REPORTED: col3_c pinwire view
-cd64688b278c, one-macro DRC 138 -> 0 (2 instances x 138 = 276); per-port window 10-129 ps on col_h9_r0_p6 pv082a7609, at
-least 79 ps back on h9 he; the stale offset table makes gen fail lint (46 errors) unless dropped in the same edit.
+Evidence (MEASURED), gate TT setup -> sign-off TT setup, every routed kit with a sign-off in the last 30 h:
 
-Root cause: three independent items. (a) flat 208 ps window on every cross-port pair; (b) col3_c pin wires in OBS
-(Lef58EolKeepOut); (c) setup is 118 ps worse after route than at the gate on r2. INFERENCE for (c): the gate reads GRT RC
-before the hold repair and before detail route of 276 unresolved markers; not measured which.
+| family | kits | gate -> sign-off | loss |
+|---|---|---|---|
+| S81 col_h9_r2 (clce45cab5) | 6 | -139..-149 -> -267..-369 | 118 to 226 |
+| S81 col_h9_r2 (older tree) | 3 | -328..-338 -> -465..-510 | 137 to 171 |
+| QC sle_hc2 | 1 | +2.5 -> -178.8 | 181 |
+| QC sle_fe_v1 | 1 | +50.9 -> -60.6 | 111 |
+| QC slw_su_l0 | 2 | +78.4 -> +36.1; +56.9 -> +36.2 | 42; 21 |
+| QC sle_su_l0, sle_fw_v3 | 3 | -4.3 -> -7.6; +8.5 -> +9.1; +50.7 -> +53.1 | 3; 0; 0 |
+| KV kv3_io_ft_v1 | 1 | -22.5 -> -62.7 | 40 |
+| S81 slice_station | 13 | +29..+186 -> +17..+173 | median 12, worst 48 |
+| HEAD (ctl_e, mesh_e, eshim_tx, st_n4, tile, turn_a) | 8 | +60..+206 -> +52..+198 | 8 to -2 |
 
-Fix:
-1. DIE-S81-92: Event F2 as one event: `clock.tap_window.per_port_ps` + drop of the 216 `tap_offset` tables + col3_c view
-   cd64688b278c + IFN 0 halves + ROM tap rows. Do not wait for all 26 layouts: bind with the tables that exist, the rest
-   take the type value 165 until their table lands (a later delta, SDC only).
-2. Pilot = col_h9_r2__clce45cab5 (nearest: -145 at the gate, already routes), then col_h9_r0_p6. Expected on r2: DRC about 0,
-   gate about -66 with the window (INFERENCE: -145 + 79), then the TT repair range.
-3. S81-TAPROWS: on pv7a260fc0 compare the worst gate path and the worst sign-off path (same endpoint or not; clock or data).
-   If the endpoint differs, the gate under-reads r2 and the -150 triage is not a route predictor for col.
-4. S81-COLABS-1115: full-kit route with the new LEF is still in GRT (iteration 16 of 30 at 17:27, REPORTED); the F2 pilot
-   replaces it as proof if it finishes first.
+sle_hc2 path, the same cells at the gate (`postcts_gate_TT.log`) and at sign-off (`signoff/tt/sta.log`), kit
+epyc10 `.../qwen_compute/s29q103S3R/items/sle_hc2__cl9c4c4509__clf60c5152/attempt_3/gen/...`:
+- Data arrival 1,043.9 -> 1,221.0 (+177). Capture clock 1,065.0 -> 1,065.2. Launch clock 250.4 -> 242.8. The clock is
+  not the cause.
+- Net capacitance, gate -> routed, per stage (fF): 21.9 -> 29.7, 21.2 -> 27.2, 11.9 -> 15.8, 14.3 -> 20.9, 32.7 -> 42.8,
+  11.0 -> 17.2, 8.8 -> 15.0. That is +29 % to +71 % on every multi-fan-out net of the path. These are ordinary nets with
+  4 to 10 loads, not one long M7 run.
+- The first five stages are a fan-out tree of one flop: BUFx2 (8 loads, slew 152) -> INVx1 (8 loads, slew 239) -> BUFx2 ->
+  BUFx10 -> BUFx2 (10 loads, 42.8 fF, slew 172). They cost 518 of the 978 ps data delay at sign-off (406 at the gate).
+- The kit has no `OT_TT_SETUP_REPAIR` key; the late ECO ran once for 11,218 s and was exhausted (494 endpoints, slew 465).
 
-### Lever 2. S81 non-col (136 types)
-
-Evidence (REPORTED): G3 sound as a plan; slice_station__t8 53, t45 16, serdes__t4 43 lint errors; G3b pre applied the 59
-drops with 0 conflicts. svc_hi rs t3 / svc_lo rs t6 stall in yosys canonicalize (PROC_DFF over 45 min) with 4,792 per-bit
-write statements in 5 native memories. dsdv_slice_c3x_C__t1 and iq_C__t1 pay the flat 208 on every port; leaf: 1,855 of 4,273
-ports without a row. MEASURED: ot_s81sl_leaf__t27 -159.0 at the gate (18:42), leaf t54 `DRT-0255` at y mod 4.32 = 2.61.
-
-Root cause: tool tree inconsistent in itself (lint); memory emitted as one write per bit; windows dropped to flat values.
-
-Fix: DIE-S81-92 adopts G3b with lint 0 on the release list. GENBUG-IMPL: merge per-bit `$mem_v2` write ports into
-source-width ports in `bind_native_glue.py` (16 svc types). S81-TAPROWS: c3x_C / iq_C tables next, then leaf. The 46
-slice_station and 11 serdes types then launch with the C3b form (lever 3): slice_station is where C3b is proven.
-
-### Lever 3. DRT-0255 (all dies)
-
-Evidence (MEASURED):
-- Signature: 59 kits with `DRT-0255` in 30 h; of 92 failing access points 78 (85 %) have y mod 4.32 in 1.89-2.70. Nets: of the
-  QC 17, 3 are boundary / feed-through nets, 6 are ring `u_dsel` cells, 8 other internal nets. So it is mostly internal pins
-  in pair rows, not face pins.
-- C2 (partial cut): c2_t37, c2_fe, c2_hroot all stopped with `DRT-0255` at the start of the 1st iteration. c2_t37 failed
-  at y = 136.544 (mod 4.32 = 2.62) and on face pin ft11_i[384] at y = 10.27.
-- C3b (100 % gcell-aligned cut M5/M6/M7): c3b_t37 at 30 % of the 1st iteration at 19:37, no error; c2_t37 failed before
-  10 %. GRT cost on t37: M6 resource 25.9M -> 23.2M, usage 3.3 %, congestion 0.
-- Die phase only: **p_t49 finished the 1st iteration at 19:4x PST with 6,324 violations and no `DRT-0255`; it is in the 2nd
-  iteration.** First proof of any variant past the 1st iteration. p_hd_spn at 50 %, no error. p_hd_ctl in iteration 0.
-  Update 19:46: c3b_t37 at 50 %, 39,574 violations, no error.
-- hd_mesh (new): clock leaf net clknet_leaf_30_clk_t23, access points at y = 304.992 (mod 4.32 = 2.59).
-
-Root cause: unchanged, now measured per access point: pins and guides in the M6 PG pair row.
+Root cause: `setRC_rcx.tcl` under-reads routed signal capacitance by 30-70 % wherever nets are dense or long. Families
+with short, low-fan-out nets (HEAD, slice_station, su_l0) do not show it. Second effect, INFERENCE: the TT repair that is
+default since 18:14 runs on the same RC. On sle_hc2 it sees +2.5 and has nothing to repair, so it cannot close what
+sign-off will show. The calibration is therefore the precondition of the TT repair on every die.
 
 Fix:
-1. DRT0255-PROOF-1115: p_t49 has its verdict (1st iteration passed): post it now and let it run to DRC 0. c3b_t37 reaches
-   "Start 2nd optimization iteration" about 20:30 PST (9 min per 10 %); post that line the minute it prints.
-2. GENBUG-IMPL: C3b into the gen env of all four dies the same hour; C2 code path removed. First QC kits: slw_hc2 and
-   sle_sc_v1 (setup +30 / +7 at the gate, `DRT-0255` is their only failing gate).
-3. Check on the first QC hc kit with C3b: GRT overflow. t37 uses 3 % of M6; hc is the congested family. If hc overflows,
-   the cut is too expensive there and hc needs rows (S4q7 hc strip), not a smaller cut.
-4. If a C3b kit still stops with an access point in the pair row on a cell pin: that is the cell class. Then the keep-out
-   form with TAP / fixed cells skipped (the DPL-0033 cause of 15:01), not a return to C2.
-5. Face-pin types (hd_ctl, hd_spn, t49, io_cor): die phase (offset 8.448). p_t49 passed; GENBUG-IMPL can put the die-phase
-   PDN (without the keep-out flag) into the gen env for the face-pin types now and add hd_spn when p_hd_spn passes.
+1. GENBUG-IMPL: do the r222 item 1 fit on signal nets from the routed SPEF of sle_hc2 attempt_3, sle_fe_v1__cl8210183c
+   attempt_3 (both epyc10 / wave S3R) and kv3_io_ft_v1 attempt_24, together with the 6 r2 kits. One RC set per layer for
+   signal nets, for all dies. Accept test: predicted minus sign-off within 30 ps on these 9 kits.
+2. Until it lands: read QC hc / fe / stm, S81 col and KV io kits at sign-off only. A gate pass on these families is
+   not a prediction.
+3. DIE-QC-103 with QC-HC-STRIP-1115: the `g_flat.g_lv[*].g_c[*].f` select flops of `u_u_xl2_*` drive about 40 loads through
+   x1 / x2 cells. Either replicate the flop per load group in RTL (4 copies, no latency change), or give the hc kits
+   `repair_design` with a fan-out limit before GRT. Decide on the count of such flops in the 494 failing endpoints
+   (not read by me: only the worst path).
+4. Do not relaunch the late ECO on sle_hc2 S3R: -179 over 494 endpoints is not ECO range.
 
-### Lever 4. KV (51 types)
+### Lever 2. DRT-0255: put the proven forms in, by class (partly dispatched)
 
-Evidence (REPORTED): 24 of 24 7u launches failed kit_rtl; tree rebuild started 18:10. Ring split v18 fails the strict bind
-with 18 errors: any new hard core renumbers `rst_rl_N`, and the 19 hg / hgi `landing_raw_branches` rows name relays by
-number. head_eighth_e2: every signal pin under the blanket OBS M1-M5; free M4 / M5 = 0 in 623 of 1,351 pin gcells, one gcell
-inward M2-M5 = 0 in all; one-macro route clean (GRT 0, 0 pin violations); 1.0 um blanket cut lifts M4 / M5 to 8.8 / 11.1
-free but models no core metal.
+Evidence: REPORTED DRT0255-PROOF 21:20: C3b on slice_station t37 passed iteration 1 with 0 x `DRT-0255`; GRT overflow 0
+on every layer, usage 6.93 -> 7.30 %, M6 guide length in pair rows 86,675 -> 1,966 um. Die phase: p_t49 DRC 0.
+MEASURED: section 0 items 2 and 3; the `config.mk` of every HEAD NF13a kit I read (hd_host_n a1 / a2, hd_st_n3_turn
+a1 / a2, hd_host_e a1 / a2, hd_mesh a6, hd_st_k5, hd_host_w) carries no `OT_PG_*` key at all.
 
-Root cause: pin escape exists only on M6 / M7 above the core edge; rows keyed by a generated index.
+Root cause: two classes, one form each. Face pins on the core PG phase -> die phase. Pins and guides inside internal
+M6 pair rows -> C3b capacity cut. A type can have both.
 
 Fix:
-1. KV-ABSPIN-1115: the signed e0 / e1 / e2 / e5 / e6 databases are not on the fleet; signed records live on AGIdock and
-   rtx-pro. Take them from the archive, export exact (-bloat 0), `splice --pin-window-um 1.0`. No blanket cut without them.
-2. KV-102 until then: on hg / hgi kits keep parent M6 / M7 trunks off the pin gcell columns (the C3b region form applied
-   to pin rows), and read GRT usage at the 623 gcells on the first kit.
-3. GENBUG-IMPL with KV-102: raw-branch rows keyed by tap name + xy, resolved to `rst_rl_N` at bind. Removes the v19 / v20
-   round trip (2.5 h per hard-core change).
-4. From 15:30, unchanged: q2 clock leaves before any hold pad; two pilots to CTS first.
+1. GENBUG-IMPL: C3b (`pg_pair_cap.tcl`, sourced last in `grt_pre.tcl`; keys in the 21:20 post) into the gen env of QC,
+   S81, HEAD and KV now. The condition of r214 item 3 is met.
+2. KIT-OPS-5: hd_st_n3_turn = C3b (ring `u_dsel` net, internal). hd_host_n = die phase (face pin). Their a2 kits of
+   21:05 are unchanged and will stop the same way.
+3. KIT-OPS-5 / DRT0255-PROOF: KIT-OPS-5 reports the die-phase keys in `spec.json`; they are not in `config.mk`. Confirm
+   on hd_ctl a2 that the floorplan log shows the die-phase offset (8.448) before more types are added.
+4. First QC kits: slw_hc2 and sle_sc_v1. Read GRT overflow on the first hc kit (hc is the congested family; t37 used
+   7 %). Then read sign-off, not the gate (lever 1): C3b removes the route stop, it does not close hc2.
+5. S81: the 46 slice_station and 11 serdes types launch on G3 with C3b from the first kit.
 
-### Lever 5. QC plan events
+### Lever 3. S81 col: stations inside F2 (partly dispatched)
 
-Evidence (REPORTED): S4q6d, S4q7e ADOPT-OK; S4q7f 24 of 24 columns fail, S4q7g = +3 on 48 + 24 sinks. sc reset hops
-690-1,041 um stay open: bind published the plan collector tree, 77 of 126 types differ from the emitted tree; fix READY
-(bind-reset-tree-1115). MEASURED: slw_fw_v2 -438.7, sle_st_b_v2 -186.7 / -201.7 still the latest kits (25-28 h old);
-cbf_q01_s2 -884 at the gate on the old S4Q2 plan (attempt 12, 0.6 h ago).
+Evidence (MEASURED): table above; all six r2 kits also carry sign-off TT hold -4.7 to -123.1 (non-port) and 211-433
+slew violations. REPORTED (DIE-S81-92 21:3x): worst sign-off path `u_u_n23 -> u_bout_frame_int_o0/q[130]`, about 22
+buffers and 1 mm along the bottom edge, 327 fF routed against 191 fF estimated; per-port window gives back at most 79 ps.
 
-Fix: DIE-QC-103 adopts S4q6d then S4q7e; cb pilot = cbn_q11 only, read at kit GRT. After bind-reset-tree merges, re-derive
-the sc reset rows (dry-run on 9 of 9 types before posting). First fw and st_b kit on S4q7: gate against -439 and -202. Stop
-relaunching cb types on S4Q2 / S4Q3C: -884 is a station class, no kit setting reaches it.
+Root cause: a 1 mm combinational run in one 833 ps cycle. Arithmetic: -267..-369 at sign-off plus 79 from the window
+is -188..-290. No window, view or repair setting closes that.
 
-### Lever 6. Die route: closed views
+Fix:
+1. DIE-S81-92: put the station rows for the bottom-edge chains (`u_bout_frame_int_o0` and its siblings) into F2a / F2b
+   itself, one flop row per 340 um of run, with the lane latency change in the same event. A pilot without them
+   will read about -190 or worse at sign-off and costs one more round.
+2. S81-TAPROWS: list every col path over 600 um between flops from one routed r2 DEF, so the station set is complete
+   in one event (the worst path is one of a family).
+3. S81-COLABS-1115: col3_c view cd64688b278c into the F2 kits (DRC 276 = 2 x 138 is unchanged at 21:05).
+4. KIT-OPS-5: r222 item 3 (TT repair at GRT ran on FF libs only on these kits).
 
-Evidence (REPORTED): hd_tile view 708.48 against outline 717.12 (566 E-face pins 8.64 um short in 264 instances); hd_st_n4
-1,123.2 against 993.6 (128,770 um2 over lep0N). All 7 units with 218-262 markers sit in one MY hd_tile each; R0 tile units
-are at 0. Other 13 HEAD type views and 13 core views: 0 mismatches. 37 of 326 units launched on the stale kit.
+### Lever 4. HEAD die route: use the signed hd_tile (NOT dispatched)
 
-Fix: HEAD-MYTILE-1115 refusal merged; HEAD-100 re-signs both types at the plan outline; rerun the 144 MY units on nf13r.
-New Sonnet lane or DIE-ROUTE-ABS-1: the same SIZE-against-outline table for S81, QC, KV closed views before their first
-die-route unit (REPORTED 0 mismatches there for plan abstracts only; closed views not scanned). u018 (1 M4 spacing, 54 GB):
-stop at step 3 when the count is flat.
+Evidence: REPORTED KIT-OPS-5 21:4x: hd_tile attempt 3 (NF6 key, DIE_AREA 717.12 x 1036.8) was signed 15:22; the die
+kit still reads the 708.48 view. hd_st_n4 NF13a route running since 20:08. MEASURED: the `signoff.json` in the wave
+kit dir of hd_tile NF6 attempt_3 (age 9.9 h) reads TT setup +52.0, TT hold non-port -16.47, 1,168 slew violations;
+hd_st_n4 NF6 attempt_10 reads TT +81.7, hold -9.41 (port class).
 
-### Lever 7. HEAD types
+Fix: HEAD-100 / CORE-ROWS-1115: register the signed 717.12 record as the closed view and re-prepare the 144 MY units.
+Before that, one read: if the registered record is the kit I scanned, its non-port TT hold -16.47 and the slew count go
+into 264 instances; if the signed record is a later ECO directory, register that one. No rebuild of hd_tile.
 
-Evidence: REPORTED hd_serdes private leaf -40.58 (gate -42), same form at the macro leaf -46.68, tap group -69.1.
-MEASURED: hd_mesh attempt 4 gate -51.0 then `DRT-0255` on a clock leaf.
+### Lever 5. KV (dispatched)
 
-Fix: HEAD-SERDES-1115: 1.4 ps of margin on GRT RC is not a closed type (col_h9_r2 lost 118 ps between gate and sign-off,
-hd_host_e lost 54 ps from CTS to GRT). Keep the private leaf row in NF13 and replicate the `ldr` registers in RTL in
-parallel; READY only on routed sign-off. hd_mesh: relaunch only with C3b (lever 3); its -51 is TT repair range.
-hd_host_e / hd_host_w: read the NF12 gate; no new action.
+Evidence (REPORTED): v20 ring split: G0 0 errors, strict bind 0, LATCHECK 2404/2404, all types under 400k, but ring
+displacement median 117 um, p90 739, max 1,000, 27 rings over 340 um. v21: median 19, max 390, in bind. pv legs
+(placed read): F2 max 2,297 um, F4 max 1,396 -> D = 4; F1 max 988 -> D = 3. q2: SRAM edge 30 nm above the M2 track,
+M3 via enclosure 16 nm from the OBS (rule 18). win1 view: pin gcells with 0 free M4 623 -> 3, M5 623 -> 165.
 
-### Lever 8. Cores and hold
+Fix: KV-102 adopts v21, not v20 (a ring 340-1,000 um from its band is 1-3 unplanned hops per ring lane). If v21
+fails bind, v20 only with a station row for each of the 27 rings. KV-PVGEN: no pv kit before the `lp_even` firm sites
+exist (the D = 4 flops are named, not sited). KV-Q2-CLK: persistent M3 strips on both edges of both bottom SRAMs.
+KV-ABSPIN: row only if head-core GRT markers drop in the running kit pair.
 
-dsdv_bksel_q (-257, FF corner on a TT lib), dsdv_gunit_l1f_bf (hold -42, ECO rewires clock nets): FABLE-PD-S81CORES-1915.
-QC hold stall: FABLE-PD-QCHOLD-1915. MEASURED here only: FF hold estimate at the gate of the fresh QC kits that reached
-route is -2 to -108 (sle_stm_v2 -106.6, slw_stm_v3 -107.7), on the stm family the hold review covers.
+### Lever 6. QC plan events and hold (dispatched)
+
+Evidence (REPORTED): S4q6d / S4q7e ADOPT-OK; S4q7g = S4q7f + 48 + 24 pad sinks. The pre-GRT cross-tap hold guard skips
+all 84 taps, so routed kits end at non-port FF hold -10 / -20. MEASURED: sle_fw_v3 S3R sign-off TT hold non-port
+-12.59, sle_su_l0__cl7a55c676 -38.96, sle_hc2 -8.53: the guard fault is visible on three routed kits.
+
+Fix: unchanged from r207 / r211. Order: adopt S4q6d, then S4q7e, then S4q7g. QC-SRC-CLOSE: the guard branch (core taps
+only) before the first C3b kits route, or they arrive at sign-off with the same -10 to -40 hold.
+
+### Lever 7. S81 svc and cores (dispatched)
+
+svc: REPORTED 20:49 pilot FAIL, cause confirmed (4,792 per-bit writes: pvq 2,120, land 1,232, pmem 512, hold 512, fq
+416). No svc kit before the `bind_native_glue.py` write-port merge. bksel: slew repair ECO on b1o (183 of 215 failing
+paths have a pin over the 320 ps limit). gunit: same ECO without `core_final_repair.tcl`. MEASURED: the 21:08 line on
+gunit reads TT -16.44 and "fails setup_tt"; the blocking limit is -42, so the open item on gunit is hold only.
 
 ## 2. Stop list (technical dead ends)
 
-1. Variant C2 (partial PG-row cut): 3 of 3 proofs failed. `OT_PG_CELL_KEEPOUT` in its 15:01 form (DPL-0033).
-2. Unchanged relaunch of the 19 `DRT-0255` types; QC hc / sc / stm / su_l1 / st_b / coll kits without C3b (12 failed in 2.5 h).
-3. col kits on the current tree: 13 more gate stops and 4 routed-not-signed in 3 h add no information.
-4. Reading -150 at the gate as "will sign off after repair" on col (118 ps gap on r2).
-5. hd_serdes READY at -40.6 on GRT RC; plan tap group for the three `done[0]` flops (-69.1).
-6. place_lines / windows-mirror forms for MY tiles; outline growth for hd_st_n4; more units on the stale kit.
-7. Pinwire on KV detail views (one cluster touches thousands of pins); blanket cut without the signed ODB.
-8. S4q7f as bound; row-0 pads for the row-2 shift; cb relaunches on S4Q2.
-9. Widening or bypassing `sdc_lint`; repairing c3x_C / iq_C against the 208 window; a fourth post-route hold ECO on gunit.
-10. Kept from 17:15: TT repair as cure below -150; `MAX_ROUTING_LAYER = M7`; density / `band_spread` for `DRT-0255`; band
-    moves for the 401-403 um hops; a third post-route hold pass on one kit.
+1. Variant C2, variant B (M4 / M8 obstructions over M6 stripes) and the cell keep-out: all failed in iteration 1.
+2. Unchanged relaunch of a `DRT-0255` type: hd_host_n a2, hd_st_n3_turn a2, the 13 QC types.
+3. A gate pass as a sign-off prediction on QC hc / fe / stm, S81 col, KV io (loss 40 to 226 ps).
+4. TT repair as the cure while it runs on the uncalibrated RC (it sees +2.5 on sle_hc2).
+5. Late ECO on kits at -110 or worse over hundreds of endpoints (sle_hc2: 11,218 s, exhausted).
+6. S81 col: per-port window, col3_c view or repair settings as the closing step (at most 79 ps against -267..-369);
+   more r2 kits on the current tree (DRC 276 each).
+7. KV: v20 as the final ring split; blanket OBS cut or pinwire views; moving the SRAM on the q2 DB; re-route without strips.
+8. QC: extra hold-repair passes; S4q7f as bound; cb relaunches on S4Q2 / S4Q3C.
+9. HEAD: rebuilding hd_tile (it is signed at 717.12); place_lines / windows-mirror; hd_serdes READY on GRT RC.
+10. S81: svc synthesis reruns before the write merge; bksel re-floor or new CTS; a fourth gunit ECO with
+    `core_final_repair.tcl` in the chain.
 
 ## 3. Not checked
 
-- Only p_t49 has finished its 1st iteration (no DRC 0 yet); C3b has no final verdict. Where the baseline t49 and hd_spn kits
-  failed inside the 1st iteration was not read, so "past the failure point" is measured for c3b_t37 only.
-- The pair-row share uses y only; x against the M7 pair (pitch 8.64) was not tested. Layer of each access point not decoded.
-- Which kits carry `OT_TT_SETUP_REPAIR`: the key is not in `config.mk`; no repaired wave kit result was identified.
-- The 118 ps gate-to-route gap is one kit (pv7a260fc0); the other three routed r2 kits were not opened.
-- KV archive presence of the signed e* databases; closed-view SIZE table for S81 / QC / KV.
-- G3b, S4q6d / S4q7e / S4q7g, 7u_c1 and NF13a kit results: none exists yet.
+- sle_hc2: only the worst path was read; the share of the 494 endpoints that sit behind the same fan-out tree is unknown.
+  sle_fe_v1 (-111) path not opened. Routed capacitance by layer not decoded (SPEF not parsed).
+- Whether the HEAD die-phase keys reach the PDN step: `config.mk` has none; `spec.json` and the floorplan log not read.
+- Whether the signed hd_tile record is the kit I scanned.
+- C3b: no DRC 0 yet (iteration 2 running); no C3b kit on a QC hc type exists.
+- v21 bind result, S4q6d / S4q7e / S4q7g adopt state, F2a compose result, win1 kit GRT: none posted by 21:25.
+- Station count and lane latency cost of the col edge chains: not derived.
