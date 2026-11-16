@@ -1,5 +1,5 @@
 """KW-FIX-44 11-10 (COORD rulings (3)): the two grt183_make.sh stage stops reach the autopilot classes COORD named:
-OT_GRT_CONGESTED_FAIL -> STRUCTURAL grt-overflow -> wave ROUTING; OT_GRT_TIMECAP -> STRUCTURAL grt-timecap -> wave TIMING.
+OT_GRT_CONGESTED_FAIL -> STRUCTURAL grt-overflow -> wave ROUTING; historical OT_GRT_TIMECAP -> FAIL grt-timecap -> wave FLOW.
     python3 -m pytest -q tools/autopilot/test_grt_stop_classify.py"""
 import re
 import sys
@@ -33,12 +33,21 @@ def test_probe_patterns_catch_both_lines():
 
 def test_classify_kinds():
     assert AP.classify({"congestion": CONG}, {"exit": 21}) == ("FAIL", "grt-overflow", CONG)
-    assert AP.classify({"grt_timecap": CAP}, {"exit": 21}) == ("STRUCTURAL", "grt-timecap", CAP)
+    assert AP.classify({"grt_timecap": CAP}, {"exit": 21}) == ("FAIL", "grt-timecap", CAP)
 
 
 def test_wave_classes():
-    for kind, why, cls in (("grt-overflow", CONG, "ROUTING"), ("grt-timecap", CAP, "TIMING")):
+    for kind, why, cls in (("grt-overflow", CONG, "ROUTING"), ("grt-timecap", CAP, "FLOW")):
         j = {"status": "DONE-STRUCTURAL", "kind": kind, "reasons": why, "signoff": None}
         stage, st, c, msg = KW.queue_class(j)
         assert (st, c) == ("FAIL", cls), (kind, stage, st, c, msg)
         assert why[:40] in msg
+
+
+def test_old_timeout_record_is_annotated_without_mutation():
+    import copy
+    j = {"status": "DONE-STRUCTURAL", "kind": "grt-timecap", "reasons": CAP, "signoff": None}
+    before = copy.deepcopy(j)
+    assert KW.queue_class(j)[1:3] == ("FAIL", "FLOW")
+    assert "retired flow timeout" in KW.queue_class(j)[3]
+    assert j == before

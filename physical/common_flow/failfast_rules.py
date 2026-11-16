@@ -9,8 +9,8 @@ Stdlib only, no repo imports: the file is copied into every kit as /work/failfas
 sent verbatim to a host by tools/autopilot/failfast_scan.py (read-only dry run on live jobs).
 
 Rules (config key, default; env wins over `export KEY = value` in the kit's config.mk; OT_FAILFAST=0 turns all off):
-  (a) [GRT overflow / no-progress rule DELETED 11-14, OWNER: delete the conservative limits; GRT is never stopped on overflow, only by
-      grt183_make.sh's post-route time cap OT_GRT_POST_MAX_S.]
+  (a) [GRT overflow / no-progress rule DELETED 11-14, OWNER: delete the conservative limits; GRT is not stopped for overflow or elapsed wall time;
+      grt183_make.sh's optional OT_GRT_POST_MAX_S threshold is advisory logging only.]
   (b) DRT_NO_PROGRESS   OT_FF_DRT=1  OT_FF_DRT_ITER=20  OT_FF_DRT_MAX_VIOL=10000  OT_FF_DRT_MIN_DROP_PCT=5  OT_FF_DRT_WINDOW=3
       From completed iteration OT_FF_DRT_ITER: stop when the violation count is above OT_FF_DRT_MAX_VIOL and over the last
       OT_FF_DRT_WINDOW iterations it fell by less than OT_FF_DRT_MIN_DROP_PCT % per iteration (compound: v_last >
