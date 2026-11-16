@@ -1,6 +1,6 @@
 # QC-PINACCESS-O handoff (Opus successor of FABLE-FIX-QC-PINACCESS)
 
-Updated 2026-11-16 02:5x PST.
+Updated 2026-11-16 03:2x PST.
 
 ## Scope
 QC detail-route failures. Class A = DRT-0255 (~19 types, expected fixed by C3b on kw45/src_qc_pin_e594a73db756).
@@ -17,5 +17,5 @@ Class B = DRT-0073 pin access (6 types). Also owns FAIL-CLASS 07f8439040 (native
 - e21636a9ba slw_sc_v2: stale 11-12 S25-plan attempt interrupted by signal 15; needs a fresh launch.
 
 ## Next
-1. Gate + READY the kit_topology branch.
+1. DONE: claude/qc-pinaccess-o-1116@79aa99dd618 GATE pass=9/9 GREEN, READY posted. Follow: merge, then TOOLS-CONVERGE QC tree re-pin (or KIT-OPS-5 kit_snap off) and relaunch of the 10 + proof kits.
 2. When a class-A proof routes with no DRT-0255: post RESULT PASS naming proof:DRT0255 so HOLDGEN-1115 releases the hold records.
