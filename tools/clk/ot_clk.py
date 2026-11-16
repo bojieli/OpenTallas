@@ -344,6 +344,8 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a.append("--clock-body-sites")
     if top.get("type_keepouts"):                # opt-in: clock sites avoid type clock.keepouts_um (bare PHY bodies)
         a.append("--clock-type-keepouts")
+    if top.get("point_keepouts_um") is not None:  # opt-in: clock sites avoid planned register points (FT cells, START, stations)
+        a += ["--clock-point-keepouts", _fmt(float(top["point_keepouts_um"]))]
     if top.get("chain_hop_max") is not None:    # CLK-TOOL-7: DME chain candidates with a hop > UM are rejected
         a += ["--chain-hop-max", _fmt(top["chain_hop_max"])]
     det = top.get("detour", "astar")

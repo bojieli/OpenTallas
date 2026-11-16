@@ -5,12 +5,15 @@ Row file = {"lane": NAME, "rows": {TYPE: {"dotted.key": value}}, "top": {"dotted
 clksite_reserve.py writes; "top" is optional and addresses the plan root).  A value {"$delete": true} removes the key.
 
   die_rows.py apply   PLAN ROWS [ROWS ...] -o OUT.json      apply row files in order; prints the changed types
-  die_rows.py windows PLAN KITWIN.json -o ROWS.json [--skip-types T,T] [--cap PS] [--seam PS]
+  die_rows.py windows PLAN KITWIN.json -o ROWS.json [--skip-types T,T] [--cap PS] [--seam PS] [--margin PS]
         die_sta_related --kit-window-out table -> one "top" row clock.tap_window.per_port_ps (measured per-port
         related-pair damage of the die clock tree of record, gen_phys.tap_window_ports).  A port above --cap
         (default period / 4, the gen_phys limit) is clamped and listed as "over_cap": that port needs a tree fix,
         not a wider window.  --skip-types keeps the flat window of those types (signed views stay valid).
-        --seam PS also sets clock.seam_hold.seam_ps.
+        --seam PS also sets clock.seam_hold.seam_ps.  --margin PS (default 10) is added to every measured need: the
+        need is nominal and exact for one tree, so a window without margin is void after any tap or route change
+        (FABLE-PD-KV-HG1 section 3).  A port whose need + margin passes the cap is "over_cap" and FAILS the command
+        (exit 1, rows still written) unless --allow-over-cap: fix the tree at that port.
 """
 import argparse
 import copy
@@ -48,7 +51,7 @@ def apply_rows(plan, rowfile):
     return sorted(changed)
 
 
-def window_rows(plan, kitwin, skip=(), cap=None, seam=None, lane="die"):
+def window_rows(plan, kitwin, skip=(), cap=None, seam=None, lane="die", margin=10.0):
     cap = float(plan["die"]["period_ps"]) / 4.0 if cap is None else float(cap)
     old = ((plan.get("clock") or {}).get("tap_window") or {}).get("per_port_ps") or {}
     table, over = {t: v for t, v in old.items() if t in skip}, []
@@ -57,14 +60,15 @@ def window_rows(plan, kitwin, skip=(), cap=None, seam=None, lane="die"):
             continue
         row = {}
         for port, need in sorted(ports.items()):
-            if need > cap:
+            want = float(need) + float(margin)
+            if want > cap:
                 over.append([tn, port, need])
-            row[port] = round(min(float(need), cap), 3)
+            row[port] = round(min(want, cap), 3)
         table[tn] = row
     top = {"clock.tap_window.per_port_ps": table}
     if seam is not None:
         top["clock.seam_hold.seam_ps"] = float(seam)
-    return {"lane": lane, "top": top, "over_cap": over, "cap_ps": cap, "skipped": sorted(skip),
+    return {"lane": lane, "top": top, "over_cap": over, "cap_ps": cap, "margin_ps": float(margin), "skipped": sorted(skip),
             "source_plan_sha256": kitwin.get("plan_sha256")}
 
 
@@ -74,7 +78,8 @@ def main(argv=None):
     a = sub.add_parser("apply"); a.add_argument("plan"); a.add_argument("rows", nargs="+"); a.add_argument("-o", required=True)
     w = sub.add_parser("windows"); w.add_argument("plan"); w.add_argument("kitwin"); w.add_argument("-o", required=True)
     w.add_argument("--skip-types", default=""); w.add_argument("--cap", type=float); w.add_argument("--seam", type=float)
-    w.add_argument("--lane", default="die")
+    w.add_argument("--lane", default="die"); w.add_argument("--margin", type=float, default=10.0)
+    w.add_argument("--allow-over-cap", action="store_true")
     args = ap.parse_args(argv)
     plan = json.load(open(args.plan))
     if args.cmd == "apply":
@@ -85,11 +90,11 @@ def main(argv=None):
         print(json.dumps({f: {"changed": len(v), "types": v} for f, v in report.items()}))
         return 0
     rows = window_rows(plan, json.load(open(args.kitwin)), tuple(t for t in args.skip_types.split(",") if t),
-                       args.cap, args.seam, args.lane)
+                       args.cap, args.seam, args.lane, args.margin)
     json.dump(rows, open(args.o, "w"), indent=1)
     print(json.dumps({"types": len(rows["top"]["clock.tap_window.per_port_ps"]), "over_cap": len(rows["over_cap"]),
-                      "cap_ps": rows["cap_ps"]}))
-    return 0
+                      "cap_ps": rows["cap_ps"], "margin_ps": rows["margin_ps"]}))
+    return 1 if rows["over_cap"] and not args.allow_over_cap else 0
 
 
 if __name__ == "__main__":

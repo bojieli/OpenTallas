@@ -543,6 +543,29 @@ def fixed_ft_rects(t):
     return rects
 
 
+FT_CELL_KEEPOUT_UM = 0.54     # 2 rows: clock.reserved_sites_um rects carry a 0.25-um margin round the clock cell body
+
+
+def planned_point_rects(t, halo):
+    """Type-frame rects no die clock cell may sit in (--clock-point-keepouts UM, FABLE-PD-KV-HG1 B-2): the type build turns
+    every die clock cell site into a placement blockage, so a cell on a planned register point moves that register.
+    -> fixed FT bit cells grown by FT_CELL_KEEPOUT_UM, and a +-halo box round every count-aligned START reader / writer
+    stage and every ft / internal station centre that is not on the type face."""
+    w, h = t["outline_um"]
+    g = FT_CELL_KEEPOUT_UM
+    rects = [(x0 - g, y0 - g, x1 + g, y1 + g) for x0, y0, x1, y1 in fixed_ft_rects(t)]
+    pts = []
+    for s in list(t.get("ft_slots", []) or []) + list(t.get("internal_stations", []) or []):
+        pts += [q for q in s.get("regs_um") or [] if 1e-6 < q[0] < w - 1e-6 and 1e-6 < q[1] < h - 1e-6]
+    ck = t.get("clock") or {}
+    for key in ("landing_reader_start", "landing_writer_start"):
+        for br in ((ck.get(key) or {}).get("branches") or {}).values():
+            pts += [sg["xy_um"] for sg in br.get("stages") or [] if isinstance(sg.get("xy_um"), (list, tuple))]
+    for x, y in sorted(set((round(q[0], 3), round(q[1], 3)) for q in pts)):
+        rects.append((x - halo, y - halo, x + halo, y + halo))
+    return rects
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -600,6 +623,15 @@ class SiteMap:
                     a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                     self.forb.append((min(a[0], b[0]), min(a[1], b[1]),
                                       max(a[0], b[0]), max(a[1], b[1]), "ft_fixed"))
+        if CLOCK_POINT_KEEPOUT_UM:              # FABLE-DIE-KV opt-in: planned register points are no die clock-cell site
+            ph, fixed = float(CLOCK_POINT_KEEPOUT_UM), {}
+            for n, p in P.parts.items():
+                tn = p["type"]
+                if tn not in fixed:
+                    fixed[tn] = planned_point_rects(P.types[tn], ph)
+                for x0, y0, x1, y1 in fixed[tn]:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]), "plan_point"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
@@ -707,6 +739,10 @@ SEAM_PROBE_UM = 2.7
 #   rectangle (+ the hard-core halo) for die clock cells. QC bare PHY slots carry no hard_cores, so without this the die
 #   tree placed 89 cells inside native SerDes/UCIe bodies (Codex reach_safe phy_window_census). Default off: byte-identical.
 CLOCK_TYPE_KEEPOUTS = False
+# CLOCK_POINT_KEEPOUT_UM (--clock-point-keepouts UM, FABLE-DIE-KV): SiteMap also forbids planned_point_rects of every type
+#   (fixed FT bit cells, START reader / writer stages, station centres). KV HG1: 223 planned points and 2,958 FT bit cells lay
+#   in die clock cell sites. Default None: byte-identical.
+CLOCK_POINT_KEEPOUT_UM = None
 CHAIN_HOP_MAX_UM = None
 DETOUR_ADAPTIVE = False
 DETOUR_STATS = []
@@ -6356,6 +6392,10 @@ def main(argv=None):
     k.add_argument("--clock-type-keepouts", action="store_true",
                    help="DIE-QC-47 opt-in: die clock cell sites also avoid every partition type clock.keepouts_um "
                         "rectangle (+2.16 um halo), e.g. bare PHY bodies. Default off (byte-identical)")
+    k.add_argument("--clock-point-keepouts", type=float, default=None, metavar="UM",
+                   help="FABLE-DIE-KV opt-in: die clock cell sites also avoid every planned register point of the types "
+                        "(fixed FT bit cells + 0.54 um, START reader / writer stages and station centres +- UM, e.g. 3). "
+                        "Default off (byte-identical)")
     k.add_argument("--chain-hop-max", type=float, default=None, metavar="UM",
                    help="CLK-TOOL-7 opt-in: the DME chain model rejects (prices as infinite) any candidate chain with a "
                         "repeater hop > UM (HBM street_body: 450). Default: no limit")
@@ -6523,10 +6563,11 @@ def main(argv=None):
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
-    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS, CLOCK_POINT_KEEPOUT_UM
     DETOUR_SEAM_PASS = bool(getattr(a, "detour_seam_pass", False))
     CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
     CLOCK_TYPE_KEEPOUTS = bool(getattr(a, "clock_type_keepouts", False))
+    CLOCK_POINT_KEEPOUT_UM = getattr(a, "clock_point_keepouts", None)
     CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
     if CHAIN_HOP_MAX_UM is not None and not (math.isfinite(CHAIN_HOP_MAX_UM) and CHAIN_HOP_MAX_UM > 0):
         raise SystemExit("--chain-hop-max must be finite and positive")

@@ -36,5 +36,33 @@ class T(unittest.TestCase):
         self.assertEqual(C.merge_rects(rs, 5), C.merge_rects(list(reversed(rs)), 5))
 
 
+    def test_no_wall_along_a_core_edge(self):
+        # FABLE-PD-KV-HG1 B-1 / HEAD NF14: four 2.16-um sites in the 2.16-um channel above a core must not become one
+        # 214-um M1-M7 strip in front of the core's edge pins; the cap gives way and the fine rects stay
+        core = (0.0, 0.0, 300.0, 100.0)
+        rs = [(x, 102.16, x + 2.16, 103.24) for x in (10.0, 80.0, 150.0, 222.0)]
+        out, st = C.merge_rects(rs, 1, blockers=[core])
+        self.assertEqual(out, sorted(rs))
+        self.assertEqual((st["over_cap"], st["walls"]), (3, 0))
+        old, st_old = C.merge_rects(rs, 1, blockers=[core], edge_gap_um=0)      # the old merge, for the record
+        self.assertEqual(len(old), 1)
+        self.assertEqual(st_old["walls"], 1)
+
+    def test_short_merge_near_a_core_and_long_merge_far_from_it_still_happen(self):
+        core = (0.0, 0.0, 300.0, 100.0)
+        near = [(10.0, 102.16, 12.16, 103.24), (14.0, 102.16, 16.16, 103.24)]          # bbox 6.16 um long: no wall
+        far = [(10.0, 150.0, 12.16, 151.08), (80.0, 150.0, 82.16, 151.08)]             # 50 um from the core
+        out, st = C.merge_rects(near + far, 2, blockers=[core])
+        self.assertEqual(out, [(10.0, 102.16, 16.16, 103.24), (10.0, 150.0, 82.16, 151.08)])
+        self.assertEqual(st["walls"], 0)
+
+    def test_bucket_prepass_keeps_the_rule(self):
+        core = (0.0, 0.0, 4000.0, 100.0)
+        rs = [(i * 2.5, 102.16, i * 2.5 + 2.16, 103.24) for i in range(1600)]
+        out, st = C.merge_rects(rs, 100, blockers=[core])
+        self.assertEqual(st["walls"], 0)
+        self.assertTrue(all(o[2] - o[0] <= C.EDGE_MAX_LEN_UM for o in out))
+
+
 if __name__ == "__main__":
     unittest.main()

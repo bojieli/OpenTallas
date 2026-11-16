@@ -147,3 +147,38 @@ def test_spatial_wall_components_preserve_touching_transitive_geometry():
     assert got == {frozenset([0, 1, 2]): (-20., -5., 30., 16.),
                    frozenset([3, 4]): (62.5, 60., 80., 80.),
                    frozenset([5]): (200., 200., 210., 210.)}
+
+
+def test_point_keepouts_forbid_planned_register_points(monkeypatch):
+    class Pts(_P):
+        types = {'t': {'outline_um': [200., 200.],
+                       'ft_slots': [dict(name='ft0', width=1, stations=2, bit_site_cell_um=[1.404, .27],
+                                         bit_sites_um=[[[80., 60.], [80., 60.27]]], regs_um=[[0., 50.], [40., 50.]])],
+                       'internal_stations': [dict(conn='bus:x', regs_um=[[120., 120.], [200., 120.]])],
+                       'clock': {'landing_reader_start': {'branches': {'b': {'stages': [{'xy_um': [150., 30.]}]}}},
+                                 'landing_writer_start': {'branches': {'o': {'stages': [{'xy_um': [20., 180.]}]}}}}}}
+        parts = {'p0': {'type': 't', 'origin_um': [0., 0.], 'orient': 'R0'},
+                 'p1': {'type': 't', 'origin_um': [200., 0.], 'orient': 'MX'}}
+    monkeypatch.setattr(D, 'CLOCK_TYPE_KEEPOUTS', False)
+    monkeypatch.setattr(D, 'CLOCK_POINT_KEEPOUT_UM', None)
+    assert D.SiteMap(Pts()).forb == []                                   # default: unchanged
+    rects = D.planned_point_rects(Pts.types['t'], 3.0)
+    assert len(rects) == 5                                               # 1 FT column + 4 interior points (2 face points skipped)
+    monkeypatch.setattr(D, 'CLOCK_POINT_KEEPOUT_UM', 3.0)
+    site = D.SiteMap(Pts())
+    assert len(site.forb) == 10
+    for q in ((80.1, 60.1), (79.6, 60.1), (40., 50.), (42.9, 52.9), (120., 120.), (150., 30.), (20., 180.), (350., 170.)):
+        assert site.why(q) == 'plan_point', q
+    for q in ((78.9, 60.1), (0.9, 50.), (199., 120.), (43.5, 50.), (150., 34.)):
+        assert site.legal(q), q
+    near = site.nearest((150., 30.))
+    assert site.legal(near) and abs(near[0] - 150.) + abs(near[1] - 30.) < 4.0
+
+
+def test_ot_clk_argv_maps_top_point_keepouts():
+    import importlib
+    sys_path = str((__import__('pathlib').Path(__file__).resolve().parents[1] / 'clk'))
+    __import__('sys').path.insert(0, sys_path)
+    O = importlib.import_module('ot_clk')
+    src = open(O.__file__).read()
+    assert 'point_keepouts_um' in src and '--clock-point-keepouts' in src
