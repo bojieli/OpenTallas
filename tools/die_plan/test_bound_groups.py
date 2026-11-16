@@ -138,3 +138,32 @@ def test_input_abi_loader_selects_exact_partition_and_explicit_module_retarget(t
         if mutation=='type':bad['source_type']='other'
         if mutation=='retarget':bad['retarget_module']='other'
         with pytest.raises(G.BoundGroupError):G.input_abi_contract(tmp_path,'type0',new,bad)
+
+
+def test_segmented_group_registers_only_exact_native_dependency_and_fails_closed(tmp_path):
+    import qc_su_lane_cut as C
+    from test_qc_su_lane_cut import fixture
+    src=fixture().replace('leaf u_u_head0 (','qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(0)) u_u_head0 (')
+    grouped,_,_=C.cut(src,0,memory_read_extra=44,segmented_memory_delay=1)
+    head=tmp_path/'rtl/physical/qfd_dv_lane_h_su_mem9.sv'
+    head.parent.mkdir(parents=True);head.write_text('module qfd_dv_lane_h_su_mem9(); endmodule\n')
+    native=tmp_path/'physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v'
+    b=N(base=str(tmp_path),extra_lib=[])
+    with pytest.raises(G.BoundGroupError,match='ot_sram_1r1w_32x64_m1'):
+        G.register_masters(b,src,grouped,segmented_memory_delay=1)
+    assert b.extra_lib==[]
+    native.parent.mkdir(parents=True);native.write_text('module ot_sram_1r1w_32x64_m1(); endmodule\n')
+    G.register_masters(b,src,grouped,segmented_memory_delay=1)
+    G.register_masters(b,src,grouped,segmented_memory_delay=1)
+    assert b.extra_lib==[str(head),str(native)]
+    # Even when the head was already present in the as-built module inventory,
+    # its newly selected opt-in native SRAM dependency is still necessary.
+    b2=N(base=str(tmp_path),extra_lib=[])
+    source_mem9=src.replace('qfd_dv_lane_h_safe2', 'qfd_dv_lane_h_su_mem9')
+    G.register_masters(b2,source_mem9,grouped,segmented_memory_delay=1)
+    assert b2.extra_lib==[str(native)]
+    ordinary,_,_=C.cut(src,0,memory_read_extra=9)
+    with pytest.raises(G.BoundGroupError,match='exact enabled mem9 head'):
+        G.register_masters(N(base=str(tmp_path),extra_lib=[]),src,ordinary,segmented_memory_delay=1)
+    with pytest.raises(G.BoundGroupError,match='explicit 0 or 1'):
+        G.register_masters(N(base=str(tmp_path),extra_lib=[]),src,grouped,segmented_memory_delay=2)
