@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.qwen.rope-resident-boundary.v1",
+  "status": "PASS_COMPONENT_SELECTED_PARAMETER_REPLAY",
+  "parameters": {
+    "NATIVE32": 1,
+    "PIPE_JOIN": 1,
+    "ROPE": 1,
+    "ROPE_DELAY": 1024,
+    "OVL": 0,
+    "FIX_ROPE_SLOT_GUARD": 1
+  },
+  "requests": 4,
+  "serialized_records": 292,
+  "gold_512bit_rope_words": 32,
+  "controls": {
+    "as_found_guard65": "CAUGHT",
+    "token_index": "CAUGHT"
+  },
+  "testbench_sha256": "5bc12628350ec0ef646c92463bff07c62be386fad68e1cc115b25ba6735ff3a9",
+  "scope": "Actual context acceptance, positional row selection,73record serialization and QC resident readback. HBM joined words injected. Selected source-event parameters match; final shared calendar/transport and physical qualification remain separate."
+}

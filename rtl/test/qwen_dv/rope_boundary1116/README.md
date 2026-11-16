@@ -5,3 +5,5 @@ Run through `ot-run` with a fresh scratch directory. The pinned capsule retains 
 The default transmitter's guard65 fails at its first valid RoPE slot. Candidate `FIX_ROPE_SLOT_GUARD=1` changes that terminal guard to73 without adding an edge. The capsule also carries a token-index mutant. Actual current HG1 still selects the legacy embedding-only producer; the KV owner must select and bind the context-enabled successor, with this correction, before any programme adoption.
 
 The native address is deliberately keyed by resident vocab-token identity. The loaded eight RoPE words are chosen from accepted request position on the KV side. Replacing the resident token with position in the QC address would break its identity checks.
+
+Exact successor parameter replay uses `run.sh /fresh/scratch/path ovl0`. It selects NATIVE32=1, PIPE_JOIN=1, ROPE=1, ROPE_DELAY=1024, OVL=0 and FIX_ROPE_SLOT_GUARD=1. The four-request/292-record/32-word proof and both controls pass; `qualification_ovl0.json` preserves this distinct receipt. The original OVL1 result remains historical.
