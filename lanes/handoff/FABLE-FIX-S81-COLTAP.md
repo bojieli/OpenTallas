@@ -63,3 +63,8 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - F2s3 plan epyc10 s81-b3-clk/ev/B6gF2s3.json 012db35daaea = F2s2 + my rows (216/216 applied, checked) + FABLE-DIE-S81 reset rows (copy_depth 3 on 216). Rebind started 16:41Z, log s81-b3-clk/log/B6gF2s3.log.
 - r2 EVIDENCE pilot RUNNING: epyc7 /srv/opentallas-scratch2/claude/fable-fix-s81-coltap/ev1 (script ev_go.sh; plan F2s3_preview.json = F2s2 + my rows only, bind out F2s2, tools srcx = F2s2 src + both commits). Client log intel2 ~/fable-fix-s81-coltap/ev1_client.log (ot-run from intel2; fleet hosts cannot resolve each other). Read: 4_1_cts.log OT_TAP_CORE lines, then the CTS STA (epyc10 fable-fix-s81-col/an/cts_sta.sh, copy to epyc7).
 - Next after the read: post it; on the F2s3 bind PASS generate the 5 countable pilots (ev_go.sh with B=run/b/B6gF2s3, PLAN=ev/B6gF2s3.json, v3 tree, no srcx) to route.
+
+## 08:5x 11-16
+- Evidence from the F2s2 bind is not possible: KIT_TOPOLOGY_BIND_STALE on any type change (ev1, ev2 on epyc7 are dead dirs, deletable). r2 comes from the real F2s3 bind: when epyc10 s81-b3-clk/log/B6gF2s3.log shows BIND_RC=0, replicate run/b/B6gF2s3/{out,src,asbuilt_run.json,sidecar_new.json} + ev/B6gF2s3.json to a non-epyc10 host (DIE-S81-92 replicates to epyc7/8/9) and run ev_go.sh with B=.../run/b/B6gF2s3, PLAN=ev/B6gF2s3.json, SRC=$B/src (check tap_balance.tcl has the tb_hung top-up line; else use srcx-style overlay).
+- FABLE-PD-S81-F2s3 ADOPT-OK notes answered: 0.576 um tap offset is pre-existing (hw +0.108 / he +0.684 in F2s2), no row fix. Per pilot report: s arrival (lead 100 unmeasured), reset-copy hop um + slack, OT_CLOCK_TAPS lines.
+- S81-IFN0-HALVES live (epyc7 s81-ifn0-halves/hw0, he0).
