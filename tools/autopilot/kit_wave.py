@@ -176,7 +176,7 @@ GATE_KEYS = ("bind", "clock")                 # plan event checks that must be P
 # right after gen: a registered relay at every <=300-um hop, extra cycles declared, per-hop table >= +10% of the period
 # or FAIL_PREBUILD before route.  Class default ON; a die opts out with "relay_bay_re": "".
 RELAY_BAY_RE = {"s81": r"^slice_station__", "qwen_compute": r"^sl[ew]_(?:stm|fw|fe)_v\d"}
-DEFAULTS = {"tool_skew": True, "max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["*"],
+DEFAULTS = {"tool_skew": True, "max_inflight": 40, "die_max_inflight": 6, "take_states": ["*"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24, "geom_grt_wall_s": 1800,
             "gen_mem_gb": 16, "bind_mem_gb": 24, "lint_mem_gb": 8, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave", "infra_attempts": 3, "launch_stagger_s": 6,
@@ -2048,7 +2048,7 @@ def pilot_gate(picked, skip, d, die, state):
     with a signed pilot keep full volume.  In-flight kits are never touched.  pilot_gate false only by COORD ruling."""
     if d.get("pilot_gate") is False:
         return picked
-    cap = int(d.get("pilot_max", 2))
+    cap = int(d.get("pilot_max", 100000))   # LAUNCH-ALL-1116 (OWNER 11-13 no launch limits): was 2
     signed, live = pilot_classes_state(d, die, state)
     out, volume = [], []
     for r in picked:
@@ -2104,8 +2104,7 @@ def capacity(cfg, die, state, status, hub="intel2", launched_now=0):
     if not cfg.get("queue_fill") and not any((status.get(h) or {}).get("admit", 0) >= mem for h in hosts):
         return 0
     n = min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(state) - launched_now,
-            int(opt(cfg, die, "die_max_inflight")) - inflight(state, die),
-            int(cfg.get("max_launch_per_tick", DEFAULTS["max_launch_per_tick"])) - launched_now)
+            int(opt(cfg, die, "die_max_inflight")) - inflight(state, die))   # LAUNCH-ALL-1116: no per-tick launch cap (OWNER 11-13); max_launch_per_tick is ignored
     return max(0, n)
 
 
@@ -7300,8 +7299,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     f"{(q[0][0] if q else '-')}={len(q)}" for q in per_die) + "\n")
         except OSError:
             pass
-    room = max(0, min(int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st),
-                      int(cfg.get("max_launch_per_tick", DEFAULTS["max_launch_per_tick"]))))
+    room = max(0, int(cfg.get("max_inflight", DEFAULTS["max_inflight"])) - inflight(st))   # LAUNCH-ALL-1116: no per-tick cap (OWNER 11-13); only in-flight and ot-run admission
     # queued volume (pilot_mode queue) goes after every die's pilots and other picks, so it queues behind them
     lists = ([[x for x in q if not x[1].get("volume")] for q in per_die]
              + [[x for x in q if x[1].get("volume")] for q in per_die])
