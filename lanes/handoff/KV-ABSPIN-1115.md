@@ -15,7 +15,7 @@ git view (physical/die_plan/qwen_kvsys/...) -> pins, pinwire, under-blanket
  kv3_head_eighth_e5 (a41e22f7b6be) 546 / 0 / 546;  e6 (b532bf846d2d) 1358 / 0 / 1358
  kv3_pv_pair pvview_1103 (25ada09fdd3b) 1668 / 0 / 1668;  ot_qwen_tp8_pv_join_t pvview_1103 (dd2dfba96f19) 4621 / 0 / 4621
  qkd_astk_ex_s ref_tile/qkd_astk_ex_s_hg1101 (d967f9d5abfb) 102 / 0 / 102
- qkd_ectlk_q0..q3 hgclk_1030 (9ab7a65fbadd, 4f96..., e1719b2034c6 or 49d7.., 4590f59fc3bd) 1478/1968/1957/1990, all 0 / all under blanket
+ qkd_ectlk_q0..q3 hgclk_1030 (9ab7a65fbadd, 4f3eb96c644f, e1719b2034c6, 4590f59fc3bd) 1478/1968/1957/1990, all 0 / all under blanket
  7q views (epyc7 kv-102/kvgeom7/views7q): qkd_ahub f357274f6d49 631 / 0 / 631; qkd_kvs_ctl a2df4fbd0f84 7076 / 0 / 7076
  qkd_kvs_pcc / pcf / *_h_head_p (all 11 variants found): merge_pin_wires merged_rects 0.
  NOT FOUND as LEF on any host: qkd_hr_cdc_hi, qkd_hr_core_peer; qkd_hr_core_rx 02aefcb4bee0 merged 0.
