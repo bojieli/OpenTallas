@@ -187,6 +187,16 @@ namespace eval ot_rm_local {
   puts "OT_RM_LOCAL moved_existing_FF=$expected total_existing_cells=[llength $moves] ctrl=17 rt_c=1 rpq=24 rt_d=8 rpw=[expr {$empty8 ? 8 : 0}]; q512/wclk/fixedsites unchanged; target_um=[expr {[lindex $center 0]/$dbu}],[expr {[lindex $center 1]/$dbu}]"
   puts "OT_RM_LOCAL clock/reset/data identities unchanged; sourceearly-116/late0 and residual hold/removal repair remain; DPL orientation/legalization + actual image + STA pending"
  }
+ # Complete visibility is scoped to actual read-clock endpoints, not merely
+ # the u_rm namespace. Any write-clock/memory/foreign endpoint on root14 must
+ # remain an explicit non-target tail in the report.
+ proc read_endpoint {name} {
+  set n [canonical $name]
+  if {[regexp {u_core[.]g_rst_tree[.](rt_c|rt_d)([^A-Za-z_0-9])} $n]} {return 1}
+  if {[regexp {u_core[.]u_rm[.](rp|rp_g|wp_g1|wp_g2|f1|f2|fault)([^A-Za-z_0-9])} $n]} {return 1}
+  if {[regexp {u_core[.]u_rm[.]g_rd.([0-7]).[.](q|g_local[.]rpq|g_local[.]g_empty_local[.]rpw)([^A-Za-z_0-9])} $n]} {return 1}
+  return 0
+ }
  # Call AFTER the candidate's own clock_taps assignment for complete load visibility.
  proc visibility {{root clk_t14}} {
   variable blk
@@ -201,10 +211,10 @@ namespace eval ot_rm_local {
     set i [$t getInst];set n [$i getName]
     if {[wire $i]} {foreach q [$i getITerms] {if {[[$q getMTerm] getIoType] eq "OUTPUT"} {lappend todo [$q getNet]}};continue}
     if {[[$t getMTerm] getName] ni {CLK CLKN CK CKN}} {dict set unknown "$n/[[$t getMTerm] getName]" 1;continue}
-    if {[regexp {u_core[.](u_rm[.]|g_rst_tree[.]rt_[cd])} [canonical $n]]} {dict set rm $n 1} else {dict set other $n 1}
+    if {[read_endpoint $n]} {dict set rm $n 1} else {dict set other $n 1}
    }
   }
-  puts "OT_RM_LOCAL ROOT_VISIBILITY $root RM=[dict size $rm] nonRM=[dict size $other] unknown=[dict size $unknown] nonRM_names=[dict keys $other] unknown_names=[dict keys $unknown]"
+  puts "OT_RM_LOCAL ROOT_VISIBILITY $root RM_read=[dict size $rm] nonRM_or_wclk=[dict size $other] unknown=[dict size $unknown] nonRM_names=[dict keys $other] unknown_names=[dict keys $unknown]"
   return [list $rm $other $unknown]
  }
 }

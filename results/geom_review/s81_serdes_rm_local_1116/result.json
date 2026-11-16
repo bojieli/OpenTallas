@@ -1,7 +1,7 @@
 {
   "verdict": "PASS_F2_PRIVATE_PHYSICAL_IDENTITY_AND_GEOMETRY_ONLY",
   "scope": "Default-off placement of existing local read-clock controls, perbank pointer copies and reset sources. No route/CTS/removal/recovery signoff claim.",
-  "helper_sha256": "ed34e2ea412ef5b3a7140da31fa76d10d01a15250d4f9a31e241b8485f482004",
+  "helper_sha256": "257fe8b5a03ad9e2f973dff8c859c5a71880e013b1f57dbbf75f2376ed620012",
   "flags": {
     "physical_enable": "OT_SERDES_RM_LOCAL=1",
     "physical_optional_LOCAL_EMPTY8_profile": "OT_SERDES_RM_LOCAL_EMPTY8=1",
@@ -90,5 +90,6 @@
     "TT setup/recovery and FF hold/removal after exact repair with original constraints",
     "Source early-116/late0 and hold25 preserved; compacting alone does not remove residual hold/removal debt"
   ],
-  "adopted": false
+  "adopted": false,
+  "root14_visibility_selector_gate": "PASS defaultoff, exactread endpoint positives, wclk wp/wp_g/rp_g1/rp_g2/mem and foreign tails negatives; actual all-loadreport pendingfreshJ2"
 }
