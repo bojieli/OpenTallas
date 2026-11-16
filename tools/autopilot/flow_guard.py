@@ -601,7 +601,7 @@ def held_key(st, die, item, claim=False):
     return ""
 
 
-def probe_result(st, die, item, stage, passed, failed_stage=False):
+def probe_result(st, die, item, stage, passed, failed_stage=False, required_stage=None, required_input=None):
     """the probe launch of a family finished.  passed (it got past the class's stage, or was enqueued): the family leaves the class, the class closes
     when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)
     failed_stage=True judges each class separately against the actual failed stage; unknown stages never prove passage.
@@ -611,6 +611,10 @@ def probe_result(st, die, item, stage, passed, failed_stage=False):
     out = []
     for key, e in list(g["open"].items()):
         if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or probe_item(e) != item:
+            continue
+        if required_stage is not None and e.get("stage") != required_stage:
+            continue
+        if required_input is not None and e.get("inp_probe") != required_input:
             continue
         stage_passed = (stage in STAGE_ORDER and e.get("stage") in STAGE_ORDER
                         and stage_rank(stage) > stage_rank(e["stage"])) if failed_stage else passed
@@ -624,6 +628,26 @@ def probe_result(st, die, item, stage, passed, failed_stage=False):
             e["inp"] = e.get("inp_probe") or e.get("inp")
             out.append((key, f"probe {item} failed again at {stage}: class stays shut until the inputs change again"))
     return out
+
+
+def refresh_verified_source_probe(st, key, inp, evidence, active=False, now=None):
+    """An exact current source proof may refresh an obsolete inactive source probe.
+    The previous probe and failure entry stay in history. Active/unknown producers,
+    missing old identity, and every other stage retain their existing lifecycle.
+    """
+    g = fg_state(st)
+    e = g["open"].get(key) or {}
+    if e.get("kind") or e.get("stage") != "src_manifest" or e.get("state") != "probe" or not inp:
+        return False
+    if e.get("inp_probe") == inp:
+        return True
+    if active or not e.get("inp_probe"):
+        return False
+    g.setdefault("source_probe_history", []).append(dict(
+        key=key, previous=json.loads(json.dumps(e)), inp=inp, evidence=evidence,
+        at=time.time() if now is None else now))
+    e["inp_probe"], e["probe"] = inp, {}
+    return True
 
 
 def breaker_tick(st, now=None, inputs=None):
