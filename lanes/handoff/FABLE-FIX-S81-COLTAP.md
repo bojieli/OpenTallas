@@ -104,3 +104,7 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - DIE-S81-92 folded rows_F2s4_colfix into B6gF2s4 (sha256 28a6fe4fec53254f, epyc10 s81-b3-clk/ev/B6gF2s4.json); bind queued; col holds key on event_adopt:B6gF2s4.
 - Checked B6gF2s4: 954 plan-outline overlaps all clear at kit offsets (498 hw|he gap 0.036; 456 col3_c|bf16_half MY gap 0.000). Kit offsets: hw +0.108, he +0.684, bf16_half MY +0.996, everything else +0.108 (cfg7_seq MY -0.108).
 - NEXT: CTS read r2 / h10_r2; GRT-stage STA; when the F2s4 bind passes regenerate the five kits on it (countable) on the D2-successor tree and rerun; PASS only from those.
+
+## 14:4x 11-16: r2 CTS read (evidence kit)
+- tap means 367..468 (was 415..542), 5/79 core pins outside 20. Halves 460 / 468 (was 520 / 542). s10 / s12 452, s11 / s14 421 / 422 (-29), s13 445. ROMs c12_6 +25, c13_2 +32, c13_6 +43. Low taps clk_t10 365, clk_t23 381; clk_t13 max 513.
+- TODO on r2: re-measure per-port windows on this 4_cts DB (tap_window_measure.py --log 4_1_cts.log); GRT-stage STA when 5_1_grt.odb exists.
