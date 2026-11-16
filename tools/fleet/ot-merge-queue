@@ -1,0 +1,1194 @@
+#!/usr/bin/env python3
+"""ot-merge-queue: automated merge queue for main (MERGE-QUEUE-1, OWNER order 2026-11-14; replaces the hand-run ROOT-MERGE lane).
+
+Run every 5 minutes by the systemd user timer ot-merge-queue.timer on the hub (intel2). One tick:
+  1. read the review queue (~/coord/lanes/COORD-REVIEW-QUEUE.md) for sha-pinned approvals
+        COORD APPROVED: <branch> @<sha>            (several per line allowed; the branch may be left out: "COORD APPROVED: @<sha>")
+        COORD REVOKED: <branch> @<sha>             (cancels an approval that has not landed yet)
+     only on a line written by COORD / OWNER (first [author] tag COORD or OWNER, or no tag); a lane quoting the line is ignored
+  2. skip every approval already in the state file (~/merge-queue/state.json), so a tick is idempotent;
+  3. for each new approval, in parallel, in its own scratch worktree of the queue clone: fetch the sha (GitHub first, then the
+     hub checkout, read-only), apply it onto current main (a no-ff merge when every commit of the branch is new; cherry-pick -x of
+     only the new commits when the branch also carries rebased copies of commits main already has), check that the changed
+     Python/shell files parse, pick the tests from the touched paths (select_tests) and run them with pytest-xdist.  A test that
+     also fails on main is baseline, not the branch's;
+  4. land serially in approval order: push the tip to main (never forced), tag flow-<date>-<xx>-{head,qc,kv,s81,hbm}, post a
+     MERGED line.  When main moved after the test the change is applied again; it is re-tested only when the files main changed
+     overlap the files the branch changes (a textual conflict is a MERGE-FAIL);
+  5. a conflict, red tests or a sha that cannot be fetched (after MQ_WAIT_TICKS ticks) -> one MERGE-FAIL line addressed to the
+     branch's lane (from its READY line) naming the conflict files or the failing tests; the approval is skipped;
+  6. after a push, the sync hook (MQ_SYNC_HOOK, default ot-tools-sync) materializes main@sha as the pinned tools tree rt/<sha>.
+Log ~/merge-queue/log; lock ~/merge-queue/lock (a tick that finds it held exits 0).
+
+usage: ot-merge-queue [tick] [--dry-run] [--only SHA] | status | parse | gate <branch>[@<sha>] | known-red
+"""
+import argparse
+import concurrent.futures as CF
+import datetime
+import fcntl
+import json
+import os
+import re
+import shlex
+import shutil
+import subprocess as S
+import sys
+import threading
+import time
+from pathlib import Path
+
+HOME = Path.home()
+MQ = Path(os.environ.get("MQ_HOME", HOME / "merge-queue"))
+REPO = Path(os.environ.get("MQ_REPO", "/srv/opentallas-scratch2/claude/mq1/repo"))
+WT = Path(os.environ.get("MQ_WT", "/srv/opentallas-scratch2/claude/mq1/wt"))
+COORD = Path(os.environ.get("MQ_COORD", HOME / "coord"))
+QUEUE_REL = os.environ.get("MQ_QUEUE_REL", "lanes/COORD-REVIEW-QUEUE.md")
+LANE_REL = os.environ.get("MQ_LANE_REL", "lanes/MERGE-QUEUE-1.md")
+COMMIT = os.environ.get("MQ_COORD_COMMIT", str(COORD / "bin/coord-commit.sh"))
+PY = os.environ.get("MQ_PYTHON", str(MQ / "venv/bin/python"))
+REMOTE = os.environ.get("MQ_REMOTE", "origin")
+FALLBACK = os.environ.get("MQ_FALLBACK_REMOTE", "hub")          # fetch only (push URL disabled in the clone)
+MAIN = os.environ.get("MQ_MAIN", "main")
+PAR = int(os.environ.get("MQ_PAR", "4"))
+XDIST = int(os.environ.get("MQ_XDIST", "16"))
+TEST_TIMEOUT = int(os.environ.get("MQ_TEST_TIMEOUT", "2400"))
+FLEET_TIMEOUT = int(os.environ.get("MQ_FLEET_TIMEOUT", "600"))
+WAIT_TICKS = int(os.environ.get("MQ_WAIT_TICKS", "6"))
+INFRA_TRIES = int(os.environ.get("MQ_INFRA_TRIES", "3"))
+REF_CAP = int(os.environ.get("MQ_REF_CAP", "40"))
+SYNC_HOOK = os.environ.get("MQ_SYNC_HOOK", str(Path(__file__).resolve().with_name("ot-tools-sync")) + " sync --sha {sha}")
+# rtl/lib + rtl/common: die_plan tools read REPO/rtl/lib/ot_reset_sync.sv etc.; without them test_bind failed on a sparse tree only
+# (pg-aware-1 288ada0041 / 240cf2612f5 false MERGE-FAIL 11-14 20:16 / 20:26)
+# Die source trees are NOT refreshed per merge (OWNER/COORD 11-15 after the 00:26 gen breakage): ot-src-refresh daily runs once a
+# day at 06:00 (ot-src-refresh.timer), batched, smoke-tested, with rollback.  MQ_SRC_HOOK stays for a manual/debug override only.
+SRC_HOOK = os.environ.get("MQ_SRC_HOOK", "")
+SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
+TAG_DATE = os.environ.get("MQ_TAG_DATE", "")
+MAX_BLOB = 95 * 1024 * 1024
+DIES = ("head", "qc", "kv", "s81", "hbm")
+ME = "MERGE-QUEUE"
+CO_AUTHOR = "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
+TERMINAL = {"MERGED", "ALREADY", "FAIL", "REVOKED"}
+
+APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:branch\s+)?(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
+# ("branch " before the name is accepted: COORD wrote 'COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef' 11-15)
+# 11-15 r130/r132 were written "COORD APPROVED (content): claude/x @sha" and "COORD APPROVED: (a) claude/x @sha ... (b) claude/y
+# @sha"; the queue saw neither.  Those forms count only on lines stamped from APPROVE_EXT_FROM on, so older lines in that
+# shape (superseded shas) never turn into new approvals.
+APPROVE_EXT_RE = re.compile(r"COORD (APPROVED|REVOKED)(?:\s*\([^)]{0,40}\))?:\s*(?:\([a-z0-9]\)\s*)?(?:branch\s+)?"
+                            r"(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
+APPROVE_HEAD_RE = re.compile(r"COORD (APPROVED|REVOKED)(?:\s*\([^)]{0,40}\))?:")
+LIST_ITEM_RE = re.compile(r"\(([a-z])\)\s*(?:branch\s+)?(claude/[\w./+-]+)\s*@\s*([0-9a-f]{7,40})\b")
+APPROVE_EXT_FROM = os.environ.get("MQ_APPROVE_EXT_FROM", "2026-11-15 11:00")
+LINE_TS_RE = re.compile(r"^- (\d{4}-\d\d-\d\d \d\d:\d\d)")
+QUOTE_RE = re.compile(r"\b(MERGED|MERGE-FAIL|READY) \[")      # a line that quotes an approval is not one
+# MERGE-QUEUE-1 11-14 20:00: only COORD (or OWNER) approves.  A line whose first [author] tag before the approval is any other
+# lane (a STATE / ASK quoting the line it asks for) is not an approval; a bare line without an author tag is a COORD ruling.
+AUTHOR_RE = re.compile(r"\[\s*([^\]\s;,]+)")
+APPROVERS = ("COORD", "OWNER")
+LANE_RE = re.compile(r"\b(?:READY|STATE|ASK) \[([A-Z][A-Za-z0-9_.-]*)")
+# READY gate stamp (FABLE-FLOW-0815 item 7, COORD 11-15: 14 train fails on 11-15, 13 of them red on main): a READY naming
+# "branch X @sha" must carry "GATE main=<main sha> pass=<passed>/<run>" = the branch rebased on that main and its touched
+# test files passing there.  The queue checks every new READY at once and posts BOUNCE to the lane when the stamp is missing
+# or wrong (stamp main not on main, not an ancestor of the tip, older than GATE_MAX_BEHIND main commits, or pass < run).
+READY_RE = re.compile(r"^- .{0,40}?\bREADY \[([A-Z][A-Za-z0-9_.-]*)")
+READY_BRANCH_RE = re.compile(r"\bbranch\s+(?:(?:hub|origin)(?::OpenTallas)?\s+)?([A-Za-z0-9][\w./+-]*)\s*@\s*([0-9a-f]{7,40})\b")
+GATE_RE = re.compile(r"\bGATE\s+main=([0-9a-f]{7,40})\s+pass=(\d+)/(\d+)")
+GATE_MAX_BEHIND = int(os.environ.get("MQ_GATE_MAX_BEHIND", "30"))
+GATE_HOW = ("READY needs a gate stamp: rebase the branch on current main, run its touched test files on that base, and add "
+            "'GATE main=<that main sha> pass=<passed>/<run>' to the READY line; then post a new READY")
+PRIORITY_RE = re.compile(r"\bpriority\s*:?\s*HIGH\b", re.I)
+TAG_RE = re.compile(r"\bflow-(\d{8})-([a-z]{2})-(?:head|qc|kv|s81|hbm)\b")
+_LOCK = threading.Lock()
+GATE_PAR = int(os.environ.get("MQ_GATE_PAR", "3"))        # `gate` commands at once (11-15 14:3x: 7 lane gates queued behind 1)
+
+
+class _ClonePLock:
+    """process-wide lock on the queue clone for the short ref / worktree writes (fetch, worktree add/remove): the tick and
+    several `gate` commands share one clone; two fetches into one ref fail with 'cannot lock ref'"""
+
+    def __enter__(self):
+        MQ.mkdir(parents=True, exist_ok=True)
+        self.f = open(MQ / "clone.lock", "w")
+        fcntl.flock(self.f, fcntl.LOCK_EX)
+        return self
+
+    def __exit__(self, *a):
+        fcntl.flock(self.f, fcntl.LOCK_UN)
+        self.f.close()
+
+
+CLONE_LOCK = _ClonePLock
+_FETCH = threading.Lock()
+DRY = False
+
+
+def now():
+    return datetime.datetime.now().astimezone()
+
+
+def stamp():
+    return now().strftime("%Y-%m-%d %H:%M %Z")
+
+
+def log(msg):
+    MQ.mkdir(parents=True, exist_ok=True)
+    line = f"{now().strftime('%Y-%m-%d %H:%M:%S')} {msg}"
+    print(line, flush=True)
+    with _LOCK, open(MQ / "log", "a") as f:
+        f.write(line + "\n")
+
+
+class GitError(RuntimeError):
+    pass
+
+
+def run(cmd, cwd=None, timeout=600, env=None, check=False):
+    try:
+        p = S.run(cmd, cwd=str(cwd) if cwd else None, capture_output=True, text=True, timeout=timeout, env=env)
+    except S.TimeoutExpired as e:
+        p = S.CompletedProcess(cmd, 124, e.stdout or "", (e.stderr or "") if isinstance(e.stderr, str) else "timeout")
+        if isinstance(p.stdout, bytes):
+            p.stdout = p.stdout.decode(errors="replace")
+    if check and p.returncode:
+        raise GitError(f"{' '.join(map(str, cmd))[:200]} rc={p.returncode}: {(p.stderr or p.stdout).strip()[:400]}")
+    return p
+
+
+def git(*a, cwd=REPO, check=True, timeout=600):
+    return run(["git", *a], cwd=cwd, timeout=timeout, check=check)
+
+
+def rev(ref, cwd=REPO):
+    p = git("rev-parse", "-q", "--verify", f"{ref}^{{commit}}", cwd=cwd, check=False)
+    return p.stdout.strip() if p.returncode == 0 else ""
+
+
+def is_ancestor(a, b, cwd=REPO):
+    return git("merge-base", "--is-ancestor", a, b, cwd=cwd, check=False).returncode == 0
+
+
+# ---------------------------------------------------------------- parsing
+
+def parse_approvals(text):
+    """-> ordered list of {'key','branch','sha','line','revoked'} (first approval of a key wins; REVOKED after it marks it)"""
+    out, seen = [], {}
+    for n, line in enumerate(text.splitlines(), 1):
+        ts = LINE_TS_RE.match(line)
+        ext = bool(ts) and ts.group(1) >= APPROVE_EXT_FROM
+        heads = list((APPROVE_HEAD_RE if ext else re.compile(r"COORD (APPROVED|REVOKED):")).finditer(line))
+        if not heads:
+            continue
+        if QUOTE_RE.search(line):
+            continue
+        au = AUTHOR_RE.search(line[:heads[0].start()])
+        if au and au.group(1) not in APPROVERS:
+            continue
+        found = [(m.group(1), m.group(2) or "", m.group(3).lower()) for m in (APPROVE_EXT_RE if ext else APPROVE_RE).finditer(line)]
+        if ext:
+            # "(a) x @s ... (b) y @t" after an APPROVED header: every lettered item up to the next header
+            for i, h in enumerate(heads):
+                if h.group(1) != "APPROVED":
+                    continue
+                seg = line[h.end():heads[i + 1].start() if i + 1 < len(heads) else len(line)]
+                if not re.match(r"\s*\([a-z]\)", seg):
+                    continue
+                for li in LIST_ITEM_RE.finditer(seg):
+                    t = ("APPROVED", li.group(2), li.group(3).lower())
+                    if t not in found:
+                        found.append(t)
+        for kind, branch, sha in found:
+            key = f"{branch or '-'}@{sha}"
+            if kind == "APPROVED" and key not in seen:
+                seen[key] = {"key": key, "branch": branch, "sha": sha, "line": n, "revoked": False,
+                             "high": bool(PRIORITY_RE.search(line))}
+                out.append(seen[key])
+            elif kind == "REVOKED":
+                for a in out:                         # a revoke names the sha (prefix either way), branch optional
+                    if (a["sha"].startswith(sha) or sha.startswith(a["sha"])) and (not branch or branch == a["branch"]):
+                        a["revoked"] = True
+    return out
+
+
+def lane_for(text, branch, sha):
+    """the lane that posted READY for this branch / sha (newest line first, READY before STATE/ASK); else a name from the branch"""
+    probes = [p for p in (sha[:9], branch) if p]
+    # a READY line often quotes the approval it asks for: keep it; drop only the approval rulings themselves
+    lines = [l for l in reversed(text.splitlines()) if any(p in l for p in probes)
+             and ("COORD APPROVED" not in l or re.search(r"\bREADY \[", l))]
+    if branch:                                    # the READY that names the branch itself beats a line that only quotes the sha
+        for line in lines:
+            if branch in line:
+                for m in LANE_RE.finditer(line):
+                    if m.group(1) not in (ME, "COORD") and m.group(0).startswith("READY"):
+                        return m.group(1)
+    for want in ("READY", None):
+        for line in lines:
+            for m in LANE_RE.finditer(line):
+                if m.group(1) not in (ME, "COORD") and (want is None or m.group(0).startswith(want)) \
+                        and (not m.group(1).startswith(ME) or ME.lower() in (branch or "")):   # the merge lane quotes shas
+                    return m.group(1)
+    if branch:
+        b = re.sub(r"^(claude|codex)/", "", branch)
+        b = re.sub(r"-\d{4}(-[0-9a-f]{6})?$", "", b)
+        return b.upper()
+    return "COORD"
+
+
+def next_tag(names, text="", today=None):
+    """flow tag series after the newest one in use (remote tag names + names quoted in the queue): flow-<date>-<xx>"""
+    pairs = [(m.group(1), m.group(2)) for n in names for m in [TAG_RE.search(n)] if m] + TAG_RE.findall(text)
+    best = max(pairs) if pairs else None
+    date = TAG_DATE or (best[0] if best else (today or now().strftime("%Y%m%d")))
+    if not best or best[0] != date:
+        return f"flow-{date}-aa"
+    a, b = best[1]
+    if b != "z":
+        return f"flow-{date}-{a}{chr(ord(b) + 1)}"
+    if a != "z":
+        return f"flow-{date}-{chr(ord(a) + 1)}a"
+    return f"flow-{today or now().strftime('%Y%m%d')}-aa"
+
+
+# ---------------------------------------------------------------- test selection
+
+def is_test(p):
+    return os.path.basename(p).startswith("test_") and p.endswith(".py")
+
+
+def select_tests(changed, all_tests, read):
+    """changed: repo paths the candidate changes; all_tests: every test file in the worktree; read(path) -> text.
+    -> (sorted test files, {test: reason}).  Rules (OWNER 11-14): tools/autopilot -> test_kit_wave.py; tools/die_plan -> the
+    die_plan tests named after or referencing the module; ot-run / ot-heavy -> their tests; otherwise the branch's own (new or
+    changed) tests plus the tests named after / referencing each changed file."""
+    have = set(all_tests)
+    pick = {}
+
+    def add(t, why):
+        if t in have and t not in pick:
+            pick[t] = why
+
+    cache = {}
+
+    def text(t):
+        if t not in cache:
+            try:
+                cache[t] = read(t)
+            except OSError:
+                cache[t] = ""
+        return cache[t]
+
+    for f in changed:
+        if is_test(f):
+            add(f, "changed test")
+    for f in changed:
+        if is_test(f) or f.endswith((".md", ".txt", ".json", ".tsv", ".csv")) and not f.startswith("tools/"):
+            continue
+        d, base = os.path.dirname(f), os.path.basename(f)
+        stem = base.rsplit(".", 1)[0] if "." in base else base
+        variants = {stem, stem.replace("-", "_")}
+        if f.startswith("tools/autopilot/"):
+            add("tools/autopilot/test_kit_wave.py", "tools/autopilot rule")
+        if f.startswith("tools/fleet/ot-run"):
+            for t in all_tests:
+                if t.startswith("tools/fleet/test_ot_run"):
+                    add(t, "ot-run rule")
+        if f.startswith("tools/fleet/ot-heavy"):
+            for t in all_tests:
+                if t.startswith("tools/fleet/test_ot_heavy"):
+                    add(t, "ot-heavy rule")
+        for t in all_tests:                                   # sibling tests named after the file
+            td, tb = os.path.dirname(t), os.path.basename(t)
+            if (td == d or td == os.path.join(d, "tests")) and any(tb.startswith(f"test_{v}") for v in variants):
+                add(t, f"named after {base}")
+        if len(stem) < 4:
+            continue
+        scope = f.split("/")[0] + "/" + f.split("/")[1] + "/" if f.startswith("tools/") and f.count("/") >= 2 else "tools/"
+        pat = re.compile(r"(?<![\w-])" + re.escape(stem) + r"(?![\w-])" if base.endswith(".py")
+                         else re.escape(base))
+        refs = [t for t in all_tests if t.startswith(scope) and t != f and pat.search(text(t))]
+        if len(refs) > REF_CAP:                               # a common name: keep the tests that import / name the file
+            strict = re.compile(r"(import\s+%s\b|from\s+%s\b|%s)" % (re.escape(stem), re.escape(stem), re.escape(base)))
+            refs = [t for t in refs if strict.search(text(t))][:REF_CAP]
+        for t in refs:
+            add(t, f"references {base}")
+    return sorted(pick), pick
+
+
+# ---------------------------------------------------------------- worktrees
+
+def wt_make(name, ref, extra_dirs=()):
+    """a detached sparse worktree of the queue clone at ref (reused if present)"""
+    p = WT / name
+    with _LOCK, CLONE_LOCK():
+        if p.exists() and not (p / ".git").exists():
+            shutil.rmtree(p)
+        if not p.exists():
+            WT.mkdir(parents=True, exist_ok=True)
+            git("worktree", "prune")
+            git("worktree", "add", "-q", "--detach", "--no-checkout", str(p), ref)
+    pats = list(SPARSE) + sorted({"/" + d.strip("/") + "/" for d in extra_dirs if d and d not in (".", "/")})
+    git("sparse-checkout", "set", "--no-cone", *pats, cwd=p)
+    for a in (("cherry-pick", "--abort"), ("merge", "--abort")):
+        git(*a, cwd=p, check=False)
+    git("checkout", "-q", "-f", "--detach", ref, cwd=p)
+    git("clean", "-fdq", cwd=p, check=False)
+    return p
+
+
+def wt_drop(name):
+    p = WT / name
+    if p.exists():
+        with _LOCK, CLONE_LOCK():
+            git("worktree", "remove", "--force", str(p), check=False)
+            if p.exists():
+                shutil.rmtree(p, ignore_errors=True)
+
+
+def fetch_main():
+    with CLONE_LOCK():
+        git("fetch", "-q", REMOTE, f"+refs/heads/{MAIN}:refs/remotes/{REMOTE}/{MAIN}", timeout=300)
+    return rev(f"{REMOTE}/{MAIN}")
+
+
+def fetch_sha(branch, sha):
+    """-> full sha or '' (GitHub branch, then the hub checkout read-only); one fetch at a time per clone"""
+    with _FETCH, CLONE_LOCK():
+        return _fetch_sha(branch, sha)
+
+
+def _fetch_sha(branch, sha):
+    full = rev(sha)
+    if full:
+        return full
+    for remote in (REMOTE, FALLBACK):
+        if not remote:
+            continue
+        if branch:
+            git("fetch", "-q", "--no-tags", remote, f"+refs/heads/{branch}:refs/mq/{remote}/{branch}", check=False, timeout=300)
+        full = rev(sha)
+        if full:
+            return full
+        git("fetch", "-q", "--no-tags", remote, sha, check=False, timeout=300)   # works when the sha is advertised / allowed
+        full = rev(sha)
+        if full:
+            return full
+    return ""
+
+
+# ---------------------------------------------------------------- apply / check / test
+
+def apply(wt, base, full, branch):
+    """-> (status, detail) status: OK / ALREADY / CONFLICT / ERROR; HEAD of wt is the candidate tip on OK"""
+    if is_ancestor(full, base, cwd=wt):
+        return "ALREADY", f"{full[:11]} is an ancestor of main {base[:11]}"
+    ch = git("cherry", base, full, cwd=wt).stdout.split("\n")
+    plus = [l[2:].strip() for l in ch if l.startswith("+ ")]
+    minus = [l[2:].strip() for l in ch if l.startswith("- ")]
+    if not plus:
+        return "ALREADY", f"every commit of {full[:11]} is already in main {base[:11]} (patch-equal)"
+    if not minus:
+        msg = f"Merge {branch or full[:11]} @{full[:11]} (MERGE-QUEUE, COORD APPROVED)\n\n{CO_AUTHOR}"
+        p = git("merge", "--no-ff", "-q", "-m", msg, full, cwd=wt, check=False)
+        mode = "no-ff merge"
+        if p.returncode:
+            u = git("diff", "--name-only", "--diff-filter=U", cwd=wt, check=False).stdout.split()
+            git("merge", "--abort", cwd=wt, check=False)
+            return ("CONFLICT", u) if u else ("ERROR", (p.stderr or p.stdout).strip()[:300])
+        return "OK", mode
+    for c in plus:
+        p = git("cherry-pick", "-x", c, cwd=wt, check=False)
+        if p.returncode:
+            u = git("diff", "--name-only", "--diff-filter=U", cwd=wt, check=False).stdout.split()
+            if not u and "empty" in (p.stderr + p.stdout):
+                git("cherry-pick", "--skip", cwd=wt, check=False)
+                continue
+            git("cherry-pick", "--abort", cwd=wt, check=False)
+            return ("CONFLICT", u) if u else ("ERROR", f"cherry-pick {c[:11]}: {(p.stderr or p.stdout).strip()[:300]}")
+    return "OK", f"cherry-pick -x of {len(plus)} new commit(s) ({len(minus)} already in main)"
+
+
+def changed_files(wt, a, b):
+    return [x for x in git("diff", "--name-only", "--no-renames", a, b, cwd=wt).stdout.split("\n") if x]
+
+
+def static_check(wt, files):
+    """parse every changed Python / shell file; no conflict markers -> [problems]"""
+    bad = []
+    for f in files:
+        p = wt / f
+        if not p.is_file():
+            continue
+        try:
+            head = p.read_bytes()[:4096]
+        except OSError:
+            continue
+        if b"\0" in head:
+            continue
+        txt = p.read_text(errors="replace")
+        if re.search(r"^(<<<<<<<|>>>>>>>) ", txt, re.M):
+            bad.append(f"{f}: conflict marker")
+        first = txt.split("\n", 1)[0]
+        if f.endswith(".py") or ("python" in first and first.startswith("#!")):
+            try:
+                compile(txt, f, "exec", dont_inherit=True)
+            except SyntaxError as e:
+                bad.append(f"{f}: SyntaxError line {e.lineno}: {e.msg}")
+        elif f.endswith(".sh") or (first.startswith("#!") and re.search(r"\b(ba)?sh\b", first)):
+            r = run(["bash", "-n", str(p)], timeout=60)
+            if r.returncode:
+                bad.append(f"{f}: bash -n: {r.stderr.strip()[:200]}")
+    return bad
+
+
+def all_test_files(wt):
+    out = git("ls-files", "--", "tools", cwd=wt).stdout.split("\n")
+    return [f for f in out if is_test(f) and (wt / f).is_file()]
+
+
+FAIL_RE = re.compile(r"^(FAILED|ERROR) (\S+)")
+
+
+def pytest(wt, items, tag, n):
+    """-> (rc, set(failed nodeids), tail)"""
+    bt = WT / "bt" / tag
+    tmp = WT / "tmp" / tag
+    shutil.rmtree(bt, ignore_errors=True)
+    bt.parent.mkdir(parents=True, exist_ok=True)
+    tmp.mkdir(parents=True, exist_ok=True)
+    env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", TMPDIR=str(tmp))
+    env.pop("PYTHONPATH", None)
+    nargs = ["-n", str(n)] if n > 1 else []
+    cmd = [PY, "-m", "pytest", "-q", *nargs, "--tb=line", "-rfE", "--continue-on-collection-errors", "-p", "no:cacheprovider",
+           "-W", "ignore", f"--basetemp={bt}", *items]
+    timeout = FLEET_TIMEOUT if all(i.startswith("tools/fleet/") for i in items) and len(items) == 1 else TEST_TIMEOUT
+    p = run(cmd, cwd=wt, timeout=timeout, env=env)
+    out = (p.stdout or "") + (p.stderr or "")
+    fails = {m.group(2) for m in map(FAIL_RE.match, out.splitlines()) if m}
+    tail = " | ".join(l for l in out.strip().splitlines()[-2:])[:300]
+    if p.returncode == 124:
+        fails.add(f"TIMEOUT({timeout}s):{' '.join(items)[:120]}")
+    if fails:
+        miss = missing_src(wt, out)
+        if miss:
+            fails.add("MISSING-SOURCE:" + " ".join(miss[:6]))
+    shutil.rmtree(bt, ignore_errors=True)
+    return p.returncode, fails, tail
+
+
+def run_tests(wt, tests, tag):
+    """fleet tests one file at a time (ot-heavy admission tests hang a shared run); the rest in one xdist run"""
+    fleet = [t for t in tests if t.startswith("tools/fleet/")]
+    rest = [t for t in tests if t not in fleet]
+    fails, rcs, tails = set(), [], []
+    if rest:
+        rc, f, tail = pytest(wt, rest, tag + "-a", min(XDIST, max(2, 4 * len(rest))))
+        fails |= f; rcs.append(rc); tails.append(tail)
+    for i, t in enumerate(fleet):
+        rc, f, tail = pytest(wt, [t], f"{tag}-f{i}", min(4, XDIST))
+        fails |= f; rcs.append(rc); tails.append(tail)
+    infra = [rc for rc in rcs if rc not in (0, 1, 5, 124)]
+    return fails, infra, tails
+
+
+def baseline(base, fails, extra=(), tag=""):
+    """the failures that also fail on main@base (by file existence + rerun) -> set.  The main tree gets the SAME sparse set as
+    the candidate (extra = the candidate's extra dirs) and is private to the item: a test that reads a file outside the sparse
+    set then fails on both sides alike (11-14 20:51: test_core_reset_io read physical/die_plan/* that a shared base tree had)."""
+    if not fails:
+        return set()
+    name = f"base-{base[:12]}" + (f"-{tag}" if tag else "")
+    files = {f.split("::")[0] for f in fails if not f.startswith("TIMEOUT")}
+    p = wt_make(name, base, set(extra) | {os.path.dirname(f) for f in files})
+    # whole FILES on main, not node ids: one id that main does not have (a new or renamed test) makes pytest exit 4 and run
+    # nothing, so every failure looked new (11-14 21:03 kit-ops-5 68 / pg-aware 57 test_core_reset_io + clock "new" failures)
+    files = sorted(f for f in files if (p / f).is_file())
+    if not files:
+        return set()
+    fleet = [f for f in files if f.startswith("tools/fleet/")]
+    rest = [f for f in files if f not in fleet]
+    on_main = set()
+    if rest:
+        on_main |= pytest(p, rest, name + "-a", min(XDIST, max(2, 4 * len(rest))))[1]
+    for f in fleet:
+        on_main |= pytest(p, [f], name + "-f", min(4, XDIST))[1]
+    # a failure on main is baseline when the same nodeid (or its whole file, for a collection ERROR) fails there too
+    return {f for f in fails if f in on_main or f.split("::")[0] in on_main}
+
+
+_TOPS = {}
+
+
+def _tops(rev_):
+    if rev_ not in _TOPS:
+        _TOPS[rev_] = sorted(git("ls-tree", "--name-only", "-d", rev_).stdout.split())
+    return _TOPS[rev_]
+
+
+def _path_lit_re(rev_, quoted=True):
+    alt = "|".join(map(re.escape, _tops(rev_))) or "rtl"
+    return re.compile((r"""["']/?((?:%s)/[\w.+-][\w./+-]*?)/?["']""" if quoted else r"""(?<![\w.-])((?:%s)/[\w.+-][\w./+-]*[\w+-])""") % alt)
+
+
+def _tree_types(rev_, paths, cwd=REPO):
+    """{path: 'blob'|'tree'} of the paths that exist at rev_ (one cat-file --batch-check)"""
+    paths = sorted(set(paths))
+    if not paths:
+        return {}
+    p = S.run(["git", "cat-file", "--batch-check"], cwd=str(cwd), input="".join(f"{rev_}:{x}\n" for x in paths),
+              capture_output=True, text=True, timeout=300)
+    out = {}
+    for x, line in zip(paths, p.stdout.splitlines()):
+        f = line.split()
+        if len(f) == 3 and f[1] in ("blob", "tree"):
+            out[x] = f[1]
+    return out
+
+
+def test_deps(wt, base, tests):
+    """dirs the selected tests need beyond the sparse set: repo paths named as string literals in each test, its conftest.py
+    files and the local modules it imports (11-15 kv-pvgen: test_pvgen_vport_selrep compiles rtl/test/kv_bootage_1019/*.sv
+    and rtl/qwen_sys/... that the branch does not touch; the sparse gate tree lacked them and the sims timed out at 2400 s)"""
+    files = set(tests)
+    for t in tests:
+        d = os.path.dirname(t)
+        while d:
+            files.add(f"{d}/conftest.py")
+            d = os.path.dirname(d)
+        try:
+            txt = (wt / t).read_text(errors="replace")
+        except OSError:
+            continue
+        for m in re.finditer(r"^\s*(?:from\s+([\w.]+)\s+import|import\s+([\w.]+))", txt, re.M):
+            mod = (m.group(1) or m.group(2)).split(".")[0]
+            for c in (f"{os.path.dirname(t)}/{mod}.py", f"tools/die_plan/{mod}.py", f"tools/{mod}.py"):
+                files.add(c)
+    lit, paths = _path_lit_re(base), set()
+    for f in files:
+        try:
+            txt = (wt / f).read_text(errors="replace")
+        except OSError:
+            continue
+        paths |= {m.group(1) for m in lit.finditer(txt)}
+    dirs = set()
+    for x, kind in _tree_types(base, paths).items():
+        if kind == "blob":
+            dirs.add(os.path.dirname(x))
+        elif x.count("/") >= 1:                  # a named directory, never a whole top-level dir (rtl/, physical/)
+            dirs.add(x)
+    return {d for d in dirs if d}
+
+
+def _covered(d, pats):
+    d = "/" + d.strip("/") + "/"
+    return any(not p.startswith("!") and p.endswith("/") and p != "/" and d.startswith(p) for p in pats)
+
+
+MISSING_MARK_RE = re.compile(r"No such file|FileNotFoundError|ENOENT|[Cc]an'?not (?:open|find|read)|[Cc]an't (?:open|find|read)|"
+                             r"[Uu]nable to (?:open|find)|does not exist|not found|[Mm]issing (?:file|source)")
+
+
+def missing_src(wt, out):
+    """repo paths an output names that exist in the gate tree's commit but are absent from its sparse checkout"""
+    out = "\n".join(l for l in (out or "").splitlines() if MISSING_MARK_RE.search(l))
+    if not out:
+        return []
+    try:
+        cand = {m.group(1) for m in _path_lit_re(rev("HEAD", cwd=wt) or "HEAD", quoted=False).finditer(out or "")}
+    except Exception:                                  # noqa: BLE001 - detection only
+        return []
+    cand = {c.rstrip(".") for c in cand}
+    have = _tree_types("HEAD", cand, cwd=wt)
+    return sorted(x for x in have if not (wt / x).exists())
+
+
+def gate(it, wt, base):
+    """compile + tests of the candidate at wt HEAD against base -> it updated with result"""
+    tip = rev("HEAD", cwd=wt)
+    ch = changed_files(wt, base, tip)
+    it["changed"] = ch
+    bad = static_check(wt, ch)
+    if bad:
+        return "RED", f"static check: {'; '.join(bad[:6])}"
+    alltests = all_test_files(wt)
+    tests, why = select_tests(ch, alltests, lambda t: (wt / t).read_text(errors="replace"))
+    it["tests"] = tests
+    if not tests:
+        return "GREEN", f"no tests select for {len(ch)} changed file(s); static check only"
+    pats = list(SPARSE) + ["/" + d.strip("/") + "/" for d in it.get("extra", ())]
+    need = sorted(d for d in test_deps(wt, base, tests) if not _covered(d, pats))
+    if need:
+        git("sparse-checkout", "add", *["/" + d + "/" for d in need], cwd=wt, timeout=1800)
+        it["extra"] = sorted(set(it.get("extra", ())) | set(need))      # the main baseline tree gets the same dirs
+        it["deps"] = need
+    fails, infra, tails = run_tests(wt, tests, it["id"])
+    miss = sorted({f for f in fails if f.startswith("MISSING-SOURCE:")})
+    if miss:
+        # paths built at run time (no literal to scan): add the dirs the run reported missing and run once more
+        got = sorted({os.path.dirname(x) for m in miss for x in m.split(":", 1)[1].split()} - {""})
+        got = [d for d in got if not _covered(d, pats + ["/" + x + "/" for x in need])]
+        if got:
+            git("sparse-checkout", "add", *["/" + d + "/" for d in got], cwd=wt, timeout=1800)
+            need = sorted(set(need) | set(got))
+            it["extra"] = sorted(set(it.get("extra", ())) | set(got))
+            it["deps"] = need
+            fails, infra, tails = run_tests(wt, tests, it["id"] + "-m")
+            miss = sorted({f for f in fails if f.startswith("MISSING-SOURCE:")})
+    if miss:
+        return "INFRA", (f"MISSING SOURCE in the gate's sparse tree (queue defect, not the branch): "
+                         f"{' '.join(m.split(':', 1)[1] for m in miss)[:300]}")
+    if infra and not fails:
+        return "INFRA", f"pytest rc {infra}: {' / '.join(tails)[:300]}"
+    base_f = baseline(base, fails, it.get("extra", ()), it["id"])
+    wt_drop(f"base-{base[:12]}-{it['id']}")
+    new = sorted(fails - base_f)
+    flaky = []
+    if new:
+        # 11-14 20:4x: under parallel items x xdist, order / load dependent tests fail on the branch and pass on the main rerun
+        # (form_wait_arm, test_m8_grant env, clock tests with 5 items in flight).  A new failure counts only when it also fails
+        # when the branch reruns it on its own, one file per process, no xdist.
+        still = rerun_serial(wt, new, it["id"])
+        flaky = [f for f in new if f not in still]
+        new = [f for f in new if f in still]
+    tos = [f for f in new if f.startswith("TIMEOUT")]
+    if tos:
+        # FABLE-FLOW-1000 class 7: a fleet test file that hit its timeout under parallel load (epyc2-scratch3 08:59, 600 s;
+        # the same file ran in <10 s alone) is rerun once alone; only a second timeout, or a failure main does not have, is RED
+        new = [f for f in new if not f.startswith("TIMEOUT")]
+        for t in tos:
+            files = t.split(":", 1)[1].split()
+            if not files or not all((wt / f).is_file() for f in files):
+                new.append(t)
+                continue
+            rc, fl, _tail = pytest(wt, files, f"{it['id']}-t", 1)
+            if rc == 124:
+                new.append(t)
+                continue
+            fl = {f for f in fl if f not in base_f}
+            if fl:
+                bt = baseline(base, fl, it.get("extra", ()), it["id"] + "-t")
+                wt_drop(f"base-{base[:12]}-{it['id']}-t")
+                base_f |= bt
+                fl -= bt
+            new += sorted(fl)
+            flaky.append(t)
+    known_red(base_f, base)
+    if new:
+        return "RED", (f"{len(new)} new failure(s) (not failing on main {base[:11]}; still failing on a serial rerun of the branch): "
+                       f"{', '.join(new[:8])}" + (f"; {len(flaky)} more passed on the serial rerun (flaky)" if flaky else ""))
+    note = f"{len(tests)} test file(s) pass" + (f" (+{len(it['deps'])} source dir(s) the tests name: {' '.join(it['deps'][:4])})"
+                                                if it.get("deps") else "") + (f" ({len(base_f)} failure(s) also fail on main: baseline)" if base_f else "") + \
+        (f" ({len(flaky)} order/load-flaky failure(s) passed on a serial rerun: {', '.join(flaky[:4])})" if flaky else "")
+    return "GREEN", note
+
+
+def known_red(fails, base):
+    """FABLE-FLOW-1000 class 7: every failure a gate found red on main too goes to ~/merge-queue/known-red.json (first/last
+    seen, main sha, count).  FLOW-HEALTH-1 drives it to zero; `ot-merge-queue known-red` lists what failed in the last 24 h."""
+    if DRY or not fails:
+        return
+    with _LOCK:
+        p = MQ / "known-red.json"
+        try:
+            kr = json.loads(p.read_text())
+        except (OSError, ValueError):
+            kr = {}
+        t = now().strftime("%Y-%m-%d %H:%M")
+        for f in fails:
+            e = kr.setdefault(f, {"first": t, "n": 0})
+            e.update(last=t, main=base[:11], n=e.get("n", 0) + 1)
+        tmp = p.with_suffix(".tmp")
+        tmp.write_text(json.dumps(kr, indent=1, sort_keys=True))
+        os.replace(tmp, p)
+
+
+def known_red_cmd(hours=24):
+    try:
+        kr = json.loads((MQ / "known-red.json").read_text())
+    except (OSError, ValueError):
+        kr = {}
+    cut = (now() - datetime.timedelta(hours=hours)).strftime("%Y-%m-%d %H:%M")
+    live = {k: v for k, v in kr.items() if v.get("last", "") >= cut}
+    for k, v in sorted(live.items()):
+        print(f"{v['last']}  main {v.get('main', '-')}  x{v.get('n', 0):<3} {k}")
+    print(f"{len(live)} test(s) red on main in the last {hours} h (known-red baseline; FLOW-HEALTH-1 drives it to 0)")
+    return 0
+
+
+def gate_cmd(spec):
+    """`ot-merge-queue gate <branch>[@<sha>]`: the queue's OWN gate (same test selection, baseline, serial rerun) on current
+    GitHub origin/main; prints the READY stamp.  FABLE-FLOW-1000 class 7: lanes ran their touched files only, the queue ran
+    up to 140 files, so 40 READYs went MERGE-FAIL on 11-15.  One gate at a time (flock); nothing is pushed or posted."""
+    branch, _, sha = spec.partition("@")
+    MQ.mkdir(parents=True, exist_ok=True)
+    slots = [open(MQ / f"gate-cmd.{i}.lock", "w") for i in range(max(1, GATE_PAR))]
+    got = None
+    while got is None:                                   # first free slot; GATE_PAR gates run at once, the rest wait
+        for f in slots:
+            try:
+                fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                got = f
+                break
+            except OSError:
+                continue
+        else:
+            time.sleep(5)
+    base = fetch_main()
+    if not sha:
+        with CLONE_LOCK():
+            git("fetch", "-q", "--no-tags", REMOTE, f"+refs/heads/{branch}:refs/mq/{REMOTE}/{branch}", check=False, timeout=300)
+        sha = rev(f"refs/mq/{REMOTE}/{branch}")
+        if not sha:
+            print(f"branch {branch} not on {REMOTE} (push it to the lane mirror first: ot-lane-clone)")
+            return 2
+    it = {"key": f"{branch}@{sha[:11]}", "branch": branch, "sha": sha, "id": f"gc-{sha[:10]}"}
+    try:
+        res, note = prepare(it, base)
+    finally:
+        wt_drop(it["id"])
+    if res == "GREEN":
+        n = max(1, len(it.get("tests", [])))
+        stamp_ = f"GATE main={base[:11]} pass={n}/{n}"
+        rec = MQ / "gates"
+        rec.mkdir(exist_ok=True)
+        (rec / f"{it['sha_full']}.json").write_text(json.dumps(dict(main=base, branch=branch, tests=it.get("tests", []),
+                                                                    note=note, at=stamp()), indent=1))
+        print(f"GREEN {it['key']}: {note}\n{stamp_}")
+        return 0
+    print(f"{res} {it['key']} on main {base[:11]}: {note}")
+    return 1
+
+
+def rerun_serial(wt, ids, tag):
+    """the failures that still fail when rerun on the candidate alone: per test file, no xdist -> set"""
+    still = set()
+    for f in sorted({i.split("::")[0] for i in ids if not i.startswith("TIMEOUT")}):
+        if not (wt / f).is_file():
+            still |= {i for i in ids if i.split("::")[0] == f}
+            continue
+        sel = [i for i in ids if i.split("::")[0] == f]
+        rc, fl, _tail = pytest(wt, sel, f"{tag}-s{abs(hash(f)) % 10000}", 1)
+        if rc not in (0, 1, 5):                               # collection / infra error: keep them as failures
+            still |= set(sel)
+            continue
+        still |= {i for i in sel if i in fl or i.split("::")[0] in fl}
+    still |= {i for i in ids if i.startswith("TIMEOUT")}
+    return still
+
+
+# ---------------------------------------------------------------- state / posting
+
+def load_state():
+    try:
+        return json.loads((MQ / "state.json").read_text())
+    except (OSError, ValueError):
+        return {"items": {}, "posts": []}
+
+
+def save_state(st):
+    if DRY:
+        return
+    MQ.mkdir(parents=True, exist_ok=True)
+    t = MQ / "state.json.tmp"
+    t.write_text(json.dumps(st, indent=1, sort_keys=True))
+    os.replace(t, MQ / "state.json")
+
+
+def queue_post(st, kind, to, body):
+    line = f"- {stamp()} {kind} [{ME}{(' -> ' + to) if to else ''}] {body}"
+    log(f"POST {line}")
+    st.setdefault("posts", []).append({"line": line, "posted": False})
+
+
+def flush_posts(st):
+    pend = [p for p in st.get("posts", []) if not p.get("posted")]
+    if not pend or DRY:
+        return
+    files = []
+    for rel in (QUEUE_REL, LANE_REL):
+        f = COORD / rel
+        have = f.read_text(errors="replace") if f.exists() else ""
+        add = [p["line"] for p in pend if p["line"] not in have]
+        if add:
+            with open(f, "a") as o:
+                o.write(("" if not have or have.endswith("\n") else "\n") + "\n".join(add) + "\n")
+        files.append(rel)
+    r = run(["bash", COMMIT, f"{ME}: {pend[0]['line'][22:80]}", *files], cwd=COORD, timeout=900)
+    if r.returncode == 0:
+        for p in pend:
+            p["posted"] = True
+        st["posts"] = st["posts"][-200:]
+    else:
+        log(f"coord-commit rc={r.returncode}: {(r.stderr or r.stdout).strip()[-300:]} (retry next tick)")
+
+
+# ---------------------------------------------------------------- landing
+
+def big_blobs(a, b, cwd):
+    p = run(["bash", "-c", f"git rev-list --objects {a}..{b} | git cat-file --batch-check='%(objecttype) %(objectsize) %(rest)'"],
+            cwd=cwd, timeout=300)
+    return [l for l in p.stdout.splitlines() if l.startswith("blob ") and int(l.split()[1]) > MAX_BLOB]
+
+
+def push_main(tip, old, wt):
+    if DRY:
+        log(f"DRY push {tip[:11]} (main {old[:11]})")
+        return True, ""
+    p = git("push", "-q", REMOTE, f"{tip}:refs/heads/{MAIN}", cwd=wt, check=False, timeout=300)
+    return p.returncode == 0, (p.stderr or p.stdout).strip()[-300:]
+
+
+def push_tags(tip, wt, text):
+    names = git("ls-remote", "--tags", REMOTE, "flow-*", cwd=wt, check=False, timeout=200).stdout.splitlines()
+    series = next_tag(names, text)
+    refs = [f"{tip}:refs/tags/{series}-{d}" for d in DIES]
+    if DRY:
+        return series + "-*"
+    p = git("push", "-q", REMOTE, *refs, cwd=wt, check=False, timeout=300)
+    if p.returncode:
+        log(f"tag push {series} failed: {(p.stderr or p.stdout).strip()[-300:]}")
+        return f"(tag push failed: {series})"
+    git("fetch", "-q", REMOTE, *[f"+refs/tags/{series}-{d}:refs/tags/{series}-{d}" for d in DIES], check=False)
+    return series + "-*"
+
+
+def land(it, text, st):
+    """serial: apply onto current main if it moved, re-test on overlap, push, tag -> post; returns new main or ''"""
+    wt = WT / it["id"]
+    for attempt in range(3):
+        cur = fetch_main()
+        if cur != it["base"]:
+            moved = changed_files(wt, it["base"], cur) if is_ancestor(it["base"], cur, cwd=wt) else ["<main rewritten>"]
+            it["extra"] = sorted({os.path.dirname(f) for f in it.get("changed", [])})
+            wt_make(it["id"], cur, it["extra"])
+            status, detail = apply(wt, cur, it["sha_full"], it["branch"])
+            if status == "ALREADY":
+                return finish(st, it, "ALREADY", f"landed meanwhile: {detail}", cur)
+            if status != "OK":
+                return fail(st, it, text, status, detail, cur)
+            overlap = sorted(set(moved) & set(it.get("changed", [])))
+            old_base = it["base"]
+            it["base"] = cur
+            it["mode"] = detail
+            if overlap:
+                log(f"{it['key']}: main moved {old_base[:11]} -> {cur[:11]} over {overlap[:5]}: re-test")
+                res, note = gate(it, wt, cur)
+                if res == "RED":
+                    return fail(st, it, text, "RED", note, cur)
+                if res == "INFRA":
+                    it["status"] = "INFRA"; return ""
+                it["note"] = note + f" (re-tested on {cur[:11]}: main changed {', '.join(overlap[:4])})"
+        tip = rev("HEAD", cwd=wt)
+        big = big_blobs(cur, tip, wt)
+        if big:
+            return fail(st, it, text, "RED", f"blob > 95 MB: {big[:3]}", cur)
+        ok, err = push_main(tip, cur, wt)
+        if ok:
+            tags = push_tags(tip, wt, text)
+            it.update(tip=tip, tags=tags)
+            return finish(st, it, "MERGED", "", cur, tip)
+        log(f"{it['key']}: push rejected ({err}); main moved, retry {attempt + 1}")
+    it["status"] = "INFRA"
+    return ""
+
+
+def finish(st, it, status, detail, main_before, tip=None):
+    it["status"] = status
+    it["updated"] = stamp()
+    br = f"{it['branch']}@{it['sha_full'][:11]}" if it["branch"] else it["sha_full"][:11]
+    if status == "MERGED":
+        body = (f"{br} -> main {main_before[:11]} -> {tip[:11]}, {it.get('mode')}, tags {it.get('tags')}. "
+                f"Gate: {it.get('note')}; tests: {' '.join(os.path.basename(t) for t in it.get('tests', [])[:12]) or 'none'}"
+                f"{' +' + str(len(it['tests']) - 12) if len(it.get('tests', [])) > 12 else ''}. Lane {it['lane']}.")
+        queue_post(st, "MERGED", it["lane"], body)
+        return tip
+    queue_post(st, "MERGED", it["lane"], f"{br}: nothing to land, {detail}.")
+    return ""
+
+
+def fail(st, it, text, status, detail, base):
+    it["status"] = "FAIL"
+    it["reason"] = f"{status}: {detail}"
+    it["updated"] = stamp()
+    sha = (it.get("sha_full") or it["sha"])[:11]             # an UNFETCHABLE item never got a full sha
+    br = f"{it['branch']}@{sha}" if it["branch"] else sha
+    if status == "CONFLICT":
+        what = f"conflict with main {base[:11]} in: {', '.join(detail) if isinstance(detail, list) else detail}"
+    else:
+        what = f"{status.lower()} on main {base[:11]}: {detail}"
+    queue_post(st, "MERGE-FAIL", it["lane"], f"{br} NOT landed, skipped: {what}. Rebase onto main, fix, push a new head and "
+                                             f"ask COORD for a new 'COORD APPROVED: <branch> @<sha>'.")
+    return ""
+
+
+# ---------------------------------------------------------------- tick
+
+def gate_record(full, base, it):
+    """a GREEN `gate` record (~/merge-queue/gates/<sha>.json, written by `ot-merge-queue gate` here or by ot-gate-remote on a
+    build host) is the item's gate when it ran on this main, or on an older main whose later commits touch none of the
+    branch's files and none of its tests -> note, or '' (gate it here)"""
+    try:
+        r = json.loads((MQ / "gates" / f"{full}.json").read_text())
+    except (OSError, ValueError):
+        return ""
+    m = r.get("main", "")
+    if not m or not rev(m) or not is_ancestor(m, base):
+        return ""
+    if m != base:
+        mb = git("merge-base", base, full).stdout.strip()
+        mine = set(changed_files(REPO, mb, full)) | set(r.get("tests", []))
+        moved = set(changed_files(REPO, m, base))
+        if mine & moved or len(moved) > 400:
+            return ""
+    it["tests"] = r.get("tests", [])
+    return (f"gate record from {r.get('host', 'hub')} {r.get('at', '')} on main {m[:11]}"
+            + ("" if m == base else f" (main since: no overlap)") + f": {r.get('note', '')}")
+
+
+def prepare(it, base):
+    """fetch + apply + gate in the item's own worktree (parallel part)"""
+    try:
+        full = fetch_sha(it["branch"], it["sha"])
+        if not full:
+            return "WAIT", f"sha {it['sha']} not fetchable from {REMOTE}/{FALLBACK} (branch {it['branch'] or '-'})"
+        it["sha_full"] = full
+        if it["branch"]:
+            tipb = rev(f"refs/mq/{REMOTE}/{it['branch']}") or rev(f"refs/mq/{FALLBACK}/{it['branch']}")
+            if tipb and tipb != full and not is_ancestor(full, tipb):
+                log(f"{it['key']}: note: branch tip {tipb[:11]} does not contain the approved sha; landing the approved sha")
+        if is_ancestor(full, base):
+            return "ALREADY", f"{full[:11]} is an ancestor of main {base[:11]}"
+        mb = git("merge-base", base, full).stdout.strip()
+        it["extra"] = sorted({os.path.dirname(f) for f in changed_files(REPO, mb, full)})
+        wt = wt_make(it["id"], base, it["extra"])
+        status, detail = apply(wt, base, full, it["branch"])
+        if status != "OK":
+            return status, detail
+        it["mode"] = detail
+        rec = gate_record(full, base, it)
+        if rec:
+            return "GREEN", rec
+        res, note = gate(it, wt, base)
+        it["note"] = note
+        return res, note
+    except Exception as e:                                   # a git / host error is infra, retried next tick
+        return "INFRA", f"{type(e).__name__}: {str(e)[:300]}"
+
+
+def check_ready(text, st):
+    """bounce new READY lines (after st['ready_from']) whose gate stamp is missing or wrong; -> number bounced"""
+    lines = text.splitlines()
+    if "ready_from" not in st:                       # rule goes live: only READYs posted from now on are checked
+        st["ready_from"] = len(lines) + 1
+        return 0
+    seen = set(st.setdefault("ready_seen", []))
+    main_ref, n_b = None, 0
+    # a READY whose sha is already approved by COORD, landed by the queue, or contained in main is not judged (09:08 11-15:
+    # s81-leaf-t14-1115b was bounced while the same tick merged it as 12f54cf1aec)
+    done = [a["sha"] for a in parse_approvals(text) if not a["revoked"]]
+    done += [it.get("sha_full") or it.get("sha", "") for it in st.get("items", {}).values()
+             if it.get("status") in ("MERGED", "ALREADY")]
+    def settled(sha):
+        nonlocal main_ref
+        if any(d and (d.startswith(sha) or sha.startswith(d)) for d in done):
+            return True
+        if main_ref is None:
+            main_ref = fetch_main()
+        full = rev(sha)
+        return bool(full and main_ref) and is_ancestor(full, main_ref)
+    for n in range(int(st["ready_from"]), len(lines) + 1):
+        line = lines[n - 1]
+        m = READY_RE.match(line)
+        if not m or m.group(1) in (ME, "COORD", "OWNER") or m.group(1).startswith(ME):
+            continue
+        bm = READY_BRANCH_RE.search(line)
+        if not bm:
+            continue                                  # a READY without branch@sha is a status / result line, not a merge request
+        key = f"{bm.group(1)}@{bm.group(2)}"
+        if key in seen:
+            continue
+        if settled(bm.group(2)):
+            seen.add(key)
+            continue
+        g, why = GATE_RE.search(line), ""
+        if not g:
+            why = "no GATE stamp"
+        elif int(g.group(3)) == 0 or int(g.group(2)) != int(g.group(3)):
+            why = f"GATE pass={g.group(2)}/{g.group(3)} is not all-pass"
+        else:
+            if main_ref is None:
+                main_ref = fetch_main()
+            gm, tip = rev(g.group(1)), ""
+            try:
+                fetch_sha(bm.group(1), bm.group(2))
+            except Exception:                             # noqa: BLE001 - reported as a bounce reason
+                pass
+            tip = rev(bm.group(2))
+            if not tip:
+                if st.get("ready_wait", {}).get(key, 0) < WAIT_TICKS:
+                    st.setdefault("ready_wait", {})[key] = st.get("ready_wait", {}).get(key, 0) + 1
+                    continue                              # not pushed yet: look again next tick
+                why = f"branch sha {bm.group(2)} not found on {REMOTE} or {FALLBACK or '-'}"
+            elif not gm or not is_ancestor(gm, main_ref):
+                why = f"GATE main={g.group(1)} is not a commit on main"
+            elif not is_ancestor(gm, tip):
+                why = f"branch {bm.group(2)} is not rebased on GATE main={g.group(1)} (that main is not an ancestor of the tip)"
+            else:
+                behind = int(git("rev-list", "--count", "--first-parent", f"{gm}..{main_ref}").stdout.strip() or 0)
+                if behind > GATE_MAX_BEHIND:
+                    why = f"GATE main={g.group(1)} is {behind} main commits old (limit {GATE_MAX_BEHIND}); rebase on current main"
+        seen.add(key)
+        if why:
+            n_b += 1
+            queue_post(st, "BOUNCE", m.group(1), f"READY {key} (queue line {n}) bounced before the train: {why}. {GATE_HOW}.")
+            st.setdefault("bounced", {})[bm.group(2)] = why
+        else:
+            log(f"READY {key} line {n}: gate stamp ok ({g.group(0)})")
+    st["ready_seen"] = sorted(seen)[-2000:]
+    return n_b
+
+
+def tick(args):
+    MQ.mkdir(parents=True, exist_ok=True)
+    lockf = open(MQ / "lock", "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        log("another tick holds the lock; exit")
+        return 0
+    st = load_state()
+    flush_posts(st)
+    text = (COORD / QUEUE_REL).read_text(errors="replace")
+    if not args.only:
+        try:
+            nb = check_ready(text, st)
+            if nb:
+                log(f"ready gate: {nb} READY line(s) bounced")
+        except Exception as e:                            # noqa: BLE001 - the gate check never stops the train
+            log(f"ready gate check error: {e}")
+        flush_posts(st)
+    apps = parse_approvals(text)
+    apps = [a for a in apps if a.get("high")] + [a for a in apps if not a.get("high")]    # priority HIGH first
+    items = st.setdefault("items", {})
+    todo = []
+    for a in apps:
+        if args.only and not a["sha"].startswith(args.only[:len(a["sha"])]) and not args.only.startswith(a["sha"]):
+            continue
+        it = items.get(a["key"])
+        if it and it.get("status") in TERMINAL:
+            continue
+        if a["revoked"]:
+            if not it or it.get("status") not in TERMINAL:
+                items[a["key"]] = dict(it or {}, key=a["key"], branch=a["branch"], sha=a["sha"], status="REVOKED", updated=stamp())
+                log(f"{a['key']}: revoked before landing")
+            continue
+        if not it:
+            it = items[a["key"]] = {"key": a["key"], "branch": a["branch"], "sha": a["sha"], "status": "NEW",
+                                    "first_seen": stamp(), "tries": 0, "line": a["line"]}
+        it["id"] = re.sub(r"[^\w.-]", "_", f"{a['sha'][:12]}")
+        it["high"] = a.get("high", False)
+        it["lane"] = lane_for(text, a["branch"], a["sha"])
+        todo.append(it)
+    if not todo:
+        save_state(st)
+        log(f"tick: {len(apps)} approval(s) in queue, none new")
+        return 0
+    base = fetch_main()
+    log(f"tick: main {base[:11]}, {len(todo)} new approval(s): {', '.join(i['key'] for i in todo)}")
+    # gates run in parallel; each item LANDS as soon as its own gate and every gate before it are done (COORD 11-15 08:4x:
+    # a 30-min gate of one item held 7 green items behind it).  land() re-tests on the moved main where files overlap.
+    ex = CF.ThreadPoolExecutor(max_workers=max(1, PAR))
+    futs = {it["key"]: ex.submit(prepare, it, base) for it in todo}
+    landed = ""
+    for it in todo:                                          # serial: priority HIGH approvals first, then queue order
+        status, detail = futs[it["key"]].result()
+        it["tries"] = int(it.get("tries", 0)) + 1
+        it["base"] = base
+        log(f"{it['key']}: {status}: {detail if isinstance(detail, str) else detail}")
+        if status == "WAIT":
+            it["status"] = "WAIT"
+            if it["tries"] >= WAIT_TICKS:
+                fail(st, it, text, "UNFETCHABLE", detail, base)
+        elif status == "INFRA":
+            it["status"] = "INFRA"
+            if it["tries"] >= INFRA_TRIES:
+                fail(st, it, text, "INFRA", detail, base)
+        elif status == "ALREADY":
+            it["sha_full"] = it.get("sha_full") or it["sha"]
+            finish(st, it, "ALREADY", detail, base)
+        elif status in ("CONFLICT", "ERROR", "RED"):
+            fail(st, it, text, status, detail, base)
+        elif status == "GREEN":
+            tip = land(it, text, st)
+            if tip:
+                landed = tip
+        save_state(st)
+        if it.get("status") in TERMINAL and not args.keep:
+            wt_drop(it["id"])
+    ex.shutdown(wait=True)
+    keep = "base-" + fetch_main()[:12]
+    for name in [p.name for p in WT.glob("base-*")]:
+        if name != keep:
+            wt_drop(name)
+    sync_note = ""
+    if landed and SYNC_HOOK and not DRY:
+        cmd = SYNC_HOOK.format(sha=landed)
+        r = run(shlex.split(cmd), timeout=1800)
+        sync_note = (r.stdout or "").strip().splitlines()[-1:] or [f"rc={r.returncode}"]
+        log(f"sync hook rc={r.returncode}: {sync_note}")
+        if r.returncode:
+            queue_post(st, "STATE", "COORD", f"ot-tools-sync for main {landed[:11]} failed rc={r.returncode}: "
+                                             f"{(r.stderr or r.stdout).strip()[-300:]}; rt/current not moved.")
+    if landed and SRC_HOOK and not DRY:
+        r = run(shlex.split(SRC_HOOK.format(old=base, new=landed)), timeout=3600)
+        out = (r.stdout or "").strip().splitlines()
+        log(f"src refresh hook rc={r.returncode}: {' | '.join(out)[:600]}")
+        held = [l for l in out if re.search(r"\b(CONFLICT|BUSY|LOCAL|ERROR)\b", l)]
+        if r.returncode or held:
+            queue_post(st, "STATE", "COORD", f"src refresh {base[:11]}..{landed[:11]} rc={r.returncode}: {' ; '.join(held or out)[:900]} "
+                                             f"(CONFLICT/LOCAL kept as the die tree has them; BUSY retried after the next merge; "
+                                             f"rows ~/merge-queue/src-refresh.tsv)")
+    flush_posts(st)
+    save_state(st)
+    return 0
+
+
+def status():
+    st = load_state()
+    for k, it in sorted(st.get("items", {}).items(), key=lambda kv: kv[1].get("first_seen", "")):
+        print(f"{it.get('status', '?'):8} {k:60} {it.get('updated', it.get('first_seen', ''))} {it.get('tip', '')[:11]} "
+              f"{it.get('reason', it.get('note', ''))[:120]}")
+    pend = [p for p in st.get("posts", []) if not p.get("posted")]
+    print(f"unposted lines: {len(pend)}")
+
+
+def main():
+    global DRY
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red"])
+    ap.add_argument("target", nargs="?", default="", help="gate: <branch>[@<sha>]")
+    ap.add_argument("--dry-run", action="store_true", help="test only: no push, no tag, no post, no state write")
+    ap.add_argument("--only", default="", help="only the approval of this sha")
+    ap.add_argument("--keep", action="store_true", help="keep worktrees of finished items")
+    a = ap.parse_args()
+    DRY = a.dry_run
+    if a.cmd == "status":
+        return status()
+    if a.cmd == "known-red":
+        return known_red_cmd()
+    if a.cmd == "gate":
+        if not a.target:
+            ap.error("gate needs <branch>[@<sha>]")
+        return gate_cmd(a.target)
+    if a.cmd == "parse":
+        text = (COORD / QUEUE_REL).read_text(errors="replace")
+        st = load_state().get("items", {})
+        for x in parse_approvals(text):
+            print(f"{x['key']:60} line {x['line']:6} lane {lane_for(text, x['branch'], x['sha']):20} "
+                  f"{'REVOKED ' if x['revoked'] else ''}{st.get(x['key'], {}).get('status', 'NEW')}")
+        return 0
+    return tick(a)
+
+
+if __name__ == "__main__":
+    sys.exit(main() or 0)

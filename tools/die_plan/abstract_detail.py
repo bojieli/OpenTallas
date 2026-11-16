@@ -606,6 +606,111 @@ def _check_windows(base_lines, window):
     return probs
 
 
+def _nm(x):
+    return int(round(float(x) * 1000))
+
+
+def merge_pin_wires(lines, layers=None):
+    """Pin-wire merge (S81-COLABS-1115): a signal pin whose own wire continues as OBS on the same layer (rects that
+    touch or overlap the pin shape, directly or through other touching OBS rects) gets that whole wire as pin shape
+    and the rects leave OBS.  Touching metal of one layer is one net, so nothing is lost; the router no longer sees a
+    pin end butted against foreign-looking metal (Lef58EolKeepOut).  Pin names, USE, DIRECTION and every other
+    line are unchanged.  layers: None = every layer the OBS lists except blanket layers (a rect covering >50% of the
+    SIZE is never merged).  -> (new_lines, report)"""
+    head, body, tail = _split(lines)
+    if body is None:
+        return lines, {"merged_rects": 0}
+    groups = _obs_by_layer(body)
+    rect_re = re.compile(r"\s*RECT\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)\s*;")
+    size = None
+    for ln in head:
+        m = re.match(r"\s*SIZE\s+(-?[\d.]+)\s+BY\s+(-?[\d.]+)", ln)
+        if m:
+            size = (_nm(m.group(1)), _nm(m.group(2)))
+    big = (size[0] * size[1] // 2) if size else None
+    obs = {}  # layer -> list of [rect, original line, alive]
+    for layer, geo in groups:
+        for ln in geo:
+            m = rect_re.match(ln)
+            if m:
+                r = tuple(_nm(x) for x in m.groups())
+                obs.setdefault(layer, []).append([r, ln, True])
+    # pins: name -> {layer: [(line index, rect)]}, per-layer insertion point (line index after last RECT of layer)
+    pins, cur, layer, skip = {}, None, None, False
+    for i, ln in enumerate(head):
+        m = re.match(r"\s*PIN (\S+)", ln)
+        if m:
+            cur, layer, skip = m.group(1), None, False
+            pins[cur] = {"use_pg": False, "layers": {}}
+            continue
+        if cur is None:
+            continue
+        if re.match(r"\s*END %s\s*$" % re.escape(cur), ln):
+            cur = None
+        elif re.search(r"USE (POWER|GROUND)", ln):
+            pins[cur]["use_pg"] = True
+        elif re.match(r"\s*LAYER (\S+)", ln):
+            layer = re.match(r"\s*LAYER (\S+)", ln).group(1)
+        else:
+            m = rect_re.match(ln)
+            if m and layer:
+                ent = pins[cur]["layers"].setdefault(layer, {"rects": [], "last": i})
+                ent["rects"].append(tuple(_nm(x) for x in m.groups()))
+                ent["last"] = i
+
+    def touch(a, b):
+        ox = min(a[2], b[2]) - max(a[0], b[0])
+        oy = min(a[3], b[3]) - max(a[1], b[1])
+        return (ox >= 0 and oy >= 0) and (ox > 0 or oy > 0)
+
+    inserts, merged, npins = {}, 0, 0
+    for pname, pd in pins.items():
+        if pd["use_pg"]:
+            continue
+        for layer, ent in pd["layers"].items():
+            if layers is not None and layer not in layers:
+                continue
+            cand = [c for c in obs.get(layer, []) if c[2] and not (big and (c[0][2] - c[0][0]) * (c[0][3] - c[0][1]) > big)]
+            if not cand:
+                continue
+            frontier, got = list(ent["rects"]), []
+            while frontier:
+                f = frontier.pop()
+                for c in cand:
+                    if c[2] and touch(f, c[0]):
+                        c[2] = False
+                        got.append(c[0])
+                        frontier.append(c[0])
+            if got:
+                npins += 1
+                merged += len(got)
+                inserts.setdefault(ent["last"], []).extend(got)
+    if not merged:
+        return lines, {"merged_rects": 0, "pins": 0}
+    new_head = []
+    for i, ln in enumerate(head):
+        new_head.append(ln)
+        for r in inserts.get(i, []):
+            new_head.append("        RECT  %s %s %s %s ;\n" % tuple(("%.3f" % (v / 1000.0)).rstrip("0").rstrip(".") for v in r))
+    # rebuild OBS: drop dead rects by identity of line text + rect (lines are per rect, order preserved)
+    dead = {}
+    for layer, lst in obs.items():
+        for r, ln, alive in lst:
+            if not alive:
+                dead.setdefault((layer, ln), 0)
+                dead[(layer, ln)] += 1
+    body_out = []
+    for layer, geo in groups:
+        body_out.append("    LAYER %s ;\n" % layer)
+        for ln in geo:
+            key = (layer, ln)
+            if dead.get(key):
+                dead[key] -= 1
+                continue
+            body_out.append(ln)
+    return new_head + body_out + tail, {"merged_rects": merged, "pins": npins}
+
+
 def check(base_lines, new_lines, layers, window=None):
     """Everything but OBS of `layers` identical.  With a pin window record (splice receipt 'pin_window': margin_um,
     top_layer, clear_um, windows) the windows must sit on base signal pins (_check_windows), the kept layers must
@@ -688,7 +793,19 @@ def main(argv=None):
         q.add_argument("--top-layer", default=None, help="parent top routing layer (default: the view's top OBS layer)")
         q.add_argument("--access-clear-um", type=float, default=ACCESS_CLEAR_UM)
     x.add_argument("--margin-um", type=float, default=WINDOW_MARGIN_UM)
+    w = sub.add_parser("pinwire", help="merge each signal pin's own same-layer OBS wire into the pin shape")
+    w.add_argument("--base", required=True)
+    w.add_argument("--out", required=True)
+    w.add_argument("--layers", default="", help="comma list (default: every OBS layer except blanket rects)")
     a = ap.parse_args(argv)
+    if a.cmd == "pinwire":
+        lines = open(a.base).read().splitlines(keepends=True)
+        new, rep = merge_pin_wires(lines, {l for l in a.layers.split(",") if l} or None)
+        with open(a.out, "w") as fh:
+            fh.writelines(new)
+        rep.update(base=a.base, base_sha256=_sha(a.base), out=a.out, out_sha256=_sha(a.out))
+        print(json.dumps(rep, indent=1))
+        return 0
     if a.cmd == "tcl":
         print("read_db %s\nwrite_abstract_lef -bloat_factor %d %s" % (a.odb, a.bloat_factor, a.out))
         return 0

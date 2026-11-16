@@ -529,6 +529,45 @@ if {[info exists ff_full_targets]} {
     ff_reserve_explicit [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}] [expr {round($w*$ff_dbu)}] [expr {round($h*$ff_dbu)}]
   }
 }
+# DRT0255 (FABLE-PD-DRT-1350 fix 3, opt-in OT_PG_PAIR_ROW_KEEPOUT=1): the landing-ring / ft-station / face-flop sites come from ff_put_near;
+# a std row under an M6 PG pair (pair + min spacing) makes the cell's straight hop run in a gcell row with 0-1 DRT-legal M6 tracks
+# (class A).  The pair rows are skipped, so a one-row hop is never a pair row; cells move by at most 2-3 rows, no plan event.
+# ff_pair_rows_build y0 rh stripes sp -> {row index ...}: pure function of the geometry (tested with tclsh).
+proc ff_pair_rows_build {y0 rh stripes sp} {
+  set blocked {}
+  foreach s $stripes {
+    lassign $s lo hi
+    set r0 [expr {int(floor(double($lo - $sp - $y0) / $rh))}]
+    set r1 [expr {int(floor(double($hi + $sp - $y0 - 1) / $rh))}]
+    for {set r $r0} {$r <= $r1} {incr r} { dict set blocked $r 1 }
+  }
+  return $blocked
+}
+proc ff_pair_row_blocked {r} {
+  global ff_pair_rows ff_pair_rows_ready ff_y0 ff_rh
+  if {![info exists ::env(OT_PG_PAIR_ROW_KEEPOUT)] || $::env(OT_PG_PAIR_ROW_KEEPOUT) ne "1"} { return 0 }
+  if {![info exists ff_pair_rows_ready]} {
+    set ff_pair_rows_ready 1; set ff_pair_rows {}
+    set blk [ord::get_db_block]; set tech [ord::get_db_tech]
+    set L [$tech findLayer [expr {[info exists ::env(OT_PG_PAIR_ROW_LAYER)] ? $::env(OT_PG_PAIR_ROW_LAYER) : "M6"}]]
+    if {$L ne "NULL" && [$L getDirection] eq "HORIZONTAL"} {
+      set st {}
+      foreach net [$blk getNets] {
+        if {![$net isSpecial]} continue
+        foreach sw [$net getSWires] { foreach w [$sw getWires] {
+          if {[$w isVia]} continue
+          set wl [$w getTechLayer]
+          if {$wl eq "NULL" || [$wl getName] ne [$L getName]} continue
+          if {([$w xMax] - [$w xMin]) <= ([$w yMax] - [$w yMin])} continue
+          lappend st [list [$w yMin] [$w yMax]]
+        } }
+      }
+      set ff_pair_rows [ff_pair_rows_build $ff_y0 $ff_rh [lsort -unique $st] [$L getSpacing]]
+      puts "OT_PG_PAIR_ROW_KEEPOUT [dict size $ff_pair_rows] std rows under [llength $st] [$L getName] stripes (+ min spacing) skipped by the ring / station / face-flop site search"
+    }
+  }
+  return [dict exists $ff_pair_rows $r]
+}
 proc ff_put_near {f x y} {
   # nearest free (column, row) cell of the global station grid around (x, y), spiral search
   global ff_gocc ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_cpitch ff_orient
@@ -546,7 +585,7 @@ proc ff_put_near {f x y} {
     for {set depth $ff_ns_inset} {$depth < 120} {incr depth} {
       foreach dc {0 1 -1} {
         set c [expr {$c0+$dc}];set r [expr {$nsface eq "N" ? $rmax-$depth : $depth}]
-        if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_ns_stride || [dict exists $ff_gocc "$c,$r"]} continue
+        if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_ns_stride || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
         set cx [expr {$ff_x0+$c*$ff_cpitch}];set cy [expr {$ff_y0+$r*$ff_rh}]
         if {abs($x-($cx+$w/2))+abs($y-($cy+$ff_rh/2))>27*$ff_dbu} continue
         if {[llength [info commands ff_hits_explicit]] && [ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
@@ -563,7 +602,7 @@ proc ff_put_near {f x y} {
     for {set dr [expr {-$rad}]} {$dr <= $rad} {incr dr} {
       foreach dc [lsort -unique [list [expr {$rad - abs($dr)}] [expr {abs($dr) - $rad}]]] {
         set c [expr {$c0 + $dc}]; set r [expr {$r0 + $dr}]
-        if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
+        if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
         if {[ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
         dict set ff_gocc "$c,$r" 1

@@ -9,6 +9,9 @@ finding only at synth, place or CTS:
   clock_export_form  a forwarded clock output with a create_generated_clock must use the fwd_buffer export form; the
                      legacy tie text (output BTerm joined onto the source tap net) stops TritonCTS with CTS-0114
   macro_tcl          a kit whose sources instantiate a staged LEF macro must stage MACRO_PLACEMENT_TCL (static sites)
+  kit_rtl_paths      (COORD r107) every source the kit-rtl filelist names lies in the kit's own source tree (gen --rtl-root),
+                     the bind out dir or the kit-rtl dir; a path in another tree (B6gsl/src beside the kit's src_rel2 copy) is
+                     a stale-source kit.  Kits without kit_rtl_paths.json (no --kit-rtl) are NA.
   rtl_check          yosys elaboration with the flow's frontend: hierarchy, undriven and multi-driven nets
                      (`check`, same script as rtl_lint.py, run in the flow image)
   memory_bits        every inferred memory (WIDTH x SIZE after memory_collect; with OT_LANDING_FF = 1 after the same
@@ -178,6 +181,27 @@ yosys hierarchy -top @TOP@
 """
 
 
+def kit_rtl_paths(kd):
+    """-> (errors, applies): kit_rtl_paths.json (written by gen_phys.write_phys for a --kit-rtl type) names the kit source tree
+    and the filelist; every file must resolve inside the source tree, the bind out dir (kit_rtl.json bind_out) or the filelist dir"""
+    f = kd / "kit_rtl_paths.json"
+    if not f.is_file():
+        return [], False
+    d = json.loads(f.read_text())
+    roots = [Path(d["src_tree"]).resolve(), Path(d["filelist"]).resolve().parent]
+    kj = Path(d["filelist"]).with_name("kit_rtl.json")
+    if kj.is_file():
+        bo = json.loads(kj.read_text()).get("bind_out")
+        if bo:
+            roots.append(Path(bo).resolve())
+    errs = []
+    for x in d.get("files", []):
+        p = Path(x).resolve()
+        if not any(p == r or r in p.parents for r in roots):
+            errs.append(f"kit_rtl.f source {p} is outside the kit source tree {roots[0]} (bind out / kit-rtl dir allowed)")
+    return errs, True
+
+
 def lint_tcl(cfg):
     """LINT_TCL for a kit: + the ot_keep_regs.tcl OT_LANDING_FF ring map when the kit config sets it."""
     on = (cfg.get("OT_LANDING_FF") or ["0"])[-1] == "1" and cfg.get("DESIGN_NAME")
@@ -306,6 +330,7 @@ def lint(kd, plan_dir=None, yosys=True, image=IMAGE, mem_gb=8):
     put("pins_vs_plan", lambda: pins_vs_plan(kd, plan_dir))
     put("clock_export_form", lambda: clock_export_form(kd))
     put("macro_tcl", lambda: macro_tcl(kd))
+    put("kit_rtl_paths", lambda: kit_rtl_paths(kd))
     cfg = _cfg(kd)
     if yosys and cfg.get("DESIGN_NAME"):
         res = {}

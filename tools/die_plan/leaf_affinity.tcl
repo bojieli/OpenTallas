@@ -226,6 +226,7 @@ dict for {r mem} $la_groups {
 set la_cross1 0
 foreach pr $la_pairlist { lassign $pr a b; if {[la_leaf $a] ne [la_leaf $b]} { incr la_cross1 } }
 puts "OT_LEAF_AFF pairs $la_pairs groups [dict size $la_groups] cross_leaf_before $la_cross0 cross_leaf_after $la_cross1 groups_moved $la_gmoved sinks_moved $la_moved same_leaf_already $la_ok skip_big $la_skip_big skip_far $la_skip_far skip_cap $la_skip_cap skip_driver $la_skip_drv skip_clock $la_skip_clock skip_gate $la_skip_gate leaf_cap $la_cap radius_um $la_um report_only $la_ronly"
+puts "OT_HOOK_COVERAGE hook=leaf_affinity touched=$la_gmoved expected=[dict size $la_groups] skip_far=$la_skip_far advisory=1"   ;# GENBUG-9: clock quality, not a gate
 # ---- DIE-S81-85 11-09 LOCAL SPLIT (OT_LEAF_AFF_SPLIT_UM, default 30 um; 0 = off; the OT_LEAF_AFF line above is unchanged) ----
 # A zero-logic group that spans the core (TX vD: every pin_q[0..2] -> d0 -> ... -> d6 bit chain, 10 flops from the
 # input face to the output mux) failed skip_far as a whole, so all 514 groups stayed on CTS leaves and 3061 of 4617

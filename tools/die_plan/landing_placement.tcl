@@ -344,6 +344,13 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
   while {$x+$w<=$bx} {
    set skip $x;set r0 [expr {int(($y-$ff_y0)/$ff_rh)}];set r1 [expr {int(ceil(double($y+$h-$ff_y0)/$ff_rh))}]
    for {set r $r0} {$r<$r1} {incr r} {
+    # KIT-OPS-6 11-14 (FABLE-TYPES-KV cause 1b): rows of other groups' ring bands (::cland_block, set by cland_avoid_rings)
+    if {[info exists ::cland_block] && [dict exists $::cland_block $r]} {
+     foreach interval [dict get $::cland_block $r] {
+      lassign $interval l u
+      if {$x<$u && $x+$fw>$l} { set skip [expr {max($skip,$u)}] }
+     }
+    }
     if {![dict exists $cland_occ $r]} continue
     foreach interval [dict get $cland_occ $r] {
      lassign $interval l u
@@ -551,6 +558,9 @@ foreach spec $cland_optional_groups {
 # (DIE-HEAD-12 probe B, hd_tile): ring FIRM in netlist order 676,805 GRT overflow, flops-only FIRM -97 %.
 set cland_ff_fill 0.90
 set cland_cursor {}
+# WAVE-COPYBACK-1115 (FABLE-PD-PLACE-0830 class B): cland_ring_place / cland_column_select read $cland_col_cursor through `global`;
+# it was set only inside other procs, so a ring band that came first after the reader-start grow died with 'no such variable'
+set cland_col_cursor {}
 # DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
 # band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
 proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0} {wwc 0} {rwc 0} {tail_groups 0} {wcw 0}} {
@@ -1091,7 +1101,7 @@ proc cland_place_ff {prefix rect tag} {
   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
  }
  set cland_cursor {};set cland_col_cursor {}
- puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement"
+ if {![info exists ::cland_fill_dry]} { puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement" }
  return [llength $ffs]
 }
 # FLOW-KITFAIL-3 10-29 (S81-KITS-B iqf__t1, plan_s13r2 band_ring=all): an all-cells ring whose reserved footprints
@@ -1364,9 +1374,128 @@ if {[info exists ::cland_native_role_banks] && [dict size $::cland_native_role_b
  }
 }
 # END NATIVE_ROLE_BANKS
+# KIT-OPS-6 11-14 (FABLE-TYPES-KV cause 1: 16 KV types fail "no legal nonoverlapping row/site in reserved band" on the LAST cells
+# of a soft ring band sized 0.4-2 % over its area formula, after START-window cells of earlier groups dropped into it, and the
+# kit stopped at the FIRST failing band so every plan event met the next one).  Three class changes, all in this file:
+#  (a) cland_ring_place: a plain +ff ring that runs out of band retries with the band grown by whole rows (columns for a tall
+#      band) up to +10 % area (high side 2.5/5/7.5/10 %, then low side, then both sides); the failed try is rolled back (cells
+#      back to unplaced, occupancy and records restored).  OT_CLAND_RING_GROW=0 restores the plan band.
+#  (b) cland_avoid_rings: START-window and local-reset cells first try sites outside the ring bands of OTHER groups that are not
+#      yet placed; no site -> the old unrestricted search.  OT_CLAND_START_AVOID_RINGS=0 restores the old search.
+#  (c) the group loop does not stop at the first failing band: the remaining groups run in the dry mode (::cland_fill_dry) and
+#      every failing band is printed ("OT_CLAND BAND FAIL ..." with cells, reserve need and band area) before the first error.
+proc cland_band_rects {tag rect} {
+ if {[info exists ::cland_multi] && [dict exists $::cland_multi $tag]} { return [dict get $::cland_multi $tag] }
+ return [list $rect]
+}
+proc cland_avoid_rings {prefix script} {
+ global ff_dbu ff_y0 ff_rh cland_ring_bands cland_ring_done
+ if {([info exists ::env(OT_CLAND_START_AVOID_RINGS)] && $::env(OT_CLAND_START_AVOID_RINGS) eq "0") || ![info exists cland_ring_bands]} {
+  return [uplevel 1 $script]
+ }
+ set blk [dict create]
+ foreach b $cland_ring_bands {
+  lassign $b bp bt br
+  if {$bp eq $prefix || [dict exists $cland_ring_done $bp]} continue
+  foreach rc [cland_band_rects $bt $br] {
+   lassign $rc ax ay bx by
+   set x0 [expr {int(ceil($ax*$ff_dbu))}]; set x1 [expr {int(floor($bx*$ff_dbu))}]
+   set y0 [expr {int(ceil($ay*$ff_dbu))}]; set y1 [expr {int(floor($by*$ff_dbu))}]
+   set r0 [expr {int(ceil(double($y0-$ff_y0)/$ff_rh))}]; set r1 [expr {int(floor(double($y1-$ff_y0)/$ff_rh))-1}]
+   for {set r $r0} {$r<=$r1} {incr r} { dict lappend blk $r [list $x0 $x1] }
+  }
+ }
+ if {![dict size $blk]} { return [uplevel 1 $script] }
+ set ::cland_block $blk
+ set rc [catch {uplevel 1 $script} err opts]
+ unset -nocomplain ::cland_block
+ if {$rc == 1 && [string match {OT_CLAND no legal*} $err]} { return [uplevel 1 $script] }
+ return -options $opts $err
+}
+proc cland_ring_grows {rect} {
+ global ff_rh ff_sw ff_dbu
+ lassign $rect ax ay bx by
+ set w [expr {$bx-$ax}]; set h [expr {$by-$ay}]
+ if {$w <= 0 || $h <= 0} { return {} }
+ set rhu [expr {double($ff_rh)/$ff_dbu}]; set swu [expr {double($ff_sw)/$ff_dbu}]
+ if {$h <= $w} { set st $rhu; set thin $h; set ydir 1 } else { set st $swu; set thin $w; set ydir 0 }
+ set res {}
+ foreach f {1.025 1.05 1.075 1.10} {
+  set d [expr {ceil($thin*($f-1.0)/$st-1e-9)*$st}]
+  if {($thin+$d)/$thin > 1.10+1e-9} { set d [expr {floor($thin*0.10/$st+1e-9)*$st}] }
+  if {$d <= 0} continue
+  if {$ydir} { set g [list $ax $ay $bx [expr {$by+$d}]] } else { set g [list $ax $ay [expr {$bx+$d}] $by] }
+  if {$g ni $res} { lappend res $g }
+  set dmax $d
+ }
+ if {![info exists dmax]} { return {} }
+ if {$ydir} { set g [list $ax [expr {$ay-$dmax}] $bx $by] } else { set g [list [expr {$ax-$dmax}] $ay $bx $by] }
+ lappend res $g
+ set lo [expr {floor($dmax/2.0/$st+1e-9)*$st}]; set hi [expr {$dmax-$lo}]
+ if {$ydir} { set g [list $ax [expr {$ay-$lo}] $bx [expr {$by+$hi}]] } else { set g [list [expr {$ax-$lo}] $ay [expr {$bx+$hi}] $by] }
+ if {$lo > 0 && $g ni $res} { lappend res $g }
+ return $res
+}
+proc cland_ring_place {prefix rect tag} {
+ global cland_occ cland_done cland_n cland_cursor cland_col_cursor cland_fh ff_blk ff_dbu
+ if {([info exists ::env(OT_CLAND_RING_GROW)] && $::env(OT_CLAND_RING_GROW) eq "0") || [string match {ring:*+x+ff*} $tag]
+     || [info exists ::env(OT_CLAND_PINSLOT)] || ([info exists ::cland_multi] && [dict exists $::cland_multi $tag])} {
+  return [cland_place_ff $prefix $rect $tag]
+ }
+ set tries [linsert [cland_ring_grows $rect] 0 $rect]
+ set first {}
+ set k 0
+ foreach r $tries {
+  set saved [list $cland_occ $cland_done $cland_n $cland_cursor $cland_col_cursor]
+  set real $cland_fh
+  set tf [file tempfile tpath]
+  set cland_fh $tf
+  set rc [catch {cland_place_ff $prefix $r $tag} msg opts]
+  set cland_fh $real
+  if {!$rc} {
+   flush $tf; seek $tf 0; fcopy $tf $real; close $tf; file delete -force $tpath
+   if {$k > 0} {
+    lassign $rect ax ay bx by; lassign $r gx gy hx hy
+    puts [format "OT_CLAND ring grow %s (%s): band {%s} -> {%s} (+%.1f %% area, step %d of %d)" $prefix $tag $rect $r [expr {100.0*(($hx-$gx)*($hy-$gy)/(($bx-$ax)*($by-$ay))-1.0)}] $k [expr {[llength $tries]-1}]]
+   }
+   return $msg
+  }
+  close $tf; file delete -force $tpath
+  set old $cland_done
+  lassign $saved cland_occ cland_done cland_n cland_cursor cland_col_cursor
+  dict for {nm v} $old {
+   if {![dict exists $cland_done $nm]} { set ii [$ff_blk findInst $nm]; if {$ii ne "NULL"} { $ii setPlacementStatus NONE } }
+  }
+  if {![string match {OT_CLAND no legal*} $msg]} { return -options $opts $msg }
+  if {$first eq {}} { set first [list $msg $opts] }
+  incr k
+ }
+ return -options [lindex $first 1] [lindex $first 0]
+}
+proc cland_band_need {prefix tag} {
+ global ff_rh ff_sw ff_dbu cland_done
+ set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
+ set need 0.0; set n 0; set gl [cland_group_insts $prefix]
+ foreach i $gl {
+  set m [$i getMaster]
+  if {[$m isBlock]} continue
+  set rw [expr {int(ceil(double([$m getWidth])/0.4*$sp/$ff_sw))*$ff_sw}]
+  set need [expr {$need+double($rw)*$ff_rh}]; incr n
+ }
+ return [list $n [expr {$need/(double($ff_dbu)*$ff_dbu)}]]
+}
 set cland_multi_seen {}
+set cland_ring_bands {}
+set cland_ring_done [dict create]
+foreach spec $cland_groups {
+ lassign $spec cb_p cb_r cb_t
+ if {[string match {ring:*} $cb_t]} { lappend cland_ring_bands [list $cb_p $cb_t $cb_r] }
+}
+set cland_fails {}
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
+ if {[llength $cland_fails] && [info exists ::cland_native_role_banks] && [dict exists $::cland_native_role_banks $prefix]} continue
+ set cland_rc [catch {
 # BEGIN NATIVE_ROLE_BANKS
  if {[info exists ::cland_native_role_banks] && [dict exists $::cland_native_role_banks $prefix]} {
   if {![dict exists $::cland_role_placed $prefix]} {cland_role_place $prefix $tag}
@@ -1380,7 +1509,8 @@ foreach spec $cland_groups {
  }
  set hit 0
  if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]} {
-  if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
+  if {![cland_ring_place $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
+  dict set cland_ring_done $prefix 1
   continue
  }
  set coll [string match {collector:*} $tag]
@@ -1392,10 +1522,31 @@ foreach spec $cland_groups {
   # DQ87 11-07 (QC slw_fe_v1): a 4.32-um local reset window can be all FIRM face flops; this one-load flop may stand further off.
   # DIE-QC-97 11-09: reader/writer START relay windows take the status/collector grow (cland_put_start).
   # KW43 LAND-RESERVE (opt-in OT_LAND_RESERVE=1): a literal local reset window grows like local-reset; the dispatch below is unchanged
- if {!$coll && $tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} { cland_put_grow $i $rect $tag literal-reset; incr hit; continue }
- if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_put_grow $i $rect $tag local-reset } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_put_start $i $rect $tag } else { cland_put $i $rect $tag };incr hit
+ if {!$coll && $tag eq "literal-local-reset" && [info exists ::env(OT_LAND_RESERVE)] && $::env(OT_LAND_RESERVE) eq "1"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag literal-reset}; incr hit; continue }
+ if {$coll} { cland_put_collector $i $rect $tag } elseif {$tag eq "local-reset"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag local-reset} } elseif {[string match {reader-start:*} $tag] || [string match {writer-start:*} $tag]} { cland_avoid_rings $prefix {cland_put_start $i $rect $tag} } else { cland_put $i $rect $tag };incr hit
  }
  if {!$hit} { error "OT_CLAND no mapped cells found under $prefix" }
+ } cland_err cland_opts]
+ if {$cland_rc == 0 || $cland_rc == 4} continue
+ if {$cland_rc == 1 && [string match {OT_CLAND no legal*} $cland_err]} {
+  # (c) keep going in the dry mode so the one pass names EVERY band that does not fit
+  lappend cland_fails [list $prefix $tag $rect $cland_err]
+  set ::cland_fill_dry 1
+  continue
+ }
+ return -options $cland_opts $cland_err
+}
+unset -nocomplain ::cland_fill_dry
+if {[llength $cland_fails]} {
+ foreach cf $cland_fails {
+  lassign $cf fp ft fr fe
+  lassign [cland_band_need $fp $ft] fn fneed
+  set farea 0.0
+  foreach br [cland_band_rects $ft $fr] { lassign $br ax ay bx by; set farea [expr {$farea+($bx-$ax)*($by-$ay)}] }
+  puts [format "OT_CLAND BAND FAIL %s (%s): %d cells, reserve need %.1f um2, band area %.1f um2 (ratio %.2f): %s" $fp $ft $fn $fneed $farea [expr {$farea > 0 ? $fneed/$farea : 0}] $fe]
+ }
+ puts "OT_CLAND dry pass: [llength $cland_fails] band(s) do not fit (all listed above)"
+ error [lindex [lindex $cland_fails 0] 3]
 }
 close $cland_fh
 puts "OT_CLAND placed $cland_n actual mapped cells FIRM in nonoverlapping reserved bands/relay sites"

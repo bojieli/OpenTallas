@@ -170,6 +170,13 @@ def cmd_plan(a):
     return 0
 
 
+def _band_orders(a):
+    """S81-CA-BAND: --band-order (every type, '*') and --band-order-type TYPE=ORDER overrides"""
+    o = {"*": a.band_order} if getattr(a, "band_order", "name") != "name" else {}
+    o.update(x.split("=", 1) for x in (getattr(a, "band_order_type", None) or []))
+    return o
+
+
 def cmd_compose(a):
     import clock_landings as CL
     import clock_landing_plan as CLP
@@ -195,7 +202,12 @@ def cmd_compose(a):
     try:
         raw, side = CLP.compose(plan, tab, a.plan, observer_part=a.observer,
                                observer=observer, monitor=a.monitor, band_reserve=a.band_reserve,
-                               band_spread=a.band_spread, band_ring=a.band_ring)
+                               band_spread=a.band_spread, band_ring=a.band_ring,
+                               band_multi_rect=getattr(a, "band_multi_rect", False),
+                               band_order_by_type=_band_orders(a) or None,
+                               band_use_max=getattr(a, "band_use_max", 0.5),
+                               band_clock_obstacles=getattr(a, "band_clock_obstacles", False),
+                               band_use_max_by_type=dict((k, float(v)) for k, v in (x.split("=", 1) for x in (getattr(a, "band_use_type", None) or []))) or None)
     except Exception as e:  # report the exact first blocker; do not invent geometry
         rep["compose"] = dict(status="FAIL", error=f"{type(e).__name__}: {e}")
         (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
@@ -305,6 +317,21 @@ def main(argv=None):
     c.add_argument("--observer-spec", help="JSON actual {module,instance_suffix,fault_port,ready_port}; binding is checked by clock_landings, default stays OPEN")
     c.add_argument("--band-spread", type=float, default=1.0,
                    help="ring_ff only: band area = spread x reserve, ring spread over the whole band (DIE-HEAD-12; 2.0 = ~0.5 density)")
+    c.add_argument("--band-multi-rect", action="store_true",
+                   help="S81-CA-BAND: a ring (or monitor) band with no legal single rect takes a notched multi-rect band "
+                        "(clock_landing_plan._storage_rects_staged, DIE-S81-47); default off = byte-identical")
+    c.add_argument("--band-order", default="name", choices=["name", "largest_first"],
+                   help="S81-CA-BAND: ring bands of a type are placed in bus-name order (default) or widest bus first, so small "
+                        "buses do not take the long macro-free strips the wide ones need")
+    c.add_argument("--band-order-type", action="append", metavar="TYPE=largest_first",
+                   help="S81-CA-BAND: band order of ONE base type (repeatable); overrides --band-order for it")
+    c.add_argument("--band-clock-obstacles", action="store_true",
+                   help="S81-CA-BAND: die clock islands and die clock-tree reserved sites (svc channel taps) are band obstacles in every band mode")
+    c.add_argument("--band-use-max", type=float, default=0.5,
+                   help="compose band_use_max (ring reserve <= this share of its band; default 0.5, 1.0 = the bare reserve)")
+    c.add_argument("--band-use-type", action="append", metavar="TYPE=USE",
+                   help="S81-CA-BAND: band use floor of ONE composed type (repeatable), e.g. svc_hi_dsdv_svc_rs__t3=1.0; "
+                        "every other type keeps --band-use-max")
     c.add_argument("--band-ring", default="all", choices=["all", "ff"],
                    help="ring_ff only: ff = place only the ring flops FIRM in bit-major order, ring logic to GPL (DIE-HEAD-13)")
     c.add_argument("--band-reserve", default="padded", choices=["padded", "live", "ring_ff"],

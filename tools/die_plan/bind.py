@@ -45,6 +45,7 @@ Construction rules:
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import re
@@ -785,6 +786,18 @@ def ft_hop_lockup_cell():
     return m.group(1)
 
 
+def wavefront_cells_text_only(names):
+    """canonical cell modules `names` copied verbatim (attributes included) from gen_rtl.CELLS."""
+    import gen_rtl
+    out = []
+    for name in names:
+        m = re.search(r"((?:\(\*[^\n]*\*\)\n)*module " + re.escape(name) + r"\b.*?\nendmodule\n)", gen_rtl.CELLS, re.S)
+        if not m:
+            raise BindError(f"canonical cell {name} missing from gen_rtl.CELLS")
+        out.append(m.group(1))
+    return "\n".join(out)
+
+
 def wavefront_cells_text(driver=False, lockup=False):
     """Copy physical reset cells verbatim, including their synthesis attributes.
 
@@ -1461,7 +1474,7 @@ class Binder:
                     self.param_defaults.get((cell.ytype, cell.module), {})):
                 cnt["proven_dead"] += 1
                 return ("literal", s[1])
-            if self.declared_ties.allows(self.parts[p]["type"], cell.module, pn, i, s[1]):
+            if self.declared_ties.allows(self.parts[p]["type"], cell.module, pn, i, s[1], self.F.cells[ci].path):
                 cnt["declared_tie"] += 1
                 self.declared_tied[(self.parts[p]["type"], cell.module, pn)].append(i)
                 return ("literal", s[1])
@@ -3221,6 +3234,9 @@ class Binder:
                 and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
         import gen_rtl
+        if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
+                and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
+            cells += "\n" + wavefront_cells_text_only(["ot_dp_rrelay"])
         if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
             cells += "\n" + gen_rtl.HOLD_CELLS
         (out / "bind_cells.sv").write_text(cells)
@@ -3274,6 +3290,10 @@ class Binder:
             f.write_text(txt)
             import native_istations
             native_istations.materialize(self, tn, f)
+            # FABLE-PD-QCC-0740: a plan hard-core param_wrap row must equal the instance this bind just emitted (module + params)
+            import hard_core_param
+            for _m in hard_core_param.check_bound_text(tn, f.read_text(), t.get("hard_cores")):
+                self.errors.append(f"HARD_CORE_PARAM_WRAP {_m}")
             # KV-98 11-12 (COORD): port_relays apply AFTER station materialization so a relay can name a native u_ist_* flop
             # (the kit_istations stations only exist in the file once materialize has run).
             port_relays = t.get("reset", {}).get("port_relays")
@@ -4117,8 +4137,17 @@ class Binder:
                    "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n") +
                 "`timescale 1ns/1ps\n`default_nettype none\n")
         pblock = (" #(\n" + ",\n".join(pdecl) + "\n)") if pdecl else ""
-        return head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
-            "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n", pnames
+        text = head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
+            "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n"
+        if t.get("reset_replicate"):
+            # S81-COLGEN-1 11-14 (FABLE-TYPES-S81-COL C2): per-region copies of a named reset / flush driver, equal latency
+            import reset_replicate
+            try:
+                text, rows = reset_replicate.apply(text, t["reset_replicate"], reset_replicate.positions_from_plan(t))
+            except reset_replicate.ReplicateError as exc:
+                raise BindError(f"reset_replicate {tn}: {exc}") from exc
+            self.__dict__.setdefault("_reset_replicate_rows", {})[tn] = rows
+        return text, pnames
 
     def default_domain(self, p):
         t = self.types[self.parts[p]["type"]]
@@ -4655,6 +4684,11 @@ def cmd_bind(a):
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
+    # HCPARAM-ALL 11-15: every hard core, built parameters vs the parameters the bound RTL really instantiates (nested + defaults)
+    import hard_core_param_all
+    B.errors.extend(hard_core_param_all.gate(B, out, fl))
+    if getattr(B, "hcparam_stats", None):
+        rep["hard_core_param_all"] = B.hcparam_stats
     strict_info = None
     if B.strict_types:
         # BIND-STRICT-SRC: bind.f inside the declared source tree, group masters listed, no unknown parameter overrides
@@ -5597,6 +5631,31 @@ def kit_landed_ports(btxt):
     return out
 
 
+def kit_rebase_path(p, old_base, new_tree):
+    """an absolute path inside the bind's recorded source base -> the same relative path in the kit's own tree (else unchanged)"""
+    q = Path(p)
+    if not q.is_absolute():
+        return str(p)
+    try:
+        return str(Path(new_tree) / q.resolve().relative_to(Path(old_base).resolve()))
+    except ValueError:
+        try:
+            return str(Path(new_tree) / q.relative_to(Path(old_base)))
+        except ValueError:
+            return str(p)
+
+
+def kit_filelist_outside(files, roots):
+    """filelist paths (resolved) that lie in none of the roots"""
+    rr = [Path(r).resolve() for r in roots]
+    bad = []
+    for f in files:
+        p = Path(f).resolve()
+        if not any(p == r or r in p.parents for r in rr):
+            bad.append(str(p))
+    return bad
+
+
 def cmd_kit_rtl(a):
     """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
     The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
@@ -5886,12 +5945,24 @@ def cmd_kit_rtl(a):
     # leaf sources: the as-built RTL closure of the bound module's leaves (the same index + closure the verify lint uses)
     ab0 = raw["asbuilt"]
     base = plan_base(a.plan, raw)
+    # GENBUG (COORD r107): kit-rtl resolves every source against the kit's OWN source tree.  The plan's asbuilt.base is an absolute
+    # path baked at bind time (B6gsl: run/b/B6gsl/src, whose ot_dp_clk_landing.sv was stale: GEN_LINT failed on the LOCAL defparam
+    # while the kit's src_rel2 copy was right).  --src-tree DIR (env OT_KIT_SRC_TREE) replaces the base; the filelist is then checked.
+    src_tree = getattr(a, "src_tree", None) or os.environ.get("OT_KIT_SRC_TREE")
+    old_base = base
+    rebase = lambda p: p
+    if src_tree:
+        st = Path(src_tree).resolve()
+        if not (st / "rtl").is_dir():
+            raise BindError(f"kit-rtl {tn}: --src-tree {st} has no rtl/")
+        base = str(st)
+        rebase = lambda p: kit_rebase_path(p, old_base, st)       # absolute paths the bind recorded in the old tree (bind.f, extra_lib)
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
-    prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
-        rep.get("extra_lib", []) + bindf_prefer(out, base)
+    prefer = [rebase(str(Path(base) / f) if not Path(f).is_absolute() else f) for f in ab0.get("prefer", [])] + \
+        [rebase(x) for x in rep.get("extra_lib", [])] + [rebase(x) for x in bindf_prefer(out, base)]
     E.validate_preferred_files(prefer)
-    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), list(ab0.get("files", [])) + list(rep.get("extra_lib", [])), base)
+    idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), [rebase(x) for x in ab0.get("files", [])] + [rebase(x) for x in rep.get("extra_lib", [])], base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
@@ -5981,6 +6052,11 @@ def cmd_kit_rtl(a):
             BRC.stage(kd, bound_reset_source, bound_reset)
         except (ValueError, gen_rtl.GenError) as exc:
             raise BindError(f"kit-rtl {tn}: native reset export: {exc}") from exc
+    if src_tree:
+        outside = kit_filelist_outside(fl, [Path(base), out, kd])
+        if outside:
+            raise BindError(f"kit-rtl {tn}: {len(outside)} filelist path(s) outside the kit source tree {base} (and the bind "
+                            f"out / kit dir): {outside[:5]}")
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
     tree_mix = kit_tree_mix(tn, kd)
     # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
@@ -5988,7 +6064,7 @@ def cmd_kit_rtl(a):
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
                asbuilt_manifest=str(Path(a.asbuilt).resolve()) if a.asbuilt else None,
-               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
+               variants=variants, bind_out=str(out), src_tree=str(base) if src_tree else None, instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, spare_ft_landed=spare_landed, narrow_buses=narrow,
                **({"dead_inputs": dead_doc} if dead_doc else {}),
                plan_buses_unbound=missing, **(dict(unbound_input_buses=unbound_inputs) if unbound_inputs else {}),
                bound_only_pins=extra, defines=kit_defines, files=[str(x) for x in fl],
@@ -6084,6 +6160,8 @@ def main(argv=None):
     k.add_argument("--instance", help="the bound instance whose parameters the kit takes (types whose instances differ)")
     k.add_argument("--asbuilt")
     k.add_argument("--component-proof", help="verified read-only LOCAL source report; never a global bind PASS")
+    k.add_argument("--src-tree", help="the kit's own source tree (src_rel2 copy): every kit source resolves against it, not the "
+                                      "plan's baked asbuilt.base; the filelist must lie inside it (env OT_KIT_SRC_TREE)")
     k.add_argument("--library-profile", help="explicit hash-pinned candidate library (kit_library_profile.v1): replaces "
                                              "captured sources in the kit closure; the captured bind stays unchanged")
     c = sub.add_parser("component-proof", help="read-only local source/port/reset checks; preserve global bind failure")

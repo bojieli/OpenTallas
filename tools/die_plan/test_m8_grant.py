@@ -257,3 +257,163 @@ def test_schema_accepts_type_m8_grant():
     p = copy.deepcopy(TINY)
     p["die"]["layer_budget"]["type_m8_grant"] = {"bogus": 1}
     assert any("type_m8_grant" in str(e) or "bogus" in str(e) for e in schema.validate(p))
+
+
+# ------------------------------------------------------------------ WAVE-RECIPE-1 11-14: M9 grant (vertical die layer)
+def pg_m9(P):
+    return [r for r in DI.pg_rects(P, DI.pg_grid(P)) if r[1] == "M9"]
+
+
+@pytest.fixture
+def _no_m9_env(monkeypatch):
+    monkeypatch.delenv("OT_GEN_M9_GRANT", raising=False)
+
+
+def test_m9_type_tracks_keep_spacing_to_every_die_m9_stripe(_no_m9_env):
+    """OWNER ruling 11-14: a type may route the remaining M9; no granted M9 track may short or come within the stripe's
+    spacing of a die M9 PG strap over any instance (the slice_station t30 case: 42 shorts + 14 spacing at no grant)."""
+    P = plan()
+    g = MG.grant(P, "mid", layer="M9")
+    assert g["layer"] == "M9" and g["dir"] == "V"
+    assert g["n_tracks"] == g["pg_tracks"] + g["die_reserve_tracks"] + g["die_route_tracks"] + g["type_tracks"]
+    assert g["pg_tracks"] > 0 and g["type_tracks"] > 0
+    assert tracks(g["type_runs"]).isdisjoint(tracks(g["die_runs"]))
+    n_checked = 0
+    for part in MG.instances(P, "mid"):
+        x0, y0, x1, y1 = P.rect(part)
+        for _n, _L, a0, b0, a1, b1 in pg_m9(P):
+            if a1 <= x0 or a0 >= x1 or b1 <= y0 or b0 >= y1:
+                continue
+            sp = max(MG.MIN_SP, DI.pg_spacing(a1 - a0))
+            for k in tracks(g["type_runs"]):
+                xd = P.to_die(part, (MG.track_y(P, k, "M9"), 0.0))[0]
+                gap = max(a0 - (xd + MG.WIRE_W / 2), (xd - MG.WIRE_W / 2) - a1)
+                assert gap >= sp - 1e-6, (part, k, xd, a0, a1)
+                n_checked += 1
+    assert n_checked > 0
+
+
+def test_m9_grant_rects_are_vertical_and_narrow(_no_m9_env):
+    g = MG.grant(plan(), "mid", layer="M9")
+    w, h = g["outline_um"]
+    for rects, runs in ((_tcl_rects(MG.obstruction_tcl(g)), g["die_runs"]), (MG.abstract_obs_rects(g), g["type_runs"])):
+        assert len(rects) == len(tracks(runs))
+        assert all(abs(y0) < 1e-9 and abs(y1 - h) < 1e-6 and x1 - x0 <= MG.WIRE_W + 1e-9 for x0, y0, x1, y1 in rects)
+    assert "findLayer M9" in MG.obstruction_tcl(g)
+
+
+def test_m8_grant_unchanged_by_the_layer_parameter(_no_m9_env):
+    """every existing M8 grant (and its sha in signed kits) is byte-identical: no dir key, same tracks"""
+    g = MG.grant(plan(), "mid")
+    assert "dir" not in g and g["layer"] == "M8"
+    assert g == MG.grant(plan(), "mid", layer="M8")
+
+
+def test_m9_lock_and_lef(_no_m9_env):
+    g = MG.grant(plan(), "mid", layer="M9")
+    assert MG.lock_check(g, plan()) == []
+
+    def ca(p):
+        p["die"]["layer_budget"]["cut_avail"] = {"M8": 0.0, "M9": 0.3}
+    bad = MG.lock_check(g, plan(ca))
+    assert bad and all("die M9 track" in b and "(x " in b for b in bad)
+    lef = LEF.replace("    LAYER M7 ;\n      RECT 0 0 864 864 ;\n", "    LAYER M7 ;\n      RECT 0 0 864 864 ;\n"
+                                                                     "    LAYER M9 ;\n      RECT 0 0 864 864 ;\n")
+    doc = dict(MG.grant(plan(), "mid"), extra_grants=[g])
+    out = lef
+    for x in MG.grants_of(doc):
+        out = MG.fix_abstract_lef(out, x)
+    m9 = out.split("LAYER M9 ;")[1].split("LAYER")[0].split("END")[0]
+    assert m9.count("RECT") == len(tracks(g["type_runs"])) and out.count("RECT 0 0 864 864 ;") == 2
+
+
+def _m9_guide(tmp, boxes, name="die_m9.guide"):
+    """OpenROAD write_guides text: boxes = [(net, layer, x0, y0, x1, y1 um)]"""
+    D = DI.DBU
+    txt = "".join("%s\n(\n%d %d %d %d %s\n)\n" % (n, x0 * D, y0 * D, x1 * D, y1 * D, L) for n, L, x0, y0, x1, y1 in boxes)
+    f = Path(tmp) / name
+    f.write_text(txt)
+    return str(f)
+
+
+def _over_mid(layer="M9", net="ck_r1_0"):
+    x0, y0, x1, y1 = plan().rect(MG.instances(plan(), "mid")[0])
+    return (net, layer, x0 + 10, y0 + 10, x0 + 20, y1 - 10)
+
+
+def test_kit_m9_grant_obstructs_die_m9_and_carries_m8(_no_m9_env):
+    """PLAN-READERS-1: the M9 grant needs the die clock guides; with them the kit is the WAVE-RECIPE-1 kit plus the die route."""
+    with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as g:
+        guide = _m9_guide(g, [_over_mid()])
+        def on(p):
+            p["die"]["layer_budget"]["type_m9_grant"] = {"enable": True, "guide": guide}
+        f = _files(_kit(a, on))
+        assert b"export MAX_ROUTING_LAYER = M9" in f["config.mk"]
+        doc = json.loads(f["m8_grant.json"])
+        g8, g9 = MG.grants_of(doc)
+        assert g8["layer"] == "M8" and g9["layer"] == "M9"
+        G, gsha = MG._guides(guide)
+        assert g9 == MG.grant(plan(), "mid", G, "4w", gsha, layer="M9") and g9["die_route_tracks"] > 0
+        pdn = f["pdn.tcl"].decode()
+        assert "findLayer M8" in pdn and "findLayer M9" in pdn and g9["sha"] in pdn
+        assert pdn.count("odb::dbObstruction_create") == len(tracks(g8["die_runs"])) + len(tracks(g9["die_runs"]))
+
+
+def test_m9_grant_without_die_clock_guides_fails_closed(_no_m9_env):
+    """PLAN-READERS-1 (FABLE-PLAN-B6B 6.5): no guide = the grant would subtract the die PG only; refuse with the reason."""
+    def on(p):
+        p["die"]["layer_budget"]["type_m9_grant"] = {"enable": True}
+    with tempfile.TemporaryDirectory() as a, pytest.raises(ValueError, match=r"M9 grant refused.*guide is not set"):
+        _kit(a, on)
+    with tempfile.TemporaryDirectory() as a, pytest.raises(ValueError, match=r"M9 grant refused.*guide is not set"):
+        _kit(a, OT_GEN_M9_GRANT="1")                      # the A/B env opt-in has no guide either
+
+
+@pytest.mark.parametrize("why,boxes,match", [
+    ("m8-clock-only", [_over_mid("M8")], "no M9 clock segment"),
+    ("m9-signal-only", [_over_mid("M9", "sig_a")], "no M9 clock segment"),
+    ("clock-elsewhere", [("ck_far", "M9", 1e5, 1e5, 1e5 + 10, 1e5 + 10)], "carry no M9 clock segment over its instances"),
+    ("empty", [], "guide file is empty")])
+def test_m9_grant_guide_must_be_the_die_clock_over_the_type(_no_m9_env, why, boxes, match):
+    with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as g:
+        guide = _m9_guide(g, boxes)
+        def on(p):
+            p["die"]["layer_budget"]["type_m9_grant"] = {"enable": True, "guide": guide}
+        with pytest.raises(ValueError, match=match):
+            _kit(a, on)
+
+
+def test_m9_grant_refuses_when_no_track_is_left(_no_m9_env, monkeypatch):
+    with tempfile.TemporaryDirectory() as g:
+        guide = _m9_guide(g, [_over_mid()])
+        P = plan(lambda p: p["die"]["layer_budget"].update(type_m9_grant={"enable": True, "guide": guide}))
+        real = MG.grant
+        monkeypatch.setattr(MG, "grant", lambda *a, **k: dict(real(*a, **k), type_tracks=0))
+        with pytest.raises(ValueError, match="no M9 track is left"):
+            MG.kit_grant(P, "mid", "M9")
+
+
+def test_m8_grant_needs_no_clock_guides(_no_m9_env):
+    assert MG.kit_grant(plan(lambda p: p["die"]["layer_budget"].update(type_m8_grant=True)), "mid") is not None
+
+
+def test_kit_m9_off_by_default_byte_identical(_no_m9_env):
+    with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+        assert _files(_kit(a)) == _files(_kit(b, OT_GEN_M9_GRANT="0"))
+
+
+def test_grant_phase_moves_the_die_tracks_and_default_is_unchanged():
+    """r153 fix 4 (FABLE-PD-DRT-1350): layer_budget.type_m8_grant.phase_um shifts the reference band the die tracks hug; absent = byte-identical"""
+    def mut(p):
+        p["die"]["layer_budget"] = dict(p["die"].get("layer_budget", {}), cut_avail={"M8": 0.4})
+    P = plan(mut)
+    tn = sorted(P.types)[0]
+    g0 = MG.grant(P, tn)
+    assert "phase_um" not in g0 and MG.grant(P, tn, phase_um=0.0) == g0
+    pitch = g0["pitch_um"]
+    g1 = MG.grant(P, tn, phase_um=pitch * 5)
+    assert g1["phase_um"] == pitch * 5 and g1["sha"] != g0["sha"]
+    assert g1["die_runs"] != g0["die_runs"]                       # the die tracks hug the shifted band
+    assert g1["pg_tracks"] == g0["pg_tracks"] and len(g1["die_runs"] and tracks(g1["die_runs"])) >= g1["pg_tracks"]
+    P2 = plan(lambda p: (mut(p), p["die"]["layer_budget"].update(type_m8_grant={"enable": True, "phase_um": pitch * 5})))
+    assert MG.grant_config(P2)["phase_um"] == pitch * 5 and MG.grant_config(plan(mut)) is None

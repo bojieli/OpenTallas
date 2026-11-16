@@ -119,6 +119,34 @@ class TestRules(unittest.TestCase):
         d.pin_by_k[1]["x"] = 10
         self.assertGreater(G.clock_entry_metrics(d, G.clock_metrics(d))["clock_reach_max"], 900)
 
+    def test_nearest_split_applies_tap_cap_and_macro_skip(self):
+        # KV-PC-DELTA-1115: 3000 sinks all nearest to clk_t1; the kit cap (1200) spills them over the neighbours; a tap
+        # over a macro (clk_t3) takes none with tap_skip_macro.
+        fl = [(i, 400 + (i % 50) * 0.5, 100 + (i // 50) * 0.05) for i in range(1, 3001)]
+        p = dump(self.d / "cap.tsv", die=(0, 0, 1000, 200), flops=fl,
+                 nets=[("CLOCK", "p0", [f"i{i}c" for i in range(1, 3001)])],
+                 macros=[(9000, 780, 50, 900, 150)],
+                 pins=[(0, "clk", "INPUT", 10, 100, "CLOCK"), (1, "clk_t1", "INPUT", 400, 100, "CLOCK"),
+                       (2, "clk_t2", "INPUT", 650, 100, "CLOCK"), (3, "clk_t3", "INPUT", 800, 100, "CLOCK")])
+        d = G.Design(p)
+        base = G.clock_metrics(d)
+        self.assertEqual(base["tap_mode"], "nearest")
+        self.assertEqual(base["grid_tap_sinks_max"], 3000)
+        cap = G.clock_metrics(d, tap_cap=1200, tap_pitch_um=1000)
+        self.assertLessEqual(cap["grid_tap_sinks_max"], 1200)
+        self.assertEqual(sum(cap["tap_sinks"].values()), 3000)
+        self.assertEqual(cap["grid_taps_over_cap"], [])
+        sk = G.clock_metrics(d, tap_cap=1200, tap_pitch_um=1000, tap_skip_macro=True)
+        self.assertEqual(sk["tap_sinks"]["clk_t3"], 0)
+        self.assertEqual(sum(sk["tap_sinks"].values()), 3000)
+        # reach too short to spill: the tap stays over cap and is reported, never silently passed
+        near = G.clock_metrics(d, tap_cap=1200, tap_pitch_um=10)
+        self.assertEqual(near["grid_taps_over_cap"], ["clk_t1"])
+        self.assertEqual(near["grid_tap_sinks_max"], 3000)
+        # the second reach (OT_TAP_SPILL_UM) finishes the spill
+        sp = G.clock_metrics(d, tap_cap=1200, tap_pitch_um=10, tap_spill_um=1000)
+        self.assertLessEqual(sp["grid_tap_sinks_max"], 1200)
+
     def test_pin_density_per_layer_is_budget_warn_with_window(self):
         # COORD 10-27 10:48: METHODOLOGY 5.2 pin window = BUDGET -> WARN naming layer, face, peak and window, not FAIL
         pins = [(k, f"a[{k}]", "INPUT", 0, 50 + k * 0.1) for k in range(80)]          # 8/um on W/M4 at y 50..58

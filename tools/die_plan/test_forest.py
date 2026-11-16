@@ -50,7 +50,9 @@ def _netlist():
         d = "src_q"
         for k in range(n):
             v.append(f"  wire {c}{k};")
-            v.append(f"  {FF} \\u_c.u_{c}.g_reg.r[{k}]$_DFF_P_  (.CLK(clk), .D({d}), .QN({c}{k}));")
+            # G12: Yosys names the LAST stage of a pipeline after its output port (u_lpr_root 3 stages = r[0], r[1], q; frl_rst 1 stage = q)
+            nm = "q" if (c in ("lpr_root", "frl_rst") and k == n - 1) else f"g_reg.r[{k}]"
+            v.append(f"  {FF} \\u_c.u_{c}.{nm}$_DFF_P_  (.CLK(clk), .D({d}), .QN({c}{k}));")
             d = f"{c}{k}"
         v.append(f"  {FF} cl_{c} (.CLK(clk), .D({d}), .QN());")
     v.append("  assign y = lq0;\nendmodule\n")

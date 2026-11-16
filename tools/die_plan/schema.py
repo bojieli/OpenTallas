@@ -268,6 +268,15 @@ SCHEMA = {
                     "type_m8_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
                         "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
                         "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
+                        # r153 fix 4 (FABLE-PD-DRT-1350): shift of the die-track reference (um, a multiple of the layer pitch is
+                        # best; rounded to tracks): the die tracks hug the PG band moved by this much; absent / 0 = unchanged
+                        "phase_um": {"type": "number"},
+                        "note": {"type": "string"}}},
+                    # WAVE-RECIPE-1 11-14 (OWNER ruling: types may use the remaining M8/M9, die infra shapes imported as
+                    # obstructions): the same grant on M9 (vertical tracks); an M9 kit also carries the M8 grant
+                    "type_m9_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
+                        "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
+                        "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
                         "note": {"type": "string"}}}}},
                 # die IO (COORD 10-23, S81-P5): pad / bump windows of every off-die signal (SerDes PMA pads, HBM PHY
                 # memory side, host).  Each window sits over its host partition (the PHY / IO partition), offers
@@ -308,6 +317,10 @@ SCHEMA = {
                                    "ports": {"type": "array", "items": _name}}}},
                 "pg": {"type": "object", "additionalProperties": False, "properties": {
                     "partition_pg_max": _layer,
+                    # GENBUG (FABLE-PD-HEAD-1115 s3): origins (um, from the type frame) of the PG stripe bands the face-pin spreader keeps
+                    # pins off; absent = [0] (the type-frame phase PART_PG_BANDS is written for).  A kit whose pdn.tcl puts the M7 pair at
+                    # the core-edge offset (CORE_MARGIN_UM 4.32 from the frame) needs [0, 4.32]: pins then avoid both phases.
+                    "pin_band_origins_um": {"type": "array", "minItems": 1, "items": {"type": "number"}},
                     "bumps": {"type": "object", "additionalProperties": False,
                               "properties": {"pitch_um": _pos, "pad_um": _nonneg, "edge_margin_um": _nonneg,
                                              # QC-PG-5 (OWNER 10-28): opt-in fine-pitch power-bump fields (die_trial._field_bumps)
@@ -400,11 +413,25 @@ SCHEMA = {
                     # S81-TYPES-6 11-07 (gen_phys.phy_pg_clip, COORD 23:0x (a)): PHY PG region + hard blockage clipped to
                     # the PHY macro bounding box grown by this PG landing margin (um) on all four sides
                     "phy_pg_clip_um": {"type": "number", "minimum": 0},
+                    # S81-PHYPG-1 11-15 (gen_phys.phy_pg_domains, FABLE-TRIAGE-S81 7.4): the placed blocks that are the PHY
+                    # supply loads; only they seed the PHY PG region (key absent = every placed block inside the die domain rect)
+                    "phy_pg_macros": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
                     # S81-RCK-3 11-06 (rck_band.tcl): first-stage capture flops of this receiver macro FIRM on the rows
                     # right under its PHY PG region, at the x of the macro output pin
                     "rck_band": {"type": "object", "additionalProperties": False, "required": ["inst"],
                                  "properties": {"inst": {"type": "string", "minLength": 1},
                                                 "rows": {"type": "integer", "minimum": 1, "maximum": 8}}},
+                    # PLAN-READERS-1 11-14 (rck_island.py, FABLE-PLAN-B6B 6.4): recovered-clock island.  The std cells of
+                    # inst_re in the fan-out of the pad clock `clock` (plus their combinational logic) go into ONE placement
+                    # fence rect_um for global placement (serdes_lanes.tcl cfg key islands); released before detail placement
+                    # unless release_before_dpl is false.  G0 (Plan): rect inside the outline, holds the sink macros of the
+                    # pad clock (u_chn, SRAMs), overlaps no other macro / PHY PG domain
+                    "rck_island": {"type": "object", "additionalProperties": False, "required": ["rect_um", "clock", "inst_re"],
+                                   "properties": {"rect_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                                                              "items": {"type": "number"}},
+                                                  "clock": {"type": "string", "minLength": 1},
+                                                  "inst_re": {"type": "string", "minLength": 1},
+                                                  "release_before_dpl": {"type": "boolean"}}},
                     # S81-RCK-4 11-07 (gen_phys.reset_relay_full): kit copy of ot_dp_rrelay_nl = one posedge flop
                     "reset_relay_full": {"type": "boolean"},
                     # S81-RCK-4 11-07 (chain_even.tcl): equal hops on register chains after GPL, no netlist change
@@ -594,8 +621,9 @@ SCHEMA = {
                         "band_tap_windows_um": {"type": "array", "items": _rect},
                         "band_tap_sites_um": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
-                            "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank"]},
-                                           "ref": {"type": "string"}}}},
+                            "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank", "channel_keepout"]},
+                                           "ref": {"type": "string"},
+                                           "route_layers": {"type": "string"}}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
@@ -670,6 +698,10 @@ SCHEMA = {
                         # merges whole into its nearest tap within tap_radius_um (clock_taps.tcl POST_MIN).
                         "tap_post_merge_min_sinks": {"type": "integer", "minimum": 1, "maximum": 1200},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        # KV-PC-DELTA-1115 (opt-in): second cap-pass reach (um) of clock_taps.tcl for a tap with no room within
+                        # half a pitch; and no grid tap over a hard macro (the tap takes no sink, is dropped when empty)
+                        "tap_spill_um": {"type": "number", "exclusiveMinimum": 0},
+                        "tap_skip_macro": {"type": "boolean"},
                         # REACH-FIX-1 11-12 (reach_fix.py): the subset of sink_sites_um the tool added (kit flops the
                         # tap planner does not list: landing rings, ring reads, relays), so its check counts them once
                         "reach_fix_sinks": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
@@ -719,6 +751,10 @@ SCHEMA = {
                         # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
                         # plan records only (unchanged kits).
                         "core_taps": {"enum": ["early", "internal"]},
+                        # PLAN-READERS-1 11-14: G0 completeness R4 exemption: this type keeps its own insertion_ps (serdes 450),
+                        # the parent prices the offset at the landing; a type with rck_island is exempt without it
+                        "insertion_target_override": {"type": "object", "additionalProperties": False, "required": ["reason"],
+                                                      "properties": {"reason": {"type": "string", "minLength": 1}}},
                         # Explicit selected parent clock endpoint delta; runtime network required before phys.
                         "core_groups": {"type": "array", "items": {"type": "object", "required":
                             ["name", "port", "xy", "members", "insertion_ps", "insertion_ff_ps", "basis", "source"],
@@ -769,6 +805,10 @@ SCHEMA = {
                                            # PLAN-GEN-RULES-1 rule A 11-10: where the tap insertion came from (measured
                                            # view / 12.9d model); documentation only, read by plan_gen_rules.py
                                            "insertion_basis": {"type": "string"},
+                                           # PLAN-READERS-1 11-14: kind core + clock.core_taps early: the core's clock pins must be
+                                           # fed >= this many ps before register arrival (G0: insertion_ps - die common latency
+                                           # must already deliver it); rck_early.txt, measured at the post-CTS gate (report only)
+                                           "min_early_ps": _nonneg,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "merged_clock_ports": {"type": "array", "minItems": 2, "uniqueItems": True, "items": _name},
                                            "from_root_um": _nonneg, "parent": _name, "note": {"type": "string"}}}}}},
@@ -1393,6 +1433,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "cdc": {"enum": ["synchronized"]}, "cdc_evidence": _name,
                 "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                     "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
+# S81-COLGEN-1 11-14 (FABLE-TYPES-S81-COL C2): per-region replication of a reset / flush fan-out driver (reset_replicate.py)
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"] = {
+    "type": "array", "items": {"type": "object", "additionalProperties": False,
+        "properties": {"driver": {"type": "string"}, "driver_re": {"type": "string"}, "region_re": {"type": "string"},
+                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
@@ -1417,7 +1462,10 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                                                                       "items": {"type": "number"}}},
             "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
                           "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}},
-            "evidence": _name}}}
+            "evidence": _name,
+            # PLAN-READERS-1 11-14 (pad_clock.ENTRY_OPT): the entry's macro pins are clocked at least this long before the
+            # earliest register clock pin, no delaybuf chain (u_chn >= 175 ps); rck_early.txt, report only at the post-CTS gate
+            "min_early_ps": {"type": "number", "minimum": 0}}}}
 # S81 LEAF-CLKENTRY-1109 (opt-in): core-clock REGIONAL entries of a tapped type.  Each is the RCK2 trunk form sourced at
 # an existing die-spine tap port (tap: clk / clk_t<k>): stations_um (one cell per station, hops <= 405 um) to an entry
 # driver at xy_um whose net takes the std-cell sinks inside region_um that the nearest-tap split left on any tap port of
@@ -1449,6 +1497,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
+# S81-SEAM-RST-1115 (default off): the last reset stage of an async clear takes the clock tap of its sinks (tap_reset_affinity.tcl).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_affinity"] = {"type": "boolean"}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {
@@ -1503,6 +1553,7 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
                                               "note": {"type": "string"}}}}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "warn", "off"]}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] = {"type": "boolean"}   # R-REACH-5 default chains (gen_phys)
+SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]}   # DLY-SPREAD G8: true | [type base names] (gen_phys dly_spread.tcl)
 # W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;
 # every receiving crossing binds K+W-R. Default absent = byte-identical.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_writer_start"] = {
@@ -2032,6 +2083,9 @@ class Plan:
         self.rep_um = float(d.get("rep_um", 450.0))
         self.grid = float(d.get("grid_um", GRID_UM))
         self.layers = {L["name"]: L for L in d.get("layers", ASAP7_LAYERS)}
+        _org = (d.get("pg") or {}).get("pin_band_origins_um")
+        if _org:        # GENBUG: opt-in extra stripe-band phases for the face-pin spreader (copy: ASAP7_LAYERS is shared)
+            self.layers = {n: (dict(L, pg_origins=tuple(float(o) for o in _org)) if n in PART_PG_BANDS else L) for n, L in self.layers.items()}
         self.layer_budget = dict(DEFAULT_LAYER_BUDGET, **d.get("layer_budget", {}))
         self.types = raw["partition_types"]
         self.parts = {p["name"]: p for p in raw["partitions"]}
@@ -2500,9 +2554,27 @@ def _corner(corner):
     return c
 
 
-def common_latency_ps(P, corner="TT"):
-    """the die common (pin-register) latency at a corner: TT clock.insertion_ps; FF clock.insertion_ff_ps, absent ->
-    FF_TT_INSERTION_RATIO x TT (250 -> 202.5)."""
+def type_override_clock(t):
+    """S81-TAPROWS 11-15 (COORD r104): the type clock dict when the type carries clock.insertion_target_override and its own
+    insertion_ps (col / leaf / serdes 450 types), else None."""
+    ck = (t or {}).get("clock") or {}
+    ov = ck.get("insertion_target_override")
+    if isinstance(ov, dict) and ov.get("reason") and ck.get("insertion_ps") is not None:
+        return ck
+    return None
+
+
+def common_latency_ps(P, corner="TT", t=None):
+    """the common (pin-register) latency the early taps of a type are priced against, at a corner.  Die: TT clock.insertion_ps;
+    FF clock.insertion_ff_ps, absent -> FF_TT_INSERTION_RATIO x TT (250 -> 202.5).  `t` = a partition type: when it carries
+    clock.insertion_target_override its OWN budget is the basis (TT clock.insertion_ps, FF clock.insertion_ff_ps, absent ->
+    ratio x TT: 450 -> 364.5); otherwise the die value."""
+    ck = type_override_clock(t)
+    if ck is not None:
+        tt = float(ck["insertion_ps"])
+        if _corner(corner) == "TT":
+            return tt
+        return float(ck.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
     tt = float(P.clock["insertion_ps"])
     if _corner(corner) == "TT":
         return tt
@@ -2518,10 +2590,11 @@ def core_tap_insertion_ps(tp, corner="TT"):
     return float(tp.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
 
 
-def core_tap_early_ps(P, tp, corner="TT"):
-    """how early the spine delivers a core tap at a corner: max(0, core insertion - the die common latency), both
-    at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number)."""
-    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner))
+def core_tap_early_ps(P, tp, corner="TT", t=None):
+    """how early the spine delivers a core tap at a corner: max(0, core insertion - the common latency), both
+    at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number).  `t` = the tap's type:
+    an override type (450) is priced against its own budget, not the die 250 (COORD r104)."""
+    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner, t))
 
 
 def full_area_hard_ip(t):
@@ -2782,6 +2855,15 @@ def pg_blocked(ln, c):
     return min(d, pitch - d) < half - 1e-9
 
 
+def pg_blocked_any(L, ln, c):
+    """pg_blocked for a layer dict that may carry pg_origins (die.pg.pin_band_origins_um, set by Plan): the track c is blocked when
+    ANY stripe-band phase blocks it.  A layer without pg_origins = the single type-frame phase (byte-identical to pg_blocked)."""
+    org = L.get("pg_origins") if isinstance(L, dict) else None
+    if not org:
+        return pg_blocked(ln, c)
+    return any(pg_blocked(ln, c - o) for o in org)
+
+
 def spread(A, n, lo, hi):
     """n of the usable tracks A (sorted, track units), UNIFORM in coordinate over the window [lo, hi]: pin j goes to
     the usable track nearest its cell centre lo + (j + 0.5) (hi - lo) / n, so any sub-window holds the window's average
@@ -2839,7 +2921,7 @@ def usable_tracks(L, ln, lo, hi, pg_free=False):
     p, off = L["pitch_um"], L["offset_um"]
     k0 = math.ceil((lo - off) / p - 1e-9)
     k1 = math.floor((hi - off) / p + 1e-9)
-    return sum(1 for k in range(k0, k1 + 1) if pg_free or not pg_blocked(ln, off + k * p))
+    return sum(1 for k in range(k0, k1 + 1) if pg_free or not pg_blocked_any(L, ln, off + k * p))
 
 
 def window_for(lo, pins, names, layers=None, per_um=6.0, track_max=0.6, pg_free=False):
@@ -2909,7 +2991,7 @@ def _window_pins(port, layers, window, pins):
         k1 = math.floor((hi - off) / p + 1e-9)
         # usable tracks: in the window and off the partition PG stripe bands (PART_PG_BANDS)
         pgf = bool(port.get("pg_free"))     # QC-PHY-1 11-14 (COORD): full-area hard IP pins sit on the macro's own pins
-        A = [k for k in range(k0, k1 + 1) if pgf or not pg_blocked(ln, off + k * p)]
+        A = [k for k in range(k0, k1 + 1) if pgf or not pg_blocked_any(L, ln, off + k * p)]
         m = len(A)
         if m < n:
             raise ValueError(f"port {port['id']}: {n} bits on {ln} need {n} tracks, window has {m} off the PG "
@@ -3007,8 +3089,16 @@ def validate(raw):
             import pad_clock as PC
             try:
                 PC.pins(P, tn)
+                if PC.has_min_early(t):
+                    PC.early_rows(P, tn)          # PLAN-READERS-1: min_early_ps sinks resolve, early core taps deliver it
             except (ValueError, KeyError, TypeError) as exc:
                 errs.append(f'type {tn}: {exc}')
+        if t.get('rck_island') is not None:
+            import rck_island as RI               # PLAN-READERS-1 G0: rect inside the outline, holds u_chn + SRAMs
+            try:
+                errs += RI.check(P, tn)
+            except (ValueError, KeyError, TypeError) as exc:
+                errs.append(f'type {tn}: rck_island: {exc}')
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")

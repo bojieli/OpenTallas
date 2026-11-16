@@ -102,22 +102,31 @@ proc nc_back {it} {
   }
   return [list "" $bufs]
 }
-proc nc_loads {inst} {
-  set n 0
+proc nc_load_insts {inst} {
+  set n {}
   foreach t [$inst getITerms] { if {[$t isOutputSignal] && [$t getNet] ne "NULL"} {
     set front [list [$t getNet]]
     for {set d 0} {$d < 40 && [llength $front]} {incr d} { set nf {}
       foreach net $front { foreach x [$net getITerms] { if {![$x isInputSignal]} continue; set xi [$x getInst]
-        if {![[$xi getMaster] isBlock] && [nc_isbuf $xi]} { foreach o [$xi getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend nf [$o getNet] } } } else { incr n } } }
+        if {![[$xi getMaster] isBlock] && [nc_isbuf $xi]} { foreach o [$xi getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend nf [$o getNet] } } } else { lappend n $xi } } }
       set front $nf }
   } }
   return $n
 }
+proc nc_loads {inst} { return [llength [nc_load_insts $inst]] }
+# every non-buffer load of inst sits in xstn cluster cl (a register that feeds only its own xstn counts as a stage)
+proc nc_loads_in_cluster {inst cl} { if {$cl eq ""} { return 0 }; foreach x [nc_load_insts $inst] { if {[nc_cluster $x] ne $cl} { return 0 } }; return 1 }
 proc nc_dpin {inst} { foreach t [$inst getITerms] { if {[[$t getMTerm] getName] eq "D"} { return $t } }; return "" }
 proc nc_ctr {o} { set b [$o getBBox]; return [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] }
+# head-hop cells are sited only when each drives nothing but this chain (a buffer that also feeds another load stays put)
+proc nc_headhop_single {head bs} { foreach b $bs { if {[nc_loads $b] != 1} { return 0 } }; return 1 }
+set nc_hh_moved 0; set nc_hh_shared 0
 set nc_corefix 0; set nc_chains 0; set nc_moved 0; set nc_l0 {}; set nc_l1 {}; set nc_rc {}
-foreach pc [$nc_blk getInsts] {
-  if {![regexp {u_pc_nk_} [$pc getName]] || ![string match "DFF*" [[$pc getMaster] getName]]} continue
+proc nc_cluster {inst} { if {[regexp {^(.*)\.u_st\.} [string map {\\ {}} [$inst getName]] -> c]} { return $c }; return "" }
+# one chain: walk back from the tail register $pc, spread its zero-logic stages and hop buffers along the macro-avoiding route.
+# gate (CB-XSTN): empty = always; else a dict of xstn clusters, and only chains whose tail or head sits in one are spread.
+proc nc_chain_one {pc {gate ""}} {
+  global nc_blk nc_dbu nc_corefix nc_chains nc_moved nc_l0 nc_l1 nc_rc nc_hh_moved nc_hh_shared
   # backward: hops {stage_inst bufs_on_its_D}, stages = movable fanout-1 zero-logic chain registers
   set seq {}; set hopb {}; set cur $pc; set head ""
   while {[llength $seq] < 24} {
@@ -128,12 +137,17 @@ foreach pc [$nc_blk getInsts] {
     set di [$drv getInst]
     set nm [string map {\\ {}} [$di getName]]
     if {![[$di getMaster] isBlock] && [string match "DFF*" [[$di getMaster] getName]] && [nc_mov $di] \
-        && [regexp {(u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_)} $nm] && ![regexp {u_pc_nk_} $nm] && [nc_loads $di] == 1} {
+        && [regexp {(u_d[0-9]+_|u_lpad_|u_r8b_strap_|u_pd[0-9]+_)} $nm] && ![regexp {u_pc_nk_} $nm] \
+        && ([nc_loads $di] == 1 || ($gate ne "" && [nc_loads_in_cluster $di [nc_cluster $pc]]))} {
       set seq [linsert $seq 0 $di]; set cur $di; continue
     }
     set head $drv; break
   }
-  if {$head eq "" || ![llength $seq]} continue
+  if {$head eq "" || ![llength $seq]} return
+  if {$gate ne ""} {
+    set gh [nc_cluster [$head getInst]]; set gt [nc_cluster $pc]
+    if {![dict exists $gate $gh] && ![dict exists $gate $gt]} return
+  }
   # head: driver flop/pin position; tail: the pipe register (anchored at the NK pin)
   if {[[[$head getInst] getMaster] isBlock]} {
     # a hard-core output launches late (NK clk->out ~870 ps TT): its first stage stays where GPL put it, next to the
@@ -141,7 +155,7 @@ foreach pc [$nc_blk getInsts] {
     lassign [nc_ctr [lindex $seq 0]] hx hy
     set seq [lrange $seq 1 end]
     incr nc_corefix
-    if {![llength $seq]} continue
+    if {![llength $seq]} return
   } else { lassign [nc_ctr [$head getInst]] hx hy }
   lassign [nc_ctr $pc] tx ty
   set route [nc_route $hx $hy $tx $ty]
@@ -158,21 +172,189 @@ foreach pc [$nc_blk getInsts] {
   }
   # buffers: hopb[k] are the buffers on the D of (pc, seq[end], seq[end-1], ...) nearest-first
   set n [llength $seq]
-  # (the head hop's buffers may be shared with other loads of the head: left where GPL put them)
-  for {set k 0} {$k < min([llength $hopb], $n)} {incr k} {
+  # CB-HEADHOP (FABLE-QC-CB 11-14): the head hop (head -> stage 0, or with a hard-core head the hop after the pin stage
+  # that stays at the pin) is sited on the route too.  Left at the GPL position its inverter/buffers sat across the tile
+  # from the margin-facing head (514 bits crossed a tile twice, GRT 102,780, setup -770 ps).  Hop index n-k, k = n is the
+  # head hop; only the entry nearest the core (k = n+1 in the hard-core case) stays put.  A head hop whose cells are
+  # shared with another load (a head-hop cell with more than one load) keeps the old rule: those cells stay where GPL put them.
+  set n [llength $seq]
+  set kmax [expr {min([llength $hopb], $n + 1)}]
+  for {set k 0} {$k < $kmax} {incr k} {
     set bs [lindex $hopb $k]; set nb [llength $bs]; if {!$nb} continue
     set hopi [expr {$n - $k}]   ;# hop index: from position hopi to hopi+1 (sink side)
+    set headhop [expr {$k == $n}]
+    if {$headhop && ![nc_headhop_single $head $bs]} { incr nc_hh_shared; continue }
     for {set q 0} {$q < $nb} {incr q} {
       set bi [lindex $bs $q]; if {![nc_mov $bi]} continue
       set f [expr {($hopi + 1 - double($q+1)/($nb+1)) / $hops}]
       if {$f < 0} { set f 0 }
       lassign [nc_at $route $f] x y; nc_put $bi $x $y
+      if {$headhop} { incr nc_hh_moved }
     }
   }
   incr nc_chains
 }
+foreach nc_pc [$nc_blk getInsts] {
+  if {![regexp {u_pc_nk_} [$nc_pc getName]] || ![string match "DFF*" [[$nc_pc getMaster] getName]]} continue
+  nc_chain_one $nc_pc
+}
 proc nc_pct {l p} { if {![llength $l]} { return na }; set l [lsort -real $l]; return [format %.0f [lindex $l [expr {min([llength $l]-1, int([llength $l]*$p))}]]] }
-puts "OT_NK_CHAIN chains $nc_chains core_head_kept $nc_corefix stages_moved $nc_moved bends $nc_rc max_hop_um before p50 [nc_pct $nc_l0 0.5] p90 [nc_pct $nc_l0 0.9] max [nc_pct $nc_l0 1.0] after p50 [nc_pct $nc_l1 0.5] p90 [nc_pct $nc_l1 0.9] max [nc_pct $nc_l1 1.0]"
+puts "OT_NK_CHAIN chains $nc_chains core_head_kept $nc_corefix stages_moved $nc_moved head_hop_cells_moved $nc_hh_moved head_hop_shared_kept $nc_hh_shared bends $nc_rc max_hop_um before p50 [nc_pct $nc_l0 0.5] p90 [nc_pct $nc_l0 0.9] max [nc_pct $nc_l0 1.0] after p50 [nc_pct $nc_l1 0.5] p90 [nc_pct $nc_l1 0.9] max [nc_pct $nc_l1 1.0]"
+# CB-XSTN (FABLE-QC-CB 11-14, COORD 22:5x): site each tile's xstn (u_st.*: tap_d registers, their gates and hop buffers, the
+# b_d/cap/cnt/run registers) inside the strip 100 um deep outside the tile's tap face, +-100 um along the pin rows, so the
+# 508 tap_d -> u_pc_nk_<tile>_tap nets do not cross the tile (cbn_q01 t13: the xstn column sat on the margin opposite the
+# tap face, 441 nets over the tile; cbx t31 likewise).  The sink registers (u_pc_nk_*_tap) are the face anchors.  The D6 a_d
+# pipes into and out of a moved xstn are then re-spread along their macro-avoiding route (nc_chain_one, gate = moved set).
+# An xstn that already sits within the reach of its face is left alone.  OT_NK_XSTN_SITE=0 turns this off; OT_NK_XSTN_REACH_UM
+# (default 100) is the strip depth.
+if {![info exists ::env(OT_NK_XSTN_SITE)] || $::env(OT_NK_XSTN_SITE) ne "0"} {
+set nx_reach_um 100.0
+if {[info exists ::env(OT_NK_XSTN_REACH_UM)]} { set nx_reach_um $::env(OT_NK_XSTN_REACH_UM) }
+set nx_reach [expr {round($nx_reach_um * $nc_dbu)}]
+# cluster -> list of {pc tap_d_or_gate bufs}
+set nx_sinks {}
+foreach nx_pc [$nc_blk getInsts] {
+  if {![regexp {u_pc_nk_u_t_[0-9]+_[0-9]+_tap[.]} [$nx_pc getName]] || ![string match "DFF*" [[$nx_pc getMaster] getName]]} continue
+  set nx_dp [nc_dpin $nx_pc]; if {$nx_dp eq ""} continue
+  lassign [nc_back $nx_dp] nx_drv nx_bufs
+  if {$nx_drv eq ""} continue
+  set nx_di [$nx_drv getInst]; if {[[$nx_di getMaster] isBlock]} continue
+  set nx_cl [nc_cluster $nx_di]
+  if {$nx_cl eq ""} {
+    # a generic gate between the xstn registers and the pipe register: its cluster is that of its register fan-in
+    foreach nx_t [$nx_di getITerms] {
+      if {![$nx_t isInputSignal] || [$nx_t getNet] eq "NULL"} continue
+      lassign [nc_back $nx_t] nx_d2 nx_b2
+      if {$nx_d2 ne "" && ![[[$nx_d2 getInst] getMaster] isBlock]} { set nx_cl [nc_cluster [$nx_d2 getInst]]; if {$nx_cl ne ""} break }
+    }
+  }
+  if {$nx_cl eq ""} continue
+  dict lappend nx_sinks $nx_cl [list $nx_pc $nx_di $nx_bufs]
+}
+set nx_keep_ext 0; set nx_moved {}; set nx_cells 0; set nx_seen 0; set nx_kept 0; set nx_before 0.0; set nx_after 0.0
+foreach nx_cl [lsort [dict keys $nx_sinks]] {
+  incr nx_seen
+  set nx_list [dict get $nx_sinks $nx_cl]
+  set nx_x0 1e18; set nx_y0 1e18; set nx_x1 -1e18; set nx_y1 -1e18
+  foreach nx_e $nx_list { lassign [nc_ctr [lindex $nx_e 0]] nx_x nx_y
+    set nx_x0 [expr {min($nx_x0, $nx_x)}]; set nx_x1 [expr {max($nx_x1, $nx_x)}]; set nx_y0 [expr {min($nx_y0, $nx_y)}]; set nx_y1 [expr {max($nx_y1, $nx_y)}] }
+  # the tile whose face the sink registers sit at, and the outward direction
+  set nx_cx [expr {($nx_x0+$nx_x1)/2}]; set nx_cy [expr {($nx_y0+$nx_y1)/2}]
+  set nx_best ""; set nx_bd 1e18
+  foreach m $nc_mac { lassign $m a b c d
+    set dx [expr {max($a-$nx_cx, 0, $nx_cx-$c)}]; set dy [expr {max($b-$nx_cy, 0, $nx_cy-$d)}]
+    set dd [expr {$dx+$dy}]; if {$dd < $nx_bd} { set nx_bd $dd; set nx_best $m } }
+  if {$nx_best eq ""} continue
+  lassign $nx_best ma mb mc md
+  set nx_face [lindex [lsort -index 0 -real [list [list [expr {abs($nx_cx-$ma)}] W] [list [expr {abs($nx_cx-$mc)}] E] [list [expr {abs($nx_cy-$mb)}] S] [list [expr {abs($nx_cy-$md)}] N]]] 0 1]
+  switch $nx_face {
+    E { set wx0 [expr {$mc + $nc_halo}]; set wx1 [expr {$mc + $nx_reach}]; set wy0 [expr {$nx_y0 - $nx_reach}]; set wy1 [expr {$nx_y1 + $nx_reach}]; set od 1; set ax x }
+    W { set wx0 [expr {$ma - $nx_reach}]; set wx1 [expr {$ma - $nc_halo}]; set wy0 [expr {$nx_y0 - $nx_reach}]; set wy1 [expr {$nx_y1 + $nx_reach}]; set od -1; set ax x }
+    N { set wy0 [expr {$md + $nc_halo}]; set wy1 [expr {$md + $nx_reach}]; set wx0 [expr {$nx_x0 - $nx_reach}]; set wx1 [expr {$nx_x1 + $nx_reach}]; set od 1; set ax y }
+    default { set wy0 [expr {$mb - $nx_reach}]; set wy1 [expr {$mb - $nc_halo}]; set wx0 [expr {$nx_x0 - $nx_reach}]; set wx1 [expr {$nx_x1 + $nx_reach}]; set od -1; set ax y }
+  }
+  set wx0 [expr {max($wx0, [$nc_core xMin])}]; set wx1 [expr {min($wx1, [$nc_core xMax])}]
+  set wy0 [expr {max($wy0, [$nc_core yMin])}]; set wy1 [expr {min($wy1, [$nc_core yMax])}]
+  # members: every cell of the cluster, the gates between the tap registers and their pipe registers, the hop buffers
+  set nx_mem {}; set nx_in [dict create]
+  foreach i [$nc_blk getInsts] { if {[nc_cluster $i] eq $nx_cl && ![[$i getMaster] isBlock] && [nc_mov $i]} { lappend nx_mem $i; dict set nx_in [$i getName] 1 } }
+  # the xstn's anonymous logic (generic gates and buffers between its registers): every cell next to a member whose
+  # loads are all members joins it, to a fixpoint (a gate that also feeds the outside world stays where it is)
+  for {set nx_r 0} {$nx_r < 4} {incr nx_r} {
+    set nx_add {}
+    foreach i $nx_mem {
+      foreach t [$i getITerms] {
+        set net [$t getNet]; if {$net eq "NULL" || [$net getSigType] ne "SIGNAL" || [llength [$net getITerms]] > 60} continue
+        foreach u [$net getITerms] {
+          set c [$u getInst]; set cn [$c getName]
+          if {[dict exists $nx_in $cn] || [[$c getMaster] isBlock] || ![nc_mov $c]} continue
+          if {![nc_isbuf $c] && ![regexp {^_[0-9]+_$} $cn]} continue
+          set ok 1; set nl 0
+          foreach o [$c getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} {
+            foreach l [[$o getNet] getITerms] { if {[$l isInputSignal]} { incr nl; set li [$l getInst]; if {![dict exists $nx_in [$li getName]] && ![string match "DFF*" [[$li getMaster] getName]]} { set ok 0 } } } } }
+          if {$ok && $nl} { dict set nx_in $cn 1; lappend nx_add $c }
+        }
+      }
+    }
+    if {![llength $nx_add]} break
+    set nx_mem [concat $nx_mem $nx_add]
+  }
+  foreach nx_e $nx_list { set gi [lindex $nx_e 1]; if {[nc_cluster $gi] eq "" && [nc_mov $gi]} { lappend nx_mem $gi } }
+  # A xstn whose registers also drive the outside (its a_d output to a port register or any non-pipe cell across the tile)
+  # would trade the 508 tap nets for those nets: count the member output nets that reach a non-member, non-pipe,
+  # non-pipe-register load; more than OT_NK_XSTN_EXT_MAX (default 20) leaves the xstn where it is (needs a plan event).
+  set nx_ext 0; set nx_bnd {}
+  foreach i $nx_mem { foreach t [$i getITerms] {
+    if {![$t isOutputSignal] || [$t getNet] eq "NULL"} continue
+    set hit 0
+    foreach l [[$t getNet] getITerms] { if {![$l isInputSignal]} continue; set li [$l getInst]; set ln [$li getName]
+      if {[dict exists $nx_in $ln] || [regexp {u_pc_nk_|u_d[0-9]+_} $ln]} continue
+      if {[string match "DFF*" [[$li getMaster] getName]]} { lappend nx_bnd $li; continue }
+      if {[nc_isbuf $li] && ![[$li getMaster] isBlock]} { set bo 0
+        foreach xi [nc_load_insts $li] { set xn [$xi getName]
+          if {[dict exists $nx_in $xn] || [regexp {u_pc_nk_|u_d[0-9]+_} $xn]} continue
+          if {[string match "DFF*" [[$xi getMaster] getName]]} { lappend nx_bnd $xi; continue }
+          set bo 1 }
+        if {!$bo} continue }
+      set hit 1 }
+    incr nx_ext $hit } }
+  set nx_ext_max 20; if {[info exists ::env(OT_NK_XSTN_EXT_MAX)]} { set nx_ext_max $::env(OT_NK_XSTN_EXT_MAX) }
+  # a register outside the xstn that it feeds (the die output pipe) keeps a single hop: refuse when the strip is farther than 405 um from it
+  set nx_bmax 0.0
+  foreach b $nx_bnd { lassign [nc_ctr $b] bx by
+    set dd [expr {(max($wx0-$bx, 0, $bx-$wx1) + max($wy0-$by, 0, $by-$wy1))/double($nc_dbu)}]; set nx_bmax [expr {max($nx_bmax, $dd)}] }
+  if {$nx_bmax > 405.0} { set nx_ext [expr {$nx_ext + 1000000}] }
+  if {$nx_ext > $nx_ext_max} { puts "OT_XSTN_KEEP $nx_cl face $nx_face external_nets $nx_ext > $nx_ext_max boundary_reg_um [format %.0f $nx_bmax] (an output of the xstn leaves across the tile; plan event needed)"; incr nx_keep_ext; continue }
+  # distance of a cell to the strip (0 inside)
+  set nx_far {}
+  foreach i $nx_mem { lassign [nc_ctr $i] x y
+    lappend nx_far [expr {(max($wx0-$x, 0, $x-$wx1) + max($wy0-$y, 0, $y-$wy1))/double($nc_dbu)}] }
+  set nx_q [lindex [lsort -real $nx_far] [expr {min([llength $nx_far]-1, int([llength $nx_far]*0.9))}]]
+  set nx_before [expr {max($nx_before, $nx_q)}]
+  if {$nx_q <= 25.0 || !([llength $nx_mem])} { incr nx_kept; continue }
+  # tap registers / gates go next to their pipe register; everything else fills the strip in rows, ordered by current y
+  set nx_tap {}
+  foreach nx_e $nx_list { lassign $nx_e pc gi bufs
+    lassign [nc_ctr $pc] px py
+    if {$ax eq "x"} { set tx [expr {$px + $od*12*$nc_dbu}]; set ty $py } else { set tx $px; set ty [expr {$py + $od*12*$nc_dbu}] }
+    if {[nc_mov $gi]} { nc_put $gi $tx $ty; incr nx_cells; dict set nx_tap $gi 1 }
+    # the gate's own fan-in registers: tap_d flops feeding a gate stay with the gate (below); hop buffers midway
+    foreach bi $bufs { if {[nc_mov $bi]} { nc_put $bi [expr {($px+$tx)/2}] [expr {($py+$ty)/2}]; incr nx_cells; dict set nx_tap $bi 1 } }
+  }
+  set nx_rest {}
+  foreach i $nx_mem { if {![dict exists $nx_tap $i]} { lappend nx_rest $i } }
+  set nx_pitch [expr {int(2.0*$nc_dbu)}]
+  set nx_w [expr {$wx1-$wx0}]; set nx_h [expr {$wy1-$wy0}]
+  set nx_cols [expr {max(1, int(sqrt(double([llength $nx_rest]) * $nx_pitch * $nx_w / max(1.0, double($nx_h)) / $nx_pitch)))}]
+  set nx_k 0
+  foreach i [lsort -command {apply {{a b} {expr {[lindex [nc_ctr $a] 1] - [lindex [nc_ctr $b] 1]}}}} $nx_rest] {
+    set cx [expr {$nx_k % $nx_cols}]; set ry [expr {$nx_k / $nx_cols}]
+    if {$ax eq "x"} {
+      set x [expr {($od > 0 ? $wx0 + $cx*$nx_pitch : $wx1 - $cx*$nx_pitch)}]; set y [expr {$wy0 + $ry*$nx_pitch}]
+      if {$y > $wy1} { set y [expr {$wy0 + ($ry % max(1, $nx_h/$nx_pitch))*$nx_pitch}] }
+    } else {
+      set y [expr {($od > 0 ? $wy0 + $cx*$nx_pitch : $wy1 - $cx*$nx_pitch)}]; set x [expr {$wx0 + $ry*$nx_pitch}]
+      if {$x > $wx1} { set x [expr {$wx0 + ($ry % max(1, $nx_w/$nx_pitch))*$nx_pitch}] }
+    }
+    nc_put $i $x $y; incr nx_cells; incr nx_k
+  }
+  set nx_far {}
+  foreach i $nx_mem { lassign [nc_ctr $i] x y
+    lappend nx_far [expr {(max($wx0-$x, 0, $x-$wx1) + max($wy0-$y, 0, $y-$wy1))/double($nc_dbu)}] }
+  set nx_after [expr {max($nx_after, [lindex [lsort -real $nx_far] [expr {min([llength $nx_far]-1, int([llength $nx_far]*0.9))}]])}]
+  dict set nx_moved $nx_cl $nx_face
+}
+set nx_spread 0
+if {[dict size $nx_moved]} {
+  set nc_chains_before $nc_chains
+  foreach i [$nc_blk getInsts] {
+    if {![regexp {[.]u_st[.]b_d} [$i getName]] || ![string match "DFF*" [[$i getMaster] getName]]} continue
+    nc_chain_one $i $nx_moved
+  }
+  set nx_spread [expr {$nc_chains - $nc_chains_before}]
+}
+puts "OT_XSTN_SITE xstn $nx_seen kept $nx_kept kept_external $nx_keep_ext moved [dict size $nx_moved] cells_moved $nx_cells p90_um_from_face_strip_before [format %.0f $nx_before] after [format %.0f $nx_after] reach_um $nx_reach_um a_d_chains_spread $nx_spread faces [dict values $nx_moved]"
+}
 # CBF-R8-CORRIDOR: an INNER strap bank has a fixed common prefix, a selectable count bank and a final NK pipe.
 # The mux is not a register chain: discover it by the kept bank identity, then verify ALL dynamic cone roots.
 # Opt-in until the coherent extra PIN-cycle event and its PLACE pilot are accepted. No netlist/latency changes here.

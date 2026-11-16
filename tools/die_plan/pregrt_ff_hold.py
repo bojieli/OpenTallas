@@ -33,7 +33,7 @@ What changed against the 11-03 opt-in form:
   4. the clock network and every clock sink are FIRM while hold cells are legalized (tap balance stays as measured);
   5. a class line before / after (port_in / same_tap / cross_tap / port_out) and pregrt_ff_hold_open.tsv = the
      endpoints the build could not close (ESCALATE: lockup latch / same tap / +1 cycle are plan forms);
-  6. fail-safe: a TT setup loss, no hold gain or a tool error writes nothing (OT_PREGRT_FF_HOLD FALLBACK).
+  6. fail-safe (pg_verdict, HOLD-GRT-1: setup rejects only below the -42 ps gate AND > 5 ps below the floor): a TT setup loss, no hold gain or a tool error writes nothing (OT_PREGRT_FF_HOLD FALLBACK).
 The in-flow GRT FF repair stays and takes the residual; sign-off FF hold >= 0 stays the only gate.  Timing context =
 hold_gate.tcl verbatim (same contract, same overlay), so the kit carries the head of its own hold_gate.tcl."""
 import os
@@ -91,6 +91,20 @@ if {$pg_auto >= 0} {
     exit 0
   }
   puts "OT_PREGRT_FF_HOLD AUTO run: $pg_nrr register-to-register hold violators >= $pg_auto"
+}
+# HOLD-GRT-1 11-14 ACCEPT TEST.  Setup is a reason to discard the repair only when the repair breached the R-MINIMAL gate
+# (TT setup < OT_PREGRT_SETUP_GATE, default -42 ps) AND moved the placement-estimate WNS by more than OT_PREGRT_SETUP_TOL (5 ps)
+# below the pre-repair floor min(s0, 0).  The old test (any loss > 1 ps) threw away every repair on a kit whose placement-estimate
+# WNS is already far below the gate (hc0 -515.45 -> -518.27, stm_v1 -8.12 -> -9.62): a worst path no hold cell sits on moves a
+# few ps with every legalized cell, and the GRT setup repair owns that term.  Hold: a gain of >= 1 ps on a kit with hold debt.
+# Returns "" (accept) or the FALLBACK reason.
+proc pg_verdict {w0 w1 n0 s0 s1} {
+  set gate -42.0; set tol 5.0
+  if {[info exists ::env(OT_PREGRT_SETUP_GATE)] && [string is double -strict $::env(OT_PREGRT_SETUP_GATE)]} { set gate $::env(OT_PREGRT_SETUP_GATE) }
+  if {[info exists ::env(OT_PREGRT_SETUP_TOL)] && [string is double -strict $::env(OT_PREGRT_SETUP_TOL)]} { set tol $::env(OT_PREGRT_SETUP_TOL) }
+  if {$s1 < $gate && $s1 < [expr {min($s0, 0.0) - $tol}]} { return [format "TT setup loss %.2f -> %.2f (gate %.1f, tol %.1f)" $s0 $s1 $gate $tol] }
+  if {$w1 < $w0 + 1.0 && $n0 > 0} { return [format "no hold gain %.2f -> %.2f" $w0 $w1] }
+  return ""
 }
 proc pg_hold {} { return [sta::time_sta_ui [sta::worst_slack_cmd min]] }
 proc pg_setup {} { return [sta::time_sta_ui [sta::worst_slack_cmd max]] }
@@ -247,8 +261,7 @@ if {[catch {
 foreach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }
 if {$pg_fail eq ""} {
   set pg_w1 [pg_hold]; set pg_s1 [pg_setup]
-  if {$pg_s1 < [expr {min($pg_s0, 0.0) - 1.0}]} { set pg_fail [format "TT setup loss %.2f -> %.2f" $pg_s0 $pg_s1]
-  } elseif {$pg_w1 < $pg_w0 + 1.0 && $pg_n0 > 0} { set pg_fail [format "no hold gain %.2f -> %.2f" $pg_w0 $pg_w1] }
+  set pg_fail [pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]
 }
 if {$pg_fail ne ""} {
   puts "OT_PREGRT_FF_HOLD FALLBACK $pg_fail: 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt"
@@ -282,6 +295,8 @@ def auto_min():
     silent, but the kit tcl runs it only when the post-CTS FF hold has >= N register-to-register violators (internal debt).
     None when unset/0.  A plan clock.pregrt_ff_hold false/true always wins."""
     v = os.environ.get("OT_PREGRT_FF_HOLD_AUTO", "").strip()
+    if v == "-1":      # KIT-OPS-5 11-14 (COORD class order, TYPE-HDCTLN): always run the build (port/ft hold counts too)
+        return -1
     if not v.isdigit() or int(v) <= 0:
         return None
     return 100 if v == "1" else int(v)

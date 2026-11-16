@@ -38,6 +38,7 @@ SCHEMA = "opentallas.col_inherit.v1"
 IDENT_RE = re.compile(r"^(col_h(?:9|10)_r[012](?:_p\d+)?)__t1(?:__(cl[0-9a-f]+))?(?:__pv([0-9a-f]+))?$")   # r0 frames carry _p<n> and may have no clock-class label
 IMAGE_PARAM_RE = re.compile(r"^P_.*_INSTANCE$")
 PV_LABEL_RE = re.compile(r"[A-Za-z0-9_.]*__pv[0-9a-f]{6,}[A-Za-z0-9_.]*")
+CL_LABEL_RE = re.compile(r"__cl[0-9a-f]{6,}")   # clock-class label (S81-TYPEMERGE R1: the layout hash ignores it)
 # viamap names of one INSTANCE (rom_gen personalise; elem cores take <I>_0/_1, the second bank <I>b..., head bundles <I>a<n>)
 IMAGE_SUFFIX = r"(?:b|a\d+)?(?:_[01])?"
 
@@ -90,10 +91,13 @@ def geometry_key(t):
                      src=t.get("sources"), hard=t.get("hard")))
 
 
-def clock_key(t):
-    """clock identity with the per-type __pv<hash> labels removed (collector_tree.type carries the identity name)"""
-    s = json.dumps(t.get("clock"), sort_keys=True)
-    return sha256_bytes(PV_LABEL_RE.sub("<PV>", s).encode())
+def clock_key(t, merge_classes=False):
+    """clock identity with the per-type __pv<hash> labels removed (collector_tree.type carries the identity name);
+    merge_classes also removes the __cl<hash> label, so classes with the same layout share one key"""
+    s = PV_LABEL_RE.sub("<PV>", json.dumps(t.get("clock"), sort_keys=True))
+    if merge_classes:
+        s = CL_LABEL_RE.sub("", s)
+    return sha256_bytes(s.encode())
 
 
 def param_set(t):
@@ -109,23 +113,25 @@ def parse_identity(name):
     return None if not m else dict(family=m.group(1), clock_class=m.group(2), pv=m.group(3))
 
 
-def groups(plan, repo=None):
+def groups(plan, repo=None, merge_classes=False):
     """{(family, cl): dict(members=[names with ROM params], singletons=[names without], verdict=..., reasons=[...], keys...)}.
     A (family, clock class) whose pv identities carry different clock / reset-collector contracts (clock key with the __pv labels
-    stripped) is split into one sub-layout per clock key, keyed (family, '<cl>/ck<8 hex>'): inheritance never crosses a clock key."""
+    stripped) is split into one sub-layout per clock key, keyed (family, '<cl>/ck<8 hex>'): inheritance never crosses a clock key.
+    merge_classes=True (S81-TYPEMERGE R1, sign-off key = layout hash): the clock class label is not part of the key; one group per
+    (family, clock key), keyed (family, 'ck<8 hex>'); the geometry / hard-core checks below still run over the whole group."""
     pt = plan_types(plan)
     raw = {}
     for n, t in pt.items():
         p = parse_identity(n)
         if p:
-            raw.setdefault((p["family"], p["clock_class"] or ""), []).append(n)
+            raw.setdefault((p["family"], "" if merge_classes else (p["clock_class"] or "")), []).append(n)
     out = {}
     for k0, allnames in sorted(raw.items()):
         byclk = {}
         for n in allnames:
-            byclk.setdefault(clock_key(pt[n]), []).append(n)
+            byclk.setdefault(clock_key(pt[n], merge_classes), []).append(n)
         for ck, names in sorted(byclk.items(), key=lambda kv: min(kv[1])):
-            k = k0 if len(byclk) == 1 else (k0[0], "%s/ck%s" % (k0[1], ck[:8]))
+            k = k0 if len(byclk) == 1 and not merge_classes else (k0[0], ("%s/ck%s" % (k0[1], ck[:8])).lstrip("/"))
             members = [n for n in names if param_set(pt[n])]
             singles = [n for n in names if not param_set(pt[n])]
             g = dict(family=k[0], clock_class=k[1], members=sorted(members), singletons=sorted(singles), reasons=[],
@@ -404,7 +410,7 @@ def archive(records, rtx_root, agi_root, agi_ssh=None, dry=False):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
-    g = sub.add_parser("groups"); g.add_argument("plan"); g.add_argument("--repo")
+    g = sub.add_parser("groups"); g.add_argument("plan"); g.add_argument("--repo"); g.add_argument("--merge-classes", action="store_true")
     r = sub.add_parser("record")
     r.add_argument("--plan", required=True); r.add_argument("--rep", required=True); r.add_argument("--sibling", action="append", required=True)
     r.add_argument("--signoff", required=True); r.add_argument("--repo", required=True); r.add_argument("--rom-dir", required=True)
@@ -419,7 +425,7 @@ def main(argv=None):
     ns = ap.parse_args(argv)
     if ns.cmd == "groups":
         plan = json.load(open(ns.plan))
-        res = {"%s|%s" % k: v for k, v in groups(plan, ns.repo).items()}
+        res = {"%s|%s" % k: v for k, v in groups(plan, ns.repo, merge_classes=ns.merge_classes).items()}
         print(json.dumps(res, indent=1)); return 0
     if ns.cmd == "record":
         plan = json.load(open(ns.plan)); pt = plan_types(plan)

@@ -205,7 +205,7 @@ def probe(host, d, spill_ok=False):
     # for the exact working directory; SCRATCH2 may place NEW mkdir output dirs later.
     test = f"test -d {q} || {{ echo NODIR; exit 0; }}; t={q}; "
     cmd = test + ("" if spill_ok else f"for m in {marks}; do test -e $m && {{ echo NODIR; exit 0; }}; done; ") + SCRATCH_FREE_SH \
-        + LOADCAP_SH + "/usr/local/bin/ot-heavy-reconcile --free $t"
+        + LOADCAP_SH + PSI_SH + "/usr/local/bin/ot-heavy-reconcile --free $t"
     try:
         r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, cmd], capture_output=True,
                            text=True, timeout=40)
@@ -220,6 +220,9 @@ def probe(host, d, spill_ok=False):
         lc = loadcap_of(r.stdout)
         if lc is not None and isinstance(row, dict):
             row["load_cap_factor"] = lc
+        psi = psi_of(r.stdout)
+        if psi is not None and isinstance(row, dict):
+            row["cpu_psi"] = psi
         return host, scratch_disk(row, d, r.stdout, host)
     except Exception as e:
         return host, {"error": str(e)[:80]}
@@ -242,6 +245,16 @@ def probe(host, d, spill_ok=False):
 # OT_RUN_ROOT_SCRATCH_ROOTS lists only those authorized roots. The default is empty.
 # Existing per-host floors still apply to explicitly authorized roots.
 ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS", "").split(",") if x)
+# EPYC2-S3 11-15 (COORD, FABLE-FLOW-0815 item 2): epyc2 scratch2 (880 GB nvme) sat at 100% while its 3.5 TB root disk
+# (scratch3 bind) was idle.  Per-host authorized second roots, in addition to OT_RUN_ROOT_SCRATCH_ROOTS (every host):
+# "host=root;root,host=root".  OT_RUN_ROOT_SCRATCH_ROOTS_HOSTS= (empty) turns the default off.
+_RSH = os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS_HOSTS", "epyc2=/srv/opentallas-scratch3")
+ROOT_SCRATCH_ROOTS_HOSTS = {k.strip(): tuple(r for r in v.split(";") if r) for k, _, v in (x.partition("=") for x in _RSH.split(","))
+                            if k.strip() and v.strip()}
+
+
+def second_roots(host=None):
+    return ROOT_SCRATCH_ROOTS + tuple(r for r in ROOT_SCRATCH_ROOTS_HOSTS.get(host, ()) if r not in ROOT_SCRATCH_ROOTS)
 ROOT_SCRATCH_FLOOR_GB = int(os.environ.get("OT_RUN_ROOT_SCRATCH_FLOOR_GB", "150"))   # OWNER 11-06 22:4x "use 150GB for floor decisions" (was 500)
 ROOT_SCRATCH_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
     "OT_RUN_ROOT_SCRATCH_FLOOR_GB_HOSTS", "intel1=150,intel2=150,localhost=150,epyc5=100,epyc6=100,epyc7=150,epyc8=150,epyc9=150").split(",")) if k.strip() and v.strip()}
@@ -323,7 +336,7 @@ def scratch_disk(row, d, out, host=None):
             extra["dir_real"] = f[1]
     # ROOTSCR_1101: second roots (root fs, named in ROOT_SCRATCH_ROOTS) count with root free - ROOT_SCRATCH_FLOOR_GB
     rfl = root_floor(host)                                    # ROOTSCR-INTEL: per-host root floor
-    second = {r: max(0, roots.pop(r) - rfl) for r in list(roots) if r in onroot and r in ROOT_SCRATCH_ROOTS}
+    second = {r: max(0, roots.pop(r) - rfl) for r in list(roots) if r in onroot and r in second_roots(host)}
     onroot -= set(second)
     # v13 SCRATCH-DISK: a root on a separate disk exists -> only those roots count (never the root fs, even if emptier)
     disk_roots = {r: v for r, v in roots.items() if r not in onroot}
@@ -459,6 +472,35 @@ LOAD_CAP_FACTOR = float(os.environ.get("OT_RUN_LOAD_CAP_FACTOR", "1.5"))   # = o
 # un-patched backend (see the REHOST-1 overlay note in the frontend).
 LOADCAP_SH = ("echo OT_LOADCAP $(sed -n 's/^[[:space:]]*LOAD_CAP_FACTOR=\\([0-9.]*\\).*/\\1/p' /etc/ot-heavy.conf 2>/dev/null"
               " | tail -1); ")
+
+
+# FLOW-HEALTH-1 11-15 (FABLE-FLOW-0815 item 3): plan / direct jobs went to "the host with the most MemAvailable" and piled onto epyc9
+# (load 291 on 96 cores, 0-3 % CPU pressure elsewhere).  The probe now reports /proc/pressure/cpu avg10 (OT_PSI) and those two
+# placements choose the lowest CPU pressure among the hosts with the memory.
+PSI_SH = "echo OT_PSI $(awk '/^some/{split($2,a,\"=\"); print a[2]}' /proc/pressure/cpu 2>/dev/null); "
+
+
+def psi_of(out):
+    for ln in (out or "").splitlines():
+        if ln.startswith("OT_PSI"):
+            try:
+                return float(ln.split()[1])
+            except (IndexError, ValueError):
+                return None
+    return None
+
+
+def cpu_pressure(r, threads=None):
+    """0..~200: PSI some-avg10 (percent) when the probe has it, else 50 x load1 / cores (load == cores reads 50); plus the units started
+    in the last 90 s (not yet in load or PSI) and this job at THREADS each, as a percent of the cores"""
+    n = max(r.get("ncpu") or 1, 1)
+    base = r["cpu_psi"] if isinstance(r.get("cpu_psi"), (int, float)) else min(100.0, 50.0 * load1(r) / n)
+    return base + 100.0 * (THREADS * r.get("fresh", 0) + (threads or 0)) / n
+
+
+def least_pressure(ok, eligible, threads=None):
+    """the eligible host with the lowest CPU pressure; ties go to the most MemAvailable"""
+    return min(eligible, key=lambda h: (round(cpu_pressure(ok[h], threads), 1), -ok[h].get("avail_gb", 0)))
 
 
 def loadcap_of(out):
@@ -816,10 +858,11 @@ def choose(res, mem, threads=THREADS, die=False):
     if not ok:
         return None, False
     if plan_job():      # PLANBYPASS_1114 (OWNER 11-14 19:40): a plan-connectivity job starts at once on the listed host with the most MemAvailable; ot-heavy bypasses its gate
-        return max(ok, key=lambda h: ok[h].get("avail_gb", 0)), False
+        roomy = [h for h in ok if ok[h].get("avail_gb", 0) >= mem] or list(ok)        # the memory it needs, then the quietest CPU
+        return least_pressure(ok, roomy, threads), False
     if direct_job():    # DIRECT_1107: the host with the most real free memory; only MemAvailable >= mem + headroom counts
         fit = [h for h in ok if ok[h].get("avail_gb", 0) >= mem + DIRECT_HEADROOM_GB and not load_gated(ok[h])]
-        return max(fit or ok, key=lambda h: ok[h].get("avail_gb", 0)), not fit
+        return max(fit or ok, key=lambda h: ok[h].get("avail_gb", 0)), not fit      # DIRECT_1107: most real free memory (FLOW-HEALTH-1 PSI choice is plan jobs only)
     if die:     # v16 MEASURED RESERVE (coordinator 10-22): a die job is admitted on MemAvailable - 64 GB (die_admit_gb)
         ok = {h: (dict(r, admit_gb=max(r.get("admit_gb", r["free_gb"]), r["die_admit_gb"])) if "die_admit_gb" in r else r)
               for h, r in ok.items()}
@@ -1101,7 +1144,7 @@ def scratch_env(host=None):
                "test -d $r/claude || continue; o=0; [ \"$(stat -L -c %d $r/claude)\" = \"$rd\" ] && o=1; "
                "f=$(df -BG --output=avail $r/claude/ | tail -1 | tr -dc 0-9); "
                # ROOTSCR_1101: a second root (root fs, ROOT_SCRATCH_ROOTS) is o=2 with usable free = free - root floor
-               "case ' " + " ".join(ROOT_SCRATCH_ROOTS) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
+               "case ' " + " ".join(second_roots(host)) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
                + str(root_floor(host)) + ")); };; esac; echo $o $f $r; done | "
                "awk -v fl=" + str(sfloor(host)) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
                "'{o[NR]=$1; f[NR]=$2; r[NR]=$3; if ($1==0) {d=1; if ($2>bd) bd=$2} if ($1==2 && $2>bs) {bs=$2; bsr=$3} "
@@ -1271,7 +1314,7 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun", host=None):
     arg = base64.b64encode(json.dumps(list(cmd)).encode()).decode()
     if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
-    pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(ROOT_SCRATCH_ROOTS))} '
+    pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(second_roots(host)))} '
           f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
     return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={sfloor(host)} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
             f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '

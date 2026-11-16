@@ -22,7 +22,7 @@ if {[catch {cland_put_grow $i {10 10 14.32 14.32} local-reset local-reset} e]} {
 
 
 def test_local_reset_tag_takes_growing_placement():
-    assert "elseif {$tag eq \"local-reset\"} { cland_put_grow $i $rect $tag local-reset }" in SRC
+    assert "elseif {$tag eq \"local-reset\"} { cland_avoid_rings $prefix {cland_put_grow $i $rect $tag local-reset} }" in SRC
 
 
 def test_fits_first_window_unchanged():

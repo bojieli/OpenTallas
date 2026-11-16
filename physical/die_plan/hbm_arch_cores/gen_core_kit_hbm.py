@@ -2803,6 +2803,9 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         if reset_contract is None:
             raise ValueError("private component reset contract does not list this top")
         reset_contract["scope"] = "PRIVATE_COMPONENT_PROPOSAL_NOT_CANONICAL"
+    elif design.startswith("ot_s81hd_"):
+        # CORE-ELEMAB-1115 (COORD 11-15): HEAD hard cores built with this generator take the s81_head die contract
+        reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["s81_head"], required_source=True)
     else:
         reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"], required_source=True)
     # Optional source-pinned placement/model assets are assembled before the

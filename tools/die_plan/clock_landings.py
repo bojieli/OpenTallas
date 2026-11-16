@@ -884,7 +884,13 @@ class Landings:
         self.forwarded_clock_only_inputs = {}
         self.emitted_top = False
         self.reset_placements = {}
+        declared = table.get("part_region")   # DIE-S81-92 ca_region_table.py: declared regions, boxes may overlap
         for pn, p in self.parts.items():
+            if declared is not None:
+                if pn not in declared:
+                    raise LandingError(f"clock landing {pn}: not in the table part_region declaration")
+                self.region[pn] = declared[pn]
+                continue
             w, h = self.types[p["type"]]["outline_um"]
             x, y = p["origin_um"][0] + w / 2, p["origin_um"][1] + h / 2
             candidates = [r["tag"] for r in table["regions"]
@@ -2059,6 +2065,54 @@ class Landings:
             raise LandingError(f'{tn}: origin clock {chosen} is not an existing scalar INPUT in emitted RTL')
         return chosen
 
+    TX_RAW_WARN_UM = 800.0    # a generator-placed flop pair longer than this is reported (WARN, never blocking)
+    TX_RAW_RELAY_UM = 600.0   # FABLE-TYPES-QC-WEST cause A: one raw-reset wire may not run farther than this
+
+    def _tx_raw(self, tn, key, raw, ca_raw, raw_logic):
+        """FABLE-TYPES-QC-WEST cause A (-162..-276 ps): the tx flop u_cland_rstart_tx sits at the cland_rstart_out pin, and
+        its raw reset used to be the FIRST raw copy in dict order (1.3-1.4 mm away).  Use the raw copy nearest to that pin;
+        when even that copy is over TX_RAW_RELAY_UM away add one ot_dp_rrelay at the midpoint (a reset level: one more
+        cycle of assertion/release, no lane effect).  Unknown pin or copy sites leave the raw unchanged."""
+        pins = list(self.types.get(key, {}).get("pins", [])) + list(
+            self.types.get(key, {}).get("clock", {}).get("landing_contract", {}).get("pins", []))
+        tx = next((p.get("xy_um") for p in pins if p.get("name") == "cland_rstart_out" and p.get("xy_um")), None)
+        if tx is None:   # plan bus form: pin on a face, window centre (same rule as the ring receiver site)
+            t = self.types.get(key, {})
+            bus = next((b for b in t.get("buses", []) if b.get("name") == "cland_rstart_out"), None)
+            if bus and bus.get("face") in ("E", "W", "N", "S") and bus.get("window_um") and t.get("outline_um"):
+                tw, th = t["outline_um"]; at = sum(bus["window_um"]) / 2; f = bus["face"]
+                tx = [0 if f == "W" else tw, at] if f in "EW" else [at, 0 if f == "S" else th]
+        if tx is None:
+            return raw
+        rp = self.reset_placements.get(tn, {})
+        sites = {}
+        for b, name in ca_raw.items():
+            xy = (rp.get(b) or {}).get("xy_um")
+            if xy is not None and name not in sites:
+                sites[name] = xy
+        if not sites:
+            return raw
+        dist = lambda xy: abs(xy[0] - tx[0]) + abs(xy[1] - tx[1])
+        best = min(sites, key=lambda n: dist(sites[n]))
+        if raw in sites and dist(sites[raw]) <= dist(sites[best]):
+            best = raw
+        d = dist(sites[best])
+        rec = dict(raw=best, dist_um=round(d, 3), tx_xy=list(tx), first_copy=raw, relay=False)
+        if d > self.TX_RAW_RELAY_UM:
+            mid = [round((sites[best][0] + tx[0]) / 2, 3), round((sites[best][1] + tx[1]) / 2, 3)]
+            new = "cland_reset_tx"
+            raw_logic.extend([f"    wire {new};",
+                              f"    ot_dp_rrelay u_cland_rst_tx (.clk(clk), .d({best}), .q({new}));"])
+            rec.update(relay=True, relay_xy_um=mid, relay_net=new)
+            best = new
+        hop = d / 2 if rec["relay"] else d
+        if hop > self.TX_RAW_WARN_UM:   # WARN only (owner: no new blocking gates)
+            rec["warn"] = f"{tn}: tx raw-reset hop {hop:.0f} um > {self.TX_RAW_WARN_UM:.0f} um"
+            import sys
+            print("WARN clock_landings " + rec["warn"], file=sys.stderr)
+        self.reset_placements.setdefault(tn, {}).setdefault("count_origin", {})["tx_raw"] = rec
+        return best
+
     def _origin_rtl(self, tn, cat, ca_raw, body, extra, type_key=None, head=None):
         """The region's count origin: root = ot_dp_landing_root (fixed settle count), child = ot_dp_landing_origin on
         the start-tree port (3-FF sync of the parent's forwarded start, edge/PAD from the bind).  Its raw reset is the
@@ -2137,6 +2191,7 @@ class Landings:
         if cat.get("relay_tx"):
             self.reset_placements[tn]["count_origin"]["relay_tx"] = True
             extra.append("    output wire cland_rstart_out")
+            raw = self._tx_raw(tn, type_key or tn, raw, ca_raw, raw_logic)
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
                          f".q(cland_rstart_out));")
         if self.tstart and self.tstart.get("reset_wave") and RAW_RESET_PIN_OUT in self.tstart["type_pins"].get(type_key or tn,{}):

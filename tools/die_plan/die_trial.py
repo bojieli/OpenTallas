@@ -274,6 +274,13 @@ ISLAND_GRID_UM = (0.054, 0.27)    # site width / row height (ASAP7 7.5T)
 ISLAND_PG_CUT = ("M7",)           # abstract PG pin layers cut at a window (the pin stack's M7 riser runs there)
 
 
+def reserved_windows(P, tn):
+    """CLKSITE-RESERVE-1115: type-frame die_clock_tree rects of clock.reserved_sites_um that carry route_layers (opt-in).
+    These are the windows cut out of the abstract (plan abstract M1-M3 + M7 PG, closed view M1-M7 + implants + M7 PG)."""
+    return [tuple(r["rect_um"]) for r in (P.types[tn].get("clock") or {}).get("reserved_sites_um", [])
+            if r.get("kind") == "die_clock_tree" and r.get("route_layers")]
+
+
 def load_island_sites(paths):
     """[(xy, source)] die-frame island sites from: a die_tree_plan.json (lattice.nodes + lattice.gate.
     leg_repeater_sites), an ot_clock_sites/1 file (sites[] of kind partition), or a die_clock_mesh build mesh.json
@@ -481,6 +488,28 @@ def clock_taps(P):
 
 
 # ------------------------------------------------------------------------------------- tree cell site legality (opt-in)
+TAP_PIN_SNAP = False      # kit --snap-tap-pins (set from the CLI)
+
+
+def snap_track(v, pitch=0.08, offset=0.04):
+    """nearest M8/M9 track centre (platform tracks: offset 0.04, pitch 0.08, plan make_tracks.tcl)"""
+    return round((v - offset) / pitch) * pitch + offset
+
+
+def snap_track_y(v, rails=(2.16, 0.24, 0.06)):
+    """M8 y track nearest to v whose centre is >= rail half width + clearance from every die M8 PG rail centre
+    (rails every 2.16 um, 0.48 wide, VDD/VSS alternate; kit psm/pdn.tcl ot_pg grids).  rails=None: plain snap_track"""
+    t = snap_track(v)
+    if not rails:
+        return t
+    rp, rh, rc = rails
+    k, n = round((t - 0.04) / 0.08), 0
+    while abs(t - round(t / rp) * rp) < rh + rc - 1e-9 and n < 400:
+        n += 1
+        t = (k + ((n + 1) // 2) * (1 if n % 2 else -1)) * 0.08 + 0.04
+    return t
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -2491,6 +2520,7 @@ DME_STREET_GAP_UM = 200.0
 # M7, ~2x the modelled leg delay).  DME_STREET_VGAPS = sorted gap centres (set from the plan in clock_kit).
 DME_STREET_COLUMN = False
 DME_STREET_VLAYER = None
+STAMPED_TREE_JSON = None      # CLKSITE-RESERVE-1115 opt-in (kit --tree-json): replace the built die clock tree by a stamped tree.json
 DME_STREET_VGAPS = None
 # HBM-CLKLOC-5: half width of the narrowest PG-free gap of DME_STREET_VLAYER (M9 on HBM d44f: 17.28-um stripe pitch,
 # 12.96-um stripes -> 4.32-um gaps, half 2.16).  A snake on a vertical leg that runs ON a gap column keeps every buffer
@@ -3667,6 +3697,48 @@ def clock_edge_readout(verilog, path, period=str(die_sta.PERIOD_PS), cells="b*",
             "close $fh"]
 
 
+def legalize_stamped_nodes(nodes, site):
+    """the kit's own legal-site map decides: an illegal node moves to the nearest legal site and every leg with an illegal
+    point (or ends that no longer meet its parent / node) loses its chain, so the kit lays the leg out itself"""
+    st = dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    for i, v in nodes.items():
+        if not site.legal((v["x"], v["y"])):
+            q = site.nearest((v["x"], v["y"]))
+            v["x"], v["y"] = round(q[0], 3), round(q[1], 3)
+            v["req_xy"] = [v["x"], v["y"]]
+            st["moved"] += 1
+    for i, v in nodes.items():
+        pl = v.get("physical_leg")
+        if not pl:
+            continue
+        p = nodes.get(v.get("parent"))
+        ends_ok = (p is not None and _man(pl["chain"][0], (p["x"], p["y"])) < 1e-6 and
+                   _man(pl["chain"][-1], (v["x"], v["y"])) < 1e-6)
+        if not ends_ok or any(not site.legal(tuple(q)) for q in pl["chain"]):
+            v.pop("physical_leg", None); v.pop("detour", None)
+            st["chains_dropped"] += 1
+    return st
+
+
+def load_stamped_tree(path, site=None, rep_um=150.0):
+    """CLKSITE-RESERVE-1115: tree.json (tools/die_plan/clksite_stamp_native.py) -> (nodes {int id: node}, taps [(part, port, x, y)]),
+    the shape tree_netlist takes.  Names are re-derived by tree_netlist from the node ids (b<id>, r<id>_<k>, q<id>_<tap>)."""
+    T = json.loads(Path(path).read_text())
+    nodes = {int(k): dict(v) for k, v in T["nodes"].items()}
+    by = {}
+    for t in T["taps"]:
+        by.setdefault(t["node"], []).append((t["part"], t["tap"], t["xy"][0], t["xy"][1]))
+    for i, v in nodes.items():
+        v["taps"] = by.get(i, [])
+        v["kids"] = list(v.get("kids", []))
+    st = legalize_stamped_nodes(nodes, site) if site is not None else dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    if site is not None:          # exact parity fix on the kit's own site map (clksite_stamp_native.fix_parity)
+        import clksite_stamp_native as _csn
+        st["parity"] = _csn.fix_parity(nodes, rep_um, site)["stats"]
+    print("STAMPED-TREE", json.dumps(st))
+    return nodes, [(t["part"], t["tap"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
+
+
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
@@ -3706,12 +3778,12 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
         dme_early = {}
         for n, p in P.parts.items():
             for port, _, _, tp in S.core_taps(P, p["type"]):
-                e = S.core_tap_early_ps(P, tp, "TT")
+                e = S.core_tap_early_ps(P, tp, "TT", P.types[p["type"]])
                 if e > 0:
                     dme_early[(n, port)] = e / float(region_dme_early)
                     if region_dme_early_ff:   # DIE-QC-9 opt-in: corner-averaged target (TT and FF in model ps)
                         dme_early[(n, port)] = 0.5 * (dme_early[(n, port)]
-                                                      + S.core_tap_early_ps(P, tp, "FF") / float(region_dme_early_ff))
+                                                      + S.core_tap_early_ps(P, tp, "FF", P.types[p["type"]]) / float(region_dme_early_ff))
     if slice_spine and tree_form != "htree":
         raise ValueError("--slice-spine and --tree-form %s are exclusive opt-ins" % tree_form)
     site = None
@@ -3840,6 +3912,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 raise ValueError(f"--tap-pad sites {port}: count does not match pad buffers")
     elif tap_pad and "sites" in tap_pad:
         tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
+    if STAMPED_TREE_JSON:        # CLKSITE-RESERVE-1115: the stamped tree replaces the one built above (same node/tap shape)
+        nodes, taps = load_stamped_tree(STAMPED_TREE_JSON, locals().get("site"), rep_um)
     v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites,
                                                             **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
     if tap_pad:
@@ -3879,6 +3953,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     root = nodes[0]
     tcl.append(f"place_pin -pin_name root -layer M9 -location {{{root['x']:.3f} {root['y']:.3f}}} -pin_size {sz9}")
     for tp, x, y, *_ in tap_ports:
+        if TAP_PIN_SNAP:      # DIE-ROUTE-ABS-1: on-track terminal (M9 x track, M8 y track) -> no off-track M8 jog / min step
+            x, y = snap_track(x), snap_track_y(y)
         tcl.append(f"place_pin -pin_name {tp} -layer M9 -location {{{x:.3f} {y:.3f}}} -pin_size {sz9}")
     for inst, x, y in place:
         tcl.append(f"place_inst -name {inst} -location {{{max(0.0, x):.3f} {max(0.0, y):.3f}}} -status PLACED")
@@ -4769,6 +4845,40 @@ def psm_tcl(P, lefs, power, bumps):
     return "\n".join(t) + "\n"
 
 
+PARTS_BY_REGION_TCL = r"""# macro (instance) grids per PG region domain: instances whose centre lies in the region box
+set ot_assigned {}; set ot_blocks 0
+foreach ot_i [$b getInsts] { if {[[$ot_i getMaster] getType] eq "BLOCK"} { incr ot_blocks } }
+foreach ot_r [$b getRegions] {
+  set ot_n [$ot_r getName]; if {![string match ot_pg_* $ot_n]} continue
+  set ot_l {}
+  foreach ot_bd [$ot_r getBoundaries] {
+    foreach ot_i [$b getInsts] {
+      if {[[$ot_i getMaster] getType] ne "BLOCK"} continue
+      set ot_bb [$ot_i getBBox]
+      set ot_cx [expr {([$ot_bb xMin]+[$ot_bb xMax])/2}]; set ot_cy [expr {([$ot_bb yMin]+[$ot_bb yMax])/2}]
+      if {$ot_cx >= [$ot_bd xMin] && $ot_cx < [$ot_bd xMax] && $ot_cy >= [$ot_bd yMin] && $ot_cy < [$ot_bd yMax]} {
+        lappend ot_l [$ot_i getName]
+      }
+    }
+  }
+  set ot_l [lsort -unique $ot_l]
+  puts "OT_PG_PARTS $ot_n [llength $ot_l]"
+  if {[llength $ot_l] == 0} continue
+  lappend ot_assigned {*}$ot_l
+  define_pdn_grid -name parts_$ot_n -voltage_domains $ot_n -macro -instances $ot_l -orient {R0 R180 MX MY} -halo {0 0 0 0}
+  add_pdn_connect -grid parts_$ot_n -layers {M7 @L0@}
+}
+set ot_assigned [lsort -unique $ot_assigned]
+puts "OT_HOOK_COVERAGE hook=die_pg_parts touched=[llength $ot_assigned] expected=$ot_blocks"
+if {[llength $ot_assigned] != $ot_blocks} {
+  if {[info exists ::env(OT_HOOK_COVERAGE)] && $::env(OT_HOOK_COVERAGE) eq "warn"} {
+    puts "OT_HOOK_COVERAGE WARN die_pg_parts: [expr {$ot_blocks - [llength $ot_assigned]}] hard instances in no PG region"
+  } else {
+    error "OT_HOOK_COVERAGE die_pg_parts: [llength $ot_assigned] of $ot_blocks hard instances have a PG region grid"
+  }
+}"""
+
+
 def psm_pdn_tcl(P):
     """die-trial PDN from the plan's PG rows (ONE PDN RULE, COORD 10-26 13:13): explicit offset + parity from the die
     lattice (pg_regions.row_spec); a plan with die.pg.domains (PHY windows) builds its VDDPHY regions exactly as
@@ -4781,8 +4891,14 @@ def psm_pdn_tcl(P):
     if die.get("pg", {}).get("domains"):
         phy = sorted({d["nets"][0] for d in die["pg"]["domains"]} - {"VDD"})
         lines += [f"add_global_connection -net {{{n}}} -inst_pattern {{.*}} -pin_pattern {{^{n}$}} -power" for n in phy]
-        lines += [pg_regions.pdn_tcl(die).rstrip("\n")]
-        dom = "Core"
+        _pr = [P.rect(n) for n in P.parts] if getattr(P, "parts", None) else None
+        lines += [pg_regions.pdn_tcl(die, parts=_pr).rstrip("\n")] if _pr is not None else [pg_regions.pdn_tcl(die).rstrip("\n")]
+        # GENBUG-3 11-15 (COORD; proven by DIE-KV-ROUTE-1 pdn2.py, KV kvgeom5 160/160 partitions, pdngen clean): with
+        # PG region domains the stripes live in the ot_pg_* domains, the default Core domain has none, so ONE {parts}
+        # macro grid in Core came out empty for every partition (PDN-0233).  One macro grid per region domain, a
+        # partition belongs to the region that holds its centre; every hard instance must be assigned (fail closed).
+        lines += [PARTS_BY_REGION_TCL.replace("@L0@", g[0]['layer'])]
+        return "\n".join(lines) + "\n"
     else:
         lines += ["global_connect", "set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}",
                   "define_pdn_grid -name {top} -voltage_domains {CORE}"]
@@ -5221,7 +5337,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
               clock_rc="ndr", slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
-              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False):
+              cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None, landing_infra=False, reset_infra=False,
+              cut_abstracts=None, cut_max_boxes=None):
     _kit_stage("plan load")
     raw = S.load(plan_path)
     P = S.Plan(raw, Path(plan_path))   # plan-relative sidecars (core pins_file of the reset wavefront; as claude/die-proto-1025@bd51e6310)
@@ -5268,6 +5385,9 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                        sites_outside_partitions=sum(1 for r in irec if not r["parts"]))
         (out / "island_windows.json").write_text(json.dumps(dict(schema="ot_island_windows/1", meta=meta_iw,
                                                                  windows=iw, sites=irec), indent=1) + "\n")
+    rsv = {tn: reserved_windows(P, tn) for tn in P.types}
+    rsv = {k: v for k, v in rsv.items() if v}
+    iw = {tn: sorted(set(list(iw.get(tn, [])) + rsv.get(tn, []))) for tn in set(iw) | set(rsv)}
     _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
                                                    reset_infra=reset_infra)))
                   for tn, t in sorted(P.types.items())
@@ -5277,13 +5397,17 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
         v = Path(views) / tn / f"{t['module']}.lef" if views else None
         if v and v.is_file():
             txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
+            if iw.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
+                import abstract_cutout
+                txt, cst = abstract_cutout.cut_lef_text(txt, iw[tn])
+                ab[tn] = dict(closed_view_cut=cst)
             if landing_infra:
                 expected = {p['name'] for p in t.get('clock',{}).get('landing_contract',{}).get('pins',[])}
                 found = set(re.findall(r'^\s*PIN\s+(\S+)',txt,re.M))
                 if expected-found:
                     raise ValueError(f'{tn}: closed view omits landing pins: {sorted(expected-found)[:8]}')
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
-            ab[tn] = dict(source="closed view", path=str(v))
+            ab.setdefault(tn, {}).update(source="closed view", path=str(v))
         else:
             txt, st = _abs[tn]
             (out / "abstracts" / f"{smod[tn]}.lef").write_text(txt)
@@ -5322,6 +5446,10 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                                               if region_dme_early_merge_only else {}))
     (out / "clock" / "make_tracks.tcl").write_text(gen_phys.make_tracks_tcl(P))
     meta["clock_tree"] = cm
+    if cut_abstracts is not None:     # DIE-ROUTE-ABS-1 opt-in: open the abstract OBS over placed die clock cells
+        import abstract_cutout
+        rep = abstract_cutout.run(plan_path, out, cut_abstracts, max_boxes=cut_max_boxes)
+        meta["abstract_cutout"] = {k: v for k, v in rep.items() if k != "per_type"}
     reserve = reserve_rects(segs, leaf_legs, P)
     # grt
     _kit_stage("grt netlist")
@@ -6122,9 +6250,21 @@ def main(argv=None):
                         "construction, no tap parity inverters. Default buf")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
+    k.add_argument("--tree-json", help="CLKSITE-RESERVE-1115 opt-in: use this stamped tree.json (clksite_stamp_native.py) as the die "
+                   "clock tree instead of the built one; the clock kit netlist, placement and tree.json follow it")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
+    k.add_argument("--cut-abstracts-under-clock", type=float, nargs="?", const=0.25, default=None, metavar="MARGIN_UM",
+                   help="DIE-ROUTE-ABS-1 opt-in: after the clock tree is placed, cut the partition abstract OBS (M1-M7) and "
+                        "the M7 PG pin over every die clock cell inside a partition (margin um, default 0.25); "
+                        "writes abstract_cutout.json; originals kept as .lef.precut")
+    k.add_argument("--cut-max-boxes", type=int, default=None, metavar="N",
+                   help="with --cut-abstracts-under-clock: merge the cut windows per type to at most N boxes "
+                        "(abstract_cutout.coarsen_windows); fewer OBS rectangles = less detail-route memory")
+    k.add_argument("--snap-tap-pins", action="store_true",
+                   help="DIE-ROUTE-ABS-1: place the die clock tap terminals on the M9 x / M8 y track grid (removes the "
+                        "off-track 7 nm M8 min-step stubs at every tap)")
     k.add_argument("--island-margin-um", type=float, default=ISLAND_MARGIN_UM)
     k.add_argument("--reset-infra", action="store_true",
                    help="Export native registered reset output pins and real neighbor wavefront nets; raw reset "
@@ -6315,10 +6455,12 @@ def main(argv=None):
         return 0
     if a.cmd == "kit":
         globals()["BAND_SHARE_FORM"] = a.band_share_form
+        globals()["TAP_PIN_SNAP"] = a.snap_tap_pins
+        globals()["STAMPED_TREE_JSON"] = a.tree_json
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,
-                      reset_infra=a.reset_infra,
+                      reset_infra=a.reset_infra, cut_abstracts=a.cut_abstracts_under_clock, cut_max_boxes=a.cut_max_boxes,
                       tree_form=a.tree_form,
                       tree_opts={**{k: float(v) for k, v in (o.split("=") for o in a.tree_opt)},
                                  **({"feed": a.feed} if a.tree_form in ("link_fishbone", "link_htree") else {})},

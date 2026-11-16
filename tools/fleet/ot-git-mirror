@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""ot-git-mirror: the lanes' git origin, a bare repo on intel2 that relays claude/* branches to GitHub (FABLE-FLOW-1000 class 8).
+
+Build hosts have no GitHub key; only intel2 has one.  Lanes therefore cloned the OWNER checkout (hub:OpenTallas) and pushed
+68 claude/* refs into it on 11-15.  This bare repo replaces it:
+
+  /srv/opentallas-scratch2/git/OpenTallas.git   (OT_GIT_MIRROR)
+    - main + claude/* fetched from GitHub every 2 min (ot-git-mirror.timer -> `ot-git-mirror sync`); tags are not mirrored
+    - accepts pushes of refs/heads/claude/* only (pre-receive): no main, no deletes, no non-fast-forward
+    - post-receive forwards each pushed claude/* ref to GitHub at once (no force); `sync` re-forwards any claude/* ref the
+      mirror has ahead of GitHub (a forward that failed), so nothing pushed here stays off GitHub
+    - claude/* is fetched WITHOUT force: a GitHub fetch never rewinds a lane push that is not forwarded yet
+    - daily `git gc` (gc.auto=0 so a push never pays for it)
+
+usage: ot-git-mirror sync | install | status
+Clones: tools/fleet/ot-lane-clone (never ~/OpenTallas).
+"""
+import fcntl
+import os
+import subprocess as S
+import sys
+import time
+from pathlib import Path
+
+MIRROR = Path(os.environ.get("OT_GIT_MIRROR", "/srv/opentallas-scratch2/git/OpenTallas.git"))
+UPSTREAM = os.environ.get("OT_GIT_UPSTREAM", "git@github.com:bojieli/OpenTallas.git")
+GC_EVERY = int(os.environ.get("OT_GIT_MIRROR_GC_S", str(24 * 3600)))
+LANE_PREFIX = "refs/heads/claude/"
+
+PRE_RECEIVE = r"""#!/bin/bash
+# ot-git-mirror: lanes push claude/* branches only; main moves only through the merge queue on GitHub
+rc=0
+while read -r old new ref; do
+  case "$ref" in
+    refs/heads/claude/*) ;;
+    *) echo "ot-git-mirror: REFUSED $ref: push claude/* branches only (main lands through the merge queue)"; rc=1; continue;;
+  esac
+  if [ "$new" = 0000000000000000000000000000000000000000 ]; then
+    echo "ot-git-mirror: REFUSED delete of $ref"; rc=1
+  fi
+done
+exit $rc
+"""
+
+POST_RECEIVE = r"""#!/bin/bash
+# ot-git-mirror: forward the pushed claude/* refs to GitHub now, in ONE push (no force); per ref when the batch fails;
+# `ot-git-mirror sync` retries a failed one
+unset GIT_QUARANTINE_PATH
+specs=()
+while read -r old new ref; do
+  case "$ref" in refs/heads/claude/*) specs+=("$new:$ref");; esac
+done
+[ ${#specs[@]} -eq 0 ] && exit 0
+if out=$(timeout 1800 git push -q origin "${specs[@]}" 2>&1); then
+  for s in "${specs[@]}"; do
+    echo "ot-git-mirror: forwarded ${s#*:refs/heads/} @${s:0:11} to GitHub"
+    echo "$(date '+%F %T') OK ${s#*:} ${s%%:*}" >> forward.log
+  done
+  exit 0
+fi
+for s in "${specs[@]}"; do
+  if out=$(timeout 300 git push -q origin "$s" 2>&1); then
+    echo "ot-git-mirror: forwarded ${s#*:refs/heads/} @${s:0:11} to GitHub"
+    echo "$(date '+%F %T') OK ${s#*:} ${s%%:*}" >> forward.log
+  else
+    echo "ot-git-mirror: FORWARD FAILED ${s#*:refs/heads/} @${s:0:11}: $(echo "$out" | tail -2 | tr '\n' ' ')"
+    echo "ot-git-mirror: the branch is in the mirror; sync retries every 2 min. Non-fast-forward on GitHub = push a new branch."
+    echo "$(date '+%F %T') FAIL ${s#*:} ${s%%:*} $(echo "$out" | tail -1)" >> forward.log
+  fi
+done
+exit 0
+"""
+
+
+def git(*a, check=True, timeout=600):
+    p = S.run(["git", "-C", str(MIRROR), *a], capture_output=True, text=True, timeout=timeout)
+    if check and p.returncode:
+        raise SystemExit(f"git {' '.join(a)[:120]}: rc={p.returncode} {(p.stderr or p.stdout).strip()[-400:]}")
+    return p
+
+
+def install():
+    """create or re-configure the bare repo and its hooks (idempotent)"""
+    if not (MIRROR / "HEAD").is_file():
+        MIRROR.parent.mkdir(parents=True, exist_ok=True)
+        S.run(["git", "init", "-q", "--bare", str(MIRROR)], check=True)
+    cfg = [("remote.origin.url", UPSTREAM), ("remote.origin.tagopt", "--no-tags"),
+           ("uploadpack.allowFilter", "true"), ("uploadpack.allowAnySHA1InWant", "true"),
+           ("receive.denyDeletes", "true"), ("receive.denyNonFastForwards", "true"),
+           ("gc.auto", "0"), ("core.logAllRefUpdates", "false")]
+    for k, v in cfg:
+        git("config", k, v)
+    git("config", "--unset-all", "remote.origin.fetch", check=False)
+    git("config", "--add", "remote.origin.fetch", "+refs/heads/main:refs/heads/main")
+    git("config", "--add", "remote.origin.fetch", "refs/heads/claude/*:refs/heads/claude/*")   # no '+': never rewind a lane push
+    for name, body in (("pre-receive", PRE_RECEIVE), ("post-receive", POST_RECEIVE)):
+        h = MIRROR / "hooks" / name
+        tmp = h.with_suffix(".tmp")
+        tmp.write_text(body)
+        tmp.chmod(0o755)
+        os.replace(tmp, h)
+    print(f"installed {MIRROR} (upstream {UPSTREAM})")
+
+
+def upstream_heads():
+    p = S.run(["git", "ls-remote", UPSTREAM, LANE_PREFIX + "*"], capture_output=True, text=True, timeout=300)
+    if p.returncode:
+        return None
+    return {r: s for s, r in (l.split("\t") for l in p.stdout.splitlines() if "\t" in l)}
+
+
+def mirror_heads():
+    out = git("for-each-ref", "--format=%(objectname) %(refname)", LANE_PREFIX).stdout
+    return {r: s for s, r in (l.split(" ", 1) for l in out.splitlines() if " " in l)}
+
+
+def is_ancestor(a, b):
+    return git("merge-base", "--is-ancestor", a, b, check=False).returncode == 0
+
+
+def sync():
+    """fetch main + claude/* from GitHub, then re-forward claude/* refs the mirror has ahead of GitHub -> exit code"""
+    lockf = open(MIRROR / "sync.lock", "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return 0                                           # the previous sync still runs
+    f = git("fetch", "-q", "origin", check=False, timeout=900)
+    rc = 0
+    if f.returncode:
+        # a rejected non-forced claude/* update (GitHub moved a branch the mirror holds differently) is reported, not fatal
+        print(f"fetch rc={f.returncode}: {f.stderr.strip()[-600:]}")
+        rc = 1
+    up = upstream_heads()
+    if up is not None:
+        todo = []
+        for ref, sha in sorted(mirror_heads().items()):
+            u = up.get(ref)
+            if u == sha:
+                continue
+            if u is None or (git("cat-file", "-e", u, check=False).returncode == 0 and is_ancestor(u, sha)):
+                todo.append((ref, sha))
+        if todo and git("push", "-q", "origin", *[f"{s}:{r}" for r, s in todo], check=False, timeout=3600).returncode == 0:
+            for ref, sha in todo:
+                print(f"re-forward {ref[len('refs/heads/'):]} @{sha[:11]}: ok")
+            todo = []
+        for ref, sha in todo:                              # the batch failed: one by one, so one bad ref blocks only itself
+            p = git("push", "-q", "origin", f"{sha}:{ref}", check=False, timeout=300)
+            print(f"re-forward {ref[len('refs/heads/'):]} @{sha[:11]}: {'ok' if p.returncode == 0 else 'FAILED ' + p.stderr.strip()[-200:]}")
+            rc |= 1 if p.returncode else 0
+    stamp = MIRROR / "gc.stamp"
+    if not stamp.exists() or time.time() - stamp.stat().st_mtime > GC_EVERY:
+        stamp.touch()
+        git("gc", "--quiet", check=False, timeout=7200)
+    return rc
+
+
+def status():
+    h = mirror_heads()
+    main = git("rev-parse", "-q", "--verify", "refs/heads/main", check=False).stdout.strip()
+    log = MIRROR / "forward.log"
+    fails = [l for l in (log.read_text().splitlines() if log.exists() else []) if " FAIL " in l]
+    print(f"{MIRROR}: main {main[:11] or '-'}, {len(h)} claude/* refs, forward failures logged: {len(fails)}")
+    for l in fails[-5:]:
+        print("  " + l)
+    return 0
+
+
+def main():
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
+    if cmd == "install":
+        install()
+        return 0
+    if cmd == "sync":
+        return sync()
+    if cmd == "status":
+        return status()
+    print(__doc__)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())

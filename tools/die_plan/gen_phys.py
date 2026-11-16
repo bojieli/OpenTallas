@@ -575,6 +575,19 @@ def reset_relay_full(rtl_dir):
 
 
 CHAIN_EVEN_HOOK = "source /work/chain_even_cfg.tcl\nsource /work/chain_even.tcl"
+DLY_SPREAD_HOOK = "source /work/dly_spread.tcl"
+MACRO_CROSS_HOOK = "source /work/macro_cross_check.tcl"
+
+
+def dly_spread_mode(budgets, tn):
+    """budgets.r_dly_spread: true = the hook in every type, gate fails closed; [type base names] = the hook only in the types whose
+    name starts with a listed base, with OT_DLY_SPREAD=warn (DIE-S81-92: c1x has 58 stage-shortfall chains); absent/false/[] = off"""
+    v = budgets.get("r_dly_spread", False)
+    if v is True:
+        return "gate"
+    if isinstance(v, list) and tn and any(b and str(tn).startswith(b) for b in v):
+        return "warn"
+    return None
 # R-REACH-5 (RULEBOOK 11-13, RULES-REACH-1): the generated zero-logic register chains every kit has -- landing bin ->
 # lane pad stages (u_lpad_<bus> r[k] / q, u_pd<n>_<bus>) -> their consumer -- get equal hops after GPL when a hop is over
 # the reach.  Evidence: S81 leaf t21 u_bin_leafdn_i0 -> u_lpad q 587 um (104 captures), KV hub_Eo u_lpad r -> q 824 um,
@@ -613,6 +626,20 @@ def rck_band_exports(P, tn):
         raise ValueError(f"type {tn}: rck_band inst {rb['inst']} must sit in exactly one PHY PG domain")
     return [f"export OT_RCK_BAND_INST = {rb['inst']}", f"export OT_RCK_BAND_TOP_UM = {_um(doms[0][3][1])}",
             f"export OT_RCK_BAND_ROWS = {int(rb.get('rows', 4))}"]
+
+
+def rck_island_exports(P, tn):
+    """PLAN-READERS-1 11-14 (opt-in type key rck_island, rck_island.py, FABLE-PLAN-B6B 6.4): config.mk exports of the recovered-clock
+    island hook (serdes_lanes.tcl, cfg key islands); [] when the key is absent.  ValueError on an invalid island (G0 rules)."""
+    import rck_island
+    return rck_island.exports(P, tn)
+
+
+def rck_early_exports(P, tn):
+    """PLAN-READERS-1 11-14 (optional min_early_ps on pad-clock entries / early core taps, pad_clock.early_rows): OT_RCK_EARLY
+    names the kit's rck_early.txt rows that rck_early_report.tcl measures at the post-CTS gate (report only); [] when none."""
+    import pad_clock as PC
+    return ["export OT_RCK_EARLY = rck_early.txt"] if PC.early_rows(P, tn) else []
 
 
 def logical_strap_names(t):
@@ -1034,7 +1061,7 @@ def core_tap_pins(P, tn):
     out = []
     for n, x, y, _ in taps:
         explicit = any(c.get("clock_entry_access") and any(
-            q == n and i == c["inst"] and pin == c["clock_entry_access"]["pin"]
+            q == n and _core_is(c, i) and pin == c["clock_entry_access"]["pin"]
             for q, i, pin, _, _ in core_tap_rows(P, tn)) for c in P.types[tn].get("hard_cores", []))
         if explicit:
             # An interior real-pin stack must not be shifted away by generic PG
@@ -1053,6 +1080,12 @@ def core_tap_pins(P, tn):
             sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), port_blocks, pg)
         out.append((n, sx, sy))
     return out
+
+
+def _core_is(core, inst):
+    """QC-CB-GEN-1115 L4/L6: True when `inst` names the hard core by its logical plan inst (u_t22) or its kit-physical inst
+    (u_bound.u_t22): core_tap_rows returns the physical name once physical_inst is declared."""
+    return inst is not None and inst in (core.get("inst"), core.get("physical_inst"))
 
 
 ENTRY_CLEAR_MAX_UM = 2.0       # an entry is moved off a macro edge by snapping distance only, never re-planned
@@ -1156,7 +1189,7 @@ def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
         access = c.get("clock_entry_access")
         if access and port is not None:
             matched = [(n, i, pin) for n, i, pin, _, _ in core_tap_rows(P, tn)
-                       if n == port and i == c["inst"] and pin == access["pin"]]
+                       if n == port and _core_is(c, i) and pin == access["pin"]]
             if matched:
                 from lef_clock_entry import validate_access
                 # DIE-QC-97: judged on the access abstract the kit stages (stage_clock_entry_lefs), not the blanket
@@ -1246,15 +1279,15 @@ def bound_core_clock_pins(P, tn, inst, pin):
     return {p: float(ck[p]["rise"]) for p in sel}
 
 
-def view_core_tap_values(P, tp, view_tt_ps, corner="TT"):
+def view_core_tap_values(P, tp, view_tt_ps, corner="TT", t=None):
     """(early, insertion) of a re-bound tap from the current view.  early = min(view insertion - common latency, what
     the tap can deliver); a tap arrives at the clock root at best, so it can be at most the common latency early.  The
     FF insertion uses the plan's FF/TT ratio on the view number, as a tap with no FF value does."""
     if view_tt_ps <= 0:          # a view with the pin but no tree arc (LEF only): the pin binds, the plan values stand
-        return S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)
+        return S.core_tap_early_ps(P, tp, corner, t), S.core_tap_insertion_ps(tp, corner)
     c = "FF" if str(corner).upper().startswith("F") else "TT"
     ins = view_tt_ps if c == "TT" else round(S.FF_TT_INSERTION_RATIO * view_tt_ps, 3)
-    lat = S.common_latency_ps(P, c)
+    lat = S.common_latency_ps(P, c, t)
     return max(0.0, min(ins - lat, lat)), ins
 
 
@@ -1269,11 +1302,11 @@ def core_tap_view_report(P, tn):
                 continue
             plan_pin = tp["name"][len(c) + 1:]
             for pin, tt in (bound_core_clock_pins(P, tn, c, plan_pin) or {}).items():
-                early, ins = view_core_tap_values(P, tp, tt)
+                early, ins = view_core_tap_values(P, tp, tt, t=P.types[tn])
                 out.append(dict(port=n, inst=c, plan_pin=plan_pin, view_pin=pin,
                                 plan_insertion_ps=S.core_tap_insertion_ps(tp), view_insertion_ps=ins,
-                                plan_early_ps=S.core_tap_early_ps(P, tp), early_ps=early,
-                                clamped=ins - S.common_latency_ps(P, "TT") > early))
+                                plan_early_ps=S.core_tap_early_ps(P, tp, 'TT', P.types[tn]), early_ps=early,
+                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) > early))
             break
     return out
 
@@ -1309,7 +1342,7 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
     out = []
     for n, _, _, tp in S.core_taps(P, tn):
         if "core_group" in tp:
-            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner))
+            out.extend((n, m["inst"], m["pin"], S.core_tap_early_ps(P, tp, corner, P.types[tn]), S.core_tap_insertion_ps(tp, corner))
                        for m in tp["core_group"]["members"])
             continue
         nm = tp["name"]
@@ -1326,14 +1359,14 @@ def core_tap_rows(P, tn, corner="TT", pending=None):
         if tp.get("merged_clock_ports"):
             import merged_core_clocks as MC
             for pin in MC.pins_or_pending(P, tn, tp, hit[0], pending):
-                out.append((n, hit[0], pin, S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
+                out.append((n, hit[0], pin, S.core_tap_early_ps(P, tp, corner, P.types[tn]), S.core_tap_insertion_ps(tp, corner)))
         else:
             rebound = bound_core_clock_pins(P, tn, hit[0], hit[1])
             if rebound:
                 # only a tap that was EMPTY in every earlier kit: a pin the view has keeps its plan values
-                out.extend((n, hit[0], pin, *view_core_tap_values(P, tp, tt, corner)) for pin, tt in rebound.items())
+                out.extend((n, hit[0], pin, *view_core_tap_values(P, tp, tt, corner, P.types[tn])) for pin, tt in rebound.items())
             else:
-                out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner), S.core_tap_insertion_ps(tp, corner)))
+                out.append((n, hit[0], hit[1], S.core_tap_early_ps(P, tp, corner, P.types[tn]), S.core_tap_insertion_ps(tp, corner)))
     physical = {c["inst"]: content_physical_identity(c)[0] for c in P.types[tn].get("hard_cores", [])
                 if "physical_inst" in c or "physical_master" in c}
     return [(n, physical.get(inst, inst), pin, early, insertion) for n, inst, pin, early, insertion in out]
@@ -1824,6 +1857,62 @@ add_pdn_connect -grid {top} -layers {M6 M7}
 """
 
 
+# PG-AWARE-1 11-14 (FABLE-WAVE-REVIEW fix 6 S2(a), DRT-0255 on QC sle_st_b_v2 x_fw_ctl_p2_i[464], S81 slice_station t49
+# ft2_i[324], KV kv3_io_cor o_serdes_W_tx_up_d1[1]): pdngen measures -offset from CORE_AREA, but PDN's offsets are TYPE
+# frame values (schema.PART_PG_BANDS, mock_lef, the face-pin band policy all put the M7 pair centre at 4.32 + 8.64 k).
+# With the default 4.32 um core margin M5 / M6 (pitch 4.32) land where the plan says, M7 (pitch 8.64) lands half a pitch
+# off: on the plan's PG-free tracks, where pin_positions puts face pins.  A pin at the face then has its own M7 track
+# taken by the stripe 4.3 um inside, M8 die reserve above and the face pin band beside it: no access path.
+# pdn_die_phase rewrites each partition-grid stripe offset of PDN to (type-frame offset - core origin) mod pitch, so every
+# stripe sits at its plan position whatever the core margin.  M5 / M6 at margin 4.32 and all layers at margin 0 keep
+# their bytes.  Gen environment OT_PG_DIE_PHASE=1 turns it on (default off until the rollout proof, PG-AWARE-1).
+PG_DIE_PHASE_STRIPES = {"M5": (False, "0.12", "0.072", 4.32), "M6": (True, "0.288", "0.096", 4.32),
+                        "M7": (False, "0.288", "0.096", 8.64)}      # layer: (horizontal, width, spacing, pitch)
+
+
+# PG-PINBAND-1 11-14 (FABLE-ROUTE lever 2): 59 of 189 detail routes died on DRT-0255 about 2 h into iteration 0, 25 of 48 within
+# 80 um of the west face (ports, first station ranks).  pg_pin_check.tcl runs as the last POST_PDN step: every signal pin box
+# on M5-M7 within OT_PG_PIN_CHECK_BAND_UM (80) of a die face whose same-layer gap to a PG stripe is below the layer spacing
+# stops the kit (error FAIL_PREFLOOR, PGPIN-0255 evidence lines in the floorplan log, pg_pin_check.tsv).  Gen environment
+# OT_PG_PIN_CHECK=1 stops, =warn only prints.  Cell keepout is checked in grt_pre via PG-AWARE-1 (pg_cell_keepout.tcl).
+def pg_pin_check_mode():
+    return os.environ.get("OT_PG_PIN_CHECK", "").strip() in ("1", "warn")
+
+
+def pg_pin_check_hook_tcl():
+    return "\n".join([
+        "# GENERATED (OT_PG_PIN_CHECK, PG-PINBAND-1): pin-access check on the open DB right after pdngen",
+        "# ORFS sources POST_PDN_TCL inside a proc: run at global scope",
+        f"set ::env(BAND_UM) {os.environ.get('OT_PG_PIN_CHECK_BAND_UM', '80').strip() or '80'}",
+        "set ::env(OUT) /work/pg_pin_check.tsv",
+        f"set ::env(OT_PG_PIN_CHECK_WARN) {1 if os.environ.get('OT_PG_PIN_CHECK', '').strip() == 'warn' else 0}",
+        "set ::pgpc_hook 1",
+        "uplevel #0 {source /work/pg_pin_check.tcl}", ""])
+
+
+def pg_die_phase_on():
+    return os.environ.get("OT_PG_DIE_PHASE", "").strip() == "1"
+
+
+def pdn_die_phase(pdn, core_area):
+    """pdn text with every PDN-template partition stripe (layer, width, spacing, pitch of PDN) re-offset from the core
+    origin core_area[0] (vertical) / core_area[1] (horizontal) to its type-frame position."""
+    out = []
+    for ln in pdn.split("\n"):
+        m = re.match(r"(add_pdn_stripe -grid \{[^}]+\} -layer \{(M\d)\} -width \{([\d.]+)\} -spacing \{([\d.]+)\} "
+                     r"-pitch \{([\d.]+)\} -offset \{)([\d.]+)(\}.*)$", ln)
+        if m and m.group(2) in PG_DIE_PHASE_STRIPES:
+            horiz, wd, sp, pitch = PG_DIE_PHASE_STRIPES[m.group(2)]
+            if (m.group(3), m.group(4)) == (wd, sp) and abs(float(m.group(5)) - pitch) < 1e-9:
+                o = float(core_area[1] if horiz else core_area[0])
+                v = round((float(m.group(6)) - o) % pitch, 4)
+                if abs(v - pitch) < 1e-6:
+                    v = 0.0
+                ln = f"{m.group(1)}{v:g}{m.group(7)}"
+        out.append(ln)
+    return "\n".join(out)
+
+
 # DIE-HEAD-5 PGCUT (DRT-TRIAL-1 10-28, opt-in plan partition_types.<t>.pg_island_cut): the kit M6 PG straps of PDN
 # (VDD offset 1.968, VSS one width + spacing after it, pitch 4.32, width 0.288; horizontal) run over the hard cores.
 # A signed core's in-core island pins (interior M5 signal/clock pins, e.g. the elemA/elemB centre rst_n) can only be
@@ -1958,6 +2047,143 @@ def pg_island_cut_tcl(cuts):
     return "\n".join(L) + "\n"
 
 
+# PG-AWARE-1 11-14 (FABLE-HARD-QCHEAD section 3 fix 2, HEAD hd_host_e u_epc): DRC 64 flat for 25 DRT iterations, all at
+# the west M6 pin face of u_epc (x 423.2-423.5): the core's M6 pins have 0.36 um pitch, so every twelfth (ft[60], [72],
+# ...) lies inside a parent M6 VSS stripe that runs to 48 nm from the pin.  Stop the parent stripes of a layer
+# FACE_CUT_UM before every macro face that carries pins on that layer (M6 horizontal stripes at W/E faces, M5/M7 vertical
+# stripes at N/S faces) over the face's pin span; the strap stays connected through its other vias.  Generator env
+# OT_PG_FACE_CUT=1 or plan partition_types.<t>.pg_face_cut turns it on (rollout switch); no core re-sign.
+FACE_CUT_UM = 1.5
+FACE_PIN_TOL_UM = 0.5                         # a face pin starts within this of the macro edge
+FACE_CUT_LAYERS = {"M5": "NS", "M6": "WE", "M7": "NS"}   # layer: faces its partition stripes run into
+
+
+def pg_face_cut_on(t):
+    return bool(t.get("pg_face_cut")) or os.environ.get("OT_PG_FACE_CUT", "").strip() == "1"
+
+
+def lef_face_pins(path, layers=tuple(FACE_CUT_LAYERS), tol=FACE_PIN_TOL_UM):
+    """([(layer, (x0, y0, x1, y1))], (w, h)): macro-frame rects of SIGNAL/CLOCK pins on `layers` within tol of an edge.
+    Line scan (a 6 MB tile LEF took 94 s with the PIN ... END <pin> regex)."""
+    w = h = None
+    out, pin, use, layer, rects = [], None, "SIGNAL", None, []
+    for line in Path(path).read_text(errors="replace").splitlines():
+        tok = line.split()
+        if not tok:
+            continue
+        k = tok[0]
+        if k == "SIZE" and w is None and len(tok) >= 4:
+            w, h = float(tok[1]), float(tok[3])
+        elif k == "PIN" and pin is None and len(tok) >= 2:
+            pin, use, layer, rects = tok[1], "SIGNAL", None, []
+        elif pin is None:
+            continue
+        elif "USE" in tok[:-1]:
+            use = tok[tok.index("USE") + 1].rstrip(";")
+        elif k == "LAYER" and len(tok) >= 2:
+            layer = tok[1].rstrip(";")
+        elif k == "RECT" and layer in layers and len(tok) >= 5:
+            rects.append((layer, tuple(float(v) for v in tok[1:5])))
+        elif k == "END" and len(tok) >= 2 and tok[1] == pin:
+            if use in ("SIGNAL", "CLOCK"):
+                out += rects
+            pin = None
+    out = [(ln, r) for ln, r in out if min(r[0], r[1], w - r[2], h - r[3]) < tol]
+    return out, (w, h)
+
+
+def pg_face_cuts(P, tn, root=None):
+    """[(inst, layer, face, (x0, y0, x1, y1))] type-frame windows: for every placed macro face with pins on a layer whose
+    partition stripes run into that face, the FACE_CUT_UM strip outside the face over the pin span (+ M6 spacing)."""
+    t = P.types[tn]
+    if not pg_face_cut_on(t):
+        return []
+    import cores as C
+    sp = PG_CUT_SPACE_UM
+    cuts = []
+    for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
+        pins, (w, h) = lef_face_pins(C.resolve(lef, root))
+        faces = {}
+        for ln, r in pins:
+            x0, y0, x1, y1 = _orient_rect_r(r, w, h, o)
+            for face, hit in (("W", x0 < FACE_PIN_TOL_UM), ("E", x1 > w - FACE_PIN_TOL_UM),
+                              ("S", y0 < FACE_PIN_TOL_UM), ("N", y1 > h - FACE_PIN_TOL_UM)):
+                if hit and face in FACE_CUT_LAYERS[ln]:
+                    lo, hi = (y0, y1) if face in "WE" else (x0, x1)
+                    a = faces.setdefault((ln, face), [lo, hi])
+                    a[0], a[1] = min(a[0], lo), max(a[1], hi)
+        for (ln, face), (lo, hi) in sorted(faces.items()):
+            if face == "W":
+                r = (ox - FACE_CUT_UM, oy + lo - sp, ox, oy + hi + sp)
+            elif face == "E":
+                r = (ox + w, oy + lo - sp, ox + w + FACE_CUT_UM, oy + hi + sp)
+            elif face == "S":
+                r = (ox + lo - sp, oy - FACE_CUT_UM, ox + hi + sp, oy)
+            else:
+                r = (ox + lo - sp, oy + h, ox + hi + sp, oy + h + FACE_CUT_UM)
+            cuts.append((inst, ln, face, tuple(round(v, 4) for v in r)))
+    return cuts
+
+
+def pg_face_cut_tcl(cuts):
+    """POST_PDN_TCL: every VDD/VSS stripe sbox of the window's layer that overlaps the window is split around it (the
+    stripe's run direction: x for M6, y for M5/M7), then the PG vias with that layer inside a cut are removed."""
+    L = ["# GENERATED by tools/die_plan/gen.py phys (PG-AWARE-1 FACECUT): parent PG stripes stop before macro pin faces",
+         "# (gen_phys.pg_face_cuts).  Runs after pdngen (POST_PDN_TCL).",
+         "uplevel #0 {",
+         "set pgf_b [ord::get_db_block]", "set pgf_u [$pgf_b getDbUnitsPerMicron]",
+         "set pgf_cuts {}; set pgf_via 0",
+         "proc pgf_layers {s} {",
+         "  foreach v [list [$s getTechVia] [$s getBlockVia]] {",
+         '    if {$v ne "NULL" && $v ne ""} { return [list [[$v getTopLayer] getName] [[$v getBottomLayer] getName]] }',
+         "  }",
+         "  return {}",
+         "}",
+         "proc pgf_window {ln wx0 wy0 wx1 wy1} {",
+         "  global pgf_b pgf_u pgf_cuts",
+         "  set X0 [expr {round($wx0*$pgf_u)}]; set Y0 [expr {round($wy0*$pgf_u)}]",
+         "  set X1 [expr {round($wx1*$pgf_u)}]; set Y1 [expr {round($wy1*$pgf_u)}]",
+         '  set horiz [expr {$ln eq "M6"}]',
+         "  foreach net {VDD VSS} {",
+         "    set n [$pgf_b findNet $net]",
+         '    if {$n eq "NULL" || $n eq ""} continue',
+         "    foreach sw [$n getSWires] {",
+         "      foreach s [$sw getWires] {",
+         "        if {[$s isVia]} continue",
+         "        if {[[$s getTechLayer] getName] ne $ln} continue",
+         "        if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
+         "        set lay [$s getTechLayer]; set st [$s getWireShapeType]",
+         "        set a [$s xMin]; set b [$s yMin]; set c [$s xMax]; set d [$s yMax]",
+         "        odb::dbSBox_destroy $s",
+         "        if {$horiz} {",
+         "          if {$a < $X0} { odb::dbSBox_create $sw $lay $a $b $X0 $d $st }",
+         "          if {$c > $X1} { odb::dbSBox_create $sw $lay $X1 $b $c $d $st }",
+         "          lappend pgf_cuts [list $net $ln [expr {max($a,$X0)}] $b [expr {min($c,$X1)}] $d]",
+         "        } else {",
+         "          if {$b < $Y0} { odb::dbSBox_create $sw $lay $a $b $c $Y0 $st }",
+         "          if {$d > $Y1} { odb::dbSBox_create $sw $lay $a $Y1 $c $d $st }",
+         "          lappend pgf_cuts [list $net $ln $a [expr {max($b,$Y0)}] $c [expr {min($d,$Y1)}]]",
+         "        }",
+         "      }",
+         "    }",
+         "  }",
+         "}"]
+    for inst, ln, face, (x0, y0, x1, y1) in cuts:
+        L.append(f"pgf_window {ln} {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f}   ;# {inst} {face} face")
+    L += ["foreach cut $pgf_cuts {",
+          "  lassign $cut net ln X0 Y0 X1 Y1",
+          "  foreach sw [[$pgf_b findNet $net] getSWires] {",
+          "    foreach s [$sw getWires] {",
+          "      if {![$s isVia]} continue",
+          "      if {[$s xMax] <= $X0 || [$s xMin] >= $X1 || [$s yMax] <= $Y0 || [$s yMin] >= $Y1} continue",
+          "      if {$ln in [pgf_layers $s]} { odb::dbSBox_destroy $s; incr pgf_via }",
+          "    }",
+          "  }",
+          "}",
+          'puts "OT_PG_FACE_CUT windows=%d strap_cuts=[llength $pgf_cuts] vias_removed=$pgf_via"' % len(cuts), "}"]
+    return "\n".join(L) + "\n"
+
+
 # ASAP7 liberty units (asap7sc7p5t_*.lib: time_unit "1ps", capacitive_load_unit (1,fF)): every SDC value below is in
 # ps / fF.  Until 10-23 12:17 the SDCs wrote ns values (period 0.833 = a 0.833-PS clock; KV-P3b), which voided every
 # earlier plan-kit / CP1 timing and repair number.
@@ -2009,14 +2235,18 @@ SLEW_MARGIN_PCT, CAP_MARGIN_PCT = 50, 20   # repair_design margins, % of the lim
 #                              (column inside an M7 pair) had GRT capacity with 0..1 legal tracks (t6: 547 M6 + 178 M7
 #                              guides on 0-legal rows).  pg_track_truth.tcl (grt_pre.tcl) blocks the spacing-illegal tracks
 #                              at GRT only; grt_post.tcl removes the obstructions before 5_1_grt.odb (DRT/PG unchanged).
+#   pg_cell_keepout            PG-AWARE-1 11-14 (FABLE-WAVE-REVIEW fix 6): placement blockages over every M5 x M6 PG
+#                              crossing + detailed_placement at the start of GRT (pg_cell_keepout.tcl), removed before
+#                              5_1_grt.odb; opt-in (gen env OT_PG_CELL_KEEPOUT=1) until the rollout proof.
 # CTS is unchanged (BUFx24 root and sink buffers, clusters of <= ~42 sinks; 0 clock pins among the violators).
 RFLOW = {"slew_margin": float(SLEW_MARGIN_PCT), "cap_margin": float(CAP_MARGIN_PCT), "gpl_keep_overflow": 0.25, "place_max_fanout": 32,
-         "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1}
+         "max_wire_um": 120.0, "hold_budget_pct": 10.0, "pg_track_truth": 1,
+         "pg_cell_keepout": 0}
 # Kit classes (die plans) that take the defaults, each with its proof kit (old vs new settings on one synthesized
 # netlist, through route and sign-off; epyc7 rules-flow-1/ab).  A die plan not listed keeps its old kit until its own
 # proof exists: HBM is parked and passes explicit margins.
-RFLOW_DIES = {"s81": "slice_station__t21", "s81_head": "hd_turn_b", "qwen_kvsys": "kv3_sys_SD_v1",
-              "qwen_compute": "coll_ftc"}
+RFLOW_DIES = {"s81": "slice_station__t21", "qwen_kvsys": "kv3_sys_SD_v1",
+              "qwen_compute": "coll_ftc"}   # s81_head removed KIT-OPS-5 11-14 (COORD, FABLE-TYPES-HEAD: 50/20/120 caused hd_ctl_n DRT-0255); proof kit hd_turn_b
 
 
 def rflow_on(die=None):
@@ -2053,7 +2283,29 @@ def rflow_cfg(gpl_plain=False, die=None):
             *([] if gpl_plain else [f"export GPL_KEEP_OVERFLOW = {RFLOW['gpl_keep_overflow']:g}"]),
             f"export OT_HOLD_BUDGET_PCT = {RFLOW['hold_budget_pct']:g}",
             "# FLOW-PGCAP-1: GRT capacity = DRT-legal tracks at PG stripes (pg_track_truth.tcl, GRT only)",
-            f"export OT_PG_TRACK_TRUTH = {RFLOW['pg_track_truth']:d}"]
+            f"export OT_PG_TRACK_TRUTH = {RFLOW['pg_track_truth']:d}",
+            "# PG-AWARE-1: no standard cell under an M5 x M6 PG crossing from GRT on (pg_cell_keepout.tcl, GRT only)",
+            f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
+
+
+def pg_drt0255_cfg():
+    """DRT0255 (FABLE-PD-DRT-1350) opt-in config.mk lines, from the gen environment: OT_PG_TRACK_TRUTH_MODE=region (GRT per-gcell
+    capacity cut on the PG pair rows / columns instead of per-track obstructions) and OT_PG_PAIR_ROW_KEEPOUT=1 (ring / station / face-flop
+    sites skip the std rows under the M6 pair).  Nothing is written without the variable (kits stay byte-equal)."""
+    out = []
+    if os.environ.get("OT_PG_TRACK_TRUTH_MODE", "").strip() == "region":
+        out += ["# DRT0255: GRT capacity cut per gcell over the PG pair rows/columns (pg_track_truth.tcl region mode)",
+                "export OT_PG_TRACK_TRUTH_MODE = region"]
+    if os.environ.get("OT_PG_PAIR_ROW_KEEPOUT", "").strip() == "1":
+        out += ["# DRT0255: ring / ft-station / face-flop sites skip the std rows under the M6 PG pair (face_flops.tcl ff_put_near)",
+                "export OT_PG_PAIR_ROW_KEEPOUT = 1"]
+    return out
+
+
+def pg_cell_keepout_value():
+    """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
+    v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
+    return int(v) if v in ("0", "1") else int(RFLOW["pg_cell_keepout"])
 FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (this side) + the neighbour's face flop.
 # COORD 10-23 15:39 FT PORT BUDGET ruling: the neighbour's receiving flop is a FIRM face flop (R2), so the out port
 # keeps only that face share (0.08 T: pin -> s0 D + setup); the last L/k segment belongs to this side (0.92 T in).
@@ -2256,7 +2508,7 @@ def tap_offset_table(P, tn):
         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
         res = {}
         for c in ("TT", "FF"):
-            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c)) if n in core else 0.0)
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, getattr(P, "types", {}).get(tn))) if n in core else 0.0)
         if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
             raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row
@@ -3335,9 +3587,12 @@ def type_macros(P, tn):
             _VIEW_LEF[k] = PV.select(LO.select(VL.view_lef_for(c["lef"], c.get("lib"), _CR.resolve), _CR.resolve),
                                      _CR.resolve)
         return _VIEW_LEF[k]
+    import core_view_sha as _CVS      # KIT-OPS-6 11-14 (TYPE-HDEPC): the signed view, by sha (OT_SIGNED_VIEW_SHA table / plan lib_sha256, lef_sha256)
+    _exp = _CVS.load_expected()
     for c in t.get("hard_cores", []):
         if not c.get("lef"):
             continue
+        _CVS.gate(c, _CR.resolve, _exp)
         ox, oy = c.get("track_offset_um", [0.0, 0.0])
         # DIE-KV-49 10-31: optional kit-only physical identity (content_physical_identity form); default unchanged
         pinst, pmaster = content_physical_identity(c) if ("physical_inst" in c or "physical_master" in c) else \
@@ -3434,16 +3689,23 @@ def phy_pg_domains(P, tn):
     type cannot carry per-instance supply variants); empty for every type without a PHY domain (kits unchanged).
     DIE-HEAD-5 opt-in: a type with "phy_pg_offmodel" (a non-empty note: the PHY body is not part of the partition view,
     e.g. the s81_head analog PMA behind the type pads) may hold a domain with no macro; the region then gets its VDDPHY
-    straps/pins and the hard placement blockage only (no macro grid).  Default (key absent) unchanged: fail closed."""
+    straps/pins and the hard placement blockage only (no macro grid).  Default (key absent) unchanged: fail closed.
+    S81-PHYPG-1 11-15 (FABLE-TRIAGE-S81 7.4, opt-in type key phy_pg_macros = [placed block names]): the domain is defined by
+    its declared members, not by whatever block lies inside the die domain rect.  Only the listed blocks seed the region (macro
+    list, notch / clip box, straddle test).  ValueError if a listed name is not found inside the die rect, or if an unlisted
+    placed block overlaps the FINAL region (a core-supply block must not sit on the VDDPHY grid / hard blockage).  Key absent =
+    every placed block in the die rect is a PHY macro (unchanged)."""
     doms = P.die.get("pg", {}).get("domains", []) or []
     if not doms:
         return []
     insts = [n for n, p in P.parts.items() if p["type"] == tn]
     t = P.types[tn]
+    listed = t.get("phy_pg_macros")
     per = []
     for inst in insts:
         a = P.rect(inst)
         got = []
+        found = set()
         for d in doms:
             b = d["rect_um"]
             r = [max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3])]
@@ -3467,6 +3729,10 @@ def phy_pg_domains(P, tn):
                 ov = box[0] < rt[2] and box[2] > rt[0] and box[1] < rt[3] and box[3] > rt[1]
                 if not ov:
                     continue
+                if listed is not None and c["inst"] not in listed and content_physical_identity(c)[0] not in listed:
+                    continue                     # phy_pg_macros: core supply, judged against the final region below
+                if listed is not None:
+                    found |= {c["inst"], content_physical_identity(c)[0]}
                 if not (box[0] >= rt[0] and box[1] >= rt[1] and box[2] <= rt[2] and box[3] <= rt[3]):
                     raise ValueError(f"type {tn}: macro {c['inst']} straddles PG domain {d['name']} {rt}")
                 mac.append(content_physical_identity(c)[0] if "physical_inst" in c or "physical_master" in c else c["inst"])
@@ -3477,7 +3743,22 @@ def phy_pg_domains(P, tn):
                 raise ValueError(f"type {tn}: PG domain {d['name']} holds no macro (a PHY domain powers its PHY macro)")
             rt = phy_pg_west_notch(t, tn, d["name"], rt, mac_x0, mac_y0)
             rt = phy_pg_clip(t, tn, d["name"], rt, mac_box)
+            if listed is not None:
+                for c in placed:
+                    if "origin_um" not in c or "outline_um" not in c:
+                        continue
+                    if c["inst"] in listed or content_physical_identity(c)[0] in listed:
+                        continue
+                    x0, y0 = c["origin_um"]
+                    cw, ch = c["outline_um"]
+                    if c.get("orient", "R0") in ("R90", "R270", "MXR90", "MYR90"):
+                        cw, ch = ch, cw
+                    if x0 < rt[2] and x0 + cw > rt[0] and y0 < rt[3] and y0 + ch > rt[1]:
+                        raise ValueError(f"type {tn}: core macro {content_physical_identity(c)[0]} inside PHY PG region "
+                                         f"{d['name']} {rt} (phy_pg_macros lists only its PHY macros)")
             got.append((d["name"], d["nets"][0], d["nets"][1], rt, sorted(mac)))
+        if listed is not None and not set(listed) <= found:
+            raise ValueError(f"type {tn}: phy_pg_macros {sorted(set(listed) - found)} not found inside a die PG domain rect")
         per.append(got)
     # DIE-HEAD-5: compare supply/geometry/macros, not the per-instance domain name (die.pg.domains names one per window)
     if any(json.dumps([x[1:] for x in g]) != json.dumps([x[1:] for x in per[0]]) for g in per):
@@ -3521,7 +3802,30 @@ def die_islands_tcl(P, tn):
     return "\n".join(lines) + "\n"
 
 
-RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank")
+# KV-PC-DELTA-1115: channel_keepout = a hard placement blockage over a routing channel between hard cores (no std cell
+# or repeater there; the pins on the channel edge are reached from outside it), same mechanism as die_clock_tree
+RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank", "channel_keepout")
+
+
+def route_layer_names(spec):
+    """'M1-M7' | ['M1','M2'] -> ['M1', ..., 'M7']"""
+    if isinstance(spec, str) and "-" in spec:
+        a, b = spec.split("-")
+        return [f"M{i}" for i in range(int(a[1:]), int(b[1:]) + 1)]
+    return [spec] if isinstance(spec, str) else list(spec)
+
+
+def route_obstruction_lines(items):
+    """CLKSITE-RESERVE-1115: M1-M7 routing obstructions over the reserved die clock-tree cell sites, so the type's own
+    routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])]."""
+    out = []
+    for (x0, y0, x1, y1), lays in items:
+        q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+        for ln in lays:
+            out.append(f"odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer {ln}] {q}")
+    if items:
+        out.append(f'puts "OT_RESERVED_SITES route_obstructions={sum(len(l) for _, l in items)}"')
+    return out
 
 
 def reserved_sites_tcl(P, tn):
@@ -3539,14 +3843,16 @@ def reserved_sites_tcl(P, tn):
     if not rows:
         return "", "", ""
     w, h = t["outline_um"]
-    hard, bank = [], []
+    hard, bank, hard_route = [], [], []
     for r in rows:
         x0, y0, x1, y1 = r["rect_um"]
         if r.get("kind") not in RESERVED_KINDS:
             raise ValueError(f"{tn}: reserved site kind {r.get('kind')} not in {RESERVED_KINDS}")
         if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
             raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
-        (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
+        (hard if r["kind"] in ("die_clock_tree", "channel_keepout") else bank).append((x0, y0, x1, y1))
+        if r["kind"] == "die_clock_tree" and r.get("route_layers"):   # CLKSITE-RESERVE-1115 opt-in
+            hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"])))
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
     # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
     def create(rects, var):
@@ -3562,6 +3868,7 @@ def reserved_sites_tcl(P, tn):
         pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
                           *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
                           "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
+                          *route_obstruction_lines(hard_route),
                           # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
                           "set ::cland_avoid_rects $rs_rects",
                           f'puts "OT_RESERVED_SITES kind=die_clock_tree rects={len(hard)} area_um2={sum((c-a)*(d-b) for a,b,c,d in hard):.3f}"',
@@ -4271,6 +4578,18 @@ _FSM_NONE_BY_MODULE = ((re.compile(r"^\s*module\s+ot_s81ph_link_gbx\w*\b", re.M)
                        (re.compile(r"^\s*module\s+(?:ot_qwen_d2d_recovery|qfd_sys_face_lctx3_core)\b", re.M), ("st",)),)
 
 
+def replica_keep_wires(rtl_dir, extra=None):
+    """MERGE-CENSUS 11-15 (FABLE-GENBUG G5): OT_KEEP_WIRES entries for the port-staging registers of every module the kit
+    instantiates more than once (replica_keep.derive: `Module:reg`), then the per-item env names (commas or spaces),
+    de-duplicated in order.  OT_REPLICA_KEEP=0 omits the derived part (the env names stay)."""
+    names = []
+    if os.environ.get("OT_REPLICA_KEEP", "1").strip() != "0":
+        import replica_keep as _RK
+        names.extend(_RK.derive(rtl_dir))
+    names.extend((extra or "").replace(",", " ").split())
+    return list(dict.fromkeys(names))
+
+
 def fsm_none_wires(rtl_dir, extra=None):
     """Wire base names for OT_FSM_NONE_WIRES: the _FSM_NONE_BY_MODULE wires of every module the kit RTL defines,
     then the per-item env names (commas or spaces), de-duplicated in order."""
@@ -4889,6 +5208,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     fsm_wires = fsm_none_wires(kd / "rtl", os.environ.get("OT_FSM_NONE_WIRES"))
+    keep_wires = replica_keep_wires(kd / "rtl", os.environ.get("OT_KEEP_WIRES"))
     pins = type_pins(P, tn)
     bump_sites = bump_pin_sites(P, tn, bump_ports, macros, Path(root) if root else Path(__file__).resolve().parent.parent.parent) \
         if bump_ports else []
@@ -4906,6 +5226,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     m8g = MG.kit_grant(P, tn)        # LAYER-BUDGET-1: leftover-M8 grant (None = off, kit unchanged)
     if m8g is not None and int(top[1:]) < 8:
         top = "M8"
+    # WAVE-RECIPE-1 11-14 (OWNER ruling ~20:00 via COORD: types may use the REMAINING M8/M9; each kit imports the die's
+    # M8/M9 infra shapes as obstructions): leftover-M9 grant (layer_budget.type_m9_grant or OT_GEN_M9_GRANT=1).  An M9 kit
+    # always carries the M8 grant as well (its M9 wires reach M9 through M8); None = off, kit unchanged.
+    m9g = MG.kit_grant(P, tn, "M9")
+    if m9g is not None:
+        if m8g is None:
+            m8g = MG.kit_grant(P, tn, "M8", force=True)
+        top = "M9"
     pdn = PDN
     if int(top[1:]) > int(P.layer_budget["partition_signal_max"][1:]):
         # face_layers raised this type to M8: keep its own M8 wiring off the die M8 PG bands (schema.PART_PG_BANDS),
@@ -4916,6 +5244,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             ln = f"M{li}"
             if ln == MG.LAYER and m8g is not None:
                 obs.append(MG.obstruction_tcl(m8g))   # die PG + die tracks from the plan grid, not the default band
+                continue
+            if ln == "M9" and m9g is not None:
+                obs.append(MG.obstruction_tcl(m9g))   # WAVE-RECIPE-1: die M9 PG straps (+ reserve / die route) per track
                 continue
             pitch, cen, half = S.PART_PG_BANDS[ln]
             horiz = P.layers[ln]["dir"] == "H"       # H layer: stripes along x -> y bands; V layer -> x bands
@@ -4954,14 +5285,22 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                   strict=_core_pg_strict(P, tn), published=set(pg_pub))
         if bad:
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
+    if pg_die_phase_on():
+        pdn = pdn_die_phase(pdn, kit_core_area(t))
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
-        (kd / "m8_grant.json").write_text(json.dumps(m8g, indent=1) + "\n")
+        # WAVE-RECIPE-1: an M9 kit's M9 grant rides in the same file (extra_grants), so the kit's existing fixlef step (run_kit
+        # .sh, unchanged) rewrites both the M8 and the M9 OBS of the abstract
+        (kd / "m8_grant.json").write_text(json.dumps(dict(m8g, extra_grants=[m9g]) if m9g is not None else m8g, indent=1) + "\n")
         shutil.copyfile(Path(__file__).with_name("m8_grant.py"), kd / "m8_grant.py")
     pg_cuts = pg_island_cuts(P, tn, root)
     if pg_cuts:
         (kd / "pg_island_cut.tcl").write_text(pg_island_cut_tcl(pg_cuts))
     post_pdn = ["/work/pg_island_cut.tcl"] if pg_cuts else []
+    face_cuts = pg_face_cuts(P, tn, root)
+    if face_cuts:
+        (kd / "pg_face_cut.tcl").write_text(pg_face_cut_tcl(face_cuts))
+        post_pdn.append("/work/pg_face_cut.tcl")
     entry_pg = clock_entry_pg_cuts(P, tn)
     if entry_pg:
         from clock_entry_pg import render as render_entry_pg
@@ -4972,6 +5311,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if pg_pub:      # PG-CORECONN-3: M7-top macro PG straps -> tile pins (after any island cut)
         (kd / "pg_publish.tcl").write_text(core_pg_publish_tcl(pg_pub))
         post_pdn.append("/work/pg_publish.tcl")
+    if pg_pin_check_mode():     # PG-PINBAND-1: pin-access check right after PDN (last POST_PDN step), fails the kit early
+        shutil.copyfile(Path(__file__).with_name("pg_pin_check.tcl"), kd / "pg_pin_check.tcl")
+        shutil.copyfile(Path(__file__).with_name("pg_cell_keepout.tcl"), kd / "pg_cell_keepout.tcl")
+        (kd / "pg_pin_check_hook.tcl").write_text(pg_pin_check_hook_tcl())
+        post_pdn.append("/work/pg_pin_check_hook.tcl")
     if len(post_pdn) > 1:
         (kd / "post_pdn.tcl").write_text("# GENERATED by tools/die_plan/gen.py phys: POST_PDN_TCL steps in order.\n" +
                                          "".join(f"source {f}\n" for f in post_pdn))
@@ -5169,6 +5513,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export PRE_CTS_TCL = /work/pre_cts.tcl",
            # COORD 10-23: taps sized by sink count (sink-anchored taps: the plan's clock.tap_max_sinks)
            f"export OT_TAP_MAX_SINKS = {_tap_cap(t)}",
+           # KV-PC-DELTA-1115 (opt-in plan keys, default absent = unchanged kit): clock_taps.tcl spill reach for a tap over
+           # the cap, and no grid tap over a hard macro
+           *([f"export OT_TAP_SPILL_UM = {float(t['clock']['tap_spill_um']):g}"] if t.get("clock", {}).get("tap_spill_um") else []),
+           *(["export OT_TAP_SKIP_MACRO = 1"] if t.get("clock", {}).get("tap_skip_macro") else []),
            *([f"export OT_HOP_LATCH_CAPTURE_TAP = {_hop_latch_tap_cfg(P, tn)}"] if _hop_latch_tap_cfg(P, tn) else []),
            *([f"export OT_HOP_LATCH_FRAC_MAP = {_hop_latch_frac_cfg(P, tn)}"] if _hop_latch_frac_cfg(P, tn) else []),
            *([f"export OT_EDGE_SPLIT_PORTS = {' '.join(edge_split_ports(P, tn))}"] if edge_split_ports(P, tn) else []),
@@ -5178,6 +5526,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export POST_CTS_TCL = /work/cts_post.tcl",
            # KW-FIX-45 11-12: OT_LEAF_AFF_ASYNC=1 in the gen env -> leaf_affinity.tcl also groups reset-release flops
            # with the registers they release (async pins), one leaf per group; unset = unchanged
+           *(["export OT_HOOK_COVERAGE = warn"] if os.environ.get("OT_HOOK_COVERAGE", "").strip() == "warn" else []),
            *(["export OT_LEAF_AFF_ASYNC = 1"] if os.environ.get("OT_LEAF_AFF_ASYNC", "").strip() == "1" else []),
            # DIE-HEAD-17 reg_spine: the plan balances the spine taps and sizes the core early-tap branches, so the
            # flow tap_balance pass (incl. its core re-hang pass) only reports
@@ -5190,6 +5539,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # DIE-HEAD-59 11-03: opt-in per item (item_env, commas for spaces): keep these FSM wires in their RTL encoding
            # DIE-HEAD-85/HSPLIT 11-07: plus the module-defined FSM wires (fsm_none_wires, e.g. the s81 gearbox hunt)
            *([f"export OT_FSM_NONE_WIRES = {' '.join(fsm_wires)}"] if fsm_wires else []),
+           # MERGE-CENSUS 11-15 (G5): yosys opt_merge folds intentionally duplicated register banks (ti_b 4,677 flops in
+           # 8 KV kits, qkd_seq_fan_s 1,142, ot_sram_oldread_wreg wdata 1,106): keep the staging registers of every
+           # multiply instantiated module (replica_keep.py), scoped by module
+           *([f"export OT_KEEP_WIRES = {' '.join(keep_wires)}"] if keep_wires else []),
            # KW-FIX-13 11-05: opt-in per item (item_env, commas for spaces), e.g. -noshare where yosys share does not finish
            *([f"export SYNTH_ARGS = {os.environ['OT_SYNTH_ARGS'].replace(',', ' ')}"] if os.environ.get("OT_SYNTH_ARGS") else []),
            f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
@@ -5298,6 +5651,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
+    cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
     if _tap_grt_pre(P, t):
@@ -5320,9 +5674,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += _pregrt_ff_hold.config_lines(t)
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
+        cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += rck_band_exports(P, tn)
+    cfg += rck_island_exports(P, tn)
+    cfg += rck_early_exports(P, tn)
     import pad_clock as PC
     PC.write_contract(P, tn, kd)
     cons = cons_kit_settings()
@@ -5335,9 +5693,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if os.environ.get("OT_GRT_NONPORT_HOLD") == "1":      # opt-in; chained after any macro-FF wrapper written above
         grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
-              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
@@ -5427,6 +5785,19 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("rck_band.tcl"), kd / "rck_band.tcl")
         hook = kd / "face_flops.tcl"
         hook.write_text(hook.read_text() + "\n" + RCK_BAND_HOOK + "\n")
+    if t.get("rck_island"):
+        # PLAN-READERS-1 11-14 (type key rck_island): the recovered-clock logic in ONE placement fence for GPL (serdes_lanes.tcl cfg
+        # key islands, sourced after the RCK band), released before DPL (serdes_lanes_release.tcl from face_flops_release.tcl)
+        import rck_island as _RI
+        (kd / "serdes_lanes_cfg.tcl").write_text(_RI.cfg_tcl(P, tn))
+        for f in ("serdes_lanes.tcl", "serdes_lanes_release.tcl"):
+            shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        hook = kd / "face_flops.tcl"
+        hook.write_text(hook.read_text() + "\nuplevel #0 {source /work/serdes_lanes.tcl}\n")
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text(hook.read_text() + "\nuplevel #0 {source /work/serdes_lanes_release.tcl}\n")
+    if rck_early_exports(P, tn):
+        shutil.copyfile(Path(__file__).with_name("rck_early_report.tcl"), kd / "rck_early_report.tcl")
     bump_out = [b for b in pad_bumps(P, tn) if b["dir"] == "output"]
     if bump_out:
         # S81-PMATX-DT 11-09 (DIE-S81-85, serdes__t14 a11 G2 u_ptx -> io_pma_tx -249 ps): a macro_pin output pad's die pin
@@ -5449,6 +5820,21 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n# R-REACH-5: zero-logic bin -> pad chains re-spaced when over the reach\n"
                         + CHAIN_EVEN_HOOK + "\n")
+    dly_mode = dly_spread_mode(P.budgets, tn)
+    if dly_mode:
+        # DLY-SPREAD (FABLE-GENBUG G8, brief 4.3): every generated zero-logic register pipe without a plan site (ot_dp_dly u_d<N>
+        # transport pipes, ot_pl_pad) is spread on driver -> load centroid after GPL, LAST in the release hook (after chain_even);
+        # stage identity by connectivity, fails closed when a chain keeps a hop over 1.5 x its ideal hop (OT_DLY_SPREAD=warn)
+        shutil.copyfile(Path(__file__).with_name("dly_spread.tcl"), kd / "dly_spread.tcl")
+        hook = kd / "face_flops_release.tcl"
+        hook.write_text(hook.read_text() + "\n" + DLY_SPREAD_HOOK + "\n")
+        # MACRO-CROSS (QC-CB-GEN-1115, FABLE-PD-QC-1115 L3): advisory count of 2-pin nets > 300 um over a macro, after the spread
+        shutil.copyfile(Path(__file__).with_name("macro_cross_check.tcl"), kd / "macro_cross_check.tcl")
+        hook.write_text(hook.read_text() + MACRO_CROSS_HOOK + "\n")
+        if dly_mode == "warn":
+            # list form: the listed types keep the stage-shortfall chains they have (plan item) as a log line, not a stop
+            mk = (kd / "config.mk").read_text()
+            (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport OT_DLY_SPREAD = warn\n")
     if core_input_place(P.raw, tn):
         for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl"):
             shutil.copyfile(Path(__file__).with_name(f_), kd / f_)
@@ -5633,7 +6019,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
     # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
     for row in bud["clock"]["core_taps"]:
-        core = next((c for c in t.get("hard_cores", []) if c["inst"] == row["inst"]), None)
+        # QC-CB-GEN-1115 L4/L6: core_tap_rows names the PHYSICAL instance (u_bound.u_t22) once the kit declares physical_inst, the plan core the
+        # logical one (u_t22): a lookup on c["inst"] alone dropped clock_entry_access from budget.json and the pin snapped 0.45 um off the access footprint
+        core = next((c for c in t.get("hard_cores", []) if _core_is(c, row["inst"])), None)
         if core and core.get("clock_entry_access"):
             if row["pin"] != core["clock_entry_access"]["pin"]:
                 raise ValueError("clock entry access pin differs from core tap")
@@ -5682,6 +6070,17 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
     # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
     shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
+    # GENBUG-5 (11-15): merged-replica census after synth, placed-database hop census before CTS; both OFF unless the
+    # generator env OT_MERGE_CENSUS / OT_HOP_CENSUS is 1 (fail) or warn (log only).  The flag file is read by run_kit.sh.
+    # (kits without an opt-in key stay byte-equal: the helpers are copied only with their flag)
+    _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
+    if _mc in ("1", "warn"):
+        shutil.copyfile(Path(__file__).with_name("merged_replica_census.py"), kd / "merged_replica_census.py")
+        (kd / "merge_census.on").write_text(("64" if _mc == "1" else "999999999") + "\n")
+    _hc = os.environ.get("OT_HOP_CENSUS", "0").strip()
+    if _hc in ("1", "warn"):
+        shutil.copyfile(Path(__file__).with_name("hop_census.py"), kd / "hop_census.py")
+        (kd / "hop_census.on").write_text(_hc + "\n")
     for helper in ("port_bind_gate.py", "hold_gate.tcl"):
         shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
@@ -5781,6 +6180,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
     prepare_signed_parent_source(P, tn, kd, macros, root)
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
+    if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
+        import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
+        hook_manifest.write(kd, Path(__file__).resolve().parent)
     return kd
 
 
@@ -6263,6 +6665,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/reg_fanout_gate.py \$N --out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\$?; head -12 /work/reg_fanout.log; if [ \$rc != 0 ]; then echo 'WARN reg_fanout ADVISORY (KIT-OPS-4 11-14 COORD: register > 64 data loads or NOT RUN, see reg_fanout.json; not a gate)'; rc=0; fi; fi; \
+  if [ \$rc = 0 ] && [ -f /work/merge_census.on ] && [ -f /work/merged_replica_census.py ]; then python3 -I /work/merged_replica_census.py /work --gate \$(head -1 /work/merge_census.on) --json /work/merge_census.json > /work/merge_census.log 2>&1; mc=\$?; grep -h -E '^OT_MERGE_CENSUS|^MRG' /work/merge_census.log | head -8; if [ \$mc != 0 ]; then echo 'FAIL_PREFLOOR merge_census (GENBUG-5: flops merged away by Yosys in short sibling instances, see merge_census.log)' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --types-from \$N --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \
@@ -6271,6 +6674,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; } && [ ! -f /work/lec_async.ready ]; then if [ -f /work/lec_preplace.off ]; then printf '1\\necho LEC_PREPLACE_DROPPED R-MINIMAL\\n' > /work/lec_async.ready; else printf '1\\npython3 -I /work/lec.py /work --netlist %s --out /work/lec > /work/lec_run.log 2>&1\\n' \$N > /work/lec_async.ready; fi; echo 'LEC_ASYNC: pre-route LEC runs beside the flow (lec_async.log)'; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ ! -f /work/lec_preplace.off ] && [ ! -f /work/lec_async.on ] && [ ! -f /work/lec_async.identity ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
+  if [ \$rc = 0 ] && [ -f /work/hop_census.on ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M place; rc=\$?; \
+    if [ \$rc = 0 ]; then PO=\$(ls /work/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1); GATE=1 ODB=\$PO TAG='$NAME' OUT=/work/hop_census.json openroad -python -exit /work/hop_census.py > /work/hop_census.log 2>&1; hc=\$?; grep -h -E '^HOPSUM|^OT_HOP_CENSUS' /work/hop_census.log; \
+      if [ \$hc != 0 ] && ! grep -q warn /work/hop_census.on; then echo 'FAIL_POSTPLACE hop census (GENBUG-5.2: zero-logic hops over reach / across a hard core, see hop_census.log)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
     if [ \$rc = 0 ] && grep -Eq '^export OT_(TAP_GRT_PRE|PINREG_PAD) = 1' /work/config.mk; then TB=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); [ -z \"\$TB\" ] || cp -p \"\$TB\" /work/4_cts_pretapbal.odb; \
@@ -6309,7 +6715,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
     for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
       grep -h OT_POSTCTS_GATE /work/postcts_gate_\$c.log || echo \"OT_POSTCTS_GATE \$c no result FAIL\" | tee -a /work/postcts_gate_\$c.log; done; \
-    if grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
+    if grep -hq 'OT_POSTCTS_GATE.*SETUP_TRIAGE' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
+      grep -h 'OT_POSTCTS_GATE.*SETUP_TRIAGE' /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): /' >> /work/FAIL_POSTCTS; rc=6; \
+    elif grep -hq 'OT_POSTCTS_GATE.*FAIL' /work/postcts_gate_TT.log /work/postcts_gate_FF.log; then \
       if [ \$BG != 0 ]; then grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/FAIL_POSTCTS pre-route insertion gate: /' >> /work/FAIL_POSTCTS; rc=6; \
       else grep -h OT_POSTCTS_GATE /work/postcts_gate_*.log | sed 's/^/OT_POSTCTS_ADVISORY pre-route insertion gate (not a stop, OWNER 11-03 19:12; signoff.json insertion_band): /' | tee -a /work/postcts_advisory.log; fi; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = grt ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
@@ -7031,6 +7439,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         if kit_rtl and tn in kit_rtl:
             import count_strap_evidence
             count_strap_evidence.write_for_kit(kits[-1], P.types[tn], Path(kit_rtl[tn]).with_name("kit_rtl.json"))
+            # GENBUG (COORD r107): the kit records the source tree it was generated from and the kit-rtl filelist, so
+            # kit_gen_lint can reject a source path outside that tree (a stale B6gsl/src beside the kit's own src_rel2 copy)
+            Path(kits[-1]).mkdir(parents=True, exist_ok=True)       # trial mode has not created the kit dir yet
+            (Path(kits[-1]) / "kit_rtl_paths.json").write_text(json.dumps(dict(
+                schema="opentallas.kit_rtl_paths.v1", src_tree=str(Path(root).resolve()), filelist=str(Path(kit_rtl[tn]).resolve()),
+                files=[str(x) for x in mine]), indent=1) + "\n")
         if kit_rtl and tn in kit_rtl and (Path(kit_rtl[tn]).parent/'kit_topology.json').is_file():
             import kit_topology
             kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1],top=t['module'])

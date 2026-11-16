@@ -3,6 +3,8 @@ clipped to the PHY macro bounding box grown by phy_pg_clip_um (opt-in type key).
 import json
 from pathlib import Path
 
+import pytest
+
 import gen_phys as G
 import schema as S
 
@@ -82,3 +84,44 @@ def test_all_s81_serdes_types_carry_the_clip():
         r = dom[0][3]
         assert x1 + 10.0 <= r[2] < x1 + 10.0 + G.PHY_PG_NOTCH_SITE_UM or r[2] == t["outline_um"][0], (tn, r, x1)
         assert r[1] <= min(b[1] for b in boxes) and r[0] <= min(b[0] for b in boxes), tn
+
+
+# ---------------------------------------------------------------------------------------------- phy_pg_macros (S81-PHYPG-1)
+def _mplan(macros=None, core_y=8.64, clip=1.0):
+    """_plan() plus a core-supply hard core (u_chn) at y core_y inside the die domain rect; macros = phy_pg_macros value."""
+    p = _plan(clip=clip)
+    raw = p.raw
+    t = raw["partition_types"]["src"]
+    t["hard_cores"] = [dict(inst="u_core.u_dec.u_chn", module="ot_s81_kp4_dchn", origin_um=[17.28, core_y], outline_um=[8.64, 6.48])]
+    if macros is not None:
+        t["phy_pg_macros"] = macros
+    return S.Plan(raw)
+
+
+PMA = ["u_bound.u_core.u_ptx", "u_bound.u_core.u_prx"]
+
+
+def test_macros_key_absent_core_block_is_swallowed_as_before():
+    r = G.phy_pg_domains(_mplan(), "src")[0]
+    assert "u_core.u_dec.u_chn" in r[4] and r[3][1] < 28.08 - 1.0 + 1e-9, r      # old behaviour: the floor drops over u_chn
+
+
+def test_macros_membership_honoured():
+    r = G.phy_pg_domains(_mplan(PMA), "src")[0]
+    assert r[4] == sorted(PMA), r
+    assert r[3] == G.phy_pg_domains(_plan(clip=1.0), "src")[0][3], r              # region = the PMA box, as without the core block
+
+
+def test_macros_unlisted_block_overlapping_final_region_errors():
+    with pytest.raises(ValueError, match="core macro u_core.u_dec.u_chn inside PHY PG region"):
+        G.phy_pg_domains(_mplan(PMA, core_y=26.0), "src")
+
+
+def test_macros_listed_name_missing_errors():
+    with pytest.raises(ValueError, match="phy_pg_macros .*u_nope.* not found"):
+        G.phy_pg_domains(_mplan(PMA + ["u_nope"]), "src")
+
+
+def test_macros_schema_accepts_key_and_rejects_empty():
+    assert not [e for e in S.validate(_mplan(PMA).raw) if "phy_pg_macros" in e]
+    assert [e for e in S.validate(_mplan([]).raw) if "phy_pg_macros" in e]

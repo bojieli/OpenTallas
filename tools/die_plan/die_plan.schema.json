@@ -344,6 +344,40 @@
           "8w"
          ]
         },
+        "phase_um": {
+         "type": "number"
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      },
+      "type_m9_grant": {
+       "type": [
+        "boolean",
+        "object"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "enable": {
+         "type": "boolean"
+        },
+        "types": {
+         "type": "array",
+         "items": {
+          "type": "string"
+         }
+        },
+        "guide": {
+         "type": "string"
+        },
+        "ndr": {
+         "enum": [
+          "2w",
+          "4w",
+          "8w"
+         ]
+        },
         "note": {
          "type": "string"
         }
@@ -527,6 +561,13 @@
       "partition_pg_max": {
        "type": "string",
        "pattern": "^M[1-9]$"
+      },
+      "pin_band_origins_um": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "number"
+       }
       },
       "bumps": {
        "type": "object",
@@ -945,6 +986,14 @@
       "type": "number",
       "minimum": 0
      },
+     "phy_pg_macros": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
      "rck_band": {
       "type": "object",
       "additionalProperties": false,
@@ -960,6 +1009,36 @@
         "type": "integer",
         "minimum": 1,
         "maximum": 8
+       }
+      }
+     },
+     "rck_island": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "rect_um",
+       "clock",
+       "inst_re"
+      ],
+      "properties": {
+       "rect_um": {
+        "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+        "items": {
+         "type": "number"
+        }
+       },
+       "clock": {
+        "type": "string",
+        "minLength": 1
+       },
+       "inst_re": {
+        "type": "string",
+        "minLength": 1
+       },
+       "release_before_dpl": {
+        "type": "boolean"
        }
       }
      },
@@ -1886,10 +1965,14 @@
           "kind": {
            "enum": [
             "die_clock_tree",
-            "landing_ring_bank"
+            "landing_ring_bank",
+            "channel_keepout"
            ]
           },
           "ref": {
+           "type": "string"
+          },
+          "route_layers": {
            "type": "string"
           }
          }
@@ -2139,6 +2222,13 @@
         "type": "integer",
         "minimum": 1
        },
+       "tap_spill_um": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "tap_skip_macro": {
+        "type": "boolean"
+       },
        "reach_fix_sinks": {
         "type": "array",
         "items": {
@@ -2355,6 +2445,19 @@
          "early",
          "internal"
         ]
+       },
+       "insertion_target_override": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "reason"
+        ],
+        "properties": {
+         "reason": {
+          "type": "string",
+          "minLength": 1
+         }
+        }
        },
        "core_groups": {
         "type": "array",
@@ -2635,6 +2738,10 @@
           "insertion_basis": {
            "type": "string"
           },
+          "min_early_ps": {
+           "type": "number",
+           "minimum": 0
+          },
           "insertion_tol_ps": {
            "type": "number",
            "minimum": 0
@@ -2898,6 +3005,10 @@
                "evidence": {
                 "type": "string",
                 "minLength": 1
+               },
+               "min_early_ps": {
+                "type": "number",
+                "minimum": 0
                }
               }
              }
@@ -3025,6 +3136,9 @@
         "type": "boolean"
        },
        "pregrt_ff_hold": {
+        "type": "boolean"
+       },
+       "tap_reset_affinity": {
         "type": "boolean"
        },
        "pregrt_hold_guard_ps": {
@@ -5577,6 +5691,35 @@
        }
       }
      },
+     "reset_replicate": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "properties": {
+        "driver": {
+         "type": "string"
+        },
+        "driver_re": {
+         "type": "string"
+        },
+        "region_re": {
+         "type": "string"
+        },
+        "grid_um": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        },
+        "optional": {
+         "type": "boolean"
+        },
+        "min_loads": {
+         "type": "integer",
+         "minimum": 0
+        }
+       }
+      }
+     },
      "realize_internal_stations": {
       "type": "boolean"
      },
@@ -7685,6 +7828,20 @@
     },
     "r_reach_even": {
      "type": "boolean"
+    },
+    "r_dly_spread": {
+     "anyOf": [
+      {
+       "type": "boolean"
+      },
+      {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "minLength": 1
+       }
+      }
+     ]
     }
    }
   },

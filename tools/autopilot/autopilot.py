@@ -154,7 +154,31 @@ def now_s():
     return time.strftime("%Y-%m-%d %H:%M:%S %Z")
 
 
+_LOG_SEEN = {}                 # message -> [last written time, suppressed count]
+LOG_DEDUP_S = float(os.environ.get("AP_LOG_DEDUP_S", "900"))
+
+
+def log_dedup(msg, now=None):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1000 class 10: 1,791 of 3,023 log lines were repeats): a message identical to one written in the last
+    LOG_DEDUP_S seconds is not written again; the next write of it carries '(+N identical suppressed)'.  -> the text to write, or None"""
+    now = time.time() if now is None else now
+    if LOG_DEDUP_S <= 0 or len(msg) > 2000:
+        return msg
+    e = _LOG_SEEN.get(msg)
+    if e and now - e[0] < LOG_DEDUP_S:
+        e[1] += 1
+        return None
+    n = e[1] if e else 0
+    if len(_LOG_SEEN) > 5000:
+        _LOG_SEEN.clear()
+    _LOG_SEEN[msg] = [now, 0]
+    return msg + (f" (+{n} identical suppressed)" if n else "")
+
+
 def log(msg):
+    msg = log_dedup(msg)
+    if msg is None:
+        return
     line = f"{now_s()} AUTOPILOT: {msg}"
     print(("[dry] " if DRY else "") + line, flush=True)
     if DRY:
@@ -669,7 +693,14 @@ for k, p in pat.items():
     if k == "orfs_error":
         # Hold repair catches bounded RSZ errors and continues. Diagnose the
         # terminal tool error rather than an earlier caught repair chunk.
-        errors = re.findall(p, runlog) or re.findall(p, txt)
+        # WAVE-RECIPE-1 11-14 (FABLE-HARD-S81: t29, serdes t13, iqf t1, slice t40 booked "RSZ-0060 buffer-cap crash"): an RSZ-0060
+        # the hold guard CAUGHT (its "OT_HOLD_GUARD_GRT chunk N:" line follows, as kit_resume.HOLD_GUARD_CAP_RE) is no error;
+        # the run's real end (Error 241 OOM kill, a later tool error, a gate FAIL) is classified instead.
+        caught_re = r"(?m)^\[ERROR RSZ-0060\][^\n]*\n(?=(?:[^\n]*\n){0,4}OT_HOLD_GUARD_GRT chunk \d+:)"
+        caught = re.findall(caught_re, runlog) or re.findall(caught_re, txt)
+        if caught:
+            out["caught_errors"] = [e.strip()[:300] for e in caught[-5:]]
+        errors = re.findall(p, re.sub(caught_re, "", runlog)) or re.findall(p, re.sub(caught_re, "", txt))
         if errors:
             out[k] = errors[-1][:300]
             # KW-FIX-43 11-09: a gate FAIL printed after the last tool error is what stopped the run
@@ -1620,6 +1651,17 @@ def near_count_match(near, die, *names):
 
 def near_count_args(near, die, *names):
     return ["--priority", "die", "--crit"] if near and near_count_match(near, die, *names) else []
+
+
+def kit_lost(j):
+    """'' = the job's kit is present on the hub (a resubmit can run); else why not: ot-run stages the kit from the hub, so a
+    missing runner file / kit dir can only die with rc 127 (epyc4 kits whose gen dir is gone)."""
+    runner, kit = j.get("runner") or "", j.get("path") or ""
+    if runner and not os.path.isfile(runner):
+        return f"runner {runner} missing on the hub"
+    if kit and not os.path.isdir(kit):
+        return f"kit dir {kit} missing on the hub"
+    return ""
 
 
 def wave_superseded(j):
@@ -2791,6 +2833,15 @@ def finish(st, j, c, client):
             j["mem_gb"] = min(512, int(j["mem_gb"] * 1.5 + 0.999))
             submit(st, j, f"(resubmit {j['oom_retries']}/{MAX_OOM_RESUBMITS} after infra-oom; resumes the run dir; "
                           f"--mem {j['mem_gb']})")
+            return
+        lost = kit_lost(j)
+        if lost:
+            # KIT-OPS-5 11-14 (COORD): the gen dir / runner is gone (epyc4 kits): a resubmit can only die with rc 127 and keeps
+            # the family "attempted" on the old src.  Mark the attempt dead (infra-lost) so the wave builds a new attempt.
+            log(f"KIT-LOST {j['id']} {j['die']}/{j['type']}: {lost}: not resubmitted, attempt dead (the wave generates a new attempt from the current src)")
+            set_status(st, j, "CRASH", f"infra-lost: kit lost, {lost}"[:200])
+            after_class(st, j)
+            released_cleanup()
             return
         if not notrun and kind != "infra-oom" and not j.get("infra_retry"):
             j["infra_retry"] = True

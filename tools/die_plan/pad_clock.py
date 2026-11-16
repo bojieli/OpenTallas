@@ -27,6 +27,11 @@ import re
 
 ENTRY_HOP_UM = 405.0         # METHODOLOGY 12.1e: plan 405 um per hop (repeaters <= 450)
 ENTRY_KEYS = {'name', 'xy_um', 'stations_um', 'cell', 'region_um', 'sink_pins', 'evidence'}
+# PLAN-READERS-1 11-14 (FABLE-PLAN-B6B 6.4): optional entry field min_early_ps (number >= 0): the entry's macro pins are clocked
+# at least that long before the earliest register clock pin of the type, by the entry trunk itself (no delaybuf chain);
+# written to rck_early.txt (write_contract) and reported by rck_early_report.tcl at the post-CTS gate (report only).
+ENTRY_OPT = {'min_early_ps'}
+EARLY_FILE = 'rck_early.txt'
 TAP_ENTRY_CLEAR_UM = 2.16      # a trunk / driver point is a std cell: >= 8 rows off every hard core (not the 8.64 tap-pin halo)
 TAP_ENTRY_KEYS = {'name', 'tap', 'take_taps', 'xy_um', 'stations_um', 'cell', 'region_um', 'evidence'}
 CDC_VALUES = ('synchronized',)
@@ -139,6 +144,15 @@ def _finite_xy(v):
             and all(not isinstance(a, bool) and isinstance(a, (int, float)) and math.isfinite(a) for a in v))
 
 
+def check_min_early(where, e):
+    """min_early_ps, when present: a finite number >= 0 (not bool)."""
+    if 'min_early_ps' not in e:
+        return
+    v = e['min_early_ps']
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0:
+        raise ValueError(f'{where}: min_early_ps must be a finite number >= 0, got {v!r}')
+
+
 def check_entries(tn, t, p, port_names):
     """Fail closed on a malformed second-entry declaration (see the module note)."""
     n = p['name']
@@ -149,9 +163,10 @@ def check_entries(tn, t, p, port_names):
     declared = [(s['module'], s['pin']) for s in p.get('sink_pins', [])]
     taken, names = set(), set()
     for e in rows:
-        if not isinstance(e, dict) or set(e) != ENTRY_KEYS:
-            raise ValueError(f'{tn}.{n}: entry requires exactly {sorted(ENTRY_KEYS)}')
+        if not isinstance(e, dict) or not (ENTRY_KEYS <= set(e) <= ENTRY_KEYS | ENTRY_OPT):
+            raise ValueError(f'{tn}.{n}: entry requires {sorted(ENTRY_KEYS)} and only the optional {sorted(ENTRY_OPT)}')
         en = e['name']
+        check_min_early(f'{tn}.{n}.{en}', e)
         if (not isinstance(en, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', en) or en in names
                 or en in port_names):
             raise ValueError(f'{tn}.{n}: duplicate, invalid or port-colliding entry name {en!r}')
@@ -435,10 +450,74 @@ def cdc_sdc(ps, text, t_lib):
     return out
 
 
+def has_min_early(t):
+    """True when the type declares min_early_ps on a pad-clock entry or an early core tap (cheap raw scan)."""
+    ck = t.get('clock', {}) or {}
+    pins_ = (ck.get('pad_clock') or {}).get('pins', []) if isinstance(ck.get('pad_clock'), dict) else []
+    return (any('min_early_ps' in e for p in pins_ if isinstance(p, dict) for e in p.get('entries', []) or [])
+            or any('min_early_ps' in tp for tp in ck.get('taps', []) or []))
+
+
+def _module_insts(t, module):
+    """instance names of the type's hard cores / contents of `module` (the bound physical identity when it has one)."""
+    import gen_phys
+    out = []
+    for c in list(t.get('hard_cores', []) or []) + list(t.get('contents', []) or []):
+        if c.get('module') == module and (c.get('inst') or c.get('physical_inst')):
+            out.append(gen_phys.content_physical_identity(c)[0] if ('physical_inst' in c or 'physical_master' in c) else c['inst'])
+    return sorted(set(out))
+
+
+def early_rows(P, tn):
+    """[(entry, inst, pin, min_early_ps)] of every pad-clock entry sink pin with min_early_ps (inst resolved from the type's
+    hard_cores / contents by module; unresolved = ValueError, fail closed) and of every early core tap
+    (clock.taps[] kind core) with min_early_ps (name = the tap, one row per core clock pin; the declared insertion must
+    already deliver it: core_tap_early_ps >= min_early_ps, else ValueError).  Sorted, [] when none."""
+    t = P.types[tn]
+    rows = []
+    for _port, e in entries(P, tn):
+        if 'min_early_ps' not in e:
+            continue
+        for s in e['sink_pins']:
+            insts = _module_insts(t, s['module'])
+            if not insts:
+                raise ValueError(f"{tn}.{e['name']}: min_early_ps sink module {s['module']} names no placed hard core / content inst")
+            rows += [(e['name'], i, s['pin'], float(e['min_early_ps'])) for i in insts]
+    import gen_phys
+    import schema as S
+    ck = t.get('clock', {}) or {}
+    for tp in ck.get('taps', []) or []:
+        if 'min_early_ps' in tp and (tp.get('kind') != 'core' or ck.get('core_taps') != 'early'):
+            raise ValueError(f"{tn}.{tp['name']}: min_early_ps needs a kind core tap with clock.core_taps 'early'")
+    for n, _x, _y, tp in S.core_taps(P, tn):
+        if 'min_early_ps' not in tp:
+            continue
+        check_min_early(f"{tn}.{tp['name']}", tp)
+        have = S.core_tap_early_ps(P, tp, 'TT', P.types[tn])
+        if have + 1e-9 < float(tp['min_early_ps']):
+            raise ValueError(f"{tn}.{tp['name']}: early core tap delivers {have:.1f} ps early (insertion_ps - die common latency), "
+                             f"min_early_ps asks {tp['min_early_ps']}")
+        for port, inst, pin, _e, _i in gen_phys.core_tap_rows(P, tn):
+            if port == n:
+                rows.append((tp['name'], inst, pin, float(tp['min_early_ps'])))
+    return sorted(set(rows))
+
+
+def early_text(rows):
+    return ('# GENERATED by tools/die_plan/gen.py phys (plan min_early_ps, PLAN-READERS-1): entry inst pin min_early_ps\n'
+            + ''.join(f'{e} {i} {p} {m:g}\n' for e, i, p, m in rows))
+
+
 def write_contract(P, tn, kit):
     """Replace or remove exactly this generator-owned optional sidecar."""
     import json
     from pathlib import Path
+    ep = Path(kit) / EARLY_FILE
+    er = early_rows(P, tn)
+    if er:
+        ep.write_text(early_text(er))
+    else:
+        ep.unlink(missing_ok=True)
     path = Path(kit) / 'pad_clock.json'
     ps = pins(P, tn)
     if ps:

@@ -29,7 +29,9 @@
   "ot_s81hd_st_turn",
   "ot_s81hd_tile_p",
   "ot_s81hd_turn_a",
-  "ot_s81hd_turn_b"
+  "ot_s81hd_turn_b",
+  "ot_s81hd_elemA_cv",
+  "ot_s81hd_elemB_cv"
  ],
  "proof": {
   "verdict": "PASS",
@@ -41,7 +43,7 @@
  },
  "generator": "OWNER decision 10-29 05:3x (S81 boot rst_n held low >= 64 clocks with the die clock running; COORD 10-30 DIE-HEAD-44 ruling applies it to the HEAD die): ONE die root ot_dp_rsync_s2 u_rst_root on rst_n in sp5 (ot_s81hd_spn_end_strip), OWNER DECISION 13 reset wavefront",
  "sinks": "every HEAD partition takes a SYNCHRONOUS registered reset from its neighbour (pin register ot_dp_rrelay on arst_n) and re-drives ot_dp_rrelay relays to its taps and rst_o (width-preserving: width out = width in at any depth; latest release 107 clocks), or START-gated consumer taps ot_dp_rgate (q <= d & run: release no earlier than the relay); the hard cores inside a partition (lep_pair, kp4_dchn SerDes) take their reset from those taps; no extra per-core reset stages",
- "modules_basis": "the 25 partition-type modules of HEAD plan l43 (head_source_l43, s81_head_top instance census) + the routed HEAD hard-core tops ot_s81hd_lep_pair and ot_s81_kp4_dchn (SerDes ECO1B kit); SRAM macros excluded (no LEC)",
+ "modules_basis": "the 25 partition-type modules of HEAD plan l43 (head_source_l43, s81_head_top instance census) + the routed HEAD hard-core tops ot_s81hd_lep_pair and ot_s81_kp4_dchn (SerDes ECO1B kit); SRAM macros excluded (no LEC) + the HEAD hard cores ot_s81hd_elemA_cv / ot_s81hd_elemB_cv (COORD 11-15 ruling: hard cores inside a partition take reset from the die taps and the 64-clock boot rst_n of OWNER 10-29 applies; at the 4-edge default their LEC failed on SPLIT9 no-reset registers that settle near edge 10)",
  "kit_use": "copy reset_contract.json + reset_contract/receipt.txt into KIT/ (receipt path is relative), or set OT_LEC_RESET_CONTRACT to this file; a kit LEC may use OT_LEC_RESET_CYCLES <= 64",
  "scope": "boot reset only (owner contract on the external rst_n); a mid-run rst_n pulse shorter than 64 clocks is outside this contract",
  "serdes_warm_reset": {

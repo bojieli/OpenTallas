@@ -747,7 +747,60 @@ def r2r_metrics(D, capture_pairs=None, collect_above=R2R_MAX):
                 r2r_worst=None if not arg else f"{name(arg[0])} -> {name(arg[1])}")
 
 
-def clock_metrics(D):
+def assign_taps_capped(sinks, taps, cap=None, maxx=None, spill=None):
+    """KV-PC-DELTA-1115: the capacity-constrained nearest-tap assignment of tools/die_plan/clock_taps.tcl, in Python.
+    sinks [(x, y)], taps {k: (x, y)}.  Nearest tap first; a tap over `cap` sheds the sinks with the least extra distance
+    to the nearest other tap with room, an extra distance <= maxx (clock_taps.tcl: half a tap pitch); a tap still over cap
+    sheds again with reach `spill` (clock_taps.tcl OT_TAP_SPILL_UM) when given.  Returns (count per tap, stuck taps)."""
+    cnt = {k: 0 for k in taps}
+    own = {}
+    for i, (x, y) in enumerate(sinks):
+        k = min(taps, key=lambda t: abs(taps[t][0] - x) + abs(taps[t][1] - y))
+        own[i] = k
+        cnt[k] += 1
+    if not cap or len(taps) < 2:
+        return cnt, []
+    for lim in [m for m in (maxx, spill) if m is not None] or [float("inf")]:
+        stuck = []
+        for _ in range(8 * len(taps)):
+            over = next((k for k in taps if cnt[k] > cap and k not in stuck), None)
+            if over is None:
+                break
+            cand = []
+            for i, k in own.items():
+                if k != over:
+                    continue
+                x, y = sinks[i]
+                d0 = abs(taps[over][0] - x) + abs(taps[over][1] - y)
+                best = None
+                for t, (tx, ty) in taps.items():
+                    if t == over or cnt[t] >= cap:
+                        continue
+                    d = abs(tx - x) + abs(ty - y) - d0
+                    if best is None or d < best[0]:
+                        best = (d, t)
+                if best is not None and best[0] <= lim:
+                    cand.append((best[0], i, best[1]))
+            if not cand:
+                stuck.append(over)
+                continue
+            cand.sort()
+            tgt = cand[0][2]
+            n, room = 0, cap - cnt[tgt]
+            for d, i, t in cand:
+                if n >= cnt[over] - cap or n >= room:
+                    break
+                if t == tgt:
+                    own[i] = tgt
+                    n += 1
+            cnt[over] -= n
+            cnt[tgt] += n
+        if not any(v > cap for v in cnt.values()):
+            break
+    return cnt, [k for k in taps if cnt[k] > cap]
+
+
+def clock_metrics(D, tap_cap=None, tap_pitch_um=None, tap_spill_um=None, tap_skip_macro=False):
     """clock sinks (seq / macro clock pins) traced up through buffers / clock cells to the input port that roots them.
     Taps = input ports that root clock sinks (or carry sig CLOCK / a clk name); grid taps = clk|ck, clk_t<i>.  Sinks
     per tap: actual tree (CTS checkpoint) or, when every sink still hangs on one root while >= 2 grid taps exist (placed
@@ -798,18 +851,30 @@ def clock_metrics(D):
     grid = {k for k, p in taps.items() if GRID_TAP_RE.match(p["name"])}
     cnt = Counter(r for r in roots.values() if r is not None)
     mode = "tree"
+    tap_stuck = []
     if len(grid) >= 2 and len({r for r in cnt if r in grid}) <= 1 and sum(cnt.values()) > 0:
         mode = "nearest"
         new = Counter({k: 0 for k in grid})
+        # KV-PC-DELTA-1115: the nearest split that clock_taps.tcl applies = nearest tap, then the OT_TAP_MAX_SINKS cap pass
+        # (kit config.mk OT_TAP_MAX_SINKS / OT_TAP_PITCH_UM) and, opt-in, no grid tap over a macro (OT_TAP_SKIP_MACRO).
+        usable = set(grid)
+        if tap_skip_macro:
+            usable = {k for k in grid if not any(c[0] == "M" and c[2] < taps[k]["x"] < c[4] and c[3] < taps[k]["y"] < c[5]
+                                                 for c in D.cells.values())} or set(grid)
+        xy = []
         for cid, r in roots.items():
             if r is None:
                 continue
             if r not in grid:
                 new[r] += 1
                 continue
-            x, y = D.extra.get("macro_clk_xy", {}).get(cid) or ctr(D.cells[cid])
-            new[min(grid, key=lambda k: abs(taps[k]["x"] - x) + abs(taps[k]["y"] - y))] += 1
+            xy.append(D.extra.get("macro_clk_xy", {}).get(cid) or ctr(D.cells[cid]))
+        cnt_u, stuck = assign_taps_capped(xy, {k: (taps[k]["x"], taps[k]["y"]) for k in usable}, tap_cap,
+                                          0.5 * tap_pitch_um if tap_pitch_um else None, tap_spill_um)
+        for k, v in cnt_u.items():
+            new[k] += v
         cnt = new
+        tap_stuck = sorted(taps[k]["name"] for k in stuck)
     gvals = [cnt.get(k, 0) for k in grid]
     # tree shape
     leaf = Counter()
@@ -836,7 +901,7 @@ def clock_metrics(D):
     return dict(taps=len(taps), grid_taps=len(grid), tap_mode=mode, clock_sinks=len(sinks),
                 unrooted_sinks=sum(1 for r in roots.values() if r is None),
                 grid_tap_sinks_min=min(gvals) if gvals else None, grid_tap_sinks_max=max(gvals) if gvals else None,
-                grid_taps_empty=sorted(taps[k]["name"] for k in grid if cnt.get(k, 0) == 0),
+                grid_taps_over_cap=tap_stuck, grid_taps_empty=sorted(taps[k]["name"] for k in grid if cnt.get(k, 0) == 0),
                 tap_sinks={taps[k]["name"]: cnt.get(k, 0) for k in taps},
                 tap_set=sorted([taps[k]["name"], face_of(taps[k]["x"], taps[k]["y"], D.die)] for k in taps),
                 clock_cells=len(clk_cells), clock_depth_max=max(depths) if depths else None,
@@ -1633,12 +1698,12 @@ def stage_of_odb(name, clock_cells=0):
 
 
 def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False, ft_interface=None, ft_ports=None,
-            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None, spare_out=None):
+            land_slots=None, face_guard=None, reset_capture_kit=None, reset_capture_typed=None, spare_out=None, tap_kit=None):
     D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
     m.update(pin_metrics(D, sr))
-    ck = clock_metrics(D)
+    ck = clock_metrics(D, **(tap_kit or {}))
     infra_pins = frozenset()
     if ft_interface or ft_ports:
         try:
@@ -1714,12 +1779,17 @@ def main(argv=None):
     ap.add_argument("--ft-ports", help="matching hash-checked scalar FT declaration")
     ap.add_argument("--land-slots", help="kit land_slots.json: declared landing ring (with --face-guard PASS) = registered capture")
     ap.add_argument("--face-guard", help="kit face_guard.json (verdict PASS) matching --land-slots")
+    ap.add_argument("--tap-max-sinks", type=int, default=None, help="kit OT_TAP_MAX_SINKS: the nearest-tap split applies clock_taps.tcl's cap pass")
+    ap.add_argument("--tap-pitch-um", type=float, default=None, help="kit OT_TAP_PITCH_UM (cap pass reach = half a pitch)")
+    ap.add_argument("--tap-spill-um", type=float, default=None, help="kit OT_TAP_SPILL_UM (second cap pass reach)")
+    ap.add_argument("--tap-skip-macro", action="store_true", help="kit OT_TAP_SKIP_MACRO=1: no grid tap over a macro")
     ap.add_argument("--spare-out", help="kit spare_out.json (opentallas.kit_spare_out.v1): constant-tied spare output bits, exempt from pins_unregistered")
     ap.add_argument("--reset-capture-kit", help="opt-in BFQG source/capture review only; raw registration gates unchanged")
     ap.add_argument("--reset-capture-typed", help="actual pin-typed OpenDB graph for --reset-capture-kit; mandatory pair")
     a = ap.parse_args(argv)
     m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach, a.ft_interface, a.ft_ports,
-                a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed, a.spare_out)
+                a.land_slots, a.face_guard, a.reset_capture_kit, a.reset_capture_typed, a.spare_out,
+                tap_kit=dict(tap_cap=a.tap_max_sinks, tap_pitch_um=a.tap_pitch_um, tap_spill_um=a.tap_spill_um, tap_skip_macro=a.tap_skip_macro))
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)

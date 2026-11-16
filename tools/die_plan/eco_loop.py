@@ -89,7 +89,7 @@ ECO_MEM_FACTOR = 1.5
 # too.  Same convention as autopilot classify ("infra-stopped": exit 137/143 with no OOM line in the run logs): OOM only
 # with a memory line in the step log; an external-stop rc without one is ABORTED (infra, retryable, never a design
 # verdict).  SIGSEGV (139 / -11) and every other rc stay tool / design errors as before.
-STOP_RCS = {129, 130, 137, 143, -1, -2, -9, -15}
+STOP_RCS = {129, 130, 137, 143, -1, -2, -9, -15, 13, 141, -13}   # 13/141/-13 = SIGPIPE: output pipe closed, not a design result
 OOM_TEXT = re.compile(r"\bKilled\b|out of memory|OOMKilled|Cannot allocate memory|std::bad_alloc|\bError 137\b", re.I)
 PEAK_RES = (re.compile(r"peak = ([0-9.]+) \(MB\)"), 1.0 / 1024,
             re.compile(r"Peak memory: ([0-9.]+)KB"), 1.0 / (1024 * 1024),
@@ -834,7 +834,13 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
 
     def step(name, cmd, **kw):
         it["commands"].append(" ".join(shlex.quote(str(c)) for c in cmd))
-        rc = run([str(c) for c in cmd], **kw)
+        if name.startswith("prd_run") and "stdout" not in kw:
+            # NEARMISS-FIX-1: never inherit the caller pipe (ot-run client); a closed pipe killed prd_run.sh with SIGPIPE
+            Path(cmd[2]).mkdir(parents=True, exist_ok=True)
+            with open(Path(cmd[2]) / "prd_run.out", "ab") as fo:
+                rc = run([str(c) for c in cmd], stdout=fo, stderr=subprocess.STDOUT, **kw)
+        else:
+            rc = run([str(c) for c in cmd], **kw)
         it["rc"][name] = rc
         return rc
 

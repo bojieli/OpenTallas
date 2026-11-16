@@ -28,7 +28,9 @@ class FormWaitArmTest(unittest.TestCase):
         self.cfg = {"dies": {"hbm": {"gen_hosts": []}}}
         self.p = [mock.patch.object(K, "type_block_sha", lambda *a, **k: "tb1"),
                   mock.patch.object(K, "WAIT_FORM_LOG", str(root / "wf.tsv")),
-                  mock.patch.object(K.Path, "home", lambda: root)]
+                  mock.patch.object(K.Path, "home", lambda: root),
+                  # test_kit_wave.py leaves verdict timestamps in the module cache; with them form_wait takes the verdict-binding path (red only in a full run)
+                  mock.patch.dict(K._GEOM_CACHE, {}, clear=True)]
         for x in self.p:
             x.start()
 

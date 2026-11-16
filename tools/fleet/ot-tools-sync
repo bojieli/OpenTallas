@@ -1,0 +1,467 @@
+#!/usr/bin/env python3
+"""ot-tools-sync: the kit wave and the fleet run a pinned main revision, never a live-patched copy (MERGE-QUEUE-1, OWNER 2026-11-14).
+
+  ot-tools-sync sync [--sha SHA]   materialize main@SHA (default: origin/main) as the read-only versioned tree
+                                   RT/<sha12> (a detached sparse worktree of the queue clone on the hub; tools/ +
+                                   physical/common_flow, the same set as the old kw38/rt), smoke-test it, then flip the
+                                   symlink RT/current to it with one rename.  The same version is copied (rsync, hard links
+                                   to the previous version) to RT/<sha12> on every fleet host (OT_RT_HOSTS) and that host's
+                                   RT/current is flipped after its own smoke test.  A version dir is never modified after
+                                   it is made; running stages keep the dir they resolved (Path(__file__).resolve()).
+  ot-tools-sync drift [--post]     live-only check: every file of RT/current (hub and hosts) against the version's manifest,
+                                   the hub tree against git, the legacy kw38/rt tree against its own HEAD while a unit still
+                                   runs it, and each host's active ot-run backend against tools/fleet/ot-run of RT/current.
+                                   --post appends DRIFT lines to the review queue when the drift set changes.
+  ot-tools-sync status             current version per host.
+Called by ot-merge-queue after every push to main (MQ_SYNC_HOOK).  Log: ~/merge-queue/log (prefix SYNC).
+"""
+import argparse
+import datetime
+import hashlib
+import json
+import os
+import re
+import shlex
+import subprocess as S
+import sys
+from pathlib import Path
+
+HOME = Path.home()
+RT = Path(os.environ.get("OT_RT_ROOT", "/srv/opentallas-scratch2/claude/rt"))
+REPO = Path(os.environ.get("MQ_REPO", "/srv/opentallas-scratch2/claude/mq1/repo"))
+MQ = Path(os.environ.get("MQ_HOME", HOME / "merge-queue"))
+PY = os.environ.get("MQ_PYTHON", str(MQ / "venv/bin/python"))
+REMOTE = os.environ.get("MQ_REMOTE", "origin")
+HOSTS = os.environ.get("OT_RT_HOSTS", "intel1 epyc2 epyc7 epyc8 epyc9 epyc10").split()
+HOST_PATHS = os.environ.get("OT_RT_HOST_PATHS", "tools/fleet").split()          # what ot-run / ot-heavy use on a host
+SPARSE = os.environ.get("MQ_SPARSE", "/*,!/*/,/tools/,/physical/common_flow/,/rtl/lib/,/rtl/common/").split(",")
+SMOKE_TESTS = os.environ.get("OT_RT_SMOKE_TESTS", "tools/autopilot/test_kit_wave.py").split()
+LEGACY = [p for p in os.environ.get("OT_RT_LEGACY", "/srv/opentallas-scratch2/claude/kw38/rt").split() if p]
+BACKEND_ROOTS = os.environ.get("OT_RT_BACKEND_ROOTS", "~/.local/bin/ot-run ~/.local/lib/kw10/ot-run ~/.local/lib/kw44/ot-run "
+                               "/usr/local/bin/ot-*").split()
+COORD = Path(os.environ.get("MQ_COORD", HOME / "coord"))
+QUEUE_REL = os.environ.get("MQ_QUEUE_REL", "lanes/COORD-REVIEW-QUEUE.md")
+LANE_REL = os.environ.get("MQ_LANE_REL", "lanes/MERGE-QUEUE-1.md")
+COMMIT = os.environ.get("MQ_COORD_COMMIT", str(COORD / "bin/coord-commit.sh"))
+SSH = ["timeout", "300", "ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20"]   # no -n: some calls feed stdin
+ME = "MERGE-QUEUE"
+SKIP_DIRS = {".git", "__pycache__", ".pytest_cache"}
+
+
+def now():
+    return datetime.datetime.now().astimezone()
+
+
+def log(msg):
+    MQ.mkdir(parents=True, exist_ok=True)
+    line = f"{now().strftime('%Y-%m-%d %H:%M:%S')} SYNC {msg}"
+    print(line, flush=True)
+    with open(MQ / "log", "a") as f:
+        f.write(line + "\n")
+
+
+def run(cmd, cwd=None, timeout=900, env=None, input=None):
+    try:
+        return S.run(cmd, cwd=str(cwd) if cwd else None, capture_output=True, text=True, timeout=timeout, env=env, input=input)
+    except S.TimeoutExpired:
+        return S.CompletedProcess(cmd, 124, "", "timeout")
+
+
+def git(*a, cwd=REPO, timeout=600):
+    p = run(["git", *a], cwd=cwd, timeout=timeout)
+    if p.returncode:
+        raise RuntimeError(f"git {' '.join(a)[:160]}: {(p.stderr or p.stdout).strip()[:300]}")
+    return p.stdout
+
+
+# ---------------------------------------------------------------- manifest (pure: also run on the hosts through ssh)
+
+MANIFEST_PY = r'''
+import hashlib, json, os, sys
+SKIP = {".git", "__pycache__", ".pytest_cache"}
+def manifest(root):
+    out = {}
+    for dp, dn, fn in os.walk(root):
+        dn[:] = sorted(d for d in dn if d not in SKIP)
+        for f in sorted(fn):
+            p = os.path.join(dp, f)
+            rel = os.path.relpath(p, root)
+            if rel == ".git" or f.endswith(".pyc"):
+                continue
+            if os.path.islink(p):
+                out[rel] = "link:" + os.readlink(p)
+                continue
+            h = hashlib.sha256()
+            with open(p, "rb") as fh:
+                for b in iter(lambda: fh.read(1 << 20), b""):
+                    h.update(b)
+            out[rel] = h.hexdigest()
+    return out
+def diff(have, want, paths=None):
+    keep = lambda r: not paths or any(r == p or r.startswith(p.rstrip("/") + "/") for p in paths)
+    changed = sorted(r for r in want if keep(r) and r in have and have[r] != want[r])
+    missing = sorted(r for r in want if keep(r) and r not in have)
+    extra = sorted(r for r in have if keep(r) and r not in want)
+    return {"changed": changed, "missing": missing, "extra": extra}
+'''
+exec(MANIFEST_PY)
+
+
+def sha12(s):
+    return s[:12]
+
+
+def in_use(path):
+    """pids whose cmdline / cwd / open files name the dir (resolved)"""
+    path = os.path.realpath(path)
+    pids = []
+    for d in os.listdir("/proc"):
+        if not d.isdigit():
+            continue
+        try:
+            cmd = open(f"/proc/{d}/cmdline", "rb").read().replace(b"\0", b" ").decode(errors="replace")
+            cwd = os.path.realpath(f"/proc/{d}/cwd")
+        except OSError:
+            continue
+        if path in cmd or cwd == path or cwd.startswith(path + "/"):
+            pids.append(int(d))
+    return pids
+
+
+def flip(root, name):
+    """RT/current -> name with one rename (atomic for readers)"""
+    tmp = root / f".current.{os.getpid()}"
+    if tmp.is_symlink() or tmp.exists():
+        tmp.unlink()
+    os.symlink(name, tmp)
+    os.replace(tmp, root / "current")
+
+
+def current(root=RT):
+    try:
+        return os.readlink(root / "current")
+    except OSError:
+        return ""
+
+
+# ---------------------------------------------------------------- materialize + smoke
+
+def smoke(d, tests=True):
+    """-> [problems]: every Python file under tools/autopilot + tools/fleet + tools/die_plan (top level) parses, every shell
+    script of physical/common_flow + tools/fleet passes bash -n, the wave suite passes, and the tree is still clean"""
+    bad = []
+    for sub in ("tools/autopilot", "tools/fleet", "tools/die_plan", "physical/common_flow"):
+        base = d / sub
+        if not base.is_dir():
+            bad.append(f"{sub} missing")
+            continue
+        for p in sorted(base.iterdir()):
+            if not p.is_file() or p.suffix in (".pyc", ".json", ".md", ".tsv", ".txt", ".tcl", ".sdc", ".lef", ".lib", ".v", ".sv"):
+                continue
+            try:
+                txt = p.read_text(errors="replace")
+            except OSError:
+                continue
+            first = txt.split("\n", 1)[0]
+            if p.suffix == ".py" or (first.startswith("#!") and "python" in first):
+                try:
+                    compile(txt, str(p), "exec", dont_inherit=True)
+                except SyntaxError as e:
+                    bad.append(f"{p.relative_to(d)}: SyntaxError line {e.lineno}")
+            elif p.suffix == ".sh" or (first.startswith("#!") and re.search(r"\b(ba)?sh\b", first)):
+                if run(["bash", "-n", str(p)], timeout=60).returncode:
+                    bad.append(f"{p.relative_to(d)}: bash -n")
+    if tests and SMOKE_TESTS and Path(PY).exists():
+        tmp = MQ / "smoke-tmp"
+        tmp.mkdir(parents=True, exist_ok=True)
+        env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", TMPDIR=str(tmp))
+        env.pop("PYTHONPATH", None)
+        p = run([PY, "-m", "pytest", "-q", "-n", "8", "-p", "no:cacheprovider", "-W", "ignore", f"--basetemp={tmp}/bt",
+                 "--tb=line", *SMOKE_TESTS], cwd=d, timeout=1200, env=env)
+        if p.returncode not in (0, 5):
+            bad.append(f"smoke tests rc={p.returncode}: {' | '.join((p.stdout or p.stderr).strip().splitlines()[-3:])[:300]}")
+    if (d / ".git").exists():
+        st = run(["git", "status", "--porcelain", "--untracked-files=all"], cwd=d, timeout=300).stdout
+        st = [l for l in st.splitlines() if "__pycache__" not in l]
+        if st:
+            bad.append(f"tree not clean after smoke: {st[:5]}")
+    return bad
+
+
+def materialize(full):
+    """hub: RT/<sha12> as a detached sparse worktree, files read-only, manifest beside it -> dir"""
+    name = sha12(full)
+    d = RT / name
+    ok = RT / f"{name}.manifest.json"
+    if d.is_dir() and ok.is_file():
+        return d
+    RT.mkdir(parents=True, exist_ok=True)
+    if d.exists():                                         # a partial earlier attempt (no manifest): rebuild it if unused
+        if in_use(d):
+            raise RuntimeError(f"{d} is partial but in use; not touched")
+        run(["git", "worktree", "remove", "--force", str(d)], cwd=REPO)
+        if d.exists():
+            run(["rm", "-rf", "--one-file-system", str(d)])
+    run(["git", "worktree", "prune"], cwd=REPO)
+    git("worktree", "add", "-q", "--detach", "--no-checkout", str(d), full)
+    git("sparse-checkout", "set", "--no-cone", *SPARSE, cwd=d)
+    git("checkout", "-q", "--detach", full, cwd=d, timeout=1200)
+    head = git("rev-parse", "HEAD", cwd=d).strip()
+    if head != full:
+        raise RuntimeError(f"{d} HEAD {head} != {full}")
+    run(["chmod", "-R", "a-w", "--", *[str(x) for x in d.iterdir() if x.name != ".git"]])
+    m = manifest(str(d))
+    t = RT / f".{name}.manifest.tmp"
+    t.write_text(json.dumps({"sha": full, "made": now().isoformat(timespec="seconds"), "files": m}, sort_keys=True))
+    os.replace(t, ok)
+    return d
+
+
+def host_sync(host, name, prev):
+    """copy RT/<name> (HOST_PATHS) to host, smoke it there (parse), flip host RT/current -> (ok, note)"""
+    r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || mkdir -p {RT}/.{name}.partial"], input="")
+    if r.returncode:
+        return False, f"ssh: {(r.stderr or r.stdout).strip()[:160]}"
+    if "HAVE" not in r.stdout:
+        link = ["--link-dest", f"{RT}/{prev}/"] if prev else []
+        args = ["rsync", "-a", "--relative", "--exclude=__pycache__", *link,
+                "-e", "ssh -o ControlPath=none -o BatchMode=yes", *[f"{RT}/{name}/./{p}" for p in HOST_PATHS],
+                f"{host}:{RT}/.{name}.partial/"]
+        r = run(args, timeout=1800)
+        if r.returncode:
+            return False, f"rsync rc={r.returncode}: {(r.stderr or '').strip()[:200]}"
+        man = json.loads((RT / f"{name}.manifest.json").read_text())
+        sub = {k: v for k, v in man["files"].items() if any(k.startswith(p.rstrip("/") + "/") for p in HOST_PATHS)}
+        check = MANIFEST_PY + f'''
+root = {str(RT / ('.' + name + '.partial'))!r}
+want = json.loads(sys.stdin.read())
+d = diff(manifest(root), want)
+bad = d["changed"] + d["missing"] + d["extra"]
+import ast
+for rel in [r for r in want if r.startswith("tools/fleet/") or r.startswith("tools/autopilot/")]:
+    p = os.path.join(root, rel)
+    try:
+        t = open(p, errors="replace").read()
+    except OSError:
+        continue
+    if rel.endswith(".py") or t.startswith("#!") and "python" in t.split("\\n", 1)[0]:
+        try:
+            compile(t, rel, "exec", dont_inherit=True)
+        except SyntaxError:
+            bad.append("syntax:" + rel)
+print(json.dumps(bad[:20]))
+'''
+        r = run(SSH + [host, "python3", "-I", "-c", shlex.quote(check)], input=json.dumps(sub), timeout=600)
+        try:
+            bad = json.loads(r.stdout.strip().splitlines()[-1])
+        except (ValueError, IndexError):
+            return False, f"remote check failed rc={r.returncode}: {(r.stderr or r.stdout).strip()[:200]}"
+        if bad:
+            return False, f"remote copy differs: {bad[:5]}"
+        m = json.dumps({"sha": man["sha"], "made": man["made"], "files": sub})
+        r = run(SSH + [host, f"chmod -R a-w {RT}/.{name}.partial/* && mv -T {RT}/.{name}.partial {RT}/{name} && "
+                             f"cat > {RT}/.{name}.m.tmp && mv {RT}/.{name}.m.tmp {RT}/{name}.manifest.json"], input=m)
+        if r.returncode:
+            return False, f"install: {(r.stderr or r.stdout).strip()[:200]}"
+    r = run(SSH + [host, f"cd {RT} && ln -sfn {name} .current.$$ && mv -T .current.$$ current && readlink current"], input="")
+    if r.returncode or r.stdout.strip() != name:
+        return False, f"flip: {(r.stderr or r.stdout).strip()[:200]}"
+    return True, "ok"
+
+
+def sync(sha, hosts=True, tests=True):
+    if not sha:
+        git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
+        sha = "origin/main"
+    full = git("rev-parse", f"{sha}^{{commit}}").strip()
+    prev = current()
+    name = sha12(full)
+    d = materialize(full)
+    if prev != name:
+        bad = smoke(d, tests=tests)
+        if bad:
+            log(f"{name}: smoke FAILED, current stays {prev or '-'}: {bad[:4]}")
+            (RT / f"{name}.smoke-failed").write_text("\n".join(bad) + "\n")
+            print(f"SMOKE-FAIL rt {name}: {bad[:3]}")
+            return 3
+        flip(RT, name)
+        with open(RT / "history.log", "a") as f:
+            f.write(f"{now().isoformat(timespec='seconds')} hub current {prev or '-'} -> {name} ({full})\n")
+    notes = []
+    if hosts:
+        for h in HOSTS:
+            ok, note = host_sync(h, name, prev if prev and prev != name else "")
+            notes.append(f"{h}:{'ok' if ok else 'FAIL ' + note}")
+            with open(RT / "history.log", "a") as f:
+                f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else 'FAILED ' + note}\n")
+    log(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
+    print(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
+    return 0 if all(":ok" in n for n in notes) else 4
+
+
+# ---------------------------------------------------------------- drift (live-only check)
+
+BACKEND_PY = r'''
+import glob, hashlib, os, re, sys, json
+def sh(p):
+    try:
+        return hashlib.sha256(open(p, "rb").read()).hexdigest()
+    except OSError:
+        return ""
+want = json.loads(sys.argv[1])        # {basename: sha256} of tools/fleet in rt/current
+out = {}
+seen = set()
+todo = []
+for p in json.loads(sys.argv[2]):     # entry points: wrappers are followed to the Python file they run
+    todo += sorted(glob.glob(os.path.expanduser(p)))
+while todo:
+    w = todo.pop(0)
+    if w in seen or not os.path.isfile(w):
+        continue
+    seen.add(w)
+    t = open(w, errors="replace").read()
+    first = t.split("\n", 1)[0]
+    if (first.startswith("#!") and "python" in first) or len(t) > 20000 or not first.startswith("#!"):
+        b = os.path.basename(w)
+        if b in want:
+            out[w] = "match" if sh(w) == want[b] else "DIFF " + b
+        continue
+    for m in re.finditer(r"(?:exec\s+|python3?\s+(?:-I\s+)?)(/[^\s\"';|&]+)", t):
+        if not m.group(1).endswith(("python3", "python")):
+            todo.append(m.group(1))
+    for m in re.finditer(r"OT_RUN_SEALED_BACKEND=([^\s\"';]+)", t):
+        todo.append(m.group(1))
+print(json.dumps(out))
+'''
+
+
+def drift():
+    """-> sorted list of drift strings"""
+    out = []
+    cur = current()
+    man = {}
+    if cur:
+        try:
+            man = json.loads((RT / f"{cur}.manifest.json").read_text())
+        except (OSError, ValueError):
+            out.append(f"hub rt/{cur}: manifest missing")
+        if man:
+            d = diff(manifest(str(RT / cur)), man["files"])
+            for k in ("changed", "missing", "extra"):
+                if d[k]:
+                    out.append(f"hub rt/{cur} {k}: {' '.join(d[k][:6])}{' +%d' % (len(d[k]) - 6) if len(d[k]) > 6 else ''}")
+    for leg in LEGACY:
+        if not Path(leg).is_dir():
+            continue
+        users = [p for p in in_use(leg)]
+        units = run(["grep", "-rl", leg, str(HOME / ".config/systemd/user")]).stdout.split()
+        if not users and not units:
+            continue
+        st = run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=leg, timeout=300).stdout.splitlines()
+        if st:
+            head = run(["git", "rev-parse", "--short=11", "HEAD"], cwd=leg).stdout.strip()
+            files = [l[3:] for l in st]
+            out.append(f"hub legacy {leg} (HEAD {head}, {len(users)} running process(es), {len(units)} unit file(s)): "
+                       f"{len(files)} file(s) differ from its HEAD: {' '.join(files[:6])}{' +%d' % (len(files) - 6) if len(files) > 6 else ''}")
+    want = json.dumps({k.split("/")[-1]: v for k, v in man.get("files", {}).items()
+                       if k.startswith("tools/fleet/") and k.count("/") == 2 and not v.startswith("link:")})
+    if man:
+        r = run(["python3", "-I", "-c", BACKEND_PY, want, json.dumps(BACKEND_ROOTS)], timeout=60)
+        out += _backend_lines("intel2", r)
+    for h in HOSTS:
+        r = run(SSH + [h, f"readlink {RT}/current"], input="")
+        hc = r.stdout.strip().splitlines()[0] if r.returncode == 0 and r.stdout.strip() else ""
+        if not hc:
+            out.append(f"{h}: no rt/current")
+        else:
+            if hc != cur:
+                out.append(f"{h}: rt/current {hc} != hub {cur}")
+            chk = MANIFEST_PY + f'''
+m = json.load(open({str(RT)!r} + "/" + {hc!r} + ".manifest.json"))
+d = diff(manifest({str(RT)!r} + "/" + {hc!r}), m["files"])
+print(json.dumps(d))
+'''
+            r2 = run(SSH + [h, "python3", "-I", "-c", shlex.quote(chk)], timeout=300, input="")
+            try:
+                d = json.loads(r2.stdout.strip().splitlines()[-1])
+                for k in ("changed", "missing", "extra"):
+                    if d[k]:
+                        out.append(f"{h} rt/{hc} {k}: {' '.join(d[k][:6])}")
+            except (ValueError, IndexError):
+                out.append(f"{h}: manifest check failed")
+        if man:
+            r3 = run(SSH + [h, "python3", "-I", "-c", shlex.quote(BACKEND_PY), shlex.quote(want), shlex.quote(json.dumps(BACKEND_ROOTS))],
+                     timeout=120, input="")
+            out += _backend_lines(h, r3)
+    return sorted(out)
+
+
+def _backend_lines(host, r):
+    try:
+        res = json.loads(r.stdout.strip().splitlines()[-1])
+    except (ValueError, IndexError):
+        return [f"{host}: ot-run backend check failed"]
+    return [f"{host} {p} differs from main tools/fleet/{v[5:]} (live-only copy)"
+            for p, v in sorted(res.items()) if v.startswith("DIFF") and "/rt/" not in p]
+
+
+def post_drift(lines):
+    """DRIFT lines to the review queue when the set changed since the last check"""
+    sf = MQ / "drift-state.json"
+    try:
+        old = set(json.loads(sf.read_text()))
+    except (OSError, ValueError):
+        old = set()
+    new = set(lines)
+    if new == old:
+        return 0
+    stamp = now().strftime("%Y-%m-%d %H:%M %Z")
+    posts = []
+    add = sorted(new - old)
+    if add:
+        posts.append(f"- {stamp} DRIFT [{ME} -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha "
+                     f"({len(add)} new): " + " ; ".join(add)[:3500] + ". Any live fix must land as a branch + COORD APPROVED; "
+                     "the merge queue lands it and ot-tools-sync deploys it.")
+    gone = sorted(old - new)
+    if gone:
+        posts.append(f"- {stamp} STATE [{ME} -> COORD] drift cleared: " + " ; ".join(gone)[:1500])
+    for rel in (QUEUE_REL, LANE_REL):
+        with open(COORD / rel, "a") as f:
+            f.write("\n".join(posts) + "\n")
+    r = run(["bash", COMMIT, f"{ME}: drift {len(new)}", QUEUE_REL, LANE_REL], cwd=COORD, timeout=900)
+    if r.returncode == 0:
+        t = MQ / "drift-state.json.tmp"
+        t.write_text(json.dumps(sorted(new)))
+        os.replace(t, sf)
+    return r.returncode
+
+
+def status():
+    print(f"hub {RT}/current -> {current() or '-'}")
+    for h in HOSTS:
+        r = run(SSH + [h, f"readlink {RT}/current || echo -"], input="")
+        print(f"{h} -> {r.stdout.strip() or r.stderr.strip()[:80]}")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("cmd", choices=["sync", "drift", "status"])
+    ap.add_argument("--sha", default="")
+    ap.add_argument("--no-hosts", action="store_true")
+    ap.add_argument("--no-tests", action="store_true", help="smoke without the wave test suite")
+    ap.add_argument("--post", action="store_true")
+    a = ap.parse_args()
+    if a.cmd == "sync":
+        return sync(a.sha, hosts=not a.no_hosts, tests=not a.no_tests)
+    if a.cmd == "status":
+        return status()
+    lines = drift()
+    for l in lines:
+        print("DRIFT", l)
+    if a.post:
+        return post_drift(lines)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main() or 0)

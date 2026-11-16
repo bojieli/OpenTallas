@@ -9,7 +9,7 @@ The same file runs on every build host (`tick`, a systemd user timer every 15 mi
   scan  one host: containers -> scope (ot-heavy oth-*.scope) -> kit dir -> the running stage's log -> metric series -> verdict.
         Writes ~/.local/state/noprog/report.json.  --act also cancels (see PASSES below).
   hub   on the hub only (has ~/coord): pushes the policy files to every host, fetches every host's report.json, writes the table
-        lanes/NOPROG-TABLE.md, appends actions to lanes/NOPROG.tsv, posts the table (first pass and on changes) and NEEDS-LANE
+        lanes/NOPROG-TABLE.md, appends actions to lanes/NOPROG-ACTIONS.tsv (lanes/NOPROG.tsv is the advisory per-job table of noprog_stage.py), posts the table (first pass and on changes) and NEEDS-LANE
         lines to lanes/COORD-REVIEW-QUEUE.md, all through ~/coord/bin/coord-commit.sh.
   tick  scan --act, then hub when this host is the hub.
 
@@ -46,7 +46,7 @@ MIN_REPORT_AGE_S = 1000        # a job is cancelled only when an earlier pass (>
 GPL_ROW = re.compile(r"^\s*(\d+) \|\s+([0-9]+\.[0-9]+) \|\s+([0-9.]+e[+-]?\d+) \|")
 GPL_ROW_OLD = re.compile(r"Iter:\s*(\d+)\s+overflow:\s*([0-9.]+)", re.I)
 TABLE_HDR = re.compile(r"^\s*(Iteration|Iter)\s*\|(.*)$")
-TABLE_ROW = re.compile(r"^\s*(\d+|final)\s*\|(.*)$")
+TABLE_ROW = re.compile(r"^\s*(\d+|final)\*?\s*\|(.*)$")       # repair_timing rows carry a trailing "*" ("3154* |")
 DRT_ITER = re.compile(r"DRT-0199\]\s+Number of violations = (\d+)")
 DRT_PCT = re.compile(r"Completing \d+% with (\d+) violations")
 GRT_TOTAL = re.compile(r"^Total\s+\d+\s+\d+\s+[\d.]+%\s+(\d+)\s*/\s*(\d+)\s*/\s*(\d+)")
@@ -81,9 +81,14 @@ def parse_tables(lines):
     return out
 
 
-def table_series(tbl):
-    """the lower-is-better value column of one repair table -> (name, [(line_idx, value)]) or None"""
+def table_series(tbl, kind=None):
+    """the lower-is-better value column of one repair table -> (name, [(line_idx, value)]) or None.
+    FLOW-HEALTH-1 11-15 (FABLE-PD-KV-1450 fix 7): in a global-route log (5_1_grt) a table whose value column is a bare `Violations`
+    is the detailed-placement legalizer's, not global-route progress: it is not the metric there (Remaining / Viol / TNS of the resizer
+    repair tables still are)."""
     for want in METRIC_COLS:
+        if kind == "grt" and want == "Violations":
+            continue
         for k, c in enumerate(tbl["cols"]):
             if c == want or (want == "TNS" and c in ("TNS", "StTNS")):
                 ser = []
@@ -135,10 +140,15 @@ def extract(kind, text):
         tbls = parse_tables(lines)
         act = tbls[-1] if tbls and not tbls[-1]["final"] else None
         if act is not None:
-            ts = table_series(act)
+            ts = table_series(act, kind)
             if ts:
                 res["name"], res["series"] = "repair_" + ts[0], ts[1]
                 return res
+        if kind == "grt":
+            # global_route's own news: GRT-0xxx lines (iteration / overflow / incremental GRT); a legalizer table filling the log is not growth
+            g = [i for i, ln in enumerate(lines) if re.search(r"\bGRT-0\d+\]", ln) and not NOISE.search(ln)]
+            if g:
+                res["growth_idx"] = g[-1]
         tot = [(i, float(m.group(3))) for i, ln in enumerate(lines) for m in [GRT_TOTAL.match(ln)] if m]
         # GRT-0096 final congestion total (one per global_route call): the metric only while it is the stage's last news
         if tot and kind == "grt" and (not meaningful or tot[-1][0] >= meaningful[-1] - 40):
@@ -247,8 +257,15 @@ def is_plan(env_prio, text):
     return env_prio == "plan" or bool(PLAN_RE.search(B64.sub(" ", text)))
 
 
+# KIT-OPS-6 11-14 (COORD item 8): 20:46 the watchdog killed HEAD elemA/elemB core builds (intel1 A1/B1) because HEAD cores use the HBM
+# core-kit generator: container hbmcore-kit_*, command run_kit_hbm.sh.  The generator name says nothing about the die.  HBM is decided
+# from the die metadata the ident carries (kit dir / work dir / type name under an hbm die: .../runs/hbm/..., hbm-*, ot_hbm_*, trialhbm-*),
+# after the generator tokens are removed.
+GENERATOR_RE = re.compile(r"(?i)(?:^|(?<=[\s/]))hbmcore-|run_kit_hbm\.sh")
+
+
 def is_hbm(text):
-    return bool(HBM_RE.search(text))
+    return bool(HBM_RE.search(GENERATOR_RE.sub(" ", text)))
 
 
 def base_type(name):
@@ -673,7 +690,7 @@ def hub(now=None, post=True):
         seen["offset"][h] = len(lines)
     files = ["lanes/NOPROG-TABLE.md"]
     if new_actions:
-        np_path = os.path.join(COORD, "lanes/NOPROG.tsv")
+        np_path = os.path.join(COORD, "lanes/NOPROG-ACTIONS.tsv")
         fresh = not os.path.exists(np_path)
         with open(np_path, "a") as f:
             if fresh:
@@ -682,7 +699,7 @@ def hub(now=None, post=True):
                 f.write("\t".join(str(x) for x in [time.strftime("%F %T", time.localtime(a["t"])), a["host"], a["type"], a["stage"],
                                                    a["metric"].replace("\t", " "), a["kit"], ",".join(a["containers"]), a["why"],
                                                    a["gb"], a["cores"], a["cores_busy"]]) + "\n")
-        files.append("lanes/NOPROG.tsv")
+        files.append("lanes/NOPROG-ACTIONS.tsv")
     qlines = []
     sig = json.dumps(sorted({f"{r['host']}|{r['container']}|{r['verdict']}" for r in flagged}))
     if sig != seen.get("table_sig") and flagged:

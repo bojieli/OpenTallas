@@ -28,7 +28,12 @@ module tb_s81_kp4_eq;
     wire h_v, h_first, h_unc, h_lock; wire [511:0] h_d; wire [4:0] h_nerr; wire [7:0] h_seq; wire [31:0] h_corr, h_unc_n, h_relock;
     kp4_dec_hw #(.MUT(DMUT), .SEAMMUT(SEAMMUT), .PREGMUT(PREGMUT)) u_h (.clk(clk), .rst_n(rst_n), .p_v(ch_v), .p_d(ch_d), .q_v(h_v), .q_d(h_d), .q_first(h_first),
         .q_unc(h_unc), .q_nerr(h_nerr), .q_seq(h_seq), .lock(h_lock), .n_corr(h_corr), .n_unc(h_unc_n), .n_relock(h_relock));
-    localparam integer DLY_Q = 8, DLY_L = 4;
+`ifdef OT_S81_DCHN_FACE
+    localparam integer FACE = 1;         // S81-RESIGN-DEEP: dchn input face register, +1 cycle on q_* / n_corr / n_unc
+`else
+    localparam integer FACE = 0;
+`endif
+    localparam integer DLY_Q = 8 + FACE, DLY_L = 4;    // lock / n_relock come from dsyn: no extra cycle
     reg [530:0] rq_dl [0:DLY_Q]; reg rl_dl [0:DLY_L]; reg [95:0] rn_dl [0:DLY_L];
     integer k_, eq_rtl_bad = 0, eq_hw_bad = 0, eq_cyc = 0, eq_qv = 0;
     always @(posedge clk) begin
@@ -38,8 +43,10 @@ module tb_s81_kp4_eq;
     end
     always @(posedge clk) if (rst_n) begin
         eq_cyc = eq_cyc + 1; if (r_v) eq_qv = eq_qv + 1;
-        if ({q_v, q_first, q_unc, q_nerr, q_seq, q_d, lock, n_corr, n_unc, n_relock} !==
-            {r_v, r_first, r_unc, r_nerr, r_seq, r_d, r_lock, r_corr, r_unc_n, r_relock}) begin
+        if (FACE ? ({q_v, q_first, q_unc, q_nerr, q_seq, q_d, n_corr, n_unc} !==
+                    {rq_dl[0][527:0], rn_dl[0][95:32]} || {lock, n_relock} !== {r_lock, r_relock}) :
+            ({q_v, q_first, q_unc, q_nerr, q_seq, q_d, lock, n_corr, n_unc, n_relock} !==
+            {r_v, r_first, r_unc, r_nerr, r_seq, r_d, r_lock, r_corr, r_unc_n, r_relock})) begin
             eq_rtl_bad = eq_rtl_bad + 1; if (eq_rtl_bad < 4) $display("ERR rtl mismatch cycle %0d", eq_cyc); end
         if (eq_cyc > DLY_Q + 2 && ({h_v, h_first, h_unc, h_nerr, h_seq, h_d} !== rq_dl[DLY_Q - 1] || h_lock !== rl_dl[DLY_L - 1])) begin
             eq_hw_bad = eq_hw_bad + 1; if (eq_hw_bad < 4) $display("ERR hw mismatch cycle %0d", eq_cyc); end

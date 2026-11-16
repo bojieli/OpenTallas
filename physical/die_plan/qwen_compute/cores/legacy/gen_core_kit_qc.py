@@ -1019,6 +1019,38 @@ def _ms():
     return m
 
 
+# KIT-OPS-5 11-14 (COORD, FABLE slang proof): yosys-slang synthesis goes quadratic on big flat cores (sta_region_nb0: 55 min against
+# 4 min on the default frontend, same netlist class).  A recipe "slang": true keeps slang only for kits up to SLANG_MAX_CELLS
+# synth cells; above it the kit takes the default frontend UNLESS a plan pin is a 1-bit bus ([0:0]: slang drops the index, so
+# a plan pin ck[0] would not exist).  Cell count = recipe "est_synth_cells", else the measurement of the kit being regenerated
+# (cap_estimate.measured_synth, read before the kit dir is rebuilt); none known -> slang unchanged.
+SLANG_MAX_CELLS = 20000
+
+
+def one_bit_buses(names):
+    """plan pin names -> sorted bus bases whose only index is [0] (a [0:0] bus)."""
+    idx = {}
+    for n in names:
+        m = re.fullmatch(r"(.+)\[(\d+)\]", n)
+        if m:
+            idx.setdefault(m.group(1), set()).add(int(m.group(2)))
+    return sorted(b for b, s in idx.items() if s == {0})
+
+
+def slang_decision(rec, names, measured_cells, max_cells=SLANG_MAX_CELLS):
+    """-> (use_slang, note).  note = '' when nothing changed from the recipe."""
+    if not rec.get("slang"):
+        return False, ""
+    cells = rec.get("est_synth_cells")
+    cells = int(cells) if cells is not None else measured_cells
+    if cells is None or cells <= max_cells:
+        return True, ""
+    one = one_bit_buses(names)
+    if one:
+        return True, f"SLANG_KEPT {cells} synth cells > {max_cells} but {len(one)} 1-bit bus pin(s) need slang: {', '.join(one[:6])}"
+    return False, f"SLANG_DROPPED {cells} synth cells > {max_cells}: default frontend (synthesis time)"
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--module", required=True, help="recipe key (= plan module unless the recipe names plan_module)")
@@ -1100,7 +1132,14 @@ def main():
     suffix = rec.get("suffix", "c")
     kd = Path(a.out) / f"{mod}_{suffix}"
     MS.precheck(a.master_slice, a.trial, plan, mod)
+    prev_cells = None
     if kd.exists():
+        try:
+            import cap_estimate
+            _m = cap_estimate.measured_synth(kd)
+            prev_cells = _m[0] if _m else None
+        except Exception:
+            prev_cells = None
         shutil.rmtree(kd)
     (kd / "rtl").mkdir(parents=True)
     srcs = []
@@ -1247,6 +1286,9 @@ def main():
     (kd / "pins.json").write_text(json.dumps(rows) + "\n")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
     names = [q["name"] for q in pins]
+    _slang_use, _slang_note = slang_decision(rec, names, prev_cells)
+    if _slang_note:
+        print(_slang_note)
     ckb, rsb = spec["clock_port"], list(spec.get("reset_ports", []))
     clks = sorted(n for n in names if base(n) == ckb)
     rsts = sorted(n for n in names if base(n) in rsb)
@@ -1496,7 +1538,7 @@ def main():
                 if no_gds else [])]
              if mplace or hcb else []),
            # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
-           *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
+           *(["export SYNTH_HDL_FRONTEND = slang"] if _slang_use else []),
            # QC-SU-SRAMHALO: macro-pin flops anchor beyond the pin-escape strip
            *([f"export OT_MPF_HALO_UM = {pch_depth:g}", "export POST_TAPCELL_TCL = /work/sram_pincol_taps.tcl"]
              if pch_depth else []),

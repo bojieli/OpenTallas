@@ -2210,9 +2210,22 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None, plan_dir=None):
         ck = t.get("clock") or {}
         if not ({"tap_um", "taps", "tap_mode"} & set(ck)):
             bad("clock_method", tn, "no clock method (clock.tap_um, clock.taps[] or clock.tap_mode)")
-        if common is not None and "insertion_ps" in ck and abs(float(ck["insertion_ps"]) - float(common)) > EPS:
-            bad("insertion_target", tn, f"clock.insertion_ps {ck['insertion_ps']:g} != die common latency "
-                f"{float(common):g} (R4: one die-wide target)")
+        if common is not None and "insertion_ps" in ck:
+            # PLAN-READERS-1 11-14 (COORD item 4): a type with rck_island (serdes recovered-clock island) or an explicit
+            # clock.insertion_target_override {"reason": str} carries its own insertion_ps; the parent prices the offset at the
+            # landing.  Non-numeric values are reported, never a TypeError.
+            ov = ck.get("insertion_target_override")
+            exempt = bool(t.get("rck_island")) or (isinstance(ov, dict) and isinstance(ov.get("reason"), str) and ov["reason"].strip())
+            if ov is not None and not (isinstance(ov, dict) and isinstance(ov.get("reason"), str) and ov["reason"].strip()):
+                bad("insertion_target", tn, "clock.insertion_target_override needs a nonempty reason")
+            try:
+                ins, com = float(ck["insertion_ps"]), float(common)
+            except (TypeError, ValueError):
+                bad("insertion_target", tn, f"clock.insertion_ps {ck['insertion_ps']!r} / die common latency {common!r} not numeric")
+            else:
+                if abs(ins - com) > EPS and not exempt:
+                    bad("insertion_target", tn, f"clock.insertion_ps {ins:g} != die common latency {com:g} "
+                        "(R4: one die-wide target; exempt: type rck_island or clock.insertion_target_override {reason})")
         if "reset" not in t:
             bad("reset_sync", tn, "no reset synchronizer entry (one per partition)")
         used = {bus for bus, _pid, _ok in ends.get(tn, ())}
@@ -2690,7 +2703,7 @@ def _plan_geom_default():
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
-        street_rule="off", r8_strap_pads=False):
+        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2748,6 +2761,10 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     geo = {lid: lane_geometry(P, lid) for lid in P.lanes}
     summ["m89_signals"] = check_m89_signals(P, R)
     summ["worst_hops"] = check_hops(P, R, geo)
+    if timing_audit != "off":
+        # PLAN-READERS-1 (FABLE-METHOD levers 1 + 8): reach priced in ps + measured core clock depth vs the type budget
+        import plan_timing_audit as PTA
+        summ["timing_audit"] = PTA.g0(P, R, root=repo_root, mode=timing_audit, geo=geo)
     summ["ft_s0_window"] = check_ft_s0_window(P, R)
     summ["xtap_latency"] = check_xtap_latency(P, R)
     if tap_sink_cap != "off":
@@ -2882,6 +2899,11 @@ def main(argv=None):
                          "R-STREET (RULEBOOK-1113): the same check also raises face_street (a macro behind the type's own "
                          "pin face keeps max(43.2, shadowed pins / (37.5 x open ends)) um, cap 129.6) and station_alley "
                          "(>= 16 station bits in a macro slot < 43.2 um); street_rule.py legalize is the auto-fix")
+    ap.add_argument("--timing-audit", choices=("warn", "error", "off"), default="warn",
+                    help="PLAN TIMING AUDIT (plan_timing_audit.py): lane hops priced in ps against period - setup - 150, and the "
+                         "MEASURED core clock depth / boundary arcs against the type clock budget; warn = WARN per failing type, "
+                         "error = ERROR (UNMEASURED cores never fail; reported with the LIB fallback depth); default warn (COORD 11-15; flip to error per die after its next plan event)")
+    ap.add_argument("--repo-root", help="checkout holding the core views for --timing-audit (default: this checkout)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
     out = Path(a.out) if a.out else Path(a.plan).resolve().parent
@@ -2892,7 +2914,7 @@ def main(argv=None):
                   completeness=a.completeness, clock_builds=a.clock_build,
                   core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, core_shape_index=a.core_shape_index,
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
-                  full_cut=a.full_cut, street_rule=a.street_rule,
+                  full_cut=a.full_cut, street_rule=a.street_rule, timing_audit=a.timing_audit, repo_root=a.repo_root,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
     ne = len(R.errors())
     npv = len(R.pendings())

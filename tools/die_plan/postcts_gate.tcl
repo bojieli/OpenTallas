@@ -230,6 +230,16 @@ set dev [expr {$n ? abs($mean - $ot_pg_bound) : 1e9}]
 set ot_pg_band_gate [expr {[info exists ::env(OT_POSTCTS_BAND_GATE)] && $::env(OT_POSTCTS_BAND_GATE) eq "1"}]
 set ot_pg_band_verdict [expr {$dev <= $ot_pg_tol ? "PASS" : ($ot_pg_band_policy eq "info" ? "INFO" : ($ot_pg_band_gate ? "FAIL" : "ADVISORY"))}]
 set v [expr {$n && $ot_pg_band_verdict ne "FAIL" ? "PASS" : "FAIL"}]
+# KIT-OPS-5 11-14 (FABLE-METHOD lever 4, COORD): fail closed.  A post-CTS TT setup estimate below OT_POSTCTS_SETUP_STOP_PS
+# (default -150 ps; 0 or "off" disables) cannot be closed by routing (a route adds no register and moves no tap): the verdict is FAIL
+# with the SETUP_TRIAGE marker, which the kit runner treats as a stop whatever the band policy (the row becomes PLAN-TRIAGE).
+set ot_pg_stop -150.0
+if {[info exists ::env(OT_POSTCTS_SETUP_STOP_PS)]} { set ot_pg_stop $::env(OT_POSTCTS_SETUP_STOP_PS) }
+set ot_pg_triage 0
+if {$ot_pg_C eq "TT" && $n && [string is double -strict $ot_pg_stop] && $ot_pg_stop < 0 && $ws < $ot_pg_stop} {
+  set ot_pg_triage 1
+  set v FAIL
+}
 set fh [open /work/postcts_gate_${ot_pg_c}.json w]
 puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.4f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\", \"band_policy\": \"%s\", \"band_verdict\": \"%s\"}" \
   $ot_pg_C $n $mean [expr {$n ? [lindex $arr 0] : -1}] [expr {$n ? [lindex $arr end] : -1}] $ot_pg_bound $dev $ot_pg_tol $ws $hs \
@@ -238,4 +248,8 @@ close $fh
 # the last word stays the verdict (flow_canary baseline GATE_RE); an advisory band miss is named before it
 puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s%s" \
   $ot_pg_C $ot_pg_mode $n $mean $ot_pg_bound $dev $ot_pg_tol $ws $hs \
-  [expr {$ot_pg_band_verdict eq "ADVISORY" ? "ADVISORY band dev > tol (not a gate, OWNER 11-03) " : ""}] $v]
+  [expr {$ot_pg_band_verdict eq "ADVISORY" ? "ADVISORY band dev > tol (not a gate, OWNER 11-03) " : ""}][expr {$ot_pg_triage ? [format "SETUP_TRIAGE setup_est %.2f < %.0f ps (PLAN-TRIAGE) " $ws $ot_pg_stop] : ""}] $v]
+# PLAN-READERS-1 11-14: plan min_early_ps rows (rck_early.txt) -- measured lead of each macro clock pin, REPORT ONLY
+if {[file exists /work/rck_early.txt] && [file exists /work/rck_early_report.tcl]} {
+  if {[catch {source /work/rck_early_report.tcl; ot_rck_early_report /work/rck_early.txt $ot_pg_C} ot_pg_re]} { puts "OT_RCK_EARLY report failed (not a gate): $ot_pg_re" }
+}

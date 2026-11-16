@@ -41,3 +41,22 @@ def test_generated_descendants_use_clock_family_ownership():
 
 def test_single_clock_census_is_unchanged():
     assert run("rename all_registers old_all_registers\nproc all_registers {args} {return {local/CK writer/CK generated/CK}}\nputs [dict keys [ot_pinreg_set]]") == "generated local writer"
+
+
+def run_arr(wave, arrival, per=833.0):
+    """ot_pinreg_arr fallback (no ot_cf_wire): clock `clk` with waveform `wave`, register CK arrival_max_rise `arrival`"""
+    return run(f"""namespace eval sta {{ proc time_sta_ui {{t}} {{return $t}} }}
+proc clk {{args}} {{ if {{[lindex $args 0] eq "waveform"}} {{return {{{wave}}}}} }}
+proc get_property {{obj prop}} {{ if {{$prop eq "arrival_max_rise"}} {{return {arrival}}} ; if {{$prop eq "period"}} {{return {per}}} }}
+puts [ot_pinreg_arr reg/CK clk]""")
+
+
+def test_fallback_arrival_is_not_folded_by_magnitude():
+    # KIT-OPS-5 (FABLE-PD-S81C-0730): real insertion 484.2 on a {0 T/2} clock was read as 67.7 (484.2 - 416.5)
+    assert float(run_arr("0 416.5", 484.2)) == 484.2
+    assert float(run_arr("0 416.5", 504.3)) == 504.3
+    assert float(run_arr("0 416.5", 389.7)) == 389.7
+
+
+def test_fallback_arrival_subtracts_the_waveform_offset_only():
+    assert float(run_arr("416.5 833", 900.5)) == 484.0          # a clock whose first rise is at T/2

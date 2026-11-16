@@ -108,7 +108,44 @@ def test_fail_safe_conditions(tmp_path):
     _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     assert "TT setup loss" in t and "no hold gain" in t and "tool error" in t
-    assert "min($pg_s0, 0.0) - 1.0" in t          # a positive TT setup may be spent down to 0, never below
+    assert "proc pg_verdict" in t and "[pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]" in t
+
+
+def _verdict(tmp_path, args, env=None):
+    tclsh = shutil.which("tclsh")
+    if not tclsh:
+        pytest.skip("no tclsh")
+    _kit(tmp_path, {"pregrt_ff_hold": True})
+    t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
+    m = re.search(r"proc pg_verdict .*?\n\}\n", t, re.S)
+    assert m
+    chk = tmp_path / "v.tcl"
+    chk.write_text(m.group(0) + "puts [pg_verdict " + " ".join(str(a) for a in args) + "]\n")
+    import os
+    r = subprocess.run([tclsh, str(chk)], capture_output=True, text=True, env={**os.environ, **(env or {})})
+    assert r.returncode == 0, r.stderr
+    return r.stdout.strip()
+
+
+# args: w0 w1 n0 s0 s1.  HOLD-GRT-1: the measured FALLBACK cases of the QC hold-stall types.
+@pytest.mark.parametrize("args,ok", [
+    ((-113.7, 4.9, 15238, -8.12, -9.62), True),        # slw_stm_v1: -1.5 ps, above the -42 gate
+    ((-108.1, 4.8, 4768, -515.45, -518.27), True),     # slw_hc0: 2.8 ps below a floor already far under the gate
+    ((-107.9, 4.9, 2873, 12.79, 0.81), True),          # positive slack spent, stays above 0
+    ((-100.0, 4.9, 100, 30.0, -30.0), True),           # spent below 0 but above the gate
+    ((-100.0, 4.9, 100, -20.0, -80.0), False),         # 60 ps loss through the gate: still rejected
+    ((-84.15, -84.15, 515, -562.4, -562.4), False),    # no hold gain
+    ((0.0, 0.0, 0, -50.0, -50.0), True),               # no debt, nothing changed
+])
+def test_accept_verdict(tmp_path, args, ok):
+    v = _verdict(tmp_path, args)
+    assert (v == "") is ok, v
+
+
+def test_accept_verdict_env_gate_and_tol(tmp_path):
+    assert _verdict(tmp_path, (-100.0, 4.9, 100, -515.0, -525.0)).startswith("TT setup loss")
+    assert _verdict(tmp_path, (-100.0, 4.9, 100, -515.0, -525.0), {"OT_PREGRT_SETUP_TOL": "15"}) == ""
+    assert _verdict(tmp_path, (-100.0, 4.9, 100, -10.0, -30.0), {"OT_PREGRT_SETUP_GATE": "-10"}).startswith("TT setup loss")
 
 
 def test_class_report_and_open_list(tmp_path):

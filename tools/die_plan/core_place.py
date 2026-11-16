@@ -152,6 +152,9 @@ class TypeModel:
                 return i
         return None
 
+    def moved_core(self, i):
+        return bool(np.abs(np.array(self.core_origin(i)) - self.org0[i]).max() > 1e-6 or self.core_orient(i) != self.ori0[i])
+
     def to_local(self, i, p):
         u, v = p[0] - self.org0[i, 0], p[1] - self.org0[i, 1]
         return xf(self.ori0[i], self.dim[i, 0], self.dim[i, 1], u, v)
@@ -180,6 +183,7 @@ class TypeModel:
                 st_pairs.add((A, bus_, str(s_.get("capture", "")).rsplit(".", 1)[0]))
         L = []   # (endA, endB, bits, kind, max_len)
         self.Lname = {}   # q -> (inst, bus, peer inst, peer bus) of a direct core link
+        self.Lbus = {}    # q -> (inst, pin, type bus) of a core pin <-> face bus link
         if cc:
             for inst, ports in cc.items():
                 if inst not in self.idx:
@@ -208,6 +212,7 @@ class TypeModel:
                             self.Lname[len(L) - 1] = (inst, bus, val, mate[0] if mate else None)
                         elif k == "bus" and val in bus_pt:
                             L.append(((i, (u, v)), (None, bus_pt[val]), bits, "bus"))
+                            self.Lbus[len(L) - 1] = (inst, bus, val)
                         elif k == "face" and val in "NSEW":
                             L.append(((i, (u, v)), (None, RS.face_point(W, H, val)), bits, "face"))
         self.stations = []
@@ -227,6 +232,20 @@ class TypeModel:
                 c = link_class(KI, inst, bus, val, mb)
                 if c and (c in allow or "any" in allow) and not depth.get(c):
                     self.lreg[q] = c
+        self.breg = {}    # --bus-reg: q -> existing source-station depth of its face bus (>= 1)
+        if self.cfg.get("bus_reg"):
+            depth, cov = collections.defaultdict(int), set()
+            for e in t.get("internal_stations") or []:
+                c = str(e.get("conn", ""))
+                if c.startswith("bus:"):
+                    depth[c[4:]] = max(depth[c[4:]], len(e.get("regs_um") or []))
+                    cov.add((c[4:], str(e.get("capture", "")))); cov.add((c[4:], str(e.get("launch", ""))))
+            self.bcov = {}    # F3: bus links served by an existing bus row of a --take-regs bus: q -> bus depth
+            for q, (inst, pin, val) in self.Lbus.items():
+                if depth.get(val, 0) >= 1 and (val, inst + "." + pin) not in cov:
+                    self.breg[q] = depth[val]
+                elif depth.get(val, 0) >= 1 and self.cfg.get("take_regs") and val in TAKE_BUSES:
+                    self.bcov[q] = depth[val]
         self.inc = collections.defaultdict(list)
         for q, (a, b, w, kind) in enumerate(L):
             for e in (a, b):
@@ -604,9 +623,15 @@ class TypeModel:
             b0 = self.llen(q)
             self.base_len.append(b0)
             if q in st:
-                lim = (st[q] + 1) * reach * 0.8
+                lim = (st[q] + 1 + (1 if self.cfg.get("take_regs") else 0)) * reach * 0.8
             elif q in self.lreg:
                 lim = 2 * reach * 0.8      # --link-reg: this direct link may take one register (+1 cycle)
+            elif q in getattr(self, "bcov", {}):
+                lim = (self.bcov[q] + 2) * reach      # F3: the bus row may take +1 (the whole bus deepens)
+            elif q in self.breg:
+                # --bus-reg: the bus's existing stage(s) may sit on it (0 cycles); hops <= reach are enforced when the
+                # stage is sited (route_station must keep the depth), so no extra 0.8 margin here
+                lim = (self.breg[q] + 1 + (1 if self.cfg.get("take_regs") else 0)) * reach
             else:
                 lim = DIRECT_REACH
             self.maxlen.append(max(lim, b0))
@@ -1015,6 +1040,43 @@ def base_ok(M, k, ignore=()):
     return True
 
 
+def block_shift(M, log):
+    """F1: one translation (dx, dy) of every movable cluster: per axis the largest clearance deficit of a --face-clear
+    rule cluster on the near face (W/S positive, E/N negative; when both faces of an axis need room the larger wins).
+    Clusters pushed past the far face are clamped inside it; face_clear_legalise then legalises overlaps."""
+    need = {"W": 0.0, "E": 0.0, "S": 0.0, "N": 0.0}
+    for face, um, rx in M.cfg.get("face_clear") or []:
+        ax = 1 if face in "SN" else 0
+        L = M.H if ax else M.W
+        for k in range(M.m):
+            if face not in M.cclr[k] or M.cfix[k]:
+                continue
+            p, d = M.cpos[k][ax], M.cbb[k, 2 + ax]
+            need[face] = max(need[face], um - p if face in "SW" else p + d - (L - um))
+    dx = need["W"] if need["W"] >= need["E"] else -need["E"]
+    dy = need["S"] if need["S"] >= need["N"] else -need["N"]
+    dx = math.ceil(dx / G - 1e-9) * G if dx > 0 else -math.ceil(-dx / G - 1e-9) * G
+    dy = math.ceil(dy / G - 1e-9) * G if dy > 0 else -math.ceil(-dy / G - 1e-9) * G
+    if not dx and not dy:
+        return 0
+    n = 0
+    for k in range(M.m):
+        if M.cfix[k]:
+            continue
+        x, y = M.cpos[k]
+        x = min(max(snap(x + dx), G), snap(M.W - M.cbb[k, 2] - G))
+        y = min(max(snap(y + dy), G), snap(M.H - M.cbb[k, 3] - G))
+        M.cpos[k] = (x, y)
+        n += 1
+    if M.bands:
+        M.band_now = np.zeros(len(M.bands))
+        for kk in range(M.m):
+            M.band_now += M._band_k(kk)
+    M.cfg.setdefault("_block_shift", (round(dx, 2), round(dy, 2)))
+    log("  block shift: (%.2f, %.2f) um on %d clusters" % (dx, dy, n))
+    return n
+
+
 def face_clear_legalise(M, log):
     """--face-clear: every rule cluster nearer its face than the rule is set onto the clearance line, then a
     sweep away from that face (Tetris) puts each cluster that is no longer legal against the ones already swept
@@ -1022,6 +1084,8 @@ def face_clear_legalise(M, log):
     already off-rule in the base and are untouched keep their base spot (base_ok).  Returns (moved, failed)."""
     failed = []
     start = [tuple(M.cpos[k]) for k in range(M.m)]
+    if M.cfg.get("block_shift"):
+        block_shift(M, log)
     for face, um, rx in M.cfg.get("face_clear") or []:
         ax = 1 if face in "SN" else 0
         sg = 1 if face in "SW" else -1           # direction away from the face
@@ -1068,6 +1132,11 @@ def face_clear_legalise(M, log):
                             break
                 if best:
                     break
+            if best is None and first is not None and M.cfg.get("take_regs"):
+                # --take-regs: move anyway; stretched links / stations pay +1 register (write_type / link-reg)
+                M.cpos[k] = first[1]
+                M.cfg.setdefault("_taken", []).append(M.inst[M.CL[k][0]])
+                continue
             if best is None:      # no spot keeps every incident link within its timing limit: the rule fails here
                 bad.append(M.inst[M.CL[k][0]])
                 continue
@@ -1083,6 +1152,12 @@ def face_clear_legalise(M, log):
         moved = [M.inst[M.CL[k][0]] for k in range(M.m) if tuple(M.cpos[k]) != start[k]]
         log("  face-clear %s %.1f: %d rule clusters set on the line, %d clusters moved: %s" % (
             face, um, len(hit), len(moved), [m_.split(".")[-2] + "." + m_.split(".")[-1] for m_ in moved]))
+    if failed and M.cfg.get("block_shift"):
+        # F1: keep the partial result (the block shift + every cluster that did find a spot); the search keeps the
+        # rule for the moved ones and the slot / station passes price the rest
+        moved = [M.inst[M.CL[k][0]] for k in range(M.m) if tuple(M.cpos[k]) != start[k]]
+        log("  face-clear (block shift): kept partial result, %d clusters moved, failed %s" % (len(moved), failed))
+        return len(moved), failed
     if failed:
         def restore():
             for k in range(M.m):
@@ -1298,6 +1373,74 @@ def walk_follow(x, fol, key=None):
     return x
 
 
+def _man(p, q):
+    return abs(p[0] - q[0]) + abs(p[1] - q[1])
+
+
+def snap_station(R, a, b, regs, reach, rmax=40):
+    """B6 (FABLE-PLAN-EVENTS A2): a station that route_station cannot re-site keeps its registers but each one that
+    now sits under a core (or its halo) moves to the nearest free 4.32 lattice point (ring search up to rmax steps)
+    not already used; accepted only if every pin-reg / reg-reg Manhattan hop stays <= reach.  None = no legal snap."""
+    G = 4.32
+    out = []
+    for r in regs:
+        x, y = float(r[0]), float(r[1])
+        if R.free(x, y) and (round(x, 2), round(y, 2)) not in out:
+            out.append((round(x, 2), round(y, 2)))
+            continue
+        i0, j0 = int(round(x / G)), int(round(y / G))
+        best = None
+        for d in range(1, rmax + 1):
+            for di in range(-d, d + 1):
+                for dj in (-(d - abs(di)), d - abs(di)):
+                    q = (round((i0 + di) * G, 2), round((j0 + dj) * G, 2))
+                    if q in out or not R.free(*q):
+                        continue
+                    if best is None or _man(q, (x, y)) < _man(best, (x, y)):
+                        best = q
+            if best is not None:
+                break
+        if best is None:
+            return None
+        out.append(best)
+    pts = [tuple(a)] + out + [tuple(b)]
+    if any(_man(p, q) > reach + 1e-6 for p, q in zip(pts, pts[1:])):
+        return None
+    return out
+
+
+def detour_fix(R, st, cfg, rep):
+    """B6 (A2, t44 station 278): a kept station whose register path is more than twice its pin distance (and longer
+    by > 100 um) is re-sited with the same register count when route_station finds a shorter legal path."""
+    import hub_repack as HR
+    rep.setdefault("detour_fixed", 0)
+    for s in st:
+        regs = s.get("regs_um") or []
+        if not regs:
+            continue
+        a, b = s["from_um"], s["to_um"]
+        pts = [tuple(a)] + [tuple(r[:2]) for r in regs] + [tuple(b)]
+        L = sum(_man(p, q) for p, q in zip(pts, pts[1:]))
+        d = _man(a, b)
+        if L <= 2 * d or L - d <= 100:
+            continue
+        r = HR.route_station(R, tuple(a), tuple(b), len(regs), cfg["reach"])
+        if r is None or len(r["regs"]) != len(regs):
+            # pins on facing cores: the a-b box is all core, so snap the registers from the pin midpoint instead
+            mid = [round((a[0] + b[0]) / 2, 2), round((a[1] + b[1]) / 2, 2)]
+            q = snap_station(R, a, b, [mid] * len(regs), cfg["reach"], rmax=60)
+            if q is None:
+                continue
+            r = dict(regs=q)
+        p2 = [tuple(a)] + [tuple(q) for q in r["regs"]] + [tuple(b)]
+        L2 = sum(_man(p, q) for p, q in zip(p2, p2[1:]))
+        if L2 >= L - 1e-6:
+            continue
+        s["regs_um"] = [list(q) for q in r["regs"]]
+        s["note"] = (s.get("note", "") + " | B6 detour fix (%.1f -> %.1f um, %d regs kept)" % (L, L2, len(regs)))
+        rep["detour_fixed"] += 1
+
+
 def write_type(M, t_new, cfg, log):
     """t_new: deepcopy of the base type; returns station report."""
     import hub_repack as HR
@@ -1359,6 +1502,8 @@ def write_type(M, t_new, cfg, log):
     rects = [(M.core_origin(i)[0], M.core_origin(i)[1], M.core_origin(i)[0] + M.dim[i, 0],
               M.core_origin(i)[1] + M.dim[i, 1]) for i in range(M.n)]
     R = HR.Raster(W, H, rects)
+    if cfg.get("slot_ft"):
+        rep["slot_cells"] = slot_mask(R, rects, W, H, cfg["slot_ft"])
     for s, (a, b, mv) in zip(st, ends):
         nold = len(s.get("regs_um") or [])
         rep["stations"] += 1
@@ -1379,20 +1524,208 @@ def write_type(M, t_new, cfg, log):
             rep["regs_new"] += nold
             s["note"] = (s.get("note", "") + " | CORE-PLACE-1 re-sited (%s, %s um, %d regs kept)" %
                          (r["kind"], r["length_um"], nold))
+        elif r is not None and len(r["regs"]) > nold and cfg.get("take_regs") and take_class(s) is not None:
+            rep.setdefault("_take", set()).add(take_class(s))
+            rep["regs_new"] += nold
         elif r is not None and len(r["regs"]) > nold:
             rep["need_more_regs"] += 1
             rep["need_more_idx"].append(st.index(s))
             rep["regs_new"] += nold
         else:
+            sn = snap_station(R, a, b, s.get("regs_um") or [], cfg["reach"])
+            if sn is None:
+                mid = [round((a[0] + b[0]) / 2, 2), round((a[1] + b[1]) / 2, 2)]
+                sn = snap_station(R, a, b, [mid] * nold, cfg["reach"], rmax=60)
+            if sn is not None:
+                s["regs_um"] = [list(p) for p in sn]
+                rep["rerouted"] += 1
+                rep["snapped"] = rep.get("snapped", 0) + 1
+                rep["regs_new"] += nold
+                s["note"] = (s.get("note", "") + " | B6 snap re-sited (%d regs kept)" % nold)
+                continue
             rep["failed"] += 1
+            rep["failed_idx"] = rep.get("failed_idx", []) + [st.index(s)]
+            rep.setdefault("failed_why", []).append(dict(idx=st.index(s), a=list(a), b=list(b), regs=s.get("regs_um"),
+                                                         free=[R.free(*q[:2]) for q in s.get("regs_um") or []],
+                                                         route=None if r is None else len(r["regs"])))
             rep["regs_new"] += nold
             if regs_free:
                 rep["kept_old_regs"] += 1
+    if rep.get("_take"):
+        take_regs_write(st, R, cfg, rep)
+    if cfg.get("detour_fix"):
+        detour_fix(R, st, cfg, rep)
     if cfg.get("ft_resite"):
         ft_resite(M, t_new, R, cfg, rep)
     if M.lreg:
         link_reg_write(M, t_new, R, cfg, rep)
+    if M.breg:
+        bus_reg_write(M, t_new, R, cfg, rep)
     return rep
+
+
+def slot_mask(R, rects, W, H, um):
+    """--slot-ft UM (B6, FABLE-HARD-S81 11-14): no station / ft register in a face-to-core slot under UM: for every
+    core whose near edge is < UM from a face, the strip between that face and the core (over the core's span) is
+    marked not free, so registers there count as covered and are re-sited (same count) by the station / ft-resite
+    passes.  Returns the number of lattice cells masked."""
+    import math as _m
+    n0 = int(R.f.sum())
+    for (x0, y0, x1, y1) in rects:
+        strips = []
+        if x0 < um:
+            strips.append((0.0, y0, x0, y1))
+        if W - x1 < um:
+            strips.append((x1, y0, W, y1))
+        if y0 < um:
+            strips.append((x0, 0.0, x1, y0))
+        if H - y1 < um:
+            strips.append((x0, y1, x1, H))
+        for (a0, b0, a1, b1) in strips:
+            i0, i1 = max(0, int(_m.floor(a0 / G))), min(R.nx - 1, int(_m.ceil(a1 / G)))
+            j0, j1 = max(0, int(_m.floor(b0 / G))), min(R.ny - 1, int(_m.ceil(b1 / G)))
+            if i0 <= i1 and j0 <= j1:
+                R.f[i0:i1 + 1, j0:j1 + 1] = False
+    return n0 - int(R.f.sum())
+
+
+TAKE_BUSES = ("leafdn_i0", "leafup_o0")
+
+
+def take_class(s):
+    """core class of an internal_stations row that --take-regs may deepen (None: H lanes, unknown, other buses).
+    F3 (FABLE-LEAF-FTSLOT 11-14): leaf bus rows bus:leafdn_i0 / bus:leafup_o0 -> 'bus:<name>' (+1 on every row of
+    the bus, die lane row +1)."""
+    import kit_istations as KI
+    if "conn" not in s:
+        return None
+    if s["conn"].startswith("bus:"):
+        b = s["conn"][4:]
+        return "bus:" + b if b in TAKE_BUSES else None
+    if s.get("launch", "").startswith("bus:"):
+        return None
+    c = KI.core_class(s)[0]
+    return None if c in (None, "cs") or c in KI.H_CLASSES else c
+
+
+def bus_take_lanes(Q, tn, bus_take):
+    """F3 lane rows: a leaf bus deepened by k stages adds k cycles to the die lane of that bus on every partition of
+    the type (leafdn_i0 -> dn_<part>, leafup_o0 -> up_<part>).  Leaf bus rows are native stations: the bind checks
+    lanes[].fixed_cycles == source row depth + deepest destination row (native_istations.annotate), so the lane's
+    fixed_cycles and the latency table fixed / cycles / natural all take +k (stations, i.e. ft slot stations, stay)."""
+    parts = Q["partitions"]
+    it = parts.items() if isinstance(parts, dict) else ((p["name"], p) for p in parts)
+    out = []
+    for pn, p in it:
+        if p.get("type") != tn:
+            continue
+        for b in bus_take:
+            ln = ("dn_" if b.startswith("leafdn") else "up_") + pn
+            r = (Q.get("latency") or {}).get("lanes", {}).get(ln)
+            if r is None:
+                out.append(dict(lane=ln, missing=True))
+                continue
+            inc = int(bus_take[b][1]) - int(bus_take[b][0])
+            for f in ("fixed", "cycles", "natural"):
+                r[f] = int(r.get(f, 0)) + inc
+            for L in Q.get("lanes") or []:
+                if L.get("id") == ln:
+                    L["fixed_cycles"] = int(L.get("fixed_cycles", 0)) + inc
+            out.append(dict(lane=ln, cycles=r["cycles"], plus=inc))
+    return out
+
+
+def deepen_rows(rows, st, R, cfg, rep, c):
+    import hub_repack as HR
+    ok = True
+    for s in rows:
+        d = len(s.get("regs_um") or [])
+        r = HR.route_station(R, tuple(s["from_um"]), tuple(s["to_um"]), d + 1, cfg["reach"])
+        if r is None or len(r["regs"]) != d + 1:
+            rep["need_more_regs"] += 1
+            rep["need_more_idx"].append(st.index(s))
+            ok = False
+            continue
+        s["regs_um"] = [list(p) for p in r["regs"]]
+        s["note"] = (s.get("note", "") + " | B6 take-regs (FABLE-LEAF-FTSLOT F3): %s %d -> %d registers (+1 cycle, "
+                     "die lane row +1)" % (c, d, d + 1))
+        rep["regs_new"] += 1
+    return ok
+
+
+def take_regs_write(st, R, cfg, rep):
+    """--take-regs (B6): every row of a class that has a station needing one more register is re-routed with d+1
+    registers (one RTL chain per class: all rows carry the same count, leaf_cs_depth.plan_depths).  +1 cycle on the
+    class; rep["take_reg"] = {class: rows}.  A row that cannot be routed at d+1 counts need_more_regs (not applied)."""
+    import hub_repack as HR
+    rep["take_reg"] = {}
+    for c in sorted(rep.pop("_take")):
+        rows = [s for s in st if take_class(s) == c]
+        ds = {len(s.get("regs_um") or []) for s in rows}
+        if c.startswith("bus:"):
+            # one chain per bus at its deepest row (kit_istations.bus_entries): every row takes +1, depth max+1
+            if deepen_rows(rows, st, R, cfg, rep, c):
+                rep["take_reg"][c] = len(rows)
+                rep.setdefault("bus_take", {})[c[4:]] = [max(ds), max(ds) + 1]
+            continue
+        if len(ds) != 1:
+            rep["need_more_regs"] += 1
+            rep["need_more_idx"].append("class %s depths %s" % (c, sorted(ds)))
+            continue
+        d = ds.pop()
+        for s in rows:
+            r = HR.route_station(R, tuple(s["from_um"]), tuple(s["to_um"]), d + 1, cfg["reach"])
+            if r is None or len(r["regs"]) != d + 1:
+                rep["need_more_regs"] += 1
+                rep["need_more_idx"].append(st.index(s))
+                continue
+            s["regs_um"] = [list(p) for p in r["regs"]]
+            s["note"] = (s.get("note", "") + " | B6 take-regs (COORD 11-14): class %s %d -> %d registers (+1 cycle)"
+                         % (c, d, d + 1))
+        rep["take_reg"][c] = len(rows)
+        rep["regs_new"] += len(rows)
+
+
+def bus_reg_write(M, t_new, R, cfg, rep):
+    """--bus-reg (B6, COORD 11-14): a core pin <-> face bus link that ended longer than its direct limit, on a bus whose
+    source stations already have depth d >= 1 (internal_stations bus:<b> rows), gets its own bus:<b> row with d
+    registers sited by hub_repack.route_station (the bus's existing stage(s) now sit on this pin's path).  The bus chain
+    depth (max rows) is unchanged: 0 cycles, no lane-table change.  rep["bus_reg"] = {bus: rows}."""
+    import hub_repack as HR
+    reach = cfg["reach"]
+    rep.update(bus_reg={}, bus_reg_failed=0)
+    st = t_new.setdefault("internal_stations", [])
+    for q, d in sorted(M.breg.items()):
+        if M.llen(q) <= max(DIRECT_REACH, M.base_len[q]) + EPS:
+            continue
+        inst, pin, val = M.Lbus[q]
+        a, b, w, _ = M.L[q]
+        pa, pb = M.pt(b), M.pt(a)            # face bus point -> core pin, as the existing rows
+        r = HR.route_station(R, tuple(pa), tuple(pb), d, reach)
+        if (r is None or len(r["regs"]) != d) and cfg.get("take_regs") and val in TAKE_BUSES:
+            c = "bus:" + val
+            if c not in (rep.get("take_reg") or {}):
+                rows = [s for s in st if take_class(s) == c]
+                if rows and deepen_rows(rows, st, R, cfg, rep, c):
+                    rep.setdefault("take_reg", {})[c] = len(rows)
+                    rep.setdefault("bus_take", {})[val] = [d, d + 1]
+            if val in (rep.get("bus_take") or {}):
+                d = rep["bus_take"][val][1]
+                r = HR.route_station(R, tuple(pa), tuple(pb), d, reach)
+            if r is not None and len(r["regs"]) > d:
+                # the chain is one per bus at its deepest row (kit_istations.bus_entries): this row deepens it
+                bt = rep.setdefault("bus_take", {}).setdefault(val, [M.breg[q], d])
+                bt[1] = max(bt[1], len(r["regs"]))
+                d = len(r["regs"])
+        if r is None or len(r["regs"]) != d:
+            rep["bus_reg_failed"] += 1
+            continue
+        st.append(dict(bits=max(1, int(round(w))), capture=inst + "." + pin, conn="bus:" + val,
+                       from_um=[round(pa[0], 4), round(pa[1], 4)], launch="face bus " + val,
+                       note="B6 bus-reg (COORD 11-14): sites the existing bus:%s stage(s) (depth %d kept, 0 cycles) on "
+                            "%s.%s, %s %s um" % (val, d, inst, pin, r["kind"], r["length_um"]),
+                       regs_um=[list(p) for p in r["regs"]], to_um=[round(pb[0], 4), round(pb[1], 4)]))
+        rep["bus_reg"][val] = rep["bus_reg"].get(val, 0) + 1
 
 
 def follow_clock_points(t, moved):
@@ -1450,32 +1783,38 @@ def link_reg_write(M, t_new, R, cfg, rep):
     need = sorted({c for q, c in M.lreg.items() if M.llen(q) > max(DIRECT_REACH, M.base_len[q]) + EPS})
     st = t_new.setdefault("internal_stations", [])
     for c in need:
-        seen, rows = set(), []
-        for q, cq in sorted(M.lreg.items()):
-            if cq != c:
-                continue
-            inst, bus, val, mb = M.Lname[q]
-            key = frozenset([(inst, bus), (val, mb)]) if mb else (inst, bus, val)
-            if key in seen:
-                continue
-            seen.add(key)
-            a, b, w, _ = M.L[q]
-            pa, pb = M.pt(a), M.pt(b)
-            e = dict(conn="core:%s.%s|core:%s" % (inst, bus, val), launch="core:%s.%s" % (inst, bus), capture=val)
-            if KI.core_class(e)[0] != c and mb:
-                e = dict(conn="core:%s.%s|core:%s" % (val, mb, inst), launch="core:%s.%s" % (val, mb), capture=inst)
-                pa, pb = pb, pa
-            bits = sum(M.L[k][2] for k, nm in M.Lname.items() if (frozenset([(nm[0], nm[1]), (nm[2], nm[3])])
-                                                                 if nm[3] else nm[:3]) == key)
-            r = HR.route_station(R, tuple(pa), tuple(pb), 1, reach)
-            if r is None or len(r["regs"]) != 1:
-                rep["link_reg_failed"] += 1
-                rows = None
+        for nreg in ((1, 2) if cfg.get("take_regs") else (1,)):   # take-regs: a class that cannot site 1 takes 2
+            seen, rows = set(), []
+            for q, cq in sorted(M.lreg.items()):
+                if cq != c:
+                    continue
+                inst, bus, val, mb = M.Lname[q]
+                key = frozenset([(inst, bus), (val, mb)]) if mb else (inst, bus, val)
+                if key in seen:
+                    continue
+                seen.add(key)
+                a, b, w, _ = M.L[q]
+                pa, pb = M.pt(a), M.pt(b)
+                e = dict(conn="core:%s.%s|core:%s" % (inst, bus, val), launch="core:%s.%s" % (inst, bus), capture=val)
+                if KI.core_class(e)[0] != c and mb:
+                    e = dict(conn="core:%s.%s|core:%s" % (val, mb, inst), launch="core:%s.%s" % (val, mb), capture=inst)
+                    pa, pb = pb, pa
+                bits = sum(M.L[k][2] for k, nm in M.Lname.items() if (frozenset([(nm[0], nm[1]), (nm[2], nm[3])])
+                                                                     if nm[3] else nm[:3]) == key)
+                r = HR.route_station(R, tuple(pa), tuple(pb), nreg, reach)
+                if r is None or len(r["regs"]) != nreg:
+                    rep["link_reg_failed"] += 1 if nreg == ((1, 2) if cfg.get("take_regs") else (1,))[-1] else 0
+                    if nreg == ((1, 2) if cfg.get("take_regs") else (1,))[-1]:
+                        rep.setdefault("link_reg_failed_why", []).append(dict(cls=c, link="%s.%s|%s" % (inst, bus, val),
+                                                                             a=[round(v, 2) for v in pa], b=[round(v, 2) for v in pb]))
+                    rows = None
+                    break
+                rows.append(dict(e, from_um=[round(pa[0], 4), round(pa[1], 4)], to_um=[round(pb[0], 4), round(pb[1], 4)],
+                                 regs_um=[list(p_) for p_ in r["regs"]], bits=max(1, int(round(bits))),
+                                 note="B4L4 link-reg (COORD 11-14): +%d register on class %s (CS_%s_D 0 -> %d, +%d cycle), "
+                                      "%s %s um" % (nreg, c, c.upper(), nreg, nreg, r["kind"], r["length_um"])))
+            if rows:
                 break
-            rows.append(dict(e, from_um=[round(pa[0], 4), round(pa[1], 4)], to_um=[round(pb[0], 4), round(pb[1], 4)],
-                             regs_um=[list(r["regs"][0])], bits=max(1, int(round(bits))),
-                             note="B4L4 link-reg (COORD 11-14): +1 register on class %s (CS_%s_D 0 -> 1, +1 cycle), "
-                                  "%s %s um" % (c, c.upper(), r["kind"], r["length_um"])))
         if rows:
             st.extend(rows)
             rep["link_reg"][c] = len(rows)
@@ -1543,7 +1882,9 @@ def ft_resite(M, t_new, R, cfg, rep):
                         return True
             return False
         # only registers a core now covers are re-sited; ft groups that already overlap in the base stay as they are
-        bad = [j for j in range(len(regs)) if blocked(j, groups_too=False)]
+        bad = [j for j in range(len(regs)) if blocked(j, groups_too=False)
+               and not (M.owner(regs[j]) is not None and not M.moved_core(M.owner(regs[j])))]
+        # (a register that already sat inside a core in the base plan, on a core that did not move, is the base form)
         if not bad:
             continue
         rep["ft_slots"] += 1
@@ -1556,44 +1897,64 @@ def ft_resite(M, t_new, R, cfg, rep):
             else:
                 runs.append(cur); cur = [j]
         runs.append(cur)
-        ok_slot = True
-        for run in runs:
-            j0, j1 = run[0], run[-1]
-            prev = tuple(regs[j0 - 1]) if j0 > 0 else A
-            nxt = tuple(regs[j1 + 1]) if j1 + 1 < len(regs) else B
-            r = HR.route_station(R, prev, nxt, len(run), reach)
-            if r is not None and len(r["regs"]) == len(run):
-                newp = [list(p) for p in r["regs"]]
-            else:           # no routed form: start the nearest-free search from the old sites
-                newp = [list(regs[j]) for j in run]
-            for k_, j in enumerate(run):
-                p = newp[k_]
-                lo = tuple(newp[k_ - 1]) if k_ else prev
-                hi = tuple(newp[k_ + 1]) if k_ + 1 < len(run) else nxt
-                best = None
-                for st in range(0, 49):
-                    for ddx in range(-st, st + 1):
-                        for ddy in ((-st, st) if abs(ddx) != st else range(-st, st + 1)):
-                            q = [snap(p[0] + ddx * G), snap(p[1] + ddy * G)]
-                            if man(q, lo) > reach + EPS or man(q, hi) > reach + EPS:
-                                continue
-                            if not blocked(j, q, q[0] - regs[j][0], q[1] - regs[j][1]):
-                                best = q; break
+        attempts = [runs]
+        if cfg.get("slot_ft") and len(regs) > 2:
+            # --slot-ft: when a run cannot be re-sited between its kept neighbours, re-route the whole slot (S0 kept)
+            # with the same total count, so a station added to the slot (ft_add_station) can sit anywhere on it
+            attempts.append([list(range(1, len(regs)))])
+        snap0 = (copy.deepcopy(regs), copy.deepcopy(groups), list(allbox))
+        for ai, runs in enumerate(attempts):
+            if ai:
+                regs[:] = copy.deepcopy(snap0[0]); groups[:] = copy.deepcopy(snap0[1]); allbox[:] = list(snap0[2])
+                rep["ft_whole_slot"] = rep.get("ft_whole_slot", 0) + 1
+            ok_slot = True
+            for run in runs:
+                j0, j1 = run[0], run[-1]
+                prev = tuple(regs[j0 - 1]) if j0 > 0 else A
+                nxt = tuple(regs[j1 + 1]) if j1 + 1 < len(regs) else B
+                r = HR.route_station(R, prev, nxt, len(run), reach)
+                if r is not None and len(r["regs"]) == len(run):
+                    newp = [list(p) for p in r["regs"]]
+                else:           # no routed form: start the nearest-free search from the old sites
+                    newp = [list(regs[j]) for j in run]
+                for k_, j in enumerate(run):
+                    p = newp[k_]
+                    lo = tuple(newp[k_ - 1]) if k_ else prev
+                    hi = tuple(newp[k_ + 1]) if k_ + 1 < len(run) else nxt
+                    best = None
+                    for st in range(0, 49):
+                        for ddx in range(-st, st + 1):
+                            for ddy in ((-st, st) if abs(ddx) != st else range(-st, st + 1)):
+                                q = [snap(p[0] + ddx * G), snap(p[1] + ddy * G)]
+                                if man(q, lo) > reach + EPS or man(q, hi) > reach + EPS:
+                                    continue
+                                # die hops run face pin -> first / last register: never deeper than the base
+                                if j == len(regs) - 1 and man(q, B) > man(snap0[0][j], B) + EPS:
+                                    continue
+                                if j == 0 and man(q, A) > man(snap0[0][j], A) + EPS:
+                                    continue
+                                if not blocked(j, q, q[0] - regs[j][0], q[1] - regs[j][1]):
+                                    best = q; break
+                            if best:
+                                break
                         if best:
                             break
-                    if best:
-                        break
-                if best is None:
-                    ok_slot = False; break
-                dx, dy = best[0] - regs[j][0], best[1] - regs[j][1]
-                for gi in gof[j]:
-                    b0 = bbox(groups[gi])
-                    groups[gi] = [[round(q[0] + dx, 4), round(q[1] + dy, 4)] for q in groups[gi]]
-                    allbox[allbox.index(b0)] = bbox(groups[gi])
-                regs[j] = [round(best[0], 4), round(best[1], 4)]
-                newp[k_] = best
-                rep["ft_regs_moved"] += 1
-            if not ok_slot:
+                    if best is None:
+                        rep.setdefault("ft_failed_why", []).append(dict(slot=f.get("name"), reg=j, nregs=len(regs), at=list(p),
+                                                                         lo=list(lo), hi=list(hi), run=list(run),
+                                                                         routed=r is not None and len(r["regs"]) == len(run)))
+                        ok_slot = False; break
+                    dx, dy = best[0] - regs[j][0], best[1] - regs[j][1]
+                    for gi in gof[j]:
+                        b0 = bbox(groups[gi])
+                        groups[gi] = [[round(q[0] + dx, 4), round(q[1] + dy, 4)] for q in groups[gi]]
+                        allbox[allbox.index(b0)] = bbox(groups[gi])
+                    regs[j] = [round(best[0], 4), round(best[1], 4)]
+                    newp[k_] = best
+                    rep["ft_regs_moved"] += 1
+                if not ok_slot:
+                    break
+            if ok_slot:
                 break
         if not ok_slot:
             rep["ft_failed"] += 1; rep["ft_failed_slots"].append(f.get("name"))
@@ -1665,8 +2026,16 @@ def eq_gate(t0, t1):
         elif a != b:
             bad.append(path)
     st0, st1 = t0.get("internal_stations") or [], t1.get("internal_stations") or []
+    # --take-regs rows: a declared +1 register (+1 cycle, approved) on an existing row; compare the rest as usual
+    took = [i for i, (s0, s1) in enumerate(zip(st0, st1)) if "take-regs" in str(s1.get("note", "")) and
+            len(s1.get("regs_um") or []) == len(s0.get("regs_um") or []) + 1 and s0.get("bits") == s1.get("bits")]
+    if took:
+        st0 = copy.deepcopy(st0)
+        for i in took:
+            st0[i]["regs_um"] = copy.deepcopy(st1[i]["regs_um"])
+        t0 = dict(t0, internal_stations=st0)
     extra = st1[len(st0):]
-    if extra and all("B4L4 link-reg" in str(e.get("note", "")) for e in extra):
+    if extra and all(("B4L4 link-reg" in str(e.get("note", "")) or "B6 bus-reg" in str(e.get("note", ""))) for e in extra):
         t1 = dict(t1, internal_stations=st1[:len(st0)])     # --link-reg rows: declared +1-cycle additions
     rec(t0, t1, "")
     for i, (h0, h1) in enumerate(zip(t0.get("hard_cores", []), t1.get("hard_cores", []))):
@@ -1897,10 +2266,26 @@ def main(argv=None):
     ap.add_argument("--link-reg", action="append", default=[], metavar="CLASS",
                     help="B4L4: direct core links of link CLASS (kit_istations CORE_CLASSES, depth 0; 'any') may stretch to "
                          "one register's reach; a class that needs it gets +1 register on all its links (+1 cycle)")
+    ap.add_argument("--detour-fix", action="store_true",
+                    help="B6: re-site kept stations whose register path is > 2x the pin distance (same count)")
+    ap.add_argument("--bus-reg", action="store_true",
+                    help="B6: a core <-> face bus link may reach the bus's existing source-station depth (>= 1); a stretched "
+                         "one gets its own bus row with that depth (0 cycles)")
     ap.add_argument("--taps-movable", action="store_true",
                     help="B4L4: clock taps / added taps off cores do not pin cores (tapleg re-legalises them after)")
     ap.add_argument("--ft-resite", action="store_true",
                     help="B4L4: ft-station registers + bit sites no longer pin cores; covered ones are re-sited with the same count")
+    ap.add_argument("--take-regs", action="store_true",
+                    help="B6 (COORD/FABLE-CLOSURE-STRATEGY 11-14): a --face-clear core with no timing-clean spot takes the "
+                         "nearest space-legal spot; a station that then needs one more register gets +1 register on "
+                         "EVERY row of its core class (+1 cycle, cycles pre-approved; H lanes / bus rows excluded)")
+    ap.add_argument("--block-shift", action="store_true",
+                    help="F1 (FABLE-LEAF-FTSLOT 11-14): --face-clear first translates the whole movable core block by one "
+                         "vector (both axes) that puts the nearest rule core on each clearance line, then legalises the "
+                         "rest; partial results are kept (no restore-all)")
+    ap.add_argument("--slot-ft", type=float, default=0.0, metavar="UM",
+                    help="B6 (FABLE-HARD-S81 11-14): no station / ft register in a face-to-core slot under UM um; "
+                         "registers there are re-sited with the same count (with --ft-resite for ft slots)")
     ap.add_argument("--svg", help="directory for before/after floorplan SVG views")
     ap.add_argument("--rs-out", help="directory for the route_supply before/after runs (default: beside --event)")
     a = ap.parse_args(argv)
@@ -1930,7 +2315,7 @@ def main(argv=None):
                flips_only=a.flips_only,
                gap_pinface=tuple(float(v) for v in a.gap_pinface.split(":")) if a.gap_pinface else None,
                face_clear=[(f.split(":")[0], float(f.split(":")[1]), f.split(":", 2)[2]) for f in a.face_clear],
-               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable,
+               slot_clear=list(a.slot_clear), window_clear=a.window_clear, ft_resite=a.ft_resite, taps_movable=a.taps_movable, bus_reg=a.bus_reg, detour_fix=a.detour_fix, take_regs=a.take_regs, slot_ft=a.slot_ft, block_shift=a.block_shift,
                link_reg=[c for x in a.link_reg for c in x.split(",") if c])
     seeds = json.loads(Path(a.seed).read_text()) if a.seed else {}
     Q = copy.deepcopy(P)
@@ -2048,6 +2433,8 @@ def main(argv=None):
                     done_ = False
                     # face-rule clusters (--face-clear) revert last: the rule is the point of the move
                     for k_, _ in sorted(cnt.most_common(), key=lambda kv: bool(M.cclr[kv[0]])):
+                        if cfg.get("take_regs") and M.cclr[k_]:
+                            continue        # F2: the face rule is the point of the move; the station takes +1
                         old = (tuple(M.cpos[k_]), M.cflip[k_])
                         ob = M._band_k(k_) if M.bands else None
                         tvb = M.tviol(range(len(M.L)))
@@ -2075,7 +2462,8 @@ def main(argv=None):
             for si in bad_end:
                 a_, b_, _, _ = M.L[qmap[si]]
                 for e in (a_, b_):
-                    if e[0] is not None and not M.cfix[M.cid[e[0]]]:
+                    if e[0] is not None and not M.cfix[M.cid[e[0]]] and \
+                            not (cfg.get("take_regs") and M.cclr[M.cid[e[0]]]):
                         add.add(M.cid[e[0]])
                 # clusters that moved onto the station's base path (pins -> its registers, bbox per hop + 10 um)
                 pts = [tuple(S_[si]["from_um"])] + [tuple(r) for r in S_[si].get("regs_um") or []] + \
@@ -2088,7 +2476,8 @@ def main(argv=None):
                             continue
                         def hit(px, py):
                             return px < bx1 and px + M.cbb[k_, 2] > bx0 and py < by1 and py + M.cbb[k_, 3] > by0
-                        if hit(*M.cpos[k_]) and not hit(*M.cbb[k_, :2]):
+                        if hit(*M.cpos[k_]) and not hit(*M.cbb[k_, :2]) and \
+                                not (cfg.get("take_regs") and M.cclr[k_]):
                             add.add(k_)
             if not add or attempt == 2:
                 break
@@ -2117,11 +2506,14 @@ def main(argv=None):
                                     after_orient=M.core_orient(i)) for i in range(M.n)])
             Path(Path(a.svg) / f"{tn}__view.json").write_text(json.dumps(dump))
         ok = not eqbad and nov == 0 and srep["need_more_regs"] == 0 and tviol_end == 0 and not srep.get("ft_failed") \
-            and not srep.get("link_reg_failed")
+            and not srep.get("link_reg_failed") and not srep.get("bus_reg_failed") \
+            and not srep.get("failed")
         if ok:
             Q["partition_types"][tn] = tnew
+            if srep.get("bus_take"):
+                srep["lane_rows"] = bus_take_lanes(Q, tn, srep["bus_take"])
         rows.append(dict(type=tn, cores=M.n, clusters=M.m, links=len(M.L), stations=len(M.stations),
-                         model=M.model, intrinsic=icut, seeded=bool(tn in seeds), seed_legalised=seeded, face_clear_moved=fc_moved, face_clear_failed=fc_failed, face_clear_end=M.clear_viol(),
+                         model=M.model, intrinsic=icut, seeded=bool(tn in seeds), seed_legalised=seeded, face_clear_moved=fc_moved, face_clear_failed=fc_failed, face_clear_taken=M.cfg.pop("_taken", []), face_clear_end=M.clear_viol(),
                          slot_clear_moved=sc_moved if cfg.get("slot_clear") else None, slot_clear_failed=sc_failed if cfg.get("slot_clear") else None,
                          slot_clear_end=[dict(a=M.inst[M.CL[k_][0]], b=M.inst[M.CL[j_][0]], gap_um=round(g_, 2)) for k_, j_, g_ in slot_pairs(M)] if cfg.get("slot_clear") else None,
                          timing_over=[dict(a=str(M.L[q][0]), b=str(M.L[q][1]), bits=M.L[q][2], kind=M.L[q][3],
@@ -2145,7 +2537,31 @@ def main(argv=None):
                                               b_cut["H"]["worst_ratio"], n_cut["H"]["worst_ratio"],
                                               b_cut["V"]["worst_ratio"], n_cut["V"]["worst_ratio"], moved,
                                               "OK" if not eqbad else eqbad[:4], srep))
+    lane_ok = bool(a.take_regs) and any((r.get("stations_report") or {}).get("lane_rows") for r in rows
+                                        if isinstance(r.get("stations_report"), dict))
     for k in P:
+        if k == "lanes" and lane_ok:
+            named = {x["lane"] for r in rows if isinstance(r.get("stations_report"), dict)
+                     for x in (r["stations_report"].get("lane_rows") or [])}
+            assert len(P[k]) == len(Q[k])
+            for L0, L1 in zip(P[k], Q[k]):
+                strip = lambda L: {f: v for f, v in L.items() if not (f == "fixed_cycles" and L.get("id") in named)}  # noqa: E731
+                assert json.dumps(strip(L0), sort_keys=True) == json.dumps(strip(L1), sort_keys=True), L0.get("id")
+            continue
+        if k == "latency" and lane_ok:
+            # F3: only latency.lanes rows named in a type's lane_rows may change, by stations/cycles/natural only
+            named = {x["lane"] for r in rows if isinstance(r.get("stations_report"), dict)
+                     for x in (r["stations_report"].get("lane_rows") or [])}
+            for ln, r0 in P[k]["lanes"].items():
+                r1 = Q[k]["lanes"][ln]
+                if ln not in named:
+                    assert json.dumps(r0, sort_keys=True) == json.dumps(r1, sort_keys=True), ln
+                else:
+                    assert {f: v for f, v in r0.items() if f not in ("fixed", "cycles", "natural")} == \
+                        {f: v for f, v in r1.items() if f not in ("fixed", "cycles", "natural")}, ln
+            assert set(P[k]) == set(Q[k]) and all(json.dumps(P[k][x], sort_keys=True) == json.dumps(Q[k][x], sort_keys=True)
+                                                  for x in P[k] if x != "lanes"), "latency"
+            continue
         if k != "partition_types" and json.dumps(P[k], sort_keys=True) != json.dumps(Q[k], sort_keys=True):
             raise AssertionError(f"top-level key {k} changed")
     out_sha = None

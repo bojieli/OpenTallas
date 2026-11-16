@@ -58,6 +58,23 @@ import ot_store as S  # noqa: E402
 
 SCHEMA = "opentallas.ot_job.v1"
 DEFAULT_ROOT = "/srv/opentallas-scratch2/claude/ot-jobs"
+
+
+def best_job_root(default="/srv/opentallas-scratch2/claude/ot-jobs", floor3=150):
+    """WAVE-BALANCE-1 11-14 (COORD): the ot-jobs root with the most free space: scratch2 vs scratch3 (a second ROOT disk: its
+    free space counts after the 150 GB root floor).  Returns (path, free_gb); a missing disk is skipped."""
+    best = (default, -1)
+    for sub, fl in (("scratch2", 0), ("scratch3", floor3)):
+        base = default.replace("scratch2", sub)
+        top = base.split("/claude/")[0]
+        try:
+            v = os.statvfs(top)
+        except OSError:
+            continue
+        fg = (v.f_bavail * v.f_frsize >> 30) - fl
+        if fg > best[1] + 20 or best[1] < 0:      # scratch2 stays unless scratch3 has 20 GB more usable space
+            best = (base, fg)
+    return best
 HIDE = ("/srv", "/mnt", "/media", "/archive", "/tmp", "/var/tmp")
 HOME_ALLOW = (".local", "bin", ".docker", ".gitconfig", "opentallas-tools")
 SYSTEM_RW = ("/var/tmp/ot-heavy",)       # fleet admission state: a nested ot-heavy (lec_async LEC unit) must see it
@@ -380,7 +397,7 @@ def reap(roots, now=None, say_=None):
 
 def run(spec, tag, cmd, bwrap=True):
     host = socket.gethostname()
-    root = spec.get("root") or os.environ.get("OT_JOB_ROOT") or DEFAULT_ROOT
+    root = spec.get("root") or os.environ.get("OT_JOB_ROOT") or best_job_root(DEFAULT_ROOT)[0]
     J = os.path.join(os.path.realpath(root), f"{spec['name']}-{tag}")
     store = S.default_store(J)
     if os.path.isdir(os.path.realpath(root)):

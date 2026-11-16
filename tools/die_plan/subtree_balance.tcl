@@ -31,7 +31,9 @@ if {![info exists ::stb::n]} { set ::stb::n 0 }
 proc stb::arr {pinname} {
   set p [get_pins -quiet $pinname]
   if {![llength $p]} { return "" }
-  set a [get_property $p arrival_max_rise]
+  # STB-EDGE-1: a sink below an odd number of inverters sees the source RISE as its FALL; measure that edge, so every
+  # sink reads insertion delay from the same source edge (not rise + half a period)
+  set a [get_property $p [expr {[info exists ::stb::par($pinname)] && $::stb::par($pinname) ? "arrival_max_fall" : "arrival_max_rise"}]]
   if {$a eq "" || $a eq "INF" || $a eq "-INF"} { return "" }
   if {abs($a) < 1.0} { set a [expr {$a * 1e12}] }
   return $a
@@ -73,9 +75,9 @@ proc stb::build {p} {
   set blk [ord::get_db_block]
   set bt [$blk findBTerm $p]
   if {$bt eq "NULL" || [$bt getNet] eq "NULL"} { return [list 0 0] }
-  set todo [list [list PORT [$bt getNet]]]; set nn 0; set ns 0; set seen {}
+  set todo [list [list PORT [$bt getNet] 0]]; set nn 0; set ns 0; set seen {}
   while {[llength $todo]} {
-    lassign [lindex $todo end] node net; set todo [lrange $todo 0 end-1]
+    lassign [lindex $todo end] node net par; set todo [lrange $todo 0 end-1]
     set ::stb::kids($p,$node) {}; set ::stb::sinks($p,$node) {}; set ::stb::blk($p,$node) 0
     foreach it [$net getITerms] {
       if {![$it isInputSignal]} continue
@@ -85,7 +87,8 @@ proc stb::build {p} {
         if {$on eq "" || [dict exists $seen [$i getName]]} continue
         dict set seen [$i getName] 1
         lappend ::stb::kids($p,$node) [$i getName]; incr nn
-        lappend todo [list [$i getName] $on]
+        set mn [[$i getMaster] getName]
+        lappend todo [list [$i getName] $on [expr {([string match "INV*" $mn] || [string match "CKINV*" $mn]) ? !$par : $par}]]
       } else {
         if {[string match "clkload*" [$i getName]]} continue
         if {[[$i getMaster] isBlock]} {
@@ -93,6 +96,7 @@ proc stb::build {p} {
           if {$::stb::blk_sinks eq "fixed"} continue
         }
         lappend ::stb::sinks($p,$node) "[$i getName]/[[$it getMTerm] getName]"; incr ns
+        set ::stb::par([$i getName]/[[$it getMTerm] getName]) $par
       }
     }
   }

@@ -681,6 +681,29 @@ class Verification:
         b=sorted(ins[pn])[0] if ins[pn] else None
         return (self.ring_reset_node(pn,b,info) if b else 'rst_n_t0'),('u_cland_rst_'+b if b else 'u_cland_origin_rst')
 
+    def _try(self,fn):
+        """Run a check; True when it added no error (its errors are dropped, the caller decides)."""
+        saved=self.errors;self.errors=[]
+        try:fn()
+        finally:new=self.errors;self.errors=saved
+        return not new
+
+    def _tx_raw_alt(self,tx,pn,ins,info):
+        """FABLE-TYPES-QC-WEST cause A: clock_landings._tx_raw sites the tx flop's raw reset on the NEAREST ring raw copy of
+        its partition, and over 600 um adds one ot_dp_rrelay u_cland_rst_tx (a reset level, no lane effect).  Accepted:
+        the planned reset node of ANY landed bus of the partition (exact parent/depth walk), directly or through that one
+        relay; anything else still fails."""
+        bits=tx.ports.get('rst_raw_n',[])
+        if len(bits)!=1:self.fail(tx.path+': exact one-bit raw reset required');return
+        c,port=tx,'rst_raw_n'
+        ds=self.G.drv.get(bits[0],[])
+        if len(ds)==1:
+            up=self.F.cells[ds[0][0]]
+            if up.path==ident(pn)+'.u_cland_rst_tx' and up.module=='ot_dp_rrelay' and ds[0][1]=='q':c,port=up,'d'
+        for b in sorted(ins[pn]):
+            if self._try(lambda:self.check_reset(c,pn,self.ring_reset_node(pn,b,info),'u_cland_rst_'+b,port=port)):return
+        self.fail(tx.path+': raw reset is neither the origin raw nor a planned ring raw copy of the partition (nearest-copy tx form)')
+
     def _check_origins(self,rows,ports):
         """Start tree: one origin per region; root = ot_dp_landing_root on a raw reset, child = ot_dp_landing_origin on
         its tree bus's raw ring reset with p_start = the tree port SENDER partition's start.  Intra-region relay (bind
@@ -765,10 +788,12 @@ class Verification:
                 if ca.get('strap_form'):
                     # strap origin (clock_landings._origin_rtl): the tx flop shares the origin's own raw reset (the
                     # selected tree bus / START pin raw, or the root's), the origin's own raw is checked above
-                    self.face_raw(tx,pn,self.byname.get(ident(pn)+'.u_cland_root' if self._strap_root(pn) else path))
+                    if not self._try(lambda:self.face_raw(tx,pn,self.byname.get(ident(pn)+'.u_cland_root' if self._strap_root(pn) else path))):
+                        self._tx_raw_alt(tx,pn,ins,info)
                 else:
                     node,relay=self._raw_node(pn,ins,info)
-                    self.check_reset(tx,pn,node,relay,port='rst_raw_n')
+                    if not self._try(lambda:self.check_reset(tx,pn,node,relay,port='rst_raw_n')):
+                        self._tx_raw_alt(tx,pn,ins,info)
                 self.equal_input(tx,'d',[self.output(path,'start')])
             for q in sorted(rel):
                 v=cparts[q]

@@ -138,7 +138,7 @@ def bind(plan, T=None, parts=None):
     for o in xs:
         u, v = o["src"], o["dst"]
         ports[o["port"]] = dict(src=u, dst=v, K=int(o["rtl"]["K"]), depth=int(o["rtl"]["DEPTH"]),
-                                sched_lat=int(o["lat_cycles"]), tree=o["port"] in tree_ports, kind=o["kind"],
+                                sched_lat=int(o["lat_cycles"]), freg=int(o.get("freg", 0)), tree=o["port"] in tree_ports, kind=o["kind"],
                                 # TRUE derated lag bounds incl. wander (no aperture), and the plan's derated phase
                                 # d = dst clock - src clock, so die_sta_related --count-align re-derives L from its own
                                 # arrivals: L_sta = L_plan + (d_sta - d_plan)
@@ -457,7 +457,10 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
         if r["port"] not in b["ports"]:
             continue
         c = b["ports"][r["port"]]
-        if (c["src"], c["dst"]) != (r["src_region"], r["dst_region"]):
+        # KIT-OPS-6 11-15 (FABLE-PD-S81-0335 F, --start-partition-origins): the plan has one count origin per PARTITION, so the bind crossing
+        # names partitions (src == src_part), not the table's region tags; the partition pair is checked below
+        part_origin = "parts" in b and c.get("src_part") == c["src"] and c.get("dst_part") == c["dst"]
+        if not part_origin and (c["src"], c["dst"]) != (r["src_region"], r["dst_region"]):
             raise BindError(f"{r['port']}: bind regions {c['src']}->{c['dst']} != table {r['src_region']}->{r['dst_region']}")
         if "parts" in b and (c["src_part"], c["dst_part"]) != (r["src"], r["dst"]):
             raise BindError(f"{r['port']}: bind partitions {c['src_part']}->{c['dst_part']} != table {r['src']}->{r['dst']}")
@@ -465,7 +468,7 @@ def annotate_table(table, b, root_settle_cycles=64, strap_form=False, mixed=None
     tp = {r["port"] for r in t["ports"]}
     t["count_aligned"] = dict(schema=b["schema"], period_ps=b["period_ps"], root=b["root"], pad=b["pad"],
                               root_settle_cycles=root_settle_cycles,
-                              ports={pid: {k: c[k] for k in ("K", "depth", "sched_lat", "tree")}
+                              ports={pid: {k: c[k] for k in ("K", "depth", "sched_lat", "tree", "freg") if k in c}
                                      for pid, c in b["ports"].items() if pid in tp},
                               regions={k: {x: v[x] for x in ("parent", "tree_port", "edge_fall", "pad", "origin_part")
                                            if x in v}

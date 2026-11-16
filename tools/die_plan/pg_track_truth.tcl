@@ -15,6 +15,45 @@
 # A track t is illegal at a stripe [lo, hi] (across the preferred direction) when t + hw + sp > lo and t - hw - sp < hi
 # (hw = half the default wire width, sp = the layer's min spacing; see OT_PG_TRACK_TRUTH_WIDE_SPACING).  Geometry-generic: it reads the
 # stripes and the track grids of the kit, so it applies to any PDN.  OT_PG_TRACK_TRUTH=0 (or unset) turns it off.
+# DRT0255 (FABLE-PD-DRT-1350, class A): with OT_PG_TRACK_TRUTH_MODE=region the per-track obstructions above are replaced by a
+# per-gcell capacity cut: set_global_routing_region_adjustment (100 %) on the PG layer over every stripe row (M6) / column (M5, M7),
+# full die length (the form DRT0255-PROOF-1115 variant C pg_pair_cap.tcl proves; one implementation).  Knobs: OT_PG_TRACK_TRUTH_REGION_LAYERS
+# (default "M5 M6 M7"), OT_PG_TRACK_TRUTH_REGION_MARGIN_DBU (default 0: widen the cut by this much on both sides of the stripe),
+# OT_PG_TRACK_TRUTH_REGION_ADJ (default 1.0).  GRT then cannot lay a guide of that layer through a gcell row whose DRT-legal
+# tracks are 0 or 1 (the obstruction form still routed 56-70 um M6 guides there).  The adjustment lives in the router, so there is
+# nothing to remove before 5_1_grt.odb (ot_pgtt_remove is a no-op); geometry, PG and sign-off are unchanged.  Default (unset or
+# "obs") = the obstruction form, byte-identical.
+proc ot_pgtt_illegal_span {lo hi hw sp} {
+  # the coordinate span (dbu) in which a track centre is illegal next to a stripe [lo, hi]: wire edge within sp of the stripe
+  return [list [expr {$lo - $hw - $sp}] [expr {$hi + $hw + $sp}]]
+}
+proc ot_pgtt_region_layers {} {
+  if {[info exists ::env(OT_PG_TRACK_TRUTH_REGION_LAYERS)] && $::env(OT_PG_TRACK_TRUTH_REGION_LAYERS) ne ""} { return $::env(OT_PG_TRACK_TRUTH_REGION_LAYERS) }
+  return {M5 M6 M7}
+}
+proc ot_pgtt_region_margin {} {
+  if {[info exists ::env(OT_PG_TRACK_TRUTH_REGION_MARGIN_DBU)] && $::env(OT_PG_TRACK_TRUTH_REGION_MARGIN_DBU) ne ""} { return $::env(OT_PG_TRACK_TRUTH_REGION_MARGIN_DBU) }
+  return 0
+}
+proc ot_pgtt_region_adj {} {
+  if {[info exists ::env(OT_PG_TRACK_TRUTH_REGION_ADJ)] && $::env(OT_PG_TRACK_TRUTH_REGION_ADJ) ne ""} { return $::env(OT_PG_TRACK_TRUTH_REGION_ADJ) }
+  return 1.0
+}
+# set_global_routing_region_adjustment only reaches the gcells that lie INSIDE the region: a stripe-sized region (0.288 um) holds no whole
+# gcell (0.57 um) and the call is a silent no-op (measured on sle_fe_v1: 1270 stripe-sized calls left the GRT resources table identical
+# to "off"; one die-sized call cut M6 by 99.87 %).  The region is therefore widened to whole gcells: ot_pgtt_gcell_align lo hi gc -> {lo' hi'}
+# on the gcell grid (origin 0, gc dbu: OT_PG_TRACK_TRUTH_GCELL_UM, default 0.57 = the 4.32/0.57 ASAP7 GRT tile of these kits).
+proc ot_pgtt_gcell_align {lo hi gc} {
+  return [list [expr {int(floor(double($lo) / $gc)) * $gc}] [expr {int(ceil(double($hi) / $gc)) * $gc}]]
+}
+proc ot_pgtt_gcell_dbu {dbu} {
+  set um 0.57
+  if {[info exists ::env(OT_PG_TRACK_TRUTH_GCELL_UM)] && $::env(OT_PG_TRACK_TRUTH_GCELL_UM) ne ""} { set um $::env(OT_PG_TRACK_TRUTH_GCELL_UM) }
+  return [expr {int(round($um * $dbu))}]
+}
+proc ot_pgtt_region_mode {} {
+  return [expr {[info exists ::env(OT_PG_TRACK_TRUTH_MODE)] && $::env(OT_PG_TRACK_TRUTH_MODE) eq "region"}]
+}
 proc ot_pgtt_add {} {
   if {![info exists ::env(OT_PG_TRACK_TRUTH)] || $::env(OT_PG_TRACK_TRUTH) ne "1"} { return }
   if {[info exists ::ot_pgtt_obs] && [llength $::ot_pgtt_obs]} { return }
@@ -29,7 +68,7 @@ proc ot_pgtt_add {} {
   if {[info exists ::env(OT_PG_TRACK_TRUTH_MIN_LEVEL)] && $::env(OT_PG_TRACK_TRUTH_MIN_LEVEL) ne ""} {
     set minl $::env(OT_PG_TRACK_TRUTH_MIN_LEVEL)
   }
-  array set cnt {}; array set ntr {}; array unset ::ot_pgtt_grid
+  array set cnt {}; array set ntr {}; array unset ::ot_pgtt_grid; array unset ::ot_pgtt_seen; set ::ot_pgtt_regions {}
   foreach net [$blk getNets] {
     if {![$net isSpecial]} { continue }
     set st [$net getSigType]
@@ -66,6 +105,22 @@ proc ot_pgtt_add {} {
         if {[info exists ::env(OT_PG_TRACK_TRUTH_WIDE_SPACING)] && $::env(OT_PG_TRACK_TRUTH_WIDE_SPACING) eq "1"} {
           if {![catch {$L getSpacing [expr {$hi - $lo}] [expr {$a1 - $a0}]} sw_sp] && $sw_sp > $sp} { set sp $sw_sp }
         }
+        if {[ot_pgtt_region_mode]} {
+          # per-gcell capacity cut over the stripe row / column, full die length; one call per stripe, deduplicated
+          if {[lsearch -exact [ot_pgtt_region_layers] $ln] < 0} { continue }
+          set mg [ot_pgtt_region_margin]
+          set die [$blk getDieArea]
+          lassign [ot_pgtt_gcell_align [expr {$lo - $mg}] [expr {$hi + $mg}] [ot_pgtt_gcell_dbu [$blk getDbUnitsPerMicron]]] s0 s1
+          set kmin [expr {[lsearch -sorted -integer -bisect $g [expr {$lo - $hw - $sp}]] + 1}]
+          set kmax [lsearch -sorted -integer -bisect $g [expr {$hi + $hw + $sp - 1}]]
+          if {$dir eq "HORIZONTAL"} { set reg [list [$die xMin] $s0 [$die xMax] $s1] } else { set reg [list $s0 [$die yMin] $s1 [$die yMax]] }
+          if {[info exists ::ot_pgtt_seen($ln,$reg)]} { continue }
+          set ::ot_pgtt_seen($ln,$reg) 1
+          lappend ::ot_pgtt_regions [list $ln $reg]
+          if {![info exists cnt($ln)]} { set cnt($ln) 0; set ntr($ln) 0 }
+          incr cnt($ln); incr ntr($ln) [expr {$kmax - $kmin + 1}]
+          continue
+        }
         # illegal tracks: lo - hw - sp < t < hi + hw + sp
         set kmin [expr {[lsearch -sorted -integer -bisect $g [expr {$lo - $hw - $sp}]] + 1}]
         set kmax [lsearch -sorted -integer -bisect $g [expr {$hi + $hw + $sp - 1}]]
@@ -81,6 +136,18 @@ proc ot_pgtt_add {} {
         incr cnt($ln); incr ntr($ln) [expr {$kmax - $kmin + 1}]
       }
     }
+  }
+  if {[ot_pgtt_region_mode]} {
+    set dbu [$blk getDbUnitsPerMicron]
+    foreach r $::ot_pgtt_regions {
+      lassign $r ln reg
+      set um [lmap v $reg {expr {double($v) / $dbu}}]
+      set_global_routing_region_adjustment $um -layer $ln -adjustment [ot_pgtt_region_adj]
+    }
+    set per {}
+    foreach ln [lsort [array names cnt]] { lappend per "$ln=$cnt($ln)/$ntr($ln)" }
+    puts "OT_PG_TRACK_TRUTH region [llength $::ot_pgtt_regions] GRT capacity cuts, 100 % per gcell (layer=stripes/tracks) [join $per { }]"
+    return
   }
   set per {}
   foreach ln [lsort [array names cnt]] { lappend per "$ln=$cnt($ln)/$ntr($ln)" }

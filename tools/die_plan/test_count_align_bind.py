@@ -275,3 +275,44 @@ def test_ocv_parts_fail_closed_on_missing_or_conflicting_endpoints():
     with pytest.raises(CB.BindError, match="port ab rows disagree"):
         CB.ocv_parts(rows + [dict(rows[0], src_part="a2")])
     assert CB.ocv_parts(rows + [dict(rows[0])]) == {"ab": ("a", "b"), "bc": ("b", "c")}   # same pair per corner: OK
+
+
+def test_freg_ring_is_carried_through_the_bind():
+    """KIT-OPS-6 11-15 (DIE-HEAD-ROUTE-1): the plan's crossing freg field reached no bind port, so the FREG-DECL-1 check failed any freg ring"""
+    rows = [row("a_b", "A", "B", 100.0, 20, 20)]
+    p = plan(rows)
+    assert all(int(o.get("freg", 0)) == 0 for o in p["crossings"])
+    assert CB.bind(p)["ports"]["a_b"]["freg"] == 0                  # no freg: unchanged, explicit 0
+    for o in p["crossings"]:
+        if o["port"] == "a_b":
+            o["freg"] = 1
+    b = CB.bind(p)
+    assert b["ports"]["a_b"]["freg"] == 1
+
+
+def test_freg_survives_annotate_table_ports():
+    """KIT-OPS-6 11-15 (DIE-HEAD-ROUTE-1): the --parts table path built count_aligned.ports from a fixed key list (K, depth, sched_lat, tree)"""
+    rows = [row("a_b", "A", "B", 100.0, 20, 20)]
+    p = plan(rows)
+    for o in p["crossings"]:
+        o["freg"] = 1
+    b = CB.bind(p)
+    table = dict(ports=[dict(port="a_b", src="A", dst="B", src_region="A", dst_region="B")], regions=[])
+    t = CB.annotate_table(table, b)
+    assert t["count_aligned"]["ports"]["a_b"]["freg"] == 1
+    for o in p["crossings"]:
+        o.pop("freg", None)
+    t0 = CB.annotate_table(dict(ports=[dict(port="a_b", src="A", dst="B", src_region="A", dst_region="B")], regions=[]), CB.bind(p))
+    assert t0["count_aligned"]["ports"]["a_b"]["freg"] == 0
+
+
+def test_annotate_table_accepts_partition_origin_bind():
+    """KIT-OPS-6 11-15 (FABLE-PD-S81-0335 F, --start-partition-origins): bind crossings name partitions (src == src_part); the table keys are region tags"""
+    b = {"schema": "s", "period_ps": 833.0, "root": "r", "pad": 0, "relay_stages": 0, "parts": {q: {"region": q, "role": "root", "src": None, "stages": 0} for q in ("A", "B")}, "regions": {},
+         "ports": {"p0": {"src": "A", "dst": "B", "src_part": "A", "dst_part": "B", "K": 1, "depth": 4, "sched_lat": 2, "tree": False}}}
+    t = {"ports": [{"port": "p0", "src": "A", "dst": "B", "src_region": "std_bg_1", "dst_region": "std_bg_2"}], "regions": []}
+    out = CB.annotate_table(t, b)
+    assert out["ports"][0]["added_cycles"] == 2
+    b["ports"]["p0"].update(src="X", dst="Y")                    # region-form bind with a different region pair is still refused
+    with pytest.raises(CB.BindError):
+        CB.annotate_table(t, b)

@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenTallas die source-tree replica drift check, hourly
+
+[Timer]
+OnCalendar=*-*-* *:25:00
+Persistent=false
+
+[Install]
+WantedBy=timers.target

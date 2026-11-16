@@ -456,10 +456,19 @@ proc ot_prd_hold_scope {body} {
       (![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ne $::ot_prd_expected_hold_scope)} {
     error "OT_HOLD_SCOPE expected $::ot_prd_expected_hold_scope in actual OpenROAD environment; refusing unscoped repair"
   }
-  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)] || $::env(OT_HOLD_REPAIR_SCOPE) ni {reg2reg nonport}} {
+  if {![info exists ::env(OT_HOLD_REPAIR_SCOPE)]} {
+    # FLOW-LATEECO 11-15: no explicit scope -> port hold is the parent's; default reg2reg unless OT_HOLD_PORT_SCOPE_OFF=1.
+    # Only where it can be applied exactly (single-mode, or a synced FF 4_cts.sdc session); otherwise the old body.
+    set _dflt [expr {[info exists ::env(OT_HOLD_PORT_SCOPE_OFF)] && $::env(OT_HOLD_PORT_SCOPE_OFF) eq "1" ? "" : "reg2reg"}]
+    set _mma [expr {[info exists ::ot_mm_active] && $::ot_mm_active}]
+    set _mms [expr {[info exists ::ot_mm_synced] && $::ot_mm_synced && [info exists ::ot_mm_stage] && $::ot_mm_stage eq "4_cts.sdc"}]
+    if {$_dflt eq "" || ($_mma && (!$_mms || ![llength [info commands ot_hold_repair_scope]]))} { return [uplevel 1 $body] }
+    set scope $_dflt
+  } elseif {$::env(OT_HOLD_REPAIR_SCOPE) ni {reg2reg nonport}} {
     return [uplevel 1 $body]
+  } else {
+    set scope $::env(OT_HOLD_REPAIR_SCOPE)
   }
-  set scope $::env(OT_HOLD_REPAIR_SCOPE)
   set mm_active [expr {[info exists ::ot_mm_active] && $::ot_mm_active}]
   set mm_synced [expr {[info exists ::ot_mm_synced] && $::ot_mm_synced}]
   set mm_stage [expr {[info exists ::ot_mm_stage] ? $::ot_mm_stage : "UNSET"}]

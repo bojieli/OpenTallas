@@ -164,6 +164,13 @@ def test_hbm_detection_and_type_names():
     assert nw.is_hbm("/srv/x/hbm-collect-1/ptwc3/kit")
     assert nw.is_hbm("trialhbm-fabric-3957235")
     assert not nw.is_hbm("dpkit-ot_s81sl_leaf__t1-4093762")
+    # KIT-OPS-6 11-14: a HEAD core built by the HBM core-kit generator is not HBM (die metadata decides, not the generator name)
+    head = ("hbmcore-kit_elemA_1-4093762 /srv/opentallas-scratch2/claude/type-hdcore-elemab/elemA/kit_elemA "
+            "/srv/opentallas-scratch2/claude/type-hdcore-elemab/elemA/kit_elemA/run bash run_kit_hbm.sh")
+    assert not nw.is_hbm(head)
+    # an HBM-die kit is still HBM, with or without the generator name
+    assert nw.is_hbm("hbmcore-kit_x-1 /srv/opentallas-scratch2/claude/kw43-wave-1109/runs/hbm/kit-wave/hbm/ev/items/PHY_NE/gen/k run_kit_hbm.sh")
+    assert nw.is_hbm("dpkit-PHY_NE-1 /srv/x/claude/kit-ops-1/hbm_pEv11c/kit")
     assert nw.base_type("dpkit-col_h9_r0_p5__t1__pvb22875c0-1143335") == "col_h9_r0_p5__t1"
     assert nw.base_type("dpkit-serdes__t2-3945605-lec") == "serdes__t2"
     assert nw.base_type("dpkit-sle_sc_v1__cl64543eaf__cl5e017c6f-3460358") == "sle_sc_v1"
@@ -237,3 +244,25 @@ def test_standalone_lec_without_scope_is_cancellable_only_when_lec_only():
     assert nw.decide([r], {"happy_hodgkin": 0}, NOW, True) == [None]
     r2 = row("flow", None, "CANCEL-NOW")
     assert nw.decide([r2], {"flow": 0}, NOW, True) == []
+
+
+LEGALIZER = """[INFO GRT-0101] Running extra iterations to remove congestion.
+Iteration | Violations | Moved
+---------------------------------
+        0 |       4000 |  10
+      100 |       3000 |  80
+[INFO RSZ-0034] detailed placement legalizer pass
+"""
+
+
+def test_grt_stage_ignores_the_legalizer_violations_table():
+    """FABLE-PD-KV-1450 fix 7: the detailed-placement legalizer table is not global-route progress in 5_1_grt"""
+    res = nw.extract("grt", LEGALIZER)
+    assert res["series"] == [] and res["name"] is None
+    assert res["growth_idx"] == 0                              # only the GRT-0101 line is global-route news
+    assert nw.extract("other", LEGALIZER)["name"] == "repair_Violations"      # other stages keep the generic reading
+
+
+def test_grt_incremental_activity_counts_as_growth():
+    t = LEGALIZER + "[INFO GRT-0128] incremental global routing: 12 nets\n"
+    assert nw.extract("grt", t)["growth_idx"] == len(t.splitlines()) - 1

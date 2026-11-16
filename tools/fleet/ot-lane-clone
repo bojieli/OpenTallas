@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+"""ot-lane-clone: the ONE way a lane gets a git clone (FABLE-FLOW-1000 class 8, COORD 11-15).
+
+origin = the lane mirror on intel2 (/srv/opentallas-scratch2/git/OpenTallas.git, see ot-git-mirror), on every host.  Never
+the owner checkout ~/OpenTallas (hub:OpenTallas): 24 lane clones used it as origin and pushed 68 claude/* refs into it on
+11-15.  The mirror takes claude/* pushes only and forwards them to GitHub; main lands only through the merge queue.
+
+usage:
+  ot-lane-clone DIR [-b claude/<lane>-<date>] [--base main] [--sparse PATH ...]
+      partial clone (blob:none) of the mirror; -b creates the lane branch on origin/<base>
+  ot-lane-clone --fix DIR ...      repoint an existing clone's origin to the mirror (old origin kept as remote 'old-origin')
+  ot-lane-clone --audit ROOT ...   list git clones under ROOTs (depth 4) whose origin is not the mirror
+Each clone gets a pre-push hook that refuses any ref but refs/heads/claude/* and any remote but the mirror.
+"""
+import argparse
+import os
+import socket
+import subprocess as S
+import sys
+from pathlib import Path
+
+MIRROR_HOST = os.environ.get("OT_LANE_MIRROR_HOST", "intel2")
+MIRROR_PATH = "/srv/opentallas-scratch2/git/OpenTallas.git"
+
+
+def mirror_url():
+    if os.environ.get("OT_LANE_MIRROR"):
+        return os.environ["OT_LANE_MIRROR"]
+    if socket.gethostname().split(".")[0] == MIRROR_HOST and Path(MIRROR_PATH).is_dir():
+        return MIRROR_PATH
+    return f"{MIRROR_HOST}:{MIRROR_PATH}"
+
+
+PRE_PUSH = r"""#!/bin/bash
+# ot-lane-clone: lanes push claude/* branches to the lane mirror only (never main, never the owner checkout)
+want=%(url)s
+if [ "$2" != "$want" ]; then
+  echo "ot-lane-clone: REFUSED push to $2: lanes push only to the lane mirror $want (ot-lane-clone --fix this clone)"; exit 1
+fi
+while read -r lref lsha rref rsha; do
+  case "$rref" in refs/heads/claude/*) ;; *) echo "ot-lane-clone: REFUSED $rref: push claude/* branches only"; exit 1;; esac
+done
+exit 0
+"""
+
+
+def git(*a, cwd=None, check=True):
+    p = S.run(["git", *a], cwd=str(cwd) if cwd else None, capture_output=True, text=True)
+    if check and p.returncode:
+        raise SystemExit(f"git {' '.join(a)[:160]}: {(p.stderr or p.stdout).strip()[-400:]}")
+    return p.stdout.strip()
+
+
+def hook(d, url):
+    gd = Path(git("rev-parse", "--absolute-git-dir", cwd=d))
+    h = gd / "hooks" / "pre-push"
+    h.parent.mkdir(parents=True, exist_ok=True)
+    tmp = h.with_suffix(".tmp")
+    tmp.write_text(PRE_PUSH % {"url": "'" + url.replace("'", "'\\''") + "'"})
+    tmp.chmod(0o755)
+    os.replace(tmp, h)
+
+
+def clone(a):
+    url, d = mirror_url(), Path(a.dir)
+    if d.exists() and any(d.iterdir()):
+        raise SystemExit(f"{d} exists and is not empty (use --fix for an existing clone)")
+    git("clone", "-q", "--filter=blob:none", "--no-checkout", url, str(d))
+    git("config", "remote.origin.pushurl", url, cwd=d)
+    git("config", "push.default", "current", cwd=d)
+    if a.sparse:
+        git("sparse-checkout", "set", "--cone", *a.sparse, cwd=d)
+    if a.branch:
+        if not a.branch.startswith("claude/"):
+            raise SystemExit("lane branches are claude/<lane>-<date>")
+        git("checkout", "-q", "--no-track", "-b", a.branch, f"origin/{a.base}", cwd=d)
+    else:
+        git("checkout", "-q", a.base, cwd=d)
+    hook(d, url)
+    print(f"{d}: origin {url}, branch {a.branch or a.base} @{git('rev-parse', '--short=11', 'HEAD', cwd=d)}")
+    return 0
+
+
+def fix(dirs):
+    url = mirror_url()
+    for d in map(Path, dirs):
+        old = git("remote", "get-url", "origin", cwd=d, check=False)
+        if old != url:
+            if old and "old-origin" not in git("remote", cwd=d).split():
+                git("remote", "add", "old-origin", old, cwd=d)
+                git("config", "remote.old-origin.pushurl", "DISABLED", cwd=d)
+            git("remote", "set-url", "origin", url, cwd=d)
+        git("config", "--unset-all", "remote.origin.pushurl", cwd=d, check=False)
+        git("config", "remote.origin.pushurl", url, cwd=d)
+        hook(d, url)
+        print(f"{d}: origin {old or '-'} -> {url}")
+    return 0
+
+
+def audit(roots):
+    url, bad = mirror_url(), 0
+    for r in map(Path, roots):
+        for g in sorted(set(r.glob(".git")) | set(r.glob("*/.git")) | set(r.glob("*/*/.git")) | set(r.glob("*/*/*/.git"))):
+            d = g.parent
+            o = git("remote", "get-url", "origin", cwd=d, check=False)
+            if o != url:
+                bad += 1
+                print(f"{d}\torigin={o or '-'}")
+    print(f"{bad} clone(s) whose origin is not {url}")
+    return 1 if bad else 0
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("dir", nargs="*")
+    ap.add_argument("-b", "--branch", default="")
+    ap.add_argument("--base", default="main")
+    ap.add_argument("--sparse", nargs="+", default=[])
+    ap.add_argument("--fix", action="store_true")
+    ap.add_argument("--audit", action="store_true")
+    a = ap.parse_args()
+    if not a.dir:
+        ap.error("DIR required")
+    if a.fix:
+        return fix(a.dir)
+    if a.audit:
+        return audit(a.dir)
+    a.dir = a.dir[0]
+    return clone(a)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

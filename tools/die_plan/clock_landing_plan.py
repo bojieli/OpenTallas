@@ -256,6 +256,9 @@ BAND_SPREAD=1.0
 # 1.0 (the bare reserve, the smallest band the placer can fill), then falls back to the mode area (recorded
 # band_use > 1, advisory). None (module default) keeps _storage_band byte-identical for direct callers.
 BAND_USE_MAX=None
+# S81-CA-BAND (opt-in compose(band_clock_obstacles=True); default off = byte-identical): die clock islands and die clock-tree
+# reserved sites (the svc channel taps) are band obstacles in EVERY band mode, not only ring_ff (FABLE-PD-S81-0850 lever 4c)
+BAND_CLOCK_OBST=False
 CA_RESERVE40=(5.36,114.0,130.0)
 CA_FLOPS=(4,72,73)
 FF_RESERVE40_UM2=0.729
@@ -483,7 +486,7 @@ def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()
     if _use is not None and _use>0:area=max(r40*RING_FF_PACK/_use,reserve*scale if _scale is not None else 0.0)
     depth=math.ceil(max(8.64,area/length)/2.16)*2.16
     obstacles=RT.blockages(t)+used+_tap_obstacles(t)   # S81-BANDTAP-1115: a single rect never covers a reserved tap site
-    if BAND_RESERVE=="ring_ff":
+    if BAND_RESERVE=="ring_ff" or BAND_CLOCK_OBST:
         # the die clock driver islands and die clock-tree cell sites are placement blockages in the kit (die_islands.tcl,
         # reserved_sites.tcl); a band over them loses rows the reserve counted, so ring_ff keeps the band off them
         ck=t.get("clock") or {}
@@ -606,7 +609,7 @@ def _reach_mask(shape,g,reach):
 
 def _band_obstacles(t,used,phy=(),resets=()):
     obstacles=RT.blockages(t)+[list(o) for o in used]+[list(o) for o in phy]+[list(o) for o in resets]+_tap_obstacles(t)
-    if BAND_RESERVE=="ring_ff":
+    if BAND_RESERVE=="ring_ff" or BAND_CLOCK_OBST:
         ck=t.get("clock") or {}
         obstacles+=[list(r) for r in ck.get("die_islands_um",[])]+\
             [list(r["rect_um"]) for r in ck.get("reserved_sites_um",[]) if r.get("kind")=="die_clock_tree"]
@@ -1066,14 +1069,14 @@ def clear_generated_landing_infra(raw):
 
 
 def compose(*a,**k):
-    global BAND_USE_MAX
-    saved=BAND_USE_MAX
+    global BAND_USE_MAX,BAND_CLOCK_OBST
+    saved=(BAND_USE_MAX,BAND_CLOCK_OBST)
     try:return _compose(*a,**k)
-    finally:BAND_USE_MAX=saved
+    finally:BAND_USE_MAX,BAND_CLOCK_OBST=saved
 
 
 def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor="reset",band_reserve="padded",band_spread=1.0,band_ring="all",
-            forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5):
+            forward_source="tap",band_order_by_type=None,band_multi_rect=False,band_use_max=0.5,band_use_max_by_type=None,band_clock_obstacles=False):
     """band_reserve="live" (opt-in): storage bands reserve the live ring (width+epoch) instead of the 64-bit padded ring.
     observer: {module, instance_suffix, fault_port, ready_port} of the real
     one-bit fault/ready inputs gated in observer_part (reset mode default QC_OBSERVER).
@@ -1102,7 +1105,8 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
     if band_ring not in ("all","ff") or (band_ring=="ff" and band_reserve!="ring_ff"):
         raise ValueError(f"band_ring {band_ring} must be all or ff (ff needs band_reserve=ring_ff)")
     if band_use_max is not None and not 0.1<=float(band_use_max)<=1.0:raise ValueError(f"band_use_max {band_use_max} not in [0.1,1]")
-    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX
+    global BAND_RESERVE,BAND_SPREAD,BAND_RING,BAND_USE_MAX,BAND_CLOCK_OBST
+    BAND_CLOCK_OBST=bool(band_clock_obstacles)
     BAND_RESERVE=band_reserve;BAND_SPREAD=float(band_spread);BAND_RING=band_ring
     BAND_USE_MAX=None if band_use_max is None else float(band_use_max)
     if observer is not None or monitor=="reset":
@@ -1179,6 +1183,8 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                 clone["note"]=clone.get("note","")+f";clock landing cohort from{base} (exact local monitor children)"
                 raw["partition_types"][name]=clone
                 if "in_um" in W["types"].get(tn,{}):raw["reset"]["in_sites"][name]=W["types"][tn]["in_um"]
+                ko=raw["reset"].get("keep_outs") or {}
+                if tn in ko:ko[name]=list(ko[tn])    # S81-TYPEMERGE R3a: a cohort clone keeps the family union of reset outs
                 for p in raw["partitions"]:
                     if p["name"] in names:p["type"]=name
         if not split:break
@@ -1186,7 +1192,10 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
     # Final topology is the topology the new wrappers and ports actually use.
     P=S.Plan(raw,plan_path);W=RT.wf_plan(P)
     bytype={};placement_failures=[];monitor_edges=[]
+    use_global=BAND_USE_MAX
     for tn,t in raw["partition_types"].items():
+        # S81-CA-BAND: band_use_max_by_type {type: use}: only the named types take a tighter (higher-use) band
+        BAND_USE_MAX=float((band_use_max_by_type or {}).get(tn,use_global)) if (band_use_max_by_type or {}).get(tn,use_global) is not None else None
         pn=next(pn for pn,p in P.parts.items() if p["type"]==tn)
         sig=signatures[pn];hard=bool(t.get("hard"))
         if hard and children[pn]:raise ValueError(f"hard partition type {tn} would collect monitor children")
@@ -1201,7 +1210,7 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                   reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
         used=[];phy=phy_supply_rects(P,tn);resets=_reset_sites_for_type(raw,tn,tree,base_type[pn])
         landings=sorted(ins[pn].items())
-        band_order=(band_order_by_type or {}).get(base_type[pn],"name")
+        band_order=(band_order_by_type or {}).get(base_type[pn],(band_order_by_type or {}).get("*","name"))   # "*" = every type (S81-CA-BAND)
         if band_order=="largest_first":
             landings.sort(key=lambda row:(-int(row[1]["width"]),row[0]))
             info["band_order"]=band_order
@@ -1280,7 +1289,12 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                         if fxm and fxm.get("rect_um"):band=copy.deepcopy(fxm)
                         else:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
                     except ValueError as e:
-                        placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
+                        band=None
+                        if band_multi_rect:        # S81-CA-BAND: the 2-bit monitor ring takes the same notched band as a landing
+                            try:band=_storage_rects_staged(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used+=band.get("rects_um") or [band["rect_um"]]
+                            except ValueError:band=None
+                        if band is None:
+                            placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
                     band["instance"]=f"u_cland_monitor_{i}"
                     info["bands"][f"monitor_{i}"]=band
                 info["children"].append(row)

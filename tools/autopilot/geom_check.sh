@@ -63,6 +63,13 @@ if [ -n "$GPID" ]; then
   wait "$GPID"; echo "AP_AUTO_GEOM_GRT rc $? ($GMIN-$GMAX adj $GADJ, $GITER it)"
 fi
 [ $rc = 0 ] || { echo "AP_AUTO_GEOM_ERROR dump rc $rc"; exit $rc; }
+# PLACED-SCAN-1115: early-fail diagnostic (advisory, never a gate): zero-logic bus hops over the plan reach / one-cycle
+# reach with no station on the matched group.  Names the group; its AP_PLACED_SCAN line is read by kit_wave.  Missing
+# script or any error = skipped.  OT_PLACED_SCAN=0 turns it off.
+if [ "${OT_PLACED_SCAN:-1}" = 1 ] && [ -f "$TOOLS/placed_scan.py" ]; then
+  timeout 600 python3 -I "$TOOLS/placed_scan.py" "$OUT/geom.tsv" --kit "$KIT" --out "$OUT" --top 0 2>&1 | head -2 | cut -c1-900 \
+    || echo "AP_PLACED_SCAN_ERROR"
+fi
 mapfile -t RA < <(python3 -I -c 'import json,sys;[print(a) for a in json.load(open(sys.argv[1])).get("rules_args",[])]' "$OUT/check.json")
 GA=(); [ "$GRT" = true ] && GA=(--grt-log "$OUT/grt.log")
 # Actual kit models classify synchronous memory boundaries; never infer them from names.
@@ -83,7 +90,10 @@ if [ -f "$KIT/land_slots.json" ] || [ -f "$KIT/face_guard.json" ]; then
 fi
 # Kit spare_out.json (DIE-HBM-100 11-11): constant-tied spare output bits are not "unregistered" pins.
 [ -f "$KIT/spare_out.json" ] && GA+=(--spare-out "$KIT/spare_out.json")
-python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${RA[@]}"
+# KV-PC-DELTA-1115: the nearest-tap split in the metric applies the kit's own tap cap / reach / macro rule, as clock_taps.tcl does
+TK=(); v=$(kv OT_TAP_MAX_SINKS); [ -n "$v" ] && TK+=(--tap-max-sinks "$v"); v=$(kv OT_TAP_PITCH_UM); [ -n "$v" ] && TK+=(--tap-pitch-um "$v")
+v=$(kv OT_TAP_SPILL_UM); [ -n "$v" ] && TK+=(--tap-spill-um "$v"); [ "$(kv OT_TAP_SKIP_MACRO)" = 1 ] && TK+=(--tap-skip-macro)
+python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${TK[@]}" "${RA[@]}"
 vrc=$?
 PA=(); [ "$GRT" = true ] && PA=(--cong "$OUT/cong.rpt")
 python3 -E "$TOOLS/geom_png.py" "$OUT/geom.tsv" "$OUT/auto_geom.json" "$OUT/auto_geom.png" "${PA[@]}" \

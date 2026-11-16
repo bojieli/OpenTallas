@@ -28,6 +28,7 @@ die_trial SiteMap point when --plan is given.  No timing value is used.  Default
 import argparse
 import hashlib
 import json
+import os
 import re
 import shutil
 from pathlib import Path
@@ -37,7 +38,12 @@ FLOP_W_UM = 1.08        # ASAP7 DFFHQNx1_ASAP7_75t_R LEF SIZE 1.08 x 0.27
 CLK_CELL_W_UM = 1.62    # die clock cell footprint (BUFx24 / CKINVDCx16, LEF SIZE 1.62 x 0.27)
 ROW_UM = 0.27
 GAP_UM = 0.54           # two sites between the node cell and the stage
-MAX_ROW_TRIES = 40
+MAX_ROW_TRIES = 40      # legacy first window (kept for the message); the search now continues outward to MAX_STAGE_DIST_UM
+# KIT-OPS-6 11-15 (COORD, DIE-HEAD-ROUTE-1): the 40-row window failed on HEAD near (6724, 8430); widened by hand to 4,000 rows the farthest stage landed
+# 18.4 um from its clock cell.  Search outward until a legal row is found, bounded by the START relay reach budget (405 um, the same budget
+# reach_relay_plan prices a hop with; env OT_START_STAGE_MAX_UM overrides); the distance is logged.
+MAX_STAGE_DIST_UM = float(os.environ.get("OT_START_STAGE_MAX_UM", "405"))
+STAGE_DISTANCES = []     # (xy, distance_um) of every placement, for the emit log
 STAGE_MODULE = "ot_dp_landing_origin"
 ROOT_MODULE = "ot_dp_landing_root"
 ROOT_SETTLE = 64        # count_align_bind --root-settle default (root_settle_cycles)
@@ -129,7 +135,8 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     """row segment for n_flops beside a clock cell at xy (lower-left): right, left, then rows +-k"""
     w = n_flops * FLOP_W_UM
     x, y = xy
-    for k in range(MAX_ROW_TRIES):
+    kmax = int(MAX_STAGE_DIST_UM / ROW_UM)
+    for k in range(kmax + 1):
         for dy in ((0.0,) if k == 0 else (k * ROW_UM, -k * ROW_UM)):
             yy = y + dy
             for x0 in (x + CLK_CELL_W_UM + GAP_UM, x - GAP_UM - w):
@@ -140,8 +147,12 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
                     continue
                 if site is not None and not (site.legal((x0, yy)) and site.legal((x1, yy + ROW_UM))):
                     continue
+                dist = abs(x0 - x) + abs(yy - y)
+                STAGE_DISTANCES.append((tuple(xy), round(dist, 2)))
+                if k >= MAX_ROW_TRIES:
+                    print(f"START-STAGE far placement: {n_flops} flops at ({round(x0, 3)}, {round(yy, 3)}) is {dist:.1f} um from its clock cell {tuple(xy)} (k={k} rows)", flush=True)
                 return [round(x0, 3), round(yy, 3), round(x1, 3), round(yy + ROW_UM, 3)]
-    raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_ROW_TRIES} rows of {xy}")
+    raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_STAGE_DIST_UM:g} um ({kmax} rows) of {xy}")
 
 
 def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False, data_manifest=None):
