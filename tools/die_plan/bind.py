@@ -6150,6 +6150,52 @@ def _plan_expect(B, p, a):
     return None
 
 
+def _plan_gate_pre(a):
+    """PLAN-GATE-PRE-1115 (COORD r213): before a die elab/bind, run tools/die_plan/plan_gate_pre.py on THIS tree (schema keys,
+    as-built inputs, tool vintage; rows only when OT_PLAN_GATE_BASELINE names the adopted plan) and refuse on FAIL, in seconds,
+    with a named reason.  OT_PLAN_GATE_PRE=off skips it, =warn prints and continues.  Result stamp out/plan_gate_pre.json lets
+    `bind` after `elab` of the same plan and tools skip the repeat.  Returns 0 or the exit code to refuse with."""
+    mode = os.environ.get("OT_PLAN_GATE_PRE", "refuse")
+    if mode == "off":
+        return 0
+    try:
+        import plan_gate_pre as G
+    except ImportError:
+        print("bind: plan_gate_pre.py not in this tree, pre-bind closure check skipped")
+        return 0
+    base = os.environ.get("OT_PLAN_GATE_BASELINE") or None
+    try:
+        blob = Path(a.plan).read_bytes() + (Path(a.asbuilt).read_bytes() if a.asbuilt else b"") + str(base).encode()
+        key = hashlib.sha256(blob).hexdigest()[:16]
+    except OSError:
+        key = None
+    stamp = Path(a.out) / "plan_gate_pre.json"
+    try:
+        if key and json.loads(stamp.read_text()).get("key") == key:
+            return 0
+    except (OSError, ValueError):
+        pass
+    try:
+        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS",))
+    except (OSError, ValueError) as e:
+        print(f"bind: plan_gate_pre could not read its inputs: {e}")
+        return 0 if mode == "warn" else 2
+    fails = [x for x in fs if x.startswith("FAIL")]
+    for x in fs:
+        print(f"bind: plan_gate_pre {x}")
+    if fails and mode != "warn":
+        print(f"bind: REFUSED by plan_gate_pre ({len(fails)} findings; OT_PLAN_GATE_PRE=warn or off to override, "
+              f"tools/die_plan/plan_gate_pre.py check --tree . --plan {a.plan} to re-run)")
+        return 2
+    if not fails and key:
+        try:
+            Path(a.out).mkdir(parents=True, exist_ok=True)
+            stamp.write_text(json.dumps({"key": key, "result": "pass"}) + "\n")
+        except OSError:
+            pass
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -6206,6 +6252,10 @@ def main(argv=None):
             return 2
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
+    if a.cmd in ("elab", "bind", "all") and "PYTEST_CURRENT_TEST" not in os.environ:   # tests call main() on toy plans
+        rc = _plan_gate_pre(a)
+        if rc:
+            return rc
     try:
         if a.cmd == "component-proof":
             import bind_component
