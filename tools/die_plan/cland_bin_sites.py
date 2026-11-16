@@ -71,9 +71,29 @@ def legs(fixed, cores, bands, avoid, via=None):
     out = [fixed[0]]
     new = []
     for a, b in zip(fixed, fixed[1:]):
-        seg = ([a] + list(via) + [b]) if via else ([a, b] if (a[0] == b[0] or a[1] == b[1]) else [a, (b[0], a[1]), b])
-        L = plen(seg)
-        k = max(0, math.ceil(L / (HOP - SLACK)) - 1)
+        cands = [([a] + list(via) + [b])] if via else ([[a, b]] if (a[0] == b[0] or a[1] == b[1]) else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]])
+        placed, err = None, None
+        for seg in cands:
+            L = plen(seg)
+            k = max(0, math.ceil(L / (HOP - SLACK)) - 1)
+            try:
+                placed = _place(seg, L, k, a, b, cores, bands, avoid + new)
+                break
+            except ValueError as e:
+                err = e
+        if placed is None:
+            raise err
+        for p in placed:
+            new.append(p)
+            out.append(p)
+        out.append(b)
+    hops = [round(man(out[i], out[i + 1]), 1) for i in range(len(out) - 1)]
+    return out, hops
+
+
+def _place(seg, L, k, a, b, cores, bands, avoid):
+    new = []
+    if True:
         prev = a
         for j in range(1, k + 1):
             d0 = L * j / (k + 1)
@@ -87,14 +107,11 @@ def legs(fixed, cores, bands, avoid, via=None):
                     continue
                 if man(prev, p) <= HOP and (j < k or man(p, b) <= HOP):
                     new.append(p)
-                    out.append(p)
                     prev = p
                     break
             else:
                 raise ValueError(f"no legal station site on leg {a}->{b} (station {j}/{k})")
-        out.append(b)
-    hops = [round(man(out[i], out[i + 1]), 1) for i in range(len(out) - 1)]
-    return out, hops
+    return new
 
 
 def build(plan, prev, rows, types, buses):
@@ -140,19 +157,44 @@ def build(plan, prev, rows, types, buses):
                 fixed_tail = [(xt, snap(yt))]
                 via = [(xm, ych0), (xm, snap(yt))]
                 ych = snap(min(max(ych0, band[1] + GRID), band[3] - GRID))
-            ubx = snap((band[2] - IN_UM) if east else (band[0] + IN_UM))
-            u_bin = (ubx, ych)
             others = [b["rect_um"] for k, b in bands.items() if k != bn]
-            if hit(u_bin, cores, others, []):
-                raise ValueError(f"{tn}.{bn}: u_bin {u_bin} is not legal")
-            hop0 = man(F, u_bin)
-            if hop0 > HOP:
-                raise ValueError(f"{tn}.{bn}: ring -> u_bin hop {hop0:.0f} um over {HOP:.0f}")
-            nodes = [u_bin] + fixed_tail
-            allnodes, hops = legs(nodes, cores, others, allst + [u_bin], via)
+            cands = []
+            for dx in range(0, int((band[2] - band[0]) / GRID)):                 # inside the own band, from the edge facing the route
+                ubx = snap((band[2] - IN_UM - dx * GRID) if east else (band[0] + IN_UM + dx * GRID))
+                for dy in [0] + [s_ * n_ for n_ in range(1, 40) for s_ in (1, -1)]:
+                    cy = snap(ych + dy * GRID)
+                    if band[1] + GRID <= cy <= band[3] - GRID and band[0] <= ubx <= band[2] and not hit((ubx, cy), cores, others, allst) \
+                            and man(F, (ubx, cy)) <= HOP:
+                        cands.append(((ubx, cy), False))
+            if not cands:                                          # e.g. the band rect is a hard-core ring macro: legal sites within 40 um of it
+                box = [band[0] - 40, band[1] - 40, band[2] + 40, band[3] + 40]
+                out_c = []
+                for ix in range(int(box[0] / GRID), int(box[2] / GRID) + 1):
+                    for iy in range(int(max(box[1], 17.28) / GRID), int(box[3] / GRID) + 1):
+                        c = (snap(ix * GRID), snap(iy * GRID))
+                        if c[1] < 17.28 or hit(c, cores, others, allst) or man(F, c) > HOP:
+                            continue
+                        d = max(band[0] - c[0], 0, c[0] - band[2]) + max(band[1] - c[1], 0, c[1] - band[3])
+                        out_c.append(((d, abs(c[1] - ych), abs(c[0] - (band[2] if east else band[0]))), c))
+                cands = [(c, True) for _, c in sorted(out_c)]
+            if not cands:
+                raise ValueError(f"{tn}.{bn}: no legal u_bin site inside or within 40 um of the band {band}")
+            last = None
+            for u_bin, outside in cands[:80]:
+                try:
+                    hop0 = man(F, u_bin)
+                    nodes = [u_bin] + fixed_tail
+                    allnodes, hops = legs(nodes, cores, others, allst + [u_bin], via)
+                    break
+                except ValueError as e:
+                    last = e
+            else:
+                raise ValueError(f"{tn}.{bn}: no u_bin candidate gives a legal route: {last}")
             sts = [p for p in allnodes[1:-1]]
             ent = dict(u_bin=list(u_bin), u_st=list(sts[0]) if sts else list(allnodes[-1]), route_um=round(hop0 + plen(allnodes), 1),
                        equal_hop_um=round(max([hop0] + hops), 1), hops=[round(hop0, 1)] + hops, plan_stations=plan_n)
+            if outside:
+                ent["u_bin_outside_band"] = True
             if len(sts) > 1:
                 ent["u_st_more"] = [list(p) for p in sts[1:]]
             res.setdefault(tn, {})[bn] = ent

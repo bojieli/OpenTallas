@@ -18,7 +18,7 @@ PREV = {"types": {"cbn_qx": {"bc_i22": {"u_bin": [492.48, 34.56], "u_st": [587.5
 def test_u_bin_at_the_east_end_of_its_own_band_and_hops_under_405():
     r = C.build(_plan(BANDS), PREV, {}, set(), set())["cbn_qx"]["bc_i22"]
     assert r["u_bin"] == [280.8, 34.56] and r["equal_hop_um"] <= 405 and "u_st_more" in r        # bin + 2 stations: 4 hops
-    assert len(r["hops"]) == 4 and abs(r["hops"][0] - (abs(280.8 - 138.752) + 34.56)) < 1.0
+    assert len(r["hops"]) == 4 and abs(r["hops"][0] - (138.752 - 280.8 and abs(280.8 - 138.752) + 34.56)) < 1.0
 
 
 def test_sites_are_legal_and_on_the_grid():
@@ -33,3 +33,19 @@ def test_plan_stations_are_counted_first_and_long_first_leg_gets_a_station():
     st = [dict(conn="bus:nb_i22", from_um=[228.552, 0.0], to_um=[77.856, 919.207], regs_um=[[34.56, 190.08], [34.56, 578.88]])]
     r = C.build(_plan(BANDS, st), {}, {}, set(), {"nb_i22"})["cbn_qx"]["nb_i22"]
     assert r["plan_stations"] == 2 and r["equal_hop_um"] <= 405 and r["u_bin"][0] == 302.4
+
+
+def test_vertical_first_route_when_the_horizontal_first_leg_runs_on_a_core_edge():
+    # plan station in the channel, tap on the core E edge: the horizontal-first L puts its vertical on the core edge (illegal), vertical-first is legal
+    st = [dict(conn="bus:bc_i22", from_um=[138.0, 0.0], to_um=[544.224, 688.46], regs_um=[[587.52, 95.04]])]
+    r = C.build(_plan({"bc_i22": dict(rect_um=[17.28, 17.28, 110.784, 75.6])}, st), {}, {}, set(), {"bc_i22"})["cbn_qx"]["bc_i22"]
+    assert r["equal_hop_um"] <= 405 and r["plan_stations"] == 1
+
+
+def test_u_bin_outside_a_hard_core_ring_band():
+    p = _plan({"bc_i22": dict(rect_um=[100.0, 17.28, 190.0, 69.12])})
+    p["partition_types"]["cbn_qx"]["hard_cores"].append(dict(inst="cl_bc_i22", origin_um=[100.0, 17.28], outline_um=[90.0, 51.84]))
+    st = [dict(conn="bus:bc_i22", from_um=[638.0, 0.0], to_um=[544.224, 688.46], regs_um=[[587.52, 95.04]])]
+    p["partition_types"]["cbn_qx"]["internal_stations"] = st
+    r = C.build(p, {}, {}, set(), {"bc_i22"})["cbn_qx"]["bc_i22"]
+    assert r.get("u_bin_outside_band") is True and r["equal_hop_um"] <= 405
