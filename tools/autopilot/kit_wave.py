@@ -2048,7 +2048,7 @@ def pilot_gate(picked, skip, d, die, state):
     with a signed pilot keep full volume.  In-flight kits are never touched.  pilot_gate false only by COORD ruling."""
     if d.get("pilot_gate") is False:
         return picked
-    cap = int(d.get("pilot_max", 100000))   # LAUNCH-ALL-1116 (OWNER 11-13 no launch limits): was 2
+    cap = int(d.get("pilot_max", 2))
     signed, live = pilot_classes_state(d, die, state)
     out, volume = [], []
     for r in picked:

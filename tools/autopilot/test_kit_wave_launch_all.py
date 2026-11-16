@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """LAUNCH-ALL-1116 (COORD 11-16, OWNER 11-13 "no launch limits"): every eligible row launches in the same tick; the only bounds are the
-in-flight caps and ot-run admission.  max_launch_per_tick is ignored; the pilot cap defaults to unlimited; AP_MAX_SUBMIT defaults high."""
+in-flight caps and ot-run admission.  max_launch_per_tick is ignored; AP_MAX_SUBMIT defaults high."""
 import sys
 import unittest
 from pathlib import Path
@@ -40,12 +40,6 @@ class LaunchAll(unittest.TestCase):
     def test_in_flight_cap_still_bounds(self):
         c = cfg(max_inflight=5)
         self.assertEqual(len(plan(c, 20)), 5)
-
-    def test_pilot_cap_default_is_unlimited(self):
-        d = {"pilot_mode": "hold"}
-        picked = [{"item": f"qc_{i}", "kind": "type"} for i in range(10)]
-        out = KW.pilot_gate(picked, {}, d, "qwen_compute", {"items": {}})
-        self.assertEqual(len(out[0] if isinstance(out, tuple) else out), 10)
 
     def test_autopilot_submit_budget_default(self):
         import autopilot as AP
