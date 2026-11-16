@@ -66,6 +66,39 @@ class LaneMirror(unittest.TestCase):
         self.assertNotEqual(p.returncode, 0)                                  # pushes go to the mirror only
         self.assertEqual(self.gh_ref("refs/heads/claude/y"), "")
 
+    def _seed_dirs(self):
+        for dname in ("physical", "results", "tools"):
+            (self.seed / dname).mkdir(exist_ok=True)
+            (self.seed / dname / "f.txt").write_text(dname + "\n")
+        sh(*G, "add", "-A", cwd=self.seed); sh(*G, "commit", "-qm", "dirs", cwd=self.seed); sh(*G, "push", "-q", "origin", "main", cwd=self.seed)
+        self.run_(MIRROR, "sync")
+
+    def test_clone_is_light_by_default_and_with_brings_dirs_back(self):
+        self._seed_dirs()
+        c = self.d / "light"
+        self.run_(CLONE, str(c), "-b", "claude/l-1115")
+        self.assertTrue((c / "tools" / "f.txt").exists())
+        self.assertFalse((c / "physical").exists())
+        self.assertFalse((c / "results").exists())
+        w = self.d / "withphys"
+        self.run_(CLONE, str(w), "-b", "claude/w-1115", "--with", "physical")
+        self.assertTrue((w / "physical" / "f.txt").exists())
+        self.assertFalse((w / "results").exists())
+        f = self.d / "full"
+        self.run_(CLONE, str(f), "-b", "claude/f-1115", "--full")
+        self.assertTrue((f / "results" / "f.txt").exists())
+
+    def test_shared_store_is_used_as_reference(self):
+        self._seed_dirs()
+        sh_ = self.d / "shared.git"
+        self.env["OT_LANE_SHARED"] = str(sh_)
+        self.run_(CLONE, "--refresh-shared")
+        self.assertTrue(sh_.is_dir())
+        c = self.d / "ref"
+        self.run_(CLONE, str(c), "-b", "claude/r-1115")
+        alt = (c / ".git" / "objects" / "info" / "alternates").read_text()
+        self.assertIn(str(sh_), alt)
+
     def test_sync_fetches_main_and_reforwards_a_failed_forward(self):
         (self.seed / "a.txt").write_text("3\n")
         sh(*G, "commit", "-qam", "main2", cwd=self.seed); sh(*G, "push", "-q", "origin", "main", cwd=self.seed)
