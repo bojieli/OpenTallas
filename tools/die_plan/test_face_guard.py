@@ -1528,3 +1528,26 @@ def test_land_replica_per_bit_fails_closed(monkeypatch):
 
 def test_replica_plans_v5_provider_tops():
     assert face_guard.REPLICA_PLANS[_RPV5] == ("ot_s81_su_smd_fold2", "ot_s81_su_sml_fold2", "ot_hdc_v41x_attn_tr_x")
+
+
+def _rst_xn_net(n, pin="RESETN"):
+    cells = "".join(f"  DFFASRHQNx1_ASAP7_75t_R f{i} (.CLK(clk), .D(d[{i}]), .{pin}(rst_xn[0]), .SETN(1'b1), .QN(q[{i}]));\n"
+                    for i in range(n))
+    return (f"module top(clk, d, q, rst_xn);\n  input clk; input [{n-1}:0] d; output [{n-1}:0] q; input [0:0] rst_xn;\n"
+            + cells + "endmodule\n")
+
+
+def test_ring_reset_replica_with_nine_async_loads_passes():
+    r = face_guard.guard(_rst_xn_net(9), skip_re=face_guard.SKIP_RE)
+    assert "shared" not in r["fail_counts"] and r["ring_reset_replica"] == ["rst_xn[0]"], r
+
+
+def test_ring_reset_replica_driving_non_reset_pin_fails():
+    net = _rst_xn_net(9) .replace(".RESETN(rst_xn[0])", ".RESETN(1'b1)", 1).replace("f1 (.CLK(clk), .D(d[1])", "f1 (.CLK(clk), .D(rst_xn[0])", 1)
+    r = face_guard.guard(net)
+    assert r["verdict"] == "FAIL" and "ring_reset_replica" not in r, r
+
+
+def test_non_reset_bus_with_many_loads_still_shared():
+    net = _rst_xn_net(9).replace("rst_xn", "rst_zz")
+    assert "shared" in face_guard.guard(net)["fail_counts"]

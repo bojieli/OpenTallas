@@ -90,6 +90,16 @@ def _reset_spine_landing(F, lds, max_flops=8):
     return len(parents) == 1
 
 
+RING_RESET_RE = r"^rst_xn(\[\d+\])?$"
+
+
+def _ring_reset_replica(F, lds):
+    """RSTXN-GUARD-1115: a replicated ring reset bit rst_xn[k] splits the ring reset fan-out by design (6-9 flops per
+    replica), so the one-load rule does not apply.  True iff the bit has loads and EVERY load is an asynchronous
+    set/reset pin of a flop (no D, clock, logic, buffer or port); any other load keeps the ordinary input check."""
+    return bool(lds) and all(is_ff(F.cells[ci][0]) and pin in ASYNC_RESET_PINS for ci, pin in lds)
+
+
 def is_buf(master):
     m = master.upper()
     return m.startswith(("BUF", "INV", "HB", "$_NOT_", "$_BUF_"))
@@ -1948,6 +1958,10 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 # the same class as arst_n into the root synchroniser (SKIP_RE): no face register by design.  Any D,
                 # logic or second-instance load still takes the ordinary input check below.
                 res.setdefault("reset_spine", []).append(b)
+                res["ok"] += 1
+                continue
+            if d == "input" and re.match(RING_RESET_RE, str(b)) and _ring_reset_replica(F, loads[r]):
+                res.setdefault("ring_reset_replica", []).append(b)
                 res["ok"] += 1
                 continue
             # S81-SVCRS-3 11-10: an unlisted bit of a per-bit replica bus skips every land branch below and takes the
