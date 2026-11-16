@@ -293,3 +293,26 @@ foreach i $::insts {
     src = p[r"u_bound.u_core.u_rxf_q\[0\]$_DFF_N_"]
     dst = p["u_bound.u_core.u_dec.u_face_p_v.q$_DFF_P_"]
     assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
+
+
+
+def test_rxneg_valid_launch_halfcycle_also_pairs_locally(tmp_path):
+    body = "set ::env(OT_TXL_MID_RXNEG_PAIR) 1\n" + RXNEG + r"""
+set ::M(DFFL) [obj master name DFFLQNx2_ASAP7_75t_R block 0]
+foreach i $::insts {
+  set n [g $i name]
+  if {$n eq "u_bound.u_core.u_rxf.enc544"} {
+    s $i name {u_bound.u_core.rs_r[1]$_DFF_PN0_}
+    s $i master $::M(DFF)
+    s $i x 200; s $i y 100
+  }
+  if {[string first {u_rxf_q\[544\]} $n]>=0} {s $i master $::M(DFFL)}
+}
+"""
+    r = mock_run(tmp_path, body, chains="u_rxf", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    src = p["u_bound.u_core.rs_r[1]$_DFF_PN0_"]
+    dst = p[r"u_bound.u_core.u_rxf_q\[544\]$_DFF_N_"]
+    assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
+    assert "bits moved 545 of 545" in r.stdout

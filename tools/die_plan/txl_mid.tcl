@@ -208,7 +208,14 @@ namespace eval ot_txl_mid {
                        [string match "u_dec.u_face_p_*" $C] &&
                        [string first "u_rxf_q" [[$src getInst] getName]]>=0 &&
                        [string match "DFFL*" [[[$src getInst] getMaster] getName]]}]
-      if {$rxpair} {
+      # The valid bit has a register source (rn_r), not a PMA macro.
+      # Its positive -> negative edge hop also has only half a cycle.
+      set rxvalid [expr {[info exists ::env(OT_TXL_MID_RXNEG_PAIR)] && $::env(OT_TXL_MID_RXNEG_PAIR) eq "1" &&
+                        $C eq "u_rxf" &&
+                        [string match "DFFL*" [[$q getMaster] getName]] &&
+                        [string match "DFF*" [[[$src getInst] getMaster] getName]] &&
+                        ![string match "DFFL*" [[[$src getInst] getMaster] getName]]}]
+      if {$rxpair || $rxvalid} {
         if {$n != 1} {error "OT_TXL_MID RXNEG half-cycle pair expects exactly one face row"}
         # Adjacent row below the source; nearest_free also clears the macro halo.
         set pts [list [list $ax [expr {$ay-2.16*$dbu}]]]
