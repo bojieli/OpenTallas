@@ -1105,6 +1105,10 @@ def straight_leg_span(site, p, nd, nrep):
 # Every changed leg records nd['reach_fix'] (before/after spans, repeaters, wire) and meta.reach_fix the totals, so the
 # added stages/wire are visible to the planner, CA regeneration and the die STA (which measures the routed result).
 REP_REACH_MAX_UM = None
+# --rep-reach-report FILE (FABLE-DIE-S81 11-16, with --rep-reach-max): a leg with no legal placement within reach is
+# appended to FILE as one JSON line (node, a, b, span_um, span, error) and keeps its default chain, so one kit run lists
+# EVERY such leg instead of stopping at the first.  Default None = fail closed, as before.
+REP_REACH_REPORT = None
 
 
 def chain_spans(chain):
@@ -3537,8 +3541,20 @@ def _leg_layout0(i, nd, p, site, rep_um, even):
             dry.append((x, y))
         chain = [(p["x"], p["y"])] + dry + [(nd["x"], nd["y"])]
         if max(chain_spans(chain)) > REP_REACH_MAX_UM + 1e-6:
-            fix_pts, fix_poly, info = reach_fix_leg(site, p, dict(nd, id=i), poly, chain, REP_REACH_MAX_UM,
-                                                    rep_um, even)
+            try:
+                fix_pts, fix_poly, info = reach_fix_leg(site, p, dict(nd, id=i), poly, chain, REP_REACH_MAX_UM,
+                                                        rep_um, even)
+            except ValueError as exc:
+                if not REP_REACH_REPORT:        # default: fail closed at the first leg
+                    raise
+                sp = chain_spans(chain)         # --rep-reach-report: list every such leg, keep its default chain
+                k = max(range(len(sp)), key=sp.__getitem__)
+                row = dict(node=i, a=[p["x"], p["y"]], b=[nd["x"], nd["y"]], span_um=round(sp[k], 2),
+                           span=[list(chain[k]), list(chain[k + 1])], error=str(exc))
+                nd["reach_unfixed"] = row
+                with open(REP_REACH_REPORT, "a") as fh:
+                    fh.write(json.dumps(row) + "\n")
+                return L, nrep, poly, pts, None, chain
             nrep = len(fix_pts)
             nd["reach_fix"] = {**(nd.get("reach_fix") or {}), **info}   # keeps the reach_balance price
             if info["kind"] == "reach_detour":
@@ -6222,6 +6238,9 @@ def main(argv=None):
     k.add_argument("--rep-reach-no-balance", action="store_true",
                    help="with --rep-reach-max: do NOT pad the other branches for the added reach-fix delay "
                         "(geometry diagnosis only; the default balances so relative arrivals stay as built)")
+    k.add_argument("--rep-reach-report", default=None, metavar="FILE",
+                   help="with --rep-reach-max: do not stop at the first leg without a legal placement within reach; "
+                        "append each one to FILE (JSON lines) and keep its default chain. Default off = fail closed")
     k.add_argument("--rep-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in: reject actual cell-to-cell and final-tap Manhattan hops over UM after legal snapping; "
                         "write actual_reach.json, default off; re-run clock_reach.py after any later clock overlay")
@@ -6521,6 +6540,8 @@ def main(argv=None):
     REP_ON_LEG = bool(getattr(a, "rep_on_leg", False))
     REP_OFF_LEG_MAX_UM = getattr(a, "rep_off_leg_max", None)
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
+    global REP_REACH_REPORT
+    REP_REACH_REPORT = getattr(a, "rep_reach_report", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
     global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS
