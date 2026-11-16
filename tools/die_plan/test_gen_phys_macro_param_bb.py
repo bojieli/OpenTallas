@@ -177,6 +177,35 @@ class MacroParamBB(unittest.TestCase):
         other = "module m_c #(parameter integer A =\n`ifdef X\n    `Y\n`else\n    0\n`endif\n) (input wire a);"
         self.assertEqual(G._header_with_defaults(other, {"A": "1"}), (other, {}))
 
+    def test_header_from_multi_module_tree_file(self):
+        # KV pv types 11-16: ot_qwen_tp8_pv_join_t #(.RESET_PIN(1)) in the bound wrapper; the module is declared in
+        # ot_qwen_tp8_pv_wide_pair.sv, which the kit does not stage and which is not named after it
+        d = self.t / "root" / "rtl" / "near"
+        d.mkdir(parents=True)
+        (d / "m_wide.sv").write_text("module m_wide(input wire a); endmodule\n"
+                                     "module m_j #(parameter integer R=0)(input wire clk, output wire q);\n"
+                                     " assign q = clk;\nendmodule\n")
+        top = self.t / "src" / "t4.sv"
+        top.write_text("module t4(input wire clk); m_j #(.R(1)) u_j(.clk(clk), .q()); endmodule\n")
+        mac = [("u_j", "m_j", "", "", 0, 0, "N")]
+        with self.assertRaises(ValueError):          # no tree: as before
+            G.macro_param_blackboxes(mac, [top], self.t / "kit")
+        out = G.macro_param_blackboxes(mac, [top], self.t / "kit", self.t / "root")
+        txt = out[0].read_text()
+        self.assertEqual(out[0].name, "m_j_bb.v")
+        self.assertIn("module m_j", txt)
+        self.assertIn("R = 1", txt.replace("R=1", "R = 1"))
+        self.assertNotIn("assign q", txt)
+        self.assertNotIn("m_wide", txt.split("\n", 1)[1])
+        # the same header in a second file is fine; a different one stops the kit
+        (d / "m_copy.sv").write_text("module m_j #(parameter integer R=0)(input wire clk,   output wire q);\nendmodule\n")
+        (self.t / "kit" / "m_j_bb.v").unlink()
+        self.assertEqual(len(G.macro_param_blackboxes(mac, [top], self.t / "kit", self.t / "root")), 1)
+        (d / "m_other.sv").write_text("module m_j #(parameter integer R=0)(input wire clk);\nendmodule\n")
+        (self.t / "kit" / "m_j_bb.v").unlink()
+        with self.assertRaisesRegex(ValueError, "different headers"):
+            G.macro_param_blackboxes(mac, [top], self.t / "kit", self.t / "root")
+
     def test_instance_identity_parse(self):
         txt = ("m_x #(.A(2), .B(P_INST), .C(\"s\")) u0 (.a(b));\n// m_x #(.A(9)) u9 ();\n"
                "m_x #(.A(2), .B(P2), .C(\"s\")) u1 (.a(b));\n")

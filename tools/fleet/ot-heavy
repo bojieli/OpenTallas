@@ -171,11 +171,34 @@ while :; do
       V=NO; WHY="load gate: load1 ${_g[1]} + fresh admits ${_fr} threads >= ${_gf} x $(nproc) = ${_g[2]} (${_why_extra}; running jobs untouched)"
     fi
   fi
+  # THREADCAP_1116 (COORD 11-16: epyc10 load 177 on 96 cores, ~25 openroad jobs at 8-32 threads, while epyc2 sat at 23/128;
+  # admission was memory-only).  The committed threads of a host = the sum of the --threads (OT_HEAVY_THREADS) of the units that hold a
+  # res.<unit> here (cthr.<unit>, written at admission, ignored once res.<unit> is gone).  A job that memory admits still waits while
+  # committed + its threads > THREAD_CAP_FACTOR (default 1.0) x nproc, unless the host has nothing committed (an empty host always
+  # takes one job).  Exempt: --priority plan, --direct, --crit (owner bypass rules), short-pool stages.  Running jobs are never touched.
+  # THREAD_CAP_FACTOR=0 (/etc/ot-heavy.conf or env) disables it.
+  if [ "$V" = OK ] && [ "${THREAD_CAP_FACTOR:-1.0}" != 0 ] && [ "${OT_HEAVY_PRIO:-}" != plan ] && [ "${OT_HEAVY_DIRECT:-}" != 1 ] &&
+     [ "${OT_HEAVY_CPU:-}" != crit ] && [ "$_short" = 0 ]; then
+    _ct=0
+    for _f in "$D"/cthr.*; do
+      [ -e "$_f" ] || continue
+      [ -e "$D/res.${_f##*/cthr.}" ] || { rm -f "$_f"; continue; }
+      read -r _t < "$_f" || continue
+      case "$_t" in ''|*[!0-9]*) continue;; esac
+      _ct=$(( _ct + _t ))
+    done
+    _mt="${OT_HEAVY_THREADS:-8}"; case "$_mt" in ''|*[!0-9]*) _mt=8;; esac
+    _tcap=$(awk -v f="${THREAD_CAP_FACTOR:-1.0}" -v n="$(nproc)" 'BEGIN{printf "%d", f * n}')
+    if [ "$_ct" -gt 0 ] && [ $(( _ct + _mt )) -gt "$_tcap" ]; then
+      V=NO; WHY="thread cap: committed ${_ct} threads + this job ${_mt} > ${THREAD_CAP_FACTOR:-1.0} x $(nproc) = ${_tcap} (memory admits; running jobs untouched)"
+    fi
+  fi
   [ "$RES" != "$MEM" ] && [ "$RES" != "$LASTRES" ] && echo "ot-heavy: request ${MEM}G is charged ${RES}G (${WHY##*; }); the cap stays ${MEM}G" >&2
   LASTRES=$RES
   if [ "$V" = OK ]; then
     echo "$UNIT $RES" > "$D/res.$UNIT"
     echo "${OT_HEAVY_THREADS:-8}" > "$D/thr.$UNIT"   # LOADGATE_1110: counted as fresh load for LOAD_FRESH_S
+    echo "${OT_HEAVY_THREADS:-8}" > "$D/cthr.$UNIT"   # THREADCAP_1116: committed for as long as res.$UNIT exists
     echo "$MEM $CLS" > "$D/meta.$UNIT"
     [ "$RES" != "$MEM" ] && echo "$(date -Is) $UNIT DOWNSIZE request ${MEM}G -> reserved ${RES}G (${WHY##*; })" >> "$D/admit.log"
     A=${WHY#*available }; G=${WHY#*growth charged }

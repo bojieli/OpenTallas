@@ -80,10 +80,64 @@ def audit_plan(plan, repo_root, layers=("M7",)):
     return rows
 
 
+def audit_orient(plan, repo_root, layers=("M7",)):
+    """Type-frame audit of EVERY hard-core row including MX / MY / R180 hard-core orients: the core pin is mirrored
+    about the core outline (check._orient_pt: MX y->h-y, MY x->w-x, R180 both) and then placed at origin + track_offset
+    in the TYPE frame, where the type is built and parent-routed (the die-frame image of a mirrored partition is not what
+    the type's own router sees).  One row per distinct (module, origin, offset, orient)."""
+    rows, seen, cache = [], set(), {}
+    for tname, t in plan["partition_types"].items():
+        for hc in t.get("hard_cores") or []:
+            o = hc.get("orient", "R0")
+            key = (hc.get("module"), tuple(hc.get("origin_um") or ()), tuple(hc.get("track_offset_um") or ()), o)
+            if key in seen or not hc.get("pins_file"):
+                continue
+            seen.add(key)
+            pf = Path(repo_root) / "physical/die_plan/s81" / hc["pins_file"]
+            if pf not in cache:
+                cache[pf] = json.loads(pf.read_text())["pins"] if pf.is_file() else None
+            pins = cache[pf]
+            if pins is None:
+                rows.append(dict(type=tname, module=hc["module"], status="NO_PINS_FILE"))
+                continue
+            w, h = hc["outline_um"]
+            dx, dy = hc.get("track_offset_um") or [0.0, 0.0]
+            res = {}
+            for lay in layers:
+                axis, off, pitch = TRACKS[lay]
+                ai = 0 if axis == "x" else 1
+                n = bad = 0
+                resid = {}
+                for p in pins:
+                    if p["layer"] != lay:
+                        continue
+                    n += 1
+                    x = w - p["x"] if o in ("MY", "R180") else p["x"]
+                    y = h - p["y"] if o in ("MX", "R180") else p["y"]
+                    g = nm(hc["origin_um"][ai]) + nm((dx, dy)[ai]) + nm((x, y)[ai])
+                    r = (g - off) % pitch
+                    if r:
+                        bad += 1
+                        resid[r] = resid.get(r, 0) + 1
+                res[lay] = dict(pins=n, offtrack=bad, residue_nm=resid)
+            rows.append(dict(type=tname, module=hc["module"], orient=o, origin_um=hc["origin_um"], layers=res,
+                             status="OFFTRACK" if any(v["offtrack"] for v in res.values()) else "OK"))
+    return rows
+
+
 def main(argv):
     plan = json.loads(Path(argv[1]).read_text())
     root = argv[argv.index("--root") + 1] if "--root" in argv else "."
     layers = tuple(argv[argv.index("--layers") + 1].split(",")) if "--layers" in argv else ("M7",)
+    if "--orient" in argv:
+        rows = audit_orient(plan, root, layers)
+        bad = [r for r in rows if r["status"] == "OFFTRACK"]
+        for r in bad:
+            print("OFFTRACK", r["type"], r["module"], r["orient"], json.dumps(r["layers"]))
+        print(f"pin_track_audit --orient: {len(rows)} distinct core rows (all orients), {len(bad)} off-track")
+        if "--json" in argv:
+            Path(argv[argv.index("--json") + 1]).write_text(json.dumps(rows, indent=1))
+        return 1 if bad else 0
     rows = audit_plan(plan, root, layers)
     if "--json" in argv:
         Path(argv[argv.index("--json") + 1]).write_text(json.dumps(rows, indent=1))

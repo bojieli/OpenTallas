@@ -393,7 +393,7 @@ class Capacity(unittest.TestCase):
         self.assertEqual(KW.capacity(c, "qwen_kvsys", st, s), 2)
         st = {"items": {str(i): {"status": "RUNNING", "die": "s81"} for i in range(38)}}
         self.assertEqual(KW.capacity(c, "qwen_kvsys", st, s), 2)                  # global 40
-        self.assertEqual(KW.capacity(c, "qwen_kvsys", {"items": {}}, s, launched_now=6), 0)   # per tick
+        self.assertEqual(KW.capacity(c, "qwen_kvsys", {"items": {}}, s, launched_now=6), 5)   # LAUNCH-ALL-1116: no per-tick cap
 
     def test_no_host_admits(self):
         s = {"epyc2": {"admit": 10, "run": 1}, "localhost": {"admit": 47, "run": 1}}

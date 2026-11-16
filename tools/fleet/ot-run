@@ -763,6 +763,18 @@ def ratio(r, threads):
     return (load1(r) + THREADS * r.get("fresh", 0) + threads) / r["ncpu"]
 
 
+THREAD_CAP = float(os.environ.get("OT_RUN_THREAD_CAP", "1.0"))   # THREADCAP_1116: mirrors ot-heavy THREAD_CAP_FACTOR; 0 disables
+
+
+def free_threads(r):
+    """THREADCAP_1116: cores (after HOST_RESERVE) minus the committed --threads of the units running there (probe field
+    committed_threads, ot-heavy cthr.*); None when the probe does not report it (older ot-heavy-reconcile)"""
+    c = r.get("committed_threads")
+    if THREAD_CAP <= 0 or not isinstance(c, (int, float)) or not r.get("ncpu"):
+        return None
+    return THREAD_CAP * r["ncpu"] - c
+
+
 def physically_capable(row, mem):
     """Do not queue a request on a host that cannot admit it even when idle.
 
@@ -890,6 +902,15 @@ def choose(res, mem, threads=THREADS, die=False):
         return max(ok, key=lambda h: ok[h]["free_gb"]), True
     if die and any(not nodie(h) for h in fits):
         fits = [h for h in fits if not nodie(h)]
+    # THREADCAP_1116: a host whose committed threads + this job stay <= cores x THREAD_CAP takes it first; among those the most free threads
+    # (ties: the old score).  When every host is over, the least over wins (the job queues there; ot-heavy holds it).  Hosts that do not
+    # report committed_threads keep the old order.
+    if THREAD_CAP > 0 and any(free_threads(ok[h]) is not None for h in fits):
+        room = [h for h in fits if free_threads(ok[h]) is None or free_threads(ok[h]) >= threads or not ok[h].get("committed_threads")]
+        fits = room or fits
+        if all(free_threads(ok[h]) is not None for h in fits):
+            return max(fits, key=lambda h: (round(free_threads(ok[h]), 1),
+                                            round(score(ok[h], mem, threads), 3), ok[h].get("admit_gb", ok[h]["free_gb"]))), False
     big = [h for h in fits if ok[h]["ncpu"] >= SMALL_CORES and ratio(ok[h], threads) <= 1.0]
     if threads > SMALL_THREADS and big:
         fits = [h for h in fits if ok[h]["ncpu"] >= SMALL_CORES]
@@ -1026,7 +1047,8 @@ def status(hosts):
         rootref = default_dir_refusal(r)
         out.append(f"{h} admits {r.get('admit_gb', r['free_gb'])} GB (avail {r['avail_gb']}, {memory_charge_note(r)}) load "
                    f"{load1(r):.0f}/{r.get('ncpu', 0)}" + (f" waiters {r['waiting']}:{r['waiting_gb']} GB" if r["waiting"] else "")
-                   + f" run {r['running']}" + (" LOADCAP" if load_capped(r, 32, 16) else "")
+                   + f" run {r['running']}" + (f" threads {r['committed_threads']}/{r.get('ncpu', 0)}" if isinstance(r.get("committed_threads"), int) else "")
+                   + (" LOADCAP" if load_capped(r, 32, 16) else "")
                    + (f" root {r['rootfs_pct']}%" if "rootfs_pct" in r else "")
                    + (f" scratch {r['scratch_disk_gb']} GB" if "scratch_disk" in r else "")
                    + (f" ONLY --dir on scratch2 (a job without one: {rootref})" if rootref else ""))

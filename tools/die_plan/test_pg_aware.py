@@ -230,3 +230,10 @@ def test_off_phase_m7_stripe_is_not_a_pin_move():
     P = _lc_plan([_lc_pin("rst_start_raw_5", 578.88, 535.68)])
     P.types["t"]["outline_um"] = [1000.0, 1000.0]
     assert LC.pg_bad_pins(P, P.types["t"]) == []
+
+
+def test_schema_accepts_pg_pin_rule_key():
+    """the plan key landing_contract.pg_rule_applies reads must be a legal type key (gen phys refused it: unknown key)"""
+    import schema as S
+    props = S.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]
+    assert props["pg_pin_rule"] == {"type": "boolean"}

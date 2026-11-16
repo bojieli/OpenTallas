@@ -286,3 +286,91 @@ class DefaultRequire(unittest.TestCase):
     def test_spec_default_is_require(self):
         cfg = {"dies": {"d": {"src": "/x", "src_sha": "a", "plan": "p", "gen_host": "h", "event": "e"}}}
         self.assertEqual(KW.opt_get(cfg, "d", "src_manifest") or "require", "require")
+
+
+class SharedInodes(Base):
+    def test_cp_al_copy_makes_tree_not_ready_and_is_named(self):
+        self.build()
+        SM.publish(self.out)
+        self.assertEqual(SM.shared_inodes(self.out), [])
+        self.assertEqual(SM.links_report(self.out)[0], [])
+        other = self.t + "/lane_copy"
+        os.makedirs(other + "/tools/die_plan")
+        os.link(self.out + "/tools/die_plan/a.py", other + "/tools/die_plan/a.py")          # someone's cp -al
+        bad = SM.shared_inodes(self.out)
+        self.assertEqual([r for r, n in bad], ["tools/die_plan/a.py"])
+        errs, n = SM.links_report(self.out, [other])
+        self.assertEqual(n, 1)
+        self.assertIn("also " + other + "/tools/die_plan/a.py", errs[0])
+        v, _ = SM.verify(self.out, ro=True, full=True)
+        self.assertIn("NOT-READY", v[0])
+        self.assertTrue(any("tools/die_plan/a.py" in e for e in v))
+
+    def test_publish_refuses_a_linked_tree(self):
+        self.build()
+        os.makedirs(self.t + "/lane_copy")
+        os.link(self.out + "/tools/x.sh", self.t + "/lane_copy/x.sh")
+        with self.assertRaises(SystemExit):
+            SM.publish(self.out)
+
+    def test_cli_links_exit_codes(self):
+        self.build()
+        self.assertEqual(SM.main(["links", self.out]), 0)
+        os.makedirs(self.t + "/lc")
+        os.link(self.out + "/tools/x.sh", self.t + "/lc/x.sh")
+        self.assertEqual(SM.main(["links", self.out]), 1)
+
+
+class Delta(Base):
+    def test_delta_tree_equals_a_fresh_build_of_the_new_sha(self):
+        old = self.t + "/old"
+        m0 = SM.build(self.repo, self.sha, None, ["tools"], old, main_ref="")
+        SM.publish(old)
+        open(self.repo + "/tools/die_plan/a.py", "w").write("A=2\n")
+        os.unlink(self.repo + "/tools/x.sh")
+        open(self.repo + "/tools/die_plan/new.py", "w").write("N=1\n")
+        git(self.repo, "add", "-A", "tools")
+        git(self.repo, "commit", "-qm", "m2")
+        sha2 = git(self.repo, "rev-parse", "HEAD")
+        pack = self.t + "/pack"
+        self.assertEqual(SM.delta_make(self.repo, old, sha2, pack), (2, 1))
+        new = self.t + "/new"
+        nm = SM.delta_apply(pack, old, new)
+        fresh = self.t + "/fresh"
+        fm = SM.build(self.repo, sha2, None, ["tools"], fresh, main_ref="")
+        self.assertEqual(nm["files"], fm["files"])
+        self.assertEqual(nm["manifest_hash"], fm["manifest_hash"])
+        SM.publish(new)
+        self.assertEqual(SM.verify(new, expect=fm["manifest_hash"], ro=True, full=True)[0], [])
+        self.assertEqual(SM.shared_inodes(new), [])                      # real copy, not links
+        self.assertEqual(open(old + "/tools/die_plan/a.py").read(), "A=1\n")   # the old tree is untouched
+
+    def test_pack_for_another_tree_and_overlay_clash_refused(self):
+        old = self.t + "/old"
+        SM.build(self.repo, self.sha, None, ["tools"], old, main_ref="")
+        other = self.t + "/other"
+        SM.build(self.repo, self.sha, self.ovj, ["tools"], other, die="kv", allow_file=self.allow(), main_ref="")
+        open(self.repo + "/tools/die_plan/b.py", "w").write("B=9\n")
+        git(self.repo, "commit", "-qam", "m2")
+        sha2 = git(self.repo, "rev-parse", "HEAD")
+        with self.assertRaises(SystemExit) as c:
+            SM.delta_make(self.repo, other, sha2, self.t + "/p2")                # b.py is overlaid in `other`
+        self.assertIn("overlaid", str(c.exception))
+        SM.delta_make(self.repo, old, sha2, self.t + "/p1")
+        with self.assertRaises(SystemExit):
+            SM.delta_apply(self.t + "/p1", other, self.t + "/n2")
+
+
+class DropOverlay(Base):
+    def test_stale_overlay_entry_can_be_dropped_and_main_wins(self):
+        old = self.t + "/old"
+        SM.build(self.repo, self.sha, self.ovj, ["tools"], old, die="kv", allow_file=self.allow(), main_ref="")
+        open(self.repo + "/tools/die_plan/b.py", "w").write("B=9\n")
+        git(self.repo, "commit", "-qam", "m2")
+        sha2 = git(self.repo, "rev-parse", "HEAD")
+        with self.assertRaises(SystemExit):
+            SM.delta_make(self.repo, old, sha2, self.t + "/p0")
+        SM.delta_make(self.repo, old, sha2, self.t + "/p1", ["tools/die_plan/b.py"])
+        nm = SM.delta_apply(self.t + "/p1", old, self.t + "/new")
+        self.assertEqual(open(self.t + "/new/tools/die_plan/b.py").read(), "B=9\n")
+        self.assertNotIn("tools/die_plan/b.py", nm["overlay"])

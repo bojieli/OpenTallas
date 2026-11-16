@@ -64,6 +64,7 @@ import signoff_profile as SP  # noqa: E402  (OWNER 11-13 R-MINIMAL; OT_SIGNOFF_P
 import wave_balance as WB  # noqa: E402
 import auto_resign as AR  # noqa: E402
 import wave_jobs as WJ  # noqa: E402
+import under_use as UU  # noqa: E402  (FABLE-FLOW-0445 #2: one UNDER-USE log line per tick)
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -99,7 +100,7 @@ NEAR_DRC_MAX = 50
 RENDER_MEM_GB = 8
 ORPHAN_IDLE_S = 3 * 3600
 CHAIN_VERSION = 2
-MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "12"))
+MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "100000"))   # LAUNCH-ALL-1116 (OWNER 11-13: no per-tick caps); was 12
 MAX_NOTRUN = 3                                          # 'NOT RUN' (never admitted) resubmits
 # KW-FIX-46 11-12 (COORD, hbm q_mcb_ne 58ab1566e512): a container memory-cgroup OOM is the kit's --mem request, not the
 # host: q_mcb_ne route peaked > 75 GB, killed at --mem 48 and again at 72 (one x1.5 step), then filed as a final CRASH.
@@ -2975,9 +2976,11 @@ def archive(st, j):
         post = archive_backoff(j, err)
         log(f"ARCHIVE FAILED {j['id']} (x{j.get('archive_fail_n')}): {err}; " + ("retry next tick" if int(j.get("archive_fail_n") or 0) < 3 else "backed off until %s" % time.strftime("%H:%M", time.localtime(j["archive_retry_at"]))))
         if post:
+            set_status(st, j, "SIGNED-NOT-ARCHIVED", "archive path gone (permanent): " + str(err)[-160:])      # terminal: archive() only handles SIGNED
             coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [AUTOPILOT -> COORD] archive of {j['die']}/{j['type']} ({j['id']}) fails permanently: {str(err)[-200:]}; "
                                                          "the kit path is gone, so the signed record cannot be archived from the host; archive from the AGIdock copy or re-sign")
-        set_status(st, j, "SIGNED", "archive pending")
+        if j.get("status") != "SIGNED-NOT-ARCHIVED":
+            set_status(st, j, "SIGNED", "archive pending")
         return
     mhost = MIRROR.get(host, MIRROR_DEFAULT)
     pdir = os.path.dirname(dest)
@@ -3317,6 +3320,8 @@ def tick(args):
     except Exception as e:                             # the gap report must never stop the chain
         log(f"LOOP-GAPS failed: {type(e).__name__}: {e}")
     _mark("loop_gaps")
+    UU.step(sys.modules[__name__])                     # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
+    _mark("under_use")
     log("TICK-TIMES total=%.0fs " % (time.time() - _t0) + " ".join(f"{k}={v}s" for k, v in _ph.items()))
     counts = {}
     for j in st["jobs"].values():

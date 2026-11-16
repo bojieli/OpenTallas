@@ -5100,6 +5100,22 @@ def macro_views(base):
     return out
 
 
+def plan_row_views(hard_cores, base):
+    """DIE-KV-67 11-04: {module: view dir} of the plan's hard_cores rows that bind a view (<dir>/<module>.lef).
+    KV-102 r249 11-16: a plan row may name its view relative to the die source tree (kv3_hub_C ahub ->
+    physical/die_plan/qwen_kvsys/kvgeom7q_views/qkd_ahub/qkd_ahub.lef); it resolves against base, as plan_base does."""
+    out = {}
+    for hc in hard_cores or []:
+        if not isinstance(hc, dict) or not hc.get("lef"):
+            continue
+        lef = Path(str(hc["lef"]))
+        if not lef.is_absolute():
+            lef = Path(base) / lef
+        if lef.stem == hc.get("module") and lef.is_file():
+            out.setdefault(lef.stem, lef.parent)
+    return out
+
+
 def _balanced(text, i):
     """text[i:] starts just after an opening parenthesis -> the text up to its matching close."""
     j, depth = i, 1
@@ -6079,10 +6095,8 @@ def cmd_kit_rtl(a):
         views.setdefault(m, d)
     # DIE-KV-67 11-04: a plan row that binds a view (a provisional overlay row) is a hard macro of this kit even when the
     # module has no source under the manifest's RTL roots (KV PCC / PCF live in results/kv_host_regen_1/rtl_rf3)
-    for hc in t.get("hard_cores") or []:
-        lef = Path(str(hc.get("lef") or ""))
-        if isinstance(hc, dict) and lef.stem == hc.get("module") and lef.is_absolute() and lef.is_file():
-            views.setdefault(lef.stem, lef.parent)
+    for m, d in plan_row_views(t.get("hard_cores"), base).items():
+        views.setdefault(m, d)
     if kit_wrap_srcs:   # QC-SLECTL-B: generated wrapper masters (a hardened view in `views` still wins: black box)
         wf = kd / "param_wrap_cores.sv"
         wf.write_text("".join(kit_wrap_srcs[m] for m in sorted(kit_wrap_srcs)))

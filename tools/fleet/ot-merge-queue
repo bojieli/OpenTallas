@@ -102,8 +102,11 @@ TAG_RE = re.compile(r"\bflow-(\d{8})-([a-z]{2})-(?:head|qc|kv|s81|hbm)\b")
 _LOCK = threading.Lock()
 MISS_ROUNDS = int(os.environ.get("MQ_GATE_MISS_ROUNDS", "3"))     # dir-level rounds for sources a run reports missing
 WHOLE_TOPS = [x for x in os.environ.get("MQ_GATE_WHOLE_TOPS", "rtl").split(",") if x]   # then the whole top dir, these only
-GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", "ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --dir "
-                             "/srv/opentallas-scratch2/claude/mq-gate -- bash /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote "
+# FLOW-HEALTH-1 11-16 (COORD): --needs names the script path: a host that does not hold /srv/.../mq-gate/ot-gate-remote (localhost, the hub) is skipped by
+# ot-run's NEEDS check instead of being picked (the clone of the intel2 mirror failed on localhost, exit 3) or refused for an undeclared script path
+GATE_SCRIPT = "/srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote"
+GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", f"ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --needs {GATE_SCRIPT} --dir "
+                             f"/srv/opentallas-scratch2/claude/mq-gate -- bash {GATE_SCRIPT} "
                              "{key} 16")                       # '' = gate on the hub
 GATE_REMOTE_TIMEOUT = int(os.environ.get("MQ_GATE_REMOTE_TIMEOUT", "10800"))
 GATE_PAR = int(os.environ.get("MQ_GATE_PAR", "3"))        # `gate` commands at once (11-15 14:3x: 7 lane gates queued behind 1)
@@ -180,7 +183,13 @@ def is_ancestor(a, b, cwd=REPO):
 def parse_approvals(text):
     """-> ordered list of {'key','branch','sha','line','revoked'} (first approval of a key wins; REVOKED after it marks it)"""
     out, seen = [], {}
+    entry_au = None                                   # author of the "- <ts> KIND [AUTHOR -> ...]" entry a line belongs to
     for n, line in enumerate(text.splitlines(), 1):
+        if line.startswith("- "):
+            m0 = AUTHOR_RE.search(line)
+            entry_au = m0.group(1) if m0 else None
+        elif line.startswith("#"):
+            entry_au = None                           # a heading ends the entry
         ts = LINE_TS_RE.match(line)
         ext = bool(ts) and ts.group(1) >= APPROVE_EXT_FROM
         heads = list((APPROVE_HEAD_RE if ext else re.compile(r"COORD (APPROVED|REVOKED):")).finditer(line))
@@ -190,6 +199,10 @@ def parse_approvals(text):
             continue
         au = AUTHOR_RE.search(line[:heads[0].start()])
         if au and au.group(1) not in APPROVERS:
+            continue
+        # a continuation line inherits its entry's author: 11-16 00:0x MERGE-QUEUE-1's own STATE quoted the approval form
+        # on a continuation line and the parser took it as COORD's approval of tools-converge-1115-skew2
+        if not au and not line.startswith("- ") and entry_au and entry_au not in APPROVERS:
             continue
         found = [(m.group(1), m.group(2) or "", m.group(3).lower()) for m in (APPROVE_EXT_RE if ext else APPROVE_RE).finditer(line)]
         if ext:

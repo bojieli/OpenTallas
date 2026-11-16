@@ -20,13 +20,22 @@ SPEC (JSON, paths relative to the repo root unless absolute):
                                       the plan grid, 8.64 um: piece outlines and origins stay on the partition lattice)
   parts [{suffix}, ..]                one per piece, low coordinate first; suffix "" keeps the type / partition names
   parts_by_type / keep_by_type        per-type overrides of parts / keep (the keep piece holds the collector up link)
-  keep                                index of the piece that keeps the region origin, the collector up link and the
-                                      START pins (the other pieces become count-aligned RELAY partitions of the same
-                                      region and collector children of the keep piece)
+  keep                                index of the piece that keeps the names, the region origin and the START pins
+                                      (the other pieces become count-aligned RELAY partitions of the same region).
+                                      The collector up link stays in the piece that holds the up pins (normally the
+                                      keep piece; the other pieces are collector children towards it).  With relay
+                                      pieces on both sides of the keep piece each side gets its own START tx pin.
   contents {type: [[regex, piece]..]} content -> piece (fullmatch on inst, first rule wins); a content that is a member
                                       of a hard core (hard_core note "<x>: a + b + ...;") follows the core geometry
   cut_lanes {type: [{from, to, stem, width}]}   generic leaf/forward cut lanes (census sizes them); legs and ft slots
                                       that cross a cut get their own cut buses automatically
+  lane_reference                      optional: the split lane reference frozen from the BASE bind
+                                      (split_lane_reference_export.py).  The split publishes it next to the plan with
+                                      part_groups = {base partition: its pieces} and names it in the as-built manifest
+                                      (split_lane_reference), so the split bind first puts every old lane's as-built
+                                      payload back (through the cut lanes) before its greedy packing: an old lane whose
+                                      sources moved to another piece keeps its bits (native stations need one lane per
+                                      OUT bus) and the census-sized cut lanes are not overfilled
   fold_legs                           drop one internal station next to the cut where both hops stay <= reach
                                       (the cut boundary flop pair replaces it: +1 cycle instead of +2)
 
@@ -178,6 +187,35 @@ def die_face(orient, lf):
 
 
 # ------------------------------------------------------------------------------------------------------------- the split
+def relay_tx_sites(cut, keep, children, mid, tn=""):
+    """START relay tx pins of the keep (region origin) piece: [(pin name, xy_um in the keep piece, [relay pieces])].
+
+    Relay pieces on one side only (every 2-way split, a chain away from an end keep piece): ONE pin cland_rstart_out at
+    the keep piece centre, as before.  Relay pieces on BOTH sides of the keep piece (FABLE-FIX-KV-PV-CUT 11-16): one pin
+    per side on that side's cut face, next to the neighbour's rx pin (cland_rstart_out towards the low pieces,
+    cland_rstart_out_1 towards the high pieces; clock_landings puts one tx flop behind each pin, same D = the origin
+    start, so every relay piece still starts RELAY_STAGES = tx + rx counts after the origin).  A centre pin cannot
+    reach both neighbours within the 405 um hop, and an infrastructure pin drives exactly one edge."""
+    lo, hi = [i for i in children if i < keep], [i for i in children if i > keep]
+    off = rnd(mid - 4.32)
+    if not (lo and hi):
+        tx = [0.0, 0.0]
+        tx[cut.ax] = rnd(round(cut.ext(keep) / 2 / 0.27) * 0.27)
+        tx[1 - cut.ax] = off
+        return [("cland_rstart_out", tx, lo + hi)]
+    out = []
+    for side, nb, name, at in ((lo, keep - 1, "cland_rstart_out", 2.656),
+                               (hi, keep + 1, "cland_rstart_out_1", rnd(cut.ext(keep) - 2.656))):
+        if side != [nb]:
+            raise SplitError(f"{tn}: START relay pin {name} would serve pieces {side}: one adjacent relay piece per "
+                             f"side of the keep piece {keep} (a pin drives one edge within the hop limit)")
+        tx = [0.0, 0.0]
+        tx[cut.ax] = at
+        tx[1 - cut.ax] = off
+        out.append((name, tx, side))
+    return out
+
+
 class TypeSplit:
     def __init__(self, ev, tn):
         self.ev, self.tn = ev, tn
@@ -1401,14 +1439,20 @@ class TypeSplit:
         self.child_idx = idx
         # up pins: on the keep piece only (it keeps the parent link)
         up = {cut.ppiece(p["xy_um"]) for p in lc.get("pins", []) if p["name"].startswith(("cland_up_", "fclk_out_cland_up"))}
-        if up and up != {self.keep}:
-            raise SplitError(f"{self.tn}: collector up pins in pieces {sorted(up)}, keep piece {self.keep}")
+        if len(up) > 1:
+            raise SplitError(f"{self.tn}: collector up pins in pieces {sorted(up)}")
+        # collector ROOT piece: the piece that physically holds the up pins (the parent link cannot move: its hop to
+        # the parent is fixed).  Normally the keep piece; with the keep (count origin) piece in the middle of a 3-way
+        # split the up pins may sit in an end piece (FABLE-FIX-KV-PV-CUT 11-16): the collector chain then runs
+        # towards that piece while the START relay still fans out from the keep piece.
+        self.croot = next(iter(up)) if up else self.keep
         # the other pieces: collector children across the cut (same region: no seam clock), each of its neighbour
         # towards the keep piece (a chain when a piece is not adjacent to the keep piece: the neighbour relays it)
         self.coll_links = []
-        order = sorted((i for i in range(self.n) if i != self.keep), key=lambda i: abs(i - self.keep))
+        self.relay_links = []
+        order = sorted((i for i in range(self.n) if i != self.croot), key=lambda i: abs(i - self.croot))
         for i in order:
-            to_keep = self.keep > i
+            to_keep = self.croot > i
             nb = i + 1 if to_keep else i - 1
             k = idx[nb]
             idx[nb] += 1
@@ -1435,17 +1479,32 @@ class TypeSplit:
             # count-aligned intra-region START relay (clock_landings: origin tx flop -> relay rx flop, 2 counts)
             rx_xy = list(up_xy)
             rx_xy[1 - cut.ax] = rnd(mid - 4.32)
-            L[i]["pins"].append(dict(name="cland_rstart_in", dir="in", kind="ctl", layer="M7", xy_um=rx_xy,
-                                     epoch=False))
+            if self.croot == self.keep:
+                L[i]["pins"].append(dict(name="cland_rstart_in", dir="in", kind="ctl", layer="M7", xy_um=rx_xy,
+                                         epoch=False))
+                self.relay_links.append(dict(child_piece=i, rx_xy=rx_xy))
             self.coll_links.append(dict(child_piece=i, parent_piece=nb, index=k, up_xy=up_xy, dn_xy=dn_xy, rx_xy=rx_xy))
-        if self.coll_links:
+        if self.croot != self.keep:
+            # START relay rx pins: every non-keep piece, on its cut face towards the keep piece
             mid = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
-            tx = [0.0, 0.0]
-            tx[cut.ax] = rnd(round(cut.ext(self.keep) / 2 / 0.27) * 0.27)
-            tx[1 - cut.ax] = rnd(mid - 4.32)
-            L[self.keep]["pins"].append(dict(name="cland_rstart_out", dir="out", kind="ctl", layer="M7", xy_um=tx,
-                                             epoch=False))
-            self.tx_xy = tx
+            for i in sorted((i for i in range(self.n) if i != self.keep), key=lambda i: abs(i - self.keep)):
+                rx_xy = [0.0, 0.0]
+                rx_xy[cut.ax] = rnd(cut.ext(i) - 2.656) if self.keep > i else 2.656
+                rx_xy[1 - cut.ax] = rnd(mid - 4.32)
+                L[i]["pins"].append(dict(name="cland_rstart_in", dir="in", kind="ctl", layer="M7", xy_um=rx_xy,
+                                         epoch=False))
+                self.relay_links.append(dict(child_piece=i, rx_xy=rx_xy))
+        if self.relay_links:
+            mid = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
+            for name, tx, kids in relay_tx_sites(cut, self.keep, [c["child_piece"] for c in self.relay_links], mid, self.tn):
+                L[self.keep]["pins"].append(dict(name=name, dir="out", kind="ctl", layer="M7", xy_um=tx,
+                                                 epoch=False))
+                if name == "cland_rstart_out":
+                    self.tx_xy = tx
+                else:
+                    for c in self.relay_links:
+                        if c["child_piece"] in kids:
+                            c["tx"] = name
         self.infra_x = rnd(round(((self.W if cut.ax == 1 else self.H) / 2) / 8.64) * 8.64)
 
     # -------------------------------------------------------------- reset
@@ -1959,6 +2018,7 @@ class Event:
         self._sidecar()
         self._straps()
         self._tap_repair()
+        self._forwarded_clock_sources()
         self._reset_trees()
         self._asbuilt()
         return raw
@@ -2579,7 +2639,9 @@ class Event:
     def _piece_of_pin(self, base, name):
         ts = self.ts[self.raw_type(base)]
         m = LAND_PIN.match(name)
-        if name in START_PINS or name.startswith(("cland_up_", "fclk_out_cland_up")):
+        if name.startswith(("cland_up_", "fclk_out_cland_up")):
+            return getattr(ts, "croot", ts.keep), name
+        if name in START_PINS:
             return ts.keep, name
         cm = re.match(r"^(cland_dn_ready_|cland_dn_fault_|fclk_in_cland_dn_)(\d+)$", name)
         if cm:
@@ -2601,6 +2663,12 @@ class Event:
                     s, nm = self._piece_of_pin(part, e[side]["bus"])
                     e[side]["part"], e[side]["bus"] = self.pmap[part][s], nm
                     n += 1
+                    ts = self.ts[self.raw_type(part)]
+                    if side == "src" and s != ts.keep and re.fullmatch(r"cland_mon_(ready|fault|clk)__" + re.escape(part),
+                                                                       e.get("id", "")):
+                        # the collector root is not the name-keeping piece: its up edges are named by their child
+                        # (the root piece); the base-named piece gets its own cland_mon_ edges below
+                        e["id"] = e["id"][:-len(part)] + self.pmap[part][s]
         st = net.get("start_tree") or {}
         for u in st.get("uses", []):
             if u["part"] in self.pmap:
@@ -2613,6 +2681,13 @@ class Event:
         for base, names in self.pmap.items():
             ts = self.ts[self.raw_type(base)]
             keep = names[ts.keep]
+            relays = {c["child_piece"]: c for c in ts.relay_links}
+
+            def relay_edge(c):
+                ch = names[c["child_piece"]]
+                return dict(id=f"cland_relay__{ch}", src=dict(part=keep, bus=c.get("tx", "cland_rstart_out")),
+                            dst=dict(part=ch, bus="cland_rstart_in"), kind="ctl", width=1, epoch=False,
+                            max_hop_um=405, source_registered=True, capture_registered=True)
             for c in ts.coll_links:
                 ch = names[c["child_piece"]]
                 for w in ("ready", "fault"):
@@ -2620,9 +2695,9 @@ class Event:
                                     dst=dict(part=names[c["parent_piece"]], bus=f"cland_dn_{w}_{c['index']}"),
                                     kind="ctl", width=1,
                                     epoch=False, max_hop_um=405, source_registered=True, capture_registered=True))
-                add.append(dict(id=f"cland_relay__{ch}", src=dict(part=keep, bus="cland_rstart_out"),
-                                dst=dict(part=ch, bus="cland_rstart_in"), kind="ctl", width=1, epoch=False,
-                                max_hop_um=405, source_registered=True, capture_registered=True))
+                if c["child_piece"] in relays:
+                    add.append(relay_edge(relays.pop(c["child_piece"])))
+            add += [relay_edge(c) for c in relays.values()]     # the collector root piece when it is a relay piece
         net["edges"] += add
         self.rep["landing_edges"] = dict(moved_ends=n, added=[e["id"] for e in add])
 
@@ -2651,7 +2726,7 @@ class Event:
                     # a relay piece takes its reset from the keep piece across the shared cut (the collector link)
                     xy = [0.0, 0.0]
                     xy[1 - ts.cut.ax] = rnd(ts.infra_x + 12.96)
-                    xy[ts.cut.ax] = rnd(ts.cut.ext(i) - 8.672) if i < ts.keep else 8.672
+                    xy[ts.cut.ax] = rnd(ts.cut.ext(i) - 8.672) if i < ts.croot else 8.672
                     ins[nm] = xy
             if tn in b.get("id_straps_in_type_types", []):
                 b["id_straps_in_type_types"] += [x for x in ts.tnames if x != tn]
@@ -2812,6 +2887,18 @@ class Event:
                 keep = names[ts.keep]
                 bt = self.raw_type(base)
                 row0 = co["types"].pop(bt)
+                if ts.croot != ts.keep:
+                    # the collector root is not the name-keeping piece: its part row (parent link, up edge) moves to
+                    # the root piece's name; the base-named piece becomes a collector child below
+                    root = names[ts.croot]
+                    co["parts"][root] = co["parts"].pop(base)
+                    co.setdefault("base_type_by_part", {})[root] = ts.tnames[ts.croot]
+                    for e in co["edges"]:
+                        if e["src"] == base:
+                            e["src"] = root
+                    bb = co.get("boot_budget", {}).get("local_registered_depths")
+                    if isinstance(bb, dict) and base in bb:
+                        bb[root] = bb[base]
                 for i, nm in enumerate(names):
                     t = self.out["partition_types"][ts.tnames[i]]
                     lc = t["clock"]["landing_contract"]
@@ -2821,11 +2908,11 @@ class Event:
                     m["inputs"] = [b for b in m["inputs"] if ts.bus_piece.get(b) == i]
                     m["outputs"] = [b for b in m["outputs"] if ts.bus_piece.get(b) == i]
                     m["children"] = len(lc.get("collector_children", []))
-                    if i != ts.keep:
+                    if i != ts.croot:
                         m["up_seam"] = False
                         up = [p["xy_um"] for p in lc["pins"] if p["name"] == "cland_up_ready"]
                         m["up_xy"] = list(up[0])
-                        par = next((c["parent_piece"] for c in ts.coll_links if c["child_piece"] == i), ts.keep)
+                        par = next((c["parent_piece"] for c in ts.coll_links if c["child_piece"] == i), ts.croot)
                         row["up_parent"] = names[par]
                     else:
                         m["up_xy"] = ts.cut.sh(m["up_xy"], i)
@@ -2844,8 +2931,8 @@ class Event:
                     row["local_sources"] = []
                     row["children"] = []
                     co["types"][ts.tnames[i]] = row
-                    if i != ts.keep:
-                        par = next((c["parent_piece"] for c in ts.coll_links if c["child_piece"] == i), ts.keep)
+                    if i != ts.croot:
+                        par = next((c["parent_piece"] for c in ts.coll_links if c["child_piece"] == i), ts.croot)
                         co["parts"][nm] = dict(type=ts.tnames[i], parent=names[par], active=True)
                         co.setdefault("base_type_by_part", {})[nm] = ts.tnames[i]
                         bb = co.get("boot_budget", {}).get("local_registered_depths")
@@ -2996,6 +3083,48 @@ class Event:
             except ValueError as e:
                 raise SplitError(f"{tn}: tap repair proof failed: {e}") from None
         self.rep["tap_repair"] = rep
+
+    def _forwarded_clock_sources(self):
+        """density-tap pieces: a forwarded clock pin's source_clock_port / source_clock_tap names a tap of the WHOLE
+        type.  A piece's density taps are re-derived from its own sink bins (other names, other sites), so the old
+        name is absent from the piece or names a far tap (bind EMIT '<type>: forwarded clock source clk_t<n> is not a
+        planned physical tap input').  Each pin takes the piece tap nearest to its old source tap.  Other tap modes
+        keep the tap map of _clock (unchanged)."""
+        todo = [(tn, ts) for tn, ts in self.ts.items() if (ts.t.get("clock") or {}).get("tap_mode") == "density"]
+        if not todo:
+            return
+        import schema as S
+        import taps as TP
+        TP._CACHE.clear()
+        TP._clear_density_cache()
+        Pb = S.Plan(json.loads(json.dumps(self.raw)), self.plan_path)
+        P = S.Plan(json.loads(json.dumps(self.out)), self.plan_path)
+        self.rep["forwarded_clock_sources"] = self._remap_clock_sources(
+            todo, lambda tn: S.tap_grid(Pb, tn), lambda tn: S.tap_grid(P, tn))
+        TP._CACHE.clear()
+        TP._clear_density_cache()
+
+    def _remap_clock_sources(self, todo, old_taps, new_taps):
+        rep = {}
+        for tn, ts in todo:
+            old = {n: (x, y) for n, x, y in old_taps(tn)}
+            base = {p["name"]: p for p in ts.t["clock"].get("landing_contract", {}).get("pins", [])}
+            for i, nm in enumerate(ts.tnames):
+                new, moved = None, 0
+                for q in self.out["partition_types"][nm]["clock"].get("landing_contract", {}).get("pins", []):
+                    p0 = base.get(q["name"], {})
+                    for k in ("source_clock_port", "source_clock_tap"):
+                        if k not in q or k not in p0:
+                            continue
+                        if p0[k] not in old:
+                            raise SplitError(f"{tn}: pin {q['name']} {k} {p0[k]} is not a tap of the base type")
+                        new = new or new_taps(nm)
+                        xy = ts.cut.sh(list(old[p0[k]]), i)
+                        tap = min(new, key=lambda s_: (abs(s_[1] - xy[0]) + abs(s_[2] - xy[1]), s_[0]))[0]
+                        moved += tap != q[k]
+                        q[k] = tap
+                rep[nm] = moved
+        return rep
 
     def _reset_trees(self):
         import schema as S
@@ -3246,6 +3375,32 @@ class Event:
             hashes[name] = hashlib.md5(payload).hexdigest()
         return hashes
 
+    def _lane_reference(self, out):
+        """publish the base bind's frozen lane payloads (spec lane_reference) for the split bind: every split base
+        partition's group becomes its pieces; the lanes, cells and source receipts are the base bind's, unchanged"""
+        ref = json.loads(rpath(self.spec["lane_reference"]).read_text())
+        if ref.get("schema") != "opentallas.split_lane_reference.v1" or not isinstance(ref.get("part_groups"), dict):
+            raise SplitError(f"lane_reference {self.spec['lane_reference']}: not a split lane reference")
+        groups = ref["part_groups"]
+        for base, names in self.pmap.items():
+            if groups.get(base) != [base]:
+                raise SplitError(f"lane_reference: base partition {base} has group {groups.get(base)} (the reference "
+                                 f"must be exported from the bind of the unsplit base plan)")
+            groups[base] = list(names)
+        ids = {x["id"] for x in self.out.get("lanes", [])}
+        gone = sorted(r["id"] for r in ref.get("lanes", []) if r["id"] not in ids)
+        if gone:
+            raise SplitError(f"lane_reference: {len(gone)} base lanes are not in the split plan, e.g. {gone[:5]}")
+        self.rep["lane_reference"] = dict(lanes=len(ref["lanes"]), bits=sum(len(r["drivers"]) for r in ref["lanes"]),
+                                          payload_sha256=ref.get("payload_sha256"),
+                                          groups={b: list(n) for b, n in self.pmap.items()})
+        txt = json.dumps(ref, separators=(",", ":")) + "\n"
+        p = out / "split_lane_reference.json"
+        if p.exists() or p.is_symlink():
+            p.unlink()
+        p.write_text(txt)
+        return hashlib.md5(txt.encode()).hexdigest()
+
     def write(self, out_dir, rel_dir):
         out = Path(out_dir)
         out.mkdir(parents=True, exist_ok=True)
@@ -3301,6 +3456,9 @@ class Event:
                 md5["plan_cells.json"] = jdump(self.pc_out, out / "plan_cells.json")
                 self.ab_out["plan_cells"] = f"{rel_dir}/plan_cells.json"
             self.ab_out["clock_landing_table"] = f"{rel_dir}/eW_sidecar.json"
+            if self.spec.get("lane_reference"):
+                md5["split_lane_reference.json"] = self._lane_reference(out)
+                self.ab_out["split_lane_reference"] = f"{rel_dir}/split_lane_reference.json"
             b = self.ab_out.get("base")
             if b:
                 # the manifest base (repo root, relative to the plan folder): re-based on the output folder when it

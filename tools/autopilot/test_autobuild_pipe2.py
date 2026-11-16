@@ -37,12 +37,13 @@ class RoundRobin(unittest.TestCase):
             return KW.plan_dies(None, cfg, st, [], status, "intel2", probe=False)[1]
 
     def test_head_gets_slots_when_s81_has_a_long_queue(self):
-        todo = self.run_plan(_cfg(per_tick=4), {"s81": 72, "s81_head": 4})
-        self.assertEqual([d for d, _ in todo], ["s81", "s81_head", "s81", "s81_head"])
+        todo = self.run_plan(_cfg(per_tick=4), {"s81": 72, "s81_head": 4})   # LAUNCH-ALL-1116: max_launch_per_tick is gone; every pick launches
+        self.assertEqual([d for d, _ in todo][:8], ["s81", "s81_head"] * 4)
+        self.assertEqual(len(todo), 60)             # 56 (die_max_inflight) + 4
 
     def test_one_die_still_fills_the_tick(self):
         todo = self.run_plan(_cfg(per_tick=6), {"s81": 72, "s81_head": 1})
-        self.assertEqual(len(todo), 6)
+        self.assertEqual(len(todo), 56 + 1)            # die_max_inflight 56 bounds s81; the per-tick cap no longer does
         self.assertEqual(sum(1 for d, _ in todo if d == "s81_head"), 1)
 
     def test_global_inflight_cap(self):

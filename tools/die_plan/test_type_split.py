@@ -54,6 +54,70 @@ def test_windows_disjoint_nearest_and_segments():
         TS.windows_for([("big", 100000, None)], 100.0, 8.0)
 
 
+def test_relay_tx_sites_one_centre_pin_unless_relays_on_both_sides():
+    """FABLE-FIX-KV-PV-CUT: the 2-way form (and a chain away from an end keep piece) keeps its ONE centre pin; a keep
+    piece with a relay piece on each side gets one tx pin per side, each next to its neighbour's rx pin"""
+    mid = 760.32
+    two = TS.Cut("x", [622.08], 2160.0)
+    assert TS.relay_tx_sites(two, 0, [1], mid) == [("cland_rstart_out", [311.04, 756.0], [1])]
+    assert TS.relay_tx_sites(two, 1, [0], mid) == [("cland_rstart_out", [768.96, 756.0], [0])]
+    three = TS.Cut("x", [622.08, 1537.92], 2160.0)
+    assert TS.relay_tx_sites(three, 0, [1, 2], mid) == [("cland_rstart_out", [311.04, 756.0], [1, 2])]
+    both = TS.relay_tx_sites(three, 1, [0, 2], mid)
+    assert both == [("cland_rstart_out", [2.656, 756.0], [0]), ("cland_rstart_out_1", [913.184, 756.0], [2])]
+    # the neighbour's rx pin sits 2.656 um inside its own cut face at the same offset: both hops are 5.312 um (<= 405)
+    for (_name, tx, (child,)), rx_local in zip(both, (three.ext(0) - 2.656, 2.656)):
+        tx_die, rx_die = three.lo(1) + tx[0], three.lo(child) + rx_local
+        assert abs(tx_die - rx_die) == pytest.approx(5.312)
+    ycut = TS.Cut("y", [449.28, 846.72], 1676.16)
+    assert TS.relay_tx_sites(ycut, 1, [0, 2], 501.12) == [("cland_rstart_out", [496.8, 2.656], [0]),
+                                                           ("cland_rstart_out_1", [496.8, 394.784], [2])]
+    four = TS.Cut("x", [500.0, 1000.0, 1500.0], 2000.0)
+    with pytest.raises(TS.SplitError, match="one adjacent relay piece per side"):
+        TS.relay_tx_sites(four, 1, [0, 2, 3], mid)
+
+
+def test_landing_network_relay_edges_name_the_tx_pin_of_their_side():
+    """each relay piece's cland_relay__ edge leaves the tx pin its coll_link names (default: the one legacy pin)"""
+    class _Ts:
+        keep, croot, cut = 1, 1, None
+        coll_links = [dict(child_piece=0, parent_piece=1, index=0), dict(child_piece=2, parent_piece=1, index=1)]
+        relay_links = [dict(child_piece=0), dict(child_piece=2, tx="cland_rstart_out_1")]
+    ev = TS.Event.__new__(TS.Event)
+    ev.out = dict(clock=dict(landing_network=dict(edges=[])))
+    ev.pmap, ev.ts, ev.rep = {"p": ["p_s", "p", "p_n"]}, {"T": _Ts()}, {}
+    ev.raw_type = lambda base: "T"
+    ev._landing_network()
+    relay = {e["id"]: (e["src"], e["dst"]) for e in ev.out["clock"]["landing_network"]["edges"]
+             if e["id"].startswith("cland_relay__")}
+    assert relay == {"cland_relay__p_s": (dict(part="p", bus="cland_rstart_out"), dict(part="p_s", bus="cland_rstart_in")),
+                     "cland_relay__p_n": (dict(part="p", bus="cland_rstart_out_1"), dict(part="p_n", bus="cland_rstart_in"))}
+    # collector root in an end piece (it holds the up pins), keep / count origin in the middle: the collector chain
+    # runs 2 -> 1 -> 0 while both relay edges still leave the keep piece, one tx pin per side
+    _Ts.croot = 0
+    _Ts.coll_links = [dict(child_piece=1, parent_piece=0, index=0), dict(child_piece=2, parent_piece=1, index=0)]
+    ev.out = dict(clock=dict(landing_network=dict(edges=[dict(id="cland_mon_ready__p", src=dict(part="p", bus="cland_up_ready"),
+                                                              dst=dict(part="par", bus="cland_dn_ready_3"))])))
+    ev._landing_network()
+    edges = ev.out["clock"]["landing_network"]["edges"]
+    assert len({e["id"] for e in edges}) == len(edges)             # the old up edge is renamed to its new child
+    got = {e["id"]: (e["src"]["part"], e["src"]["bus"], e["dst"]["part"]) for e in edges}
+    assert got["cland_mon_ready__p_s"] == ("p_s", "cland_up_ready", "par")
+    assert got["cland_mon_ready__p"] == ("p", "cland_up_ready", "p_s") and got["cland_mon_ready__p_n"][2] == "p"
+    assert got["cland_relay__p_s"] == ("p", "cland_rstart_out", "p_s")
+    assert got["cland_relay__p_n"] == ("p", "cland_rstart_out_1", "p_n")
+    assert ev._piece_of_pin("p", "cland_up_ready") == (0, "cland_up_ready")
+    assert ev._piece_of_pin("p", "cland_tstart_in") == (1, "cland_tstart_in")
+    _Ts.croot = 1
+    _Ts.coll_links = [dict(child_piece=0, parent_piece=1, index=0)]     # 2-way: unchanged edge
+    _Ts.relay_links = [dict(child_piece=0)]
+    ev.out = dict(clock=dict(landing_network=dict(edges=[])))
+    ev.pmap = {"p": ["p_s", "p"]}
+    ev._landing_network()
+    assert [e["src"] for e in ev.out["clock"]["landing_network"]["edges"] if e["id"] == "cland_relay__p_s"] == [
+        dict(part="p", bus="cland_rstart_out")]
+
+
 class _Ev:
     def __init__(self, raw, spec):
         self.raw, self.spec, self.tag = raw, spec, "T"
@@ -95,6 +159,15 @@ def test_kv_hub_type_split(tn):
     for i in (0, 2):
         pn = {p["name"] for p in T[i]["clock"]["landing_contract"]["pins"]}
         assert "cland_rstart_in" in pn and "cland_up_ready" in pn and "cland_tstart_in" not in pn
+    # relay pieces on both sides of the keep piece: one tx pin per side, each within the hop limit of its rx pin
+    assert "cland_rstart_out_1" in names
+    assert {c["child_piece"]: c.get("tx", "cland_rstart_out") for c in ts.relay_links} == {0: "cland_rstart_out",
+                                                                                          2: "cland_rstart_out_1"}
+    pins = {i: {p["name"]: p["xy_um"] for p in T[i]["clock"]["landing_contract"]["pins"]} for i in range(3)}
+    for child, tx in ((0, "cland_rstart_out"), (2, "cland_rstart_out_1")):
+        a, b = pins[1][tx], pins[child]["cland_rstart_in"]
+        hop = abs(a[0] - b[0]) + abs((ts.cut.lo(1) + a[1]) - (ts.cut.lo(child) + b[1]))
+        assert hop <= 405
     # cut legs: each cut has an out bus on one side and the matching in bus on the other
     for leg in ts.legs:
         for c in leg["cuts"]:
@@ -296,3 +369,82 @@ def test_plancell_replica_callback_runs_once_with_shared_type_endpoints():
     ev._plancell_requests()
     assert calls==[("o_id","i_id")]
     assert len(ev.req)==2 and len(typ[0]["buses"])==1
+
+
+def test_lane_reference_is_published_with_the_piece_groups(tmp_path):
+    """FABLE-FIX-KV-PV-CUT (bind: 'native stations ...: expected one outgoing lane'): an old lane whose forward sources
+    land in another piece must keep its as-built bits, so the split names the base bind's frozen lane payloads in the
+    manifest with each split partition's group = its pieces"""
+    ref = dict(schema="opentallas.split_lane_reference.v1", payload_sha256="x", cells={},
+               part_groups={"p": ["p"], "q": ["q"]},
+               lanes=[dict(id="L1", src="p", dst="q", drivers=[["p.a", "q", 0], ["p.a", "q", 1]])])
+    (tmp_path / "ref.json").write_text(json.dumps(ref))
+
+    def event(spec, lanes=("L1", "L9")):
+        ev = TS.Event.__new__(TS.Event)
+        ev.plan_dir, ev.ts, ev.rep, ev.tag = tmp_path, {}, {}, "test-ref"
+        ev.spec, ev.pmap = spec, {"p": ["p", "p_x1", "p_x2"]}
+        ev.out = dict(partition_types={}, lanes=[dict(id=i) for i in lanes])
+        ev._census = lambda _out: {}
+        ev.side, ev.pc_out, ev.latency_rows = None, None, []
+        ev.ab_out = {}
+        return ev
+    ev = event(dict(lane_reference=str(tmp_path / "ref.json")))
+    out = tmp_path / "split"
+    ev.write(out, "rel/split")
+    ab = json.loads((out / "asbuilt_vN.json").read_text())
+    assert ab["split_lane_reference"] == "rel/split/split_lane_reference.json"
+    got = json.loads((out / "split_lane_reference.json").read_text())
+    assert got["part_groups"] == {"p": ["p", "p_x1", "p_x2"], "q": ["q"]}
+    assert got["lanes"] == ref["lanes"] and got["payload_sha256"] == "x"      # payload untouched
+    assert ev.rep["lane_reference"]["bits"] == 2
+    # no spec key: the manifest is unchanged (existing splits bind as before)
+    ev = event({})
+    ev.write(tmp_path / "plain", "rel/plain")
+    assert "split_lane_reference" not in json.loads((tmp_path / "plain" / "asbuilt_vN.json").read_text())
+    assert not (tmp_path / "plain" / "split_lane_reference.json").exists()
+    # fail closed: a base lane the split dropped, a reference that is not from the unsplit base
+    with pytest.raises(TS.SplitError, match="base lanes are not in the split plan"):
+        event(dict(lane_reference=str(tmp_path / "ref.json")), lanes=("L9",)).write(tmp_path / "gone", "rel/gone")
+    ref["part_groups"]["p"] = ["p", "p_old"]
+    (tmp_path / "ref.json").write_text(json.dumps(ref))
+    with pytest.raises(TS.SplitError, match="exported from the bind of the unsplit base plan"):
+        event(dict(lane_reference=str(tmp_path / "ref.json"))).write(tmp_path / "bad", "rel/bad")
+
+
+def test_density_piece_forwarded_clock_sources_follow_the_piece_taps():
+    """bind EMIT '<piece>: forwarded clock source clk_t139 is not a planned physical tap input': the base type's density
+    tap names do not exist in a piece (its taps are re-derived); each forwarded clock pin takes the nearest piece tap"""
+    from types import SimpleNamespace
+    cut = TS.Cut("x", [600.0], 1400.0)
+    pin = lambda name, tap, x: dict(name=name, dir="out", kind="clock", xy_um=[x, 5.0], source_clock_port=tap,
+                                    source_clock_tap=tap)
+    base = dict(clock=dict(tap_mode="density", landing_contract=dict(pins=[
+        pin("fclk_out_a", "clk_t139", 20.0), pin("fclk_out_b", "clk_t3", 900.0), dict(name="cland_up_ready")])))
+    ts = SimpleNamespace(t=base, cut=cut, tnames=["T", "T_x1"])
+    ev = TS.Event.__new__(TS.Event)
+    # the pieces as _clock leaves them: the port keeps the base name, the tap went through the R4 grid map (wrong in
+    # density mode)
+    ev.out = dict(partition_types={
+        "T": dict(clock=dict(landing_contract=dict(pins=[pin("fclk_out_a", "clk_t139", 20.0)]))),
+        "T_x1": dict(clock=dict(landing_contract=dict(pins=[dict(pin("fclk_out_b", "clk_t3", 300.0),
+                                                                 source_clock_tap="clk_t2")])))})
+    old = {"T": [("clk", 10.0, 10.0), ("clk_t3", 950.0, 40.0), ("clk_t139", 30.0, 900.0)]}
+    new = {"T": [("clk", 300.0, 300.0), ("clk_t1", 40.0, 880.0)], "T_x1": [("clk", 345.0, 50.0), ("clk_t1", 100.0, 700.0)]}
+    rep = ev._remap_clock_sources([("T", ts)], old.__getitem__, new.__getitem__)
+    a = ev.out["partition_types"]["T"]["clock"]["landing_contract"]["pins"][0]
+    b = ev.out["partition_types"]["T_x1"]["clock"]["landing_contract"]["pins"][0]
+    assert (a["source_clock_port"], a["source_clock_tap"]) == ("clk_t1", "clk_t1")
+    assert (b["source_clock_port"], b["source_clock_tap"]) == ("clk", "clk")       # old tap 950 -> 350 in piece 1
+    assert rep == {"T": 2, "T_x1": 2}
+    for nm in new:        # every source is now a planned tap of its piece
+        names = {n for n, _x, _y in new[nm]}
+        assert all(q["source_clock_port"] in names for q in ev.out["partition_types"][nm]["clock"]["landing_contract"]["pins"])
+    base["clock"]["landing_contract"]["pins"][0]["source_clock_port"] = "clk_t999"
+    with pytest.raises(TS.SplitError, match="not a tap of the base type"):
+        ev._remap_clock_sources([("T", ts)], old.__getitem__, new.__getitem__)
+    # other tap modes: untouched (the pass selects density types only)
+    ev.ts = {"G": SimpleNamespace(t=dict(clock=dict(tap_mode="grid+explicit")))}
+    ev.rep = {}
+    ev._forwarded_clock_sources()
+    assert "forwarded_clock_sources" not in ev.rep

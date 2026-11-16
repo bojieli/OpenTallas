@@ -563,13 +563,19 @@ def _blocks(e, key, item, claim):
     records it as the probe), every other item of that family stays held until the probe passes the class's stage"""
     if e.get("state") != "probe":
         return key
-    fam = family_of(item)
     pr = e.setdefault("probe", {})
-    if fam not in pr:
+    cur = probe_item(e)
+    if not cur:                                  # PROBE-ONE-1116 (COORD): exactly ONE probe for the whole class, not one per family
         if claim:
-            pr[fam] = item
+            pr["*"] = item
         return ""
-    return "" if pr[fam] == item else key
+    return "" if cur == item else key
+
+
+def probe_item(e):
+    """the class's single probe item ('' = none claimed yet); a state written with per-family claims (before PROBE-ONE-1116) counts its first claim"""
+    pr = e.get("probe") or {}
+    return pr.get("*") or next(iter(pr.values()), "")
 
 
 def held_key(st, die, item, claim=False):
@@ -597,20 +603,19 @@ def held_key(st, die, item, claim=False):
 
 def probe_result(st, die, item, stage, passed):
     """the probe launch of a family finished.  passed (it got past the class's stage, or was enqueued): the family leaves the class, the class closes
-    when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)"""
+    when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)
+    PROBE-ONE-1116 (COORD 11-16): the class has ONE probe; when it passes the failing stage EVERY family of the class is released in the same
+    tick (the class closes at once).  A family that fails again reopens the class by the normal breaker rule."""
     g = fg_state(st)
     out = []
-    fam = family_of(item)
     for key, e in list(g["open"].items()):
-        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or (e.get("probe") or {}).get(fam) != item:
+        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or probe_item(e) != item:
             continue
         if passed:
-            e["fams"] = [x for x in e.get("fams", []) if x != fam]
-            e["probe"].pop(fam, None)
-            out.append((key, f"probe {item} passed {e.get('stage') or 'the stage'}: family {fam} released"))
-            if not e["fams"]:
-                close(st, key)
-                out.append((key, "all families released: class closed"))
+            fams = list(e.get("fams", []))
+            out.append((key, f"probe {item} passed {e.get('stage') or 'the stage'}: family {family_of(item)} released"))
+            close(st, key)
+            out.append((key, f"all {len(fams)} famil{'y' if len(fams) == 1 else 'ies'} released in the same tick ({', '.join(fams[:12])}): class closed"))
         else:
             e["state"], e["probe"] = "shut", {}
             e["inp"] = e.get("inp_probe") or e.get("inp")
@@ -722,19 +727,29 @@ def closure_files(read, entry=ENTRY_FILES, search=SEARCH_DIRS):
     return sorted(out)
 
 
+# the kit scripts a die tree carries into every kit (core_flow.stage_grt183 copies them): GRT early stops lived in these and stayed in trees that
+# predate main (FLOW-HEALTH-1 11-16: the S81 tree B6gG3b still stopped GRT at iteration 15 four days after main deleted the rule)
+KIT_SCRIPTS = ("physical/common_flow/grt183_make.sh", "physical/common_flow/grt183_resume.tcl", "physical/common_flow/grt_stall_resume.tcl",
+               "physical/common_flow/failfast_rules.py", "physical/common_flow/hold_guard_grt.tcl")
+
+
 def skew_report(trees, main_sha, read_main, rpy, hosts_of):
     """trees: [(die, tree)]; main_sha(rel) -> sha1 of main's file or None; hosts_of: {die: [hosts]}.
     -> [(die, host, tree, [rel differing from main])] only where something differs (a missing file counts)"""
     files = closure_files(read_main)
+    files += [f for f in KIT_SCRIPTS if f not in files and main_sha(f) is not None]
     want = {r: main_sha(r) for r in files}
-    rows = []
-    for die, tree in trees:
-        for h in hosts_of.get(die, []):
-            r = rpy(h, SHA_PY, {"tree": tree, "files": files}, timeout=180)
-            if not _ok(r):
-                rows.append((die, h, tree, ["<unreachable: " + str((r or {}).get("error"))[:80] + ">"]))
-                continue
-            diff = [f for f in files if r.get(f) != want[f]]
-            if diff:
-                rows.append((die, h, tree, diff))
-    return rows
+    jobs = [(die, h, tree) for die, tree in trees for h in hosts_of.get(die, [])]
+
+    def one(job):
+        die, h, tree = job
+        r = rpy(h, SHA_PY, {"tree": tree, "files": files}, timeout=180)
+        if not _ok(r):
+            return (die, h, tree, ["<unreachable: " + str((r or {}).get("error"))[:80] + ">"])
+        diff = [f for f in files if r.get(f) != want[f]]
+        return (die, h, tree, diff) if diff else None
+
+    # every (die, host, tree) probe is independent: one worker per host at a time keeps the sshd load flat (COORD 11-16: cover everything, no cap)
+    import concurrent.futures as cf
+    with cf.ThreadPoolExecutor(max(1, min(16, len(jobs)))) as ex:
+        return [x for x in ex.map(one, jobs) if x]

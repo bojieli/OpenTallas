@@ -141,6 +141,10 @@ def verify(root, expect="", ro=False, full=False):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
         elif ro and not os.path.islink(p) and os.lstat(p).st_nlink > 1:
             errs.append(f"SRC_MANIFEST DRIFT {rel} (hardlinked, nlink {os.lstat(p).st_nlink}: a write or chmod elsewhere reaches this file)")
+    nshared = sum(1 for e in errs if "hardlinked, nlink" in e)
+    if nshared:
+        errs.insert(0, f"SRC_MANIFEST NOT-READY {nshared} file(s) share an inode with another path (cp -al copy elsewhere): "
+                       f"a published tree must be unshared; run `src_manifest.py links TREE --find-in DIR...` to name the other paths")
     for rel in sorted(set(have) - set(want)):
         errs.append(f"SRC_MANIFEST DRIFT {rel} (extra: not in the manifest)")
     if ro and writable(root):
@@ -155,6 +159,58 @@ def verify(root, expect="", ro=False, full=False):
         except OSError:
             pass
     return errs, info
+
+
+def shared_inodes(root, limit=0):
+    """stat-only scan (no hashing: cheap enough for every tick): [(relpath, nlink)] of every regular file with nlink > 1, i.e. a file
+    another path (a `cp -al` copy in some lane's tree) can change.  A published tree must have none (TOOLS-CONVERGE-1116, 2nd
+    occurrence: S81 cmp_B6gF2s, HEAD fable-fix-head-serdes/tree5)."""
+    out = []
+    for dp, dn, fn in os.walk(root):
+        dn[:] = [d for d in dn if d not in SKIP_DIRS]
+        for f in fn:
+            p = os.path.join(dp, f)
+            try:
+                st = os.lstat(p)
+            except OSError:
+                continue
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1:
+                out.append((os.path.relpath(p, root), st.st_nlink))
+                if limit and len(out) >= limit:
+                    return out
+    return out
+
+
+def links_report(root, find_in=(), show=20):
+    """-> (errors, n): 'SRC_MANIFEST SHARED-INODE <path> (nlink n[, also <path>])'; find_in = dirs searched for the other names"""
+    bad = shared_inodes(root)
+    errs = []
+    inos = {}
+    for rel, n in bad[:show]:
+        inos[os.lstat(os.path.join(root, rel)).st_ino] = rel
+    partners = {}
+    if find_in and inos:
+        for top in find_in:
+            for dp, dn, fn in os.walk(top):
+                if os.path.realpath(dp).startswith(os.path.realpath(root)):
+                    dn[:] = []
+                    continue
+                for f in fn:
+                    pp = os.path.join(dp, f)
+                    try:
+                        i = os.lstat(pp).st_ino
+                    except OSError:
+                        continue
+                    if i in inos and i not in partners:
+                        partners[i] = pp
+                if len(partners) == len(inos):
+                    break
+    for rel, n in bad[:show]:
+        ino = os.lstat(os.path.join(root, rel)).st_ino
+        errs.append(f"SRC_MANIFEST SHARED-INODE {rel} (nlink {n}" + (f", also {partners[ino]}" if ino in partners else "") + ")")
+    if len(bad) > show:
+        errs.append(f"SRC_MANIFEST SHARED-INODE ... and {len(bad) - show} more of {len(bad)}")
+    return errs, len(bad)
 
 
 def report(errs):
@@ -344,6 +400,93 @@ def derive(live, repo, sha, scope):
     return {"main_sha": sha, "files": out}
 
 
+# ---- delta (v2 trees without a rebuild or a 48 GB network copy) --------------------------------------------------------------
+
+def delta_make(repo, old_tree, new_sha, out, drop_overlay=()):
+    """pack = the paths whose content differs between the tree's main sha and new_sha inside the tree's scope (typically 40-80 files):
+    out/delta.json + out/files/<path>.  A changed path that the tree's overlay carries is refused (the overlay wins; re-derive it)."""
+    m = load_manifest(old_tree)
+    if not m:
+        raise SystemExit(f"{old_tree} has no manifest")
+    new_sha = subprocess.run(["git", "-C", repo, "rev-parse", new_sha + "^{commit}"], capture_output=True, text=True,
+                             check=True).stdout.strip()
+    nm = subprocess.run(["git", "-C", repo, "diff", "--name-status", "-z", "--no-renames", m["main_sha"], new_sha, "--"] + list(m["scope"]),
+                        capture_output=True, text=True, check=True).stdout.split("\0")
+    recs = [(nm[i], nm[i + 1]) for i in range(0, len(nm) - 1, 2)]
+    drop = set(drop_overlay)
+    clash = [p for _st, p in recs if p in m["overlay"] and p not in drop]
+    if clash:
+        raise SystemExit("refuse: paths changed on main are overlaid by the tree: " + ", ".join(clash[:10]))
+    if os.path.exists(out):
+        raise SystemExit(f"refuse: {out} exists")
+    os.makedirs(os.path.join(out, "files"))
+    add, delete = {}, []
+    for st, path in recs:
+        if st == "D":
+            delete.append(path)
+            continue
+        blob = subprocess.run(["git", "-C", repo, "cat-file", "blob", f"{new_sha}:{path}"], capture_output=True, check=True).stdout
+        mode = subprocess.run(["git", "-C", repo, "ls-tree", new_sha, "--", path], capture_output=True, text=True).stdout.split()[0]
+        dest = os.path.join(out, "files", path)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        with open(dest, "wb") as f:
+            f.write(blob)
+        add[path] = {"sha256": hashlib.sha256(blob).hexdigest(), "exec": mode == "100755", "link": mode == "120000"}
+    json.dump({"old_manifest_hash": m["manifest_hash"], "old_main": m["main_sha"], "new_main": new_sha, "scope": m["scope"],
+               "add": add, "delete": delete, "overlay_drop": sorted(drop & set(m["overlay"]))},
+              open(os.path.join(out, "delta.json"), "w"), indent=0, sort_keys=True)
+    return len(add), len(delete)
+
+
+def delta_apply(pack, old_tree, out):
+    """out = a real copy (cp -a, fresh inodes, never links) of old_tree + the pack; new manifest = old manifest with the changed paths;
+    nothing is trusted: the caller runs publish (full verify) afterwards."""
+    d = json.load(open(os.path.join(pack, "delta.json")))
+    m = load_manifest(old_tree)
+    if not m or m["manifest_hash"] != d["old_manifest_hash"]:
+        raise SystemExit("refuse: pack was made for another tree (old manifest hash differs)")
+    if os.path.exists(out):
+        raise SystemExit(f"refuse: {out} exists")
+    tmp = out + ".building"
+    shutil.rmtree(tmp, ignore_errors=True)
+    subprocess.run(["cp", "-a", "--reflink=never", old_tree, tmp], check=True)
+    for dp, dn, fn in os.walk(tmp):
+        os.chmod(dp, os.lstat(dp).st_mode | stat.S_IWUSR)
+    files = dict(m["files"])
+    for path in d["delete"]:
+        try:
+            os.unlink(os.path.join(tmp, path))
+        except FileNotFoundError:
+            pass
+        files.pop(path, None)
+    for path, e in d["add"].items():
+        dest = os.path.join(tmp, path)
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        if os.path.lexists(dest):
+            os.chmod(os.path.dirname(dest), os.lstat(os.path.dirname(dest)).st_mode | stat.S_IWUSR)
+            os.unlink(dest)
+        shutil.copyfile(os.path.join(pack, "files", path), dest)
+        os.chmod(dest, 0o755 if e["exec"] else 0o644)
+        files[path] = e["sha256"]
+    ov = dict(m["overlay"])
+    for k in d.get("overlay_drop") or []:                       # a stale overlay copy of a file main changed: main's version wins
+        ov.pop(k, None)
+    ov.update(d.get("overlay_add") or {})                       # data files a data pack adds (data_pack.py): they are overlay, not main
+    nm = {"version": 1, "main_sha": d["new_main"], "scope": m["scope"], "overlay": ov, "files": files}
+    nm["manifest_hash"] = manifest_hash(nm)
+    for fn in (MANIFEST, HASHFILE):
+        try:
+            os.unlink(os.path.join(tmp, fn))
+        except FileNotFoundError:
+            pass
+    with open(os.path.join(tmp, MANIFEST), "w") as f:
+        json.dump(nm, f, indent=0, sort_keys=True)
+    with open(os.path.join(tmp, HASHFILE), "w") as f:
+        f.write(nm["manifest_hash"] + "\n")
+    os.rename(tmp, out)
+    return nm
+
+
 # ---- hosts ----------------------------------------------------------------------------------------------------------
 
 SSH = ["timeout", "900", "ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=20"]
@@ -378,10 +521,24 @@ def main(argv=None):
     v.add_argument("--expect", default="")
     v.add_argument("--ro", action="store_true")
     v.add_argument("--full", action="store_true")
+    dm = sp.add_parser("delta-make", help="pack of the paths that differ between the tree's main sha and --sha (small)")
+    dm.add_argument("tree")
+    dm.add_argument("--repo", required=True)
+    dm.add_argument("--sha", required=True)
+    dm.add_argument("--out", required=True)
+    dm.add_argument("--drop-overlay", nargs="*", default=[], help="overlay paths whose copy is an OLDER main version: main wins")
+    da = sp.add_parser("delta-apply", help="OUT = cp -a of TREE + the pack (run on each host, then publish)")
+    da.add_argument("pack")
+    da.add_argument("--old", required=True)
+    da.add_argument("--out", required=True)
+    lk = sp.add_parser("links", help="stat-only: fail when any file of TREE has another hardlink (a published tree must be unshared)")
+    lk.add_argument("tree")
+    lk.add_argument("--find-in", nargs="*", default=[], help="dirs to search for the other names (slow)")
     h = sp.add_parser("hosts")
     h.add_argument("tree")
     h.add_argument("--hosts", required=True)
     h.add_argument("--expect", default="")
+    h.add_argument("--links-only", action="store_true", help="per host: stat-only shared-inode check instead of the full hash verify")
     r = sp.add_parser("replicate")
     r.add_argument("tree")
     r.add_argument("--hosts", required=True)
@@ -403,9 +560,29 @@ def main(argv=None):
             report(errs)
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
+    elif a.cmd == "delta-make":
+        n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out, a.drop_overlay)
+        print(f"SRC_MANIFEST DELTA {a.out}: {n} changed/added, {dl} deleted")
+    elif a.cmd == "delta-apply":
+        nm = delta_apply(a.pack, os.path.abspath(a.old), a.out)
+        print(f"SRC_MANIFEST DELTA-APPLIED {a.out} main {nm['main_sha'][:12]} hash {nm['manifest_hash']} (run publish next)")
+    elif a.cmd == "links":
+        errs, n = links_report(os.path.abspath(a.tree), a.find_in)
+        if errs:
+            report(errs)
+            return 1
+        print(f"SRC_MANIFEST LINKS OK {a.tree}: no file shared with another path")
     elif a.cmd == "hosts":
         bad = 0
         for host in a.hosts.split(","):
+            if a.links_only:
+                script = open(os.path.abspath(__file__)).read()
+                p = subprocess.run(SSH + [host, f"python3 -I -c {shlex.quote(script)} links {shlex.quote(os.path.abspath(a.tree))}"],
+                                   capture_output=True, text=True)
+                txt = (p.stdout + p.stderr).strip()
+                print(f"{host}: " + (txt.splitlines()[-1] if p.returncode == 0 and txt else txt[:1500]))
+                bad |= bool(p.returncode)
+                continue
             rc, txt = remote_verify(host, os.path.abspath(a.tree), a.expect)
             print(f"{host}: " + (txt.splitlines()[-1] if rc == 0 and txt else txt[:2000]))
             bad |= bool(rc)

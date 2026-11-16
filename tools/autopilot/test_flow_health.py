@@ -164,9 +164,12 @@ class CountGap(unittest.TestCase):
                "qwen_compute\tcore_c\tcore\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-RTX\\n"
                "hbm\ttype_x\ttype\t\t/a\t/b\t1\tsha\tvp\tso\tARCHIVED-BOTH\\n")
         listing = {"agidock_index_tsv": tsv.replace("\\\\n", "\\n")}
-        cache = {"plans": {"p1": {"die": "qwen_compute", "signed_cores": {"core_b": ["r"]}}, "p2": {"die": "hbm", "signed_types": {"type_x": ["r"]}}}}
+        cache = {"plans": {"p1": {"die": "qwen_compute", "signed_cores": {"core_b": ["r"]}, "hard_cores": ["core_a", "core_b"]},
+                           "p2": {"die": "hbm", "signed_types": {"type_x": ["r"]}, "plan_types": {"type_x": "m"}}}}
         rows = FH.count_gap_rows(listing, cache)
         self.assertEqual([(r[0], r[1]) for r in rows], [("qwen_compute", "core_a")])
+        cache["plans"]["p1"]["hard_cores"] = ["core_b"]                       # core_a left the plan: a retired master is not a count gap
+        self.assertEqual(FH.count_gap_rows(listing, cache), [])
 
     def test_unreadable_inputs_are_not_a_crash(self):
         self.assertTrue(FH.count_gap_section("/nonexistent", "/nonexistent")[0].startswith("# COUNT-GAP not computed"))
@@ -190,3 +193,24 @@ class LocalHost(unittest.TestCase):
             self.assertEqual(FH.ssh_rpy("me", code, {"x": 1}), {"args": {"x": 1}})
             r = FH.ssh_rpy("other-host-that-does-not-exist.invalid", code, {"x": 1}, timeout=20)
         self.assertIn("error", r)                      # a remote host still goes through ssh
+
+
+class ParallelSkew(unittest.TestCase):
+    def test_skew_probes_run_in_parallel_and_cover_every_tree(self):
+        import threading, time
+        files = {"tools/die_plan/gen.py": b"x\n"}
+        seen, live, peak = [], [0], [0]
+        lock = threading.Lock()
+
+        def rpy(h, code, args, timeout=0):
+            with lock:
+                live[0] += 1; peak[0] = max(peak[0], live[0]); seen.append((h, args["tree"]))
+            time.sleep(0.05)
+            with lock:
+                live[0] -= 1
+            return {"tools/die_plan/gen.py": "bad"} if h == "h2" else {k: __import__("hashlib").sha1(v).hexdigest() for k, v in files.items()}
+        cfg = {"dies": {"d%d" % i: {"enabled": True, "gen_host": "h1", "gen_hosts": ["h1", "h2"], "src": "/t/%d" % i, "item_inputs": {}} for i in range(6)}}
+        out = FH.skew_section(cfg, rpy=rpy, blob=lambda rel: files.get(rel), compare_mod=None, now=NOW)
+        self.assertEqual(len(seen), 12)
+        self.assertGreater(peak[0], 1)
+        self.assertEqual(len([l for l in out if l.startswith("d") and "\th2\t" in l]), 6)

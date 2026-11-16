@@ -368,6 +368,39 @@ def core_tap_reach(kit, limit=None):
     return out
 
 
+# FABLE-FIX-S81-RINGS 11-16 (FABLE-PD-S81-0117 lever 3b, COORD r268): an S81 kit whose landing ring of >= 256 bits is not
+# flops-only (plan band without ring_place=ff, or a landing_placement.tcl tag without +ff) packs the whole ring FIRM in
+# netlist order and fails GRT inside the band (13 of 13 leaf kits, 38k-250k overflow).  A certain tool failure, so it
+# is an error here.  Only S81 kits are judged (freeze.json die s81): KV still has hub types on the old form (KV-102 rows).
+RING_FF_MIN_BITS = 256
+def ring_ff(kit, min_bits=RING_FF_MIN_BITS):
+    kit = Path(kit)
+    lc_path, tcl_path = kit/'landing_contract.json', kit/'landing_placement.tcl'
+    if not lc_path.is_file():
+        return []
+    freeze = kit/'freeze.json'
+    if not freeze.is_file() or json.loads(freeze.read_text()).get('die') != 's81':
+        return []
+    bands = (json.loads(lc_path.read_text()).get('bands') or {})
+    tags = {}
+    if tcl_path.is_file():
+        for m in re.finditer(r'\{\S+\s+\{[^}]*\}\s+ring:([^@+}\s]+)([^}\s]*)\}', tcl_path.read_text()):
+            tags.setdefault(m.group(1), []).append(m.group(2))
+    errors = []
+    for bus, b in sorted(bands.items()):
+        if bus.startswith('monitor_') or not isinstance(b, dict) or not b.get('rect_um') or b.get('hard_core'):
+            continue
+        width = int(b.get('width') or 0)
+        if width < min_bits:
+            continue
+        if b.get('ring_place') != 'ff':
+            errors.append(f'landing ring {bus} ({width} bits) has no ring_place=ff in landing_contract.json: the whole '
+                          f'ring would be placed FIRM in netlist order (compose --band-ring ff)')
+        elif bus in tags and not all('+ff' in t for t in tags[bus]):
+            errors.append(f'landing ring {bus} ({width} bits): landing_placement.tcl tag ring:{bus}{tags[bus][0]} has no +ff')
+    return errors
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -451,6 +484,7 @@ def check(kit, plan_dir=None, contract=False):
     run('cell_budget', cell_budget)
     if cap_record:
         checks['cell_budget']['estimate'] = cap_record
+    run('ring_ff', lambda: ring_ff(kit))
     # WF-1 11-14 (OWNER: delete the conservative limits; S81 leaf t17 clk_c4 at 382 um was stopped): the core tap reach is ADVISORY.  The
     # rows are reported in checks['core_tap_reach']['advisory'] (and logged); CTS and STA judge the real effect.  Never an issue.
     def core_tap_advisory():

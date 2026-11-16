@@ -1303,7 +1303,7 @@ def view_core_tap_values(P, tp, view_tt_ps, corner="TT", t=None):
     c = "FF" if str(corner).upper().startswith("F") else "TT"
     ins = view_tt_ps if c == "TT" else round(S.FF_TT_INSERTION_RATIO * view_tt_ps, 3)
     lat = S.common_latency_ps(P, c, t)
-    return max(0.0, min(ins - lat, lat)), ins
+    return max(0.0, min(ins - lat + S.core_tap_lead_ps(t, c), lat)), ins
 
 
 def core_tap_view_report(P, tn):
@@ -1321,7 +1321,7 @@ def core_tap_view_report(P, tn):
                 out.append(dict(port=n, inst=c, plan_pin=plan_pin, view_pin=pin,
                                 plan_insertion_ps=S.core_tap_insertion_ps(tp), view_insertion_ps=ins,
                                 plan_early_ps=S.core_tap_early_ps(P, tp, 'TT', P.types[tn]), early_ps=early,
-                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) > early))
+                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) + S.core_tap_lead_ps(P.types[tn]) > early))
             break
     return out
 
@@ -2314,7 +2314,7 @@ def kit_effective_env():
     appear in config.mk).  Sorted; only variables that are set are listed."""
     out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
     for k in sorted(os.environ):
-        if k.startswith(("OT_PG_", "OT_PGCAP_")) and os.environ[k].strip() != "":
+        if (k == "OT_PGCAP" or k.startswith(("OT_PG_", "OT_PGCAP_"))) and os.environ[k].strip() != "":
             out[k] = os.environ[k].strip()
     return out
 
@@ -2629,7 +2629,8 @@ def tap_offset_table(P, tn):
         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
         res = {}
         for c in ("TT", "FF"):
-            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, getattr(P, "types", {}).get(tn))) if n in core else 0.0)
+            ty = getattr(P, "types", {}).get(tn)
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, ty) + S.core_tap_lead_ps(ty, c)) if n in core else 0.0)
         if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
             raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row
@@ -4470,6 +4471,41 @@ def core_physical_rows(P, tn, rows):
             for r in rows]
 
 
+def apply_core_pin_lead(P, tn, rows):
+    """S81-COL-CLK-1116 (Spec 0 part 2, default off): clock.core_pin_lead_ps [{module_re, pin, lead_ps}] declares a physical
+    clock pin arrival LEAD for matching hard-core pins (S81 col ROMs: 255 ps; the ROM has no internal tree and its read side
+    launches 270-370 ps after its capture pin).  tap_balance.tcl then hangs the pin at target - lead.  rise_ps/fall_ps (and the
+    mean-contract TT/FF corner means) rise by the lead; FF scales by the type's bound FF/TT insertion ratio.  The SDC is
+    unchanged.  Rows are returned as copies; an absent key leaves the rows (and the kit) byte-identical."""
+    spec = P.types[tn].get("clock", {}).get("core_pin_lead_ps")
+    if not spec or not rows:
+        return rows
+    ratio = None
+    out = []
+    for r in rows:
+        lead = sum(float(sp["lead_ps"]) for sp in spec
+                   if re.fullmatch(sp["module_re"], str(r.get("module", ""))) and sp["pin"] == r["pin"])
+        if not lead:
+            out.append(r)
+            continue
+        if ratio is None:
+            ib = insertion_binding(P, tn)
+            ratio = ib["ff"] / ib["tt"]
+        r = dict(r, rise_ps=round(r["rise_ps"] + lead, 2), lead_ps=lead)
+        if "fall_ps" in r:
+            r["fall_ps"] = round(r["fall_ps"] + lead, 2)
+        if "corners" in r:
+            c = {k: dict(v) for k, v in r["corners"].items()}
+            c["tt"]["mean_ps"] = round(c["tt"]["mean_ps"] + lead, 2)
+            c["ff"]["mean_ps"] = round(c["ff"]["mean_ps"] + lead * ratio, 2)
+            r["corners"] = c
+            r["lead_basis"] = "declared_lead"
+        else:
+            r["basis"] = "declared_lead"
+        out.append(r)
+    return out
+
+
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
     """Write authoritative TT/FF boundary-register mean contracts for hard cores.
 
@@ -4520,6 +4556,7 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
             matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]
             if not matching or any(abs(r["rise_ps"] - insertion) > .01 for r in matching):
                 raise CC.ContractError(f"{tn}/{inst}.{pin}: planned early core tap does not match selected TT mean; regenerate from means")
+    rows = apply_core_pin_lead(P, tn, rows)
     if rows:
         (kd / "core_latency.json").write_text(json.dumps(dict(type=tn, edge="rise", target_ps=P.clock["insertion_ps"],
                                                               rows=rows), indent=1) + "\n")
@@ -4894,6 +4931,21 @@ def _module_header(text, mod):
     return None
 
 
+def _tree_module_headers(rtl_root, mod):
+    """[(header, file)] for every .sv/.v under rtl_root that declares module mod, in sorted path order."""
+    out, key = [], mod.encode()
+    for c in sorted(set(Path(rtl_root).rglob("*.sv")) | set(Path(rtl_root).rglob("*.v"))):
+        try:
+            if not c.is_file() or key not in c.read_bytes():
+                continue
+        except OSError:
+            continue
+        h = _module_header(c.read_text(errors="replace"), mod)
+        if h:
+            out.append((h, c))
+    return out
+
+
 def _header_localparams(text, mod, hdr):
     """DIE-HBM-92-GEN 11-08 (HBM q_b002 GEN_LINT "Identifier NKT is implicitly declared" in ot_hbm_idx_tail_native_bb.v):
     the module-scope `localparam ...;` statements of mod's body (text = its source) that the header's port list uses
@@ -5108,6 +5160,17 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
         hit = next(((h, c) for h, c in ((_module_header(c.read_text(errors="replace"), mod), c) for c in cands
                                         if c.is_file()) if h), None)
+        if hit is None and root:
+            # FABLE-FIX-KV-PVHUB 11-16 (KV pv types with OT_HCPARAM_ALL=1): the bound wrapper instantiates
+            # ot_qwen_tp8_pv_join_t #(.RESET_PIN(1)), and that module is declared in ot_qwen_tp8_pv_wide_pair.sv, a
+            # multi-module source that the kit does not stage (every module in it is a hard core) and that is not named
+            # after the module.  Last resort: the tree file that declares it.  Two different headers stop the kit.
+            found = _tree_module_headers(Path(root) / "rtl", mod)
+            if len({" ".join(h.split()) for h, _c in found}) > 1:
+                raise ValueError(f"macro {mod}: {len(found)} tree files declare it with different headers "
+                                 f"({', '.join(str(c) for _h, c in found[:4])}); stage the one the view was built from")
+            hit = found[0] if found else None
+            cands += [c for _h, c in found]
         hdr = hit[0] if hit else None
         if hdr is None:
             raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "
@@ -5215,19 +5278,35 @@ def macro_move_table(t, tn, env=None):
     return out
 
 
-def txl_mid_exports(cfg, kd, env=None):
+# SERDES-TXPIPE 11-14: a serdes pipe form brings its own placement (txl_mid.tcl face mode), so a type that sets the define
+# in its plan verilog_defines gets the hook without a generation env (wave kits, private kits alike).
+SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE": ("u_rxf", "u_dec.u_face_p_d"),
+                     "OT_S81_SERDES_RXNEG": ("u_rxf", "u_dec.u_face_p_d")}
+
+
+def txl_mid_exports(cfg, kd, env=None, defines=()):
     """KW-FIX-43 11-10 (DIE-S81-85 serdes TXL4, COORD): opt-in at generation (OT_TXL_MID=1; OT_TXL_MID_CHAINS = instance
     chains, spaces or commas, default u_txl in the hook): copy txl_mid.tcl into the kit and run it as POST_GLOBAL_PLACE_TCL
     (each relay row and its hop buffers / inverters placed evenly from source to sink; placement only, no netlist change).
+    SERDES-TXPIPE 11-14: the type defines OT_S81_SERDES_TXPIPE / OT_S81_SERDES_RXPIPE (defines: the kit VERILOG_DEFINES,
+    bare or -D) turn it on by themselves with their chains (SERDES_PIPE_CHAINS, after any env chains) and the macro-face
+    rule OT_TXL_MID_FACE = 1 (the row next to the PMA macro sits at its pin).
     Unset = no lines, the kit is byte-identical."""
     env = os.environ if env is None else env
-    if env.get("OT_TXL_MID") != "1":
+    names = {d[2:] if d.startswith("-D") else d for d in defines}
+    pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
+    if env.get("OT_TXL_MID") != "1" and not pipe:
         return []
     assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") for c in cfg), "OT_TXL_MID: POST_GLOBAL_PLACE_TCL in use"
-    chains = " ".join(env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split())
+    chains = env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split() if env.get("OT_TXL_MID") == "1" else []
+    if pipe:
+        chains = list(dict.fromkeys(chains + pipe))
+    chains = " ".join(chains)
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
-            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []), "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"]
+            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
+            *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
+            "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"]
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
@@ -5815,6 +5894,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if t.get("clock", {}).get("tap_core_etap"):
         # HEAD-TILE-ETAP as a plan form (DH59-TILE 11-03, opt-in clock.tap_core_etap): tap_balance.tcl early-source core re-hang
         cfg.append("export OT_TAP_CORE_ETAP = 1")
+        if t["clock"].get("tap_core_src") == "tree":
+            # S81-COL-CLK-1116 (Spec 0 part 3): the early-source core re-hang may also take tree buffer outputs
+            cfg.append("export OT_TAP_CORE_SRC = tree")
     # R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13; was HEAD-TILE-PREGRT-HOLD): opt-in, plan clock.pregrt_ff_hold true
     # (COORD 11-13 07:2x, default-preserving); pregrt_ff_hold.py, run_kit.sh step below
     import pregrt_ff_hold as _pregrt_ff_hold
@@ -5835,7 +5917,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cons = cons_kit_settings()
     if cons:
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
-    cfg += txl_mid_exports(cfg, kd)
+    cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)

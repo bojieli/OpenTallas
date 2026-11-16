@@ -143,14 +143,31 @@ def main_reader(repo=REPO):
     return blob
 
 
-def trees_of(cfg):
-    """[(die, tree)] and {die: [hosts]} of enabled dies (the die src + every item_inputs src, as ot-src-refresh targets())"""
+def trees_of(cfg, state=None, now=None, live_h=12.0):
+    """[(die, tree)] and {die: [hosts]} of the LIVE wave trees (FABLE-FLOW-0015 b): the die's kit_wave.json src, plus the src named by the spec.json of every
+    wave attempt that was active in the last live_h hours (a row still on an older tree is the skew to see) and the item_inputs src of items with such an
+    attempt.  Old plans' item_inputs trees of finished items are no longer probed."""
+    now = time.time() if now is None else now
     trees, hosts = [], {}
+    live = collections.defaultdict(set)
+    for r in ((state or {}).get("items") or {}).values():
+        if not isinstance(r, dict) or now - float(r.get("updated") or 0) > live_h * 3600:
+            continue
+        if r.get("status") in ("RUNNING", "LAUNCHING", "ROUTE-HELD", "RETRY-INFRA", "ENQUEUED", "FAIL", "PASS") and r.get("dir"):
+            try:
+                s = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("src")
+            except (OSError, ValueError, TypeError):
+                s = None
+            if isinstance(s, str) and s.startswith("/"):
+                live[r.get("die")].add(s)
+            live[(r.get("die"), "items")].add(r.get("item"))
     for die, d in sorted((cfg.get("dies") or {}).items()):
         if not isinstance(d, dict) or not d.get("enabled") or not d.get("gen_host"):
             continue
         hosts[die] = [h for h in dict.fromkeys([d["gen_host"]] + list(d.get("gen_hosts") or [])) if h]
-        srcs = [d.get("src")] + [v.get("src") for v in (d.get("item_inputs") or {}).values() if isinstance(v, dict)]
+        act = live.get((die, "items"))
+        ii = [v.get("src") for k, v in (d.get("item_inputs") or {}).items() if isinstance(v, dict) and (act is None or k in act or state is None)]
+        srcs = [d.get("src")] + sorted(live.get(die, ())) + ii
         for s in dict.fromkeys(x for x in srcs if isinstance(x, str) and x.startswith("/")):
             trees.append((die, s))
     return trees, hosts
@@ -158,6 +175,13 @@ def trees_of(cfg):
 
 def compare_budget(mod, hosts, src, seconds=240):
     """ot-src-refresh compare() with a wall budget -> (problems, diffs) or ([note], {})"""
+    import threading
+    if threading.current_thread() is not threading.main_thread():      # SIGALRM only works in the main thread; compare() has its own ssh timeouts
+        try:
+            return mod.compare(hosts, src)
+        except Exception as e:
+            return [f"compare {type(e).__name__}"], {}
+
     def _h(sig, frm):
         raise TimeoutError()
     old = signal.signal(signal.SIGALRM, _h)
@@ -174,7 +198,11 @@ def compare_budget(mod, hosts, src, seconds=240):
 def skew_section(cfg, rpy=ssh_rpy, blob=None, compare_mod=None, now=None):
     now = time.time() if now is None else now
     blob = blob or main_reader()
-    trees, hosts = trees_of(cfg)
+    try:
+        state = json.loads(STATE.read_text())
+    except (OSError, ValueError):
+        state = None
+    trees, hosts = trees_of(cfg, state, now)
     rd = lambda rel: (blob(rel) or b"").decode("utf-8", "replace") if blob(rel) is not None else None   # noqa: E731
     cache = {}
 
@@ -194,13 +222,16 @@ def skew_section(cfg, rpy=ssh_rpy, blob=None, compare_mod=None, now=None):
         out.append("-\t-\t-\t0\tevery probed tree matches main on the closure")
     if compare_mod is not None:
         out.append("\t".join(["die", "tree", "cross_host_compare", "n", "modules"]))
-        done = set()
+        seen, todo = set(), []
         for die, tree in trees:
             hs = hosts.get(die) or []
-            if len(hs) < 2 or tree in done:
-                continue
-            done.add(tree)
-            pb, diffs = compare_budget(compare_mod, hs, tree)
+            if len(hs) >= 2 and tree not in seen:
+                seen.add(tree)
+                todo.append((die, tree, hs))
+        import concurrent.futures as cf
+        with cf.ThreadPoolExecutor(max(1, min(8, len(todo)))) as ex:           # trees are independent: compared in parallel, every one of them
+            res = list(ex.map(lambda x: compare_budget(compare_mod, x[2], x[1]), todo))
+        for (die, tree, hs), (pb, diffs) in zip(todo, res):
             hit = [r for r in diffs if r in set(files)]
             out.append("\t".join([die, tree, "; ".join(pb)[:120] or "ok", str(len(hit)), " ".join(hit[:20])]))
     return out
@@ -346,11 +377,16 @@ COUNT_CACHE = os.path.expanduser("~/.local/state/fleet-viz/release_tree_plan_cac
 def count_gap_rows(listing, cache):
     """FLOW-HEALTH-1 11-15 (FABLE-CENSUS-1815 class 10): INDEX.tsv rows of the AGIdock archive (ARCHIVED-BOTH core / type) whose die's count does
     not credit the name.  -> [(die, name, kind, state, note)].  3 QC n9 cores sat here for 5 h before anybody noticed."""
-    credited = {}
+    credited, planned = {}, {}
     for e in (cache.get("plans") or {}).values():
         s = credited.setdefault(e.get("die"), set())
+        pl = planned.setdefault(e.get("die"), set())
         for a in ("signed_types", "signed_cores", "signed_designs"):
             s.update((e.get(a) or {}).keys())
+        pl.update(e.get("hard_cores") or [])
+        pt = e.get("plan_types")
+        pl.update(pt.keys() if isinstance(pt, dict) else (pt or []) if not isinstance(pt, int) else [])
+        pl.update((e.get("designs") or {}).keys() if isinstance(e.get("designs"), dict) else [])
     out = []
     for ln in (listing.get("agidock_index_tsv") or "").splitlines():
         f = ln.split("\t")
@@ -359,7 +395,7 @@ def count_gap_rows(listing, cache):
         die, name, kind, state = f[0], f[1], f[2], f[10]
         if state != "ARCHIVED-BOTH" or kind not in ("core", "type", "design"):
             continue
-        if name not in credited.get(die, set()):
+        if name not in credited.get(die, set()) and name in planned.get(die, set()):      # only names of the die's CURRENT plan: retired masters / ring children are not a count gap
             out.append((die, name, kind, state, (f[11] if len(f) > 11 else "")[:100]))
     return out
 

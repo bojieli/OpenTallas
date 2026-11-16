@@ -344,3 +344,21 @@ def test_cli_strict_cores_flag(tmp_path):
     r = subprocess.run([sys.executable, "-I", str(me), "check", "--tree", str(tree), "--plan", str(p), "--strict-cores"],
                        capture_output=True, text=True)
     assert r.returncode == 1 and "GEOM-STATION-IN-CORE" in r.stdout
+
+
+def test_tools_sys_path_insert_resolves_imports_in_that_dir(tmp_path):
+    """TOOLS-CONVERGE-1116: ca_region_table does sys.path.insert(tools/s81_head) and imports tools/s81_head/fallback_land.py; a
+    different tools/die_plan/fallback_land.py of the same name must not be the one its attributes are checked against."""
+    import plan_gate_pre as G
+    dp = tmp_path / "tools" / "die_plan"
+    sh = tmp_path / "tools" / "s81_head"
+    dp.mkdir(parents=True)
+    sh.mkdir(parents=True)
+    (dp / "fallback_land.py").write_text("def other():\n    return 1\n")
+    (sh / "fallback_land.py").write_text("CYC = 3\n\ndef part_boxes(p):\n    return p\n")
+    (dp / "ca_region_table.py").write_text(
+        "import sys\nfrom pathlib import Path\nsys.path.insert(0, str(Path(__file__).resolve().parents[1] / \"s81_head\"))\n"
+        "import fallback_land as F\n\ndef f(p):\n    return F.part_boxes(p), F.CYC\n")
+    assert G.check_tools(str(tmp_path)) == []
+    (sh / "fallback_land.py").write_text("CYC = 3\n")          # a real miss in the dir it imports from is still found
+    assert any("part_boxes" in x for x in G.check_tools(str(tmp_path)))

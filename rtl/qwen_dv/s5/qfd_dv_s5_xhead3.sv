@@ -30,7 +30,7 @@
 // forwarding of a same-edge descriptor write dropped).
 // =====================================================================================================================
 // QC-TRANSPORT-FIX-3 11-08: N_PAD / S_PAD = extra edges on this column's N / S corridor word (bind hook qc_fabric_transport.py; 0 = as-built, no flop).
-module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PAD = 0, parameter integer S_PAD = 0) (
+module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PAD = 0, parameter integer S_PAD = 0, parameter integer SPLIT_STICKY_FAULT = 0) (
     input  wire           ck,
     input  wire           rst_n,
     input  wire [5:0]     cid,
@@ -411,7 +411,20 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
     wire [AW-1:0] b_xcs   = ib_q[5*AW + 12 +: AW];
     wire [3:0]    b_split = ib_q[5*AW + 5 +: 4];
     wire          b_round = ib_q[4*AW + 4];
-    reg           busy, flt, fault_r;
+    reg           busy, flt_legacy, fault_r;
+    wire flt;
+    // HCFE-1116: sticky OR distributes over time. Nine local sticky bits replace
+    // the wide priority/reduction cone into flt, while fault_r keeps its edge.
+    generate if (SPLIT_STICKY_FAULT) begin : g_split_sticky
+        wire [8:0] causes = {
+            miss, |lqbp[7:4], |lqbp[3:0],
+            |go_bad_bits[12:8], |go_bad_bits[7:4], |go_bad_bits[3:0],
+            g_q && e_pbad[REPc[17]], b_v && pfault_n,
+            r_dv[5] && (aff_bad || st[r_dep[5]] != 2'd0 || sp_bad)};
+        ot_qfd_xh_sticky_fault u_fault (.ck(ck), .rst_n(rr[6]), .causes(causes), .fault(flt));
+    end else begin : g_legacy_sticky
+        assign flt = flt_legacy;
+    end endgenerate
     (* keep = "true" *) reg [3:0] rep_c;                     // the epoch being read: [0] FSM, [1] k/pool, [2]/[3] REP a/b
     wire          rep = rep_c[0];
     (* keep = "true" *) reg [9:0] ep_rd_c;                   // the next epoch a go consumes: [0] FSM, [1..5] epoch field
@@ -499,21 +512,21 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
     wire          pool_x = fwd ? b_poolm : (REP_k ? e_poolc1[0] : e_poolc0[0]);
     always @(posedge ck or negedge rr[6])
         if (!rr[6]) begin
-            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd_c <= 10'd0; busy <= 1'b0; flt <= 1'b0; ph <= 3'd0; rep_c <= 4'b0;
+            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd_c <= 10'd0; busy <= 1'b0; flt_legacy <= 1'b0; ph <= 3'd0; rep_c <= 4'b0;
             fault_r <= 1'b0; te_c <= 3'd0;
         end else begin
             te_c <= {3{busy_n && (ph_n == IL - 1)}};
             fault_r <= flt | fi_q;
             if (r_dv[5]) begin
-                if (aff_bad) flt <= 1'b1;
-                if (st[r_dep[5]] != 2'd0) flt <= 1'b1;
+                if (aff_bad) flt_legacy <= 1'b1;
+                if (st[r_dep[5]] != 2'd0) flt_legacy <= 1'b1;
                 st[r_dep[5]] <= 2'd1;
-                if (sp_bad) flt <= 1'b1;
+                if (sp_bad) flt_legacy <= 1'b1;
             end
-            if (b_v && pfault_n) flt <= 1'b1;
-            if ((g_q && e_pbad[REPc[17]]) || |go_bad_bits) flt <= 1'b1;
-            if (|lqbp) flt <= 1'b1;
-            if (miss) flt <= 1'b1;
+            if (b_v && pfault_n) flt_legacy <= 1'b1;
+            if ((g_q && e_pbad[REPc[17]]) || |go_bad_bits) flt_legacy <= 1'b1;
+            if (|lqbp) flt_legacy <= 1'b1;
+            if (miss) flt_legacy <= 1'b1;
             if (g_q) begin
                 if (busy && last) st[(MUT == 4) ? ~rep : rep] <= 2'd0;
                 st[ep_rd] <= 2'd2;
@@ -666,4 +679,16 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0, parameter integer N_PA
         assign s_d = pad_s[S_PAD-1];
     end endgenerate
     assign fault = fault_r;
+endmodule
+
+// Same-cycle sticky fault fan-in, split into kept per-cause state. Reset and
+// fault_r remain on their original edges. MUT is for the negative control only.
+module ot_qfd_xh_sticky_fault #(parameter integer MUT = 0) (
+    input wire ck, rst_n, input wire [8:0] causes, output wire fault
+);
+    (* keep = "true" *) reg [8:0] sticky;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) sticky <= 9'd0;
+        else sticky <= sticky | (MUT ? (causes & 9'h0ff) : causes);
+    assign fault = |sticky;
 endmodule

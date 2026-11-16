@@ -32,9 +32,14 @@ from zoneinfo import ZoneInfo
 HOME = Path(os.path.expanduser("~"))
 LANE = "FAIL-ROUTE-1115"
 DIE_DEFAULT = {"s81": "DIE-S81-92", "qwen_compute": "DIE-QC-103", "qwen_kvsys": "KV-102", "head": "HEAD-100"}
-DIE_PREFIX = {"s81": ("DIE-S81", "S81-"), "qwen_compute": ("DIE-QC", "QC-"), "qwen_kvsys": ("KV-", "DIE-KV"),
-              "head": ("HEAD-", "DIE-HEAD"), "hbm": ("DIE-HBM", "HBM-")}
+DIE_PREFIX = {"s81": ("DIE-S81", "S81-", "FABLE-FIX-S81"), "qwen_compute": ("DIE-QC", "QC-", "FABLE-FIX-QC"),
+              "qwen_kvsys": ("KV-", "DIE-KV", "FABLE-FIX-KV"), "head": ("HEAD-", "DIE-HEAD", "FABLE-FIX-HEAD"), "hbm": ("DIE-HBM", "HBM-")}
 NOT_OWNER = ("FABLE-", "COORD", "FLOW-HEALTH", "KIT-OPS", "KIT-WAVE", "MERGE-QUEUE", "CLEAN", "PLAN-GATE-PRE", LANE)
+# COORD 11-16: S81 kit items go to the lane that owns their item family; first match wins, else the die default
+S81_RULES = ((r"^col_", "FABLE-FIX-S81-COL"), (r"^(leaf|ring)|_ring", "FABLE-FIX-S81-RINGS"), (r"strip", "FABLE-FIX-S81-STRIP"),
+             (r"serdes|phy", "S81-SERDES-PHY-1116"))
+S81_ONLY = {"FABLE-FIX-S81-COL"}   # never the generic pick for non-col items
+OWNER_OK = ("FABLE-FIX-",)   # fix lanes own failures; other FABLE-* are reviewers
 VERDICT = re.compile(r"did NOT pass|FAIL|REFUSE|Traceback")
 POST = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d \d\d:\d\d) (?:PST|PDT)\s+(?P<tag>[A-Z][A-Z-]*)\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)"
                   r"\s*->\s*(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")
@@ -84,7 +89,7 @@ def live_lanes(posts, now, live_h):
     """lane -> (last post epoch) for lanes that posted within live_h hours; reviewers and infra lanes are not owners."""
     last = {}
     for p in posts:
-        if p["lane"].startswith(NOT_OWNER):
+        if p["lane"].startswith(NOT_OWNER) and not p["lane"].startswith(OWNER_OK):
             continue
         last[p["lane"]] = max(last.get(p["lane"], 0), p["t"])
     return {k: v for k, v in last.items() if now - v <= live_h * 3600}
@@ -93,6 +98,8 @@ def live_lanes(posts, now, live_h):
 def pick_owner(die, fam, live, posts, now, live_h):
     """live owner lane for (die, family) or COORD."""
     pref = DIE_PREFIX.get(die, ())
+    if die == "s81":
+        live = {k: v for k, v in live.items() if k not in S81_ONLY}
     cand = {k: v for k, v in live.items() if k.startswith(pref) or k == DIE_DEFAULT.get(die)}
     if fam:
         named = [p for p in posts if p["lane"] in live and now - p["t"] <= live_h * 3600 and fam in p["text"]
@@ -119,6 +126,11 @@ def kit_failures(state, now, window_h):
     for k, v in sigs.items():
         if k not in open_ or now - v.get("last", 0) > window_h * 3600:
             continue
+        # FABLE-FLOW-0445 #6: self-closing class: a later attempt of the item (queued, running, enqueued or signed) means the failure is answered
+        moved = [x for kk, x in items.items() if "|".join(kk.split("|")[:2]) == k and x.get("status") not in LIVE_STATUS
+                 and float(x.get("updated") or 0) > float(v.get("last") or 0) + 60]
+        if moved:
+            continue
         reason = v.get("reason", "")
         if "signal 15" in reason or v.get("cls") == "STOPPED":
             continue
@@ -140,14 +152,16 @@ def build_classes(coord, state, posts, now, window_h, live_h):
     live = live_lanes(posts, now, live_h)
     classes = {}
 
-    def add(die, kind, label, name, fam, t, ckey):
-        c = classes.setdefault(ckey, dict(die=die, kind=kind, label=label, items={}, fams=set()))
+    def add(die, kind, label, name, fam, t, ckey, forced=""):
+        c = classes.setdefault(ckey, dict(die=die, kind=kind, label=label, items={}, fams=set(), forced=forced))
         c["items"][name] = t
         c["fams"].add(fam)
 
     for die, item, cls, stage, reason, n, last in kit_failures(state, now, window_h):
         label = f"{die}/{stage}/{cls}"
-        add(die, "kit", label + " " + mask(reason)[:60], item, family(item), last, f"kit|{die}|{cls}|{stage}|{mask(reason)}")
+        forced = next((ln for rx, ln in S81_RULES if re.search(rx, item)), DIE_DEFAULT["s81"]) if die == "s81" else ""
+        add(die, "kit", label + " " + mask(reason)[:60], item, family(item), last,
+            f"kit|{die}|{cls}|{stage}|{mask(reason)}|{forced}", forced)
     for p in posts:
         if p["tag"] != "RESULT" or p["lane"].startswith(NOT_OWNER) or now - p["t"] > window_h * 3600:
             continue
@@ -158,7 +172,7 @@ def build_classes(coord, state, posts, now, window_h, live_h):
         add(die, "waiter", f"{die}/waiter RESULT FAIL", name, p["lane"], p["t"], f"waiter|{die}")
     for ckey, c in classes.items():
         fam = sorted(c["fams"])[0] if len(c["fams"]) == 1 else None
-        c["owner"] = pick_owner(c["die"], fam, live, posts, now, live_h)
+        c["owner"] = c.get("forced") or pick_owner(c["die"], fam, live, posts, now, live_h)
         c["cid"] = cid_of(ckey)
     return classes
 
@@ -173,6 +187,9 @@ def acked(posts, owner, c, after):
     """a RESULT or ACK from the owner after `after` that names the class id, an item or an item family."""
     toks = {c["cid"], *c["items"], *c["fams"]}
     for p in posts:
+        # a COORD ruling that names the class id closes it (FABLE-FLOW-0445 #6)
+        if p["lane"] == "COORD" and p["tag"] in ("RULING", "RESULT", "ACK") and p["t"] > after and c["cid"] in p["text"]:
+            return True
         if p["lane"] == owner and p["tag"] in ("RESULT", "ACK") and p["t"] > after and any(t and t in p["text"] for t in toks):
             return True
     return False
@@ -196,6 +213,8 @@ def run(coord, state_f, post_sh, window_h=3.0, live_h=3.0, ack_min=30, dry=False
     classes = build_classes(coord, kw, posts, now, window_h, live_h)
     sent = []
     fail = []
+    digest = {}       # owner -> [(rec_k, class)] new classes of this run: ONE post per owner per run (FABLE-FLOW-0445 #6)
+    lane_digest = []  # classes past the ack window of this run: ONE NEEDS-LANE to COORD
 
     def do_post(text):
         if dry:
@@ -212,15 +231,7 @@ def run(coord, state_f, post_sh, window_h=3.0, live_h=3.0, ack_min=30, dry=False
             rec = {"t": min(tm) if tm else now, "items": sorted(c["items"])}
             st["classes"][rec_k] = rec
         if not rec:
-            to = f"{c['owner']}, COORD" if c["owner"] != "COORD" else "COORD"
-            text = (f"NEEDS-ACTION [{LANE} -> {to}] FAIL-CLASS {c['cid']} owner {c['owner']} {c['label']}: {len(c['items'])} item(s) "
-                    f"failed and not answered: {names_line(c)}. Owner: post RESULT or ACK naming {c['cid']} (or an item) with the "
-                    f"cause and the next step within {ack_min} min, else NEEDS-LANE goes to COORD. One post per class; no repeat.")
-            if do_post(text):
-                st["classes"][rec_k] = {"t": now, "items": sorted(c["items"]), "label": c["label"]}
-                sent.append(("ACTION", c["cid"], c["owner"], len(c["items"])))
-            else:
-                fail.append(c["cid"])
+            digest.setdefault(c["owner"], []).append((rec_k, c))
             continue
         if rec.get("lane_posted") or rec.get("acked"):
             continue
@@ -228,14 +239,30 @@ def run(coord, state_f, post_sh, window_h=3.0, live_h=3.0, ack_min=30, dry=False
             rec["acked"] = int(now)
             continue
         if now - rec["t"] >= ack_min * 60:
-            text = (f"NEEDS-LANE [{LANE} -> COORD] FAIL-CLASS {c['cid']} {c['label']}: {len(c['items'])} item(s), no RESULT/ACK from "
-                    f"{c['owner']} in {int((now - rec['t']) / 60)} min: {names_line(c)}. COORD: start or assign a lane for this class; "
-                    f"this relay does not repeat (class {c['cid']}).")
-            if do_post(text):
+            lane_digest.append((rec, c))
+    for owner, lst in sorted(digest.items()):
+        to = f"{owner}, COORD" if owner != "COORD" else "COORD"
+        segs = " | ".join(f"FAIL-CLASS {c['cid']} owner {owner} {c['label']}: {len(c['items'])} item(s): {names_line(c)}" for _, c in lst)
+        text = (f"NEEDS-ACTION [{LANE} -> {to}] {len(lst)} failed class(es), {sum(len(c['items']) for _, c in lst)} item(s) not answered: {segs}. "
+                f"Owner: post RESULT or ACK naming a class id (or an item) with the cause and the next step within {ack_min} min, else NEEDS-LANE goes to "
+                f"COORD. One digest per owner per run; a class closes by itself when its items have a later attempt, or when COORD names its id.")
+        if do_post(text):
+            for rec_k, c in lst:
+                st["classes"][rec_k] = {"t": now, "items": sorted(c["items"]), "label": c["label"]}
+                sent.append(("ACTION", c["cid"], owner, len(c["items"])))
+        else:
+            fail.extend(c["cid"] for _, c in lst)
+    if lane_digest:
+        segs = " | ".join(f"FAIL-CLASS {c['cid']} {c['label']}: {len(c['items'])} item(s), no RESULT/ACK from {c['owner']} in "
+                          f"{int((now - rec['t']) / 60)} min: {names_line(c)}" for rec, c in lane_digest)
+        text = (f"NEEDS-LANE [{LANE} -> COORD] {len(lane_digest)} failed class(es) unanswered: {segs}. COORD: start or assign a lane for each; "
+                f"this relay does not repeat these classes.")
+        if do_post(text):
+            for rec, c in lane_digest:
                 rec["lane_posted"] = int(now)
                 sent.append(("LANE", c["cid"], c["owner"], len(c["items"])))
-            else:
-                fail.append(c["cid"])
+        else:
+            fail.extend(c["cid"] for _, c in lane_digest)
     keep = now - 7 * 86400
     st["classes"] = {k: v for k, v in st["classes"].items() if v.get("t", now) > keep}
     if not dry:
