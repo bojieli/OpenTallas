@@ -34,3 +34,15 @@ Goal: sign off hd_serdes (s81_head): DRC 0, TT setup >= -42 ps, FF non-port hold
 - sd6 = W/gen_sd6.sh (die_gen_env + item_env + PGCAP + TT repair + OT_GRT_ALLOW_CONGESTION=1), config equals sd2/sd3 form
   plus main additions; running from synth on epyc10 (log intel2 ~/head-serdes-o-logs/sd6.otrun.log). After route: signoff,
   then RESULT PASS head-serdes-fanout (HOLDGEN hold). If TT short: diag5/run.sh pattern on sd6 DBs.
+
+## 11-16 09:2x update
+- sd6 (fanout+DKREG): CTS TT -146.8 -> -26.6 kept; GRT TT -182.9 -> -112.5 kept. Worst class (W/diag6): 55 u_out.bsrc
+  endpoints, u_chn clk->q 400 ps + ~480 ps wire/6 BUF. Also u_enc.rem_q -67.8. sd6 still running to route (wait by8qgs7ni).
+- DOREG form: branch claude/head-serdes-doreg-1116 @67db0dbde3 (LOCAL in W/repo, not pushed): seam regs g_oreg.r_* on
+  chn->out (cw/apply/one/unc/fs), DDX = DKREG+DOREG (+2 pma_rck per RX vs main). Bench W/bench3.sh (log
+  intel2 ~/head-serdes-o-logs/bench3.log) must PASS doreg and FAIL doreg_mut_nodd; then push, gate via epyc2 wrapper
+  mq-gate/lane/head-serdes-o-gate.sh, READY, LATENCY row -> +2 pma_rck.
+- sd7 = DOREG RTL, sd6 kit form (W/gen_sd7.sh, log ~/head-serdes-o-logs/sd7.otrun.log). FABLE-CLOSURE-1143 ask done in
+  place before placement: sd7/hd_serdes/oreg_site.tcl (sourced end of cons_gpl_pre.tcl) puts g_oreg flops FIRM 1.5 um
+  outside u_chn on the driving-pin edge; released in face_flops_release.tcl. Check log line OT_OREG_SITE placed N.
+  Kit-local; move into gen_phys if sd7 closes.
