@@ -101,6 +101,31 @@ class AsbuiltMap(unittest.TestCase):
             SM.publish(new)
             self.assertEqual(SM.verify(new, ro=True, full=True)[0], [])
 
+    def test_qc_manifest_relative_map_can_stay_in_baseline(self):
+        with tempfile.TemporaryDirectory() as t:
+            repo = t + "/repo"
+            bind = "physical/die_plan/qwen_compute/bind"
+            os.makedirs(repo + "/" + bind)
+            g = lambda *a: subprocess.run(["git", "-C", repo, "-c", "user.name=t", "-c", "user.email=t@t"] + list(a), check=True, capture_output=True, text=True).stdout.strip()
+            g("init", "-q")
+            open(repo + "/" + bind + "/asbuilt_map_p6.json", "w").write("{}")
+            g("add", "physical"); g("commit", "-qm", "map")
+            SM.CACHE_DIR = t + "/cache"
+            old, new = t + "/old", t + "/new"
+            SM.build(repo, g("rev-parse", "HEAD"), None, ["physical"], old, main_ref="")
+            rel = "physical/die_plan/qwen_compute/qc_start_1106/runtime"
+            stage = t + "/stage"
+            os.makedirs(stage + "/" + rel)
+            open(stage + "/" + rel + "/asbuilt_sw2_pv.json", "w").write(json.dumps(dict(top="qfd_die", base="../../../../..", map_file="../../bind/asbuilt_map_p6.json")))
+            pack = t + "/pack"
+            DP.make(old, new, pack, [(stage, ".")])
+            SM.delta_apply(pack, old, new)
+            ab = json.load(open(new + "/" + rel + "/asbuilt_sw2_pv.json"))
+            self.assertEqual(ab["map_file"], new + "/" + bind + "/asbuilt_map_p6.json")
+            self.assertTrue(os.path.isfile(ab["map_file"]))
+            SM.publish(new)
+            self.assertEqual(SM.verify(new, ro=True, full=True)[0], [])
+
     def test_manifest_relative_map_takes_precedence_and_missing_map_refuses(self):
         with tempfile.TemporaryDirectory() as t:
             os.makedirs(t + "/manifest")
