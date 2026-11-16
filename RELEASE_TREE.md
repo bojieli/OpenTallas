@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-16 13:2x PST: see SIGN-RATE. All lanes stopped 11:2x-13:20 on a 5-hour usage limit; resumed 13:2x. S81 on F2s2 data pack _d6 (epyc10/epyc2/epyc7), pubtree guard r311; v4 tree (TXPIPE) binding. F2s3 rebind with bksel fix. QC S4q9d/e/f binding; HEAD NF14 vs NF14r under review; KV 7yhr tail on epyc7. Disk cleanup freed epyc7/8/9.
+2026-11-16 14:4x PST: see SIGN-RATE (no new count this hour). Adopted HEAD NF15/NF15a, KV HG1A, QC S4q9j; S81 F2s4 bind restarting with col overlap fix, signed vsw view and reset chain sites; QC S4q9k binding, S4q9l composed. Delete guard approved; cleaners off until guard pass. epyc10 overloaded by pre-cap jobs; thread cap now live fleet-wide.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
