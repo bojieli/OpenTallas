@@ -342,6 +342,9 @@ class Snap(unittest.TestCase):
         ab = put(os.path.join(folder, "a.json"), json.dumps({"base": os.path.relpath(self.src, folder), "clock_landing_table": "physical/h2/table.json"}))
         spec = dict(self.spec())
         spec["in_place"] = [self.src]
+        # Actual KV eW: the gen --clock-landing input names this same source
+        # table before asbuilt discovery. Required mirrored closure must win.
+        spec["inputs"].insert(0, {"role": "gen_args", "path": table, "required": False})
         spec["inputs"].append({"role": "asbuilt", "path": ab, "required": True, "deep": False})
         a = KS.snap(spec, self.snaps, log=lambda *x: None)
         self.assertEqual(Path(a["kit_inputs"] + table).read_bytes(), Path(table).read_bytes())
