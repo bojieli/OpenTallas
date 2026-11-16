@@ -16,4 +16,4 @@ Gates: DRC 0, TT setup >= -42, FF non-port hold >= 0, LEC.
 ## bk_sel__t2 HCPARAM (posted READY-RTL 11-16)
 - Wrong side = die RTL frozen copy physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv (cab54e3df937).
 - Fix file sha 51beecd2dc38: intel2 /srv/opentallas-scratch2/claude/s81-bksel-o/idx_hcparam/dsdv_idx_l20s.sv; epyc10 same dir + repo path.
-- Release: next S81 bind with it + OT_HCPARAM_ALL=1 -> 0 mismatches, BIND_RC 0, LATCHECK pass (tl_o +3 edges).
+- RESULT bksel-hcparam PASS posted (B6gF2s2 bind + fixed file: mismatches 1 -> 0, epyc10 s81-bksel-o/hcp_check). HOLDGEN asked to re-key term to result:S81-BKSEL-O:bksel-hcparam. Next bind must price tl_o +3 edges in LATCHECK.
