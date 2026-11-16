@@ -1,10 +1,10 @@
 {
  "die": "s81",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_e4b9ae9f1c1f",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_eb1e73448bd0",
  "smoke": "PASS",
- "smoke_detail": "kit_rtl 14/14 RC0; plan_gate_pre PASS",
- "src_manifest_sha": "e6626b1f72572b4d8020d1ab8d79d81fbb96ba7c408aea8a8ed608e544869d8d",
- "tools_sha": "e4b9ae9f1c1f",
+ "smoke_detail": "v2: kit_rtl 14/14 RC0; plan_gate_pre PASS; tree_smoke_assert OK; tree_skew_check OK; hash+nlink verified on all listed hosts; bind of record s81bind_pin_eb1e73448bd0/out on all listed hosts",
+ "src_manifest_sha": "59d562a34e1c22303b580e91eb2c45150638df7358abd28543706bf65874cabe",
+ "tools_sha": "eb1e73448bd0",
  "hosts": [
   "epyc10",
   "epyc9",
@@ -20,5 +20,5 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 03:31:42 PST"
+ "time": "2026-11-16 07:10:25 PST"
 }
