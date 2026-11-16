@@ -84,3 +84,10 @@
 - p2 pids (intel2): svc_hi rs t3 2788430, svc_lo rs t7 2788774. Work root now epyc9 ROOT disk
   /srv/opentallas-scratch/fable-fix-s81-svc/pilot (414 GB free after a 7.2 GB snapshot); logs ~/fable-fix-s81-svc/<item>/p2/.
 - p2 passed src_manifest, kit_snap, bind_fetch, bind, kit_rtl_probe; in kit_rtl at 08:57.
+
+## 09:05 PST pilots RELAUNCHED as p3 on epyc2 (p2 failed kit_rtl: ot-run refuses a root-disk --dir on epyc9; INFRA)
+- p3 pids (intel2): svc_hi rs t3 2994618, svc_lo rs t7 2995111. gen host epyc2 (v3 tree + bind present, 184 GB free),
+  work epyc2 /srv/opentallas-scratch2/claude/fable-fix-s81-svc/pilot/items/<item>/attempt_p3; logs ~/fable-fix-s81-svc/<item>/p3/.
+  Lane inputs staged on epyc2: fable-fix-s81-svc/in/B6gF2sv_sidecar.json a3b57fc803bf; asbuilt_run.json was there.
+- p3 passed src_manifest, kit_snap, bind_fetch, bind, kit_rtl_probe; kit_rtl running 09:01.
+- My epyc9 root-disk pilot dir + the root kit-store I created (7.2 GB) are deleted.
