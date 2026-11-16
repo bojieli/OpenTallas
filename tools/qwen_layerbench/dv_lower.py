@@ -462,7 +462,9 @@ def check_memory_profile(ages, path, expected=None):
                          'calibrate this exact memory profile before compiling')
 
 
-def load_ages(path=AGES):
+def load_ages(path=None):
+    """Explicit path wins; DV_SU_AGES selects a measured profile; legacy default remains unchanged."""
+    path = os.environ.get('DV_SU_AGES', AGES) if path is None else path
     p = ROOT / path
     if not p.exists():
         raise LowerError(f'{path} missing: measure it (rtl/test/qwen_dv/dv_lower_bench.py --calibrate)')
