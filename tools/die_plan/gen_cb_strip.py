@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """DIE-QC-103 (hop formula + cl_* skip: QC-CB-GEN-1115): deepen the cb landing bands (clock.landing_contract.bands.<bus>) so the ring flops reach density DENS.
-usage: gen_cb_strip.py BASE_PLAN OUT_ROWS OUT_PLAN [--dens 0.45]   FLOPS_PER_RING_BIT = 5400/576 (QC-CB-GEN measured ~5.4k per ring)"""
+usage: gen_cb_strip.py BASE_PLAN OUT_ROWS OUT_PLAN [--dens 0.45]   ring flops per family from tools/die_plan/cb_ring_flops.json (measured, QC-CB-GEN-1115)"""
 import json, sys, math, copy
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
+import cb_ring_flops as RF
 base, out_rows, out_plan = sys.argv[1:4]
 DENS = float(sys.argv[sys.argv.index("--dens")+1]) if "--dens" in sys.argv else 0.45
-FPB = 5400/576.0; G = 2.16
+G = 2.16
 plan = json.load(open(base)); pt = plan["partition_types"]; rows = {}; rep = []
 def pin_xy(face, win, W, H):
     """centre of a bus pin window on its face: S y=0, N y=H, W x=0, E x=W (the window is the span along the face)"""
@@ -27,7 +29,7 @@ for tn, t in pt.items():
         if bn.startswith("cl_") or any(abs(old["rect_um"][i] - c[i]) < 1.0 for c in cores for i in range(4)) and any(
                 c[0] <= old["rect_um"][0] and c[1] <= old["rect_um"][1] and c[2] >= old["rect_um"][2] and c[3] >= old["rect_um"][3] for c in cores):
             rep.append((tn, bn, "hard-core ring", old["rect_um"])); continue
-        n = old["ring_width"] * FPB; need = n / DENS
+        n, how = RF.ring_flops(tn, bn, old); need = n / DENS         # measured per family/class (cb_ring_flops.json), not one constant
         have = (old["rect_um"][2]-old["rect_um"][0])*(old["rect_um"][3]-old["rect_um"][1])
         if have >= need: rep.append((tn, bn, "ok", round(n/have, 2))); continue
         x0, y0, x1, y1 = old["rect_um"]; others = [v["rect_um"] for k, v in bands.items() if k != bn and v.get("rect_um")] + cores
