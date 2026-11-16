@@ -190,24 +190,10 @@ def apply_to_kit(P, kit_dir, windows_by_type, smod, dry_run=False, max_boxes=Non
 
 
 def lef_sizes(P, kit_dir, smod, tol=1e-3):
-    """{type: (w, h)} for the types whose kit abstract LEF SIZE differs from the plan outline_um (closed views carry their
-    own SIZE).  ot_place puts the master lower-left at the plan origin, so windows of a mirrored instance must be computed
-    about this size (HEAD-MYTILE-1115: hd_tile 708.48 vs 717.12 put every MY window 8.64 um off -> u042/u046 stacks)."""
-    out = {}
-    for tn, t in P.types.items():
-        f = Path(kit_dir) / "abstracts" / f"{smod[tn]}.lef"
-        pre = f.with_suffix(".lef.precut")
-        f = pre if pre.is_file() else f
-        if not f.is_file():
-            continue
-        m = re.search(r"\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;", f.read_text())
-        if not m:
-            continue
-        wh = (float(m.group(1)), float(m.group(2)))
-        w, h = t["outline_um"]
-        if abs(wh[0] - w) > tol or abs(wh[1] - h) > tol:
-            out[tn] = wh
-    return out
+    """{type: (w, h)} where the kit abstract LEF SIZE differs from the plan outline (die_trial.lef_sizes); place_lines puts
+    mirrored masters flush with the far outline edge, island_windows maps with the same offset."""
+    import die_trial as D
+    return D.lef_sizes(P, Path(kit_dir) / "abstracts", smod, tol)
 
 
 def run(plan, kit_dir, margin_um=0.25, dry_run=False, max_boxes=None):
