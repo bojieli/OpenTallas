@@ -10,6 +10,17 @@ if {[info exists ::env(OT_RESET_PAIR_FIXED)] && $::env(OT_RESET_PAIR_FIXED) eq "
   foreach n [split [read $ff_rf] "\n"] { if {$n ne ""} { dict set ff_reset_fixed $n 1 } }
   close $ff_rf
 }
+# Opt-in planned FT sites remain FIRM through DPL; every legacy slot still releases.
+proc ff_ft_keep_slot {nm} {
+  if {![info exists ::env(OT_FT_KEEP_FIRM)]} {return {}}
+  foreach slot $::env(OT_FT_KEEP_FIRM) {
+    if {![regexp {^[A-Za-z_][A-Za-z0-9_]*$} $slot]} {error "unsafe FT keep_firm slot name"}
+    set re [format {(^|[./])u_ft_%s_(o_[0-9]+|s[0-9]+)[./]} $slot]
+    if {[regexp $re $nm]} {return $slot}
+  }
+  return {}
+}
+set ff_ft_kept {}
 set fh [open $::env(RESULTS_DIR)/ot_face_flops.txt r]
 foreach ln [split [read $fh] "\n"] {
   if {$ln eq ""} continue
@@ -19,10 +30,24 @@ foreach ln [split [read $fh] "\n"] {
   # DIE-HEAD-76 11-06: kit_istations exact banks list names with the bus-bit escapes stripped; look up the escaped
   # DB name too, else those station flops stay FIRM on tap sites (DPL-0033, 75 overlaps in the hd_spn 1106 kit).
   if {$i eq "NULL" || $i eq ""} { set i [$ff_blk findInst [string map {"\[" "\\[" "\]" "\\]"} $ff_name]]; if {$i ne "NULL" && $i ne ""} { incr ff_esc } }
-  if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "FIRM"} { $i setPlacementStatus PLACED; incr ff_n }
+  if {$i ne "NULL" && $i ne "" && [$i getPlacementStatus] eq "FIRM"} {
+    set ff_ks [ff_ft_keep_slot [$i getName]]
+    if {$ff_ks ne "" && [string match *DFF* [[$i getMaster] getName]]} {
+      dict incr ff_ft_kept $ff_ks
+      continue
+    }
+    $i setPlacementStatus PLACED
+    incr ff_n
+  }
 }
 close $fh
 puts "OT_FACE_FLOPS released $ff_n pin registers for DPL ($ff_esc found by escaped name)"
+if {[info exists ::env(OT_FT_KEEP_FIRM)]} {
+  foreach slot $::env(OT_FT_KEEP_FIRM) {
+    if {![dict exists $ff_ft_kept $slot]} {error "FT keep_firm requested slot without FIRM DFFs: $slot"}
+  }
+  if {[dict size $ff_ft_kept]} {puts "OT_FT_KEEP_FIRM $ff_ft_kept"}
+}
 # HBM-GAPS-8 11-06 (OT_FF_CHAIN_PIN): release the face-chain BUF/INV cells too (empty list when off)
 set ff_cf $::env(RESULTS_DIR)/ot_face_chain.txt
 if {[file exists $ff_cf]} {
