@@ -158,6 +158,13 @@ def trees_of(cfg):
 
 def compare_budget(mod, hosts, src, seconds=240):
     """ot-src-refresh compare() with a wall budget -> (problems, diffs) or ([note], {})"""
+    import threading
+    if threading.current_thread() is not threading.main_thread():      # SIGALRM only works in the main thread; compare() has its own ssh timeouts
+        try:
+            return mod.compare(hosts, src)
+        except Exception as e:
+            return [f"compare {type(e).__name__}"], {}
+
     def _h(sig, frm):
         raise TimeoutError()
     old = signal.signal(signal.SIGALRM, _h)
@@ -194,13 +201,16 @@ def skew_section(cfg, rpy=ssh_rpy, blob=None, compare_mod=None, now=None):
         out.append("-\t-\t-\t0\tevery probed tree matches main on the closure")
     if compare_mod is not None:
         out.append("\t".join(["die", "tree", "cross_host_compare", "n", "modules"]))
-        done = set()
+        seen, todo = set(), []
         for die, tree in trees:
             hs = hosts.get(die) or []
-            if len(hs) < 2 or tree in done:
-                continue
-            done.add(tree)
-            pb, diffs = compare_budget(compare_mod, hs, tree)
+            if len(hs) >= 2 and tree not in seen:
+                seen.add(tree)
+                todo.append((die, tree, hs))
+        import concurrent.futures as cf
+        with cf.ThreadPoolExecutor(max(1, min(8, len(todo)))) as ex:           # trees are independent: compared in parallel, every one of them
+            res = list(ex.map(lambda x: compare_budget(compare_mod, x[2], x[1]), todo))
+        for (die, tree, hs), (pb, diffs) in zip(todo, res):
             hit = [r for r in diffs if r in set(files)]
             out.append("\t".join([die, tree, "; ".join(pb)[:120] or "ok", str(len(hit)), " ".join(hit[:20])]))
     return out

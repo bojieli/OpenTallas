@@ -727,14 +727,17 @@ def skew_report(trees, main_sha, read_main, rpy, hosts_of):
     -> [(die, host, tree, [rel differing from main])] only where something differs (a missing file counts)"""
     files = closure_files(read_main)
     want = {r: main_sha(r) for r in files}
-    rows = []
-    for die, tree in trees:
-        for h in hosts_of.get(die, []):
-            r = rpy(h, SHA_PY, {"tree": tree, "files": files}, timeout=180)
-            if not _ok(r):
-                rows.append((die, h, tree, ["<unreachable: " + str((r or {}).get("error"))[:80] + ">"]))
-                continue
-            diff = [f for f in files if r.get(f) != want[f]]
-            if diff:
-                rows.append((die, h, tree, diff))
-    return rows
+    jobs = [(die, h, tree) for die, tree in trees for h in hosts_of.get(die, [])]
+
+    def one(job):
+        die, h, tree = job
+        r = rpy(h, SHA_PY, {"tree": tree, "files": files}, timeout=180)
+        if not _ok(r):
+            return (die, h, tree, ["<unreachable: " + str((r or {}).get("error"))[:80] + ">"])
+        diff = [f for f in files if r.get(f) != want[f]]
+        return (die, h, tree, diff) if diff else None
+
+    # every (die, host, tree) probe is independent: one worker per host at a time keeps the sshd load flat (COORD 11-16: cover everything, no cap)
+    import concurrent.futures as cf
+    with cf.ThreadPoolExecutor(max(1, min(16, len(jobs)))) as ex:
+        return [x for x in ex.map(one, jobs) if x]
