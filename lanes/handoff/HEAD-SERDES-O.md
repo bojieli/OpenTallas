@@ -26,3 +26,11 @@ Goal: sign off hd_serdes (s81_head): DRC 0, TT setup >= -42 ps, FF non-port hold
 1. sd5: read CTS/GRT TT repair numbers (tt_setup_repair.log, keep decision), route DRC, then signoff.py (TT setup, FF hold, LEC).
 2. sd5 signed off -> RESULT PASS line naming head-serdes-fanout (releases the HOLDGEN hold).
 3. If sd5 TT still < -42: classes from the reloaded GRT DB (W/diag/classes.tcl pattern), next structural form.
+
+## 11-16 05:5x update
+- r288 APPROVED (branch fanout + DKREG). sd5 FAILED GRT-0116 (congestion 2) + CTS TT -199: sd5 lacked the wave item_env
+  (OT_CONS_KIT util 0.25, M9 ceiling, fanout 32, pma_rck secondary clock, M8 grant, PG track truth). diag W/diag5 (worst:
+  u_chn -> u_out cmem/bsrc long wires). 
+- sd6 = W/gen_sd6.sh (die_gen_env + item_env + PGCAP + TT repair + OT_GRT_ALLOW_CONGESTION=1), config equals sd2/sd3 form
+  plus main additions; running from synth on epyc10 (log intel2 ~/head-serdes-o-logs/sd6.otrun.log). After route: signoff,
+  then RESULT PASS head-serdes-fanout (HOLDGEN hold). If TT short: diag5/run.sh pattern on sd6 DBs.
