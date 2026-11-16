@@ -117,3 +117,10 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
   The new ot-gate-remote (reaper) is deployed on epyc2 and epyc9.
 - clksite-qc-snap @7b9953f2d73 MERGE-FAIL is a semantic conflict (TAP_PIN_SNAP default); the lane owns it.
 - The mirror sync died every cycle on the cores-s81 forward until the fix lands; lanes can push to the mirror directly.
+
+## CODEX takeover 2026-11-16 10:28 PST
+- Direct queue takeover; no owner checkout writes, no new lane/clone. Source gates run once via admitted mq-gate epyc9; logs intel2 mq1/tmp/rg/*-1116.out; full-SHA GREEN records in ~/merge-queue/gates.
+- Landed through main2259ce1358a: r313 count hosts; r314 KV tools272407d9f41 and HEAD DOREG67db0dbd; HEAD schema6a4646; QC packed-driver0551428; CONG advisory-only9961807; data_pack map-file322cf809; HCFE default-offa37b263; NOPROG advisory4877c82; current-source svc closure79ca679. Last confirmed full fleet sync main06c5e501a8fa at10:15; next sync after2259 train is automatic.
+- Ready source gates for root: final token9ffad1bf706cdc385808689239094d9eadef44b4 GREEN4/4; native modern-only507a77c7149f01028419b23386c31d446fe80190 GREEN26/26; clockreachcda5a7251117e78fdf815f49563fe707c69b52ff GREEN51/51. No own live gates as of10:28.
+- Immutable FAIL: nativeeb79c43046c33adb3938323e623e8a4370f8effa changed frozen legacy RUN_KIT bytes; corrected507 restores frozen literal/hash and changes modern runner only. Failed log retained native-eb79c43-1116.out. No unchanged rerun. Superseded tokendecfb gate GREEN but not for separate adoption afterfinal9ff.
+- Historical merge failures inspected against current needs: old tap-clear intent already present indirectly; no current QC/KV gate needs old tap-snap or default LAND_RESERVE; old capped START experiment not current. No speculative replay. Active CONG clone and its untracked t8/t28 review drafts stay intact.
