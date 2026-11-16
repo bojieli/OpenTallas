@@ -118,43 +118,36 @@ class Store:
         return sha
 
     def ingest(self, path):
-        """content of path -> blob (hardlink when same fs and already read-only, else copy) -> sha"""
+        """Copy source into CAS; only CAS-to-snapshot links may share inodes.
+
+        Published read-only sources require nlink=1. Detach legacy CAS aliases
+        without replacing the source or any already-running snapshot alias.
+        """
         st = os.stat(path)
         sha = self.file_sha(path, st)
         b = self.blob(sha)
-        if os.path.exists(b):
+        if os.path.exists(b) and not os.path.samestat(st, os.stat(b)):
             return sha, st.st_size
         os.makedirs(os.path.dirname(b), exist_ok=True)
         tmp = os.path.join(self.root, "tmp", f"{sha}.{os.getpid()}")
-        linked = False
-        if st.st_dev == self.dev and not (st.st_mode & 0o222):
-            try:
-                os.link(path, tmp)
-                linked = True
-            except OSError:
-                linked = False
-        if not linked:
-            shutil.copyfile(path, tmp)
-            if sha256_file(tmp) != sha:
-                os.unlink(tmp)
-                raise StoreError(f"content changed while copying {path}")
-            os.chmod(tmp, 0o444)
-            self.bytes_copied += st.st_size
-            ts = os.stat(tmp)
-            self.db.execute("insert or replace into ino values (?,?,?,?,?)",
-                            (ts.st_dev, ts.st_ino, ts.st_size, ts.st_mtime_ns, sha))
-        try:
-            os.rename(tmp, b) if not os.path.exists(b) else os.unlink(tmp)
-        except OSError:
-            if os.path.exists(tmp):
-                os.unlink(tmp)
+        shutil.copyfile(path, tmp)
+        if sha256_file(tmp) != sha:
+            os.unlink(tmp)
+            raise StoreError(f"content changed while copying {path}")
+        os.chmod(tmp, 0o444)
+        self.bytes_copied += st.st_size
+        ts = os.stat(tmp)
+        self.db.execute("insert or replace into ino values (?,?,?,?,?)",
+                        (ts.st_dev, ts.st_ino, ts.st_size, ts.st_mtime_ns, sha))
+        os.replace(tmp, b)
         self.files_new += 1
         return sha, st.st_size
 
     def linkable(self, path):
-        """a source the store can hardlink (no bytes): same fs, already read-only"""
+        """No copy needed only when an independent CAS blob already exists."""
         st = os.stat(path)
-        return st.st_dev == self.dev and not (st.st_mode & 0o222)
+        b = self.blob(self.file_sha(path, st))
+        return os.path.exists(b) and not os.path.samestat(st, os.stat(b))
 
     def put_bytes(self, data):
         sha = hashlib.sha256(data).hexdigest()
@@ -309,6 +302,22 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print, dry=False, m
     def under_src(p):
         return any(p == r or p.startswith(r + "/") for r in in_place)
     queue = [(dict(x), 0) for x in spec.get("inputs") or []]
+    # native_contract reads this table relative to the asbuilt base. A moved
+    # asbuilt needs its exact table in the mirrored source path, not a new JSON.
+    for inp in spec.get("inputs") or []:
+        if inp.get("role") != "asbuilt" or not os.path.isfile(inp["path"]):
+            continue
+        ab = jload(inp["path"])
+        table, base = ab.get("clock_landing_table"), ab.get("base")
+        if not table or not isinstance(base, str):
+            continue
+        moved = not os.path.isabs(base) and not under_src(os.path.normpath(inp["path"]))
+        base = os.path.realpath(base if os.path.isabs(base) else os.path.join(os.path.dirname(inp["path"]), base))
+        table = os.path.realpath(os.path.join(base, table))
+        if os.path.commonpath([base, table]) != base:
+            raise StoreError("KIT-STORE clock_landing_table must be inside asbuilt base")
+        queue.append(({"role": "clock_landing_table", "path": table, "kind": "file",
+                       "required": True, "deep": False, "copy_in_place": moved}, 0))
     # floor guard: copies (writable or foreign-fs sources) count against the host root floor when the store is on '/'
     root_dev = os.stat("/").st_dev
     on_root = os.stat(store.root).st_dev == root_dev
@@ -318,7 +327,9 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print, dry=False, m
         if p in seen:
             continue
         seen.add(p)
-        if under_src(p):
+        if under_src(p) and not inp.get("copy_in_place"):
+            if inp.get("role") == "clock_landing_table" and not os.path.isfile(p):
+                raise StoreError(f"KIT-STORE MISSING clock_landing_table {p}")
             try:
                 kept_in_place[p] = store.file_sha(p, os.stat(p)) if os.path.isfile(p) else "dir"
             except OSError:
@@ -534,8 +545,8 @@ VIEW_REF_MAX_BYTES = 600 << 20
 
 def view_refs(plan_path, typ, roots, store=None):
     """KIT-FIX-F follow-up (QC slw_su_l1 canary): gen reads, for each child view the plan type names (<view dir>/x.lef),
-    <view dir>/provenance.json and follows its absolute paths to the ORIGINAL signed kit (provenance.src/face_guard.json,
-    the netlist that names, the sign-off receipt).  Those paths sit in json inside the pinned src tree, are read at
+    <view dir>/provenance.json and follows signed receipt paths. Actual hard landing children without portable
+    evidence also need original face_guard synthesis inputs. Those paths sit inside pinned JSON and are read at
     their original place and so cannot be remapped; they must exist on the gen host.
     -> {present: {path: sha | 'dir'}, missing: [{path, by}]} for the views of ONE type (other types' views never block)."""
     out = {"present": {}, "missing": []}
@@ -543,6 +554,11 @@ def view_refs(plan_path, typ, roots, store=None):
         t = (jload(plan_path).get("partition_types") or {}).get(typ)
     except (OSError, ValueError):
         return out
+    # Only hard_landing.emit reads original synthesis evidence. Ordinary
+    # child views retain historical receipts without needing that netlist.
+    landing_lefs = {c.get("lef") for c in (t or {}).get("hard_cores", [])
+                    if (c.get("param_wrap") or {}).get("base") in
+                    ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas", "ot_dp_clk_landing")}
     lefs, todo = set(), [t]
     while todo:
         v = todo.pop()
@@ -578,13 +594,14 @@ def view_refs(plan_path, typ, roots, store=None):
         except (OSError, ValueError):
             continue
         refs = [r for r in scan_refs(pv) if os.path.normpath(r) != os.path.normpath(str(j.get("src") or "/"))]
-        if isinstance(j.get("src"), str) and j["src"].startswith("/"):
+        if (lef in landing_lefs and not os.path.isdir(os.path.join(vd, "landing_evidence"))
+                and isinstance(j.get("src"), str) and j["src"].startswith("/")):
             fg = os.path.join(j["src"], "face_guard.json")
             refs.append(fg)
             try:
                 n = jload(fg).get("netlist")
                 if isinstance(n, str) and n.startswith("/"):
-                    refs.append(n)
+                    refs.append(os.path.join(j["src"], n[6:]) if n.startswith("/work/") else n)
             except (OSError, ValueError, AttributeError):
                 pass
         for r in refs:
