@@ -2359,7 +2359,9 @@ def core_view_model(module, view_dir, corner, load_ff, part_delay_ps):
         meta["clock_latency_measured"] = json.loads(cj.read_text()).get("clock_latency_measured")
     if prov.exists():
         p = json.loads(prov.read_text())
-        k = p.get("kit", {})
+        # An explicit export of the signed final DEF/LEF records the routed
+        # interface while retaining the old requested kit contract as history.
+        k = p.get("final_physical") or p.get("kit", {})
         meta.update(verdict=p.get("verdict"), pins_sha256=k.get("pins_sha256"), pins_file=k.get("pins_file"),
                     pins_canon_sha256=k.get("pins_canon_sha256"), outline_um=k.get("outline_um"))
     meta.update(view_dir=str(vd), module=module)

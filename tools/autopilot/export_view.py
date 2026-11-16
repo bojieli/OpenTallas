@@ -113,7 +113,7 @@ def pin_access(lef):
         sys.path.remove(str(HERE.parent / "die_plan"))
 
 
-def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None, clock_witness_dir=None):
+def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, flow_tag=None, note=None, clock_witness_dir=None, final_physical_contract=False):
     kit = os.path.realpath(kit)
     sdoc, so = so_record(signoff)
     sdir = os.path.dirname(os.path.realpath(signoff))
@@ -174,11 +174,33 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
         prov["export"]["pin_access"] = gates["pin_access"] = pin_access(lef_src)
     if not mod:
         raise SystemExit("no module found (kit freeze/core record or a single base LEF)")
+    physical = None
+    if final_physical_contract:
+        from final_physical_contract import derive
+        if (Path(out_root) / mod / "provenance.json").exists():
+            raise ValueError("final physical contract needs a NEW view version; preserve prior registration")
+        if not lef_src:
+            raise ValueError("final physical contract requires the paired LEF")
+        physical = derive(Path(base) / "6_final.def", lef_src, mod)
     vd = Path(out_root) / mod
     vd.mkdir(parents=True, exist_ok=True)
     for rel, src in sorted(view["files"].items()):
         (vd / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, vd / rel)
+    if physical is not None:
+        # Preserve the requested contract byte-for-byte. The new contract comes
+        # only from the signed final geometry, cross-checked against its LEF.
+        if (vd / "pins.json").exists():
+            shutil.copy2(vd / "pins.json", vd / "requested_pins.json")
+        pins_out = vd / "pins.json"
+        pins_out.write_text(json.dumps(physical, indent=1) + "\n")
+        prov["final_physical"] = dict(schema=physical["schema"], module=mod,
+                                     outline_um=physical["outline_um"], pins_file="pins.json",
+                                     pins_sha256=sha256(pins_out), sources=physical["sources"],
+                                     basis=physical["basis"])
+        prov["export"]["files_sha256"]["pins.json"] = sha256(pins_out)
+        if (vd / "requested_pins.json").exists():
+            prov["export"]["files_sha256"]["requested_pins.json"] = sha256(vd / "requested_pins.json")
     if view.get("core"):
         (vd / f"{mod}.core.json").write_text(json.dumps(view["core"], indent=1))
     (vd / "provenance.json").write_text(json.dumps(prov, indent=1))
@@ -214,10 +236,12 @@ def main(argv=None):
     ap.add_argument("--src-commit")
     ap.add_argument("--flow-tag")
     ap.add_argument("--note")
+    ap.add_argument("--final-physical-contract", action="store_true",
+                    help="NEW view version: derive routed pins/outline from final DEF and paired LEF, retain requested contract")
     ap.add_argument("--clock-witness-dir", type=Path,
                     help="retain an exact separately measured native clock witness; copy only, no STA")
     a = ap.parse_args(argv)
-    res = export(a.kit, a.signoff, a.out, a.die, a.base, a.lec, a.src_commit, a.flow_tag, a.note, a.clock_witness_dir)
+    res = export(a.kit, a.signoff, a.out, a.die, a.base, a.lec, a.src_commit, a.flow_tag, a.note, a.clock_witness_dir, a.final_physical_contract)
     print(json.dumps(res))
     if a.clock_witness_dir and (res.get("child_clock_witness") or {}).get("status") != "RETAINED":
         return 2
