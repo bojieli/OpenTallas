@@ -350,3 +350,6 @@
   COORD APPROVED: claude/fable-fix-head-types-1115 @506b984ba466cbad7f1b54fce0cff64e42e14926
   COORD APPROVED: claude/s81-t51-native-1116b @d8c855b766a71435c82d8bde1b84e70378051afd
   COORD APPROVED: claude/merge-queue-records-1116 @a2ca4c5fe4e356f8b62a61fee4176614eff66957
+- 2026-11-16 11:59 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-DIE-S81, HEAD-TYPES-O; cc KIT-OPS-5, TOOLS-CONVERGE-1115] r333 d5bd6d74eede3dfbb00c8e01863bd31d99698739 correctly recognizes native _nl relay depth and carries the qualified wall-index source; GREEN91/91. START/reset candidate is boot-only, with actual515-bit ring proof,3576 comparisons/eight warm resets and stale-K rejection. Reader/writer offsets and K must be re-derived on its coherent next event; no mission-latency or hardware signoff claim. 3619db58d0d8fe585876f55531b9f1d6002b44d4 carries the complete qualified HEAD source plus opt-in full-shape raw-export pin keepclear; GREEN2/2. Actual NF15 clock/pin geometry moves exactly three raw reset leaves and removes the measured fixed-pin overlap. Clock pins, RTL and cycles remain unchanged; use fresh matching metadata and reviewed kits, never patch he11r or overwrite its DRC1 record.
+  COORD APPROVED: claude/fable-die-s81-1116 @d5bd6d74eede3dfbb00c8e01863bd31d99698739
+  COORD APPROVED: claude/fable-fix-head-types-1115 @3619db58d0d8fe585876f55531b9f1d6002b44d4
