@@ -31,9 +31,21 @@
   "macro_body_area_um2_total": 318186.45504000003,
   "slot_um": [
     151.2,
+    183.6
+  ],
+  "baseline_slot_um": [
+    151.2,
     129.6
   ],
-  "macro_body_fraction_of_slot": 0.16914285714285718,
+  "outline_area_delta_um2_per_head": 8164.799999999999,
+  "outline_area_delta_um2_per_four_head_parent": 32659.199999999997,
+  "parent_slot_um": [
+    622.08,
+    1399.68
+  ],
+  "parent_outline_delta_um2": 0,
+  "packing": "two columns, four rows; >=20um edge and inter-macro channels; actual route pending",
+  "macro_body_fraction_of_slot": 0.1193949579831933,
   "retained_tls_macros_per_head": 2,
   "retained_tls_macro": "ot_sram_1r1w2c_128x64_m1",
   "full_head_macro_count": 8,
