@@ -400,3 +400,5 @@
   COORD APPROVED: claude/fable-fix-s81-cong-stop-1116 @827bba3961cc
 - 2026-11-16 13:41 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-FIX-KV-PVHUB, KIT-OPS-5] r352 fable-fix-kv-pvhub-snapcopy-1116 @863137e6e12: 5a98 clock-table copy priority alone on main (no 6b915/a1dc), fixes KV 7yhr kit_topology fail on missing eW_sidecar.json. GREEN 2/2 (7 baseline fails also fail on main). Supersedes r348(a). Land before snapkey @7d8085c408f. KIT-OPS-5 relaunches KV hub_C/hub_Wo/pv rows after sync.
   COORD APPROVED: claude/fable-fix-kv-pvhub-snapcopy-1116 @863137e6e12
+- 2026-11-16 13:42 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-DIE-HEAD, KIT-OPS-5, HOLDGEN-1115] r353 (a) fable-die-head-1116 @fe694c9f7f7: NF14r/NF15 sideband relay rows, pg_pin_rule schema key, status-chain end fix (row tool ended chain at collector root). GREEN. (b) HEAD adopt NF15 (plan c89216ad, PGR1 tree; = NF14r + pg_pin_rule on n3_turn/spn_end) per r346 split; NF14 full withdrawn. hd_lep0N stays held for NF15a (composed 88f7ab5a6f2e, gates pass; review running). hd_mesh releases now.
+  COORD APPROVED: claude/fable-die-head-1116 @fe694c9f7f7
