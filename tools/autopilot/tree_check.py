@@ -63,7 +63,7 @@ def launch(root, ident, checker, main_sha, links_only=False, launcher=None):
     with (folder / "launch.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         old = read(root, ident) or {}
-        if old.get("running") or (old.get("full_ok") and not links_only):
+        if old.get("running") or (old.get("state") == "ok" and old.get("full_ok") and not links_only):
             return old
         stamp = str(time.time_ns())
         unit = "ot-treecheck-" + folder.name[:20] + "-" + stamp[-10:]
@@ -136,6 +136,7 @@ def worker(specfile):
     result = dict(prior, identity=ident, running=False, unit=spec["unit"], attempt=spec["attempt"],
                   t=now, state="bad" if rc else "ok", details=details)
     if not rc:
+        result.pop("why", None)  # failed attempt evidence remains in its immutable *.result.json
         result["links_t"] = now
         if not spec["links_only"]:
             result.update(full_ok=True, verified_t=now, main_sha=spec.get("main_sha", ""))
