@@ -298,7 +298,7 @@ def eng_ver_profile(die, sl):
     ot_s81sl_leaf u_cst_ver delays ve partial/add response, valid and fault
     together. CS_VE_D (the request direction) is a separate parameter.
     """
-    params = die.inst[sl].get('params', '')
+    params = die.slices()[sl].get('params', '')
     matches = re.findall(r"\.LF_CS_VER_D\s*\(\s*(20\s*'h[0-9a-fA-F_]+|0)\s*\)", params)
     if '.LF_CS_VER_D' in params and len(matches) != 1:
         raise ValueError('selected LF_CS_VER_D needs one explicit 20-bit hex literal: ' + sl)

@@ -8,7 +8,7 @@ import lower_vs as V
 
 class EngVerProfileTest(unittest.TestCase):
     def compile(self, params):
-        die=types.SimpleNamespace(inst={'s_0N':dict(params=params)})
+        die=types.SimpleNamespace(slices=lambda:{'s_0N':dict(params=params)})
         with tempfile.TemporaryDirectory() as t:
             root=Path(t)
             rowmap=root/'results/arch/s81_dv_1016/eng/kv_rowmap.json'
