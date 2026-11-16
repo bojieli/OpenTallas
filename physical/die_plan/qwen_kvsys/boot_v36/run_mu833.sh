@@ -15,6 +15,8 @@ H=$(cd "$(dirname "$0")" && pwd); R=$(cd "$H/../../../.." && pwd); cd "$R"
 task_head_prepare_edges=${OT_KV_HEAD_PREP_EDGES:-}
 task_compute_record_txd=${OT_KV_COMPUTE_RECORD_TXD:-}
 task_cal_ofs=${OT_KV_CAL_OFS:-}
+# The selected source keeps its actual transport ABI; RoPE does not imply OVL.
+task_rope_ovl=${OT_KV_ROPE_OVL:-0}
 AS=$O/asbuilt_rtl6; mkdir -p "$AS"
 cp "$H/asbuilt_rtl6/kv_flags.env" "$H/asbuilt_rtl6/SOURCE_COMMIT" "$AS/"
 for f in "$H"/asbuilt_rtl6/*.json.gz; do zcat "$f" > "$AS/$(basename "${f%.gz}")"; done
@@ -35,6 +37,7 @@ echo "ZB_ADD ${OT_KV_ASTK_ZB_ADD:-0}"
 set -a; . "$AS/kv_flags.env"; set +a
 [ -z "$task_compute_record_txd" ] || export OT_KV_COMPUTE_RECORD_TXD=$task_compute_record_txd
 [ -z "$task_cal_ofs" ] || export OT_KV_CAL_OFS=$task_cal_ofs
+export OT_KV_ROPE_OVL=$task_rope_ovl
 export OT_KV_RETIRE_SUCCESSOR=$AS/health_successor.json OT_KV_RETIRE_LOGICAL=1 PYTHONDONTWRITEBYTECODE=1
 PV_ARGS=(); [ -z "${OT_KV_PV_RESULT_CALENDAR:-}" ] || PV_ARGS=(--pv-result-calendar "$OT_KV_PV_RESULT_CALENDAR")
 # DIE-KV-97 11-09: the KV PC core split (DIE-KV-66 RF-KV3, plan_of_record kv67_1104) names its INNER rows by the PCC/PCF halves;
@@ -49,7 +52,7 @@ pair_image() {   # $1 = attention-service pad
     bash tools/qwen_split/d2d_cal_image_production.sh "$O/img_bnd" > "$O/img.log" 2>&1
 }
 pair_image "${OT_KV_ATTN_SERVICE_PAD:-0}"
-export OT_KV_EMB_WIN=$EMB OT_KV_ROPE_OVL=1 OT_KV_HEAD_PREP_EDGES=$HP OT_KV_CONTROLLER_CORE=1
+export OT_KV_EMB_WIN=$EMB OT_KV_ROPE=1 OT_KV_ROPE_OVL=$task_rope_ovl OT_KV_HEAD_PREP_EDGES=$HP OT_KV_CONTROLLER_CORE=1
 # DIE-KV-18: the static RESULT slot follows the attention service need of these ages (worst context, one pad for every
 # layer; kv_static_programme.service_slot_pad).  An explicit OT_KV_ATTN_SERVICE_PAD is kept as given; pad 0 = unchanged image.
 if [ -z "${OT_KV_ATTN_SERVICE_PAD:-}" ]; then
