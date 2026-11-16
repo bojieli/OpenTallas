@@ -4,9 +4,13 @@
 // context_valid and stripped local_ring; this block never invents admission.
 // The physical and HBC fault paths return a STATUS frame to the controller.
 // An overlapping arrival is a schedule fault, never a stall or hidden drop.
-module ot_s81hd_host_frame_mux #(parameter integer MUT=0)(
+module ot_s81hd_host_frame_mux #(parameter integer MUT=0,parameter integer CS_COPIES=0)(
  input wire ck,rst_n,context_valid,
  input wire host0_v,host1_v,input wire[552:0]host0_d,host1_d,
+ // HEAD-TYPES-O 11-16 (hw3 routed TT -80.84: l1rx_d[552] -> cs decode -> BUFx2 64 loads -> ctl_rx_d mux): CS_COPIES>0 takes
+ // the cs decode as CS_COPIES registered copies computed by the parent one cycle early (cycle-exact with the internal
+ // decode); copy g selects ctl_rx_d bits [64g+63:64g].  CS_COPIES=0 keeps the internal decode (host1_cs_q unused).
+ input wire[(CS_COPIES>0?CS_COPIES:1)-1:0]host1_cs_q,
  input wire[1103:0]local_ring,input wire[16:0]source_fault,
  input wire ctl_v,input wire[552:0]ctl_d,
  output wire[1103:0]from_prev,
@@ -18,7 +22,7 @@ module ot_s81hd_host_frame_mux #(parameter integer MUT=0)(
  assign from_prev={571'd0,host0_d[527:16],8'd0,4'd0,5'd1,3'd6,hf};
  wire fw_record=local_ring[0]&&local_ring[3:1]==6;
  wire fw=fw_record&&context_valid;
- wire cs=host1_v&&host1_d[552]&&host1_d[3:0]==6;
+ wire cs=(CS_COPIES>0)?host1_cs_q[0]:(host1_v&&host1_d[552]&&host1_d[3:0]==6);
  wire cfg=cs&&(context_valid||MUT==1);
  wire result=ctl_v&&ctl_d[552]&&ctl_d[3:0]==9;
  wire status=ctl_v&&ctl_d[552]&&ctl_d[3:0]==8;
@@ -29,7 +33,15 @@ module ot_s81hd_host_frame_mux #(parameter integer MUT=0)(
  wire[552:0]forward_frame={1'b1,24'd0,local_ring[532:21],8'd0,2'd0,2'd0,4'd7} ^ (MUT==3 ? (553'd1<<527) : 553'd0);
  wire[552:0]fault_frame={1'b1,519'd0,fault,12'd0,4'd8};
  assign ctl_rx_v=rx_request&&rx_gap==0;
- assign ctl_rx_d=fw?forward_frame:cfg?host1_d:fault_frame;
+ generate if(CS_COPIES>0)begin:g_csq
+  genvar gi;
+  for(gi=0;gi<553;gi=gi+1)begin:g_b
+   wire cfg_g=host1_cs_q[(gi/64)<CS_COPIES?(gi/64):CS_COPIES-1]&&(context_valid||MUT==1);
+   assign ctl_rx_d[gi]=fw?forward_frame[gi]:cfg_g?host1_d[gi]:fault_frame[gi];
+  end
+ end else begin:g_csi
+  assign ctl_rx_d=fw?forward_frame:cfg?host1_d:fault_frame;
+ end endgenerate
  assign lane_tx_v={status,result};
  assign lane_tx_d={ctl_d,ctl_d};
  wire[16:0]events=source_fault|{

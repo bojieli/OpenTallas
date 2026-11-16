@@ -50,6 +50,12 @@ module ot_s81hd_host_w_core #(
  always@(posedge ck or negedge rst_n)if(!rst_n)begin l1rx_v<=0;l1rx_f<=0;end
   else begin l1rx_v<=l1_rx_i[553];l1rx_f<=(SPLIT_MUT==4)?4'd0:l1_rx_i[557:554];end
  always@(posedge ck)l1rx_d<=l1_rx_i[552:0];
+ // HEAD-TYPES-O 11-16: cs decode of u_mux (host1_v && host1_d[552] && host1_d[3:0]==6) registered here from the same
+ // inputs as l1rx_v / l1rx_d, 9 copies (one per 64-bit group of ctl_rx_d), reset like l1rx_v: cycle-exact (SPLIT_MUT 0).
+ localparam integer CS_COPIES=(SPLIT_MUT==0)?9:0;
+ (* keep="true" *)reg[8:0]l1cs_q;
+ always@(posedge ck or negedge rst_n)if(!rst_n)l1cs_q<=9'd0;
+  else l1cs_q<={9{l1_rx_i[553]&&l1_rx_i[552]&&l1_rx_i[3:0]==4'd6}};
  wire lv1=(SPLIT_MUT==1)?l1_rx_i[553]:l1rx_v;
  wire[552:0]ld1=(SPLIT_MUT==1)?l1_rx_i[552:0]:(SPLIT_MUT==2)?{l1rx_d[552:18],l1rx_d[16],l1rx_d[17],l1rx_d[15:0]}:l1rx_d;
  wire[3:0]lf1=l1rx_f;
@@ -103,7 +109,7 @@ module ot_s81hd_host_w_core #(
   (|return_fault),(|hbc_stage_fault),(|hbc_fault),crtxf,crxf,
   3'd0,lf1,lf0};
  wire[16:0]host_fault;
- ot_s81hd_host_frame_mux #(.MUT(MUT))u_mux(.ck(ck),.rst_n(rst_n),.context_valid(ctxv),
+ ot_s81hd_host_frame_mux #(.MUT(MUT),.CS_COPIES(CS_COPIES))u_mux(.ck(ck),.rst_n(rst_n),.context_valid(ctxv),.host1_cs_q(l1cs_q),
   .host0_v(lv[0]),.host1_v(lv[1]),.host0_d(ld[552:0]),.host1_d(ld[1105:553]),
   .local_ring(to_local),.source_fault(source_fault),.ctl_v(cv),.ctl_d(cd),
   .from_prev(from_prev),.ctl_rx_v(rxv_m),.ctl_rx_d(rxframe_m),
