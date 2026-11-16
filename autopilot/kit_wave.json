@@ -10511,6 +10511,13 @@
             "dir": "/srv/opentallas-scratch2/claude/type-gunit-l1f/signed_view_1116/dsdv_gunit_l1f_bf",
             "job": "SIGNED 11-16 gunit view complete problems[]; pins canon sha256 9f39dae591e94282cc58abfa5653128b2cd677bfeb21b34ca38dd78785a1ae21; root approved replacing provisional source, no rebuild"
           }
+        ],
+        "s81p_slice_station__t51_ot_s81_station_t51_native_e": [
+          {
+            "host": "epyc8",
+            "dir": "/srv/opentallas-scratch2/claude/ne-signoff-r1116/view_hold5_m7/s81p_slice_station__t51_ot_s81_station_t51_native_e",
+            "job": "SIGNED native_e hold5_m7; owner gates view_complete true problems[]; pins0d5391f6b0209f0b868140b71bd4a1d86fb479d645eda91913037fd5da671605; actual source b3cbd20de41 frozen, recipe main60d74d58990; signoff1597eb8f079abdd7c895685388214d6f763c04052a42b8f19a3d21a8d6444b42. Provider availability only, parent boundary/physical holds retained."
+          }
         ]
       },
       "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
