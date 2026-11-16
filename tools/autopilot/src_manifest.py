@@ -24,6 +24,7 @@ import fnmatch
 import hashlib
 import json
 import os
+from pathlib import Path
 import shlex
 import shutil
 import stat
@@ -160,6 +161,67 @@ def verify(root, expect="", ro=False, full=False):
             pass
     return errs, info
 
+
+
+def cached_receipt(root, expect=""):
+    """Reuse a completed content verification only while its immutable metadata still matches.
+
+    This never hashes source payload again. The existing verify cache is written
+    only after error-free content verification; a missing/stale cache is a miss,
+    and the caller must run the normal verifier. Read-only and inode checks are
+    current, not assumed from that earlier verification.
+    """
+    root = os.path.realpath(root)
+    m = load_manifest(root)
+    if m is None:
+        return [f"SRC_MANIFEST CACHE MISS {root}: no manifest"], {}
+    try:
+        h = manifest_hash(m)
+    except (KeyError, TypeError, ValueError) as e:
+        return [f"SRC_MANIFEST CACHE MISS {root}: malformed manifest ({e})"], {}
+    errs = []
+    if h != m.get("manifest_hash"):
+        errs.append("SRC_MANIFEST CACHE MISS manifest content does not match its hash")
+    if expect and h != expect:
+        errs.append(f"SRC_MANIFEST CACHE MISS hash {h} is not expected {expect}")
+    try:
+        if Path(root, HASHFILE).read_text().strip() != h:
+            errs.append("SRC_MANIFEST CACHE MISS published hash file differs from manifest")
+    except OSError as e:
+        errs.append(f"SRC_MANIFEST CACHE MISS hash file: {e}")
+    cf = os.path.join(CACHE_DIR, hashlib.md5(root.encode()).hexdigest() + ".json")
+    try:
+        cb = Path(cf).read_bytes()
+        cached = json.loads(cb)
+        cache_mtime = os.stat(cf).st_mtime_ns
+    except (OSError, ValueError) as e:
+        return errs + [f"SRC_MANIFEST CACHE MISS {cf}: {e}"], {}
+    sig = signature(root)
+    if cached.get("hash") != h or cached.get("sig") != sig:
+        errs.append("SRC_MANIFEST CACHE MISS completed verification hash/signature is stale")
+    have = walk_tree(root)
+    want = m.get("files") or {}
+    if set(have) != set(want):
+        errs.append("SRC_MANIFEST CACHE MISS current inventory differs from verified manifest")
+    paths = [root, os.path.join(root, MANIFEST), os.path.join(root, HASHFILE)] + list(have.values())
+    for dp, dn, _fn in os.walk(root):
+        dn[:] = [d for d in dn if d not in SKIP_DIRS]
+        paths.extend(os.path.join(dp, d) for d in dn)
+    for q in paths:
+        try:
+            st = os.lstat(q)
+            if not stat.S_ISLNK(st.st_mode) and st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH):
+                errs.append(f"SRC_MANIFEST CACHE MISS writable {os.path.relpath(q, root)}")
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1:
+                errs.append(f"SRC_MANIFEST CACHE MISS shared inode {os.path.relpath(q, root)} nlink={st.st_nlink}")
+        except OSError as e:
+            errs.append(f"SRC_MANIFEST CACHE MISS stat {q}: {e}")
+    info = dict(schema="opentallas.src_manifest.cached_receipt.v1", verdict="PASS" if not errs else "MISS",
+                source=root, manifest_hash=h, main_sha=m.get("main_sha"), files=len(want),
+                signature=sig, cache_path=cf, cache_mtime_ns=cache_mtime,
+                cache_sha256=hashlib.sha256(cb).hexdigest(),
+                basis="completed content verification cache plus current read-only unshared inventory")
+    return errs, info
 
 def shared_inodes(root, limit=0):
     """stat-only scan (no hashing: cheap enough for every tick): [(relpath, nlink)] of every regular file with nlink > 1, i.e. a file
@@ -521,6 +583,9 @@ def main(argv=None):
     v.add_argument("--expect", default="")
     v.add_argument("--ro", action="store_true")
     v.add_argument("--full", action="store_true")
+    cr = sp.add_parser("cached-receipt", help="reuse an exact completed verification plus current immutable metadata, no payload rehash")
+    cr.add_argument("tree")
+    cr.add_argument("--expect", default="")
     dm = sp.add_parser("delta-make", help="pack of the paths that differ between the tree's main sha and --sha (small)")
     dm.add_argument("tree")
     dm.add_argument("--repo", required=True)
@@ -539,6 +604,7 @@ def main(argv=None):
     h.add_argument("--hosts", required=True)
     h.add_argument("--expect", default="")
     h.add_argument("--links-only", action="store_true", help="per host: stat-only shared-inode check instead of the full hash verify")
+    h.add_argument("--cached-receipts", action="store_true", help="per host: exact completed verification receipt, fail on cache miss")
     r = sp.add_parser("replicate")
     r.add_argument("tree")
     r.add_argument("--hosts", required=True)
@@ -560,6 +626,12 @@ def main(argv=None):
             report(errs)
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
+    elif a.cmd == "cached-receipt":
+        errs, info = cached_receipt(a.tree, a.expect)
+        if errs:
+            report(errs)
+            return 1
+        print(json.dumps(info, sort_keys=True))
     elif a.cmd == "delta-make":
         n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out, a.drop_overlay)
         print(f"SRC_MANIFEST DELTA {a.out}: {n} changed/added, {dl} deleted")
@@ -575,6 +647,16 @@ def main(argv=None):
     elif a.cmd == "hosts":
         bad = 0
         for host in a.hosts.split(","):
+            if a.cached_receipts:
+                script = open(os.path.abspath(__file__)).read()
+                cmd = f"python3 -I -c {shlex.quote(script)} cached-receipt {shlex.quote(os.path.abspath(a.tree))}"
+                if a.expect:
+                    cmd += " --expect " + shlex.quote(a.expect)
+                p = subprocess.run(SSH + [host, cmd], capture_output=True, text=True)
+                txt = (p.stdout + p.stderr).strip()
+                print(f"{host}: " + (txt.splitlines()[-1] if p.returncode == 0 and txt else txt[:2000]))
+                bad |= bool(p.returncode)
+                continue
             if a.links_only:
                 script = open(os.path.abspath(__file__)).read()
                 p = subprocess.run(SSH + [host, f"python3 -I -c {shlex.quote(script)} links {shlex.quote(os.path.abspath(a.tree))}"],

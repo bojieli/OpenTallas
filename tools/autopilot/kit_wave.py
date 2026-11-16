@@ -423,11 +423,15 @@ def tree_gate(AP, cfg):
     {"tree": path, "manifest_hash": ..., "smoke": "PASS", "die_gen_env": {...}, "config": {die keys, dicts merged}}.
     tree_fn(die, tree): the marker names the tree with smoke PASS, and on every gen host of the die (die.gen_hosts, else cfg hosts,
     minus retired_hosts) <tree>/.src-manifest.sha256 equals the marker hash (cheap).  Then, once per tree, `src_manifest hosts --expect
-    <hash>` verifies the files on all those hosts in a background thread (the answer stays False until it passes); afterwards
-    `hosts --links-only` rechecks every 600 s (a tree with shared inodes turns False).  A failed check is retried after 60 / 300 s."""
+    <hash>` verifies the files on all those hosts in an independent user unit (the answer stays False until it passes).
+    Completed publication receipts may supply the existing content verification, with current immutable metadata rechecked.
+    Results survive oneshot tick exit; `hosts --links-only` rechecks every 600 s. Failed checks keep their attempt evidence."""
     import hold_records as _HR
+    import tree_check as _TC
     retired = cfg.get("retired_hosts") or []
     hub = AP.HUB_NAME
+    check_root = Path(getattr(AP, "AP_DIR", cfg.get("_ap_dir") or os.path.expanduser("~/.local/state/opentallas"))) / "tree_checks"
+    checker = os.path.join(os.path.dirname(os.path.abspath(__file__)), "src_manifest.py")
 
     def hosts_of(die):
         d = (cfg.get("dies") or {}).get(die) or {}
@@ -474,6 +478,11 @@ def tree_gate(AP, cfg):
             return False, ""
 
     def run_bg(ent, hosts, tree, want, links_only):
+        if not _TREE_SYNC:
+            # A separate user unit survives this oneshot tick's cgroup. Its
+            # pinned checker and durable result are shared by subsequent ticks.
+            ent.update(_TC.launch(check_root, ent["_identity"], checker, ent.get("main_sha", ""), links_only))
+            return
         def job():
             rc, txt = _src_manifest_hosts(hosts, tree, want, links_only)
             if rc != 0 and links_only and "unrecognized arguments" in txt:
@@ -486,11 +495,7 @@ def tree_gate(AP, cfg):
                 AP.log(f"KIT-WAVE TREE-CHECK {'links' if links_only else 'verify'} FAILED {tree}: {txt[-200:]}")
             ent["running"] = False
         ent["running"] = True
-        if _TREE_SYNC:
-            job()
-        else:
-            import threading
-            threading.Thread(target=job, daemon=True).start()
+        job()                                                 # deterministic inline mode used by unit tests
 
     def ready(die, tree):
         m = marker(die)
@@ -499,13 +504,24 @@ def tree_gate(AP, cfg):
         if not m or m.get("tree") != tree or str(m.get("smoke") or "").upper() != "PASS" or not want or not hosts:
             return False
         key, now = (die, tree, want, tuple(hosts)), time.time()
+        ident = _TC.identity(die, tree, want, hosts, checker)
+        if not _TREE_SYNC:
+            saved = _TC.read(check_root, ident)
+            if saved:
+                _TREE_CACHE[key] = saved
         ent = _TREE_CACHE.get(key)
+        if ent is not None:
+            ent["_identity"] = ident
         if ent is not None and ent.get("running"):
             return ent.get("state") == "ok"
         if ent is not None and ent.get("state") == "ok":
             if now - ent.get("links_t", 0) > 600:
                 run_bg(ent, hosts, tree, want, True)             # later ticks: stat-only shared-inode check
             return ent.get("state") == "ok"
+        if ent is not None and ent.get("full_ok") and ent.get("state") == "bad":
+            if now - ent.get("t", 0) >= 300:
+                run_bg(ent, hosts, tree, want, True)             # retry the failed stat check, not the completed content hash
+            return False
         if ent is not None and now - ent.get("t", 0) < (300 if ent.get("state") == "bad" else 60):
             return False
         from concurrent.futures import ThreadPoolExecutor
@@ -514,7 +530,7 @@ def tree_gate(AP, cfg):
         have = all(ok for ok, _main in probes)
         mains = {main for ok, main in probes if ok and main}
         ent = _TREE_CACHE[key] = {"t": now, "state": "cheap" if have else "absent", "running": False,
-                                  "main_sha": next(iter(mains)) if len(mains) == 1 else ""}
+                                  "main_sha": next(iter(mains)) if len(mains) == 1 else "", "_identity": ident}
         if have:
             run_bg(ent, hosts, tree, want, False)                # switch time: src_manifest hosts --expect <hash>
         return ent.get("state") == "ok"
