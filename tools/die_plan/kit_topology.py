@@ -42,8 +42,16 @@ def native_contract(raw,asbuilt=None,plan_path=None):
             if context is None:raise ValueError('native clock table requires explicit full plan context')
             base=Path(context).parent/base
         path=Path(ab['clock_landing_table'])
-        if not path.is_absolute():path=base/path
+        absolute=path.is_absolute()
+        if not absolute:path=base/path
         base,path=base.resolve(),path.resolve()
+        if absolute and not path.is_relative_to(base):
+            # QC-PINACCESS-O 11-16: a kit snapshot (kit-store/snaps/<sha>/root/<live path>) moves the base but not an
+            # absolute live table path. Re-root the table under the ancestor of base that mirrors the live tree; it is
+            # accepted only when that copy exists inside base, so tables outside the native base stay refused.
+            for anc in base.parents:
+                cand=(anc/path.relative_to(path.anchor)).resolve()
+                if cand.is_relative_to(base) and cand.is_file():path=cand;break
         try:path.relative_to(base)
         except ValueError as error:raise ValueError('native clock table must resolve inside its declared native base') from error
         payload=path.read_bytes();table=json.loads(payload);table_sha=hashlib.sha256(payload).hexdigest()

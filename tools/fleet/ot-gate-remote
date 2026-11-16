@@ -6,8 +6,9 @@
 set -u
 cd /
 B=/srv/opentallas-scratch2/claude/mq-gate
-M=intel2:/srv/opentallas-scratch2/git/OpenTallas.git
-[ "$(hostname -s)" = intel2 ] && M=/srv/opentallas-scratch2/git/OpenTallas.git
+# the mirror is reached by the hub's IP (fleet hosts and localhost do not resolve the alias "intel2": the clone failed there, exit 3)
+M=ubuntu@185.8.106.226:/srv/opentallas-scratch2/git/OpenTallas.git
+[ "$(hostname -s)" = tolerant-swine ] && M=/srv/opentallas-scratch2/git/OpenTallas.git
 T=${2:-16}
 mkdir -p $B
 if [ ! -x $B/venv/bin/python ]; then
