@@ -9,11 +9,14 @@ Only typed filler instances whose connected pins are POWER/GROUND are removed.
 Nonfiller placements, ports, signal/clock connectivity and exact wire opcode/data
 streams must match before/after. Require the successful manifest and output hash
 before adopting a derived seed. Ordinary refill, PG, timing, clock, DRC/DRV and
-routed equivalence gates remain required. No production path calls this by default.
+routed equivalence gates remain required. No production path calls this by default. --allow-empty writes a verified identity
+seed when the final source already contains no fillers; the default still refuses it.
 """
 import collections,hashlib,json,resource,struct,sys,time
 from pathlib import Path
 import odb
+if sys.argv[4:] not in ([], ["--allow-empty"]):raise RuntimeError("expected optional --allow-empty only")
+allow_empty=sys.argv[4:]==["--allow-empty"]
 source,dest,manifest=map(Path,sys.argv[1:4])
 if len({source.resolve(),dest.resolve(),manifest.resolve()})!=3 or dest.exists() or manifest.exists():raise RuntimeError('refuse input/output alias or existing output')
 if not hasattr(odb.dbMaster,'isFiller'):raise RuntimeError('typed filler API required')
@@ -55,7 +58,7 @@ def fingerprint(block):
   r=(n.getName(),sig,tuple(pins),tuple(bterms),length,wh.hexdigest());nets.append(r)
   if sig=='CLOCK':clocks.append(r)
  return {'nonfiller_instances':len(insts),'nonfiller_placement_sha256':digest(insts),'ports':len(ports),'ports_sha256':digest(ports),'nonpg_nets':len(nets),'nonpg_net_connectivity_and_exact_wire_sha256':digest(nets),'clock_nets':len(clocks),'clock_connectivity_and_exact_wire_sha256':digest(clocks),'wire_ops':wire_ops}
-t0=time.perf_counter();result={'schema':'opentallas.prd_filler_preclean.v1','source':str(source),'output':str(dest),'mechanism':'separate odb.dbDatabase; no ord-managed STA/DRT database','source_sha256':sha_file(source),'timings':{}}
+t0=time.perf_counter();result={'schema':'opentallas.prd_filler_preclean.v1','source':str(source),'output':str(dest),'mechanism':'separate odb.dbDatabase; no ord-managed STA/DRT database','source_sha256':sha_file(source),'tool_sha256':sha_file(Path(__file__)),'allow_empty':allow_empty,'timings':{}}
 t=time.perf_counter();db=odb.dbDatabase.create();odb.read_db(db,str(source));block=db.getChip().getBlock();result['timings']['read_s']=time.perf_counter()-t
 result['instances_before']=len(block.getInsts());selected=[];masters=collections.Counter();removed_names=hashlib.sha256()
 t=time.perf_counter()
@@ -68,7 +71,7 @@ for seen,inst in enumerate(block.getInsts(),1):
   selected.append(inst);masters[master.getName()]+=1;removed_names.update(inst.getName().encode()+b'\n')
  if seen%500000==0:print(json.dumps({'phase':'select','seen':seen,'typed_pg_only_fillers':len(selected)}),flush=True)
 result['timings']['selection_s']=time.perf_counter()-t
-if not selected:raise RuntimeError('refuse empty preclean')
+if not selected and not allow_empty:raise RuntimeError('refuse empty preclean')
 print(json.dumps({'phase':'fingerprint_before','selected':len(selected)}),flush=True)
 t=time.perf_counter();before=fingerprint(block);result['timings']['fingerprint_before_s']=time.perf_counter()-t
 print(json.dumps({'phase':'delete','selected':len(selected)}),flush=True)

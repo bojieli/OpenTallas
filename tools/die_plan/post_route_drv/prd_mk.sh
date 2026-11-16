@@ -21,6 +21,9 @@
 #           the route seed does not match the SPEF (prd_hook.tcl OT_PRD STAGE_MISMATCH; eco_loop.py retries with final).
 # OT_PRD_PROTECT_NETS = Tcl list of exact measured data nets to preserve during
 # repair; persisted through both passes. Does not waive any signoff checks.
+# OT_PRD_PRECLEAN_FINAL=1: stage an immutable filled final seed; prd_run removes typed PG-only fillers
+# in a separate admitted OpenDB session before DRT initialization, verifies its manifest, then routes normally.
+# Default 0 and non-final seeds keep the prior staging; every physical/signoff check remains required.
 set -euo pipefail
 KIT=$(cd "$1" && pwd -P); OUT=$2; V=$3; SO=$(cd "$4" && pwd); SPEF=${5:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -47,6 +50,14 @@ if [ -f $RS/6_final.odb ] && [ $FROM != final ] && [ "${OT_PRD_SEED_CHECK:-1}" !
     *) echo "prd_mk: seed check failed rc $src: $SEEDCHK"; exit 2 ;;
   esac
 fi
+# Cold final-seed removal runs later inside prd_run's admitted memory envelope,
+# before OpenROAD initializes DRT callbacks. The default staging stays unchanged.
+PRECLEAN_FINAL=0
+case ${OT_PRD_PRECLEAN_FINAL:-0} in
+  0) ;;
+  1) [ "$FROM" != final ] || PRECLEAN_FINAL=1 ;;
+  *) echo "prd_mk: OT_PRD_PRECLEAN_FINAL: want 0|1"; exit 2 ;;
+esac
 # Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint (orfs_hold_mm.tcl ot_hold_stage: file EXISTENCE
 # only, the content is never read).  Preserve it through every PRD pass.  DIE-QC-66 11-03 (class fix, tool-input): a
 # routed kit whose 4_1_cts.odb was pruned (scratch reaper / resume-derived kits) still IS past CTS when its 5_1_grt.odb
@@ -85,7 +96,12 @@ rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclu
 chmod -R u+w "$OUT"
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
-cp $RS/$SRC $B/4_cts.odb
+if [ "$PRECLEAN_FINAL" = 1 ]; then
+  cp "$RS/$SRC" "$B/4_cts_filled.odb"
+  for f in prd_filler_preclean.py prd_filler_seed_check.py; do cp --remove-destination "$HERE/$f" "$OUT/"; done
+else
+  cp $RS/$SRC $B/4_cts.odb
+fi
 cp "$RS/$CTS_ID" "$B/4_1_cts.odb"
 cp "$SPEF" $B/6_final.spef
 # DIE-S81-50 11-03: the logic instances the SPEF connects; prd_hook.tcl checks them against the seed (stale staging)
@@ -251,5 +267,16 @@ fi
 if [ $CTS_ID != 4_1_cts.odb ]; then
   python3 -I -c 'import json,sys; p=sys.argv[1]; d=json.load(open(p)); d["cts_identity"]=sys.argv[2]; open(p,"w").write(json.dumps(d)+"\n")' \
     $OUT/PRD.json "$RS/$CTS_ID (original 4_1_cts.odb absent)"
+fi
+if [ "$PRECLEAN_FINAL" = 1 ]; then
+  echo 'OT_PRD_PRECLEAN_FINAL=1' >> "$OUT/variant.env"
+  python3 -I - "$OUT/PRD.json" "$B" <<'PY_PRECLEAN_REQUEST'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);b=Path(sys.argv[2]);x=json.loads(p.read_text())
+x['filler_preclean']={'requested':True,'source':str(b/'4_cts_filled.odb'),
+    'output':str(b/'4_cts.odb'),'manifest':str(p.parent/'prd_filler_preclean.json')}
+p.write_text(json.dumps(x,indent=1)+'\n')
+PY_PRECLEAN_REQUEST
 fi
 echo "prd pass dir ready $OUT ($(du -sh $OUT | cut -f1))"
