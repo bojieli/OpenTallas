@@ -100,3 +100,12 @@ Final asynchronous handback updates: merge_ops thin13460a0 normal source gate te
 - Superseded, never merge: claude/fable-fix-kv-pvhub-snap-1116 @6b1c7a507f9; 5a98a213258 on claude/rc-signal-1115 (carries 6b915b8f4cc).
 - After both merge + rt sync: hub_C / hub_Wo / pv_v1 release with reason "snapshot" (RELAUNCH-ON-FIX); KIT-OPS-5 relaunches.
 - HG1B ADOPT still waits on the FABLE-PD-KV-HG1 review.
+
+## 13:5x PST HG1A READY+ADOPT posted (r354, FABLE-PD-KV-HG1 ADOPT-WITH-SPLIT)
+- Event KV-HG1 = HG1A plan 08d352df7ef0; tree epyc10 fable-fix-kv-pvhub/hg1/tree (real copy of my 7yhr tree + plan + v25hv/k2r cores +
+  kvhg1_views_1116 + die_rows.py); bind of record hg1/gate/bind (bind_report d1bf5c2c22da, native_topology 97366d61066c).
+- Gate read from the logs myself (gate.out RC lines are literals under set -e): pre PASS findings 0, G0 0 errors / 2390 warn, strict bind 0
+  errors 160/56/2545/429530, LATCHECK 2404/2404. No kit_rtl / gen smoke was run on HG1A; the pilots are the first.
+- Pilots kv3_hg_v1, kv3_hg_v3, kv3_pv_v1n; the other 31 KV-HG1 keys asked to wait on proof:kv-hg1-pilot-cts (I post RESULT PASS at the
+  pilot CTS read: cells, TT setup, krsp first hop). HG1B is NOT adopted: rows B + C and R-REACH-4 go to HG2 (FABLE-DIE-KV). treeC separate.
+- Do not delete hg1/tree, hg1/gate, kw45/src_kv_kvgeom7yhr_eb1e73448bd0 on epyc10 until KIT-OPS-5 / TOOLS-CONVERGE published the KV-HG1 tree.
