@@ -104,3 +104,11 @@
 - Post svc-ready PASS only when BOTH pilots show: GRT overflow 0 AND TT setup >= -42 ps on the GRT-stage read
   (S81 RC x1.00, reloaded DB); OR post-CTS TT >= +45 ps before GRT. Post-CTS placement-RC under-reads by 51-86 ps,
   so a post-CTS value between -42 and +45 is NOT a pass. Plus my own: all macros placed at floorplan (148 / 169).
+
+## 09:35 PST p4/p3 FAIL kit_topology: KIT_TOPOLOGY_BIND_STALE (real: v3 bind_out is the G3b-line bind, plan is F2sv)
+- Fix: use DIE-S81-92 F2sv bind (epyc10 s81-b3-clk/run/b/B6gF2sv: bind errors 0, LATCHECK 873/873, bound on the v2 tree).
+  Copied to epyc2 at the SAME absolute path: out/ (6.8 GB), asbuilt_run.json, sidecar_new.json (a3b57fc803bf = ev sidecar),
+  src/physical/die_plan/s81/h2_2249 (42 MB, asbuilt base + clock_landing_table).
+- p5 launched 09:33 (intel2 pids svc_hi t3 3591211, svc_lo t7 3591571): v3 tree, plan_inputs/B6gF2sv_formA.json,
+  bind_out/asbuilt/sidecar = B6gF2sv/{out,asbuilt_run.json,sidecar_new.json}, gen epyc2. Logs <item>/p5/.
+- If p5 is BIND_STALE again, the 496 contents rows are in the bind fingerprint -> need a bind of the formA plan (F2s3).
