@@ -537,6 +537,64 @@ def tree_gate(AP, cfg):
     return ready, marker
 
 
+
+def verified_source_probes(AP, cfg, st, die, tree_fn, marker_fn, read_check=None):
+    """Feed exact durable source verification into source-only probe lifecycle.
+    This never judges snapshot, circuit, lint or physical classes. Failed attempts
+    stay on disk and FG.close retains its normal probation/history semantics.
+    """
+    import tree_check as TC
+    d = (cfg.get("dies") or {}).get(die) or {}
+    tree = d.get("src")
+    inp = breaker_inputs(cfg, die)
+    probes = [e for e in ((st.get("flow_guard") or {}).get("open") or {}).values()
+              if e.get("die") == die and not e.get("kind") and e.get("stage") == "src_manifest"
+              and e.get("state") == "probe"]
+    if not tree or not inp or not probes or not tree_fn(die, tree):
+        return []
+    marker = marker_fn(die) or {}
+    want = marker.get("manifest_hash") or marker.get("src_manifest_sha")
+    if marker.get("tree") != tree or str(marker.get("smoke") or "").upper() != "PASS" or not want:
+        return []
+    hosts = [h for h in (d.get("gen_hosts") or cfg.get("hosts") or [])
+             if h not in (cfg.get("retired_hosts") or [])]
+    if not hosts:
+        return []
+    root = Path(getattr(AP, "AP_DIR", cfg.get("_ap_dir") or os.path.expanduser("~/.local/state/opentallas"))) / "tree_checks"
+    ident = TC.identity(die, tree, want, hosts, str(Path(__file__).with_name("src_manifest.py")))
+    proof = (read_check or TC.read)(root, ident)
+    if (not proof or proof.get("identity") != ident or proof.get("state") != "ok"
+            or not proof.get("full_ok") or proof.get("running")
+            or not proof.get("links_t") or time.time() - proof["links_t"] > 600
+            or not proof.get("details")
+            or {x.get("host") for x in proof["details"]} != set(hosts)
+            or any(x.get("rc") != 0 for x in {x.get("host"): x for x in proof["details"]}.values())):
+        return []
+    evidence = str(TC.location(root, ident) / "result.json")
+    def active(item):
+        if not item:
+            return False
+        if live_attempt_elsewhere(st, die, item, None):
+            return True
+        terminal = {"FAIL", "CANCELLED", "PASS", "DONE", "REJECTED", "DISCARDED"}
+        return any(r.get("die") == die and r.get("item") == item and
+                   (r.get("enqueue_pending") or r.get("status") not in terminal)
+                   for r in (st.get("items") or {}).values())
+    eligible = []
+    for key, e in list(((st.get("flow_guard") or {}).get("open") or {}).items()):
+        if e in probes and FG.refresh_verified_source_probe(st, key, inp, evidence, active(FG.probe_item(e))):
+            eligible.append(e)
+    out = []
+    for item in sorted({FG.probe_item(e) for e in eligible}):
+        # An empty claim is also source-proven: no hardware launch is needed to
+        # establish the exact same die-wide source files verified on every host.
+        out.extend(FG.probe_result(st, die, item, "src_manifest", passed=True,
+                                  required_stage="src_manifest", required_input=inp))
+    for key, why in out:
+        AP.log(f"KIT-WAVE FLOW-GUARD VERIFIED-SOURCE '{key}': {why}; proof {evidence}")
+    return out
+
+
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
@@ -7486,6 +7544,11 @@ def flow_guard_gate(AP, cfg, st, die, go, picks, skip, now=None, rpy=None):
         hp.setdefault(FG.held_key(st, die, r["item"]), []).append(r["item"] not in pf)
     for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now, {dn: breaker_inputs(cfg, dn) for dn in (cfg.get('dies') or {})}):
         AP.log(f"KIT-WAVE FLOW-GUARD RELEASE '{key}': {why}")
+    try:
+        tree_fn, marker_fn = tree_gate(AP, cfg)
+        verified_source_probes(AP, cfg, st, die, tree_fn, marker_fn)
+    except Exception as exc:
+        AP.log(f"KIT-WAVE verified source probe skipped: {type(exc).__name__}: {exc}")
     out = []
     for r in go:
         hk = FG.held_key(st, die, r["item"])
