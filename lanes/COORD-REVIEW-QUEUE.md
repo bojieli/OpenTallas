@@ -16347,3 +16347,4 @@ Train since r253:
   COORD APPROVED: claude/mq-parse-author-1116 @3884f896326
   COORD APPROVED: claude/tools-converge-1115-skew2 @87ba593cd35
   COORD APPROVED: claude/fable-fix-head-types-1115 @3f5eaa00f23
+- 2026-11-16 00:18 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> QC-SRC-CLOSE-1115, COORD] FAIL-CLASS dbf273d991 owner QC-SRC-CLOSE-1115 qwen_compute/pipeline/FLOW tool / Tcl error @pipeline: Traceback (most recent call last: 2 item(s) failed and not answered: cbx_q10__cl89936551, cbf_q11. Owner: post RESULT or ACK naming dbf273d991 (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
