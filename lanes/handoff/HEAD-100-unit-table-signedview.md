@@ -1,4 +1,4 @@
-# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 08:11:27 PST by intel2 ~/tmp/head100_utable.sh
+# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 08:26:42 PST by intel2 ~/tmp/head100_utable.sh
 # DONE 143, DONE with DRC>0: 0, DONE with RSS>20 GB: 4; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
 renewed-glider u038_b DONE drc=0 rss_mb=12099 wall=28:57.10 [INFO DRT-0199]   Number of violations =
 renewed-glider u039_b DONE drc=0 rss_mb=10380 wall=23:03.23 [INFO DRT-0199]   Number of violations =
@@ -143,4 +143,4 @@ civil-redfish u298_b DONE drc=0 rss_mb=12068 wall=15:24.18 [INFO DRT-0199]   Num
 civil-redfish u299_b DONE drc=0 rss_mb=10713 wall=12:30.93 [INFO DRT-0199]   Number of violations =
 key-cardinal u300_b DONE drc=0 rss_mb=11682 wall=20:47.29 [INFO DRT-0199]   Number of violations =
 renewed-glider u301_b DONE drc=0 rss_mb=11237 wall=14:54.33 [INFO DRT-0199]   Number of violations =
-renewed-glider u308_b DRT drc=- rss_mb=- wall=- [INFO DRT-0199]   Number of violations =
+renewed-glider u308_b DRT drc=- rss_mb=- wall=- Completing 30% with 1066 violations.
