@@ -10711,6 +10711,8 @@ def _step(AP, ap_dir):
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
         cfg["_proof_lines"] = _q[-3000:]
+        import pending_actions as _PA                    # LIMIT-GUARD-1116: release steps as data, run here with no lane
+        _PA.step_cfg(AP, cfg, ap_dir)
         _before = len(cfg.get("_hold_auto_released") or [])
         _tf, _mf = tree_gate(AP, cfg)
         compile_hold_records(cfg, None, _tf, _mf)
@@ -10762,6 +10764,8 @@ def _step(AP, ap_dir):
     try:
         name_stuck_retry_infra(AP, cfg, st)
         retire_superseded_rows(AP, cfg, st)
+        import pending_actions as _PA2
+        _PA2.step_rows(AP, st, ap_dir)
         config_key_check(AP, cfg, st)
     except Exception as e:
         AP.log(f"KIT-WAVE retry-infra naming / config-key check skipped: {type(e).__name__}: {e}")
