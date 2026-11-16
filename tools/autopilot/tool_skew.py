@@ -110,13 +110,13 @@ def manifest(root):
     return m
 
 
-def remote_manifest(host, tree, timeout=300):
+def _remote_inventory(host, tree, mode, timeout=300):
     """manifest of a tree on another host: this file is piped to `python3 -I -` there.  -> dict, or None if unreachable"""
     if os.environ.get("OT_TOOL_SKEW_REMOTE") == "0":
         return None                                      # tests / offline runs never ssh
     try:
         p = subprocess.run(["ssh", "-T", "-o", "ControlPath=none", "-o", "BatchMode=yes", host,
-                            "python3", "-I", "-", "manifest", str(tree)],
+                            "python3", "-I", "-", mode, str(tree)],
                            input=Path(__file__).read_bytes(), capture_output=True, timeout=timeout)
     except (OSError, subprocess.SubprocessError):
         return None
@@ -126,6 +126,18 @@ def remote_manifest(host, tree, timeout=300):
         return json.loads(p.stdout)
     except ValueError:
         return None
+
+
+def remote_manifest(host, tree, timeout=300):
+    return _remote_inventory(host, tree, "manifest", timeout)
+
+
+def remote_scope_manifest(host, tree, timeout=300):
+    """Pin mode needs the same full-scope inventory and v2 marker remotely as locally."""
+    data = _remote_inventory(host, tree, "scope-manifest", timeout)
+    if not isinstance(data, dict) or not isinstance(data.get("files"), dict):
+        return None
+    return data
 
 
 def diff(tree_m, main_m):
@@ -179,17 +191,19 @@ def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=No
         if ref is None:
             return dict(ok=not strict, measured=False, refused={f"rt/{str(tools_sha)[:12]}": "missing"} if strict else {},
                         allowed={}, expired={}, n_closure=0, pin=str(tools_sha)[:12])
+        mk = v2_marker(tree) if Path(tree).is_dir() else None
         if tree_m is None and Path(tree).is_dir():
             tree_m = tree_scope_manifest(tree)
         if tree_m is None and host:
-            tree_m = remote_manifest(host, tree)
+            remote = remote_scope_manifest(host, tree)
+            if remote is not None:
+                tree_m, mk = remote["files"], remote.get("marker")
         if tree_m is None:
             return dict(ok=not strict, measured=False, refused={str(tree): "unreadable"} if strict else {}, allowed={},
                         expired={}, n_closure=len(ref), pin=str(tools_sha)[:12])
         # MANIFEST-V2-1116 (FABLE-FLOW-0913): a v2 tree's manifest covers the whole source (17987 in-scope files) but the pin's rt manifest is
         # the v1 baseline (280 files): every other file read as 'only_die' ("17138 of 17987 differ", never a signal).  A v2 tree whose
         # marker main_sha is the pin is compared on the pin's own files; the files the baseline does not list are main's, not private.
-        mk = v2_marker(tree) if Path(tree).is_dir() else None
         if mk and str(mk["main_sha"])[:12] == str(tools_sha)[:12]:
             tree_m = {k: v for k, v in tree_m.items() if k in ref}
         refused, allowed, expired = apply_allow(diff(tree_m, ref), (allow or {}).get(die) or {}, today)
@@ -231,6 +245,8 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
     m = sub.add_parser("manifest")
     m.add_argument("tree")
+    sm = sub.add_parser("scope-manifest")
+    sm.add_argument("tree")
     c = sub.add_parser("check")
     c.add_argument("die")
     c.add_argument("tree")
@@ -240,6 +256,9 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.cmd == "manifest":
         print(json.dumps(manifest(a.tree)))
+        return 0
+    if a.cmd == "scope-manifest":
+        print(json.dumps(dict(files=tree_scope_manifest(a.tree), marker=v2_marker(a.tree))))
         return 0
     a.main = a.main or str(Path(__file__).resolve().parents[2])
     allow = load_allow(a.allow or Path(a.main) / ALLOW_REL)
