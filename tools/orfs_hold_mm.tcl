@@ -763,10 +763,17 @@ proc ot_repair_timing {rt_args} {
   set hold [expr {[lsearch -exact $rt_args -hold] >= 0}]
   if {$setup && !$hold} { return [log_cmd repair_timing {*}$rt_args] }
   if {$hold && !$setup} {
-    return [ot_rc_cal_hold {
-      ot_hold_structural_gate
-      ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }
-    }]
+    if {![ot_hold_guard_on]} {
+      return [ot_rc_cal_hold {
+        ot_hold_structural_gate
+        ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }
+      }]
+    }
+    # The guarded helper appends -hold itself. Explicit hold-only callers need
+    # the same existing chunk/progress handling as the combined repair path.
+    set args {}
+    foreach arg $rt_args { if {$arg ne "-hold"} { lappend args $arg } }
+    return [ot_rc_cal_hold { ot_hold_repair_scope { ot_repair_hold_guarded $args } }]
   }
   # Explicit -setup -hold and the no-flag form both request combined repair.
   # Keep setup on normal RC, then gate/repair hold on calibrated FF clock RC.
