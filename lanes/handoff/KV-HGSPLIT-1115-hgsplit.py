@@ -22,6 +22,7 @@ ap.add_argument("--margin", type=float, default=17.28)
 ap.add_argument("--min-w", type=int, default=250)
 ap.add_argument("--grid", type=float, default=8.64)
 ap.add_argument("--keep-taps", action="store_true")
+ap.add_argument("--move-sites", action="store_true")
 ap.add_argument("--ban-um", type=float, default=20.0)
 ap.add_argument("--site-clear", type=float, default=2.0)
 ap.add_argument("--toff", default="0.012,0.012")
@@ -158,6 +159,8 @@ for tn in targets:
             for k, v in o.items():
                 if k in SKIP:
                     continue
+                if a.move_sites and k in ("landing_reader_start", "landing_writer_start", "landing_raw_branches", "added_taps", "collector_tree"):
+                    continue
                 walk(v, k, skipnames, rst or k in ("reset", "collector_tree", "collector_children", "collector_root_node"))
         elif isinstance(o, list):
             if len(o) == 2 and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in o):
@@ -255,6 +258,47 @@ for tn in targets:
                                        budget_owner="KV-HGSPLIT-1115: ring child core clk, target 250/202.5 ESTIMATE (same as QC ring children), re-measure from the child's own kit"))
         rows.append(dict(type=tn, bus=b, W=v["width"] + 1, status="OK", master=mk, face=f, orient=ori, origin=[ox, oy],
                          outline=[cw, ch], disp=round(best[0], 1), axis=ax, cells=(M["cells"] or int(24.9 * (v["width"] + 1)))))
+
+    if a.move_sites:
+        rects = [(h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0], h["origin_um"][1] + h["outline_um"][1]) for h in t["hard_cores"] if h["module"].startswith("kv_cland")]
+        cores = [(h["origin_um"][0] - 4.32, h["origin_um"][1] - 4.32, h["origin_um"][0] + h["outline_um"][0] + 4.32, h["origin_um"][1] + h["outline_um"][1] + 4.32) for h in t["hard_cores"] if not h["module"].startswith("kv_cland")]
+        rr = [(x0 - 4.33, y0 - 4.33, x1 + 4.33, y1 + 4.33) for x0, y0, x1, y1 in rects]
+
+        def bad(x, y, c=4.33):
+            return (any(a0 < x < a1 and b0 < y < b1 for a0, b0, a1, b1 in [(r0 - c + 4.33, r1 - c + 4.33, r2 + c - 4.33, r3 + c - 4.33) for r0, r1, r2, r3 in rr] + cores) or not (4.32 <= x <= W_ - 4.32 and 4.32 <= y <= H_ - 4.32))
+        moved = [0]
+
+        def fix(o):
+            if isinstance(o, dict):
+                kk = "xy_um" if "xy_um" in o else "xy"
+                clr = 8.65 if tapset[0] else 4.33
+                if kk in o and isinstance(o[kk], list) and len(o[kk]) == 2 and bad(*o[kk], clr):
+                    x, y = o[kk]; found = None
+                    for r in range(1, 150):
+                        for dx in range(-r, r + 1):
+                            for dy in ((-r, r) if abs(dx) != r else range(-r, r + 1)):
+                                nx, ny = x + dx * 2.16, y + dy * 2.16
+                                if not bad(nx, ny, clr):
+                                    found = (nx, ny); break
+                            if found:
+                                break
+                        if found:
+                            break
+                    if found:
+                        o[kk] = [round(found[0], 3), round(found[1], 3)]; moved[0] += 1
+                for v in o.values():
+                    fix(v)
+            elif isinstance(o, list):
+                for v in o:
+                    fix(v)
+        tapset = [False]
+        for k in ("landing_reader_start", "landing_writer_start", "landing_raw_branches"):
+            if k in t["clock"]:
+                fix(t["clock"][k])
+        fix(t["clock"].get("landing_contract", {}).get("collector_tree", {}))
+        tapset[0] = True
+        fix(t["clock"].get("added_taps") or [])
+        print("moved start/raw sites", tn, moved[0], flush=True)
 
 (out / "plan_c.json").write_text(json.dumps(plan, indent=1) + "\n")
 with open(out / "hgsplit_rows.tsv", "w") as fh:
