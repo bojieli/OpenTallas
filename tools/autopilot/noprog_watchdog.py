@@ -218,9 +218,13 @@ def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False):
         detail = f"{res['name']} best {best_all:g} last {pts[-1][1]:g} rows {len(pts)}"
         if recent and min(recent) == 0:
             return "PROGRESS", f"{res['name']} reached 0", detail
-        if span < window or not before:
-            return "YOUNG", (f"evidence {span / 3600:.1f} h < {window / 3600:g} h" if span < window else f"series started inside the last {window / 3600:g} h"), detail
-        bb = min(before)
+        if span < YOUNG_S:
+            return "YOUNG", f"stage {span / 3600:.1f} h < {YOUNG_S / 3600:g} h", detail
+        if span < window:
+            return "YOUNG", f"evidence {span / 3600:.1f} h < {window / 3600:g} h", detail
+        # WAVE-PREPNR-1115: a series that restarted inside the window (GRT rounds restart the table) keeps the evidence age of
+        # the stage: the baseline is the series start, not "no data" (18 h flat GRT jobs were YOUNG)
+        bb = min(before) if before else pts[0][1]
         rb = min(recent) if recent else None
         detail += f" | before-window best {bb:g}, window best {'-' if rb is None else format(rb, 'g')}"
         if rb is None:
@@ -243,6 +247,64 @@ def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False):
     return "PROGRESS", "log still growing", detail
 
 
+# ---------------------------------------------------------------- WAVE-PREPNR-1115 GRT rounds / yosys stall (pure)
+GRT_LABEL = "GRT-LABEL"        # label-only verdict of the GRT round metric (never cancels, never counts as bad)
+YOUNG_S = 3600                 # YOUNG = < 1 h since the start of the CURRENT stage
+GRT_STOP_OVF = 1000            # FABLE-PD-T14-0935: iteration-10 overflow above ~1000 (or still rising) = design failure
+CONG_RPT = re.compile(r"congestion-(\d+)\.rpt$")
+CONG_VAL = re.compile(r"congestion:(\d+)")
+EXEC_PASS = re.compile(r"Executing (\S+) pass")
+SYNTH_STALL_PASSES = ("SHARE", "OPT_MEM_PRIORITY")
+SYNTH_STALL_S = 3600
+
+
+def grt_rounds(report_dir):
+    """[(extra-iteration N, total overflow)] from the congestion-N.rpt files FastRoute writes every 5 extra iterations
+    (the stage log prints no overflow while it loops).  Overflow = sum of the `congestion:K` values of the violations."""
+    out = []
+    try:
+        names = os.listdir(report_dir)
+    except OSError:
+        return out
+    for nm in names:
+        m = CONG_RPT.match(nm)
+        if m:
+            try:
+                out.append((int(m.group(1)), sum(int(x) for x in CONG_VAL.findall(read_text(os.path.join(report_dir, nm))))))
+            except OSError:
+                pass
+    return sorted(out)
+
+
+def judge_grt_rounds(rounds, log_text=""):
+    """-> None | (verdict, why, detail, klass).  DESIGN-FAIL (GRT-CONGESTION): the first GRT-0273 (a clock NDR dropped under
+    congestion), or the overflow at round >= 10 above GRT_STOP_OVF or still rising.  NO-PROGRESS: the overflow has not fallen
+    across 2 consecutive rounds.  A measurement of the rounds, not a time limit."""
+    trend = " -> ".join(f"{n}:{v}" for n, v in rounds[-6:])
+    detail = f"grt rounds {len(rounds)} overflow {trend}"
+    if "GRT-0273" in log_text:
+        return "DESIGN-FAIL", "GRT-0273 (clock NDR dropped under congestion)", detail, "GRT-CONGESTION"
+    late = [(n, v) for n, v in rounds if n >= 10]
+    if late:
+        n10, v10 = late[0]
+        if v10 > GRT_STOP_OVF:
+            return "DESIGN-FAIL", f"overflow {v10} at round {n10} > {GRT_STOP_OVF}", detail, "GRT-CONGESTION"
+        if len(late) > 1 and late[-1][1] > late[-2][1]:
+            return "DESIGN-FAIL", f"overflow rising at round {late[-1][0]}: {late[-2][1]} -> {late[-1][1]}", detail, "GRT-CONGESTION"
+    v = [x for _, x in rounds]
+    if len(v) >= 3 and v[-1] > 0 and v[-1] >= v[-2] >= v[-3]:
+        return "NO-PROGRESS", f"overflow has not fallen across 2 consecutive rounds ({v[-3]} {v[-2]} {v[-1]})", detail, ""
+    return None
+
+
+def synth_mem_stall(text, log_age_s):
+    """a yosys log whose last pass is SHARE / OPT_MEM_PRIORITY and silent for 60 min: a DESIGN failure (SYNTH-MEM-STALL)"""
+    passes = EXEC_PASS.findall(text)
+    if passes and passes[-1] in SYNTH_STALL_PASSES and log_age_s >= SYNTH_STALL_S:
+        return "DESIGN-FAIL", f"yosys in pass {passes[-1]} for {log_age_s / 60:.0f} min", f"yosys last pass {passes[-1]}", "SYNTH-MEM-STALL"
+    return None
+
+
 # ---------------------------------------------------------------- policy helpers (pure)
 PLAN_RE = re.compile(r"(?i)(strict[-_ ]?bind|bind[-_]?strict|die[-_]?proto|(?:^|[/_ -])g0(?:[/_. -]|$)|latcheck|chain[A-Za-z]*\d*\.sh|kit[-_]gen[-_]proof)")
 HBM_RE = re.compile(r"(?i)(^|[/_-])(hbm|trialhbm|hbmcore)")
@@ -254,7 +316,9 @@ B64 = re.compile(r"[A-Za-z0-9+/=]{60,}")
 def is_plan(env_prio, text):
     """--priority plan (OT_HEAVY_PRIO=plan) or a bind / LATCHECK / G0 / die-proto / chain command.  --priority die (die-level
     trials) is NOT excluded: those are exactly the long builds this watchdog is for.  base64 spec blobs are stripped first."""
-    return env_prio == "plan" or bool(PLAN_RE.search(B64.sub(" ", text)))
+    # WAVE-PREPNR-1115 (COORD FABLE-FLOW-1200 f4 / FLOW-1350 c3): ONLY a declared OT_HEAVY_PRIO=plan excludes.  The old text match
+    # (PLAN_RE on the command line) excluded 81 of 110 rows although no job carried --priority plan.
+    return env_prio == "plan"
 
 
 # KIT-OPS-6 11-14 (COORD item 8): 20:46 the watchdog killed HEAD elemA/elemB core builds (intel1 A1/B1) because HEAD cores use the HBM
@@ -435,6 +499,9 @@ def save_json(path, obj):
     os.replace(tmp, path)
 
 
+BAD_VERDICTS = ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL")      # GRT_LABEL is deliberately NOT here: it never cancels
+
+
 def decide(rows, reported, now, act):
     """annotate rows with `action`; -> units to cancel now.  A scope is cancelled only when every container in it is
     NO-PROGRESS / CANCEL-NOW, it has an ot-heavy scope, and an earlier pass (>= MIN_REPORT_AGE_S ago) already listed each."""
@@ -443,10 +510,10 @@ def decide(rows, reported, now, act):
         by_unit.setdefault(r["unit"], []).append(r)
     out = []
     for unit, rs in by_unit.items():
-        bad = [r for r in rs if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW")]
+        bad = [r for r in rs if r["verdict"] in BAD_VERDICTS]
         if not bad:
             continue
-        healthy = [r for r in rs if r["verdict"] not in ("NO-PROGRESS", "CANCEL-NOW")]
+        healthy = [r for r in rs if r["verdict"] not in BAD_VERDICTS]
         standalone = unit is None and all(r.get("lec_only") for r in bad) and not healthy
         if healthy or (unit is None and not standalone):
             for r in bad:
@@ -531,6 +598,17 @@ def scan(now=None, act=False, probe_s=4):
             anchors.append((max(mt, anchors[-1][0] + 1), res["n"]))
             exact = len(st["samples"]) > 0 and now - st["samples"][0][0] >= WINDOW_S
             v, why, detail = judge_activity(mt, started, now, "LEC") if kind == "lec" else judge(res, anchors, now, exact=exact)
+            special = None
+            if kind == "grt" and log:
+                rdir = os.path.dirname(log).replace("/logs/", "/reports/")
+                special = judge_grt_rounds(grt_rounds(rdir), read_text(log) if os.path.isfile(log) else "")
+                if special:
+                    # OWNER rule 11-14 deleted the GRT early stop: the round metric is a LABEL (class + trend + NEEDS-LANE), never a cancel
+                    special = (GRT_LABEL, f"{special[0]}: {special[1]}", special[2], "GRT-CONGESTION")
+            elif kind == "yosys" and log:
+                special = synth_mem_stall(read_text(log) if os.path.isfile(log) else "", now - mt)
+            if special:
+                v, why, detail, row["klass"] = special
             if kind == "lec" and now - started > LEC_MAX_S:
                 # COORD 11-14: LEC is advisory under R-MINIMAL.  A LEC-only job (the route result exists) older than 24 h goes,
                 # alive or not; a LEC whose route stage has not produced its result is never cancelled here.
@@ -559,9 +637,9 @@ def scan(now=None, act=False, probe_s=4):
             r["why"] += " (cpu idle: hung)"
     reported = state.setdefault("reported", {})
     cancel_units = decide(rows, reported, now, act)
-    actions = [do_cancel(u, [r for r in rows if r["unit"] == u and r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW")] if u is None else [r for r in rows if r["unit"] == u], now) for u in cancel_units] if act else []
+    actions = [do_cancel(u, [r for r in rows if r["unit"] == u and r["verdict"] in BAD_VERDICTS] if u is None else [r for r in rows if r["unit"] == u], now) for u in cancel_units] if act else []
     for r in rows:
-        if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW") and not r.get("action", "").startswith("REPORT-ONLY"):
+        if r["verdict"] in BAD_VERDICTS and not r.get("action", "").startswith("REPORT-ONLY"):
             reported.setdefault(r["key"], now)
     live = {r["key"] for r in rows}
     for k in list(reported):
@@ -597,13 +675,13 @@ def do_cancel(unit, rs, now):
     res = sh("ot-heavy-stop", *args, timeout=300)
     return {"t": now, "host": rs[0]["host"], "unit": unit, "how": " ".join(args), "result": res.strip()[-300:],
             "containers": [r["container"] for r in rs], "type": rs[0]["type"], "stage": rs[0]["stage"],
-            "metric": rs[0].get("detail", ""), "kit": kit, "why": rs[0]["why"], "verdict": rs[0]["verdict"],
+            "metric": rs[0].get("detail", ""), "kit": kit, "why": rs[0]["why"], "verdict": rs[0]["verdict"], "class": rs[0].get("klass", ""),
             "gb": round(sum(r["gb"] for r in rs), 1), "cores": sum(r["threads"] for r in rs),
             "cores_busy": round(sum(r.get("cores_now") or 0 for r in rs), 1)}
 
 
 # ---------------------------------------------------------------- hub
-ORDER = {"NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
+ORDER = {"GRT-LABEL": 1, "DESIGN-FAIL": 0, "NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
 
 
 def md_table(reports):
@@ -665,7 +743,7 @@ def hub(now=None, post=True):
             missing.append(h)
     table, rows = md_table(reports)
     stamp = time.strftime("%Y-%m-%d %H:%M PST", time.localtime(now))
-    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW")]
+    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_LABEL)]
     counts = {}
     for r in rows:
         counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
@@ -706,13 +784,21 @@ def hub(now=None, post=True):
         qlines.append(f"- {stamp} STATE [NOPROG-WATCHDOG -> COORD] NO-PROGRESS table: {len(flagged)} flagged of {len(rows)} containers {counts}; full table lanes/NOPROG-TABLE.md; flagged: "
                       + "; ".join(f"{r['host']} {r['type']} {r['stage']} [{r['verdict']}: {(r.get('why') or '')[:60]}] {r.get('action', '')[:28]}" for r in flagged[:40]))
     seen["table_sig"] = sig
+    labelled = set(seen.get("labelled", []))
+    for r in rows:
+        if r["verdict"] == GRT_LABEL and r["type"] not in labelled:
+            labelled.add(r["type"])
+            qlines.append(f"- {stamp} NEEDS-LANE [NOPROG-WATCHDOG -> COORD] {r['type']}: DESIGN-FAIL class GRT-CONGESTION on {r['host']} at {r['stage']} "
+                          f"({(r.get('why') or '')[:90]}; {(r.get('detail') or '')[:160]}). Label only, the job keeps running; no unchanged retry.")
+    seen["labelled"] = sorted(labelled)
     done = set(seen["posted"])
     for a in new_actions:
         if a["type"] in done:
             continue
         done.add(a["type"])
-        qlines.append(f"- {stamp} NEEDS-LANE [NOPROG-WATCHDOG -> COORD] {a['type']}: cancelled NO-PROGRESS on {a['host']} at {a['stage']} ({a['why'][:90]}; {a['metric'][:140]}); "
-                      f"kit kept at {a['kit']}; freed {a['gb']} GB / {a['cores']} cores. Needs a structural fix, not a retry.")
+        qlines.append(f"- {stamp} NEEDS-LANE [NOPROG-WATCHDOG -> COORD] {a['type']}: cancelled {a.get('verdict') or 'NO-PROGRESS'}{(' class ' + a['class']) if a.get('class') else ''} on {a['host']} at {a['stage']} ({a['why'][:90]}; {a['metric'][:140]}); "
+                      f"kit kept at {a['kit']}; freed {a['gb']} GB / {a['cores']} cores. "
+                      + ("DESIGN failure (congestion/synthesis): do not retry unchanged." if a.get("class") else "Needs a structural fix, not a retry."))
     seen["posted"] = sorted(done)
     if qlines:
         with open(os.path.join(COORD, "lanes/COORD-REVIEW-QUEUE.md"), "a") as f:
