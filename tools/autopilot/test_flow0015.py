@@ -37,6 +37,43 @@ def test_a_missing_input_ignores_a_tool_merge_and_releases_when_the_input_appear
     assert KW.fail_key_gate(cfg(), st, "s81", "slice_station__t51", "b2")[2] == ["block"]
 
 
+def test_a_missing_input_inside_a_snapshot_releases_only_on_a_newer_snapshot_that_holds_it(tmp_path, monkeypatch):
+    # KV 7yhr hub_C a2 11-16: kit_topology read <store>/snaps/550ac.../root/<tree>/plan_of_record/eW_sidecar.json, absent from the snapshot
+    import os
+    old, new, oth = "a" * 40, "b" * 40, "c" * 40
+    logical = "/srv/x/tree/plan_of_record/eW_sidecar.json"
+    store = tmp_path / "kit-store"
+    for sid in (old, new, oth):
+        (store / "snaps" / sid / "root/srv/x/tree/plan_of_record").mkdir(parents=True)
+        (store / "snaps" / sid / "root/srv/x/tree/plan_of_record/e_other.json").write_text("{}")
+        (store / "snaps" / sid / "MANIFEST.json").write_text("{}")
+    miss = f"{store}/snaps/{old}/root{logical}"
+    why = f"FLOW[missing_input]: KIT_NOT_SELF_CONTAINED: kit recipe must copy the file into the kit at staging @kit_topology: {miss}"
+    assert KW.snapshot_logical(miss) == (str(store), old, logical) and KW.snapshot_logical("/srv/x/tree/a.json") is None
+    st = {}
+    monkeypatch.setattr(KW, "path_exists_somewhere", lambda c, d, p, **k: False)
+    KW.note_fail_key(cfg(), st, dict(rec("hub_C"), stage="kit_topology"), "FLOW", why)
+    e = st["fail_keys"]["s81|hub_C"]
+    assert e["type"] == "missing_input" and e["missing"] == [miss]
+    c = cfg()
+    c["dies"]["s81"]["gen_host"] = None                                  # local store only
+    t0 = e["ts"]
+    for sid in (old, new, oth):
+        os.utime(store / "snaps" / sid / "MANIFEST.json", (t0 - 100, t0 - 100))
+    gate = lambda: (KW.SNAP_FIXED.clear(), KW.fail_key_gate(c, st, "s81", "hub_C", "b1"))[1]
+    assert gate()[0]                                                     # nothing newer, file nowhere: blocked
+    os.utime(store / "snaps" / oth / "MANIFEST.json", (t0 + 50, t0 + 50))
+    assert gate()[0]                                                     # a newer snapshot with the same hole (only e_other): blocked
+    (store / "snaps" / new / "root/srv/x/tree/plan_of_record/eW_sidecar.json").write_text("{}")
+    assert gate()[0]                                                     # the file is in a snapshot made BEFORE the fail: blocked
+    os.utime(store / "snaps" / new / "MANIFEST.json", (t0 + 60, t0 + 60))
+    assert gate() == (False, "", ["snapshot"])                           # a newer snapshot holds it: released
+    e["missing"] = [miss[:-len("W_sidecar.json")]]                       # stored error text cut after ".../plan_of_record/e"
+    assert gate() == (False, "", ["snapshot"])
+    (store / "snaps" / new / "root/srv/x/tree/plan_of_record/eW_sidecar.json").unlink()
+    assert gate()[0]                                                     # the cut prefix matches only a file the failed snapshot also has
+
+
 def test_a_other_classes_still_release_on_a_tool_change(monkeypatch):
     st = {}
     KW.note_fail_key(cfg(), st, rec(), "INFRA", "INFRA: tool or source skew @gen: AttributeError: module 'x' has no attribute 'y'")

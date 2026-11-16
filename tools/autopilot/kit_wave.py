@@ -9304,6 +9304,54 @@ def path_exists_somewhere(cfg, die, p, ttl=300, now=None):
     return ok
 
 
+_SNAP_PATH_RE = re.compile(r"^(/.+)/snaps/([0-9a-f]{40})/root(/.+)$")
+SNAP_FIXED = {}
+# one snapshot made after the fail (MANIFEST newer than $3) that holds a file matching the logical path ($4, a prefix: the stored
+# error text may be cut) which the failed snapshot ($2) does not hold
+_SNAP_FIXED_SH = ('for m in "$1"/snaps/*/MANIFEST.json; do d=${m%/MANIFEST.json}; [ "${d##*/}" = "$2" ] && continue; '
+                  '[ "$(stat -c %Y "$m" 2>/dev/null || echo 0)" -gt "$3" ] || continue; '
+                  'for f in "$d/root$4"*; do [ -e "$f" ] || continue; [ -e "$1/snaps/$2/root${f#"$d"/root}" ] && continue; exit 0; done; done; exit 1')
+
+
+def snapshot_logical(p):
+    """(store, snapshot id, logical path) of a path inside a kit-store snapshot, else None"""
+    m = _SNAP_PATH_RE.match(str(p or ""))
+    return m.groups() if m else None
+
+
+def snapshot_closure_fixed(cfg, die, p, since, ttl=300, now=None):
+    """FABLE-FIX-KV-PVHUB 11-16 (KV 7yhr hub_C / hub_Wo / pv_v1 @kit_topology: snapshot 550ac5b3 lacked plan_of_record/eW_sidecar.json):
+    a missing input INSIDE a kit-store snapshot can never appear, the snapshot is immutable, and the logical file always existed, so
+    neither says the closure is fixed.  Evidence that it is: a snapshot of the same store made after the fail holds the file.  Cached 5 min."""
+    sl = snapshot_logical(p)
+    if not sl:
+        return False
+    now = time.time() if now is None else now
+    c = SNAP_FIXED.get((die, p))
+    if c and now - c[0] < ttl:
+        return c[1]
+    store, sid, logical = sl
+    d = (cfg.get("dies") or {}).get(die) or {}
+    hosts = [h for h in dict.fromkeys([d.get("gen_host")] + list(d.get("gen_hosts") or [])) if h]
+    args = [store, sid, str(int(float(since or 0))), logical]
+    ok = False
+    try:
+        ok = subprocess.run(["sh", "-c", _SNAP_FIXED_SH, "snapfix"] + args, capture_output=True, timeout=60).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        ok = False
+    for h in ([] if ok else hosts):
+        try:
+            cmd = "sh -c " + shlex.quote(_SNAP_FIXED_SH) + " snapfix " + " ".join(shlex.quote(x) for x in args)
+            if subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, cmd],
+                              capture_output=True, timeout=60).returncode == 0:
+                ok = True
+                break
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+    SNAP_FIXED[(die, p)] = (now, ok)
+    return ok
+
+
 FILE_SHA = {}
 
 
@@ -9444,6 +9492,8 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         changed = [k for k in ("block", "src", "overlay") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
         if not changed and any(path_exists_somewhere(cfg, die, p) for p in miss):
             changed = ["input"]
+        if not changed and any(snapshot_closure_fixed(cfg, die, p, prev.get("ts") or 0) for p in miss):
+            changed = ["snapshot"]
     else:
         changed = [k for k in ("block", "src", "overlay", "tools") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
         # FABLE-FLOW-0445 #3: an overlay (or tools) change that did not touch a file the failed stage read is no release: kv3_pv_v1/v7/v12 failed 4 times
