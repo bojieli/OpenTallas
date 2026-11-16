@@ -5939,7 +5939,7 @@
       "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6/physical/die_plan/s81/plan_inputs/run/B6gF2s2_B6gF2sv.json",
       "gen_host": "epyc2",
       "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a_d6",
-      "src_sha": "41bb1dcfd10a",
+      "src_sha": "41bb1dcfd10a88b78ac6296e8209d8783422fcae",
       "kit_rtl": {
         "mode": "bind",
         "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_41bb1dcfd10a_d6/out",
@@ -6125,7 +6125,7 @@
       "pilot_mode": "queue",
       "bind_mem_gb": 48,
       "hold_items": {},
-      "queue_src": "main@41bb1dcfd10a",
+      "queue_src": "main@41bb1dcfd10a88b78ac6296e8209d8783422fcae",
       "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave",
       "plan_note": "CODEX1131/root reviewed composed1cd/b1 S81 source adoption; canonical bind_ev2 preserved read-only, exact17 reset-safe landing bands, child views, clock providers, svc parser/tap metadata and G5 HB4. Old source/jobs retained. Two svc canaries manually owned; actual t41 GRT failure held pending structural correction.",
       "retry_fix": {
