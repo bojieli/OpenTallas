@@ -91,3 +91,17 @@ def test_plan_sha_mismatch_fails_loud_with_the_fix():
         return 0, "a" * 64 + "  plan_c.json\n"
     assert G.plan_sha_check(cfg, "kv", ["epyc7"], ok, lambda s: None) is True
     assert G.plan_sha_check({"dies": {"kv": {"plan": "/x"}}}, "kv", ["epyc7"], ok, lambda s: None) is True     # nothing declared
+
+
+def test_published_tree_check_requires_the_marker_tree_and_hash(tmp_path):
+    import json
+    cfg = {"dies": {"x": {"src_manifest": "require", "src": "/srv/opentallas-scratch2/claude/kw45/src_x_pin_aaaaaaaaaaaa",
+                          "src_manifest_hash": "h1"}, "y": {"src_manifest": "verify", "src": "/lane/run/b/src"}}}
+    assert G.published_tree_check(cfg, "y", tmp_path) == []                    # not "require": not judged
+    assert "no readable published-tree marker" in G.published_tree_check(cfg, "x", tmp_path)[0]   # a lane run copy has no marker
+    (tmp_path / "tree_switch_x.json").write_text(json.dumps({"tree": "/lane/run/b/src", "src_manifest_sha": "h1"}))
+    assert "not the published marker tree" in G.published_tree_check(cfg, "x", tmp_path)[0]
+    (tmp_path / "tree_switch_x.json").write_text(json.dumps({"tree": cfg["dies"]["x"]["src"], "src_manifest_sha": "h2"}))
+    assert "src_manifest_hash" in G.published_tree_check(cfg, "x", tmp_path)[0]
+    (tmp_path / "tree_switch_x.json").write_text(json.dumps({"tree": cfg["dies"]["x"]["src"], "src_manifest_sha": "h1"}))
+    assert G.published_tree_check(cfg, "x", tmp_path) == []
