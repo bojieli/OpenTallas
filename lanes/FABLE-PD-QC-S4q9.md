@@ -77,3 +77,18 @@ first placed fe kit, not a plan defect.
   plan tool only).
 - plan_gate_pre GEOM on S4q9 (PLAN-GATE-PRE's tool); my rsf check is the box test in d2.py.
 - Latency effect of the 113 added cycles on the token schedule (the latency table carries them).
+
+## 6. Recheck on S4q9b (r199 verdict), 2026-11-16 02:45 PST, QC-HCFE-O (Opus successor of FABLE-FIX-QC-HCFE)
+
+Knee only, as scoped. Plan: epyc2 kw45/src_qc_pin_e594a73db756_q9/physical/die_plan/qwen_compute/plan_of_record/
+zz_s29_qc103_s4q9b.json, sha256 dcf35395a229a1e1... (byte-equal to die-qc-103/plans9 copy). Checker: that tree:
+tools/die_plan/istation_knee.py. Outputs epyc2 /srv/opentallas-scratch2/claude/fable-fix-qc-hcfe/q9b/knee_s4q9{,b}.{tsv,out}.
+
+| plan | chains | types | FAIL > 403 | margin (400,403] | unchecked | worst um |
+|---|---|---|---|---|---|---|
+| S4q9 (same tree, control) | 988 | 47 | 113 | 7 | 0 | 728.86 |
+| S4q9b | 988 | 47 | **0** | **0** | 0 | 399.98 |
+
+Diff of the two tables: exactly the 120 chains that were > 400 um (113 fail + 7 margin) got +1 station each, in 34 types; no
+other chain changed station count. **Verdict r199: S4q9b NON-BLOCKING on the knee rule (F1 closed).** Sections 1 (a), (b), (d)
+stand. Not checked here: bind / LATCHECK / hcparam / G0 of S4q9b (DIE-QC-103 gates), latency effect of the 120 cycles.
