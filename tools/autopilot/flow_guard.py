@@ -77,6 +77,20 @@ def norm_class(cls, why):
     return re.sub(r"\s+", " ", s).strip()[:150]
 
 
+_FAM_SUFFIX = re.compile(r"(?:__(?:cl|pv|t)[0-9a-z]*)+$")
+STAGE_ORDER = ("mkdir", "bind", "bind_fetch", "kit_rtl", "gen", "gen_lint", "kit_topology", "preflight", "prov_views", "lec_tools", "views", "cells",
+               "relay_bay", "sync_hub", "pipeline", "selfcontained", "type_overlay", "unit", "place", "cts", "grt", "route", "sta", "signoff")
+
+
+def family_of(item):
+    """the item name without its __cl<hash> / __pv<hash> / __t<n> suffixes: slice_station__t17 -> slice_station"""
+    return _FAM_SUFFIX.sub("", str(item or "")) or str(item or "")
+
+
+def stage_rank(stage):
+    return STAGE_ORDER.index(stage) if stage in STAGE_ORDER else len(STAGE_ORDER)
+
+
 def pf_kind(key):
     """which preflight can judge this class again ('' = none)"""
     if PF_SKEW.search(key):
@@ -520,9 +534,14 @@ def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, sta
     g["fails2"] = [f for f in g.get("fails2", []) if now - f[0] <= CLASS_WINDOW_S] + [[now, k2, f"{die}/{item}", evidence]]
     m2 = [f for f in g["fails2"] if f[1] == k2]
     if k2 in g["open"]:
-        g["open"][k2]["n"] = max(g["open"][k2].get("n", 0), len(m2)); g["open"][k2]["last_fail"] = now
+        e2 = g["open"][k2]
+        e2["n"] = max(e2.get("n", 0), len(m2)); e2["last_fail"] = now
+        fam = family_of(item)
+        if fam not in e2.setdefault("fams", []) and e2.get("state") != "probe": e2["fams"] = sorted(set(e2["fams"]) | {fam})
     elif len(m2) >= CLASS_N:
-        g["open"][k2] = {"t": now, "n": len(m2), "first": m2[0][3] or evidence, "posted": 0, "kind": "", "last_fail": now, "die": die, "inp": inp}
+        g["open"][k2] = {"t": now, "n": len(m2), "first": m2[0][3] or evidence, "posted": 0, "kind": "", "last_fail": now, "die": die, "inp": inp,
+                         "stage": stage or fail_stage(why) or "", "state": "shut", "probe": {},
+                         "fams": sorted({family_of(str(f[2]).split("/", 1)[-1]) for f in m2})}
     if not legacy:
         return key
     g["fails"] = [f for f in g["fails"] if now - f[0] <= BREAKER_WINDOW_S]
@@ -539,33 +558,86 @@ def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, sta
     return key
 
 
-def held_key(st, die, item):
-    """the open class an item's last fail belongs to, or ''"""
+def _blocks(e, key, item, claim):
+    """does open class entry e hold this item?  shut: yes.  probe (after the die's inputs changed): the FIRST item of each family may run (claim=True
+    records it as the probe), every other item of that family stays held until the probe passes the class's stage"""
+    if e.get("state") != "probe":
+        return key
+    fam = family_of(item)
+    pr = e.setdefault("probe", {})
+    if fam not in pr:
+        if claim:
+            pr[fam] = item
+        return ""
+    return "" if pr[fam] == item else key
+
+
+def held_key(st, die, item, claim=False):
+    """the open class that holds an item: its own last fail's class, or (die-wide family hold, FABLE-FLOWCLASS-RETRY-2030 P4) any open class of
+    the die whose failing families include the item's family, failed yet or not.  '' = free to launch"""
     g = st.get("flow_guard") or {}
+    op = g.get("open") or {}
     k = (g.get("last") or {}).get(f"{die}/{item}")
-    if k and k in (g.get("open") or {}):
+    if k and k in op:
         return k
     k2 = (g.get("last2") or {}).get(f"{die}/{item}")
-    return k2 if k2 and k2 in (g.get("open") or {}) else ""
+    if k2 and k2 in op:
+        r = _blocks(op[k2], k2, item, claim)
+        if r:
+            return r
+    fam = family_of(item)
+    for key, e in op.items():
+        if e.get("kind") or e.get("die") != die or fam not in (e.get("fams") or []):
+            continue
+        r = _blocks(e, key, item, claim)
+        if r:
+            return r
+    return ""
+
+
+def probe_result(st, die, item, stage, passed):
+    """the probe launch of a family finished.  passed (it got past the class's stage, or was enqueued): the family leaves the class, the class closes
+    when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)"""
+    g = fg_state(st)
+    out = []
+    fam = family_of(item)
+    for key, e in list(g["open"].items()):
+        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or (e.get("probe") or {}).get(fam) != item:
+            continue
+        if passed:
+            e["fams"] = [x for x in e.get("fams", []) if x != fam]
+            e["probe"].pop(fam, None)
+            out.append((key, f"probe {item} passed {e.get('stage') or 'the stage'}: family {fam} released"))
+            if not e["fams"]:
+                close(st, key)
+                out.append((key, "all families released: class closed"))
+        else:
+            e["state"], e["probe"] = "shut", {}
+            e["inp"] = e.get("inp_probe") or e.get("inp")
+            out.append((key, f"probe {item} failed again at {stage}: class stays shut until the inputs change again"))
+    return out
 
 
 def breaker_tick(st, now=None, inputs=None):
-    """release of classes the preflight cannot judge: ONLY when the inputs of the die they opened on changed (FABLE-FLOW-2000 (b): the 19:15
-    cooldown release gave 15 launches and 15 fails of the same unfixed class).  inputs: {die: digest}; returns [(key, why)] released.
-    A class opened without a recorded input digest (older state) keeps the cooldown."""
+    """a class the preflight cannot judge never releases on time or on preflight text (FABLE-FLOW-2000 b, FLOWCLASS-RETRY-2030 P4): when the inputs of
+    the die it opened on change, it goes to PROBE state (one item per family may launch).  Only a probe that passes closes a family.
+    inputs: {die: digest}.  -> [(key, what)] state changes (probe window opened).  A class opened without an input digest keeps the old cooldown."""
     now = time.time() if now is None else now
     g = fg_state(st)
     rel = []
+    closed = []
     for key, b in list(g["open"].items()):
         if b.get("kind"):
             continue
         if b.get("inp"):
             cur = (inputs or {}).get(b.get("die"))
-            if cur and cur != b["inp"]:
-                rel.append((key, "the die's inputs (plan / src / kit form) changed since the class opened"))
+            if cur and cur != b["inp"] and b.get("state", "shut") == "shut":
+                b["state"], b["probe"], b["inp_probe"] = "probe", {}, cur
+                rel.append((key, "the die's inputs changed: PROBE window open, one item per family may launch"))
         elif now - float(b.get("last_fail") or b["t"]) >= BREAKER_COOLDOWN_S:
             rel.append((key, f"cooldown {BREAKER_COOLDOWN_S // 60} min without a new fail"))
-    for key, _ in rel:
+            closed.append(key)
+    for key in closed:
         close(st, key, now)
     return rel
 
@@ -604,7 +676,7 @@ def alert_lines(st, now_s):
                          f"{BREAKER_WINDOW_S // 60} min; first log {b.get('first') or 'n/a'}; {len(held)} item(s) held (no launch, no auto-retry): "
                          f"{' '.join(held[:12])}{' ...' if len(held) > 12 else ''}; releases when "
                          + ("the preflight passes again for every held item" if b.get("kind") else
-                            f"{BREAKER_COOLDOWN_S // 60} min pass without a new fail (half-open)")))
+                            "the die's inputs (plan block / src / overlay / the stage's tool files) change and one probe launch per family passes this stage")))
         b["posted"] = time.time()
     return out
 

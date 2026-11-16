@@ -722,7 +722,7 @@ def rearm_changes(state, cfg, die, d, rec):
         out.append("hosts+" + ",".join(added))
     led = state.setdefault(REARM_LED, {})
     k, a = f"{die}|{rec.get('item')}", int(rec.get("attempt") or 0)
-    cur = rt_tools_digest()
+    cur = stage_tools_digest()                       # the stage tool closure, not the whole tools tree (22 merges in 4 h re-armed every failed row)
     seen = led.get(k)
     if not isinstance(seen, dict) or seen.get("a") != a:
         led[k] = {"a": a, "tools": cur}
@@ -7394,9 +7394,17 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         return None
     if tool_skew_refuse(AP, cfg, st, die):
         return None
-    if FG.held_key(st, die, r.get("item")) and cfg["dies"][die].get("flow_guard") is not False:     # FLOW-HEALTH-1: open class, any launch path
-        AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: FLOW-GUARD class open ({FG.held_key(st, die, r.get('item'))[:100]})")
-        return None
+    if cfg["dies"][die].get("flow_guard") is not False:                                            # FLOW-HEALTH-1: open class / same fail key, any launch path
+        _hk = FG.held_key(st, die, r.get("item"), claim=True)
+        if _hk:
+            AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: FLOW-GUARD class open ({_hk[:100]})")
+            return None
+        _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
+        if _bl:
+            AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: {_why}")
+            return None
+        if _chg:
+            AP.log(f"KIT-WAVE RELAUNCH-ON-FIX {die}/{r.get('item')}: changed {'+'.join(_chg)}")
     arm = r.get("arm") if isinstance(r.get("arm"), dict) else None      # KW-FIX-44 GRTARM_1111
     key = arm["key"] if arm else item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
@@ -8451,21 +8459,6 @@ def collect(AP, cfg, st, notices):
                        f"one free retry on another host next tick")
         elif cls == "INFRA" and infra_used(rec) < infra_attempts(cfg, rec["die"]):
             rec["status"] = "RETRY-INFRA"                # relaunched next tick (up to infra_attempts in all)
-        if cls in ("INFRA", "FLOW") and rec.get("status") in ("RETRY-INFRA", "FAIL") and not NO_HOST.search(why or "") and not _TRANSIENT_INFRA.search(why or ""):
-            _ik = infra_key(cfg, rec, cls, why)
-            if infra_repeat(st, rec, _ik):
-                # the same (tool sha, src sha, plan sha, error class) failed again: a retry would run the same thing
-                cls = "TOOL" if TOOL_INFRA_RE.search(why or "") else "DESIGN"
-                rec.update(status="FAIL", blocked="BLOCKED-INFRA-REPEAT", **{"class": cls},
-                           reason=f"INFRA-KEY repeat ({_ik}): {why}"[:400])
-                AP.log(f"KIT-WAVE INFRA-KEY-REPEAT {rec['die']}/{rec['item']}@{rec.get('attempt')}: same tool/src/plan/error key {_ik} failed again; "
-                       f"reclassified {cls}, no retry")
-                if _ik not in (st.setdefault("infra_posted", {})):
-                    st["infra_posted"][_ik] = time.time()
-                    AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [KIT-WAVE -> COORD] {rec['die']}/{rec['item']}: INFRA failed twice on the "
-                                    f"same (tool sha, src sha, plan sha, error class) key {_ik}; no auto retry, class {cls}: {why[:200]}")
-            else:
-                rec["infra_key"] = _ik
         c = note_fail_sig(st, rec, cls, why, inp=input_digest(cfg, rec["die"]))
         _um = note_unfixed(cfg, st, rec, cls, why)
         if _um:
@@ -8489,6 +8482,11 @@ def collect(AP, cfg, st, notices):
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))
+                for _k, _what in FG.probe_result(st, rec["die"], rec["item"], _stg, passed=FG.stage_rank(_stg) > FG.stage_rank(
+                        next((e.get("stage") for e in (st.get("flow_guard") or {}).get("open", {}).values() if e.get("die") == rec["die"] and e.get("state") == "probe"
+                              and (e.get("probe") or {}).get(FG.family_of(rec["item"])) == rec["item"]), ""))):
+                    AP.log(f"KIT-WAVE FLOW-GUARD PROBE {rec['die']}/{rec['item']}: {_what}")
+                note_fail_key(cfg, st, rec, cls, why)
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
                     AP.log(f"KIT-WAVE FLOW-GUARD CLASS-BREAKER open '{_k}'")
                     AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", _line)
@@ -8524,6 +8522,94 @@ KILL_RE = re.compile(r"Error 241|exit 143|rc 143|exit 137|process terminated|ear
 
 
 TOOL_INFRA_RE = re.compile(r"python exception|plan-schema|tool or source skew|Traceback|ModuleNotFoundError|AttributeError|ImportError")
+
+
+_STAGE_TOOLS = {}
+HOST_FAIL_RE = re.compile(r"No space left|disk (?:full|floor)|ENOSPC|Errno 28|copy-?back|copied back failed|interrupted \(signal|cancellation requested|"
+                          r"process terminated|NOT COMPLETED|unit stopped from outside|OOM|oom-kill|earlyoom|docker|no host qualifies|admission|ot-run: NOT RUN", re.I)
+
+
+def stage_tools_digest(root=None):
+    """FABLE-FLOWCLASS-RETRY-2030 P2: the digest of the tool files the generation / bind stages import (flow_guard.closure_files of gen.py, gen_phys.py,
+    bind.py), not the whole tools tree: rt/current changed 22 times in 4 h and re-armed every failed row each time"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    k = str(root)
+    if k in _STAGE_TOOLS:
+        return _STAGE_TOOLS[k]
+    def read(rel):
+        try:
+            return (root / rel).read_text()
+        except (OSError, UnicodeDecodeError):
+            return None
+    h = hashlib.sha1()
+    try:
+        for rel in FG.closure_files(read):
+            try:
+                h.update(rel.encode()); h.update((root / rel).read_bytes())
+            except OSError:
+                pass
+    except Exception:
+        h.update(b"no-closure")
+    _STAGE_TOOLS[k] = h.hexdigest()[:16]
+    return _STAGE_TOOLS[k]
+
+
+def kit_digest_parts(cfg, die, rec=None):
+    """what a (re)launch of an item builds on: plan block sha, src sha, source content hash, the stage tools closure.  From the attempt's own spec.json
+    when rec is a failed attempt (what it ran on), else from the die config (what a launch would run on)."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    sp = {}
+    if rec and rec.get("dir"):
+        try:
+            sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        except (OSError, ValueError, TypeError):
+            sp = {}
+    return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
+            "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
+            "tools": stage_tools_digest()}
+
+
+def fail_key(parts, cls, why):
+    """FABLE-FLOWCLASS-RETRY-2030 P2: one key = kit input digest + masked first error (item / type names stripped)"""
+    dig = hashlib.sha1(json.dumps(parts, sort_keys=True).encode()).hexdigest()[:16]
+    return hashlib.sha1((dig + "|" + FG.norm_class(cls, why)).encode()).hexdigest()[:16], dig
+
+
+def is_host_fail(cls, why):
+    """HOST (disk, OOM, ssh, copy-back, admission) and STOPPED (signal, cancel) fails retry on their own and never make a key"""
+    return bool(cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_FAIL_RE.search(why or "") or KILL_RE.search(why or "")))
+
+
+def note_fail_key(cfg, st, rec, cls, why):
+    """store the key of this fail (not for HOST / STOPPED fails).  -> the key or None"""
+    if is_host_fail(cls, why):
+        return None
+    parts = kit_digest_parts(cfg, rec["die"], rec)
+    key, dig = fail_key(parts, cls, why)
+    store = st.setdefault("fail_keys", {})
+    k = f"{rec['die']}|{rec['item']}"
+    prev = store.get(k) or {}
+    n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
+    store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160]}
+    rec["fail_key"] = key
+    return key
+
+
+def fail_key_gate(cfg, st, die, item, block_sha=None):
+    """the ONE check every launch path goes through (pick, RETRY-INFRA, re-arm, retry key, breaker release): -> (blocked, why, changed).
+    blocked: the last non-HOST fail of this item has the same kit input digest, so the launch would fail the same way.
+    changed: what differs since that fail (the RELAUNCH-ON-FIX reason), [] when nothing was stored"""
+    prev = (st.get("fail_keys") or {}).get(f"{die}|{item}")
+    if not prev:
+        return False, "", []
+    d = (cfg.get("dies") or {}).get(die) or {}
+    now = kit_digest_parts(cfg, die, {"block_sha": block_sha} if block_sha else None)
+    old = prev.get("parts") or {}
+    changed = [k for k in ("block", "src", "overlay", "tools") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
+    if not changed:
+        return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay and the stage tools are "
+                      f"unchanged since the last fail: {str(prev.get('why'))[:100]}"), []
+    return False, "", changed
 
 
 def breaker_inputs(cfg, die):
@@ -9140,6 +9226,12 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         msg += " + GEOM REQ sample"
     notices.setdefault(rec["die"], []).append(msg)
     AP.log(f"KIT-WAVE ENQUEUE {rec['die']}/{rec['item']} {rec['kit']} geom {rec.get('geom', '')[:120]}")
+    try:
+        (st.get("fail_keys") or {}).pop(f"{rec['die']}|{rec['item']}", None)                    # a kit that got through: the old fail key is spent
+        for _k, _what in FG.probe_result(st, rec["die"], rec["item"], "place", passed=True):
+            AP.log(f"KIT-WAVE FLOW-GUARD PROBE {rec['die']}/{rec['item']}: {_what}")
+    except Exception:
+        pass
 
 
 def retry_enqueue(AP, cfg, st, notices):
