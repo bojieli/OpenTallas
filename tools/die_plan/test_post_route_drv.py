@@ -851,3 +851,45 @@ def test_preclean_only_first_final_seed_of_two_passes(tmp_path):
     second=tmp_path/'cold_p2'
     assert 'OT_PRD_PRECLEAN_FINAL' not in (second/'variant.env').read_text()
     assert json.loads((second/'PRD.json').read_text())['from']=='route'
+
+
+
+@pytest.mark.parametrize('from_',['route','final'])
+def test_mk_clock_inventory_is_pinned_after_native_pregrt_chain(tmp_path,from_):
+    kit=_final_kit(tmp_path);out=tmp_path/'inventory'
+    (kit/'native_pre.tcl').write_text('set ::native_seen 1\n')
+    with (kit/'config.mk').open('a') as f:f.write('export PRE_GLOBAL_ROUTE_TCL = /work/native_pre.tcl\n')
+    env=env_with_fake(tmp_path,OT_PRD_FROM=from_,OT_PRD_CLOCK_INVENTORY=1,OT_PRD_SEED_CHECK=0)
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    assert (out/'prd_clock_inventory.tcl').read_bytes()==(PRD/'prd_clock_inventory.tcl').read_bytes()
+    hook=(out/'eco_grt_pre.tcl').read_text()
+    assert hook.startswith((PRD/'eco_grt_pre.tcl').read_text())
+    assert hook.endswith('source /work/prd_clock_inventory.tcl\n')
+    assert 'OT_PRD_CLOCK_INVENTORY=1' in (out/'variant.env').read_text()
+    assert json.loads((out/'PRD.json').read_text())['clock_inventory']['requested'] is True
+    assert 'OT_ECO_GRT_PRE_CHAIN = /work/native_pre.tcl' in (out/'config.mk').read_text()
+    assert 'MAX_CLK_ROUTING_LAYER' not in (out/'config.mk').read_text()
+
+
+@pytest.mark.parametrize('from_,flag',[('grt',0),('route',0),('final',0),('grt',1)])
+def test_mk_clock_inventory_default_or_ordinary_grt_unchanged(tmp_path,from_,flag):
+    kit=_final_kit(tmp_path);out=tmp_path/'plain_inventory'
+    env=env_with_fake(tmp_path,OT_PRD_FROM=from_,OT_PRD_CLOCK_INVENTORY=flag,OT_PRD_SEED_CHECK=0)
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    assert (out/'eco_grt_pre.tcl').read_bytes()==(PRD/'eco_grt_pre.tcl').read_bytes()
+    assert not (out/'prd_clock_inventory.tcl').exists()
+    assert 'OT_PRD_CLOCK_INVENTORY' not in (out/'variant.env').read_text()
+    assert 'clock_inventory' not in json.loads((out/'PRD.json').read_text())
+
+
+def test_clock_inventory_request_survives_second_routekeeping_pass(tmp_path):
+    kit=_final_kit(tmp_path);out=tmp_path/'clock_keep'
+    env=env_with_fake(tmp_path,OT_PRD_FROM='route',OT_PRD_CLOCK_INVENTORY=1,OT_PRD_SEED_CHECK=0,
+                      FAKE_COUNTS='p1_tc=1,p1_bc=0,p2_tc=0,p2_bc=0')
+    result=mk(kit,out,env=env);assert result.returncode==0,result.stdout+result.stderr
+    result=subprocess.run(['bash',str(PRD/'prd_run.sh'),str(out),'2','4','2'],env=env,capture_output=True,text=True)
+    assert result.returncode==0,result.stdout+result.stderr
+    second=tmp_path/'clock_keep_p2'
+    assert 'OT_PRD_CLOCK_INVENTORY=1' in (second/'variant.env').read_text()
+    hook=(second/'eco_grt_pre.tcl').read_text()
+    assert hook.count('source /work/prd_clock_inventory.tcl')==1
