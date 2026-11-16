@@ -23,6 +23,16 @@ def verify_existing(directory,manifest_name,snapshot,guard):
         f=directory/name
         if not f.is_file() or hashlib.sha256(f.read_bytes()).hexdigest()!=want:
             raise ValueError(f'existing image differs; preserve and diagnose {f}')
+    if manifest_name!='head_rom.json':
+        # A pinned manifest from the same checkpoint can still contain the
+        # emitter's wrong instruction defaults. Reuse only the selected native ABI.
+        import hdc_qwen_fullshape_program_w12 as F
+        profile=F.profile(record['die'],matrix_rows=record['matrix_layout'],
+                          post_scale_bases=record['post_tp_scale_bases'])
+        for name,key in [('program.hex','program_hex'),('segments.hex','descriptor_hex')]:
+            native=('\n'.join(profile[key])+'\n').encode()
+            if hashlib.sha256(native).hexdigest()!=record['image_sha256'][name]:
+                raise ValueError(f'existing image uses a different native instruction profile; preserved {p}')
     return True
 
 
