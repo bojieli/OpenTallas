@@ -34,6 +34,20 @@ class Ops:
                             f"rsync -a {flag}-e 'ssh -o BatchMode=yes -o ControlPath=none' {path}/ {dst}:{path}/")
 
 
+    def ensure_snap(self, src, dst, sd, verify_cmd):
+        """KIT-OPS-5 11-15 (COORD r241): the verified kit snapshot directory sd is present on dst, replicated from src first when it is
+        not.  A roam stage reads kit inputs through snapshot paths; a host that never received the snapshot raised FileNotFoundError.
+        Present = sd/.verified exists on dst (written only by a passing verify).  -> (rc, text); rc 0 = present and verified."""
+        rc, _ = self.sh(dst, f"test -f {sd}/.verified")
+        if rc == 0:
+            return 0, ""
+        rc, txt = self.sh(src, f"ssh -o BatchMode=yes -o ControlPath=none {dst} mkdir -p {sd} && "
+                               f"rsync -a --exclude .verified --exclude .used -e 'ssh -o BatchMode=yes -o ControlPath=none' {sd}/ {dst}:{sd}/")
+        if rc:
+            return rc, txt
+        return self.sh(dst, verify_cmd(sd))
+
+
 class RoamArgv(list):
     """an ot-run argv whose --hosts value the Roamer rewrites (list subclass: run() / logging treat it as a list)"""
     roamer = None
@@ -49,6 +63,8 @@ class Roamer:
         self.others = [] if not enabled else [h for h in dict.fromkeys(candidates or [])
                                               if h != G and h not in hub_names and h]
         self.log = []
+        self.snaps = []                    # verified kit snapshot dirs this kit reads (set once kit_snap_stage returned)
+        self.snap_verify = None            # sd -> shell command that verifies sd on the host it runs on
 
     def before(self, stage):
         """copy W to every other candidate -> the host list for this stage (G first)"""
@@ -61,6 +77,12 @@ class Roamer:
         ok = [self.G]
         for h in self.others:
             rc, txt = self.ops.copy(self.G, h, self.W)
+            if rc == 0:                    # the stage may only be offered to a host that holds the kit's snapshots (no pinning)
+                for sd in self.snaps:
+                    rc, txt = self.ops.ensure_snap(self.G, h, sd, self.snap_verify)
+                    if rc:
+                        txt = f"snapshot {sd[-40:]}: {txt}"
+                        break
             if rc == 0:
                 ok.append(h)
             else:
