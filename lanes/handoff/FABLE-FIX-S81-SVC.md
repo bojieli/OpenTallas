@@ -79,3 +79,8 @@
   mismatch on svc would show at kit_rtl or preflight -> then ask DIE-S81-92 for the F2sv bind out on v3.
 - RISK: epyc9 scratch2 31 GB free at 08:40; tree only on epyc9 + epyc10.
 - Launcher fix: no pipefail (ls|head SIGPIPE killed it silently).
+
+## 08:58 PST pilots RELAUNCHED as p2 (p1 failed kit_snap: epyc9 scratch2 27 GB < 50 GB store floor, INFRA)
+- p2 pids (intel2): svc_hi rs t3 2788430, svc_lo rs t7 2788774. Work root now epyc9 ROOT disk
+  /srv/opentallas-scratch/fable-fix-s81-svc/pilot (414 GB free after a 7.2 GB snapshot); logs ~/fable-fix-s81-svc/<item>/p2/.
+- p2 passed src_manifest, kit_snap, bind_fetch, bind, kit_rtl_probe; in kit_rtl at 08:57.
