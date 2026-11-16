@@ -1,0 +1,26 @@
+{
+ "die": "head",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_e594a73db756",
+ "smoke": "PASS",
+ "smoke_detail": "kit_rtl 12/12 RC0; plan_gate_pre PASS",
+ "src_manifest_sha": "2f6af4b15fce5050fbbf5c2ce6f348e46b1cb34f85f379fb650f0c4ef48fe1f9",
+ "tools_sha": "e594a73db756",
+ "hosts": [
+  "epyc10",
+  "epyc2",
+  "epyc8",
+  "epyc9",
+  "intel1"
+ ],
+ "hosts_verified": "src_manifest hash+ro at copy, links check after",
+ "die_gen_env": {
+  "OT_PG_DIE_PHASE": "1",
+  "OT_PGCAP": "1",
+  "OT_TT_SETUP_REPAIR": "both",
+  "OT_PG_TRACK_TRUTH": "1",
+  "OT_PG_PIN_CHECK": "1",
+  "OT_GPL_SPARSE_UTIL": "0.10"
+ },
+ "written_by": "TOOLS-CONVERGE-1115",
+ "time": "2026-11-16 03:31:49 PST"
+}
