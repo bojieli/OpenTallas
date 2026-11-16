@@ -92,3 +92,9 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - Client logs intel2 ~/fable-fix-s81-coltap/pilot_col_*.log; kit logs <kit>/run/logs/asap7/*/base/.
 - r2 kit check: u_e10.u_w placed at 285.228 (swapped), clk_c6 -> e10_u_e, clk_c7 -> e10_u_w, early 215.39, s10..s14 371.22.
 - Reads to do: (1) 4_1_cts.log OT_TAP_CORE / OT_TAP_BALANCE done; (2) STA on reloaded 5_1_grt.odb, die RC 1.00 (adapt epyc10 fable-fix-s81-col/an/cts_sta.sh: FX_ODB=5_1_grt.odb, estimate_parasitics -global_routing), classes go_tag / ef / ROM q->s / reset chain hops (um); (3) GRT overflow; then RESULT col-wave1 / col-wave2 per r310; (4) sign-off + export.
+
+## 14:0x 11-16: ROW BUG found on the pilots (mine)
+- F2s3 swapped pairs overlap 1.116 um (pitch 267.84, half 268.38, kit offsets hw +0.108 / he +0.684). MPL-0041 at 2_2_floorplan_macro on every swapped col type. My earlier "0.576 um is harmless" answer was wrong (checked pins, not outlines).
+- Fix rows: epyc10 fable-fix-s81-coltap/rows_F2s4_colfix.json 1f35a4225f75 (copies on epyc7/8): 366 pairs one half +-4.32 um, 6 pairs (col_h10_r0_p4) unswapped. Asked DIE-S81-92 to fold into the next col event + rebind; col holds must be re-keyed to it.
+- Evidence reruns: kit_colfix.py ROWS KIT patches macro_place.tcl of a STOPPED kit (backup macro_place.tcl.f2s3). r2 + col_h10_r2 relaunched on epyc7 (logs pilot_col_h9_r2_.log, pilot_col_h10_r2_.log; first tries *.try1.log). TODO: when col_h9_r1 / col_h9_r0_p2 (epyc8) and col_h10_r0_p1 (epyc7) stop with MPL-0041: patch + relaunch the same way.
+- These runs are evidence only. PASS needs kits generated on the corrected bind (regenerate the five then).
