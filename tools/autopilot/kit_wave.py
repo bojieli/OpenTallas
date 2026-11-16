@@ -7112,7 +7112,7 @@ BIND_PREFLIGHT_TTL_S = 1800
 def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
     """{item: why} for type rows whose kit_topology prepare-stations would raise KIT_TOPOLOGY_BIND_STALE (kit_rtl mode
     bind, canonical topology preparation on).  One probe per (src, plan, bind_out, asbuilt, reset scope) on the die's
-    gen_host, cached in st for BIND_PREFLIGHT_TTL_S; a probe error or an unreadable input = unknown = launch (fail open).
+    gen_host, cached in st for BIND_PREFLIGHT_TTL_S; a probe error or an unreadable input = unknown = NOT launched (fail closed, FAILCLOSED-1116).
     Die option bind_preflight false turns it off."""
     d = cfg["dies"][die]
     if d.get("bind_preflight") is False or d.get("canonical_topology_prepare", True) is False:
@@ -7148,8 +7148,10 @@ def bind_preflight(AP, cfg, st, die, rows, now=None, rpy=None):
             p = rpy(d.get("gen_host"), PROBE_BIND, dict(g, types=sorted(set(items))), timeout=600)
             if not isinstance(p, dict) or p.get("error") or not isinstance(p.get("stale"), list):
                 if AP:
-                    AP.log(f"KIT-WAVE bind preflight {die} skipped (unknown = launch): "
+                    AP.log(f"KIT-WAVE bind preflight {die} UNKNOWN (fail closed, rows not launched): "
                            f"{(p or {}).get('error') if isinstance(p, dict) else p}"[:400])
+                for item in items:                       # FAILCLOSED-1116: an unreadable probe blocks the launch, never passes it (not cached: retried next tick)
+                    out[item] = "BIND_PREFLIGHT_UNKNOWN: the bind probe could not run on the gen host; not launched until it can"
                 continue
             c = cache[key] = {"t": now, "checked": sorted(set(items)), "stale": p["stale"]}
         for item in items:

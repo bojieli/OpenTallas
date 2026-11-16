@@ -4,6 +4,7 @@ does the reads and the log.  It never launches, cancels or writes state."""
 import fnmatch
 import json
 import re
+import time
 from collections import Counter
 from pathlib import Path
 
@@ -35,28 +36,35 @@ def kind(text):
     return m.group(1) if m else "unnamed"
 
 
-def hold_counts(items, cfg):
-    """-> Counter of 'kind' -> rows.  ENQUEUED rows of a die whose hold_items match = 'hold_items:<kind>'; ROUTE-HELD rows =
-    'route_hold:<kind>'; any hold or reason text that names tree_switch / tree-switch is counted as 'tree_switch' instead."""
+def row_classes(items, cfg):
+    """-> {row key: class} for every eligible (ENQUEUED / ROUTE-HELD) row.  A row with no hold is split by the first launch gate it waits on:
+    gate:disk_wait (gen disk), gate:q_<queue status> (the autopilot queue / ot-run admission state of its enqueued job), gate:no_queue_status."""
     dies = (cfg or {}).get("dies") or {}
-    c = Counter()
-    for rec in (items or {}).values():
+    out = {}
+    for key, rec in (items or {}).items():
         st = rec.get("status")
         if st not in ELIGIBLE + HELD:
             continue
         d = dies.get(rec.get("die")) or {}
         if st in HELD:
             why = str(rec.get("route_hold") or rec.get("reason") or "")
-            k = "tree_switch" if re.search(r"tree[_-]switch", why, re.I) else "route_hold:" + kind(why)
-            c[k] += 1
+            out[key] = "tree_switch" if re.search(r"tree[_-]switch", why, re.I) else "route_hold:" + kind(why)
             continue
         item = str(rec.get("item") or "")
         why = next((str(w) for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(item, pat)), None)
-        if why is None:
-            c["enqueued_not_held"] += 1          # eligible, no hold: waits for a slot / host / max_inflight
+        if why is not None:
+            out[key] = "tree_switch" if re.search(r"tree[_-]switch", why, re.I) else "hold_items:" + kind(why)
+        elif rec.get("disk_wait"):
+            out[key] = "gate:disk_wait"
         else:
-            c["tree_switch" if re.search(r"tree[_-]switch", why, re.I) else "hold_items:" + kind(why)] += 1
-    return c
+            out[key] = "gate:q_" + (str(rec.get("q_status") or "").lower() or "no_queue_status")
+    return out
+
+
+def hold_counts(items, cfg):
+    """-> Counter of 'kind' -> rows.  ENQUEUED rows of a die whose hold_items match = 'hold_items:<kind>'; ROUTE-HELD rows =
+    'route_hold:<kind>'; any hold or reason text that names tree_switch / tree-switch is counted as 'tree_switch' instead."""
+    return Counter(row_classes(items, cfg).values())
 
 
 def line(status_text, items, cfg, top=5):
@@ -70,6 +78,26 @@ def line(status_text, items, cfg, top=5):
     pct = (100.0 * (cores - idle) / cores) if cores else 0.0
     return (f"UNDER-USE idle {idle} of {cores} threads (used {pct:.0f}%): {per or 'no host status'} | "
             f"rows not launching {sum(holds.values())}: {ranked}")
+
+
+NEEDS_ACTION_TICKS = 3
+
+
+def track(state, classes, now):
+    """state {"rows": {key: [class, ticks]}, "posted": {class: t}}; a row in the same non-hold gate class for NEEDS_ACTION_TICKS ticks
+    -> returns {class: n rows} not yet posted (the caller posts one NEEDS-ACTION per class and marks it posted)"""
+    rows = state.setdefault("rows", {})
+    posted = state.setdefault("posted", {})
+    for k in [k for k in rows if k not in classes]:
+        del rows[k]
+    for k, c in classes.items():
+        rows[k] = [c, rows[k][1] + 1 if k in rows and rows[k][0] == c else 1]
+    for c in [c for c in posted if not any(v[0] == c for v in rows.values())]:
+        del posted[c]                                   # class cleared: a recurrence posts again
+    due = Counter(v[0] for v in rows.values() if v[1] >= NEEDS_ACTION_TICKS and v[0].startswith("gate:") and v[0] not in posted)
+    for c in due:
+        posted[c] = now
+    return dict(due)
 
 
 def step(AP):
@@ -87,5 +115,19 @@ def step(AP):
         except (OSError, ValueError):
             cfg = {}
         AP.log(line(status, items, cfg) if status else "UNDER-USE ot-run --status unavailable")
+        try:
+            sp = ap_dir / "under_use_state.json"
+            try:
+                state = json.loads(sp.read_text())
+            except (OSError, ValueError):
+                state = {}
+            due = track(state, row_classes(items, cfg), time.time())
+            sp.write_text(json.dumps(state))
+            for c, n in sorted(due.items()):
+                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md",
+                                f"- {time.strftime('%Y-%m-%d %H:%M %Z')} NEEDS-ACTION [AUTOPILOT -> COORD] UNDER-USE: {n} row(s) "
+                                f"waited {NEEDS_ACTION_TICKS}+ ticks at launch gate '{c}' with no hold naming it")
+        except Exception as e:
+            AP.log(f"UNDER-USE needs-action skipped: {type(e).__name__}: {e}")
     except Exception as e:
         AP.log(f"UNDER-USE failed: {type(e).__name__}: {e}")
