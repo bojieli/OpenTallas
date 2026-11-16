@@ -118,3 +118,17 @@ Root explicitly ordered park. No further edits or launches after the requested h
 
 ### Four oldwave image holds
 qc_pack holds only hubcontrollers slice_station14a6/45a6/46a7/8a32, actual remoteGEN continues. Exact ledger intel2 coord/autopilot/codex_s81_gen_review_freeze_1116.json; source waveed968/oldF2s3, separate from new proposals/fresh8leaf. CONG has NOT yet viewed actual4wave images and sent NO approval. Do not unfreeze by assuming proposalPNG3 is identical; it is not. qc_pack SIGCONTs exact controllers after actual scoped image approval; other25 ownedplans/clock_reach. Root/Claude takes release-owner role now.
+
+## Update 2026-11-16 ~14:15 PST (COORD r341)
+- Stop restored: claude/fable-fix-s81-cong-stop-1116 @827bba3961cc (revert of 99618079ab on main, OT_GRT_POST_MAX_S default 0 kept),
+  GATE main=96cae5872b9 23/23 GREEN (intel2 ~/fable-fix-s81-cong/gate_827bba3.log). READY posted; COORD approves on GREEN.
+- After merge: relaunch t34/t47/t62/t65 as D2-tree (F2s3) kits, NOT the old c_* kits. Old kits still alive at last read: c_t62 (epyc8),
+  c_t75b (epyc8 root scratch), c_t8 (epyc10); stop by exact PID once the D2 kits run.
+- 4 CONG-held controllers (slice_station t14/t45/t46/t8) reviewed on plan geometry (no cores, hops <= 389) and released by kill -CONT
+  (post ae75524). Image: rtx-pro scratchpad rvdir/ss4.png.
+- Codex notes to carry: (a) old c_t43b ended DPL-0033 after the real max-wire repair (ft5_o stage 3 bits 274/267 overlap): check the
+  t43 ft5 band row for two bit sites on one legal site before F2s4strip1 binds; (b) leaf8 GEN STALE-CORE-VIEW on ot_s81sl_vsw
+  (D2 TT lib c005b97581b1 vs signed cbc77fd548ba): needs the signed-view cohort fixed, never a hash-gate bypass.
+- NOT DONE (r341): structural fix (pitch on placement parasitics before ONE full GRT without the overflow-30 regression, or threaded
+  incremental GRT); t34 -99 ps at GRT RC; GRT proof of the t28/t8 W-widen forms; t43/t75 rows handed as files (READY-ROWS posted, in
+  F2s4strip1 list per DIE-S81-92).
