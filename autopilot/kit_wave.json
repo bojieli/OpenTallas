@@ -28,8 +28,8 @@
       "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
       "kit_rtl": {
         "mode": "bind",
-        "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
-        "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx1",
+        "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/asbuilt_portable.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx2",
         "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
       },
       "gen_args": [
@@ -260,7 +260,9 @@
         "kv3_pv_v12@1",
         "kv3_pv_v1@20",
         "kv3_pv_v7@1",
-        "kv3_sys_c@3"
+        "kv3_sys_c@3",
+        "kv3_hub_Wo@1",
+        "kv3_pv_v1@25"
       ],
       "take_states": [
         "NEEDS-KIT",
@@ -309,7 +311,7 @@
         "kv3_hgi_v7@2": "DIE-KV-64 pvbind 62b62298941 merged main 88f2e7ecac1 (class 1 kv3_pv* KIT_PREFLIGHT bound-netlist path: kv3_pv_pair composites + plan_c physical_inst + bind r8 alias; class 2 CLAND ring-band budgets cland_fit_resize_off_types += kv3_hgi,_v3,_v4,_v5) + recipe pvrec/bind_pv; one batch KW-FIX-4 13:5x + plan_c budgets-note schema fix 98e13b8bfec (wave src kw-fix-4-kv88 @98e13b8bfec = main 4b0a73deb5f + fix)",
         "kv3_hgi_v8@1": "KIT-OPS-3 11-13 22:5x KV-102 ADOPT kv102fx_e7d0118c2c (KV-RCAP-FLAT cap_budget CORED by measured synth count; KV-CLAND-EDGE inclusive landing start window) + train-L patch-only PG-track; plan sha unchanged -> failed rows relaunch via item@attempt, others digest-keep. [rcap]",
         "kv3_hub_Eo@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
-        "kv3_hub_Wo@1": "COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
+        "kv3_hub_Wo@1": "FLOW-FIX: TOOLS-CONVERGE-1115 root-authorized portable manifest metadata fix: normal ROOT policy0, native56 equality, actualbind_matches56 LATCHECK2404 and actual hub_C KITRTL0; AB7f285ea9c8bd + new ctx2. Same source4312921fd6bb and plan723fd5b4b006; no circuit change. Previous: COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
         "kv3_pv@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
         "kv3_pv_v1@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
         "kv3_pv_v12@1": "REDESIGN: R-MINIMAL auto retry (gate token for unchanged_fail; R-PROFILE/R-MINIMAL one retry with the R-FLOW recipe): --slew-margin 50 --cap-margin 20 --max-wire-um 120 + OT_PLACE_MAX_FANOUT=32. Prev class FLOW. KIT-OPS-2 2026-11-13 R-MINIMAL (OWNER 17:5x, RULEBOOK R-MINIMAL; COORD 17:4x). Was: COORD 05:20 (2): stopped at bind on the 05:05 config (bind_pv2 missing on epyc4); bind_e2 now reachable",
@@ -566,7 +568,7 @@
         "kv3_hg_v1p3@7": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
         "kv3_hg_v1p6@4": "FAIL-QCKV-1 pass 4 (COORD): latest attempt was on kv102fx/kv101ns, not kv102sem/ftgrid; in-flight unit stopped; relaunch on current event.",
         "kv3_hg_v3@13": "FAIL-QCKV-1 pass 4 (COORD): latest attempt was on kv102fx/kv101ns, not kv102sem/ftgrid; in-flight unit stopped; relaunch on current event.",
-        "kv3_hub_C@1": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
+        "kv3_hub_C@1": "FLOW-FIX: TOOLS-CONVERGE-1115 root-authorized portable manifest metadata fix: normal ROOT policy0, native56 equality, actualbind_matches56 LATCHECK2404 and actual hub_C KITRTL0; AB7f285ea9c8bd + new ctx2. Same source4312921fd6bb and plan723fd5b4b006; no circuit change. Previous: KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
         "kv3_hgi_v3@7": "KV-FTGRID (KV-102 READY 02:13): plan_c.json re-sites 16 off-grid ft5 bits in kv3_hgi_v3/v6 (G0 0 errors, bind_matches 56/56) + ft_add_station.py nearest-legal-site fallback; relaunch only these two.",
         "kv3_hgi_v6@8": "KV-FTGRID (KV-102 READY 02:13): plan_c.json re-sites 16 off-grid ft5 bits in kv3_hgi_v3/v6 (G0 0 errors, bind_matches 56/56) + ft_add_station.py nearest-legal-site fallback; relaunch only these two.",
         "kv3_pv_v3n@6": "KIT-OPS-4 11-14 03:4x INFRA: ot-job exit 99 input (gen/run_kit.sh) on another gen host, no fetch host in spec / ADMIT-TUNE-1 soft-pin REBALANCE regression (fixed)",
@@ -588,7 +590,8 @@
         "kv3_pv_v6@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
         "kv3_pv_v6n@8": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
         "kv3_pv_v7@6": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
-        "kv3_pc_v3@7": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running."
+        "kv3_pc_v3@7": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
+        "kv3_pv_v1@25": "FLOW-FIX: TOOLS-CONVERGE-1115 root-authorized portable manifest metadata fix: normal ROOT policy0, native56 equality, actualbind_matches56 LATCHECK2404 and actual hub_C KITRTL0; AB7f285ea9c8bd + new ctx2. Same source4312921fd6bb and plan723fd5b4b006; no circuit change."
       },
       "only_items": [
         "kv3_astk",
@@ -5923,7 +5926,12 @@
         "gen_hosts": [
           "epyc10"
         ]
-      }
+      },
+      "prev_kv_portable_ctx2_1116": {
+        "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+        "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx1"
+      },
+      "note_kv_portable_ctx2_1116": "FLOW-FIX: TOOLS-CONVERGE-1115 root-authorized portable manifest metadata fix: normal ROOT policy0, native56 equality, actualbind_matches56 LATCHECK2404 and actual hub_C KITRTL0; AB7f285ea9c8bd + new ctx2. Same source4312921fd6bb and plan723fd5b4b006; no circuit change."
     },
     "s81": {
       "enabled": true,
