@@ -18,3 +18,6 @@ env -u DV_SU_TRANSPORT DV2_S8DIE=1 \
 ```
 
 `DV_SU_AGES` and `DV_VEC_AGES` affect default intake only; an explicit `load_ages(path)` wins. Unset variables retain the legacy defaults. The existing memory-profile mismatch check remains active. This command is for native zero-parent-transport analytical compilation. It does not qualify the current bound READ_EXTRA9 vehicle. Do not set `DV_SU_TRANSPORT` until QC resolves and measures its relative control/data and VM-loop contract.
+
+
+A fresh paired MIF0/CROM3 baseline can be emitted with the composer option `--native-mif 0`; it uses the baseline measured in the same current component, not a historic age file. `composed_base_align3_mif0` and `composed_base_3_1` were both analytically compiled with the actual S8 selector. The native tagged path now charges its freshly compiled attention-return span, rather than applying the old 98-edge whole-family record. The resulting conditional chained difference is +27 cycles. Both compiler vehicles still report unresolved coverage/capacity; the MIF1 calendar additionally exposes a historical absolute SEG-date clash with a shifted residual command. See `native_pair_price/price.json`; this diagnostic is not a qualified release price or final bound calendar.

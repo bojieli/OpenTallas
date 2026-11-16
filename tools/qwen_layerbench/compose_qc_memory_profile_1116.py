@@ -31,7 +31,11 @@ def dynamic(ledger,fixture,op):
     raise ValueError(f'missing dynamic case {fixture}/{op}')
 def sampled(a,key): return a[key]-1  # drive-negedge counter origin -> actual input sampling posedge
 
-def compose(su,static,head,red):
+def compose(su,static,head,red,native_mif=1):
+    require(native_mif in (0,1), "native MIF must be0 or1")
+    profile=dict(PROFILE,sram_if_mif=native_mif)
+    def selected(a,key):
+        return sampled(a,key if native_mif else key.replace("mif_","base_"))
     require(su['source_flat_sha256']==FLAT,'SU source mismatch')
     require(su['profile1']==PROFILE,'SU memory profile mismatch')
     require(static['prefix']['edges']==3 and static['native_d2d_suffix']['edges']==3 and static['native_sc_psum_suffix']['edges']==3,'unreviewed static boundary')
@@ -59,16 +63,16 @@ def compose(su,static,head,red):
     base=red['first_input_to_producer_output_edges']
     require(type(base) is int and base>=15,'invalid measured RED base age')
     prefix=static['prefix']['edges']; dd=static['native_d2d_suffix']['edges']; sc=static['native_sc_psum_suffix']['edges']
-    red_first=prefix+sampled(ssq,'mif_first')+base+2+3+1
+    red_first=prefix+selected(ssq,'mif_first')+base+2+3+1
     ps=[red_first+sc+16*j for j in range(3)]
     root_cfg=4 # fixed compiler command guard; independent of SU memory-read age
-    scalar={'schema':'opentallas.qwen.dv-slice-ages.v1','memory_profile':PROFILE,'slice_rtl':'s8','ssq_psum_out':ps,'root_cfg_lead':root_cfg,
+    scalar={'schema':'opentallas.qwen.dv-slice-ages.v1','memory_profile':profile,'slice_rtl':'s8','ssq_psum_out':ps,'root_cfg_lead':root_cfg,
             'per_slice':{str(s['slice']):ps[:s['FP32_words']//128] for s in head['slices']}}
     def dd_array(a):
-        first=sampled(a,'mif_first')+prefix+dd; last=sampled(a,'mif_last')+prefix+dd
+        first=selected(a,'mif_first')+prefix+dd; last=selected(a,'mif_last')+prefix+dd
         require(last-first+1==a['count1']//8 or a['count1']==1,'D2D cadence mismatch')
         return list(range(first,last+1))
-    d2d={'rs':[sampled(rs,'mif_first')+prefix+dd],
+    d2d={'rs':[selected(rs,'mif_first')+prefix+dd],
          'qn':dd_array(dynamic(static,'qn_rope_lo',1)),
          'rope_q':dd_array(dynamic(static,'qn_rope_lo',3)),
          'rope_k':dd_array(dynamic(static,'rope_hi_v',1)),
@@ -77,14 +81,14 @@ def compose(su,static,head,red):
     # Readback3 has the same fixed command and sixteen beats per repeated row;
     # HEAD receiver receipt measures the full three-row control and packing span.
     d2d['readback']=dd_array(dynamic(static,'residual_readback3',3))
-    xs=[x['offset']+prefix for x in max(head['slices'],key=lambda x:x['FP32_words'])['BF16_receiver_beats']]
-    silu_first=sampled(silu,'mif_first')+11+prefix
-    vector={'schema':'opentallas.qwen.dv-slice-vec-ages.v1','memory_profile':PROFILE,'slice_rtl':'s8','add_psum_out':ps,'xs_out':xs,
-            'silu_out':[silu_first,silu_first+8],'red_vm':red_first+7,'root_cfg_lead':root_cfg,'d2d':d2d}
-    note={'schema':'opentallas.qc.memory-profile-composition.v1','status':'PASS_COMPOSED_COMPONENTS','memory_profile':PROFILE,
+    xs=[x['offset']+prefix+(selected(copy,'mif_first')-sampled(copy,'mif_first')) for x in max(head['slices'],key=lambda x:x['FP32_words'])['BF16_receiver_beats']]
+    silu_first=selected(silu,'mif_first')+11+prefix
+    vector={'schema':'opentallas.qwen.dv-slice-vec-ages.v1','memory_profile':profile,'slice_rtl':'s8','add_psum_out':ps,'xs_out':xs,
+            'silu_out':[silu_first,silu_first+8],'red_vm':red_first+7-(1-native_mif),'root_cfg_lead':root_cfg,'d2d':d2d}
+    note={'schema':'opentallas.qc.memory-profile-composition.v1','status':'PASS_COMPOSED_COMPONENTS','memory_profile':profile,
           'origin':'actual flat cmd_i sampling posedge to receiver sampling posedge; final bound lane transport remains separate',
-          'native_zero_parent_transport':True,'bound_profile_adoption':False,'raw_su_origin_conversion':-1,'prefix':prefix,'d2d_suffix':dd,'red_measured_base':base,'red_selected_IN_OUT':5,
-          'red_producer_to_next_receiver':1,'sc_suffix_from_input_receiver':sc,'vm_publication_from_ctl_input_receiver':7,
+          'native_zero_parent_transport':True,'bound_profile_adoption':False,'paired_current_source_baseline':native_mif==0,'raw_su_origin_conversion':-1,'prefix':prefix,'d2d_suffix':dd,'red_measured_base':base,'red_selected_IN_OUT':5,
+          'red_producer_to_next_receiver':1,'sc_suffix_from_input_receiver':sc,'vm_publication_from_ctl_input_receiver':7-(1-native_mif),
           'source_flat_sha256':FLAT,'static_source_sha256':static['source_sha256'],'HEAD_stream_source_sha256':head['stream_source_sha256'],'RED_source_sha256':red['source_sha256'],'RED_qualification_status':red['status'],'RED_scope':red.get('scope','See RED receipt'),
           'root_cfg_lead_note':'Fixed four-edge compiler ROOT-configuration guard, not an SU read age; preserved separately from measured SU ages.',
           'qualification_limit':'Native zero-parent-transport composition only; final bound READ_EXTRA9 is not qualified by this memory1 receipt. Current native component composition only. Requires selected source/plan transport dates and final bound shared calendar before programme/token adoption.'}
@@ -94,9 +98,11 @@ def compose(su,static,head,red):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for n in ('su','static','head','red'):p.add_argument('--'+n,type=Path,required=True)
-    p.add_argument('--out',type=Path,required=True);a=p.parse_args()
+    p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--native-mif',type=int,choices=(0,1),default=1,help='0 selects freshly paired current-source MIF0/CROM3 baseline')
+    a=p.parse_args()
     try:
-        scalar,vector,ledger=compose(*(read(getattr(a,k)) for k in ('su','static','head','red')))
+        scalar,vector,ledger=compose(*(read(getattr(a,k)) for k in ('su','static','head','red')),native_mif=a.native_mif)
         require(not a.out.exists(),'output directory already exists; preserve prior verdict')
         ledger['receipts']={k:{'path':str(getattr(a,k)),'sha256':sha(getattr(a,k))} for k in ('su','static','head','red')}
         a.out.mkdir(parents=True)

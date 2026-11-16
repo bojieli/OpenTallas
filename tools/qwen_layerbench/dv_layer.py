@@ -114,7 +114,15 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     at_span_c = max(x['edge_e5'] for x in at_lw['expected']['x']) - at_r0
     at_rec = json.loads((ROOT / ATTNRET_REC).read_text()) if (ROOT / ATTNRET_REC).exists() else {}
     at_span = at_rec.get('measured_span_edges')
-    if at_span is None:
+    native_s8_ages = at_lw['ages'].get('slice_rtl') == 's8'
+    if native_s8_ages:
+        # Current native ages are composed from measured minimum components;
+        # a historical whole-family receipt cannot replace their new dates.
+        if at_span != at_span_c:
+            notes.append(f'ATTENTION RETURN: native S8 component-composed span {at_span_c}; '
+                         f'historical span {at_span} from {ATTNRET_REC} is not applied')
+        at_span = at_span_c
+    elif at_span is None:
         gaps.append(f'ATTENTION RETURN: no measured span ({ATTNRET_REC}); the compiled span {at_span_c} is used')
         at_span = at_span_c
     elif at_span != at_span_c:
@@ -216,8 +224,9 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     # the ctlm price already counts its own result landing, plan first landed word = done - 16)
     t_ret = stage_rec('attention return: dr words land (PORTS dd windows) + o_proj x stream (DV)', [11, 12], t_att,
                       t_att + at_span, P[11]['done'] - 16, P[11]['done'],
-                      f'dv_lower_vec attn (owners {at_lw["attn_owners"]}): MEASURED first dr word at the W5 pin -> '
-                      f'last x word at E5 ({ATTNRET_REC}); priced = the plan landing tail (done - 16 .. done)')
+                      f'dv_lower_vec attn (owners {at_lw["attn_owners"]}): {"COMPONENT-COMPOSED" if native_s8_ages else "MEASURED"} first dr word at the W5 pin -> '
+                      f'last x word at E5 ({"native S8 measured-component schedule" if native_s8_ages else ATTNRET_REC}); '
+                      'priced = the plan landing tail (done - 16 .. done)')
     o_at = edge('pre_o', t_ret + gap(11, 12))
     o_low, o_ch, o_xc, o_t0, o_first_out = mv_ar('o', o_at, o_at + P[12]['done'] - P[12]['at'])
     t_o = stage_rec('o_proj matvec L8 -> AR words + XC (column tiles + STN)', [12, 13], o_at, o_t0 + 255, P[12]['at'],
