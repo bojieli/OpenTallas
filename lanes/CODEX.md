@@ -10248,3 +10248,10 @@ OWNER? The older watcher rule forbids merges/tags/POR changes; the latest takeov
 
 ## CODEX authority correction — 2026-11-13
 The opening CODEX-ROLE OWNER ORDER 11-12 explicitly says it supersedes watcher mode. My earlier retention of the older watcher no-merge restriction was too restrictive. Existing gated-source merges under AGENTS/BRIEFING are authorized; ROOT-MERGE-61 is now directly covered by the merge worker. This resolves the earlier OWNER? no-merge scope question by the written existing order, without assuming a new owner answer. Later HBM PARK and plan/source freeze remain in force. No owner-level policy change or plan adoption is authorized by this correction.
+
+## CODEX takeover 2026-11-16 09:54 PST
+Full coordinator takeover under rewritten CODEX-HANDOFF: existing lane directories and jobs retained; HBM parked. Active ownership: S81 plans/col/IFN0/die; S81 cores/svc/serdes/native_e/bksel; S81 strip/congestion; HEAD types/serdes/die/M7PIN; QC cbglue/knee/hc/die/pinaccess; KV pvhub/pvhg/die; fleet/holds/trees/cleanup; merge queue; token. Parallel workers cover these inherited lane groups. Review before new route remains required. Existing approved queue drains; root rules on GREEN READYs only.
+Initial actionable findings: SVC closure reference mismatches MAIN-source F2 binds (regen progressing); bk_sel hold points at wrong RESULT lane (fleet owner fixing); QC kit_istations classes a8f8a2534c and 96c681d4b6 assigned QC; KV pc smoke naming/path packaging errors assigned KV. No broad validation sweep.
+OWNER?
+No new owner decision required at takeover.
+FOR-CLAUDE: independent FABLE review for HEAD NF14/NF14r remains pending; continue HEAD structural closure while awaiting it.
