@@ -37201,8 +37201,7 @@
     "sl?_hc0*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption.",
     "sl?_hc1*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption.",
     "slw_su_l1__cla2a78701": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
-    "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
-    "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
+    "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -47472,8 +47471,10 @@
     "sl?_hc0*": "event_adopt:S4q5",
     "sl?_hc1*": "event_adopt:S4q5",
     "slw_su_l1__cla2a78701": "lane_result:DRT0255-PROOF flags READY",
-    "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY",
-    "slw_st_a_v2__cl9f076a5c": "lane_ready:KITRTL-FAIL-1115 releases"
+    "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY"
+   },
+   "hold_items_released_wavehold1115_r189": {
+    "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
    }
   },
   "hbm": {
