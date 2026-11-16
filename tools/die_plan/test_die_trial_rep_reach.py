@@ -226,3 +226,15 @@ def test_adaptive_reach_escapes_wide_phy_wall(monkeypatch):
     assert max(D.chain_spans([a] + pts + [b])) <= 405. + 1e-6
     assert (len(pts) + 1) % 2 == 0
     assert info['added_wire_um'] > 2000. and info['added_stages'] > 0
+
+
+def test_extra_reach_stages_skip_unsplittable_macro_span():
+    # A legal 400um macro overflight cannot itself take another repeater.
+    # Minimum-count/parity stages belong on either legal side of the core.
+    class Site:
+        def legal(self, q):
+            return not (300. < q[0] < 700.)
+    pts = D.reach_place(Site(), [(0., 0.), (1000., 0.)], 450., nmin=4)
+    assert pts is not None and len(pts) == 4
+    assert all(Site().legal(q) for q in pts)
+    assert max(D.chain_spans([(0., 0.)] + pts + [(1000., 0.)])) <= 450. + 1e-6
