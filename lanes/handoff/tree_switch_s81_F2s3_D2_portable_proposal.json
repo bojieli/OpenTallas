@@ -1,0 +1,36 @@
+{
+ "die": "s81",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2",
+ "smoke": "PASS",
+ "manifest_hash": "aed3b3e059b20904d0125d0b89e6c8d0c0ce561247674c237df75a8db2d3d8a3",
+ "src_manifest_sha": "aed3b3e059b20904d0125d0b89e6c8d0c0ce561247674c237df75a8db2d3d8a3",
+ "hosts": [
+  "epyc10"
+ ],
+ "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2/physical/die_plan/s81/plan_inputs/run/B6gF2s3.json",
+ "plan_sha256": "ed968f4cc6e6734b9b9d826e2e0c5bee74a220d8e55074f9a73fdc3e715f0e0d",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_3c913dbdfb23_f2s3_mainref_pg_d2/asbuilt_portable.json",
+ "asbuilt_sha256": "65649ead371a9101b200d8cacb40d8bbad4883c15fc6fe42d1f3b19aaac3be02",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2/physical/die_plan/s81/plan_inputs/run/sidecar_F2s3.json",
+ "sidecar_sha256": "7d94d9fcedb5bcd1d4de105d44755215d0c64f4048082b019eb7254ae19bc694",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_3c913dbdfb23_f2s3_mainref_pg_d2/out_ctx2",
+ "config": {
+  "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+  "queue_src": "main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_3c913dbdfb23_f2s3_mainref_pg_d2/asbuilt_portable.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_3c913dbdfb23_f2s3_mainref_pg_d2/out_ctx2"
+  }
+ },
+ "status": "PROPOSAL ONLY root/parent owns canonical adoption; ep9 add after source+bind replication verified",
+ "proof": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_3c913dbdfb23_f2s3_mainref_pg_d2/F2s3_D2_portable_context_PASS.json",
+ "normal_manifest_policy_errors": [],
+ "bind_matches_passed": 395,
+ "latcheck_passed": 873,
+ "kit_rtl_type": "slice_station__t14",
+ "kit_rtl_rc": 0,
+ "compiled_asbuilt_sha256": "02a9acbd9408b04a1c60a93b2063d4f0bc49d254cad3c9435ca10a825e45f102",
+ "preserve_holds": "col/svc and exact6 failed SerDes unchanged; source coherent does not override physical failures"
+}
