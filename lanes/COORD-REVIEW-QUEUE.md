@@ -16994,3 +16994,32 @@ FAILED [AUTOPILOT a5c67d3cd2cf] 2026-11-16 04:22:23 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-16 04:23 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 1 event(s): coll_ftc route FAIL FLOW (flow-error: [ERROR DRT-0255] Maze Route cannot find path of net u_bound.u_cland_tl_st_wi_i/u_ring.dch\[10\].u_dsel/net103784 in worker of routeBox ( 166440 9245) job a5c67d3cd2cf
 FAILED [AUTOPILOT b21bcd39a736] 2026-11-16 04:42:24 PST AUTOPILOT -> KIT-WAVE-5: FAILED b21bcd39a736 s81_head/hd_ctl (CRASH/flow-error): [ERROR DRT-0255] Maze Route cannot find path of net net32841 in worker of routeBox ( 326040 190380 ) ( 330030 194370 ). | kit epyc7:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF13a/items/hd_ctl/attempt_3/gen/hd_ctl src main@2dd0d8c9fd6c | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-11-16 04:43 PST KIT-WAVE [s81_head] -> HEAD die owner (HEAD-100): 2 event(s): hd_ctl route FAIL FLOW (flow-error: [ERROR DRT-0255] Maze Route cannot find path of net net32841 in worker of routeBox ( 326040 190380 ) ( 330030 194370 ).) job b21bcd39a736; hd_ctl LAUNCHED (kw-s81hea-hdctl-4-33021)
+- 2026-11-16 04:52 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc COORD, FABLE-PD-S81-1415] pgh = pg (reset_replicate rows + OT_TAP_RESET_AFFINITY=1) + pregrt_ff_hold, through route, col_h9_r0_p6. Before: pg 4_cts TT removal 198 fails -229, recovery 0 (+61). ac5 on the built DB (4_cts.odb after the R-CLOCK hold build) and the routed DB, TT and FF libs:
+  run_kit end: ot-run: RAN on epyc10 (unit oth-ubuntu-3955626-1794780950): exit 2
+  OT_PREGRT_FF_HOLD class before port_in 1368 ws -91.80 same_tap 877 ws -206.46 cross_tap 9752 ws -243.83 port_out 0 ws 0.00
+  OT_PREGRT_FF_HOLD pass all 1 margin 5.0 wns -147.9501249651429 endpoints 1308 insts 234630
+  OT_PREGRT_FF_HOLD pass all 2 margin 5.0 wns -30.922722839326006 endpoints 78 insts 236416
+  OT_PREGRT_FF_HOLD pass all 3 margin 5.0 wns -30.922722839326006 endpoints 78 insts 236416
+  OT_PREGRT_FF_HOLD pass xt 1 margin 5.0 + cross-tap 40.0 wns -52.05808027693126 endpoints 97 insts 246440
+  OT_PREGRT_FF_HOLD legalize negotiation overlaps 0
+  OT_PREGRT_FF_HOLD class after port_in 0 ws 0.00 same_tap 0 ws 0.00 cross_tap 87 ws -30.92 port_out 0 ws 0.00
+  OT_PREGRT_FF_HOLD after wns -30.922722839326006 endpoints 87 cross_tap_wns -12.058080276931257 tap_ports 32 hold_cells 31543 insts 246440 setup_wns -348.6500824210495 (before -348.6500824210495) guard 45 locked 19686 sec
+  OT_PREGRT_FF_HOLD pass xt 1 margin 5.0 + cross-tap 40.0 wns -52.05808027693126 endpoints 97 insts 246440
+  OT_PREGRT_FF_HOLD legalize negotiation overlaps 0
+  OT_PREGRT_FF_HOLD class after port_in 0 ws 0.00 same_tap 0 ws 0.00 cross_tap 87 ws -30.92 port_out 0 ws 0.00
+  OT_PREGRT_FF_HOLD after wns -30.922722839326006 endpoints 87 cross_tap_wns -12.058080276931257 tap_ports 32 hold_cells 31543 insts 246440 setup_wns -348.6500824210495 (before -348.6500824210495) guard 45 locked 19686 sec
+  4_1_cts.odb
+  4_cts.odb
+  5_1_grt.odb
+  == pgh 4_cts.odb TT
+  KIND max endpoints 8422 failing 339 worst -96.881783 net172146 {u_bound.u_u_lpl_9_w.u_y_w.g_chunk[9].r[15]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 13
+  KIND min endpoints 8422 failing 0 worst 22.287296 u_bound.u_u_y_rt_2a_1.u.g_rsreg.rq {u_bound.u_u_y_rt_2a_1.u.o[26]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 0
+  == pgh 4_cts.odb FF
+  KIND max endpoints 8422 failing 0 worst 97.569290 net172146 {u_bound.u_u_lpl_9_w.u_y_w.g_chunk[9].r[15]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 0
+  KIND min endpoints 8422 failing 0 worst 4.984457 {u_bound.u_u_lpl_15_r.g_chunk[1].wr} {u_bound.u_u_lpl_15_r.u_y_q.g_chunk[1].r[15]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 0
+  == 5_route.odb TT: odb missing
+  == 5_route.odb FF: odb missing

@@ -164,3 +164,32 @@
   Pilot per FABLE-PD-S81-1415: pgh = pg (reset_replicate rows + OT_TAP_RESET_AFFINITY=1) + pregrt_ff_hold (R-CLOCK hold build, guard 45) through route, epyc10 s81-seam-rst-1115/pilot/pgh, log intel2 ~/s81-seam-rst-pgh.log. pregrt_ff_hold.py read: pg_hold = worst_slack -min (includes removal), up to 6 passes per scene until wns >= margin or gain < 1 ps, so no tool fix needed on paper; the pilot decides.
 - 2026-11-15 15:17 PST READY [S81-SEAM-RST-1115 -> MERGE-QUEUE-1, COORD; cc DIE-S81-92, FABLE-PD-S81-1415] branch claude/s81-seam-rst-1115-2 @7f17ca5a5fe890360c2400b7ac15529c8dd85f5f (one commit on main f846153278affa37024e0f6ff0cd5b009808981d; pushed to the mirror, forwarded to GitHub). Supersedes claude/s81-seam-rst-1115 (do not merge that one: it carries the r155 stop-list forms). Contents, 6 files under tools/die_plan only: tap_reset_affinity.tcl (new; the last reset stage of an async clear, any DFF whose Q/QN reaches >= 2 RESETN/SETN pins, gets its CK on the tap its sinks use; clock pin only, no data/reset/cell edit), clock_taps.tcl (opt-in hook, env OT_TAP_RESET_AFFINITY=1, default off), schema.py + die_plan.schema.json (partition_types[T].clock.tap_reset_affinity, boolean, regenerated with schema.py dump-schema), gen_phys.py (emits export OT_TAP_RESET_AFFINITY = 1 when the key is true; ships the tcl in the kit file list), test_tap_reset_affinity.py (3 tests). Unset = kits byte-identical to main. GATE: full working tree (ot-lane-clone, python 3.14.4, pytest 9.1.1): the 5 files touching this diff (new test, test_tap_pair_affinity, test_tap_chain_affinity, test_ft_hop_latch_place, test_dpl_legalizer, test_reset_replicate) pass; the earlier latency_consumers SyntaxError was a local python 3.10 artefact and is gone. test_pg_aware::test_kit_default_off_and_gen_env_switch fails on main too (not this diff). A serial full tools/die_plan run on main vs branch is in progress as optional evidence (RESULT-GATE follows); queue gate on its own clone decides.
 - 2026-11-15 16:14 PST RESULT-GATE [S81-SEAM-RST-1115 -> MERGE-QUEUE-1, COORD] claude/s81-seam-rst-1115-2 (full working tree via ot-lane-clone on epyc2, python 3.14.4, pytest 9.1.1, tools/die_plan serial): main+branch shas f846153278affa37024e0f6ff0cd5b009808981d 7f17ca5a5fe890360c2400b7ac15529c8dd85f5f . main:             if isinstance(hit, ValueError):     # HBM-CLKLOC-3 negative cache: the same leg failed before; branch:             if isinstance(hit, ValueError):     # HBM-CLKLOC-3 negative cache: the same leg failed before. no test fails on the branch that does not fail on main. The earlier latency_consumers SyntaxError was a local python 3.10 artefact: it does not occur on 3.14. Failing on main itself (not this diff): test_core_tap_reach.py::test_check_runs_it_as_a_blocking_preflight_check test_die_sta_related.py::test_exact_canonical_period_and_noncanonical_policy test_ftres_core_zero.py::test_reservation_never_double_owns_die_tracks_with_cores test_ftres_core_zero.py::test_reservation_zero_over_core_outside_bands_and_core_share_inside test_hold_guard_grt.py::test_time_cap - AssertionError:... test_lec_inst_rename.py::test_yosys_reads_the_renamed_copy test_partition_ft_reserve.py::test_clock_pg_layers_cannot_be_admitted_as_ft_signal_share test_partition_ft_reserve.py::test_default_is_unchanged_and_half_band_blocks_die_owned_half test_partition_ft_reserve.py::test_exact_complement_never_double_owns_die_tracks test_partition_ft_reserve.py::test_full_die_band_physically_excludes_partition_route test_partition_ft_reserve.py::test_m4_m6_reservations_are_disjoint_rows_and_exact_complements test_partition_f
+- 2026-11-16 04:52 PST RESULT [S81-SEAM-RST-1115 -> DIE-S81-92; cc COORD, FABLE-PD-S81-1415] pgh = pg (reset_replicate rows + OT_TAP_RESET_AFFINITY=1) + pregrt_ff_hold, through route, col_h9_r0_p6. Before: pg 4_cts TT removal 198 fails -229, recovery 0 (+61). ac5 on the built DB (4_cts.odb after the R-CLOCK hold build) and the routed DB, TT and FF libs:
+  run_kit end: ot-run: RAN on epyc10 (unit oth-ubuntu-3955626-1794780950): exit 2
+  OT_PREGRT_FF_HOLD class before port_in 1368 ws -91.80 same_tap 877 ws -206.46 cross_tap 9752 ws -243.83 port_out 0 ws 0.00
+  OT_PREGRT_FF_HOLD pass all 1 margin 5.0 wns -147.9501249651429 endpoints 1308 insts 234630
+  OT_PREGRT_FF_HOLD pass all 2 margin 5.0 wns -30.922722839326006 endpoints 78 insts 236416
+  OT_PREGRT_FF_HOLD pass all 3 margin 5.0 wns -30.922722839326006 endpoints 78 insts 236416
+  OT_PREGRT_FF_HOLD pass xt 1 margin 5.0 + cross-tap 40.0 wns -52.05808027693126 endpoints 97 insts 246440
+  OT_PREGRT_FF_HOLD legalize negotiation overlaps 0
+  OT_PREGRT_FF_HOLD class after port_in 0 ws 0.00 same_tap 0 ws 0.00 cross_tap 87 ws -30.92 port_out 0 ws 0.00
+  OT_PREGRT_FF_HOLD after wns -30.922722839326006 endpoints 87 cross_tap_wns -12.058080276931257 tap_ports 32 hold_cells 31543 insts 246440 setup_wns -348.6500824210495 (before -348.6500824210495) guard 45 locked 19686 sec
+  OT_PREGRT_FF_HOLD pass xt 1 margin 5.0 + cross-tap 40.0 wns -52.05808027693126 endpoints 97 insts 246440
+  OT_PREGRT_FF_HOLD legalize negotiation overlaps 0
+  OT_PREGRT_FF_HOLD class after port_in 0 ws 0.00 same_tap 0 ws 0.00 cross_tap 87 ws -30.92 port_out 0 ws 0.00
+  OT_PREGRT_FF_HOLD after wns -30.922722839326006 endpoints 87 cross_tap_wns -12.058080276931257 tap_ports 32 hold_cells 31543 insts 246440 setup_wns -348.6500824210495 (before -348.6500824210495) guard 45 locked 19686 sec
+  4_1_cts.odb
+  4_cts.odb
+  5_1_grt.odb
+  == pgh 4_cts.odb TT
+  KIND max endpoints 8422 failing 339 worst -96.881783 net172146 {u_bound.u_u_lpl_9_w.u_y_w.g_chunk[9].r[15]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 13
+  KIND min endpoints 8422 failing 0 worst 22.287296 u_bound.u_u_y_rt_2a_1.u.g_rsreg.rq {u_bound.u_u_y_rt_2a_1.u.o[26]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 0
+  == pgh 4_cts.odb FF
+  KIND max endpoints 8422 failing 0 worst 97.569290 net172146 {u_bound.u_u_lpl_9_w.u_y_w.g_chunk[9].r[15]$_DFF_PN0_/RESETN}
+  KIND max failing_nets 0
+  KIND min endpoints 8422 failing 0 worst 4.984457 {u_bound.u_u_lpl_15_r.g_chunk[1].wr} {u_bound.u_u_lpl_15_r.u_y_q.g_chunk[1].r[15]$_DFF_PN0_/RESETN}
+  KIND min failing_nets 0
+  == 5_route.odb TT: odb missing
+  == 5_route.odb FF: odb missing
