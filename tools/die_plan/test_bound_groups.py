@@ -119,3 +119,22 @@ def test_register_masters_records_successor_head_source_only(tmp_path):
     rep0,_,_=C.cut(src,0)
     G.register_masters(b2,src,rep0)
     assert b2.extra_lib==[]                       # no memory_read_extra: nothing new, default unchanged
+
+
+def test_input_abi_loader_selects_exact_partition_and_explicit_module_retarget(tmp_path):
+    import hashlib,json
+    from test_qc_su_lane_cut import abi_vehicle
+    _,abi=abi_vehicle(); old='qfd_qc_su_lane_w_l0'; new=old+'_m44s1'
+    (tmp_path/'ref.sv').write_text(abi['reference_rtl'])
+    group=abi['aliases'][0];group.update(type='type0',partition='partition0')
+    (tmp_path/'aliases.json').write_text(json.dumps(dict(schema='opentallas.qc.explicit_group_input_aliases.v1',groups=[group])))
+    spec=dict(reference_rtl='ref.sv',reference_sha256=abi['reference_sha256'],aliases_file='aliases.json',
+              source_type='type0',source_partition='partition0',reference_module=old,retarget_module=new)
+    out=G.input_abi_contract(tmp_path,'type0',new,spec)
+    assert out['reference_rtl']==abi['reference_rtl'] and out['aliases']==[group]
+    for mutation in ('partition','type','retarget'):
+        bad=deepcopy(spec)
+        if mutation=='partition':bad['source_partition']='other'
+        if mutation=='type':bad['source_type']='other'
+        if mutation=='retarget':bad['retarget_module']='other'
+        with pytest.raises(G.BoundGroupError):G.input_abi_contract(tmp_path,'type0',new,bad)

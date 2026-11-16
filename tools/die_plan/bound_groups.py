@@ -61,6 +61,31 @@ def register_masters(binder,source,grouped):
             binder.extra_lib.append(str(f))
 
 
+def input_abi_contract(base, tn, module, spec):
+    """Load one explicitly selected prior partition's immutable input aliases."""
+    from pathlib import Path
+    if spec is None:
+        return None
+    def path(name):
+        p=Path(name)
+        return p if p.is_absolute() else Path(base)/p
+    reference=path(spec['reference_rtl']).read_text()
+    artifact=json.loads(path(spec['aliases_file']).read_text())
+    if artifact.get('schema')!='opentallas.qc.explicit_group_input_aliases.v1':
+        raise BoundGroupError('unsupported explicit input ABI alias schema')
+    source_type=spec.get('source_type',tn)
+    source_partition=spec['source_partition']
+    reference_module=spec.get('reference_module',module)
+    if reference_module!=module and spec.get('retarget_module')!=module:
+        raise BoundGroupError('explicit input ABI module retarget differs')
+    groups=[g for g in artifact['groups'] if g['type']==source_type and g['partition']==source_partition and g['module']==reference_module]
+    if not groups:
+        raise BoundGroupError('explicit input ABI has no exact type/partition/module aliases')
+    return dict(reference_rtl=reference,reference_sha256=spec['reference_sha256'],aliases=groups,
+                reference_module=reference_module,retarget_module=spec.get('retarget_module'),
+                source_type=source_type,source_partition=source_partition)
+
+
 def materialize(binder, tn, frame):
     from pathlib import Path
     import reset_tree as RT
@@ -78,7 +103,7 @@ def materialize(binder, tn, frame):
         if target is None:
             raise BoundGroupError('group has no planned reset target '+hc['inst'])
         lane=int(re.fullmatch(r'u_lane(\d+)',hc['inst'])[1])
-        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],kv_wr_pipe=c.get('kv_wr_pipe',0),memory_read_extra=c.get('memory_read_extra',0))
+        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],kv_wr_pipe=c.get('kv_wr_pipe',0),memory_read_extra=c.get('memory_read_extra',0), segmented_memory_delay=c.get('segmented_memory_delay',0), input_abi=input_abi_contract(binder.base,tn,hc['module'],c.get('input_abi')))
         actual={(x['instance'].replace('u_u_','u_',1),x['module']) for x in report['leaves']}
         expected={(x['inst'],x['module']) for x in c['members']}
         net=f"rst_n_t{target['tap']}"
