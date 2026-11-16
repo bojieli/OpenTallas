@@ -431,7 +431,11 @@ if {[dict size $tb_clat]} {
     tb_begin
     foreach c $tb_cores {
       lassign $c p tap a L
-      if {[string match clk_c* $tap]} continue
+      # FABLE-FIX-S81-COLTAP 11-16: a pin the ETAP pass hung on an early core-tap PORT now reads as a clk_c<k> sink and was
+      # skipped for good, so its 3/4 first estimate was never topped up (col_h9_r2 s11 / s14 from clk_c8 / clk_c12 at
+      # -215 ps: 10 stages delivered 243 of 394 ps, pin 28 instead of 179, core 150 ps early).  Only the tap's own
+      # planned core pins are balanced with the taps above; an ETAP-hung pin stays in this pass.
+      if {[string match clk_c* $tap] && !($tb_etap && [dict exists $tb_hung $p])} continue
       set d [expr {$tgt - ($a + $L)}]
       if {abs($d) <= $tb_tol} continue
       set it [[ord::get_db_block] findITerm $p]

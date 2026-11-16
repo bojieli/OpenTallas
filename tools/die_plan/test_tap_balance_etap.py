@@ -59,3 +59,14 @@ def test_default_path_is_pre_etap():
     late = TB[TB.index("      if {$d < 0} {\n"):TB.index(PRE_ETAP_LATE)]
     assert re.search(r"if \{\[dict exists \$tb_hung \$p\]\} continue\n\s+set need \[expr \{\$tgt - \$L\}\]\n"
                      r"\s+if \{\$need < 20\.0\} continue\n\s+if \{\$tb_etap\} \{\n", late)
+
+
+def test_etap_hung_pin_on_a_core_port_is_topped_up():
+    """FABLE-FIX-S81-COLTAP 11-16: only an early core tap's own pins skip the core pass; a pin ETAP hung on a clk_c<k> port is padded on
+    the next pass like any other (ETAP off: the skip is the old one)."""
+    assert TB.count("if {[string match clk_c* $tap] && !($tb_etap && [dict exists $tb_hung $p])} continue") == 1
+    assert "if {[string match clk_c* $tap]} continue" not in TB
+    core = TB[TB.index("    foreach c $tb_cores {\n      lassign $c p tap a L"):]
+    # the early (d > 0) branch pads in front of the pin and has no tb_hung skip
+    early = core[core.index("      } else {\n        set src [$it getNet]"):core.index("      lassign [tb_outside $it] x y")]
+    assert "tb_hung" not in early and "$d / $tb_cstage * 0.75" in early
