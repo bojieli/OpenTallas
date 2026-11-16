@@ -18445,3 +18445,8 @@ FAILED [AUTOPILOT c7500465204c] 2026-11-16 14:30:03 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/fable-fix-kv-pvhub-snapcopy-1116 @863137e6e1203af6b9742b04336b1494bca570a9 priority HIGH
   COORD APPROVED: claude/fable-fix-kv-pvhub-snapkey-1116 @7d8085c408f0b34ee34d5f862fdc9befe2cf153a priority HIGH
   COORD APPROVED: claude/tools-converge-1116-retire @bcc2b77eb731d217180c1ff0405d4bf3e0613863 priority HIGH
+FAILED [AUTOPILOT 120bbdbb2749] 2026-11-16 14:36:41 PST AUTOPILOT -> KIT-WAVE-5: FAILED 120bbdbb2749 s81_head/hd_serdes (CRASH/flow-error): rogram is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+PIN_AUDIT FAIL 1057/1057 missing 0 wrong_layer 0 wrong_place 0 extra 1088
+ | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/s81_head/head_rp21z20NF13a/items/hd_serdes/attempt_8/gen/hd_serdes src main@2dd0d8c9fd6c | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
