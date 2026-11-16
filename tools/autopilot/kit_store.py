@@ -650,7 +650,7 @@ def snap(spec, snap_root, store_root=None, log=print):
             "bytes_copied": 0 if reused else man.get("bytes_copied", 0), "store": store_root}
 
 
-def verify(snap_dir, mark=True):
+def verify(snap_dir, mark=True, final_dir=None):
     """re-hash every file of a snapshot against its MANIFEST.json; write .verified only when all match.
     Run after the snapshot is built and again on every host it is copied to.  -> {id, n_files}"""
     d = snap_dir.rstrip("/")
@@ -659,10 +659,11 @@ def verify(snap_dir, mark=True):
     except (OSError, ValueError) as e:
         raise StoreError(f"KIT-SNAP VERIFY {d}: MANIFEST.json unreadable ({e})")
     sid = snap_id(man)
-    if sid != os.path.basename(d) or man.get("snap_id") != sid:
+    identity_dir = (final_dir or d).rstrip("/")
+    if sid != os.path.basename(identity_dir) or man.get("snap_id") != sid:
         raise StoreError(f"KIT-SNAP VERIFY {d}: manifest content id {sid} is not the directory name")
     root = os.path.join(d, "root")
-    if man.get("kit_inputs") != root:
+    if man.get("kit_inputs") != os.path.join(identity_dir, "root"):
         raise StoreError(f"KIT-SNAP VERIFY {d}: built for {man.get('kit_inputs')}; a snapshot must sit at the same "
                          "absolute path on every host (its recipes name that path)")
     bad = []
@@ -689,6 +690,59 @@ def verify(snap_dir, mark=True):
             f.write(json.dumps({"id": sid, "host": socket.gethostname(), "t": now_s(), "n_files": len(man["files"])}))
         _touch(os.path.join(d, ".used"))
     return {"id": sid, "dir": d, "n_files": len(man["files"]), "host": socket.gethostname()}
+
+
+def fetch(snap_dir, from_host, copy=None):
+    """One destination-host writer per snapshot; publish only verified content.
+
+    The OS lock is shared with local snap construction. Existing legacy partial
+    destinations are preserved and refused: they may still have active writers.
+    Failed unique transfer directories remain as immutable failure evidence.
+    """
+    import fcntl
+    import shlex
+    import subprocess
+    import tempfile
+    d = os.path.abspath(snap_dir).rstrip("/")
+    if not re.fullmatch(r"[0-9a-f]{40}", os.path.basename(d)):
+        raise StoreError(f"KIT-SNAP FETCH invalid snapshot directory {d}")
+    if not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.@-]*", from_host):
+        raise StoreError("KIT-SNAP FETCH invalid donor host")
+    os.makedirs(os.path.dirname(d), exist_ok=True)
+    with open(d + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        # A peer may have completed while this caller waited. Do not start a
+        # second transfer, and never trust a stale marker over actual content.
+        if os.path.exists(d):
+            if not os.path.isfile(os.path.join(d, ".verified")):
+                raise StoreError(f"KIT-SNAP FETCH existing unverified destination retained (may have a legacy writer): {d}")
+            return dict(verify(d), reused=True)
+        partial = tempfile.mkdtemp(prefix="." + os.path.basename(d) + ".partial.", dir=os.path.dirname(d))
+        try:
+            if copy is None:
+                subprocess.run(["rsync", "-a", "--exclude", ".verified", "--exclude", ".used",
+                                "-e", "ssh -o BatchMode=yes -o ControlPath=none",
+                                from_host + ":" + shlex.quote(d + "/"), partial + "/"], check=True)
+            else:
+                copy(from_host, d, partial)
+            result = verify(partial, final_dir=d)
+            # The lock covers future writers. If an old unlocked writer created
+            # a destination meanwhile, rename fails; preserve both directories.
+            if os.path.exists(d):
+                raise StoreError("destination appeared during transfer; existing writer left untouched")
+            # Linux atomic no-replace also protects a legacy destination that
+            # appears after the check above, including an empty directory.
+            import ctypes
+            libc = ctypes.CDLL(None, use_errno=True)
+            rename = getattr(libc, "renameat2", None)
+            if rename is None:
+                raise StoreError("atomic no-replace rename unavailable; destination left untouched")
+            if rename(-100, os.fsencode(partial), -100, os.fsencode(d), 1):
+                err = ctypes.get_errno()
+                raise OSError(err, os.strerror(err), d)
+            return dict(result, dir=d, reused=False)
+        except Exception as exc:
+            raise StoreError(f"KIT-SNAP FETCH failed; partial retained at {partial}: {exc}") from exc
 
 
 def snap_gc(snap_root, keep_days=SNAP_KEEP_DAYS, apply=False, now=None, log=print):
@@ -812,6 +866,9 @@ def main(argv=None):
     s.add_argument("--store-root")
     s = sp.add_parser("verify", help="re-hash a snapshot against its manifest; writes .verified when it matches")
     s.add_argument("snap_dir")
+    s = sp.add_parser("fetch", help="coalesced verified atomic snapshot transfer to this host")
+    s.add_argument("snap_dir")
+    s.add_argument("--from-host", required=True)
     s = sp.add_parser("snap-gc")
     s.add_argument("--snap-root", required=True)
     s.add_argument("--keep-days", type=float, default=SNAP_KEEP_DAYS)
@@ -830,6 +887,8 @@ def main(argv=None):
             print("KW_KIT_SNAP " + json.dumps(snap(json.loads(base64.b64decode(a.spec_b64)), a.snap_root, a.store_root)))
         elif a.cmd == "verify":
             print("KW_KIT_SNAP_VERIFY " + json.dumps(verify(a.snap_dir)))
+        elif a.cmd == "fetch":
+            print("KW_KIT_SNAP_VERIFY " + json.dumps(fetch(a.snap_dir, a.from_host)))
         elif a.cmd == "snap-gc":
             print("KW_KIT_SNAP_GC " + json.dumps(snap_gc(a.snap_root, a.keep_days, a.apply)))
         elif a.cmd == "localize-filelist":

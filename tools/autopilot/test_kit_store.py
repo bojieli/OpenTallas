@@ -420,8 +420,10 @@ class KitWaveSnap(unittest.TestCase):
         self.assertEqual(self.calls[1][1][:5], ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none"])
         self.assertEqual(self.calls[1][1][5], "h2")                        # first other die host
         fetch = self.calls[2][1][-1]
-        self.assertIn("rsync -a --delete", fetch)
-        self.assertIn(" verify ", fetch)                                   # sha256 re-check on the gen host before use
+        header = fetch.splitlines()[0]
+        self.assertIn(" fetch ", header)
+        self.assertIn("--from-host h2", header)
+        self.assertNotIn("rsync", header)  # the verified single-writer helper owns transport
         self.assertEqual(res["kit_snap"]["copied_from"], "h2")
 
     def test_copy_that_does_not_verify_stops_the_item(self):

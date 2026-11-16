@@ -6898,7 +6898,6 @@ def ks_spec(sp, plan, W):
 
 
 KIT_INPUT_MISSING = "KIT_INPUT_MISSING"
-SNAP_COPY_MAX_GB = 40                # a snapshot larger than this is not copied between hosts (a tree, not a kit input)
 
 
 def snap_root_of(W):
@@ -6966,11 +6965,9 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
                 continue
             sd = d2["dir"]
             hh = hub if h == "localhost" else h
-            fetch = (f"set -e; kb=$(ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 {q(hh)} \"du -sk {q(sd)} | cut -f1\"); "
-                     f"if [ \"${{kb:-0}}\" -gt {SNAP_COPY_MAX_GB * 1024 * 1024} ]; then echo KIT-SNAP COPY refused: $kb KB over the "
-                     f"{SNAP_COPY_MAX_GB} GB cap; exit 4; fi; mkdir -p {q(sd)}; "
-                     f"rsync -a --delete --exclude .verified --exclude .used -e \"ssh -o BatchMode=yes -o ControlPath=none\" "
-                     f"{q(hh)}:{q(sd)}/ {q(sd)}/; echo KW_SNAP_COPIED {q(hh)} $kb KB; " + ks_cmd(f"verify {q(sd)}"))
+            # Destination-local fetch owns the per-snapshot OS lock, rechecks
+            # verified completion after waiting, and atomically publishes once.
+            fetch = ks_cmd(f"fetch {q(sd)} --from-host {q(hh)}")
             rc3, t3 = run("kit_snap_fetch", remote(fetch), idempotent=True)
             if rc3 or "KW_KIT_SNAP_VERIFY " not in t3:
                 return None, "KIT-SNAP copy %s -> %s failed or did not verify (rc %s)\n%s" % (h, G, rc3, t3[-3000:])
