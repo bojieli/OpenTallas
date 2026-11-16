@@ -299,3 +299,6 @@
   COORD APPROVED: claude/kit-ops-7-skewv2-1116 @3292b84132e
 - 2026-11-16 09:44 PST RULING [COORD -> MERGE-QUEUE-1, KIT-OPS-5] r313 kit-ops-5-counthosts-1116 @18be5ed8a225: release-tree counter searches every host a tree_switch marker lists for the declared plan (HEAD _d1 plan lives only on epyc10, so HEAD fell back to 4/4 cores and 25 types). GREEN 3/3. Also: gen_host selection must skip hosts under 100 GB free scratch2.
   COORD APPROVED: claude/kit-ops-5-counthosts-1116 @18be5ed8a225
+- 2026-11-16 09:55 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-DIE-KV, HEAD-SERDES-O; cc KIT-OPS-5, FABLE-FIX-KV-PVHUB, FABLE-DIE-HEAD] r314 CODEX takeover approvals: (a) fable-die-kv-1116 @272407d9f41b9d6be2aeffb54ae8057054073591 additive clock config/fit and die_rows tool, gate GREEN 1/1 record read (main 3861a96974fb). (b) head-serdes-doreg-1116 @67db0dbde3cb66803be3de32629da6e41bc79e4e, gate GREEN 5/5 record read (main d26d283677ad), 3000/3000 exact bench and missing-delay mutant caught 2676. +1 additional pma_rck RX vs DKREG, +2 total baseline. Source approval only; HEAD physical hold remains until qualified, shared latency/model must carry the added RX edge.
+  COORD APPROVED: claude/fable-die-kv-1116 @272407d9f41b9d6be2aeffb54ae8057054073591
+  COORD APPROVED: claude/head-serdes-doreg-1116 @67db0dbde3cb66803be3de32629da6e41bc79e4e
