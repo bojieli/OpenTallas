@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "J2 production-shape PLACE admission; actual J2 placed geometry must be reviewed before CTS/route",
+  "source_commit": "df8de17d27d",
+  "kit": "intel2:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/J2/serdes__t14/gen/serdes__t14",
+  "mapped_inventory": "intel2:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/rx_transport/J2_inventory/mapped_inventory.json",
+  "mapped_sha256": "412d43fe5c98342e52a3d813b144c157262b4fa6f597dceb65eb09c12e3f208c",
+  "reviewed_images": [
+    "F2 actual full-shape post-GPL relay overlay and final DPL layout/density (unchanged macro/IO/PDN footprint)",
+    "results/geom_review/s81_serdes_am_cohort_1116/actual_clock_cohort.png"
+  ],
+  "findings": [
+    "Actual mapped new mechanisms are present: RCK2216/reset4/AM9/rpq24/rpw8;89 read and89 write local landing chunks,356 readOH and356 writeOH FF.",
+    "LPL data capacity7868bits and logical payload/outputFF9835 unchanged; current mapped LPL12772 versus F2 9917. Actual added2855FF priced including61 baseline-pruning credit; additional LOCAL_EMPTY8 wrapFF priced, no credit for two mapped reset-pad folds.",
+    "New local landing controls are bounded to<=24 payload bits each; aggregate crossing bank widths and external ports unchanged. Conservative added LPL body2326.6764um2 fits unchanged2.8Mum2 softfield; no outline, hard-core, macro or PDN change.",
+    "Clock/placement profiles default off; staged reviewed RCK halfcycle/relay helper plus RM58/69-bank placement and AM21 same-leaf opt-in. AM mechanism TT-35.4372 and FF+573.7509 measured; whole-block pending.",
+    "Current generated I clock family retains landing_exports footer. Full local-readside extension remains pending before CTS; known ingress debt is owned by reset_form. No new clocks, cycle edges or uncertainty relaxation.",
+    "PLACE only follows this conditional geometry admission. Actual J2 GPL/DPL/RM58 placements, density, hierarchy coverage and clock roots must be inspected before CTS/route; all four academic physical gates remain."
+  ]
+}
