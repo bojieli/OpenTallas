@@ -25,7 +25,7 @@ class DurableCheck(unittest.TestCase):
             "raise SystemExit(3 if 'failed-hash' in sys.argv else 0)\n")
         return checker
 
-    def produce_in_separate_process(self, td, checker, want):
+    def produce_in_separate_process(self, td, checker, want, links_only=False):
         # This first interpreter exits while its worker is still running. A new
         # interpreter below must consume its result without module globals.
         code = (
@@ -38,7 +38,7 @@ class DurableCheck(unittest.TestCase):
             " i=argv.index(sys.executable)\n"
             " subprocess.Popen(argv[i:],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,start_new_session=True)\n"
             " return subprocess.CompletedProcess(argv,0,'','')\n"
-            "T.launch(root,ident,checker,'4'*40,launcher=detached)\n")
+            f"T.launch(root,ident,checker,'4'*40,links_only={links_only!r},launcher=detached)\n")
         subprocess.run([sys.executable, "-I", "-c", code], check=True)
         ident = TC.identity("s81", "/published/_d6", want, ["epyc7", "epyc2"], str(checker))
         end = time.monotonic() + 10
@@ -77,6 +77,47 @@ class DurableCheck(unittest.TestCase):
             self.assertIsNone(TC.read(td, changed))
             changed_host = TC.identity("s81", "/published/_d6", "published-hash", ["epyc10"], str(checker))
             self.assertIsNone(TC.read(td, changed_host))
+
+    def test_failed_link_check_recovers_via_fresh_receipt_in_new_process(self):
+        with tempfile.TemporaryDirectory() as td:
+            checker = Path(td) / "checker.py"
+            checker.write_text(
+                "from pathlib import Path\nimport sys\n"
+                f"root=Path({td!r})\n"
+                "bad=(root/'bad-link').exists()\n"
+                "wrong='failed-hash' in sys.argv\n"
+                "host=sys.argv[sys.argv.index('--hosts')+1]\n"
+                "receipt=root/('receipt-'+host)\n"
+                "if '--links-only' in sys.argv: raise SystemExit(3 if bad else 0)\n"
+                "if '--cached-receipts' in sys.argv:\n"
+                " print('fresh readonly/unshared inventory')\n"
+                " raise SystemExit(0 if receipt.exists() and not bad and not wrong else 2)\n"
+                "p=root/'count'\n"
+                "p.write_text(str(int(p.read_text())+1 if p.exists() else 1))\n"
+                "if bad or wrong: raise SystemExit(3)\n"
+                "receipt.touch()\n")
+            ident, first = self.produce_in_separate_process(td, checker, "published-hash")
+            self.assertEqual(first["state"], "ok")
+            self.assertEqual((Path(td) / "count").read_text(), "2")
+            (Path(td) / "bad-link").touch()
+            _, failed = self.produce_in_separate_process(td, checker, "published-hash", links_only=True)
+            self.assertEqual(failed["state"], "bad")
+            self.assertTrue(failed["full_ok"])  # old content proof cannot override current failed inventory
+            self.assertEqual((Path(td) / "count").read_text(), "2")
+            (Path(td) / "bad-link").unlink()
+            _, repaired = self.produce_in_separate_process(td, checker, "published-hash")
+            self.assertEqual(repaired["state"], "ok")
+            self.assertTrue(repaired["full_ok"])
+            self.assertNotIn("why", repaired)
+            self.assertNotEqual(repaired["attempt"], failed["attempt"])
+            self.assertEqual({r["basis"] for r in repaired["details"]}, {"published-verification-receipt"})
+            self.assertEqual((Path(td) / "count").read_text(), "2")  # repaired links did not rehash source payload
+            self.assertTrue(TC.read(td, ident)["full_ok"])
+            wrong_ident, wrong = self.produce_in_separate_process(td, checker, "failed-hash")
+            self.assertNotEqual(wrong_ident, ident)
+            self.assertEqual(wrong["state"], "bad")
+            self.assertFalse(wrong.get("full_ok", False))
+            self.assertEqual(TC.read(td, ident)["attempt"], repaired["attempt"])
 
     def test_failed_verification_cannot_be_consumed_as_pass(self):
         with tempfile.TemporaryDirectory() as td:
