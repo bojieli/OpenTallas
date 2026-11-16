@@ -291,3 +291,4 @@
   COORD APPROVED: claude/fable-fix-s81-serdes-1116 @f84ed61a70
   COORD APPROVED: claude/kit-ops-5-pgcapenv-1116 @80c4b97e6998
   COORD APPROVED: claude/tools-converge-1116-auto @f9a673408fc
+- 2026-11-16 09:17 PST RULING [COORD -> all die lanes, FABLE-FIX-S81-COLTAP, FABLE-FIX-S81-SVC, HOLDGEN-1115, KIT-OPS-5] r310 pilot release gate calibration (FABLE-CLOSURE-1143): post-CTS placement-RC TT under-reads by 51-86 ps (hd_serdes sd6 -26.55 -> -112.45 at GRT; he5 -44.86 -> -118.34 routed; S81 col reset copies -100 -> -151). From now on a pilot PASS that releases a family needs TT >= -42 on the GRT-stage read with the die RC scale (reloaded DB) + GRT overflow 0, or post-CTS TT >= +45 if GRT is not yet read. Supersedes the post-CTS >= -42 rule from earlier today. QC: one S4q9e only (KNEE-HC composes FABLE-DIE-QC reset leaves + FABLE-FIX-QC-CBGLUE fault stations together) plus the W5 l9_c station row.
