@@ -49265,17 +49265,6 @@
      "carry": true
     },
     {
-     "id": "qwen_compute-mig-025",
-     "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "tree_switch:qwen_compute (COORD r249): the qwen_compute wave tree lacks the die-phase / TT-repair / C3b code, so those keys are no-ops; no NEW launch until TOOLS-CONVERGE posts the die's new tree and KIT-OPS-5 switches it (same tick, this key is deleted). Running kits continue. Lift = delete this key.",
-     "release": [],
-     "migrated": true,
-     "keys": [
-      "*"
-     ],
-     "carry": true
-    },
-    {
      "id": "qwen_compute-mig-002-k1",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
      "reason": "WAVE-HOLDS-1115 2026-11-15 19:45 PST (COORD r211, FABLE-PD-QCHOLD-1915): the GRT hold-stall class is stale; type is in a DRT-0255 family (lever 1). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
