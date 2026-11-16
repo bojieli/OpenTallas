@@ -36149,9 +36149,9 @@
     {
      "id": "s81-mig-005-k5-k6-k2-k1",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
+     "reason": "DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
      "release": [
-      "event_adopt:B6gF2s3",
+      "event_adopt:B6gF2s4",
       "result:FABLE-FIX-S81-COLTAP:col-wave2",
       "lint_clean:s81"
      ],
@@ -36170,14 +36170,19 @@
       "col_h9_r0_p5__t1",
       "col_h9_r0_p6__t1"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_dies81_92_f2s4": [
+      "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave2",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-005-k5-k6-k2-k2",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
+     "reason": "DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
      "release": [
-      "event_adopt:B6gF2s3",
+      "event_adopt:B6gF2s4",
       "result:FABLE-FIX-S81-COLTAP:col-wave1",
       "lint_clean:s81"
      ],
@@ -36192,14 +36197,19 @@
       "col_h9_r2__t1__clc9ad8f7e",
       "col_h9_r2__t1__clce45cab5"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_dies81_92_f2s4": [
+      "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave1",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-001-k1-k2-k1-k3",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
+     "reason": "DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
      "release": [
-      "event_adopt:B6gF2s3",
+      "event_adopt:B6gF2s4",
       "result:FABLE-FIX-S81-COLTAP:col-wave2",
       "lint_clean:s81"
      ],
@@ -36288,14 +36298,19 @@
       "col_h9_r0_p4__t1__clcb2fbfe8__pv3544fb31",
       "col_h9_r0_p4__t1__clcb2fbfe8__pvec137455"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_dies81_92_f2s4": [
+      "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave2",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-001-k1-k2-k1-k4",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
+     "reason": "DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
      "release": [
-      "event_adopt:B6gF2s3",
+      "event_adopt:B6gF2s4",
       "result:FABLE-FIX-S81-COLTAP:col-wave1",
       "lint_clean:s81"
      ],
@@ -36431,7 +36446,12 @@
       "col_h9_r2__t1__cl774acf45__pvea45273b",
       "col_h9_r2__t1__cl774acf45__pve3ab90e7"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_dies81_92_f2s4": [
+      "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-COLTAP:col-wave1",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-serdes-source-1116-codex",
@@ -36496,7 +36516,8 @@
     "B6gG3b",
     "B6gG3c",
     "B6gG4",
-    "B6gSVC"
+    "B6gSVC",
+    "B6gF2s4"
    ],
    "prev_treeswitch1115": {
     "src": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/src",
