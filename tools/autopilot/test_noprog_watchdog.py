@@ -154,8 +154,9 @@ def test_interp_time_is_piecewise_linear():
 def test_plan_priority_and_bind_jobs_are_excluded_die_priority_is_not():
     assert nw.is_plan("plan", "x")
     assert not nw.is_plan("die", "dpkit-dsdv_slice_iq_C__t1 run_kit.sh place")
-    assert nw.is_plan("", "bash bindB4L4_leafplan.sh strict_bind")
-    assert nw.is_plan("", "python3 latcheck.py")
+    # WAVE-PREPNR-1115: only a DECLARED priority=plan excludes; a command-line text match no longer does
+    assert not nw.is_plan("", "bash bindB4L4_leafplan.sh strict_bind")
+    assert not nw.is_plan("", "python3 latcheck.py")
     assert not nw.is_plan("", "--spec-b64 " + "Zg0/" * 40 + " run_kit.sh route")     # a base64 blob containing '/g0/' is not a G0 job
 
 
