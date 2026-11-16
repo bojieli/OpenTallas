@@ -159,16 +159,25 @@ proc pg_classes {when {open ""}} {
   set line "OT_PREGRT_FF_HOLD class $when"
   foreach c $cls { append line [format " %s %d ws %.2f" $c $n($c) $w($c)] }
   puts $line
-  if {$open ne ""} {
-    set f [open $open w]; puts $f "slack_ps\tclass\tstart\tend\tlaunch_tap\tcapture_tap"
-    foreach r [lrange [lsort -real -index 0 $rows] 0 4999] { puts $f [join $r "\t"] }
-    close $f
-  }
+  # QC-SRC-CLOSE-1115 (COORD r211, FABLE-PD-QCHOLD-1915 F3): the accept test reads the NON-PORT classes only (same_tap + cross_tap);
+  # port_in / port_out hold is the parent's contract and never decides whether the repair is kept
+  set ::pg_npw($when) [expr {min($w(same_tap), $w(cross_tap))}]
+  set ::pg_npn($when) [expr {$n(same_tap) + $n(cross_tap)}]
+  set ::pg_rows $rows
+  if {$open ne ""} { pg_write_open $open }
+}
+proc pg_write_open {open} {
+  set f [open $open w]; puts $f "slack_ps\tclass\tstart\tend\tlaunch_tap\tcapture_tap"
+  foreach r [lrange [lsort -real -index 0 $::pg_rows] 0 4999] { puts $f [join $r "\t"] }
+  close $f
 }
 set pg_w0 [pg_hold]; set pg_n0 [sta::endpoint_violation_count min]; set pg_s0 [pg_setup]
+set pg_cw0 $pg_w0; set pg_cn0 $pg_n0
 set pg_i0 [llength [$pg_blk getInsts]]; set pg_t0 [clock seconds]
 puts "OT_PREGRT_FF_HOLD before wns $pg_w0 endpoints $pg_n0 insts $pg_i0 setup_wns $pg_s0 scenes [expr {$pg_two ? {TC+BC} : {BC only (no TLIBS: setup guard at FF)}}] guard $pg_guard"
 pg_classes before
+if {[info exists ::pg_npw(before)]} { set pg_cw0 $::pg_npw(before); set pg_cn0 $::pg_npn(before) }
+puts "OT_PREGRT_FF_HOLD nonport before wns $pg_cw0 endpoints $pg_cn0"
 # the clock network and its sinks keep their sites: FIRM while hold cells are seated and legalized
 set pg_lock {}
 foreach pg_net [$pg_blk getNets] {
@@ -180,20 +189,32 @@ foreach pg_net [$pg_blk getNets] {
 }
 set pg_fail ""; set pg_xt "nan"
 # tap window ports of the kit SDC (gen_phys.tap_window_tcl: set_clock_latency -source -early -clock <ck> <-W_p>
-# [get_ports {...}]): port -> {clock early}.  Early core-tap ports with an FF overlay (core_taps_ff.sdc) keep their
-# FF value untouched (no cross-tap guard on them).
+# [get_ports {...}]): port -> {clock early}.  CORE-tap ports (the "CP2 FF core tap" lines of core_taps_ff.sdc) keep their
+# FF value untouched (no cross-tap guard on them); every other tap is guarded from its FF overlay value.
 set pg_taps [dict create]
 if {[info exists hg_txt]} {
-  set pg_skip {}
+  # QC-SRC-CLOSE-1115 (COORD r211, FABLE-PD-QCHOLD-1915 F1): the overlay holds the core taps ("# CP2 FF core tap NAME" + a
+  # set_clock_latency line) AND, since R-CLOCK-7, every grid / edge tap.  Only the core taps keep their FF value untouched;
+  # a grid / edge tap takes its FF early value from the overlay as the base of the cross-tap widening.
+  set pg_skip {}; set pg_ovl [dict create]
   set pg_cf [file join [file dirname $hg_gold] core_taps_ff.sdc]
   if {[file exists $pg_cf]} {
     set pg_f [open $pg_cf]
-    foreach pg_l [split [read $pg_f] "\n"] { if {[regexp {\[get_ports \{?([^\}\]]+)\}?\]} $pg_l -> pg_pl]} { foreach pg_p $pg_pl { lappend pg_skip $pg_p } } }
+    foreach pg_l [split [read $pg_f] "\n"] {
+      if {[regexp {^# CP2 FF core tap (\S+)} $pg_l -> pg_cn]} { lappend pg_skip $pg_cn; continue }
+      if {[regexp {^set_clock_latency -source -early -clock (\S+) (-?[0-9.]+) \[get_ports \{?([^\}\]]+)\}?\]\s*$} $pg_l -> pg_ck2 pg_e2 pg_pl2]} {
+        foreach pg_p2 $pg_pl2 { dict set pg_ovl $pg_p2 $pg_e2 }
+      }
+    }
     close $pg_f
   }
   foreach pg_l [split $hg_txt "\n"] {
     if {![regexp {^set_clock_latency -source -early -clock (\S+) (-?[0-9.]+) \[get_ports \{?([^\}\]]+)\}?\]\s*$} $pg_l -> pg_ck pg_e pg_pl]} continue
-    foreach pg_p $pg_pl { if {$pg_p ni $pg_skip && [llength [get_ports -quiet $pg_p]]} { dict set pg_taps $pg_p [list $pg_ck $pg_e] } }
+    foreach pg_p $pg_pl {
+      if {$pg_p ni $pg_skip && [llength [get_ports -quiet $pg_p]]} {
+        dict set pg_taps $pg_p [list $pg_ck [expr {[dict exists $pg_ovl $pg_p] ? [dict get $pg_ovl $pg_p] : $pg_e}]]
+      }
+    }
   }
 }
 set pg_pm [expr {[info exists ::env(OT_PREGRT_HOLD_PORT_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_PORT_MARGIN)] ? $::env(OT_PREGRT_HOLD_PORT_MARGIN) : 5.0}]
@@ -261,13 +282,21 @@ if {[catch {
 foreach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }
 if {$pg_fail eq ""} {
   set pg_w1 [pg_hold]; set pg_s1 [pg_setup]
-  set pg_fail [pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]
+  # accept test on the non-port classes (same_tap + cross_tap); the all-class numbers stay in the log lines
+  set pg_cw1 $pg_w1
+  if {![catch {pg_classes after}] && [info exists ::pg_npw(after)] && [info exists ::pg_npw(before)]} {
+    set pg_cw1 $::pg_npw(after)
+    puts "OT_PREGRT_FF_HOLD nonport after wns $pg_cw1 endpoints $::pg_npn(after)"
+  } else { set pg_cw0 $pg_w0; set pg_cn0 $pg_n0 }
+  set pg_fail [pg_verdict $pg_cw0 $pg_cw1 $pg_cn0 $pg_s0 $pg_s1]
 }
 if {$pg_fail ne ""} {
   puts "OT_PREGRT_FF_HOLD FALLBACK $pg_fail: 4_cts.odb unchanged, the in-flow GRT hold repair takes the whole debt"
 } else {
   set pg_open [file join [file dirname [file normalize [info script]]] pregrt_ff_hold_open.tsv]
-  if {[catch {pg_classes after $pg_open} pg_err]} { catch {pg_classes after}; puts "OT_PREGRT_FF_HOLD open list not written ($pg_err)" }
+  if {[info exists ::pg_rows]} {
+    if {[catch {pg_write_open $pg_open} pg_err]} { puts "OT_PREGRT_FF_HOLD open list not written ($pg_err)" }
+  } elseif {[catch {pg_classes after $pg_open} pg_err]} { puts "OT_PREGRT_FF_HOLD open list not written ($pg_err)" }
   puts "OT_PREGRT_FF_HOLD after wns $pg_w1 endpoints [sta::endpoint_violation_count min] cross_tap_wns $pg_xt tap_ports [dict size $pg_taps] hold_cells $pg_nh insts [llength [$pg_blk getInsts]] setup_wns $pg_s1 (before $pg_s0) guard $pg_guard locked [llength $pg_lock] secs [expr {[clock seconds] - $pg_t0}]"
   write_db $::env(ODB).pg_tmp
   file rename -force $::env(ODB).pg_tmp $::env(ODB)

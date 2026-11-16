@@ -686,7 +686,7 @@ proc ot_hold_structural_gate {} {
   return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
 }
 # HOLD-REPAIR-SCOPE: opt-in FF repair scope. Legacy reg2reg excludes input starts and output endpoints.
-# nonport excludes input-port starts only, retaining register-to-output and macro/internal paths (OWNER 11-07).
+# nonport excludes input-port starts and (QC-SRC-CLOSE-1115, COORD r211) output-port endpoints, retaining macro/internal paths.
 # This is an optimization scope only: TT setup is untouched, FF constraints replay at full precision in finally,
 # and the original current mode is restored even on a repair error. Default remains the original all-path repair.
 proc ot_hold_scope_read {path} {
@@ -729,7 +729,15 @@ proc ot_hold_repair_scope {body} {
       if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
     }
     set outputs {}
-    if {$scope eq "reg2reg"} { set outputs [all_outputs] }
+    # QC-SRC-CLOSE-1115 (COORD r211): nonport now also leaves output-port endpoints out (advisory PORT_SEAM line)
+    if {$scope in {reg2reg nonport}} { set outputs [all_outputs] }
+    if {$scope eq "nonport"} {
+      set ps_n 0; set ps_w 0.0
+      if {[llength $outputs] && ![catch {find_timing_paths -path_delay min -to $outputs -group_path_count 3000000 -endpoint_path_count 1 -slack_max 0} ps_l]} {
+        foreach ps_e $ps_l { set ps_s [sta::time_sta_ui [$ps_e slack]]; incr ps_n; if {$ps_s < $ps_w} { set ps_w $ps_s } }
+      }
+      puts [format "OT_HOLD_SCOPE PORT_SEAM out %d ws %.2f (advisory: output-port hold is not repaired at GRT)" $ps_n $ps_w]
+    }
     puts "OT_HOLD_SCOPE begin scope=$scope full_ff=[ot_hold_stats] input_ports=[llength $inputs] excluded_output_ports=[llength $outputs]"
     try {
       if {[llength $inputs]} { set_false_path -hold -from $inputs }

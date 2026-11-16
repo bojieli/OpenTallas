@@ -5,8 +5,16 @@ if {![info exists ::env(OT_GRT_NONPORT_HOLD)] || $::env(OT_GRT_NONPORT_HOLD) in 
 if {$::env(OT_GRT_NONPORT_HOLD) ne "1"} { error "OT_GRT_NONPORT_HOLD requires 0 or 1" }
 if {[info exists ::ot_grt_nonport_installed]} { return }
 
+# advisory residue of the output-port hold that the GRT repair no longer pads: PORT_SEAM out N ws X (die STA owns it)
+proc ot_grt_port_seam {outs} {
+  set n 0; set ws 0.0
+  if {[llength $outs] && ![catch {find_timing_paths -path_delay min -to $outs -group_path_count 3000000 -endpoint_path_count 1 -slack_max 0} ps]} {
+    foreach pe $ps { set s [sta::time_sta_ui [$pe slack]]; incr n; if {$s < $ws} { set ws $s } }
+  }
+  puts [format "OT_GRT_NONPORT PORT_SEAM out %d ws %.2f (advisory: output-port hold is not repaired at GRT)" $n $ws]
+}
 # Native FF scope follows ot_prd_hold_scope's full-precision SDC restoration.
-# Only input DATA starts are excluded; no output/internal/macro exception.
+# Input DATA starts and output-port endpoints are excluded; no internal/macro exception.
 proc ot_grt_nonport_native_scope {body} {
   set dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [pwd]}]
   set stem [file join $dir ot_grt_nonport_[pid]_[clock clicks]]
@@ -21,12 +29,18 @@ proc ot_grt_nonport_native_scope {body} {
   foreach port [all_inputs] {
     if {![dict exists $clock_sources [get_full_name $port]]} { lappend inputs $port }
   }
-  puts "OT_GRT_NONPORT begin native_ff input_ports=[llength $inputs] excluded_output_ports=0"
+  # QC-SRC-CLOSE-1115 (COORD r211, FABLE-PD-QCHOLD-1915 F2): output-port endpoints leave the GRT hold scope; the residue is one
+  # advisory line for die STA.  (Output-port padding at 11-15 s per buffer was the measured QC GRT hold stall.)
+  set outputs [all_outputs]
+  puts "OT_GRT_NONPORT begin native_ff input_ports=[llength $inputs] excluded_output_ports=[llength $outputs]"
+  ot_grt_port_seam $outputs
   try {
     if {[llength $inputs]} { set_false_path -hold -from $inputs }
+    if {[llength $outputs]} { set_false_path -hold -to $outputs }
     return [uplevel 1 $body]
   } finally {
     if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
+    if {[llength $outputs]} { unset_path_exceptions -hold -to $outputs }
     # Replay the complete original SDC: removing an overlapping temporary
     # exception may split an original one, and clock/IO precision must survive.
     read_sdc $before
@@ -77,5 +91,5 @@ if {[info exists ::ot_mm_active] && $::ot_mm_active} {
   }
   set ::ot_grt_nonport_installed native_ff
 }
-puts "OT_GRT_NONPORT installed $::ot_grt_nonport_installed; hold input starts only; reg-to-output/internal retained"
+puts "OT_GRT_NONPORT installed $::ot_grt_nonport_installed; hold input starts and output endpoints out of scope; reg2reg/internal/macro retained"
 

@@ -108,7 +108,7 @@ def test_fail_safe_conditions(tmp_path):
     _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     assert "TT setup loss" in t and "no hold gain" in t and "tool error" in t
-    assert "proc pg_verdict" in t and "[pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]" in t
+    assert "proc pg_verdict" in t and "[pg_verdict $pg_cw0 $pg_cw1 $pg_cn0 $pg_s0 $pg_s1]" in t
 
 
 def _verdict(tmp_path, args, env=None):
@@ -248,3 +248,14 @@ def test_legalize_failure_keeps_the_repair(tmp_path):
     # the residue branch sets no pg_fail: only the outer tool-error catch and the setup/hold gain checks can fall back
     assert "set pg_fail" not in seg
     assert "check_placement -verbose\n  estimate_parasitics" not in tcl
+
+
+def test_cross_tap_guard_skips_core_taps_only_and_accepts_on_nonport(tmp_path):
+    """QC-SRC-CLOSE-1115 (COORD r211): core taps (CP2 FF core tap lines) are the only skipped ports; grid/edge taps take their
+    FF overlay value; the accept test reads same_tap + cross_tap only."""
+    _kit(tmp_path, {"pregrt_ff_hold": True})
+    t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
+    assert "# CP2 FF core tap (\\S+)" in t and "lappend pg_skip $pg_cn" in t
+    assert "dict exists $pg_ovl $pg_p" in t
+    assert "set ::pg_npw($when)" in t and "min($w(same_tap), $w(cross_tap))" in t
+    assert "core_taps_ff.sdc" in t and "lappend pg_skip $pg_p }" not in t

@@ -54,10 +54,21 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     set win [::ot_hg_num OT_HOLD_STALL_WINDOW_S 3600]
     set mingain [::ot_hg_num OT_HOLD_MIN_GAIN_PCT 2.0]
     set maxs [expr {[::ot_hg_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
-    set nb [expr {max($bmin, 0.0025 * $inst0)}]
+    # QC-SRC-CLOSE-1115 (COORD r211, FABLE-PD-QCHOLD-1915 F5): the first chunk is OT_HOLD_CHUNK_BUF_MIN (200) buffers so the
+    # repair rate is visible in minutes; later chunks size themselves to OT_HOLD_CHUNK_S from the measured rate
+    set nb $bmin
     set t0 [clock seconds]; set wt $t0; set wstat $prev; set capped 0
     puts [format "OT_HOLD_GUARD_GRT start: hold ws %.2f tns %.1f viol %d, margin %g, %d instances, budget %g %%" \
       {*}$prev $hm $inst0 $tot]
+    # violator split at start: port starts / port ends / internal
+    set sp_i 0; set sp_o 0; set sp_r 0
+    if {![catch {find_timing_paths -path_delay min -group_path_count 3000000 -endpoint_path_count 1 -slack_max 0} sp_l]} {
+      foreach sp_p $sp_l {
+        set sp_a [sta::sta_to_db_pin [get_property $sp_p startpoint]]; set sp_b [sta::sta_to_db_pin [get_property $sp_p endpoint]]
+        if {$sp_a eq "NULL" || $sp_a eq ""} { incr sp_i } elseif {$sp_b eq "NULL" || $sp_b eq ""} { incr sp_o } else { incr sp_r }
+      }
+      puts "OT_HOLD_GUARD_GRT split: port_in $sp_i port_out $sp_o internal $sp_r"
+    }
     for {set k 1} {1} {incr k} {
       if {[lindex $prev 0] >= $hm} { break }
       set inst [llength [$block getInsts]]
