@@ -1,0 +1,139 @@
+{
+  "schema": "opentallas.completed_route_input_copy.v1",
+  "source_host": "epyc10",
+  "source": "/srv/opentallas-scratch2/claude/ot-jobs/coll_n-route-civil-redfish-3443740-1794846925/work/",
+  "destination": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_a22_route_input",
+  "copied": 1794856214.557608,
+  "inventory_bytes": 283761527,
+  "source_scratch_free_gb": 1600,
+  "destination_scratch_free_gb": 106,
+  "copy_admission": "Light rsync of measured 284MB completed input against 106GB destination headroom; no build or active detail-route DB copied",
+  "rows": [
+    {
+      "path": "run/results/asap7/dp_coll_n/base/5_1_grt.odb",
+      "bytes": 263074460,
+      "mtime": 1794848534.7492242,
+      "sha256": "72183b36faf799e736648d1a4b8e56a44baaaa6b58cfe3306519a2db19f1b151"
+    },
+    {
+      "path": "run/results/asap7/dp_coll_n/base/5_1_grt.sdc",
+      "bytes": 766153,
+      "mtime": 1794848330.3859138,
+      "sha256": "8b86f1ab2d93bbd79b8b0797e51a2bbfa46307902bc4416f057eabc260665e9d"
+    },
+    {
+      "path": "run/results/asap7/dp_coll_n/base/route.guide",
+      "bytes": 19419250,
+      "mtime": 1794848524.681126,
+      "sha256": "e0d442fdf9efc88741814d165aa2568394be5fdbccb608a675d266c7d1dea6a7"
+    },
+    {
+      "path": "run/logs/asap7/dp_coll_n/base/5_1_grt.log",
+      "bytes": 169212,
+      "mtime": 1794848332.7412546,
+      "sha256": "a293245aff6c670afdf399f6fc7566bfb849df12d9f30e9939e042b72b7d53a6"
+    },
+    {
+      "path": "run/logs/asap7/dp_coll_n/base/5_1_grt.json",
+      "bytes": 81646,
+      "mtime": 1794848330.3872318,
+      "sha256": "4435de1a6f8c0c3be57c55fdeeae58c603dc2efd14dd38e7eb04b0bdf38c8a26"
+    },
+    {
+      "path": "config.mk",
+      "bytes": 6090,
+      "mtime": 1794845017.0519252,
+      "sha256": "b5a52e92aa77aa47f02a2540c4ee850f267daa3757e3c500fc02d7fce80dc7da"
+    },
+    {
+      "path": "macro_ff_repair.mk",
+      "bytes": 361,
+      "mtime": 1794845017.0511568,
+      "sha256": "89616c69f9432736353da186f28f3c8d5240b25576e0f9c22a53b4f2f689d7c9"
+    },
+    {
+      "path": "constraint.sdc",
+      "bytes": 7913,
+      "mtime": 1794845016.9777842,
+      "sha256": "65a953699aa83aa25406fe02a6f7f8b07ffa1e8d9d46b052c47683d37e5c33af"
+    },
+    {
+      "path": "tt_setup_repair.tcl",
+      "bytes": 8391,
+      "mtime": 1794845018.7990859,
+      "sha256": "76642d12f21a3491fb46d3b8db44ae075e9fd4e6a2713895387b4842ad784f7f"
+    },
+    {
+      "path": "tt_setup_repair.log",
+      "bytes": 9111,
+      "mtime": 1794847280.4314132,
+      "sha256": "a8b78141cea0c9763c87dfb1eedf3e6cfbfc432492b440c376e6a281d2d753ca"
+    },
+    {
+      "path": "tt_setup_repair_grt.log",
+      "bytes": 178977,
+      "mtime": 1794848534.7502244,
+      "sha256": "0d96585d1096cc6718e261dc96a186d4aac6f903283e8504776b7f7a1b328794"
+    },
+    {
+      "path": "tt_setup_measure.log",
+      "bytes": 1978,
+      "mtime": 1794847296.0399969,
+      "sha256": "ab67b0c27fa4889c1db9b474b4fc3ae98dc574c93263a63b3e720a51a160b2f9"
+    },
+    {
+      "path": "tt_setup_measure_grt.log",
+      "bytes": 2733,
+      "mtime": 1794848585.2097166,
+      "sha256": "2a3a8870ee0cd4ba44a39ceb4c4af54603ea93c3a6aae653b3ef64ee11d5bf5c"
+    },
+    {
+      "path": "tt_setup_keep.log",
+      "bytes": 186,
+      "mtime": 1794848585.966724,
+      "sha256": "cc5c867a05acc3d11554f08322f72e73514e4cd5c033760251026fa4f5e889fe"
+    },
+    {
+      "path": "pg_pair_cap.tcl",
+      "bytes": 3946,
+      "mtime": 1794845017.0574865,
+      "sha256": "75c4b143744db17d910e57d1ce7c097474b483b8a14c3dab00c034348e37742d"
+    },
+    {
+      "path": "pg_connect.tcl",
+      "bytes": 3011,
+      "mtime": 1794845017.0565653,
+      "sha256": "a647aae7424be11fbe7e25f7dc651005707b1d86f99b498cb9eecb859544b099"
+    },
+    {
+      "path": "pg_track_truth.tcl",
+      "bytes": 10028,
+      "mtime": 1794845017.0569644,
+      "sha256": "4ed369351dbb5bd59f97ee833a4834331c38278b94a412a245c042f43759f67c"
+    },
+    {
+      "path": "pg_cell_keepout.tcl",
+      "bytes": 9138,
+      "mtime": 1794845017.0570946,
+      "sha256": "c367f0c4db6ac73bd20e685cbbce519e2071635b09e91acb7bc0754d39ecb0ff"
+    },
+    {
+      "path": "pg_pin_check.tcl",
+      "bytes": 8556,
+      "mtime": 1794845016.9694576,
+      "sha256": "cbf17cebf5580acfd6b6861033bbc7dd023216b40f8e31ac496c56d67b2e31d6"
+    },
+    {
+      "path": "pg_pin_check_hook.tcl",
+      "bytes": 314,
+      "mtime": 1794845016.9697423,
+      "sha256": "319267a47642275480bb74b8a33fb579edeb1054aa4f1903613d306ce0761a37"
+    },
+    {
+      "path": "pg_pin_check.tsv",
+      "bytes": 73,
+      "mtime": 1794845346.384368,
+      "sha256": "07ab2ab94cfc19ff08298238c70b36f51dcf6e3b85a130367588966ce25f8640"
+    }
+  ]
+}
