@@ -38536,10 +38536,8 @@
      "items": [
       "hd_serdes"
      ],
-     "release": [
-      "proof:head-serdes-fanout"
-     ],
-     "reason": "HOLDGEN-1115 2026-11-16 (COORD stop list): the wave relaunched hd_serdes at 03:04 on unchanged RTL after a -261 ps read. No unchanged relaunch until HEAD-SERDES-O posts a RESULT PASS naming head-serdes-fanout. Running attempts finish."
+     "release": [],
+     "reason": "HOLDGEN-1115 2026-11-16 (COORD stop list): the wave relaunched hd_serdes at 03:04 on unchanged RTL after a -261 ps read. No unchanged relaunch until HEAD-SERDES-O posts a RESULT PASS naming head-serdes-fanout. Running attempts finish. [HOLDGEN 07:4x: auto release off until the RESULT matcher fix merges: proof:head-serdes-fanout matched prose]"
     }
    ],
    "proof_items": {
