@@ -236,3 +236,38 @@ def test_memory_macros_are_counted_separately_not_unchecked(tmp_path):
         dict(inst="u_m", module="ot_sram_1r1w_32x64_m1", lib="physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/x_tt.lib"))
     r = A.check_plan(plan, b, None, registry=reg, allow={})
     assert r["macro"] == 1 and all(x["kind"] != "NO_RECORD" for x in r["rows"])
+
+
+PVJ_CORE = """
+module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0, OUTPUT_LOAD_LOCAL=0)(input wire clk, rst_n);
+endmodule
+module ot_qwen_tp8_pv_col #(parameter integer MUT=0, RESET_PIN=0)(input wire clk, rst_n);
+    ot_qwen_tp8_pv_join_t #(.MUT(MUT),.RESET_PIN(RESET_PIN)) u_join(.clk(clk),.rst_n(rst_n));
+endmodule
+"""
+
+
+def _pvj(tmp_path, reset_pin):
+    (tmp_path / "rtl").mkdir()
+    (tmp_path / "rtl" / "kv3_pv_v1.sv").write_text(
+        "module kv3_pv_v1 (input clk, input rst_n);\n"
+        f"    ot_qwen_tp8_pv_col #(.MUT(0), .RESET_PIN({reset_pin})) u_col (.clk(clk), .rst_n(rst_n));\nendmodule\n")
+    (tmp_path / "core.sv").write_text(PVJ_CORE)
+    (tmp_path / "bind.f").write_text(str(tmp_path / "core.sv") + "\n")
+    row = dict(inst="u_col.u_join", module="ot_qwen_tp8_pv_join_t",
+               lib="physical/die_plan/qwen_kvsys/pvview_1103/views/ot_qwen_tp8_pv_join_t/ot_qwen_tp8_pv_join_t_tt.lib")
+    return dict(die="qwen_kvsys", partition_types={"kv3_pv_v1": dict(module="kv3_pv_v1", hard_cores=[row])})
+
+
+def test_kv_pv_join_registry_record_is_the_signed_wrapper_reset_pin_1(tmp_path):
+    # r137: the signed pv_join kit top is a parameterless wrapper whose u_leaf is built #(.J_LAT(7), .MUT(0), .RESET_PIN(1))
+    # (signed 6_final.v holds u_leaf.g_reset_pin.rst_q; signed lib has setup/hold on rst_n); config.mk lists no params
+    e = [x for x in json.loads(A.REGISTRY.read_text())["entries"]
+         if x.get("die") == "qwen_kvsys" and x["module"] == "ot_qwen_tp8_pv_join_t"]
+    assert len(e) == 1 and e[0]["params"] == {"J_LAT": 7, "MUT": 0, "RESET_PIN": 1}
+    plan = _pvj(tmp_path / "die", 1) if (tmp_path / "die").mkdir() is None else None
+    r = A.check_plan(plan, tmp_path / "die", None, registry=A.REGISTRY, allow={})
+    assert r["mismatches"] == [] and r["rows_checked"] == 1
+    plan = _pvj(tmp_path / "zero", 0) if (tmp_path / "zero").mkdir() is None else None
+    r = A.check_plan(plan, tmp_path / "zero", None, registry=A.REGISTRY, allow={})
+    assert {(x["param"], x["built_value"], x["die_value"]) for x in r["rows"]} == {("RESET_PIN", 1, 0)}

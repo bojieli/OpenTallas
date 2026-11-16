@@ -294,8 +294,12 @@
   {
    "die": "qwen_kvsys",
    "module": "ot_qwen_tp8_pv_join_t",
-   "params": {},
-   "source": "signed kit config.mk VERILOG_TOP_PARAMS, agidock:/archive/opentallas-signed-1106/epyc2/srv/opentallas-scratch3/claude/dkv61/pvjoin/R0_A/prd_w60_p2/config.mk (signoff verdict SIGNED, 8 signed kit(s) agree, harvested 2026-11-15, AGIdock + fleet)",
+   "params": {
+    "J_LAT": 7,
+    "MUT": 0,
+    "RESET_PIN": 1
+   },
+   "source": "signed kit wrapper rtl/ot_qwen_tp8_pv_join_t.sv (sha256 60808253cc28; parameterless top, l.537 instantiates ot_qwen_tp8_pv_join_t__leaf #(.J_LAT(7), .MUT(0), .RESET_PIN(1)) u_leaf), identical in both signed kits agidock:/archive/opentallas-signed-1106/epyc2/srv/opentallas-scratch3/claude/dkv61/pvjoin/R0_A/prd_w60_p2 and R0_B/prd_w80_p2 (kit provenance commit 0d672a1dcbdf); both signed 6_final.v hold u_leaf.g_reset_pin.rst_q (43 refs) and the signed view pvview_1103 _tt/_ff.lib carry setup_rising/hold_rising arcs on rst_n. config.mk VERILOG_TOP_PARAMS is empty because the parameters sit in the kit wrapper; the 11-15 harvest read {} from it (KV-102 r137 correction 2026-11-16)",
    "records": [
     "ce849299a035d91f3691c6372d0e4cb7828bd1b093ff005c9ab31bf16fe74249",
     "ceda73b2ce306242fb26a3f230863561f0a4680677e905a911b1fcb1960be3d7"
