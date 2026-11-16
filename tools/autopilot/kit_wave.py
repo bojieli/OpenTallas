@@ -8271,6 +8271,21 @@ def grt_arm_reclaim(AP, rec, hosts):
     return "; ".join(out) or "no host"
 
 
+def reclaim_at_result(AP, cfg, rec, cls):
+    """RESULT-RECLAIM-1116 (FABLE-FLOW-1113 #4, the main disk growth): a FAIL result deletes the run DBs (GRT_ARM_RECLAIM: odb/def/spef/gds/oas) of
+    its own attempt dir at once; reports, logs and bind inputs stay (owner 11-13).  Fail-closed as grt_arm_reclaim (own attempt_<n> dir, attempt >= 2,
+    no signoff.json under it).  An INFRA fail keeps its checkpoint (it relaunches and resumes); die/global option reclaim_failed false opts out.
+    SIGNED results are not touched here (their export to AGIdock + rtx-pro comes first).  -> the reclaim note or ''"""
+    d = (cfg.get("dies") or {}).get(rec.get("die")) or {}
+    if cfg.get("reclaim_failed") is False or d.get("reclaim_failed") is False or AP.DRY or cls == "INFRA" or rec.get("status") != "FAIL":
+        return ""
+    hosts = [d.get("gen_host"), str(rec.get("kit") or "").partition(":")[0]] + list(rec.get("ran_hosts") or [])
+    note = grt_arm_reclaim(AP, rec, hosts)
+    rec["reclaim"] = note
+    AP.log(f"KIT-WAVE RESULT-RECLAIM {rec['die']}/{rec['item']}@{rec.get('attempt')}: {note}")
+    return note
+
+
 def grt_arm_cancel(AP, cfg, rec, why, cls, jobs, notices, reclaim=True):
     """stop one attempt by its exact units (wave unit + PLACE client, or its running route job; an unstarted queue row is
     withdrawn), stop its containers on the fleet, mark it CANCELLED <cls> and reclaim its run data (reclaim=False keeps it)"""
@@ -9061,6 +9076,10 @@ def collect(AP, cfg, st, notices):
         notices.setdefault(rec["die"], []).append(f"{rec['item']} FAIL {cls} ({why[:160]}) evid {rec['evidence']}")
         rec["stage_class"] = typed_class(cls, res.get("stage") or rec.get("stage"), why)
         AP.log(f"KIT-WAVE FAIL {rec['die']}/{rec['item']} {cls}[{rec['stage_class']}]: {why}")
+        try:
+            reclaim_at_result(AP, cfg, rec, cls)
+        except Exception as e:                           # a reclaim never stops the result path
+            AP.log(f"KIT-WAVE RESULT-RECLAIM skipped: {type(e).__name__}: {e}")
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
