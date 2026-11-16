@@ -83,3 +83,13 @@ Final asynchronous handback updates: merge_ops thin13460a0 normal source gate te
   (dry-run sync 13:28: 0 differences), epyc8 (.part, sync from epyc7 finishing). HG1 trees were copied from it; do not delete while
   hg1/treeC gate (epyc10) is active. No further sync or rename from this lane.
 - Open on 7yhr production: C2 / Wo2 / pv26 failed before GEN (kit snapshot 550ac5b3 lacks plan_of_record/eW_sidecar.json); kv_pack / fleet own it.
+
+## 13:4x PST (FABLE-FIX-KV-PVHUB)
+- Sidecar fail: fix = 5a98a213258 (r348). My gate-side complement is a LOCAL commit only: epyc9 fable-fix-kv-pvhub/repo branch
+  claude/fable-fix-kv-pvhub-snap-1116 @6b1c7a507f (not pushed, not READY; COORD decides). Without it or an input change the 3 fail keys
+  (hub_C, hub_Wo, pv_v1; missing path inside snapshot 550ac5b3) keep the rows blocked.
+- epyc7 tail was on an intact tree (no rerun). Baseline control on 7uh gives the same pc kit_rtl error (harness scope).
+- HG1: candidate to adopt = HG1B plan b78d8aa38797 (epyc10 hg1/treeB, gateB ALL_DONE: PRE 0, G0 0, bind 0, LATCHECK 2404/2404).
+  treeC (B + ctx source 13460a0, plan 6e6140a2c269) gate C: PRE 0 at 13:17, G0 + bind running on epyc10 (load 300). C is its own later event.
+  WAITING on the FABLE-PD-KV-HG1 review (not posted at 13:35). On no blocking finding: READY+ADOPT HG1B to KIT-OPS-5 / TOOLS-CONVERGE
+  (they publish the tree + bind on epyc10 + epyc2 as for 7yhr d1); pilots kv3_hg_v1, kv3_hg_v3, kv3_pv_v1n.
