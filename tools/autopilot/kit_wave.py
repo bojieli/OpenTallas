@@ -2819,7 +2819,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # SRC-TREE-1115 (FABLE-FLOW-1000 classes 4/5): src tree manifest policy.  die/global option src_manifest: "off" |
             # "verify" (default: a tree with a manifest must verify, one without is noted) | "require" (no manifest = refuse);
             # src_manifest_hash = the manifest hash adoption pinned (item_inputs may pin its own).
-            "src_manifest": str(opt_get(cfg, die, "src_manifest") or "verify"),
+            "src_manifest": str(opt_get(cfg, die, "src_manifest") or "require"),
             "src_manifest_hash": str(item_in.get("src_manifest_hash") or d.get("src_manifest_hash") or ""),
             # KIT-OVERLAY-1: item_inputs {item: {type_overlay: <path>}} = positions-only intra-type overlay (type_overlay.py) on
             # the die plan of record; gen phys --type-overlay + the overlaid plan for station preparation.  Absent = unchanged.
@@ -5276,7 +5276,7 @@ def src_manifest_cmd(sp):
     The verifier is shipped inline (python3 -I -c), so the gen host needs no copy of it."""
     if "src_manifest" not in sp:                         # a spec written before SRC-TREE-1115 (old worker spec): unchanged
         return None
-    mode = str(sp.get("src_manifest") or "verify")
+    mode = str(sp.get("src_manifest") or "require")
     if mode == "off" or not str(sp.get("src") or "").startswith("/"):
         return None
     try:
@@ -5294,7 +5294,7 @@ def src_manifest_cmd(sp):
 def src_manifest_verdict(sp, rc, txt):
     """-> (refuse_text or '', note).  A tree whose manifest does not verify is refused before any gen, naming the drifted
     file(s); no manifest is a note ('verify') or a refusal ('require', or when adoption pinned a hash)."""
-    mode = str(sp.get("src_manifest") or "verify")
+    mode = str(sp.get("src_manifest") or "require")
     txt = txt or ""
     missing = "SRC_MANIFEST MISSING" in txt
     if rc == 0 and not missing:
@@ -7369,9 +7369,11 @@ def tool_skew_refuse(AP, cfg, st, die):
     if die not in cache:
         main_root = Path(d.get("tool_skew_main") or Path(__file__).resolve().parents[2])
         try:
-            main_m = cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
+            pin = d.get("tools_sha")
+            main_m = None if pin else cache.setdefault("_main", {}).setdefault(str(main_root), TS.manifest(main_root))
             res = TS.check_die(die, d["src"], main_root, TS.load_allow(main_root / TS.ALLOW_REL),
-                               host=d.get("gen_host"), main_m=main_m)
+                               host=d.get("gen_host"), main_m=main_m, tools_sha=pin,
+                               rt_root=d.get("tools_rt_root") or TS.RT_ROOT, strict=opt(cfg, die, "tool_skew") == "refuse")
         except Exception as e:                           # a broken check never stops the wave
             AP.log(f"KIT-WAVE tool_skew {die} not checked: {type(e).__name__}: {e}")
             res = dict(ok=True, measured=False, refused={}, allowed={}, expired={}, n_closure=0)

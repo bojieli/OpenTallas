@@ -93,6 +93,53 @@ class CheckDie(unittest.TestCase):
         self.assertEqual(TS.signature(a), TS.signature(dict(refused={"x": "differ"})))
 
 
+class PinMode(unittest.TestCase):
+    """FABLE-FLOWCLASS-TOOLSKEW-2030 section 4: the reference is the die's pinned tools_sha manifest, not main"""
+
+    def rt(self, t, files, sha="a" * 40):
+        Path(t, "rt").mkdir(exist_ok=True)
+        Path(t, "rt", sha[:12] + ".manifest.json").write_text(json.dumps({"sha": sha, "files": files}))
+        return str(Path(t, "rt"))
+
+    def h(self, txt):
+        import hashlib
+        return hashlib.sha256(txt.encode()).hexdigest()
+
+    def test_tree_equal_to_pin_ok_scope_is_whole_tools_scope(self):
+        with tempfile.TemporaryDirectory() as t:
+            files = {"tools/fleet/x.py": "x\n", "physical/common_flow/a.tcl": "t\n", "rtl/lib/l.sv": "l\n"}
+            tr = tree(Path(t) / "tree", files)
+            rt = self.rt(t, {k: self.h(v) for k, v in files.items()})
+            r = TS.check_die("kv", tr, "/nonexistent", tools_sha="a" * 40, rt_root=rt)
+            self.assertTrue(r["ok"], r)
+            self.assertEqual(r["n_closure"], 3)
+            Path(tr, "physical/common_flow/a.tcl").write_text("patched\n")
+            r = TS.check_die("kv", tr, "/nonexistent", tools_sha="a" * 40, rt_root=rt)
+            self.assertEqual(r["refused"], {"physical/common_flow/a.tcl": "differ"})
+
+    def test_extra_and_missing_files_and_manifest_tree(self):
+        with tempfile.TemporaryDirectory() as t:
+            rt = self.rt(t, {"tools/a.py": self.h("a\n"), "tools/b.py": self.h("b\n")})
+            tr = tree(Path(t) / "tree", {"tools/a.py": "a\n", "tools/extra.py": "e\n"})
+            r = TS.check_die("kv", tr, "/nonexistent", tools_sha="a" * 40, rt_root=rt)
+            self.assertEqual(r["refused"], {"tools/extra.py": "only_die", "tools/b.py": "missing"})
+            # a tree that carries .src-manifest.json is read through it
+            tree(Path(t) / "t2", {TS.SRC_MANIFEST: json.dumps({"files": {"tools/a.py": self.h("a\n"), "tools/b.py": self.h("b\n"),
+                                                                       "plans/x.json": "zz"}})})
+            self.assertTrue(TS.check_die("kv", str(Path(t) / "t2"), "/nonexistent", tools_sha="a" * 40, rt_root=rt)["ok"])
+
+    def test_unreadable_pin_or_tree_unmeasured_but_refused_in_strict(self):
+        with tempfile.TemporaryDirectory() as t:
+            rt = self.rt(t, {"tools/a.py": "h"})
+            r = TS.check_die("kv", str(Path(t) / "no"), "/x", tools_sha="a" * 40, rt_root=rt)
+            self.assertTrue(r["ok"] and not r["measured"])
+            r = TS.check_die("kv", str(Path(t) / "no"), "/x", tools_sha="a" * 40, rt_root=rt, strict=True)
+            self.assertFalse(r["ok"])
+            r = TS.check_die("kv", t, "/x", tools_sha="b" * 40, rt_root=rt, strict=True)
+            self.assertFalse(r["ok"])
+            self.assertTrue(TS.check_die("kv", t, "/x", tools_sha="b" * 40, rt_root=rt)["ok"])
+
+
 class LaunchGate(unittest.TestCase):
     def setup(self, t, tool_skew=True, allow=None):
         main = tree(Path(t) / "main", BASE)

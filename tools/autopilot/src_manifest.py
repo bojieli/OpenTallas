@@ -206,11 +206,52 @@ def git_archive(repo, sha, scope, out, lazy=False):
         cf.wait()
 
 
-def build(repo, sha, overlay_json, scope, out):
+TOOLS_SCOPE = ("tools/", "physical/common_flow/", "rtl/lib/", "rtl/common/")
+
+
+def check_pin(repo, sha, main_ref, rt_root):
+    """TOOLS-CONVERGE-1115 (FABLE-FLOWCLASS-TOOLSKEW-2030 2.2): the pinned tools_sha must be an ancestor of main_ref and, when
+    rt_root is given, have rt/<sha12>.manifest.json there.  Errors -> SystemExit."""
+    if main_ref:
+        r = subprocess.run(["git", "-C", repo, "merge-base", "--is-ancestor", sha, main_ref], capture_output=True)
+        if r.returncode:
+            raise SystemExit(f"refuse: tools_sha {sha[:12]} is not an ancestor of {main_ref} (a die tree is built from merged main only)")
+    if rt_root and not os.path.isfile(os.path.join(rt_root, f"{sha[:12]}.manifest.json")):
+        raise SystemExit(f"refuse: no {rt_root}/{sha[:12]}.manifest.json (tools_sha is not published as an rt tree on this host)")
+
+
+def tool_overlay_errors(ov, die, allow_file, now=None):
+    """overlay entries under the TOOLS scope are refused unless tool_skew_allow.json lists them for the die with a branch_sha
+    and an expiry (ISO date-time) at most 12 h away.  -> [error text]"""
+    import datetime
+    tools = sorted(r for r in ov if r.startswith(TOOLS_SCOPE))
+    if not tools:
+        return []
+    now = now or datetime.datetime.now()
+    try:
+        allow = (json.load(open(allow_file)) if allow_file else {}).get(die or "", {})
+    except (OSError, ValueError):
+        allow = {}
+    errs = []
+    for rel in tools:
+        ent = next((e for pat, e in allow.items() if pat == rel or fnmatch.fnmatchcase(rel, pat)), None)
+        try:
+            exp = datetime.datetime.fromisoformat(str((ent or {}).get("expires", "")))
+        except ValueError:
+            exp = None
+        if ent is None or not ent.get("branch_sha") or exp is None:
+            errs.append(f"overlay {rel} is a TOOL (only DATA may be overlaid); allow it per die with branch_sha + expires in tool_skew_allow.json")
+        elif exp < now or exp > now + datetime.timedelta(hours=12):
+            errs.append(f"overlay {rel}: allowlist expiry {exp} must be in the future and within 12 h")
+    return errs
+
+
+def build(repo, sha, overlay_json, scope, out, die="", allow_file="", main_ref="origin/main", rt_root=""):
     if os.path.exists(out):
         raise SystemExit(f"refuse: {out} exists (a tree is built once into a new dir, never rebuilt in place)")
     sha = subprocess.run(["git", "-C", repo, "rev-parse", sha + "^{commit}"], capture_output=True, text=True,
                          check=True).stdout.strip()
+    check_pin(repo, sha, main_ref, rt_root)
     ov = {}
     if overlay_json:
         base = os.path.dirname(os.path.abspath(overlay_json))
@@ -221,6 +262,9 @@ def build(repo, sha, overlay_json, scope, out):
                 raise SystemExit(f"overlay {rel}: source {src} missing or sha256 != declared {e['sha256'][:12]}")
             if rel.startswith("/") or ".." in rel.split("/"):
                 raise SystemExit(f"overlay path {rel} escapes the tree")
+    bad = tool_overlay_errors(ov, die, allow_file)
+    if bad:
+        raise SystemExit("refuse:\n  " + "\n  ".join(bad))
     tmp = out + ".building"
     shutil.rmtree(tmp, ignore_errors=True)
     os.makedirs(tmp)
@@ -322,6 +366,10 @@ def main(argv=None):
     b.add_argument("--overlay")
     b.add_argument("--scope", nargs="+", default=DEFAULT_SCOPE)
     b.add_argument("--out", required=True)
+    b.add_argument("--die", default="")
+    b.add_argument("--allow", default="", help="tool_skew_allow.json (a TOOLS-scope overlay entry needs a live entry there)")
+    b.add_argument("--main-ref", default="origin/main", help="tools sha must be an ancestor of this ref ('' = no check)")
+    b.add_argument("--rt-root", default="", help="require rt-root/<sha12>.manifest.json (the published rt tree of the pin)")
     pu = sp.add_parser("publish")
     pu.add_argument("tree")
     pu.add_argument("--pointer", default="")
@@ -344,7 +392,7 @@ def main(argv=None):
     d.add_argument("--scope", nargs="+", default=DEFAULT_SCOPE)
     a = ap.parse_args(argv)
     if a.cmd == "build":
-        m = build(a.repo, a.sha, a.overlay, a.scope, a.out)
+        m = build(a.repo, a.sha, a.overlay, a.scope, a.out, a.die, a.allow, a.main_ref, a.rt_root)
         print(f"SRC_MANIFEST BUILT {a.out} main {m['main_sha'][:12]} overlay {len(m['overlay'])} files {len(m['files'])} hash {m['manifest_hash']}")
     elif a.cmd == "publish":
         info = publish(a.tree, a.pointer)
