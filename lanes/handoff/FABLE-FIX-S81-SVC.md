@@ -119,3 +119,16 @@
   out + asbuilt_run.json + sidecar_new.json + src/physical/die_plan/s81/h2_2249 + ev/B6gF2s3.json to epyc2 (same paths)
   and launch both pilots as p6 with plan = B6gF2s3.json, in parallel with anything still running. svc releases off
   whichever passes r310 first. p5 is in kit_rtl at 09:25.
+
+## 09:50 PST p5 (F2sv bind) FAIL kit_rtl on BOTH pilots: memory closure refuses the F2sv bound (cause (a) NOT closed on the F2s line)
+- Error: s81_svc_memory_closure.py "reference net 673_Y not structurally mapped" (svc_hi t3; svc_lo t7 same stage).
+- MEASURED: ref_1116 was regenerated from the G3b LANE bind, whose source run/b/B6gG3b/src has dsdv_svc_att.sv
+  3c1f2d53cf3f (1016 lines) and ot_hdc_v41x_attn_tile_s.sv da37bbd0; main / v2 / v3 trees and the F2sv + F2s3 bind src
+  have 7e6095d05c87 (1099 lines, +83 = ifdef OT_SVC_NATIVE_RT2_CALENDAR / OT_SVC_BAND blocks) and attn_tile_s 0464a4ce.
+  svc plan type rows G3b vs F2sv differ only in clock. Bound svc_hi t3: 14448 lines (G3b) vs 14530 (F2sv); lo t7 +82.
+  p3/p4 kit_rtl passed only because the v3 marker bind_out is the G3b-line bind.
+- So EVERY main-source bind (F2sv, F2s3) fails the closure until the reference is regenerated from a main-source bound.
+- My regen try (epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-svc/regen: pt/ = copy of the lane pt + v3 tools,
+  bound/ = F2sv svc_lo t7 unclosed bound, new/ = main att+rs, old/ = lane regen/old): REFUSED, one token in the residual
+  w_u_rsv_14_u_u_att_u_eng_111_Y (paired 5624, residual 1269/2163). Variants with --drop-loc running (regen_try.log).
+- F2s3 pilots would fail the same way: do NOT launch them before a reference that closes the F2sv bound exists.
