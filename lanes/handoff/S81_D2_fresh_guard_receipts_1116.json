@@ -1,0 +1,64 @@
+{
+ "evidence_only": true,
+ "no_state_edits": true,
+ "fresh_readonly_unshared_receipts": {
+  "epyc9": {
+   "basis": "completed content verification cache plus current read-only unshared inventory",
+   "cache_mtime_ns": 1794859647662340650,
+   "cache_path": "/home/ubuntu/.cache/src-manifest/6dc4d5c8725dc47e5b302cfbc593203a.json",
+   "cache_sha256": "72ab195fb1d42361ef982be2f8a629cb580353e8727ae2ff751067719f30b3c6",
+   "files": 323266,
+   "main_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+   "manifest_hash": "aed3b3e059b20904d0125d0b89e6c8d0c0ce561247674c237df75a8db2d3d8a3",
+   "schema": "opentallas.src_manifest.cached_receipt.v1",
+   "signature": "323269:1794855379990844875:50721416537",
+   "source": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2",
+   "verdict": "PASS"
+  },
+  "epyc10": {
+   "basis": "completed content verification cache plus current read-only unshared inventory",
+   "cache_mtime_ns": 1794855914009144680,
+   "cache_path": "/home/ubuntu/.cache/src-manifest/6dc4d5c8725dc47e5b302cfbc593203a.json",
+   "cache_sha256": "72ab195fb1d42361ef982be2f8a629cb580353e8727ae2ff751067719f30b3c6",
+   "files": 323266,
+   "main_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+   "manifest_hash": "aed3b3e059b20904d0125d0b89e6c8d0c0ce561247674c237df75a8db2d3d8a3",
+   "schema": "opentallas.src_manifest.cached_receipt.v1",
+   "signature": "323269:1794855379990844875:50721416537",
+   "source": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2",
+   "verdict": "PASS"
+  }
+ },
+ "log": "/tmp/s81_D2_fresh_readonly_receipts_1116.log",
+ "durable_result": "/home/ubuntu/coord/autopilot/tree_checks/bb0b45526412afbcf5fe8c6680e4dd6d78e6b9b0c5f3d7a8e14b37687bfbfe7b/result.json",
+ "identity": {
+  "checker_sha256": "60f061c510832504f98540c4eb55d2a25b158606677b72f3702e86969b975111",
+  "die": "s81",
+  "hosts": [
+   "epyc10",
+   "epyc9"
+  ],
+  "manifest_hash": "aed3b3e059b20904d0125d0b89e6c8d0c0ce561247674c237df75a8db2d3d8a3",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2"
+ },
+ "fresh_links_attempt": "1794860846475477811",
+ "fresh_links_unit": "ot-treecheck-bb0b45526412afbcf5fe-6475477811",
+ "links_t": 1794860860.4797513,
+ "state": "ok",
+ "full_ok": true,
+ "latest_link_details": [
+  {
+   "basis": "links",
+   "host": "epyc10",
+   "output": "epyc10: SRC_MANIFEST LINKS OK /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2: no file shared with another path\n",
+   "rc": 0
+  },
+  {
+   "basis": "links",
+   "host": "epyc9",
+   "output": "epyc9: SRC_MANIFEST LINKS OK /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s3_mainref_pg_d2: no file shared with another path\n",
+   "rc": 0
+  }
+ ],
+ "stale_why_is_historical": true
+}
