@@ -376,8 +376,7 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   @FF_GRT_STEP@\
   @GRT_GATE_STEP@\
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
-  if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
-  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
+  if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-finish && \$M do-generate_abstract; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = place ]; then P=\$(ls /work/run/results/asap7/*/base/3_place.odb | tail -1); ODB=\$P OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py > /work/dump_placed.log 2>&1; fi; \
   O=\$(ls /work/run/results/asap7/*/base/5_route.odb /work/run/results/asap7/*/base/6_final.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_POSTROUTE pin_audit'; fi; fi; \
@@ -459,6 +458,8 @@ def run_kit(modern):
     # FLOW-21: host-side async-LEC hooks only in the modern runner (legacy bytes unchanged)
     t = t.replace("@LECA_START@\n", LECA_START if modern else "").replace("@LECA_FINISH@\n", LECA_FINISH if modern else "")
     if modern:
+        # ORFS finish already runs final_report (RCX/IR); keep frozen legacy bytes.
+        t = t.replace('  if [ \\$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \\$M do-finish && \\$M do-generate_abstract; rc=\\$?; fi; \\\n', '  if [ \\$rc = 0 ] && [ $GOAL = route ]; then \\$M do-finish; rc=\\$?; fi; \\\n  if [ \\$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \\$M do-generate_abstract; rc=\\$?; fi; \\\n', 1)
         t = t.replace("; rc=0; ", "; rc=0; " + "if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; ", 1)
         t = t.replace("  chown -R ", "  if [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \\$rc; fi; chown -R ", 1)
     if not modern:   # the old first step had no rc guard
