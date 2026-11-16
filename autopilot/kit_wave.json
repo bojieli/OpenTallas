@@ -294,50 +294,7 @@
    "die_max_inflight": 100000,
    "live_claim_h": 0.25,
    "pilot_mode": "queue",
-   "hold_items": {
-    "kv3_hgi_v5": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1160 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
-    "kv3_hg": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hg_v1": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hg_v1p3": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hg_v1p4": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_pc_v3": "WAVE-PREPNR-1115 11-15 08:3x: gen ValueError invalid bound R8 count declaration (strap_r8pad_slg_vreq; bound_r8_straps.declared width/port rule in src_kv_kvgeom6_pgL) on every attempt; source/tool skew needs a KV-owner source fix (KV-102 hsl3_fi precedent); unchanged relaunch fails identically. Lift when src_sha or the R8 declaration changes.",
-    "kv3_hg_v1p2": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hg_v1p5": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hg_v1p6": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v1__cl141fc26e": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v1__cl42bc8b12": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v2__cle0015330": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v3": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v4": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v6": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v7": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v8": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v2": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v2n": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v4": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v4n": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v6": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v6n": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pc_v1__cl4ea58a5c": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
-    "kv3_io_cor": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
-    "kv3_io_cor_v1": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
-    "kv3_hroot": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key.",
-    "kv3_hg_v3": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v2__cl2862d491": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_sys_SD": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
-    "kv3_sys_SD_v1": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
-    "kv3_pv": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v1n": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v3": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v3n": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v5": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v5n": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v8": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v1": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
-    "kv3_hgi_v2": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key."
-   },
+   "hold_items": {},
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
     "kv3_io_cor@2": "604304bb7f2 (KV-032 DPL-0033 / cland status-window class: CLAND_RELEASE_GROWN_TCL + per-type diamond DPL + cland_fit_resize_off_types; proof V3 0 viol on the wave kit 3_4 DB) in source-follow src 08542fa9d7d; relaunched 07:03 as a3 (resume from a2)",
@@ -5271,50 +5228,6 @@
     "kv3_pv_v6",
     "kv3_pv_v6n"
    ],
-   "hold_release_on": {
-    "kv3_pc_v1__cl4ea58a5c": "event_adopt:KV pc delta",
-    "kv3_io_cor": "lane_result:DRT0255-PROOF io_cor proof route",
-    "kv3_io_cor_v1": "lane_result:DRT0255-PROOF io_cor proof route",
-    "kv3_hgi_v5": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v3*": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
-    "kv3_hg": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hg_v1": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hg_v1p3": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hg_v1p4": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_pc_v3": "lane_ready:KV owner source fix",
-    "kv3_hg_v1p2": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hg_v1p5": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hg_v1p6": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v1__cl141fc26e": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v1__cl42bc8b12": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v2__cle0015330": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v3": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v4": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v6": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v7": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v8": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_pv_v2": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v2n": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v4": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v4n": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v6": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v6n": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_hroot": "lane_result:DRT0255-PROOF flags READY",
-    "kv3_hg_v3": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v2__cl2862d491": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_sys_SD": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
-    "kv3_sys_SD_v1": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
-    "kv3_pv": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v1n": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v3": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v3n": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v5": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v5n": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_pv_v8": "lane_ready:KV-PVGEN split delta adopted (or KV-102 posts a first-census number under 400k for the item)",
-    "kv3_hgi_v1": "lane_ready:KV-HGSPLIT ring split adopted (r235)",
-    "kv3_hgi_v2": "lane_ready:KV-HGSPLIT ring split adopted (r235)"
-   },
    "prev_wavehold1115_kvgeom6": {
     "event": "kvgeom6",
     "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_kvgeom6_pgL/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
@@ -5756,7 +5669,204 @@
     "kv3_hg_v1p5@14",
     "kv3_hg_v1p6@17"
    ],
-   "src_manifest": "verify"
+   "src_manifest": "verify",
+   "hold_records": [
+    {
+     "id": "qwen_kvsys-mig-008-k1",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
+     "release": [
+      "proof:DRT0255"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_io_cor",
+      "kv3_io_cor_v1"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-001-k2",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
+     "release": [
+      "event_adopt:KV-HG1"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_hgi_v5"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-003-k3",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
+     "release": [
+      "event_adopt:KV-HG1"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_hg",
+      "kv3_hg_v1",
+      "kv3_hg_v1p3",
+      "kv3_hg_v1p4"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-005-k4",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
+     "release": [
+      "event_adopt:KV-HG1"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_hg_v1p2",
+      "kv3_hg_v1p5",
+      "kv3_hg_v1p6",
+      "kv3_hgi",
+      "kv3_hgi_v1__cl141fc26e",
+      "kv3_hgi_v1__cl42bc8b12",
+      "kv3_hgi_v2__cle0015330",
+      "kv3_hgi_v3",
+      "kv3_hgi_v4",
+      "kv3_hgi_v6",
+      "kv3_hgi_v7",
+      "kv3_hgi_v8"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-006-k5",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
+     "release": [
+      "event_adopt:KV-PVSPLIT",
+      "census_lt:400k"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_pv_v2",
+      "kv3_pv_v2n",
+      "kv3_pv_v4",
+      "kv3_pv_v4n",
+      "kv3_pv_v6",
+      "kv3_pv_v6n"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-009-k6",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key.",
+     "release": [
+      "proof:DRT0255"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_hroot"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-010-k7",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
+     "release": [
+      "event_adopt:KV-HG1"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_hg_v3",
+      "kv3_hgi_v2__cl2862d491"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-011-k8",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+     "release": [
+      "proof:DRT0255"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_sys_SD",
+      "kv3_sys_SD_v1"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-012-k9",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
+     "release": [
+      "event_adopt:KV-PVSPLIT",
+      "census_lt:400k"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_pv",
+      "kv3_pv_v1n",
+      "kv3_pv_v3",
+      "kv3_pv_v3n",
+      "kv3_pv_v5",
+      "kv3_pv_v5n",
+      "kv3_pv_v8"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-013-k10",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 22:13 PST (COORD r235/r239): no hg/hgi launch without the ring split (KV-HGSPLIT-1115 joint event on 7uh). Running attempts finish. Lift = delete this key.",
+     "release": [
+      "event_adopt:KV-HG1"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_hgi_v1",
+      "kv3_hgi_v2"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-004-k11",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-PREPNR-1115 11-15 08:3x: gen ValueError invalid bound R8 count declaration (strap_r8pad_slg_vreq; bound_r8_straps.declared width/port rule in src_kv_kvgeom6_pgL) on every attempt; source/tool skew needs a KV-owner source fix (KV-102 hsl3_fi precedent); unchanged relaunch fails identically. Lift when src_sha or the R8 declaration changes.",
+     "release": [
+      "event_adopt:KV-PCV3-R8"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_pc_v3"
+     ],
+     "carry": true
+    },
+    {
+     "id": "qwen_kvsys-mig-007-k12",
+     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
+     "reason": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
+     "release": [
+      "event_adopt:KV-PCDELTA"
+     ],
+     "migrated": true,
+     "keys": [
+      "kv3_pc_v1__cl4ea58a5c"
+     ],
+     "carry": true
+    }
+   ],
+   "planned_events": [
+    "KV-7uh",
+    "KV-7y",
+    "KV-HG1",
+    "KV-PCDELTA",
+    "KV-PCV3-R8",
+    "KV-PVSPLIT"
+   ]
   },
   "s81": {
    "enabled": true,
@@ -35754,7 +35864,11 @@
     }
    ],
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
-   "hold_items": {},
+   "hold_items": {
+    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
+    "hd_spn": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "hd_st_str": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key."
+   },
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
     "hd_host_w@2": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
