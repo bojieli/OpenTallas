@@ -67,3 +67,15 @@
   Take SRC / plan / sidecar / bind_out / asbuilt / manifest hash from the v3 marker post.
 - Reads: gen_lint + preflight, floorplan placed macros 148 (hi t3) / 169 (lo t7), GPL, CTS, GRT, route, R-MINIMAL gates.
   Then post exactly: RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready PASS: <evidence>.
+
+## 08:45 PST pilots LAUNCHED (private run-items, v3 tree)
+- svc_hi_dsdv_svc_rs__t3 pid 2601519, svc_lo_dsdv_svc_rs__t7 pid 2601838 (intel2 run-item; kill exact PIDs only).
+  logs intel2 ~/fable-fix-s81-svc/<item>/p1/unit.log (+ stage logs); work epyc9
+  /srv/opentallas-scratch2/claude/fable-fix-s81-svc/pilot/items/<item>/attempt_p1.
+- Inputs: src kw45/src_s81_pin_41bb1dcfd10a (manifest 3a6408ed...), plan in-tree plan_inputs/B6gF2sv_formA.json
+  626de2b41910, sidecar epyc9 fable-fix-s81-svc/in/B6gF2sv_sidecar.json a3b57fc803bf (copy of ev/), bind_out
+  kw45/s81bind_pin_41bb1dcfd10a/out, asbuilt s81-b3-clk/run/b/B6gG3b/asbuilt_run.json.
+- RISK: the v3 bind_out was bound on plan_h2_2249 (G3b line), the pilots use the F2sv plan: a kit_rtl / LATCHECK
+  mismatch on svc would show at kit_rtl or preflight -> then ask DIE-S81-92 for the F2sv bind out on v3.
+- RISK: epyc9 scratch2 31 GB free at 08:40; tree only on epyc9 + epyc10.
+- Launcher fix: no pipefail (ls|head SIGPIPE killed it silently).
