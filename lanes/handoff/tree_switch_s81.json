@@ -1,15 +1,13 @@
 {
  "die": "s81",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_eb1e73448bd0",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_41bb1dcfd10a",
  "smoke": "PASS",
- "smoke_detail": "v2: kit_rtl 14/14 RC0; plan_gate_pre PASS; tree_smoke_assert OK; tree_skew_check OK; hash+nlink verified on all listed hosts; bind of record s81bind_pin_eb1e73448bd0/out on all listed hosts",
- "src_manifest_sha": "59d562a34e1c22303b580e91eb2c45150638df7358abd28543706bf65874cabe",
- "tools_sha": "eb1e73448bd0",
+ "smoke_detail": "v3 (main 41bb1dcfd10: svcmem closure + core_tap_lead_ps; +native_e plan + svc plan as data): kit_rtl 14/14 RC0; tree_smoke_assert OK; nlink 1; hash+links verified on epyc9",
+ "src_manifest_sha": "3a6408ede9c2c432663c249965824e56988d1af66a175a05fdbcdd6c73309635",
+ "tools_sha": "41bb1dcfd10a",
  "hosts": [
   "epyc10",
-  "epyc9",
-  "epyc8",
-  "intel1"
+  "epyc9"
  ],
  "hosts_verified": "src_manifest hash+ro at copy, links check after",
  "die_gen_env": {
@@ -20,8 +18,5 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 07:10:25 PST",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/s81bind_pin_eb1e73448bd0/out",
- "asbuilt": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gG3b/asbuilt_run.json",
- "note": "kit_rtl.bind_out = bind_out here (present on every listed host, 6.8 GB); plan/asbuilt/sidecar are still lane-folder inputs (ext_source_check --config reports them): plan copy into the tree is the next data pack"
+ "time": "2026-11-16 08:32:36 PST"
 }
