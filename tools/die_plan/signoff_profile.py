@@ -77,9 +77,61 @@ def _num(x):
     return v if math.isfinite(v) and abs(v) < TIMING_ABS_MAX_PS else None
 
 
+def internal_hold_measurement(rec):
+    """Complete native internal census, or a complete nonnegative all-path bound.
+
+    core_n/core_wns are emitted only after both native searches finish without
+    truncation. A zero count/zero bound proves no internal hold miss; it does
+    not claim the boundary WNS is zero. Typed summaries may carry that same
+    measurement, but an old local SIGNED/port-only verdict is not evidence.
+    """
+    ff = (rec.get("corners") or {}).get("ff")
+    if isinstance(ff, dict):
+        c = ff.get("std_min_start") or {}
+        if not isinstance(c, dict):
+            c = {}
+        done = ff.get("done") is True and not ff.get("errors") and ff.get("rc", 0) == 0
+        complete = done and c.get("err") == 0 and c.get("trunc") == 0
+        w, n = _num(c.get("core_wns")), _num(c.get("core_n"))
+        source = "corners.ff.std_min_start.core_wns (complete internal census)"
+        # Older native signers omitted the census when every STD min path met.
+        # That complete, finite all-path minimum is a stronger internal bound.
+        # Never replace a present/ambiguous core census or use another frame.
+        if "core_wns" not in c and "core_n" not in c:
+            all_w, all_n = _num(ff.get("std_wns_min")), _num(ff.get("std_nviol_min"))
+            census_ok = c.get("err", 0) == 0 and c.get("trunc", 0) == 0
+            if done and census_ok and all_w is not None and all_w >= 0 and all_n == 0:
+                complete, w, n = True, all_w, 0.0
+                source = "corners.ff.std_wns_min (complete all-path STD lower bound; no internal census)"
+    else:
+        c = rec.get("internal_hold") or {}
+        if not isinstance(c, dict):
+            c = {}
+        complete = c.get("schema") == "opentallas.internal_ff_hold.v1" and c.get("complete") is True
+        w, n = _num(c.get("wns_ps")), _num(c.get("violators"))
+        source = c.get("source") or "typed internal hold summary"
+    valid = (complete and w is not None and n is not None and n >= 0 and n.is_integer()
+             and ((n == 0 and w >= 0) or (n > 0 and w < 0)))
+    return dict(schema="opentallas.internal_ff_hold.v1", complete=bool(valid),
+                wns_ps=w if valid else None, violators=int(n) if valid else None,
+                source=source, reason=None if valid else "missing or ambiguous complete internal FF measurement")
+
+
+def boundary_hold_metric(rec):
+    ch = rec.get("checks") or {}
+    hf = ch.get("hold_ff") if isinstance(ch.get("hold_ff"), dict) else {}
+    for value, source in ((hf.get("wns_ps"), "hold_ff.wns_ps (standard overlay)"),
+                          (hf.get("sdc_wns_ps"), "hold_ff.sdc_wns_ps (kit SDC)"),
+                          (rec.get("ff_wns"), "summary ff_wns")):
+        value = _num(value)
+        if value is not None:
+            return value, source
+    return None, None
+
+
 def metrics(rec):
     """(drc, tt_wns_ps, ff_hold_wns_ps, hold_source) from a signoff.json record or an autopilot job summary
-    (keys drc / tt_wns / ff_wns).  Missing = None."""
+    (keys drc / tt_wns plus a typed complete internal_hold). Missing = None."""
     ch = rec.get("checks") or {}
     drc = (ch.get("drc") or {}).get("count") if isinstance(ch.get("drc"), dict) else None
     if drc is None:
@@ -92,14 +144,8 @@ def metrics(rec):
         tt = _num(st.get("sdc_wns_ps"))
     if tt is None:
         tt = _num(rec.get("tt_wns"))
-    hf = ch.get("hold_ff") if isinstance(ch.get("hold_ff"), dict) else {}
-    ff, src = _num(hf.get("wns_ps")), "hold_ff.wns_ps (standard overlay)"
-    if ff is None:
-        ff, src = _num(hf.get("sdc_wns_ps")), "hold_ff.sdc_wns_ps (kit SDC)"
-    if ff is None:
-        ff, src = _num(rec.get("ff_wns")), "summary ff_wns"
-    if ff is None:
-        src = None
+    internal = internal_hold_measurement(rec)
+    ff, src = internal["wns_ps"], internal["source"]
     return (None if drc is None else int(drc)), tt, ff, src
 
 
@@ -146,9 +192,8 @@ def judge(rec, die=None):
     die = die or record_die(rec)
     tol = setup_tolerance_ps(die)
     gates = gate_verdicts(drc, tt, ff, tol)
-    port_only = ff is not None and ff < HOLD_MIN_PS and internal_hold_port_only(rec)
-    if port_only:
-        gates["hold_ff"] = "PASS"          # internal reg-to-reg hold >= 0; the port-start hold is the die STA's (advisory)
+    boundary_ff, boundary_source = boundary_hold_metric(rec)
+    port_only = ff is not None and ff >= HOLD_MIN_PS and boundary_ff is not None and boundary_ff < HOLD_MIN_PS
     reasons = []
     if gates["drc"] != "PASS":
         reasons.append(f"drc: {gates['drc']}" + ("" if drc is None else f" {drc}"))
@@ -168,8 +213,11 @@ def judge(rec, die=None):
         if k not in MINIMAL_GATES and not any(a.startswith(k + ":") for a in adv):
             adv.append(str(r)[:160])
     return dict(verdict="SIGNED" if not reasons else "NOT SIGNED", profile="minimal", gates=gates, reasons=reasons,
-                advisories=adv + ([f"hold_ff: port-start hold {ff:+.2f} ps (io_hold_parent, die STA)"] if port_only else []),
+                advisories=adv + ([f"hold_ff: boundary hold {boundary_ff:+.2f} ps (io_hold_parent, die STA; advisory)"]
+                                  if boundary_ff is not None and boundary_ff < 0 else []),
                 drc=drc, tt_wns_ps=tt, ff_hold_wns_ps=ff, hold_source=src, hold_port_only=port_only,
+                boundary_ff_hold_wns_ps=boundary_ff, boundary_hold_source=boundary_source,
+                internal_hold=internal_hold_measurement(rec),
                 setup_within_tolerance=tt is not None and -tol <= tt < 0, die=die, die_period_ps=die_period_ps(die),
                 setup_tolerance_ps=tol,
                 achieved_period_ps=achieved_period_ps(tt), legacy_verdict=rec.get("verdict"))
@@ -184,7 +232,7 @@ def apply(rec, value=None):
     j = judge(rec)
     rec["legacy_verdict"], rec["legacy_reasons"] = rec.get("verdict"), list(rec.get("reasons") or [])
     rec.update(verdict=j["verdict"], reasons=j["reasons"], advisories=j["advisories"], profile="minimal",
-               profile_gates=j["gates"], achieved_period_ps=j["achieved_period_ps"],
+               profile_gates=j["gates"], internal_hold=j["internal_hold"], achieved_period_ps=j["achieved_period_ps"],
                setup_within_tolerance=j["setup_within_tolerance"], die_period_ps=j["die_period_ps"],
                profile_rule="R-MINIMAL + R-PERIOD (OWNER 2026-11-13)")
     return rec

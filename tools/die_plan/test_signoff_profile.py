@@ -27,7 +27,10 @@ def rec(drc=0, tt=10.0, ff=1.0, port_only=False, extra=None, verdict="NOT SIGNED
               antenna=dict(verdict="FAIL", count=3), drv=dict(verdict="FAIL"), pg=dict(verdict="NOT RUN"),
               io_hold_parent=dict(verdict="NOT RUN"))
     ch.update(extra or {})
+    internal = 0.0 if port_only else ff
+    census = dict(core_n=0 if internal >= 0 else 1, core_wns=internal, err=0, trunc=0)
     return dict(verdict=verdict, checks=ch, reasons=["antenna: FAIL 3"],
+                corners=dict(ff=dict(done=True, std_min_start=census)),
                 inputs=dict(kit="/x/kit-wave/s81/ev/items/t1/attempt_1/gen/t1"))
 
 
@@ -74,7 +77,7 @@ def test_hold_has_no_tolerance_but_port_start_only_is_advisory():
     j = SP.judge(rec(ff=-1.28))                    # e.g. hd_st_n3_transit: internal hold miss, not signed
     assert j["verdict"] == "NOT SIGNED" and j["reasons"][0].startswith("hold_ff: FAIL")
     j = SP.judge(rec(ff=-14.41, port_only=True))   # every violator starts at an input port -> io_hold_parent advisory
-    assert j["verdict"] == "SIGNED" and j["hold_port_only"] and any("port-start hold" in a for a in j["advisories"])
+    assert j["verdict"] == "SIGNED" and j["hold_port_only"] and any("boundary hold" in a for a in j["advisories"])
 
 
 def test_drc_and_missing_numbers_block():
@@ -87,6 +90,9 @@ def test_drc_and_missing_numbers_block():
 def test_autopilot_summary_records():
     s = dict(drc=0, tt_wns=147.75, ff_wns=-14.41, local_verdict="SIGNED", verdict="LOCAL_PASS_NEEDS_PARENT", fails=[],
              reasons=["io_hold_parent: NEEDS_PARENT; matching real-parent PASS receipt missing"], die="s81")
+    assert SP.judge(s)["gates"]["hold_ff"] == "NOT RUN"  # an old local verdict is not an internal measurement
+    s["internal_hold"] = dict(schema="opentallas.internal_ff_hold.v1", complete=True,
+                              wns_ps=0.0, violators=0, source="native complete internal census")
     assert SP.judge(s)["verdict"] == "SIGNED"
     s = dict(drc=3, tt_wns=84.87, ff_wns=-15.39, fails=["drc", "drv", "hold_ff"], die="s81_head")
     assert SP.judge(s)["verdict"] == "NOT SIGNED"
@@ -141,3 +147,104 @@ def test_rejudge_type_of_path():
 def test_inf_slack_is_not_a_measurement():
     """kv3_pv_pair re-judge 11-13: TT 1e42 'slack' (no constrained path) must never sign off"""
     assert SP.judge(dict(drc=0, tt_wns=1.0000000190432691e+42, ff_wns=1.0000000190432691e+42, die="kv"))["verdict"] == "NOT SIGNED"
+
+@pytest.mark.parametrize("core,n,verdict", [(0.34, 0, "SIGNED"), (0.0, 0, "SIGNED"), (-0.01, 1, "NOT SIGNED")])
+def test_boundary_negative_internal_gate_uses_real_census(core, n, verdict):
+    import copy
+    r = rec(ff=-32.87)
+    r["corners"]["ff"]["std_min_start"].update(core_n=n, core_wns=core)
+    old = copy.deepcopy(r)
+    j = SP.judge(r)
+    assert j["verdict"] == verdict
+    assert j["ff_hold_wns_ps"] == core
+    assert j["boundary_ff_hold_wns_ps"] == -32.87
+    assert any("boundary hold -32.87" in a for a in j["advisories"])
+    assert r == old
+
+
+@pytest.mark.parametrize("mutation", [
+    lambda f: f["std_min_start"].pop("core_wns"),
+    lambda f: f["std_min_start"].pop("core_n"),
+    lambda f: f.update(done=False),
+    lambda f: f["std_min_start"].update(err=1),
+    lambda f: f["std_min_start"].update(trunc=1),
+    lambda f: f["std_min_start"].update(core_n=0, core_wns=-1),
+])
+def test_missing_or_ambiguous_internal_measurement_is_not_run(mutation):
+    r = rec(ff=10)
+    mutation(r["corners"]["ff"])
+    j = SP.judge(r)
+    assert j["gates"]["hold_ff"] == "NOT RUN" and j["verdict"] == "NOT SIGNED"
+    assert not j["internal_hold"]["complete"]
+
+
+def test_legacy_port_only_marker_cannot_hide_internal_failure():
+    r = rec(ff=-100, port_only=True)
+    r["corners"]["ff"]["std_min_start"].update(core_n=1, core_wns=-3.75)
+    assert SP.judge(r)["gates"]["hold_ff"] == "FAIL"
+
+
+def test_actual_hw4_native_sdk_field_witness():
+    # Existing immutable hw4 signoff/ff/sta.log lines565-568; no new STA.
+    import signoff
+    text = """SO DONE 1
+SO STD_MIN_START port 0 other 31 reg 31 trunc 0 err 0 oport 460
+SO STD_MIN_START_PORTS
+SO STD_MIN_START_OPORTS cland_fstart_out_coll_o0 coll_o0 rst_o_0 rst_o_1
+SO STD_MIN_NONPORT n 491 wns -32.87 core_n 31 core_wns -12.32
+"""
+    ff = signoff.corner_result(signoff.parse_session(text))
+    r = rec(ff=-32.87, tt=-25.5)
+    r["corners"]["ff"] = ff
+    j = SP.judge(r)
+    assert j["gates"]["hold_ff"] == "FAIL" and j["ff_hold_wns_ps"] == -12.32
+    assert ff["std_min_start"]["nonport_wns"] == -32.87
+    assert r["checks"]["hold_ff"]["wns_ps"] == -32.87
+
+
+def test_new_signer_emits_complete_census_even_without_negative_hold():
+    import signoff
+    assert "if {[sta::endpoint_violation_count min] > 0} {" not in signoff.SESSION_TCL
+    assert "STD_MIN_NONPORT" in signoff.SESSION_TCL
+
+
+def test_internal_census_tcl_remains_syntactically_complete(tmp_path):
+    import signoff
+    import subprocess
+    path = tmp_path / "session.tcl"
+    path.write_text(signoff.SESSION_TCL)
+    script = f'set f [open {{{path}}}];set body [read $f];close $f;puts [info complete $body]\n'
+    run = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert run.returncode == 0 and run.stdout.strip() == "1", run.stderr
+
+
+
+def test_old_complete_all_path_positive_is_a_stronger_internal_bound():
+    r = rec(ff=-84.59)
+    r["corners"]["ff"] = dict(done=True, rc=0, errors=[], std_wns_min=0.34, std_nviol_min=0)
+    j = SP.judge(r)
+    assert j["gates"]["hold_ff"] == "PASS" and j["ff_hold_wns_ps"] == 0.34
+    assert "all-path STD lower bound" in j["hold_source"]
+    assert r["checks"]["hold_ff"]["wns_ps"] == -84.59
+
+
+@pytest.mark.parametrize("extra", [
+    dict(done=False), dict(rc=1), dict(errors=["native read failed"]),
+    dict(std_wns_min=float("nan")), dict(std_wns_min=float("inf")),
+    dict(std_wns_min=1e42), dict(std_wns_min=-0.01),
+    dict(std_nviol_min=1), dict(std_nviol_min=None),
+    dict(std_min_start=dict(err=1)), dict(std_min_start=dict(trunc=1)),
+    dict(std_min_start=dict(core_n=0)),
+])
+def test_incomplete_or_inconsistent_all_path_fallback_is_not_run(extra):
+    r = rec(ff=1)
+    r["corners"]["ff"] = dict(done=True, rc=0, errors=[], std_wns_min=0.34, std_nviol_min=0)
+    r["corners"]["ff"].update(extra)
+    assert SP.judge(r)["gates"]["hold_ff"] == "NOT RUN"
+
+
+def test_real_internal_negative_dominates_positive_different_frame():
+    r = rec(ff=1)
+    r["corners"]["ff"].update(std_wns_min=10, std_nviol_min=0)
+    r["corners"]["ff"]["std_min_start"].update(core_n=1, core_wns=-3.75)
+    assert SP.judge(r)["gates"]["hold_ff"] == "FAIL"

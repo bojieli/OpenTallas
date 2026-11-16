@@ -913,8 +913,7 @@ puts "SO_PATH_END"
 # ---- KW-FIX-24 11-06: STD hold violators by startpoint kind (OWNER: a hold miss only on io ports is NEEDS_PARENT).
 # port = violating endpoints whose worst min path starts at a non-clock top input port; other = any other start;
 # reg = violating min paths launched from any register clock pin (a reg path hidden behind a worse port path counts).
-# Read-only (no constraint change); runs only when there are min violators. ----
-if {[sta::endpoint_violation_count min] > 0} {
+# Read-only complete internal census even when all hold paths meet: R-MINIMAL must not infer internal closure from a boundary-only scalar. ----
   set so_hs_port 0; set so_hs_other 0; set so_hs_reg 0; set so_hs_trunc 0; set so_hs_err 0; set so_hs_ports {}
   set so_hs_oport 0; set so_hs_oports {}
   if {[catch {
@@ -980,7 +979,6 @@ if {[sta::endpoint_violation_count min] > 0} {
       so STD_MIN_NONPORT n [dict size $so_np] wns [format %.2f $so_np_w] core_n [dict size $so_np_core] core_wns [format %.2f $so_np_cw]
     }
   }
-}
 # ---- DRV ----
 so SLEW_VIOL [sta::max_slew_violation_count]
 so CAP_VIOL [sta::max_capacitance_violation_count]
