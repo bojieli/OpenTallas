@@ -1,0 +1,44 @@
+[
+ {
+  "item": "kv3_hub_C",
+  "attempt": 2,
+  "unit": "kw-qwenkv-kv3hubC-2-62612",
+  "local_attempt": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_hub_C_b8093e506f1a8/a2",
+  "gen_host": "epyc9",
+  "work": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom7yhr/items/kv3_hub_C/attempt_2",
+  "source": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1",
+  "source_hash": "4312921fd6bbda17280ed8e071f308455f2637e8b09f74a3b0eec37b9bbe88e9",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/asbuilt_portable.json",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx2",
+  "unit_state": "ActiveState=active\nSubState=running\nExecMainStartTimestamp=Mon 2026-11-16 12:56:52 PST"
+ },
+ {
+  "item": "kv3_hub_Wo",
+  "attempt": 2,
+  "unit": "kw-qwenkv-kv3hubWo-2-62612",
+  "local_attempt": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_hub_Wo_b599a15f67050/a2",
+  "gen_host": "epyc9",
+  "work": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom7yhr/items/kv3_hub_Wo/attempt_2",
+  "source": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1",
+  "source_hash": "4312921fd6bbda17280ed8e071f308455f2637e8b09f74a3b0eec37b9bbe88e9",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/asbuilt_portable.json",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx2",
+  "unit_state": "ActiveState=active\nSubState=running\nExecMainStartTimestamp=Mon 2026-11-16 12:56:52 PST"
+ },
+ {
+  "item": "kv3_pv_v1",
+  "attempt": 26,
+  "unit": "kw-qwenkv-kv3pvv1-26-62597",
+  "local_attempt": "/home/ubuntu/coord/autopilot/kit_wave/qwen_kvsys_kv3_pv_v1_b9ba9c7df7c9a/a26",
+  "gen_host": "epyc9",
+  "work": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave/qwen_kvsys/kvgeom7yhr/items/kv3_pv_v1/attempt_26",
+  "source": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1",
+  "source_hash": "4312921fd6bbda17280ed8e071f308455f2637e8b09f74a3b0eec37b9bbe88e9",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/asbuilt_portable.json",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx2",
+  "unit_state": "ActiveState=active\nSubState=running\nExecMainStartTimestamp=Mon 2026-11-16 12:56:52 PST"
+ }
+]
