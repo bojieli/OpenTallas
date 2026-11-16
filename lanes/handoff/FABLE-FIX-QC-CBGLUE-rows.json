@@ -1,0 +1,170 @@
+{
+ "cbf_q01": [
+  {
+   "name": "fstart_0",
+   "raw": "rst_rl_9",
+   "xy_um": [
+    147.552,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_a00_o"
+   ]
+  },
+  {
+   "name": "fstart_1",
+   "raw": "rst_rl_35",
+   "xy_um": [
+    1195.552,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_y_o12"
+   ]
+  },
+  {
+   "name": "fstart_2",
+   "raw": "rst_rl_199",
+   "xy_um": [
+    78.88,
+    186.976
+   ],
+   "consumers": [
+    "u_cland_origin"
+   ]
+  }
+ ],
+ "cbf_q01_s2": [
+  {
+   "name": "fstart_0",
+   "raw": "rst_rl_11",
+   "xy_um": [
+    229.899,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_a00_o",
+    "u_cland_fstart_rx_flit_serdes_rx_o",
+    "u_cland_fstart_rx_v_serdes_rx_valid_o"
+   ]
+  },
+  {
+   "name": "fstart_1",
+   "raw": "rst_rl_81",
+   "xy_um": [
+    403.68,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_tx_up_serdes_up_o"
+   ]
+  },
+  {
+   "name": "fstart_2",
+   "raw": "rst_rl_222",
+   "xy_um": [
+    1195.552,
+    2.656
+   ],
+   "consumers": [
+    "u_cland_fstart_y_o12"
+   ]
+  },
+  {
+   "name": "fstart_3",
+   "raw": "rst_rl_206",
+   "xy_um": [
+    78.88,
+    186.976
+   ],
+   "consumers": [
+    "u_cland_origin"
+   ]
+  }
+ ],
+ "glue": [
+  {
+   "name": "fstart_0",
+   "raw": "rst_rl_247",
+   "xy_um": [
+    64.024,
+    1466.144
+   ],
+   "consumers": [
+    "u_cland_fstart_d2d_rom__kv_x3_slot",
+    "u_cland_fstart_d2d_rom__native_rx_slot",
+    "u_cland_fstart_d2d_rom__native_rx_slot_beat",
+    "u_cland_fstart_d2d_rom__native_rx_slot_kind",
+    "u_cland_fstart_d2d_rom__native_rx_v",
+    "u_cland_fstart_d2d_rom__native_tx_slot",
+    "u_cland_fstart_d2d_rom__native_tx_slot_beat",
+    "u_cland_fstart_d2d_rom__native_tx_slot_kind"
+   ]
+  },
+  {
+   "name": "fstart_1",
+   "raw": "rst_rl_205",
+   "xy_um": [
+    255.136,
+    1466.144
+   ],
+   "consumers": [
+    "u_cland_fstart_d2d_rom__rx_payload",
+    "u_cland_fstart_d2d_rom__rx_user",
+    "u_cland_fstart_d2d_rom__tx_user"
+   ]
+  },
+  {
+   "name": "fstart_2",
+   "raw": "rst_rl_179",
+   "xy_um": [
+    579.784,
+    1466.144
+   ],
+   "consumers": [
+    "u_cland_fstart_embed_prov__embed_code_q",
+    "u_cland_fstart_embed_prov__embed_scale_q",
+    "u_cland_fstart_mu_ctxrx__ctx_x",
+    "u_cland_fstart_mu_dhobs__dh_user",
+    "u_cland_fstart_mu_flt_o",
+    "u_cland_fstart_sys_face__complete_slot",
+    "u_cland_fstart_sys_face__host_epoch",
+    "u_cland_fstart_sys_face__host_epoch_valid",
+    "u_cland_fstart_sys_face__host_fused_capability",
+    "u_cland_fstart_sys_face__host_generation",
+    "u_cland_fstart_sys_face__host_tag",
+    "u_cland_fstart_sys_face__kv_word_index",
+    "u_cland_fstart_sys_face__kv_word_slot",
+    "u_cland_fstart_sys_face__q_slot",
+    "u_cland_fstart_sys_face__q_slot_beat",
+    "u_cland_fstart_sys_face__seq_dh"
+   ]
+  },
+  {
+   "name": "fstart_3",
+   "raw": "rst_rl_165",
+   "xy_um": [
+    721.709,
+    1466.144
+   ],
+   "consumers": [
+    "u_cland_fstart_sys_face__tt_fab",
+    "u_cland_fstart_sys_face__tt_kok",
+    "u_cland_fstart_sys_face__tt_kwd",
+    "u_cland_fstart_sys_face__tt_pw",
+    "u_cland_fstart_sys_face__visibility_slot"
+   ]
+  },
+  {
+   "name": "fstart_4",
+   "raw": "rst_rl_35",
+   "xy_um": [
+    196.064,
+    184.096
+   ],
+   "consumers": [
+    "u_cland_origin"
+   ]
+  }
+ ]
+}
