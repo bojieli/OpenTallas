@@ -17582,9 +17582,73 @@ def s81_head_lep_vf_stage_calendar_model():
                       'native timing and parent pin/clock/reset joins remain required')
 
 
+def s81_serdes_lpl_chunk_model(chunk_bits=0, dff_body_um2=0.2916):
+    """Size existing OT_S81_LPL_CHUNK, preserving all eleven D4/K2 calendars."""
+    if dff_body_um2 <= 0:
+        raise ValueError("positive DFF body proxy required")
+    if chunk_bits not in (0, 24):
+        raise ValueError("existing landing chunk candidate is default-off or 24 bits")
+    widths = [544, 4, 310, 5, 1, 544, 544, 8, 1, 5, 1]
+    depth, aw = 4, 2
+    chunks = [math.ceil(w / 24) for w in widths]
+    count = sum(chunks)
+    extra_copies = count - len(widths)
+    # Old pair: writer rq/wc/valid=1+3+4; reader rq/rc/warm=1+3+1.
+    # Local pair:21 control plus12 epoch outputs/chunk; kept local hierarchy
+    # may retain unused output registers. Price all33 before actual pruning.
+    ff_envelope = 33*count - 13*len(widths) if chunk_bits else 0
+    # Six elementary gates per additional counter bit, plus sixteen for
+    # selected-valid8, write-valid4 and write-enable4 per additional chunk.
+    # Data AND/OR mux outputs and payload register capacity remain unchanged.
+    comb_envelope = ((6*2*(aw+1) + 16)*extra_copies + 12*count) if chunk_bits else 0
+    return dict(default_off=True, adopted=False, source_define="OT_S81_LPL_CHUNK",
+        enabled=bool(chunk_bits), landing_width_bits=widths, landings=len(widths),
+        depth=depth, read_offset_K=2, chunk_bits=chunk_bits,
+        chunks_per_landing=chunks if chunk_bits else [1]*len(widths),
+        local_ring_pairs=count if chunk_bits else len(widths),
+        MACs_per_cycle=0, compute_intensity_MACs_per_byte=0,
+        aggregate_write_bits_per_cycle=sum(widths),
+        aggregate_read_bits_per_cycle=sum(widths),
+        aggregate_write_bytes_per_cycle=sum(widths)/8,
+        aggregate_read_bytes_per_cycle=sum(widths)/8,
+        logical_read_expressions=count if chunk_bits else len(widths),
+        physical_data_read_output_bits=sum(widths), added_physical_memory_ports=0,
+        storage_data_bits=depth*sum(widths), output_data_FF=sum(widths),
+        unchanged_payload_data_FF=(depth+1)*sum(widths),
+        boundary_ring_data_bits=depth*sum(widths),
+        added_boundary_payload_bits=0,
+        per_landing_data_tracks=[depth*w for w in widths],
+        per_chunk_data_tracks=depth*24 if chunk_bits else depth*max(widths),
+        local_select_tracks=depth if chunk_bits else aw,
+        control_FF_envelope=33*count if chunk_bits else 13*len(widths),
+        baseline_control_FF=13*len(widths),
+        added_FF_envelope=ff_envelope,
+        expected_after_dead_epoch_valid_pruning_added_FF=(14*count-9*len(widths)) if chunk_bits else 0,
+        added_comb_generic_gate_envelope=comb_envelope,
+        comb_envelope_basis="6 gates/additional counter bit;16/chunk controls;12/chunk epoch enable MUX allowance; mapped delta required",
+        read_select_payload_fanout_max=24 if chunk_bits else max(widths),
+        write_select_payload_fanout_max=24 if chunk_bits else max(widths),
+        global_valid_fanout_max=max(chunks) if chunk_bits else 1,
+        data_mux_output_count=sum(widths), added_data_mux_outputs=0,
+        clock_control_replicas=count if chunk_bits else len(widths),
+        DFF_body_proxy_um2=dff_body_um2,
+        added_FF_body_proxy_um2=ff_envelope*dff_body_um2,
+        added_comb_body_proxy_um2=comb_envelope*dff_body_um2,
+        added_body_proxy_um2=(ff_envelope+comb_envelope)*dff_body_um2,
+        outline_delta_um2=0, new_hard_core_count=0,
+        added_RX_edges=0, added_TX_edges=0, added_data_edges=0,
+        existing_landing_edges=3, reset_age_delta_edges=0,
+        sustained_words_per_cycle=1,
+        floorplan="same slots/K/boundaries; local <=24b control beside its data flops; no new corridor data tracks",
+        correctness="current W544/D4/K2 writer+reader lockstep and chunk3 wrong-K mutant; no whole decoder simulation",
+        prior_proof="results/s81_rck_10_vj_1107/dec/base_final.log (combo SYN_LOCAL+2, historical)",
+        qualification="candidate only; actual mapped FF/comb delta and full-shape TT/FF resource fit remain required")
+
+
 def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
                                   span_um=1321.0, corridor_um=48.0,
-                                  dff_body_um2=0.2916, boot_release_stages=0):
+                                  dff_body_um2=0.2916, boot_release_stages=0,
+                                  lpl_chunk_bits=0, read_local_empty_copies=0):
     """Size the opt-in native S81 RX transport and local RM selector before build.
 
     RELAY4 carries payload/valid/AM metadata and the reset calendar together.
@@ -17592,6 +17656,8 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
     mapped cells, CTS/repair overhead and full-shape throughput remain measured
     gates. This candidate does not activate any released rate or plan row.
     """
+    if read_local_empty_copies not in (0, 8) or (read_local_empty_copies and read_pointer_copies != 8):
+        raise ValueError("local empty candidate is 0 or 8 and requires all 8 local read pointers")
     if boot_release_stages not in (0, 3):
         raise ValueError("boot release is baseline or the sized three-stage candidate")
     if relay_stages not in (0, 4) or read_pointer_copies not in (1, 8):
@@ -17604,7 +17670,10 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
     metadata_ff = 9 if relay_stages else 0
     rm_ff = 24 if read_pointer_copies == 8 else 0  # original global pointer remains
     rm_comb = dict(NOT=71, AND=8, XOR=16, OR=119) if rm_ff else {}
-    total_ff = transport_ff + reset_ff + metadata_ff + rm_ff + boot_release_stages
+    lpl = s81_serdes_lpl_chunk_model(lpl_chunk_bits, dff_body_um2)
+    empty_ff = 8 if read_local_empty_copies else 0
+    empty_comb = 96 if read_local_empty_copies else 0
+    total_ff = transport_ff + reset_ff + metadata_ff + rm_ff + empty_ff + boot_release_stages + lpl["added_FF_envelope"]
     pitch_um = 0.0458  # existing S81 ft_corridor aggregate track lane rule
     cut_bits = cohort_bits + 1  # data/valid/AM + matched reset-calendar bit
     capacity = corridor_um / pitch_um
@@ -17613,7 +17682,24 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
         schema="opentallas.s81-serdes-rx-transport.v1",
         default_off=True, adopted=False, physical_qualified=False,
         defines=(["OT_S81_KP4_AM_FACE3", "OT_S81_RCK_RELAY4"] if relay_stages else [])
-            + (["OT_S81_SERDES_BOOT_RELEASE3"] if boot_release_stages else []),
+            + (["OT_S81_SERDES_BOOT_RELEASE3"] if boot_release_stages else [])
+            + (["OT_S81_SERDES_RM_RPC8"] if rm_ff else [])
+            + (["OT_S81_LPL_CHUNK"] if lpl_chunk_bits else [])
+            + (["OT_S81_SERDES_RM_LOCAL_EMPTY8"] if read_local_empty_copies else []),
+        lpl_chunking=lpl,
+        local_empty=dict(default_off=True, copies=read_local_empty_copies,
+            added_wrap_FF=empty_ff, added_clock_reset_sinks=empty_ff,
+            generic_comb_gate_envelope=empty_comb,
+            comb_basis="8*(3 gray-to-binary XOR+7 four-bit equality gates+2 wrap increment gates)",
+            added_body_proxy_um2=(empty_ff+empty_comb)*dff_body_um2,
+            global_write_pointer_bits=4, global_write_pointer_internal_sink_bits=32 if empty_ff else 4,
+            internal_write_pointer_route_tracks=4, local_read_pointer_bits_per_bank=4 if empty_ff else 3,
+            global_empty_payload_fanout=0 if empty_ff else 512,
+            local_empty_payload_fanout=64 if empty_ff else 0,
+            local_empty_counter_fanout=4 if empty_ff else 0,
+            global_control_protocol_unchanged=True, original_global_reset_unchanged=True,
+            added_data_edges=0, added_MACs_per_cycle=0, added_memory_ports=0,
+            added_boundary_bits_per_cycle=0, read_bytes_per_cycle=64, write_bytes_per_cycle=64),
         clock_ps=833, recovered_clock_ps_nominal=833,
         MACs_per_cycle=0, added_MACs_per_cycle=0,
         compute_intensity_MACs_per_byte=0,
@@ -17637,6 +17723,8 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
             boot_release_FF=boot_release_stages,
             local_read_pointer_copies=read_pointer_copies,
             added_read_pointer_FF=rm_ff,
+            added_local_empty_wrap_FF=empty_ff,
+            added_local_empty_comb_cells=empty_comb,
             generic_read_pointer_comb_cells=rm_comb,
             generic_read_pointer_comb_cell_count=sum(rm_comb.values()),
             added_clock_reset_sinks=total_ff),
@@ -17680,13 +17768,14 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
             read_pointer_added_FF_body_um2=rm_ff*dff_body_um2,
             read_pointer_comb_conservative_proxy_um2=sum(rm_comb.values())*dff_body_um2,
             read_pointer_added_body_proxy_um2=(rm_ff+sum(rm_comb.values()))*dff_body_um2,
+            local_empty_added_body_proxy_um2=(empty_ff+empty_comb)*dff_body_um2,
             added_FF_total=total_ff,
             added_FF_body_proxy_um2=total_ff*dff_body_um2,
-            added_body_proxy_um2=(total_ff+sum(rm_comb.values()))*dff_body_um2,
+            added_body_proxy_um2=(total_ff+sum(rm_comb.values())+empty_comb+lpl["added_comb_generic_gate_envelope"])*dff_body_um2,
             comb_proxy_scope='conservative DFF body ceiling per generic gate; mapped gate areas pending',
             relay_stage_site_area_at_55pct_um2=cohort_bits*dff_body_um2/.55,
             planned_corridor_site_area_um2=corridor_um*span_um,
-            corridor_utilization_proxy=(total_ff+sum(rm_comb.values()))*dff_body_um2/(corridor_um*span_um),
+            corridor_utilization_proxy=(total_ff+sum(rm_comb.values())+empty_comb+lpl["added_comb_generic_gate_envelope"])*dff_body_um2/(corridor_um*span_um),
             outline_delta_um2=0, new_hard_core_count=0,
             mapped_CTS_hold_inventory_pending=True),
         latency=dict(boot_release_stages=boot_release_stages,
