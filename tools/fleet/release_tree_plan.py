@@ -196,12 +196,31 @@ SCAN_PRUNE = ('.git', '__pycache__', 'rtl', 'tools', 'arch', 'uarch', 'logs', 'r
 # be a PLAN DRIFT note and the die was counted against its last main plan (QC 31/31 against plan_qc99_s28 while the wave builds s29 with 65 cores).
 # The plan file (sha256 == kit_wave.json plan_sha256) is now read from the host that holds it, with the pins tables it names, into the tmp tree and
 # counted; the pinned main plan remains the fallback when no host has it.  OT_COUNT_NO_HOST_PLAN=1 turns this off.
+# COUNT-PLAN-TREE-1116 (COORD): a published marker tree (kw45/src_<die>_pin_*) carries the die plan in-tree and sits on the gen hosts the marker
+# lists (epyc8/9/10 are not scan hosts), so the plan search also asks every host a tree_switch marker names, not only the scan HOSTS.
+PLAN_EXTRA_HOSTS = ['epyc10', 'epyc9', 'epyc8']
+
+
+def plan_hosts(handoff=None):
+    out = list(HOSTS)
+    h = pathlib.Path(handoff) if handoff else pathlib.Path(os.path.expanduser('~/coord/lanes/handoff'))
+    extra = list(PLAN_EXTRA_HOSTS)
+    try:
+        for f in sorted(h.glob('tree_switch_*.json')):
+            extra += [x for x in (json.loads(f.read_text()).get('hosts') or []) if isinstance(x, str)]
+    except (OSError, ValueError):
+        pass
+    for x in extra:
+        if x not in out: out.append(x)
+    return out
+
+
 def stage_host_plan(tmp, pdir, w, log=lambda *a: None):
     """-> (rel path under tmp, info dict) or None.  w = wave_plan_shas entry (sha, path)"""
     import base64
     path, sha = (w or {}).get('path'), (w or {}).get('sha')
     if os.environ.get('OT_COUNT_NO_HOST_PLAN') or not path or not sha: return None
-    for h in HOSTS:
+    for h in plan_hosts():
         cmd = ['bash', '-c', 'cat %s' % shlex_quote(path)] if h == 'local' else \
             ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'cat %s' % shlex_quote(path)]
         try:

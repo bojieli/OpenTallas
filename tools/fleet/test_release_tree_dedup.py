@@ -27,3 +27,11 @@ def test_existing_credit_is_never_replaced(tmp_path):
     r = rows(tmp_path, 's81\tm\to\tj\tc\ti\n')
     st = {'o': ['a'], 'm': ['own record']}
     assert R.dedup_credit('s81', st, {'o': 'x', 'm': 'x'}, r) == [] and st['m'] == ['own record']
+
+
+def test_plan_hosts_adds_the_marker_gen_hosts(tmp_path):
+    import json, release_tree_plan as R
+    (tmp_path / "tree_switch_x.json").write_text(json.dumps({"hosts": ["epyc10", "epyc7", "intel1", "epyc11"]}))
+    got = R.plan_hosts(tmp_path)
+    assert got[:len(R.HOSTS)] == list(R.HOSTS)
+    assert {"epyc10", "epyc9", "epyc8", "epyc11"} <= set(got) and len(got) == len(set(got))
