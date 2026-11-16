@@ -3747,6 +3747,9 @@ def phy_pg_domains(P, tn):
             # failed the per-instance identity below on the sign of zero alone)
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
+            if t.get("phy_pg_floor_um") is not None:   # HEAD-99 rp21z19: PHY region floor raised to this type y; macros below it are CORE macros
+                rt[1] = max(rt[1], float(t["phy_pg_floor_um"]))
+                if rt[1] >= rt[3] - 1e-6: continue
             mac, mac_x0, mac_y0, mac_box = [], [], [], []
             placed = pg_placed_blocks(t)
             for c in placed:
@@ -6219,6 +6222,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
     prepare_signed_parent_source(P, tn, kd, macros, root)
+    # HEAD-SERDES-SECONDARY 11-14: OT_GEN_SECONDARY_CLOCK="<type>:<port>:<clock>:<target>:<dmax_um>:<radius_um>" installs the
+    # explicit pad-source density tree (secondary_clock.install) on that type only; unset = kit unchanged.
+    _sec = os.environ.get("OT_GEN_SECONDARY_CLOCK", "")
+    if _sec and _sec.split(":")[0] == tn:
+        import secondary_clock as _SEC
+        _f = _sec.split(":")
+        _SEC.install(kd, dict(port=_f[1], clock=_f[2], target=int(_f[3]), dmax_um=float(_f[4]), radius_um=float(_f[5])))
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
         import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
