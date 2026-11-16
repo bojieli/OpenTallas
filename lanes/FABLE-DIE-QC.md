@@ -66,11 +66,11 @@ All 130 types, bound RTL of S4Q9CBR: 1,142 FSTART face flops. 1,014 (110 types) 
 
 | type | flops | over 405 um | worst um | fix |
 |---|---|---|---|---|
-| glue | 32 | 32 | 2,108 | S4q9d (FABLE-FIX-QC-CBGLUE) |
+| glue | 32 | 32 | 2,108 | S4q9d (FABLE-FIX-QC-CBGLUE); r199 review ADOPT-OK posted |
 | cbf_q01, cbf_q01_s2 | 5 + 5 | 2 + 5 | 2,339 | S4q9d |
-| **coll_core** | 14 | 4 | 1,745 | **S4q9e (mine)**: 6 leaves / 15 consumers |
-| **native59** | 37 | 28 | 1,228 | **S4q9e**: 7 / 38 |
-| **tt_ctlm** | 26 | 23 | 957 | **S4q9e**: 4 / 27 |
+| **coll_core** | 14 | 4 | 1,745 | **my rows**: 6 leaves / 15 consumers |
+| **native59** | 37 | 28 | 1,228 | **my rows**: 7 / 38 |
+| **tt_ctlm** | 26 | 23 | 957 | **my rows**: 4 / 27 |
 | coll_n, slw_hc3 x2 | 3 + 3 + 3 | 0 | < 300 | none |
 
 So this is not a die reset-tree problem: the die tree and per-type relays exist; six types lacked the leaf rows.
@@ -83,8 +83,8 @@ QC-CBGLUE's 06:43 raw-branch delta must not be applied to the 14 cb types that a
 
 | # | rows | types | cycles | state |
 |---|---|---|---|---|
-| 1 | S4q9e = S4q9d + `landing_local_resets` + `reset_tree_anchor` on coll_core, native59, tt_ctlm | 3 | 0 | composed, epyc9 `fable-die-qc/delta/zz_s29_qc103_s4q9e.json` sha c12269e24374; DELTA posted to KNEE-HC (bind instead of S4q9d) |
-| 2 | clock rows from the S4q9c routed proof: `clock.tap_offset.per_port_ps`, `seam_hold.seam_ps`, `tap_window.per_type_ps` | all | 0 | waits for the S4q9c chain (section 6) |
+| 1 | `landing_local_resets` + `reset_tree_anchor` on coll_core, native59, tt_ctlm | 3 | 0 | rows handed to FABLE-FIX-QC-KNEE-HC (lanes/handoff/FABLE-DIE-QC-rows.json), which composes the one S4q9e; my own copy is withdrawn |
+| 2 | clock rows from the S4q9c routed proof: `clock.tap_offset.per_port_ps`, `seam_hold.seam_ps`, `tap_window.per_type_ps` | all | 0 | method PROVEN on S4k (section 6); rows for the current plan wait for the S4q9c chain |
 | 3 | region trees built once per type and reused in every instance (tool change in die_trial region DME), so the +-129 ps instance spread goes to the +-10 ps floor | 14 cb types, 192 partitions | 0 | not started; next step |
 | 4 | feed: cb regions fed from their own slice column instead of the 21-deep chain | clock only, K re-plan | lane cycles re-derived | not started; do only if count-align on S4q9c shows margin under 50 ps |
 
@@ -93,3 +93,19 @@ QC-CBGLUE's 06:43 raw-branch delta must not be applied to the 14 cb types that a
 RUNNING: die chain on S4q9c, epyc2 `fable-die-qc/chain/qc/s4q9c` (kit, GRT0 TT / FF 50 it, tap arrivals, die STA,
 count-align C / D, STA with count-align). Client log intel2 `~/fable-die-qc/chain_s4q9c.client.log`. The S4k kit stage took
 3 h 35 min.
+
+### 6.1 Clock rows delta proven on S4k (epyc2 `fable-die-qc/s4k/out`, a = plan rows, b = rows re-derived by `bin/clock_rows_delta.py`)
+
+Second tool cause found: the offset rows were mean +- half range over the instances of a type, which cannot cover a skewed
+set of 3 or more instances. Branch head @dd7250845f3 writes the mid-range (gate GREEN 37/37).
+
+| check (FF, same routed clock) | a: S4k rows | b: re-derived rows |
+|---|---|---|
+| TAP-OFFSET-GATE | FAIL, 5,014 of 84,302 outside | **PASS, 0 of 84,512** |
+| intra kit-contract hold | -114.9 (W 87, need 201.9, 64,762 pairs) | **0.00** (W 79, need 79.0, 0 pairs) |
+| seam kit-contract hold | -59.2 (W 110, need 169.2, 2,797 pairs) | **+10.8** (W 180, 0 pairs) |
+| TT setup intra / seam | +362.0 / +540.4 | unchanged |
+
+Delta b = `clock.tap_offset.per_port_ps` (52 of 130 types change), `clock.tap_window.per_port_ps`, `seam_hold.seam_ps` 110 -> 180.
+Cost: the 52 changed types get a new kit SDC; seam hold repair covers 180 ps instead of 110. Hold on real views stays
+BLOCKED(kits) until types are signed.
