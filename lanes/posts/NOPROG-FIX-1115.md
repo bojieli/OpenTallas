@@ -20,3 +20,8 @@
 - 2026-11-16 04:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 04:52 PST: 121 running jobs, PROGRESSING 111, SLOW 8, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 kit drt_TT stage 26.7 h job 26.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.6%; stagnant 7.2 h; last event 0.7 h ago, log write 0.7 h ago (1548 lines)
   NO-PROGRESS epyc8 svc_lo_dsdv_svc_rs__t6 1_2_yosys stage 9.5 h job 11.6 h: no new meaningful log line for 6.5 h; last: 3.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+- 2026-11-16 05:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 05:52 PST: 102 running jobs, PROGRESSING 93, SLOW 5, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 27.7 h job 27.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.6%; stagnant 8.2 h; last event 1.5 h ago, log write 0.1 h ago (1550 lines)
+  NO-PROGRESS epyc10 fullroute 5_1_grt stage 15.1 h job 15.1 h: grt_overflow best 0 last 18 rows 2 window-gain 0.0%; stagnant 11.1 h; last event 0.4 h ago, log write 0.4 h ago (1072 lines)
+  NO-PROGRESS epyc8 svc_lo_dsdv_svc_rs__t6 1_2_yosys stage 10.5 h job 12.6 h: no new meaningful log line for 7.5 h; last: 3.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+  NO-PROGRESS epyc10 hd_lep0N pregrt_ff_hold stage 6.6 h job 7.9 h: no new meaningful log line for 6.5 h; last: 0 |       0 |       0 |            0 |    +0.0% | -195.610 | -2132201.000 | u_core.u.g_pp[2].u_pair/
