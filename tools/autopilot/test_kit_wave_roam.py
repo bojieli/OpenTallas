@@ -98,3 +98,12 @@ def test_roam_note_is_never_the_decisive_line():
     cls, why = K.classify("kit_rtl", txt)
     assert "unrecognized arguments" in why and "KW_ROAM" not in why
     assert K.classify("kit_rtl", txt)[1] == K.classify("kit_rtl", txt.replace("intel1", "epyc8"))[1]
+
+
+def test_api_skew_signature():
+    import kit_wave as K
+    for t in ("TypeError: core_tap_early_ps() takes from 2 to 3 positional arguments but 4 were given",
+              "AttributeError: module \x27reset_tree\x27 has no attribute \x27pin_root_copies\x27",
+              "ImportError: cannot import name \x27x\x27 from \x27y\x27"):
+        assert K.API_SKEW.search(t), t
+    assert not K.API_SKEW.search("bind: ERROR kit-rtl t: leaf modules without a source [\x27a\x27]")

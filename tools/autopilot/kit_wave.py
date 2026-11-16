@@ -2389,6 +2389,9 @@ ADMISSION = re.compile(r"^\s*(?:ot-run: (?:\S+\s+admits\b|-> |waiting\b|queued\b
                        r"KW_ROAM \w+: (?:ran on|pinned to|\S+ dropped)\b)")
 EXC_LINE = re.compile(r"^\s*(?:[A-Za-z_][\w.]*(?:Error|Exception|Exit|Interrupt)(?::|$)|bind: ERROR|ERROR\b|Error:|"
                       r"[A-Z][A-Z0-9_]+ FAIL\b|FAIL_PREFLOOR\b)")
+# KITRTL-FAIL-1115: a staged die_plan whose modules do not fit each other (caller and callee from different vintages)
+API_SKEW = re.compile(r"TypeError: \S+\(\) (?:takes|got an unexpected|missing \d+ required)|AttributeError: module '\w+' has no attribute|"
+                      r"ImportError: cannot import name|ModuleNotFoundError: No module named|NameError: name '\w+' is not defined")
 ID_PARAM = re.compile(r"(?:_id|_tid|sidx|map_lane_j)$")
 
 
@@ -5900,8 +5903,16 @@ def run_item(spec_path):
             if rc:
                 return fail("kit_rtl", txt)
             kbind = f"{kt}/tools/die_plan/bind.py"
-        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && python3 {q(kbind)} kit-rtl {q(plan)} --out {q(bind)} "
-                                               f"--asbuilt {q(a)} --type {q(T)} --src-tree {q(src)} --kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan), gh))
+        krb_cmd = lambda bnd, flag: (f"cd {q(src)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
+                                    f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan))
+        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, f"--src-tree {q(src)} "), gh))
+        # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
+        # tree's modules with main's bind.py; when the tree's older modules do not fit main's bind.py (API skew, an import-time or
+        # call-time error, never a design verdict) the tree runs its OWN bind.py unchanged, one consistent set, without --src-tree
+        # (exactly how every kit_rtl ran before the flag existed).
+        if rc and rcp and API_SKEW.search(strip_admission(txt)):
+            print("KW_KITRTL_LEGACY_BIND: staged set has API skew; retrying with the tree's own bind.py (no --src-tree)", flush=True)
+            rc, txt = run("kit_rtl_legacy", otrun(8, 2, W, krb_cmd("tools/die_plan/bind.py", ""), gh))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:
