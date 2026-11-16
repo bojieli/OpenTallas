@@ -260,7 +260,10 @@ for root, dirs, files in os.walk(K):
         except OSError:
             continue
         new, changed = txt, False
-        for m in sorted(set(pat.findall(txt)), key=len, reverse=True):
+        # a path that is only named in a comment is not read (pg_pair_cap.tcl line 1 named drt0255-proof/... and failed 6 QC kits):
+        # whole-line # comments and trailing "  # ..." comments are not scanned (.mk .sh .tcl .sdc .py; .f has none)
+        code = "\n".join("" if ln.lstrip().startswith("#") else re.split(r"(?:\s|;)#", ln, 1)[0] for ln in txt.splitlines())
+        for m in sorted(set(pat.findall(code)), key=len, reverse=True):
             a = m.rstrip("/")
             if a.startswith(K.rstrip("/")) or a.startswith(W.rstrip("/")): continue
             if re.search(r"[*?\[]", a) or re.fullmatch(r"/(?:srv|home)/[^/]+(?:/claude)?", a) or a.rstrip("/").endswith("/claude"): continue   # globs / roots of the script's own search, not files
