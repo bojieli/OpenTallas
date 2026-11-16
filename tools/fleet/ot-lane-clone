@@ -6,8 +6,12 @@ the owner checkout ~/OpenTallas (hub:OpenTallas): 24 lane clones used it as orig
 11-15.  The mirror takes claude/* pushes only and forwards them to GitHub; main lands only through the merge queue.
 
 usage:
-  ot-lane-clone DIR [-b claude/<lane>-<date>] [--base main] [--sparse PATH ...]
-      partial clone (blob:none) of the mirror; -b creates the lane branch on origin/<base>
+  ot-lane-clone DIR [-b claude/<lane>-<date>] [--base main] [--sparse PATH ...] [--with physical results ...] [--full]
+      partial clone (blob:none) of the mirror; -b creates the lane branch on origin/<base>.  LIGHT by default (COORD 11-15,
+      epyc2 held four ~55 GB clones): the checkout leaves out physical/ and results/ (--with DIR brings one back, --full
+      checks out everything, --sparse PATH... is an explicit cone list), and objects come from the per-host shared store
+      (OT_LANE_SHARED, default /srv/opentallas-scratch2/git/shared/OpenTallas.git) via --reference-if-able.
+  ot-lane-clone --refresh-shared   create or fetch the per-host shared object store (bare, blob:none) from the mirror
   ot-lane-clone --fix DIR ...      repoint an existing clone's origin to the mirror (old origin kept as remote 'old-origin')
   ot-lane-clone --audit ROOT ...   list git clones under ROOTs (depth 4) whose origin is not the mirror
 Each clone gets a pre-push hook that refuses any ref but refs/heads/claude/* and any remote but the mirror.
@@ -21,6 +25,8 @@ from pathlib import Path
 
 MIRROR_HOST = os.environ.get("OT_LANE_MIRROR_HOST", "intel2")
 MIRROR_PATH = "/srv/opentallas-scratch2/git/OpenTallas.git"
+SHARED = os.environ.get("OT_LANE_SHARED", "/srv/opentallas-scratch2/git/shared/OpenTallas.git")
+LIGHT_EXCLUDE = ("physical", "results")
 
 
 def mirror_url():
@@ -65,11 +71,16 @@ def clone(a):
     url, d = mirror_url(), Path(a.dir)
     if d.exists() and any(d.iterdir()):
         raise SystemExit(f"{d} exists and is not empty (use --fix for an existing clone)")
-    git("clone", "-q", "--filter=blob:none", "--no-checkout", url, str(d))
+    ref = ["--reference-if-able", SHARED] if Path(SHARED).is_dir() else []
+    git("clone", "-q", "--filter=blob:none", "--no-checkout", *ref, url, str(d))
     git("config", "remote.origin.pushurl", url, cwd=d)
     git("config", "push.default", "current", cwd=d)
     if a.sparse:
         git("sparse-checkout", "set", "--cone", *a.sparse, cwd=d)
+    elif not a.full:
+        keep = set(a.with_dirs or [])
+        pats = ["/*"] + [f"!/{x}/" for x in LIGHT_EXCLUDE if x not in keep]
+        git("sparse-checkout", "set", "--no-cone", *pats, cwd=d)
     if a.branch:
         if not a.branch.startswith("claude/"):
             raise SystemExit("lane branches are claude/<lane>-<date>")
@@ -78,6 +89,17 @@ def clone(a):
         git("checkout", "-q", a.base, cwd=d)
     hook(d, url)
     print(f"{d}: origin {url}, branch {a.branch or a.base} @{git('rev-parse', '--short=11', 'HEAD', cwd=d)}")
+    return 0
+
+
+def refresh_shared():
+    url, sh = mirror_url(), Path(SHARED)
+    if not sh.is_dir():
+        sh.parent.mkdir(parents=True, exist_ok=True)
+        git("clone", "-q", "--bare", "--filter=blob:none", url, str(sh))
+    else:
+        git("fetch", "-q", "--prune", url, "+refs/heads/*:refs/heads/*", cwd=sh)
+    print(f"{sh}: shared object store from {url}")
     return 0
 
 
@@ -116,9 +138,14 @@ def main():
     ap.add_argument("-b", "--branch", default="")
     ap.add_argument("--base", default="main")
     ap.add_argument("--sparse", nargs="+", default=[])
+    ap.add_argument("--with", dest="with_dirs", nargs="+", default=[], help="bring back physical/ and/or results/")
+    ap.add_argument("--full", action="store_true", help="no light sparse checkout")
+    ap.add_argument("--refresh-shared", action="store_true")
     ap.add_argument("--fix", action="store_true")
     ap.add_argument("--audit", action="store_true")
     a = ap.parse_args()
+    if a.refresh_shared:
+        return refresh_shared()
     if not a.dir:
         ap.error("DIR required")
     if a.fix:
