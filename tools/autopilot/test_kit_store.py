@@ -43,6 +43,25 @@ class Store(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(ki, "MANIFEST.json")))
         self.assertEqual(man["map"][a], ki + a)
 
+    def test_readonly_source_and_legacy_blob_alias_are_isolated(self):
+        a = put(os.path.join(self.lane, "published/a.sv"), "module a; endmodule")
+        os.chmod(a, 0o444)
+        man, ki = self.snap([a])
+        blob = KS.Store(self.root).blob(man["files"][a])
+        self.assertEqual(os.stat(a).st_nlink, 1)
+        self.assertNotEqual(os.stat(a).st_ino, os.stat(blob).st_ino)
+        self.assertEqual(os.stat(blob).st_ino, os.stat(ki + a).st_ino)
+        os.unlink(blob)
+        os.link(a, blob)
+        old_live = a + ".old-live"
+        os.link(a, old_live)
+        st = KS.Store(self.root)
+        self.assertFalse(st.linkable(a))
+        st.ingest(a)
+        self.assertNotEqual(os.stat(a).st_ino, os.stat(blob).st_ino)
+        self.assertEqual(os.stat(a).st_ino, os.stat(old_live).st_ino)
+        self.assertEqual(Path(a).read_bytes(), Path(blob).read_bytes())
+
     def test_pruned_original_is_restored_from_the_store(self):
         a = put(os.path.join(self.lane, "a/plan.json"), '{"x": 2}')
         self.snap([a], n=1)
@@ -277,8 +296,8 @@ class Snap(unittest.TestCase):
         od = os.path.join(self.src, "physical/views/other")
         put(os.path.join(od, "other.lef"), "MACRO other\n")
         put(os.path.join(od, "provenance.json"), json.dumps({"src": os.path.join(self.t, "scratch/claude/gone/kit")}))
-        put(self.plan, json.dumps({"partition_types": {"T1": {"kids": [{"lef": "physical/views/hl/hl.lef"}]},
-                                                       "T2": {"kids": [{"lef": "physical/views/other/other.lef"}]}}}))
+        put(self.plan, json.dumps({"partition_types": {"T1": {"hard_cores": [{"lef": "physical/views/hl/hl.lef", "param_wrap": {"base": "ot_dp_clk_landing_ca"}}]},
+                                                       "T2": {"hard_cores": [{"lef": "physical/views/other/other.lef", "param_wrap": {"base": "ot_dp_clk_landing_ca"}}]}}}))
         spec = dict(self.spec(), view_refs_type="T1")
         a = KS.snap(spec, self.snaps, log=lambda *x: None)
         self.assertEqual(a["view_refs_missing"], [])                       # T2's dead view does not concern T1
@@ -291,6 +310,47 @@ class Snap(unittest.TestCase):
         self.assertTrue(b["view_refs_missing"][0]["by"].endswith("views/hl/provenance.json"))
         c = KS.snap(dict(self.spec(), view_refs_type="T2"), self.snaps, log=lambda *x: None)
         self.assertEqual(len(c["view_refs_missing"]), 1)
+
+    def test_ordinary_child_keeps_provenance_without_historical_netlist(self):
+        vd = os.path.join(self.src, "physical/views/ordinary")
+        put(os.path.join(vd, "x.lef"), "MACRO x")
+        pv = put(os.path.join(vd, "provenance.json"), json.dumps({"src": "/gone/build"}))
+        original = Path(pv).read_bytes()
+        put(self.plan, json.dumps({"partition_types": {"T": {"hard_cores": [{"lef": "physical/views/ordinary/x.lef"}]}}}))
+        self.assertEqual(KS.view_refs(self.plan, "T", [self.src])["missing"], [])
+        self.assertEqual(Path(pv).read_bytes(), original)
+
+    def test_landing_resolves_work_netlist_and_portable_evidence_skips_original(self):
+        kit = os.path.join(self.t, "scratch/claude/old/kit")
+        put(os.path.join(kit, "face_guard.json"), json.dumps({"netlist": "/work/run/1_synth.v"}))
+        nv = put(os.path.join(kit, "run/1_synth.v"), "module x; endmodule")
+        vd = os.path.join(self.src, "physical/views/hl")
+        put(os.path.join(vd, "x.lef"), "MACRO x")
+        put(os.path.join(vd, "provenance.json"), json.dumps({"src": kit}))
+        put(self.plan, json.dumps({"partition_types": {"T": {"hard_cores": [{"lef": "physical/views/hl/x.lef", "param_wrap": {"base": "ot_dp_clk_landing_cas"}}]}}}))
+        refs = KS.view_refs(self.plan, "T", [self.src])
+        self.assertEqual(refs["missing"], [])
+        self.assertIn(nv, refs["present"])
+        os.unlink(nv)
+        self.assertEqual(KS.view_refs(self.plan, "T", [self.src])["missing"][0]["path"], nv)
+        os.makedirs(os.path.join(vd, "landing_evidence"))
+        self.assertEqual(KS.view_refs(self.plan, "T", [self.src])["missing"], [])
+
+    def test_moved_asbuilt_closes_exact_relative_clock_table(self):
+        table = put(os.path.join(self.src, "physical/h2/table.json"), '{"rows": [1]}')
+        folder = os.path.join(self.t, "scratch/claude/asbuilt")
+        ab = put(os.path.join(folder, "a.json"), json.dumps({"base": os.path.relpath(self.src, folder), "clock_landing_table": "physical/h2/table.json"}))
+        spec = dict(self.spec())
+        spec["in_place"] = [self.src]
+        spec["inputs"].append({"role": "asbuilt", "path": ab, "required": True, "deep": False})
+        a = KS.snap(spec, self.snaps, log=lambda *x: None)
+        self.assertEqual(Path(a["kit_inputs"] + table).read_bytes(), Path(table).read_bytes())
+        self.assertEqual(Path(a["kit_inputs"] + ab).read_bytes(), Path(ab).read_bytes())
+        put(table, '{"rows": [2]}')
+        self.assertNotEqual(KS.snap(spec, self.snaps, log=lambda *x: None)["id"], a["id"])
+        put(ab, json.dumps({"base": self.src, "clock_landing_table": "absent.json"}))
+        with self.assertRaises(KS.StoreError):
+            KS.snap(spec, self.snaps, log=lambda *x: None)
 
     def test_snap_gc_deletes_only_snapshots_unused_past_the_window(self):
         a = self.snap()
