@@ -838,6 +838,19 @@ def direct_paths():
                 out.setdefault(j['host'], set()).add(p)
     except Exception:
         pass
+    # FLOW-HEALTH-1 11-15 (FABLE-CENSUS-1815 class 10): a WAVE row that signed off (queue status SIGNED, q_signoff = the sign-off.json path on its
+    # kit host) is read directly too.  Only autopilot/state.json jobs were: kv3_io_ft_v1 sat SIGNED in the wave from 10:53 and was never counted.
+    try:
+        for r in ((json.loads((COORD_DIR / 'autopilot/kit_wave_state.json').read_text()).get('items')) or {}).values():
+            if not isinstance(r, dict): continue
+            signed = r.get('q_status') == 'SIGNED' or r.get('status') in ('SIGNED', 'SIGNED-UNVERSIONED')
+            p = r.get('q_signoff') or r.get('signoff')
+            kit = str(r.get('kit') or '')
+            h = kit.split(':', 1)[0] if ':' in kit else ''
+            if signed and isinstance(p, str) and p.startswith('/') and h:
+                out.setdefault(h, set()).add(p)
+    except Exception:
+        pass
     try:
         for l in (COORD_DIR / 'lanes/COUNT-DIRECT.tsv').read_text().splitlines():
             f = l.split('\t')

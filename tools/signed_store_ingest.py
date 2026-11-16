@@ -29,7 +29,8 @@ HOST_TOOL = '~/.local/share/ot-autoclean-auto/ot-autoclean.py'
 LOCK = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest.lock'
 LAST = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest_last.json'
 SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20']
-AGI = SSH + ['-i', os.path.expanduser('~/.ssh/agidock_ot'), 'ubuntu@155.103.253.53']
+AGI_KEY = os.path.expanduser('~/.ssh/agidock_ot')
+AGI = SSH + ['-i', AGI_KEY, 'ubuntu@155.103.253.53']
 ORDER = tuple(h for h in ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2') if h in rtp.HOSTS) + tuple(h for h in rtp.HOSTS if h not in ('local', 'epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
 
 PROBE = r'''
@@ -283,6 +284,14 @@ def main():
         say('marker sweep: new holds', len(add), 'fails', fails)
         return 1 if fails else 0
     dry = '--dry' in sys.argv
+    # FLOW-HEALTH-1 11-15 (COORD): the ingest runs where the AGIdock key lives (localhost rtx-pro).  On a host without the key every archive
+    # step used to die with a JSONDecodeError after a 7-minute scan, hourly, for three days (the store did not grow after 11-12 19:40).
+    if not dry and not os.path.isfile(AGI_KEY):
+        msg = 'AGIdock key missing on this host (%s): the signed-store ingest runs on localhost (rtx-pro), not here; nothing done' % AGI_KEY
+        say(msg)
+        try: LAST.write_text(json.dumps(dict(time=time.ctime(), fails=[[os.uname().nodename, '*', msg]], new=[], dry=dry), indent=1))
+        except OSError: pass
+        return 2
     t0 = time.time(); fails = []; new = []; unreachable = []; committed = 0; commit = None
     recs = []
     import concurrent.futures as cf
@@ -301,7 +310,10 @@ def main():
     if not dry:
         for h in ORDER:
             if not byh.get(h): continue
-            sha, P = archive_host(h, byh[h], fails)
+            try:
+                sha, P = archive_host(h, byh[h], fails)
+            except Exception as e:                      # one host's archive step never aborts the other hosts' records
+                fails.append([h, '*', 'archive step: %s: %s' % (type(e).__name__, str(e)[:160])]); say(h, 'ARCHIVE STEP FAILED', type(e).__name__, str(e)[:160]); continue
             for v in byh[h]:
                 r = v[0]; o = P.get(r['path']) or {}
                 fl = [f[0] for f in o.get('files', [])]

@@ -23,3 +23,8 @@ AGIdock	/archive/opentallas-signed-1114/qwen_compute/phy_serdes_b/signoff.json
 AGIdock	/archive/opentallas-signed-1114/qwen_compute/phy_ucie_kv/signoff.json
 # COORD ruling 11-14 (loop-gap 18:1x): qwen_kvsys qkd_ahub (hc_qkd_ahub__604_8x440_64) COUNTABLE: R-MINIMAL passes (DRC 0, TT +19.38, FF +1.57, LEC EQUIVALENT); the NOT SIGNED verdict string is only 22 advisory slew drv pins. signoff.json sha 62caf26a3ce2, 6_final.odb sha 39fba597d827 (verified equal on rtx-pro, AGIdock and epyc2 source).
 AGIdock	/archive/opentallas-signed-1114/qwen_kvsys/qkd_ahub/signoff.json
+# FLOW-HEALTH-1 11-15 (FABLE-CENSUS-1815): the 3 QC n9 cores CORE-ROWS-1115 built as lane kits, ARCHIVED-BOTH in AGIdock INDEX.tsv rows 436-438
+epyc9	/srv/opentallas-scratch2/claude/core-rows-1115/eco_q_h17_u5/i1/signoff/signoff.json
+epyc9	/srv/opentallas-scratch2/claude/core-rows-1115/eco_q_h18a_u5/i1/signoff/signoff.json
+epyc9	/srv/opentallas-scratch2/claude/core-rows-1115/b/q_h18b_u5/sta_region_nb0_h18_n9_s11/kits/sta_region_nb0_h18_n9_s11_synth0/signoff/signoff.json
+epyc9	/srv/opentallas-scratch2/claude/autopilot/closed/qwen_kvsys/kv3_io_ft_v1__66e6607e3f/kit/signoff_eco_1794784071323437646/signoff.json
