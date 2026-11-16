@@ -17,3 +17,6 @@
 - 2026-11-16 02:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 02:52 PST: 149 running jobs, PROGRESSING 140, SLOW 9, NO-PROGRESS 0 (advisory, no cancel); table lanes/NOPROG.tsv
 - 2026-11-16 03:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 03:52 PST: 127 running jobs, PROGRESSING 120, SLOW 6, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 kit drt_TT stage 25.7 h job 25.7 h: drt_violations best 14534 last 14534 rows 2 window-gain 0.0%; stagnant 6.2 h; last event 0.7 h ago, log write 0.3 h ago (1505 lines)
+- 2026-11-16 04:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 04:52 PST: 121 running jobs, PROGRESSING 111, SLOW 8, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 26.7 h job 26.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.6%; stagnant 7.2 h; last event 0.7 h ago, log write 0.7 h ago (1548 lines)
+  NO-PROGRESS epyc8 svc_lo_dsdv_svc_rs__t6 1_2_yosys stage 9.5 h job 11.6 h: no new meaningful log line for 6.5 h; last: 3.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).

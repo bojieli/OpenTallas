@@ -17023,3 +17023,6 @@ FAILED [AUTOPILOT b21bcd39a736] 2026-11-16 04:42:24 PST AUTOPILOT -> KIT-WAVE-5:
   KIND min failing_nets 0
   == 5_route.odb TT: odb missing
   == 5_route.odb FF: odb missing
+- 2026-11-16 04:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 04:52 PST: 121 running jobs, PROGRESSING 111, SLOW 8, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 26.7 h job 26.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.6%; stagnant 7.2 h; last event 0.7 h ago, log write 0.7 h ago (1548 lines)
+  NO-PROGRESS epyc8 svc_lo_dsdv_svc_rs__t6 1_2_yosys stage 9.5 h job 11.6 h: no new meaningful log line for 6.5 h; last: 3.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
