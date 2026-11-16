@@ -69,8 +69,8 @@ def qwen_qc_tail1_parameter_view_model():
         boundary_bits_per_cycle=558, boundary_bits_delta=0,
         added_external_tracks=0, added_mux_demux=0,
         internal_hi_pipeline_width=74, added_hi_clock_sinks_upper=74*17,
-        wrapper_fault_input_edges=1,
-        wrapper_fault_note="preserve existing core_latency.in fault contract; qualify exact wrapper, never infer generic physical equality",
+        base_fault_input_capture_edges=1, added_wrapper_edges=0,
+        wrapper_fault_note="use current base landed fault-reader capture; do not copy legacy extra fault register into parameter wrapper",
         boot_policy="existing two input reset stages and timed local reset tree retained; no release rule change",
         latency_price="absolute HI_PAD/SKEW parameters above; zero new cycles versus actual J RTL/plan",
         qualification="four exact views unqualified; measured native macro/mapped timing, ordinary TT/FF/DRC/LEC required")
