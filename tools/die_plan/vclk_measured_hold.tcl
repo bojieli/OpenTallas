@@ -138,6 +138,7 @@ proc ot_vclk_measured_bind {} {
 }
 
 proc ot_vclk_measured_hold {} {
+  source [file join $::ot_vmh_dir hold_sdc_guard.tcl]
   set mean [ot_vclk_measured_bind]
   if {$mean eq ""} { return }
   set hm 0

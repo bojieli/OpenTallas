@@ -5,6 +5,7 @@ if {![info exists ::ot_mm_active] || ![llength [info commands ot_mm_sc]] ||
   puts "OT_CORE_FINAL_REPAIR NOT RUN: no active TT/FF two-mode repair session; existing gates unchanged"
   return
 }
+source [file join [file dirname [info script]] hold_sdc_guard.tcl]
 # Reuse the established overlap-aware clock lock when staged. Older snapshots
 # get the same protection locally, without overriding their global DPL command.
 proc ot_core_final_legalize {} {
@@ -73,7 +74,12 @@ global_route -start_incremental
 repair_timing_helper -setup -sequence {sizeup swap split buffer}
 repair_timing_helper -hold
 ot_core_final_legalize
-global_route -end_incremental -resistance_aware
+set ot_cf_grt_args {-end_incremental}
+# Keep the reviewed kit routing policy (M8-grant production kits explicitly use 0).
+if {![info exists ::env(ENABLE_RESISTANCE_AWARE)] || $::env(ENABLE_RESISTANCE_AWARE) ne "0"} {
+  lappend ot_cf_grt_args -resistance_aware
+}
+global_route {*}$ot_cf_grt_args
 estimate_parasitics -global_routing
 # Report the actual final parasitics, not the earlier pre-DRV repair result.
 ot_mm_sync

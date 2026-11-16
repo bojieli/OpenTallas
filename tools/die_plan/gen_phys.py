@@ -6453,10 +6453,6 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import pregrt_ff_hold
     pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))
     pregrt_ff_hold.install(t, kd)
-    import hold_sdc_check as _HSC                       # HOLD-SDC-1116: a kit whose hold stages can read another SDC than sign-off fails here
-    _hf = _HSC.kit_findings(kd)
-    if _hf:
-        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.
@@ -6470,6 +6466,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         import secondary_clock as _SEC
         _f = _sec.split(":")
         _SEC.install(kd, dict(port=_f[1], clock=_f[2], target=int(_f[3]), dmax_um=float(_f[4]), radius_um=float(_f[5])))
+    # Bind repair to the final golden SDC after every native/secondary-clock installer.
+    import hold_flow
+    hold_flow.install(kd)
+    import hold_sdc_check as _HSC
+    _hf = _HSC.kit_findings(kd)
+    if _hf:
+        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
         import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
