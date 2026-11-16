@@ -14,7 +14,7 @@ SCHEMA_PY = '''
 SCHEMA = {"type": "object", "additionalProperties": False, "properties": {
     "die": {"type": "string"},
     "partition_types": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": False,
-        "properties": {"reset": {"type": "object"}, "clock": {"type": "object", "additionalProperties": False, "properties": {"tap": {"type": "number"}%s}}}}},
+        "properties": {"reset": {"type": "object"}, "hard": {"type": "boolean"}, "hard_cores": {"type": "array"}, "ft_slots": {"type": "array"}, "internal_stations": {"type": "array"}, "clock": {"type": "object", "additionalProperties": False, "properties": {"tap": {"type": "number"}%s}}}}},
     "asbuilt": {"type": "object"}}}
 %s
 def validate_structure(obj):
@@ -268,3 +268,79 @@ def test_cli_exit_codes_and_mkproof(tmp_path):
     r = subprocess.run([sys.executable, "-I", str(me), "mkproof", "--plan", str(rp), "--lane", "L", "--evidence", "e",
                         "--out", str(out)], capture_output=True, text=True)
     assert r.returncode == 0 and json.loads(out.read_text())["types"].keys() == {"ty1"}
+
+
+def geom_plan(tmp, cores, ft=None, st=None, rst=None, name="geom.json", hard=False):
+    t = {"clock": {"tap": 1.0}, "hard_cores": cores}
+    if ft:
+        t["ft_slots"] = ft
+    if st:
+        t["internal_stations"] = st
+    if rst:
+        t["reset"] = rst
+    p = {"die": "x", "partition_types": {"ty1": t, "ty2": {"clock": {"tap": 1.0}}}}
+    f = Path(tmp) / name
+    f.write_text(json.dumps(p))
+    return f
+
+
+RING = {"inst": "cl_i_slg_Q_N_krsp", "origin_um": [544.0, 1261.0], "outline_um": [92.0, 55.0], "orient": "MX"}
+HEAD = {"inst": "head0_e2", "origin_um": [60.0, 336.0], "outline_um": [216.0, 216.0], "orient": "R0"}
+
+
+def test_geom_lists_every_station_relay_and_reset_site_inside_a_ring_core(tmp_path):
+    tree = mk_tree(tmp_path / "t")
+    p = geom_plan(tmp_path, [RING],
+                  st=[{"conn": "bus:krsp", "regs_um": [[306, 468], [605, 1300], [610, 1270]]}],
+                  ft=[{"name": "ft0", "regs_um": [[560, 1280]]}],
+                  rst={"local_taps_um": [[8.64, 8.64], [600, 1300]], "tap_um": [590, 1262]})
+    fs = chk(tree, p)
+    assert kinds(fs) == ["GEOM-STATION-IN-CORE"] and len(fs) == 5
+    txt = "\n".join(fs)
+    for want in ("(605, 1300)", "(610, 1270)", "(560, 1280)", "reset.local_taps_um[1]", "reset.tap_um", "cl_i_slg_Q_N_krsp",
+                 "type ty1"):
+        assert want in txt
+    assert "(306, 468)" not in txt
+
+
+def test_geom_edges_other_types_and_hard_types_do_not_count(tmp_path):
+    tree = mk_tree(tmp_path / "t")
+    p = geom_plan(tmp_path, [RING], st=[{"conn": "c", "regs_um": [[544.0, 1280], [636.0, 1280], [600, 1316.0], [600, 1261.0]]}])
+    assert chk(tree, p) == []                                   # on the edge = not inside
+    raw = json.loads(p.read_text())
+    raw["partition_types"]["ty2"]["internal_stations"] = [{"conn": "c", "regs_um": [[600, 1280]]}]   # ty2 has no cores
+    p.write_text(json.dumps(raw))
+    assert chk(tree, p) == []
+    raw["partition_types"]["ty1"]["hard"] = True
+    raw["partition_types"]["ty1"]["internal_stations"] = [{"conn": "c", "regs_um": [[600, 1280]]}]
+    p.write_text(json.dumps(raw))
+    assert chk(tree, p) == []
+    assert len(chk(tree, geom_plan(tmp_path, [RING], st=[{"conn": "c", "regs_um": [[543.5, 1280]]}], name="h.json"))) == 0
+    assert len(G.check_geom(geom_plan(tmp_path, [RING], st=[{"conn": "c", "regs_um": [[543.5, 1280]]}], name="h2.json"),
+                            halo=1.0)) == 1
+
+
+def test_geom_other_cores_warn_unless_strict_or_new_vs_baseline(tmp_path):
+    tree = mk_tree(tmp_path / "t")
+    p = geom_plan(tmp_path, [HEAD, RING], st=[{"conn": "c", "regs_um": [[168.0, 532.0], [605, 1300]]}])
+    fs = G.check(tree, p)
+    assert [x.split()[1] for x in fs if x.startswith("FAIL")] == ["GEOM-STATION-IN-CORE"]       # the ring core only
+    assert any(x.startswith("WARN GEOM-INHERITED 1 ") for x in fs)
+    assert len(chk(tree, p, strict_cores=True)) == 2
+    assert chk(tree, p, skip=("GEOM",)) == []
+    base = geom_plan(tmp_path, [HEAD, RING], st=[{"conn": "c", "regs_um": [[168.0, 532.0], [605, 1300]]}], name="base.json")
+    assert chk(tree, p, baseline=base) == []                                                    # all inherited
+    p2 = geom_plan(tmp_path, [HEAD, RING], st=[{"conn": "c", "regs_um": [[168.0, 532.0], [170.0, 540.0]]}], name="p2.json")
+    fs = chk(tree, p2, baseline=base)
+    assert len(fs) == 1 and "(170, 540)" in fs[0] and "head0_e2" in fs[0]                       # a new overlap with any core
+
+
+def test_cli_strict_cores_flag(tmp_path):
+    tree = mk_tree(tmp_path / "t")
+    p = geom_plan(tmp_path, [HEAD], st=[{"conn": "c", "regs_um": [[168.0, 532.0]]}])
+    me = Path(G.__file__)
+    r = subprocess.run([sys.executable, "-I", str(me), "check", "--tree", str(tree), "--plan", str(p)], capture_output=True, text=True)
+    assert r.returncode == 0 and "GEOM-INHERITED" in r.stdout
+    r = subprocess.run([sys.executable, "-I", str(me), "check", "--tree", str(tree), "--plan", str(p), "--strict-cores"],
+                       capture_output=True, text=True)
+    assert r.returncode == 1 and "GEOM-STATION-IN-CORE" in r.stdout

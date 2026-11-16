@@ -12,7 +12,7 @@ one named reason per defect.  It is a precondition check, not a limit on the des
         --evidence PATH --out P.json [--result pass]
 
 BINDTREE is the directory the bind runs in (cwd of `python3 tools/die_plan/bind.py`): it holds tools/die_plan/*.py and the
-overlay.  Four classes, each finding line starts `FAIL <CLASS> ...`:
+overlay.  Five classes, each finding line starts `FAIL <CLASS> ...`:
 
   SCHEMA   every key of the composed plan is known to BINDTREE/tools/die_plan/schema.py (the G1d miss: overlay ovl_b6E carried
            the B6gE schema, the compose tree the BANDTAP one: 17 "unknown key band_fixed_um"); die_plan.schema.json of the
@@ -26,6 +26,10 @@ overlay.  Four classes, each finding line starts `FAIL <CLASS> ...`:
            import a` and call `X.f(...)` between sibling modules resolves to a name that exists with a matching arity.
            Catches the KV 7u tree (core_tap_early_ps called with another arity than schema.py defines, reset_tree
            without pin_root_copies, a gen_phys.py older than the schema.py next to it).
+  GEOM     no station, relay or reset-relay site (ft_slots / internal_stations regs_um, reset.local_taps_um, reset.tap_um) lies
+           inside a landing ring core (cl_*) of its own type, every overlap listed (G0 has no such check: 2 KV krsp stations in
+           ring cores passed it, r235).  With --baseline-plan every overlap the baseline lacks is refused, with --strict-cores
+           every overlap; the overlaps over other cores of adopted plans are only counted (WARN).
   ROWS     rows of another lane in the plan (reset.consumer_localization, the rows a lane merges into an event) carry a
            passing ROWS-PROOF: a dry-run of the consumer check on the EMITTED bind RTL, keyed by the rows' sha.  Rows equal to
            the --baseline-plan (the adopted plan) need none.  QC-SC-ROWS' reset rows had never been dry-run: 9/9 types
@@ -47,7 +51,13 @@ from pathlib import Path
 PROOF_SCHEMA = "opentallas.rows_proof.v1"
 ROWS_KEY = "consumer_localization"
 LIST_KEYS = ("files", "prefer", "netlist", "rtl_roots", "hard_params")
-CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS")
+CLASSES = ("SCHEMA", "INPUT", "TOOLS", "ROWS", "GEOM")
+# GEOM scope.  Stations of the adopted plans already lie over planned cores (KV 7u: 335 sites over head/pvg cores; S81 B6gE 51,
+# QC S4q7e 24: through-stations over native / lane cores), and G0 accepts them, so a plain "no site inside any core" would refuse
+# every adopted plan.  Default: refuse the overlaps with the landing ring cores the ring split adds (instance name cl_*), the
+# class G0 missed on 7w+v21.  --baseline-plan BASE: refuse every overlap that BASE does not already have (new = refused, same
+# type + site + core = inherited).  --strict-cores: refuse every overlap.  The rest is counted in one WARN line.
+REFUSE_CORES = r"^cl_"
 
 
 def _load(p):
@@ -483,9 +493,83 @@ def mkproof(plan, baseline, lane, evidence, result="pass"):
             "types": d}
 
 
+# ---------------------------------------------------------------- GEOM
+def type_sites(t):
+    """(name, (x, y)) for every station, relay and reset-relay site of one partition type (type frame, um)."""
+    for i, sl in enumerate(t.get("ft_slots") or []):
+        for j, p in enumerate(sl.get("regs_um") or []):
+            yield f"ft_slots[{i}:{sl.get('name')}].regs_um[{j}]", p
+    for i, st in enumerate(t.get("internal_stations") or []):
+        for j, p in enumerate(st.get("regs_um") or []):
+            yield f"internal_stations[{i}:{st.get('conn')}].regs_um[{j}]", p
+    rs = t.get("reset") or {}
+    for j, p in enumerate(rs.get("local_taps_um") or []):
+        yield f"reset.local_taps_um[{j}]", p
+    if rs.get("tap_um"):
+        yield "reset.tap_um", rs["tap_um"]
+
+
+def core_boxes(t):
+    out = []
+    for c in t.get("hard_cores") or []:
+        try:
+            ox, oy = c["origin_um"]
+            w, h = c["outline_um"]
+        except (KeyError, TypeError, ValueError):
+            continue
+        out.append((c.get("inst", "?"), float(ox), float(oy), float(ox) + float(w), float(oy) + float(h)))
+    return out
+
+
+def geom_overlaps(raw, halo=0.0):
+    """[(type, site name, (x, y), core inst, box)] for every site strictly inside (halo-grown) a hard-core box of ITS OWN type."""
+    out = []
+    for tn, t in (raw.get("partition_types") or {}).items():
+        if t.get("hard"):
+            continue
+        boxes = core_boxes(t)
+        if not boxes:
+            continue
+        for name, p in type_sites(t):
+            try:
+                x, y = float(p[0]), float(p[1])
+            except (TypeError, ValueError, IndexError):
+                continue
+            for inst, x0, y0, x1, y1 in boxes:
+                if x0 - halo < x < x1 + halo and y0 - halo < y < y1 + halo:
+                    out.append((tn, name, (x, y), inst, (x0, y0, x1, y1)))
+    return out
+
+
+def check_geom(plan, halo=0.0, strict_cores=False, baseline=None, refuse=REFUSE_CORES):
+    """FAIL STATION-IN-CORE per refused overlapping site (all listed); one WARN line counts the tolerated overlaps."""
+    out = []
+    ref = re.compile(refuse)
+    known = None
+    if baseline:
+        known = {(tn, name, xy, inst) for tn, name, xy, inst, _ in geom_overlaps(_load(baseline), halo)}
+    n_inh = 0
+    for tn, name, (x, y), inst, b in geom_overlaps(_load(plan), halo):
+        if known is not None:
+            refused = (tn, name, (x, y), inst) not in known
+        else:
+            refused = strict_cores or bool(ref.match(inst))
+        if strict_cores:
+            refused = True
+        if not refused:
+            n_inh += 1
+            continue
+        out.append(f"FAIL GEOM-STATION-IN-CORE type {tn}: {name} at ({x:g}, {y:g}) lies inside hard core {inst} "
+                   f"[{b[0]:g}, {b[1]:g}, {b[2]:g}, {b[3]:g}]")
+    if n_inh:
+        out.append(f"WARN GEOM-INHERITED {n_inh} station/relay sites lie over other hard cores (tolerated: adopted plans carry "
+                   f"them; --baseline-plan refuses new ones, --strict-cores all)")
+    return out
+
+
 # ---------------------------------------------------------------- driver
 def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=None, proofs=(), rows_files=(),
-          skip=(), want_list=False, require_asbuilt=False):
+          skip=(), want_list=False, require_asbuilt=False, strict_cores=False, halo=0.0):
     findings = []
     skip = {s.upper() for s in skip}
     if "SCHEMA" not in skip:
@@ -496,6 +580,8 @@ def check(tree, plan, sidecar=None, asbuilt=None, compose_tree=None, baseline=No
         findings += check_tools(tree)
     if "ROWS" not in skip:
         findings += check_rows(plan, baseline, proofs, rows_files)
+    if "GEOM" not in skip:
+        findings += check_geom(plan, halo, strict_cores, baseline)
     return findings
 
 
@@ -513,6 +599,8 @@ def main(argv=None):
     c.add_argument("--rows", action="append", default=[])
     c.add_argument("--skip", action="append", default=[], choices=CLASSES)
     c.add_argument("--require-asbuilt", action="store_true", help="a plan without an as-built section is a FAIL")
+    c.add_argument("--strict-cores", action="store_true", help="GEOM: also refuse sites over the planned head/pvg cores")
+    c.add_argument("--site-halo-um", type=float, default=0.0, help="GEOM: grow every core box by this margin")
     c.add_argument("--list", action="store_true", help="print the resolved input paths (cleanup keep set)")
     c.add_argument("--json")
     c.add_argument("--quiet", action="store_true")
@@ -531,7 +619,7 @@ def main(argv=None):
         return 0
     try:
         f = check(a.tree, a.plan, a.sidecar, a.asbuilt, a.compose_tree, a.baseline_plan, a.rows_proof, a.rows, a.skip,
-                  a.list, a.require_asbuilt)
+                  a.list, a.require_asbuilt, a.strict_cores, a.site_halo_um)
     except (OSError, ValueError) as e:
         print(f"plan_gate_pre: cannot read input: {e}", file=sys.stderr)
         return 2
