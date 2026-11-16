@@ -5313,6 +5313,43 @@ SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE"
                      "OT_S81_SERDES_RXNEG": ("u_rxf", "u_dec.u_face_p_d")}
 
 
+def s81_rck4_source_contract(cfg, kd, names):
+    """Refuse the observed stale native closure before emitting the opt-in RCK4 hook.
+    These are source-shape checks, not a replacement for actual synthesized FF inventory.
+    """
+    required = {"OT_S81_KP4_AM_FACE3", "OT_S81_SERDES_RXNEG"}
+    missing = sorted(required - names)
+    assert not missing, "S81 RCK4: missing required source defines " + ", ".join(missing)
+    entries = [line.split("=", 1)[1].split() for line in cfg if line.startswith("export VERILOG_FILES =")]
+    assert len(entries) == 1, "S81 RCK4: actual VERILOG_FILES missing or ambiguous"
+    files = [Path(kd) / path.removeprefix("/work/") for path in entries[0]]
+    body = "\n".join(re.sub(r"/\*.*?\*/|//[^\n]*", "", path.read_text(), flags=re.S) for path in files)
+    native = re.search(r"\bmodule\s+ot_s81_kp4_dec_native_flat_lp\b.*?\bendmodule\b", body, re.S)
+    assert native, "S81 RCK4: actual native LP module absent (stale frozen capsule)"
+    for width, inst in ((554, "u_rck_transport4"), (1, "u_rck_reset4")):
+        pattern = (r"\bot_pl_pad\s*#\s*\(\s*\.W\s*\(\s*" + str(width) +
+                   r"\s*\)\s*,\s*\.N\s*\(\s*4\s*\)\s*\)\s*" + inst + r"\b")
+        assert re.search(pattern, native[0]), (
+            f"S81 RCK4: actual {inst} W={width} N=4 absent (stale frozen capsule)")
+    am = re.search(r"\bmodule\s+ot_s81_kp4_am_face3\b.*?\bendmodule\b", body, re.S)
+    assert am and re.search(r"\boutput\s+reg\s*\[\s*8\s*:\s*0\s*\]\s*parts\b", am[0]), (
+        "S81 RCK4: actual 9-bit AM_FACE3 register module absent")
+    rpc = "OT_S81_SERDES_RM_RPC8" in names
+    if rpc:
+        assert "OT_S81_SERDES_RST_TREE" in names and "OT_S81_RM_STAGED" not in names, (
+            "S81 RCK4 RPC8: requires RST_TREE native _rt caller and no RM_STAGED")
+        rm = re.search(r"\bmodule\s+ot_s81_rate_match_rt\b.*?\bendmodule\b", body, re.S)
+        assert rm and all(re.search(pattern, rm[0]) for pattern in (
+            r"\bOT_S81_SERDES_RM_RPC8\b", r"\bg_local\b", r"\breg\s*\[\s*2\s*:\s*0\s*\]\s*rpq\b")), (
+            "S81 RCK4 RPC8: actual native local read-pointer mechanism absent")
+    record = {"source_defines": sorted(names), "source_sha256": {
+        str(path.relative_to(kd)): _hashlib.sha256(path.read_bytes()).hexdigest() for path in files},
+        "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0},
+        "scope": "Actual emitted source guard; synthesized inventory remains required before P&R",
+        "RX_added_edges": 4, "TX_added_edges": 0, "RPC_added_edges": 0}
+    (Path(kd) / "rck4_source_contract.json").write_text(json.dumps(record, indent=2) + "\n")
+
+
 def txl_mid_exports(cfg, kd, env=None, defines=()):
     """KW-FIX-43 11-10 (DIE-S81-85 serdes TXL4, COORD): opt-in at generation (OT_TXL_MID=1; OT_TXL_MID_CHAINS = instance
     chains, spaces or commas, default u_txl in the hook): copy txl_mid.tcl into the kit and run it as POST_GLOBAL_PLACE_TCL
@@ -5320,9 +5357,13 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     SERDES-TXPIPE 11-14: the type defines OT_S81_SERDES_TXPIPE / OT_S81_SERDES_RXPIPE (defines: the kit VERILOG_DEFINES,
     bare or -D) turn it on by themselves with their chains (SERDES_PIPE_CHAINS, after any env chains) and the macro-face
     rule OT_TXL_MID_FACE = 1 (the row next to the PMA macro sits at its pin).
+    RCK_RELAY4 additionally requires the actual current native/AM source and emits the joint RX+4 hook.
     Unset = no lines, the kit is byte-identical."""
     env = os.environ if env is None else env
-    names = {d[2:] if d.startswith("-D") else d for d in defines}
+    names = {(d[2:] if d.startswith("-D") else d).split("=", 1)[0] for d in defines}
+    rck4 = "OT_S81_RCK_RELAY4" in names
+    if rck4:
+        s81_rck4_source_contract(cfg, kd, names)
     pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
     if env.get("OT_TXL_MID") != "1" and not pipe:
         return []
@@ -5332,10 +5373,15 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
         chains = list(dict.fromkeys(chains + pipe))
     chains = " ".join(chains)
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
+    if rck4:
+        shutil.copyfile(Path(__file__).with_name("rck_transport_mid.tcl"), Path(kd) / "rck_transport_mid.tcl")
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
             *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
             *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
-            "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"]
+            *(["# S81 RCK4: source-qualified RX+4 coherent transport; no netlist/clock change",
+               "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
+               "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
+            "export POST_GLOBAL_PLACE_TCL = /work/" + ("rck_transport_mid.tcl" if rck4 else "txl_mid.tcl")]
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
