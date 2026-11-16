@@ -37245,7 +37245,14 @@
     "sl?_sc_v3*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
     "sl?_stm_v2*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
     "sl?_su_l1*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
-    "coll_s": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key."
+    "coll_s": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "slw_fe_v1__*": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "slw_fe_v2__*": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "sle_stm_v1__cl27746664": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "sle_stm_v1__clbe630b9c": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "slw_hc3__*": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -47515,7 +47522,14 @@
     "sl?_sc_v3*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
     "sl?_stm_v2*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
     "sl?_su_l1*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
-    "coll_s": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
+    "coll_s": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "slw_fe_v1__*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "slw_fe_v2__*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "sle_stm_v1__cl27746664": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "sle_stm_v1__clbe630b9c": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "slw_stm_v1__cl05fc43f7__cl2086fa2c": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "slw_stm_v1__cl05fc43f7__cl389df4e9": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "slw_hc3__*": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
    },
    "hold_items_released_wavehold1115_r189": {
     "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
@@ -65895,6 +65909,15 @@
    "slw_hc3__*": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
    "slw_stm_v1__cl05fc43f7__cl2086fa2c": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key.",
    "slw_stm_v1__cl05fc43f7__cl389df4e9": "FABLE-TRIAGE-QC 11-15 (COORD): hold-stall class (GRT hold repair >3 h, identical numbers per attempt): no relaunch until QC-HOLDGRT-1's hold-arm fix lands. Lift = delete this key."
-  }
+  },
+  "restored_after_correction": [
+   "slw_fe_v1__*",
+   "slw_fe_v2__*",
+   "sle_stm_v1__cl27746664",
+   "sle_stm_v1__clbe630b9c",
+   "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "slw_stm_v1__cl05fc43f7__cl389df4e9",
+   "slw_hc3__*"
+  ]
  }
 }
