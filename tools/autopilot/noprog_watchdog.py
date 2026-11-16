@@ -238,6 +238,7 @@ def judge(res, anchors, now, window=WINDOW_S, improve=MIN_IMPROVE, exact=False):
 
 
 # ---------------------------------------------------------------- WAVE-PREPNR-1115 GRT rounds / yosys stall (pure)
+GRT_LABEL = "GRT-LABEL"        # label-only verdict of the GRT round metric (never cancels, never counts as bad)
 YOUNG_S = 3600                 # YOUNG = < 1 h since the start of the CURRENT stage
 GRT_STOP_OVF = 1000            # FABLE-PD-T14-0935: iteration-10 overflow above ~1000 (or still rising) = design failure
 CONG_RPT = re.compile(r"congestion-(\d+)\.rpt$")
@@ -481,7 +482,7 @@ def save_json(path, obj):
     os.replace(tmp, path)
 
 
-BAD_VERDICTS = ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL")
+BAD_VERDICTS = ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL")      # GRT_LABEL is deliberately NOT here: it never cancels
 
 
 def decide(rows, reported, now, act):
@@ -584,6 +585,9 @@ def scan(now=None, act=False, probe_s=4):
             if kind == "grt" and log:
                 rdir = os.path.dirname(log).replace("/logs/", "/reports/")
                 special = judge_grt_rounds(grt_rounds(rdir), read_text(log) if os.path.isfile(log) else "")
+                if special:
+                    # OWNER rule 11-14 deleted the GRT early stop: the round metric is a LABEL (class + trend + NEEDS-LANE), never a cancel
+                    special = (GRT_LABEL, f"{special[0]}: {special[1]}", special[2], "GRT-CONGESTION")
             elif kind == "yosys" and log:
                 special = synth_mem_stall(read_text(log) if os.path.isfile(log) else "", now - mt)
             if special:
@@ -660,7 +664,7 @@ def do_cancel(unit, rs, now):
 
 
 # ---------------------------------------------------------------- hub
-ORDER = {"DESIGN-FAIL": 0, "NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
+ORDER = {"GRT-LABEL": 1, "DESIGN-FAIL": 0, "NO-PROGRESS": 0, "CANCEL-NOW": 0, "NO-DATA": 2, "YOUNG": 2, "EXCLUDED": 3, "KEEP": 3, "PROGRESS": 4}
 
 
 def md_table(reports):
@@ -722,7 +726,7 @@ def hub(now=None, post=True):
             missing.append(h)
     table, rows = md_table(reports)
     stamp = time.strftime("%Y-%m-%d %H:%M PST", time.localtime(now))
-    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW")]
+    flagged = [r for r in rows if r["verdict"] in ("NO-PROGRESS", "CANCEL-NOW", "DESIGN-FAIL", GRT_LABEL)]
     counts = {}
     for r in rows:
         counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
@@ -763,6 +767,13 @@ def hub(now=None, post=True):
         qlines.append(f"- {stamp} STATE [NOPROG-WATCHDOG -> COORD] NO-PROGRESS table: {len(flagged)} flagged of {len(rows)} containers {counts}; full table lanes/NOPROG-TABLE.md; flagged: "
                       + "; ".join(f"{r['host']} {r['type']} {r['stage']} [{r['verdict']}: {(r.get('why') or '')[:60]}] {r.get('action', '')[:28]}" for r in flagged[:40]))
     seen["table_sig"] = sig
+    labelled = set(seen.get("labelled", []))
+    for r in rows:
+        if r["verdict"] == GRT_LABEL and r["type"] not in labelled:
+            labelled.add(r["type"])
+            qlines.append(f"- {stamp} NEEDS-LANE [NOPROG-WATCHDOG -> COORD] {r['type']}: DESIGN-FAIL class GRT-CONGESTION on {r['host']} at {r['stage']} "
+                          f"({(r.get('why') or '')[:90]}; {(r.get('detail') or '')[:160]}). Label only, the job keeps running; no unchanged retry.")
+    seen["labelled"] = sorted(labelled)
     done = set(seen["posted"])
     for a in new_actions:
         if a["type"] in done:

@@ -72,3 +72,23 @@ def test_decide_cancels_design_fail_after_report():
     rows = [{"unit": "u1", "verdict": "DESIGN-FAIL", "key": "k1", "container": "c"}]
     assert W.decide(rows, {}, 1e6, True) == [] and rows[0]["action"].startswith("REPORTED")
     assert W.decide(rows, {"k1": 1e6 - 5000}, 1e6, True) == ["u1"]
+
+
+def test_grt_label_never_stops_a_job():
+    """OWNER rule 11-14: no GRT early stop.  The GRT round metric only labels."""
+    assert W.GRT_LABEL not in W.BAD_VERDICTS
+    # every bad GRT trend (GRT-0273, overflow >1000, rising, 2 flat rounds) still decides to cancel nothing
+    for rounds, text in (([(5, 10), (10, 1500)], ""), ([(5, 900), (10, 800), (15, 900)], ""), ([(5, 500), (10, 500), (15, 500)], ""),
+                         ([], "GRT-0273 Disabled NDR")):
+        v = W.judge_grt_rounds(rounds, text)
+        assert v is not None
+        rows = [{"unit": "u1", "verdict": W.GRT_LABEL, "key": "k1", "container": "c", "why": v[1]}]
+        assert W.decide(rows, {"k1": 0.0}, 1e9, True) == []            # even with an earlier report and act=True
+        assert "action" not in rows[0]
+
+
+def test_grt_label_is_not_cancelled_by_do_cancel_path(monkeypatch):
+    calls = []
+    monkeypatch.setattr(W, "do_cancel", lambda *a, **k: calls.append(a))
+    rows = [{"unit": "u1", "verdict": W.GRT_LABEL, "key": "k", "container": "c"}]
+    assert W.decide(rows, {"k": 0.0}, 1e9, True) == [] and not calls
