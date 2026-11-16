@@ -1,0 +1,18 @@
+{
+  "keys": [
+    "serdes__t13",
+    "serdes__t14",
+    "serdes__t15__cla2127225",
+    "serdes__t15__cla3d02796",
+    "serdes__t1__clb45db5be",
+    "serdes__t1__clfe1f0815"
+  ],
+  "release": "result:FABLE-FIX-S81-SERDES:serdes-corrected",
+  "removed_retry": [
+    "serdes__t15__cla3d02796@5",
+    "serdes__t15__cla3d02796@6",
+    "serdes__t1__clb45db5be@6"
+  ],
+  "previous_source_event_holds": "preserved unchanged",
+  "why": "measured C forms fail; actual combined RX/cohort/RPC remedy pending"
+}
