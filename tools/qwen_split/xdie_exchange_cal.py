@@ -129,7 +129,10 @@ def main():
     w2[3] += X
     SD = a.status_delay
     # status (kind 15) placement: the first offset >= 40 whose write capture is unique (compiler search, fail closed)
-    for st_ofs in range(40, 49):
+    # start at the production compiler's own law (d2d_link_calendar.compute_status_offset: first slot after the 32-word Q
+    # capture of THIS seam's TXD C0, clear of the KVN captures); a fixed 40..48 window collides at C0 >= 18 (QC seam 7)
+    st0 = L.compute_status_offset(txd['C'], 40)
+    for st_ofs in range(st0, st0 + 9):
         msgs = layer_msgs_gap(w2, txl_p, phy_p, st_ofs, a.qgap, SD, a.attn_tx_shift)
         try:
             imgs, table, _ = L.compile_cal(msgs, a.txl, phy_c, 0, txd)
