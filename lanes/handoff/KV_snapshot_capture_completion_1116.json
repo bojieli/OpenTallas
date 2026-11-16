@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.kv_snapshot_capture_completion.v1",
+ "new_snapshot": "/srv/opentallas-scratch2/kit-store/snaps/e7905026ab33b8ad3a3c47fc4dec40e94269aff3",
+ "old_snapshot": "/srv/opentallas-scratch2/kit-store/snaps/550ac5b3a12360150390a7c26d432affefff9d1e",
+ "normal_verify_log": "/srv/opentallas-scratch2/claude/tools-converge/kv/KV_full_capture_5a98_verify_1116.log",
+ "verified": {
+  "id": "e7905026ab33b8ad3a3c47fc4dec40e94269aff3",
+  "host": "civil-redfish",
+  "t": "2026-11-16T21:23:32+0000",
+  "n_files": 1110
+ },
+ "manifest_sha256": "62268468c2db4fa3ef2cd2a33613c29ccaf6f66e1f883cff25e21e01496e3290",
+ "logical_file": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+ "logical_sha256": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
+ "source_tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1",
+ "source_manifest_hash": "4312921fd6bbda17280ed8e071f308455f2637e8b09f74a3b0eec37b9bbe88e9",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/asbuilt_portable.json",
+ "asbuilt_sha256": "7f285ea9c8bd4abf11f1d0d16e715fb88d050428890e15a3c9a28a74788b1cd8",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx2",
+ "unchanged_intersection": 1100,
+ "changed_files": [],
+ "added_files": [
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/bound_reset.json",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/kit_core_clocks.json",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/kit_rtl.f",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/kit_rtl.json",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/kit_rtl_sim.f",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/kit_tree_mix.json",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/kv3_hub_C_part.sv",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/kv3_hub_C_part_bound.sv",
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/kit_portable_hubC/reset_tree.tcl",
+  "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_7yhr_d1/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+ ],
+ "omitted_files": [
+  "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/epyc9_ctx2_replica_PASS.json"
+ ],
+ "omission_reason": "epyc9-only replica evidence receipt is not a producer dependency on ep10",
+ "capture_driver_assertion": "old full subset assumption was stronger than closure identity; no second capture",
+ "use": "r355 permits fresh CURRENT-config retry; this snapshot is not adopted as source data"
+}
