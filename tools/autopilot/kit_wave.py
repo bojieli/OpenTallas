@@ -73,6 +73,7 @@ import tool_skew as TS
 import wave_jobs as WJ
 import kit_wave_roam as ROAM
 import flow_guard as FG
+import repeat_stop as RS
 
 # A main merge can happen during a long tick. Never release a merged fix with
 # older in-memory launch logic; the next ordinary tick imports the new package.
@@ -606,10 +607,11 @@ def place_mem_gb(cfg, die, item):
     """PLACE memory (GB) of one item: the first fnmatch pattern of place_mem_gb_by_item (die > global, in insertion
     order) that matches the item, else the die's place_mem_gb.  QC-TYPES-6 11-08: the hc tap-pair kits need >= 96 GB
     for their kit LEC (rc137 OOM at 32 and 48 GB) without raising every kit's budget."""
+    x = float((cfg.get("_mem_x") or {}).get(f"{die}|{item}", 1.0))          # REPEAT-STOP: x1.5 after the first OOM kill of the item
     for pat, gb in (opt(cfg, die, "place_mem_gb_by_item") or {}).items():
         if fnmatch.fnmatchcase(str(item), pat):
-            return int(gb)
-    return int(opt(cfg, die, "place_mem_gb"))
+            return int(gb * x)
+    return int(opt(cfg, die, "place_mem_gb") * x)
 
 
 def pick_charge_gb(cfg, die, item):
@@ -7800,6 +7802,14 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                     AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: kit identical to {_dr.get('owner')} whose attempt failed ({_sig}); waits for its owner to change (DEDUP terminal)")
                 return None
             (st.get("dedup_released") or {}).pop(f"{die}|{r.get('item')}", None)
+        _rb, _rwhy, _rrel = RS.gate(st, die, r.get("item"), repeat_inputs_now(cfg, st, die, r.get("item"), r.get("block_sha")), cfg.get("_unblocks") or ())
+        if _rrel:
+            AP.log(f"KIT-WAVE REPEAT-STOP RELEASE {die}/{r.get('item')}: {_rrel}")
+        if _rb:
+            if not (st.get("repeat_ledger") or {}).get(f"{die}|{r.get('item')}", {}).get("held_logged"):
+                st["repeat_ledger"][f"{die}|{r.get('item')}"]["held_logged"] = time.time()
+                AP.log(f"KIT-WAVE LAUNCH-HELD {die}/{r.get('item')}: {_rwhy[:260]}")
+            return None
         _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
         if _bl:
             AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: {_why}")
@@ -8909,6 +8919,10 @@ def collect(AP, cfg, st, notices):
                               and FG.probe_item(e) == rec["item"]), ""))):
                     AP.log(f"KIT-WAVE FLOW-GUARD PROBE {rec['die']}/{rec['item']}: {_what}")
                 note_fail_key(cfg, st, rec, cls, why)
+                if not is_host_fail(cls, why) or RS.is_oom(cls, why):          # REPEAT-STOP ledger: gen / kit / route outcomes, OOM kills
+                    _ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), _stg or rec.get("stage") or "gen", cls, why, inputs=repeat_inputs(cfg, rec, why))
+                    if _ev:
+                        repeat_event(AP, cfg, st, rec, _ev)
                 for _k, _line in FG.alert_lines(st, now_s()):          # the ALERT goes out when the class opens, not at the next launch gate
                     AP.log(f"KIT-WAVE FLOW-GUARD CLASS-BREAKER open '{_k}'")
                     AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", _line)
@@ -9088,6 +9102,73 @@ def reads_changed(cfg, die, prev):
     """True when one of the files the failed stage read now differs from what it read (or a missing one appeared)"""
     old = prev.get("read_sha") or {}
     return any(file_sha(cfg, die, p) != s for p, s in old.items())
+
+
+def repeat_inputs(cfg, rec, why):
+    """FLOW-HEALTH-1 REPEAT-STOP: the item's OWN inputs at this attempt: the plan block and the files its failing stage names (kit input list), plus the
+    plan file named by the attempt's spec.  Die-wide overlay / tools hashes are not in it."""
+    die = rec.get("die")
+    out = {"block": str(rec.get("block_sha") or "")}
+    paths = list(stage_reads(why))
+    try:
+        sp = json.loads((Path(rec["dir"]) / "spec.json").read_text())
+        if isinstance(sp.get("plan"), str) and sp["plan"].startswith("/"):
+            paths.append(sp["plan"])
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    for p in dict.fromkeys(paths):
+        out["file:" + p] = file_sha(cfg, die, p)
+    return out
+
+
+def repeat_inputs_now(cfg, st, die, item, block_sha=None):
+    """the same keys as the ledger's stored inputs, recomputed now"""
+    e = (st.get("repeat_ledger") or {}).get(f"{die}|{item}") or {}
+    out = {}
+    for k in (e.get("inputs") or {}):
+        if k == "block":
+            out[k] = str(block_sha or "") or e["inputs"][k]          # no block known at the gate: not a change
+        elif k.startswith("file:"):
+            out[k] = file_sha(cfg, die, k[5:])
+    return out
+
+
+QUEUE_OUTCOMES = []
+
+
+def repeat_queue_outcomes(AP, cfg, st):
+    """route-level results (queue FAIL / SIGNED) into the REPEAT-STOP ledger"""
+    todo, QUEUE_OUTCOMES[:] = list(QUEUE_OUTCOMES), []
+    for rec, status, stage, cls, why in todo:
+        try:
+            if status == "SIGNED":
+                RS.record(st, rec["die"], rec["item"], rec.get("attempt"), "signoff", "", "", ok=True)
+            elif not is_host_fail(cls, why) or RS.is_oom(cls, why):
+                ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), stage, cls, why, inputs=repeat_inputs(cfg, rec, why))
+                if ev:
+                    repeat_event(AP, cfg, st, rec, ev)
+        except Exception as e:
+            AP.log(f"KIT-WAVE repeat-stop queue record skipped: {type(e).__name__}: {e}")
+
+
+def repeat_event(AP, cfg, st, rec, ev):
+    """log + one NEEDS-ACTION to the die owner per (item, state, fp); the OOM resubmit only logs"""
+    die, item = rec["die"], rec["item"]
+    if ev["event"] == "OOM-RESUBMIT":
+        AP.log(f"KIT-WAVE REPEAT-STOP {die}/{item}: OOM kill; the resubmit runs with place memory x{ev['mem_x']}")
+        return
+    e = st["repeat_ledger"][f"{die}|{item}"]
+    AP.log(f"KIT-WAVE REPEAT-STOP {die}/{item}: {ev['event']}:{ev['fp'][:140]} ({ev['why']})")
+    if e.get("posted") == f"{ev['event']}|{ev['fp']}":
+        return
+    e["posted"] = f"{ev['event']}|{ev['fp']}"
+    try:
+        owner = die_owner(cfg, die)[0]
+    except Exception:
+        owner = "COORD"
+    AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-ACTION [REPEAT-STOP -> {owner}, COORD] {die}/{item} {ev['event']}: {ev['why']}; fingerprint "
+                    f"{ev['fp'][:160]}; the wave launches it again only when one of its own inputs changes (plan block, the files its failing stage read) or a line "
+                    f"`unblock {item} {ev['fp'].split('|')[0]}` (or `*`) names it")
 
 
 def fail_key_gate(cfg, st, die, item, block_sha=None):
@@ -9737,6 +9818,10 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     notices.setdefault(rec["die"], []).append(msg)
     AP.log(f"KIT-WAVE ENQUEUE {rec['die']}/{rec['item']} {rec['kit']} geom {rec.get('geom', '')[:120]}")
     try:
+        RS.record(st, rec["die"], rec["item"], rec.get("attempt"), "place", "", "", ok=True)
+    except Exception:
+        pass
+    try:
         (st.get("fail_keys") or {}).pop(f"{rec['die']}|{rec['item']}", None)                    # a kit that got through: the old fail key is spent
         for _k, _what in FG.probe_result(st, rec["die"], rec["item"], "place", passed=True):
             AP.log(f"KIT-WAVE FLOW-GUARD PROBE {rec['die']}/{rec['item']}: {_what}")
@@ -9904,6 +9989,8 @@ def follow_queue(st, ap_dir, notices, stops=None):
         n += 1
         if (status, cls) != old:
             rec["q_updated"] = time.time()
+        if (status, cls) != old and status in ("FAIL", "SIGNED"):
+            QUEUE_OUTCOMES.append((rec, status, str(stage or "route"), cls, why))          # processed by repeat_queue_outcomes() (it has cfg / AP)
         if (status, cls) != old and (status in ("SIGNED", "FAIL")):
             msg = (f"{rec['item']} SIGNED OFF -> count ({why[:120]})" if status == "SIGNED" else
                    f"{rec['item']} {stage} FAIL {cls} ({why[:160]}) job {j.get('id')}")
@@ -10437,6 +10524,12 @@ def _step(AP, ap_dir):
     except Exception as e:                               # unknown cells / proofs = still held
         AP.log(f"KIT-WAVE hold recompile skipped: {type(e).__name__}: {e}")
     try:
+        cfg["_mem_x"] = {k: round(float(v.get("mem_x") or 1.0), 2) for k, v in (st.get("repeat_ledger") or {}).items() if float(v.get("mem_x") or 1.0) > 1.0}
+        cfg["_unblocks"] = RS.parse_unblocks(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md") or "")
+    except Exception as e:
+        cfg["_unblocks"] = []
+        AP.log(f"KIT-WAVE repeat-stop tick setup skipped: {type(e).__name__}: {e}")
+    try:
         hub_disk_gate(AP, cfg, st)
     except Exception as e:                                       # unknown = launch
         AP.log(f"KIT-WAVE hub disk check skipped: {type(e).__name__}: {e}")
@@ -10461,6 +10554,7 @@ def _step(AP, ap_dir):
     retry_enqueue(AP, cfg, st, notices)
     stops = []
     follow_queue(st, ap_dir, notices, stops)
+    repeat_queue_outcomes(AP, cfg, st)
     try:
         dedup_step(AP, cfg, st, notices, ap_dir)         # WF-1 11-14 (friction 7): credit / release / cancel duplicates
     except Exception as e:
