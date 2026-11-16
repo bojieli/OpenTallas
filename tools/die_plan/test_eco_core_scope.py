@@ -117,7 +117,7 @@ puts "RESTORED [ot_hold_stats]"
     return script
 
 
-@pytest.mark.parametrize('scope,count', [('reg2reg', 8), ('nonport', 263), ('all', 2368)])
+@pytest.mark.parametrize('scope,count', [('reg2reg', 8), ('nonport', 8), ('all', 2368)])
 def test_actual_tcl_scope_keeps_exact_core8_and_preserves_overrides(tmp_path, scope, count):
     result = subprocess.run(['tclsh'], input=_tcl_scope_script(tmp_path, scope), text=True, capture_output=True)
     assert result.returncode == 0 and 'SELECTED '+str(count)+'\n' in result.stdout, result.stdout+result.stderr
