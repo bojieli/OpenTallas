@@ -34,3 +34,11 @@ Gates: DRC 0, TT setup >= -42 ps, FF non-port hold >= 0, bind + LATCHECK. Lane S
 - Read order: 3_5_place_dp.log (0 violations expected), OT_TXL_MID lines in 3_3, 4_1_cts TT, 5_1_grt, signoff/signoff.json. Pass = DRC 0, TT setup >= -42, FF non-port hold >= 0 -> AUTO-RESIGN row + export to AGIdock /archive/opentallas-signed-1114 and rtx-pro.
 - Not done: no sign-off yet; old-form DPL-0033 cause not isolated to one cell class (did not reproduce on v2; failed DBs were cleaned before I started).
 - Open for the wave: KIT-OPS-5 keeps serdes__t* held until TOOLS-CONVERGE rebuilds the S81 tree from main >= 8b9258eb3ce and the die adopts F2s2/F2s3.
+
+## CODEX notes 2026-11-16: prepared reset authority fallback
+- Existing six C F2s2 kits remain active in GPL on epyc7, preserved without edits. No signoff yet.
+- Older F2sv S81-SERDES-DPL t13 proves ring_ff DPL 0, but CTS lock_sync[0]->[1] -729.08; ODB locations (2575.692,1220.940) to (1658.016,946.890), Manhattan1191.726um. These older proofs lack TXL hook and are not C evidence.
+- Prepared default-off placement-only fallback on inherited branch claude/fable-fix-s81-serdes-1116 @607205aa5d8, tools/die_plan/serdes_reset_local.tcl. Group includes authority registers and bounded short fanin/fanout; no RTL/net/stage/clock identity changes. Added cycles0, cells0, model delta0.
+- Read-only off/on ODB gate PASS: default-off identical, 34 authority pin/net maps unchanged. 97 cells moved, area16.67952um2; pocket12.96um square near native consumers, existing area43.11306um2, no blockages, conservative combined occupancy35.60%.
+- Viewed epyc7 fable-fix-s81-serdes/reset_probe/reset_local.png (source/density TSV + renderer beside it). Macro halos clear and compact region has room; PDN/pins/macro sites unchanged. Review PASS-COND in results/geom_review/s81_serdes_reset_local_1116.json.
+- Enable only if C postCTS reproduces same-class locality miss. Candidate recipe: copy fresh C kit after GPL, combine txl_mid + reset_local in post-GPL hook, set OT_SERDES_RESET_LOCAL=1, re-place through CTS/GRT after review. Do not patch active C kits. CTS clock locality remains to measure per original domain; never splice clk/rck clocks.
