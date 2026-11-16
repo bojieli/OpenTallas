@@ -5144,6 +5144,25 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
         hit = next(((h, c) for h, c in ((_module_header(c.read_text(errors="replace"), mod), c) for c in cands
                                         if c.is_file()) if h), None)
+        if hit is None and root:
+            # KV-PVHG-O 11-16 (KV pv family, ot_qwen_tp8_pv_join_t): a hard macro whose module lives in a multi-module
+            # source not named after it (rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv) and that the kit does not stage
+            # (header-only view).  Last resort: every <root>/rtl source that declares the module; more than one distinct
+            # header is ambiguous and refused.
+            decl = re.compile(r"(?<![\w$])module\s+" + re.escape(mod) + r"(?![\w$])")
+            found = {}
+            for c in sorted(set((Path(root) / "rtl").rglob("*.sv")) | set((Path(root) / "rtl").rglob("*.v"))):
+                if c.is_file() and c not in cands:
+                    t = c.read_text(errors="replace")
+                    if mod in t and decl.search(t):
+                        h = _module_header(t, mod)
+                        if h:
+                            found.setdefault(h, c)
+            if len(found) > 1:
+                raise ValueError(f"macro {mod}: {len(found)} different RTL headers under {root}/rtl: "
+                                 + ", ".join(str(c) for c in found.values()))
+            if found:
+                hit = next(iter(found.items()))
         hdr = hit[0] if hit else None
         if hdr is None:
             raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "

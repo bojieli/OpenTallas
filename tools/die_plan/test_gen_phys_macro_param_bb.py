@@ -49,6 +49,39 @@ class MacroParamBB(unittest.TestCase):
         self.assertNotIn("LV = 2", txt)
         self.assertNotIn("reg r", txt)
 
+    def _multi_module_root(self, *files):
+        top = self.t / "src" / "t4.sv"
+        top.write_text("module t4(input wire clk); m_join #(.RESET_PIN(1)) u_j(.clk(clk), .y()); endmodule\n")
+        for rel, txt in files:
+            f = self.t / "root" / "rtl" / rel
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text(txt)
+        return top
+
+    def test_header_from_multi_module_source_under_root(self):
+        # KV-PVHG-O 11-16 (kv3_pv ot_qwen_tp8_pv_join_t lives in ot_qwen_tp8_pv_wide_pair.sv, not staged by the kit)
+        top = self._multi_module_root(("hdc/wide_pair.sv",
+            "module m_other(input wire a); endmodule\n"
+            "module m_join #(parameter integer J_LAT=7, RESET_PIN=0)(input wire clk, output reg [3:0] y);\n"
+            " always @(posedge clk) y <= 0;\nendmodule\n"))
+        out = G.macro_param_blackboxes([("u_j", "m_join", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+        txt = out[0].read_text()
+        self.assertIn("module m_join", txt)
+        self.assertIn("output reg [3:0] y", txt)
+        self.assertNotIn("m_other", txt)
+        self.assertNotIn("always", txt)
+
+    def test_multi_module_source_two_headers_refused(self):
+        h = "module m_join #(parameter integer RESET_PIN=0)(input wire clk, output reg [{w}:0] y);\nendmodule\n"
+        top = self._multi_module_root(("a/p.sv", h.format(w=3)), ("b/q.sv", h.format(w=7)))
+        with self.assertRaisesRegex(ValueError, "different RTL headers"):
+            G.macro_param_blackboxes([("u_j", "m_join", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+
+    def test_no_header_anywhere_still_fails(self):
+        top = self._multi_module_root(("a/p.sv", "module m_none(input wire a); endmodule\n"))
+        with self.assertRaisesRegex(ValueError, "no RTL header was found"):
+            G.macro_param_blackboxes([("u_j", "m_join", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+
     def test_self_contained_header_bb_unchanged(self):
         out = G.macro_param_blackboxes(self.macros, [self.top], self.t / "kit")
         self.assertTrue(out[0].read_text().endswith(");\nendmodule\n"))
