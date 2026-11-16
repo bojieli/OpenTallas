@@ -61,3 +61,11 @@ def test_waiter_result_fail_routed(tmp_path):
     sent = []
     s, _, _ = fr.run(tmp_path, tmp_path / "st.json", "post.sh", now=NOW, poster=lambda p, t: sent.append(t) or True)
     assert len(s) == 1 and "DIE-S81-92" in sent[0] and "S81-SVC-SYNTH-1115" in sent[0]
+
+
+def test_fix_lane_is_owner(tmp_path):
+    mk(tmp_path, [f"- {stamp(5)} STATE [FABLE-FIX-S81-RINGS -> COORD] alive", f"- {stamp(5)} STATE [QC-DRT-1116 -> COORD] alive"],
+       ["s81|ring_a", "qwen_compute|cbn_q00"])
+    sent = []
+    fr.run(tmp_path, tmp_path / "st.json", "post.sh", now=NOW, poster=lambda p, t: sent.append(t) or True)
+    assert any("FABLE-FIX-S81-RINGS, COORD" in t for t in sent) and any("QC-DRT-1116, COORD" in t for t in sent)

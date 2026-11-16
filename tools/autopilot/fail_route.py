@@ -32,9 +32,10 @@ from zoneinfo import ZoneInfo
 HOME = Path(os.path.expanduser("~"))
 LANE = "FAIL-ROUTE-1115"
 DIE_DEFAULT = {"s81": "DIE-S81-92", "qwen_compute": "DIE-QC-103", "qwen_kvsys": "KV-102", "head": "HEAD-100"}
-DIE_PREFIX = {"s81": ("DIE-S81", "S81-"), "qwen_compute": ("DIE-QC", "QC-"), "qwen_kvsys": ("KV-", "DIE-KV"),
-              "head": ("HEAD-", "DIE-HEAD"), "hbm": ("DIE-HBM", "HBM-")}
+DIE_PREFIX = {"s81": ("DIE-S81", "S81-", "FABLE-FIX-S81"), "qwen_compute": ("DIE-QC", "QC-", "FABLE-FIX-QC"),
+              "qwen_kvsys": ("KV-", "DIE-KV", "FABLE-FIX-KV"), "head": ("HEAD-", "DIE-HEAD", "FABLE-FIX-HEAD"), "hbm": ("DIE-HBM", "HBM-")}
 NOT_OWNER = ("FABLE-", "COORD", "FLOW-HEALTH", "KIT-OPS", "KIT-WAVE", "MERGE-QUEUE", "CLEAN", "PLAN-GATE-PRE", LANE)
+OWNER_OK = ("FABLE-FIX-",)   # fix lanes own failures; other FABLE-* are reviewers
 VERDICT = re.compile(r"did NOT pass|FAIL|REFUSE|Traceback")
 POST = re.compile(r"^- (?P<stamp>\d{4}-\d\d-\d\d \d\d:\d\d) (?:PST|PDT)\s+(?P<tag>[A-Z][A-Z-]*)\s+\[(?P<lane>[A-Za-z0-9][A-Za-z0-9._-]*)"
                   r"\s*->\s*(?P<to>[^\];]*)(?:;\s*cc\s*(?P<cc>[^\]]*))?\]\s*(?P<text>.*)$")
@@ -84,7 +85,7 @@ def live_lanes(posts, now, live_h):
     """lane -> (last post epoch) for lanes that posted within live_h hours; reviewers and infra lanes are not owners."""
     last = {}
     for p in posts:
-        if p["lane"].startswith(NOT_OWNER):
+        if p["lane"].startswith(NOT_OWNER) and not p["lane"].startswith(OWNER_OK):
             continue
         last[p["lane"]] = max(last.get(p["lane"], 0), p["t"])
     return {k: v for k, v in last.items() if now - v <= live_h * 3600}
