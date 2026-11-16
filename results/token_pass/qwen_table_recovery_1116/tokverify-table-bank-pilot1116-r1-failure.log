@@ -1,0 +1,8 @@
+ot-run: epyc10         admits   233 GB (avail 282, reserve 0, fresh 0, peak 0, headroom 0, waiters 0/0 GB) load 283/96 running 67 disk 1186 GB 
+ot-run: -> epyc10
+ot-heavy: admitted on civil-redfish as oth-ubuntu-3862864-1794859838 after 1 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/tok-verify-2/recovery1116/tools/qwen_code_rom/recover_table_banks.py", line 12, in <module>
+    import recover_rank as R
+ModuleNotFoundError: No module named 'recover_rank'
+ot-run: RAN on epyc10 (unit oth-ubuntu-3862864-1794859838): exit 1

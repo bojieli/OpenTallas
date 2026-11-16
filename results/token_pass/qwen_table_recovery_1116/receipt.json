@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.qwen.native-table-recovery-pilot.v1",
+  "status": "PILOT_MEASURED_AND_SOURCE_PROFILE_DIAGNOSED",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "download_bytes": 16381550382,
+  "pilot_seconds": 198.08,
+  "peak_rss_kbytes": 4143076,
+  "threads": 4,
+  "admission_gb": 32,
+  "coefficients_byte_exact": [
+    "matrix_int8.hex",
+    "matrix_scale_bf16.hex",
+    "crom.hex"
+  ],
+  "initial_program_drift": "Inherited defaults AR_WORDS128/SU_WIDTH8;31instructions5segments; not a runtime numerical failure",
+  "control1": "Explicit AR_WORDS256 restores exact protected descriptors,29instructions/3segments; only3 chase_n fields differ",
+  "control2": "Explicit AR_WORDS256 and HDC_SU_WIDTH64 restores exact protected program and descriptors",
+  "source_profile": {
+    "QWEN_O4_TP": 8,
+    "QWEN_O4_GROUPS": 3072,
+    "QWEN_O4_AR_WORDS": 256,
+    "HDC_SU_WIDTH": 64
+  },
+  "failed_default_banks_preserved": "epyc10 recovery1116/pilot_default_profile_banks",
+  "full_rank_outputs": "NOT_EMITTED",
+  "code_masks_generated": false,
+  "next_step": "Admit raw-bank recovery using fixed native profile, fresh banks_native; then selected-attention-owner table lowering"
+}
