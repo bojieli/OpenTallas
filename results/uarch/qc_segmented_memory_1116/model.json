@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.qc.segmented-memory-candidate.v1",
+  "candidate": true,
+  "default_enabled": false,
+  "physical_replicas": 96,
+  "source_census": "QC-PINACCESS-O-SU-transport-census.json",
+  "required_field_alignment": "all VM/CROM/WROM loops normalized to43; WROM bit0 skew corrected",
+  "native_alignment": 3,
+  "native_mif_extra": 1,
+  "external_transport_edges": 43,
+  "outer_ml": 52,
+  "s1_width": 8,
+  "s1_depth": 58,
+  "s1_ring_segments": [
+    29,
+    29
+  ],
+  "s2_width": 133,
+  "s2_depth": 60,
+  "s2_sram_segments": [
+    30,
+    30
+  ],
+  "sram_macro": "ot_sram_1r1w_32x64_m1",
+  "sram_macros_per_head": 6,
+  "sram_capacity_bits_per_head": 12288,
+  "live_metadata_bits_per_head": 8444,
+  "flop_state_upper_per_head": 792,
+  "legacy_s2_flops_per_head": 7980,
+  "macro_body_area_um2_per_head": 3314.4422400000003,
+  "macro_body_area_um2_total": 318186.45504000003,
+  "slot_um": [
+    613.44,
+    717.12
+  ],
+  "macro_body_fraction_of_slot": 0.00753436280332598,
+  "slot_fit": "body area fits; packing, pin access, PG, channels and TT/FF remain unqualified",
+  "memory_ports_per_macro": {
+    "read": 1,
+    "write": 1
+  },
+  "memory_bytes_per_cycle_per_head": 96,
+  "boundary_bits_per_cycle_delta": 0,
+  "added_macs_per_cycle": 0,
+  "routing_note": "local sequential segment boundaries; no new die crossing; pin-channel capacity requires actual floorplan",
+  "max_ring_select_fanout": 16,
+  "max_ring_pointer_slots": 31,
+  "sram_pointer_loads_per_segment": 30,
+  "throughput_items_per_cycle": 1,
+  "added_compute_edges": 0,
+  "boot_warmup_edges": 60,
+  "token_latency_note": "parent43 is charged once; compiler must use fresh actual profile, no rate credit",
+  "qualification": "minimum actual one-head native loop and full-shape physical gate pending"
+}
