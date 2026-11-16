@@ -33,9 +33,11 @@ CV=${CV:-0}   # 10-24: CV=1 = elements as the closed-view macro models (ot_s81hd
 AIS=${AIS:-0}; MH=${MH:-0}; CS=${CS:-0}
 # 11-05 (DIE-HEAD-70): RIR / TH / FX / BSTV / KH env = tile ROW_IN_REG / TEN_HOP / FLT_XHOP / BST / KEY_HOP (defaults = unchanged)
 RIR=${RIR:-0}; RH=${RH:-0}; TH=${TH:-0}; FX=${FX:-0}; BSTV=${BSTV:-2}; KH=${KH:-0}
-OBJ=$O/obj_${M}_${CUT}_${S9}_cv${CV}_l4${L4}_a${AIS}m${MH}c${CS}_r${RIR}h${RH}t${TH}f${FX}b${BSTV}k${KH}
+# 11-13 (HEAD-97 F1c): XOH env = tile XO_HOP (x / go stages x_q -> u_xo; t1 sees x / go XOH later, hidden while the chain best hop is longer: no EXP_CYC term.  Measured 11-13 (A, go -> spr): default params XOH 0/2/4/6 = 8430/8430/8432/8434; hd_tile plan params (CV 1 AIS 1 MH 1 CS 3 RIR 1 TH 2 FX 1 BST 3 KH 1) XOH 0/2/4/6 = 8442/8442/8442/8443)
+XOH=${XOH:-0}
+OBJ=$O/obj_${M}_${CUT}_${S9}_cv${CV}_l4${L4}_a${AIS}m${MH}c${CS}_r${RIR}h${RH}t${TH}f${FX}b${BSTV}k${KH}x${XOH}
 if [ ! -x $OBJ/Vtb_s81hd_mini ]; then
-  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GFADD_L4=$L4 -GCV=$CV -GAIS=$AIS -GMH=$MH -GCS=$CS -GRIR=$RIR -GRH=$RH -GTH=$TH -GFX=$FX -GBSTP=$BSTV -GKH=$KH -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
+  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GFADD_L4=$L4 -GCV=$CV -GAIS=$AIS -GMH=$MH -GCS=$CS -GRIR=$RIR -GRH=$RH -GTH=$TH -GFX=$FX -GBSTP=$BSTV -GKH=$KH -GXOH=$XOH -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
     -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build_$M.log 2>&1 || { grep -m10 %Error $O/build_$M.log; echo "BUILD_FAILED $M"; exit 3; }
 fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
