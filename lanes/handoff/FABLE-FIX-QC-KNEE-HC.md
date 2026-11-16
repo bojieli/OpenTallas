@@ -84,3 +84,18 @@ First clean route -> QC-PINACCESS-O posts RESULT PASS proof:DRT0255 -> HOLDGEN r
 - J2 tagK refused immediately by CM manifest guard (old81735fe95 vsMIF1canonical86ede400), not a newRTL failure. Oldsidecar/failure preserved. New `gates/cm_S4Q9JBQL.json` revalidated after proving solemanifestdeltaMIFdefine and unchanged source/default clock fields; canonicalinjectPASS. New `gates/kp_S4Q9JBQL.json` made by canonicalkp_inject.make, injectPASS. Runner exports both explicitly; finaldomainchecks remain on. Receipt `gates/j_clock_pricing_manifest_revalidation.json`. Finalpublicpack must regenerate these guards against path-relocatedcanonicalmanifest onlyaftersemanticmapfileidentity; no bypass/hash-onlyretag.
 - Native MIF1 ages/compiler qualification remains with TOK-VERIFY-3. NativeVMR read+1/write+1/fault0 proven; physicalprofile record canonical `QC-PINACCESS-O-VMR-physical-profile.json` pins exact signedarchive netlist/LEC, originalbuildinteger notinvented. HEAD nativecontract legacyextra0 receipts do nottransfer; genuine linkedHEAD37stage is committed rank0 JSON sha03fa2dcff20b67032c63cf05f92f52454bc3d6bb9700d979a67f69038f482117. Finalsharedcalendar waitsKVHG1bind+currentages; no fixedperiod claim.
 - Shared TT PG replay8df merged; prospectivepublictooloverlay only, no runningJ edits. Old coll_n liveDRT input preserved by QC-PINACCESS-O for possible PG A/B. HC2 P2PG-aware baseline still failsTT-132.61/1; P3 sticky-split inCTS, noMIFparameter inHC2vehicle, ordinarymatching-source gatesdecide. Cdieclock TT/FFregionalGRT0 and tapextraction complete; REG_STA and laterclockrows pending.
+
+## CLAUDE (Fable) 2026-11-16 13:35 PST, back after the limit; Codex state above is authoritative
+- Read at 13:22: epyc2 G binds. S4Q9DBQG errors 36 (all HARD_CORE_PARAM_ALL: 24 st_a_v1 rows = false, fixed by checker 3db14d42; 12 su_c MIF rows = REAL,
+  manifest define OT_QC_SRAM_MIF missing), r8rc 0, LATCHECK 1921/1921, hcparam 0. S4Q9EBQG same 36 + 1 R8_STALE (fault lane), fault lanes 12/12/10 in LATCHECK,
+  G0 2 inherited. S4Q9FBQG R8_STALE on the 17 seam lanes -> regen failed (expected; needs the F-derived seed). None gates. NO adoption of D / E / F.
+- My mistake at 13:23: before reading the Codex part of this file I launched three rebinds (tags S4Q9DBQH / EBQH / FBQH, treeE, OT_HCPARAM_ALL=0) with a new
+  bin/chain_h.sh. Stopped at 13:26 by exact PID (9 PIDs, all mine), about 3 min in; their bind dirs are empty stubs and count for nothing. With the gate off
+  they would have hidden the real MIF mismatch. bin/chain_h.sh on epyc2 is now MY file: the Codex runner of the rejected S4q9g (10:04) was overwritten;
+  its log log/chain_s4q9g_H.log and the plan are intact. Files I added in gates/: pin_S4Q9{D,E,F}BH.json, cb16_spec_S4Q9{D,E,F}BH.json,
+  r8_s29q103S4Q9{E,F}BQH.derived.json (F one is the same derive as Codex r8_s29q103S4Q9F_seam.derived.json sha 1f4190499064), zz_r8_s29q103S3D2.json (seed copy).
+- Candidate of record stays Codex J: treeJ, plan s4q9j sha 79bca8d5b9bb, bind S4Q9JBQL errors 0 / r8rc 0 / LATCHECK 1921/1921 / hcparam 0 = structural PASS
+  only; SU memory transport (N43 normalization, QC-PINACCESS-O / CBGLUE) and the final shared calendar are open, so nothing is published or adopted.
+- Done by me today and still valid: S4q9b never bound (v1 tree plan_gate_pre skew); S4q9c (3 PHY outline rows); per-slice st_a pad pin (bin/pinpad_rel.py,
+  W +5/+6, E +3) fixes the W5 nb_od regen error; hc TT repair env on 18 keys + file-01 hold deleted (kit_wave 4789478d31c); hc2 cl3edce1b8 exported to
+  rtx-pro + AGIdock. proof:DRT0255 PASS posted by QC-PINACCESS-O 12:14 (coll_n a22 route clean; coll_n NOT signed, FF hold -58.19).
