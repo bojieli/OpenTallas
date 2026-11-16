@@ -48,3 +48,9 @@ Owner of S81 col closure (216 types), pilot col_h9_r2__t1__clce45cab5__pv7a260fc
 - So col needs measured per-port window rows on the new tap trees (S81-TAPROWS method) or the offsets form back; with 165 flat no layout passes. Posted 01:2x.
 - The wave kit attempt_2 of pv7a260fc0 on epyc7 (routed baseline) was cleaned up; my census outputs in epyc7 scratch3 fable-fix-s81-col/an remain; STA preambles copied to epyc10 fable-fix-s81-col/ks.
 - f2s2 keeps routing (client log localhost scratchpad f2s2_route.log; kit run_route.log). Its repair runs against the 165 window: read DRC and the station hops from it, not WNS.
+
+## 01:4x 11-16: tasks from COORD (r268)
+1. Review S81-COL-CLK-IMPL per-port window rows when posted, against: window 0 -> 26 setup endpoints, 165 flat -> 6,543; estimate pass below about 40 ps.
+2. F2s structural review (r199 style, lanes/FABLE-PD-S81-F2s.md) in parallel with its bind. Check also: ring_place ff on S81 bands >= 256 bits (lever 1) reaches the col wide rings (lpad_frame_int_i0 1,168 bits x 4 ranks, bin/bout frame_int 1,168 / 322, lpl_*_r/w).
+3. Countable pilot: r2 from the S81 tree REBUILT AFTER claude/s81-col-clk-1116 merges (NOT kw45/src_s81_pin_e594a73db756: no clock.core_pin_lead_ps), plan F2s, clock form from plan keys (no post-gen kit edits), die-phase PDN + TT repair present (check pdn.tcl offset 8.448 and tt_setup_repair in the kit), run_kit.sh route via ot-run, sign-off, export. Gen recipe = epyc10 fable-fix-s81-col/f2s_gen.sh with SRC/B/PLAN switched and the post-gen block removed.
+- Hub watcher (localhost background task) fires on IMPL / DIE-S81-92 COMPOSED / TOOLS-CONVERGE S81 posts; re-arm after a restart.
