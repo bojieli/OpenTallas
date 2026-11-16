@@ -99,3 +99,5 @@ First clean route -> QC-PINACCESS-O posts RESULT PASS proof:DRT0255 -> HOLDGEN r
 - Done by me today and still valid: S4q9b never bound (v1 tree plan_gate_pre skew); S4q9c (3 PHY outline rows); per-slice st_a pad pin (bin/pinpad_rel.py,
   W +5/+6, E +3) fixes the W5 nb_od regen error; hc TT repair env on 18 keys + file-01 hold deleted (kit_wave 4789478d31c); hc2 cl3edce1b8 exported to
   rtx-pro + AGIdock. proof:DRT0255 PASS posted by QC-PINACCESS-O 12:14 (coll_n a22 route clean; coll_n NOT signed, FF hold -58.19).
+
+## CLAUDE 13:5x PST: S4q9j ADOPTED (READY+ADOPT posted; inputs + release / hold lists in that post). Next = S4q9k items (a)-(d) per COORD / FABLE-PD-QC-S4q9e.
