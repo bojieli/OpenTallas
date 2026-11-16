@@ -1,0 +1,64 @@
+{
+  "partition_types": {
+    "serdes__t13": {
+      "clock": {
+        "tap_group": {
+          "re": "(?:^|[/.])(u_enc(?=[/.])|u_(?=(?:rrl_119|rrl_120|rrl_121|cland_collect_rst_rl_119)[/.]))"
+        }
+      }
+    },
+    "serdes__t1__clb45db5be": {
+      "clock": {
+        "tap_group": {
+          "re": "(?:^|[/.])(u_enc(?=[/.])|u_(?=(?:rrl_51|rrl_52)[/.]))"
+        }
+      }
+    }
+  },
+  "status": "DRAFT_NOT_ROUTED",
+  "basis": {
+    "serdes__t13": {
+      "path": "rrl119 negedge -> rrl121 posedge",
+      "old_slack_ps": -504.75,
+      "data_delay_ps": 228.82,
+      "source_tree_ps": 724.87,
+      "capture_tree_ps": 127.91,
+      "capture_source_latency_ps": -75,
+      "source_xy_um": [
+        28.08,
+        287.28
+      ],
+      "capture_xy_um": [
+        17.28,
+        568.62
+      ],
+      "span_um": 292.14,
+      "note": "FIRM sites preserved; group also119state,collector119 ready/fault,and sibling120. Independent of impossible north lock authority anchor."
+    },
+    "serdes__t1__clb45db5be": {
+      "path": "rrl51 negedge -> rrl52 state posedge",
+      "old_slack_ps": -1086.91,
+      "data_delay_ps": 313.13,
+      "source_tree_ps": 1117.39,
+      "capture_tree_ps": 41.85,
+      "capture_source_latency_ps": -94,
+      "source_xy_um": [
+        2270.16,
+        230.04
+      ],
+      "capture_xy_um": [
+        1982.88,
+        153.09
+      ],
+      "span_um": 364.23,
+      "note": "FIRM sites preserved; 4register51/52group. Halfcycle residual only103.37ps before setup/clock effects, targeted actualCTS required."
+    }
+  },
+  "required_source_guard": "55b26f86497 (both ct_follow passes honor ct_group_owned)",
+  "model_delta": {
+    "cycles": 0,
+    "cells": 0
+  },
+  "evidence_dir": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/reset_probe/anchor",
+  "scope": "Same logical core clock, source/capture tapcohort only. Not applicable to DATA-dominated START/root transports."
+}
