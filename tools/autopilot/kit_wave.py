@@ -4775,6 +4775,11 @@ _TRANSIENT_INFRA = re.compile(r"ot-run: NOT RUN|ot-run: NOT COMPLETED|no host qu
 # bucket.  Types: stopped (signal 15 / operator stop: never a failure), sdc_lint, missing_input, stale_view, tool_mix, design:<stage>.
 _TYPED = (("stopped", re.compile(r"interrupted \(signal 15|terminated by signal 15|\bexit -15\b|stopped by operator|cancellation requested|"
                                  r"stopped by signal 15|^Terminated\b|\nTerminated\b|command exit 143", re.I)),
+          # COORD r253: ssh timeouts / transport drops and host OOM kills are INFRA, not design and not a missing input
+          ("infra", re.compile(r"earlyoom|\] Error 24[17]\b|\brc[ =]+1(?:37|43)\b|ssh: connect to host .* (?:timed out|Connection (?:refused|timed out))|"
+                               r"Connection timed out|Operation timed out|ssh transport|SSH probe exit 255|Host key verification failed|"
+                               r"Could not resolve hostname|ot-run: NOT (?:RUN|COMPLETED)|no host qualifies|kex_exchange_identification|"
+                               r"Connection (?:reset|closed) by", re.I)),
           ("sdc_lint", re.compile(r"SdcLintError|sdc_lint", re.I)),
           ("stale_view", re.compile(r"STALE-CORE-VIEW|stale (?:closed )?view|view .*(?:stale|does not match)", re.I)),
           ("missing_input", re.compile(r"KIT_INPUT_MISSING|INFRA-VIEW-MISSING|HDL source missing|source missing|not found by the probe|"
@@ -4785,7 +4790,7 @@ _TYPED = (("stopped", re.compile(r"interrupted \(signal 15|terminated by signal 
 
 
 def typed_class(cls, stage, why):
-    """'stopped' | 'sdc_lint' | 'stale_view' | 'missing_input' | 'tool_mix' | 'design:<stage>' for one FAIL (first rule wins)"""
+    """'stopped' | 'infra' | 'sdc_lint' | 'stale_view' | 'missing_input' | 'tool_mix' | 'design:<stage>' for one FAIL (first rule wins)"""
     text = str(why or "")
     for name, rx in _TYPED:
         if rx.search(text):

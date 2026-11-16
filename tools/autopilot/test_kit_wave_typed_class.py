@@ -17,6 +17,12 @@ class Typed(unittest.TestCase):
         self.assertEqual(self.t("global_place.tcl 5 unmapped flop", "place", "FLOW"), "design:place")
         self.assertEqual(self.t("x", "", "FLOW"), "design:unknown")
 
+    def test_ssh_timeouts_and_earlyoom_are_infra(self):
+        for why in ("ssh: connect to host epyc7 port 22: Connection timed out", "ssh transport drop before RAN on",
+                    "host earlyoom SIGTERM victim, make Error 247", "ot-run: NOT RUN: no host qualifies", "rc 137"):
+            self.assertEqual(self.t(why, "place", "FLOW"), "infra", why)
+        self.assertEqual(self.t("global_place.tcl 5 unmapped flop", "place", "FLOW"), "design:place")
+
     def test_stopped_never_counts(self):
         self.assertIsNone(K.fail_signature("INFRA", "ot-run: interrupted (signal 15) on epyc7", "place"))
         self.assertIsNone(K.fail_signature("FLOW", "stopped by operator", "place"))
