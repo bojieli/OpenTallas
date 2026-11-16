@@ -685,6 +685,15 @@ SCHEMA = {
                         # tap nearest the group centroid.  KW-FIX-45 11-12: the key was emitted but not in the schema.
                         "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
                             "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"}}},
+                        # Default-off (HEAD-SERDES-1115 11-15, gen_phys.private_leaf_exports -> OT_PRIVATE_LEAF_LIKE/RE,
+                        # private_leaf.tcl, run_kit.sh post-CTS step): clone the leaf clock buffer that drives the anchor
+                        # instance's clock pin (a macro) and move only the sinks matching re onto the clone: they get the
+                        # anchor's clock arrival on a leaf of their own.  One row per type.
+                        "private_leaf": {"type": "array", "minItems": 1, "maxItems": 1,
+                            "items": {"type": "object", "additionalProperties": False, "required": ["like", "re"],
+                                "properties": {"like": {"type": "string", "minLength": 1},
+                                               "re": {"type": "string", "minLength": 3},
+                                               "note": {"type": "string"}}}},
                         # Default-off: short reg-to-reg pair tap affinity before CTS (QC-TYPES-6 11-07).
                         "tap_pair_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
