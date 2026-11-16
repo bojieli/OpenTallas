@@ -72,3 +72,14 @@ REVIEW ready: actual prior7yhr GEN constraints rendered/directly viewed, ep9 fab
 Other preserved results: HG1B remains fullyPASS pre/G0/bind/LAT2404 with reset/bus bytes equalA, plan b78d8aa38797; no source mutation. C1 full real hold remains missing-view/unmeasured; independent landing-ring cross-product -3.13ps is not a direct data path, no resign. q2 true mismatch: signed kit233.28wide vs plan/LEF243.648; exact archive recovery only, no metadata override. q1/q3 old kits absent. Reach+1station7types analytical19219FFbits, model_ready_to_build=false/no RTL or adoption. Original order face proof nowPASS post0/mut1/emitted0; original peer face proof still progressing ep9 unit1994781-1794858497, not v2 readiness gate. No jobs cancelled.
 
 Final asynchronous handback updates: merge_ops thin13460a0 normal source gate terminalGREEN19/19 on main631a697+1baseline (no source/physical reproof), pending explicit root/Claude approval. kv_pack already launched one full snapshot capture via immutable committed5a98 helper on ep10, client1334843, intel2 log /tmp/KV_full_snapshot_5a98_1116.log. Result NOT checked after reset; preserve and do not duplicate. genbug_fastpath owns closure/transport; fleet_flow has pending verified-closure fingerprint mechanism. kv_pack parked; C2/Wo2/pv26 GEN/physical NOT_RUN, no holds/signals.
+
+## FABLE-FIX-KV-PVHUB back 2026-11-16 13:3x PST (after the Codex period r314-r339)
+- NO READY+ADOPT from this lane: kvgeom7yhr was ADOPTED at 10:27 (r322). Live config (autopilot/kit_wave.json, read 13:30): event
+  kvgeom7yhr, src kw45/src_kv_pin_eb1e73448bd0_7yhr_d1, bind kw45/kvbind_pin_eb1e73448bd0_7yhr_d1/out_h1_ctx2, gen hosts epyc9 + epyc10,
+  no hold left on event_adopt:kvgeom7yhr. Root owns handback / merge / adopt of everything after it (94d9 precursor, 13460a0, treeC).
+- My gate tail on epyc7 (kvgeom7yhr.gate.tail.out): pv_v7, pv_v12, sys_c kit_rtl + gen RC 0 (pv_join blackbox written), final G0 0 errors.
+  5 pc types kit_rtl RC 2 = harness scope (no prov_stage overlay; wave option prov_first_re), not an event finding.
+- My own tree kw45/src_kv_kvgeom7yhr_eb1e73448bd0 (+ kvbind_kvgeom7yhr_eb1e73448bd0) is NOT the wave tree. Copies: epyc7, epyc9, epyc10
+  (dry-run sync 13:28: 0 differences), epyc8 (.part, sync from epyc7 finishing). HG1 trees were copied from it; do not delete while
+  hg1/treeC gate (epyc10) is active. No further sync or rename from this lane.
+- Open on 7yhr production: C2 / Wo2 / pv26 failed before GEN (kit snapshot 550ac5b3 lacks plan_of_record/eW_sidecar.json); kv_pack / fleet own it.
