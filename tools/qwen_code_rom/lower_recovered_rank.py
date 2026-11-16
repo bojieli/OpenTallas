@@ -19,7 +19,10 @@ def inventory(banks,rank):
         d=banks/(f'head_images/rank{rank}'if layer=='head'else f'images/layer{layer}/die{rank}')
         p=d/('head_rom.json'if layer=='head'else f'layer{layer}_rom.json')
         if not p.is_file():missing.append(str(p));continue
-        m=json.loads(p.read_text())
+        
+        try:m=json.loads(p.read_text())
+        except json.JSONDecodeError:
+            missing.append(str(p)+' [metadata write in progress]');continue
         if m['die']!=rank or m['tp']!=8 or (layer!='head'and m['layer']!=layer):raise ValueError('actual raw stage/rank geometry mismatch')
         revision.add(m['checkpoint_revision']);locks.add(m['checkpoint_lock_sha256'])
         files={}
@@ -41,6 +44,7 @@ def main():
     ap.add_argument('--banks',type=Path,required=True);ap.add_argument('--rank',type=int,choices=range(8),required=True)
     ap.add_argument('--snapshot',type=Path);ap.add_argument('--attention-contract',type=Path)
     ap.add_argument('--lowering-commit');ap.add_argument('--out',type=Path)
+    ap.add_argument('--selected-identity',type=Path,help='pinned current-candidate loader identities; proposal only')
     ap.add_argument('--inventory-only',action='store_true');a=ap.parse_args()
     inv=inventory(a.banks,a.rank)
     if a.inventory_only:print(json.dumps(inv));return 0 if inv['status']=='ACTUAL36_PLUS_HEAD_PRESENT' else 2
@@ -92,6 +96,11 @@ def main():
             for k in range(4):
                 name=f'table_s{sid}_m{k}.viamap.hex';p=masks/name
                 p.write_text(''.join(f'{x:0532x}\n'for x in P.physical_rows(words,k)));hashes[name]=sha(p)
+        if a.selected_identity:
+            import table_roms as T
+            identity=json.loads(a.selected_identity.read_text())
+            dump(temp/'selected_source_identity.json',identity)
+            dump(temp/'physical_mask_assignment.json',T.physical_assignment(identity,hashes))
         receipt=dict(schema='opentallas.qwen.recovered-native-rank-tables.v1',status='COMPLETE_GENUINE_SOURCE_TABLES_CANDIDATE_ONLY',
             rank=a.rank,actual_stages=37,images=hashes,manifest_sha256=sha(temp/'mu_table_input.json'),
             source_commit=a.lowering_commit,raw_inventory_sha256=sha(temp/'raw_inventory.json'),

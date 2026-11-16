@@ -37,6 +37,7 @@ def main():
                  '../venv/bin/python','tools/qwen_code_rom/lower_recovered_rank.py',
                  '--banks','../banks_native','--rank',str(rank),'--snapshot','../checkpoint/b968826d9c46dd6066d109eabc6255188de91218',
                  '--attention-contract','results/rtl/qc_rope_boundary_1116/attention_owner_candidate.json',
+                 '--selected-identity','results/token_pass/qwen_head_local4_1116/selected_source_identity.json',
                  '--lowering-commit',a.source_commit,'--out','../tables_candidate1116/rank'+str(rank)]
         with (a.out/f'rank{rank}.log').open('w')as log:
             p=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT)
