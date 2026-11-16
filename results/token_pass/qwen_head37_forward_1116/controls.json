@@ -35,6 +35,11 @@
     "reason": "actual source-complete TT parent has not selected the candidate CTLM body"
   },
   {
+    "control": "global_selection_rejects_head_only_coupon",
+    "caught": true,
+    "reason": "global stage37 selection rejects partial masks: actual transformer stages1..36 are absent"
+  },
+  {
     "control": "wrong_physical_mask_identity",
     "caught": true,
     "reason": "source-selected physical mask identity mismatch sl_E0_stm.u_core.u_tload.u_ld.m0"

@@ -24,9 +24,10 @@
     "internal_loader_done": 92,
     "next_request_admission_interval": 90
   },
-  "paired_selection_controls": 8,
+  "paired_selection_controls": 9,
   "actual_binding_changed": false,
   "global_HEAD_STAGE37_enabled": false,
   "source_complete_TT_parent_selected": false,
-  "remaining": "actual complete TT parent must select candidate CTLM source before binding; final CALR/publication dates and physical tuple adoption remain explicit"
+  "remaining": "actual complete TT parent must select candidate CTLM source before binding; final CALR/publication dates and physical tuple adoption remain explicit",
+  "global_partial_mask_selection": "REJECTED; explicit component-only mode required"
 }

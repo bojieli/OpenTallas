@@ -30,7 +30,7 @@ def flag(entry,body):
     if type(value)is not int or value not in (0,1):raise ValueError('HEAD_STAGE37 must be literal0 or1')
     return value
 
-def validate(selection,*,require_source_complete_tt_parent=False):
+def validate(selection,*,component_only=False,require_source_complete_tt_parent=False):
     if selection.get('schema')!='opentallas.qc-head37-selection.v1':raise ValueError('wrong selection schema')
     ct=selection['ctlm'];body=source(ct);cf=flag(ct,body)
     if cf:
@@ -68,9 +68,29 @@ def validate(selection,*,require_source_complete_tt_parent=False):
         witness=json.loads(Path(selection['native_window']).read_text())
         if witness.get('status')!='PASS_COMPONENT' or witness.get('exact_payload_checks')!=400:
             raise ValueError('native HEAD37 loader positive authority missing')
+        if not component_only:
+            if r.get('complete_transformer_programme')is not True:
+                raise ValueError('global stage37 selection rejects partial masks: actual transformer stages1..36 are absent')
+            import programme_store as P
+            mp=Path(selection['complete_manifest']);full=json.loads(mp.read_text())
+            if hashlib.sha256(mp.read_bytes()).hexdigest()!=r.get('manifest_sha256'):
+                raise ValueError('complete source-table manifest identity differs')
+            P.logical_images(full,head_stage37=True)
+            parent=selection.get('ctlm_parent')
+            if not parent or not selection.get('source_complete_tt_parent_selected',False):
+                raise ValueError('real source-complete TT parent selection is missing')
+            pb=source(parent)
+            if flag(parent,pb)!=1 or 'qfd_dv_cmd_cal_mu_head37'not in pb or '.HEAD_STAGE37(HEAD_STAGE37)'not in pb:
+                raise ValueError('actual TT parent does not select the candidate stage37 calendar source')
+            window=json.loads(Path(selection['loader_windows']).read_text())
+            if window.get('status')!='COMPLETE_SOURCE_SELECTED_LOCAL4_WINDOWS' or window.get('unresolved'):
+                raise ValueError('actual complete loader-window join is missing')
+            if {(v['slice'],v['user'])for v in window['windows']}!={(x,u)for x in range(12)for u in range(4)}:
+                raise ValueError('all48 source-selected per-user loader windows are required')
         if require_source_complete_tt_parent and not selection.get('source_complete_tt_parent_selected',False):
             raise ValueError('actual source-complete TT parent has not selected the candidate CTLM body')
-    return dict(schema='opentallas.qc-head37-selection-verdict.v1',status='DEFAULTS_OFF_COMPATIBLE'if not cf else'SOURCE_PAIR_AND_MASKS_VALID_NOT_INSTALLED',
+    return dict(schema='opentallas.qc-head37-selection-verdict.v1',status='DEFAULTS_OFF_COMPATIBLE'if not cf else('COMPONENT_PAIR_AND_MASKS_VALID_NOT_INSTALLED'if component_only else'COMPLETE_SOURCE_SELECTION_VALID_NOT_INSTALLED'),
+                component_only=component_only,
                 HEAD_STAGE37=cf,loaders=12,numeric_TSLICE_changed=False,
                 source_complete_tt_parent_selected=selection.get('source_complete_tt_parent_selected',False),
                 global_enable=False,physical_adoption=False,
@@ -81,13 +101,13 @@ def resolve(selection,base):
     s=copy.deepcopy(selection)
     for e in [s['ctlm']]+s['loaders']:
         if not Path(e['source']).is_absolute():e['source']=str((base/e['source']).resolve())
-    for k in ['selected_identity','mask_receipt','masks','physical_assignment','native_window']:
+    for k in ['selected_identity','mask_receipt','masks','physical_assignment','native_window','complete_manifest','loader_windows']:
         if k in s and not Path(s[k]).is_absolute():s[k]=str((base/s[k]).resolve())
     return s
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--selection',type=Path,required=True)
-    ap.add_argument('--out',type=Path,required=True);ap.add_argument('--require-source-complete-tt-parent',action='store_true')
-    a=ap.parse_args();r=validate(resolve(json.loads(a.selection.read_text()),a.selection.parent),require_source_complete_tt_parent=a.require_source_complete_tt_parent)
+    ap.add_argument('--out',type=Path,required=True);ap.add_argument('--require-source-complete-tt-parent',action='store_true');ap.add_argument('--component-only',action='store_true',help='explicit partial coupon mode; never global activation')
+    a=ap.parse_args();r=validate(resolve(json.loads(a.selection.read_text()),a.selection.parent),component_only=a.component_only,require_source_complete_tt_parent=a.require_source_complete_tt_parent)
     a.out.write_text(json.dumps(r,indent=2)+'\n');print(r['status'])
 if __name__=='__main__':main()
