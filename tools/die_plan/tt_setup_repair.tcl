@@ -7,10 +7,17 @@
 # write the repaired 4_cts.odb.  env ODB (input), OUT (output, default = ODB), OT_TT_SETUP_MARGIN (ps, default 0), OT_TT_SETUP_ARGS (extra).
 # env OT_TT_SETUP_RC = placement (default, the CTS stage) | grt (5_1_grt.odb: estimate_parasitics -global_routing, the RC basis the TT gate reads;
 # measured on hd_host_e v1k2 by HEAD-HOST-CLOSE-1115: GRT RC -77.72 -> -30.40 ps, placement RC -23.70 -> -5.80 ps).
+# FABLE-FIX-QC-HCFE 11-15 (r228 item 1; lanes/FABLE-PD-QC-S4q8.md section 2), all three keys opt-in, read from the env or the kit config.mk:
+#   OT_TT_SETUP_CSCALE  (grt basis only) multiplies the per-layer C of OT_TT_SETUP_CLAYERS (default M2..M7) for THIS session.  The kit
+#     layer table is the clock-arrival fit; routed signal nets carry more C: QC sle_hc2 S3R a3 reads +2.48 / 0 endpoints at x1.0,
+#     -155 / 314 at x1.4, -194 / 537 at x1.5, routed sign-off -178.75 / 494; S81 bksel fits x1.40.  The repair then sees the routed load.
+#   OT_TT_SETUP_DESIGN=1 runs repair_design (TT slew / cap) before repair_timing: the kit's GRT repair_design is an FF session
+#     (sle_hc2: 6 slew violations there, 465 at TT sign-off).
+#   OT_TT_SETUP_MARGIN  (ps) is now also read from config.mk.
 if {[file exists /work/config.mk]} {
   set fh [open /work/config.mk]
   foreach ln [split [read $fh] "\n"] {
-    if {[regexp {^export\s+(OT_VCLK_TT|LAYER_PARASITICS_FILE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} { set ::env($k) $v }
+    if {[regexp {^export\s+(OT_VCLK_TT|LAYER_PARASITICS_FILE|OT_TT_SETUP_MARGIN|OT_TT_SETUP_CSCALE|OT_TT_SETUP_CLAYERS|OT_TT_SETUP_DESIGN)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} { set ::env($k) $v }
   }
   close $fh
 }
@@ -35,6 +42,29 @@ if {[info exists ::env(OT_VCLK_TT)]} { set_clock_latency -source $::env(OT_VCLK_
 set_propagated_clock $real
 if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} { source $::env(LAYER_PARASITICS_FILE) } else { source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl }
 set ot_tt_rc placement; if {[info exists ::env(OT_TT_SETUP_RC)] && $::env(OT_TT_SETUP_RC) eq "grt"} { set ot_tt_rc grt }
+set ot_tt_cs 1.0
+if {[info exists ::env(OT_TT_SETUP_CSCALE)] && $::env(OT_TT_SETUP_CSCALE) ne ""} {
+  if {![string is double -strict $::env(OT_TT_SETUP_CSCALE)] || $::env(OT_TT_SETUP_CSCALE) <= 0} { error "tt_setup_repair: bad OT_TT_SETUP_CSCALE $::env(OT_TT_SETUP_CSCALE)" }
+  set ot_tt_cs $::env(OT_TT_SETUP_CSCALE)
+}
+if {$ot_tt_rc eq "grt" && $ot_tt_cs != 1.0} {
+  # re-issue the layer table of the file just sourced with C x scale on the signal routing layers (R and vias unchanged)
+  set ot_tt_rcf /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+  if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARASITICS_FILE)]} { set ot_tt_rcf $::env(LAYER_PARASITICS_FILE) }
+  set ot_tt_cl {M2 M3 M4 M5 M6 M7}
+  if {[info exists ::env(OT_TT_SETUP_CLAYERS)] && $::env(OT_TT_SETUP_CLAYERS) ne ""} { set ot_tt_cl [split $::env(OT_TT_SETUP_CLAYERS) ,] }
+  set fh [open $ot_tt_rcf]; set ot_tt_rct [read $fh]; close $fh
+  set ot_tt_cn 0
+  foreach ln [split $ot_tt_rct "\n"] {
+    if {![regexp {^\s*set_layer_rc\s} $ln] || ![regexp {\s-layer\s+(\S+)} $ln -> l] || $l ni $ot_tt_cl} continue
+    if {![regexp {\s-resistance\s+(\S+)} $ln -> r] || ![regexp {\s-capacitance\s+(\S+)} $ln -> c]} continue
+    set_layer_rc -layer $l -resistance $r -capacitance [expr {$c * $ot_tt_cs}]
+    incr ot_tt_cn
+  }
+  if {$ot_tt_cn != [llength $ot_tt_cl]} { error "tt_setup_repair: OT_TT_SETUP_CSCALE found $ot_tt_cn of [llength $ot_tt_cl] layers in $ot_tt_rcf" }
+  puts "OT_TT_SETUP_REPAIR signal C x$ot_tt_cs on $ot_tt_cn layers ($ot_tt_cl) for this session"
+}
+set ot_tt_design [expr {[info exists ::env(OT_TT_SETUP_DESIGN)] && $::env(OT_TT_SETUP_DESIGN) eq "1"}]
 proc ot_tt_est {} {
   global ot_tt_rc
   if {$ot_tt_rc eq "grt"} { estimate_parasitics -global_routing } else { estimate_parasitics -placement }
@@ -50,10 +80,14 @@ lassign [ot_tt_wns before] w0 t0
 set mg 0; if {[info exists ::env(OT_TT_SETUP_MARGIN)] && $::env(OT_TT_SETUP_MARGIN) ne ""} { set mg $::env(OT_TT_SETUP_MARGIN) }
 set extra {}; if {[info exists ::env(OT_TT_SETUP_ARGS)]} { set extra $::env(OT_TT_SETUP_ARGS) }
 set n0 [llength [get_cells *]]
-if {$w0 < $mg} {
+if {$w0 < $mg || $ot_tt_design} {
   # GRT-RC mode works on a routed-guide DB: route the changed nets incrementally (as ORFS wraps repair_timing in the GRT stage) so every
   # new buffer / resized net keeps a guide for detail route; -allow_congestion = the kit's own GRT policy (GRT-0232 class)
   if {$ot_tt_rc eq "grt"} { global_route -start_incremental -allow_congestion }
+  if {$ot_tt_design} {
+    repair_design -verbose
+    ot_tt_wns after_design
+  }
   repair_timing -setup -setup_margin $mg -repair_tns 100 -skip_last_gasp -verbose {*}$extra
   detailed_placement
   if {$ot_tt_rc eq "grt"} {
