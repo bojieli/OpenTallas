@@ -102,6 +102,10 @@ TAG_RE = re.compile(r"\bflow-(\d{8})-([a-z]{2})-(?:head|qc|kv|s81|hbm)\b")
 _LOCK = threading.Lock()
 MISS_ROUNDS = int(os.environ.get("MQ_GATE_MISS_ROUNDS", "3"))     # dir-level rounds for sources a run reports missing
 WHOLE_TOPS = [x for x in os.environ.get("MQ_GATE_WHOLE_TOPS", "rtl").split(",") if x]   # then the whole top dir, these only
+GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", "ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --dir "
+                             "/srv/opentallas-scratch2/claude/mq-gate -- bash /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote "
+                             "{key} 16")                       # '' = gate on the hub
+GATE_REMOTE_TIMEOUT = int(os.environ.get("MQ_GATE_REMOTE_TIMEOUT", "10800"))
 GATE_PAR = int(os.environ.get("MQ_GATE_PAR", "3"))        # `gate` commands at once (11-15 14:3x: 7 lane gates queued behind 1)
 
 
@@ -754,7 +758,7 @@ def gate_cmd(spec):
             return 2
     it = {"key": f"{branch}@{sha[:11]}", "branch": branch, "sha": sha, "id": f"gc-{sha[:10]}"}
     try:
-        res, note = prepare(it, base)
+        res, note = prepare(it, base, remote=False)   # the gate command IS the runner: never re-dispatch
     finally:
         wt_drop(it["id"])
     if res == "GREEN":
@@ -956,7 +960,31 @@ def gate_record(full, base, it):
             + ("" if m == base else f" (main since: no overlap)") + f": {r.get('note', '')}")
 
 
-def prepare(it, base):
+def gate_remote(it, full, base):
+    """run the item's gate on a build host (GATE_REMOTE, ot-run + ot-gate-remote; CLEAN-ALL 11-15 16:0x: hub scratch took
+    5 gate trees, ~15 GB of churn an hour) -> (status, note), or None when the runner could not start (gate it here)"""
+    cmd = GATE_REMOTE.format(key=f"{it['branch'] or '-'}@{full}")
+    try:
+        r = S.run(cmd, shell=True, capture_output=True, text=True, timeout=GATE_REMOTE_TIMEOUT, cwd="/")
+    except S.TimeoutExpired as e:
+        tail = ((e.stdout or b"") if isinstance(e.stdout, bytes) else (e.stdout or "").encode())[-300:].decode(errors="replace")
+        return "INFRA", f"remote gate timed out after {GATE_REMOTE_TIMEOUT // 60} min ({cmd.split()[0]}): {tail}"
+    out = (r.stdout or "") + (r.stderr or "")
+    rec = gate_record(full, base, it)
+    if rec:
+        return "GREEN", "remote " + rec
+    last = [ln for ln in out.splitlines() if re.match(r"(GREEN|RED|INFRA)\b", ln)]
+    if r.returncode in (126, 127) or not last:
+        log(f"{it['key']}: remote gate did not run (rc {r.returncode}: {out.strip()[-200:]}); gating on the hub")
+        return None
+    word, _, rest = last[-1].partition(" ")
+    rest = rest.split(": ", 1)[1] if ": " in rest else rest
+    if word == "GREEN":                                     # GREEN without a usable record (main moved under it): gate here
+        return None
+    return word, "remote: " + rest[:1500]
+
+
+def prepare(it, base, remote=True):
     """fetch + apply + gate in the item's own worktree (parallel part)"""
     try:
         full = fetch_sha(it["branch"], it["sha"])
@@ -978,7 +1006,13 @@ def prepare(it, base):
         it["mode"] = detail
         rec = gate_record(full, base, it)
         if rec:
+            it["note"] = rec                                 # the MERGED post quotes it (drt0255 16:19 quoted its old INFRA)
             return "GREEN", rec
+        if remote and GATE_REMOTE and not DRY:
+            got = gate_remote(it, full, base)
+            if got:
+                it["note"] = got[1]
+                return got
         res, note = gate(it, wt, base)
         it["note"] = note
         return res, note
@@ -986,8 +1020,24 @@ def prepare(it, base):
         return "INFRA", f"{type(e).__name__}: {str(e)[:300]}"
 
 
+def pregate(branch, sha):
+    """start the remote gate for a READY whose stamp is missing or stale (detached; one per sha) -> what was done"""
+    if not GATE_REMOTE or DRY:
+        return "no remote runner; the tick gates it on approval"
+    full = rev(sha) or sha
+    out = MQ / "pregate" / f"{sha}.out"
+    if (MQ / "gates" / f"{full}.json").exists() or out.exists():
+        return "gate record or gate run already there (one gate per sha)"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with open(out, "w") as f:
+        S.Popen(GATE_REMOTE.format(key=f"{branch}@{sha}"), shell=True, stdout=f, stderr=S.STDOUT, stdin=S.DEVNULL, cwd="/",
+                start_new_session=True)
+    return f"gating it on the remote runner (output {out})"
+
+
 def check_ready(text, st):
-    """bounce new READY lines (after st['ready_from']) whose gate stamp is missing or wrong; -> number bounced"""
+    """new READY lines (after st['ready_from']) whose gate stamp is missing or wrong are gated by the queue itself (pregate),
+    never bounced (COORD r178); -> number pre-gated"""
     lines = text.splitlines()
     if "ready_from" not in st:                       # rule goes live: only READYs posted from now on are checked
         st["ready_from"] = len(lines) + 1
@@ -1050,9 +1100,10 @@ def check_ready(text, st):
                     why = f"GATE main={g.group(1)} is {behind} main commits old (limit {GATE_MAX_BEHIND}); rebase on current main"
         seen.add(key)
         if why:
+            # FABLE-FLOW-1600 / COORD r178: never bounce a READY for its stamp; gate it ourselves, once per sha, so the
+            # record is waiting when COORD approves
             n_b += 1
-            queue_post(st, "BOUNCE", m.group(1), f"READY {key} (queue line {n}) bounced before the train: {why}. {GATE_HOW}.")
-            st.setdefault("bounced", {})[bm.group(2)] = why
+            log(f"READY {key} line {n}: {why}; " + pregate(bm.group(1), bm.group(2)))
         else:
             log(f"READY {key} line {n}: gate stamp ok ({g.group(0)})")
     st["ready_seen"] = sorted(seen)[-2000:]
@@ -1074,7 +1125,7 @@ def tick(args):
         try:
             nb = check_ready(text, st)
             if nb:
-                log(f"ready gate: {nb} READY line(s) bounced")
+                log(f"ready gate: {nb} READY line(s) without a usable stamp, gated by the queue")
         except Exception as e:                            # noqa: BLE001 - the gate check never stops the train
             log(f"ready gate check error: {e}")
         flush_posts(st)
