@@ -96,3 +96,29 @@ def test_mtp_programme_writes_actual_result_tag_before_run():
     assert len(frames) == 9
     assert frames[-1]['csr_address'] == 8
     assert next(r['csr_value'] for r in frames if r['csr_address'] == 5) == 0x4321
+
+
+def test_actual_split_host_binding_selects_the_hbc_west_provider():
+    p, o, i, j, t = fixture()
+    p['partition_types']['h']['contents'][0]['module'] = 'ot_s81hd_host_w_core'
+    p['partition_types']['e'] = dict(reset=dict(start_role='bootstrap'),
+        contents=[dict(module='ot_s81hd_host_e_core')])
+    p['partitions'].append(dict(name='host_e', type='e'))
+    for port in p['ports']:
+        if port['id'] == 'i1':
+            port['dst']['part'] = 'host_e'
+    p['ports'].append(dict(id='seam0', src=dict(part='host_e', bus='l1_rx_o'),
+                          dst=dict(part='host', bus='l1_rx_i')))
+    p['lanes'].append(dict(id='seam', ports=['seam0']))
+    p['latency']['lanes']['seam'] = dict(cycles=4)
+    o['parts']['host_e'] = dict(type='e', release=10)
+    o['start']['bootstrap_types'] = ['c', 'e', 'h']
+    t['peer_to_host_frame'] = 7
+    candidate, programme, recipe = compile_programme(p, o, i, j, t, PARAMS)
+    assert recipe['host_part'] == 'host'
+    assert recipe['host_e_part'] == 'host_e'
+    assert recipe['host1_seam_cycles'] == 4
+    assert candidate['partition_types']['h']['contents'][0]['params']['LOCAL_RANK'] == j['rank']
+    assert 'params' not in candidate['partition_types']['e']['contents'][0]
+    assert len(recipe['frames']) == 11
+    assert not recipe['production_transport_qualified']
