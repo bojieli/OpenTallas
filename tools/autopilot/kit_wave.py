@@ -1823,6 +1823,9 @@ def select(rows, cfg, die, state, plan_types=None):
         elif prov_predecessor(d, die, state, r["item"], rec):
             why = ("PROV-RESIGN: the PROVISIONAL kit of this type re-signs (STA only, no re-route) on the signed child "
                    "views (KW-PROV-1)")
+        elif rec and rec.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
+            # SIGNED-TERMINAL-1115: a signed R-MINIMAL record on this plan block is terminal, flow tag or not, retry key or not
+            why = "signed off on this plan block (terminal; a missing flow tag is bookkeeping, never a build)"
         elif rec and rec.get("status") == "ENQUEUED" and not (
                 rec.get("q_status") == "FAIL" and f"{r['item']}@{rec.get('attempt')}" in retry):
             # KIT-TRIAGE-1 11-01: a kit that FAILED in the autopilot queue (route / sign-off) stays ENQUEUED in the
@@ -9053,7 +9056,12 @@ def queue_class(j):
             return "visual", "RUNNING", "", str(j["visual_gate"])[:300]
         return "archive", "RUNNING", "", "signed off; archive + PROVENANCE pending"
     if stt == "SIGNED-UNVERSIONED":
-        return "provenance", "FAIL", "FLOW", "signed off but no flow release tag carries its flow: " + str(j.get("prov_error") or "")[:200]
+        # SIGNED-TERMINAL-1115 (FABLE-FLOW-1350 class 2; OWNER 11-14: count on the R-MINIMAL record alone, no commit / flow tag /
+        # re-sign): an archived R-MINIMAL sign-off ends the item.  The missing flow tag is bookkeeping (autopilot
+        # retry_unversioned / auto_resign), never a FAIL: a FAIL here was an 'ended' attempt that retry_key_decision released
+        # and the wave relaunched (20 items, 60 relaunches on 11-15).
+        return "count", "SIGNED", "", ("signed off (R-MINIMAL), archived " + str(j.get("archive", "")) +
+                                       "; flow tag pending (bookkeeping, terminal): " + str(j.get("prov_error") or "")[:160])
     if stt in ("RUNNING", "") or stt.startswith("WAIT-") or stt in ("ORPHAN", "TRIAL-SIGNED", "WITHDRAWN", "CANCELLED"):
         return ("route" if stt == "RUNNING" else "queue"), (stt or "QUEUED"), "", str((j.get("history") or [[0, 0, ""]])[-1][-1])[:200]
     if stt == "REJECTED":
@@ -10450,6 +10458,8 @@ def retry_key_decision(st, die, item, n):
         except (TypeError, ValueError):
             return 0.0
     last = max(recs, key=lambda r: (started(r), int(r.get("attempt") or 0)))
+    if last.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
+        return False, f"{item} is signed off (terminal): {item}@{n} never releases"
     try:
         ln = int(last.get("attempt") or 0)
         nn = int(n)
