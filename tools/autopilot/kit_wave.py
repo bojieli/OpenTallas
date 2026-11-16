@@ -1651,6 +1651,35 @@ def config_key_check(AP, cfg, st):
                             f"reads: {' '.join(new[:12])}; the setting does nothing (delete it or add its reader)")
 
 
+def retire_superseded_rows(AP, cfg, st, now=None):
+    """RETIRE-1116 (COORD r293): an ENQUEUED row on an event that is not the die's current one, whose queue job already ended FAIL, is retired
+    (CANCELLED class SUPERSEDED, never relaunched) when its (die, item) has a row on the current event, else it is released for a relaunch on the
+    current event (same terminal mark: the wave's select then picks the item on the current event, as it is no longer a live attempt).  SIGNED and RUNNING
+    queue rows are never touched.  Returns (retired, relaunched)."""
+    now = time.time() if now is None else now
+    items = st.get("items") or {}
+    have = {(r.get("die"), r.get("item")) for r in items.values()
+            if (cfg.get("dies") or {}).get(r.get("die"), {}).get("event") and r.get("event") == cfg["dies"][r.get("die")]["event"]}
+    retired = relaunched = 0
+    for r in items.values():
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("status") != "ENQUEUED" or not d.get("event") or not r.get("event") or r.get("event") == d["event"]:
+            continue
+        if str(r.get("q_status") or "").upper() not in ("FAIL", ""):
+            continue
+        if (r.get("die"), r.get("item")) in have:
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="retired", updated=now,
+                     reason=f"SUPERSEDED: retired; event {r.get('event')} is not current ({d['event']}) and the type has a current-event row")
+            retired += 1
+        else:
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="relaunch", updated=now,
+                     reason=f"SUPERSEDED: event {r.get('event')} is not current ({d['event']}); relaunched on the current event")
+            relaunched += 1
+    if (retired or relaunched) and AP is not None:
+        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}")
+    return retired, relaunched
+
+
 def name_stuck_retry_infra(AP, cfg, st, now=None, grace_s=1200):
     """FABLE-FLOW-0445 #5: a RETRY-INFRA row not relaunched within ~2 ticks takes the name of what stops it: SUPERSEDED (its event is not the die's current
     one: terminal CANCELLED), HELD:<class key> (open breaker class), FAIL-KEY (standing fail key), NO-HOST:<why>, else UNEXPLAINED.  Returns {name: n}."""
@@ -10578,6 +10607,7 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE DEDUP step skipped: {type(e).__name__}: {e}")
     try:
         name_stuck_retry_infra(AP, cfg, st)
+        retire_superseded_rows(AP, cfg, st)
         config_key_check(AP, cfg, st)
     except Exception as e:
         AP.log(f"KIT-WAVE retry-infra naming / config-key check skipped: {type(e).__name__}: {e}")
