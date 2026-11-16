@@ -106,3 +106,14 @@ kit-ops-5-curplan-1114 @4c696027e0ef RED (branch alone fails test_kit_wave_compo
   - one gate per sha (skip remote when the tick has a worktree for that sha);
   - gate a READY without a stamp yourself, never bounce it.
 - Force-first script: mq1/tmp/first2.sh pattern (stop timer + service, tick --only, trap restarts timer).
+
+## 2026-11-15 18:1x update
+- r177/r178 train all MERGED (kitrtl 3813f569afe ... drt0255 78697599c68, then noprog-fix, qc-cb-gen ac68, gate-deps-1115b@3956 -> d35f4c5e46d).
+  rt/current was checked equal on all 6 hosts (9afae4e98166, 16:3x). COORD: verify readlink on each host and post the sha after EVERY train.
+- READY claude/mq-gate-deps-1115b @442f26021f2 (GATE main=8989ba7b175 pass=2/2), awaiting approval:
+  - remote-runner tick gating, pregate instead of bounce, gate-tree reaper, mirror hub-only skip, record note.
+  - After it lands, reset state ready_from to ready_from_saved (13902) under the flock. Bounces are OFF via ready_from=1e9 until then (mq1/tmp/noready.py).
+- Ops done: gc.auto=0 / maintenance.auto=false on mq1/repo; playwright in the gate venvs (intel2, epyc2, epyc9); intel2 mirror hub-only.txt.
+  The new ot-gate-remote (reaper) is deployed on epyc2 and epyc9.
+- clksite-qc-snap @7b9953f2d73 MERGE-FAIL is a semantic conflict (TAP_PIN_SNAP default); the lane owns it.
+- The mirror sync died every cycle on the cores-s81 forward until the fix lands; lanes can push to the mirror directly.
