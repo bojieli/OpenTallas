@@ -5,7 +5,7 @@
 // see the same second-edge commands. Payload/counter controls are local kept
 // copies; the row stays in the identical real SRAM. No credits or wait states.
 // Active full-view latency equivalence and reset warmup require measured proof.
-module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
+module qkd_embedding_row_tx_rope #(parameter integer MUT=0, FIX_ROPE_SLOT_GUARD=0)(
  input wire ck,rst_n,fill_begin,
  input wire [17:0] fill_token,input wire [15:0] fill_epoch,input wire [12:0] fill_position,
  input wire word_v,input wire [511:0] word_data,input wire [17:0] word_token,
@@ -163,7 +163,9 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
    end
    if(slot_control[MAIN])begin
     if(n_state[MAIN]==0&&!resident&&MUT!=2)fault<=1;
-    if(!armed_state[MAIN]||n_state[MAIN]==65)fault<=1;
+    // A RoPE frame has header +64 embedding +8 RoPE records: valid slots0..72.
+    // Opt-in correction; default retains the diagnosed legacy slot65 failure.
+    if(!armed_state[MAIN]||n_state[MAIN]==(FIX_ROPE_SLOT_GUARD?73:65))fault<=1;
    end
    if(fill_control[MAIN])begin
     if(armed_state[MAIN]||(n_state[MAIN]!=0&&n_state[MAIN]!=73)||slot_control[MAIN]||ftok_second>=151936)fault<=1;
