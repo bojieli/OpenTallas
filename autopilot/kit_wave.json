@@ -680,7 +680,6 @@
    "pilot_mode": "queue",
    "hold_items": {
     "kv3_hgi_v5": "FABLE stoplist 21:3x (STOPLIST-2120, COORD order; FABLE-CLOSURE-STRATEGY section 4): a6 13 h on superseded event kv102sem_ftgrid; release on the current event",
-    "kv3_pv_v1n*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1546 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v3*": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-1160 ps): no unchanged wave relaunch until KV-102's kvgeom7. Running attempts finish. Lift = delete this key.",
     "kv3_hg": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
     "kv3_hg_v1": "FABLE-PD-KV-0800 (COORD 11-15): do not route the placed kvgeom5 hg builds (stop list); no unchanged hg/hgi relaunch on kvgeom6",
@@ -700,16 +699,6 @@
     "kv3_hgi_v6": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v7": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_hgi_v8": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v1": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v12": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v1n": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v3": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v3n": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v5": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v5n": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v7": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
-    "kv3_pv_v8": "KV-7J-PENDING 11-15 (COORD, KV-102-delta-7j.tsv CHANGED): this type's kit inputs change under kvgeom7j (lanes/R8/plan type); no new launch or retry until 7j adopts, then regenerated fresh. Running attempts finish. Lift = delete this key.",
     "kv3_pv_v2": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
     "kv3_pv_v2n": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
     "kv3_pv_v4": "WAVE-HOLDS-1115 2026-11-15 10:52 PST (FABLE-CLOSURE-STRATEGY 0910 stop list item 8, COORD): no unchanged relaunch of hg/hgi/pv types on kvgeom6 (placed -450 to -1570 ps). Running attempts finish. Lift = delete this key (KV owner posts a changed row). Revert note: dies.qwen_kvsys.hold_items_added_wavehold1115_stop lists the keys.",
@@ -5669,7 +5658,6 @@
     "kv3_io_cor": "lane_result:DRT0255-PROOF io_cor proof route",
     "kv3_io_cor_v1": "lane_result:DRT0255-PROOF io_cor proof route",
     "kv3_hgi_v5": "event_adopt:KV current event",
-    "kv3_pv_v1n*": "event_adopt:kvgeom7",
     "kv3_hgi_v3*": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
     "kv3_hg": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
     "kv3_hg_v1": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
@@ -5689,16 +5677,6 @@
     "kv3_hgi_v6": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
     "kv3_hgi_v7": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
     "kv3_hgi_v8": "lane_result:TYPES-KV-FAIL-1115 pilots (kv3_hgi_v2__cl2862d491 + kv3_hg_v3) CTS report",
-    "kv3_pv": "event_adopt:kvgeom7j",
-    "kv3_pv_v1": "event_adopt:kvgeom7j",
-    "kv3_pv_v12": "event_adopt:kvgeom7j",
-    "kv3_pv_v1n": "event_adopt:kvgeom7j",
-    "kv3_pv_v3": "event_adopt:kvgeom7j",
-    "kv3_pv_v3n": "event_adopt:kvgeom7j",
-    "kv3_pv_v5": "event_adopt:kvgeom7j",
-    "kv3_pv_v5n": "event_adopt:kvgeom7j",
-    "kv3_pv_v7": "event_adopt:kvgeom7j",
-    "kv3_pv_v8": "event_adopt:kvgeom7j",
     "kv3_pv_v2": "lane_ready:KV-101",
     "kv3_pv_v2n": "lane_ready:KV-101",
     "kv3_pv_v4": "lane_ready:KV-101",
@@ -7766,7 +7744,6 @@
     "ot_s81sl_leaf__t37": "WAVE-HOLDS-1115 2026-11-15 15:20 PST (COORD r172 prep, DIE-S81-92 + S81-SVC-SYNTH-1115): sdc_lint / kit_preflight core-tap class: this B6gE type still carries the stale tap_offset table (core tap windows vs plan early); gen fails sdc_lint. Hold until G1d adopts (rows/s81_tapoffset_drop_noncol.json). Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t39": "WAVE-HOLDS-1115 2026-11-15 15:20 PST (COORD r172 prep, DIE-S81-92 + S81-SVC-SYNTH-1115): sdc_lint / kit_preflight core-tap class: this B6gE type still carries the stale tap_offset table (core tap windows vs plan early); gen fails sdc_lint. Hold until G1d adopts (rows/s81_tapoffset_drop_noncol.json). Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t40__cl86ea32b3": "WAVE-HOLDS-1115 2026-11-15 15:20 PST (COORD r172 prep, DIE-S81-92 + S81-SVC-SYNTH-1115): sdc_lint / kit_preflight core-tap class: this B6gE type still carries the stale tap_offset table (core tap windows vs plan early); gen fails sdc_lint. Hold until G1d adopts (rows/s81_tapoffset_drop_noncol.json). Running attempts finish. Lift = delete this key.",
-    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": "WAVE-HOLDS-1115 2026-11-15 15:20 PST (COORD r172 prep, DIE-S81-92 + S81-SVC-SYNTH-1115): sdc_lint / kit_preflight core-tap class: this B6gE type still carries the stale tap_offset table (core tap windows vs plan early); gen fails sdc_lint. Hold until G1d adopts (rows/s81_tapoffset_drop_noncol.json). Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t40__clf8bbdae1": "WAVE-HOLDS-1115 2026-11-15 15:20 PST (COORD r172 prep, DIE-S81-92 + S81-SVC-SYNTH-1115): sdc_lint / kit_preflight core-tap class: this B6gE type still carries the stale tap_offset table (core tap windows vs plan early); gen fails sdc_lint. Hold until G1d adopts (rows/s81_tapoffset_drop_noncol.json). Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t41": "WAVE-HOLDS-1115 2026-11-15 15:20 PST (COORD r172 prep, DIE-S81-92 + S81-SVC-SYNTH-1115): sdc_lint / kit_preflight core-tap class: this B6gE type still carries the stale tap_offset table (core tap windows vs plan early); gen fails sdc_lint. Hold until G1d adopts (rows/s81_tapoffset_drop_noncol.json). Running attempts finish. Lift = delete this key.",
     "ot_s81sl_leaf__t42": "WAVE-HOLDS-1115 2026-11-15 15:20 PST (COORD r172 prep, DIE-S81-92 + S81-SVC-SYNTH-1115): sdc_lint / kit_preflight core-tap class: this B6gE type still carries the stale tap_offset table (core tap windows vs plan early); gen fails sdc_lint. Hold until G1d adopts (rows/s81_tapoffset_drop_noncol.json). Running attempts finish. Lift = delete this key.",
@@ -34655,7 +34632,6 @@
     "ot_s81sl_leaf__t37": "event_adopt:B6gG1d",
     "ot_s81sl_leaf__t39": "event_adopt:B6gG1d",
     "ot_s81sl_leaf__t40__cl86ea32b3": "event_adopt:B6gG1d",
-    "ot_s81sl_leaf__t40__cl86ea32b3__sid5S": "event_adopt:B6gG1d",
     "ot_s81sl_leaf__t40__clf8bbdae1": "event_adopt:B6gG1d",
     "ot_s81sl_leaf__t41": "event_adopt:B6gG1d",
     "ot_s81sl_leaf__t42": "event_adopt:B6gG1d",
@@ -65840,5 +65816,83 @@
     "all already held"
    ]
   ]
+ },
+ "hold_cleanup_wavehold1115_r196": {
+  "time": "2026-11-15 18:19",
+  "before": {
+   "qwen_kvsys": 54,
+   "s81": 481,
+   "s81_head": 4,
+   "qwen_compute": 50,
+   "hbm": 107
+  },
+  "after": {
+   "qwen_kvsys": 43,
+   "s81": 480,
+   "s81_head": 4,
+   "qwen_compute": 50,
+   "hbm": 107
+  },
+  "kv_lifted": [
+   "kv3_pv",
+   "kv3_pv_v1",
+   "kv3_pv_v12",
+   "kv3_pv_v1n",
+   "kv3_pv_v1n*",
+   "kv3_pv_v3",
+   "kv3_pv_v3n",
+   "kv3_pv_v5",
+   "kv3_pv_v5n",
+   "kv3_pv_v7",
+   "kv3_pv_v8"
+  ],
+  "s81_redundant_removed": [
+   "ot_s81sl_leaf__t40__cl86ea32b3__sid5S"
+  ],
+  "checks": {
+   "st_a_v2_still_held": [],
+   "kitrtl_release_on_left": [
+    [
+     "qwen_kvsys",
+     "kv3_hg_v3"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_hgi_v2__cl2862d491"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_hub_Ei"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_hub_Eo"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_hub_Wo"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_pc__cl254f2e73"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_pc__cl5a95b461"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_pc_v1__cl23f6a148"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_pc_v1__cl7f648944"
+    ],
+    [
+     "qwen_kvsys",
+     "kv3_sys_c"
+    ]
+   ]
+  }
  }
 }
