@@ -120,7 +120,9 @@ if LINK_R16:
     LINK_IMAGE = LINK_IMAGE.replace('.svh', '_r16.svh')
 # The OVL source uses the actual RoPE pair image, not an intermediate scalar variant.
 LINK_ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL', '0') == '1'
-if LINK_ROPE_OVL:
+# RoPE payload/calendar selection is independent of the optional OVL transport.
+LINK_ROPE = os.environ.get('OT_KV_ROPE', '0') == '1' or LINK_ROPE_OVL
+if LINK_ROPE:
     LINK_IMAGE = LINK_IMAGE.replace('.svh', '_rope.svh')
 # TOK-QK 10-25 (opt-in, default unset = unchanged): OT_KV_HEAD_PREP_EDGES=<N> = the pair image was compiled with
 # d2d_cal_image_production.sh D2D_HEAD_PREPARE_EDGES=<N> (recurring C->K HEAD_PREP kind-12 slot, RoPE only; the
@@ -219,7 +221,7 @@ LINK_CAL_OFS = image_calendar_offset()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', str(LINK_HOST_STAGES), '--emb-stages', str(LINK_EMB_STAGES), '--ofs', str(LINK_CAL_OFS), '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else []) \
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE else []) \
     + (['--head-prepare-edges', LINK_HEAD_PREP] if LINK_HEAD_PREP else []) \
     + (['--compute-record-txd', LINK_COMPUTE_RECORD_TXD] if LINK_COMPUTE_RECORD_TXD else [])
 #            + --token-path (decompressed in link_calendar)
