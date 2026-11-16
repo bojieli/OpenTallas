@@ -1,4 +1,4 @@
-# Landed from DRT0255-PROOF-1115 variant C3b (/srv/opentallas-scratch2/claude/drt0255-proof/tools/pg_pair_cap.tcl, byte-identical body; C3b: iteration 1 of t37 detail route 0 x DRT-0255).
+# Landed from DRT0255-PROOF-1115 variant C3b (drt0255-proof tools/pg_pair_cap.tcl, byte-identical body; C3b: iteration 1 of t37 detail route 0 x DRT-0255).
 # Sourced last from grt_pre.tcl only with OT_PGCAP=1 (gen env; default off = kits byte-equal).  No file change in the DB: GRT-internal setting.
 # DRT0255-PROOF-1115 variant C (FABLE-PD-DRT-1350 fix 1): per-gcell GRT capacity cut on the PG-pair rows/columns of the
 # PG layers themselves: M6 (horizontal) rows covering an M6 stripe, M5/M7 (vertical) columns covering an M5/M7 stripe.

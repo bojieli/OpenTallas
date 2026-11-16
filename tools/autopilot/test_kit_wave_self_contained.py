@@ -25,6 +25,18 @@ class T(unittest.TestCase):
             rows = [l for l in r.stdout.splitlines() if l.startswith("SELFCONT\t")]
             self.assertEqual(len(rows), 1); self.assertTrue(rows[0].endswith("/srv/opentallas-scratch2/claude/other/y.lef"))
 
+    def test_paths_in_comments_are_not_scanned(self):
+        with tempfile.TemporaryDirectory() as d:
+            K = os.path.join(d, "kit"); os.makedirs(K)
+            open(os.path.join(K, "x.tcl"), "w").write(
+                "# Landed from X (/srv/opentallas-scratch2/claude/drt0255-proof/tools/pg_pair_cap.tcl, byte-identical)\n"
+                "   # indented /srv/a/b/c.tcl\n"
+                "set a 1 ;# trailing /srv/a/b/d.tcl\n"
+                "source /srv/opentallas-scratch2/claude/other/real.tcl\n")
+            r = subprocess.run([sys.executable, "-I", "-c", kw.SELFCONT_PY, K, d], capture_output=True, text=True)
+            rows = [l for l in r.stdout.splitlines() if l.startswith("SELFCONT\t")]
+            self.assertEqual(len(rows), 1, r.stdout); self.assertTrue(rows[0].endswith("/other/real.tcl"))
+
     def test_copy_in(self):
         import tempfile
         with tempfile.TemporaryDirectory() as d:
