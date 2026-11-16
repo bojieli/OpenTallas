@@ -56,11 +56,26 @@
     ],
     "landings": 11,
     "chunks": 89,
-    "added_FF_conservative": 2794,
+    "added_FF_conservative": 2855,
     "added_comb_gate_conservative": 5124,
-    "added_body_proxy_um2": 2308.8888,
-    "note": "Price33localcontrolFF/chunk including kept epoch output registers vs13baseline after possible pruning. Actual fulltop mapped delta still required; no epoch-prune detour."
+    "added_body_proxy_um2": 2326.6764000000003,
+    "note": "Actual J2 LPL12772 vs F2 LPL9917 gives2855FF. Unpruned baseline estimate9978 had61FF already folded; retain that pruning credit. No epoch-prune detour."
   },
   "evidence": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/rx_transport/lpl_chunk",
-  "qualification": "minimum mechanism only; actual source-pinned full-shape synth inventory, reviewed geometry and TT/FF remain required"
+  "qualification": "minimum mechanism only; actual source-pinned full-shape synth inventory, reviewed geometry and TT/FF remain required",
+  "production_mapped_inventory": {
+    "host": "intel2",
+    "path": "/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/rx_transport/J2_inventory/mapped_inventory.json",
+    "J2_total_FF": 40991,
+    "F2_total_FF": 38130,
+    "J2_LPL_FF": 12772,
+    "F2_LPL_FF": 9917,
+    "LPL_added_FF": 2855,
+    "read_chunks": 89,
+    "write_chunks": 89,
+    "read_onehot_FF": 356,
+    "write_onehot_FF": 356,
+    "actual_mapped_SHA256": "412d43fe5c98342e52a3d813b144c157262b4fa6f597dceb65eb09c12e3f208c",
+    "outside_delta": "8 localwrap FF; GrayMSB rp_g3->rp3 rename count0; two non-distinct decoder reset pad FF aftermapping. Source N3 unchanged; model takes no cost credit for these two."
+  }
 }

@@ -5334,7 +5334,15 @@ def s81_rck4_source_contract(cfg, kd, names):
     am = re.search(r"\bmodule\s+ot_s81_kp4_am_face3\b.*?\bendmodule\b", body, re.S)
     assert am and re.search(r"\boutput\s+reg\s*\[\s*8\s*:\s*0\s*\]\s*parts\b", am[0]), (
         "S81 RCK4: actual 9-bit AM_FACE3 register module absent")
+    if re.search(r"\bot_pdie_pma_release_chain\s*#", body):
+        assert re.search(r"\bmodule\s+ot_pdie_pma_release_chain\b", body), (
+            "S81 RCK4: actual default0 boot release module absent; stage current locksafe dependency")
+    empty = "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names
     rpc = "OT_S81_SERDES_RM_RPC8" in names
+    assert not empty or rpc, "S81 LOCAL_EMPTY8 requires RPC8"
+    if empty:
+        assert re.search(r"\bg_empty_local\b", body) and re.search(r"\breg\s+rpw\b", body), (
+            "S81 LOCAL_EMPTY8: actual kept local wrap/empty mechanism absent")
     if rpc:
         assert "OT_S81_SERDES_RST_TREE" in names and "OT_S81_RM_STAGED" not in names, (
             "S81 RCK4 RPC8: requires RST_TREE native _rt caller and no RM_STAGED")
@@ -5342,12 +5350,35 @@ def s81_rck4_source_contract(cfg, kd, names):
         assert rm and all(re.search(pattern, rm[0]) for pattern in (
             r"\bOT_S81_SERDES_RM_RPC8\b", r"\bg_local\b", r"\breg\s*\[\s*2\s*:\s*0\s*\]\s*rpq\b")), (
             "S81 RCK4 RPC8: actual native local read-pointer mechanism absent")
+    chunk = "OT_S81_LPL_CHUNK" in names
+    if chunk:
+        assert all(re.search(r"\bmodule\s+" + module + r"\b", body) for module in
+                   ("ot_pl_land_local_w", "ot_pl_land_local_r")), (
+            "S81 LPL_CHUNK: actual local writer/reader modules absent")
+        assert re.search(r"\bCB\s*=\s*24\b", body), "S81 LPL_CHUNK: actual24-bit chunk shape absent"
     record = {"source_defines": sorted(names), "source_sha256": {
         str(path.relative_to(kd)): _hashlib.sha256(path.read_bytes()).hexdigest() for path in files},
-        "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0},
+        "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0, "LOCAL_EMPTY": 8 if empty else 0},
         "scope": "Actual emitted source guard; synthesized inventory remains required before P&R",
         "RX_added_edges": 4, "TX_added_edges": 0, "RPC_added_edges": 0}
+    if chunk:
+        record["expected_actual_synth_ff"].update(LPL_read_onehot=356, LPL_write_onehot=356)
+        record["expected_local_ring_instances"] = {"read": 89, "write": 89}
     (Path(kd) / "rck4_source_contract.json").write_text(json.dumps(record, indent=2) + "\n")
+
+
+def ft_keep_firm_exports(t):
+    names = []
+    for slot in t.get("ft_slots", []):
+        enabled = slot.get("keep_firm", False)
+        if not isinstance(enabled, bool):
+            raise ValueError("ft_slots.keep_firm must be boolean")
+        if enabled:
+            name = slot.get("name", "")
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+                raise ValueError("unsafe FT keep_firm slot name")
+            names.append(name)
+    return ["export OT_FT_KEEP_FIRM = " + " ".join(names)] if names else []
 
 
 def txl_mid_exports(cfg, kd, env=None, defines=()):
@@ -5362,6 +5393,10 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     env = os.environ if env is None else env
     names = {(d[2:] if d.startswith("-D") else d).split("=", 1)[0] for d in defines}
     rck4 = "OT_S81_RCK_RELAY4" in names
+    am_clock = env.get("OT_S81_RCK_AM_COHORT") == "1"
+    rm_local = env.get("OT_SERDES_RM_LOCAL") == "1"
+    assert not rm_local or rck4, "S81 RM locality requires the actual RCK4 native source profile"
+    assert not am_clock or rck4, "S81 AM cohort requires the actual RCK4 source profile"
     if rck4:
         s81_rck4_source_contract(cfg, kd, names)
     pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
@@ -5375,13 +5410,24 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
     if rck4:
         shutil.copyfile(Path(__file__).with_name("rck_transport_mid.tcl"), Path(kd) / "rck_transport_mid.tcl")
+    post_gpl = "rck_transport_mid.tcl" if rck4 else "txl_mid.tcl"
+    if rm_local:
+        shutil.copyfile(Path(__file__).with_name("serdes_rm_local.tcl"), Path(kd) / "serdes_rm_local.tcl")
+        (Path(kd) / "serdes_post_gpl.tcl").write_text(
+            "source /work/rck_transport_mid.tcl\nsource /work/serdes_rm_local.tcl\n")
+        post_gpl = "serdes_post_gpl.tcl"
+    if am_clock:
+        shutil.copyfile(Path(__file__).with_name("rck_am_cohort.tcl"), Path(kd) / "rck_am_cohort.tcl")
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
             *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
             *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
             *(["# S81 RCK4: source-qualified RX+4 coherent transport; no netlist/clock change",
                "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
                "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
-            "export POST_GLOBAL_PLACE_TCL = /work/" + ("rck_transport_mid.tcl" if rck4 else "txl_mid.tcl")]
+            *(["export OT_S81_RCK_AM_COHORT = 1"] if am_clock else []),
+            *(["export OT_SERDES_RM_LOCAL = 1",
+               "export OT_SERDES_RM_LOCAL_EMPTY8 = " + ("1" if "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names else "0")] if rm_local else []),
+            "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
@@ -5984,6 +6030,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += ft_stage0_exports(t)
+    cfg += ft_keep_firm_exports(t)
     cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)

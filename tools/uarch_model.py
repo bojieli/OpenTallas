@@ -17596,7 +17596,11 @@ def s81_serdes_lpl_chunk_model(chunk_bits=0, dff_body_um2=0.2916):
     # Old pair: writer rq/wc/valid=1+3+4; reader rq/rc/warm=1+3+1.
     # Local pair:21 control plus12 epoch outputs/chunk; kept local hierarchy
     # may retain unused output registers. Price all33 before actual pruning.
-    ff_envelope = 33*count - 13*len(widths) if chunk_bits else 0
+    # Actual F2 mapping folded61 FF beyond the unpruned baseline; retaining
+    # this credit prices the measured current-shape delta rather than assuming
+    # those already-absent baseline registers can fund the new local state.
+    baseline_pruning_credit = 61 if chunk_bits else 0
+    ff_envelope = 33*count - 13*len(widths) + baseline_pruning_credit if chunk_bits else 0
     # Six elementary gates per additional counter bit, plus sixteen for
     # selected-valid8, write-valid4 and write-enable4 per additional chunk.
     # Data AND/OR mux outputs and payload register capacity remain unchanged.
@@ -17622,6 +17626,10 @@ def s81_serdes_lpl_chunk_model(chunk_bits=0, dff_body_um2=0.2916):
         local_select_tracks=depth if chunk_bits else aw,
         control_FF_envelope=33*count if chunk_bits else 13*len(widths),
         baseline_control_FF=13*len(widths),
+        measured_baseline_LPL_FF=9917,
+        measured_chunked_LPL_FF=12772 if chunk_bits else 9917,
+        baseline_pruning_credit_FF=baseline_pruning_credit,
+        baseline_pruning_by_landing=[1,16,1,1,1,1,1,1,1,36,1],
         added_FF_envelope=ff_envelope,
         expected_after_dead_epoch_valid_pruning_added_FF=(14*count-9*len(widths)) if chunk_bits else 0,
         added_comb_generic_gate_envelope=comb_envelope,
@@ -17648,7 +17656,8 @@ def s81_serdes_lpl_chunk_model(chunk_bits=0, dff_body_um2=0.2916):
 def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
                                   span_um=1321.0, corridor_um=48.0,
                                   dff_body_um2=0.2916, boot_release_stages=0,
-                                  lpl_chunk_bits=0, read_local_empty_copies=0):
+                                  lpl_chunk_bits=0, read_local_empty_copies=0,
+                                  am_clock_cohorts=False, rm_control_local=False):
     """Size the opt-in native S81 RX transport and local RM selector before build.
 
     RELAY4 carries payload/valid/AM metadata and the reset calendar together.
@@ -17656,6 +17665,10 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
     mapped cells, CTS/repair overhead and full-shape throughput remain measured
     gates. This candidate does not activate any released rate or plan row.
     """
+    if not isinstance(rm_control_local, bool) or (rm_control_local and read_pointer_copies != 8):
+        raise ValueError("RM control placement requires the eight local read pointers")
+    if not isinstance(am_clock_cohorts, bool) or (am_clock_cohorts and relay_stages != 4):
+        raise ValueError("AM clock cohorts require the four-stage native RX candidate")
     if read_local_empty_copies not in (0, 8) or (read_local_empty_copies and read_pointer_copies != 8):
         raise ValueError("local empty candidate is 0 or 8 and requires all 8 local read pointers")
     if boot_release_stages not in (0, 3):
@@ -17686,6 +17699,16 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
             + (["OT_S81_SERDES_RM_RPC8"] if rm_ff else [])
             + (["OT_S81_LPL_CHUNK"] if lpl_chunk_bits else [])
             + (["OT_S81_SERDES_RM_LOCAL_EMPTY8"] if read_local_empty_copies else []),
+        physical_options=dict(OT_S81_RCK_AM_COHORT=int(am_clock_cohorts),
+            OT_SERDES_RM_LOCAL=int(rm_control_local)),
+        RM_control_placement=dict(enabled=rm_control_local, added_FF=0, added_data_edges=0,
+            existing_FF_scope=(58 if empty_ff else 50) if rm_control_local else 0,
+            native_bank_clock_regs=69 if empty_ff else 68,
+            global_reset_contract_unchanged=True, wclk_and_write_state_unchanged=True,
+            root_visibility_includes_nonread_and_unknown_loads=True),
+        AM_clock_cohorts=dict(enabled=am_clock_cohorts, groups=3 if am_clock_cohorts else 0,
+            header_FF=12, metadata_FF=9, FF_per_group=7, added_FF=0, added_data_edges=0,
+            gating_root_and_INV_parity_unchanged=True, max_radius_um=30, existing_leaf_cap_policy=True),
         lpl_chunking=lpl,
         local_empty=dict(default_off=True, copies=read_local_empty_copies,
             added_wrap_FF=empty_ff, added_clock_reset_sinks=empty_ff,
