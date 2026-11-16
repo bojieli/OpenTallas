@@ -1,0 +1,641 @@
+{
+  "schema": "opentallas.qc.su_normalized_successor_bundle.v1",
+  "status": "PROSPECTIVE_NOT_BIND_OR_ROUTE_READY",
+  "base_plan": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/finalK/zz_s29_qc103_s4q9k.json",
+  "base_plan_sha256": "f7dc230bf72360b98a37f050d3aa16faf5174c5d0c516a21c5ce90b73e64b805",
+  "base_bind": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/bind/bind_s29q103S4Q9JBQL",
+  "normalization": {
+    "native_MIF1_extra": 1,
+    "transport_target": 43,
+    "MEMORY_READ_EXTRA": 44,
+    "SEGMENTED_MEMORY_DELAY": 1,
+    "field_contract": "All480fieldloops from actualL including head0 sharedWROM launch correction; receiver-only pad; bit0 word skew explicitly retained"
+  },
+  "old_views_immutable": {
+    "qfd_qc_su_lane_w_l0": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l0/qfd_qc_su_lane_w_l0.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l0/qfd_qc_su_lane_w_l0_tt.lib",
+      "pins_file": "cores/su/slw_su_l0_u_lane0_pins.json"
+    },
+    "qfd_qc_su_lane_w_l1": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l1/qfd_qc_su_lane_w_l1.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l1/qfd_qc_su_lane_w_l1_tt.lib",
+      "pins_file": "cores/su/slw_su_l0_u_lane1_pins.json"
+    },
+    "qfd_qc_su_lane_w_l2": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l2/qfd_qc_su_lane_w_l2.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l2/qfd_qc_su_lane_w_l2_tt.lib",
+      "pins_file": "cores/su/slw_su_l0_u_lane2_pins.json"
+    },
+    "qfd_qc_su_lane_w_l3": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l3/qfd_qc_su_lane_w_l3.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l3/qfd_qc_su_lane_w_l3_tt.lib",
+      "pins_file": "cores/su/slw_su_l0_u_lane3_pins.json"
+    },
+    "qfd_qc_su_lane_w_l4": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l4/qfd_qc_su_lane_w_l4.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l4/qfd_qc_su_lane_w_l4_tt.lib",
+      "pins_file": "cores/su/slw_su_l1_u_lane4_pins.json"
+    },
+    "qfd_qc_su_lane_w_l5": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l5/qfd_qc_su_lane_w_l5.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l5/qfd_qc_su_lane_w_l5_tt.lib",
+      "pins_file": "cores/su/slw_su_l1_u_lane5_pins.json"
+    },
+    "qfd_qc_su_lane_w_l6": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l6/qfd_qc_su_lane_w_l6.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l6/qfd_qc_su_lane_w_l6_tt.lib",
+      "pins_file": "cores/su/slw_su_l1_u_lane6_pins.json"
+    },
+    "qfd_qc_su_lane_w_l7": {
+      "lef": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l7/qfd_qc_su_lane_w_l7.lef",
+      "lib": "physical/die_plan/qwen_compute/qcviews_1111/views/qfd_qc_su_lane_w_l7/qfd_qc_su_lane_w_l7_tt.lib",
+      "pins_file": "cores/su/slw_su_l1_u_lane7_pins.json"
+    }
+  },
+  "typed_group_contracts": [
+    {
+      "partition_type": "sle_su_l0__cl7a55c676",
+      "source_partition": "sl_E0_su_l0",
+      "inst": "u_lane0",
+      "old_module": "qfd_qc_su_lane_w_l0",
+      "new_module": "qfd_qc_su_lane_w_l0_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+      "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c"
+    },
+    {
+      "partition_type": "sle_su_l0__cl7a55c676",
+      "source_partition": "sl_E0_su_l0",
+      "inst": "u_lane1",
+      "old_module": "qfd_qc_su_lane_w_l1",
+      "new_module": "qfd_qc_su_lane_w_l1_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l1.sv",
+      "reference_sha256": "5cb6417d31e4b8f3784d1ef8ce80f8ce00508a2c86fd262b6f611effd12278d4"
+    },
+    {
+      "partition_type": "sle_su_l0__cl7a55c676",
+      "source_partition": "sl_E0_su_l0",
+      "inst": "u_lane2",
+      "old_module": "qfd_qc_su_lane_w_l2",
+      "new_module": "qfd_qc_su_lane_w_l2_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l2.sv",
+      "reference_sha256": "dd5868163180567c29e8dc7363c80bb3ff3d065847bc26d9dbbcdaa792940f2d"
+    },
+    {
+      "partition_type": "sle_su_l0__cl7a55c676",
+      "source_partition": "sl_E0_su_l0",
+      "inst": "u_lane3",
+      "old_module": "qfd_qc_su_lane_w_l3",
+      "new_module": "qfd_qc_su_lane_w_l3_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l3.sv",
+      "reference_sha256": "a316510ca3e951ad3f5b50305e4ab9352f393605cd5310b62cde733f83250e40"
+    },
+    {
+      "partition_type": "sle_su_l1__cl5ea486db",
+      "source_partition": "sl_E0_su_l1",
+      "inst": "u_lane4",
+      "old_module": "qfd_qc_su_lane_w_l4",
+      "new_module": "qfd_qc_su_lane_w_l4_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l4.sv",
+      "reference_sha256": "c7ab6dd6fb314c382be1b1ec7e928870deb34de88481773bf55b255a3153d877"
+    },
+    {
+      "partition_type": "sle_su_l1__cl5ea486db",
+      "source_partition": "sl_E0_su_l1",
+      "inst": "u_lane5",
+      "old_module": "qfd_qc_su_lane_w_l5",
+      "new_module": "qfd_qc_su_lane_w_l5_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l5.sv",
+      "reference_sha256": "ac5b59adc4c9710a84c9258de16031e78517ff22262e03bdd771b6a8726a89bb"
+    },
+    {
+      "partition_type": "sle_su_l1__cl5ea486db",
+      "source_partition": "sl_E0_su_l1",
+      "inst": "u_lane6",
+      "old_module": "qfd_qc_su_lane_w_l6",
+      "new_module": "qfd_qc_su_lane_w_l6_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l6.sv",
+      "reference_sha256": "c8f9bcc04d4c12e962ceb2ac6f36099d20455111ef8e7b2bfdaa5dad847f99e4"
+    },
+    {
+      "partition_type": "sle_su_l1__cl5ea486db",
+      "source_partition": "sl_E0_su_l1",
+      "inst": "u_lane7",
+      "old_module": "qfd_qc_su_lane_w_l7",
+      "new_module": "qfd_qc_su_lane_w_l7_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l7.sv",
+      "reference_sha256": "2261203cfa8d718ca04bed227ffe3fd018fafdf76fa049c316533fd786e40779"
+    },
+    {
+      "partition_type": "sle_su_l1__clc6d66f5b",
+      "source_partition": "sl_E1_su_l1",
+      "inst": "u_lane4",
+      "old_module": "qfd_qc_su_lane_w_l4",
+      "new_module": "qfd_qc_su_lane_w_l4_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l4.sv",
+      "reference_sha256": "c7ab6dd6fb314c382be1b1ec7e928870deb34de88481773bf55b255a3153d877"
+    },
+    {
+      "partition_type": "sle_su_l1__clc6d66f5b",
+      "source_partition": "sl_E1_su_l1",
+      "inst": "u_lane5",
+      "old_module": "qfd_qc_su_lane_w_l5",
+      "new_module": "qfd_qc_su_lane_w_l5_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l5.sv",
+      "reference_sha256": "ac5b59adc4c9710a84c9258de16031e78517ff22262e03bdd771b6a8726a89bb"
+    },
+    {
+      "partition_type": "sle_su_l1__clc6d66f5b",
+      "source_partition": "sl_E1_su_l1",
+      "inst": "u_lane6",
+      "old_module": "qfd_qc_su_lane_w_l6",
+      "new_module": "qfd_qc_su_lane_w_l6_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l6.sv",
+      "reference_sha256": "c8f9bcc04d4c12e962ceb2ac6f36099d20455111ef8e7b2bfdaa5dad847f99e4"
+    },
+    {
+      "partition_type": "sle_su_l1__clc6d66f5b",
+      "source_partition": "sl_E1_su_l1",
+      "inst": "u_lane7",
+      "old_module": "qfd_qc_su_lane_w_l7",
+      "new_module": "qfd_qc_su_lane_w_l7_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l7.sv",
+      "reference_sha256": "2261203cfa8d718ca04bed227ffe3fd018fafdf76fa049c316533fd786e40779"
+    },
+    {
+      "partition_type": "sle_su_l0__cl086d85ba",
+      "source_partition": "sl_E5_su_l0",
+      "inst": "u_lane0",
+      "old_module": "qfd_qc_su_lane_w_l0",
+      "new_module": "qfd_qc_su_lane_w_l0_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+      "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c"
+    },
+    {
+      "partition_type": "sle_su_l0__cl086d85ba",
+      "source_partition": "sl_E5_su_l0",
+      "inst": "u_lane1",
+      "old_module": "qfd_qc_su_lane_w_l1",
+      "new_module": "qfd_qc_su_lane_w_l1_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l1.sv",
+      "reference_sha256": "5cb6417d31e4b8f3784d1ef8ce80f8ce00508a2c86fd262b6f611effd12278d4"
+    },
+    {
+      "partition_type": "sle_su_l0__cl086d85ba",
+      "source_partition": "sl_E5_su_l0",
+      "inst": "u_lane2",
+      "old_module": "qfd_qc_su_lane_w_l2",
+      "new_module": "qfd_qc_su_lane_w_l2_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l2.sv",
+      "reference_sha256": "dd5868163180567c29e8dc7363c80bb3ff3d065847bc26d9dbbcdaa792940f2d"
+    },
+    {
+      "partition_type": "sle_su_l0__cl086d85ba",
+      "source_partition": "sl_E5_su_l0",
+      "inst": "u_lane3",
+      "old_module": "qfd_qc_su_lane_w_l3",
+      "new_module": "qfd_qc_su_lane_w_l3_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l3.sv",
+      "reference_sha256": "a316510ca3e951ad3f5b50305e4ab9352f393605cd5310b62cde733f83250e40"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1a1c1f8f",
+      "source_partition": "sl_W0_su_l0",
+      "inst": "u_lane0",
+      "old_module": "qfd_qc_su_lane_w_l0",
+      "new_module": "qfd_qc_su_lane_w_l0_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+      "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1a1c1f8f",
+      "source_partition": "sl_W0_su_l0",
+      "inst": "u_lane1",
+      "old_module": "qfd_qc_su_lane_w_l1",
+      "new_module": "qfd_qc_su_lane_w_l1_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l1.sv",
+      "reference_sha256": "5cb6417d31e4b8f3784d1ef8ce80f8ce00508a2c86fd262b6f611effd12278d4"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1a1c1f8f",
+      "source_partition": "sl_W0_su_l0",
+      "inst": "u_lane2",
+      "old_module": "qfd_qc_su_lane_w_l2",
+      "new_module": "qfd_qc_su_lane_w_l2_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l2.sv",
+      "reference_sha256": "dd5868163180567c29e8dc7363c80bb3ff3d065847bc26d9dbbcdaa792940f2d"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1a1c1f8f",
+      "source_partition": "sl_W0_su_l0",
+      "inst": "u_lane3",
+      "old_module": "qfd_qc_su_lane_w_l3",
+      "new_module": "qfd_qc_su_lane_w_l3_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l3.sv",
+      "reference_sha256": "a316510ca3e951ad3f5b50305e4ab9352f393605cd5310b62cde733f83250e40"
+    },
+    {
+      "partition_type": "slw_su_l1__cla2a78701",
+      "source_partition": "sl_W0_su_l1",
+      "inst": "u_lane4",
+      "old_module": "qfd_qc_su_lane_w_l4",
+      "new_module": "qfd_qc_su_lane_w_l4_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l4.sv",
+      "reference_sha256": "c7ab6dd6fb314c382be1b1ec7e928870deb34de88481773bf55b255a3153d877"
+    },
+    {
+      "partition_type": "slw_su_l1__cla2a78701",
+      "source_partition": "sl_W0_su_l1",
+      "inst": "u_lane5",
+      "old_module": "qfd_qc_su_lane_w_l5",
+      "new_module": "qfd_qc_su_lane_w_l5_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l5.sv",
+      "reference_sha256": "ac5b59adc4c9710a84c9258de16031e78517ff22262e03bdd771b6a8726a89bb"
+    },
+    {
+      "partition_type": "slw_su_l1__cla2a78701",
+      "source_partition": "sl_W0_su_l1",
+      "inst": "u_lane6",
+      "old_module": "qfd_qc_su_lane_w_l6",
+      "new_module": "qfd_qc_su_lane_w_l6_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l6.sv",
+      "reference_sha256": "c8f9bcc04d4c12e962ceb2ac6f36099d20455111ef8e7b2bfdaa5dad847f99e4"
+    },
+    {
+      "partition_type": "slw_su_l1__cla2a78701",
+      "source_partition": "sl_W0_su_l1",
+      "inst": "u_lane7",
+      "old_module": "qfd_qc_su_lane_w_l7",
+      "new_module": "qfd_qc_su_lane_w_l7_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l7.sv",
+      "reference_sha256": "2261203cfa8d718ca04bed227ffe3fd018fafdf76fa049c316533fd786e40779"
+    },
+    {
+      "partition_type": "slw_su_l0__cl76fb247e",
+      "source_partition": "sl_W1_su_l0",
+      "inst": "u_lane0",
+      "old_module": "qfd_qc_su_lane_w_l0",
+      "new_module": "qfd_qc_su_lane_w_l0_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+      "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c"
+    },
+    {
+      "partition_type": "slw_su_l0__cl76fb247e",
+      "source_partition": "sl_W1_su_l0",
+      "inst": "u_lane1",
+      "old_module": "qfd_qc_su_lane_w_l1",
+      "new_module": "qfd_qc_su_lane_w_l1_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l1.sv",
+      "reference_sha256": "5cb6417d31e4b8f3784d1ef8ce80f8ce00508a2c86fd262b6f611effd12278d4"
+    },
+    {
+      "partition_type": "slw_su_l0__cl76fb247e",
+      "source_partition": "sl_W1_su_l0",
+      "inst": "u_lane2",
+      "old_module": "qfd_qc_su_lane_w_l2",
+      "new_module": "qfd_qc_su_lane_w_l2_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l2.sv",
+      "reference_sha256": "dd5868163180567c29e8dc7363c80bb3ff3d065847bc26d9dbbcdaa792940f2d"
+    },
+    {
+      "partition_type": "slw_su_l0__cl76fb247e",
+      "source_partition": "sl_W1_su_l0",
+      "inst": "u_lane3",
+      "old_module": "qfd_qc_su_lane_w_l3",
+      "new_module": "qfd_qc_su_lane_w_l3_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l3.sv",
+      "reference_sha256": "a316510ca3e951ad3f5b50305e4ab9352f393605cd5310b62cde733f83250e40"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1e5219ea",
+      "source_partition": "sl_W2_su_l0",
+      "inst": "u_lane0",
+      "old_module": "qfd_qc_su_lane_w_l0",
+      "new_module": "qfd_qc_su_lane_w_l0_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+      "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1e5219ea",
+      "source_partition": "sl_W2_su_l0",
+      "inst": "u_lane1",
+      "old_module": "qfd_qc_su_lane_w_l1",
+      "new_module": "qfd_qc_su_lane_w_l1_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l1.sv",
+      "reference_sha256": "5cb6417d31e4b8f3784d1ef8ce80f8ce00508a2c86fd262b6f611effd12278d4"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1e5219ea",
+      "source_partition": "sl_W2_su_l0",
+      "inst": "u_lane2",
+      "old_module": "qfd_qc_su_lane_w_l2",
+      "new_module": "qfd_qc_su_lane_w_l2_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l2.sv",
+      "reference_sha256": "dd5868163180567c29e8dc7363c80bb3ff3d065847bc26d9dbbcdaa792940f2d"
+    },
+    {
+      "partition_type": "slw_su_l0__cl1e5219ea",
+      "source_partition": "sl_W2_su_l0",
+      "inst": "u_lane3",
+      "old_module": "qfd_qc_su_lane_w_l3",
+      "new_module": "qfd_qc_su_lane_w_l3_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l3.sv",
+      "reference_sha256": "a316510ca3e951ad3f5b50305e4ab9352f393605cd5310b62cde733f83250e40"
+    },
+    {
+      "partition_type": "slw_su_l1__clcc9d0155",
+      "source_partition": "sl_W5_su_l1",
+      "inst": "u_lane4",
+      "old_module": "qfd_qc_su_lane_w_l4",
+      "new_module": "qfd_qc_su_lane_w_l4_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l4.sv",
+      "reference_sha256": "c7ab6dd6fb314c382be1b1ec7e928870deb34de88481773bf55b255a3153d877"
+    },
+    {
+      "partition_type": "slw_su_l1__clcc9d0155",
+      "source_partition": "sl_W5_su_l1",
+      "inst": "u_lane5",
+      "old_module": "qfd_qc_su_lane_w_l5",
+      "new_module": "qfd_qc_su_lane_w_l5_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l5.sv",
+      "reference_sha256": "ac5b59adc4c9710a84c9258de16031e78517ff22262e03bdd771b6a8726a89bb"
+    },
+    {
+      "partition_type": "slw_su_l1__clcc9d0155",
+      "source_partition": "sl_W5_su_l1",
+      "inst": "u_lane6",
+      "old_module": "qfd_qc_su_lane_w_l6",
+      "new_module": "qfd_qc_su_lane_w_l6_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l6.sv",
+      "reference_sha256": "c8f9bcc04d4c12e962ceb2ac6f36099d20455111ef8e7b2bfdaa5dad847f99e4"
+    },
+    {
+      "partition_type": "slw_su_l1__clcc9d0155",
+      "source_partition": "sl_W5_su_l1",
+      "inst": "u_lane7",
+      "old_module": "qfd_qc_su_lane_w_l7",
+      "new_module": "qfd_qc_su_lane_w_l7_m44s1",
+      "MEMORY_READ_EXTRA": 44,
+      "SEGMENTED_MEMORY_DELAY": 1,
+      "memory_alignment": 3,
+      "kv_wr_pipe": 1,
+      "reference_rtl": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/normalize43_successor/reference_rtl/qfd_qc_su_lane_w_l7.sv",
+      "reference_sha256": "2261203cfa8d718ca04bed227ffe3fd018fafdf76fa049c316533fd786e40779"
+    }
+  ],
+  "per_type": {
+    "sle_su_l0__cl7a55c676": {
+      "new_relay_sites": 512,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_E0_su_l0",
+      "equivalent_partitions": [
+        "sl_E0_su_l0",
+        "sl_E1_su_l0",
+        "sl_E2_su_l0",
+        "sl_E3_su_l0",
+        "sl_E4_su_l0"
+      ],
+      "alias_semantics_sha256": "4d375ba59242dbce32c4786bbfd2044587397c91eedffd7d1dbbfee66719ae85"
+    },
+    "sle_su_l1__cl5ea486db": {
+      "new_relay_sites": 7552,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_E0_su_l1",
+      "equivalent_partitions": [
+        "sl_E0_su_l1"
+      ],
+      "alias_semantics_sha256": "5c063f6b52842d38b9949b8be97ad95962560723b2e93fbc9e385af6b2974857"
+    },
+    "sle_su_l1__clc6d66f5b": {
+      "new_relay_sites": 7552,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_E1_su_l1",
+      "equivalent_partitions": [
+        "sl_E1_su_l1",
+        "sl_E2_su_l1",
+        "sl_E3_su_l1",
+        "sl_E4_su_l1",
+        "sl_E5_su_l1"
+      ],
+      "alias_semantics_sha256": "5c063f6b52842d38b9949b8be97ad95962560723b2e93fbc9e385af6b2974857"
+    },
+    "sle_su_l0__cl086d85ba": {
+      "new_relay_sites": 512,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_E5_su_l0",
+      "equivalent_partitions": [
+        "sl_E5_su_l0"
+      ],
+      "alias_semantics_sha256": "4d375ba59242dbce32c4786bbfd2044587397c91eedffd7d1dbbfee66719ae85"
+    },
+    "slw_su_l0__cl1a1c1f8f": {
+      "new_relay_sites": 1152,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_W0_su_l0",
+      "equivalent_partitions": [
+        "sl_W0_su_l0"
+      ],
+      "alias_semantics_sha256": "02c19cfc1e49ab60a79c01958ac79ec6afd9c34bc0ee7102a10618218eb27631"
+    },
+    "slw_su_l1__cla2a78701": {
+      "new_relay_sites": 8190,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_W0_su_l1",
+      "equivalent_partitions": [
+        "sl_W0_su_l1",
+        "sl_W1_su_l1",
+        "sl_W2_su_l1",
+        "sl_W3_su_l1",
+        "sl_W4_su_l1"
+      ],
+      "alias_semantics_sha256": "87205b2d611e879e7a3749b8c0fae5641fa2d6cbe5a497eb8e85f602466184d2"
+    },
+    "slw_su_l0__cl76fb247e": {
+      "new_relay_sites": 1152,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_W1_su_l0",
+      "equivalent_partitions": [
+        "sl_W1_su_l0",
+        "sl_W3_su_l0",
+        "sl_W5_su_l0"
+      ],
+      "alias_semantics_sha256": "02c19cfc1e49ab60a79c01958ac79ec6afd9c34bc0ee7102a10618218eb27631"
+    },
+    "slw_su_l0__cl1e5219ea": {
+      "new_relay_sites": 1152,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_W2_su_l0",
+      "equivalent_partitions": [
+        "sl_W2_su_l0",
+        "sl_W4_su_l0"
+      ],
+      "alias_semantics_sha256": "02c19cfc1e49ab60a79c01958ac79ec6afd9c34bc0ee7102a10618218eb27631"
+    },
+    "slw_su_l1__clcc9d0155": {
+      "new_relay_sites": 8190,
+      "retained_relay_sites": 0,
+      "source_partition": "sl_W5_su_l1",
+      "equivalent_partitions": [
+        "sl_W5_su_l1"
+      ],
+      "alias_semantics_sha256": "87205b2d611e879e7a3749b8c0fae5641fa2d6cbe5a497eb8e85f602466184d2"
+    }
+  },
+  "retained_exact_plan_keys": [
+    "clock",
+    "reset",
+    "lanes",
+    "ports",
+    "latency",
+    "latency_groups"
+  ],
+  "ready_blockers": [
+    "Source ABI/segmented flag support gate",
+    "Actual typed group master RTL with MEM44seg1 exactness",
+    "New group physical view/outline/pins and setup/hold/LEC",
+    "Successor coherent bind derives all actual absolute field prices",
+    "Placement rows/unlocated glue/PDN/CTS including proposed local branches; reservation sites not legal placement proof"
+  ],
+  "new_FF_24_partitions": 104436,
+  "base_clock_status": "UNQUALIFIED: Cclock finalSTA_C has io_serdes_2->c_W5_bf_01 TT-107.1ps FF-67.0ps; worker physical owns correction. Preserved three K clock keys only as prospective inputs, never clockPASS/adoption."
+}
