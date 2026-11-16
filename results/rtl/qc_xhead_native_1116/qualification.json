@@ -42,8 +42,8 @@
   },
   "compiler_ages": {
     "x_tap": 0,
-    "d_head": 20,
-    "read_tail": -5,
+    "d_head": 21,
+    "read_tail": -6,
     "consumer": {
       "qkv": {
         "go_lag": -3,
@@ -63,7 +63,7 @@
       }
     }
   },
-  "conversion": "directcoupon hr_q is afterFDN1; slicehr input ages: d_head19+1=20, xpflead=local+1, golag=local-1; receiverposedge sampling",
+  "conversion": "directcoupon hr_q is afterFDN1; actual GO receiver20+FDN1=21; firstXtag direct19, lastXtag=GO+read_span-6. Initial20/-5 split usedfirstXtag; correctedwithoutchangingreadend. XPFlead=local+1,GOlag=local-1.",
   "source_capsule_sha256": "688eb12c12aaa0dd88642ff3909e8eafd1a968fac4256718389b084a4da19736",
   "native_base_only": true,
   "bound_transport_qualified": false,

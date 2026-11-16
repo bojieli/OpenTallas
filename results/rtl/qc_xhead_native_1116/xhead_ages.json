@@ -4,8 +4,8 @@
   "slice_rtl": "s8",
   "source_scope": "native_zero_parent_transport",
   "x_tap": 0,
-  "d_head": 20,
-  "read_tail": -5,
+  "d_head": 21,
+  "read_tail": -6,
   "go_lag": -3,
   "xpf_lead": 4,
   "consumer": {
@@ -38,5 +38,13 @@
     "coupon_actual.sv": "43fa6e65467428bb926f0a9315c33838dd0064c2c825f8dbe997639e811f2f3c"
   },
   "qualification": "All48column identities, fourconsumer paired boundaries and GOearly/XPFlate controls;240 actualloweredconsumer coupons; noMACarithmetic or finalphysicaltransport qualification",
-  "tile": null
+  "tile": null,
+  "go_tag_boundary": {
+    "direct_hr_q_to_GO_receiver": 20,
+    "direct_hr_q_to_first_Xtag_receiver": 19,
+    "slice_HR_to_GO_receiver": 21,
+    "FDN": 1,
+    "source": "tb_go_conduit.sv: bit0 GO vs bit515 X tag",
+    "note": "The earlier20/-5 split measured first X tag instead of GO. Read-end sum remains15, so readiness rows and12-edgeDown correction remain unchanged."
+  }
 }
