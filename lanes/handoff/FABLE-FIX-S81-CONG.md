@@ -42,3 +42,8 @@ Updated 2026-11-16 ~06:30 PST.
 ## Next
 1. Read c_t34 GRT (expect ~16:00 UTC). 2. Route goal on GRT-0 kits (c_t34, c_t47, b_t43, A_t65), sign-off, export
 to AGIdock /archive/opentallas-signed-1114 + rtx-pro. 3. READY-ROWS per type to DIE-S81-92.
+
+## 15:0x UTC result
+- c_t34 GRT FINAL 0 / 0 / 0 (it5 134, it10 7, no NDR restart). READY-ROWS posted (f9fa845).
+- Route goal chained: intel2 ~/fable-fix-s81-cong/chain_route.sh (pid 3359681) waits for grt ot-run pid 723045, then run_kit.sh route on epyc8; log run_c_t34_route.log. Next owner: read DRC / TT setup / FF hold, sign-off, export to AGIdock + rtx-pro.
+- Still open: DIE-S81-92 adoption of t34/t47 rows + svc stamp; t62/t28/t75/t8 row kits (STRIP-O); A_t65 route.
