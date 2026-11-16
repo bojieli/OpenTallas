@@ -1,0 +1,464 @@
+{
+  "schema": "opentallas.die_plan.r8_landing.v1",
+  "die": "qwen_compute",
+  "kind": "su_wrom_word_align",
+  "note": "Successor to L only: W heads4..7 WROM bits1..255 take +2 real destination pad stages to match bit0 on flt lane; metadata GB bits256..499 unchanged. Source L immutable; compose via land_r8_extra and realize/review named R8 pad sites before route.",
+  "members": [
+    {
+      "id": "dvs_W0.u_core.u_sub.u_lrly4.gb[1:255]<-dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W0.u_core.u_sub.u_lrly4",
+      "sink_part": "sl_W0_su_l1",
+      "src_part": "sl_W0_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W0_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_lrly5.gb[1:255]<-dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W0.u_core.u_sub.u_lrly5",
+      "sink_part": "sl_W0_su_l1",
+      "src_part": "sl_W0_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W0_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_lrly6.gb[1:255]<-dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W0.u_core.u_sub.u_lrly6",
+      "sink_part": "sl_W0_su_l1",
+      "src_part": "sl_W0_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W0_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W0.u_core.u_sub.u_lrly7.gb[1:255]<-dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W0.u_core.u_sub.u_lrly7",
+      "sink_part": "sl_W0_su_l1",
+      "src_part": "sl_W0_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W0.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W0_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_lrly4.gb[1:255]<-dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W1.u_core.u_sub.u_lrly4",
+      "sink_part": "sl_W1_su_l1",
+      "src_part": "sl_W1_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W1_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_lrly5.gb[1:255]<-dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W1.u_core.u_sub.u_lrly5",
+      "sink_part": "sl_W1_su_l1",
+      "src_part": "sl_W1_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W1_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_lrly6.gb[1:255]<-dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W1.u_core.u_sub.u_lrly6",
+      "sink_part": "sl_W1_su_l1",
+      "src_part": "sl_W1_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W1_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W1.u_core.u_sub.u_lrly7.gb[1:255]<-dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W1.u_core.u_sub.u_lrly7",
+      "sink_part": "sl_W1_su_l1",
+      "src_part": "sl_W1_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W1.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W1_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_lrly4.gb[1:255]<-dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W2.u_core.u_sub.u_lrly4",
+      "sink_part": "sl_W2_su_l1",
+      "src_part": "sl_W2_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W2_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_lrly5.gb[1:255]<-dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W2.u_core.u_sub.u_lrly5",
+      "sink_part": "sl_W2_su_l1",
+      "src_part": "sl_W2_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W2_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_lrly6.gb[1:255]<-dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W2.u_core.u_sub.u_lrly6",
+      "sink_part": "sl_W2_su_l1",
+      "src_part": "sl_W2_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W2_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W2.u_core.u_sub.u_lrly7.gb[1:255]<-dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W2.u_core.u_sub.u_lrly7",
+      "sink_part": "sl_W2_su_l1",
+      "src_part": "sl_W2_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W2.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W2_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_lrly4.gb[1:255]<-dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W3.u_core.u_sub.u_lrly4",
+      "sink_part": "sl_W3_su_l1",
+      "src_part": "sl_W3_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W3_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_lrly5.gb[1:255]<-dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W3.u_core.u_sub.u_lrly5",
+      "sink_part": "sl_W3_su_l1",
+      "src_part": "sl_W3_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W3_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_lrly6.gb[1:255]<-dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W3.u_core.u_sub.u_lrly6",
+      "sink_part": "sl_W3_su_l1",
+      "src_part": "sl_W3_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W3_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W3.u_core.u_sub.u_lrly7.gb[1:255]<-dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W3.u_core.u_sub.u_lrly7",
+      "sink_part": "sl_W3_su_l1",
+      "src_part": "sl_W3_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W3.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W3_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_lrly4.gb[1:255]<-dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W4.u_core.u_sub.u_lrly4",
+      "sink_part": "sl_W4_su_l1",
+      "src_part": "sl_W4_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W4_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_lrly5.gb[1:255]<-dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W4.u_core.u_sub.u_lrly5",
+      "sink_part": "sl_W4_su_l1",
+      "src_part": "sl_W4_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W4_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_lrly6.gb[1:255]<-dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W4.u_core.u_sub.u_lrly6",
+      "sink_part": "sl_W4_su_l1",
+      "src_part": "sl_W4_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W4_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W4.u_core.u_sub.u_lrly7.gb[1:255]<-dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W4.u_core.u_sub.u_lrly7",
+      "sink_part": "sl_W4_su_l1",
+      "src_part": "sl_W4_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W4.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 19,
+      "pad": 2,
+      "landed": 21,
+      "lane": "sl_W4_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_lrly4.gb[1:255]<-dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W5.u_core.u_sub.u_lrly4",
+      "sink_part": "sl_W5_su_l1",
+      "src_part": "sl_W5_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W5_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_lrly5.gb[1:255]<-dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W5.u_core.u_sub.u_lrly5",
+      "sink_part": "sl_W5_su_l1",
+      "src_part": "sl_W5_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W5_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_lrly6.gb[1:255]<-dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W5.u_core.u_sub.u_lrly6",
+      "sink_part": "sl_W5_su_l1",
+      "src_part": "sl_W5_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W5_su_c__x_su_c_su_l1"
+    },
+    {
+      "id": "dvs_W5.u_core.u_sub.u_lrly7.gb[1:255]<-dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q@0",
+      "sink": "dvs_W5.u_core.u_sub.u_lrly7",
+      "sink_part": "sl_W5_su_l1",
+      "src_part": "sl_W5_su_c",
+      "sink_port": "gb",
+      "sink_bits": [
+        [
+          1,
+          255
+        ]
+      ],
+      "source": "dvs_W5.u_core.u_sub.u_suvm.$procdff$60309.Q",
+      "asbuilt": 0,
+      "bound": 18,
+      "pad": 2,
+      "landed": 20,
+      "lane": "sl_W5_su_c__x_su_c_su_l1"
+    }
+  ]
+}
