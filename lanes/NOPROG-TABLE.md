@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 15:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 15:45 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-DATA': 3, 'YOUNG': 20, 'EXCLUDED': 12, 'KEEP': 1, 'PROGRESS': 7}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-DATA': 3, 'YOUNG': 18, 'EXCLUDED': 12, 'KEEP': 1, 'PROGRESS': 8}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -24,9 +24,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-DATA': 3, 'YOUNG'
 | intel1 | dpkit-kit-2538957 | kit | 5_1_grt | 45.4 | repair_TNS best 343060 last 343060 rows 4 | YOUNG: series started inside the last 6 h |  |
 | intel1 | dpkit-kit-2546869 | kit | 5_1_grt | 45.4 | repair_TNS best 421033 last 421033 rows 7 | YOUNG: series started inside the last 6 h |  |
 | intel1 | dpkit-slw_fe_v1__clfe325744__cldb4efe33-2596195 | slw_fe_v1 | 5_2_route | 45.4 | last meaningful line 0.0 h ago (211/211 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| intel2 | dpkit-serdes__t13-2903576 | serdes__t13 | 3_1_place_gp_skip_io | 0.5 | overflow best 0.2613 last 0.2613 rows 45 | YOUNG: evidence 0.3 h < 7.5 h |  |
-| intel2 | dpkit-serdes__t14-2797952 | serdes__t14 | 3_3_place_gp | 0.6 | overflow best 0.2015 last 0.2015 rows 42 | YOUNG: evidence 0.3 h < 7.5 h |  |
-| intel2 | dpkit-serdes__t1__clb45db5be-3144076 | serdes__t1 | 1_2_yosys | 0.1 | last meaningful line 0.0 h ago (325/325 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
+| intel2 | dpkit-serdes__t13-2903576 | serdes__t13 | 3_3_place_gp | 0.7 | overflow best 0.8611 last 0.8611 rows 17 | YOUNG: evidence 0.2 h < 7.5 h |  |
 | epyc2 | dpkit-cbn_q01__clab6e67f2-2229149 | cbn_q01 | 5_1_grt | 13.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 13.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 3.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -47,3 +45,4 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'NO-DATA': 3, 'YOUNG'
 | epyc2 | kqc-qfd_dv_s8_station_tail1_h16_n9_s10_synth0-250133 | qfd_dv_s8_station_tail1_h16_n9_s10_synth0 | 4_1_cts | 0.2 | repair_TNS best 0 last 0 rows 2 | PROGRESS: repair_TNS reached 0 |  |
 | epyc2 | kqc-qfd_dv_s8_station_tail1_h16_n9_s11_synth0-252560 | qfd_dv_s8_station_tail1_h16_n9_s11_synth0 | 4_1_cts | 0.2 | repair_TNS best 0 last 0 rows 76 | PROGRESS: repair_TNS reached 0 |  |
 | epyc2 | kqc-qfd_dv_s8_station_tail1_h17_n9_s10_synth0-250959 | qfd_dv_s8_station_tail1_h17_n9_s10_synth0 | 4_1_cts | 0.2 | repair_Violations best 0 last 0 rows 1 | PROGRESS: repair_Violations reached 0 |  |
+| intel2 | dpkit-serdes__t14-2797952 | serdes__t14 | 3_5_place_dp | 0.9 | repair_Violations best 0 last 0 rows 6 | PROGRESS: repair_Violations reached 0 |  |
