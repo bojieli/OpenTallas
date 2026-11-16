@@ -316,9 +316,26 @@ def check_tools(tree, max_findings=12):
         if m.error:
             out.append(f"FAIL TOOLS-SYNTAX {m.error}")
     found = []
-    for m in mods.values():
+    all_mods = mods
+    extra_cache = {}
+    for m in all_mods.values():
         if m.tree is None or m.name.startswith("test_") or m.name == "conftest":
             continue
+        # a module that does sys.path.insert(0, <here>/"X") imports X's modules first (ca_region_table -> tools/s81_head/fallback_land.py):
+        # resolve those names in tools/X, not in the same-named sibling of tools/die_plan (a checker false positive on KV 7u/7uh)
+        mods = dict(all_mods)
+        try:
+            src = m.path.read_text()
+        except (OSError, AttributeError, UnicodeDecodeError):
+            src = ""
+        for xd in re.findall(r"sys\.path\.insert\(\s*\d+\s*,[^\n]*?[\"']([A-Za-z0-9_]+)[\"']\s*\)", src):
+            xdir = Path(tree) / "tools" / xd
+            if xdir.is_dir() and xd != "die_plan":
+                for xp in xdir.glob("*.py"):
+                    if xp.stem in mods and not xp.stem.startswith("test_"):
+                        key = str(xp)
+                        extra_cache.setdefault(key, _Mod(xp.stem, xp))
+                        mods[xp.stem] = extra_cache[key]
         alias = {}                  # local name -> sibling module name
         multi = set()               # local names bound to more than one module (function-local imports)
         frm = {}                    # local name -> (module, name)
