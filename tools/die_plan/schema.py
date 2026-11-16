@@ -1152,6 +1152,7 @@ SCHEMA = {
                                    "type": "object", "additionalProperties": False, "required": ["TT", "FF", "tol"],
                                    "properties": {"TT": {"type": "number"}, "FF": {"type": "number"}, "tol": _nonneg}}}},
                                           "source": {"type": "string"}, "proof": {"type": "string"},
+                                          "schema": {"type": "string"}, "status": {"type": "string"},   # TOOLS-CONVERGE-1116: QC s29 plan carries both (old tree schema was an open object)
                                           "note": {"type": "string"}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
@@ -3350,6 +3351,19 @@ SCHEMA["properties"]["core_shape_exceptions"] = {"type": "array", "items": {
     "type": "object", "additionalProperties": False, "required": ["core", "old", "new", "reason", "measured_by"],
     "properties": {"core": {"type": "string", "minLength": 1}, "old": _wh, "new": _wh,
                    "reason": {"type": "string", "minLength": 1}, "measured_by": {"type": "string", "minLength": 1}}}}
+
+
+# DIE-S81-92 / FIX-RELAYPOLY 11-14: per-type relay waypoint polylines (opt-in, absent = unchanged kits); gen_phys._relay_polylines reads it
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_polylines"] = {
+    "type": "array", "items": {"type": "object", "required": ["group_re", "polyline_um"], "additionalProperties": False,
+    "properties": {"group_re": {"type": "string", "minLength": 1}, "sink": {"type": "string", "minLength": 1},
+                   "polyline_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}},
+                   "max_hop_um": {"type": "number"}}}}
+
+# DIE-S81-92 R-COL-2 (B3x2): plan budgets that gen_phys already reads (gutter_block.tcl) were not in the schema -> G0 schema ERROR x3
+SCHEMA["properties"]["budgets"]["properties"]["gutter_block_um"] = {"type": "number", "exclusiveMinimum": 0}
+SCHEMA["properties"]["budgets"]["properties"]["gutter_block_min_span_um"] = {"type": "number", "exclusiveMinimum": 0}
+SCHEMA["properties"]["budgets"]["properties"]["gutter_block_types"] = {"type": "array", "items": {"type": "string", "minLength": 1}}
 
 
 def main(argv):
