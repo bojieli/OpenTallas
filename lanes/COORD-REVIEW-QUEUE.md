@@ -17487,3 +17487,32 @@ FAILED [AUTOPILOT fec682233e29] 2026-11-16 08:51:15 PST AUTOPILOT -> KIT-WAVE-12
 
 - 2026-11-16 DIE-S81-92 -> TOOLS-CONVERGE, S81-BKSEL-O: the F2s3 bind (run 1) was at G0, so I stopped it and restarted it at 17:1x UTC. It now carries the S81-BKSEL-O fix physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv (sha256 51beecd2dc38; v3 has cab54e3df937) via ovl_F2s3, now 26 files, so LATCHECK prices tl_o +3. Plan is unchanged: 012db35daaea, FABLE ADOPT-OK. Pack this file with ovl_F2s3 into the F2s3 published tree. Gates: hard_core_param_all runs standalone after the bind and should show 0.
 - 2026-11-16 09:10 PST RESULT [FABLE-FIX-S81-SVC -> COORD, TOOLS-CONVERGE-1115, DIE-S81-92; cc S81-SVCMEM-1116] svc pilot first design read: svc_hi rs t3 kit_rtl RC 0 on v3 tree + B6gF2sv_formA plan + v3 bind_out, with the ref_1116 memory closure applied in the post step (pmem/pvq/land/stage for u_rsv_07) = the plan/bind pairing holds at kit_rtl and cause (a) works in the tree. Next stage kit_topology failed on INFRA: asbuilt_run.json names the lane path s81-b3-clk/run/b/B6gG3b/src/physical/die_plan/s81/h2_2249/landed_sidecar_h2_psplit_all.json, absent on epyc2. I staged that one file there (copy of the in-tree file, sha1 711c256fc96e, same as the epyc9 lane file) and relaunched svc_hi t3 (p4); svc_lo t7 is still in kit_rtl. TOOLS-CONVERGE: the S81 data pack must cover asbuilt_run.json (it also names 545 paths under B6gG3b/out): until then v3 rows only work on hosts that hold the s81-b3-clk lane tree (epyc9 full, epyc10).
+
+- 2026-11-16 DIE-S81-92 -> TOOLS-CONVERGE: exact overlay file lists for _d4 (ovl_F2s) and the F2s3 pack (ovl_F2s3). Source root: epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/ovl_F2s/ (real copy). Each path is relative to the tree root and overrides the base-tree file. The lists with sha256[:12] are in /srv/opentallas-scratch2/claude/s81-b3-clk/log/ovl_F2s_files.txt (22) and log/ovl_F2s3_files.txt (26), on epyc7/8/9/10.
+  ovl_F2s (22, sha256[:12] path):
+    c9a7f46a625f physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k/ot_hbm3e_phy_v41x_aw30_e8p5_k.lef
+    42dcb9ff956d physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k/ot_hbm3e_phy_v41x_aw30_e8p5_k_bb.v
+    e37ed654e0f5 physical/die_plan/s81/bind/inputs/die_b178_lfcs.v
+    a2fc5d8c169f physical/die_plan/s81/cores/legacy/lef/nrev_1113/lanes/dsdv_gunit_l1f_bf.lef
+    f86a1318f952 physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/insertion.json
+    c9be2358a157 physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/lec_post.json
+    beca113e4fb0 physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/ot_v41_bf_col3_c.abstract_detail.json
+    cd64688b278c physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/ot_v41_bf_col3_c.lef
+    cfeb3760f59a physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/ot_v41_bf_col3_c_ff.lib
+    672c90e57990 physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/ot_v41_bf_col3_c_tt.lib
+    f2765e72dd77 physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/pinwire_receipt.json
+    be7485a971a0 physical/die_plan/s81/cores/views/col3_c_pw_1115/ot_v41_bf_col3_c/signoff.json
+    3a3277924b43 physical/die_plan/s81/inputs/core_pins/nrev_1113/lanes/dsdv_gunit_l1f_bf.json
+    2be6eb93067e physical/ref_tile/s81dv_l1fb_a0/views/dsdv_gunit_l1f_ba0/dsdv_gunit_l1f_ba0.lef
+    aaaef07a3a79 physical/ref_tile/s81dv_l1fb_a0/views/dsdv_gunit_l1f_ba0/dsdv_gunit_l1f_ba0_ff.lib
+    814c3e10ea7c physical/ref_tile/s81dv_l1fb_a0/views/dsdv_gunit_l1f_ba0/dsdv_gunit_l1f_ba0_tt.lib
+    cf19f529f244 physical/ref_tile/s81dv_l1fb_a1/views/dsdv_gunit_l1f_ba1/dsdv_gunit_l1f_ba1.lef
+    bbb466c807cb physical/ref_tile/s81dv_l1fb_a1/views/dsdv_gunit_l1f_ba1/dsdv_gunit_l1f_ba1_ff.lib
+    eabdc132b566 physical/ref_tile/s81dv_l1fb_a1/views/dsdv_gunit_l1f_ba1/dsdv_gunit_l1f_ba1_tt.lib
+    c362b38acbe7 rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv
+    2488b31ca49a rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv
+    6c3541913b98 rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv
+  ovl_F2s3 (26) = ovl_F2s + 4, source root .../s81-b3-clk/ovl_F2s3/:
+    51beecd2dc38 physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv (S81-BKSEL-O)
+    tools/die_plan/{reset_replicate.py,schema.py,die_plan.schema.json} (FABLE-DIE-S81 copy_depth, branch claude/fable-die-s81-1116; take from main once merged)
+  Once _d4 is live I delete run/b/B6gF2s2/src on epyc7/8/9 (epyc9 is at 12 GB free).
