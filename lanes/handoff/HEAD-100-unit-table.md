@@ -1,5 +1,5 @@
-# HEAD die route units, recipe run nf13r (NF13a plan, plan abstracts for hd_tile 717.12 / hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 00:38:23 PST by intel2 ~/tmp/head100_utable.sh
-# DONE 118, DONE with DRC>0: 0, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
+# HEAD die route units, recipe run nf13r (NF13a plan, plan abstracts for hd_tile 717.12 / hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 00:53:41 PST by intel2 ~/tmp/head100_utable.sh
+# DONE 123, DONE with DRC>0: 0, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
 renewed-glider u038_b DONE drc=0 rss_mb=11044 wall=27:17.00 [INFO DRT-0199]   Number of violations =
 renewed-glider u039_b DONE drc=0 rss_mb=9081 wall=25:19.74 [INFO DRT-0199]   Number of violations =
 renewed-glider u040_b DONE drc=0 rss_mb=9419 wall=30:35.53 [INFO DRT-0199]   Number of violations =
@@ -117,18 +117,23 @@ key-cardinal u250_b DONE drc=0 rss_mb=9983 wall=37:01.41 [INFO DRT-0199]   Numbe
 renewed-glider u251_b DONE drc=0 rss_mb=9727 wall=12:38.83 [INFO DRT-0199]   Number of violations =
 renewed-glider u252_b DONE drc=0 rss_mb=9523 wall=22:20.76 [INFO DRT-0199]   Number of violations =
 renewed-glider u253_b DONE drc=0 rss_mb=9249 wall=18:45.49 [INFO DRT-0199]   Number of violations =
-renewed-glider u254_b DRT drc=- rss_mb=- wall=- Completing 60% with 634 violations.
+renewed-glider u254_b DONE drc=0 rss_mb=9735 wall=20:16.97 [INFO DRT-0199]   Number of violations =
 renewed-glider u255_b DONE drc=0 rss_mb=9959 wall=14:42.45 [INFO DRT-0199]   Number of violations =
-renewed-glider u256_b DRT drc=- rss_mb=- wall=- Completing 10% with 688 violations.
-renewed-glider u257_b DRT drc=- rss_mb=- wall=- Completing 60% with 283 violations.
-renewed-glider u269_b DRT drc=- rss_mb=- wall=- Completing 80% with 106 violations.
-key-cardinal u270_b DRT drc=- rss_mb=- wall=- 
-key-cardinal u271_b DRT drc=- rss_mb=- wall=- Completing 60% with 19 violations.
-key-cardinal u272_b DRT drc=- rss_mb=- wall=- 
-key-cardinal u273_b DRT drc=- rss_mb=- wall=- Completing 10% with 0 violations.
-key-cardinal u274_b PREP drc=- rss_mb=- wall=- 
-key-cardinal u275_b PREP drc=- rss_mb=- wall=- 
-key-cardinal u276_b PREP drc=- rss_mb=- wall=- 
-key-cardinal u277_b PREP drc=- rss_mb=- wall=- 
-key-cardinal u278_b PREP drc=- rss_mb=- wall=- 
-key-cardinal u279_b PREP drc=- rss_mb=- wall=- 
+renewed-glider u256_b DONE drc=0 rss_mb=9387 wall=19:07.43 [INFO DRT-0199]   Number of violations =
+renewed-glider u257_b DONE drc=0 rss_mb=9897 wall=14:36.65 [INFO DRT-0199]   Number of violations =
+renewed-glider u269_b DONE drc=0 rss_mb=10795 wall=15:40.90 [INFO DRT-0199]   Number of violations =
+key-cardinal u270_b DRT drc=- rss_mb=- wall=- Completing 30% with 225 violations.
+key-cardinal u271_b DONE drc=0 rss_mb=8686 wall=20:14.33 [INFO DRT-0199]   Number of violations =
+key-cardinal u272_b DRT drc=- rss_mb=- wall=- Completing 30% with 168 violations.
+key-cardinal u273_b DRT drc=- rss_mb=- wall=- Completing 80% with 250 violations.
+key-cardinal u274_b DRT drc=- rss_mb=- wall=- Completing 30% with 152 violations.
+key-cardinal u275_b DRT drc=- rss_mb=- wall=- Completing 80% with 145 violations.
+key-cardinal u276_b DRT drc=- rss_mb=- wall=- Completing 80% with 182 violations.
+key-cardinal u277_b DRT drc=- rss_mb=- wall=- Completing 60% with 137 violations.
+key-cardinal u278_b DRT drc=- rss_mb=- wall=- Completing 30% with 103 violations.
+key-cardinal u279_b DRT drc=- rss_mb=- wall=- Completing 30% with 124 violations.
+key-cardinal u291_b DRT drc=- rss_mb=- wall=- 
+key-cardinal u292_b DRT drc=- rss_mb=- wall=- 
+renewed-glider u293_b DRT drc=- rss_mb=- wall=- Completing 60% with 82 violations.
+renewed-glider u294_b DRT drc=- rss_mb=- wall=- Completing 10% with 0 violations.
+renewed-glider u295_b PREP drc=- rss_mb=- wall=- 
