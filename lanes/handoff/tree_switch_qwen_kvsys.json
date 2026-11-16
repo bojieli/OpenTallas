@@ -6,9 +6,13 @@
  "src_manifest_sha": "6dd08c2a09b4d0b044ca214123b1ffe022d41a2e483db1088fa74194407bcedf",
  "tools_sha": "eb1e73448bd0",
  "hosts": [
-  "epyc10"
+  "epyc10",
+  "epyc2",
+  "epyc8",
+  "epyc9",
+  "intel1"
  ],
- "hosts_verified": "src_manifest hash+ro at copy, links check after",
+ "hosts_verified": "hash (src_manifest hosts --expect) + links check OK on epyc2, epyc8, epyc9, intel1 and epyc10; epyc7 pending (KV copy slow, QC applied)",
  "die_gen_env": {
   "OT_PG_DIE_PHASE": "1",
   "OT_PGCAP": "1",
@@ -17,5 +21,7 @@
   "OT_PG_PIN_CHECK": "1"
  },
  "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 06:07:23 PST"
+ "time": "2026-11-16 06:07:23 PST",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0/out_h1",
+ "bind_dir_on_hosts": "epyc2 epyc7 epyc8 epyc9 intel1 epyc10 (rsync, same path)"
 }
