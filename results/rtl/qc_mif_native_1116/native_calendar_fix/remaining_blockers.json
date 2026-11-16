@@ -49,9 +49,9 @@
         "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
         "tools/qwen_layerbench/dv_lower_vec.py:rope_rx/rope_words"
       ],
-      "diagnosis": "Actual L native59 selects ROPE1/EMB_RT_CODE13/EMB_RT_SCALE14. Native base+token*8 addresses a resident request identity, not an angle ROM. QC reads only the low3bits of the8word preloaded payload and checks resident token/epoch. KV source derives a RoPE row from accepted context position>>3 and selects the eight words for that position. Current selected HG1 producer and final shared calendar/data join remain to be witnessed.",
+      "diagnosis": "Actual current HG1 binds the legacy embedding-only producer, not qkd_kvs_emb_ctx. Intended accepted-context position selection and QC resident namespace are correct and now measured on four requests. Intended73-record transmitter had a terminal guard65 bug; offdefault FIX_ROPE_SLOT_GUARD1 candidate passes. KV owner is preparing a source event that forks actual slot/CRC/epoch-qualified HOST context into the ctx-enabled successor; the current physical/calendar/data join remains open.",
       "next_owner": "TOKEN coordinator with KV source/calendar owner",
-      "next_action": "Trace selected HG1 preload path and actual position authority. Run minimum row-transmitter/resident-store witness for same token/different positions and different tokens/same position, with token-index mutant. Keep namespace token addressing unchanged unless actual selected producer proof finds a mismatch."
+      "next_action": "Integrate the explicit current-parent ctx successor using the real qualified context record and guard73 opt-in, then qualify its actual record/mask/calendar windows; do not change native resident token addressing."
     }
   ]
 }
