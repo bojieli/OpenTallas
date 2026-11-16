@@ -37473,7 +37473,7 @@
     "hd_turn_a",
     "hd_turn_b"
    ],
-   "plan_sha256": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
+   "plan_sha256": "ddebc47fddd315ec1abcf7ba77969cae19601b3b8c562e41bf4b5bb11a8b38e1",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81_head.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
     "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_head.json",
@@ -38599,7 +38599,8 @@
      "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
      "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
     }
-   }
+   },
+   "plan_sha256_prev_d1": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb"
   },
   "qwen_compute": {
    "enabled": true,
