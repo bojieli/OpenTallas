@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qc.physical_profile.v1",
+  "module": "qfd_dv_s8x_vmr",
+  "profile": "MIF1",
+  "verdict": "MATCHED_PHYSICAL_PROFILE",
+  "scope": "Identification of the already signed core memory-interface profile; no new sign-off or token qualification",
+  "identification": {
+    "actual_routed_branch_occurrences": {
+      "g_rr": 194,
+      "g_rs1": 157,
+      "g_rd": 0,
+      "g_rs0": 0
+    },
+    "MIF0_branches_absent": true,
+    "MIF_nonzero_branch_semantics": "VMR uses MIF==0 vs nonzero branches. The physical behavior is the documented MIF1 profile; original integer literal is not recoverable from this alone.",
+    "signed_gold_branch": "Archived EQUIVALENT LEC gold keypoint constraints explicitly include g_bank[0/1].g_rr.u_ra.q[0..9]",
+    "read_delta_vs_MIF0": 1,
+    "write_delta_vs_MIF0": 1,
+    "fault_delta_vs_MIF0": 0,
+    "source_basis": "Source module comments and generate branches, corroborated by signed gold and routed netlist"
+  },
+  "source": {
+    "commit": "275646f85fd8c24eff99121721aa20d23ec4f9a9",
+    "path": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "file_sha256": "6680b7214276f423d076aa2050d9a0cf27ec03ee7e18d2a5eb9fec8c5b86d40c",
+    "vmr_module_sha256": "2d5cce106010deb5e97809065d6e390dfb96ae19a64be8bd7ab7a65447713dcb"
+  },
+  "physical": {
+    "published_route": "physical/die_plan/qwen_compute/ft_physical_1106/vmr/route.v.gz",
+    "decompressed_route_sha256": "b77359ea0d7a177021517fe5706a6ba069a0cbd0a478b7a0a2914a3f832246f5",
+    "archive_netlist": "AGIdock:/archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8x_vmr/6_final.v",
+    "archive_netlist_sha256": "b77359ea0d7a177021517fe5706a6ba069a0cbd0a478b7a0a2914a3f832246f5",
+    "netlist_identity": "BYTE_IDENTICAL",
+    "signed_view_record": "dfecc3725a2770cc1d73326db7034f1fdc3dd0c5df1c36e956e8e46842110093",
+    "archived_view_pack": "AGIdock:/archive/opentallas-signed-1114/_view-packs/elements/qwen_compute.c.qfd_dv_s8x_vmr/6_final_619956786a.json",
+    "routed_db": "/srv/opentallas-scratch2/claude/die-qc-44/vmrV1/kit/run/results/asap7/kq_qfd_dv_s8x_vmr_f4a_m1/base/6_final.odb"
+  },
+  "evidence": {
+    "route.v.gz": "d60a04d3a9966da2443e45bf4783ff38a0da7c5a1887786f05620569a671379b",
+    "lec.json": "5f8d4888c107ecd58d6d68441adcc48bf8eebb33ce3a18bbada4f0c29b59188d",
+    "PROVENANCE.json": "d0620c7804ada8705b872468914fa76a97caf477ad7281bfb1f4019990a13631",
+    "signoff.json": "dfecc3725a2770cc1d73326db7034f1fdc3dd0c5df1c36e956e8e46842110093",
+    "qfd_dv_s8x_vmr_tt.lib": "cc723508f80c8f9e91a5378611cb4818afe8e63615147938b1819324577389cb",
+    "qfd_dv_s8x_vmr_ff.lib": "9c201c26ebc993e394fe4cf42f5e2b2f4a9f68e8b53609fdc984a8ed31724592",
+    "qfd_dv_s8x_vmr.lef": "6dd379d21ce4d095f3b08683b4d0124ba1d3fb057d4787fc54daa28196ae270b"
+  },
+  "record_recovery": {
+    "config_mk": "Not found in original fleet directory or exact signed-1106 archive kit path",
+    "spec_json": "Not found in exact signed-1106 archive kit path",
+    "waivers_added": false,
+    "registry_or_allowlist_changed": false
+  }
+}
