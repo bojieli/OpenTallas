@@ -41,7 +41,8 @@ def test_route_ack_escalate(tmp_path):
     s, _, _ = fr.run(*args, now=NOW + 31 * 60, poster=lambda p, t: sent.append(t) or True)
     assert sorted(x[0] for x in s) == ["LANE", "LANE"]
     assert fr.run(*args, now=NOW + 90 * 60, poster=lambda p, t: sent.append(t) or True)[0] == []
-    assert sum(t.startswith("NEEDS-LANE") for t in sent) == 2
+    assert sum(t.startswith("NEEDS-LANE") for t in sent) == 1                  # one digest for both classes (FABLE-FLOW-0445 #6)
+    assert [t for t in sent if t.startswith("NEEDS-LANE")][0].count("FAIL-CLASS") == 2
 
 
 def test_ack_suppresses_lane(tmp_path):
@@ -80,3 +81,39 @@ def test_s81_family_routing(tmp_path):
         return next(t for t in sent if n in t).split("->")[1].split(",")[0].strip()
     assert [to(n) for n in names] == ["FABLE-FIX-S81-COL", "FABLE-FIX-S81-RINGS", "FABLE-FIX-S81-STRIP", "S81-SERDES-PHY-1116",
                                       "DIE-S81-92", "DIE-S81-92"]
+
+
+def test_one_digest_per_owner_per_run(tmp_path):
+    names = ["slice_station__t17", "dsdv_slice_c1x__t1"]                          # both routed to DIE-S81-92, two different error texts = two classes
+    mk(tmp_path, [f"- {stamp(5)} STATE [DIE-S81-92 -> COORD] alive"], ["s81|" + n for n in names])
+    kw = json.loads((tmp_path / "autopilot/kit_wave_state.json").read_text())
+    kw["fail_sigs"]["s81|dsdv_slice_c1x__t1"]["reason"] = "a completely different error text"
+    (tmp_path / "autopilot/kit_wave_state.json").write_text(json.dumps(kw))
+    sent = []
+    s, _, cl = fr.run(tmp_path, tmp_path / "st.json", "post.sh", now=NOW, poster=lambda p, t: sent.append(t) or True)
+    assert len(cl) == 2 and len(s) == 2 and len(sent) == 1                         # two classes, one post
+    assert sent[0].count("FAIL-CLASS") == 2 and "DIE-S81-92" in sent[0]
+    assert fr.run(tmp_path, tmp_path / "st.json", "post.sh", now=NOW + 60, poster=lambda p, t: sent.append(t) or True)[0] == []
+
+
+def test_class_closes_when_the_item_has_a_later_attempt(tmp_path):
+    mk(tmp_path, [f"- {stamp(5)} STATE [DIE-S81-92 -> COORD] alive"], ["s81|slice_station__t17"])
+    kw = json.loads((tmp_path / "autopilot/kit_wave_state.json").read_text())
+    kw["items"]["s81|slice_station__t17|b1"] = {"status": "ENQUEUED", "updated": NOW - 60}      # relaunched and past the failed stage
+    kw["items"]["s81|slice_station__t17|b0"] = {"status": "FAIL", "updated": NOW - 900}
+    (tmp_path / "autopilot/kit_wave_state.json").write_text(json.dumps(kw))
+    sent = []
+    fr.run(tmp_path, tmp_path / "st.json", "post.sh", now=NOW, poster=lambda p, t: sent.append(t) or True)
+    assert sent == []
+
+
+def test_coord_ruling_naming_the_class_closes_it(tmp_path):
+    mk(tmp_path, [f"- {stamp(5)} STATE [DIE-S81-92 -> COORD] alive"], ["s81|slice_station__t17"])
+    sent = []
+    st = tmp_path / "st.json"
+    s, _, cl = fr.run(tmp_path, st, "post.sh", now=NOW, poster=lambda p, t: sent.append(t) or True)
+    cid = next(iter(cl.values()))["cid"]
+    q = tmp_path / "lanes/COORD-REVIEW-QUEUE.md"
+    q.write_text(q.read_text() + f"- {stamp(-5)} RULING [COORD -> DIE-S81-92] class {cid} is closed by r301\n")
+    s2, _, _ = fr.run(tmp_path, st, "post.sh", now=NOW + 40 * 60, poster=lambda p, t: sent.append(t) or True)
+    assert s2 == [] and len(sent) == 1
