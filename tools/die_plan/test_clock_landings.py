@@ -760,3 +760,65 @@ def test_tx_raw_warns_but_never_blocks_over_800um(capsys):
     raw = c._tx_raw("b", key, "raw_far", {"P": "raw_far"}, rl)
     assert raw == "cland_reset_tx" and "warn" in c.reset_placements["b"]["count_origin"]["tx_raw"]
     assert "WARN clock_landings" in capsys.readouterr().err
+
+
+def ca_relay2_vehicle():
+    """FABLE-FIX-KV-PV-CUT: region r1 = b (origin, the middle piece of a 3-way type split) + c and d (relay pieces on
+    either side); b carries a second tx pin cland_rstart_out_1 and the plan's cland_relay__d edge leaves it"""
+    p, t = ca_relay_vehicle()
+    def pin(name, direction):
+        return dict(name=name, dir=direction, width=1, face="E", window_um=[1, 2], layers=["M8"])
+    p["partitions"].append(dict(name="d", type="C", origin_um=[12, 2]))
+    p["partition_types"]["B"]["buses"].append(pin("cland_rstart_out_1", "out"))
+    p["partition_types"]["A"]["buses"] += [pin("fclk_out_v", "out"), pin("cland_fstart_out_v", "out")]
+    p["ports"].append(dict(id="R", width=4, kind="data", src=dict(part="a", bus="v"), dst=dict(part="d", bus="z")))
+    t["ports"].append(dict(port="R", width=4, src="a", dst="d", src_region="r0", dst_region="r1", lane="LR"))
+    t["count_aligned"]["ports"]["R"] = dict(K=-1, depth=4, sched_lat=3, tree=False)
+    t["count_aligned"]["parts"]["d"] = dict(region="r1", role="relay", src="b", stages=2)
+    relay = lambda part, bus: dict(id="cland_relay__" + part, src=dict(part="b", bus=bus),
+                                   dst=dict(part=part, bus="cland_rstart_in"), kind="ctl", width=1, epoch=False)
+    p["clock"] = dict(landing_network=dict(edges=[relay("c", "cland_rstart_out"), relay("d", "cland_rstart_out_1")]))
+    return p, t
+
+
+RELAY2_TOP = ("module die_bound_top (rst_n, clk_core);\n input wire rst_n;\n input wire clk_core;\n    a_mod a (\n"
+              "        .clk(clk_core)\n    );\n    b_mod b (\n        .clk(clk_core)\n    );\n    c_mod c (\n"
+              "        .clk(clk_core)\n    );\n    c_mod d (\n        .clk(clk_core)\n    );\nendmodule\n")
+
+
+def test_count_aligned_relay_second_tx_pin_has_its_own_flop_and_net():
+    import re
+    from clock_landings import relay_tx_extra, relay_tx_pins
+    p, t = ca_relay2_vehicle(); c = Landings(p, t)
+    assert relay_tx_extra(p["partition_types"]["B"]) == [("cland_rstart_out_1", "_1")]
+    assert relay_tx_extra(p["partition_types"]["C"]) == [] and relay_tx_extra(None) == []
+    assert relay_tx_pins(p) == {"c": "cland_rstart_out", "d": "cland_rstart_out_1"}
+    bb = c.type_rtl("B", B_BODY)
+    # both tx flops sample the same origin start: either relay piece starts tx + rx = 2 counts after the origin
+    assert "ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n(cland_reset_y), .d(cland_start), .q(cland_rstart_out));" in bb
+    assert "output wire cland_rstart_out_1" in bb
+    assert "ot_dp_landing_relay u_cland_rstart_tx_1 (.clk(clk), .rst_raw_n(cland_reset_y), .d(cland_start), .q(cland_rstart_out_1));" in bb
+    tt = c.top_rtl(RELAY2_TOP)
+    assert "wire clock_landing_rstart_b;" in tt and "wire clock_landing_rstart_b_1;" in tt
+    inst = {m.group(1): m.group(2) for m in re.finditer(r"(?ms)^    \w+ (\w) \(\n(.*?)\n    \);", tt)}
+    assert ".cland_rstart_out(clock_landing_rstart_b)" in inst["b"] and ".cland_rstart_out_1(clock_landing_rstart_b_1)" in inst["b"]
+    assert ".cland_rstart_in(clock_landing_rstart_b)" in inst["c"] and "rstart_b_1" not in inst["c"]
+    assert ".cland_rstart_in(clock_landing_rstart_b_1)" in inst["d"]
+    assert c.ca_part_role["d"]["role"] == "relay" and t["count_aligned"]["parts"]["d"]["stages"] == 2
+
+
+def test_count_aligned_relay_edge_on_an_undeclared_tx_pin_fails_closed():
+    p, t = ca_relay2_vehicle()
+    p["clock"]["landing_network"]["edges"][1]["src"]["bus"] = "cland_rstart_out_2"
+    c = Landings(p, t)
+    with pytest.raises(LandingError, match="not a declared start-relay tx pin"):
+        c.top_rtl(RELAY2_TOP)
+
+
+def test_one_tx_pin_form_is_unchanged_by_the_second_pin_support():
+    p, t = ca_relay_vehicle(); c = Landings(p, t)
+    bb = c.type_rtl("B", B_BODY)
+    assert "cland_rstart_out_" not in bb and "u_cland_rstart_tx_" not in bb
+    top = RELAY2_TOP.replace("    c_mod d (\n        .clk(clk_core)\n    );\n", "")
+    tt = c.top_rtl(top)
+    assert "clock_landing_rstart_b_" not in tt and tt.count("wire clock_landing_rstart_b;") == 1

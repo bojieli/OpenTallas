@@ -741,6 +741,30 @@ MON_RELAY_RTL = [
     "endmodule"]
 
 
+RELAY_TX_PIN = "cland_rstart_out"
+
+
+def relay_tx_extra(t):
+    """[(pin, suffix)] of the EXTRA start-relay tx pins of an origin type: landing-contract out pins cland_rstart_out_<n>
+    (type_split: relay pieces on both sides of the keep piece, one pin per side).  Each gets its own tx flop
+    u_cland_rstart_tx_<n> with the same D (the origin start) as u_cland_rstart_tx, so a relay partition starts
+    RELAY_STAGES counts after its origin whichever pin feeds it.  A type without such pins (every plan before
+    FABLE-FIX-KV-PV-CUT 11-16) returns []: nothing changes."""
+    pins = list(((t or {}).get("clock") or {}).get("landing_contract", {}).get("pins", [])) + list((t or {}).get("buses", []))
+    found = sorted((int(m.group(1)), p["name"]) for p in pins
+                   for m in [re.fullmatch(RELAY_TX_PIN + r"_(\d+)", str(p.get("name", "")))] if m and p.get("dir") == "out")
+    return [(name, f"_{k}") for k, name in found]
+
+
+def relay_tx_pins(plan):
+    """{relay partition: the origin tx pin that feeds its cland_rstart_in} from the plan's cland_relay__<part> edges"""
+    out = {}
+    for e in list(plan.get("ports", [])) + list(plan.get("clock", {}).get("landing_network", {}).get("edges", [])):
+        if str(e.get("id", "")).startswith("cland_relay__") and e["dst"]["bus"] == "cland_rstart_in":
+            out[e["dst"]["part"]] = e["src"]["bus"]
+    return out
+
+
 def monitor_relays(plan):
     """{child partition: dict(form, relays)} of the collector monitor bundles cland_mon_{ready,fault[,clk]}__<child>
     that carry R-REACH-1 relays (reach_relay_plan); every edge of a bundle must name the same sites and form."""
@@ -2068,17 +2092,17 @@ class Landings:
     TX_RAW_WARN_UM = 800.0    # a generator-placed flop pair longer than this is reported (WARN, never blocking)
     TX_RAW_RELAY_UM = 600.0   # FABLE-TYPES-QC-WEST cause A: one raw-reset wire may not run farther than this
 
-    def _tx_raw(self, tn, key, raw, ca_raw, raw_logic):
+    def _tx_raw(self, tn, key, raw, ca_raw, raw_logic, pin="cland_rstart_out", sfx=""):
         """FABLE-TYPES-QC-WEST cause A (-162..-276 ps): the tx flop u_cland_rstart_tx sits at the cland_rstart_out pin, and
         its raw reset used to be the FIRST raw copy in dict order (1.3-1.4 mm away).  Use the raw copy nearest to that pin;
         when even that copy is over TX_RAW_RELAY_UM away add one ot_dp_rrelay at the midpoint (a reset level: one more
         cycle of assertion/release, no lane effect).  Unknown pin or copy sites leave the raw unchanged."""
         pins = list(self.types.get(key, {}).get("pins", [])) + list(
             self.types.get(key, {}).get("clock", {}).get("landing_contract", {}).get("pins", []))
-        tx = next((p.get("xy_um") for p in pins if p.get("name") == "cland_rstart_out" and p.get("xy_um")), None)
+        tx = next((p.get("xy_um") for p in pins if p.get("name") == pin and p.get("xy_um")), None)
         if tx is None:   # plan bus form: pin on a face, window centre (same rule as the ring receiver site)
             t = self.types.get(key, {})
-            bus = next((b for b in t.get("buses", []) if b.get("name") == "cland_rstart_out"), None)
+            bus = next((b for b in t.get("buses", []) if b.get("name") == pin), None)
             if bus and bus.get("face") in ("E", "W", "N", "S") and bus.get("window_um") and t.get("outline_um"):
                 tw, th = t["outline_um"]; at = sum(bus["window_um"]) / 2; f = bus["face"]
                 tx = [0 if f == "W" else tw, at] if f in "EW" else [at, 0 if f == "S" else th]
@@ -2100,9 +2124,9 @@ class Landings:
         rec = dict(raw=best, dist_um=round(d, 3), tx_xy=list(tx), first_copy=raw, relay=False)
         if d > self.TX_RAW_RELAY_UM:
             mid = [round((sites[best][0] + tx[0]) / 2, 3), round((sites[best][1] + tx[1]) / 2, 3)]
-            new = "cland_reset_tx"
+            new = "cland_reset_tx" + sfx
             raw_logic.extend([f"    wire {new};",
-                              f"    ot_dp_rrelay u_cland_rst_tx (.clk(clk), .d({best}), .q({new}));"])
+                              f"    ot_dp_rrelay u_cland_rst_tx{sfx} (.clk(clk), .d({best}), .q({new}));"])
             rec.update(relay=True, relay_xy_um=mid, relay_net=new)
             best = new
         hop = d / 2 if rec["relay"] else d
@@ -2110,7 +2134,7 @@ class Landings:
             rec["warn"] = f"{tn}: tx raw-reset hop {hop:.0f} um > {self.TX_RAW_WARN_UM:.0f} um"
             import sys
             print("WARN clock_landings " + rec["warn"], file=sys.stderr)
-        self.reset_placements.setdefault(tn, {}).setdefault("count_origin", {})["tx_raw"] = rec
+        self.reset_placements.setdefault(tn, {}).setdefault("count_origin", {})["tx_raw" + sfx] = rec
         return best
 
     def _origin_rtl(self, tn, cat, ca_raw, body, extra, type_key=None, head=None):
@@ -2191,9 +2215,16 @@ class Landings:
         if cat.get("relay_tx"):
             self.reset_placements[tn]["count_origin"]["relay_tx"] = True
             extra.append("    output wire cland_rstart_out")
+            raw0 = raw
             raw = self._tx_raw(tn, type_key or tn, raw, ca_raw, raw_logic)
             logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx (.clk(clk), .rst_raw_n({raw}), .d(cland_start), "
                          f".q(cland_rstart_out));")
+            for pin, sfx in relay_tx_extra(getattr(self, "types", {}).get(type_key or tn)):
+                # one tx flop per extra pin (a relay piece on the other side of the origin piece): same D, own nearest raw
+                extra.append(f"    output wire {pin}")
+                rawx = self._tx_raw(tn, type_key or tn, raw0, ca_raw, raw_logic, pin=pin, sfx=sfx)
+                logic.append(f"    ot_dp_landing_relay u_cland_rstart_tx{sfx} (.clk(clk), .rst_raw_n({rawx}), "
+                             f".d(cland_start), .q({pin}));")
         if self.tstart and self.tstart.get("reset_wave") and RAW_RESET_PIN_OUT in self.tstart["type_pins"].get(type_key or tn,{}):
             extra.append(f"    output wire {RAW_RESET_PIN_OUT}")
             # DIE-KV-32 10-29: the face flop is an ot_dp_rrelay instance driving the port alone (a kept reg aliased
@@ -2600,7 +2631,10 @@ class Landings:
                      if e["net"] != trw[e["src_part"]]]
         rpr = getattr(self, "ca_part_role", {}) if self.ca else {}
         rst = {r["origin"]: f"clock_landing_rstart_{ident(r['origin'])}" for r in rpr.values() if r["role"] == "relay"}
-        decl += [f"    wire {w};" for w in sorted(set(rst.values()))]
+        rtx_extra = {o: relay_tx_extra(self.types.get(self.parts[o]["type"])) for o in rst}
+        decl += [f"    wire {w};" for w in sorted(set(rst.values()) | {rst[o] + sfx for o, xs in rtx_extra.items()
+                                                                     for _pin, sfx in xs})]
+        rtx_pin = relay_tx_pins(self.plan) if any(rtx_extra.values()) else {}
         mon = {}
         mon_out = {}
         if (self.dataflow or not self.collector) and monitor_relays(self.plan):
@@ -2693,8 +2727,14 @@ class Landings:
                                            "port lands on this copy")
             if pn in rpr and rpr[pn]["relay_tx"]:
                 conn.append(f"        .cland_rstart_out({rst[pn]})")
+                conn += [f"        .{pin}({rst[pn]}{sfx})" for pin, sfx in rtx_extra.get(pn, [])]
             if pn in rpr and rpr[pn]["role"] == "relay":
-                conn.append(f"        .cland_rstart_in({rst[rpr[pn]['origin']]})")
+                org = rpr[pn]["origin"]
+                txp = rtx_pin.get(pn, RELAY_TX_PIN)
+                if txp != RELAY_TX_PIN and txp not in [pin for pin, _sfx in rtx_extra.get(org, [])]:
+                    raise LandingError(f"clock landing {pn}: relay edge names tx pin {org}.{txp}, not a declared "
+                                       "start-relay tx pin of the origin type")
+                conn.append(f"        .cland_rstart_in({rst[org]}{txp[len(RELAY_TX_PIN):]})")
             if self.strap and pn in self.strap["instances"]:
                 # OWNER 12.15a / 1.8 rule 3: each strap bit a literal here; die_constant_cells.tcl maps every bit to its
                 # own TIEHI/TIELO next to the pin; straps.audit_count_strap_values checks the pattern against the bind
