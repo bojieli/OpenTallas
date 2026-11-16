@@ -23,7 +23,7 @@
     "evidence": "WAVE-HOLDS-1115 2026-11-15 16:26 PST kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168): G0 PASS 0 errors (epyc7, --priority plan); pinned strict bind RC 0 (160/56/2545, 0 errors), R8_RECHECK changed 0; LATCHECK 2404/2404 PASS | prev: KIT-OPS-1 2026-11-12 18:05: KV vN2 (KV-VN2-FIN 17:13): G0 PASS 0 errors 0 NEW (epyc4 dkv99/g0_vN2i); strict bind RC 0 (epyc8 dkv99/bind_vN2i and the wave rebind kit-ops-1/kvbind_vN2i); lane_asbuilt_latency 2404/2404 PASS (ROOT-MERGE-61 17:25) | prev: DIE-KV-56 per-type windows 1589d7e38bf + seam d230e4b4d9f (ROOT-MERGE-AK 0a1b323259a) + phy 2d0fec07d7d (COORD 14:02: G0C identical, 0 new test failures); strict bind 0 on plan_c d5265caef67d (KIT-WAVE-7 smoke CHECKED) | prev: DIE-KV-40 RESULT 10-29 21:07 (G0C 2103 = base, strict bind 0, die clock GRT0 TT/FF 0 ov) + default adoption (no COORD veto); DIE-KV-41 22:08 kv_e26a_w243 PASS"
    },
    "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
-   "gen_host": "epyc10",
+   "gen_host": "epyc9",
    "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0",
    "src_sha": "96f13b36a258e3b6121497ff52a7a31e9add3131",
    "kit_rtl": {
@@ -730,7 +730,11 @@
     "intel2"
    ],
    "gen_hosts": [
-    "epyc10"
+    "epyc10",
+    "epyc2",
+    "epyc8",
+    "epyc9",
+    "intel1"
    ],
    "place_prefer": [
     "intel1",
@@ -5917,7 +5921,13 @@
     "src_manifest": "verify"
    },
    "src_manifest_hash": "6dd08c2a09b4d0b044ca214123b1ffe022d41a2e483db1088fa74194407bcedf",
-   "tools_sha": "eb1e73448bd0"
+   "tools_sha": "eb1e73448bd0",
+   "prev_widen1116": {
+    "gen_host": "epyc10",
+    "gen_hosts": [
+     "epyc10"
+    ]
+   }
   },
   "s81": {
    "enabled": true,
@@ -38675,7 +38685,7 @@
     "evidence": "DIE-QC-58 00:35/00:36: G0C PASS 0 err (die-qc-58/g0c_base); strict bind errors 0 unbound 0 (die-qc-58/bindC; KIT-WAVE-12 smoke intel1 kit-wave-12/smoke_qc on wt/kit-wave-12-qc @5346b95c915: 377 partitions, 1921 crossings, errors 0 unbound 0 CHECKED); clock = 12.25 die gate BLOCKED(kits) only (contracts 0, TT +156.79, CA 0; DIE-QC-57 staA2d) -> PASS for types per the structural reading (DIE-QC-58 00:36) | CODEX canonical read-only bind profile3_pad:377parts119types,0errors/undriven/unbound,201closedfiles. This source update does not assert a new physical clock PASS; exact SU/CB and cap holds retained. | QC1131 d90 strict119types0errors and201closedfiles; source/recipe matching pre-D13, metadata Q4 hints included. No new die-clock/current START freeze receipt claimed; existing physical/view holds unchanged. | QC4 existing-source release: explicit cached strictRC0 2026-11-07 01:31:36,119types377parts1921crossings790393bits0errors. Planv4 d6f2098a5d1a/asbuilt131abb5d4c5b, source compoundbase02909+overlayee1/tree661bf2. No new die timing claim."
    },
    "plan": "/srv/opentallas-scratch2/claude/die-qc-103/treeA/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q6d.json",
-   "gen_host": "epyc10",
+   "gen_host": "epyc9",
    "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0",
    "src_sha": "1e3b302be85085f4c4aca8a0dc93b4e5063d2b55",
    "kit_rtl": {
@@ -39485,7 +39495,11 @@
     "sle_ctl__cla4f6f12f@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch."
    },
    "gen_hosts": [
-    "epyc10"
+    "epyc10",
+    "epyc2",
+    "epyc8",
+    "epyc9",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
@@ -49593,7 +49607,13 @@
     "slw_st_b_v2__pvc2ec5bfb",
     "slw_sc_v2"
    ],
-   "note_knee_hc_1116": "FABLE-FIX-QC-KNEE-HC 11-16 07:4x (COORD FABLE-CLOSURE-0943 lever D): item_env OT_TT_SETUP_DESIGN=1 OT_TT_SETUP_MARGIN=30 on the 18 hc keys; hold record qwen_compute-file-01 deleted (its lift = QC switched to the v2 tree, done 06:5x; frees coll_n + the 4 DRT0255 proof kits + 5 v1-tree rows); sle_hc2 clf60c5152 + clcc5e3e61 declared proof_items DRT0255 (hc2 setup/hold + DRT-0255 proof on v2); 9 hc keys added to only_items (2 hc2 proofs, 5 sle hc0/hc1, slw_hc0 cl1bc59e1c, slw_hc1 cle683a076: not held by any record)"
+   "note_knee_hc_1116": "FABLE-FIX-QC-KNEE-HC 11-16 07:4x (COORD FABLE-CLOSURE-0943 lever D): item_env OT_TT_SETUP_DESIGN=1 OT_TT_SETUP_MARGIN=30 on the 18 hc keys; hold record qwen_compute-file-01 deleted (its lift = QC switched to the v2 tree, done 06:5x; frees coll_n + the 4 DRT0255 proof kits + 5 v1-tree rows); sle_hc2 clf60c5152 + clcc5e3e61 declared proof_items DRT0255 (hc2 setup/hold + DRT-0255 proof on v2); 9 hc keys added to only_items (2 hc2 proofs, 5 sle hc0/hc1, slw_hc0 cl1bc59e1c, slw_hc1 cle683a076: not held by any record)",
+   "prev_widen1116": {
+    "gen_host": "epyc10",
+    "gen_hosts": [
+     "epyc10"
+    ]
+   }
   },
   "hbm": {
    "enabled": true,
