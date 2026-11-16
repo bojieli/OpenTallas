@@ -35999,6 +35999,7 @@
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt.",
      "release": [
+      "event_adopt:B6gF2sv",
       "result:FABLE-FIX-S81-SVC:svc-ready"
      ],
      "migrated": true,
@@ -36024,6 +36025,7 @@
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
      "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key.",
      "release": [
+      "event_adopt:B6gF2sv",
       "result:FABLE-FIX-S81-SVC:svc-ready"
      ],
      "migrated": true,
