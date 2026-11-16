@@ -168,6 +168,68 @@ class T(unittest.TestCase):
         HR.compile_holds(c, HR.Ctx(event_met=KW._hold_term_met))
         self.assertEqual(d["hold_items"], {})
 
+    def test_tree_ready_term_validate_release_and_switch(self):
+        c = base()
+        d = c["dies"]["s81"]
+        d.update(src="/old", die_gen_env={"A": "1"}, kit_rtl={"bind_out": "/o", "keep": 1})
+        for bad in ("tree_ready:hbm:/t", "tree_ready:s81:rel/t", "tree_ready:s81:/t/", "tree_ready:s81:/a/../t", "tree_ready:s81"):
+            with self.assertRaises(ValueError, msg=bad):
+                HR.add_record(c, "s81", rec(release=[bad]))
+        HR.add_record(c, "s81", rec(release=["tree_ready:s81:/t/src1", "lint_clean:s81"]))
+        marker = {"tree": "/t/src1", "manifest_hash": "abc", "die_gen_env": {"B": "2"}, "config": {"kit_rtl": {"bind_out": "/n"}, "tools_sha": "e59"}}
+        ready = {"v": False}
+        ctx = HR.Ctx(tree_fn=lambda die, p: ready["v"] and p == "/t/src1", marker_fn=lambda die: marker)
+        HR.compile_holds(c, ctx)
+        self.assertEqual(len(d["hold_items"]), 2)
+        self.assertEqual(HR.apply_tree_switches(c, ctx), [])
+        self.assertEqual(d["src"], "/old")
+        ready["v"] = True
+        d["_lint_clean"] = ["*"]
+        HR.compile_holds(c, ctx)
+        self.assertEqual(d["hold_items"], {})                                    # tree ready + lint clean releases
+        sw = HR.apply_tree_switches(c, ctx)
+        self.assertEqual(sw[0][:2], ("s81", "/t/src1"))
+        self.assertEqual((d["src"], d["src_manifest_hash"], d["die_gen_env"], d["kit_rtl"], d["tools_sha"]),
+                         ("/t/src1", "abc", {"A": "1", "B": "2"}, {"bind_out": "/n", "keep": 1}, "e59"))
+        self.assertEqual(HR.apply_tree_switches(c, ctx), [])                     # idempotent: nothing changes the second tick
+
+    def test_kit_wave_tree_gate_and_switch(self):
+        import tempfile, os
+        with tempfile.TemporaryDirectory() as td:
+            tree = os.path.join(td, "src1")
+            os.makedirs(tree)
+            marker = {"tree": tree, "manifest_hash": "h1", "smoke": "PASS", "die_gen_env": {"OT_PGCAP": "1"}}
+
+            class AP:
+                HUB_NAME = "hub"
+                text = json.dumps(marker)
+
+                @staticmethod
+                def read_coord(rel):
+                    return AP.text if rel.endswith("tree_switch_s81.json") else ""
+            c = base()
+            c["hosts"] = ["localhost"]
+            c["dies"]["s81"]["src"] = "/old"
+            HR.add_record(c, "s81", rec(release=[f"tree_ready:s81:{tree}"]))
+            KW._TREE_CACHE.clear()
+            tf, mf = KW.tree_gate(AP, c)
+            self.assertFalse(tf("s81", tree))                                    # hash file missing on the host
+            KW._TREE_CACHE.clear()
+            open(os.path.join(tree, ".src-manifest.sha256"), "w").write("h1\n")
+            self.assertTrue(tf("s81", tree))
+            KW._TREE_CACHE.clear()
+            AP.text = json.dumps(dict(marker, smoke="FAIL"))
+            self.assertFalse(tf("s81", tree))                                    # smoke not PASS
+            AP.text = json.dumps(dict(marker, tree="/other"))
+            self.assertFalse(tf("s81", tree))                                    # marker names another tree
+            AP.text = json.dumps(marker)
+            KW._TREE_CACHE.clear()
+            KW.compile_hold_records(c, lambda r: False, tf, mf)
+            self.assertEqual(c["dies"]["s81"]["hold_items"], {})
+            sw = HR.apply_tree_switches(c, KW.hold_ctx(c, lambda r: False, tf, mf))
+            self.assertEqual((c["dies"]["s81"]["src"], c["dies"]["s81"]["die_gen_env"]), (tree, {"OT_PGCAP": "1"}))
+            self.assertEqual(sw[0][1], tree)
+
 
 if __name__ == "__main__":
     unittest.main()
