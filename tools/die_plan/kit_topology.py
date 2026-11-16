@@ -284,11 +284,34 @@ def verify_component_source(receipt_path, *, context_plan,prepared_plan,bind_out
     return report
 
 
+def remap_under_root(path,kd):
+    """WAVE-PREPNR-1115: a path that no longer exists but lies under this kit's own work root (recorded through a symlinked
+    work root: realpath/logical spelling differ per host) -> the same relative file under the local kit dir kd; else the path."""
+    p=Path(path);kd=Path(kd)
+    if p.exists():return p
+    kp,pp=kd.parts,p.parts
+    for i in range(1,len(kp)-3):
+        s=kp[i:]
+        for j in range(1,len(pp)-len(s)+1):
+            if pp[j:j+len(s)]==s:
+                return kd.joinpath(*pp[j+len(s):])
+    return p
+
+
 def localize_bound(kd):
     """Give the kit a local copy of a bound module that bind kit-rtl left at the bind output (a variant bound type whose
     text it did not rewrite, e.g. QC sle_fe_v2).  kit_istations edits only kit-local copies, and the bind output is never
-    touched.  Same bytes; only the kit's paths change.  Refuses a different file already at the local path."""
+    touched.  Same bytes; only the kit's paths change.  Refuses a different file already at the local path.
+    WAVE-PREPNR-1115: every path of the manifest / filelists under this kit's work root is first mapped onto the local kit
+    dir (kit_rtl.json written on a host whose work root is a symlink names the realpath spelling)."""
     kd=Path(kd);mfile=kd/'kit_rtl.json';man=json.loads(mfile.read_text())
+    fixed={f:str(remap_under_root(f,kd)) for f in man['files']}
+    if any(k!=v for k,v in fixed.items()):
+        for fl in kd.glob('kit_rtl*.f'):
+            fl.write_text(''.join((fixed[ln.strip()]+'\n') if ln.strip() in fixed else ln
+                                  for ln in fl.read_text().splitlines(keepends=True)))
+        man['files']=[fixed[f] for f in man['files']]
+        mfile.write_text(json.dumps(man,indent=1))
     bound=next((Path(f) for f in man['files'] if Path(f).stem==man.get('bound_module')),None)
     if bound is None or bound.resolve().parent==kd.resolve():return None
     local=kd/bound.name

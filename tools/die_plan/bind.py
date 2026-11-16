@@ -5840,7 +5840,9 @@ def cmd_kit_rtl(a):
     else:
         pset = next(iter(pinst.values()), "")
     mod = t["module"]
-    kd = (Path(a.kit) if a.kit else out / "kit_rtl" / tn).resolve()
+    # WAVE-PREPNR-1115: the LOGICAL work-root path (absolute, symlinks kept). realpath here wrote scratch3 paths into kit_rtl.json /
+    # kit_rtl*.f on a host whose work root is a symlink; a roam host has no such path (kit_topology FileNotFoundError).
+    kd = Path(os.path.abspath(a.kit)) if a.kit else (out / "kit_rtl" / tn).resolve()
     kd.mkdir(parents=True, exist_ok=True)
     native_geometry = kit_native_station_geometry(out, key, btxt, kd)
     import hbm_spb_native
