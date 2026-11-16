@@ -37311,7 +37311,11 @@
     "sle_stm_v1__clbe630b9c": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
     "slw_stm_v1__cl05fc43f7__cl2086fa2c": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
     "slw_stm_v1__cl05fc43f7__cl389df4e9": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
-    "slw_hc3__*": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key."
+    "slw_hc3__*": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+    "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): KIT_NOT_SELF_CONTAINED: input (sta_cland_w1574_e_s26 build-dir view) exists on epyc2 only, epyc2 is not in the item's roam hosts (attempts 9-14 same path). Running attempts finish. Lift = delete this key.",
+    "sle_st_a_v2__pv30dda31f": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): same input on epyc2 only; no attempt can pass until the F1 backfill. Running attempts finish. Lift = delete this key.",
+    "sle_st_a_v2__pv4242de79": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): same input on epyc2 only; no attempt can pass until the F1 backfill. Running attempts finish. Lift = delete this key.",
+    "cbn_q00__cldbcda913": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): stub view qc_cland_w515_n_d8_local32_codex/provenance.json has export: {}; needs a signed cland w515 view, not a retry. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -47588,7 +47592,11 @@
     "sle_stm_v1__clbe630b9c": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
     "slw_stm_v1__cl05fc43f7__cl2086fa2c": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
     "slw_stm_v1__cl05fc43f7__cl389df4e9": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
-    "slw_hc3__*": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
+    "slw_hc3__*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "slw_st_a_v2__cl9f076a5c": "lane_ready:kit_snap live on QC + missing input staged on every roam host (FABLE-FLOWCLASS-KITPACK-2030 F1/F3)",
+    "sle_st_a_v2__pv30dda31f": "lane_ready:kit_snap live on QC + missing input staged on every roam host (FABLE-FLOWCLASS-KITPACK-2030 F1/F3)",
+    "sle_st_a_v2__pv4242de79": "lane_ready:kit_snap live on QC + missing input staged on every roam host (FABLE-FLOWCLASS-KITPACK-2030 F1/F3)",
+    "cbn_q00__cldbcda913": "lane_ready:kit_snap live on QC + missing input staged on every roam host (FABLE-FLOWCLASS-KITPACK-2030 F1/F3)"
    },
    "hold_items_released_wavehold1115_r189": {
     "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
@@ -65982,5 +65990,11 @@
    "slw_stm_v1__cl05fc43f7__cl389df4e9",
    "slw_hc3__*"
   ]
- }
+ },
+ "hold_items_added_wavehold1115_r221": [
+  "cbn_q00__cldbcda913",
+  "sle_st_a_v2__pv30dda31f",
+  "sle_st_a_v2__pv4242de79",
+  "slw_st_a_v2__cl9f076a5c"
+ ]
 }
