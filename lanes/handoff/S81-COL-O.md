@@ -15,3 +15,9 @@ Read first: lanes/handoff/FABLE-FIX-S81-COL.md, lanes/FABLE-FIX-S81-COL-SPECS.md
 3. Windows: tap_window_measure.py (main 0c49f5c6af1; clone epyc10 s81-col-clk-impl/wt) --log 4_1_cts.log (or tcl odb mode). Rows -> DIE-S81-92.
 4. Regenerate with per_port_ps rows, route via ot-run, read signoff (an/mk.sh + cls.py census).
 - Watcher: localhost scratchpad s81colo/watch.sh (background).
+
+## 05:3x 11-16
+- REVIEW posted 03:43 (re-posted 05:3x): lanes/FABLE-PD-S81-F2s.md. F2s NONE; F2s1 (80 ps) BLOCKING; lever 3 (upper taps) = main-tool early core tap price, needs a tool fix (IMPL).
+- Window STA on f2s2 r2 4_cts.odb (an/cts_f2s2_w80, _w8020, _w4010, _wpp; SDC dirs ks80, ks8020, ks4010, kspp): below -42 = 341 / 118 / 14 / 12.
+- F2s + F2s1 binds refused (BIND_RC=1, TOOLS-SKEW, DIE-S81-92 04:0x). Pilot gen waits for the bind (run/b/B6gF2s/out).
+- Pilot rows ready: epyc10 fable-fix-s81-col/rows_clk3pp_r2.json (3 clock keys + measured per_port); run f2s3_gen.sh WORK rows_clk3pp_r2.json, then run_kit.sh cts via ot-run.
