@@ -338,9 +338,14 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------
 module ot_s81_rate_match_rt #(parameter integer NRD = 8,
 `ifdef OT_S81_SERDES_RM_RPC8
-                            parameter integer RPC = NRD
+                            parameter integer RPC = NRD,
 `else
-                            parameter integer RPC = 1
+                            parameter integer RPC = 1,
+`endif
+`ifdef OT_S81_SERDES_RM_LOCAL_EMPTY8
+                            parameter integer LOCAL_EMPTY = 1
+`else
+                            parameter integer LOCAL_EMPTY = 0
 `endif
 ) (
     input  wire            wclk, wrst_n,
@@ -354,6 +359,8 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8,
     localparam integer SW = 512 / NRD;
     initial if (SW * NRD != 512) $error("ot_s81_rate_match_rt: NRD must divide 512");
     initial if (RPC != 1 && RPC != NRD) $error("ot_s81_rate_match_rt: RPC must be 1 or NRD");
+    initial if (LOCAL_EMPTY != 0 && (LOCAL_EMPTY != 1 || RPC != NRD))
+        $error("ot_s81_rate_match_rt: LOCAL_EMPTY requires RPC=NRD");
     // RPC=NRD: private read-select counters, one beside each output slice.
     // Every copy follows the ORIGINAL rrst_nc/empty/increment contract, hence
     // equals rp[2:0] even when rrst_nd independently resets an output bank.
@@ -390,14 +397,32 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8,
                 else q <= rd_n[gs * SW +: SW];
         end else begin : g_local
             (* keep *) reg [2:0] rpq;
-            wire [511:0] rw = empty ? 512'd2 : mem[rpq];
-            always @(posedge rclk or negedge rrst_nc)
-                if (!rrst_nc) rpq <= 3'd0;
-`ifdef RMRPC_RT_MUT_STALE
-                else if (!empty && (gs != 5 || rp[3])) rpq <= rpq + 3'd1; // bench mutant only
+            wire bank_empty;
+            // Same-cycle local occupancy test. The kept wrap bit and rpq form
+            // an exact copy of rp, reset by rrst_nc (never an output bank reset).
+            // Global publication, credit and synchronizer stages stay unchanged.
+            if (LOCAL_EMPTY) begin : g_empty_local
+                (* keep *) reg rpw;
+`ifdef RMEMPTY_RT_MUT_WRAP
+                wire [3:0] bank_rp = {(gs == 5 ? 1'b0 : rpw), rpq};
 `else
-                else if (!empty) rpq <= rpq + 3'd1;
+                wire [3:0] bank_rp = {rpw, rpq};
 `endif
+                assign bank_empty = g2b(wp_g2) == bank_rp;
+                always @(posedge rclk or negedge rrst_nc)
+                    if (!rrst_nc) {rpw, rpq} <= 4'd0;
+                    else if (!bank_empty) {rpw, rpq} <= {rpw, rpq} + 4'd1;
+            end else begin : g_empty_shared
+                assign bank_empty = empty;
+                always @(posedge rclk or negedge rrst_nc)
+                    if (!rrst_nc) rpq <= 3'd0;
+`ifdef RMRPC_RT_MUT_STALE
+                    else if (!empty && (gs != 5 || rp[3])) rpq <= rpq + 3'd1; // bench mutant only
+`else
+                    else if (!empty) rpq <= rpq + 3'd1;
+`endif
+            end
+            wire [511:0] rw = bank_empty ? 512'd2 : mem[rpq];
             always @(posedge rclk or negedge rrst_nd[gs])
                 if (!rrst_nd[gs]) q <= 512'd2 >> (gs * SW);
                 else q <= rw[gs * SW +: SW];
