@@ -17,3 +17,8 @@ Gates: DRC 0, TT setup >= -42, FF non-port hold >= 0, LEC.
 - Wrong side = die RTL frozen copy physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv (cab54e3df937).
 - Fix file sha 51beecd2dc38: intel2 /srv/opentallas-scratch2/claude/s81-bksel-o/idx_hcparam/dsdv_idx_l20s.sv; epyc10 same dir + repo path.
 - RESULT bksel-hcparam PASS posted (B6gF2s2 bind + fixed file: mismatches 1 -> 0, epyc10 s81-bksel-o/hcp_check). HOLDGEN asked to re-key term to result:S81-BKSEL-O:bksel-hcparam. Next bind must price tl_o +3 edges in LATCHECK.
+
+## CODEX takeover 2026-11-16 09:55 PST
+- fx5 was stopped at 08:40 (earlier running line is stale). fx6 epyc2 active pid 1459553 at GRT extra iteration 16/30, CPU 157%, no duplicate launch.
+- Off-grid driver failure is historical; current 4_cts.odb is legalized. Read post-GRT pk2 input paths, then routed TT/FF/DRC before export.
+- Shared hold matcher still has DIE-S81-92:bksel-hcparam twice; COORD notified to re-key to S81-BKSEL-O:bksel-hcparam. Next bind keeps tl_o +3 edges price.
