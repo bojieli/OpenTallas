@@ -140,6 +140,59 @@ class PinMode(unittest.TestCase):
             self.assertTrue(TS.check_die("kv", t, "/x", tools_sha="b" * 40, rt_root=rt)["ok"])
 
 
+class OneClosure(unittest.TestCase):
+    def test_only_restricts_both_sides(self):
+        with tempfile.TemporaryDirectory() as t:
+            m = tree(Path(t) / "main", dict(BASE, **{"tools/die_plan/unrelated.py": "u=1\n"}))
+            bad = tree(Path(t) / "bad", dict(BASE, **{"tools/die_plan/unrelated.py": "u=2\n", "tools/die_plan/gen_phys.py": "a=2\n"}))
+            r = TS.check_die("s81", bad, m, only={"tools/die_plan/gen_phys.py", "tools/die_plan/sdc_lint.py"})
+            self.assertEqual(r["refused"], {"tools/die_plan/gen_phys.py": "differ"})
+            self.assertEqual(r["n_closure"], 2)
+            self.assertEqual(len(TS.check_die("s81", bad, m)["refused"]), 2)
+
+
+class MeasureAll(unittest.TestCase):
+    """FABLE-FLOW-2200 class 6: warn logs WARN not refuse, one closure, every enabled die measured without launching"""
+    def setup(self, t, mode):
+        main = tree(Path(t) / "main", {"tools/die_plan/gen.py": "import gen_phys\n", "tools/die_plan/gen_phys.py": "a=1\n",
+                                       "tools/die_plan/bind.py": "b=1\n", "tools/die_plan/other.py": "o=1\n"})
+        bad = tree(Path(t) / "bad", {"tools/die_plan/gen.py": "import gen_phys\n", "tools/die_plan/gen_phys.py": "a=2\n",
+                                     "tools/die_plan/bind.py": "b=1\n", "tools/die_plan/other.py": "o=2\n"})
+        ok = tree(Path(t) / "ok", {"tools/die_plan/gen.py": "import gen_phys\n", "tools/die_plan/gen_phys.py": "a=1\n",
+                                   "tools/die_plan/bind.py": "b=1\n", "tools/die_plan/other.py": "o=1\n"})
+        c = cfg(src=bad, tool_skew_main=main)
+        c["dies"]["qwen_kvsys"]["tool_skew"] = mode
+        c["dies"]["s81"] = dict(c["dies"]["qwen_kvsys"], src=ok, enabled=True)
+        c["dies"]["qwen_kvsys"]["enabled"] = True
+        return c
+
+    def run_all(self, mode):
+        with tempfile.TemporaryDirectory() as t:
+            c = self.setup(t, mode)
+            ap = FakeAP(t, "")
+            ap.coord = []
+            ap.coord_append = lambda rel, line: ap.coord.append(line)
+            st = {"items": {}}
+            rows = KW.tool_skew_measure_all(ap, c, st, t)
+            tbl = json.loads((Path(t) / "kit_wave_tool_skew.json").read_text())
+            return rows, ap, tbl
+
+    def test_warn_logs_warn_and_counts_only_the_import_closure(self):
+        rows, ap, tbl = self.run_all("warn")
+        self.assertEqual(rows["qwen_kvsys"]["n_differ"], 1)            # other.py differs but is outside the closure
+        self.assertEqual(rows["qwen_kvsys"]["modules"], ["tools/die_plan/gen_phys.py"])
+        self.assertEqual(rows["s81"]["n_differ"], 0)                   # a die that launches nothing is measured too
+        txt = "\n".join(ap.logs)
+        self.assertIn("TOOL-SKEW WARN qwen_kvsys: 1 of 3 import-closure module(s) differ from main (warn, launching)", txt)
+        self.assertIn("TOOL-SKEW OK s81", txt)
+        self.assertNotIn("refuse", txt.lower().replace("(launches refused)", ""))
+        self.assertEqual(tbl["dies"]["qwen_kvsys"]["n_closure"], 3)
+
+    def test_refuse_mode_logs_refuse(self):
+        rows, ap, tbl = self.run_all(True)
+        self.assertIn("TOOL-SKEW REFUSE qwen_kvsys", "\n".join(ap.logs))
+
+
 class LaunchGate(unittest.TestCase):
     def setup(self, t, tool_skew=True, allow=None):
         main = tree(Path(t) / "main", BASE)

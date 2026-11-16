@@ -180,7 +180,13 @@ def is_ancestor(a, b, cwd=REPO):
 def parse_approvals(text):
     """-> ordered list of {'key','branch','sha','line','revoked'} (first approval of a key wins; REVOKED after it marks it)"""
     out, seen = [], {}
+    entry_au = None                                   # author of the "- <ts> KIND [AUTHOR -> ...]" entry a line belongs to
     for n, line in enumerate(text.splitlines(), 1):
+        if line.startswith("- "):
+            m0 = AUTHOR_RE.search(line)
+            entry_au = m0.group(1) if m0 else None
+        elif line.startswith("#"):
+            entry_au = None                           # a heading ends the entry
         ts = LINE_TS_RE.match(line)
         ext = bool(ts) and ts.group(1) >= APPROVE_EXT_FROM
         heads = list((APPROVE_HEAD_RE if ext else re.compile(r"COORD (APPROVED|REVOKED):")).finditer(line))
@@ -190,6 +196,10 @@ def parse_approvals(text):
             continue
         au = AUTHOR_RE.search(line[:heads[0].start()])
         if au and au.group(1) not in APPROVERS:
+            continue
+        # a continuation line inherits its entry's author: 11-16 00:0x MERGE-QUEUE-1's own STATE quoted the approval form
+        # on a continuation line and the parser took it as COORD's approval of tools-converge-1115-skew2
+        if not au and not line.startswith("- ") and entry_au and entry_au not in APPROVERS:
             continue
         found = [(m.group(1), m.group(2) or "", m.group(3).lower()) for m in (APPROVE_EXT_RE if ext else APPROVE_RE).finditer(line)]
         if ext:

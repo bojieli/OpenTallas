@@ -386,6 +386,19 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class ParseAuthor(unittest.TestCase):
+    def test_continuation_line_of_a_lane_entry_is_not_an_approval(self):
+        import importlib.machinery, importlib.util
+        ld = importlib.machinery.SourceFileLoader("omq_parse", P)
+        m = importlib.util.module_from_spec(importlib.util.spec_from_loader("omq_parse", ld)); ld.exec_module(m)
+        text = ("- 2026-11-15 23:54 PST STATE [MERGE-QUEUE-1 -> COORD] r253.\n"
+                "skew2: on your 'COORD APPROVED: claude/x-skew2 @87ba593cd35' it lands.\n"
+                "- 2026-11-15 23:58 PST RULING [COORD -> MERGE-QUEUE-1] r254\n"
+                "  COORD APPROVED: claude/clean-refguard-1115 @0668000bbc4\n")
+        keys = [a["key"] for a in m.parse_approvals(text)]
+        self.assertEqual(keys, ["claude/clean-refguard-1115@0668000bbc4"])
+
+
 class Reap(unittest.TestCase):
     def test_wt_drop_kills_processes_left_in_the_tree_and_its_basetemp_only(self):
         import importlib.machinery, importlib.util, tempfile, time
