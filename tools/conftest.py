@@ -7,6 +7,9 @@ itself; tools/die_plan/test_signoff_profile.py covers the minimal profile and it
 import os
 import pytest
 
+# TOOLS-CONVERGE-1115: the kit_wave launch gate (autopilot/tool_skew.py) never ssh-es to a die tree host under test
+os.environ.setdefault("OT_TOOL_SKEW_REMOTE", "0")
+
 
 @pytest.fixture(autouse=True)
 def _legacy_signoff_profile_default(monkeypatch):
