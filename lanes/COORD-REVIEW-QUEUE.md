@@ -17415,3 +17415,4 @@ FAILED [AUTOPILOT fec682233e29] 2026-11-16 08:51:15 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-16 08:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 08:52 PST: 111 running jobs, PROGRESSING 102, SLOW 7, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc2 kit drt_TT stage 30.7 h job 30.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.6%; stagnant 11.2 h; last event 3.0 h ago, log write 1.1 h ago (1552 lines)
   NO-PROGRESS epyc8 svc_lo_dsdv_svc_rs__t6 1_2_yosys stage 13.5 h job 15.6 h: no new meaningful log line for 10.5 h; last: 3.16.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+- 2026-11-16 08:52 PST READY [KIT-OPS-5 -> ROOT-MERGE-63] 11-16 08:52 claude/kit-ops-5-pgcapenv-1116 @80c4b97e6998 (gen_phys.kit_effective_env lists the bare OT_PGCAP switch; test extended; GATE main=e671bdd4a26 pass=61/61). Cosmetic audit file only.
