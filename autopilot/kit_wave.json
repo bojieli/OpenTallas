@@ -35595,9 +35595,9 @@
         {
           "id": "s81-mig-024-k1",
           "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-          "reason": "DIE-S81-92 2026-11-16 00:5x: RE-HELD. B6gG3b/src tools predate die-phase/TT-repair/C3b gen code, so OT_PG_DIE_PHASE is ignored: G3b kits gen core-phase PDN (pdn.tcl M7 -offset 4.128, no pg_pin_check; slice_station t46 a6, t47 a5). Release on B6gG3c = the same G3b plan + RTL on the TOOLS-CONVERGE S81 tree (die-phase + TT repair), checked on one fresh kit (M7 offset 8.448).",
+          "reason": "DIE-S81-92 2026-11-16 00:5x: RE-HELD. B6gG3b/src tools predate die-phase/TT-repair/C3b gen code, so OT_PG_DIE_PHASE is ignored: G3b kits gen core-phase PDN (pdn.tcl M7 -offset 4.128, no pg_pin_check; slice_station t46 a6, t47 a5). Release on B6gG3c = the same G3b plan + RTL on the TOOLS-CONVERGE S81 tree (die-phase + TT repair), checked on one fresh kit (M7 offset 8.448). | r331 F2s3 reviewed source successor and canonical395SDClintPASS: sourceevent rekey F2sv->F2s3; lint term retained, physical result holds independent.",
           "release": [
-            "event_adopt:B6gF2sv",
+            "event_adopt:B6gF2s3",
             "lint_clean:s81"
           ],
           "migrated": true,
@@ -35823,7 +35823,11 @@
             "slice_station__t7__cl945bc067",
             "slice_station__t8"
           ],
-          "carry": true
+          "carry": true,
+          "release_history_1116_F2s3": [
+            "event_adopt:B6gF2sv",
+            "lint_clean:s81"
+          ]
         },
         {
           "id": "s81-mig-003-k3-k4",
