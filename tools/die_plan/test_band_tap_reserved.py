@@ -93,3 +93,16 @@ def test_tap_reach_no_site_in_reach_raises():
     t["clock"]["band_tap_reach_um"] = 50.0
     with pytest.raises(ValueError):
         CL._storage_rects(t, "b", 100, [])
+
+
+def test_band_place_region_and_min_area():
+    t = _type()
+    b = CL._storage_rects(t, "b", 100, [], place={"region_um": [0, 0, 400, 40], "min_area_um2": 900.0, "no_reach": True})
+    rs = b.get("rects_um") or [b["rect_um"]]
+    assert all(r[3] <= 40 + 1e-6 for r in rs)
+    assert sum((r[2] - r[0]) * (r[3] - r[1]) for r in rs) + 1e-6 >= 900.0
+
+
+def test_band_place_region_too_small_raises():
+    with pytest.raises(ValueError):
+        CL._storage_rects(_type(), "b", 100, [], place={"region_um": [0, 0, 400, 25], "min_area_um2": 5000.0})

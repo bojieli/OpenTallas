@@ -617,6 +617,8 @@ SCHEMA = {
                         "band_tap_reach_um": _pos,
                         # S81-BANDTAP-1115: frozen landing bands {bus: band dict with rect_um[/rects_um]}, used verbatim by compose
                         "band_fixed_um": {"type": "object"},
+                        # S81-BANDTAP-1115 r186: {bus: {region_um: rect, min_area_um2: n, no_reach: bool}} band placement for one bus
+                        "band_place_um": {"type": "object"},
                         # S81-BANDTAP-1115: tap windows (holes) cut in frozen bands: where S81-PHYT1 puts taps for uncovered band points
                         "band_tap_windows_um": {"type": "array", "items": _rect},
                         "band_tap_sites_um": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},

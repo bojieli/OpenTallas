@@ -647,10 +647,11 @@ def _storage_rects(t,bus,width,used,*,branch=3,depth=2,**kw):
 
 
 def _storage_rects_one(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_rects=24,g=1.08,margin=17.28,reach=405-2.16,
-                   min_w=4,min_h=2,picks=(),reach_k=1.0):
+                   min_w=4,min_h=2,picks=(),reach_k=1.0,place=None):
     import numpy as np
     w,h=t["outline_um"];px,py=_bus_xy(t,bus);rw=64*math.ceil((width+int(has_epoch))/64)
     reserve=_band_reserve_um2(width,has_epoch);obstacles=_band_obstacles(t,used,phy,resets)
+    if place and place.get("min_area_um2"):reserve=max(reserve,float(place["min_area_um2"]))   # e.g. ring density <= 0.6 (r186)
     nx,ny=int(w//g),int(h//g)
     free=np.ones((nx,ny),bool)
     for o in obstacles:
@@ -661,7 +662,11 @@ def _storage_rects_one(t,bus,width,used,*,has_epoch=True,phy=(),resets=(),max_re
     xs=np.arange(nx+1)*g;ys=np.arange(ny+1)*g
     dx=np.maximum(np.abs(xs[:-1]-px),np.abs(xs[1:]-px));dy=np.maximum(np.abs(ys[:-1]-py),np.abs(ys[1:]-py))
     free&=(dx[:,None]+dy[None,:])<=reach+1e-9
-    tr=_tap_reach(t)
+    if place and place.get("region_um"):                      # S81-BANDTAP-1115 r186: the band lives inside this region
+        rg=place["region_um"];m_=np.zeros(free.shape,bool)
+        m_[max(0,int(math.ceil(rg[0]/g))):min(nx,int(rg[2]//g)),max(0,int(math.ceil(rg[1]/g))):min(ny,int(rg[3]//g))]=True
+        free&=m_
+    tr=_tap_reach(t) if not (place and place.get("no_reach")) else None
     if tr:free&=_reach_mask(free.shape,g,(tr[0]*reach_k,tr[1]))               # S81-BANDTAP-1115: band points a legal tap site reaches
     rects=[];left=reserve
     while left>1e-6:
@@ -1229,6 +1234,12 @@ def _compose(plan,table,plan_path=None,observer_part="glue",observer=None,monito
                 # moved rect) is taken as is: taps and bands stop chasing each other
                 band=copy.deepcopy(fx)
             try:
+                bp=((t.get("clock") or {}).get("band_place_um") or {}).get(bus)
+                if band is None and bp and band_multi_rect:        # S81-BANDTAP-1115 r186: placement region + minimum area for this bus
+                    try:
+                        band=_storage_rects_staged(t,bus,int(r["width"]),used,phy=phy,resets=resets,place=bp)
+                        band["band_place_um"]=bp;used+=band.get("rects_um") or [band["rect_um"]]
+                    except ValueError:band=None
                 if band is None and _tap_reach(t) and band_multi_rect:      # S81-BANDTAP-1115: tap-reach types take the reach-masked search first
                     for k in (1.0,1.5,2.0):                     # widest reach last; none = the plain search below
                         try:
