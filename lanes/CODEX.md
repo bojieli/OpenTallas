@@ -10255,3 +10255,26 @@ Initial actionable findings: SVC closure reference mismatches MAIN-source F2 bin
 OWNER?
 No new owner decision required at takeover.
 FOR-CLAUDE: independent FABLE review for HEAD NF14/NF14r remains pending; continue HEAD structural closure while awaiting it.
+
+## CODEX live coverage 2026-11-16 10:08 PST
+All active inherited lanes covered; HBM parked by latest owner handoff. Workers keep original lane files/handoffs current.
+| Lane group | Actual work/job | Remaining action or diagnosed failure |
+|---|---|---|
+| DIE-S81-92 / COLTAP / COL-O | epyc10 s81-b3-clk F2s3 strict bind, healthy elab; five-pilot launcher armed by intel2 PID347243 | On bind0 generate five correct reset-copy pilots; r310 GRT setup/overflow gate before wave RESULT. Old F2s2/F2s3 mixed pilots invalid. |
+| S81 IFN0 | epyc7 s81-ifn0-halves hw1/he1 admitted clients241701/241702 | Correct actual604 input-capture clock selection vs18 predecessor; collect GRT. |
+| FABLE-DIE-S81 | epyc2 fable-die-s81/s81/F2s2ke fixed-form die run | Collect current run, preserve active progress. |
+| S81 SVC/SVCMEM | epyc9 main reference closure8e3c91c7 SELF-CHECK12605dc2 PASS; family16 application running; epyc2 kit generation | Commit gated current-source reference, pack into same-line source tree, then pilots. Relocate t6 stage9 sites in next delta (+0cycles). |
+| S81 bksel | epyc2 fable-fix-bksel/fx6 GRT final0, now timing/repair | Read actualpk2 timing; token lower_bk profile needs internalproducer+3, do not double charge transport. |
+| S81 native_e/gunit | native_e epyc8 DRC0/LEC30610eq/TT-23.24,6 internalhold misses worst-6.30 | Diagnose route-preserving hold ECO. gunit signed eco_gf1115c found/exported; stale provider replaced, no rebuild. |
+| S81 Serdes | six formC GPL epyc7 | ActualC RX selector u_rxf vsu_rxf_q gives0/0 moved: corrected source+placement successor underway. Reset-affinity fallback sized. |
+| S81 CONG/STRIP/LEAF | t28 W+85um row/allocator; t8 S+216um corridor fallback | Existing t34/47/62 repair runs preserved; t8 buffer explosion234k->801k cells diagnosed. Safe watcher99618079 approvedr316. |
+| HEAD types/Serdes | sd6DRT,sd7GPL,hw4hold,he9/10DRT;he11 output-bank placement form preparing | he10only2 EPC output capture paths worst-87.56; fix wholebank at macroedge0cycles. DOREG source67db mergedmain87218eaba92. |
+| HEAD die/M7PIN | NF14 chain done; real-view19/26 STA activeepyc2;NF15pg package preparing | NF14/r independentFABLE review FOR-CLAUDE. Four-port force-rip causalDRT0206A/B activeepyc10; historicalp16g active/notstalled. |
+| QC CBGLUE/KNEE/HC/die/pinaccess | D/E/F binds activeepyc2;G diagnostic has macro-overlap, Hrows fixing;HCFE P3 activeepyc10 | SUL1 packed-driverchecker0551428 GREEN24/24 approvedr316; equal-depth rows max4 cost0 but mustmacro-clear. Stickyfaulta37b263 GREEN6/6 approvedr318, hardwareadoptionwaitsP3. |
+| KV PVHUB/PVHG/die | HG1A composed08d352df7ef0, full-treebind/G0/LATCHECKepyc10;7yhrchangedpv_v1n gen finishing | Changedtypesonly C/Wo/pv_v1n readiness; unchangedroutinePCsmokes neednotdelay. Missingcoherentmanifest fixedthroughdata_pack. HG1includesk2r ringcore remedy;13holds rekeyed fromobsoletePVsplit/cellcap. |
+| TOKEN | +3 calendar nativecomponent PASS6000edges/3epochs/all53bits,oldprofile/lostbasecontrols caught | FinalQC/KVbindprogramme cosim pending; recoveringexistingtokenclone for bksel TX_OFF7->10FACE2 optinprofile and HEADPHYlatencyterms. ProductionG5 remainsOPEN. |
+| Fleet/holds/trees/cleanup | S81_d6 gen distributedepyc2/7/10;v4 strictbindrepairedmanifest activeepyc10 | Newpackage mapresolution322cf809 GREEN2/2 approvedr317; publishfixedcoherenttreebeforeadopt. gunitproviderrepaired;hd_turn_b confirmedarchivedboth. |
+| MERGE-QUEUE | r314KV272407->main9543aab2ae5;HEAD67db->main87218eaba92; sixhosttools syncdone | r315/316trainactive; r317/318queued; no freshmergefailure. Historicalfailedbranches diagnosed/superseded/unneeded, no blindreplay. |
+OWNER?
+No new owner choice needed; work continues.
+FOR-CLAUDE: independent FABLE reviews HEAD NF14/r and current QC combined event where required; no blocking dialog.
