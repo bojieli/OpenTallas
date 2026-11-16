@@ -37,6 +37,45 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+
+def qwen_qc_tail1_parameter_view_model():
+    """Actual J's 24 unsigned tail1 obligations; no new delay versus published J."""
+    variants = [(17, 9, 10, 4), (16, 9, 10, 4),
+                (15, 9, 10, 4), (16, 9, 11, 12)]
+    rows = []
+    for hi, north, south, replicas in variants:
+        pad_bits = 74 * hi  # 64 data + 4 error + 6 valid bits
+        logical_delta = pad_bits + 2 * (north + south - 28)
+        rows.append(dict(hi_pad=hi, skew_n=north, skew_s=south,
+            physical_replicas=replicas, hi_delay_bits=pad_bits,
+            logical_delay_state_delta_vs_generic=logical_delta,
+            positive_flop_pair_area_upper_um2=pad_bits*0.33534,
+            source_parameters_already_priced_by_J=True,
+            added_edges_vs_published_J=0))
+    return dict(schema="opentallas.qc.tail1-parameter-view.v1",
+        candidate=True, default_plan_enable=False,
+        original_master="qfd_dv_s8_station_tail1",
+        reason="generic HI_PAD0/SKEW14 signed view cannot qualify J's selected parameters",
+        variants=rows, replicas_total=24, region_lanes=2,
+        added_arithmetic_units=0, result_bits_per_cycle=64,
+        memory_macro="ot_sram_1r1w_32x64_m1", macros_per_core=5,
+        macro_capacity_bits_per_core=10240,
+        physical_memory_read_write_bytes_per_cycle_upper=80,
+        outline_um=[162,162], outline_delta_um2=0,
+        macro_body_area_um2=5*31.968*17.280,
+        baseline_measured_body_area_um2=8221,
+        body_area_upper_um2=8221+74*17*0.33534,
+        body_fill_upper=(8221+74*17*0.33534)/(162*162),
+        boundary_bits_per_cycle=558, boundary_bits_delta=0,
+        added_external_tracks=0, added_mux_demux=0,
+        internal_hi_pipeline_width=74, added_hi_clock_sinks_upper=74*17,
+        wrapper_fault_input_edges=1,
+        wrapper_fault_note="preserve existing core_latency.in fault contract; qualify exact wrapper, never infer generic physical equality",
+        boot_policy="existing two input reset stages and timed local reset tree retained; no release rule change",
+        latency_price="absolute HI_PAD/SKEW parameters above; zero new cycles versus actual J RTL/plan",
+        qualification="four exact views unqualified; measured native macro/mapped timing, ordinary TT/FF/DRC/LEC required")
+
+
 def qwen_qc_w5_landed_count_candidate_model():
     """Keep the C diagnostic; actual N43 region/table mapping selects no update."""
     ports = ("rx_flit", "rx_v", "tx_up")
