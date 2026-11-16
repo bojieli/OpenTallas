@@ -5891,7 +5891,7 @@ def run_item(spec_path):
             if rc:
                 return fail("kit_rtl", txt)
             farm = (f"rm -rf {q(kt)}/tools && mkdir -p {q(kt)}/tools && cp -a {q(src)}/tools/die_plan {q(kt)}/tools/die_plan && "
-                    f"rsync -a --ignore-existing {q(kt)}/main_dp/ {q(kt)}/tools/die_plan/ && cp -f {q(kt)}/main_dp/bind.py {q(kt)}/tools/die_plan/bind.py && "
+                    f"rsync -a --ignore-existing {q(kt)}/main_dp/ {q(kt)}/tools/die_plan/ && cp -f {q(kt)}/main_dp/bind.py {q(kt)}/main_dp/param_wrap.py {q(kt)}/tools/die_plan/ && "
                     f"cd {q(src)} && for e in * .[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools ] && continue; "
                     f"ln -sfn {q(src)}/\"$e\" {q(kt)}/\"$e\"; done; "
                     f"for e in tools/* tools/.[!.]*; do [ -e \"$e\" ] || continue; [ \"$e\" = tools/die_plan ] && continue; "
