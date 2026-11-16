@@ -453,7 +453,7 @@ def frame_slot(die, frame):
     raise KeyError(frame)
 
 
-def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None, stretch=None, ret_score=None):
+def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=None, kslot=1, nsr=None, stretch=None, ret_score=None, frame_instance=None):
     """legalise one phase on pairs (a contiguous run qa[off:off + n]); assign_slots in field-slot indexing"""
     import frame_return_plan as P
     import v41_rom_ksplit_bankmap as S
@@ -462,7 +462,7 @@ def phase_plan(die_frame_master, lk, pairs, off, mat, x, nseg, iters, assign=Non
     if kx is not None and not all(n in kx['slot_extra'] for n in range(1, kslot + 1)):
         kx = None      # a slot count without a measurement: unmeasured
     plan = P.plan_phase(LX.base_master(die_frame_master), pairs, mat, x, nseg, iters=iters, land_e=LX.land_e(lk),
-                        frame_schedule=LX.source_frame_schedule(die_frame_master),
+                        frame_schedule=LX.source_frame_schedule(die_frame_master, frame_instance),
                         seg_extra=sx, assign=assign, kslot=kslot, nsr=nsr, stretch=stretch, ret_score=ret_score,
                         slot_extra=_prov_slot(kslot) if kx is None else {int(n): v for n, v in kx['slot_extra'].items()})
     plan['assign_slots'] = [(i + off, R, sg) for i, R, sg in plan['assign_slots']]
@@ -564,7 +564,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     if p0['rows']:
         mats, gidx = LX.frame_mats(fxa, p0['rows'])
         _f, _ph, plan0, qa, _q, _bf = LX.frame_programme(master, lk, mats, fxa['x'], rank_rows=p0['rows'],
-                                cap_cfg=LX.aproj_capture_contract(die, sl, fxa, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+                                cap_cfg=LX.aproj_capture_contract(die, sl, fxa, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None, frame_instance=frame)
     else:
         qa = q[:NPAIRS]
     if NPAIRS == 12:
@@ -624,7 +624,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
             capture = FF.capture(fx.meta['rank'], g, FF.expert_slot(grp['mat'][:-3], fx.meta['experts']), spans=spans)
             cap_score = down_cap_scorer([grp['rows'][i] for i in sel], capture)
         plan = phase_plan(master, lk, pairs, 0, mat, grp['x'], nseg, iters if measured else 0, kslot=ks, nsr=nsr_k,
-                          stretch=st_k, ret_score=cap_score)
+                          stretch=st_k, ret_score=cap_score, frame_instance=frame)
         if cap_score is not None:
             plan['single_frame_cap_score'] = cap_score(plan['ret'])
             plan['single_frame_cap_scope'] = 'logical FIN only; physical input ages and simultaneous frames unadmitted'
@@ -646,7 +646,7 @@ def compile_frame(die, frame, fixd, ops, iters=LX.ITERS, only=None):
     bfo = [o for o in ops if o in XB.BF_OPS]
     if bfo:
         phases += compile_bf(field, fx, bfo, g, j, LX.base_master(master), LX.land_e(lk), bf, len(qa),
-                             frame=XB.frame_variant(master))
+                             frame=XB.frame_variant(master), frame_instance=frame)
     if LX.aproj_topology_enabled():
         field.aproj_rank_rows = list(p0['rows'])
         phases[0]['row_index'] = list(p0['rows'])
@@ -673,7 +673,7 @@ def bf_phase_list(fx, ops, npairs):
     return seq
 
 
-def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None):
+def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None, frame_instance=None):
     """the BF16 pair phases of this frame (xs_bf.py): one BSEG segment of up to 2 x 3 rows per phase, super row R on BF
     pair R; the programme (measured descriptor of the master / lane latency, this phase's ROM base) rides the cfg spare
     columns.  A frame without rows in a die-wide phase gets the phase's stream and an EMPTY configuration."""
@@ -681,7 +681,7 @@ def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None):
     import xs_bf as XB
     records=XB.load_meas();measurements={}
     for op in ops:
-        meas,how=XB.meas_for(records,master,land_e,frame,op=op)
+        meas,how=XB.meas_for(records,master,land_e,frame,op=op,frame_instance=frame_instance)
         measurements[op]=dict(meas,calendar=how) if meas is not None else None
     out = []
     for op, gi, c, s, n, R, most in bf_phase_list(fx, ops, XB.BF_PAIRS_DIE):
@@ -698,7 +698,7 @@ def compile_bf(field, fx, ops, g, j, master, land_e, bf, off, frame=None):
         mat = FMatBF(grp['mat'], np.ascontiguousarray(u[:, cols]), list(range(len(u))), op)
         nsr = -(-mat.rows // 2)
         base = [int(field.fill[off + R_]) + (int(field.fill[off + R_]) & 1) for R_ in range(nsr)]   # PP: even start
-        plan = XB.bf_plan(master, bf, vals, s, n, measurements[op] if sel else None, base, frame=frame)
+        plan = XB.bf_plan(master, bf, vals, s, n, measurements[op] if sel else None, base, frame=frame, frame_instance=frame_instance)
         orig = I._place
         I._place = XB.place_bf([(off + R_, R_) for R_ in range(nsr)], s, n)
         try:
@@ -1187,7 +1187,7 @@ def lower_placed_bf(die, op, ctx, rec, fx, sl, g):
         fv = XB.frame_variant(die.inst[fr]['master'])
         _, bfp = B.frame_pairs(master)
         key = XB.shape_key(master, E, fv)
-        _, how = XB.meas_for(meas, master, E, fv,op=name)
+        _, how = XB.meas_for(meas, master, E, fv,op=name,frame_instance=fr)
         if how is None:
             unm.add(key)
         rows = [len(XB.bf_groups(fx, op_)[gi]['groups'][g][j][c * R:(c + 1) * R]) for op_, gi, c, s, n, R, most in seq]
