@@ -1,0 +1,148 @@
+{
+ "note": "FABLE-FIX-QC-CBGLUE 11-16 glue fault-station rows. Apply onto any plan whose type glue has no reach_homes / internal_stations: set the two type keys, set lanes[].fixed_cycles, replace latency.lanes rows (or re-run reach_fix.sync_fixed_cycles against the base). Nothing else changes.",
+ "base_plan_sha256_12": "9c0f8e750f07",
+ "result_plan_sha256_12": "aed254508723",
+ "partition_types": {
+  "glue": {
+   "reach_homes": [
+    {
+     "name": "sys",
+     "rect_um": [
+      556.0,
+      1200.0,
+      770.0,
+      1440.0
+     ],
+     "buses": [
+      "coll_flt_i",
+      "coll_fltv_i",
+      "ctlm_flt_i"
+     ]
+    }
+   ],
+   "internal_stations": [
+    {
+     "conn": "bus:coll_flt_i",
+     "from_um": [
+      765.6,
+      12.0
+     ],
+     "to_um": [
+      765.6,
+      1200.0
+     ],
+     "regs_um": [
+      [
+       765.6,
+       309.0
+      ],
+      [
+       765.6,
+       606.0
+      ],
+      [
+       765.6,
+       903.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "face:E",
+     "note": "R-REACH-2 (S4q9e glue reach delta): 1188 um window -> reach_home sys: 3 FIRM station(s), +3 cycle(s)"
+    },
+    {
+     "conn": "bus:coll_fltv_i",
+     "from_um": [
+      765.6,
+      12.928
+     ],
+     "to_um": [
+      765.6,
+      1200.0
+     ],
+     "regs_um": [
+      [
+       765.6,
+       309.696
+      ],
+      [
+       765.6,
+       606.464
+      ],
+      [
+       765.6,
+       903.232
+      ]
+     ],
+     "bits": 70,
+     "launch": "face:E",
+     "note": "R-REACH-2 (S4q9e glue reach delta): 1187 um window -> reach_home sys: 3 FIRM station(s), +3 cycle(s)"
+    },
+    {
+     "conn": "bus:ctlm_flt_i",
+     "from_um": [
+      12.0,
+      1456.8
+     ],
+     "to_um": [
+      556.0,
+      1440.0
+     ],
+     "regs_um": [
+      [
+       275.6,
+       1440.0
+      ]
+     ],
+     "bits": 1,
+     "launch": "face:N",
+     "note": "R-REACH-2 (S4q9e glue reach delta): 561 um window -> reach_home sys: 1 FIRM station(s), +1 cycle(s)"
+    }
+   ]
+  }
+ },
+ "lanes_fixed_cycles": {
+  "coll_core__fltc": 3,
+  "tt_ctlm__fltt": 1,
+  "coll_core__fltvc": 3
+ },
+ "latency_lanes": {
+  "coll_core__fltc": {
+   "cycles": 12,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 3,
+   "clock_landing": 6,
+   "natural": 12,
+   "pad": 0,
+   "param": "LAT_COLL_CORE__FLTC"
+  },
+  "tt_ctlm__fltt": {
+   "cycles": 10,
+   "stations": 2,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 1,
+   "clock_landing": 5,
+   "natural": 10,
+   "pad": 0,
+   "param": "LAT_TT_CTLM__FLTT"
+  },
+  "coll_core__fltvc": {
+   "cycles": 12,
+   "stations": 1,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 3,
+   "clock_landing": 6,
+   "natural": 12,
+   "pad": 0,
+   "param": "LAT_COLL_CORE__FLTVC"
+  }
+ },
+ "latency_before": {
+  "coll_core__fltc": 9,
+  "tt_ctlm__fltt": 9,
+  "coll_core__fltvc": 9
+ }
+}

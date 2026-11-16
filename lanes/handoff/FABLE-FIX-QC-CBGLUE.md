@@ -21,7 +21,7 @@ QC event owner (binds, adopts): FABLE-FIX-QC-KNEE-HC, epyc9 fable-fix-qc-knee-hc
   chains (3 / 3 / 1 stations, sites from reach_rules' own route code, 214 flops), lanes coll_core__fltc 9 -> 12,
   coll_core__fltvc 9 -> 12, tt_ctlm__fltt 9 -> 10 (sticky fault lanes; reach_fix.sync_fixed_cycles: rule_broken 0, 0
   latency groups change). Only type glue + those 3 lanes / latency rows differ from S4q9d.
-- File: epyc9 .../fable-fix-qc-cbglue/delta/zz_s29_qc103_s4q9e.json (sha aed254508723) + 3 sidecars; composer mk_s4q9e.py;
+- File: epyc9 .../fable-fix-qc-cbglue/delta/zz_s29_qc103_s4q9d_cbgfault.json (sha aed254508723; renamed, S4q9e is FABLE-DIE-QC; rows file lanes/handoff/FABLE-FIX-QC-CBGLUE-fault-station-rows.json sha 7720eceed9a4, KNEE-HC composes the combined event) + 3 sidecars; composer mk_s4q9e.py;
   reports delta/s4q9e.report.json, s4q9e.sync.json. Gates: reach_rules glue 0 errors; plan_gate_pre + reach_fix see post.
 - Needs: one bind (lanes change: LATCHECK must show exactly those 3 lane deltas as planned), then a glue kit.
 
