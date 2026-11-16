@@ -36,6 +36,30 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+
+def qwen_qc_w5_landed_count_candidate_model():
+    """Keep the C diagnostic; actual N43 region/table mapping selects no update."""
+    ports = ("rx_flit", "rx_v", "tx_up")
+    return dict(schema="opentallas.qc.w5-landed-count-candidate.v2",
+        planner_source="dec8cc442acfcee01c5f3f85fd363db15188ef9e",
+        source_partition="io_serdes_2", destination_partition="c_W5_bf_01",
+        actual_common_physical_region="c_W5_bf_01",
+        diagnostic_changes=[dict(port=p, old_k=3, new_k=4,
+            old_scheduled_edges=2, new_scheduled_edges=3,
+            diagnostic_added_edges=1, diagnostic_added_ps=833,
+            present_in_selected_n43_ca=False) for p in ports],
+        diagnostic_c_crossings=2993, actual_n43_ca_crossings=2525,
+        compared_changed_rows=468, actual_same_region_rows=468,
+        actual_native_ca_overlap=0, selected_changes=[],
+        selected_programme_delta_edges=0, selected_programme_delta_ps=0,
+        register_depth_delta=0, region_delta=0, start_edge_delta=0,
+        geometry_delta_um2=0, external_tracks_delta=0,
+        applicability_evidence="delta/ca_pair_diag_1116/planner_fixed/n43_applicability_receipt.json",
+        applicability_rule="exact physical-region mapping and native CA table overlap; never infer applicability from graph-node counts",
+        qualification="C diagnostic fixed; actual N43 counter and programme delta empty; normalized source bind still pending")
+
+
+
 def qwen_qc_segmented_memory_candidate_model(replicas=96, external_edges=43):
     """Bound S4Q9L census; candidate only, no closure or schedule credit."""
     if type(replicas) is not int or replicas < 1 or not 20 <= external_edges <= 49:
