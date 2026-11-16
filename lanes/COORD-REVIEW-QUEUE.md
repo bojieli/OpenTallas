@@ -17585,3 +17585,4 @@ FAILED [AUTOPILOT fec682233e29] 2026-11-16 08:51:15 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/kit-ops-7-skewv2-1116 @3292b84132e
 - 2026-11-16 09:36 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.qwen_kvsys has key(s) no runtime code reads: prev_widen1116; the setting does nothing (delete it or add its reader)
 - 2026-11-16 09:36 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.qwen_compute has key(s) no runtime code reads: prev_widen1116; the setting does nothing (delete it or add its reader)
+- 2026-11-16 09:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc9: rt/current 3861a96974fb != hub 4da6b671b6f5. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
