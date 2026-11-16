@@ -27,7 +27,7 @@ line with the plan.
 | START reader hop | 13 types over 405 um (405.4 to 573.0) | BAD |
 
 Render viewed: whole-die floorplan + feed tree, clock tree + cells, tap insertion map
-(epyc9 fable-die-kv/runs/b7/die_b7.png is not written; the copy is on rtx-pro scratchpad fdkv/die_b7.png).
+(intel2 ~/tmp/fdkv/die_b7.png).
 
 ## 1. What the render and the numbers show
 
@@ -104,9 +104,20 @@ L1524_2..8 hgi_WN ft11 / ft15 chain 418.8 to 427.4; L1427_2..9 hgi_EN ft2 / ft6 
 L2090_1 / L2129_1 / L2168_1 / L2207_1 hg_*_7.ft3_o -> hgi_*_7 414.5. In every case the long part is the last station
 to the out pin inside the sending type.
 
-## 6. Proof of the composed plan (7yhr + A + B + C = 5cfab111c977)
+## 6. Proof of the composed plan (7yhr + A + B + C = 5cfab111c977), MEASURED on epyc2 fable-die-kv/runs/p1 and gate/
 
-PENDING at the time of writing: die chain epyc2 fable-die-kv/runs/p1, plan gate fable-die-kv/gate/gate.out.
+| check | result |
+|---|---|
+| G0 (check.py --r8-strap-pads) | PASS, 0 errors, 2,351 warnings (7yhr: 2,364) |
+| reach_rules check | 0 errors (7yhr: 13), 8 warnings |
+| die clock kit, form b7g, with 48,865 reserved windows cut from the abstracts | rc 0; 32,861 inverters, 10,832 taps |
+| die GRT0 TT and FF | 0 overflow, use 2.47 %, 286.6 m |
+| die STA setup TT | intra +482.2 ps, seam +510.1 ps |
+| kit clock-arrival contract, per-port windows | intra 0 pairs (worst residual 28.0 ps), seam 0 pairs; 1 advisory violation left = the port clamped at 208.25 |
+| tap slew | max 138.9 ps, 0 over 150 |
+| count-aligned gate | 3,915 / 3,915 TT and FF; worst lo +193.9 / +131.1 ps, hi +818.0 / +763.5; bind sim_window_violations 0, min margin +118.5 |
+| die clock gate verdict | BLOCKED(kits): hold on real views unmeasured (section 4) |
+| strict bind + LATCHECK | first try REFUSED by plan_gate_pre INPUT-MISSING: my plan copy sat outside a tree (my setup, not the plan). Rerun in a link tree: epyc2 fable-die-kv/gate2/gate.out, running |
 
 ## 7. Not checked
 
