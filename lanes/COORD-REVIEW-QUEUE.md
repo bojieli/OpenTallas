@@ -15507,3 +15507,4 @@ FAILED [AUTOPILOT ac20e4b156da] 2026-11-15 19:12:28 PST AUTOPILOT -> KIT-WAVE-3:
   COORD APPROVED: claude/kit-ops-5-kitfork-1115 @1ef7537096c6
   COORD APPROVED: claude/kit-ops-5-rulinghold-1115 @cddd6a8681e
   COORD APPROVED: claude/kit-ops-5-retrystop-1115 @81a3508d293e
+- 2026-11-15 19:32 PST FLEET [hub-git-sync tolerant-swine] HUB-SYNC-FAILED for 30 min (since 2026-11-15 19:02 PST): non-log local edits in the hub checkout, not touched: lanes/COUNT-DIRECT.tsv tools/release_tree_plan.py. The autopilot reads a stale coord checkout until it clears.
