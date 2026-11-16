@@ -51,6 +51,10 @@ def row_classes(items, cfg):
             out[key] = "tree_switch" if re.search(r"tree[_-]switch", why, re.I) else "route_hold:" + kind(why)
             continue
         item = str(rec.get("item") or "")
+        cur = d.get("event")
+        if cur and rec.get("event") and rec.get("event") != cur:
+            out[key] = "superseded"          # SUPERSEDED-1116: a row on an old event is not waiting; retire or relaunch it, never count it as non-launching
+            continue
         why = next((str(w) for pat, w in (d.get("hold_items") or {}).items() if fnmatch.fnmatchcase(item, pat)), None)
         if why is not None:
             out[key] = "tree_switch" if re.search(r"tree[_-]switch", why, re.I) else "hold_items:" + kind(why)
@@ -74,10 +78,11 @@ def line(status_text, items, cfg, top=5):
     per = " ".join(f"{h}={v['idle']}(load {v['load']:.0f}/{v['cores']}" + (f", thr {v['committed']}" if v["committed"] is not None else "") + ")"
                    for h, v in sorted(hosts.items(), key=lambda kv: -kv[1]["idle"]))
     holds = hold_counts(items, cfg)
+    sup = holds.pop("superseded", 0)
     ranked = ", ".join(f"{k}={n}" for k, n in holds.most_common(top)) or "none"
     pct = (100.0 * (cores - idle) / cores) if cores else 0.0
     return (f"UNDER-USE idle {idle} of {cores} threads (used {pct:.0f}%): {per or 'no host status'} | "
-            f"rows not launching {sum(holds.values())}: {ranked}")
+            f"rows not launching {sum(holds.values())}: {ranked} | superseded-event rows (not counted, retire or relaunch) {sup}")
 
 
 NEEDS_ACTION_TICKS = 3
