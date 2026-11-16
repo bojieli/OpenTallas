@@ -4489,6 +4489,9 @@
         "cells_basis": {
          "type": "string"
         },
+        "core_latency": {
+         "type": "object"
+        },
         "clock_entry_access": {
          "type": [
           "object",
