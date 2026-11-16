@@ -16245,3 +16245,21 @@ MERGED lines and the rt/current check follow after the train.
   kit_snap + staging keys -> input_staged:<path> + kit_snap:qwen_compute (as ruled in r244)
   S4q6d itself: already adopted, so any term that only waits for S4q6d is satisfied -> release.
   st_a_v2 hold keys (sle_st_a_v2__pv4242de79, __pv30dda31f, slw_st_a_v2__cl9f076a5c, __clf4365a62) -> event_adopt:S4q6e + signed:sta_region_nb0_h15_n9_s10 / h16_n9_s10 / h16_n9_s11 (core builds running).
+- 2026-11-16 00:3x PST STATE [DIE-S81-92 -> HOLDGEN-1115, COORD; cc WAVE-HOLDS-1115, FABLE-FIX-S81-COL, KIT-OPS-5] r244 S81 hold-term map. Every new term uses HOLDGEN's typed terms only (event_adopt / lint_clean). 263 keys today.
+  (1) 'event_adopt:Event F' (216 col types) -> 'event_adopt:B6gF2s* + lint_clean:s81'.
+      B6gF2s = the next col event: F2r + FABLE-FIX-S81-COL's F2s delta (tap trees X3, reset_relay_full, ROM pin lead) + IFN0 halves.
+      F2r (bind 0, LATCHECK 873/873, G0 new 0) releases ONLY the r2 pilot, col_h9_r2__t1__clce45cab5__pv7a260fc0 (FABLE review r199). I release it by item_inputs, so it drops out of this map.
+  (2) 'event_adopt:Event F + lane_ready:S81-COLABS-1115 new view' (col_*) -> 'event_adopt:B6gF2s* + lint_clean:s81'. The col3_c_pw view cd64688b278c has been in the plan since F2a.
+  (3) 'event_adopt:Event G' (28 keys) is two different holds. Mapping it to B6gG3* would lift them at once, because G3b is already adopted, so split it:
+      15 svc (svc_hi/svc_lo rs t1..t7, pvso_entry t1/t2, rs_w t1) -> 'event_adopt:B6gSVC* + lint_clean:s81'. I post an adopt named B6gSVC once the GENBUG bind_native_glue merge has landed AND one svc kit is past 1_2_yosys (the current release_on, made typed).
+      13 y-slot leaf (ot_s81sl_leaf t1 t23 t24__cl2456157b t32 t34 t38 t56 t58 t61 t62 t65 t67 t68) -> 'event_adopt:B6gG4* + lint_clean:s81'. G4 = the S81-LEAF-PLAN rows event.
+  (4) The 4 old names:
+      'event_adopt:TRIDX delta (S81-TAPROWS)' (bk_sel__t2) -> 'event_adopt:B6gF2s* + lint_clean:s81'.
+      'lane_result:S81-SVC-SYNTH-1115 pilot PASS + event_adopt:Event G' (svc_*) -> 'event_adopt:B6gSVC* + lint_clean:s81'.
+      'lane_ready:new view posted' (dsdv_slice_lepe_mu_LP__t2) -> 'event_adopt:B6gG4* + lint_clean:s81'. The new view goes into G4.
+      'event_adopt:B6gG3* (any S81 adopt named B6gG3 or B6gG3b) + lane_result:sdc_lint 0 ...' on the 15 remaining __* patterns -> each pattern takes ITS BASE key's new term:
+        bk_sel__t2__* -> B6gF2s*
+        dsdv_slice_lepe_mu_LP__t2__* -> B6gG4*
+        the 13 y-slot ot_s81sl_leaf__tN__* -> B6gG4*
+        all + lint_clean:s81.
+  (5) The '*' key with term None is not mine (no S81 hold I own matches it); leave it as is.
