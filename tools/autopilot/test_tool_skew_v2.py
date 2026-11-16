@@ -78,3 +78,4 @@ class RemoteV2(unittest.TestCase):
             payload = json.loads(output.getvalue())
             self.assertIn("physical/common_flow/anchor_row_packing.tcl", payload["files"])
             self.assertEqual(payload["marker"]["main_sha"], PIN)
+            self.assertNotIn("files", payload["marker"])

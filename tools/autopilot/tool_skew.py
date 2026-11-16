@@ -258,7 +258,10 @@ def main(argv=None):
         print(json.dumps(manifest(a.tree)))
         return 0
     if a.cmd == "scope-manifest":
-        print(json.dumps(dict(files=tree_scope_manifest(a.tree), marker=v2_marker(a.tree))))
+        marker = v2_marker(a.tree)
+        if marker is not None:
+            marker = {k: marker.get(k) for k in ("main_sha", "version", "manifest_hash")}
+        print(json.dumps(dict(files=tree_scope_manifest(a.tree), marker=marker)))
         return 0
     a.main = a.main or str(Path(__file__).resolve().parents[2])
     allow = load_allow(a.allow or Path(a.main) / ALLOW_REL)
