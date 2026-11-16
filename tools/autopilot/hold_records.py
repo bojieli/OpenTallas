@@ -219,6 +219,34 @@ def term_met(term, rec, die, item, cfg, ctx):
     return False
 
 
+def proof_exclusions(rec, d):
+    """items named as the proof of a proof:<name> term of this record: die.proof_items = {name: [item, ...]}.  A proof:<name> record
+    must never hold them (the proof's own routing is what releases the hold)"""
+    out = set()
+    for t in rec.get("release") or []:
+        kind, val = split_term(t)
+        if kind == "proof":
+            out.update(str(i) for i in ((d or {}).get("proof_items") or {}).get(val) or [])
+    return out
+
+
+def carve_keys(keys, excl, names):
+    """-> (keys without the proof items, [pattern keys that still cover a proof item because no item list is known])"""
+    out, stuck = [], []
+    for k in keys:
+        if k in excl:
+            continue
+        if GLOB.search(k) and any(fnmatch.fnmatchcase(i, k) for i in excl):
+            if names:
+                out.extend(n for n in names if fnmatch.fnmatchcase(n, k) and n not in excl and n not in out)
+            else:
+                out.append(k)
+                stuck.append(k)
+            continue
+        out.append(k)
+    return out, stuck
+
+
 def rec_keys(rec, die_items):
     """record -> ordered list of hold keys: migrated = legacy keys verbatim; else items + patterns expanded against die_items"""
     if rec.get("migrated"):
@@ -252,6 +280,10 @@ def validate_record(rec, cfg):
     elif not (rec.get("items") or rec.get("patterns") or rec.get("keys")):
         errs.append("record selects nothing")
     mig = bool(rec.get("migrated"))
+    ex = proof_exclusions(rec, d)
+    for k in list(rec.get("items") or []) + list(rec.get("keys") or []):
+        if k in ex:
+            errs.append(f"{k!r} is named as the proof of this record's proof: term: a proof record never holds its own proof items")
     for t in rec.get("release") or []:
         e = term_error(t, die, cfg, migrated=mig)
         if e:
@@ -294,6 +326,7 @@ def compile_holds(cfg, ctx=None):
     if cfg.get("_hold_auto_released"):
         cfg["_hold_auto_released"] = [r for r in cfg["_hold_auto_released"] if r[0] not in (cfg.get("_hold_rec_dies") or ())]
     rec_dies = set()
+    stuck_all = []
     for die, d in (cfg.get("dies") or {}).items():
         recs = d.get("hold_records")
         if not isinstance(recs, list) or not recs:
@@ -312,6 +345,11 @@ def compile_holds(cfg, ctx=None):
             if stale and rec.get("follow_plan") and lists.get(cur) is not None:
                 use, stale, rebound = cur, False, True
             keys = rec_keys(rec, lists.get(use) or lists.get(sha) or [])
+            excl = proof_exclusions(rec, d)
+            if excl:
+                keys, stuck = carve_keys(keys, excl, (cfg.get("_item_names") or {}).get(die) or [])
+                for k in stuck:
+                    stuck_all.append((die, rec.get("id"), k))
             rel = [str(t) for t in rec.get("release") or [] if str(t).strip()]
             zero = (not rec.get("migrated")) and bool(rec.get("patterns")) and not keys
             held = 0
@@ -330,6 +368,7 @@ def compile_holds(cfg, ctx=None):
                                              "zero": zero, "keys": len(keys), "held": held, "release": rel,
                                              "migrated": bool(rec.get("migrated"))})
     cfg["_hold_compiled"], cfg["_hold_rec_info"], cfg["_hold_rec_dies"] = comp, info, rec_dies
+    cfg["_hold_proof_stuck"] = stuck_all
     if released:
         cfg["_hold_auto_released"] = list(cfg.get("_hold_auto_released") or []) + released
     return released
@@ -360,6 +399,8 @@ def audit(cfg, launched=()):
                 why = unreachable_why(t, die, cfg)
                 if why:
                     add("TERM-UNREACHABLE", die, rid, f"{t[:90]}: {why}", n=inf["held"])
+    for die, rid, k in cfg.get("_hold_proof_stuck") or []:
+        add("PROOF-HELD", die, rid, f"pattern {k!r} still covers a proof item (no item list to carve it)")
     for die, item in launched:
         d = (cfg.get("dies") or {}).get(die) or {}
         for pat in (d.get("hold_items") or {}):
