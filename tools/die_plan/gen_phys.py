@@ -5902,6 +5902,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
+    shutil.copyfile(Path(__file__).with_name("hold_sdc_guard.tcl"), kd / "hold_sdc_guard.tcl")      # HOLD-SDC-1116
+    cfg.append("export OT_SIGNOFF_SDC_SHA = " + _hashlib.sha256((kd / "constraint.sdc").read_bytes()).hexdigest()[:16])
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -6451,6 +6453,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import pregrt_ff_hold
     pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))
     pregrt_ff_hold.install(t, kd)
+    import hold_sdc_check as _HSC                       # HOLD-SDC-1116: a kit whose hold stages can read another SDC than sign-off fails here
+    _hf = _HSC.kit_findings(kd)
+    if _hf:
+        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.

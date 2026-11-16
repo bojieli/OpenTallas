@@ -32,6 +32,7 @@ read_sdc $::env(FF_SDC)
 foreach clk [all_clocks] {
   if {[llength [get_property $clk sources]]} { set_propagated_clock $clk }
 }
+source [file join [file dirname [info script]] hold_sdc_guard.tcl]   ;# HOLD-SDC-1116
 source $::env(RCFILE)
 estimate_parasitics -$ff_mode
 set ff_pre_w [sta::time_sta_ui [sta::worst_slack_cmd min]]

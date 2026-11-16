@@ -43,6 +43,7 @@ proc ot_final_ff_hold {} {
       error "OT_FINAL_FF_HOLD: clock freeze cannot be disabled"
     }
     source [file join $::ot_final_ff_tooldir clk_freeze.tcl]
+    source [file join $::ot_final_ff_tooldir hold_sdc_guard.tcl]     ;# HOLD-SDC-1116
     ot_clk_freeze $d
     global_route -start_incremental
     # Both scenes are active: hold buffers must retain the real TT setup guard.
