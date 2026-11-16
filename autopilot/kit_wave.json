@@ -729,7 +729,9 @@
     "kv3_pc__cl5a95b461": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
     "kv3_pc_v1__cl23f6a148": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
     "kv3_pc_v1__cl7f648944": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
-    "kv3_sys_c": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key."
+    "kv3_sys_c": "WAVE-HOLDS-1115 2026-11-15 17:10 PST (COORD loop-gap): last FAIL is @kit_rtl TypeError (core_tap_early_ps() args) / AttributeError (reset_tree.pin_root_copies): tool skew between the staged kit tools and src_kv_kvgeom7u. Held until KITRTL-FAIL-1115's KV fix merges and rt/current syncs. Running attempts finish. Lift = delete this key.",
+    "kv3_sys_SD": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "kv3_sys_SD_v1": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109/runs/qwen_kvsys/kit-wave",
    "retry_fix": {
@@ -5711,7 +5713,9 @@
     "kv3_pc__cl5a95b461": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
     "kv3_pc_v1__cl23f6a148": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
     "kv3_pc_v1__cl7f648944": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
-    "kv3_sys_c": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync"
+    "kv3_sys_c": "lane_ready:KITRTL-FAIL-1115 KV fix merged + rt sync",
+    "kv3_sys_SD": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "kv3_sys_SD_v1": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
    },
    "prev_wavehold1115_kvgeom6": {
     "event": "kvgeom6",
@@ -35273,7 +35277,9 @@
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave",
    "hold_items": {
     "hd_spn_eshim_rx": "KIT-OPS-3 11-14: autopilot CLASSIFY SIGNED + ARCHIVED for this type but the wave relaunched it (counter cache is hourly; the signed job was a private/other job, not the wave row): hold until the counter lists it. Lift when a plan block changes.",
-    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns"
+    "hd_ctl_n": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
+    "hd_spn": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "hd_st_str": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key."
    },
    "retry_fix": {
     "hd_ctl_n@14": "KIT-OPS-3 11-13 21:1x (COORD): HEAD-99 switched src to src_head_rp21z_pgcap1d724b73 (FLOW-PGCAP-1 1d724b73cc) with same plan block+src_sha, so records are reused (no auto-regen); a failed PG-class attempt relaunches on the new src only via retry item@attempt. Attempts a2/a1 of ctl/host_w/spn_end were launched on the old src (running, past place/CTS): released so a FAIL relaunches on pgcap.",
@@ -37154,7 +37160,9 @@
    },
    "hold_release_on": {
     "hd_spn_eshim_rx": "lane_ready:HEAD-99 count",
-    "hd_ctl_n": "lane_result:DRT0255-PROOF"
+    "hd_ctl_n": "lane_result:DRT0255-PROOF",
+    "hd_spn": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "hd_st_str": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
    }
   },
   "qwen_compute": {
@@ -37250,7 +37258,13 @@
     "sl?_hc0*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption.",
     "sl?_hc1*": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): hc0/hc1 types held until the area delta S4q5. Running attempts finish. Lift = delete this key on S4q5 adoption.",
     "slw_su_l1__cla2a78701": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
-    "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key."
+    "slw_su_l1__clcc9d0155": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): 3x DRT-0255 today with GRT ov 0. Running attempts finish. Lift = delete this key.",
+    "sl?_hc2*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "sl?_sc_v1*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "sl?_sc_v3*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "sl?_stm_v2*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "sl?_su_l1*": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+    "coll_s": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key."
    },
    "work_root": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave",
    "plan_note": "QC explicitly approved combined d90/event1131_fixed override. Preserve all existing37 exact SU/CB/cap holds and existing prototype gates; no new die-clock/current START freeze PASS asserted. Original5271/profile3_pad sources/jobs untouched. This source/recipe is pre-D13; do not mix with later no-patch recipes.",
@@ -47520,7 +47534,13 @@
     "sl?_hc0*": "event_adopt:S4q5",
     "sl?_hc1*": "event_adopt:S4q5",
     "slw_su_l1__cla2a78701": "lane_result:DRT0255-PROOF flags READY",
-    "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY"
+    "slw_su_l1__clcc9d0155": "lane_result:DRT0255-PROOF flags READY",
+    "sl?_hc2*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "sl?_sc_v1*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "sl?_sc_v3*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "sl?_stm_v2*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "sl?_su_l1*": "lane_result:DRT0255-PROOF verdict + proven form in gen env",
+    "coll_s": "lane_result:DRT0255-PROOF verdict + proven form in gen env"
    },
    "hold_items_released_wavehold1115_r189": {
     "slw_st_a_v2__cl9f076a5c": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): kit_rtl fails every tick: param_wrap base qfd_dv_s8_station_tail1_nb0 has no port table. Hold until KITRTL-FAIL-1115 releases it. Lift = delete this key."
@@ -65711,6 +65731,101 @@
   "stripped_my_text_still_held_by_other_reason": [
    "s81/slice_station__t24__cl66b71008",
    "s81/slice_station__t49"
+  ]
+ },
+ "hold_items_added_wavehold1115_drt0255": {
+  "qwen_compute": [
+   [
+    "sl?_hc0*",
+    5,
+    "all already held"
+   ],
+   [
+    "sl?_hc2*",
+    6,
+    "held now: sle_hc2__cl9c4c4509__cl3edce1b8,sle_hc2__cl9c4c4509__clf60c5152,sle_hc2__clcc5e3e61,slw_hc2__cla3497502__cl16607c7a"
+   ],
+   [
+    "sl?_sc_v1*",
+    5,
+    "held now: sle_sc_v1__cl115da35f,sle_sc_v1__cl7479a5ec,slw_sc_v1__cl63e5a7a2,slw_sc_v1__cl64543eaf__cl4590432d,slw_sc_v1__cl64543eaf__cl5e017c6f"
+   ],
+   [
+    "sl?_sc_v3*",
+    2,
+    "held now: sle_sc_v3,slw_sc_v3"
+   ],
+   [
+    "sl?_st_b*",
+    16,
+    "all already held"
+   ],
+   [
+    "sl?_stm_v2*",
+    4,
+    "held now: sle_stm_v2__cl55be2264,sle_stm_v2__cl7b3062fa"
+   ],
+   [
+    "sl?_su_l1*",
+    4,
+    "held now: sle_su_l1__cl5ea486db,sle_su_l1__clc6d66f5b"
+   ],
+   [
+    "coll_s",
+    1,
+    "held now: coll_s"
+   ]
+  ],
+  "qwen_kvsys": [
+   [
+    "kv3_io_cor",
+    1,
+    "all already held"
+   ],
+   [
+    "kv3_io_cor_v1",
+    1,
+    "all already held"
+   ],
+   [
+    "kv3_sys_SD",
+    1,
+    "held now: kv3_sys_SD"
+   ],
+   [
+    "kv3_sys_SD_v1",
+    1,
+    "held now: kv3_sys_SD_v1"
+   ]
+  ],
+  "s81_head": [
+   [
+    "hd_spn",
+    1,
+    "held now: hd_spn"
+   ],
+   [
+    "hd_ctl_n",
+    1,
+    "all already held"
+   ],
+   [
+    "hd_st_str",
+    1,
+    "held now: hd_st_str"
+   ]
+  ],
+  "s81": [
+   [
+    "ot_s81sl_leaf__t25*",
+    2,
+    "all already held"
+   ],
+   [
+    "ot_s81sl_leaf__t54*",
+    2,
+    "all already held"
+   ]
   ]
  }
 }
