@@ -7620,10 +7620,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                        "have no bound RTL (landing kits use the landed wrapper)")
         else:
             gtypes = None          # the landed emitter checks every copy of every type
-    if kit_rtl and gtypes == [] and landing is None:
+    if kit_rtl and gtypes == []:
         # Every selected kit already has its complete bound RTL filelist.
         # Keep the same plan validation, but do not build an unused whole-die
         # top/pad map (including every unrelated partition and reset relay).
+        # With a declaration-only landing sidecar, Landings and the bound RTL
+        # land-slot/collector checks below still validate that exact contract.
         errs = (S.scope_errors_typed(S.validate(raw), types, raw) if overlay_receipt else
                 S.scope_errors(S.validate(raw), types))
         if errs:
