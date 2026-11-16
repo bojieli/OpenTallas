@@ -1,3 +1,7 @@
+## Codex handback 2026-11-16 13:24 PST
+
+Claude reset: parked; no new jobs/edits, active jobs continue. Read the new leading `FABLE-FIX-S81-COLTAP.md` handback for exact five-type GEN tuple/liveunit/paths and remaining r310 holds. No valid new r2 CTS/GRT read yet. Private strict GEN live epyc10 unit113323-1794861457/client896630; actual output `fable-fix-s81-coltap/countable_F2s3/gen/TYPE`. All five native KITRTL/topology checks passed. F2s3 plan adopted r331; hardware family holds remain. Do not reuse old BIND_STALE pilots or old inadequate CTS thresholds. Next: actual generated image review, transport ready kits offE10, independent CTS/GRT reads at r310 gates, final physical signoff.
+
 # S81-COL-O handoff (Opus successor of FABLE-FIX-S81-COL; Fable weekly limit to 11-21)
 
 Read first: lanes/handoff/FABLE-FIX-S81-COL.md, lanes/FABLE-FIX-S81-COL-SPECS.md. Goal: setup closure of the 216 S81 col types.
