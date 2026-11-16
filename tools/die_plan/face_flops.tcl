@@ -650,6 +650,31 @@ proc ff_put_stage {f slot j nm xy} {
   }
   return [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
 }
+# Opt-in endpoint-biased unlanded slots may explicitly own station0 too.
+# Default off leaves the original pin-face register and every legacy slot unchanged.
+proc ff_place_explicit_stage0 {f slot nm bt ob k regs} {
+  global ff_dbu ff_bit_site_cells ff_bit_sites
+  if {![info exists ::env(OT_FT_EXPLICIT_STAGE0)] || $slot ni $::env(OT_FT_EXPLICIT_STAGE0)} {return {}}
+  if {[llength $regs] >= 2*$k} {
+    set xy [list [expr {round([lindex $regs 0]*$ff_dbu)}] [expr {round([lindex $regs 1]*$ff_dbu)}]]
+    set xy [ff_lane_xy $slot $bt $ob $xy 0.0]
+  } else {
+    error "FT explicit stage0 lacks complete waypoints/sites: $slot"
+  }
+  # Legacy ft_bit_sites tables own internal stages1..k-1 only. Their existence
+  # must not make the newly planned stage0 look like a missing explicit site.
+  set own0 0
+  if {[regexp {\[([0-9]+)\]$} $nm -> bit] && [info exists ff_bit_sites]} {
+    set own0 [dict exists $ff_bit_sites "$slot,0,$bit"]
+  }
+  if {[info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot] && !$own0} {
+    set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+  } else {
+    set got [ff_put_stage $f $slot 0 $nm $xy]
+  }
+  if {![llength $got]} {error "FT explicit stage0 placement failed: $slot $nm"}
+  return $got
+}
 # RELAY-PLACE-1 11-12 (FT-LANE, default on; OT_FT_LANE=0 restores the slot-point form): plan regs_um are ONE site per
 # slot stage (the slot centre line), so every bit of a W-bit slot took ff_put_near around the same point and the spiral
 # piled them into a blob, while station 0 (the face flop) and the landing ring sit AT each bit's own pin, spread over the
@@ -762,6 +787,11 @@ foreach bt [$ff_blk getBTerms] {
   for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
   # station 0 = the in-face register placed by the face pass (its location when the db has it)
   if {[catch {$f getLocation} lprev] || [llength $lprev] != 2} { set lprev "" }
+  set ff_exp0 [ff_place_explicit_stage0 $f $slot $nm $bt $ob $k $regs]
+  if {[llength $ff_exp0]} {
+    set lprev $ff_exp0
+    puts $ff_out "[$f getName]\tst0_explicit\t[expr {[lindex $lprev 0]/double($ff_dbu)}]\t[expr {[lindex $lprev 1]/double($ff_dbu)}]\t$nm"
+  }
   incr ff_lane_bits
   for {set j 1} {$j < $k} {incr j} {
     set q [ff_next_station $f]

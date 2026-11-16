@@ -3339,7 +3339,36 @@ def tap_group_exports(t):
         raise ValueError("clock.tap_group.re must be a non-empty capture regex without '#', '$' or whitespace")
     import re as _re
     _re.compile(rx)
-    return [f"export OT_TAP_GROUP_RE = {rx}"]
+    out = [f"export OT_TAP_GROUP_RE = {rx}"]
+    fixed = clock["tap_group"].get("fixed_taps", {})
+    if not isinstance(fixed, dict):
+        raise ValueError("clock.tap_group.fixed_taps must be a group-to-port map")
+    for group, port in fixed.items():
+        if not _re.fullmatch(r"[A-Za-z0-9_./-]+", str(group)) or not _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", str(port)):
+            raise ValueError("clock.tap_group.fixed_taps uses unsafe group or port name")
+    if fixed:
+        out.append("export OT_TAP_GROUP_FIXED = " + ",".join(f"{g}:{fixed[g]}" for g in sorted(fixed)))
+    return out
+
+
+def ft_stage0_exports(t):
+    """Default-off explicit stage0 placement for selected unlanded FT slots."""
+    slots = []
+    import re as _re
+    for slot in t.get("ft_slots", []):
+        flag = slot.get("explicit_stage0", False)
+        if not isinstance(flag, bool):
+            raise ValueError("ft_slots.explicit_stage0 must be boolean")
+        if not flag:
+            continue
+        name = slot["name"]
+        k = int(slot.get("stations", 1))
+        if not _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+            raise ValueError("explicit stage0 slot has unsafe name")
+        if len(slot.get("regs_um", [])) < k:
+            raise ValueError("explicit stage0 needs all stage waypoints")
+        slots.append(name)
+    return ["export OT_FT_EXPLICIT_STAGE0 = " + " ".join(slots)] if slots else []
 
 
 def private_leaf_exports(t):
@@ -5908,6 +5937,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
+    cfg += ft_stage0_exports(t)
     cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)
