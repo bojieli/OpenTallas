@@ -17,8 +17,8 @@ Running Fable reviews, not duplicated here: FABLE-PD-S81CORES-1915 (dsdv_bksel_q
 
 1. **DRT-0255 now has a measured signature and the first proof verdicts.** 78 of 92 failing access points (59 kits, first
    two per kit) lie at y mod 4.32 um = 1.89 to 2.70, the M6 PG pair row (pdn.tcl: M6 pitch 4.32, offset 1.968, width 0.288,
-   spacing 0.096). Variant C2 (partial cut) FAILED on all three proofs. Variant C3b and the die-phase proof p_t49 are past
-   the point where their class failed before. Section lever 3.
+   spacing 0.096). Variant C2 (partial cut) FAILED on all three proofs. The die-phase proof p_t49 PASSED its 1st iteration (first
+   proof to do so); variant C3b is past the point where C2 failed. Section lever 3.
 2. **The class grew.** Latest kit per type: 19 types stop with `DRT-0255` (QC 17, HEAD hd_mesh, S81 leaf t54); 12 of the QC
    17 failed in the last 2.5 h. QC latest routed kits: 17 `DRT-0255`, 5 DRC 0.
 3. **S81 col_h9_r2 routes, and its two failures are now separate and both have a fix on the shelf.** Four kits routed today:
@@ -39,7 +39,7 @@ Running Fable reviews, not duplicated here: FABLE-PD-S81CORES-1915 (dsdv_bksel_q
 |---|---|---|---|---|---|
 | 1 | S81 | col Event F2: per-port window + col3_c pinwire view + IFN 0 + ROM tap rows in one kit; r2 first; explain the 118 ps gate-to-route loss | 216 types | DIE-S81-92, S81-TAPROWS, S81-COLABS-1115 | windows for 1 type; 26 layouts measuring |
 | 2 | S81 | G3b: drop 59 tables, per-bit memory write merge for svc, per-port windows for c3x_C / iq_C and the leaf ports | 136 types | DIE-S81-92, GENBUG-IMPL, S81-TAPROWS | G3b composing; svc held |
-| 3 | all 4 | `DRT-0255`: C3b form into the gen env when its 1st iteration ends; die phase for face-pin types | 19 types now; every QC hc / sc / stm / su_l1 / st_b / coll kit | DRT0255-PROOF-1115, GENBUG-IMPL | c3b at 30 % of iteration 1, p_t49 at 90 % |
+| 3 | all 4 | `DRT-0255`: C3b form into the gen env when its 1st iteration ends; die phase for face-pin types | 19 types now; every QC hc / sc / stm / su_l1 / st_b / coll kit | DRT0255-PROOF-1115, GENBUG-IMPL | p_t49 PASSED iteration 1 (19:4x); c3b at 50 % of iteration 1 |
 | 4 | KV | one-sha tree; raw-branch rows that survive a relay renumber; head_eighth pin windows from the signed ODBs | 51 types | KV-102, KV-ABSPIN-1115, GENBUG-IMPL | v19 binding; ODBs not found on fleet |
 | 5 | QC | S4q6d, S4q7e, S4q7g; reset localization on the emitted tree; fw / st_b stations | about 40 held types | DIE-QC-103, QC-CB-GEN-1115 | three binds running |
 | 6 | HEAD, all dies | Die route: refuse closed views whose LEF SIZE differs from the outline; re-sign hd_tile 717.12 and hd_st_n4 993.6 | 144 of 326 units; all later die routes | HEAD-MYTILE-1115, HEAD-100 | approved; nf13r kit building |
@@ -93,22 +93,24 @@ Evidence (MEASURED):
   at y = 136.544 (mod 4.32 = 2.62) and on face pin ft11_i[384] at y = 10.27.
 - C3b (100 % gcell-aligned cut M5/M6/M7): c3b_t37 at 30 % of the 1st iteration at 19:37, no error; c2_t37 failed before
   10 %. GRT cost on t37: M6 resource 25.9M -> 23.2M, usage 3.3 %, congestion 0.
-- Die phase only: p_t49 at 90 % of the 1st iteration, 7,014 violations, no error. p_hd_spn at 40 %, no error. p_hd_ctl in
-  iteration 0.
+- Die phase only: **p_t49 finished the 1st iteration at 19:4x PST with 6,324 violations and no `DRT-0255`; it is in the 2nd
+  iteration.** First proof of any variant past the 1st iteration. p_hd_spn at 50 %, no error. p_hd_ctl in iteration 0.
+  Update 19:46: c3b_t37 at 50 %, 39,574 violations, no error.
 - hd_mesh (new): clock leaf net clknet_leaf_30_clk_t23, access points at y = 304.992 (mod 4.32 = 2.59).
 
 Root cause: unchanged, now measured per access point: pins and guides in the M6 PG pair row.
 
 Fix:
-1. DRT0255-PROOF-1115: verdict when c3b_t37 reaches "Start 2nd optimization iteration" (about 70 min after 19:37 at 10 min
-   per 10 %); same for p_t49 (minutes away). Post both lines at once.
+1. DRT0255-PROOF-1115: p_t49 has its verdict (1st iteration passed): post it now and let it run to DRC 0. c3b_t37 reaches
+   "Start 2nd optimization iteration" about 20:30 PST (9 min per 10 %); post that line the minute it prints.
 2. GENBUG-IMPL: C3b into the gen env of all four dies the same hour; C2 code path removed. First QC kits: slw_hc2 and
    sle_sc_v1 (setup +30 / +7 at the gate, `DRT-0255` is their only failing gate).
 3. Check on the first QC hc kit with C3b: GRT overflow. t37 uses 3 % of M6; hc is the congested family. If hc overflows,
    the cut is too expensive there and hc needs rows (S4q7 hc strip), not a smaller cut.
 4. If a C3b kit still stops with an access point in the pair row on a cell pin: that is the cell class. Then the keep-out
    form with TAP / fixed cells skipped (the DPL-0033 cause of 15:01), not a return to C2.
-5. Face-pin types (hd_ctl, hd_spn, t49, io_cor): die phase (offset 8.448) if p_t49 and p_hd_spn pass.
+5. Face-pin types (hd_ctl, hd_spn, t49, io_cor): die phase (offset 8.448). p_t49 passed; GENBUG-IMPL can put the die-phase
+   PDN (without the keep-out flag) into the gen env for the face-pin types now and add hd_spn when p_hd_spn passes.
 
 ### Lever 4. KV (51 types)
 
@@ -183,7 +185,7 @@ route is -2 to -108 (sle_stm_v2 -106.6, slw_stm_v3 -107.7), on the stm family th
 
 ## 3. Not checked
 
-- No proof has finished its 1st iteration; C3b and die phase have no final verdict. Where the baseline t49 and hd_spn kits
+- Only p_t49 has finished its 1st iteration (no DRC 0 yet); C3b has no final verdict. Where the baseline t49 and hd_spn kits
   failed inside the 1st iteration was not read, so "past the failure point" is measured for c3b_t37 only.
 - The pair-row share uses y only; x against the M7 pair (pitch 8.64) was not tested. Layer of each access point not decoded.
 - Which kits carry `OT_TT_SETUP_REPAIR`: the key is not in `config.mk`; no repaired wave kit result was identified.
