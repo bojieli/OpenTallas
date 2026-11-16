@@ -323,7 +323,13 @@ endmodule
 // (512/NRD bits each, one leaf per slice, <= 64 reset pins a leaf).  Same registers, same next-state logic, same reset
 // values; all rrst_n* tied together == ot_s81_rate_match every edge.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_rate_match_rt #(parameter integer NRD = 8) (
+module ot_s81_rate_match_rt #(parameter integer NRD = 8,
+`ifdef OT_S81_SERDES_RM_RPC8
+                            parameter integer RPC = NRD
+`else
+                            parameter integer RPC = 1
+`endif
+) (
     input  wire            wclk, wrst_n,
     input  wire            w_v,
     input  wire [511:0]    w_d,
@@ -334,6 +340,12 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8) (
 );
     localparam integer SW = 512 / NRD;
     initial if (SW * NRD != 512) $error("ot_s81_rate_match_rt: NRD must divide 512");
+    initial if (RPC != 1 && RPC != NRD) $error("ot_s81_rate_match_rt: RPC must be 1 or NRD");
+    // RPC=NRD: private read-select counters, one beside each output slice.
+    // Every copy follows the ORIGINAL rrst_nc/empty/increment contract, hence
+    // equals rp[2:0] even when rrst_nd independently resets an output bank.
+    // No FIFO occupancy, gray publication, data stage, or boundary changes.
+
     reg  [511:0] mem [0:7];
     reg  [3:0] wp, rp, wp_g, rp_g;
     reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
@@ -359,9 +371,24 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8) (
     genvar gs;
     generate for (gs = 0; gs < NRD; gs = gs + 1) begin : g_rd
         reg [SW-1:0] q;
-        always @(posedge rclk or negedge rrst_nd[gs])
-            if (!rrst_nd[gs]) q <= 512'd2 >> (gs * SW);
-            else q <= rd_n[gs * SW +: SW];
+        if (RPC == 1) begin : g_shared
+            always @(posedge rclk or negedge rrst_nd[gs])
+                if (!rrst_nd[gs]) q <= 512'd2 >> (gs * SW);
+                else q <= rd_n[gs * SW +: SW];
+        end else begin : g_local
+            (* keep *) reg [2:0] rpq;
+            wire [511:0] rw = empty ? 512'd2 : mem[rpq];
+            always @(posedge rclk or negedge rrst_nc)
+                if (!rrst_nc) rpq <= 3'd0;
+`ifdef RMRPC_RT_MUT_STALE
+                else if (!empty && (gs != 5 || rp[3])) rpq <= rpq + 3'd1; // bench mutant only
+`else
+                else if (!empty) rpq <= rpq + 3'd1;
+`endif
+            always @(posedge rclk or negedge rrst_nd[gs])
+                if (!rrst_nd[gs]) q <= 512'd2 >> (gs * SW);
+                else q <= rw[gs * SW +: SW];
+        end
         assign r_d[gs * SW +: SW] = q;
     end endgenerate
     reg f1, f2; always @(posedge rclk or negedge rrst_nc) if (!rrst_nc) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end

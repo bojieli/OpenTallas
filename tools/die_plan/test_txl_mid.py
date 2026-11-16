@@ -207,3 +207,112 @@ def test_face_source_macro_first_row_at_pin(tmp_path):
     x = _rows(pos(r.stdout), "u_rxf")
     assert 1 < x[0] <= 12                                                   # at the source macro pin, outside its halo
     assert all(abs(a - b) <= 4 for a, b in zip(x[1:], [251, 501, 751]))     # k/4 of src pin 1 -> sink 1001
+
+
+# Production RXNEG hierarchy: falling-edge vector, not an ot_pl_pad.q array.
+RXNEG = r"""
+for {set bit 0} {$bit < 545} {incr bit} {
+  chain u_bound.u_core.u_rxf $bit 1 0 1000 800 PMA ENCB
+}
+foreach i $::insts {
+  set n [g $i name]
+  if {[string first {u_rxf.q} $n]>=0} {
+    s $i name [string map {{u_rxf.q} {u_rxf_q} {$_DFF_P_} {$_DFF_N_}} $n]
+  }
+}
+"""
+
+
+def test_rxneg_actual_hierarchy_moves_all_545_bits(tmp_path):
+    r = mock_run(tmp_path, RXNEG, chains="u_rxf", face="1")
+    assert r.returncode == 0, r.stderr
+    assert "chain u_rxf bits moved 545 of 545," in r.stdout
+    assert "macro-face anchored 545" in r.stdout
+    p = pos(r.stdout)
+    stations = {k: v for k, v in p.items() if "u_rxf_q" in k}
+    assert len(stations) == 545
+    assert all(1 < xy[0] <= 12 for xy in stations.values())
+
+
+def test_rxneg_missing_valid_bit_refuses_incomplete_width(tmp_path):
+    r = mock_run(tmp_path, RXNEG.replace("$bit < 545", "$bit < 544"),
+                 chains="u_rxf", face="1")
+    assert r.returncode != 0
+    assert "RXNEG face width 544, expected 545" in r.stderr
+
+
+def test_explicit_missing_chain_is_not_silent_zero(tmp_path):
+    r = mock_run(tmp_path, BITS, chains="u_rxf", face="1")
+    assert r.returncode != 0
+    assert "requested chain u_rxf has no register endpoints" in r.stderr
+
+
+PHASE_PAIR = r"""
+chain u_dec.u_face_p_d 0 1 100 1000 800
+set ::M(DFFL) [obj master name DFFLQNx2_ASAP7_75t_R block 0]
+foreach i $::insts {
+  if {[g $i name] eq "u_dec.u_face_p_d.enc0"} {
+    s $i name {u_bound.u_core.u_rxf_q\[0\]$_DFF_N_}
+    s $i master $::M(DFFL)
+  }
+}
+"""
+
+
+def test_rxneg_halfcycle_pair_adjacent_when_opted_in(tmp_path):
+    body = "set ::env(OT_TXL_MID_RXNEG_PAIR) 1\n" + PHASE_PAIR
+    r = mock_run(tmp_path, body, chains="u_dec.u_face_p_d", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    src = p[r"u_bound.u_core.u_rxf_q\[0\]$_DFF_N_"]
+    dst = p[r"u_dec.u_face_p_d.q\[0\]$_DFF_P_"]
+    assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
+
+
+def test_rxneg_pair_default_off_preserves_even_placement(tmp_path):
+    r = mock_run(tmp_path, PHASE_PAIR, chains="u_dec.u_face_p_d", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    assert abs(p[r"u_dec.u_face_p_d.q\[0\]$_DFF_P_"][0] - 551) <= 3
+
+
+
+def test_rxneg_valid_scalar_face_row_pairs_like_data(tmp_path):
+    body = ("set ::env(OT_TXL_MID_RXNEG_PAIR) 1\n"
+            + PHASE_PAIR.replace("u_face_p_d", "u_face_p_v")
+            + r"""
+foreach i $::insts {
+  if {[string first {u_face_p_v.q} [g $i name]] >= 0} {
+    s $i name {u_bound.u_core.u_dec.u_face_p_v.q$_DFF_P_}
+  }
+}
+""")
+    r = mock_run(tmp_path, body, chains="u_dec.u_face_p_v", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    src = p[r"u_bound.u_core.u_rxf_q\[0\]$_DFF_N_"]
+    dst = p["u_bound.u_core.u_dec.u_face_p_v.q$_DFF_P_"]
+    assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
+
+
+
+def test_rxneg_valid_launch_halfcycle_also_pairs_locally(tmp_path):
+    body = "set ::env(OT_TXL_MID_RXNEG_PAIR) 1\n" + RXNEG + r"""
+set ::M(DFFL) [obj master name DFFLQNx2_ASAP7_75t_R block 0]
+foreach i $::insts {
+  set n [g $i name]
+  if {$n eq "u_bound.u_core.u_rxf.enc544"} {
+    s $i name {u_bound.u_core.rs_r[1]$_DFF_PN0_}
+    s $i master $::M(DFF)
+    s $i x 200; s $i y 100
+  }
+  if {[string first {u_rxf_q\[544\]} $n]>=0} {s $i master $::M(DFFL)}
+}
+"""
+    r = mock_run(tmp_path, body, chains="u_rxf", face="1")
+    assert r.returncode == 0, r.stderr
+    p = pos(r.stdout)
+    src = p["u_bound.u_core.rs_r[1]$_DFF_PN0_"]
+    dst = p[r"u_bound.u_core.u_rxf_q\[544\]$_DFF_N_"]
+    assert abs(src[0] - dst[0]) + abs(src[1] - dst[1]) <= 10
+    assert "bits moved 545 of 545" in r.stdout

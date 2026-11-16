@@ -4,7 +4,7 @@
 # one local tree per tap (radius <= ~300 um) instead of one tree from one interior tap (CP1: 1176 ps, 29-32 levels).
 # QC-A0 10-24: the tap port family is OT_TAP_PORT (default clk: plan partitions clk / clk_t<i>; the A0 hard cores
 # ck / ck_t<i>), so hard-core kits use this tool unchanged instead of private copies.
-global ct_taps ct_k ct_pinned ct_grp ct_blk ct_fre
+global ct_taps ct_k ct_pinned ct_grp ct_blk ct_fre ct_group_owned
 set ct_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
 set ct_blk [ord::get_db_block]
 set ct_taps {}
@@ -146,6 +146,7 @@ if {[llength $ct_taps] < 2} {
 # pinned: the cap pass and the small-tap merge below move whole taps or ungrouped sinks only.
 global ct_taps ct_k ct_pinned  ;# sourced from inside an ORFS proc: procs below read these as globals
 set ct_pinned {}
+set ct_group_owned {}
 # FLOW-CANARY 10-25: OPT-IN (default off = the 202a nearest-sink assignment).  On by default it regressed every
 # gen_phys canary (s81 t12 / KV io_ft / QC coll_ftm structural FF hold -311.8/-152.0/-144.8 vs 202a PASS; a whole
 # long station row on the tap nearest its centroid left 4-8 taps EMPTY and grew 460-556 ps trees; A/B with 202a
@@ -164,12 +165,17 @@ proc ct_clk_iterm {inst} {
 }
 # followers (reset relays): tap of the majority of the flops their output tree (through buf/inv) reaches
 proc ct_follow {} {
-  global ct_blk ct_fre ct_pinned
+  global ct_blk ct_fre ct_pinned ct_group_owned
   set ct_fmoved 0; set ct_fn 0
   foreach inst [$ct_blk getInsts] {
     if {$ct_fre eq "" || ![regexp -- $ct_fre [$inst getName]]} continue
     set cit [ct_clk_iterm $inst]
     if {$cit eq ""} continue
+    # Explicit cohorts are atomic: a reset member must not follow a remote
+    # descendant onto another tap after its group was assigned. Keep this
+    # distinct from ct_pinned, which also contains ordinary followers and
+    # must remain eligible for the post-cap follower update.
+    if {[dict exists $ct_group_owned $cit]} continue
     set votes {}; set seen {}; set todo {}
     foreach it [$inst getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT" && [$it getNet] ne "NULL"} { lappend todo [$it getNet] } }
     while {[llength $todo]} {
@@ -224,6 +230,7 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
     foreach it $its {
       if {[$it getNet] ne [lindex $best 1]} { $it disconnect; $it connect [lindex $best 1]; incr ct_gmoved }
       dict set ct_pinned $it 1
+      dict set ct_group_owned $it 1
     }
   }
   lassign [ct_follow] ct_fn ct_fmoved

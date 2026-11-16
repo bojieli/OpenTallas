@@ -246,3 +246,41 @@ def test_cap_spill_reach_is_opt_in(tmp_path):
     q = run(tmp_path, fill, env=env + '\nset ::env(OT_TAP_SPILL_UM) 1500')
     assert q.returncode == 0, q.stderr
     assert 'spill reach 1500 um' in q.stdout, q.stdout
+
+
+RESET_COHORT = r"""
+# Adjacent same-logical-clock source/collector, with a remote descendant.
+# Without atomic group ownership, ct_follow drags only the reset source
+# to the descendant tap, splitting the deliberately compact cohort.
+mkflop u_rrl_94/q 10
+mkflop u_cland_collect_rst_rl_94/ready_o 20
+mkflop distant0 990 rq
+mkflop distant1 1000 rq
+proc q_u_rrl_94/q {m args} {switch $m {getMTerm {return outp} getInst {return u_rrl_94/q} getNet {return rq}}}
+set NET(q_u_rrl_94/q) rq
+"""
+
+
+def test_explicit_reset_cohort_survives_both_follower_passes(tmp_path):
+    env = "set ::env(OT_TAP_GROUP_RE) {(?:^|[/.])(u_)(?:rrl_94|cland_collect_rst_rl_94)[/.]}"
+    p = run(tmp_path, RESET_COHORT, env=env)
+    assert p.returncode == 0, p.stderr
+    assert "NET ck_u_rrl_94/q nclk" in p.stdout
+    assert "NET ck_u_cland_collect_rst_rl_94/ready_o nclk" in p.stdout
+    assert "followers after cap pass:" in p.stdout
+
+
+def test_atomic_reset_cohort_negative_control_detects_original_split(tmp_path, monkeypatch):
+    global HOOK
+    mutant = tmp_path / "clock_taps_mutant.tcl"
+    original = HOOK
+    text = original.read_text()
+    guard = "    if {[dict exists $ct_group_owned $cit]} continue\n"
+    assert text.count(guard) == 1
+    mutant.write_text(text.replace(guard, "    # mutant: original unprotected follower\n"))
+    monkeypatch.setitem(globals(), "HOOK", mutant)
+    env = "set ::env(OT_TAP_GROUP_RE) {(?:^|[/.])(u_)(?:rrl_94|cland_collect_rst_rl_94)[/.]}"
+    p = run(tmp_path, RESET_COHORT, env=env)
+    assert p.returncode == 0, p.stderr
+    assert "NET ck_u_rrl_94/q nt1" in p.stdout
+    assert "NET ck_u_cland_collect_rst_rl_94/ready_o nclk" in p.stdout
