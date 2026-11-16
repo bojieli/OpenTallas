@@ -10456,9 +10456,9 @@
         ],
         "dsdv_gunit_l1f_bf": [
           {
-            "host": "epyc8",
-            "dir": "/srv/opentallas-scratch2/claude/gunit-core-1/view_gf3ds60/dsdv_gunit_l1f_bf",
-            "job": "GUNIT-CORE-1 11-13 routed DRC-0 NOT SIGNED kit_gf3ds60 (epyc8 die-s81-85/bfpad, DS88 BF-SIGN-2 form, GEOM-VIS-9 ISSUES-ACCEPT 11-12 16:06): base lef + tc/BC libs copied as _tt/_ff, PROVISIONAL only; prov_view.py make on plan_h2_2249 accepted it (routed)"
+            "host": "epyc7",
+            "dir": "/srv/opentallas-scratch2/claude/type-gunit-l1f/signed_view_1116/dsdv_gunit_l1f_bf",
+            "job": "SIGNED 11-16 gunit view complete problems[]; pins canon sha256 9f39dae591e94282cc58abfa5653128b2cd677bfeb21b34ca38dd78785a1ae21; root approved replacing provisional source, no rebuild"
           }
         ]
       },
