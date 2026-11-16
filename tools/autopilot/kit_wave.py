@@ -1190,6 +1190,13 @@ def kit_rtl_post_cmd(T, W, plan, steps_dir=None):
     return "".join(f" && {env} bash -c {q(p.read_text())} {q('kit_rtl_post.d/' + p.name)}" for p in steps)
 
 
+def kit_rtl_closure_cmd(W, src):
+    """Package inputs on the actual kit-RTL producer, before roam output copy-back."""
+    code = (Path(__file__).resolve().parent / "kit_rtl_closure.py").read_text()
+    return (f" && python3 - {shlex.quote(W)}/rtl --source {shlex.quote(src)} <<'KW_CLOSURE_EOF'\n"
+            + code + "\nKW_CLOSURE_EOF\n")
+
+
 def kit_rtl_mode(d):
     """the die's kit-RTL mode (bind / script): the type kit takes the bound partition RTL; None = plan wrapper"""
     kr = d.get("kit_rtl") if isinstance(d.get("kit_rtl"), dict) else {}
@@ -6492,7 +6499,7 @@ def run_item(spec_path):
                 return fail("kit_rtl", txt)
             kbind = f"{kt}/tools/die_plan/bind.py"
         krb_cmd = lambda bnd, flag: (f"cd {q(src)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
-                                    f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan))
+                                    f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan) + kit_rtl_closure_cmd(W, src))
         rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, f"--src-tree {q(src)} "), gh))
         # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
         # tree's modules with main's bind.py; when the tree's older modules do not fit main's bind.py (API skew, an import-time or
@@ -6511,7 +6518,8 @@ def run_item(spec_path):
             res["kit_store_fl"] = (txt.strip().splitlines() or [""])[-1][:400]
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
     elif kr.get("mode") == "script":
-        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}", gh))
+        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
+                                       + kit_rtl_closure_cmd(W, src), gh))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:

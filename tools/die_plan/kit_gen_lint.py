@@ -205,6 +205,27 @@ def kit_rtl_paths(kd):
     if not f.is_file():
         return [], False
     d = json.loads(f.read_text())
+    closure = d.get("input_closure")
+    if closure:
+        import hashlib
+        roots = [Path(r) for r in closure["roots"]]
+        errs = []
+        for x in d.get("files", []):
+            # Compare lexical producer paths: realpath on another host may resolve a
+            # scratch alias differently. Content hashes bind each staged file to its
+            # producer-validated original path without expanding permitted roots.
+            p = Path(x)
+            try:
+                rel = str(p.relative_to(Path(closure["producer_directory"])))
+            except ValueError:
+                errs.append(f"kit RTL closure path outside package: {p}")
+                continue
+            entry = closure["files"].get(rel)
+            if not entry or not any(Path(entry["original"]).is_relative_to(r) for r in roots):
+                errs.append(f"kit RTL closure has no permitted origin: {p}")
+            elif not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != entry["sha256"]:
+                errs.append(f"kit RTL closure content mismatch: {p}")
+        return errs, True
     roots = [Path(d["src_tree"]).resolve(), Path(d["filelist"]).resolve().parent]
     kj = Path(d["filelist"]).with_name("kit_rtl.json")
     if kj.is_file():
