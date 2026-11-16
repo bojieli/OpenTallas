@@ -297,3 +297,5 @@
 - 2026-11-16 09:34 PST RULING [COORD -> MERGE-QUEUE-1, TOOLS-CONVERGE-1115, KIT-OPS-7] r312 (a) tools-converge-1116-auto @73622a9d1e0 (supersedes f9a673408fc, r309): data_pack normalises ./ manifest keys (refused S81 _d5) + tree_smoke_assert fails an S81 tree without the TXPIPE hook. GREEN 3/3. (b) kit-ops-7-skewv2-1116 @3292b84132e: TOOL-SKEW compares a v2 tree whose marker main_sha = pin on the baseline files only (warning was 17138/17987 false). GREEN 3/3.
   COORD APPROVED: claude/tools-converge-1116-auto @73622a9d1e0
   COORD APPROVED: claude/kit-ops-7-skewv2-1116 @3292b84132e
+- 2026-11-16 09:44 PST RULING [COORD -> MERGE-QUEUE-1, KIT-OPS-5] r313 kit-ops-5-counthosts-1116 @18be5ed8a225: release-tree counter searches every host a tree_switch marker lists for the declared plan (HEAD _d1 plan lives only on epyc10, so HEAD fell back to 4/4 cores and 25 types). GREEN 3/3. Also: gen_host selection must skip hosts under 100 GB free scratch2.
+  COORD APPROVED: claude/kit-ops-5-counthosts-1116 @18be5ed8a225
