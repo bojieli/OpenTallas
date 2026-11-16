@@ -359,3 +359,18 @@ class Delta(Base):
         SM.delta_make(self.repo, old, sha2, self.t + "/p1")
         with self.assertRaises(SystemExit):
             SM.delta_apply(self.t + "/p1", other, self.t + "/n2")
+
+
+class DropOverlay(Base):
+    def test_stale_overlay_entry_can_be_dropped_and_main_wins(self):
+        old = self.t + "/old"
+        SM.build(self.repo, self.sha, self.ovj, ["tools"], old, die="kv", allow_file=self.allow(), main_ref="")
+        open(self.repo + "/tools/die_plan/b.py", "w").write("B=9\n")
+        git(self.repo, "commit", "-qam", "m2")
+        sha2 = git(self.repo, "rev-parse", "HEAD")
+        with self.assertRaises(SystemExit):
+            SM.delta_make(self.repo, old, sha2, self.t + "/p0")
+        SM.delta_make(self.repo, old, sha2, self.t + "/p1", ["tools/die_plan/b.py"])
+        nm = SM.delta_apply(self.t + "/p1", old, self.t + "/new")
+        self.assertEqual(open(self.t + "/new/tools/die_plan/b.py").read(), "B=9\n")
+        self.assertNotIn("tools/die_plan/b.py", nm["overlay"])
