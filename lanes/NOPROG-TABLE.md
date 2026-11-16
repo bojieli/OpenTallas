@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-15 21:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-15 21:45 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 16, 'EXCLUDED': 29, 'KEEP': 1, 'PROGRESS': 4}. Hosts without report: none.
 
@@ -49,7 +49,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 16, 'EXCLUDE
 | intel1 | dpkit-slw_hc1__cl68f9248e__cle683a076-3728476 | slw_hc1 | 5_1_grt | 12.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261115_154955_2417288-i1t-4050928 | eco_20261115_154955_2417288-i1t | 5_2_route | 5.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261115_212433_1495639-i1t-3296488 | eco_20261115_212433_1495639-i1t | 5_1_grt | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-serdes__t12-4151483 | serdes__t12 | 5_1_grt | 8.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-serdes__t12-4151483 | serdes__t12 | 5_1_grt | 8.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 19.3 | last meaningful line 0.4 h ago (1444/1444 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-hd_serdes-1086898-lec | hd_serdes | lec | 6.1 | LEC last write 0.2 h ago | PROGRESS: LEC still writing |  |
 | intel1 | dpkit-kit-2538957 | kit | 5_1_grt | 27.4 | repair_TNS best 438566 last 438566 rows 41 | before-window best 479858, window best 438566 | PROGRESS: repair_TNS improved 8.6 % in window |  |
