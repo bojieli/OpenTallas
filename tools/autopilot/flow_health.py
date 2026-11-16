@@ -259,6 +259,48 @@ def ot_run_drift_section(blob=None, wrapper=WRAPPER, host=os.uname().nodename):
             "\t".join([host, path or "-", state, str(n)])]
 
 
+NOPROG_FILES = ("noprog_watchdog.py", "noprog_stage.py")
+NOPROG_DIR = "~/.local/lib/noprog"
+NOPROG_HOSTS = ("intel2", "intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10")
+SHA_PY = r"""
+import hashlib, json, os, sys
+out = {}
+a = json.loads(sys.argv[1])
+for f in a["files"]:
+    p = os.path.expanduser(os.path.join(a["dir"], f))
+    try:
+        out[f] = hashlib.sha1(open(p, "rb").read()).hexdigest()
+    except OSError:
+        out[f] = None
+print("AP_JSON " + json.dumps(out))
+"""
+
+
+def noprog_drift_section(blob=None, rpy=None, hosts=NOPROG_HOSTS):
+    """FLOW-HEALTH-1 11-15 (COORD r184): the noprog files the hub pushes to every host must equal main's tools/autopilot copies.
+    One row per host and file: SAME | DIFFERS | MISSING | UNREACHABLE."""
+    blob = blob or main_reader()
+    rpy = rpy or ssh_rpy
+    main = {}
+    for f in NOPROG_FILES:
+        b = blob("tools/autopilot/" + f)
+        main[f] = hashlib.sha1(b).hexdigest() if b is not None else None
+    out = ["# NOPROG-DRIFT installed ~/.local/lib/noprog vs origin/main tools/autopilot", "\t".join(["host", "file", "state"])]
+    for h in hosts:
+        r = rpy(h, SHA_PY, {"files": list(NOPROG_FILES), "dir": NOPROG_DIR}, timeout=60)
+        for f in NOPROG_FILES:
+            if not isinstance(r, dict) or r.get("error"):
+                st = "UNREACHABLE"
+            elif r.get(f) is None:
+                st = "MISSING"
+            elif main[f] is None:
+                st = "NO-MAIN"
+            else:
+                st = "SAME" if r[f] == main[f] else "DIFFERS"
+            out.append("\t".join([h, f, st]))
+    return out
+
+
 def load_src_refresh(path=SRC_REFRESH):
     if not os.path.isfile(path):
         return None
@@ -286,6 +328,10 @@ def build(args, now=None):
         except Exception as e:
             rows += ["", f"# SKEW not computed: {type(e).__name__}: {str(e)[:200]}"]
     if not args.no_skew:
+        try:
+            rows += [""] + noprog_drift_section()
+        except Exception as e:
+            rows += ["", f"# NOPROG-DRIFT not computed: {type(e).__name__}"]
         try:
             rows += [""] + ot_run_drift_section()
         except Exception as e:

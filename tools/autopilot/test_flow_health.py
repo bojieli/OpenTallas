@@ -128,3 +128,30 @@ class OtRunDrift(unittest.TestCase):
         rows = FH.ot_run_drift_section(blob=lambda rel: b"x = 2\n", wrapper=str(w), host="h")
         self.assertEqual(rows[-1].split("\t")[2:], ["DIFFERS", "2"])
         self.assertEqual(FH.installed_backend(str(d / "nope")), "")
+
+
+class NoprogDrift(unittest.TestCase):
+    def test_states(self):
+        import hashlib
+        h = lambda b: hashlib.sha1(b).hexdigest()
+        main = {"tools/autopilot/noprog_watchdog.py": b"a\n", "tools/autopilot/noprog_stage.py": b"b\n"}
+        got = {"good": {"noprog_watchdog.py": h(b"a\n"), "noprog_stage.py": h(b"b\n")},
+               "old": {"noprog_watchdog.py": h(b"a\n"), "noprog_stage.py": h(b"OLD")},
+               "none": {"noprog_watchdog.py": None, "noprog_stage.py": None}}
+        rpy = lambda host, code, args, timeout=0: got[host] if host in got else {"error": "ssh"}
+        rows = FH.noprog_drift_section(blob=lambda rel: main.get(rel), rpy=rpy, hosts=("good", "old", "none", "down"))
+        st = {tuple(r.split("\t")[:2]): r.split("\t")[2] for r in rows[2:]}
+        self.assertEqual(st[("good", "noprog_watchdog.py")], "SAME")
+        self.assertEqual(st[("old", "noprog_stage.py")], "DIFFERS")
+        self.assertEqual(st[("old", "noprog_watchdog.py")], "SAME")
+        self.assertEqual(st[("none", "noprog_stage.py")], "MISSING")
+        self.assertEqual(st[("down", "noprog_stage.py")], "UNREACHABLE")
+
+    def test_remote_script_hashes_files(self):
+        import json, subprocess, sys
+        d = Path(tempfile.mkdtemp())
+        (d / "noprog_watchdog.py").write_text("x")
+        r = subprocess.run([sys.executable, "-I", "-c", FH.SHA_PY, json.dumps({"files": list(FH.NOPROG_FILES), "dir": str(d)})], capture_output=True, text=True)
+        out = json.loads([l for l in r.stdout.splitlines() if l.startswith("AP_JSON ")][-1][8:])
+        self.assertEqual(out["noprog_stage.py"], None)
+        self.assertEqual(len(out["noprog_watchdog.py"]), 40)
