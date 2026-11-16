@@ -44,3 +44,25 @@ def test_pieces_disjoint_inside_original_and_clear_of_the_hole():
 def test_carve_drops_slivers():
     pieces = W.carve([0, 0, 10, 8.64], [1, 0, 9.5, 8.64])
     assert [1, 0, 9.5, 8.64] not in pieces and all(p[2] - p[0] >= 2.16 for p in pieces)
+
+
+def test_window_is_a_full_square_even_in_a_thin_channel_rect():
+    new, holes, left = W.plan_type({"b": [[20, 20, 220, 28.08]]}, [(20, 900)], 100.0, sites=[(100.0, 24.04), (200.0, 24.04)])
+    assert left == []
+    for h in (x["hole_um"] for x in holes):
+        assert abs((h[2] - h[0]) - 8.64) < 1e-6 and abs((h[3] - h[1]) - 8.64) < 1e-6      # >= 8.64 x 8.64 (4.32 clear on every side)
+    ov = lambda a, b: min(a[2], b[2]) > max(a[0], b[0]) + 1e-6 and min(a[3], b[3]) > max(a[1], b[1]) + 1e-6
+    assert all(not ov(r, x["hole_um"]) for r in new["b"] for x in holes)
+
+
+def test_window_is_cut_from_every_band_it_touches():
+    rbb = {"a": [[20, 20, 220, 28.08]], "c": [[20, 30, 220, 38.64]]}
+    new = W.carve_centres(rbb, [(100.0, 29.0)])
+    h = W.site_hole(None, (100.0, 29.0), 8.64)
+    ov = lambda a, b: min(a[2], b[2]) > max(a[0], b[0]) + 1e-6 and min(a[3], b[3]) > max(a[1], b[1]) + 1e-6
+    assert all(not ov(r, h) for rs in new.values() for r in rs)
+
+
+def test_points_follow_the_phyt1_40um_grid():
+    pts = W.pts_of([0, 0, 100, 8.64])
+    assert (0.0, 0.0) in pts and (100.0, 8.64) in pts and len(pts) == 6

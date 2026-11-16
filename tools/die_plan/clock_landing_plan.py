@@ -588,7 +588,7 @@ def _tap_reach(t):
     band slides to sinks a tap can reach instead of leaving them without a legal site.  None = off (default, unchanged)"""
     ck=t.get("clock") or {};R=ck.get("band_tap_reach_um")
     if not R:return None
-    sites=[tuple(x["xy"]) for x in list(ck.get("taps") or [])+list(ck.get("added_taps") or []) if x.get("xy")]
+    sites=[tuple(x["xy"]) for x in list(ck.get("taps") or [])+list(ck.get("added_taps") or []) if x.get("xy") and x.get("kind")!="core"]   # core taps feed their own core only
     sites+=[tuple(x) for x in ck.get("band_tap_sites_um",[])]
     return (float(R),sites) if sites else None
 

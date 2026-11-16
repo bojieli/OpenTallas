@@ -13,25 +13,40 @@ usage: band_tap_windows.py PLAN OUT_ROWS REPORT [--types RE] [--hole 8.64] [--ra
 import argparse, copy, json, re, sys
 
 
-def pts_of(rect, step=40.0, inset=0.02):
+def pts_of(rect, step=40.0, inset=0.0):
+    """band points as S81-PHYT1 g2 counts them: (nx+1) x (ny+1) points, nx = int(width // step), edges included"""
     x0, y0, x1, y1 = rect
-    xs = [x0 + inset]
-    x = x0 + step
-    while x < x1 - inset:
-        xs.append(x); x += step
-    xs.append(x1 - inset)
-    ys = [y0 + inset]
-    y = y0 + step
-    while y < y1 - inset:
-        ys.append(y); y += step
-    ys.append(y1 - inset)
-    return [(round(a, 3), round(b, 3)) for a in xs for b in sorted(set(ys))]
+    nx = max(1, int((x1 - x0) // step)); ny = max(1, int((y1 - y0) // step))
+    return [(round(x0 + (x1 - x0) * i / nx, 3), round(y0 + (y1 - y0) * j / ny, 3)) for i in range(nx + 1) for j in range(ny + 1)]
 
 
 def carve(rect, hole, min_side=2.16):
-    x0, y0, x1, y1 = rect; hx0, hy0, hx1, hy1 = hole
+    """rect minus hole (the hole is clipped to the rect first); pieces thinner than min_side are dropped"""
+    x0, y0, x1, y1 = rect
+    hx0, hy0, hx1, hy1 = max(hole[0], x0), max(hole[1], y0), min(hole[2], x1), min(hole[3], y1)
+    if hx1 <= hx0 or hy1 <= hy0:
+        return [[round(v, 6) for v in rect]]
     out = [[x0, y0, x1, hy0], [x0, hy1, x1, y1], [x0, hy0, hx0, hy1], [hx1, hy0, x1, hy1]]
     return [[round(v, 6) for v in r] for r in out if r[2] - r[0] >= min_side - 1e-9 and r[3] - r[1] >= min_side - 1e-9]
+
+
+def site_hole(rect, c, h):
+    """tap window = the full h x h square around the tap site c (COORD 11-15 v3: 4.32 clear to every band piece on all four
+    sides; the part of the square outside the rect is plain free area, the site itself was legalised against macros)"""
+    return [round(c[0] - h / 2, 6), round(c[1] - h / 2, 6), round(c[0] + h / 2, 6), round(c[1] + h / 2, 6)]
+
+
+def carve_centres(rbb, centres, h=8.64):
+    """cut an h x h window at every tap centre out of every band rect it touches (all buses): {bus: pieces}"""
+    cur = {b: [list(r) for r in rs] for b, rs in rbb.items()}
+    for c in centres:
+        hl = site_hole(None, c, h)
+        for b in cur:
+            nxt = []
+            for r in cur[b]:
+                nxt += carve(r, hl)
+            cur[b] = nxt
+    return cur
 
 
 def holes_for(rect, p, h):
@@ -44,7 +59,7 @@ def holes_for(rect, p, h):
     return [[round(x, 6), round(y, 6), round(x + hw, 6), round(y + hh, 6)] for x in xs for y in ys]
 
 
-def plan_type(rects_by_bus, taps, radius, hole=8.64, step=40.0, margin=0.5):
+def plan_type(rects_by_bus, taps, radius, hole=8.64, step=40.0, margin=0.5, sites=None):
     """rects_by_bus {bus: [rect..]}; taps [(x,y)]; returns (new rects_by_bus, holes, uncovered points)"""
     cur = {b: [list(r) for r in rs] for b, rs in rects_by_bus.items()}
     taps = [tuple(t) for t in taps]
@@ -59,8 +74,14 @@ def plan_type(rects_by_bus, taps, radius, hole=8.64, step=40.0, margin=0.5):
                 cx, cy = (r[0] + r[2]) / 2, (r[1] + r[3]) / 2
                 near_pts = [p for p in U if abs(p[0] - cx) + abs(p[1] - cy) <= R + half]
                 seen = set()
-                for p in near_pts:
-                    for hl in holes_for(r, p, hole):
+                if sites is not None:                     # only holes centred on a legal tap site inside this rect
+                    cand = [h for s_ in sites if r[0] - 4.32 < s_[0] < r[2] + 4.32 and r[1] - 4.32 < s_[1] < r[3] + 4.32
+                            for h in [site_hole(r, s_, hole)] if h]
+                    groups = [cand]
+                else:
+                    groups = [holes_for(r, p, hole) for p in near_pts]
+                for grp in groups:
+                    for hl in grp:
                         k = tuple(hl)
                         if k in seen:
                             continue
@@ -77,7 +98,8 @@ def plan_type(rects_by_bus, taps, radius, hole=8.64, step=40.0, margin=0.5):
         if best is None:
             break
         _, b, i, hl, c, pieces = best
-        cur[b][i:i + 1] = pieces
+        for bb in cur:                                   # the window is cut out of every band rect it touches
+            cur[bb] = [q for r in cur[bb] for q in carve(r, hl)]
         holes.append(dict(bus=b, hole_um=hl, tap_xy=[round(c[0], 3), round(c[1], 3)]))
         taps.append(c)
         U = [q for q in U if abs(q[0] - c[0]) + abs(q[1] - c[1]) > R]
