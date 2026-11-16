@@ -33,3 +33,6 @@ Lesson: it5 totals overstate; judge at it15+ or end.
 
 ## Next
 Read finals; READY-ROWS to DIE-S81-92 only for rows whose kit reads GRT 0 (or clearly better than base), plus "no row" verdicts for converging types.
+
+## CODEX notes 2026-11-16 10:17 PST
+Strip successors t8 south/t28 W-S candidates allocated and reviewed; full current steps/results/paths in handoff/FABLE-FIX-S81-CONG.md CODEX notes. Die refloor/compose owned by s81_plans/DIE-S81-92; new matching proof kits after bind. Inherited jobs retained, no signed claim.
