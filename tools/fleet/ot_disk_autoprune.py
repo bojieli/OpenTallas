@@ -87,6 +87,13 @@ def newest(d):
 
 def verdict(tree, ptext, refs, now=None, min_age_h=24):
     now = now or time.time()
+    try:
+        import ot_delete_guard as dg                       # CLEAN-ALL-1115: shared guard (kit_wave.json src, markers, bind of record, live fds)
+        gr = dg.refuse(tree, **({"ptext": ptext} if ptext else {}))
+        if gr:
+            return "delete guard: " + gr
+    except ImportError:
+        return "delete guard module missing (fail closed)"
     if os.path.islink(tree) or os.path.realpath(tree) != tree:
         return "symlink/realpath"
     if tree in ptext or tree + "/" in ptext:
