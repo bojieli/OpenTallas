@@ -106,3 +106,25 @@ class Skew(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OtRunDrift(unittest.TestCase):
+    def test_states(self):
+        self.assertEqual(FH.ot_run_drift("a\nb\n", "a\nb\n"), ("SAME", 0))
+        self.assertEqual(FH.ot_run_drift("a\nb\n", "a\nc\n"), ("DIFFERS", 2))
+        self.assertEqual(FH.ot_run_drift(None, "a")[0], "NO-INSTALLED")
+        self.assertEqual(FH.ot_run_drift("a", None)[0], "NO-MAIN")
+
+    def test_wrapper_backend_and_section(self):
+        d = Path(tempfile.mkdtemp())
+        be = d / "be/ot-run"
+        be.parent.mkdir()
+        be.write_text("x = 1\n")
+        w = d / "ot-run"
+        w.write_text("#!/bin/sh\n/usr/bin/python3 -I /x/lane-declare \"$@\" || exit $?\nexec /usr/bin/python3 %s \"$@\"\n" % be)
+        self.assertEqual(FH.installed_backend(str(w)), str(be))
+        rows = FH.ot_run_drift_section(blob=lambda rel: b"x = 1\n", wrapper=str(w), host="h")
+        self.assertEqual(rows[-1].split("\t"), ["h", str(be), "SAME", "0"])
+        rows = FH.ot_run_drift_section(blob=lambda rel: b"x = 2\n", wrapper=str(w), host="h")
+        self.assertEqual(rows[-1].split("\t")[2:], ["DIFFERS", "2"])
+        self.assertEqual(FH.installed_backend(str(d / "nope")), "")

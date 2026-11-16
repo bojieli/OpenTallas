@@ -216,6 +216,49 @@ def hostname_section(rpy=ssh_rpy, hosts=HOSTS):
     return out
 
 
+WRAPPER = os.path.expanduser("~/.local/bin/ot-run")
+OT_RUN_MAIN = "tools/fleet/ot-run"
+
+
+def installed_backend(wrapper=WRAPPER):
+    """the ot-run backend the installed wrapper execs (its last `exec ... <path>/ot-run` line), or ''"""
+    try:
+        for ln in reversed(open(wrapper).read().splitlines()):
+            m = re.search(r"exec\s+\S*python3?\s+(\S+/ot-run)\b", ln)
+            if m:
+                return m.group(1)
+    except OSError:
+        pass
+    return ""
+
+
+def ot_run_drift(installed_text, main_text):
+    """-> (state, n_differing_lines): SAME | DIFFERS | NO-INSTALLED | NO-MAIN"""
+    if installed_text is None:
+        return "NO-INSTALLED", 0
+    if main_text is None:
+        return "NO-MAIN", 0
+    if installed_text == main_text:
+        return "SAME", 0
+    import difflib
+    return "DIFFERS", sum(1 for l in difflib.unified_diff(installed_text.splitlines(), main_text.splitlines(), lineterm="", n=0)
+                          if l[:1] in "+-" and l[:3] not in ("+++", "---"))
+
+
+def ot_run_drift_section(blob=None, wrapper=WRAPPER, host=os.uname().nodename):
+    """FLOW-HEALTH-1 11-15 (COORD r196): the installed ot-run backend must equal main's; hand patches that never reached main were nearly
+    overwritten by a rollout on 11-15 (261 differing lines).  One row per check; DIFFERS names the number of differing lines."""
+    path = installed_backend(wrapper)
+    try:
+        inst = open(path).read() if path else None
+    except OSError:
+        inst = None
+    b = (blob or main_reader())(OT_RUN_MAIN)
+    state, n = ot_run_drift(inst, b.decode("utf-8", "replace") if b is not None else None)
+    return ["# OT-RUN-DRIFT installed backend vs origin/main " + OT_RUN_MAIN, "\t".join(["host", "backend", "state", "differing_lines"]),
+            "\t".join([host, path or "-", state, str(n)])]
+
+
 def load_src_refresh(path=SRC_REFRESH):
     if not os.path.isfile(path):
         return None
@@ -243,6 +286,10 @@ def build(args, now=None):
         except Exception as e:
             rows += ["", f"# SKEW not computed: {type(e).__name__}: {str(e)[:200]}"]
     if not args.no_skew:
+        try:
+            rows += [""] + ot_run_drift_section()
+        except Exception as e:
+            rows += ["", f"# OT-RUN-DRIFT not computed: {type(e).__name__}"]
         try:
             rows += [""] + hostname_section()
         except Exception as e:
