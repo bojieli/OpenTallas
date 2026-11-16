@@ -17582,3 +17582,8 @@ def s81_head_lep_vf_stage_calendar_model():
                           'do not qualify vF depths0000/1220/1221/2/3/3/COL02',
         qualification='HEAD private plan event, exact vF source programme/epoch leases, '
                       'native timing and parent pin/clock/reset joins remain required')
+
+
+def qwen_native_ar_go_cache_model(hr=None):
+    from uarch_model_qwen_native_ar_cache import model
+    return model(hr)
