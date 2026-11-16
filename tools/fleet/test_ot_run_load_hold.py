@@ -90,7 +90,7 @@ class Rebalance(unittest.TestCase):
         module = load(Path(__file__).with_name('ot-run'))
         seq = [dict(a=row(40,10,128),b=row(10,10,128)), dict(a=row(40,10,128),b=row(200,10,128))]
         calls = []
-        def probe(h, d):
+        def probe(h, d, spill_ok=False):
             return h, seq[min(len(calls), 1)][h]
         def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, disk=None):
             calls.append((host, max_wait))

@@ -204,11 +204,11 @@ class Placer(unittest.TestCase):
 
 
 class HostReserve(unittest.TestCase):
-    """coordinator 2026-10-24: localhost is a normal host minus its HOST_RESERVE (now 8 threads / 16 GB)"""
+    """coordinator 2026-10-24: localhost is a normal host minus its HOST_RESERVE (now 16 threads / 207 GB, KIT-OPS-2 11-12)"""
     def test_localhost_is_normal_with_reserve(self):
         self.assertEqual(m.HOST_ROLE['localhost'], 'normal')
         r = m.reserved('localhost', dict(ncpu=256, free_gb=300, admit_gb=300, total_gb=755, cpu_load1=10))
-        self.assertEqual((r['ncpu'], r['admit_gb'], r['free_gb'], r['total_gb']), (248, 284, 284, 739))
+        self.assertEqual((r['ncpu'], r['admit_gb'], r['free_gb'], r['total_gb']), (240, 93, 93, 548))
         self.assertIs(m.reserved('epyc2', dict(ncpu=128, free_gb=300)).get('reserve_gb'), None)
 
     def test_reserve_decides_between_hosts(self):
