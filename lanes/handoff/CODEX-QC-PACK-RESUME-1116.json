@@ -1,0 +1,60 @@
+{
+ "at": 1794868037.8000271,
+ "actual_held": 0,
+ "signals_sent": 0,
+ "reconciled": [
+  {
+   "action": "CONTROLLER_CONTINUED",
+   "at": 1794868037.8000054,
+   "item": "slice_station__t14",
+   "hub_unit": "kw-s81-slicestationt14-6-62614.service",
+   "controller_pid": 1069684,
+   "owner": "FABLE-FIX-S81-CONG (COORD r349)",
+   "reconciled": true,
+   "signal_sent_now": false,
+   "reported_release": "2026-11-16 13:36 PST REVIEW [FABLE-FIX-S81-CONG -> COORD]",
+   "release_basis": "Owner LOOKED four plan geometry images, PASS for P&R, reported identity-checked SIGCONT of exact four controller PIDs. Recorded late by ledger owner.",
+   "actual_observation": "absent; unit LoadState=not-found, terminal geom_run infrastructure failure EP9 DRAIN"
+  },
+  {
+   "action": "CONTROLLER_CONTINUED",
+   "at": 1794868037.8000128,
+   "item": "slice_station__t45",
+   "hub_unit": "kw-s81-slicestationt45-6-62615.service",
+   "controller_pid": 1069783,
+   "owner": "FABLE-FIX-S81-CONG (COORD r349)",
+   "reconciled": true,
+   "signal_sent_now": false,
+   "reported_release": "2026-11-16 13:36 PST REVIEW [FABLE-FIX-S81-CONG -> COORD]",
+   "release_basis": "Owner LOOKED four plan geometry images, PASS for P&R, reported identity-checked SIGCONT of exact four controller PIDs. Recorded late by ledger owner.",
+   "actual_observation": "S; exact run-item/spec matches; active unit; cgroup running"
+  },
+  {
+   "action": "CONTROLLER_CONTINUED",
+   "at": 1794868037.8000174,
+   "item": "slice_station__t46",
+   "hub_unit": "kw-s81-slicestationt46-7-62615.service",
+   "controller_pid": 1069788,
+   "owner": "FABLE-FIX-S81-CONG (COORD r349)",
+   "reconciled": true,
+   "signal_sent_now": false,
+   "reported_release": "2026-11-16 13:36 PST REVIEW [FABLE-FIX-S81-CONG -> COORD]",
+   "release_basis": "Owner LOOKED four plan geometry images, PASS for P&R, reported identity-checked SIGCONT of exact four controller PIDs. Recorded late by ledger owner.",
+   "actual_observation": "S; exact run-item/spec matches; active unit; cgroup running"
+  },
+  {
+   "action": "CONTROLLER_CONTINUED",
+   "at": 1794868037.8000197,
+   "item": "slice_station__t8",
+   "hub_unit": "kw-s81-slicestationt8-32-62615.service",
+   "controller_pid": 1069849,
+   "owner": "FABLE-FIX-S81-CONG (COORD r349)",
+   "reconciled": true,
+   "signal_sent_now": false,
+   "reported_release": "2026-11-16 13:36 PST REVIEW [FABLE-FIX-S81-CONG -> COORD]",
+   "release_basis": "Owner LOOKED four plan geometry images, PASS for P&R, reported identity-checked SIGCONT of exact four controller PIDs. Recorded late by ledger owner.",
+   "actual_observation": "S; exact run-item/spec matches; active unit; cgroup running"
+  }
+ ],
+ "remaining_physical_jobs": "PRESERVED; no cancellation/restart"
+}
