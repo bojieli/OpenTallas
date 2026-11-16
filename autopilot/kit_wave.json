@@ -35197,7 +35197,8 @@
    ],
    "retry": [
     "hd_ctl@2",
-    "hd_spn_end@1"
+    "hd_spn_end@1",
+    "hd_mesh@5"
    ],
    "pilot_max": 100000,
    "plan_note": "HEAD-98 11-13 rp21z5 (small update on the rp21z4 FINAL event, same event key): + hd_tile rst_start_raw_7 one 8.64 step N (M7 pin short fix) + hd_lep0N SE SRAM relayout with PHYS-KVHEAD remap (7 raw exports re-pointed before republish). Raw plan head-98/pd/rp21z5.json f1bbe7a94db0. All other 24 types: kit RTL byte-identical to rp21z4. | HEAD-98 11-13 rp21z4 FINAL event (OWNER: adopt now, R-PROFILE early exception to the 11-15 freeze): rp21v + tile bay + pregrt_ff_hold mesh/spn/host_e/ctl/host_w + spn_end rows2/spread + serdes pd3 explicit taps clk Y20.384. Raw plan head-98/pd/rp21z4.json 150386ac488e.",
