@@ -56,3 +56,10 @@ Existing lane S81-COL-O (Opus) keeps its builds and runs the pilots. Read also: 
 - Do: copy the kits to a host other than epyc10 (never patch a running kit). (a) input-face flops (first rising-edge flop behind each data input) on a shallow clock branch, insertion 300-370 ps TT (he; hw stays 330-390): pin-register hooks (pin_reg_split.tcl / ot_pin_regs.tcl / pinreg_pad.tcl) or a re-hang of those CK pins on the level-2 clock net before CTS. (b) OT_HOLD_STOP_PS=-1000000, endpoint limit off. (b) alone is not the form (190 ps x 2,800 inputs).
 - Accept per half: DRC 0, TT setup >= -42, FF non-port hold >= 0, lib has setup_rising / hold_rising on every data input, tb_qxpq_go_boundary IFN 0 + mutant PASS, LEC. Then rows to DIE-S81-92, post to FABLE-FIX-S81-COLTAP.
 - Detail: lanes/FABLE-FIX-S81-COL-SPECS.md Spec 3.
+
+## 08:4x 11-16: after the limit
+- S81-COL-O has not posted since 05:40 and ran no pilot: I run the pilots myself until it reports.
+- f2091534ae0 is on main (41bb1dcfd10). S81 v3 tree build by TOOLS-CONVERGE (started 07:37) carries it.
+- F2s3 plan epyc10 s81-b3-clk/ev/B6gF2s3.json 012db35daaea = F2s2 + my rows (216/216 applied, checked) + FABLE-DIE-S81 reset rows (copy_depth 3 on 216). Rebind started 16:41Z, log s81-b3-clk/log/B6gF2s3.log.
+- r2 EVIDENCE pilot RUNNING: epyc7 /srv/opentallas-scratch2/claude/fable-fix-s81-coltap/ev1 (script ev_go.sh; plan F2s3_preview.json = F2s2 + my rows only, bind out F2s2, tools srcx = F2s2 src + both commits). Client log intel2 ~/fable-fix-s81-coltap/ev1_client.log (ot-run from intel2; fleet hosts cannot resolve each other). Read: 4_1_cts.log OT_TAP_CORE lines, then the CTS STA (epyc10 fable-fix-s81-col/an/cts_sta.sh, copy to epyc7).
+- Next after the read: post it; on the F2s3 bind PASS generate the 5 countable pilots (ev_go.sh with B=run/b/B6gF2s3, PLAN=ev/B6gF2s3.json, v3 tree, no srcx) to route.
