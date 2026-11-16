@@ -5745,10 +5745,9 @@
         {
           "id": "qwen_kvsys-mig-006-k5",
           "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-          "reason": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
+          "reason": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key. | CODEX 11-16 owner14Nov cell cap removed; KV owner confirms hard-ring k2r remedy now composes in KV-HG1 (NOT kvgeom7yhr), replacing abandoned three-way KV-PVSPLIT. Original failure retained; cells all16PV201581..312865, standalone bind/R8/LATCHECK2404/2404 and3kitPASS. Release on actual remedied plan event; no census gate.",
           "release": [
-            "event_adopt:KV-PVSPLIT",
-            "census_lt:400k"
+            "event_adopt:KV-HG1"
           ],
           "migrated": true,
           "keys": [
@@ -5805,10 +5804,9 @@
         {
           "id": "qwen_kvsys-mig-012-k9",
           "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-          "reason": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key.",
+          "reason": "KV-PV-OVER400K: wait KV-PVGEN split delta (KV-102 HOLD 22:06 PST, R-CAP 400k, lanes/handoff/OVERSIZE-1.md; applied WAVE-HOLDS-1115 2026-11-15 22:13 PST, COORD r239). Running attempts finish. Lift = delete this key. | CODEX 11-16 owner14Nov cell cap removed; KV owner confirms hard-ring k2r remedy now composes in KV-HG1 (NOT kvgeom7yhr), replacing abandoned three-way KV-PVSPLIT. Original failure retained; cells all16PV201581..312865, standalone bind/R8/LATCHECK2404/2404 and3kitPASS. Release on actual remedied plan event; no census gate.",
           "release": [
-            "event_adopt:KV-PVSPLIT",
-            "census_lt:400k"
+            "event_adopt:KV-HG1"
           ],
           "migrated": true,
           "keys": [
