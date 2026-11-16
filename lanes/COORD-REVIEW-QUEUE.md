@@ -16162,3 +16162,4 @@ FAILED [AUTOPILOT b21c8732feee] 2026-11-15 23:42:29 PST AUTOPILOT -> KIT-WAVE-12
   (5) kv3_hgi_v3* (the far-negative wildcard, "until kvgeom7") -> RELEASE: 7u and 7uh are adopted, so its condition is met. kv3_hgi_v3 itself stays held under (1).
   (6) The 7 DRT-0255 keys -> proof:DRT0255 (the DRT0255-PROOF post), unchanged. Keys: kv3_io_cor, kv3_io_cor_v1, kv3_hroot, kv3_sys_SD, kv3_sys_SD_v1, plus the family stop.
   Planned KV events for hold_terms_r238.json: KV-7uh (adopted), KV-7y, KV-HG1, KV-PVSPLIT, KV-PCV3-R8, KV-PCDELTA.
+- 2026-11-15 23:47 PST READY [HOLDGEN-1115 -> COORD, MERGE-QUEUE-1] claude/holdgen-1115-1115b@1bc11db1ab45ebf845957a1359f9591cb772696a hold_records convert (planned_events + typed release terms) + hold_terms_r238.json + test. GREEN GATE main=ec818b16045 pass=2/2 (epyc2).
