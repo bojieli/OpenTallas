@@ -149,3 +149,42 @@ endmodule'''
     r=C.trace(p,'top',text)
     assert not r['core_conns']['top']
     assert any(x['reason']=='nonliteral delay D' for x in r['wiring_warnings'])
+
+
+# DIE-S81-92 r228 / FABLE-FIX-S81-COL: the seam WRITE sides are wiring between a core output and the out face flop.
+# Before, the trace stopped at them, so a core -> seam write -> out bus run (col_h9_r2 u_n23.o -> u_lpl_17_w ->
+# u_bout_frame_int_o0, 1,073 um) had no producer and the station tool never planned an out station on it.
+def _seam_plan(tmp):
+    a=lef(tmp,'HS',{'q':('OUTPUT',4)})
+    return {'partition_types':{'top':{'module':'top','buses':[{'name':'out_bus','dir':'out','width':4}],
+        'hard_cores':[{'inst':'src','module':'HS','lef':a}]}}}
+
+
+def _out_stages(r):
+    return sorted({(x['core'],x['port'],x['stages_existing']) for x in r['paths'] if x['core']=='src'})
+
+
+def test_seam_write_pl_is_a_zero_stage_wire_to_the_out_bus(tmp_path):
+    text='''module top(output wire [3:0] out_bus);
+wire [3:0] q,wq;
+HS u_src (.q(q));
+ot_pl_seam_w_pl #(.CHUNKS(1), .CHUNK_BITS(24), .W(4)) u_lpl_w (.ck(ck),.i(q),.q(wq),.rsi(rs));
+ot_dp_st #(.W(4)) u_bout_out_bus (.clk(ck),.rst_n(rs),.d(wq),.ea(rs),.q(out_bus));
+endmodule'''
+    r=C.trace(_seam_plan(tmp_path),'top',text)
+    assert r['core_conns']['top']['src']['q']==['bus:out_bus']
+    assert not r['wiring_warnings'] and not r['unresolved']
+
+
+def test_seam_write_plr_counts_its_one_register(tmp_path):
+    base='''module top(output wire [3:0] out_bus);
+wire [3:0] q,wq;
+HS u_src (.q(q));
+%s
+ot_dp_st #(.W(4)) u_bout_out_bus (.clk(ck),.rst_n(rs),.d(wq),.ea(rs),.q(out_bus));
+endmodule'''
+    pl=C.trace(_seam_plan(tmp_path),'top',base % 'ot_pl_seam_w_pl #(.W(4)) u_lpl_w (.ck(ck),.i(q),.q(wq),.rsi(rs));')
+    plr=C.trace(_seam_plan(tmp_path),'top',base % 'ot_pl_seam_w_plr #(.RSREG(0), .W(4)) u_lpl_w (.ck(ck),.ir(q),.q(wq),.rse(rs),.rsi(rs));')
+    assert plr['core_conns']['top']['src']['q']==['bus:out_bus']
+    a=_out_stages(pl); b=_out_stages(plr)
+    assert len(a)==1 and len(b)==1 and b[0][2]==a[0][2]+1
