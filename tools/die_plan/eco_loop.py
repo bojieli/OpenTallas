@@ -78,7 +78,7 @@ FLOW_FILES = ("post_route_drv/prd_mk.sh", "post_route_drv/prd_run.sh", "post_rou
               "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_grt_pre.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl", "post_route_drv/prd_autofo.tcl",
               "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "post_route_drv/prd_seed.py",
               "post_route_drv/prd_spef_insts.py", "post_route_drv/prd_filler_preclean.py",
-              "post_route_drv/prd_filler_seed_check.py", "eco_loop.py") + ECO_TOOL_FILES
+              "post_route_drv/prd_filler_seed_check.py", "post_route_drv/prd_clock_inventory.tcl", "eco_loop.py") + ECO_TOOL_FILES
 POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")
 # ECO-OOM-1 (DIE-S81-48 11-02, VEs autopilot 246986099dc1): the late ECO inherited the kit runner's ot-run memory (24 GB)
 # as its docker cap, but the ECO session holds the routed DB + the routed SPEF in TWO scenes + repair + DRT on top of what

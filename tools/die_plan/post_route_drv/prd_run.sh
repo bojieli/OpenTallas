@@ -89,7 +89,7 @@ if [ -n "${OT_PRD_FINAL_ONLY:-}" ]; then
   busfit_prep "$FINAL"
 fi
 while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
-  OT_PRD_FROM=grt; OT_PRD_PROTECT_NETS=; OT_PRD_NARROW_PINS=; OT_PRD_REPAIR_RC=; OT_PRD_AUTO_FANOUT=; OT_HOLD_REPAIR_SCOPE=; OT_PRD_PRECLEAN_FINAL=0; . $D/variant.env   # the pinned pass dir decides, not a stray export
+  OT_PRD_FROM=grt; OT_PRD_PROTECT_NETS=; OT_PRD_NARROW_PINS=; OT_PRD_REPAIR_RC=; OT_PRD_AUTO_FANOUT=; OT_HOLD_REPAIR_SCOPE=; OT_PRD_PRECLEAN_FINAL=0; OT_PRD_CLOCK_INVENTORY=0; . $D/variant.env   # the pinned pass dir decides, not a stray export
   NAME=prd-$(basename $(dirname $D) | cut -c1-30)-$(basename $D)-$$
   PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
   busfit_prep "$D"
@@ -142,7 +142,7 @@ while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   [ "${OT_PRD_FROM:-grt}" = final ] && OT_PRD_FROM=route   # pass p+1 of a final seed: pass p has no post-route edits
   N=${D0}_p$((P + 1))
   OT_SLEW_MARGIN="$OT_SLEW_MARGIN" OT_SETUP_MARGIN="$OT_SETUP_MARGIN" OT_HOLD_ALLOW_SETUP="$OT_HOLD_ALLOW_SETUP" OT_HOLD_MAXBUF="$OT_HOLD_MAXBUF" \
-  OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_UNFOLD_CHAINS=${OT_PRD_UNFOLD_CHAINS:-0} OT_PRD_TARGET_SLEW_PS=${OT_PRD_TARGET_SLEW_PS:-} OT_PRD_TARGET_FANOUT=${OT_PRD_TARGET_FANOUT:-} OT_PRD_AUTO_FANOUT=${OT_PRD_AUTO_FANOUT:-} OT_PRD_TIE_SPLIT=${OT_PRD_TIE_SPLIT:-} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" OT_PRD_NARROW_PINS="${OT_PRD_NARROW_PINS:-}" OT_PRD_REPAIR_RC="${OT_PRD_REPAIR_RC:-}" OT_HOLD_REPAIR_SCOPE="${OT_HOLD_REPAIR_SCOPE:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
+  OT_PRD_CLOCK_INVENTORY="${OT_PRD_CLOCK_INVENTORY:-0}" OT_PRD_HOOK="$D/prd_hook.tcl" OT_PRD_TARGETED=${OT_PRD_TARGETED:-0} OT_PRD_UNFOLD_CHAINS=${OT_PRD_UNFOLD_CHAINS:-0} OT_PRD_TARGET_SLEW_PS=${OT_PRD_TARGET_SLEW_PS:-} OT_PRD_TARGET_FANOUT=${OT_PRD_TARGET_FANOUT:-} OT_PRD_AUTO_FANOUT=${OT_PRD_AUTO_FANOUT:-} OT_PRD_TIE_SPLIT=${OT_PRD_TIE_SPLIT:-} OT_PRD_FROM=${OT_PRD_FROM:-grt} OT_PRD_MAX_WIRE_LENGTH=${OT_PRD_MAX_WIRE_LENGTH:-0} OT_PRD_PROTECT_NETS="${OT_PRD_PROTECT_NETS:-}" OT_PRD_NARROW_PINS="${OT_PRD_NARROW_PINS:-}" OT_PRD_REPAIR_RC="${OT_PRD_REPAIR_RC:-}" OT_HOLD_REPAIR_SCOPE="${OT_HOLD_REPAIR_SCOPE:-}" bash $HERE/prd_mk.sh $D $N $V $SO $B/5_2_route_rcx.spef || { rc=7; break; }
   D=$N; P=$((P + 1))
 done
 if [ -n "$FINAL" ] && [ "${OT_PRD_FINISH:-1}" = 1 ]; then
