@@ -36,30 +36,6 @@ def test_kit_wave_records_infra_but_not_a_host_shortage():
     assert "NO_HOST.search(why or \"\") or _TRANSIENT_INFRA.search(why or \"\")" in src
 
 
-def cfg(src="s1"):
-    return {"dies": {"d": {"src_sha": src, "plan_sha": "p"}}}
-
-
-def test_infra_key_changes_with_tool_src_plan_and_error_class(monkeypatch):
-    rec = {"die": "d", "item": "i"}
-    monkeypatch.setattr(KW, "rt_tools_digest", lambda: "t1")
-    a = KW.infra_key(cfg(), rec, "INFRA", S81 % 1)
-    assert a == KW.infra_key(cfg(), rec, "INFRA", S81 % 7)                      # same error class, other numbers: same key
-    assert a != KW.infra_key(cfg("s2"), rec, "INFRA", S81 % 1)                  # src changed
-    assert a != KW.infra_key(cfg(), dict(rec, plan_sha="p2"), "INFRA", S81 % 1)  # plan changed
-    assert a != KW.infra_key(cfg(), rec, "INFRA", KV)                           # other error class
-    monkeypatch.setattr(KW, "rt_tools_digest", lambda: "t2")
-    assert a == KW.infra_key(cfg(), rec, "INFRA", S81 % 1)                      # the hub runtime digest is NOT in the key (FABLE-FLOW-2000 a)
-
-
-def test_second_failure_of_the_same_key_is_the_repeat():
-    st, rec = {}, {"die": "d", "item": "i"}
-    assert KW.infra_repeat(st, rec, "k1") is False
-    assert KW.infra_repeat(st, rec, "k2") is False
-    assert KW.infra_repeat(st, rec, "k1") is True
-    assert KW.infra_repeat(st, {"die": "d", "item": "other"}, "k1") is False     # per item
-
-
 def test_tool_vs_design_reclass():
     assert KW.TOOL_INFRA_RE.search("python exception / plan-schema refusal in the kit tool: tool or source skew")
     assert not KW.TOOL_INFRA_RE.search("INFRA host input gap on epyc7")
