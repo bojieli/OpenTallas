@@ -96,3 +96,24 @@ def test_emit_merges_and_is_equivalent_to_the_per_bit_form(tmp_path, monkeypatch
         "proc\nmemory_collect\nmemory_map\nopt_clean\nequiv_make gold gate eq\nhierarchy -top eq\n"
         "equiv_simple -seq 2\nequiv_induct -seq 2\nequiv_status -assert\n")
     E.run_yosys(tmp_path / "lec.ys", tmp_path / "lec.log", [tmp_path], mem_gb=4)
+
+
+def test_overlapping_ports_at_different_addresses_carry_earlier_writes():
+    """LEC finding on land (11-16): port B's chunk (en bit 0) must not undo port A's write to the same word.  The merged text starts B's
+    read-modify-write from the word as port A leaves it (address compare) instead of from the old word."""
+    a = per_bit(64, addr="{ 24'h000000, WR_ADDR[7:0] }")
+    b = per_bit(64, addr="{ 22'h000000, WR_ADDR[41:32] }", off=64, d="WR_DATA", )
+    o, st = merge_memwr("always @(posedge c) begin\n" + a + b + "end\n")
+    assert st == [("\\\\native_memory", 128, 2)]
+    second = [l for l in o.splitlines() if "WR_ADDR[41:32]" in l][0]
+    assert "(" in second and "== " in second and "WR_ADDR[7:0]" in second          # earlier port A folded in under an address compare
+    first = [l for l in o.splitlines() if "WR_ADDR[7:0]" in l][0]
+    assert "==" not in first                                                       # the first chunk has no earlier statement to fold in
+
+
+def test_same_address_overlap_folds_without_compare():
+    a = per_bit(64)
+    b = per_bit(64, off=64)
+    o, st = merge_memwr("always @(posedge c) begin\n" + a + b + "end\n")
+    second = [l for l in o.splitlines() if "WR_EN[64" in l][0]
+    assert "==" not in second and "WR_EN[0 +: 64]" in second
