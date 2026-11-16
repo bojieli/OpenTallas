@@ -69,3 +69,14 @@ def test_fix_lane_is_owner(tmp_path):
     sent = []
     fr.run(tmp_path, tmp_path / "st.json", "post.sh", now=NOW, poster=lambda p, t: sent.append(t) or True)
     assert any("FABLE-FIX-S81-RINGS, COORD" in t for t in sent) and any("QC-DRT-1116, COORD" in t for t in sent)
+
+
+def test_s81_family_routing(tmp_path):
+    names = ["col_h9_r1__t1", "leaf_a__t2", "boxed_strip__t3", "serdes_x__t1", "slice_station__t17", "dsdv_slice_c1x__t1"]
+    mk(tmp_path, [f"- {stamp(5)} STATE [DIE-S81-92 -> COORD] alive"], ["s81|" + n for n in names])
+    sent = []
+    fr.run(tmp_path, tmp_path / "st.json", "post.sh", now=NOW, poster=lambda p, t: sent.append(t) or True)
+    def to(n):
+        return next(t for t in sent if n in t).split("->")[1].split(",")[0].strip()
+    assert [to(n) for n in names] == ["FABLE-FIX-S81-COL", "FABLE-FIX-S81-RINGS", "FABLE-FIX-S81-STRIP", "S81-SERDES-PHY-1116",
+                                      "DIE-S81-92", "DIE-S81-92"]
