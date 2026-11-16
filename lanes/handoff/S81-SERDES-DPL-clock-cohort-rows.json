@@ -1,0 +1,11 @@
+{
+  "partition_types": {
+    "serdes__t14": {
+      "clock": {
+        "tap_group": {
+          "re": "(?:^|[/.])(u_enc(?=[/.])|u_(?=(?:rrl_94|cland_collect_rst_rl_94)[/.]))"
+        }
+      }
+    }
+  }
+}

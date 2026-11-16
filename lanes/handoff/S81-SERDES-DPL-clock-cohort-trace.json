@@ -1,0 +1,48 @@
+{
+  "source": "epyc7:/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/C/serdes__t14/gen/serdes__t14",
+  "source_plan": "B6gF2s2, bound C production shape",
+  "tool_dependency": "claude/fable-fix-s81-serdes-1116 @55b26f86497",
+  "mechanism": "Explicit relay94 + ready/fault collector94 clock cohort, preserving existing u_enc group. ct_group_owned prevents either reset-follower pass from moving only relay94 to remote-descendant tap.",
+  "measured_before": {
+    "source": "u_bound.u_rrl_94/q$_DFF_N_",
+    "source_xy_um": [
+      2740.932,
+      230.58
+    ],
+    "source_clock": "clk_t23",
+    "source_clock_fall_arrival_ps": 1737.8,
+    "capture": "u_bound.u_cland_collect_rst_rl_94/ready_o$_SDFF_PN0_",
+    "capture_xy_um": [
+      2742.282,
+      231.93
+    ],
+    "capture_clock": "clk_t7",
+    "capture_clock_rise_arrival_ps": 880.25,
+    "physical_distance_um": 2.7,
+    "data_delay_ps": 111.8,
+    "tt_setup_slack_ps": -973.54
+  },
+  "clock_accounting": {
+    "source_phase_ps": 416.5,
+    "source_port_latency_ps": 0,
+    "source_real_tree_insertion_ps": 1321.3,
+    "capture_phase_ps": 833,
+    "capture_port_latency_ps": -116,
+    "capture_real_tree_insertion_ps": 163.25,
+    "cppr_ps": 0
+  },
+  "model_delta": {
+    "cycles": 0,
+    "cells": 0,
+    "ports": 0,
+    "outline": 0
+  },
+  "other_failures_not_claimed_fixed": [
+    "native rt_d5 -> bank5 recovery -358.87 (native reset tree/data locality class)",
+    "t13 lock_sync0->1 -660.73; relay119->121 -504.75; lock_sync1->rs_r1 -160.40",
+    "t1clb45 relay51->52/state -1086.91",
+    "t1clfe cland_origin/s2 -> reader_start_ft1_i0/g_x6.u_r/q -1406.90",
+    "t15cla3d relay115 -> cland_fstart_ft0_o/q -1415.22"
+  ],
+  "status": "Typed minimal t14 row; actual preCTS assignment proof/clock image in progress, CTS gate remains required."
+}
