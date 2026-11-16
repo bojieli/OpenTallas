@@ -47,8 +47,17 @@
 //   lock_sync -> rs_t[0] recovery -83) but ONE kept pma_rck flop rq_t (async assert by that AND, release on the next
 //   pma_rck edge) beside rs_t: the clk domain releases one pma_rck edge later; rs_r and the rck domain are unchanged.
 //   0 data cycles (reset release only).
+// BOOT_RELEASE_STAGES (default0; opt-in OT_S81_SERDES_BOOT_RELEASE3): common reset release
+// adds3 recovered edges (authority66 -> local69, native RX71), no mission cycles.
+// Three kept async-assert/sync-release stages span the measured north-authority to
+// native-sync corridor; HOLD64 and the existing TX-only RST_RT stage are unchanged.
 module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0,
                             parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64,
+`ifdef OT_S81_SERDES_BOOT_RELEASE3
+                            parameter integer BOOT_RELEASE_STAGES = 3,
+`else
+                            parameter integer BOOT_RELEASE_STAGES = 0,
+`endif
 `ifdef OT_S81_SERDES_RST_TREE2
                             parameter integer RST_TREE = 3,
 `elsif OT_S81_SERDES_RST_TREE
@@ -89,11 +98,15 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         $error("TX PIN form requires LOCKSAFE=1 and HOLD_EDGES>=64");
 `endif
     // ---- S81.RESET warm-reset sequencer (LOCKSAFE=1 only; region syn, on pma_rck)
-    wire rst_g, rst_g_t;
+    wire rst_g, rst_g_t, rst_g_authority;
+    initial if (BOOT_RELEASE_STAGES != 0 && (BOOT_RELEASE_STAGES != 3 || LOCKSAFE == 0))
+        $error("BOOT_RELEASE_STAGES requires LOCKSAFE and the sized three-stage form");
     generate if (LOCKSAFE != 0) begin : g_locksafe
         wire hold_ready;
         ot_pdie_pma_reset_hold #(.HOLD_EDGES(HOLD_EDGES)) u_hold
-            (.rst_n(rst), .pma_lock(pma_lock), .pma_rck(pma_rck), .core_rst_n(rst_g), .hold_ready(hold_ready));
+            (.rst_n(rst), .pma_lock(pma_lock), .pma_rck(pma_rck), .core_rst_n(rst_g_authority), .hold_ready(hold_ready));
+        ot_pdie_pma_release_chain #(.STAGES(BOOT_RELEASE_STAGES)) u_boot_release
+            (.rst_n(rst_g_authority), .pma_rck(pma_rck), .released_n(rst_g));
         if (RST_RT != 0) begin : g_rst_rt
             (* keep *) reg rq_t;
             always @(posedge pma_rck or negedge rst_g) if (!rst_g) rq_t <= 1'b0; else rq_t <= 1'b1;
@@ -105,7 +118,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         if (RST_RT != 0) begin : g_rt_needs_ls
             initial $error("RST_RT requires LOCKSAFE != 0");
         end
-        assign rst_g = rst; assign rst_g_t = rst;
+        assign rst_g_authority = rst; assign rst_g = rst; assign rst_g_t = rst;
     end endgenerate
     // ---- resets: one synchroniser per clock domain (rs_t in region tx, rs_r in region syn beside the PMA)
     reg [1:0] rs_t, rs_r;
