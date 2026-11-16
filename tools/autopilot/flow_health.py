@@ -276,6 +276,20 @@ print("AP_JSON " + json.dumps(out))
 """
 
 
+LOCAL_NAMES = {"localhost", os.uname().nodename, os.environ.get("OT_HUB_NAME", "intel2") if os.path.isdir(os.path.expanduser("~/coord")) else "-"}
+
+
+def local_sha(args):
+    try:
+        p = subprocess.run([sys.executable, "-I", "-c", SHA_PY, json.dumps(args)], capture_output=True, text=True, timeout=60)
+        for line in reversed(p.stdout.splitlines()):
+            if line.startswith("AP_JSON "):
+                return json.loads(line[8:])
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return {"error": "local"}
+
+
 def noprog_drift_section(blob=None, rpy=None, hosts=NOPROG_HOSTS):
     """FLOW-HEALTH-1 11-15 (COORD r184): the noprog files the hub pushes to every host must equal main's tools/autopilot copies.
     One row per host and file: SAME | DIFFERS | MISSING | UNREACHABLE."""
@@ -287,7 +301,11 @@ def noprog_drift_section(blob=None, rpy=None, hosts=NOPROG_HOSTS):
         main[f] = hashlib.sha1(b).hexdigest() if b is not None else None
     out = ["# NOPROG-DRIFT installed ~/.local/lib/noprog vs origin/main tools/autopilot", "\t".join(["host", "file", "state"])]
     for h in hosts:
-        r = rpy(h, SHA_PY, {"files": list(NOPROG_FILES), "dir": NOPROG_DIR}, timeout=60)
+        args = {"files": list(NOPROG_FILES), "dir": NOPROG_DIR}
+        if h in LOCAL_NAMES:                      # the hub cannot ssh to its own fleet name (intel2 does not resolve on intel2)
+            r = local_sha(args)
+        else:
+            r = rpy(h, SHA_PY, args, timeout=60)
         for f in NOPROG_FILES:
             if not isinstance(r, dict) or r.get("error"):
                 st = "UNREACHABLE"
