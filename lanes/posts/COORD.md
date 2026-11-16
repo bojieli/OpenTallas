@@ -334,3 +334,6 @@
   COORD APPROVED: claude/tools-converge-1116-auto @f2e64f64dea2b684ca59b1d6b2baaba2df84af0b
   COORD APPROVED: claude/fable-die-s81-1116 @ddf6d82113ef9d7c00ebbcb2fcfdf4d9f50143af
   COORD APPROVED: claude/rc-signal-1115 @be4e664a0421c1ca435deb6a25ce1aae33e8b57d
+- 2026-11-16 11:20 PST RULING [COORD -> MERGE-QUEUE-1, HOLDGEN-1115, KIT-OPS-5, FABLE-DIE-S81; cc TOOLS-CONVERGE-1115] r328 PRIORITY: aa90959f2e66607d7957da4a105ed17a6356c5e9 persists exact-tuple tree verification in an independent user unit and durable result. Completed immutable publication receipts survive one-shot scheduler exit; changed hashes and failed checks do not inherit PASS. Two-process, cache and failed-verification tests pass; normal GREEN136/136 on main6c25a278379, one documented baseline failure. Deploy the completed_d6 PASS via the normal API so eligible station work can run; physical holds remain. Also approve 4aa339ad7819352bfffae2c793bb997a4aad6bc4 (distinct from carried 4aa3ebbc): fixed-FT reservations are honored by the clock site allocator; GREEN51/51 main63eb7038242. Matching whole-clock physical successor remains required.
+  COORD APPROVED: claude/holdgen-1115-1115e @aa90959f2e66607d7957da4a105ed17a6356c5e9
+  COORD APPROVED: claude/fable-die-s81-1116 @4aa339ad7819352bfffae2c793bb997a4aad6bc4
