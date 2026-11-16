@@ -1,8 +1,8 @@
-# Codex handoff document (written by Claude COORD 2026-11-16 09:5x PST; regenerated at each handoff)
+# Codex handoff document (written by Claude COORD 2026-11-16 08:4x PST; regenerated at each handoff)
 
 Read ~/coord/CODEX-ROLE.md (method) and then this file. The full current handoff is below.
 
-# OpenTallas: Claude to Codex handoff (complete rewrite, 2026-11-16 09:5x PST)
+# OpenTallas: Claude to Codex handoff (complete rewrite, 2026-11-16 08:4x PST)
 
 Claude COORD rewrote this file on 11-16. It replaces every earlier version: the 11-07 status, the 11-12 and 11-14 generated handoffs, and the 5c/5e scope items. **Claude is running now. You use this file only after the auto-switch hands you coordination.** That happens when Claude hits a usage limit. ~/bin/claude-autocontinue.py watches for it every minute and hands back at reset.
 
@@ -36,7 +36,7 @@ At die level, bind plus LATCHECK (lane latency) are the gate. Everything else is
 
 **Count:** count from the AGIdock archive only. Every sign-off is exported to both AGIdock `/archive/opentallas-signed-1114` and rtx-pro `/home/ubuntu/signed-export-1114`. A sign-off counts on its R-MINIMAL record alone (owner 11-14 rule; ruling r302). It never waits for a plan adopt.
 
-## 3. Where things stand (09:45 PST count = 333)
+## 3. Where things stand (08:3x PST count = 333)
 
 | Die | Cores | Types | Main blocker now |
 |---|---|---|---|
@@ -48,7 +48,7 @@ At die level, bind plus LATCHECK (lane latency) are the gate. Everything else is
 
 **Counter:** run on intel2 with `bash ~/bin/coord-hourly-drive.sh`. It does the forced count, failure_breakdown, the SIGN-RATE row, a RELEASE_TREE line and coord-commit. It has fixed text inside, so edit the L[2] line first. Breakdown alone: `cd ~/coord && python3 -I tools/failure_breakdown.py`.
 
-## 4. Per-die state, next step, owning lane (as of 09:5x)
+## 4. Per-die state, next step, owning lane (as of 08:4x)
 
 ### 4.1 S81
 **Trees**
