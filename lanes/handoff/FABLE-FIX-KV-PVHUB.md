@@ -93,3 +93,10 @@ Final asynchronous handback updates: merge_ops thin13460a0 normal source gate te
   treeC (B + ctx source 13460a0, plan 6e6140a2c269) gate C: PRE 0 at 13:17, G0 + bind running on epyc10 (load 300). C is its own later event.
   WAITING on the FABLE-PD-KV-HG1 review (not posted at 13:35). On no blocking finding: READY+ADOPT HG1B to KIT-OPS-5 / TOOLS-CONVERGE
   (they publish the tree + bind on epyc10 + epyc2 as for 7yhr d1); pilots kv3_hg_v1, kv3_hg_v3, kv3_pv_v1n.
+
+## 14:xx PST branches (FABLE-FIX-KV-PVHUB)
+- READY, land in this order: (1) claude/fable-fix-kv-pvhub-snapcopy-1116 @863137e6e12 = 5a98 alone on main (gate 2/2);
+  (2) claude/fable-fix-kv-pvhub-snapkey-1116 @7d8085c408f = fail-key release for snapshot-internal missing inputs (gate 133/133).
+- Superseded, never merge: claude/fable-fix-kv-pvhub-snap-1116 @6b1c7a507f9; 5a98a213258 on claude/rc-signal-1115 (carries 6b915b8f4cc).
+- After both merge + rt sync: hub_C / hub_Wo / pv_v1 release with reason "snapshot" (RELAUNCH-ON-FIX); KIT-OPS-5 relaunches.
+- HG1B ADOPT still waits on the FABLE-PD-KV-HG1 review.
