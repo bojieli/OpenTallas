@@ -1,5 +1,5 @@
-# HEAD die route units, recipe run nf13r (NF13a plan, plan abstracts for hd_tile 717.12 / hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 09:33:33 PST by intel2 ~/tmp/head100_utable.sh
-# DONE 325, DONE with DRC>0: 7, DONE with RSS>20 GB: 11; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
+# HEAD die route units, recipe run nf13r (NF13a plan, plan abstracts for hd_tile 717.12 / hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-16 09:48:55 PST by intel2 ~/tmp/head100_utable.sh
+# DONE 326, DONE with DRC>0: 7, DONE with RSS>20 GB: 11; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
 renewed-glider u000_b DONE drc=398 rss_mb=10507 wall=2:00:58 [INFO DRT-0199]   Number of violations =
 key-cardinal u001_b DONE drc=0 rss_mb=10632 wall=1:13:57 [INFO DRT-0199]   Number of violations =
 key-cardinal u002_b DONE drc=0 rss_mb=11211 wall=1:32:01 [INFO DRT-0199]   Number of violations =
@@ -102,7 +102,7 @@ renewed-glider u098_b DONE drc=0 rss_mb=10683 wall=21:20.22 [INFO DRT-0199]   Nu
 renewed-glider u099_b DONE drc=0 rss_mb=10190 wall=16:17.06 [INFO DRT-0199]   Number of violations =
 civil-redfish u100_b DONE drc=0 rss_mb=9235 wall=42:16.24 [INFO DRT-0199]   Number of violations =
 renewed-glider u101_b DONE drc=0 rss_mb=10475 wall=12:26.49 [INFO DRT-0199]   Number of violations =
-civil-redfish u102_b DRT drc=- rss_mb=- wall=- Completing 80% with 313 violations.
+civil-redfish u102_b DONE drc=0 rss_mb=9616 wall=1:06:44 [INFO DRT-0199]   Number of violations =
 renewed-glider u103_b DONE drc=0 rss_mb=9993 wall=15:57.68 [INFO DRT-0199]   Number of violations =
 renewed-glider u104_b DONE drc=0 rss_mb=10063 wall=14:34.89 [INFO DRT-0199]   Number of violations =
 renewed-glider u105_b DONE drc=0 rss_mb=10319 wall=14:50.55 [INFO DRT-0199]   Number of violations =
