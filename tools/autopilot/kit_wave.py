@@ -1840,8 +1840,20 @@ def retire_superseded_rows(AP, cfg, st, now=None):
             r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="relaunch", updated=now,
                      reason=f"SUPERSEDED: event {r.get('event')} is not current ({d['event']}); relaunched on the current event")
             relaunched += 1
-    if (retired or relaunched) and AP is not None:
-        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}")
+    dedup = 0
+    for r in items.values():                             # DEDUP-RETIRE-1116 (FABLE-FLOW-1113 #8: 173 unowned S81 DEDUP rows from the old plan line)
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("status") != "DEDUP" or not d.get("event"):
+            continue
+        old = bool(r.get("event")) and r.get("event") != d["event"]
+        owner_gone = any(o.get("die") == r.get("die") and o.get("item") == r.get("dedup_owner") and o.get("event") == r.get("event")
+                         and o.get("status") == "CANCELLED" and o.get("class") == "SUPERSEDED" for o in items.values())
+        if old or owner_gone:
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="dedup", updated=now,
+                     reason=f"SUPERSEDED: DEDUP member of {r.get('dedup_owner')} on " + (f"event {r.get('event')} (die is on {d['event']})" if old else "a retired owner row"))
+            dedup += 1
+    if (retired or relaunched or dedup) and AP is not None:
+        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}, dedup members {dedup}")
     return retired, relaunched
 
 
