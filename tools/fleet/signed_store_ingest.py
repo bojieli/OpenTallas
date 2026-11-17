@@ -23,25 +23,13 @@ import release_tree_plan as rtp    # noqa: E402
 import signed_store as ss          # noqa: E402
 
 COORD = pathlib.Path(TOOLS).parent
-
-
-def relto(path):
-    """path relative to the coord checkout, symlinks resolved on both sides (~/coord is a link to /srv/.../hub-coord on the hub: the tool runs from
-    the real path while the store paths name ~/coord; relative_to raised after the first host's entries were written and aborted the commit)"""
-    return os.path.relpath(os.path.realpath(str(path)), os.path.realpath(str(COORD)))
 WINDOW_H = float(os.environ.get('OT_INGEST_WINDOW_H', 96))
 RATE = float(os.environ.get('OT_INGEST_MBPS', 40)) * 1e6
 HOST_TOOL = '~/.local/share/ot-autoclean-auto/ot-autoclean.py'
 LOCK = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest.lock'
 LAST = pathlib.Path.home() / '.local/state/fleet-viz/signed_store_ingest_last.json'
 SSH = ['ssh', '-o', 'ControlPath=none', '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=20']
-def host_cmd(h, remote):
-    """ssh to host h, or the command run here when h is this machine (the hub cannot ssh to its own fleet name)"""
-    return ['bash', '-c', remote] if rtp.is_local_host(h) else SSH + [h, remote]
-
-
-AGI_KEY = os.path.expanduser('~/.ssh/agidock_ot')
-AGI = SSH + ['-i', AGI_KEY, 'ubuntu@155.103.253.53']
+AGI = SSH + ['-i', os.path.expanduser('~/.ssh/agidock_ot'), 'ubuntu@155.103.253.53']
 ORDER = tuple(h for h in ('epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2') if h in rtp.HOSTS) + tuple(h for h in rtp.HOSTS if h not in ('local', 'epyc6', 'epyc5', 'epyc4', 'intel1', 'intel2', 'epyc2'))   # hosts that go away first come first; any host the counter scans (epyc7 11-09) is ingested too
 
 PROBE = r'''
@@ -124,7 +112,7 @@ def marker_sweep(fails, cache=None):
     add = []
     for h, ds in sorted(need.items()):
         try:
-            r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(MARKER_PY)), '\n'.join(sorted(ds)) + '\n', 600)
+            r = run(SSH + [h, 'python3 -I -c ' + shlex.quote(MARKER_PY)], '\n'.join(sorted(ds)) + '\n', 600)
             if r.returncode != 0 or not r.stdout.strip():          # FLEET-OPS-R: a terminated / unreachable host (epyc4/5/6) has no markers to read: not a failure
                 say('marker sweep skipped, host unreachable:', h, 'rc', r.returncode, (r.stderr or '')[-80:].strip()); continue
             found = json.loads(r.stdout)
@@ -148,7 +136,7 @@ def run(cmd, inp=None, timeout=3600):
 
 def stream(host, base, todo):
     """tar on the host, zstd through localhost, untar on the archive with --skip-old-files.  -> True when both ends exit 0"""
-    p1 = subprocess.Popen(host_cmd(host, 'set -o pipefail; nice -n 15 tar -C / --null -T - -cf - | nice -n 15 zstd -q -T2 -3 -c'),
+    p1 = subprocess.Popen(SSH + [host, 'set -o pipefail; nice -n 15 tar -C / --null -T - -cf - | nice -n 15 zstd -q -T2 -3 -c'],
                           stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     p1.stdin.write(('\0'.join(todo) + '\0').encode()); p1.stdin.close()
     q = shlex.quote(base)
@@ -174,12 +162,12 @@ def host_tool(h):
     ~/.cache/ot-signed-store (a host onboarded with autoclean off has none: epyc7 11-09, probe 'no answer')"""
     import hashlib
     want = hashlib.md5(open(LOCAL_TOOL, 'rb').read()).hexdigest()
-    r = run(host_cmd(h, 'md5sum %s %s 2>/dev/null' % (HOST_TOOL, SHIP_TOOL)), None, 60)
+    r = run(SSH + [h, 'md5sum %s %s 2>/dev/null' % (HOST_TOOL, SHIP_TOOL)], None, 60)
     have = {ln.split()[1]: ln.split()[0] for ln in r.stdout.splitlines() if len(ln.split()) == 2}
     for t in (HOST_TOOL, SHIP_TOOL):
         if have.get(os.path.expanduser(t).replace(os.path.expanduser('~'), '/home/ubuntu')) == want or have.get(t) == want:
             return t
-    c = run(host_cmd(h, 'mkdir -p ~/.cache/ot-signed-store && cat > %s.tmp && mv %s.tmp %s' % (SHIP_TOOL, SHIP_TOOL, SHIP_TOOL)), open(LOCAL_TOOL).read(), 120)
+    c = run(SSH + [h, 'mkdir -p ~/.cache/ot-signed-store && cat > %s.tmp && mv %s.tmp %s' % (SHIP_TOOL, SHIP_TOOL, SHIP_TOOL)], open(LOCAL_TOOL).read(), 120)
     if c.returncode: raise RuntimeError('cannot ship the unit tool to %s: %s' % (h, c.stderr[-200:]))
     return SHIP_TOOL
 
@@ -190,7 +178,7 @@ def archive_host(h, cands, fails):
         tool = host_tool(h)
     except Exception as e:
         fails.append([h, '*', 'tool', str(e)[:200]]); return {}, {}
-    r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(PROBE) + ' ' + tool), '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
+    r = run(SSH + [h, 'python3 -I -c ' + shlex.quote(PROBE) + ' ' + tool], '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
     P = {}
     for ln in r.stdout.splitlines():
         o = json.loads(ln); P[o['path']] = o
@@ -210,7 +198,7 @@ def archive_host(h, cands, fails):
     if todo and not stream(h, base, todo):
         fails.append([h, '*', 'stream failed']); return {}, P
     A = json.loads(run(AGI + [hash_], lst, 7200).stdout)
-    H = json.loads(run(host_cmd(h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool), lst, 7200).stdout)
+    H = json.loads(run(SSH + [h, 'nice -n 15 ionice -c2 -n7 python3 -I %s hash' % tool], lst, 7200).stdout)
     good = {p: A[p] for p in files if A.get(p) is not None and A.get(p) == H.get(p)}
     bad = [p for p in files if p not in good]
     if bad: say(h, 'hash differs on', len(bad), 'files, first', bad[0])
@@ -313,7 +301,7 @@ def host_pins(h, r):
 def late_pass(late, fails, archive=None, collect=None, pinf=None):
     """archive + verify the unit again (new files only are sent), require every stored file unchanged, then late_provenance"""
     archive = archive or archive_host
-    collect = collect or (lambda h, p: json.loads(run(host_cmd(h, 'python3 -I -c ' + shlex.quote(ss.COLLECT_PY)), p + '\n', 300).stdout)[p])
+    collect = collect or (lambda h, p: json.loads(run(SSH + [h, 'python3 -I -c ' + shlex.quote(ss.COLLECT_PY)], p + '\n', 300).stdout)[p])
     done = []
     byh = collections.defaultdict(list)
     for e, r in late: byh[r['scan_host']].append((e, r))
@@ -370,20 +358,12 @@ def main():
         if '--dry' in a:
             say('dry: sign-off files', len(archive_unit_paths(local_dir)))
         if new:
-            rel = [relto(ss.entry_path(e)) for e in new]
+            rel = [str(pathlib.Path(ss.entry_path(e)).relative_to(COORD)) for e in new]
             c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: archive-recovery ingest %s, %d new entries' % (host, len(rel))] + rel, None, 280)
             if c.returncode: fails.append(['coord', host, 'store commit rc %d' % c.returncode])
         say('from-archive', host, 'new', len(new), 'fails', fails)
         return 1 if fails else 0
     dry = '--dry' in sys.argv
-    # FLOW-HEALTH-1 11-15 (COORD): the ingest runs where the AGIdock key lives (localhost rtx-pro).  On a host without the key every archive
-    # step used to die with a JSONDecodeError after a 7-minute scan, hourly, for three days (the store did not grow after 11-12 19:40).
-    if not dry and not os.path.isfile(AGI_KEY):
-        msg = 'AGIdock key missing on this host (%s): the signed-store ingest runs on localhost (rtx-pro), not here; nothing done' % AGI_KEY
-        say(msg)
-        try: LAST.write_text(json.dumps(dict(time=time.ctime(), fails=[[os.uname().nodename, '*', msg]], new=[], dry=dry), indent=1))
-        except OSError: pass
-        return 2
     t0 = time.time(); fails = []; new = []; unreachable = []; committed = 0; commit = None
     recs = []
     import concurrent.futures as cf
@@ -402,10 +382,7 @@ def main():
     if not dry:
         for h in ORDER:
             if not byh.get(h): continue
-            try:
-                sha, P = archive_host(h, byh[h], fails)
-            except Exception as e:                      # one host's archive step never aborts the other hosts' records
-                fails.append([h, '*', 'archive step: %s: %s' % (type(e).__name__, str(e)[:160])]); say(h, 'ARCHIVE STEP FAILED', type(e).__name__, str(e)[:160]); continue
+            sha, P = archive_host(h, byh[h], fails)
             for v in byh[h]:
                 r = v[0]; o = P.get(r['path']) or {}
                 fl = [f[0] for f in o.get('files', [])]
@@ -421,7 +398,7 @@ def main():
             # (the 01:23 pass was killed at 40 min with 84 entries written and none committed)
             fresh = new[committed:]
             if fresh:
-                rel = [relto(ss.entry_path(e)) for e in fresh]
+                rel = [str(pathlib.Path(ss.entry_path(e)).relative_to(COORD)) for e in fresh]
                 c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: hourly ingest %s, %d new entries' % (h, len(rel))] + rel, None, 280)
                 commit = max(commit or 0, c.returncode)
                 if c.returncode: fails.append(['coord', h, 'store commit rc %d' % c.returncode])
@@ -433,7 +410,7 @@ def main():
     if not dry:
         lated = late_pass(late, fails)
         if lated:
-            rel = [relto(ss.entry_path(i)) for i in lated]
+            rel = [str(pathlib.Path(ss.entry_path(i)).relative_to(COORD)) for i in lated]
             c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: late provenance on %d entries' % len(rel)] + rel, None, 280)
             if c.returncode: fails.append(['coord', '*', 'late commit rc %d' % c.returncode])
     holds = [] if dry else marker_sweep(fails)

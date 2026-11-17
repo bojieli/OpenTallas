@@ -37,9 +37,7 @@ CACHE = pathlib.Path(os.environ.get('OT_COUNT_CACHE') or pathlib.Path.home() / '
 # inside the directory"): SIGNED records come from the durable store (signed_store.py, ~/coord/signed-store + AGIdock), not from
 # a walk of the fleet.  OT_COUNT_SOURCE=hosts is the old walk; 'store' reads no host and any ssh raises (NoHostAccess).
 SIGNED_SOURCE = os.environ.get('OT_COUNT_SOURCE', 'store')   # live since 2026-11-08: count from the store; OT_COUNT_SOURCE=hosts is the old walk
-# COUNT-FRICTION-1 11-14 (OWNER 00:3x: no full plan check in the count): the count never waits on tools/die_plan/check.py (G0C, ~10-30 min);
-# merge_with_cache carries the last G0C values per plan (g0c_stale_since).  OT_COUNT_G0C=1 runs the plan check again (private / die-owner use).
-SKIP_G0C = not bool(os.environ.get('OT_COUNT_G0C'))
+SKIP_G0C = bool(os.environ.get('OT_COUNT_SKIP_G0C'))   # private proof runs only: no G0C, signed matching only
 STORE_PINS = {}
 REFRESH_S = 50 * 60
 # release-tree die key -> (plan dir under physical/die_plan, plan-of-record file relative to the repo root).
@@ -51,22 +49,19 @@ REFRESH_S = 50 * 60
 # the plan dir first, in order (HBM: d35a holds every referenced cores/*.json + side JSON as .gz).  Repo-relative
 # 'results/...' tables the plan names are fetched too.  Re-point a line here when a die's plan of record changes.
 _HBM_POR = 'physical/die_plan/hbm/plan_of_record/'
-PLANS = [('s81', 's81', 'physical/die_plan/s81/events/s81_ready11r_1112/plan_ready11r_db1da17a93ab.json.gz', ()),   # WAVE-POR 11-12: pinned fallback = ready11r (last wave plan on main)
-         # was: ('s81', 's81', 'physical/die_plan/s81/events/svc_prov_v5_por_1111/plan_h2_2249_pgr1_v5pi_64eb2c89c94c197f.json.gz', ()),   # S81 POR + PGR1 + svc_prov v5 + physinst fix (COORD 11-11 03:1x ruling (a); main e5cc5a2dc5f, pin tables 274aaaa2b61f; dry run 0 lost, +2 H4/IRG; SMC/SML/SMR/SMD follow with the S81 12:00 plan event)
-         # was: ('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),                         # event3 composed (12.20)
+PLANS = [('s81', 's81', 'physical/die_plan/s81/events/s81_ready11r_1112/plan_ready11r_db1da17a93ab.json.gz', ()),   # S81 ready11r db1da17a93ab (DIE-S81-87 READY 11-12 00:32, main d09b37890062): the plan the kit wave builds; svc_rs back on POR hard cores (CORES-S81-1 11-12)
+         # was: ('s81', 's81', 'physical/die_plan/s81/plan_h2_2249.json', ()),   # event3 composed (12.20); still carried the svc v5 prov_1109 provider cores
          ('s81_head', 's81_head/plan_of_record/l48uo', 'physical/die_plan/s81_head/plan_of_record/l48uo/source_plan.json.gz',
           ('s81_head/plan_of_record/l48uo',)),   # HEAD l48uo (DIE-HEAD-82, COORD 11-07 13:14; main 2d1ee842c5a with native-reset + head_root_boot re-pin f140216c): plain plan-relative tables, plan latency = sidecar sched_lat; dry run 16 types + 4 cores, 0 lost
          # was l48un: ('s81_head', 's81_head/plan_of_record/l48ui', 'physical/die_plan/s81_head/plan_of_record/l48ui/source_plan_l48un.json.gz', ('s81_head/plan_of_record/l48ui',)),   # HEAD l48un (DIE-HEAD-81, COORD 11-07 09:4x): main l48ui (n4 FREG = the signed hd_st_n4) + hd_serdes same_edge data_inputs, repo-relative sink_bins; dry run same 16 types + 4 cores
          # was l48x: ('s81_head', 's81_head', 'results/die_head_52_1031/pin/source_plan_l48x.json', ('../../results/die_head_47_1031/l47',)),   # HEAD l48x (= l48w + 51 rst_start_raw pin moves; plan of record per COORD 19:0x 10-31, merged f3e4659f5; SIGNOFF-SPRINT-15); same plan-relative core_pins/native_domains refs as l47, laid from the l47 dir
          # was:   # SIGNOFF-SPRINT-11 10-31: plan-relative native_domains/ + core_pins/ (DIE-HEAD-48 fd132f2b694) laid beside the por__ copy   # HEAD l47 (APPROVED, main c68675660; ROOT-MERGE-AI 04:20 READY, SIGNOFF-SPRINT-11 10-31; was l46a)
-         ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc99_s27.json', ()),   # WAVE-POR 11-12: pinned fallback = s27 (last wave plan on main)
-         # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52u.json', ()),  # QC qc52u = qc52t + NK clock-pin event qc52u_nk_ck_event (NK-CK-1 ae9a80d2854d, main 0741e605dae; qfd_tile_nk_a0c ck to the as-built M5 position; COORD 11-09 18:xx)
-        # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52t.json', ()),  # QC qc52t = qc52n + tap-pair affinity on 25 types (QC-TYPES-6, main a09cbc70ae5; dry run 26 designs, 0 lost, G0C 616 unchanged; COORD 11-08 01:0x)
+         ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52t.json', ()),  # QC qc52t = qc52n + tap-pair affinity on 25 types (QC-TYPES-6, main a09cbc70ae5; dry run 26 designs, 0 lost, G0C 616 unchanged; COORD 11-08 01:0x)
         # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52n.json', ()),  # QC qc52n = qc52 + NL clock-pin event (DIE-QC-91, COORD 11-07 17:07 (5) / 18:00 (1); main a6b4cd1c5d3 in 18ed159e6b8): dry run 24 -> 25 designs (NL gained), 0 lost, G0C findings identical
          # was: ('qwen_compute', 'qwen_compute/plan_of_record', 'physical/die_plan/qwen_compute/plan_of_record/plan_qc52.json', ()),  # QC plan of record qc52 (0735589d; binds btab P8eco), COORD 12:43 10-31 SIGNOFF-SPRINT-13 (was plan_qc50)
          ('qwen_kvsys', 'qwen_kvsys/plan_of_record', 'physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json', ()),  # event28w_c
-         ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v_gqi_cp1109_q3vm_smk_n4x/die_plan.json.gz',   # d44v_gqi_cp1109_q3vm_smk = d44v_gqi_cp1109_q3vm_opsb + smk_1109 (q_sm0..3 partition types with the 17 kid masters; train EE 80d3e9939471, main 390dd784999, COORD 11-09 17:3x). d44v_gqi_cp1109_q3vm_opsb = d44v_gqi_cp1109_q3vm + opsbpins_1109 (opsb_output pin table drops 9 unread lwa[375..383]; train DY main 97c15c2f48b, e99f414bff0, COORD 11-09 15:4x). d44v_gqi_cp1109_q3vm = d44v_gqi_cp1109 + P-Q3VM-2 q3_vm pin table (HBM-CORES-B 76e4bc2df01, COORD 11-09). d44v_gqi_cp1109 = d44v_gqi + corepins_1109 (24 pins_file: wbq_root_g1 vC5, svgr_own RF4T; COORD 11-09 08:55 (4), COUNT-ARCHIVE-2). d44v_gqi = d44v_epm + gqi8_1108 (gqi_issue drops 4 dead pins; HBM-HARD-9 11-09, main 82d8624efb7). d44v_epm = d44v + EP-MOD-1108/1108d: NW_io u_ep_N0, u_host_ep -> as-built EP modules (HBM-HARD-8 11-08; COORD ruling, DIE-HBM-94 CONFIRM 22:24, main 76c9a4e6e02)
-          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v', 'd44v_epm', 'd44v_gqi', 'd44v_gqi_cp1109', 'd44v_gqi_cp1109_q3vm', 'd44v_gqi_cp1109_q3vm_opsb', 'd44v_gqi_cp1109_q3vm_smk', 'd44v_gqi_cp1109_q3vm_smk_n4x')))]
+         ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v_gqi_cp1109_q3vm/die_plan.json.gz',   # d44v_gqi_cp1109_q3vm = d44v_gqi_cp1109 + P-Q3VM-2 q3_vm pin table (HBM-CORES-B 76e4bc2df01, COORD 11-09). d44v_gqi_cp1109 = d44v_gqi + corepins_1109 (24 pins_file: wbq_root_g1 vC5, svgr_own RF4T; COORD 11-09 08:55 (4), COUNT-ARCHIVE-2). d44v_gqi = d44v_epm + gqi8_1108 (gqi_issue drops 4 dead pins; HBM-HARD-9 11-09, main 82d8624efb7). d44v_epm = d44v + EP-MOD-1108/1108d: NW_io u_ep_N0, u_host_ep -> as-built EP modules (HBM-HARD-8 11-08; COORD ruling, DIE-HBM-94 CONFIRM 22:24, main 76c9a4e6e02)
+          tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v', 'd44v_epm', 'd44v_gqi', 'd44v_gqi_cp1109', 'd44v_gqi_cp1109_q3vm')))]
          # was: ('hbm', 'hbm/plan_of_record/d44v_por', _HBM_POR + 'd44v/die_plan.json.gz', tuple('hbm/plan_of_record/' + x for x in ('d35a', 'd35b', 'd35c', 'd44v')))   # d44v = HBM RE-FORM batch, FROZEN (COORD 11-03 11:01)
 # PIN ALIASES (FLOW-15 2026-10-31, SIGNOFF-SPRINT-10 ASK (b)): a plan built in a lane tree may name a plan-relative pins
 # file that is not on main under that name; its byte-identical main copy elsewhere is laid at the plan-relative path
@@ -78,197 +73,6 @@ PIN_ALIASES = {
         'core_pins/lep_pair_pins_777.json': ('results/die_head_33_1029/lep/lep_pair_pins_777.json',
                                              '0e40649dca0fc3f1a6e55543e5d6679c327ffe1e7f81ba8ec846831ceea70351')},
 }
-
-
-# WAVE-POR (CORES-S81-1, COORD 11-12 03:2x): the counted plan per die FOLLOWS THE KIT WAVE.  PLANS above is only the
-# pinned fallback (plan dir, overlays, last plan of record).  Each refresh reads the plan the wave builds each die on
-# (autopilot/kit_wave.json dies.<die>: plan_sha256 when set, else the plan_sha of the die's newest plan_current rows
-# in autopilot/kit_wave_stages.tsv; that column is sha256[:12] of the wave's plan file) and counts the origin/main
-# file with that sha256 (index of plan-like files below physical/die_plan/<die top>, blob-sha cached).  The pinned
-# plan dir + overlays stay (plan-relative tables resolve as before), only the plan file changes.  A wave plan that
-# is NOT on origin/main is never counted (the counter reads no host): the pinned plan is counted and the die gets a
-# 'PLAN DRIFT' error until its plan event is merged.  ent['plan_sha'] / ent['wave_plan_sha'] / ent['plan_drift']
-# record it per plan; cache['plans_resolved'] is the list the other tools read through current_plans().
-COORD_DIR = pathlib.Path(os.environ.get('OT_COORD_DIR') or pathlib.Path(__file__).resolve().parent.parent)
-WAVE_CFG = pathlib.Path(os.environ.get('OT_COUNT_WAVE_CFG') or COORD_DIR / 'autopilot' / 'kit_wave.json')
-WAVE_STAGES = pathlib.Path(os.environ.get('OT_COUNT_WAVE_STAGES') or COORD_DIR / 'autopilot' / 'kit_wave_stages.tsv')
-PLAN_INDEX = pathlib.Path(os.environ.get('OT_COUNT_PLAN_INDEX') or CACHE.with_name('release_tree_plan_index.json'))
-PLAN_FILE_RE = re.compile(r'(^|/)(plan|source_plan|die_plan)[^/]*\.json(\.gz)?$')
-WAVE_WINDOW_S = 24 * 3600
-NO_WAVE = bool(os.environ.get('OT_COUNT_NO_WAVE'))   # private proof runs: count the pinned PLANS only
-
-
-def wave_plan_shas(cfg_path=None, stages_path=None, window_s=WAVE_WINDOW_S):
-    """{die: dict(sha=sha256[:12] or None, path=wave plan path, source, rows=...)} of the plan the kit wave builds each
-    die on.  The sha comes ONLY from kit_wave.json dies.<die>.plan_sha256 (written with every repoint): the stages
-    TSV plan_current votes flip between wave ticks (11-12 02:43 -> 03:04: 78 HBM t39w rows and 102 QC s27 rows lost
-    plan_current), so they are reported as a cross-check (rows) and never pick the counted plan."""
-    import csv, collections
-    out = {}
-    try: cfg = json.loads(pathlib.Path(cfg_path or WAVE_CFG).read_text())
-    except Exception: cfg = {}
-    votes = collections.defaultdict(collections.Counter)
-    try:
-        with open(stages_path or WAVE_STAGES, newline='') as f:
-            for r in csv.DictReader(f, delimiter='\t'):
-                if r.get('plan_current') == 'yes' and re.fullmatch(r'[0-9a-f]{12}', r.get('plan_sha') or ''):
-                    votes[r.get('die')][r['plan_sha']] += 1
-    except OSError: pass
-    for die, d in (cfg.get('dies') or {}).items():
-        exp = str((d or {}).get('plan_sha256') or '').lower()
-        sha = exp[:12] if re.fullmatch(r'[0-9a-f]{64}', exp) else None
-        out[die] = dict(sha=sha, path=(d or {}).get('plan'), rows=dict(votes[die].most_common(3)),
-                        source='kit_wave.json plan_sha256' if sha else 'kit_wave.json has no plan_sha256 for this die')
-    return out
-
-
-def _sha12(b, gz):
-    import gzip
-    if gz:
-        try: b = gzip.decompress(b)
-        except Exception: return None
-    return hashlib.sha256(b).hexdigest()[:12]
-
-
-def main_plan_index(tops, repo=None, rev='origin/main', index_path=None, min_bytes=20000):
-    """{sha256[:12] of the plan JSON: [repo paths]} over plan-like files on rev below physical/die_plan/<top>
-    (gz content unzipped); blob -> sha cached in index_path, so a refresh hashes only new blobs"""
-    repo = repo or REPO; ip = pathlib.Path(index_path or PLAN_INDEX)
-    try: cache = json.loads(ip.read_text())
-    except Exception: cache = {}
-    paths = ['physical/die_plan/' + t for t in sorted(set(tops))]
-    ls = subprocess.run(['git', '-C', str(repo), 'ls-tree', '-r', '-l', rev, '--'] + paths, capture_output=True, text=True, timeout=300)
-    if ls.returncode: raise RuntimeError('git ls-tree %s failed: %s' % (rev, ls.stderr.strip()[-200:]))
-    idx, seen = {}, {}
-    for line in ls.stdout.splitlines():
-        meta, path = line.split('\t', 1)
-        _, typ, blob, size = meta.split()
-        if typ != 'blob' or not PLAN_FILE_RE.search(path) or size == '-' or int(size) < min_bytes: continue
-        if blob not in cache:
-            b = subprocess.run(['git', '-C', str(repo), 'cat-file', 'blob', blob], capture_output=True, timeout=300).stdout
-            cache[blob] = _sha12(b, path.endswith('.gz'))
-        seen[blob] = cache[blob]
-        if cache[blob]: idx.setdefault(cache[blob], []).append(path)
-    try:
-        ip.parent.mkdir(parents=True, exist_ok=True)
-        t = ip.with_suffix('.tmp'); t.write_text(json.dumps(seen)); os.replace(t, ip)
-    except OSError: pass
-    return idx
-
-
-def resolve_plans(plans, wave, index, prev=None):
-    """-> (resolved [(key, pdir, src, ovl, info)], drift [str]).  info = dict(wave_plan_sha, wave_plan_path,
-    wave_source, repointed_from, drift).  The plan file follows the wave when the wave's plan is on main
-    (same die top, preferring a path under the pinned plan dir).  Else the die keeps the plan it counted last
-    (prev {die: (pdir, src, overlays)} from the previous cache, when that file is still on main) with a drift note:
-    a repoint to a lane-tree plan must not drop the count back to the stale pinned PLANS (11-12 03:37 S81 ready11p /
-    QC s28 repoints would have reverted S81 to svc v5 and QC to qc52u); the pinned entry is the last resort."""
-    prev = prev or {}
-    on_main = {q for v in index.values() for q in v}
-    out, drift = [], []
-    for key, pdir, src, ovl in plans:
-        w = wave.get(key)
-        info = dict(wave_plan_sha=(w or {}).get('sha'), wave_plan_path=(w or {}).get('path'), wave_source=(w or {}).get('source'))
-        top = 'physical/die_plan/' + pdir.split('/')[0] + '/'
-        if not w or not w.get('sha'):
-            info['drift'] = ('PLAN DRIFT %s: kit_wave.json dies.%s has no plan_sha256 (wave plan %s); counting the pinned %s'
-                             % (key, key, (w or {}).get('path') or '?', plan_label(src)))
-        else:
-            cand = [p for p in index.get(w['sha'], []) if p.startswith(top)]
-            if cand:
-                pref = 'physical/die_plan/' + pdir + '/'
-                cand.sort(key=lambda p: (p != src, not p.startswith(pref), len(p), p))
-                if cand[0] != src: info['repointed_from'] = src
-                src = cand[0]
-            else:
-                pv = prev.get(key)
-                if pv and pv[1] in on_main and pv[1] != src:
-                    info['kept_last'] = pv[1]; pdir, src, ovl = pv[0], pv[1], tuple(pv[2])
-                info['drift'] = ('PLAN DRIFT %s: the kit wave builds plan sha %s (%s) which is not on origin/main; counting the %s %s '
-                                 'until that plan event is merged' % (key, w['sha'], w.get('path') or '?',
-                                                                      'last counted' if info.get('kept_last') else 'pinned', plan_label(src)))
-        if info.get('drift'): drift.append(info['drift'])
-        out.append((key, pdir, src, ovl, info))
-    return out, drift
-
-
-# COUNT-FRICTION-1 11-14 (COORD 05:2x "point EVERY die's count at the plan the kit wave builds"): a wave plan that is not on origin/main used to
-# be a PLAN DRIFT note and the die was counted against its last main plan (QC 31/31 against plan_qc99_s28 while the wave builds s29 with 65 cores).
-# The plan file (sha256 == kit_wave.json plan_sha256) is now read from the host that holds it, with the pins tables it names, into the tmp tree and
-# counted; the pinned main plan remains the fallback when no host has it.  OT_COUNT_NO_HOST_PLAN=1 turns this off.
-def stage_host_plan(tmp, pdir, w, log=lambda *a: None):
-    """-> (rel path under tmp, info dict) or None.  w = wave_plan_shas entry (sha, path)"""
-    import base64
-    path, sha = (w or {}).get('path'), (w or {}).get('sha')
-    if os.environ.get('OT_COUNT_NO_HOST_PLAN') or not path or not sha: return None
-    for h in HOSTS:
-        cmd = ['bash', '-c', 'cat %s' % shlex_quote(path)] if h == 'local' else \
-            ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'cat %s' % shlex_quote(path)]
-        try:
-            r = subprocess.run(cmd, capture_output=True, timeout=180)
-            if r.returncode == 255 and b'resolve hostname' in r.stderr: r = subprocess.run(['bash', '-c', 'cat %s' % shlex_quote(path)], capture_output=True, timeout=180)
-        except Exception:
-            continue
-        if r.returncode or _sha12(r.stdout, path.endswith('.gz')) != sha: continue
-        data = r.stdout
-        name = 'wave__' + pathlib.Path(path[:-3] if path.endswith('.gz') else path).name
-        rel = 'physical/die_plan/%s/%s' % (pdir, name)
-        f = pathlib.Path(tmp) / rel; f.parent.mkdir(parents=True, exist_ok=True)
-        import gzip
-        f.write_bytes(gzip.decompress(data) if path.endswith('.gz') else data)
-        # pins tables the plan names: from the plan's own tree (its dir, then each parent up to physical/die_plan/<top>)
-        P = json.loads(f.read_bytes())
-        want = sorted({hc.get('pins_file') for v in (P.get('partition_types') or {}).values() for hc in (v.get('hard_cores') or []) if hc.get('pins_file')})
-        got = 0
-        if want:
-            script = ("import sys,os,json,base64\n"
-                      "pp,want=json.loads(sys.stdin.read())\nout={}\nb=os.path.dirname(pp)\nbases=[]\n"
-                      "while b and b!='/':\n    bases.append(b)\n    if b.endswith('physical/die_plan') or b.endswith('physical'): break\n    b=os.path.dirname(b)\n"
-                      "for f in want:\n    for b in bases:\n        q=os.path.join(b,f)\n"
-                      "        if os.path.isfile(q) and os.path.getsize(q)<30000000:\n            out[f]=base64.b64encode(open(q,'rb').read()).decode(); break\n"
-                      "print(json.dumps(out))\n")
-            c2 = ['python3', '-c', script] if h == 'local' else ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(script)]
-            try:
-                r2 = subprocess.run(c2, capture_output=True, text=True, timeout=300, input=json.dumps([path, want]))
-                if r2.returncode == 255 and 'resolve hostname' in r2.stderr: r2 = subprocess.run(['python3', '-c', script], capture_output=True, text=True, timeout=300, input=json.dumps([path, want]))
-                for pf, b64 in json.loads(r2.stdout.strip().splitlines()[-1]).items():
-                    t = pathlib.Path(tmp) / 'physical/die_plan' / pdir / pf; t.parent.mkdir(parents=True, exist_ok=True)
-                    t.write_bytes(base64.b64decode(b64)); got += 1
-            except Exception as e:
-                log('wave plan pins %s: %s' % (h, str(e)[:100]))
-        return rel, dict(host=h, path=path, sha=sha, pins_staged=got, pins_named=len(want))
-    return None
-
-
-def pick_plan_dir(root, src, pdir, overlays):
-    """(pdir, overlays) for a repointed plan file: the pinned plan dir (+ overlays) or the file's own dir, whichever
-    resolves more of the plan's hard-core pins files in the extracted tree root (tie: pinned).  S81 event plans name
-    inputs/core_pins/ of the die dir; an HBM plan_of_record/<event>/ dir carries its own cores/."""
-    import gzip
-    root = pathlib.Path(root); f = root / src
-    try:
-        b = f.read_bytes(); P = json.loads(gzip.decompress(b) if src.endswith('.gz') else b)
-    except Exception: return pdir, overlays
-    pfs = {h.get('pins_file') for v in (P.get('partition_types') or {}).values() for h in (v.get('hard_cores') or []) if h.get('pins_file')}
-    def score(d, ovs):
-        bases = [root / 'physical/die_plan' / x for x in (d,) + tuple(ovs)]
-        ok = lambda q: any((b_ / q).exists() or (b_ / (q + '.gz')).exists() or (b_ / 'cores' / pathlib.Path(q).name).exists() for b_ in bases)
-        return sum(1 for q in pfs if ok(q))
-    own = str(pathlib.PurePosixPath(src).parent)
-    own = own[len('physical/die_plan/'):] if own.startswith('physical/die_plan/') else None
-    if not own or own == pdir: return pdir, overlays
-    return (own, ()) if score(own, ()) > score(pdir, overlays) else (pdir, overlays)
-
-
-def current_plans(cache_path=None):
-    """[(key, pdir, src, ovl)] the counter counted last (cache 'plans_resolved'), else the pinned PLANS.  Read by
-    tools/fleet_viz/plan_now.py, tools/die_plan/obs_sync.py, lanes/plan-route-1/flags_cron.sh (route_supply_watch)."""
-    try:
-        c = json.loads(pathlib.Path(cache_path or CACHE).read_text())
-        rp = c.get('plans_resolved')
-        if rp: return [(r['die'], r['pdir'], r['src'], tuple(r.get('overlays') or ())) for r in rp]
-    except Exception: pass
-    return [tuple(p) for p in PLANS]
 
 
 def materialize_pin_aliases(plan_dir, aliases, rev='origin/main', read=None):
@@ -302,23 +106,6 @@ def is_mem_macro(h):
     signoff.py record (OWNER 10-25 ROMs = generated macros), so they stay out of the hard-core design count (FLOW-12 ASK
     default, COUNT-REP); listed per plan as memory_macros."""
     return str(h.get('lef') or '').startswith(MEM_MACRO_LEF)
-
-
-def hard_ip_types(T):
-    """HARD-IP types (COORD DECIDES 2026-11-10): partition types whose only contents are a reused PHY macro with
-    nothing to place or route -- plan 'hard': true, every contents entry status 'reuse' naming a committed lib, and no
-    hard_cores, ft_slots or std cells.  They leave BOTH the type numerator and the denominator (no sign-off needed;
-    the die uses the macro's committed LEF/libs).  Structural rule, no name list: a PHY type with rework/new contents,
-    wrapper logic, cells or feedthrough slots (KV kv3_phy*, HBM PHY_N*) stays a type.  -> {type: {macros, lef, lib}}"""
-    out = {}
-    for k, v in (T or {}).items():
-        c = v.get('contents') or []
-        if v.get('hard') is not True or not c: continue
-        if v.get('hard_cores') or v.get('ft_slots') or v.get('cells'): continue
-        if not all(isinstance(x, dict) and x.get('status') == 'reuse' and x.get('lib') for x in c): continue
-        out[k] = dict(macros=sorted({str(x.get('physical_master') or x.get('module')) for x in c}),
-                      lef=sorted({x['lef'] for x in c if x.get('lef')}), lib=sorted({x['lib'] for x in c}))
-    return out
 
 
 def plan_label(src):
@@ -377,7 +164,7 @@ def fetch_results_refs(root, plan_path, rev='origin/main'):
     return have
 
 
-HOSTS = ['local', 'epyc2', 'intel1', 'intel2', 'epyc7', 'epyc8', 'epyc9', 'epyc10']   # ONBOARD-4 11-10: epyc8. ONBOARD-4 11-09: epyc7. ONBOARD-2 11-05: epyc5/epyc6 rented (same SCAN_ROOTS)
+HOSTS = ['local', 'epyc2', 'intel1', 'intel2', 'epyc4', 'epyc5', 'epyc6', 'epyc7']   # ONBOARD-4 11-09: epyc7. ONBOARD-2 11-05: epyc5/epyc6 rented (same SCAN_ROOTS)
 # DIE-KV-64 11-03 (COORD 10:5x KV 17->14): PRUNE-1103D moved intel2 scratch2 dirs (die-kv-49 pv/tx, die-kv-51 ectl, ...) to
 # epyc4:/srv/opentallas-scratch3/claude/from-intel2-1103d and left symlinks (find -xdev does not follow them), so their SIGNED
 # records (kv3_pv_pair pv_bkv_eA b-kv re-sign, ...) left the scan. Scan epyc4 (rented 11-03) and every host's scratch3.
@@ -405,6 +192,73 @@ SCAN_PRUNE = ('.git', '__pycache__', 'rtl', 'tools', 'arch', 'uarch', 'logs', 'r
 #  (b) NAME line 'name:<die>:<type key or module>\t<date>\t<lane>\t<reason>' (<die> = release-tree die key, e.g. s81)
 #      retires every SIGNED record of that die type / hard core generated BEFORE <date> ('YYYY-MM-DD[ HH:MM[ TZ]]', local
 #      time; a record without a readable 'generated' is retired).  A fresh build signed off after <date> counts again.
+# COUNT-FRICTION-1 11-14 (COORD 05:2x "point EVERY die's count at the plan the kit wave builds"): a wave plan that is not on origin/main used to
+# be a PLAN DRIFT note and the die was counted against its last main plan (QC 31/31 against plan_qc99_s28 while the wave builds s29 with 65 cores).
+# The plan file (sha256 == kit_wave.json plan_sha256) is now read from the host that holds it, with the pins tables it names, into the tmp tree and
+# counted; the pinned main plan remains the fallback when no host has it.  OT_COUNT_NO_HOST_PLAN=1 turns this off.
+# COUNT-PLAN-TREE-1116 (COORD): a published marker tree (kw45/src_<die>_pin_*) carries the die plan in-tree and sits on the gen hosts the marker
+# lists (epyc8/9/10 are not scan hosts), so the plan search also asks every host a tree_switch marker names, not only the scan HOSTS.
+PLAN_EXTRA_HOSTS = ['epyc10', 'epyc9', 'epyc8']
+
+
+def plan_hosts(handoff=None):
+    out = list(HOSTS)
+    h = pathlib.Path(handoff) if handoff else pathlib.Path(os.path.expanduser('~/coord/lanes/handoff'))
+    extra = list(PLAN_EXTRA_HOSTS)
+    try:
+        for f in sorted(h.glob('tree_switch_*.json')):
+            extra += [x for x in (json.loads(f.read_text()).get('hosts') or []) if isinstance(x, str)]
+    except (OSError, ValueError):
+        pass
+    for x in extra:
+        if x not in out: out.append(x)
+    return out
+
+
+def stage_host_plan(tmp, pdir, w, log=lambda *a: None):
+    """-> (rel path under tmp, info dict) or None.  w = wave_plan_shas entry (sha, path)"""
+    import base64
+    path, sha = (w or {}).get('path'), (w or {}).get('sha')
+    if os.environ.get('OT_COUNT_NO_HOST_PLAN') or not path or not sha: return None
+    for h in plan_hosts():
+        cmd = ['bash', '-c', 'cat %s' % shlex_quote(path)] if h == 'local' else \
+            ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'cat %s' % shlex_quote(path)]
+        try:
+            r = subprocess.run(cmd, capture_output=True, timeout=180)
+            if r.returncode == 255 and b'resolve hostname' in r.stderr: r = subprocess.run(['bash', '-c', 'cat %s' % shlex_quote(path)], capture_output=True, timeout=180)
+        except Exception:
+            continue
+        if r.returncode or _sha12(r.stdout, path.endswith('.gz')) != sha: continue
+        data = r.stdout
+        name = 'wave__' + pathlib.Path(path[:-3] if path.endswith('.gz') else path).name
+        rel = 'physical/die_plan/%s/%s' % (pdir, name)
+        f = pathlib.Path(tmp) / rel; f.parent.mkdir(parents=True, exist_ok=True)
+        import gzip
+        f.write_bytes(gzip.decompress(data) if path.endswith('.gz') else data)
+        # pins tables the plan names: from the plan's own tree (its dir, then each parent up to physical/die_plan/<top>)
+        P = json.loads(f.read_bytes())
+        want = sorted({hc.get('pins_file') for v in (P.get('partition_types') or {}).values() for hc in (v.get('hard_cores') or []) if hc.get('pins_file')})
+        got = 0
+        if want:
+            script = ("import sys,os,json,base64\n"
+                      "pp,want=json.loads(sys.stdin.read())\nout={}\nb=os.path.dirname(pp)\nbases=[]\n"
+                      "while b and b!='/':\n    bases.append(b)\n    if b.endswith('physical/die_plan') or b.endswith('physical'): break\n    b=os.path.dirname(b)\n"
+                      "for f in want:\n    for b in bases:\n        q=os.path.join(b,f)\n"
+                      "        if os.path.isfile(q) and os.path.getsize(q)<30000000:\n            out[f]=base64.b64encode(open(q,'rb').read()).decode(); break\n"
+                      "print(json.dumps(out))\n")
+            c2 = ['python3', '-c', script] if h == 'local' else ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(script)]
+            try:
+                r2 = subprocess.run(c2, capture_output=True, text=True, timeout=300, input=json.dumps([path, want]))
+                if r2.returncode == 255 and 'resolve hostname' in r2.stderr: r2 = subprocess.run(['python3', '-c', script], capture_output=True, text=True, timeout=300, input=json.dumps([path, want]))
+                for pf, b64 in json.loads(r2.stdout.strip().splitlines()[-1]).items():
+                    t = pathlib.Path(tmp) / 'physical/die_plan' / pdir / pf; t.parent.mkdir(parents=True, exist_ok=True)
+                    t.write_bytes(base64.b64decode(b64)); got += 1
+            except Exception as e:
+                log('wave plan pins %s: %s' % (h, str(e)[:100]))
+        return rel, dict(host=h, path=path, sha=sha, pins_staged=got, pins_named=len(want))
+    return None
+
+
 RETIRED = pathlib.Path(__file__).resolve().parent.parent / 'RETIRED_SIGNOFFS.tsv'
 
 
@@ -633,37 +487,8 @@ def counts_signed(d):
     # sign-off is SIGNED and the only open reason is io_hold_parent (that receipt moves to the die STA FF row).
     v = d.get('verdict')
     if v == 'SIGNED': return True
-    if v == 'LOCAL_PASS_NEEDS_PARENT' and d.get('local_verdict') == 'SIGNED' and all(str(r).startswith('io_hold_parent') for r in (d.get('reasons') or [])): return True
-    # EXPLORER-FABLE-1 11-14 (COORD): a HARD-IP view (opentallas.hard_ip_view.v1: a full-area PHY macro in a thin wrapper, nothing to place
-    # or route) counts on a clean bind, port bind and face guard.  It credits a type only where the counted plan lists that type as a
-    # countable type, so a plan that is not adopted yet (or that keeps the type structurally hard-IP, out of both totals) gives no credit.
-    if v == 'HARD-IP':
-        ch = d.get('checks') or {}
-        return (d.get('schema') == 'opentallas.hard_ip_view.v1' and (ch.get('bind') or {}).get('errors') == 0
-                and ch.get('port_bind') == 'PASS' and not ch.get('face_guard_fails'))
-    return rminimal(d)
-def _fin(x):
-    try: x = float(x)
-    except (TypeError, ValueError): return None
-    return x if abs(x) < 1e6 else None
-def rminimal(d):
-    # COUNT-FRICTION-1 11-14 (R-MINIMAL, OWNER 11-13 17:5x; same metrics as tools/die_plan/signoff_profile.py): a record counts when detailed-route
-    # DRC is 0, TT setup WNS >= -42 ps (833 ps) and the INTERNAL FF hold >= 0 (a hold miss only at input ports is allowed); every other
-    # check is advisory.  This lets a record whose legacy verdict is NOT SIGNED for an advisory reason count.
-    try:
-        ch = d.get('checks') or {}
-        drc = (ch.get('drc') or {}).get('count') if isinstance(ch.get('drc'), dict) else None
-        if drc is None: drc = (d.get('route') or {}).get('drc')
-        st = ch.get('setup_tt') if isinstance(ch.get('setup_tt'), dict) else {}
-        tt = _fin(st.get('wns_ps'))
-        if tt is None: tt = _fin(st.get('sdc_wns_ps'))
-        hf = ch.get('hold_ff') if isinstance(ch.get('hold_ff'), dict) else {}
-        ff = _fin(hf.get('wns_ps'))
-        if ff is None: ff = _fin(hf.get('sdc_wns_ps'))
-        if drc is None or int(drc) != 0 or tt is None or tt < -42.0 or ff is None: return False
-        return ff >= 0.0 or (bool(hf.get('port_only_needs_parent')) and hf.get('verdict') == 'PASS')
-    except Exception:
-        return False
+    if v != 'LOCAL_PASS_NEEDS_PARENT' or d.get('local_verdict') != 'SIGNED': return False
+    return all(str(r).startswith('io_hold_parent') for r in (d.get('reasons') or []))
 def resign(f, x, load):
     # COORD ruling 2026-10-30 02:03 (3b): RE-SIGN record = a routed DB re-checked (signoff.py TT/FF/DRC + post-route LEC)
     # with tools at a released flow tag.  PROVENANCE.json {kind: resign, src_commit: tag commit, flow_tag, routed_db,
@@ -788,22 +613,6 @@ UNREACHABLE = set()   # hosts whose SIGNED scan or pins fetch failed in this ref
 PARTIAL = set()       # hosts whose walk hit SCAN_WALK_S in this refresh: known records read, new ones wait for the next walk
 
 
-def is_local_host(h):
-    """FLOW-HEALTH-1 11-15 (COORD): True when `h` (a fleet alias, a cherry name, 'local' / 'localhost') names the machine this code runs on.  The hub
-    cannot ssh to its own fleet name (intel2 does not resolve on intel2); every per-host scan / probe reads local paths for it instead."""
-    if h in ('local', 'localhost', None): return True
-    try:
-        me = {os.uname().nodename, os.uname().nodename.split('.')[0]}
-        tab = COORD_DIR / 'tools/fleet_hosts.tsv'
-        if tab.is_file():
-            for ln in tab.read_text().splitlines():
-                f = ln.split('\t')
-                if len(f) >= 2 and not ln.startswith('#') and f[0] == h and f[1] in me: return True
-        return h in me
-    except Exception:
-        return False
-
-
 def scan_cmd(roots=None, walk_s=None, prune=None):
     """shell pipeline: known paths on stdin, plus the walk of each distinct root, into SCAN_PY"""
     roots = SCAN_ROOTS if roots is None else roots
@@ -817,13 +626,12 @@ def scan_cmd(roots=None, walk_s=None, prune=None):
 
 def scan_host(h, known=()):
     cmd = scan_cmd()
-    local = is_local_host(h)
-    if local:
+    if h == 'local':
         cmd = ['bash', '-c', cmd]
     else:
         cmd = ['ssh', '-o', 'ConnectTimeout=10', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, cmd]
     stdin = ''.join(p + '\n' for p in known)
-    r = sh_ssh(cmd, SCAN_SSH_S, retry_timeout=False, input=stdin) if not local else sh(cmd, SCAN_SSH_S, input=stdin)
+    r = sh_ssh(cmd, SCAN_SSH_S, retry_timeout=False, input=stdin) if h != 'local' else sh(cmd, SCAN_SSH_S, input=stdin)
     if r.returncode != 0 and not r.stdout.strip():
         raise RuntimeError('%s: rc %d %s' % (h, r.returncode, r.stderr.strip()[-200:]))
     lines = r.stdout.strip().splitlines()
@@ -832,153 +640,6 @@ def scan_host(h, known=()):
         PARTIAL.add(h)
     for x in recs: x['scan_host'] = h
     return recs
-
-
-# COUNT-FRICTION-1 11-14 (OWNER: count a result without waiting for commit / tag / archive; COORD EXPERT-REVIEW-6 #5): sign-off paths of
-# autopilot rows SIGNED-UNVERSIONED / WAIT-PARENT / TRIAL-SIGNED (state.json) and the rows of lanes/COUNT-DIRECT.tsv ('<host>\t<signoff.json path>')
-# are read straight from their host (no walk: the paths only, parallel, short timeout) and judged by the same counts_signed (verdict SIGNED /
-# R-MINIMAL gates).  A host that does not answer keeps its last read (direct_records.json).  The ingest still archives them for later.
-DIRECT_STATUS = ('SIGNED-UNVERSIONED', 'WAIT-PARENT', 'TRIAL-SIGNED')
-DIRECT_READ_S = 120
-COORD_DIR = pathlib.Path(__file__).resolve().parent.parent
-
-
-def direct_paths():
-    out = {}
-    try:
-        jobs = json.loads((COORD_DIR / 'autopilot/state.json').read_text()).get('jobs') or {}
-        for j in (jobs.values() if isinstance(jobs, dict) else jobs):
-            if not isinstance(j, dict) or j.get('status') not in DIRECT_STATUS: continue
-            c = j.get('chain') if isinstance(j.get('chain'), dict) else {}
-            p = c.get('signoff') or j.get('signoff')
-            if isinstance(p, str) and p.startswith('/') and j.get('host'):
-                out.setdefault(j['host'], set()).add(p)
-    except Exception:
-        pass
-    # FLOW-HEALTH-1 11-15 (FABLE-CENSUS-1815 class 10): a WAVE row that signed off (queue status SIGNED, q_signoff = the sign-off.json path on its
-    # kit host) is read directly too.  Only autopilot/state.json jobs were: kv3_io_ft_v1 sat SIGNED in the wave from 10:53 and was never counted.
-    try:
-        for r in ((json.loads((COORD_DIR / 'autopilot/kit_wave_state.json').read_text()).get('items')) or {}).values():
-            if not isinstance(r, dict): continue
-            signed = r.get('q_status') == 'SIGNED' or r.get('status') in ('SIGNED', 'SIGNED-UNVERSIONED')
-            p = r.get('q_signoff') or r.get('signoff')
-            kit = str(r.get('kit') or '')
-            h = kit.split(':', 1)[0] if ':' in kit else ''
-            if signed and isinstance(p, str) and p.startswith('/') and h:
-                out.setdefault(h, set()).add(p)
-    except Exception:
-        pass
-    try:
-        for l in (COORD_DIR / 'lanes/COUNT-DIRECT.tsv').read_text().splitlines():
-            f = l.split('\t')
-            if len(f) >= 2 and not l.startswith('#') and f[1].startswith('/'): out.setdefault(f[0], set()).add(f[1].strip())
-    except OSError:
-        pass
-    # lanes/AUTO-RESIGN.tsv: die, name, host, dir (glob ok), ...: <dir>/signoff/signoff.json, else <dir>/signoff.json (glob expanded on the host)
-    try:
-        for l in (COORD_DIR / 'lanes/AUTO-RESIGN.tsv').read_text().splitlines():
-            f = l.split('\t')
-            if len(f) >= 4 and not l.startswith('#') and f[3].startswith('/') and f[2]:
-                d = f[3].strip().rstrip('/')
-                out.setdefault(f[2], set()).update([d + '/signoff/signoff.json', d + '/signoff.json'])
-    except OSError:
-        pass
-    return {h: sorted(v) for h, v in out.items() if h in HOSTS or h.lower() == 'agidock'}   # AGIdock: archive-local read (read_archive_local), no ssh
-
-
-def expand_globs(h, paths):
-    """paths with a glob character are expanded on their host (one ssh); plain paths pass through; a missing file is just not read"""
-    g = [p for p in paths if any(c in p for c in '*?[')]
-    if not g: return paths
-    script = "import glob,sys\nfor p in sys.stdin.read().split():\n    print(*glob.glob(p), sep='\\n')\n"
-    cmd = ['python3', '-c', script]
-    try:
-        r = sh(['bash', '-c', 'python3 -c %s' % shlex_quote(script)] if h == 'local' else ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, 'python3 -c %s' % shlex_quote(script)],
-               60, input=''.join(p + '\n' for p in g))
-        if r.returncode == 255 and 'resolve hostname' in r.stderr:
-            r = sh(['bash', '-c', 'python3 -c %s' % shlex_quote(script)], 60, input=''.join(p + '\n' for p in g))
-        ex = [x for x in r.stdout.split('\n') if x.startswith('/')]
-    except Exception:
-        ex = []
-    return sorted(set([p for p in paths if p not in g] + ex))
-
-
-DEDUP_FILE = pathlib.Path(os.environ.get('OT_COUNT_DEDUP') or COORD_DIR / 'autopilot' / 'dedup_members.tsv')
-
-
-def dedup_rows(path=None):
-    """autopilot/dedup_members.tsv (WAVE-FRICTION-1 friction 7): die, member type, owner type, owner job, credit id, identity.  -> [dict]"""
-    out = []
-    try:
-        for l in pathlib.Path(path or DEDUP_FILE).read_text().splitlines():
-            f = l.split('\t')
-            if len(f) < 3 or not f[0] or f[0].startswith('#') or f[0] in ('die', 'time'): continue
-            out.append(dict(die=f[0], member=f[1], owner=f[2], owner_job=f[3] if len(f) > 3 else '', credit_id=f[4] if len(f) > 4 else '',
-                            identity=f[5] if len(f) > 5 else ''))
-    except OSError:
-        pass
-    return out
-
-
-def dedup_credit(die, st, tm, rows):
-    """kit dedup (COORD 11-14): a member type whose kit has the owner's identity counts when the owner counts.  st {type: [refs]} (mutated), tm {type: module}
-    of the plan.  The ref is the owner's, with 'via dedup <owner>' appended.  -> [member types credited].  An owner that is not counted credits nothing."""
-    done = []
-    for r in rows:
-        m, o = r['member'], r['owner']
-        if r['die'] != die or m in st or m not in tm or not st.get(o): continue
-        st[m] = [x + ' via dedup %s (job %s, identity %s)' % (o, r['owner_job'], r['identity'][:12]) for x in st[o]]
-        done.append(m)
-    return done
-
-
-def read_archive_local(paths):
-    """COUNT-DIRECT host AGIdock: the record is read from the archive listing the archive host pushes every 15 min
-    (agidock_archive_index.json, key agidock_signoffs: the signoff.json of every archive entry that has no routed database).
-    The hub holds no archive key, so there is no ssh; a path the listing does not carry is simply not read."""
-    A = json.loads((CACHE.parent / 'agidock_archive_index.json').read_text())
-    S = A.get('agidock_signoffs') or {}
-    out = []
-    for p in sorted(paths):
-        d = S.get(p)
-        if not isinstance(d, dict) or not _PROV_NS['counts_signed'](d): continue
-        fg = d.get('face_guard') if isinstance(d.get('face_guard'), dict) else {}
-        out.append(dict(path=p, name=d.get('name'), top=fg.get('top'), generated=d.get('generated'), host='AGIdock', pins_path=None,
-                        versioned=False, scan_host='AGIdock', direct=True, hard_ip=d.get('verdict') == 'HARD-IP'))
-    return out
-
-
-def read_direct(h, paths):
-    if h.lower() == 'agidock': return read_archive_local(paths)
-    cmd = ['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', '-o', 'ControlPath=none', h, scan_cmd(roots=' ')]
-    if h == 'local': cmd = ['bash', '-c', scan_cmd(roots=' ')]
-    paths = expand_globs(h, paths)
-    r = sh(cmd, DIRECT_READ_S, input=''.join(p + '\n' for p in paths))
-    if r.returncode == 255 and not r.stdout.strip() and 'resolve hostname' in r.stderr:   # the hub reading its own paths (it has no name for itself)
-        r = sh(['bash', '-c', scan_cmd(roots=' ')], DIRECT_READ_S, input=''.join(p + '\n' for p in paths))
-    lines = r.stdout.strip().splitlines()
-    recs = json.loads(lines[-1])
-    for x in recs: x['scan_host'] = h; x['direct'] = True
-    return recs
-
-
-def direct_records(log=lambda *a: None):
-    f = CACHE.parent / 'direct_records.json'
-    try: last = json.loads(f.read_text())
-    except Exception: last = {}
-    want = direct_paths()
-    out, new = [], {}
-    with cf.ThreadPoolExecutor(max(1, len(want))) as ex:
-        futs = {ex.submit(read_direct, h, ps): h for h, ps in want.items()}
-        for fu, h in futs.items():
-            try: rs = fu.result(timeout=DIRECT_READ_S + 30)
-            except Exception as e:
-                rs = last.get(h) or []; log('direct read %s failed (%s); last read kept (%d)' % (h, str(e)[:80], len(rs)))
-            new[h] = rs; out += rs
-    try:
-        t = f.with_suffix('.tmp'); t.write_text(json.dumps(new)); os.replace(t, f)
-    except OSError: pass
-    return out
 
 
 def known_paths(old, h):
@@ -1007,16 +668,7 @@ def first_flow_tag_ts():
     return min(ts) if ts else None
 
 
-_TAG_MEMO = {}
-
-
 def tag_commit(tag):
-    # COUNT-FRICTION-1 11-14: one git call per distinct tag, not per record (30,409 git subprocesses = 350 s of a count)
-    if tag not in _TAG_MEMO: _TAG_MEMO[tag] = _tag_commit(tag)
-    return _TAG_MEMO[tag]
-
-
-def _tag_commit(tag):
     if TAGS_FILE: return (json.load(open(TAGS_FILE))['tags'].get(tag) or '')
     r = sh(['git', '-C', str(REPO), 'rev-parse', '-q', '--verify', 'refs/tags/%s^{commit}' % tag], 30)
     return r.stdout.strip() if r.returncode == 0 else ''
@@ -1110,17 +762,7 @@ def main_view_pins(d):
     return out
 
 
-_KEYS_MEMO = {}
-
-
 def rec_keys(r):
-    # COUNT-FRICTION-1 11-14: 8 M calls per count; the key set depends on (top, name) only
-    k = (r.get('top'), r.get('name'))
-    if k not in _KEYS_MEMO: _KEYS_MEMO[k] = frozenset(_rec_keys(r))
-    return _KEYS_MEMO[k]
-
-
-def _rec_keys(r):
     ks = set()
     for v in (r.get('top'), r.get('name')):
         if not v: continue
@@ -1128,12 +770,6 @@ def _rec_keys(r):
         m = re.match(r'^(dp|kr)_(.+)$', v)
         if m:
             ks.add(m.group(2)); ks.add(re.sub(r'_(lfp|r\d+|c\d+)$', '', m.group(2)))
-    # EXPLORER-FABLE-1 11-14 (COORD): a sign-off whose face_guard names no top (ECO re-signs of kit runs) is known only
-    # by its run name k<die letter>_<module>_synth<N>; that run name is the module (30 of 30 store records that carry
-    # both agree).  Without this the record matches no plan core (QC sta_region_nb0, qfd_dv_s8_station_tail1).
-    if not r.get('top'):
-        m = re.match(r'^k[a-z]_(.+)_synth\d+$', r.get('name') or '')
-        if m: ks.add(m.group(1))
     return ks
 
 
@@ -1622,59 +1258,6 @@ def miss_why(got, ds, designs, rows, plan_shapes=None):
     return 'pins match no plan design: ' + '; '.join(out[:2])
 
 
-# DIGEST-KEEP (EXPERT-REVIEW-4 / COORD 2026-11-13 18:1x, lane PROFILE-1): a plan event must not drop a counted type
-# whose plan block is unchanged.  Block digest = the kit wave's plan block identity (plan_block_identity RAW:
-# sha256 of {'type': partition_types[t], 'budget': budgets[t]}, sort_keys) -- the type NAME is not in it, so a class
-# re-split that renames an unchanged block (slice_station__t30__cl<old> -> __cl<new>) keeps the same digest.  Every
-# refresh records, per die, digest -> the type + refs it was counted with (BLOCK_LEDGER).  A plan type with no
-# name-matched SIGNED record whose digest is in the ledger is credited with those refs, tagged DIGEST-KEEP, while at
-# least one of the refs is still a live counted record in this refresh (a retired / revoked / DNC record never
-# carries).  A changed block gets no carry (it builds again); name matching is unchanged.
-BLOCK_LEDGER = pathlib.Path(os.environ.get('OT_BLOCK_LEDGER') or CACHE.parent / 'release_tree_block_ledger.json')
-DIGEST_TAG = ' DIGEST-KEEP '
-
-
-def type_blocks(P):
-    """{plan type: block digest} -- identical to kit_wave / plan_block_identity RAW block_sha"""
-    T = P.get('partition_types') or {}
-    bud = P.get('budgets'); bud = bud if isinstance(bud, dict) else {}
-    return {k: hashlib.sha256(json.dumps({'type': v, 'budget': bud.get(k)}, sort_keys=True, default=str).encode()).hexdigest()
-            for k, v in T.items()}
-
-
-def load_ledger(path=None):
-    try: d = json.loads(pathlib.Path(path or BLOCK_LEDGER).read_text())
-    except Exception: return {}
-    return d if isinstance(d, dict) else {}
-
-
-def save_ledger(led, path=None):
-    q = pathlib.Path(path or BLOCK_LEDGER); q.parent.mkdir(parents=True, exist_ok=True)
-    tmp = q.with_suffix('.tmp'); tmp.write_text(json.dumps(led, indent=1, sort_keys=True)); os.replace(tmp, q)
-
-
-def digest_keep(die, blocks, signed, ledger, live, plan_sha=None, now=None):
-    """blocks {type: digest} of the counted plan; signed {type: [refs]} (name-matched, mutated: kept types added);
-    ledger {die: {digest: {type, refs, plan_sha, ts}}} (mutated: this plan's counted types recorded); live = the
-    '<host>:<path>' / path heads of every counted record in this refresh.  -> {type: why} for the kept types."""
-    L = ledger.setdefault(die, {})
-    kept = {}
-    for t, b in sorted(blocks.items()):
-        if t in signed: continue
-        e = L.get(b)
-        if not e or not e.get('refs'): continue
-        refs = [r for r in e['refs'] if r.split(' ', 1)[0] in live]
-        if not refs: continue
-        why = 'block %s unchanged: counted as %s in plan %s' % (b[:12], e.get('type'), e.get('plan_sha'))
-        signed[t] = [r.split(DIGEST_TAG, 1)[0] + DIGEST_TAG + why for r in refs]
-        kept[t] = why
-    for t, refs in signed.items():
-        b = blocks.get(t)
-        if b and t not in kept and refs:
-            L[b] = dict(type=t, refs=[r.split(DIGEST_TAG, 1)[0] for r in refs], plan_sha=plan_sha, ts=now or time.time())
-    return kept
-
-
 def credit_designs(designs, rows, core_recs, rec_pins, plan_shapes=None):
     """-> (signed {design id: [refs]}, unmatched {module: [refs]}).  core_recs {module: [(ref, record)]} are the
     counted (versioned / legacy, not retired) records of each module.  A record credits the plan-of-record design(s)
@@ -1798,6 +1381,86 @@ def keep_g0c_report(label, rep):
         pass
 
 
+# COUNT-FRICTION-1 port: main's copy of this file has no COORD_DIR (the deployed coord copy defines it); same value as there
+COORD_DIR = globals().get('COORD_DIR') or pathlib.Path(os.environ.get('OT_COORD_DIR') or pathlib.Path(__file__).resolve().parent.parent)
+DEDUP_FILE = pathlib.Path(os.environ.get('OT_COUNT_DEDUP') or COORD_DIR / 'autopilot' / 'dedup_members.tsv')
+
+
+def dedup_rows(path=None):
+    """autopilot/dedup_members.tsv (WAVE-FRICTION-1 friction 7): die, member type, owner type, owner job, credit id, identity.  -> [dict]"""
+    out = []
+    try:
+        for l in pathlib.Path(path or DEDUP_FILE).read_text().splitlines():
+            f = l.split('\t')
+            if len(f) < 3 or not f[0] or f[0].startswith('#') or f[0] in ('die', 'time'): continue
+            out.append(dict(die=f[0], member=f[1], owner=f[2], owner_job=f[3] if len(f) > 3 else '', credit_id=f[4] if len(f) > 4 else '',
+                            identity=f[5] if len(f) > 5 else ''))
+    except OSError:
+        pass
+    return out
+
+
+def dedup_credit(die, st, tm, rows):
+    """kit dedup (COORD 11-14): a member type whose kit has the owner's identity counts when the owner counts.  st {type: [refs]} (mutated), tm {type: module}
+    of the plan.  The ref is the owner's, with 'via dedup <owner>' appended.  -> [member types credited].  An owner that is not counted credits nothing."""
+    done = []
+    for r in rows:
+        m, o = r['member'], r['owner']
+        if r['die'] != die or m in st or m not in tm or not st.get(o): continue
+        st[m] = [x + ' via dedup %s (job %s, identity %s)' % (o, r['owner_job'], r['identity'][:12]) for x in st[o]]
+        done.append(m)
+    return done
+
+
+INHERIT_FILE = pathlib.Path(os.environ.get('OT_COUNT_INHERIT') or COORD_DIR / 'autopilot' / 'inherit_members.tsv')
+INHERIT_SCHEMA = 'opentallas.col_inherit.v1'
+
+
+def inherit_rows(path=None):
+    """autopilot/inherit_members.tsv (S81-COL-INHERIT 11-14): die, member type, representative type, record json path, record sha256.  -> [dict]"""
+    out = []
+    try:
+        for l in pathlib.Path(path or INHERIT_FILE).read_text().splitlines():
+            f = l.split('\t')
+            if len(f) < 4 or not f[0] or f[0].startswith('#') or f[0] in ('die', 'time'): continue
+            out.append(dict(die=f[0], member=f[1], rep=f[2], record=f[3], sha=f[4] if len(f) > 4 else ''))
+    except OSError:
+        pass
+    return out
+
+
+def inherit_record_ok(row):
+    """the inherited record a row names must exist, match its sha when given, and say: this schema, this sibling and representative,
+    credit true (representative gates passed, LEF/lib/ROM-image checks equal, no failed LEC).  -> (ok, why)"""
+    try:
+        raw = pathlib.Path(row['record']).read_bytes()
+        rec = json.loads(raw)
+    except (OSError, ValueError) as e:
+        return False, 'record unreadable: %s' % e
+    if row.get('sha') and hashlib.sha256(raw).hexdigest() != row['sha']:
+        return False, 'record sha256 differs from the row'
+    if rec.get('schema') != INHERIT_SCHEMA: return False, 'wrong schema'
+    if rec.get('sibling') != row['member'] or rec.get('representative') != row['rep']: return False, 'record names another identity'
+    if rec.get('credit') is not True: return False, 'record credit is not true: %s' % (rec.get('credit_blockers') or 'unspecified')
+    return True, ''
+
+
+def inherit_credit(die, st, tm, rows, ok=inherit_record_ok):
+    """S81-COL-INHERIT (OWNER via COORD 11-14): a sibling pv identity counts when its representative counts and its inherited record
+    (tools/fleet/col_inherit.py: gates of the representative's signoff.json, param-set sha, ROM image sha list, LEF/lib sha equal,
+    via-mask DRC, LEC) says credit.  st {type: [refs]} (mutated), tm {type: module}.  The ref is the representative's with
+    'via inherit <rep>' appended.  -> [members credited].  A member with its own record keeps it."""
+    done = []
+    for r in rows:
+        m, o = r['member'], r['rep']
+        if r['die'] != die or m in st or m not in tm or not st.get(o): continue
+        good, _why = ok(r)
+        if not good: continue
+        st[m] = [x + ' via inherit %s (record %s)' % (o, (r.get('sha') or '')[:12] or r['record']) for x in st[o]]
+        done.append(m)
+    return done
+
+
 def refresh(log=lambda *a: None, old=None):
     errs = []
     for g in sweep_stale_tmp():
@@ -1817,53 +1480,28 @@ def refresh(log=lambda *a: None, old=None):
         r = subprocess.run(['tar', '-x', '-C', str(tmp)], stdin=p1.stdout, capture_output=True, timeout=600)
         p1.wait(60)
         if r.returncode or p1.returncode: raise RuntimeError('git archive origin/main failed')
-        # WAVE-POR: the plan file per die follows the kit wave when its plan is on main (the archive above already
-        # holds every die top, so a repointed file is in tmp); a wave plan not on main is a PLAN DRIFT error
-        if NO_WAVE:
-            active = [(k, pd, sr, ov, {}) for k, pd, sr, ov in PLANS]
-        else:
-            try:
-                wave = wave_plan_shas()
-                prev = {r['die']: (r['pdir'], r['src'], r.get('overlays') or ()) for r in ((old or {}).get('plans_resolved') or [])}
-                active, drift = resolve_plans(PLANS, wave, main_plan_index([pd.split('/')[0] for _, pd, _, _ in PLANS]), prev)
-                errs.extend(drift)
-            except Exception as e:
-                errs.append('PLAN DRIFT check failed (%s); counting the pinned PLANS' % e)
-                active = [(k, pd, sr, ov, {}) for k, pd, sr, ov in PLANS]
-        for i, (k, pd, sr, ov, inf) in enumerate(active):
-            if inf.get('repointed_from'):
-                pd2, ov2 = pick_plan_dir(tmp, sr, pd, ov)
-                active[i] = (k, pd2, sr, tuple(ov2), inf)
-        res['plans_resolved'] = [dict(die=k, pdir=pd, src=sr, overlays=list(ov), **{x: y for x, y in inf.items() if y})
-                                 for k, pd, sr, ov, inf in active]
         design_rows = {}
         try: wave_by_die = {} if NO_WAVE else wave_plan_shas()
         except Exception: wave_by_die = {}
         # SIGNED records: fleet scan in parallel while the G0C checks run here
         with cf.ThreadPoolExecutor(len(HOSTS)) as ex:
             futs = {} if SIGNED_SOURCE == 'store' else {ex.submit(scan_host, h, known_paths(old, h)): h for h in HOSTS}
-            g0c_ex, g0c_jobs = cf.ThreadPoolExecutor(len(active)), []
-            for key, pdir, src, ovl, inf in active:
+            g0c_ex, g0c_jobs = cf.ThreadPoolExecutor(len(PLANS)), []
+            for key, pdir, src, ovl in PLANS:
                 d = plan_label(src)
-                ent = dict(plan=d, plan_src=src, **{x: y for x, y in inf.items() if y})
+                ent = dict(plan=d, plan_src=src)
                 try:
                     st_ = stage_host_plan(tmp, pdir, wave_by_die.get(key), log) if inf.get('drift') and wave_by_die.get(key, {}).get('sha') else None
                     if st_:
                         ent['plan_counted'] = st_[1]; inf = dict(inf, drift=None); errs[:] = [e_ for e_ in errs if not e_.startswith('PLAN DRIFT %s:' % key)]
                         log('wave plan %s counted from %s:%s (%d/%d pins tables)' % (key, st_[1]['host'], st_[1]['path'], st_[1]['pins_staged'], st_[1]['pins_named']))
                     pj = materialize_plan(tmp, pdir, st_[0] if st_ else src, ovl)
-                    ent['plan_sha'] = hashlib.sha256(pj.read_bytes()).hexdigest()[:12]
                     ent['refs_fetched'] = len(fetch_results_refs(tmp, pj))
                     ent['pin_aliases'] = materialize_pin_aliases(pj.parent, PIN_ALIASES.get(key))
                     P = json.loads(pj.read_text())
                     T = P.get('partition_types') or {}
-                    # HARD-IP (COORD DECIDES 11-10): a type that is only a reused PHY macro (nothing to place or
-                    # route) is out of BOTH the type numerator and denominator; the die uses its committed LEF/libs
-                    hip = hard_ip_types(T)
-                    ent['hard_ip_types'] = hip; ent['types_incl_hard_ip'] = len(T)
-                    ent['types'] = len(T) - len(hip); ent['partitions'] = len(P.get('partitions') or [])
-                    ent['type_modules'] = {k: (v.get('module') or k) for k, v in T.items() if k not in hip}
-                    ent['type_blocks'] = {k: b for k, b in type_blocks(P).items() if k not in hip}
+                    ent['types'] = len(T); ent['partitions'] = len(P.get('partitions') or [])
+                    ent['type_modules'] = {k: (v.get('module') or k) for k, v in T.items()}
                     ent['hard_cores'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and not is_mem_macro(h)})
                     ent['memory_macros'] = sorted({h.get('module') for v in T.values() for h in (v.get('hard_cores') or []) if h.get('module') and is_mem_macro(h)})
                     ent['designs'], design_rows[d] = plan_designs(P, pj.parent)
@@ -1871,7 +1509,7 @@ def refresh(log=lambda *a: None, old=None):
                     # RTP-PAR-1102 (FLOW-22): the five G0C checks run in parallel (sequential 12.8 min > the render
                     # unit's 600 s start timeout since 11-01 21:40, so the cache froze at a0f8f0ad60); materialization
                     # above stays sequential (shared tmp tree)
-                    if not SKIP_G0C: g0c_jobs.append((d, ent, [k for k in T if k not in hip], out, g0c_ex.submit(_g0c_run, tmp, pj, out)))
+                    if not SKIP_G0C: g0c_jobs.append((d, ent, list(T), out, g0c_ex.submit(_g0c_run, tmp, pj, out)))
                 except Exception as e:
                     errs.append('plan %s: %s' % (d, e)); ent['error'] = str(e)
                 res['plans'][d] = dict(ent, die=key)
@@ -1900,12 +1538,6 @@ def refresh(log=lambda *a: None, old=None):
                     STORE_PINS[k] = dict(v, shapes={a: [tuple(x) for x in b] for a, b in v['shapes'].items()}) if v.get('shapes') else v
                 recs += srecs; scanned.append('signed-store')
                 log('signed-store: %d records, %d pin tables' % (len(srecs), len(pins)))
-            try:
-                have_ = {(x.get('scan_host'), x.get('path')) for x in recs}
-                dr = [x for x in direct_records(log) if (x.get('scan_host'), x.get('path')) not in have_]
-                recs += dr; scanned.append('direct:%d' % len(dr)); log('direct reads: %d records not in the store' % len(dr))
-            except Exception as e:
-                errs.append('DIRECT read: %s' % e)
             for f, h in futs.items():
                 try:
                     recs += f.result(timeout=SCAN_SSH_S + 60); scanned.append(h)
@@ -1925,8 +1557,6 @@ def refresh(log=lambda *a: None, old=None):
         recs, gone = split_dnc(recs, dnc_rows()); res['retired_records'] += gone
         names = retired_names()
         res['signed_records'] = recs; res['scanned'] = scanned
-        ledger = load_ledger()
-        live = set()
         # match SIGNED records to plan types / hard cores
         for d, ent in res['plans'].items():
             if 'types' not in ent: continue
@@ -1937,7 +1567,6 @@ def refresh(log=lambda *a: None, old=None):
             for r_ in recs:
                 ks = rec_keys(r_)
                 ref = r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path']
-                live.add(ref)   # COUNT-FRICTION-1: every counting record is live, tagged or not
                 if r_.get('versioned'):
                     ref += ' src %s flow %s' % (str(r_['src_commit'])[:12], r_['flow_tag'])
                     if r_.get('resign'):
@@ -1945,13 +1574,10 @@ def refresh(log=lambda *a: None, old=None):
                     if r_.get('credit'):
                         ref += ' COUNT-CREDIT ' + r_['credit']
                 elif r_.get('resign_error'):
-                    ref += ' SIGNED-NO-TAG (re-sign provenance not used: ' + r_['resign_error'] + ')'
+                    ref += ' RE-SIGN-INVALID ' + r_['resign_error']
                 elif r_.get('legacy'):
                     ref += ' SIGNED-LEGACY'
-                else:
-                    ref += ' SIGNED-NO-TAG'   # COUNT-FRICTION-1 11-14 (OWNER): no src commit / flow tag needed to count
-                if r_.get('direct'): ref += ' DIRECT-READ (not yet in signed-store)'
-                T, C = st, sc
+                T, C = (st, sc) if (r_.get('versioned') or r_.get('legacy')) else (ut, uc)
                 for k, m in tm.items():
                     if k in ks or m in ks:
                         why = name_retired(r_, ent['die'], names, (k, m))
@@ -1968,22 +1594,17 @@ def refresh(log=lambda *a: None, old=None):
                 ent['dedup_credited'] = dedup_credit(ent['die'], st, tm, dedup_rows())
             except Exception as e:
                 errs.append('DEDUP credit %s: %s' % (d, e))
+            try:
+                ent['inherit_credited'] = inherit_credit(ent['die'], st, tm, inherit_rows())
+            except Exception as e:
+                errs.append('INHERIT credit %s: %s' % (d, e))
             ent['signed_types'] = st; ent['signed_cores'] = sc
-            if ent.get('type_blocks'):
-                try:
-                    ent['digest_kept'] = digest_keep(ent['die'], ent.pop('type_blocks'), st, ledger, live, ent.get('plan_sha'))
-                    for k in ent['digest_kept']: ut.pop(k, None)
-                except Exception as e:
-                    errs.append('DIGEST-KEEP %s: %s' % (d, e))
             if ent.get('designs') is not None:
                 rp = fetch_rec_pins([r_ for m in core_recs for _, r_ in core_recs[m]], log) if core_recs else {}
                 ent['signed_designs'], ent['design_unmatched'] = credit_designs(ent['designs'], design_rows.get(d) or {}, core_recs, rp)
                 ent['replica_sample'] = replica_sample(ent['designs'], ent['signed_designs'])
             ent['unversioned_types'] = {k: v for k, v in ut.items() if k not in st}
             ent['unversioned_cores'] = {k: v for k, v in uc.items() if k not in sc}
-        if live:
-            try: save_ledger(ledger)
-            except Exception as e: errs.append('DIGEST-KEEP ledger save: %s' % e)
     except Exception as e:
         errs.append('refresh: %s' % e)
     finally:
@@ -2066,26 +1687,10 @@ G0C_FIELDS = ('g0c_verdict', 'g0c_errors', 'g0c_clean', 'g0c_types', 'g0c_die_le
               'check_s')
 
 
-def current_plans_of(cache):
-    rp = (cache or {}).get('plans_resolved')
-    return [(r['die'], r['pdir'], r['src'], tuple(r.get('overlays') or ())) for r in rp] if rp else [tuple(p) for p in PLANS]
-
-
-def wave_check(cache, wave=None):
-    """[(die, counted plan sha, wave plan sha, ok)] from a counter cache and the kit-wave state"""
-    wave = wave_plan_shas() if wave is None else wave
-    out = []
-    for r in (cache or {}).get('plans_resolved') or []:
-        ent = (cache.get('plans') or {}).get(plan_label(r['src'])) or {}
-        w = (wave.get(r['die']) or {}).get('sha')
-        out.append((r['die'], ent.get('plan_sha'), w, bool(w) and ent.get('plan_sha') == w))
-    return out
-
-
 def merge_with_cache(new, old):
     """keep the last good per-plan values when this refresh failed for a plan or for the SIGNED scan"""
     if not old: return new
-    cur = {plan_label(src) for _, _, src, _ in current_plans_of(new)}
+    cur = {plan_label(src) for _, _, src, _ in PLANS}
     for d, ent in (old.get('plans') or {}).items():
         if d not in cur: continue   # plan no longer of record (e.g. hbm_arch/B2n -> d41v): drop, never carry it forward
         n = new['plans'].get(d)
@@ -2118,12 +1723,7 @@ def load(force=False, log=lambda *a: None, refresh_stale=True):
     if not force and not refresh_stale:
         return old, ('plan layer cache stale; scheduled refresh pending' if old else 'plan layer not cached; run with --refresh-plan')
     try:
-        # ARCHIVE GATE (OWNER 11-14, EXPLORER-FABLE-1): signed = credited AND archived on AGIdock; the rest is pending archive.
-        # The carry-over logic works on the credited sets (signed + pending), the gate runs last, on what is saved.
-        import importlib.util as _ilu   # by path: the count runs under python3 -I (the script dir is not on sys.path)
-        _sp = _ilu.spec_from_file_location('archive_gate', pathlib.Path(__file__).resolve().parent / 'archive_gate.py'); archive_gate = _ilu.module_from_spec(_sp); _sp.loader.exec_module(archive_gate)
-        cred = archive_gate.ungate(old)
-        new = archive_gate.apply(merge_with_cache(carry_unreachable(refresh(log, cred), cred), cred))
+        new = merge_with_cache(carry_unreachable(refresh(log, old), old), old)
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         tmp = CACHE.with_suffix('.tmp'); tmp.write_text(json.dumps(new, indent=1)); os.replace(tmp, CACHE)
         return new, ('; '.join(new['errors']) or None)
@@ -2185,13 +1785,10 @@ def die_counts(cache, key):
         rows.append(dict(plan=d, types=ent.get('types'), clean=ent.get('g0c_clean'), verdict=ent.get('g0c_verdict'),
                          errors=ent.get('g0c_errors'), bad=ent.get('g0c_bad_types') or {}, die_level=ent.get('g0c_die_level') or {},
                          signed_types=len(ent.get('signed_types') or {}), cores=len(ent.get('hard_cores') or []),
-                         pending_archive_types=len(ent.get('pending_archive_types') or {}), pending_archive_cores=len(ent.get('pending_archive_designs') or ent.get('pending_archive_cores') or {}),
-                         pending_archive_list=sorted(ent.get('pending_archive_types') or {}) + sorted(ent.get('pending_archive_cores') or {}),
                          signed_cores=len(ent.get('signed_cores') or {}), signed_list=sorted(ent.get('signed_types') or {}) + sorted(ent.get('signed_cores') or {}),
                          modules=len(ent.get('hard_cores') or []), signed_modules=len(ent.get('signed_cores') or {}),
                          stale=ent.get('stale_since'), error=ent.get('error'),
-                         geom_report_types=(ent.get('geom_report') or {}).get('types'),
-                         hard_ip_types=sorted(ent.get('hard_ip_types') or {}), types_incl_hard_ip=ent.get('types_incl_hard_ip')))
+                         geom_report_types=(ent.get('geom_report') or {}).get('types')))
         rows[-1].update(design_counts(ent))
     return rows
 
@@ -2199,26 +1796,14 @@ def die_counts(cache, key):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--force', action='store_true'); ap.add_argument('--print', action='store_true')
-    ap.add_argument('--plans-jsonl', action='store_true', help='print the counted plans as route_supply_watch.py input and exit')
-    ap.add_argument('--check-wave', action='store_true', help='per die: counted plan sha vs kit-wave plan sha (cache only); exit 1 on drift')
     a = ap.parse_args()
-    if a.plans_jsonl:
-        for k, pd, sr, ov in current_plans():
-            print(json.dumps({'die': k, 'plan': sr, 'refs': list(ov)}))
-        sys.exit(0)
-    if a.check_wave:
-        try: c = json.loads(CACHE.read_text())
-        except Exception as e: print('no cache: %s' % e); sys.exit(1)
-        rows = wave_check(c)
-        for d, cs, ws, ok in rows: print('%-13s counted %s wave %s %s' % (d, cs, ws, 'OK' if ok else 'DRIFT'))
-        sys.exit(0 if rows and all(x[3] for x in rows) else 1)
     c, err = load(a.force, log=lambda *x: print(*x, file=sys.stderr))
     if err: print('WARN', err, file=sys.stderr)
     if a.print:
         for key in ('s81', 's81_head', 'qwen_compute', 'qwen_kvsys', 'hbm'):
             for r in die_counts(c, key):
-                print('%-13s %-14s G0C %s/%s clean (%s) [geom report: %s types] ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s) ; PENDING ARCHIVE types %d cores %d%s %s' % (
+                print('%-13s %-14s G0C %s/%s clean (%s) [geom report: %s types] ; SIGNED types %d/%s ; SIGNED hard-core designs %d/%d (modules %d/%d, copies %s/%s)%s %s' % (
                     key, r['plan'], r['clean'], r['types'], r['verdict'], r.get('geom_report_types'), r['signed_types'], r['types'], r['signed_cores'], r['cores'],
-                    r['signed_modules'], r['modules'], r.get('signed_instances', '?'), r.get('instances', '?'), r['pending_archive_types'], r['pending_archive_cores'],
+                    r['signed_modules'], r['modules'], r.get('signed_instances', '?'), r.get('instances', '?'),
                     (' UNMATCHED %s' % r['design_unmatched'] if r.get('design_unmatched') else '') + (
                         ' (counted; other records miss: %d modules)' % len(r['design_unmatched_extra']) if r.get('design_unmatched_extra') else ''), r['signed_list'][:8]))
