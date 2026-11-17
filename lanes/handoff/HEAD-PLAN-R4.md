@@ -69,3 +69,10 @@ Read lanes/handoff/HEAD-R3.md for the NF15e -> NF15f decision (hop halving + cor
   labels + strap values from the NF15f clock census after the clock GEN; mesh PG knobs + north clock re-site in that GEN;
   reset seam timing after the census; production token calendar rerun on NF15F; no kits until the corridor fix lands.
 - Harness lessons: one attempt per run dir; run_rs6.sh is the current runner (code_rs6); republish_g1.py takes HR4_CODE.
+
+## (6) 11-17 evening: corridor prefix map withdrawn, tag map adopted
+- My "corridor capacity shortfall" is WITHDRAWN. It came from hr4/edges_g1.py, which mapped model stage groups to the composed plan by PREFIX; the NF15f chains are renumbered, so stages were sent onto relay rects (FABLE-FIX-HEAD-CORRIDOR 09:09 / 12:49).
+- Fix: hr4/edges_g1.py now maps by TAG and exits 2 if any model rect fails to map uniquely (104/104 map). The old builder is kept as hr4/edges_g1_prefixmap_WRONG.py. This is a scratch event tool; no repo tool maps stage groups by prefix (grepped code_rs6/tools: landing_place.py and head_lep_nf15e_delta.py only validate prefixes), so no repo branch is needed.
+- Rerun on rs7 source_plan 10e41a91 (hr4/rs7_tag/): edges are byte-identical to fable-fix-head-corridor/rec/edges_rs7_g3.json apart from the plan path string. alloc_r4 unchanged: 59,089 nets, unassigned 4,295, reach_bad 0, worst full-rect cut 0.903 at x=1180, mandatory 0.502 at x=980.
+- Still open on rs7, all in the anchor form: 4,295 unassigned, cut 0.903 (just over 0.9), 4 stage-on-macro and 32 reserved-site rects (g1e column-centre relay rects).
+- Next: when FABLE-FIX-HEAD-CORRIDOR posts the hybrid (unassigned 0), apply its apply_stage_rects.py onto rs7 source_plan, then rerun the rs6/rs7 pipeline (compose, strap, KCRED 28, republish, bind, cohort, LATCHECK, G0, keepout count = 0). Then the HEAD type kits. Kits stay held until then.
