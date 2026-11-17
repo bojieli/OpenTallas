@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-17 07:2x PST: see SIGN-RATE (07:05: S81 62/64+41/394, HEAD 5/5+23/26, QC 70/70+8/127, KV 62/62+6/56, HBM 90/118+1/84). HEAD +1 (hd_ctl, hd_st_n3_turn signed). Approved r545-r558. Root causes found: S81 serdes rck tree (H12 span 214 FAIL; H13 late-tail, H14 centre pin running), strip t34 west ft seam (VE_m move), col hold repair leaves PG obstructions (fix gating), QC 21/h kit_rtl = D2/D3 filelist escapes (QC-PLAN-R3). QC M5 adopt-ready (Fable). HEAD NF15e decided.
+2026-11-17 08:1x PST: see SIGN-RATE (2026-11-17 08:04 368 s81=62+41t head=5+23t qc=70+8t kv=62+6t hbm=90+1t auto). Approved r559-r564 (QC tap[0] pad, delta publish, bksel merge+LQH, HEAD reset entry-phase). QC cb closed at post-CTS (pilot binding). HEAD NF15f g1e bind+cohort PASS, KRX = credit round trip (depth fix testing); reset 530 fails = clock phase, entry-phase fix modelled 0. KV D16 applied; HG6 recomposed after Fable (S1/S2). S81 serdes: 3 forms pass post-CTS, DRT-0255 worker-edge hypothesis tested. Wave launching almost nothing for S81/KV/HEAD (WAVE-PILOT-FIX); epyc10 5 GB (D14/D15 retire).
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
