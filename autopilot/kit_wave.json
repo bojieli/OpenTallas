@@ -51364,7 +51364,11 @@
     "epyc8"
    ],
    "note_codex_tail1_1117": "Registered four already-SIGNED complete param master views (E2 qc-tail1-param/views_1116); no source, plan, or physical change. All four own routed LEC EQUIVALENT; TT36.64..44.91 FF5.01..5.41.",
-   "note_qc_m4_providers_1117": "Five real M4 views on activegenhosts, botharchive/indexreceipt QC-M4-ARCHIVED-BOTH-1117.json; zero source/plan/cyclechange."
+   "note_qc_m4_providers_1117": "Five real M4 views on activegenhosts, botharchive/indexreceipt QC-M4-ARCHIVED-BOTH-1117.json; zero source/plan/cyclechange.",
+   "superseded_trees": [
+    "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2"
+   ],
+   "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d3"
   },
   "hbm": {
    "enabled": true,
