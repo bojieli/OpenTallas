@@ -34,6 +34,8 @@ import time
 BREAKER_N = 5
 BREAKER_WINDOW_S = 1800
 BREAKER_COOLDOWN_S = 1800
+PROBES_PER_CLASS = 3            # WAVE-PILOT-FIX 11-17 (COORD, owner r556 against single-pilot holds): three probes per class, not one
+PROBE_PASS_AFTER_S = 3600       # a probe RUNNING this long without a result counts as a pass for releasing its siblings
 PROBATION_N = 2
 PASS_TTL_S = 900
 FAIL_TTL_S = 120
@@ -564,18 +566,33 @@ def _blocks(e, key, item, claim):
     if e.get("state") != "probe":
         return key
     pr = e.setdefault("probe", {})
-    cur = probe_item(e)
-    if not cur:                                  # PROBE-ONE-1116 (COORD): exactly ONE probe for the whole class, not one per family
-        if claim:
-            pr["*"] = item
+    cur = probe_items(e)
+    if item in cur:
         return ""
-    return "" if cur == item else key
+    if len(cur) < PROBES_PER_CLASS:                                           # WAVE-PILOT-FIX: three probes for the whole class
+        if claim:
+            if not cur:
+                pr["*"] = item
+            else:
+                e.setdefault("probes", []).append(item)
+            e.setdefault("probe_t", {})[item] = time.time()
+        return ""
+    return key
 
 
 def probe_item(e):
-    """the class's single probe item ('' = none claimed yet); a state written with per-family claims (before PROBE-ONE-1116) counts its first claim"""
+    """the class's first probe item ('' = none claimed yet); a state written with per-family claims (before PROBE-ONE-1116) counts its first claim"""
     pr = e.get("probe") or {}
     return pr.get("*") or next(iter(pr.values()), "")
+
+
+def probe_items(e):
+    """every probe item the class has claimed (up to PROBES_PER_CLASS), first claim first"""
+    out = [probe_item(e)] if probe_item(e) else []
+    for i in e.get("probes") or []:
+        if i not in out:
+            out.append(i)
+    return out
 
 
 def held_key(st, die, item, claim=False):
@@ -610,7 +627,7 @@ def probe_result(st, die, item, stage, passed, failed_stage=False, required_stag
     g = fg_state(st)
     out = []
     for key, e in list(g["open"].items()):
-        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or probe_item(e) != item:
+        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or (item != probe_item(e) and item not in probe_items(e)):
             continue
         if required_stage is not None and e.get("stage") != required_stage:
             continue
@@ -624,9 +641,15 @@ def probe_result(st, die, item, stage, passed, failed_stage=False, required_stag
             close(st, key)
             out.append((key, f"all {len(fams)} famil{'y' if len(fams) == 1 else 'ies'} released in the same tick ({', '.join(fams[:12])}): class closed"))
         else:
-            e["state"], e["probe"] = "shut", {}
-            e["inp"] = e.get("inp_probe") or e.get("inp")
-            out.append((key, f"probe {item} failed again at {stage}: class stays shut until the inputs change again"))
+            failed = e.setdefault("probes_failed", [])
+            if item not in failed:
+                failed.append(item)
+            if all(i in failed for i in probe_items(e)):     # every claimed probe failed (none left running): shut until the inputs change again
+                e["state"], e["probe"], e["probes"], e["probes_failed"], e["probe_t"] = "shut", {}, [], [], {}
+                e["inp"] = e.get("inp_probe") or e.get("inp")
+                out.append((key, f"probe {item} failed again at {stage} (all {len(failed)} claimed probe(s) failed): class stays shut until the inputs change again"))
+            else:
+                out.append((key, f"probe {item} failed at {stage}: {len(failed)} of {len(probe_items(e))} claimed probes failed, the others still run"))
     return out
 
 
@@ -650,7 +673,7 @@ def refresh_verified_source_probe(st, key, inp, evidence, active=False, now=None
     return True
 
 
-def breaker_tick(st, now=None, inputs=None):
+def breaker_tick(st, now=None, inputs=None, trees=None):
     """a class the preflight cannot judge never releases on time or on preflight text (FABLE-FLOW-2000 b, FLOWCLASS-RETRY-2030 P4): when the inputs of
     the die it opened on change, it goes to PROBE state (one item per family may launch).  Only a probe that passes closes a family.
     inputs: {die: digest}.  -> [(key, what)] state changes (probe window opened).  A class opened without an input digest keeps the old cooldown."""
@@ -658,9 +681,29 @@ def breaker_tick(st, now=None, inputs=None):
     g = fg_state(st)
     rel = []
     closed = []
+    # WAVE-PILOT-FIX 11-17 (COORD): a tree switch IS the fix: failures that predate the die's current src tree reset at the switch.
+    # trees = {die: the die's current src tree identity}; the first sight of a die only records it.
+    seen = g.setdefault("tree_seen", {})
+    switched = set()
+    for die, tr in (trees or {}).items():
+        if tr and seen.get(die) not in (None, tr):
+            switched.add(die)
+        if tr:
+            seen[die] = tr
     for key, b in list(g["open"].items()):
         if b.get("kind"):
             continue
+        if b.get("die") in switched:
+            rel.append((key, "the die's src tree switched: its failures predate the tree, class reset"))
+            closed.append(key)
+            continue
+        if b.get("state") == "probe":                     # a probe running PROBE_PASS_AFTER_S without a result counts as a pass
+            slow = [i for i in probe_items(b) if i not in (b.get("probes_failed") or [])
+                    and now - float((b.get("probe_t") or {}).get(i, now)) >= PROBE_PASS_AFTER_S]
+            if slow:
+                rel.append((key, f"probe {slow[0]} ran {PROBE_PASS_AFTER_S // 60} min without a result: counts as a pass, class released"))
+                closed.append(key)
+                continue
         if b.get("inp"):
             cur = (inputs or {}).get(b.get("die"))
             if cur and cur != b["inp"] and b.get("state", "shut") == "shut":
