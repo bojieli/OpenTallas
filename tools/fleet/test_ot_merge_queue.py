@@ -147,6 +147,24 @@ class Select(unittest.TestCase):
             self.assertEqual(M.evidence_copies(Path("/unused"), "base", "tip", [old, new, bad]), {new: "rtl/operator.sv"})
             self.assertEqual(M.evidence_copies(Path("/unused"), "base", "tip", [old, new, bad, "rtl/operator.sv"]), {})
 
+    def test_physical_die_plan_tests_next_to_a_changed_file_are_selected(self):
+        """r619 changed physical/die_plan/qwen_compute/bind/ and the gate ran no test ('static only'): every test_*.py in that directory now runs"""
+        T = ["physical/die_plan/qwen_compute/bind/test_bind_a.py", "physical/die_plan/qwen_compute/bind/test_other_thing.py",
+             "physical/die_plan/qwen_compute/bind/tests/test_in_tests_dir.py", "physical/die_plan/qwen_compute/test_parent.py",
+             "physical/die_plan/kv/bind/test_other_die.py", "tools/die_plan/test_x.py"]
+        got = M.select_tests(["physical/die_plan/qwen_compute/bind/native_bind.py"], T, lambda t: "")[0]
+        self.assertEqual(got, T[:3])                                   # same directory + its tests/ dir; not the parent directory, another die, or tools/
+        self.assertEqual(M.select_tests(["physical/die_plan/qwen_compute/bind/plan.json"], T, lambda t: "")[0], T[:3])   # a data file there selects them too
+        self.assertEqual(M.select_tests(["physical/die_plan/qwen_compute/bind/native_bind.py"], [], lambda t: "")[0], [])
+
+    def test_all_test_files_lists_physical_die_plan(self):
+        from unittest.mock import patch
+        listing = "tools/x/test_a.py\nphysical/die_plan/q/test_b.py\nphysical/die_plan/q/data.json\n"
+        with patch.object(M, "git", return_value=subprocess.CompletedProcess([], 0, listing, "")) as g, \
+                patch.object(pathlib.Path, "is_file", return_value=True):
+            self.assertEqual(M.all_test_files(pathlib.Path("/wt")), ["tools/x/test_a.py", "physical/die_plan/q/test_b.py"])
+        self.assertIn("physical/die_plan", g.call_args[0])
+
     def test_docs_select_nothing(self):
         self.assertEqual(self.sel(["docs/X.md"]), [])
 
