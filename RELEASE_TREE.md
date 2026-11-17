@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-16 16:17 PST: see SIGN-RATE. CODEX active: S81 F2s4tapfix1 bind0 LAT873/873 newG0=0/inherited6, atomic portable adoption packaging; fresh col preparation admitted. HEAD NF15a, KV HG1A, QC J current, QC Kf atomic adoption proceeding with two explicit face holds. KV A PG tool compatibility packaging fix; private C normal E2 admission after headroom recovery. Transport3af/native781/HEAD88 merged, all6 full runtime sync16:13. Guarded E9/E8/E7 capacity recovery; actual PLANGUARD low memory remains enabled. PMA GREEN62 approvedr375; SerDes/Cheader/BG normal source gates live. SVC fullshape synth140/23 passed, exact8 dead macro placement fix pending; physical hold remedies remain owned. MEM44 genuine HEAD640FP32/80BF16 passed, control normalization/DS programmes/TT witness/HGD still open. HBM parked.
+2026-11-16 17:0x PST: see SIGN-RATE. Claude lanes stopped 14:2x on a usage limit; Codex covered to 16:5x (HEAD NF15b adopted, S81 F2s4 adoption, KV C bind, QC S4q9k source publish). Handback in progress; lanes resume from the Codex handoff. Disk: epyc8 908 GB free, epyc7/intel1 at floor.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
