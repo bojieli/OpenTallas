@@ -57,3 +57,55 @@ class Apply(unittest.TestCase):
         c = mk()
         with self.assertRaises(AssertionError):
             A.apply_marker(c, cand(), "/x/other", "E0", pilot_item="t1", TC=TC)
+
+
+class KeepGenHosts(unittest.TestCase):
+    """HEAD-DIE-R (COORD r400/r401): keep_gen_hosts keeps the die's current gen_hosts, guarded and fail-closed."""
+
+    def _tc(self, seen, mutate=None):
+        class T(TC):
+            @staticmethod
+            def identity(die, tree, want, hosts, checker):
+                seen.append(sorted(hosts)); return dict(die=die, tree=tree, hosts=sorted(hosts))
+            @staticmethod
+            def read(d, ident):
+                if mutate:
+                    mutate()
+                return dict(state="ok", full_ok=True, running=False, main_sha="a" * 40)
+        return T
+
+    def test_keeps_current_hosts_and_guards_them(self):
+        c = mk({"gen_hosts": ["epyc10", "epyc8"], "gen_host": "epyc8"})
+        seen = []
+        o = dict(cand(), config={"gen_hosts": ["epyc10"], "gen_host": "epyc10"})
+        A.apply_marker(c, {"marker": o, "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc(seen))
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual(d["gen_hosts"], ["epyc10", "epyc8"]); self.assertEqual(d["gen_host"], "epyc8")
+        self.assertEqual(seen, [["epyc10", "epyc8"]])
+
+    def test_flag_argument_equals_candidate_key(self):
+        c = mk({"gen_hosts": ["epyc10", "epyc8"]})
+        A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]), keep_gen_hosts=True)
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual(d["gen_hosts"], ["epyc10", "epyc8"]); self.assertEqual(d["gen_host"], "epyc10")
+
+    def test_hosts_changed_after_guard_read_refuses_untouched(self):
+        c = mk({"gen_hosts": ["epyc10", "epyc8"]})
+        p = c / "autopilot/kit_wave.json"
+        def mutate():
+            cfg = json.loads(p.read_text()); cfg["dies"]["kv"]["gen_hosts"] = ["epyc10"]; p.write_text(json.dumps(cfg))
+        with self.assertRaises(AssertionError):
+            A.apply_marker(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([], mutate))
+        d = json.loads(p.read_text())["dies"]["kv"]
+        self.assertEqual(d["src"], "/x/old"); self.assertFalse((c / "lanes/handoff/tree_switch_kv.json").exists())
+
+    def test_no_current_hosts_refuses(self):
+        c = mk()
+        with self.assertRaises(AssertionError):
+            A.apply_marker(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+
+    def test_default_still_uses_candidate_hosts(self):
+        c = mk({"gen_hosts": ["epyc10", "epyc8"]})
+        A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual(d["gen_hosts"], ["epyc10"])
