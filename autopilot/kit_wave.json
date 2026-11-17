@@ -51177,9 +51177,9 @@
     {
      "id": "qc-l2-stop-m5-changed-1117",
      "plan_sha": "19be3f0a3bb42d8ea1a388412843e1d80e98563041d169899e54c22a47dffe82",
-     "reason": "FABLE-PLAN-QC-M5 A2 (COORD 11-17 06:5x): M5 cf3ee3ca adopted (M5BR CB16 7/7); these L2 types are re-rowed/re-mastered in M5 (offset outside L2 tol, window raised or type row changed: /home/ubuntu/qc-plan-r3/m5_changed_vs_l2_1117.json), so an L2 build is not an M5 result. No NEW L2 launch; running attempts finish. Releases at the M5 event adopt.",
+     "reason": "FABLE-PLAN-QC-M5 A2 (COORD 11-17 06:5x): M5 cf3ee3ca adopted (M5BR CB16 7/7); these L2 types are re-rowed/re-mastered in M5 (offset outside L2 tol, window raised or type row changed: /home/ubuntu/qc-plan-r3/m5_changed_vs_l2_1117.json), so an L2 build is not an M5 result. No NEW L2 launch; running attempts finish. Releases at the M5 event adopt. | RELEASE event_adopt:s29q103S4Q9N1B (COORD lever 2 11-17 13:3x: one QC apply; N1B s29q103S4Q9N1B is the apply if its gates pass first, else M5T s29q103S4Q9M5 and this goes back)",
      "release": [
-      "event_adopt:s29q103S4Q9M5"
+      "event_adopt:s29q103S4Q9N1B"
      ],
      "keys": [
       "cbf_q00__cl870de686",
@@ -51320,7 +51320,8 @@
     "s29q103S4Q9L2",
     "s29q103S4Q9M",
     "s29q103S4Q9N",
-    "s29q103S4Q9M5"
+    "s29q103S4Q9M5",
+    "s29q103S4Q9N1B"
    ],
    "src_manifest_hash": "e5d43a25c4cfcaedc984f2f969cc76ae49dc0f37cae19fd19fc9f93b39b95b92",
    "tools_sha": "eb1e73448bd0",
