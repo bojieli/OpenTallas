@@ -319,7 +319,7 @@ def macro_libs(kit, corner):
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py",
-                  "netlist_alias_check.py")
+                  "netlist_alias_check.py", "fwd_pad_check.py")
 OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
 
 
@@ -2425,6 +2425,14 @@ def evaluate(rec, insertion_target=None):
         if not nst["modules"]:
             probs = probs + [dict(kind="no_module", net=None)]
         put("netlist_alias", "FAIL" if probs else "PASS", problems=len(probs), first=probs[:5], netlist=fv, **nst)
+        # HEAD-DIE-R 11-17: subtree-balance pads on forwarded-clock outputs (blocking in both profiles)
+        try:
+            import fwd_pad_check as FPC
+        except ImportError:
+            FPC = None
+        if FPC is not None:
+            fr = FPC.check(Path(fv).read_text(errors="replace"))
+            put("fwd_pads", fr["verdict"], **{k: v for k, v in fr.items() if k != "verdict"})
     reasons = []
     fm = rec.get("ft_interface")
     if fm is not None:                        # 12.2a1 declared ft arcs (only kits with ft_ports.json)
@@ -2445,7 +2453,7 @@ def evaluate(rec, insertion_target=None):
         put("timing_modes", tm.get("verdict", "NOT RUN"), **{k: v for k, v in tm.items() if k != "verdict"})
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
             (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()) + \
-            (("netlist_alias",) if "netlist_alias" in ch else ()):
+            (("netlist_alias",) if "netlist_alias" in ch else ()) + (("fwd_pads",) if "fwd_pads" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))
