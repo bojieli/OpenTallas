@@ -1,3 +1,43 @@
+# FABLE-FIX-S81-COL handoff (restarted 2026-11-16 21:15 PST as lever 1 of FABLE-CLOSURE-STRATEGY 21:40)
+
+Owns closure of the S81 col family (216 plan types: h9_r1 60, h9_r2 60, h10_r2 12 = col-wave1; h9_r0_p1..p6, h10_r0_p1/p4, h10_r1 = col-wave2).
+Gates: DRC 0, routed TT >= -42, internal FF hold >= 0. Directs S81-TYPES-R2 (kits, tree) and FIX-S81-COL-STALE (holds, wave release).
+
+## Where things are
+- epyc8 /srv/opentallas-scratch2/claude/fable-fix-s81-col/: an/ (cong.py congestion.rpt binning, ist_rows.py station-row rewrite),
+  pg1/ (h9_r2 PG-cap route proof), ir1/ (h9_r1 station-row proof). Each has its own run_kit.sh copy + flow_tag.
+- intel2 ~/fable-fix-s81-col/: ot-run client logs pg1_h9_r2_route.log, ir1_h9_r1_route.log.
+- Source kits (S81-TYPES-R2, do not touch): epyc8 /srv/opentallas-scratch2/claude/fable-fix-s81-coltap/countable_F2s4tapfix1/{gen,gen_rm3}.
+- How a private restart is made: rsync the kit without the stages to redo, restore signoff.py / signoff_profile.py, `touch -r` config.mk
+  to the source kit's mtime (RESYNTH-GUARD), `ot-run --mem 64 --threads 16 --dir W --hosts epyc8 -- bash W/run_kit.sh W/<kit> route 64 16`.
+
+## Root causes (21:2x, MEASURED)
+1. col_h10_r2 gen/: sign-off STA ran; TT setup -172.57 / 102 endpoints (u_t7/so[1:0] -> ist_frame_int_o0_0 q[383:382], site class),
+   internal FF hold -4.83 / 10 (reset removal), DRC 0. The session then died in pair-skew (psambig, old pair_skew.tcl). Not signable.
+   rm3 (per-bit sites for q[382:383]) is the h10_r2 candidate: in detail route since 21:26 (client of S81-TYPES-R2).
+2. col_h9_r2 DRT-0255: class A (FABLE-PD-DRT-1350). Net clknet_leaf_70_clk_t18_regs, box (326.04,130.53)-(330.03,134.52), end at
+   (330.030,132.192) on M6 = first track above the M6 PG pair (VSS 131.424-131.712, VDD 131.808-132.096). Die-phase PG was present
+   (M7 offset 8.448). The private gen/ kits had no OT_PGCAP (C3b capacity cut); wave die_gen_env has OT_PGCAP=1.
+   Proof pg1 = same kit from 4_cts + pg_pair_cap hook only (GRT log: OT_PGCAP region adjustments M7 331 M5 664 M6 564).
+3. col_h9_r1 GRT-0116: 898 overflowing gcells, all in x 600-800, y 1200-1227 (north strip, 61 um between the e8 macro row and the edge).
+   istations.tcl packs each 1,167-flop frame_int_o0 rank at one point (1069 / 757 / 445, y 1226.88) = a 147 x 9 um triangle with
+   bits in arbitrary order; lpad_frame_int_i0 (321 b) ranks at 639 / 983 share the strip. CTS timing fine (worst -20.1).
+   Proof ir1 = ordered rows: 117 ten-bit groups per rank over x +-90 um, same y, same rank centres (ist_rows.py), + OT_PGCAP.
+
+## Decision table
+- pg1 routes DRC 0 -> OT_PGCAP is the h9_r2 fix; the D4/D5 wave kit already has it. Sign-off pg1 (TT / FF) and, if it passes, export.
+- ir1 GRT 0 overflow -> station-row form goes into kit_istations.py as the default for a rank wider than 256 bits on an N/S face
+  (S81-TYPES-R2 implements; plan rows unchanged, no cycles). If ir1 still overflows: read congestion.rpt with an/cong.py; next form =
+  lpad_i0 ranks moved 20 um inward and o0 rows +-140 um.
+- col-wave1 PASS is posted by S81-TYPES-R2 only after a wave pilot (D4/D5 kit) signs; FIX-S81-COL-STALE then releases in waves
+  (h10_r2 12 first, then h9_r2 60, then h9_r1 60 after the row form is in the tree).
+- col-wave2 (76 types): relay depth in the col RTL generator for the 10 non-row groups + C4 rows (strategy lever 1 items 5-6).
+
+## Export
+AGIdock /archive/opentallas-signed-1114/s81/<type> and rtx-pro /home/ubuntu/signed-export-1114/s81/<type>, INDEX.tsv row under flock.
+
+---
+# History (previous run, 11-15 23:00 to 11-16 01:4x)
 # FABLE-FIX-S81-COL handoff
 
 Owner of S81 col closure (216 types), pilot col_h9_r2__t1__clce45cab5__pv7a260fc0. Gates: DRC 0, TT setup >= -42, FF non-port hold >= 0, bind + LATCHECK.
