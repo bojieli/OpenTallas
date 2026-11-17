@@ -18,7 +18,8 @@ port).  Depth(raw) + 1 == depth(old reset) is what clock_landings._local_resets 
 release edge is unchanged: 0 added cycles, +1 flop per group.  Both hops (relay -> leaf, leaf -> consumer) must be
 <= --reach-um, else the tool fails closed (the type then needs reset.local_taps_um first: reach_fix class 5).
 clock.reset_tree_anchor is re-recorded on the bound tree (reset_anchor.record), so a later renumbering re-picks by site.
-Types that already have a local reset on a consumer keep it; every other type is byte-as-PLAN.
+Types that already have a local reset on a consumer keep it; every other type is byte-as-PLAN, and so is a type with no
+FSTART face flop and no count origin (no shared START raw reset to localise).
 """
 import argparse
 import json
@@ -102,6 +103,10 @@ def type_delta(tn, t, sv, A, src, span=200.0, reach=405.0, prefix="fstart"):
     w, h = t["outline_um"]
     a = re.search(r"\bassign\s+cland_start_raw\s*=\s*(\w+)\s*;", sv)
     if not a:
+        # S81 C4R1 11-17 (t37): a type with no FSTART face flop and no count origin has no shared START raw reset at all;
+        # nothing to localise, the type stays byte-as-PLAN.  FSTART/origin flops without the shared raw still fail closed.
+        if not re.search(r"\bu_cland_(?:fstart_\w+|origin)\b", sv):
+            return [], []
         raise DeltaError(f"{tn}: no cland_start_raw in the bound RTL")
     shared = resolve(sv, "cland_start_raw")
     depth = old_depth(sv, relays, shared) - 1
