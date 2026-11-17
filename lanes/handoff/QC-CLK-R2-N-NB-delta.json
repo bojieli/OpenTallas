@@ -2,7 +2,7 @@
  "base": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m_d8.json",
  "base_sha256": "beaa07b778ce233b9608c48ee0c843c59e03a1490ae57a0e917e4091d27702ad",
  "plan": "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/n_nb_1116/plan_n_nb.json",
- "sha256": "d8c5e183516da113f632b14675daa8f64899c491d1d1d2d13ecd1588ad310ca2",
+ "sha256": "d99a1840f308911fc1f90e64f540b99693d2a4ae715c91c67914ff0aea33b72e",
  "type": "cbn_q00__cldbcda913",
  "core": "cl_nb_i00",
  "orientation": "R0",
@@ -63,6 +63,19 @@
    "/hard_cores/6/origin_um/0",
    1129.68,
    1086.48
+  ],
+  [
+   "/clock/landing_contract/bands/nb_i00/max_pin_to_band_hop_um",
+   132.048,
+   182.376
+  ],
+  [
+   "/clock/landing_contract/collector_local_sources/3/band/max_pin_to_band_hop_um",
+   104.904,
+   165.384
   ]
- ]
+ ],
+ "previous_six_delta_sha256": "d8c5e183516da113f632b14675daa8f64899c491d1d1d2d13ecd1588ad310ca2",
+ "band_max_hop_um": 182.376,
+ "band_hop_formula_source": "clock_landing_plan.py554 max Manhattan over band rectangle corners"
 }

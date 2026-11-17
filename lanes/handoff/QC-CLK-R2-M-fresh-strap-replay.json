@@ -95459,5 +95459,16 @@
     }
    ]
   }
- ]
+ ],
+ "physical_reference": {
+  "cell": "DFFHQNx1_ASAP7_75t_R",
+  "cell_area_um2": 0.2916,
+  "lib": "ASAP7 RVT TT SEQ nldm220123",
+  "lib_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+  "high10_data_ff_bits_across_copies": 35836,
+  "ff_cell_area_reference_um2": 10449.777600000001,
+  "selector_data_bits_across_copies": 1424,
+  "constant_strap_pins_across_copies": 152,
+  "qualification": "FF-only area lower bound; mapped mux, routing, CTS, timing and area remain unqualified"
+ }
 }
