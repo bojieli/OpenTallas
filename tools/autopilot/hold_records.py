@@ -475,6 +475,59 @@ def release_pilot_pick(cfg, die, d, ready):
     return sorted(names, key=lambda k: (cells.get((die, k)) if cells.get((die, k)) is not None else 10 ** 12, k))[0]
 
 
+def _latest_row(cfg, die, item):
+    best = None
+    for r in cfg.get("_item_rows") or []:
+        if r.get("die") == die and r.get("item") == item and (best is None or int(r.get("attempt") or 0) >= int(best.get("attempt") or 0)):
+            best = r
+    return best
+
+
+def _row_failed(r):
+    return bool(r) and (r.get("status") == "FAIL" or (r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL"))
+
+
+def held_elsewhere(d, rec_id, item):
+    """True when another record of the die names ITEM explicitly (items / keys) or by a pattern: the pilot would not launch"""
+    for r in d.get("hold_records") or []:
+        if r.get("id") == rec_id or r.get("auto_pilot"):
+            continue
+        names = list(r.get("items") or []) + list(r.get("keys") or [])
+        if item in names or any(fnmatch.fnmatchcase(item, p) for p in list(r.get("patterns") or []) + [n for n in names if GLOB.search(str(n))]):
+            if r.get("release"):
+                return True
+    return False
+
+
+def pilot_launchable(cfg, die, d, item, rec_id=""):
+    """WAVE-PILOT-FIX 11-17 (FABLE-FLOW-1100 / owner r556: no family hold): a pilot is launchable when no other record holds it and its
+    latest attempt has not FAILed (a FAIL row is refused a blind relaunch: the family would wait on it forever)"""
+    if not item or held_elsewhere(d, rec_id, item):
+        return False
+    return not _row_failed(_latest_row(cfg, die, item))
+
+
+def pilot_deadlock(cfg, die, d, rec):
+    """PILOT-DEADLOCK: '' when the auto-pilot record may stand, else why it is released: it names a stale tree (not the die's current
+    src manifest), or every one of its pilot items is held by another record or has a FAILed latest attempt (fail open)"""
+    if not rec.get("auto_pilot"):
+        return ""
+    cur = str(d.get("src_manifest_hash") or "")[:12].lower()
+    for t in rec.get("release") or []:
+        kind, val = split_term(str(t))
+        if kind == "gen_pilot":
+            sha = split_pilot(val)[1]
+            if cur and PILOT_SHA.match(cur) and sha != cur:
+                return f"PILOT-DEADLOCK: pilot record names tree {sha}, the die is on {cur}"
+    items = list(rec.get("pilot_items") or [])
+    if items and not any(pilot_launchable(cfg, die, d, i, rec.get("id")) for i in items):
+        why = []
+        for i in items:
+            why.append(f"{i}: " + ("held by another record" if held_elsewhere(d, rec.get("id"), i) else "latest attempt FAILed"))
+        return "PILOT-DEADLOCK: no launchable pilot (" + "; ".join(why) + ")"
+    return ""
+
+
 def rec_owner(rec):
     """the lane that owns a hold record: its 'owner' field, else the lane of its first result: term, else '' (a legacy record with no owner never expires)"""
     if rec.get("owner"):
@@ -535,6 +588,7 @@ def compile_holds(cfg, ctx=None):
             if isinstance(h, dict):
                 h.pop(k, None)
     cfg["_hold_added"] = added = {}
+    cfg["_pilot_deadlock"] = []
     if cfg.get("_hold_auto_released"):
         cfg["_hold_auto_released"] = [r for r in cfg["_hold_auto_released"] if r[0] not in (cfg.get("_hold_rec_dies") or ())]
     rec_dies = set()
@@ -578,6 +632,10 @@ def compile_holds(cfg, ctx=None):
             # types released, all 34 launched on an unfixed tree, 33 failed kit_rtl in 11 minutes.  State per record in
             # cfg['_release_pilot'] (kit_wave persists it): {pilot, t, passed}.  Fails open: glob-only keys, no state store.
             exp = record_expired(rec, cfg) if rel is not None else ""
+            dl = pilot_deadlock(cfg, die, d, rec)
+            if dl:
+                exp = dl
+                cfg.setdefault("_pilot_deadlock", []).append((die, rec.get("id"), dl))
             ready = [k for k in keys if exp or (rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel))]
             gate = {}
             store = cfg.get("_release_pilot")
@@ -670,6 +728,8 @@ def audit(cfg, launched=()):
         loose = [k for k in loose if k not in {x for n, x in (cfg.get("_hold_added") or {}).get(die, []) if n == "hold_items"}]
         if loose and die != "hbm":
             add("LEGACY-HOLD", die, "-", f"{len(loose)} hold_items key(s) with no record / typed release: {','.join(loose[:4])}", n=len(loose))
+    for die, rid, why in cfg.get("_pilot_deadlock") or []:
+        add("PILOT-DEADLOCK", die, rid, why[:200])                                   # released by compile_holds the same pass
     for die, rid, k in cfg.get("_hold_proof_stuck") or []:
         add("PROOF-HELD", die, rid, f"pattern {k!r} still covers a proof item (no item list to carve it)")
     for die, item in launched:
@@ -865,6 +925,9 @@ def add_pilot_hold(cfg, die, d, marker):
         return False
     sha = str(d.get("src_manifest_hash") or (marker or {}).get("manifest_hash") or "")[:12].lower()
     item = pilot_item_for(cfg, die, d)
+    if item and not pilot_launchable(cfg, die, d, item, f"pilot-{die}-{sha}"):
+        names = sorted((cfg.get("_item_names") or {}).get(die) or [])
+        item = next((n for n in names if pilot_launchable(cfg, die, d, n, f"pilot-{die}-{sha}")), "")   # a launchable pilot, else fail open
     if not PILOT_SHA.match(sha) or not item:
         return False
     rid = f"pilot-{die}-{sha}"

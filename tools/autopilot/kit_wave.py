@@ -900,7 +900,7 @@ def hold_audit_step(AP, cfg, st, t0):
     found = HR.audit(cfg, launched)
     summ = HR.summarize(found)
     AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
-           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD")))
+           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD", "PILOT-DEADLOCK")))
     # HOLD-FLOW-R 11-16 (FABLE-FLOW-2000): a held release term with no producer for 12 h is a wave alert line
     try:
         _ctx = hold_ctx(cfg)
