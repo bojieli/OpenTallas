@@ -14,6 +14,9 @@ set ::env(OT_STB_TOL) [ot_rck_env OT_RCK_BALANCE_TOL 20]
 set ::env(OT_STB_STAGE) [ot_rck_env OT_RCK_BALANCE_STAGE 24]
 set ::env(OT_STB_CELL) [ot_rck_env OT_RCK_BALANCE_CELL INVx4_ASAP7_75t_R]
 set ::env(OT_STB_PAIR) 1
+# 16 rounds by default (the top-down sweep reaches the wide levels only from round 6; 8 rounds left span 214 ps, 16 give 70-75 ps on
+# serdes__t13).  OT_RCK_BALANCE_ROUNDS, else a config.mk OT_STB_ROUNDS, overrides.
+set ::env(OT_STB_ROUNDS) [ot_rck_env OT_RCK_BALANCE_ROUNDS [ot_rck_env OT_STB_ROUNDS 16]]
 set ::env(OT_STB_SPAN_MAX) [ot_rck_env OT_RCK_BALANCE_SPAN 110]
 set ::env(OT_STB_SPAN_FAIL) [ot_rck_env OT_RCK_BALANCE_FAIL 0]
 puts "OT_RCK_BALANCE port $::env(OT_STB_PORTS) tol $::env(OT_STB_TOL) cell $::env(OT_STB_CELL) pair span<=$::env(OT_STB_SPAN_MAX)"
