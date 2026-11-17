@@ -24,6 +24,7 @@ import fnmatch
 import hashlib
 import json
 import os
+from pathlib import Path
 import shlex
 import shutil
 import stat
@@ -160,6 +161,67 @@ def verify(root, expect="", ro=False, full=False):
             pass
     return errs, info
 
+
+
+def cached_receipt(root, expect=""):
+    """Reuse a completed content verification only while its immutable metadata still matches.
+
+    This never hashes source payload again. The existing verify cache is written
+    only after error-free content verification; a missing/stale cache is a miss,
+    and the caller must run the normal verifier. Read-only and inode checks are
+    current, not assumed from that earlier verification.
+    """
+    root = os.path.realpath(root)
+    m = load_manifest(root)
+    if m is None:
+        return [f"SRC_MANIFEST CACHE MISS {root}: no manifest"], {}
+    try:
+        h = manifest_hash(m)
+    except (KeyError, TypeError, ValueError) as e:
+        return [f"SRC_MANIFEST CACHE MISS {root}: malformed manifest ({e})"], {}
+    errs = []
+    if h != m.get("manifest_hash"):
+        errs.append("SRC_MANIFEST CACHE MISS manifest content does not match its hash")
+    if expect and h != expect:
+        errs.append(f"SRC_MANIFEST CACHE MISS hash {h} is not expected {expect}")
+    try:
+        if Path(root, HASHFILE).read_text().strip() != h:
+            errs.append("SRC_MANIFEST CACHE MISS published hash file differs from manifest")
+    except OSError as e:
+        errs.append(f"SRC_MANIFEST CACHE MISS hash file: {e}")
+    cf = os.path.join(CACHE_DIR, hashlib.md5(root.encode()).hexdigest() + ".json")
+    try:
+        cb = Path(cf).read_bytes()
+        cached = json.loads(cb)
+        cache_mtime = os.stat(cf).st_mtime_ns
+    except (OSError, ValueError) as e:
+        return errs + [f"SRC_MANIFEST CACHE MISS {cf}: {e}"], {}
+    sig = signature(root)
+    if cached.get("hash") != h or cached.get("sig") != sig:
+        errs.append("SRC_MANIFEST CACHE MISS completed verification hash/signature is stale")
+    have = walk_tree(root)
+    want = m.get("files") or {}
+    if set(have) != set(want):
+        errs.append("SRC_MANIFEST CACHE MISS current inventory differs from verified manifest")
+    paths = [root, os.path.join(root, MANIFEST), os.path.join(root, HASHFILE)] + list(have.values())
+    for dp, dn, _fn in os.walk(root):
+        dn[:] = [d for d in dn if d not in SKIP_DIRS]
+        paths.extend(os.path.join(dp, d) for d in dn)
+    for q in paths:
+        try:
+            st = os.lstat(q)
+            if not stat.S_ISLNK(st.st_mode) and st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH):
+                errs.append(f"SRC_MANIFEST CACHE MISS writable {os.path.relpath(q, root)}")
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1:
+                errs.append(f"SRC_MANIFEST CACHE MISS shared inode {os.path.relpath(q, root)} nlink={st.st_nlink}")
+        except OSError as e:
+            errs.append(f"SRC_MANIFEST CACHE MISS stat {q}: {e}")
+    info = dict(schema="opentallas.src_manifest.cached_receipt.v1", verdict="PASS" if not errs else "MISS",
+                source=root, manifest_hash=h, main_sha=m.get("main_sha"), files=len(want),
+                signature=sig, cache_path=cf, cache_mtime_ns=cache_mtime,
+                cache_sha256=hashlib.sha256(cb).hexdigest(),
+                basis="completed content verification cache plus current read-only unshared inventory")
+    return errs, info
 
 def shared_inodes(root, limit=0):
     """stat-only scan (no hashing: cheap enough for every tick): [(relpath, nlink)] of every regular file with nlink > 1, i.e. a file
@@ -402,7 +464,7 @@ def derive(live, repo, sha, scope):
 
 # ---- delta (v2 trees without a rebuild or a 48 GB network copy) --------------------------------------------------------------
 
-def delta_make(repo, old_tree, new_sha, out):
+def delta_make(repo, old_tree, new_sha, out, drop_overlay=()):
     """pack = the paths whose content differs between the tree's main sha and new_sha inside the tree's scope (typically 40-80 files):
     out/delta.json + out/files/<path>.  A changed path that the tree's overlay carries is refused (the overlay wins; re-derive it)."""
     m = load_manifest(old_tree)
@@ -413,7 +475,8 @@ def delta_make(repo, old_tree, new_sha, out):
     nm = subprocess.run(["git", "-C", repo, "diff", "--name-status", "-z", "--no-renames", m["main_sha"], new_sha, "--"] + list(m["scope"]),
                         capture_output=True, text=True, check=True).stdout.split("\0")
     recs = [(nm[i], nm[i + 1]) for i in range(0, len(nm) - 1, 2)]
-    clash = [p for _st, p in recs if p in m["overlay"]]
+    drop = set(drop_overlay)
+    clash = [p for _st, p in recs if p in m["overlay"] and p not in drop]
     if clash:
         raise SystemExit("refuse: paths changed on main are overlaid by the tree: " + ", ".join(clash[:10]))
     if os.path.exists(out):
@@ -432,7 +495,8 @@ def delta_make(repo, old_tree, new_sha, out):
             f.write(blob)
         add[path] = {"sha256": hashlib.sha256(blob).hexdigest(), "exec": mode == "100755", "link": mode == "120000"}
     json.dump({"old_manifest_hash": m["manifest_hash"], "old_main": m["main_sha"], "new_main": new_sha, "scope": m["scope"],
-               "add": add, "delete": delete}, open(os.path.join(out, "delta.json"), "w"), indent=0, sort_keys=True)
+               "add": add, "delete": delete, "overlay_drop": sorted(drop & set(m["overlay"]))},
+              open(os.path.join(out, "delta.json"), "w"), indent=0, sort_keys=True)
     return len(add), len(delete)
 
 
@@ -467,6 +531,8 @@ def delta_apply(pack, old_tree, out):
         os.chmod(dest, 0o755 if e["exec"] else 0o644)
         files[path] = e["sha256"]
     ov = dict(m["overlay"])
+    for k in d.get("overlay_drop") or []:                       # a stale overlay copy of a file main changed: main's version wins
+        ov.pop(k, None)
     ov.update(d.get("overlay_add") or {})                       # data files a data pack adds (data_pack.py): they are overlay, not main
     nm = {"version": 1, "main_sha": d["new_main"], "scope": m["scope"], "overlay": ov, "files": files}
     nm["manifest_hash"] = manifest_hash(nm)
@@ -481,6 +547,101 @@ def delta_apply(pack, old_tree, out):
         f.write(nm["manifest_hash"] + "\n")
     os.rename(tmp, out)
     return nm
+
+
+# ---- retire (FLOW-1113 / r343: one base tree per tools sha + small data packs; superseded _dN versions are deleted at publish) ----
+
+import re as _re
+
+_DN = _re.compile(r"^(?P<base>.+?)_d(?P<n>\d+)$")
+
+
+def _in_use(path):
+    """True when any process cmdline or cwd names `path` (a running kit/bind keeps its tree)"""
+    needle = path.rstrip("/").encode()
+    for pid in os.listdir("/proc"):
+        if not pid.isdigit():
+            continue
+        try:
+            if needle in open(f"/proc/{pid}/cmdline", "rb").read():
+                return True
+            if os.readlink(f"/proc/{pid}/cwd").startswith(path.rstrip("/")):
+                return True
+        except OSError:
+            continue
+    return False
+
+
+def retire_candidates(new_tree, refs=(), keep=0):
+    """-> [(path, why)] superseded siblings of new_tree: same base name with a LOWER _dN (the base tree itself is kept: it is the
+    shared base the packs were made from), not named in any refs file, not in use.  keep = how many of the newest older _dN to keep."""
+    new_tree = os.path.abspath(new_tree).rstrip("/")
+    d, name = os.path.dirname(new_tree), os.path.basename(new_tree)
+    m = _DN.match(name)
+    if not m:
+        return []
+    base, n = m.group("base"), int(m.group("n"))
+    text = ""
+    for r in refs:
+        try:
+            text += open(r, errors="ignore").read()
+        except OSError:
+            pass
+    older = []
+    for e in sorted(os.listdir(d)):
+        mm = _DN.match(e)
+        if mm and mm.group("base") == base and int(mm.group("n")) < n and os.path.isdir(os.path.join(d, e)):
+            older.append((int(mm.group("n")), e))
+    older.sort(reverse=True)
+    out = []
+    for i, (k, e) in enumerate(older):
+        path = os.path.join(d, e)
+        if i < keep:
+            continue
+        if _re.search(_re.escape(e) + r"(?![\w])", text):
+            out.append((path, "REFERENCED"))
+        elif _in_use(path):
+            out.append((path, "IN-USE"))
+        else:
+            out.append((path, "DELETE"))
+    return out
+
+
+def _guard():
+    """the ONE shared delete rule (tools/fleet/ot_delete_guard.py, CLEAN-ALL-1115 postmortem): -> module, or None when it cannot be loaded.
+    A missing guard fails CLOSED: nothing is deleted."""
+    try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "fleet"))
+        import ot_delete_guard as G
+        return G if hasattr(G, "refuse") else None
+    except Exception:
+        return None
+
+
+def retire(new_tree, refs=(), keep=0, dry=False, guard=None):
+    done = []
+    G = guard if guard is not None else _guard()
+    for path, why in retire_candidates(new_tree, refs, keep):
+        if why != "DELETE":
+            print(f"SRC_MANIFEST RETIRE-KEEP {path} ({why})")
+            continue
+        if G is None:
+            print(f"SRC_MANIFEST RETIRE-REFUSED {path} (ot_delete_guard missing: fail closed)")
+            continue
+        try:
+            reason = G.refuse(path)
+        except Exception as e:                           # a guard that errors is a guard that refuses
+            reason = f"guard error {type(e).__name__}: {e}"
+        if reason:
+            print(f"SRC_MANIFEST RETIRE-REFUSED {path} (ot_delete_guard: {reason})")
+            continue
+        if not dry:
+            for dp, dn, fn in os.walk(path):
+                os.chmod(dp, os.lstat(dp).st_mode | stat.S_IWUSR)
+            shutil.rmtree(path)
+        print(f"SRC_MANIFEST RETIRED {path}" + (" (dry run)" if dry else ""))
+        done.append(path)
+    return done
 
 
 # ---- hosts ----------------------------------------------------------------------------------------------------------
@@ -512,20 +673,30 @@ def main(argv=None):
     pu = sp.add_parser("publish")
     pu.add_argument("tree")
     pu.add_argument("--pointer", default="")
+    pu.add_argument("--retire-refs", nargs="*", default=None, help="after a clean publish, retire superseded _dN siblings (refs = files naming live trees)")
     v = sp.add_parser("verify")
     v.add_argument("tree")
     v.add_argument("--expect", default="")
     v.add_argument("--ro", action="store_true")
     v.add_argument("--full", action="store_true")
+    cr = sp.add_parser("cached-receipt", help="reuse an exact completed verification plus current immutable metadata, no payload rehash")
+    cr.add_argument("tree")
+    cr.add_argument("--expect", default="")
     dm = sp.add_parser("delta-make", help="pack of the paths that differ between the tree's main sha and --sha (small)")
     dm.add_argument("tree")
     dm.add_argument("--repo", required=True)
     dm.add_argument("--sha", required=True)
     dm.add_argument("--out", required=True)
+    dm.add_argument("--drop-overlay", nargs="*", default=[], help="overlay paths whose copy is an OLDER main version: main wins")
     da = sp.add_parser("delta-apply", help="OUT = cp -a of TREE + the pack (run on each host, then publish)")
     da.add_argument("pack")
     da.add_argument("--old", required=True)
     da.add_argument("--out", required=True)
+    rt = sp.add_parser("retire", help="delete superseded <base>_dN siblings of TREE (older N), unless referenced or in use")
+    rt.add_argument("tree")
+    rt.add_argument("--refs", nargs="*", default=[], help="files that may name a tree (kit_wave.json, handoff markers): a named tree is kept")
+    rt.add_argument("--keep", type=int, default=0)
+    rt.add_argument("--dry", action="store_true")
     lk = sp.add_parser("links", help="stat-only: fail when any file of TREE has another hardlink (a published tree must be unshared)")
     lk.add_argument("tree")
     lk.add_argument("--find-in", nargs="*", default=[], help="dirs to search for the other names (slow)")
@@ -534,6 +705,7 @@ def main(argv=None):
     h.add_argument("--hosts", required=True)
     h.add_argument("--expect", default="")
     h.add_argument("--links-only", action="store_true", help="per host: stat-only shared-inode check instead of the full hash verify")
+    h.add_argument("--cached-receipts", action="store_true", help="per host: exact completed verification receipt, fail on cache miss")
     r = sp.add_parser("replicate")
     r.add_argument("tree")
     r.add_argument("--hosts", required=True)
@@ -548,6 +720,8 @@ def main(argv=None):
         print(f"SRC_MANIFEST BUILT {a.out} main {m['main_sha'][:12]} overlay {len(m['overlay'])} files {len(m['files'])} hash {m['manifest_hash']}")
     elif a.cmd == "publish":
         info = publish(a.tree, a.pointer)
+        if a.retire_refs is not None:
+            retire(a.tree, a.retire_refs)
         print(f"SRC_MANIFEST PUBLISHED {a.tree} read-only hash {info['manifest_hash']}" + (f" pointer {a.pointer}" if a.pointer else ""))
     elif a.cmd == "verify":
         errs, info = verify(a.tree, a.expect, a.ro, a.full)
@@ -555,12 +729,20 @@ def main(argv=None):
             report(errs)
             return 1
         print(f"SRC_MANIFEST OK {info['manifest_hash']} main {str(info.get('main_sha'))[:12]} files {info.get('files')}")
+    elif a.cmd == "cached-receipt":
+        errs, info = cached_receipt(a.tree, a.expect)
+        if errs:
+            report(errs)
+            return 1
+        print(json.dumps(info, sort_keys=True))
     elif a.cmd == "delta-make":
-        n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out)
+        n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out, a.drop_overlay)
         print(f"SRC_MANIFEST DELTA {a.out}: {n} changed/added, {dl} deleted")
     elif a.cmd == "delta-apply":
         nm = delta_apply(a.pack, os.path.abspath(a.old), a.out)
         print(f"SRC_MANIFEST DELTA-APPLIED {a.out} main {nm['main_sha'][:12]} hash {nm['manifest_hash']} (run publish next)")
+    elif a.cmd == "retire":
+        retire(os.path.abspath(a.tree), a.refs, a.keep, a.dry)
     elif a.cmd == "links":
         errs, n = links_report(os.path.abspath(a.tree), a.find_in)
         if errs:
@@ -570,6 +752,16 @@ def main(argv=None):
     elif a.cmd == "hosts":
         bad = 0
         for host in a.hosts.split(","):
+            if a.cached_receipts:
+                script = open(os.path.abspath(__file__)).read()
+                cmd = f"python3 -I -c {shlex.quote(script)} cached-receipt {shlex.quote(os.path.abspath(a.tree))}"
+                if a.expect:
+                    cmd += " --expect " + shlex.quote(a.expect)
+                p = subprocess.run(SSH + [host, cmd], capture_output=True, text=True)
+                txt = (p.stdout + p.stderr).strip()
+                print(f"{host}: " + (txt.splitlines()[-1] if p.returncode == 0 and txt else txt[:2000]))
+                bad |= bool(p.returncode)
+                continue
             if a.links_only:
                 script = open(os.path.abspath(__file__)).read()
                 p = subprocess.run(SSH + [host, f"python3 -I -c {shlex.quote(script)} links {shlex.quote(os.path.abspath(a.tree))}"],

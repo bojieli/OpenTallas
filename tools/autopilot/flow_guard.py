@@ -78,7 +78,7 @@ def norm_class(cls, why):
 
 
 _FAM_SUFFIX = re.compile(r"(?:__(?:cl|pv|t)[0-9a-z]*)+$")
-STAGE_ORDER = ("mkdir", "bind", "bind_fetch", "kit_rtl", "gen", "gen_lint", "kit_topology", "preflight", "prov_views", "lec_tools", "views", "cells",
+STAGE_ORDER = ("mkdir", "src_manifest", "kit_snap", "kit_store", "bind", "bind_fetch", "kit_rtl", "gen", "gen_lint", "kit_topology", "preflight", "prov_views", "lec_tools", "views", "cells",
                "relay_bay", "sync_hub", "pipeline", "selfcontained", "type_overlay", "unit", "place", "cts", "grt", "route", "sta", "signoff")
 
 
@@ -601,9 +601,10 @@ def held_key(st, die, item, claim=False):
     return ""
 
 
-def probe_result(st, die, item, stage, passed):
+def probe_result(st, die, item, stage, passed, failed_stage=False, required_stage=None, required_input=None):
     """the probe launch of a family finished.  passed (it got past the class's stage, or was enqueued): the family leaves the class, the class closes
     when no family is left.  failed: the class is shut again until the die's inputs change once more.  -> list of (key, what)
+    failed_stage=True judges each class separately against the actual failed stage; unknown stages never prove passage.
     PROBE-ONE-1116 (COORD 11-16): the class has ONE probe; when it passes the failing stage EVERY family of the class is released in the same
     tick (the class closes at once).  A family that fails again reopens the class by the normal breaker rule."""
     g = fg_state(st)
@@ -611,7 +612,13 @@ def probe_result(st, die, item, stage, passed):
     for key, e in list(g["open"].items()):
         if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or probe_item(e) != item:
             continue
-        if passed:
+        if required_stage is not None and e.get("stage") != required_stage:
+            continue
+        if required_input is not None and e.get("inp_probe") != required_input:
+            continue
+        stage_passed = (stage in STAGE_ORDER and e.get("stage") in STAGE_ORDER
+                        and stage_rank(stage) > stage_rank(e["stage"])) if failed_stage else passed
+        if stage_passed:
             fams = list(e.get("fams", []))
             out.append((key, f"probe {item} passed {e.get('stage') or 'the stage'}: family {family_of(item)} released"))
             close(st, key)
@@ -621,6 +628,26 @@ def probe_result(st, die, item, stage, passed):
             e["inp"] = e.get("inp_probe") or e.get("inp")
             out.append((key, f"probe {item} failed again at {stage}: class stays shut until the inputs change again"))
     return out
+
+
+def refresh_verified_source_probe(st, key, inp, evidence, active=False, now=None):
+    """An exact current source proof may refresh an obsolete inactive source probe.
+    The previous probe and failure entry stay in history. Active/unknown producers,
+    missing old identity, and every other stage retain their existing lifecycle.
+    """
+    g = fg_state(st)
+    e = g["open"].get(key) or {}
+    if e.get("kind") or e.get("stage") != "src_manifest" or e.get("state") != "probe" or not inp:
+        return False
+    if e.get("inp_probe") == inp:
+        return True
+    if active or not e.get("inp_probe"):
+        return False
+    g.setdefault("source_probe_history", []).append(dict(
+        key=key, previous=json.loads(json.dumps(e)), inp=inp, evidence=evidence,
+        at=time.time() if now is None else now))
+    e["inp_probe"], e["probe"] = inp, {}
+    return True
 
 
 def breaker_tick(st, now=None, inputs=None):

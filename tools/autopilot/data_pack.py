@@ -17,12 +17,93 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import src_manifest as SM  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "../die_plan"))
+import manifest_paths as MP  # noqa: E402
 
 TEXT = (".json", ".f", ".txt", ".tcl", ".tsv", ".sh", ".mk", ".sdc")
 
 
 def sha(p):
     return hashlib.sha256(open(p, "rb").read()).hexdigest()
+
+
+
+def rebase_asbuilt_map(data, src_file, old_tree, new_tree, rules, dst_file=None):
+    """Keep bind.py map_file manifest-relative semantics when packing an as-built file.
+
+    Historical S81 manifests use a tree-relative map_file even after moving the
+    manifest below plan_inputs/run. Resolve an existing manifest-relative path
+    first, then its base and old-tree roots; never invent an input or waive a gate.
+    """
+    if not isinstance(data, dict) or not data.get("top") or not data.get("map_file"):
+        return data
+    value = data["map_file"]
+    if not isinstance(value, str):
+        return data
+    if dst_file is None:
+        for source, target in rules:
+            if src_file == source or src_file.startswith(source + "/"):
+                dst_file = target + src_file[len(source):]
+                break
+    if dst_file is None:
+        raise ValueError(f"asbuilt manifest destination is not mapped: {src_file}")
+    dest_dir = os.path.dirname(dst_file)
+
+    def mapped(path, fallback=None):
+        path = os.path.normpath(path)
+        matched = False
+        for source, target in rules + [(old_tree.rstrip("/"), new_tree.rstrip("/"))]:
+            if path == source or path.startswith(source + "/"):
+                path = os.path.normpath(target + path[len(source):])
+                matched = True
+                break
+        if not matched and fallback is not None:
+            path = os.path.normpath(fallback)
+        if os.path.commonpath([path, new_tree]) != os.path.normpath(new_tree):
+            raise ValueError(f"asbuilt input has no in-tree mapping: {path}")
+        return path
+
+    parent = os.path.dirname(src_file)
+    base = data.get("base") or old_tree
+    if not os.path.isabs(base):
+        base = os.path.join(parent, base)
+    candidates = [value] if os.path.isabs(value) else [os.path.join(parent, value)]
+    if not os.path.isabs(value):
+        # The payload may contain only the manifest; an unchanged sibling map
+        # remains in the baseline tree. Resolve its manifest-relative location
+        # at the mapped destination, then look for that exact baseline input.
+        for source, target in rules:
+            if src_file == source or src_file.startswith(source + "/"):
+                packed_file = target + src_file[len(source):]
+                packed_map = os.path.normpath(os.path.join(os.path.dirname(packed_file), value))
+                if os.path.commonpath([packed_map, new_tree]) == os.path.normpath(new_tree):
+                    candidates.append(os.path.join(old_tree, os.path.relpath(packed_map, new_tree)))
+                break
+        candidates.extend([os.path.join(base, value), os.path.join(old_tree, value)])
+    resolved = next((os.path.normpath(q) for q in candidates if os.path.isfile(q)), None)
+    if resolved is None:
+        raise ValueError(f"asbuilt map_file does not exist: {src_file}: {value}")
+    # Input manifests must stay repository-relative even when the destination
+    # file has moved below plan_inputs/run (the binder owns this invariant).
+    original_base = data.get("base")
+    fallback_base = os.path.join(dest_dir, original_base) if isinstance(original_base, str) and not os.path.isabs(original_base) else None
+    mapped_base = mapped(base, fallback_base)
+    data["base"] = os.path.relpath(mapped_base, dest_dir)
+    data["map_file"] = os.path.relpath(mapped(resolved), dest_dir)
+    for key in MP.LIST_KEYS:
+        values = data.get(key)
+        if values is None:
+            continue
+        scalar = isinstance(values, str)
+        values = [values] if scalar else values
+        data[key] = [os.path.relpath(mapped(v if os.path.isabs(v) else os.path.join(base, v), None if os.path.isabs(v) else os.path.join(mapped_base, v)), mapped_base)
+                     if isinstance(v, str) else v for v in values]
+        if scalar:
+            data[key] = data[key][0]
+    if data.get("clock_landing_table"):
+        path = data["clock_landing_table"]
+        data["clock_landing_table"] = os.path.relpath(mapped(path if os.path.isabs(path) else os.path.join(base, path), None if os.path.isabs(path) else os.path.join(mapped_base, path)), mapped_base)
+    return data
 
 
 def make(old_tree, new_tree, out, maps, digest=None):
@@ -40,13 +121,28 @@ def make(old_tree, new_tree, out, maps, digest=None):
                 sp = os.path.join(dp, f)
                 if os.path.islink(sp) or not os.path.isfile(sp) or SM.skipped(os.path.join(rel, f)):
                     continue   # symlinks and cache/backup names (*.bak*, *.orig, __pycache__) are not tree content
-                r = os.path.join(rel, os.path.relpath(sp, src))
+                r = os.path.normpath(os.path.join(rel, os.path.relpath(sp, src)))   # RELDIR '.' must not leave './' in the manifest key
                 dp2 = os.path.join(stage, r)
                 os.makedirs(os.path.dirname(dp2), exist_ok=True)
                 if f.endswith(TEXT):
                     b = open(sp, "rb").read()
                     for s_, d_ in rules:
                         b = b.replace(s_.encode(), d_.encode())
+                    if f.endswith(".json"):
+                        try:
+                            original = json.loads(open(sp, "rb").read())
+                        except (ValueError, UnicodeError):
+                            original = None
+                        if isinstance(original, dict) and original.get("top") and original.get("map_file"):
+                            fixed = rebase_asbuilt_map(original, sp, old_tree, new_tree, rules, os.path.join(new_tree, r))
+                            packed = json.loads(b)
+                            for key in ("base", "map_file", "clock_landing_table") + MP.LIST_KEYS:
+                                if key in fixed:
+                                    packed[key] = fixed[key]
+                            errors = MP.check(packed, os.path.dirname(os.path.join(new_tree, r)), new_tree)
+                            if errors:
+                                raise ValueError("packed asbuilt violates repository-relative paths: " + "; ".join(errors))
+                            b = (json.dumps(packed, indent=1) + "\n").encode()
                     open(dp2, "wb").write(b)
                 else:
                     shutil.copyfile(sp, dp2)

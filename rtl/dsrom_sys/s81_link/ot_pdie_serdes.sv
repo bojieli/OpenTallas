@@ -24,7 +24,8 @@
 module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 0, parameter integer DMUT = 0,
     parameter integer DNGB = 4,     // u_dec.u_syn base-form PE groups (ot_s81_kp4_dsyn NGB0); 4 = unchanged
     parameter integer RMRPC = 1,    // u_rm read-pointer copies (ot_s81_rate_match RPC); 1 = unchanged
-    parameter integer DKREG = 0) (  // u_dec k_* seam register in front of u_chn (+1 pma_rck RX latency); 0 = unchanged
+    parameter integer DKREG = 0,    // u_dec k_* seam register in front of u_chn (+1 pma_rck RX latency); 0 = unchanged
+    parameter integer DOREG = 0) (  // u_dec chn -> out seam register (+1 pma_rck RX latency); 0 = unchanged
 
     input  wire          clk,
     input  wire          rst,
@@ -59,7 +60,7 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
     wire [543:0] r_d;
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_prx (.clk(pma_rck), .d_v(1'b1), .d(pma_rx), .q(r_d));
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
-    ot_s81_kp4_dec #(.MUT(DMUT), .NGB0(DNGB), .DKREG(DKREG)) u_dec (.clk(pma_rck), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .q_v(q_v), .q_d(q_d),
+    ot_s81_kp4_dec #(.MUT(DMUT), .NGB0(DNGB), .DKREG(DKREG), .DOREG(DOREG)) u_dec (.clk(pma_rck), .rst_n(rn_r), .p_v(rn_r), .p_d(r_d), .q_v(q_v), .q_d(q_d),
         .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .lock(lock), .n_corr(n_corr), .n_unc(n_unc),
         .n_relock(n_rl));
     reg unc_r; always @(posedge pma_rck or negedge rn_r) if (!rn_r) unc_r <= 1'b0; else if (q_v && q_first && q_unc) unc_r <= 1'b1;

@@ -317,13 +317,15 @@ def _snap_out(v, g, up):
     return round((math.ceil(k - 1e-6) if up else math.floor(k + 1e-6)) * g, 4)
 
 
-def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
+def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM, native_origins=False):
     """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
     rects = {n: P.rect(n) for n in P.parts}
     by_type, recs = defaultdict(set), []
     for site in sites:
         (x, y), src = site[0], site[1]
         c = site[2] if len(site) > 2 else cell      # per-site body size (opt-in), else the planned clock body
+        if native_origins:                       # physical tree sites are native lower-left origins
+            x, y = x + c[0] / 2, y + c[1] / 2
         hx = c[0] / 2 + snap + margin
         hy = c[1] + snap + margin          # the cell row may lie above or below the site's row line
         w = (x - hx, y - hy, x + hx, y + hy)
@@ -510,6 +512,62 @@ def snap_track_y(v, rails=(2.16, 0.24, 0.06)):
     return t
 
 
+def fixed_ft_rects(t):
+    """Union explicit fixed FT cell envelopes into contiguous column rectangles.
+
+    bit_sites_um are lower-left coordinates; bit_site_cell_um is the checked
+    allocation envelope. Coalescing touching vertical cells preserves their
+    exact occupied region and avoids millions of repeated spatial-index rows.
+    """
+    from ft_bit_sites import validate_slot
+    columns = defaultdict(list)
+    for slot in t.get("ft_slots", []) or []:
+        if "bit_sites_um" not in slot:
+            continue
+        validate_slot(slot)
+        width, height = slot["bit_site_cell_um"]
+        for stage in slot["bit_sites_um"]:
+            for x, y in stage:
+                columns[(x, width)].append((y, y + height))
+    rects = []
+    for (x, width), intervals in sorted(columns.items()):
+        lo, hi = None, None
+        for a, b in sorted(intervals):
+            if lo is None:
+                lo, hi = a, b
+            elif a <= hi + 1e-8:
+                hi = max(hi, b)
+            else:
+                rects.append((x, lo, x + width, hi))
+                lo, hi = a, b
+        if lo is not None:
+            rects.append((x, lo, x + width, hi))
+    return rects
+
+
+FT_CELL_KEEPOUT_UM = 0.54     # 2 rows: clock.reserved_sites_um rects carry a 0.25-um margin round the clock cell body
+
+
+def planned_point_rects(t, halo):
+    """Type-frame rects no die clock cell may sit in (--clock-point-keepouts UM, FABLE-PD-KV-HG1 B-2): the type build turns
+    every die clock cell site into a placement blockage, so a cell on a planned register point moves that register.
+    -> fixed FT bit cells grown by FT_CELL_KEEPOUT_UM, and a +-halo box round every count-aligned START reader / writer
+    stage and every ft / internal station centre that is not on the type face."""
+    w, h = t["outline_um"]
+    g = FT_CELL_KEEPOUT_UM
+    rects = [(x0 - g, y0 - g, x1 + g, y1 + g) for x0, y0, x1, y1 in fixed_ft_rects(t)]
+    pts = []
+    for s in list(t.get("ft_slots", []) or []) + list(t.get("internal_stations", []) or []):
+        pts += [q for q in s.get("regs_um") or [] if 1e-6 < q[0] < w - 1e-6 and 1e-6 < q[1] < h - 1e-6]
+    ck = t.get("clock") or {}
+    for key in ("landing_reader_start", "landing_writer_start"):
+        for br in ((ck.get(key) or {}).get("branches") or {}).values():
+            pts += [sg["xy_um"] for sg in br.get("stages") or [] if isinstance(sg.get("xy_um"), (list, tuple))]
+    for x, y in sorted(set((round(q[0], 3), round(q[1], 3)) for q in pts)):
+        rects.append((x - halo, y - halo, x + halo, y + halo))
+    return rects
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -532,13 +590,50 @@ class SiteMap:
         # outlines. Keep those sites legal; core and PHY exclusions below still
         # apply, including wherever a channel rectangle crosses either one.
         self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
-                          if ch.get("rect_um"))
+                          if ch.get("rect_um") and ch.get("clock_channel") is not False)
+        # A reserved gap (seal ring / ESD) is not a clock placement island.
+        # The existing explicit flag also excludes native bodies that cross it.
+        for ch in P.die.get("channels", []) or []:
+            if ch.get("clock_channel") is False and ch.get("rect_um"):
+                self.forb.append((*ch["rect_um"], "reserved_channel"))
         if CLOCK_TYPE_KEEPOUTS:                 # DIE-QC-47 opt-in: a type's clock.keepouts_um (e.g. a bare PHY body)
             for n, p in P.parts.items():        # is no die clock-cell site either (same halo as a hard core)
                 for x0, y0, x1, y1 in (P.types[p["type"]].get("clock", {}) or {}).get("keepouts_um", []) or []:
                     a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                     self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
                                       max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "keepout"))
+        if CLOCK_TYPE_KEEPOUTS:                 # FABLE-DIE-S81: landing band rects of every
+            bh = 0.54                           # type are no die clock-cell site (ring-ff fills them); 2-row halo
+            for n, p in P.parts.items():
+                lc = ((P.types[p["type"]].get("clock", {}) or {}).get("landing_contract") or {})
+                for bd in (lc.get("bands") or {}).values():
+                    rs = [bd["rect_um"]] if bd.get("rect_um") else []
+                    for k in ("rects_um", "band_fixed_um", "multi_rect_um"):
+                        v = bd.get(k)
+                        rs += [r for r in (v.values() if isinstance(v, dict) else v or []) if isinstance(r, list) and len(r) == 4]
+                    for x0, y0, x1, y1 in rs:
+                        a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                        self.forb.append((min(a[0], b[0]) - bh, min(a[1], b[1]) - bh,
+                                          max(a[0], b[0]) + bh, max(a[1], b[1]) + bh, "band"))
+        if CLOCK_TYPE_KEEPOUTS:
+            fixed = {}
+            for n, p in P.parts.items():
+                tn = p["type"]
+                if tn not in fixed:
+                    fixed[tn] = fixed_ft_rects(P.types[tn])
+                for x0, y0, x1, y1 in fixed[tn]:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]), min(a[1], b[1]),
+                                      max(a[0], b[0]), max(a[1], b[1]), "ft_fixed"))
+        if CLOCK_POINT_KEEPOUT_UM:              # FABLE-DIE-KV opt-in: planned register points are no die clock-cell site
+            ph, fixed = float(CLOCK_POINT_KEEPOUT_UM), {}
+            for n, p in P.parts.items():
+                tn = p["type"]
+                if tn not in fixed:
+                    fixed[tn] = planned_point_rects(P.types[tn], ph)
+                for x0, y0, x1, y1 in fixed[tn]:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]), "plan_point"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
@@ -646,6 +741,10 @@ SEAM_PROBE_UM = 2.7
 #   rectangle (+ the hard-core halo) for die clock cells. QC bare PHY slots carry no hard_cores, so without this the die
 #   tree placed 89 cells inside native SerDes/UCIe bodies (Codex reach_safe phy_window_census). Default off: byte-identical.
 CLOCK_TYPE_KEEPOUTS = False
+# CLOCK_POINT_KEEPOUT_UM (--clock-point-keepouts UM, FABLE-DIE-KV): SiteMap also forbids planned_point_rects of every type
+#   (fixed FT bit cells, START reader / writer stages, station centres). KV HG1: 223 planned points and 2,958 FT bit cells lay
+#   in die clock cell sites. Default None: byte-identical.
+CLOCK_POINT_KEEPOUT_UM = None
 CHAIN_HOP_MAX_UM = None
 DETOUR_ADAPTIVE = False
 DETOUR_STATS = []
@@ -829,6 +928,18 @@ def _wall_components(site):
     cc = getattr(site, "_wall_cc", None)
     if cc is None:
         rects = list(site.forb)
+        # Fixed FT envelopes can contribute hundreds of thousands of small
+        # rectangles. Discover the same touching/overlapping edges locally,
+        # rather than scanning every pending rectangle for each wall member.
+        bucket = getattr(site, "b", 250.0) / 4.0
+        spatial = defaultdict(list)
+        def buckets(r):
+            for x in range(math.floor(r[0] / bucket), math.floor(r[2] / bucket) + 1):
+                for y in range(math.floor(r[1] / bucket), math.floor(r[3] / bucket) + 1):
+                    yield x, y
+        for i, r in enumerate(rects):
+            for key in buckets(r):
+                spatial[key].append(i)
         pending = set(range(len(rects)))
         cc = []
         while pending:
@@ -836,8 +947,9 @@ def _wall_components(site):
             ids, todo = [first], [first]
             while todo:
                 u = rects[todo.pop()]
-                hit = [i for i in pending if u[0] <= rects[i][2] and rects[i][0] <= u[2] and u[1] <= rects[i][3]
-                       and rects[i][1] <= u[3]]
+                nearby = {i for key in buckets(u) for i in spatial[key]} & pending
+                hit = [i for i in sorted(nearby) if u[0] <= rects[i][2] and rects[i][0] <= u[2] and
+                       u[1] <= rects[i][3] and rects[i][1] <= u[3]]
                 for i in hit:
                     pending.remove(i)
                     ids.append(i)
@@ -856,7 +968,8 @@ def _detour_wall(site, a, b, step, margin, turn_um):
     if not blockers:
         return None
     rects, cc = _wall_components(site)
-    seed = {i for i, r in enumerate(rects) if r in blockers}
+    blocker_set = {tuple(r) for r in blockers}
+    seed = {i for i, r in enumerate(rects) if tuple(r) in blocker_set}
     blockers = [box for ids, box in cc if ids & seed]
     escape = []
     for r in blockers:      # a wall crossing the direct box is bypassed above/below or left/right: nearest outward face
@@ -1030,6 +1143,10 @@ def straight_leg_span(site, p, nd, nrep):
 # Every changed leg records nd['reach_fix'] (before/after spans, repeaters, wire) and meta.reach_fix the totals, so the
 # added stages/wire are visible to the planner, CA regeneration and the die STA (which measures the routed result).
 REP_REACH_MAX_UM = None
+# --rep-reach-report FILE (FABLE-DIE-S81 11-16, with --rep-reach-max): a leg with no legal placement within reach is
+# appended to FILE as one JSON line (node, a, b, span_um, span, error) and keeps its default chain, so one kit run lists
+# EVERY such leg instead of stopping at the first.  Default None = fail closed, as before.
+REP_REACH_REPORT = None
 
 
 def chain_spans(chain):
@@ -1081,11 +1198,18 @@ def reach_place(site, poly, reach, nmin=0, even=False, step=0.54):
     best = list(best)
     while len(best) < need:             # split the largest span at the legal point nearest its middle
         ch = [0.0] + best + [L]
-        k = max(range(len(ch) - 1), key=lambda i: ch[i + 1] - ch[i])
-        m = (ch[k] + ch[k + 1]) / 2
-        inside = [t for t in ok if ch[k] + 1e-9 < t < ch[k + 1] - 1e-9]
-        if not inside:
+        # The longest span may be an unavoidable macro overflight with no
+        # legal interior site. Add parity/minimum-count stages to the largest
+        # splittable span instead of rejecting a physically legal chain.
+        split = []
+        for k in range(len(ch) - 1):
+            inside = ok[bisect.bisect_right(ok, ch[k] + 1e-9):bisect.bisect_left(ok, ch[k + 1] - 1e-9)]
+            if inside:
+                split.append((ch[k + 1] - ch[k], k, inside))
+        if not split:
             return None
+        _, k, inside = max(split, key=lambda item: (item[0], -item[1]))
+        m = (ch[k] + ch[k + 1]) / 2
         best = sorted(best + [min(inside, key=lambda t: abs(t - m))])
     q = [(round(pts[t][0], 3), round(pts[t][1], 3)) for t in best]
     if max(chain_spans([poly[0]] + q + [poly[-1]])) > reach + 1e-6:
@@ -1175,10 +1299,16 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
     own = [poly] if poly is not None else (
         [[a, b]] if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6 else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]])
     tried = []
-    for kind, cands in (("on_path", own), ("reach_detour", None)):
+    searches = [("on_path", own), ("reach_detour", None)]
+    if DETOUR_ADAPTIVE:
+        # The jump-grid search may miss a legal path, and its fixed local box
+        # cannot escape a wide PHY wall. Reuse the existing site-legal wall
+        # detour, then require the same reach/parity placement proof below.
+        searches.append(("site_detour", None))
+    for kind, cands in searches:
         if cands is None:
-            d = reach_detour(site, a, b, reach)
-            cands = [d] if d is not None else []
+            route = legal_detour(site, a, b) if kind == "site_detour" else reach_detour(site, a, b, reach)
+            cands = [route] if route is not None else []
         res = []
         for q in cands:
             Lq = polyline_points(q, [])[1]
@@ -1189,10 +1319,14 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
         if res:
             nrep, Lq, r, q = min(res, key=lambda t: (t[1], t[0]))
             after = max(chain_spans([a] + r + [b]))
-            return r, q, dict(kind=kind, span_before_um=round(before, 3), span_after_um=round(after, 3),
-                              nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
-                              wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
-                              added_stages=nrep - (len(chain) - 2))
+            info = dict(kind="reach_detour" if kind == "site_detour" else kind,
+                        span_before_um=round(before, 3), span_after_um=round(after, 3),
+                        nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
+                        wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
+                        added_stages=nrep - (len(chain) - 2))
+            if kind == "site_detour":
+                info["route_source"] = "site_legal_adaptive"
+            return r, q, info
     raise ValueError(f"--rep-reach-max {reach:g}: leg to node {nd.get('id')} ({a} -> {b}, span {before:.2f} um) has no "
                      f"legal repeater placement within reach on its path or a reach detour ({tried})")
 
@@ -2378,11 +2512,16 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                 if not all(0 <= x <= site.W and 0 <= y <= site.H for x, y in raw):
                     continue
                 pts, snap = [pa], 0.0
-                for x in raw[1:-1]:
-                    y = x if site.legal(x) else site.nearest(x)
-                    y = round_legal(site, y)
-                    snap += _man(x, y)
-                    pts.append(y)
+                try:
+                    for x in raw[1:-1]:
+                        y = x if site.legal(x) else site.nearest(x)
+                        y = round_legal(site, y)
+                        snap += _man(x, y)
+                        pts.append(y)
+                except ValueError:
+                    # An optional snake may enter a continuous legal sliver with no native row site.
+                    # Reject this candidate just as physical_leg below rejects an unplaceable chain.
+                    continue
                 pts.append(q)
                 if EVEN_LEGS and (len(pts) - 1) % 2 != _LEG_PAR:
                     continue            # inv2: odd stage count would flip polarity (EDGE_ALT: the leg's parity)
@@ -3440,8 +3579,20 @@ def _leg_layout0(i, nd, p, site, rep_um, even):
             dry.append((x, y))
         chain = [(p["x"], p["y"])] + dry + [(nd["x"], nd["y"])]
         if max(chain_spans(chain)) > REP_REACH_MAX_UM + 1e-6:
-            fix_pts, fix_poly, info = reach_fix_leg(site, p, dict(nd, id=i), poly, chain, REP_REACH_MAX_UM,
-                                                    rep_um, even)
+            try:
+                fix_pts, fix_poly, info = reach_fix_leg(site, p, dict(nd, id=i), poly, chain, REP_REACH_MAX_UM,
+                                                        rep_um, even)
+            except ValueError as exc:
+                if not REP_REACH_REPORT:        # default: fail closed at the first leg
+                    raise
+                sp = chain_spans(chain)         # --rep-reach-report: list every such leg, keep its default chain
+                k = max(range(len(sp)), key=sp.__getitem__)
+                row = dict(node=i, a=[p["x"], p["y"]], b=[nd["x"], nd["y"]], span_um=round(sp[k], 2),
+                           span=[list(chain[k]), list(chain[k + 1])], error=str(exc))
+                nd["reach_unfixed"] = row
+                with open(REP_REACH_REPORT, "a") as fh:
+                    fh.write(json.dumps(row) + "\n")
+                return L, nrep, poly, pts, None, chain
             nrep = len(fix_pts)
             nd["reach_fix"] = {**(nd.get("reach_fix") or {}), **info}   # keeps the reach_balance price
             if info["kind"] == "reach_detour":
@@ -6125,6 +6276,9 @@ def main(argv=None):
     k.add_argument("--rep-reach-no-balance", action="store_true",
                    help="with --rep-reach-max: do NOT pad the other branches for the added reach-fix delay "
                         "(geometry diagnosis only; the default balances so relative arrivals stay as built)")
+    k.add_argument("--rep-reach-report", default=None, metavar="FILE",
+                   help="with --rep-reach-max: do not stop at the first leg without a legal placement within reach; "
+                        "append each one to FILE (JSON lines) and keep its default chain. Default off = fail closed")
     k.add_argument("--rep-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in: reject actual cell-to-cell and final-tap Manhattan hops over UM after legal snapping; "
                         "write actual_reach.json, default off; re-run clock_reach.py after any later clock overlay")
@@ -6259,6 +6413,10 @@ def main(argv=None):
     k.add_argument("--clock-type-keepouts", action="store_true",
                    help="DIE-QC-47 opt-in: die clock cell sites also avoid every partition type clock.keepouts_um "
                         "rectangle (+2.16 um halo), e.g. bare PHY bodies. Default off (byte-identical)")
+    k.add_argument("--clock-point-keepouts", type=float, default=None, metavar="UM",
+                   help="FABLE-DIE-KV opt-in: die clock cell sites also avoid every planned register point of the types "
+                        "(fixed FT bit cells + 0.54 um, START reader / writer stages and station centres +- UM, e.g. 3). "
+                        "Default off (byte-identical)")
     k.add_argument("--chain-hop-max", type=float, default=None, metavar="UM",
                    help="CLK-TOOL-7 opt-in: the DME chain model rejects (prices as infinite) any candidate chain with a "
                         "repeater hop > UM (HBM street_body: 450). Default: no limit")
@@ -6424,12 +6582,15 @@ def main(argv=None):
     REP_ON_LEG = bool(getattr(a, "rep_on_leg", False))
     REP_OFF_LEG_MAX_UM = getattr(a, "rep_off_leg_max", None)
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
+    global REP_REACH_REPORT
+    REP_REACH_REPORT = getattr(a, "rep_reach_report", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
-    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS, CLOCK_POINT_KEEPOUT_UM
     DETOUR_SEAM_PASS = bool(getattr(a, "detour_seam_pass", False))
     CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
     CLOCK_TYPE_KEEPOUTS = bool(getattr(a, "clock_type_keepouts", False))
+    CLOCK_POINT_KEEPOUT_UM = getattr(a, "clock_point_keepouts", None)
     CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
     if CHAIN_HOP_MAX_UM is not None and not (math.isfinite(CHAIN_HOP_MAX_UM) and CHAIN_HOP_MAX_UM > 0):
         raise SystemExit("--chain-hop-max must be finite and positive")

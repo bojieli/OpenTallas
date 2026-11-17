@@ -451,6 +451,10 @@ def apply_su_transport(ages):
 
 
 def check_memory_profile(ages, path, expected=None):
+    measured_slice = ages.get('slice_rtl')
+    if measured_slice is not None and measured_slice != SLICE_RTL:
+        raise LowerError(f'{path}: measured slice_rtl {measured_slice!r} does not match RTL {SLICE_RTL!r}; '
+                         'select DV2_S8DIE=1 for native S8 profiles')
     expected = memory_profile() if expected is None else expected
     expected = {k: v for k, v in expected.items() if k != 'su_parent_transport'}
     measured = ages.get('memory_profile')
@@ -462,7 +466,9 @@ def check_memory_profile(ages, path, expected=None):
                          'calibrate this exact memory profile before compiling')
 
 
-def load_ages(path=AGES):
+def load_ages(path=None):
+    """Explicit path wins; DV_SU_AGES selects a measured profile; legacy default remains unchanged."""
+    path = os.environ.get('DV_SU_AGES', AGES) if path is None else path
     p = ROOT / path
     if not p.exists():
         raise LowerError(f'{path} missing: measure it (rtl/test/qwen_dv/dv_lower_bench.py --calibrate)')

@@ -34,6 +34,8 @@ ENTRY_OPT = {'min_early_ps'}
 EARLY_FILE = 'rck_early.txt'
 TAP_ENTRY_CLEAR_UM = 2.16      # a trunk / driver point is a std cell: >= 8 rows off every hard core (not the 8.64 tap-pin halo)
 TAP_ENTRY_KEYS = {'name', 'tap', 'take_taps', 'xy_um', 'stations_um', 'cell', 'region_um', 'evidence'}
+PHY_EXPORT_SOURCE_SDC = 'if {[file exists /work/phy_clock_export_source.tcl]} {source /work/phy_clock_export_source.tcl}'
+
 CDC_VALUES = ('synchronized',)
 CDC_RULE = ('COORD 10-31 ruling (3): synchronized plesiochronous pad clock -> asynchronous crossing, '
             'max delay one pad period (latency ignored), no hold check')
@@ -416,7 +418,10 @@ def sdc(P, tn, text):
                 value = gen_phys.t_lib(row[kind + '_ps'])
                 text += (f'set_output_delay -{kind} {value:.4f} -clock {clock} '
                          f'[get_ports {{{row["port"]}[*]}}]\n')
-    return text + cdc_sdc(ps, text, gen_phys.t_lib)
+    text += cdc_sdc(ps, text, gen_phys.t_lib)
+    if any(p['name'] == 'pma_tck' and p['source_clock_port'] == 'clk' for p in exports):
+        text += PHY_EXPORT_SOURCE_SDC + '\n'
+    return text
 
 
 def sdc_clock_names(text):
@@ -524,3 +529,18 @@ def write_contract(P, tn, kit):
         path.write_text(json.dumps(dict(schema='opentallas.pad_clock.v1', pins=ps), indent=1) + '\n')
     else:
         path.unlink(missing_ok=True)
+    owned = [Path(kit) / 'phy_clock_export.tcl', Path(kit) / 'phy_clock_export_source.tcl']
+    export = next((p for p in ps if p['name'] == 'pma_tck' and p['dir'] == 'out'
+                   and p['source_clock_port'] == 'clk'), None)
+    if export is None:
+        for f in owned:
+            f.unlink(missing_ok=True)
+    else:
+        import shutil
+        import gen_phys
+        shutil.copyfile(Path(__file__).with_name('phy_clock_export.tcl'), owned[0])
+        owned[1].write_text(
+            '# Generator-owned typed pma_tck export; no IO, uncertainty or CDC policy changes.\n'
+            'source [file join [file dirname [info script]] phy_clock_export.tcl]\n'
+            'ot_phy_export_rebind [dict create target {pma_tck[0]} clock pma_tck master clk '
+            f'declared_source clk period {gen_phys.t_lib(export["period_ps"]):.4f} period_ps {export["period_ps"]}]\n')

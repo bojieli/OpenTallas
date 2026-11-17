@@ -126,6 +126,11 @@ def test_rebase_source_renames_tokens_and_refuses_unknown():
 
 
 def _kit_rtl_main(monkeypatch, tmp_path, **kw):
+    import json
+    bm = 's81p_svc_hi_dsdv_svc_rs__t1_bound'
+    (tmp_path / 'kit_rtl.json').write_text(json.dumps(dict(bound_module=bm, files=[])))
+    (tmp_path / (bm + '.sv')).write_text('module ' + bm + ';\n' +
+        '\n'.join('    %s u%d();' % (name, i) for i, name in enumerate(c.NATIVE)) + '\nendmodule\n')
     called = []
     monkeypatch.setattr(c, 'apply_kit', lambda *a, **k: called.append('apply_kit') or dict(status='APPLIED'))
     for k, v in kw.items(): monkeypatch.setattr(c, k, v)
@@ -162,3 +167,20 @@ def test_kit_rtl_missing_input_fails_and_names_it_without_fallback(monkeypatch, 
         c.main()
     assert str(e.value).startswith('closure inputs missing: ') and want in str(e.value)
     assert called == []
+
+def test_kit_rtl_no_helpers_needs_no_reference_assets(monkeypatch, tmp_path, capsys):
+    import json
+    bm = 's81p_svc_hi_dsdv_svc_rs__t1_bound'
+    (tmp_path / 'kit_rtl.json').write_text(json.dumps(dict(bound_module=bm, files=[])))
+    bound = tmp_path / (bm + '.sv')
+    text = 'module ' + bm + '; endmodule\n'
+    bound.write_text(text)
+    before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+    def forbidden(*a, **k): raise AssertionError('no-op tried to load transform/reference assets')
+    monkeypatch.setattr(c, 'closure_inputs', forbidden)
+    monkeypatch.setattr(c, 'ref_text', forbidden)
+    monkeypatch.setattr(c, 'cur_ref', forbidden)
+    monkeypatch.setattr(c.sys, 'argv', ['closure', '--kit-rtl', str(tmp_path)])
+    c.main()
+    assert 'NOT_APPLICABLE' in capsys.readouterr().out
+    assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == before

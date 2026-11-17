@@ -35,6 +35,136 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+
+
+
+def qwen_qc_tail1_parameter_view_model():
+    """Actual J's 24 unsigned tail1 obligations; no new delay versus published J."""
+    variants = [(17, 9, 10, 4), (16, 9, 10, 4),
+                (15, 9, 10, 4), (16, 9, 11, 12)]
+    rows = []
+    for hi, north, south, replicas in variants:
+        pad_bits = 74 * hi  # 64 data + 4 error + 6 valid bits
+        logical_delta = pad_bits + 2 * (north + south - 28)
+        rows.append(dict(hi_pad=hi, skew_n=north, skew_s=south,
+            physical_replicas=replicas, hi_delay_bits=pad_bits,
+            logical_delay_state_delta_vs_generic=logical_delta,
+            positive_flop_pair_area_upper_um2=pad_bits*0.33534,
+            source_parameters_already_priced_by_J=True,
+            added_edges_vs_published_J=0))
+    return dict(schema="opentallas.qc.tail1-parameter-view.v1",
+        candidate=True, default_plan_enable=False,
+        original_master="qfd_dv_s8_station_tail1",
+        reason="generic HI_PAD0/SKEW14 signed view cannot qualify J's selected parameters",
+        variants=rows, replicas_total=24, region_lanes=2,
+        added_arithmetic_units=0, result_bits_per_cycle=64,
+        memory_macro="ot_sram_1r1w_32x64_m1", macros_per_core=5,
+        macro_capacity_bits_per_core=10240,
+        physical_memory_read_write_bytes_per_cycle_upper=80,
+        outline_um=[162,162], outline_delta_um2=0,
+        macro_body_area_um2=5*31.968*17.280,
+        baseline_measured_body_area_um2=8221,
+        body_area_upper_um2=8221+74*17*0.33534,
+        body_fill_upper=(8221+74*17*0.33534)/(162*162),
+        boundary_bits_per_cycle=558, boundary_bits_delta=0,
+        added_external_tracks=0, added_mux_demux=0,
+        internal_hi_pipeline_width=74, added_hi_clock_sinks_upper=74*17,
+        base_fault_input_capture_edges=1, added_wrapper_edges=0,
+        wrapper_fault_note="use current base landed fault-reader capture; do not copy legacy extra fault register into parameter wrapper",
+        boot_policy="existing two input reset stages and timed local reset tree retained; no release rule change",
+        latency_price="absolute HI_PAD/SKEW parameters above; zero new cycles versus actual J RTL/plan",
+        qualification="four exact views unqualified; measured native macro/mapped timing, ordinary TT/FF/DRC/LEC required")
+
+
+def qwen_qc_w5_landed_count_candidate_model():
+    """Keep the C diagnostic; actual N43 region/table mapping selects no update."""
+    ports = ("rx_flit", "rx_v", "tx_up")
+    return dict(schema="opentallas.qc.w5-landed-count-candidate.v2",
+        planner_source="dec8cc442acfcee01c5f3f85fd363db15188ef9e",
+        source_partition="io_serdes_2", destination_partition="c_W5_bf_01",
+        actual_common_physical_region="c_W5_bf_01",
+        diagnostic_changes=[dict(port=p, old_k=3, new_k=4,
+            old_scheduled_edges=2, new_scheduled_edges=3,
+            diagnostic_added_edges=1, diagnostic_added_ps=833,
+            present_in_selected_n43_ca=False) for p in ports],
+        diagnostic_c_crossings=2993, actual_n43_ca_crossings=2525,
+        compared_changed_rows=468, actual_same_region_rows=468,
+        actual_native_ca_overlap=0, selected_changes=[],
+        selected_programme_delta_edges=0, selected_programme_delta_ps=0,
+        register_depth_delta=0, region_delta=0, start_edge_delta=0,
+        geometry_delta_um2=0, external_tracks_delta=0,
+        applicability_evidence="delta/ca_pair_diag_1116/planner_fixed/n43_applicability_receipt.json",
+        applicability_rule="exact physical-region mapping and native CA table overlap; never infer applicability from graph-node counts",
+        qualification="C diagnostic fixed; actual N43 counter and programme delta empty; normalized source bind still pending")
+
+
+
+def qwen_qc_segmented_memory_candidate_model(replicas=96, external_edges=43):
+    """Bound S4Q9L census; candidate only, no closure or schedule credit."""
+    if type(replicas) is not int or replicas < 1 or not 20 <= external_edges <= 49:
+        raise ValueError("positive physical replicas and measured supported transport required")
+    outer_ml = 5 + 3 + 1 + external_edges  # native MIF1 plus actual parent loop, once
+    s1, s2 = outer_ml + 6, outer_ml + 8
+    def segments(d):
+        n = math.ceil(d / 32)
+        return [d // n + (i < d % n) for i in range(n)]
+    a, b = segments(s1), segments(s2)
+    macros = len(b) * math.ceil(133 / 64)
+    macro_area = 31.968 * 17.280
+    # SRAM used_q flops are 133/segment; 3 independent 5-bit write pointers.
+    state = 8*s1 + 133*len(b) + 15*len(b)
+    legacy_s2 = 133*(s2-16) + 133*15 + 133
+    return dict(schema="opentallas.qc.segmented-memory-candidate.v1",
+        candidate=True, default_enabled=False, physical_replicas=replicas,
+        source_census="QC-PINACCESS-O-SU-transport-census.json",
+        required_field_alignment="all VM/CROM/WROM loops normalized to43; WROM bit0 skew corrected",
+        native_alignment=3, native_mif_extra=1, external_transport_edges=external_edges,
+        outer_ml=outer_ml, s1_width=8, s1_depth=s1, s1_ring_segments=a,
+        s2_width=133, s2_depth=s2, s2_sram_segments=b,
+        sram_macro="ot_sram_1r1w_32x64_m1", sram_macros_per_head=macros,
+        sram_capacity_bits_per_head=macros*2048,
+        live_metadata_bits_per_head=8*s1+133*s2,
+        flop_state_upper_per_head=state+32, legacy_s2_flops_per_head=legacy_s2,
+        macro_body_area_um2_per_head=macros*macro_area,
+        macro_body_area_um2_total=replicas*macros*macro_area,
+        slot_um=[151.2,185.76], baseline_slot_um=[151.2,129.6],
+        outline_area_delta_um2_per_head=151.2*(185.76-129.6),
+        outline_area_delta_um2_per_four_head_parent=4*151.2*(185.76-129.6),
+        parent_slot_um=[622.08,1399.68], parent_outline_delta_um2=0,
+        packing="two columns, four rows; on-track origins; >=20um core edge and inter-macro channels; actual route pending",
+        macro_body_fraction_of_slot=macros*macro_area/(151.2*185.76),
+        retained_tls_macros_per_head=2, retained_tls_macro="ot_sram_1r1w2c_128x64_m1",
+        full_head_macro_count=macros+2, full_head_macro_body_area_um2=macros*macro_area+2*33.720*27.576,
+        slot_fit="body area fits; packing, pin access, PG, channels and TT/FF remain unqualified",
+        memory_ports_per_macro=dict(read=1,write=1), memory_bytes_per_cycle_per_head=2*macros*8,
+        boundary_bits_per_cycle_delta=0, added_macs_per_cycle=0,
+        routing_note="local sequential segment boundaries; no new die crossing; pin-channel capacity requires actual floorplan",
+        max_ring_select_fanout=16, max_ring_pointer_slots=31,
+        sram_pointer_loads_per_segment=3*10,
+        throughput_items_per_cycle=1, added_compute_edges=0,
+        boot_warmup_edges=s2, token_latency_note="parent43 is charged once; compiler must use fresh actual profile, no rate credit",
+        qualification="native one-head E0/W0 COPY exact128/128 each; full-shape physical gate pending",
+        component_proof_commit="6b9d2833f9ebb135a8bc1fd55654f84da2014f6b")
+
+
+def qwen_xhead_sticky_fault_split_model(replicas=1):
+    """Candidate: distribute the existing sticky fault state; no pipeline edge."""
+    if type(replicas) is not int or replicas < 1:
+        raise ValueError('positive actual xhead replica count required')
+    return dict(schema='opentallas.qwen-xhead-sticky-fault-split.v1',
+        opt_in_default=False, qualification='pending full-shape TT/FF route',
+        replicas=replicas, macs_per_cycle=0, memory_bytes_per_cycle=0,
+        added_boundary_bits_per_cycle=0, added_tracks=0,
+        original_sticky_bits=1, candidate_sticky_bits=9,
+        added_flops=8*replicas, candidate_event_fanout=1,
+        largest_new_sticky_group_bits=5, output_reduce_bits=9,
+        output_register='existing fault_r', added_latency_edges=0,
+        token_latency_delta_edges=0, throughput_ratio=1.0,
+        outline_delta_um2=0, area_fit='8 control flops per xhead; verify placement',
+        new_macros=0, added_mux_demux=0,
+        cause='P2 GRT TT -132.61ps: go_bad_bits to shared sticky flt reduction')
+
+
 def qwen_tile_node_native_boundary_model():
     """Output pad correction on the existing 16-lane FP32 node; no schedule credit."""
     return dict(schema="opentallas.qwen-tile-node-native-boundary.v1",

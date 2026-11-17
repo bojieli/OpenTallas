@@ -44,7 +44,7 @@ def _code(s):
     return re.sub(r'\s+','',re.sub(r'//[^\n]*','',s))
 
 
-def register_masters(binder,source,grouped):
+def register_masters(binder,source,grouped,segmented_memory_delay=0):
     """A group may bind a member to a successor master that the as-built leaves do not use (QC-MEM9: the lane head
     qfd_dv_lane_h_safe2 -> qfd_dv_lane_h_su_mem9, rtl/physical).  Its source is part of the bound design: record it in
     binder.extra_lib (bind_report extra_lib -> bind_verify's yosys interface set and lint closure); before this it was
@@ -53,12 +53,48 @@ def register_masters(binder,source,grouped):
     from pathlib import Path
     old={m['module'] for m in C.LEAF.finditer(source)}
     now=set(re.findall(r'^    (\w+)(?: #\([^\n]*?\))? u_u_(?:exp|rsq|head|rcp|lrly)\d+ \(',grouped,re.M))
-    for m in sorted(now-old):
-        f=Path(binder.base)/'rtl/physical'/(m+'.sv')
+    if type(segmented_memory_delay) is not int or segmented_memory_delay not in (0,1):
+        raise BoundGroupError('segmented memory dependency requires explicit 0 or 1')
+    required=[Path(binder.base)/'rtl/physical'/(m+'.sv') for m in sorted(now-old)]
+    if segmented_memory_delay:
+        heads=re.findall(r'^    qfd_dv_lane_h_su_mem9 #\(([^\n]*)\) u_u_head\d+ \(',grouped,re.M)
+        if len(heads)!=1 or '.SEGMENTED_MEMORY_DELAY(1)' not in heads[0]:
+            raise BoundGroupError('segmented memory dependency has no exact enabled mem9 head')
+        # The opt-in long S2 delay has precisely this additional native leaf.
+        # Do not load unrelated memory interfaces or traverse a library tree.
+        required.append(Path(binder.base)/'physical/asap7_memory_macros_v2'/
+                        'ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v')
+    for f in required:
         if not f.is_file():
-            raise BoundGroupError(f'group member master {m} has no source {f}')
+            raise BoundGroupError(f'group member dependency has no source {f}')
+    for f in required:
         if str(f) not in binder.extra_lib:
             binder.extra_lib.append(str(f))
+
+
+def input_abi_contract(base, tn, module, spec):
+    """Load one explicitly selected prior partition's immutable input aliases."""
+    from pathlib import Path
+    if spec is None:
+        return None
+    def path(name):
+        p=Path(name)
+        return p if p.is_absolute() else Path(base)/p
+    reference=path(spec['reference_rtl']).read_text()
+    artifact=json.loads(path(spec['aliases_file']).read_text())
+    if artifact.get('schema')!='opentallas.qc.explicit_group_input_aliases.v1':
+        raise BoundGroupError('unsupported explicit input ABI alias schema')
+    source_type=spec.get('source_type',tn)
+    source_partition=spec['source_partition']
+    reference_module=spec.get('reference_module',module)
+    if reference_module!=module and spec.get('retarget_module')!=module:
+        raise BoundGroupError('explicit input ABI module retarget differs')
+    groups=[g for g in artifact['groups'] if g['type']==source_type and g['partition']==source_partition and g['module']==reference_module]
+    if not groups:
+        raise BoundGroupError('explicit input ABI has no exact type/partition/module aliases')
+    return dict(reference_rtl=reference,reference_sha256=spec['reference_sha256'],aliases=groups,
+                reference_module=reference_module,retarget_module=spec.get('retarget_module'),
+                source_type=source_type,source_partition=source_partition)
 
 
 def materialize(binder, tn, frame):
@@ -78,7 +114,7 @@ def materialize(binder, tn, frame):
         if target is None:
             raise BoundGroupError('group has no planned reset target '+hc['inst'])
         lane=int(re.fullmatch(r'u_lane(\d+)',hc['inst'])[1])
-        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],kv_wr_pipe=c.get('kv_wr_pipe',0),memory_read_extra=c.get('memory_read_extra',0))
+        rtl,new,report=C.cut(text,lane,hc['module'],memory_alignment=c['memory_alignment'],kv_wr_pipe=c.get('kv_wr_pipe',0),memory_read_extra=c.get('memory_read_extra',0), segmented_memory_delay=c.get('segmented_memory_delay',0), input_abi=input_abi_contract(binder.base,tn,hc['module'],c.get('input_abi')))
         actual={(x['instance'].replace('u_u_','u_',1),x['module']) for x in report['leaves']}
         expected={(x['inst'],x['module']) for x in c['members']}
         net=f"rst_n_t{target['tap']}"
@@ -87,7 +123,7 @@ def materialize(binder, tn, frame):
         reference=Path(binder.base)/'rtl/physical'/(hc['module']+'.sv')
         if not reference.is_file() or _code(reference.read_text())!=_code(rtl):
             raise BoundGroupError(f'{hc["inst"]}: grouped source differs from committed actual module')
-        register_masters(binder,text,rtl)
+        register_masters(binder,text,rtl,segmented_memory_delay=c.get('segmented_memory_delay',0))
         out=frame.parent/(hc['module']+'.sv')
         if out.exists() and _code(out.read_text())!=_code(rtl):
             raise BoundGroupError('group module has inconsistent source across types '+hc['module'])

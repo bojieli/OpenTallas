@@ -2303,6 +2303,27 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def explicit_pg_cfg(cfg):
+    """Carry explicitly requested PG booleans even when R-FLOW/CONS defaults are off.
+
+    Unset keys add no lines and retain the existing generation fast path/defaults.
+    Do not duplicate values already emitted by the selected kit profile.
+    """
+    keys = ("OT_PG_TRACK_TRUTH", "OT_PG_TRACK_TRUTH_WIDE_SPACING", "OT_PG_CELL_KEEPOUT")
+    requested = {k: os.environ.get(k, "").strip() for k in keys
+                 if os.environ.get(k, "").strip() in ("0", "1")}
+    if not requested:
+        return []
+    import re
+    emitted = {}
+    for line in cfg:
+        m = re.match(r"^export\s+(\w+)\s*=\s*(.*?)\s*$", line)
+        if m:
+            emitted[m[1]] = m[2]
+    out = [f"export {k} = {v}" for k, v in requested.items() if emitted.get(k) != v]
+    return (["# Explicit PG gen intent (independent of R-FLOW/CONS defaults)."] + out) if out else []
+
+
 def tt_setup_repair_mode():
     """effective OT_TT_SETUP_REPAIR of this kit: cts | grt | both | off (the mapping of the step files in write_type_kit)"""
     return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
@@ -2314,7 +2335,7 @@ def kit_effective_env():
     appear in config.mk).  Sorted; only variables that are set are listed."""
     out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
     for k in sorted(os.environ):
-        if k.startswith(("OT_PG_", "OT_PGCAP_")) and os.environ[k].strip() != "":
+        if (k == "OT_PGCAP" or k.startswith(("OT_PG_", "OT_PGCAP_"))) and os.environ[k].strip() != "":
             out[k] = os.environ[k].strip()
     return out
 
@@ -2413,8 +2434,10 @@ if {[info exists ::env(OT_PGCAP)] && $::env(OT_PGCAP) eq "1"} {
 
 
 def pgcap_install(kd):
-    """OT_PGCAP=1 only: copy pg_pair_cap.tcl into the kit and append PGCAP_HOOK to the kit's grt_pre.tcl (kits without it stay byte-equal)."""
-    if os.environ.get("OT_PGCAP", "").strip() != "1":
+    """Stage dependencies from the final generated OT_PGCAP value (not the caller environment)."""
+    values = re.findall(r"^\s*(?:override\s+)?export\s+OT_PGCAP\s*(?::=|=)\s*([01])\s*$",
+                        (kd / "config.mk").read_text(), re.M)
+    if not values or values[-1] != "1":
         return False
     shutil.copyfile(Path(__file__).with_name("pg_pair_cap.tcl"), kd / "pg_pair_cap.tcl")
     g = kd / "grt_pre.tcl"
@@ -6002,6 +6025,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
+    shutil.copyfile(Path(__file__).with_name("hold_sdc_guard.tcl"), kd / "hold_sdc_guard.tcl")      # HOLD-SDC-1116
+    cfg.append("export OT_SIGNOFF_SDC_SHA = " + _hashlib.sha256((kd / "constraint.sdc").read_bytes()).hexdigest()[:16])
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -6040,6 +6065,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cons = cons_kit_settings()
     if cons:
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
+    cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
     cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
@@ -6383,6 +6409,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Signal grants/CONS may raise routing above the unchanged physical clock-pin layer.
+    # No extra metadata for ordinary kits: preserve their existing budget bytes.
+    if top != P.layer_budget["partition_signal_max"]:
+        bud["clock"]["pin_layer"] = P.layer_budget["partition_signal_max"]
     # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
     for row in bud["clock"]["core_taps"]:
         # QC-CB-GEN-1115 L4/L6: core_tap_rows names the PHYSICAL instance (u_bound.u_t22) once the kit declares physical_inst, the plan core the
@@ -6445,6 +6475,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     (kd / "kit_effective_env.json").write_text(json.dumps(kit_effective_env(), indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
+        shutil.copyfile(Path(__file__).with_name("grt_pg_replay.tcl"), kd / "grt_pg_replay.tcl")
         shutil.copyfile(Path(__file__).with_name("tt_setup_keep.py"), kd / "tt_setup_keep.py")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
@@ -6560,6 +6591,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         import secondary_clock as _SEC
         _f = _sec.split(":")
         _SEC.install(kd, dict(port=_f[1], clock=_f[2], target=int(_f[3]), dmax_um=float(_f[4]), radius_um=float(_f[5])))
+    # Bind repair to the final golden SDC after every native/secondary-clock installer.
+    import hold_flow
+    hold_flow.install(kd)
+    import hold_sdc_check as _HSC
+    _hf = _HSC.kit_findings(kd)
+    if _hf:
+        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
         import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
@@ -7743,10 +7781,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                        "have no bound RTL (landing kits use the landed wrapper)")
         else:
             gtypes = None          # the landed emitter checks every copy of every type
-    if kit_rtl and gtypes == [] and landing is None:
+    if kit_rtl and gtypes == []:
         # Every selected kit already has its complete bound RTL filelist.
         # Keep the same plan validation, but do not build an unused whole-die
         # top/pad map (including every unrelated partition and reset relay).
+        # With a declaration-only landing sidecar, Landings and the bound RTL
+        # land-slot/collector checks below still validate that exact contract.
         errs = (S.scope_errors_typed(S.validate(raw), types, raw) if overlay_receipt else
                 S.scope_errors(S.validate(raw), types))
         if errs:

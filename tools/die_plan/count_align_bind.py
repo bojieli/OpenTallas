@@ -252,7 +252,9 @@ def bind_parts(b, parts):
     for pid, c in ports.items():
         sp, dp = parts[pid]
         if not c["tree"]:
-            c["K"] = c["sched_lat"] - 1 - (N[dp] - N[sp]) - _fsh(b, sp, dp)   # count frame: N' = N + f
+            # FREG-K-1 (FABLE-DIE-HEAD 11-16): a declared FREG cycle is a face register in front of the ring, not a reader
+            # shift, so it is not in K (strap_ties adds the WREG + FREG depth; bench: strap K + 3 = two added cycles)
+            c["K"] = c["sched_lat"] - 1 - (N[dp] - N[sp]) - _fsh(b, sp, dp) - int(c.get("freg", 0))   # count frame: N' = N + f
         c.update(src_part=sp, dst_part=dp)
     for pid, c in sp_.items():
         c["src_part"], c["dst_part"] = eparts(pid)
@@ -298,7 +300,7 @@ def _edge(b, eid):
         e = (sp["src_part"], sp["dst_part"]) if "parts" in b and "src_part" in sp else (sp["src"], sp["dst"])
         return sp["step"] + _fsh(b, *e), 0     # START-TREE-1 start port: origin step, no ring (count frame: N' = N + f)
     c = b["ports"][eid]
-    return c["sched_lat"], c["K"] + 1
+    return c["sched_lat"], c["K"] + 1 + int(c.get("freg", 0))   # FREG-K-1: the face register cycle
 
 
 def fundamental_cycles(b):
@@ -351,7 +353,7 @@ def verify(b, samples=2000, seed=1, need_ps=100.0, fall_ports=None):
     nom = b["parts"] if "parts" in b else reg
     for pid, c in ports.items():
         s_, d_ = _ends(b, c)
-        lhs = c["K"] + 1 + nom[d_]["n_nominal"] - nom[s_]["n_nominal"] + _fsh(b, s_, d_)
+        lhs = c["K"] + 1 + nom[d_]["n_nominal"] - nom[s_]["n_nominal"] + _fsh(b, s_, d_) + int(c.get("freg", 0))   # FREG-K-1
         if lhs != c["sched_lat"]:
             errs.append(f"identity {pid}: K+1+dn {lhs} != sched_lat {c['sched_lat']}")
     for q, pi in b.get("parts", {}).items():

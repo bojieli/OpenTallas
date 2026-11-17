@@ -917,4 +917,7 @@ if {[llength $ct_taps] >= 2} {
   if {[llength $ct_oc]} { puts "OT_CLOCK_TAPS WARN OVER_CAP [llength $ct_oc] taps > cap $ct_cap sinks in the final assignment: [join $ct_oc { }]" }
 }
 
+# Rebind only the typed PHY export whose actual source changed in this tap split.
+if {[file exists /work/phy_clock_export_source.tcl]} {source /work/phy_clock_export_source.tcl}
+# Verify functional clock ancestry on the final tap state (after any PHY export rebind).
 if {$ct_clock_guard_on} {ct_clock_guard_verify}

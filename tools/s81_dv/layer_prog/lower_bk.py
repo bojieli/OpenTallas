@@ -653,10 +653,24 @@ assert TX_WORST + max(TX_LPX_SHIFT[TX_LPX], TX_LPX_SHIFT[TX_LPX_BOOKED]) <= TX_S
 # tx-job CTL at the bk_sel vi_n pin edge c -> first grid slot printed (lo) at c + TX_OFF + DLY.  Measured 5 on 10-19 with
 # FWD 2 / no out-face; the 11-03 dsdv_bk_g re-forms (S81-RF1 FWD 2->3, RF 4 OFACE +1) put the slot 2 edges later and
 # PIN_TO_PIN followed but TX_OFF did not (S81-PLAN-1 11-10: idxd tree bench first tx beat +2 on every die, 6/6 cases).
-TX_OFF = 5 + (FWD - 2) + OFACE
+# Explicit source profile for the signed idx_vb FACE2 hard core. Default0 retains
+# legacy compiler output; F2s3 source51beecd2dc38 must select OT_BK_TX_FACE=2.
+TX_FACE = int(_os.environ.get('OT_BK_TX_FACE', '0'))
+if TX_FACE not in (0, 1, 2):
+    raise ValueError('OT_BK_TX_FACE must be the selected transmitter FACE0/1/2')
+TX_FACE_EDGES = (0, 1, 3)[TX_FACE]
+TX_OFF = 5 + (FWD - 2) + OFACE + TX_FACE_EDGES
 TX_LINK = 3              # tx lo printed at t -> parent bk_sel vi_s ingress edge t + TX_LINK + leg (vmux 2 + pin 1)
 VMUX_LAT = 2             # dsdv_idx_vmux pin -> pin
 TX_CTL_LEAD = 16         # the tx-job CTL enters vi_n this many edges before the drain CTL
+
+
+def tx_slot_delay(first, ctl_edge):
+    """Select the existing reserved first slot only when its real DLY budget fits."""
+    dly = int(first) - (int(ctl_edge) + TX_OFF)
+    if dly < 1:
+        raise ValueError(f'IDX TX FACE{TX_FACE} needs first slot >= {ctl_edge + TX_OFF + 1}; got {first}')
+    return dly
 
 
 def reader_beats(keys, b0, n, k, tag, om, e0, p=READER_P, ik=4):
@@ -748,12 +762,13 @@ def job_rank_tree_rd(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boo
             a1 = a0 + TX_SM * TX_R
             free_from = a1 + 1
             c_tx = pc['drain']['vi_n_edge'] - TX_CTL_LEAD
-            dly = first - (c_tx + TX_OFF)
-            assert dly >= 1, (d, c, dly)
+            dly = tx_slot_delay(first, c_tx)
             hb = sub_lo(c) // 16 * 16
             pc['tx'] = dict(lane=L, parent=d, ptag=tag, hb=hb, ctl_vi_n=c_tx, dly=dly, first=first, r=TX_R, sm=TX_SM,
                             arrive=[a0, a1], payload=tx_payload(L, tag, K_MAX, hb, pc['tag'], dly, TX_R, TX_SM),
                             words=lane_words_sparse(ks, sel, hb, K_MAX, L, tag))
+            if TX_FACE:
+                pc['tx']['source_profile'] = dict(FACE=TX_FACE, internal_output_edges=TX_FACE_EDGES, ctl_to_slot_offset=TX_OFF, transport_included=False)
             pc['tx']['beat'] = ctl_beat(pc['tx']['payload'])
             arr.append([a0, a1])
             t_last = max(t_last, a1)
