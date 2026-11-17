@@ -104,3 +104,7 @@
   NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 14.3 h job 14.4 h: no new meaningful log line for 13.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
 - 2026-11-17 01:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 01:52 PST: 107 running jobs, PROGRESSING 101, SLOW 5, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 15.3 h job 15.4 h: no new meaningful log line for 14.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+- 2026-11-17 02:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 02:52 PST: 93 running jobs, PROGRESSING 84, SLOW 8, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 16.3 h job 16.4 h: no new meaningful log line for 15.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+- 2026-11-17 03:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 03:52 PST: 111 running jobs, PROGRESSING 100, SLOW 10, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 17.3 h job 17.4 h: no new meaningful log line for 16.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
