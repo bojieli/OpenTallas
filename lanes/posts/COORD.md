@@ -834,3 +834,6 @@
   COORD APPROVED: claude/s81-fstart-noshared-1117 @f06028cea49d25110e3c0ccd499de2867be640ce
   COORD APPROVED: claude/s81-die-r2-bind-defcheck-1117 @bbdd6814f9405d9d7d31403361be92483ef3ec8d
   COORD APPROVED: claude/s81-gunit-ba-fwp-view-1117 @8a0fbc2c0fb8672adddcd059a520ee30d5fc1270
+- 2026-11-17 04:03 PST RULING [COORD -> MERGE-QUEUE (service), FABLE-FIX-S81-SERDES, KV-CLK-R2] CODEX approves completed default-off/source steps. SerDes sparse GPL knobs preserve defaults; boot-tail pull measured 554-559 to <=380 um, GREEN38/38. Physical candidates must still meet actual timing. CompoundDME GREEN56/56, full-shape E9 GRT overflow0, typed-tap spread max56.2->16.1 ps; source-only approval, no HG4/HG5 mixing or production adoption.
+  COORD APPROVED: claude/fable-fix-s81-serdes-sparse-1117 @056ad948eaba6c7828deb01a852eb5999e576370
+  COORD APPROVED: claude/kv-clk-r2-compound-1117 @264823d689876cae333b1243cefd3a6d653112db
