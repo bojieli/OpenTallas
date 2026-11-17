@@ -610,6 +610,8 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
             return False
         if stages.get("kit_topology", 0) != 0:
             return False
+        if stages.get("kit_rtl", 0) != 0:        # WAVE-PILOT-FIX 11-17: the kit_rtl canary; a pilot whose kit_rtl failed proves nothing
+            return False
         spec_path = Path(spec_path)
         raw = spec_path.read_bytes()
         sp = json.loads(raw)
@@ -626,6 +628,9 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
                        stages={stage: stages[stage] for stage in GEN_PILOT_STAGES})
         if "kit_topology" in stages:
             receipt["stages"]["kit_topology"] = stages["kit_topology"]
+        if "kit_rtl" in stages:
+            receipt["stages"]["kit_rtl"] = stages["kit_rtl"]
+        receipt["canary"] = "kit_rtl_v1"          # receipts with this mark carry the kit_rtl verdict (older receipts are grandfathered)
         target = spec_path.with_name("gen_pilot.json")
         temp = target.with_name(target.name + "." + str(os.getpid()) + ".tmp")
         temp.write_text(json.dumps(receipt, sort_keys=True) + "\n")
@@ -638,6 +643,18 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
         return True
     except (OSError, ValueError, TypeError, KeyError):
         return False
+
+
+def kit_rtl_canary_ok(rec, spec):
+    """WAVE-PILOT-FIX 11-17 (FABLE-FLOW-0900 B): no tree goes live without a pilot whose kit_rtl stage passed.  A stage rc recorded in the
+    receipt must be 0; a receipt with the kit_rtl_v1 canary mark of a die whose recipe runs kit_rtl (mode bind or a script) must carry the
+    stage.  Receipts written before the mark existed are grandfathered (they have no kit_rtl verdict to read)."""
+    stages = rec.get("stages") or {}
+    if "kit_rtl" in stages:
+        return stages["kit_rtl"] == 0
+    kr = spec.get("kit_rtl") if isinstance(spec, dict) else None
+    runs = isinstance(kr, dict) and (kr.get("mode") == "bind" or bool(kr.get("script")))
+    return not (rec.get("canary") == "kit_rtl_v1" and runs)
 
 
 def gen_pilot_receipt_pass(path, die, item, spec, raw_spec):
@@ -656,7 +673,8 @@ def gen_pilot_receipt_pass(path, die, item, spec, raw_spec):
                 and bool(re.fullmatch(r"[0-9a-f]{64}", str(rec.get("src_manifest_hash") or "")))
                 and rec.get("spec_sha256") == hashlib.sha256(raw_spec).hexdigest()
                 and all((rec.get("stages") or {}).get(stage) == 0 for stage in GEN_PILOT_STAGES)
-                and (rec.get("stages") or {}).get("kit_topology", 0) == 0)
+                and (rec.get("stages") or {}).get("kit_topology", 0) == 0
+                and kit_rtl_canary_ok(rec, spec))
     except (OSError, ValueError, TypeError):
         return False
 
