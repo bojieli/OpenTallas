@@ -38,6 +38,7 @@ def read(path):
 def prove(directory):
     """Validate a staged, self-contained child receipt and re-prove its faces."""
     import face_guard as F
+    import signoff_profile as SP
     d = Path(directory)
     m = read(d / 'manifest.json')
     if m.get('schema') != 'hard_landing/1':
@@ -49,8 +50,15 @@ def prove(directory):
     master = m['master']
     if p.get('kit', {}).get('module') != master or old.get('top') != master:
         raise ValueError('hard landing evidence master mismatch')
-    if s.get('verdict') != 'SIGNED' or old.get('verdict') != 'PASS':
-        raise ValueError('hard landing requires SIGNED child and PASS face evidence')
+    # Older frozen signers retain LOCAL_PASS_NEEDS_PARENT for boundary hold.
+    # Re-judge the immutable receipt using the same canonical profile as the
+    # sign-off chain: a label alone never proves internal FF closure.
+    qualification = SP.judge(s) if SP.is_minimal() else None
+    signed = qualification['verdict'] == 'SIGNED' if qualification else s.get('verdict') == 'SIGNED'
+    if not signed or old.get('verdict') != 'PASS':
+        reason = '; '.join(qualification['reasons']) if qualification and not signed else ''
+        raise ValueError('hard landing requires profile-qualified SIGNED child and PASS face evidence'
+                         + (': ' + reason if reason else ''))
     if digest(d / 'signoff.json') != p['export']['signoff_sha256']:
         raise ValueError('hard landing signoff is not the exported view signoff')
     # Freeze *_sha256 fields identify tool scripts, not result JSON files.
