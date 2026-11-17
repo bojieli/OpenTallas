@@ -7967,7 +7967,7 @@ def flow_guard_gate(AP, cfg, st, die, go, picks, skip, now=None, rpy=None):
     hp = {}
     for r in held:
         hp.setdefault(FG.held_key(st, die, r["item"]), []).append(r["item"] not in pf)
-    for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now, {dn: breaker_inputs(cfg, dn) for dn in (cfg.get('dies') or {})}):
+    for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now, {dn: breaker_inputs(cfg, dn) for dn in (cfg.get('dies') or {})}, {dn: str((cfg['dies'][dn] or {}).get('src') or '') for dn in (cfg.get('dies') or {})}):
         AP.log(f"KIT-WAVE FLOW-GUARD RELEASE '{key}': {why}")
     try:
         tree_fn, marker_fn = tree_gate(AP, cfg)
@@ -8326,6 +8326,37 @@ def bind_restage(cfg, die, prev, sp):
         sp["gen_host"] = moved
 
 
+def tree_on_host(AP, cfg, host, tree):
+    """WAVE-PILOT-FIX 11-17 (COORD 3): does HOST hold the source tree (its .src-manifest.json)?  One probe per (host, tree) per pass.  Unknown
+    (no tree, probe error other than 'absent') = yes: never refuse blind."""
+    if not tree:
+        return True
+    cache = cfg.setdefault("_tree_host_ok", {})
+    key = (host, tree)
+    if key not in cache:
+        path = tree.rstrip("/") + "/.src-manifest.json"
+        hub = cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""
+        argv = (["test", "-f", path] if host in (hub, "localhost") else
+                ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=8", "-o", "ControlPath=none", host, "test -f " + shlex.quote(path)])
+        try:
+            rc = AP.sh(argv, timeout=30)[0]
+        except Exception:
+            rc = 255
+        cache[key] = rc != 1                       # rc 1 = test -f says absent; ssh failure (255) / error = unknown = yes
+    return cache[key]
+
+
+def tree_host_for(AP, cfg, die, sp, item):
+    """the host a launch may use: sp's gen_host when it holds the item's tree, else the first other gen host of the die that does, else ''"""
+    tree = sp.get("src")
+    if tree_on_host(AP, cfg, sp["gen_host"], tree):
+        return sp["gen_host"]
+    for h in gen_hosts(cfg, die, item):
+        if h != sp["gen_host"] and tree_on_host(AP, cfg, h, tree):
+            return h
+    return ""
+
+
 def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
     """KW-FIX-7 11-04: one row's launch error never ends the pass.  06:28 a merge changed kit_resume.py under a reload pass:
     launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
@@ -8575,6 +8606,13 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if attempt > 1 or leafslew_item_env(cfg, die, r["item"]) is not None else (None, None)
     if ls_form:
         sp["leafslew_form"] = ls_form
+    _h = tree_host_for(AP, cfg, die, sp, r["item"])            # a launch / resume / relaunch goes only to a host that holds the item's tree
+    if not _h:
+        AP.log(f"KIT-WAVE LAUNCH-DEFER {die}/{r['item']}: no gen host holds the source tree {sp.get('src')} (.src-manifest.json); not launched (a host without it would fail src_manifest)")
+        return None
+    if _h != sp["gen_host"]:
+        AP.log(f"KIT-WAVE GEN-HOST-TREE {die}/{r['item']}: {sp['gen_host']} lacks tree {sp.get('src')}; launching on {_h} instead")
+        sp["gen_host"] = _h
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
