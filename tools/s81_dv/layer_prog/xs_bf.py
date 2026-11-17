@@ -255,6 +255,13 @@ def qualify_asbuilt_measurement(rec, master, land_e, frame, frame_instance=None)
     import hashlib
     import lower_xs
     q=rec.get('asbuilt_source_qualification',{})
+    if q.get('status') == 'COMPONENT_COMPOSITION':
+        # An unchanged kernel replay plus source-traced input/return transport
+        # is explicitly composed, never retagged as a new frame replay.
+        import bf_component_composition as BC
+        root = Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT', str(ROOT))).resolve()
+        schedule = lower_xs.source_frame_schedule(master + '_l4_lp_' + frame, frame_instance)
+        return BC.qualify(rec, root, ROOT, schedule, frame_instance)
     if (not rec.get('ok') or q.get('status')!='PASS_STATIC_REPLAY' or q.get('clock_ps')!=833
             or rec.get('key')!=shape_key(master,land_e,frame)
             or not q.get('payload_control_caught') or not q.get('one_edge_control_caught')
@@ -284,6 +291,13 @@ def meas_for(meas, master, land_e, frame=None, op=None, frame_instance=None):
     frame-internal event rides the landed lanes: frame_return_plan.x_shift; the programme is go-relative, unchanged);
     returns (record, 'measured_shape' | 'predicted_lane_shift') or (None, None)"""
     k = shape_key(master, land_e, frame)
+    # Per-instance source transport may differ even when the hardened master
+    # and lane latency are the same. Legacy shape-only records stay unchanged.
+    scoped = frame_instance + '::' + k if frame_instance else None
+    if scoped in meas:
+        how = qualify_asbuilt_measurement(meas[scoped], master, land_e, frame, frame_instance)
+        supported = meas[scoped]['asbuilt_source_qualification'].get('validated_ops', ['attn.wo_a', 'ffn.router'])
+        return (None, None) if op is not None and op not in supported else (meas[scoped], how)
     if k in meas:
         if frame in ('asb_x','asb_nx'):
             how=qualify_asbuilt_measurement(meas[k],master,land_e,frame,frame_instance)
