@@ -26,8 +26,11 @@ def plan(dest, ref, cone, warm=WARM, origin=ORIGIN):
     steps = []
     if not os.path.isdir(warm):
         steps.append(["git", "clone", "--bare", "--filter=blob:none", origin, warm])
-    else:
-        steps.append(["git", "-C", warm, "fetch", "-q", "origin", "+refs/heads/*:refs/heads/*"])
+    # COORD 11-17 (epyc2: the fetch refused to update a branch a retired lane's worktree still had checked out): the warm repo fetches into refs/remotes/origin/*, which no worktree can
+    # have checked out, never into refs/heads/*.  A lane clone is a DETACHED worktree of origin/<ref>, so no lane ever holds a branch of the warm repo either.
+    steps.append(["git", "-C", warm, "fetch", "-q", "origin", "+refs/heads/*:refs/remotes/origin/*"])
+    if not ref.startswith(("refs/", "origin/")) and len(ref) < 40:
+        ref = "refs/remotes/origin/" + ref
     steps += [["git", "-C", warm, "worktree", "add", "--no-checkout", "--detach", dest, ref],
               ["git", "-C", dest, "sparse-checkout", "init", "--cone"],
               ["git", "-C", dest, "sparse-checkout", "set", *cone],
