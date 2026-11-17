@@ -1,0 +1,623 @@
+{
+  "scope": "STATIC_POTENTIAL_NOT_GATE",
+  "plan": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m4.json",
+  "requires": "Check actual cat.relay_tx / count_origin roles and emitted RTL before treating declared export pins as real paths; only STB6717 routed failure confirmed",
+  "types": [
+    {
+      "type": "slw_stm_v3",
+      "parts": [
+        "sl_W5_stm"
+      ],
+      "origin_centre_um": [
+        285.03,
+        551.692
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 647.034,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_sc_v3",
+      "parts": [
+        "sl_W5_sc"
+      ],
+      "origin_centre_um": [
+        164.13,
+        717.052
+      ],
+      "declared_export_pin_um": [
+        611.296,
+        915.84
+      ],
+      "L1_um": 645.954,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_st_b_v2__pva66d0f22__pvb80e2003",
+      "parts": [
+        "sl_W1_st_b"
+      ],
+      "origin_centre_um": [
+        120.23,
+        490.31
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1037.524,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_st_b_v2__pva66d0f22__pv3d7bec84",
+      "parts": [
+        "sl_W3_st_b"
+      ],
+      "origin_centre_um": [
+        120.23,
+        490.31
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1037.524,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_st_b_v2__pvc2ec5bfb",
+      "parts": [
+        "sl_W5_st_b"
+      ],
+      "origin_centre_um": [
+        120.23,
+        490.31
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1037.524,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_st_b_v1__pvc5a85fd4__pv7b7fafb4",
+      "parts": [
+        "sl_E0_st_b"
+      ],
+      "origin_centre_um": [
+        142.88,
+        426.28
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1078.904,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_st_b_v1__pvc5a85fd4__pv38472fb8",
+      "parts": [
+        "sl_E4_st_b"
+      ],
+      "origin_centre_um": [
+        142.88,
+        426.28
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1078.904,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_st_b_v1__pv0e7b1dcc",
+      "parts": [
+        "sl_E2_st_b"
+      ],
+      "origin_centre_um": [
+        142.88,
+        426.28
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1078.904,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_fe_v2",
+      "parts": [
+        "sl_E1_fe",
+        "sl_E3_fe"
+      ],
+      "origin_centre_um": [
+        377.32,
+        428.44516150000004
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 862.570839,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_stm_v3",
+      "parts": [
+        "sl_E5_stm"
+      ],
+      "origin_centre_um": [
+        263.52,
+        581.113
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 596.103,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_sc_v3",
+      "parts": [
+        "sl_E5_sc"
+      ],
+      "origin_centre_um": [
+        161.11,
+        721.183
+      ],
+      "declared_export_pin_um": [
+        611.296,
+        915.84
+      ],
+      "L1_um": 644.843,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_hc2__cl6bcaba89",
+      "parts": [
+        "sl_W1_hc2",
+        "sl_W0_hc2"
+      ],
+      "origin_centre_um": [
+        408.48,
+        29.381999999999998
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        358.56
+      ],
+      "L1_um": 735.514,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_st_b_v1__cl6357f1cc__pv6ace3e48",
+      "parts": [
+        "sl_W2_st_b"
+      ],
+      "origin_centre_um": [
+        142.82,
+        436.46000000000004
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1068.784,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_st_b_v1__cl6357f1cc__pvffd43fdc",
+      "parts": [
+        "sl_W4_st_b"
+      ],
+      "origin_centre_um": [
+        142.82,
+        436.46000000000004
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1068.784,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_st_b_v1__cle6023ec2",
+      "parts": [
+        "sl_W0_st_b"
+      ],
+      "origin_centre_um": [
+        142.82,
+        426.28
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1078.964,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_stm_v1__cle34a73c3",
+      "parts": [
+        "sl_W0_stm"
+      ],
+      "origin_centre_um": [
+        279.09000000000003,
+        559.8299999999999
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 632.956,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_sc_v1__cl63e5a7a2",
+      "parts": [
+        "sl_W0_sc"
+      ],
+      "origin_centre_um": [
+        160.36,
+        722.2090000000001
+      ],
+      "declared_export_pin_um": [
+        611.296,
+        915.84
+      ],
+      "L1_um": 644.567,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_hc2__clcc5e3e61",
+      "parts": [
+        "sl_E5_hc2"
+      ],
+      "origin_centre_um": [
+        408.48,
+        29.381999999999998
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        358.56
+      ],
+      "L1_um": 735.514,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_st_b_v2__cl14c98df5__pvcd986c42",
+      "parts": [
+        "sl_E1_st_b"
+      ],
+      "origin_centre_um": [
+        104.12,
+        478.34000000000003
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1065.604,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_st_b_v2__cl14c98df5__pv41c959f3",
+      "parts": [
+        "sl_E3_st_b"
+      ],
+      "origin_centre_um": [
+        104.12,
+        478.34000000000003
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1065.604,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_st_b_v2__clfde1249e",
+      "parts": [
+        "sl_E5_st_b"
+      ],
+      "origin_centre_um": [
+        104.12,
+        478.34000000000003
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1065.604,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_hc2__cla3497502__cl16607c7a",
+      "parts": [
+        "sl_W5_hc2",
+        "sl_W4_hc2"
+      ],
+      "origin_centre_um": [
+        408.48,
+        29.381999999999998
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        358.56
+      ],
+      "L1_um": 735.514,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_fe_v2__cle312294d",
+      "parts": [
+        "sl_W3_fe",
+        "sl_W1_fe"
+      ],
+      "origin_centre_um": [
+        375.3,
+        431.20799999999997
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 857.788,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_st_a_v1__clb036e152",
+      "parts": [
+        "sl_W2_st_a"
+      ],
+      "origin_centre_um": [
+        425.68,
+        264.89
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1185.814,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_fw_v1__clf51c11d8__cl592e3d37",
+      "parts": [
+        "sl_W2_fw"
+      ],
+      "origin_centre_um": [
+        131.4,
+        715.5889035
+      ],
+      "declared_export_pin_um": [
+        619.936,
+        915.84
+      ],
+      "L1_um": 688.787097,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+      "parts": [
+        "sl_W4_stm"
+      ],
+      "origin_centre_um": [
+        281.65,
+        556.315
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 639.031,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+      "parts": [
+        "sl_W4_sc"
+      ],
+      "origin_centre_um": [
+        162.72000000000003,
+        718.981
+      ],
+      "declared_export_pin_um": [
+        611.296,
+        915.84
+      ],
+      "L1_um": 645.435,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_fe_v1__clfe325744__cl08d14f0d",
+      "parts": [
+        "sl_W2_fe"
+      ],
+      "origin_centre_um": [
+        385.13,
+        417.76309649999996
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 881.062904,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "slw_fw_v2__cl8f84514c",
+      "parts": [
+        "sl_W1_fw"
+      ],
+      "origin_centre_um": [
+        180.02999999999997,
+        698.2869675
+      ],
+      "declared_export_pin_um": [
+        619.936,
+        915.84
+      ],
+      "L1_um": 657.459033,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "slw_stm_v2__cl1ca9c415",
+      "parts": [
+        "sl_W3_stm"
+      ],
+      "origin_centre_um": [
+        284.90999999999997,
+        551.857
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 646.749,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_hc2__cl9c4c4509__cl3edce1b8",
+      "parts": [
+        "sl_E0_hc2",
+        "sl_E3_hc2",
+        "sl_E4_hc2"
+      ],
+      "origin_centre_um": [
+        408.48,
+        29.381999999999998
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        358.56
+      ],
+      "L1_um": 735.514,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_fw_v1__cl9d029624",
+      "parts": [
+        "sl_E2_fw"
+      ],
+      "origin_centre_um": [
+        134.81,
+        696.2080000000001
+      ],
+      "declared_export_pin_um": [
+        619.936,
+        915.84
+      ],
+      "L1_um": 704.758,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_stm_v1__cl27746664",
+      "parts": [
+        "sl_E0_stm",
+        "sl_E4_stm"
+      ],
+      "origin_centre_um": [
+        284.87,
+        551.9110000000001
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 646.655,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_sc_v1__cl115da35f",
+      "parts": [
+        "sl_E0_sc",
+        "sl_E4_sc"
+      ],
+      "origin_centre_um": [
+        163.24,
+        718.27
+      ],
+      "declared_export_pin_um": [
+        611.296,
+        915.84
+      ],
+      "L1_um": 645.626,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_fe_v1__cl1cbb7497",
+      "parts": [
+        "sl_E2_fe"
+      ],
+      "origin_centre_um": [
+        373.89,
+        433.13651600000003
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 854.449484,
+      "minimum_extra_hops": 2
+    },
+    {
+      "type": "sle_fw_v2__cl6740750e",
+      "parts": [
+        "sl_E3_fw"
+      ],
+      "origin_centre_um": [
+        131.4,
+        727.556645
+      ],
+      "declared_export_pin_um": [
+        619.936,
+        915.84
+      ],
+      "L1_um": 676.819355,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_stm_v2__cl7b3062fa",
+      "parts": [
+        "sl_E1_stm"
+      ],
+      "origin_centre_um": [
+        287.98,
+        547.658
+      ],
+      "declared_export_pin_um": [
+        2.144,
+        915.84
+      ],
+      "L1_um": 654.018,
+      "minimum_extra_hops": 1
+    },
+    {
+      "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+      "parts": [
+        "sl_E2_st_a"
+      ],
+      "origin_centre_um": [
+        425.68,
+        264.89
+      ],
+      "declared_export_pin_um": [
+        311.52,
+        1336.544
+      ],
+      "L1_um": 1185.814,
+      "minimum_extra_hops": 2
+    }
+  ]
+}
