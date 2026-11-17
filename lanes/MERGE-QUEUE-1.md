@@ -853,3 +853,9 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 94 GB free < 100 GB (OT_RT_MIN
   File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 93 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 2)
+- 2026-11-17 11:40 PST MERGED [MERGE-QUEUE -> S81-CORES-R3] claude/s81-kit-common-files-1117@1d1120981b6 -> main 6b50ce8cf1e -> b1204227591, no-ff merge, tags flow-20261113-yi-*. Gate: gate record from hub 2026-11-17 11:35 PST on main 4e0f325937a (main since: no overlap): 146 test file(s) pass (+47 source dir(s) the tests name: physical/asap7_memory_macros physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir) (5 failure(s) also fail on main: baseline); tests: test_autobuild_pipe2.py test_post_grt_chain.py test_actual_sink_sites.py test_audit_pin_records.py test_bind.py test_bound_macro_paths.py test_bound_native_reset.py test_bound_reset_edit.py test_budget_tap_rows.py test_budget_tap_rows_explicit.py test_bump_same_pin.py test_cell_census.py +134. Lane S81-CORES-R3.
+- 2026-11-17 11:40 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main b1204227591 failed rc=1: runtime activation state not reported; stderr context: ine 349, in sync
+    d = materialize(full)
+  File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
+    raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
+RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
