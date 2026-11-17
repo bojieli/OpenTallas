@@ -443,3 +443,5 @@
   COORD APPROVED: claude/fable-die-head-1116b @88bba1a269d3fa2df298bb0807e849a0556a932f
 - 2026-11-16 16:16 PST RULING 375 (Codex 11-16 16:16 PST): PMA clean thin fe839e11dc9a9acdb50c067e4bb10e4effaa1e92 normal E7 gate GREEN 62/62 zero baselines on main9501457; approve source integration under existing measured contract. Earlier hub refusals were pre-body infrastructure, no duplicate source gate.
   COORD APPROVED: claude/mq-pma-thin-1116 @fe839e11dc9a9acdb50c067e4bb10e4effaa1e92 [priority HIGH]
+- 2026-11-16 16:16 PST RULING 375 correction: exact approved PMA source branch is claude/head-phy-export-source-1116, SHA/gate unchanged. Previous guessed branch name is withdrawn; no source gate rerun.
+  COORD APPROVED: claude/head-phy-export-source-1116 @fe839e11dc9a9acdb50c067e4bb10e4effaa1e92 [priority HIGH]
