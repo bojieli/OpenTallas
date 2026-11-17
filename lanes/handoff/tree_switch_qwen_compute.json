@@ -1,14 +1,14 @@
 {
  "die": "qwen_compute",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d3",
- "manifest_hash": "f6917f02d13cc1852e974de328728d373537d1ad0411fd4da5c79d8e5ef92373",
- "src_manifest_sha": "f6917f02d13cc1852e974de328728d373537d1ad0411fd4da5c79d8e5ef92373",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d4",
+ "manifest_hash": "e5d43a25c4cfcaedc984f2f969cc76ae49dc0f37cae19fd19fc9f93b39b95b92",
+ "src_manifest_sha": "e5d43a25c4cfcaedc984f2f969cc76ae49dc0f37cae19fd19fc9f93b39b95b92",
  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
   "epyc8"
  ],
  "smoke": "PASS",
- "smoke_detail": "D3 = D2 a5357034 + merged b08d2ac81e tools/die_plan/hard_landing.py only (sha 21b1ba3921829b50). Normal publish+guard PASS. prove PASS all 8 sle_ctl landing children with D2 signoff_profile. No GEN/route/timing claim.",
+ "smoke_detail": "D4 = D3 f6917f02 + tools/die_plan/bind.py = pin 049b2db8 + merged main 3d763393b4 (sha 39fee2a24d7c) only. Normal publish+guard PASS. Real-case kit-rtl --src-tree repro rc0 on failing types. No GEN/route/timing claim.",
  "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9l2.json",
  "plan_sha256": "19be3f0a3bb42d8ea1a388412843e1d80e98563041d169899e54c22a47dffe82",
  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_jkf_portable.json",
@@ -48,10 +48,10 @@
   "cancel_superseded": false
  },
  "status": "ADOPTED reviewed tuple",
- "written_by": "QC-PLAN-R3 D3 source-only atomic apply",
+ "written_by": "QC-PLAN-R3 D4 source-only atomic apply",
  "previous_source": {
-  "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2",
-  "manifest_hash": "a535703479c0951f3a82a889344dc8983ab6e81ea3a2ad76d84755fe671c8cf8",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d3",
+  "manifest_hash": "f6917f02d13cc1852e974de328728d373537d1ad0411fd4da5c79d8e5ef92373",
   "hosts": [
    "epyc8"
   ]
