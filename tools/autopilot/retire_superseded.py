@@ -51,7 +51,7 @@ def main():
     cfg = json.load(open(a.kit_wave))
 
     def delete(t):
-        os.system("chmod -R u+w " + __import__("shlex").quote(t)); shutil.rmtree(t, ignore_errors=True)
+        os.system("find " + __import__("shlex").quote(t) + " -type d -exec chmod u+w {} +"); shutil.rmtree(t, ignore_errors=True)
     with open(a.log, "a") as lf:
         recs = run(cfg, lambda t: g.refuse(t, prot), delete, lambda r: lf.write(json.dumps(r) + "\n"), a.apply)
     for r in recs:
