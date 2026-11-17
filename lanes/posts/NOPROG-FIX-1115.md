@@ -147,3 +147,5 @@
   NO-PROGRESS epyc8 serdes__t13 5_2_route stage 14.1 h job 18.1 h: no new meaningful log line for 12.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
 - 2026-11-17 14:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 14:52 PST: 81 running jobs, PROGRESSING 76, SLOW 4, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc8 serdes__t13 5_2_route stage 15.1 h job 19.1 h: no new meaningful log line for 13.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
+- 2026-11-17 15:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 15:52 PST: 72 running jobs, PROGRESSING 68, SLOW 3, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 serdes__t13 5_2_route stage 16.1 h job 20.1 h: no new meaningful log line for 14.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
