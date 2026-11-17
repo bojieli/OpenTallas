@@ -104,7 +104,7 @@ Milder than t47: port -> sd_c passes at kit RC (+54, +64), where the x1.45 censu
    XR flops for the x_w* and VS-side inputs go at the bank end (a region at u_b0/u_b1 holding vpw and its XR flops), on a standard tap,
    never at the VS output. Do not raise LF_CS_HI_D as well. Pilot t34 (501 um) and t62 to a reloaded-GRT read before volume.
 3. **VP driver fan-out, not in form B.** Owner: S81-TYPES-R-STRIP. `driver_dswp_q` is one flop driving the hw_d/lo_d/wl_d registers 300-500 um away:
-   t62 601 paths, worst -548 at x1.45, and it sets t62's kit WNS class. Replicate it per slice with kept copies, as vpw does with xl_q/xh_q (0 cycles).
+   t62 601 paths, worst -548 at x1.45 (t62 kit WNS is -216; its class at kit RC was not read). Replicate it per slice with kept copies, as vpw does with xl_q/xh_q (0 cycles).
 4. **Ring logic with its flops.** Owner: S81-TYPES-R-STRIP. After fix 1, read the ring paths again. If any ring gate is still more than about
    50 um from its flops, place ring logic with the band instead of `ring_place=ff`. The paths have 416.5 ps, so they tolerate about 150 um in total.
 5. **t34-class far types.** Owner: S81-DIE-R2. If the t34 GRT read of form B is under +42 ps, move VS toward the banks on the 9 types over 500 um
