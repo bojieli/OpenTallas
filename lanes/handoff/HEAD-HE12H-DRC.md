@@ -9,3 +9,10 @@ Authoritative host E9 /srv/opentallas-scratch2/claude/fable-fix-head-timing.
 
 - Final exact ECO2 final_all.webp LOOKED: EPC macro along E face, distributed smaller macros and open W-side corridors, PG stripes continuous; no new layout launch. Current final report DRC0 is the physical check of the reserved-site edge fix.
 - Narrow source follow-up: E9 he12h_drc2/run_eco.sh custom DRT must emit actual DRT metrics (or explicitly supply current report); do not teach global signoff to trust file mtime. Parent agrees keep global signoff unchanged.
+
+## SIGNED + ARCHIVED-BOTH 2026-11-16 19:5x PST
+- ECO2 actual-frame signoff R-MINIMAL SIGNED, DRC0 (current 5_route_drc.rpt), TT setup -24.28ps (achieved857.28ps within42ps tolerance), FF standard min +0.69ps, complete internal FF census0violators. SDC lint and face_guard PASS; pin audit2167/2167. Antenna not present in actual-frame record (advisory). Legacy and pre-ECO failures retained.
+- Actual signoff: E9 he12h_drc2/hd_host_e/signoff_he12h_eco_actual/signoff.json. Source output directory: hd_host_e/run/results/asap7/dp_hd_host_e/base.
+- ARCHIVED-BOTH: AGIdock /archive/opentallas-signed-1114/s81_head/hd_host_e__he12h_drc2; rtx-pro /home/ubuntu/signed-export-1114/s81_head/hd_host_e__he12h_drc2. Both INDEX.tsv appended. ODB sha27077f92a77f9f9af459289146e1cf7f5f773b685db5ab868d38379682baf3f3,414166494bytes.
+- Targeted final6_final.v output BUF/INV/HB4 alias-cycle check PASS:1083outputs checked,0cycles,max18bufferchain, onlycontinuousalias fclk_out_coll_o1=cland_fwd_fclk_out_coll_o1. Scopedcheck not LEC. JSON he12h_drc2/he12h_output_buffer_check.json.
+- HEAD-DIE-R real-view worker informed to replace host_e stand-in. No more physical retries required for host_e. Narrow custom-runner actual metrics fix remains follow-up; no global signoff edit.
