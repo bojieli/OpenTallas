@@ -266,7 +266,7 @@
     "kv3_hub_C@2",
     "kv3_pv_v1@26",
     "kv3_hg_v1@1",
-    "kv3_hg_v1@2"
+    "kv3_hg_v1@4"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -598,7 +598,8 @@
     "kv3_pv_v1@25": "FLOW-FIX: TOOLS-CONVERGE-1115 root-authorized portable manifest metadata fix: normal ROOT policy0, native56 equality, actualbind_matches56 LATCHECK2404 and actual hub_C KITRTL0; AB7f285ea9c8bd + new ctx2. Same source4312921fd6bb and plan723fd5b4b006; no circuit change.",
     "kv3_hub_C@2": "FLOW-FIX: root r352/r355 approved snapcopy863137e6e12 + snapkey7d8085c408f merged and full six-host sync db95 completed14:56:09; current cfg rebuilds its own verified snapshot. Sole capture e790 has missing eW table SHAe8b77b956217; no old snapshot mutation or source/AB churn.",
     "kv3_pv_v1@26": "FLOW-FIX: root r352/r355 approved snapcopy863137e6e12 + snapkey7d8085c408f merged and full six-host sync db95 completed14:56:09; current cfg rebuilds its own verified snapshot. Sole capture e790 has missing eW table SHAe8b77b956217; no old snapshot mutation or source/AB churn.",
-    "kv3_hg_v1@1": "source changed D3->D5, cause fixed (KV-R 11-16 18:5x: GEN FileNotFoundError kvhg1_views_1116/*/provenance.json; D5 7a4761d359fa carries provenance.json + landing_evidence for the views); pilot kv3_hg_v1 on the PILOT hold"
+    "kv3_hg_v1@1": "source changed D3->D5, cause fixed (KV-R 11-16 18:5x: GEN FileNotFoundError kvhg1_views_1116/*/provenance.json; D5 7a4761d359fa carries provenance.json + landing_evidence for the views); pilot kv3_hg_v1 on the PILOT hold",
+    "kv3_hg_v1@4": "source changed D5->D10, cause fixed (hard_landing.prove face tool 5083985a != frozen 7ecd3a0d in views w652/w653/w672; D10 carries 7ecd3a0d, view_hash_errors passes); attempt 4 (3 identical D5 failures) was the last D5 attempt"
    },
    "only_items": [
     "kv3_astk",
