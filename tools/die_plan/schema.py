@@ -1454,6 +1454,13 @@ SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
                    "types": {"type": "array", "uniqueItems": True, "items": _name},
                    "pipe": {"type": "integer", "minimum": 0, "maximum": 4},
                    "pipe_except": {"type": "array", "uniqueItems": True, "items": _name},
+                   # r541 latch_except (bind.core_input_latch: "<port>" = port-wide, "<port>[<bit>]" = one bit) and the explicit
+                   # pad latch_except_hb4 (bind.core_input_latch_except_hb4): the code read the keys, the schema refused them
+                   # (plan_gate_pre SCHEMA-UNKNOWN-KEY), so no plan row could use them.
+                   "latch_except": {"type": "object", "additionalProperties": {
+                       "type": "array", "uniqueItems": True, "items": _name}},
+                   "latch_except_hb4": {"type": "object", "additionalProperties": {
+                       "type": "object", "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8}}},
                    "note": {"type": "string"}}}
 # KV-PVGEN 11-15: plan clock.core_link_pipe, read by bind.core_link_pipe (absent = off, byte-identical RTL): D register
 # stages (ot_dp_dly u_pc_lp_*) on named input ports of bound leaves/cores of the listed types; cycles DECLARED in
