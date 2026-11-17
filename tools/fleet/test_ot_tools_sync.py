@@ -27,7 +27,7 @@ class Sync(unittest.TestCase):
         sh(*g, "clone", "-q", str(d / "origin.git"), str(d / "repo"))
         sh("git", "config", "extensions.worktreeConfig", "true", cwd=d / "repo")
         self.env = dict(os.environ, OT_RT_ROOT=str(d / "rt"), MQ_REPO=str(d / "repo"), MQ_HOME=str(d / "mq"), OT_RT_HOSTS="",
-                        OT_RT_SMOKE_TESTS="", OT_RT_LEGACY="", OT_RT_BACKEND_ROOTS="", MQ_COORD=str(d / "coord"), MQ_PYTHON=sys.executable)
+                        OT_RT_SMOKE_TESTS="", OT_RT_MIN_FREE_GB="0", OT_RT_LEGACY="", OT_RT_BACKEND_ROOTS="", MQ_COORD=str(d / "coord"), MQ_PYTHON=sys.executable)
 
     def run_(self, *a):
         return subprocess.run([sys.executable, "-I", P, *a], env=self.env, capture_output=True, text=True, timeout=300)
