@@ -4784,6 +4784,9 @@
        "pin_entry_fall": {
         "type": "boolean"
        },
+       "pin_entry_phase": {
+        "type": "boolean"
+       },
        "pin_entry_delay": {
         "type": "object",
         "additionalProperties": false,
@@ -6432,6 +6435,11 @@
        "type": "integer",
        "minimum": 0
       }
+     },
+     "reset_entry_phase": {
+      "type": "integer",
+      "minimum": -8,
+      "maximum": 8
      },
      "note": {
       "type": "string"
