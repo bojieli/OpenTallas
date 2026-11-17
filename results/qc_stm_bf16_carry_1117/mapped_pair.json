@@ -1,0 +1,22 @@
+{
+  "base": {
+    "record": "/srv/opentallas-scratch2/claude/ref_gate/qfd_stream_bf16_base_1117-20261117-122711/routes/gate/work/orfs/logs/asap7/opentallas_qfd_dv_stream_tile_asap7_ref_gate/base/1_synth.json",
+    "cells": 50795,
+    "area_um2": 8005.7,
+    "io": 6947,
+    "macros": 0
+  },
+  "carry": {
+    "record": "/srv/opentallas-scratch2/claude/ref_gate/qfd_stream_bf16_carry_1117-20261117-122711/routes/gate/work/orfs/logs/asap7/opentallas_qfd_dv_stream_tile_asap7_ref_gate/base/1_synth.json",
+    "cells": 50859,
+    "area_um2": 8017.79,
+    "io": 6947,
+    "macros": 0
+  },
+  "delta": {
+    "cells": 64,
+    "area_um2": 12.09,
+    "cycles": 0
+  },
+  "status": "MAPPED_ONLY_TIMING_PENDING"
+}

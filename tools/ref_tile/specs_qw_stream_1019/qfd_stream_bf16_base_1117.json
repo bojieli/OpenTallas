@@ -216,162 +216,27 @@
   },
   "structural_change": "QW-STREAM3 10-20: native-32 successor of qfd_dv_stream_t2_1019 (CLOSED s2/c2-49ac29c7e FAIL the actual mapped native census: 211 drivers > 32, max 69 -- 32-bit select groups at 2 mux pins per bit, raw valid pins, combinational tap predicates, the complete AND driving 69 copies, lane-1 decode): every wide select is a kept 14-bit LEAF (<= 28 pins), pass-side leaves fed by kept ROOT banks at the face (+1 pass / tap edge), own-write completion from 9 independent complete trees on kept mask / open / slot-hit copies (<= 27 leaves each), insertion from the assembly word directly (own path -1 edge vs t2), four decoder copies; yosys 0.68 keep-regs mapped census (14-bit leaves): 39,042 roots, max 30 apart from rst_n (397 drivers at 28, zero role errors), rst_n 725 loads -> 28 landed copies.",
   "job": {
-    "owner": "Claude:LEAD4-QW/QW-STREAM3",
-    "branch": "claude/qw-stream3-1020",
-    "tag": "c3",
-    "purpose": "Qwen compute MU die Q-DV slice stream face (Q.SAFE.STREAM): relay + static x packer + table/x taps",
-    "record_to": "results/rtl/ref_tile/qfd_dv_stream_t3c_1020",
-    "views_to": "physical/ref_tile/qfd_dv_stream_t3c_1020/views",
+    "owner": "QC-TYPES-R CODEX continuation",
+    "branch": "claude/fable-fix-qc-hcfe-1115",
+    "tag": "bf16-base-1117",
+    "purpose": "Paired fullshape production stream rounding mechanism measurement; no parent STM qualification",
+    "record_to": "results/qc_stm_bf16_carry_1117/base",
+    "views_to": "physical/ref_tile/qfd_stream_bf16_base_1117/views",
     "auto_merge": false,
     "extra_paths": [
-      "rtl/qwen_dv/qfd_dv_stream.sv",
-      "rtl/test/qwen_dv/static_stream/tb_stream_tile.sv",
-      "rtl/test/qwen_dv/static_stream/run_tile.sh",
-      "results/rtl/qw_stream3_1020/bench"
+      "results/qc_stm_bf16_carry_1117"
     ],
     "benches": [
       {
-        "name": "stream_tile_m0",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m0 0",
-        "threads": 4,
-        "peak_ram_gb": 8,
+        "name": "actual_function_exactness_and_mutant",
+        "cmd": "PATH=$HOME/.local/opentallas-tools/bin:$PATH bash results/qc_stm_bf16_carry_1117/prove_actual.sh",
+        "threads": 1,
+        "peak_ram_gb": 2,
         "needs": [
-          "verilator"
+          "yosys"
         ],
         "expect": "pass",
-        "pass_regex": "STREAM_TILE_EQ PASS edges10000",
-        "min_count_regex": "emits(\\d+)",
-        "pass_witness": "results/rtl/qw_stream3_1020/bench/m0.log"
-      },
-      {
-        "name": "stream_tile_m2",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m2 2",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m2.log",
-        "why": "BF16 truncation instead of RNE"
-      },
-      {
-        "name": "stream_tile_m21",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m21 21",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m21.log",
-        "why": "no highest-lane priority"
-      },
-      {
-        "name": "stream_tile_m22",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m22 22",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m22.log",
-        "why": "no duplicate-address fault"
-      },
-      {
-        "name": "stream_tile_m31",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m31 31",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m31.log",
-        "why": "relay leaf 17 selects on the E valid root"
-      },
-      {
-        "name": "stream_tile_m32",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m32 32",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m32.log",
-        "why": "table-tap leaf 5 drops the SID match"
-      },
-      {
-        "name": "stream_tile_m33",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m33 33",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m33.log",
-        "why": "insertion leaf E 9 stuck 0"
-      },
-      {
-        "name": "stream_tile_m34",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m34 34",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m34.log",
-        "why": "tree 3 write-any leaf stuck 0 (its open copy never updates)"
-      },
-      {
-        "name": "stream_tile_m35",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m35 35",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m35.log",
-        "why": "tree 5 mask copy never updates"
-      },
-      {
-        "name": "stream_tile_m37",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m37 37",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m37.log",
-        "why": "eword enable leaf 7 stuck 0 (held x-tap word)"
-      },
-      {
-        "name": "stream_tile_m38",
-        "cmd": "bash rtl/test/qwen_dv/static_stream/run_tile.sh {RUN}/bench/m38 38",
-        "threads": 4,
-        "peak_ram_gb": 8,
-        "needs": [
-          "verilator"
-        ],
-        "expect": "fail",
-        "fail_regex": "STREAM_TILE_MISMATCH",
-        "fail_witness": "results/rtl/qw_stream3_1020/bench/m38.log",
-        "why": "tag high-half config leaf never enables"
+        "pass_regex": "ACTUAL_FUNCTION_EXACT_PASS MUTANT_CAUGHT"
       }
     ]
   },

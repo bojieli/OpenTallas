@@ -1,0 +1,11 @@
+{
+  "verdict": "PROCEED_CONDITIONAL",
+  "image": "results/qc_stm_bf16_carry_1117/plan_review.png",
+  "personally_viewed": true,
+  "findings": [
+    "Unchanged full production stream outline 259.2x380.16, no macros or walls; W/E wide registered relay 259.2um below405 reach; face groups preserved; no new pins, state, clock sinks or fanout introduced.",
+    "South clock entry existing cts topology, balance and PDN continuity remain measured at actual floorplan/CTS; roomy pin-bound7percent utilization diagnostic, no geometry qualification inferred."
+  ],
+  "scope": "Planning render reviewed before heavy gate; original pre-route attempt stopped before any build on missing sparse dependencies.",
+  "next": "Actual FP and CTS read before route"
+}
