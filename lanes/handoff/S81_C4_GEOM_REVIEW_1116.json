@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "CODEX S81-DIE-R2",
+ "candidate_sha256": "85862e390fc3fa6fdfe04c95c03282d0b14ef0f7cd14d6e7fefa044a2baa7074",
+ "image": "epyc10:/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R/c4_rows_1116/review_J6c_t75v2.png",
+ "image_sha256": "ff449f805900cd17b6c182bbe718b390fd917d98d19af40ffe6e7da9df807e1b",
+ "looked": true,
+ "verdict": "PASS-COND for row geometry, NOT physical signoff or route authorization",
+ "findings": [
+  "SVC t6 stage9 moved bank stays in open top channel above macro grid;277 sites on .054x.27 grid,0 macro intersects,0 cycles. Minimum GEN source-owner PASS.",
+  "t75 station4 now spans x399.6..418.284,y4.32..54.0 east of ve_s edge397.44. Full-height vertical bank retained,2.16um minimum macro clearance,0 macro or other FT overlaps per source-owner,0FF/0cycles. Needs real fixed-cell/PDN review after GEN; no reset receipt reuse.",
+  "J6c source pipeline banks spread x1854/2172/2485 with512payload+epoch, and status bits advance separately atx2360/2533/2706. All1545 sites on standard rows,0planned-hardcore intersects; source-owner actual PMA strips y951..1223 and SRAM/dchn below231 do not hit new banksy449..566. Three stages maintain1item/cycle.",
+  "J6c lanes coll__lk_EN3__s_7N_LP 58->61 and coll__lk_WS2__s_0S_LP74->77; no other lane changes, total14717->14723.",
+  "Clock review: current t14 taps hug south/east because legacy logical-PHY keepout covers entire central lot. Proposed t16 move would be2292.4um, so no local clock-row adoption. Source-owner first measures existingt13/t14 cohort profile; real diefeed/window proof required.",
+  "No seam pins, macro outlines, die outlines or PDN source geometry changed. Existing port density unchanged. PDN continuity and actual new fixed-cell/clock reservations require the generated-kit view before route."
+ ],
+ "preserved_failures": [
+  "J6b draft:411/515 sites perstage off stdrow, immutable FAIL retained; successorJ6c fixes it.",
+  "t75 globalshift43.2:545 macro overlaps; source-owner retained failure.",
+  "t75 first south-only repack superseded by full-height east-of-macro v2."
+ ],
+ "gate_obligations": [
+  "bind+LATCHECK/G0 exact candidate after review/model readiness",
+  "actual J6 clock windows on current die tree",
+  "generated-kit fixed-cell and PDN review",
+  "source-owner exactness plus mutant remains gating"
+ ],
+ "route_started": false
+}
