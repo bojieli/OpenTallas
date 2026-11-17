@@ -4792,6 +4792,11 @@ def cmd_bind(a):
         strict_info["allowed_roots"] = [str(r) for r in roots]
         strict_info["allow_src_root_flag"] = list(getattr(a, "allow_src_root", None) or [])
         B.errors.extend(serrs)
+        # VIEW-DEFINES (COORD r535, S81 D5c 11-17): the die elab blackboxes hard cores, so a view built under another
+        # define set than the die one (for a define its RTL reads) is invisible here; compare each view bind_defines
+        import view_define_check
+        verrs, strict_info["view_defines"] = view_define_check.gate(raw, B.ab, B.base)
+        B.errors.extend(verrs)
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
