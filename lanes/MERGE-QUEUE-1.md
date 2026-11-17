@@ -788,3 +788,4 @@
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }
 - 2026-11-17 08:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): epyc10: rt/current e251fda2da5b != hub c38b1562239e. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-17 08:15 PST MERGED [MERGE-QUEUE -> FLEET-OPS-R-LIVE-PROTECT-2] claude/fleet-ops-r-live-protect-2-1117@1c648e98a8b -> main c38b1562239 -> 6a365d471a0, no-ff merge, tags flow-20261113-xl-*. Gate: gate record from dear-crayfish 2026-11-17 08:11 PST on main c38b1562239: 1 test file(s) pass; tests: test_build_protected_live.py. Lane FLEET-OPS-R-LIVE-PROTECT-2.
+- 2026-11-17 08:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current e251fda2da5b != hub c38b1562239e
