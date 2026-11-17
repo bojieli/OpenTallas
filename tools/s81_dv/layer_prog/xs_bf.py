@@ -256,6 +256,8 @@ def qualify_asbuilt_measurement(rec, master, land_e, frame, frame_instance=None)
     import lower_xs
     q=rec.get('asbuilt_source_qualification',{})
     if q.get('status') == 'COMPONENT_COMPOSITION':
+        if rec.get('key') != shape_key(master, land_e, frame):
+            raise ValueError('BF component composition selects another shape')
         # An unchanged kernel replay plus source-traced input/return transport
         # is explicitly composed, never retagged as a new frame replay.
         import bf_component_composition as BC

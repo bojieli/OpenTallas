@@ -96,6 +96,23 @@ class CompositionTest(unittest.TestCase):
             rec, how = scope['meas_for'](records,'col_h9',2,'asb_x',frame_instance=frame)
             self.assertEqual((rec['marker'],how),(expected,expected))
 
+    def test_invalid_current_record_caught(self):
+        rec=copy.deepcopy(self.record);rec['ok']=False
+        with self.assertRaisesRegex(ValueError,'not valid'):self.qualify(rec)
+
+    def test_wrong_shape_component_caught_before_source_lookup(self):
+        import sys
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        path=Path(__file__).with_name('xs_bf.py')
+        node=next(n for n in ast.parse(path.read_text()).body
+                  if isinstance(n,ast.FunctionDef) and n.name=='qualify_asbuilt_measurement')
+        scope=dict(shape_key=lambda *a:'expected_shape')
+        exec(compile(ast.Module(body=[node],type_ignores=[]),str(path),'exec'),scope)
+        with patch.dict(sys.modules,{'lower_xs':SimpleNamespace()}):
+            with self.assertRaisesRegex(ValueError,'another shape'):
+                scope['qualify_asbuilt_measurement'](self.record,'col_h10',2,'asb_x','u_f_0L02')
+
     def test_replay_change_caught(self):
         self.replay.write_text('{}')
         with self.assertRaisesRegex(ValueError,'replay changed'):self.qualify()

@@ -73,6 +73,8 @@ def translate(base, inputs):
     return out, shifts
 
 def qualify(rec, source_root, replay_root, schedule_path, frame_instance):
+    if not rec.get('ok'):
+        raise ValueError('BF component composition record is not valid')
     q = rec['asbuilt_source_qualification']
     c = q.get('component_composition', {})
     if q.get('status') != 'COMPONENT_COMPOSITION' or c.get('frame') != frame_instance:
