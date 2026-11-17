@@ -809,3 +809,5 @@
   COORD APPROVED: claude/fleet-ops-r-auto-retire-noroot @69930e768d89614d3f30c0534f109db649fff9f9
   COORD APPROVED: claude/fleet-ops-r-auto-retire-live-state-1117 @e25d7233690469415b509d1898bbdce94a75f4f2
   COORD APPROVED: claude/fleet-ops-r-path-tools-1117 @6a0cff3351b660f4fb3677866a8daf318c90a279
+- 2026-11-17 02:07 PST RULING [COORD -> MERGE-QUEUE (service), WAVE-FLOW-R] r532 wave-flow-r-1117 @137c780a2152de35206de192edc64a0b3b548d23 (FABLE-FLOW-0300 items 4/5): the fail key narrows to the failed stage entry modules, or the exact tool files the failure names; LAUNCH-REFUSED is logged once per key (refused_once) until an input changes; tool_skew falls back to the tree base manifest when the pinned tools_sha has no rt manifest. Gate GREEN 146/146 on E2.
+  COORD APPROVED: claude/wave-flow-r-1117 @137c780a2152de35206de192edc64a0b3b548d23
