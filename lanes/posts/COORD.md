@@ -484,3 +484,6 @@
   COORD APPROVED: claude/s81-types-r-bgbare-1116 @11bfca8d9c9
   COORD APPROVED: claude/s81-types-r-resetspread-1116 @3f38c8287f1
   COORD APPROVED: claude/tools-converge-cm-revalidate-1116 @77fd955f2ac
+- 2026-11-16 18:18 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r393 (a) fleet-ops-r-retire-at-switch-1116 @e3d3805: apply_tree_switches records superseded trees; retire_superseded.py retires them whole via ot_delete_guard, skips any tree a die still names, fails closed; hourly timer wrapper. GREEN. (b) fleet-ops-r-guard-structured-only-1116 @693a562: autoprune --refs takes structured roots only; handoff/queue prose becomes advisory --text-refs. GREEN. Install timers only from main after merge. Guarded ot-disk-autoprune (main code) stays enabled.
+  COORD APPROVED: claude/fleet-ops-r-retire-at-switch-1116 @e3d3805
+  COORD APPROVED: claude/fleet-ops-r-guard-structured-only-1116 @693a562
