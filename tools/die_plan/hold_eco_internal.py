@@ -23,7 +23,7 @@ import math
 import sys
 
 TARGET_PS = 10.0          # hold repair target; the gate stays FF hold >= 0
-HB4_FF_PS = 37.0          # FF delay of one HB4xp67 (measured 11-15 s81hc ref: ~37 ps)
+HB4_FF_PS = 29.8         # FF MIN delay of one HB4xp67 (coll_n pilot model 29.81 at the conservative slew domain)
 HB4_TT_MAX_PS = 171.24    # TT delay of one HB4xp67 at slew <= 320 (coll_n pilot)
 DOUBLE_OVER_PS = 25.0     # need above this gets two cells at least
 MAX_PER_ENDPOINT = 4

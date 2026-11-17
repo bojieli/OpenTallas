@@ -21,7 +21,7 @@ def test_target_is_plus_10_and_one_cell_up_to_25():
     assert H.need_to_cells(0) == 0 and H.need_to_cells(-3) == 0
     assert H.need_to_cells(10) == 1 and H.need_to_cells(25) == 1
     assert H.need_to_cells(26) == 2           # over 25 ps: two cells at least
-    assert H.need_to_cells(68.19) == 2        # coll_n worst: -58.19 -> +10
+    assert H.need_to_cells(68.19) == 3        # coll_n worst: -58.19 -> +10 (the pilot used 3 stages there)
     assert H.need_to_cells(500) == H.MAX_PER_ENDPOINT
 
 
@@ -45,8 +45,8 @@ def test_only_endpoints_below_target_are_selected_not_whole_type():
 
 
 def test_worst_path_to_a_pin_sets_its_need():
-    p = H.plan(rows(("u/a/D", "s1", "reg", "reg", -5, 300), ("u/a/D", "s2", "reg", "reg", -58.19, 400)))
-    assert p["cells"] == [("u/a/D", 2)]
+    p = H.plan(rows(("u/a/D", "s1", "reg", "reg", -5, 300), ("u/a/D", "s2", "reg", "reg", -58.19, 600)))
+    assert p["cells"] == [("u/a/D", 3)]
 
 
 def test_tt_room_is_kept_inside_the_gate():
@@ -63,13 +63,13 @@ def test_reset_pins_and_wd_in_are_supported():
 
 def test_plan_file_roundtrip_and_cli(tmp_path):
     ep = tmp_path / "e.tsv"
-    ep.write_text(HDR + "u/a/D\ts\treg\treg\t-58.19\t400\nu/b/RESETN\ts\treg\treg\t-8.65\t300\n")
+    ep.write_text(HDR + "u/a/D\ts\treg\treg\t-58.19\t600\nu/b/RESETN\ts\treg\treg\t-8.65\t300\n")
     out = tmp_path / "plan.tsv"
     r = subprocess.run([sys.executable, "-I", str(HERE / "hold_eco_internal.py"), "plan", str(ep), str(out)],
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
-    assert H.read_plan(out.read_text()) == [("u/a/D", 2), ("u/b/RESETN", 1)]
-    assert json.loads(r.stdout)["hb4"] == 3
+    assert H.read_plan(out.read_text()) == [("u/a/D", 3), ("u/b/RESETN", 1)]
+    assert json.loads(r.stdout)["hb4"] == 4
 
 
 def test_bad_inputs_are_refused():
