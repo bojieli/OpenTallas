@@ -39,3 +39,12 @@ On release the wave relaunches them; DEDUP collapses each base to its distinct k
 2. When col-wave1 releases: watch launches (log.txt KIT-WAVE ... col_h9_r1/r2/h10_r2), DEDUP claims, failures by class.
 3. Sign-off -> export AGIdock + rtx-pro.
 4. Leaf t40 sid5S: die-wide s81-mig-024-k1 (event_adopt:B6gF2s3 unmatchable) -> DIE-S81-R2 / HOLDGEN.
+
+## Codex park at Claude reset — 2026-11-16 19:50 PST
+- r414 exact source-event retypes APPLIED under kit_wave.lock and pushed: s81-mig-024-k1, s81-mig-003-k3-k4, s81-mig-002-k2-k3-k1, s81-mig-006-k6-k7-k2 now event_adopt:3fa87b84b18. Every original lint/svc-ready term unchanged; old release arrays retained. Receipt lanes/handoff/FIX-S81-COL-STALE-source-carry-1116.json. Commits 055a501f2a95734d3b0facca75a49a2bdb59a0b5 and 48b40827302a46a0c8f78986f0d6d78d07dd0ef1.
+- Generic source fix published claude/fix-s81-col-stale-plan-event-1116 @cca8efdc426cd227b25f7bf3bfa147a540a14da3: plan_event becomes a current adopted identity in validation and both release evaluators. Exact token/explicit trailing-star semantics retained; previous/planned identities never release. Focused37/37 PASS. Normal gate client2070076 remains RUNNING, no terminal record or approval; log intel2 /srv/opentallas-scratch2/claude/fix-s81-col-stale/gate_cca8efdc.log. Do not start duplicate.
+- Existing full clone checkout PID1916996 remains active inherited fetch, preserved. Source fix built via private draft-index/commit-tree in same clone to avoid touching its active index. Draft4 source/test files and three helper symlinks in ../draft. Own write-tree lazy fetch was stopped exact own PIDs2020347/2019972; private-index write-tree --missing-ok completed, no inherited process stopped.
+- mig007 missing-view hold remains: coll_e view gates.json view_completefalse / LOCAL_PASS_NEEDS_PARENT, TT+30.31 FF+0.02 LEC equivalent archived; lnland signed. Root owns R-MINIMAL sufficiency decision.
+- QC equal11 st_b administrative split NOT APPLIED. Root/QC requested after Kf atomic switch; current still S4q6d last read. Rowproof has11 equal st_b,11 fw and3 su_c differ internal_stations. Preserve latter14 and all other S4q8/S4q6e holds until qualified. QC informed park.
+- KV3 obsolete source/port holds remain pending HG2c strictbind/R8/LAT proof: pc-sysc-01, mig004-k11, mig007-k12; KV worker owns qualification, no guessed successor matching.
+- Future S81 C4 adopt must explicitly carry qualified source terms to new current identity or they rehold; no generic history bypass added. No new job or edit after park except this handoff.
