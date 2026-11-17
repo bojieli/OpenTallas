@@ -144,3 +144,26 @@ class HostPrune(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         left = sorted(x.name for x in d.iterdir() if x.is_dir() and not x.is_symlink() and len(x.name) == 12)
         self.assertEqual(left, sorted([names[0], names[5], names[6]]))        # newest 2 (6,7), pinned 1
+
+
+class SyncAlert(unittest.TestCase):
+    def load(self):
+        return Guard.load(Guard())
+
+    def test_first_failure_posts_at_once_repeats_hourly_changes_post_and_recovery_posts_once(self):
+        m = self.load(); sf = tempfile.mktemp(); posted = []
+        pst = posted.append
+        m.current = lambda root=None: "abc123"
+        self.assertTrue(m.sync_alert(False, "disk 93 GB < 100", sf, pst, now=1000).startswith("ALERT"))        # first failure: immediately
+        self.assertEqual(m.sync_alert(False, "disk 93 GB < 100", sf, pst, now=1300), "")                       # same reason inside the hour: quiet
+        self.assertIn("still failing for 60 min", m.sync_alert(False, "disk 93 GB < 100", sf, pst, now=1000 + 3600))
+        self.assertTrue(m.sync_alert(False, "smoke failed", sf, pst, now=5000).startswith("ALERT"))             # a new reason posts
+        self.assertIn("recovered after", m.sync_alert(True, "", sf, pst, now=7000))
+        self.assertEqual(m.sync_alert(True, "", sf, pst, now=7100), ""); self.assertEqual(len(posted), 4)
+
+    def test_sync_guarded_turns_an_exception_into_an_alert_and_a_failing_exit(self):
+        m = self.load(); posted = []
+        m.sync = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("/rt: 93 GB free < 100 GB (OT_RT_MIN_FREE_GB)"))
+        m.sync_alert = lambda ok, reason, *a, **k: posted.append((ok, reason))
+        self.assertEqual(m.sync_guarded("", True, False), 1)
+        self.assertEqual(posted[0][0], False); self.assertIn("93 GB free", posted[0][1])
