@@ -10,3 +10,11 @@ Owns S81 col (216), strip leaves, IFN0 halves. Three tracks:
 - Plan per kit: transport off E10 by ot-run --stage, run to cts (place image in run/layout_review/place + OT_TAP_CORE + an/stage_sta.sh cts), LOOK, then route -> sign-off.
 - ROM-read class (r2: rd_out -> s q -57 at sequencer lead 100): kit core_latency.txt u_s1x clk[0] 371.22 -> 311.22 (lead 40, ROM 255) on r2 / r1 / h10_r2 pilots; row core_pin_lead_ps cfg7_seq 100 -> 40 goes to S81-DIE-R when measured.
 - Reset-chain class: v5 hook (epyc10 + localhost reset_chain_spread_v5_candidate.tcl; epyc9 copy is stale) = source from gp_noconverge_gate.tcl + export OT_RESET_CHAIN_SPREAD = 1 in config.mk. Staged only; needs post-DPL hop + CTS proof on the current r2 kit, then tools/die_plan integration + gate.
+
+## 17:5x COORD lever 2 (FABLE-CLOSURE-STRATEGY) applied
+- GEN exit 0, five kits. Patched on epyc10 (backups *.gen0), then rsynced to epyc8 same path: (1) r2 / r1 / h10_r2: u_s* clk[0] 371.22 -> 311.22 (lead 40) in core_latency.txt, core_latency.json, budget.json; (2) all five: reset_chain_spread.tcl (= v5, sha 30bf01cb) sourced at the end of gp_noconverge_gate.tcl + export OT_RESET_CHAIN_SPREAD = 1.
+- Launched to CTS on epyc8 (64 GB / 16 thr): intel2 clients 313858 (r2) 313859 (r1) 313860 (h10_r2) 313861 (h9_r0_p2) 313862 (h10_r0_p1); logs intel2 ~/fable-fix-s81-coltap/pilot5_<fam>_cts.log; kits epyc8 /srv/opentallas-scratch2/claude/fable-fix-s81-coltap/countable_F2s4tapfix1/gen/<type>.
+- NEXT per kit: 3_4_place_resized.log OT_RESET_V5 / OT_RESET_CHAIN lines; run/layout_review/place PNG LOOK; post-DPL reset hop table (0 over 405 um); an/stage_sta.sh KIT OUT cts (epyc8 fable-fix-s81-coltap/an) + cls2.py classes (go_tag, ef, ROM q/a, reset); then relaunch same command with goal route, GRT read (r310: TT >= -42 on reloaded 5_1_grt, overflow 0), sign-off, export.
+- gen_phys integration: epyc7 fable-fix-s81-coltap/repo branch claude/s81-types-r-resetspread-1116 @3f38c8287f1 (commit f3a0695f5b + merge of main), gate log intel2 ~/fable-fix-s81-coltap/gate_3f38c82.log. Post READY when GREEN.
+- Row posted to S81-DIE-R: core_pin_lead_ps cfg7_seq 100 -> 40 on 132 types.
+- Workers: IFN0 (told: balance the 512 IR sinks to the gated cohort in CTS, no hold buffers; no old-form numbers), STRIP.
