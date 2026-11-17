@@ -48,3 +48,8 @@
   cores/views/bksel_c_qrx_1117 + archive both, and a registry entry with QRX 1 scoped to the new view.
 - The quarter LEC (merged vs eco3 6_final.v) is still running.
 - NOTE: epyc2 /srv/opentallas-scratch3 is on the root fs (ot-run warns). Next lane dirs go on scratch2.
+
+## 11-17 update (fsm attribute + lint)
+- 4bc02f0a010 (fsm_encoding none on ot_s81ph_sel_pipeline st) gated GREEN (main 70d8223e400, static), READY posted (needs approval on top of r563). DIE-R3 told: synth attribute only, D6/LATCHECK unaffected.
+- FSM lint posted (coord a07ca4cc). At risk: eng_rr_e u_lkp.u_e.st, coll_lane e/w u.u_gb.hunt, cfg7_seq_bfp bk. gunit_l3 already one-hot as signed (leave). Unverified: rck_tx, t51 stations (kit-only RTL). Scan script + logs: epyc2 /srv/opentallas-scratch3/claude/s81-cores-r3/wt/bench_out/fsm_cores2.py, fsmc/ fsmc2/ fsmc3/.
+- Open: control kit r2 (oth-ubuntu-2905785-1794938300, at CTS; async LEC running), quarter LECs lec_synth/lec_final_j1 on scratch2/lec_merged still running. Next: on kit SIGNED -> R-MINIMAL, export view cores/views/bksel_c_qrx_1117 both archives, registry entry QRX 1, tell DIE-R3 ready for D6.
