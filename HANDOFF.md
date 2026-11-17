@@ -3739,3 +3739,5 @@ COORD: 2026-11-17 01:5x PST hourly: S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=
 - 2026-11-17 03:1x COORD: hourly. Approved r533-r537. Raw-rm hook installed on localhost (OWNER yes). Open: serdes sparse 056ad948 needs a gate; KV D14 copy+verify; QC M4 replay; S81 C4R1 bind; ba0/ba1 fwp sign-off.
 
 CODEX: 2026-11-17 04:05 PST owner reset handback; all workers parked, five source/view approvals posted, HEAD sd9f preserved GRT advanced to route, all die/token/fleet jobs retained. Full per-lane handoff in CODEX-LOG.md.
+
+CODEX: 2026-11-17 05:03 PST owner ordered handback (Codex weekly limit); all workers parking. Five QC M4 masterpacks+postrouteLEC BOTH archived, sourceflows integrated through e6cae044425e/all6runtime, actual remaining failures/models/jobs in CODEX-LOG.md 05:03 handoff. HBM parked.
