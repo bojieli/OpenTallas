@@ -99,7 +99,7 @@ def verdict(tree, ptext, refs, now=None, min_age_h=24):
     if tree in ptext or tree + "/" in ptext:
         return "live process or queued/waiter/unit text"
     if any(r == tree or r.startswith(tree + "/") or tree.startswith(r + "/") for r in refs):
-        return "referenced (provenance/signed/handoff<=72h/protected)"
+        return "referenced (provenance/signed/protected list)"
     if now - newest(tree) < min_age_h * 3600:
         return "mtime < %gh" % min_age_h
     return None
@@ -123,7 +123,9 @@ def free_gb(path):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("mode", choices=["plan", "apply", "trigger"])
-    ap.add_argument("--markers", required=True); ap.add_argument("--refs", nargs="*", default=[])
+    ap.add_argument("--markers", required=True)
+    ap.add_argument("--refs", nargs="*", default=[], help="STRUCTURED refs only (provenance / signed / protected lists): these refuse a delete")
+    ap.add_argument("--text-refs", nargs="*", default=[], help="paths scraped from handoff/queue PROSE: advisory, printed as NOTE, never refuse (r388 structured-roots-only)")
     ap.add_argument("--root", default="/srv/opentallas-scratch2/claude/kw45")
     ap.add_argument("--below", type=float, default=65.0); ap.add_argument("--every", type=float, default=10.0)
     ap.add_argument("--lock", default=os.path.expanduser("~/.local/state/ot-disk-autoprune.last"))
@@ -136,8 +138,11 @@ def main(argv=None):
             print("ran < %g min ago" % a.every); return 0
         os.makedirs(os.path.dirname(a.lock), exist_ok=True); open(a.lock, "w").write(str(time.time()))
     refs, ptext, freed = load_refs(a.refs), procs_text(), 0
+    trefs = load_refs(a.text_refs)
     for t in superseded(a.root, a.markers):
         why = verdict(t, ptext, refs)
+        if t in trefs or any(r.startswith(t + "/") for r in trefs):
+            print("NOTE %s is named in handoff/queue prose (advisory, does not refuse)" % t)
         sz = int(subprocess.run(["du", "-xsm", t], capture_output=True, text=True).stdout.split()[0] or 0) if why is None or a.mode == "plan" else 0
         print(("KEEP %7dMB %s: %s" % (sz, t, why)) if why else ("%s %7dMB %s" % ("DEL " if a.mode != "plan" else "WOULD-DEL", sz, t)))
         if why is None and a.mode != "plan":
