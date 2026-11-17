@@ -24,3 +24,8 @@ Owns S81 col (216), strip leaves, IFN0 halves. Three tracks:
 - CTS reads (epyc8 fable-fix-s81-coltap/an/p5_<fam>_cts + .out): r2 -46.8 (1 under -42; reset class gone, ROM q -11.4, a -21.2); r1 -93.4 (9; lpl_r chunk -> t payload 763 um); h10_r2 -204.2 (14; t/so -> ist_frame_int_o 1135 um, y_rt_a -> n/a 712 um). Place images LOOKED PASS (localhost scratchpad col5/).
 - Route clients intel2: 687024 (r2) 687025 (r1) 687026 (h10_r2), logs pilot5_<fam>_route.log. Still at cts goal: 313861 (h9_r0_p2), 313862 (h10_r0_p1): LOOK + stage_sta cts, then same route command.
 - TODO at GRT: stage_sta.sh KIT OUT grt (r310), GRT overflow, post-DPL reset hop table, FF hold; post col-wave1 / col-wave2 RESULT; then sign-off + export (AGIdock /archive/opentallas-signed-1114 + rtx-pro).
+
+## 18:4x relay regex class (r0 families)
+- h9_r0_p2 CTS -1099 / 3,676 under -42: OT_RELAY_MID_RE in config.mk is [.]u_y_ (gen_phys default, budgets.relay_mid_re), r-flattened relays (u_u_r0_u_y_xo*, u_u_y_rt_*) not matched; Codex GEN env [._] is not read by gen. NOT routed.
+- Sibling kits epyc8 countable_F2s4tapfix1/gen_rm2/<type> (pristine E10 kit + config.mk regex [._]) for h9_r0_p2, h10_r0_p1, h10_r2 to CTS: intel2 logs pilot5rm2_<fam>_cts.log. Read OT_HOOK_COVERAGE hook=relay_mid + stage_sta cts; if good route rm2 kits (and stop caring about gen/ h9_r0_p2, h10_r0_p1; gen/h10_r2 route continues as comparison).
+- If confirmed: gen_phys RELAY_MID_RE default -> [._] (branch, test, gate) + plan budgets row via S81-DIE-R. r2 / r1 placed with the old regex (y_x / y_rt relays unplaced there too; r2 CTS -46.8 anyway).
