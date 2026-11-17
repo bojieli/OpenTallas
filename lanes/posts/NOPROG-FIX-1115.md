@@ -116,3 +116,7 @@
   NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 19.3 h job 19.4 h: no new meaningful log line for 18.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
   NO-PROGRESS epyc8 gen_rm4 5_1_grt stage 9.6 h job 11.0 h: repair_Remaining best 179322 last 179322 rows 26 window-gain 0.0%; stagnant 6.8 h; last event 7.0 h ago, log write 7.0 h ago (974 lines)
   NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 3_5_place_dp stage 6.1 h job 11.9 h: no new meaningful log line for 6.0 h; last: [INFO DPL-1101] Legalizing using diamond search.
+- 2026-11-17 06:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 06:52 PST: 96 running jobs, PROGRESSING 84, SLOW 9, NO-PROGRESS 3 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 52.7 h job 52.7 h: drt_violations best 2967 last 2967 rows 4 window-gain 0.0%; stagnant 8.7 h; last event 0.7 h ago, log write 0.1 h ago (1624 lines)
+  NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 20.3 h job 20.4 h: no new meaningful log line for 19.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+  NO-PROGRESS epyc8 gen_rm4 5_1_grt stage 10.6 h job 12.0 h: repair_Remaining best 179322 last 179322 rows 26 window-gain 0.0%; stagnant 7.8 h; last event 8.0 h ago, log write 8.0 h ago (974 lines)
