@@ -1,0 +1,2375 @@
+{
+ "schema": "opentallas.reset_handoff_boot_price.v1",
+ "status": "MODEL_ONLY_REQUIRES_SOURCE_DEPTH_GATE",
+ "scope": "13 receiver phase-class clones only, each adds1 synchronous pin entry handoff stage for reset AND START. Existing raw/run relay topology andcountdepth retained. Old NF15c graph; fresh NF15e reprice required.",
+ "relocated_census": [
+  {
+   "type": "hd_serdes",
+   "old": "/srv/opentallas-scratch2/claude/head-97/pd/native_domains/head_serdes_primary_3place_1113.json",
+   "new": "/srv/opentallas-scratch2/claude/head-die-r/prep21z20NF15c/prep/native_domains/head_serdes_primary_3place_1113.json",
+   "file_sha256": "949ded01b12b0a1768f6752cdb982ff4000201f4b7e8b360be37befdb82b8332"
+  }
+ ],
+ "source_plan_sha256": "e471b074e48fbce552b9fb9f19bc185940bfba57ae84e590f8273724936aa8e7",
+ "local_handoff_instances": [
+  "sp3",
+  "sp4",
+  "tE3b0",
+  "tE3b7",
+  "tE3b9",
+  "tE4b0",
+  "tE4b6",
+  "tE4b8",
+  "tE5b4",
+  "tW3b9",
+  "tW4b0",
+  "tW4b8",
+  "tW5b5"
+ ],
+ "old_wavefront_max_release": 96,
+ "new_wavefront_max_release": 97,
+ "max_path_added_boot_cycles": 2,
+ "changed_parts": 291,
+ "old_ca_root_settle_cycles": 88,
+ "proposed_ca_root_settle_cycles": 90,
+ "root_settle_policy": "Increase by max extra raw-wavefront path cost, preserving every old relative boot clearance even if the root raw provider also moves later; no reduced hold/reset obligation.",
+ "explicit_start_offsets": "Reset AND START use same wavefront: compiler per-part mission-admission offsets increase by listed delta. Root must not issue arithmetic before updated release/calendar.",
+ "count_aligned_J_K": "Conditional: origin sample clocks and forward START physical path unchanged => J and origin differences unchanged after common rootsettle delay; recompute actual post-fork source/destination phase interval and run ordinary count-align gate. A boundary crossing/changed J requires new K/depth/strap rows, never assume old K.",
+ "added_arithmetic_cycles": 0,
+ "added_reset_start_ff": 26,
+ "shared_phasefork_buf4": 390,
+ "added_area_um2": 48.52224,
+ "changes": [
+  {
+   "part": "ctl",
+   "type": "hd_ctl",
+   "old_release_cycles": 51,
+   "new_release_cycles": 53,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "ctl_estrip",
+   "type": "hd_ctl_e",
+   "old_release_cycles": 54,
+   "new_release_cycles": 56,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "ctl_nstrip",
+   "type": "hd_ctl_n",
+   "old_release_cycles": 56,
+   "new_release_cycles": 58,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "lep0N",
+   "type": "hd_lep0N",
+   "old_release_cycles": 60,
+   "new_release_cycles": 62,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "lk_EN0",
+   "type": "hd_serdes",
+   "old_release_cycles": 72,
+   "new_release_cycles": 74,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "lk_EN1",
+   "type": "hd_serdes",
+   "old_release_cycles": 80,
+   "new_release_cycles": 81,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "lk_WN0",
+   "type": "hd_serdes",
+   "old_release_cycles": 64,
+   "new_release_cycles": 66,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "lk_WN1",
+   "type": "hd_serdes",
+   "old_release_cycles": 72,
+   "new_release_cycles": 74,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "lk_WN2",
+   "type": "hd_serdes",
+   "old_release_cycles": 82,
+   "new_release_cycles": 83,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "lk_WN3",
+   "type": "hd_serdes",
+   "old_release_cycles": 64,
+   "new_release_cycles": 66,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "mesh7N",
+   "type": "hd_mesh",
+   "old_release_cycles": 66,
+   "new_release_cycles": 67,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "mesh7N_estrip",
+   "type": "hd_mesh_e",
+   "old_release_cycles": 62,
+   "new_release_cycles": 64,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst1",
+   "type": "hd_st_turn",
+   "old_release_cycles": 74,
+   "new_release_cycles": 75,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst10",
+   "type": "hd_st_turn",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst2",
+   "type": "hd_st_str",
+   "old_release_cycles": 68,
+   "new_release_cycles": 69,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst3_transit",
+   "type": "hd_st_n3_transit",
+   "old_release_cycles": 64,
+   "new_release_cycles": 66,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst3_turn",
+   "type": "hd_st_n3_turn",
+   "old_release_cycles": 69,
+   "new_release_cycles": 71,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst4",
+   "type": "hd_st_n4",
+   "old_release_cycles": 63,
+   "new_release_cycles": 65,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst7",
+   "type": "hd_st_m",
+   "old_release_cycles": 59,
+   "new_release_cycles": 61,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "nst9",
+   "type": "hd_st_str",
+   "old_release_cycles": 66,
+   "new_release_cycles": 67,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp0",
+   "type": "hd_spn",
+   "old_release_cycles": 47,
+   "new_release_cycles": 49,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp0_be_i_shim",
+   "type": "hd_spn_eshim_rx",
+   "old_release_cycles": 59,
+   "new_release_cycles": 61,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp0_bw_i_shim",
+   "type": "hd_spn_wshim_rx",
+   "old_release_cycles": 54,
+   "new_release_cycles": 56,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp0_xe_o_shim",
+   "type": "hd_spn_eshim_tx",
+   "old_release_cycles": 63,
+   "new_release_cycles": 65,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp0_xw_o_shim",
+   "type": "hd_spn_wshim_tx",
+   "old_release_cycles": 52,
+   "new_release_cycles": 54,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp1",
+   "type": "hd_spn",
+   "old_release_cycles": 39,
+   "new_release_cycles": 41,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp1_be_i_shim",
+   "type": "hd_spn_eshim_rx",
+   "old_release_cycles": 49,
+   "new_release_cycles": 51,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp1_bw_i_shim",
+   "type": "hd_spn_wshim_rx",
+   "old_release_cycles": 46,
+   "new_release_cycles": 48,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp1_xe_o_shim",
+   "type": "hd_spn_eshim_tx",
+   "old_release_cycles": 53,
+   "new_release_cycles": 55,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp1_xw_o_shim",
+   "type": "hd_spn_wshim_tx",
+   "old_release_cycles": 44,
+   "new_release_cycles": 46,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp2",
+   "type": "hd_spn",
+   "old_release_cycles": 31,
+   "new_release_cycles": 33,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp2_be_i_shim",
+   "type": "hd_spn_eshim_rx",
+   "old_release_cycles": 39,
+   "new_release_cycles": 41,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp2_bw_i_shim",
+   "type": "hd_spn_wshim_rx",
+   "old_release_cycles": 38,
+   "new_release_cycles": 40,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp2_xe_o_shim",
+   "type": "hd_spn_eshim_tx",
+   "old_release_cycles": 43,
+   "new_release_cycles": 45,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp2_xw_o_shim",
+   "type": "hd_spn_wshim_tx",
+   "old_release_cycles": 36,
+   "new_release_cycles": 38,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp3",
+   "type": "hd_spn",
+   "old_release_cycles": 23,
+   "new_release_cycles": 25,
+   "delta_cycles": 2,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "sp3_be_i_shim",
+   "type": "hd_spn_eshim_rx",
+   "old_release_cycles": 29,
+   "new_release_cycles": 31,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp3_bw_i_shim",
+   "type": "hd_spn_wshim_rx",
+   "old_release_cycles": 30,
+   "new_release_cycles": 32,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp3_xe_o_shim",
+   "type": "hd_spn_eshim_tx",
+   "old_release_cycles": 33,
+   "new_release_cycles": 35,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp3_xw_o_shim",
+   "type": "hd_spn_wshim_tx",
+   "old_release_cycles": 28,
+   "new_release_cycles": 30,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp4",
+   "type": "hd_spn",
+   "old_release_cycles": 15,
+   "new_release_cycles": 16,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "sp4_be_i_shim",
+   "type": "hd_spn_eshim_rx",
+   "old_release_cycles": 19,
+   "new_release_cycles": 20,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp4_bw_i_shim",
+   "type": "hd_spn_wshim_rx",
+   "old_release_cycles": 22,
+   "new_release_cycles": 23,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp4_xe_o_shim",
+   "type": "hd_spn_eshim_tx",
+   "old_release_cycles": 23,
+   "new_release_cycles": 24,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "sp4_xw_o_shim",
+   "type": "hd_spn_wshim_tx",
+   "old_release_cycles": 20,
+   "new_release_cycles": 21,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b0",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 57,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b1",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 57,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b10",
+   "type": "hd_tile",
+   "old_release_cycles": 81,
+   "new_release_cycles": 83,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b2",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 57,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b3",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 57,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b4",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 56,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b5",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b6",
+   "type": "hd_tile",
+   "old_release_cycles": 65,
+   "new_release_cycles": 66,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b7",
+   "type": "hd_tile",
+   "old_release_cycles": 70,
+   "new_release_cycles": 71,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b8",
+   "type": "hd_tile",
+   "old_release_cycles": 75,
+   "new_release_cycles": 76,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0b9",
+   "type": "hd_tile",
+   "old_release_cycles": 80,
+   "new_release_cycles": 81,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o0",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 62,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o1",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 62,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o10",
+   "type": "hd_tile",
+   "old_release_cycles": 86,
+   "new_release_cycles": 88,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o2",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 62,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o3",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 62,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o4",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o5",
+   "type": "hd_tile",
+   "old_release_cycles": 65,
+   "new_release_cycles": 66,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o6",
+   "type": "hd_tile",
+   "old_release_cycles": 70,
+   "new_release_cycles": 71,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o7",
+   "type": "hd_tile",
+   "old_release_cycles": 75,
+   "new_release_cycles": 76,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o8",
+   "type": "hd_tile",
+   "old_release_cycles": 80,
+   "new_release_cycles": 81,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE0o9",
+   "type": "hd_tile",
+   "old_release_cycles": 85,
+   "new_release_cycles": 86,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b0",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 47,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b1",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 47,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b10",
+   "type": "hd_tile",
+   "old_release_cycles": 76,
+   "new_release_cycles": 78,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b2",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 47,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b3",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 46,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b4",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 51,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b5",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 56,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b6",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b7",
+   "type": "hd_tile",
+   "old_release_cycles": 65,
+   "new_release_cycles": 66,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b8",
+   "type": "hd_tile",
+   "old_release_cycles": 70,
+   "new_release_cycles": 71,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1b9",
+   "type": "hd_tile",
+   "old_release_cycles": 71,
+   "new_release_cycles": 73,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o0",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 52,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o1",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 52,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o10",
+   "type": "hd_tile",
+   "old_release_cycles": 81,
+   "new_release_cycles": 83,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o2",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 52,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o3",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 51,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o4",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 56,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o5",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o6",
+   "type": "hd_tile",
+   "old_release_cycles": 65,
+   "new_release_cycles": 66,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o7",
+   "type": "hd_tile",
+   "old_release_cycles": 70,
+   "new_release_cycles": 71,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o8",
+   "type": "hd_tile",
+   "old_release_cycles": 75,
+   "new_release_cycles": 76,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE1o9",
+   "type": "hd_tile",
+   "old_release_cycles": 76,
+   "new_release_cycles": 78,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b0",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 37,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b1",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 37,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b10",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 69,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b2",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 36,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b3",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 41,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b4",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 46,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b5",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 51,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b6",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 56,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b7",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b8",
+   "type": "hd_tile",
+   "old_release_cycles": 61,
+   "new_release_cycles": 63,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2b9",
+   "type": "hd_tile",
+   "old_release_cycles": 66,
+   "new_release_cycles": 68,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o0",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 42,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o1",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 42,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o10",
+   "type": "hd_tile",
+   "old_release_cycles": 72,
+   "new_release_cycles": 74,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o2",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 41,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o3",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 46,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o4",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 51,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o5",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 56,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o6",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o7",
+   "type": "hd_tile",
+   "old_release_cycles": 65,
+   "new_release_cycles": 66,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o8",
+   "type": "hd_tile",
+   "old_release_cycles": 66,
+   "new_release_cycles": 68,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE2o9",
+   "type": "hd_tile",
+   "old_release_cycles": 71,
+   "new_release_cycles": 73,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b0",
+   "type": "hd_tile",
+   "old_release_cycles": 25,
+   "new_release_cycles": 27,
+   "delta_cycles": 2,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tE3b1",
+   "type": "hd_tile",
+   "old_release_cycles": 25,
+   "new_release_cycles": 26,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b10",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 64,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b2",
+   "type": "hd_tile",
+   "old_release_cycles": 30,
+   "new_release_cycles": 31,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b3",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 36,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b4",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 41,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b5",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 46,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b6",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 51,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b7",
+   "type": "hd_tile",
+   "old_release_cycles": 51,
+   "new_release_cycles": 53,
+   "delta_cycles": 2,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tE3b8",
+   "type": "hd_tile",
+   "old_release_cycles": 56,
+   "new_release_cycles": 58,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3b9",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 59,
+   "delta_cycles": 2,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tE3o0",
+   "type": "hd_tile",
+   "old_release_cycles": 30,
+   "new_release_cycles": 32,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o1",
+   "type": "hd_tile",
+   "old_release_cycles": 30,
+   "new_release_cycles": 31,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o10",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 69,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o2",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 36,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o3",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 41,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o4",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 46,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o5",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 51,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o6",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 56,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o7",
+   "type": "hd_tile",
+   "old_release_cycles": 56,
+   "new_release_cycles": 58,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o8",
+   "type": "hd_tile",
+   "old_release_cycles": 61,
+   "new_release_cycles": 63,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE3o9",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 64,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b0",
+   "type": "hd_tile",
+   "old_release_cycles": 15,
+   "new_release_cycles": 16,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tE4b1",
+   "type": "hd_tile",
+   "old_release_cycles": 20,
+   "new_release_cycles": 21,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b10",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b2",
+   "type": "hd_tile",
+   "old_release_cycles": 25,
+   "new_release_cycles": 26,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b3",
+   "type": "hd_tile",
+   "old_release_cycles": 30,
+   "new_release_cycles": 31,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b4",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 36,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b5",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 41,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b6",
+   "type": "hd_tile",
+   "old_release_cycles": 41,
+   "new_release_cycles": 42,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tE4b7",
+   "type": "hd_tile",
+   "old_release_cycles": 46,
+   "new_release_cycles": 47,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4b8",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tE4b9",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o0",
+   "type": "hd_tile",
+   "old_release_cycles": 20,
+   "new_release_cycles": 21,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o1",
+   "type": "hd_tile",
+   "old_release_cycles": 25,
+   "new_release_cycles": 26,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o10",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o2",
+   "type": "hd_tile",
+   "old_release_cycles": 30,
+   "new_release_cycles": 31,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o3",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 36,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o4",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 41,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o5",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 46,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o6",
+   "type": "hd_tile",
+   "old_release_cycles": 46,
+   "new_release_cycles": 47,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o7",
+   "type": "hd_tile",
+   "old_release_cycles": 51,
+   "new_release_cycles": 52,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o8",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE4o9",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tE5b4",
+   "type": "hd_tile",
+   "old_release_cycles": 31,
+   "new_release_cycles": 32,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tE5o4",
+   "type": "hd_tile",
+   "old_release_cycles": 36,
+   "new_release_cycles": 37,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b0",
+   "type": "hd_tile",
+   "old_release_cycles": 49,
+   "new_release_cycles": 51,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b1",
+   "type": "hd_tile",
+   "old_release_cycles": 51,
+   "new_release_cycles": 53,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b10",
+   "type": "hd_tile",
+   "old_release_cycles": 87,
+   "new_release_cycles": 88,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b2",
+   "type": "hd_tile",
+   "old_release_cycles": 53,
+   "new_release_cycles": 55,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b3",
+   "type": "hd_tile",
+   "old_release_cycles": 55,
+   "new_release_cycles": 56,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b4",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b5",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b6",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 68,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b7",
+   "type": "hd_tile",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b8",
+   "type": "hd_tile",
+   "old_release_cycles": 77,
+   "new_release_cycles": 78,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0b9",
+   "type": "hd_tile",
+   "old_release_cycles": 82,
+   "new_release_cycles": 83,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o0",
+   "type": "hd_tile",
+   "old_release_cycles": 54,
+   "new_release_cycles": 56,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o1",
+   "type": "hd_tile",
+   "old_release_cycles": 56,
+   "new_release_cycles": 58,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o10",
+   "type": "hd_tile",
+   "old_release_cycles": 92,
+   "new_release_cycles": 93,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o2",
+   "type": "hd_tile",
+   "old_release_cycles": 58,
+   "new_release_cycles": 60,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o3",
+   "type": "hd_tile",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o4",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o5",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 68,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o6",
+   "type": "hd_tile",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o7",
+   "type": "hd_tile",
+   "old_release_cycles": 77,
+   "new_release_cycles": 78,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o8",
+   "type": "hd_tile",
+   "old_release_cycles": 82,
+   "new_release_cycles": 83,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW0o9",
+   "type": "hd_tile",
+   "old_release_cycles": 87,
+   "new_release_cycles": 88,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b0",
+   "type": "hd_tile",
+   "old_release_cycles": 41,
+   "new_release_cycles": 43,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b1",
+   "type": "hd_tile",
+   "old_release_cycles": 43,
+   "new_release_cycles": 45,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b10",
+   "type": "hd_tile",
+   "old_release_cycles": 82,
+   "new_release_cycles": 83,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b2",
+   "type": "hd_tile",
+   "old_release_cycles": 45,
+   "new_release_cycles": 46,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b3",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b4",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b5",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b6",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b7",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 68,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b8",
+   "type": "hd_tile",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1b9",
+   "type": "hd_tile",
+   "old_release_cycles": 77,
+   "new_release_cycles": 78,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o0",
+   "type": "hd_tile",
+   "old_release_cycles": 46,
+   "new_release_cycles": 48,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o1",
+   "type": "hd_tile",
+   "old_release_cycles": 48,
+   "new_release_cycles": 50,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o10",
+   "type": "hd_tile",
+   "old_release_cycles": 87,
+   "new_release_cycles": 88,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o2",
+   "type": "hd_tile",
+   "old_release_cycles": 50,
+   "new_release_cycles": 51,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o3",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o4",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o5",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o6",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 68,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o7",
+   "type": "hd_tile",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o8",
+   "type": "hd_tile",
+   "old_release_cycles": 77,
+   "new_release_cycles": 78,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW1o9",
+   "type": "hd_tile",
+   "old_release_cycles": 82,
+   "new_release_cycles": 83,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b0",
+   "type": "hd_tile",
+   "old_release_cycles": 33,
+   "new_release_cycles": 35,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b1",
+   "type": "hd_tile",
+   "old_release_cycles": 35,
+   "new_release_cycles": 36,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b10",
+   "type": "hd_tile",
+   "old_release_cycles": 73,
+   "new_release_cycles": 75,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b2",
+   "type": "hd_tile",
+   "old_release_cycles": 37,
+   "new_release_cycles": 38,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b3",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b4",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b5",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b6",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b7",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b8",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 68,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2b9",
+   "type": "hd_tile",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o0",
+   "type": "hd_tile",
+   "old_release_cycles": 38,
+   "new_release_cycles": 40,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o1",
+   "type": "hd_tile",
+   "old_release_cycles": 40,
+   "new_release_cycles": 41,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o10",
+   "type": "hd_tile",
+   "old_release_cycles": 78,
+   "new_release_cycles": 80,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o2",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o3",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o4",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o5",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o6",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o7",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 68,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o8",
+   "type": "hd_tile",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW2o9",
+   "type": "hd_tile",
+   "old_release_cycles": 77,
+   "new_release_cycles": 78,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b0",
+   "type": "hd_tile",
+   "old_release_cycles": 25,
+   "new_release_cycles": 26,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b1",
+   "type": "hd_tile",
+   "old_release_cycles": 27,
+   "new_release_cycles": 28,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b10",
+   "type": "hd_tile",
+   "old_release_cycles": 68,
+   "new_release_cycles": 70,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b2",
+   "type": "hd_tile",
+   "old_release_cycles": 32,
+   "new_release_cycles": 33,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b3",
+   "type": "hd_tile",
+   "old_release_cycles": 37,
+   "new_release_cycles": 38,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b4",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b5",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b6",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b7",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b8",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3b9",
+   "type": "hd_tile",
+   "old_release_cycles": 63,
+   "new_release_cycles": 65,
+   "delta_cycles": 2,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tW3o0",
+   "type": "hd_tile",
+   "old_release_cycles": 30,
+   "new_release_cycles": 31,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o1",
+   "type": "hd_tile",
+   "old_release_cycles": 32,
+   "new_release_cycles": 33,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o10",
+   "type": "hd_tile",
+   "old_release_cycles": 73,
+   "new_release_cycles": 75,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o2",
+   "type": "hd_tile",
+   "old_release_cycles": 37,
+   "new_release_cycles": 38,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o3",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o4",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o5",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o6",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o7",
+   "type": "hd_tile",
+   "old_release_cycles": 62,
+   "new_release_cycles": 63,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o8",
+   "type": "hd_tile",
+   "old_release_cycles": 67,
+   "new_release_cycles": 68,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW3o9",
+   "type": "hd_tile",
+   "old_release_cycles": 68,
+   "new_release_cycles": 70,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b0",
+   "type": "hd_tile",
+   "old_release_cycles": 17,
+   "new_release_cycles": 18,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tW4b1",
+   "type": "hd_tile",
+   "old_release_cycles": 22,
+   "new_release_cycles": 23,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b10",
+   "type": "hd_tile",
+   "old_release_cycles": 63,
+   "new_release_cycles": 64,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b2",
+   "type": "hd_tile",
+   "old_release_cycles": 27,
+   "new_release_cycles": 28,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b3",
+   "type": "hd_tile",
+   "old_release_cycles": 32,
+   "new_release_cycles": 33,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b4",
+   "type": "hd_tile",
+   "old_release_cycles": 37,
+   "new_release_cycles": 38,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b5",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b6",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b7",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4b8",
+   "type": "hd_tile",
+   "old_release_cycles": 53,
+   "new_release_cycles": 54,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tW4b9",
+   "type": "hd_tile",
+   "old_release_cycles": 58,
+   "new_release_cycles": 59,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o0",
+   "type": "hd_tile",
+   "old_release_cycles": 22,
+   "new_release_cycles": 23,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o1",
+   "type": "hd_tile",
+   "old_release_cycles": 27,
+   "new_release_cycles": 28,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o10",
+   "type": "hd_tile",
+   "old_release_cycles": 68,
+   "new_release_cycles": 69,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o2",
+   "type": "hd_tile",
+   "old_release_cycles": 32,
+   "new_release_cycles": 33,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o3",
+   "type": "hd_tile",
+   "old_release_cycles": 37,
+   "new_release_cycles": 38,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o4",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o5",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o6",
+   "type": "hd_tile",
+   "old_release_cycles": 52,
+   "new_release_cycles": 53,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o7",
+   "type": "hd_tile",
+   "old_release_cycles": 57,
+   "new_release_cycles": 58,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o8",
+   "type": "hd_tile",
+   "old_release_cycles": 58,
+   "new_release_cycles": 59,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW4o9",
+   "type": "hd_tile",
+   "old_release_cycles": 63,
+   "new_release_cycles": 64,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW5b5",
+   "type": "hd_tile",
+   "old_release_cycles": 37,
+   "new_release_cycles": 38,
+   "delta_cycles": 1,
+   "entry_handoff_added": true
+  },
+  {
+   "part": "tW5b6",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW5o5",
+   "type": "hd_tile",
+   "old_release_cycles": 42,
+   "new_release_cycles": 43,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "tW5o6",
+   "type": "hd_tile",
+   "old_release_cycles": 47,
+   "new_release_cycles": 48,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE0a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 90,
+   "new_release_cycles": 92,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE0b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 84,
+   "new_release_cycles": 86,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE1a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 85,
+   "new_release_cycles": 87,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE1b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 79,
+   "new_release_cycles": 81,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE2a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 76,
+   "new_release_cycles": 78,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE2b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 70,
+   "new_release_cycles": 72,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE3a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 71,
+   "new_release_cycles": 73,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE3b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 65,
+   "new_release_cycles": 67,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE4a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 66,
+   "new_release_cycles": 67,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnE4b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 60,
+   "new_release_cycles": 61,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW0a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 96,
+   "new_release_cycles": 97,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW0b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 90,
+   "new_release_cycles": 91,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW1a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 91,
+   "new_release_cycles": 92,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW1b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 85,
+   "new_release_cycles": 86,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW2a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 82,
+   "new_release_cycles": 84,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW2b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 76,
+   "new_release_cycles": 78,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW3a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 77,
+   "new_release_cycles": 79,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW3b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 71,
+   "new_release_cycles": 73,
+   "delta_cycles": 2,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW4a",
+   "type": "hd_turn_a",
+   "old_release_cycles": 72,
+   "new_release_cycles": 73,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  },
+  {
+   "part": "turnW4b",
+   "type": "hd_turn_b",
+   "old_release_cycles": 66,
+   "new_release_cycles": 67,
+   "delta_cycles": 1,
+   "entry_handoff_added": false
+  }
+ ],
+ "supersedes_area_only": "/srv/opentallas-scratch2/claude/head-die-r/reset_feasibility_r4_1117/handoff_boot_price_provisional_r2.json",
+ "added_INVxp67_polarity_cells": 26,
+ "polarity_note": "NativeDFFHQNx1QN is negative, requiringoneINVxp67beforelocalhandoffDperinput. Cycle/bootgraphunchanged. r2componentmodelsINV."
+}

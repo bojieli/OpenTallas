@@ -1,0 +1,10 @@
+{
+ "status": "COMPONENT_MODEL_ONLY_NO_PHYSICAL_RELEASE",
+ "supersedes": "Initial timing-only handoff model omitted the polarity INV needed by the negative-output native DFFHQNx1. r2 includes2INVxp67; old records remain unchanged.",
+ "native_ff_truth": "ff(IQN,IQNN);clocked_on CLK;next_state !D;QN function IQN",
+ "source_pinned_files": {
+  "handoff_component_r2.py": "e5a0a3332f675a2776d6051ee20eccd925032c416400c76318b8a926a3a50b74",
+  "handoff_boot_price_r3.json": "4a2c355448e4606bcce0a9b78b0d9ad213073a199af52e90eff5273aa3a5cfb6",
+  "handoff_component_r2.json": "cb18da6a6b3e6238970633354d4deba1820155be81c0c57c3e4726f167b0ae72"
+ }
+}
