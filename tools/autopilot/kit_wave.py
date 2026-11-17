@@ -619,6 +619,13 @@ def pilot_passed_map(st, cfg):
     return out
 
 
+def release_pilot_passed(rows, die, item, t0):
+    """FABLE-FLOW-2200: the release pilot's attempt that started at or after the release is past GEN (PILOT_PASS_STATUS: PASS, ENQUEUED,
+    ROUTE-HELD, SIGNED); a FAIL or a running attempt is not a pass."""
+    return any(r.get("die") == die and r.get("item") == item and r.get("status") in PILOT_PASS_STATUS
+               and float(r.get("started") or 0) >= float(t0) - 60 for r in rows or [])
+
+
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
@@ -628,7 +635,8 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   cells_fn=lambda die, item: cells.get((die, item)),
                   proof_fn=proof_pass_fn(proofs),
                   tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item),
-                  pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []))
+                  pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []),
+                  release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0))
 
 
 RESULT_POST = r"^\s*-?\s*\d{4}-\d\d-\d\d\s+\S+\s+[A-Za-z]{2,4}\s+RESULT\s*\["        # a post OF TYPE RESULT: "- 2026-11-16 07:18 PST RESULT [LANE ->"
@@ -11097,6 +11105,16 @@ def _step(AP, ap_dir):
                 _names.setdefault(_r["die"], set()).add(_r["item"])
         cfg["_item_names"] = {d_: sorted(v) for d_, v in _names.items()}
         cfg["_pilot_passed"] = pilot_passed_map(st, cfg)
+        _act = {}
+        for _r in (st.get("items") or {}).values():
+            if _r.get("die") and _r.get("item") and _r.get("status") in ("RUNNING", "ENQUEUED", "PASS", "ROUTE-HELD", "SIGNED"):
+                _act.setdefault(_r["die"], set()).add(_r["item"])
+        cfg["_item_active"] = {d_: sorted(v) for d_, v in _act.items()}
+        cfg["_item_rows"] = list((st.get("items") or {}).values())       # FABLE-FLOW-2200 release pilot: attempts since the release
+        _rp = st.setdefault("hold_release_pilot", {})                     # persistent per record: {pilot, t, passed}
+        for _k, _v in (cfg.get("_release_pilot") or {}).items():
+            _rp.setdefault(_k, _v)
+        cfg["_release_pilot"] = _rp
         cfg["_lint_fail"] = lint_failures(cfg, (st.get("items") or {}).values())
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
