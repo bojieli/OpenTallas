@@ -163,12 +163,15 @@ def test_default_threshold_covers_the_silent_blowup_band():
 
 # ---- rule 3 (FABLE-FIX-S81-STRIP 11-16): sparse exit overflow, opt-in OT_GPL_SPARSE_OVERFLOW ----
 OVF = "set ::env(OT_GPL_SPARSE_OVERFLOW) 0.25"
+# timing-driven call at exit 0.25: second pass at 0.30, buffers kept below 0.35 (the kit's 0.3 is raised)
+NOROUTE_X = (NOROUTE.replace("-keep_resize_below_overflow 0.3", "-keep_resize_below_overflow 0.35")
+             + " -timing_driven_net_reweight_overflow {64 30} -overflow 0.25")
 
 
 @needs_tcl
 def test_sparse_exit_overflow_added_to_sparse_kit_only():
     out = _run(SPARSE, env=OVF)
-    assert f"CALL 1: {NOROUTE} -overflow 0.25\n" in out and "OT_GPL_SPARSE exit overflow 0.25" in out, out
+    assert f"CALL 1: {NOROUTE_X}\n" in out and "OT_GPL_SPARSE exit overflow 0.25" in out, out
     assert "RC=0 RES=done CALLS=1 RD=0 TD=1" in out, out
     out = _run(DENSE, env=OVF)                                              # 10 %: not sparse, call unchanged
     assert f"CALL 1: {ARGS}\n" in out and "-overflow" not in out and "RD=1 TD=1" in out, out
@@ -185,6 +188,22 @@ def test_sparse_exit_overflow_off_is_the_old_call():
 def test_sparse_exit_overflow_keeps_an_explicit_overflow():
     out = _run(SPARSE, env=OVF, call=ARGS + " -overflow 0.15")
     assert f"CALL 1: {NOROUTE} -overflow 0.15\n" in out and "exit overflow 0.25" not in out, out
+
+
+@needs_tcl
+def test_sparse_exit_keeps_the_second_timing_driven_pass():
+    td = "-density 0.5 -timing_driven -keep_resize_below_overflow %s -min_phi_coef 0.95"
+    out = _run(SPARSE, env=OVF, call=td % "0.25")                           # the S81 leaf kit call
+    assert ("CALL 1: " + td % "0.35" + " -timing_driven_net_reweight_overflow {64 30} -overflow 0.25\n") in out, out
+    out = _run(SPARSE, env=OVF, call=td % "0.5")                            # a higher keep threshold is not lowered
+    assert ("CALL 1: " + td % "0.5" + " -timing_driven_net_reweight_overflow {64 30} -overflow 0.25\n") in out, out
+    out = _run(SPARSE, env=OVF, call="-density 0.5 -timing_driven")         # no keep threshold named: one is added
+    assert "CALL 1: -density 0.5 -timing_driven -keep_resize_below_overflow 0.35 -timing_driven_net_reweight_overflow {64 30} -overflow 0.25\n" in out, out
+    own = td % "0.25" + " -timing_driven_net_reweight_overflow {79 40}"     # the kit's own list is kept
+    out = _run(SPARSE, env=OVF, call=own)
+    assert ("CALL 1: " + own.replace("0.25", "0.35") + " -overflow 0.25\n") in out, out
+    out = _run(SPARSE, env="set ::env(OT_GPL_SPARSE_OVERFLOW) 0.3", call=td % "0.25")
+    assert "-keep_resize_below_overflow 0.4 " in out and "{64 35} -overflow 0.3\n" in out, out
 
 
 @needs_tcl

@@ -917,6 +917,12 @@ if {[file exists [file join [file dirname [file normalize [info script]]] cell_c
 #      logic left its FIRM flops by 150-300 um (HPWL 1.43e7 -> 2.20e7 um, minimum 1.39e7).  Target density 0.65 / 0.9,
 #      timing-driven off and keep-resize 0 all end the same way (1.30-2.07 x the minimum on t47 / t75); exit at 0.20 is
 #      on the knee (t47 1.26 x).  Exit at 0.25: 1.026 x, detailed placement average displacement 2.0 um, max 91.6 um.
+#      A timing-driven call keeps its second, non-virtual pass: OpenROAD fires it at overflow 0.20, which an exit at
+#      0.25 never reaches, and it is the pass that buffers by wire length (t47: 26,196 long wires; without it flop ->
+#      lane-pin nets keep one 812 um unbuffered segment, -986 ps at the CTS read against -167).  So the call also gets
+#      -timing_driven_net_reweight_overflow {64 R} with R = 100 x (V + 0.05), and -keep_resize_below_overflow is raised
+#      to V + 0.10 (pass at 0.30, buffers kept, then Nesterov settles them down to 0.25).  A call that names its own
+#      reweight list keeps it.
 #      The plain FALLBACK retry and an already plain call of a sparse kit get the same exit.  Unset / 0 = unchanged.
 # Placement quality is judged downstream as for every kit (DPL, CTS, GRT, STA, sign-off gates are unchanged).
 proc ot_gpl_sparse_util {blk} {
@@ -985,7 +991,16 @@ proc ot_gpl_sparse_overflow_value {} {
 }
 proc ot_gpl_exit_args {argl v} {
  if {$v <= 0 || [lsearch -exact $argl -overflow] >= 0} { return $argl }
- return [concat $argl [list -overflow $v]]
+ set out $argl
+ if {[lsearch -exact $out -timing_driven] >= 0} {
+  set keep [format %g [expr {$v + 0.10}]]
+  set k [lsearch -exact $out -keep_resize_below_overflow]
+  if {$k < 0} { lappend out -keep_resize_below_overflow $keep } elseif {[lindex $out [expr {$k+1}]] < $keep} { lset out [expr {$k+1}] $keep }
+  if {[lsearch -exact $out -timing_driven_net_reweight_overflow] < 0} {
+   lappend out -timing_driven_net_reweight_overflow [list 64 [expr {int(round(100.0*($v + 0.05)))}]]
+  }
+ }
+ return [concat $out [list -overflow $v]]
 }
 # global_placement as called by ORFS global_place.tcl (the decision is taken at call time, after every hook above)
 proc ot_gpl_guarded {args} {
