@@ -107,3 +107,15 @@ iverilog, orfs; `max_job_ram_gb` 0.8 x RAM; disk floors 200 GB epyc2/3, 100 GB i
 localhost has `max_loop_threads 0` (the loop places nothing there until the owner opens it) and `bench_offload`.
 No `git_mirror` (servers cannot reach GitHub; sync falls back to the tar stream). Old hosts are in `retired_hosts`,
 so old specs that pin them fall back to admission.
+
+
+## Host provisioning checklist (gen hosts)
+
+A host is a gen host of a die only when ALL of these hold; `tools/autopilot/derive_gen_hosts.py` (hourly, rt/current) checks the mechanical ones and takes a host out of `gen_hosts` when one fails:
+
+1. The die's CURRENT source tree is present, full-hash verified (`src_manifest.py hosts --expect <manifest hash>`), no `.part` / `.building` beside it.
+2. Scratch2 has at least 70 GB free (the 50 GB floor + 20 GB).
+3. `~/.local/opentallas-pdk-asap7` (the legacy PDK root that `ref_tile.py` gen routes use) exists, read-only, identical manifest on every host (`find . -type f | sort | xargs sha256sum | sha256sum` = 13448116da4762e6, 25 files on 11-17). Per die override: `dies.<die>.host_requires` in kit_wave.json (a list of paths, `[]` = none).
+4. `rt/current` is the hub's sha (ot-tools-sync) and `/usr/local/bin/ot-heavy` is a symlink into it.
+5. `~/.local/bin/ot-delete`, `ot-gate-remote` and `ot-lane-clone` are symlinks into `rt/current/tools/fleet`.
+6. scratch3 is on a different disk than scratch2 (root disk bind of `/home/ubuntu/scratch-root`) when the root disk has more than 150 GB free beyond the data.

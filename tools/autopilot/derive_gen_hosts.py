@@ -8,6 +8,9 @@ import argparse, fcntl, json, os, shlex, shutil, subprocess, sys
 HOSTS = ("epyc10", "epyc7", "epyc8", "epyc9", "epyc2", "intel1")
 HASHFILE = ".src-manifest.sha256"
 HARD_FLOOR, MARGIN = 50, 20
+# COORD 11-17: ~/.local/opentallas-pdk-asap7 (the legacy PDK root ref_tile.py gen routes use) existed on intel1 and epyc2 only, so svc core routes failed on epyc8.  A host that lacks a required
+# tool path is not a gen host.  Per die: kit_wave.json dies.<die>.host_requires (list, [] = none); default for every die = REQUIRES_DEFAULT.
+REQUIRES_DEFAULT = ("~/.local/opentallas-pdk-asap7/lib",)
 
 
 def probe(host, tree, run=subprocess.run):
@@ -28,16 +31,37 @@ def probe(host, tree, run=subprocess.run):
     return ls[0].strip(), bool(ls[1].strip()), free
 
 
-def derive(cfg, hosts=HOSTS, prober=probe, floor=None):
+def host_requires(host, paths, run=subprocess.run):
+    """-> [paths missing on host] (ssh test -e per path; a host that does not answer is reported missing for all)"""
+    cmd = "; ".join("[ -e %s ] || echo MISSING %s" % (p.replace("~", "$HOME", 1), shlex.quote(p)) for p in paths)
+    try:
+        r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=15", host, cmd], capture_output=True, text=True, timeout=60)
+    except Exception:
+        return list(paths)
+    if getattr(r, "returncode", 0) not in (0, None):
+        return list(paths)
+    return [l.split(None, 1)[1].strip("'") for l in r.stdout.splitlines() if l.startswith("MISSING ")]
+
+
+def derive(cfg, hosts=HOSTS, prober=probe, floor=None, checker=host_requires):
     """-> {die: (new list, [reasons])}"""
     out = {}
+    _req = {}
     base = max(HARD_FLOOR, int(floor if floor is not None else HARD_FLOOR))
     for die, d in (cfg.get("dies") or {}).items():
         tree, want = d.get("src"), d.get("src_manifest_hash")
         if not tree or not want or not d.get("gen_hosts"):
             continue
         keep, why = [], []
+        need = tuple(d["host_requires"]) if isinstance(d.get("host_requires"), list) else REQUIRES_DEFAULT
         for h in hosts:
+            if need:
+                miss = _req.get((h, need))
+                if miss is None:
+                    miss = _req[(h, need)] = checker(h, need)
+                if miss:
+                    if h in d["gen_hosts"]: why.append(f"{h}: lacks {', '.join(miss)}")
+                    continue
             got, partial, free = prober(h, tree)
             if got != want:
                 if h in d["gen_hosts"]: why.append(f"{h}: tree missing or other hash")
