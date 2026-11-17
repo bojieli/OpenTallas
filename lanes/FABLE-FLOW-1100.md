@@ -1,7 +1,7 @@
-# FABLE-FLOW-1100: procedural and flow failures, 07:43-09:55 PST
+# FABLE-FLOW-1100: procedural and flow failures, 07:43-09:50 PST
 
 Reviewer: FABLE-FLOW-1100 (Fable). Read-only: no deletes, no kills, no git in owner checkouts. One ALERT posted
-(epyc7 disk). Measured 2026-11-17 09:43-09:58 PST on hub intel2 and the 6 build hosts.
+(epyc7 disk). Measured 2026-11-17 09:43-09:52 PST on hub intel2 and the 6 build hosts.
 Sources: autopilot/log.txt 07:43-09:43 (27 ticks), kit_wave.json + kit_wave_state.json (hub copy), `kit_wave.py plan`
 and `unchanged` (read-only), tools/failure_breakdown.py (09:43), `ot-run --status` (09:43), rt/history.log,
 per-host df and tree listing. Previous: FABLE-FLOW-0900. Scope: process and tooling only.
