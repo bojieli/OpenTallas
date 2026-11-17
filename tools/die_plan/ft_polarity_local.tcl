@@ -2,7 +2,7 @@
 # Keep the polarity inverter beside the planned launch station; subsequent
 # repair_design buffers the long wire after the inverter, rather than the weak QN.
 # Both canonical _sN and bound port-derived _i_N/_o_N stations belong to the same
-# physical structure; bound names are emitted by prepare-stations.
+# physical structure; bound names under u_bound are emitted by prepare-stations.
 # Placement only: no cells, connections, clocks, or cycles change. The ordinary
 # face_flops_release hook releases these cells for legalisation before DPL.
 if {![info exists ::env(OT_FT_POLARITY_LOCAL)] || $::env(OT_FT_POLARITY_LOCAL) ne "1"} {return}
@@ -16,7 +16,7 @@ set fpl_seen {}
 set fpl_groups {}
 foreach fpl_ff [$fpl_blk getInsts] {
   set fpl_name [string map {\\ {}} [$fpl_ff getName]]
-  if {![regexp {^(u_ft_.+_(?:s[0-9]+|[io]_[0-9]+))/q\[} $fpl_name -> fpl_group]} {continue}
+  if {![regexp {^((?:.*[./])?u_ft_.+_(?:s[0-9]+|[io]_[0-9]+))/q\[} $fpl_name -> fpl_group]} {continue}
   if {![string match DFF* [[$fpl_ff getMaster] getName]]} {continue}
   set fpl_bb [$fpl_ff getBBox]
   set fpl_box [list [$fpl_bb xMin] [$fpl_bb yMin] [$fpl_bb xMax] [$fpl_bb yMax]]
@@ -30,7 +30,7 @@ foreach fpl_ff [$fpl_blk getInsts] {
 set fpl_out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
 foreach fpl_ff [$fpl_blk getInsts] {
   set fpl_name [string map {\\ {}} [$fpl_ff getName]]
-  if {![regexp {^(u_ft_.+_(?:s[0-9]+|[io]_[0-9]+))/q\[} $fpl_name -> fpl_group]} {continue}
+  if {![regexp {^((?:.*[./])?u_ft_.+_(?:s[0-9]+|[io]_[0-9]+))/q\[} $fpl_name -> fpl_group]} {continue}
   if {![string match DFF* [[$fpl_ff getMaster] getName]]} {continue}
   if {[$fpl_ff getPlacementStatus] ni {FIRM PLACED}} {continue}
   foreach fpl_q [$fpl_ff getITerms] {
