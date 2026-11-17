@@ -37,7 +37,9 @@ def rom_dir(tmp, n=3, skip=()):
 
 def signoff(tmp, drc=0, tt=10.0, ff=5.0, name="signoff.json"):
     p = tmp / name
-    p.write_text(json.dumps(dict(die="s81", verdict="SIGNED", checks=dict(drc=dict(count=drc), setup_tt=dict(wns_ps=tt), hold_ff=dict(wns_ps=ff, verdict="PASS")))))
+    # signoff_profile judges the hold from a COMPLETE internal FF measurement (typed opentallas.internal_ff_hold.v1), not from checks.hold_ff alone
+    ih = dict(schema="opentallas.internal_ff_hold.v1", complete=True, wns_ps=ff, violators=0 if ff >= 0 else 1, source="test fixture")
+    p.write_text(json.dumps(dict(die="s81", verdict="SIGNED", internal_hold=ih, checks=dict(drc=dict(count=drc), setup_tt=dict(wns_ps=tt), hold_ff=dict(wns_ps=ff, verdict="PASS")))))
     return p
 
 
