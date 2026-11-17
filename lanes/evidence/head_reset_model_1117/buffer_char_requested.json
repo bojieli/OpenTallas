@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.control_buffer_chain_model.v1",
+ "rows": [
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 64,
+   "pitch_um": 0.81,
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.61,
+   "min_ps": 1406.64209,
+   "max_ps": 1607.47876,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N64_p0.81_TT_s30.log"
+  },
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 64,
+   "pitch_um": 0.81,
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.68,
+   "min_ps": 1050.761963,
+   "max_ps": 1132.089844,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N64_p0.81_FF_s30.log"
+  },
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 64,
+   "pitch_um": 1.35,
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.61,
+   "min_ps": 1421.47583,
+   "max_ps": 1620.920898,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N64_p1.35_TT_s30.log"
+  },
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 64,
+   "pitch_um": 1.35,
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.68,
+   "min_ps": 1061.157959,
+   "max_ps": 1141.686768,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N64_p1.35_FF_s30.log"
+  },
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 92,
+   "pitch_um": 0.81,
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.61,
+   "min_ps": 2018.640869,
+   "max_ps": 2307.415283,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N92_p0.81_TT_s30.log"
+  },
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 92,
+   "pitch_um": 0.81,
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.68,
+   "min_ps": 1507.32251,
+   "max_ps": 1623.973755,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N92_p0.81_FF_s30.log"
+  },
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 92,
+   "pitch_um": 1.35,
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.61,
+   "min_ps": 2039.995117,
+   "max_ps": 2326.76001,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N92_p1.35_TT_s30.log"
+  },
+  {
+   "cell": "BUFx4_ASAP7_75t_R",
+   "n": 92,
+   "pitch_um": 1.35,
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_actual_DFF_D_cap_fF": 0.68,
+   "min_ps": 1522.285034,
+   "max_ps": 1637.782837,
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/bufchar_requested/BUFx4_N92_p1.35_FF_s30.log"
+  }
+ ],
+ "scope": "NLDM+selfload+optional planned M2 piRC only; not routed timing",
+ "wire_R_ohm_per_um": 29.7127,
+ "wire_C_fF_per_um": 0.21017999999999998,
+ "counts": [
+  26,
+  100
+ ],
+ "actual_tail": "DFFHQNx1_ASAP7_75t_R/D pinned SEQ TT/FF",
+ "added_cycles": 0
+}

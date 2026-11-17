@@ -1,0 +1,508 @@
+{
+ "schema": "opentallas.actual_control_delay_profile.v1",
+ "rows": [
+  {
+   "signal": "reset",
+   "mode": "baseline",
+   "corner": "TT",
+   "input_slew_ps": 10,
+   "tail_fF": 0.61,
+   "times": {
+    "rise": {
+     "min": 49.912056,
+     "max": 49.912056
+    },
+    "fall": {
+     "min": 63.074684,
+     "max": 63.074684
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "baseline",
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_fF": 0.61,
+   "times": {
+    "rise": {
+     "min": 56.732868,
+     "max": 56.732868
+    },
+    "fall": {
+     "min": 69.279541,
+     "max": 69.279541
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "baseline",
+   "corner": "TT",
+   "input_slew_ps": 100,
+   "tail_fF": 0.61,
+   "times": {
+    "rise": {
+     "min": 80.550194,
+     "max": 80.550194
+    },
+    "fall": {
+     "min": 94.509018,
+     "max": 94.509018
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "baseline",
+   "corner": "FF",
+   "input_slew_ps": 10,
+   "tail_fF": 0.68,
+   "times": {
+    "rise": {
+     "min": 37.544312,
+     "max": 37.544312
+    },
+    "fall": {
+     "min": 44.912537,
+     "max": 44.912537
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "baseline",
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_fF": 0.68,
+   "times": {
+    "rise": {
+     "min": 43.834778,
+     "max": 43.834778
+    },
+    "fall": {
+     "min": 51.067398,
+     "max": 51.067398
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "baseline",
+   "corner": "FF",
+   "input_slew_ps": 100,
+   "tail_fF": 0.68,
+   "times": {
+    "rise": {
+     "min": 62.303421,
+     "max": 62.303421
+    },
+    "fall": {
+     "min": 73.442917,
+     "max": 73.442917
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "profile",
+   "corner": "TT",
+   "input_slew_ps": 10,
+   "tail_fF": 0.558822,
+   "times": {
+    "rise": {
+     "min": 1449.500244,
+     "max": 1468.702881
+    },
+    "fall": {
+     "min": 1647.29895,
+     "max": 1665.380127
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "profile",
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_fF": 0.558822,
+   "times": {
+    "rise": {
+     "min": 1456.237183,
+     "max": 1475.439819
+    },
+    "fall": {
+     "min": 1653.476685,
+     "max": 1671.554443
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "profile",
+   "corner": "TT",
+   "input_slew_ps": 100,
+   "tail_fF": 0.558822,
+   "times": {
+    "rise": {
+     "min": 1480.552002,
+     "max": 1499.762085
+    },
+    "fall": {
+     "min": 1679.053345,
+     "max": 1697.142822
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "profile",
+   "corner": "FF",
+   "input_slew_ps": 10,
+   "tail_fF": 0.62135,
+   "times": {
+    "rise": {
+     "min": 1080.946533,
+     "max": 1094.041382
+    },
+    "fall": {
+     "min": 1157.888184,
+     "max": 1170.411621
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "profile",
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_fF": 0.62135,
+   "times": {
+    "rise": {
+     "min": 1087.208496,
+     "max": 1100.293701
+    },
+    "fall": {
+     "min": 1164.037476,
+     "max": 1176.558594
+    }
+   }
+  },
+  {
+   "signal": "reset",
+   "mode": "profile",
+   "corner": "FF",
+   "input_slew_ps": 100,
+   "tail_fF": 0.62135,
+   "times": {
+    "rise": {
+     "min": 1106.373657,
+     "max": 1119.495239
+    },
+    "fall": {
+     "min": 1187.056641,
+     "max": 1199.588989
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "baseline",
+   "corner": "TT",
+   "input_slew_ps": 10,
+   "tail_fF": 0.61,
+   "times": {
+    "rise": {
+     "min": 49.912056,
+     "max": 49.912056
+    },
+    "fall": {
+     "min": 63.074684,
+     "max": 63.074684
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "baseline",
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_fF": 0.61,
+   "times": {
+    "rise": {
+     "min": 56.732868,
+     "max": 56.732868
+    },
+    "fall": {
+     "min": 69.279541,
+     "max": 69.279541
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "baseline",
+   "corner": "TT",
+   "input_slew_ps": 100,
+   "tail_fF": 0.61,
+   "times": {
+    "rise": {
+     "min": 80.550194,
+     "max": 80.550194
+    },
+    "fall": {
+     "min": 94.509018,
+     "max": 94.509018
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "baseline",
+   "corner": "FF",
+   "input_slew_ps": 10,
+   "tail_fF": 0.68,
+   "times": {
+    "rise": {
+     "min": 37.544312,
+     "max": 37.544312
+    },
+    "fall": {
+     "min": 44.912537,
+     "max": 44.912537
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "baseline",
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_fF": 0.68,
+   "times": {
+    "rise": {
+     "min": 43.834778,
+     "max": 43.834778
+    },
+    "fall": {
+     "min": 51.067398,
+     "max": 51.067398
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "baseline",
+   "corner": "FF",
+   "input_slew_ps": 100,
+   "tail_fF": 0.68,
+   "times": {
+    "rise": {
+     "min": 62.303421,
+     "max": 62.303421
+    },
+    "fall": {
+     "min": 73.442917,
+     "max": 73.442917
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "profile",
+   "corner": "TT",
+   "input_slew_ps": 10,
+   "tail_fF": 0.558822,
+   "times": {
+    "rise": {
+     "min": 1464.246216,
+     "max": 1483.335083
+    },
+    "fall": {
+     "min": 1661.086548,
+     "max": 1678.987915
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "profile",
+   "corner": "TT",
+   "input_slew_ps": 30,
+   "tail_fF": 0.558822,
+   "times": {
+    "rise": {
+     "min": 1470.982788,
+     "max": 1490.071655
+    },
+    "fall": {
+     "min": 1667.244385,
+     "max": 1685.143311
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "profile",
+   "corner": "TT",
+   "input_slew_ps": 100,
+   "tail_fF": 0.558822,
+   "times": {
+    "rise": {
+     "min": 1495.328247,
+     "max": 1514.417114
+    },
+    "fall": {
+     "min": 1692.874634,
+     "max": 1710.777222
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "profile",
+   "corner": "FF",
+   "input_slew_ps": 10,
+   "tail_fF": 0.62135,
+   "times": {
+    "rise": {
+     "min": 1090.640381,
+     "max": 1103.567871
+    },
+    "fall": {
+     "min": 1167.416382,
+     "max": 1179.796021
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "profile",
+   "corner": "FF",
+   "input_slew_ps": 30,
+   "tail_fF": 0.62135,
+   "times": {
+    "rise": {
+     "min": 1096.905273,
+     "max": 1109.842041
+    },
+    "fall": {
+     "min": 1173.539062,
+     "max": 1185.914185
+    }
+   }
+  },
+  {
+   "signal": "start",
+   "mode": "profile",
+   "corner": "FF",
+   "input_slew_ps": 100,
+   "tail_fF": 0.62135,
+   "times": {
+    "rise": {
+     "min": 1116.175781,
+     "max": 1129.128662
+    },
+    "fall": {
+     "min": 1196.587769,
+     "max": 1208.974121
+    }
+   }
+  }
+ ],
+ "deltas": [
+  {
+   "signal": "reset",
+   "input_slew_ps": 10,
+   "TT_max_gain_ps": 1602.305443,
+   "TT_edge_gains_ps": {
+    "rise": 1418.790825,
+    "fall": 1602.305443
+   },
+   "FF_min_gain_ps": 1043.402221,
+   "FF_edge_gains_ps": {
+    "rise": 1043.402221,
+    "fall": 1112.975647
+   }
+  },
+  {
+   "signal": "reset",
+   "input_slew_ps": 30,
+   "TT_max_gain_ps": 1602.274902,
+   "TT_edge_gains_ps": {
+    "rise": 1418.706951,
+    "fall": 1602.274902
+   },
+   "FF_min_gain_ps": 1043.373718,
+   "FF_edge_gains_ps": {
+    "rise": 1043.373718,
+    "fall": 1112.970078
+   }
+  },
+  {
+   "signal": "reset",
+   "input_slew_ps": 100,
+   "TT_max_gain_ps": 1602.633804,
+   "TT_edge_gains_ps": {
+    "rise": 1419.2118910000002,
+    "fall": 1602.633804
+   },
+   "FF_min_gain_ps": 1044.070236,
+   "FF_edge_gains_ps": {
+    "rise": 1044.070236,
+    "fall": 1113.6137239999998
+   }
+  },
+  {
+   "signal": "start",
+   "input_slew_ps": 10,
+   "TT_max_gain_ps": 1615.913231,
+   "TT_edge_gains_ps": {
+    "rise": 1433.423027,
+    "fall": 1615.913231
+   },
+   "FF_min_gain_ps": 1053.096069,
+   "FF_edge_gains_ps": {
+    "rise": 1053.096069,
+    "fall": 1122.5038450000002
+   }
+  },
+  {
+   "signal": "start",
+   "input_slew_ps": 30,
+   "TT_max_gain_ps": 1615.86377,
+   "TT_edge_gains_ps": {
+    "rise": 1433.338787,
+    "fall": 1615.86377
+   },
+   "FF_min_gain_ps": 1053.0704950000002,
+   "FF_edge_gains_ps": {
+    "rise": 1053.0704950000002,
+    "fall": 1122.4716640000001
+   }
+  },
+  {
+   "signal": "start",
+   "input_slew_ps": 100,
+   "TT_max_gain_ps": 1616.268204,
+   "TT_edge_gains_ps": {
+    "rise": 1433.8669200000002,
+    "fall": 1616.268204
+   },
+   "FF_min_gain_ps": 1053.8723599999998,
+   "FF_edge_gains_ps": {
+    "rise": 1053.8723599999998,
+    "fall": 1123.144852
+   }
+  }
+ ],
+ "n": 64,
+ "cell": "BUFx4_ASAP7_75t_R",
+ "profile": "/srv/opentallas-scratch2/claude/head-die-r/control_hold_coupon/buf4_64/inspect/edges.tsv",
+ "model": "actual placement pin-Manhattan lengths with planned M2 signal piRC, R29.7127Ohm/um,C.186*1.13fF/um; includes existing last HB4 source driving changedload, subtracts original HB4 at original .61TT/.68FF total load, no routed detour/coupling qualification",
+ "constraints": {
+  "tile_need_FF_gain_ps": 946.224,
+  "tile_TT_gain_budget_ps": 1791.842
+ },
+ "verdict": "MODEL_PASS"
+}

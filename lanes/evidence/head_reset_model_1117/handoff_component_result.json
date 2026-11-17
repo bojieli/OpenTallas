@@ -1,0 +1,355 @@
+{
+ "schema": "opentallas.reset_entry_handoff_model.v1",
+ "status": "COMPONENT_MODEL_ONLY",
+ "scope": "N30 shared late-clock capture2FF plus2newlocalhandoffFF. Source root clock transition57.46ps,833psperiod,0setup25hold. M2perlengthR29.7127ohm/um,C.186*1.13fF/um. PureNLDM+pi-RC,not routedphysicalevidence. Real incoming sourceclockphase and outgoinghandofffanout mustgate fullshape; no clockuncertainty/IO exception.",
+ "added_handoff_ff": 2,
+ "added_handoff_area_um2": 0.5832,
+ "shared_clock_buffer_cells": 30,
+ "shared_clock_buffer_area_um2": 3.0618,
+ "added_boot_control_cycles": 1,
+ "added_arithmetic_cycles": 0,
+ "rows": [
+  {
+   "clock_pitch_um": 0,
+   "data_and_last_clock_hop_um": 0.81,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 106.748665,
+     "hold_ps": 661.292053
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 106.748665,
+     "hold_ps": 661.292053
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0_d0.81_TT.log"
+  },
+  {
+   "clock_pitch_um": 0,
+   "data_and_last_clock_hop_um": 0.81,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 291.696045,
+     "hold_ps": 486.704468
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 291.696045,
+     "hold_ps": 486.704468
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0_d0.81_FF.log"
+  },
+  {
+   "clock_pitch_um": 0,
+   "data_and_last_clock_hop_um": 2.7,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 101.317398,
+     "hold_ps": 666.086304
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 101.317398,
+     "hold_ps": 666.086304
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0_d2.7_TT.log"
+  },
+  {
+   "clock_pitch_um": 0,
+   "data_and_last_clock_hop_um": 2.7,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 288.420746,
+     "hold_ps": 490.042389
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 288.420746,
+     "hold_ps": 490.042389
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0_d2.7_FF.log"
+  },
+  {
+   "clock_pitch_um": 0,
+   "data_and_last_clock_hop_um": 5.4,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 94.837914,
+     "hold_ps": 673.194946
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 94.837914,
+     "hold_ps": 673.194946
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0_d5.4_TT.log"
+  },
+  {
+   "clock_pitch_um": 0,
+   "data_and_last_clock_hop_um": 5.4,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 283.911743,
+     "hold_ps": 494.692566
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 283.911743,
+     "hold_ps": 494.692566
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0_d5.4_FF.log"
+  },
+  {
+   "clock_pitch_um": 0.81,
+   "data_and_last_clock_hop_um": 0.81,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 96.824547,
+     "hold_ps": 671.321716
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 96.824547,
+     "hold_ps": 671.321716
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0.81_d0.81_TT.log"
+  },
+  {
+   "clock_pitch_um": 0.81,
+   "data_and_last_clock_hop_um": 0.81,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 284.765533,
+     "hold_ps": 493.689819
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 284.765533,
+     "hold_ps": 493.689819
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0.81_d0.81_FF.log"
+  },
+  {
+   "clock_pitch_um": 0.81,
+   "data_and_last_clock_hop_um": 2.7,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 91.390007,
+     "hold_ps": 676.119202
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 91.390007,
+     "hold_ps": 676.119202
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0.81_d2.7_TT.log"
+  },
+  {
+   "clock_pitch_um": 0.81,
+   "data_and_last_clock_hop_um": 2.7,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 281.489288,
+     "hold_ps": 497.028595
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 281.489288,
+     "hold_ps": 497.028595
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0.81_d2.7_FF.log"
+  },
+  {
+   "clock_pitch_um": 0.81,
+   "data_and_last_clock_hop_um": 5.4,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 84.905472,
+     "hold_ps": 683.233337
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 84.905472,
+     "hold_ps": 683.233337
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0.81_d5.4_TT.log"
+  },
+  {
+   "clock_pitch_um": 0.81,
+   "data_and_last_clock_hop_um": 5.4,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 276.979004,
+     "hold_ps": 501.680145
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 276.979004,
+     "hold_ps": 501.680145
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c0.81_d5.4_FF.log"
+  },
+  {
+   "clock_pitch_um": 1.35,
+   "data_and_last_clock_hop_um": 0.81,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 90.033371,
+     "hold_ps": 678.087402
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 90.033371,
+     "hold_ps": 678.087402
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c1.35_d0.81_TT.log"
+  },
+  {
+   "clock_pitch_um": 1.35,
+   "data_and_last_clock_hop_um": 0.81,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 280.006744,
+     "hold_ps": 498.423523
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 280.006744,
+     "hold_ps": 498.423523
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c1.35_d0.81_FF.log"
+  },
+  {
+   "clock_pitch_um": 1.35,
+   "data_and_last_clock_hop_um": 2.7,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 84.59655,
+     "hold_ps": 682.887207
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 84.59655,
+     "hold_ps": 682.887207
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c1.35_d2.7_TT.log"
+  },
+  {
+   "clock_pitch_um": 1.35,
+   "data_and_last_clock_hop_um": 2.7,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 276.729919,
+     "hold_ps": 501.762909
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 276.729919,
+     "hold_ps": 501.762909
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c1.35_d2.7_FF.log"
+  },
+  {
+   "clock_pitch_um": 1.35,
+   "data_and_last_clock_hop_um": 5.4,
+   "corner": "TT",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 78.108353,
+     "hold_ps": 690.005066
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 78.108353,
+     "hold_ps": 690.005066
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c1.35_d5.4_TT.log"
+  },
+  {
+   "clock_pitch_um": 1.35,
+   "data_and_last_clock_hop_um": 5.4,
+   "corner": "FF",
+   "returncode": 0,
+   "paths": [
+    {
+     "pin": "hand0/D",
+     "setup_ps": 272.218689,
+     "hold_ps": 506.415466
+    },
+    {
+     "pin": "hand1/D",
+     "setup_ps": 272.218689,
+     "hold_ps": 506.415466
+    }
+   ],
+   "log": "/srv/opentallas-scratch2/claude/head-die-r/reset_entry_handoff_model_1117/c1.35_d5.4_FF.log"
+  }
+ ]
+}
