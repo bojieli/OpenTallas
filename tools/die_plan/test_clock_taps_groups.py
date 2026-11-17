@@ -322,6 +322,7 @@ def test_fixed_output_missing_group_refuses(tmp_path):
     assert "group has no sinks" in p.stderr
 
 INGRESS = r'''
+mkflop u_bound.u_cland_reader_start_coll_i0_0/start 900
 mkflop u_bound.u_bin_coll_i0/q0 100
 mkflop u_bound.u_bin_coll_i0/q1 200
 mkflop u_bound.u_core.u_enc.d0/q0 800
@@ -408,3 +409,81 @@ def test_serdes_typed_relay_cohort_refuses_oversized_geometry(tmp_path):
     p = run(tmp_path, RESET_FAMILY+'\nmkflop u_rrl_4/q 900\n',
         env='set ::env(OT_SERDES_RESET_COHORT) 1\nset ::env(OT_SERDES_RELAY_COHORTS) {3,4}')
     assert p.returncode != 0 and 'unsized group' in p.stderr
+
+
+FULL_ON = INGRESS_ON+'\nset ::env(OT_SERDES_INGRESS_READSIDE) 1\nset ::env(OT_SERDES_INGRESS_ENCODER_STAGE) d0'
+
+
+def test_full_local_readside_cohort_stops_at_forwarded_writer(tmp_path):
+    body = INGRESS + '\nmkflop u_bound.u_cland_coll_i0/u_ring.read_q 900\n'
+    p = run(tmp_path, body, env=FULL_ON)
+    assert p.returncode == 0, p.stderr
+    assert 'local_readside=1 interfaces=coll_i0' in p.stdout
+    keys = ['u_bound.u_bin_coll_i0/q0','u_bound.u_core.u_enc.d0/q0',
+            'u_bound.u_cland_coll_i0/u_ring.read_q']
+    lines = [l for l in p.stdout.splitlines() if any(l.startswith('NET ck_'+k+' ') for k in keys)]
+    assert len(lines) == 3 and len({l.rsplit(' ',1)[1] for l in lines}) == 1, p.stdout
+    assert 'NET ck_u_bound.u_cland_coll_i0/w0 nfwd' in p.stdout
+    assert 'NET ck_u_bound.u_bin_coll_i0/q_foreign nfwd' in p.stdout
+
+
+def test_full_local_readside_other_generated_input_interface(tmp_path):
+    body = INGRESS.replace('coll_i0','ft3_i')+'\nmkflop u_bound.u_cland_ft3_i/read_control 900\n'
+    p = run(tmp_path, body, env=FULL_ON)
+    assert p.returncode == 0, p.stderr
+    assert 'interfaces=ft3_i' in p.stdout and 'local_readside=1' in p.stdout
+    assert 'NET ck_u_bound.u_cland_ft3_i/w0 nfwd' in p.stdout
+
+
+def test_full_local_readside_requires_explicit_ingress(tmp_path):
+    p = run(tmp_path, INGRESS, env='set ::env(OT_SERDES_INGRESS_READSIDE) 1')
+    assert p.returncode != 0 and 'requires OT_SERDES_INGRESS_COHORT' in p.stderr
+
+
+def test_full_local_readside_refuses_missing_reader(tmp_path):
+    p = run(tmp_path, INGRESS, env=FULL_ON)
+    assert p.returncode != 0 and 'missing compiled local read-side' in p.stderr
+
+
+def test_full_local_readside_encoder_reset_leaf_stays_with_backend(tmp_path):
+    body = (INGRESS+'\nmkflop u_bound.u_cland_coll_i0/read 900\n'
+            'mkflop u_bound.u_core.g_rst_tree.rt_e/q 100\n'
+            'mkflop u_bound.u_core.u_enc.d1/q0 100\n')
+    env=FULL_ON+'\nset ::env(OT_TAP_GROUP_RE) {(u_enc)[/.]}\nset ::env(OT_TAP_GROUP_FIXED) {serdes_ingress_d0:clk_t1,u_enc:clk}'
+    p = run(tmp_path, body, env=env)
+    assert p.returncode == 0, p.stderr
+    assert 'encoder_reset_leaf=1' in p.stdout
+    assert 'NET ck_u_bound.u_core.g_rst_tree.rt_e/q nclk' in p.stdout
+    assert 'NET ck_u_bound.u_core.u_enc.d1/q0 nclk' in p.stdout
+    assert 'NET ck_u_bound.u_core.u_enc.d0/q0 nt1' in p.stdout
+
+
+def test_full_local_readside_requires_sized_encoder_stage(tmp_path):
+    p=run(tmp_path,INGRESS,env=INGRESS_ON+'\nset ::env(OT_SERDES_INGRESS_READSIDE) 1')
+    assert p.returncode != 0 and 'explicit sized' in p.stderr
+
+
+def test_full_local_readside_refuses_wrong_encoder_stage(tmp_path):
+    p=run(tmp_path,INGRESS,env=FULL_ON.replace('d0','d1'))
+    assert p.returncode != 0 and 'explicit sized' in p.stderr
+
+
+def test_full_local_readside_requires_complete_first_stage(tmp_path):
+    body=INGRESS.replace('mkflop u_bound.u_core.u_enc.d0/q1 900','')+'\nmkflop u_bound.u_cland_coll_i0/read 900\n'
+    p=run(tmp_path,body,env=FULL_ON)
+    assert p.returncode != 0 and 'first-stage width=1 expected=2' in p.stderr
+
+
+def test_full_local_readside_refuses_missing_start_authority(tmp_path):
+    body=INGRESS.replace('mkflop u_bound.u_cland_reader_start_coll_i0_0/start 900','')+'\nmkflop u_bound.u_cland_coll_i0/read 900\n'
+    p=run(tmp_path,body,env=FULL_ON)
+    assert p.returncode != 0 and 'missing compiled reader START' in p.stderr
+
+
+def test_full_local_readside_stops_before_origin_and_forwarded_face(tmp_path):
+    body=INGRESS+'\nmkflop u_bound.u_cland_coll_i0/read 900\nmkflop u_bound.u_cland_origin/s2 100\nmkflop u_bound.u_cland_fstart_coll_o0/q 100\n'
+    p=run(tmp_path,body,env=FULL_ON+'\nset ::env(OT_TAP_GROUP_FIXED) {serdes_ingress_d0:clk_t1}')
+    assert p.returncode == 0,p.stderr
+    assert 'NET ck_u_bound.u_cland_reader_start_coll_i0_0/start nt1' in p.stdout
+    assert 'NET ck_u_bound.u_cland_origin/s2 nclk' in p.stdout
+    assert 'NET ck_u_bound.u_cland_fstart_coll_o0/q nclk' in p.stdout

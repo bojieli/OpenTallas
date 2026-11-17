@@ -238,7 +238,31 @@ proc ct_follow {} {
 # only pins already on the local core clock tap family are considered below.
 set ct_ingress [expr {[info exists ::env(OT_SERDES_INGRESS_COHORT)] && $::env(OT_SERDES_INGRESS_COHORT) eq "1"}]
 set ct_reset_family [expr {[info exists ::env(OT_SERDES_RESET_COHORT)] && $::env(OT_SERDES_RESET_COHORT) eq "1"}]
-set ct_ingress_bin 0;set ct_ingress_enc 0
+set ct_ingress_readside [expr {[info exists ::env(OT_SERDES_INGRESS_READSIDE)] && $::env(OT_SERDES_INGRESS_READSIDE) eq "1"}]
+if {$ct_ingress_readside && !$ct_ingress} {error "OT_SERDES_INGRESS_READSIDE requires OT_SERDES_INGRESS_COHORT"}
+# I2 measured all-encoder grouping is intentionally not the new READSIDE API:
+# its 7269-sink tree reached979ps and moved debt into finite START/reset inputs.
+# The opt-in caller must name the modeled first payload stage and price every
+# following stage/START/reset/forwarded-clock boundary before routing.
+set ct_ingress_stage [expr {[info exists ::env(OT_SERDES_INGRESS_ENCODER_STAGE)] ? $::env(OT_SERDES_INGRESS_ENCODER_STAGE) : ""}]
+if {$ct_ingress_readside && $ct_ingress_stage ne "d0"} {error "OT_SERDES_INGRESS_READSIDE requires explicit sized OT_SERDES_INGRESS_ENCODER_STAGE=d0"}
+if {!$ct_ingress_readside && $ct_ingress_stage ne ""} {error "OT_SERDES_INGRESS_ENCODER_STAGE requires OT_SERDES_INGRESS_READSIDE"}
+set ct_ingress_key [expr {$ct_ingress_readside ? "serdes_ingress_d0" : "u_enc"}]
+set ct_ingress_bin 0;set ct_ingress_enc 0;set ct_ingress_read 0;set ct_ingress_aux 0;set ct_ingress_reset 0;set ct_ingress_start 0
+set ct_ingress_ports {}
+# Generated boundary payload stages identify their receiving landing. Cover the
+# complete local read pipeline/read controls, not just its last register. Only
+# original local core-tap clock pins are enumerated: the forwarded writer and
+# any independent clock behind that barrier cannot enter this cohort.
+if {$ct_ingress_readside} {
+ foreach tap $ct_taps {
+  foreach pin [[lindex $tap 1] getITerms] {
+   if {[[$pin getMTerm] getName] ni {CLK CLKN CK CKN}} continue
+   if {[regexp {(?:^|[/.])u_bin_([A-Za-z0-9_]+)[/.]q} [[$pin getInst] getName] -> port]} {dict set ct_ingress_ports $port 1}
+  }
+ }
+ if {![dict size $ct_ingress_ports]} {error "OT_SERDES_INGRESS_READSIDE no compiled local payload boundaries"}
+}
 set ct_reset_members {};set ct_reset_used {};set ct_reset_map {};set ct_reset_available {}
 proc ct_has_clock_pin {inst} {
   foreach pin [$inst getITerms] {
@@ -316,10 +340,18 @@ if {[llength $ct_taps] >= 2 && ($ct_gre ne "" || $ct_ingress || $ct_reset_family
     foreach it [[lindex $tp 1] getITerms] {
       if {[[$it getMTerm] getIoType] ne "INPUT"} continue
       set ct_iname [[$it getInst] getName];set g ""
-      if {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_bin_coll_i0[/.]q} $ct_iname]} {
-        set g u_enc;incr ct_ingress_bin
-      } elseif {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_enc[/.]} $ct_iname]} {
-        set g u_enc;incr ct_ingress_enc
+      if {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && (($ct_ingress_readside && [regexp {(?:^|[/.])u_bin_([A-Za-z0-9_]+)[/.]q} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]) || (!$ct_ingress_readside && [regexp {(?:^|[/.])u_bin_coll_i0[/.]q} $ct_iname]))} {
+        set g $ct_ingress_key;incr ct_ingress_bin
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_bin_([A-Za-z0-9_]+)[/.]eq} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]} {
+        set g $ct_ingress_key;incr ct_ingress_aux
+      } elseif {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_enc[/.]} $ct_iname] && (!$ct_ingress_readside || [regexp {(?:^|[/.])u_enc[/.]d0[^A-Za-z0-9_]} $ct_iname])} {
+        set g $ct_ingress_key;incr ct_ingress_enc
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_cland_([A-Za-z0-9_]+)[/.]} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]} {
+        set g $ct_ingress_key;incr ct_ingress_read
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_cland_reader_start_([A-Za-z0-9_]+)_[0-9]+[/.]} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]} {
+        set g $ct_ingress_key;incr ct_ingress_start
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_core[.]g_rst_tree[.]rt_e[^A-Za-z0-9_]} $ct_iname]} {
+        set g u_enc;incr ct_ingress_reset
       } elseif {$ct_reset_family && [dict exists $ct_reset_members $ct_iname]} {
         set g serdes_rst_[dict get $ct_reset_map [dict get $ct_reset_members $ct_iname]]
       } elseif {$ct_reset_family && [regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $ct_iname -> owner] && [dict exists $ct_reset_map $owner]} {
@@ -331,7 +363,10 @@ if {[llength $ct_taps] >= 2 && ($ct_gre ne "" || $ct_ingress || $ct_reset_family
   if {$ct_ingress} {
     set expected [expr {[info exists ::env(OT_SERDES_INGRESS_BITS)] ? $::env(OT_SERDES_INGRESS_BITS) : 512}]
     if {$expected<=0 || $ct_ingress_bin!=$expected || $ct_ingress_enc<=0} {error "OT_SERDES_INGRESS_COHORT capture mismatch bin=$ct_ingress_bin expected=$expected encoder=$ct_ingress_enc"}
-    puts "OT_SERDES_INGRESS_COHORT bin=$ct_ingress_bin encoder=$ct_ingress_enc; local core clock only; forwarded writer unchanged"
+    if {$ct_ingress_readside && $ct_ingress_enc!=$expected} {error "OT_SERDES_INGRESS_READSIDE first-stage width=$ct_ingress_enc expected=$expected"}
+    if {$ct_ingress_readside && $ct_ingress_start<=0} {error "OT_SERDES_INGRESS_READSIDE missing compiled reader START authority copies"}
+    if {$ct_ingress_readside && $ct_ingress_read<=0} {error "OT_SERDES_INGRESS_READSIDE missing compiled local read-side clock pins"}
+    puts "OT_SERDES_INGRESS_COHORT bin=$ct_ingress_bin encoder=$ct_ingress_enc local_readside=$ct_ingress_read interfaces=[dict keys $ct_ingress_ports] local_boundary_aux=$ct_ingress_aux encoder_reset_leaf=$ct_ingress_reset reader_start=$ct_ingress_start encoder_stage=$ct_ingress_stage group=$ct_ingress_key; local core clock only; forwarded writer unchanged"
   }
   set ct_gmoved 0; set ct_gsplit 0
   dict for {g its} $ct_grp {
