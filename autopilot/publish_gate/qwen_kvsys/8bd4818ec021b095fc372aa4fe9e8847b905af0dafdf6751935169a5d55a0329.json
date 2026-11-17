@@ -1,0 +1,56 @@
+{
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "admission_resume": "/srv/opentallas-scratch2/claude/tools-converge/kv-r2/d14_resume_receipt.json",
+   "dir": "/srv/opentallas-scratch2/claude/tools-converge/kv-r2/d14_publish_work/qwen_kvsys/8bd4818ec021/kv3_hg_v1",
+   "gen_host": "epyc7",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14",
+   "stage": "gen_lint",
+   "verdict": "FAIL",
+   "why": "GEN_LINT FAIL issues 3 pins_vs_plan=PASS clock_export_form=PASS macro_tcl=PASS kit_rtl_paths=FAIL rtl_check=FAIL memory_bits=FAIL\n- GEN_LINT FAIL kit_rtl_paths: kit_rtl.f source /srv/opentallas-scratch2/claude/kv-r/d14_bind/rtl/bind_cells.sv is outside the kit source tree /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14 (bind out / kit-rtl dir allowed)\n- GEN_LINT FAIL rtl_check: ERROR: Module `\\qkd_ectl3_kiss_st_cols__columns_fixed_at_13_0_34_18' referenced in module `$paramod$d3164671cf37a5d823b8153d05896f8fc708179a\\qkd_ectl3_kiss_st_cols' in cell `\\g_param_mismatch.u_param_mismatch' is not part of the design.\n- GEN_LINT FAIL memory_bits: not measured: yosys elaboration failed (see rtl_check)"
+  },
+  "hashes": {
+   "findings": [],
+   "plan_sha256": "5c15509230caae3d9e57be35468115d95eb1a58b32d789b116430c0135d3e765",
+   "verdict": "PASS",
+   "views": 59
+  },
+  "pre_g0": {
+   "fresh_pre": {
+    "rc": 0,
+    "tail": "WARN GEOM-INHERITED 335 station/relay sites lie over other hard cores (tolerated: adopted plans carry them; --baseline-plan refuses new ones, --strict-cores all)\nPLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14 plan=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json findings=0\n"
+   },
+   "g0_inherited": true,
+   "g0_rc": 0,
+   "inherited_authority": "r498 exact checker-only successor",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12 plan=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json findings=0\n\nG0: dius=271.964/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_hg_v1p5: grid+explicit tap clk_t48 radius=271.964/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hg_v1p6: grid+explicit tap clk_t42 radius=215.716/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v1__cl141fc26e: grid+explicit tap clk_t40 radius=203.216/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v1__cl42bc8b12: grid+explicit tap clk_t39 radius=203.216/200.0 (advisory)\nTAP-LIMIT-INFO kv3_hgi_v2__cl2862d491: grid+explicit tap clk_t33 load=269/1200, radius=264.832/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_hgi_v2__cl2862d491: grid+explicit tap clk_t33 radius=264.832/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v2__cle0015330: grid+explicit tap clk_t34 radius=213.248/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v8: grid+explicit tap clk_t22 radius=202.148/200.0 (advisory)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "hosts": [
+  "epyc7"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "8bd4818ec021b095fc372aa4fe9e8847b905af0dafdf6751935169a5d55a0329",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "5c15509230caae3d9e57be35468115d95eb1a58b32d789b116430c0135d3e765",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1794919867.242878,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14",
+ "verdict": "FAIL"
+}
