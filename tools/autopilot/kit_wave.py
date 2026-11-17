@@ -4704,6 +4704,21 @@ def waiter_guard(cfg, die, hs, stt, hub):
     return over or hs
 
 
+LOAD_RANK_STEP = 0.05
+
+
+def load_rank(cfg, h, v):
+    """FLEET-OPS-R (COORD 11-16, owner 'never pin, spread by load'): the gen-host order among hosts that fit = the LEAST LOADED first
+    (load1 / cores, in steps of 5 % so that noise does not decide), ties broken by the MOST free memory (admit GB minus GB already waiting),
+    then the host_share weight, then the configured order.  Returns a tuple where smaller is better.  Replaces WAVE-BALANCE-1's
+    free-cores x free-admits product, which let a big host at 80 % load beat a small host at 5 %."""
+    v = v or {}
+    cores = max(1, int(v.get("cores") or 0))
+    frac = float(v.get("load", 0)) / cores
+    free_mem = max(0.0, float(v.get("admit", 0)) - float(v.get("wait_gb", 0)))
+    return (round(frac / LOAD_RANK_STEP), -free_mem * host_share(cfg, h))
+
+
 def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
     GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used.
@@ -4737,7 +4752,7 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         # (and never onto a host under the die's gen disk floor: with no room anywhere the old score order decides)
         uncapped = [h for h in hs if key(h) and not over_load_cap(key(h)) and not die_disk_low(cfg, die, h, key(h))
                     and die not in low.get(h, {})]
-        best = (max(fits, key=lambda h: (host_capacity(key(h)) * host_share(cfg, h), -hs.index(h))) if fits
+        best = (min(fits, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)) if fits
                 else max(room or uncapped or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
