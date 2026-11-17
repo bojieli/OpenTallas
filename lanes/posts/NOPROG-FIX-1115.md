@@ -90,3 +90,8 @@
   NO-PROGRESS epyc9 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 11.4 h job 11.4 h: no new meaningful log line for 11.0 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
   NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 11.3 h job 11.4 h: no new meaningful log line for 10.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
   NO-PROGRESS epyc7 phy__t1 5_1_grt stage 9.5 h job 9.5 h: no new meaningful log line for 8.8 h; last: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_phy__t1/base/conges
+- 2026-11-16 22:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 22:52 PST: 96 running jobs, PROGRESSING 85, SLOW 7, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 20.6 h job 20.7 h: no new meaningful log line for 17.5 h; last: 15.42. Extracting gate netlist of module `\s81p_svc_hi_dsdv_svc_rs__t3' to `<abc-temp-dir>/input.bli
+  NO-PROGRESS epyc9 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 12.4 h job 12.4 h: no new meaningful log line for 12.0 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+  NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 12.3 h job 12.4 h: no new meaningful log line for 11.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+  NO-PROGRESS epyc7 phy__t1 5_1_grt stage 10.5 h job 10.5 h: no new meaningful log line for 9.8 h; last: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_phy__t1/base/conges

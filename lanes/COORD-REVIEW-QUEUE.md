@@ -19770,3 +19770,8 @@ FAILED [AUTOPILOT 48fd96d18394] 2026-11-16 22:32:53 PST AUTOPILOT -> KIT-WAVE-3:
   COORD APPROVED: claude/hold-capture-net-1116 @e2d47e8d060b916710cc3f38f66684e0d5e83ed7
   RULING r474 mq-evidence-copy-select6c5b31d590991f3110fd2fd843044f3237311072 narrows genericbasename benchselection only for ADDED results copies byteidentical toUNCHANGED trackedauthority. Explicitpath/staticconsumers/newtests stayselected; realauthoritychanges use normaltests.8focusedPASS, normalGREEN2/2. This changes testselection, not measuredcomponentproof or production.
   COORD APPROVED: claude/mq-evidence-copy-select-1116 @6c5b31d590991f3110fd2fd843044f3237311072
+- 2026-11-16 22:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 22:52 PST: 96 running jobs, PROGRESSING 85, SLOW 7, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 20.6 h job 20.7 h: no new meaningful log line for 17.5 h; last: 15.42. Extracting gate netlist of module `\s81p_svc_hi_dsdv_svc_rs__t3' to `<abc-temp-dir>/input.bli
+  NO-PROGRESS epyc9 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 12.4 h job 12.4 h: no new meaningful log line for 12.0 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+  NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 12.3 h job 12.4 h: no new meaningful log line for 11.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+  NO-PROGRESS epyc7 phy__t1 5_1_grt stage 10.5 h job 10.5 h: no new meaningful log line for 9.8 h; last: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_phy__t1/base/conges
