@@ -1,0 +1,122 @@
+{
+ "by": "QC-PLAN-R",
+ "old": {
+  "clock27": {
+   "id": "qwen_compute-kf-clock27",
+   "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
+   "reason": "QC-PLAN-R (COORD): 27 of the 52 clock-row types (FABLE-DIE-QC clock_c types_changed) had no typed hold; their tap_offset rows change in S4q9l2 (19be3f0a3bb4, bind gates PASS). Coverage lanes/handoff/QC_KF_hold_coverage_1116.json. Lift = S4q9l2 adopt.",
+   "release": [
+    "event_adopt:S4q9l2"
+   ],
+   "items": [
+    "cbf_q00__cl1b5a6458",
+    "cbf_q00__cl870de686",
+    "cbf_q01",
+    "cbf_q11",
+    "cbn_q00__cl622f65d2",
+    "cbn_q01__clab6e67f2",
+    "cbn_q01__cld9ff4c40",
+    "cbn_q11__cl49ae4555",
+    "cbn_q11__cl5cc92dfe",
+    "cbx_q10__cl89936551",
+    "cbx_q10__cl89936551_h",
+    "cbx_q10__cl94a12200",
+    "cbx_q10__cl94a12200_h",
+    "sle_fe_v1__cl8210183c",
+    "sle_fe_v2",
+    "sle_fe_v3",
+    "sle_hc0__cl929603c0__cl4baa7c9c",
+    "sle_hc1__cl7d360508",
+    "sle_sc_v1__cl115da35f",
+    "sle_sc_v1__cl7479a5ec",
+    "sle_sc_v2",
+    "sle_su_l0__cl7a55c676",
+    "slw_hc1__cl68f9248e__cle683a076",
+    "slw_sc_v2",
+    "slw_su_l0__cl1e5219ea",
+    "slw_su_l0__cl76fb247e",
+    "slw_su_l1__cla2a78701"
+   ],
+   "carry": true
+  },
+  "faces": {
+   "id": "qwen_compute-kf-faces-l2d",
+   "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
+   "reason": "QC-PLAN-R (COORD): G0 face errors sl_W5_fw.W / coll_f4.E (72 pins / 10 um) are fixed in S4q9l2d a915f1136c27 by coll_ftc +43.2 / coll_ftn -43.2 um and a slw_fw_v3 W-face repack; these 3 types rebuild on S4q9m. Lift = S4q9m adopt.",
+   "release": [
+    "event_adopt:S4q9m"
+   ],
+   "items": [
+    "slw_fw_v3",
+    "coll_ftc",
+    "coll_ftn"
+   ],
+   "carry": true
+  },
+  "planned": [
+   "S4q6d",
+   "S4q6e",
+   "S4q7h",
+   "S4q8",
+   "S4q9l2",
+   "S4q9l2d",
+   "S4q9m"
+  ]
+ },
+ "added": {
+  "id": "qwen_compute-kf-cb18",
+  "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
+  "reason": "FABLE-PD-QC-MCLK lever 4 via COORD 20:xx: all 18 cb types hold until the S4q9m die clock event (per-type region trees / cb instance spread); not released on Kf or L2. Lift = S4q9m adopt.",
+  "release": [
+   "event_adopt:s29q103S4Q9M"
+  ],
+  "items": [
+   "cbf_q00__cl1b5a6458",
+   "cbf_q00__cl870de686",
+   "cbf_q00_s2",
+   "cbf_q01",
+   "cbf_q01_s2",
+   "cbf_q11",
+   "cbn_q00__cl622f65d2",
+   "cbn_q00__cld7bf7197",
+   "cbn_q00__cldbcda913",
+   "cbn_q01__clab6e67f2",
+   "cbn_q01__cld9ff4c40",
+   "cbn_q01__cldd6ea846",
+   "cbn_q11__cl49ae4555",
+   "cbn_q11__cl5cc92dfe",
+   "cbx_q10__cl89936551",
+   "cbx_q10__cl89936551_h",
+   "cbx_q10__cl94a12200",
+   "cbx_q10__cl94a12200_h"
+  ],
+  "carry": true
+ },
+ "clock27_items_now": [
+  "sle_fe_v1__cl8210183c",
+  "sle_fe_v2",
+  "sle_fe_v3",
+  "sle_hc0__cl929603c0__cl4baa7c9c",
+  "sle_hc1__cl7d360508",
+  "sle_sc_v1__cl115da35f",
+  "sle_sc_v1__cl7479a5ec",
+  "sle_sc_v2",
+  "sle_su_l0__cl7a55c676",
+  "slw_hc1__cl68f9248e__cle683a076",
+  "slw_sc_v2",
+  "slw_su_l0__cl1e5219ea",
+  "slw_su_l0__cl76fb247e",
+  "slw_su_l1__cla2a78701"
+ ],
+ "releases": {
+  "clock27": [
+   "event_adopt:s29q103S4Q9L2"
+  ],
+  "faces": [
+   "event_adopt:s29q103S4Q9M"
+  ],
+  "cb18": [
+   "event_adopt:s29q103S4Q9M"
+  ]
+ }
+}
