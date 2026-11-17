@@ -39,3 +39,16 @@ def test_ports_match_source_header():
     want = header_ports(SRC.read_text(), BASE)
     got = [(d, n, w({})) for d, n, w in PW.PORTS[BASE]]
     assert got == want
+
+
+def test_ordinary_tail1_ports_match_source_header():
+    source = SRC.with_name("qfd_dv_s8_station_tail1.sv")
+    if not source.is_file():
+        return
+    base = "qfd_dv_s8_station_tail1"
+    want = header_ports(source.read_text(), base)
+    got = [(d, n, w({})) for d, n, w in PW.PORTS[base]]
+    assert got == want
+    sv = PW.wrapper_sv("qfd_dv_s8_station_tail1_h17_n7_s8", base, {"HI_PAD": 17, "SKEW_N": 7, "SKEW_S": 8})
+    assert ".nb_d_p(nb_d_p)" in sv and ".nb_c_p(nb_c_p)" in sv
+    assert "#(.HI_PAD(17), .SKEW_N(7), .SKEW_S(8))" in sv
