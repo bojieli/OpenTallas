@@ -493,3 +493,5 @@
   COORD APPROVED: claude/fable-die-qc-r-1116 @d57188aede6
 - 2026-11-16 18:32 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r396 fleet-ops-r-owner-alias-1116 @5f35f3c: ownership.py maps retired lane names to current owners (DIE-S81-* -> S81-DIE-R, FAIL-S81-1 -> S81-TYPES-R, CORE-ROWS-1115 -> S81-CORES-R, KV-PVHG-O -> KV-R, QC-PLAN-M/QC-PINACCESS-O -> QC-PLAN-R); unlisted names unchanged. GREEN 6/6.
   COORD APPROVED: claude/fleet-ops-r-owner-alias-1116 @5f35f3c
+- 2026-11-16 18:39 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r397 fleet-ops-r-self-heal-2-1116 @8964aab: ITEM-SYNC/SRC-SYNC self-heal stops after 2 attempts per host+item+path (persisted), logs once, resets when the probe sees the path whole. GREEN 138/138. PILOT wave mode (8ee60f1) is gating; when READY it must also cover the atomic marker apply path (add_pilot_hold in apply_reviewed_tree_marker_1116.py), otherwise lanes that use that apply skip the pilot.
+  COORD APPROVED: claude/fleet-ops-r-self-heal-2-1116 @8964aab
