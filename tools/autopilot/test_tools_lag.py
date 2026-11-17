@@ -1,4 +1,5 @@
-"""WAVE-FLOW-R2 11-17: TOOLS-LAG = approved die-tool fixes (ruling rNNN on a die_plan / flow path) missing from a die's pinned tools."""
+"""WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1700 items 1 and 2): TOOLS-LAG maps rulings to shas through COORD.md `COORD APPROVED: <branch> @<sha>` lines and tests ancestry
+against the die tree tools base (no commit-message parsing); tree_has answers the same question for hold release terms."""
 import subprocess
 import sys
 from pathlib import Path
@@ -7,8 +8,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import tools_lag as TL
 
 
-def git(repo, *a, env=None):
-    subprocess.run(["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@t", *a], check=True, capture_output=True)
+def git(repo, *a):
+    return subprocess.run(["git", "-C", str(repo), "-c", "user.name=t", "-c", "user.email=t@t", *a], check=True, capture_output=True, text=True).stdout.strip()
 
 
 def commit(repo, rel, text, msg):
@@ -17,27 +18,74 @@ def commit(repo, rel, text, msg):
     f.write_text(text)
     git(repo, "add", "-A")
     git(repo, "commit", "-q", "-m", msg)
-    return subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    return git(repo, "rev-parse", "HEAD")
+
+
+def merge_branch(repo, name, rel, text):
+    """a branch with one commit merged into main with a merge commit -> (branch tip sha, merge sha)"""
+    git(repo, "checkout", "-q", "-b", name)
+    tip = commit(repo, rel, text, f"branch {name}")
+    git(repo, "checkout", "-q", "main")
+    git(repo, "merge", "-q", "--no-ff", "-m", f"Merge {name} @{tip[:11]}", name)
+    return tip, git(repo, "rev-parse", "HEAD")
 
 
 def make(tmp_path):
     r = tmp_path / "repo"
     r.mkdir()
     git(r, "init", "-q", "-b", "main")
-    pin = commit(r, "tools/die_plan/a.py", "1", "base")
-    commit(r, "tools/die_plan/a.py", "2", "S81 bind: fix (COORD r535)")
-    commit(r, "docs/x.md", "x", "docs only (COORD r536)")                        # ruling but no die tool path: not listed
-    commit(r, "tools/die_plan/b.py", "b", "plain refactor without a ruling")      # counted as a commit, not as a ruling
-    commit(r, "physical/common_flow/c.tcl", "c", "flow fix\n\nRULING r554 approved")
-    return r / ".git", pin
+    commit(r, "tools/base.py", "1", "base")
+    t1, _ = merge_branch(r, "fix-a", "tools/die_plan/a.py", "a")
+    pin = git(r, "rev-parse", "HEAD")                                   # the die tree tools base: after fix-a
+    t2, _ = merge_branch(r, "fix-b", "tools/closure_loop/b.py", "b")  # r623-like: not under tools/die_plan
+    t3, _ = merge_branch(r, "fix-doc", "docs/x.md", "d")                # a ruling that touches no tool path
+    git(r, "checkout", "-q", "-b", "unmerged")
+    t4 = commit(r, "tools/die_plan/c.py", "c", "not merged yet")
+    git(r, "checkout", "-q", "main")
+    return r / ".git", pin, dict(a=t1, b=t2, doc=t3, unmerged=t4)
 
 
-def test_lag_lists_rulings_on_die_tool_paths(tmp_path):
-    repo, pin = make(tmp_path)
-    res = TL.lag(repo, pin)
-    assert res["n_commits"] == 3 and res["missing"] == ["r535", "r554"]
-    assert TL.line("kv", res) == "TOOLS-LAG kv 3 commits / missing r535 r554"
-    assert TL.lag(repo, "HEAD")["n_commits"] == 0 and TL.line("kv", TL.lag(repo, "HEAD")).endswith("0 commits / missing none")
+COORD = """- 2026-11-17 15:00 PST RULING r601 [COORD -> X] fix a (message says nothing useful)
+  COORD APPROVED: claude/fix-a @{a}
+- 2026-11-17 15:10 PST RULING r623 [COORD -> Y] job env
+  COORD APPROVED: claude/fix-b @{b}
+- 2026-11-17 15:20 PST RULING r630 [COORD -> Z] doc only\\nCOORD APPROVED: claude/fix-doc @{doc}
+- 2026-11-17 15:30 PST RULING r640 [COORD -> W] not merged
+  COORD APPROVED: claude/unmerged @{unmerged}
+- 2026-11-17 15:40 PST RULING r650 [COORD -> W] design ruling, no approved branch
+"""
+
+
+def test_ruling_shas_associates_approved_lines_with_the_nearest_ruling():
+    shas = dict(a="a" * 40, b="b" * 40, doc="c" * 40, unmerged="d" * 40)
+    m = TL.ruling_shas(COORD.format(**shas))
+    assert m == {"r601": ["a" * 40], "r623": ["b" * 40], "r630": ["c" * 40], "r640": ["d" * 40]}          # inline (literal \\n) and own-line forms; r650 has none
+    assert TL.ruling_shas("COORD APPROVED: x @" + "e" * 40) == {}                                          # an approval before any ruling belongs to none
+
+
+def test_lag_by_ancestry_not_messages(tmp_path):
+    repo, pin, t = make(tmp_path)
+    rulings = TL.ruling_shas(COORD.format(**t))
+    TL.clear_caches()
+    res = TL.lag(repo, pin, "main", rulings=rulings)
+    assert res["missing"] == ["r623"]                       # r601 is in the pin; r630 touches no tool path; r640 is not merged; r623 is merged after the pin
+    assert res["n_commits"] >= 1 and TL.line("kv", res).endswith("missing r623")
+    for r, want in (("r601", "has"), ("r623", "missing"), ("r630", "not_tool"), ("r640", "not_merged")):
+        assert TL.ruling_state(repo, pin, rulings[r])[0] == want, r
+    assert TL.lag(repo, "HEAD", "main", rulings=rulings)["missing"] == []                  # a tree at main lacks nothing
+
+
+def test_tree_has_ruling_and_sha(tmp_path):
+    repo, pin, t = make(tmp_path)
+    rulings = TL.ruling_shas(COORD.format(**t))
+    TL._HAS_CACHE.clear()
+    TL.clear_caches()
+    assert TL.tree_has(repo, pin, "r601", rulings) is True
+    assert TL.tree_has(repo, pin, "r623", rulings) is False                                 # merged after the pin: the tree does not have it
+    assert TL.tree_has(repo, "main", "r623", rulings) is True
+    assert TL.tree_has(repo, pin, "r640", rulings) is False and TL.tree_has(repo, pin, "r999", rulings) is False
+    assert TL.tree_has(repo, pin, t["a"][:12]) is True and TL.tree_has(repo, pin, t["b"]) is False        # tree_has_sha form
+    assert TL.tree_has(repo, pin, "not-a-token", rulings) is False
 
 
 def test_pin_resolution_and_unmeasured(tmp_path):
@@ -47,6 +95,6 @@ def test_pin_resolution_and_unmeasured(tmp_path):
     m.mkdir()
     (m / ".src-manifest.json").write_text('{"main_sha": "1234567abcde"}')
     assert TL.pin_of({"src": str(m), "src_sha": "main@ffff"}) == "1234567abcde"
-    assert TL.line("x", TL.lag("/nonexistent", "")).startswith("TOOLS-LAG x unmeasured")
-    res = TL.measure({"dies": {"a": {"enabled": True, "src_sha": "main@deadbee"}, "b": {"enabled": False}}}, repo=tmp_path / "nope")
+    assert TL.line("x", TL.lag("/nonexistent", "", rulings={})).startswith("TOOLS-LAG x unmeasured")
+    res = TL.measure({"dies": {"a": {"enabled": True, "src_sha": "main@deadbee"}, "b": {"enabled": False}}}, repo=tmp_path / "nope", rulings={})
     assert list(res) == ["a"] and res["a"]["n_commits"] is None
