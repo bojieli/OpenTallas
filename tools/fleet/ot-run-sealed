@@ -874,6 +874,7 @@ def gap_row(conf, K, stage, path, tool):
 
 
 LAST_OUT = []
+LAST_UNSEALED = False
 
 
 def not_admitted(out):
@@ -896,6 +897,8 @@ def with_max_wait(argv, s):
 def run_sealed(argv, conf, orig):
     """run the sealed job, streaming its output; on a missing undeclared input outside the job, log the gap(s) and
     rerun ONCE unsealed (OWNER 11-09 08:2x fallback) -> exit code"""
+    global LAST_UNSEALED
+    LAST_UNSEALED = False
     p = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace")
     for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):    # the wave stops a client: stop the job client too
         signal.signal(sig, lambda n, f: (p.send_signal(n), sys.exit(128 + n)))
@@ -926,7 +929,26 @@ def run_sealed(argv, conf, orig):
     print(f"ot-run-sealed: ISOLATE-GAP {len(gaps)} path(s) outside the job (first {gaps[0][0]}); rerun UNSEALED once",
           file=sys.stderr, flush=True)
     backend = backend_of(conf)
+    LAST_UNSEALED = True   # the unsealed backend owns its own result return
     return subprocess.call([backend] + list(orig))
+
+
+def returned_host(out):
+    """Use the backend's terminal receipt, not the host selected before admission.
+
+    A sealed, fetchable job can roam after staging. Copying from the staged host
+    can succeed with an old checkpoint, so absent receipts must fail closed.
+    """
+    rows = re.findall(r"^ot-run: RAN on ([A-Za-z0-9_.-]+) \(unit [^\s()]+\): exit -?\d+\s*$",
+                      "".join(out), re.M)
+    return rows[-1] if rows else None
+
+
+def return_copy(cb, out):
+    host = returned_host(out)
+    if not host:
+        return 97, None
+    return copy_back(host, cb["to"], cb["path"], cb.get("stage")), host
 
 
 def sealed_ap(argv, conf):
@@ -998,10 +1020,14 @@ def main():
             cb = json.load(open(argv[argv.index("--job") + 1])).get("copy_back") if "--job" in argv else None
         except (OSError, ValueError):
             cb = None
-        if cb:
-            crc = copy_back(cb["from"], cb["to"], cb["path"], cb.get("stage"))
-            log(conf, f"COPY-BACK {cb['path']} {cb['from']} -> {cb['to']} rc {crc}")
-            print(f"ot-run-sealed: copy-back {cb['from']} -> {cb['to']} rc {crc}", file=sys.stderr, flush=True)
+        if cb and not LAST_UNSEALED:
+            crc, actual = return_copy(cb, LAST_OUT)
+            if actual is None:
+                log(conf, f"COPY-BACK REFUSED {cb['path']}: no terminal RAN receipt")
+                print("ot-run-sealed: copy-back REFUSED: no terminal RAN receipt", file=sys.stderr, flush=True)
+            else:
+                log(conf, f"COPY-BACK {cb['path']} {actual} -> {cb['to']} rc {crc}")
+                print(f"ot-run-sealed: copy-back {actual} -> {cb['to']} rc {crc}", file=sys.stderr, flush=True)
             if crc and not rc:
                 rc = 97
         sys.exit(rc)
