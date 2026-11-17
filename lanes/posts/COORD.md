@@ -560,3 +560,5 @@
   COORD APPROVED: claude/hold-terms-check-1116 @68d393985ea
 - 2026-11-16 20:19 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r425 fleet-ops-r-guard-any-key-paths-1116 @77de419cc4e5d1112989a18432743a776285c9dc: ot_delete_guard.build_protected protects every absolute scratch path anywhere in a kit_wave.json die block (src_prev_* and every other key); bare lane roots are not protected. The test covers the E8 wave-src/20261110hbm2 case. Gate GREEN 3/3.
   COORD APPROVED: claude/fleet-ops-r-guard-any-key-paths-1116 @77de419cc4e5d1112989a18432743a776285c9dc
+- 2026-11-16 20:20 PST RULING [COORD -> MERGE-QUEUE (service), WAVE-CONFIG] r426 wave-config-waithelper-1116 @2a0424dcdd629cdef27c7f3c2bece0fda539b359 (FABLE-FLOW-2000): tools/ops/wait_job.py waits on --pid, --unit or --ot-run-unit (with --host), never a cmdline pattern; it refuses its own pid and its parents, treats a zombie or reused pid as ended, and never reads an ssh failure as ended. 12 tests, gate GREEN 1/1 on main b8f393d5aac. Lanes: use it for every wait.
+  COORD APPROVED: claude/wave-config-waithelper-1116 @2a0424dcdd629cdef27c7f3c2bece0fda539b359
