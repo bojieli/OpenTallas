@@ -1,0 +1,403 @@
+{
+ "status": "ARCHIVED_BOTH_INDEXED",
+ "modules": [
+  {
+   "module": "kv_cland_w1045_ns_ddbeb",
+   "source_host": "intel1",
+   "path": "/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w1045_ns_ddbeb",
+   "files": {
+    "6_final.odb": "92cec7bb111067f03e9365f728f84258631aa737556d1cf76189e593a876cd45",
+    "signoff.json": "94f5510eda42f7806045104360d9692a750cdbb1f6a5df5d2f6a4d01524c7bda",
+    "6_final.def": "b7d02fd148c64946926daa25175597f6bf90878a69ce29bc746a9d9c3dbd5cee",
+    "6_final.v": "ee7f2795e7ecc7e817150752fe4f71ee5d67ebc44fadeeb1f56ccfe6710daf3e",
+    "6_final.sdc": "db438ec91c880784847f6b01e42a6cb656d74bf2703954fc2dfff07aa5dc1dfb",
+    "freeze.json": "19ad8361f357a90534eea00f4dbed54aea9d8980b57e35cd3b063253cea546cc",
+    "core.json": "ad8e127a37d5bf407e358d9a0dfb042b7e8c892c1a2c0d1fbd4a37b418e35990",
+    "pins.json": "8340578cfaa4a5fc46c05528172d3f626b0e2a910ffa10d8940e4889f9cad34a",
+    "views/kv_cland_w1045_ns_ddbeb.lef": "e0e38b807fd15b9f5b1eee472de514af9076b1ff5492f2c32610760892d4bb36",
+    "views/kv_cland_w1045_ns_ddbeb_tt.lib": "7349d8f4b58986df172434333d9e320c4da51df9b4b58888699a38c4e410202f",
+    "views/kv_cland_w1045_ns_ddbeb_ff.lib": "ef1ffc55b2247c90461adb918a4f9dab7e67952705824333ba89fedef999daee",
+    "views/kv_cland_w1045_ns_ddbeb_tc.lib": "65b997c19adcaef193dce4ce58f93c7dc7e0692f416f5219c41bd90542cbeecf",
+    "views/kv_cland_w1045_ns_ddbeb_BC.lib": "80c83ce39d0f62e65dbac4e417beb3cfc4681274cf85f34f52e6de4c8022f35f",
+    "ARCHIVE_RECOVERY.json": "2e2f8c918dc34c44a3e13166cc557a67f1ad5e7c24daffe60907b857f379e333"
+   },
+   "meta": {
+    "module": "kv_cland_w1045_ns_ddbeb",
+    "source_host": "key-cardinal",
+    "source_kit": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0",
+    "source_signoff": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/signoff/signoff.json",
+    "verdict": "SIGNED",
+    "action": "Existing signed artifact two-copy archive receipt recovery; no new signoff/source qualification",
+    "files": {
+     "6_final.odb": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/run/results/asap7/kq_kv_cland_w1045_ns_ddbeb_synth0/base/6_final.odb",
+      "bytes": 51768437,
+      "sha256": "92cec7bb111067f03e9365f728f84258631aa737556d1cf76189e593a876cd45"
+     },
+     "signoff.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/signoff/signoff.json",
+      "bytes": 24008,
+      "sha256": "94f5510eda42f7806045104360d9692a750cdbb1f6a5df5d2f6a4d01524c7bda"
+     },
+     "6_final.def": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/run/results/asap7/kq_kv_cland_w1045_ns_ddbeb_synth0/base/6_final.def",
+      "bytes": 31039776,
+      "sha256": "b7d02fd148c64946926daa25175597f6bf90878a69ce29bc746a9d9c3dbd5cee"
+     },
+     "6_final.v": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/run/results/asap7/kq_kv_cland_w1045_ns_ddbeb_synth0/base/6_final.v",
+      "bytes": 5352156,
+      "sha256": "ee7f2795e7ecc7e817150752fe4f71ee5d67ebc44fadeeb1f56ccfe6710daf3e"
+     },
+     "6_final.sdc": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/run/results/asap7/kq_kv_cland_w1045_ns_ddbeb_synth0/base/6_final.sdc",
+      "bytes": 579504,
+      "sha256": "db438ec91c880784847f6b01e42a6cb656d74bf2703954fc2dfff07aa5dc1dfb"
+     },
+     "freeze.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/freeze.json",
+      "bytes": 2093,
+      "sha256": "19ad8361f357a90534eea00f4dbed54aea9d8980b57e35cd3b063253cea546cc"
+     },
+     "core.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/core.json",
+      "bytes": 197,
+      "sha256": "ad8e127a37d5bf407e358d9a0dfb042b7e8c892c1a2c0d1fbd4a37b418e35990"
+     },
+     "pins.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/pins.json",
+      "bytes": 170192,
+      "sha256": "8340578cfaa4a5fc46c05528172d3f626b0e2a910ffa10d8940e4889f9cad34a"
+     },
+     "views/kv_cland_w1045_ns_ddbeb.lef": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/run/results/asap7/kq_kv_cland_w1045_ns_ddbeb_synth0/base/kv_cland_w1045_ns_ddbeb.lef",
+      "bytes": 303718,
+      "sha256": "e0e38b807fd15b9f5b1eee472de514af9076b1ff5492f2c32610760892d4bb36"
+     },
+     "views/kv_cland_w1045_ns_ddbeb_tt.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/views/kv_cland_w1045_ns_ddbeb_tt.lib",
+      "bytes": 1743584,
+      "sha256": "7349d8f4b58986df172434333d9e320c4da51df9b4b58888699a38c4e410202f"
+     },
+     "views/kv_cland_w1045_ns_ddbeb_ff.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/views/kv_cland_w1045_ns_ddbeb_ff.lib",
+      "bytes": 1741479,
+      "sha256": "ef1ffc55b2247c90461adb918a4f9dab7e67952705824333ba89fedef999daee"
+     },
+     "views/kv_cland_w1045_ns_ddbeb_tc.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/run/results/asap7/kq_kv_cland_w1045_ns_ddbeb_synth0/base/kv_cland_w1045_ns_ddbeb_tc.lib",
+      "bytes": 1743528,
+      "sha256": "65b997c19adcaef193dce4ce58f93c7dc7e0692f416f5219c41bd90542cbeecf"
+     },
+     "views/kv_cland_w1045_ns_ddbeb_BC.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0/run/results/asap7/kq_kv_cland_w1045_ns_ddbeb_synth0/base/kv_cland_w1045_ns_ddbeb_BC.lib",
+      "bytes": 1741439,
+      "sha256": "80c83ce39d0f62e65dbac4e417beb3cfc4681274cf85f34f52e6de4c8022f35f"
+     }
+    }
+   },
+   "index_row": "qwen_kvsys\tkv_cland_w1045_ns_ddbeb\tc\t94f5510eda42f7806045104360d9692a750cdbb1f6a5df5d2f6a4d01524c7bda\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w1045_ns_ddbeb/6_final.odb\t/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w1045_ns_ddbeb/6_final.odb\t51768437\t92cec7bb111067f03e9365f728f84258631aa737556d1cf76189e593a876cd45\t\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w1045_ns_ddbeb/signoff.json\tARCHIVED-BOTH-NO-VIEWPACK\tKV archive recovery1116 of existing SIGNED NO-TAG provider intel1:/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1045_ns_ddbeb/kits/kv_cland_w1045_ns_ddbeb_synth0; no new signoff or rerun"
+  },
+  {
+   "module": "kv_cland_w1057_ew_94a44",
+   "source_host": "epyc2",
+   "path": "/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w1057_ew_94a44",
+   "files": {
+    "6_final.odb": "36a489784a6bbe54db1177ed72a7c642c015425fc25392a45e4362b7150edbe1",
+    "signoff.json": "b67d881fe71b3626e639adbc37aec06fd301a098b8ff342781bd7d497e9dd8a6",
+    "6_final.def": "06151d4a0b481cb62149181b835f5e658e44e189b0186c7c74d830b6127fac07",
+    "6_final.v": "c19bb68fdebf23a8ad4e9be1162a8cbcc36bc407a8352e816c9d955081a3f769",
+    "6_final.sdc": "9361d00fff774174f0138d9704a26d8a6d9431b68faac312f2b5a3a0c9aa8a07",
+    "freeze.json": "4a4aba3a1a6f56d03459e86ef1165806fc266f2f0a577054f1e5baee0de0d832",
+    "core.json": "8ac3fd040922ab634a46b1074e8999ba464ee512e999c6c6a6d54831de5334f0",
+    "pins.json": "35aa11976e4d98304911e9c7c0b38921d2cc1a289b416316d127f327ab933ea7",
+    "views/kv_cland_w1057_ew_94a44.lef": "b75795be78d69f83616d1832c0bd4970d80cef1e1afc07920d4c86089463f1bd",
+    "views/kv_cland_w1057_ew_94a44_tt.lib": "de214bfd511c57b315d39bab595e5fdb2721897524ed679ec0a81ca4595e7d99",
+    "views/kv_cland_w1057_ew_94a44_ff.lib": "e64f1f6f4059b84bf99d9b6abfa282e583d14e8903d70d5951aec866bb7f5761",
+    "views/kv_cland_w1057_ew_94a44_tc.lib": "b15ab33f77a0f2ccf1baba63288e116ecdddf65897fcdd1e4cb833e563e386e5",
+    "views/kv_cland_w1057_ew_94a44_BC.lib": "c1c1d7a7cb0556d5133e0308edc5fadfc5451f3aaf8131639cb78d6fa39ec0d5",
+    "ARCHIVE_RECOVERY.json": "ae7a385ad5e906876446a30283e1d1e039f86b59bc7093822c39355a757dea7d"
+   },
+   "meta": {
+    "module": "kv_cland_w1057_ew_94a44",
+    "source_host": "dear-crayfish",
+    "source_kit": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0",
+    "source_signoff": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/signoff/signoff.json",
+    "verdict": "SIGNED",
+    "action": "Existing signed artifact two-copy archive receipt recovery; no new signoff/source qualification",
+    "files": {
+     "6_final.odb": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/run/results/asap7/kq_kv_cland_w1057_ew_94a44_synth0/base/6_final.odb",
+      "bytes": 53918823,
+      "sha256": "36a489784a6bbe54db1177ed72a7c642c015425fc25392a45e4362b7150edbe1"
+     },
+     "signoff.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/signoff/signoff.json",
+      "bytes": 23859,
+      "sha256": "b67d881fe71b3626e639adbc37aec06fd301a098b8ff342781bd7d497e9dd8a6"
+     },
+     "6_final.def": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/run/results/asap7/kq_kv_cland_w1057_ew_94a44_synth0/base/6_final.def",
+      "bytes": 32628371,
+      "sha256": "06151d4a0b481cb62149181b835f5e658e44e189b0186c7c74d830b6127fac07"
+     },
+     "6_final.v": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/run/results/asap7/kq_kv_cland_w1057_ew_94a44_synth0/base/6_final.v",
+      "bytes": 5518667,
+      "sha256": "c19bb68fdebf23a8ad4e9be1162a8cbcc36bc407a8352e816c9d955081a3f769"
+     },
+     "6_final.sdc": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/run/results/asap7/kq_kv_cland_w1057_ew_94a44_synth0/base/6_final.sdc",
+      "bytes": 586032,
+      "sha256": "9361d00fff774174f0138d9704a26d8a6d9431b68faac312f2b5a3a0c9aa8a07"
+     },
+     "freeze.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/freeze.json",
+      "bytes": 2093,
+      "sha256": "4a4aba3a1a6f56d03459e86ef1165806fc266f2f0a577054f1e5baee0de0d832"
+     },
+     "core.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/core.json",
+      "bytes": 197,
+      "sha256": "8ac3fd040922ab634a46b1074e8999ba464ee512e999c6c6a6d54831de5334f0"
+     },
+     "pins.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/pins.json",
+      "bytes": 171400,
+      "sha256": "35aa11976e4d98304911e9c7c0b38921d2cc1a289b416316d127f327ab933ea7"
+     },
+     "views/kv_cland_w1057_ew_94a44.lef": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/run/results/asap7/kq_kv_cland_w1057_ew_94a44_synth0/base/kv_cland_w1057_ew_94a44.lef",
+      "bytes": 306623,
+      "sha256": "b75795be78d69f83616d1832c0bd4970d80cef1e1afc07920d4c86089463f1bd"
+     },
+     "views/kv_cland_w1057_ew_94a44_tt.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/views/kv_cland_w1057_ew_94a44_tt.lib",
+      "bytes": 1763769,
+      "sha256": "de214bfd511c57b315d39bab595e5fdb2721897524ed679ec0a81ca4595e7d99"
+     },
+     "views/kv_cland_w1057_ew_94a44_ff.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/views/kv_cland_w1057_ew_94a44_ff.lib",
+      "bytes": 1761650,
+      "sha256": "e64f1f6f4059b84bf99d9b6abfa282e583d14e8903d70d5951aec866bb7f5761"
+     },
+     "views/kv_cland_w1057_ew_94a44_tc.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/run/results/asap7/kq_kv_cland_w1057_ew_94a44_synth0/base/kv_cland_w1057_ew_94a44_tc.lib",
+      "bytes": 1763756,
+      "sha256": "b15ab33f77a0f2ccf1baba63288e116ecdddf65897fcdd1e4cb833e563e386e5"
+     },
+     "views/kv_cland_w1057_ew_94a44_BC.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0/run/results/asap7/kq_kv_cland_w1057_ew_94a44_synth0/base/kv_cland_w1057_ew_94a44_BC.lib",
+      "bytes": 1761642,
+      "sha256": "c1c1d7a7cb0556d5133e0308edc5fadfc5451f3aaf8131639cb78d6fa39ec0d5"
+     }
+    }
+   },
+   "index_row": "qwen_kvsys\tkv_cland_w1057_ew_94a44\tc\tb67d881fe71b3626e639adbc37aec06fd301a098b8ff342781bd7d497e9dd8a6\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w1057_ew_94a44/6_final.odb\t/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w1057_ew_94a44/6_final.odb\t53918823\t36a489784a6bbe54db1177ed72a7c642c015425fc25392a45e4362b7150edbe1\t\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w1057_ew_94a44/signoff.json\tARCHIVED-BOTH-NO-VIEWPACK\tKV archive recovery1116 of existing SIGNED NO-TAG provider epyc2:/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w1057_ew_94a44/kits/kv_cland_w1057_ew_94a44_synth0; no new signoff or rerun"
+  },
+  {
+   "module": "kv_cland_w288_ns_ad575",
+   "source_host": "epyc2",
+   "path": "/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w288_ns_ad575",
+   "files": {
+    "6_final.odb": "1858dd7bf97dbc06903bf8fda744ca4a4c91fb0d01228a69400b6ac51aa0f021",
+    "signoff.json": "dba66faeb6687cf12f90109a0fb0437c795326bf6321b0d82252629d1a3b75cb",
+    "6_final.def": "54589163285f122e9cfbab29332d8608e7a365999cd44d61c1e1c5e277d0b00b",
+    "6_final.v": "184c23e2b2e2a5c878d41933ae867e25867219785c8f50f304640ff261967f62",
+    "6_final.sdc": "eb0ec78ff4bd57c0d6baac045a37489e627022280951ef61d75767630823144e",
+    "freeze.json": "5ee0c59751e38738cd85b50a53260ec0037c4d6e2caf7a70fc1389d643b1f098",
+    "core.json": "3e31da07dd58f4a408c0381d1baec640f995cea06a5cded12de399405ad616bf",
+    "pins.json": "dba04a50bffd096d88337956c41651c1416ce07a504b1a4167ee5d7ca281b9c8",
+    "views/kv_cland_w288_ns_ad575.lef": "23701903369f1e4a8e185a6433bd2858f577ee1585c1e3c593bf6829a6308583",
+    "views/kv_cland_w288_ns_ad575_tt.lib": "9f5b0a83036cd959e30705cf5fd87725fd87d0dc640bebe587bc6f835e147232",
+    "views/kv_cland_w288_ns_ad575_ff.lib": "caaec9ab9555da90b9139d2e84a1024328cc4dfd66466e2d189d9642b8e8a97f",
+    "views/kv_cland_w288_ns_ad575_tc.lib": "811b2b6c9fbc0bed0848cab2ae2c619b3650058bf8cfd37778750ac22359499e",
+    "views/kv_cland_w288_ns_ad575_BC.lib": "0ac3af0a913367b043c3464ec9ef0b3b78caf508dd3a5e0c6bed61564c48f849",
+    "ARCHIVE_RECOVERY.json": "16e773a4290b868a0367ecdc1878de705df904dda9c97bcb4c55c81b6a3f9542"
+   },
+   "meta": {
+    "module": "kv_cland_w288_ns_ad575",
+    "source_host": "dear-crayfish",
+    "source_kit": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0",
+    "source_signoff": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/signoff/signoff.json",
+    "verdict": "SIGNED",
+    "action": "Existing signed artifact two-copy archive receipt recovery; no new signoff/source qualification",
+    "files": {
+     "6_final.odb": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/run/results/asap7/kq_kv_cland_w288_ns_ad575_synth0/base/6_final.odb",
+      "bytes": 15269240,
+      "sha256": "1858dd7bf97dbc06903bf8fda744ca4a4c91fb0d01228a69400b6ac51aa0f021"
+     },
+     "signoff.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/signoff/signoff.json",
+      "bytes": 23828,
+      "sha256": "dba66faeb6687cf12f90109a0fb0437c795326bf6321b0d82252629d1a3b75cb"
+     },
+     "6_final.def": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/run/results/asap7/kq_kv_cland_w288_ns_ad575_synth0/base/6_final.def",
+      "bytes": 8690873,
+      "sha256": "54589163285f122e9cfbab29332d8608e7a365999cd44d61c1e1c5e277d0b00b"
+     },
+     "6_final.v": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/run/results/asap7/kq_kv_cland_w288_ns_ad575_synth0/base/6_final.v",
+      "bytes": 1508274,
+      "sha256": "184c23e2b2e2a5c878d41933ae867e25867219785c8f50f304640ff261967f62"
+     },
+     "6_final.sdc": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/run/results/asap7/kq_kv_cland_w288_ns_ad575_synth0/base/6_final.sdc",
+      "bytes": 164167,
+      "sha256": "eb0ec78ff4bd57c0d6baac045a37489e627022280951ef61d75767630823144e"
+     },
+     "freeze.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/freeze.json",
+      "bytes": 2086,
+      "sha256": "5ee0c59751e38738cd85b50a53260ec0037c4d6e2caf7a70fc1389d643b1f098"
+     },
+     "core.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/core.json",
+      "bytes": 196,
+      "sha256": "3e31da07dd58f4a408c0381d1baec640f995cea06a5cded12de399405ad616bf"
+     },
+     "pins.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/pins.json",
+      "bytes": 47267,
+      "sha256": "dba04a50bffd096d88337956c41651c1416ce07a504b1a4167ee5d7ca281b9c8"
+     },
+     "views/kv_cland_w288_ns_ad575.lef": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/run/results/asap7/kq_kv_cland_w288_ns_ad575_synth0/base/kv_cland_w288_ns_ad575.lef",
+      "bytes": 85114,
+      "sha256": "23701903369f1e4a8e185a6433bd2858f577ee1585c1e3c593bf6829a6308583"
+     },
+     "views/kv_cland_w288_ns_ad575_tt.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/views/kv_cland_w288_ns_ad575_tt.lib",
+      "bytes": 486137,
+      "sha256": "9f5b0a83036cd959e30705cf5fd87725fd87d0dc640bebe587bc6f835e147232"
+     },
+     "views/kv_cland_w288_ns_ad575_ff.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/views/kv_cland_w288_ns_ad575_ff.lib",
+      "bytes": 484944,
+      "sha256": "caaec9ab9555da90b9139d2e84a1024328cc4dfd66466e2d189d9642b8e8a97f"
+     },
+     "views/kv_cland_w288_ns_ad575_tc.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/run/results/asap7/kq_kv_cland_w288_ns_ad575_synth0/base/kv_cland_w288_ns_ad575_tc.lib",
+      "bytes": 486220,
+      "sha256": "811b2b6c9fbc0bed0848cab2ae2c619b3650058bf8cfd37778750ac22359499e"
+     },
+     "views/kv_cland_w288_ns_ad575_BC.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0/run/results/asap7/kq_kv_cland_w288_ns_ad575_synth0/base/kv_cland_w288_ns_ad575_BC.lib",
+      "bytes": 485635,
+      "sha256": "0ac3af0a913367b043c3464ec9ef0b3b78caf508dd3a5e0c6bed61564c48f849"
+     }
+    }
+   },
+   "index_row": "qwen_kvsys\tkv_cland_w288_ns_ad575\tc\tdba66faeb6687cf12f90109a0fb0437c795326bf6321b0d82252629d1a3b75cb\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w288_ns_ad575/6_final.odb\t/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w288_ns_ad575/6_final.odb\t15269240\t1858dd7bf97dbc06903bf8fda744ca4a4c91fb0d01228a69400b6ac51aa0f021\t\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w288_ns_ad575/signoff.json\tARCHIVED-BOTH-NO-VIEWPACK\tKV archive recovery1116 of existing SIGNED NO-TAG provider epyc2:/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w288_ns_ad575/kits/kv_cland_w288_ns_ad575_synth0; no new signoff or rerun"
+  },
+  {
+   "module": "kv_cland_w781_ns_9f2d9",
+   "source_host": "intel1",
+   "path": "/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w781_ns_9f2d9",
+   "files": {
+    "6_final.odb": "4074c58249d9424dc3a99e587c1f51a3eb3a2a8d7c3e2a490493cbf34a5e6465",
+    "signoff.json": "eed8607d0d2a5f8e9e638e61ad0881d5aa573495158549760984621b982b2025",
+    "6_final.def": "2879f5b1ad7b0ba6f514740135f0cb9e9328186d94a87b1417e5004de5368c98",
+    "6_final.v": "1886ca834f371786d938252ec3286a1ee28e7199eeb193713f2fce0f7ceeedf7",
+    "6_final.sdc": "532cbc06a3def393957e3596f216e0aa84d11088f7f2262f668d17b50ac282aa",
+    "freeze.json": "18def11de26986eb4effe34cf18fea689b7d460585d5c5069b0531953a395cc7",
+    "core.json": "88acdbd579aa759a59cc56167f0e3513b94e4fef50fea17c645b6ed942ddd3e2",
+    "pins.json": "06063c2dac668054b67226a1087a753327e513316412453f3ff0f5ebe10c3a91",
+    "views/kv_cland_w781_ns_9f2d9.lef": "8b972e5ffb49a053f9c9b46e241590bcec9c142c993e5a5a146f2cc460cfdb5b",
+    "views/kv_cland_w781_ns_9f2d9_tt.lib": "f43404ba59a68a450a4904e3a52f5538a795249b0d1976aa723fd4fdc56f2c2f",
+    "views/kv_cland_w781_ns_9f2d9_ff.lib": "4f8654dc5f1003f59a563f52a06e8ce64f95bee6af5e1c472fb1687cf37796fc",
+    "views/kv_cland_w781_ns_9f2d9_tc.lib": "9e681004ab6d38d539eb9250747fcf0e069a754ccf3804ab82d8d95f23378e04",
+    "views/kv_cland_w781_ns_9f2d9_BC.lib": "96a99106f08c72f6c0e55e3bb67f406aa857caeb6f9f64e7fb525eb7fa4f1201",
+    "ARCHIVE_RECOVERY.json": "a2771c92e75162ec97a578dbc2cbc75ee8680f07ce2acb54dd41d708162e1ba2"
+   },
+   "meta": {
+    "module": "kv_cland_w781_ns_9f2d9",
+    "source_host": "key-cardinal",
+    "source_kit": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0",
+    "source_signoff": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/signoff/signoff.json",
+    "verdict": "SIGNED",
+    "action": "Existing signed artifact two-copy archive receipt recovery; no new signoff/source qualification",
+    "files": {
+     "6_final.odb": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/run/results/asap7/kq_kv_cland_w781_ns_9f2d9_synth0/base/6_final.odb",
+      "bytes": 39014356,
+      "sha256": "4074c58249d9424dc3a99e587c1f51a3eb3a2a8d7c3e2a490493cbf34a5e6465"
+     },
+     "signoff.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/signoff/signoff.json",
+      "bytes": 24038,
+      "sha256": "eed8607d0d2a5f8e9e638e61ad0881d5aa573495158549760984621b982b2025"
+     },
+     "6_final.def": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/run/results/asap7/kq_kv_cland_w781_ns_9f2d9_synth0/base/6_final.def",
+      "bytes": 23216103,
+      "sha256": "2879f5b1ad7b0ba6f514740135f0cb9e9328186d94a87b1417e5004de5368c98"
+     },
+     "6_final.v": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/run/results/asap7/kq_kv_cland_w781_ns_9f2d9_synth0/base/6_final.v",
+      "bytes": 4009984,
+      "sha256": "1886ca834f371786d938252ec3286a1ee28e7199eeb193713f2fce0f7ceeedf7"
+     },
+     "6_final.sdc": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/run/results/asap7/kq_kv_cland_w781_ns_9f2d9_synth0/base/6_final.sdc",
+      "bytes": 434601,
+      "sha256": "532cbc06a3def393957e3596f216e0aa84d11088f7f2262f668d17b50ac282aa"
+     },
+     "freeze.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/freeze.json",
+      "bytes": 2087,
+      "sha256": "18def11de26986eb4effe34cf18fea689b7d460585d5c5069b0531953a395cc7"
+     },
+     "core.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/core.json",
+      "bytes": 196,
+      "sha256": "88acdbd579aa759a59cc56167f0e3513b94e4fef50fea17c645b6ed942ddd3e2"
+     },
+     "pins.json": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/pins.json",
+      "bytes": 127038,
+      "sha256": "06063c2dac668054b67226a1087a753327e513316412453f3ff0f5ebe10c3a91"
+     },
+     "views/kv_cland_w781_ns_9f2d9.lef": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/run/results/asap7/kq_kv_cland_w781_ns_9f2d9_synth0/base/kv_cland_w781_ns_9f2d9.lef",
+      "bytes": 226780,
+      "sha256": "8b972e5ffb49a053f9c9b46e241590bcec9c142c993e5a5a146f2cc460cfdb5b"
+     },
+     "views/kv_cland_w781_ns_9f2d9_tt.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/views/kv_cland_w781_ns_9f2d9_tt.lib",
+      "bytes": 1305214,
+      "sha256": "f43404ba59a68a450a4904e3a52f5538a795249b0d1976aa723fd4fdc56f2c2f"
+     },
+     "views/kv_cland_w781_ns_9f2d9_ff.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/views/kv_cland_w781_ns_9f2d9_ff.lib",
+      "bytes": 1303626,
+      "sha256": "4f8654dc5f1003f59a563f52a06e8ce64f95bee6af5e1c472fb1687cf37796fc"
+     },
+     "views/kv_cland_w781_ns_9f2d9_tc.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/run/results/asap7/kq_kv_cland_w781_ns_9f2d9_synth0/base/kv_cland_w781_ns_9f2d9_tc.lib",
+      "bytes": 1305174,
+      "sha256": "9e681004ab6d38d539eb9250747fcf0e069a754ccf3804ab82d8d95f23378e04"
+     },
+     "views/kv_cland_w781_ns_9f2d9_BC.lib": {
+      "path": "/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0/run/results/asap7/kq_kv_cland_w781_ns_9f2d9_synth0/base/kv_cland_w781_ns_9f2d9_BC.lib",
+      "bytes": 1303605,
+      "sha256": "96a99106f08c72f6c0e55e3bb67f406aa857caeb6f9f64e7fb525eb7fa4f1201"
+     }
+    }
+   },
+   "index_row": "qwen_kvsys\tkv_cland_w781_ns_9f2d9\tc\teed8607d0d2a5f8e9e638e61ad0881d5aa573495158549760984621b982b2025\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w781_ns_9f2d9/6_final.odb\t/home/ubuntu/signed-export-1114/qwen_kvsys/kv_cland_w781_ns_9f2d9/6_final.odb\t39014356\t4074c58249d9424dc3a99e587c1f51a3eb3a2a8d7c3e2a490493cbf34a5e6465\t\t/archive/opentallas-signed-1114/qwen_kvsys/kv_cland_w781_ns_9f2d9/signoff.json\tARCHIVED-BOTH-NO-VIEWPACK\tKV archive recovery1116 of existing SIGNED NO-TAG provider intel1:/srv/opentallas-scratch2/claude/cland-macro-1/rk/kv_cland_w781_ns_9f2d9/kits/kv_cland_w781_ns_9f2d9_synth0; no new signoff or rerun"
+  }
+ ],
+ "agi_receipt": {
+  "status": "AGI4_VERIFIED_INDEXED",
+  "modules": [
+   "kv_cland_w1045_ns_ddbeb",
+   "kv_cland_w1057_ew_94a44",
+   "kv_cland_w288_ns_ad575",
+   "kv_cland_w781_ns_9f2d9"
+  ],
+  "files": 56
+ }
+}
