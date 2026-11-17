@@ -17580,3 +17580,9 @@ def s81_head_lep_vf_stage_calendar_model():
                           'do not qualify vF depths0000/1220/1221/2/3/3/COL02',
         qualification='HEAD private plan event, exact vF source programme/epoch leases, '
                       'native timing and parent pin/clock/reset joins remain required')
+
+
+def qwen_pc_ring_to_bin_candidate_model(**kwargs):
+    """Unqualified transport sizing from the full-shape PC physical witness."""
+    from uarch_model_qwen_pc_ring_to_bin import model
+    return model(**kwargs)
