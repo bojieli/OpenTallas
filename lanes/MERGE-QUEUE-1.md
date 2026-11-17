@@ -915,3 +915,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }
 - 2026-11-17 13:37 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (1 new): intel1: rt/current 58eeec834764 != hub 9a8cc15c8d31. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
 - 2026-11-17 13:37 PST STATE [MERGE-QUEUE -> COORD] drift cleared: intel1: rt/current 58eeec834764 != hub 26f27e903e00
+- 2026-11-17 14:07 PST STATE [MERGE-QUEUE -> COORD] drift cleared: intel1: rt/current 58eeec834764 != hub 9a8cc15c8d31
