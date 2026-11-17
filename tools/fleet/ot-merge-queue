@@ -774,6 +774,34 @@ def missing_src(wt, out):
     return sorted(x for x in have if not (wt / x).exists())
 
 
+WIDE_MAX = int(os.environ.get("MQ_GATE_WIDE_MAX", "4000"))     # widen a missing path to its 2-level dir when it holds <= this many files
+
+
+def widen_dirs(wt, paths, tops=None):
+    """MQ-PACK-FIX 11-17: dirs to add to the sparse tree for sources a run reported missing, so ONE retry finds the rest
+    (TOKEN-R gate 4918810761: dsfd_cfifo_crs.sv, then dsfd_bf_col.sv, ... one file per round ran out of rounds).
+    A path under a WHOLE_TOPS top (rtl/) -> that whole top; any other path -> its 2-level dir (physical/asap7_memory_macros_v2)
+    when that holds <= WIDE_MAX files (never physical/die_plan scale), else just its parent dir."""
+    tops = WHOLE_TOPS if tops is None else tops
+    out = set()
+    for x in paths:
+        parts = x.split("/")
+        if parts[0] in tops:
+            out.add(parts[0])
+            continue
+        par = os.path.dirname(x)
+        if not par:
+            continue
+        wide = "/".join(parts[:2]) if len(parts) > 2 else par
+        if wide != par:
+            r = git("ls-tree", "-r", "--name-only", "HEAD", wide, cwd=wt, check=False)
+            if r.returncode == 0 and 0 < len(r.stdout.split("\n")) <= WIDE_MAX:
+                out.add(wide)
+                continue
+        out.add(par)
+    return sorted(out)
+
+
 def gate(it, wt, base):
     """compile + tests of the candidate at wt HEAD against base -> it updated with result"""
     tip = rev("HEAD", cwd=wt)
@@ -805,7 +833,7 @@ def gate(it, wt, base):
         # top-level dir when it is in WHOLE_TOPS (rtl/ ~0.9 GB; never physical/, 33 GB)
         paths = {x for m in miss for x in m.split(":", 1)[1].split()}
         if rnd < MISS_ROUNDS:
-            got = sorted({os.path.dirname(x) for x in paths} - {""})
+            got = widen_dirs(wt, paths)
         else:
             got = sorted({x.split("/")[0] for x in paths} & set(WHOLE_TOPS))
         got = [d for d in got if not _covered(d, pats + ["/" + x + "/" for x in need])]
