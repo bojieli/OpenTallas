@@ -1932,8 +1932,13 @@ def core_reset_targets(P, tn):
                 # its declared module, and refuse differing candidates instead of silently choosing another die.
                 base = HERE.parents[1] / "physical" / "die_plan"
                 paths = list(base.glob("*/" + c["pins_file"])) + list(base.glob("*/*/" + c["pins_file"]))
-                paths = [p for p in paths if isinstance((j := json.loads(p.read_text())), dict)
-                         and (j.get("module") or j.get("core")) == c.get("module")]
+                tabs = [(p, json.loads(p.read_text())) for p in paths]
+                keyed = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) == c.get("module")]
+                # QC-CLK-R2 11-17: a bare pin list (no module / core key, e.g. qwen_compute cores/su/signed/*_pins.json)
+                # cannot name its module; it is a candidate only when no table at that path names another module, and
+                # the byte-equality rule below still refuses differing copies.
+                other = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) not in (None, c.get("module"))]
+                paths = keyed or ([p for p, j in tabs if isinstance(j, list)] if not other else [])
                 if paths and len({p.read_bytes() for p in paths}) == 1:
                     pd = paths[0]
                     for _ in Path(c["pins_file"]).parts:
