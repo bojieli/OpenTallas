@@ -33,6 +33,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from uarch_model_qwen_native_stn55 import model as qwen_native_stn55_model
+from uarch_model_s81_ffn_masked_copy import model as s81_final_ffn_masked_copy_model
 
 
 

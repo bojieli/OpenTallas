@@ -1,0 +1,115 @@
+{
+  "schema": "opentallas.s81.xrt-current-control-bit-liveness.v1",
+  "selected_RTL_sha256": "d2a543e4fd9f25b13ccece85058652ecb9ccae366353738b6da20346e9c030a9",
+  "scope": "optimized current RTL at RING_LAND2; CTLbody45:52 already live before candidate; candidate still adds64 internal metadataFF, no existing external bus widening",
+  "variants": [
+    {
+      "top": "ot_s81sl_xrt1",
+      "optimized_netlist_sha256": "e763bbfb583a42a875beda0517e4fb655fb22988e57c18fc17c9fa89353f0ec8",
+      "body_bits": [
+        {
+          "index": 45,
+          "net_id": 40129,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 46,
+          "net_id": 40130,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 47,
+          "net_id": 40131,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 48,
+          "net_id": 40132,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 49,
+          "net_id": 40133,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 50,
+          "net_id": 40134,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 51,
+          "net_id": 40135,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 52,
+          "net_id": 40136,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        }
+      ]
+    },
+    {
+      "top": "ot_s81sl_xrt3",
+      "optimized_netlist_sha256": "895ce265f6fef649badc9c9973b848e8a5d89c197fae1127e2a58d930593c31a",
+      "body_bits": [
+        {
+          "index": 45,
+          "net_id": 43532,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 46,
+          "net_id": 43533,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 47,
+          "net_id": 43534,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 48,
+          "net_id": 43535,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 49,
+          "net_id": 43536,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 50,
+          "net_id": 43537,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 51,
+          "net_id": 43538,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        },
+        {
+          "index": 52,
+          "net_id": 43539,
+          "sequential_D_consumers": 1,
+          "nonconstant": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+{
+ "schema": "opentallas.s81.final-ffn-actual-span-masked-copy-model.v1",
+ "status": "MODEL_ONLY_NOT_ADOPTED",
+ "source_plan_sha256": "819037bbe371ad99945d4a9b3f11a536060280b59bd1c4ac48167d9cf77b140d",
+ "topology": {
+  "enabled": true,
+  "frames_per_slice": [
+   6,
+   6,
+   3,
+   3,
+   6,
+   6,
+   3,
+   3,
+   3,
+   3,
+   6,
+   6,
+   3,
+   3,
+   6,
+   6
+  ],
+  "die_sha": "1d7f96f951f9f23c52ea1a663825109e6a2dc3ac55bb0c4ead007a0356f403e2"
+ },
+ "actual_source_spans": [
+  [
+   0,
+   107
+  ],
+  [
+   107,
+   107
+  ],
+  [
+   214,
+   53
+  ],
+  [
+   267,
+   53
+  ],
+  [
+   320,
+   107
+  ],
+  [
+   427,
+   107
+  ],
+  [
+   534,
+   53
+  ],
+  [
+   587,
+   53
+  ],
+  [
+   640,
+   53
+  ],
+  [
+   693,
+   53
+  ],
+  [
+   746,
+   107
+  ],
+  [
+   853,
+   107
+  ],
+  [
+   960,
+   53
+  ],
+  [
+   1013,
+   53
+  ],
+  [
+   1066,
+   107
+  ],
+  [
+   1173,
+   107
+  ]
+ ],
+ "actual_counts": [
+  107,
+  107,
+  53,
+  53,
+  107,
+  107,
+  53,
+  53,
+  53,
+  53,
+  107,
+  107,
+  53,
+  53,
+  107,
+  107
+ ],
+ "rom_ownership_changed": false,
+ "row_tags_changed": false,
+ "checkpoint_values_changed": false,
+ "down_phases_before": 35,
+ "down_phases_after": 35,
+ "phase_delta": 0,
+ "rank_count": 4,
+ "expert_slots": 7,
+ "rank_words": 1280,
+ "exact_raw_words": 35840,
+ "destination_pair_count": 4480,
+ "descriptor_count": 448,
+ "capture": {
+  "old_stride_words": 64,
+  "proposed_stride_words": 72,
+  "old_rows_per_expert": 16,
+  "proposed_rows_per_expert": 18,
+  "old_rows_per_leaf": 112,
+  "proposed_rows_per_leaf": 126,
+  "extra_rows_per_leaf": 14,
+  "old_capture_rows": [
+   128,
+   240
+  ],
+  "proposed_capture_rows": [
+   128,
+   254
+  ],
+  "per_source_padding": [
+   0,
+   3,
+   6,
+   3,
+   0,
+   3,
+   6,
+   3,
+   0,
+   5,
+   2,
+   5,
+   0,
+   5,
+   2,
+   5
+  ],
+  "rbase_rcnt_unchanged": true,
+  "capacity_increase_bytes_per_leaf": 224
+ },
+ "scratch": {
+  "rows": [
+   304,
+   306
+  ],
+  "max_rows_per_leaf": 2,
+  "unique_leaf_slots": 75,
+  "bytes_all_named_leaf_slots": 2400,
+  "lease_qualified": false,
+  "reuse": "one fragment at a time; must book transport then local masked copy before reuse"
+ },
+ "counts": {
+  "source_row_pair_fragments": 4984,
+  "full_fragments": 3976,
+  "partial_fragments": 1008
+ },
+ "unpacked_transport_steps": {
+  "local_copy": 329,
+  "local_masked_copy": 1008,
+  "v_pair": 2492,
+  "wide_tier": 4158
+ },
+ "full_mask_bulk_max_pairs": 4,
+ "bulk_packed_packet_count": 2632,
+ "bulk_packed_transport_steps": {
+  "local_copy": 133,
+  "local_masked_copy": 1008,
+  "v_pair": 1316,
+  "wide_tier": 2198
+ },
+ "mutants_caught": {
+  "legacy_force_all_words_would_overwrite": true,
+  "missing_complement_detected": true,
+  "old_no_pad_breaks_global_word_slot": true,
+  "old_stride_overlaps_padded_full_chunk": true
+ },
+ "scope": "actual source107/53 ownership and numeric row tags retained; CAP mutable-address padding + reserved capture stride + candidate local masked copy only; no new RTL, images, physical timing, SRAM lifetime or token-rate qualification",
+ "required_gates": [
+  "actual VPX/capture scratch leases",
+  "model-priced new mask metadata register/bit-liveness path",
+  "smallest full107/53 CAP-XR-VP masked-store exactness with miter/mutant",
+  "full-shape context TT setup/FF hold",
+  "actual static transport/issuer/control reservation calendar"
+ ]
+}
