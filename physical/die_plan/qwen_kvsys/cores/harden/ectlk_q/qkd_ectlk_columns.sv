@@ -1,4 +1,4 @@
-module qkd_ectlk_reference (
+module qkd_ectlk_reference #(parameter integer QK_ISSUE_AGE = 37, parameter integer RESPONSE_LAT = 26) (
 
     input wire [15:0] rsp_epoch,
     input wire [5:0] rsp_layer,
@@ -31,7 +31,7 @@ module qkd_ectlk_reference (
     output wire [0:0] req_valid,
     input wire [1023:0] rsp_data
 );
-    qkd_ectl3_kiss_st #(.HXK(13), .MUT(0), .QK_ISSUE_AGE(34), .RESPONSE_LAT(18)) u_leaf (
+    qkd_ectl3_kiss_st #(.HXK(13), .MUT(0), .QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_leaf (
         .rsp_epoch(rsp_epoch),
         .rsp_layer(rsp_layer),
         .rsp_t(rsp_t),
@@ -66,7 +66,7 @@ module qkd_ectlk_reference (
 endmodule
 
 
-module qkd_ectlk_q0 (
+module qkd_ectlk_q0 #(parameter integer QK_ISSUE_AGE = 37, parameter integer RESPONSE_LAT = 26) (
     input wire [0:0] ck,
     input wire [15:0] rsp_epoch,
     input wire [5:0] rsp_layer,
@@ -2718,7 +2718,7 @@ module qkd_ectlk_q0 (
     assign old_rsp_data[1021] = 1'b0;
     assign old_rsp_data[1022] = 1'b0;
     assign old_rsp_data[1023] = 1'b0;
-    qkd_ectlk_reference u_ref (
+    qkd_ectlk_reference #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_ref (
         .rsp_epoch(old_rsp_epoch),
         .rsp_layer(old_rsp_layer),
         .rsp_t(old_rsp_t),
@@ -2752,7 +2752,7 @@ module qkd_ectlk_q0 (
     );
 endmodule
 
-module qkd_ectlk_q1 (
+module qkd_ectlk_q1 #(parameter integer QK_ISSUE_AGE = 37, parameter integer RESPONSE_LAT = 26) (
     input wire [0:0] ck,
     input wire [0:0] rst_n,
     input wire [282:0] si,
@@ -5559,7 +5559,7 @@ module qkd_ectlk_q1 (
     assign old_rsp_data[1021] = rsp_data[1021];
     assign old_rsp_data[1022] = rsp_data[1022];
     assign old_rsp_data[1023] = rsp_data[1023];
-    qkd_ectlk_reference u_ref (
+    qkd_ectlk_reference #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_ref (
         .rsp_epoch(old_rsp_epoch),
         .rsp_layer(old_rsp_layer),
         .rsp_t(old_rsp_t),
@@ -5593,7 +5593,7 @@ module qkd_ectlk_q1 (
     );
 endmodule
 
-module qkd_ectlk_q2 (
+module qkd_ectlk_q2 #(parameter integer QK_ISSUE_AGE = 37, parameter integer RESPONSE_LAT = 26) (
     input wire [0:0] ck,
     input wire [0:0] rst_n,
     input wire [14:0] si,
@@ -8403,7 +8403,7 @@ module qkd_ectlk_q2 (
     assign old_rsp_data[1021] = 1'b0;
     assign old_rsp_data[1022] = 1'b0;
     assign old_rsp_data[1023] = 1'b0;
-    qkd_ectlk_reference u_ref (
+    qkd_ectlk_reference #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_ref (
         .rsp_epoch(old_rsp_epoch),
         .rsp_layer(old_rsp_layer),
         .rsp_t(old_rsp_t),
@@ -8437,7 +8437,7 @@ module qkd_ectlk_q2 (
     );
 endmodule
 
-module qkd_ectlk_q3 (
+module qkd_ectlk_q3 #(parameter integer QK_ISSUE_AGE = 37, parameter integer RESPONSE_LAT = 26) (
     input wire [0:0] ck,
     input wire [0:0] rst_n,
     input wire [536:0] si,
@@ -11270,7 +11270,7 @@ module qkd_ectlk_q3 (
     assign old_rsp_data[1021] = rsp_data[1021];
     assign old_rsp_data[1022] = rsp_data[1022];
     assign old_rsp_data[1023] = rsp_data[1023];
-    qkd_ectlk_reference u_ref (
+    qkd_ectlk_reference #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_ref (
         .rsp_epoch(old_rsp_epoch),
         .rsp_layer(old_rsp_layer),
         .rsp_t(old_rsp_t),
@@ -11304,7 +11304,7 @@ module qkd_ectlk_q3 (
     );
 endmodule
 
-module qkd_ectlk_columns (
+module qkd_ectlk_columns #(parameter integer QK_ISSUE_AGE = 37, parameter integer RESPONSE_LAT = 26) (
     input wire [3:0] ck,
     input wire [15:0] rsp_epoch,
     input wire [5:0] rsp_layer,
@@ -12079,7 +12079,7 @@ module qkd_ectlk_columns (
     assign req_t[12] = q0_req_t[12];
     wire [0:0] q0_req_valid;
     assign req_valid[0] = q0_req_valid[0];
-    qkd_ectlk_q0 u_q0 (
+    qkd_ectlk_q0 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q0 (
         .ck(ck[0]),
         .rsp_epoch(rsp_epoch[15:0]),
         .rsp_layer(rsp_layer[5:0]),
@@ -13018,7 +13018,7 @@ module qkd_ectlk_columns (
     assign t0[1302] = q1_t0[907];
     assign t0[1303] = q1_t0[908];
     assign t0[1304] = q1_t0[909];
-    qkd_ectlk_q1 u_q1 (
+    qkd_ectlk_q1 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q1 (
         .ck(ck[1]),
         .rst_n(rst_n[0:0]),
         .si(si[282:0]),
@@ -13939,7 +13939,7 @@ module qkd_ectlk_columns (
     assign t1[654] = q2_t1[654];
     assign t1[655] = q2_t1[655];
     assign t1[656] = q2_t1[656];
-    qkd_ectlk_q2 u_q2 (
+    qkd_ectlk_q2 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q2 (
         .ck(ck[2]),
         .rst_n(rst_n[0:0]),
         .si(si[14:0]),
@@ -14886,7 +14886,7 @@ module qkd_ectlk_columns (
     assign e1[13] = q3_e1[13];
     assign e1[14] = q3_e1[14];
     assign e1[15] = q3_e1[15];
-    qkd_ectlk_q3 u_q3 (
+    qkd_ectlk_q3 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q3 (
         .ck(ck[3]),
         .rst_n(rst_n[0:0]),
         .si(si[536:0]),
@@ -14898,7 +14898,7 @@ module qkd_ectlk_columns (
     );
 endmodule
 
-module qkd_ectlk_columns_legacy (
+module qkd_ectlk_columns_legacy #(parameter integer QK_ISSUE_AGE = 37, parameter integer RESPONSE_LAT = 26) (
     input wire [15:0] rsp_epoch,
     input wire [5:0] rsp_layer,
     input wire [13:0] rsp_t,
@@ -20356,7 +20356,7 @@ module qkd_ectlk_columns_legacy (
     assign compact_rsp_data[1021] = rsp_data[1021];
     assign compact_rsp_data[1022] = rsp_data[1022];
     assign compact_rsp_data[1023] = rsp_data[1023];
-    qkd_ectlk_columns u_columns (
+    qkd_ectlk_columns #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_columns (
         .ck({4{ck[0]}}),
         .rsp_epoch(compact_rsp_epoch),
         .rsp_layer(compact_rsp_layer),
