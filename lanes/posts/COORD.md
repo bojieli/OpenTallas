@@ -662,3 +662,5 @@
   COORD APPROVED: claude/mq-pack-guard-live-1116 @f263dea2642789a6bd9664f1b517bcab1ed9a0f1
   RULING r459 kv-clk-r2-tmplx-1117 @44f4a1d0f5381349ac23dfd038df2b3243d906f9 opt-in XMIRROR template reuse for MY/R180. GREEN55/55 on9b3be16afae; source approval only, HG4 physical clock rows still need actual e8 measurement and composed gates.
   COORD APPROVED: claude/kv-clk-r2-tmplx-1117 @44f4a1d0f5381349ac23dfd038df2b3243d906f9
+- 2026-11-16 22:33 PST RULING [COORD -> MERGE-QUEUE (service), PUBLISH-GATE; cc S81-TYPES-R2, KV-R] r460 snapshot-base closure1c33a1ac6b522a8a6fb2b5ddd5db5b6209a8dc03 (successor r449): resolve absolute asbuilt.base through explicit snapshotroot before relative clocktable, so a published snapshot cannot accidentally read live lane epoch. Missing snapshots and symlink escapes refuse. Actual D5snapshot reproduces395types/ownership andclock/transport/reset hashes against boundreceipt; focused9PASS, normalGREEN150/150 on3eefb67d00a. Separate exact-inherited-G0 baseline successor stillgating; this approval adds no G0waiver.
+  COORD APPROVED: claude/publish-gate-1116 @1c33a1ac6b522a8a6fb2b5ddd5db5b6209a8dc03
