@@ -1,0 +1,88 @@
+{
+ "nets": 59089,
+ "assigned": 53427,
+ "unassigned": 2387,
+ "reach_bad": 3275,
+ "relay_ff": 0,
+ "relay_edges_by_kind": {},
+ "edges_by_kind": {
+  "PIN stage": 1150,
+  "POUT stage (to relay)": 3411,
+  "POUT stage (from relay)": 3411,
+  "PIN stage (to relay)": 2300,
+  "PIN stage (from relay)": 2300,
+  "PIN to native ROP": 1104,
+  "ROP to ROQ": 1104,
+  "PIN to MU command": 34,
+  "MU command to tag payload": 32,
+  "MU tag payload to held window tag": 32,
+  "shared frame to TXI (to relay)": 2208,
+  "shared frame to TXI (from relay)": 2208,
+  "TXI to SRAM write FF": 2212,
+  "TX write FF to SRAM port": 2212,
+  "TX SRAM to read FF": 2212,
+  "TX read FF to output FF": 2212,
+  "TX output FF to K core input (to relay)": 2212,
+  "TX output FF to K core input (from relay)": 2212,
+  "TXI stage (to relay)": 1106,
+  "TXI stage (from relay)": 1106,
+  "KRX to RX DQ": 2212,
+  "RX DQ to SRAM write FF": 2212,
+  "RX write FF to SRAM port": 2212,
+  "RX write to bypass-cache FF": 2212,
+  "K core to KRX (to relay)": 1659,
+  "K core to KRX (from relay)": 1659,
+  "KRX stage (to relay)": 2212,
+  "KRX stage (from relay)": 2212,
+  "shared RX head to MLWD (to relay)": 2208,
+  "shared RX head to MLWD (from relay)": 2208,
+  "MLWD to MU write capture": 1104,
+  "MU write capture to SRAM": 1104,
+  "MU SRAM to replay capture": 1104,
+  "shared RX head to RID (from relay)": 2206,
+  "MU replay capture to RID": 1103,
+  "RID to POUT0 (to relay)": 1103,
+  "RID to POUT0 (from relay)": 1103
+ },
+ "rows": {
+  "M4": 7530,
+  "M6": 4348,
+  "M8": 1618
+ },
+ "band": [
+  490.0,
+  851.44
+ ],
+ "grow": 0,
+ "relay_t": 1000000000.0,
+ "m8_all": false,
+ "worst_full_rect": {
+  "x": 1210,
+  "n": 12950,
+  "cap": 11046,
+  "f": 1.1724
+ },
+ "worst_center": {
+  "x": 1210,
+  "n": 9455,
+  "cap": 11046,
+  "f": 0.856
+ },
+ "worst_mandatory": {
+  "x": 1240,
+  "n": 5406,
+  "cap": 11046,
+  "f": 0.4894
+ },
+ "worst_witness": 0.9587,
+ "unassigned_by_source": {
+  "RELAY:stage:pout_r2:FF:u_core.u.g_pout.g": 941,
+  "RTL:u_core.u.u_lep.u.fr": 651,
+  "FF:u_core.u.u_lep.u.g_tx": 256,
+  "FF:u_core.u.u_lep.u.g_inpipe.rop": 209,
+  "RELAY:stage:pout_r4:FF:u_core.u.g_pout.g": 121,
+  "MACRO:u_core.u.u_lep.u.g_tx": 116,
+  "FF:u_core.u.u_lep.u.g_rx": 70,
+  "FF:u_core.u.g_pin.g_s": 23
+ }
+}

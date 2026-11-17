@@ -1,0 +1,17 @@
+CASE plan expect=PASS got=PASS OK
+CASE zero expect=PASS got=PASS OK
+CASE mut_dbit expect=FAIL got=FAIL OK
+CASE nf15f expect=PASS got=FAIL UNEXPECTED
+CASE nf15f_norxh expect=PASS got=FAIL UNEXPECTED
+CASE rxh_only expect=PASS got=PASS OK
+CASE mut_rxhbit expect=FAIL got=FAIL OK
+CASE mut_rxhskew expect=FAIL got=FAIL OK
+== dbg: CASE dbg 0 LEPK_FAULT dut cyc=4053 phase=2 ovf=0000 perr=1 herr=0 slq=0 lfq=000000 lfbq=000000 mferr=0(terr=0 mcol=0 mlf=0) ie=0 merr=0 LEPK_STAGES FAIL hang at cyc=60001 phase=3 ri ref=1040 dut=1018 lw ref=80 dut=6 landed=80 
+== krx: CASE krx 0 LEPK_FAULT dut cyc=4045 phase=2 ovf=0000 perr=1 herr=0 slq=0 lfq=000000 lfbq=000000 mferr=0(terr=0 mcol=0 mlf=0) ie=0 merr=0 LEPK_STAGES FAIL hang at cyc=60001 phase=3 ri ref=1040 dut=1018 lw ref=80 dut=7 landed=80 
+== ktx: CASE ktx 0 LEPK_FAULT dut cyc=4868 phase=2 ovf=0000 perr=1 herr=0 slq=0 lfq=000000 lfbq=000000 mferr=0(terr=0 mcol=0 mlf=0) ie=0 merr=0 LEPK_STAGES FAIL hang at cyc=60001 phase=3 ri ref=1040 dut=1040 lw ref=80 dut=77 landed=80 
+== io: CASE io 1 LEPK_STAGES PASS 
+== k0600: CASE k0600 0 LEPK_FAULT dut cyc=4292 phase=2 ovf=0000 perr=1 herr=0 slq=0 lfq=000000 lfbq=000000 mferr=0(terr=0 mcol=0 mlf=0) ie=0 merr=0 
+== k3360: CASE k3360 0 LEPK_FAULT dut cyc=4044 phase=2 ovf=0000 perr=1 herr=0 slq=0 lfq=000000 lfbq=000000 mferr=0(terr=0 mcol=0 mlf=0) ie=0 merr=0 LEPK_STAGES FAIL hang at cyc=60001 phase=3 ri ref=1040 dut=1034 lw ref=80 dut=55 landed=80 
+== k6666: CASE k6666 0 LEPK_FAULT dut cyc=4045 phase=2 ovf=0000 perr=1 herr=0 slq=0 lfq=000000 lfbq=000000 mferr=0(terr=0 mcol=0 mlf=0) ie=0 merr=0 LEPK_STAGES FAIL hang at cyc=60001 phase=3 ri ref=1040 dut=1019 lw ref=80 dut=20 landed=80 
+== c16: CASE c16 0 LEPK_FAULT dut cyc=4878 phase=2 ovf=0000 perr=1 herr=0 slq=0 lfq=000000 lfbq=000000 mferr=0(terr=0 mcol=0 mlf=0) ie=0 merr=0 LEPK_STAGES FAIL hang at cyc=60001 phase=3 ri ref=1040 dut=1040 lw ref=80 dut=65 landed=80 
+== c24: CASE c24 1 LEPK_STAGES PASS 

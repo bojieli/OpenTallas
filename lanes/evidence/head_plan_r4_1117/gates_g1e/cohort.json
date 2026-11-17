@@ -1,0 +1,138 @@
+{
+ "verdict": "PASS",
+ "types": 26,
+ "equal": 26,
+ "unpublished": [],
+ "rows": [
+  {
+   "type": "hd_ctl",
+   "module": "ot_s81hd_ctl",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_ctl_e",
+   "module": "ot_s81hd_ctl_estrip",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_ctl_n",
+   "module": "ot_s81hd_ctl_nstrip",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_host_e",
+   "module": "ot_s81hd_host_e_ep",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_host_n",
+   "module": "ot_s81hd_host_nstrip",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_host_w",
+   "module": "ot_s81hd_host_w_ep",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_lep0N",
+   "module": "ot_s81hd_lep0N",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_mesh",
+   "module": "ot_s81hd_mesh_ep",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_mesh_e",
+   "module": "ot_s81hd_mesh_estrip",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_serdes",
+   "module": "ot_s81hd_serdes",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_spn",
+   "module": "ot_s81hd_spn_strip",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_spn_end",
+   "module": "ot_s81hd_spn_end_strip",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_spn_eshim_rx",
+   "module": "ot_s81hd_spn_eshim_rx",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_spn_eshim_tx",
+   "module": "ot_s81hd_spn_eshim_tx",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_spn_wshim_rx",
+   "module": "ot_s81hd_spn_wshim_rx",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_spn_wshim_tx",
+   "module": "ot_s81hd_spn_wshim_tx",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_st_k5",
+   "module": "ot_s81hd_st_k5",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_st_m",
+   "module": "ot_s81hd_st_m",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_st_n3_transit",
+   "module": "ot_s81hd_st_n3_transit",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_st_n3_turn",
+   "module": "ot_s81hd_st_n3_turn",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_st_n4",
+   "module": "ot_s81hd_st_n4",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_st_str",
+   "module": "ot_s81hd_st_str",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_st_turn",
+   "module": "ot_s81hd_st_turn",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_tile",
+   "module": "ot_s81hd_tile_p",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_turn_a",
+   "module": "ot_s81hd_turn_a",
+   "verdict": "EQUAL"
+  },
+  {
+   "type": "hd_turn_b",
+   "module": "ot_s81hd_turn_b",
+   "verdict": "EQUAL"
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+LANDING_CLOSURE 3 ['rtl/common/ot_dp_clk_landing.sv', 'rtl/common/ot_dp_clk_landing_ca.sv', 'rtl/common/ot_meso_fifo.sv']
+pads: 293 instances, 2650 open wavefront outs
+DIE_PORT_BIND PASS masters=26 instances=358 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=121 pad_bits=0 spare_out_bits=2650 unresolved_children=0 instance_params_not_in_rtl=0 kitparam_resolved=0 ambiguous_children=0 variant_children=0 manifest_missing=0
+ 
+PORT_BIND_NESTED PASS {"verdict": "PASS", "instances": 7215, "unbound": 0, "unknown": 0, "width_mismatch": 0, "unresolved": 0, "no_master": 0, "optional_open": 5, "optional_open_examples": ["ot_s81hd_ctl_nstrip.u_cland_ctrl_ft_i (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_ctl_nstrip.u_cland_lep_fault_ft_i (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_ctl_nstrip.u_cland_lw_ft_i (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_lep0N.u_cland_lepf_i0 (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_lep0N.u_cland_unit_i0 (ot_dp_clk_landing_cas).rst_xn"]}
+HEAD_DIE_PORTBIND PASS module_missing=0 port_bind_rc=0 tie_audit=PASS nested=PASS
+===rs4
+pads: 293 instances, 2650 open wavefront outs
+FAIL instance parameter ot_s81hd_tile_p/u_core -> ot_s81hd_tile_native: not declared ['XO_HOP']
+DIE_PORT_BIND FAIL masters=26 instances=358 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=146 pad_bits=0 spare_out_bits=2650 unresolved_children=0 instance_params_not_in_rtl=1 kitparam_resolved=0 ambiguous_children=0 variant_children=0 manifest_missing=0
+ 
+PORT_BIND_NESTED PASS {"verdict": "PASS", "instances": 7215, "unbound": 0, "unknown": 0, "width_mismatch": 0, "unresolved": 0, "no_master": 0, "optional_open": 5, "optional_open_examples": ["ot_s81hd_ctl_nstrip.u_cland_ctrl_ft_i (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_ctl_nstrip.u_cland_lep_fault_ft_i (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_ctl_nstrip.u_cland_lw_ft_i (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_lep0N.u_cland_lepf_i0 (ot_dp_clk_landing_cas).rst_xn", "ot_s81hd_lep0N.u_cland_unit_i0 (ot_dp_clk_landing_cas).rst_xn"]}
+HEAD_DIE_PORTBIND FAIL module_missing=0 port_bind_rc=1 tie_audit=PASS nested=PASS

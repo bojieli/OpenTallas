@@ -1,0 +1,570 @@
+{
+ "schema": "opentallas.head_nf15f_anchor_resite.v1",
+ "plan_in": "22a491461735822235f17fce9cfb15c1422acdfb0c3e09d65f1034f73954e130",
+ "plan_out": "cfd6126be89a10a9b87d95922d6a217edc21ef91867d8be08f572c22c9e84d84",
+ "anchors": [
+  {
+   "tag": "stage:pin_r2",
+   "bits": 1150,
+   "old_rect_um": [
+    1595.0,
+    622.72,
+    1703.0,
+    634.72
+   ],
+   "rect_um": [
+    1697.76,
+    606.64,
+    1751.76,
+    630.64
+   ],
+   "reach_in_um": 183.88,
+   "reach_out_um": 184.84,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:pin_r4",
+   "bits": 1150,
+   "old_rect_um": [
+    1365.0,
+    732.0,
+    1473.0,
+    744.0
+   ],
+   "rect_um": [
+    1572.48,
+    606.64,
+    1626.48,
+    630.64
+   ],
+   "reach_in_um": 158.6,
+   "reach_out_um": 165.32,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:pout_r2",
+   "bits": 1137,
+   "old_rect_um": [
+    1295.68,
+    683.16,
+    1403.68,
+    695.16
+   ],
+   "rect_um": [
+    1200.96,
+    662.8,
+    1236.96,
+    698.8
+   ],
+   "reach_in_um": 206.16,
+   "reach_out_um": 217.16,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:pout_r4",
+   "bits": 1137,
+   "old_rect_um": [
+    1554.0,
+    663.08,
+    1662.0,
+    675.08
+   ],
+   "rect_um": [
+    1239.84,
+    662.8,
+    1275.84,
+    698.8
+   ],
+   "reach_in_um": 256.04,
+   "reach_out_um": 196.2,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:pout_r6",
+   "bits": 1137,
+   "old_rect_um": [
+    1729.0,
+    532.24,
+    1837.0,
+    544.24
+   ],
+   "rect_um": [
+    1458.0,
+    684.4,
+    1512.0,
+    708.4
+   ],
+   "reach_in_um": 241.56,
+   "reach_out_um": 241.8,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:pout_r0",
+   "bits": 1103,
+   "old_rect_um": [
+    1101.36,
+    721.36,
+    1209.36,
+    733.36
+   ],
+   "rect_um": [
+    1110.24,
+    684.4,
+    1146.24,
+    720.4
+   ],
+   "reach_in_um": 239.14,
+   "reach_out_um": 148.08,
+   "n_src_rects": 6,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:ktx0_r0",
+   "bits": 553,
+   "old_rect_um": [
+    1199.96,
+    671.0,
+    1249.96,
+    683.0
+   ],
+   "rect_um": [
+    1192.32,
+    751.36,
+    1217.32,
+    775.36
+   ],
+   "reach_in_um": 341.2,
+   "reach_out_um": 342.33,
+   "n_src_rects": 5,
+   "n_dst_rects": 553
+  },
+  {
+   "tag": "stage:txi1_r2",
+   "bits": 553,
+   "old_rect_um": [
+    742.5,
+    714.0,
+    806.5,
+    726.0
+   ],
+   "rect_um": [
+    961.2,
+    751.36,
+    993.2,
+    775.36
+   ],
+   "reach_in_um": 272.44,
+   "reach_out_um": 271.76,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:ktx1_r0",
+   "bits": 553,
+   "old_rect_um": [
+    231.0,
+    676.48,
+    281.0,
+    688.48
+   ],
+   "rect_um": [
+    259.2,
+    768.64,
+    284.2,
+    792.64
+   ],
+   "reach_in_um": 291.52,
+   "reach_out_um": 290.49,
+   "n_src_rects": 5,
+   "n_dst_rects": 553
+  },
+  {
+   "tag": "stage:txi2_r2",
+   "bits": 553,
+   "old_rect_um": [
+    720.0,
+    674.0,
+    784.0,
+    686.0
+   ],
+   "rect_um": [
+    898.56,
+    695.2,
+    930.56,
+    719.2
+   ],
+   "reach_in_um": 220.4,
+   "reach_out_um": 221.16,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:ktx2_r0",
+   "bits": 553,
+   "old_rect_um": [
+    273.0,
+    711.36,
+    323.0,
+    723.36
+   ],
+   "rect_um": [
+    244.08,
+    658.48,
+    269.08,
+    682.48
+   ],
+   "reach_in_um": 399.52,
+   "reach_out_um": 391.76,
+   "n_src_rects": 5,
+   "n_dst_rects": 553
+  },
+  {
+   "tag": "stage:ktx3_r0",
+   "bits": 553,
+   "old_rect_um": [
+    1496.0,
+    697.4,
+    1546.0,
+    709.4
+   ],
+   "rect_um": [
+    1529.28,
+    662.8,
+    1562.613,
+    680.8
+   ],
+   "reach_in_um": 184.93,
+   "reach_out_um": 384.37,
+   "n_src_rects": 5,
+   "n_dst_rects": 553
+  },
+  {
+   "tag": "stage:krx1_r0",
+   "bits": 553,
+   "old_rect_um": [
+    314.64,
+    698.0,
+    364.64,
+    710.0
+   ],
+   "rect_um": [
+    265.68,
+    820.48,
+    290.68,
+    844.48
+   ],
+   "reach_in_um": 244.42,
+   "reach_out_um": 245.44,
+   "n_src_rects": 553,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:krx1_r2",
+   "bits": 553,
+   "old_rect_um": [
+    512.5,
+    704.0,
+    562.5,
+    716.0
+   ],
+   "rect_um": [
+    332.64,
+    742.72,
+    357.64,
+    766.72
+   ],
+   "reach_in_um": 111.72,
+   "reach_out_um": 113.6,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:krx1_r4",
+   "bits": 553,
+   "old_rect_um": [
+    797.5,
+    777.0,
+    847.5,
+    789.0
+   ],
+   "rect_um": [
+    473.04,
+    742.72,
+    498.04,
+    766.72
+   ],
+   "reach_in_um": 154.28,
+   "reach_out_um": 152.18,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:krx2_r0",
+   "bits": 553,
+   "old_rect_um": [
+    283.08,
+    677.92,
+    333.08,
+    689.92
+   ],
+   "rect_um": [
+    211.68,
+    636.88,
+    261.68,
+    648.88
+   ],
+   "reach_in_um": 389.85,
+   "reach_out_um": 174.44,
+   "n_src_rects": 553,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:krx2_r2",
+   "bits": 553,
+   "old_rect_um": [
+    535.0,
+    664.48,
+    585.0,
+    676.48
+   ],
+   "rect_um": [
+    382.32,
+    658.48,
+    415.653,
+    676.48
+   ],
+   "reach_in_um": 164.01,
+   "reach_out_um": 170.56,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:krx2_r4",
+   "bits": 553,
+   "old_rect_um": [
+    855.0,
+    688.0,
+    905.0,
+    700.0
+   ],
+   "rect_um": [
+    419.04,
+    658.48,
+    435.707,
+    694.48
+   ],
+   "reach_in_um": 206.59,
+   "reach_out_um": 195.96,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:krx3_r0",
+   "bits": 553,
+   "old_rect_um": [
+    1490.0,
+    683.44,
+    1540.0,
+    695.44
+   ],
+   "rect_um": [
+    1458.0,
+    710.32,
+    1491.333,
+    728.32
+   ],
+   "reach_in_um": 502.46,
+   "reach_out_um": 501.05,
+   "n_src_rects": 553,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:txi0_r0",
+   "bits": 552,
+   "old_rect_um": [
+    1000.0,
+    731.68,
+    1064.0,
+    743.68
+   ],
+   "rect_um": [
+    1149.12,
+    721.12,
+    1181.12,
+    745.12
+   ],
+   "reach_in_um": 204.9,
+   "reach_out_um": 203.68,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:txi1_r0",
+   "bits": 552,
+   "old_rect_um": [
+    1149.0,
+    760.0,
+    1213.0,
+    772.0
+   ],
+   "rect_um": [
+    1237.68,
+    701.68,
+    1280.347,
+    719.68
+   ],
+   "reach_in_um": 238.93,
+   "reach_out_um": 201.67,
+   "n_src_rects": 2,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:txi2_r0",
+   "bits": 552,
+   "old_rect_um": [
+    991.36,
+    746.8,
+    1055.36,
+    758.8
+   ],
+   "rect_um": [
+    1146.96,
+    747.04,
+    1189.627,
+    765.04
+   ],
+   "reach_in_um": 227.57,
+   "reach_out_um": 216.51,
+   "n_src_rects": 1,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:txi3_r0",
+   "bits": 552,
+   "old_rect_um": [
+    1149.0,
+    775.12,
+    1213.0,
+    787.12
+   ],
+   "rect_um": [
+    1220.4,
+    742.72,
+    1252.4,
+    766.72
+   ],
+   "reach_in_um": 258.02,
+   "reach_out_um": 147.8,
+   "n_src_rects": 2,
+   "n_dst_rects": 1
+  },
+  {
+   "tag": "stage:rxh_l0",
+   "bits": 552,
+   "old_rect_um": [
+    1105.0,
+    694.0,
+    1155.0,
+    706.0
+   ],
+   "rect_um": [
+    1082.16,
+    686.56,
+    1107.16,
+    710.56
+   ],
+   "reach_in_um": 263.68,
+   "reach_out_um": 224.22,
+   "n_src_rects": 557,
+   "n_dst_rects": 2
+  },
+  {
+   "tag": "stage:rxh_l2",
+   "bits": 552,
+   "old_rect_um": [
+    913.16,
+    628.08,
+    963.16,
+    640.08
+   ],
+   "rect_um": [
+    881.28,
+    649.84,
+    906.28,
+    673.84
+   ],
+   "reach_in_um": 222.06,
+   "reach_out_um": 153.06,
+   "n_src_rects": 557,
+   "n_dst_rects": 2
+  },
+  {
+   "tag": "stage:rxh_l1",
+   "bits": 552,
+   "old_rect_um": [
+    965.0,
+    717.76,
+    1015.0,
+    729.76
+   ],
+   "rect_um": [
+    995.76,
+    718.96,
+    1029.093,
+    736.96
+   ],
+   "reach_in_um": 364.79,
+   "reach_out_um": 365.5,
+   "n_src_rects": 557,
+   "n_dst_rects": 5
+  },
+  {
+   "tag": "stage:rxh_l3",
+   "bits": 552,
+   "old_rect_um": [
+    1265.0,
+    696.16,
+    1315.0,
+    708.16
+   ],
+   "rect_um": [
+    1283.04,
+    690.88,
+    1308.04,
+    714.88
+   ],
+   "reach_in_um": 360.28,
+   "reach_out_um": 360.84,
+   "n_src_rects": 557,
+   "n_dst_rects": 5
+  },
+  {
+   "tag": "stage:rxh_ctl",
+   "bits": 44,
+   "old_rect_um": [
+    1133.26,
+    707.76,
+    1149.46,
+    719.76
+   ],
+   "rect_um": [
+    1185.84,
+    721.12,
+    1202.04,
+    733.12
+   ],
+   "reach_in_um": 166.44,
+   "reach_out_um": 166.44,
+   "n_src_rects": 2,
+   "n_dst_rects": 2
+  }
+ ],
+ "over_405": [
+  "stage:krx3_r0"
+ ]
+}

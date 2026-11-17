@@ -1,0 +1,504 @@
+{
+ "schema": "opentallas.head_nf15f_geometry_event.v1",
+ "base_plan_sha256": "3210bf1f1390a8c3a1aab968de8c7bd7e6ff452f3783be2ae3d2f336f90b60f9",
+ "growth_um": 181.44,
+ "type_cut_um": 665.28,
+ "die_cut_um": 16225.92,
+ "moved": {
+  "hd_lep0N": {
+   "/hd_lep0N/clock/edge_clocks[]/tap_um": 5,
+   "/hd_lep0N/clock/landing_contract/pins[]/xy_um": 42,
+   "/hd_lep0N/clock/landing_contract/bands/coll_i0/rect_um": 1,
+   "/hd_lep0N/clock/landing_contract/bands/coll_i1/rect_um": 1,
+   "/hd_lep0N/clock/landing_contract/bands/coll_i3/rect_um": 1,
+   "/hd_lep0N/clock/landing_contract/bands/lepf_i0/rect_um": 1,
+   "/hd_lep0N/clock/landing_contract/bands/unit_i0/rect_um": 1,
+   "/hd_lep0N/clock/landing_contract/collector_local_sources[]/xy_um": 5,
+   "/hd_lep0N/clock/landing_contract/collector_local_sources[]/band/rect_um": 3,
+   "/hd_lep0N/clock/landing_contract/collector_children[]/xy_um": 5,
+   "/hd_lep0N/clock/taps[]/xy": 53,
+   "/hd_lep0N/clock/reserved_sites_um[]/rect_um": 193,
+   "/hd_lep0N/clock/landing_reader_start/branches/coll_i0/stages[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_writer_start/branches/coll_o0/stages[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_writer_start/branches/coll_o1/stages[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_writer_start/branches/fault_o0/stages[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_writer_start/branches/lw_o/stages[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/agg/coll_i0[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o0/coll_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o0/coll_i1[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o0/coll_i2[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o0/coll_i3[]/xy_um": 4,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o0/lepf_i0[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o0/lepk_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o0/unit_i0[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o1/coll_i0[]/xy_um": 2,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o1/coll_i2[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o2/coll_i0[]/xy_um": 4,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o2/coll_i1[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/coll_o3/coll_i0[]/xy_um": 5,
+   "/hd_lep0N/clock/landing_status_input_stages/ctrl_o0/coll_i0[]/xy_um": 4,
+   "/hd_lep0N/clock/landing_status_input_stages/fault_o0/coll_i0[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_status_input_stages/fault_o0/coll_i1[]/xy_um": 6,
+   "/hd_lep0N/clock/landing_status_input_stages/fault_o0/coll_i2[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/fault_o0/coll_i3[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/fault_o0/lepf_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/fault_o0/lepk_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/fault_o0/unit_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/lw_o/coll_i0[]/xy_um": 3,
+   "/hd_lep0N/clock/landing_status_input_stages/lw_o/coll_i1[]/xy_um": 6,
+   "/hd_lep0N/clock/landing_status_input_stages/lw_o/coll_i2[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/lw_o/coll_i3[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/lw_o/lepf_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/lw_o/lepk_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_status_input_stages/lw_o/unit_i0[]/xy_um": 1,
+   "/hd_lep0N/clock/landing_local_resets[]/xy_um": 18,
+   "/hd_lep0N/reset/local_taps_um[]": 9,
+   "/hd_lep0N/hard_cores[]/origin_um": 2,
+   "/hd_lep0N/reset_start_raw_exports[]/xy_um": 2
+  },
+  "parent": {
+   "lk_WN0": [
+    5970.24,
+    16407.36
+   ],
+   "/die/pg/domains[]/rect_um": 1,
+   "/die/pg/domains[]/bumps/rect_um": 1,
+   "/die/io[]/rect_um": 1,
+   "/die/channels[]/rect_um": 1
+  }
+ },
+ "straddle": [
+  [
+   "/hd_lep0N/clock/landing_contract/collector_local_sources[]/band/rect_um",
+   [
+    17.28,
+    640.0,
+    62.64,
+    846.0
+   ]
+  ],
+  [
+   "/hd_lep0N/clock/landing_contract/collector_local_sources[]/band/rect_um",
+   [
+    1794.96,
+    645.1912,
+    1874.88,
+    759.6356
+   ]
+  ],
+  [
+   "/die/channels[]/rect_um",
+   [
+    0,
+    103.68,
+    103.68,
+    17452.8
+   ]
+  ],
+  [
+   "/die/channels[]/rect_um",
+   [
+    17608.32,
+    103.68,
+    17712.0,
+    17452.8
+   ]
+  ]
+ ],
+ "anchors": [
+  {
+   "tag": "stage:pin_r2",
+   "column_um": [
+    1649,
+    646
+   ],
+   "rect_um": [
+    1595.0,
+    622.72,
+    1703.0,
+    634.72
+   ],
+   "offset_um": 17.28
+  },
+  {
+   "tag": "stage:pin_r4",
+   "column_um": [
+    1419,
+    738
+   ],
+   "rect_um": [
+    1365.0,
+    732.0,
+    1473.0,
+    744.0
+   ],
+   "offset_um": 0.0
+  },
+  {
+   "tag": "stage:pout_r0",
+   "column_um": [
+    1164,
+    682
+   ],
+   "rect_um": [
+    1101.36,
+    721.36,
+    1209.36,
+    733.36
+   ],
+   "offset_um": 54.0
+  },
+  {
+   "tag": "stage:pout_r2",
+   "column_um": [
+    1354,
+    633
+   ],
+   "rect_um": [
+    1295.68,
+    683.16,
+    1403.68,
+    695.16
+   ],
+   "offset_um": 60.48
+  },
+  {
+   "tag": "stage:pout_r4",
+   "column_um": [
+    1608,
+    641
+   ],
+   "rect_um": [
+    1554.0,
+    663.08,
+    1662.0,
+    675.08
+   ],
+   "offset_um": 28.08
+  },
+  {
+   "tag": "stage:pout_r6",
+   "column_um": [
+    1783,
+    562
+   ],
+   "rect_um": [
+    1729.0,
+    532.24,
+    1837.0,
+    544.24
+   ],
+   "offset_um": 23.76
+  },
+  {
+   "tag": "stage:txi0_r0",
+   "column_um": [
+    1032,
+    742
+   ],
+   "rect_um": [
+    1000.0,
+    731.68,
+    1064.0,
+    743.68
+   ],
+   "offset_um": 4.32
+  },
+  {
+   "tag": "stage:txi1_r0",
+   "column_um": [
+    1181,
+    766
+   ],
+   "rect_um": [
+    1149.0,
+    760.0,
+    1213.0,
+    772.0
+   ],
+   "offset_um": 0.0
+  },
+  {
+   "tag": "stage:txi1_r2",
+   "column_um": [
+    774.5,
+    720
+   ],
+   "rect_um": [
+    742.5,
+    714.0,
+    806.5,
+    726.0
+   ],
+   "offset_um": 0.0
+  },
+  {
+   "tag": "stage:txi2_r0",
+   "column_um": [
+    1032,
+    742
+   ],
+   "rect_um": [
+    991.36,
+    746.8,
+    1055.36,
+    758.8
+   ],
+   "offset_um": 19.44
+  },
+  {
+   "tag": "stage:txi2_r2",
+   "column_um": [
+    752,
+    680
+   ],
+   "rect_um": [
+    720.0,
+    674.0,
+    784.0,
+    686.0
+   ],
+   "offset_um": 0.0
+  },
+  {
+   "tag": "stage:txi3_r0",
+   "column_um": [
+    1181,
+    766
+   ],
+   "rect_um": [
+    1149.0,
+    775.12,
+    1213.0,
+    787.12
+   ],
+   "offset_um": 15.12
+  },
+  {
+   "tag": "stage:krx1_r0",
+   "column_um": [
+    331,
+    704
+   ],
+   "rect_um": [
+    314.64,
+    698.0,
+    364.64,
+    710.0
+   ],
+   "offset_um": 8.64
+  },
+  {
+   "tag": "stage:krx1_r2",
+   "column_um": [
+    537.5,
+    710
+   ],
+   "rect_um": [
+    512.5,
+    704.0,
+    562.5,
+    716.0
+   ],
+   "offset_um": 0.0
+  },
+  {
+   "tag": "stage:krx1_r4",
+   "column_um": [
+    822.5,
+    783
+   ],
+   "rect_um": [
+    797.5,
+    777.0,
+    847.5,
+    789.0
+   ],
+   "offset_um": 0.0
+  },
+  {
+   "tag": "stage:krx2_r0",
+   "column_um": [
+    334,
+    658
+   ],
+   "rect_um": [
+    283.08,
+    677.92,
+    333.08,
+    689.92
+   ],
+   "offset_um": 51.84
+  },
+  {
+   "tag": "stage:krx2_r2",
+   "column_um": [
+    560,
+    664
+   ],
+   "rect_um": [
+    535.0,
+    664.48,
+    585.0,
+    676.48
+   ],
+   "offset_um": 6.48
+  },
+  {
+   "tag": "stage:krx2_r4",
+   "column_um": [
+    880,
+    694
+   ],
+   "rect_um": [
+    855.0,
+    688.0,
+    905.0,
+    700.0
+   ],
+   "offset_um": 0.0
+  },
+  {
+   "tag": "stage:krx3_r0",
+   "column_um": [
+    1515,
+    670
+   ],
+   "rect_um": [
+    1490.0,
+    683.44,
+    1540.0,
+    695.44
+   ],
+   "offset_um": 19.44
+  },
+  {
+   "tag": "stage:ktx0_r0",
+   "column_um": [
+    1212,
+    677
+   ],
+   "rect_um": [
+    1199.96,
+    671.0,
+    1249.96,
+    683.0
+   ],
+   "offset_um": 12.96
+  },
+  {
+   "tag": "stage:ktx1_r0",
+   "column_um": [
+    256,
+    676
+   ],
+   "rect_um": [
+    231.0,
+    676.48,
+    281.0,
+    688.48
+   ],
+   "offset_um": 6.48
+  },
+  {
+   "tag": "stage:ktx2_r0",
+   "column_um": [
+    298,
+    672
+   ],
+   "rect_um": [
+    273.0,
+    711.36,
+    323.0,
+    723.36
+   ],
+   "offset_um": 45.36
+  },
+  {
+   "tag": "stage:ktx3_r0",
+   "column_um": [
+    1521,
+    671
+   ],
+   "rect_um": [
+    1496.0,
+    697.4,
+    1546.0,
+    709.4
+   ],
+   "offset_um": 32.4
+  },
+  {
+   "tag": "stage:rxh_l0",
+   "column_um": [
+    1130,
+    700
+   ],
+   "rect_um": [
+    1105.0,
+    694.0,
+    1155.0,
+    706.0
+   ]
+  },
+  {
+   "tag": "stage:rxh_l1",
+   "column_um": [
+    990,
+    700
+   ],
+   "rect_um": [
+    965.0,
+    717.76,
+    1015.0,
+    729.76
+   ]
+  },
+  {
+   "tag": "stage:rxh_l2",
+   "column_um": [
+    990,
+    660
+   ],
+   "rect_um": [
+    913.16,
+    628.08,
+    963.16,
+    640.08
+   ]
+  },
+  {
+   "tag": "stage:rxh_l3",
+   "column_um": [
+    1290,
+    700
+   ],
+   "rect_um": [
+    1265.0,
+    696.16,
+    1315.0,
+    708.16
+   ]
+  },
+  {
+   "tag": "stage:rxh_ctl",
+   "rect_um": [
+    1133.26,
+    707.76,
+    1149.46,
+    719.76
+   ]
+  }
+ ],
+ "moved_column_um": [
+  [
+   5970.24,
+   8856.0
+  ]
+ ],
+ "parent_overlaps": [],
+ "outside_die": [],
+ "plan_sha256": "d7573daaf972f1559e7a57d8b659e7e77a344494b275604512d06493bec9cbe9",
+ "groups": 217,
+ "anchors_n": 28
+}
