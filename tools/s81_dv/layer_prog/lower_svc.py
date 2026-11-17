@@ -1017,12 +1017,31 @@ def sot_booking_for(job, s):
         r0 = at[f'SMJ_OP{g}'] + 1
         stride = 2 if getattr(job, 'hs', 16) == 8 else 1
         wr[g] = (r0 - pw1 + SOT_W_LAT - SOT_SLACK, r0 + 31 * stride - pw1 + SOT_W_LAT + SOT_SLACK)
+    # Optional source-owned lifetime fence for externally generated q frames.
+    # Move actual read/retire reservations, never clamp the reported done pulse.
+    # Absent key preserves the historical booking.
+    last_q = s.get('job_last_q_edge')
+    if last_q is not None:
+        if type(last_q) is not int or last_q < 0:
+            raise ValueError('job_last_q_edge must be a nonnegative integer edge')
+        if last_q < max((c for c, _ in s.get('words', [])), default=0):
+            raise ValueError('job_last_q_edge precedes an actual source q word')
+    lifetime = {}
     heads, arr, done = {}, {}, {}
     for half in ('W', 'E'):
         hs = sorted(((t, d) for sd, (t, d, hf) in depth.items() if hf == half), key=lambda x: (wr[x[0]][1], x[0]))
         # arrival (entry pv pins) of head k's first word = pw1 + SOT_INST + DN_HOP d + read + GW_ARR + RT_HOP d
         lead = lambda d: SOT_INST + GW_ARR + (DN_HOP + RT_HOP) * d
         a0 = max(pw1 + wr[t][1] + 2 + lead(d) - GW_SP * k for k, (t, d) in enumerate(hs))
+        if last_q is not None:
+            # Real completion: gather arrival, return, retire, up-tree and JD.
+            done_offset = max(GW_SP * k - GW_ARR - RT_HOP * d +
+                              SO_RETIRE + UP_HOP * d for k, (_, d) in enumerate(hs)) + JD_SO
+            old_done = a0 + done_offset
+            shift = max(0, last_q + 2 - old_done)
+            a0 += shift
+            lifetime[half] = dict(read_retire_delay_edges=shift,
+                                  done_before=old_done, done_after=a0 + done_offset)
         last = 0
         for k, (t, d) in enumerate(hs):
             a = a0 + GW_SP * k
@@ -1040,6 +1059,9 @@ def sot_booking_for(job, s):
         heads[0]['last'] -= 8 + 2 * SOT_SLACK
     rec = booking(owner, 0x21, SO_JID, SO_OBASE, 1, install, heads, install + gf, install + gl)
     rec.update(arrival=arr, done=done, pw1=pw1, gx_zero=gx0, entry_window=(gx0 + gf, gx0 + gl))
+    if last_q is not None:
+        rec['lifetime_fence'] = dict(job_last_q_edge=last_q, halves=lifetime,
+                                      added_state_bits=0, added_data_edges=0)
     return rec
 
 
