@@ -107,6 +107,28 @@ def transform(text):
             lines[sn] = lines[sn].replace(f'.{pin}({old})', f'.{pin}({selected})', 1)
             ledger.append(dict(group=inst, sink=sink, pin=pin, width=width,
                                added_cycles=depth-1, candidate_data_ff=width*depth))
+    # Preserve the baseline x/go/cfg alignment at the receiving boundaries.
+    for sink, pin, width, added in [('u_bs0', 'i_cfg', 54, 2),
+                                     ('u_bs0', 'i_go', 1, 2),
+                                     ('u_t1', 'cci', 15, 1),
+                                     ('u_e0', 'go_tag', 2, 2)]:
+        sn, sm, sc = ins[sink]
+        ck = sc.get('ck', sc.get('clk')); rs = sc.get('rs', sc.get('rst_n'))
+        if pin not in sc or not ck or not rs:
+            raise ValueError(f'{sink}: incomplete alignment interface')
+        old = sc[pin]
+        stem = f'cr_align_{sink[2:]}_{pin}'
+        add, net = chain(stem, width, added, ck, rs, old)
+        tails.extend(add)
+        selected = f'{stem}_selected'
+        tails.append(f'    wire [{width-1}:0] {selected};')
+        tails.append(f'    assign {selected} = COLRELAY_P1 ? {net} : {old};')
+        if f'.{pin}({old})' not in lines[sn]:
+            raise ValueError(f'{sink}.{pin}: alignment anchor absent')
+        lines[sn] = lines[sn].replace(f'.{pin}({old})', f'.{pin}({selected})', 1)
+        ledger.append(dict(group='control_alignment', sink=sink, pin=pin,
+                           width=width, added_cycles=added,
+                           added_data_ff=width*added))
     lines.insert(len(lines)-1, '\n'.join(tails))
     output = text[:m.start()] + '\n'.join(lines) + text[m.end():]
     manifest = dict(schema='opentallas.s81.colrelay_depth.v1',

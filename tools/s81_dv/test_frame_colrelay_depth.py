@@ -14,7 +14,7 @@ sp.loader.exec_module(cd)
 
 def fixture():
     ports = ['input wire clk', 'input wire rs', 'input wire [535:0] din']
-    rows=[]; observed=[]
+    rows=['    wire [535:0] ctrl_in;', '    ot_s81_rly #(.W(536), .RSREG(1)) u_ctrl (.ck(clk), .rs(rs), .i(din), .o(ctrl_in));']; observed=[]
     for i,(inst,(w,extra)) in enumerate(cd.LINEAR.items()):
         o=f'o{i}'; ports.append(f'output wire [{w-1}:0] {o}')
         if inst.startswith('u_lpl'):
@@ -29,7 +29,19 @@ def fixture():
         pin0,pin1=('xai','xbi') if sink=='u_t1' else ('i_x0','i_x1')
         for idx,w in [(0,283),(1,266)]:
             o=f'{sink[2:]}_{idx}';ports.append(f'output wire [{w-1}:0] {o}');observed.append((o,w,depth-1))
-        rows.append(f'    sink_{sink[2:]} {sink} (.{pin0}(b0), .{pin1}(b1), .a({sink[2:]}_0), .b({sink[2:]}_1));')
+        extra = '.ck(clk), .rs(rs), '
+        if sink == 'u_bs0':
+            ports += ['output wire [53:0] cfg0', 'output wire go0']
+            extra += '.i_cfg(ctrl_in[53:0]), .i_go(ctrl_in[0]), .cfg(cfg0), .go(go0), '
+            observed += [('cfg0',54,2), ('go0',1,2)]
+        if sink == 'u_t1':
+            ports += ['output wire [14:0] cc1']
+            extra += '.cci(ctrl_in[14:0]), .cc(cc1), '
+            observed += [('cc1',15,1)]
+        rows.append(f'    sink_{sink[2:]} {sink} ('+extra+f'.{pin0}(b0), .{pin1}(b1), .a({sink[2:]}_0), .b({sink[2:]}_1));')
+    ports += ['output wire [1:0] tag0']
+    rows.append('    elem_tag u_e0 (.clk(clk), .rst_n(rs), .go_tag(ctrl_in[1:0]), .tag(tag0));')
+    observed += [('tag0',2,2)]
     src='module col_h10_l4_lp_r0 #(parameter integer MUT = 0, parameter integer DUMMY=0)(\n'+',\n'.join(ports)+'\n);\n'+'\n'.join(rows)+'\nendmodule\n'
     return src,observed
 
@@ -42,7 +54,16 @@ def support():
     # are abstracted to one registered producer, the minimum delay mechanism.
     text+='module ot_pl_seam_r_plq #(parameter W=2,K=2,CHUNK_BITS=24)(input ck,rsi,input[W-1:0] d,output[W-1:0] o); ot_s81_rly #(.W(W),.RSREG(1)) u(.ck(ck),.rs(rsi),.i(d),.o(o)); endmodule\n'
     for name,p0,p1 in [('bs0','i_x0','i_x1'),('t1','xai','xbi'),('bs2','i_x0','i_x1')]:
-        text+=f'module sink_{name}(input[282:0] {p0},input[265:0] {p1},output[282:0] a,output[265:0] b); assign a={p0}; assign b={p1}; endmodule\n'
+        extra = 'input ck,rs, '
+        body = ''
+        if name == 'bs0':
+            extra += 'input[53:0] i_cfg,input i_go,output[53:0] cfg,output go, '
+            body += 'assign cfg=i_cfg; assign go=i_go; '
+        if name == 't1':
+            extra += 'input[14:0] cci,output[14:0] cc, '
+            body += 'assign cc=cci; '
+        text+=f'module sink_{name}('+extra+f'input[282:0] {p0},input[265:0] {p1},output[282:0] a,output[265:0] b); '+body+f'assign a={p0}; assign b={p1}; endmodule\n' 
+    text += 'module elem_tag(input clk,rst_n,input[1:0] go_tag,output[1:0] tag); assign tag=go_tag; endmodule\n'
     return text
 
 
@@ -66,7 +87,7 @@ class Depth(unittest.TestCase):
     def test_production_shape_and_mutant(self):
         if not shutil.which('iverilog'):self.skipTest('iverilog unavailable')
         src,obs=fixture(); new,report=cd.transform(src)
-        self.assertEqual(len(report['groups']),13)
+        self.assertEqual(len(report['groups']),17)
         with tempfile.TemporaryDirectory() as d:
             d=Path(d)
             primitive=HERE.parents[1]/'rtl/dsrom_sys/s81_glue/ot_s81_rly.sv'
