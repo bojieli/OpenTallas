@@ -15,7 +15,18 @@ generated here, and every container runs as the calling user (no root-owned file
   KITDIR         the kit (constraint.sdc, config.mk, macros) mounted as /work
   --first-signoff  an existing signoff.py output dir of this DB (with tt/ and ff/ session dumps); absent = run it here
 Run it on a build host through ot-run (it starts docker); exit 0 = final sign-off SIGNED, 1 = not signed, 2 = nothing to do (no
-endpoint below the plan's selection threshold), 3 = a step failed.  Result: OUTDIR/RESULT.json.
+endpoint below the plan's selection threshold), 3 = a step failed, 4 = REFUSED by a limit (nothing was signed).
+Result: OUTDIR/RESULT.json.
+
+LIMITS (FABLE-CLOSURE-STRATEGY 11-17 lever 8: the ECO is for a few small near-misses, never a way to buy a bigger hold hole; it is the
+automatic fallback after a routed FF-hold FAIL only inside these):
+  worst internal FF hold >= -15 ps            (--max-worst-ps 15; port-start / port-end endpoints are the parent's and never count)
+  padded ends <= 100                          (--max-ends 100)
+  setup room on every padded end              (TT setup - n x HB4_TT_MAX_PS >= --min-setup-room-ps, default 0; no partial / skipped pad)
+  no clock or port nets                       (every capture pin sits on an ordinary data net with no port: checked on the DB before the insert)
+  no PG obstructions left in the DB           (the block's obstruction count after the route must equal the input DB's: the route step's
+                                               temporary PG-track obstructions must all be gone)
+A violation prints OT_LIMIT <name> ..., is written to RESULT.json and the exit code is 4.
 """
 import argparse
 import json
@@ -51,6 +62,7 @@ set ::env(OT_PRD_HOLD_PLAN) /out/plan.tsv
 set ::env(RESULTS_DIR) /out
 set blk [ord::get_db_block]
 puts "DRV insts_before [llength [$blk getInsts]]"
+source /out/netcheck.tcl
 source /ro/hold_eco_internal_insert.tcl
 puts "DRV insts_after [llength [$blk getInsts]]"
 if {[catch {check_placement -verbose} m]} { puts "DRV check_placement FAIL: $m" } else { puts "DRV check_placement OK" }
@@ -59,6 +71,54 @@ puts "DRV done"
 exit
 '''
 OPENROAD = "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"
+OBS = "read_db $::env(OBS_ODB)\nputs \"LIM obstructions [llength [[ord::get_db_block] getObstructions]]\"\nexit\n"
+NETCHECK = r"""foreach row [split [read [open /out/plan.tsv r]] "\n"] {
+  if {$row eq "" || [string index $row 0] eq "#"} continue
+  lassign [split $row "\t"] pin n
+  set p [get_pins -quiet $pin]
+  if {[llength $p] != 1} { puts "OT_LIMIT unresolved capture pin $pin"; continue }
+  set it [sta::sta_to_db_pin $p]; set net [$it getNet]
+  if {$net eq "NULL" || [$net getSigType] ne "SIGNAL"} { puts "OT_LIMIT non-data net on $pin"; continue }
+  if {[llength [$net getBTerms]]} { puts "OT_LIMIT port net on $pin"; continue }
+  if {[[$it getMTerm] getName] in {CLK CLKN CK CKN}} { puts "OT_LIMIT clock pin $pin" }
+}
+"""
+
+
+def check_limits(endpoints_tsv, plan_tsv, max_worst_ps=15.0, max_ends=100, min_room_ps=0.0, hb4_tt_ps=None):
+    """pure: the violations (strings; empty = inside the limits) of a planned ECO.  endpoints_tsv is hold_endpoints.tsv (header line;
+    ff_hold_slack_ps and tt_setup_slack_ps in ps), plan_tsv the hold_eco_internal.py plan (capture_pin TAB n_hb4 + a summary trailer)."""
+    if hb4_tt_ps is None:
+        sys.path.insert(0, str(HERE))
+        import hold_eco_internal as HEI
+        hb4_tt_ps = HEI.HB4_TT_MAX_PS
+    viol, setup, worst = [], {}, None
+    for i, line in enumerate(Path(endpoints_tsv).read_text().splitlines()):
+        p = line.split("\t")
+        if not i or len(p) < 6:
+            continue
+        ff, tt = float(p[4]), float(p[5])
+        setup[p[0]] = tt
+        if p[2] != "port" and p[3] != "port":
+            worst = ff if worst is None else min(worst, ff)
+    if worst is not None and worst < -abs(max_worst_ps):
+        viol.append("worst_internal_ff_hold %.2f ps < -%g" % (worst, abs(max_worst_ps)))
+    rows, summary = [], {}
+    for line in Path(plan_tsv).read_text().splitlines():
+        if line.startswith("# summary"):
+            summary = json.loads(line[len("# summary"):])
+        elif line and not line.startswith("#"):
+            rows.append(line.split("\t"))
+    if len(rows) > max_ends:
+        viol.append("padded_ends %d > %d" % (len(rows), max_ends))
+    for pin, n in rows:
+        room = setup.get(pin, 1e6) - int(n) * hb4_tt_ps
+        if room < min_room_ps:
+            viol.append("setup_room %s %.1f ps < %g (TT setup %.1f, %s x %.1f)" % (pin, room, min_room_ps, setup.get(pin, 1e6), n, hb4_tt_ps))
+    if summary.get("partial") or summary.get("skipped") or summary.get("nets_left_unpadded"):
+        viol.append("plan could not pad every end (partial %s skipped %s unpadded %s)" % (
+            summary.get("partial"), summary.get("skipped"), summary.get("nets_left_unpadded")))
+    return viol
 
 
 def libs_from_receipt(path):
@@ -132,6 +192,9 @@ def main(argv=None):
     ap.add_argument("--image", default="openroad/orfs:asap7lock")
     ap.add_argument("--sign-image", default="openroad/orfs:latest")
     ap.add_argument("--rt", default=str(HERE.parent.parent), help="checkout whose tools/die_plan is used (default: this one)")
+    ap.add_argument("--max-worst-ps", type=float, default=15.0, help="refuse when the worst internal FF hold is below -this (default 15)")
+    ap.add_argument("--max-ends", type=int, default=100, help="refuse when more ends than this would be padded (default 100)")
+    ap.add_argument("--min-setup-room-ps", type=float, default=0.0, help="TT setup left on a padded end after its HB4s (default 0)")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args(argv)
     rt, base, kit, out = Path(a.rt), Path(a.base).resolve(), Path(a.kit).resolve(), Path(a.out).resolve()
@@ -195,16 +258,29 @@ def main(argv=None):
     res["steps"]["plan_rows"] = len(rows)
     if not rows:
         return finish(2, "no endpoint selected by the plan (nothing to pad)")
+    viol = check_limits(out / "hold_endpoints.tsv", out / "plan.tsv", a.max_worst_ps, a.max_ends, a.min_setup_room_ps)
+    res["limits"] = {"max_worst_ps": a.max_worst_ps, "max_ends": a.max_ends, "min_setup_room_ps": a.min_setup_room_ps, "violations": viol}
+    if viol:
+        for v in viol:
+            print("OT_LIMIT", v)
+        return finish(4, "REFUSED by limits: " + "; ".join(viol))
     shutil.copy(routed, out / "in" / "6_final.odb")           # a copy: the routed DB itself is never opened for writing
     shutil.copy(out / "plan.tsv", out / "ins" / "plan.tsv")
     (out / "ins" / "drv.tcl").write_text(DRV)
+    (out / "ins" / "netcheck.tcl").write_text(NETCHECK)
+    (out / "ins" / "obs.tcl").write_text(OBS)
 
     # 3. insert, 4. incremental route of the touched nets only
     common = ["docker", "run", "--rm"] + user
     if run(common + ["-v", "%s:/in:ro" % (out / "in"), "-v", "%s:/out" % (out / "ins"), "-v", "%s:/ro:ro" % ro, "-v", "%s:/work:ro" % kit,
                      a.image, OPENROAD, "-no_init", "-exit", "/out/drv.tcl"], out / "ins" / "drv.log"):
         return finish(3, "insert failed (ins/drv.log)")
-    if "DRV check_placement OK" not in (out / "ins" / "drv.log").read_text():
+    drv_log = (out / "ins" / "drv.log").read_text()
+    net_viol = [ln for ln in drv_log.splitlines() if ln.startswith("OT_LIMIT")]
+    if net_viol:
+        res["limits"]["violations"] = net_viol
+        return finish(4, "REFUSED by limits: " + "; ".join(net_viol))
+    if "DRV check_placement OK" not in drv_log:
         return finish(3, "check_placement did not pass after the insert (ins/drv.log)")
     (out / "ins" / "route").mkdir(exist_ok=True)
     env = ["-e", "OT_HEI_IN=/out/ins.odb", "-e", "OT_HEI_CELLS=/out/hold_eco_internal_cells.tsv", "-e", "OT_HEI_OUT=/out/route",
@@ -214,6 +290,22 @@ def main(argv=None):
     routed2 = out / "ins" / "route" / "hei_routed.odb"
     if not routed2.is_file() or "OT_HEI_ROUTE_DONE" not in (out / "ins" / "route.log").read_text():
         return finish(3, "incremental route failed (ins/route.log)")
+
+    def obstructions(odb_dir, odb_name):
+        o = subprocess.run(["docker", "run", "--rm"] + user + ["-v", "%s:/d:ro" % odb_dir, "-v", "%s:/ro:ro" % (out / "ins"),
+                           "-e", "OBS_ODB=/d/" + odb_name, a.image, OPENROAD, "-no_init", "-exit", "/ro/obs.tcl"],
+                           capture_output=True, text=True).stdout
+        for ln in o.splitlines():
+            if ln.startswith("LIM obstructions"):
+                return int(ln.split()[-1])
+        return None
+    obs_in, obs_out = obstructions(out / "in", "6_final.odb"), obstructions(out / "ins" / "route", "hei_routed.odb")
+    res["limits"]["obstructions_in"], res["limits"]["obstructions_out"] = obs_in, obs_out
+    if obs_in is None or obs_out is None or obs_in != obs_out:
+        msg = "pg_obstructions_left input %s output %s (the route step's temporary PG obstructions must all be gone)" % (obs_in, obs_out)
+        print("OT_LIMIT", msg)
+        res["limits"]["violations"] = [msg]
+        return finish(4, "REFUSED by limits: " + msg)
 
     # 5. final sign-off on the re-routed DB
     sr = out / "so_run"

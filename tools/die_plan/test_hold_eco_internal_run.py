@@ -61,3 +61,52 @@ def test_no_hand_copied_inputs_and_containers_run_as_the_caller():
     assert '"-v", "%s:/ro:ro" % ro' in SRC                       # Tcl mounted read-only, never copied (the chmod restarts)
     assert 'user = ["-u", "%d:%d" % (os.getuid(), os.getgid())]' in SRC   # no root-owned outputs
     assert "(a previous ECO)" not in SRC and "never overwrite a previous ECO" in SRC
+
+
+# --- limits (FABLE-CLOSURE-STRATEGY 11-17 lever 8) ---------------------------------------------------------------------------------
+HDR = "endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps\ttt_setup_slack_ps\n"
+
+
+def _limits(tmp_path, ends, plan, **kw):
+    e, p = tmp_path / "e.tsv", tmp_path / "p.tsv"
+    e.write_text(HDR + "".join("%s\t%s\t%s\t%s\t%s\t%s\n" % t for t in ends))
+    p.write_text("# hold_eco_internal plan\n" + "".join("%s\t%d\n" % t for t in plan)
+                 + '# summary {"partial": 0, "skipped": 0, "nets_left_unpadded": 0}\n')
+    return H.check_limits(e, p, hb4_tt_ps=132.8, **kw)
+
+
+def test_inside_the_limits_has_no_violation(tmp_path):
+    assert _limits(tmp_path, [("a/D", "s", "reg", "reg", -1.55, 300.0)], [("a/D", 1)]) == []
+
+
+def test_worst_internal_end_below_minus_15_is_refused_but_port_ends_never_count(tmp_path):
+    bad = _limits(tmp_path, [("a/D", "s", "reg", "reg", -15.5, 300.0)], [("a/D", 1)])
+    assert any(v.startswith("worst_internal_ff_hold") for v in bad)
+    ok = _limits(tmp_path, [("a/D", "s", "reg", "reg", -3.0, 300.0), ("po", "s", "reg", "port", -170.0, 300.0),
+                            ("b/D", "pi", "port", "reg", -173.9, 300.0)], [("a/D", 1)])
+    assert ok == []                                                    # the parent's port holds are advisory
+
+
+def test_more_than_100_ends_is_refused(tmp_path):
+    ends = [("p%d/D" % i, "s", "reg", "reg", -2.0, 400.0) for i in range(101)]
+    assert any(v.startswith("padded_ends 101") for v in _limits(tmp_path, ends, [(e[0], 1) for e in ends]))
+    assert _limits(tmp_path, ends[:100], [(e[0], 1) for e in ends[:100]]) == []
+
+
+def test_setup_room_after_the_pad_is_required_on_every_end(tmp_path):
+    v = _limits(tmp_path, [("a/D", "s", "reg", "reg", -20.0, 150.0)], [("a/D", 2)])          # 150 - 2 x 132.8 < 0
+    assert any(x.startswith("setup_room a/D") for x in v)
+    assert _limits(tmp_path, [("a/D", "s", "reg", "reg", -5.0, 150.0)], [("a/D", 1)]) == []
+
+
+def test_a_partial_or_skipped_plan_is_refused(tmp_path):
+    e, p = tmp_path / "e.tsv", tmp_path / "p.tsv"
+    e.write_text(HDR + "a/D\ts\treg\treg\t-3.0\t500.0\n")
+    p.write_text('a/D\t1\n# summary {"partial": 1, "skipped": 0, "nets_left_unpadded": 0}\n')
+    assert any(v.startswith("plan could not pad") for v in H.check_limits(e, p, hb4_tt_ps=132.8))
+
+
+def test_net_and_obstruction_checks_are_wired_in_and_refuse_with_exit_4():
+    assert "source /out/netcheck.tcl" in SRC and "OT_LIMIT port net" in SRC and "OT_LIMIT non-data net" in SRC
+    assert "getObstructions" in SRC and "obs_in != obs_out" in SRC
+    assert SRC.count("return finish(4,") >= 3
