@@ -7,7 +7,23 @@ usage: lane_quota.py scan [--root R] [--window-h 6] [--quota-gb 150]          (p
 import argparse, json, os, subprocess, sys, time
 
 WINDOW_H, QUOTA_GB = 6.0, 150.0
+BURST_H, BURST_GB = 1.0, 30.0      # 11-17: a 39 GB lane clone (QC-TYPES-R3) never reached 150 GB / 6 h; a burst tier alerts at 30 GB / 1 h
+ROOTS = ("/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch3/claude")   # epyc2 lanes live on scratch3 too
 SKIP = {"rt", "git", "signed-store", "hub-coord", "mq1", "mq-gate"}
+
+
+def scan_all(roots=ROOTS, now=None):
+    """-> {lane: GB} for lanes over either tier on any root that exists on this host ('lane' keys carry the root when it is not scratch2)"""
+    out = {}
+    for r in roots:
+        if not os.path.isdir(r):
+            continue
+        tag = "" if "scratch2" in r else os.path.basename(os.path.dirname(r)) + ":"
+        for h, g in ((WINDOW_H, QUOTA_GB), (BURST_H, BURST_GB)):
+            for lane, gb in scan(r, h, g, now).items():
+                out.setdefault(tag + lane, gb)
+                out[tag + lane] = max(out[tag + lane], gb)
+    return out
 
 
 def scan(root, window_h=WINDOW_H, quota_gb=QUOTA_GB, now=None, skip=SKIP):
@@ -38,15 +54,17 @@ def hub(hosts, coord, run=subprocess.run, state=None, now=None):
     except (OSError, ValueError): seen = {}
     posted = []
     for h in hosts:
-        r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "nice -n 19 python3 -I /srv/opentallas-scratch2/claude/fleet-ops-r/lane_quota.py scan"],
-                capture_output=True, text=True, timeout=1500)
-        try: over = json.loads(r.stdout.strip().splitlines()[-1])
-        except (ValueError, IndexError): continue
+        try:                      # one slow or dead host must not abort the other hosts (epyc7 timed out and no alert was ever posted)
+            r = run(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "nice -n 19 python3 -I /srv/opentallas-scratch2/claude/fleet-ops-r/lane_quota.py scan"],
+                    capture_output=True, text=True, timeout=900)
+            over = json.loads(r.stdout.strip().splitlines()[-1])
+        except Exception:
+            continue
         for lane, gb in over.items():
             k = "%s/%s" % (h, lane)
             if seen.get(k) == day: continue
             seen[k] = day
-            line = "ALERT [FLEET-OPS-R -> COORD] lane quota: %s on %s wrote %.0f GB in the last %g h (quota %g GB/lane/%g h; alert only, nothing stopped); owner please prune or confirm" % (lane, h, gb, WINDOW_H, QUOTA_GB, WINDOW_H)
+            line = "ALERT [FLEET-OPS-R -> COORD] lane quota: %s on %s wrote %.0f GB in the last window (quota %g GB/lane/%g h or %g GB/%g h burst; alert only, nothing stopped); owner please prune or confirm" % (lane, h, gb, QUOTA_GB, WINDOW_H, BURST_GB, BURST_H)
             run(["bash", os.path.join(coord, "bin/post.sh"), "FLEET-OPS-R", line], capture_output=True, text=True)
             posted.append(line)
     os.makedirs(os.path.dirname(state), exist_ok=True)
@@ -60,7 +78,7 @@ def main(argv=None):
     ap.add_argument("--window-h", type=float, default=WINDOW_H); ap.add_argument("--quota-gb", type=float, default=QUOTA_GB); ap.add_argument("--coord", default=os.path.expanduser("~/coord"))
     a = ap.parse_args(argv)
     if a.cmd == "scan":
-        print(json.dumps(scan(a.root, a.window_h, a.quota_gb)))
+        print(json.dumps(scan_all() if a.root == "/srv/opentallas-scratch2/claude" and a.window_h == WINDOW_H and a.quota_gb == QUOTA_GB else scan(a.root, a.window_h, a.quota_gb)))
     else:
         for l in hub(a.hosts, a.coord): print(l)
     return 0
