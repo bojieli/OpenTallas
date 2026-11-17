@@ -584,6 +584,7 @@ SCHEMA = {
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
                                        "explicit_stage0": {"type": "boolean"},  # opt-in consumer of planned station0
+                                       "keep_firm": {"type": "boolean"},  # opt-in preserve FT sites through DPL
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)

@@ -320,3 +320,91 @@ def test_fixed_output_missing_group_refuses(tmp_path):
             "\nset ::env(OT_TAP_GROUP_FIXED) {missing:clk_t1}")
     assert p.returncode != 0
     assert "group has no sinks" in p.stderr
+
+INGRESS = r'''
+mkflop u_bound.u_bin_coll_i0/q0 100
+mkflop u_bound.u_bin_coll_i0/q1 200
+mkflop u_bound.u_core.u_enc.d0/q0 800
+mkflop u_bound.u_core.u_enc.d0/q1 900
+# A forwarded-clock writer and a lookalike outside the core root stay put.
+mkflop u_bound.u_cland_coll_i0/w0 900
+mkflop u_bound.u_bin_coll_i0/q_foreign 100
+mkflop u_bound.u_bin_coll_i0/eq 900
+proc nfwd {m args} {netproc nfwd $m {*}$args}
+set NET(ck_u_bound.u_cland_coll_i0/w0) nfwd
+set NET(ck_u_bound.u_bin_coll_i0/q_foreign) nfwd
+'''
+INGRESS_ON = 'set ::env(OT_SERDES_INGRESS_COHORT) 1\nset ::env(OT_SERDES_INGRESS_BITS) 2'
+
+
+def test_serdes_ingress_cohort_local_only(tmp_path):
+    p = run(tmp_path, INGRESS, env=INGRESS_ON)
+    assert p.returncode == 0, p.stderr
+    assert 'bin=2 encoder=2' in p.stdout
+    rows = [l for l in p.stdout.splitlines() if l.startswith('NET ck_u_bound.')]
+    nets = [l.rsplit(' ',1)[1] for l in rows if '/q' in l and 'foreign' not in l]
+    assert len(nets) == 4 and len(set(nets)) == 1, p.stdout
+    assert 'NET ck_u_bound.u_cland_coll_i0/w0 nfwd' in p.stdout
+    assert 'NET ck_u_bound.u_bin_coll_i0/q_foreign nfwd' in p.stdout
+    assert 'NET ck_u_bound.u_bin_coll_i0/eq nt1' in p.stdout
+
+
+def test_serdes_ingress_default_off_preserves_split(tmp_path):
+    p = run(tmp_path, INGRESS)
+    assert p.returncode == 0, p.stderr
+    assert 'OT_SERDES_INGRESS_COHORT' not in p.stdout
+    assert 'NET ck_u_bound.u_bin_coll_i0/q0 nclk' in p.stdout
+    assert 'NET ck_u_bound.u_core.u_enc.d0/q0 nt1' in p.stdout
+    assert 'NET ck_u_bound.u_cland_coll_i0/w0 nfwd' in p.stdout
+
+
+def test_serdes_ingress_refuses_missing_intended_width(tmp_path):
+    p = run(tmp_path, INGRESS, env='set ::env(OT_SERDES_INGRESS_COHORT) 1')
+    assert p.returncode != 0 and 'bin=2 expected=512' in p.stderr
+
+
+RESET_FAMILY = r'''
+mkflop u_rrl_3/q 600
+proc q_u_rrl_3/q {m args} {switch $m {getMTerm {return outp} getInst {return u_rrl_3/q} getNet {return rq}}}
+set NET(q_u_rrl_3/q) rq
+# Numeric95 deliberately differs from actual compiled driver3 (merged alias).
+mkflop u_cland_collect_rst_rl_95/ready 350 rq
+mkflop u_cland_collect_rst_rl_95/fault 400 rq
+'''
+
+
+def test_serdes_reset_family_uses_compiled_alias_driver(tmp_path):
+    p = run(tmp_path, RESET_FAMILY, env='set ::env(OT_SERDES_RESET_COHORT) 1')
+    assert p.returncode == 0, p.stderr
+    assert 'u_cland_collect_rst_rl_95 <- u_rrl_3' in p.stdout
+    rows = [l for l in p.stdout.splitlines() if l.startswith('NET ck_')]
+    assert len(rows) == 3 and len({l.rsplit(' ',1)[1] for l in rows}) == 1, p.stdout
+
+
+def test_serdes_reset_family_refuses_missing_actual_driver(tmp_path):
+    body = RESET_FAMILY + '\nrename q_u_rrl_3/q {}\nunset NET(q_u_rrl_3/q)\n'
+    p = run(tmp_path, body, env='set ::env(OT_SERDES_RESET_COHORT) 1')
+    assert p.returncode != 0 and 'missing compiled RRL authority' in p.stderr
+
+
+def test_serdes_typed_relay_cohort_fixed_light_root(tmp_path):
+    body = RESET_FAMILY + '\nmkflop u_rrl_4/q 620\n'
+    env = ('set ::env(OT_SERDES_RESET_COHORT) 1\n'
+           'set ::env(OT_SERDES_RELAY_COHORTS) {3,4}\n'
+           'set ::env(OT_TAP_GROUP_FIXED) {serdes_rst_3:clk_t1}')
+    p = run(tmp_path, body, env=env)
+    assert p.returncode == 0, p.stderr
+    rows = [l for l in p.stdout.splitlines() if l.startswith('NET ck_')]
+    assert len(rows) == 4 and all(l.endswith(' nt1') for l in rows), p.stdout
+
+
+def test_serdes_typed_relay_cohort_refuses_wrong_source(tmp_path):
+    p = run(tmp_path, RESET_FAMILY, env=('set ::env(OT_SERDES_RESET_COHORT) 1\n'
+        'set ::env(OT_SERDES_RELAY_COHORTS) {3,99}'))
+    assert p.returncode != 0 and 'missing/duplicate compiled relay 99' in p.stderr
+
+
+def test_serdes_typed_relay_cohort_refuses_oversized_geometry(tmp_path):
+    p = run(tmp_path, RESET_FAMILY+'\nmkflop u_rrl_4/q 900\n',
+        env='set ::env(OT_SERDES_RESET_COHORT) 1\nset ::env(OT_SERDES_RELAY_COHORTS) {3,4}')
+    assert p.returncode != 0 and 'unsized group' in p.stderr
