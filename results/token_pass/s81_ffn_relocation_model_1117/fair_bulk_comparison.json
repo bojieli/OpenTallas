@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.s81.ffn.relocation-fair-restrictedbulk-comparison.v1",
+ "status": "MODEL_ONLY_NOT_FIT_827",
+ "policy": "Both candidates only bulk fullmask singleleg local/wide<=4; any V/multileg/partial staysonepair with2rowscratch.",
+ "canonical": {
+  "packets": 7602,
+  "controls": 15204,
+  "separate_rank_engine_floor": 2128,
+  "aliased_rank_engine_floor": 8092,
+  "packet_sizes": {
+   "4": 308,
+   "1": 7042,
+   "2": 252
+  }
+ },
+ "relocated": {
+  "packets": 4752,
+  "controls": 9504,
+  "separate_rank_engine_floor": 1232,
+  "aliased_rank_engine_floor": 4864
+ },
+ "relocation_saving": {
+  "control_words": 5700,
+  "separate_rank_control_floor": 896,
+  "aliased_rank_control_floor": 3228
+ },
+ "additional_relocation_storage_bytes_per_rank": 5120,
+ "remaining_minimum_budget_deficit": 405,
+ "remaining": "1232localtransportissuefloor alreadyexceeds827beforeVS13~75,POST~63,pathages,peerflow,reload; no newRTLeligible or rateclaim."
+}

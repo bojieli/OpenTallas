@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.s81.ffn.relocation-restricted-bulk.v1",
+ "status": "MODEL_ONLY_CALENDAR_BLOCKED",
+ "policy": "Only fullmask SINGLELEG localcopy or same-tierwide may bulk<=4; any V/multileg/partial remainsonepair, so intermediate scratch stays2rows.",
+ "packet_count": 4752,
+ "packet_sizes": {
+  "4": 696,
+  "1": 3776,
+  "2": 280
+ },
+ "leg_packet_counts": {
+  "local_copy": 1300,
+  "local_masked_copy_candidate": 1008,
+  "V": 1216,
+  "wide": 1228
+ },
+ "control_words": 9504,
+ "control_by_rank_engine": [
+  {
+   "rank": 0,
+   "engine": 0,
+   "slots": 1232
+  },
+  {
+   "rank": 0,
+   "engine": 1,
+   "slots": 1180
+  },
+  {
+   "rank": 1,
+   "engine": 0,
+   "slots": 1200
+  },
+  {
+   "rank": 1,
+   "engine": 1,
+   "slots": 1164
+  },
+  {
+   "rank": 2,
+   "engine": 0,
+   "slots": 1216
+  },
+  {
+   "rank": 2,
+   "engine": 1,
+   "slots": 1132
+  },
+  {
+   "rank": 3,
+   "engine": 0,
+   "slots": 1216
+  },
+  {
+   "rank": 3,
+   "engine": 1,
+   "slots": 1164
+  }
+ ],
+ "separate_rank_engine_floor": 1232,
+ "aliased_rank_engine_floor": 4864,
+ "read_port_pair_floor": 135,
+ "write_port_pair_floor": 127,
+ "lane_packet_floor": 66,
+ "existing827budget_deficit": 405,
+ "unpacked_control_words": 14240,
+ "unpacked_engine_floor": 1800,
+ "alias_negative_control": {
+  "actual_clobber_cases": 18,
+  "example": {
+   "rank": 0,
+   "incoming_beat": 5,
+   "canonical_sid": 1,
+   "leaf": 0,
+   "unsent_relocated_beat": 2,
+   "old_receive_rows": [
+    448,
+    464
+   ],
+   "separate_safe_receive_rows": [
+    464,
+    480
+   ],
+   "old_POST_reads_wrong_beat": true
+  },
+  "incoming448_rejected": true,
+  "old_POST_a1448_rejected": true,
+  "correct_POST_a1464": true,
+  "symbolic_word_identity": [
+   [
+    5,
+    0
+   ],
+   [
+    2,
+    0
+   ]
+  ]
+ },
+ "remaining": "This is finite-resource lowerbound, not dependency/fullstaticcalendar. Need CAPready+scratchleases+selectedXRT/maskedcopyages+VS13timing+POST/peerflow+hostreload and productionexactness.",
+ "scope": "No new source/RTL/images. Actual107/53 ownership and canonicalPOST/H layout preserved; whole64beat assembly relocation only."
+}

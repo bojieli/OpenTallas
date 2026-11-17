@@ -68,3 +68,46 @@ def model():
             composed_single_user_cycles=None,
             note='old directV estimate rejected: actual full boundDie Vbridges exist onlycolumns0,2,5,7; bulk4pairs needs8scratchrows, not2. Correct onepair route floor2436 alreadyexceeds827combine; ages/leases/POST remainadditional'),
         qualification='MODEL ONLY; scratch leases, finite port/calendar composition, full107/53 CAP-XR-VP exactness/miter/mutants, sustained throughput and context TT/FF remain required')
+
+
+def source_near_combine_model():
+    """Keep native seven-expert order and VS13 n8, return one combined beat."""
+    result = model()
+    result['schema'] = 'opentallas.s81.final-ffn-source-near-combine-uarch.v1'
+    result['communication']['mechanism'] = (
+        'assemble complete64-word beats at20 distinct source-near leaf slots per TPdie; '
+        'same VS13 n8/expertstride16; return combined64-word beat to canonical POST owner')
+    result['memory'].update(canonical_receive_rows=[464,480],
+        canonical_receive_bytes_per_used_leaf=256,
+        canonical_receive_used_leaves_per_TPdie=20,
+        canonical_receive_bytes_per_TPdie=5120,
+        old_inplace_receive_alias_cases_detected=18,
+        POST_a1=464, original_combined_source_rows=[448,464])
+    result['latency'] = dict(
+        down_phases_before=35,down_phases_after=35,
+        canonical_same_bulk_packets=7602,
+        relocated_same_bulk_packets=4752,
+        canonical_same_bulk_CTL_words=15204,
+        relocated_same_bulk_CTL_words=9504,
+        canonical_separate_TPdie_issue_floor=2128,
+        relocated_separate_TPdie_issue_floor=1232,
+        saved_CTL_words=5700,
+        saved_issue_floor_cycles_per_TPdie=896,
+        canonical_shared_rank_issue_floor=8092,
+        relocated_shared_rank_issue_floor=4864,
+        nominal_unqualified_combine_cycles=827,
+        minimum_extension_over_nominal_cycles=405,
+        exact_seven_expert_add_order_unchanged=True,
+        native_VS13_n=8, native_expert_stride_rows=16,
+        legal_bulk_policy='only fullmask singleleg local/wide<=4; V/multileg/partial onepair',
+        current_missing_composition=[
+            'actualCAPready and VPXlastreader rowleases',
+            'selectedXRT/maskedcopy latency',
+            'finite dependency/control/link calendar',
+            'existingVS13~75/POST~63 plus peerflow/hostreload'],
+        composed_single_user_cycles=None,
+        note='827 is an incomplete nominal budget, not an adoption ceiling. Resourcefloor requires at least405 additionalcycles; wholepath extension remains unpriced. No hidden overlap duringdown without actualleases.')
+    result['qualification'] = ('MODEL ONLY candidate with priced resource improvement; '
+        'numeric ownership retained, noRTL/image or physical claim. Full schedule/leases, '
+        'CAP-XR-VP fullshape exactness/miter/mutants, contextTT/FF and throughput remain OPEN.')
+    return result

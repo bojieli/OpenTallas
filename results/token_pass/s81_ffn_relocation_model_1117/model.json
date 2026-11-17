@@ -1,0 +1,1259 @@
+{
+ "schema": "opentallas.s81.ffn.whole64beat-relocation-model.v1",
+ "status": "MODEL_ONLY_CALENDAR_BLOCKED",
+ "rom_ownership_changed": false,
+ "row_tags_changed": false,
+ "numeric_order_changed": false,
+ "actual_source_counts": [
+  107,
+  107,
+  53,
+  53,
+  107,
+  107,
+  53,
+  53,
+  53,
+  53,
+  107,
+  107,
+  53,
+  53,
+  107,
+  107
+ ],
+ "assignment_method": "For each of20canonical64wordbeats/rank chooseSIDwithmostactualproducerwords; pick unusedleaf preferringproducerleaf. No global optimality claim.",
+ "assignments": [
+  {
+   "rank": 0,
+   "global_beat": 0,
+   "assembly_sid": 0,
+   "assembly_leaf": 0,
+   "canonical_sid": 0,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "0": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 0,
+   "global_beat": 1,
+   "assembly_sid": 0,
+   "assembly_leaf": 1,
+   "canonical_sid": 0,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "0": 43,
+    "1": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 0,
+   "global_beat": 2,
+   "assembly_sid": 1,
+   "assembly_leaf": 0,
+   "canonical_sid": 0,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "1": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 0,
+   "global_beat": 3,
+   "assembly_sid": 2,
+   "assembly_leaf": 0,
+   "canonical_sid": 0,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "1": 22,
+    "2": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 0,
+   "global_beat": 4,
+   "assembly_sid": 3,
+   "assembly_leaf": 0,
+   "canonical_sid": 0,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "2": 11,
+    "3": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 0,
+   "global_beat": 5,
+   "assembly_sid": 4,
+   "assembly_leaf": 0,
+   "canonical_sid": 1,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "4": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 0,
+   "global_beat": 6,
+   "assembly_sid": 4,
+   "assembly_leaf": 1,
+   "canonical_sid": 1,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "4": 43,
+    "5": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 0,
+   "global_beat": 7,
+   "assembly_sid": 5,
+   "assembly_leaf": 0,
+   "canonical_sid": 1,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "5": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 0,
+   "global_beat": 8,
+   "assembly_sid": 6,
+   "assembly_leaf": 0,
+   "canonical_sid": 1,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "5": 22,
+    "6": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 0,
+   "global_beat": 9,
+   "assembly_sid": 7,
+   "assembly_leaf": 0,
+   "canonical_sid": 1,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "6": 11,
+    "7": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 0,
+   "global_beat": 10,
+   "assembly_sid": 8,
+   "assembly_leaf": 0,
+   "canonical_sid": 2,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "8": 53,
+    "9": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 0,
+   "global_beat": 11,
+   "assembly_sid": 9,
+   "assembly_leaf": 0,
+   "canonical_sid": 2,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "9": 42,
+    "10": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 0,
+   "global_beat": 12,
+   "assembly_sid": 10,
+   "assembly_leaf": 0,
+   "canonical_sid": 2,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "10": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 0,
+   "global_beat": 13,
+   "assembly_sid": 11,
+   "assembly_leaf": 0,
+   "canonical_sid": 2,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "10": 21,
+    "11": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 0,
+   "global_beat": 14,
+   "assembly_sid": 11,
+   "assembly_leaf": 1,
+   "canonical_sid": 2,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "11": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 0,
+   "global_beat": 15,
+   "assembly_sid": 12,
+   "assembly_leaf": 0,
+   "canonical_sid": 3,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "12": 53,
+    "13": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 0,
+   "global_beat": 16,
+   "assembly_sid": 13,
+   "assembly_leaf": 0,
+   "canonical_sid": 3,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "13": 42,
+    "14": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 0,
+   "global_beat": 17,
+   "assembly_sid": 14,
+   "assembly_leaf": 0,
+   "canonical_sid": 3,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "14": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 0,
+   "global_beat": 18,
+   "assembly_sid": 15,
+   "assembly_leaf": 0,
+   "canonical_sid": 3,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "14": 21,
+    "15": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 0,
+   "global_beat": 19,
+   "assembly_sid": 15,
+   "assembly_leaf": 1,
+   "canonical_sid": 3,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "15": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 20,
+   "assembly_sid": 0,
+   "assembly_leaf": 0,
+   "canonical_sid": 4,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "0": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 21,
+   "assembly_sid": 0,
+   "assembly_leaf": 1,
+   "canonical_sid": 4,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "0": 43,
+    "1": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 1,
+   "global_beat": 22,
+   "assembly_sid": 1,
+   "assembly_leaf": 0,
+   "canonical_sid": 4,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "1": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 23,
+   "assembly_sid": 2,
+   "assembly_leaf": 0,
+   "canonical_sid": 4,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "1": 22,
+    "2": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 1,
+   "global_beat": 24,
+   "assembly_sid": 3,
+   "assembly_leaf": 0,
+   "canonical_sid": 4,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "2": 11,
+    "3": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 1,
+   "global_beat": 25,
+   "assembly_sid": 4,
+   "assembly_leaf": 0,
+   "canonical_sid": 5,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "4": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 26,
+   "assembly_sid": 4,
+   "assembly_leaf": 1,
+   "canonical_sid": 5,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "4": 43,
+    "5": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 1,
+   "global_beat": 27,
+   "assembly_sid": 5,
+   "assembly_leaf": 0,
+   "canonical_sid": 5,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "5": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 28,
+   "assembly_sid": 6,
+   "assembly_leaf": 0,
+   "canonical_sid": 5,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "5": 22,
+    "6": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 1,
+   "global_beat": 29,
+   "assembly_sid": 7,
+   "assembly_leaf": 0,
+   "canonical_sid": 5,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "6": 11,
+    "7": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 1,
+   "global_beat": 30,
+   "assembly_sid": 8,
+   "assembly_leaf": 0,
+   "canonical_sid": 6,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "8": 53,
+    "9": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 1,
+   "global_beat": 31,
+   "assembly_sid": 9,
+   "assembly_leaf": 0,
+   "canonical_sid": 6,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "9": 42,
+    "10": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 1,
+   "global_beat": 32,
+   "assembly_sid": 10,
+   "assembly_leaf": 0,
+   "canonical_sid": 6,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "10": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 33,
+   "assembly_sid": 11,
+   "assembly_leaf": 0,
+   "canonical_sid": 6,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "10": 21,
+    "11": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 1,
+   "global_beat": 34,
+   "assembly_sid": 11,
+   "assembly_leaf": 1,
+   "canonical_sid": 6,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "11": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 35,
+   "assembly_sid": 12,
+   "assembly_leaf": 0,
+   "canonical_sid": 7,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "12": 53,
+    "13": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 1,
+   "global_beat": 36,
+   "assembly_sid": 13,
+   "assembly_leaf": 0,
+   "canonical_sid": 7,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "13": 42,
+    "14": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 1,
+   "global_beat": 37,
+   "assembly_sid": 14,
+   "assembly_leaf": 0,
+   "canonical_sid": 7,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "14": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 1,
+   "global_beat": 38,
+   "assembly_sid": 15,
+   "assembly_leaf": 0,
+   "canonical_sid": 7,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "14": 21,
+    "15": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 1,
+   "global_beat": 39,
+   "assembly_sid": 15,
+   "assembly_leaf": 1,
+   "canonical_sid": 7,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "15": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 40,
+   "assembly_sid": 0,
+   "assembly_leaf": 0,
+   "canonical_sid": 8,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "0": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 41,
+   "assembly_sid": 0,
+   "assembly_leaf": 1,
+   "canonical_sid": 8,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "0": 43,
+    "1": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 2,
+   "global_beat": 42,
+   "assembly_sid": 1,
+   "assembly_leaf": 0,
+   "canonical_sid": 8,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "1": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 43,
+   "assembly_sid": 2,
+   "assembly_leaf": 0,
+   "canonical_sid": 8,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "1": 22,
+    "2": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 2,
+   "global_beat": 44,
+   "assembly_sid": 3,
+   "assembly_leaf": 0,
+   "canonical_sid": 8,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "2": 11,
+    "3": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 2,
+   "global_beat": 45,
+   "assembly_sid": 4,
+   "assembly_leaf": 0,
+   "canonical_sid": 9,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "4": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 46,
+   "assembly_sid": 4,
+   "assembly_leaf": 1,
+   "canonical_sid": 9,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "4": 43,
+    "5": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 2,
+   "global_beat": 47,
+   "assembly_sid": 5,
+   "assembly_leaf": 0,
+   "canonical_sid": 9,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "5": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 48,
+   "assembly_sid": 6,
+   "assembly_leaf": 0,
+   "canonical_sid": 9,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "5": 22,
+    "6": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 2,
+   "global_beat": 49,
+   "assembly_sid": 7,
+   "assembly_leaf": 0,
+   "canonical_sid": 9,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "6": 11,
+    "7": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 2,
+   "global_beat": 50,
+   "assembly_sid": 8,
+   "assembly_leaf": 0,
+   "canonical_sid": 10,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "8": 53,
+    "9": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 2,
+   "global_beat": 51,
+   "assembly_sid": 9,
+   "assembly_leaf": 0,
+   "canonical_sid": 10,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "9": 42,
+    "10": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 2,
+   "global_beat": 52,
+   "assembly_sid": 10,
+   "assembly_leaf": 0,
+   "canonical_sid": 10,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "10": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 53,
+   "assembly_sid": 11,
+   "assembly_leaf": 0,
+   "canonical_sid": 10,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "10": 21,
+    "11": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 2,
+   "global_beat": 54,
+   "assembly_sid": 11,
+   "assembly_leaf": 1,
+   "canonical_sid": 10,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "11": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 55,
+   "assembly_sid": 12,
+   "assembly_leaf": 0,
+   "canonical_sid": 11,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "12": 53,
+    "13": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 2,
+   "global_beat": 56,
+   "assembly_sid": 13,
+   "assembly_leaf": 0,
+   "canonical_sid": 11,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "13": 42,
+    "14": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 2,
+   "global_beat": 57,
+   "assembly_sid": 14,
+   "assembly_leaf": 0,
+   "canonical_sid": 11,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "14": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 2,
+   "global_beat": 58,
+   "assembly_sid": 15,
+   "assembly_leaf": 0,
+   "canonical_sid": 11,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "14": 21,
+    "15": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 2,
+   "global_beat": 59,
+   "assembly_sid": 15,
+   "assembly_leaf": 1,
+   "canonical_sid": 11,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "15": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 60,
+   "assembly_sid": 0,
+   "assembly_leaf": 0,
+   "canonical_sid": 12,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "0": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 61,
+   "assembly_sid": 0,
+   "assembly_leaf": 1,
+   "canonical_sid": 12,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "0": 43,
+    "1": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 3,
+   "global_beat": 62,
+   "assembly_sid": 1,
+   "assembly_leaf": 0,
+   "canonical_sid": 12,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "1": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 63,
+   "assembly_sid": 2,
+   "assembly_leaf": 0,
+   "canonical_sid": 12,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "1": 22,
+    "2": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 3,
+   "global_beat": 64,
+   "assembly_sid": 3,
+   "assembly_leaf": 0,
+   "canonical_sid": 12,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "2": 11,
+    "3": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 3,
+   "global_beat": 65,
+   "assembly_sid": 4,
+   "assembly_leaf": 0,
+   "canonical_sid": 13,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "4": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 66,
+   "assembly_sid": 4,
+   "assembly_leaf": 1,
+   "canonical_sid": 13,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "4": 43,
+    "5": 21
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 3,
+   "global_beat": 67,
+   "assembly_sid": 5,
+   "assembly_leaf": 0,
+   "canonical_sid": 13,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "5": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 68,
+   "assembly_sid": 6,
+   "assembly_leaf": 0,
+   "canonical_sid": 13,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "5": 22,
+    "6": 42
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 3,
+   "global_beat": 69,
+   "assembly_sid": 7,
+   "assembly_leaf": 0,
+   "canonical_sid": 13,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "6": 11,
+    "7": 53
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 3,
+   "global_beat": 70,
+   "assembly_sid": 8,
+   "assembly_leaf": 0,
+   "canonical_sid": 14,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "8": 53,
+    "9": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 3,
+   "global_beat": 71,
+   "assembly_sid": 9,
+   "assembly_leaf": 0,
+   "canonical_sid": 14,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "9": 42,
+    "10": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 3,
+   "global_beat": 72,
+   "assembly_sid": 10,
+   "assembly_leaf": 0,
+   "canonical_sid": 14,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "10": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 73,
+   "assembly_sid": 11,
+   "assembly_leaf": 0,
+   "canonical_sid": 14,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "10": 21,
+    "11": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 3,
+   "global_beat": 74,
+   "assembly_sid": 11,
+   "assembly_leaf": 1,
+   "canonical_sid": 14,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "11": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 75,
+   "assembly_sid": 12,
+   "assembly_leaf": 0,
+   "canonical_sid": 15,
+   "canonical_leaf": 0,
+   "source_word_counts": {
+    "12": 53,
+    "13": 11
+   },
+   "source_majority_words": 53
+  },
+  {
+   "rank": 3,
+   "global_beat": 76,
+   "assembly_sid": 13,
+   "assembly_leaf": 0,
+   "canonical_sid": 15,
+   "canonical_leaf": 1,
+   "source_word_counts": {
+    "13": 42,
+    "14": 22
+   },
+   "source_majority_words": 42
+  },
+  {
+   "rank": 3,
+   "global_beat": 77,
+   "assembly_sid": 14,
+   "assembly_leaf": 0,
+   "canonical_sid": 15,
+   "canonical_leaf": 2,
+   "source_word_counts": {
+    "14": 64
+   },
+   "source_majority_words": 64
+  },
+  {
+   "rank": 3,
+   "global_beat": 78,
+   "assembly_sid": 15,
+   "assembly_leaf": 0,
+   "canonical_sid": 15,
+   "canonical_leaf": 3,
+   "source_word_counts": {
+    "14": 21,
+    "15": 43
+   },
+   "source_majority_words": 43
+  },
+  {
+   "rank": 3,
+   "global_beat": 79,
+   "assembly_sid": 15,
+   "assembly_leaf": 1,
+   "canonical_sid": 15,
+   "canonical_leaf": 4,
+   "source_word_counts": {
+    "15": 64
+   },
+   "source_majority_words": 64
+  }
+ ],
+ "assembly_price": {
+  "legs": 6104,
+  "leg_counts": {
+   "local_copy": 3416,
+   "local_masked_copy_candidate": 1008,
+   "V": 896,
+   "wide": 784
+  },
+  "controls": 12208,
+  "per_rank_engine": [
+   {
+    "rank": 0,
+    "engine": 0,
+    "slots": 1540
+   },
+   {
+    "rank": 0,
+    "engine": 1,
+    "slots": 1512
+   },
+   {
+    "rank": 1,
+    "engine": 0,
+    "slots": 1540
+   },
+   {
+    "rank": 1,
+    "engine": 1,
+    "slots": 1512
+   },
+   {
+    "rank": 2,
+    "engine": 0,
+    "slots": 1540
+   },
+   {
+    "rank": 2,
+    "engine": 1,
+    "slots": 1512
+   },
+   {
+    "rank": 3,
+    "engine": 0,
+    "slots": 1540
+   },
+   {
+    "rank": 3,
+    "engine": 1,
+    "slots": 1512
+   }
+  ],
+  "separate_rank_control_floor": 1540,
+  "aliased_rank_control_floor": 6160,
+  "read_port_floor": 119,
+  "write_port_floor": 119,
+  "lane_floor": 42
+ },
+ "combined_return_price": {
+  "legs": 1016,
+  "leg_counts": {
+   "local_copy": 48,
+   "V": 320,
+   "wide": 648
+  },
+  "controls": 2032,
+  "per_rank_engine": [
+   {
+    "rank": 0,
+    "engine": 0,
+    "slots": 256
+   },
+   {
+    "rank": 0,
+    "engine": 1,
+    "slots": 288
+   },
+   {
+    "rank": 1,
+    "engine": 0,
+    "slots": 224
+   },
+   {
+    "rank": 1,
+    "engine": 1,
+    "slots": 272
+   },
+   {
+    "rank": 2,
+    "engine": 0,
+    "slots": 240
+   },
+   {
+    "rank": 2,
+    "engine": 1,
+    "slots": 240
+   },
+   {
+    "rank": 3,
+    "engine": 0,
+    "slots": 240
+   },
+   {
+    "rank": 3,
+    "engine": 1,
+    "slots": 272
+   }
+  ],
+  "separate_rank_control_floor": 288,
+  "aliased_rank_control_floor": 1072,
+  "read_port_floor": 16,
+  "write_port_floor": 16,
+  "lane_floor": 80
+ },
+ "total_transport_price": {
+  "legs": 7120,
+  "leg_counts": {
+   "local_copy": 3464,
+   "local_masked_copy_candidate": 1008,
+   "V": 1216,
+   "wide": 1432
+  },
+  "controls": 14240,
+  "per_rank_engine": [
+   {
+    "rank": 0,
+    "engine": 0,
+    "slots": 1796
+   },
+   {
+    "rank": 0,
+    "engine": 1,
+    "slots": 1800
+   },
+   {
+    "rank": 1,
+    "engine": 0,
+    "slots": 1764
+   },
+   {
+    "rank": 1,
+    "engine": 1,
+    "slots": 1784
+   },
+   {
+    "rank": 2,
+    "engine": 0,
+    "slots": 1780
+   },
+   {
+    "rank": 2,
+    "engine": 1,
+    "slots": 1752
+   },
+   {
+    "rank": 3,
+    "engine": 0,
+    "slots": 1780
+   },
+   {
+    "rank": 3,
+    "engine": 1,
+    "slots": 1784
+   }
+  ],
+  "separate_rank_control_floor": 1800,
+  "aliased_rank_control_floor": 7120,
+  "read_port_floor": 135,
+  "write_port_floor": 127,
+  "lane_floor": 94
+ },
+ "existing_original_price": {
+  "controls": 17556,
+  "separate_rank_control_floor": 2436
+ },
+ "saving": {
+  "transport_controls": 3316,
+  "separate_rank_floor_cycles": 636
+ },
+ "existing_combine_budget": 827,
+ "minimum_separate_rank_budget_deficit": 973,
+ "storage": {
+  "capture": [
+   128,
+   254
+  ],
+  "scratch": [
+   304,
+   306
+  ],
+  "assembled": [
+   320,
+   432
+  ],
+  "combined_source": [
+   448,
+   464
+  ],
+  "canonical_combined_receive": [
+   464,
+   480
+  ],
+  "assembly_leaf_slots": 80,
+  "assembly_leaves_per_rank": 20,
+  "assembly_rows_per_used_leaf": 112,
+  "combined_source_rows_per_used_leaf": 16,
+  "new_canonical_receive_rows_per_used_leaf": 16,
+  "new_canonical_receive_bytes_per_leaf": 256,
+  "new_canonical_receive_bytes_per_rank": 5120,
+  "full_bulk_enabled": false
+ },
+ "commands": {
+  "vs13": "Existing OP_MOE n8,seven expert stride16 at assemblyleaf;80commands across4ranks",
+  "post": "Existing VPPOST mechanism on canonicalleaf with mutablea1base464 instead448;80commands across4ranks",
+  "additional_vs13_and_post_control_words": 160
+ },
+ "blocked": [
+  "VPXcapture/scratch/assembly retirement and producerready/lastreader leases absent.",
+  "Rows464..480 fit static gap FFNC448..464 to HEADG480..496 but need new explicit dynamic lifetime.",
+  "Candidate local mask RTL/native selectedXRT timing not qualified.",
+  "Control issue/resource floors omit distribution/pipeline delay,VS13dependency,POSTduration,peerbroadcast and template reload.",
+  "No deterministic event calendar yet; no measured throughput or physical adoption."
+ ],
+ "scope": "Whole64beat assembly relocation plus single combined return preserves canonical POST/H ownership and unchanged ROM107/53 allocation. Pure model; lowerbounds are not full token prices."
+}
