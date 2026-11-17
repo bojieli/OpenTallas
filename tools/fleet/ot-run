@@ -752,6 +752,24 @@ def load1(r):
     return r.get("cpu_load1", r.get("load1", 0))
 
 
+# FLEET-OPS-R (COORD 11-16): a merge-queue gate (ot-gate-remote) never runs on localhost (rtx-pro: no heavy jobs there, owner 10-23) or on the hub (intel2):
+# localhost is in the pool as the least loaded "normal host minus reserve" and took a gate whose record copy to the hub then failed
+GATE_RE = re.compile(r"(?:^|[\s/])ot-gate-remote(?:\s|$)")
+GATE_NO_HOSTS = ("localhost", "intel2")
+
+
+def gate_like(cmd):
+    return bool(GATE_RE.search(" ".join(cmd) if isinstance(cmd, (list, tuple)) else str(cmd)))
+
+
+def gate_hosts(cmd, hosts):
+    """hosts a gate command may use: localhost and the hub are dropped (an explicit --hosts list that names only those stays as it is, so it fails loudly)"""
+    if not gate_like(cmd):
+        return hosts
+    kept = [h for h in hosts if h not in GATE_NO_HOSTS]
+    return kept or hosts
+
+
 def die_like(cmd, d):
     """die-level by name: die STA / GEN / GRT / chain scripts (owner 2026-10-18: die jobs go ahead of tile gates)"""
     return bool(DIE_RE.search(" ".join(cmd) + " " + (d or "")))
@@ -1614,6 +1632,7 @@ def main():
     os.environ["OT_RUN_THREADS"] = str(threads)
     if mem is None or not (cmd or pick):
         sys.exit(__doc__)
+    hosts = gate_hosts(cmd, hosts)
     held = held_hosts()
     if held and not os.environ.get("OT_RUN_INCLUDE_HELD"):
         kept = [h for h in hosts if h not in held]
@@ -1675,7 +1694,7 @@ def main():
             if ch:
                 say(f"ot-run: RE-PLACE: host table changed on disk ({', '.join(ch)}): {', '.join(HOSTS)}")
             held = held_hosts() if not os.environ.get("OT_RUN_INCLUDE_HELD") else {}
-            hosts = [h for h in HOSTS if h not in held] or hosts
+            hosts = gate_hosts(cmd, [h for h in HOSTS if h not in held]) or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
         ok = drop_low_disk(raw, die, disk, say if first else None)
         previously_qualified.update(ok)
