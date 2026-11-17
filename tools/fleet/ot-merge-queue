@@ -1356,6 +1356,24 @@ def check_ready(text, st):
     return n_b
 
 
+def sync_hook_note(result):
+    """Report activation evidence before incidental stderr; rc 4 can follow a successful flip."""
+    lines = [line.strip() for line in (result.stdout or "").splitlines() if line.strip()]
+    current = next((line for line in reversed(lines) if line.startswith("rt/current -> ")), "")
+    smoke = next((line for line in lines if line.startswith("SMOKE-FAIL ")), "")
+    if current:
+        parts = [current]
+        parts += [line for line in lines if line.startswith("ALERT ")]
+    elif smoke:
+        parts = [smoke, "rt/current unchanged: smoke failed before activation"]
+    else:
+        parts = lines[-3:] or ["runtime activation state not reported"]
+    note = " ; ".join(parts)[:1600]
+    if (result.stderr or "").strip():
+        note += "; stderr context: " + result.stderr.strip()[-400:]
+    return note
+
+
 def tick(args):
     MQ.mkdir(parents=True, exist_ok=True)
     lockf = open(MQ / "lock", "w")
@@ -1447,11 +1465,11 @@ def tick(args):
     if landed and SYNC_HOOK and not DRY:
         cmd = SYNC_HOOK.format(sha=landed)
         r = run(shlex.split(cmd), timeout=1800)
-        sync_note = (r.stdout or "").strip().splitlines()[-1:] or [f"rc={r.returncode}"]
+        sync_note = sync_hook_note(r)
         log(f"sync hook rc={r.returncode}: {sync_note}")
         if r.returncode:
             queue_post(st, "STATE", "COORD", f"ot-tools-sync for main {landed[:11]} failed rc={r.returncode}: "
-                                             f"{(r.stderr or r.stdout).strip()[-300:]}; rt/current not moved.")
+                                             f"{sync_note}")
     if landed and SRC_HOOK and not DRY:
         r = run(shlex.split(SRC_HOOK.format(old=base, new=landed)), timeout=3600)
         out = (r.stdout or "").strip().splitlines()
