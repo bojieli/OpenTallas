@@ -213,3 +213,47 @@ def test_min_loads_leaves_small_drivers_alone():
     assert new == mod(7) and rep[0]["copies"] == 0 and "min_loads" in rep[0]["note"]
     new, rep = RR.apply(mod(7), [dict(driver="u_d7_6_Y", min_loads=3)])
     assert rep[0]["copies"] > 1
+
+
+def test_copy_depth_chain_text_and_report():
+    """FABLE-DIE-S81 11-16: copy_depth 3 = common D(4) + a private 3-flop chain per region, 7 stages in total"""
+    new, rep = RR.apply(mod(7), [dict(driver="u_d7_6_Y", copy_depth=3)])
+    r = rep[0]
+    assert r["depth"] == 7 and r["common_depth"] == 4 and r["copy_depth"] == 3 and r["chain_flops"] == 15
+    assert ".D(4)) u_d7_6_Y" in new
+    assert new.count("ot_dp_rrelay u_d7_6_Y_r") == 15 and len(re.findall(r"ot_dp_rrelay u_d7_6_Y_r\d_s[01] ", new)) == 10
+    assert len(re.findall(r"u_d7_6_Y_r\d_s0 \(\.clk\(clk\), \.d\(d7_6_Y\[0\]\)", new)) == 5      # chain heads on the common flop
+    assert len(re.findall(r"u_d7_6_Y_r\d \(\.clk\(clk\), \.d\(d7_6_Y_r\d_s1\)", new)) == 5        # last stage keeps the old name
+    same, _ = RR.apply(mod(7), [dict(driver="u_d7_6_Y", copy_depth=1)])
+    assert same == RR.apply(mod(7), SPEC)[0]                                                          # 1 = byte-identical
+
+
+def test_copy_depth_capped_keeps_one_common_stage():
+    new, rep = RR.apply(mod(7).replace("7", "2"), [dict(driver="u_d2_6_Y", copy_depth=5)])
+    assert rep[0]["copy_depth"] == 1 and rep[0]["common_depth"] == 1 and ".D(1)) u_d2_6_Y" in new
+    new, rep = RR.apply(mod(7).replace("7", "3"), [dict(driver="u_d3_6_Y", copy_depth=5)])
+    assert rep[0]["copy_depth"] == 2 and rep[0]["common_depth"] == 1
+    with pytest.raises(RR.ReplicateError, match="copy_depth"):
+        RR.apply(mod(7), [dict(driver="u_d7_6_Y", copy_depth=0)])
+
+
+@pytest.mark.skipif(not shutil.which("iverilog"), reason="iverilog")
+def test_copy_depth_cycle_equivalence_iverilog(tmp_path):
+    """every sink still sees the source exactly 7 flops late with the 3-flop chains"""
+    new, _ = RR.apply(mod(7), [dict(driver="u_d7_6_Y", copy_depth=3, region_re="^(.*)$")])
+    for tag, text in (("old", mod(7)), ("new", new)):
+        (tmp_path / f"{tag}.v").write_text((CELLS if tag == "old" else "") + text.replace("module top", f"module top_{tag}"))
+    tb = """module tb; reg clk=0, s=0; wire [5:0] a, b; integer i, bad=0; reg [31:0] x = 32'h1234567;
+      top_old o(.clk(clk), .s(s), .o(a)); top_new n(.clk(clk), .s(s), .o(b));
+      initial begin for (i = 0; i < 400; i = i + 1) begin x = x * 1103515245 + 12345; s = x[17];
+          #1 clk = 1; #1 clk = 0; if (i > 12 && a !== b) bad = bad + 1; end
+        $display("BAD=%0d", bad); $finish; end endmodule"""
+    (tmp_path / "tb.v").write_text(tb)
+    subprocess.run(["iverilog", "-o", str(tmp_path / "s"), str(tmp_path / "old.v"), str(tmp_path / "new.v"), str(tmp_path / "tb.v")], check=True)
+    out = subprocess.run(["vvp", str(tmp_path / "s")], capture_output=True, text=True, check=True).stdout
+    assert "BAD=0" in out
+
+
+def test_copy_depth_schema():
+    props = schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"]["items"]["properties"]
+    assert props["copy_depth"] == {"type": "integer", "minimum": 1}

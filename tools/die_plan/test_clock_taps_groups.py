@@ -246,3 +246,77 @@ def test_cap_spill_reach_is_opt_in(tmp_path):
     q = run(tmp_path, fill, env=env + '\nset ::env(OT_TAP_SPILL_UM) 1500')
     assert q.returncode == 0, q.stderr
     assert 'spill reach 1500 um' in q.stdout, q.stdout
+
+
+RESET_COHORT = r"""
+# Adjacent same-logical-clock source/collector, with a remote descendant.
+# Without atomic group ownership, ct_follow drags only the reset source
+# to the descendant tap, splitting the deliberately compact cohort.
+mkflop u_rrl_94/q 10
+mkflop u_cland_collect_rst_rl_94/ready_o 20
+mkflop distant0 990 rq
+mkflop distant1 1000 rq
+proc q_u_rrl_94/q {m args} {switch $m {getMTerm {return outp} getInst {return u_rrl_94/q} getNet {return rq}}}
+set NET(q_u_rrl_94/q) rq
+"""
+
+
+def test_explicit_reset_cohort_survives_both_follower_passes(tmp_path):
+    env = "set ::env(OT_TAP_GROUP_RE) {(?:^|[/.])(u_)(?:rrl_94|cland_collect_rst_rl_94)[/.]}"
+    p = run(tmp_path, RESET_COHORT, env=env)
+    assert p.returncode == 0, p.stderr
+    assert "NET ck_u_rrl_94/q nclk" in p.stdout
+    assert "NET ck_u_cland_collect_rst_rl_94/ready_o nclk" in p.stdout
+    assert "followers after cap pass:" in p.stdout
+
+
+def test_atomic_reset_cohort_negative_control_detects_original_split(tmp_path, monkeypatch):
+    global HOOK
+    mutant = tmp_path / "clock_taps_mutant.tcl"
+    original = HOOK
+    text = original.read_text()
+    guard = "    if {[dict exists $ct_group_owned $cit]} continue\n"
+    assert text.count(guard) == 1
+    mutant.write_text(text.replace(guard, "    # mutant: original unprotected follower\n"))
+    monkeypatch.setitem(globals(), "HOOK", mutant)
+    env = "set ::env(OT_TAP_GROUP_RE) {(?:^|[/.])(u_)(?:rrl_94|cland_collect_rst_rl_94)[/.]}"
+    p = run(tmp_path, RESET_COHORT, env=env)
+    assert p.returncode == 0, p.stderr
+    assert "NET ck_u_rrl_94/q nt1" in p.stdout
+    assert "NET ck_u_cland_collect_rst_rl_94/ready_o nclk" in p.stdout
+
+
+
+def test_fixed_output_group_uses_declared_forwarded_clock(tmp_path):
+    env = GROUP_ON + "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t1}"
+    p = run(tmp_path, STATION, env=env)
+    assert p.returncode == 0, p.stderr
+    for bit in range(3):
+        assert f"NET ck_u_ft_ft0_s1/q_{bit} nt1" in p.stdout
+
+
+def test_fixed_output_group_survives_cap_and_min_merges(tmp_path):
+    env = (GROUP_ON + "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t1}"
+           "\nset ::env(OT_TAP_MAX_SINKS) 3"
+           "\nset ::env(OT_TAP_REASSIGN_UM) 1500"
+           "\nset ::env(OT_TAP_MIN_SINKS) 50"
+           "\nset ::env(OT_TAP_POST_MIN_SINKS) 50"
+           "\nset ::env(OT_TAP_POST_MIN_UM) 1500")
+    p = run(tmp_path, STATION, env=env)
+    assert p.returncode == 0, p.stderr
+    for bit in range(3):
+        assert f"NET ck_u_ft_ft0_s1/q_{bit} nt1" in p.stdout
+
+
+def test_fixed_output_unknown_clock_port_refuses(tmp_path):
+    p = run(tmp_path, STATION, env=GROUP_ON +
+            "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t99}")
+    assert p.returncode != 0
+    assert "unknown or non-grid clock port" in p.stderr
+
+
+def test_fixed_output_missing_group_refuses(tmp_path):
+    p = run(tmp_path, STATION, env=GROUP_ON +
+            "\nset ::env(OT_TAP_GROUP_FIXED) {missing:clk_t1}")
+    assert p.returncode != 0
+    assert "group has no sinks" in p.stderr

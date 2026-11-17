@@ -316,3 +316,25 @@ def test_annotate_table_accepts_partition_origin_bind():
     b["ports"]["p0"].update(src="X", dst="Y")                    # region-form bind with a different region pair is still refused
     with pytest.raises(CB.BindError):
         CB.annotate_table(t, b)
+
+
+def test_freg_cycle_is_not_in_K():
+    """FREG-K-1 (FABLE-DIE-HEAD 11-16): a declared FREG cycle (lat_cycles + 1, freg 1) is the face register in front of
+    the ring; the reader does not move, so K, the ring lag and the simulated window are those of the plain crossing
+    (the HEAD sidecars had K + 1 on 30 FREG ports: strap K + 3 = two added cycles on the DH58 wreg_equiv bench)."""
+    rows, parts = multi_rows()
+    b0 = CB.bind(plan(rows), parts=parts)
+    non_tree = sorted(pid for pid, c in b0["ports"].items() if not c["tree"])
+    p = plan(rows)
+    for o in p["crossings"]:
+        if o["port"] in non_tree[:2]:
+            o["freg"] = 1
+            o["lat_cycles"] = int(o["lat_cycles"]) + 1
+    b = CB.bind(p, parts=parts)
+    for pid in non_tree[:2]:
+        assert b["ports"][pid]["freg"] == 1 and b["ports"][pid]["sched_lat"] == b0["ports"][pid]["sched_lat"] + 1
+        assert b["ports"][pid]["K"] == b0["ports"][pid]["K"]
+    v, v0 = CB.verify(b, 400), CB.verify(b0, 400)
+    assert not v["identity_and_loop_errors"], v["identity_and_loop_errors"][:3]
+    assert (v["sim_window_violations"], v["sim_min_margin_low_ps"], v["sim_min_margin_high_ps"]) == \
+        (v0["sim_window_violations"], v0["sim_min_margin_low_ps"], v0["sim_min_margin_high_ps"])

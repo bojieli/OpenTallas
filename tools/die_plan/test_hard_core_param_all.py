@@ -271,3 +271,30 @@ def test_kv_pv_join_registry_record_is_the_signed_wrapper_reset_pin_1(tmp_path):
     plan = _pvj(tmp_path / "zero", 0) if (tmp_path / "zero").mkdir() is None else None
     r = A.check_plan(plan, tmp_path / "zero", None, registry=A.REGISTRY, allow={})
     assert {(x["param"], x["built_value"], x["die_value"]) for x in r["rows"]} == {("RESET_PIN", 1, 0)}
+
+
+def test_explicit_unsigned_future_child_not_matched_to_other_signed_module(tmp_path):
+    b = _bind(tmp_path)
+    plan, reg = _plan(SIGNED_VB, tmp_path, extra=dict(note="UNSIGNED until its kit signs off"))
+    row = plan["partition_types"]["bk_sel__t2"]["hard_cores"][0]
+    del row["lib"]
+    r = A.check_plan(plan, b, None, registry=reg)
+    assert r["mismatches"] == [] and r["unsigned"] == 1
+    assert r["rows_total"] == 1 and r["rows_checked"] == 0
+
+
+def test_unsigned_note_does_not_hide_real_signed_view_mismatch(tmp_path):
+    b = _bind(tmp_path)
+    plan, reg = _plan(SIGNED_VB, tmp_path, extra=dict(note="UNSIGNED old note; now signed"))
+    r = A.check_plan(plan, b, None, registry=reg)
+    assert r["unsigned"] == 0 and r["rows_checked"] == 1
+    assert any(x["param"] == "FACE" for x in r["rows"])
+
+
+def test_missing_signed_view_is_not_treated_as_future_unsigned(tmp_path):
+    b = _bind(tmp_path)
+    plan, reg = _plan(SIGNED_VB, tmp_path, extra=dict(note="SIGNED view accidentally missing"))
+    del plan["partition_types"]["bk_sel__t2"]["hard_cores"][0]["lib"]
+    r = A.check_plan(plan, b, None, registry=reg)
+    assert r["unsigned"] == 0 and r["rows_checked"] == 1
+    assert any(x["param"] == "FACE" for x in r["rows"])

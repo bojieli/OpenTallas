@@ -53,6 +53,11 @@ class T(unittest.TestCase):
         c["dies"]["s81"]["_lint_clean"] = ["col_a__t1"]
         HR.compile_holds(c)
         self.assertEqual(list(c["dies"]["s81"]["hold_items"]), ["col_a__t2"])
+        HR.compile_holds(c, HR.Ctx(lint_fn=lambda die, item: item != "col_a__t2"))      # live path: a known sdc_lint failure holds, the rest releases
+        self.assertEqual(list(c["dies"]["s81"]["hold_items"]), ["col_a__t2"])
+        c["dies"]["s81"]["hold_items"] = {}
+        HR.compile_holds(c, HR.Ctx(lint_fn=lambda die, item: True))
+        self.assertEqual(c["dies"]["s81"]["hold_items"], {})
 
     def test_digest_changed_and_staged_and_snap(self):
         c = base()
@@ -255,6 +260,111 @@ class T(unittest.TestCase):
         finally:
             KW._src_manifest_hosts, KW._TREE_SYNC = old_fn, old_sync
 
+    def test_published_d6_switch_refreshes_source_identity_not_pinned_attempt(self):
+        import tempfile, os
+        from unittest.mock import patch
+        main = "41bb1dcfd10a88b78ac6296e8209d8783422fcae"
+        old = "7073a6b4a599c1de9e041896421b3b779045df1d"
+        with tempfile.TemporaryDirectory() as td:
+            tree = Path(td) / "src_s81_pin_41bb1dcfd10a_d6"
+            tree.mkdir()
+            (tree / ".src-manifest.sha256").write_text("hash-d6\n")
+            (tree / ".src-manifest.json").write_text(json.dumps(dict(main_sha=main, manifest_hash="hash-d6")))
+            attempt = Path(td) / "attempt"
+            attempt.mkdir()
+            spec = attempt / "spec.json"
+            pinned = json.dumps(dict(src_sha=old, queue_src="main@" + old, src="/old/G3b/src"))
+            spec.write_text(pinned)
+            marker = dict(tree=str(tree), src_manifest_sha="hash-d6", smoke="PASS", tools_sha="f" * 40,
+                          _validated_main_sha="a" * 40, config={"tools_sha": "f" * 40})
+            class AP:
+                HUB_NAME = "hub"
+                read_coord = staticmethod(lambda rel: json.dumps(marker))
+                log = staticmethod(lambda text: None)
+            c = base()
+            d = c["dies"]["s81"]
+            d.update(src=str(tree), src_sha=old, queue_src="main@" + old, gen_hosts=["localhost"])
+            HR.add_record(c, "s81", rec(release=["tree_ready:s81:" + str(tree)]))
+            with patch.object(KW, "_TREE_CACHE", {}), patch.object(KW, "_TREE_SYNC", True), \
+                 patch.object(KW, "_src_manifest_hosts", return_value=(0, "verified")):
+                tf, mf = KW.tree_gate(AP, c)
+                ctx = KW.hold_ctx(c, lambda ref: False, tf, mf)
+                changed = HR.apply_tree_switches(c, ctx)
+                self.assertEqual((d["src_sha"], d["queue_src"], d["tools_sha"]), (main, "main@" + main, "f" * 40))
+                self.assertIn("src_sha", changed[0][2])
+                self.assertEqual(HR.apply_tree_switches(c, ctx), [])
+                self.assertEqual(spec.read_text(), pinned)
+
+    def test_switched_plan_carries_only_explicit_marker_declaration(self):
+        import tempfile, hashlib
+        with tempfile.TemporaryDirectory() as td:
+            old, new = Path(td) / "old.json", Path(td) / "B6gF2s3.json"
+            old.write_text('{"event":"F2s2"}\\n')
+            new.write_text('{"event":"F2s3"}\\n')
+            old_sha = hashlib.sha256(old.read_bytes()).hexdigest()
+            new_sha = hashlib.sha256(new.read_bytes()).hexdigest()
+            for declared in (None, new_sha):
+                with self.subTest(marker_declaration=declared):
+                    c = base()
+                    d = c["dies"]["s81"]
+                    d.update(plan=str(old), plan_sha256=old_sha)
+                    HR.add_record(c, "s81", rec(release=["tree_ready:s81:/published"]))
+                    marker = dict(tree="/published", plan=str(new), config={"plan": str(new)})
+                    if declared:
+                        marker["plan_sha256"] = declared
+                    ctx = HR.Ctx(tree_fn=lambda die, path: True, marker_fn=lambda die: marker)
+                    HR.apply_tree_switches(c, ctx)
+                    self.assertEqual(d["plan"], str(new))
+                    self.assertEqual(d["plan_sha256"], declared or old_sha)
+                    mismatch = KW.plan_sha_mismatch(d, {"plan_sha": new_sha})
+                    if declared:
+                        self.assertIsNone(mismatch)
+                    else:
+                        self.assertIn("PLAN_SHA_MISMATCH", mismatch)
+                    self.assertEqual(HR.apply_tree_switches(c, ctx), [])
+
+    def test_tree_switch_honors_explicit_config_plan_declaration(self):
+        c = base()
+        HR.add_record(c, "s81", rec(release=["tree_ready:s81:/published"]))
+        marker = dict(tree="/published", plan_sha256="a" * 64,
+                      config={"plan": "/explicit/plan.json", "plan_sha256": "b" * 64})
+        ctx = HR.Ctx(tree_fn=lambda die, path: True, marker_fn=lambda die: marker)
+        HR.apply_tree_switches(c, ctx)
+        self.assertEqual(c["dies"]["s81"]["plan_sha256"], "b" * 64)
+
+    def test_tree_switch_honors_explicit_source_identity_after_validation(self):
+        c = base()
+        HR.add_record(c, "s81", rec(release=["tree_ready:s81:/published"]))
+        explicit = {"src_sha": "b" * 40, "queue_src": "claude/composed@" + "b" * 40}
+        marker = dict(tree="/published", _validated_main_sha="a" * 40, config=explicit)
+        ctx = HR.Ctx(tree_fn=lambda die, path: True, marker_fn=lambda die: marker)
+        HR.apply_tree_switches(c, ctx)
+        self.assertEqual({k:c["dies"]["s81"][k] for k in explicit}, explicit)
+
+    def test_unverified_tree_metadata_never_changes_source_identity(self):
+        import tempfile
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            tree = Path(td) / "candidate"
+            tree.mkdir()
+            (tree / ".src-manifest.sha256").write_text("h1\n")
+            (tree / ".src-manifest.json").write_text(json.dumps(dict(main_sha="a" * 40)))
+            marker = dict(tree=str(tree), manifest_hash="h1", smoke="PASS", _validated_main_sha="c" * 40)
+            class AP:
+                HUB_NAME = "hub"
+                read_coord = staticmethod(lambda rel: json.dumps(marker))
+                log = staticmethod(lambda text: None)
+            c = base()
+            d = c["dies"]["s81"]
+            d.update(src="/old", src_sha="b" * 40, queue_src="main@" + "b" * 40, gen_hosts=["localhost"])
+            HR.add_record(c, "s81", rec(release=["tree_ready:s81:" + str(tree)]))
+            with patch.object(KW, "_TREE_CACHE", {}), patch.object(KW, "_TREE_SYNC", True), \
+                 patch.object(KW, "_src_manifest_hosts", return_value=(1, "manifest drift")):
+                tf, mf = KW.tree_gate(AP, c)
+                self.assertEqual(HR.apply_tree_switches(c, KW.hold_ctx(c, lambda ref: False, tf, mf)), [])
+                self.assertEqual(d["src_sha"], "b" * 40)
+                self.assertNotIn("_validated_main_sha", mf("s81"))
+
     def test_switch_only_record_holds_nothing_and_switches(self):
         c = base()
         d = c["dies"]["hbm"]
@@ -310,6 +420,61 @@ class T(unittest.TestCase):
         del c["_item_names"]
         HR.compile_holds(c)                                                           # no item list: pattern kept, audit names it
         self.assertEqual(sorted(HR.summarize(HR.audit(c)).items()), [("PROOF-HELD", 1)])
+
+    def test_record_is_authority_over_written_back_file_keys_and_legacy_audit(self):
+        c = base()
+        d = c["dies"]["s81"]
+        HR.add_record(c, "s81", rec(release=["event_adopt:B6gG3b"]))
+        d["hold_items"] = {"col_a__t1": "stale prose copy", "loose_key": "prose with no record"}
+        d["event"], d["plan"] = "B6gG3b", "/x/B6gG3b.json"
+        HR.compile_holds(c, HR.Ctx(event_met=KW._hold_term_met))
+        self.assertEqual(d["hold_items"], {"loose_key": "prose with no record"})        # released key not kept alive by its file copy
+        self.assertEqual([(x["code"], x["n"]) for x in HR.audit(c)], [("LEGACY-HOLD", 1)])
+
+    def test_kit_wave_lint_clean_item(self):
+        c = {"_lint_fail": {"s81": {"col_a__t1"}}}
+        self.assertFalse(KW.lint_clean_item(c, "s81", "col_a__t1"))
+        self.assertTrue(KW.lint_clean_item(c, "s81", "col_b__t1"))
+        self.assertFalse(KW.lint_clean_item(c, "s81", "col_a__*"))                       # a glob key is clean only if no covered item failed
+        self.assertTrue(KW.lint_clean_item(c, "hbm", "x"))
+
+    def test_result_term_and_its_proof_items(self):
+        c = base()
+        d = c["dies"]["s81"]
+        d["proof_items"] = {"svc-ready": ["col_a__t1"]}
+        for bad in ("result:svc-ready", "result::x", "result:LANE:a b", "result:LANE:"):
+            with self.assertRaises(ValueError, msg=bad):
+                HR.add_record(c, "s81", rec(release=[bad]))
+        HR.add_record(c, "s81", rec(release=["result:SVC-LANE:svc-ready"], patterns=["col_*"]))
+        HR.compile_holds(c)
+        self.assertEqual(sorted(d["hold_items"]), ["col_a__t2", "col_b__t1"])             # the pilot (proof item) is not held
+        HR.compile_holds(c, HR.Ctx(result_fn=lambda lane, tag: (lane, tag) == ("SVC-LANE", "svc-ready")))
+        self.assertEqual(d["hold_items"], {})
+
+    def test_kit_wave_result_fn(self):
+        lines = ["- 2026-11-16 08:00 PST RESULT [SVC-LANE -> COORD] svc-ready PASS: 16/16 closure applied",
+                 "- 2026-11-16 08:01 PST RESULT [OTHER-LANE -> COORD] svc-ready PASS",
+                 "- 2026-11-16 08:02 PST RESULT [SVC-LANE -> COORD] other-tag PASS",
+                 "- 2026-11-16 08:03 PST RESULT [SVC-LANE -> COORD] svc-ready NOT yet, FAIL"]
+        f = KW.result_pass_fn(lines)
+        self.assertTrue(f("SVC-LANE", "svc-ready"))
+        self.assertTrue(f("OTHER-LANE", "svc-ready"))
+        self.assertFalse(f("SVC-LANE", "svc-ready-2"))
+        self.assertFalse(KW.result_pass_fn(lines[2:])("SVC-LANE", "svc-ready"))
+        self.assertFalse(KW.result_pass_fn([lines[0].replace("-> COORD]", "-> COORD; cc SVC-LANE]").replace("[SVC-LANE", "[X")])("SVC-LANE", "svc-ready"))
+
+    def test_instruction_text_in_a_ruling_is_not_a_result(self):
+        ruling = ("- 2026-11-16 07:00 PST RULING [COORD -> MERGE-QUEUE-1, FABLE-FIX-S81-SVC] r297: FABLE-FIX-S81-SVC: post exactly "
+                  "RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready PASS: <evidence> when ready; HEAD-SERDES-O proves head-serdes-fanout PASS later")
+        ready = "- 2026-11-16 06:59 PST READY [HOLDGEN-1115 -> COORD] a RESULT [LANE -> x] line with tag PASS releases"
+        real = "- 2026-11-16 09:00 PST RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready PASS: closure ref_1116 applied 16/16"
+        self.assertFalse(KW.result_pass_fn([ruling, ready])("FABLE-FIX-S81-SVC", "svc-ready"))
+        self.assertFalse(KW.proof_pass_fn(KW.result_posts([ruling, ready]))("head-serdes-fanout"))
+        self.assertTrue(KW.result_pass_fn([ruling, real])("FABLE-FIX-S81-SVC", "svc-ready"))
+        self.assertTrue(KW.result_pass_fn(["  - 2026-11-16 09:00 UTC RESULT [FABLE-FIX-S81-SVC -> COORD] svc-ready: PASS"])("FABLE-FIX-S81-SVC", "svc-ready"))
+        rp = "- 2026-11-16 09:01 PST RESULT [HEAD-SERDES-O -> COORD] head-serdes-fanout PASS: gate TT -30"
+        self.assertTrue(KW.proof_pass_fn(KW.result_posts([rp]))("head-serdes-fanout"))
+        self.assertFalse(KW.proof_pass_fn(KW.result_posts([rp]))("head-serdes"))
 
 
 if __name__ == "__main__":

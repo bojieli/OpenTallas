@@ -61,3 +61,15 @@ def test_unshared_reset_needs_no_leaf():
     one = RTL.replace("    ot_dp_landing_relay u_cland_fstart_s_o (.clk(clk), .rst_raw_n(cland_start_raw), "
                       ".d(cland_start_d), .q(fs_s));\n", "")
     assert F.plan_entries(one, TCL, (200.0, 1000.0)) == []
+
+
+def test_production_no_latch_wavefront_depth_and_leaf_match_plain_relay():
+    # C production SerDes raw wavefront uses _nl; it is still one registered edge.
+    plain = F.plan_entries(RTL, TCL, (200.0, 1000.0))
+    native = RTL.replace('ot_dp_rrelay ', 'ot_dp_rrelay_nl ')
+    rtl, tcl, rec = F.apply_kit(native, TCL, plain, 'production_nl')
+    assert len(rec) == 2 and all(x['depth'] == 3 for x in rec)
+    bad = [dict(x) for x in plain]
+    bad[0]['raw'] = 'rst_rl_0'
+    with pytest.raises(LandingError, match='release edge would move'):
+        F.apply_kit(native, TCL, bad, 'production_nl')

@@ -12,6 +12,8 @@
 //   rck <-> clk only through u_rm (gray FIFO) and the 2-flop status syncs, as ot_pdie_serdes.
 // Latency vs ot_pdie_serdes (fixed, static schedule; the link layer above skips IDLE beats, the rate matcher absorbs it):
 //   TX +TXL (2 relay rows over the ~1.1 mm enc -> PMA lane, reach 405 um); RX decoder +2 face pads +6 landing edges.
+//   Opt-in forms: OT_S81_SERDES_TXL4 TX +2, OT_S81_SERDES_TXPIPE TX +1 (one more u_txl row), OT_S81_SERDES_RXPIPE RX +1
+//   (u_rxf PMA q face row); each is a fixed latency, valid piped with data.
 // MUT (bench only, 0 in every kit): passed to the landed decoder (1 = landing 0 bypassed, 2 = landing 0 read K+1,
 //   3 = pad 0 short, 4 = syn reset run long); 8 = TX relay one row short (PMA sees the lane one cycle early: no effect on
 //   data, kept as a probe only).
@@ -45,8 +47,17 @@
 //   lock_sync -> rs_t[0] recovery -83) but ONE kept pma_rck flop rq_t (async assert by that AND, release on the next
 //   pma_rck edge) beside rs_t: the clk domain releases one pma_rck edge later; rs_r and the rck domain are unchanged.
 //   0 data cycles (reset release only).
+// BOOT_RELEASE_STAGES (default0; opt-in OT_S81_SERDES_BOOT_RELEASE3): common reset release
+// adds3 recovered edges (authority66 -> local69, native RX71), no mission cycles.
+// Three kept async-assert/sync-release stages span the measured north-authority to
+// native-sync corridor; HOLD64 and the existing TX-only RST_RT stage are unchanged.
 module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL = 2, parameter integer MUT = 0,
                             parameter integer LOCKSAFE = 0, parameter integer HOLD_EDGES = 64,
+`ifdef OT_S81_SERDES_BOOT_RELEASE3
+                            parameter integer BOOT_RELEASE_STAGES = 3,
+`else
+                            parameter integer BOOT_RELEASE_STAGES = 0,
+`endif
 `ifdef OT_S81_SERDES_RST_TREE2
                             parameter integer RST_TREE = 3,
 `elsif OT_S81_SERDES_RST_TREE
@@ -87,11 +98,15 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         $error("TX PIN form requires LOCKSAFE=1 and HOLD_EDGES>=64");
 `endif
     // ---- S81.RESET warm-reset sequencer (LOCKSAFE=1 only; region syn, on pma_rck)
-    wire rst_g, rst_g_t;
+    wire rst_g, rst_g_t, rst_g_authority;
+    initial if (BOOT_RELEASE_STAGES != 0 && (BOOT_RELEASE_STAGES != 3 || LOCKSAFE == 0))
+        $error("BOOT_RELEASE_STAGES requires LOCKSAFE and the sized three-stage form");
     generate if (LOCKSAFE != 0) begin : g_locksafe
         wire hold_ready;
         ot_pdie_pma_reset_hold #(.HOLD_EDGES(HOLD_EDGES)) u_hold
-            (.rst_n(rst), .pma_lock(pma_lock), .pma_rck(pma_rck), .core_rst_n(rst_g), .hold_ready(hold_ready));
+            (.rst_n(rst), .pma_lock(pma_lock), .pma_rck(pma_rck), .core_rst_n(rst_g_authority), .hold_ready(hold_ready));
+        ot_pdie_pma_release_chain #(.STAGES(BOOT_RELEASE_STAGES)) u_boot_release
+            (.rst_n(rst_g_authority), .pma_rck(pma_rck), .released_n(rst_g));
         if (RST_RT != 0) begin : g_rst_rt
             (* keep *) reg rq_t;
             always @(posedge pma_rck or negedge rst_g) if (!rst_g) rq_t <= 1'b0; else rq_t <= 1'b1;
@@ -103,7 +118,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
         if (RST_RT != 0) begin : g_rt_needs_ls
             initial $error("RST_RT requires LOCKSAFE != 0");
         end
-        assign rst_g = rst; assign rst_g_t = rst;
+        assign rst_g_authority = rst; assign rst_g = rst; assign rst_g_t = rst;
     end endgenerate
     // ---- resets: one synchroniser per clock domain (rs_t in region tx, rs_r in region syn beside the PMA)
     reg [1:0] rs_t, rs_r;
@@ -164,10 +179,24 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     // S81-SERDES-TXL4 (DIE-S81-85 2026-11-09): opt-in, two more u_txl relay rows (TX +2 clk).  Measured on serdes 4_cts/G2 kits:
     // the row 0 -> last row hop spans up to 2.2-2.4 mm and takes data 1020-1514 ps (833 ps period); wirelength-driven GPL
     // leaves the rows at the encoder and at the pad.  Rows 1 and 2 are the hop stations (place at 1/3 and 2/3 of the span).
-    localparam integer TXL_N = TXL + 2;
+    localparam integer TXL_X = 2;
 `else
-    localparam integer TXL_N = TXL;
+    localparam integer TXL_X = 0;
 `endif
+`ifdef OT_S81_SERDES_TXPIPE
+    // S81-SERDES-TXPIPE (SERDES-TXPIPE 2026-11-14): opt-in, ONE more u_txl relay row (TX +1 clk), all 545 bits: the 544 data
+    // bits and the valid d_v ride the same row, so the PMA word / valid alignment is unchanged and no bit sees a different
+    // date.  serdes__t14 wave route 4837cfb49ca5 (epyc2) CTS: u_txl.q[239] -> u_ptx/d[239] 102.7 ck-q + 1199.9 ps of
+    // repeated wire (27 stages) vs a 583.7 ps budget, -718.9 ps (GRT -454.9 after repair, 340 endpoints): the PMA TX data
+    // face (2246 um wide, behind the RX PMA band) is 2.2-2.9 mm of wire from the encoder, more than two 833 ps hops carry.
+    // Placement (tools/die_plan/txl_mid.tcl, enabled by this define at kit generation): the LAST row sits FIRM-near its own
+    // PMA pin (nearest free site below the RX PMA band, ~150 um of M6+ over it), the other rows at even shares of the
+    // encoder -> face span.  No reset on the new row (same as the other rows): LOCKSAFE holds the column >= 64 edges.
+    localparam integer TXL_P = 1;
+`else
+    localparam integer TXL_P = 0;
+`endif
+    localparam integer TXL_N = TXL + TXL_X + TXL_P;
     ot_pl_pad #(.W(545), .N((MUT == 8) ? TXL_N - 1 : TXL_N)) u_txl (.ck(clk), .d({e_v, e_d}), .q(l_q));
     // ---- analog PMA: two abstracts side by side along the edge (rx W half beside the dsyn W channel, tx E half under the
     //      TX lane drop), each with ONE clock (tx: the forwarded lane clock; rx: the recovered clock)
@@ -184,6 +213,27 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
     ot_s81_pma_txm #(.LAT(PMA_LAT)) u_ptx (.ck(clk), .d_v(l_q[544]), .d(l_q[543:0]), .pma_tx(pma_tx), .pma_tck(pma_tck));
     ot_s81_pma_rxm #(.LAT(PMA_LAT)) u_prx (.pma_rck(pma_rck), .pma_rx(pma_rx), .q(r_d));
 `endif
+    // ---- RX PMA face stage (S81-SERDES-RXPIPE, SERDES-TXPIPE 2026-11-14; opt-in, default = a wire, byte-identical):
+    //      ONE pma_rck row u_rxf between the RX PMA q face and the decoder (RX +1 rck), all 544 bits, and the decoder
+    //      valid p_v (= rn_r) piped by the same row so valid and data keep their alignment (the decoder face pad sees the
+    //      first beat one edge later together with its valid; rst_n stays rn_r).  serdes__t14 CTS: u_face_p_d.q[538] ->
+    //      u_syn.am_ok -350.99 ps: the 2246 um wide PMA q face is one hop from the syn alignment cone.  Placement: u_rxf
+    //      sits at its own PMA q pin (txl_mid.tcl face mode), so u_face_p_d moves to the decoder side and the face wire
+    //      gets its own cycle.  No reset on the row (as the face pad): LOCKSAFE holds the column >= 64 edges.
+    wire [543:0] r_dp; wire r_vp;
+`ifdef OT_S81_SERDES_RXNEG
+    // S81-SERDES-RXNEG (FIX-S81-SERDES-CLKPART, SERDES-TXPIPE 2026-11-14; opt-in, supersedes RXPIPE when both): RX row 0 u_rxf
+    // captures on the FALLING pma_rck edge (PMA q is launched on the rising edge: half-cycle window, so the pin-vs-row-0
+    // clock insertion offset is absorbed), the decoder face pad then re-times to the next rising edge = the data reaches the
+    // decoder on the SAME rising edge as without the row (latency +0 rck, never more than +1).  No reset (as the face pad).
+    reg [544:0] u_rxf_q;
+    always @(negedge pma_rck) u_rxf_q <= {rn_r, r_d};
+    assign {r_vp, r_dp} = u_rxf_q;
+`elsif OT_S81_SERDES_RXPIPE
+    ot_pl_pad #(.W(545), .N(1)) u_rxf (.ck(pma_rck), .d({rn_r, r_d}), .q({r_vp, r_dp}));
+`else
+    assign r_dp = r_d; assign r_vp = rn_r;
+`endif
     // ---- receive: landed KP4 decoder (4 rck regions) -> rate matcher -> clk
     wire q_v, q_first, q_unc, lock; wire [511:0] q_d; wire [4:0] q_nerr; wire [7:0] q_seq; wire [31:0] n_corr, n_unc, n_rl;
 `ifdef OT_S81_RCK_REFORM
@@ -192,7 +242,7 @@ module ot_pdie_serdes_col #(parameter integer PMA_LAT = 4, parameter integer TXL
 `else
     ot_s81_kp4_dec_native_flat_lp #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0)) u_dec (
 `endif
-        .rst_n(rn_r), .p_v(rn_r), .p_d(r_d),
+        .rst_n(rn_r), .p_v(r_vp), .p_d(r_dp),
         .q_v(q_v), .q_d(q_d), .q_first(q_first), .q_unc(q_unc), .q_nerr(q_nerr), .q_seq(q_seq), .lock(lock),
         .n_corr(n_corr), .n_unc(n_unc), .n_relock(n_rl),
         .ck_syn(pma_rck), .ck_dly(pma_rck), .ck_chn(pma_rck), .ck_out(pma_rck));
@@ -286,7 +336,13 @@ endmodule
 // (512/NRD bits each, one leaf per slice, <= 64 reset pins a leaf).  Same registers, same next-state logic, same reset
 // values; all rrst_n* tied together == ot_s81_rate_match every edge.
 // ---------------------------------------------------------------------------------------------------------------
-module ot_s81_rate_match_rt #(parameter integer NRD = 8) (
+module ot_s81_rate_match_rt #(parameter integer NRD = 8,
+`ifdef OT_S81_SERDES_RM_RPC8
+                            parameter integer RPC = NRD
+`else
+                            parameter integer RPC = 1
+`endif
+) (
     input  wire            wclk, wrst_n,
     input  wire            w_v,
     input  wire [511:0]    w_d,
@@ -297,6 +353,12 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8) (
 );
     localparam integer SW = 512 / NRD;
     initial if (SW * NRD != 512) $error("ot_s81_rate_match_rt: NRD must divide 512");
+    initial if (RPC != 1 && RPC != NRD) $error("ot_s81_rate_match_rt: RPC must be 1 or NRD");
+    // RPC=NRD: private read-select counters, one beside each output slice.
+    // Every copy follows the ORIGINAL rrst_nc/empty/increment contract, hence
+    // equals rp[2:0] even when rrst_nd independently resets an output bank.
+    // No FIFO occupancy, gray publication, data stage, or boundary changes.
+
     reg  [511:0] mem [0:7];
     reg  [3:0] wp, rp, wp_g, rp_g;
     reg  [3:0] rp_g1, rp_g2, wp_g1, wp_g2;
@@ -322,9 +384,24 @@ module ot_s81_rate_match_rt #(parameter integer NRD = 8) (
     genvar gs;
     generate for (gs = 0; gs < NRD; gs = gs + 1) begin : g_rd
         reg [SW-1:0] q;
-        always @(posedge rclk or negedge rrst_nd[gs])
-            if (!rrst_nd[gs]) q <= 512'd2 >> (gs * SW);
-            else q <= rd_n[gs * SW +: SW];
+        if (RPC == 1) begin : g_shared
+            always @(posedge rclk or negedge rrst_nd[gs])
+                if (!rrst_nd[gs]) q <= 512'd2 >> (gs * SW);
+                else q <= rd_n[gs * SW +: SW];
+        end else begin : g_local
+            (* keep *) reg [2:0] rpq;
+            wire [511:0] rw = empty ? 512'd2 : mem[rpq];
+            always @(posedge rclk or negedge rrst_nc)
+                if (!rrst_nc) rpq <= 3'd0;
+`ifdef RMRPC_RT_MUT_STALE
+                else if (!empty && (gs != 5 || rp[3])) rpq <= rpq + 3'd1; // bench mutant only
+`else
+                else if (!empty) rpq <= rpq + 3'd1;
+`endif
+            always @(posedge rclk or negedge rrst_nd[gs])
+                if (!rrst_nd[gs]) q <= 512'd2 >> (gs * SW);
+                else q <= rw[gs * SW +: SW];
+        end
         assign r_d[gs * SW +: SW] = q;
     end endgenerate
     reg f1, f2; always @(posedge rclk or negedge rrst_nc) if (!rrst_nc) begin f1 <= 0; f2 <= 0; end else begin f1 <= flt; f2 <= f1; end

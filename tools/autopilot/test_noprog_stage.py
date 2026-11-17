@@ -289,3 +289,51 @@ def test_old_action_log_is_kept_under_new_name():
     ns.coord_commit = lambda msg, files: got.append(files)
     ns.hub(now=NOW, post=False)
     assert open(os.path.join(d, "lanes/NOPROG-ACTIONS.tsv")).read() == old and "lanes/NOPROG-ACTIONS.tsv" in got[0]
+
+
+def drt_partial_case(counts, stale=False, extra=""):
+    # HEAD p16g: the old completed totals changed <2%; iteration 3 is long
+    # and its real Completing counts improve before another completed total.
+    text = ("[INFO DRT-0195] Start 1st optimization iteration.\n"
+            "[INFO DRT-0199] Number of violations = 14622\n"
+            "[INFO DRT-0195] Start 2nd optimization iteration.\n"
+            "[INFO DRT-0199] Number of violations = 14445\n"
+            "[INFO DRT-0195] Start 3rd optimization iteration.\n")
+    text += "\n".join(f"Completing {10 * (i + 1)}% with {n} violations" for i, n in enumerate(counts)) + "\n" + extra
+    res = ns.parse_stage("route", text)
+    end_age = 7 if stale else 0
+    anc = [(NOW - 32 * H, 0), (NOW - 14 * H, 3), (NOW - (end_age + 4) * H, 5), (NOW - end_age * H, res["n"] - 1)]
+    return res, ns.classify("route", res, anc, NOW, 32 * H, NOW - end_age * H, 11.02)
+
+
+def test_drt_active_iteration_improvement_is_separate_from_completed_totals():
+    res, (cls, ev) = drt_partial_case([13437, 12438, 11462])
+    assert [v for _, v in res["series"]] == [14622, 14445]
+    assert [v for _, v in res["partial_series"]] == [13437, 12438, 11462]
+    assert cls == "PROGRESSING", ev
+    assert "drt_active_iteration_violations" in ev and "14.7%" in ev
+
+
+def test_drt_percent_advances_with_flat_or_worse_quality_is_no_progress():
+    for counts in ([14445, 14445, 14445], [14445, 15000, 15500]):
+        _, (cls, ev) = drt_partial_case(counts)
+        assert cls == "NO-PROGRESS", ev
+
+
+def test_drt_old_partial_improvement_does_not_keep_job_alive():
+    _, (cls, ev) = drt_partial_case([13437, 12438, 11462], stale=True)
+    assert cls == "NO-PROGRESS", ev
+
+
+def test_drt_partial_restart_never_combines_different_iteration_states():
+    for restart in ("[INFO DRT-0195] Start 4th optimization iteration.\nCompleting 10% with 20000 violations\n",
+                    "Completing 10% with 20000 violations\n"):
+        res, (cls, ev) = drt_partial_case([13437, 12438, 11462], extra=restart)
+        assert [v for _, v in res["partial_series"]] == [20000]
+        assert cls == "NO-PROGRESS", ev
+
+
+def test_drt_completed_iteration_discards_its_partial_witness():
+    res, (cls, ev) = drt_partial_case([13437, 12438, 11462], extra="[INFO DRT-0199] Number of violations = 14445\n")
+    assert res["partial_series"] == []
+    assert cls == "NO-PROGRESS", ev

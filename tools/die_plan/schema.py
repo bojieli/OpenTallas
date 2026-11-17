@@ -497,6 +497,9 @@ SCHEMA = {
                     # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
                     # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)
                     "pg_island_cut": {"type": "boolean"},
+                    # PG-AWARE-1: force the landing-pin PG access rule on (true) or off (false) for this type, overriding
+                    # the signed-type exemption list pg_pin_rule_signed.json (landing_contract.pg_rule_applies)
+                    "pg_pin_rule": {"type": "boolean"},
                     # DIE-HEAD-17 10-28 (opt-in): register clock spine + local trees + core early-tap branches in PRE_CTS
                     # (gen_phys copies reg_spine.json/.py/.tcl into the kit; spec documented in reg_spine.py)
                     "reg_spine": {"type": "object", "required": ["trunk"], "properties": {
@@ -580,6 +583,7 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
+                                       "explicit_stage0": {"type": "boolean"},  # opt-in consumer of planned station0
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
@@ -686,7 +690,9 @@ SCHEMA = {
                         # CLOCK-RESET group form): every sink matching re goes with its group (capture 1 = key) to the
                         # tap nearest the group centroid.  KW-FIX-45 11-12: the key was emitted but not in the schema.
                         "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
-                            "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"}}},
+                            "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"},
+                                "fixed_taps": {"type": "object", "propertyNames": {"pattern": "^[A-Za-z0-9_./-]+$"},
+                                    "additionalProperties": _name}}},
                         # Default-off (HEAD-SERDES-1115 11-15, gen_phys.private_leaf_exports -> OT_PRIVATE_LEAF_LIKE/RE,
                         # private_leaf.tcl, run_kit.sh post-CTS step): clone the leaf clock buffer that drives the anchor
                         # instance's clock pin (a macro) and move only the sinks matching re onto the clone: they get the
@@ -1468,7 +1474,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"] = {
     "type": "array", "items": {"type": "object", "additionalProperties": False,
         "properties": {"driver": {"type": "string"}, "driver_re": {"type": "string"}, "region_re": {"type": "string"},
-                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0}}}}
+                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0},
+                       # FABLE-DIE-S81 11-16: private k-flop copy chain per region out of the driver's own depth (0 added cycles)
+                       "copy_depth": {"type": "integer", "minimum": 1}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
@@ -1535,6 +1543,13 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["module_re", "pin", "lead_ps"],
     "properties": {"module_re": {"type": "string", "minLength": 1}, "pin": {"type": "string", "minLength": 1},
                    "lead_ps": {"type": "number", "minimum": 0.001, "maximum": 1000}}}}
+# FABLE-FIX-S81-COLTAP 11-16 (default absent = byte-identical): clock.core_tap_lead_ps L = the in-type run every EARLY core tap of the
+# type is given between its port clk_c<k> and the core clock pin: the spine delivers the tap L ps earlier (core_tap_early_ps + L, FF
+# FF_TT_INSERTION_RATIO x L) and the kit's tap_balance pads the pin back to the type target.  Without it an override type (450) prices
+# early = insertion - 450 (COORD r104), i.e. zero run: the port-to-pin wire and any view latency above the declared insertion land the
+# core late with nothing to trim (col_h9_r2: element halves declared 465.39, view 533 / 553 -> effective 520 / 542 against 450).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["core_tap_lead_ps"] = {
+    "type": "number", "minimum": 0, "maximum": 450}
 # S81-SEAM-RST-1115 (default off): the last reset stage of an async clear takes the clock tap of its sinks (tap_reset_affinity.tcl).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_affinity"] = {"type": "boolean"}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
@@ -2630,11 +2645,19 @@ def core_tap_insertion_ps(tp, corner="TT"):
     return float(tp.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
 
 
+def core_tap_lead_ps(t, corner="TT"):
+    """the declared in-type run of the type's early core taps at a corner (clock.core_tap_lead_ps; FF = FF_TT_INSERTION_RATIO x
+    TT: it is a buffer chain); 0 when the type has no key."""
+    lead = float(((t or {}).get("clock") or {}).get("core_tap_lead_ps", 0.0) or 0.0)
+    return lead if _corner(corner) == "TT" else round(FF_TT_INSERTION_RATIO * lead, 3)
+
+
 def core_tap_early_ps(P, tp, corner="TT", t=None):
     """how early the spine delivers a core tap at a corner: max(0, core insertion - the common latency), both
     at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number).  `t` = the tap's type:
-    an override type (450) is priced against its own budget, not the die 250 (COORD r104)."""
-    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner, t))
+    an override type (450) is priced against its own budget, not the die 250 (COORD r104), plus the type's declared in-type
+    run clock.core_tap_lead_ps (core_tap_lead_ps; col: 200 -> 465.39 - 450 + 200 = 215.39)."""
+    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner, t) + core_tap_lead_ps(t, corner))
 
 
 def full_area_hard_ip(t):

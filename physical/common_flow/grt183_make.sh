@@ -167,34 +167,51 @@ restore   # a re-run killed hard left the swap in place; its marker stays, so it
 # repair change.  OT_GRT_STALL_RESUME=0 (env or config.mk export) opts out.
 T0=$(date +%s); stall=0; gstop=""
 stall_off() { [ "${OT_GRT_STALL_RESUME:-1}" = 0 ] || grep -q '^export OT_GRT_STALL_RESUME = 0' "$W/config.mk" 2>/dev/null; }
-# KW-FIX-44 11-10 GRT-INCR-CONGESTED + GRT time cap (COORD rulings 11-10 (3)).  Two stops of the 5_1_grt stage, judged on
-# THIS run's 5_1_grt.tmp.log (mtime >= wrapper start), measured from the end of the full global route (first GRT-0303
-# 'Global routing runtime' line); the full route itself is never cut.
-#  (a) REMOVED 11-14 (OWNER limit-removal): no overflow-based stop remains; the full route always runs all its iterations.
-#  (b) time cap: everything after the full route (repair_design, incremental reroutes, hold repair) may take
-#      OT_GRT_POST_MAX_S (default 43200 = 12 h, OWNER 11-14: the only GRT stop).  t68 a5: full route 4h05, then post-GRT repair_design ran ~13 h (14,000
-#      of 129,591 nets) before an outside kill; slw_fw_v1 cl592e3d37 a16: incremental route silent 6h06 at overflow 0
-#      (neither matched the GRT-STALL rule below: last line was not the bare -end_incremental command).  The hold
-#      guard alone caps hold repair at 3 h (hold_guard_grt.tcl).  Stops the stage and prints OT_GRT_TIMECAP with the
-#      last hold/setup slack the log carries (autopilot: STRUCTURAL grt-timecap -> wave class TIMING).
-#      'export OT_GRT_POST_MAX_S = 0' in config.mk (or env) opts out.
-# The stop: no fresh-process re-run, the stage's rc is replaced by 21.
+# Retired GRT stops: neither overflow nor elapsed repair time terminates GRT.
+# OT_GRT_POST_MAX_S is only an optional diagnostic log threshold (default0).
+# Zero, from config or environment, disables that diagnostic; it never enables
+# a wall-time cap. Progressing pinned jobs keep their work and checkpoints.
 cfg_num() { local v; v=$(sed -n "s/^export $1[[:space:]]*=[[:space:]]*\([0-9][0-9]*\)[[:space:]]*$/\1/p" "$W/config.mk" 2>/dev/null | tail -1)
   printf '%s' "${v:-$2}"; }
-POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 43200)}
+POST_MAX=${OT_GRT_POST_MAX_S:-$(cfg_num OT_GRT_POST_MAX_S 0)}
+# S81-CONG REPAIR-NOPROGRESS 11-16 (FABLE-FIX-S81-CONG; COORD / FABLE-FLOW-0913: 8 jobs in 16 h silent to the 12 h line inside the
+# post-GRT max-wire repair_design; A_t68 5.6 h between two table rows, perf 82 % single-thread incremental FastRoute).  While the
+# log is inside 'OT_MAXWIRE repair_design' (grt_maxwire.tcl body started, its 'leaf instances' end line not yet printed):
+#  - one OT_GRT_REPAIR_PASS line every OT_GRT_REPAIR_LOG_S (default 600 s) with the last table row and the flat time;
+#  - log flat OT_GRT_REPAIR_STALL_S (default 1800 s): the stage is stopped and re-run ONCE in a fresh process with the marker
+#    5_1_grt.repair_nostall.json; grt_maxwire.tcl then skips the post-GRT repair_design, so the stage keeps the
+#    full route's result (the best design it has) and continues to 5_1_grt.odb.  Not a failure: rc is the re-run's rc.  0 (env or config.mk export) = off.
+RSTALL=${OT_GRT_REPAIR_STALL_S:-$(cfg_num OT_GRT_REPAIR_STALL_S 1800)}; RLOG=${OT_GRT_REPAIR_LOG_S:-$(cfg_num OT_GRT_REPAIR_LOG_S 600)}
+rstall=0; rlast=0
+repair_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets rstall and stops the stage
+  local Tl=$1 pid=$2 now a b age row
+  [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
+  a=$(grep -c '^OT_MAXWIRE repair_design' "$Tl"); b=$(grep -c '^OT_MAXWIRE leaf instances' "$Tl")
+  [ "$a" -gt "$b" ] || return 1
+  now=$(date +%s); age=$((now - $(stat -c %Y "$Tl")))
+  row=$(grep -E '^ +[0-9]+ \|' "$Tl" | tail -1 | awk -F'|' '{gsub(/ /,""); print "nets_done=" $1 " buffers=" $4 " remaining=" $6}')
+  if [ "$RLOG" -gt 0 ] && [ $((now - rlast)) -ge "$RLOG" ]; then
+    echo "OT_GRT_REPAIR_PASS post-GRT repair_design ${row:-no table row yet} log_flat_s=$age $(date -u '+%F %T')"; rlast=$now
+  fi
+  [ "$RSTALL" -gt 0 ] && [ "$age" -ge "$RSTALL" ] || return 1
+  [ -n "$Rw" ] && [ ! -f "$Rw/5_1_grt.repair_nostall.json" ] || return 1
+  echo "OT_GRT_REPAIR_NO_PROGRESS 5_1_grt.tmp.log flat ${age} s inside the post-GRT repair_design (${row:-no table row}): stopping the stage (process group $pid) $(date -u '+%F %T')"
+  rstall=1; kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null
+  return 0
+}
 grt_slack() {   # last slack figures the log carries (hold guard chunks / start, repair_timing tables); never a new STA
   local h s
   h=$(grep -oE 'OT_HOLD_GUARD_GRT (chunk [0-9]+|start): hold ws -?[0-9.]+' "$1" | tail -1 | sed 's/.*hold ws //')
   s=$(grep -oE '(setup|Setup)[^|]*WNS[^0-9-]*-?[0-9.]+' "$1" | tail -1 | grep -oE -- '-?[0-9.]+$')
   printf 'hold_ws_ps=%s setup_wns=%s' "${h:-unmeasured}" "${s:-unmeasured}"; }
 # GRT-EARLY (inside-route overflow stop, rule 15:10000,20:1000) and GRT-INCR-CONGESTED (stop on a congested end of the full route) REMOVED 11-14, OWNER: remove conservative limits; GRT runs its full iterations.
-gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; sets gstop and stops the stage
+gstop_check() {   # $1 = this run's 5_1_grt.tmp.log, $2 = stage pid; observes post-route diagnostic time; never stops GRT
   local Tl=$1 pid=$2 now last
   [ "$(stat -c %Y "$Tl")" -ge "$T0" ] || return 1
   if [ -z "$tpost" ]; then grep -q 'GRT-0303\]' "$Tl" && tpost=$(date +%s) || return 1; fi
   now=$(date +%s); last=$(grep -v '^[[:space:]]*$' "$Tl" | tail -1 | cut -c1-160)
   # WF-1 11-14 (COORD/OWNER: delete the conservative limits; kv3_sys_c b5215b6c8bc0 was killed STRUCTURAL/grt-timecap while converging):
-  # the post-route time cap no longer kills GRT.  The line is logged once past OT_GRT_POST_MAX_S (default 43200 s) and the stage goes on.
+  # the post-route time cap no longer kills GRT.  The line is logged once past OT_GRT_POST_MAX_S (default0: disabled) and the stage goes on.
   if [ -z "${tlogged:-}" ] && [ "$POST_MAX" -gt 0 ] && [ $((now - tpost)) -ge "$POST_MAX" ]; then
     echo "OT_GRT_TIMELOG stage=grt post-route repair over $((now - tpost)) s (log threshold $POST_MAX s, NO CAP: GRT continues) $(grt_slack "$Tl") last='$last' $(date -u '+%F %T')"
     tlogged=1
@@ -227,7 +244,7 @@ ff_check() {   # sets gstop, prints the class line
 watch_run() {
   stall=0; gstop=""; tpost=""
   rm -f "$W/run/failfast_state.json" 2>/dev/null
-  if stall_off && [ "$POST_MAX" -le 0 ] && [ ! -f "$FF" ]; then "$@"; return $?; fi
+  if stall_off && [ "$POST_MAX" -le 0 ] && [ ! -f "$FF" ] && [ "$RSTALL" -le 0 ] && [ "$RLOG" -le 0 ]; then "$@"; return $?; fi
   if command -v setsid >/dev/null; then setsid "$@" & else "$@" & fi
   local pid=$! Rw Tl age last
   trap 'kill -TERM -- -$pid 2>/dev/null' TERM INT
@@ -237,6 +254,7 @@ watch_run() {
     Rw=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1); Tl=$(ls "$W"/run/logs/asap7/*/base/5_1_grt.tmp.log 2>/dev/null | head -1)
     if ff_check; then kill -TERM -- -$pid 2>/dev/null || kill -TERM $pid; sleep "${OT_GRT_STALL_KILL_WAIT:-20}"; kill -KILL -- -$pid 2>/dev/null; break; fi
     if [ -n "$Tl" ] && gstop_check "$Tl" $pid; then break; fi
+    if [ -n "$Tl" ] && repair_check "$Tl" $pid; then break; fi
     stall_off && continue
     [ -n "$Rw" ] && [ -n "$Tl" ] && [ -f "$Rw/5_1_grt.stall_resume.odb" ] && [ ! -f "$Rw/5_1_grt.grt183_recovered.json" ] || continue
     [ "$(stat -c %Y "$Rw/5_1_grt.stall_resume.odb")" -ge "$T0" ] || continue      # a save from this run only
@@ -256,6 +274,16 @@ R=$(ls -d "$W"/run/results/asap7/*/base 2>/dev/null | head -1)
 [ -n "$R" ] || exit "$rc"
 L=$(ls -d "$W"/run/logs/asap7/*/base 2>/dev/null | head -1)
 G=$L/5_1_grt.log
+if [ "$rstall" = 1 ] && [ -f "$R/4_cts.odb" ] && [ ! -f "$R/5_1_grt.repair_nostall.json" ]; then
+  stall_clean
+  [ ! -f "$L/5_1_grt.tmp.log" ] || mv -f "$L/5_1_grt.tmp.log" "$L/5_1_grt.log.repair_attempt1"
+  printf '{"schema": "opentallas.grt_repair_nostall.v1", "by": "grt183_make.sh", "rc_attempt1": %d, "flat_s": %d, "attempt1_log": "5_1_grt.log.repair_attempt1"}\n' "$rc" "$RSTALL" > "$R/5_1_grt.repair_nostall.json"
+  [ ! -f "$KWRS_DONE" ] || sed -i '/^do-grt$/d;/^do-5_1/d' "$KWRS_DONE"
+  echo "OT_GRT_REPAIR_NO_PROGRESS attempt 1 rc $rc: re-running once in a fresh process with the post-GRT max-wire repair skipped (continue, not a failure) $(date -u '+%F %T')"
+  "$@"; rc=$?
+  echo "OT_GRT_REPAIR_NO_PROGRESS attempt 2 rc $rc $(date -u '+%F %T')"
+  exit "$rc"
+fi
 if [ "$stall" = 1 ] && [ -f "$R/5_1_grt.stall_resume.odb" ] && [ -f "$R/4_cts.odb" ] && [ ! -f "$R/5_1_grt.grt183_recovered.json" ]; then
   [ ! -f "$L/5_1_grt.tmp.log" ] || mv -f "$L/5_1_grt.tmp.log" "$L/5_1_grt.log.stall_attempt1"
   python3 -I - "$R" "$L/5_1_grt.log.stall_attempt1" "$rc" > "$R/5_1_grt.grt183_recovered.json" <<'PY'

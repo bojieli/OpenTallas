@@ -40,6 +40,7 @@ def _reset(monkeypatch):
     monkeypatch.setattr(D, "lef_top_layer", lambda _: None)
     yield
     D.REP_REACH_MAX_UM = None
+    D.REP_REACH_REPORT = None
     D.REP_ON_LEG = False
 
 
@@ -196,3 +197,59 @@ def test_feed_repair_composes_with_native_body_packing(monkeypatch):
         assert site.legal((x,y))
         assert all(abs(x-xx) >= D.ISLAND_CELL_UM[0]-1e-8 or abs(y-yy) >= D.ISLAND_CELL_UM[1]-1e-8
                    for _, xx, yy in place[:k])
+
+
+def test_adaptive_reach_escapes_wide_phy_wall(monkeypatch):
+    # S81 F2s2ke node248: an upper-to-lower feed crosses a wide PHY.
+    # Both endpoints are legal, but escaping the wall needs >600um sideways.
+    class Phy:
+        W, H = 3000.0, 2000.0
+        parts = {'p': dict(type='t', origin_um=[0., 0.])}
+        types = {'t': dict(outline_um=[3000., 2000.], hard_cores=[],
+                           clock=dict(keepouts_um=[[0., 500., 2735., 1500.]]))}
+        die = {}
+
+        def to_die(self, part, pt):
+            return pt
+
+    monkeypatch.setattr(D, 'CLOCK_TYPE_KEEPOUTS', True)
+    monkeypatch.setattr(D, 'DETOUR_ADAPTIVE', False)
+    site = D.SiteMap(Phy())
+    a, b = (1600., 1550.), (1600., 450.)
+    p, n = dict(x=a[0], y=a[1]), dict(id=248, x=b[0], y=b[1])
+    with pytest.raises(ValueError, match='no legal repeater placement'):
+        D.reach_fix_leg(site, p, n, None, [a, b], 405., 250., True)
+    monkeypatch.setattr(D, 'DETOUR_ADAPTIVE', True)
+    pts, path, info = D.reach_fix_leg(site, p, n, None, [a, b], 405., 250., True)
+    assert info['route_source'] == 'site_legal_adaptive'
+    assert info['kind'] == 'reach_detour'
+    assert all(site.legal(q) for q in pts)
+    assert max(D.chain_spans([a] + pts + [b])) <= 405. + 1e-6
+    assert (len(pts) + 1) % 2 == 0
+    assert info['added_wire_um'] > 2000. and info['added_stages'] > 0
+
+
+def test_extra_reach_stages_skip_unsplittable_macro_span():
+    # A legal 400um macro overflight cannot itself take another repeater.
+    # Minimum-count/parity stages belong on either legal side of the core.
+    class Site:
+        def legal(self, q):
+            return not (300. < q[0] < 700.)
+    pts = D.reach_place(Site(), [(0., 0.), (1000., 0.)], 450., nmin=4)
+    assert pts is not None and len(pts) == 4
+    assert all(Site().legal(q) for q in pts)
+    assert max(D.chain_spans([(0., 0.)] + pts + [(1000., 0.)])) <= 450. + 1e-6
+
+
+def test_report_mode_lists_the_leg_and_keeps_the_default_chain(tmp_path):
+    # FABLE-DIE-S81 11-16: --rep-reach-report lists every leg without a placement within reach instead of stopping
+    import json
+    D.REP_REACH_MAX_UM = 450.0
+    site = D.SiteMap(_P(core=(1100.0, 0.0, 500.0, 1000.0)))
+    D.REP_REACH_REPORT = str(tmp_path / "r.jsonl")
+    n = _nodes(1000.0, 1760.0)
+    D.tree_netlist(n, [], rep_um=250.0, site=site)
+    rows = [json.loads(x) for x in open(D.REP_REACH_REPORT)]
+    assert len(rows) >= 1 and {r["node"] for r in rows} == {1}
+    assert rows[0]["span_um"] > 450.0 and "rep-reach-max 450: leg to node 1" in rows[0]["error"]
+    assert n[1]["reach_unfixed"]["span_um"] == rows[0]["span_um"] and "reach_fix" not in n[1]

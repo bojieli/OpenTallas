@@ -33,6 +33,7 @@ def test_flag_writes_the_step_files(tmp_path, monkeypatch):
     k = _kit(tmp_path, monkeypatch, True)
     assert (k / "tt_setup_repair.on").read_text().strip() == "cts"
     assert (k / "tt_setup_repair.tcl").read_text() == (HERE / "tt_setup_repair.tcl").read_text()
+    assert (k / "grt_pg_replay.tcl").read_text() == (HERE / "grt_pg_replay.tcl").read_text()
 
 
 def test_run_kit_step_is_flag_gated_fail_open_and_between_cts_and_grt():
@@ -89,16 +90,17 @@ def test_effective_mode_is_in_every_kit_config_and_json(tmp_path, monkeypatch):
 
 def test_effective_env_json_lists_the_pg_and_pgcap_keys_that_act_at_gen_time(tmp_path, monkeypatch):
     import json
-    for k in [k for k in __import__("os").environ if k.startswith(("OT_PG_", "OT_PGCAP_"))]:
+    for k in [k for k in __import__("os").environ if k.startswith(("OT_PG_", "OT_PGCAP"))]:
         monkeypatch.delenv(k)
     monkeypatch.setenv("OT_TT_SETUP_REPAIR", "both")
+    monkeypatch.setenv("OT_PGCAP", "1")                # the C3b switch itself (no trailing underscore)
     monkeypatch.setenv("OT_PG_DIE_PHASE", "1")
     monkeypatch.setenv("OT_PG_CELL_KEEPOUT", "0")
     monkeypatch.setenv("OT_PGCAP_ADJ", "1.0")
     monkeypatch.setenv("OT_PG_PIN_CHECK", "")          # empty = not set
     gen_phys.write_type_kit(schema.Plan(copy.deepcopy(PAIR)), "fa", str(tmp_path), [])
     got = json.loads((tmp_path / "fa" / "kit_effective_env.json").read_text())
-    assert got == {"OT_PGCAP_ADJ": "1.0", "OT_PG_CELL_KEEPOUT": "0", "OT_PG_DIE_PHASE": "1", "OT_TT_SETUP_REPAIR": "both"}
+    assert got == {"OT_PGCAP": "1", "OT_PGCAP_ADJ": "1.0", "OT_PG_CELL_KEEPOUT": "0", "OT_PG_DIE_PHASE": "1", "OT_TT_SETUP_REPAIR": "both"}
 
 
 def test_calibrated_keys_reach_config_only_when_set_and_valid(tmp_path, monkeypatch):

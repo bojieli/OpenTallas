@@ -600,6 +600,16 @@ def _json(p):
         return None
 
 
+def future_unsigned_view(row):
+    """An explicitly unbuilt plan child has no signed view to compare by module name.
+
+    A real lib/lef always wins over a stale UNSIGNED note. Missing-view rows that
+    claim SIGNED, or have no explicit UNSIGNED declaration, remain checked.
+    """
+    return (not row.get("lib") and not row.get("lef")
+            and re.search(r"\bUNSIGNED\b", str(row.get("note", ""))) is not None)
+
+
 class Built:
     """built-parameter lookup for a hard-core row"""
 
@@ -810,7 +820,7 @@ def check_plan(plan, bind_dir, root, files=None, defines=(), hard_params=None, o
     die = die_name(plan)
     owner = die_owner(plan)
     allowed = load_allow(allow) if not isinstance(allow, dict) else allow
-    res = dict(mismatches=[], rows=[], macro=0, allowed=0, no_record={}, no_built=0, no_built_why={}, shared=0, not_found=0, unresolved=0, rows_checked=0, rows_total=0, no_rtl=[], owner=owner, die=die)
+    res = dict(mismatches=[], rows=[], macro=0, allowed=0, no_record={}, no_built=0, no_built_why={}, shared=0, not_found=0, unresolved=0, rows_checked=0, rows_total=0, no_rtl=[], unsigned=0, owner=owner, die=die)
     views = {}
     full = full_reach = None
     for tn, t in sorted(types.items()):
@@ -838,6 +848,9 @@ def check_plan(plan, bind_dir, root, files=None, defines=(), hard_params=None, o
                 found, by_row = f2, b2
         seen = set()
         for k, row in enumerate(rows):
+            if future_unsigned_view(row):
+                res["unsigned"] += 1
+                continue
             cands = by_row[k]
             bp, src = built.lookup(row, die)
             if bp is None and src.startswith("memory macro"):
@@ -953,7 +966,7 @@ def gate(binder, out, files):
         binder.hcparam_stats = dict(skipped=f"{type(exc).__name__}: {exc}")
         return []
     binder.hcparam_stats = {k: res[k] for k in ("rows_total", "rows_checked", "macro", "allowed", "no_built", "not_found", "unresolved",
-                                                "shared")}
+                                                "shared", "unsigned")}
     binder.hcparam_stats["unchecked_allowlisted"] = res["allowed"]
     binder.hcparam_stats["unchecked_no_record_modules"] = len(res["no_record"])
     binder.hcparam_stats["mismatches"] = len(res["mismatches"])
@@ -1004,7 +1017,7 @@ def main(argv=None):
     for m in res["mismatches"]:
         print("HARD_CORE_PARAM_ALL", m)
     print("HARD_CORE_PARAM_ALL_SUM", str(bd), "die", res["die"], "owner", res["owner"], "rows", res["rows_total"], "checked",
-          res["rows_checked"], "macro", res["macro"], "unchecked_allowlisted", res["allowed"], "no_record_modules",
+          res["rows_checked"], "macro", res["macro"], "unsigned_future_views", res["unsigned"], "unchecked_allowlisted", res["allowed"], "no_record_modules",
           len(res["no_record"]), "no_built_record", res["no_built"], "not_found", res["not_found"], "unresolved_values",
           res["unresolved"], "shared_view_diffs", res["shared"], "mismatches", len(res["mismatches"]))
     for why, mods in sorted(res["no_built_why"].items(), key=lambda kv: -sum(kv[1].values())):

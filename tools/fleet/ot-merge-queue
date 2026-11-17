@@ -337,6 +337,18 @@ def select_tests(changed, all_tests, read):
 
 # ---------------------------------------------------------------- worktrees
 
+def changed_checkout_entries(files):
+    """Keep shallow result records exact: their parent can contain unrelated large evidence."""
+    return sorted({"file:" + f if f.startswith("results/") and f.count("/") <= 2
+                   else os.path.dirname(f) for f in files})
+
+
+def extra_sparse_patterns(entries):
+    """Directory dependencies keep their old form; explicit files never select sibling evidence."""
+    return sorted({"/" + e[5:].strip("/") if e.startswith("file:") else "/" + e.strip("/") + "/"
+                   for e in entries if e and e not in (".", "/")})
+
+
 def wt_make(name, ref, extra_dirs=()):
     """a detached sparse worktree of the queue clone at ref (reused if present)"""
     p = WT / name
@@ -347,7 +359,7 @@ def wt_make(name, ref, extra_dirs=()):
             WT.mkdir(parents=True, exist_ok=True)
             git("worktree", "prune")
             git("worktree", "add", "-q", "--detach", "--no-checkout", str(p), ref)
-    pats = list(SPARSE) + sorted({"/" + d.strip("/") + "/" for d in extra_dirs if d and d not in (".", "/")})
+    pats = list(SPARSE) + extra_sparse_patterns(extra_dirs)
     git("sparse-checkout", "set", "--no-cone", *pats, cwd=p)
     for a in (("cherry-pick", "--abort"), ("merge", "--abort")):
         git(*a, cwd=p, check=False)
@@ -666,7 +678,7 @@ def gate(it, wt, base):
     it["tests"] = tests
     if not tests:
         return "GREEN", f"no tests select for {len(ch)} changed file(s); static check only"
-    pats = list(SPARSE) + ["/" + d.strip("/") + "/" for d in it.get("extra", ())]
+    pats = list(SPARSE) + extra_sparse_patterns(it.get("extra", ()))
     need = sorted(d for d in test_deps(wt, base, tests) if not _covered(d, pats))
     if need:
         git("sparse-checkout", "add", *["/" + d + "/" for d in need], cwd=wt, timeout=1800)
@@ -1043,7 +1055,7 @@ def prepare(it, base, remote=True):
         if is_ancestor(full, base):
             return "ALREADY", f"{full[:11]} is an ancestor of main {base[:11]}"
         mb = git("merge-base", base, full).stdout.strip()
-        it["extra"] = sorted({os.path.dirname(f) for f in changed_files(REPO, mb, full)})
+        it["extra"] = changed_checkout_entries(changed_files(REPO, mb, full))
         wt = wt_make(it["id"], base, it["extra"])
         status, detail = apply(wt, base, full, it["branch"])
         if status != "OK":

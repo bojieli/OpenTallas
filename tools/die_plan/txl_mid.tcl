@@ -156,12 +156,29 @@ namespace eval ot_txl_mid {
       }
       set nm [$i getName]
       foreach C $chains {
-        if {[string first "$C.q" $nm] >= 0 && [regexp [string cat [string map {. {\.}} $C] {\.q\\?\[[0-9]+\\?\]}] $nm]} { dict lappend lasts $C $i }
+        # RXNEG uses a named falling-edge register vector C_q rather than
+        # an ot_pl_pad instance C.q.  It is the same one-row face station.
+        set cp [string map {. {\.}} $C]
+        set pad [expr {[string first "$C.q" $nm]>=0 && [regexp [string cat $cp {\.q\\?\[[0-9]+\\?\]}] $nm]}]
+        set reg [expr {[string first [string cat $C _q] $nm]>=0 && [regexp [string cat $cp {_q\\?\[[0-9]+\\?\]}] $nm]}]
+        # Yosys scalarises the one-bit valid pad: C.q$_DFF_P_, no [0].
+        set scalar [expr {[string first "$C.q" $nm]>=0 && [regexp [string cat $cp {\.q(\$|$)}] $nm]}]
+        if {$pad || $reg || $scalar} { dict lappend lasts $C $i }
       }
     }
     set ret {}
     foreach C $chains {
     set clasts [expr {[dict exists $lasts $C] ? [dict get $lasts $C] : {}}]
+    if {![llength $clasts]} {error "OT_TXL_MID requested chain $C has no register endpoints"}
+    if {$C eq "u_rxf"} {
+      set bits {};set rxneg 0
+      foreach i $clasts {
+        set name [$i getName]
+        if {[string first "u_rxf_q" $name]>=0} {set rxneg 1}
+        if {[regexp {\\?\[([0-9]+)\\?\]} $name _ bit]} {dict set bits $bit 1}
+      }
+      if {$rxneg && [dict size $bits] != 545} {error "OT_TXL_MID RXNEG face width [dict size $bits], expected 545 data/valid bits"}
+    }
     set moved 0; set rows 0; set skip 0; set nofree 0; set hmax 0.0; set hcells 0; set nface 0
     set face [expr {[info exists ::env(OT_TXL_MID_FACE)] && $::env(OT_TXL_MID_FACE) eq "1"}]
     foreach q $clasts {
@@ -184,7 +201,27 @@ namespace eval ot_txl_mid {
         if {$sb && !$ab} { set end snk } elseif {$ab && !$sb} { set end src }
         if {$end ne ""} { incr nface }
       }
-      set pts [face_targets $ax $ay $bx $by $n $end]
+      # RXNEG launches on the falling edge; face_p_[dv] captures the next
+      # rising edge. Put this half-cycle pair together, leaving the long
+      # decoder span on the following full-cycle leg. Default off.
+      set rxpair [expr {[info exists ::env(OT_TXL_MID_RXNEG_PAIR)] && $::env(OT_TXL_MID_RXNEG_PAIR) eq "1" &&
+                       [string match "u_dec.u_face_p_*" $C] &&
+                       [string first "u_rxf_q" [[$src getInst] getName]]>=0 &&
+                       [string match "DFFL*" [[[$src getInst] getMaster] getName]]}]
+      # The valid bit has a register source (rn_r), not a PMA macro.
+      # Its positive -> negative edge hop also has only half a cycle.
+      set rxvalid [expr {[info exists ::env(OT_TXL_MID_RXNEG_PAIR)] && $::env(OT_TXL_MID_RXNEG_PAIR) eq "1" &&
+                        $C eq "u_rxf" &&
+                        [string match "DFFL*" [[$q getMaster] getName]] &&
+                        [string match "DFF*" [[[$src getInst] getMaster] getName]] &&
+                        ![string match "DFFL*" [[[$src getInst] getMaster] getName]]}]
+      if {$rxpair || $rxvalid} {
+        if {$n != 1} {error "OT_TXL_MID RXNEG half-cycle pair expects exactly one face row"}
+        # Adjacent row below the source; nearest_free also clears the macro halo.
+        set pts [list [list $ax [expr {$ay-2.16*$dbu}]]]
+      } else {
+        set pts [face_targets $ax $ay $bx $by $n $end]
+      }
       set ok 1; set places {}
       foreach p $pts {
         lassign $p tx ty

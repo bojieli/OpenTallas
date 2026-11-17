@@ -91,7 +91,11 @@ set n0 [llength [get_cells *]]
 if {$w0 < $mg || $ot_tt_design} {
   # GRT-RC mode works on a routed-guide DB: route the changed nets incrementally (as ORFS wraps repair_timing in the GRT stage) so every
   # new buffer / resized net keeps a guide for detail route; -allow_congestion = the kit's own GRT policy (GRT-0232 class)
-  if {$ot_tt_rc eq "grt"} { global_route -start_incremental -allow_congestion }
+  if {$ot_tt_rc eq "grt"} {
+    source /work/grt_pg_replay.tcl
+    ot_grt_pg_replay_begin /work
+    global_route -start_incremental -allow_congestion
+  }
   if {$ot_tt_design} {
     repair_design -verbose
     ot_tt_wns after_design
@@ -103,6 +107,7 @@ if {$w0 < $mg || $ot_tt_design} {
   detailed_placement
   if {$ot_tt_rc eq "grt"} {
     global_route -end_incremental -allow_congestion
+    ot_grt_pg_replay_end
     if {[info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }
   }
   ot_tt_est
