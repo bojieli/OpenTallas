@@ -606,3 +606,13 @@
   COORD APPROVED: claude/fleet-ops-r-store-from-archive-1116 @a5b3ca9a917e2d91030c4b066a31b3f74ba66776
   r442 DEFER tools-converge-1116-retire @fcb130894c7: it deletes _dM trees with its own reference rule. After the 11-16 hollowing and the wave-src near-miss, every delete goes through ot_delete_guard and the full kit_wave.json root set (r425). Rebase it to call the guard, then re-gate and re-post. Until then, no builder passes --retire-refs.
   NOT RULED (no gate record): fable-fix-qc-cbglue-xdie @c33a20f7277 (FABLE-FIX-QC-DIECLK: decide whether it is still needed); head-hold-reference @5613ffa54a53 (HEAD-TYPES-R2: gate it or mark it superseded); tok thin15 @0d069c06fc2 and gocache @aa1679f90b8 (TOKEN-R: run the gates). publish-gate @72c9b6550b5a is held until its D10 and real dry-gen proof. qc-pinaccess shas are superseded by 7af064b5ed0 (r392).
+- 2026-11-16 21:16 PST DIRECTIVE [COORD -> all die lanes] FABLE-CLOSURE-STRATEGY 21:40 dispatched (lanes/FABLE-CLOSURE-STRATEGY.md).
+  L1 S81 col: new FABLE-FIX-S81-COL owns it. No col-wave volume until a pilot routes clean (h9_r1 GRT 119%, h9_r2 DRT-0255); h10_r2 sign-off STA first.
+  L2 tap-window hold class: FABLE-FIX-QC-DIECLK shares its method; KV-CLK-R2 reads post-CTS cross-tap; HEAD-DIE-R cuts NF15d rows.
+  L3 strip: FABLE-FIX-S81-STRIP sets overflow 0.2/0.25 + form B + dswp, all in D5 before kitrtl releases the leaves (S81-TYPES-R2).
+  L4 QC: count-frame re-frame + cb setup read.
+  L5 HEAD: hw4e2 hei3 rerun after the permission error.
+  L6 KV: fold hgi_v8; classify the hgi/hg gen errors.
+  L7 S81 SerDes: H3p continues.
+  L8 bksel: 46/51 are macro input pins.
+  STOP: col-wave1 volume; leaf kits at overflow 0.10; and the rest of the file list.
