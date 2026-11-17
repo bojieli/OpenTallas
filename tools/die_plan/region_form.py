@@ -462,7 +462,7 @@ START_RETIME = ("--start-retime-up", "--start-lift")
 
 
 def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_out=None, cap_args=(),
-        start_retime=True):
+        start_retime=True, cap_in=None):
     import count_frame as CF
     import locality as LO
     import count_align_plan as CAP
@@ -488,6 +488,26 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
     if pr != fr.part_region:
         raise Conflict("plan regions differ from the frame's region map")
     retime = [x for x in START_RETIME if x not in cap_args] if start_retime and start_form == "clock" else []
+    if cap_in is not None:
+        # QC-CLK-R2 11-16 (--cap-in): a count_align_plan result measured on the BUILT clock (landed_phase_ocv of the routed
+        # tap arrivals + --sta-proof, die chain gate/ca_*.json) replaces the locality-model hull.  The model rows follow
+        # the plan's 'fwd' feed; a clock built on another feed (QC S4q9m comb) widens them by ns and fails the ring
+        # spuriously.  Fail closed unless the result is in this plan's count frame, uses the sidecar's START form and is
+        # a --sta-proof result; the landed-set check below requires it to cover every sidecar crossing.
+        cap = json.loads(Path(cap_in).read_bytes())
+        cs = cap.get("summary") or {}
+        try:
+            CF.check_same(cs.get("frame"), fr, "--cap-in")
+        except CF.FrameError as ex:
+            raise Conflict(str(ex))
+        cform = (cs.get("start_tree") or {}).get("form")
+        if cform != start_form:
+            raise Conflict(f"--cap-in START form {cform!r} != sidecar {start_form!r}")
+        if not (cs.get("sta_interval") or {}).get("proof"):
+            raise Conflict("--cap-in is not a --sta-proof (built clock) count_align_plan result")
+        return _sta_apply(base_path, btext, raw, side, sca, out_path, side_in, side_out,
+                          proof or cs["sta_interval"]["proof"], report, ca_out, cap, 0 if not cs.get("fail") else 1,
+                          ["cap-in " + str(cap_in)])
     D = LO.load_plan(base_path)
     with contextlib.redirect_stderr(io.StringIO()):
         S = LO.score(D, dict(pr), v, "fwd")
@@ -507,6 +527,11 @@ def sta(base_path, out_path, side_in, side_out, proof, v=290.0, report=None, ca_
                            str(base_path), "--sta-cppr-lca", "--sta-clock-cell", "inv2", "--start-tree", start_form,
                            "--out", str(fo)] + retime + list(cap_args))
         cap = json.loads(fo.read_text())
+    return _sta_apply(base_path, btext, raw, side, sca, out_path, side_in, side_out, proof, report, ca_out, cap, rc,
+                      retime)
+
+
+def _sta_apply(base_path, btext, raw, side, sca, out_path, side_in, side_out, proof, report, ca_out, cap, rc, retime):
     if ca_out:
         Path(ca_out).write_text(json.dumps(cap, indent=0) + "\n")
     xs = {o["port"]: o for o in cap["crossings"]}
@@ -614,13 +639,15 @@ def main(argv=None):
     t.add_argument("--cap-arg", action="append", default=[], metavar="ARG",
                    help="extra count_align_plan argument (e.g. --start-retime-up), repeatable")
     t.add_argument("--v-ps-mm", type=float, default=290.0)
+    t.add_argument("--cap-in", metavar="CA.json", help="count_align_plan --sta-proof result on the BUILT clock (die chain "
+                   "gate/ca_*.json, same count frame + START form), used instead of the locality-model hull")
     t.add_argument("--no-start-retime", action="store_true",
                    help="clock START sidecar: plain START tree (default: " + " ".join(START_RETIME) + ")")
     a = ap.parse_args(argv)
     if a.cmd == "sta":
         try:
             rep = sta(a.base, a.out, a.sidecar[0], a.sidecar[1], a.proof, a.v_ps_mm, a.report, a.ca_out, a.cap_arg,
-                      start_retime=not a.no_start_retime)
+                      start_retime=not a.no_start_retime, cap_in=a.cap_in)
         except Conflict as ex:
             print(f"CONFLICT {ex}")
             return 3
