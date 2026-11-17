@@ -5976,7 +5976,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else []),
            *(["export PRE_MACRO_PLACE_TCL = /work/macro_skip_rtlmp.tcl"] if macros and _macros_all_plan_fixed(t) else [])]
     if macros:
-        (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+        macro_script = "\n".join(mplace) + "\n"
+        if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
+            import s81_svc_live_sites
+            macro_script = s81_svc_live_sites.wrap(tn, macro_script, enabled=True)
+        (kd / "macro_place.tcl").write_text(macro_script)
         if _macros_all_plan_fixed(t):       # KW-FIX-45 11-12: plan-fixed macros: rtl_macro_placer skipped
             shutil.copyfile(Path(__file__).with_name("macro_skip_rtlmp.tcl"), kd / "macro_skip_rtlmp.tcl")
         if macro_moves:
