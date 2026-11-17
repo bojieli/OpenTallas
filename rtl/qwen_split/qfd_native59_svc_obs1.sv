@@ -8,7 +8,7 @@
 // svc3: tx payload too (TX_FREE, MCTX 1) and the DV fault as four sticky flops.
 module qfd_native59_svc_obs1 #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
- parameter integer RECV_INPUTS=0,RECV_MUT=0,LOCAL32=0,LOCAL_MUT=0,
+ parameter integer RECV_INPUTS=0,RECV_MUT=0,LOCAL32=0,LOCAL_MUT=0,NATIVE_LOCAL_KV_ADDR=0,
  parameter integer ROPE=0,USER_BIND=0,HEAD_PREP=0,NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0,EMB_RT_CODE=0,EMB_RT_SCALE=0
 )(
  input wire ck,rst_n,
@@ -535,12 +535,16 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   kv_we=0;kv_waddr=0;kv_wdata=0;kv_in_bad=0;ka=0;
   if(dd_kv)for(l=0;l<8;l=l+1)if(dd_mask[l])begin
    ka=p_dd[345+24*l+:24];
-   if((dd_kind==2'd1)?(|ka[23:20]):((|ka[23:21])||!ka[20]))kv_in_bad=1;
+   if(NATIVE_LOCAL_KV_ADDR!=0)begin
+    if(|ka[23:7])kv_in_bad=1;
+   end else if((dd_kind==2'd1)?(|ka[23:20]):((|ka[23:21])||!ka[20]))kv_in_bad=1;
   end
   // R3d: each lane's we / waddr / wdata halves are gated by that lane's own kept field copies (== dd_kv && dd_mask[l]).
   for(l=0;l<8;l=l+1)begin
    if(ddc[3*l][10]&&(ddc[3*l][9:8]==2'd1||ddc[3*l][9:8]==2'd2)&&ddc[3*l][l])begin
-    kv_we[l]=1'b1;kv_waddr[24*l+:24]=p_dd[345+24*l+:24]^((MUT==2)?24'd1:24'd0);
+    kv_we[l]=1'b1;
+    kv_waddr[24*l+:24]=(NATIVE_LOCAL_KV_ADDR!=0 ?
+     {3'b0,(ddc[3*l][9:8]==2'd2),13'b0,p_dd[345+24*l+:7]} : p_dd[345+24*l+:24])^((MUT==2)?24'd1:24'd0);
    end
    if(ddc[3*l+1][10]&&(ddc[3*l+1][9:8]==2'd1||ddc[3*l+1][9:8]==2'd2)&&ddc[3*l+1][l])kv_wdata[32*l+:16]=p_dd[89+32*l+:16];
    if(ddc[3*l+2][10]&&(ddc[3*l+2][9:8]==2'd1||ddc[3*l+2][9:8]==2'd2)&&ddc[3*l+2][l])kv_wdata[32*l+16+:16]=p_dd[89+32*l+16+:16];
@@ -553,7 +557,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[17:0]kv_nin=iss[0]?18'd128:18'd64;
  wire formatter_fault,formatter_idle,formatter_drained,kvn_v;wire[7:0]formatter_fault_code;
  wire[10:0]kvn_tag;wire[511:0]kvn_data;wire[39:0]kvn_ctl_pub;
- ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE),.LOCAL_CTL(LOCAL32),.SEAT_HT(1))u_formatter(
+ ot_qfd_su_kv_static_posted #(.ENABLE(1),.HEADS(1),.SAFE(SAFE),.LOCAL_CTL(LOCAL32),.SEAT_HT(1),.LOCAL_DIM_INPUT(NATIVE_LOCAL_KV_ADDR))u_formatter(
  .clk(ck),.rst_n(rst_fmt),.epoch_begin(LOCAL32?nc_pub[0]:native_context),.epoch_begin_pub(nc_pub[2:1]),.word_slot_pub(ws_pub),.epoch_pos(c_pos),
  .issue_v(kv_issue),.issue_kind(kv_kind),.issue_nout(18'd1),.issue_nin(kv_nin),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.epoch_idle(formatter_idle),.drained(formatter_drained),
