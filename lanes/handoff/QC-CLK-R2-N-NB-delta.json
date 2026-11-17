@@ -1,0 +1,68 @@
+{
+ "base": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m_d8.json",
+ "base_sha256": "beaa07b778ce233b9608c48ee0c843c59e03a1490ae57a0e917e4091d27702ad",
+ "plan": "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/n_nb_1116/plan_n_nb.json",
+ "sha256": "d8c5e183516da113f632b14675daa8f64899c491d1d1d2d13ecd1588ad310ca2",
+ "type": "cbn_q00__cldbcda913",
+ "core": "cl_nb_i00",
+ "orientation": "R0",
+ "move_um": [
+  -43.2,
+  0
+ ],
+ "placed_rect": [
+  1086.492,
+  2484.012,
+  1226.892,
+  2535.8520000000003
+ ],
+ "right_clearance_um": 8.627999999999929,
+ "macro_halo_clear": true,
+ "signed_shape_identity_equal": true,
+ "station_report": {
+  "stations": 5,
+  "moved": 0,
+  "regs_old": 15,
+  "regs_new": 15,
+  "rerouted": 0,
+  "kept_old_regs": 0,
+  "need_more_regs": 0,
+  "failed": 0,
+  "need_more_idx": []
+ },
+ "latency_delta_cycles": 0,
+ "lane_latency_equal": true,
+ "ft_slots": 1,
+ "changes": [
+  [
+   "/clock/landing_contract/bands/nb_i00/rect_um/0",
+   1129.68,
+   1086.48
+  ],
+  [
+   "/clock/landing_contract/bands/nb_i00/rect_um/2",
+   1218.24,
+   1175.04
+  ],
+  [
+   "/clock/landing_contract/collector_local_sources/3/band/rect_um/0",
+   1129.392,
+   1086.192
+  ],
+  [
+   "/clock/landing_contract/collector_local_sources/3/band/rect_um/2",
+   1218.24,
+   1175.04
+  ],
+  [
+   "/clock/taps/11/xy/0",
+   1173.24,
+   1130.04
+  ],
+  [
+   "/hard_cores/6/origin_um/0",
+   1129.68,
+   1086.48
+  ]
+ ]
+}
