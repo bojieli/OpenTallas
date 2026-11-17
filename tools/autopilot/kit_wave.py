@@ -1190,11 +1190,11 @@ def kit_rtl_post_cmd(T, W, plan, steps_dir=None):
     return "".join(f" && {env} bash -c {q(p.read_text())} {q('kit_rtl_post.d/' + p.name)}" for p in steps)
 
 
-def kit_rtl_closure_cmd(W, src):
-    """Package inputs on the actual kit-RTL producer, before roam output copy-back."""
+def kit_rtl_closure_cmd(W, src, mode="inputs", chain=True, guard=False):
+    """Run the current closure tool on the actual stage host (pinned generator stays immutable)."""
     code = (Path(__file__).resolve().parent / "kit_rtl_closure.py").read_text()
-    return (f" && python3 - {shlex.quote(W)}/rtl --source {shlex.quote(src)} <<'KW_CLOSURE_EOF'\n"
-            + code + "\nKW_CLOSURE_EOF\n")
+    return ((" && " if chain else "") + f"python3 - {shlex.quote(W)}/rtl --source {shlex.quote(src)} --mode {mode} <<'KW_CLOSURE_EOF'"
+            + (" || exit $?" if guard else "") + "\n" + code + "\nKW_CLOSURE_EOF\n")
 
 
 def kit_rtl_mode(d):
@@ -6099,13 +6099,13 @@ def run_item(spec_path):
     def remote(cmd):                                     # ssh joins argv with spaces: send ONE quoted command
         return _ssh(G, hub) + ["bash -c " + shlex.quote(cmd)] if _ssh(G, hub) else ["bash", "-c", cmd]
 
-    def otrun(mem, thr, d, cmd, hosts, allow_hub=False):  # ot-run names the hub itself 'localhost'
+    def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):  # ot-run names the hub itself 'localhost'
         hosts = target_hosts(hosts, hub, allow_hub)       # KW-FIX-45 11-12: only the place stage may target the hub (capped by ot-run), never gen
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
         argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
             + heavy_args(sp) + ["--", "bash", "-c", cmd]
-        if d == W and hosts == [G] and not allow_hub and roamer.others:     # WAVE-BALANCE-1: any synced host may run it
+        if roam and d == W and hosts == [G] and not allow_hub and roamer.others:     # WAVE-BALANCE-1: any synced host may run it
             return ROAM.RoamArgv(argv)
         return argv
 
@@ -6500,14 +6500,14 @@ def run_item(spec_path):
             kbind = f"{kt}/tools/die_plan/bind.py"
         krb_cmd = lambda bnd, flag: (f"cd {q(src)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
                                     f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan) + kit_rtl_closure_cmd(W, src))
-        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, f"--src-tree {q(src)} "), gh))
+        rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, f"--src-tree {q(src)} "), gh, roam=False))
         # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
         # tree's modules with main's bind.py; when the tree's older modules do not fit main's bind.py (API skew, an import-time or
         # call-time error, never a design verdict) the tree runs its OWN bind.py unchanged, one consistent set, without --src-tree
         # (exactly how every kit_rtl ran before the flag existed).
         if rc and rcp and API_SKEW.search(strip_admission(txt)):
             print("KW_KITRTL_LEGACY_BIND: staged set has API skew; retrying with the tree's own bind.py (no --src-tree)", flush=True)
-            rc, txt = run("kit_rtl_legacy", otrun(8, 2, W, krb_cmd("tools/die_plan/bind.py", ""), gh))
+            rc, txt = run("kit_rtl_legacy", otrun(8, 2, W, krb_cmd("tools/die_plan/bind.py", ""), gh, roam=False))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:
@@ -6519,7 +6519,7 @@ def run_item(spec_path):
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
     elif kr.get("mode") == "script":
         rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
-                                       + kit_rtl_closure_cmd(W, src), gh))
+                                       + kit_rtl_closure_cmd(W, src), gh, roam=False))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:
@@ -6556,9 +6556,15 @@ def run_item(spec_path):
         context_args = f" --asbuilt {q(kr['asbuilt'])}" if kr.get("asbuilt") else ""
         prep = (f"cd {q(src)} && {topology_env_prefix(sp)}python3 -I {q(helper)} prepare-stations {q(plan_ov)} {q(T)} {q(W)}/rtl "
                 f"--native-plan {q(plan0)}{context_args}")
-        rc, txt = run("kit_topology", otrun(8, 2, W, prep, gh))
+        rc, txt = run("kit_topology", otrun(8, 2, W, prep, gh, roam=False))
         if rc:
             return fail("kit_topology", txt)
+    if not core and kit_rtl_arg:
+        # Native preparation owns the original complete bind and mutates only
+        # localized attempt sources. Publish the portable closure after it succeeds.
+        rc, txt = run("kit_rtl_closure", remote(kit_rtl_closure_cmd(W, src, "seal", chain=False)), idempotent=True)
+        if rc:
+            return fail("kit_rtl_closure", txt)
     if not core:
         ps = sp.get("cland_pinslot") or ""
         # a wave source checkout older than gen phys --cland-pinslot keeps the plan-only pinslot (noted in the gen log)
@@ -6569,6 +6575,8 @@ def run_item(spec_path):
         genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
         gen = (f"cd {q(src)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
                f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}{ov_arg}")
+        if kit_rtl_arg:
+            gen = kit_rtl_closure_cmd(W, src, "relocate", chain=False, guard=True) + gen
         rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
         if rc:
             return fail("gen", txt)
@@ -6661,6 +6669,8 @@ def run_item(spec_path):
     # A wave source older than the lint skips it with a note (the class rule applies from the merge on).
     gl = (f"{pstage}cd {q(src)} && if [ -f tools/die_plan/kit_gen_lint.py ]; then python3 tools/die_plan/kit_gen_lint.py "
           f"{q(K)} --plan-dir {q(pdir)} --mem {int(sp.get('lint_mem_gb') or 8)}; else echo 'KW_NOTE no kit_gen_lint.py in this source'; fi")
+    if kit_rtl_arg:
+        gl = kit_rtl_closure_cmd(W, src, "relocate", chain=False, guard=True) + gl
     rc, txt = run("gen_lint", otrun(int(sp.get("lint_mem_gb") or 8) + 2, 2, W, gl, gh))
     if rc:
         return fail("gen_lint", txt, f"{G}:{K}/gen_lint.json")

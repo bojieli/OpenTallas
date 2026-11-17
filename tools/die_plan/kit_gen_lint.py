@@ -207,6 +207,8 @@ def kit_rtl_paths(kd):
     d = json.loads(f.read_text())
     closure = d.get("input_closure")
     if closure:
+        if not closure.get("sealed"):
+            return ["kit RTL closure is not sealed after source preparation"], True
         import hashlib
         roots = [Path(r) for r in closure["roots"]]
         errs = []
@@ -235,6 +237,17 @@ def kit_rtl_paths(kd):
                 errs.append(f"kit RTL closure has no permitted origin: {p}")
             elif not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != entry["sha256"]:
                 errs.append(f"kit RTL closure content mismatch: {p}")
+        checked = {str(Path(x).relative_to(package_root)) for x in files if Path(x).is_relative_to(package_root)}
+        for rel, entry in closure["files"].items():
+            rp = Path(rel)
+            if rp.is_absolute() or ".." in rp.parts:
+                errs.append(f"kit RTL closure has an invalid relative metadata path: {rel}")
+                continue
+            if rel in checked:
+                continue
+            p = package_root / rp
+            if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != entry["sha256"]:
+                errs.append(f"kit RTL closure metadata content mismatch: {p}")
         return errs, True
     roots = [Path(d["src_tree"]).resolve(), Path(d["filelist"]).resolve().parent]
     kj = Path(d["filelist"]).with_name("kit_rtl.json")
