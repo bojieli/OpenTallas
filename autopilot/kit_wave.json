@@ -6037,7 +6037,7 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gF2s4tapfix1/src/physical/die_plan/s81/plan_h2_2249.json",
    "gen_host": "epyc10",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d4",
    "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
    "kit_rtl": {
     "mode": "bind",
@@ -22106,7 +22106,7 @@
    "plan_sha256": "819037bbe371ad99945d4a9b3f11a536060280b59bd1c4ac48167d9cf77b140d",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.s81.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d4/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_PREGRT_FF_HOLD_AUTO": "-1",
@@ -35685,7 +35685,7 @@
      "migrated": true,
      "reason": "ROUTE-HOLD s81 G3b (COORD 00:1x): core-phase PDN without TT repair, detailed route would mostly die at DRT-0255 after hours; the kit finishes place/CTS/GRT for timing data and waits here, no route enqueue until the die-phase tree + TT repair (TOOLS-CONVERGE tree) is switched in. Admitted jobs are never cancelled. Lift = delete this key. | CODEX 11-16 source remedy actual _d6; 29 old-profile station attempts explicit FLOW retry with src identity corrected7073->41bb and stage_resume_off; six serdes separately held for F2s3 hook source.",
      "release": [
-      "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3"
+      "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d4"
      ],
      "carry": true
     },
@@ -36580,7 +36580,7 @@
      "plan_sha": "ccc4744caa15c834c4f265cf47d165caafa513425e83c298a8e8b88d9e1a0f7a",
      "reason": "Six old nonrunning serdes kits lack TXPIPE placement hook and correct die PGphase; await coherent F2s3/mainref source and regenerate before route; old kit history retained",
      "release": [
-      "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3"
+      "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d4"
      ],
      "keys": [
       "serdes__t12",
@@ -36627,6 +36627,22 @@
      "carry": true,
      "reason": "Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries. Route companion protects already-built old C kits as well as generation.",
      "route": true
+    },
+    {
+     "id": "pilot-s81-4db2d3f87934",
+     "plan_sha": "819037bbe371ad99945d4a9b3f11a536060280b59bd1c4ac48167d9cf77b140d",
+     "reason": "PILOT after tree switch: one GEN pilot (col_h9_r2__t1__clce45cab5) from tree 4db2d3f87934 must pass GEN + preflight first",
+     "release": [
+      "gen_pilot:s81:4db2d3f87934"
+     ],
+     "items": [
+      "*"
+     ],
+     "pilot_items": [
+      "col_h9_r2__t1__clce45cab5"
+     ],
+     "follow_plan": true,
+     "auto_pilot": true
     }
    ],
    "planned_events": [
@@ -36660,7 +36676,7 @@
     },
     "src_manifest": "verify"
    },
-   "src_manifest_hash": "35eaaa5d65dae530b163ca2fba251d2dfd309006d6b61ab22fa126e79cdaea59",
+   "src_manifest_hash": "4db2d3f87934019b9abd088ddb71af88de728a3c8a0f062f4d6f6b2e79281b82",
    "tools_sha": "2efedf57b857ecfcd7300bb28cf1dd852ab8880e",
    "proof_items": {
     "svc-ready": [
@@ -36803,7 +36819,11 @@
    "cancel_superseded": false,
    "prev_gen_hosts_fleetopsr1116": [
     "epyc10"
-   ]
+   ],
+   "superseded_trees": [
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3"
+   ],
+   "pilot_item": "col_h9_r2__t1__clce45cab5"
   },
   "s81_head": {
    "enabled": true,
