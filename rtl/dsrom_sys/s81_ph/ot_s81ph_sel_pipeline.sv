@@ -287,7 +287,9 @@ module ot_s81ph_sel_ctl_pipe #(
         .clk(clk), .gs(s_gf), .bs(s_bf), .q(qf), .g_out(c_fg),
         .res_b(fres_b), .res_above(fres_above), .res_ok(fres_ok), .res_eq(fres_eq));
 
-    reg  [2:0]    st;
+    // S81-CORES-R3 11-17: binary state kept (no yosys FSM_RECODE): the rfdq control synth one-hot-recoded st and the LEC
+    // could not map st / c_rep (NOT EQUIVALENT, 5 points); the signed c3 netlist kept the 3-bit st.  No function change.
+    (* fsm_encoding = "none" *) reg  [2:0]    st;
     reg  [TW-1:0] wcnt, hold_c, hold_f;
     reg           kseen, hf_seen, bs_done;
     reg  [7:0]    bs, ls;
