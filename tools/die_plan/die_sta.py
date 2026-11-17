@@ -1373,11 +1373,11 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
           "if {$x eq \"\" || [string match *INF* $x]} { continue }; if {$best eq \"\" || $x < $best} { set best $x } }; "
           "if {$best eq \"\"} { continue }; incr n($dly); if {$best < 0} { incr nneg($dly); set tns($dly) [expr {$tns($dly) + $best}] }; "
           "if {$w($dly) eq \"\" || $best < $w($dly)} { set w($dly) $best; set wb($dly) [list $lau $cap $s $d] } } }",
-          "  foreach dly {max min} { if {$n($dly) == 0} { puts $fh \"SEAM $gname $dly NO_PATH\"; continue }",
+          "  foreach dly {max min} { if {$n($dly) == 0} { puts $fh \"SEAM $gname $dly NO_PATH bits [llength $bits]\"; continue }",
           "    lassign $wb($dly) lau cap s d; set sp $s; set la NA; set ep $d; set ca NA",
           "    if {[llength $lau]} { lassign [lindex $lau 0] sp la }; if {[llength $cap]} { lassign [lindex $cap 0] ep ca }",
-          "    puts $fh [format \"SEAM %s %s paths %d worst %.3f neg %d tns %.3f launch %s capture %s from %s to %s\" "
-          "$gname $dly $n($dly) $w($dly) $nneg($dly) $tns($dly) $la $ca $sp $ep] }",
+          "    puts $fh [format \"SEAM %s %s paths %d worst %.3f neg %d tns %.3f launch %s capture %s from %s to %s bits %d\" "
+          "$gname $dly $n($dly) $w($dly) $nneg($dly) $tns($dly) $la $ca $sp $ep [llength $bits]] }",
           "  if {$pn} { puts $fh [format \"PAIRSKEW %s n %d max %.2f maxl %s maxc %s min %.2f minl %s minc %s p99 %.2f over %d\" "
           "$gname $pn $pmax {*}$pmaxp $pmin {*}$pminp [ot_p99 $pabs] $p80]",
           "    lappend ot_cand [list $pmax hold $gname {*}$pmaxp] [list [expr {-$pmin}] setup $gname {*}$pminp] } }",
@@ -1443,6 +1443,8 @@ def parse_sta(txt):
             res["seams"].setdefault(g, {})[dly] = dict(
                 paths=int(d["paths"]), worst=float(d["worst"]), neg=int(d["neg"]), tns=float(d["tns"]),
                 launch=d["launch"], capture=d["capture"], start=d["from"], end=d["to"])
+            if "bits" in d:                       # bits the group times; paths < bits = an arc without a timing path
+                res["seams"][g][dly]["bits"] = int(d["bits"])
         elif f[0] == "FFSPREAD":
             d = dict(zip(f[2::2], f[3::2]))
             res.setdefault("ffspread", {})[f[1]] = dict(n=int(d["n"]), min=float(d["min"]), max=float(d["max"]),
@@ -1677,6 +1679,7 @@ def cmd_run(a):
                spine="tree" if a.spine_tree else "branch" if a.spine_branch else ("routed" if a.die_spef else "ideal"),
                instances=inst_mods, parts={m: str(parts[m]) for m in mod_files or parts}, abstracts=abstracts, corners={},
                seam_groups=len(groups), seam_bits=len(seams))
+    res["netlist_alias"] = part_netlist_alias(parts, set(inst_mods.values()))
     # Parent IO-HOLD qualification never treats a budget stand-in as a real view.
     from io_hold_qualification import view_snapshot
     res['view_evidence'] = {m: view_snapshot(parts[m]) for m in set(inst_mods.values())}
@@ -1760,6 +1763,50 @@ def cmd_run(a):
     return res
 
 
+def part_netlist_alias(parts, mods):
+    """re-read every part netlist: an assign/alias cycle (SPEPRD3 11-16: 566 padded outputs aliased back onto
+    themselves through their delay buffers) makes the stitched STA meaningless -> verdict FAIL"""
+    import netlist_alias_check as NAC
+    out = {}
+    for m in sorted(mods):
+        v = Path(parts[m]) / "6_final.v"
+        if not v.is_file():
+            out[m] = dict(verdict="FAIL", problems=1, first=[dict(kind="missing_netlist", net=str(v))])
+            continue
+        probs, st = NAC.check(v.read_text(errors="replace"))
+        if not st["modules"]:
+            probs = probs + [dict(kind="no_module", net=None)]
+        out[m] = dict(verdict="FAIL" if probs else "PASS", problems=len(probs), first=probs[:3], **st)
+    return out
+
+
+def missing_seam_arcs(res):
+    """Seams the gate corners did not time: per corner that ran (TT setup, FF hold), every seam group whose path is
+    null (NO_PATH, e.g. an aliased or disconnected link), a group with fewer timed bits than it has bits, and seam groups
+    absent from the report altogether (STA stopped early).  Any entry makes the verdict FAIL (fail closed)."""
+    out = {}
+    for c, delay in (("TT", "max"), ("FF", "min")):
+        r = res["corners"].get(c)
+        if r is None or r.get("exit") != 0:
+            out[c] = []
+            continue
+        seams = r.get("seams") or {}
+        miss = []
+        for name, seam in sorted(seams.items()):
+            p = (seam or {}).get(delay)
+            if not p:
+                miss.append(name)
+            elif p.get("bits") is not None and p.get("paths", 0) < p["bits"]:
+                miss.append(f"{name} ({p['bits'] - p.get('paths', 0)}/{p['bits']} bits untimed)")
+        expect = res.get("seam_groups")
+        if isinstance(expect, int) and len(seams) < expect:
+            miss.append(f"<{expect - len(seams)} of {expect} seam groups not reported>")
+        if not seams and not miss:
+            miss.append("<0 seam groups measured>")        # zero objects measured is never a PASS
+        out[c] = miss
+    return out
+
+
 def verdict(res):
     """PASS only if TT setup and FF hold ran, every seam slack there is >= 0 and the related launch/capture pair skew
     (seam + intra-partition pairs, CPPR credited) is <= SKEW_PS at TT and FF (BRIEFING decision 5, owner 10-24).
@@ -1785,8 +1832,10 @@ def verdict(res):
     v["clock_endpoint_coverage"] = {c: res["corners"].get(c, {}).get("clock_endpoint_coverage", {}).get("status", "UNAVAILABLE")
                                     for c in ("TT", "FF")}
     ran = {c for c, r in res["corners"].items() if r.get("exit") == 0}
-    missing_seam_paths = {c: [name for name, seam in res["corners"].get(c, {}).get("seams", {}).items()
-                             if not seam.get(delay)] for c, delay in (("TT", "max"), ("FF", "min"))}
+    missing_seam_paths = missing_seam_arcs(res)
+    bad_netlists = sorted(m for m, x in (res.get("netlist_alias") or {}).items() if x.get("verdict") != "PASS")
+    if bad_netlists:
+        v["netlist_alias_fail"] = bad_netlists
     if any(missing_seam_paths.values()):
         v["missing_seam_paths"] = missing_seam_paths
     if res["mode"] == "etm":
@@ -1795,8 +1844,15 @@ def verdict(res):
              for c in ("TT", "FF")):
         v["status"] = "NOT RUN (expanded clock endpoint coverage incomplete)"
         v["expanded_child_flop_pairs"] = "NOT RUN"
+    elif bad_netlists:
+        v["status"] = "FAIL"
+        v["fail_reason"] = "part netlist alias cycle: " + ", ".join(
+            f"{m} {res['netlist_alias'][m]['problems']}" for m in bad_netlists)
     elif any(missing_seam_paths.values()):
-        v["status"] = "NOT RUN (seam timing path coverage incomplete)"
+        # fail closed: a seam group (or a bit of one) without a TT setup / FF hold path is an untimed link, never PASS
+        v["status"] = "FAIL"
+        v["fail_reason"] = "seam timing path coverage incomplete: " + ", ".join(
+            f"{c} {len(x)}" for c, x in missing_seam_paths.items() if x) + " seam(s) without a timed arc"
     elif not {"TT", "FF"} <= ran:
         v["status"] = "NOT RUN (signoff needs TT setup + FF hold)"
     else:
