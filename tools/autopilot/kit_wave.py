@@ -7589,7 +7589,7 @@ try:
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
     flags, deps, lint, pdeps, bound, pkeys, unbound = {}, {}, {}, {}, {}, {}, {}
     split = []
-    cmax = int(a["cells_max"])
+    cmax = int(a.get("cells_max") or 0)          # 0 = no estimate check (the wave always passes SPLIT_CELLS)
     for t, v in pt.items():
         if not isinstance(v, dict):
             continue
@@ -7601,7 +7601,7 @@ try:
         if not isinstance(nc, (int, float)) or isinstance(nc, bool):
             cc = [c.get("cells") for c in (v.get("contents") or []) if isinstance(c, dict)]
             nc = sum(cc) if cc and all(isinstance(x, (int, float)) for x in cc) else None
-        if nc is not None and nc > cmax and not v.get("hard_cores") and not v.get("hard"):
+        if cmax and nc is not None and nc > cmax and not v.get("hard_cores") and not v.get("hard"):
             li.append(f"cells: SPLIT-NEEDED est {int(nc)} flat std cells > {cmax} (plan estimate): split the type or re-form into hard cores")
             split.append(t)
         decl = [r.get("name") for r in (v.get("id_straps") or []) + (v.get("count_straps") or []) if isinstance(r, dict)]
