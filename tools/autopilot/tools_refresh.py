@@ -14,6 +14,7 @@ A die opts in with dies.<die>.tools_refresh: true (apply), "dry" (compose + guar
 """
 import argparse
 import json
+import re
 import os
 import shlex
 import subprocess
@@ -186,7 +187,8 @@ class Ops:
     def bind_cmd(self, new, out):
         kr = self.d.get("kit_rtl") or {}
         tpl = self.d.get("tools_refresh_bind_cmd") or ""
-        return f"cd {shlex.quote(new)} && " + tpl.format(plan=self.d.get("plan", "").replace(self.d.get("src", ""), new), out=out,
+        # {out} = the empty scratch dir next to the tree, {out_rel} = the same dir relative to the tree root (HEAD head_die_portbind wants --out repo-relative)
+        return f"cd {shlex.quote(new)} && " + tpl.format(plan=self.d.get("plan", "").replace(self.d.get("src", ""), new), out=out, out_rel="../" + os.path.basename(out),
                                                         bind=out, asbuilt=(kr.get("asbuilt") or "").replace(self.d.get("src", ""), new), tree=new)
 
     def bind_closure_touched(self):
@@ -215,14 +217,25 @@ class Ops:
                 return True, True, f"bind closure untouched: none of the {len(self.delta_paths)} delta files is in bind.py's import closure"
             return False, False, (f"the delta touches bind.py's import closure ({len(touched)}: {', '.join(touched[:8])}) and dies.{self.d.get('_die', '<die>')}.tools_refresh_bind_cmd "
                                   f"names no strict-bind recipe to re-run (a bind recipe is per die: env such as OT_HCPARAM_ALL, packaged elaboration): the die owner gives it")
+        out = f"{new}.bindcheck"
+        pass_re = self.d.get("tools_refresh_bind_pass")
+        if pass_re:
+            # a recipe with a PASS line and no comparable bind output (HEAD head_die_portbind: HEAD_DIE_PORTBIND PASS ...): rc 0 + the line = bind holds, same as the record
+            rc, txt = self.run(self.host, self.bind_cmd(new, out))
+            self.run(self.host, f"rm -rf {shlex.quote(out)}")
+            if rc or not re.search(pass_re, txt or ""):
+                return False, False, f"strict bind did not pass (rc {rc}, wanted /{pass_re}/): " + (txt or "")[-300:]
+            return True, True, "strict bind PASS (no bind output to compare; PASS line matched)"
         record = (kr.get("bind_out") or "").rstrip("/")
         if not record:
             return False, False, "no kit_rtl.bind_out of record: cannot compare"
-        out = f"{new}.bindcheck"
+        sub = str(self.d.get("tools_refresh_bind_sub") or "").strip("/")        # where native_topology.json lands under {out} (KV: bind)
+        outdir = f"{out}/{sub}" if sub else out
         rc, txt = self.run(self.host, self.bind_cmd(new, out))
         if rc:
+            self.run(self.host, f"rm -rf {shlex.quote(out)}")
             return False, False, "strict bind failed: " + txt[-300:]
-        rc, got = self.run(self.host, f"sha256sum {shlex.quote(out)}/native_topology.json {shlex.quote(record)}/native_topology.json | awk '{{print $1}}'")
+        rc, got = self.run(self.host, f"sha256sum {shlex.quote(outdir)}/native_topology.json {shlex.quote(record)}/native_topology.json | awk '{{print $1}}'")
         shas = got.split()
         self.run(self.host, f"rm -rf {shlex.quote(out)}")
         if rc or len(shas) != 2:
