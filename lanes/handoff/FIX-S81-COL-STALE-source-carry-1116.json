@@ -36,6 +36,17 @@
     "event_adopt:3fa87b84b18",
     "result:FABLE-FIX-S81-SVC:svc-ready"
    ]
+  },
+  {
+   "id": "s81-mig-003-k3-k4",
+   "before": [
+    "event_adopt:B6gF2sv",
+    "lint_clean:s81"
+   ],
+   "after": [
+    "event_adopt:3fa87b84b18",
+    "lint_clean:s81"
+   ]
   }
  ]
 }

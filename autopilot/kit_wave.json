@@ -35933,9 +35933,9 @@
     {
      "id": "s81-mig-003-k3-k4",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): y-slot/x-slot over core, kit inputs unchanged; t14 needs form R (sec2). Running attempts finish. Lift = delete this key on Event G adopt.",
+     "reason": "CODEX r414 adopted819 source-event carry (F2sv rows retained; changed FT rows adopted fb0a249ce735 bind/LAT). WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): y-slot/x-slot over core, kit inputs unchanged; t14 needs form R (sec2). Running attempts finish. Lift = delete this key on Event G adopt.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
@@ -35954,7 +35954,11 @@
       "ot_s81sl_leaf__t38",
       "ot_s81sl_leaf__t24__cl2456157b"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_codex_source_carry_1116": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-004-k4-k5",
