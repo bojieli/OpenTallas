@@ -598,6 +598,68 @@ def verified_source_probes(AP, cfg, st, die, tree_fn, marker_fn, read_check=None
 PILOT_PASS_STATUS = ("PASS", "ENQUEUED", "ROUTE-HELD", "SIGNED")
 
 
+GEN_PILOT_STAGES = ("gen", "gen_kit", "gen_lint", "preflight")
+
+
+def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
+    """Publish source proof before PLACE, only for actual zero-exit GEN/preflight.
+    Failure to write evidence never fails a build; it simply earns no early credit.
+    """
+    try:
+        if any(stages.get(stage) != 0 for stage in GEN_PILOT_STAGES):
+            return False
+        if stages.get("kit_topology", 0) != 0:
+            return False
+        spec_path = Path(spec_path)
+        raw = spec_path.read_bytes()
+        sp = json.loads(raw)
+        if not isinstance(sp, dict):
+            return False
+        sha = str(sp.get("src_manifest_hash") or "").lower()
+        if (hashlib.sha256(raw).hexdigest() != spec_sha256
+                or not re.fullmatch(r"[0-9a-f]{64}", sha)
+                or not sp.get("die") or not sp.get("item") or not sp.get("src")):
+            return False
+        receipt = dict(schema="opentallas.gen_pilot.v1", stage="gen_preflight", verdict="PASS",
+                       die=sp["die"], item=sp["item"], source=sp["src"], src_manifest_hash=sha,
+                       spec_sha256=spec_sha256,
+                       stages={stage: stages[stage] for stage in GEN_PILOT_STAGES})
+        if "kit_topology" in stages:
+            receipt["stages"]["kit_topology"] = stages["kit_topology"]
+        target = spec_path.with_name("gen_pilot.json")
+        temp = target.with_name(target.name + "." + str(os.getpid()) + ".tmp")
+        temp.write_text(json.dumps(receipt, sort_keys=True) + "\n")
+        try:
+            os.link(temp, target)                  # atomic, never replace a prior verdict
+        except FileExistsError:
+            return json.loads(target.read_text()) == receipt
+        finally:
+            temp.unlink(missing_ok=True)
+        return True
+    except (OSError, ValueError, TypeError, KeyError):
+        return False
+
+
+def gen_pilot_receipt_pass(path, die, item, spec, raw_spec):
+    """An early proof is tied to the exact immutable attempt spec and source."""
+    try:
+        rec = json.loads((Path(path) / "gen_pilot.json").read_text())
+        if not isinstance(rec, dict):
+            return False
+        return (rec.get("schema") == "opentallas.gen_pilot.v1"
+                and rec.get("stage") == "gen_preflight" and rec.get("verdict") == "PASS"
+                and rec.get("die") == die == spec.get("die")
+                and rec.get("item") == item == spec.get("item")
+                and rec.get("source") == spec.get("src")
+                and rec.get("src_manifest_hash") == spec.get("src_manifest_hash")
+                and bool(re.fullmatch(r"[0-9a-f]{64}", str(rec.get("src_manifest_hash") or "")))
+                and rec.get("spec_sha256") == hashlib.sha256(raw_spec).hexdigest()
+                and all((rec.get("stages") or {}).get(stage) == 0 for stage in GEN_PILOT_STAGES)
+                and (rec.get("stages") or {}).get("kit_topology", 0) == 0)
+    except (OSError, ValueError, TypeError):
+        return False
+
+
 def pilot_passed_map(st, cfg):
     """Source-specific pilot passes, including retained successful prior attempts.
 
@@ -623,8 +685,9 @@ def pilot_passed_map(st, cfg):
                     pass
             for path, row_pass in candidates:
                 try:
-                    sp = json.loads((path / "spec.json").read_text())
-                    if not row_pass:
+                    raw_spec = (path / "spec.json").read_bytes()
+                    sp = json.loads(raw_spec)
+                    if not row_pass and not gen_pilot_receipt_pass(path, die, r["item"], sp, raw_spec):
                         result = json.loads((path / "result.json").read_text())
                         if (result.get("verdict") != "PASS" or result.get("stage") != "geom"
                                 or result.get("die") != die or result.get("item") != r["item"]
@@ -6182,8 +6245,11 @@ def ensure_future_lec(out, meta):
 
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
-    sp = json.loads(Path(spec_path).read_text())
+    spec_bytes = Path(spec_path).read_bytes()
+    spec_sha256 = hashlib.sha256(spec_bytes).hexdigest()
+    sp = json.loads(spec_bytes)
     out = Path(spec_path).parent
+    completed_stages = {}
     res = {"stage": "start", "verdict": "FAIL", "die": sp["die"], "item": sp["item"], "t0": time.time()}
     G, hub, W, T = sp["gen_host"], sp["hub"], sp["work"], sp["item"]
     K = f"{W}/gen/{T}"                                   # gen.py phys --out W/gen: kit W/gen/T, runner W/gen/run_kit.sh
@@ -6239,6 +6305,7 @@ def run_item(spec_path):
         (out / f"{stage}.log").write_text(txt_all)
         logs.append(stage)
         print(f"KW_STAGE_RC {stage} {rc_out}", flush=True)
+        completed_stages[stage] = rc_out
         return rc_out, txt
 
     def remote(cmd):                                     # ssh joins argv with spaces: send ONE quoted command
@@ -6834,6 +6901,8 @@ def run_item(spec_path):
     # were only in the receipt and one log line; they go into result.json and the row.  Advisory: never stops the kit.
     _, rtxt = run("preflight_adv", remote(f"cat {q(W)}/{pfo}"), idempotent=True)
     res["preflight_advisory"] = preflight_advisory(rtxt)
+    if publish_gen_pilot_receipt(spec_path, spec_sha256, completed_stages):
+        print("KW_GEN_PILOT_PASS source-specific GEN + preflight receipt", flush=True)
     _dg = sp.get("dedup_group") or ""
     if _dg:                                       # WF-1 11-14 (friction 7): one build per kit identity
         try:
