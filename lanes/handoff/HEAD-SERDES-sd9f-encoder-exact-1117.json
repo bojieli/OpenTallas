@@ -1,0 +1,35 @@
+{
+  "source_sha256": "9f68f25109f98249a4ce6c33ce08a88a381f552b65aea6c05eab71848bea1b2b",
+  "shape": {
+    "PPCYC": 0,
+    "PIN_FAULT": 0,
+    "H0_SEQ_ONLY": 0,
+    "cycles": 30000
+  },
+  "baseline_reference": "preprocessed define-off source before candidate flags",
+  "positive": [
+    "KP4_ENC_LA PASS PPCYC=0 MUT=0 PIN_FAULT=0 SEED=1 LAT=0 cycles=30000 p_v=29544 words_tail_nz=29544 resets=18 gaps=103 mismatches=0"
+  ],
+  "negative": [
+    "KP4_ENC_LA FAIL PPCYC=0 MUT=0 PIN_FAULT=0 SEED=1 LAT=0 cycles=30000 p_v=29544 words_tail_nz=29544 resets=18 gaps=103 mismatches=2940"
+  ],
+  "latency_delta": 0,
+  "verdict": "PASS",
+  "input_sha256": {
+    "ot_s81_kp4_enc_mat_q4.svh": "f021ac32049429a46a59aeb84e4aad8792c116584c1751624356e6552dec2fbf",
+    "ref_flat.sv": "2f618910c646ae30029e860adeaa2610c506106c6e331a19d200c4d240f3063a",
+    "ot_s81_kp4_enc_la_mat.svh": "b4d6117f9fb9569f7777009197cd23077c0d0ca5a0d3061092e2e8aa2db28041",
+    "ot_s81_kp4_common.sv": "261a00d6db06bab0c3add28489c8f3e1bc6ddf3a0a6b8af1b4158068c05a1afb",
+    "ot_s81_kp4_enc_la_mat_q4.svh": "8750c6f428670191bf2984927a41a2ce9dbf2a8d69d6dcdf7d44c618f8413eb4",
+    "ot_s81_kp4_enc.sv": "9f68f25109f98249a4ce6c33ce08a88a381f552b65aea6c05eab71848bea1b2b",
+    "ot_s81_kp4_enc_ref.sv": "fddca4a14a0dfc570db69235facd666a47da1c225038e499267c07f845c065c8",
+    "ot_s81_gf1024.svh": "0c1d1e94f6a2a360da1f1b23b1cd7847958450c3b642b9978b0c13faead4b855",
+    "ot_s81_kp4_enc_mat.svh": "f35e2b018bbc00ac7da81ecbd7b2b9a114a3aa4edcc43a7f1effb23aaedc2f70",
+    "tb_kp4_enc_la.sv": "caf2ae9ac08869b41bd391ea72f7a4a3a75260e4cb4820f86ef820b2064f6d68"
+  },
+  "unit": "oth-ubuntu-3284375-1794902398",
+  "run_host": "epyc8",
+  "model_before_build": "../model_before_build.json",
+  "physical": "NOT QUALIFIED; GRT candidate running independently",
+  "failed_a1": "bench_a1_ref_comment_guard retained: guard matched mutant name inside a comment after preprocessing, fixed to check active directives/mutant expression; no simulation ran in a1"
+}

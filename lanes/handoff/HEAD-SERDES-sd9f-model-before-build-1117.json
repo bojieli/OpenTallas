@@ -1,0 +1,39 @@
+{
+  "candidate": "sd9f=sd9e+existing OT_S81_KP4_ENC_LA",
+  "source": "stock ot_s81_kp4_enc.sv, committed11-09 evaluation-domain form",
+  "state_bits": 300,
+  "basis": "GF(2^10), exact Q*A=D*Q; no floating arithmetic",
+  "macs_per_cycle": 0,
+  "communication_bytes_per_cycle": {
+    "input": 64,
+    "pma_output": 68
+  },
+  "boundary_tracks_delta": 0,
+  "throughput_beats_per_cycle": 1,
+  "latency_delta_vs_sd9e": 0,
+  "latency_total_vs_original": {
+    "rx_pma_edges": 2,
+    "rx_core_edges": 1,
+    "tx_extra_edges": 0
+  },
+  "loop": {
+    "old_row_inputs_max": 173,
+    "new_row_inputs_max": 8,
+    "new_feedback_logic_xor_depth_upper": 3
+  },
+  "parity": {
+    "partial_register_banks": 4,
+    "partial_width_bits": 300,
+    "partial_column_bits": 75,
+    "max_inputs_per_row": 51
+  },
+  "flops_delta": {
+    "rem_s": 300,
+    "partial_pi": 1200,
+    "old_par_removed": -300,
+    "total": 1200
+  },
+  "routing": "Same3hardcores/pins/typeoutline; old dense feedback fanout moves to kept rem_s and four partial-register banks. rem_q feedback only <=10 local D rows per10bit lane; no added boundary or mux transaction.",
+  "floorplan_fit": "1200FF extra versus241902 synthesizedstdcells <0.5percent cellcount; same NF15d2-derived slot2885.76x1226.88, no core reshape. Actual area/fanout/clock sinks measured in fullshape PNR.",
+  "qualification": "minimum actualHEAD PPCYC0 PINFAULT0 H0_SEQ_ONLY0 encoder lockstep+lane mutant before route; fulltype TT/FF/DRC gating before adoption"
+}
