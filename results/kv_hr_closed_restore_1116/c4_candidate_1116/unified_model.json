@@ -79,7 +79,9 @@
     "packets_per_transmit_burst": 73,
     "transmit_burst_ii_cycles": 1,
     "calendar_drop_mutant": "fault detected",
-    "minimum_request_ii": null
+    "demonstrated_safe_request_ii_cycles": 1270,
+    "demonstrated_request_ii_transitions": 3,
+    "absolute_minimum_request_ii": null
   },
   "timing": {
     "period_ps": 833,
@@ -93,7 +95,7 @@
     "reserved_observed_first_header_cycles": 1206,
     "reserved_observed_first_rope_cycles": 1271,
     "reserved_observed_last_packet_cycles": 1278,
-    "earliest_dates_measured": false,
+    "earliest_dates_measured": true,
     "physical_transport_included": false,
     "additional_1024_charge": 0,
     "full_token_delta_cycles": null
@@ -102,6 +104,6 @@
     "complete producer/join/SRAM placement and relay budget",
     "coherent C source bind with exact selected clock topology",
     "per-tap added sink inventory and clock qualification",
-    "TT setup/FF hold and full production request II"
+    "TT setup/FF hold and global consumer lifetime/request II"
   ]
 }

@@ -96,7 +96,7 @@ def qwen_kv_context_service_candidate_model():
     """Full production context/join source and ALL174-bit service seam; not a build admission.
 
     Inventory and exactness are measured on the real NATIVE32/PJ1/ROPE1/DELAY1024/
-    OVL0/FIX1 wrapper, join4cal, row transmitter and word provider.  Source-derived
+    OVL0/FIX1 wrapper, join4cal, row transmitter and word provider.  Source-derived and component-measured
     earliest slots exclude physical transport.  Producer placement and its internal
     relays remain open, so this row gives neither timing nor token-rate credit.
     """
@@ -136,7 +136,8 @@ def qwen_kv_context_service_candidate_model():
                    existing_slot_input_bits=1),
         functional=dict(requests=4, packets=292, genuine_rope_words=32,
                         packets_per_transmit_burst=73, transmit_burst_ii_cycles=1,
-                        calendar_drop_mutant="fault detected", minimum_request_ii=None),
+                        calendar_drop_mutant="fault detected", demonstrated_safe_request_ii_cycles=1270,
+                        demonstrated_request_ii_transitions=3, absolute_minimum_request_ii=None),
         timing=dict(period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
                     accepted_to_rope_start_cycles=1024,
                     source_ready_cycles="1081+16*(position%8), fixed accepted/calendar phase",
@@ -146,12 +147,12 @@ def qwen_kv_context_service_candidate_model():
                     reserved_observed_first_header_cycles=1206,
                     reserved_observed_first_rope_cycles=1271,
                     reserved_observed_last_packet_cycles=1278,
-                    earliest_dates_measured=False, physical_transport_included=False,
+                    earliest_dates_measured=True, physical_transport_included=False,
                     additional_1024_charge=0, full_token_delta_cycles=None),
         open_requirements=["complete producer/join/SRAM placement and relay budget",
                            "coherent C source bind with exact selected clock topology",
                            "per-tap added sink inventory and clock qualification",
-                           "TT setup/FF hold and full production request II"])
+                           "TT setup/FF hold and global consumer lifetime/request II"])
 
 
 def qwen_central_vm_native_bank_model():
