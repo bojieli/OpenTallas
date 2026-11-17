@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 16:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 16:45 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 13, 'NO-DATA': 2, 'EXCLUDED': 12, 'PROGRESS': 3}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 12, 'NO-DATA': 2, 'EXCLUDED': 12, 'PROGRESS': 3}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -16,9 +16,8 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 13, 'NO-DATA
 | intel1 | dpkit-kit-2538957 | kit | 5_1_grt | 46.4 | repair_TNS best 336908 last 336908 rows 9 | YOUNG: series started inside the last 6 h |  |
 | intel1 | dpkit-kit-2546869 | kit | 5_1_grt | 46.4 | repair_TNS best 414610 last 414610 rows 1 | YOUNG: series started inside the last 6 h |  |
 | intel1 | dpkit-slw_fe_v1__clfe325744__cldb4efe33-2596195 | slw_fe_v1 | 5_2_route | 46.4 | last meaningful line 0.1 h ago (350/351 lines) | YOUNG: evidence 1.1 h < 7.5 h |  |
-| intel2 | dpkit-serdes__t14-3610047 | serdes__t14 | 3_3_place_gp | 0.3 | overflow best 0.8644 last 0.8644 rows 7 | YOUNG: evidence 0.1 h < 7.5 h |  |
-| intel2 | dpkit-serdes__t1__clb45db5be-3821183 | serdes__t1 | 2_4_floorplan_pdn | 0.1 | last meaningful line 0.0 h ago (91/91 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
-| intel2 | otc-3880738-27462 | 3880738 | 2_4_floorplan_pdn | 0.0 | last meaningful line 0.0 h ago (91/91 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| intel2 | dpkit-serdes__t14-3610047 | serdes__t14 | 3_3_place_gp | 0.6 | overflow best 0.2015 last 0.2015 rows 42 | YOUNG: evidence 0.3 h < 7.5 h |  |
+| intel2 | dpkit-serdes__t1__clb45db5be-3821183 | serdes__t1 | 3_3_place_gp | 0.3 | last meaningful line 0.0 h ago (27/27 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | epyc2 | dpkit-cbn_q01__clab6e67f2-2229149 | cbn_q01 | 5_1_grt | 14.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 14.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 4.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
