@@ -8,7 +8,7 @@ exit $?
 __doc__ = """ot-run: run a heavy command on the least CPU-loaded fleet host that can admit it (admission is by memory only).
 
   ot-run --mem GB [--threads N] [--dir REMOTE_DIR] [--disk GB] [--hosts a,b] [--pick] [--stage PATH ...] -- <command...>
-  ot-run --mem GB --job SPEC.json [--hosts a,b] ... -- <command...>     (a spec key "plan_job": "bind"|"latcheck"|"g0" = --plan-job)
+  ot-run --mem GB --job SPEC.json [--hosts a,b] ... -- <command...>
                            SEALED JOB (ISOLATE-1, OWNER 2026-11-09 "yes, isolate the jobs. simply delete the finished job
                            folder"): the command runs through ot-job on the chosen host, in its own job dir with only the
                            declared inputs of the spec (read-only, from the host store) and its work dir; any other host
@@ -45,9 +45,6 @@ Queue candidates must have enough total physical RAM after mandatory headroom fo
                  only while a waiting die job fits the host NOW (it starts within seconds); a die job that does not fit
                  never holds memory idle (DIE-FIRST v2, ot-heavy-reconcile).  ot-run also sets it for commands matching
                  DIE_RE (see die_like()).
---plan-job KIND: explicit plan marker (KIND = bind, latcheck or g0; WAVE-CONFIG 11-16).  Implies --priority plan and does not look at the
-                 script name; any other kind is refused.  --priority plan alone keeps the script-name rule (bind*, run_gate*,
-                 chain*, latcheck*, g0) as the fallback.  Type builds never qualify.
 --crit: a critical job (token sims, die GRT50, die clock runs; COORD 11-01): CPUWeight=1000 on its scope and cpu.weight
          ~1000 on its containers (default 100), and it bypasses the host load cap (non-crit jobs wait while load1 >=
          LOAD_CAP_FACTOR x nproc, default 1.5).  Same as OT_RUN_CRIT=1.  Memory admission is unchanged.
@@ -860,6 +857,8 @@ def direct_job():
 PLAN_CMD_RE = re.compile(r'''(?i)(?:^|[/\s_.=-])(?:bind[A-Za-z0-9_]*|run_gate[A-Za-z0-9_]*|chain[A-Za-z0-9_]*|latcheck[A-Za-z0-9_]*|g0)(?:\.sh|\.py|\.tcl)?(?=$|[\s/_.-])''')
 
 
+# --plan-job KIND (bind, latcheck or g0; WAVE-CONFIG 11-16): explicit plan marker, implies --priority plan, ignores the script name; a sealed-job spec
+# key "plan_job" does the same.  --priority plan alone keeps the script-name rule as the fallback.  Help text is hash-pinned by test_ot_run_shell_guard.
 PLAN_JOB_KINDS = ("bind", "latcheck", "g0")      # WAVE-CONFIG 11-16: the only kinds a job-spec marker may name
 
 
