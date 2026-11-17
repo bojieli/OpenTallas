@@ -9,7 +9,19 @@ FIND_DEL = re.compile(r"\bfind\s+[^;&|\n]*" + SCRATCH + r"[^;&|\n]*\s-delete\b")
 RMTREE = re.compile(r"rmtree\([^)]*" + SCRATCH)
 
 
+GIT_CLONE = re.compile(r"\bgit\s+(?:-C\s+\S+\s+)?clone\b[^;&|\n]*" + SCRATCH)
+GIT_WT = re.compile(r"\bgit\s+(?:-C\s+\S+\s+)?worktree\s+add\b[^;&|\n]*" + SCRATCH)
+SAFE_FLAGS = re.compile(r"--filter|--sparse|--depth|--no-checkout|--bare|--mirror|--reference|ot-lane-clone")
+
+
+def raw_full_checkout(cmd):
+    """a `git clone` / `git worktree add` into scratch that is not sparse / filtered / shallow / bare = a raw ~49 GB checkout (COORD FABLE-FLOW-0700 (3))"""
+    return any((rx.search(seg) and not SAFE_FLAGS.search(seg)) for seg in re.split(r"[;&|\n]", cmd) for rx in (GIT_CLONE, GIT_WT))
+
+
 def blocked(cmd):
+    if raw_full_checkout(cmd):
+        return True
     if "ot-delete" in cmd.split() and not RM_R.search(cmd):
         return False
     return bool(RM_R.search(cmd) or FIND_DEL.search(cmd) or RMTREE.search(cmd))
