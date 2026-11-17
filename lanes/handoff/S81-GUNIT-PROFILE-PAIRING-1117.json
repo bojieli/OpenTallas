@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.s81.gunit.profile_pairing.v1",
+  "decision": "candidate FWDOWN off paired to actual signed BF and BA FWPIPE views",
+  "source_die_sha256": "784fcfe55a69aeb981abd8af680b0f35b6e44c8044575862ebe5852a4f461cde",
+  "source_signed_bf_sha256": "5dbc1715426f63eecd68f7709d9ddf54cfa6257d89268183cdf41cf72fb35962",
+  "candidate_delta": {
+    "remove_global_define": "OT_S81_GUNIT_FWDOWN",
+    "added_cycles": 0,
+    "new_rtl": false,
+    "parent_wrapper_change": false
+  },
+  "checks": {
+    "dsdv_gunit_l1f_bf": {
+      "signed_equals_candidate_off": true,
+      "candidate_on_equals_off": false,
+      "sha_off": "fc0dd360dbf073cb4ff0d8a7111d4de0a4a5f4a2c9979c6c9de3bc370f005b6a"
+    },
+    "dsdv_gunit_l1f": {
+      "signed_equals_candidate_off": true,
+      "candidate_on_equals_off": true,
+      "sha_off": "7728bba51c0bc0b0b0e3ca2dd38e51dddd3e97fe07f7466a24d1f7544644e000"
+    },
+    "wrapper_swapped_hi_mutant_rejected": true
+  },
+  "method": "Verilator -E -P, exact selected-profile module token equality after whitespace removal; no synthesis/physical rerun. Swapped sv_hi->sv_lo wrapper mutation rejected. This is source identity, not new numerical proof.",
+  "bf": {
+    "view": "physical/die_plan/s81/cores/views/dsdv_gunit_l1f_bf_signed_1116",
+    "bind_defines": [
+      "OT_GUNIT_BF_M1REG",
+      "OT_GUNIT_BF_C1REG",
+      "OT_GUNIT_BF_SVREG",
+      "OT_GUNIT_BF_FWPIPE"
+    ],
+    "fwdown": false,
+    "signed_netlist_sha256": "572c164dda993d89ad0dbae76c5774848f5814a7f60fe1d51ba2ad0fbd36896e",
+    "wqc_bits": 126,
+    "adc_bits": 1120
+  },
+  "ba": {
+    "bind_defines": [
+      "OT_GUNIT_BF_SVREG",
+      "OT_GUNIT_BF_FWPIPE"
+    ],
+    "fwdown": false,
+    "ba0_view": "physical/die_plan/s81/cores/views/dsdv_gunit_l1f_ba0_fwp_1117",
+    "ba0_branch": "claude/s81-gunit-ba-fwp-view-1117@8a0fbc2c0fb8672adddcd059a520ee30d5fc1270",
+    "ba1_status": "Original fwp RMIN signed/both archives but parent child_lint FAIL11 W M4 pins under own M5. Fresh fwppk geometry successor E8 unit2288546 in DRT; use coherent new view after finish/signoff/checked export, not falsely checked old one."
+  },
+  "gate_remaining": [
+    "Fresh ELAB/strict bind/LATCHECK/G0 on candidate profile",
+    "BA1 checked FWPIPE view from fwppk successor for final parent physical use"
+  ],
+  "scope": "No D5d mutation/apply performed. Existing pipeline latency price FWPIPE remains; removing FWDOWN changes replication, not cycles."
+}
