@@ -55,3 +55,9 @@ On release the wave relaunches them; DEDUP collapses each base to its distinct k
 - Audit of all live hold records: lanes/handoff/FIX-S81-COL-STALE-hold-audit.tsv (script intel2 W/audit.py).
 - QC: added qwen_compute-kf-clock-l2-1116 (27 uncovered clock types, event_adopt:S4q9l2* + lint_clean) and qwen_compute-kf-face-m-1116 (slw_fw_v3, coll_ftc, event_adopt:S4q9m* + lint_clean), bound to plan 9982b4d5, carry; planned_events += S4q9l2, S4q9l2d, S4q9m. Prefix * so the l2d / m_r plan names also release.
 - Next: D4 S81 src publication (Codex left STOP marker tools-converge/s81/d4col_1116/STOP; resume from candidate/finish.py), then col-wave1 pilot with S81-TYPES-R2.
+
+## 2026-11-16 20:2x PST
+- D4: S81-TYPES-R2 owns S81 tree switches and applied D4 itself (pilot hold pilot-s81-4db2d3f87934). My finish_claude.py is parked at STOP; do NOT restart it or run any tree apply.
+- QC: the QC-PLAN-R Kf apply (017c51d2cc3) carries the clock27/faces holds; my duplicate records were removed (19683946957).
+- NEW CLASS after r414 released mig-024-k1: kit_rtl "N filelist path(s) outside the kit source tree" on ~34 dsdv/gunit/leaf/serdes types, 20:0x-20:1x; FLOW-GUARD breaker open. The bind-out compile list points at RTL in run/b/B6gF2s4/src and B6gF2s4tapfix1/src (staged under kit-store snaps). All 5 files I sampled are byte-identical to the d4 src copy, so no RTL differs. Tool fix: bind.py kit-rtl rebases an outside file to <base>/<rtl-relative path> when the bytes are equal (foreign/different bytes still fail). Not started (COORD scope); proposed to S81-DIE-R2 / FLEET-OPS-R.
+- Watch: col-wave1 PASS from S81-TYPES-R2 -> 126 wave1 types launch; drive them to sign-off + export.
