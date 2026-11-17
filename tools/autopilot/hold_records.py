@@ -79,13 +79,17 @@ def split_term(t):
     return kind.strip(), val.strip()
 
 
-def known_events(d):
-    """lower-case event names the die has or declared: current event, plan file stem, *_prev events, planned_events"""
-    out = set()
+def adopted_events(d):
+    """Current adopted identities only; declarations and previous events never release a hold."""
     d = d or {}
-    for v in [d.get("event"), os.path.splitext(os.path.basename(str(d.get("plan") or "")))[0]]:
-        if v:
-            out.add(str(v).lower())
+    return {str(v).lower() for v in (d.get("event"), d.get("plan_event"),
+            os.path.splitext(os.path.basename(str(d.get("plan") or "")))[0]) if v}
+
+
+def known_events(d):
+    """Event names current or declared: adopted identities, *_prev events, planned_events."""
+    d = d or {}
+    out = adopted_events(d)
     for k, v in d.items():
         if k.startswith("event_prev") and isinstance(v, str):
             out.add(v.lower())
@@ -225,8 +229,7 @@ def term_met(term, rec, die, item, cfg, ctx):
             name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
             if not event_name_ok(name):
                 return False
-            hay = [str(d.get("event") or "").lower(), os.path.basename(str(d.get("plan") or "")).lower()]
-            return _event_token_in(name, hay)
+            return _event_token_in(name, adopted_events(d))
         if kind == "merge":
             ref = val.split()[0] if val else ""
             return bool(ref) and bool(ctx.is_merged(ref))
