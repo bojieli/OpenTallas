@@ -3,6 +3,7 @@
 Moved into the repo (tools/autopilot) from tools-converge/apply_reviewed_tree_marker_1116.py (FLEET-OPS-R, COORD r397) and extended with
 PILOT wave mode: the atomic apply switches die.src in kit_wave.json itself, so hold_records.apply_tree_switches never sees a switch;
 this adds the pilot hold (all items held but one pilot, released by gen_pilot:<die>:<manifest sha12>) in the same locked write.
+PUBLISH-GATE-1116: refuses without a PASS record of tools/autopilot/publish_gate.py (run it first; no opt-out flag).
 usage: apply_reviewed_tree_marker.py --candidate JSON --expect-source OLD_TREE --expect-event OLD_EVENT [--pilot-item ITEM | --no-pilot]
        [--keep-gen-hosts]
 --keep-gen-hosts (or candidate key keep_gen_hosts: true; HEAD-DIE-R, COORD r400/r401): keep the die's CURRENT gen_hosts (e.g. a
@@ -24,7 +25,7 @@ def atomic(path, data):
     os.replace(tmp, path)
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None):
     C = Path(C)
     marker = dict(obj.get("marker", obj))
     die = marker["die"]
@@ -40,6 +41,13 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         mc.pop("gen_hosts", None)
         mc.pop("gen_host", None)
     assert hosts and marker.get("smoke") == "PASS" and marker.get("plan") and marker.get("plan_sha256")
+    # PUBLISH-GATE-1116: no switch without a PASS record of the pre-apply gate (schema, PRE/G0, provenance hashes, dry gen) keyed to
+    # this tree manifest sha.  PG=False is only publish_gate.project_cfg() projecting the apply on a scratch copy.
+    if PG is not False:
+        if PG is None:
+            import publish_gate as PG
+        why = PG.require_pass(C, die, tree, want, marker["plan_sha256"])
+        assert not why, why
     if TC is None:
         import tree_check as TC
     rt = rt or HERE

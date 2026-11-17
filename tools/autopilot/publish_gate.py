@@ -1,0 +1,323 @@
+#!/usr/bin/env python3
+"""publish_gate: the pre-apply gate every tree switch must pass (PUBLISH-GATE, FABLE-FLOW-2000 class B, third request).
+
+Three KV trees (D3, D5, D8) failed only after the switch: D5 in pilot GEN (face_guard hash != provenance, 3 wrong frozen view
+files), D8 in PRE/G0 (advisory clock.die_tree unknown to the schema).  Publish checked that files were copied, not that gen and
+PRE/G0 accept them.  This gate runs, on the gen host that holds the tree and before apply_reviewed_tree_marker.py applies it:
+
+  schema   tree/tools/die_plan/schema.py validate PLAN       (the schema the tree's own PRE/G0/bind use)
+  pre_g0   plan_gate_pre.py check (SCHEMA unknown keys, INPUT, TOOLS, GEOM, ROWS) + check.py PLAN (G0)  - both of the tree
+  hashes   every provenance hash the tree bytes can answer: each view's landing_evidence/manifest.json sha256 map against the
+           files, provenance.json kit.face_guard_sha256 against landing_evidence/face_guard_source.py, the plan sha256
+  dry_gen  kit_wave.py run-item with spec dry_gen on ONE representative item of the die (the pilot item): kit_snap, kit_rtl,
+           gen, gen_lint and kit preflight, the same code and the cfg the apply would write; it stops before place (no P&R)
+
+and writes autopilot/publish_gate/<die>/<tree manifest sha>.json = verdict PASS | FAIL with the four check results.  The apply
+script refuses without a PASS record whose die, tree, manifest sha and plan sha256 match the candidate (require_pass()).
+
+    publish_gate.py run --candidate JSON --expect-source OLD_TREE --expect-event OLD_EVENT [--item ITEM] [--kind type|core]
+                        [--coord ~/coord] [--commit] [--work DIR] [--hub NAME] [--no-dry-gen-run (tests: skip the unit)]
+    publish_gate.py static --tree T --plan P [--asbuilt A] [--plan-sha256 S] [--work DIR]   (runs on the gen host, prints PG_STATIC {json})
+    publish_gate.py check --coord C --die D --tree T --manifest SHA --plan-sha256 S           (exit 0 = a matching PASS record)
+
+Nothing here changes a live config: the apply is projected on a scratch copy of the coord config, the dry gen runs in its own
+work root, the only coord write is the record (committed by bin/coord-commit.sh with --commit)."""
+import argparse
+import hashlib
+import json
+import os
+import re
+import shlex
+import socket
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent if "__file__" in globals() else Path(".")   # shipped inline to the gen host (-c): no file
+SCHEMA_ID = "opentallas.publish_gate.v1"
+CHECKS = ("schema", "pre_g0", "hashes", "dry_gen")
+HEX64 = re.compile(r"^[0-9a-f]{64}$")
+
+
+def sha256_file(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+# --------------------------------------------------------------------------------------------------- record + apply-side check
+def record_path(C, die, want):
+    return Path(C) / "autopilot" / "publish_gate" / die / (str(want) + ".json")
+
+
+def require_pass(C, die, tree, want, plan_sha256):
+    """-> '' when a matching PASS record exists, else the reason the apply must refuse"""
+    if not HEX64.match(str(want or "")):
+        return "publish gate: tree manifest sha is not a 64-hex sha256"
+    p = record_path(C, die, want)
+    try:
+        r = json.loads(p.read_text())
+    except (OSError, ValueError):
+        return f"publish gate: no PASS record {p} (run tools/autopilot/publish_gate.py run on this candidate first)"
+    for k, v in (("schema", SCHEMA_ID), ("die", die), ("tree", tree), ("manifest_hash", want), ("plan_sha256", plan_sha256)):
+        if r.get(k) != v:
+            return f"publish gate: record {p.name} {k} {str(r.get(k))[:80]!r} != candidate {str(v)[:80]!r}"
+    bad = [c for c in CHECKS if ((r.get("checks") or {}).get(c) or {}).get("verdict") != "PASS"]
+    if r.get("verdict") != "PASS" or bad:
+        return f"publish gate: record {p.name} is {r.get('verdict')}, checks not PASS: {','.join(bad) or '-'}"
+    return ""
+
+
+# --------------------------------------------------------------------------------------------------- static checks (run on the gen host)
+def check_hashes(tree, plan=None, plan_sha256=None):
+    """-> (findings, n_views).  Pure stdlib, reads tree bytes only.  A finding is one line 'HASH <what>: <detail>'."""
+    out, n = [], 0
+    if plan and plan_sha256:
+        try:
+            got = sha256_file(plan)
+            if got != plan_sha256:
+                out.append(f"HASH plan {plan}: sha256 {got[:12]} != candidate plan_sha256 {plan_sha256[:12]}")
+        except OSError as e:
+            out.append(f"HASH plan {plan}: unreadable ({e})")
+    root = Path(tree) / "physical"
+    for dp, dns, fns in os.walk(root):
+        if os.path.basename(dp) != "landing_evidence":
+            continue
+        dns[:] = []
+        n += 1
+        le, view = Path(dp), Path(dp).parent
+        name = str(view.relative_to(tree))
+        try:
+            man = json.loads((le / "manifest.json").read_text())
+        except (OSError, ValueError) as e:
+            out.append(f"HASH {name}: landing_evidence/manifest.json unreadable ({type(e).__name__})")
+            continue
+        for fn, want in sorted((man.get("sha256") or {}).items()):
+            try:
+                got = sha256_file(le / fn)
+            except OSError:
+                out.append(f"HASH {name}: landing_evidence/{fn} missing (manifest names it)")
+                continue
+            if got != want:
+                out.append(f"HASH {name}: landing_evidence/{fn} sha256 {got[:12]} != manifest {str(want)[:12]}")
+        try:
+            prov = json.loads((view / "provenance.json").read_text())
+        except (OSError, ValueError):
+            out.append(f"HASH {name}: provenance.json unreadable")
+            continue
+        fg = (prov.get("kit") or {}).get("face_guard_sha256")
+        if fg:
+            try:
+                got = sha256_file(le / "face_guard_source.py")
+            except OSError:
+                out.append(f"HASH {name}: landing_evidence/face_guard_source.py missing (provenance records face_guard_sha256)")
+                continue
+            if got != fg:
+                out.append(f"HASH {name}: face_guard_source.py sha256 {got[:12]} != provenance kit.face_guard_sha256 {str(fg)[:12]}")
+    return out, n
+
+
+def _sub(argv, cwd, timeout=1800):
+    try:
+        p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+        return p.returncode, (p.stdout + p.stderr)
+    except (OSError, subprocess.SubprocessError) as e:
+        return 99, f"{type(e).__name__}: {e}"
+
+
+def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None):
+    """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
+    tree, plan = str(tree), str(plan)
+    work = work or tempfile.mkdtemp(prefix="pubgate-")
+    dp = os.path.join(tree, "tools", "die_plan")
+    py = sys.executable
+    res = {}
+    if not os.path.isfile(plan):
+        miss = {"verdict": "FAIL", "why": f"plan file missing: {plan}"}
+        return {c: dict(miss) for c in ("schema", "pre_g0", "hashes")}
+    # schema.py imports its sibling modules; python3 -I drops the script directory from sys.path, so put the tree's in
+    rc, txt = _sub([py, "-I", "-c", "import sys; sys.path.insert(0, %r); import schema; sys.exit(schema.main(['schema.py', 'validate', %r]))" % (dp, plan)], tree)
+    res["schema"] = {"verdict": "PASS" if rc == 0 else "FAIL", "rc": rc, "tail": txt[-1500:]}
+    pre = [py, "-I", os.path.join(dp, "plan_gate_pre.py"), "check", "--tree", tree, "--plan", plan, "--quiet"]
+    if asbuilt:
+        pre += ["--asbuilt", str(asbuilt)]
+    rc1, t1 = _sub(pre, tree)
+    rc2, t2 = _sub([py, "-I", os.path.join(dp, "check.py"), plan, "--quiet", "--out", os.path.join(work, "g0")], tree)
+    res["pre_g0"] = {"verdict": "PASS" if rc1 == 0 and rc2 == 0 else "FAIL", "pre_rc": rc1, "g0_rc": rc2,
+                     "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
+    finds, n = check_hashes(tree, plan, plan_sha256)
+    res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
+                     **({"why": "no landing_evidence view found under the tree"} if not n and not finds else {})}
+    return res
+
+
+# --------------------------------------------------------------------------------------------------- orchestration (hub)
+def host_cmd(ot_run, host, work_dir, shell_cmd, mem=6, threads=2):
+    """a gate stage on the gen host goes through ot-run (admission), never straight onto a loaded host"""
+    return [ot_run, "--mem", str(mem), "--threads", str(threads), "--dir", work_dir, "--hosts", host, "--", "bash", "-c", shell_cmd]
+
+
+def static_remote(ot_run, host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run):
+    """ships this file inline (the gen host has no checkout of the tool); -> the static result dict"""
+    q = shlex.quote
+    cmd = (f"python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} --plan-sha256 {q(plan_sha256)}"
+           + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}")
+    p = runner(host_cmd(ot_run, host, work_dir, cmd), capture_output=True, text=True, timeout=3600)
+    txt = (p.stdout or "") + (p.stderr or "")
+    got = [ln[len("PG_STATIC "):] for ln in txt.splitlines() if ln.startswith("PG_STATIC ")]
+    if not got:
+        why = f"no PG_STATIC line (rc {p.returncode}): " + txt[-400:]
+        return {c: {"verdict": "FAIL", "why": why} for c in ("schema", "pre_g0", "hashes")}
+    return json.loads(got[-1])
+
+
+def project_cfg(C, obj, expect_source, expect_event, item=None, TC=None):
+    """the kit_wave config the apply WOULD write, from a scratch copy of the coord config (apply_marker itself, so no second
+    implementation; the scratch has no live path).  -> (cfg_text, die, item)"""
+    import apply_reviewed_tree_marker as A
+    import hold_records as HR
+    if TC is None:
+        import tree_check as TC
+    C = Path(C)
+    marker = dict(obj.get("marker", obj))
+    die = marker["die"]
+    with tempfile.TemporaryDirectory(prefix="pubgate-cfg-") as td:
+        S = Path(td)
+        (S / "autopilot").mkdir()
+        (S / "lanes/handoff").mkdir(parents=True)
+        (S / "autopilot/kit_wave.json").write_text((C / "autopilot/kit_wave.json").read_text())
+        os.symlink(C / "autopilot/tree_checks", S / "autopilot/tree_checks")
+        A.apply_marker(S, dict(obj), expect_source, expect_event, no_pilot=True, TC=TC, PG=False)
+        text = (S / "autopilot/kit_wave.json").read_text()
+    cfg = json.loads(text)
+    pick = item or HR.pilot_item_for(cfg, die, cfg["dies"][die])
+    return text, die, pick
+
+
+def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, want=""):
+    """build the item spec from the projected cfg, run kit_wave run-item with dry_gen, -> check dict"""
+    sys.path.insert(0, str(HERE))
+    import kit_wave as KW
+    cfg = KW.load_config(cfg_text)
+    cfg["_hub"] = hub
+    cfg["dies"][die]["event"] = "pg" + str(want)[:10]
+    sp = KW.spec_for(dict(cfg, _otrun_status={}), die, item, hub, kind=kind)
+    sp.update(dry_gen=True, gen_host=gen_host)
+    jd = Path(work_root) / die / str(want)[:12] / item
+    jd.mkdir(parents=True, exist_ok=True)
+    (jd / "spec.json").write_text(json.dumps(sp, indent=1))
+    out = {"verdict": "FAIL", "item": item, "kind": kind, "gen_host": gen_host, "dir": str(jd), "spec_src": sp.get("src")}
+    if not run_unit:
+        out["why"] = "unit not run"
+        return out
+    code = ("import sys,runpy;sys.path.insert(0,%r);sys.argv=['kit_wave.py','run-item',%r];"
+            "runpy.run_path(%r,run_name='__main__')" % (str(HERE), str(jd / "spec.json"), str(HERE / "kit_wave.py")))
+    with open(jd / "unit.log", "w") as lg:
+        p = subprocess.run([sys.executable, "-I", "-c", code], stdout=lg, stderr=subprocess.STDOUT, timeout=6 * 3600)
+    try:
+        res = json.loads((jd / "result.json").read_text())
+    except (OSError, ValueError):
+        res = {}
+    out.update(rc=p.returncode, stage=res.get("stage"), result=res.get("verdict"))
+    if res.get("verdict") == "DRY-PASS" and p.returncode == 0:
+        out["verdict"] = "PASS"
+        out["preflight_fail_advisory"] = res.get("preflight_fail_advisory")
+    else:
+        out["why"] = ("stage %s: %s" % (res.get("stage"), "; ".join(res.get("errors") or []) or str(res.get("tail") or "")[-600:]))[:1500]
+    return out
+
+
+def write_record(C, rec, commit=False, runner=subprocess.run):
+    p = record_path(C, rec["die"], rec["manifest_hash"])
+    p.parent.mkdir(parents=True, exist_ok=True)
+    tmp = p.with_name(p.name + ".tmp.%d" % os.getpid())
+    tmp.write_text(json.dumps(rec, indent=1, sort_keys=True) + "\n")
+    os.replace(tmp, p)
+    if commit:
+        rel = str(p.relative_to(C))
+        r = runner([str(Path(C) / "bin/coord-commit.sh"), f"PUBLISH-GATE {rec['verdict']} {rec['die']} {rec['manifest_hash'][:12]}", rel],
+                   capture_output=True, text=True, timeout=900)
+        rec["_commit"] = (r.stdout or "").strip().splitlines()[-1:] or r.returncode
+    return p
+
+
+def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=None, hub=None, commit=False, run_unit=True, ot_run=None,
+             static_fn=None, dry_fn=None, TC=None):
+    marker = dict(obj.get("marker", obj))
+    die, tree = marker["die"], marker["tree"]
+    want = marker.get("manifest_hash") or marker["src_manifest_sha"]
+    plan, plan_sha = marker["plan"], marker["plan_sha256"]
+    hosts = list((marker.get("config") or {}).get("gen_hosts") or marker.get("hosts") or [])
+    rec = {"schema": SCHEMA_ID, "die": die, "tree": tree, "manifest_hash": want, "plan": plan, "plan_sha256": plan_sha, "hosts": hosts,
+           "t": time.time(), "checks": {}, "verdict": "FAIL"}
+    hub = hub or os.environ.get("OT_HUB_NAME") or socket.gethostname()
+    work = work or os.path.expanduser("~/.local/state/publish-gate")
+    try:
+        text, die2, pick = project_cfg(C, obj, expect_source, expect_event, item, TC)
+        cfgd = json.loads(text)["dies"][die]
+        hosts = list(cfgd.get("gen_hosts") or hosts)
+        rec["hosts"] = hosts
+        if not pick:
+            raise AssertionError("no representative item: pass --item or set die.pilot_item")
+        rec["item"] = pick
+        wr = str(cfgd.get("work_root") or json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("work_root") or "/tmp")
+        st = (static_fn or (lambda h, t, p, ab, ps: static_remote(ot_run or "ot-run", h, wr + "/pubgate", t, p, ab, ps)))(
+            hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
+        rec["checks"].update(st)
+        if all((st.get(c) or {}).get("verdict") == "PASS" for c in ("schema", "pre_g0", "hashes")):
+            rec["checks"]["dry_gen"] = (dry_fn or (lambda t, d, i, k, h, w: dry_gen(t, d, i, k, work, hub, h, run_unit, w)))(
+                text, die, pick, kind, hosts[0], want)
+        else:
+            rec["checks"]["dry_gen"] = {"verdict": "SKIP", "why": "an earlier check failed (the dry gen would only repeat it)"}
+    except Exception as e:                         # a gate that cannot run is a FAIL, never a pass
+        rec["checks"].setdefault("gate", {"verdict": "FAIL", "why": f"{type(e).__name__}: {e}"[:600]})
+    rec["verdict"] = "PASS" if all((rec["checks"].get(c) or {}).get("verdict") == "PASS" for c in CHECKS) else "FAIL"
+    write_record(C, rec, commit)
+    return rec
+
+
+def main(argv=None):
+    P = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = P.add_subparsers(dest="cmd", required=True)
+    r = sub.add_parser("run")
+    r.add_argument("--candidate", required=True)
+    r.add_argument("--expect-source", required=True)
+    r.add_argument("--expect-event", required=True)
+    r.add_argument("--item")
+    r.add_argument("--kind", default="type")
+    r.add_argument("--coord", default="/home/ubuntu/coord")
+    r.add_argument("--commit", action="store_true", help="commit the record with bin/coord-commit.sh")
+    r.add_argument("--work")
+    r.add_argument("--hub")
+    s = sub.add_parser("static")
+    s.add_argument("--tree", required=True)
+    s.add_argument("--plan", required=True)
+    s.add_argument("--asbuilt")
+    s.add_argument("--plan-sha256")
+    s.add_argument("--work")
+    c = sub.add_parser("check")
+    c.add_argument("--coord", default="/home/ubuntu/coord")
+    c.add_argument("--die", required=True)
+    c.add_argument("--tree", required=True)
+    c.add_argument("--manifest", required=True)
+    c.add_argument("--plan-sha256", required=True)
+    a = P.parse_args(argv)
+    if a.cmd == "static":
+        print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work)))
+        return 0
+    if a.cmd == "check":
+        why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)
+        print(why or "PASS")
+        return 1 if why else 0
+    obj = json.loads(Path(a.candidate).read_text())
+    rec = run_gate(a.coord, obj, a.expect_source, a.expect_event, a.item, a.kind, a.work, a.hub, a.commit)
+    print(json.dumps({k: (v if k != "checks" else {c: (x or {}).get("verdict") for c, x in v.items()}) for k, v in rec.items()}))
+    return 0 if rec["verdict"] == "PASS" else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
