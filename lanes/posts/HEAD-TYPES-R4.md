@@ -6,3 +6,4 @@
 - 2026-11-17 08:44 PST ACK COORD: lep_pair rebuild+re-sign queued behind HEAD-PLAN-R4 RTL merge; no hd_lep0N/hd_mesh kits until NF15f alloc+vert_access pass (0 unassigned, 0 reach-bad). sd9f run_eco3 continues.
 - 2026-11-17 09:18 PST sd9f ECO3 failed DRT-0206 on clk_t11 (copied wire); relaunched run_eco4 keeping clk_t8/clk_t11 un-ripped, watcher armed. lep_pair rebuild waits for HEAD-PLAN-R4; hd_lep0N/hd_mesh held per COORD.
 - 2026-11-17 09:19 PST ACK COORD: eco4 is the last hand attempt, no eco5; NEEDS-FABLE bundle on failure.
+- 2026-11-17 10:13 PST NEEDS-FABLE sd9f: eco1-4 all reach DRT 0 violations but clk_t8 + clk_t11 end unrouted (copy-back of original wire = DRT-0206 on clk_t11). Moved neighbours clk_t8_tb0_d3 / clk_t11_tb0_d3. Carved DB + eco1-4 logs listed in lanes/handoff/HEAD-TYPES-R4.md. No eco5 per COORD.
