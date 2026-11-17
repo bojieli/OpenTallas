@@ -10323,6 +10323,27 @@ def repeat_event(AP, cfg, st, rec, ev):
                     f"`unblock {item} {ev['fp'].split('|')[0]}` (or `*`) names it")
 
 
+VIEW_FAIL_RE = re.compile(r"abstract|\.lef\b|\.lib\b|\bview\b|PROV_FAIL", re.I)
+DESIGN_PARTS = {"block", "src", "overlay", "tools", "read-file", "input", "snapshot"}
+CELL_STAGES = ("cells", "cell-cap", "gen_lint")
+
+
+def release_parts(prev):
+    """WAVE-FLOW-R2 11-17: the input parts that may release a stored fail key, by failure class; None = every part (unknown class).
+    cell / lint failures: design inputs only.  prov_views and a bind failure naming an abstract / lef / lib: design inputs + staged views (+ bind context for
+    bind stages).  Any other class: design inputs, and bind context for the bind stages; never staged views."""
+    stage = str(prev.get("stage") or "")
+    why = str(prev.get("why") or "")
+    if stage in CELL_STAGES or re.search(r"SPLIT-NEEDED|cells? (?:cap|count|limit)|std cells >", why, re.I):
+        return set(DESIGN_PARTS) - {"tools"} | ({"tools"} if prev.get("tool_files") else set())
+    parts = set(DESIGN_PARTS)
+    if stage in BIND_STAGES:
+        parts.add("bind_context")
+    if stage.startswith("prov_") or (stage in BIND_STAGES and VIEW_FAIL_RE.search(why)):
+        parts.add("views")
+    return parts
+
+
 def fail_key_gate(cfg, st, die, item, block_sha=None):
     """the ONE check every launch path goes through (pick, RETRY-INFRA, re-arm, retry key, breaker release): -> (blocked, why, changed).
     blocked: the last non-HOST fail of this item has the same kit input digest, so the launch would fail the same way.
@@ -10378,6 +10399,11 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         changed.append("bind_context")
     if views_changed and "views" not in changed:
         changed.append("views")
+    # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 C): per-class input parts.  A fail key is released only by an input its failure class depends on:
+    # staged views / bind context do not release a cell-cap or other design failure (kv3_hub_Wo relaunched 4 times in 46 min after r589)
+    allow = release_parts(prev)
+    if allow is not None:
+        changed = [c for c in changed if c in allow]
     if not changed:
         return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay, stage tools and measured bind context are "
                       f"unchanged since the last fail: {str(prev.get('why'))[:100]}"), []
