@@ -730,7 +730,23 @@ def hold_audit_step(AP, cfg, st, t0):
     found = HR.audit(cfg, launched)
     summ = HR.summarize(found)
     AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
-           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD")))
+           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD")))
+    # HOLD-FLOW-R 11-16 (FABLE-FLOW-2000): a held release term with no producer for 12 h is a wave alert line
+    try:
+        _ctx = hold_ctx(cfg)
+        _seen = st.setdefault("hold_term_seen", {})
+        _al = HR.term_alerts(cfg, _seen, hours=12.0, is_met=lambda term, die, rec: HR.term_met(term, rec, die, "", cfg, _ctx))
+        if _al:
+            AP.log("KIT-WAVE HOLD-TERMS no producer for 12 h: " + "; ".join(f"{a['die']}/{a['id']} {a['term'][:60]} ({a['why']})" for a in _al)[:1500])
+            _sig2 = hashlib.sha1(json.dumps([(a["die"], a["id"], a["term"]) for a in _al]).encode()).hexdigest()[:12]
+            if st.get("hold_term_alert_sig") != _sig2:
+                st["hold_term_alert_sig"] = _sig2
+                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [HOLD-FLOW-R -> COORD, WAVE-HOLDS-1115] hold terms with no producer for 12 h: "
+                                + "; ".join(f"{a['die']}/{a['id']} {a['term'][:70]} x{a['n']} held: {a['why']}" for a in _al)[:1700])
+        else:
+            st.pop("hold_term_alert_sig", None)
+    except Exception as _e:
+        AP.log(f"KIT-WAVE HOLD-TERMS check failed: {type(_e).__name__}: {_e}")
     sig = hashlib.sha1(json.dumps([(f["code"], f["die"], f["id"], f["detail"], f["n"], sorted(map(str, f["items"]))[:50]) for f in found],
                                   default=str).encode()).hexdigest()[:12]
     if found and st.get("hold_audit_sig") != sig:
@@ -11023,6 +11039,17 @@ def _step(AP, ap_dir):
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
         cfg["_proof_lines"] = _q[-3000:]
+        try:                                             # HOLD-FLOW-R 11-16: lane registry + activity for the dead-term guard
+            import hold_records as _HRL
+            _all = AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines()
+            cfg["_registry_lanes"] = _HRL.registry_lanes(AP.read_coord("lanes/agent_ids.tsv"), AP.read_coord("autopilot/OWNERS.tsv"))
+            if not cfg["_registry_lanes"]:               # nothing readable: lanes are not checkable this tick (never refuse on a blind read)
+                cfg.pop("_registry_lanes")
+            cfg["_lane_activity"] = _HRL.lane_activity(_all)
+            _cut = time.time() - 12 * 3600
+            cfg["_queue_recent"] = [ln for ln in _all if (lambda m: m and time.mktime(time.strptime(m.group(1) + " " + m.group(2), "%Y-%m-%d %H:%M")) >= _cut)(re.match(r"^\s*-?\s*(\d{4}-\d\d-\d\d)\s+(\d\d:\d\d)\s", ln))]
+        except Exception as _e:
+            AP.log(f"KIT-WAVE HOLD-TERMS lane registry unreadable: {type(_e).__name__}: {_e}")
         import pending_actions as _PA                    # LIMIT-GUARD-1116: release steps as data, run here with no lane
         _PA.step_cfg(AP, cfg, ap_dir)
         _before = len(cfg.get("_hold_auto_released") or [])
