@@ -1,0 +1,321 @@
+{
+ "scope": "diagnosis of failed MBR, not a passing M bind or closure claim",
+ "failed_bind": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/bind/bind_s29q103S4Q9MBR",
+ "failed_report_sha256": "f96854d6f9e1c700bee8e5ec0ac441500a17cffb68f4d34932f3ab32f33b2d0f",
+ "source_bind_py_sha256": "049b2db8c6403067fbea7dba9ab3ed91392c62d2a52dc28a479d3edaa545cdfc",
+ "source_hook_sha256": "73608111b17b3f5ee21bbbd5c1a831f9193b9cb06a4412cf08697cc0b527bb72",
+ "param_regen_error": [
+  "PARAM_REGEN coll_regen.py: RS0: core->face 21 vs face->core 20 stages (the face calendar takes one R per port)"
+ ],
+ "m_param_regen_record_present": false,
+ "l2_derived_parameter_changes": 417,
+ "wrap_error_counts": {
+  "total": 72,
+  "bare_missing_parameter_form": 24,
+  "explicit_defaults_mismatch": 48,
+  "unique_type_rows": 40,
+  "types": 10
+ },
+ "normal_checker_comparison": [
+  {
+   "type": "sle_st_a_v1__cl67389ecd",
+   "m_checker_errors": [
+    "type sle_st_a_v1__cl67389ecd row u_r0: expected one bound instance u_u_r0, found 0",
+    "type sle_st_a_v1__cl67389ecd row u_r1: expected one bound instance u_u_r1, found 0",
+    "type sle_st_a_v1__cl67389ecd row u_r2: expected one bound instance u_u_r2, found 0",
+    "type sle_st_a_v1__cl67389ecd row u_r3: expected one bound instance u_u_r3, found 0"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+   "m_checker_errors": [
+    "type sle_st_a_v1__cl989804f6__cl18eece69 row u_r0: expected one bound instance u_u_r0, found 0",
+    "type sle_st_a_v1__cl989804f6__cl18eece69 row u_r1: expected one bound instance u_u_r1, found 0",
+    "type sle_st_a_v1__cl989804f6__cl18eece69 row u_r2: expected one bound instance u_u_r2, found 0",
+    "type sle_st_a_v1__cl989804f6__cl18eece69 row u_r3: expected one bound instance u_u_r3, found 0"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "sle_st_a_v1__cl989804f6__cled3c1d7b",
+   "m_checker_errors": [
+    "type sle_st_a_v1__cl989804f6__cled3c1d7b row u_r0: expected one bound instance u_u_r0, found 0",
+    "type sle_st_a_v1__cl989804f6__cled3c1d7b row u_r1: expected one bound instance u_u_r1, found 0",
+    "type sle_st_a_v1__cl989804f6__cled3c1d7b row u_r2: expected one bound instance u_u_r2, found 0",
+    "type sle_st_a_v1__cl989804f6__cled3c1d7b row u_r3: expected one bound instance u_u_r3, found 0"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "sle_st_a_v2__pv30dda31f",
+   "m_checker_errors": [
+    "type sle_st_a_v2__pv30dda31f row u_r0 (u_u_r0): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type sle_st_a_v2__pv30dda31f row u_r0 (u_u_r0): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv30dda31f row u_r0 (u_u_r0): parameter SKEW_S bound 14, plan param_wrap 10",
+    "type sle_st_a_v2__pv30dda31f row u_r1 (u_u_r1): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type sle_st_a_v2__pv30dda31f row u_r1 (u_u_r1): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv30dda31f row u_r1 (u_u_r1): parameter SKEW_S bound 14, plan param_wrap 10",
+    "type sle_st_a_v2__pv30dda31f row u_r2 (u_u_r2): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type sle_st_a_v2__pv30dda31f row u_r2 (u_u_r2): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv30dda31f row u_r2 (u_u_r2): parameter SKEW_S bound 14, plan param_wrap 10",
+    "type sle_st_a_v2__pv30dda31f row u_r3 (u_u_r3): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type sle_st_a_v2__pv30dda31f row u_r3 (u_u_r3): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv30dda31f row u_r3 (u_u_r3): parameter SKEW_S bound 14, plan param_wrap 10"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "sle_st_a_v2__pv4242de79",
+   "m_checker_errors": [
+    "type sle_st_a_v2__pv4242de79 row u_r0 (u_u_r0): parameter HI_PAD bound 0, plan param_wrap 15",
+    "type sle_st_a_v2__pv4242de79 row u_r0 (u_u_r0): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv4242de79 row u_r0 (u_u_r0): parameter SKEW_S bound 14, plan param_wrap 10",
+    "type sle_st_a_v2__pv4242de79 row u_r1 (u_u_r1): parameter HI_PAD bound 0, plan param_wrap 15",
+    "type sle_st_a_v2__pv4242de79 row u_r1 (u_u_r1): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv4242de79 row u_r1 (u_u_r1): parameter SKEW_S bound 14, plan param_wrap 10",
+    "type sle_st_a_v2__pv4242de79 row u_r2 (u_u_r2): parameter HI_PAD bound 0, plan param_wrap 15",
+    "type sle_st_a_v2__pv4242de79 row u_r2 (u_u_r2): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv4242de79 row u_r2 (u_u_r2): parameter SKEW_S bound 14, plan param_wrap 10",
+    "type sle_st_a_v2__pv4242de79 row u_r3 (u_u_r3): parameter HI_PAD bound 0, plan param_wrap 15",
+    "type sle_st_a_v2__pv4242de79 row u_r3 (u_u_r3): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type sle_st_a_v2__pv4242de79 row u_r3 (u_u_r3): parameter SKEW_S bound 14, plan param_wrap 10"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "slw_st_a_v1__clb036e152",
+   "m_checker_errors": [
+    "type slw_st_a_v1__clb036e152 row u_r0: expected one bound instance u_u_r0, found 0",
+    "type slw_st_a_v1__clb036e152 row u_r1: expected one bound instance u_u_r1, found 0",
+    "type slw_st_a_v1__clb036e152 row u_r2: expected one bound instance u_u_r2, found 0",
+    "type slw_st_a_v1__clb036e152 row u_r3: expected one bound instance u_u_r3, found 0"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
+   "m_checker_errors": [
+    "type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 row u_r0: expected one bound instance u_u_r0, found 0",
+    "type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 row u_r1: expected one bound instance u_u_r1, found 0",
+    "type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 row u_r2: expected one bound instance u_u_r2, found 0",
+    "type slw_st_a_v1__clfc5867a6__pvdf8e5ca4 row u_r3: expected one bound instance u_u_r3, found 0"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "slw_st_a_v1__clfc5867a6__pvf82a6c28",
+   "m_checker_errors": [
+    "type slw_st_a_v1__clfc5867a6__pvf82a6c28 row u_r0: expected one bound instance u_u_r0, found 0",
+    "type slw_st_a_v1__clfc5867a6__pvf82a6c28 row u_r1: expected one bound instance u_u_r1, found 0",
+    "type slw_st_a_v1__clfc5867a6__pvf82a6c28 row u_r2: expected one bound instance u_u_r2, found 0",
+    "type slw_st_a_v1__clfc5867a6__pvf82a6c28 row u_r3: expected one bound instance u_u_r3, found 0"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "slw_st_a_v2__cl9f076a5c",
+   "m_checker_errors": [
+    "type slw_st_a_v2__cl9f076a5c row u_r0 (u_u_r0): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__cl9f076a5c row u_r0 (u_u_r0): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__cl9f076a5c row u_r0 (u_u_r0): parameter SKEW_S bound 14, plan param_wrap 11",
+    "type slw_st_a_v2__cl9f076a5c row u_r1 (u_u_r1): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__cl9f076a5c row u_r1 (u_u_r1): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__cl9f076a5c row u_r1 (u_u_r1): parameter SKEW_S bound 14, plan param_wrap 11",
+    "type slw_st_a_v2__cl9f076a5c row u_r2 (u_u_r2): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__cl9f076a5c row u_r2 (u_u_r2): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__cl9f076a5c row u_r2 (u_u_r2): parameter SKEW_S bound 14, plan param_wrap 11",
+    "type slw_st_a_v2__cl9f076a5c row u_r3 (u_u_r3): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__cl9f076a5c row u_r3 (u_u_r3): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__cl9f076a5c row u_r3 (u_u_r3): parameter SKEW_S bound 14, plan param_wrap 11"
+   ],
+   "l2_checker_errors": []
+  },
+  {
+   "type": "slw_st_a_v2__clf4365a62",
+   "m_checker_errors": [
+    "type slw_st_a_v2__clf4365a62 row u_r0 (u_u_r0): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__clf4365a62 row u_r0 (u_u_r0): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__clf4365a62 row u_r0 (u_u_r0): parameter SKEW_S bound 14, plan param_wrap 11",
+    "type slw_st_a_v2__clf4365a62 row u_r1 (u_u_r1): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__clf4365a62 row u_r1 (u_u_r1): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__clf4365a62 row u_r1 (u_u_r1): parameter SKEW_S bound 14, plan param_wrap 11",
+    "type slw_st_a_v2__clf4365a62 row u_r2 (u_u_r2): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__clf4365a62 row u_r2 (u_u_r2): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__clf4365a62 row u_r2 (u_u_r2): parameter SKEW_S bound 14, plan param_wrap 11",
+    "type slw_st_a_v2__clf4365a62 row u_r3 (u_u_r3): parameter HI_PAD bound 0, plan param_wrap 16",
+    "type slw_st_a_v2__clf4365a62 row u_r3 (u_u_r3): parameter SKEW_N bound 14, plan param_wrap 9",
+    "type slw_st_a_v2__clf4365a62 row u_r3 (u_u_r3): parameter SKEW_S bound 14, plan param_wrap 11"
+   ],
+   "l2_checker_errors": []
+  }
+ ],
+ "sc_rows": [
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "sle_sc_v1__cl115da35f",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "sle_sc_v1__cl7479a5ec",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "sle_sc_v1__cl7479a5ec",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "sle_sc_v2",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "sle_sc_v2",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "sle_sc_v3",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf_dn0",
+   "l2_reference_type": "sle_sc_v3",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "slw_sc_v1__cl63e5a7a2",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "slw_sc_v1__cl64543eaf__cl4590432d",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "slw_sc_v2",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "slw_sc_v2",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "slw_sc_v2__v1",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf",
+   "l2_reference_type": "slw_sc_v2",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  },
+  {
+   "type": "slw_sc_v3",
+   "row": "u_core",
+   "instance": "u_core",
+   "master": "qfd_dv_s5_sc2_leaf_up0",
+   "l2_reference_type": "slw_sc_v3",
+   "m_unparameterized": true,
+   "l2_hard_pinreg_1": true
+  }
+ ],
+ "l2_sc_hard_pinreg_derivations": [
+  {
+   "inst": "dvs_E0.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_E1.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_E2.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_E3.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_E4.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_E5.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_W0.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_W1.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_W2.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_W3.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_W4.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  },
+  {
+   "inst": "dvs_W5.u_core.u_sub.u_sc",
+   "param": "HARD_PINREG",
+   "asbuilt": "0",
+   "bound": 1
+  }
+ ],
+ "causal_mechanism": "regen_params catches coll_regen RS0 exception and returns before applying any derived parameters. sc_hard_params/qc_fabric_transport run after the RS0 symmetry check. M emits bare/default parameterizations, while existing qualified L2 RTL matches every one of the same 72 M-plan param_wrap expectations; SC L2 explicitly sets HARD_PINREG1 matching the signed master.",
+ "minimal_fix": "Fix RS0 depth asymmetry, run normal new M regeneration, then reevaluate signed-variant agreement. Do not force old L2 values, waive checks, or redesign cores based on these cascading errors."
+}
