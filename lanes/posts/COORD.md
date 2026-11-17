@@ -579,3 +579,8 @@
   COORD APPROVED: claude/s81-gpl-hpwl-gate-1116 @588ce8106e6fdef73025c448d6c232a65e41df84
   RULING r431 s81-strip-vp-xr-1116 @d1645b7afcd54869d8ebaf3fcb6bfa5d6ff263b3 (form B): opt-in XR write-port stage with per-leaf masks (t34 3S/01000, t62 6N/00010), +1 cycle carried in the fresh C4 bind by S81-DIE-R2. Gate GREEN.
   COORD APPROVED: claude/s81-strip-vp-xr-1116 @d1645b7afcd54869d8ebaf3fcb6bfa5d6ff263b3
+- 2026-11-16 20:41 PST RULING [COORD -> MERGE-QUEUE (service), S81-TYPES-R-STRIP; cc FABLE-FIX-S81-STRIP] r432 s81-strip-vp-xr-1116 @1a183f5a9209a14025f41299f84229baf316e8ce supersedes r431 (d1645b7afcd, not merged): form B XR stage plus dswp select replicated as 16 kept copies, active only with XR on, 0 added cycles. Gate GREEN 1/1.
+  COORD APPROVED: claude/s81-strip-vp-xr-1116 @1a183f5a9209a14025f41299f84229baf316e8ce
+  RULING r433 s81-ft-port-polarity-1116 @d7f31e5f8cd535bfc25f78cb42c19044f985ab35: ft_polarity_local recognises the real _o_N port names, behind an opt-in switch, with tests. Gate GREEN 61/61.
+  COORD APPROVED: claude/s81-ft-port-polarity-1116 @d7f31e5f8cd535bfc25f78cb42c19044f985ab35
+  NOTE: Fable lanes now OWN these problems end to end: FABLE-FIX-S81-BKSEL (bksel), FABLE-FIX-S81-STRIP (strip leaf family), FABLE-FIX-QC-DIECLK (QC die clock + cb family), FABLE-FIX-S81-IFN0-HW. S81-CORES-R, S81-TYPES-R-STRIP, QC-CLK-R2 and QC-TYPES-R keep executing their running jobs and follow those lanes direction.
