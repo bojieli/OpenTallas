@@ -131,3 +131,16 @@ class InstalledDiff(unittest.TestCase):
         import types
         out = m.installed_diffs({"tools/fleet/ot-heavy": "aa"}, hosts=["h1"], runner=lambda c, **k: types.SimpleNamespace(stdout=json.dumps({"/usr/local/bin/ot-heavy": "OK"}) + "\n"))
         self.assertEqual(out, [])
+
+
+class HostPrune(unittest.TestCase):
+    def test_prune_subcommand_prunes_the_local_rt_and_reads_pins_from_stdin(self):
+        d = pathlib.Path(tempfile.mkdtemp()); names = ["%012x" % i for i in range(1, 8)]
+        for i, n in enumerate(names):
+            (d / n).mkdir(); os.utime(d / n, (1000 + i, 1000 + i))
+        os.symlink(names[-1], d / "current")
+        env = dict(os.environ, OT_RT_ROOT=str(d), OT_RT_KEEP="2", MQ_HOME=str(d / "mq"), OT_RT_HOSTS="", MQ_COORD=str(d / "coord"))
+        r = subprocess.run([sys.executable, "-I", P, "prune"], input="pinned " + names[0], env=env, capture_output=True, text=True, timeout=120)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        left = sorted(x.name for x in d.iterdir() if x.is_dir())
+        self.assertEqual(left, sorted([names[0], names[5], names[6]]))        # newest 2 (6,7), pinned 1
