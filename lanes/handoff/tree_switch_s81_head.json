@@ -5,7 +5,8 @@
  "src_manifest_sha": "a51810b59b0b81b11c75c51d1c176bdfb4982bb296a32cc4e548c292840caeb5",
  "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
  "hosts": [
-  "epyc10"
+  "epyc10",
+  "epyc8"
  ],
  "smoke": "PASS",
  "smoke_detail": "NF15c = NF15b + die.layer_budget.type_m8_grant{enable,guide a8dcf2f554252553 in prep,ndr 4w} (26 types, grant shas reproduced, hd_tile 8aeed4bed8315661 = r381) + current-RTL native release receipt. Gates E10 head-die-r: G0 PASS 0 errors with --native-reset-receipt (1 without = inherited 12-PMA), bind PASS nested, cohort 26/26, LATCHECK 329/329 delta{}. Tree smoke: NF15b base 26/26 kit_rtl; NF15c changes only prep + receipt. Review FABLE-REVIEW-NF15C ADOPT-WITH-CHANGES (gate rerun done), no BLOCK.",
@@ -22,7 +23,8 @@
   "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
   "gen_host": "epyc10",
   "gen_hosts": [
-   "epyc10"
+   "epyc10",
+   "epyc8"
   ],
   "kit_rtl": {
    "mode": "script",
@@ -37,5 +39,6 @@
  },
  "written_by": "root-authorized lane atomic apply",
  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/results/head_native_release_nf15c/native_release_receipt.json",
- "status": "ADOPTED reviewed tuple"
+ "status": "ADOPTED reviewed tuple",
+ "hosts_note": "FLEET-OPS-R e6d8e17: NF15c tree replicated+verified on epyc8; marker aligned to live gen_hosts (HEAD-DIE-R, COORD r400)"
 }
