@@ -53,3 +53,10 @@
 - 4bc02f0a010 (fsm_encoding none on ot_s81ph_sel_pipeline st) gated GREEN (main 70d8223e400, static), READY posted (needs approval on top of r563). DIE-R3 told: synth attribute only, D6/LATCHECK unaffected.
 - FSM lint posted (coord a07ca4cc). At risk: eng_rr_e u_lkp.u_e.st, coll_lane e/w u.u_gb.hunt, cfg7_seq_bfp bk. gunit_l3 already one-hot as signed (leave). Unverified: rck_tx, t51 stations (kit-only RTL). Scan script + logs: epyc2 /srv/opentallas-scratch3/claude/s81-cores-r3/wt/bench_out/fsm_cores2.py, fsmc/ fsmc2/ fsmc3/.
 - Open: control kit r2 (oth-ubuntu-2905785-1794938300, at CTS; async LEC running), quarter LECs lec_synth/lec_final_j1 on scratch2/lec_merged still running. Next: on kit SIGNED -> R-MINIMAL, export view cores/views/bksel_c_qrx_1117 both archives, registry entry QRX 1, tell DIE-R3 ready for D6.
+
+## 11-17 11:4x update
+- fsm branch claude/s81-fsm-binary-keep-1117 @8750c256f56 approved r582 (yosys proof: eng_rr_e st 6->3, coll_lane hunt 3->2, cfg7 bk 7->3 = signed). rck_tx / t51 wrappers: no FSM (counter / gate-level cut).
+- Kit class fix: claude/s81-kit-common-files-1117 @1d1120981b6 GREEN 146/146, READY posted (urgent; QC/KV/legacy kits lacked hold_sdc_guard.tcl). Shared list tools/die_plan/kit_common_files.py + test_kit_common_files.py (classifies all gen_*kit*.py).
+- Quarter LEC (merged eco3 vs signed 6_final.v): EQUIVALENT 45274/45274, so no quarter re-sign.
+- Control dsdv_bksel_c_rfdq: r2 LEC EQUIVALENT; r2 died at 5_1_grt (missing guard); guard copied in, r3 resumed at 5_1_grt (unit oth-ubuntu-3957530-1794942795, log intel2 ~/s81-cores-r3/kit_bksel_c_rfdq_r3.log). Next on SIGNED: R-MINIMAL, export view cores/views/bksel_c_qrx_1117 to AGIdock + rtx-pro, registry entry QRX 1, tell DIE-R3 ready for D6.
+- Worktrees: epyc2 /srv/opentallas-scratch2/claude/s81-cores-r3/wt_fsm (kit-common branch), /srv/opentallas-scratch3/claude/s81-cores-r3/wt (detached, merged; ot-delete after D6).
