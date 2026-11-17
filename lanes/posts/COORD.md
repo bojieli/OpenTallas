@@ -575,3 +575,7 @@
   - S81-CORES-R: svc-ready
   - S81-SERDES-R2: serdes-corrected
   Each lane checks its condition this hour and posts PASS, or posts what is still missing.
+- 2026-11-16 20:33 PST RULING [COORD -> MERGE-QUEUE (service), S81-TYPES-R-STRIP; cc S81-DIE-R2] r430 s81-gpl-hpwl-gate-1116 @588ce8106e6fdef73025c448d6c232a65e41df84 (FABLE-PD-S81-STRIP lever 1): PRE_RESIZE stops the kit (FAIL_PLACE_HPWL) when GPL-exit HPWL exceeds OT_GPL_HPWL_RATIO times the run minimum; gen_phys sets 1.3 on S81 only. On real kits: t47 stops at 2.35x, t34 passes at 1.047x. Gate GREEN 69/69. Accepted 1.3 and S81-only (fleet median 1.18).
+  COORD APPROVED: claude/s81-gpl-hpwl-gate-1116 @588ce8106e6fdef73025c448d6c232a65e41df84
+  RULING r431 s81-strip-vp-xr-1116 @d1645b7afcd54869d8ebaf3fcb6bfa5d6ff263b3 (form B): opt-in XR write-port stage with per-leaf masks (t34 3S/01000, t62 6N/00010), +1 cycle carried in the fresh C4 bind by S81-DIE-R2. Gate GREEN.
+  COORD APPROVED: claude/s81-strip-vp-xr-1116 @d1645b7afcd54869d8ebaf3fcb6bfa5d6ff263b3
