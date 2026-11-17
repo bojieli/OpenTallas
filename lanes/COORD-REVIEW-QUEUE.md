@@ -21654,3 +21654,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 - 2026-11-17 12:37 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main 1e0504fe8f4 failed rc=4: rt/current -> 1e0504fe8f44 (was 769398c940c7); hosts intel1:FAIL 48 GB free < 50 GB (OT_RT_HOST_MIN_FREE_GB); not copied epyc2:ok epyc7:ok epyc8:ok epyc9:ok epyc10:ok; stderr context: er matches
 /srv/opentallas-scratch2/claude/rt/1e0504fe8f44/tools/die_plan/test_hold_gate_ring.py:24: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }
+- 2026-11-17 12:40 PST DISK-RATE epyc7 /srv/opentallas-scratch2: free 87 GB, falling 7 GB/h, floor 50 GB in 5.6 h (cron disk_rate.py; read-only)
