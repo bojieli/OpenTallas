@@ -1864,6 +1864,50 @@ def feed_edge_pol(nodes, extra_load=None):
 # tree is legal where the template's was; otherwise the region keeps its own embedding (counted in the stats).
 DME_TEMPLATE = os.environ.get("OT_CLK_DME_TEMPLATE", "0") not in ("", "0")
 DME_TEMPLATE_TYPES = None      # {partition: type}, set by clock_kit
+# FABLE-DIE-QC-R 11-16 OT_CLK_DME_TEMPLATE=2: the template tree is embedded on the sites that are legal in EVERY instance
+# (_dme_template_site), so no copy is refused for an illegal site (S4q9m comb_t: 17 regions of cbn_q00 / cbx_q10_h / cbf_q11
+# kept their own tree and those three types kept a 55..69 ps instance spread while every fully copied type was under 5 ps).
+DME_TEMPLATE_COMMON = os.environ.get("OT_CLK_DME_TEMPLATE", "0") == "2"
+
+
+def _dme_template_site(site, ctaps, xfs, pad=5.0):
+    """SiteMap copy for a template region: a point is legal iff it is legal for the template and, moved by every copy's xf,
+    legal for that copy.  parts = the template partition rect cut to every copy's own rect (moved back); forb = the keep-outs
+    near the template plus every copy's keep-outs moved back.  None when a partition rect cannot be found."""
+    import copy
+    if not hasattr(site, "parts") or not hasattr(site, "forb"):
+        return None
+    cx = sum(t[2] for t in ctaps) / len(ctaps)
+    cy0 = sum(t[3] for t in ctaps) / len(ctaps)
+    area = lambda r: (r[2] - r[0]) * (r[3] - r[1])
+    own = lambda x, y: min((r for r in site.parts if r[0] <= x <= r[2] and r[1] <= y <= r[3]), key=area, default=None)
+    near = lambda r, q: r[0] < q[2] + pad and r[2] > q[0] - pad and r[1] < q[3] + pad and r[3] > q[1] - pad
+    rect = own(cx, cy0)
+    if rect is None:
+        return None
+    rect = tuple(rect[:4])
+    forb = [r for r in site.forb if near(r, rect)]
+    for dx, sy, cy in xfs:
+        q = own(cx + dx, sy * cy0 + cy)
+        if q is None:
+            return None
+        back = lambda r: (r[0] - dx, min(sy * (r[1] - cy), sy * (r[3] - cy)), r[2] - dx, max(sy * (r[1] - cy), sy * (r[3] - cy)))
+        b = back(q)
+        rect = (max(rect[0], b[0]), max(rect[1], b[1]), min(rect[2], b[2]), min(rect[3], b[3]))
+        forb += [back(r) + tuple(r[4:]) for r in site.forb if near(r, q)]
+    if rect[2] <= rect[0] or rect[3] <= rect[1]:
+        return None
+    ts = copy.copy(site)
+    ts.parts = [rect]
+    ts.forb = sorted(set(forb))
+    ts.idx = {}
+    for k, r in enumerate(ts.forb):
+        for i in range(int(r[0] // ts.b), int(r[2] // ts.b) + 1):
+            for j in range(int(r[1] // ts.b), int(r[3] // ts.b) + 1):
+                ts.idx.setdefault((i, j), []).append(k)
+    ts.__dict__.pop("_pidx", None)
+    ts.__dict__.pop("_pidx_n", None)
+    return ts
 
 
 def _dme_template_xform(ctaps, itaps, tol=2e-3):
@@ -1975,9 +2019,18 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                 tmpl[jk] = (first[key], xf)
     own = [jk for jk in range(len(jobs)) if jk not in tmpl]
     trees = {}
+    tsite = {}               # template job index -> site common to the template and its copies (DME_TEMPLATE_COMMON)
+    if DME_TEMPLATE_COMMON and tmpl:
+        grp = defaultdict(list)
+        for jk, (cj, xf) in tmpl.items():
+            grp[cj].append(xf)
+        for cj, xfs in grp.items():
+            ts = _dme_template_site(site, rt[jobs[cj][1]], xfs)
+            if ts is not None:
+                tsite[cj] = ts
     if DME_WORKERS > 1 and len(own) > 1:
         import multiprocessing as mp
-        _DME_POOL_JOBS = [(site, rt[jobs[jk][1]], jobs[jk][3], jobs[jk][1]) for jk in own]
+        _DME_POOL_JOBS = [(tsite.get(jk, site), rt[jobs[jk][1]], jobs[jk][3], jobs[jk][1]) for jk in own]
         try:
             with mp.get_context("fork").Pool(min(DME_WORKERS, len(own))) as pool:
                 # DIE-QC-63/CLK: imap (ordered, chunksize 1) = the same list as pool.map, with one line per collected tree
@@ -1994,7 +2047,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         if jk in tmpl and jk not in trees:
             cj, xf = tmpl[jk]
             if cj not in trees:
-                trees[cj] = _dme_timed(site, rt[jobs[cj][1]], jobs[cj][3], jobs[cj][1])
+                trees[cj] = _dme_timed(tsite.get(cj, site), rt[jobs[cj][1]], jobs[cj][3], jobs[cj][1])
             cp = _dme_template_copy(site, trees[cj], rt[jobs[cj][1]], rt[rn], xf)
             if cp is None:
                 tstat["illegal"] += 1
@@ -2002,7 +2055,7 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                 tstat["copied"] += 1
                 trees[jk] = cp
         if jk not in trees:
-            trees[jk] = _dme_timed(site, rt[rn], kw, rn)
+            trees[jk] = _dme_timed(tsite.get(jk, site), rt[rn], kw, rn)
         dn, droot, dst = trees[jk]
 
         def attach(j, parent, snake_pts=None):
