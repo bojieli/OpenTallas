@@ -9959,6 +9959,54 @@ def bind_context_digest(cfg, die, kit_rtl):
     return hashlib.sha1(json.dumps(hashes).encode()).hexdigest()
 
 
+VIEW_SHA = {}
+
+
+def view_sha(host, p, ttl=300, now=None):
+    """sha1 of one staged view file on its host ('' = absent); local path first, then ssh to the candidate host; cached 5 min"""
+    now = time.time() if now is None else now
+    c = VIEW_SHA.get((host, p))
+    if c and now - c[0] < ttl:
+        return c[1]
+    out = ""
+    try:
+        if os.path.isfile(p):
+            out = hashlib.sha1(open(p, "rb").read()).hexdigest()
+    except OSError:
+        out = ""
+    if not out and host and host not in ("localhost", "hub"):
+        try:
+            r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "sha1sum", shlex.quote(p)],
+                               capture_output=True, text=True, timeout=30)
+            if r.returncode == 0 and r.stdout.split():
+                out = r.stdout.split()[0]
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    VIEW_SHA[(host, p)] = (now, out)
+    return out
+
+
+def view_inputs(cfg, die, item):
+    """WAVE-FLOW-R2 11-17 (COORD, KV-R3 gap): the staged child-view files the prov_views stage reads for this item = for every child module of the
+    item, every die-config prov_view_sources candidate's lef, tt/ff lib, detailed_lef and detailed_receipt (the kvview_stage files) -> {host:path: sha}.
+    A view fix (new receipt / LEF) changes it and releases the item."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    mods = list((d.get("_prov_deps") or {}).get(item) or (d.get("_plan_deps") or {}).get(item) or [])
+    out = {}
+    for m in mods:
+        lst = (d.get("prov_view_sources") or {}).get(m) or []
+        for c in lst if isinstance(lst, list) else [lst]:
+            if not isinstance(c, dict) or not c.get("dir"):
+                continue
+            names = [f"{m}.lef", f"{m}_tt.lib", f"{m}_ff.lib", c.get("detailed_lef"), c.get("detailed_receipt")]
+            for nm in names:
+                if not nm:
+                    continue
+                path = nm if str(nm).startswith("/") else os.path.join(str(c["dir"]), str(nm))
+                out[f"{c.get('host') or ''}:{path}"] = view_sha(c.get("host"), path)
+    return out
+
+
 def kit_digest_parts(cfg, die, rec=None, group="", files=None):
     """what a (re)launch of an item builds on: plan block sha, src sha, source content hash, the stage tools closure.  From the attempt's own spec.json
     when rec is a failed attempt (what it ran on), else from the die config (what a launch would run on)."""
@@ -9979,7 +10027,9 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
     return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
             "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
             "tools": stage_tools_digest(group=group, files=files),
-            "bind_context": bind_context_digest(cfg, die, kr)}
+            "bind_context": bind_context_digest(cfg, die, kr),
+            "views": hashlib.sha1(json.dumps(view_inputs(cfg, die, (rec or {}).get("item")), sort_keys=True).encode()).hexdigest()[:16]
+            if view_inputs(cfg, die, (rec or {}).get("item")) else ""}
 
 
 def fail_key(parts, cls, why):
@@ -10233,6 +10283,9 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         context_changed = bool(old_context and now.get("bind_context") and old_context != now["bind_context"])
     else:
         context_changed = False
+    # WAVE-FLOW-R2 11-17 (KV-R3): staged child-view files (receipt / LEF / libs of prov_view_sources) are item inputs; keys stored before this field exist release only
+    # on a real change of the files (a key without "views" is not released by their absence)
+    views_changed = "views" in (prev.get("parts") or {}) and now.get("views") != (prev.get("parts") or {}).get("views")
     # FABLE-FLOW-0015 (a): a missing-input fail releases only when what failed changes: the named input appears, or the plan block / src / overlay
     # (a repointed config) changes.  A tool merge that does not touch it is no reason (slice_station__t51 failed twice on the same missing input
     # after the 23:29 tool merge re-armed it)
@@ -10257,6 +10310,8 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         changed = [c for c in changed if c != "tools"]
     if context_changed:
         changed.append("bind_context")
+    if views_changed and "views" not in changed:
+        changed.append("views")
     if not changed:
         return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay, stage tools and measured bind context are "
                       f"unchanged since the last fail: {str(prev.get('why'))[:100]}"), []
