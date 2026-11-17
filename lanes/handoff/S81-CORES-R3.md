@@ -60,3 +60,9 @@
 - Quarter LEC (merged eco3 vs signed 6_final.v): EQUIVALENT 45274/45274, so no quarter re-sign.
 - Control dsdv_bksel_c_rfdq: r2 LEC EQUIVALENT; r2 died at 5_1_grt (missing guard); guard copied in, r3 resumed at 5_1_grt (unit oth-ubuntu-3957530-1794942795, log intel2 ~/s81-cores-r3/kit_bksel_c_rfdq_r3.log). Next on SIGNED: R-MINIMAL, export view cores/views/bksel_c_qrx_1117 to AGIdock + rtx-pro, registry entry QRX 1, tell DIE-R3 ready for D6.
 - Worktrees: epyc2 /srv/opentallas-scratch2/claude/s81-cores-r3/wt_fsm (kit-common branch), /srv/opentallas-scratch3/claude/s81-cores-r3/wt (detached, merged; ot-delete after D6).
+
+## 11-17 12:5x update: control re-sign DONE
+- kl_dsdv_bksel_c_rfdq SIGNED R-MINIMAL (TT +2.37, FF +2.39, DRC 0). Archived both: s81/dsdv_bksel_c__qrx_1117 (odb e1f3b821), INDEX rows both.
+- Branch claude/s81-bksel-c-qrx-view-1117 @97aa645907c GREEN, READY posted: view cores/views/bksel_c_qrx_1117 + registry QRX1 entry. DIE-R3 told READY FOR D6.
+- Open READYs: kit-common-files @1d1120981b6 (urgent), view branch @97aa645907c.
+- Cleanup after merges (ot-delete): epyc2 scratch3 wt (root fs!), scratch2 wt_fsm, kits/dsdv_bksel_c_rfdq (archived), lec_merged, bench_out.
