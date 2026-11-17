@@ -1,0 +1,59 @@
+{
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/qwen_compute/c961ac70ceb9/cbn_q01__clab6e67f2",
+   "gen_host": "epyc9",
+   "item": "cbn_q01__clab6e67f2",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/qwen_compute/c961ac70ceb9/cbn_q01__clab6e67f2/published_gen_origin.json",
+   "origin_sha256": "26a9cfab9b8a971973780e086b0001a3eb9e89072270d5cc3284b664e7aa6ae7",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "8dae9f9a8543f8ac3277b9338583a0969e962ed6bb751fd927c0e930cdd6ddd4",
+   "spec_sha256": "b0e272718bbdb64e32d961de7e91d9895c3933a6bdccefe7d4ca23d56d9321fe",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2",
+   "stage": "preflight",
+   "unit_log_sha256": "041dc2f38244810e5459b9e749ffb1f62273b76427ef7e8394b98bdcfc78fdcb",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 33
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-ehrkxlh6/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2 plan=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n1b.json findings=0\n\nG0: G0C per type: 96/133 types clean (G3-eligible: 96); die-level {}; reported as WARN (run --completeness)\nG0 PASS: 0 errors, 0 pending-view, 489 warnings; 133 types / 377 partitions (105 in near-duplicate groups); worst cut {'ratio': 0.2369, 'at': 'horizontal@13750'}, worst partition segment {'ratio': 0.5336, 'at': 'horizontal@11500:sl_W3_su_l1'}; report /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-ehrkxlh6/g0_report.json\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n1b.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_compute",
+ "hosts": [
+  "epyc9"
+ ],
+ "item": "cbn_q01__clab6e67f2",
+ "manifest_hash": "c961ac70ceb9338ce4267fbc9036a7e1255f2a3a6892aeb0feed7a877f8960e6",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n1b.json",
+ "plan_sha256": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1794949524.3463385,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2",
+ "verdict": "PASS"
+}
