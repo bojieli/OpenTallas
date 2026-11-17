@@ -38,7 +38,10 @@ def build(coord, markers=(), canon=os.path.normpath):
         for f in sorted(os.listdir(d)) if os.path.isdir(d) else []:
             if f.startswith("tree_switch_") and f.endswith(".json"):
                 try:
-                    paths_in(json.load(open(os.path.join(d, f))), out, canon)
+                    mk = json.load(open(os.path.join(d, f)))
+                    if isinstance(mk, dict) and str(mk.get("status") or "").upper().startswith("SUPERSEDED"):
+                        continue                       # a marker its owner / COORD marked SUPERSEDED no longer protects anything (kept for history)
+                    paths_in(mk, out, canon)
                 except (OSError, ValueError):
                     pass
     for f in ("PROTECTED-DBS.txt", "lanes/PROTECTED-DBS.txt"):

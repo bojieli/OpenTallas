@@ -58,3 +58,9 @@ class Cutover(unittest.TestCase):
         os.utime(old, (1, 1))
         out = set(); B.prose_paths([new, old, q, cd], out, os.path.normpath)
         self.assertEqual(out, {R + "n/e/w/path"})
+
+
+class Superseded(unittest.TestCase):
+    def test_superseded_marker_protects_nothing_but_a_live_one_does(self):
+        d = mk({"dies": {}}, markers=[{"status": "SUPERSEDED by D16 (COORD)", "tree": R + "kw45/src_dead/a/b"}, {"status": "PENDING CANDIDATE NOT ADOPTED", "tree": R + "kw45/src_live/a/b"}])
+        self.assertEqual(B.build(d, [d + "/lanes/handoff"]), {R + "kw45/src_live/a/b"})
