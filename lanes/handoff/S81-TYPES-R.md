@@ -29,3 +29,9 @@ Owns S81 col (216), strip leaves, IFN0 halves. Three tracks:
 - h9_r0_p2 CTS -1099 / 3,676 under -42: OT_RELAY_MID_RE in config.mk is [.]u_y_ (gen_phys default, budgets.relay_mid_re), r-flattened relays (u_u_r0_u_y_xo*, u_u_y_rt_*) not matched; Codex GEN env [._] is not read by gen. NOT routed.
 - Sibling kits epyc8 countable_F2s4tapfix1/gen_rm2/<type> (pristine E10 kit + config.mk regex [._]) for h9_r0_p2, h10_r0_p1, h10_r2 to CTS: intel2 logs pilot5rm2_<fam>_cts.log. Read OT_HOOK_COVERAGE hook=relay_mid + stage_sta cts; if good route rm2 kits (and stop caring about gen/ h9_r0_p2, h10_r0_p1; gen/h10_r2 route continues as comparison).
 - If confirmed: gen_phys RELAY_MID_RE default -> [._] (branch, test, gate) + plan budgets row via S81-DIE-R. r2 / r1 placed with the old regex (y_x / y_rt relays unplaced there too; r2 CTS -46.8 anyway).
+
+## 19:1x
+- Relay regex [._] confirmed (gen_rm2 h10_r2 CTS: 2 under -42, both t7/so -> ist_frame_int_o0_0, -304.8, 1,181 um). rm2 h10_r2 route client intel2 963708 (log pilot5rm2_col_h10_r2_route.log). rm2 h9_r0_p2 (721642) / h10_r0_p1 (721643) still to CTS.
+- gen_rm3/h10_r2 = pristine + regex + istations.tcl per-bit sites (q[382], q[383] of ranks 0..2 at 702.196, 34.56 / 23.04 / 11.52); client 972763, log pilot5rm3_col_h10_r2_cts.log. Read: epyc8 an/stage_sta.sh KIT an/p5rm3_col_h10_r2_cts cts. If good -> route rm3 (it is the candidate to sign), row to S81-DIE-R.
+- TODO flow: gen_phys RELAY_MID_RE default [._] on branch (epyc7 repo, new branch from main), test, gate, READY.
+- STRIP worker resumed with COORD r392 items (t8 taps, follow six leaves, hosts not pinned). IFN0 worker: balanced halves in GRT.
