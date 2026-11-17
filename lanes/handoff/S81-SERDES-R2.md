@@ -106,3 +106,5 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - 01:1x H3p ROUTE FAIL: DRT-0255 net148630 @893,709 after iter0 176457 viol; 20% util, PLACE_DENSITY 0.5 clumps XOR logic (595 cells/13x12um, local density 0.742, GRT max 92%). GRT TT -54.29. No signoff/export. Next: H4 = H3p + density spread (~0.3 or padding u_enc/u_dec) + am_ok stage. Probe: probes_serdes_r_1116/net_probe.tcl.
 
 - 01:4x H5 = H3p RTL + Codex H4 reflow (04fc337c) + PLACE_DENSITY 0.30, resume place, goal route. Kit intel1+epyc2 L/H5 (epyc8 staging copy remains; guard REFUSE parent protected). Running epyc2 unit oth-ubuntu-121200-1794907016, log intel2 ~/s81-serdes-r2/h5-route.out. Codex H4 (E7) = reflow only, density 0.5, runs in parallel; its postcts_gate_tt.json is stale H3p copy.
+
+- 02:0x H5 attempt1 FAIL GPL boot tail 550.87um (density spread). Patched serdes_boot_release_local.tcl tail pull <=380um (sha e66f67de, backup .H5_before_tailpull) both kits. Attempt2 epyc2 unit oth-ubuntu-637956-1794909388. Wait marker /tmp/s81r2_h5_mark (epyc2).
