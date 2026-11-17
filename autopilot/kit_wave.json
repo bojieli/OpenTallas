@@ -5983,22 +5983,6 @@
      "carry": true
     },
     {
-     "id": "pilot-qwen_kvsys-7a4761d359fa",
-     "plan_sha": "08d352df7ef0ab9adad227d83d30a835262636d879ef7aa82bf38876d5313065",
-     "reason": "PILOT after tree switch: one GEN pilot (kv3_hg_v1) from tree 7a4761d359fa must pass GEN + preflight first",
-     "release": [
-      "gen_pilot:qwen_kvsys:7a4761d359fa"
-     ],
-     "items": [
-      "*"
-     ],
-     "pilot_items": [
-      "kv3_hg_v1"
-     ],
-     "follow_plan": true,
-     "auto_pilot": true
-    },
-    {
      "id": "pilot-qwen_kvsys-3fbbcd9f69fc",
      "plan_sha": "fac383f38bc4989b0ca08ca6e9c246e16aa0e387354b824fe11fe113e8829421",
      "reason": "PILOT after tree switch: one GEN pilot (kv3_hg_v1) from tree 3fbbcd9f69fc must pass GEN + preflight first",

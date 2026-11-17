@@ -1,0 +1,22 @@
+{
+ "reason": "KV-R confirms old HG1A tree no longer eligible; D10 current GEN pilot remains; CTS31 and pc-delta unchanged",
+ "current_source": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10",
+ "retired": [
+  {
+   "id": "pilot-qwen_kvsys-7a4761d359fa",
+   "plan_sha": "08d352df7ef0ab9adad227d83d30a835262636d879ef7aa82bf38876d5313065",
+   "reason": "PILOT after tree switch: one GEN pilot (kv3_hg_v1) from tree 7a4761d359fa must pass GEN + preflight first",
+   "release": [
+    "gen_pilot:qwen_kvsys:7a4761d359fa"
+   ],
+   "items": [
+    "*"
+   ],
+   "pilot_items": [
+    "kv3_hg_v1"
+   ],
+   "follow_plan": true,
+   "auto_pilot": true
+  }
+ ]
+}

@@ -26,3 +26,4 @@
   - mig-002-k2-k3-k1 and mig-006-k6-k7-k2 -> result:S81-CORES-R:svc-ready.
   - serdes-corrected-1116-codex and its route companion -> result:S81-SERDES-R2:serdes-corrected.
   No tree apply was touched.
+- 2026-11-16 22:21 PST RESULT+FIX [FIX-S81-COL-STALE -> COORD, KV-R] Retired superseded HG1A auto_pilot pilot-qwen_kvsys-7a4761d359fa, which could never pass from adoptedD10 and would hold every remaining item even after current pilot succeeded. KV-R confirms obsolete. Current D10 pilot3fbbcd9f69fc retained; physical CTS31 and pc-delta holds unchanged. Old record preserved handoff/FIX-S81-COL-STALE-KV-retire-oldpilot-1116.json. D12 apply must replace its superseded D10 pilot with the new tree-specific pilot.
