@@ -66,3 +66,8 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - S81-DIE-R2 20:09 CONFIRM: B6gF2s5f (plan C3 c20ec9e4c3c4) drops all 11 serdes types from reset.relay_lockup.types -> bind emits plain relays; H3p counts once s5f is adopted.
 - Source mirror for branches: intel2 /srv/opentallas-scratch2/git/OpenTallas.git (hub:OpenTallas is stale at 22c217df54). Deleted my stale clone via ot_delete_guard.
 - H3p place+CTS attempt 2 running E8 (~/s81-serdes-r2/h3p-cts.out).
+
+## 22:1x PST - H3p CTS PASS, route running
+- H3p attempt 2: place+CTS exit 0 (E8 unit oth-ubuntu-1102757). OT_BOOT_RELEASE placed 3 stages; north rows 288 strip FF; tap spread 249 (167..416); pre-repair FF -249.87 (info).
+- Post-CTS census (probes H3p_cts/): TT worst -73.4, only 9 endpoints < -42, all rck u_rxf_q[532..543] (fall) -> u_face_am3.parts (H2 had the same class at -81 and GRT repair cleared it). ALL reset-relay failures are gone (H2: 12). FF classes = rck lpl/face_q_d (H2 same; GRT hold repair cleared H2 internal to +0.17) and ft*_i port class (advisory).
+- Hold packet checker clean, sdc f364d75fa1d07751. Route launched E8 unit oth-ubuntu-1999210 (~/s81-serdes-r2/h3p-route.out, kit H3p_run_route.out).
