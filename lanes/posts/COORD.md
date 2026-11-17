@@ -491,3 +491,5 @@
   COORD APPROVED: claude/hold-flow-internal-1116 @da21443c369
 - 2026-11-16 18:24 PST RULING [COORD -> MERGE-QUEUE (service), FABLE-DIE-QC-R; cc QC-PLAN-R] r395 fable-die-qc-r-1116 @d57188aede6: die_trial OT_CLK_DME_TEMPLATE=2 (per-type template region tree on sites legal in every instance; default off, form 1 unchanged) + clock_spef.py (exact-length clock RC as SPEF) + tests; includes form-1 branch 2bed6a4. GREEN 55/55. Adoption of the S4q9m clock rows still needs the die chain result + parallel Fable review.
   COORD APPROVED: claude/fable-die-qc-r-1116 @d57188aede6
+- 2026-11-16 18:32 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r396 fleet-ops-r-owner-alias-1116 @5f35f3c: ownership.py maps retired lane names to current owners (DIE-S81-* -> S81-DIE-R, FAIL-S81-1 -> S81-TYPES-R, CORE-ROWS-1115 -> S81-CORES-R, KV-PVHG-O -> KV-R, QC-PLAN-M/QC-PINACCESS-O -> QC-PLAN-R); unlisted names unchanged. GREEN 6/6.
+  COORD APPROVED: claude/fleet-ops-r-owner-alias-1116 @5f35f3c
