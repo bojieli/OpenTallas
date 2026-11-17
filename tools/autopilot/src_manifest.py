@@ -104,6 +104,18 @@ def link_base(root):
     return b if b and os.path.isfile(os.path.join(b, MANIFEST)) else ""
 
 
+def write_link_base(root, base):
+    """(re)write ROOT/.link-base = realpath(base), copy+mv: a .link-base copied or hardlinked from an earlier tree (a chained link,
+    e.g. D4 -> M5 -> M5T) is read-only and may share its inode with that tree's own .link-base, so it is replaced, never written through.
+    The caller makes ROOT writable first."""
+    dst = os.path.join(root, LINKBASE)
+    tmp = dst + f".tmp.{os.getpid()}"
+    with open(tmp, "w") as f:
+        f.write(os.path.realpath(base) + "\n")
+    os.chmod(tmp, 0o444)
+    os.replace(tmp, dst)
+
+
 def shares_with_base(path, rel, base):
     """True when the file is the same inode as the file at rel in the declared base (an intended link, not a cp -al copy elsewhere)"""
     if not base:
@@ -225,6 +237,7 @@ def cached_receipt(root, expect=""):
     if set(have) != set(want):
         errs.append("SRC_MANIFEST CACHE MISS current inventory differs from verified manifest")
     paths = [root, os.path.join(root, MANIFEST), os.path.join(root, HASHFILE)] + list(have.values())
+    lbase = link_base(root)                                     # a link-published tree: inodes shared with exactly its declared base are intended (as verify)
     for dp, dn, _fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP_DIRS]
         paths.extend(os.path.join(dp, d) for d in dn)
@@ -233,7 +246,7 @@ def cached_receipt(root, expect=""):
             st = os.lstat(q)
             if not stat.S_ISLNK(st.st_mode) and st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH):
                 errs.append(f"SRC_MANIFEST CACHE MISS writable {os.path.relpath(q, root)}")
-            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1:
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not shares_with_base(q, os.path.relpath(q, root), lbase):
                 errs.append(f"SRC_MANIFEST CACHE MISS shared inode {os.path.relpath(q, root)} nlink={st.st_nlink}")
         except OSError as e:
             errs.append(f"SRC_MANIFEST CACHE MISS stat {q}: {e}")
@@ -241,7 +254,7 @@ def cached_receipt(root, expect=""):
                 source=root, manifest_hash=h, main_sha=m.get("main_sha"), files=len(want),
                 signature=sig, cache_path=cf, cache_mtime_ns=cache_mtime,
                 cache_sha256=hashlib.sha256(cb).hexdigest(),
-                basis="completed content verification cache plus current read-only unshared inventory")
+                basis="completed content verification cache plus current read-only unshared inventory" + (f" (inodes shared only with link base {lbase})" if lbase else ""))
     return errs, info
 
 def shared_inodes(root, limit=0):
@@ -637,8 +650,7 @@ def delta_apply(pack, old_tree, out, link=False, expect=""):
     with open(os.path.join(tmp, HASHFILE), "w") as f:
         f.write(nm["manifest_hash"] + "\n")
     if link:
-        with open(os.path.join(tmp, LINKBASE), "w") as f:
-            f.write(os.path.realpath(old_tree) + "\n")
+        write_link_base(tmp, old_tree)                          # old_tree's own .link-base (chained link) was hardlinked in: replace it
     if expect or link:                                           # (4) hash equality BEFORE the tree can be published or applied
         errs, _info = verify(tmp, expect=expect, full=True)
         if errs:
@@ -748,6 +760,7 @@ def retire(new_tree, refs=(), keep=0, dry=False, guard=None):
 
 # ---- hosts ----------------------------------------------------------------------------------------------------------
 
+RSYNC_SSH = "ssh -o BatchMode=yes -o ControlPath=none"   # rsync -e (tests swap in a local stand-in)
 SSH = ["timeout", "900", "ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=20"]
 
 
@@ -934,11 +947,14 @@ def main(argv=None):
                 cand = os.path.join(os.path.dirname(tree), a.link_from)
                 if subprocess.run(SSH + [host, f"test -f {shlex.quote(cand)}/{MANIFEST} && test -d {shlex.quote(cand)}"]).returncode == 0:
                     linkdir = cand
-            rs = subprocess.run(["rsync", "-a", *([f"--link-dest={linkdir}/"] if linkdir else []), "-e",
-                                 "ssh -o BatchMode=yes -o ControlPath=none", tree + "/", f"{host}:{part}/"])
+            # the source's own .link-base (it may itself be a link replica, D4 -> M5 -> M5T) names a base on the SOURCE host and is read-only:
+            # never copy it; the target gets a fresh one naming its own base, written by copy+mv (11-17: the copied file made the write fail)
+            rs = subprocess.run(["rsync", "-a", "--exclude=/" + LINKBASE, *([f"--link-dest={linkdir}/"] if linkdir else []), "-e",
+                                 RSYNC_SSH, tree + "/", f"{host}:{part}/"])
             if rs.returncode == 0 and linkdir:
-                subprocess.run(SSH + [host, f"cd {shlex.quote(part)} && chmod u+w . && readlink -f {shlex.quote(linkdir)} > {LINKBASE} && chmod a-w . {LINKBASE}"])
-                print(f"{host}: linked from {os.path.basename(linkdir)}")
+                lw = subprocess.run(SSH + [host, f"cd {shlex.quote(part)} && chmod u+w . && readlink -f {shlex.quote(linkdir)} > {LINKBASE}.tmp && "
+                                                 f"chmod a-w {LINKBASE}.tmp && mv -f {LINKBASE}.tmp {LINKBASE} && chmod a-w ."])
+                print(f"{host}: linked from {os.path.basename(linkdir)}" + ("" if lw.returncode == 0 else " (.link-base write FAILED)"))
             rc, txt = remote_verify(host, part, m["manifest_hash"], ro=True) if rs.returncode == 0 else (1, "rsync failed")
             if rc == 0:
                 rc = subprocess.run(SSH + [host, f"mv -T {shlex.quote(part)} {shlex.quote(tree)}"]).returncode
