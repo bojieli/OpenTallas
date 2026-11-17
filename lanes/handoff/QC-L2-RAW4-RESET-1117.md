@@ -7,3 +7,6 @@ Fixed private context on E7/E8/intel1: /srv/opentallas-scratch2/claude/qc-collco
 Normal coll_core kit-rtl smoke is running separately from the wave on the first single-file fixed context bind_L2BQ_raw (immutable running input); client intel2 PID288577, unit E8 oth-ubuntu-2741976-1794917519, Python2742353, log intel2 ~/qc-collcore-reset-1117/kit_rtl_smoke_stage.log, output E8 qc-collcore-reset-1117/kit_rtl_smoke. Initial attempt refused undeclared external source-stage; preserved kit_rtl_smoke.log. Successor declares source tree with --stage. At04:16 CPU100pct/healthy, no output yet. No route launched. Normal wave retries exercise the raw4 context. Collect smoke + next wave result; if another source issue appears, diagnose separately instead of rewriting receipt hashes.
 
 The M relocation helper already excludes HDL and reset receipts from path rewriting; use that corrected policy for future publication. No new production code was needed here.
+
+## 04:18 update
+Normal coll_core producer PASS exit0: 25files, variants1, unbound0, exact reset source accepted; E8unit2741976 completed. Four exact retry keys armed once with FLOW-FIX: coll_core@1, CTLcl372cea1c@17/cl503337ff@19/cla4f6f12f@10. Await wave regeneration result. No route or RTL change.
