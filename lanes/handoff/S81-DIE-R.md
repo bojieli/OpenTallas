@@ -32,5 +32,13 @@ E/F2s5_ledger.json. Ready: CA_R4_ECOv3 (compose next), T51_E_signed1116. Row rea
 ### 6. COORD 11-16 ~18:0x: gunit bf rows
 FABLE-FIX-S81-GUNIT writes delta rows (bf back to the signed 432x216 shape + pre-nrev pins, 4 ba1 +43.2 y, W/E landings +21.6). Folded into the F2s5 ledger as GUNIT_l1f_bf_signed_shape, waiting for the rows. Checked in 819: gunit__t1 has 4 bf at [432.0,172.8] with nrev_1113 pins and LEF, ba1 abutting at bf y + 172.8. On delivery: expected-before, overlap/outline of gunit__t1, pin_sites, G0, then compose. gunit__t1 also takes one depth 4->8 ring from the CA table, so one re-key covers both. COLTAP reset-chain sites, t43 and IFN0 rows join the same event when ready.
 
+### 7. Fable review FABLE-PD-S81-F2s5 (hub post fb8f6ff51727)
+- BLOCK on the CA table as-is for svc_lo_dsdv_svc_rs__t1 (svc_2): depth-8 rings do not fit bands ft0_i (use 1.80) and idx_i0 (1.74); unit_i1 0.95. Tight: slice_station__t26 ft4_i, ot_s81sl_leaf__t11 leafdn_i0 (1.01). Band sizing is depth-blind.
+- Cheaper first (not evaluated): the four svc_0->svc_2 crossings miss the depth-4 limit by 6.5-19.2 ps (try a ~20 ps svc_2 phase move or T/2 edge); svc_14->svc_12 and svc_14->eng miss by 1.9 / 2.6 ps; nine crossings are deep only through --min-lat-cycles 1.
+- sched_lat OK; LATCHECK must show the three partition pairs with one-cycle lane differences are independent.
+- T51 OK; view port-start FF hold -53.04 ps on 5268 endpoints must close in the parent kit.
+- clk_t48 OK. R2: separate event, read-only odb census, ECO only hits.
+- So step 2 below starts with a planner pass that removes the near-miss depth-ups before any compose.
+
 ## Next steps
 1. Read G0 t51e. 2. Compose CA R4d on the 819 lineage (fallback_land compose; check the 38 deeper rings fit their bands), regenerate lanes, estimate before build. 3. F2s5 = 819 + T51 + CA (+ SVC stage 9 if delivered): source cohort with the overlay and the ca planner hunks from TOOLS-CONVERGE, fresh elab, strict bind, LATCHECK, G0; Fable review in parallel. 4. R2 ruling and census.
