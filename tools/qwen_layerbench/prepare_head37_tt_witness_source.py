@@ -31,10 +31,32 @@ def rewrite_parent(text, master):
         raise ValueError('actual closed BASE witness instance differs')
     if body.count('assign w_fault = f16_st[16];') != 1:
         raise ValueError('actual witness fault return differs')
+    if body.count('.start({u_start,') != 1 or body.count('.retire({c_done,') != 1:
+        raise ValueError('actual native witness start/retire source differs')
     selected = body.replace('qfd_tt_ctlm_dv_wtn u_wtn (', master + ' u_wtn (', 1)
+    # The native calendar also completes BOOT, which has no mission witness.
+    # Preserve BASE13 verbatim; only the selected HEAD37 leaf excludes stage0.
+    selected = selected.replace('.start({u_start,', '.start({u_start && (u_stage != 0),', 1)
+    selected = selected.replace('.retire({c_done,',
+                                '.retire({c_done && (stg_b[c_done_user] != 0),', 1)
     new = ('    generate if (F16WTN != 0 && HEAD_STAGE37 == 0) begin : g_wtn\n'
            + body + '    end else if (F16WTN != 0) begin : g_wtn_head37\n' + selected)
     return text[:i] + new + text[j:]
+
+
+def clear_mission_stage_on_new_image(text):
+    """Reuse the native stage bank; a warm BOOT must not inherit stage37."""
+    old = ('            if (d_start) stg_b[s_user] <= d_stage;\n'
+           '            else if (l_start) stg_b[l_user] <= op_stage;')
+    if text.count(old) != 1:
+        raise ValueError('actual unique native mission stage-bank update required')
+    new = '''            // HEAD37: a new image has no mission witness context.
+            // Existing stage-bank storage is reused; no extra context state.
+            if (HEAD_STAGE37 != 0 && dh_q[118] && dh_q[117:108] == 0) begin
+                for (sg_i = 0; sg_i < NU; sg_i = sg_i + 1) stg_b[sg_i] <= 6'd0;
+            end else if (d_start) stg_b[s_user] <= d_stage;
+            else if (l_start) stg_b[l_user] <= op_stage;'''
+    return text.replace(old, new, 1)
 
 
 def trace_parent(text):
@@ -100,7 +122,7 @@ def prepare(parts, receipt_path, profile_path, leaf, controller, output):
                   ".HEAD_PROFILE_EPOCH(16'd" + str(p['epoch']) + ')']:
         if token not in compact:
             raise ValueError('baked selected leaf does not bind its authenticated controller')
-    result = trace_parent(rewrite_parent(parts.read_text(), master))
+    result = trace_parent(clear_mission_stage_on_new_image(rewrite_parent(parts.read_text(), master)))
     output.mkdir(parents=True)
     target = output / parts.name
     target.write_text(result)
@@ -118,6 +140,8 @@ def prepare(parts, receipt_path, profile_path, leaf, controller, output):
                   added_output_cycles=0, physical_adoption=False,
                   trace_define='OT_HEAD37_WITNESS_TRACE',
                   requires_frontend_receipt_regeneration=True,
+                  boot_retire_qualification='stage0 excluded; existing mission stage bank cleared on new PW0',
+                  added_context_state_bits=0,
                   next=['native construct must retain the exact new leaf and dependency',
                         'all48 current loader/command/lease windows',
                         'unified model/slot fit and physical qualification'])

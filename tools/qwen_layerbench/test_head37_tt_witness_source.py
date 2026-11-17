@@ -35,7 +35,19 @@ class TTWitnessSourceTests(unittest.TestCase):
         self.assertEqual(before[:before.index(begin)], after[:after.index(newbegin)])
         self.assertEqual(before[before.index(end):], after[after.index(end):])
         self.assertIn('begin : g_wtn_head37\n        ' + MASTER + ' u_wtn', after)
+        selected = after.split('begin : g_wtn_head37')[1].split(end)[0]
+        self.assertIn('.start({u_start && (u_stage != 0),', selected)
+        self.assertIn('.retire({c_done && (stg_b[c_done_user] != 0),', selected)
         self.assertRaises(ValueError, P.rewrite_parent, before.replace('HEAD_STAGE37 = 0', 'HEAD_STAGE37 = 1'), MASTER)
+
+    def test_warm_boot_clears_existing_stage_bank_only_in_head37_mode(self):
+        before = (FIX / 'head37_tt_parent_fragment.sv').read_text()
+        after = P.clear_mission_stage_on_new_image(before)
+        self.assertIn('HEAD_STAGE37 != 0 && dh_q[118] && dh_q[117:108] == 0', after)
+        self.assertEqual(before.count('reg [5:0] stg_b'), after.count('reg [5:0] stg_b'))
+        self.assertIn('else if (d_start) stg_b[s_user] <= d_stage;', after)
+        self.assertIn('else if (l_start) stg_b[l_user] <= op_stage;', after)
+        self.assertRaises(ValueError, P.clear_mission_stage_on_new_image, after)
 
     def test_real_component_receipt_refused_before_output(self):
         with tempfile.TemporaryDirectory() as tmp:

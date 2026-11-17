@@ -18,6 +18,20 @@ module qfd_tt_ctlm_dv_gi_hp13 #(
     wire [23:0] s_tok=0;
     wire u_start=0,c_done=0,ag_stn_busy=0;
     wire [5:0] u_stage=0;
+    // Actual native stage-bank update fragment; unrelated surrounding glue omitted.
+    reg [5:0] stg_b [0:3];
+    integer sg_i;
+    wire [186:0] dh_q=0;
+    wire d_start=0;
+    wire [5:0] d_stage=0,op_stage=0;
+    wire [1:0] s_user=0;
+    localparam integer NU=4;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin for (sg_i = 0; sg_i < NU; sg_i = sg_i + 1) stg_b[sg_i] <= 6'd0; end
+        else begin
+            if (d_start) stg_b[s_user] <= d_stage;
+            else if (l_start) stg_b[l_user] <= op_stage;
+        end
     wire [15:0] u_tokid = l_start ? tok_b[l_user][15:0] : s_tok[15:0];   // the context's token identity at its start
     generate if (F16WTN != 0) begin : g_wtn
         qfd_tt_ctlm_dv_wtn u_wtn (.ck(ck), .rst_n(rst_n), .pw(pw), .auth(f16_auth),
