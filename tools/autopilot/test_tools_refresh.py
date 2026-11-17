@@ -157,3 +157,10 @@ def test_main_wins_overlays_are_dropped_and_logged(monkeypatch):
     monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {"tools/c.py": {"cls": "c", "why": "private patch", "diff": "+X"}})
     ok, detail, h = TR.Ops(die(), "/r", SHA, run=lambda *a, **k: (0, "")).compose(OLD, "/n")
     assert not ok and detail.startswith("OVERLAY-PRIVATE") and "+X" in detail
+
+
+def test_cli_starts_under_isolated_mode():
+    """the wave starts it as `python3 -I tools_refresh.py`: the first dry run died with ModuleNotFoundError: overlay_classify"""
+    import subprocess
+    r = subprocess.run([sys.executable, "-I", str(HERE / "tools_refresh.py"), "--help"], capture_output=True, text=True, cwd="/")
+    assert r.returncode == 0 and "--die" in r.stdout, r.stderr
