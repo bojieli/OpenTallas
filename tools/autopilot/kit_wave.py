@@ -1000,11 +1000,28 @@ def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
     return "hub disk low: " + "; ".join(low) if low else ""
 
 
+def hub_writer_die(cfg, die):
+    """FABLE-FLOW-0500 (1): the hub floor holds only dies that write on the hub, i.e. the hub is one of their gen_hosts.  A die whose kits are generated, placed and
+    routed on other hosts is not stopped by a full hub disk (11-17: every die was refused for 105 min although none of them has intel2 in gen_hosts)."""
+    row = ((cfg.get("dies") or {}).get(die)) or {}
+    hosts = row.get("gen_hosts")
+    if not hosts:
+        return True                      # unknown placement: keep the old, safe behaviour
+    hub = {"intel2", str(cfg.get("_hub") or "")} - {""}
+    return any(h in hub for h in hosts)
+
+
 def hub_disk_gate(AP, cfg, st, now=None):
     """called once per tick: sets cfg['_hub_disk_low'] and posts one STATE line when the condition starts (one more when it ends)"""
     why = hub_disk_low(cfg)
     cfg["_hub_disk_low"] = why
     g = st.setdefault("hub_disk", {})
+    if why:
+        g["ticks"] = int(g.get("ticks") or 0) + 1
+        if g["ticks"] == 2 and not g.get("alerted"):          # FABLE-FLOW-0500 (1): 105 min of refused launches with no ALERT; the second tick posts one
+            g["alerted"] = True
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [KIT-WAVE -> COORD, FLEET-OPS-R] {why} for 2 ticks: launches of dies that write on the hub "
+                            "(hub in their gen_hosts) are refused; free the hub disk (rt snapshots, autopilot/closed, own clones)")
     if why and not g.get("since"):
         g["since"] = time.time() if now is None else now
         AP.log(f"KIT-WAVE HUB-DISK launch refused: {why}")
@@ -1021,7 +1038,7 @@ def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
         return cfg["error"]
-    if cfg.get("_hub_disk_low"):
+    if cfg.get("_hub_disk_low") and hub_writer_die(cfg, die):
         return cfg["_hub_disk_low"]
     if (ap_dir / "kit_wave.stop").exists():
         return "global stop file kit_wave.stop"

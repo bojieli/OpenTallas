@@ -57,3 +57,22 @@ def test_three_alternating_fails_reach_the_cap():
     for i, w in enumerate(["KW_ROAM a @kit_rtl: p", "bind.py: error b @kit_rtl: q", "KW_ROAM c @kit_rtl: r"]):
         c = KW.note_fail_sig(st, dict(rec, attempt=i), "FLOW", w)
     assert c["n"] == 3
+
+
+def test_hub_floor_holds_only_hub_writers_and_alerts_on_the_second_tick(monkeypatch, tmp_path):
+    cfg = {"enabled": True, "_hub": "epyc1", "dies": {"remote": {"gen_hosts": ["epyc10", "epyc8"]}, "onhub": {"gen_hosts": ["intel2", "epyc8"]}, "unknown": {}}}
+    cfg["_hub_disk_low"] = "hub disk low: / 10 GB free < 64 GB"
+    assert KW.stop_reason(cfg, "remote", tmp_path) != cfg["_hub_disk_low"]
+    assert KW.stop_reason(cfg, "onhub", tmp_path) == cfg["_hub_disk_low"]
+    assert KW.stop_reason(cfg, "unknown", tmp_path) == cfg["_hub_disk_low"]
+    posts = []
+    class AP:
+        @staticmethod
+        def log(m): pass
+        @staticmethod
+        def coord_append(rel, line): posts.append(line)
+    monkeypatch.setattr(KW, "hub_disk_low", lambda c, **k: "hub disk low: / 10 GB free < 64 GB")
+    st = {}
+    for _ in range(4):
+        KW.hub_disk_gate(AP, {}, st)
+    assert sum("ALERT" in l for l in posts) == 1 and sum("STATE" in l for l in posts) == 1
