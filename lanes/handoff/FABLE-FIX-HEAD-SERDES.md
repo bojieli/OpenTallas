@@ -79,3 +79,9 @@ Gates: DRC 0, routed TT >= -42, internal FF hold >= 0. 0 added cycles vs sd9c (+
 - NEXT: when the kit GRT step ends: read OT_POSTCTS_GATE TT; meas.sh on the kept 5_1_grt.odb; LOOK grt render; then route a4 to sign-off
   (resume.json start=route, GOAL=route) -- the routed RCX number is the only frame without the clock-table artefact; one HEI pass; export.
   If the kit repair dies again the unrepaired DB is kept (FALLBACK): do not route that; rerun the repair privately with catch + full re-route.
+
+## CODEX 2026-11-17 04:1x takeover
+- Collected missed sd9e and sd9f GRT completions: both real RAN exit0. sd9e TT -53.04; sd9f TT -22.17, FF postCTS PASS. sd9f is existing exact-qualified staged-RM + encoder-LA candidate, +1 core RX edge vs sd9d, no new RTL here.
+- sd9f E7 place/layout.png + grt/congestion.png LOOKED: clear upper PHY region, three separate south cores with gaps, hot blobs near south logic/memories remain (GRT completes). PASS-COND for routed RCX measurement; review sd9f_lane/results/geom_review/sd9f_codex_route_review.json.
+- Advanced sd9f using resume.json start=route, existing checkpoints retained. Intel2 client167171 log ~/fable-fix-head-serdes-logs/sd9f_route_codex.log, ot-run96GB/16threads with staged gen input, fleet eligible (not host-pinned). NEXT collect unit/route, final signoff/LEC, one existing HEI pass if only internal FF fails, export both stores on SIGNED.
+- sd9d a4 terminal FAIL_POSTCTS after TT-repair RSZ0074 net73020/rebuffer73024; unrepaired TT -158.94 retained, no DRT. Existing private catch+full-reroute attempt a4_ttfix2 progressing E8 unit oth-ubuntu-2286763-1794915274 at ~iteration1363 TT -69; kept untouched. Do not install failed repair or route unrepaired a4 DB.
