@@ -5566,6 +5566,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     _hm = os.environ.get("OT_HOLD_FF_MARGIN_PS", "").strip()
     if _hm:
         hold_ff_margin = float(_hm)
+    # S81-COL-GRT-PORT 11-17 (COORD): OT_GRT_PORT_HOLD_MARGIN_PS (kit_wave item_env) includes the input-port starts in the GRT hold repair
+    # (OT_GRT_PORT_HOLD_INCLUDE = 1, tools/grt_nonport_hold.tcl) and floors the GRT hold margin at that value; unset = today's behaviour.
+    _pm = os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip()
+    if _pm:
+        hold_ff_margin = max(float(_pm), hold_ff_margin if hold_ff_margin is not None else 0.0)
     margins = rflow_margins(margins, P.name)    # R-FLOW defaults per kit class (explicit arguments win)
     max_wire_um = rflow_max_wire_um(max_wire_um, P.name)
     macro_moves = macro_move_table(t, tn)
@@ -5980,6 +5985,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
              if hold_ff_margin is not None else []),
            *(["export OT_S81_SSTN_M5_BLOCK = 1"] if os.environ.get("OT_S81_SSTN_M5_BLOCK") == "1" else []),
+           *(["export OT_GRT_PORT_HOLD_INCLUDE = 1"] if os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
