@@ -1,0 +1,28 @@
+{
+  "source_branch": "claude/head-hw-pad-search-1116",
+  "source_sha": "f3c465700de",
+  "normal_gate": "GREEN5/5 main82f825f0501",
+  "candidate_enumerator_test": "300 deterministic Tcl fixtures, accepted sites and ordering identical to old full-gap loop",
+  "actual_component_bench": {
+    "positive": "10HB4 at2output-buffer A pins; original placement/legalization PASS; exact global instance census PASS",
+    "mutant": "delete one newly inserted cell before final census: DETECTED rc1 (inserted cell lost)",
+    "host": "epyc8",
+    "path": "/srv/opentallas-scratch2/claude/head-hw-eco/site_bounds_bench"
+  },
+  "full_shape": {
+    "pads": 2565,
+    "capture_pins": 513,
+    "removed_filler": 1883,
+    "check_placement": "PASS",
+    "matching_slow_original_prefix_rows": 332,
+    "matching_first_optimization_prefix_rows": 199,
+    "path": "epyc8:/srv/opentallas-scratch2/claude/head-hw-eco/outpad5_fast2",
+    "bbox_um": [
+      4.428,
+      341.01,
+      7.884,
+      548.37
+    ],
+    "added_cycles": 0
+  }
+}
