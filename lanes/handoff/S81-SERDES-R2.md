@@ -56,3 +56,7 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 ## 20:1x PST - J5 PARKED
 - J5 post-CTS census (probes J5_cts/): TT -1138.95, 817 ep < -42; FF -521.7. Moving rd.q to its mux put the whole span on rd.q -> u_bout_coll_o0 (399 ep, -1139), and rd.q landed on clk_t28 whose tree is deep (launch arrival 1206 ps vs t15 capture 996); also rt_d -> rd.q -242 (240 ep), txl t21 -> t28 FF -482.
 - Conclusion: the J floorplan puts rm.mem ~1150 um from the east output face; one register cannot split that span with these trees. J family needs a floorplan move of rm toward the output face or an added rd.q -> bout_coll stage (RTL). Not pursued now; H3p is the sign-off form.
+
+## 20:4x PST - H3p attempt 1 failed at GPL, resumed
+- H3p synth+floorplan OK, 3_3 GPL hook failed: "OT_BOOT_RELEASE expected3 kept stages, found 2" (serdes_boot_release_local.tcl, sourced by post_global_boot3.tcl). Fresh Yosys names stage2's DFF u_boot_release.released_n (rq kept only as a net alias); the older selector matched only g_stage[k].rq. The newer H_boot_selector_public.tcl already handles this (reproduced: it finds 0 1 2 on H3p 3_2_place_iop.odb).
+- Fix (kit copy+mv, orig .H3p_before_alias): the same released_n -> stage2 rule in serdes_boot_release_local.tcl. Resumed at place (resume.json start place, reuse synth/floorplan), ~/s81-serdes-r2/h3p-cts.out. This is a flow-family bug for any SerDes t13 kit that resynthesizes; worth a source fix in tools (serdes_boot_release_local.tcl).
