@@ -55,3 +55,9 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/head-die-r (pack/smoke/proof),
 - Successor E8 head-die-r/fclk_recovery_u1/route_contact_r2 routes changed2clockroots plus exact legacycontact net using established SDK prd_route_keep/eco_grt_pre park+restore helpers from entry_phase_context. Input dry2/unpadded.odb/reference originalinput6_final.odb, no newcells/pinmoves/constraintchanges. Review results/geom_review/contact_r2.json; original removal192 image retained.
 - Intel2client1965116 ~/hdr/fclk_route192_contact_r2.log, unitoth-ubuntu-3667957-1794903876. Collect DRT/RCX then localTTsetup+internalFFhold and minimumu1 actualpair; d1actualSerDespeer still absent. Originalsignedarchive untouched.
 - NF15d2r1 newlaunch TOOL-SKEW4c852e87ef64 check.py/proto_die.sh is assigned root/holds semanticcomparison; no blindallowlist or liveimmutableedit.
+
+### 00:3x continuation
+- Current 192 successor unit still progressing through track assignment; no terminal, previous failed DRT0206 retained. Prepared UNSTARTED run_signoff_contact_r2.sh requires separate export_contact_r2 canonical DB/V/SPEF + EXPORT_ALIAS_PASS marker, then original SDC and TT/FF nominal signoff. Child SPE owns canonical exporter output_net_identity.tcl BEFORE DB/V and regenerate SPEF on renamed nets; raw OpenROAD writer is not inherently alias-safe. Raw route outputs remain preserved.
+- Incoming reset/start 2-bit falling-entry coupon E8 head-spe-export/entry_phase_context still DRT iteration0 progressing; actual shared-root baseline FF hold -269.780, not scalar -225.
+- Separate sp4->sp3/start_i setup failure has minimum actual-root measurement TT -487.665 / hold +861.821, FF setup -282.655 / hold +714.246. SPE child owns counted J2 existing-CA window/boot/start contract measurement, no MCP/window waiver.
+- Fresh NF13a attempt5 n3_turn DRC3 is stale rst_start_raw_2 M7 partial-overlap geometry already superseded by signed NF15 pin_pg view; no second ECO.
