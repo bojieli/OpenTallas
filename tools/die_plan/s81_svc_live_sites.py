@@ -114,3 +114,55 @@ def wrap(type_name, placement_tcl, enabled=False):
         raise ValueError("SVC_R369 requires each of the exact eight declared bank sites once")
     allow = " ".join("{" + n + "}" for n in expected)
     return PREAMBLE.replace("@ALLOW@", allow) + placement_tcl + EPILOGUE
+
+
+# PDN (S81-CORES-R 11-16): the copied hi3 resume passed 2_2 with wrap() and then stopped in 2_4 with PDN-1030 at the
+# same first dead bank: pdn.tcl names all 31 declared macros in its macro grids.  wrap_pdn() applies the identical
+# all-absent / all-present / mixed-fail contract to define_pdn_grid -macro -instances; nothing else changes.
+PDN_PREAMBLE = PREAMBLE.split("rename ::place_macro")[0].replace(
+    "SVC_R369 placement callback re-entry", "SVC_R369 PDN callback re-entry") + r"""rename ::define_pdn_grid ::s81_svc_r369::original_define_pdn_grid
+proc ::define_pdn_grid {args} {
+    set k [lsearch -exact $args -instances]
+    if {$::s81_svc_r369::absent && $k >= 0 && $k+1 < [llength $args]} {
+        set keep {}
+        foreach p [lindex $args [expr {$k+1}]] {
+            set n [::s81_svc_r369::normal [string trimright [string trimleft $p "^"] "$"]]
+            regsub -all {\\} $n {} n
+            if {$n in $::s81_svc_r369::allowed} {
+                incr ::s81_svc_r369::skipped
+                puts "SVC_R369 pdn declared_unused_bank $n"
+                continue
+            }
+            lappend keep $p
+        }
+        set args [lreplace $args [expr {$k+1}] [expr {$k+1}] $keep]
+    }
+    return [uplevel 1 [list ::s81_svc_r369::original_define_pdn_grid {*}$args]]
+}
+try {
+"""
+
+PDN_EPILOGUE = r"""
+    puts "SVC_R369 pdn skipped=$::s81_svc_r369::skipped"
+} finally {
+    rename ::define_pdn_grid {}
+    rename ::s81_svc_r369::original_define_pdn_grid ::define_pdn_grid
+    namespace delete ::s81_svc_r369
+}
+"""
+
+
+def wrap_pdn(type_name, pdn_tcl, enabled=False):
+    """Byte-identical default; otherwise the exact-two-type PDN callback (same R369 contract as wrap())."""
+    if not enabled or type_name not in PREFIX:
+        return pdn_tcl
+    expected = expected_names(type_name)
+    pats = Counter(_normal(re.sub(r"\\+", "", p)) for p in re.findall(
+        r"\{\^([^{}]*)\$\}", "\n".join(l for l in pdn_tcl.splitlines() if l.startswith("define_pdn_grid -macro"))))
+    found = [n for n in expected if pats[n] >= 1]
+    if not found:
+        return pdn_tcl          # no macro grid names the cohort: nothing for PDN to resolve
+    if len(found) != len(expected):
+        raise ValueError("SVC_R369 PDN requires each of the exact eight declared banks in a macro grid")
+    allow = " ".join("{" + n + "}" for n in expected)
+    return PDN_PREAMBLE.replace("@ALLOW@", allow) + pdn_tcl + PDN_EPILOGUE
