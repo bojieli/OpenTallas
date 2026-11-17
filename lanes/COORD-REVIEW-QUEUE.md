@@ -21447,3 +21447,4 @@ FAILED [AUTOPILOT 4ebaca93bcd1] 2026-11-17 10:35:44 PST AUTOPILOT -> KIT-WAVE-12
   File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 100 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-17 10:58 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> QC-PLAN-R3, COORD] FAIL-CLASS 40d8bcfa2d owner QC-PLAN-R3 qwen_compute/place/PLAN plan macro position outside the core @place: [ERROR MPL-N] C: 1 item(s) failed and not answered: slw_st_a_v1__clfc5867a6__pvf82a6c28. Owner: post RESULT or ACK naming 40d8bcfa2d (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
