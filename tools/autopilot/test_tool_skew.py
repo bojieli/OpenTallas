@@ -50,6 +50,20 @@ class Allowlist(unittest.TestCase):
         self.assertEqual(set(r), set(self.SK))
         self.assertEqual(e, {"tools/die_plan/gen_phys.py": "2026-11-20"})
 
+    def test_exact_overlay_and_reference_hashes(self):
+        rel = "tools/die_plan/gen_phys.py"
+        policy = {rel: {"expires": "2026-11-24", "tree_sha256": "approved", "reference_sha256": "pinned"}}
+        for tm, rm, accepted in (({rel: "approved"}, {rel: "pinned"}, True),
+                                  ({rel: "changed"}, {rel: "pinned"}, False),
+                                  ({rel: "approved"}, {rel: "new-pin"}, False),
+                                  (None, None, False)):
+            refused, allowed, _ = TS.apply_allow({rel: "differ"}, policy, "2026-11-17", tm, rm)
+            self.assertEqual(bool(allowed), accepted)
+            self.assertEqual(bool(refused), not accepted)
+        refused, _, _ = TS.apply_allow({rel: "differ"}, policy, "2026-11-25",
+                                       {rel: "approved"}, {rel: "pinned"})
+        self.assertTrue(refused)
+
     def test_glob_and_missing_expiry(self):
         r, a, e = TS.apply_allow(self.SK, {"tools/die_plan/*.py": {"expires": "2026-12-01"}}, "2026-11-16")
         self.assertEqual(r, {})
