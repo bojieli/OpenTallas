@@ -56,13 +56,18 @@ def module_defaults(rtl_root, mod):
     raise SystemExit(f"{mod}: no #(...) module header under {rtl_root}")
 
 
-def leaf_depths(plan, tree_overrides=None):
+def leaf_depths(plan, tree_overrides=None, vp_xr=None):
     """{(slice, k): {param: depth}}, report rows."""
     tree_overrides = tree_overrides or {}
+    vp_xr = vp_xr or {}
     PT = plan["partition_types"]
-    unknown = set(tree_overrides) - {p["type"] for p in plan["partitions"] if LCD.LEAF_TYPE.match(p["type"])}
+    known = {p["type"] for p in plan["partitions"] if LCD.LEAF_TYPE.match(p["type"])}
+    unknown = (set(tree_overrides) | set(vp_xr)) - known
     if unknown:
         raise SystemExit(f"unknown leaf tree override types: {sorted(unknown)}")
+    for typ, value in vp_xr.items():
+        if isinstance(value, bool) or not isinstance(value, int) or value not in (0, 1):
+            raise SystemExit(f"{typ}: VP_XR contract must be integer 0 or 1")
     out, rep = {}, []
     for p in plan["partitions"]:
         if not LCD.LEAF_TYPE.match(p["type"]):
@@ -81,6 +86,13 @@ def leaf_depths(plan, tree_overrides=None):
                              "no LF_CS source staged")
         want, dis = LCD.plan_depths(t)
         d = {x: want.get(c, 0) for x, c in CLS.items()}
+        xr = vp_xr.get(p["type"], 0)
+        if xr:
+            if d["HI_D"] < 1:
+                raise SystemExit(f"{p['name']}: effective HI depth must include the XR stage")
+            # The plan/native count includes XR's one per-lane HI stage.
+            # LF_CS_HI_D prices only the source's pre-XR stages.
+            d["HI_D"] -= xr
         kv = "kv_leaf" in p["type"]          # DIE-S81-70 kv leaves: per-lane hi / ho stages (GS 0), as bound today
         d["HI_GS"], d["HO_GS"], d["H_G"] = (0, 0, 4) if kv else (d["HI_D"], d["HO_D"], 4)
         for param, value in tree_overrides.get(p["type"], {}).items():
@@ -97,8 +109,10 @@ def leaf_depths(plan, tree_overrides=None):
     return out, rep
 
 
-def stage(plan, net_text, rtl_root, tree_overrides=None):
-    depths, rep = leaf_depths(plan, tree_overrides)
+def stage(plan, net_text, rtl_root, tree_overrides=None, vp_xr=None):
+    depths, rep = leaf_depths(plan, tree_overrides, vp_xr)
+    selected = {(PART.match(p["name"]).group(1), int(PART.match(p["name"]).group(2))): p["type"]
+                for p in plan["partitions"] if LCD.LEAF_TYPE.match(p["type"]) and PART.match(p["name"])}
     slices = sorted({s for s, _ in depths})
     done, defaults = set(), {}
 
@@ -120,6 +134,14 @@ def stage(plan, net_text, rtl_root, tree_overrides=None):
                 v |= nib << (4 * k)
             vals.append(f".LF_CS_{x}(20'h{v:05x})")
         old = m.group("p")
+        if vp_xr:
+            mask = re.search(r"\.LF_VP_XR\(\s*5'b([01]{5})\s*\)", old or "")
+            if "LF_VP_XR" in (old or "") and not mask:
+                raise SystemExit(f"u_s_{s}: VP_XR contract requires a literal five-bit LF_VP_XR mask")
+            bits = int(mask.group(1), 2) if mask else 0
+            for (part, k), typ in selected.items():
+                if part == s and ((bits >> k) & 1) != vp_xr.get(typ, 0):
+                    raise SystemExit(f"u_s_{s} leaf {k}: LF_VP_XR mask differs from explicit {typ} contract")
         if old and "LF_CS_" in old:
             raise SystemExit(f"u_s_{s}: netlist already sets LF_CS_* ({old[:80]})")
         done.add(s)
@@ -142,6 +164,8 @@ def main(argv=None):
     ap.add_argument("--report")
     ap.add_argument("--hi-gs", action="append", default=[], metavar="TYPE:N")
     ap.add_argument("--ho-gs", action="append", default=[], metavar="TYPE:N")
+    ap.add_argument("--vp-xr", action="append", default=[], metavar="TYPE:0|1",
+                    help="explicit selective XR contract: plan effective HI depth includes XR; source depth excludes it")
     a = ap.parse_args(argv)
     plan = json.loads(Path(a.plan).read_text())
     overrides = {}
@@ -155,7 +179,17 @@ def main(argv=None):
             if param in overrides.setdefault(typ, {}):
                 ap.error(f"duplicate {param} override for {typ}")
             overrides[typ][param] = value
-    out, rep = stage(plan, Path(a.netlist).read_text(), a.rtl, overrides)
+    xr = {}
+    for item in a.vp_xr:
+        try:
+            typ, value = item.rsplit(":", 1)
+            value = int(value)
+        except ValueError:
+            ap.error(f"invalid VP_XR contract {item!r}; expected TYPE:0|1")
+        if typ in xr or value not in (0, 1):
+            ap.error(f"duplicate or invalid VP_XR contract {item!r}")
+        xr[typ] = value
+    out, rep = stage(plan, Path(a.netlist).read_text(), a.rtl, overrides, xr)
     Path(a.out).write_text(out)
     if a.report:
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
