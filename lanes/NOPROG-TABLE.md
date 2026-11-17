@@ -1,11 +1,9 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 15:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 15:45 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 4, 'NO-DATA': 8, 'EXCLUDED': 32, 'PROGRESS': 1}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 2, 'NO-DATA': 8, 'EXCLUDED': 32, 'PROGRESS': 1}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
-| epyc2 | otc-3056513-10941 | 3056513 | orfs_synth | 0.1 | last meaningful line 0.1 h ago (406/406 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc2 | otc-3085180-32037 | 3085180 | orfs_synth | 0.1 | last meaningful line 0.1 h ago (417/417 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
 | intel1 | dpkit-kit-2538957 | kit | 5_1_grt | 69.4 | repair_TNS best 244991 last 244991 rows 1 | YOUNG: series started inside the last 6 h |  |
 | intel1 | dpkit-kit-2546869 | kit | 5_1_grt | 69.4 | repair_TNS best 313775 last 313775 rows 2 | YOUNG: series started inside the last 6 h |  |
 | intel1 | so_2412427_ff_30093 | so_2412427_ff_30093 | signoff | 1.0 |  | NO-DATA: empty log |  |
@@ -16,9 +14,9 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 4, 'NO-DATA'
 | intel1 | so_2684759_tt_37266 | so_2684759_tt_37266 | signoff | 0.8 |  | NO-DATA: empty log |  |
 | intel1 | so_2746637_ff_56342 | so_2746637_ff_56342 | signoff | 0.8 |  | NO-DATA: empty log |  |
 | intel1 | so_2746637_tt_56342 | so_2746637_tt_56342 | signoff | 0.8 |  | NO-DATA: empty log |  |
-| epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 37.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 27.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 61.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 37.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 28.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 61.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-kv3_pc__cl254f2e73-3798670 | kv3_pc | 5_1_grt | 3.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-kv3_pc__cl5a95b461-3753749 | kv3_pc | 5_1_grt | 3.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-kv3_pc_v1__cl23f6a148-3798940 | kv3_pc_v1 | pregrt_ff_hold | 3.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -47,5 +45,5 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 4, 'NO-DATA'
 | intel1 | prd-count-p1_bc-692412 | count-p1_bc | prd_count_p1_bc | 0.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261117_084547_311459-i1-2692492 | eco_20261117_084547_311459-i1 | 5_1_grt | 0.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261117_152321_640128-i1-3737872 | eco_20261117_152321_640128-i1 | 5_1_grt | 0.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 18.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 7.7 | last meaningful line 0.2 h ago (1381/1381 lines) | PROGRESS: log still growing |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 18.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 8.0 | last meaningful line 0.4 h ago (1381/1381 lines) | PROGRESS: log still growing |  |
