@@ -10911,16 +10911,65 @@ def step(AP, ap_dir=None):
         AP.log(f"KW-STEP-TIMES total={time.time() - t_step:.0f}s " + " ".join(f"{k}={v[0]}x/{v[1]:.0f}s" for k, v in top))
 
 
+def read_config_text(AP):
+    """WAVE-CONFIG 11-16 (FABLE-FLOW-2000 class D): the wave runs on the COMMITTED kit_wave.json, `git show HEAD:autopilot/kit_wave.json` of the
+    hub checkout, never on the working file, so a lane's uncommitted edit has no effect.  Edit through tools/autopilot/kit_wave_edit.py (patch + commit
+    in one step).  No git checkout (tests, AP_COORD_FILES) or an unreadable HEAD blob: AP.read_coord (origin/coord/state, also committed)."""
+    if getattr(AP, "CONFIG_OVERRIDE", None) is not None:          # `step --config FILE` (manual dry run)
+        return AP.CONFIG_OVERRIDE
+    coord = getattr(AP, "COORD", None)
+    if coord and not getattr(AP, "COORD_FILES", None):
+        try:
+            p = subprocess.run(["git", "-C", str(coord), "show", "HEAD:" + CFG_REL], capture_output=True, text=True, timeout=60)
+            if p.returncode == 0 and p.stdout.strip():
+                return p.stdout
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    return AP.read_coord(CFG_REL)
+
+
+def lock_owner_text(path):
+    """the 'pid=N cmd=...' line a lock holder wrote into its lock file, or 'unknown (no owner line)'"""
+    try:
+        t = Path(path).read_text(errors="replace").strip()
+    except OSError:
+        t = ""
+    return t.splitlines()[-1] if t else "unknown (no owner line)"
+
+
+def lock_take(path, wait_s=0):
+    """non-blocking flock on `path` (kept open, never truncated while another process holds it); on success the file names this process
+    (pid + command line).  Returns the open file, or None when another process holds the lock."""
+    import fcntl
+    lk = open(path, "a+")
+    for i in range(max(1, int(wait_s / 5) + 1) if wait_s else 1):
+        try:
+            fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except OSError:
+            if wait_s and i < int(wait_s / 5):
+                time.sleep(5)
+    else:
+        lk.close()
+        return None
+    try:
+        cmd = " ".join(Path("/proc/self/cmdline").read_text().split("\0")).strip()[:300]
+    except OSError:
+        cmd = " ".join(sys.argv)[:300]
+    lk.seek(0)
+    lk.truncate()
+    lk.write(f"pid={os.getpid()} cmd={cmd}\n")
+    lk.flush()
+    return lk
+
+
 def _step_locked(AP, ap_dir):
     import fcntl
     if os.environ.get("KW_LOCK_HELD") == "1":           # reload_step child: the parent pass holds kit_wave.lock
         return _step(AP, ap_dir)
-    lk = open(Path(ap_dir) / "kit_wave.lock", "w")
-    try:
-        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        AP.log("KIT-WAVE step skipped: another wave pass holds kit_wave.lock")
-        lk.close()
+    lk = lock_take(Path(ap_dir) / "kit_wave.lock")
+    if lk is None:
+        AP.log(f"KIT-WAVE step skipped: another wave pass holds kit_wave.lock (owner {lock_owner_text(Path(ap_dir) / 'kit_wave.lock')})")
         return None
     try:
         return _step(AP, ap_dir)
@@ -11001,7 +11050,7 @@ def log_hold_releases(AP, ap_dir, entries, text, reset=False):
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
-    cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    cfg = load_config(read_config_text(AP))
     _t0 = time.time()
     log_hold_releases(AP, ap_dir, cfg.get("_hold_auto_released") or [], "release_on met", reset=True)
     WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
@@ -11579,15 +11628,9 @@ def cmd_reclassify(a):
     ap_dir = Path(a.ap_dir or AP_DIR)
     lk = None
     if a.write:
-        lk = open(ap_dir / "kit_wave.lock", "w")
-        for _ in range(120):                          # wait for a running wave pass (never write under it)
-            try:
-                fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                break
-            except OSError:
-                time.sleep(5)
-        else:
-            print("reclassify: kit_wave.lock held for 10 min; nothing written")
+        lk = lock_take(ap_dir / "kit_wave.lock", wait_s=600)       # wait for a running wave pass (never write under it)
+        if lk is None:
+            print(f"reclassify: kit_wave.lock held for 10 min by {lock_owner_text(ap_dir / 'kit_wave.lock')}; nothing written")
             return 2
     try:
         st = load_state(ap_dir)
@@ -11738,12 +11781,9 @@ def rejudge_geom(AP, cfg, st, ap_dir, write=False, include_old=False):
     if not write:
         return rows
     import fcntl
-    lk = open(Path(ap_dir) / "kit_wave.lock", "w")
-    try:
-        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        print("rejudge-geom --write: kit_wave.lock held by a wave pass; nothing written (rerun after the tick)")
-        lk.close()
+    lk = lock_take(Path(ap_dir) / "kit_wave.lock")
+    if lk is None:
+        print(f"rejudge-geom --write: kit_wave.lock held by {lock_owner_text(Path(ap_dir) / 'kit_wave.lock')}; nothing written (rerun after the tick)")
         return rows
     try:
         st = load_state(ap_dir)                          # fresh copy under the lock
@@ -12233,7 +12273,7 @@ def main(argv=None):
     if a.cmd == "unchanged":
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import autopilot as AP
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         cfg["_hub"] = AP.HUB_NAME
         rows = redesign_rows(cfg, load_state())
         import collections as _c
@@ -12254,7 +12294,7 @@ def main(argv=None):
     import autopilot as AP
     if a.cmd == "reap-dead":
         AP.DRY = True
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         rows = reap_dead_scan(AP, cfg, load_state(), minutes=a.minutes)
         import collections as _c
         for key, kind, why in rows:
@@ -12263,12 +12303,12 @@ def main(argv=None):
         return 0
     if a.cmd == "rejudge-geom":
         AP.DRY = not a.write
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         rejudge_geom(AP, cfg, load_state(), AP_DIR, write=a.write, include_old=a.include_old)
         return 0
     if a.cmd == "prov-census":
         AP.DRY = True
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         print(json.dumps(prov_census(AP, cfg, load_state()), indent=1) if a.json else "\n".join(
             f"{die}: {r.get('error') or ''}WAIT-DEP types {r.get('types', 0)} -> routed child abstract {r.get('routed', 0)}, "
             f"plan-contract abstract {r.get('contract', 0)} (children {r.get('children', 0)}, routed {r.get('children_routed', 0)})"
@@ -12279,6 +12319,7 @@ def main(argv=None):
         if a.config:
             real = AP.read_coord
             text = Path(a.config).read_text()
+            AP.CONFIG_OVERRIDE = text
             AP.read_coord = lambda rel: text if rel == "autopilot/kit_wave.json" else real(rel)
         if a.owners:
             Path(AP.AP_DIR).mkdir(parents=True, exist_ok=True)
@@ -12289,7 +12330,7 @@ def main(argv=None):
             __import__("collections").Counter(r.get("status") for r in st["items"].values()).items())))
         return 0
     AP.DRY = True
-    cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+    cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
     merge_auto_views(cfg, AP_DIR)                # KW-FIX-35-CV: the plan reads the views the pass reads
     owners = parse_owners(Path(a.owners or AP_DIR / "OWNERS.tsv").read_text())
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
