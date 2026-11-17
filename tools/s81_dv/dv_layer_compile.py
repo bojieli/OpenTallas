@@ -932,6 +932,40 @@ def _line_hop(die, tier, a, b):
     return max(L['age_edges'] for L in cand) + RSTOP_HOP
 
 
+def gunit_ctl_line_reservations(die, prog):
+    """Forbidden V issue edges from actual G-unit CTL reinjection.
+
+    Use the same source-bound landing/rstop paths as line_slot_conflicts.
+    A collective's existing whole-leg allocator may move its config, RDOUT
+    and send events together; a pinned individual command is never retimed.
+    """
+    reserved, paths = set(), {}
+    inj = die.timing_contract['v_ctl_inject']
+    for e in prog.events:
+        if (e.get('inst') != 'u_gunit' or e.get('dir') != 'out'
+                or e.get('kind') != 'CTL' or e.get('port') not in ('vo_s', 'vo_n')):
+            continue
+        tier = 'S' if e['port'] == 'vo_s' else 'N'
+        link = die.links.get(f'tv{tier}_gunit')
+        if link is None:
+            continue
+        t_out = e['cycle'] + link['age_edges'] - RSTOP_HOP + inj
+        eng = ENG['VS'] if tier == 'S' else ENG['VN']
+        for stops, port in ((range(2, -1, -1), 'ri_e'), (range(4, 8), 'ri_w')):
+            t, prev = t_out, 3
+            for c in stops:
+                t += _line_hop(die, tier, prev, c)
+                prev = c
+                if c == 4:
+                    continue
+                cp = paths.setdefault((tier, c), ctl_path(die, f'u_s_{c}{tier}'))
+                if cp['entry_port'] == port:
+                    issue = t - cp['edges'] + RSTOP_HOP
+                    if issue >= 0:
+                        reserved.add((eng, issue))
+    return reserved
+
+
 def line_slot_conflicts(die, prog):
     """S81d-TOK 10-22 (cap30 L0..L20): the column-3 slice re-injects EVERY G-unit V CTL beat (vo_s -> u_s_3S, vo_n ->
     u_s_3N) on its tier line both ways (ot_s81sl_xr ci_dir 3'b011, hops 0), while every seq_host V calendar row's beat
@@ -1199,7 +1233,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             hits0 = len(getattr(die, 'bound_blocked_hits', ()))
             try:
                 r = m.lower(die, o, dict(ctx, t_issue=int(math.floor(o['start'])),
-                                         ctl_used={(row['eng'], row['issue']) for row in prog.rows}))
+                                         ctl_used=({(row['eng'], row['issue']) for row in prog.rows}
+                                                   | (gunit_ctl_line_reservations(die, prog) if fam == 'vpx' else set()))))
             except Exception as exc:
                 if bound_rec is None or type(exc).__name__ != 'BoundBlocked':
                     raise
