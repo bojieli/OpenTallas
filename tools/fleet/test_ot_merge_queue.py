@@ -624,6 +624,41 @@ class PackGuard(unittest.TestCase):
         self.assertEqual(seen["env"]["GIT_NO_LAZY_FETCH"], "1")
 
 
+class TickStall(unittest.TestCase):
+    def test_run_group_kills_the_whole_group_on_timeout(self):
+        import time as _t
+        t0 = _t.time()
+        with self.assertRaises(subprocess.TimeoutExpired):
+            M.run_group("sleep 30 & sleep 30", 1)
+        self.assertLess(_t.time() - t0, 10)
+
+    def test_await_item_sets_a_slow_item_aside(self):
+        import concurrent.futures as CF, threading
+        from unittest.mock import patch
+        ev = threading.Event(); ex = CF.ThreadPoolExecutor(1)
+        fut = ex.submit(ev.wait, 30)
+        it = {"key": "k", "t0": 1.0}
+        with patch.object(M, "ITEM_SECS", 1), patch.object(M, "stall_alert"):
+            M.ASIDE.clear()
+            self.assertEqual(M.await_item({}, it, fut, 1)[0], "INFRA")
+            self.assertEqual(M.ASIDE, ["k"])
+        ev.set(); ex.shutdown(); M.ASIDE.clear()
+
+    def test_stall_alert_posts_once_per_window(self):
+        import time as _t
+        from unittest.mock import patch
+        st = {"last_merge_ts": _t.time() - M.STALL_SECS - 5}
+        with patch.object(M, "flush_posts"), patch.object(M, "save_state"), patch.object(M, "log"):
+            M.stall_alert(st, 3); M.stall_alert(st, 3)
+        self.assertEqual([p["line"].split("[")[0].split()[-1] for p in st["posts"]], ["ALERT"])
+
+    def test_no_alert_without_pending_or_when_recent(self):
+        import time as _t
+        st = {"last_merge_ts": _t.time()}
+        M.stall_alert(st, 5); M.stall_alert({"last_merge_ts": 1.0}, 0)
+        self.assertNotIn("posts", st)
+
+
 class MainFetchFreshness(unittest.TestCase):
     def _run(self, advertisement, rc=0, object_rc=0):
         from unittest.mock import patch
