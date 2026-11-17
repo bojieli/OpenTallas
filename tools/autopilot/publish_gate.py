@@ -254,6 +254,11 @@ def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, 
     if not run_unit:
         out["why"] = "unit not run"
         return out
+    import published_gen_origin as PGO
+    try:
+        out.update(PGO.capture(cfg, die, sp, jd, KW))
+    except (AssertionError, OSError, ValueError, TypeError, KeyError, AttributeError) as e:
+        out["origin_capture_error"] = str(e)       # metadata refusal never changes the publish-gate verdict
     code = ("import sys,runpy;sys.path.insert(0,%r);sys.argv=['kit_wave.py','run-item',%r];"
             "runpy.run_path(%r,run_name='__main__')" % (str(HERE), str(jd / "spec.json"), str(HERE / "kit_wave.py")))
     with open(jd / "unit.log", "w") as lg:
@@ -263,6 +268,7 @@ def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, 
     except (OSError, ValueError):
         res = {}
     out.update(rc=p.returncode, stage=res.get("stage"), result=res.get("verdict"))
+    out.update(PGO.seal(jd, p.returncode))
     if res.get("verdict") == "DRY-PASS" and p.returncode == 0:
         out["verdict"] = "PASS"
         out["preflight_fail_advisory"] = res.get("preflight_fail_advisory")
