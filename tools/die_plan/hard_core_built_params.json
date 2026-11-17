@@ -818,6 +818,22 @@
     "LQH": 1
    },
    "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k/lecrun/lec/gold.ys read_slang -G OLL=2 -G SELOH=1 -G RNF=1 -G LQH=1; build_commit 06c38ca5736 (LQH = 47046ce95e0, folded into main by S81-CORES-R3 11-17); kit dir since cleaned"
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "die": "s81",
+   "lib_contains": "cores/views/bksel_c_qrx_1117/",
+   "records": [
+    "e1f3b821e2ab8dfd9e4bfac2b27794de9892e3393ce2318fbce85183a4afc3ca"
+   ],
+   "params": {
+    "OLL": 2,
+    "SELOH": 1,
+    "RNF": 1,
+    "LQH": 1,
+    "QRX": 1
+   },
+   "source": "S81-CORES-R3 11-17 (COORD r561/r563/r582): QRX 1 control for the eco3 (RFH 2) quarters; kit epyc2:/srv/opentallas-scratch2/claude/s81-cores-r3/kits/dsdv_bksel_c_rfdq, recipe physical/die_plan/s81/cores/legacy/profiles/rfc_bk_1103/recipes_rfdq.json, RTL main 4bc02f0a010 (st fsm_encoding none); R-MINIMAL SIGNED TT +2.37 FF +2.39 DRC 0; pre-route LEC EQUIVALENT 30876/30876; records = sha256 of the signed 6_final.odb"
   }
  ]
 }
