@@ -468,12 +468,14 @@ def cap_word(c):
             c['rsplit'] << 56 | c['lo32'] << 72 | c['hi32'] << 73)
 
 
-def cap_emit(XP, fx, ops, final_ffn=False):
+def cap_emit(XP, fx, ops, final_ffn=False, *, capture_only=False):
     """per slice and die-wide phase: cfg_d (rbase = the slice's first row of the op, rcnt = its share, fmt from the op's
     output format) + the frame tag map (phase-local r -> capture-root tag); validated through cap_model.decode: every
     row of the slice decodes in range to a distinct (leaf, word), no other slice's row decodes in range.  A GU_MERGE
     matrix (xs_place.merged_cap) carries its own tags / range (gate and up are two disjoint row runs of a slice).
     Returns (record, {(matrix base, gate|up|row, row): (slice, leaf, word)}, pairing-slot collisions)."""
+    if capture_only and not final_ffn:
+        raise ValueError('capture-only requires explicit final-FFN placement')
     from cap_model import decode
     seq = XP.phase_list(fx, ops)
     groups = {op: XP.op_groups(fx, op) for op in ops}
@@ -493,9 +495,9 @@ def cap_emit(XP, fx, ops, final_ffn=False):
         if key not in obase:                      # slice vp store: one 64-row-aligned region per matrix (allocation)
             if final_ffn and op == 'ffn.down':
                 # cap addresses WORDS, while final_ffn allocates four-word ROWS.
-                from layer_prog.final_ffn import CAPTURE, expert_slot, source_spans
+                from layer_prog.final_ffn import CAPTURE, expert_slot, source_spans, capture_spans
                 slot = expert_slot(grp['expert'], fx.meta['experts'])
-                source_spans(per_slice)
+                (capture_spans if capture_only else source_spans)(per_slice)
                 if grp['out'] != 'bf16':
                     raise ValueError('final FFN requires actual output-sharded BF16 down capture')
                 obase[key] = 4 * (CAPTURE + 16 * slot)
@@ -553,38 +555,63 @@ def cap_emit(XP, fx, ops, final_ffn=False):
     if final_ffn:
         rec['final_ffn_placement'] = dict(capture_rows=[128,240],assembled_rows=[320,432],combined_rows=[448,464],
                                          admitted=False,requires='dead VPX lease + real RD/allgather reservations')
+    if capture_only:
+        rec['capture_only'] = dict(enabled=True, native_RD_layout_admitted=False,
+                                   mission_epoch=None, selected_native_timing_qualified=False,
+                                   row_leases_qualified=False)
+        rec['final_ffn_placement']['requires'] += '; current partial native RD bursts remain unadmitted'
     return rec, amap, slotc
 
 
 def cmd_cap(a):
     """cap_emit for a layer (+ with GU_MERGE: the consumer-layout check against the two-matrix reference)"""
     import xs_place as XP
+    bound_dir = getattr(a, 'bound_data', None)
+    bound_manifest = getattr(a, 'bound_data_manifest', None)
+    if bool(bound_dir) != bool(bound_manifest):
+        raise ValueError('CAP requires both bound-data and bound-data-manifest')
+    bind = None
     if XP.TP.ENABLED:          # S81-ROMOPT-A: the physical frames per slice come from the die (xs_topo)
         if not a.die_src:
             raise SystemExit('OT_XS_TOPO=1 needs --die-src (physical frames per slice)')
         import dv_layer_compile as C
-        C.Die(C.die_tree(None, a.die_src))
+        if bound_dir:
+            from layer_prog import bound_data as BD
+            bind = BD.load_bind(bound_dir, bound_manifest, C.ROOT)
+            C.Die(C.die_tree(None, a.die_src), netlist=bind['netlist_path'],
+                  netlist_sha=bind['netlist_sha256'], bound_rtl=Path(bind['bound']) / 'rtl')
+        else:
+            C.Die(C.die_tree(None, a.die_src))
+    elif bound_dir:
+        raise ValueError('bound CAP source needs the physical-frame topology enabled')
     fx = XP.Fix(a.fixtures)
-    ops = XP.XS_OPS[a.layer]
+    ops = getattr(a, 'op', None) or XP.XS_OPS[a.layer]
+    if any(op not in XP.XS_OPS[a.layer] for op in ops):
+        raise ValueError('CAP op is outside the selected layer field')
     ff = getattr(a, 'final_ffn_placement', False)
-    rec, amap, slotc = cap_emit(XP, fx, ops, ff)
+    rec, amap, slotc = cap_emit(XP, fx, ops, ff, capture_only=getattr(a, 'capture_only', False))
     rec['layer'] = a.layer
+    if bind is not None:
+        rec['bound_source'] = dict(manifest=str(bound_manifest),
+                                   netlist_sha256=bind['netlist_sha256'],
+                                   mission_epoch=None)
     rec['topo'] = XP.TP.describe()
     import xs_flags as XO
     rec['env'] = XO.describe()
     rec['pairing_slot_collisions'] = slotc
     bad = rec['faults']
-    if XP.GU_PROP:     # DRIVE-S81-GUPROP: SW row-pair capture layout; the consumer check is the gather map (gu_gather)
+    gu_ops = any(op in ('ffn.experts_gu', 'ffn.shared_gu') for op in ops)
+    if XP.GU_PROP and gu_ops:     # DRIVE-S81-GUPROP: SW row-pair capture layout; the consumer check is the gather map (gu_gather)
         import gu_gather as GG
         gg = GG.check(amap, fx.meta['experts'])[0]
         gsl = [c for c in slotc if c['op'] in ('ffn.experts_gu', 'ffn.shared_gu')]
         rec['gu_gather_check'] = dict(gg, gu_slot_collisions=len(gsl), PASS=gg['PASS'] and not gsl)
         bad += 0 if rec['gu_gather_check']['PASS'] else 1
         print('XS_CAP_GU_GATHER', json.dumps({k: v for k, v in rec['gu_gather_check'].items() if k != 'refusals_first'}))
-    elif XP.GU_MERGE:
+    elif XP.GU_MERGE and gu_ops:
         XP.GU_MERGE = False
         try:
-            _r0, ref, _s0 = cap_emit(XP, fx, ops, ff)
+            _r0, ref, _s0 = cap_emit(XP, fx, ops, ff, capture_only=getattr(a, 'capture_only', False))
         finally:
             XP.GU_MERGE = True
         diff = sorted(k for k in set(ref) | set(amap) if ref.get(k) != amap.get(k))
@@ -598,6 +625,17 @@ def cmd_cap(a):
         bad += 0 if rec['merged_layout_check']['PASS'] else 1
         print('XS_CAP_MERGED_LAYOUT', json.dumps({k: v for k, v in rec['merged_layout_check'].items()
                                                    if k != 'first_differing'}), diff[:3])
+    image_dir = getattr(a, 'capture_image_dir', None)
+    phase_calendar = getattr(a, 'phase_calendar', None)
+    if bool(image_dir) != bool(phase_calendar):
+        raise ValueError('capture images require the matching emitted phase calendar')
+    if image_dir:
+        if not getattr(a, 'capture_only', False) or bad:
+            raise ValueError('capture images require passing explicit capture-only mode')
+        from capture_payload_images import write_images
+        image_manifest = write_images(rec, json.loads(Path(phase_calendar).read_text()), image_dir)
+        rec['payload_images'] = dict(path=str(image_dir), status=image_manifest['status'],
+                                     issue_epoch=None, install_admitted=False)
     Path(a.out).write_text(json.dumps(rec, indent=1) + '\n')
     print(f'XS_CAP {a.layer} phases {len(rec["phases"])} slices/phase <= {XP.NSLICE} faults {rec["faults"]} '
           f'vp rows {rec["vp_rows_used"]} slot collisions {len(slotc)} gu_merge {XP.GU_MERGE}')
@@ -626,6 +664,15 @@ def main(argv=None):
     p.add_argument('--fixtures', default=str(LX.FIX))
     p.add_argument('--layer', default='L0')
     p.add_argument('--die-src', default=None, help='die tree (physical frames per slice; needed with OT_XS_TOPO=1)')
+    p.add_argument('--bound-data', default=None, help='strict current bind output for selected physical topology')
+    p.add_argument('--bound-data-manifest', default=None, help='matching as-built manifest of the strict bind')
+    p.add_argument('--op', action='append', default=None, help='restrict CAP emission to this selected-layer op (repeatable)')
+    p.add_argument('--capture-image-dir', default=None,
+                   help='emit loadable CAP160/XRtarget3 payload186/line1104 hex; no mission issue dates')
+    p.add_argument('--phase-calendar', default=None,
+                   help='matching emitted per-op calendar supplies field phase IDs, never CAP issue dates')
+    p.add_argument('--capture-only', action='store_true',
+                   help='with --final-ffn-placement: emit arbitrary contiguous CAP ownership only; native RD/leases remain unadmitted')
     p.add_argument('--final-ffn-placement', action='store_true', help='opt-in actual VS13 capture rows; requires VPX lifetime proof')
     a = ap.parse_args(argv)
     return {'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect, 'cap': cmd_cap}[a.cmd](a)
