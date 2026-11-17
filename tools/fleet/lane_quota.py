@@ -33,7 +33,7 @@ def scan(root, window_h=WINDOW_H, quota_gb=QUOTA_GB, now=None, skip=SKIP):
 def hub(hosts, coord, run=subprocess.run, state=None, now=None):
     """-> list of posted lines.  state = json file with {host/lane: day} so a lane alerts once per day"""
     now = now or time.time(); day = time.strftime("%F", time.localtime(now))
-    state = state or os.path.join(coord, "autopilot", "lane_quota_state.json")
+    state = state or os.path.expanduser("~/.local/state/lane_quota_state.json")
     try: seen = json.load(open(state))
     except (OSError, ValueError): seen = {}
     posted = []

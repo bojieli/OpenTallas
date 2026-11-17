@@ -20,5 +20,5 @@ class Quota(unittest.TestCase):
         def run(cmd, **kw):
             if cmd[0] == "ssh": return types.SimpleNamespace(stdout=json.dumps({"laneA": 200.0}) + "\n")
             posts.append(cmd[-1]); return types.SimpleNamespace(stdout="")
-        a = Q.hub(["epyc7"], coord, run=run); b = Q.hub(["epyc7"], coord, run=run)
+        st = os.path.join(coord, "st.json"); a = Q.hub(["epyc7"], coord, run=run, state=st); b = Q.hub(["epyc7"], coord, run=run, state=st)
         self.assertEqual(len(a), 1); self.assertEqual(b, []); self.assertIn("laneA on epyc7 wrote 200 GB", a[0]); self.assertIn("alert only", posts[0])
