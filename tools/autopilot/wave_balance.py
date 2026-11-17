@@ -322,6 +322,25 @@ def job_roots(j):
     return roots
 
 
+def job_spec_kit(argv):
+    """WAVE-FLOW-R2 11-17: a sealed client runs --dir <ot-jobs> --job <spec.json>; the kit it works on is the spec's work.at"""
+    try:
+        sp = json.loads(Path(argv[argv.index("--job") + 1]).read_text())
+        return str((sp.get("work") or {}).get("at") or "").rstrip("/")
+    except (ValueError, IndexError, OSError, AttributeError):
+        return ""
+
+
+def waiter_kit(w, ops):
+    """the kit dir of a waiter: the cd dir of its ot-heavy wrapper, or for a sealed client (--dir under ot-jobs) the --job spec's work.at"""
+    d = w["dir"].rstrip("/")
+    if "/ot-jobs" in d + "/":
+        k = job_spec_kit(ops.client_argv(w["client_pid"]))
+        if k:
+            return k
+    return d
+
+
 def candidates(AP, st, ops, status, hub_node, cfg):
     """RUNNING KIT-WAVE jobs whose ot-run waiter still WAITS (not started) on the job's home host, on a hot host"""
     hot = {h for h, v in (status or {}).items() if int(v.get("wait_n", 0)) > int(cfg.get("waiter_max", WAITER_MAX))}
@@ -335,7 +354,7 @@ def candidates(AP, st, ops, status, hub_node, cfg):
             continue
         if h not in ps_cache:
             ps_cache[h] = parse_waiters(ops.ps(h), hub_node)
-        ws = [w for w in ps_cache[h] if not w["started"] and w["dir"].rstrip("/") == j["path"].rstrip("/")
+        ws = [w for w in ps_cache[h] if not w["started"] and waiter_kit(w, ops) == j["path"].rstrip("/")
               and ops.client_unit_ok(w["client_pid"], j["unit"])]
         if not ws:
             continue
