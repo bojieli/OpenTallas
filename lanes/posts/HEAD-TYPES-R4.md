@@ -23,3 +23,4 @@
 - 2026-11-17 15:33 PST lep_pair hold ECO round 1: 7 -> 2 internal violators (-3.33 -> -0.59 ps), DRC 0, TT +7.15; round 2 running (E9 lep_hold_eco3). Not yet signed.
 - 2026-11-17 15:36 PST sd9f rebuild re-staged from r620 tip 0b5eafc9c4b7 (kit sd9g3, gen exit 0, preflight PASS); r620 not on main yet, a watcher launches the route the minute it merges (OT_CAPSKEW_ECO=1 if TT short). Apply step 1/6 of HEAD-PLAN-R4 noted, not waited for.
 - 2026-11-17 15:36 PST r620 merged; sd9f rebuild route (sd9g3) LAUNCHED on E9 (unit oth-ubuntu-3730314-1794958570). Watching; OT_CAPSKEW_ECO=1 if TT lands short.
+- 2026-11-17 15:51 PST COUNT-REVOKED row added for hd_serdes (die head, key sha256:e4f6d7f41ca335ccc326760b9e90d997705d41fa0ba69f5c942107930527a3f1 = 6_final.v of s81_head/hd_serdes__sd9f_fable_us_1117; reason PHY rail defect 3047/5671 rows, r620). Archive untouched. I remove the row when sd9g3 signs.
