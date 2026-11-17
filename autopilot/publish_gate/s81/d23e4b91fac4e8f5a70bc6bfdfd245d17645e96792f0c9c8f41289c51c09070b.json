@@ -1,8 +1,51 @@
 {
  "checks": {
-  "gate": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81/d23e4b91fac4/gunit__t1",
+   "gen_host": "epyc10",
+   "item": "gunit__t1",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81/d23e4b91fac4/gunit__t1/published_gen_origin.json",
+   "origin_sha256": "657d7e15eb30113327413145a70ac552b91bc8d783545e1ca180bcbb13a8f333",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "0a4d10aaa3ef65e7a18c988502953e2a0f7c66957c873b4e08b2cdc42eb8cc95",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c",
+   "stage": "gen_lint",
    "verdict": "FAIL",
-   "why": "AssertionError: exact current normal source guard is not ready"
+   "why": "stage gen_lint: GEN_LINT FAIL issues 2 pins_vs_plan=PASS clock_export_form=PASS macro_tcl=PASS kit_rtl_paths=PASS rtl_check=FAIL memory_bits=FAIL\n- GEN_LINT FAIL rtl_check: /work/rtl/dsdv_gunit_l1f.sv:624: ERROR: Unimplemented compiler directive or undefined macro `error.\n- GEN_LINT FAIL memory_bits: not measured: yosys elaboration failed (see rtl_check)"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "accepted": 6,
+    "errors": 6,
+    "inherited": true,
+    "record_sha256": "696f075f5e0170c3253652a186c453d46d10b0bd28957954b82c358fea47015d",
+    "review": "S81-DIE-R2 2026-11-17: S5h strict bind 0 / LATCHECK 873/873 on D5c plan c204a42e; G0 exactly the 6 inherited errors (svc_rs__t6 ft2 stage9 macro overlap + 5 street cut-density) reviewed under COORD no-new-error policy (FABLE-PLAN-S81-B6gF2s5f GO); fixes carried in C4",
+    "reviewed_g0_sha256": "d1530d28e7b37a1c4ca4b9768aaf64729b11b0866edc55b9eb881a020694d31c",
+    "reviewed_plan_sha256": "c204a42e3780898d48a56eefc07edb3c818ff2caa6fd8408c1e62abc22da7b77",
+    "verdict": "PASS"
+   },
+   "g0_rc": 1,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/pubgate/g0-b15pad2_/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c plan=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c/physical/die_plan/s81/plan_h2_2249.json findings=0\n\nG0: 40 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t41 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t42 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t43 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t44 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t45 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t47 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c/physical/die_plan/s81/plan_h2_2249.json: PASS (0 errors)\n",
+   "verdict": "PASS"
   }
  },
  "die": "s81",
@@ -11,11 +54,12 @@
   "epyc8",
   "intel1"
  ],
+ "item": "gunit__t1",
  "manifest_hash": "d23e4b91fac4e8f5a70bc6bfdfd245d17645e96792f0c9c8f41289c51c09070b",
  "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c/physical/die_plan/s81/plan_h2_2249.json",
  "plan_sha256": "c204a42e3780898d48a56eefc07edb3c818ff2caa6fd8408c1e62abc22da7b77",
  "schema": "opentallas.publish_gate.v1",
- "t": 1794909284.4125497,
+ "t": 1794909699.3215072,
  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c",
  "verdict": "FAIL"
 }
