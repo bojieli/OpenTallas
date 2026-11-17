@@ -60,3 +60,71 @@ def test_rebase_maps_old_tree_paths_into_the_kit_tree(tmp_path):
     assert B.kit_rebase_path(old / "rtl" / "lib" / "x.sv", old, new) == str(new / "rtl" / "lib" / "x.sv")
     assert B.kit_rebase_path(str(tmp_path / "other" / "y.sv"), old, new) == str(tmp_path / "other" / "y.sv")
     assert B.kit_rebase_path("rtl/z.sv", old, new) == "rtl/z.sv"
+
+
+def _tree(root, rels, txt="module m; endmodule\n"):
+    for r in rels:
+        f = root / r; f.parent.mkdir(parents=True, exist_ok=True); f.write_text(txt)
+    return root
+
+
+def test_rebase_staged_copy_of_the_recorded_base(tmp_path):
+    """KITRTL-PATHS 11-16: kit_store rewrites bind.f to kit-store/snaps/<id>/root/<abs> but keeps asbuilt base byte-identical;
+    t61 listed snaps/b0a3../root/.../B6gF2s4tapfix1/src/rtl/common/ot_dp_clk_landing_ca.sv while base = .../B6gF2s4tapfix1/src."""
+    old = tmp_path / "run" / "b" / "B6gF2s4tapfix1" / "src"
+    new = _tree(tmp_path / "kw45" / "src_d4", ["rtl/common/ot_dp_clk_landing_ca.sv"])
+    staged = tmp_path / "kit-store" / "snaps" / ("b0a3" * 10) / "root" / str(old).lstrip("/") / "rtl/common/ot_dp_clk_landing_ca.sv"
+    _tree(staged.parent, [staged.name])
+    assert B.kit_staged_original(staged) == old / "rtl/common/ot_dp_clk_landing_ca.sv"
+    assert B.kit_rebase_path(str(staged), old, new) == str(new / "rtl/common/ot_dp_clk_landing_ca.sv")
+
+
+def test_rebase_foreign_source_tree_into_the_kit_tree(tmp_path):
+    """the bind of record (tapfix1) reused B6gF2s4's as-built netlist, so asbuilt_sources.json lib (-> bind.f) names
+    run/b/B6gF2s4/src: those map by their repository-relative part when the kit tree has the file; a staged copy too."""
+    old = tmp_path / "run" / "b" / "B6gF2s4tapfix1" / "src"
+    other = _tree(tmp_path / "run" / "b" / "B6gF2s4" / "src", ["rtl/hdc/ot_hdc_delay.sv", "physical/die_plan/s81/bind/x.sv",
+                                                               "rtl/only_there.sv"])
+    new = _tree(tmp_path / "kw45" / "src_d4", ["rtl/hdc/ot_hdc_delay.sv", "physical/die_plan/s81/bind/x.sv"])
+    moved = {}
+    for rel in ("rtl/hdc/ot_hdc_delay.sv", "physical/die_plan/s81/bind/x.sv"):
+        assert B.kit_rebase_path(str(other / rel), old, new, moved=moved) == str(new / rel)
+    staged = tmp_path / "kit-store" / "snaps" / "abc123" / "root" / str(other).lstrip("/") / "rtl/hdc/ot_hdc_delay.sv"
+    _tree(staged.parent, [staged.name])
+    assert B.kit_rebase_path(str(staged), old, new, moved=moved) == str(new / "rtl/hdc/ot_hdc_delay.sv")
+    assert moved[str(staged)] == str(new / "rtl/hdc/ot_hdc_delay.sv") and len(moved) == 3
+    # a file the kit tree lacks stays where it is, so the outside-the-kit-tree check still fails it
+    assert B.kit_rebase_path(str(other / "rtl/only_there.sv"), old, new) == str(other / "rtl/only_there.sv")
+    assert B.kit_filelist_outside([other / "rtl/only_there.sv"], [new]) == [str((other / "rtl/only_there.sv").resolve())]
+    # no repository top dir in the path: unchanged
+    odd = _tree(tmp_path / "romq_rtl", ["a.sv"]) / "a.sv"
+    assert B.kit_rebase_path(str(odd), old, new) == str(odd)
+
+
+def test_rebase_never_moves_bind_out_or_kit_files(tmp_path):
+    old = tmp_path / "B6gF2s4tapfix1" / "src"
+    out = _tree(tmp_path / "B6gF2s4tapfix1" / "out", ["rtl/bind_cells.sv"])
+    kd = _tree(tmp_path / "kit", ["rtl/w.sv"])
+    new = _tree(tmp_path / "src_d4", ["rtl/bind_cells.sv", "rtl/w.sv"])
+    staged_out = tmp_path / "kit-store" / "snaps" / "ff00" / "root" / str(out).lstrip("/")
+    _tree(staged_out, ["rtl/bind_cells.sv"])
+    for p in (out / "rtl/bind_cells.sv", kd / "rtl/w.sv", staged_out / "rtl/bind_cells.sv"):
+        assert B.kit_rebase_path(str(p), old, new, keep=(out, kd)) == str(p)
+    assert B.kit_rebase_path(str(staged_out / "rtl/bind_cells.sv"), old, new, keep=(staged_out, kd)) == \
+        str(staged_out / "rtl/bind_cells.sv")
+
+
+def test_moved_rows_record_bytes(tmp_path):
+    other = _tree(tmp_path / "other" / "src", ["rtl/a.sv", "rtl/b.sv"])
+    new = _tree(tmp_path / "new", ["rtl/a.sv"])
+    _tree(new, ["rtl/b.sv"], "module changed; endmodule\n")
+    moved = {str(other / "rtl/a.sv"): str(new / "rtl/a.sv"), str(other / "rtl/b.sv"): str(new / "rtl/b.sv"),
+             str(other / "rtl/c.sv"): str(new / "rtl/c_unused.sv")}
+    rows = B.kit_src_moved_rows(moved, [new / "rtl/a.sv", new / "rtl/b.sv"])
+    assert [(Path(r["kit"]).name, r["same_bytes"]) for r in rows] == [("a.sv", True), ("b.sv", False)]
+
+
+def test_kit_rtl_rebases_with_keep_and_records_foreign_moves():
+    t = Path(B.__file__).read_text()
+    assert "kit_rebase_path(p, old_base, st, keep=(out, kd), moved=src_moved)" in t
+    assert '"src_rebased_foreign": src_moved' in t

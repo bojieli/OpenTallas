@@ -857,8 +857,17 @@ def direct_job():
 PLAN_CMD_RE = re.compile(r'''(?i)(?:^|[/\s_.=-])(?:bind[A-Za-z0-9_]*|run_gate[A-Za-z0-9_]*|chain[A-Za-z0-9_]*|latcheck[A-Za-z0-9_]*|g0)(?:\.sh|\.py|\.tcl)?(?=$|[\s/_.-])''')
 
 
+# --plan-job KIND (bind, latcheck or g0; WAVE-CONFIG 11-16): explicit plan marker, implies --priority plan, ignores the script name; a sealed-job spec
+# key "plan_job" does the same.  --priority plan alone keeps the script-name rule as the fallback.  Help text is hash-pinned by test_ot_run_shell_guard.
+PLAN_JOB_KINDS = ("bind", "latcheck", "g0")      # WAVE-CONFIG 11-16: the only kinds a job-spec marker may name
+
+
 def plan_cmd_ok(words):
-    """PLANBYPASS_1114 (COORD 19:5x): --priority plan only for a die-plan bind / LATCHECK / G0 / chain script (bind*, run_gate*, chain*, latcheck*, g0), or OT_RUN_PLAN_OK=1 (plan marker)"""
+    """PLANBYPASS_1114 (COORD 19:5x): --priority plan only for a die-plan bind / LATCHECK / G0 job.  WAVE-CONFIG 11-16: the job
+    names its kind with --plan-job bind|latcheck|g0 (OT_RUN_PLAN_JOB); the script-name rule (bind*, run_gate*, chain*, latcheck*, g0)
+    and OT_RUN_PLAN_OK=1 stay as the fallback when no kind is given"""
+    if os.environ.get("OT_RUN_PLAN_JOB") in PLAN_JOB_KINDS:
+        return True
     return os.environ.get("OT_RUN_PLAN_OK") == "1" or bool(PLAN_CMD_RE.search(" ".join(words)))
 
 
@@ -1519,6 +1528,15 @@ def job_wrap(cmd, spec_path):
     return [JOB_BIN, "run", "--spec-b64", b64, "--"] + list(cmd)
 
 
+def spec_plan_job(spec_path):
+    """WAVE-CONFIG 11-16: the plan marker of a sealed-job spec ("plan_job": "bind" | "latcheck" | "g0"), else None"""
+    try:
+        kind = json.load(open(spec_path)).get("plan_job")
+    except Exception:
+        return None
+    return kind if kind in PLAN_JOB_KINDS else None
+
+
 def spec_local_inputs(spec_path):
     """INPUTHOLD_1114: the path-only inputs (no fetch host) of an ot-job spec; they exist only on the host(s) that hold them"""
     try:
@@ -1603,9 +1621,17 @@ def main():
             prio = a.pop(0)
             if prio not in ("die", "plan"): sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials) or 'plan' (plan-event jobs: strict bind, G0, die-proto)")
             os.environ["OT_RUN_PRIO_ENV"] = f"OT_HEAVY_PRIO={prio} "   # PLAN_PRIO_1114
+        elif o == "--plan-job":      # WAVE-CONFIG 11-16: explicit plan marker: kind of the plan job (bind, latcheck or g0); implies --priority plan
+            kind = a.pop(0) if a else ""
+            if kind not in PLAN_JOB_KINDS: sys.exit("ot-run: --plan-job takes only " + ", ".join(PLAN_JOB_KINDS) + " (die bind, LATCHECK, G0)")
+            os.environ["OT_RUN_PLAN_JOB"] = kind
+            os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=plan "
         else: sys.exit(__doc__)
+    if job and not os.environ.get("OT_RUN_PLAN_JOB") and spec_plan_job(job):     # the job spec names the plan kind: it implies --priority plan
+        os.environ["OT_RUN_PLAN_JOB"] = spec_plan_job(job)
+        os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=plan "
     if os.environ.get("OT_RUN_PRIO_ENV", "").startswith("OT_HEAVY_PRIO=plan") and not plan_cmd_ok(a[1:]):
-        sys.exit("ot-run: --priority plan is for die-plan bind / LATCHECK / G0 scripts only (bind*, run_gate*, chain*, latcheck*, g0; OT_RUN_PLAN_OK=1 for a plan marker); type builds do not bypass memory admission")
+        sys.exit("ot-run: --priority plan is for die-plan bind / LATCHECK / G0 scripts only (--plan-job bind|latcheck|g0, or the script names bind*, run_gate*, chain*, latcheck*, g0; OT_RUN_PLAN_OK=1 for a plan marker); type builds do not bypass memory admission")
     cmd = ro_source_binds(a[1:])
     if job:
         cmd = job_wrap(cmd, job)
