@@ -1,0 +1,26 @@
+{
+  "status": "DEFERRED optional intel1 replica; source copy paused safely",
+  "sender_host": "epyc7",
+  "sender_pid": 3777547,
+  "sender_state": "SIGSTOP at 04:44 PST; exact command destination verified",
+  "receiver_host": "intel1",
+  "destination": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14.part",
+  "expected_manifest": "8bd4818ec021b095fc372aa4fe9e8847b905af0dafdf6751935169a5d55a0329",
+  "free_bytes_at_pause": 95887581184,
+  "remaining_allocated_bytes_at_pause": 43469139968,
+  "normal_floor_bytes": 53687091200,
+  "decision": "COORD agreed defer optional replica, preserve partial/process; E7/E8 complete and E10 restoration suffice",
+  "resume_condition": [
+    "Actual newer KV plan/tree adoption permits old D10 retirement",
+    "Fresh protected reference union and normal guard allow D10 retirement; never remove active current/rollback tree",
+    "Remeasure destination free >= outstanding source allocation + normal50GiB floor",
+    "Verify exact sender identity then SIGCONT same PID; never restart the progressing copy"
+  ],
+  "other_copy": {
+    "target": "epyc10",
+    "client_on_intel2": 339924,
+    "unit_on_epyc7": "oth-ubuntu-3812945-1794917715",
+    "log": "/srv/opentallas-scratch2/claude/fleet-ops-r/codex_restore_d14_e10_1117.log"
+  },
+  "known_after_source_copy": "Original batch bind rsync destination lacks host; fleet restoration script separately copies host-qualified bind to E10/E8. Intel1 bind still deferred."
+}
