@@ -18,7 +18,8 @@ def test_place_async_and_otrun_have_the_guard():
     # (as ot-run 'localhost', capped by ot-run HOST_RESERVE + scratch floor)
     assert 'hosts = target_hosts(hosts, hub, allow_hub)' in src
     assert src.count('allow_hub=True') == 1 and 'phosts, allow_hub=True))' in src
-    assert 'def otrun(mem, thr, d, cmd, hosts, allow_hub=False):' in src
+    # the roam flag (kit_rtl / topology stay on the host that holds the attempt) is a keyword after the guard: allow_hub default stays False
+    assert 'def otrun(mem, thr, d, cmd, hosts, allow_hub=False, roam=True):' in src
 
 
 def test_ot_run_accepts_exclude_hosts():
