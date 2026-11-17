@@ -41,6 +41,16 @@ def native_contract(raw,asbuilt=None,plan_path=None):
             context = asbuilt or plan_path
             if context is None:raise ValueError('native clock table requires explicit full plan context')
             base=Path(context).parent/base
+        # An explicit asbuilt manifest inside a kit-store snapshot owns the mirrored
+        # absolute base too. Reading a surviving live base here would mix epochs.
+        if asbuilt and base.is_absolute():
+            context=Path(asbuilt).resolve()
+            root=next((a for a in context.parents
+                       if a.name=='root' and a.parent.parent.name=='snaps'),None)
+            if root is not None and not base.resolve().is_relative_to(root):
+                base=(root/base.relative_to(base.anchor)).resolve()
+                if not base.is_relative_to(root):
+                    raise ValueError('native base must remain inside its manifest snapshot')
         path=Path(ab['clock_landing_table'])
         absolute=path.is_absolute()
         if not absolute:path=base/path
