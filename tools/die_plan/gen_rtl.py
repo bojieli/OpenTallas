@@ -679,6 +679,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
             raise GenError(f"type {tn}: bus {b['name']} is not bound to any leaf port (open {'input' if b['dir'] == 'in' else 'output'})")
         if b["dir"] == "out" and len(use[k]) != 1:
             raise GenError(f"type {tn}: out bus {b['name']} driven by {len(use[k])} leaf ports {use[k]}")
+    if (rtree or {}).get("pin_entry_phase"):       # the entry cells' static capture-phase select
+        use.setdefault("strap:strap_rst_ph", []).extend(["u_rst_in.ph"] + (["u_run_in.ph"] if rtree.get("start") else []))
     for sp in t.get("id_straps", []):
         if not use.get(f"strap:{sp['name']}"):
             raise GenError(f"type {tn}: id strap {sp['name']} is not bound to any leaf port")
@@ -902,7 +904,9 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
     import pin_entry_delay as PED
+    import pin_entry_phase as PEP
     (out / "ot_dp_cells.sv").write_text(CELLS + (PED.CELL_RTL if PED.uses(P.raw) else "")
+                                        + (PEP.CELL_RTL if PEP.uses(P.raw) else "")
                                         + (ENTRY_FALL_CELLS if uses_entry_fall(P.raw) else "")
                                         + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
                                         + (HOLD_CELLS if uses_hold_hb4(P.raw) else ""))

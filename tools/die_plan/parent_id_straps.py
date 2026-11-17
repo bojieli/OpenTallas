@@ -22,7 +22,9 @@ S81HD_ID_WIDTHS = {'strap_row0': 17, 'strap_ten': 1}
 PHYSICAL_ID_ALIASES = {
     'strap_lane_lane_id': dict(native='lane_lane_id', width=11, module='ot_hbm_su_static_pgslice_lg__lane_exp0_id'),
 }
-PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS, 'strap_qid': 2,
+# FABLE-FIX-HEAD-RESET 11-17: per-instance reset/START entry capture phase (pin_entry_phase.py), same strap rules
+RESET_PHASE_WIDTHS = {'strap_rst_ph': 1}
+PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS, 'strap_qid': 2, **RESET_PHASE_WIDTHS,
                       **{a: r['width'] for a, r in PHYSICAL_ID_ALIASES.items()}}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
 
