@@ -1,8 +1,51 @@
 {
  "checks": {
-  "gate": {
-   "verdict": "FAIL",
-   "why": "AssertionError: exact current normal source guard is not ready"
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81/20ee09596c16/gunit__t1",
+   "gen_host": "epyc10",
+   "item": "gunit__t1",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81/20ee09596c16/gunit__t1/published_gen_origin.json",
+   "origin_sha256": "6d5c39735c67208f3d9ab1b444677bf427b3cfa00755779fc73aaaa8925ea07b",
+   "preflight_fail_advisory": "KIT_PREFLIGHT FAIL i",
+   "published_gen_import_declined": "preflight error was downgraded to advisory",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "spec_sha256": "43978138854584114a92f784f2e156ea022b8ee411d0519ac2cd89ccc01e3393",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e",
+   "stage": "preflight",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "accepted": 6,
+    "errors": 6,
+    "inherited": true,
+    "record_sha256": "15c0703a301ab020475b76e8ba7730af9922eb8789afda55c625bc941efce1c1",
+    "review": "S81-DIE-R3 2026-11-17: D5e-r3b strict bind 0 / LATCHECK 873/873 on plan 9f664e6f; G0 exactly the same 6 inherited ERROR identities as the D5c baseline (svc_rs__t6 ft2 stage9 macro overlap + 5 street cut-density), message-identical; fixes carried in C4 / next tree",
+    "reviewed_g0_sha256": "de0ba4ef88d49e4406df355f27d235df4b3a898adef8575fd8d73ab477674126",
+    "reviewed_plan_sha256": "9f664e6fa54a82298a3f795a15142e2d70c8f07f6cb51f9a6effd9abf1f8d340",
+    "verdict": "PASS"
+   },
+   "g0_rc": 1,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/pubgate/g0-2xs5f0qs/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e plan=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_h2_2249.json findings=0\n\nG0: 40 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t41 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t42 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t43 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t44 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t45 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t47 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_h2_2249.json: PASS (0 errors)\n",
+   "verdict": "PASS"
   }
  },
  "die": "s81",
@@ -11,11 +54,12 @@
   "epyc8",
   "intel1"
  ],
+ "item": "gunit__t1",
  "manifest_hash": "20ee09596c164e346b921291ade8dfd1e51bc96febafb57832b0b37c0ff15965",
  "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_h2_2249.json",
  "plan_sha256": "9f664e6fa54a82298a3f795a15142e2d70c8f07f6cb51f9a6effd9abf1f8d340",
  "schema": "opentallas.publish_gate.v1",
- "t": 1794929406.1188252,
+ "t": 1794929596.2661893,
  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e",
- "verdict": "FAIL"
+ "verdict": "PASS"
 }
