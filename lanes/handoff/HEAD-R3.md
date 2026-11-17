@@ -43,11 +43,22 @@ Relay sites per word class: relay_hops in hr3/w_final_knobF_g60.json (sha d8418d
 y 513..780, POUT s0->s1 x=1354, KRX1 x=537.5/822.5, KRX2 x=560/880, TXI1 x=774.5, TXI2 x=752.
 Scope: horizontal trunk witness only; vertical branches, vias, pin access, clock re-reservation not qualified. No route credit.
 
-## NF15f functional compose + gates (running)
-E10 hr3/compose_f1.py + run_f1.sh: stage/prep_f1 = copy of gated prep_r2 (final75r2, b112d9ad) + the stage tuple; new stage
-groups are FUNCTIONAL PLACEHOLDERS on existing anchors (same tag/rect). Republish hd_lep0N, receipt, kit RTL, strict bind,
-cohort, LAT, G0 -> gates_f1/. E10 unit oth-ubuntu-1494505-1794924335, log ~/head-r3-logs/nf15f_func_gates.log.
-F1_ATTEMPTED guards a repeat. This proves the cycle tuple only; it is not the geometry event.
+## NF15f functional compose + gates: PASS (06:20 PST)
+E10 hr3/compose_f1.py + run_f1.sh: stage/prep_f1 = copy of gated prep_r2 (final75r2, b112d9ad) + the stage tuple
+PIN6 POUT8 TXI 16'h2442 KTX 16'h1111 KRX 16'h2660; 34 new stage groups are FUNCTIONAL PLACEHOLDERS on existing anchors
+(same tag/rect). Plan sha 3210bf1f1390a8c3a1aab968de8c7bd7e6ff452f3783be2ae3d2f336f90b60f9, +16,413 state bits.
+E10 unit oth-ubuntu-1494505-1794924335 exit 0, gates_f1/: receipt rc 0, kit RTL PASS, HEAD_DIE_PORTBIND PASS
+(module_missing 0, tie_audit PASS), cohort 26/26, LANE_ASBUILT 329/329 delta {}, G0 0 errors / 206 warnings.
+Leg prices stage/prep_f1/native_provider_calendar_nf15f.json (PIN +2, POUT +4, TXI +1/+2/+2/+1, KTX +1 each, KRX +0/+3/+3/+1,
+forward and credit). The token/compiler calendar for this tuple is NOT regenerated. This proves the cycle tuple only.
+
+## Collected 06:1x-06:3x PST
+- hd_st_n3_turn hei2: SIGNED R-MINIMAL, DRC 0, TT +43.88, internal FF hold 0 (138 output-port ends -12.85 on d1_o /
+  rst_start_raw_* advisory, parent). Exported BOTH s81_head/hd_st_n3_turn__nf15_fclk192_hei2_1117, ODB sha
+  0765cc9e970cf7df77f4ee9ce94d353b9f877a2475e3768014061372cbd57541; INDEX rows on rtx-pro + AGIdock. Final render not re-looked
+  (1 HB4 after the reviewed hei1 image). NEXT: swap into die STA (E7 head-die-r/nf15c_real4/run_nf15c4.sh), remeasure ring hold.
+- BUF64 coupon: export_r2 alias PASS (E7 buf4_64/export_r2/6_final.*), routed pair tE1o0->tE0b1 hold TT +386.45 / FF +106.09,
+  2 endpoints, 0 negative (buf4_64/pair_routed_r2). Model said 171 TT / 115 FF margin. Coupon only; phase contract owner decides.
 
 ## Not done (next owner)
 1. Geometry event NF15f: apply +181.44 to LEP type (2 upper cores, N-face pins, clock taps/reservations, plw_s2), parent
