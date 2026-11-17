@@ -410,6 +410,13 @@ def wt_drop(name):
 
 def fetch_main():
     with CLONE_LOCK():
+        local = rev(f"refs/remotes/{REMOTE}/{MAIN}")
+        if local:
+            advertised = git("ls-remote", "--exit-code", REMOTE, f"refs/heads/{MAIN}", check=False, timeout=300)
+            rows = [line.split() for line in advertised.stdout.splitlines() if line.strip()]
+            if (advertised.returncode == 0 and rows == [[local, f"refs/heads/{MAIN}"]]
+                    and git("cat-file", "-e", f"{local}^{{commit}}", check=False).returncode == 0):
+                return local
         git("fetch", "-q", REMOTE, f"+refs/heads/{MAIN}:refs/remotes/{REMOTE}/{MAIN}", timeout=300)
     return rev(f"{REMOTE}/{MAIN}")
 

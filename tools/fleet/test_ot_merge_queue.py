@@ -546,3 +546,37 @@ class FailureOutputRetention(unittest.TestCase):
             self.assertTrue(any('first traceback' in s for s in texts))
             self.assertTrue(any('second traceback' in s for s in texts))
             self.assertTrue(all('command=' in s and 'rc=1' in s for s in texts))
+
+
+class MainFetchFreshness(unittest.TestCase):
+    def _run(self, advertisement, rc=0, object_rc=0):
+        from unittest.mock import patch
+        from contextlib import nullcontext
+        local = 'a' * 40
+        calls = []
+        def git(*args, **kwargs):
+            calls.append(args)
+            if args[0] == 'ls-remote':
+                return subprocess.CompletedProcess([], rc, advertisement, '')
+            if args[0] == 'cat-file':
+                return subprocess.CompletedProcess([], object_rc, '', '')
+            return subprocess.CompletedProcess([], 0, '', '')
+        with patch.object(M, 'CLONE_LOCK', side_effect=nullcontext), patch.object(M, 'rev', return_value=local), patch.object(M, 'git', side_effect=git):
+            result = M.fetch_main()
+        return result, calls
+
+    def test_exact_current_advertisement_and_present_commit_skip_fetch(self):
+        result, calls = self._run('a' * 40 + '\trefs/heads/main\n')
+        self.assertEqual(result, 'a' * 40)
+        self.assertNotIn('fetch', [c[0] for c in calls])
+        self.assertIn('cat-file', [c[0] for c in calls])
+
+    def test_missing_commit_still_fetches(self):
+        _, calls = self._run('a' * 40 + '\trefs/heads/main\n', object_rc=1)
+        self.assertIn('fetch', [c[0] for c in calls])
+
+    def test_changed_failed_or_ambiguous_advertisement_still_fetches(self):
+        for text, rc in [('b' * 40 + '\trefs/heads/main\n', 0), ('', 128), ('a' * 40 + '\trefs/heads/main\n' + 'a' * 40 + '\trefs/heads/main\n', 0)]:
+            with self.subTest(text=text, rc=rc):
+                _, calls = self._run(text, rc=rc)
+                self.assertIn('fetch', [c[0] for c in calls])
