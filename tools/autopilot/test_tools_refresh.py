@@ -223,3 +223,10 @@ def test_wave_and_unit_use_the_same_key():
     st = {}
     KW.tools_refresh_tick(AP, {"dies": {"kv": {"enabled": True, "tools_refresh": True}}}, st)
     assert list(st["tools_refresh_started"]) == [TR.wave_key("kv", LAG)] and seen["n"] == 1
+
+
+def test_cli_starts_under_isolated_mode():
+    """the wave starts it as `python3 -I tools_refresh.py`: the first dry run died with ModuleNotFoundError: overlay_classify"""
+    import subprocess
+    r = subprocess.run([sys.executable, "-I", str(HERE / "tools_refresh.py"), "--help"], capture_output=True, text=True, cwd="/")
+    assert r.returncode == 0 and "--die" in r.stdout, r.stderr

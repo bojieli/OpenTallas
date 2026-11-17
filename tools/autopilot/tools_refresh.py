@@ -23,6 +23,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
+sys.path.insert(0, str(HERE))              # python3 -I does not put the script dir on sys.path: overlay_classify lives here
 import tools_lag as TL  # noqa: E402
 import overlay_classify as OC  # noqa: E402
 
