@@ -46,6 +46,9 @@ import child_lint  # noqa: E402
 import pin_fit  # noqa: E402
 import cdc_fsm_guard  # noqa: E402
 import clock_entry_constraints  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "closure_loop"))
+import route_env as RE  # noqa: E402  (WAVE-FLOW-R2 11-17: the loop's route env function)
+import helper_overlay as HO  # noqa: E402
 import raw_macro_clocks  # noqa: E402
 from measured_band_fill import lattice_band_errors, measured_band_fill  # noqa: E402
 sys.path.insert(0, str(HERE))
@@ -3111,6 +3114,12 @@ def gen_job(s: dict, kd: str, commit: str | None, blocks: list) -> dict:
     rr = s.get("reroute_reason") or j.get("reroute_reason")
     if isinstance(rr, dict) and rr.get("kind"):
         spec["reroute_reason"] = rr
+    # WAVE-FLOW-R2 11-17 (COORD): the loop's own route env, from the function closure_loop.launch_stage calls (tools/closure_loop/route_env.py), computed over THIS final spec
+    # and written both as stages.route.env and as a prefix of the route command: a hand / ref_tile launch from job.json then carries OT_ROUTE_HOLD_CORNERS=mm, HM,
+    # OT_ORFS_CORNER ... and no longer fails closed at CTS ("BC scene unavailable").  created = now: a job submitted from this file is created later.
+    renv = RE.route_exports(spec, "route", RE.now_iso(), HO.pg_strict(spec))
+    spec["stages"]["route"]["env"] = renv
+    spec["stages"]["route"]["cmd"] = RE.cmd_prefix(renv) + spec["stages"]["route"]["cmd"]
     return spec
 
 
