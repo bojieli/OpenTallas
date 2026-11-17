@@ -120,7 +120,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp --remove-destination $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py hold_eco_internal_insert.tcl hold_eco_internal_plan.tcl; do cp --remove-destination $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp --remove-destination "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 if [ "$CLOCK_INVENTORY" = 1 ]; then
@@ -246,6 +246,9 @@ done
 [ -z "${OT_PRD_PROTECT_NETS:-}" ] || printf 'OT_PRD_PROTECT_NETS=%q\n' "$OT_PRD_PROTECT_NETS" >> $OUT/variant.env
 [ -z "${OT_PRD_NARROW_PINS:-}" ] || printf 'OT_PRD_NARROW_PINS=%q\n' "$OT_PRD_NARROW_PINS" >> $OUT/variant.env
 [ -z "${OT_PRD_UNFOLD_CHAINS:-}" ] || printf 'OT_PRD_UNFOLD_CHAINS=%q\n' "$OT_PRD_UNFOLD_CHAINS" >> $OUT/variant.env
+# HOLD-FLOW-R 11-16: targeted internal hold insert plan (hold_eco_internal.py plan), staged beside the hook
+if [ -n "${OT_PRD_HOLD_PLAN:-}" ]; then cp --remove-destination "$OT_PRD_HOLD_PLAN" $OUT/hold_plan.tsv && echo 'OT_PRD_HOLD_PLAN=/work/hold_plan.tsv' >> $OUT/variant.env; fi
+[ "${OT_PRD_HOLD_TARGETED:-0}" != 1 ] || echo 'OT_PRD_HOLD_TARGETED=1' >> $OUT/variant.env
 [ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_SLEW_PS:-}" ] || printf 'OT_PRD_TARGET_SLEW_PS=%q\n' "$OT_PRD_TARGET_SLEW_PS" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_FANOUT:-}" ] || [ "${OT_PRD_TARGET_FANOUT}" = 0 ] || printf 'OT_PRD_TARGET_FANOUT=%q\n' "$OT_PRD_TARGET_FANOUT" >> $OUT/variant.env

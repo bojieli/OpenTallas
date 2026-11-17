@@ -65,7 +65,7 @@ def test_run_is_one_strict_declared_pass_at_the_flow_target_and_recorded(tmp_pat
     rc = R.run(k, s, mem=48, cpus=16, run_loop=fake)
     assert rc == 1
     assert seen["max_iter"] == 1 and seen["strict_one_pass"] and seen["route_hold_form"]
-    assert seen["hold_margin"] == eco_loop.HOLD_MARGIN_PS == 5
+    assert seen["hold_margin"] == eco_loop.HOLD_MARGIN_PS == 10
     assert seen["runner"].endswith("run_kit_hbm.sh")
     out = json.loads((k / "route_hold_pass.json").read_text())
     assert out["run"] and out["on"] and out["passes"] == 1 and out["verdict"] == "EXHAUSTED"
@@ -145,7 +145,7 @@ def test_generator_declares_the_form_in_the_spec():
     sys.path.insert(0, str(ROOT / "physical/die_plan/hbm_arch_cores"))
     import gen_core_kit_hbm as G
     on, off = G.route_hold_pass_spec(True), G.route_hold_pass_spec(False)
-    assert on["on"] is True and off["on"] is False and on["passes"] == 1 and on["repair_target_ps"] == 5
+    assert on["on"] is True and off["on"] is False and on["passes"] == 1 and on["repair_target_ps"] == 10
     assert on["eco_on_top"] is False
     src = (ROOT / "physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py").read_text()
     assert 'flow["route_hold_pass"] = route_hold_pass_spec(a.route_hold_pass == "on")' in src

@@ -11,7 +11,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 TOOLS = ("prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl "
-         "prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py").split()
+         "prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py hold_eco_internal_insert.tcl hold_eco_internal_plan.tcl").split()
 SO_TOOLS = "clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl".split()
 
 

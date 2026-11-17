@@ -31,7 +31,7 @@ import os
 import re
 import sys
 
-TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready", "result")
+TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready", "result", "gen_pilot")
 LEGACY_OK = ("merge",)          # still evaluated (ancestor of origin/main); accepted in new records too
 GLOB = re.compile(r"[*?\[]")
 PROOF_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
@@ -63,6 +63,15 @@ def census_limit(val):
 
 def plan_id(d):
     return str((d or {}).get("plan_sha256") or (d or {}).get("_plan_sha") or (d or {}).get("plan_sha") or (d or {}).get("event") or "")
+
+
+def split_pilot(val):
+    """'qwen_kvsys:13f758a4fe34' -> ('qwen_kvsys', '13f758a4fe34')  (die : first 12 hex of the tree manifest sha)"""
+    die, _, sha = str(val).partition(":")
+    return die.strip(), sha.strip().lower()
+
+
+PILOT_SHA = re.compile(r"^[0-9a-f]{12}$")
 
 
 def split_term(t):
@@ -132,6 +141,11 @@ def term_error(term, die, cfg, migrated=False):
         if not tp.startswith("/") or tp.endswith("/") or ".." in tp.split("/"):
             return f"{term!r}: tree_ready needs <die>:<absolute tree path without trailing slash>"
         return None
+    if kind == "gen_pilot":
+        pd, ps = split_pilot(val)
+        if pd != die or not PILOT_SHA.match(ps):
+            return f"{term!r}: gen_pilot needs <this die>:<12 hex of the tree manifest sha>"
+        return None
     if kind == "result":
         lane, tag = split_result(val)
         if not (PROOF_NAME.match(lane) and PROOF_NAME.match(tag)):
@@ -167,6 +181,9 @@ def unreachable_why(term, die, cfg):
     if kind == "tree_ready":
         td, tp = split_tree(val)
         return None if td == die and tp.startswith("/") else "tree_ready die or path malformed"
+    if kind == "gen_pilot":
+        pd, ps = split_pilot(val)
+        return None if pd == die and PILOT_SHA.match(ps) else "gen_pilot die or manifest sha malformed"
     if kind == "result":
         lane, tag = split_result(val)
         return None if PROOF_NAME.match(lane) and PROOF_NAME.match(tag) else "result lane or tag malformed"
@@ -182,7 +199,7 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None, pilot_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
@@ -192,6 +209,7 @@ class Ctx:
         self.proof_fn = proof_fn or (lambda name: False)          # name -> a RESULT PASS line names this proof
         self.result_fn = result_fn or (lambda lane, tag: False)    # (lane, tag) -> a RESULT line of that lane says '<tag> PASS'
         self.lint_fn = lint_fn                                      # (die, item-or-pattern) -> True when no sdc_lint failure is known; None = old _lint_clean list
+        self.pilot_fn = pilot_fn or (lambda die, sha12: False)    # (die, tree manifest sha[:12]) -> one GEN pilot from that tree passed GEN + preflight
         self.tree_fn = tree_fn or (lambda die, path: False)       # (die, tree) -> marker + smoke + replication on all gen hosts
         self.marker_fn = marker_fn or (lambda die: None)          # die -> parsed lanes/handoff/tree_switch_<die>.json or None
         self.cells_fn = cells_fn or (lambda die, item: None)      # (die, item) -> measured cell count or None (unknown = held)
@@ -224,6 +242,9 @@ def term_met(term, rec, die, item, cfg, ctx):
         if kind == "tree_ready":
             td, tp = split_tree(val)
             return td == die and bool(ctx.tree_fn(td, tp))
+        if kind == "gen_pilot":
+            pd, ps = split_pilot(val)
+            return pd == die and bool(ctx.pilot_fn(pd, ps))
         if kind == "result":
             lane, tag = split_result(val)
             return bool(ctx.result_fn(lane, tag))
@@ -250,6 +271,8 @@ def proof_exclusions(rec, d):
             val, kind = split_result(val)[1], "proof"          # result:<lane>:<tag> names its proof items by <tag>
         if kind == "proof":
             out.update(str(i) for i in ((d or {}).get("proof_items") or {}).get(val) or [])
+        if kind == "gen_pilot":                                  # the pilot item itself is never held by the pilot record
+            out.update(str(i) for i in rec.get("pilot_items") or [])
     return out
 
 
@@ -506,7 +529,13 @@ def apply_tree_switches(cfg, ctx):
                     continue
                 m = ctx.marker_fn(die) or {}
                 ch = []
+                _switched = d.get("src") != tp
                 if d.get("src") != tp:
+                    old_src = d.get("src")
+                    if old_src:                      # FLEET-OPS-R: the replaced tree is queued for guarded retirement (retire_superseded.py)
+                        sup = d.setdefault("superseded_trees", [])
+                        if old_src not in sup:
+                            sup.append(old_src)
                     d["src"] = tp
                     ch.append("src")
                 if m.get("manifest_hash") and d.get("src_manifest_hash") != m["manifest_hash"]:
@@ -541,9 +570,41 @@ def apply_tree_switches(cfg, ctx):
                         d[k] = v
                     if json.dumps(d.get(k), sort_keys=True, default=str) != before:
                         ch.append(k)
+                if _switched and add_pilot_hold(cfg, die, d, m):
+                    ch.append("pilot_hold")
                 if ch:
                     out.append((die, tp, ch))
     return out
+
+
+def pilot_item_for(cfg, die, d):
+    """the one item that is allowed to GEN first: die.pilot_item (COORD choice), else the smallest known item name of the die"""
+    if d.get("pilot_item"):
+        return str(d["pilot_item"])
+    names = sorted((cfg.get("_item_names") or {}).get(die) or [])
+    if names:
+        return names[0]
+    items = (d.get("hold_event_items") or {}).get(plan_id(d)) or []
+    return sorted(items)[0] if items else ""
+
+
+def add_pilot_hold(cfg, die, d, marker):
+    """PILOT wave mode (FLEET-OPS-R, COORD r393): after a tree switch the die is held (hold_items['*']) except ONE pilot item; the hold is
+    released when `gen_pilot:<die>:<manifest sha[:12]>` is met = one GEN pilot built from the new tree passed GEN + preflight.  Fails OPEN:
+    no resolvable pilot item (or pilot_after_switch: false) adds no hold, so the die can never deadlock.  -> True when a record was added"""
+    if d.get("pilot_after_switch") is False or cfg.get("pilot_after_switch") is False:
+        return False
+    sha = str(d.get("src_manifest_hash") or (marker or {}).get("manifest_hash") or "")[:12].lower()
+    item = pilot_item_for(cfg, die, d)
+    if not PILOT_SHA.match(sha) or not item:
+        return False
+    rid = f"pilot-{die}-{sha}"
+    recs = d.setdefault("hold_records", [])
+    if any(r.get("id") == rid for r in recs):
+        return False
+    recs.append({"id": rid, "plan_sha": plan_id(d), "reason": f"PILOT after tree switch: one GEN pilot ({item}) from tree {sha} must pass GEN + preflight first",
+                 "release": [f"gen_pilot:{die}:{sha}"], "items": ["*"], "pilot_items": [item], "follow_plan": True, "auto_pilot": True})
+    return True
 
 
 def convert_keys(cfg, keymap):

@@ -409,7 +409,7 @@ proc rm_fits {x y w h} {
   }
   return 1
 }
-set rm_nfit 0; set rm_nold 0
+set rm_nfit 0; set rm_nold 0; set rm_nofit {}
 dict for {g st} $rm_station {
   lassign $st x y
   set rm_done 0
@@ -458,7 +458,10 @@ dict for {g st} $rm_station {
       puts "OT_RELAY_MID_FIT $g $how [expr {$x / double($rm_dbu)}] [expr {$y / double($rm_dbu)}] footprint [expr {$fw / double($rm_dbu)}]x[expr {$fh / double($rm_dbu)}] um margin [expr {$rm_used / double($rm_dbu)}] um"
     } else {
       incr rm_nold
-      puts "OT_RELAY_MID_FIT $g NOFIT (old nearest-free fallback)"
+      # S81-TYPES-R2 11-16: the even-split hop of this stage's line, so a fail-closed stop names depth (hop > max) vs site space
+      set rm_eh [expr {$len / ($n + 1.0) / $rm_dbu}]
+      lappend rm_nofit [format "%s:%.0f" $g $rm_eh]
+      puts "OT_RELAY_MID_FIT $g NOFIT (old nearest-free fallback) line [expr {$len / double($rm_dbu)}] um stages $n even hop [format %.1f $rm_eh] um"
     }
   }
   if {!$rm_done && ![rm_free $x $y]} {
@@ -502,7 +505,7 @@ if {$rm_fit} {
   set rm_cov [expr {$rm_nfit + $rm_nold}]
   puts "OT_HOOK_COVERAGE hook=relay_mid touched=$rm_nfit expected=$rm_cov fallback=$rm_nold advisory=[expr {![info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)]}]"
   if {[info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)] && $rm_cov > 0 && double($rm_nold) / $rm_cov > $::env(OT_RELAY_FALLBACK_MAX_FRAC)} {
-    error "OT_HOOK_COVERAGE relay_mid: $rm_nold of $rm_cov stations on the old fallback (> $::env(OT_RELAY_FALLBACK_MAX_FRAC))"
+    error "OT_HOOK_COVERAGE relay_mid: $rm_nold of $rm_cov stations on the old fallback (> $::env(OT_RELAY_FALLBACK_MAX_FRAC)); unfitted group:even_hop_um [join $rm_nofit { }]"
   }
 }
 puts "OT_RELAY_MID placed $rm_n relay flops of [dict size $rm_station] stations ([dict size $rm_grp] relay groups) FIRM on their source-sink lines"

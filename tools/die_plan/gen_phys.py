@@ -192,12 +192,28 @@ def _cland_pinslot(budgets, tn, extra=()):
 
 
 
+def _is_col_type(tn):
+    return tn is not None and tn.split("__")[0].startswith("col_")
+
+
+def _relay_fallback_max_frac(budgets, tn):
+    """S81-TYPES-R2 11-16 (COORD CLOSURE-STRATEGY-2100 lever 2): a col kit fails closed at place when ANY relay group
+    takes the old nearest-free fallback (relay_mid.tcl OT_RELAY_FALLBACK_MAX_FRAC = 0): an unfitted group means a hop
+    over OT_RELAY_MID_MAX_HOP_UM (405) or no site, i.e. a plan relay-depth row, never a routable kit (col_h10_r0_p1:
+    18 of 95 unfitted, hops 1,118-1,561 um, CTS -508.5).  budgets.relay_fallback_max_frac overrides (null = advisory)."""
+    if "relay_fallback_max_frac" in budgets:
+        return budgets["relay_fallback_max_frac"]
+    return 0 if _is_col_type(tn) else None
+
+
 def _relay_mid_fit(budgets, tn):
     """S81-TYPES-5 11-07 CHANNEL class (relay_mid.tcl FIT), opt-in three ways, absent = unchanged kits: plan-wide
     budgets.relay_mid_fit, per type budgets.relay_mid_fit_types (types or unsplit base names), or per kit-wave row
     through item_env (GEN env OT_RELAY_MID_FIT=1), so a pilot or a class batch needs no plan event."""
     if os.environ.get("OT_RELAY_MID_FIT") == "1" or budgets.get("relay_mid_fit"):
         return True
+    if _is_col_type(tn) and budgets.get("relay_mid_fit") is not False:
+        return True       # S81-TYPES-R2 11-16 (COORD lever 2): col types always FIT, so the fail-closed count below exists
     on = list(budgets.get("relay_mid_fit_types") or [])
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
@@ -989,7 +1005,9 @@ def io_tcl(P, tn, pins):
 
 # soft relay instances placed by relay_mid.tcl: the kept ot_s81_rly relays of the S81 frame bands (u_r<k>.u_y_<lane>);
 # a plan may override it with budgets.relay_mid_re (first capture = the relay group)
-RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
+# S81-TYPES-R2 11-16: [._] before u_y_ -- synthesis flattens u_r0.u_y_xo0_0 to u_u_r0_u_y_xo0_0 (col types); the [.]-only
+# form matched 5 of 80 relay groups on col_h10_r2 (CTS 14 endpoints under -42 -> 2 with [._], 7,014 relay flops placed)
+RELAY_MID_RE = r"^(.*[._]u_y_[A-Za-z0-9_]+)[.]"
 
 
 def _snap_tap(P, x, y, pg_legal=True):
@@ -3314,7 +3332,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
 # GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
-HOLD_FF_MARGIN_DEFAULT = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
+HOLD_FF_MARGIN_DEFAULT = 10.0   # HOLD-FLOW-R 11-16 (closure strategy lever 1): 10 ps repair target on INTERNAL endpoints only (the in-flow repair scope is reg2reg: input starts and output ends are excluded), never 20; GRT repair closes to 0 on the estimate and extraction then moves short paths by 9-17 ps; the GATE stays FF hold >= 0; was 0 (OWNER 11-02)
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
@@ -5368,7 +5386,15 @@ def s81_rck4_source_contract(cfg, kd, names):
     am = re.search(r"\bmodule\s+ot_s81_kp4_am_face3\b.*?\bendmodule\b", body, re.S)
     assert am and re.search(r"\boutput\s+reg\s*\[\s*8\s*:\s*0\s*\]\s*parts\b", am[0]), (
         "S81 RCK4: actual 9-bit AM_FACE3 register module absent")
+    if re.search(r"\bot_pdie_pma_release_chain\s*#", body):
+        assert re.search(r"\bmodule\s+ot_pdie_pma_release_chain\b", body), (
+            "S81 RCK4: actual default0 boot release module absent; stage current locksafe dependency")
+    empty = "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names
     rpc = "OT_S81_SERDES_RM_RPC8" in names
+    assert not empty or rpc, "S81 LOCAL_EMPTY8 requires RPC8"
+    if empty:
+        assert re.search(r"\bg_empty_local\b", body) and re.search(r"\breg\s+rpw\b", body), (
+            "S81 LOCAL_EMPTY8: actual kept local wrap/empty mechanism absent")
     if rpc:
         assert "OT_S81_SERDES_RST_TREE" in names and "OT_S81_RM_STAGED" not in names, (
             "S81 RCK4 RPC8: requires RST_TREE native _rt caller and no RM_STAGED")
@@ -5376,12 +5402,35 @@ def s81_rck4_source_contract(cfg, kd, names):
         assert rm and all(re.search(pattern, rm[0]) for pattern in (
             r"\bOT_S81_SERDES_RM_RPC8\b", r"\bg_local\b", r"\breg\s*\[\s*2\s*:\s*0\s*\]\s*rpq\b")), (
             "S81 RCK4 RPC8: actual native local read-pointer mechanism absent")
+    chunk = "OT_S81_LPL_CHUNK" in names
+    if chunk:
+        assert all(re.search(r"\bmodule\s+" + module + r"\b", body) for module in
+                   ("ot_pl_land_local_w", "ot_pl_land_local_r")), (
+            "S81 LPL_CHUNK: actual local writer/reader modules absent")
+        assert re.search(r"\bCB\s*=\s*24\b", body), "S81 LPL_CHUNK: actual24-bit chunk shape absent"
     record = {"source_defines": sorted(names), "source_sha256": {
         str(path.relative_to(kd)): _hashlib.sha256(path.read_bytes()).hexdigest() for path in files},
-        "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0},
+        "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0, "LOCAL_EMPTY": 8 if empty else 0},
         "scope": "Actual emitted source guard; synthesized inventory remains required before P&R",
         "RX_added_edges": 4, "TX_added_edges": 0, "RPC_added_edges": 0}
+    if chunk:
+        record["expected_actual_synth_ff"].update(LPL_read_onehot=356, LPL_write_onehot=356)
+        record["expected_local_ring_instances"] = {"read": 89, "write": 89}
     (Path(kd) / "rck4_source_contract.json").write_text(json.dumps(record, indent=2) + "\n")
+
+
+def ft_keep_firm_exports(t):
+    names = []
+    for slot in t.get("ft_slots", []):
+        enabled = slot.get("keep_firm", False)
+        if not isinstance(enabled, bool):
+            raise ValueError("ft_slots.keep_firm must be boolean")
+        if enabled:
+            name = slot.get("name", "")
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+                raise ValueError("unsafe FT keep_firm slot name")
+            names.append(name)
+    return ["export OT_FT_KEEP_FIRM = " + " ".join(names)] if names else []
 
 
 def txl_mid_exports(cfg, kd, env=None, defines=()):
@@ -5396,6 +5445,10 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     env = os.environ if env is None else env
     names = {(d[2:] if d.startswith("-D") else d).split("=", 1)[0] for d in defines}
     rck4 = "OT_S81_RCK_RELAY4" in names
+    am_clock = env.get("OT_S81_RCK_AM_COHORT") == "1"
+    rm_local = env.get("OT_SERDES_RM_LOCAL") == "1"
+    assert not rm_local or rck4, "S81 RM locality requires the actual RCK4 native source profile"
+    assert not am_clock or rck4, "S81 AM cohort requires the actual RCK4 source profile"
     if rck4:
         s81_rck4_source_contract(cfg, kd, names)
     pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
@@ -5409,13 +5462,24 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
     if rck4:
         shutil.copyfile(Path(__file__).with_name("rck_transport_mid.tcl"), Path(kd) / "rck_transport_mid.tcl")
+    post_gpl = "rck_transport_mid.tcl" if rck4 else "txl_mid.tcl"
+    if rm_local:
+        shutil.copyfile(Path(__file__).with_name("serdes_rm_local.tcl"), Path(kd) / "serdes_rm_local.tcl")
+        (Path(kd) / "serdes_post_gpl.tcl").write_text(
+            "source /work/rck_transport_mid.tcl\nsource /work/serdes_rm_local.tcl\n")
+        post_gpl = "serdes_post_gpl.tcl"
+    if am_clock:
+        shutil.copyfile(Path(__file__).with_name("rck_am_cohort.tcl"), Path(kd) / "rck_am_cohort.tcl")
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
             *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
             *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
             *(["# S81 RCK4: source-qualified RX+4 coherent transport; no netlist/clock change",
                "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
                "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
-            "export POST_GLOBAL_PLACE_TCL = /work/" + ("rck_transport_mid.tcl" if rck4 else "txl_mid.tcl")]
+            *(["export OT_S81_RCK_AM_COHORT = 1"] if am_clock else []),
+            *(["export OT_SERDES_RM_LOCAL = 1",
+               "export OT_SERDES_RM_LOCAL_EMPTY8 = " + ("1" if "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names else "0")] if rm_local else []),
+            "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
@@ -5618,6 +5682,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     if pg_die_phase_on():
         pdn = pdn_die_phase(pdn, kit_core_area(t))
+    if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
+        import s81_svc_live_sites
+        pdn = s81_svc_live_sites.wrap_pdn(tn, pdn, enabled=True)
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
         # WAVE-RECIPE-1: an M9 kit's M9 grant rides in the same file (extra_grants), so the kit's existing fixlef step (run_kit
@@ -5921,6 +5988,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
            *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
+           *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
+             if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
            *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
@@ -5942,7 +6011,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else []),
            *(["export PRE_MACRO_PLACE_TCL = /work/macro_skip_rtlmp.tcl"] if macros and _macros_all_plan_fixed(t) else [])]
     if macros:
-        (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+        macro_script = "\n".join(mplace) + "\n"
+        if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
+            import s81_svc_live_sites
+            macro_script = s81_svc_live_sites.wrap(tn, macro_script, enabled=True)
+        (kd / "macro_place.tcl").write_text(macro_script)
         if _macros_all_plan_fixed(t):       # KW-FIX-45 11-12: plan-fixed macros: rtl_macro_placer skipped
             shutil.copyfile(Path(__file__).with_name("macro_skip_rtlmp.tcl"), kd / "macro_skip_rtlmp.tcl")
         if macro_moves:
@@ -6021,6 +6094,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
     cfg += ft_stage0_exports(t)
+    cfg += ft_keep_firm_exports(t)
     cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)
@@ -6211,6 +6285,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/lp_even.tcl\n")
     if t.get("reset_relay_full"):
         reset_relay_full(kd / "rtl")
+    install_reset_chain_spread(kd, t)
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
@@ -6591,6 +6666,40 @@ def type_verilog_defines(t, kit_defines=None):
             not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
         raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
     return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
+
+
+RESET_CHAIN_SPREAD_HOOK = "\n# FABLE-FIX-S81-COLTAP 11-16: reset_replicate copy_depth chains on the line common flop -> region copy\nsource /work/reset_chain_spread.tcl\n"
+
+
+def reset_chain_depth(t):
+    """the deepest reset_replicate copy_depth of a type (0 = no key, 1 = one copy per region: no chain flops)."""
+    return max([int(sp.get("copy_depth") or 1) for sp in (t or {}).get("reset_replicate") or []] or [0])
+
+
+def install_reset_chain_spread(kd, t):
+    """FABLE-FIX-S81-COLTAP 11-16: a type with a reset_replicate copy_depth > 1 gets reset_chain_spread.tcl at PRE_RESIZE
+    (after global placement, before repair_design buffers the hops).  GPL puts every chain flop u_x_r<k>_s<j> next to the
+    loads of its region, so the way from the common flop was one hop (col_h9_r2, copy_depth 3: 836..1,174 um, -181 ps at
+    CTS; with the hook the longest hop is 315 um).  Appended to the kit's PRE_RESIZE hook (the PLACE-NOCONVERGE gate runs
+    first), or the hook itself when the kit has none.  No copy_depth > 1: the kit is byte-identical.  Returns True when
+    installed."""
+    if reset_chain_depth(t) < 2:
+        return False
+    kd = Path(kd)
+    shutil.copyfile(Path(__file__).with_name("reset_chain_spread.tcl"), kd / "reset_chain_spread.tcl")
+    mk = (kd / "config.mk").read_text()
+    m_ = re.search(r"^export PRE_RESIZE_TCL = /work/(\S+)\s*$", mk, re.M)
+    if m_ and (kd / m_.group(1)).is_file():
+        with (kd / m_.group(1)).open("a") as f_:
+            f_.write(RESET_CHAIN_SPREAD_HOOK)
+        mk = mk.rstrip("\n") + "\n"
+    elif m_:
+        raise ValueError(f"reset_chain_spread: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
+    else:
+        mk = mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/reset_chain_spread.tcl\n"
+    (kd / "config.mk").write_text(mk + "# reset_replicate copy_depth chains are spread after global placement (reset_chain_spread.tcl)\n"
+                                       "export OT_RESET_CHAIN_SPREAD = 1\n")
+    return True
 
 
 def install_gp_noconverge_gate(kd, cfg, die=None):
@@ -7837,9 +7946,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             # GENBUG (COORD r107): the kit records the source tree it was generated from and the kit-rtl filelist, so
             # kit_gen_lint can reject a source path outside that tree (a stale B6gsl/src beside the kit's own src_rel2 copy)
             Path(kits[-1]).mkdir(parents=True, exist_ok=True)       # trial mode has not created the kit dir yet
+            closure_meta = Path(kit_rtl[tn]).with_name("kit_rtl.json")
+            closure = json.loads(closure_meta.read_text()).get("input_closure") if closure_meta.is_file() else None
             (Path(kits[-1]) / "kit_rtl_paths.json").write_text(json.dumps(dict(
-                schema="opentallas.kit_rtl_paths.v1", src_tree=str(Path(root).resolve()), filelist=str(Path(kit_rtl[tn]).resolve()),
-                files=[str(x) for x in mine]), indent=1) + "\n")
+                schema="opentallas.kit_rtl_paths.v1", src_tree=str(Path(root).resolve()), filelist=str(Path(kit_rtl[tn]).absolute()),
+                files=[str(x) for x in mine],
+                input_closure=closure), indent=1) + "\n")
         if kit_rtl and tn in kit_rtl and (Path(kit_rtl[tn]).parent/'kit_topology.json').is_file():
             import kit_topology
             kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1],top=t['module'])

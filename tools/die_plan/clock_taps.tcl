@@ -37,6 +37,76 @@ foreach bt [$ct_blk getBTerms] {
   }
   lappend ct_taps [list $n $net [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
+# SerDes physical clock edits may change a grid tap, never a functional clock
+# gate, inversion edge, forwarded-clock authority, or a gated FF's clock net.
+# Capture BEFORE even the ordinary nearest-tap pass. Buffer-only clock wiring
+# is transparent; every INV and functional driver/control net remains explicit.
+global ct_clock_guard_on ct_clock_guard_roots ct_clock_guard_before ct_clock_guard_cache
+set ct_clock_guard_on [expr {([info exists ::env(OT_TAP_CLOCK_ANCESTRY_GUARD)] && $::env(OT_TAP_CLOCK_ANCESTRY_GUARD) eq "1") || ([info exists ::env(OT_SERDES_INGRESS_COHORT)] && $::env(OT_SERDES_INGRESS_COHORT) eq "1") || ([info exists ::env(OT_SERDES_RESET_COHORT)] && $::env(OT_SERDES_RESET_COHORT) eq "1")}]
+set ct_clock_guard_roots {};set ct_clock_guard_before {};set ct_clock_guard_cache {}
+foreach tap $ct_taps {dict set ct_clock_guard_roots [[lindex $tap 1] getName] 1}
+proc ct_clock_signature {net {depth 0}} {
+ global ct_clock_guard_roots ct_clock_guard_cache
+ if {$net eq "NULL" || $net eq ""} {return {DISCONNECTED}}
+ set name [$net getName]
+ if {[dict exists $ct_clock_guard_roots $name]} {return {LOCAL_CORE_TAP}}
+ if {[dict exists $ct_clock_guard_cache $name]} {return [dict get $ct_clock_guard_cache $name]}
+ if {$depth>128} {error "clock ancestry recursion/cycle at $name"}
+ set ports {}
+ if {![catch {$net getBTerms} bterms]} {
+  foreach bt $bterms {if {[$bt getIoType] in {INPUT INOUT}} {lappend ports [$bt getName]}}
+ }
+ if {[llength $ports]} {set sig [list PORT [lsort $ports]]} else {
+  set drivers {};set transparent {}
+  foreach pin [$net getITerms] {
+   if {[[$pin getMTerm] getIoType] ne "OUTPUT"} continue
+   set inst [$pin getInst];set master [[$inst getMaster] getName]
+   set inputs {};set wiring {}
+   foreach ip [$inst getITerms] {
+    if {[[$ip getMTerm] getIoType] ne "INPUT"} continue
+    set pn [[$ip getMTerm] getName];set nn [$ip getNet]
+    if {$nn eq "NULL" || $nn eq ""} {set is {DISCONNECTED}
+    } elseif {[dict exists $ct_clock_guard_roots [$nn getName]] || [regexp {^(BUF|INV)} $master] || $pn in {CLK CLKN CK CKN CP CLKIN CKIN}} {
+      set is [ct_clock_signature $nn [expr {$depth+1}]]
+    } else {set is [list CONTROL_NET [$nn getName]]}
+    lappend inputs [list $pn $is];lappend wiring $is
+   }
+   set pass_buffer 0
+   if {[regexp {^BUF} $master] && [llength $wiring]==1} {set ds [lindex $wiring 0];set pass_buffer 1
+   } elseif {[regexp {^INV} $master] && [llength $wiring]==1} {set ds [list INV [$inst getName] $master [lindex $wiring 0]]
+   } else {set ds [list FUNCTIONAL [$inst getName] $master [[$pin getMTerm] getName] [lsort $inputs]]}
+   lappend drivers $ds;lappend transparent $pass_buffer
+  }
+  if {[llength $drivers]==1 && [lindex $transparent 0]} {set sig [lindex $drivers 0]
+  } else {set sig [expr {[llength $drivers] ? [list DRIVERS [lsort $drivers]] : [list UNDRIVEN $name]}]}
+ }
+ dict set ct_clock_guard_cache $name $sig
+ return $sig
+}
+proc ct_clock_guard_snapshot {} {
+ global ct_blk ct_clock_guard_cache
+ set ct_clock_guard_cache {};set result {}
+ foreach inst [$ct_blk getInsts] {
+  if {![regexp {^(DFF|SDF)} [[$inst getMaster] getName]]} continue
+  foreach pin [$inst getITerms] {
+   set pn [[$pin getMTerm] getName]
+   if {[[$pin getMTerm] getIoType] ne "INPUT" || $pn ni {CLK CLKN CK CKN}} continue
+   dict set result [list [$inst getName] $pn] [list [[$inst getMaster] getName] [ct_clock_signature [$pin getNet]]]
+  }
+ }
+ return $result
+}
+proc ct_clock_guard_verify {} {
+ global ct_clock_guard_before
+ set after [ct_clock_guard_snapshot]
+ if {[dict size $after]!=[dict size $ct_clock_guard_before]} {error "clock ancestry clock-pin inventory changed"}
+ dict for {pin signature} $ct_clock_guard_before {
+  if {![dict exists $after $pin] || [dict get $after $pin] ne $signature} {error "clock ancestry changed for $pin: before=$signature after=[expr {[dict exists $after $pin] ? [dict get $after $pin] : {MISSING}}]"}
+ }
+ puts "OT_CLOCK_ANCESTRY PASS [dict size $after] FF clock pins; functional gates, INV edges and noncore roots preserved"
+}
+if {$ct_clock_guard_on} {set ct_clock_guard_before [ct_clock_guard_snapshot]}
+
 # CP2 (COORD 10-23): EARLY core taps (gen.py phys core_taps.txt, env OT_CORE_TAPS; plan clock.taps[] kind 'core' with
 # clock.core_taps 'early').  Each line `port inst pin|*`: the hard core's clock pin(s) leave the clk net for the core
 # tap port's own net BEFORE the nearest-tap split, so the core hangs on the tap the spine delivers early (its internal
@@ -157,7 +227,7 @@ set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE)
 # registers and the already-declared forwarded output clock. Default off.
 set ct_fixed {}; set ct_fixed_taps {}
 if {[info exists ::env(OT_TAP_GROUP_FIXED)] && $::env(OT_TAP_GROUP_FIXED) ne ""} {
-  if {$ct_gre eq ""} {error "OT_TAP_GROUP_FIXED needs an explicit group regex"}
+  if {$ct_gre eq "" && !([info exists ::env(OT_SERDES_RESET_COHORT)] && $::env(OT_SERDES_RESET_COHORT) eq "1") && !([info exists ::env(OT_SERDES_INGRESS_COHORT)] && $::env(OT_SERDES_INGRESS_COHORT) eq "1")} {error "OT_TAP_GROUP_FIXED needs an explicit group regex"}
   foreach spec [split $::env(OT_TAP_GROUP_FIXED) ,] {
     set pair [split $spec :]
     if {[llength $pair] != 2 || [lindex $pair 0] eq "" || [lindex $pair 1] eq ""} {error "OT_TAP_GROUP_FIXED malformed group:port"}
@@ -234,13 +304,139 @@ proc ct_follow {} {
   }
   return [list $ct_fn $ct_fmoved]
 }
-if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
+# Default-off SerDes clock cohorts. The incoming forwarded writer is untouched:
+# only pins already on the local core clock tap family are considered below.
+set ct_ingress [expr {[info exists ::env(OT_SERDES_INGRESS_COHORT)] && $::env(OT_SERDES_INGRESS_COHORT) eq "1"}]
+set ct_reset_family [expr {[info exists ::env(OT_SERDES_RESET_COHORT)] && $::env(OT_SERDES_RESET_COHORT) eq "1"}]
+set ct_ingress_readside [expr {[info exists ::env(OT_SERDES_INGRESS_READSIDE)] && $::env(OT_SERDES_INGRESS_READSIDE) eq "1"}]
+if {$ct_ingress_readside && !$ct_ingress} {error "OT_SERDES_INGRESS_READSIDE requires OT_SERDES_INGRESS_COHORT"}
+# I2 measured all-encoder grouping is intentionally not the new READSIDE API:
+# its 7269-sink tree reached979ps and moved debt into finite START/reset inputs.
+# The opt-in caller must name the modeled first payload stage and price every
+# following stage/START/reset/forwarded-clock boundary before routing.
+set ct_ingress_stage [expr {[info exists ::env(OT_SERDES_INGRESS_ENCODER_STAGE)] ? $::env(OT_SERDES_INGRESS_ENCODER_STAGE) : ""}]
+if {$ct_ingress_readside && $ct_ingress_stage ne "d0"} {error "OT_SERDES_INGRESS_READSIDE requires explicit sized OT_SERDES_INGRESS_ENCODER_STAGE=d0"}
+if {!$ct_ingress_readside && $ct_ingress_stage ne ""} {error "OT_SERDES_INGRESS_ENCODER_STAGE requires OT_SERDES_INGRESS_READSIDE"}
+set ct_ingress_key [expr {$ct_ingress_readside ? "serdes_ingress_d0" : "u_enc"}]
+set ct_ingress_bin 0;set ct_ingress_enc 0;set ct_ingress_read 0;set ct_ingress_aux 0;set ct_ingress_reset 0;set ct_ingress_start 0
+set ct_ingress_ports {}
+# Generated boundary payload stages identify their receiving landing. Cover the
+# complete local read pipeline/read controls, not just its last register. Only
+# original local core-tap clock pins are enumerated: the forwarded writer and
+# any independent clock behind that barrier cannot enter this cohort.
+if {$ct_ingress_readside} {
+ foreach tap $ct_taps {
+  foreach pin [[lindex $tap 1] getITerms] {
+   if {[[$pin getMTerm] getName] ni {CLK CLKN CK CKN}} continue
+   if {[regexp {(?:^|[/.])u_bin_([A-Za-z0-9_]+)[/.]q} [[$pin getInst] getName] -> port]} {dict set ct_ingress_ports $port 1}
+  }
+ }
+ if {![dict size $ct_ingress_ports]} {error "OT_SERDES_INGRESS_READSIDE no compiled local payload boundaries"}
+}
+set ct_reset_members {};set ct_reset_used {};set ct_reset_map {};set ct_reset_available {}
+proc ct_has_clock_pin {inst} {
+  foreach pin [$inst getITerms] {
+    if {[[$pin getMTerm] getName] in {CLK CLKN CK CKN}} {return 1}
+  }
+  return 0
+}
+# Trace compiled reset/data authority through combinational logic, stopping at
+# every sequential/PHY boundary. A merged relay is identified by its REAL driver,
+# never guessed from the collector's numeric name. No data or clock net is edited.
+proc ct_rl_sources {net depth seen} {
+  if {$net eq "NULL" || $net eq "" || $depth<=0 || [dict exists $seen [$net getName]]} {return {}}
+  dict set seen [$net getName] 1;set found {}
+  foreach pin [$net getITerms] {
+    if {[[$pin getMTerm] getIoType] ne "OUTPUT"} continue
+    set inst [$pin getInst];set name [$inst getName]
+    if {[regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $name -> owner] && [ct_clk_iterm $inst] ne ""} {
+      dict set found $owner 1;continue
+    }
+    if {[ct_has_clock_pin $inst]} continue
+    if {![catch {[[$inst getMaster] isBlock]} hard] && $hard eq "1"} continue
+    foreach input [$inst getITerms] {
+      if {[[$input getMTerm] getIoType] ne "INPUT" || [[$input getMTerm] getName] in {VDD VSS VPWR VGND}} continue
+      set found [dict merge $found [ct_rl_sources [$input getNet] [expr {$depth-1}] $seen]]
+    }
+  }
+  return $found
+}
+if {$ct_reset_family} {
+  set ct_collectors {}
+  foreach tap $ct_taps {
+    foreach pin [[lindex $tap 1] getITerms] {
+      if {[[$pin getMTerm] getName] ni {CLK CLKN CK CKN}} continue
+      set inst [$pin getInst];set name [$inst getName]
+      if {[regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $name -> owner]} {dict set ct_reset_available $owner 1}
+      if {[regexp {^(.*(?:^|[/.])u_cland_collect_rst_rl_[0-9]+)[/.]} $name -> collector]} {
+        dict set ct_collectors $collector $name $inst
+      }
+    }
+  }
+  if {![dict size $ct_collectors]} {error "OT_SERDES_RESET_COHORT no compiled local-clock collectors"}
+  # Typed rows are sized on the actual compiled driver graph before CTS. Each
+  # bounded group has a fixed existing light-clock tap, not the encoder root.
+  if {[info exists ::env(OT_SERDES_RELAY_COHORTS)] && $::env(OT_SERDES_RELAY_COHORTS) ne ""} {
+    foreach row [split $::env(OT_SERDES_RELAY_COHORTS) {;}] {
+      set ids [split $row ,];set key [lindex $ids 0]
+      foreach id $ids {
+        if {![regexp {^[0-9]+$} $id] || ![dict exists $ct_reset_available $id] || [dict exists $ct_reset_map $id]} {error "OT_SERDES_RELAY_COHORTS missing/duplicate compiled relay $id"}
+        dict set ct_reset_map $id $key
+      }
+    }
+    if {[dict size $ct_reset_map]!=[dict size $ct_reset_available]} {error "OT_SERDES_RELAY_COHORTS incomplete compiled relay coverage"}
+  } else {
+    dict for {id unused} $ct_reset_available {dict set ct_reset_map $id $id}
+  }
+  dict for {collector instances} $ct_collectors {
+    set owners {}
+    dict for {name inst} $instances {
+      foreach pin [$inst getITerms] {
+        if {[[$pin getMTerm] getName] ni {D RESETN SETN}} continue
+        set owners [dict merge $owners [ct_rl_sources [$pin getNet] 12 {}]]
+      }
+    }
+    if {[dict size $owners]!=1} {error "OT_SERDES_RESET_COHORT ambiguous/missing compiled RRL authority for $collector: [dict keys $owners]"}
+    set owner [lindex [dict keys $owners] 0]
+    dict set ct_reset_used $owner 1
+    dict for {name inst} $instances {dict set ct_reset_members $name $owner}
+    puts "OT_SERDES_RESET_COHORT compiled $collector <- u_rrl_$owner ([dict size $instances] clock pins)"
+  }
+}
+
+if {[llength $ct_taps] >= 2 && ($ct_gre ne "" || $ct_ingress || $ct_reset_family)} {
   set ct_grp {}
   foreach tp $ct_taps {
     foreach it [[lindex $tp 1] getITerms] {
       if {[[$it getMTerm] getIoType] ne "INPUT"} continue
-      if {[regexp -- $ct_gre [[$it getInst] getName] -> g]} { dict lappend ct_grp $g $it }
+      set ct_iname [[$it getInst] getName];set g ""
+      if {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && (($ct_ingress_readside && [regexp {(?:^|[/.])u_bin_([A-Za-z0-9_]+)[/.]q} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]) || (!$ct_ingress_readside && [regexp {(?:^|[/.])u_bin_coll_i0[/.]q} $ct_iname]))} {
+        set g $ct_ingress_key;incr ct_ingress_bin
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_bin_([A-Za-z0-9_]+)[/.]eq} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]} {
+        set g $ct_ingress_key;incr ct_ingress_aux
+      } elseif {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_enc[/.]} $ct_iname] && (!$ct_ingress_readside || [regexp {(?:^|[/.])u_enc[/.]d0[^A-Za-z0-9_]} $ct_iname])} {
+        set g $ct_ingress_key;incr ct_ingress_enc
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_cland_([A-Za-z0-9_]+)[/.]} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]} {
+        set g $ct_ingress_key;incr ct_ingress_read
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_cland_reader_start_([A-Za-z0-9_]+)_[0-9]+[/.]} $ct_iname -> port] && [dict exists $ct_ingress_ports $port]} {
+        set g $ct_ingress_key;incr ct_ingress_start
+      } elseif {$ct_ingress_readside && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_core[.]g_rst_tree[.]rt_e[^A-Za-z0-9_]} $ct_iname]} {
+        set g u_enc;incr ct_ingress_reset
+      } elseif {$ct_reset_family && [dict exists $ct_reset_members $ct_iname]} {
+        set g serdes_rst_[dict get $ct_reset_map [dict get $ct_reset_members $ct_iname]]
+      } elseif {$ct_reset_family && [regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $ct_iname -> owner] && [dict exists $ct_reset_map $owner]} {
+        set g serdes_rst_[dict get $ct_reset_map $owner]
+      } elseif {$ct_gre ne ""} {regexp -- $ct_gre $ct_iname -> g}
+      if {$g ne ""} {dict lappend ct_grp $g $it}
     }
+  }
+  if {$ct_ingress} {
+    set expected [expr {[info exists ::env(OT_SERDES_INGRESS_BITS)] ? $::env(OT_SERDES_INGRESS_BITS) : 512}]
+    if {$expected<=0 || $ct_ingress_bin!=$expected || $ct_ingress_enc<=0} {error "OT_SERDES_INGRESS_COHORT capture mismatch bin=$ct_ingress_bin expected=$expected encoder=$ct_ingress_enc"}
+    if {$ct_ingress_readside && $ct_ingress_enc!=$expected} {error "OT_SERDES_INGRESS_READSIDE first-stage width=$ct_ingress_enc expected=$expected"}
+    if {$ct_ingress_readside && $ct_ingress_start<=0} {error "OT_SERDES_INGRESS_READSIDE missing compiled reader START authority copies"}
+    if {$ct_ingress_readside && $ct_ingress_read<=0} {error "OT_SERDES_INGRESS_READSIDE missing compiled local read-side clock pins"}
+    puts "OT_SERDES_INGRESS_COHORT bin=$ct_ingress_bin encoder=$ct_ingress_enc local_readside=$ct_ingress_read interfaces=[dict keys $ct_ingress_ports] local_boundary_aux=$ct_ingress_aux encoder_reset_leaf=$ct_ingress_reset reader_start=$ct_ingress_start encoder_stage=$ct_ingress_stage group=$ct_ingress_key; local core clock only; forwarded writer unchanged"
   }
   set ct_gmoved 0; set ct_gsplit 0
   dict for {g its} $ct_grp {
@@ -251,6 +447,15 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
       dict set owners [[$it getNet] getName] 1
     }
     if {[dict size $owners] > 1} { incr ct_gsplit }
+    if {[string match serdes_rst_* $g]} {
+      set xs {};set ys {}
+      foreach it $its {lassign [[$it getInst] getLocation] x y;lappend xs $x;lappend ys $y}
+      set xs [lsort -integer $xs];set ys [lsort -integer $ys]
+      set du [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
+      set span [expr {([lindex $xs end]-[lindex $xs 0]+[lindex $ys end]-[lindex $ys 0])/$du}]
+      if {$span>405.0 || [llength $its]>64} {error "OT_SERDES_RELAY_COHORTS unsized group $g span_um=$span FF=[llength $its]"}
+      puts "OT_SERDES_RELAY_COHORTS $g FF=[llength $its] bbox_span_um=$span"
+    }
     set cx [expr {$sx / [llength $its]}]; set cy [expr {$sy / [llength $its]}]
     set best ""; set bd 0
     foreach tp $ct_taps {
@@ -714,3 +919,5 @@ if {[llength $ct_taps] >= 2} {
 
 # Rebind only the typed PHY export whose actual source changed in this tap split.
 if {[file exists /work/phy_clock_export_source.tcl]} {source /work/phy_clock_export_source.tcl}
+# Verify functional clock ancestry on the final tap state (after any PHY export rebind).
+if {$ct_clock_guard_on} {ct_clock_guard_verify}

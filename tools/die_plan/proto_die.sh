@@ -36,6 +36,12 @@ for t in st_TT st_FF off_TT; do log "GRT_$t $(grep -h -E 'EXIT|Total overflow|GR
 mkdir -p $D/proof
 for C in TT FF; do python3 -s $S/trial_tap_arrivals.py $K/clock/tree.json $D/grt_st_$C/arr_$C.txt $C $D/proof/tap_arrivals_$C.json --physical-paths > $D/tta_$C.log 2>&1; log "TTA_$C $? $(tail -n 1 $D/tta_$C.log)"; done
 # KIT-OPS-6 11-15: CA steps always run (landed_phase_ocv, count_align_plan/bind, die_sta_related --count-align); legacy T/2 run kept as sta_legacy (LEGACY)
-bash $S/die_chain_ca.sh $D/proof $P $D/ca ${CC:-inv2} --kit-window-out $D/kitwin.json; log "CA_CHAIN $? (STA_CA in $D/ca/CHAIN.log; legacy T/2 = LEGACY)"
+# HEAD-DIE-R 11-16 (COORD r400): the CA steps run on the tools of the plan's OWN published source tree (the nearest parent
+# holding .src-manifest.json), so the count-aligned bind matches the plan's sidecar/FREG declarations; CA_TOOLS overrides;
+# a plan outside any published tree keeps the worktree tools ($S).
+CAT=${CA_TOOLS:-}; if [ -z "$CAT" ]; then pd=$(cd "$(dirname "$P")" && pwd)
+  while [ "$pd" != / ]; do [ -f "$pd/.src-manifest.json" ] && { CAT=$pd/tools/die_plan; break; }; pd=$(dirname "$pd"); done; fi
+[ -f "${CAT:-/nonexistent}/die_chain_ca.sh" ] || CAT=$S; log "CA_TOOLS $CAT"
+CA_TOOLS=$CAT bash $CAT/die_chain_ca.sh $D/proof $P $D/ca ${CC:-inv2} --kit-window-out $D/kitwin.json; log "CA_CHAIN $? (STA_CA in $D/ca/CHAIN.log; legacy T/2 = LEGACY)"
 ( cd $S && nice python3 -s die_sta_related.py $D/proof --plan $P --out $D/sta_droop --corner TT --corner FF --core-insertion declared --cppr-lca --clock-cell ${CC:-inv2} --margin-policy legacy --data-droop class ) > $D/sta_droop.log 2>&1; log "STA_DROOP $?"
 log CHAIN_DONE

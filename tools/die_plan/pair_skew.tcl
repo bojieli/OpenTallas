@@ -200,16 +200,51 @@ proc ot_ps_clock_role {pin role} {
       if {$failed} {error "ot_ps_clock_role: report_edges failed for [get_full_name $pin]: $message"}
       set found [ot_ps_parse_role $report $role]
     }
-    if {[llength $found] > 1} {error "ot_ps_clock_role: ambiguous $role clock/edge for [get_full_name $pin]: $found"}
+    # S81-TYPES-R2 11-16: a hard core may relate one data pin to several clock pins of one edge (dsfd_bf_front_roots rs:
+    # ck / io_clk / io_e / io_w, all on clk).  Kept as a candidate list; resolved per instance below to the worst capture.
+    if {[llength $found] > 1 && ($role ni {setup hold} || [llength [lsort -unique [lmap f $found {lindex $f 1}]]] != 1)} {
+      error "ot_ps_clock_role: ambiguous $role clock/edge for [get_full_name $pin]: $found"
+    }
     dict set ::ot_ps_role_cache $key $found
   }
   set found [dict get $::ot_ps_role_cache $key]
   if {![llength $found]} {return {}}
+  if {[llength $found] > 1} {return [ot_ps_worst_role $pin $role $found]}
   lassign [lindex $found 0] formal rf
   set full "[ot_ps_inst [get_full_name $pin]]/$formal"
   set clocks [get_pins -quiet $full]
   if {[llength $clocks] != 1} {error "ot_ps_clock_role: missing/nonunique actual clock pin $full"}
   return [list [lindex $clocks 0] $rf]
+}
+# Several same-edge clock pins of one instance check one data pin (STA checks every arc; the worst one binds): setup
+# takes the EARLIEST capture clock arrival, hold the LATEST.  Fail closed unless every candidate is one actual pin on
+# ONE clock with a measured tag arrival (no property fallback), so a write-only SRAM WCLK can never be swapped for RCLK.
+proc ot_ps_worst_role {pin role found} {
+  set name [get_full_name $pin]
+  if {![info exists ::ot_ps_method] || $::ot_ps_method ne "tag"} {
+    error "ot_ps_clock_role: ambiguous $role clock/edge for $name: $found (no clock-tag arrivals)"
+  }
+  set best {};set bestv "";set clk ""
+  foreach f $found {
+    lassign $f formal rf
+    set p [get_pins -quiet "[ot_ps_inst $name]/$formal"]
+    if {[llength $p] != 1} {error "ot_ps_clock_role: ambiguous $role clock/edge for $name: missing actual pin $formal"}
+    set cl [get_property [lindex $p 0] clocks]
+    if {[llength $cl] != 1 || ($clk ne "" && [get_full_name [lindex $cl 0]] ne $clk)} {
+      error "ot_ps_clock_role: ambiguous $role clock/edge for $name: $formal is not on one shared clock"
+    }
+    set clk [get_full_name [lindex $cl 0]]
+    set v [ot_ps_ckarr [lindex $p 0] [lindex $cl 0] [expr {$role eq "setup" ? "min" : "max"}] $rf]
+    if {$v eq ""} {error "ot_ps_clock_role: ambiguous $role clock/edge for $name: no arrival at $formal"}
+    if {$bestv eq "" || ($role eq "setup" ? $v < $bestv : $v > $bestv)} {set bestv $v;set best [list [lindex $p 0] $rf]}
+  }
+  set wk [list [get_property [get_cells -quiet -of_objects $pin] ref_name] [get_property $pin lib_pin_name] $role]
+  if {![info exists ::ot_ps_worst_warned]} {set ::ot_ps_worst_warned {}}
+  if {![dict exists $::ot_ps_worst_warned $wk]} {
+    dict set ::ot_ps_worst_warned $wk 1
+    puts "OT_PS_WARN multi-clock $role role $wk: [llength $found] same-edge clock pins on $clk, worst capture taken"
+  }
+  return $best
 }
 # Native get_fanin may return a constant SRAM DATA input itself (its wire and
 # checks are disabled by constant). It is a capture endpoint, not a launch.

@@ -3,6 +3,7 @@ of K returns the job into a private stage dir, so that copy is never overwritten
 import importlib.machinery
 import importlib.util
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -58,6 +59,31 @@ class HubFetch(unittest.TestCase):
 
     def test_copy_back_refuses_a_stage_with_a_foreign_basename(self):
         self.assertEqual(self.m.copy_back("epyc7", "intel2", K, stage="/srv/opentallas-scratch2/claude/ot-jobs/.return/1-2/other"), 99)
+
+
+    def test_roamed_place_returns_actual_checkpoint_not_staged_copy(self):
+        cb = {"from": "epyc8", "to": "epyc9", "path": K, "stage": "/srv/return/q_x"}
+        out = ["ot-run-sealed: SEALED on epyc8: " + K + "\n",
+               "ot-run: RAN on intel1 (unit oth-ubuntu-3799539-1794865488): exit 0\n"]
+        with patch.object(self.m, "copy_back", return_value=0) as cp:
+            self.assertEqual(self.m.return_copy(cb, out), (0, "intel1"))
+        cp.assert_called_once_with("intel1", "epyc9", K, "/srv/return/q_x")
+
+    def test_no_terminal_receipt_never_copies_stale_staged_checkpoint(self):
+        cb = {"from": "epyc8", "to": "epyc9", "path": K}
+        for out in ([], ["ot-run: NOT RUN: no host qualifies\n"],
+                    ["ot-run: -> intel1\n"], ["ot-run: RAN on intel1 invalid\n"]):
+            with self.subTest(out=out), patch.object(self.m, "copy_back") as cp:
+                self.assertEqual(self.m.return_copy(cb, out), (97, None))
+                cp.assert_not_called()
+
+    def test_final_receipt_preserves_partial_failure_return_and_hub_alias(self):
+        cb = {"from": "epyc8", "to": "epyc9", "path": K}
+        out = ["ot-run: RAN on epyc7 (unit earlier): exit 75\n",
+               "ot-run: RAN on localhost (unit final): exit 1\n"]
+        with patch.object(self.m, "copy_back", return_value=23) as cp:
+            self.assertEqual(self.m.return_copy(cb, out), (23, "localhost"))
+        cp.assert_called_once_with("localhost", "epyc9", K, None)
 
 
 if __name__ == "__main__":

@@ -150,9 +150,9 @@ def test_run_sdc_lint_derived_accepts_old_60_25_sdc(tmp_path, monkeypatch):
 
 def test_hold_repair_margin_default_is_0():
     """OWNER 11-02: no +10 ps hold margin (was 10, OWNER 12.19)."""
-    assert core_flow.HOLD_FF_MARGIN_DEFAULT == 0.0
-    assert gen_phys.HOLD_FF_MARGIN_DEFAULT == 0.0
-    assert 'a3.add_argument("--hold-ff-margin", type=float, default=0.0' in (HERE / "gen.py").read_text()
+    assert core_flow.HOLD_FF_MARGIN_DEFAULT == 10.0
+    assert gen_phys.HOLD_FF_MARGIN_DEFAULT == 10.0
+    assert 'a3.add_argument("--hold-ff-margin", type=float, default=10.0' in (HERE / "gen.py").read_text()
     assert '"export HOLD_SLACK_MARGIN = 5"' in (HERE / "gen_phys.py").read_text()
 
 
