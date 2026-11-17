@@ -5722,16 +5722,19 @@
     {
      "id": "qwen_kvsys-mig-008-k1",
      "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): no unchanged relaunch of io_cor / io_cor_v1 (DRT-0255) until DRT0255-PROOF posts the io_cor proof route. Running attempts finish. release_on = that RESULT.",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:KV-HG1"
      ],
      "migrated": true,
      "keys": [
       "kv3_io_cor",
       "kv3_io_cor_v1"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "qwen_kvsys-mig-001-k2",
@@ -5807,15 +5810,18 @@
     {
      "id": "qwen_kvsys-mig-009-k6",
      "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): relaunched unchanged at 13:24 after DRT-0255. Running attempts finish. Lift = delete this key.",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:KV-HG1"
      ],
      "migrated": true,
      "keys": [
       "kv3_hroot"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "qwen_kvsys-mig-010-k7",
@@ -5834,16 +5840,19 @@
     {
      "id": "qwen_kvsys-mig-011-k8",
      "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:KV-HG1"
      ],
      "migrated": true,
      "keys": [
       "kv3_sys_SD",
       "kv3_sys_SD_v1"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "qwen_kvsys-mig-012-k9",
@@ -5881,28 +5890,34 @@
     {
      "id": "qwen_kvsys-mig-004-k11",
      "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-     "reason": "WAVE-PREPNR-1115 11-15 08:3x: gen ValueError invalid bound R8 count declaration (strap_r8pad_slg_vreq; bound_r8_straps.declared width/port rule in src_kv_kvgeom6_pgL) on every attempt; source/tool skew needs a KV-owner source fix (KV-102 hsl3_fi precedent); unchanged relaunch fails identically. Lift when src_sha or the R8 declaration changes.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): lift when src_sha changes: KV is on KV-HG1 src_kv_pin_eb1e73448bd0 (not kvgeom6_pgL) | WAVE-PREPNR-1115 11-15 08:3x: gen ValueError invalid bound R8 count declaration (strap_r8pad_slg_vreq; bound_r8_straps.declared width/port rule in src_kv_kvgeom6_pgL) on every attempt; source/tool skew needs a KV-owner source fix (KV-102 hsl3_fi precedent); unchanged relaunch fails identically. Lift when src_sha or the R8 declaration changes.",
      "release": [
-      "event_adopt:KV-PCV3-R8"
+      "event_adopt:KV-HG1"
      ],
      "migrated": true,
      "keys": [
       "kv3_pc_v3"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:KV-PCV3-R8"
+     ]
     },
     {
      "id": "qwen_kvsys-mig-007-k12",
      "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): still unmet: KV-R posts 'kv-pc-delta PASS' when the pc delta is adopted (KV-PCDELTA was never an event name of the die) | WAVE-HOLDS-1115 2026-11-15 13:03 PST (COORD, FABLE-PD-KV-1200 stop list): attempt 17 failed, attempt_18 dir exists but nothing running (ot-heavy-stop --dry-run 0 scopes on 5 hosts). Running attempts finish. release_on = KV pc delta adopt.",
      "release": [
-      "event_adopt:KV-PCDELTA"
+      "result:KV-R:kv-pc-delta"
      ],
      "migrated": true,
      "keys": [
       "kv3_pc_v1__cl4ea58a5c"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:KV-PCDELTA"
+     ]
     },
     {
      "id": "qwen_kvsys-hold-pc-sysc-01",
@@ -5913,9 +5928,12 @@
       "kv3_sys_c"
      ],
      "release": [
-      "event_adopt:kvgeom7yhr"
+      "event_adopt:KV-HG1"
      ],
-     "reason": "HOLDGEN-1115 2026-11-16 (COORD, KITINPUT-1116): the source tree src_kv_kvgeom7uh_c1 is gone, every retry fails (kv3_pc at 27 attempts). Held until event_adopt:kvgeom7yhr. Running attempts finish."
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): the missing src_kv_kvgeom7uh_c1 tree is no longer the wave src (KV-HG1 d5 tree); kvgeom7yhr retired | HOLDGEN-1115 2026-11-16 (COORD, KITINPUT-1116): the source tree src_kv_kvgeom7uh_c1 is gone, every retry fails (kv3_pc at 27 attempts). Held until event_adopt:kvgeom7yhr. Running attempts finish.",
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:kvgeom7yhr"
+     ]
     },
     {
      "id": "kv-hg1-pilot-cts",
@@ -35976,16 +35994,20 @@
     {
      "id": "s81-mig-007-k7-k8",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): released 12:29 without its new view. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): still unmet (coll_e view_complete false, r414 kept): S81-DIE-R2 posts 'lepe-mu-view PASS' when the new view is in | WAVE-HOLDS-1115 2026-11-15 13:57 PST (COORD r151, FABLE-CLOSURE-1310): released 12:29 without its new view. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "result:S81-DIE-R2:lepe-mu-view",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "dsdv_slice_lepe_mu_LP__t2"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-008-k8-k9",
@@ -36003,206 +36025,262 @@
     {
      "id": "s81-mig-009-k9-k10",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type dsdv_slice_lepe_mu_LP__t2 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type dsdv_slice_lepe_mu_LP__t2 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "dsdv_slice_lepe_mu_LP__t2__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-010-k10-k11",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t1 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t1 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t1__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-011-k11-k12",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t23 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t23 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t23__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-012-k12-k13",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t24__cl2456157b is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t24__cl2456157b is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t24__cl2456157b__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-013-k13-k14",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t32 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t32 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t32__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-014-k14-k15",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t34 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t34 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t34__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-015-k15-k16",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t38 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t38 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t38__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-016-k16-k17",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t56 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t56 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t56__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-017-k17-k18",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t58 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t58 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t58__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-018-k18-k19",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t61 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t61 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t61__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-019-k19-k20",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t62 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t62 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t62__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-020-k20-k21",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t65 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t65 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t65__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-021-k21-k22",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t67 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t67 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t67__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-022-k22-k23",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t68 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): B6gF2sv superseded (F2sv->F2s3->F2s4 lineage adopted); the real condition, the stale tap_offset table failing sdc_lint, is the lint_clean term itself | WAVE-HOLDS-1115 2026-11-15 16:30 PST (COORD r187): type ot_s81sl_leaf__t68 is in s81_tapoffset_drop_noncol.json (stale per-port tap-offset table; gen fails sdc_lint plan clock.tap_window). Held by LIST until B6gG1d adopts. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:B6gF2sv",
+      "event_adopt:3fa87b84b18",
       "lint_clean:s81"
      ],
      "migrated": true,
      "keys": [
       "ot_s81sl_leaf__t68__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:B6gF2sv",
+      "lint_clean:s81"
+     ]
     },
     {
      "id": "s81-mig-002-k2-k3-k1",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "CODEX 11-16 source-event carry to adopted819/3fa87b84b18 (COORD approved; original source cause qualified, lint/svc-ready retained). WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt. | SVCowner11-16 confirmed F2s3/D2 source successor: canonical16/16APPLIED, oldF2sv mainref sourceconditionsincluded. Sourceeventrekeyonly; actualF2s3 physicalsvc-ready remainsrequired/HELD.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): svc producer is S81-CORES-R (FABLE-FIX-S81-SVC limited) | CODEX 11-16 source-event carry to adopted819/3fa87b84b18 (COORD approved; original source cause qualified, lint/svc-ready retained). WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): E2 station flops or form J band rect >150 um from nearest tap (sec1 a/b). Running attempts finish. Lift = delete this key on Event G adopt. | SVCowner11-16 confirmed F2s3/D2 source successor: canonical16/16APPLIED, oldF2sv mainref sourceconditionsincluded. Sourceeventrekeyonly; actualF2s3 physicalsvc-ready remainsrequired/HELD.",
      "release": [
       "event_adopt:3fa87b84b18",
-      "result:FABLE-FIX-S81-SVC:svc-ready"
+      "result:S81-CORES-R:svc-ready"
      ],
      "migrated": true,
      "keys": [
@@ -36228,15 +36306,19 @@
      "prev_release_codex_source_carry_1116": [
       "event_adopt:B6gF2s3",
       "result:FABLE-FIX-S81-SVC:svc-ready"
+     ],
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:3fa87b84b18",
+      "result:FABLE-FIX-S81-SVC:svc-ready"
      ]
     },
     {
      "id": "s81-mig-006-k6-k7-k2",
      "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-     "reason": "CODEX 11-16 source-event carry to adopted819/3fa87b84b18 (COORD approved; original source cause qualified, lint/svc-ready retained). WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key. | SVCowner11-16 confirmed F2s3/D2 source successor: canonical16/16APPLIED, oldF2sv mainref sourceconditionsincluded. Sourceeventrekeyonly; actualF2s3 physicalsvc-ready remainsrequired/HELD.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): svc producer is S81-CORES-R | CODEX 11-16 source-event carry to adopted819/3fa87b84b18 (COORD approved; original source cause qualified, lint/svc-ready retained). WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD, FABLE-PD-S81-1200 B sec 1.3): no svc launch from tree 7073a6b4a59 under any key (synthesis never passes OPT_MEM_PRIORITY/SHARE: native pbuf wrapper, 4096 writes). svc types only from a B6 plan carrying OT_SVC_ATT_MEM_MACRO, with -noshare. Lift = delete this key. | SVCowner11-16 confirmed F2s3/D2 source successor: canonical16/16APPLIED, oldF2sv mainref sourceconditionsincluded. Sourceeventrekeyonly; actualF2s3 physicalsvc-ready remainsrequired/HELD.",
      "release": [
       "event_adopt:3fa87b84b18",
-      "result:FABLE-FIX-S81-SVC:svc-ready"
+      "result:S81-CORES-R:svc-ready"
      ],
      "migrated": true,
      "keys": [
@@ -36249,6 +36331,10 @@
      ],
      "prev_release_codex_source_carry_1116": [
       "event_adopt:B6gF2s3",
+      "result:FABLE-FIX-S81-SVC:svc-ready"
+     ],
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:3fa87b84b18",
       "result:FABLE-FIX-S81-SVC:svc-ready"
      ]
     },
@@ -36605,10 +36691,13 @@
       "serdes__t1__clfe1f0815"
      ],
      "release": [
-      "result:FABLE-FIX-S81-SERDES:serdes-corrected"
+      "result:S81-SERDES-R2:serdes-corrected"
      ],
      "carry": true,
-     "reason": "Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries."
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): SERDES producer is S81-SERDES-R2 (FABLE-FIX-S81-SERDES limited) | Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries.",
+     "prev_release_fix_s81_col_stale_retype": [
+      "result:FABLE-FIX-S81-SERDES:serdes-corrected"
+     ]
     },
     {
      "id": "s81-serdes-corrected-route-1116-codex",
@@ -36622,11 +36711,14 @@
       "serdes__t1__clfe1f0815"
      ],
      "release": [
-      "result:FABLE-FIX-S81-SERDES:serdes-corrected"
+      "result:S81-SERDES-R2:serdes-corrected"
      ],
      "carry": true,
-     "reason": "Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries. Route companion protects already-built old C kits as well as generation.",
-     "route": true
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): SERDES producer is S81-SERDES-R2 | Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries. Route companion protects already-built old C kits as well as generation.",
+     "route": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "result:FABLE-FIX-S81-SERDES:serdes-corrected"
+     ]
     },
     {
      "id": "pilot-s81-4db2d3f87934",
@@ -38936,29 +39028,35 @@
     {
      "id": "s81_head-mig-002",
      "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
-     "reason": "signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event (hd_ctl_n is signed+archived already) | signed+archived (COUNT-DIRECT); wave form crashes DRT-0255; HEAD-99 owns",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:head_rp21z20NF15c"
      ],
      "migrated": true,
      "keys": [
       "hd_ctl_n"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "s81_head-mig-003",
      "plan_sha": "810a66fa536a1353a68ef37c3af603650750868ceb292533252879a718c15bfb",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:head_rp21z20NF15c"
      ],
      "migrated": true,
      "keys": [
       "hd_spn",
       "hd_st_str"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "s81_head-hold-hdserdes-01",
@@ -49482,101 +49580,122 @@
     {
      "id": "qwen_compute-mig-003",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): the DIE-QC-103 S4 plan delta landed in the adopted S4q9 lineage (S4q8 superseded) | FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
       "coll_ucie"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-004",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
       "sle_fw_v2*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-005",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage (slw_fw_v3 also held by qwen_compute-kf-faces-l2d to S4q9m) | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
       "slw_fw_v3*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-006",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-302 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-302 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
       "sle_st_b_v2*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-021",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): KIT_NOT_SELF_CONTAINED: input (sta_cland_w1574_e_s26 build-dir view) exists on epyc2 only, epyc2 is not in the item's roam hosts (attempts 9-14 same path). Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): still unmet (epyc2-only build-dir view): QC-PLAN-R posts 'qc-kit-inputs-selfcontained PASS' when the Kf kit inputs are on all roam hosts | WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): KIT_NOT_SELF_CONTAINED: input (sta_cland_w1574_e_s26 build-dir view) exists on epyc2 only, epyc2 is not in the item's roam hosts (attempts 9-14 same path). Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "result:QC-PLAN-R:qc-kit-inputs-selfcontained"
      ],
      "migrated": true,
      "keys": [
       "slw_st_a_v2__cl9f076a5c"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-022",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): same input on epyc2 only; no attempt can pass until the F1 backfill. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): still unmet (F1 backfill): same producer and tag | WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): same input on epyc2 only; no attempt can pass until the F1 backfill. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "result:QC-PLAN-R:qc-kit-inputs-selfcontained"
      ],
      "migrated": true,
      "keys": [
       "sle_st_a_v2__pv30dda31f",
       "sle_st_a_v2__pv4242de79"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-023",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): stub view qc_cland_w515_n_d8_local32_codex/provenance.json has export: {}; needs a signed cland w515 view, not a retry. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): still unmet (stub w515 view export {}): QC-PLAN-R posts 'qc-cland-w515-signed PASS' with a signed view | WAVE-HOLDS-1115 2026-11-15 21:02 PST (COORD r221, FABLE-FLOWCLASS-KITPACK-2030 stop list): stub view qc_cland_w515_n_d8_local32_codex/provenance.json has export: {}; needs a signed cland w515 view, not a retry. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "result:QC-PLAN-R:qc-cland-w515-signed"
      ],
      "migrated": true,
      "keys": [
       "cbn_q00__cldbcda913"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-024",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 21:14 PST (COORD r223, FABLE-FLOWCLASS-HOLDS-2030 5.4): last FAIL INFRA@gen hard landing actual child proof failed: shared rst_xn[i] 8-9 loads (real reset-ring proof failure, 9 attempts). No relaunch until the reset-ring fix. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): still unmet (shared rst_xn reset-ring proof failure): QC-PLAN-R posts 'qc-reset-ring-fixed PASS' | WAVE-HOLDS-1115 2026-11-15 21:14 PST (COORD r223, FABLE-FLOWCLASS-HOLDS-2030 5.4): last FAIL INFRA@gen hard landing actual child proof failed: shared rst_xn[i] 8-9 loads (real reset-ring proof failure, 9 attempts). No relaunch until the reset-ring fix. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:S4q8"
+      "result:QC-PLAN-R:qc-reset-ring-fixed"
      ],
      "migrated": true,
      "keys": [
@@ -49584,21 +49703,27 @@
       "sle_ctl__cl503337ff",
       "sle_ctl__cl372cea1c"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-002-k1",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 19:45 PST (COORD r211, FABLE-PD-QCHOLD-1915): the GRT hold-stall class is stale; type is in a DRT-0255 family (lever 1). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 19:45 PST (COORD r211, FABLE-PD-QCHOLD-1915): the GRT hold-stall class is stale; type is in a DRT-0255 family (lever 1). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
       "slw_stm_v2__*",
       "sle_st_b_v1__pv0e7b1dcc"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "qwen_compute-mig-007-k2",
@@ -49616,9 +49741,10 @@
     {
      "id": "qwen_compute-mig-008-k3",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-QCFIX-0715 hold: last fail class VIEWMISSING; held until class proven past its step (COORD 07:3x)",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): VIEWMISSING class on the old tree; proven past its step = the Kf tree GEN+preflight pilot | WAVE-QCFIX-0715 hold: last fail class VIEWMISSING; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
      "keys": [
@@ -49627,27 +49753,34 @@
       "sle_ctl__cl67434795",
       "sle_ctl__cla4f6f12f"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-009-k4",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed long ago; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
      "release": [
-      "event_adopt:S4q6e"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
       "sle_st_a_v1__cl989804f6__cled3c1d7b"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q6e"
+     ]
     },
     {
      "id": "qwen_compute-mig-010-k5",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
      "keys": [
@@ -49655,14 +49788,18 @@
       "slw_fw_v1__cl51d45468",
       "slw_fw_v1__clf51c11d8__cl592e3d37"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-011-k6",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-QCFIX-0715 hold: last fail class GENLINT; held until class proven past its step (COORD 07:3x)",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): GENLINT class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class GENLINT; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
      "keys": [
@@ -49672,14 +49809,18 @@
       "slw_hc2__cl6bcaba89",
       "slw_hc2__cla3497502__cldc737267"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-012-k7",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
      "keys": [
@@ -49687,14 +49828,17 @@
       "slw_fw_v1__clf51c11d8__clc7ddab13",
       "slw_fw_v2__cl8537f156"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-013-k8",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
      "release": [
-      "event_adopt:S4q6e"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
@@ -49702,20 +49846,27 @@
       "slw_st_a_v1__clfc5867a6__pvdf8e5ca4",
       "slw_st_a_v1__clfc5867a6__pvf82a6c28"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q6e"
+     ]
     },
     {
      "id": "qwen_compute-mig-014-k9",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:S4q8"
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
      "keys": [
       "slw_su_c__cl92142dac"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q8"
+     ]
     },
     {
      "id": "qwen_compute-mig-015-k10",
@@ -49733,23 +49884,26 @@
     {
      "id": "qwen_compute-mig-016-k11",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
      "release": [
-      "event_adopt:S4q6e"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
       "sle_st_a_v1__cl67389ecd",
       "sle_st_a_v1__cl989804f6__cl18eece69"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "event_adopt:S4q6e"
+     ]
     },
     {
      "id": "qwen_compute-mig-019-k13",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
@@ -49763,14 +49917,17 @@
       "sle_su_l1__clc6d66f5b",
       "coll_s"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "qwen_compute-mig-020-k14",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "proof:DRT0255"
+      "event_adopt:s29q103S4Q9KF"
      ],
      "migrated": true,
      "keys": [
@@ -49782,7 +49939,10 @@
       "slw_stm_v1__cl05fc43f7__cl389df4e9",
       "slw_hc3__*"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_fix_s81_col_stale_retype": [
+      "proof:DRT0255"
+     ]
     },
     {
      "id": "pilot-qwen_compute-c8e63f164faa",

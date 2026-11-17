@@ -61,3 +61,6 @@ On release the wave relaunches them; DEDUP collapses each base to its distinct k
 - QC: the QC-PLAN-R Kf apply (017c51d2cc3) carries the clock27/faces holds; my duplicate records were removed (19683946957).
 - NEW CLASS after r414 released mig-024-k1: kit_rtl "N filelist path(s) outside the kit source tree" on ~34 dsdv/gunit/leaf/serdes types, 20:0x-20:1x; FLOW-GUARD breaker open. The bind-out compile list points at RTL in run/b/B6gF2s4/src and B6gF2s4tapfix1/src (staged under kit-store snaps). All 5 files I sampled are byte-identical to the d4 src copy, so no RTL differs. Tool fix: bind.py kit-rtl rebases an outside file to <base>/<rtl-relative path> when the bytes are equal (foreign/different bytes still fail). Not started (COORD scope); proposed to S81-DIE-R2 / FLEET-OPS-R.
 - Watch: col-wave1 PASS from S81-TYPES-R2 -> 126 wave1 types launch; drive them to sign-off + export.
+
+## 2026-11-16 20:4x PST retype
+- 46 dead-term records retyped on QC/KV/HEAD/S81 (diff lanes/handoff/FIX-S81-COL-STALE-retype-1116.txt; script W/retype.py; r424 term_error from W/r424/hold_records.py). Producers named: QC-PLAN-R (3 tags), KV-R kv-pc-delta, S81-DIE-R2 lepe-mu-view, S81-CORES-R svc-ready, S81-SERDES-R2 serdes-corrected.
