@@ -174,3 +174,32 @@ class LiveState(unittest.TestCase):
         self.assertEqual(A.live_state_text(json.dumps({"rows": []})), json.dumps({"rows": []}))
         self.assertEqual(A.ref_count("src_kv_d1", [A.live_state_text(self.STATE)]), 0)
         self.assertEqual(A.ref_count("src_kv_d4", [A.live_state_text(self.STATE)]), 1)
+
+
+class Lanes(unittest.TestCase):
+    def tree(self):
+        root = tempfile.mkdtemp(); now = 1_000_000.0
+        for n, age in (("old_lane", 100), ("new_lane", 1), ("kw45", 500), ("wt", 2)):
+            os.makedirs(os.path.join(root, n)); open(os.path.join(root, n, "f"), "w").write("x")
+            os.utime(os.path.join(root, n, "f"), (now - age * 3600, now - age * 3600)); os.utime(os.path.join(root, n), (now - age * 3600,) * 2)
+        for c, age in (("a", 80), ("b", 3)):
+            os.makedirs(os.path.join(root, "wt", c)); open(os.path.join(root, "wt", c, "f"), "w").write("x")
+            os.utime(os.path.join(root, "wt", c, "f"), (now - age * 3600, now - age * 3600)); os.utime(os.path.join(root, "wt", c), (now - age * 3600,) * 2)
+        return root, now
+
+    def test_idle_24h_lanes_and_wt_children_only_never_kw45(self):
+        root, now = self.tree()
+        got = [os.path.relpath(p, root) for p, _ in A.lane_candidates(root, now)]
+        self.assertEqual(got, ["old_lane", "wt/a"])
+
+    def test_run_lanes_guard_ingest_first_and_dry(self):
+        root, now = self.tree(); log = []
+        res = A.run_lanes(root, set(), lambda t: "protected" if t.endswith("wt/a") else None, log.append, 10 ** 9, apply=False, now=now, free=lambda: 0)
+        self.assertEqual([(os.path.basename(r["tree"]), r["result"].split(":")[0]) for r in res], [("old_lane", "WOULD-DELETE"), ("a", "REFUSED")])
+        self.assertTrue(os.path.isdir(os.path.join(root, "old_lane")))
+        open(os.path.join(root, "old_lane", "signoff.json"), "w").write(json.dumps({"verdict": "SIGNED"}))
+        os.utime(os.path.join(root, "old_lane", "signoff.json"), (now - 100 * 3600,) * 2)
+        os.utime(os.path.join(root, "old_lane"), (now - 100 * 3600,) * 2)
+        res = A.run_lanes(root, set(), lambda t: None, log.append, 10 ** 9, apply=True, now=now, free=lambda: 0)
+        self.assertIn("not in the signed store", [r for r in res if r["tree"].endswith("old_lane")][0]["result"])
+        self.assertTrue(os.path.isdir(os.path.join(root, "old_lane")))

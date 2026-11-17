@@ -187,12 +187,86 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
     return res
 
 
+LANE_SKIP = frozenset({"kw45", "rt", "hub-coord", "mq1", "mq-gate", "git", "clean-all-1115", "tools-converge", "fleet-ops-r", "signed-store", "autopilot"})
+
+
+def newest_mtime(path, stop_after=None):
+    """newest file mtime under path (0 = empty); stops at the first file newer than stop_after (idle test needs only that)"""
+    best = 0.0
+    for r, ds, fs in os.walk(path):
+        for f in fs + ds:
+            try:
+                t = os.lstat(os.path.join(r, f)).st_mtime
+            except OSError:
+                continue
+            best = max(best, t)
+            if stop_after is not None and best > stop_after:
+                return best
+    try:
+        return max(best, os.lstat(path).st_mtime)
+    except OSError:
+        return best
+
+
+def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_mtime, depth=2):
+    """FABLE-FLOW-0700 (1): idle lane dirs.  -> [(path, idle seconds)] oldest first.  Level 1 = claude/<lane>, plus (when the lane is claude/wt, or a lane the guard
+    refuses as a whole) level 2 = claude/<lane>/<child>.  Idle = nothing under it modified in idle_h hours (24 h rule)."""
+    now = now or time.time(); cut = now - idle_h * 3600; out = []
+    for n in sorted(os.listdir(claude)):
+        p = os.path.join(claude, n)
+        if n in LANE_SKIP or n in skip or not os.path.isdir(p) or os.path.islink(p) or n.startswith("."):
+            continue
+        out.append(p)
+        if depth >= 2:
+            try:
+                out += [os.path.join(p, c) for c in sorted(os.listdir(p)) if os.path.isdir(os.path.join(p, c)) and not os.path.islink(os.path.join(p, c))]
+            except OSError:
+                pass
+    res = []
+    for p in out:
+        m = mtime(p, cut)
+        if m <= cut:
+            res.append((p, now - m))
+    res.sort(key=lambda x: -x[1])
+    return res
+
+
+def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime):
+    """retire idle lane dirs (and claude/wt children) through the guard, ingest-first, oldest first, stop at target_gb free.  A parent already removed or
+    refused as a whole is retried through its children (level 2 is in the candidate list)."""
+    free = free or (lambda: free_gb(claude)); res = []; gone = []
+    for p, idle in lane_candidates(claude, now, idle_h, mtime=mtime):
+        if free() >= target_gb:
+            res.append(dict(stop="target", free=round(free(), 1))); break
+        if any(p == g or p.startswith(g + "/") for g in gone) or not os.path.isdir(p):
+            continue
+        rec = dict(tree=p, t=time.strftime("%F %T"), idle_h=round(idle / 3600, 1), kind="lane")
+        why = refuse(p)
+        if not why:
+            sn, miss = signed_not_in_store(p, ids)
+            rec.update(signed_units=sn, signed_not_in_store=miss)
+            if miss:
+                why = "%d SIGNED unit(s) not in the signed store" % miss
+        if why:
+            rec["result"] = "REFUSED: " + str(why)[:120]
+        elif not apply:
+            rec["result"] = "WOULD-DELETE"; gone.append(p)
+        else:
+            b = free()
+            (delete or (lambda q: (os.system("chmod -R u+w " + q), shutil.rmtree(q, ignore_errors=True))))(p)
+            rec.update(result="DELETED" if not os.path.exists(p) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
+            if rec["result"] == "DELETED": gone.append(p)
+        log(rec); res.append(rec)
+    return res
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for k in ("--kit-wave", "--state", "--markers", "--store-ids", "--guard-module", "--list", "--log"):
         ap.add_argument(k, required=True)
     ap.add_argument("--root", default="/srv/opentallas-scratch2/claude/kw45"); ap.add_argument("--target", type=float, default=350.0)
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--lanes", action="store_true", help="also retire idle (24 h) lane dirs and claude/wt children, after the source trees")
     a = ap.parse_args(argv)
     sp = importlib.util.spec_from_file_location("g", a.guard_module); g = importlib.util.module_from_spec(sp); sp.loader.exec_module(g)
     prot, err = g.load_list(a.list)
@@ -203,6 +277,8 @@ def main(argv=None):
     ids = {l.strip() for l in open(a.store_ids) if l.strip()}
     with open(a.log, "a") as lf:
         res = run(a.root, json.loads(cfgt), texts, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply)
+        if a.lanes:
+            res += run_lanes(os.path.dirname(a.root.rstrip("/")), ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply)
     for r in res:
         print(r.get("result") or r)
     return 0
