@@ -8,7 +8,12 @@ ot_s81sl_kv_leaf__* type, the depth of class c is the deepest plan internal_stat
 (leaf_cs_depth.plan_depths: the strict bind gate's own definition).  hi / ho trees: GS = D (every hi / ho stage is a
 shared group stage, as the bound form today; kv leaves GS 0, per lane, as DIE-S81-70), H_G 4.  The die instance u_s_<slice> gets #(.LF_CS_<C>(20'h...)) for
 all 17 parameters; a nibble with no plan leaf keeps the slice module's default (read from its RTL header).
-cs rows have no RTL realisation (re-planned in the floorplan stage) and are reported, never staged."""
+cs rows have no RTL realisation (re-planned in the floorplan stage) and are reported, never staged.
+
+S81-STRIP form B (11-17): with --vp-xr TYPE:1 the plan's HI depth of that leaf is its EFFECTIVE depth and includes the one
+per-lane HI stage XR adds in ot_s81sl_vp (CS_HI_E = CS_HI_D + XR); the source gets HI_D = plan HI - 1 (GS follows), so a
+plan HI 3 stages source 2 / GS 2 and elaborates to 3, not 4.  The die instance's LF_VP_XR mask must agree with the
+contracts bit by bit (a mask bit with no contract refuses)."""
 import argparse
 import json
 import re
@@ -78,6 +83,8 @@ def leaf_depths(plan, tree_overrides=None, vp_xr=None):
         k = int(m.group(2))
         t = PT[p["type"]]
         if not t.get("hard_cores"):
+            if vp_xr.get(p["type"]):
+                raise SystemExit(f"{p['name']}: VP_XR contract on a leaf with no hard cores (no VP to stage)")
             rep.append(dict(part=p["name"], type=p["type"], skipped="no hard cores (no leaf chains)"))
             continue
         missing = LCD.unmapped_core_rows(t)
@@ -87,6 +94,9 @@ def leaf_depths(plan, tree_overrides=None, vp_xr=None):
         want, dis = LCD.plan_depths(t)
         d = {x: want.get(c, 0) for x, c in CLS.items()}
         xr = vp_xr.get(p["type"], 0)
+        plan_hi = d["HI_D"]
+        if xr and "kv_leaf" in p["type"]:
+            raise SystemExit(f"{p['name']}: VP_XR is an ordinary-leaf form (ot_s81sl_vp WRP); not on kv leaves")
         if xr:
             if d["HI_D"] < 1:
                 raise SystemExit(f"{p['name']}: effective HI depth must include the XR stage")
@@ -105,11 +115,12 @@ def leaf_depths(plan, tree_overrides=None, vp_xr=None):
             raise SystemExit(f"{p['name']}: depth > 15 does not fit a nibble: {d}")
         out[(m.group(1), k)] = d
         rep.append(dict(part=p["name"], type=p["type"], slice="u_s_" + m.group(1), k=k, depths=d, disagree=dis,
-                        cs_rows=want.get("cs", 0)))
+                        cs_rows=want.get("cs", 0), vp_xr=xr, plan_hi_d=plan_hi))
     return out, rep
 
 
 def stage(plan, net_text, rtl_root, tree_overrides=None, vp_xr=None):
+    vp_xr = vp_xr or {}
     depths, rep = leaf_depths(plan, tree_overrides, vp_xr)
     selected = {(PART.match(p["name"]).group(1), int(PART.match(p["name"]).group(2))): p["type"]
                 for p in plan["partitions"] if LCD.LEAF_TYPE.match(p["type"]) and PART.match(p["name"])}
@@ -134,14 +145,16 @@ def stage(plan, net_text, rtl_root, tree_overrides=None, vp_xr=None):
                 v |= nib << (4 * k)
             vals.append(f".LF_CS_{x}(20'h{v:05x})")
         old = m.group("p")
-        if vp_xr:
-            mask = re.search(r"\.LF_VP_XR\(\s*5'b([01]{5})\s*\)", old or "")
-            if "LF_VP_XR" in (old or "") and not mask:
-                raise SystemExit(f"u_s_{s}: VP_XR contract requires a literal five-bit LF_VP_XR mask")
-            bits = int(mask.group(1), 2) if mask else 0
-            for (part, k), typ in selected.items():
-                if part == s and ((bits >> k) & 1) != vp_xr.get(typ, 0):
-                    raise SystemExit(f"u_s_{s} leaf {k}: LF_VP_XR mask differs from explicit {typ} contract")
+        # The die netlist's LF_VP_XR mask and the explicit contracts must agree leaf by leaf, also when no contract
+        # is given: an XR leaf staged on the old path gets source HI_D = plan HI (effective HI + 1).
+        mask = re.search(r"\.LF_VP_XR\(\s*5'b([01]{5})\s*\)", old or "")
+        if "LF_VP_XR" in (old or "") and not mask:
+            raise SystemExit(f"u_s_{s}: LF_VP_XR must be a literal five-bit mask (5'bxxxxx) to stage this slice")
+        bits = int(mask.group(1), 2) if mask else 0
+        for (part, k), typ in selected.items():
+            if part == s and ((bits >> k) & 1) != vp_xr.get(typ, 0):
+                raise SystemExit(f"u_s_{s} leaf {k}: LF_VP_XR mask bit {(bits >> k) & 1} differs from the VP_XR contract "
+                                 f"{vp_xr.get(typ, 0)} of {typ} (pass --vp-xr {typ}:1 for an XR leaf)")
         if old and "LF_CS_" in old:
             raise SystemExit(f"u_s_{s}: netlist already sets LF_CS_* ({old[:80]})")
         done.add(s)
