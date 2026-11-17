@@ -110,3 +110,28 @@ def test_net_and_obstruction_checks_are_wired_in_and_refuse_with_exit_4():
     assert "source /out/netcheck.tcl" in SRC and "OT_LIMIT port net" in SRC and "OT_LIMIT non-data net" in SRC
     assert "getObstructions" in SRC and "obs_in != obs_out" in SRC
     assert SRC.count("return finish(4,") >= 3
+
+
+def test_skipped_port_ends_never_count_but_a_skipped_internal_end_does(tmp_path):
+    """S81 col_pg3: 110 input-port ends (the parent's, advisory, never padded) made the plan summary say skipped=110 and the run exit 4.
+    Port ends plus a few internal ends must pass; an internal end the plan could not pad must still refuse."""
+    ends = [("a/D", "s", "reg", "reg", -3.0, 400.0), ("b/D", "s", "reg", "reg", -2.0, 400.0)] \
+        + [("pi%d/D" % i, "arst_n", "port", "reg", -173.9, 400.0) for i in range(110)]
+    e, p = tmp_path / "e.tsv", tmp_path / "p.tsv"
+    e.write_text(HDR + "".join("%s\t%s\t%s\t%s\t%s\t%s\n" % t for t in ends))
+    skips = "".join("# skipped pi%d/D: port path: the parent's, no cell\n" % i for i in range(110))
+    p.write_text("a/D\t1\nb/D\t1\n" + skips + '# summary {"partial": 0, "skipped": 110, "nets_left_unpadded": 0, "endpoints": 2}\n')
+    assert H.check_limits(e, p, hb4_tt_ps=132.8) == []
+    p.write_text("a/D\t1\n" + skips + "# skipped b/D: TT slack 100 - 1 x 132.8 < -42\n"
+                 + '# summary {"partial": 0, "skipped": 111, "nets_left_unpadded": 0, "endpoints": 1}\n')
+    v = H.check_limits(e, p, hb4_tt_ps=132.8)
+    assert len(v) == 1 and v[0].startswith("internal end not padded: b/D")
+
+
+def test_only_internal_ends_count_toward_max_ends_and_setup_room(tmp_path):
+    ends = [("p%d/D" % i, "pi", "port", "reg", -170.0, 10.0) for i in range(150)] + [("a/D", "s", "reg", "reg", -3.0, 400.0)]
+    e, p = tmp_path / "e.tsv", tmp_path / "p.tsv"
+    e.write_text(HDR + "".join("%s\t%s\t%s\t%s\t%s\t%s\n" % t for t in ends))
+    p.write_text("a/D\t1\n" + "".join("# skipped p%d/D: port path: the parent's, no cell\n" % i for i in range(150))
+                 + '# summary {"partial": 0, "skipped": 150, "nets_left_unpadded": 0}\n')
+    assert H.check_limits(e, p, max_ends=100, hb4_tt_ps=132.8) == []      # 150 port ends, 10 ps of TT setup: none of it counts
