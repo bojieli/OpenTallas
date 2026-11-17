@@ -199,6 +199,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     rt, base, kit, out = Path(a.rt), Path(a.base).resolve(), Path(a.kit).resolve(), Path(a.out).resolve()
     ro = rt / "tools/die_plan/post_route_drv"
+    sys.path.insert(0, str(rt / "tools/die_plan"))      # hold_eco_internal (HB4 constants) of the SAME checkout as the Tcl, not of this file
     for need in (ro / "hold_eco_internal_insert.tcl", ro / "hold_eco_internal_route.tcl", rt / "tools/die_plan/hold_eco_internal.py"):
         if not need.is_file():
             raise SystemExit("missing %s" % need)
