@@ -1,0 +1,25 @@
+{
+  "stage": {
+    "edges": 64,
+    "module": "qfd_qc_su_lane_w_l0_m44s1",
+    "scope": "plan_type",
+    "die": "qwen_compute",
+    "contract": "/srv/opentallas-scratch2/claude/qc-types-r/w0_lec_diag_1116/canonical_reset/reset_contract.json",
+    "contract_sha256": "1f98496c8c6ec67753bcb329040942c6fc0ffdd4ec1400ad8add9ceffb2de070",
+    "receipt_sha256": "1e1994ab1acd729ea8651944f6946a8a024b9b4878287e4eb7c47411d1212cad"
+  },
+  "gate": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/srv/opentallas-scratch2/claude/qc-types-r/w0_lec_diag_1116/scoped_reset/reset_contract.json",
+      "die": "qwen_compute",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/srv/opentallas-scratch2/claude/qc-types-r/w0_lec_diag_1116/scoped_reset/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  },
+  "scope": "Fresh diagnostic scope only; original failed kit unchanged; same existing QC die boot/reset generator proof and caught mutant"
+}
