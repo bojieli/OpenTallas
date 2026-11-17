@@ -218,6 +218,17 @@ def _relay_mid_fit(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _ft_polarity_local(budgets, tn):
+    """S81-STRIP 11-16 (t47 ft2_o/ft6_o CTS -3956 ps: the QN inverter + port buffer of a face-edge FT station landed ~1000 um
+    from the station): ft_polarity_local.tcl keeps the polarity inverter beside its station.  Opt-in three ways like
+    relay_mid_fit, absent = unchanged kits: GEN env OT_FT_POLARITY_LOCAL=1, plan-wide budgets.ft_polarity_local, or per
+    type budgets.ft_polarity_local_types (types or unsplit base names)."""
+    if os.environ.get("OT_FT_POLARITY_LOCAL") == "1" or budgets.get("ft_polarity_local"):
+        return True
+    on = list(budgets.get("ft_polarity_local_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
 def _relay_polylines(P, tn):
     """FIX-RELAYPOLY 11-14 (FABLE-REVIEW-COL R-COL-4): opt-in plan partition_types.<t>.relay_polylines = [{group_re, sink,
     polyline_um [[x, y], ...], max_hop_um}], absent = unchanged kits.  One point = the source point of a soft-source head
@@ -5976,6 +5987,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
