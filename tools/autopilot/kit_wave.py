@@ -2755,6 +2755,25 @@ def parse_otrun_status(text):
     return out
 
 
+SCRATCH_REFUSE_GB = {"localhost": 150}      # ot-run's per-host scratch floor (default 50, localhost 150): a host below it is refused for new jobs
+
+
+def place_prefer_live(pref, stt, mem_gb, hub="intel2", floors=None):
+    """FABLE-FLOW-1500 (E2): place_prefer is an ORDER from the config, but a host that ot-run would REFUSE right now (its scratch free is under its floor) or cannot admit the job
+    is dropped from it, computed from the live status each time (intel1 at 21 GB, epyc10 at 44 GB and localhost kept being preferred and placing on them).  -> [host]"""
+    floors = SCRATCH_REFUSE_GB if floors is None else floors
+    out = []
+    for h in pref:
+        row = stt.get("localhost" if h == hub else h) or {}
+        if row.get("admit", 0) < mem_gb:
+            continue
+        sc = row.get("scratch_gb")
+        if sc is not None and sc < floors.get("localhost" if h == hub else h, 50):
+            continue
+        out.append(h)
+    return out
+
+
 def inflight(state, die=None):
     return sum(1 for r in (state.get("items") or {}).values()
                if r.get("status") in ("RUNNING", "LAUNCHING") and (die is None or r.get("die") == die))
@@ -7190,7 +7209,7 @@ def run_item(spec_path):
         if pref and not rs:                                             # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
             p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
             stt = parse_otrun_status(p.stdout if p.returncode == 0 else "")
-            ok = [h for h in pref if (stt.get("localhost" if h == hub else h) or {}).get("admit", 0) >= m]
+            ok = place_prefer_live(pref, stt, m, hub)
             if ok:
                 # KW-FIX-45 11-12 place_prefer is an ORDER, not a pin: pinning --hosts to the preferred hosts alone made ot-run
                 # answer NOT RUN when the preferred host refused (epyc2 scratch2 dipping under its 50 GB floor: 9 HBM rows
@@ -7500,7 +7519,9 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
                     return json.loads(t_[t_.index("{"):])
                 except ValueError:
                     return None
-            rows = ER.restore_rows([(m["path"], m["by"]) for m in vmiss[:200]], _prov, G)
+            rows, skips = ER.restore_rows_ex([(m["path"], m["by"]) for m in vmiss[:200]], _prov, G)
+            for sp_, why_ in skips:
+                print(f"KW_KIT_SNAP_RESTORE_SKIP {sp_} ({why_})"[:300], flush=True)
             n = ER.queue_append(os.path.join(qdir, "restore_needed.jsonl"), rows, done=ER.read_jsonl(os.path.join(qdir, "restore_done.jsonl")))
             if n:
                 print(f"KW_KIT_SNAP_RESTORE_NEEDED queued {n} of {len(rows)} (copy-only worker on rtx-pro restores them; retried next tick)", flush=True)

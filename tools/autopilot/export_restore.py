@@ -78,19 +78,49 @@ def restore(items, fetch, tmpdir, hash_ok=sha256_file):
 import time
 
 
-def restore_rows(missing, provenance_of, host, now=None):
-    """missing: [(path, provenance.json path)] -> [{module, record, key, path, host, by, t, status}] for the paths that are export/* paths of their provenance"""
-    rows = []
-    for path, by in missing:
-        prov = provenance_of(by) or {}
-        ex = prov.get("export") if isinstance(prov.get("export"), dict) else {}
-        key = next((k for k, v in ex.items() if v == path), None)
-        if not key or not ex.get("signoff_sha256"):
+def store_sha(record, path, store_dir=None):
+    """expected sha256 of an original-kit file from its signed STORE record (files [path, size, sha]); '' when the record or the file is unknown"""
+    import glob, gzip
+    d = store_dir or os.path.expanduser("~/coord/signed-store/records")
+    for f in glob.glob(os.path.join(d, record[:2], record[:12] + "*.json.gz")):
+        try:
+            rec = json.loads(gzip.open(f).read())
+        except (OSError, ValueError):
             continue
+        for e in rec.get("files") or []:
+            if e[0].lstrip("/") == path.lstrip("/"):
+                return e[2]
+    return ""
+
+
+def restore_rows_ex(missing, provenance_of, host, now=None, sha_of=None):
+    """COORD FABLE-FLOW-1500 (B): EVERY missing view-ref path is queued, not only provenance export keys (the failing paths were original-kit files: face_guard.json, kit
+    files).  kind = the export key (odb / signoff / lec / base / kit) or 'original-kit'; module and record id come from the view's provenance; an original-kit row carries the
+    expected sha256 from the signed store record when it lists the file.  -> (rows, skips [(path, reason)])"""
+    rows, skips = [], []
+    for path, by in missing:
+        prov = provenance_of(by)
+        if not prov:
+            skips.append((path, "provenance.json %s unreadable" % by)); continue
+        ex = prov.get("export") if isinstance(prov.get("export"), dict) else {}
         kit = prov.get("kit") if isinstance(prov.get("kit"), dict) else {}
-        rows.append({"module": kit.get("module") or "", "record": ex["signoff_sha256"], "key": key, "path": path, "host": host, "by": by,
-                     "lec_sha256_any": ex.get("lec_sha256_any") or [], "t": now or time.time(), "status": "NEEDED"})
-    return rows
+        rid = ex.get("signoff_sha256") or ""
+        if not rid:
+            skips.append((path, "no export.signoff_sha256 (record id) in %s" % by)); continue
+        key = next((k for k, v in ex.items() if v == path), None)
+        kind = key or "original-kit"
+        row = {"module": kit.get("module") or "", "record": rid, "key": kind, "path": path, "host": host, "by": by,
+               "lec_sha256_any": ex.get("lec_sha256_any") or [], "t": now or time.time(), "status": "NEEDED"}
+        if kind == "original-kit":
+            row["sha256"] = (sha_of or store_sha)(rid, path)
+            if not row["sha256"]:
+                row["note"] = "expected hash unknown (store record does not list the file): the worker restores it only if exactly one export file has that name and the record has no other candidate"
+        rows.append(row)
+    return rows, skips
+
+
+def restore_rows(missing, provenance_of, host, now=None, sha_of=None):
+    return restore_rows_ex(missing, provenance_of, host, now, sha_of)[0]
 
 
 def queue_append(qfile, rows, done=()):
@@ -130,6 +160,27 @@ def resolve(row, index_rows, root):
     key, rid = row["key"], row["record"]
     if key in ("kit", "base"):
         return "dir", None, None
+    if key == "original-kit":
+        rows = [r for r in index_rows if r.get("record", "").startswith(rid[:12])]
+        if not rows:
+            return None, "no signed export row for record " + rid[:12], None
+        e = os.path.dirname(os.path.join(root, os.path.relpath(rows[0]["db"], "/archive/opentallas-signed-1114")))
+        name = os.path.basename(row["path"])
+        found = []
+        for dp, dn, fn in os.walk(e):
+            if name in fn:
+                found.append(os.path.join(dp, name))
+        if not found:
+            return None, "no file named %s in the export of record %s" % (name, rid[:12]), None
+        want = row.get("sha256") or ""
+        if want:
+            for f in found:
+                if sha256_file(f) == want:
+                    return "original-kit", f, want
+            return None, "no export file named %s has the recorded sha256 %s" % (name, want[:12]), None
+        if len(found) == 1:
+            return "original-kit", found[0], "any:"                    # unique name, hash unknown: accepted without a check only when nothing else could match
+        return None, "%d export files named %s and no expected hash" % (len(found), name), None
     rows = [r for r in index_rows if r.get("record", "").startswith(rid[:12])]
     if not rows:
         return None, "no signed export row for record " + rid[:12], None
