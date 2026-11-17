@@ -13916,3 +13916,6 @@ FOR-CLAUDE: Finish conditional Fable/design reviews and pending physical actions
 - Merge pending classified-only: HEAD724fdedd likely superseded df3821,2b266a8f unknown; fleetdbc9 superseded1ba50/merged8d2a,c0f4d unknown. No approvals or reruns during park. All subtree leads report parked.
 
 FINAL QC correction: tail1 registration completed at 04:05:18 before the ssh timeout; all four prov_view_sources keys ARE present. QC-TYPES-R RESULT committed/pushed, no pending mutation/lock users. Six L2 parents can stage signed views now. Supersedes registration-pending notes above.
+
+## Resumed 2026-11-17 04:08 PST
+Owner confirms Claude still limited until05:42; resumed all seven parent workers in existing lane clones. Continuing from parked results, no repeated completed proofs.
