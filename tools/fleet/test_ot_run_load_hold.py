@@ -116,7 +116,7 @@ class Rebalance(unittest.TestCase):
                  patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(io.StringIO()):
                 with self.assertRaises(SystemExit) as ex:
                     module.main()
-            self.assertEqual(ex.exception.code, 75)
+            self.assertEqual(ex.exception.code, 78)     # FLOW-1700: a request that never started ends NOT-RUN / 78
             self.assertEqual(calls, want)
 
     def test_die_like_commands_get_die_priority(self):
@@ -180,7 +180,8 @@ class PickEligibility(unittest.TestCase):
         module = load(Path(__file__).with_name('ot-run'))
         result = exercise(module, dict(agi={**row(28, 10, 64), 'total_gb':126, 'floor_gb':25}), mem=168)
         self.assertIsNone(result['host'], result)
-        self.assertIn('no host qualifies', result['status'])
+        self.assertEqual(result["status"], 78)
+        self.assertIn("no host qualifies", result["log"])
 
     def test_mandatory_headroom_boundary_and_old_probe_compatibility(self):
         module = load(Path(__file__).with_name('ot-run'))

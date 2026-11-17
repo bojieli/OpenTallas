@@ -6,6 +6,7 @@ Lanes use this instead of private `while systemctl is-active` loops (KV's showed
 
   DONE     the job exited 0 (systemd Result=success and ExecMainStatus 0, or the client log's `exit 0`)
   FAILED   the job exited non-zero, failed, was killed, vanished without an exit status, or is `active` with no live process
+  NOT-RUN  ot-run refused the request before the unit started (`NOT-RUN <reason>` line, ot-run exit 78): nothing ran; exit status 78
   RUNNING  only while a live process of the unit / kit exists (never returned for an exited unit)
   TIMEOUT  --timeout seconds passed while still alive (exit status 2)
 
@@ -24,7 +25,7 @@ import time
 
 LIVE_ACTIVE = ("active", "activating", "reloading", "deactivating")
 RAN_RE = re.compile(r"ot-run: RAN on \S+(?: \(unit \S+\))?: exit (-?\d+)")
-NOTRUN_RE = re.compile(r"ot-run: NOT RUN\b[^\n]*")
+NOTRUN_RE = re.compile(r"ot-run: NOT RUN\b[^\n]*|^NOT-RUN\b[^\n]*|(?:^|\s)NOT-RUN \S[^\n]*")
 PROPS = "Id,LoadState,ActiveState,SubState,Result,ExecMainStatus,ExecMainCode,MainPID,ControlGroup,Type"
 LOCAL = (None, "", "localhost", "hub")
 
@@ -81,6 +82,15 @@ def log_exit(lines):
     return None
 
 
+def notrun_reason(lines):
+    """the text of the last NOT-RUN / NOT RUN line"""
+    for ln in reversed(lines):
+        m = NOTRUN_RE.search(ln)
+        if m:
+            return m.group(0).strip()
+    return ""
+
+
 def classify_unit(props, pids, tail):
     """-> (state, rc, reason).  RUNNING only with a live process; every exited / vanished unit is DONE or FAILED."""
     load, act, sub, res = props.get("LoadState", ""), props.get("ActiveState", ""), props.get("SubState", ""), props.get("Result", "")
@@ -92,7 +102,11 @@ def classify_unit(props, pids, tail):
     if load == "not-found" or act in ("unknown", ""):
         if ex and ex[0] == "RAN":
             return ("DONE" if ex[1] == 0 else "FAILED"), ex[1], "unit collected; exit status from the client log"
+        if ex and ex[0] == "NOT RUN":
+            return "NOT-RUN", None, "ot-run refused before the unit started: " + notrun_reason(tail)
         return "FAILED", None, f"unit {load or act}: exited and collected, no exit status recorded ({props.get('_err', '')})".strip()
+    if ex and ex[0] == "NOT RUN" and not (act in LIVE_ACTIVE and pids):
+        return "NOT-RUN", None, "ot-run refused before the unit started: " + notrun_reason(tail)
     if act in LIVE_ACTIVE:           # active / deactivating with no live process: it exited (the 85-minute false RUNNING)
         rc = code if code is not None else (ex[1] if ex and ex[0] == "RAN" else None)
         return ("DONE" if rc == 0 and ex != ("NOT RUN", None) else "FAILED"), rc, f"{act}/{sub} but no live process"
@@ -106,7 +120,7 @@ def classify_unit(props, pids, tail):
     if act == "failed" or res not in ("", "success"):
         return "FAILED", code, f"{act}/{sub} Result={res} exit {code}"
     if ex and ex[0] == "NOT RUN":
-        return "FAILED", None, "ot-run NOT RUN (no host admitted it)"
+        return "NOT-RUN", None, "ot-run refused before the unit started: " + notrun_reason(tail)
     if code not in (None, 0):
         return "FAILED", code, f"{act}/{sub} exit {code}"
     if ex and ex[0] == "RAN" and ex[1] != 0:
@@ -174,7 +188,7 @@ def main(argv=None):
     a = ap.parse_args(argv)
     res = wait(a.unit, a.kit, a.host, a.log, timeout=a.timeout, poll=a.poll, tail=a.tail, once=a.once)
     print(json.dumps(res))
-    return {"DONE": 0, "FAILED": 1}.get(res["state"], 2)
+    return {"DONE": 0, "FAILED": 1, "NOT-RUN": 78}.get(res["state"], 2)
 
 
 if __name__ == "__main__":

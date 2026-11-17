@@ -67,7 +67,14 @@ def test_collected_unit_uses_the_client_log_or_fails():
     none = W.wait(unit="u", run=fake(gone, log="nothing\n"), once=True)
     assert none["state"] == "FAILED" and "no exit status" in none["reason"]
     nr = W.wait(unit="u", run=fake(props("inactive", "dead", "success", "0", "0"), log="ot-run: NOT RUN on x: no host\n"), once=True)
-    assert nr["state"] == "FAILED"
+    assert nr["state"] == "NOT-RUN" and nr["rc"] is None
+
+
+def test_not_run_line_is_its_own_state_and_exit_78():
+    gone = props(load="not-found", act="inactive", sub="dead", pid="0")
+    log = "ot-run: REFUSED (ISOLATION step 3): root fs\nNOT-RUN on epyc2: actual directory is on the ROOT filesystem (ot-run status 255)\n"
+    r = W.wait(unit="u", run=fake(gone, log=log), once=True)
+    assert r["state"] == "NOT-RUN" and "ROOT filesystem" in r["reason"]
 
 
 def test_kit_mode():
