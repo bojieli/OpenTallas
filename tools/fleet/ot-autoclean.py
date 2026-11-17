@@ -78,6 +78,16 @@ except ImportError:
     _dg = None
 
 
+PUSH_COORD_MAX_H = 1.0
+
+
+def push_coord_fresh(coord, now=None):
+    try:
+        return (now or time.time()) - os.path.getmtime(os.path.join(coord, "autopilot/kit_wave.json")) <= PUSH_COORD_MAX_H * 3600
+    except OSError:
+        return False
+
+
 def guard_refuse(path):
     if _dg is None:
         return "ot_delete_guard module missing (fail closed)"
@@ -3195,7 +3205,11 @@ class Driver:
             gm = os.path.join(here, "ot_delete_guard.py")
             if os.path.exists(gm):
                 shutil.copy(gm, os.path.join(tb, "tools/ot_delete_guard.py"))
-            if _dg is not None:                           # protected list for the host guard (kit_wave.json src/bind of record, markers)
+            if _dg is None or not os.path.exists(gm):     # FLEET-OPS-R r359: never install a cleaner without the guard module beside it
+                raise RuntimeError("push refused: ot_delete_guard.py missing next to the pushed ot-autoclean.py (fail closed)")
+            if not push_coord_fresh(self.a.coord):        # a stale local coord clone must not overwrite the hosts' hub-built protected list
+                pass
+            elif _dg is not None:                         # protected list for the host guard (kit_wave.json src/bind of record, markers)
                 try:
                     os.makedirs(os.path.join(tb, "guard"))
                     _dg.write_list(_dg.build_protected([self.a.coord] + [c for c in os.environ.get("OT_GUARD_EXTRA_COORDS", "").split(",") if c]),
