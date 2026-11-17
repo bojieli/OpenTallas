@@ -1,7 +1,8 @@
 from pathlib import Path
 import json,re,sys,math,hashlib
-root=Path('/srv/opentallas-scratch2/claude/kv-r/pc_delta_hg6')
-pf=Path('/srv/opentallas-scratch2/claude/kv-clk-r2/rows_e9_hg3b/plan_hg5.json')
+root=Path(sys.argv[2]) if len(sys.argv)>2 else Path('/srv/opentallas-scratch2/claude/kv-r/pc_delta_hg6')
+root.mkdir(parents=True,exist_ok=True)
+pf=Path(sys.argv[1]) if len(sys.argv)>1 else Path('/srv/opentallas-scratch2/claude/kv-clk-r2/rows_e9_hg3b/plan_hg5.json')
 sys.path.insert(0,'/srv/opentallas-scratch2/claude/rt/current/tools/die_plan')
 import schema,landing_place,ft_spread,ft_bit_sites
 raw=json.load(open(pf));P=schema.Plan(raw,str(pf));rows={};report={}
@@ -32,14 +33,14 @@ for tn in ['kv3_pc_v1__cl23f6a148','kv3_pc_v1__cl7f648944','kv3_pc_v1__cl4ea58a5
  for h in protected:rects=[r2 for r in rects for r2 in subtract(r,h['hole'])]
  rects=[[round(x,6) for x in r] for r in rects]
  assert not any(overlap(r,g['rect']) for r in rects for g in protected)
- reserve=t['clock'].get('reserved_sites_um',[])
- assert not any(x.get('kind')=='channel_keepout' for x in reserve)
+ reserve=[x for x in t['clock'].get('reserved_sites_um',[]) if not (x.get('kind')=='channel_keepout' and x.get('ref')=='PC gap density remedy; carved around all generated fixed landing/station bays')]
+ assert not any(x.get('kind')=='channel_keepout' for x in reserve), 'unknown channel keepout requires explicit reconciliation'
  # Keep every measured HG5 clock-tree rectangle byte-identical.
  new=[*reserve,*[dict(rect_um=r,kind='channel_keepout',ref='PC gap density remedy; carved around all generated fixed landing/station bays') for r in rects]]
- rows[tn]={'clock.reserved_sites_um':new,'clock.tap_skip_macro':True,'clock.tap_spill_um':600,'clock.tap_max_sinks':1200}
+ rows[tn]={'clock.reserved_sites_um':new}
  area=lambda rs:sum((r[2]-r[0])*(r[3]-r[1]) for r in rs)
  report[tn]=dict(original_keepout_area_um2=area(boxes),carved_keepout_area_um2=area(rects),bay_open_area_um2=area(boxes)-area(rects),rectangles=len(rects),mandatory_bays=protected,old_keepout_bay_collisions=len(protected),new_keepout_bay_collisions=0,added_cycles=0,added_cells=0,die_clock_reserved_rows_preserved=len(reserve),rows=rects)
 out=dict(lane='KV-PC-DELTA-1115',source_plan_sha256=hashlib.sha256(pf.read_bytes()).hexdigest(),rows=rows)
-(root/'HG6_PC_bay_rows.json').write_text(json.dumps(out,indent=1)+'\n')
-(root/'HG6_PC_bay_report.json').write_text(json.dumps(report,indent=1)+'\n')
+(root/'HG6_PC_carve_only_rows.json').write_text(json.dumps(out,indent=1)+'\n')
+(root/'HG6_PC_carve_only_report.json').write_text(json.dumps(report,indent=1)+'\n')
 print(json.dumps({k:{x:v[x] for x in ['carved_keepout_area_um2','bay_open_area_um2','rectangles','old_keepout_bay_collisions','new_keepout_bay_collisions']} for k,v in report.items()},indent=1))
