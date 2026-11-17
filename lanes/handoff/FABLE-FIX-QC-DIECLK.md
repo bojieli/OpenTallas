@@ -10,14 +10,19 @@ Client logs intel2 ~/fable-fix-qc-dieclk/. Lanes directed by posts: QC-CLK-R2 (r
 - What-if A (wiA: failed kit cee3540cfd65 4_cts.odb unchanged + kit SDC rewritten with S4q9m cb rows 5eb16cc73797 + lever-3 repair):
   before 1,736 endpoints, cross-tap 1,699 worst -81.55; after ONE pass 0 endpoints, wns +5.00, 2,369 hold cells (0.55 %),
   TT setup estimate unchanged -294.44, 0 overlaps, 861 s. Old rows: 36,093 cells and -211.66 kept.
-- What-if B (wiB: same placement, CTS re-run with lever 2): hop-latch pass 5,892 latches on their launch tap, 1,058 re-hung,
-  256 without a tapped launch flop; result lines in wiB/kit/hold_gate.log, pregrt_ff_hold.log (see posts).
+- What-if B (wiB: same placement, CTS re-run with lever 2 + cb rows): hop-latch pass 5,892 latches on their launch tap, 1,058
+  re-hung, 256 without a tapped launch flop. Post-CTS FF gate: 785 endpoints = cross_tap 712 worst -44.17, same_tap 71 worst -47.80,
+  port_in 2 at -91.84 (IO shift not regenerated). After one pass: 0 endpoints, +5.01, 1,311 hold cells, setup unchanged -285.78, 475 s.
+- Setup read (setupA, TT, placement RC, repaired wiA DB): wns -294.44, 417 endpoints, all internal; 409 are one class
+  u_fab_u_x_*.u_st.b_d -> tap_d / cap / u_d*_a_d.r[0] (worst = zero logic, 20 buffers, 955 ps of wire); 8 are u_lk_nk latch -> core.
+  Old source has 0 ot_qfd_xcst_rep cells; the L2 source has it (rtl/physical/qcluster/qfd_c_stn.sv). Setup on cb is UNPROVEN until
+  the pilot on the L2 source; pilot gate: no b_d -> tap_d/cap/a_d endpoint below -42 at post-CTS TT.
 - Limits of both: old S4Q6D source (no r301 xcst_rep), IO window shift kept at the old W 644.2, placement RC.
 
 ## Source
 - claude/fable-fix-qc-dieclk-1116 @dd226b837fa: clock_taps.tcl hop-latch pass also takes u_lk_nk_*; pregrt_ff_hold pg_verdict accepts
   on endpoint + TNS gain, pass loop continues while endpoints fall >= 5 %; GRT-form anchors follow; +5 tests.
-  Gate: intel2 ~/fable-fix-qc-dieclk/gate2.client.log (gate1 = RED on a source-text test, fixed). Post READY on GREEN.
+  GATE main=d1fa289b1cb pass=25/25, READY posted 21:1x; waits for the COORD ruling / merge.
 - The S4q9m published tree must carry these two files, else every cb kit repeats the FALLBACK (told QC-PLAN-R).
 
 ## Open / next
@@ -31,6 +36,8 @@ Client logs intel2 ~/fable-fix-qc-dieclk/. Lanes directed by posts: QC-CLK-R2 (r
    of one cb region vs the SPEF offsets (QC-CLK-R2 self-review note).
 5. Advisory: 6 taps over the 1,200-sink cap in cbn_q01 (clk_t115 5,425, clk_t104 2,471, clk_t42 2,488, clk_t103 2,249,
    clk_t39 1,354, clk_t97 1,281); trees still matched to 2 ps on the worst pair; finer tap pitch is a later event.
+
+## Method shared (COORD request): post METHOD to KV-CLK-R2 / HEAD-DIE-R 21:1x (diagnose per tap pair, SPEF row cut, same-DB what-if).
 
 ## Not checked
 - Routed (RCX) hold of the padded pairs; other cb types' own DBs; whether the l2d cb rows equal the s4q9m_r cb rows to 1 ps.
