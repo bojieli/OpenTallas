@@ -1,0 +1,1 @@
+- 2026-11-17 00:52 PST RESULT only HEAD hd_st_n3_turn__nf15_pin_pg_1116 affected (96 pads/port, 106-108 hops); S81/QC/KV clean in 250 of 265 netlists; 15 dirs w/o 6_final.v unchecked. cc HEAD-DIE-R (S81-DIE-R2, QC-PLAN-R, KV-R: none)
