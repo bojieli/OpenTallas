@@ -61,3 +61,9 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/head-die-r (pack/smoke/proof),
 - Incoming reset/start 2-bit falling-entry coupon E8 head-spe-export/entry_phase_context still DRT iteration0 progressing; actual shared-root baseline FF hold -269.780, not scalar -225.
 - Separate sp4->sp3/start_i setup failure has minimum actual-root measurement TT -487.665 / hold +861.821, FF setup -282.655 / hold +714.246. SPE child owns counted J2 existing-CA window/boot/start contract measurement, no MCP/window waiver.
 - Fresh NF13a attempt5 n3_turn DRC3 is stale rst_start_raw_2 M7 partial-overlap geometry already superseded by signed NF15 pin_pg view; no second ECO.
+
+## Claude 01:0x resume (after limit)
+- sta-landing 1d07c5de GREEN record ~/merge-queue/gates/1d07c5de...json, MERGED main 364e27a1cba. Done.
+- NF15d2r1 adopted by Codex (bdd769, 3 gen hosts); not redone. TOOL-SKEW waits r509 8f88 runtime rollout, then fresh skew check on same tree.
+- Landing-ring hold -2023 TT nst3_turn->nst4/u1_i diagnosed: real view defect, not die-STA model. hd_st_n3_turn fclk_out_u1_o/d1_o each 96 delaybuf_otstb (subtree_balance sinkless-branch 12x8 cap); other 25 HEAD views 0. Tool fix on main 47a7685132a; view fix = 192-pad recovery E8 unit3667957 (preserve). After it signs: swap view into nf15c_real4-style die STA (E7 head-die-r/nf15c_real4/run_nf15c4.sh) and remeasure.
+- Next owned: collect 192 route -> export_contact_r2 -> run_signoff_contact_r2.sh; stand-in swaps (ctl, lep0N, mesh, serdes; host_w now SIGNED outpad5); next event tap offset rows (E7 head-die-r/tapwin) + re-derived seam in_min/out_min.
