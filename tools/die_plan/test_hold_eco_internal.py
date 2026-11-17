@@ -130,4 +130,5 @@ def test_tcl_files_are_complete_and_use_the_proven_calls():
             assert r.returncode == 0, f
     ins = (d / "hold_eco_internal_insert.tcl").read_text()
     assert "row segment ends where its macro cut starts" in ins and "[$it getBBox]" in ins
+    assert "OT_HEI inserted cell lost" in ins and "by NAME, never by a kept handle" in ins
     assert "isBlock" in ins                                    # a macro spans many rows

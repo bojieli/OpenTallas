@@ -37,7 +37,7 @@ proc ot_hei_run {} {
   foreach i [$blk getInsts] {
     set bb [$i getBBox]; set y [$bb yMin]
     if {[string match FILLER* [$i getName]] || [[$i getMaster] getType] eq "CORE_SPACER"} {
-      dict lappend fill $y [list [$bb xMin] [$bb xMax] $i]
+      dict lappend fill $y [list [$bb xMin] [$bb xMax] [$i getName]]
     } elseif {[[$i getMaster] isBlock] || ([$bb yMax] - $y) > $rowh} {
       foreach rw $rows {
         set ry [lindex $rw 0]
@@ -47,6 +47,7 @@ proc ot_hei_run {} {
       dict lappend occ $y [list [$bb xMin] [$bb xMax]]
     }
   }
+  set gone [dict create]; set allnames {}
   set total 0; set nruns 0; set removed 0; set out [open $::env(RESULTS_DIR)/hold_eco_internal_cells.tsv w]
   puts $out "capture\tstage\tname\tx_um\ty_um\torient"
   foreach row $plan {
@@ -97,8 +98,13 @@ proc ot_hei_run {} {
       lassign $s px ry ror
       if {![dict exists $fill $ry]} continue
       foreach f [dict get $fill $ry] {
-        lassign $f f0 f1 fi
-        if {$f0 < $px + $mw && $px < $f1 && [$blk findInst [$fi getName]] ne "NULL"} { odb::dbInst_destroy $fi; incr removed }
+        lassign $f f0 f1 fname
+        # by NAME, never by a kept handle: a destroyed filler's memory can be reused by a new HB4 (proof run lost 4 cells)
+        if {$f0 < $px + $mw && $px < $f1 && ![dict exists $gone $fname]} {
+          set fi [$blk findInst $fname]
+          if {$fi ne "NULL" && [string match FILLER* [$fi getName]] || ($fi ne "NULL" && [[$fi getMaster] getType] eq "CORE_SPACER")} { odb::dbInst_destroy $fi; incr removed }
+          dict set gone $fname 1
+        }
       }
     }
     set oldn [$oldnet getName]; set k 0; set prev {}
@@ -126,11 +132,16 @@ proc ot_hei_run {} {
         if {[[$ni findITerm [$mt getName]] getNet] eq "NULL"} { [$ni findITerm [$mt getName]] connect $pg }
       }
       puts $out "$capture\t$k\t$name\t$x\t$y\t$ror"
+      lappend allnames $name
       incr k; incr total
     }
     incr nruns
   }
   close $out
+  # fail closed: every cell we report must still be in the block, and the census must match the plan
+  foreach nm $allnames { if {[$blk findInst $nm] eq "NULL"} { error "OT_HEI inserted cell lost: $nm" } }
+  set want 0; foreach row $plan { incr want [lindex $row 1] }
+  if {$total != $want} { error "OT_HEI inserted $total HB4 but the plan asks $want" }
   puts "OT_HEI inserted $total HB4 at $nruns capture pins, removed $removed filler cells (radius $radius um)"
   set_dont_use $cells
 }
