@@ -52493,7 +52493,6 @@
     "*": "PARKED-OWNER-1113 (KIT-OPS-1 2026-11-13 03:29): OWNER 11-13 03:5x 'park HBM': no new HBM kit-wave launches or route submissions; running HBM jobs finish; no HBM src switches. Lift = delete this key."
    },
    "gen_hosts": [
-    "epyc10",
     "epyc2"
    ],
    "gen_hosts_note": "KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -68484,7 +68483,11 @@
      "intel1"
     ],
     "gen_host": "epyc9"
-   }
+   },
+   "prev_gen_hosts_fleetopsr1117c": [
+    "epyc10",
+    "epyc2"
+   ]
   }
  },
  "place_prefer": [
