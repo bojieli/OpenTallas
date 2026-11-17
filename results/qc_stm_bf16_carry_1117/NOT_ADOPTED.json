@@ -1,0 +1,61 @@
+{
+  "verdict": "NOT_ADOPTED",
+  "candidate": "OT_QFD_BF16_CARRY default OFF",
+  "source_sha": "92245d98726",
+  "proof_and_mapped_floorplan_sha": "af6f3f97c44",
+  "vehicle": "FULL production stream component:8FP32lanes/4outputbanks/32functional converter outputs,16621flops,6947RTLpins,0macros; same259.2x380.16floorplan",
+  "exactness": "actual-extracted RTL function SAT PASS for all32input bits, wrong-tie mutant caught",
+  "CTS_measurement": {
+    "unit": "oth-ubuntu-487203-1794919938",
+    "corner": "TT",
+    "period_ps": 833,
+    "setup_uncertainty_ps": 0,
+    "hold_uncertainty_ps": 25,
+    "RC": "placement estimate; not routed signoff",
+    "launches": 256,
+    "captures": 512,
+    "base_worst_slack_ps": 296.649811,
+    "carry_worst_slack_ps": 301.340912,
+    "delta_ps": 4.691101,
+    "base_first_worst_data_from_launch_clock_ps": 498.67,
+    "carry_first_worst_data_from_launch_clock_ps": 501.32,
+    "limit": "Worst capture banks differ; small complete-path slack change includes polarity/setup-arc and placement/clock effects, not a large arithmetic delay gain"
+  },
+  "mapped": {
+    "base": {
+      "record": "/srv/opentallas-scratch2/claude/ref_gate/qfd_stream_bf16_base_1117-20261117-122711/routes/gate/work/orfs/logs/asap7/opentallas_qfd_dv_stream_tile_asap7_ref_gate/base/1_synth.json",
+      "cells": 50795,
+      "area_um2": 8005.7,
+      "io": 6947,
+      "macros": 0
+    },
+    "carry": {
+      "record": "/srv/opentallas-scratch2/claude/ref_gate/qfd_stream_bf16_carry_1117-20261117-122711/routes/gate/work/orfs/logs/asap7/opentallas_qfd_dv_stream_tile_asap7_ref_gate/base/1_synth.json",
+      "cells": 50859,
+      "area_um2": 8017.79,
+      "io": 6947,
+      "macros": 0
+    },
+    "delta": {
+      "cells": 64,
+      "area_um2": 12.09,
+      "cycles": 0
+    },
+    "status": "MAPPED_ONLY_TIMING_PENDING"
+  },
+  "GRT": {
+    "base_overflow": 0,
+    "carry_overflow": 0,
+    "base_usage_percent": 23.63,
+    "carry_usage_percent": 23.7
+  },
+  "architectural_delta": {
+    "cycles": 0,
+    "state_bits": 0,
+    "clock_sinks": 0,
+    "ports": 0,
+    "demonstrated_token_rate_gain": 0
+  },
+  "reason": "Small standalone complete-path gain does not demonstrate a fix for actual parent STM timing. Actual routed parent is a539.676umstage with wire/buffer cost and adverse source+network clock phase; parent-context arithmetic improvement has not been established. No adoption or further DRT/tuning.",
+  "preservation": "All source and failed original STM records retained. Both healthy standard gate trials finished normally. Prototype remains default OFF."
+}

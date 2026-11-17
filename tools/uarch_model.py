@@ -17807,7 +17807,10 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
 def qwen_stream_bf16_carry_model():
     """Opt-in exact BF16 carry predicate; unchanged producer/consumer register edge."""
     return dict(schema="opentallas.qwen.stream-bf16-carry.v1",
-                status="CANDIDATE_NOT_ADOPTED", clock_ps=833,
+                status="NOT_ADOPTED_INSUFFICIENT_MEASURED_BENEFIT", clock_ps=833,
+                measurement="results/qc_stm_bf16_carry_1117/NOT_ADOPTED.json",
+                measured_complete_path_slack_gain_ps=4.691101,
+                demonstrated_token_rate_gain=0,
                 inputs_per_cycle=8, output_bf16_per_cycle=8,
                 replicated_output_banks=4, combinational_converters=32,
                 MACs_per_cycle=0, added_cycles=0, token_cycles_added=0,
