@@ -2,7 +2,7 @@
   "vehicle": "full-shape P3 fixed E1 GRT",
   "source_odb": "../p3_fault_split_e1_pg_1116/5_1_grt_fx.odb",
   "expected_internal_failures": 6,
-  "candidate": "one targeted HB4 at each exact negative internal capture; size only after TT all-start room read",
+  "candidate": "target10ps: approvedplanner9HB4 at6captures",
   "zero_changes": [
     "engine RTL",
     "port ABI",
@@ -18,7 +18,7 @@
     717.12
   ],
   "HB4_area_um2": 0.10206,
-  "max_candidate_added_area_um2": 0.61236,
+  "max_candidate_added_area_um2": 0.91854,
   "HB4_bounds": {
     "source": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_clock_diag/hb4_liberty_model.json",
     "sha256": "36c467e060e8a6981d3b5c9141b2b91ed570fed8502550e25bbd643db2f0f7e1",
