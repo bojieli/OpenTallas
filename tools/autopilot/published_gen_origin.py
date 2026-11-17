@@ -8,7 +8,7 @@ def sha(data):
 ARCHIVE_COMMIT = "00b48fe8d83bc70b1660bec8582f1ca91bf13b2b"
 # Exact whole-file compatibility is filled from the reviewed imported-proof
 # change; unknown scheduler versions always keep normal GEN as fallback.
-REVIEWED_RECIPE_FILES = {'251744c0682fdfcd3f069c50ed72d119917fab31322211f7a02bf2a6824a7f8e', 'c9335d32f3663f45bc474cd26035b6ba589941c3eeb8e0b64e79e36481dc71cf'}
+REVIEWED_RECIPE_FILES = {'9cea75b21b9bbbbaed17207330350c7388e5fb6bff2e648f4aaa032be08f942d', '251744c0682fdfcd3f069c50ed72d119917fab31322211f7a02bf2a6824a7f8e', 'c9335d32f3663f45bc474cd26035b6ba589941c3eeb8e0b64e79e36481dc71cf'}
 EXTERNAL_HELPERS = ("kit_store.py", "src_manifest.py", "prov_view.py", "kit_rtl_closure.py", "future_kit_lec.py")
 
 
