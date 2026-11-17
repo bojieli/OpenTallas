@@ -69,6 +69,24 @@ foreach h [dict keys $::rows] { set r [dict get $::rows $h]; puts "[dict get $r 
             assert ox + ns * 54 <= 30024 or ox >= 70200, (name, ox, ns)             # no piece inside the region
 
 
+@pytest.mark.skipif(TCLSH is None, reason="tclsh not installed")
+def test_full_width_region_removes_the_rows_inside_it():
+    # HEAD hd_serdes form: PHY supply region over the whole die width from y 400 up (phy_pg.json rect 0 400 2885.76 1226.88, no macro).
+    # 3047 of its 5672 rows had no rail: the rows inside the region.  They have no piece outside it, so they go; rows below stay.
+    out = _tcl(ROW_MODEL + """
+mkrow below  80 399600 53400      ;# y 399.60..399.87: untouched
+mkrow edge   80 399870 53400      ;# y 399.87..400.14: overlaps the region by 0.14 um -> removed
+mkrow inside 80 800010 53400
+mkrow top    80 1226610 53400     ;# last row under the region top
+set prr_rects {{0 400 2885.76 1226.88}}
+source %s
+foreach h [dict keys $::rows] { puts [dict get [dict get $::rows $h] name] }
+""" % (HERE / "phy_region_rows.tcl"))
+    lines = out.splitlines()
+    assert lines[0] == "OT_PHY_REGION_ROWS 1 region(s): 3 overlapping rows replaced by 0 pieces outside the region", lines
+    assert lines[1:] == ["below"]
+
+
 # ---------------------------------------------------------------- PG-RAIL-CHECK-1
 @pytest.mark.skipif(TCLSH is None, reason="tclsh not installed")
 def test_rail_cover_rule():
