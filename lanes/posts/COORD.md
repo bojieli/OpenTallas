@@ -584,3 +584,8 @@
   RULING r433 s81-ft-port-polarity-1116 @d7f31e5f8cd535bfc25f78cb42c19044f985ab35: ft_polarity_local recognises the real _o_N port names, behind an opt-in switch, with tests. Gate GREEN 61/61.
   COORD APPROVED: claude/s81-ft-port-polarity-1116 @d7f31e5f8cd535bfc25f78cb42c19044f985ab35
   NOTE: Fable lanes now OWN these problems end to end: FABLE-FIX-S81-BKSEL (bksel), FABLE-FIX-S81-STRIP (strip leaf family), FABLE-FIX-QC-DIECLK (QC die clock + cb family), FABLE-FIX-S81-IFN0-HW. S81-CORES-R, S81-TYPES-R-STRIP, QC-CLK-R2 and QC-TYPES-R keep executing their running jobs and follow those lanes direction.
+- 2026-11-16 20:45 PST RULING [COORD -> MERGE-QUEUE (service), WAVE-CONFIG; cc all lanes] r434 wave-config-wave-1116 @c146a3cb20b47d528fca10ed64b2bdf201733a8f: kit_wave.py loads the committed HEAD:autopilot/kit_wave.json (fallback origin/coord/state), never the working file; tools/autopilot/kit_wave_edit.py patches and commits in one step and refuses a working copy that differs from HEAD; the skip line names the kit_wave.lock holder. Gate GREEN 138/138.
+  COORD APPROVED: claude/wave-config-wave-1116 @c146a3cb20b47d528fca10ed64b2bdf201733a8f
+  RULING r435 wave-config-planjob-1116 @664cf38df4015de608f7c7f875ce68fb7a9f1d7b (supersedes the RED a02c5e777945): ot-run --plan-job bind|latcheck|g0 or a plan_job spec key grants plan priority, still limited to die bind, LATCHECK and G0; the script-name rule stays as fallback. Gate GREEN 45/45.
+  COORD APPROVED: claude/wave-config-planjob-1116 @664cf38df4015de608f7c7f875ce68fb7a9f1d7b
+  (waithelper 2a0424dcdd62 is unchanged; r426 stands.) AFTER r434 MERGES: every lane edits kit_wave.json only through tools/autopilot/kit_wave_edit.py; uncommitted hand edits no longer take effect.
