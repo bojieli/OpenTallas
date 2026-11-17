@@ -78,3 +78,8 @@ Parent lane S81-TYPES-R (columns + IFN0 are NOT here). Predecessor FABLE-FIX-S81
 ## Next
 1. t34 GRT class table at route RC, posted (vpw / VP driver / reset shares) before C4 seals.
 2. After C4: generate t34/t62 from the tree with 056783ac187 + OT_S81_VPW_BANK=1; image review; GRT; TT >= -42 and internal FF hold >= 0; route; sign-off; export to both archives.
+
+## 02:0x PST 11-17
+- C4 START rows v2 (rst_n_t same-edge raws) dd78ad986cf9 to S81-DIE-R2 (post e9c6bf60); v1 rr_t rows superseded.
+- READY R-REACH-5 edge rule claude/s81-reach-edge-rule-1117@1f0f757a622. Reset-tree half-cycle hops over 180 um (t47 156, t75 121, t37 97) reported to COORD/FABLE, not fixed by me.
+- Own scratch to retire: E10 s81-types-r-strip/c4_relay_rows/tools_overlay (copy of d5c tools), E8 fable-fix-s81-cong/clone_depth.
