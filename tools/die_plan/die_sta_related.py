@@ -1434,11 +1434,35 @@ def ca_named_pairs(ports):
     return out
 
 
-def build_pairs(plan, taps, ca_pairs=None):
+def load_data_edges(path):
+    """DIE-HOLD-PAIRS: data-connectivity file {"known": [tap port, ...], "edges": [[launch, capture], ...]} -> dict.
+    'known' lists the taps whose data connectivity is resolved; an edge is a data path launch -> capture."""
+    d = json.loads(Path(path).read_text())
+    return dict(known=set(d.get("known", [])), edges={(a, b) for a, b in d.get("edges", [])})
+
+
+def has_data_edge(edges, a, b):
+    """False only when connectivity is KNOWN for both taps and no launch a -> capture b path exists; unknown -> True."""
+    if not edges or a not in edges["known"] or b not in edges["known"]:
+        return True
+    return (a, b) in edges["edges"]
+
+
+def filter_no_data_edge(pairs, edges):
+    """(kept, dropped_count); conservative: dropped only on known connectivity with no data edge."""
+    if not edges:
+        return list(pairs), 0
+    kept = [p for p in pairs if has_data_edge(edges, p[0], p[1])]
+    return kept, len(pairs) - len(kept)
+
+
+def build_pairs(plan, taps, ca_pairs=None, data_edges=None):
     """complete pair sets from the plan ports and the tap table (one corner's rows; ports are corner independent).
     ca_pairs (KIT-OPS-6 11-15, FABLE-TRIAGE-HEADKV 21: KV 320 'no taps' crossings): partition pairs {(src, dst)} that count-aligned ports name.  Their tap pairs
     of the SAME clock region were classed 'seam' (single-cycle) and never reached count_align_port_intervals, so every CA port inside one region got no
-    interval; those pairs now go to 'landed' (the CA crossing's own class) and leave 'seam'.  None = unchanged."""
+    interval; those pairs now go to 'landed' (the CA crossing's own class) and leave 'seam'.  None = unchanged.
+    data_edges (DIE-HOLD-PAIRS 11-16, opt-in --data-edges, load_data_edges): pairs between KNOWN taps with no data edge are
+    dropped; the per-class count is coverage 'no_data_edge' (never silent); unknown connectivity keeps the pair."""
     by_part = defaultdict(list)
     # DIE-HEAD-13 10-28: a tap with part None is a die-level start stage (start_stage_emit '__st__<path>' / virtual_tap):
     # it belongs to no partition, so it never forms intra/seam pairs (HEAD: 193 stage taps were grouped as ONE
@@ -1470,9 +1494,15 @@ def build_pairs(plan, taps, ca_pairs=None):
             for b in by_part[t]:
                 same = taps[a]["cppr_node"] == taps[b]["cppr_node"]
                 (seam if same and (ca_pairs is None or (s, t) not in ca_pairs) else landed).append((a, b, f"{s}->{t}"))
-    return dict(intra=intra, intra_cross_region=straddle, seam=seam, landed=landed), dict(
+    out = dict(intra=intra, intra_cross_region=straddle, seam=seam, landed=landed)
+    nde = {}
+    if data_edges:
+        for k in list(out):
+            out[k], nde[k] = filter_no_data_edge(out[k], data_edges)
+    return out, dict(
         partitions_with_taps=len(by_part), connected_part_pairs=len(conn), uncovered_bits=dict(uncovered),
-        **({"start_stage_taps_no_pairs": unpart} if unpart else {}))
+        **({"start_stage_taps_no_pairs": unpart} if unpart else {}),
+        **({"no_data_edge": nde, "no_data_edge_total": sum(nde.values())} if data_edges else {}))
 
 
 def nearest_pairs(d, plan_path, tool, taps):
@@ -2897,6 +2927,8 @@ def main(argv=None):
                     help="DIE-HEAD-18 opt-in (--count-align): time each count-aligned ring on its BUILT clocks (writer = "
                          "fwd_out + fwd_wire + fclk_in, reader = reader, per partition type, routed) instead of the "
                          "declared common latency on both sides (ca_ring_fn docstring); default = unchanged")
+    ap.add_argument("--data-edges", help="DIE-HOLD-PAIRS opt-in: JSON {known:[taps], edges:[[launch,capture]]}; pairs between "
+                    "known taps with no data edge are dropped and counted under coverage no_data_edge (unknown kept)")
     ap.add_argument("--count-align-key", choices=("part", "region"), default="part",
                     help="DIE-QC-5 opt-in: how landed pairs meet the bind crossings. part (default, unchanged) = bind "
                          "src/dst are partitions; region = map partitions through bind parts[p].region (bind crossings "
@@ -2984,6 +3016,7 @@ def main(argv=None):
     ap.add_argument("--data-droop-margins", help="margins JSON with the data_droop block (default tools/die_plan/"
                     "die_ci_margins.json)")
     a = ap.parse_args(argv)
+    DATA_EDGES = load_data_edges(a.data_edges) if a.data_edges else None
     mpol = apply_margin_policy(a)        # OWNER 12.24b: nominal default, before any check that reads a margin flag
     if a.nominal_arrival is None:
         a.nominal_arrival = NOMINAL_ARRIVAL_DEFAULT if mpol["policy"] == "nominal" else "minmax"
@@ -3081,7 +3114,9 @@ def main(argv=None):
         rng = clock_cppr_ranges(meta)
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
-        pairs, cov = build_pairs(plan, taps, ca_named_pairs(json.loads(Path(a.count_align).read_text()).get("ports")) if a.count_align else None)
+        pairs, cov = build_pairs(plan, taps, ca_named_pairs(json.loads(Path(a.count_align).read_text()).get("ports")) if a.count_align else None, DATA_EDGES)
+        if DATA_EDGES:
+            print(f"NO_DATA_EDGE {c} dropped {cov['no_data_edge_total']} {cov['no_data_edge']}")
         views = None
         if ecm is None:
             ecm = early_core_map(plan, taps, plan_path=a.plan)

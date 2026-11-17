@@ -864,3 +864,16 @@ def test_kit_windows_per_region_with_tap_offset_rows():
     w = R.kit_windows(pc, None, plan)["intra"]
     assert w["per_region"]["p0"] == 140.0          # span of the offsets form: (20 + 10) - (-100 - 10)
     assert w["per_region"]["p1"] == 180.0
+
+
+def test_build_pairs_no_data_edge_filter():
+    # 3 cores in one partition: a->b real edge, a->c known no edge, d unknown connectivity
+    taps = {k: dict(part="P", cppr_node="h0", late_ps=1.0, early_ps=1.0) for k in "abcd"}
+    plan = dict(ports=[])
+    edges = dict(known={"a", "b", "c"}, edges={("a", "b")})
+    pairs, cov = R.build_pairs(plan, taps, data_edges=edges)
+    kept = {(x, y) for x, y, _ in pairs["intra"]}
+    assert ("a", "b") in kept                      # real edge kept
+    assert ("a", "c") not in kept and ("b", "c") not in kept   # known, no edge: dropped
+    assert ("a", "d") in kept and ("d", "c") in kept           # unknown connectivity kept
+    assert cov["no_data_edge"]["intra"] == 5 and cov["no_data_edge_total"] == 5
