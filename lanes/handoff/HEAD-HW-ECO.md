@@ -27,3 +27,9 @@ One signed form of hd_host_w is enough: whichever of hw5 / hw4e2 signs first get
   (same HEI recipe on signoff_codex scenes; launch with ot-run --dir /srv/opentallas-scratch2/claude --hosts epyc8 only after signoff_codex ends
   and only if internal FF < 0).
 - STOPPED per COORD/FABLE-PD-HEAD-2045: hw4e1, further hw4 setup repair.
+
+## CODEX takeover 22:18 result (2026-11-16)
+- hei3 COMPLETE SIGNED: E8 eco_hw4/hei3/kit_hd_host_w/signoff_hei/signoff.json, TT -29.73, DRC0, FF core_n0/core_wns0. 444 output boundary negative ends (worst -31.91) remain advisory for actual parent proof. No RTL/latency change. Final placement image LOOKED; regular SRAM pairs keep aisles and pins, no new geometry defect.
+- Export RUNNING via local rtx-pro /home/ubuntu/head-spe-export/ffht_export_v2.sh. Key s81_head/hd_host_w__hw4e2_hei3_1116, log local /home/ubuntu/head-spe-export/hostw_hei3_export.log; local archive files staged, alias PASS, AGIdock transfer follows. Check OK and both INDEX rows before declaring ARCHIVED-BOTH. Base has no LEF/lib; ILM/full real-die STA should use actual6_final V/SPEF/ODB plus kit/macros libs.
+- hw5hei COMPLETE FAIL: DRC0, TT -47.65, FF internal3 ends worst -0.66 (all-path -30.09 output boundary). BeforeHEI TT -46.30 and internal38 ends -17.81. Worst setup is beat_tx[220] -> u_bout_coll_o0/q[220], data chain ~637ps after launch flop; tap6 capture ~330ps vs launch~426ps plus25ps source window. Dedicated bank tap failed final timing. Do NOT retry: signed hei3 already supplies host_w. Keep both failed records.
+- NEXT: finish both-store export, notify HEAD-DIE-R to swap signed host_w into real4 and measure coll_o0 boundary hold. No further host_w P&R necessary.
