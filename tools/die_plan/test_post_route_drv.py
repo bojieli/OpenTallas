@@ -193,6 +193,35 @@ def test_mk_keeps_macro_libs_listed_in_tc_lib_files(tmp_path):
     assert r.returncode == 0 and tc.split()[3:] == ["$(TC_NLDM_LIB_FILES)"]
 
 
+@pytest.mark.parametrize("rhs", ["$(BC_NLDM_LIB_FILES) /work/macros/pk2_BC.lib",
+                                  "/work/macros/pk2_BC.lib"])
+def test_mk_preserves_explicit_custom_bc_lib_rhs(tmp_path, rhs):
+    # Bksel's actual custom TC/BC names do not obey the _tt -> _ff fallback.
+    kit = make_kit(tmp_path)
+    (kit / "macros").mkdir()
+    for name in ("pk2_tc.lib", "pk2_BC.lib"):
+        (kit / "macros" / name).write_text("library(x) {}\n")
+    cfg = (kit / "config.mk").read_text().replace(
+        "export ADDITIONAL_LIBS =\n", "export ADDITIONAL_LIBS = /work/macros/pk2_tc.lib\n")
+    (kit / "config.mk").write_text(cfg + f"export BC_LIB_FILES = {rhs}\n")
+    r = mk(kit, tmp_path / "p1")
+    assert r.returncode == 0, r.stdout + r.stderr
+    lines = (tmp_path / "p1/config.mk").read_text().splitlines()
+    assert [line for line in lines if line.startswith("export BC_LIB_FILES")][-1] == f"export BC_LIB_FILES = {rhs}"
+    assert [line for line in lines if line.startswith("export TC_LIB_FILES")][-1].endswith(" /work/macros/pk2_tc.lib")
+
+
+def test_mk_refuses_missing_explicit_bc_even_when_tc_exists(tmp_path):
+    kit = make_kit(tmp_path)
+    (kit / "macros").mkdir()
+    (kit / "macros/pk2_tc.lib").write_text("library(x) {}\n")
+    cfg = (kit / "config.mk").read_text().replace(
+        "export ADDITIONAL_LIBS =\n", "export ADDITIONAL_LIBS = /work/macros/pk2_tc.lib\n")
+    (kit / "config.mk").write_text(cfg + "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/pk2_BC.lib\n")
+    r = mk(kit, tmp_path / "p1")
+    assert r.returncode == 2 and "missing declared FF macro lib /work/macros/pk2_BC.lib" in r.stdout
+
+
 def test_mk_no_fanout_limit_by_default(tmp_path):
     # R8: sign-off fanout is WARN-only; a default max_fanout split wide nets with weak buffers (bdring TT setup -22 -> -40)
     kit = make_kit(tmp_path)
