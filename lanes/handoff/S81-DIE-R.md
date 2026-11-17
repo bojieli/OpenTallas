@@ -40,5 +40,14 @@ FABLE-FIX-S81-GUNIT writes delta rows (bf back to the signed 432x216 shape + pre
 - clk_t48 OK. R2: separate event, read-only odb census, ECO only hits.
 - So step 2 below starts with a planner pass that removes the near-miss depth-ups before any compose.
 
+### 8. COORD r389 (11-16 ~18:4x)
+- (a) Planner reruns on epyc10 W/s81/F2s4currentECOv3 (driver reach_codex/run_current_r4_ca_phase.sh; opt-in --part-phase and --min-lat-exempt in the private planner copy). r4g = R4d + svc_2 clock 20 ps earlier (MODEL: crossing d and fall interval shifted, start edges not): 33 depth-ups, svc_2 has none. r4h = r4g + the 9 crossings exempt from --min-lat-cycles 1: 993 crossings, fail 0, start 376/376, strap sim 0 violations, +106.2 / +104.9; depth 4->8 on 24 crossings / 9 types (9,125 bits), sched_lat sum 2522 -> 2551, 9 crossings at sched_lat 0. svc_lo_dsdv_svc_rs__t1, slice_station__t26 and ot_s81sl_leaf__t11 take NO deeper ring, so their bands stay as adopted. Scaled ring fit of the 24 remaining bands (x 5527/3074): 23 at 0.85-0.89, one over: svc_lo_dsdv_svc_rs_w__t1 hbmrd_i0 (1120 b) 0.648 -> 1.165, must grow in compose.
+- The svc_2 -20 ps move is a planner model. It needs a real clock ECO on the svc_2 feed (successor graph + GRT + arrivals) before the table is a measured result.
+- sched_lat 0 on 9 crossings: the planner and strap sim accept it; the bind / lane price of a 0-cycle landing is not yet proven (adopted table minimum is 1).
+- (b) R2 reservation is its own event (census first); not in F2s5.
+- (c) gunit rows copied to E/gunit (40 patches, 11 overlay files). Applied with the T51 rows on 819 with expected-before: E/cand/plan_819_t51e_gunit.json ed35d72ec082, overlay E/cand/overlay (22 files). gunit__t1: 22 cores, 0 overlaps, 0 outside, 0 pin-site duplicates. Bind needs define OT_GUNIT_BF_FWPIPE, lane RT_LAT 66/64. G0 of this candidate: E/g0/t51e_gunit, intel2 ~/s81-die-r/g0_t51e_gunit.log.
+- (d) T51 adopts only if the view port-start FF hold (-53.04 ps, 5268 endpoints) closes in the parent slice_station__t51 kit. No parent measurement exists yet (W child view is unsigned).
+- Compose: the last real compose was B6gF2s from a PRE plan; every later event applied rows on the composed plan. Estimate-only recompose of the candidate with the r4h table: E/cmp/r4h_t51e_gunit, intel2 ~/s81-die-r/compose_try_r4h.log.
+
 ## Next steps
 1. Read G0 t51e. 2. Compose CA R4d on the 819 lineage (fallback_land compose; check the 38 deeper rings fit their bands), regenerate lanes, estimate before build. 3. F2s5 = 819 + T51 + CA (+ SVC stage 9 if delivered): source cohort with the overlay and the ca planner hunks from TOOLS-CONVERGE, fresh elab, strict bind, LATCHECK, G0; Fable review in parallel. 4. R2 ruling and census.
