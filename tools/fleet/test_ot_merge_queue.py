@@ -527,3 +527,22 @@ class ImportedDirectoryInputs(unittest.TestCase):
             with patch.object(M, 'wt_make', return_value=root), patch.object(M, 'pytest', return_value=result):
                 with self.assertRaisesRegex(M.GitError, 'baseline fixture input missing'):
                     M.baseline('main', {'tools/test_case.py::test_case'}, tag='incomplete')
+
+
+class FailureOutputRetention(unittest.TestCase):
+    def test_primary_and_followup_failures_keep_distinct_immutable_output(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            m = load({'MQ_HOME': str(root / 'mq'), 'MQ_WT': str(root / 'wt')})
+            one = subprocess.CompletedProcess([], 1, 'FAILED tools/test_case.py::primary\nfirst traceback\n', '')
+            two = subprocess.CompletedProcess([], 1, 'FAILED tools/test_case.py::serial\nsecond traceback\n', '')
+            with patch.object(m, 'run', side_effect=[one, two]), patch.object(m, 'missing_src', return_value=[]):
+                m.pytest(root, ['tools/test_case.py'], 'same-tag', 1)
+                m.pytest(root, ['tools/test_case.py'], 'same-tag', 1)
+            logs = list((root / 'mq/failure-output').glob('*.log'))
+            self.assertEqual(len(logs), 2)
+            texts = [p.read_text() for p in logs]
+            self.assertTrue(any('first traceback' in s for s in texts))
+            self.assertTrue(any('second traceback' in s for s in texts))
+            self.assertTrue(all('command=' in s and 'rc=1' in s for s in texts))

@@ -527,6 +527,13 @@ def pytest(wt, items, tag, n):
     timeout = FLEET_TIMEOUT if all(i.startswith("tools/fleet/") for i in items) and len(items) == 1 else TEST_TIMEOUT
     p = run(cmd, cwd=wt, timeout=timeout, env=env)
     out = (p.stdout or "") + (p.stderr or "")
+    if p.returncode:
+        dest = MQ / "failure-output"
+        dest.mkdir(parents=True, exist_ok=True)
+        record = dest / (re.sub(r"[^A-Za-z0-9_.-]", "_", tag) + f"-{time.time_ns()}.log")
+        with record.open("x") as stream:
+            stream.write(f"cwd={wt}\ncommand={shlex.join(cmd)}\nrc={p.returncode}\n\n" + out)
+        log(f"pytest failure output retained: {record}")
     fails = {m.group(2) for m in map(FAIL_RE.match, out.splitlines()) if m}
     tail = " | ".join(l for l in out.strip().splitlines()[-2:])[:300]
     if p.returncode == 124:
