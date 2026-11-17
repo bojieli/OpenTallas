@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 22:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 22:15 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 13, 'NO-DATA': 1, 'EXCLUDED': 12, 'PROGRESS': 2}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 12, 'NO-DATA': 1, 'EXCLUDED': 12, 'PROGRESS': 2}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -17,7 +17,6 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 13, 'NO-DATA
 | intel1 | dpkit-kit-2546869 | kit | 5_1_grt | 51.9 | repair_TNS best 387169 last 387169 rows 6 | YOUNG: series started inside the last 6 h |  |
 | intel1 | dpkit-ot_s81sl_leaf__t28-2091344 | ot_s81sl_leaf__t28 | 5_1_grt | 3.8 | last meaningful line 0.0 h ago (152/152 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
 | intel1 | dpkit-ot_s81sl_leaf__t34-2093853 | ot_s81sl_leaf__t34 | 5_1_grt | 3.8 | last meaningful line 2.0 h ago (199/223 lines) | YOUNG: evidence 2.3 h < 7.5 h |  |
-| intel2 | relaxed_carver | relaxed_carver | asbuilt.yosys | 0.0 | last meaningful line -0.0 h ago (104/104 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 19.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 10.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 44.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -29,6 +28,6 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 13, 'NO-DATA
 | intel1 | dpkit-cbn_q11__cl5cc92dfe-3365622 | cbn_q11 | 5_1_grt | 8.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-slice_station__t42__clcf44e680-3277913 | slice_station__t42 | 5_2_route | 2.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261116_023111_238129-i1t-2308651 | eco_20261116_023111_238129-i1t | 5_2_route | 19.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 0.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 43.8 | last meaningful line 1.6 h ago (1566/1566 lines) | PROGRESS: log still growing |  |
 | intel1 | ffs4-t47_ov25-139346 | ffs4-t47_ov25 | 4_1_cts | 0.5 | repair_Violations best 0 last 0 rows 2 | PROGRESS: repair_Violations reached 0 |  |
