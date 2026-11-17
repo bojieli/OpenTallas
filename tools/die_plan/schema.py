@@ -632,7 +632,10 @@ SCHEMA = {
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
                             "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank", "channel_keepout"]},
                                            "ref": {"type": "string"},
-                                           "route_layers": {"type": "string"}}}},
+                                           "route_layers": {"type": "string"},
+                                           # CLKSITE-TAP-ESCAPE-1117: per-site opt-outs of the tap escape column / E-W placement pad
+                                           "tap_escape": {"type": "boolean"},
+                                           "edge_pad_sites": {"type": "integer", "minimum": 0}}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
