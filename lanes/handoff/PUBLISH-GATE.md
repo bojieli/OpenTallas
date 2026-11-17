@@ -30,3 +30,19 @@ KV team owns D12/HG3b actual dryGEN; no duplicate KV or S81 physical launches he
 ## Dispatcher coverage
 22:20 last-hour class only KV kit_rtl4ab4e56491 (1); older3h S81 kit_rtl29+serdes4 same source-publication class, no new>=10/h event.
 Exact33 S81 publication owner rows ->S81-TYPES-R2 committed01ff7a2214d2; current class owners now KV-R /S81-TYPES-R2, no orphan.
+
+## Final integrated source (22:4x PST)
+- 45629 normal RED: auto-retire's newly added rollback fixture called production apply without the existing PGOK-qualified helper. Exact failure retained E2 slot0/mq/failure-output/gc-45629*.log.
+- 1ab5e1438fd corrected the fixture only; its normal gate reported add/add conflict with main's new rollback test. No production bypass added.
+- Temporary same-lane integration worktree /srv/opentallas-scratch2/claude/publish-gate/integrate_1116 preserves original clone's18 inherited dirty files untouched.
+  Plain merge main800d3f3a9c44; sole add/add test conflict resolved hunk-by-hunk using qualified helper while preserving rollback expectations/current main production.
+- FINAL source6cf4d562fab3b500de50ab9a1fc59f97f9fc1b8e pushed same branch+GitHub.
+  NORMAL GREEN13/13 on800d3f3a9c44, gate E9unit57848-1794897831 DONE0, record ~/merge-queue/gates/6cf4d562fab3b500de50ab9a1fc59f97f9fc1b8e.json.
+  Focused baseline8+rollback1 PASS in merged source. Actual C3 report6PASS; same-count new-message mutantFAIL.
+- Root canonical READY posted; approval/merge root-owned. Die teams own actual static+dryGEN/adopt.
+- Approvedr460 snapshot twofiles staged E8 tools-converge/s81/d5b_1116/tool_overlay/tools/die_plan:
+  kit_topology.py SHA8ea28749c3f11453ed12565be5509c169eaada47765f90d3a5b3b95d2501c412;
+  test_native_topology_base.py SHA442cf1bee9b101c05bc6584295bf01d3bcc40cae754d963d9a854a1345606834.
+- Old D4 G0 rc1/reportPASS confusion is not reproduced: actual E10 /runs/s81/kit-wave/pubgate/g0/g0_report.json at21:43 reads FAIL6.
+  Fresh unique output directories in new helper avoid stale result authorization.
+- All my source gates terminal. No physical job launched. Keep integration worktree until S81/KV helper users switch to merged runtime, then remove it.
