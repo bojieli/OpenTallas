@@ -1785,12 +1785,18 @@ def verdict(res):
     v["clock_endpoint_coverage"] = {c: res["corners"].get(c, {}).get("clock_endpoint_coverage", {}).get("status", "UNAVAILABLE")
                                     for c in ("TT", "FF")}
     ran = {c for c, r in res["corners"].items() if r.get("exit") == 0}
+    missing_seam_paths = {c: [name for name, seam in res["corners"].get(c, {}).get("seams", {}).items()
+                             if not seam.get(delay)] for c, delay in (("TT", "max"), ("FF", "min"))}
+    if any(missing_seam_paths.values()):
+        v["missing_seam_paths"] = missing_seam_paths
     if res["mode"] == "etm":
         v["status"] = "INFO (etm: setup cross-check only)"
     elif any(res["corners"].get(c, {}).get("clock_endpoint_coverage", {}).get("verdict") != "PASS"
              for c in ("TT", "FF")):
         v["status"] = "NOT RUN (expanded clock endpoint coverage incomplete)"
         v["expanded_child_flop_pairs"] = "NOT RUN"
+    elif any(missing_seam_paths.values()):
+        v["status"] = "NOT RUN (seam timing path coverage incomplete)"
     elif not {"TT", "FF"} <= ran:
         v["status"] = "NOT RUN (signoff needs TT setup + FF hold)"
     else:
