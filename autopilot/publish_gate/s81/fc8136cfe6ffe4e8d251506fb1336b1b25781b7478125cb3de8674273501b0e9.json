@@ -1,0 +1,55 @@
+{
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5b/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+ "checks": {
+  "contained": {
+   "verdict": "NOTRUN",
+   "why": "No completed canonical check claimed here; static G0 diagnosis is still in progress."
+  },
+  "dry_gen": {
+   "dir": "/srv/opentallas-scratch2/claude/tools-converge/s81/d5b_1116/dry_work/s81/fc8136cfe6ff/gunit__t1",
+   "gen_host": "epyc8",
+   "item": "gunit__t1",
+   "kind": "type",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5b",
+   "stage": "gen",
+   "verdict": "FAIL",
+   "why": "stage gen: Traceback (most recent call last):\nValueError: type gunit__t1: macros have LEF but no timing liberty: u_bound.u_u_gunit_u_l5 (dsdv_gunit_l5), u_bound.u_u_gunit_u_l1c (dsdv_gunit_l1c), u_bound.u_u_gunit_u_l2 (dsdv_gunit_l2), u_bound.u_u_gunit_u_l4 (dsdv_gunit_l4), u_bound.u_u_gunit_g_l1f_0_u_l1f.u_alo (dsdv_gunit_l1f_ba0), u_bound.u_u_gunit_g_l1f_0_u_l1f.u_f (dsdv_gunit_l1f_bf), u_bound.u_u_gunit_g_l1f_0_u_l1f.u_ahi (dsdv_gunit_l1f_ba1), u_bound.u_u_gunit_g_l1f_1_u_l1f.u_alo (dsdv_gunit_l1f_ba0), u_bound.u_u_gunit_g_l1f_1_u_l1f.u_f (dsdv_gunit_l1f_bf), u_bound.u_u_gunit_g_l1f_1_u_l1f.u_ahi (dsdv_gunit_l1f_ba1), u_bound.u_u_gunit"
+  },
+  "hashes": {
+   "verdict": "NOTRUN",
+   "why": "No completed canonical check claimed here; static G0 diagnosis is still in progress."
+  },
+  "normal_source_guard": {
+   "verdict": "NOTRUN",
+   "why": "Not run for this unpublished/unadopted candidate."
+  },
+  "pre_g0": {
+   "verdict": "NOTRUN",
+   "why": "No completed canonical check claimed here; static G0 diagnosis is still in progress."
+  },
+  "schema": {
+   "verdict": "NOTRUN",
+   "why": "No completed canonical check claimed here; static G0 diagnosis is still in progress."
+  }
+ },
+ "die": "s81",
+ "evidence": {
+  "packet": "/srv/opentallas-scratch2/claude/tools-converge/s81/d5b_1116/dry_packet.json",
+  "packet_sha256": "2ea24d6625671b77443be2e76880988cf72e54be9651d5081ac4d7d144922ecd"
+ },
+ "hosts": [
+  "epyc8"
+ ],
+ "item": "gunit__t1",
+ "manifest_hash": "fc8136cfe6ffe4e8d251506fb1336b1b25781b7478125cb3de8674273501b0e9",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5b/physical/die_plan/s81/plan_of_record/plan_h2_2249.json",
+ "plan_sha256": "c20ec9e4c3c4728dde433545b3dacd13418cf5c9296082d2fbd04cfb5dc50946",
+ "projected_cfg_sha256": "04c4c28ab5555ac3e5338874d4d4b65cfd1edfff77468a0ba4282648ac4b1068",
+ "schema": "opentallas.publish_gate.v1",
+ "scope": "Actual gunit dry GEN failed; source not adopted. Other checks are NOTRUN here, not borrowed from diagnostics.",
+ "t": 1794900322.19978,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5b",
+ "verdict": "FAIL"
+}
