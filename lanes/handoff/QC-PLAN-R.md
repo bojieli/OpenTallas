@@ -44,3 +44,10 @@
 - Child QC-PLAN-H checking result tags qc-kit-inputs-selfcontained / qc-cland-w515-signed / qc-reset-ring-fixed (mig-021..024); posts PASS or NOT MET.
 - Child QC-PLAN-G (7 stale types, R-REACH on l2d) still running; rows -> qc-plan-r/g/s4q9m_stale_rows.json.
 - Waiting: FABLE-DIE-QC-R clock rows -> compose S4q9m = l2d + clock + G rows, event s29q103S4Q9M.
+
+## 2026-11-16 21:2x
+- qc-kit-inputs-selfcontained PASS posted (4fdd59791d4): the consumed views + signoff of the 6 st_a child cores are byte-identical on all 7 hosts.
+- qc-cland-w515-signed: the signed view was exported by QC-PLAN-H2 to /srv/opentallas-scratch2/claude/qc-plan-h2-1116/views/qc_cland_w515_n_d8_local32_codex (DRC 0, TT +40.94, FF +14.96), dir sha 9bd668452c3d, identical on all 7 hosts. TODO in S4q9m: point the registry/plan at it, then post PASS.
+- qc-reset-ring-fixed: QC-PLAN-RST is designing reset rows (rst/s4q9m_reset_rows.json), gate run pending.
+- QC-PLAN-G stale rows are ready: qc-plan-r/g/s4q9m_stale_rows.json (7 types; before adopt: sc ft bit_sites regen, gen_rst2 dry-run, latency --inplace, LATCHECK).
+- Waiting on FABLE-DIE-QC-R clock rows.
