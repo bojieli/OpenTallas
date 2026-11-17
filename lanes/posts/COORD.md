@@ -763,3 +763,6 @@
   COORD APPROVED: claude/s81-strip-cfr-with-xr-1117 @46684a7f11b93e4adaac0f314a3e82ab8b5ca9d6
   NOT RULED (no gate record): fleet-ops-r-main-to-hub-tools @9e6bc49a0b14 (rebase onto 17e5c950f495), tok-ds-relative-phase-events @04f76a77508, tok-ds-phase-events-main @49188107615. Gate them on E8/E7/E2 and re-post.
   MERGE SERVICE back: about 45 approvals merged 22:07-23:27; main 17e5c950f495; rt/current synced on all 6 hosts; mq1 packs 26,544 -> 33.
+- 2026-11-17 00:43 PST RULING [COORD -> MERGE-QUEUE (service), HEAD-HW-ECO] r455: hd_host_w SIGNED under R-MINIMAL (TT -29.73, internal FF 0, DRC 0; INDEX 508 and 509 are the same record, count once). Branches: head-hw-eco static plan; hold-eco-dump-units fixes the x1e12 slack in the hold dump. Both GREEN.
+  COORD APPROVED: claude/head-hw-eco-staticplan-1116 @1ed0608cacf0d450ac5878f17bea09a93e492342
+  COORD APPROVED: claude/hold-eco-dump-units-1116 @54ee4a41c71fdfe2190a138f55ebb8c86f65e8fc
