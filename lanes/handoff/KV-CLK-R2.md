@@ -23,3 +23,20 @@ KV-R owns the D4/D5 trees, views, C bind and pilots.
 ## Next
 1. KV-R: fresh bind of HG2 (new plan sha -> new fingerprint) + LATCHECK; the rows B pilot kv3_pv_v1n waits on KV-R's D5 tree.
 2. On a review BLOCK: fix and recompose (scripts M/rows_hg2.sh RUN, M/hold_e6.sh RUN).
+
+## 11-17 lever 2 (per-port tap window = hold class), M = epyc7 /srv/opentallas-scratch2/claude/kv-clk-r2
+- HG2b/HG2c/HG3 clock fields verified; clock.cohort row landed in HG3 006e38e15a71 (rows_cohort_e6a.json b043c6e92991).
+- e7 = HG3 tree with OT_CLK_DME_TEMPLATE=2 + exact clock SPEF (M/chain7.sh M/e7.env e7; runs/e7): SPEF tol p90 10.9 / p99 30.9 / max 56.2.
+- CLASS CONFIRMED (post 9168e2ea): M/xtap.tcl + xtap.sh (copy of QC sta.tcl) + xtapan.py on post-CTS FF DBs:
+  kv3_hgi_v1__cl141fc26e (epyc10 kw43 kv101ns, W 130): cross-tap 4,408 worst -152.5, 99.4 % window-only; offset projection 163 (worst -44.1).
+  kv3_sys_SD_v1 (epyc8 kvN2, W 80): cross-tap 2,323 worst -79.8, 100 % window-only. Outputs: <host>:M/xtap_hgi_v1, M/xtap_sdv1.
+- Rows (not applied): M/rows_l2/{rows.json 1287f7a89fdb, plan.json 1ecde607e8df, report.json} by M/rows_kv.py (QC rows_m + creates
+  clock.tap_offset, SKIP_TYPES = 5 signed keep windows): 51 types, 6,129 ports, tol max 66.2, seam 170 -> 140, table errors 0.
+  The tables carry plan_sha 006e38e15a71 (HG3): re-cut on the next plan sha (rows_kv.py refuses a mismatch).
+- Tree fix: hg/pc types sit R0/MX/MY/R180; template copied only the MX instance. Branch claude/kv-clk-r2-tmplx-1117 (worktree M/src_tx):
+  opt-in OT_CLK_DME_TEMPLATE_XMIRROR=1 also copies onto x-mirrored instances (+ test_die_trial_dme_template_xmirror.py).
+  e8 = e7 + XMIRROR (M/chain8.sh M/e8.env e8) launched 11-17 via ot-run from intel2 (log intel2 ~/tmp/kvr2_e8.log).
+
+## Next (lever 2)
+1. e8 CHAIN_DONE: GRT overflow 0 both corners, SPEF tol readout (expect hg/pc <= ~15), CA. Then rows_kv.py on e8 -> rows for the event after HG3b.
+2. Branch GREEN -> READY post; KV-R composes rows into the event after HG3b (fresh bind + LATCHECK + Fable review).
