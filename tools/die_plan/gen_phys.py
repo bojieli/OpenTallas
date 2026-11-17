@@ -192,12 +192,28 @@ def _cland_pinslot(budgets, tn, extra=()):
 
 
 
+def _is_col_type(tn):
+    return tn is not None and tn.split("__")[0].startswith("col_")
+
+
+def _relay_fallback_max_frac(budgets, tn):
+    """S81-TYPES-R2 11-16 (COORD CLOSURE-STRATEGY-2100 lever 2): a col kit fails closed at place when ANY relay group
+    takes the old nearest-free fallback (relay_mid.tcl OT_RELAY_FALLBACK_MAX_FRAC = 0): an unfitted group means a hop
+    over OT_RELAY_MID_MAX_HOP_UM (405) or no site, i.e. a plan relay-depth row, never a routable kit (col_h10_r0_p1:
+    18 of 95 unfitted, hops 1,118-1,561 um, CTS -508.5).  budgets.relay_fallback_max_frac overrides (null = advisory)."""
+    if "relay_fallback_max_frac" in budgets:
+        return budgets["relay_fallback_max_frac"]
+    return 0 if _is_col_type(tn) else None
+
+
 def _relay_mid_fit(budgets, tn):
     """S81-TYPES-5 11-07 CHANNEL class (relay_mid.tcl FIT), opt-in three ways, absent = unchanged kits: plan-wide
     budgets.relay_mid_fit, per type budgets.relay_mid_fit_types (types or unsplit base names), or per kit-wave row
     through item_env (GEN env OT_RELAY_MID_FIT=1), so a pilot or a class batch needs no plan event."""
     if os.environ.get("OT_RELAY_MID_FIT") == "1" or budgets.get("relay_mid_fit"):
         return True
+    if _is_col_type(tn) and budgets.get("relay_mid_fit") is not False:
+        return True       # S81-TYPES-R2 11-16 (COORD lever 2): col types always FIT, so the fail-closed count below exists
     on = list(budgets.get("relay_mid_fit_types") or [])
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
@@ -5960,6 +5976,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
+             if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
            *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
