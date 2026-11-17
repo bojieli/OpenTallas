@@ -18,7 +18,8 @@ def scan_all(roots=ROOTS, now=None):
     for r in roots:
         if not os.path.isdir(r):
             continue
-        tag = "" if "scratch2" in r else os.path.basename(os.path.dirname(r)) + ":"
+        vol = os.path.basename(os.path.dirname(r.rstrip("/")))
+        tag = "" if vol.endswith("scratch2") else vol.replace("opentallas-", "") + ":"
         for h, g in ((WINDOW_H, QUOTA_GB), (BURST_H, BURST_GB)):
             for lane, gb in scan(r, h, g, now).items():
                 out.setdefault(tag + lane, gb)

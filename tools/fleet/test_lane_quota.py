@@ -31,7 +31,7 @@ class Tiers(unittest.TestCase):
             with open(os.path.join(root, lane, "f"), "wb") as f: f.write(b"x" * 4096 * 20)
         Q.BURST_GB = 0.00005; Q.QUOTA_GB = 10 ** 6
         got = Q.scan_all(roots=(root + "/scratch2/claude", root + "/scratch3/claude"))
-        self.assertIn("laneA", got); self.assertTrue(any(k.endswith(":laneB") for k in got), got)
+        self.assertIn("laneA", got); self.assertTrue(any(k == "scratch3:laneB" for k in got), got)
         coord = tempfile.mkdtemp(); posts = []
         def run(cmd, **kw):
             if cmd[0] == "ssh" and cmd[6] == "bad": raise TimeoutError("slow host")
