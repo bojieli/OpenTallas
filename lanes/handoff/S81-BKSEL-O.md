@@ -31,3 +31,9 @@ Gates: DRC 0, TT setup >= -42, FF non-port hold >= 0, LEC.
 - 11-16 22:0x UTC: the fix is ALREADY ON MAIN via commit d8c855b766 (main 96cae5872b; file sha 51beecd2dc38, byte-identical; that commit reports strict bind PASS, LATCHECK 873/873, HCPARAM 0). No branch needed. COORD told t2 can relaunch from main; HOLDGEN asked to release result:DIE-S81-92:bksel-hcparam.
 ## fx6 (11-16 22:0x UTC)
 - epyc2 run relaunched from GRT with the hold buffer cap 1.6 (fx_repair.tcl wrapper); GRT is in its congestion passes. Standalone LEC is running (container bksel-o-lec-fx6); lec_async.done gets created only if lec.json = EQUIVALENT.
+
+## CODEX resumed current actual run 2026-11-16 16:36 PST
+- Earlier PID1459553 is obsolete: Claude stopped it13:26. Current exact epyc2 container e04f43a14bc5 / klegacy-bksel_vC9fx6-2821105, OpenROAD PID2831006, same fx6 directory. Never launch a duplicate or stop this progressing job to alter settings.
+- Current GRT initial overflow0 and DRV1997buffers completed. First inherited1.6percent hold-budget pass returned; calibrated FF hold afterwards+6.92ps with2820 endpoints inside20ps margin. Second pass now iter360/355buffers/+12.030ps/TNS0. No terminal error yet. These intermediate inherited report labels are not routed TT signoff.
+- No fresh5_1_grt.odb yet: wrapper has not returned. Current fx_pre_repair.odb and route.guide preserve completed initialGRT. Finalroute/DRC/currentTT/internalFF remain pending.
+- Source-only LEC container db342fa36a98 remains advisory under r371. export_view.py accepts absent --lec, so physicalSIGNED/export must not wait solely for advisoryLEC; never fabricate EQUIVALENT. Actualknownfunctionalerror would still block.
