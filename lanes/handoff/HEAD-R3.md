@@ -11,7 +11,12 @@ Started 2026-11-17 05:28 PST. Client logs: intel2 ~/head-r3-logs/. Nothing delet
 - BUF64 coupon: route E7 unit104774 exit 0, validate_route.py DRC 0 (130 nets). export/run_export.sh FAILED (script bug:
   libs.txt names /work/macros/*.lib, kit not mounted). Successor export_r2/run_export_r2.sh (kit mounted ro, then
   pair TT/FF into buf4_64/pair_routed_r2) queued on E7, log ~/head-r3-logs/buf64_export_pair_r2.log. Coupon only: no type sign-off.
-- hd_serdes sd9f: E7 unit3729170 DRT 2nd iteration, 11,565 violations at 06:02 (from 69,638). sd9e (E10) fallback untouched.
+- hd_serdes sd9f: E7 unit3729170 DRT ended 06:45 PST at 64 iterations with 28 DRC (19 Short + 9 Metal Spacing), ALL on M2
+  against macro/cell obstructions, mostly clk_t*_tb0_n2 clock-tap nets and u_rrl_*/_1_ (same class as he12h drc2: HEAD-HE12H-DRC.md).
+  Report E7 fable-fix-head-serdes/sd9f_lane/sd9f/gen/hd_serdes/run/reports/asap7/dp_hd_serdes/base/5_route_drc.rpt. The kit
+  continues to finish + sign-off by itself (will be NOT SIGNED on DRC); routed TT not yet read (GRT TT -22.17).
+  NEXT: read signoff TT/internal FF; if timing passes, one targeted M2 obstruction ECO on the 28 markers (he12h drc2 recipe),
+  re-sign, export. sd9e (E10, TT -53.04 fallback) untouched.
 - E7 scratch2 hit 0.4 GB free at 05:55 (ALERT posted); 100+ GB again at 06:00.
 
 ## NF15e corridor decision (model, numbers)  -> "NF15f"
