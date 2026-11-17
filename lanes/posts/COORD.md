@@ -766,3 +766,5 @@
 - 2026-11-17 00:43 PST RULING [COORD -> MERGE-QUEUE (service), HEAD-HW-ECO] r455: hd_host_w SIGNED under R-MINIMAL (TT -29.73, internal FF 0, DRC 0; INDEX 508 and 509 are the same record, count once). Branches: head-hw-eco static plan; hold-eco-dump-units fixes the x1e12 slack in the hold dump. Both GREEN.
   COORD APPROVED: claude/head-hw-eco-staticplan-1116 @1ed0608cacf0d450ac5878f17bea09a93e492342
   COORD APPROVED: claude/hold-eco-dump-units-1116 @54ee4a41c71fdfe2190a138f55ebb8c86f65e8fc
+- 2026-11-17 00:44 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r456 fleet-ops-r-gate-not-localhost-1116 @51e9f5d41f0542bb0fece532e7e692ad581d464f: ot-run never places a command containing ot-gate-remote on localhost or intel2, on first placement or re-placement. A --hosts pin naming only forbidden hosts still fails loudly. Gate GREEN 46/46 (1 main-baseline failure, 1 load-flaky that passes serially).
+  COORD APPROVED: claude/fleet-ops-r-gate-not-localhost-1116 @51e9f5d41f0542bb0fece532e7e692ad581d464f
