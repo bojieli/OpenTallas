@@ -6119,6 +6119,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/lp_even.tcl\n")
     if t.get("reset_relay_full"):
         reset_relay_full(kd / "rtl")
+    install_reset_chain_spread(kd, t)
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
@@ -6492,6 +6493,40 @@ def type_verilog_defines(t, kit_defines=None):
             not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", v) for v in values):
         raise ValueError("type verilog_defines must be a list of bare Verilog macro names")
     return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
+
+
+RESET_CHAIN_SPREAD_HOOK = "\n# FABLE-FIX-S81-COLTAP 11-16: reset_replicate copy_depth chains on the line common flop -> region copy\nsource /work/reset_chain_spread.tcl\n"
+
+
+def reset_chain_depth(t):
+    """the deepest reset_replicate copy_depth of a type (0 = no key, 1 = one copy per region: no chain flops)."""
+    return max([int(sp.get("copy_depth") or 1) for sp in (t or {}).get("reset_replicate") or []] or [0])
+
+
+def install_reset_chain_spread(kd, t):
+    """FABLE-FIX-S81-COLTAP 11-16: a type with a reset_replicate copy_depth > 1 gets reset_chain_spread.tcl at PRE_RESIZE
+    (after global placement, before repair_design buffers the hops).  GPL puts every chain flop u_x_r<k>_s<j> next to the
+    loads of its region, so the way from the common flop was one hop (col_h9_r2, copy_depth 3: 836..1,174 um, -181 ps at
+    CTS; with the hook the longest hop is 315 um).  Appended to the kit's PRE_RESIZE hook (the PLACE-NOCONVERGE gate runs
+    first), or the hook itself when the kit has none.  No copy_depth > 1: the kit is byte-identical.  Returns True when
+    installed."""
+    if reset_chain_depth(t) < 2:
+        return False
+    kd = Path(kd)
+    shutil.copyfile(Path(__file__).with_name("reset_chain_spread.tcl"), kd / "reset_chain_spread.tcl")
+    mk = (kd / "config.mk").read_text()
+    m_ = re.search(r"^export PRE_RESIZE_TCL = /work/(\S+)\s*$", mk, re.M)
+    if m_ and (kd / m_.group(1)).is_file():
+        with (kd / m_.group(1)).open("a") as f_:
+            f_.write(RESET_CHAIN_SPREAD_HOOK)
+        mk = mk.rstrip("\n") + "\n"
+    elif m_:
+        raise ValueError(f"reset_chain_spread: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
+    else:
+        mk = mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/reset_chain_spread.tcl\n"
+    (kd / "config.mk").write_text(mk + "# reset_replicate copy_depth chains are spread after global placement (reset_chain_spread.tcl)\n"
+                                       "export OT_RESET_CHAIN_SPREAD = 1\n")
+    return True
 
 
 def install_gp_noconverge_gate(kd, cfg, die=None):
