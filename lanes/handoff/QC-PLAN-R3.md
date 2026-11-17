@@ -10,3 +10,11 @@
 
 ## 2026-11-17 06:0x COORD latch_except ruling
 - COORD: no port-level latch_except {qfd_tile_nk_a0c: [tap]} row in M5 or any plan (FABLE-PD-QC-0600: breaks hold on 1744 tap pins). Checked: M4 32bba546, M5 cf3ee3ca and zz_bind_s29q103S4Q9M5BR carry 0 latch_except keys. The bit-level form (tap[0] + pad) from QC-TYPES-R3 goes in a later event, not M5.
+
+## 2026-11-17 07:0x FABLE-PLAN-QC-M5 dispatch (verdict ADOPT M5 cf3ee3ca + M5BR, CB16 7/7)
+- D3 applied 06:30 (src ..._s4q9l2_d3 f6917f02, = D2 + b08d2ac81e hard_landing.py). Receipt qwen_compute_atomic_apply_1794925814280898470.json.
+- A2 DONE 06:5x: hold qc-l2-stop-m5-changed-1117 (plan 19be3f0a, keys = 123 L2 types changed in M5 by offset-out-of-tol / window raise / type row; list ~/qc-plan-r3/m5_changed_vs_l2_1117.json on intel2), release event_adopt:s29q103S4Q9M5 (added to planned_events). No new L2 launches of those; running ones finish. The 8 D3-released L2 rows had not launched yet and are held too (do not count toward M5).
+- A1 lane check running on E8 (qc-plan-r3-m5-1117/a1check.sh): D3 gen_phys tap_offset/tap_window tables on all 133 M5 types + D3 bind.py kit-rtl on the 22 param_wrap types against the M5BR bind copy (E8 qc-plan-r3-m5-1117/bind). Publish M5 = D3 tools + M5 plan/runtime/portable manifest only if both pass, and only after the M5 chain CHAIN_DONE.
+- DISK: the E8 scratch2 has about 93 GB free after D3; a D4 copy (60 GB) would leave about 33 GB, below the 50 GiB floor. Retire D2 (superseded, check no live consumer) before the D4 copy.
+- STRUCTURAL RULE (next event N): the clock of record is the frozen M4 tree (s4q9m4/kit/clock/tree.json) plus m4_measured_1117/rows.json, keyed by tree sha, outside the plan tag. Later events take it as template, re-cut only regions whose tap set changed, and rewrite a row only where the tap-offset gate or the window need fails. No rows re-fold, no clock re-run, no re-bind for rows-only deltas, no relaunch/re-sign of the 11 churn types (<=1.1 ps), no slew repair in M5, no port-level latch_except, no "+403.6 die setup". N bundles bit-level latch_except tap[0], N START, SC reset and R-REACH-4 into one event.
+- Stray: my first E7 clone /srv/opentallas-scratch/claude/qc-plan-r3-hlemit-1117 (root disk, 58 GB, broken checkout) is not deleted: ot-delete refused it as protected. Needs a COORD / FLEET-OPS decision.
