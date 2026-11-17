@@ -28,9 +28,9 @@ def _native_stage_groups(t, groups):
     rows = cfg['groups']
     if not isinstance(rows, list) or not rows:
         raise ValueError('native_stage_groups needs nonempty groups')
-    width, height = t['outline_um']; seen = {x[0] for x in groups}; added = []; leaf = {}
+    width, height = t['outline_um']; seen = {x[0] for x in groups}; added = []; leaf = {}; density = {}; ff_only = []
     for row in rows:
-        if not isinstance(row, dict) or set(row) not in ({'prefix', 'rect_um', 'tag'}, {'prefix', 'rect_um', 'tag', 'match'}):
+        if not isinstance(row, dict) or not {'prefix', 'rect_um', 'tag'} <= set(row) or set(row) - {'prefix', 'rect_um', 'tag', 'match', 'density'}:
             raise ValueError('native_stage_groups group fields')
         mode = row.get('match', 'prefix')
         if mode not in ('prefix', 'cell'):
@@ -44,6 +44,13 @@ def _native_stage_groups(t, groups):
             raise ValueError('native_stage_groups invalid regex') from exc
         if not isinstance(tag, str) or not re.fullmatch(r'stage:[A-Za-z0-9_.:-]+', tag):
             raise ValueError('native_stage_groups invalid tag')
+        if 'density' in row:
+            d = row['density']
+            if mode != 'cell' or type(d) not in (int, float) or not isfinite(d) or not (0.4 <= d <= 0.6):
+                raise ValueError('native_stage_groups density requires cell match and 0.4..0.6')
+            if tag in density and density[tag] != d:
+                raise ValueError('native_stage_groups conflicting tag density')
+            density[tag] = d; ff_only.append(prefix)
         if not isinstance(rect, list) or len(rect) != 4 or any(type(x) not in (int, float) or not isfinite(x) for x in rect):
             raise ValueError('native_stage_groups finite rectangle required')
         if not (0 <= rect[0] < rect[2] <= width and 0 <= rect[1] < rect[3] <= height):
@@ -64,9 +71,24 @@ def _native_stage_groups(t, groups):
     if leaf:
         init = 'set ::cland_native_leaf_regex [dict create]\n'
         init += ''.join('dict set ::cland_native_leaf_regex {' + p + '} {' + pat + '}\n' for p, pat in leaf.items())
+        init += 'set ::cland_native_ff_only [dict create]\n'
+        init += ''.join('dict set ::cland_native_ff_only {' + p + '} 1\n' for p in ff_only)
+        init += 'set ::cland_native_tag_density [dict create]\n'
+        init += ''.join('dict set ::cland_native_tag_density {' + tag + '} ' + str(d) + '\n' for tag, d in density.items())
+        init += '''proc cland_native_leaf_match {i prefix} {
+ if {![regexp [dict get $::cland_native_leaf_regex $prefix] [$i getName]]} {return 0}
+ if {[dict exists $::cland_native_ff_only $prefix] && ![string match DFF* [[$i getMaster] getName]]} {return 0}
+ return 1
+}
+proc cland_native_sp {tag} {
+ if {[dict exists $::cland_native_tag_density $tag]} {return [expr {0.4 / [dict get $::cland_native_tag_density $tag]}]}
+ return 1.0
+}
+'''
         check = check.replace(' set cland_native_found 0',
-            ' set cland_native_found 0\n set cland_native_re [format {(^|[/.])%s[/.]} $cland_native_prefix]\n if {[dict exists $::cland_native_leaf_regex $cland_native_prefix]} {set cland_native_re [dict get $::cland_native_leaf_regex $cland_native_prefix]}')
-        check = check.replace('regexp [format {(^|[/.])%s[/.]} $cland_native_prefix]', 'regexp $cland_native_re')
+            ' set cland_native_found 0\n')
+        check = check.replace('regexp [format {(^|[/.])%s[/.]} $cland_native_prefix] [$cland_native_i getName]',
+            'expr {[dict exists $::cland_native_leaf_regex $cland_native_prefix] ? [cland_native_leaf_match $cland_native_i $cland_native_prefix] : [regexp [format {(^|[/.])%s[/.]} $cland_native_prefix] [$cland_native_i getName]]}')
         check = init + check
     return groups + added, check
 
@@ -81,12 +103,15 @@ def _native_stage_placement_source(t, source):
     extra = ''' if {[dict exists $::cland_native_leaf_regex $prefix]} {
   set hit {}
   foreach i [$ff_blk getInsts] {
-   if {[regexp [dict get $::cland_native_leaf_regex $prefix] [$i getName]]} {lappend hit $i}
+   if {[cland_native_leaf_match $i $prefix]} {lappend hit $i}
   }
   return $hit
  }
 '''
-    return source.replace(marker, marker + extra)
+    source = source.replace(marker, marker + extra)
+    if any('density' in row for row in cfg.get('groups', [])):
+        source = source.replace('set sp 1.0', 'set sp [cland_native_sp $tag]')
+    return source
 
 
 def _group_rect_overrides(t, groups, stale=None):
