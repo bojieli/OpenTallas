@@ -1,6 +1,6 @@
 {
   "die": "qwen_kvsys",
-  "status": "BLOCKED PAYLOAD; source publication validation only; NOT ADOPTED",
+  "status": "SUPERSEDED by D16 (COORD decision 11-17, FLEET-OPS-R): D15 was never published; D16 (HG5, manifest d9187b9c24f1) applied 07:17",
   "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15",
   "candidate_paths": [
     "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15",
@@ -21,5 +21,7 @@
   "source_hosts": [
     "epyc7",
     "epyc10"
-  ]
+  ],
+  "status_before_superseded": "BLOCKED PAYLOAD; source publication validation only; NOT ADOPTED",
+  "superseded_by": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d16"
 }

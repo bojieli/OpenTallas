@@ -1,6 +1,6 @@
 {
   "die": "qwen_kvsys",
-  "status": "PENDING CANDIDATE NOT ADOPTED",
+  "status": "SUPERSEDED by D16 (COORD decision 11-17, FLEET-OPS-R): D14 is TERMINAL FAIL; superseded by D16 (applied 07:17)",
   "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14",
   "manifest_hash": "8bd4818ec021b095fc372aa4fe9e8847b905af0dafdf6751935169a5d55a0329",
   "candidate_paths": [
@@ -10,5 +10,7 @@
   ],
   "reason": "active canonical E7 source and ongoing replica publication; preserve until adoption or explicit abandonment",
   "owner": "KV-R",
-  "codex": "2026-11-17"
+  "codex": "2026-11-17",
+  "status_before_superseded": "PENDING CANDIDATE NOT ADOPTED",
+  "superseded_by": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d16"
 }
