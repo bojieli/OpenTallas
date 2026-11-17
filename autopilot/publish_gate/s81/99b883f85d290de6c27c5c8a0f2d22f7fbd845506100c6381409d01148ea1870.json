@@ -1,8 +1,53 @@
 {
  "checks": {
-  "gate": {
-   "verdict": "FAIL",
-   "why": "AssertionError: die changed since reviewed candidate"
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81/99b883f85d29/bk_sel__t2",
+   "gen_host": "epyc10",
+   "item": "bk_sel__t2",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81/99b883f85d29/bk_sel__t2/published_gen_origin.json",
+   "origin_sha256": "4b600b6d213b1dd82dd3d9c9f3a15d783b356d616711100ed76e9eb5e87d47a4",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "9adbfeddbc7e76366abfd0cc8b298d132f423c223cf3543c476e18ffcf9a80e1",
+   "spec_sha256": "12d25a04b56eb137492bc91e2f159732e5233ff10e0cf72368576272d9f4f26f",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6_1117_work",
+   "stage": "preflight",
+   "unit_log_sha256": "7fb63a7b6c96974609c98fd04a00c0d9e1752d736f36265917945410212793a7",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "accepted": 5,
+    "errors": 5,
+    "inherited": true,
+    "record_sha256": "7a27aa7df37bfe91b119145d3f4778aafa564bdd7b5c49f36ba9818f68a8b756",
+    "review": "S81-DIE-R3 2026-11-17: D6-r3 = C4r3 + r563 bksel merge (default mode) on the same plan 0126890b; fresh elab + strict bind 0 / LATCHECK 873/873; G0 ERROR set identical to the reviewed C4r3 baseline (588c4714, 5 identities), 0 new.",
+    "reviewed_g0_sha256": "bfb16ed3ae19a90c63f7ac3d60975b7955693c013d8b99c228c19e37fb4aeab9",
+    "reviewed_plan_sha256": "0126890b808f8f5f6b4ed496ec75eb360e9b54375c77386399a40218600e2997",
+    "verdict": "PASS"
+   },
+   "g0_rc": 1,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/pubgate/g0-d232pddg/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6_1117_work plan=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6_1117_work/physical/die_plan/s81/plan_h2_2249.json findings=0\n\nG0: 40 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t41 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t42 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t43 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t44 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t45 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t47 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6_1117_work/physical/die_plan/s81/plan_h2_2249.json: PASS (0 errors)\n",
+   "verdict": "PASS"
   }
  },
  "die": "s81",
@@ -11,11 +56,12 @@
   "epyc8",
   "intel1"
  ],
+ "item": "bk_sel__t2",
  "manifest_hash": "99b883f85d290de6c27c5c8a0f2d22f7fbd845506100c6381409d01148ea1870",
  "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6_1117_work/physical/die_plan/s81/plan_h2_2249.json",
  "plan_sha256": "0126890b808f8f5f6b4ed496ec75eb360e9b54375c77386399a40218600e2997",
  "schema": "opentallas.publish_gate.v1",
- "t": 1794941313.970105,
+ "t": 1794941429.3486388,
  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6_1117_work",
- "verdict": "FAIL"
+ "verdict": "PASS"
 }
