@@ -1,0 +1,84 @@
+{
+ "marker": {
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+  "asbuilt_sha256": "3b58769a5f517c7f873a33f9e5339a0af620f81add77426c17ceec93e4c7d376",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_of_record/native_bind/out",
+  "bind_passed": true,
+  "bind_run": "epyc10:/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R/d5e/r3b",
+  "bind_types": 395,
+  "config": {
+   "cancel_superseded": false,
+   "event": "3fa87b84b18",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "100",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_of_record/sidecar_new.json"
+   ],
+   "gen_host": "epyc10",
+   "gen_hosts": [
+    "epyc10",
+    "epyc8",
+    "intel1"
+   ],
+   "kit_rtl": {
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_of_record/native_bind/out",
+    "mode": "bind",
+    "note": "S81-DIE-R3 2026-11-17 D5e-r3b on 20ee09596c16: strict bind 0 / LATCHECK 873/873 / G0 6 inherited 0 new. Revert: rollback_tree D5 c0762a39663f"
+   },
+   "plan_event": "D5e-r3b",
+   "queue_src": "main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+   "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+   "tools_sha": "2efedf57b857ecfcd7300bb28cf1dd852ab8880e"
+  },
+  "die": "s81",
+  "die_gen_env": {
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_PGCAP": "1",
+   "OT_PG_CELL_KEEPOUT": "0",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PG_PIN_CHECK": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+   "OT_PLACE_MAX_FANOUT": "64",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
+   "OT_TT_SETUP_REPAIR": "both"
+  },
+  "event": "3fa87b84b18",
+  "g0_baseline": {
+   "path": "/home/ubuntu/coord/lanes/handoff/S81-D5E-R3B-G0-BASELINE-1117.json",
+   "sha256": "15c0703a301ab020475b76e8ba7730af9922eb8789afda55c625bc941efce1c1"
+  },
+  "hosts": [
+   "epyc10",
+   "epyc8",
+   "intel1"
+  ],
+  "latcheck": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_of_record/latcheck.json",
+  "latcheck_passed": 873,
+  "manifest_hash": "20ee09596c164e346b921291ade8dfd1e51bc96febafb57832b0b37c0ff15965",
+  "physical_qualified": false,
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_h2_2249.json",
+  "plan_event": "D5e-r3b",
+  "plan_sha256": "9f664e6fa54a82298a3f795a15142e2d70c8f07f6cb51f9a6effd9abf1f8d340",
+  "preserve_holds": "All inherited holds preserved (strip-leaf s81-strip-gpl-d5, col waves, SerDes, t37 station-start); event key kept 3fa87b84b18 per FABLE-PLAN-S81-B6gF2s5f s7 (only plan_event changes), so no event-term carry",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e/physical/die_plan/s81/plan_of_record/sidecar_new.json",
+  "sidecar_sha256": "98aa35e5a944ceba9dd92c7c7232143a29ef3fdbcbf216c37a20b58b054239ff",
+  "smoke": "PASS",
+  "source_causal_bound_qualified": false,
+  "src_manifest_sha": "20ee09596c164e346b921291ade8dfd1e51bc96febafb57832b0b37c0ff15965",
+  "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+  "status": "D5e-r3b = D5c + 29 gunit profile defines (FWDOWN off, signed BF/BA pairing) + BA0 FWP + BA1 FWPPK signed views + EGN gen_phys c5e20297 + ordered rows e943 + scoped bksel registry; bksel stays on D5c hq3 view (eco3 needs RTL, C4/NEEDS-LANE). Strict bind 0 / LAT 873/873 / G0 6 inherited / PRE PASS / gunit__t1 GEN+gen_lint PASS; published E10/E8/i1",
+  "tools_sha": "2efedf57b857ecfcd7300bb28cf1dd852ab8880e",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e",
+  "written_by": "S81-DIE-R3"
+ }
+}
