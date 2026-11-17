@@ -5209,9 +5209,44 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
+def fixed_bb_default_parameters(mod, bb_text, rtl_files, root=None, staged=None):
+    """Preserve a fixed physical ABI while restoring omitted numeric default metadata.
+
+    A signed fixed-port blackbox can omit parameters that its logical caller still
+    sets. The defaults come from the unambiguous native declaration, never from
+    caller overrides; native_bb still rejects an elaborated value that differs.
+    """
+    import native_bb
+    if staged is None:
+        staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files if Path(f).is_file())
+    requested = set(_macro_instance_overrides(staged, mod))
+    present = native_bb.header_params(bb_text).get(mod, {})
+    missing = requested - set(present)
+    if not missing:
+        return None
+    headers = [(h, Path(f)) for f in rtl_files if Path(f).is_file()
+               and not Path(f).name.endswith(("_bb.v", "_bb.sv"))
+               and (h := _module_header(Path(f).read_text(errors="replace"), mod))]
+    if not headers and root:
+        headers = _tree_module_headers(Path(root) / "rtl", mod)
+    choices = []
+    for header, path in headers:
+        if "`" in header:
+            continue  # no guessing an inactive conditional declaration
+        params = native_bb.header_params(header + "\nendmodule").get(mod, {})
+        if missing <= set(params) and all(params[k][0] == "int" for k in missing):
+            choices.append({k: params[k][1] for k in missing})
+    if not choices or any(c != choices[0] for c in choices):
+        raise ValueError(f"macro {mod}: fixed blackbox lacks {sorted(missing)}; numeric native defaults are not unique")
+    declarations = "".join(f"    parameter {k} = {v};\n" for k, v in sorted(choices[0].items()))
+    if len(re.findall(r"\bendmodule\b", bb_text)) != 1:
+        raise ValueError(f"macro {mod}: fixed blackbox must contain exactly one module")
+    return re.sub(r"\bendmodule\b", declarations + "endmodule", bb_text, count=1)
+
+
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=(), plan_dir=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
-    and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
+    and that has no _bb view yet (or lacks numeric default metadata); header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
@@ -5227,6 +5262,14 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
         if f"{mod}_bb.v" in have or f"{mod}_bb.sv" in have:
             if mod in declared_ft:
                 raise ValueError(f"macro {mod}: explicit FT header conflicts with existing blackbox")
+            if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
+                continue
+            bb = next(Path(f) for f in rtl_files if Path(f).name in (f"{mod}_bb.v", f"{mod}_bb.sv"))
+            enriched = fixed_bb_default_parameters(mod, bb.read_text(), rtl_files, root, staged)
+            if enriched is not None:
+                dst = rtl_dir / bb.name
+                dst.write_text(enriched)
+                out.append(dst)
             continue
         if mod not in declared_ft and not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
             continue
