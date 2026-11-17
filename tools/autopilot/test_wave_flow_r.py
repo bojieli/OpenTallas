@@ -65,3 +65,26 @@ def test_pin_without_manifest_falls_back_to_tree_base(tmp_path):
     assert res["measured"] and res["ok"]
     res = TS.check_die("s81", str(tmp_path / "nope"), tmp_path, {}, tools_sha="deadbeefdead" + "0" * 28, rt_root=str(rt))
     assert not res["measured"] and "missing" in res["why"]
+
+
+def test_second_identical_failure_closes_the_key_against_tool_changes(monkeypatch):
+    seq = {"v": "t1"}
+    monkeypatch.setattr(KW, "stage_tools_digest", lambda root=None, group="", files=None: seq["v"])
+    monkeypatch.setattr(KW, "failed_tool_files", lambda why, root=None: [])
+    st = {}
+    KW.note_fail_key(cfg(), st, rec(), "INFRA", WHY)
+    seq["v"] = "t2"                                    # a tools change relaunches the first time (sig_n 1)
+    assert KW.fail_key_gate(cfg(), st, "qc", "sle_sc_v3", "b")[2] == ["tools"]
+    KW.note_fail_key(cfg(), st, rec(), "INFRA", WHY)   # failed again, same stage and error
+    assert st["fail_keys"]["qc|sle_sc_v3"]["sig_n"] == 2
+    seq["v"] = "t3"
+    bl, why, chg = KW.fail_key_gate(cfg(), st, "qc", "sle_sc_v3", "b")
+    assert bl and chg == []                            # tool change no longer releases
+    c = cfg(); c["dies"]["qc"]["src_sha"] = "s2"       # a named input does
+    assert KW.fail_key_gate(c, st, "qc", "sle_sc_v3", "b")[2] == ["src"]
+
+
+def test_hub_statvfs_is_replaceable_for_fixed_host_state(monkeypatch):
+    import types
+    monkeypatch.setattr(KW, "_HUB_STATVFS", lambda p: types.SimpleNamespace(f_bavail=500, f_frsize=2**30))
+    assert KW.hub_disk_low({}) == ""

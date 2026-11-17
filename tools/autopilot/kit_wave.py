@@ -979,7 +979,10 @@ def pick_charge_gb(cfg, die, item):
 HUB_DISK_PATHS = ("/srv/opentallas-scratch2", "/")
 
 
-def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
+_HUB_STATVFS = os.statvfs            # tests replace this with a fixed host state (conftest), never the live disk
+
+
+def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=None):
     """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1200 item 2): '' or why the hub cannot take new work.  A hub ENOSPC killed 28 units at once; the tick
     launches nothing while the hub's scratch2 or root has less than hub_free_min_gb (default 64) free.  Running units are untouched."""
     try:
@@ -988,6 +991,7 @@ def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
         floor = 64.0
     if floor <= 0:
         return ""
+    statvfs = statvfs or _HUB_STATVFS
     low = []
     for p in paths:
         try:
@@ -1000,11 +1004,43 @@ def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
     return "hub disk low: " + "; ".join(low) if low else ""
 
 
+HUB_ALERT_TICKS = 2
+
+
+def hub_top_writers(root="/srv/opentallas-scratch2/claude", n=5, run=None):
+    """best effort: the n biggest directories directly under root (du, 40 s cap) as 'path GB, ...'"""
+    try:
+        p = (run or subprocess.run)(["timeout", "40", "du", "-sk", "--max-depth=1", root], capture_output=True, text=True, timeout=50)
+        rows = sorted(((int(a), b) for a, b in (ln.split("\t", 1) for ln in p.stdout.splitlines() if "\t" in ln) if b.strip() != root), reverse=True)
+        return ", ".join(f"{b.strip()} {a / 2**20:.0f} GB" for a, b in rows[:n]) or "unknown"
+    except Exception:
+        return "unknown"
+
+
+def hub_launch_held(cfg, die, item):
+    """'' or the hub-disk reason when this launch writes to the hub: every gen host of the item is the hub (build-host launches never wait on the hub floor)"""
+    why = cfg.get("_hub_disk_low")
+    if not why:
+        return ""
+    try:
+        hosts = [h for h in gen_hosts(cfg, die, item)]
+    except Exception:
+        return why
+    return why if all(h in ("localhost", "intel2", cfg.get("hub")) for h in hosts) else ""
+
+
 def hub_disk_gate(AP, cfg, st, now=None):
     """called once per tick: sets cfg['_hub_disk_low'] and posts one STATE line when the condition starts (one more when it ends)"""
     why = hub_disk_low(cfg)
     cfg["_hub_disk_low"] = why
     g = st.setdefault("hub_disk", {})
+    if why:
+        g["ticks"] = int(g.get("ticks") or 0) + 1
+        if g["ticks"] == HUB_ALERT_TICKS and not g.get("alerted") and not getattr(AP, "DRY", False):
+            g["alerted"] = time.time()
+            AP.log(f"KIT-WAVE HUB-DISK ALERT: hub floor held {g['ticks']} ticks: {why}")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [KIT-WAVE -> COORD, FLEET-OPS-R] hub disk floor held {g['ticks']} ticks: {why}. "
+                            f"Hub writers only are held (launches whose gen host is the hub); build-host launches continue. Top hub writers: {hub_top_writers()}")
     if why and not g.get("since"):
         g["since"] = time.time() if now is None else now
         AP.log(f"KIT-WAVE HUB-DISK launch refused: {why}")
@@ -1021,8 +1057,6 @@ def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
         return cfg["error"]
-    if cfg.get("_hub_disk_low"):
-        return cfg["_hub_disk_low"]
     if (ap_dir / "kit_wave.stop").exists():
         return "global stop file kit_wave.stop"
     if not cfg.get("enabled"):
@@ -8333,6 +8367,8 @@ def tool_skew_refuse(AP, cfg, st, die):
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
+    if hub_launch_held(cfg, die, r.get("item")):          # WAVE-FLOW-R 11-17: the hub floor holds hub writers only
+        return None
     if tool_skew_refuse(AP, cfg, st, die):
         return None
     try:                                                    # PUBTREE-1116: a "require" die runs only on its published marker tree
@@ -9768,8 +9804,10 @@ def note_fail_key(cfg, st, rec, cls, why):
     k = f"{rec['die']}|{rec['item']}"
     prev = store.get(k) or {}
     n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
+    sig = hashlib.sha1(f"{stage}|{FG.norm_class(cls, why)}".encode()).hexdigest()[:12]
+    sig_n = int(prev.get("sig_n") or 1) + 1 if prev.get("sig") == sig else 1
     store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
-                "tools_group": group, "tool_files": tfiles,
+                "tools_group": group, "tool_files": tfiles, "sig": sig, "sig_n": sig_n,
                 "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why),
                 "read_sha": {p: file_sha(cfg, rec["die"], p) for p in stage_reads(why)}}
     rec["fail_key"] = key
@@ -10010,6 +10048,10 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         # on identical text because the key held one hash for the whole die overlay.  With no file named in the error the old rule stands.
         if changed and set(changed) <= {"overlay", "tools"} and prev.get("read_sha"):
             changed = ["read-file"] if reads_changed(cfg, die, prev) else []
+    # WAVE-FLOW-R 11-17 (FABLE-FLOW-0500 item 5): the same stage + error signature twice in a row closes the key against tool changes; only a named input
+    # (block, src, overlay, the files the failure names, bind context) opens it again
+    if int(prev.get("sig_n") or 0) >= 2 and not prev.get("tool_files") and "tools" in changed:
+        changed = [c for c in changed if c != "tools"]
     if context_changed:
         changed.append("bind_context")
     if not changed:
