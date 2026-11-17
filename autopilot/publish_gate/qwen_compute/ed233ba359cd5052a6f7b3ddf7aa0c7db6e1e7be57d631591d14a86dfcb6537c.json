@@ -1,0 +1,45 @@
+{
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "verdict": "SKIP",
+   "why": "an earlier check failed (the dry gen would only repeat it)"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 33
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-as58thxd/g0_report.json",
+   "pre_rc": 1,
+   "tail": "PRE: PLAN-GATE-PRE FAIL tree=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n2b_d2 plan=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n2b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json findings=1 classes=ROWS\n\nG0: G0C per type: 96/133 types clean (G3-eligible: 96); die-level {}; reported as WARN (run --completeness)\nG0 PASS: 0 errors, 0 pending-view, 491 warnings; 133 types / 377 partitions (105 in near-duplicate groups); worst cut {'ratio': 0.2369, 'at': 'horizontal@13750'}, worst partition segment {'ratio': 0.5336, 'at': 'horizontal@11500:sl_W3_su_l1'}; report /srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-as58thxd/g0_report.json\n",
+   "verdict": "FAIL"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n2b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_compute",
+ "hosts": [
+  "epyc9"
+ ],
+ "item": "slw_st_a_v1__clfc5867a6__pvf82a6c28",
+ "manifest_hash": "ed233ba359cd5052a6f7b3ddf7aa0c7db6e1e7be57d631591d14a86dfcb6537c",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n2b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json",
+ "plan_sha256": "25f8809745530334726e14f4ea9086542a539b974a7024b4d96c92d055842e1b",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1794955322.0702245,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n2b_d2",
+ "verdict": "FAIL"
+}
