@@ -71,7 +71,9 @@ module ot_s81_cfg7_seq_bfp #(
         assign st = {st_ld[1] | pfault, st_ld[0]};    // fault: loader OR programme (a go while the programme still runs)
     end endgenerate
     // spare columns of the macro read on the previous edge (the loader's own registered bank select, rebuilt from ce)
-    reg  [2:0] bk, bk_d;
+    // S81-CORES-R3 11-17 (COORD r580): binary state kept (no yosys FSM_RECODE) to match the signed netlist; synthesis attribute only, no function change.
+    (* fsm_encoding = "none" *) reg  [2:0] bk;
+    reg  [2:0] bk_d;
     wire [6:0] cev = ce_local;
     always @(posedge clk[0]) if (|cev) bk <= cev[0] ? 3'd0 : cev[1] ? 3'd1 : cev[2] ? 3'd2 : cev[3] ? 3'd3 :
                                               cev[4] ? 3'd4 : cev[5] ? 3'd5 : 3'd6;
