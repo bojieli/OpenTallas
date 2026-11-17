@@ -27,7 +27,7 @@ class Sync(unittest.TestCase):
         sh(*g, "clone", "-q", str(d / "origin.git"), str(d / "repo"))
         sh("git", "config", "extensions.worktreeConfig", "true", cwd=d / "repo")
         self.env = dict(os.environ, OT_RT_ROOT=str(d / "rt"), MQ_REPO=str(d / "repo"), MQ_HOME=str(d / "mq"), OT_RT_HOSTS="",
-                        OT_RT_SMOKE_TESTS="", OT_RT_LEGACY="", OT_RT_BACKEND_ROOTS="", MQ_COORD=str(d / "coord"), MQ_PYTHON=sys.executable)
+                        OT_RT_SMOKE_TESTS="", OT_RT_MIN_FREE_GB="0", OT_RT_LEGACY="", OT_RT_BACKEND_ROOTS="", MQ_COORD=str(d / "coord"), MQ_PYTHON=sys.executable)
 
     def run_(self, *a):
         return subprocess.run([sys.executable, "-I", P, *a], env=self.env, capture_output=True, text=True, timeout=300)
@@ -77,3 +77,40 @@ class Sync(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Guard(unittest.TestCase):
+    def load(self):
+        loader = importlib.machinery.SourceFileLoader("ots", P)
+        m = importlib.util.module_from_spec(importlib.util.spec_from_loader("ots", loader)); loader.exec_module(m)
+        return m
+
+    def mk(self, names):
+        d = pathlib.Path(tempfile.mkdtemp())
+        for i, n in enumerate(names):
+            (d / n).mkdir(); os.utime(d / n, (1000 + i, 1000 + i)); (d / f"{n}.manifest.json").write_text("{}")
+        os.symlink(names[-1], d / "current")
+        return d
+
+    def test_prune_keeps_newest_current_protected_and_named(self):
+        m = self.load(); names = ["%012x" % i for i in range(1, 9)]
+        d = self.mk(names)
+        gone = m.prune_snapshots(d, keep=3, protect=(names[1],), text="x " + names[2] + " y")
+        self.assertEqual(sorted(gone), sorted([names[0], names[3], names[4]]))   # newest 3 = 6,7,8; protect 2; named 3
+        self.assertTrue((d / names[2]).is_dir() and (d / names[1]).is_dir() and (d / names[7]).is_dir())
+        self.assertFalse((d / f"{names[0]}.manifest.json").exists())
+
+    def test_prune_off_and_in_use_untouched(self):
+        m = self.load(); names = ["%012x" % i for i in range(1, 6)]
+        d = self.mk(names)
+        self.assertEqual(m.prune_snapshots(d, keep=0, text=""), [])
+        m.in_use = lambda p: [1] if pathlib.Path(p).name == names[0] else []
+        gone = m.prune_snapshots(d, keep=1, text="")
+        self.assertNotIn(names[0], gone); self.assertEqual(len(gone), 3)
+
+    def test_low_disk_refuses_to_write(self):
+        m = self.load(); d = pathlib.Path(tempfile.mkdtemp())
+        m.RT = d; m.MIN_FREE_GB = 10 ** 9
+        with self.assertRaises(RuntimeError) as c:
+            m.materialize("a" * 40)
+        self.assertIn("OT_RT_MIN_FREE_GB", str(c.exception)); self.assertEqual(list(d.iterdir()), [])
