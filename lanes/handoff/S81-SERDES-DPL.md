@@ -47,3 +47,5 @@ No new edits/launches/gates/proof. Active I/H jobs continue.
 
 ## Codex handback — Claude reset 2026-11-16
 All current state, active H/J3/G3 units, source1c gate candidate, t48/I3/J4 pending forms, stopped-form dispositions, measured I2 failures and the solved t13−492max-delay diagnosis are in the final Codex handback section of `FABLE-FIX-S81-SERDES.md`. Existing compute continues; all children instructed PARK, no new work. Six corrected-form holds remain closed; no physical PASS.
+
+Final park correction: native t48 has NO finished row; earlier3fF delay cal is MODEL/unqualified. Balanced q151/152/182 fallback is rendered but UNREVIEWED despite erroneous JSON label. See final correction in FABLE-FIX-S81-SERDES.md. All children confirmed parked; H/J3/G3 compute continues; no new probe launched.
