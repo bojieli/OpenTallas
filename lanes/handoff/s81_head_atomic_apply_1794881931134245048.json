@@ -1,0 +1,57 @@
+{
+ "die": "s81_head",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1",
+  "event": "head_rp21z20NF15b",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/prep/source_plan.json",
+  "plan_sha256": "1a85ef1196b125ea51ba96fdca39684936038ea1fc2e4a7895eb6b15817bb62b",
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+   "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+  }
+ },
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1",
+  "manifest_hash": "a51810b59b0b81b11c75c51d1c176bdfb4982bb296a32cc4e548c292840caeb5",
+  "src_manifest_sha": "a51810b59b0b81b11c75c51d1c176bdfb4982bb296a32cc4e548c292840caeb5",
+  "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
+  "hosts": [
+   "epyc10"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "NF15c = NF15b + die.layer_budget.type_m8_grant{enable,guide a8dcf2f554252553 in prep,ndr 4w} (26 types, grant shas reproduced, hd_tile 8aeed4bed8315661 = r381) + current-RTL native release receipt. Gates E10 head-die-r: G0 PASS 0 errors with --native-reset-receipt (1 without = inherited 12-PMA), bind PASS nested, cohort 26/26, LATCHECK 329/329 delta{}. Tree smoke: NF15b base 26/26 kit_rtl; NF15c changes only prep + receipt. Review FABLE-REVIEW-NF15C ADOPT-WITH-CHANGES (gate rerun done), no BLOCK.",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/prep/source_plan.json",
+  "plan_sha256": "cef70ef0888dafaae9ae72c65461c6739ffb4358f9353bad9e232850371f1570",
+  "plan_canonical_sha256": "e471b074e48fbce552b9fb9f19bc185940bfba57ae84e590f8273724936aa8e7",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/prep/source_sidecar.json",
+  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
+  "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/die_clock/kit_tree.json",
+  "physical_qualified": false,
+  "preserve_holds": "all inherited s81_head hold_records kept; physical_qualified false",
+  "config": {
+   "event": "head_rp21z20NF15c",
+   "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
+   "gen_host": "epyc10",
+   "gen_hosts": [
+    "epyc10"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/prep/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ]
+  },
+  "written_by": "root-authorized lane atomic apply",
+  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/results/head_native_release_nf15c/native_release_receipt.json",
+  "status": "ADOPTED reviewed tuple"
+ },
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/baf2004e5454dbed5c56fcc11deea75f4c956ad10ace180ee94a6c5088f7cd66/result.json",
+ "candidate": "/home/ubuntu/hdr/nf15c_candidate.json"
+}
