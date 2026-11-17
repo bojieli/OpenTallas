@@ -13,6 +13,7 @@ or older-than-MAX_AGE_H list fails CLOSED for any tree root.  usage: ot_delete_g
 import glob, json, os, re, sys, time
 
 DEFAULT_LIST = os.path.expanduser("~/.local/state/ot-delete-guard/protected.txt")
+CURRENT_TREES = os.path.expanduser("~/.local/state/ot-delete-guard/current_trees.json")   # hub-built: {src_<die prefix>_: {"tree": name, "adopted_at": epoch}}
 MAX_AGE_H = float(os.environ.get("OT_GUARD_MAX_AGE_H", "6"))
 TREE_ROOT = re.compile(r"^(?P<root>/srv/opentallas-scratch[0-9]*/claude/(?:kw45/[^/]+|[^/]+/src_[^/]+))(?:/(?P<rest>.+))?$")
 SRV = re.compile(r"/srv/opentallas-scratch[0-9]*/claude/[A-Za-z0-9._+/@=-]+")
@@ -135,7 +136,31 @@ def _live_text(skip=()):
     return "\n".join(t).replace("opentallas-scratch3", "opentallas-scratch2")
 
 
-def refuse(target, protected=None, ptext=None, why_list=None):
+def newer_than_current(target, current=None):
+    """COORD 11-17 (QC M5T was retired while its apply was pending): a source tree whose manifest is NEWER than the moment its die adopted the current tree is an adoption in progress,
+    never a superseded tree.  current = {prefix: {"tree": name, "adopted_at": epoch}} (default: the hub-built current_trees.json).  -> reason or ''"""
+    if current is None:
+        try:
+            current = json.load(open(CURRENT_TREES))
+        except (OSError, ValueError):
+            return ""
+    name = os.path.basename(os.path.abspath(target).rstrip("/"))
+    for prefix, row in (current or {}).items():
+        if name.startswith(prefix) and name != row.get("tree") and not name.endswith((".part", ".building")):
+            for f in (os.path.join(target, ".src-manifest.json"), target):
+                try:
+                    mt = os.stat(f).st_mtime
+                    break
+                except OSError:
+                    continue
+            else:
+                return ""
+            if mt > float(row.get("adopted_at") or 0) + 60:
+                return "newer than the die's current tree %s (published after its adoption: apply pending / in progress)" % row.get("tree")
+    return ""
+
+
+def refuse(target, protected=None, ptext=None, why_list=None, current=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
     if os.path.islink(target) or os.path.realpath(target) != os.path.abspath(target):
@@ -144,6 +169,10 @@ def refuse(target, protected=None, ptext=None, why_list=None):
     m = TREE_ROOT.match(t)
     if m and m.group("rest"):
         return "partial delete inside source tree %s (whole trees only)" % os.path.basename(m.group("root"))
+    if m and not m.group("rest"):
+        nt = newer_than_current(t if os.path.isdir(t) else target, current)
+        if nt:
+            return nt
     if protected is None:
         protected, err = load_list()
         if protected is None:

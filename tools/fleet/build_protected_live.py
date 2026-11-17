@@ -108,6 +108,53 @@ def live_cmd_paths(out, canon, proc="/proc", unit_dirs=("~/.config/systemd/user"
 
 
 PROV_CACHE = os.path.expanduser("~/.local/state/prov_paths.json")
+POST_SKIP_LANES = ("FLEET-OPS-R", "DISK-RATE", "FLEET", "HUB-SYNC", "FLEET-OPS", "MERGE-QUEUE", "OT-TOOLS-SYNC", "KIT-WAVE")
+TREE_TOKEN = re.compile(r"\b(src_[A-Za-z0-9_]+)")
+DIE_PREFIX = (("src_kv_", "qwen_kvsys"), ("src_qc_", "qwen_compute"), ("src_head_", "s81_head"), ("src_s81_", "s81"), ("src_hbm_", "hbm"))
+POST_LINE = re.compile(r"^- (\d{4}-\d{2}-\d{2}) (\d{2}):(\d{2}|\dx)\b[^\[]*\[([^\]\s>]+)")
+
+
+def post_trees(queue_file, out, canon, now=None, max_age_h=24.0, root="/srv/opentallas-scratch2/claude/kw45"):
+    """COORD 11-17: any source tree NAMED in a hub post of the last 24 h (not a fleet / retirement post: those would renew their own protection) is protected,
+    whatever the key (QC M5T was published at 13:0x and posted; the retire path did not see a name that was only in the queue).  Posts carry 'YYYY-MM-DD HH:MM'."""
+    import datetime
+    now = now or time.time()
+    try:
+        lines = open(queue_file, errors="replace").read().splitlines()[-4000:]
+    except OSError:
+        return
+    for ln in lines:
+        m = POST_LINE.match(ln)
+        if not m or m.group(4).upper() in POST_SKIP_LANES:
+            continue
+        try:
+            t = datetime.datetime.strptime(m.group(1) + " " + m.group(2) + ":" + ("00" if "x" in m.group(3) else m.group(3)), "%Y-%m-%d %H:%M").timestamp()
+        except ValueError:
+            continue
+        if now - t > max_age_h * 3600 or t > now + 7200:
+            continue
+        for tok in TREE_TOKEN.findall(ln):
+            out.add(canon(os.path.join(root, tok)))
+
+
+def current_trees(coord, now=None):
+    """-> {src_<prefix>_: {"tree": basename of the die's current source, "adopted_at": mtime of its tree_switch marker}} for the guard's newer-than-current rule"""
+    res = {}
+    try:
+        cfg = json.load(open(os.path.join(coord, "autopilot/kit_wave.json")))
+    except (OSError, ValueError):
+        return res
+    for prefix, die in DIE_PREFIX:
+        d = (cfg.get("dies") or {}).get(die) or {}
+        src = d.get("src")
+        if not src:
+            continue
+        try:
+            at = os.stat(os.path.join(coord, "lanes/handoff/tree_switch_%s.json" % die)).st_mtime
+        except OSError:
+            continue
+        res[prefix] = {"tree": os.path.basename(src.rstrip("/")), "adopted_at": at}
+    return res
 
 
 def prov_cache_paths(cache, out, canon, max_age_h=72.0, now=None):
@@ -131,6 +178,12 @@ def main(argv):
     prose_paths(glob.glob(os.path.join(coord, "lanes/handoff/*.md")), s, g.canon)
     live_cmd_paths(s, g.canon)
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
+    post_trees(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), s, g.canon)
+    try:                                           # the guard's newer-than-current input, next to the list (refresh_guard_live.sh pushes both)
+        with open(outp + ".current_trees.json", "w") as f:
+            json.dump(current_trees(coord), f)
+    except OSError:
+        pass
     g.write_list(s, outp)
     print(len(s), "live protected roots ->", outp)
     return 0
