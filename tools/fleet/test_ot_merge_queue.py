@@ -261,6 +261,36 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual(p.returncode, 0, out + err)
         self.assertIn("GATE main=", out)
 
+    def _imported_directory_gate(self, present):
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        (self.dev / "data/fix").mkdir(parents=True)
+        (self.dev / "data/fix/input.txt").write_text("42")
+        (self.dev / "tools/x/reader.py").write_text("import pathlib\nR=pathlib.Path(__file__).resolve().parents[2]\ndef read():\n    return (R / 'data/fix' / " + "'input.txt'" + ").read_text()\n")
+        (self.dev / "tools/x/test_reader.py").write_text("import reader\ndef test_read():\n    assert reader.read() == '42'\n")
+        sh(*self.g, "add", "data/fix/input.txt", "tools/x/reader.py", "tools/x/test_reader.py", cwd=self.dev)
+        sh(*self.g, "commit", "-qm", "reader fixture", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        sh(*self.g, "checkout", "-q", "-b", "claude/reader", "main", cwd=self.dev)
+        if not present:
+            (self.dev / "data/fix/input.txt").unlink()
+        with open(self.dev / "tools/x/reader.py", "a") as f:
+            f.write("# changed implementation\n")
+        sh(*self.g, "commit", "-qam", "reader change", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "claude/reader", cwd=self.dev)
+        return subprocess.run([sys.executable, "-I", P, "gate", "claude/reader"], env=self.env, capture_output=True, text=True, timeout=600)
+
+    def test_imported_directory_actual_input_is_discovered(self):
+        g = self._imported_directory_gate(True)
+        self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("source dir(s) the tests name: data/fix", g.stdout)
+        self.assertNotIn("also fail on main", g.stdout)
+
+    def test_imported_directory_absent_input_fails_closed(self):
+        g = self._imported_directory_gate(False)
+        self.assertNotEqual(g.returncode, 0, g.stdout + g.stderr)
+        self.assertIn("RED", g.stdout)
+        self.assertNotIn("GATE main=", g.stdout)
+
     def test_gate_tree_gets_the_sources_a_selected_test_names(self):
         # the branch touches tools/x/mod.py only; the selected test reads data/fix/input.txt (outside the sparse set)
         g = self._dep_branch("claude/dep", "import os, pathlib, mod\nR = pathlib.Path(__file__).resolve().parents[2]\n\n"
@@ -473,3 +503,27 @@ class SparseResultFiles(unittest.TestCase):
             broad = m.wt_make("old-parent-control", sha, {os.path.dirname(f) for f in changed})
             self.assertTrue((broad / "results/rtl/unrelated.v").exists())
             self.assertTrue((broad / "results/geom_review/unrelated.png").exists())
+
+
+class ImportedDirectoryInputs(unittest.TestCase):
+    def test_unused_module_output_root_is_not_a_fixture_but_exact_file_is(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / 'tools').mkdir()
+            (root / 'tools/test_case.py').write_text("import gen_phys\nFIXTURE = 'data/fix'\n")
+            (root / 'tools/gen_phys.py').write_text("OUT = 'physical/ref_tile'\nINPUT = 'data/static/input.txt'\n")
+            kinds = {'data/fix': 'tree', 'physical/ref_tile': 'tree', 'data/static/input.txt': 'blob'}
+            with patch.object(M, '_tops', return_value=['tools', 'physical', 'data']), patch.object(M, '_tree_types', side_effect=lambda rev, paths: {p: kinds[p] for p in paths if p in kinds}):
+                self.assertEqual(M.test_deps(root, 'main', ['tools/test_case.py']), {'data/fix', 'data/static'})
+
+    def test_incomplete_baseline_cannot_mask_candidate_failure(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            (root / 'tools').mkdir()
+            (root / 'tools/test_case.py').write_text('')
+            result = (1, {'tools/test_case.py::test_case', 'MISSING-SOURCE:data/fix/input.txt'}, '')
+            with patch.object(M, 'wt_make', return_value=root), patch.object(M, 'pytest', return_value=result):
+                with self.assertRaisesRegex(M.GitError, 'baseline fixture input missing'):
+                    M.baseline('main', {'tools/test_case.py::test_case'}, tag='incomplete')
