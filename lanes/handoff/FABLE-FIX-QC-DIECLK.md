@@ -89,3 +89,12 @@ Pilot2 clock entry_clear8 / geometry146 advisories diagnosed byphysical+clockwor
 
 ### Old-failure diagnostic harness correction, 00:40 PST
 First sameODB helper accidentally omitted OT_POSTCTS_GRT=1, so it produced TT PLACEMENT results (cbx−1950.60), not intended routedRC; preserve these as diagnostic and DO NOT credit/compare them to authoritativeTT/GRT−8369.76. Corrected read-only helper uses explicit OT_POSTCTS_GRT=1, NEWoutputdir E10 `/srv/opentallas-scratch2/claude/fable-fix-qc-dieclk/old_failures_grt_1117/<type>/`, sourcekit mountedRO, exactoriginalTT libs/GRTodb. Corrected intel2clientPID2149580, log m_bootstrap/old_failures_grt_TT.client.log (ot-heavyunit inlog). This is samecomponentSTAread ONLY, not oldroute retry. Originalplacementdiagnostic PID2102849 mayfinish independently; preserve/no patternkill. Root/parent informed of mistake and correction; no falselylabelled proof.
+
+## PARKED: Claude reset explicitly announced, 2026-11-17 00:43 PST
+No further edits/jobs by this lane. Preserve livejobs: L2cb3pilot E8unitoth-ubuntu-3164095-1794902020; actualCTS completed00:35 (2453s,13.8GBpeak,6clockexports0dead), now nativeTTsetuprepair progressingiter1050 WNS≈−302.854 endpoint u_bound.u_d6_u_fab_u_x_1_2_a_d.r[0][460]/D,143endpoints. No terminalTT/GRTverdict yet. Exact log E8 pilot2/items/cbn_q01__clab6e67f2/attempt_1/gen/cbn_q01__clab6e67f2/tt_setup_repair.log. No borrowedMproof.
+
+CorrectedoldfailureTT/GRTreadonlyjob ACTIVE E10unitoth-ubuntu-1245358-1794904680/intel2PID2149580; log m_bootstrap/old_failures_grt_TT.client.log, outputs E10 fable-fix-qc-dieclk/old_failures_grt_1117. Lastcbxlog successfullyrestoredglobalroutes+OT_RC_SIGNAL thentimingqueries, no finalreportyet. Preservefirstplacement-onlydiagnostic1186640too; it hasnoTT/GRTcredit. No oldroute retry.
+
+BothactualMcallbackdiagnostics COMPLETE; sourceRS+freshbase+exactcaps cost audited, correctedCB16extra localW5SjoinPASS, globalMstillnotqualified. Parent owns correctedM composition/globalbind. Remaining TYPE_SPLIT2 mustreevaluate afterfullregenclears; doNOTmaterializeold5types. Newextrae2f94854 adds41634alignmentFF; realRScohortpads add2800dataFF (north560/south2240), combined44434minimumincrementaldataFF. Capbankprofile35836FF separate.
+
+LatestactiveMmemberships verified: oldcbxcl94a softtype remains14copies bf/tf, parallel_h14bn/tn, NL+3NKmacros; oldcbncld7bf remains1 c_W5_bn_00,4NK. Their oldevents superseded butcauseclassesareactivecurrentM, so currentholdsremainuntilMcausalproof. No source/hold/eventapply performedbythislane duringdiagnosis.
