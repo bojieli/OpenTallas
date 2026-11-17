@@ -1,0 +1,681 @@
+{
+ "schema": "opentallas.kv-context-transport-clock-candidate.v1",
+ "state": "ADMISSION_UPPER_AND_COMPONENT_CLOCK_BUDGET_ONLY",
+ "total_added_clock_branches": 44,
+ "geometrically_located_branches": 30,
+ "unlocated_branches": 14,
+ "transport_data_FF_floor": 7522,
+ "transport_data_FF_declared_upper": 9500,
+ "transport_epoch_FF_copies": 44,
+ "transport_CLK_TT_floor_fF": 3591.331748,
+ "transport_CLK_TT_declared_upper_fF": 4530.359555999999,
+ "full_composed_FF_declared_upper": 15396,
+ "full_composed_area_declared_upper_floor_um2": 31967.27564400001,
+ "full_composed_CLK_TT_declared_upper_fF": 7317.109267,
+ "clock_buffer_wire_hold_PDN_cost_unpriced": true,
+ "rows": [
+  {
+   "branch": "ctx_in_d2d__svc_s1",
+   "port": "d2d__svc",
+   "stage": 1,
+   "declared_data_FF": 174,
+   "observed_used_data_FF_floor": 139,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 66.45120299999999,
+   "TT_CLK_declared_upper_fF": 83.06696299999999,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_d2d__svc_s2",
+   "port": "d2d__svc",
+   "stage": 2,
+   "declared_data_FF": 174,
+   "observed_used_data_FF_floor": 139,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 66.45120299999999,
+   "TT_CLK_declared_upper_fF": 83.06696299999999,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_d2d__svc_s3",
+   "port": "d2d__svc",
+   "stage": 3,
+   "declared_data_FF": 174,
+   "observed_used_data_FF_floor": 139,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 66.45120299999999,
+   "TT_CLK_declared_upper_fF": 83.06696299999999,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_d2d__svc_s4",
+   "port": "d2d__svc",
+   "stage": 4,
+   "declared_data_FF": 174,
+   "observed_used_data_FF_floor": 139,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 66.45120299999999,
+   "TT_CLK_declared_upper_fF": 83.06696299999999,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_d2d__emb_tx_slot_s1",
+   "port": "d2d__emb_tx_slot",
+   "stage": 1,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_d2d__emb_tx_slot_s2",
+   "port": "d2d__emb_tx_slot",
+   "stage": 2,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_d2d__emb_tx_slot_s3",
+   "port": "d2d__emb_tx_slot",
+   "stage": 3,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_d2d__emb_tx_slot_s4",
+   "port": "d2d__emb_tx_slot",
+   "stage": 4,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_ctl_s1",
+   "port": "i_ctl",
+   "stage": 1,
+   "declared_data_FF": 73,
+   "observed_used_data_FF_floor": 73,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 35.118627,
+   "TT_CLK_declared_upper_fF": 35.118627,
+   "xy_um": [
+    1252.8000000000002,
+    1062.72
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_ctl_s2",
+   "port": "i_ctl",
+   "stage": 2,
+   "declared_data_FF": 73,
+   "observed_used_data_FF_floor": 73,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 35.118627,
+   "TT_CLK_declared_upper_fF": 35.118627,
+   "xy_um": [
+    1263.6000000000001,
+    959.0400000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_ctl_s3",
+   "port": "i_ctl",
+   "stage": 3,
+   "declared_data_FF": 73,
+   "observed_used_data_FF_floor": 73,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 35.118627,
+   "TT_CLK_declared_upper_fF": 35.118627,
+   "xy_um": [
+    1183.68,
+    922.32
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_ctl_s4",
+   "port": "i_ctl",
+   "stage": 4,
+   "declared_data_FF": 73,
+   "observed_used_data_FF_floor": 73,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 35.118627,
+   "TT_CLK_declared_upper_fF": 35.118627,
+   "xy_um": [
+    1149.1200000000001,
+    872.6400000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WS_s1",
+   "port": "i_hroot_WS",
+   "stage": 1,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    8.64,
+    613.44
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WS_s2",
+   "port": "i_hroot_WS",
+   "stage": 2,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    241.92000000000002,
+    708.48
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WS_s3",
+   "port": "i_hroot_WS",
+   "stage": 3,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    568.08,
+    708.48
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WS_s4",
+   "port": "i_hroot_WS",
+   "stage": 4,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    900.72,
+    717.12
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WN_s1",
+   "port": "i_hroot_WN",
+   "stage": 1,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    8.64,
+    578.88
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WN_s2",
+   "port": "i_hroot_WN",
+   "stage": 2,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    216.0,
+    708.48
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WN_s3",
+   "port": "i_hroot_WN",
+   "stage": 3,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    552.96,
+    708.48
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_WN_s4",
+   "port": "i_hroot_WN",
+   "stage": 4,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    881.2800000000001,
+    717.12
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_ES_s1",
+   "port": "i_hroot_ES",
+   "stage": 1,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1244.16,
+    743.0400000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_ES_s2",
+   "port": "i_hroot_ES",
+   "stage": 2,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1218.24,
+    753.84
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_ES_s3",
+   "port": "i_hroot_ES",
+   "stage": 3,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1183.68,
+    721.44
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_ES_s4",
+   "port": "i_hroot_ES",
+   "stage": 4,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1166.4,
+    721.44
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_EN_s1",
+   "port": "i_hroot_EN",
+   "stage": 1,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1244.16,
+    717.12
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_EN_s2",
+   "port": "i_hroot_EN",
+   "stage": 2,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1218.24,
+    734.4000000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_EN_s3",
+   "port": "i_hroot_EN",
+   "stage": 3,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1200.96,
+    743.0400000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_hroot_EN_s4",
+   "port": "i_hroot_EN",
+   "stage": 4,
+   "declared_data_FF": 299,
+   "observed_used_data_FF_floor": 299,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 142.408963,
+   "TT_CLK_declared_upper_fF": 142.408963,
+   "xy_um": [
+    1149.1200000000001,
+    721.44
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_head_record_s1",
+   "port": "i_head_record",
+   "stage": 1,
+   "declared_data_FF": 552,
+   "observed_used_data_FF_floor": 98,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 46.987027,
+   "TT_CLK_declared_upper_fF": 262.51717099999996,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_head_record_s2",
+   "port": "i_head_record",
+   "stage": 2,
+   "declared_data_FF": 552,
+   "observed_used_data_FF_floor": 98,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 46.987027,
+   "TT_CLK_declared_upper_fF": 262.51717099999996,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_head_record_s3",
+   "port": "i_head_record",
+   "stage": 3,
+   "declared_data_FF": 552,
+   "observed_used_data_FF_floor": 98,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 46.987027,
+   "TT_CLK_declared_upper_fF": 262.51717099999996,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_in_i_head_record_s4",
+   "port": "i_head_record",
+   "stage": 4,
+   "declared_data_FF": 552,
+   "observed_used_data_FF_floor": 98,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 46.987027,
+   "TT_CLK_declared_upper_fF": 262.51717099999996,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_rowtx__emb_tx_v_s1",
+   "port": "rowtx__emb_tx_v",
+   "stage": 1,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": [
+    1254.96,
+    1002.24
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_rowtx__emb_tx_v_s2",
+   "port": "rowtx__emb_tx_v",
+   "stage": 2,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": [
+    1244.16,
+    1356.48
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_rowtx__emb_tx_payload_s1",
+   "port": "rowtx__emb_tx_payload",
+   "stage": 1,
+   "declared_data_FF": 548,
+   "observed_used_data_FF_floor": 537,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 255.396131,
+   "TT_CLK_declared_upper_fF": 260.618227,
+   "xy_um": [
+    1261.44,
+    1019.5200000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_rowtx__emb_tx_payload_s2",
+   "port": "rowtx__emb_tx_payload",
+   "stage": 2,
+   "declared_data_FF": 548,
+   "observed_used_data_FF_floor": 537,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 255.396131,
+   "TT_CLK_declared_upper_fF": 260.618227,
+   "xy_um": [
+    1218.24,
+    1339.2
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_px_tok_s1",
+   "port": "px_tok",
+   "stage": 1,
+   "declared_data_FF": 18,
+   "observed_used_data_FF_floor": 18,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 9.008147,
+   "TT_CLK_declared_upper_fF": 9.008147,
+   "xy_um": [
+    1254.96,
+    976.32
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_px_tok_s2",
+   "port": "px_tok",
+   "stage": 2,
+   "declared_data_FF": 18,
+   "observed_used_data_FF_floor": 18,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 9.008147,
+   "TT_CLK_declared_upper_fF": 9.008147,
+   "xy_um": [
+    1244.16,
+    1270.0800000000002
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_px_tep_s1",
+   "port": "px_tep",
+   "stage": 1,
+   "declared_data_FF": 16,
+   "observed_used_data_FF_floor": 16,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 8.058675,
+   "TT_CLK_declared_upper_fF": 8.058675,
+   "xy_um": [
+    1254.96,
+    967.6800000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_px_tep_s2",
+   "port": "px_tep",
+   "stage": 2,
+   "declared_data_FF": 16,
+   "observed_used_data_FF_floor": 16,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 8.058675,
+   "TT_CLK_declared_upper_fF": 8.058675,
+   "xy_um": [
+    1244.16,
+    1278.72
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_o_ctx_svc_s1",
+   "port": "o_ctx_svc",
+   "stage": 1,
+   "declared_data_FF": 174,
+   "observed_used_data_FF_floor": 174,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 83.06696299999999,
+   "TT_CLK_declared_upper_fF": 83.06696299999999,
+   "xy_um": [
+    1166.4,
+    855.36
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_o_ctx_svc_s2",
+   "port": "o_ctx_svc",
+   "stage": 2,
+   "declared_data_FF": 174,
+   "observed_used_data_FF_floor": 174,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 83.06696299999999,
+   "TT_CLK_declared_upper_fF": 83.06696299999999,
+   "xy_um": [
+    1183.68,
+    933.1200000000001
+   ],
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_emb_fault_s1",
+   "port": "emb_fault",
+   "stage": 1,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  },
+  {
+   "branch": "ctx_out_emb_fault_s2",
+   "port": "emb_fault",
+   "stage": 2,
+   "declared_data_FF": 1,
+   "observed_used_data_FF_floor": 1,
+   "epoch_FF_copy": 1,
+   "TT_CLK_used_floor_fF": 0.937635,
+   "TT_CLK_declared_upper_fF": 0.937635,
+   "xy_um": null,
+   "site_qualified": false,
+   "clock_qualified": false
+  }
+ ],
+ "selection": "C context proposal only; do not add these leaves to HG5 or selected production CA without a composed C plan/consumer event"
+}
