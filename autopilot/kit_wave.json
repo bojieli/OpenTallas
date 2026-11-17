@@ -49590,9 +49590,9 @@
     {
      "id": "qwen_compute-mig-003",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): the DIE-QC-103 S4 plan delta landed in the adopted S4q9 lineage (S4q8 superseded) | FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): the DIE-QC-103 S4 plan delta landed in the adopted S4q9 lineage (S4q8 superseded) | FABLE-CLOSURE-STRATEGY 05:1x stop list (COORD): last attempt post-CTS setup_est -215 ps (< -150): no unchanged relaunch until DIE-QC-103 posts a plan delta. Lift = delete this key.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49601,14 +49601,17 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
      "id": "qwen_compute-mig-004",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-453 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49617,14 +49620,17 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
      "id": "qwen_compute-mig-005",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage (slw_fw_v3 also held by qwen_compute-kf-faces-l2d to S4q9m) | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage (slw_fw_v3 also held by qwen_compute-kf-faces-l2d to S4q9m) | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-380 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49633,14 +49639,17 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
      "id": "qwen_compute-mig-006",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-302 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4 delta landed in the adopted S4q9 lineage | FABLE-CLOSURE-STRATEGY 05:xx far-negative going into route (setup ~-302 ps): no unchanged wave relaunch until DIE-QC-103's S4 delta. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49649,6 +49658,9 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
@@ -49721,9 +49733,9 @@
     {
      "id": "qwen_compute-mig-002-k1",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 19:45 PST (COORD r211, FABLE-PD-QCHOLD-1915): the GRT hold-stall class is stale; type is in a DRT-0255 family (lever 1). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 19:45 PST (COORD r211, FABLE-PD-QCHOLD-1915): the GRT hold-stall class is stale; type is in a DRT-0255 family (lever 1). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49733,6 +49745,9 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "proof:DRT0255"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
@@ -49751,9 +49766,9 @@
     {
      "id": "qwen_compute-mig-008-k3",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): VIEWMISSING class on the old tree; proven past its step = the Kf tree GEN+preflight pilot | WAVE-QCFIX-0715 hold: last fail class VIEWMISSING; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): VIEWMISSING class on the old tree; proven past its step = the Kf tree GEN+preflight pilot | WAVE-QCFIX-0715 hold: last fail class VIEWMISSING; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:s29q103S4Q9KF",
+      "event_adopt:s29q103S4Q9L2",
       "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
@@ -49766,14 +49781,18 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ]
     },
     {
      "id": "qwen_compute-mig-009-k4",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed long ago; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed long ago; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49782,14 +49801,17 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q6e"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
      "id": "qwen_compute-mig-010-k5",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:s29q103S4Q9KF",
+      "event_adopt:s29q103S4Q9L2",
       "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
@@ -49801,14 +49823,18 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ]
     },
     {
      "id": "qwen_compute-mig-011-k6",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): GENLINT class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class GENLINT; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): GENLINT class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class GENLINT; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:s29q103S4Q9KF",
+      "event_adopt:s29q103S4Q9L2",
       "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
@@ -49822,14 +49848,18 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ]
     },
     {
      "id": "qwen_compute-mig-012-k7",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:s29q103S4Q9KF",
+      "event_adopt:s29q103S4Q9L2",
       "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
@@ -49841,14 +49871,18 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ]
     },
     {
      "id": "qwen_compute-mig-013-k8",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49859,14 +49893,17 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q6e"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
      "id": "qwen_compute-mig-014-k9",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
      "release": [
-      "event_adopt:s29q103S4Q9KF",
+      "event_adopt:s29q103S4Q9L2",
       "gen_pilot:qwen_compute:c8e63f164faa"
      ],
      "migrated": true,
@@ -49876,6 +49913,10 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q8"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF",
+      "gen_pilot:qwen_compute:c8e63f164faa"
      ]
     },
     {
@@ -49894,9 +49935,9 @@
     {
      "id": "qwen_compute-mig-016-k11",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): S4q3d landed; the die is on S4q9kf | WAVE-HOLDS-1115 2026-11-15 12:31 PST (COORD r139): st_a_v1 type held until S4q3d adopts. Running attempts finish. Lift = delete this key on S4q3d adoption.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49906,14 +49947,17 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "event_adopt:S4q6e"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
      "id": "qwen_compute-mig-019-k13",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49930,14 +49974,17 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "proof:DRT0255"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
      "id": "qwen_compute-mig-020-k14",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 19:47 PST (COORD r211 correction, FABLE-PD-QCHOLD-1915): stm_v1, fe_v1, fe_v2 and hc3 are DRT-0255 families (33 of 47 S3R+ runs stop there). No unchanged relaunch until DRT0255-PROOF posts a verdict and the proven form is in gen env. Running attempts finish. Lift = delete this key.",
      "release": [
-      "event_adopt:s29q103S4Q9KF"
+      "event_adopt:s29q103S4Q9L2"
      ],
      "migrated": true,
      "keys": [
@@ -49952,6 +49999,9 @@
      "carry": true,
      "prev_release_fix_s81_col_stale_retype": [
       "proof:DRT0255"
+     ],
+     "prev_release_qcplanr_l2_retype": [
+      "event_adopt:s29q103S4Q9KF"
      ]
     },
     {
