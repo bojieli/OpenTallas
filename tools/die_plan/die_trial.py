@@ -2006,6 +2006,8 @@ DME_TEMPLATE_COMMON = os.environ.get("OT_CLK_DME_TEMPLATE", "0") == "2"
 # R0 / MX template; x' = -x + dx), returned as the 4-tuple (dx, sy, cy, -1.0).  KV e7: every hg / pc type sits R0 / MX / MY /
 # R180, so only the MX copy was taken and the MY / R180 pair kept its own embedding (tol up to 66 ps on kv3_pc_v1, 50 on kv3_hg).
 DME_TEMPLATE_XMIRROR = os.environ.get("OT_CLK_DME_TEMPLATE_XMIRROR", "0") not in ("", "0")
+# Compound PC+PHY regions retain their logical CA ID while copying repeated physical subtrees.
+DME_TEMPLATE_COMPOUND = os.environ.get("OT_CLK_DME_TEMPLATE_COMPOUND", "0") not in ("", "0")
 
 
 def _xf4(xf):
@@ -2018,6 +2020,25 @@ def _dme_template_site(site, ctaps, xfs, pad=5.0):
     legal for that copy.  parts = the template partition rect cut to every copy's own rect (moved back); forb = the keep-outs
     near the template plus every copy's keep-outs moved back.  None when a partition rect cannot be found."""
     import copy
+
+    groups = defaultdict(list)
+    for t in ctaps:
+        groups[t[0]].append(t)
+    if DME_TEMPLATE_COMPOUND and len(groups) > 1:
+        pieces = [_dme_template_site(site, ts, xfs, pad) for ts in groups.values()]
+        if any(q is None for q in pieces):
+            return None
+        ts = copy.copy(site)
+        ts.parts = sorted({tuple(r) for q in pieces for r in q.parts})
+        ts.forb = sorted({tuple(r) for q in pieces for r in q.forb})
+        ts.idx = {}
+        for k, r in enumerate(ts.forb):
+            for i in range(int(r[0] // ts.b), int(r[2] // ts.b) + 1):
+                for j in range(int(r[1] // ts.b), int(r[3] // ts.b) + 1):
+                    ts.idx.setdefault((i, j), []).append(k)
+        ts.__dict__.pop("_pidx", None)
+        ts.__dict__.pop("_pidx_n", None)
+        return ts
     if not hasattr(site, "parts") or not hasattr(site, "forb"):
         return None
     cx = sum(t[2] for t in ctaps) / len(ctaps)
@@ -2055,11 +2076,29 @@ def _dme_template_site(site, ctaps, xfs, pad=5.0):
     return ts
 
 
+def _dme_template_part_roles(taps):
+    """Unique type -> partition roles of a compound region; ambiguity forbids copying."""
+    if not DME_TEMPLATE_TYPES:
+        return None
+    parts = {t[0] for t in taps}
+    roles = {DME_TEMPLATE_TYPES.get(p): p for p in parts}
+    return roles if None not in roles and len(roles) == len(parts) else None
+
+
+def _dme_template_tap_key(t, compound):
+    return (DME_TEMPLATE_TYPES[t[0]], t[1]) if compound else t[1]
+
+
 def _dme_template_xform(ctaps, itaps, tol=2e-3):
     """taps [(part, port, x, y)] of the template and of the instance -> (dx, sy, cy) with x' = x + dx, y' = sy * y + cy,
     or None when the port sets differ or the instance is not a translate / y-mirror image of the template"""
-    c = {t[1]: t for t in ctaps}
-    i = {t[1]: t for t in itaps}
+    compound = len({t[0] for t in ctaps}) > 1 or len({t[0] for t in itaps}) > 1
+    if compound:
+        cr, ir = _dme_template_part_roles(ctaps), _dme_template_part_roles(itaps)
+        if not DME_TEMPLATE_COMPOUND or cr is None or ir is None or set(cr) != set(ir):
+            return None
+    c = {_dme_template_tap_key(t, compound): t for t in ctaps}
+    i = {_dme_template_tap_key(t, compound): t for t in itaps}
     if set(c) != set(i) or len(c) != len(ctaps) or len(i) != len(itaps):
         return None
     k0 = sorted(c)[0]
@@ -2078,17 +2117,25 @@ def _dme_template_copy(site, tree, ctaps, itaps, xf):
     """the template tree (dme_region_tree result) moved by xf onto the instance taps; None if a moved cell site is illegal"""
     dn, droot, dst = tree
     dx, sy, cy, sx = _xf4(xf)
-    imap = {t[1]: t for t in itaps}
+    compound = len({t[0] for t in ctaps}) > 1
     cpart, ipart = ctaps[0][0], itaps[0][0]
+    if compound:
+        cr, ir = _dme_template_part_roles(ctaps), _dme_template_part_roles(itaps)
+        if not DME_TEMPLATE_COMPOUND or cr is None or ir is None or set(cr) != set(ir):
+            return None
+        pmap = {p: ir[ty] for ty, p in cr.items()}
+    else:
+        pmap = {cpart: ipart}
+    imap = {_dme_template_tap_key(t, compound): t for t in itaps}
     mv = lambda x, y: (round(sx * x + dx, 3), round(sy * y + cy, 3))
     out = []
     for d in dn:
         q = mv(d["x"], d["y"])
         if site.legal((d["x"], d["y"])) and not site.legal(q):
             return None
-        n = dict(d, x=q[0], y=q[1], kids=list(d["kids"]), taps=[imap[t[1]] for t in d["taps"]])
-        if d.get("part_root") == cpart:
-            n["part_root"] = ipart
+        n = dict(d, x=q[0], y=q[1], kids=list(d["kids"]), taps=[imap[_dme_template_tap_key(t, compound)] for t in d["taps"]])
+        if d.get("part_root") in pmap:
+            n["part_root"] = pmap[d["part_root"]]
         if d.get("snakes"):
             n["snakes"] = {k: [list(mv(*pt)) for pt in v] for k, v in d["snakes"].items()}
             if any(not site.legal(tuple(pt)) for k, v in n["snakes"].items() for pt in v[1:-1]):
@@ -2096,8 +2143,8 @@ def _dme_template_copy(site, tree, ctaps, itaps, xf):
         out.append(n)
     st = json.loads(json.dumps(dst, default=str))
     for et in st.get("early_taps") or []:
-        if isinstance(et, dict) and et.get("part") == cpart:
-            et["part"] = ipart
+        if isinstance(et, dict) and et.get("part") in pmap:
+            et["part"] = pmap[et["part"]]
     st["template_of"] = cpart
     return out, droot, st
 
@@ -2153,9 +2200,16 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
         for jk, (e, rn, sn, kw) in enumerate(jobs):
             pn = rt[rn][0][0]
             ty = DME_TEMPLATE_TYPES.get(pn)
-            if ty is None or npart[rn] != 1 or any(t[0] != pn for t in rt[rn]):
+            compound = npart[rn] != 1 or any(t[0] != pn for t in rt[rn])
+            if ty is None:
                 continue
-            ev = tuple(sorted((t[1], (early or {}).get((t[0], t[1]))) for t in rt[rn])) if isinstance(early, dict) else None
+            if compound:
+                roles = _dme_template_part_roles(rt[rn])
+                if not DME_TEMPLATE_COMPOUND or roles is None or len(roles) != npart[rn]:
+                    continue
+                ty = ("compound", tuple(sorted(roles)))
+            ev = tuple(sorted((_dme_template_tap_key(t, compound), (early or {}).get((t[0], t[1])))
+                              for t in rt[rn])) if isinstance(early, dict) else None
             key = (ty, ev, json.dumps({k: v for k, v in kw.items() if k != "early"}, sort_keys=True, default=str))
             if key not in first:
                 first[key] = jk
