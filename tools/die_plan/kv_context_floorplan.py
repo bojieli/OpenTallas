@@ -12,8 +12,8 @@ def candidates(w,h,obstacles):
 
 def worst(a,b):
  return max(abs(x-u)+abs(y-v) for x in [a[0],a[2]] for y in [a[1],a[3]] for u in [b[0],b[2]] for v in [b[1],b[3]])
-def run(plan_path,toolroot,inventory_path,out):
- import sys,itertools
+def run(plan_path,toolroot,inventory_path,out,macro_lef):
+ import sys,itertools,re
  sys.path.insert(0,str(toolroot));import schema as S,gen_phys as G
  raw=json.loads(plan_path.read_text());t=raw['partition_types']['kv3_hub_Wi'];P=S.Plan(raw,path=str(plan_path))
  assert t['outline_um']==[1278.72,1676.16]
@@ -26,7 +26,11 @@ def run(plan_path,toolroot,inventory_path,out):
   for i,st in enumerate(f.get('bit_sites_um',[])):
    xs=[p[0] for p in st];ys=[p[1] for p in st]
    obstacles.append((min(xs)-2.16,min(ys)-2.16,max(xs)+2.16,max(ys)+2.16,f['name']+':'+str(i)))
- macro=[(r,o) for w,h,o in [(192.888,99.384,'R0'),(99.384,192.888,'R90')] for r in candidates(w,h,obstacles)]
+ lef=macro_lef.read_text();size=re.search(r'\bSIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)',lef);assert size
+ mw,mh=map(float,size.groups());assert [mw,mh]==[171.288,77.784]
+ symmetry=re.search(r'\bSYMMETRY\s+([^;]+);',lef).group(1).split();shapes=[(mw+21.6,mh+21.6,'R0')]
+ if 'R90' in symmetry:shapes.append((mh+21.6,mw+21.6,'R90'))
+ macro=[(r,o) for w,h,o in shapes for r in candidates(w,h,obstacles)]
  logic=list(candidates(86.4,86.4,obstacles));best=None
  for (a,ao),(b,bo) in itertools.combinations(macro,2):
   if overlap(a,b):continue
@@ -52,7 +56,7 @@ def run(plan_path,toolroot,inventory_path,out):
   branches.append(dict(name='ctx_clk_'+str(i),xy_um=[l[0]+14.4+28.8*(i%3),l[1]+21.6+43.2*(i//3)],FF_sinks=ff//6+(i<ff%6),estimated_uniform_TT_CLK_load_fF=inv['rows']['context']['FF_CLK_cap_fF']/6,qualified=False))
  result=dict(schema='opentallas.qwen-kv-context-placement-candidate.v1',status='GEOMETRY_FIT_ONLY_NOT_BUILD_READY',selected=False,
  source_plan_sha256=hashlib.sha256(plan_path.read_bytes()).hexdigest(),partition='hub_Wi',partition_type='kv3_hub_Wi',frame='local type um',
- exact_macro_master='ot_sram_1r1w_64x512_m1_r2c2',macro_LEF_outline_um=[171.288,77.784],macro_halo_um=10.8,
+ macro_LEF_sha256=hashlib.sha256(macro_lef.read_bytes()).hexdigest(),macro_LEF_symmetry=symmetry,macro_orientation_verified=True,PDN_continuity_qualified=False,global_PG_layer_qualified=False,exact_macro_master='ot_sram_1r1w_64x512_m1_r2c2',macro_LEF_outline_um=[171.288,77.784],macro_halo_um=10.8,
  macros=[dict(inst=n,orientation=o,halo_rect_um=r,body_rect_um=[r[0]+10.8,r[1]+10.8,r[2]-10.8,r[3]-10.8]) for n,r,o in [('u_context.g_rope.u_rowtx.u_row',a,ao),('u_context.g_rope.u_rowtx.u_rope',b,bo)]],
  logic_region_um=l,mapped_logic_area_um2=cellarea,logic_util=cellarea/(86.4**2),mapped_FF=ff,
  tested_obstacles=dict(hard_cores=len(t['hard_cores']),clock_rects=len(t['clock']['reserved_sites_um']),ft_station_envelopes=len(obstacles)-len(t['hard_cores'])-len(t['clock']['reserved_sites_um'])),
@@ -74,4 +78,4 @@ def run(plan_path,toolroot,inventory_path,out):
  (out/'placement.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1278.72 1676.16"><rect width="1278.72" height="1676.16" fill="white"/>'+''.join(shapes)+'</svg>')
  print(json.dumps(dict(status=result['status'],internal_max=reach,logic_util=result['logic_util'],macros=result['macros'],output=str(out))))
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('--plan',type=Path,required=True);p.add_argument('--toolroot',type=Path,required=True);p.add_argument('--inventory',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();run(a.plan,a.toolroot,a.inventory,a.out)
+ p=argparse.ArgumentParser();p.add_argument('--plan',type=Path,required=True);p.add_argument('--toolroot',type=Path,required=True);p.add_argument('--inventory',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--macro-lef',type=Path,required=True);a=p.parse_args();run(a.plan,a.toolroot,a.inventory,a.out,a.macro_lef)

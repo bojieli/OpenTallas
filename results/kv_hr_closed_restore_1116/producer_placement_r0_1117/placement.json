@@ -1,0 +1,231 @@
+{
+ "schema": "opentallas.qwen-kv-context-placement-candidate.v1",
+ "status": "GEOMETRY_FIT_ONLY_NOT_BUILD_READY",
+ "selected": false,
+ "source_plan_sha256": "e89b1a2db7d7b1437fcecc48abff8e342f6af9544d4c57aa13dc20e992961f5f",
+ "partition": "hub_Wi",
+ "partition_type": "kv3_hub_Wi",
+ "frame": "local type um",
+ "macro_LEF_sha256": "ec986c5e711849ec8e10f7d74549a525819ef73e792779a6a921e0a279facb28",
+ "macro_LEF_symmetry": [
+  "X",
+  "Y"
+ ],
+ "macro_orientation_verified": true,
+ "PDN_continuity_qualified": false,
+ "global_PG_layer_qualified": false,
+ "exact_macro_master": "ot_sram_1r1w_64x512_m1_r2c2",
+ "macro_LEF_outline_um": [
+  171.288,
+  77.784
+ ],
+ "macro_halo_um": 10.8,
+ "macros": [
+  {
+   "inst": "u_context.g_rope.u_rowtx.u_row",
+   "orientation": "R0",
+   "halo_rect_um": [
+    1047.6000000000001,
+    421.20000000000005,
+    1240.488,
+    520.5840000000001
+   ],
+   "body_rect_um": [
+    1058.4,
+    432.00000000000006,
+    1229.688,
+    509.78400000000005
+   ]
+  },
+  {
+   "inst": "u_context.g_rope.u_rowtx.u_rope",
+   "orientation": "R0",
+   "halo_rect_um": [
+    1058.4,
+    950.4000000000001,
+    1251.288,
+    1049.784
+   ],
+   "body_rect_um": [
+    1069.2,
+    961.2,
+    1240.488,
+    1038.9840000000002
+   ]
+  }
+ ],
+ "logic_region_um": [
+  1101.6000000000001,
+  734.4000000000001,
+  1188.0000000000002,
+  820.8000000000001
+ ],
+ "mapped_logic_area_um2": 2431.22958,
+ "logic_util": 0.32568554687499995,
+ "mapped_FF": 5502,
+ "tested_obstacles": {
+  "hard_cores": 21,
+  "clock_rects": 166,
+  "ft_station_envelopes": 181
+ },
+ "macro_to_logic_all_corners_Manhattan_max_um": 518.4000000000001,
+ "internal_geometry_required_additional_cycles": null,
+ "internal_route_required_additional_cycles": null,
+ "external_endpoint_relay_budget": {
+  "i_kvs_ctl_o_emb": {
+   "bits": 74,
+   "worst_direct_um": 575.3599999999999,
+   "face": "E",
+   "required_segments_at_380um": 2,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_px_tep": {
+   "bits": 17,
+   "worst_direct_um": 970.6239999999998,
+   "face": "E",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_px_tok": {
+   "bits": 19,
+   "worst_direct_um": 968.5119999999997,
+   "face": "E",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_rowtx__emb_tx_payload": {
+   "bits": 549,
+   "worst_direct_um": 1084.5839999999998,
+   "face": "N",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_rowtx__emb_tx_v": {
+   "bits": 2,
+   "worst_direct_um": 1102.3999999999999,
+   "face": "N",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_EN_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 282.6959999999999,
+   "face": "E",
+   "required_segments_at_380um": 1,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_ES_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 256.448,
+   "face": "E",
+   "required_segments_at_380um": 1,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_WN_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 1759.4880000000003,
+   "face": "W",
+   "required_segments_at_380um": 5,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_WS_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 1717.4640000000004,
+   "face": "W",
+   "required_segments_at_380um": 5,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "L2416_o": {
+   "bits": 175,
+   "worst_direct_um": 379.4559999999998,
+   "face": "E",
+   "required_segments_at_380um": 1,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  }
+ },
+ "proposed_clock_branches": [
+  {
+   "name": "ctx_clk_0",
+   "xy_um": [
+    1116.0000000000002,
+    756.0000000000001
+   ],
+   "FF_sinks": 917,
+   "estimated_uniform_TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_1",
+   "xy_um": [
+    1144.8000000000002,
+    756.0000000000001
+   ],
+   "FF_sinks": 917,
+   "estimated_uniform_TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_2",
+   "xy_um": [
+    1173.6000000000001,
+    756.0000000000001
+   ],
+   "FF_sinks": 917,
+   "estimated_uniform_TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_3",
+   "xy_um": [
+    1116.0000000000002,
+    799.2000000000002
+   ],
+   "FF_sinks": 917,
+   "estimated_uniform_TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_4",
+   "xy_um": [
+    1144.8000000000002,
+    799.2000000000002
+   ],
+   "FF_sinks": 917,
+   "estimated_uniform_TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_5",
+   "xy_um": [
+    1173.6000000000001,
+    799.2000000000002
+   ],
+   "FF_sinks": 917,
+   "estimated_uniform_TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  }
+ ],
+ "macro_clock_load_fF_each": 9.3458,
+ "fixed_boundary_lane": "L2416",
+ "fixed_boundary_cycles": 2,
+ "timing_claim": false,
+ "route_claim": false,
+ "exactness_claim": false,
+ "open_requirements": [
+  "Trace each actual mapped D/Q net through existing input-delay/join registers before assigning added cycles; boundary distance alone must not become an added-cycle claim.",
+  "Place named register banks and route around clock/tree/FT obstacles; direct Manhattan fit is not a routed reach proof.",
+  "Real context99 HOST source path originates inside hard-host hierarchy and needs exact source-pin tracing, not a partition-edge assumption.",
+  "Proposed six clock branches and two macro clock sinks must be composed into the exact selected tree and recut rows.",
+  "Qualify full component with adjusted dates if any new relay edge is introduced; no old-calendar reuse."
+ ]
+}

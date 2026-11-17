@@ -1,0 +1,7 @@
+{
+ "verdict": "REJECTED_UNSUPPORTED_MACRO_ORIENTATION",
+ "supersedes": "producer_placement1117/placement.json and review.json geometry-only candidate",
+ "reason": "Exact SRAM LEF SYMMETRY X Y excludes R90; the candidate used R90 for u_rope. No source activation, route, STA, or build qualification occurred.",
+ "successor": "producer_placement_r0_1117/placement.json",
+ "failed_candidate_preserved": true
+}

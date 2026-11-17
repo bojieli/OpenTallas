@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS_CONDITIONAL_ANALYTICAL_R0_SITING",
+ "image": "results/kv_hr_closed_restore_1116/producer_placement_r0_1117/placement.svg",
+ "reviewed_directly": true,
+ "findings": [
+  "Both SRAMs retain legal R0 orientation from actual LEF SYMMETRY X Y and exact171.288x77.784 bodies.",
+  "Bodies and10.8um halos avoid existing hard cores/clock reservations/FT station envelopes;32.57pct mapped logic utilization in separate86.4square region.",
+  "Conservative allcorner518.4um reach stays recorded. Actual macro pin -> mapped first/lastFF endpoint sites use actual FF D/QN rectangles and R0/MX rows;298.845um maximum with0unmatched/failed cones.",
+  "PDN continuity, global PG layers, clock balance, intervening combinational paths, all-bit transport and joint channels remain unqualified. No build/route release.",
+  "All16376mappedstdcells and5502FF haveexplicitmaster sites;20324realregistereddataedges haveD/QNpinrectangle max379.368um,0over405. No added internal cycle or FF proposed. Intermediatecombinational wire reach/timing remains unqualified."
+ ]
+}
