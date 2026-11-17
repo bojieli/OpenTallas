@@ -21550,3 +21550,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN
   File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-17 11:51 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc8 wrote 398 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
