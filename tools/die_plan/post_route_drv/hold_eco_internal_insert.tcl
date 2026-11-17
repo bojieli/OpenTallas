@@ -74,7 +74,11 @@ proc ot_hei_run {} {
         lassign $b b0 b1
         if {$b0 > $rx1} { set b0 $rx1 }   ;# a row segment ends where its macro cut starts: never plan past the segment
         # free gap [x, b0): candidate x positions snapped to the site grid
-        for {set px [expr {$rx0 + (($x - $rx0 + $sw - 1) / $sw) * $sw}]} {$px + $mw <= $b0} {incr px $sw} {
+        # Bound enumeration before walking sites: outside this horizontal radius the original
+        # Manhattan-distance filter cannot accept a site. Same accepted sites and stable order.
+        set pxlo [expr {max($x, $cx - $rad - $mw / 2)}]
+        set pxhi [expr {min($b0 - $mw, $cx + $rad - $mw / 2)}]
+        for {set px [expr {$rx0 + (($pxlo - $rx0 + $sw - 1) / $sw) * $sw}]} {$px <= $pxhi} {incr px $sw} {
           set d [expr {abs($px + $mw / 2 - $cx) + abs($ry - $cy)}]
           if {$d <= $rad} { lappend cands [list $d $px $ry $ror] }
         }
