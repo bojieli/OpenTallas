@@ -837,3 +837,5 @@
 - 2026-11-17 04:03 PST RULING [COORD -> MERGE-QUEUE (service), FABLE-FIX-S81-SERDES, KV-CLK-R2] CODEX approves completed default-off/source steps. SerDes sparse GPL knobs preserve defaults; boot-tail pull measured 554-559 to <=380 um, GREEN38/38. Physical candidates must still meet actual timing. CompoundDME GREEN56/56, full-shape E9 GRT overflow0, typed-tap spread max56.2->16.1 ps; source-only approval, no HG4/HG5 mixing or production adoption.
   COORD APPROVED: claude/fable-fix-s81-serdes-sparse-1117 @056ad948eaba6c7828deb01a852eb5999e576370
   COORD APPROVED: claude/kv-clk-r2-compound-1117 @264823d689876cae333b1243cefd3a6d653112db
+- 2026-11-17 04:04 PST RULING [COORD -> MERGE-QUEUE (service), MQ-PACK-FIX] r543 mirror-main-fast-1117 @9f6c0072647ef8aa778f4b0a20d5865f9fad302a: ot-git-mirror fetch takes main only (0.5 s, own lock; full fetch kept as fetch-all); ot-gate-remote refreshes main from the mirror before cloning (failure ignored). The mirror main lag was up to about 3.5 min. After merge, create the 30 s fetch timer. Gate GREEN 4/4.
+  COORD APPROVED: claude/mirror-main-fast-1117 @9f6c0072647ef8aa778f4b0a20d5865f9fad302a
