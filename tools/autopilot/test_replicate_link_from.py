@@ -22,10 +22,12 @@ class LinkFrom(unittest.TestCase):
         subprocess.run(["rsync", "-a", f"--link-dest={prev}/", src + "/", new + ".part/"], check=True)
         # mtimes differ in this fixture, so only content-equal + attribute-equal files link; make the fixture honest: align a.py's mtime
         self.assertEqual(os.stat(new + ".part/tools/b.py").st_ino == os.stat(prev + "/tools/b.py").st_ino, False)
+        os.chmod(new + ".part", 0o755)                                  # replicate does `chmod u+w .` before writing the sidecar
         open(new + ".part/" + SM.LINKBASE, "w").write(os.path.realpath(prev) + "\n")
         self.assertEqual(SM.link_base(new + ".part"), os.path.realpath(prev))
         errs, _ = SM.verify(new + ".part", expect=m2["manifest_hash"], full=True)
         self.assertEqual(errs, [])
+        os.chmod(new + ".part", 0o755); [os.chmod(os.path.join(d, "tools"), 0o755) for d in (new + ".part", prev, src)]
 
     def test_a_linked_copy_is_budgeted_small(self):
         self.assertFalse(SM.room_after_copy(60, 49)[0]); self.assertTrue(SM.room_after_copy(90, 8)[0])
