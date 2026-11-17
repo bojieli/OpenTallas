@@ -265,7 +265,8 @@
     "kv3_pv_v1@25",
     "kv3_hub_C@2",
     "kv3_pv_v1@26",
-    "kv3_hg_v1@1"
+    "kv3_hg_v1@1",
+    "kv3_hg_v1@2"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -566,7 +567,7 @@
     "kv3_pc_v1__cl23f6a148@4": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_pc_v1__cl4ea58a5c@4": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_hg@13": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
-    "kv3_hg_v1@2": "FAIL-QCKV-1 pass 4 (COORD): latest attempt was on kv102fx/kv101ns, not kv102sem/ftgrid; in-flight unit stopped; relaunch on current event.",
+    "kv3_hg_v1@2": "source changed D5->D10, cause fixed (GEN hard_landing.prove: face_guard_source.py 5083985a != frozen 7ecd3a0d in views w652/w653/w672; D10 carries the 7ecd3a0d bytes, view_hash_errors guard passes); pilot kv3_hg_v1 on the D10 PILOT hold",
     "kv3_hg_v1p2@3": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_hg_v1p3@7": "KV-102 ADOPT kv102sem (semantic R8 table; changed emitted RTL / KV-CLAND-EDGE2); unchanged types digest-keep.",
     "kv3_hg_v1p6@4": "FAIL-QCKV-1 pass 4 (COORD): latest attempt was on kv102fx/kv101ns, not kv102sem/ftgrid; in-flight unit stopped; relaunch on current event.",
