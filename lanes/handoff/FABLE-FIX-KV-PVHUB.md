@@ -109,3 +109,48 @@ Final asynchronous handback updates: merge_ops thin13460a0 normal source gate te
 - Pilots kv3_hg_v1, kv3_hg_v3, kv3_pv_v1n; the other 31 KV-HG1 keys asked to wait on proof:kv-hg1-pilot-cts (I post RESULT PASS at the
   pilot CTS read: cells, TT setup, krsp first hop). HG1B is NOT adopted: rows B + C and R-REACH-4 go to HG2 (FABLE-DIE-KV). treeC separate.
 - Do not delete hg1/tree, hg1/gate, kw45/src_kv_kvgeom7yhr_eb1e73448bd0 on epyc10 until KIT-OPS-5 / TOOLS-CONVERGE published the KV-HG1 tree.
+
+## 2026-11-16 17:01 PST — CODEX RESET HANDOFF / PARKED
+
+Claude reset instruction received. No new jobs, retries, relocations or technical collection after reset. Running jobs remain untouched. KV-102 child parked; its complete C/hroot handoff is lanes/handoff/KV-102.md, commit 8b4d15a9380e414c6efce5b23569107968990918.
+
+### Current private C: ELAB PASS, strict bind RUNNING, LATCHECK NOT_STARTED
+- EP10 output /srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/gateC_elab_attrfix_ep10. gate.out RC_ELAB=0; elab.log and bind.log are actual checks. No bind_report.json or bus_groups.json yet at final observation; latcheck.log/json/tsv not started. Do not borrow A/B constants or PASS.
+- Strict bind PID1285434, unit oth-ubuntu-1062531-1794874789, intel2 client3750569. At last observation 27m23, CPU97.9%, RSS7.79GB; no ERROR/UNMAPPED/FAIL/REFUSED. Only advisory tap-radius/reach messages. New asbuilt.json253MiB; ELAB73 modules,3 full files,39 libraries, ambiguous0/undefined0.
+- Exact readonly C source EP10 hg1/treeC, plan SHA6e6140a2c269a32599a8a72ad615f32edd4fc556ecf7e80a74eaf2c611760058; AB physical/die_plan/qwen_kvsys/bind/ctx_hr_1116_v2/asbuilt_ctx_hr.json SHA972062757875e98f5c95f63c88588461604967cc594e2c3d08386341fddf7935. Full absolute prefix /srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/.
+- Selected event NATIVE32=1 PIPE_JOIN=1 ROPE=1 ROPE_DELAY=1024 OVL=0 FIX_ROPE_SLOT_GUARD=1. Current HEAD_PREP1 kind12 stage0/seg0 context authority; qualified hrec_rx[3] used for both valid/observed. Price1024 per accepted fresh context in dependent window. No HOST substitution, no whole historical OVL transport replacement.
+- Source13460 merged bbd752e7c40/deployed db8d six hosts16:13. Extractor attribute fix dc6b396f7d7 actual ELAB qualified; thin c262a835db286d86ba7384de092c30560deb2e00 GREEN24/24, root r384HIGH; normal integration pending at last observation. No source C mutation/forged stub or receipt.
+- Prior failures preserved: missing fresh asbuilt BIND2; attributed nonANSI port extraction ELAB2; overlay import-context failure beforeYosys; unstarted E2 disk waiter cancelled only after original E10 inputs/headroom ready. Current retry is fresh Yosys. Readonly E2 S3 replica is ROOT bind mount, not genuine scratch. Current E10 normal48GB/8threads/8GB reservation/60GB floor, no guard bypass. All output/TMP/cache realS2; no hidden source writes.
+- Original peer proof EP9 PID1996249/unit oth-ubuntu-1994781-1794858497 remains CPU-active (~5h10 at last observation), no deadline/restart.
+- Cleaner protection canonical KV-C-private-protected-1116.json includes current and old outputs/source; latest current EP10 protection commit ab221eb76016ca24cfb38a81e76eb5744f9525b9.
+
+### Prospective C-on-A: NOT bound / NOT physically qualified
+- Three-way A08d352/Bb78d8/C6e614 merge zero conflicts, candidate hg1/planC_on_A_candidate.json SHA7ce1459c7990135a4934d63a47617b4e90620427a5fd66329cc41b1f64529dda. Restores reviewed A physical rows and preserves C functional delta (C-v-B only note and kv3_hub_Wi hard_cores), zero added data cycles.
+- Complete private read-view hg1/C_on_A_sourceview: only candidate plan copied48MB, all other entries symlink exacttreeC. No49GB clone, no public adoption. Root permits minimum cached strictbind/LAT using actual unchanged native authority only AFTER current6e614 proof terminal and actual candidate image review.
+- Render launched before reset: intel2 client32775, unit oth-ubuntu-1735195-1794877022, log ~/tmp/ffkph/codex_C_on_A_render_1116.log, EP10 hg1/render_C_on_A.py. TERMINAL FAIL ModuleNotFoundError matplotlib. No image/review PASS. Resume can use already installed local renderer at /srv/opentallas-scratch/claude/fable-fix-kv-pvhub-render; no installation needed. No C-on-A cachedbind/LAT launched.
+
+### Current A package / three original replacement jobs
+- HG1A D3 coherently adopted by kv_pack: manifest13f758a4fe34, unchanged Aplan08d352, portableABef6242fa5831, out_ctx1/native6ad4be944d76; source230/native56/fresh guard PASS. Exact31 proof holds retained, only kv3_hg_v1/kv3_hg_v3/kv3_pv_v1n pilots eligible, verifiedEP10 only. Watcher3852421 actualD3 source/event. D3 is original r305 generator plus only approved8df PG-copy hunk (64c62f), approved TT/replay Tcl retained.
+- Bad D2 whole6ce generator referenced absent schema.core_tap_lead_ps; honest dependency failure before constructor/GEN. No badD2 pilot ran. No broad schema adoption, model change or new bind.
+- Original7yhr C3/Wo3/PV27 all KITRTL0, topology0, GEN0. Actual images directly reviewed and exact controllers resumed; no review holds remain. Canonical KV_Wo3_actual_review_release_1116.json, KV_C3_actual_review_release_1116.json, KV_PV27_actual_review_release_1116.json.
+- Wo3 PLACE failed infrastructure Error247: PLANGUARD SIGKILL OpenROAD247990 at23:52:59UTC, RSS1.65GB, scopepeak6.84GB/48GB, no kernel/cgroupOOM. No geometry/timing verdict. kv_pack/fleet own guard diagnosis; no blind retry. C/PV place progressing at last observation; kv_pack owns normal monitoring/dispatch.
+
+### Signed20 composition, accounting source, pending corrected run
+- Four ECTL final physical exports COMPLETE and TT/FF canonical PASS; actual finalDEF/LEF pins used, original requested/freshness failures preserved. Clean exporter thin b3d45a00ea2497b9b54892d8b63365c04afbc074 pushed, lower-priority normal gate deferred; no archive-exception/freshness weakening committed.
+- Existing static20 composition terminal0: EP10 hg1/runs/c1/sta_finalphysical20_v1/die_sta_related.json, registry hg1/finalphysical20_registry_v1.json, log intel2 ~/tmp/ffkph/codex_sta_finalphysical20_v1_1116.log. TT intra168.44/seam543.36;540 early taps,1832 missing;384 measured intra holdpairs min+22.57,1426596 unmeasured;seam0 measured/26832 unmeasured. RMIN BLOCKED(kits), not PASS. Broad/landed negatives retained as diagnostics without independent-ring crossproduct signoff.
+- Real analysis bugs fixed in inherited FABLE-DIE clone HEADaf217902f93, committed/pushed: physical-to-logical identity alias for early exclusion; exact signed core:module:clock view recognized instead of false missing single-root key. Wrong clock/unsigned views still missing. Two focused tests PASS. Evidence results/kv_core_view_alias_fix_1116/result.json. Normal thin/gate requested merge_ops, no launch known. Runtime consumer file copied only after old run completed.
+- CORRECTED C1 STATIC COMPOSITION NOT LAUNCHED because reset arrived immediately before dispatch. Do not claim corrected numbers or another physical signoff.
+
+### Four actual signed archive debts CLOSED
+- cland_w1045_ns_ddbeb, cland_w1057_ew_94a44, cland_w288_ns_ad575, cland_w781_ns_9f2d9: original SIGNED DB/DEF/SO found, targeted two-copy archive and append-only INDEX complete;56files SHA verified both destinations, original mtimes/provider keys preserved. No rebuild/re-sign/source qualification/counter rerun.
+- Local /home/ubuntu/signed-export-1114/qwen_kvsys/<master>; AGI /archive/opentallas-signed-1114/qwen_kvsys/<master>. Both INDEX rows ARCHIVED-BOTH-NO-VIEWPACK.
+- Canonical lanes/handoff/KV4_archive_receipts_closed_1116.json, pushed commit559f6eb841d2d67cd6be94be4cb4c664c6be678b. Local receipt /srv/opentallas-scratch/claude/fable-fix-kv-pvhub-render/archive4/two_copy_INDEX_receipt.json.
+- Existing16:20 FAIL.KV.CORES58/62 reflects expanded62 named/staged provider universe versus old34, plus those4 archive debts; not26 new hardware failures. Root expects normal next hourly count, no manual counter rerun.
+
+### HG2 / programme followups remain honestly open
+- HG2 reservation source0140435505bc570fdb72afd42980426c7600863a6 normalGREEN57 merged16:46 main d0ee4a2afb1; six-host sync pending. Correct lower-left origins + planned point blockers removes actual E4 2033 point conflicts to0; no new physical build. Old gate attempts body-not-run preserved.
+- E4 measured max277ps requires actual+10margin;40ports exceed existing gen_phys208.25 software guard. No clamp/waiver/applied rows, no intrinsic functional208 derivation invented. Signed native island ownership/clock-window problem remains open; globalFFhold unmeasured.
+- TOKEN owns exact R8 analytical reach join: L1427+8 absorbed11pad, L1524+8 exposes3, L346+7 exposes3 and must propagate actualR8 cohort; L350+1 absorbed but directstatus81+1 separately admission. NO_BUILD/model_readyfalse. No global+8 guess, no currentC contamination.
+- TOKEN owns actual QC-native address-law adapter proof and selected programme window. KV512 writer ABI unchanged; upstream masked-packet bridge exists. No quota/calendar/pad adoption before actual proof. Use accepted context calendar and per-start1024, no old empty-image certification.
+
+Parked. All running jobs and failure records preserved. No pending owner question or additional action requested during reset.
