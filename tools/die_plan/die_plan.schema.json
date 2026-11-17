@@ -4784,6 +4784,25 @@
        "pin_entry_fall": {
         "type": "boolean"
        },
+       "pin_entry_handoff": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "clock_buffers",
+         "physical_form"
+        ],
+        "properties": {
+         "clock_buffers": {
+          "type": "integer",
+          "minimum": 1
+         },
+         "physical_form": {
+          "enum": [
+           "post_route_branch_fork"
+          ]
+         }
+        }
+       },
        "pin_entry_delay": {
         "type": "object",
         "additionalProperties": false,

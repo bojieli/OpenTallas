@@ -59,6 +59,7 @@ def configure(P,tn,T,error=ValueError):
 
 
 def entry_cell(T,signal):
+    if T.get('pin_entry_handoff'):return 'ot_dp_rrelay_handoff'
     n=(T.get('pin_entry_delay') or {}).get(signal,0)
     if n:return f'ot_dp_rrelay_delay #(.N({n}))'
     return 'ot_dp_rrelay_fn' if T.get('pin_entry_fall') else 'ot_dp_rrelay'

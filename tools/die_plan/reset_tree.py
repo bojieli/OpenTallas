@@ -1155,7 +1155,7 @@ def for_type(P, tn, reach=None):
     if native:
         import copy
         tree = copy.deepcopy(native["tree"])
-        configured = _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, tree)))
+        configured = _type_pin_entry_handoff(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, tree))))
         if configured != tree:
             raise ResetError(f"type {tn}: pin root copies require regenerated bound RTL and a fresh native source contract")
         return tree
@@ -1196,7 +1196,7 @@ def for_type(P, tn, reach=None):
             if boot_buses or boot_contents:
                 T.update(bootstrap_buses=boot_buses, bootstrap_contents=boot_contents,
                          bootstrap_taps=list(range(nck)))
-        return _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T)))
+        return _type_pin_entry_handoff(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T))))
     if pipelined(P):
         K = part_depth(P)
         T = _type_tree(P, tn, K, reach)
@@ -1213,13 +1213,13 @@ def for_type(P, tn, reach=None):
         T["relay_lockup"] = relay_lockup_form(P)
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
-    return _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T)))
+    return _type_pin_entry_handoff(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T))))
 
 
 def entry_stages(T):
     """pin -> release of the entry: the root synchroniser (+ the PLL lock qualifier ot_dp_lockq when declared) or one
     pin register."""
-    return T["sync_stages"] + int((T.get("lock") or {}).get("stages", 0)) if T["entry"] == "sync" else 1
+    return T["sync_stages"] + int((T.get("lock") or {}).get("stages", 0)) if T["entry"] == "sync" else (2 if T.get('pin_entry_handoff') else 1)
 
 
 def release_clocks(T):
@@ -2526,6 +2526,11 @@ def _pin_copy_entry_lines(T, ind, src, signal='reset'):
     return out
 
 
+def _type_pin_entry_handoff(P, tn, T):
+    import pin_entry_handoff as H
+    return H.configure(P, tn, T, ResetError)
+
+
 def _type_pin_entry_delay(P, tn, T):
     import pin_entry_delay as D
     result = D.configure(P, tn, T, ResetError)
@@ -2945,8 +2950,12 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
         raise ResetError("native reset placement nodes require exact verified hierarchy paths")
     ent = "u_rst_root" if T["entry"] == "sync" else "u_rst_in"
     root_xy = (native_sites or {}).get(ent, T['root'])
+    two_stage = 'cap' if T.get('pin_entry_handoff') else ('pre' if T.get('pin_entry_fall') else None)
+    suffix = 'q*' if two_stage else '*'
     t = [TCL_HEAD.replace("REACH", f"{T['reach_um']:g} um"),
-         f"rtr_place rst_root_n {{*{ent}[./]*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
+         f"rtr_place rst_root_n {{*{ent}[./]{suffix}}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry"]
+    if two_stage:
+        t.append(f"rtr_place rst_entry_capture {{*{ent}[./]{two_stage}*}} {root_xy[0]:.3f} {root_xy[1]:.3f} rentry_capture")
     rel = [dict(r, dlab=r.get("dlab", r["d"])) for r in physical_reset_relays(T)]
     for c in pin_root_copies(T)[1:]:
         x, y = (native_sites or {}).get(c['name'], c['xy'])
@@ -2987,7 +2996,9 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
     if T.get("start"):
         rent = "u_run_root" if T["entry"] == "sync" else "u_run_in"
         run_xy = (native_sites or {}).get(rent, T['start_in'])
-        t.append(f"rtr_place run_root {{*{rent}[./]*}} {run_xy[0]:.3f} {run_xy[1]:.3f} sentry")
+        t.append(f"rtr_place run_root {{*{rent}[./]{suffix}}} {run_xy[0]:.3f} {run_xy[1]:.3f} sentry")
+        if two_stage:
+            t.append(f"rtr_place run_entry_capture {{*{rent}[./]{two_stage}*}} {run_xy[0]:.3f} {run_xy[1]:.3f} sentry_capture")
     oq = out_relays(T)
     for r in (native_nodes if native_nodes is not None else rel):
         place = "rtr_place_opt" if r.get("optional") else "rtr_place"
@@ -3077,6 +3088,8 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
         for name, path in native_paths.items():
             exact = "[./]".join(path.split(".")) + "[./]*"
             text = text.replace("*" + name + "[./]*", exact)
+            for reg in ('q', 'cap', 'pre'):
+                text = text.replace("*" + name + "[./]" + reg + "*", exact[:-1] + reg + "*")
         if re.search(r"^rtr_place(?:_opt|_lk)?\s+\S+\s+\{\*", text, re.M):
             raise ResetError("native reset placement contains an unverified wildcard instance")
     return text
@@ -3092,7 +3105,7 @@ def summary(T):
                 else "OWNER RESET RULE 10-24: one root synchroniser per die region + equal-depth synchronous relays") | (
                     dict(pin_entry_fall=True, pin_entry_added_flops=T['pin_entry_added_flops'],
                          pin_entry_added_whole_cycles=0, pin_entry_count_window='measured J=1 required')
-                    if T.get('pin_entry_fall') else {}) | __import__('pin_entry_delay').summary(T)
+                    if T.get('pin_entry_fall') else {}) | __import__('pin_entry_delay').summary(T) | __import__('pin_entry_handoff').summary(T)
 
 
 # ----------------------------------------------------------------------------------------------- G0

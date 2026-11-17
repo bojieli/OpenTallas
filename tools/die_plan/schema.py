@@ -920,6 +920,11 @@ SCHEMA = {
                         "local_taps_um": {"type": "array", "items": _xy},
                         # Measured J=1 synchronous entry window only: one falling pre-capture per input.
                         "pin_entry_fall": {"type": "boolean"},
+                        # +1 local boot stage; phase fork is a separately measured physical post-route contract.
+                        "pin_entry_handoff": {"type": "object", "additionalProperties": False,
+                            "required": ["clock_buffers", "physical_form"], "properties": {
+                                "clock_buffers": {"type": "integer", "minimum": 1},
+                                "physical_form": {"enum": ["post_route_branch_fork"]}}},
                         # Exact physical input-to-capture technology chain; no new FF/cycle.
                         "pin_entry_delay": {"type": "object", "additionalProperties": False,
                             "required": ["cell", "reset", "start", "reset_sites_um", "start_sites_um", "max_hop_um"],
