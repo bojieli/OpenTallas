@@ -15,6 +15,50 @@ def _tcl_quote(s):
 def safe(s):return re.sub(r'\W','_',s)
 
 
+def _native_stage_groups(t, groups):
+    # Existing HEAD vd stages must occupy the windows the plan already prices.
+    cfg = t.get('clock', {}).get('landing_contract', {}).get('native_stage_groups')
+    if cfg is None:
+        return groups, ''
+    if not isinstance(cfg, dict) or set(cfg) != {'schema', 'content', 'module', 'params', 'groups'} or cfg['schema'] != 'opentallas.native_stage_groups.v1':
+        raise ValueError('native_stage_groups schema/fields')
+    matches = [x for x in t.get('contents', []) if x.get('inst') == cfg['content']]
+    if len(matches) != 1 or matches[0].get('module') != cfg['module'] or matches[0].get('params', {}) != cfg['params']:
+        raise ValueError('native_stage_groups content/module/params mismatch')
+    rows = cfg['groups']
+    if not isinstance(rows, list) or not rows:
+        raise ValueError('native_stage_groups needs nonempty groups')
+    width, height = t['outline_um']; seen = {x[0] for x in groups}; added = []
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {'prefix', 'rect_um', 'tag'}:
+            raise ValueError('native_stage_groups group fields')
+        prefix, rect, tag = row['prefix'], row['rect_um'], row['tag']
+        if not isinstance(prefix, str) or not prefix.startswith(re.escape(cfg['content'])) or any(x in prefix for x in '{}\n\r\t\0') or prefix in seen:
+            raise ValueError('native_stage_groups invalid/duplicate prefix')
+        try:
+            re.compile(prefix)
+        except re.error as exc:
+            raise ValueError('native_stage_groups invalid regex') from exc
+        if not isinstance(tag, str) or not re.fullmatch(r'stage:[A-Za-z0-9_.:-]+', tag):
+            raise ValueError('native_stage_groups invalid tag')
+        if not isinstance(rect, list) or len(rect) != 4 or any(type(x) not in (int, float) or not isfinite(x) for x in rect):
+            raise ValueError('native_stage_groups finite rectangle required')
+        if not (0 <= rect[0] < rect[2] <= width and 0 <= rect[1] < rect[3] <= height):
+            raise ValueError('native_stage_groups rectangle outside outline')
+        seen.add(prefix); added.append((prefix, rect, tag))
+    # Use the exact matcher that the later placement loop uses.
+    entries = ' '.join('{' + p + '}' for p, _, _ in added)
+    check = '\n'.join(['foreach cland_native_prefix {%s} {' % entries,
+        ' set cland_native_found 0',
+        ' foreach cland_native_i [$ff_blk getInsts] {',
+        '  if {[regexp [format {(^|[/.])%s[/.]} $cland_native_prefix] [$cland_native_i getName]]} {set cland_native_found 1; break}',
+        ' }',
+        ' if {!$cland_native_found} {',
+        '  error "OT_CLAND missing native stage group $cland_native_prefix"',
+        ' }', '}', 'unset -nocomplain cland_native_prefix cland_native_found cland_native_i', ''])
+    return groups + added, check
+
+
 def _group_rect_overrides(t, groups, stale=None):
     """Explicit physical collector/raw-copy sites; absent plans keep identical output.
 
@@ -774,6 +818,7 @@ def tcl(P,tn,macro_moves=None):
                 x,y=s['xy_um'];i=s['index']
                 status.extend([(f'cland_dn_trained_{i}',x,y),(f'cland_dn_guard_{i}',x,y)])
     groups, override_check = _group_rect_overrides(P.types[tn], groups, stale)
+    groups, native_check = _native_stage_groups(P.types[tn], groups)
     out=[f'puts "OT_CLAND face-window {_tcl_quote(n)}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     for p,r,tag in groups:
         # Optional raw copies only exist when the original START tap is gated.
@@ -786,7 +831,7 @@ def tcl(P,tn,macro_moves=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_placement_source(bool(role_config))
+    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_placement_source(bool(role_config))
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -801,10 +846,11 @@ def _dataflow_tcl(tn,c,t=None):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
     groups, override_check = _group_rect_overrides(t or {}, groups)
+    groups, native_check = _native_stage_groups(t or {}, groups)
     out=[f'puts "OT_CLAND face-window {_tcl_quote(n)}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
     out+=['  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}' for p,r,tag in groups]
     out+=['}','set cland_optional_groups {','}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, t or {})
-    return '\n'.join(out)+'\n'+override_check+role_config+_local_chunk_config(t or {})+_placement_source(bool(role_config))
+    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(t or {})+_placement_source(bool(role_config))
