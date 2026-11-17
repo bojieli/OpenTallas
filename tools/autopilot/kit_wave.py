@@ -118,8 +118,11 @@ OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 LANE = "KIT-WAVE-1"
 # STRUCTURAL (DIE-HBM-97 11-10, COORD): a design verdict the flow reached early (gpl-noconverge); held like FLOW/PLAN
 CLASSES = ("PLAN", "FLOW", "RTL", "INFRA", "STRUCTURAL")
-CELL_CAP = 400_000       # default kit run cap; a kit's own native_cell_count.json limit (--native-cell-cap) overrides it
-CELL_CAP_MAX = 517_000   # COORD 11-04 06:00 (2): 400k advisory up to the largest closed run; above stays stopped
+import importlib.util as _ilu
+_cc_spec = _ilu.spec_from_file_location("cell_cap", str(Path(__file__).resolve().parents[1] / "die_plan" / "cell_cap.py"))
+_cc = _ilu.module_from_spec(_cc_spec)
+_cc_spec.loader.exec_module(_cc)
+SPLIT_CELLS = _cc.SPLIT_CELLS   # WAVE-FLOW-R2 11-17: the ONE cell limit, checked at plan time (SPLIT-NEEDED); no run-time cell stop
 PLACE_POLL_S = float(os.environ.get("KW_PLACE_POLL_S", "60"))
 # run on the gen host by place_receipt(): argv K, service start time (epoch s)
 PLACE_RECEIPT = r"""
@@ -1368,6 +1371,7 @@ def item_key(die, event, item, block=None):
 
 
 PLAN_BLOCK = {
+    "split": "SPLIT-NEEDED: estimated flat std cells over the one 400k type limit (die_plan/cell_cap.py): split the type; never launched",
     "hard": "plan entry: hard type (gen skips it unless die cfg hard_wrappers names it)",
     "contract": "plan entry fails kit preflight: clock.core_taps internal with parent_budget core taps (gen ContractError)",
     # AUTOBUILD-PIPE-1 10-30: not launched (gen would fail 'macros have LEF but no timing liberty'); no FAIL record, so
@@ -1464,7 +1468,7 @@ def plan_entry_block(d, item, kind=None):
 
 # ------------------------------------------------------------------------------------------------ KW-FIX-4 gen-time lint
 # OWNER 11-03 (COORD 06:11 RE-FORM template, GEN rules): before any kit launches, a lint fails the type on
-#   cells   estimated flat std cells > 150k (plan probe; die prelint_cells_max overrides);
+#   cells   estimated flat std cells > 400k = SPLIT-NEEDED (plan probe, blocks the launch; die_plan/cell_cap.py);
 #   memory  a memory over SYNTH_MEMORY_MAX_BITS that is not a macro (the type's GEN_LINT memory_bits verdict on this
 #           same plan block; a block change, or a retry row whose fix is named in retry_fix, clears it);
 #   view    a planned hard core without a signed view (probe flags planned / noview: these already wait as WAIT-DEP);
@@ -6544,8 +6548,6 @@ def run_item(spec_path):
             if count.get("schema") == "opentallas.native_cell_count.v1" and type(count.get("stdcells")) is int:
                 res["cells"] = count["stdcells"]
                 res["cells_basis"] = "actual synthesized top standard cells, excluding block macros"
-                if type(count.get("limit")) is int:
-                    res["cells_limit"] = min(count["limit"], CELL_CAP_MAX)
         if sp.get("cell_check") and res["cells"]:
             cc_cmd = (f"cd / && python3 -I {q(src)}/tools/die_plan/cell_check.py --plan {q(sp['plan'])} --type {q(T)} "
                       f"--cells {int(res['cells'])} --stat \"$(ls {q(K)}/run/reports/asap7/*/base/synth_stat.txt | head -1)\"")
@@ -6575,8 +6577,8 @@ def run_item(spec_path):
             # reuse the finished place DB and so carry no layout_review); warn and go on to geom/sign-off
             res["render_missing"] = True
             print(f"KW_RENDER_WARN {T}: place finished (3_place.odb present) but run/layout_review has no PNG; advisory only", flush=True)
-        if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
-            return fail("cells", f"{res['cells']} cells", f"{kh}:{K}")
+        if res["cells"] and res["cells"] > SPLIT_CELLS:      # WAVE-FLOW-R2: reported, never a stop (the plan-time SPLIT-NEEDED check owns the limit)
+            print(f"KW_CELLS_INFO {T}: {res['cells']} cells above {SPLIT_CELLS} (advisory; plan-time SPLIT-NEEDED is the only cell check)", flush=True)
         olc = outline_cmd(K)
         _, ol = run("outline", rem(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
@@ -7559,7 +7561,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 5   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 6   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
@@ -7586,7 +7588,8 @@ try:
         baseline_path = a["identity_baseline_plan"]
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
     flags, deps, lint, pdeps, bound, pkeys, unbound = {}, {}, {}, {}, {}, {}, {}
-    cmax = int(a.get("cells_max") or 150000)
+    split = []
+    cmax = int(a["cells_max"])
     for t, v in pt.items():
         if not isinstance(v, dict):
             continue
@@ -7599,7 +7602,8 @@ try:
             cc = [c.get("cells") for c in (v.get("contents") or []) if isinstance(c, dict)]
             nc = sum(cc) if cc and all(isinstance(x, (int, float)) for x in cc) else None
         if nc is not None and nc > cmax and not v.get("hard_cores") and not v.get("hard"):
-            li.append(f"cells: est {int(nc)} flat std cells > {cmax} (plan estimate): re-form into hard cores / a smaller slot")
+            li.append(f"cells: SPLIT-NEEDED est {int(nc)} flat std cells > {cmax} (plan estimate): split the type or re-form into hard cores")
+            split.append(t)
         decl = [r.get("name") for r in (v.get("id_straps") or []) + (v.get("count_straps") or []) if isinstance(r, dict)]
         dup = sorted({n for n in decl if decl.count(n) > 1})
         if dup:
@@ -7657,6 +7661,8 @@ try:
                 str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps):
             # DIE-KV-60/taps 11-01: = gen_phys.internal_core_taps_estimate (unsigned internal taps -> estimate form)
             flags[t] = "contract"
+    for t in split:
+        flags.setdefault(t, "split")
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V,
            "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
@@ -7686,7 +7692,7 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max"),
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": SPLIT_CELLS,
             "block_ignore": d.get("block_ignore")}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
@@ -10724,7 +10730,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
-            "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
+            "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])), "--cells", str(int(cells * 1.3) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))

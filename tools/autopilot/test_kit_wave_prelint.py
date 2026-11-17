@@ -17,16 +17,16 @@ def probe(plan, **kw):
     with tempfile.TemporaryDirectory() as d:
         pp = Path(d) / "plan.json"
         pp.write_text(json.dumps(plan))
-        out = subprocess.run([sys.executable, "-c", KW.PROBE_PLAN, json.dumps(dict(plan=str(pp), **kw))],
+        out = subprocess.run([sys.executable, "-c", KW.PROBE_PLAN, json.dumps(dict(dict(cells_max=400000), plan=str(pp), **kw))],
                              capture_output=True, text=True, cwd=d)
         return json.loads(out.stdout.split("AP_JSON ", 1)[1])
 
 
 PLAN = {"partition_types": {
-    "big": {"cells": 160000, "contents": [{"inst": "u", "module": "m"}]},
-    "sum": {"contents": [{"inst": "a", "module": "a", "cells": 100000}, {"inst": "b", "module": "b", "cells": 60000}]},
+    "big": {"cells": 460000, "contents": [{"inst": "u", "module": "m"}]},
+    "sum": {"contents": [{"inst": "a", "module": "a", "cells": 250000}, {"inst": "b", "module": "b", "cells": 210000}]},
     "cored": {"cells": 900000, "hard_cores": [{"inst": "c", "module": "c", "lef": "c.lef", "lib": "c.lib"}]},
-    "small": {"cells": 149000},
+    "small": {"cells": 399000},
     "leak": {"buses": [{"name": "strap_id", "dir": "in", "width": 4}, {"name": "d_i", "dir": "in", "width": 8}]},
     "ok_strap": {"buses": [{"name": "strap_id", "dir": "in", "width": 4}], "id_straps": [{"name": "strap_id", "width": 4}]},
     "dup": {"id_straps": [{"name": "strap_a", "width": 1}, {"name": "strap_a", "width": 1}]},
@@ -38,12 +38,12 @@ class Probe(unittest.TestCase):
         res = probe(PLAN)
         lint = res["lint"]
         self.assertEqual(sorted(lint), ["big", "dup", "leak", "sum"])
-        self.assertTrue(lint["big"][0].startswith("cells: est 160000"))
-        self.assertTrue(lint["sum"][0].startswith("cells: est 160000"))     # sum of contents[].cells
+        self.assertTrue(lint["big"][0].startswith("cells: SPLIT-NEEDED est 460000"))
+        self.assertTrue(lint["sum"][0].startswith("cells: SPLIT-NEEDED est 460000"))     # sum of contents[].cells
         self.assertIn("strap_id", lint["leak"][0])
         self.assertIn("duplicate", lint["dup"][0])
         self.assertEqual(res["probe_v"], KW.PROBE_V)
-        self.assertNotIn("big", probe(PLAN, cells_max=200000)["lint"])     # die override of the cell limit
+        self.assertNotIn("big", probe(PLAN, cells_max=500000)["lint"])     # the probe limit is a parameter; the wave passes the one SPLIT_CELLS
 
     def test_entry_block_and_opt_out(self):
         res = probe(PLAN)
@@ -51,10 +51,10 @@ class Probe(unittest.TestCase):
         names = {t: f"b_{t}" for t in PLAN["partition_types"]}
         d["_lint"] = KW.prelint(d, "die", names, {"items": {}})
         # OWNER 07:0x advisory: lint hits never block; only a missing planned core view does (WAIT-DEP)
-        self.assertIsNone(KW.plan_entry_block(d, "big"))
+        self.assertTrue(KW.plan_entry_block(d, "big").startswith("SPLIT-NEEDED"))   # over 400k: never launched
         self.assertIsNone(KW.plan_entry_block(d, "leak"))
         self.assertIn("big", d["_lint"])
-        self.assertTrue(KW.plan_entry_block(dict(d, prelint_block=True), "big").startswith("LINT cells"))
+        self.assertTrue(KW.plan_entry_block(dict(d, prelint_block=True), "big").startswith("SPLIT-NEEDED"))
         self.assertTrue(KW.plan_entry_block(dict(d, prelint_block=True), "leak").startswith("LINT strap"))
         self.assertIsNone(KW.plan_entry_block(d, "small"))
         self.assertIsNone(KW.plan_entry_block(d, "cored"))
@@ -68,7 +68,15 @@ class Probe(unittest.TestCase):
         d0["_lint"] = KW.prelint(d0, "die", names, {"items": {}})
         self.assertTrue(KW.plan_entry_block(d0, "pv").startswith("WAIT-DEP"))
         self.assertIn("WAIT-DEP", d0["_lint"]["pv"][0])
-        self.assertIsNone(KW.plan_entry_block(dict(d, prelint=False, prelint_block=True), "big"))
+        self.assertTrue(KW.plan_entry_block(dict(d, prelint=False), "big").startswith("SPLIT-NEEDED"))   # not an advisory lint: the one plan-time limit
+
+    def test_one_cell_limit(self):
+        sys.path.insert(0, str(Path(KW.__file__).resolve().parents[1] / "die_plan"))
+        import cell_cap, type_bound
+        self.assertEqual(KW.SPLIT_CELLS, cell_cap.SPLIT_CELLS)
+        self.assertEqual(type_bound.CELL_CAP, cell_cap.SPLIT_CELLS)
+        self.assertEqual(type_bound.classify(cell_cap.SPLIT_CELLS + 1, {}, {})[0], "NEEDS-SPLIT")
+        self.assertFalse(hasattr(KW, "CELL_CAP"))
 
 
 class History(unittest.TestCase):
