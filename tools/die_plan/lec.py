@@ -7927,8 +7927,10 @@ def instance_net_clash_normalise(netlist, out, rec):
     with op(netlist, "rt", errors="replace") as f:
         t = f.read()
     norm = lambda n: n[1:].rstrip() if n.startswith("\\") else n
-    decl = re.compile(r"^\s*(?:input|output|inout|wire|reg|tri|supply0|supply1)\b([^;]*);", re.M)
-    inst = re.compile(r"^(\s*)(" + _VID + r")(\s+)(" + _VID + r")(\s*\[[^\]]*\])?(\s*)\(", re.M)
+    # Keep line anchors on their own line: \s* retried at every empty line scans a
+    # blank run quadratically (physical-cell exports can leave millions of lines).
+    decl = re.compile(r"^[ \t]*(?:input|output|inout|wire|reg|tri|supply0|supply1)\b([^;]*);", re.M)
+    inst = re.compile(r"^([ \t]*)(" + _VID + r")(\s+)(" + _VID + r")(\s*\[[^\]]*\])?(\s*)\(", re.M)
     parts, pos, renamed = [], 0, []
     for mm in re.finditer(r"\bmodule\b.*?\bendmodule\b", t, re.S):
         body = mm.group(0)

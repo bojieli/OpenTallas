@@ -68,6 +68,26 @@ def test_yosys_reads_the_renamed_copy(tmp_path):
     src = tmp_path / "6_final.v"
     src.write_text(NET)
     ok, msg = _yosys_ok(src)
-    assert not ok and "Re-definition of cell" in msg                # the failure mode
+    assert not ok and ("Re-definition of cell" in msg or
+                       ("Cannot add cell" in msg and "same name was already created" in msg))
     ok, msg = _yosys_ok(lec.instance_net_clash_normalise(str(src), tmp_path, {}))
     assert ok, msg
+
+
+def test_blank_runs_and_split_headers_preserve_functional_text(tmp_path):
+    # Physical-only cell removal leaves long blank runs in real final exports.
+    # Keep legal newlines within a cell header, including an escaped instance.
+    text = NET.replace("  input a;", "\n" * 8192 + "\tinput a;")
+    text = text.replace("  BUFx2 cland_fwd_fclk_out_t_o (",
+                        "\tBUFx2\n\n  cland_fwd_fclk_out_t_o\n  (")
+    src = tmp_path / "blank_final.v"
+    src.write_text(text)
+    rec = {}
+    got = lec.instance_net_clash_normalise(str(src), tmp_path, rec)
+    assert src.read_text() == text
+    assert rec["instance_net_renames"]["n"] == 3
+    renamed = Path(got).read_text()
+    assert "\n" * 8192 + "\tinput a;" in renamed
+    assert "\tBUFx2\n\n  cland_fwd_fclk_out_t_o__lecinst\n  (" in renamed
+    assert renamed.replace("cland_fwd_fclk_out_t_o__lecinst", "cland_fwd_fclk_out_t_o").replace(
+        "\\n[0]__lecinst ", "\\n[0]").replace("BUFx2 n_9__lecinst1", "BUFx2 n_9") == text
