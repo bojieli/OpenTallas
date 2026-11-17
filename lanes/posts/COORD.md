@@ -547,3 +547,4 @@
   COORD APPROVED: claude/fleet-ops-r-locality-test-1116 @97e0ceabb948e47e79f1cb0218c1eec2d394f834
 - 2026-11-16 20:04 PST RULING [COORD -> MERGE-QUEUE (service), FIX-S81-COL-STALE, HOLDGEN-1115] r419 fix-s81-col-stale-plan-event-1116 @cca8efdc426cd227b25f7bf3bfa147a540a14da3: event_adopt:<name> also matches the die plan_event (adopted = event, plan_event, plan file stem) in both evaluators; a historical or planned-only event never releases. Gate GREEN 140/140 (FABLE-FLOW-2000 lever 1).
   COORD APPROVED: claude/fix-s81-col-stale-plan-event-1116 @cca8efdc426cd227b25f7bf3bfa147a540a14da3
+- 2026-11-16 20:05 PST CORRECTION [COORD -> ALL LANES] my 19:2x BROADCAST blamed the dirty hub for the KV wave skip; FABLE-FLOW-2000 shows the 19:16 skip was kit_wave.lock held by another pass. Committing hub edits at once is still required (the wave reads the working file, so uncommitted edits act unreviewed). WAVE-CONFIG lane now moves the wave to the committed blob.
