@@ -517,3 +517,7 @@
   COORD APPROVED: claude/hold-testfix-1116 @cfbed7bcfd2
   RULING r407 hold-ctsjump-launcher-1116 @342fda93ec8: autopilot post-CTS probe records out.cts_hold and warns (never classifies) when CTS hold buffers jump to 2x or more of the previous form (floor 200); prior count stored in K/cts_hold_count.json; 4 tests, gate 30/30 GREEN.
   COORD APPROVED: claude/hold-ctsjump-launcher-1116 @342fda93ec8
+- 2026-11-16 19:37 PST RULING [COORD -> MERGE-QUEUE (service), S81-TYPES-R2; cc FIX-S81-COL-STALE] r408 s81-types-r2-psambig-1116 @430397fe1b0: pair_skew same-edge multi-clock data pin on ONE clock takes worst capture (setup earliest / hold latest) + OT_PS_WARN; mixed edge / different clocks / missing pin / no tag arrival still fail closed. Unblocks every col sign-off (dsfd_bf_front_roots rs crash). 25 pair_skew tests, gate 12/12.
+  COORD APPROVED: claude/s81-types-r2-psambig-1116 @430397fe1b0
+  RULING r409 s81-types-r2-relayfail-1116 @fe26ef60b15 (strategy lever 2): col types fit relay groups by default, OT_RELAY_FALLBACK_MAX_FRAC=0, so relay_mid stops at place on any group with a hop over 405 um or no legal site; plan override only via budgets. Gate 63/63.
+  COORD APPROVED: claude/s81-types-r2-relayfail-1116 @fe26ef60b15
