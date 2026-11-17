@@ -1,0 +1,54 @@
+{
+  "status": "CONFIRMED_ROUTED_START_EXPORT_LONG_HOP_NOT_FIXED_BY_M4_QFT_SPLIT",
+  "owner": "QC-PLAN-R next-N plan/source event; no M4 mutation",
+  "failure_job": "6717a9bb0fe4",
+  "failed_kit": "epyc10:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q6D/items/slw_st_b_v2__pva66d0f22/attempt_6/gen/slw_st_b_v2__pva66d0f22",
+  "setup_tt_ps": -118.14,
+  "setup_path": "u_bound.u_cland_origin/s2 -> u_bound.u_cland_rstart_tx/q",
+  "actual_DEF_dbu_per_um": 1000,
+  "actual_origin_xy_um": [
+    114.318,
+    481.95
+  ],
+  "actual_tx_xy_um": [
+    313.2,
+    1331.37
+  ],
+  "actual_L1_um": 1048.302,
+  "FF_all_ps": -60.93,
+  "FF_all_scope": "inputport cws3_i352->feedthrough; parent advisory; internal ring holds separate",
+  "m4_plan": "epyc2:/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m4.json",
+  "affected_m4_types": [
+    "slw_st_b_v2__pva66d0f22__pvb80e2003",
+    "slw_st_b_v2__pva66d0f22__pv3d7bec84"
+  ],
+  "m4_origin_rect_um": [
+    111.59,
+    481.67,
+    128.87,
+    498.95
+  ],
+  "m4_rstart_out_um": [
+    311.52,
+    1336.544
+  ],
+  "m4_L1_um": 1037.524,
+  "emitter": "tools/die_plan/clock_landings.py:_origin_rtl, cat.relay_tx branch; currently one ot_dp_landing_relay u_cland_rstart_tx .d(cland_start), no export intermediate stages",
+  "verify": "tools/die_plan/clock_landing_verify.py count origin relay TX/RX identity; update only with actual new plan semantics",
+  "proposal_only": {
+    "intermediate_xy_um": [
+      [
+        184,
+        770
+      ],
+      [
+        248,
+        1050
+      ]
+    ],
+    "extra_boot_edges": 2,
+    "extra_state_bits_per_partition": 2,
+    "extra_token_edges": 0,
+    "required": "raw-reset/START identity exactness, model before RTL, price CA/frame/lane impacts, floorplan/clock reproof and new plan event; not a drop-in M4 row patch"
+  }
+}
