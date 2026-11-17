@@ -38,3 +38,9 @@ W = epyc2 /srv/opentallas-scratch2/claude/s81-ifn0-halves. My tools: W/read_type
 - Routed CK TT: gated547 443..455 (HE) / 445..455 (HW), up from 365..375 at CTS (gated branch picks up route RC + GRT hold buffers); root57 399 / 422, IR 398..417 / 423..441.
 - Both: eco_loop check = ECO_ELIGIBLE (R-MINIMAL only internal FF hold). ONE hold ECO each (reg2reg scope, margin 5, max_iter 1; force_pa_reset.tcl replaced by Codex reentry-guarded version, originals kept *.pre_guard): HE client 1610335 (~/s81-types-r-ifn0-he-bal1-eco.log, KIT/eco_hold1), HW client 1762340 (~/s81-types-r-ifn0-hw-bal1-eco.log). Tools W/read_types_r/rmin_tools (copy of Codex rmin_hold_inventory1116).
 - Legacy signoff.py verdicts NOT SIGNED (all-path hold incl ports, DRV slew advisory, face_guard NOT RUN: no 1_synth.v in these kits).
+
+## CODEX PARK — Claude reset reported by parent, 2026-11-16
+- Took over result collection only; no live kit edits, route restart, duplicate job or signoff claims.
+- Existing E2 HE eco_hold1/i1 unit3709223-1794885271 / Docker e59a41830e34 live DRT iteration1/30%,3251 transient violations. Repair internal hold223->0,+5.01 with1611buffers; setup repair estimate -29.57. Await routedTT/FF/DRC.
+- Existing HW eco_hold1/i1 unit3865114-1794885864 / Docker0ce6e9ae7784 live DRT pin access after DPL0/GRT. Repair internal hold406->0,+5.00 with1761buffers; TT postrepair estimate -107.71 (NOT final). All1505 frozen clock nets retained. Diagnose actual routed setup if below -42; no extra ECO launched.
+- Logs remain intel2 s81-types-r-ifn0-{he,hw}-bal1-eco.log and each kit eco_hold1/i1/run_prd.log. Parent cores_ifn0 owns final handback.
