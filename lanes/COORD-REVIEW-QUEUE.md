@@ -19900,3 +19900,5 @@ FAILED [AUTOPILOT f4987df7c75e] 2026-11-16 23:43:16 PST AUTOPILOT -> KIT-WAVE-3:
   COORD APPROVED: claude/head-ctl-mchk-local-1116 @2ab82cffae0d53d4c2185ec4e376bf5b756c4c5f
   RULING r491 kv-clk-r2-compound264823d689876cae333b1243cefd3a6d653112db opt-in perpartition compoundPC/PHY clocktemplate preserveslogicalCAIDs; focused11PASS/normalGREEN56/56 on17e5. Measurednewclock-onlymodel andselectedproductiontable/consumer gates stillrequired; no exploratoryring authority.
   COORD APPROVED: claude/kv-clk-r2-compound-1117 @264823d689876cae333b1243cefd3a6d653112db
+- 2026-11-16 23:49 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 3 event(s): glue unstarted waiter RESTAGED (epyc7 -> epyc8); sle_fe_v1__cl8210183c unstarted waiter RESTAGED (epyc7 -> epyc8); sle_fe_v2 unstarted waiter RESTAGED (epyc7 -> epyc8)
+- 2026-11-16 23:50 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 119 GB, falling 53 GB/h, floor 50 GB in 1.3 h AUTO-RETIRE rc 0: df before:  111G / df after:  111G; deleted 0,  (cron disk_rate.py; read-only)
