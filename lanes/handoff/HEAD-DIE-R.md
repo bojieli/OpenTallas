@@ -73,3 +73,9 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/head-die-r (pack/smoke/proof),
 - NF15e: took over memory prepare from parked other_types child. E8 disk full, so work copy at E10 head-die-r/nf15e_e10 (E7 copy nf15e_e7 lacks d1 tree refs). r5 PASS -> stage/prep/memory_prepared_plan.json sha 253926800553 (chain_resite.py DP fixed lepk_i0 405.61). Next: native_stage_groups from memory_geometry_final_groups.json, capacity recompute, render LOOK, wrapper/receipt, GEN/G0/bind/LAT.
 - Reset/START: 508/714 arst_n/start_i min seams neg (TT), all setup+hold>=0; form = last crossing relay inside receiver clock region (reset_tree relay rows). sp4->sp3 setup via SPE N30 fork.
 - Then tap offset rows (E7 head-die-r/tapwin) + in/out_min.
+
+## CODEX NF15e fresh clock geometry 2026-11-17 04:1x
+- Parent HEAD assigned clock regeneration after NF15e moved SRAMs overlap107 of628 inherited clock reservation boxes. Own workspace E10 head-die-r/nf15e_clock; final52plan snapshot sha2fca59e60600 kept adjacent to plan as source_plan_clock_input_2fca59e6.json (source_plan unchanged).
+- Fresh config clock_fresh.yaml removes old --tree-json stamped_fdh_st.json override; preserves map/feed/views, inv/NDR inv_ndr_head26_i150 stage model (check PASS), link_htree leaf200/rep150 + DMEmax405/LEP300. Input manifest and run_geometry.py pin snapshot.
+- Geometry-only ot-run64GB24threads E10 unit oth-ubuntu-4005198-1794917739, intel2client346206 log ~/hdr/nf15e_clock_geometry.log, generator log nf15e_clock/tree/kit.log. No GRT/STA launched. After generation: derive new clksite_reserve rows, check overlaps, render+LOOK, send rows to NF15e child for integration/capacity recompute. New GRT guide must pass current M8 grant lock before integration, or explicit newgrant/event; no silent lock removal.
+- Staged mk_combo_kv.py (own copy) corrects old833.333 prototype period to833.000 throughout. Full die RTL route still waits wrapper/gates and ROQ/TXI models; no physical/adopt claim.
