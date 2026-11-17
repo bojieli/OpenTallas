@@ -110,12 +110,12 @@ class MetFirstTests(unittest.TestCase):
         self.assertIn("margin chase skipped", out)
 
     def test_flood_still_violating_falls_back_to_guarded_chunks(self):
-        calls, _ = run_repair([(-40.0, -9000.0, 900), (-30.0, -5000.0, 500), (-10.0, -100.0, 20), (12.0, 0.0, 0)], 50 - 1)
+        calls, _ = run_repair([(-40.0, -9000.0, 900), (-30.0, -5000.0, 500), (-10.0, -100.0, 20), (12.0, 0.0, 0)], 50 - 1, env="set ::env(OT_HOLD_CHUNK) 1000")   # chunking is opt-in since OT_HOLD_CHUNK defaults to 0
         self.assertIn("-hold_margin 0.0", calls[1])
         self.assertTrue(any("-max_iterations" in c and "-hold_margin 49" in c for c in calls[2:]))
 
     def test_no_flood_keeps_margin_chase(self):
-        calls, out = run_repair([(-3.0, -10.0, 4), (50.5, 0.0, 0)], 50)
+        calls, out = run_repair([(-3.0, -10.0, 4), (50.5, 0.0, 0)], 50, env="set ::env(OT_HOLD_CHUNK) 1000")
         self.assertNotIn("margin chase skipped", out)
         self.assertIn("-hold_margin 50", calls[1])
         self.assertIn("-max_iterations", calls[1])
