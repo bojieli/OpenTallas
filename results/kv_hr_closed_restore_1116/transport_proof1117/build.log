@@ -1,0 +1,669 @@
+%Warning-TIMESCALEMOD: qkd_kvs_emb_transport.sv:1:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    1 | module qkd_kvs_emb_transport #(parameter integer ENABLE=0, parameter integer MUT_BYPASS=0, parameter integer MEALY_COMP=1) (input wire ck,input wire rst_n,
+      |        ^~~~~~~~~~~~~~~~~~~~~
+                       qkd_kvs_emb_ctx.sv:15:8: ... Location of module with timescale
+   15 | module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0, parameter integer ROPE=0, parameter integer ROPE_DELAY=1024, parameter integer OVL=0, parameter integer FIX_ROPE_SLOT_GUARD=0) (
+      |        ^~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-TIMESCALEMOD: qkd_kvs_emb_rope.sv:1:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    1 | module qkd_kvs_emb_rope (
+      |        ^~~~~~~~~~~~~~~~
+                       qkd_kvs_emb_ctx.sv:15:8: ... Location of module with timescale
+   15 | module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0, parameter integer ROPE=0, parameter integer ROPE_DELAY=1024, parameter integer OVL=0, parameter integer FIX_ROPE_SLOT_GUARD=0) (
+      |        ^~~~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_transport.sv:16:13: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                   : ... note: In instance 'tb.u_tr'
+   16 | generate if(!ENABLE)begin:g_off
+      |             ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: qkd_kvs_emb_transport.sv:33:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_BYPASS' generates 32 bits.
+                                                   : ... note: In instance 'tb.u_tr'
+   33 | localparam integer N_rowtx__emb_tx_v=(MUT_BYPASS?1:2);
+      |                                                 ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_transport.sv:40:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_BYPASS' generates 32 bits.
+                                                   : ... note: In instance 'tb.u_tr'
+   40 | localparam integer N_rowtx__emb_tx_payload=(MUT_BYPASS?1:2);
+      |                                                       ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_transport.sv:47:40: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_BYPASS' generates 32 bits.
+                                                   : ... note: In instance 'tb.u_tr'
+   47 | localparam integer N_px_tok=(MUT_BYPASS?1:2);
+      |                                        ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_transport.sv:54:40: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_BYPASS' generates 32 bits.
+                                                   : ... note: In instance 'tb.u_tr'
+   54 | localparam integer N_px_tep=(MUT_BYPASS?1:2);
+      |                                        ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_transport.sv:103:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_BYPASS' generates 32 bits.
+                                                    : ... note: In instance 'tb.u_tr'
+  103 | localparam integer N_o_ctx_svc=(MUT_BYPASS?1:2);
+      |                                           ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_transport.sv:110:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUT_BYPASS' generates 32 bits.
+                                                    : ... note: In instance 'tb.u_tr'
+  110 | localparam integer N_emb_fault=(MUT_BYPASS?1:2);
+      |                                           ^
+%Warning-WIDTHTRUNC: qfd_embedding_word_provider.sv:81:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ROPE' generates 32 bits.
+                                                         : ... note: In instance 'tb.qc'
+   81 |     generate if (ROPE) begin : g_rope
+      |              ^~
+%Warning-WIDTHTRUNC: qfd_embedding_word_provider.sv:116:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ROPE_FF' generates 32 bits.
+                                                         : ... note: In instance 'tb.qc'
+  116 |         if (ROPE_FF) begin : g_rope_ff
+      |         ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:85:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   85 |     generate if(ROPE)begin:g_rope
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:79:74: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   79 |     qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.LOCAL(6),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]&&(!OVL||ovl_adm_done)), .ctx_observed_v(i_ctx[97]&&(!OVL||ovl_adm_done)),
+      |                                                                          ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:85:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   85 |     generate if(ROPE)begin:g_rope
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:79:74: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   79 |     qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.LOCAL(6),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]&&(!OVL||ovl_adm_done)), .ctx_observed_v(i_ctx[97]&&(!OVL||ovl_adm_done)),
+      |                                                                          ^
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:91:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                     : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+   91 |     generate if(NATIVE32)begin:g_fresh
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:105:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                      : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+  105 |     generate if(NATIVE32)begin:g_reset
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:112:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                      : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+  112 |     generate if(NATIVE32)begin:g_native32
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4_cal.sv:38:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                            : ... note: In instance 'tb.mut.u_context.u_join'
+   38 |     generate if(NATIVE32)begin:g_reset
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4_cal.sv:58:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                            : ... note: In instance 'tb.mut.u_context.u_join'
+   58 |     generate if (NATIVE32) begin : g_native32_calendar
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4_cal.sv:93:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                            : ... note: In instance 'tb.mut.u_context.u_join'
+   93 |     generate if(NATIVE32)begin:g_last
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4.sv:21:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join.u_join4'
+   21 |     generate if(NATIVE32)begin:g_reset
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4.sv:38:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'NATIVE32' generates 32 bits.
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join.u_join4'
+   38 |     generate if (NATIVE32) begin : g_native32
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4.sv:58:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PIPE_JOIN' generates 32 bits.
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join.u_join4'
+   58 |     generate if (PIPE_JOIN) begin : g_pipelined_join
+      |              ^~
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4.sv:78:52: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE_JOIN' generates 32 bits.
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join.u_join4'
+   78 |         else begin if(multi)mf<=1;fault<=(PIPE_JOIN?mf_q:mf)|jf|(PIPE_JOIN?multi_q:multi);end
+      |                                                    ^
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4.sv:78:75: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE_JOIN' generates 32 bits.
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join.u_join4'
+   78 |         else begin if(multi)mf<=1;fault<=(PIPE_JOIN?mf_q:mf)|jf|(PIPE_JOIN?multi_q:multi);end
+      |                                                                           ^
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4_cal.sv:111:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join'
+  111 |             if(!NATIVE32)for (k = 0; k < 8; k = k + 1) begin off[k] <= 16'd0; len[k] <= 8'd0; end
+      |                ^
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4_cal.sv:115:20: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join'
+  115 |                 if(!NATIVE32)begin off[ca[2:0]] <= cd[15:0]; len[ca[2:0]] <= cd[23:16];end
+      |                    ^
+%Warning-WIDTHTRUNC: qkd_embedding_static_join4_cal.sv:129:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE_JOIN' generates 32 bits.
+                                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_join'
+  129 |     assign fault = jf | (PIPE_JOIN ? cf_q : cf);
+      |                                    ^
+%Warning-WIDTHTRUNC: qkd_embedding_row_tx_rope.sv:168:63: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'FIX_ROPE_SLOT_GUARD' generates 32 bits.
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.g_rope.u_rowtx'
+  168 |     if(!armed_state[MAIN]||n_state[MAIN]==(FIX_ROPE_SLOT_GUARD?73:65))fault<=1;
+      |                                                               ^
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:68:32: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE32' generates 32 bits.
+                                                     : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+   68 |     assign start_local=NATIVE32?start_banks:{LOCAL{start_state}};
+      |                                ^
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:69:26: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE32' generates 32 bits.
+                                                     : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+   69 |     assign start=NATIVE32?start_delayed:start_state;
+      |                          ^
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:70:26: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'NATIVE32' generates 32 bits.
+                                                     : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+   70 |     assign fault=NATIVE32?fault_delayed:fault_state;
+      |                          ^
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:145:61: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                      : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+  145 |             qv <= 1'b0; qo <= 1'b0; start_state <= 1'b0; if(!NATIVE32)last <= 61'd0; have <= 1'b0; gap <= 10'd0; fault_state <= 1'b0;
+      |                                                             ^
+%Warning-WIDTHTRUNC: qkd_embedding_ctx_start.sv:155:49: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'NATIVE32' generates 32 bits.
+                                                      : ... note: In instance 'tb.u_me.g_on.u_core.u_context.u_ctx'
+  155 |                         start_state <= 1'b1; if(!NATIVE32)last <= qd; have <= 1'b1; gap <= 10'(MIN_GAP);
+      |                                                 ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:44:25: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   44 |       if(start_local[1] && ROPE)rope_id<=18'd151936+{8'd0,accepted_owner[18:9]};
+      |                         ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:45:25: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   45 |       if(start_local[2] && ROPE)position<=accepted_owner[18:6];
+      |                         ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:46:25: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   46 |       if(start_local[0] && ROPE)rope_epoch<=tep;    
+      |                         ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:52:27: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   52 |         if(start_local[3] && ROPE)begin
+      |                           ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:66:40: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   66 |     wire rope_start_nx=!(start_local[3]&&ROPE)&&rope_pending&&rope_count==0;
+      |                                        ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:79:154: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OVL' generates 32 bits.
+                                              : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   79 |     qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.LOCAL(6),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]&&(!OVL||ovl_adm_done)), .ctx_observed_v(i_ctx[97]&&(!OVL||ovl_adm_done)),
+      |                                                                                                                                                          ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:79:204: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OVL' generates 32 bits.
+                                              : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   79 |     qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.LOCAL(6),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]&&(!OVL||ovl_adm_done)), .ctx_observed_v(i_ctx[97]&&(!OVL||ovl_adm_done)),
+      |                                                                                                                                                                                                            ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:82:83: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ROPE' generates 32 bits.
+                                             : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+   82 |         .up2(i_hroot_ES), .up3(i_hroot_EN), .start(sweep_start), .rope_sweep(ROPE && rope_start), .cfg_we(i_ctl[72]), .cfg_addr(i_ctl[7:0]), .cfg_data(i_ctl[71:8]),
+      |                                                                                   ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:103:12: Logical operator IF expects 1 bit on the If, but If's VARREF 'OVL' generates 32 bits.
+                                              : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+  103 |       else if(OVL)begin
+      |            ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx.sv:108:43: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OVL' generates 32 bits.
+                                              : ... note: In instance 'tb.u_me.g_on.u_core.u_context'
+  108 |     assign emb_fault = cf | jf | rf | (OVL&&ovl_fault);
+      |                                           ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:44:25: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   44 |       if(start_local[1] && ROPE)rope_id<=18'd151936+{8'd0,accepted_owner[18:9]};
+      |                         ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:45:25: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   45 |       if(start_local[2] && ROPE)position<=accepted_owner[18:6];
+      |                         ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:46:25: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   46 |       if(start_local[0] && ROPE)rope_epoch<=tep;    
+      |                         ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:52:27: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   52 |         if(start_local[3] && ROPE)begin
+      |                           ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:66:40: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   66 |     wire rope_start_nx=!(start_local[3]&&ROPE)&&rope_pending&&rope_count==0;
+      |                                        ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:79:154: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OVL' generates 32 bits.
+                                                      : ... note: In instance 'tb.mut.u_context'
+   79 |     qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.LOCAL(6),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]&&(!OVL||ovl_adm_done)), .ctx_observed_v(i_ctx[97]&&(!OVL||ovl_adm_done)),
+      |                                                                                                                                                          ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:79:204: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OVL' generates 32 bits.
+                                                      : ... note: In instance 'tb.mut.u_context'
+   79 |     qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.LOCAL(6),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]&&(!OVL||ovl_adm_done)), .ctx_observed_v(i_ctx[97]&&(!OVL||ovl_adm_done)),
+      |                                                                                                                                                                                                            ^
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:82:83: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ROPE' generates 32 bits.
+                                                     : ... note: In instance 'tb.mut.u_context'
+   82 |         .up2(i_hroot_ES), .up3(i_hroot_EN), .start(sweep_start), .rope_sweep(ROPE && rope_start), .cfg_we(i_ctl[72]), .cfg_addr(i_ctl[7:0]), .cfg_data(i_ctl[71:8]),
+      |                                                                                   ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:103:12: Logical operator IF expects 1 bit on the If, but If's VARREF 'OVL' generates 32 bits.
+                                                      : ... note: In instance 'tb.mut.u_context'
+  103 |       else if(OVL)begin
+      |            ^~
+%Warning-WIDTHTRUNC: qkd_kvs_emb_ctx_joinmut.sv:108:43: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OVL' generates 32 bits.
+                                                      : ... note: In instance 'tb.mut.u_context'
+  108 |     assign emb_fault = cf | jf | rf | (OVL&&ovl_fault);
+      |                                           ^~
+%Warning-WIDTHTRUNC: qfd_embedding_word_provider.sv:58:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ROPE' generates 32 bits.
+                                                         : ... note: In instance 'tb.qc'
+   58 |     wire wr_rope = ROPE && word_scale && word_index != 0;
+      |                         ^~
+%Warning-WIDTHTRUNC: qfd_embedding_word_provider.sv:59:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ROPE' generates 32 bits.
+                                                         : ... note: In instance 'tb.qc'
+   59 |     wire ex_rope = ROPE && expected_scale && expected_word != 0;
+      |                         ^~
+%Warning-WIDTHTRUNC: qfd_embedding_word_provider.sv:61:25: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ROPE' generates 32 bits.
+                                                         : ... note: In instance 'tb.qc'
+   61 |     wire rd_rope = ROPE && embed_code_re && embed_code_addr >= ROPE_BASE;
+      |                         ^~
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:23:94: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                    : ... note: In instance 'tb.u_me'
+   23 | always@(posedge ck or negedge rst_n)if(!rst_n)e_d2d__svc<=0;else e_d2d__svc<=((e_d2d__svc<<1)|1'b1);
+      |                                                                                              ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:30:118: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+   30 | always@(posedge ck or negedge rst_n)if(!rst_n)e_d2d__emb_tx_slot<=0;else e_d2d__emb_tx_slot<=((e_d2d__emb_tx_slot<<1)|1'b1);
+      |                                                                                                                      ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:37:115: Operator OR expects 2 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+   37 | always@(posedge ck or negedge rst_n)if(!rst_n)e_rowtx__emb_tx_v<=0;else e_rowtx__emb_tx_v<=((e_rowtx__emb_tx_v<<1)|1'b1);
+      |                                                                                                                   ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:44:133: Operator OR expects 2 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+   44 | always@(posedge ck or negedge rst_n)if(!rst_n)e_rowtx__emb_tx_payload<=0;else e_rowtx__emb_tx_payload<=((e_rowtx__emb_tx_payload<<1)|1'b1);
+      |                                                                                                                                     ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:51:88: Operator OR expects 2 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                    : ... note: In instance 'tb.u_me'
+   51 | always@(posedge ck or negedge rst_n)if(!rst_n)e_px_tok<=0;else e_px_tok<=((e_px_tok<<1)|1'b1);
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:58:88: Operator OR expects 2 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                    : ... note: In instance 'tb.u_me'
+   58 | always@(posedge ck or negedge rst_n)if(!rst_n)e_px_tep<=0;else e_px_tep<=((e_px_tep<<1)|1'b1);
+      |                                                                                        ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:65:85: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                    : ... note: In instance 'tb.u_me'
+   65 | always@(posedge ck or negedge rst_n)if(!rst_n)e_i_ctl<=0;else e_i_ctl<=((e_i_ctl<<1)|1'b1);
+      |                                                                                     ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:72:100: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+   72 | always@(posedge ck or negedge rst_n)if(!rst_n)e_i_hroot_WS<=0;else e_i_hroot_WS<=((e_i_hroot_WS<<1)|1'b1);
+      |                                                                                                    ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:79:100: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+   79 | always@(posedge ck or negedge rst_n)if(!rst_n)e_i_hroot_WN<=0;else e_i_hroot_WN<=((e_i_hroot_WN<<1)|1'b1);
+      |                                                                                                    ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:86:100: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+   86 | always@(posedge ck or negedge rst_n)if(!rst_n)e_i_hroot_ES<=0;else e_i_hroot_ES<=((e_i_hroot_ES<<1)|1'b1);
+      |                                                                                                    ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:93:100: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+   93 | always@(posedge ck or negedge rst_n)if(!rst_n)e_i_hroot_EN<=0;else e_i_hroot_EN<=((e_i_hroot_EN<<1)|1'b1);
+      |                                                                                                    ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:100:109: Operator OR expects 4 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                      : ... note: In instance 'tb.u_me'
+  100 | always@(posedge ck or negedge rst_n)if(!rst_n)e_i_head_record<=0;else e_i_head_record<=((e_i_head_record<<1)|1'b1);
+      |                                                                                                             ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:107:97: Operator OR expects 2 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+  107 | always@(posedge ck or negedge rst_n)if(!rst_n)e_o_ctx_svc<=0;else e_o_ctx_svc<=((e_o_ctx_svc<<1)|1'b1);
+      |                                                                                                 ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:114:97: Operator OR expects 2 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                     : ... note: In instance 'tb.u_me'
+  114 | always@(posedge ck or negedge rst_n)if(!rst_n)e_emb_fault<=0;else e_emb_fault<=((e_emb_fault<<1)|1'b1);
+      |                                                                                                 ^
+%Warning-WIDTHEXPAND: qkd_kvs_emb_transport.sv:23:94: Operator OR expects 5 bits on the RHS, but RHS's CONST '1'h1' generates 1 bits.
+                                                    : ... note: In instance 'tb.u_by'
+   23 | always@(posedge ck or negedge rst_n)if(!rst_n)e_d2d__svc<=0;else e_d2d__svc<=((e_d2d__svc<<1)|1'b1);
+      |                                                                                              ^
+%Warning-WIDTHEXPAND: tb_full.sv:111:110: Operator SHIFTR expects 32 or 18 bits on the LHS, but LHS's VARREF 'pos' generates 13 bits.
+                                        : ... note: In instance 'tb'
+  111 |   if(!ps||pt!==18'(151936+(pos>>3))||pe!==epoch)$fatal(1,"POSITION_ROW_REQUEST got%0d want%0d",pt,151936+(pos>>3));
+      |                                                                                                              ^~
+%Warning-WIDTHEXPAND: tb_full.sv:111:31: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos' generates 13 bits.
+                                       : ... note: In instance 'tb'
+  111 |   if(!ps||pt!==18'(151936+(pos>>3))||pe!==epoch)$fatal(1,"POSITION_ROW_REQUEST got%0d want%0d",pt,151936+(pos>>3));
+      |                               ^~
+%Warning-WIDTHEXPAND: tb_full.sv:114:29: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos' generates 13 bits.
+                                       : ... note: In instance 'tb'
+  114 |    send_half(18'(151936+(pos>>3)),epoch,k,0,sweep[64*c+k][255:0],0,2*k);
+      |                             ^~
+%Warning-WIDTHEXPAND: tb_full.sv:115:29: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos' generates 13 bits.
+                                       : ... note: In instance 'tb'
+  115 |    send_half(18'(151936+(pos>>3)),epoch,k,1,sweep[64*c+k][511:256],0,2*k+1);
+      |                             ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:16: Signal has multiple driving blocks with different clocking: 'tb.u_me.g_on.u_core.u_context.u_join.off'
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:37: Signal has multiple driving blocks with different clocking: 'tb.u_me.g_on.u_core.u_context.u_join.len'
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:17: Signal has multiple driving blocks with different clocking: 'tb.u_me.g_on.u_core.u_context.u_join.u_join4.u0'
+                      qkd_embedding_static_join4.sv:28:32: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                ^~
+                      qkd_embedding_static_join4.sv:31:20: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                    ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:20: Signal has multiple driving blocks with different clocking: 'tb.u_me.g_on.u_core.u_context.u_join.u_join4.u1'
+                      qkd_embedding_static_join4.sv:28:54: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                      ^~
+                      qkd_embedding_static_join4.sv:31:34: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                  ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:23: Signal has multiple driving blocks with different clocking: 'tb.u_me.g_on.u_core.u_context.u_join.u_join4.u2'
+                      qkd_embedding_static_join4.sv:28:76: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                            ^~
+                      qkd_embedding_static_join4.sv:31:48: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:26: Signal has multiple driving blocks with different clocking: 'tb.u_me.g_on.u_core.u_context.u_join.u_join4.u3'
+                      qkd_embedding_static_join4.sv:28:98: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                                                  ^~
+                      qkd_embedding_static_join4.sv:31:62: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                              ^~
+%Warning-MULTIDRIVEN: qkd_embedding_ctx_start.sv:77:17: Signal has multiple driving blocks with different clocking: 'tb.u_me.g_on.u_core.u_context.u_ctx.last'
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of first driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of other driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:16: Signal has multiple driving blocks with different clocking: 'tb.u_by.g_on.u_core.u_context.u_join.off'
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:37: Signal has multiple driving blocks with different clocking: 'tb.u_by.g_on.u_core.u_context.u_join.len'
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:17: Signal has multiple driving blocks with different clocking: 'tb.u_by.g_on.u_core.u_context.u_join.u_join4.u0'
+                      qkd_embedding_static_join4.sv:28:32: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                ^~
+                      qkd_embedding_static_join4.sv:31:20: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                    ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:20: Signal has multiple driving blocks with different clocking: 'tb.u_by.g_on.u_core.u_context.u_join.u_join4.u1'
+                      qkd_embedding_static_join4.sv:28:54: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                      ^~
+                      qkd_embedding_static_join4.sv:31:34: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                  ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:23: Signal has multiple driving blocks with different clocking: 'tb.u_by.g_on.u_core.u_context.u_join.u_join4.u2'
+                      qkd_embedding_static_join4.sv:28:76: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                            ^~
+                      qkd_embedding_static_join4.sv:31:48: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:26: Signal has multiple driving blocks with different clocking: 'tb.u_by.g_on.u_core.u_context.u_join.u_join4.u3'
+                      qkd_embedding_static_join4.sv:28:98: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                                                  ^~
+                      qkd_embedding_static_join4.sv:31:62: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                              ^~
+%Warning-MULTIDRIVEN: qkd_embedding_ctx_start.sv:77:17: Signal has multiple driving blocks with different clocking: 'tb.u_by.g_on.u_core.u_context.u_ctx.last'
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of first driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of other driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:16: Signal has multiple driving blocks with different clocking: 'tb.u_off.g_off.u_core.u_context.u_join.off'
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:37: Signal has multiple driving blocks with different clocking: 'tb.u_off.g_off.u_core.u_context.u_join.len'
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:17: Signal has multiple driving blocks with different clocking: 'tb.u_off.g_off.u_core.u_context.u_join.u_join4.u0'
+                      qkd_embedding_static_join4.sv:28:32: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                ^~
+                      qkd_embedding_static_join4.sv:31:20: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                    ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:20: Signal has multiple driving blocks with different clocking: 'tb.u_off.g_off.u_core.u_context.u_join.u_join4.u1'
+                      qkd_embedding_static_join4.sv:28:54: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                      ^~
+                      qkd_embedding_static_join4.sv:31:34: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                  ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:23: Signal has multiple driving blocks with different clocking: 'tb.u_off.g_off.u_core.u_context.u_join.u_join4.u2'
+                      qkd_embedding_static_join4.sv:28:76: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                            ^~
+                      qkd_embedding_static_join4.sv:31:48: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:26: Signal has multiple driving blocks with different clocking: 'tb.u_off.g_off.u_core.u_context.u_join.u_join4.u3'
+                      qkd_embedding_static_join4.sv:28:98: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                                                  ^~
+                      qkd_embedding_static_join4.sv:31:62: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                              ^~
+%Warning-MULTIDRIVEN: qkd_embedding_ctx_start.sv:77:17: Signal has multiple driving blocks with different clocking: 'tb.u_off.g_off.u_core.u_context.u_ctx.last'
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of first driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of other driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:16: Signal has multiple driving blocks with different clocking: 'tb.u_tr.g_on.u_core.u_context.u_join.off'
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:37: Signal has multiple driving blocks with different clocking: 'tb.u_tr.g_on.u_core.u_context.u_join.len'
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:17: Signal has multiple driving blocks with different clocking: 'tb.u_tr.g_on.u_core.u_context.u_join.u_join4.u0'
+                      qkd_embedding_static_join4.sv:28:32: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                ^~
+                      qkd_embedding_static_join4.sv:31:20: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                    ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:20: Signal has multiple driving blocks with different clocking: 'tb.u_tr.g_on.u_core.u_context.u_join.u_join4.u1'
+                      qkd_embedding_static_join4.sv:28:54: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                      ^~
+                      qkd_embedding_static_join4.sv:31:34: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                  ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:23: Signal has multiple driving blocks with different clocking: 'tb.u_tr.g_on.u_core.u_context.u_join.u_join4.u2'
+                      qkd_embedding_static_join4.sv:28:76: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                            ^~
+                      qkd_embedding_static_join4.sv:31:48: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:26: Signal has multiple driving blocks with different clocking: 'tb.u_tr.g_on.u_core.u_context.u_join.u_join4.u3'
+                      qkd_embedding_static_join4.sv:28:98: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                                                  ^~
+                      qkd_embedding_static_join4.sv:31:62: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                              ^~
+%Warning-MULTIDRIVEN: qkd_embedding_ctx_start.sv:77:17: Signal has multiple driving blocks with different clocking: 'tb.u_tr.g_on.u_core.u_context.u_ctx.last'
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of first driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of other driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:16: Signal has multiple driving blocks with different clocking: 'tb.p.u_context.u_join.off'
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:37: Signal has multiple driving blocks with different clocking: 'tb.p.u_context.u_join.len'
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:17: Signal has multiple driving blocks with different clocking: 'tb.p.u_context.u_join.u_join4.u0'
+                      qkd_embedding_static_join4.sv:28:32: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                ^~
+                      qkd_embedding_static_join4.sv:31:20: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                    ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:20: Signal has multiple driving blocks with different clocking: 'tb.p.u_context.u_join.u_join4.u1'
+                      qkd_embedding_static_join4.sv:28:54: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                      ^~
+                      qkd_embedding_static_join4.sv:31:34: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                  ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:23: Signal has multiple driving blocks with different clocking: 'tb.p.u_context.u_join.u_join4.u2'
+                      qkd_embedding_static_join4.sv:28:76: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                            ^~
+                      qkd_embedding_static_join4.sv:31:48: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:26: Signal has multiple driving blocks with different clocking: 'tb.p.u_context.u_join.u_join4.u3'
+                      qkd_embedding_static_join4.sv:28:98: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                                                  ^~
+                      qkd_embedding_static_join4.sv:31:62: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                              ^~
+%Warning-MULTIDRIVEN: qkd_embedding_ctx_start.sv:77:17: Signal has multiple driving blocks with different clocking: 'tb.p.u_context.u_ctx.last'
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of first driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of other driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:16: Signal has multiple driving blocks with different clocking: 'tb.mut.u_context.u_join.off'
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+                      qkd_embedding_static_join4_cal.sv:71:41: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                         ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4_cal.sv:51:37: Signal has multiple driving blocks with different clocking: 'tb.mut.u_context.u_join.len'
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of first driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+                      qkd_embedding_static_join4_cal.sv:71:77: ... Location of other driving block
+   71 |                 else begin if(write_off)off[segment]<=cd[15:0];if(write_len)len[segment]<=cd[23:16];end
+      |                                                                             ^~~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:17: Signal has multiple driving blocks with different clocking: 'tb.mut.u_context.u_join.u_join4.u0'
+                      qkd_embedding_static_join4.sv:28:32: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                ^~
+                      qkd_embedding_static_join4.sv:31:20: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                    ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:20: Signal has multiple driving blocks with different clocking: 'tb.mut.u_context.u_join.u_join4.u1'
+                      qkd_embedding_static_join4.sv:28:54: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                      ^~
+                      qkd_embedding_static_join4.sv:31:34: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                  ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:23: Signal has multiple driving blocks with different clocking: 'tb.mut.u_context.u_join.u_join4.u2'
+                      qkd_embedding_static_join4.sv:28:76: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                            ^~
+                      qkd_embedding_static_join4.sv:31:48: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                ^~
+%Warning-MULTIDRIVEN: qkd_embedding_static_join4.sv:26:26: Signal has multiple driving blocks with different clocking: 'tb.mut.u_context.u_join.u_join4.u3'
+                      qkd_embedding_static_join4.sv:28:98: ... Location of first driving block
+   28 |     always @(posedge ck) begin u0[298:1]<=up0[298:1];u1[298:1]<=up1[298:1];u2[298:1]<=up2[298:1];u3[298:1]<=up3[298:1];end
+      |                                                                                                  ^~
+                      qkd_embedding_static_join4.sv:31:62: ... Location of other driving block
+   31 |         else begin u0[0]<=up0[0];u1[0]<=up1[0];u2[0]<=up2[0];u3[0]<=up3[0];slot_q<=beat_slot;end
+      |                                                              ^~
+%Warning-MULTIDRIVEN: qkd_embedding_ctx_start.sv:77:17: Signal has multiple driving blocks with different clocking: 'tb.mut.u_context.u_ctx.last'
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of first driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+                      qkd_embedding_ctx_start.sv:128:40: ... Location of other driving block
+  128 |                 else if(admit_q[group])last[LO+:WIDTH]<=pending_owner[LO+:WIDTH];
+      |                                        ^~~~
+%Warning-MULTIDRIVEN: qkd_embedding_row_tx_rope.sv:70:37: Signal has multiple driving blocks with different clocking: 'n_state'
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.g_rope.u_rowtx'
+                      qkd_embedding_row_tx_rope.sv:82:5: ... Location of first driving block
+   82 |     n_state[c]<=n_nx;is_hdr[c]<={2{n_nx==7'd0}};is_rope[c]<={2{n_nx>=7'd65}};
+      |     ^~~~~~~
+                      qkd_embedding_row_tx_rope.sv:82:5: ... Location of other driving block
+   82 |     n_state[c]<=n_nx;is_hdr[c]<={2{n_nx==7'd0}};is_rope[c]<={2{n_nx>=7'd65}};
+      |     ^~~~~~~
+%Warning-MULTIDRIVEN: qkd_embedding_row_tx_rope.sv:75:37: Signal has multiple driving blocks with different clocking: 'is_hdr'
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.g_rope.u_rowtx'
+                      qkd_embedding_row_tx_rope.sv:82:22: ... Location of first driving block
+   82 |     n_state[c]<=n_nx;is_hdr[c]<={2{n_nx==7'd0}};is_rope[c]<={2{n_nx>=7'd65}};
+      |                      ^~~~~~
+                      qkd_embedding_row_tx_rope.sv:82:22: ... Location of other driving block
+   82 |     n_state[c]<=n_nx;is_hdr[c]<={2{n_nx==7'd0}};is_rope[c]<={2{n_nx>=7'd65}};
+      |                      ^~~~~~
+%Warning-MULTIDRIVEN: qkd_embedding_row_tx_rope.sv:76:37: Signal has multiple driving blocks with different clocking: 'is_rope'
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.g_rope.u_rowtx'
+                      qkd_embedding_row_tx_rope.sv:82:49: ... Location of first driving block
+   82 |     n_state[c]<=n_nx;is_hdr[c]<={2{n_nx==7'd0}};is_rope[c]<={2{n_nx>=7'd65}};
+      |                                                 ^~~~~~~
+                      qkd_embedding_row_tx_rope.sv:82:49: ... Location of other driving block
+   82 |     n_state[c]<=n_nx;is_hdr[c]<={2{n_nx==7'd0}};is_rope[c]<={2{n_nx>=7'd65}};
+      |                                                 ^~~~~~~
+%Warning-MULTIDRIVEN: qkd_embedding_row_tx_rope.sv:89:13: Signal has multiple driving blocks with different clocking: 'filled'
+                                                        : ... note: In instance 'tb.u_me.g_on.u_core.u_context.g_rope.u_rowtx'
+                      qkd_embedding_row_tx_rope.sv:95:9: ... Location of first driving block
+   95 |    else filled[g*16+:16]<=filled_next[g*16+:16];
+      |         ^~~~~~
+                      qkd_embedding_row_tx_rope.sv:95:9: ... Location of other driving block
+   95 |    else filled[g*16+:16]<=filled_next[g*16+:16];
+      |         ^~~~~~
+ot-heavy: verilator build -j2 capped to -j1 (16 GB / 30 GB per cc1plus)
+make: Entering directory '/srv/opentallas-scratch2/claude/kv-102/hr_parent1116/transport_proof1117/obj'
+ccache g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+ccache g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+ccache g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+ccache g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
+ccache g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_0.cpp
+ccache g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.fast -c Vtb_vm_classes_1.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb__pch.h -o Vtb__pch.h.slow.gch
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__ConstPool__0__Slow.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__Slow.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb___024root__0__Slow.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_qkd_embedding_row_tx_rope__F1__Slow.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_qkd_embedding_row_tx_rope__F1__0__Slow.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_qkd_embedding_row_tx_rope__F1__1__Slow.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb_qkd_embedding_row_tx_rope__F1__2__Slow.cpp
+ccache g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb__pch.h.slow -c Vtb__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb__ALL.a    -pthread -lpthread -latomic   -o Vtb
+rm Vtb__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch2/claude/kv-102/hr_parent1116/transport_proof1117/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 1.217 MB sources in 20 modules, into 7.908 MB in 22 C++ files needing 0.020 MB
+- Verilator: Walltime 47.974 s (elab=0.071, cvt=2.135, bld=45.557); cpu 2.623 s on 2 threads; allocated 116.656 MB

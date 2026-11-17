@@ -161,24 +161,29 @@ def qwen_kv_context_service_candidate_model():
 
 
 def qwen_kv_context_transport_candidate_model():
-    """Analytical C4 uniform transport; the current release source remains unchanged.
+    """Opt-in C4 transport component; the current release source remains unchanged.
 
     Exact widths come from the actual TT-mapped qkd_kvs_emb_rope interface. Four
     input and two output edges give a component latency delta of six cycles.
-    Physical paths, reset epochs and parent calendar consumption remain open;
-    neither this price nor the producer slot fit authorizes an RTL build.
+    The139pure service passthrough bits use a fifth input stage for exact Mealy alignment. Physical paths, reset epochs and parent calendar consumption remain open;
+    the actual component proof qualifies only this source shape, not physical release.
     """
     return dict(schema='opentallas.qwen-kv-context-transport-candidate.v1',
-        selected=False, build_ready=False, opt_in_default=False, hardware_implemented=False,
+        selected=False, build_ready=False, opt_in_default=False, hardware_implemented=True, component_exactness=True,
+        component_proof='results/kv_hr_closed_restore_1116/transport_proof1117/contract.json',
+        qualified_output_trace_bits=758, qualified_trace_cycles=10304,
+        qualified_requests=8, qualified_packets=584, qualified_reset_epochs=2,
+        egress_bypass_mutant_caught=True, naive_Mealy_latency_mutant_caught=True,
         source_component='qwen_kv_context_service_candidate_model',
-        evidence='results/kv_hr_closed_restore_1116/producer_placement_r0_1117/transport_model.json',
+        evidence='results/kv_hr_closed_restore_1116/producer_placement_r0_1117/transport_model_compensated.json',
         compute=dict(macs_per_cycle=0, added_rounding_points=0), replicas=1,
-        input_stages=4, output_stages=2, component_added_cycles=6,
+        input_stages=4, passthrough_service_input_stages=5, output_stages=2, component_added_cycles=6,
         input_declared_bits_per_cycle=1996, input_used_bits_per_cycle=1507,
         output_declared_bits_per_cycle=758, output_nonconstant_bits_per_cycle=747,
-        data_FF_observed_used_floor=7522, data_FF_declared_upper=9500,
-        data_FF_area_floor_um2=2193.4152, data_FF_CLK_TT_floor_fF=3570.964192,
-        epoch_control_FF_logical=6, epoch_control_FF_candidate=44, epoch_control_area_floor_um2=16.67952,
+        data_FF_observed_used_floor=7661, data_FF_declared_upper=9674,
+        data_FF_area_floor_um2=2233.9476, data_FF_CLK_TT_floor_fF=3636.952496,
+        epoch_control_FF_logical=7, epoch_control_FF_candidate=45, epoch_control_area_floor_um2=17.0586,
+        epoch_qualification_logic_area_upper_um2=4.0,
         clock_buffer_wire_hold_cost_unpriced=True,
         source_dates=dict(first_header=1193, first_rope=1258, last_packet=1265),
         candidate_dates=dict(first_header=1199, first_rope=1264, last_packet=1271),
@@ -194,19 +199,19 @@ def qwen_kv_context_transport_candidate_model():
         macro_orientation='R0; actual LEF SYMMETRY X Y',
         source_baseline_total_area_floor_um2=14702.238072,
         source_candidate_total_area_floor_um2=29078.161164,
-        total_composed_candidate_area_floor_um2=31390.490844,
-        total_candidate_minus_baseline_area_floor_um2=16688.252772,
-        total_composed_candidate_FF=13418, total_candidate_minus_baseline_FF=10295,
-        total_candidate_minus_baseline_CLK_TT_fF=4889.106218,
+        total_composed_candidate_area_floor_um2=31431.402324,
+        total_candidate_minus_baseline_area_floor_um2=16729.164252,
+        total_composed_candidate_FF=13558, total_candidate_minus_baseline_FF=10435,
+        total_candidate_minus_baseline_CLK_TT_fF=4955.555821,
         PDN_continuity_qualified=False, global_PG_layers_qualified=False,
         transport_register_sites_qualified=False, transport_geometric_external_bank_count=30,
         transport_local_bank_sites_missing=14, transport_geometric_external_hop_max_um=365.04,
-        transport_total_clock_branch_copies=44,
-        transport_CLK_TT_data_epoch_floor_fF=3591.331748,
-        transport_CLK_TT_declared_data_epoch_upper_fF=4530.359556,
-        total_composed_candidate_FF_declared_upper=15396,
-        total_composed_candidate_area_declared_upper_floor_um2=31967.275644,
-        total_composed_CLK_TT_declared_upper_fF=7317.109267,
+        transport_total_clock_branch_copies=45,
+        transport_CLK_TT_data_epoch_floor_fF=3657.782951,
+        transport_CLK_TT_declared_data_epoch_upper_fF=4613.426519,
+        total_composed_candidate_FF_declared_upper=15571,
+        total_composed_candidate_area_declared_upper_floor_um2=32018.393124,
+        total_composed_CLK_TT_declared_upper_fF=7400.17623,
         global_token_delta_cycles=None,
         open_requirements=['obstacle-aware complete per-bit transport sites and channel demand',
             'reset-epoch treatment and actual component lockstep plus bypass mutant',

@@ -1,0 +1,19 @@
+REQUEST_PASS token17 position0 epoch4096 packets73 ropewords8
+REQUEST_PASS token17 position1 epoch4100 packets73 ropewords8
+REQUEST_PASS token29 position1 epoch4104 packets73 ropewords8
+REQUEST_PASS token29 position8 epoch4108 packets73 ropewords8
+REQUEST_PASS token17 position0 epoch4096 packets73 ropewords8
+REQUEST_PASS token17 position1 epoch4100 packets73 ropewords8
+REQUEST_PASS token29 position1 epoch4104 packets73 ropewords8
+REQUEST_PASS token29 position8 epoch4108 packets73 ropewords8
+COMPONENT_DATES case0 input152 accepted155 ready1236 first_packet6596 first_rope6661 last_packet6668 drained1420 input_to_accepted3 accepted_to_first6441 accepted_to_rope6506 accepted_to_last6513 observed_accepted_spacing0
+COMPONENT_DATES case1 input1422 accepted1425 ready2522 first_packet7866 first_rope7931 last_packet7938 drained2690 input_to_accepted3 accepted_to_first6441 accepted_to_rope6506 accepted_to_last6513 observed_accepted_spacing1270
+COMPONENT_DATES case2 input2692 accepted2695 ready3792 first_packet9136 first_rope9201 last_packet9208 drained3960 input_to_accepted3 accepted_to_first6441 accepted_to_rope6506 accepted_to_last6513 observed_accepted_spacing1270
+COMPONENT_DATES case3 input3962 accepted3965 ready5046 first_packet10406 first_rope10471 last_packet10478 drained5230 input_to_accepted3 accepted_to_first6441 accepted_to_rope6506 accepted_to_last6513 observed_accepted_spacing1270
+JOIN_CALENDAR_SCALE_SLOT_MUTANT_CAUGHT fault1
+TRANSPORT_PROOF_PASS checks10304 packets584 bypass_bad10304 mealy_bad10304 reset_epochs2
+FULL_PRODUCTION_RECURRENCE_PASS requests4 packets584 goldwords64 same-token-diff-pos same-pos-diff-token
+- tb_full.sv:135: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 0.345 s; speed 25.311 us/s
+- Verilator: cpu 0.345 s on 1 threads; allocated 8 MB

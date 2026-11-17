@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.qwen-kv-context-transport-component-proof.v1",
+ "verdict": "PASS_DELAYED_GOLDEN_COMPONENT",
+ "opt_in_default": false,
+ "profile": {
+  "ENABLE": 1,
+  "MEALY_COMP": 1,
+  "MUT_BYPASS": 0,
+  "NATIVE32": 1,
+  "PIPE_JOIN": 1,
+  "ROPE": 1,
+  "ROPE_DELAY": 1024,
+  "OVL": 0,
+  "FIX_ROPE_SLOT_GUARD": 1
+ },
+ "source_profile": "actual production qkd_kvs_emb_rope+join4cal/fan32+rowtx/twoSRAM+QCwordprovider; arithmetic bodies unchanged",
+ "positive_whole_output_bits": 758,
+ "positive_trace_checks": 10304,
+ "relative_output_cycles": 6,
+ "reset_epochs": 2,
+ "reset_scope": "drained warm reset between two missions; 64post-reset warmup cycles excluded from trace comparison; no midpacket abort qualification",
+ "requests": 8,
+ "packets": 584,
+ "genuine_rope_words": 64,
+ "default_off": "full758-bit original wrapper equality on every qualified trace cycle",
+ "negative_controls": {
+  "egress_bypass_divergent_checks": 10304,
+  "naive_service_ingress4_divergent_checks": 10304,
+  "join_calendar_drop": "fault caught in reused production bench"
+ },
+ "input_stimulus": "real4context production recurrence repeated across two reset epochs plus independent174-bitLFSRservice input",
+ "legacy_log_label": "Terminal FULL_PRODUCTION_RECURRENCE_PASS requests4 is the reused literal label; eight REQUEST_PASS lines,584packets and64goldenwords are authoritative",
+ "new_hardware_cycles": {
+  "stateful_ingress": 4,
+  "pure_service_ingress": 5,
+  "egress": 2,
+  "coherent_after_edge_output_delta": 6
+ },
+ "proof_pipeline": "golden independently sampled afterposedge and delayed6, no output-field mask",
+ "job": {
+  "host": "epyc7",
+  "unit": "oth-ubuntu-366839-1794921309",
+  "client_intel2": 1124351,
+  "exit": 0,
+  "build_wall_seconds": 47.974,
+  "build_threads": 2,
+  "simulation_wall_seconds": 0.345
+ },
+ "physical_qualification": false,
+ "die_source_adopted": false,
+ "global_calendar_consumer_qualified": false,
+ "inputs": [
+  {
+   "path": "ot_rst_relay.sv",
+   "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  {
+   "path": "ot_sram_1r1w_64x512_m1_r2c2.v",
+   "sha256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+  },
+  {
+   "path": "qfd_embedding_word_provider.sv",
+   "sha256": "57777bb021f001f433ce7c5f9ec35ca7a351d673a7d58fcf06dfca0046a4eed1"
+  },
+  {
+   "path": "qkd_embedding_ctx_start.sv",
+   "sha256": "d07896d059e87a1de2fb1f54cdd8e8ccfc737f1b8947f8cc77d2a511f5e92d54"
+  },
+  {
+   "path": "qkd_embedding_row_tx_ctx.sv",
+   "sha256": "c8265e99c453d3a25a8ad43be16d7de207ea8838ff95bc335a862ec6ce0d30cd"
+  },
+  {
+   "path": "qkd_embedding_row_tx_ctx_native32.sv",
+   "sha256": "64d1e72150ec32a025d96775293646421f91bfd89a765ff266956d48fbf29c83"
+  },
+  {
+   "path": "qkd_embedding_row_tx_rope.sv",
+   "sha256": "a170b7a373e6c4201c0182d29f27fd85be8d0b2906ff02de38e98d812bcd5c55"
+  },
+  {
+   "path": "qkd_embedding_static_core_store.sv",
+   "sha256": "df2b4c6470ecc68a9795de30072b95185c74f977715db932d4854dddc2cd93f9"
+  },
+  {
+   "path": "qkd_embedding_static_join.sv",
+   "sha256": "457c182ea84427fb3515d4b5c0de0c110dd434a2c3a9fa81fa2250bc340a5b66"
+  },
+  {
+   "path": "qkd_embedding_static_join4.sv",
+   "sha256": "e1a3bbdd455fb984a96df8463844e351613e5bbb6f6e3c417766097c5d17b211"
+  },
+  {
+   "path": "qkd_embedding_static_join4_cal.sv",
+   "sha256": "c4caf36391cbf7b6c3eb660984508b6721765a469b0446d553bbd0f4af1d28d4"
+  },
+  {
+   "path": "qkd_embedding_static_join_fan32.sv",
+   "sha256": "26bd64995c17841f6bbd84f43c78ee6af9b6b83806382da67c2617ea376fad33"
+  },
+  {
+   "path": "qkd_embedding_static_preload_face.sv",
+   "sha256": "52afe2023dbe64dbfc331c222b4f16db1f4529d438ca1b0f61ba1a5210dd2b55"
+  },
+  {
+   "path": "qkd_kvs_emb_ctx.sv",
+   "sha256": "3ff19b0e0ddd583dd8f63a869825669d2c9373a496bf7d6af50cfc75a511d069"
+  },
+  {
+   "path": "qkd_kvs_emb_ctx_joinmut.sv",
+   "sha256": "a00be021193ddf42286ced4b3d5b93480867a879ca4b5be02a099e54e4321b3a"
+  },
+  {
+   "path": "qkd_kvs_emb_rope.sv",
+   "sha256": "8b8ec9abb8b80ec36632eddeb53fdb160c4c0078c68851872691610c6fa2a530"
+  },
+  {
+   "path": "qkd_kvs_emb_rope_joinmut.sv",
+   "sha256": "82969e1d6cbae4e7b783c84febe55d2237e0527491d468d7d7d6d108f110c57d"
+  },
+  {
+   "path": "qkd_kvs_emb_transport.sv",
+   "sha256": "2f0d0f3aea231bb7d719762d455f83a73d1eaa6e2a0ae0268fbbafc8b5235c5e"
+  },
+  {
+   "path": "rope_expected.hex",
+   "sha256": "ce86ccd351482ec3f2e3c3f5cdb945f5cddeb39dd7d1a190af3861bc9c79ac48"
+  },
+  {
+   "path": "rope_sweep.hex",
+   "sha256": "6b3d8d03eb83e6a9191063d6bba3ef2bc0b29d141e67d5b83bf765e8b5ae0d98"
+  },
+  {
+   "path": "run.sh",
+   "sha256": "33faacd724a5822d1d2651486e685a9645ec6b393890a3a5de38a96b12d21d43"
+  },
+  {
+   "path": "sources.f",
+   "sha256": "958d2f5ab48000602b88752510d37319d56e3696eb7c7d2a14b6b88fd347ad66"
+  },
+  {
+   "path": "tb_full.sv",
+   "sha256": "273332a0019b52c8658550f7ea271517546c8c7a4960a9c23f1974cc2076d36e"
+  }
+ ]
+}

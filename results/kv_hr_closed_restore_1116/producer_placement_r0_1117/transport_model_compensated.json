@@ -1,0 +1,205 @@
+{
+ "schema": "opentallas.qwen-kv-context-transport-mealy-compensated.v1",
+ "state": "MODELED_COMPONENT_PROOF_CANDIDATE_NOT_PHYSICAL_BUILD_READY",
+ "opt_in_default": false,
+ "selected": false,
+ "hardware_implemented": true,
+ "source_mapped_sha256": "4cebef8fa7bc26db3fac24b039887546eb9328e420c37a67c8c9a53f6ef8832f",
+ "input_ports": {
+  "d2d__svc": {
+   "declared_bits": 174,
+   "used_bits": 139,
+   "pipeline_stages": 5
+  },
+  "d2d__emb_tx_slot": {
+   "declared_bits": 1,
+   "used_bits": 1
+  },
+  "i_ctl": {
+   "declared_bits": 73,
+   "used_bits": 73
+  },
+  "i_hroot_WS": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_hroot_WN": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_hroot_ES": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_hroot_EN": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_head_record": {
+   "declared_bits": 552,
+   "used_bits": 98
+  }
+ },
+ "output_ports": {
+  "rowtx__emb_tx_v": {
+   "declared_bits": 1,
+   "nonconstant_bits": 1
+  },
+  "rowtx__emb_tx_payload": {
+   "declared_bits": 548,
+   "nonconstant_bits": 537
+  },
+  "px_tok": {
+   "declared_bits": 18,
+   "nonconstant_bits": 18
+  },
+  "px_tep": {
+   "declared_bits": 16,
+   "nonconstant_bits": 16
+  },
+  "o_ctx_svc": {
+   "declared_bits": 174,
+   "nonconstant_bits": 174
+  },
+  "emb_fault": {
+   "declared_bits": 1,
+   "nonconstant_bits": 1
+  }
+ },
+ "input_stages": 4,
+ "output_stages": 2,
+ "added_component_latency_cycles": 6,
+ "added_component_latency_ps": 4998,
+ "raw_input_bits_per_cycle": 1996,
+ "used_input_bits_per_cycle": 1507,
+ "output_bits_per_cycle": 758,
+ "nonconstant_output_bits_per_cycle": 747,
+ "transport_FF_declared_upper": 9674,
+ "transport_FF_observed_used_bits_floor": 7661,
+ "output_bank_policy": "keep distinct physical output banks; do not share aliased px_tok/px_tep with service seam bits across different faces",
+ "transport_data_FF_area_floor_um2": 2233.9476000000004,
+ "transport_FF_CLK_cap_TT_floor_fF": 3636.952496,
+ "epoch_control_FF_logical": 7,
+ "epoch_control_FF_candidate": 45,
+ "epoch_control_FF_area_floor_um2": 17.0586,
+ "source_component_mapped_FF": 5502,
+ "source_component_logic_area_um2": 2431.22958,
+ "macro_count": 2,
+ "macro_memory_bytes_per_cycle_each": {
+  "read": 64,
+  "write": 64
+ },
+ "compute": {
+  "macs_per_cycle": 0,
+  "added_rounding_points": 0
+ },
+ "replicas": 1,
+ "mux_demux_added": 0,
+ "throughput": {
+  "pipe_items_per_cycle": 1,
+  "component_demonstrated_request_spacing_cycles": 1270,
+  "new_composed_request_spacing_qualified": false
+ },
+ "source_dates": {
+  "first_header": 1193,
+  "first_rope": 1258,
+  "last_packet": 1265
+ },
+ "candidate_dates": {
+  "first_header": 1199,
+  "first_rope": 1264,
+  "last_packet": 1271
+ },
+ "physical_service_boundary": {
+  "existing_cycles": 2,
+  "with_wrapper_cycles_from_original_inputs": 8,
+  "bits_per_cycle": 174,
+  "extra_epoch_bits": 1
+ },
+ "placement_scope": {
+  "producer_geometry": "GEOMETRY_FIT_ONLY_NOT_BUILD_READY",
+  "internal_direct_max_um": 518.4000000000001,
+  "transport_stage_sites_unplaced": true
+ },
+ "admission": {
+  "measured_prior_component": "oth-ubuntu-986963-1794903354, Verilator -j2 PASS; new simulator measured CPU/RAM not yet available",
+  "next_vehicle": "actual same production component plus opt-in uniform-delay wrapper and latency-aligned lockstep; port-delay bypass mutant must fail",
+  "CPU_threads": 2,
+  "RAM_GB": null,
+  "capacity_policy": "derive from retained prior ot-heavy peak/admission before launch; no guessed protective limit or wall-time cap"
+ },
+ "open_requirements": [
+  "Four input stages must delay every used input including the slot/CTL/config/host-context and passthrough-service bits consistently.",
+  "Place per-port transport registers on actual source-to-consumer paths, including shared valid/epoch with payload; four stages only establish capacity for five <=380um hops, not obstacle-aware reach.",
+  "Determine reset assertion/release treatment explicitly and prove complete reset epochs; a uniform delay does not authorize silently changing reset behavior.",
+  "Global calendar and QC word-provider lifetime must consume the +6-cycle delivery event before source adoption.",
+  "Per-tap new sink inventory,44per-portbankepochFF realization and TT/FF/route qualification remain open."
+ ],
+ "area_accounting": {
+  "source_baseline_logic_um2": 1378.77228,
+  "source_baseline_macro_count": 1,
+  "source_candidate_logic_um2": 2431.22958,
+  "source_candidate_macro_count": 2,
+  "each_macro_body_LEF_um2": 13323.465792000003,
+  "source_baseline_total_floor_um2": 14702.238072000002,
+  "source_candidate_total_floor_um2": 29078.161164000005,
+  "additional_transport_data_FF_floor_um2": 2233.9476000000004,
+  "additional_transport_epoch_FF_floor_um2": 17.0586,
+  "additional_service_boundary350FF_floor_um2": 102.23496,
+  "total_composed_candidate_floor_um2": 31431.402324000006,
+  "total_candidate_minus_baseline_floor_um2": 16729.164252000006,
+  "unpriced": "CTS,hold,signalbuffers andwire/PDN channels; floor values are not placed silicon utilization"
+ },
+ "FF_accounting": {
+  "source_baseline": 3123,
+  "source_candidate": 5502,
+  "transport_data": 7661,
+  "transport_epoch_candidate": 45,
+  "service_boundary": 350,
+  "total_composed_candidate": 13558,
+  "total_candidate_minus_baseline": 10435
+ },
+ "clock_accounting_TT_fF": {
+  "source_baseline": 1488.975241,
+  "source_candidate": 2620.615785,
+  "transport_data": 3636.952496,
+  "transport_epoch_candidate": 20.830455,
+  "service_boundary": 166.133926,
+  "total_composed_candidate": 6444.532662,
+  "total_candidate_minus_baseline": 4955.557421
+ },
+ "internal_pin_cone_placement": "R0-only successor; direct allcorners518.4 retained, actual mappedD/Q cone site candidate separately required; no internal extra cycle assumed ready",
+ "supersedes": "transport_model.json four-input/two-output price did not compensate139direct passthrough output bits",
+ "input_stage_by_port": {
+  "d2d__svc": 5,
+  "d2d__emb_tx_slot": 4,
+  "i_ctl": 4,
+  "i_hroot_WS": 4,
+  "i_hroot_WN": 4,
+  "i_hroot_ES": 4,
+  "i_hroot_EN": 4,
+  "i_head_record": 4
+ },
+ "Mealy_alignment_compensation": {
+  "port": "d2d__svc",
+  "added_input_registers": 1,
+  "observed_used_bits": 139,
+  "declared_bits": 174,
+  "reason": "state-derived outputs see input-stage latency4; zero-state passthrough bits need one additional input register to align whole after-edge output trace at6 cycles"
+ },
+ "admission_declared_upper": {
+  "data_FF": 9674,
+  "epoch_FF": 45,
+  "total_composed_FF": 15571,
+  "total_composed_area_floor_um2": 32018.393124000006,
+  "total_composed_CLK_TT_fF": 7400.176229999999
+ },
+ "epoch_qualification_logic": {
+  "operations": "ANDof7stateful ingress-release copies,ANDof6output-release copies,onevalid-outputAND",
+  "area_upper_um2": 4.0,
+  "arithmetic_reordering": false,
+  "composed_area_upper_excludes_clock_hold_buffers": true
+ },
+ "component_exactness": true,
+ "component_proof": "../transport_proof1117/contract.json"
+}
