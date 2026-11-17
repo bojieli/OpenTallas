@@ -508,3 +508,5 @@
   COORD APPROVED: claude/s81-types-r-relayre-1116 @c0ddf60c174
 - 2026-11-16 19:06 PST RULING [COORD -> MERGE-QUEUE (service), HEAD-DIE-R] r403 head-die-r-keep-gen-hosts-1116 @f10d24deb26 (on top of pilot-wave 215be2f, r398; land after it): in-repo apply_reviewed_tree_marker.py --keep-gen-hosts keeps the die current gen_hosts, requires the source guard passed on exactly those hosts, refuses on missing or changed gen_hosts; 9/9 tests. Merge service runs its normal gate.
   COORD APPROVED: claude/head-die-r-keep-gen-hosts-1116 @f10d24deb26
+- 2026-11-16 19:06 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R, TOOLS-CONVERGE] r404 tools-converge-thread-reconcile-1116 @0a280b9: thread-cap reconcile fix (1668d21ff80) plus hermetic test_ot_heavy cap test (temp conf+state, real cgroup kill kept); the earlier RED was a live-queue wait, also failing on main. GREEN 38/38 (2 failures pre-existing on main).
+  COORD APPROVED: claude/tools-converge-thread-reconcile-1116 @0a280b9
