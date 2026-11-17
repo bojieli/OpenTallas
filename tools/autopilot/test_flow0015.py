@@ -74,9 +74,9 @@ def test_a_missing_input_inside_a_snapshot_releases_only_on_a_newer_snapshot_tha
     assert gate()[0]                                                     # the cut prefix matches only a file the failed snapshot also has
 
 
-def test_a_other_classes_still_release_on_a_tool_change(monkeypatch):
+def test_a_other_classes_release_on_a_tool_change_only_when_the_failure_names_the_file(monkeypatch):
     st = {}
-    KW.note_fail_key(cfg(), st, rec(), "INFRA", "INFRA: tool or source skew @gen: AttributeError: module 'x' has no attribute 'y'")
+    KW.note_fail_key(cfg(), st, rec(), "INFRA", "INFRA: tool or source skew @gen: File tools/die_plan/gen_phys.py line 9 AttributeError: module 'x' has no attribute 'y'")
     monkeypatch.setattr(KW, "stage_tools_digest", lambda *a, **k: "new")
     assert KW.fail_key_gate(cfg(), st, "s81", "slice_station__t51", "b1")[2] == ["tools"]
 
