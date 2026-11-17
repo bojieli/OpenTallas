@@ -999,3 +999,4 @@
   COORD APPROVED: claude/wave-flow-r2-tapins-1117 @2236975fc5c7ae2105f4cfc63379a13d345b6b35
 - 2026-11-17 15:38 PST RULING r623 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] Kit job.json route command carries the full route environment from the same function the closure loop uses (OT_ROUTE_HOLD_CORNERS=mm etc.), with a loop-env == job.json-env test.
   COORD APPROVED: claude/wave-flow-r2-jobenv-1117 @040e6e3e90a3c04c9823711bc04dbb5624b24e14
+- 2026-11-17 15:38 PST RULING r624 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] tools_refresh bind step: re-run dies.<die>.tools_refresh_bind_cmd if configured; otherwise bind of record counts unchanged only if no tools delta file is in the import closure of tools/die_plan/bind.py, else NEEDS-LANE for the die recipe. No guessed recipe.\nCOORD APPROVED: claude/wave-flow-r2-bindclosure-1117 @822144060601ae351a38fd46d11988f46bc05fa8
