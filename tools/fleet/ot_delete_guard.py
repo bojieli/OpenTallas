@@ -13,6 +13,7 @@ or older-than-MAX_AGE_H list fails CLOSED for any tree root.  usage: ot_delete_g
 import glob, json, os, re, sys, time
 
 DEFAULT_LIST = os.path.expanduser("~/.local/state/ot-delete-guard/protected.txt")
+ALLOW_EXACT = os.path.expanduser("~/.local/state/ot-delete-guard/allow_exact.txt")   # COORD-ruled narrow exceptions: "<path>\t<expiry epoch>\t<reason>" per line
 CURRENT_TREES = os.path.expanduser("~/.local/state/ot-delete-guard/current_trees.json")   # hub-built: {src_<die prefix>_: {"tree": name, "adopted_at": epoch}}
 MAX_AGE_H = float(os.environ.get("OT_GUARD_MAX_AGE_H", "6"))
 TREE_ROOT = re.compile(r"^(?P<root>/srv/opentallas-scratch[0-9]*/claude/(?:kw45/[^/]+|[^/]+/src_[^/]+))(?:/(?P<rest>.+))?$")
@@ -136,6 +137,21 @@ def _live_text(skip=()):
     return "\n".join(t).replace("opentallas-scratch3", "opentallas-scratch2")
 
 
+def load_allow_exact(path=None, now=None):
+    """{canon path} of the unexpired exact exceptions.  An exception lets ONE directory be deleted although a protected ancestor (a rows dir) contains it; it never lifts the protection of
+    the directory itself, of anything protected INSIDE it, the live-process check or the newer-than-current rule."""
+    now = time.time() if now is None else now
+    out = set()
+    try:
+        for ln in open(path or ALLOW_EXACT):
+            f = ln.rstrip("\n").split("\t")
+            if len(f) >= 2 and f[0].startswith("/srv/") and float(f[1]) > now:
+                out.add(canon(f[0]))
+    except (OSError, ValueError):
+        pass
+    return out
+
+
 def newer_than_current(target, current=None):
     """COORD 11-17 (QC M5T was retired while its apply was pending): a source tree whose manifest is NEWER than the moment its die adopted the current tree is an adoption in progress,
     never a superseded tree.  current = {prefix: {"tree": name, "adopted_at": epoch}} (default: the hub-built current_trees.json).  -> reason or ''"""
@@ -160,7 +176,7 @@ def newer_than_current(target, current=None):
     return ""
 
 
-def refuse(target, protected=None, ptext=None, why_list=None, current=None):
+def refuse(target, protected=None, ptext=None, why_list=None, current=None, allow=None):
     """None = allowed.  protected/ptext may be passed in (tests, batch callers); otherwise loaded."""
     t = canon(os.path.abspath(target))
     if os.path.islink(target) or os.path.realpath(target) != os.path.abspath(target):
@@ -177,7 +193,10 @@ def refuse(target, protected=None, ptext=None, why_list=None, current=None):
         protected, err = load_list()
         if protected is None:
             return err if m else None            # fail closed for tree roots; other targets keep the other guards
+    allow = load_allow_exact() if allow is None else allow
     for p in protected:
+        if t.startswith(p + "/") and t in allow:
+            continue                                  # exact exception: only a protected ANCESTOR is skipped
         if p == t or p.startswith(t + "/") or t.startswith(p + "/"):
             return "protected (kit_wave.json src/bind of record/marker/prov): " + p
     pt = live_text() if ptext is None else ptext
