@@ -37298,9 +37298,9 @@
         {
           "id": "s81-serdes-source-1116-codex",
           "plan_sha": "ccc4744caa15c834c4f265cf47d165caafa513425e83c298a8e8b88d9e1a0f7a",
-          "reason": "Six old nonrunning serdes kits lack TXPIPE placement hook and correct die PGphase; await coherent F2s3/mainref source and regenerate before route; old kit history retained",
+          "reason": "Six old nonrunning serdes kits lack TXPIPE placement hook and correct die PGphase; await coherent F2s3/mainref source and regenerate before route; old kit history retained | S81-TYPES-R3 11-17: release repointed to rail-gen (COORD)",
           "release": [
-            "tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5e"
+            "result:FABLE-FIX-S81-SERDES2:rail-gen"
           ],
           "keys": [
             "serdes__t12",
@@ -37311,52 +37311,9 @@
             "serdes__t3"
           ],
           "route": true,
-          "carry": true
-        },
-        {
-          "id": "s81-serdes-corrected-1116-codex",
-          "plan_sha": "ccc4744caa15c834c4f265cf47d165caafa513425e83c298a8e8b88d9e1a0f7a",
-          "keys": [
-            "serdes__t13",
-            "serdes__t14",
-            "serdes__t15__cla2127225",
-            "serdes__t15__cla3d02796",
-            "serdes__t1__clb45db5be",
-            "serdes__t1__clfe1f0815"
-          ],
-          "release": [
-            "result:S81-TYPES-R3:serdes-corrected"
-          ],
           "carry": true,
-          "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): SERDES producer is S81-SERDES-R2 (FABLE-FIX-S81-SERDES limited) | Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries.",
-          "prev_release_fix_s81_col_stale_retype": [
-            "result:FABLE-FIX-S81-SERDES:serdes-corrected"
-          ],
-          "owner": "S81-TYPES-R3",
-          "owner_since": "2026-11-17 06:30 PST WAVE-PILOT-FIX re-own (dead lane)"
-        },
-        {
-          "id": "s81-serdes-corrected-route-1116-codex",
-          "plan_sha": "ccc4744caa15c834c4f265cf47d165caafa513425e83c298a8e8b88d9e1a0f7a",
-          "keys": [
-            "serdes__t13",
-            "serdes__t14",
-            "serdes__t15__cla2127225",
-            "serdes__t15__cla3d02796",
-            "serdes__t1__clb45db5be",
-            "serdes__t1__clfe1f0815"
-          ],
-          "release": [
-            "result:S81-TYPES-R3:serdes-corrected"
-          ],
-          "carry": true,
-          "reason": "FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): SERDES producer is S81-SERDES-R2 | Owner S81-SERDES/COORD11-16: exactsix measured C shapes fail CTS; F2s3 TXL source readiness does not qualify corrected RX/cohort/RPC pipeline. Existing source/event holds retained AND this result required. Owner posts corrected PASS only on combined full-shape qualified remedy; no unchanged C retries. Route companion protects already-built old C kits as well as generation.",
-          "route": true,
-          "prev_release_fix_s81_col_stale_retype": [
-            "result:FABLE-FIX-S81-SERDES:serdes-corrected"
-          ],
-          "owner": "S81-TYPES-R3",
-          "owner_since": "2026-11-17 06:30 PST WAVE-PILOT-FIX re-own (dead lane)"
+          "cause": "std-cell rows beside the PHY lot get no M1/M2 followpin rails (2046 of 6664 rows on H17), measured on the shared serdes generator",
+          "owner": "FABLE-FIX-S81-SERDES2"
         },
         {
           "id": "s81-strip-gpl-d5",
