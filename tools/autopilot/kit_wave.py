@@ -8499,6 +8499,31 @@ def tool_skew_measure(AP, cfg, st, die):
     return res
 
 
+TOOLS_LAG_CACHE = {"t": 0.0, "rows": {}}
+
+
+def tools_lag_rows(AP, cfg, ttl=1800):
+    """WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1300 item 2): {die: 'TOOLS-LAG <die> N commits / missing rNNN ...'} = the approved die-tool fixes (ruling rNNN on a
+    die_plan / flow path) main has that each die's pinned tools lack; measured at most every 30 min, logged when it changes"""
+    now = time.time()
+    if now - TOOLS_LAG_CACHE["t"] < ttl and TOOLS_LAG_CACHE["rows"]:
+        return TOOLS_LAG_CACHE["rows"]
+    try:
+        spec = _ilu.spec_from_file_location("tools_lag", str(Path(__file__).resolve().parents[1] / "tools_lag.py"))
+        TL = _ilu.module_from_spec(spec)
+        spec.loader.exec_module(TL)
+        rows = {die: TL.line(die, r) for die, r in TL.measure(cfg, repo=cfg.get("tools_lag_repo") or TL.DEFAULT_REPO,
+                                                              main_ref=cfg.get("tools_lag_main") or "main").items()}
+    except Exception as e:                       # advisory: never stops the wave
+        AP.log(f"KIT-WAVE TOOLS-LAG not measured: {type(e).__name__}: {e}")
+        return TOOLS_LAG_CACHE["rows"]
+    for die, ln in rows.items():
+        if TOOLS_LAG_CACHE["rows"].get(die) != ln:
+            AP.log("KIT-WAVE " + ln)
+    TOOLS_LAG_CACHE.update(t=now, rows=rows)
+    return rows
+
+
 def tool_skew_measure_all(AP, cfg, st, ap_dir):
     """every enabled die, every tick, independent of launches (a held die such as S81 or KV launches nothing and used to have no
     reading); writes kit_wave_tool_skew.json = the numbers the SKEW table and NEEDS-LANE posts quote"""
@@ -8511,6 +8536,9 @@ def tool_skew_measure_all(AP, cfg, st, ap_dir):
             continue
         rows[die] = dict(mode=str(opt(cfg, die, "tool_skew")), tree=d.get("src"), measured=res["measured"], n_differ=len(res["refused"]),
                          n_closure=res.get("n_closure", 0), pin=res.get("pin"), modules=sorted(res["refused"])[:60])
+    lag_rows = tools_lag_rows(AP, cfg)
+    for die, ln in lag_rows.items():
+        rows.setdefault(die, {})["tools_lag"] = ln
     if rows and not AP.DRY:
         try:
             p = Path(ap_dir or AP.AP_DIR) / "kit_wave_tool_skew.json"
