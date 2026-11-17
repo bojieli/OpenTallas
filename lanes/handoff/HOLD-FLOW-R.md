@@ -38,3 +38,10 @@ intel2 merge-queue/gates/da21443c369b8365c465733e163a02bc0c452a4b.json). Pre-exi
   FF+TT session, `hold_eco_internal.py plan`, then OT_PRD_HOLD_PLAN=plan.tsv through eco_loop / prd_mk. P3: insert of its 6.
 - HEAD-TYPES-R: hw4 (31) the same way; his live eco_hw4/i1t is not touched.
 
+
+## CTS scope follow-up (COORD 11-16 18:4x)
+Branch claude/hold-cts-scope-1116 @36f8f872e51 on main 9b0fa68ec7f, GATE 37/37 GREEN, READY posted. ot_hold_repair_scope accepts
+3_place.sdc + 4_cts.sdc; OT_CTS_HOLD_PAD=HB2|HB4 (ot_cts_hold_pad). Test tools/test_cts_hold_scope.py (44 -> 2 endpoints on a 40-port fixture).
+Affected = two-mode kits (override export OT_HOLD_MM = 1) whose CTS repair is not skipped: core kits via core_flow (no SKIP_CTS_REPAIR_TIMING)
+and hand-driven ref_tile / abi3 / closure_loop builds like headseg44. gen_phys type kits with a hold_ff_margin skip CTS repair (unaffected).
+Live count NOT measured: fleet find scans of config.mk returned nothing within limits.
