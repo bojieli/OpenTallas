@@ -1,0 +1,84 @@
+{
+ "before": {
+  "id": "qwen_compute-kf-cb18",
+  "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
+  "reason": "COORD 11-16 22:4x cb-ready: actual production cb pilot after CTS + reloaded GRT at matching M clock/station/tool contracts; TT >= -42 ps, internal FF >= 0, overflow 0; port advisories separate, no SDC relaxation. FABLE-PD-QC-MCLK lever 4 via COORD 20:xx: all 18 cb types hold until the S4q9m die clock event (per-type region trees / cb instance spread); not released on Kf or L2. Lift = S4q9m adopt.",
+  "release": [
+   "event_adopt:s29q103S4Q9M",
+   "result:FABLE-FIX-QC-DIECLK:cb-ready"
+  ],
+  "items": [
+   "cbf_q00__cl1b5a6458",
+   "cbf_q00__cl870de686",
+   "cbf_q00_s2",
+   "cbf_q01",
+   "cbf_q01_s2",
+   "cbf_q11",
+   "cbn_q00__cl622f65d2",
+   "cbn_q00__cld7bf7197",
+   "cbn_q00__cldbcda913",
+   "cbn_q01__clab6e67f2",
+   "cbn_q01__cld9ff4c40",
+   "cbn_q01__cldd6ea846",
+   "cbn_q11__cl49ae4555",
+   "cbn_q11__cl5cc92dfe",
+   "cbx_q10__cl89936551",
+   "cbx_q10__cl89936551_h",
+   "cbx_q10__cl94a12200",
+   "cbx_q10__cl94a12200_h"
+  ],
+  "carry": true,
+  "prev_release_codex_cb_ready_1116": [
+   "event_adopt:s29q103S4Q9M"
+  ]
+ },
+ "remaining": {
+  "id": "qwen_compute-kf-cb18",
+  "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
+  "reason": "COORD 11-16 22:4x cb-ready: actual production cb pilot after CTS + reloaded GRT at matching M clock/station/tool contracts; TT >= -42 ps, internal FF >= 0, overflow 0; port advisories separate, no SDC relaxation. FABLE-PD-QC-MCLK lever 4 via COORD 20:xx: all 18 cb types hold until the S4q9m die clock event (per-type region trees / cb instance spread); not released on Kf or L2. Lift = S4q9m adopt.",
+  "release": [
+   "event_adopt:s29q103S4Q9M",
+   "result:FABLE-FIX-QC-DIECLK:cb-ready"
+  ],
+  "items": [
+   "cbf_q00__cl1b5a6458",
+   "cbf_q00__cl870de686",
+   "cbf_q00_s2",
+   "cbf_q01",
+   "cbf_q11",
+   "cbn_q00__cl622f65d2",
+   "cbn_q00__cld7bf7197",
+   "cbn_q00__cldbcda913",
+   "cbn_q01__clab6e67f2",
+   "cbn_q01__cld9ff4c40",
+   "cbn_q01__cldd6ea846",
+   "cbn_q11__cl49ae4555",
+   "cbn_q11__cl5cc92dfe",
+   "cbx_q10__cl89936551",
+   "cbx_q10__cl89936551_h",
+   "cbx_q10__cl94a12200",
+   "cbx_q10__cl94a12200_h"
+  ],
+  "carry": true,
+  "prev_release_codex_cb_ready_1116": [
+   "event_adopt:s29q103S4Q9M"
+  ]
+ },
+ "split": {
+  "id": "qwen_compute-kf-cb18-serdes",
+  "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
+  "reason": "COORD exact cbf_q01_s2 falling-serdes-to-dsel cause split: same r463 production CTS/reloaded GRT TT>=-42/internalFF>=0/overflow0 under matching M clock/station/tool tuple, no full DRT wait. COORD 11-16 22:4x cb-ready: actual production cb pilot after CTS + reloaded GRT at matching M clock/station/tool contracts; TT >= -42 ps, internal FF >= 0, overflow 0; port advisories separate, no SDC relaxation. FABLE-PD-QC-MCLK lever 4 via COORD 20:xx: all 18 cb types hold until the S4q9m die clock event (per-type region trees / cb instance spread); not released on Kf or L2. Lift = S4q9m adopt.",
+  "release": [
+   "event_adopt:s29q103S4Q9M",
+   "result:FABLE-FIX-QC-DIECLK:cb-serdes-ready"
+  ],
+  "items": [
+   "cbf_q01_s2"
+  ],
+  "carry": true,
+  "prev_release_codex_cb_ready_1116": [
+   "event_adopt:s29q103S4Q9M"
+  ]
+ },
+ "scope": "exact single cbf_q01_s2; no cbf_q00_s2 expansion"
+}
