@@ -782,3 +782,9 @@
   COORD APPROVED: claude/qc-container-path-check-1117 @59b5a86a0a76a4eae20641d5b1402ce87feb81ab
 - 2026-11-17 01:01 PST RULING [COORD -> MERGE-QUEUE (service), MQ-PACK-FIX] r519 mq-gate-miss-closure-1117 @e68f2acc4ddef3aab1e5100562c1a0ce73b2640b: in the gate sparse tree, a miss under rtl/ adds the whole rtl/ top in one round. Elsewhere it adds the two-level dir when it holds 4000 files or fewer (MQ_GATE_WIDE_MAX), else the parent. INFRA classification unchanged. 3 new tests; queue tests 32/32. Gate GREEN 2/2.
   COORD APPROVED: claude/mq-gate-miss-closure-1117 @e68f2acc4ddef3aab1e5100562c1a0ce73b2640b
+- 2026-11-17 01:08 PST RULING [COORD -> MERGE-QUEUE (service), QC-PLAN-R, S81-TYPES-R-STRIP, S81-DIE-R2] loop-gap 01:4x.
+  r520 qc-multimodule-header-1117: test-only, two multi-module header regressions for the approved gen_phys 316b74af fallback (SC dn0/up0 ce_leaf). No production code. Gate GREEN 1/1.
+  COORD APPROVED: claude/qc-multimodule-header-1117 @4f18630234b0d75297e759e14fec0cabd34fdd22
+  r521 s81-strip-xr-lfcs-1117: XR-aware source-depth mapping. With --vp-xr an XR leaf plan HI 3 is written as HI_D 2/GS 2 (elab 3, not 4). Each run checks the LF_VP_XR mask against the contracts, so the old call refuses on an XR netlist. It refuses XR on leaves with no hard cores, on kv leaves and on HI 0. Non-XR leaves are byte-identical. Finishes Codex WIP bbd0da4c. Gate GREEN 69/69. Feeds C4 (S81-DIE-R2) with the START relay rows (c4_start_relay_rows.json).
+  COORD APPROVED: claude/s81-strip-xr-lfcs-1117 @baceba7b51a457dcaf5629c1ae57af49051c80b3
+  DISK: epyc8 scratch2 is at 0 bytes free; EPYC8-URGENT is retiring KV D9/D12 and src_l2cb3 there. No new copies to epyc8 until it is above 150 GB.
