@@ -1,232 +1,211 @@
-# FABLE-CLOSURE-STRATEGY 2026-11-16 09:25 PST (FABLE-CLOSURE-1143): the fixes are composed; three of them are stuck on one technical error each, and one release gate reads 50-90 ps optimistic
+# FABLE-CLOSURE-STRATEGY 2026-11-16 17:20 PST (1730): plans bind on all four dies; the open class is now routed internal hold, and three runs repeat a measured failure
 
-Read-only review by FABLE-CLOSURE-1143 (Fable). Technical physical design only. HBM parked. Nothing launched, stopped or changed.
-Read: FABLE-CLOSURE-STRATEGY 07:25 (0943), FABLE-DIE-HEAD / -S81 / -QC, FABLE-PD-S81-F2s3, the FABLE-DIE-KV 07:50 post
-(there is no lanes/FABLE-DIE-KV.md), handoffs FABLE-FIX-{HEAD-TIMING, QC-CBGLUE, QC-KNEE-HC, S81-COLTAP, S81-CONG, S81-SERDES,
-S81-SVC, KV-PVHUB}, S81-BKSEL-O, HEAD-SERDES-O, HEAD-TYPES-O, M7PIN-STRIPE-1116, S81-IFN0-HALVES, KV-PVHG-O, queue lines
-07:25-09:12, `failure_breakdown.py` 09:10.
-MEASURED = read by me 09:10-09:25 (plan JSON, bind logs, tool source; no odb opened, no STA run). REPORTED = lane post. INFERENCE is marked.
+Read-only review (Fable). Technical physical design only. HBM parked. Nothing launched, stopped or changed.
+Read: FABLE-CLOSURE-STRATEGY 09:25, CODEX-LOG "Handoff to Claude 17:04" + 17:07 receipts, today's FABLE-DIE-HEAD / -S81 /
+-QC / -KV, FABLE-PD-S81-F2s3 / -F2s4, -QC-S4q9e / 9k / 9l, -HEAD-NF14 / NF15a / NF15b, -KV-HG1, handoffs
+FABLE-FIX-S81-COLTAP, S81-IFN0-HALVES, FABLE-FIX-QC-CBGLUE, HEAD-TYPES-O, HEAD-SERDES-O, FABLE-FIX-HEAD-TIMING,
+FABLE-FIX-KV-PVHUB, KV-102, `failure_breakdown.py` 17:12.
+MEASURED = read by me 17:05-17:20 from kit logs / sign-off JSON on the build hosts. REPORTED = lane or Codex post.
+INFERENCE is marked. No odb opened, no STA run, no render opened.
 
-Signed types 07:13 -> 09:10: S81 41 -> 41 of 394, HEAD 20 -> 20 of 26, QC 7 -> 7 of 127 (+1 signed, count pending), KV 6 -> 6 of 56.
-No technical class shrank in count. Three classes changed state from "cause unknown" to "fix composed".
+Signed types 09:10 -> 17:12: S81 41 -> 41 of 394, HEAD 20 -> 20 of 26, QC 7 -> 7 of 127, KV 6 -> 6 of 56.
+(hd_st_n3_turn is signed on the private NF15 pin form, TT +80.66 / FF +0.34, not in the count yet.)
 
 ## 0. Verdict
 
-1. **The QC event cannot bind, and the retry in flight cannot fix it.** MEASURED: S4Q9DBQ2 and S4Q9DBQ3 (fe bump 2 and 3) both
-   ended 16:59 UTC with the same `PARAM_REGEN W5: nb_od of region 0 is not the latest`, hcparam mismatches 48. The check is
-   `nbo[r] = E[r] + delta(u_fup.l9_c[64r..64r+63])` with `nbo[0] == max` (qc_fabric_transport.py line 183). A uniform pin pad
-   bump moves all eight regions together, so no fe or ctl value can pass. About 60 QC types wait on this one row.
-2. **Two different plans are both called S4q9e.** MEASURED on epyc9: `fable-die-qc/delta/zz_s29_qc103_s4q9e.json` has reset
-   leaves on coll_core / native59 / tt_ctlm and no glue stations; `fable-fix-qc-cbglue/delta/zz_s29_qc103_s4q9e.json` has the
-   glue fault stations and no reset leaves on those three types. Binding either one drops the other.
-3. **The post-CTS release gate under-reads.** Three reads today: hd_serdes sd6 CTS -26.55 -> GRT RC -112.45 (86 worse);
-   hd_host_e he5 gate -44.86 -> routed -118.34 (73 worse); S81 col reset copies -100 CTS -> -151 routed (51 worse). The S81
-   col waves (216 types) release on post-CTS TT >= -42.
-4. **Lever E of 0943 was wrong** (my inference, refuted by M7PIN-STRIPE-1116 with odb numbers). The class is three small
-   causes: 6 types by pin row, 1 by macro LEF, 1 ECO-session.
-5. **S81 is one bind away on both halves** (F2s3: review ADOPT-OK, bind restarted 17:1x UTC with the bk_sel file). The first
-   detail route of a ring-ff kit is still unread, 2 h after it was named the first read.
+1. **The plan-level blockers of 09:25 are gone.** S81 current819 is adopted (BIND 0, LATCHECK 873/873, G0 new 0). KV HG1A is
+   adopted (LATCHECK 2404/2404). QC Kf binds (LATCHECK 1921/1921, hcparam 0 mismatches: the W5 nb_od error is closed).
+   HEAD NF15b is reviewed ADOPT-OK (bind 358, LATCHECK 329/329). No type was signed from any of them yet.
+2. **The failure class that now ends every finished route is internal FF hold of -9 to -60 ps on 30-860 endpoints**, with
+   DRC 0 and TT inside -42. MEASURED / REPORTED today on 9 builds on three dies (table in lever 1).
+3. **A post-route fix for that class is proven.** MEASURED (epyc2 qc-pinaccess-o/coll_n_hold80_1116/signoff): coll_n with
+   80 HB4 cells at 64 capture pins, 144 nets re-routed in 63 min, DRC report empty: TT -1.39, FF hold +0.47 (was -58.19 on
+   64 endpoints). It is a hand-built pilot; no other type uses it.
+4. **Three runs repeat a measured failure.**
+   - S81: the five col pilot kits in GEN carry sequencer lead 100 / ROM 255. That value read ROM rd_out -> s at -57.0 with
+     14 endpoints under -42 at CTS on the r2 evidence kit (15:0x). Lead 40 read q +9 / a -42.
+   - QC: headseg44 detail route is at iteration 50 and does not converge. MEASURED violations per iteration: 17,686 ->
+     1,192 (it 16), then five saw-teeth 4,960 / 5,309 / 8,461 / 6,747 / 8,746 with floors 922 / 1,164 / 909 / 1,001.
+     Shorts on M2 / M3 / M4 (816 / 878 / 686) and M4 eolKeepOut 1,663. Design utilisation is 54 %.
+   - QC P3 (sle_hc2): the 20 ps pre-route hold target selects 26,258 endpoints to repair 6 negative ones (-24.29).
+     MEASURED: the repair has been at iteration 0 for 20 min.
+5. **S81 col (216 types) is serial behind one core form that has only a CTS.** The old IFN = 0 halves bypassed the ICG on
+   547 of 604 input flops and are void. The correct split form (he_splitclk1) reads TT +13.88 at CTS and QB -> IR hold
+   -88 TT / -97 FF, because the 512 IR flops are clocked at 407-470 ps against 365-371 for the gated flops.
 
-## 1. The 0943 levers: landed or not
+## 1. The 09:25 levers: landed or not
 
-| # | lever | landed? | class change, numbers |
+| # | lever (1143) | landed? | numbers |
 |---|---|---|---|
-| A | S81 adopt F2sv, then one delta | **PARTLY** | F2s2 (= F2sv + windows) adopted. F2s3 composed = strip rows t34 / t47 / t62 + col rows + reset copies + bk_sel file; review ADOPT-OK; bind not finished. serdes DPL fix PROVEN on F2sv: t13 0 violations in 4 m 59 s (was 233), FIRM ring cells 39,612 -> 9,237. svc: kit_rtl RC 0 with the memory closure on the v3 tree. Signed 41 -> 41 |
-| B | S81 col F2s3, r2 read before bind | **PARTLY** | rows in F2s3 (372 swaps, 282 sequencer moves, tap lead 200, sequencer lead 100 on 132 types, reset copy_depth 3 on 216). The r2 evidence read is NOT possible before the bind (KIT_TOPOLOGY_BIND_STALE twice). IFN = 0 halves started (hw0 / he0 to GRT, no CTS number yet). 0 col types built |
-| C | Sideband reach, one audit per die | **YES for the audits, NO for a bound fix** | QC: 1,142 FSTART flops audited, 128 on a shared reset in 9 types, 6 types get rows (65 flops over 405 um). HEAD: 6,400 hops audited, 122 over 405 um (hd_lep0N 85, hd_ctl 15, 22 raw relay hops in 10 types). S81: reset rows for 216 col types delivered. No kit has read any of these rows yet |
-| D | QC S4q9c adopt, hc env, coll_n | **NO** | S4q9c / 9d: r8rc 0, LATCHECK 1921/1921, knee 0, G0 2 inherited, but BIND_RC 1 (verdict 1). hc TT env on 18 keys is in the wave; hc1 x2 placed on v2. coll_n a22 on v2: placed, GRT 0, in route |
-| E | M7 scalar pins vs die-phase stripes | **REFUTED** | Rect Only = M6 PG pair under an 80-nm interior M7 pin with M8 obstructed: 4 / 4 failing pins, 0 / 109 passing. EOL = pin-width M7 OBS abutting the pin top in the u_epc LEF: 13 / 15 against 0 / 540. DRT-0206 = ECO session only. he6 (halo) cleared 3 spacing markers and left 29 EOL |
-| F | HEAD timing | **PARTLY** | hd_serdes sd6 GRT RC -112.45: 55 u_out.bsrc endpoints, u_chn apply clk->q 400 ps + 480 ps of wire. sd7 = DOREG register on the 559-bit seam, from synth. hd_host_e: he4 -66.43 / he5 -118.34 / he6 -125.44, DRC 30 each. hd_host_w: ECO no gain (-80.96); hw4 CTS -11.93 after repair, routing |
-| G | KV 7yhr + v25hv + k2r | **PARTLY** | 7yhr on v2: G0 0, strict bind 0, LATCHECK 2404/2404, kit_rtl RC 0 on 4 types, review no blocking finding; the gate's remaining kit_rtl / gen runs were in flight at 08:37. k2n gated; k2r at bind4. Not adopted; 0 KV kits on 7yhr |
-| H | S81 strip congestion | **YES** | four types end GRT 0 / 0 / 0 with 0 NDR restarts: c_t34, c_t47, c_t62, c_t43b (ft5 only). t34 / t47 / t62 rows are in F2s3; t43 rows are READY (08:57) and not in F2s3. t75 / t8 / t28 open (b_t75 21 restarts) |
+| 1 | S81 col: F2s3 bind, pilots, GRT read, chain sites | **PARTLY** | F2s3 -> F2s4 -> current819 adopted. Swapped halves overlapped 1.116 um (MPL-0041 on every swapped col type); fixed in rows (366 pairs +-4.32 um). r2 CTS: go_tag +109..+137, ef +118..+151 (were -186 / -160): tile fix measured. Reset chain hop 1 is 836-1,174 um, -181; spread hook v4 gives 309 hops, max 316.4 um, pre-DPL only. 0 col types routed |
+| 2 | S81 non-col | **PARTLY** | strips t8 / t28 / t75 / t43 rows in the plan; t34 FF form is a model only; eight-type GEN running. svc hi3 in floorplan repair (3.557 M std cells). serdes H at CTS, six holds stay |
+| 3 | QC W5 row, one S4q9e | **YES** | one plan chain 9e -> 9k -> Kf; hcparam 0 mismatch. Clock rows L reviewed ADOPT-OK (tap gate 0 of 84,512 outside). Kf / L are not the plan of record yet |
+| 4 | KV 7yhr + HG1 | **YES** | 7yhr then HG1A adopted; die run c1: GRT 0 overflow, setup +482.8 / +510.6, slew max 128.4. Three pilots only; 31 keys held on their CTS read |
+| 5 | Gate on GRT RC, not post-CTS | **YES** | r310 read = TT >= -42 on the GRT DB at die RC scale + overflow 0; r371 gate = routed TT >= -42, internal FF >= 0 |
+| 6 | HEAD NF14 rows, DOREG site, host_e pin row | **PARTLY** | NF15a / NF15b: lep0N worst hop 694.6 -> 377 um, M1-M7 walls gone. host_e he12h: 253 HB4, internal hold -23.71 -> +20.06, TT +4.65, GRT 0; in detail route. serdes sd9A closed at CTS, no GRT |
+| 7 | Die clock cells in types, hold on real views | **PARTLY** | S81 clock kit ECOv3: 93,626 cells, 0 overlap, max edge 403.9 um (K2 failed on a 993.9 um leg). KV first real-view hold: 384 pairs, min +22.57; 1,426,596 unmeasured. HEAD, QC, S81: 0 pairs |
+| 8 | bksel_q | **NO** | bc5 still in its second hold pass (470 / 462 buffers, +12.26), no route |
 
 ## 2. Levers now, ranked by types unblocked
 
 | # | die | lever | unblocks | owner |
 |---|---|---|---|---|
-| 1 | S81 | col: F2s3 bind -> five pilots; release on the GRT-RC read; chain-flop sites for reset copies | 216 types | FABLE-FIX-S81-COLTAP, FABLE-DIE-S81, S81-IFN0-HALVES |
-| 2 | S81 | non-col: F2s3 adopt; serdes only from a tree with f84ed61a70; read the first ring-ff detail route and the svc macro-gap GRT | about 137 (394 - 41 signed - 216 col), incl 16 svc, 11 serdes, strips | DIE-S81-92, FABLE-FIX-S81-SERDES / -SVC / -CONG |
-| 3 | QC | W5 l9_c station row; ONE S4q9e | 34 knee + su_l0 + 3 PHY + 2 cbn_q00, 19 cb / glue, 3 reset types | FABLE-FIX-QC-KNEE-HC (event), FABLE-DIE-QC, FABLE-FIX-QC-CBGLUE |
-| 4 | KV | adopt 7yhr; KV-HG1 = v25hv + k2r + the 13 START hops | 13 pv + 21 hg + 4 hub | FABLE-FIX-KV-PVHUB, KV-PVHG-O, FABLE-DIE-KV |
-| 5 | all | gate calibration: decide on GRT RC with the die signal scale, never on post-CTS placement RC | every wave release; 216 col first | COORD ruling; FABLE-FIX-S81-COLTAP, HEAD lanes |
-| 6 | HEAD | NF14 with rows A-C + pg_pin_rule on 2 types; serdes DOREG with a site rule; host_e flops at the u_epc pin row | 6 open types | FABLE-DIE-HEAD, HEAD-100, FABLE-FIX-HEAD-TIMING |
-| 7 | all | die clock cells inside types, and die hold on real views | die closure on 4 dies; avoids a second build of signed types | FABLE-DIE-S81 / -HEAD / -KV / -QC |
-| 8 | S81 | bksel_q fx6 (ETM clock landing v3) | last S81 core + bk_sel__t2 + 1 parent type | S81-BKSEL-O |
+| 1 | all | routed internal hold: one post-route HB4 insert step in the flow + a 10 ps pre-route margin | every type that reaches route; today 9 builds, incl. QC head group (96 heads) and both S81 halves | FLEET-OPS-R; QC-TYPES-R, HEAD-TYPES-R, S81-CORES-R |
+| 2 | S81 | col: halves closed in CTS (IR group), lead rows fixed before any pilot launch, reset spread in the flow | 216 types | S81-CORES-R (halves), S81-TYPES-R, S81-DIE-R (rows) |
+| 3 | QC | head: no hold cells on port-only paths; rebuild the head from the CTS-scope fix | 96 heads in 9 SU types, 8 group forms | QC-TYPES-R, FLEET-OPS-R (a03 fix) |
+| 4 | QC | Kf + L as one plan of record; +1 K on 3 serdes crossings | about 100 unsigned types now on S4q6d kits | QC-PLAN-R |
+| 5 | KV | pilot CTS read releases 31 keys; rows B' without walls; E4 tap window | 31 + 14 waiting on child cores | KV-R |
+| 6 | HEAD | M8 grant wherever M1-M7 is reserved; hw4 by lever 1; sd9A GRT read | 4 of the 6 open types | HEAD-TYPES-R, HEAD-DIE-R |
+| 7 | S81 | non-col: t34 / t43 strips, svc size, serdes cohort guard | about 137 types | S81-TYPES-R, S81-CORES-R |
+| 8 | all | clock rows have 0 margin; region tree per type | re-sign risk on 52 QC + 51 KV types at each tap move | QC-PLAN-R, KV-R, S81-DIE-R |
 
-### Lever 1. S81 col (216 types)
+### Lever 1. Routed internal hold (all dies)
+
+Evidence (FF corner, hold uncertainty 25, internal reg-to-reg only; all DRC 0 unless noted):
+
+| build | TT setup | internal FF hold | endpoints | source |
+|---|---|---|---|---|
+| QC coll_n a22 | -1.09 | -58.19 | 64 | REPORTED; pilot2 after insert: -1.39 / **+0.47** MEASURED |
+| QC group44 W0 | +12.40 | -16.89 | 858 (842 D, 13 RESETN) | REPORTED; all have >= 306.7 ps TT room |
+| QC tail H17 / H16 | +45.05 / +61.17 | -15.69 / -8.65 | 327 / 171 | REPORTED; TT room >= 343 / 432 |
+| QC P3 sle_hc2 (GRT RC) | +39.05 | -24.29 | 6 | MEASURED (p3_native_hold.log) |
+| HEAD hd_host_w hw4 | -25.50 | -32.87 sign-off line; -12.32 internal | 31 | MEASURED (hw4.log) / REPORTED; TT room >= 173 |
+| HEAD hd_host_e he12 | +4.65 | -23.71 -> +20.06 after 253 HB4 pre-route | 109 | REPORTED |
+| S81 he half (void clock form) | +11.24 | -2.15 after 1,707 buffers | 285 before | REPORTED |
+| S81 hw half (void clock form) | -11.94 | -68.88 | 635 | REPORTED |
+
+Root cause. Pre-route hold repair closes to 0 on the GRT estimate; extraction then moves short paths by 9-17 ps (W0: same
+frame, M6 / M7 unused, so it is estimate against RCX, not calibration). Every endpoint repaired to +0..+15 lands negative.
+The endpoints have 170-430 ps of setup room, so the fix costs no timing.
+
+Fix.
+1. FLEET-OPS-R: make the coll_n pilot a flow stage (epyc2 qc-pinaccess-o: `qc_hold_insert_prepare_generic.py`,
+   `qc_hold_insert_body.tcl`, `qc_hold_reservation_model_v2.py`). Trigger: routed DRC 0, TT >= -42, internal FF in
+   [-70, 0), TT room on each endpoint >= 172 ps (the HB4 TT max 171.24 at slew <= 320). One HB4 per capture D pin on a
+   filler site within 7.2 um, re-route of the touched nets only, then the normal sign-off.
+2. Size it for +10, not 0. coll_n ended +0.47: a re-extraction can flip that. Two HB4 where the need is over 25 ps.
+3. Pre-route margin: 10 ps on internal endpoints only, never 20. P3 shows the cost of 20 (26,258 endpoints for 6).
+   he12h shows a targeted list works (253 cells, +25.8 um2).
+4. Apply at once, by owner: QC-TYPES-R H16 (171 cells, structural insert already PASS), H17 (327), W0 (858, reservation
+   found, 12 cells at 6.0-7.2 um); HEAD-TYPES-R hw4 (31; the eco_hw4/i1t run is this); P3 by insert of 6 after route.
+5. RESETN / SETN removal endpoints (13-27 per type) take the same cell at the reset pin; keep them in the count.
+
+### Lever 2. S81 col (216 types)
 
 Evidence.
-- F2s3 tap lead 200 gives early taps 215.39 / 184.57 / 53.17 = the F2r tree values, the only tree that measured 460 / 468
-  on the 465.39 halves (REPORTED, FABLE-PD-S81-F2s3).
-- Unmeasured on these rows: sequencer lead 100 (132 types), the swap (372 tiles), every one of the 84 r0 / h10_r1 types
-  (estimate go_tag +40, ef +23..+63 at CTS).
-- Reset copies: copy_depth 3 chains carry NO sites. One common flop drives 70..110 chain heads; per-hop estimate 195..415 um.
-- Gate: col-wave1 / 2 release on post-CTS TT >= -42. Verdict 3: this stage read 51..86 ps optimistic on three kits today.
+- he_splitclk1 (epyc2 s81-ifn0-halves), CTS only: 57 root / 547 on the original ICG / 512 IR flops. Arrival TT 393.9-395.3 /
+  364.9-371.4 / 407.5-469.5. QB -> IR hold -88.36 TT / -97.07 FF with setup +679.8. IR downstream hold -4.02 / -24.17.
+- Sequencer leads: lead 100 -> ROM rd_out -> s -57.0 (14 under -42); lead 40 / ROM 285 -> go_tag +64..70, ef +184..194,
+  q +9, a -42. a + q per sequencer does not depend on the leads (s14 +44, s12 +64).
+- Reset: copy_depth 3 chains are not spread by placement; hop 1 836-1,174 um, -181, 26 endpoints. v4 probe: 468 stale
+  reset buffers removed, 206 flops re-sited, 309 hops, max 316.4 um (pre-DPL).
+- The five pilot kits in GEN (epyc10 countable_F2s4tapfix1) are "current plan 100 lead / 255 ROM".
 
-Root cause of the risk: the wave gate is a placement-RC number, and two of the four col mechanisms have no measurement.
-
-Fix.
-1. Pilots from the real F2s3 bind (already the plan). Report per pilot: core pins within 20 ps, s arrival, go_tag, ef,
-   reset-copy worst hop in um and slack.
-2. Wave release = GRT-stage TT on the reloaded DB at the S81 signal scale >= -42 and overflow 0. Until that read exists,
-   a post-CTS release needs >= +45 (the smallest margin that covers the 86 ps worst miss against -42).
-3. Reset copies: if the r2 pilot shows a hop over 405 um or the class under -42, FABLE-DIE-S81 adds sites for the chain
-   flops (300 um grid, taken from the F2s3 core positions) in the next delta. Compose them now; do not wait for wave 2.
-4. r0 / h10_r1 (84 types): the estimate is below the +45 rule. Treat IFN = 0 halves as the main form for these 84, not the
-   fallback. S81-IFN0-HALVES posts the face-branch insertion at CTS (target 300-370 he, 330-390 hw) today.
-5. IFN = 0 check: FF hold on the 605 input ports (-137) is a port contract; it is closed only if the lib carries
-   hold_rising on every data input AND the die seam window covers it. Read both before rows go to DIE-S81-92.
-
-### Lever 2. S81 non-col
-
-Evidence.
-- serdes: DPL closed on F2sv (table). But main, the v2 tree and B6gF2s2/src lack the gen_phys TXPIPE hook (`OT_TXL_MID`,
-  POST_GLOBAL_PLACE): pipe rows are not placed at the PMA faces. That was the -455..-719 ps TX class of 11-14. Branch
-  f84ed61a70 approved r309 at 09:06.
-- svc: cause (a) memory closure works in the tree (kit_rtl RC 0). Causes (b) ff bands and (c) 31 form-A sites are in
-  B6gF2sv_formA. No floorplan or GRT read yet.
-- strips: 4 types at GRT 0 with rows. c_t34 route was chained on epyc8; no route log exists on the hub (MEASURED 09:15).
-- A_t65 route: no result posted.
+Root cause. Three independent mechanisms, each measured once on an evidence kit, none yet together on a countable kit;
+and the main form waits on a core whose clock groups are 40-100 ps apart by construction.
 
 Fix.
-1. DIE-S81-92: adopt F2s3 on its gates (BIND 0, LATCHECK 873/873 with tl_o +3 priced, G0 new 0, hcparam 0). Add t43_rows
-   (ft5 band x 440..600) and the svc form-A sites to the next delta, one event.
-2. No serdes kit from a tree without f84ed61a70. The two F2sv proof kits now in route have no TXPIPE placement: read their
-   TX-face paths at GRT before trusting the route.
-3. First ring-ff detail route (c_t34 or A_t65): DRC at the ff bands. This is still the one unproven step for about 137 types.
-   If epyc8 refused the chained route (disk), relaunch it on another host now.
-4. svc pilots: read GRT overflow in the 10.8-um gaps between the 32x128 macros at the floorplan stage.
+1. S81-CORES-R: close the halves in CTS, not by hold cells. Put the 512 IR sinks in the balance group of the gated
+   sinks with target 365-371 (they are 40-100 ps late). That removes the -88 / -97 class at its source; the 679 ps of
+   setup room pays for it. Then GRT read, then route; lever 1 covers the residue. The old form needed 1,707 buffers.
+2. S81-DIE-R / S81-TYPES-R: before any physical launch of the five pilots, change `core_pin_lead_ps` to sequencer 40 /
+   ROM 255 (the measured fallback). Do not route kits with lead 100. This is a row change on 132 types, 0 cycles.
+3. Sequencer s14 is at a + q = +44 total, so the fallback is thin after route (HEAD lost 73-86 ps from CTS to route).
+   The IFN = 0 delta (sequencer lead 0) stays the main form; the fallback pilots exist to measure reset and ef / go_tag
+   on a countable kit now, not to sign.
+4. FLEET-OPS-R: put reset_chain_spread v5 into gen_phys (PRE_RESIZE, on `reset_replicate copy_depth > 1`). Proof on the
+   r2 pilot = post-DPL hop table (0 over 405 um) and the reset class at the GRT read.
 
-### Lever 3. QC event
+### Lever 3. QC head (96 heads)
 
-Evidence: verdicts 1 and 2. S4q9d review ADOPT-OK (0 cycles, hops relay -> leaf at most 220.5 um). glue fault OR: two
-unregistered hops of 1.3-1.5 mm; S4q9e-glue adds 214 station flops, lanes fltc 9 -> 12, fltvc 9 -> 12, fltt 9 -> 10.
+Evidence: lever 0.4 (route history). REPORTED: 5,585 hold cells sit on port-only paths; 581 of them in one 192 um2 spot
+raise its fill from 69.1 % to 90.6 %. GRT overflow was 0, so the failure is local pin access, not global capacity.
 
-Root cause of the bind error: the knee stations added delay on some `u_fup.l9_c` region slice of W5, so region 0 is no
-longer the latest, and the transport code has a pad for regions 1-7 only (`NB_PAD = max - nbo[r]`).
-
-Fix.
-1. FABLE-FIX-QC-KNEE-HC: stop the fe / ctl bump scan. Print `nbo[0..7]` for W5 from the S4Q9DBQ view. Then one plan row:
-   add the missing station(s) on W5 `l9_c[0..63]` (region 0) so that `nbo[0] = max` (cycles pre-approved), or give all
-   eight l9_c slices the same station count. Same check on `r_d` (line 180) before the rebind.
-2. One S4q9e = S4q9d + glue fault stations (aed254508723) + reset leaves on coll_core / native59 / tt_ctlm
-   (c12269e24374). The type sets are disjoint. KNEE-HC composes it, renames nothing else S4q9e, binds once. LATCHECK must
-   show exactly 3 lane deltas.
-3. glue d2d_rom store (-64..-152, about 400 endpoints): keep the withdrawn SRAM move withdrawn. Decide from the glue a6
-   post-CTS probe; prefer region rows for the store flops beside the SRAMs over the TT repair env (the env does not move
-   a flop that is 1 mm from its SRAM).
-4. Rect Only on slw / sle su_l0 (4 types): rebuild on v2, where PG-AWARE-1 is active; check `cland_tstart_in` is off the
-   M6 PG pair before route.
-
-### Lever 4. KV
-
-Evidence: 7yhr gates as in the table. FABLE-DIE-KV: 13 types with a START reader hop of 405.4-573 um (10 pv, hg_v1p5,
-hg_v1p6, io_cor_v1); 39 ports / 7,128 bits over 405 um (max 530.2); 21 taps with slew over 150 ps on pv_N_7 (max 224.7);
-2,024 die clock cells on the signed hard kv3_phy / kv3_phy_v1.
+Root cause: hold repair pads port paths that r371 no longer gates, and the cells pile up at the pin row.
 
 Fix.
-1. Adopt 7yhr when the gate's last gen runs end. Read the first hub_C / hub_Wo place on ring_place ff before more hub rows.
-2. KV-HG1 = v25hv + k2r + the 13 START hop rows in one event. The 10 pv START hops are the same one-cycle sideband class
-   that cost QC and HEAD a day; they are cheaper in the event than after the pv pilots fail at CTS.
-3. The 2,024 clock cells over a signed hard PHY cannot exist: FABLE-DIE-KV fixes the die clock site rule (hard macros
-   as keep-outs) before any KV die number is used.
+1. QC-TYPES-R: do not wait on headseg44 and do not relaunch it unchanged. Rebuild the head from CTS with the a03 scope
+   fix (hold repair on internal endpoints only). Expected: -5,585 cells, hot spot back to about 69 %.
+2. If the same spot still plateaus over 500 violations at iteration 16: placement blockage (partial, 60 %) on that
+   192 um2 window. No outline growth.
+3. Check group44 W0 for the same cells: its flow finished (MEASURED, 6_report written) with 858 internal negatives;
+   the W1..W7 248-output form should be generated with the a03 scope from the start.
 
-### Lever 5. Gate calibration (all dies)
+### Lever 4. QC plan of record
 
-Evidence: verdict 3. HEAD-TYPES-O calls it "the 75-150 ps GRT under-read". Cause (INFERENCE): the post-CTS gate uses
-placement RC without the die signal scale (HEAD 1.13, QC 1.25, KV 1.10) and without detours round macros.
+Evidence: Kf valid (bind 0, R8 0, LATCHECK 1921/1921). L = Kf + clock rows: tap gate PASS 0 of 84,512, seam window 180
+against a need of 169.2, intra 79 / 79.0. Die STA with the count-align bind: 3 of 2,993 crossings fail, io_serdes_2 ->
+c_W5_bf_01, margin lo -107.1 TT / -67.0 FF, hi +1,968. L private bind r2 failed on a missing bind sibling, not on hardware.
+Fix (QC-PLAN-R): bind L once with the 12 bind siblings present; add +1 K on the three serdes ports in the same event (hi
+margin has 1,968 ps of room); glue kit first on that plan and read it at GRT. Do not start more S4q6d kits.
 
-Fix: one ruling. Decisions (wave release, keep / drop a form, "inside the gate") are taken on the GRT-stage TT of the
-reloaded DB with the die signal scale. A post-CTS number is information unless it is >= +45. This costs about 1 h per
-pilot and removes a 216-type false release.
+### Lever 5. KV
+
+Evidence: HG1A die run as in section 1. Rows B as cut: 997 merged strips, 125 walls with >= 276 core pins behind them
+(worst 946 of 1,660 M5 pins of pvg1_p3); raw sites have 0 walls. E4 island: tap window need 277 + 10 against the T/4 =
+208.25 guard on 40 ports. 39 wide ports over 405 um (max 530.2). 2,024 clock cells on the signed PHY types.
+Fix (KV-R).
+1. Post the pilot CTS read (cells, TT, krsp first hop) for kv3_hg_v1 / hg_v3 / pv_v1n as soon as each CTS ends; it frees
+   31 keys. Wo3 died on host memory, not geometry: same kit, another host.
+2. Rows B': no merged rect within 5 um of a core edge unless under 10 um long; check 0 walls with >= 50 pins; first build
+   kv3_pv_v1n to GRT.
+3. E4: do not clamp 277 to 208.25. Give the E4 regions a DME tree (form E did this for pv_N_7: 224.7 -> 138.9 slew and
+   smaller spread) and re-measure; rows C only from that tree.
+4. hg +1 station on the 7 types (19,219 FF bits) goes with B' / C in HG2, one event.
 
 ### Lever 6. HEAD
 
-Evidence.
-- hd_lep0N: 85 sideband hops over 405 um (status up to 2,780, start 1,515); rows give worst hop 349-370 um, 0 data cycles,
-  boot +8. Region tree FF spread 271.6 -> 128.6 with `actual_max_region {lep0N: 300}` (proven).
-- hd_ctl: 15 hops over 405 um (931 / 840 / 842). r308 moved its rows to the next delta.
-- hd_serdes: u_chn outputs on its top edge, y 386.0, under the VDDPHY floor at 400; consumers behind u_dmem.
-- hd_host_e: every u_epc input is captured on the early clk_c0 tap (-63.32) with 93.55 ps macro setup; a normal-tap flop
-  has about 230 ps. he5 worst net: CKINVDCx16 on 64 fF, slew 733, 231.8 ps of wire.
-- LEF: FABLE-FIX-HEAD-TIMING's static A/B (merge OBS into pin: markers move to the new pin end) and M7PIN (OBS 13 / 15)
-  disagree. he7 (merge + re-route) is the test.
-
+Evidence: he12 failed GRT with overflow 13, all clock entries inside NF15 M1-M7 reservations with max layer M7 (no M8
+grant). he12h with the grant: GRT 0; detail route at iteration 1, 22,944 violations at 30 % (MEASURED 17:16). hw4 as in
+lever 1. sd9A: every pipeline cap positive at CTS; sd9B DK -> chn -51.16. The four-net DRT-0206 A/B ended exit 2 (MEASURED)
+on an unrelated net: inconclusive.
 Fix.
-1. NF14 = rows A-C plus `pg_pin_rule=true` on hd_st_n3_turn and hd_spn_end (config only, moves 2 pins off the M6 pair).
-2. hd_ctl: do not rebuild it on NF14 without its sideband rows; it would hit 931 um in one cycle again. Either the
-   rows enter NF14 or hd_ctl waits for the delta.
-3. hd_serdes sd7: DOREG works only if the 559 seam flops sit at the u_chn top edge (14-um strip). Add a region /
-   pin-row rule for them and read their distance to the u_chn pins after place, before GRT. Without it the 400 ps
-   clk->q + 480 ps wire path stays, one flop later.
-4. hd_host_e: the form is flops at the u_epc pin row on the same early tap (launch 63 ps early, wire under 30 um). The
-   skid slice already pays the cycle. FABLE-FIX-HEAD-TIMING owns it; nothing has been started since 08:58.
-5. he7: accept only 0 EOL at the u_epc pins. If the markers move to the new pin tops, the cause is the M7 access stub
-   end against internal macro metal: then give the 15 pins M8-only access (pin shape on M8) in the abstract.
-6. hd_host_w hw4: -11.93 is a post-CTS number; hw3 hold -34 is open. Read GRT RC.
+1. HEAD-DIE-R: complete the NF15b switch and carry `die.layer_budget.type_m8_grant` (enable, frozen guide, 4w NDR) for
+   every type with an M1-M7 clock reservation; hd_tile tp2 needs it too. The environment switch alone imports PG only.
+2. HEAD-TYPES-R: sd9A to GRT now and read TT on the GRT DB (HEAD lost 73-86 ps there twice). Drop sd9B.
+3. hw4: lever 1 on the 31 endpoints; TT -25.5 is inside the gate. Do not pad the 460 output ports.
+4. he12h: read sign-off when route ends; EOL at the u_epc pins is the number to look at (he6 had 29).
 
-### Lever 7. Die clock cells and die hold (4 dies)
+### Lever 7. S81 non-col
 
-Evidence (REPORTED by the three die reports).
-- Die clock cells inside type area with no reservation: S81 93,522 (2,586 inside ring-ff band rects, about 4,003 on ft
-  station columns; 0 of 395 types reserve); HEAD 42,882 of 44,493; KV 30,264 + 2,024 on hard PHY. QC: 0 illegal.
-- Hold on real views: 0 pairs measured on S81, HEAD (0 of 585,476, although 18 closed views are in the kit) and QC.
-  Kit-contract hold: QC -114.9 intra / -59.2 seam; S81 seam skew 310 against a 40 ps contract; HEAD -80.6 declared-budget.
-- S81 feed: 188 stages, 11.7 ns, K table still from the B6gsh kit (taps 22,895 -> 21,687). QC: 14.12 ns, late-early
-  1,828 ps, same-type instance spread +-129 ps on 14 cb types.
+Evidence: t34 ring-ff model: 256 existing FF, 336 shared comb clones, +18.2 um2, 0 cycles, margin 7.9 um (model only).
+t43: partial coverage IN 69 / 595, OUT 410 / 668. leaf34 bare instance names are not handled by the ac601 helper. svc
+hi3: 3.557 M std cells / 653 k FF in one type, floorplan repair at iteration 977, peak 31.4 GiB. serdes: start / reset
+rows fix distance only; RX half-cycle skew 413 ps, reset relay skew 553 ps need the cohort guard (55b26f).
+Fix: S81-TYPES-R builds t34 on current819 to GRT before more strip rows; t43 waits for full-width aliases. S81-CORES-R:
+serdes pilots only from a tree with d5bd6d74 + 55b26f; read the svc hi3 floorplan result before lo7 goes past synth.
 
-Root cause: types are built without the die clock cells, and die STA has never been fed a signed view.
+### Lever 8. Clock rows and die hold
 
-Fix.
-1. S81 R3 now (clock kit of record: bands, ft stations and tap rows as keep-outs; 405 um leg cap), then R4 (K table from
-   that kit) and R2 (reservation rows). Every col and ring type signed before R2 may need a second build; R3 first
-   keeps that set small. Report the count of reserved sites that hit placed cells per signed type.
-2. HEAD fix D now: load the 18 closed views into die STA. It is the first real hold number on any die.
-3. QC row 3 (one region tree per type, reused per instance): start it; the +-129 ps spread is larger than the 87 / 110 ps
-   kit windows.
+Evidence: QC L rows: 2,607 of 15,391 ports at 0 margin, 3,597 under 5 ps; cb instance spread to 129 ps. KV rows C: 0 margin
+on 6,129 ports; 44 % of ports moved past their window after one compose (p90 29 ps, max 91). S81 seam need 290 against 40.
+Root cause: per-instance region trees and rows cut at exactly the measured need.
+Fix: cut rows at need + 10 ps (setup room is +360..+540 on all three dies); QC row 3 (one region tree per type, reused
+per instance) is still not started and removes most edge ports; S81 R4 K table from the ECOv3 kit before col kits sign.
 
-### Lever 8. bksel_q
+## 3. Stop list
 
-Evidence: pk2 clock pin 696 TT, 811 inputs FF hold -124, setup to u_fq r_addr -149.8. fx6 (BUFx24 at each ETM clock pin)
-CTS: pk2 pin - regs -115.1 -> -156.9 against a target of -180; hc0 bank only -78.9.
-Fix: read the 12 paths into pk2 and hc0 at post-GRT repair. If hc0 or pk2 misses, feed those two pins from one tree
-level higher (a second measured tap choice), not a further hold-repair round.
+1. Routing the five S81 col pilots with sequencer lead 100.
+2. Any number from the old IFN = 0 halves (604-hook, ICG bypassed); more hold buffers on the halves before the IR group
+   is balanced in CTS.
+3. Waiting on, or relaunching unchanged, QC headseg44 (plateau 900-1,200 for 33 iterations).
+4. A 20 ps pre-route hold target on whole types (P3: 26,258 endpoints for 6).
+5. Hold cells on port-only paths in any type kit.
+6. KV rows B as merged; clamping the E4 window to 208.25; a second die run on HG1B before B'.
+7. HEAD: host_e without the M8 grant; merged OBS pins (GRT-0116 twice); further four-net rip A/B runs; sd9B; the WEST
+   reverse fallback while he12h is in route.
+8. S81: F2s3 col GEN outputs (MPL-0041); the K2 clock kit; the t43 VSW / RXSB +198.72 move; serdes pilots without the
+   cohort guard; splitting common 13 / 48 into separate arrival windows.
+9. QC: more S4q6d kits; the C2993 3 + 1 ring graft on N43; the early-E collector pad.
+10. Still valid from 09:25: route-keep ECO rounds on hd_host_e / hd_ctl; moving the 4 glue d2d SRAMs; reading it5-it15
+    as GRT convergence; hold repair without an iteration cap on bksel.
 
-## 3. Lanes whose approach looks wrong
+## 4. Not checked
 
-| lane | issue | change |
-|---|---|---|
-| FABLE-FIX-QC-KNEE-HC | fe 2 / 3 bump scan for an error a uniform bump cannot move; next step in the handoff is fe 4 / 5 | stop; W5 l9_c region-0 station row (lever 3) |
-| FABLE-DIE-QC + FABLE-FIX-QC-CBGLUE | two plans named S4q9e, different contents | one composed S4q9e |
-| FABLE-FIX-S81-COLTAP | col waves release on post-CTS >= -42 | GRT-RC read, or post-CTS >= +45 |
-| S81-IFN0-HALVES | treated as fallback; the 84 types have no measured tile and a +23..+63 estimate | main form for r0 / h10_r1 |
-| HEAD-SERDES-O | sd7 DOREG without a site rule for the seam flops | region at the u_chn edge; read after place |
-| FABLE-FIX-HEAD-TIMING | hd_host_e has no build since he6 failed; three RTL forms missed the same pin-row cause | pin-row flops on the early tap |
-| HEAD-100 / FABLE-DIE-HEAD | hd_ctl rows deferred while hd_ctl rebuilds on NF14 | rows in NF14, or hd_ctl held |
-| FABLE-FIX-S81-SERDES | F2sv proof kits in route have no TXPIPE placement | read TX-face paths at GRT; rebuild from f84ed61a70 |
-| FABLE-FIX-S81-CONG / S81-STRIP-O | ring-ff detail route (c_t34, A_t65) still unread; STRIP-O silent since 05:42 | CONG owns the route read today |
-| FABLE-DIE-KV | 2,024 clock cells on a signed hard PHY left for a later delta | site rule before any die number |
-
-## 4. Stop list
-
-1. fe / ctl pin-pad bumps to clear `PARAM_REGEN W5 nb_od`.
-2. Binding either current S4q9e file as it is.
-3. Releasing a volume wave on a post-CTS placement-RC number between -42 and +45.
-4. Any S81 col kit before the F2s3 bind; hand-edited kits to get round KIT_TOPOLOGY_BIND_STALE.
-5. Any S81 serdes kit from a tree without f84ed61a70; any kit on G3b / B6gE bands.
-6. Route-keep ECO rounds on hd_host_e / hd_host_w / hd_ctl (three rounds, 0 gain: -116.51, -66.93, -80.96).
-7. PDN halo as the fix for the u_epc EOL class (he6: 29 EOL left). A LEF OBS trim (markers stay).
-8. hd_ctl or hd_lep0N rebuilt without sideband rows; reading u_chn or hd_serdes from sd5 or from a post-CTS number.
-9. Hold repair with no iteration cap on bksel (fx1 / fx3 / fx5 stalled at -34.6 / -36.8 for more than 3 h).
-10. Moving the 4 glue d2d store SRAMs with FDI stations (+3 cycles breaks the compiled link calendars on both dies).
-11. Reading it5 / it10 / it15 as GRT convergence; relaunching b_t75 / b_t62 / b_t47 bases without rows.
-12. Still valid from 0943: hold judged on a flat 165 ps window; dropping track-truth obstructions in an ECO session;
-    raising the QC 403 um knee; KV pv on kvgeom6, 7p, v20 / v21.
-
-## 5. Not checked
-
-- F2s3 bind result, c_t34 / A_t65 routes, sd6 / sd7 / hw4 / he7 routes, coll_n a22 route, fx6, IFN0 CTS: all in flight.
-- I did not read the W5 `nbo[]` values; the cause in lever 3 is from the code and the unchanged error, not from the numbers.
-- The +45 margin is from three kits on two dies; S81 non-col and KV have no CTS-to-routed pair in my read.
-- The die clock-cell counts and hold contract numbers are from the die reports, not re-run.
-- No render opened. No KV die report file exists to read; KV die numbers are from one queue post.
+- The coll_n pilot sign-off line also says `face_guard FAIL` and DRC NOT RUN inside sign-off (the route report is empty);
+  I did not read why face_guard fails.
+- KV pilot kit logs: I could not find their kit directories on epyc10 in the time; pilot state is REPORTED.
+- S81 svc hi3, serdes H, bksel bc5, the eight-type GEN, the clock R4 run: REPORTED only.
+- The 9-17 ps estimate-to-RCX drift is from QC and HEAD; S81 has no valid pair yet. The IR-group fix is INFERENCE from
+  the clock arrival table, not a run.
+- Whether eco_hw4/i1t is still in route (ab206 ended exit 2; I did not read eco_hw4.log).
