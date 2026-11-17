@@ -47,9 +47,11 @@ class ProbeLocality(unittest.TestCase):
         def ssh(args, **kwargs):
             self.assertEqual(args[0], 'ssh')
             self.assertEqual(args[-2], host)
-            cmd = args[-1].replace('/usr/local/bin/ot-heavy-reconcile',
-                                   shlex.quote(sys.executable) + ' ' + shlex.quote(str(self.stub)))
-            cmd = cmd.replace('/srv/', str(self.base / host) + '/srv/')
+            # rewrite the /srv/ paths of the probed host FIRST, then insert the interpreter: a gate interpreter that itself lives under /srv
+            # (the mq-gate venv) would otherwise be rewritten to a path that does not exist and the stub never runs (KeyError 'probed')
+            cmd = args[-1].replace('/srv/', str(self.base / host) + '/srv/')
+            cmd = cmd.replace('/usr/local/bin/ot-heavy-reconcile',
+                              shlex.quote(sys.executable) + ' ' + shlex.quote(str(self.stub)))
             return self.real_run(['bash', '-c', cmd], **kwargs)
         with mock.patch.object(self.m.subprocess, 'run', side_effect=ssh):
             return self.m.probe(host, path, spill_ok=spill_ok)[1]
