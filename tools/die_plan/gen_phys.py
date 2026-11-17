@@ -2432,6 +2432,17 @@ def pg_drt0255_cfg():
     return out
 
 
+PG_ROW_GUIDES_LINES = ["# PG-ROW-GUIDES-1: move M6 guides off the PG pair rows before detail route (DRT-0255 class A, pg_row_guides.tcl)",
+                       "export PRE_DETAIL_ROUTE_TCL = /work/pg_row_guides.tcl"]
+
+
+def pg_row_guides_lines(cfg):
+    """The PRE_DETAIL_ROUTE hook lines, unless the kit config already has a PRE_DETAIL_ROUTE_TCL (its own hook is kept)."""
+    if any(re.match(r"(override\s+)?export\s+PRE_DETAIL_ROUTE_TCL\b", c) for c in cfg):
+        return []
+    return list(PG_ROW_GUIDES_LINES)
+
+
 def pgcap_cfg():
     """DRT0255-PROOF-1115 C3b opt-in config.mk lines from the gen environment: OT_PGCAP=1 turns on pg_pair_cap.tcl in grt_pre.tcl
     (GRT per-gcell capacity cut over every M5/M7 stripe column and M6 stripe row); OT_PGCAP_LAYERS (M-layer names), OT_PGCAP_ADJ
@@ -5542,7 +5553,11 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
                "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
                "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
             *(["export OT_S81_RCK_AM_COHORT = 1"] if am_clock else []),
-            *(["export OT_S81_RCK_BALANCE = 1"] if env.get("OT_S81_RCK_BALANCE") == "1" else []),
+            # S81 serdes family default (FABLE-FIX-S81-SERDES2 11-17): rck depth balance on every RCK4 kit, 16 rounds (8 rounds stop
+            # at span 214 ps, 16 reach 70-75 ps on serdes__t13); gen env OT_S81_RCK_BALANCE=0 opts out, =1 forces it on other kits
+            *(["export OT_S81_RCK_BALANCE = 1", "export OT_STB_ROUNDS = 16"]
+              if env.get("OT_S81_RCK_BALANCE") == "1" or (rck4 and env.get("OT_S81_RCK_BALANCE") != "0") else []),
+            *(pg_row_guides_lines(cfg) if env.get("OT_PG_ROW_GUIDES") != "0" else []),
             *(["export OT_SERDES_RM_LOCAL = 1",
                "export OT_SERDES_RM_LOCAL_EMPTY8 = " + ("1" if "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names else "0")] if rm_local else []),
             "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
@@ -6126,6 +6141,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
     cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
+    if os.environ.get("OT_PG_ROW_GUIDES", "").strip() == "1":     # any family, opt-in at generation; serdes kits get it by default below
+        cfg += pg_row_guides_lines(cfg)
     cfg += rc_signal_cfg(P.name)   # r222/r228 signal-net RC table (per die; OT_RC_SIGNAL=0 off)
     cfg += pgcap_cfg()         # DRT0255 C3b opt-in (gen env OT_PGCAP=1)
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
@@ -6181,7 +6198,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl"):
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl", "pg_row_guides.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
