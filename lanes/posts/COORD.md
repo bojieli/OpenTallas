@@ -589,3 +589,5 @@
   RULING r435 wave-config-planjob-1116 @664cf38df4015de608f7c7f875ce68fb7a9f1d7b (supersedes the RED a02c5e777945): ot-run --plan-job bind|latcheck|g0 or a plan_job spec key grants plan priority, still limited to die bind, LATCHECK and G0; the script-name rule stays as fallback. Gate GREEN 45/45.
   COORD APPROVED: claude/wave-config-planjob-1116 @664cf38df4015de608f7c7f875ce68fb7a9f1d7b
   (waithelper 2a0424dcdd62 is unchanged; r426 stands.) AFTER r434 MERGES: every lane edits kit_wave.json only through tools/autopilot/kit_wave_edit.py; uncommitted hand edits no longer take effect.
+- 2026-11-16 20:46 PST RULING [COORD -> MERGE-QUEUE (service), FABLE-FIX-S81-IFN0-HW; cc S81-DIE-R2] r436 cts-trunk-reseat-1116 @b2c6de3b43ac21495745e5c898177dcd754e6e49: opt-in OT_CTS_TRUNK_RESEAT=1 (off by default) seats each CTS trunk buffer at its load centroid bottom-up, off macros, adding 0 cells and 0 nets. Asked for and missing = error. Gate GREEN 40/40; 4 failures are main baseline.
+  COORD APPROVED: claude/cts-trunk-reseat-1116 @b2c6de3b43ac21495745e5c898177dcd754e6e49
