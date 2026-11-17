@@ -1990,6 +1990,13 @@
           },
           "route_layers": {
            "type": "string"
+          },
+          "tap_escape": {
+           "type": "boolean"
+          },
+          "edge_pad_sites": {
+           "type": "integer",
+           "minimum": 0
           }
          }
         }
