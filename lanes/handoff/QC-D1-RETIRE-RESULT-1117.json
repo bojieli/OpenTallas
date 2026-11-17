@@ -1,0 +1,32 @@
+{
+  "at": "2026-11-17T04:53:23.462733-08:00",
+  "host": "epyc8",
+  "source": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d1",
+  "result": "RETIRED_COMPACT_PRESERVED",
+  "guard": "ALLOW; current canonical plus hub-coord marker/config union, live process check, realpath/inode/device check",
+  "signed_units": 148,
+  "signed_not_in_store": 0,
+  "free_before_bytes": 61890506752,
+  "free_after_bytes": 122180964352,
+  "observed_net_reclaim_bytes": 60290457600,
+  "preservation_commit": "7233c93ac8b4dfd3b33daee4ca772113d9c4b2da",
+  "preservation_receipt": "lanes/handoff/QC-D1-COMPACT-PRESERVE-1117.json",
+  "compact_archive": "/srv/opentallas-scratch2/claude/fleet-ops-r-preserve-1117/qc_L2_D1_compact_preservation_1117.tar.gz",
+  "compact_archive_hosts": [
+    "epyc8",
+    "epyc10"
+  ],
+  "compact_archive_bytes": 17379228,
+  "compact_archive_sha256": "2b333f2817b4317357bda27587604b464b213cd07bf32eacf19c77a5e7672a33",
+  "reconstructible_payload_files": 323767,
+  "unchanged_retained": [
+    "canonical BASE fc19bea6c523",
+    "D2 a535703479c0 reconstruction anchor",
+    "rollback",
+    "SC GEN original proof and working directory",
+    "D2 publisher and current guard/GEN consumers",
+    "all other active jobs"
+  ],
+  "only_removed": "never-adopted unconsumed D1 source tree; no plan adoption or production pointer change",
+  "retirement_log": "epyc8:/srv/opentallas-scratch2/claude/fleet-ops-r/retire_qc_D1_compact_1117.log"
+}
