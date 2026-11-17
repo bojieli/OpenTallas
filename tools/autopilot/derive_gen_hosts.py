@@ -77,14 +77,23 @@ def apply(coord, result, run=subprocess.run):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--coord", default=os.path.expanduser("~/coord")); ap.add_argument("--hosts", default=",".join(HOSTS)); ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--log", default="", help="append one line per die and run (time, old -> new, reasons, applied) to this file: every change is logged")
     a = ap.parse_args(argv)
     cfg = json.load(open(os.path.join(a.coord, "autopilot/kit_wave.json")))
     res = derive(cfg, tuple(a.hosts.split(",")))
     for die, (new, why) in sorted(res.items()):
         cur = cfg["dies"][die]["gen_hosts"]
         print(f"{die}: {','.join(cur)} -> {','.join(new)}" + (" | " + "; ".join(why) if why else ""))
+    changed = apply(a.coord, res) if a.apply else []
     if a.apply:
-        print("applied:", apply(a.coord, res) or "nothing")
+        print("applied:", changed or "nothing")
+    if a.log:
+        import time
+        os.makedirs(os.path.dirname(os.path.abspath(a.log)), exist_ok=True)
+        with open(a.log, "a") as f:
+            for die, (new, why) in sorted(res.items()):
+                cur = cfg["dies"][die]["gen_hosts"]
+                f.write("%s %s %s -> %s%s%s\n" % (time.strftime("%F %T"), die, ",".join(cur), ",".join(new), " APPLIED" if any(c.startswith(die + "=") for c in changed) else (" (dry)" if not a.apply else ""), (" | " + "; ".join(why)) if why else ""))
     return 0
 
 
