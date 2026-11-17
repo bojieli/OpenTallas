@@ -36,3 +36,8 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - Form fix (cycle-neutral): launcher of a cross-tap hop = plain ot_dp_rrelay (posedge q, full-cycle hop). nl: state@k, q@k+0.5, next@k+1; plain: q@k, next@k+1 -> same latency, LATCHECK unchanged. Hold across taps on a >= 250 ps hop is easy; hold repair covers the rest.
 - H3 = H2 kit + rtl/s81p_serdes__t13_bound.sv with u_rrl_{0,7,11,17,23,30,33,42,45,49,57,58,62,72,86,93,96,101,115,117,118,123,125,130,132} nl -> plain (orig .H2), resynth (OT_ALLOW_RESYNTH=1), goal cts. E8 L/H3/serdes__t13/gen/serdes__t13, ~/s81-serdes-r2/h3-cts.out. lec_async.sh not copied (LEC skipped, advisory).
 - To count H3 the die bind generator must emit the same rule (owner: S81-DIE-R2 / reset plan). Posted.
+
+## 19:3x PST
+- G3 CTS exit 0 after the cohort fallback (group 0 nearest leaf clknet_leaf_434, worst member 30.2 um). Census (probes G3_cts/): TT -974.56, 1022 endpoints < -42; FF -645.75. Tap insertion 219..927 ps (t13 1163, t14 1240, t20 1146, t9 1189 max): rrl relay cross-tap hops -700..-975, rm rd.q class -717 (same as J4). G3 PARKED: no route. Its tap plan needs re-pitching (OT_TAP_CHECK says <= 117 um) plus the J5/H3 fixes before it is worth another CTS.
+- J5 at GPL (3_3); H3 at synth. H route E2 + H2 route E8 + J4 route E8 running.
+- Order to close: H2 routed numbers -> if only rrl class remains, H3 is the sign-off candidate (needs the bind rule adopted).
