@@ -111,3 +111,7 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
 2. t22 calibration GRT (S81-TYPES-R3, asked twice, no answer by 11:00): decides 45.6 vs about 41.9; then re-run cand.sh with
    ARGS="--add --per-um <measured>" and re-bind. t75 / t8 need a look at that capacity.
 3. First re-slotted kit to GRT: t22 or t34 (bundles crossing M5 cores on M7 are priced by the model, not yet shown by a GRT).
+
+## 2026-11-17 11:3x PST READY posted
+- D7-strip chain PASS: strict bind 0 / 395 / 873, LATCHECK 873/873, G0 5 = C4r3 baseline, PRE PASS, census 0 over (worst 0.695). READY post names branch 02e762e464c, rows cand/rows_d7_strip.json, work tree d7strip_1117_work (not published).
+- Waiting on: S81-DIE-R3 to take the rows into D7; S81-TYPES-R3 t22 GRT calibration; then per-um from the measured table.
