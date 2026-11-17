@@ -93,3 +93,13 @@ Latest substantive canonical post/table/receipts PUSHED2116f475da6124699997534a8
 - Read 00:44 CODEX-LOG QC section + this file. M clock (M3 12f2493f) + CB16extra e2f94854 already delivered; parent owns M2 bind; FABLE-FIX-QC-DIECLK owns cb family / die clock closure + E2 unit3527117 (not touched).
 - Took the one open clock-lane item: N-NB branch clock qualification. Die chain on plan_n_nb.json d99a1840 (comb feed, template 2, exact SPEF LE15), dir chain/qc/s4q9n_nb, script bin/chain_n.sh, unit oth-ubuntu-3921342-1794905455 (E2), client intel2 ~/qc-clk-r2/chain_n.client.log, started 00:5x, ~3 h. feed_s4q9m.json + regions_s29.json copied byte-equal next to the plan (dbdd/f332) for count-frame path resolution.
 - Read on CHAIN_DONE: KIT template refused 0, GRT 0/0/0, TOL, clk_c6 offset on the 11 cb0 copies vs M rows, CA FAIL 0, STA_C PASS, rows_m need+10 vs M rows (delta only).
+
+## N-NB clock RESULT 2026-11-17 03:2x PST
+RESULT [QC-CLK-R2 -> QC-PLAN-R, COORD; cc FABLE-FIX-QC-DIECLK] N-NB clock qualification (plan_n_nb d99a1840) on the full exact die chain: E2 fable-die-qc-r/chain/qc/s4q9n_nb (comb feed, template 2, exact SPEF LE15).
+(1) PASS: template 198 copied / 0 refused; die GRT TT+FF 0/0/0; clock detour 0; 42,253 taps, missing 0. CA_C/D 2,993 FAIL 0 (depth 4: 2,953 / 8: 40, MC 300 chips 0 violations, START 734/734 clean). STA_C COUNT-ALIGN PASS, TT lo 105.0 / FF lo 114.6. Intra TT setup +401.5 (neg 0). SPEF same-type half range max 36.2, as on M.
+(2) The M rows do NOT carry over: tap gate on the N plan (which holds the M rows) = 2,485 of 84,502 taps outside, RESIGN 50 rows, all cbn_q00__cldbcda913. N rows were cut at need + 10 from this proof: E2 qcclk2/n_nb_rows/rows.json 424b4671e7d4 and plan.json a03b14aa32a7 (= d99a1840 + rows). 130 types, tol max 46.3, min margin 10.05, seam 160, table errors 0.
+(3) Delta vs M rows (lanes/handoff/QC-CLK-R2-N-NB-rows-delta_vs_M.json):
+  - cbn_q00__cldbcda913: offsets shift on 122 ports, up to 153.3 ps (clk_c6 -44.4, clk_c8 +91.0, clk_t72 -142.5). tol stays 10.1, so the 10 copies still match one another, but the type tree itself changed. The kit must be built on the N rows.
+  - The 3 sle_st_b_v1 types shift by 32-34 ps and gain port clk_t128. This comes from the M composition (G rows), not from the NB move, so M beaa carries stale l2d rows for these 3 types. Recut M rows for them from an M-geometry proof before any st_b_v1 kit.
+  - Other changes are <= 3 ps.
+(4) Advisory: the kit stage ended rc 1 in reset_tree (sle_su_c vmr pin table not unique in src5), after the clock and GRT outputs were written. This is source packaging, not clock.
