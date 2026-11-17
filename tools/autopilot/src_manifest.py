@@ -839,6 +839,8 @@ def main(argv=None):
     r = sp.add_parser("replicate")
     r.add_argument("tree")
     r.add_argument("--hosts", required=True)
+    r.add_argument("--link-from", default="", help="basename of an earlier published tree of the same die: on each target that holds it, unchanged files are hardlinked from it (--link-dest), "
+                                                   "so the copy costs the delta; the target's .link-base names it (verify accepts exactly those shared inodes)")
     d = sp.add_parser("derive")
     d.add_argument("live")
     d.add_argument("--repo", required=True)
@@ -916,7 +918,8 @@ def main(argv=None):
             free, have = remote_free_gb(host, os.path.dirname(tree), part)
             if free is None:
                 print(f"{host}: refuse (cannot read the target's free space)"); bad = 1; continue
-            ok, after = room_after_copy(free, size, have, max(REPL_FLOOR_GB, int(os.environ.get("OT_REPL_FLOOR_GB", REPL_FLOOR_GB))))
+            lk = bool(a.link_from) and subprocess.run(SSH + [host, f"test -d {shlex.quote(os.path.join(os.path.dirname(tree), a.link_from))}"]).returncode == 0
+            ok, after = room_after_copy(free, min(size, 8.0) if lk else size, have, max(REPL_FLOOR_GB, int(os.environ.get("OT_REPL_FLOOR_GB", REPL_FLOOR_GB))))   # a linked copy is budgeted at <= 8 GB
             if not ok:
                 print(f"{host}: refuse (free {free:.0f} GB + part {have:.0f} - tree {size:.0f} = {after:.0f} GB after the copy < floor {REPL_FLOOR_GB} + {REPL_MARGIN_GB} GB)")
                 bad = 1
@@ -926,8 +929,16 @@ def main(argv=None):
                 print(f"{host}: refuse (target exists or not writable)")
                 bad = 1
                 continue
-            rs = subprocess.run(["rsync", "-a", "-e",
+            linkdir = ""
+            if a.link_from:
+                cand = os.path.join(os.path.dirname(tree), a.link_from)
+                if subprocess.run(SSH + [host, f"test -f {shlex.quote(cand)}/{MANIFEST} && test -d {shlex.quote(cand)}"]).returncode == 0:
+                    linkdir = cand
+            rs = subprocess.run(["rsync", "-a", *([f"--link-dest={linkdir}/"] if linkdir else []), "-e",
                                  "ssh -o BatchMode=yes -o ControlPath=none", tree + "/", f"{host}:{part}/"])
+            if rs.returncode == 0 and linkdir:
+                subprocess.run(SSH + [host, f"cd {shlex.quote(part)} && chmod u+w . && readlink -f {shlex.quote(linkdir)} > {LINKBASE} && chmod a-w . {LINKBASE}"])
+                print(f"{host}: linked from {os.path.basename(linkdir)}")
             rc, txt = remote_verify(host, part, m["manifest_hash"], ro=True) if rs.returncode == 0 else (1, "rsync failed")
             if rc == 0:
                 rc = subprocess.run(SSH + [host, f"mv -T {shlex.quote(part)} {shlex.quote(tree)}"]).returncode
