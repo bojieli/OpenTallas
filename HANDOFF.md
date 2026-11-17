@@ -3737,3 +3737,5 @@ COORD: 2026-11-17 01:5x PST hourly: S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=
 - 2026-11-17 02:1x COORD: hourly done. Approved r524-r532 (r523 WITHDRAWN; 1c07ed14 waits on the pilot passing 3_4). QC M2 NOT ADOPT -> M3. S81 C4: reset.relay_um=180 plus v2 START rows. FIX lanes: S81-SERDES, HEAD-CTL. Disk urgent -> FLEET-OPS-R. GEOM renders not done this hour (no fresh placed views).
 
 - 2026-11-17 03:1x COORD: hourly. Approved r533-r537. Raw-rm hook installed on localhost (OWNER yes). Open: serdes sparse 056ad948 needs a gate; KV D14 copy+verify; QC M4 replay; S81 C4R1 bind; ba0/ba1 fwp sign-off.
+
+CODEX: 2026-11-17 04:05 PST owner reset handback; all workers parked, five source/view approvals posted, HEAD sd9f preserved GRT advanced to route, all die/token/fleet jobs retained. Full per-lane handoff in CODEX-LOG.md.
