@@ -56,8 +56,14 @@ proc ot_phy_export_rebind {cfg} {
   set state REBOUND
  }
  set out [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : [file dirname [info script]]}]
- set f [open [file join $out phy_clock_export_binding.json] w]
- puts $f [format {{"schema":"opentallas.phy_clock_export_binding.v1","target":%s,"clock":%s,"master":%s,"declared_source":%s,"realized_source":%s,"period_ps":%s,"status":%s,"buffer_instances":%d,"only_source_identity_changed":true}} [ot_phy_json_string $target] [ot_phy_json_string $clock] [ot_phy_json_string $master] [ot_phy_json_string $declared] [ot_phy_json_string $actual] [dict get $cfg period_ps] [ot_phy_json_string $state] [llength $chain]]
- close $f
+ # PHY-EXPORT-RO-1117 (FABLE-FIX-HEAD-SD9F): the sign-off STA session reads the kit read-only (signoff.py mounts /work:ro and
+ # sets no RESULTS_DIR), so this open was a fatal 'read-only file system' in golden.sdc and no hd_serdes corner ran.  The
+ # rebind above is what timing needs; the ledger is flow evidence (written by the flow steps, where the dir is writable).
+ if {[catch {open [file join $out phy_clock_export_binding.json] w} f]} {
+  puts "OT_PHY_CLOCK_EXPORT ledger not written ($out not writable): $f"
+ } else {
+  puts $f [format {{"schema":"opentallas.phy_clock_export_binding.v1","target":%s,"clock":%s,"master":%s,"declared_source":%s,"realized_source":%s,"period_ps":%s,"status":%s,"buffer_instances":%d,"only_source_identity_changed":true}} [ot_phy_json_string $target] [ot_phy_json_string $clock] [ot_phy_json_string $master] [ot_phy_json_string $declared] [ot_phy_json_string $actual] [dict get $cfg period_ps] [ot_phy_json_string $state] [llength $chain]]
+  close $f
+ }
  puts "OT_PHY_CLOCK_EXPORT $state target=$target declared=$declared realized=$actual master=$master period=[get_property $masters period] buffer_instances=[llength $chain]"
 }

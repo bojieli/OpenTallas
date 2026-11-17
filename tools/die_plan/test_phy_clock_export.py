@@ -48,8 +48,7 @@ def test_owned_hook_is_typed_and_not_a_general_source_escape(tmp_path):
     assert keep.read_text()=="unchanged"
     assert not (tmp_path/"phy_clock_export_source.tcl").exists()
 
-@pytest.mark.parametrize("actual,propagated", [("clk_t2",0),("clk_t2",1),("clk",1),("alias",1)])
-def test_realized_tcl_mapping_and_propagated_state(tmp_path,actual,propagated):
+def _run_rebind(results_dir,actual,propagated):
     tcl=shutil.which("tclsh")
     if not tcl:pytest.skip("tclsh unavailable")
     script=r"""
@@ -82,13 +81,28 @@ proc set_propagated_clock {args} {global propagated;set propagated 1}
 proc unset_propagated_clock {args} {global propagated;set propagated 0}
 """
     script+=f"set actual {actual}\nset propagated {propagated}\n"
-    script+=f"set ::env(RESULTS_DIR) {{{tmp_path}}}\nsource {{{HERE/'phy_clock_export.tcl'}}}\n"
+    script+=f"set ::env(RESULTS_DIR) {{{results_dir}}}\nsource {{{HERE/'phy_clock_export.tcl'}}}\n"
     script+="ot_phy_export_rebind [dict create target {pma_tck[0]} clock pma_tck master clk declared_source clk period 833 period_ps 833]\n"
     script+='puts "STATE $propagated CALLS [llength $calls]"\n'
     result=subprocess.run([tcl],input=script,text=True,capture_output=True,check=True)
     assert not result.stderr,result.stderr
+    return result
+
+
+@pytest.mark.parametrize("actual,propagated", [("clk_t2",0),("clk_t2",1),("clk",1),("alias",1)])
+def test_realized_tcl_mapping_and_propagated_state(tmp_path,actual,propagated):
+    result=_run_rebind(tmp_path,actual,propagated)
     ledger=json.loads((tmp_path/"phy_clock_export_binding.json").read_text())
     want="clk_t2" if actual=="clk_t2" else "clk"
     assert ledger["realized_source"]==want
     assert ledger["status"]==("REBOUND" if want!="clk" else "UNCHANGED")
     assert f"STATE {propagated} CALLS {int(want!='clk')}" in result.stdout
+
+
+def test_rebind_survives_unwritable_ledger_dir(tmp_path):
+    """PHY-EXPORT-RO-1117: sign-off STA sources the kit read-only; the rebind must still happen, the ledger is skipped."""
+    result=_run_rebind(tmp_path/"not_there","clk_t2",1)
+    assert "OT_PHY_CLOCK_EXPORT ledger not written" in result.stdout
+    assert "OT_PHY_CLOCK_EXPORT REBOUND" in result.stdout
+    assert "STATE 1 CALLS 1" in result.stdout
+    assert not (tmp_path/"not_there").exists()
