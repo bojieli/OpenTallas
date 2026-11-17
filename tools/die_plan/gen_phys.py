@@ -3087,7 +3087,10 @@ def die_sta_sdc_lines(P, tn, side):
 def _lockup_pad_type(P, tn):
     """True when clock.core_input_lockup lists type tn and declares a latch_except_hb4 pad."""
     cfg = ((P.raw or {}).get("clock") or {}).get("core_input_lockup") or {}
-    if tn not in (cfg.get("types") or ()):
+    if cfg.get("all"):                      # same type rule as bind.core_input_lockup: "all" minus "except", else "types"
+        if tn in set(cfg.get("except") or ()):
+            return False
+    elif tn not in set(cfg.get("types") or ()):
         return False
     return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
 
