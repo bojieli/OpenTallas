@@ -7361,6 +7361,45 @@ def _snap_missing(txt):
     return next((ln.strip()[:400] for ln in txt.splitlines() if ln.startswith("KIT-STORE FAIL KIT-STORE MISSING")), "")
 
 
+def signed_export_restore(cfg, vmiss, run, remote, G, ER):
+    """cfg = {"root": export root, "ssh": host holding it or ''}.  -> restored paths.  The export index and the files are read from the export host (or a local root), staged on
+    the wave host, pushed to G at the same path; hashes are checked by export_restore before anything is placed."""
+    import tempfile, subprocess, shutil
+    root, host = cfg.get("root"), cfg.get("ssh") or ""
+    def fetch(src, dst):
+        cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, f"cat {shlex.quote(src)}"] if host else ["cat", src]
+        with open(dst, "wb") as f:
+            r = subprocess.run(cmd, stdout=f, stderr=subprocess.PIPE, timeout=1200)
+        if r.returncode:
+            raise OSError(r.stderr.decode()[-120:])
+    tmp = tempfile.mkdtemp(prefix="kwexport.")
+    idx = os.path.join(tmp, "INDEX.tsv"); fetch(os.path.join(root, "INDEX.tsv"), idx)
+    rows = ER.load_index(tmp)
+    def prov(by):
+        rc, t = run("kit_snap_prov", remote(f"cat {shlex.quote(by)}"), idempotent=True)
+        try:
+            return json.loads(t[t.index("{"):])
+        except ValueError:
+            return None
+    items, _bad = ER.plan([(m["path"], m["by"]) for m in vmiss[:200]], prov, rows, root)
+    done, _fail = ER.restore([(os.path.join(tmp, "stage", i[0].lstrip("/")), *i[1:]) for i in items], fetch, tmp)
+    placed = []
+    for d in done:
+        dst = "/" + os.path.relpath(d, os.path.join(tmp, "stage"))
+        if G == "localhost":
+            os.makedirs(os.path.dirname(dst) if os.path.isfile(d) else dst, exist_ok=True)
+            if os.path.isfile(d): shutil.copyfile(d, dst)
+            placed.append(dst); continue
+        ssh = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", G]
+        if os.path.isfile(d):
+            r1 = subprocess.run(ssh + [f"mkdir -p {shlex.quote(os.path.dirname(dst))}"], capture_output=True)
+            r2 = subprocess.run(["rsync", "-a", "--ignore-existing", "-e", "ssh -o BatchMode=yes -o ControlPath=none", d, f"{G}:{dst}"], capture_output=True)
+            if not (r1.returncode or r2.returncode): placed.append(dst)
+        elif not subprocess.run(ssh + [f"mkdir -p {shlex.quote(dst)}"], capture_output=True).returncode:
+            placed.append(dst)
+    return placed
+
+
 def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
     """-> ({orig: snapshot path}, '') or (None, why).  kit_store.py snap on the gen host; when G lacks a required input,
     snap on the first other die host that holds it, copy <snaps>/<id> to the same path on G and verify every sha256
@@ -7436,6 +7475,37 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
         if d4 is not None:
             doc = dict(d4, copied_from=doc.get("copied_from"))
         vmiss = doc.get("view_refs_missing") or []
+    if vmiss and sp.get("signed_export"):
+        # FLEET-OPS-R r585 (b): what no die host holds may still be in the SIGNED EXPORT (hash checked against its record); restore it and snapshot again
+        try:
+            import export_restore as ER
+            restored = signed_export_restore(sp["signed_export"], vmiss, run, remote, G, ER)
+            if restored:
+                rc5, t5 = run("kit_snap", remote(cmd), idempotent=True)
+                d5 = None if rc5 else _snap_doc(t5)
+                if d5 is not None:
+                    doc = dict(d5, copied_from=doc.get("copied_from")); vmiss = doc.get("view_refs_missing") or []
+                print(f"KW_KIT_SNAP_EXPORT_RESTORED {len(restored)} still_missing {len(vmiss)}", flush=True)
+        except Exception as e:                       # the export is an optional last resort: never turns a degraded snapshot into a crash
+            print(f"KW_KIT_SNAP_EXPORT_FAILED {type(e).__name__}: {e}"[:300], flush=True)
+    if vmiss and sp.get("restore_queue") is not False:
+        # COORD 11-17: the signed export is off the fleet; ask for the files instead.  One RESTORE-NEEDED row per missing export path (module, record id, path, host) goes to the
+        # hub queue; a copy-only cron on rtx-pro pushes the hash-checked files and the next tick's snapshot finds them.
+        try:
+            import export_restore as ER
+            qdir = os.environ.get("OT_RESTORE_QUEUE_DIR") or os.path.expanduser("~/.local/state")
+            def _prov(by):
+                rc_, t_ = run("kit_snap_prov", remote(f"cat {shlex.quote(by)}"), idempotent=True)
+                try:
+                    return json.loads(t_[t_.index("{"):])
+                except ValueError:
+                    return None
+            rows = ER.restore_rows([(m["path"], m["by"]) for m in vmiss[:200]], _prov, G)
+            n = ER.queue_append(os.path.join(qdir, "restore_needed.jsonl"), rows, done=ER.read_jsonl(os.path.join(qdir, "restore_done.jsonl")))
+            if n:
+                print(f"KW_KIT_SNAP_RESTORE_NEEDED queued {n} of {len(rows)} (copy-only worker on rtx-pro restores them; retried next tick)", flush=True)
+        except Exception as e:
+            print(f"KW_KIT_SNAP_RESTORE_QUEUE_FAILED {type(e).__name__}: {e}"[:300], flush=True)
     if vmiss:
         names = "; ".join(f"{m['path']} (named by {m['by']})" for m in vmiss[:5])
         if sp.get("kit_snap_view_refs") == "strict":
