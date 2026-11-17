@@ -21655,3 +21655,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 /srv/opentallas-scratch2/claude/rt/1e0504fe8f44/tools/die_plan/test_hold_gate_ring.py:24: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }
 - 2026-11-17 12:40 PST DISK-RATE epyc7 /srv/opentallas-scratch2: free 87 GB, falling 7 GB/h, floor 50 GB in 5.6 h (cron disk_rate.py; read-only)
+- 2026-11-17 12:40 PST DISK-RATE epyc9 /srv/opentallas-scratch: free 377 GB, falling 67 GB/h, floor 50 GB in 4.9 h (cron disk_rate.py; read-only)
