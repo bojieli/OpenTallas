@@ -4,6 +4,10 @@ Moved into the repo (tools/autopilot) from tools-converge/apply_reviewed_tree_ma
 PILOT wave mode: the atomic apply switches die.src in kit_wave.json itself, so hold_records.apply_tree_switches never sees a switch;
 this adds the pilot hold (all items held but one pilot, released by gen_pilot:<die>:<manifest sha12>) in the same locked write.
 usage: apply_reviewed_tree_marker.py --candidate JSON --expect-source OLD_TREE --expect-event OLD_EVENT [--pilot-item ITEM | --no-pilot]
+       [--keep-gen-hosts]
+--keep-gen-hosts (or candidate key keep_gen_hosts: true; HEAD-DIE-R, COORD r400/r401): keep the die's CURRENT gen_hosts (e.g. a
+replica FLEET-OPS added after the candidate was written) instead of the candidate list.  The normal source guard must be full_ok on
+exactly those hosts, and the apply refuses when gen_hosts changed between that guard read and the locked write.
 The pilot item is --pilot-item, else die.pilot_item, else the smallest item of the die's hold_event_items; none resolvable = refuse
 (--no-pilot is the explicit opt-out; the output then says PILOT NONE)."""
 import argparse, fcntl, json, os, sys, time
@@ -20,7 +24,7 @@ def atomic(path, data):
     os.replace(tmp, path)
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False):
     C = Path(C)
     marker = dict(obj.get("marker", obj))
     die = marker["die"]
@@ -28,6 +32,13 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     want = marker.get("manifest_hash") or marker["src_manifest_sha"]
     mc = dict(marker.get("config") or {})
     hosts = list(mc.get("gen_hosts") or marker.get("hosts") or [])
+    keep = bool(keep_gen_hosts or obj.get("keep_gen_hosts"))
+    if keep:
+        cur = json.loads((C / "autopilot/kit_wave.json").read_text())["dies"][die]
+        hosts = list(cur.get("gen_hosts") or [])
+        assert hosts, "keep_gen_hosts: the die has no current gen_hosts"
+        mc.pop("gen_hosts", None)
+        mc.pop("gen_host", None)
     assert hosts and marker.get("smoke") == "PASS" and marker.get("plan") and marker.get("plan_sha256")
     if TC is None:
         import tree_check as TC
@@ -44,6 +55,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         cfg = json.loads(cfgpath.read_text())
         d = cfg["dies"][die]
         assert d["src"] == expect_source and d["event"] == expect_event, "die changed since reviewed candidate"
+        if keep:
+            assert sorted(d.get("gen_hosts") or []) == sorted(hosts), "keep_gen_hosts: gen_hosts changed since the guard read; nothing applied"
         old = dict(src=d["src"], event=d["event"], plan=d.get("plan"), plan_sha256=d.get("plan_sha256"), kit_rtl=d.get("kit_rtl"))
         # decide the pilot BEFORE any write: a refusal leaves everything untouched
         pilot = ""
@@ -56,7 +69,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         if old["src"] and old["src"] != tree and old["src"] not in sup:
             sup.append(old["src"])
         d.update(src=tree, src_manifest=True, src_manifest_hash=want, plan=marker["plan"], plan_sha256=marker["plan_sha256"], gen_hosts=hosts,
-                 gen_host=mc.get("gen_host") or hosts[0], cancel_superseded=False)
+                 gen_host=mc.get("gen_host") or (d.get("gen_host") if keep and d.get("gen_host") in hosts else hosts[0]),
+                 cancel_superseded=False)
         d.setdefault("src_sha", main)
         d.setdefault("queue_src", "main@" + main)
         if "src_sha" not in mc:
@@ -95,11 +109,12 @@ def main(argv=None):
     P.add_argument("--expect-event", required=True)
     P.add_argument("--pilot-item")
     P.add_argument("--no-pilot", action="store_true")
+    P.add_argument("--keep-gen-hosts", action="store_true", help="keep the die's current gen_hosts (guard must cover exactly them)")
     P.add_argument("--coord", default="/home/ubuntu/coord")
     a = P.parse_args(argv)
     obj = json.loads(Path(a.candidate).read_text())
     obj["_path"] = a.candidate
-    print(json.dumps(apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot)))
+    print(json.dumps(apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts)))
 
 
 if __name__ == "__main__":
