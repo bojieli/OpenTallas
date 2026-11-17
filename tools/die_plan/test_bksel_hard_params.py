@@ -27,9 +27,18 @@ def _registry(module):
 
 def test_control_is_bound_with_its_signed_rfd6_parameters():
     (c,) = _found([])["dsdv_bksel_c"]
-    (e,) = _registry("dsdv_bksel_c")
+    (e,) = [r for r in _registry("dsdv_bksel_c") if r["lib_contains"] == "cores/views/bksel_c3_1104/"]
     assert {k: c.eff[k] for k in e["params"]} == e["params"] == {"OLL": 2, "SELOH": 1, "RNF": 1, "LQH": 1}
     assert c.eff["QRX"] == 0
+
+
+def test_eco3_control_matches_the_signed_qrx1_view_entry():
+    """S81-CORES-R3 11-17: the QRX 1 control re-sign (cores/views/bksel_c_qrx_1117) = the eco3 control params"""
+    (c,) = _found(["OT_BKQ_ECO3"])["dsdv_bksel_c"]
+    (e,) = [r for r in _registry("dsdv_bksel_c") if r["lib_contains"] == "cores/views/bksel_c_qrx_1117/"]
+    assert e["params"] == {"OLL": 2, "SELOH": 1, "RNF": 1, "LQH": 1, "QRX": 1}
+    assert {k: c.eff[k] for k in e["params"]} == e["params"]
+    assert e["records"] == ["e1f3b821e2ab8dfd9e4bfac2b27794de9892e3393ce2318fbce85183a4afc3ca"]
 
 
 def test_default_quarters_are_hq3_and_eco3_quarters_take_the_eco3_set_with_control_qrx():
