@@ -58,3 +58,33 @@ Owner of strip leaf closure end to end. Executor: S81-TYPES-R-STRIP (Opus). Bind
    one standard tap); run to GRT; read TT (gate -42) and internal FF hold; then route, sign-off, export to AGIdock /archive/opentallas-signed-1114 + rtx-pro.
 3. t34 form B GRT margin decides the 9 far types (t65 t3 t10 t74 t38 t13 t42 t31 t34): below +42 -> VS move about 100 um as a plan row.
 4. All 75 leaf types take XR in the following bind; waves of leaf kits after that. Hold s81-strip-gpl-d5 stays until then.
+
+## 2026-11-17 10:1x PST strip-family ft re-slot (NEEDS-LANE 08:53, FABLE-CLOSURE-STRATEGY lever 5)
+Work dir W = epyc10 /srv/opentallas-scratch2/claude/fable-fix-s81-strip; logs intel2 ~/fable-fix-s81-strip; clone W/lane7 (main 147b9727c1).
+E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-DIE-R3). Floor = applied C4r3, plan 0126890b.
+
+### Decided
+- Re-slot, cores fixed: tools/die_plan/ft_channel_route.py (+ test_ft_channel_route.py, 5 tests), branch claude/s81-ft-channel-route-1117
+  (local commit in W/lane7, NOT pushed, NOT gated yet). Each N/S slot is routed on the 4.32 lattice with every row gap, column gap and
+  check channel charged once per slot (wires, not sites); bundles may cross M5-ceiling cores on 0.6 of M7; station count kept;
+  bands only in channels the bundle runs through; --add gives +1 station when a route is too long.
+- Moves-only VE rows withdrawn (COORD 09:2x). core_place --seed is not usable for single-core nudges: a vsw -12.96 seed on t57 moved
+  VE_m / VE_s too (W/s57/event.json, 40 links over). No core move is needed in the result below.
+
+### Measured (C4r3 plan, check ft_channel_tracks of main, W/cen.py)
+- Base: 25 channels / 20 types over 0.70 (W/base/census.json); core_place --no-search base W/base/event.json (no new timing_over).
+- --add, gate 0.70 (W/r9a/ledger.json): 20 of 20 types <= 0.70, worst 0.695 (t73), 19 types at 0 cycles, t67 ft9 +1 station (1 lane).
+  t22 2.175 -> 0.457, t2 2.093 -> 0.566, t9 1.499 -> 0.65, t34 1.118 -> 0.52, t13 1.282 -> 0.641, t57 1.016 -> 0.618.
+- --add --route-max 0.857 (= 0.60 of the tracks, W/r9ta/ledger.json): 20 of 20, worst 0.599, +11 lane cycles
+  (t13 +3, t73 +4, t9 +2, t43 +1, t67 +1). Fallback if the region-mode capacity comes out under 45.6 / um.
+- Without --add (W/r9): 18 of 20 (t57, t67 left).
+
+### Running / next
+1. W/cand.sh (ot-run, log ~/fable-fix-s81-strip/cand.log): full plan W/cand/plan_d7_strip.json, census, core_place score on the 20 types,
+   G0 with main check.py (ft_channel_tracks blocking). Compare G0 errors with lanes/handoff/S81-C4R3-G0-BASELINE-1117.json (5).
+2. If clean: `ot-run --mem 200 --priority plan --hosts epyc10 --dir W -- bash W/bind_d7strip.sh` (work tree
+   kw45/src_s81_pin_3c913dbdfb23_d7strip_1117_work = C4r3 + this plan; strict bind, LATCHECK, G0, PRE). Then push the branch,
+   `ot-run ... tools/fleet/ot-gate-remote claude/s81-ft-channel-route-1117@<sha>`, post READY + rows to S81-DIE-R3 for D7.
+3. Calibration: asked S81-TYPES-R3 (post 53b299df) for t22 GRT on the C4r3 floor, OT_PG_TRACK_TRUTH_MODE=region, no early stop.
+   No placed t22 / t2 kit exists. The result sets tracks/um for region mode; if under 45.6 use the 0.60 variant (r9ta form).
+4. Not covered: the 5-6 inherited over-length core links per type (core_place base_violations) are as bound in C4r3.
