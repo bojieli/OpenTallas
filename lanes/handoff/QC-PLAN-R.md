@@ -37,3 +37,10 @@
 - Holds: pilot-qwen_compute-c8e63f164faa (pilot sle_fe_v1__cl1cbb7497, launched 20:06 unit kw-qwenco-slefev1cl1cbb7497-1-88399); kf-clock27 = 14 non-cb types -> event_adopt:s29q103S4Q9L2; kf-cb18 = all 18 cb -> event_adopt:s29q103S4Q9M (FABLE-PD-QC-MCLK lever 4); kf-faces-l2d slw_fw_v3/coll_ftc/coll_ftn -> event_adopt:s29q103S4Q9M; mig-007-k2 -> [sle_fw_v3]; mig-015-k10 unchanged. Edit receipt qwen_compute_hold_edit_cb18_1794888453460737026.json. Tool: intel2 /srv/opentallas-scratch2/claude/tools-converge/qc_kf_pub/apply_qckf.py (adds hold_record_edits).
 - First tick 20:06: HELD-BUT-LAUNCHED 0, TERM-UNREACHABLE 0.
 - NEXT: pilot GEN PASS -> pilot record releases -> S4q9l2 publication (Codex publish_s4q9l2 on E8 running, E7 json written; tools-converge/qc/l2_closure_1116) -> guard -> candidate (event s29q103S4Q9L2) -> apply. Then S4q9m = l2d + FABLE-DIE-QC-R clock rows.
+
+## 2026-11-16 20:4x
+- Post-L2 tick 20:29: kf-clock27 (14 types) auto-released; HELD-BUT-LAUNCHED 0.
+- 15 records with event_adopt:s29q103S4Q9KF were unreachable after L2 (TERM-UNREACHABLE). Retyped to s29q103S4Q9L2 under lock, old terms in prev_release_qcplanr_l2_retype; hub 05ce218758f; QC TERM-UNREACHABLE now 0.
+- Child QC-PLAN-H checking result tags qc-kit-inputs-selfcontained / qc-cland-w515-signed / qc-reset-ring-fixed (mig-021..024); posts PASS or NOT MET.
+- Child QC-PLAN-G (7 stale types, R-REACH on l2d) still running; rows -> qc-plan-r/g/s4q9m_stale_rows.json.
+- Waiting: FABLE-DIE-QC-R clock rows -> compose S4q9m = l2d + clock + G rows, event s29q103S4Q9M.
