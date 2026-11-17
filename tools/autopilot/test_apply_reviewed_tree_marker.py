@@ -55,7 +55,7 @@ class Apply(unittest.TestCase):
         physical = {"id": "physical", "plan_sha": "s0", "items": ["t3"],
                     "release": ["proof:cts"], "reason": "physical proof", "carry": True}
         c = mk({"hold_records": [old, physical]})
-        result = A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)
+        result = apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)
         after = json.loads((c / "autopilot/kit_wave.json").read_text())
         records = after["dies"]["kv"]["hold_records"]
         self.assertIn(physical, records)
