@@ -19775,3 +19775,4 @@ FAILED [AUTOPILOT 48fd96d18394] 2026-11-16 22:32:53 PST AUTOPILOT -> KIT-WAVE-3:
   NO-PROGRESS epyc9 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 12.4 h job 12.4 h: no new meaningful log line for 12.0 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
   NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 12.3 h job 12.4 h: no new meaningful log line for 11.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
   NO-PROGRESS epyc7 phy__t1 5_1_grt stage 10.5 h job 10.5 h: no new meaningful log line for 9.8 h; last: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_phy__t1/base/conges
+- 2026-11-16 22:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current d1fa289b1cba != hub 800d3f3a9c44
