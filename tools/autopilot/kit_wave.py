@@ -8262,7 +8262,7 @@ def tool_skew_measure(AP, cfg, st, die):
     cache[die] = res
     n, tot = len(res["refused"]), res.get("n_closure", 0)
     if not res["measured"]:
-        AP.log(f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: tree {d['src']} not readable")
+        AP.log(f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: {res.get('why') or 'tree ' + str(d['src']) + ' not readable'}")
     elif not res["ok"]:
         if mode == "warn":
             AP.log(f"KIT-WAVE TOOL-SKEW WARN {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (warn, launching)")
@@ -8347,8 +8347,16 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             return None
         _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
         if _bl:
-            AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: {_why}")
+            _rk = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}", {}).get("key", "")
+            _led = st.setdefault("refused_once", {})
+            _e = _led.get(f"{die}|{r.get('item')}")
+            if not _e or _e.get("key") != _rk:
+                _led[f"{die}|{r.get('item')}"] = {"key": _rk, "n": 1, "ts": time.time()}
+                AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: {_why} (recorded once; further ticks count in state refused_once until an input changes)")
+            else:
+                _e["n"] = int(_e.get("n") or 0) + 1
             return None
+        (st.get("refused_once") or {}).pop(f"{die}|{r.get('item')}", None)
         if _chg:
             AP.log(f"KIT-WAVE RELAUNCH-ON-FIX {die}/{r.get('item')}: changed {'+'.join(_chg)}")
     arm = r.get("arm") if isinstance(r.get("arm"), dict) else None      # KW-FIX-44 GRTARM_1111
@@ -9615,13 +9623,48 @@ HOST_FAIL_RE = re.compile(r"No space left|disk (?:full|floor)|ENOSPC|Errno 28|co
                           r"process terminated|NOT COMPLETED|unit stopped from outside|OOM|oom-kill|earlyoom|docker|no host qualifies|admission|ot-run: NOT RUN", re.I)
 
 
-def stage_tools_digest(root=None):
-    """FABLE-FLOWCLASS-RETRY-2030 P2: the digest of the tool files the generation / bind stages import (flow_guard.closure_files of gen.py, gen_phys.py,
-    bind.py), not the whole tools tree: rt/current changed 22 times in 4 h and re-armed every failed row each time"""
+BIND_STAGES = ("kit_rtl", "kit_topology", "bind", "elab")
+_TOOL_FILE_RE = re.compile(r"(?:tools|physical)/[A-Za-z0-9_./-]+\.(?:py|sh|tcl)")
+
+
+def tools_group(stage):
+    """WAVE-FLOW-R 11-17 (FABLE-FLOW-0300 item 5): the entry modules of the stage that failed: bind stages -> bind.py, gen -> gen.py + gen_phys.py,
+    any other stage '' (the whole gen/gen_phys/bind closure, as before)"""
+    if stage in BIND_STAGES:
+        return "bind"
+    return "gen" if stage == "gen" else ""
+
+
+def failed_tool_files(why, root=None):
+    """the tool files (tree-relative, existing in this rt tree) that the failure text names, e.g. traceback frames; [] when none"""
     root = Path(root) if root else Path(__file__).resolve().parents[2]
-    k = str(root)
+    out = []
+    for m in _TOOL_FILE_RE.findall(str(why or "")):
+        rel = m.split("/tools/", 1)[-1] if m.startswith("/") else m
+        if (root / rel).is_file() and rel not in out:
+            out.append(rel)
+    return sorted(out)[:12]
+
+
+def stage_tools_digest(root=None, group="", files=None):
+    """FABLE-FLOWCLASS-RETRY-2030 P2: the digest of the tool files the generation / bind stages import (flow_guard.closure_files of gen.py, gen_phys.py,
+    bind.py), not the whole tools tree: rt/current changed 22 times in 4 h and re-armed every failed row each time.
+    WAVE-FLOW-R: group narrows the entry modules to the failed stage ('gen' / 'bind'); files = exactly the tool files the failure named (content hash)"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    k = str(root) + "|" + str(group or "") + "|" + ",".join(files or ())
+    if files:
+        if k not in _STAGE_TOOLS:
+            h = hashlib.sha1()
+            for rel in files:
+                try:
+                    h.update(rel.encode()); h.update((root / rel).read_bytes())
+                except OSError:
+                    h.update(b"missing")
+            _STAGE_TOOLS[k] = h.hexdigest()[:16]
+        return _STAGE_TOOLS[k]
     if k in _STAGE_TOOLS:
         return _STAGE_TOOLS[k]
+    entry = {"bind": ("tools/die_plan/bind.py",), "gen": ("tools/die_plan/gen.py", "tools/die_plan/gen_phys.py")}.get(group) or FG.ENTRY_FILES
     def read(rel):
         try:
             return (root / rel).read_text()
@@ -9629,7 +9672,7 @@ def stage_tools_digest(root=None):
             return None
     h = hashlib.sha1()
     try:
-        for rel in FG.closure_files(read):
+        for rel in FG.closure_files(read, entry=entry):
             try:
                 h.update(rel.encode()); h.update((root / rel).read_bytes())
             except OSError:
@@ -9657,7 +9700,7 @@ def bind_context_digest(cfg, die, kit_rtl):
     return hashlib.sha1(json.dumps(hashes).encode()).hexdigest()
 
 
-def kit_digest_parts(cfg, die, rec=None):
+def kit_digest_parts(cfg, die, rec=None, group="", files=None):
     """what a (re)launch of an item builds on: plan block sha, src sha, source content hash, the stage tools closure.  From the attempt's own spec.json
     when rec is a failed attempt (what it ran on), else from the die config (what a launch would run on)."""
     d = (cfg.get("dies") or {}).get(die) or {}
@@ -9676,7 +9719,7 @@ def kit_digest_parts(cfg, die, rec=None):
         kr = dict(d.get("kit_rtl") or {}, **(ii.get("kit_rtl") or {}))
     return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
             "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
-            "tools": stage_tools_digest(),
+            "tools": stage_tools_digest(group=group, files=files),
             "bind_context": bind_context_digest(cfg, die, kr)}
 
 
@@ -9695,13 +9738,16 @@ def note_fail_key(cfg, st, rec, cls, why):
     """store the key of this fail (not for HOST / STOPPED fails).  -> the key or None"""
     if is_host_fail(cls, why):
         return None
-    parts = kit_digest_parts(cfg, rec["die"], rec)
+    stage = rec.get("stage") or FG.fail_stage(why)
+    group, tfiles = tools_group(stage), failed_tool_files(why)
+    parts = kit_digest_parts(cfg, rec["die"], rec, group=group, files=tfiles)
     key, dig = fail_key(parts, cls, why)
     store = st.setdefault("fail_keys", {})
     k = f"{rec['die']}|{rec['item']}"
     prev = store.get(k) or {}
     n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
     store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
+                "tools_group": group, "tool_files": tfiles,
                 "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why),
                 "read_sha": {p: file_sha(cfg, rec["die"], p) for p in stage_reads(why)}}
     rec["fail_key"] = key
@@ -9908,7 +9954,8 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
     if not prev:
         return False, "", []
     d = (cfg.get("dies") or {}).get(die) or {}
-    now = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})))
+    now = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})),
+                           group=prev.get("tools_group") or "", files=prev.get("tool_files") or None)
     old = prev.get("parts") or {}
     # Older failure keys did not record bind context. Recover only from the
     # exact failed attempt's pinned spec; never treat rollout/missing metadata as
