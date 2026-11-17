@@ -33,7 +33,7 @@ def procs():
     return "\n".join(out)
 
 
-def run(script, routes=True, platform="asap7", env="", spine=False):
+def run(script, routes=True, platform="asap7", env="", spine=False, hold_cal=True):
     """run SCRIPT after the procs with OpenROAD stubbed; returns the ordered OpenROAD command log"""
     stubs = f"""
 set ::log {{}}
@@ -47,11 +47,14 @@ proc estimate_parasitics {{args}} {{ lappend ::log "estimate_parasitics $args" }
 rename source ot_tcl_source
 proc source {{f}} {{ lappend ::log "source $f" }}
 proc ot_hold_structural_gate {{}} {{}}
+proc ot_hold_repair_scope {{body}} {{ uplevel 1 $body }}
+proc ot_cts_hold_pad {{body}} {{ uplevel 1 $body }}
 proc ot_hold_stats {{}} {{ return {{-5.0 -50.0 3}} }}
 proc ot_hm_guard {{a}} {{ return $a }}
 proc ot_hold_stop {{a}} {{ return 0 }}
 proc ot_hold_window_report {{why hist}} {{ }}
 {'set ::ot_sp_insts {b1 b2}' if spine else ''}
+{'set ::env(OT_RC_CAL_HOLD) 1' if hold_cal else ''}
 {env}
 """
     body = stubs + procs() + "\nif {[catch {\n" + script + "\n} msg]} {puts stderr $msg; exit 1}\nforeach c $::log { puts \"LOG $c\" }\n"
@@ -101,6 +104,19 @@ class RcCalHoldTests(unittest.TestCase):
         self.assertTrue(log[0].startswith("set_layer_rc -layer M6"))
         self.assertIn("-hold", log[3])
         self.assertEqual(log[-2], "source /orfs/platforms/asap7/setRC.tcl")
+
+    def test_default_hold_repair_uses_the_signoff_table(self):
+        # HOLD-FLOW-R 11-16: no calibrated repair table unless OT_RC_CAL_HOLD=1 (bksel: -28.38 kit table vs +6.92 repair table)
+        for kw in (dict(routes=True), dict(routes=False, spine=True), dict(routes=False)):
+            log = run("ot_repair_timing {-hold_margin 30 -hold}", hold_cal=False, **kw)
+            self.assertFalse([c for c in log if c.startswith(("set_layer_rc", "set_wire_rc", "source"))], (kw, log))
+            self.assertTrue([c for c in log if c.startswith("repair_timing")], kw)
+        log = run("ot_repair_timing {-hold_margin 30 -hold}", hold_cal=False, env="set ::env(OT_RC_CAL_HOLD) 0")
+        self.assertFalse([c for c in log if c.startswith("set_layer_rc")])
+
+    def test_calibrated_hold_table_is_explicit_opt_in(self):
+        log = run("ot_repair_timing {-hold_margin 30 -hold}", hold_cal=False, env="set ::env(OT_RC_CAL_HOLD) 1")
+        self.assertTrue(log[0].startswith("set_layer_rc -layer M6"))
 
     def test_setup_only_call_untouched(self):
         self.assertEqual(run("ot_repair_timing {-setup_margin 0 -setup}"), ["repair_timing -setup_margin 0 -setup"])

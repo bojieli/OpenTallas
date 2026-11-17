@@ -246,6 +246,7 @@ proc ot_mm_ws {check scene} {
 # parasitics): set_wire_rc -clock, and only when a clock spine was built in this session (a TritonCTS tree's low-layer
 # clock wiring is NOT over-estimated: the clock-wide value moved hcoll -16 ps the wrong way).  Data wires on M6 / M7
 # also get the lower C, which only makes them faster under a min-delay check (conservative for hold).
+# HOLD-FLOW-R 11-16: the HOLD repair uses this table only with OT_RC_CAL_HOLD=1 (default: the kit's sign-off table); spine balancing is unchanged.
 # Knobs: OT_RC_CAL=0 off; OT_RC_CAL_R / OT_RC_CAL_C in setRC.tcl units (defaults 1.40E-02 = 14 ohm/um, 1.05E-01 fF/um),
 # OT_RC_CAL_LAYERS (default "M6 M7").  asap7 only.  The spine balancing (clock_spine.tcl) uses the same procs.
 proc ot_rc_cal_on {} {
@@ -270,6 +271,10 @@ proc ot_rc_cal_spine {} {
 # calls ot_rc_cal_restore)
 proc ot_rc_cal_apply {kind} {
   if {![ot_rc_cal_on]} { return 0 }
+  # HOLD-FLOW-R 11-16 (CLOSURE-STRATEGY-2100 lever 1): every hold repair pass (CTS, GRT, post-route ECO) is timed on the kit's
+  # SIGN-OFF RC table.  The calibrated repair table read +6.92 where the kit table reads -28.38 on the same bksel netlist, so a
+  # repair on it closes to a number sign-off never sees.  The calibrated hold table is now opt-in: OT_RC_CAL_HOLD=1.
+  if {$kind eq "hold" && (![info exists ::env(OT_RC_CAL_HOLD)] || $::env(OT_RC_CAL_HOLD) ne "1")} { return 0 }
   lassign [ot_rc_cal_rc] r c
   set mode [ot_rc_cal_mode]
   if {$mode eq "-global_routing"} {
