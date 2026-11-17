@@ -1,0 +1,9 @@
+# QC L2 reset identity repair — CODEX 2026-11-17 04:15 PST
+
+Four active L2 kit_rtl FLOW failures (coll_core; sle_ctl__cl372cea1c, __cl503337ff, __cla4f6f12f) were caused by relocated bound HDL rewriting absolute source-location comments. Original reset receipts require original raw emission bytes. Original E2 L2BQ raw HDL matches those receipts exactly, and functional text with line comments removed is identical to the failed relocated HDL.
+
+Fixed private context on E7/E8/intel1: /srv/opentallas-scratch2/claude/qc-collcore-reset-1117/bind_L2BQ_raw4. Copied previous context, restored only these four raw SV files from qualified E2 L2BQ, left all original reset receipts unchanged, relocated only metadata references to the new context. Normal kit_topology.bind_matches and bound_reset_contract.source PASS all four. Original failed contexts unchanged. Source/plan/functional HDL/cycles unchanged. Four item_inputs bind_out overrides applied under kit_wave.lock; RESULT posted 04:15, committed/pushed. Identity receipt: QC-L2-RAW4-RESET-IDENTITY-1117.json, coord6f9d2006d6f5.
+
+Normal coll_core kit-rtl smoke is running separately from the wave on the first single-file fixed context bind_L2BQ_raw (immutable running input); client intel2 PID288577, unit E8 oth-ubuntu-2741976-1794917519, Python2742353, log intel2 ~/qc-collcore-reset-1117/kit_rtl_smoke_stage.log, output E8 qc-collcore-reset-1117/kit_rtl_smoke. Initial attempt refused undeclared external source-stage; preserved kit_rtl_smoke.log. Successor declares source tree with --stage. At04:16 CPU100pct/healthy, no output yet. No route launched. Normal wave retries exercise the raw4 context. Collect smoke + next wave result; if another source issue appears, diagnose separately instead of rewriting receipt hashes.
+
+The M relocation helper already excludes HDL and reset receipts from path rewriting; use that corrected policy for future publication. No new production code was needed here.
