@@ -22,6 +22,7 @@ def _raw(pad=None):
     for t in raw["partition_types"].values():
         for b in t.get("buses", []):
             b.pop("hold_hb4", None)
+    raw["partition_types"]["fb"]["hard_cores"] = [{"inst": "u_t", "module": "m"}]     # fb binds the keyed module; the other types do not
     return raw
 
 
@@ -42,3 +43,17 @@ def test_all_form_of_the_lockup_key_is_a_listed_type_too():
     assert "*u_hdly_lk_*" in gen_phys.hold_pad_dont_touch_tcl(schema.Plan(raw), "fb")
     cfg["except"] = ["fb"]
     assert gen_phys.hold_pad_dont_touch_tcl(schema.Plan(raw), "fb") == ""
+
+
+def test_the_hook_is_per_type_only_types_that_bind_a_lockup_module(tmp_path):
+    """"all": true lists every type, but only a type with a hard core of a lockup module can hold a pad: the keep hook errors when no pad
+    cell exists, so emitting it for the other types stopped them at PRE_FLOORPLAN (FABLE-PLAN-QC-N, 115 of 133 types)."""
+    raw = _raw(3)
+    cfg = raw["clock"]["core_input_lockup"]
+    cfg.pop("types"); cfg["all"] = True
+    P = schema.Plan(raw)
+    types = list(raw["partition_types"])
+    hooked = [t for t in types if gen_phys.hold_pad_dont_touch_tcl(P, t)]
+    assert hooked == ["fb"], hooked
+    raw["partition_types"]["fb"]["hard_cores"] = [{"inst": "u_t", "module": "other"}]
+    assert not [t for t in types if gen_phys.hold_pad_dont_touch_tcl(schema.Plan(raw), t)]
