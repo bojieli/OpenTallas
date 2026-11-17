@@ -43,3 +43,9 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/head-die-r (pack/smoke/proof),
 ## 22:3x PST
 - real4 DONE (E7 head-die-r/nf15c_real4/seam_split.json): untimed 379 -> 22 (all stand-in launched); real-real 1062/1062 timed. Real: TT setup -396.17 (sp4->sp3/start_i), hold TT -2023.58 / FF -1518.85 (nst3_turn->nst4/u1_i landed ring, capture fclk +2.1 ns). OPEN: diagnose landed-ring hold class (forwarded clock model) before any fix.
 - Branch claude/head-die-r-sta-landing-1116 @1d07c5de34e (tools/die_plan/sta_landing_top.py + test) READY; validated identical to real4 top (E10 head-die-r/slt_top.v).
+
+## CODEX takeover NF15d2r1 ADOPTED 2026-11-16
+- Correctedimmutable successor src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1 manifestbdd769da096619bcbe67188b844b3952d4f28070ef73af80308702796f57ac1c, plan47948a9f7ee996d8c678c45772ab2cda8434f444ff75b0406c3398a075e3d05b, eventhead_rp21z20NF15d2r1. Fixedstale published-wrapper receipt8a2e0eed; currentprep rootprefixrelocationonly, nativeproof rebound. Originald2d966 NOTADOPTABLE(stalewrapperSHA), E10originalretained,E8/i1unusedcopiesguardretired.
+- Actual kit_rtl bootstrap+assetdigests+publishedSHA+tokencomparePASS21files; G0zero/bindPASS/cohort26EQUAL/LAT329delta{} atE10head-die-r/nf15d2r1_gate. IndustryimagesLOOKED E10head-die-r/results/geom_review/NF15d2_codex_1116,samegeometryprovenrootprefix-onlyplan diff. Fablefollowup nonblockingperCOORD.
+- Sourceguard3f8675ae full_ok all3hosts; publishgate bdd769 PASSschema/pre_g0/hashes/contained/dry_gen (PUSHED4f81218c). InitialE8drycontroller wasunstarted below100GBfloor; exactowncontrollers1289786/1301551/waiter1302332 cancelled, capacityevidencepreserved; E10drygenpassed androamedlint/preflighti1. No physicaljobcancelled/nofloorrelax.
+- Runtimeatomicapply keeps all3hosts/inheritedphysicalholds; pilothd_serdes; physicalqualifiedfalse. Receipt /home/ubuntu/coord/lanes/handoff/s81_head_atomic_apply_1794902357004072501.json.

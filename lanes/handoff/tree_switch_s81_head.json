@@ -1,44 +1,45 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1",
- "manifest_hash": "a51810b59b0b81b11c75c51d1c176bdfb4982bb296a32cc4e548c292840caeb5",
- "src_manifest_sha": "a51810b59b0b81b11c75c51d1c176bdfb4982bb296a32cc4e548c292840caeb5",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1",
+ "manifest_hash": "bdd769da096619bcbe67188b844b3952d4f28070ef73af80308702796f57ac1c",
+ "src_manifest_sha": "bdd769da096619bcbe67188b844b3952d4f28070ef73af80308702796f57ac1c",
  "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
  "hosts": [
   "epyc10",
-  "epyc8"
+  "epyc8",
+  "intel1"
  ],
  "smoke": "PASS",
- "smoke_detail": "NF15c = NF15b + die.layer_budget.type_m8_grant{enable,guide a8dcf2f554252553 in prep,ndr 4w} (26 types, grant shas reproduced, hd_tile 8aeed4bed8315661 = r381) + current-RTL native release receipt. Gates E10 head-die-r: G0 PASS 0 errors with --native-reset-receipt (1 without = inherited 12-PMA), bind PASS nested, cohort 26/26, LATCHECK 329/329 delta{}. Tree smoke: NF15b base 26/26 kit_rtl; NF15c changes only prep + receipt. Review FABLE-REVIEW-NF15C ADOPT-WITH-CHANGES (gate rerun done), no BLOCK.",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/prep/source_plan.json",
- "plan_sha256": "cef70ef0888dafaae9ae72c65461c6739ffb4358f9353bad9e232850371f1570",
- "plan_canonical_sha256": "e471b074e48fbce552b9fb9f19bc185940bfba57ae84e590f8273724936aa8e7",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/prep/source_sidecar.json",
+ "smoke_detail": "NF15d2r1 corrects stale published-wrapper receipt hash to8a2e0eed and relocates current prep into _d1. Actual kit_rtl.sh hd_serdes bootstrap GEN+all assetdigests+publishedSHA+generated/published tokencompare PASS21files. G0zero, bindPASS, cohort26eq, LAT329/329 delta{}. Newplan bytes equal old700ea plan after rootprefix relocation only. Codex industry image review originald2 applies identical geometry. Physical-qualified false; inherited holds and gen_hosts3 preserved.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/prep/NF15d2/prep/source_plan.json",
+ "plan_sha256": "47948a9f7ee996d8c678c45772ab2cda8434f444ff75b0406c3398a075e3d05b",
+ "plan_canonical_sha256": "d1a52b1bb84dddb0238cbcec1f0a3c8478d061902c35405a2ece3a476f548488",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/prep/NF15d2/prep/source_sidecar.json",
  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
- "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/die_clock/kit_tree.json",
+ "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/prep/NF15d2/die_clock/kit_tree.json",
  "physical_qualified": false,
  "preserve_holds": "all inherited s81_head hold_records kept; physical_qualified false",
  "config": {
-  "event": "head_rp21z20NF15c",
+  "event": "head_rp21z20NF15d2r1",
   "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
   "gen_host": "epyc10",
   "gen_hosts": [
    "epyc10",
-   "epyc8"
+   "epyc8",
+   "intel1"
   ],
   "kit_rtl": {
    "mode": "script",
-   "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
   },
   "gen_args": [
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/physical/die_plan/s81_head/prep/NF15c/prep/source_sidecar.json",
+   "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/prep/NF15d2/prep/source_sidecar.json",
    "--hold-ff-margin",
    "0"
   ]
  },
  "written_by": "root-authorized lane atomic apply",
- "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15c_pgr1/results/head_native_release_nf15c/native_release_receipt.json",
- "status": "ADOPTED reviewed tuple",
- "hosts_note": "FLEET-OPS-R e6d8e17: NF15c tree replicated+verified on epyc8; marker aligned to live gen_hosts (HEAD-DIE-R, COORD r400)"
+ "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/results/head_native_release_nf15d2r1/native_release_receipt.json",
+ "status": "ADOPTED reviewed tuple"
 }
