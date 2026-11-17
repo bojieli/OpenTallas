@@ -32,6 +32,14 @@ SM = str(HERE / "src_manifest.py")
 STATE_REL = "tools_refresh_state.json"
 
 
+MAX_CRASHES = 3
+
+
+def wave_key(die, lag):
+    """the wave's own dedupe key (no main sha): die | pin | rulings.  kit_wave.tools_refresh_tick builds the same string"""
+    return f"{die}|{lag.get('pin')}|{','.join(lag.get('missing') or [])}"
+
+
 def refresh_key(die, lag, main_sha):
     return f"{die}|{lag.get('pin')}|{main_sha[:12]}|{','.join(lag.get('missing') or [])}"
 
@@ -49,7 +57,10 @@ def should_refresh(d, lag, state, key):
         return False, "no tree"
     if lag.get("n_commits") is None or not lag.get("missing"):
         return False, "no die-tool ruling missing"
-    if key in (state.get("done") or {}):
+    n = int((state.get("crashes") or {}).get(wave_key(d.get("_die", ""), lag), 0))
+    if n >= MAX_CRASHES:
+        return False, f"crash stop: {n} crashed passes for this pin and rulings, a lane must look"
+    if key in (state.get("done") or {}) and state["done"][key].get("status") != "CRASH":
         return False, "already handled: " + str(state["done"][key].get("status"))
     return True, ""
 
@@ -192,13 +203,15 @@ class Ops:
 def refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.time):
     """one refresh pass -> record dict (status: SKIP | GUARD-FAIL | BIND-FAIL | BIND-CHANGED | COMPOSE-FAIL | DRY-OK | APPLIED | APPLY-FAIL); stored in state['done'][key]"""
     key = refresh_key(die, lag, main_sha)
+    d = dict(d, _die=die)
     ok, why = should_refresh(d, lag, state, key)
     if not ok:
         return dict(status="SKIP", why=why)
     old = d["src"]
     new = new_tree_path(old, main_sha)
     rec = dict(key=key, old=old, new=new, missing=lag["missing"], ts=int(now()), owner=d.get("owner_lane", ""))
-    state.setdefault("done", {})[key] = rec
+    state.setdefault("done", {})[key] = rec          # the attempt is recorded only now: compose is about to start (a crash before this point is not an attempt)
+    state.setdefault("attempts", {})[wave_key(die, lag)] = dict(key=key, status="STARTED", ts=int(now()))
     good, detail, h = ops.compose(old, new)
     rep = getattr(ops, "overlay_report", None) or {}
     if rep:
@@ -241,6 +254,23 @@ def refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.t
     return rec
 
 
+def record_crash(state, die, d, lag, main_sha, exc, post):
+    """r615: a crashed pass is counted per (die, pin, rulings); stop at MAX_CRASHES with one NEEDS-LANE.  After compose started the record says CRASH and the key may be
+    retried; a crash before that is no attempt at all (nothing marks the key)"""
+    wk = wave_key(die, lag)
+    state.setdefault("crashes", {})[wk] = int(state.get("crashes", {}).get(wk, 0)) + 1
+    key = refresh_key(die, lag, main_sha)
+    why = f"{type(exc).__name__}: {exc}"[:300]
+    if key in state.get("done", {}):
+        state["done"][key].update(status="CRASH", why=why)
+        state.get("attempts", {}).get(wk, {}).update(status="CRASH")
+    n = state["crashes"][wk]
+    if n >= MAX_CRASHES:
+        post(f"NEEDS-LANE [TOOLS-REFRESH -> {d.get('owner_lane') or die}] {die}: tools_refresh crashed {n} times for these rulings ({why}); "
+             f"stopped, no more automatic passes for this pin and rulings")
+    return dict(status="CRASH", why=why, crashes=n)
+
+
 def load_state(p):
     try:
         return json.loads(Path(p).read_text())
@@ -271,7 +301,14 @@ def main(argv=None):
         if r.returncode:
             raise RuntimeError((r.stdout + r.stderr)[-300:])
 
-    rec = refresh(a.die, d, lag, main_sha, Ops(d, a.repo, main_sha), state, post, edit, dry=a.dry)
+    try:
+        rec = refresh(a.die, d, lag, main_sha, Ops(d, a.repo, main_sha), state, post, edit, dry=a.dry)
+    except Exception as e:
+        rec = record_crash(state, a.die, d, lag, main_sha, e, post)
+    else:
+        wk = wave_key(a.die, lag)
+        if wk in state.get("attempts", {}) and rec.get("status") not in ("SKIP",):
+            state["attempts"][wk]["status"] = rec.get("status")
     Path(a.state).write_text(json.dumps(state, indent=1, sort_keys=True))
     print(json.dumps({k: v for k, v in rec.items() if k != "key"}))
     return 0 if rec.get("status") in ("SKIP", "APPLIED", "DRY-OK") else 1
