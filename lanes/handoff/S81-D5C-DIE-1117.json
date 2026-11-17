@@ -1,26 +1,46 @@
 {
-  "status": "D5c qualified metadata installed; fresh strict bind and latency running",
-  "source_tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c",
-  "source_manifest": "1908dd0685da412d9c7edd522a3f837788df577a9190b1ed9bfb321b6d6de9ba",
-  "plan_sha256": "c31c42c51977e3c3fb3ef642ddce9563c2cf302f4a957c16c1f35eb59a2b196f",
-  "asbuilt_run_sha256": "19dcbe52101a9917fbbe6b5f39c4e2377256ba397c7532bbca9b36fc2e91159d",
-  "changes": "16 qualified library fields across 7 gunit masters, 24 dedicated BA measured clock budget fields, historical provenance label; no RTL, geometry, parameters or cycles",
-  "cheap_checks": {"schema_structure": "PASS []", "contained": "PASS []", "hashes": "PASS [] 31", "plan_gate_pre": "PASS findings=0"},
-  "fresh_bind_run": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gF2s5g",
-  "fresh_bind_client": 1680731,
-  "fresh_bind_unit": "oth-ubuntu-503193-1794902331",
-  "fresh_bind_log": "intel2:/home/ubuntu/s81-die-r/s5g_bind_1117_r2.log",
-  "compiled_elab_reused": "ba49da9048dab98bdca10349687ca8922d4c123c049727030c9b11233d3e20b4; all 131 selected RTL source payloads byte equal C3; no frontend elaboration",
-  "initial_predispatch_failure": "client1668145 isolation refused script outside --dir; no work ran, corrected dir and explicit D5c --stage",
-  "next": "fresh strict bind/LAT result, exact inherited G0 baseline at c31, fresh gunit kit-rtl/prepare/GEN diagnostic; parent owns final publication and standard published gunit dryGEN",
-  "separate_C4": {
-    "path": "/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R/c4_rows_1116/plan_C4_from_D5c_J6c_t75v2.json",
-    "sha256": "6abdff9b22e1673011a84eb4d2ab0b323bc1ce62b5463f091bf8fd1634b6a3b1",
-    "scope": "Reviewed SVCt6 stage9, t75 station4 v2, J6c source stations and exact two-lane +3; rebased onto D5c qualified core metadata. No B/col/CA/new clock moves; not bound or routed."
-  },
-  "separate_T51_variant": {
-    "path": "/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R/c4_rows_1116/t51_variant_1117_r3/plan_C4_D5c_T51EW_pending_shared_budgets.json",
-    "sha256": "41207611c27913230635bb7435529e0e76c04f214381e76e29610d77ce3217bf",
-    "status": "STAGED ONLY; 18 overlay files, W changed landing leaves merged preserving E; shared clk_t2/19/62 original budgets retained pending coordinator basis ruling; parent IO STA required"
-  }
+ "status": "S5g retained diagnostic TERMINAL EXIT0, not final adoption context",
+ "source_tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5c",
+ "source_manifest": "1908dd0685da412d9c7edd522a3f837788df577a9190b1ed9bfb321b6d6de9ba",
+ "plan_sha256": "c31c42c51977e3c3fb3ef642ddce9563c2cf302f4a957c16c1f35eb59a2b196f",
+ "asbuilt_run_sha256": "19dcbe52101a9917fbbe6b5f39c4e2377256ba397c7532bbca9b36fc2e91159d",
+ "changes": "16 qualified library fields across 7 gunit masters, 24 dedicated BA measured clock budget fields, historical provenance label; no RTL, geometry, parameters or cycles",
+ "cheap_checks": {
+  "schema_structure": "PASS []",
+  "contained": "PASS []",
+  "hashes": "PASS [] 31",
+  "plan_gate_pre": "PASS findings=0"
+ },
+ "fresh_bind_run": "/srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gF2s5g",
+ "fresh_bind_client": 1680731,
+ "fresh_bind_unit": "oth-ubuntu-503193-1794902331",
+ "fresh_bind_log": "intel2:/home/ubuntu/s81-die-r/s5g_bind_1117_r2.log",
+ "compiled_elab_reused": "ba49da9048dab98bdca10349687ca8922d4c123c049727030c9b11233d3e20b4; all 131 selected RTL source payloads byte equal C3; no frontend elaboration",
+ "initial_predispatch_failure": "client1668145 isolation refused script outside --dir; no work ran, corrected dir and explicit D5c --stage",
+ "next": "Coordinator archives old1908 inputs and S5g output records then atomically installs coherent all7 c204 twofile delta; fresh S5h strict bind/LAT/G0 using retained compiled RTL, no ELAB; final samegunit GEN under finalcontext only",
+ "separate_C4": {
+  "path": "/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R/c4_rows_1116/plan_C4_from_D5c_J6c_t75v2.json",
+  "sha256": "6abdff9b22e1673011a84eb4d2ab0b323bc1ce62b5463f091bf8fd1634b6a3b1",
+  "scope": "Reviewed SVCt6 stage9, t75 station4 v2, J6c source stations and exact two-lane +3; rebased onto D5c qualified core metadata. No B/col/CA/new clock moves; not bound or routed."
+ },
+ "separate_T51_variant": {
+  "path": "/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R/c4_rows_1116/t51_variant_1117_r3/plan_C4_D5c_T51EW_pending_shared_budgets.json",
+  "sha256": "41207611c27913230635bb7435529e0e76c04f214381e76e29610d77ce3217bf",
+  "status": "STAGED ONLY; 18 overlay files, W changed landing leaves merged preserving E; shared clk_t2/19/62 original budgets retained pending coordinator basis ruling; parent IO STA required"
+ },
+ "result": {
+  "strict_bind_errors": 0,
+  "partitions": 398,
+  "types": 395,
+  "crossings": 873,
+  "LAT": "873/873 PASS no delta",
+  "G0": "rc1 six inherited errors,0pendingview",
+  "source_pin_after": "PASS"
+ },
+ "final_all7_pack": {
+  "path": "epyc10:/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R/gunit_lib_restore1117/all7_final1117",
+  "delta_sha256": "2d9166abaf8ea4aee04d18d3c3e94951324967e39fe165e546ac28a153ad88c8",
+  "plan_sha256": "c204a42e3780898d48a56eefc07edb3c818ff2caa6fd8408c1e62abc22da7b77",
+  "files": 2
+ }
 }
