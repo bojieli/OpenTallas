@@ -1,0 +1,17 @@
+{
+  "verdict": "INFRA_SIGKILL_NO_TIMING_RESULT",
+  "job": "epyc10:p3_fault_split_e1_margin10_1116",
+  "unit": "oth-ubuntu-3786773-1794884101",
+  "admit_record": "2026-11-17T02:55:22+00:00 mem32G bash p3_hold_run10.sh",
+  "completion_record": "oth-ubuntu-3786773-1794884101\\t1794884122\\t1794885865\\t137",
+  "completion_UTC": "2026-11-17 03:24:25",
+  "last_tool_output": "RSZ iteration0;6negative FF endpoints/-24.285740;6213 endpoints below+10; no after result",
+  "guard_log": "2026-11-17 03:24:22 GUARD SIGKILL 3793355 openroad RSS9475MiB adj612: MemAvailable<5percent with a planjobrunning",
+  "guard_source": "epyc10:/var/tmp/ot-oom-age/kills.log",
+  "docker_journal": "2026-11-17T03:24:23 Docker7ab7b4f8aca8a1fdb333c64f9c9c977edcc83b83a4a8c6833c347ea042f8eacf ended;28min58.644s elapsed/28min41.665sCPU/9.2Gpeak",
+  "cause": "External SIGKILL, correlated with plan-memory guard at same second. Not a32GB cgroup-cap failure or measured design/timing rejection.",
+  "correction": "Earlier CODEX generic PID4113361 attribution to P3m10 was wrong: container261e3948 is unrelated hd_lep0N old route; it was never touched.",
+  "old_evidence_preserved": true,
+  "executing_alternative": "p3_hold6_1116: exactsame fixedE1 source, approved target10 planner9HB4/6captures; actualinsertion9/geometricreviewPASS; fullrouteunit3201033 live plusintel2watcher630014",
+  "no_owner_decision_needed": true
+}
