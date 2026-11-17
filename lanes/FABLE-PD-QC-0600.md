@@ -12,7 +12,7 @@ same for attempt_hh, `b_TT.log` / `b_FF.log` STA, `c.log` fanout).
 2. The station is not too long for one cycle. The same structure with a joined trunk has +325 ps or more. No extra
    cycle, no station or tap re-site.
 3. `latch_except` is right for bit `tap[0]` only. The merged key is port-wide, and port-wide it fails hold on
-   1,744 of 1,776 tap pins. **Do not launch the 18-type wave with `latch_except {qfd_tile_nk_a0c: [tap]}`.**
+   1,744 of 1,776 timed tap pins (TT; 1,702 at FF). **Do not launch the 18-type wave with `latch_except {qfd_tile_nk_a0c: [tap]}`.**
 
 ## 1. Root cause of tap_d[431] / [442] and the 245 ps first hop
 
@@ -71,8 +71,8 @@ In-memory ECO on the 4_1_cts database: each core `tap` pin moved from the latch 
 |---|---|---|---|---|
 | `tap[0]`, with latch (4 pins) | -117.9 .. -65.9 | +398.7 .. +448.7 | -52.2 .. -1.8 | +395.7 .. +444.4 |
 | `tap[0]`, no latch | +294.7 .. +338.3 | t02 +11.1, t03 +6.8, t12 -13.8, t13 +28.3 | +361.6 .. +406.3 | t02 +8.6, t03 +7.7, t12 -14.0, t13 +29.7 |
-| `tap[1..507]`, with latch | min +320 | min +286.1 | min +320 | min +323.4 |
-| `tap[1..507]`, no latch | min +733 | 1,744 of 1,776 negative, min -130.7, median -70.9 | min +727 | 1,702 negative, min -87.9, median -37.8 |
+| `tap[1..507]`, with latch | none negative, median +368 | min +286.1 | none negative, median +350 | min +323.4 |
+| `tap[1..507]`, no latch | +703 or more | 1,743 of 1,772 negative, min -130.7 | +719 or more | 1,701 negative, min -87.9 |
 
 - `tap[0]` (the `go` bit) has its own core arc: library setup 216.8 / hold 641.8 (TT), against 672.1 / 709.7 for the
   other bits. Its window is 261 to 624 ps after the edge; the other bits' window is 329 to 1,079 ps and needs the
