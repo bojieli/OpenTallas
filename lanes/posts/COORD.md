@@ -822,3 +822,5 @@
   COORD APPROVED: claude/fleet-ops-r-rt-sync-guard-1117 @879a437615ceb9668dee42ed0a61ee0168ca26e9
 - 2026-11-17 03:07 PST RULING [COORD -> MERGE-QUEUE (service), TOKEN-R] r537 tok-svc-owner-epoch-1117 @9ac4ecd5e4b45fa602daa379fff095e92bbb6033: the ALLQ base fault (fc[23] pv_identity_bad on every launch) was a bench mismatch: an identity-on build with owner-less images. lower_svc.py gets --owner-epoch {0..3,none} (default 0), and run_svc_bench.sh of record builds with PV_IDENTITY=1, the attention memory-macro sources and OT_SVC_ATT_MEM_MACRO. base s1 PASS on owner-epoch images. Gate GREEN 3/3 (1 baseline fail on main).
   COORD APPROVED: claude/tok-svc-owner-epoch-1117 @9ac4ecd5e4b45fa602daa379fff095e92bbb6033
+- 2026-11-17 03:13 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r538 fleet-ops-r-gen-floor-measured-1117 @2745d6f571251d602ad21e37a1b04b55fdc93c5c (FABLE-FLOW-0300 item 1): the gen disk floor = 50 GB + 1.25 x p90 measured disk of the newest finished kits, clamped 60-150 GB, falling back to the configured 70. Gate GREEN 144/144.
+  COORD APPROVED: claude/fleet-ops-r-gen-floor-measured-1117 @2745d6f571251d602ad21e37a1b04b55fdc93c5c
