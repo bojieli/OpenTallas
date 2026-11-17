@@ -13,7 +13,11 @@
   216.0
  ],
  "bind_defines": [
+  "OT_GUNIT_BF_M1REG",
+  "OT_GUNIT_BF_C1REG",
+  "OT_GUNIT_BF_SVREG",
   "OT_GUNIT_BF_FWPIPE"
  ],
- "lane_latency": "RT_LAT 66/64 (FWPIPE)"
+ "lane_latency": "RT_LAT 66/64 (FWPIPE)",
+ "bind_defines_note": "S81-CORES-R 11-17: the full define set the signed view was synthesised with (eco_gf1115c config.mk VERILOG_DEFINES). In dsdv_gunit_l1f.sv, M1REG/C1REG act only inside dsdv_gunit_l1f_bf; SVREG and FWPIPE also change dsdv_gunit_l1f_acore (ba0/ba1, lines ~411-441); C1REG is also read by dsdv_gunit_sel_n32.sv."
 }
