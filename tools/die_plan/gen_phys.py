@@ -6537,6 +6537,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
+    shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
     shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
     shutil.copyfile(Path(__file__).with_name("lec_completed_reference.py"), kd / "lec_completed_reference.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
@@ -6820,6 +6821,13 @@ if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resum
       exit 12
     fi
   fi
+fi
+# KWRS-END
+# STAGE-CAP block (COORD 11-17, FLEET-OPS-R): bounds the stage ODBs this kit writes from now on; refusal-free, no physical step  # KWRS-BEGIN
+# Keeps 1_synth, the step boundaries (2_floorplan 3_place 4_cts 5_1_grt = diagnosis anchors) and the latest final; drops the
+# other intermediates once the successor stage is written (stage_odb_cap.py).  OT_KEEP_STAGE_ODBS=1 or K/.keep_stage_odbs opts out.
+if [ "${OT_KEEP_STAGE_ODBS:-0}" != 1 ] && [ ! -f "$K/.keep_stage_odbs" ] && [ -f "$K/stage_odb_cap.py" ]; then
+  nohup python3 -I "$K/stage_odb_cap.py" --watch "$K/run/results/asap7" --kit "$K" --max-hours 36 >>"$K/stage_odb_cap.log" 2>&1 </dev/null &
 fi
 # KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then
