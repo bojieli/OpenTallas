@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 07:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 07:15 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 7, 'NO-DATA': 4, 'EXCLUDED': 39, 'PROGRESS': 3}. Hosts without report: none.
 
@@ -53,7 +53,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 7, 'NO-DATA'
 | intel1 | dpkit-slw_su_l1__cla2a78701-311708 | slw_su_l1 | 5_1_grt | 4.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-slw_su_l1__clcc9d0155-2367146 | slw_su_l1 | 5_1_grt | 2.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-fin-1973717 | fin | 6_report | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 9.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 10.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 52.8 | last meaningful line 0.2 h ago (1624/1624 lines) | PROGRESS: log still growing |  |
 | epyc2 | dpkit-serdes__t13-153484 | serdes__t13 | 4_1_cts | 0.3 | repair_Violations best 0 last 0 rows 1 | PROGRESS: repair_Violations reached 0 |  |
 | epyc7 | qc-collucie-holdeco-route-1117 | qc-collucie-holdeco-route | 5_2_route | 1.4 | drt_violations best 0 last 0 rows 7 | PROGRESS: drt_violations reached 0 |  |
