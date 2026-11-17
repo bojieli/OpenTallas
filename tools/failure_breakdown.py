@@ -247,6 +247,16 @@ def main():
             out += stale_list.section(cache, rows, DIES, plan_die=PLAN_DIE)
         except Exception as e:                       # the breakdown is still written; the failure is named in it
             out.append('### STALE · not computed: %s: %s' % (type(e).__name__, str(e)[:200]))
+    # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1300 item 2): TOOLS-LAG per die = approved die-tool fixes (ruling rNNN on a die_plan / flow path) missing from
+    # the die's pinned tools, as the wave measured them (kit_wave_tool_skew.json dies.<die>.tools_lag)
+    try:
+        lag = json.load(open(os.path.join(COORD, 'autopilot/kit_wave_tool_skew.json'))).get('dies') or {}
+        lines = [v['tools_lag'] for _, v in sorted(lag.items()) if isinstance(v, dict) and v.get('tools_lag')]
+        if lines:
+            out.append('### TOOLS-LAG · die tool fixes missing from the pinned trees')
+            out += ['- ' + x for x in lines]
+    except (OSError, ValueError):
+        pass
     out.append(END)
     block = '\n'.join(out)
 
