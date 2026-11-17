@@ -1,9 +1,15 @@
 """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1600): the conftest fixture reaps the detached lec_async watchers a test starts"""
+import importlib.util
 import os
+from pathlib import Path
 import subprocess
 import sys
 
-import conftest as C
+# Multiple conftest.py files share the unqualified module name during combined
+# collection. Load the watcher helpers from this test's adjacent file explicitly.
+_spec = importlib.util.spec_from_file_location("ot_tools_reap_conftest", Path(__file__).with_name("conftest.py"))
+C = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(C)
 
 
 def test_detached_watcher_is_found_and_reaped(tmp_path):
