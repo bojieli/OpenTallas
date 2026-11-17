@@ -22,3 +22,9 @@ Delta file: lanes/handoff/KV-HUB-WO-delta.json; applier epyc10 /srv/opentallas-s
 
 ## Next for KV-R
 Fold the delta into KV's next tree switch (D10 or later), same switch, no separate one. After the switch relaunch kv3_hub_Wo place once; first place pass is the final proof. If a new tree moves the ft stations, re-check that the two windows are still comb-free.
+
+## F1 kv3_hgi_v8 fs_ft11_o stages 1,2 (HG3 006e38e15a71; from FABLE-PLAN-KV-HG3 via COORD)
+- Kit generated from the HG3 tree (gen.py phys, kit_rtl from KV-HG1 hgi_v8 rtl). KV-R preflight cland_band_sites (origin/claude/kv-r-cland-band-preflight-1116 @6f8c943e9ea) reports exactly 2 errors: u_cland_raw_fs_ft11_o_1 and _2, best gap 0.756 um < 1.188 (51 and 48 FIRM ft cells touch the windows).
+- Delta (lanes/handoff/KV-HUB-WO-v8-delta.json): stage 1 (1213.92,762.408)->(1215.0,771.048), stage 2 (1213.92,375.684)->(1215.0,391.074). Candidate windows: best gap 4.32 um (11 and 10 cells touch, full free rows).
+- Proof on copies: plan_gate_pre PASS 0 findings; regenerated kit differs from the unpatched one in exactly the 2 rects; preflight on it 0 errors. NOT done: a real landing pass, because no hgi_v8 ODB exists (needs synth+floorplan+3_2 of the type); preflight is the static twin.
+- exp2 (Wo placement copy) had already exited (3_3 Error 247 after the landing pass, no process left); nothing to kill. No leftover job of mine on epyc10.

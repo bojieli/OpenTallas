@@ -1,0 +1,32 @@
+{
+ "lane": "KV-HUB-WO",
+ "base_plan": "HG3 006e38e15a71 (tree src_kv_pin_eb1e73448bd0_hg3_006e38e1_d11)",
+ "type": "kv3_hgi_v8",
+ "field": "clock.landing_raw_branches",
+ "moves": [
+  {
+   "branch": "fs_ft11_o",
+   "stage": 1,
+   "from": [
+    1213.92,
+    762.408
+   ],
+   "to": [
+    1215.0,
+    771.048
+   ]
+  },
+  {
+   "branch": "fs_ft11_o",
+   "stage": 2,
+   "from": [
+    1213.92,
+    375.684
+   ],
+   "to": [
+    1215.0,
+    391.074
+   ]
+  }
+ ]
+}
