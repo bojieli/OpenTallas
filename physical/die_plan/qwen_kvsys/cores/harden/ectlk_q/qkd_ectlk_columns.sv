@@ -11335,6 +11335,15 @@ module qkd_ectlk_columns #(parameter integer QK_ISSUE_AGE = 37, parameter intege
     output wire [12:0] req_t,
     output wire [0:0] req_valid
 );
+    // KV-R3 11-17: u_q0..u_q3 are the hardened quarter macros (liberty/LEF cells in every kit and in synth), fixed
+    // netlists built at QK_ISSUE_AGE 37 / RESPONSE_LAT 26 (signed views kvhg1_views_1116, q*_m10_p2 mem.json params).
+    // A macro cell has no parameters, so the values are NOT forwarded to it; any other parent value fails
+    // elaboration here (no silent latency change).
+    generate
+        if (QK_ISSUE_AGE != 37 || RESPONSE_LAT != 26) begin : g_param_mismatch
+            qkd_ectlk_columns__hard_quarters_built_at_37_26 u_param_mismatch ();
+        end
+    endgenerate
     wire [270:0] q0_so;
     assign so[0] = q0_so[0];
     assign so[1] = q0_so[1];
@@ -12079,7 +12088,7 @@ module qkd_ectlk_columns #(parameter integer QK_ISSUE_AGE = 37, parameter intege
     assign req_t[12] = q0_req_t[12];
     wire [0:0] q0_req_valid;
     assign req_valid[0] = q0_req_valid[0];
-    qkd_ectlk_q0 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q0 (
+    qkd_ectlk_q0 u_q0 (
         .ck(ck[0]),
         .rsp_epoch(rsp_epoch[15:0]),
         .rsp_layer(rsp_layer[5:0]),
@@ -13018,7 +13027,7 @@ module qkd_ectlk_columns #(parameter integer QK_ISSUE_AGE = 37, parameter intege
     assign t0[1302] = q1_t0[907];
     assign t0[1303] = q1_t0[908];
     assign t0[1304] = q1_t0[909];
-    qkd_ectlk_q1 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q1 (
+    qkd_ectlk_q1 u_q1 (
         .ck(ck[1]),
         .rst_n(rst_n[0:0]),
         .si(si[282:0]),
@@ -13939,7 +13948,7 @@ module qkd_ectlk_columns #(parameter integer QK_ISSUE_AGE = 37, parameter intege
     assign t1[654] = q2_t1[654];
     assign t1[655] = q2_t1[655];
     assign t1[656] = q2_t1[656];
-    qkd_ectlk_q2 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q2 (
+    qkd_ectlk_q2 u_q2 (
         .ck(ck[2]),
         .rst_n(rst_n[0:0]),
         .si(si[14:0]),
@@ -14886,7 +14895,7 @@ module qkd_ectlk_columns #(parameter integer QK_ISSUE_AGE = 37, parameter intege
     assign e1[13] = q3_e1[13];
     assign e1[14] = q3_e1[14];
     assign e1[15] = q3_e1[15];
-    qkd_ectlk_q3 #(.QK_ISSUE_AGE(QK_ISSUE_AGE), .RESPONSE_LAT(RESPONSE_LAT)) u_q3 (
+    qkd_ectlk_q3 u_q3 (
         .ck(ck[3]),
         .rst_n(rst_n[0:0]),
         .si(si[536:0]),
