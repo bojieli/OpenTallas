@@ -1,191 +1,213 @@
-# FABLE-FLOW-2200: procedural and flow failures, ranked by fleet time wasted
+# FABLE-FLOW-2200: procedural and flow failures, 19:43-21:47 PST
 
-Reviewer: FABLE FLOW (read-only). Measured 2026-11-15 21:43-22:10 PST on hub intel2.
-Window: autopilot/log.txt 19:45-21:45 PST (1,541 lines), lanes/FLOW-HEALTH.tsv (21:27), kit_wave.json and
-kit_wave_state.json (22:00), tools/failure_breakdown.py (22:00), `ot-run --status` (21:50, 21:58), df on 7 hosts,
-rt/history.log, user timers, lane posts 20:00-22:00 incl. rulings r216-r231.
-Previous review: FABLE-FLOW-2000 (window 17:45-19:45). Scope: process and tooling only.
+Reviewer: FABLE-FLOW-2200 (Fable). Read-only. Measured 2026-11-16 21:43-21:50 PST on hub intel2.
+Sources: autopilot/log.txt 19:43-21:43 (1,156 lines, 22 ticks), lanes/FLOW-HEALTH.tsv (written 20:46),
+tools/failure_breakdown.py (21:44), `ot-run --status` (21:43), df/load/kills.log on 6 build hosts (21:45),
+merge-queue log + journal, origin/main (d1fa289b1cb), rt/current, lanes/posts since 19:50. Previous: FABLE-FLOW-2000.
+Scope: process and tooling only.
 
 ## Headline
 
-1. The S81 relaunch loop is closed. S81: 0 launches, 0 fails (was 60 and 60). Fails fell from 72 to 19, all on
-   QC and HEAD. The cause is the family hold of 20:20 and `auto_rearm: false` of 21:14, both config edits.
-2. The price is launch volume: 39 launches in 2 h (20 per hour; was 119 and 60). S81 and KV launch nothing. Both
-   wait on an adopt step whose input is READY: KV tree c1 READY at 21:19, S81 B6gG3b READY+ADOPT at 21:46. At
-   22:00 the wave config still names the old KV tree with the `*` die hold, and the old S81 tree.
-3. epyc7 scratch ran full during the window: 52 GB free at 21:03, 4 GB at 21:44, 0.47 GB at 21:52, then 85 GB at
-   21:58 and 111 GB at 22:02. `ot-run` reported epyc7 REFUSED. The runtime sync to epyc7 at 21:54 failed
-   ("mkdir: No space left on device"), so epyc7 runs rt 9eab0c06ef18 while the hub and the five other hosts run
-   421b431493f1. I did not find the writer (see Not checked). No lane post names it.
-4. The hub scratch swings by 50 to 160 GB inside 20 minutes: 67 GB at 21:23, 44 GB at 21:32 (wave launches
-   refused for one tick, 21:32-21:42), 210 GB at 21:50, 154 GB at 22:02, 147 GB at 22:08.
-5. Turning on `kit_snap` for QC (r221) made a new fail class: 4 fails on 2 items at kit_rtl, where the kit names
-   a path under `kit-store/snaps/<sha>/root/...` and the self-contained check rejects it.
-6. Of the nine r219-r230 fixes asked about: 4 work, 3 work in part, 2 have not landed. Table below.
+1. The merge service is down, so none of the fixes ruled after 20:50 is live. Last merge 20:50 (main d1fa289b1cb);
+   one tick ran 20:52:53-21:45:59 and was stopped; at 21:47 the service is `failed` and the timer `inactive`.
+   COORD posted this at 21:45 (MQ-PACK-FIX: 105,616 pack files). Eleven rulings are not on main:
+   r412, r429, r430, r432, r434, r436, r437, r438, r443, r444, r445. Also not on main: publish gate 72c9b65,
+   plan-job 664cf38, ingest --from-archive a5b3ca9, main-to-hub 9e6bc49.
+2. So two "known" items in the brief are not true at run time. The wave does NOT read committed kit_wave.json:
+   rt/current/tools/autopilot/kit_wave.py has 0 matches for the HEAD blob read. r437 is on no host's rt;
+   S81 D5 carries it from the branch.
+3. r429 can never merge as ruled. COORD ruled sha 8c7687c05761f8d5..., which is the sha of the FLEET-OPS-R post
+   that was retracted at 20:24. The real head is 8c7687c0576b6e0f1c1416a3552a4ca342588c60; COORD.md has 0 lines
+   with it. After the repack the queue will WAIT on it again. This is the fix for the epyc10 overload.
+4. epyc10 scratch2 is filling now: 445 GB (20:30), 354 (21:05), 178 (21:40), 143 (21:46), about 240 GB/h.
+   The 50 GB floor is about 25 min away. DISK-RATE alerted (21:40) but the alert has no actor.
+   Other hosts at 21:45: intel1 88 GB, epyc7 119, epyc2 128, epyc9 145 (was 265 at 20:27), epyc8 371.
+5. The wave almost stopped launching: 48 LAUNCH+ENQUEUE in 19:43-19:59, then 6 in 20:00-21:43.
+   Fleet use: median 50% of 624 threads (range 41-63%), while epyc10 sits at load 141-156 on 96 cores.
 
-## Kit wave, 19:45-21:45
+## Kit wave by hour
 
-| | 19:45-20:45 | 20:45-21:45 | 2 h | FABLE-FLOW-2000 |
-|---|---|---|---|---|
-| LAUNCH | 25 | 14 | 39 (QC 23, HEAD 16, S81 0, KV 0) | 119 |
-| FAIL | 12 | 7 | 19 (QC 17, HEAD 2) | 72 |
-| ENQUEUE (place done) | | | 25 | about 35 reached P&R |
-
-Repeats: 9 distinct failing items for 19 fails, so 10 fails (53%) are repeats; was 49 of 72 (68%).
-
-| Count | Die | Stage | Class | Items | State at 22:00 |
-|---|---|---|---|---|---|
-| 6 | QC | gen | hard landing child proof: shared rst_xn[i] 8-9 loads. Labelled "INFRA: tool or source skew"; it is a design proof failure | 3 | held, term "DIE-QC-103 reset-ring proof fix" |
-| 4 | QC | gen | KIT_NOT_SELF_CONTAINED: view points into build dir tl-qcstav2/rk (epyc2 only) | 1 (slw_st_a_v2__cl9f076a5c, attempts 13-16) | held since about 21:00; closed-view branch READY 21:44, not merged |
-| 4 | QC | kit_rtl | KIT_NOT_SELF_CONTAINED on a kit-store snapshot path (new) | 2 (cbn_q01__clab6e67f2 3 times, tt_ctlm) | cbn_q01 BLOCKED 21:32; tt_ctlm not held |
-| 3 | QC | gen | WAIT-DEP: stub provenance, view not exported | 1 (cbn_q00__cldbcda913) | held |
-| 2 | HEAD | place | exit 143, signal 15: operator stop of rows launched without the die-phase keys | 2 | relaunched with keys |
-
-## r219-r230 score
-
-| Fix | Ruling | State | Evidence |
+| | 19:43-19:59 | 20 | 21 (to :43) |
 |---|---|---|---|
-| S81 holds re-termed | r223 | working | 483 of 483 S81 keys carry a release term; 227 moved to `event_adopt:B6gG3*`. 13 SUPERSEDED-KEEP lines show the family key matching. 0 S81 launches |
-| S81 auto_rearm off | r223 | working | `auto_rearm: false` since 21:14; no S81 launch after it. Its removal is a hand step tied to the G3b adopt |
-| ot-src-refresh disabled | r219 | working | timer disabled and inactive, absent from the timer list |
-| fail_route timer | r229 | working | timer runs every 10 min; 5 posts 21:48-21:58 (4 NEEDS-ACTION, 1 NEEDS-LANE). One class is misrouted, see class 5 |
-| kit_snap strict on all dies | r221 | partly | config: on with strict view refs for QC, S81, KV, HEAD; not HBM (parked). Only QC and HEAD launched, so S81 and KV are unproven. New fail class on QC (4 fails). The smoke was called at RUNNING; that row (cbn_q01 a10) failed at 21:12 |
-| tool_skew warn gate | r219 | partly | live since rt 0d0eec1e3a01 (21:03), `warn` on 5 dies, launches go on (12 after 21:04). Three defects, see class 6 |
-| KV tree from one sha | r219 | partly | c1 built and gated (tools whole from main 8989ba7b1755), READY 21:19. Not adopted: wave src is still src_kv_kvgeom7u, `*` hold still set. A second KV tree from another sha exists (class 2) |
-| failkey-1115b key and family breaker | r226 | landed, not exercised | in rt since 21:43 (9eab0c06ef18): `fail_key_gate` is in `launch()`. No FAIL after 21:43, so `fail_keys` has 0 entries and there are 0 LAUNCH-REFUSED and 0 RELAUNCH-ON-FIX lines. Judge it at 00:00 |
-| typed FAIL classes | r220 | not landed | branch kit-ops-5-typedclass-1115 @23ab2044be6 READY at 21:2x, not in rt. Every FAIL line to 21:32 carries the old FLOW/INFRA/PLAN label; signal 15 is still a FAIL |
-| HOLDGEN | r223 | not landed | one post in lanes/posts/HOLDGEN-1115.md; no compiled hold records, no per-tick audit table |
+| LAUNCH + ENQUEUE | 48 | 3 | 3 |
+| FAIL | 1 (KV gen) | 34 (33 S81 kit_rtl, 1 KV gen) | 1 (KV gen) |
+| LAUNCH-REFUSED same key | 2 | 5 | 0 |
+| RETRY-IGNORED (stale attempt key) | 0 | 31 | 3 |
+| SRC-INCOMPLETE | 0 | 11 | 11 |
+| GEN-DISK-LOW | 0 | 6 | 0 |
+| HUB-SYNC-FAILED | 0 | 2 | 2 |
+| ALERT ADOPT-GUARD (hbm PLAN_MISSING) | 6 | 24 | 16 |
+| TOOL-SKEW UNMEASURED s81 | 2 | 12 | 8 |
 
-## Summary, ranked by waste
+Tick time: median 162 s, max 528 s (2000: 167 / 535). Rows not launching: 55 (WAIT-FORM 25, q_running 14,
+KW-FIX-45 8, SKIP-HELD 4, q_fail 2) plus 84 superseded-event rows. HOLD-AUDIT: HELD-BUT-LAUNCHED 0 on all ticks,
+TERM-UNREACHABLE 44 on one tick (20:31) then 0, HOLD-SUPERSEDED 45 -> 72 (rising).
+STALE current-event: 254 (2000: 257; 1900: 202). S81 304 rows, 203 FIX-S81-COL-STALE; QC 43; KV 10; HBM 107.
+Unowned: 14 (KV 3, HBM 11). Live check NOT SEEN: intel2, epyc4 (epyc8 is seen now).
 
-| # | Class | Count | Trend vs 20:00 | Fleet share wasted | Owner |
-|---|---|---|---|---|---|
-| 1 | Two dies launch nothing; adopt steps wait on a hand edit | S81 0 and KV 0 launches; about 279 of 624 build threads idle | worse (32% -> 45% idle) | 45% | KIT-OPS-5, WAVE-HOLDS-1115 |
-| 2 | Host disk full without an owner | epyc7 under 5 GB for about 15 min; rt sync failed; hub 44-210 GB | worse (hub was 146-149 flat; epyc7 new) | epyc7 (96 threads) refused for at least 20 min; hub refused one tick | CLEAN-ALL-1115 |
-| 3 | kit_snap against the self-contained check | 4 fails, 2 items, 40 min | new | under 1% CPU; blocks the QC rows that kit_snap was meant to cure | KIT-OPS-5 |
-| 4 | Known-failing rows relaunched | 10 repeat fails, 5 QC items | better (49 -> 10) | under 1% | FLOW-HEALTH-1 |
-| 5 | Untyped classes: wrong label, wrong owner | 6 of 19 fails mislabelled; 3 of 6 items in one fail_route post sent to the wrong lane | same | none directly | KIT-OPS-5 |
-| 6 | tool_skew gate reads badly | 7 "refuse" lines in warn mode; two module counts; S81 and KV unmeasured | new | none | TOOLS-CONVERGE-1115 |
-| 7 | Config does not reach the kit | HEAD rows launched without die-phase keys: 2 stops at 20:13, 2 more rows relaunched unchanged at 21:05 (r228) | new | 4 HEAD place runs of 25-40 min | KIT-OPS-5 |
-| 8 | Periodic jobs fail each tick | SRC-INCOMPLETE epyc2 13, ADOPT-GUARD 24, ARCHIVE FAILED 12, HUB-SYNC-FAILED 11, REAP-DEAD native59 12 | same or worse (9, 18, 12, 9, 12) | epyc2 at 19/128 load | KIT-OPS-5, FLOW-HEALTH-1 |
-| 9 | Stale and unowned rows | STALE 271 current (+158 superseded); unowned S81 198, QC 11, KV 8, HBM 11 | worse (191; S81 192) | none directly | WAVE-HOLDS-1115, COORD |
-| 10 | Log noise | DEDUP 804 + RETRY-IGNORED 158 = 62% of 1,541 lines | same (64%) | none | FLOW-HEALTH-1 |
+## Which 2000 fixes landed
 
-## 1. Adopt steps wait on a hand edit
+| 2000 fix | State | Evidence |
+|---|---|---|
+| Approve cca8efdc426 (event_adopt matches plan event) | landed | r419, on main |
+| Hold term refused at write time; dead-term audit | landed | r424 on main; HOLD-AUDIT prints TERM-UNREACHABLE; 46 records retyped 20:23 |
+| QC Kf terms checked | landed | QC-PLAN-R 20:07, exact event names |
+| Wait helper, no cmdline pattern | landed | r426 on main |
+| Frozen views by content hash | landed | r427 on main; KV D10 built with it |
+| DISK-RATE alert | landed, no actor | 16 lines since 20:30; nothing consumes them |
+| epyc8 disk tonight | done | 377 -> 609 GB at 20:39 |
+| Symlinked entry points | merged, not applied | r423 on main; /usr/local/bin/ot-heavy is still a regular file on 6 of 6 hosts (hash equal, 4b40ef39f849) |
+| Wave reads committed config; patch command; lock owner | approved, NOT live | r434 not on main, not in rt/current |
+| Publish gate (schema, PRE/G0, hashes, dry gen) | not merged | 72c9b65 GREEN, held for proof; run by hand it found S81 D4 not self-contained (21:18) |
+| Plan priority by marker | not merged | 664cf38 GREEN, no ruling merged |
+| Least-loaded gen host | not mergeable | r429 names the wrong sha |
+| Self-heal at most twice | no | hbm PLAN_MISSING on 22 of 22 ticks; SRC-INCOMPLETE 22 |
+| Skew check on a gen host | no | s81 UNMEASURED 22 of 22 ticks (fourth review) |
+| Generated files out of the hub checkout | no | lanes/NOPROG.tsv caused 4 HUB-SYNC-FAILED; kit_wave_state.json dirty now |
+| Fail on zero coverage; export read-back (HEAD) | not checked | |
 
-Loads at 21:58: epyc2 19/128, intel1 99/112, epyc8 47/96, epyc9 47/96, epyc10 71/96; epyc7 refused (last
-read 62/96 at 20:23). About 345 of 624 threads loaded. Every host but epyc7 admits 447 to 760 GB.
+Wrong in 2000:
+- "epyc8 full near 23:00" was a straight-line guess from one burst (a 49 GB tree copy plus gate runs).
+  FLEET-OPS-R measured +58 GB/h net at 20:16.
+- "Place/CTS/route to the host with most memory" aimed at ot-run. ot-run already orders hosts by projected load
+  (FLEET-OPS-R 20:15). The overload comes from the wave's gen-host choice and from trees that exist on epyc10 only.
 
-- KV: 0 launches for about 6 h. KV-102 posted READY at 21:19 with gates (G0 0 errors, strict bind RC 0,
-  LATCHECK 2404/2404, kit_rtl RC 0 on three types) and asked for the hold lift. 40 min later nothing changed.
-- S81: B6gG3b READY+ADOPT at 21:46. 227 holds release on it, and `auto_rearm` must come off in the same step.
-  216 more keys wait on "Event F" and 33 on "Event G"; r226 lists event names under 3 characters as not yet
-  matched by `apply_hold_release_on`. Those 249 keys can stay held after their event adopts.
-- Signed off now: S81 types 41 of 394, QC 7 of 127, KV 5 of 56, HEAD 19 of 26.
+## Verification of the items known since 20:00
 
-Root cause: an adopt is three hand edits by three lanes (die owner posts READY, KIT-OPS-5 moves `src` and
-`event`, WAVE-HOLDS lifts keys), each waiting for the previous post to be read.
-Fix: one `adopt` command owned by KIT-OPS-5 that takes the READY post's tree, plan sha and event name, runs
-adopt_guard on all gen hosts, and writes `src`, `event`, the hold releases and the `auto_rearm` removal in one
-commit. HOLDGEN's typed release terms are the input it needs; until then KIT-OPS-5 does KV and S81 by hand now.
-Decide first which KV tree is adopted: c1 (main 8989ba7b1755, KV-102) or src_kv_pin_0d0eec1e3a01
-(TOOLS-CONVERGE, 34 GB on epyc10, built 21:49, not published). Two lanes built two successors from two shas.
+| Item | Verified | Note |
+|---|---|---|
+| r434 wave reads committed config | no, not live | see headline 2 |
+| r437 kitrtl rebase, D5 publishing | yes | S81-TYPES-R2 21:33: D5 = D4 + r437 + form B + plan sidecars, publishing on E8/E10 |
+| r441 ingest --from-archive | branch only | a5b3ca9 not on main |
+| Publish gate fails non-contained plans; D4 sidecars in a lane dir | yes | 18 SRC-INCOMPLETE lines on epyc8 name s81-b3-clk/run/b/B6gF2s4tapfix1 |
+| oomkill branch gating | yes | two gates run at once on the same branch (3dfeac0 and 0dd62f9); the first is superseded |
+| 20 guard kills in 24 h, all epyc10 | yes | 20 on epyc10; 2 since 20:00 (20:55 PST); other hosts 0 since 11-15 |
+| E8 retirement raced the ingest | yes | FLEET-OPS-R 20:52; retire3.py refusal not read |
+| Hub tools diverged from main | yes | 9e6bc49 READY 21:12, not on main |
+| Stale retry keys | yes | 34 RETRY-IGNORED; kv3_hg_v1@1, @2, @4 against attempts 3-5 |
+| Apply refused after checker sha moved | not seen in the log | consistent with r427 "identities re-key once" |
+| tools-converge retire deferred | yes | RETIRE-SUPERSEDED retired 0 on 3 runs; kw45 holds 53 trees on epyc10, 44 on epyc9, 37 on epyc8 |
 
-## 2. Host disk
+## Classes
 
-epyc7 /srv/opentallas-scratch2 (7.3 TB): wave log GEN-DISK-LOW 53, 44, 23, 11, 4 GB at 21:03-21:44; my df
-0.47 GB at 21:52, 8.8, 20, 85, 111 GB after. No wave FAIL names ENOSPC in the window, so the loss is in lane
-jobs and in the rt sync. epyc7 holds lane trees for S81 (s81-b3-clk, the S81 plan of record), KV (kv-102,
-kv-pvgen) and GENBUG; a full disk there stops the two die owners that are about to adopt.
-Hub: top recent trees under claude/: wt 99 GB (60 worktrees), rstxn-guard-1115 48 GB (new lane tree today),
-rt 15 GB (37 trees), hub-coord 13 GB, restore-1115 10 GB. 19 top-level directories carry a .git.
+Share = share of fleet thread-hours in the window, estimated.
 
-Root cause: no component owns "free space on host X over time". The wave has a floor per launch, ot-run has
-a floor per job, the cleaner runs hourly; lanes write outside all three. A lane's full clone or a view
-restore of 50 GB lands between two cleaner runs.
-Fix (CLEAN-ALL-1115): a 5-minute df sample per host into one table; when a host loses more than 20 GB in
-10 min or falls under 2x its floor, post once with the three directories that grew most since the last sample
-(keep a per-directory size table from the hourly pass, compare against it). Lane trees over 20 GB go to
-epyc10 (4.4 TB free) or epyc9 (1.35 TB); the hub and epyc7 take none. FLOW-HEALTH-1: rt sync that fails on
-a host posts once and the host leaves gen_hosts until its rt equals the hub's.
+### A. Fix pipeline stops silently (new; largest)
 
-## 3. kit_snap against kit_self_contained
+Count: 1 stall of 57+ min, 11 rulings and 4 READY branches waiting. Trend: new.
+Root cause: the merge service is one serial oneshot with `TimeoutStartSec=infinity` and no progress alarm.
+One unfetchable sha cost the whole tick; a partial clone with 105,616 packs made each lookup about 10 min.
+A ruling is free text, so a retracted sha was ruled and nothing compared it with the branch head.
+Fix (MERGE-QUEUE-1):
+- The tick has a per-item time limit (2 min for fetch and lookup). An item over the limit is set aside and the
+  tick goes on. A sha that is not the head of its branch is BOUNCED with one post, not waited on.
+- No merge for 20 min with approvals pending posts one ALERT (the autopilot tick can check the log age).
+- The repo is a full clone with `gc.auto` and a pack-count limit; the tick refuses to start above 200 packs
+  and repacks first.
+- COORD rulings are written by a command that reads the sha from the lane's READY line and checks it against
+  the branch head.
+Do now: re-rule r429 with 8c7687c0576b6e0f1c1416a3552a4ca342588c60.
+Share: no compute of its own; it holds classes B, D and E open. About 50% of threads are idle behind it.
 
-r221 turned kit_snap on for QC at about 21:10. cbn_q01__clab6e67f2 then failed at kit_rtl at 21:12, 21:22
-and 21:32, and tt_ctlm at 21:22, each with KIT_NOT_SELF_CONTAINED on
-`/srv/opentallas-scratch2/kit-store/snaps/<sha>/root/.../die-qc-103/treeA/.../plan_of_record/zz_s29_qc103_s4q3c.*`.
-Reading from the path (I did not open kit_rtl.log): kit_snap redirects the plan input to the snapshot store,
-and the later check treats any absolute path outside the kit as a leak. Two guards for one class disagree.
-Fix (KIT-OPS-5): the self-contained check accepts a path under kit-store/snaps/<sha> when the sha is recorded
-in the kit, since that store is content-addressed and replicated; or kit_rtl copies the file from the
-snapshot into the kit. A config switch counts as smoked when one row passes the stage the switch touches,
-not when the row is RUNNING. Do this before S81 and KV launch with kit_snap on, or the same class appears
-on about 450 rows.
+### B. S81 kit_rtl: paths outside the kit tree
 
-## 4. Relaunch of known-failing rows
+Count: 33 FAIL in 11 min (20:10-20:21), 28 S81 types in the breakdown, 33 RESULT-RECLAIM refusals.
+Trend: new at 20:10, stopped by the class breaker at 20:10:52 (worked; 1 probe failed at 20:15).
+Root cause: a hold release (r414 retype) opened 34 types on a tree whose bind output names RTL in the bind
+run's own lane dirs. Nothing ran one item of a held family on the current tree before the whole family opened.
+Fix:
+- (HOLD-FLOW-R) a hold that releases more than 5 items releases 1 pilot first; the rest follow its kit_rtl pass.
+- (PUBLISH-GATE) the dry gen covers one item per kit class and fails on any path outside the tree. Merge it.
+- (KITRTL-PATHS) r437, in D5.
+Share: under 1% of compute (fails in minutes). 28 types (7% of S81) blocked 1.6 h so far.
 
-Before 21:43: slw_st_a_v2__cl9f076a5c was BLOCKED-FLOW at 20:22 and launched again at 20:24 and 20:53;
-cbn_q00__cldbcda913 was BLOCKED-PLAN at 20:33 and got RETRY-RELEASE at 21:13; cbn_q01 failed 3 times in
-30 min before its block. The old breaker released once on preflight text (19:55). A BLOCKED line did not stop
-the next launch. failkey-1115b replaces these paths and has been live since 21:43; there is no fail after it
-yet. Existing FAIL rows (S81 748, QC 296, KV 250) have no stored key, so the first relaunch of each after an
-adopt is not gated. That is correct for a new tree or plan; check that an env-only edit does not release
-them (the 18:11 case).
+### C. Trees and plans that are not self-contained
 
-## 5. Untyped classes
+Count: SRC-INCOMPLETE 22 (2000: SRC-SYNC 13), SRC-SYNC self-heal 3 (654 and 82 files copied), ADOPT-GUARD
+PLAN_MISSING 23. Trend: up.
+Root cause: kit_wave.json may point at any absolute path. S81 asbuilt and plan sidecars live in
+s81-b3-clk/run/b/... on epyc10; KV bind RTL in kv-r/hg2cgate. Other hosts are then "not a gen host", so the
+die is pinned to epyc10. The self-heal copies files each time and never stops.
+Fix:
+- (PUBLISH-GATE) apply refuses a die block in which any path lies outside the published tree or the bind-of-
+  record dir. The gate's sandbox mounts only those two.
+- (WAVE-CONFIG) SRC-INCOMPLETE on the same host and die on 3 ticks posts one NEEDS-ACTION to the die owner
+  and stops repeating. HBM PLAN_MISSING (44 alert lines, die parked) is silenced by a `parked` flag.
+Share: this is the cause of class D. Direct cost small.
 
-- The 6 "hard landing actual child proof failed: shared rst_xn" fails are labelled INFRA "tool or source
-  skew". The cause is a reset-ring load count in the QC cland RTL (DIE-QC-103).
-- fail_route class df55481680 (21:48) groups those 3 items with 3 KIT_NOT_SELF_CONTAINED items and sends all
-  6 to QC-SRC-CLOSE-1115. Half the list has the wrong owner.
-- BLOCKED lines at 20:22 and 20:33 name owner DIE-QC-101 (ended); the 21:32 line names DIE-QC-103.
-Fix: merge kit-ops-5-typedclass-1115; fail_route then keys on the typed class, not on the first 60 characters.
+### D. epyc10 overload and guard kills
 
-## 6. tool_skew gate
+Count: load 141-156 on 96 cores on 22 of 22 ticks; CPU pressure 37%; 35 of 126 running jobs; 20 guard kills
+in 24 h, 2 since 20:00. Four hosts sit at load 23-35. Trend: flat (2000: load 169-188).
+Root cause: class C pins S81 and KV gen to epyc10, and the gen-host pick does not use load (r429 not merged).
+ot-run counts 60 of 96 threads there while openroad uses 75 cores: declared threads are below real use.
+Fix:
+- (MERGE-QUEUE-1 / COORD) merge r429.
+- (FLEET-OPS-R) FLEET-OPS-R copies every applied tree to at least 3 gen hosts in the apply step itself
+  (KV D10 was done this way at 21:25; make it the rule in apply_reviewed_tree_marker.py).
+- (FLEET-OPS-R) ot-run admission adds a load term: no new job on a host with load1 above 1.2 x cores while
+  another host can admit it.
+- (WAVE-CONFIG) the oomkill/INFRA_KILLED branch: a guard kill is not a design fail and does not use a retry.
+Share: about 28% of jobs run about a third slower: near 10% of running throughput.
 
-- In `warn` mode the log line is "KIT-WAVE TOOL-SKEW refuse <die>: N module(s) differ from main", once per
-  die per tick. Launches proceed. A reader takes it for a refusal.
-- It reports 120 modules for QC and 136 for HEAD. FLOW-HEALTH.tsv SKEW (21:07) reports 38 and 43 for the same
-  trees. The closures differ (433 modules against 229). One fleet, two skew numbers.
-- The check runs inside `launch()`. S81 and KV launch nothing, so they have no reading and no NEEDS-LANE post.
-Fix (TOOLS-CONVERGE-1115): one closure shared with the SKEW table; log "differ (warn, launching)"; measure
-every enabled die once per tick outside `launch()`.
+### E. Disk: alert without actor, superseded trees kept
 
-## 7. Config that does not reach the kit
+Count: 16 DISK-RATE lines, 6 GEN-DISK-LOW, epyc10 -240 GB/h now. Trend: worse on epyc10, intel1, epyc7.
+Root cause: (1) DISK-RATE only posts. (2) Each route job keeps 4-5 ODBs of about 2 GB (4.5-15 GB per job;
+epyc9 wrote 134 GB in 90 min from ten jobs). (3) Each plan step publishes a new 49 GB tree per host and
+the old ones stay: retire-superseded retired 0 three times.
+Fix (FLEET-OPS-R):
+- DISK-RATE under 1 h to the floor makes the wave stop new launches on that host in the same tick and
+  starts the guarded cleanup. No lane action needed.
+- The job deletes 5_route.odb, 5_3_fillcell.odb and 6_1_fill.odb when 6_final.odb is written and hashed.
+- Apply writes superseded_trees for the die; retire runs through the delete guard in the same apply.
+  Trees share unchanged files by hard link at publish (same filesystem), so a new tree costs its delta.
+Do now: epyc10.
+Share: none yet. A full epyc10 kills its 35 jobs (28% of running work).
 
-HEAD NF13a rows launched at 19:47 without the die-phase keys; KIT-OPS-5 stopped and relaunched them (the two
-signal-15 fails at 20:13). r228 (21:33) reports the config.mk files carry no OT_PG_* key, and hd_host_n and
-hd_st_n3_turn were relaunched unchanged at 21:05; hd_host_n was stopped at 21:42 and launched again at 21:45.
-r231 (kit_effective_env.json records the keys) is the audit. Add the gate: a row whose effective env lacks a
-key that its item_env or die_gen_env sets fails at gen, before place.
+### F. Retries on an unfixed cause (KV hg_v1)
 
-## 8-10. Periodic failures, stale rows, log
+Count: 3 identical gen fails (19:49, 20:5x, 21:22), 2 RELAUNCH-ON-FIX "changed tools", 1 REPEAT-STOP at 3.
+Root cause: the fail key contains the stage-tool sha. Every rt/current sync changes it, so the same-key
+refusal opens although the failing input (3 frozen views in D5) is unchanged. The same whole-tool sha
+re-keyed every tree guard and refused an apply. Retry keys name an attempt number, so they go stale.
+Fix (WAVE-CONFIG):
+- The fail key uses the hash of the files the failing stage read (import closure of that stage), not the
+  tool tree sha. Same for the tree guard: checker identity = hash of the checker's own closure.
+- A retry names the fail fingerprint, not an attempt. It is consumed when that fingerprint is the latest.
+- An INFRA @gen fail that names a tree input is released only by a tree switch.
+Share: under 0.5%. Cost was KV: 0 new kits past gen until D10 at 21:28.
 
-- epyc2: SRC-INCOMPLETE 13 lines and ADOPT-GUARD 24 lines for the same QC plan file as at 18:24. Third review
-  with this item open. epyc2 admits 760 GB at load 19/128.
-- ARCHIVE FAILED 3054c87a89d6: 12 more lines. The backoff is in failkey-1115b (live 21:43); check at 00:00.
-- HUB-SYNC-FAILED: 11 lines; lanes/NOPROG.tsv and now lanes/posts/HEAD-100.md edited in the hub checkout.
-- lanes/CRON-HEALTH.tsv (FABLE-FLOW-2000 class 6) does not exist.
-- STALE 271 current (was 191). Owner labels still name ended lanes: KIT-WAVE-1 116 rows, DIE-S81-90 39,
-  FAIL-S81-1 25. S81 unowned 198.
-- The runtime changed 3 times in 51 min (21:03, 21:43, 21:54), each a sync to 7 hosts.
+### G. Stale state, noise and small faults
 
-## For COORD, in order
+- Hub checkout: generated NOPROG.tsv blocked sync 4 times; kit_wave_state.json dirty; six .state.json.<pid>
+  and three STALLS.txt.tmp files left behind. (FLEET-OPS-R: move generated files out; write temp files in /run.)
+- CONFIG-KEY-UNREAD 3: lanes keep backups (prev_gen_hosts_fleetopsr1116c/d) inside the live config.
+  (WAVE-CONFIG: kit_wave_edit.py refuses unknown keys; backups are git history.)
+- REAP-DEAD SILENT kv3_hub_C, 22 lines: the test wants 360 s of CPU growth per window, but the tick is
+  about 280 s and the stage has one thread, so it can never pass. (WAVE-CONFIG: growth per elapsed second.)
+- Two gates on one branch at once (oomkill). (MERGE-QUEUE-1: a new sha cancels the gate of the old one.)
+- kills.log on epyc10 is in UTC, the hub log in PST. (FLEET-OPS-R: one zone, with offset.)
+- Unowned 14 (KV 3 pv types, HBM 11). HBM is parked; the 3 KV types need an owner or a retire.
+- HOLD-SUPERSEDED 72 and 84 superseded-event rows are not retired. (HOLD-FLOW-R: retire with the plan apply.)
+Share: under 1% together.
 
-1. CLEAN-ALL-1115 now: epyc7 scratch (name the writer, free to 300 GB), then re-sync rt on epyc7. Hub: move
-   rstxn-guard-1115 (48 GB) and restore-1115 off the hub.
-2. KIT-OPS-5 + WAVE-HOLDS-1115 now: adopt KV c1 (or name the pin tree instead) and lift `*`; adopt S81 G3b,
-   release the 227 keys and remove `auto_rearm` in the same commit.
-3. KIT-OPS-5 before item 2 launches at volume: kit_snap and kit_self_contained agree on snapshot paths; hold
-   tt_ctlm and cbn_q01 until then.
-4. MERGE-QUEUE-1: kit-ops-5-typedclass-1115, kitpack-close-1115 (closed views).
-5. FLOW-HEALTH-1: Event F / Event G release matching (249 S81 keys); rt sync failure removes the host from
-   gen_hosts.
-6. TOOLS-CONVERGE-1115: tool_skew wording, one closure, per-tick measurement of all dies.
-7. HOLDGEN-1115: first deliverable is the per-tick audit (held-but-launched, release-term-unreachable).
-8. KIT-OPS-5: replicate the QC treeA plan files to epyc2 or take epyc2 out of QC gen_hosts.
+## Order of work
 
-Not checked: which process or lane filled epyc7 (a find for files over 500 MB newer than 50 min returned
-nothing in 120 s; du over the 7.3 TB disk timed out); kit_rtl.log of the snapshot-path fails; whether the
-hub swings come from the cleaner or from lane deletes; failkey-1115b behaviour on a real fail; the HOLDGEN
-post text; kit_snap on S81 and KV; lane-run job losses on epyc7 during the full-disk period.
+1. FLEET-OPS-R: epyc10 disk now (143 GB, -240 GB/h).
+2. COORD: re-rule r429 with the real sha. MQ-PACK-FIX: restart the timer; add the per-item limit and the
+   no-merge alert.
+3. After the queue runs: confirm r434 and r437 in rt/current; rule publish gate, plan-job, r441, main-to-hub.
+4. PUBLISH-GATE + FLEET-OPS-R: no path outside the tree; 3 gen hosts per applied tree.
+5. FLEET-OPS-R: DISK-RATE stops launches; intermediate ODBs deleted at result; superseded trees retired in apply.
+6. WAVE-CONFIG: fail key by stage closure; retry by fingerprint.
+7. HOLD-FLOW-R: pilot-first release for holds over 5 items.
+
+## Not checked
+
+- retire3.py SIGNED-not-in-store refusal (code not read).
+- The refused apply after the checker sha moved (no log line found).
+- HEAD zero-coverage and export read-back fixes.
+- Who writes to epyc10 scratch2 (S81 D5 publish and route jobs are the likely writers; not measured).
+- QC "other flow error 7", S81 "other flow error 7", S81 "no host 5": rows not opened.
+- The idle 50% is partly intended: 203 S81 col types are stopped by S81-TYPES-R2 on purpose and HBM is parked.
