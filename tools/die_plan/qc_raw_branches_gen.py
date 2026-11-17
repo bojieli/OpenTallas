@@ -9,7 +9,7 @@ the type: glue u_rrl_257 -> u_cland_fstart_* 1670 um (-492 ps), cbf_q01 u_cland_
 
 For every FSTART face flop whose raw source is more than --need um away, one branch copies the ORIGINAL relay chain of
 that raw reset from the deepest ancestor that still allows hops <= --hop um, at sites on the L path towards the
-FSTART pin: same clock, same D chain, same depth -> the same release cycle; +flops only, 0 added cycles.
+FSTART pin: same clock, relay kinds and D chain -> the same release phase; +flops only, 0 added cycles.
 
 Inputs: the plan (partition_types[tn].clock.landing_contract.pins, outline_um) and the bound RTL of a strict bind of
 that plan (relay sites from the '@ (x, y)' comments; the ring relay u_cland_rst_<b> takes the landing pin site of
@@ -23,7 +23,7 @@ import os
 import re
 import sys
 
-RELAY = re.compile(r"ot_dp_rrelay\s+(\w+)\s*\(\s*\.clk\(clk\),\s*\.d\((\w+)\),\s*\.q\((\w+)\)\s*\);([^\n]*)")
+RELAY = re.compile(r"\b(ot_dp_rrelay(?:_nl)?)\s+(\w+)\s*\(\s*\.clk\(clk\),\s*\.d\((\w+)\),\s*\.q\((\w+)\)\s*\);([^\n]*)")
 SITE = re.compile(r"@ \(([-\d.]+), ([-\d.]+)\)")
 INSET = 14.0
 
@@ -58,7 +58,7 @@ def type_rtl(rtl_dir, tn):
     hits = []
     for f in sorted(glob.glob(os.path.join(rtl_dir, "*.sv"))):
         b = os.path.basename(f)
-        if not (b == f"{tn}_part.sv" or f"__{tn}_" in b or b.endswith(f"__{tn}.sv") or b == f"{tn}.sv"):
+        if not (b == f"{tn}_part.sv" or f"__{tn}_" in b or b.endswith(f"__{tn}.sv") or b == f"{tn}.sv" or b == f"s81p_{tn}.sv"):
             continue
         if re.search(r"\bassign\s+cland_start_raw\s*=", open(f).read()):
             hits.append(f)
@@ -69,7 +69,7 @@ def type_rtl(rtl_dir, tn):
 
 def relays(text, pins):
     by_q = {}
-    for inst, d, q, comment in RELAY.findall(text):
+    for module, inst, d, q, comment in RELAY.findall(text):
         if q in by_q:
             raise GenError(f"raw relay Q {q} driven twice")
         m = SITE.search(comment)
@@ -77,7 +77,7 @@ def relays(text, pins):
         ring = re.fullmatch(r"u_cland_rst_(\w+)", inst)
         if xy is None and ring and f"fclk_in_{ring.group(1)}" in pins:
             xy = tuple(pins[f"fclk_in_{ring.group(1)}"])
-        by_q[q] = dict(inst=inst, d=d, xy=xy)
+        by_q[q] = dict(inst=inst, d=d, xy=xy, module=module)
     return by_q
 
 
@@ -132,6 +132,7 @@ def gen_type(plan, rtl_dir, tn, hop_um, need_um):
                              consumers=[f"fstart:{b}"]))
         hops = [man(a, c) for a, c in zip([list(by_q[base]["xy"])] + pts, pts + [list(xy)])]
         rep[f"fstart:{b}"] = dict(direct_um=round(d0, 1), base=base, base_xy=list(by_q[base]["xy"]), copies=mcopy,
+                                  added_flops=sum(2 if by_q[chain[k + 1 + i]]["module"] == "ot_dp_rrelay_nl" else 1 for i in range(mcopy)),
                                   max_hop_um=round(max(hops), 1))
     return dict(raw=raw, raw_xy=list(src), chain=chain, branches=branches, report=rep)
 
@@ -152,7 +153,7 @@ def main(argv=None):
         res[tn] = r
         hops = [v.get("max_hop_um", v["direct_um"]) for v in r["report"].values()]
         print(tn, r["raw"], r["raw_xy"], "branches", len(r["branches"]),
-              "flops", sum(len(b["stages"]) for b in r["branches"]), "max hop", max(hops) if hops else None)
+              "flops", sum(v.get("added_flops", 0) for v in r["report"].values()), "max hop", max(hops) if hops else None)
     json.dump(res, open(a.out, "w"), indent=1)
     return 0
 
