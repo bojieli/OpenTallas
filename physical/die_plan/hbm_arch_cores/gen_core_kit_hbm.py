@@ -2306,7 +2306,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # (physical/common_flow/hold_pad_hb4.tcl; dont_use lifted ONLY inside repair_timing -hold, so setup / DRV / CTS never
     # pick it).  exp0 _k36nr BUFx2 guarded chunks stalled at FF hold ws -25.87 (8,538 cells, FAIL_POSTCTS) while _k39hb
     # HB4 reached -86.36 -> +0.94 / 0 viol in 4 chunks (8,536 cells); same margins, constraints and acceptance.
-    shutil.copyfile(HOLD_PAD_HB4, kd / "hold_pad_hb4.tcl")
+    import importlib.util as _ilu   # KIT-COMMON-1117: the one shared kit helper list (tools/die_plan/kit_common_files.py)
+    _s = _ilu.spec_from_file_location("kit_common_files", REPO / "tools/die_plan/kit_common_files.py")
+    _kcf = _ilu.module_from_spec(_s); _s.loader.exec_module(_kcf); _kcf.stage(kd)
+    # (hold_pad_hb4.tcl is in the shared list)
     # HBM-COLLECT-1/PTW-C 11-09 (class: HBM core kits had no repeater-pitch hook; the q_spt2 die-type kits do via
     # gen.py --max-wire-um): pt_w r2 routed 1297 TT max-slew pins, every one a single ~197 um BUFx6f -> BUFx3 N-S segment
     # that the GRT-estimate repair_design saw in limit and RCX put at up to 591 ps (limit 320).  Opt-in pitch cap.

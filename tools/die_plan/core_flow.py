@@ -235,7 +235,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     grt_nonport_hold opts a NEW kit into the shared input-start exclusion during FF GRT repair only;
     TT setup and final full-path sign-off are unchanged. Default keeps the original generated files."""
     kd = Path(kd)
-    shutil.copyfile(TOOL.parent / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
+    import kit_common_files; kit_common_files.stage(kd)   # KIT-COMMON-1117: the helpers gen_phys type kits carry (hold_sdc_guard.tcl, ...), one shared list
     stage_grt183(kd)
     for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_maxwire.tcl", "hold_guard_grt.tcl","grt_layers.tcl", "grt_post.tcl", "pg_connect.tcl", "pg_track_truth.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
         shutil.copyfile(TOOL / f, kd / f)
@@ -243,7 +243,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     # kits as one class form): every core kit's FF GRT hold repair may pad with HB4xp67 (physical/common_flow/
     # hold_pad_hb4.tcl: dont_use lifted ONLY inside repair_timing -hold, idempotent per process).  exp0: BUFx2 guarded
     # chunks stalled at FF hold -25.87, HB4 -86.36 -> +0.94 / 0 viol.  Same constraints, margins and acceptance.
-    shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
+    # hold_pad_hb4.tcl: staged by kit_common_files.stage above
     shutil.copyfile(TOOL / "core_final_repair.tcl", kd / "core_final_repair.tcl")
     # S81-CORES-1115: the override POST_GLOBAL_ROUTE_TCL below replaces a generator's post_grt_drv.tcl (the only repair_design);
     # with SKIP_INCREMENTAL_REPAIR=1 no repair_design then ran after placement (bksel b1o/b1g: 1,800 slew violations, TT -257/-219).

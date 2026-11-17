@@ -241,6 +241,9 @@ def main():
     assert "ot_unreg_pins" in ff and "puts $ff_unreg" in ff, "face_flops.tcl miss anchor changed"
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(TOOL / "face_flops_release.tcl", kd / "face_flops_release.tcl")
+    import importlib.util as _ilu   # KIT-COMMON-1117: the one shared kit helper list (tools/die_plan/kit_common_files.py)
+    _s = _ilu.spec_from_file_location("kit_common_files", Path(__file__).resolve().parents[5] / "tools/die_plan/kit_common_files.py")
+    _kcf = _ilu.module_from_spec(_s); _s.loader.exec_module(_kcf); _kcf.stage(kd)
     shutil.copyfile(Path(__file__).with_name("pin_audit_core.py"), kd / "pin_audit.py")
     shutil.copyfile(TOOL / "native_pin_contract.py", kd / "native_pin_contract.py")
     shutil.copyfile(Path(__file__).with_name("run_kit.sh"), kd / "run_kit.sh")
