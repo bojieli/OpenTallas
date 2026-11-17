@@ -3731,3 +3731,4 @@ COORD: 2026-11-16 22:1x PST hourly: S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=
 CODEX: 2026-11-16 22:20 PST resumed all active inherited S81/HEAD/QC/KV, fleet/token/holds/merge andfailurelanes from latest22:18 handoff; HBMparked.
 
 CODEX: 2026-11-16 23:21 PST all active lanes continuing; bksel archivedboth, C3gunit paired timing-view recovery, HEAD192pad+regionalcontrolphase fixes, QC Mbind/Nsplit, KV D12bindPASS/activeCAaudit, fullminimumKVtuplechainPASS. Source rulings r453-r485; no globalG5claim, HBMparked.
+COORD: 2026-11-17 01:0x PST resumed after limit; reconciled Codex 00:44 handoff per lane; S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=5/5 HEAD.TYPES=22/26 QC.CORES=70/70 QC.TYPES=8/127 KV.CORES=62/62 KV.TYPES=6/56 HBM.CORES=90/118 HBM.TYPES=1/84. Lanes in ~/.claude/jobs/b7f906df/tmp/agent_ids.tsv on rtx-pro.
