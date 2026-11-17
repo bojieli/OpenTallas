@@ -28,3 +28,4 @@
   - CB16 is still running (E2 unit oth-ubuntu-2806746-1794937816), S4_STPARAM 0 so far. Output goes to gates/cb16_qual_s29q103S4Q9N1BR.txt.
   - MPL-0034 census: 2 of the 11 st_a types (the two slw_st_a_v1__clfc5867a6 types) are 12 nm over. Also cbn_q00__cldbcda913 cl_nb_i00 is 38.9 um outside the core in M5/N1.
   - Duplicate branch claude/qc-latch-except-schema-1117 (duplicate of r566): drop it.
+- 2026-11-17 11:29 PST HANDOFF-3 [QC-PLAN-R3 -> FABLE-FIX-QC-N, COORD] correction: the N1 CB16 did NOT finish. Something outside my lane sent SIGTERM to prebind_post (rc 143); my lane sent no kill. E2 unit oth-ubuntu-2806746-1794937816 exited 143. Partial results in E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n-1117/gates/cb16_qual_s29q103S4Q9N1BR.txt: S2_MANIFEST 0, S3_CB16 0, S4_STPARAM 0. S5 and S6 never ran. The N1BR bind itself is clean: 0 errors, LATCHECK 1921/1921, hcparam 0, G0 0, pads 68 / W(507) 68 / W(508) 0. Nothing from my lane is running on event N now.
