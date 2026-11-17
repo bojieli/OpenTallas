@@ -7493,7 +7493,7 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
         # hub queue; a copy-only cron on rtx-pro pushes the hash-checked files and the next tick's snapshot finds them.
         try:
             import export_restore as ER
-            qdir = os.path.expanduser("~/.local/state")
+            qdir = os.environ.get("OT_RESTORE_QUEUE_DIR") or os.path.expanduser("~/.local/state")
             def _prov(by):
                 rc_, t_ = run("kit_snap_prov", remote(f"cat {shlex.quote(by)}"), idempotent=True)
                 try:

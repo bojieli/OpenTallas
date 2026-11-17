@@ -456,13 +456,14 @@ class KitWaveSnap(unittest.TestCase):
         self.assertEqual(self.K.classify("kit_snap", why)[0], "INFRA")
 
     def test_missing_view_ref_is_fetched_then_advisory_or_strict(self):
+        import tempfile; os.environ["OT_RESTORE_QUEUE_DIR"] = tempfile.mkdtemp()      # never write the real hub queue from a test
         miss = [{"path": "/srv/x/kit/face_guard.json", "by": "/srv/src/views/hl/provenance.json"}]
         doc = {"id": "a" * 40, "dir": "/d", "map": {}, "n_files": 1, "view_refs_missing": miss}
         ans = {"kit_snap": (0, "KW_KIT_SNAP " + json.dumps(doc)), "kit_snap_refs": (0, "")}
         self.sp["kind"] = "type"
         mp, why, res = self.stage(ans)
         self.assertEqual((mp, why), ({}, ""))                               # advisory by default: the item goes on
-        self.assertEqual([c[0] for c in self.calls], ["kit_snap", "kit_snap_refs", "kit_snap"])
+        self.assertEqual([c[0] for c in self.calls], ["kit_snap", "kit_snap_refs", "kit_snap", "kit_snap_prov"])   # + the RESTORE-NEEDED request reads the views' provenance
         self.assertIn("rsync -a", self.calls[1][1][-1])
         self.assertIn("*/face_guard.json) rsync -a --max-size=50m", self.calls[1][1][-1])   # the kit's top-level files too
         self.assertEqual(res["kit_snap"]["view_refs_missing"], ["/srv/x/kit/face_guard.json"])
