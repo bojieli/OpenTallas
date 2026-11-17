@@ -21,7 +21,7 @@
 // face-register form; with the independent write_oh flops face_guard could not
 // prove exclusivity (HEAD-KITS-3: 556 bits FAIL).  The N -> K direction (lane-
 // internal inputs, no face) keeps ot_s81_mu72_land unchanged.
-module ot_s81hd_lep_pair #(parameter [0:0] CHB=1'b1)(
+module ot_s81hd_lep_pair #(parameter [0:0] CHB=1'b1, parameter integer KCRED = 12)(
  input  wire clk,rst_n,
  input  wire k_lo_v,output wire k_lo_r,input wire[552:0]k_lo_d,
  output wire k_li_v,input  wire k_li_r,output wire[552:0]k_li_d,
@@ -37,7 +37,7 @@ module ot_s81hd_lep_pair #(parameter [0:0] CHB=1'b1)(
   .n_lo_v(lv),.n_lo_r(lr),.n_lo_d(ld),
   .n_li_v(liv),.n_li_r(lir),.n_li_d(lid),
   .n_rxv(lrx),.n_flt(lf));
- dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12))u_lane(
+ dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(KCRED))u_lane(
   .ck(clk),.rs(rst_n),.chb(CHB),
   .rx({coll_i[512],coll_i[513],coll_i[511:0],lrx}),
   .tx(coll_o),.lo_v(lv),.lo_r(lr),.lo_d(ld),

@@ -24,7 +24,8 @@ module ot_s81hd_lep_core_nr #(
                                        // -> ql (iqf) + cut-through relay to pair A by the header relay count (see g_qrx)
     parameter integer IN_PIPE = 0,     // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
-    parameter [15:0]  TXI = 16'h0000   // DIE-HEAD-84: per-lane TX ingress stages (see g_tx); 0 = none
+    parameter [15:0]  TXI = 16'h0000,  // DIE-HEAD-84: per-lane TX ingress stages (see g_tx); 0 = none
+    parameter integer RXH = 0          // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -805,6 +806,49 @@ module ot_s81hd_lep_core_nr #(
     assign ri = {rid, riv};
     wire mcol_w;                                       // MU: replay collided with a cut-through beat
     wire [1103:0] rb = {h1[H-1:0], h0[H-1:0]};          // the released frame (ring beat when bit 0)
+    // HEAD-PLAN-R4 11-17 NF15f (opt-in RXH, default 0 = the *_h names below are aliases of the originals, no added cycle):
+    // RXH 1 puts ONE registered rank on the shared RX head word (rhd: 4 lanes x 552 data bits = 2,208 flops in four kept
+    // leaves g_rxh.g_l[t].u_st, placeable mid-trunk) between the RX FIFO heads and the ring delivery (rid) / landing (mwd)
+    // registers.  Every ring-side term the delivery block g_rxm reads with that word -- pair release (rne), ring / land /
+    // tag metadata, the look-ahead select inputs, the return-tag non-empty flags -- takes the same one register (kept leaf
+    // g_rxh.u_ctl, 44 control flops cleared by rnx), so ri, mu_rt and ml_wv / ml_wd move by exactly +1 edge together: same
+    // beats, same order, same tags.  The replay word (ml_rv / ml_rd) is not delayed: a ring beat behaves as if its K link were
+    // one cycle longer (as one more KRX stage, without the credit round trip).  FIFO pops, credits, rxv and the perr / pair
+    // parity checks still read the undelayed head.  Supported at MU_EN 1 + RX_SRAM 1 + NATIVE32 1 + AB_EN 1 (hd_lep0N) only.
+    wire [NL*(H+1)-1:0] rhd_h; wire [NL-1:0] rhk_h, rne_return_h, rnex_h, rringx_h, rhkx_h, rtagx_h;
+    wire [NL*4-1:0] ring_meta_regions_h; wire [1:0] relp_h; wire rpb_h; wire [3:0] active_ring_flags_h; wire [1103:0] rb_h;
+    generate if (RXH == 0) begin : g_rxh0
+        assign rhd_h = rhd; assign rhk_h = rhk; assign rne_return_h = rne_return; assign rnex_h = rnex;
+        assign rringx_h = rringx; assign rhkx_h = rhkx; assign rtagx_h = rtagx; assign ring_meta_regions_h = ring_meta_regions;
+        assign relp_h = relp; assign rpb_h = rpb; assign active_ring_flags_h = active_ring_flags; assign rb_h = rb;
+    end else begin : g_rxh
+        initial if (RXH != 1 || MU_EN == 0 || RX_SRAM == 0 || NATIVE32 == 0 || NL != 4) $fatal(1, "RXH 1 needs MU_EN, RX_SRAM, NATIVE32, AB_EN 1");
+        wire [NL-1:0] rne_q;
+        for (genvar t = 0; t < NL; t = t + 1) begin : g_l
+            wire [H-1:0] hq;
+            ot_s81hd_lep_rxh_st #(.W(H)) u_st(.clk(clk), .d_i(rhd[t*(H+1)+:H]), .d_o(hq));
+`ifdef OT_S81HD_LEPK_MUT_RXHBIT
+            if (t == 1) begin : g_mut assign rhd_h[t*(H+1)+:H] = {hq[H-1:41], rhd[t*(H+1)+40], hq[39:0]}; end   // MUTANT: lane 1 bit 40 skips the rank
+            else begin : g_ok assign rhd_h[t*(H+1)+:H] = hq; end
+`else
+            assign rhd_h[t*(H+1)+:H] = hq;
+`endif
+            assign rhd_h[t*(H+1)+H] = 1'b0;            // lane sequence-parity bit: g_rxm reads [H-1:0] of each lane only
+        end
+        wire [43:0] cd = {rtagx, rhkx, rringx, rnex, rhk, ring_meta_regions, rne_return, rne};
+        wire [43:0] cq;
+        ot_s81hd_lep_rxh_ctl #(.W(44)) u_ctl(.clk(clk), .rn(rnx), .d_i(cd), .d_o(cq));
+`ifdef OT_S81HD_LEPK_MUT_RXHSKEW
+        assign {rtagx_h, rhkx_h, rringx_h, rnex_h} = {rtagx, rhkx, rringx, rnex};   // MUTANT: look-ahead selects skip the rank
+        assign {rhk_h, ring_meta_regions_h, rne_return_h, rne_q} = cq[27:0];
+`else
+        assign {rtagx_h, rhkx_h, rringx_h, rnex_h, rhk_h, ring_meta_regions_h, rne_return_h, rne_q} = cq;
+`endif
+        assign relp_h = {rne_q[2] && rne_q[3], rne_q[0] && rne_q[1]};
+        assign rpb_h = relp_h[1] && !relp_h[0];
+        assign active_ring_flags_h = rpb_h ? ring_meta_regions_h[2*4+:4] : ring_meta_regions_h[0+:4];
+        assign rb_h = rpb_h ? {rhd_h[4*H+2:3*H+3], rhd_h[3*H+1:2*H+2]} : {rhd_h[2*H:H+1], rhd_h[H-1:0]};
+    end endgenerate
     generate if (MU_EN == 0) begin : g_rxr
     if(SAFE_STD) begin:g_std_output
       localparam integer SG=69,CG=(SG+7)/8;
@@ -842,16 +886,16 @@ module ot_s81hd_lep_core_nr #(
     reg mrv, mcol, mwv; reg [1103:0] mrd, mwd; reg [31:0] rtq;
     always @(posedge clk) mrd <= ml_rd;
     // MU-S81-2/RX: selects straight from the show-ahead flops.  Per pair X: gX = X releases a ring beat (pair A wins a
-    // collision, as rpb), lX = its pre-decoded land bit (lane 0 XB / XQ ring beat && lane 1 tag && land); sX = deliver
+    // collision, as rpb_h), lX = its pre-decoded land bit (lane 0 XB / XQ ring beat && lane 1 tag && land); sX = deliver
     // X's beat on ri, sM = deliver the replayed beat (cut-through wins a collision, mcol fault as before).
-    wire [1103:0] bA = {rhd[2*H:H+1], rhd[H-1:0]};     // pair A frame (lane 1 high half, lane 0 low half)
-    wire lA = rhk[0] && rhk[1];
-    wire gA = relp[0] && ring_meta_regions[0];
+    wire [1103:0] bA = {rhd_h[2*H:H+1], rhd_h[H-1:0]};     // pair A frame (lane 1 high half, lane 0 low half)
+    wire lA = rhk_h[0] && rhk_h[1];
+    wire gA = relp_h[0] && ring_meta_regions_h[0];
     wire [1103:0] bB; wire lB, gB;
     if (NL == 4) begin : g_mb
-        assign bB = {rhd[4*H+2:3*H+3], rhd[3*H+1:2*H+2]};
-        assign lB = rhk[2] && rhk[3];
-        assign gB = rpb && ring_meta_regions[2*4];               // rpb: nz flops only
+        assign bB = {rhd_h[4*H+2:3*H+3], rhd_h[3*H+1:2*H+2]};
+        assign lB = rhk_h[2] && rhk_h[3];
+        assign gB = rpb_h && ring_meta_regions_h[2*4];               // rpb_h: nz flops only
     end else begin : g_nmb
         assign bB = 1104'd0; assign lB = 1'b0; assign gB = 1'b0;
     end
@@ -862,14 +906,14 @@ module ot_s81hd_lep_core_nr #(
 `endif
     wire rr_land = (gA && ldA) || (gB && ldB);
     wire rr_dlv = (gA && !ldA) || (gB && !ldB);
-    wire [1103:0] db = rr_dlv ? rb : mrd;               // delivered beat (tag fields only: rtq)
+    wire [1103:0] db = rr_dlv ? rb_h : mrd;               // delivered beat (tag fields only: rtq)
     // rid: one AO222 per bit, {sA, sB, sM} duplicated per column group (keep) so each select net drives ~70 bits
     localparam integer OREP = (RX_SRAM!=0)?((1103+15)/16):16, OW = (1103 + OREP - 1) / OREP;
     wire [1103:1] nrid;
     // strip only TAGGED beats (XB / XQ ring beat with the tag bit, SPEC (a)): any other beat is delivered bit-exact.
-    // Lane-0 kind is pre-decoded per FIFO row (rhk[0] / rhk[2]); the tag bit is a show-ahead flop; the replay word a pin flop.
-    wire tA = rhk[0] && bA[TG];
-    wire tB = (NL == 4) ? (rhk[NL - 2] && bB[TG]) : 1'b0;
+    // Lane-0 kind is pre-decoded per FIFO row (rhk_h[0] / rhk_h[2]); the tag bit is a show-ahead flop; the replay word a pin flop.
+    wire tA = rhk_h[0] && bA[TG];
+    wire tB = (NL == 4) ? (rhk_h[NL - 2] && bB[TG]) : 1'b0;
     wire tM = tagd(mrd);
 `ifdef OT_S81SL_LEP_MUT_STRIPALL
     wire [1103:0] sbA = strip(bA), sbB = strip(bB), sbM = strip(mrd);   // MUTANT: strips every beat (pre-fix behaviour)
@@ -879,47 +923,47 @@ module ot_s81hd_lep_core_nr #(
     // With SRAM, next-head metadata is available alongside next read address. Register the
     // delivery selects there, one reset-distinct copy per<=16outputbits. Data still reaches rid
     // on the original edge; no global1103load select or extra receive stage remains.
-    wire a_rel_next=rnex[0] && rnex[1];
-    wire a_ring_next=a_rel_next && rringx[0];
+    wire a_rel_next=rnex_h[0] && rnex_h[1];
+    wire a_ring_next=a_rel_next && rringx_h[0];
     wire b_ring_next;
     wire b_land_next, b_tag_next;
     if(NL==4) begin:g_b_lookahead
-        assign b_ring_next=rnex[2] && rnex[3] && !a_rel_next && rringx[2];
-        assign b_land_next=rhkx[2] && rhkx[3];
-        assign b_tag_next=rhkx[2] && rtagx[3];
+        assign b_ring_next=rnex_h[2] && rnex_h[3] && !a_rel_next && rringx_h[2];
+        assign b_land_next=rhkx_h[2] && rhkx_h[3];
+        assign b_tag_next=rhkx_h[2] && rtagx_h[3];
     end else begin:g_no_b_lookahead
         assign b_ring_next=1'b0; assign b_land_next=1'b0; assign b_tag_next=1'b0;
     end
 `ifdef OT_S81SL_LEP_MUT_LANDCUT
     wire a_cut_next=a_ring_next, b_cut_next=b_ring_next;
 `else
-    wire a_cut_next=a_ring_next && !(rhkx[0] && rhkx[1]);
+    wire a_cut_next=a_ring_next && !(rhkx_h[0] && rhkx_h[1]);
     wire b_cut_next=b_ring_next && !b_land_next;
 `endif
 `ifdef OT_S81SL_LEP_MUT_STRIPALL
     wire a_tag_next=1'b1, bt_next=1'b1, m_tag_next=1'b1;
 `else
-    wire a_tag_next=rhkx[0] && rtagx[1];
+    wire a_tag_next=rhkx_h[0] && rtagx_h[1];
     wire bt_next=b_tag_next;
     wire m_tag_next=tagd(ml_rd);
 `endif
     localparam integer CG=(OREP+7)/8;
     wire [CG*6-1:0] control_local;
-    wire [CG-1:0] pb_next;                            // L5B-LEPMU: rpb one edge early, per control group (AB_EN 1)
+    wire [CG-1:0] pb_next;                            // L5B-LEPMU: rpb_h one edge early, per control group (AB_EN 1)
     if(RX_SRAM!=0) begin:g_control_groups
         for(genvar cg=0;cg<CG;cg=cg+1) begin:g_group
-            (* keep=1 *) ot_s81sl_lep_rx_control u_ctrl(.ne({{(4-NL){1'b0}},rnex}),.ring({{(4-NL){1'b0}},rringx}),
-                .hk({{(4-NL){1'b0}},rhkx}),.tag({{(4-NL){1'b0}},rtagx}),
+            (* keep=1 *) ot_s81sl_lep_rx_control u_ctrl(.ne({{(4-NL){1'b0}},rnex_h}),.ring({{(4-NL){1'b0}},rringx_h}),
+                .hk({{(4-NL){1'b0}},rhkx_h}),.tag({{(4-NL){1'b0}},rtagx_h}),
                 .mv(ml_rv),.mt({ml_rd[TG],ml_rd[3:0]}),.sel(control_local[cg*6+:6]));
             if(NATIVE32!=0 && NL==4) begin:g_pb
-                (* keep=1 *) ot_s81sl_lep_bsel_next u_pb(.ne(rnex),.q(pb_next[cg]));
+                (* keep=1 *) ot_s81sl_lep_bsel_next u_pb(.ne(rnex_h),.q(pb_next[cg]));
             end else begin:g_npb assign pb_next[cg]=1'b0; end
         end
     end else begin:g_no_control_groups
         assign pb_next='0;
     end
-    // L5B-LEPMU 10-21 (native census: rpb drove the 1,104-bit mwd pair select, 1,109 / 1,102 loads): at NATIVE32 + AB_EN 1
-    // mwd takes per-16-bit-group registered copies of rpb (pb_r <= rpb's next value), exact and same edge.
+    // L5B-LEPMU 10-21 (native census: rpb_h drove the 1,104-bit mwd pair select, 1,109 / 1,102 loads): at NATIVE32 + AB_EN 1
+    // mwd takes per-16-bit-group registered copies of rpb_h (pb_r <= rpb_h's next value), exact and same edge.
     wire [1103:0] mwd_n;
     wire [OREP-1:0] pb_g;
     for (c = 0; c < OREP; c = c + 1) begin : g_o
@@ -935,7 +979,7 @@ module ot_s81hd_lep_core_nr #(
                         pb_r<=pb_next[c/8];
                     end
                 assign pb_g[c]=pb_r;
-                assign mwd_n[HI-1:LO]=(NATIVE32!=0 && NL==4) ? (pb_r ? bB[HI-1:LO] : bA[HI-1:LO]) : rb[HI-1:LO];
+                assign mwd_n[HI-1:LO]=(NATIVE32!=0 && NL==4) ? (pb_r ? bB[HI-1:LO] : bA[HI-1:LO]) : rb_h[HI-1:LO];
                 genvar ob;
                 for(ob=LO;ob<HI;ob=ob+1) begin:g_bit
                     wire da, dbit, dm;
@@ -952,7 +996,7 @@ module ot_s81hd_lep_core_nr #(
             (* keep = "true" *) wire sM = mrv && !(gA && !ldA) && !(gB && !ldB);
             assign nrid[HI-1:LO] = ({(HI - LO){sA}} & sbA[HI-1:LO]) | ({(HI - LO){sB}} & sbB[HI-1:LO])
                                  | ({(HI - LO){sM}} & sbM[HI-1:LO]);
-            assign pb_g[c]=1'b0; assign mwd_n[HI-1:LO]=rb[HI-1:LO];
+            assign pb_g[c]=1'b0; assign mwd_n[HI-1:LO]=rb_h[HI-1:LO];
             end
         end
     end
@@ -961,8 +1005,8 @@ module ot_s81hd_lep_core_nr #(
         mwd[1103:1] <= mwd_n[1103:1];
 
     end
-    // L5B-LEPMU: the return tag / code bits and mwd[0] take the released frame through their own kept copies of rpb
-    // (3 x ot_s81sl_lep_vcopy of pb_next, <= 16 bits each) at NATIVE32 + AB_EN 1; rb elsewhere.
+    // L5B-LEPMU: the return tag / code bits and mwd[0] take the released frame through their own kept copies of rpb_h
+    // (3 x ot_s81sl_lep_vcopy of pb_next, <= 16 bits each) at NATIVE32 + AB_EN 1; rb_h elsewhere.
     wire [1103:0] rbx;
     if(NATIVE32!=0 && RX_SRAM!=0 && NL==4) begin:g_rbx
       wire [2:0] pbx;
@@ -973,9 +1017,9 @@ module ot_s81hd_lep_core_nr #(
       assign rbx[TG+18+:15]=pbx[1]?bB[TG+18+:15]:bA[TG+18+:15];
       assign rbx[TG+1:TG]=pbx[2]?bB[TG+1:TG]:bA[TG+1:TG];
       assign rbx[3:0]=pbx[2]?bB[3:0]:bA[3:0];
-      assign rbx[TG-1:4]=rb[TG-1:4]; assign rbx[1103:TG+33]=rb[1103:TG+33];
+      assign rbx[TG-1:4]=rb_h[TG-1:4]; assign rbx[1103:TG+33]=rb_h[1103:TG+33];
     end else begin:g_nrbx
-      assign rbx=rb;
+      assign rbx=rb_h;
     end
     always @(posedge clk) mwd[0] <= rbx[0];
     if(RT_EN==0) begin:g_nort
@@ -985,8 +1029,8 @@ module ot_s81hd_lep_core_nr #(
       wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
       for(genvar rt=0;rt<4;rt=rt+1) begin:g_byte
         wire [7:0] next_tag;
-        (* keep=1 *) ot_s81sl_lep_return8 u_tag(.ne({{(4-NL){1'b0}},rne_return}),
-          .ring({((NL==4)?ring_meta_regions[2*4+3]:1'b0),ring_meta_regions[3]}),.land({ldB,ldA}),.ring_code({rbx[TG],rbx[3:1],active_ring_flags[2]}),
+        (* keep=1 *) ot_s81sl_lep_return8 u_tag(.ne({{(4-NL){1'b0}},rne_return_h}),
+          .ring({((NL==4)?ring_meta_regions_h[2*4+3]:1'b0),ring_meta_regions_h[3]}),.land({ldB,ldA}),.ring_code({rbx[TG],rbx[3:1],active_ring_flags_h[2]}),
           .replay_code({mrd[TG],mrd[3:0]}),.ring_data(ring_tag[rt*8+:8]),
           .replay_data(replay_tag[rt*8+:8]),.q(next_tag));
         always @(posedge clk) rtq[rt*8+:8]<=next_tag;
@@ -1209,7 +1253,7 @@ endmodule
 
 module ot_s81hd_lep_idx_nr #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1, parameter [15:0] TXI = 16'h0000
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0, parameter integer IDX_EN = 1, parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1243,7 +1287,7 @@ module ot_s81hd_lep_idx_nr #(
     output wire [275:0]    cb
 );
     ot_s81hd_lep_core_nr #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
-        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(IDX_EN), .TXI(TXI), .RXH(RXH)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1533,4 +1577,16 @@ module ot_s81hd_lep_txi_st #(parameter integer W = 553, parameter integer NV = 1
     // one TXI stage: the pushes clear on the lane reset, the word is reset-free
     always @(posedge clk or negedge rn) if (!rn) v_o <= '0; else v_o <= v_i;
     always @(posedge clk) d_o <= d_i;
+endmodule
+
+// HEAD-PLAN-R4 11-17: the RXH rank leaves (kept: lanes 0 / 2 and 1 / 3 can hold equal head words; flattened (* keep *) regs
+// would fold across lanes as in DIE-HEAD-85).  Data is reset-free; the control copies clear on the RX reset.
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_rxh_st #(parameter integer W = 552) (input wire clk, input wire [W-1:0] d_i, output reg [W-1:0] d_o);
+    always @(posedge clk) d_o <= d_i;
+endmodule
+
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_rxh_ctl #(parameter integer W = 44) (input wire clk, rn, input wire [W-1:0] d_i, output reg [W-1:0] d_o);
+    always @(posedge clk or negedge rn) if (!rn) d_o <= '0; else d_o <= d_i;
 endmodule

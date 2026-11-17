@@ -15,6 +15,86 @@ def module(text,name):
  if not m:raise ValueError('missing exact source module '+name)
  return m.group()
 
+# HEAD-PLAN-R4 11-17 (NF15f, opt-in RXH; default 0 = every net and flop of the delivery unchanged): RXH 1 = one registered
+# rank on the shared RX head word between the four RX FIFO heads and the ring delivery (rid) / landing (mwd) registers.
+# The ring delivery block g_rxm reads the head word and every ring-side term aligned with it (pair release, ring / land /
+# tag metadata, the look-ahead selects) through *_h names; RXH 0 makes them plain aliases, RXH 1 the same one register.
+RXH_NAMES=['rhd','rhk','relp','rpb','ring_meta_regions','active_ring_flags','rnex','rringx','rhkx','rtagx','rne_return','rb']
+RXH_DECL=r"""
+    // HEAD-PLAN-R4 11-17 NF15f (opt-in RXH, default 0 = the *_h names below are aliases of the originals, no added cycle):
+    // RXH 1 puts ONE registered rank on the shared RX head word (rhd: 4 lanes x 552 data bits = 2,208 flops in four kept
+    // leaves g_rxh.g_l[t].u_st, placeable mid-trunk) between the RX FIFO heads and the ring delivery (rid) / landing (mwd)
+    // registers.  Every ring-side term the delivery block g_rxm reads with that word -- pair release (rne), ring / land /
+    // tag metadata, the look-ahead select inputs, the return-tag non-empty flags -- takes the same one register (kept leaf
+    // g_rxh.u_ctl, 44 control flops cleared by rnx), so ri, mu_rt and ml_wv / ml_wd move by exactly +1 edge together: same
+    // beats, same order, same tags.  The replay word (ml_rv / ml_rd) is not delayed: a ring beat behaves as if its K link were
+    // one cycle longer (as one more KRX stage, without the credit round trip).  FIFO pops, credits, rxv and the perr / pair
+    // parity checks still read the undelayed head.  Supported at MU_EN 1 + RX_SRAM 1 + NATIVE32 1 + AB_EN 1 (hd_lep0N) only.
+    wire [NL*(H+1)-1:0] rhd_h; wire [NL-1:0] rhk_h, rne_return_h, rnex_h, rringx_h, rhkx_h, rtagx_h;
+    wire [NL*4-1:0] ring_meta_regions_h; wire [1:0] relp_h; wire rpb_h; wire [3:0] active_ring_flags_h; wire [1103:0] rb_h;
+    generate if (RXH == 0) begin : g_rxh0
+        assign rhd_h = rhd; assign rhk_h = rhk; assign rne_return_h = rne_return; assign rnex_h = rnex;
+        assign rringx_h = rringx; assign rhkx_h = rhkx; assign rtagx_h = rtagx; assign ring_meta_regions_h = ring_meta_regions;
+        assign relp_h = relp; assign rpb_h = rpb; assign active_ring_flags_h = active_ring_flags; assign rb_h = rb;
+    end else begin : g_rxh
+        initial if (RXH != 1 || MU_EN == 0 || RX_SRAM == 0 || NATIVE32 == 0 || NL != 4) $fatal(1, "RXH 1 needs MU_EN, RX_SRAM, NATIVE32, AB_EN 1");
+        wire [NL-1:0] rne_q;
+        for (genvar t = 0; t < NL; t = t + 1) begin : g_l
+            wire [H-1:0] hq;
+            ot_s81hd_lep_rxh_st #(.W(H)) u_st(.clk(clk), .d_i(rhd[t*(H+1)+:H]), .d_o(hq));
+`ifdef OT_S81HD_LEPK_MUT_RXHBIT
+            if (t == 1) begin : g_mut assign rhd_h[t*(H+1)+:H] = {hq[H-1:41], rhd[t*(H+1)+40], hq[39:0]}; end   // MUTANT: lane 1 bit 40 skips the rank
+            else begin : g_ok assign rhd_h[t*(H+1)+:H] = hq; end
+`else
+            assign rhd_h[t*(H+1)+:H] = hq;
+`endif
+            assign rhd_h[t*(H+1)+H] = 1'b0;            // lane sequence-parity bit: g_rxm reads [H-1:0] of each lane only
+        end
+        wire [43:0] cd = {rtagx, rhkx, rringx, rnex, rhk, ring_meta_regions, rne_return, rne};
+        wire [43:0] cq;
+        ot_s81hd_lep_rxh_ctl #(.W(44)) u_ctl(.clk(clk), .rn(rnx), .d_i(cd), .d_o(cq));
+`ifdef OT_S81HD_LEPK_MUT_RXHSKEW
+        assign {rtagx_h, rhkx_h, rringx_h, rnex_h} = {rtagx, rhkx, rringx, rnex};   // MUTANT: look-ahead selects skip the rank
+        assign {rhk_h, ring_meta_regions_h, rne_return_h, rne_q} = cq[27:0];
+`else
+        assign {rtagx_h, rhkx_h, rringx_h, rnex_h, rhk_h, ring_meta_regions_h, rne_return_h, rne_q} = cq;
+`endif
+        assign relp_h = {rne_q[2] && rne_q[3], rne_q[0] && rne_q[1]};
+        assign rpb_h = relp_h[1] && !relp_h[0];
+        assign active_ring_flags_h = rpb_h ? ring_meta_regions_h[2*4+:4] : ring_meta_regions_h[0+:4];
+        assign rb_h = rpb_h ? {rhd_h[4*H+2:3*H+3], rhd_h[3*H+1:2*H+2]} : {rhd_h[2*H:H+1], rhd_h[H-1:0]};
+    end endgenerate
+"""
+RXH_LEAVES=r"""
+// HEAD-PLAN-R4 11-17: the RXH rank leaves (kept: lanes 0 / 2 and 1 / 3 can hold equal head words; flattened (* keep *) regs
+// would fold across lanes as in DIE-HEAD-85).  Data is reset-free; the control copies clear on the RX reset.
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_rxh_st #(parameter integer W = 552) (input wire clk, input wire [W-1:0] d_i, output reg [W-1:0] d_o);
+    always @(posedge clk) d_o <= d_i;
+endmodule
+
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_rxh_ctl #(parameter integer W = 44) (input wire clk, rn, input wire [W-1:0] d_i, output reg [W-1:0] d_o);
+    always @(posedge clk or negedge rn) if (!rn) d_o <= '0; else d_o <= d_i;
+endmodule"""
+
+def rxh_core(core):
+ old="    parameter [15:0]  TXI = 16'h0000   // DIE-HEAD-84: per-lane TX ingress stages (see g_tx); 0 = none\n) ("
+ new=("    parameter [15:0]  TXI = 16'h0000,  // DIE-HEAD-84: per-lane TX ingress stages (see g_tx); 0 = none\n"
+      "    parameter integer RXH = 0          // HEAD-PLAN-R4 NF15f: RX head rank before ri / ml_wd (see g_rxh); 0 = none\n) (")
+ if core.count(old)!=1:raise ValueError('RXH parameter pattern changed')
+ core=core.replace(old,new)
+ anchor='    wire [1103:0] rb = {h1[H-1:0], h0[H-1:0]};          // the released frame (ring beat when bit 0)\n'
+ if core.count(anchor)!=1:raise ValueError('RXH anchor pattern changed')
+ core=core.replace(anchor,anchor+RXH_DECL.lstrip('\n'))
+ a=core.index('    end else begin : g_rxm\n');b=core.index('    assign ml_wv = mwv; assign ml_wd = mwd; assign mcol_w = mcol;\n',a)
+ blk=core[a:b]
+ if re.search(r'\brne\b',blk):raise ValueError('g_rxm reads rne directly: extend RXH_NAMES')
+ for n in RXH_NAMES:
+  blk,k=re.subn(r'\b'+n+r'\b',n+'_h',blk)
+  if k==0:raise ValueError('RXH: g_rxm no longer reads '+n)
+ return core[:a]+blk+core[b:]
+
 def derive(root):
  src=[(root/p).read_text() for p in SOURCES]
  core=module(src[0],'ot_s81sl_lep_core').replace('module ot_s81sl_lep_core','module ot_s81hd_lep_core_nr',1)
@@ -67,6 +147,10 @@ def derive(root):
  idx=idx.replace('parameter integer IDX_EN = 1\n',"parameter integer IDX_EN = 1, parameter [15:0] TXI = 16'h0000\n",1)
  if '.IDX_EN(IDX_EN)) u' not in idx:raise ValueError('idx pattern changed')
  idx=idx.replace('.IDX_EN(IDX_EN)) u','.IDX_EN(IDX_EN), .TXI(TXI)) u',1)
+ core=rxh_core(core)
+ idx=idx.replace("parameter [15:0] TXI = 16'h0000\n","parameter [15:0] TXI = 16'h0000, parameter integer RXH = 0\n",1)
+ idx=idx.replace('.TXI(TXI)) u','.TXI(TXI), .RXH(RXH)) u',1)
+ if '.RXH(RXH)) u' not in idx or 'parameter integer RXH = 0' not in idx:raise ValueError('idx RXH pattern changed')
  txi=r"""module ot_s81hd_lep_txi #(parameter integer W = 553, parameter integer NG = 18, parameter integer N = 0) (
     input  wire          clk, rn,
     input  wire          psh_i, input wire [NG-1:0] pg_i, input wire [W-1:0] wd_i,
@@ -126,10 +210,11 @@ endmodule"""
              changes=['head-only module names','real512x128_m4_r0c0 instead of tied-repair r2c2','no data/control/credit/latency change',
                       'MU TX tag bit 0 = constant wire (no constant-load flop; LEC safe form, 11-05)',
                       'opt-in TXI per-lane TX ingress stages (DIE-HEAD-84 11-07; default 0 = no added cycle)',
-                      'MU landing slot index wsi/rsi = (NS>1) ? ws/rs : 0 (no X array index; LEC safe form, 11-09)'],added_cycles=0,
+                      'MU landing slot index wsi/rsi = (NS>1) ? ws/rs : 0 (no X array index; LEC safe form, 11-09)',
+                      'opt-in RXH RX head rank before ri / ml_wd (HEAD-PLAN-R4 NF15f 11-17; default 0 = no added cycle)'],added_cycles=0,
              physical='new head provider; no inherited physical view or signoff')
  header='`timescale 1ns/1ps\n// Generated by tools/s81_head/head_lep_nr_sources.py; do not edit.\n'
- return header+core+'\n\n'+idx+'\n\n'+mem+'\n\n'+land+'\n\n'+show+'\n\n'+txi+'\n',record
+ return header+core+'\n\n'+idx+'\n\n'+mem+'\n\n'+land+'\n\n'+show+'\n\n'+txi+'\n'+RXH_LEAVES+'\n',record
 
 if __name__=='__main__':
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--build-macro',action='store_true');ap.add_argument('--out',type=Path,default=ROOT/'rtl/dsrom_sys/s81_head/generated/ot_s81hd_lep_nr.sv');ap.add_argument('--record',type=Path,required=True);ap.add_argument('--check',action='store_true');a=ap.parse_args()
