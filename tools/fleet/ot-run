@@ -1391,7 +1391,7 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun", host=None):
     if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
     pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(second_roots(host)))} '
-          f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
+          f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_SMARGIN={SCRATCH_SECOND_MARGIN_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
     return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={sfloor(host)} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
             f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '
             '[ -n "$pl" ] && printf "%s\n" "$pl" | head -20 >&2; '

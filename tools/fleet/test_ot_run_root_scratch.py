@@ -19,6 +19,7 @@ from test_ot_run_scratch_disk import fake_bin, load  # noqa: E402
 
 S3 = '/srv/opentallas-scratch3'
 _env = {k: v for k, v in os.environ.items() if not k.startswith('OT_RUN_ROOT_SCRATCH')}
+_env['OT_RUN_SCRATCH_SECOND_MARGIN_GB'] = '1000000'   # these tests exercise the below-floor rule; the margin rule is in test_ot_run_job_dir_placement.py
 _env['OT_RUN_ROOT_SCRATCH_ROOTS'] = '/srv/opentallas-scratch3'   # ot-run's default is now empty (authorized roots only): these tests exercise the scratch3 path
 with mock.patch.dict(os.environ, _env, clear=True):   # ROOTSCR-INTEL 11-05: on by default, per-host root floors
     m = load()
@@ -219,7 +220,7 @@ class Placement(unittest.TestCase):
         nxt = self.r[1] + '/claude/lane/newrun'
         cmd = ['bash', '-c', f'mkdir -p {nxt} && touch {nxt}/x']
         code = m.SCRATCH_PLACE_PY.replace('/srv/opentallas-scratch', self.base + '/srv/opentallas-scratch')
-        env = dict(OT_RUN_PLACE_ROOTS=' '.join(self.r), OT_RUN_PLACE_SECOND=self.r[2], OT_RUN_PLACE_RFLOOR='500',
+        env = dict(OT_RUN_PLACE_ROOTS=' '.join(self.r), OT_RUN_PLACE_SECOND=self.r[2], OT_RUN_PLACE_RFLOOR='500', OT_RUN_PLACE_SMARGIN='1000000',
                    OT_RUN_PLACE_PIN=pin, OT_RUN_SCRATCH_DISK_FLOOR_GB='50')
         argv = ['x', self.r[1] + '/claude/lane', base64.b64encode(json.dumps(cmd).encode()).decode()]
         err = io.StringIO()
