@@ -97,3 +97,6 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 
 ## CODEX 00:42 PST Nov17
 - G4 explicit DPL completed EXIT0; final3_place.odb/SDC ready, actual row/site/overlap0. Stopped kit resume now startcts (synth/floorplan/place reused), earlier resume archived. Canonical CTS r5 launched E8 client2193663 ~/s81-serdes-r2/g4-cts-r5.out. NO route/adoption; clock keepout/feed still blocked. H4 CTS still cts_post, H3p DRT iteration0 70%; both preserve live jobs. No final signoff/LEC verdict claimed.
+
+## 00:4x PST 11-17
+- H3p GRT: setup ws +103.41 tns 0, hold ws +0.096 tns 0, 0 timing violations, overflow 0, antenna 0. DRV: boot_release slew -81/-57/-45/-39/-31 (advisory). DRT running (E8 unit oth-ubuntu-1999210).
