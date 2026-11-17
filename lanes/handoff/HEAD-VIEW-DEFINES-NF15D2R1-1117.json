@@ -1,0 +1,256 @@
+{
+ "schema": "opentallas.view_define_check.v1",
+ "errors": [
+  "VIEW_DEFINES ot_s81_kp4_dchn (results/head_core_clockfreeze_release/kp4_e13a_corner/ot_s81_kp4_dchn_tt.lib): declares no bind_defines but reads shared define(s) OT_S81_DCHN_FACE (die has none; also read by OT_S81_DCHN_FACE: ot_s81_kp4_ddly,tb_s81_kp4_eq): record the set it was built with in its view.json",
+  "VIEW_DEFINES ot_s81hd_he_epc (/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/prep/eco99_south_g2/i1/views/ot_s81hd_he_epc_tt.lib): declares no bind_defines but reads shared define(s) OT_COLL_NATIVE32,OT_COLL_NATIVE32_OFF,OT_S81PH_EP_MWR,OT_S81PH_EP_RXPIPE,OT_S81PH_EP_TOREG (die has none; also read by OT_COLL_NATIVE32: ot_s81ph_coll_lane_safe4,ot_s81ph_coll_lane_safe4_hd,ot_s81ph_link_ep_safe4; OT_COLL_NATIVE32_OFF: ot_s81ph_link_ep_safe4; OT_S81PH_EP_MWR: dsfd_coll_lane_e,dsfd_coll_lane_e_ntf,dsfd_coll_lane_e_safe2,dsfd_coll_lane_w; OT_S81PH_EP_RXPIPE: dsfd_coll_lane_e,dsfd_coll_lane_e_ntf,dsfd_): record the set it was built with in its view.json",
+  "VIEW_DEFINES ot_s81hd_lep_pair (results/head_lep_pair_views_vE_1106/ot_s81hd_lep_pair_tt.lib): declares no bind_defines but reads shared define(s) OT_COLL_NATIVE32,OT_COLL_NATIVE32_OFF,OT_S81PH_EP_MWR,OT_S81PH_EP_RXPIPE,OT_S81PH_EP_TOREG (die has none; also read by OT_COLL_NATIVE32: ot_s81hd_he_epc,ot_s81ph_coll_lane_safe4_hd,ot_s81ph_link_ep_safe4_hd; OT_COLL_NATIVE32_OFF: ot_s81ph_link_ep_safe4_hd; OT_S81PH_EP_MWR: dsfd_coll_lane_e,dsfd_coll_lane_e_ntf,dsfd_coll_lane_e_safe2,dsfd_coll_lane_w; OT_S81PH_EP_RXPIPE: dsfd_coll_lane_e,dsfd_coll_lane_e_ntf,dsfd_col): record the set it was built with in its view.json"
+ ],
+ "advisory": [],
+ "views": [
+  {
+   "module": "ot_s81_kp4_dchn",
+   "lib": "results/head_core_clockfreeze_release/kp4_e13a_corner/ot_s81_kp4_dchn_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [
+    "OT_S81_DCHN_FACE"
+   ],
+   "shared": {
+    "OT_S81_DCHN_FACE": [
+     "ot_s81_kp4_ddly",
+     "tb_s81_kp4_eq"
+    ]
+   },
+   "types": [
+    "hd_serdes"
+   ],
+   "in_rtl": true,
+   "verdict": "UNDECLARED_SHARED"
+  },
+  {
+   "module": "ot_s81hd_elemA_cv",
+   "lib": "results/head_core_clockfreeze_release/elemA_corner/ot_s81hd_elemA_cv_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_tile"
+   ],
+   "in_rtl": true,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_s81hd_elemB_cv",
+   "lib": "results/head_core_clockfreeze_release/elemB_corner/ot_s81hd_elemB_cv_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_tile"
+   ],
+   "in_rtl": true,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_s81hd_he_epc",
+   "lib": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15d2_pgr1_d1/physical/die_plan/s81_head/prep/eco99_south_g2/i1/views/ot_s81hd_he_epc_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81PH_EP_MWR",
+    "OT_S81PH_EP_RXPIPE",
+    "OT_S81PH_EP_TOREG"
+   ],
+   "shared": {
+    "OT_COLL_NATIVE32": [
+     "ot_s81ph_coll_lane_safe4",
+     "ot_s81ph_coll_lane_safe4_hd",
+     "ot_s81ph_link_ep_safe4"
+    ],
+    "OT_COLL_NATIVE32_OFF": [
+     "ot_s81ph_link_ep_safe4"
+    ],
+    "OT_S81PH_EP_MWR": [
+     "dsfd_coll_lane_e",
+     "dsfd_coll_lane_e_ntf",
+     "dsfd_coll_lane_e_safe2",
+     "dsfd_coll_lane_w"
+    ],
+    "OT_S81PH_EP_RXPIPE": [
+     "dsfd_coll_lane_e",
+     "dsfd_coll_lane_e_ntf",
+     "dsfd_coll_lane_e_safe2",
+     "dsfd_coll_lane_w"
+    ],
+    "OT_S81PH_EP_TOREG": [
+     "dsfd_coll_lane_e",
+     "dsfd_coll_lane_e_ntf",
+     "dsfd_coll_lane_e_safe2",
+     "dsfd_coll_lane_w"
+    ]
+   },
+   "types": [
+    "hd_host_e"
+   ],
+   "in_rtl": true,
+   "verdict": "UNDECLARED_SHARED"
+  },
+  {
+   "module": "ot_s81hd_lep_pair",
+   "lib": "results/head_lep_pair_views_vE_1106/ot_s81hd_lep_pair_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81PH_EP_MWR",
+    "OT_S81PH_EP_RXPIPE",
+    "OT_S81PH_EP_TOREG"
+   ],
+   "shared": {
+    "OT_COLL_NATIVE32": [
+     "ot_s81hd_he_epc",
+     "ot_s81ph_coll_lane_safe4_hd",
+     "ot_s81ph_link_ep_safe4_hd"
+    ],
+    "OT_COLL_NATIVE32_OFF": [
+     "ot_s81ph_link_ep_safe4_hd"
+    ],
+    "OT_S81PH_EP_MWR": [
+     "dsfd_coll_lane_e",
+     "dsfd_coll_lane_e_ntf",
+     "dsfd_coll_lane_e_safe2",
+     "dsfd_coll_lane_w"
+    ],
+    "OT_S81PH_EP_RXPIPE": [
+     "dsfd_coll_lane_e",
+     "dsfd_coll_lane_e_ntf",
+     "dsfd_coll_lane_e_safe2",
+     "dsfd_coll_lane_w"
+    ],
+    "OT_S81PH_EP_TOREG": [
+     "dsfd_coll_lane_e",
+     "dsfd_coll_lane_e_ntf",
+     "dsfd_coll_lane_e_safe2",
+     "dsfd_coll_lane_w"
+    ]
+   },
+   "types": [
+    "hd_lep0N"
+   ],
+   "in_rtl": true,
+   "verdict": "UNDECLARED_SHARED"
+  },
+  {
+   "module": "ot_sram_1r1w2c_256x64_m1",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_host_w",
+    "hd_mesh"
+   ],
+   "in_rtl": false,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_sram_1r1w2c_32x64_m1",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_host_e",
+    "hd_host_w",
+    "hd_mesh"
+   ],
+   "in_rtl": false,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_sram_1r1w2c_64x546_m1",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_serdes"
+   ],
+   "in_rtl": false,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_sram_1r1w_128x256_m1_r0c0",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r0c0/ot_sram_1r1w_128x256_m1_r0c0_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_lep0N"
+   ],
+   "in_rtl": false,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_sram_1r1w_32x128_m1_r0c0",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_lep0N"
+   ],
+   "in_rtl": false,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_sram_1r1w_32x546_m1",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_serdes"
+   ],
+   "in_rtl": true,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_sram_1r1w_512x128_m4_r0c0",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r0c0/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_lep0N"
+   ],
+   "in_rtl": false,
+   "verdict": "UNDECLARED"
+  },
+  {
+   "module": "ot_sram_1r1w_64x512_m1_r2c2",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+   "view_json": null,
+   "declared": null,
+   "reads": [],
+   "shared": {},
+   "types": [
+    "hd_ctl"
+   ],
+   "in_rtl": true,
+   "verdict": "UNDECLARED"
+  }
+ ]
+}
