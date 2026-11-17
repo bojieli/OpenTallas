@@ -28,3 +28,10 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/head-die-r (pack/smoke/proof),
 - READY claude/head-die-r-proto-ca-tools-1116 @2285df35d0a: repo proto_die.sh CA steps use the plan's own tree tools. After merge, run the HEAD die proto with repo proto_die.sh (PW=<tree>), not the lane-local proto_die_fdh.sh/ca_chain.sh (old d1 src).
 - Types successor: HEAD-TYPES-R2 (7 stand-ins).
 - r401: proto-ca-tools approved. keep_gen_hosts ported in-repo: READY claude/head-die-r-keep-gen-hosts-1116 @f10d24deb26 (stacked on 215be2f r398). After merge use ONLY tools/autopilot/apply_reviewed_tree_marker.py (--keep-gen-hosts; pilot hold applies, use --pilot-item or --no-pilot).
+## 21:xx PST update (resume)
+- Branches receipt-1116, proto-ca-tools-1116, keep-gen-hosts-1116 MERGED to main (19:17-19:27). Use in-repo apply_reviewed_tree_marker.py --keep-gen-hosts; 1116 tools-converge copy retired for my use.
+- 3 unowned stand-ins SIGNED+ARCHIVED-BOTH (sha verified both stores, provenance/ in each entry):
+  hd_ctl_n -> s81_head/hd_ctl_n__rminimal_1116 (same routed DB E8 type-hdctln/pregrt, ODB 41050a6e; legacy NOT SIGNED = setup -25.82/DRV/io_hold advisory; R-MINIMAL judge SIGNED, internal FF core_n 0).
+  hd_turn_b -> s81_head/hd_turn_b__viewexp_1116, hd_spn_wshim_tx -> s81_head/hd_spn_wshim_tx__viewexp_1116 (run dirs gone; V+SPEF regenerated from archived ODB, E7 head-die-r/standin3/export_view.{tcl,sh}).
+- NF15c real-view die STA real3: E7 head-die-r/nf15c_real3 (21 real, stand-ins ctl/host_w/lep0N/mesh/serdes), unit oth-ubuntu-2640521-1794891723, log intel2 ~/hdr/nf15c_real3.log, results run/die_sta.json.
+- NF15d plan event (u_chn 1548.0,109.44; FABLE-PD-HEAD-2045 lever 3): E10 head-die-r/pack_nf15d.py -> kw45/src_head_pin_d0ee4a2afb10_nf15d_pgr1 (+ fresh receipt results/head_native_release_nf15d, + main check.py/proto_die.sh). Gate head-die-r/gate_nf15d.sh (G0 no flag = auto-pick proof). Then Fable review + switch (--keep-gen-hosts).
