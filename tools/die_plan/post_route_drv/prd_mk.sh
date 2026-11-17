@@ -120,7 +120,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py hold_eco_internal_insert.tcl hold_eco_internal_plan.tcl output_net_identity.tcl; do cp --remove-destination $HERE/$f $OUT/; done
+for f in prd_obs_check.tcl prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py hold_eco_internal_insert.tcl hold_eco_internal_plan.tcl output_net_identity.tcl; do cp --remove-destination $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp --remove-destination "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 if [ "$CLOCK_INVENTORY" = 1 ]; then
@@ -147,6 +147,11 @@ python3 -I "$HERE/post_grt_chain.py" "$OUT"
   echo 'source /work/pg_connect.tcl'
   echo 'if {(![info exists ::env(OT_PG_STRICT)] || $::env(OT_PG_STRICT) ne "1") && [llength [[ord::get_db_block] getGlobalConnects]]} {ot_pg_connect_all post_route_drv}'
   echo 'ot_pg_require_bound post_route_drv'
+  # S81-COL-PRD-OBS (FABLE-PD-S81-0720 B1): the kit grt_post.tcl is replaced here, so its temporary-obstruction removal must run here:
+  # PG-track-truth GRT obstructions and PG-cell keepout blockages come off before 5_1_grt.odb is written, then the per-layer check.
+  echo 'if {[llength [info procs ot_pgtt_remove]]} { ot_pgtt_remove }'
+  echo 'if {[llength [info procs ot_pgcko_remove]]} { ot_pgcko_remove }'
+  echo 'if {[llength [info procs ot_prd_obs_check]]} { ot_prd_obs_check }'
   echo 'source /work/output_net_identity.tcl'
   echo 'ot_output_net_identity'
   echo 'if {[llength [info commands ot_clk_freeze_assert]]} {ot_clk_freeze_assert post_chain}'; } > $OUT/eco_post.tcl
