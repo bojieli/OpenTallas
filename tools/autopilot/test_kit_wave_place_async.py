@@ -141,7 +141,7 @@ class CancelVolume(unittest.TestCase):
             AP = SimpleNamespace(DRY=False, sh=lambda argv, timeout=None: calls.append(argv) or (0, "", ""),
                                  log=lambda *a: None)
             cfg = {"dies": {"s81": {"pilot_queue": True}}}
-            st = {"items": {"p": {"die": "s81", "item": "A", "status": "FAIL", "class": "FLOW", "updated": 10.0},
+            st = {"items": {"p": {"die": "s81", "item": "A", "status": "FAIL", "class": "PLAN", "updated": 10.0},
                             "v": {"die": "s81", "item": "B", "status": "RUNNING", "volume": "C", "started": 1.0,
                                   "unit": "kw-b", "dir": d}}}
             real = (KW.pilot_queue_mode, KW.pilot_classes_state, KW.pilot_key)
