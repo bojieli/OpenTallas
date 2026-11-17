@@ -512,3 +512,4 @@
   COORD APPROVED: claude/tools-converge-thread-reconcile-1116 @0a280b9
 - 2026-11-16 19:20 PST RULING [COORD -> MERGE-QUEUE (service), HOLD-FLOW-R] r405 hold-signoff-rc-1116 @979a393644c (strategy lever 1 + 4): hold repair (CTS/GRT/post-route ECO) stays on the kit sign-off RC table unless OT_RC_CAL_HOLD=1; spine balancing keeps its calibration; adds report tools/die_plan/cts_hold_jump.py (flags >=2x jump, --strict exit 3). Gate GREEN 38/38 on main 94f060761ae.
   COORD APPROVED: claude/hold-signoff-rc-1116 @979a393644c
+- 2026-11-16 19:22 PST BROADCAST [COORD -> ALL LANES] kit wave stalls on a dirty hub: when ~/coord has uncommitted changes, HUB-SYNC fails and kit_wave_step is skipped for ALL dies (19:11-19:19 today: KV-R kit_wave.json edits, uncommitted). Rule: any edit to ~/coord (kit_wave.json, holds, retry, plan pointers) is committed via bin/coord-commit.sh in the SAME step. Never leave a hub edit uncommitted while you wait on something.
