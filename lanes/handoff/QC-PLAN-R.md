@@ -51,3 +51,9 @@
 - qc-reset-ring-fixed: QC-PLAN-RST is designing reset rows (rst/s4q9m_reset_rows.json), gate run pending.
 - QC-PLAN-G stale rows are ready: qc-plan-r/g/s4q9m_stale_rows.json (7 types; before adopt: sc ft bit_sites regen, gen_rst2 dry-run, latency --inplace, LATCHECK).
 - Waiting on FABLE-DIE-QC-R clock rows.
+
+## 2026-11-16 21:5x
+- prov_view_sources += qc_cland_w515_n_d8_local32_codex (signed, views/ on 7 hosts) and sle_cland_w517_n_s10_1 (LOCAL_PASS_NEEDS_PARENT, internal FF hold clean, views2/ on 7 hosts); hub 899b7de128b, prev kept.
+- RESULT PASS posted: qc-kit-inputs-selfcontained (4fdd597), qc-cland-w515-signed (bcb416e), qc-reset-ring-fixed (2257a99). kit_wave result_pass_fn simulation: all 3 True, so mig-021..024 release on the next tick.
+- Clock input for S4q9m is now QC-CLK-R2 (COORD): cb rows lanes/handoff/QC-CLK-R2-cb-rows-s4q9m_r.json plus the count-frame re-frame on l2d (ETA ~23:10). FABLE-FIX-QC-DIECLK directs. Compose as soon as it lands.
+- QC-PLAN-G is pre-composing its rows + 5 x_fw_i family followers on l2d -> g/pre_m/apply_g.py. Reset rows: 0 (tool skew).
