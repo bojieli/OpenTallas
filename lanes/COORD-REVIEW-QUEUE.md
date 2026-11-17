@@ -19592,3 +19592,4 @@ FAILED [AUTOPILOT 1b8d79037dd0] 2026-11-16 21:56:46 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/publish-gate-1116 @0485967676b717eedd3311290791e4b293333e28
   NOT RULED: fable-fix-qc-dieclk-1116 @dd226b837fa (no gate record; gate it and re-post), fleet-ops-r-main-to-hub-tools (waits for rebase after r441).
   MERGE SERVICE: failed/inactive since 21:58 (MQ-PACK-FIX repair); 22 approvals are queued behind it.
+- 2026-11-16 22:05 PST STATE ADMIT-TUNE-1 HOURLY kill report (earlyoom openroad/all, plan-guard SIGKILLs, median victim RSS):  intel1=0/0 guard=0 medRSS_GB=0; intel2=0/0 guard=0 medRSS_GB=0; epyc2=0/0 guard=0 medRSS_GB=0; epyc7=0/0 guard=0 medRSS_GB=0; epyc8=0/0 guard=0 medRSS_GB=0; epyc9=0/0 guard=0 medRSS_GB=0; epyc10=1/1 guard=0 medRSS_GB=39; TOTAL earlyoom=1 guard=0
