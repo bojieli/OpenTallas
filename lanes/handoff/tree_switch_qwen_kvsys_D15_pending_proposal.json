@@ -1,11 +1,19 @@
 {
   "die": "qwen_kvsys",
-  "status": "PENDING CANDIDATE NOT ADOPTED",
+  "status": "BLOCKED PAYLOAD; source publication validation only; NOT ADOPTED",
   "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15",
   "candidate_paths": [
     "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15",
     "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15.building"
   ],
   "reason": "KV-R composing HG5 candidate from protected D14; active preparation and gates",
-  "owner": "KV-R"
+  "owner": "KV-R",
+  "payload_failure_evidence_commit": "98e4c42",
+  "payload_failures": [
+    "actual gen_lint: canonical d14_bind/rtl/bind_cells.sv snapshot prefix is outside the allowed source tree; producer repairing localization",
+    "qkd_ectl3_kiss_st_cols definition 34/18 differs from actual bound instantiation 37/26; KV owns parameter/source pairing repair"
+  ],
+  "release_rule": "NO GEN or adoption from this candidate until a repaired successor manifest qualifies; source-manifest publish PASS alone does not release it",
+  "source_publication": "E10 local derivative running normal full publisher under unit oth-ubuntu-757623-1794920924; preserve progressing job",
+  "repair_owner": "KV-R"
 }
