@@ -39564,7 +39564,11 @@
         "slw_su_l1__cla2a78701@21",
         "slw_su_l1__clcc9d0155@9",
         "slw_su_l0__cl1a1c1f8f@8",
-        "sle_su_l0__cl7a55c676@21"
+        "sle_su_l0__cl7a55c676@21",
+        "coll_core@1",
+        "sle_ctl__cl372cea1c@17",
+        "sle_ctl__cl503337ff@19",
+        "sle_ctl__cla4f6f12f@10"
       ],
       "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
       "type_args": {
@@ -39921,7 +39925,7 @@
         "cbx_q10__cl89936551@7": "DRT-0073 class I74+ prov view: a7 launched 04:33 on pre-fix source (qc-wave-1105e4 LEF with blanket OBS), same class as cbx_q10__cl94a12200",
         "sle_su_l0__cl7a55c676@6": "DRT-0073 on pre-fix kit cbb7cfda1; fix 0cd43c91712",
         "sle_hc2__clcc5e3e61@5": "infra-notrun on scratch floor, not a strike",
-        "coll_core@1": "PDN-0006 on contract prov view ot_coll_fold_slice (OBS M6/M7 over M5 PG); fix I168 17dcf533a38 dq81-provobs (COORD 17:2x (3)), DIE-QC-81",
+        "coll_core@1": "FLOW-FIX: raw4 immutable bind context restores exact original bound HDL matching original reset receipt; old relocation changed source-location comments only. Normal coll_core kit-rtl exit0 unit2741976; source/plan/cycles unchanged.",
         "slw_su_c__cl92142dac@13": "PROV-PINS-BUS: contract views of 5 su_c children were pinless (bus/bit pin tables); fix I 97f4f3d6a77 dq81-provpins (COORD 18:01 (1)), DIE-QC-81",
         "coll_ft__cl78c7b300@1": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
         "coll_ft__cla4a25d77@2": "KW-FIX-17 18:2x holdgaterr fa68f2c8863 (tag 77b4b069dc3): post-CTS hold stop judged on reg-to-reg; port-only overshoot -> OT_HOLD_PORT ADVISORY (COORD 17:40 APPROVED); class batch relaunch",
@@ -40153,7 +40157,7 @@
         "cbn_q00__cl622f65d2@16": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; kit on reverted grow tcl bd435405 (suspect)",
         "cbn_q01__clab6e67f2@23": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; start-window class + kit on reverted grow tcl bd435405 (suspect)",
         "coll_s@16": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; kit on reverted grow tcl bd435405 (suspect)",
-        "sle_ctl__cla4f6f12f@10": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; kit on reverted grow tcl bd435405 (suspect)",
+        "sle_ctl__cla4f6f12f@10": "FLOW-FIX: raw4 immutable bind context restores exact original bound HDL matching original reset receipt; old relocation changed source-location comments only. Normal coll_core kit-rtl exit0 unit2741976; source/plan/cycles unchanged.",
         "sle_sc_v1__cl115da35f@10": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; kit on reverted grow tcl bd435405 (suspect)",
         "sle_stm_v2__cl55be2264@13": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; kit on reverted grow tcl bd435405 (suspect)",
         "sle_stm_v2__cl7b3062fa@12": "KW-FIX-42 03:22 COORD 03:2x: QC cland-start-grow 9db0ec8d71e (main 771b665ddaf, landing_placement.tcl e5db9d4d in kw41/src_lfq_cl on all 7 hosts 03:19): restart at gen; start-window class + kit on reverted grow tcl bd435405 (suspect)",
@@ -40296,7 +40300,9 @@
         "sle_ctl__cl503337ff__v1@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
         "sle_ctl__cl67434795@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
         "sle_ctl__cl67434795__v1@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
-        "sle_ctl__cla4f6f12f@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch."
+        "sle_ctl__cla4f6f12f@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
+        "sle_ctl__cl372cea1c@17": "FLOW-FIX: raw4 immutable bind context restores exact original bound HDL matching original reset receipt; old relocation changed source-location comments only. Normal coll_core kit-rtl exit0 unit2741976; source/plan/cycles unchanged.",
+        "sle_ctl__cl503337ff@19": "FLOW-FIX: raw4 immutable bind context restores exact original bound HDL matching original reset receipt; old relocation changed source-location comments only. Normal coll_core kit-rtl exit0 unit2741976; source/plan/cycles unchanged."
       },
       "gen_hosts": [
         "epyc7",
