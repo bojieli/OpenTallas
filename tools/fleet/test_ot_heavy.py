@@ -15,15 +15,53 @@ ENV = dict(os.environ, LOAD_CAP_FACTOR="0", LOAD_GATE_FACTOR="0")
 
 class OtHeavy(unittest.TestCase):
     def test_cap_kills_the_command_not_the_host(self):
-        r = subprocess.run([T, "--mem", "1", "--", "python3", "-c", "x=bytearray(2*1024**3); print('leak')"],
-                           capture_output=True, text=True, env=ENV)
-        self.assertNotEqual(r.returncode, 0)
-        self.assertNotIn("leak", r.stdout)
-        r = subprocess.run([T, "--mem", "1", "--", "python3", "-c", "print('ok')"], capture_output=True, text=True, env=ENV)
-        self.assertEqual(r.stdout.strip(), "ok")
+        # Admission is isolated (temporary conf / state / reconcile: a busy production queue must not decide this test); the REAL
+        # systemd-run cgroup MemoryMax kill is kept, that is the behaviour under test.
+        with tempfile.TemporaryDirectory() as temporary:
+            wrapper, env = self._isolated(pathlib.Path(temporary), stub_systemd=False)
+            r = subprocess.run([str(wrapper), "--mem", "1", "--", "python3", "-c", "x=bytearray(2*1024**3); print('leak')"],
+                               capture_output=True, text=True, env=env, timeout=120)
+            self.assertNotEqual(r.returncode, 0)
+            self.assertNotIn("leak", r.stdout)
+            r = subprocess.run([str(wrapper), "--mem", "1", "--", "python3", "-c", "print('ok')"], capture_output=True, text=True, env=env, timeout=120)
+            self.assertEqual(r.stdout.strip(), "ok", r.stderr)
 
     def test_usage(self):
         self.assertEqual(subprocess.run([T, "--", "true"], capture_output=True, env=ENV).returncode, 2)
+
+    def _isolated(self, root, stub_systemd):
+        """a temporary copy of the shipped ot-heavy with its own conf / state dir / reconcile: the admission never sees the live host queue.
+        stub_systemd=False keeps the REAL systemd-run (the cgroup MemoryMax kill is the thing under test)."""
+        tools, state = root / "bin", root / "state"
+        tools.mkdir(); state.mkdir()
+        conf = root / "ot-heavy.conf"
+        conf.write_text("LOAD_CAP_FACTOR=0\nLOAD_GATE_FACTOR=0\nLOAD_FRESH_S=0\nOT_HEAVY_SHORT_POOL=0\nTHREAD_CAP_FACTOR=0\n")
+
+        def executable(name, body):
+            target = tools / name
+            target.write_text(body); target.chmod(0o755)
+            return str(target)
+
+        reconcile = executable("reconcile", "#!/bin/sh\ncase \"$1\" in --is-plan|--is-die) exit 1;; --gate) echo 'OK 1 fixture | measured memory available';; esac\n")
+        protect = executable("protect", "#!/bin/sh\nexit 1\n")
+        exit_wrapper = executable("exit-wrapper", "#!/bin/sh\nshift\nexec \"$@\"\n")
+        executable("sudo", "#!/bin/sh\nexit 0\n")
+        executable("nproc", "#!/bin/sh\necho 1\n")
+        if stub_systemd:
+            executable("systemd-run", "#!" + sys.executable + "\nimport os,sys\na=sys.argv[sys.argv.index('--')+1:]\nos.execvp(a[0],a)\n")
+        script = pathlib.Path(T).read_text()
+        for old, replacement in [
+                ("D=/var/tmp/ot-heavy", "D=" + str(state)),
+                ("/etc/ot-heavy.conf", str(conf)),
+                ("/usr/local/bin/ot-heavy-reconcile", reconcile),
+                ("/usr/local/bin/ot-protect-die", protect),
+                ("/usr/local/lib/ot-heavy/ot-heavy-exit", exit_wrapper)]:
+            script = script.replace(old, replacement)
+        wrapper = root / "ot-heavy"
+        wrapper.write_text(script); wrapper.chmod(0o755)
+        env = dict(ENV, PATH=str(tools) + os.pathsep + os.environ["PATH"], OT_HEAVY_CONF=str(conf), OT_HEAVY_THREADS="1")
+        env.pop("OT_HEAVY_PRIO", None); env.pop("OT_HEAVY_DIRECT", None)
+        return wrapper, env
 
     def test_no_fixed_slots(self):
         # Exercise the shipped Bash admission/lock/launch path, replacing only
@@ -31,35 +69,7 @@ class OtHeavy(unittest.TestCase):
         # and a nine-second wall clock are not a concurrency specification.
         with tempfile.TemporaryDirectory() as temporary:
             root = pathlib.Path(temporary)
-            tools, state = root / "bin", root / "state"
-            tools.mkdir(); state.mkdir()
-            conf = root / "ot-heavy.conf"
-            conf.write_text("LOAD_CAP_FACTOR=0\nLOAD_GATE_FACTOR=0\nLOAD_FRESH_S=0\nOT_HEAVY_SHORT_POOL=0\nTHREAD_CAP_FACTOR=0\n")
-
-            def executable(name, body):
-                target = tools / name
-                target.write_text(body); target.chmod(0o755)
-                return str(target)
-
-            reconcile = executable("reconcile", "#!/bin/sh\ncase \"$1\" in --is-plan|--is-die) exit 1;; --gate) echo 'OK 1 fixture | measured memory available';; esac\n")
-            protect = executable("protect", "#!/bin/sh\nexit 1\n")
-            exit_wrapper = executable("exit-wrapper", "#!/bin/sh\nshift\nexec \"$@\"\n")
-            executable("sudo", "#!/bin/sh\nexit 0\n")
-            executable("nproc", "#!/bin/sh\necho 1\n")
-            executable("systemd-run", "#!" + sys.executable + "\nimport os,sys\na=sys.argv[sys.argv.index('--')+1:]\nos.execvp(a[0],a)\n")
-            script = pathlib.Path(T).read_text()
-            for old, replacement in [
-                    ("D=/var/tmp/ot-heavy", "D=" + str(state)),
-                    ("/etc/ot-heavy.conf", str(conf)),
-                    ("/usr/local/bin/ot-heavy-reconcile", reconcile),
-                    ("/usr/local/bin/ot-protect-die", protect),
-                    ("/usr/local/lib/ot-heavy/ot-heavy-exit", exit_wrapper)]:
-                script = script.replace(old, replacement)
-            wrapper = root / "ot-heavy"
-            wrapper.write_text(script); wrapper.chmod(0o755)
-            env = dict(ENV, PATH=str(tools) + os.pathsep + os.environ["PATH"],
-                       OT_HEAVY_CONF=str(conf), OT_HEAVY_THREADS="1")
-            env.pop("OT_HEAVY_PRIO", None); env.pop("OT_HEAVY_DIRECT", None)
+            wrapper, env = self._isolated(root, stub_systemd=True)
             release = root / "release"
             payload = ("from pathlib import Path;import sys,time;"
                        "Path(sys.argv[1]).write_text('started');"
