@@ -84,12 +84,15 @@
     "mask_leaf_output_FF": 40,
     "added_metadata_FF_per_XRT": 64,
     "added_data_FF": 0,
-    "physical_XRT_replica_count_pending": true
+    "physical_XRT_replicas": 16,
+    "XRT1_replicas": 14,
+    "XRT3_replicas": 2,
+    "added_metadata_FF_all_XRT": 1024
   },
   "mux_demux_fanout": {
     "new_mask_bits_per_leaf": 8,
     "new_mask_output_sinks": 40,
-    "mask_config_fanout_upper": 8,
+    "mask_classifier_fanout_per_bit": 5,
     "existing_output_mask_registers_reused": true,
     "mapped_enable_mux_and_buffer_inventory_pending": true
   },
@@ -101,6 +104,7 @@
   "area": {
     "DFF_body_proxy_um2": 0.2916,
     "metadata_FF_floor_um2": 18.6624,
+    "metadata_FF_floor_all_XRT_um2": 298.5984,
     "mapped_comb_CTS_hold_repair_pending": true,
     "actual_floorplan_slot_fit_qualified": false
   },
@@ -119,9 +123,26 @@
       "vertical_pair": 1316,
       "wide_tier": 2198
     },
+    "actual_bound_bridge_columns": [
+      0,
+      2,
+      5,
+      7
+    ],
+    "one_pair_legal_route_legs": {
+      "local_copy": 329,
+      "local_masked_copy": 1008,
+      "vertical_pair": 2492,
+      "wide_tier": 4949
+    },
+    "legal_route_control_issue_words": 17556,
+    "separate_TP4_dies_transport_floor_cycles": 2436,
+    "separate_TP4_dies_combine_budget_deficit_cycles": 1609,
+    "rank_contexts_shared_die_transport_floor_cycles": 9324,
+    "rank_contexts_shared_die_combine_budget_deficit_cycles": 8497,
     "extra_mask_pipeline_cycles_proposed": 0,
     "composed_single_user_cycles": null,
-    "note": "old directV estimate rejected: actual bound sliceV exists onlycol0; bulk4pairs also needs8scratchrows, not2. Solve actual wide-col0-V-wide routes and finite scratch beforeRTL"
+    "note": "old directV estimate rejected: actual full boundDie Vbridges exist onlycolumns0,2,5,7; bulk4pairs needs8scratchrows, not2. Correct onepair route floor2436 alreadyexceeds827combine; ages/leases/POST remainadditional"
   },
   "qualification": "MODEL ONLY; scratch leases, finite port/calendar composition, full107/53 CAP-XR-VP exactness/miter/mutants, sustained throughput and context TT/FF remain required"
 }

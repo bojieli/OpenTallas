@@ -2,12 +2,18 @@
   "status": "REJECTED_TRANSPORT_ESTIMATE",
   "ownership_mapping_result_unchanged": true,
   "direct_V_at_all_columns": false,
-  "actual_bound_slice_vertical_only_column0": true,
   "column0_vertical_age": 32,
   "scratch_rows_per_pair": 2,
   "bulk_four_pairs_requires_rows": 8,
   "old_two_row_scratch_supports_pairs": 1,
-  "required_route": "source wide to col0, V across tiers, wide col0 to destination; allocate intermediate scratch per leg",
+  "required_route": "source wide to a landed bridge at columns0,2,5,7, V across tiers, wide to destination; allocate intermediate scratch per leg",
   "current_native_calendar_missing": true,
-  "action": "regenerate legal bound path schedule and scratch leases before RTL"
+  "action": "regenerate legal bound path schedule and scratch leases before RTL",
+  "schedule_links_was_used_subset_not_full_boundDie": true,
+  "actual_full_bound_bridge_columns": [
+    0,
+    2,
+    5,
+    7
+  ]
 }

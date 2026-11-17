@@ -1,0 +1,157 @@
+{
+  "schema": "opentallas.s81.ffn.actual-bound-path-finite-resource-model.v1",
+  "status": "MODEL_ONLY_CALENDAR_BLOCKED",
+  "die_sha": "1d7f96f951f9f23c52ea1a663825109e6a2dc3ac55bb0c4ead007a0356f403e2",
+  "actual_bridges": [
+    {
+      "source": 0,
+      "destination": 1,
+      "link": "tvN_s_0S",
+      "age": 32
+    },
+    {
+      "source": 1,
+      "destination": 0,
+      "link": "tvS_s_0N",
+      "age": 32
+    },
+    {
+      "source": 4,
+      "destination": 5,
+      "link": "tvN_s_2S",
+      "age": 31
+    },
+    {
+      "source": 5,
+      "destination": 4,
+      "link": "tvS_s_2N",
+      "age": 36
+    },
+    {
+      "source": 10,
+      "destination": 11,
+      "link": "tvN_s_5S",
+      "age": 31
+    },
+    {
+      "source": 11,
+      "destination": 10,
+      "link": "tvS_s_5N",
+      "age": 32
+    },
+    {
+      "source": 14,
+      "destination": 15,
+      "link": "tvN_s_7S",
+      "age": 32
+    },
+    {
+      "source": 15,
+      "destination": 14,
+      "link": "tvS_s_7N",
+      "age": 36
+    }
+  ],
+  "fragments": 4984,
+  "one_pair_packet_policy": true,
+  "scratch_rows": [
+    304,
+    306
+  ],
+  "scratch_row_owner": "VPX [0,448): requires explicit retirement/release before reuse",
+  "leg_counts": {
+    "local_copy": 329,
+    "local_masked_copy_candidate": 1008,
+    "V": 2492,
+    "wide": 4949
+  },
+  "leg_count": 8778,
+  "controls": 17556,
+  "control_slots_by_rank_engine": [
+    {
+      "key": [
+        0,
+        0
+      ],
+      "count": 2240
+    },
+    {
+      "key": [
+        0,
+        1
+      ],
+      "count": 2408
+    },
+    {
+      "key": [
+        1,
+        0
+      ],
+      "count": 1974
+    },
+    {
+      "key": [
+        1,
+        1
+      ],
+      "count": 2436
+    },
+    {
+      "key": [
+        2,
+        0
+      ],
+      "count": 2030
+    },
+    {
+      "key": [
+        2,
+        1
+      ],
+      "count": 2156
+    },
+    {
+      "key": [
+        3,
+        0
+      ],
+      "count": 1988
+    },
+    {
+      "key": [
+        3,
+        1
+      ],
+      "count": 2324
+    }
+  ],
+  "busiest_read_pairs": 126,
+  "busiest_write_pairs": 126,
+  "busiest_lane_slots": 623,
+  "busiest_control_engine_slots": 2436,
+  "resource_only_local_transport_floor_cycles": 2436,
+  "existing_entire_combine_budget_cycles": 827.0,
+  "minimum_combine_budget_deficit_cycles": 1609.0,
+  "scratch_writes": 3794,
+  "blockers": [
+    "Current actual R4 calendar has no final FFN CAP ready/arrival/last-read row lease events: scratch304..306 is inside VPX0..448, so exclusivity cannot be claimed.",
+    "Actual source-bound XRT native runtime age qualification remains PENDING_SELECTED_XRT; candidate masked-local CI-to-SW latency has no measured contract.",
+    "Every source read+sendcfg consumes distinct host engine issue cycles. Resource floor excludes control distribution delays, path occupancy/return ages, combine75, POST63, offdie allgather, host reload and template inventory overhead.",
+    "Full-packet bulk4 needs8 scratchrows per intermediate stage; current2row proposal intentionally uses one pair per leg.",
+    "CAP padding changes write-port selection: producer arrival calendar must be decoded with padded descriptors to expose actual per-port conflicts."
+  ],
+  "scope": "Finite static resource lower bound from unchanged actual fragments and actual bound physical paths. No invented event ages or row lease; no complete schedule/RTL/physical/token qualification.",
+  "rank_replication_conditions": {
+    "TP4_separate_physical_dies": {
+      "engine_cycles_lower_bound": 2436,
+      "combine_deficit_cycles_lower_bound": 1609
+    },
+    "all4rank_contexts_alias_same_physical_die": {
+      "engine0_control_issues": 8232,
+      "engine1_control_issues": 9324,
+      "engine_cycles_lower_bound": 9324,
+      "combine_deficit_cycles_lower_bound": 8497
+    },
+    "source_basis": "final_ffn_transport.Network.route rejects cross-rank as off-die; broadcasts mark explicit interrank external; fixture weights rank-local"
+  }
+}
