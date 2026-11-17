@@ -10,6 +10,10 @@ and one VP reset relay stage (TREE_STAGES 1 -> 2).  With XR the dswp row-swap se
 registers is also 16 kept flop copies (DSR, 0 cycles; t62 dswp -> hw_d -548 ps at CTS).  XR = 0 is the source exactly
 (no cycle, no cell).
 
+Optional --lane-reset-copies (off by default): XR leaves use16 independent, same-depth kept reset outputs for
+their lane HI/core/HO reset pins. This replaces the single rs_p fanout; +32 relay FF at TREE_STAGES2, no further
+boot or data cycles. Physical placement and production-shape timing remain required.
+
 Latency contract (S81-DIE-R2 bind + LATCHECK): vp write availability +1 clk (SU x_w and sw/cw writes), hc_post
 write-back +1 clk, VP boot reset release +1 edge; vp read port latency unchanged.
 
@@ -46,7 +50,7 @@ def sub_exact(s, a, b, n, what):
     return s.replace(a, b)
 
 
-def patch_vp(s):
+def patch_vp(s, lane_reset_copies=False):
     if TAG in s:
         raise SystemExit("XR_OVERLAY_TWICE ot_s81sl_vp.sv already carries XR")
     if "module ot_s81sl_vpw" not in s:
@@ -105,7 +109,29 @@ def patch_vp(s):
         d.append(f"        assign {n}_i = {n}_q;")
     d += ["    end else begin : g_nxr"] + [f"        assign {n}_i = {n};" for n, _ in WRITERS]
     d += ["    end endgenerate", ""]
-    return s[:start] + "\n".join(d) + body + s[end:]
+    s = s[:start] + "\n".join(d) + body + s[end:]
+    if lane_reset_copies:
+        # The corrected t75 placement still has40 VP-reset endpoints below-42ps.
+        # A second tree stage alone retains one rs_p driver for all16 lanes.
+        # Copies at the same depth remove that fanout without another boot edge.
+        s = sub_exact(s, "    wire [3:0] rsv;",
+                      "    localparam integer RREG = (XR != 0) ? 20 : 4;\n"
+                      "    wire [RREG-1:0] rsv;", 1, "per-lane reset regions")
+        s = sub_exact(s, ".REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1 + XR)) u_rr",
+                      ".REGIONS(RREG), .SYNC_STAGES(2), .TREE_STAGES(1 + XR)) u_rr", 1, "per-lane reset tree")
+        rs = "    wire rs_c = rsv[0], rs_s = rsv[1], rs_p = rsv[2], rs_o = rsv[3];"
+        s = sub_exact(s, rs, rs + "\n    // Same reset edge as rs_p, one kept driver per lane at XR1.\n"
+                      "    wire [15:0] rs_ln;\n"
+                      "    generate if (XR != 0) begin : g_lane_reset\n"
+                      "        assign rs_ln = rsv[19:4];\n"
+                      "    end else begin : g_common_reset\n"
+                      "        assign rs_ln = {16{rs_p}};\n"
+                      "    end endgenerate", 1, "lane reset wires")
+        a = s.index("    generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_ln")
+        b = s.index("    // the h half row of POST step", a)
+        segment = sub_exact(s[a:b], ".rst_n(rs_p)", ".rst_n(rs_ln[gl])", 4, "lane HI/core/HO reset pins")
+        s = s[:a] + segment + s[b:]
+    return s
 
 
 HI_HDR = re.compile(r"parameter \[19:0\] LF_CS_HI_D = ")
@@ -151,11 +177,13 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("root")
     ap.add_argument("--die", action="append", default=[], metavar="PART=MASK")
+    ap.add_argument("--lane-reset-copies", action="store_true",
+                    help="XR leaves use16 same-depth local lane reset copies; +32 FF vs XR, no extra cycles")
     a = ap.parse_args(argv)
     root = Path(a.root)
     out = {}                                          # every edit is computed first; nothing is written on a miss
     vp = root / VP
-    out[vp] = (patch_vp(vp.read_text()), "vp")
+    out[vp] = (patch_vp(vp.read_text(), a.lane_reset_copies), "vp")
     leaf_seen = 0
     for d in SLICE_DIRS:
         for f in sorted((root / d).rglob("*.sv")):

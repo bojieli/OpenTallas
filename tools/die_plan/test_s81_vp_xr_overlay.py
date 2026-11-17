@@ -116,3 +116,53 @@ def test_vpw_xr_bench_and_bypass_mutant(tree, tmp_path_factory):
     assert int(re.search(r"checks=(\d+)", ok.stdout).group(1)) > 9000
     bad = run("-DMUTANT")
     assert "XR control mismatch" in bad.stdout + bad.stderr
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None or shutil.which("vvp") is None, reason="iverilog not installed")
+def test_lane_reset_copy_miter_and_early_stage_mutant(tree, tmp_path):
+    # The minimum changed mechanism is the real VP reset tree. Arithmetic and
+    # memory children are left unresolved (-i); no arithmetic is simulated or
+    # claimed. Check the actual generated VP's control and16 lane reset pins.
+    X.main([str(tree), "--lane-reset-copies", "--die", "3S=01000", "--die", "6N=00010"])
+    vp = tree / X.VP
+    relay = Path(__file__).resolve().parents[2] / "rtl/lib/ot_rst_relay.sv"
+    assert relay.is_file(), relay
+    bench = tmp_path / "reset_tb.sv"
+    bench.write_text(r'''
+`timescale 1ns/1ps
+module tb;
+ reg clk=0; always #5 clk=~clk;
+ reg rst_n=1;
+ wire [3:0] r0,r1;
+ ot_rst_relay #(.REGIONS(4),.TREE_STAGES(1)) ref0(.clk(clk),.rst_n_in(rst_n),.rst_n(r0));
+ ot_rst_relay #(.REGIONS(4),.TREE_STAGES(2)) ref1(.clk(clk),.rst_n_in(rst_n),.rst_n(r1));
+ ot_s81sl_vp #(.XR(0)) dut0(.clk(clk),.rst_n(rst_n));
+ ot_s81sl_vp #(.XR(1)) dut1(.clk(clk),.rst_n(rst_n));
+ integer i,checks=0,pulses=0; reg [31:0] r;
+ initial begin
+  rst_n=0;
+  for(i=0;i<2000;i=i+1) begin
+   @(negedge clk); #2; r=$random;
+   rst_n=(i%31>2 && r[4:0]!=0); if(!rst_n) pulses=pulses+1;
+   @(posedge clk); #1;
+   if(dut0.rsv !== r0 || dut0.rs_ln !== {16{r0[2]}}) $fatal(1,"XR0 reset mismatch %0d",i);
+   if(dut1.rsv[3:0] !== r1 || dut1.rs_ln !== {16{r1[2]}}) $fatal(1,"lane reset mismatch %0d",i);
+   checks=checks+1;
+  end
+  $display("PASS lane reset copies checks=%0d reset_pulses=%0d",checks,pulses);$finish;
+ end
+endmodule
+''')
+    def run(source, tag):
+        out = tmp_path / (tag + ".vvp")
+        subprocess.run(["iverilog", "-g2012", "-i", "-s", "tb", "-o", str(out), str(relay), str(source), str(bench)],
+                       check=True, capture_output=True)
+        return subprocess.run(["vvp", "-n", str(out)], capture_output=True, text=True)
+    ok = run(vp, "positive")
+    assert ok.returncode == 0 and "checks=2000" in ok.stdout, ok.stdout + ok.stderr
+    mutant = tmp_path / "vp_mut.sv"
+    source = vp.read_text()
+    assert source.count(".TREE_STAGES(1 + XR)) u_rr") == 1
+    mutant.write_text(source.replace(".TREE_STAGES(1 + XR)) u_rr", ".TREE_STAGES(1)) u_rr"))
+    bad = run(mutant, "early_stage")
+    assert bad.returncode != 0 and "lane reset mismatch" in bad.stdout + bad.stderr
