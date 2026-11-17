@@ -11,12 +11,14 @@ For each distinct hard-core module of the plan:
   reads(module)  = every macro tested by `ifdef / `ifndef / `elsif inside the module's body (plus file-level guards) and the
                    bodies of every module it instantiates, transitively (index of <base>/rtl; *_bb stubs never define)
   DECLARED  view lists bind_defines V: ERROR for each m in reads with (m in V) != (m in die defines)
-  TRACKED   view declares nothing, but it reads a macro that some declared view of the plan also reads and lists, or that
-            a declared view lists and the die defines: ERROR (same define family, unknown build set: the S81 ba0/ba1 case)
-  UNDECLARED view declares nothing and reads only untracked macros: advisory finding (count + sample), never an error
+  SHARED    view declares nothing, but its closure reads a define that RTL outside its closure also reads (a wrapper on
+            the other side of the black box, another core, the other die: FABLE-CLOSURE-STRATEGY 11-17 lever 5, 45 such
+            pipeline-class defines on S81) or that a declared view tracks: ERROR (unknown build set: the S81 ba0/ba1 case)
+  UNDECLARED view declares nothing and reads only defines no other RTL reads: advisory finding, never an error
+SYNTHESIS, bench mutant (*MUTANT*, *_MUT*), *_CHECK and *_TRACE switches are never compared.
 
     python3 -I view_define_check.py PLAN.json --asbuilt ASBUILT_RUN.json [--base SRC] [--json OUT]   (exit 1 on ERROR)
-bind.py bind --strict runs gate() and adds its errors to the bind errors.
+bind.py bind --strict runs gate(): blocking when the asbuilt manifest sets view_define_gate, else reported (would_fail).
 """
 import argparse
 import glob
@@ -60,6 +62,29 @@ def rtl_index(base):
     return mod, info
 
 
+IGNORE = re.compile(r"^(SYNTHESIS|VERILATOR|NEGK)$|MUTANT|_MUT($|_|\d)|_CHECK$|_TRACE$")
+
+
+def closure(module, mod, info):
+    seen, todo = set(), [module]
+    while todo:
+        m = todo.pop()
+        if m in seen or m not in mod:
+            continue
+        seen.add(m)
+        todo.extend(w for w in info[mod[m]][1] if w in mod and w not in seen)
+    return seen
+
+
+def readers(mod, info):
+    """macro -> set of modules whose body tests it"""
+    out = {}
+    for m, key in mod.items():
+        for x in info[key][0]:
+            out.setdefault(x, set()).add(m)
+    return out
+
+
 def reads(module, mod, info):
     """macros the module's RTL tests, transitively over the modules it instantiates"""
     seen, todo, out = set(), [module], set()
@@ -101,11 +126,15 @@ def check(plan, die_defines, base, index=None):
             key = (m, hc.get("lib") or "")
             views.setdefault(key, set()).add(tn)
     mod, info = index or rtl_index(base)
+    who = readers(mod, info)
     rows = []
     for (m, lib), tns in sorted(views.items()):
         decl, vj = view_defines(base, lib)
+        cl = closure(m, mod, info)
+        rd = sorted(x for x in reads(m, mod, info) if not IGNORE.search(x))
+        shared = {x: sorted(who.get(x, set()) - cl)[:4] for x in rd if who.get(x, set()) - cl}
         rows.append(dict(module=m, lib=lib, view_json=vj, declared=sorted(decl) if decl is not None else None,
-                         reads=sorted(reads(m, mod, info)), types=sorted(tns)[:5], in_rtl=m in mod))
+                         reads=rd, shared=shared, types=sorted(tns)[:5], in_rtl=m in mod))
     tracked = set()
     for r in rows:
         if r["declared"] is not None:
@@ -121,12 +150,13 @@ def check(plan, die_defines, base, index=None):
                 errors.append("VIEW_DEFINES %s (%s): %s (%s reads it)" % (r["module"], r["lib"], side, r["module"]))
             r["verdict"] = "MISMATCH" if bad else "MATCH"
         else:
-            hit = sorted(rd & tracked)
+            hit = sorted((rd & tracked) | set(r["shared"]))
             if hit:
-                errors.append("VIEW_DEFINES %s (%s): declares no bind_defines but reads tracked define(s) %s (die has %s): "
-                              "record the set it was built with in its view.json" % (
-                                  r["module"], r["lib"], ",".join(hit), ",".join(x for x in hit if x in die) or "none"))
-                r["verdict"] = "UNDECLARED_TRACKED"
+                errors.append("VIEW_DEFINES %s (%s): declares no bind_defines but reads shared define(s) %s (die has %s; also "
+                              "read by %s): record the set it was built with in its view.json" % (
+                                  r["module"], r["lib"], ",".join(hit), ",".join(x for x in hit if x in die) or "none",
+                                  "; ".join("%s: %s" % (x, ",".join(r["shared"][x])) for x in hit if x in r["shared"])[:300]))
+                r["verdict"] = "UNDECLARED_SHARED"
             else:
                 r["verdict"] = "UNDECLARED"
                 if rd & die:
@@ -135,12 +165,15 @@ def check(plan, die_defines, base, index=None):
 
 
 def gate(plan, ab, base):
-    """bind --strict hook -> (errors, summary)"""
+    """bind --strict hook -> (errors, summary).  Blocking once the asbuilt manifest sets "view_define_gate": true (a die turns
+    it on when its views record their sets: S81 D5c had 1 of 66 views declared); until then the bind report carries the
+    full finding list as would_fail and the bind does not stop on it."""
     errors, advisory, rows = check(plan, ab.get("defines") or [], base)
     from collections import Counter
-    summ = dict(views=len(rows), verdicts=dict(Counter(r["verdict"] for r in rows)), errors=len(errors),
-                advisory=len(advisory), advisory_sample=advisory[:10])
-    return errors, summ
+    on = bool(ab.get("view_define_gate"))
+    summ = dict(gate="BLOCKING" if on else "REPORT", views=len(rows), verdicts=dict(Counter(r["verdict"] for r in rows)),
+                errors=len(errors), would_fail=[] if on else errors[:200], advisory=len(advisory), advisory_sample=advisory[:10])
+    return (errors if on else []), summ
 
 
 def main(argv=None):
