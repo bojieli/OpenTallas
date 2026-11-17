@@ -40,6 +40,7 @@ def _reset(monkeypatch):
     monkeypatch.setattr(D, "lef_top_layer", lambda _: None)
     yield
     D.REP_REACH_MAX_UM = None
+    D.REP_REACH_REPORT = None
     D.REP_ON_LEG = False
 
 
@@ -238,3 +239,17 @@ def test_extra_reach_stages_skip_unsplittable_macro_span():
     assert pts is not None and len(pts) == 4
     assert all(Site().legal(q) for q in pts)
     assert max(D.chain_spans([(0., 0.)] + pts + [(1000., 0.)])) <= 450. + 1e-6
+
+
+def test_report_mode_lists_the_leg_and_keeps_the_default_chain(tmp_path):
+    # FABLE-DIE-S81 11-16: --rep-reach-report lists every leg without a placement within reach instead of stopping
+    import json
+    D.REP_REACH_MAX_UM = 450.0
+    site = D.SiteMap(_P(core=(1100.0, 0.0, 500.0, 1000.0)))
+    D.REP_REACH_REPORT = str(tmp_path / "r.jsonl")
+    n = _nodes(1000.0, 1760.0)
+    D.tree_netlist(n, [], rep_um=250.0, site=site)
+    rows = [json.loads(x) for x in open(D.REP_REACH_REPORT)]
+    assert len(rows) >= 1 and {r["node"] for r in rows} == {1}
+    assert rows[0]["span_um"] > 450.0 and "rep-reach-max 450: leg to node 1" in rows[0]["error"]
+    assert n[1]["reach_unfixed"]["span_um"] == rows[0]["span_um"] and "reach_fix" not in n[1]

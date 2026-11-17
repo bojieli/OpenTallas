@@ -483,6 +483,16 @@ def check_geometry(P, R):
                 fill=area / (W * H), planned_channels=chans, station_macro_intersections=macro_hits)
 
 
+def check_kit_core_fit(P, R):
+    """KITFIT-1116 (S81 F2s3: 372 half pairs overlapping by 1.116 um at their kit offsets passed G0): every hard core placed at origin_um +
+    track_offset_um as gen_phys.type_macros places it; an overlap, a halo breach (type macro_halo_um) or a box outside the outline is an ERROR"""
+    import kit_fit as KF
+    msgs = KF.findings(P.types)
+    for m in msgs:
+        R.err("kit_fit", m)
+    return dict(findings=len(msgs))
+
+
 def fmt_rect(r):
     return "[" + ",".join(f"{v:g}" for v in r) + "]"
 
@@ -2745,6 +2755,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["r_reach"] = RRL.check_plan(P, R)
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
+    summ["kit_fit"] = check_kit_core_fit(P, R)          # KITFIT-1116: boxes at the kit's real offsets, every type
     summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
     summ["merged_clock_view"] = check_merged_clock_view(P, R)
     import landing_islands as LI

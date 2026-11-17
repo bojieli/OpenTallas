@@ -313,6 +313,9 @@ def test_reach_keys_map_to_die_trial_flags_and_default_off():
     c["top"]["rep_actual_max"] = 450.0
     f = flags(O.kit_argv(c, "OUT"))
     assert f["--rep-reach-max"] == "450" and f["--rep-actual-max"] == "450"
+    assert "--rep-reach-report" not in O.kit_argv(c, "OUT")
+    c["top"]["rep_reach_report"] = "/tmp/r.jsonl"
+    assert flags(O.kit_argv(c, "OUT"))["--rep-reach-report"] == "/tmp/r.jsonl"
 
 
 def _replay_dirs(tmp_path, new_meta, ref_meta, cell="CKINVDCx16_ASAP7_75t_R", ref_cell=None):

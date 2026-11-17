@@ -26,6 +26,14 @@ if {[info procs $ot_mw_target] ne "" && [info procs ot_orig_repair_design_helper
     if {[info exists ::env(CAP_MARGIN)] && $::env(CAP_MARGIN) ne ""} { lappend args -cap_margin $::env(CAP_MARGIN) }
     if {[info exists ::env(SLEW_MARGIN)] && $::env(SLEW_MARGIN) ne ""} { lappend args -slew_margin $::env(SLEW_MARGIN) }
     if {[info exists ::env(MATCH_CELL_FOOTPRINT)] && $::env(MATCH_CELL_FOOTPRINT)} { lappend args -match_cell_footprint }
+    # REPAIR-NOPROGRESS (S81-CONG 11-16): grt183_make.sh stopped attempt 1 inside this repair (log flat OT_GRT_REPAIR_STALL_S) and
+    # re-runs the stage once with this marker: the post-GRT repair_design is skipped, so the stage keeps the full route's
+    # result and goes on to timing repair.  Max slew / cap DRV are advisory in the R-MINIMAL profile (OWNER 11-13) and stay
+    # visible in the sign-off DRV report.
+    if {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/5_1_grt.repair_nostall.json]} {
+      puts "OT_MAXWIRE_PASS post skipped: no-progress stop in attempt 1 (5_1_grt.repair_nostall.json); full-route result kept, stage continues (max slew / cap DRV advisory)"
+      return
+    }
     puts "OT_MAXWIRE repair_design $args"
     set n0 [sta::network_leaf_instance_count]
     set t0 [clock seconds]

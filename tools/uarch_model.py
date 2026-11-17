@@ -37,6 +37,45 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+
+def qwen_qc_tail1_parameter_view_model():
+    """Actual J's 24 unsigned tail1 obligations; no new delay versus published J."""
+    variants = [(17, 9, 10, 4), (16, 9, 10, 4),
+                (15, 9, 10, 4), (16, 9, 11, 12)]
+    rows = []
+    for hi, north, south, replicas in variants:
+        pad_bits = 74 * hi  # 64 data + 4 error + 6 valid bits
+        logical_delta = pad_bits + 2 * (north + south - 28)
+        rows.append(dict(hi_pad=hi, skew_n=north, skew_s=south,
+            physical_replicas=replicas, hi_delay_bits=pad_bits,
+            logical_delay_state_delta_vs_generic=logical_delta,
+            positive_flop_pair_area_upper_um2=pad_bits*0.33534,
+            source_parameters_already_priced_by_J=True,
+            added_edges_vs_published_J=0))
+    return dict(schema="opentallas.qc.tail1-parameter-view.v1",
+        candidate=True, default_plan_enable=False,
+        original_master="qfd_dv_s8_station_tail1",
+        reason="generic HI_PAD0/SKEW14 signed view cannot qualify J's selected parameters",
+        variants=rows, replicas_total=24, region_lanes=2,
+        added_arithmetic_units=0, result_bits_per_cycle=64,
+        memory_macro="ot_sram_1r1w_32x64_m1", macros_per_core=5,
+        macro_capacity_bits_per_core=10240,
+        physical_memory_read_write_bytes_per_cycle_upper=80,
+        outline_um=[162,162], outline_delta_um2=0,
+        macro_body_area_um2=5*31.968*17.280,
+        baseline_measured_body_area_um2=8221,
+        body_area_upper_um2=8221+74*17*0.33534,
+        body_fill_upper=(8221+74*17*0.33534)/(162*162),
+        boundary_bits_per_cycle=558, boundary_bits_delta=0,
+        added_external_tracks=0, added_mux_demux=0,
+        internal_hi_pipeline_width=74, added_hi_clock_sinks_upper=74*17,
+        base_fault_input_capture_edges=1, added_wrapper_edges=0,
+        wrapper_fault_note="use current base landed fault-reader capture; do not copy legacy extra fault register into parameter wrapper",
+        boot_policy="existing two input reset stages and timed local reset tree retained; no release rule change",
+        latency_price="absolute HI_PAD/SKEW parameters above; zero new cycles versus actual J RTL/plan",
+        qualification="four exact views unqualified; measured native macro/mapped timing, ordinary TT/FF/DRC/LEC required")
+
+
 def qwen_qc_w5_landed_count_candidate_model():
     """Keep the C diagnostic; actual N43 region/table mapping selects no update."""
     ports = ("rx_flit", "rx_v", "tx_up")
@@ -17675,7 +17714,7 @@ def s81_head_lep_vf_stage_calendar_model():
 
 def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
                                   span_um=1321.0, corridor_um=48.0,
-                                  dff_body_um2=0.2916):
+                                  dff_body_um2=0.2916, boot_release_stages=0):
     """Size the opt-in native S81 RX transport and local RM selector before build.
 
     RELAY4 carries payload/valid/AM metadata and the reset calendar together.
@@ -17683,6 +17722,8 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
     mapped cells, CTS/repair overhead and full-shape throughput remain measured
     gates. This candidate does not activate any released rate or plan row.
     """
+    if boot_release_stages not in (0, 3):
+        raise ValueError("boot release is baseline or the sized three-stage candidate")
     if relay_stages not in (0, 4) or read_pointer_copies not in (1, 8):
         raise ValueError("only baseline/RELAY4 and baseline/eight local RM copies are qualified candidate shapes")
     if min(span_um, corridor_um, dff_body_um2) <= 0:
@@ -17693,7 +17734,7 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
     metadata_ff = 9 if relay_stages else 0
     rm_ff = 24 if read_pointer_copies == 8 else 0  # original global pointer remains
     rm_comb = dict(NOT=71, AND=8, XOR=16, OR=119) if rm_ff else {}
-    total_ff = transport_ff + reset_ff + metadata_ff + rm_ff
+    total_ff = transport_ff + reset_ff + metadata_ff + rm_ff + boot_release_stages
     pitch_um = 0.0458  # existing S81 ft_corridor aggregate track lane rule
     cut_bits = cohort_bits + 1  # data/valid/AM + matched reset-calendar bit
     capacity = corridor_um / pitch_um
@@ -17701,7 +17742,8 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
     return dict(
         schema="opentallas.s81-serdes-rx-transport.v1",
         default_off=True, adopted=False, physical_qualified=False,
-        defines=(["OT_S81_KP4_AM_FACE3", "OT_S81_RCK_RELAY4"] if relay_stages else []),
+        defines=(["OT_S81_KP4_AM_FACE3", "OT_S81_RCK_RELAY4"] if relay_stages else [])
+            + (["OT_S81_SERDES_BOOT_RELEASE3"] if boot_release_stages else []),
         clock_ps=833, recovered_clock_ps_nominal=833,
         MACs_per_cycle=0, added_MACs_per_cycle=0,
         compute_intensity_MACs_per_byte=0,
@@ -17722,12 +17764,15 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
         replicas=dict(transport_stage_count=relay_stages,
             transport_lane_bits=cohort_bits, transport_FF=transport_ff,
             matched_reset_FF=reset_ff, AM_partial_FF=metadata_ff,
+            boot_release_FF=boot_release_stages,
             local_read_pointer_copies=read_pointer_copies,
             added_read_pointer_FF=rm_ff,
             generic_read_pointer_comb_cells=rm_comb,
             generic_read_pointer_comb_cell_count=sum(rm_comb.values()),
             added_clock_reset_sinks=total_ff),
         mux_demux_fanout=dict(new_transport_muxes=0, new_demuxes=0,
+            boot_release_stage_fanout=1 if boot_release_stages else 0,
+            boot_release_terminal_reset_pin_fanout=4 if boot_release_stages else 0,
             transport_bit_driver_fanout=1,
             AM_header_input_fanout=2 if relay_stages else 1,
             read_mux_payload_bits=512,
@@ -17738,6 +17783,17 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
         routing=dict(measured_remaining_span_um=span_um,
             planned_hops=hops, planned_max_hop_um=span_um/hops,
             hop_target_um=405, hop_fit=span_um/hops <= 405,
+            boot_release=dict(stages=boot_release_stages,
+                authority_pocket_requires_PMA_pair_y_shift_um=-27 if boot_release_stages else 0,
+                measured_source_endpoint_span_um=1249.498,
+                planned_relay_hops_um=[316.44, 362.51, 339.976] if boot_release_stages else [],
+                max_endpoint_tail_um=233.002 if boot_release_stages else 1249.498,
+                max_hop_um=362.51 if boot_release_stages else 1249.498,
+                hop_fit=bool(boot_release_stages),
+                signal_layers=["M6", "M7"], M8_reserved_for_clock_PG=True,
+                signal_bits_per_cut=1 if boot_release_stages else 0,
+                route_tracks_needed=1 if boot_release_stages else 0,
+                placement="north authority pocket then legal relays (1656.72,905.85), (1450,750.06), (1235.034,625.05); PMA LEF OBS M1-M5; actual clock/recovery closure pending"),
             tracks_needed_per_transport_cut=cut_bits if relay_stages else 0,
             aggregate_lane_pitch_um=pitch_um,
             planned_corridor_um=corridor_um,
@@ -17750,6 +17806,7 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
         area=dict(DFF_body_proxy_um2=dff_body_um2,
             DFF_proxy_source="tools/uarch_model_s81_bf_pinlat.py (conservative proxy, not mapped inventory)",
             transport_added_body_um2=(transport_ff+reset_ff+metadata_ff)*dff_body_um2,
+            boot_release_added_FF_body_um2=boot_release_stages*dff_body_um2,
             read_pointer_added_FF_body_um2=rm_ff*dff_body_um2,
             read_pointer_comb_conservative_proxy_um2=sum(rm_comb.values())*dff_body_um2,
             read_pointer_added_body_proxy_um2=(rm_ff+sum(rm_comb.values()))*dff_body_um2,
@@ -17762,7 +17819,16 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
             corridor_utilization_proxy=(total_ff+sum(rm_comb.values()))*dff_body_um2/(corridor_um*span_um),
             outline_delta_um2=0, new_hard_core_count=0,
             mapped_CTS_hold_inventory_pending=True),
-        latency=dict(added_RX_recovered_edges=relay_stages,
+        latency=dict(boot_release_stages=boot_release_stages,
+            boot_release_extra_recovered_edges=boot_release_stages,
+            boot_release_extra_ps_nominal=833*boot_release_stages,
+            authority_HOLD_EDGES=64,
+            authority_release_recovered_edge=66,
+            common_release_recovered_edge=66+boot_release_stages,
+            native_RX_release_recovered_edge=68+boot_release_stages,
+            boot_release_added_mission_cycles=0,
+            boot_release_note="asynchronous assertion remains active with recovered clock stopped; only common boot/warm release changes; existing TX RST_RT extra edge retained",
+            added_RX_recovered_edges=relay_stages,
             added_RX_ps_nominal=833*relay_stages,
             added_TX_edges=0, added_rate_match_data_edges=0,
             reset_calendar_extra_recovered_edges=relay_stages,

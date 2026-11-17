@@ -30,6 +30,7 @@ for tn,t in sorted(P['partition_types'].items()):
     # raw relays with "@ (x, y)" comments
     for m in re.finditer(r'ot_dp_rrelay\s+(\w+)\s*\(([^;]*?)\);[^\n]*?@ \(([-\d.]+), ([-\d.]+)\)',src): pos[m.group(1)]=[float(m.group(3)),float(m.group(4))]
     drv={}; edges=[]  # net -> driver inst
+    dead=set()
     insts={}
     for m in re.finditer(r'ot_dp_landing_collect\s+#\(\.N\((\d+)\)\)\s+(\w+)\s*\((.*?)\);',src,re.S):
         name,body=m.group(2),m.group(3)
@@ -42,8 +43,14 @@ for tn,t in sorted(P['partition_types'].items()):
         insts[name]=dict(kind='start',ins=[d.group(1)],rst=rst.group(1) if rst else None); drv[q.group(1)]=name
     for m in re.finditer(r'ot_dp_rrelay\s+(\w+)\s*\(([^;]*?)\);',src):
         name,body=m.group(1),m.group(2); d=re.search(r'\.d\((\w+)\)',body); q=re.search(r'\.q\((\w+)\)',body)
-        if d and q: insts[name]=dict(kind='raw',ins=[d.group(1)],rst=None); drv[q.group(1)]=name
+        if d and q:
+            insts[name]=dict(kind='raw',ins=[d.group(1)],rst=None); drv[q.group(1)]=name
+            # a relay whose Q has no reader is swept by synthesis (no keep): not a hop (NF15a hd_lep0N u_cland_rst_lepf_i0 / coll_i3)
+            if len(re.findall(r'\b'+re.escape(q.group(1))+r'\b',src))<=2 and '(* keep' not in src[max(0,m.start()-40):m.start()]: dead.add(name)
     for a,b in re.findall(r'assign\s+(\w+)\s*=\s*(\w+)\s*;',src): drv.setdefault(a,'='+b)
+    ins_xy=(P.get('reset',{}).get('in_sites') or {}).get(tn)
+    if ins_xy:      # the reset / START pin registers sit at the plan reset in-site of the type
+        pos.setdefault('u_rst_in',ins_xy); pos.setdefault('u_run_in',ins_xy)
     def resolve(net,d=0):
         x=drv.get(net)
         while isinstance(x,str) and x.startswith('=') and d<20: net=x[1:]; x=drv.get(net); d+=1
@@ -83,6 +90,7 @@ for tn,t in sorted(P['partition_types'].items()):
             if not any(re.fullmatch(rf'u_cland_reader_start_{re.escape(b)}_{int(m.group(2))+1}',x) for x in insts):
                 for k in ('cland_dn_fault_'+b,'fclk_in_'+b):
                     if k in pin: pos['ring:'+b]=pin[k]; E.append((n,'ring:'+b,'start')); break
+    E=[e for e in E if e[1] not in dead and e[0] not in dead]
     nodes={a for e in E for a in e[:2]}
     unk=[n for n in nodes if n not in pos]
     adj=collections.defaultdict(list)

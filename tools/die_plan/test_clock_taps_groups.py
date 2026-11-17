@@ -284,3 +284,39 @@ def test_atomic_reset_cohort_negative_control_detects_original_split(tmp_path, m
     assert p.returncode == 0, p.stderr
     assert "NET ck_u_rrl_94/q nt1" in p.stdout
     assert "NET ck_u_cland_collect_rst_rl_94/ready_o nclk" in p.stdout
+
+
+
+def test_fixed_output_group_uses_declared_forwarded_clock(tmp_path):
+    env = GROUP_ON + "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t1}"
+    p = run(tmp_path, STATION, env=env)
+    assert p.returncode == 0, p.stderr
+    for bit in range(3):
+        assert f"NET ck_u_ft_ft0_s1/q_{bit} nt1" in p.stdout
+
+
+def test_fixed_output_group_survives_cap_and_min_merges(tmp_path):
+    env = (GROUP_ON + "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t1}"
+           "\nset ::env(OT_TAP_MAX_SINKS) 3"
+           "\nset ::env(OT_TAP_REASSIGN_UM) 1500"
+           "\nset ::env(OT_TAP_MIN_SINKS) 50"
+           "\nset ::env(OT_TAP_POST_MIN_SINKS) 50"
+           "\nset ::env(OT_TAP_POST_MIN_UM) 1500")
+    p = run(tmp_path, STATION, env=env)
+    assert p.returncode == 0, p.stderr
+    for bit in range(3):
+        assert f"NET ck_u_ft_ft0_s1/q_{bit} nt1" in p.stdout
+
+
+def test_fixed_output_unknown_clock_port_refuses(tmp_path):
+    p = run(tmp_path, STATION, env=GROUP_ON +
+            "\nset ::env(OT_TAP_GROUP_FIXED) {u_ft_ft0_s1:clk_t99}")
+    assert p.returncode != 0
+    assert "unknown or non-grid clock port" in p.stderr
+
+
+def test_fixed_output_missing_group_refuses(tmp_path):
+    p = run(tmp_path, STATION, env=GROUP_ON +
+            "\nset ::env(OT_TAP_GROUP_FIXED) {missing:clk_t1}")
+    assert p.returncode != 0
+    assert "group has no sinks" in p.stderr

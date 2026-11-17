@@ -518,6 +518,12 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         try:
             w = _words(cmd)
             c = w[0]
+            # Only the generator-owned physical source binding of this explicit
+            # pad contract is executable SDC; never accept an arbitrary source.
+            if cmd.strip() == 'if {[file exists /work/phy_clock_export_source.tcl]} {source /work/phy_clock_export_source.tcl}':
+                if pad_out.get('pma_tck', {}).get('source_clock_port') != 'clk':
+                    err.append('pad_clock: physical export hook without typed pma_tck-from-clk contract')
+                continue
             if edge_cdc and c in ("set_max_delay", "set_false_path"):
                 m = (cdc_form[0] if c == "set_max_delay" else cdc_form[1]).fullmatch(" ".join(w))
                 ecl = {clk_src[p_]: p_ for p_ in edge_cdc if p_ in clk_src}

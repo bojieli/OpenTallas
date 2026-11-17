@@ -3,7 +3,8 @@
 Same plan keys and helpers as tools/s81_head/head_cland_stage_delta.py (local_resets, nearest, rrl_from_rtl, republish);
 the only difference: stage sites follow a street path round the hard cores instead of the straight segment (hd_lep0N has
 four 777.6 x 492.48 cores), every path hop <= HMAX.  0 data cycles; sidecar unchanged.
-usage: head_sideband_street_rows.py TOOLS_ROOT SRC_PREP OUT_PREP [--types hd_lep0N,hd_ctl] [--no-republish]
+usage: head_sideband_street_rows.py TOOLS_ROOT SRC_PREP OUT_PREP [--types hd_lep0N,hd_ctl] [--no-republish] [--redo T,T]
+--redo: the type already carries the rows; drop and rebuild them (the wrapper is only read for the reset relay table).
 Types on the region-reset form (hd_ctl) take the depth of their tap wavefront relay."""
 import sys, json, re, math, heapq, shutil, hashlib
 from pathlib import Path
@@ -69,7 +70,7 @@ class Streets:
         return out, h
 
 
-def build(tn, T, coll, wrapper):
+def build(tn, T, coll, wrapper, redo=False):
     c = T["clock"]; S = Streets(T); pins = m.pins_of(T); rep = dict(type=tn); worst = [0.0, ""]
     def note(name, h):
         if h > worst[0]: worst[:] = [h, name]
@@ -90,6 +91,9 @@ def build(tn, T, coll, wrapper):
     bands = {b: m.band_geom(v["rect_um"]) for b, v in c["landing_contract"]["bands"].items()}
     mask = coll["mask"]; rings = list(mask["inputs"]); tree = mask["tree_bus"]; ndep = int(coll["local_registered_depth"])
     add, consumers = {}, {}
+    if redo:
+        for k in ("landing_reader_start", "landing_writer_start", "landing_status_input_stages", "landing_status_anchors", "landing_local_resets"):
+            c.pop(k, None)
     have_reader = "landing_reader_start" in c
     for k in ("landing_writer_start", "landing_status_input_stages", "landing_local_resets"): assert k not in c, (tn, k)
     if not have_reader:
@@ -114,8 +118,18 @@ def build(tn, T, coll, wrapper):
     rep["writer_start_depth"] = W; rep["writer_far"] = far
     targets = {}
     if tree and "landing_status_anchors" not in c:
-        root_xy = tuple(coll.get("collector_root_xy") or pins[f"cland_up_ready_{tree}"])
+        # the tree output register sits at its status pin (the sidecar collector_root_xy is the collector root, which can be
+        # 450 um from the pin: NF14r hd_lep0N agg_6 -> u_cland_up_lepk_o0 694.6 um, FABLE-PD-HEAD-NF14)
+        root_xy = tuple(pins.get(f"cland_up_ready_{tree}") or coll["collector_root_xy"])
         a1 = S.legal(tuple(sum(bands[b][0][i] for b in rings) / len(rings) for i in (0, 1)))
+        # the agg chain has a fixed depth (sidecar local_registered_depth): when the hub is too far from the pin for it,
+        # agg_1 moves along the street path toward the pin (the rings reach it through their own status relays)
+        pp = S.path(a1, root_xy); acc = [0.0]
+        for i in range(len(pp) - 1): acc.append(acc[-1] + md(pp[i], pp[i + 1]))
+        room = (ndep - 1) * HMAX * 0.96
+        if acc[-1] > room:
+            i = next(k for k in range(len(pp)) if acc[-1] - acc[k] <= room)
+            a1 = S.legal(pp[i]); rep["agg_1_moved_toward_pin_um"] = round(acc[i], 1)
         pts, h = S.chain(a1, 0.0, root_xy, 0.0, ndep - 2); note("agg", h)
         assert len(pts) == ndep - 2, (tn, "agg chain needs depth", len(pts) + 2, "has", ndep)
         anchors = {"u_cland_agg_1": a1}
@@ -144,11 +158,12 @@ def build(tn, T, coll, wrapper):
 def main(argv):
     ROOT, SRC, OUT = Path(argv[1]), Path(argv[2]), Path(argv[3])
     TYPES = argv[argv.index("--types") + 1].split(",") if "--types" in argv else ["hd_lep0N", "hd_ctl"]
+    REDO = set(argv[argv.index("--redo") + 1].split(",")) if "--redo" in argv else set()
     plan = json.loads((SRC / "source_plan.json").read_text()); side = json.loads((SRC / "source_sidecar.json").read_text())
     report = {}
     for tn in TYPES:
         T = plan["partition_types"][tn]
-        add, rep = build(tn, T, side["collector"]["types"][tn], SRC / "published" / (T["module"] + ".sv"))
+        add, rep = build(tn, T, side["collector"]["types"][tn], SRC / "published" / (T["module"] + ".sv"), redo=tn in REDO)
         T["clock"].update(add); report[tn] = rep
         T["note"] += (" | FABLE-DIE-HEAD rp21z20NF14 (11-16, FABLE-CLOSURE lever C): landing sideband reach rows %s on street paths, "
                       "every hop <= 370 um, 0 data cycles" % "/".join(sorted(add)))

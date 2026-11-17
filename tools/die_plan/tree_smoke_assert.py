@@ -18,6 +18,10 @@ REQUIRED_FILES = ("tools/die_plan/tt_setup_keep.py", "tools/die_plan/tt_setup_re
 WIRED = (("tools/die_plan/gen_phys.py", "tt_setup_keep"),)
 # FABLE-CLOSURE-1143 r309: S81 serdes types build only from a tree that carries the TXPIPE placement hook (f84ed61a70, main 8b9258eb3ce):
 # SERDES_PIPE_CHAINS (gen_phys) names the pipe chains whose placement txl_mid.tcl face mode takes, and its RXNEG entry is the new one
+# FABLE-PD-S81-F2s4 (cond 2): a published S81 tree must carry d5bd6d74 (clock_landings accepts no-latch wavefront relays, `_nl`) and
+# 55b26f (clock_taps.tcl keeps explicit clock cohorts atomic: ct_group_owned) before the serdes t1/t15 START rows GEN
+F2S4_MARKERS = (("tools/die_plan/clock_landings.py", "(?:relay|gate)(?:_nl)?", "d5bd6d74"),
+                ("tools/die_plan/clock_taps.tcl", "ct_group_owned", "55b26f"))
 HOOK_S81 = (("tools/die_plan/gen_phys.py", '"OT_S81_SERDES_RXNEG": ("u_rxf"'), ("tools/die_plan/gen_phys.py", "SERDES_PIPE_CHAINS"))
 
 
@@ -39,6 +43,13 @@ def check(tree, dies=None):
             try:
                 if word not in (tree / rel).read_text(errors="replace"):
                     out.append(f"STALE-TREE {rel} lacks the S81 serdes TXPIPE hook ({word}; main 8b9258eb3ce, f84ed61a70)")
+            except OSError:
+                pass
+    if dies is None or "s81" in dies:
+        for rel, word, sha in F2S4_MARKERS:
+            try:
+                if word not in (tree / rel).read_text(errors="replace"):
+                    out.append(f"STALE-TREE {rel} lacks {sha} (marker {word!r}): S81 serdes START rows need it before GEN")
             except OSError:
                 pass
     try:

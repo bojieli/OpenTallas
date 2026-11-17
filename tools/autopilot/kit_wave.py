@@ -1840,8 +1840,20 @@ def retire_superseded_rows(AP, cfg, st, now=None):
             r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="relaunch", updated=now,
                      reason=f"SUPERSEDED: event {r.get('event')} is not current ({d['event']}); relaunched on the current event")
             relaunched += 1
-    if (retired or relaunched) and AP is not None:
-        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}")
+    dedup = 0
+    for r in items.values():                             # DEDUP-RETIRE-1116 (FABLE-FLOW-1113 #8: 173 unowned S81 DEDUP rows from the old plan line)
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("status") != "DEDUP" or not d.get("event"):
+            continue
+        old = bool(r.get("event")) and r.get("event") != d["event"]
+        owner_gone = any(o.get("die") == r.get("die") and o.get("item") == r.get("dedup_owner") and o.get("event") == r.get("event")
+                         and o.get("status") == "CANCELLED" and o.get("class") == "SUPERSEDED" for o in items.values())
+        if old or owner_gone:
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="dedup", updated=now,
+                     reason=f"SUPERSEDED: DEDUP member of {r.get('dedup_owner')} on " + (f"event {r.get('event')} (die is on {d['event']})" if old else "a retired owner row"))
+            dedup += 1
+    if (retired or relaunched or dedup) and AP is not None:
+        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}, dedup members {dedup}")
     return retired, relaunched
 
 
@@ -6898,7 +6910,6 @@ def ks_spec(sp, plan, W):
 
 
 KIT_INPUT_MISSING = "KIT_INPUT_MISSING"
-SNAP_COPY_MAX_GB = 40                # a snapshot larger than this is not copied between hosts (a tree, not a kit input)
 
 
 def snap_root_of(W):
@@ -6966,11 +6977,9 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
                 continue
             sd = d2["dir"]
             hh = hub if h == "localhost" else h
-            fetch = (f"set -e; kb=$(ssh -o BatchMode=yes -o ControlPath=none -o ConnectTimeout=10 {q(hh)} \"du -sk {q(sd)} | cut -f1\"); "
-                     f"if [ \"${{kb:-0}}\" -gt {SNAP_COPY_MAX_GB * 1024 * 1024} ]; then echo KIT-SNAP COPY refused: $kb KB over the "
-                     f"{SNAP_COPY_MAX_GB} GB cap; exit 4; fi; mkdir -p {q(sd)}; "
-                     f"rsync -a --delete --exclude .verified --exclude .used -e \"ssh -o BatchMode=yes -o ControlPath=none\" "
-                     f"{q(hh)}:{q(sd)}/ {q(sd)}/; echo KW_SNAP_COPIED {q(hh)} $kb KB; " + ks_cmd(f"verify {q(sd)}"))
+            # Destination-local fetch owns the per-snapshot OS lock, rechecks
+            # verified completion after waiting, and atomically publishes once.
+            fetch = ks_cmd(f"fetch {q(sd)} --from-host {q(hh)}")
             rc3, t3 = run("kit_snap_fetch", remote(fetch), idempotent=True)
             if rc3 or "KW_KIT_SNAP_VERIFY " not in t3:
                 return None, "KIT-SNAP copy %s -> %s failed or did not verify (rc %s)\n%s" % (h, G, rc3, t3[-3000:])
@@ -7876,6 +7885,24 @@ def resume_source(AP, prev):
     return out
 
 
+def attempt_gen_host(cfg, die, rec):
+    """GENHOST-REC-1116 (COORD): the host an attempt GENERATED on: its record, else its spec.json, else the host of its recorded kit
+    (host:path); only then the die's current gen_host.  dies.<die>.gen_host moves while units are held, so a later stage that reads
+    the current value looks for the kit on the wrong host."""
+    rec = rec or {}
+    if rec.get("gen_host"):
+        return rec["gen_host"]
+    try:
+        g = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
+        if g:
+            return g
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    if ":" in str(rec.get("kit") or ""):
+        return str(rec["kit"]).split(":", 1)[0]
+    return ((cfg.get("dies") or {}).get(die) or {}).get("gen_host")
+
+
 def bind_restage(cfg, die, prev, sp):
     """the attempt after a RESTAGE runs on the host the move chose, while that host still holds the die's gen inputs"""
     moved = prev.pop("restage_host", None)
@@ -8135,6 +8162,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
            "block_sha": r.get("block_sha"), "plan_sha": cfg["dies"][die].get("_plan_sha"),
            "unit": unit, "dir": str(jd), "volume": r.get("volume") or "",
+           "gen_host": sp.get("gen_host"), "work": sp.get("work"),        # GENHOST-REC-1116: the host this attempt generated on; later stages / controllers read it, never the die's current gen_host
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time(),
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
@@ -9304,6 +9332,54 @@ def path_exists_somewhere(cfg, die, p, ttl=300, now=None):
     return ok
 
 
+_SNAP_PATH_RE = re.compile(r"^(/.+)/snaps/([0-9a-f]{40})/root(/.+)$")
+SNAP_FIXED = {}
+# one snapshot made after the fail (MANIFEST newer than $3) that holds a file matching the logical path ($4, a prefix: the stored
+# error text may be cut) which the failed snapshot ($2) does not hold
+_SNAP_FIXED_SH = ('for m in "$1"/snaps/*/MANIFEST.json; do d=${m%/MANIFEST.json}; [ "${d##*/}" = "$2" ] && continue; '
+                  '[ "$(stat -c %Y "$m" 2>/dev/null || echo 0)" -gt "$3" ] || continue; '
+                  'for f in "$d/root$4"*; do [ -e "$f" ] || continue; [ -e "$1/snaps/$2/root${f#"$d"/root}" ] && continue; exit 0; done; done; exit 1')
+
+
+def snapshot_logical(p):
+    """(store, snapshot id, logical path) of a path inside a kit-store snapshot, else None"""
+    m = _SNAP_PATH_RE.match(str(p or ""))
+    return m.groups() if m else None
+
+
+def snapshot_closure_fixed(cfg, die, p, since, ttl=300, now=None):
+    """FABLE-FIX-KV-PVHUB 11-16 (KV 7yhr hub_C / hub_Wo / pv_v1 @kit_topology: snapshot 550ac5b3 lacked plan_of_record/eW_sidecar.json):
+    a missing input INSIDE a kit-store snapshot can never appear, the snapshot is immutable, and the logical file always existed, so
+    neither says the closure is fixed.  Evidence that it is: a snapshot of the same store made after the fail holds the file.  Cached 5 min."""
+    sl = snapshot_logical(p)
+    if not sl:
+        return False
+    now = time.time() if now is None else now
+    c = SNAP_FIXED.get((die, p))
+    if c and now - c[0] < ttl:
+        return c[1]
+    store, sid, logical = sl
+    d = (cfg.get("dies") or {}).get(die) or {}
+    hosts = [h for h in dict.fromkeys([d.get("gen_host")] + list(d.get("gen_hosts") or [])) if h]
+    args = [store, sid, str(int(float(since or 0))), logical]
+    ok = False
+    try:
+        ok = subprocess.run(["sh", "-c", _SNAP_FIXED_SH, "snapfix"] + args, capture_output=True, timeout=60).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        ok = False
+    for h in ([] if ok else hosts):
+        try:
+            cmd = "sh -c " + shlex.quote(_SNAP_FIXED_SH) + " snapfix " + " ".join(shlex.quote(x) for x in args)
+            if subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, cmd],
+                              capture_output=True, timeout=60).returncode == 0:
+                ok = True
+                break
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+    SNAP_FIXED[(die, p)] = (now, ok)
+    return ok
+
+
 FILE_SHA = {}
 
 
@@ -9444,6 +9520,8 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         changed = [k for k in ("block", "src", "overlay") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
         if not changed and any(path_exists_somewhere(cfg, die, p) for p in miss):
             changed = ["input"]
+        if not changed and any(snapshot_closure_fixed(cfg, die, p, prev.get("ts") or 0) for p in miss):
+            changed = ["snapshot"]
     else:
         changed = [k for k in ("block", "src", "overlay", "tools") if now.get(k) != old.get(k) and not (k == "block" and not block_sha)]
         # FABLE-FLOW-0445 #3: an overlay (or tools) change that did not touch a file the failed stage read is no release: kv3_pv_v1/v7/v12 failed 4 times
@@ -10749,13 +10827,39 @@ def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=
     return dr
 
 
+def log_hold_releases(AP, ap_dir, entries, text, reset=False):
+    """HOLD-LOG-1116 (FABLE-FLOW-1113 #7: 12,624 HOLD-AUTO-RELEASE lines for 259 keys): the release is recomputed every tick, so it was logged every
+    tick.  Log one line per (die, key, condition) change: the logged set lives in <ap_dir>/hold_release_logged.json; reset=True (the first call of a
+    tick) first drops the keys that are no longer released, so a key released again later logs again."""
+    p = Path(ap_dir) / "hold_release_logged.json"
+    try:
+        seen = set(json.loads(p.read_text()))
+    except (OSError, ValueError):
+        seen = set()
+    cur = {f"{d}/{k}/{c}" for d, k, c in entries}
+    if reset:
+        seen &= cur
+    new = 0
+    for d, k, c in entries:
+        key = f"{d}/{k}/{c}"
+        if key not in seen:
+            seen.add(key)
+            new += 1
+            AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {d}/{k}: {text} ({c})")
+    if not AP.DRY:
+        try:
+            p.write_text(json.dumps(sorted(seen)))
+        except OSError:
+            pass
+    return new
+
+
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     _t0 = time.time()
-    for _die, _key, _cond in cfg.get("_hold_auto_released") or []:
-        AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release_on met ({_cond})")
+    log_hold_releases(AP, ap_dir, cfg.get("_hold_auto_released") or [], "release_on met", reset=True)
     WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
     merge_auto_views(cfg, ap_dir, AP.log)                # KW-FIX-35-CV: counted child views overlay (hub sidecar)
     merge_src_overlay(cfg, AP.HUB_NAME, AP.log)          # KW-FIX-44: spec field for in-place source overlays
@@ -10774,11 +10878,12 @@ def _step(AP, ap_dir):
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
         cfg["_proof_lines"] = _q[-3000:]
+        import pending_actions as _PA                    # LIMIT-GUARD-1116: release steps as data, run here with no lane
+        _PA.step_cfg(AP, cfg, ap_dir)
         _before = len(cfg.get("_hold_auto_released") or [])
         _tf, _mf = tree_gate(AP, cfg)
         compile_hold_records(cfg, None, _tf, _mf)
-        for _die, _key, _cond in (cfg.get("_hold_auto_released") or [])[_before:]:
-            AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {_die}/{_key}: release terms met ({_cond})")
+        log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met")
         import hold_records as _HR                       # tree_ready: switch dies.<die>.src / die_gen_env in memory, no lane needed
         for _die, _tree, _ch in _HR.apply_tree_switches(cfg, hold_ctx(cfg, None, _tf, _mf)):
             if (_die, _tree, tuple(_ch)) not in _TREE_LOGGED:
@@ -10825,6 +10930,8 @@ def _step(AP, ap_dir):
     try:
         name_stuck_retry_infra(AP, cfg, st)
         retire_superseded_rows(AP, cfg, st)
+        import pending_actions as _PA2
+        _PA2.step_rows(AP, st, ap_dir)
         config_key_check(AP, cfg, st)
     except Exception as e:
         AP.log(f"KIT-WAVE retry-infra naming / config-key check skipped: {type(e).__name__}: {e}")

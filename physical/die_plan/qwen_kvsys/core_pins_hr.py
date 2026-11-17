@@ -141,7 +141,7 @@ class Host:
             m = self.J[m]['cells'][hit[0]]['type']
         return '/'.join(path)
 
-    def walk(self, members):
+    def walk(self, members, include_opaque=False):
         """union-find over (inst path, bit) of the non-member hierarchy; returns nets {root: [ends]}, glue cells."""
         par = {}
 
@@ -164,7 +164,8 @@ class Host:
             has = False
             for cn, c in self.J[m]['cells'].items():
                 cp = (path + '/' + cn) if path else cn
-                if c['type'] in self.J:
+                opaque = self.J.get(c['type'], {}).get('attributes', {}).get('blackbox')
+                if c['type'] in self.J and (cp in members or not (include_opaque and opaque)):
                     if cp in members:
                         mods[cp] = c['type']
                         for p, bits in c['connections'].items():
@@ -204,6 +205,7 @@ class Host:
                 if e[0] == 'G':
                     gnets.setdefault(e[1], set()).add(r)
         self.mods = mods
+        self.net_root = f
         return nets, glue, gnets, subtree
 
     def port_info(self, mpath):

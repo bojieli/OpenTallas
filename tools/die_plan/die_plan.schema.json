@@ -1717,6 +1717,9 @@
           "maxItems": 2
          }
         },
+        "explicit_stage0": {
+         "type": "boolean"
+        },
         "bit_sites_um": {
          "type": "array",
          "items": {
@@ -2174,6 +2177,16 @@
          },
          "note": {
           "type": "string"
+         },
+         "fixed_taps": {
+          "type": "object",
+          "propertyNames": {
+           "pattern": "^[A-Za-z0-9_./-]+$"
+          },
+          "additionalProperties": {
+           "type": "string",
+           "minLength": 1
+          }
          }
         }
        },
