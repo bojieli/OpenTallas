@@ -113,3 +113,45 @@ class RetirementQueueRefs(unittest.TestCase):
         os.utime(old, (now-500, now-500))
         self.assertIn("SIGNED unit", run()[0]["result"])
         self.assertTrue(os.path.isdir(old))
+
+
+class ExplicitRollback(unittest.TestCase):
+    def setUp(self):
+        self.root = mk([("src_head_d1", 500), ("src_head_d2", 400), ("src_head_d3", 300),
+                        ("src_head_d4", 200), ("src_head_d5", 100)])
+        self.addCleanup(__import__("shutil").rmtree, self.root)
+        self.names = os.listdir(self.root)
+        self.mt = {n: os.lstat(os.path.join(self.root, n)).st_mtime for n in self.names}
+        self.row = {"src": os.path.join(self.root, "src_head_d4"),
+                    "rollback_tree": os.path.join(self.root, "src_head_d3"),
+                    "superseded_trees": [os.path.join(self.root, "src_head_d2")]}
+
+    def select(self, row=None, extra="", texts=None):
+        cfg = {"dies": {"s81_head": self.row if row is None else row}}
+        return A.select(self.names, cfg, [json.dumps(cfg), extra, ""] if texts is None else texts, self.mt, root=self.root)
+
+    def test_existing_explicit_rollback_does_not_reserve_an_extra_tree(self):
+        self.assertEqual(self.select(), ["src_head_d1", "src_head_d2"])
+        # Canonical rollback remains protected even when there is no textual ref.
+        self.assertNotIn("src_head_d3", self.select(texts=["", "", ""]))
+
+    def test_missing_wrong_die_newer_and_symlink_rollback_keep_fallback(self):
+        for path in (os.path.join(self.root, "src_head_missing"),
+                     os.path.join(self.root, "src_head_d5"),
+                     os.path.join(self.root, "src_kv_other")):
+            self.assertNotIn("src_head_d3", self.select(dict(self.row, rollback_tree=path)))
+        no = dict(self.row); no.pop("rollback_tree")
+        self.assertNotIn("src_head_d3", self.select(no))
+        alias = os.path.join(self.root, "alias")
+        os.symlink(self.row["rollback_tree"], alias)
+        self.assertNotIn("src_head_d3", self.select(dict(self.row, rollback_tree=alias)))
+
+    def test_same_name_elsewhere_does_not_qualify_and_other_refs_still_protect(self):
+        with tempfile.TemporaryDirectory() as td:
+            other = os.path.join(td, "src_head_d3"); os.mkdir(other)
+            self.assertIsNone(A.rollback_snapshot("s81_head", dict(self.row, rollback_tree=other),
+                                                  "src_head_d4", self.names, self.mt, root=self.root))
+        self.assertNotIn("src_head_d2", self.select(extra=os.path.join(self.root, "src_head_d2")))
+        row = dict(self.row, manual_protected=os.path.join(self.root, "src_head_d2"))
+        self.assertNotIn("src_head_d2", self.select(row))
+        self.assertNotIn("src_head_d5", self.select())  # pending newer adoption

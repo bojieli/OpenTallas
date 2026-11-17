@@ -51,14 +51,40 @@ def live_reference_texts(cfg, texts):
     return [json.dumps(clean), *texts[1:]]
 
 
-def select(trees, cfg, texts, mtimes):
+def rollback_snapshot(die, row, current, trees, mtimes, root=None):
+    """An existing local, same-die, older source entry can be the one rollback."""
+    path = row.get("rollback_tree")
+    if not isinstance(path, str) or not os.path.isabs(path):
+        return None
+    name = os.path.basename(path.rstrip("/"))
+    if name not in trees or die_of(name) != die or name == current:
+        return None
+    if name not in mtimes or current not in mtimes or mtimes[name] >= mtimes[current]:
+        return None
+    if os.path.islink(path) or not os.path.isdir(path):
+        return None
+    if root is not None:
+        try:
+            if not os.path.samefile(path, os.path.join(root, name)):
+                return None
+        except OSError:
+            return None
+    return name
+
+
+def select(trees, cfg, texts, mtimes, root=None):
     """trees = [name]; cfg = parsed kit_wave.json; texts = [kit_wave.json, state, markers text]; mtimes = {name: mtime}.  -> [name] candidates, oldest first"""
     texts = live_reference_texts(cfg, texts)
     dies = cfg.get("dies") or {}
     cur = {d: os.path.basename(str((v or {}).get("src") or "").rstrip("/")) for d, v in dies.items()}
+    rollbacks = {}
+    for die, row in dies.items():
+        name = rollback_snapshot(die, row or {}, cur.get(die), trees, mtimes, root)
+        if name is not None:
+            rollbacks[die] = name
     out = []
     for name in sorted(trees, key=lambda n: mtimes.get(n, 0)):
-        if ref_count(name, texts):
+        if name in rollbacks.values() or ref_count(name, texts):
             continue                                                  # referenced anywhere = kept, whole tree
         d = die_of(name)
         if d and cur.get(d):
@@ -66,9 +92,12 @@ def select(trees, cfg, texts, mtimes):
             if mtimes.get(name, 0) >= cm:
                 continue                                              # newer than (or) current: pending adoption
         out.append(name)
-    # one rollback per die: the newest unreferenced tree older than the die's current tree is kept
+    # An explicit qualified rollback is already kept. Use the old conservative
+    # fallback only when that designated snapshot is absent or invalid.
     keep = set()
     for d in {die_of(n) for n in out} - {None}:
+        if d in rollbacks:
+            continue
         olds = [n for n in out if die_of(n) == d]
         if olds:
             keep.add(max(olds, key=lambda n: mtimes.get(n, 0)))
@@ -105,7 +134,7 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
     texts = live_reference_texts(cfg, texts)
     free = free or (lambda: free_gb(root))
     names = [n for n in os.listdir(root) if n.startswith("src_") and os.path.isdir(os.path.join(root, n)) and not os.path.islink(os.path.join(root, n))]
-    cand = select(names, cfg, texts, {n: os.lstat(os.path.join(root, n)).st_mtime for n in names})
+    cand = select(names, cfg, texts, {n: os.lstat(os.path.join(root, n)).st_mtime for n in names}, root=root)
     res = []
     for n in cand:
         if free() >= target_gb:
