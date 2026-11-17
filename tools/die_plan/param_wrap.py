@@ -65,6 +65,14 @@ PORTS = {
 }
 
 
+# QC L2/M4 ordinary tail1 masters also carry neighbour input pins.
+# Keep the shared header order and add only the two ports removed by nb0.
+_nb0 = PORTS["qfd_dv_s8_station_tail1_nb0"]
+_i = next(i for i, (_, n, _) in enumerate(_nb0) if n == "nb_od")
+PORTS["qfd_dv_s8_station_tail1"] = (_nb0[:_i]
+    + [("input", "nb_d_p", lambda p: 64), ("input", "nb_c_p", lambda p: 2)]
+    + _nb0[_i:])
+
 def param_text(params):
     """the bind's instantiation parameter text: #(.W(2104), .DEPTH(4), ...) in the given order"""
     return "#(" + ", ".join(f".{k}({int(v)})" for k, v in params.items()) + ")"

@@ -979,7 +979,10 @@ def pick_charge_gb(cfg, die, item):
 HUB_DISK_PATHS = ("/srv/opentallas-scratch2", "/")
 
 
-def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
+_HUB_STATVFS = os.statvfs            # tests replace this with a fixed host state (conftest), never the live disk
+
+
+def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=None):
     """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1200 item 2): '' or why the hub cannot take new work.  A hub ENOSPC killed 28 units at once; the tick
     launches nothing while the hub's scratch2 or root has less than hub_free_min_gb (default 64) free.  Running units are untouched."""
     try:
@@ -988,6 +991,7 @@ def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
         floor = 64.0
     if floor <= 0:
         return ""
+    statvfs = statvfs or _HUB_STATVFS
     low = []
     for p in paths:
         try:
@@ -1000,11 +1004,43 @@ def hub_disk_low(cfg, paths=HUB_DISK_PATHS, statvfs=os.statvfs):
     return "hub disk low: " + "; ".join(low) if low else ""
 
 
+HUB_ALERT_TICKS = 2
+
+
+def hub_top_writers(root="/srv/opentallas-scratch2/claude", n=5, run=None):
+    """best effort: the n biggest directories directly under root (du, 40 s cap) as 'path GB, ...'"""
+    try:
+        p = (run or subprocess.run)(["timeout", "40", "du", "-sk", "--max-depth=1", root], capture_output=True, text=True, timeout=50)
+        rows = sorted(((int(a), b) for a, b in (ln.split("\t", 1) for ln in p.stdout.splitlines() if "\t" in ln) if b.strip() != root), reverse=True)
+        return ", ".join(f"{b.strip()} {a / 2**20:.0f} GB" for a, b in rows[:n]) or "unknown"
+    except Exception:
+        return "unknown"
+
+
+def hub_launch_held(cfg, die, item):
+    """'' or the hub-disk reason when this launch writes to the hub: every gen host of the item is the hub (build-host launches never wait on the hub floor)"""
+    why = cfg.get("_hub_disk_low")
+    if not why:
+        return ""
+    try:
+        hosts = [h for h in gen_hosts(cfg, die, item)]
+    except Exception:
+        return why
+    return why if all(h in ("localhost", "intel2", cfg.get("hub")) for h in hosts) else ""
+
+
 def hub_disk_gate(AP, cfg, st, now=None):
     """called once per tick: sets cfg['_hub_disk_low'] and posts one STATE line when the condition starts (one more when it ends)"""
     why = hub_disk_low(cfg)
     cfg["_hub_disk_low"] = why
     g = st.setdefault("hub_disk", {})
+    if why:
+        g["ticks"] = int(g.get("ticks") or 0) + 1
+        if g["ticks"] == HUB_ALERT_TICKS and not g.get("alerted") and not getattr(AP, "DRY", False):
+            g["alerted"] = time.time()
+            AP.log(f"KIT-WAVE HUB-DISK ALERT: hub floor held {g['ticks']} ticks: {why}")
+            AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [KIT-WAVE -> COORD, FLEET-OPS-R] hub disk floor held {g['ticks']} ticks: {why}. "
+                            f"Hub writers only are held (launches whose gen host is the hub); build-host launches continue. Top hub writers: {hub_top_writers()}")
     if why and not g.get("since"):
         g["since"] = time.time() if now is None else now
         AP.log(f"KIT-WAVE HUB-DISK launch refused: {why}")
@@ -1021,8 +1057,6 @@ def stop_reason(cfg, die, ap_dir=None):
     ap_dir = Path(ap_dir or AP_DIR)
     if cfg.get("error"):
         return cfg["error"]
-    if cfg.get("_hub_disk_low"):
-        return cfg["_hub_disk_low"]
     if (ap_dir / "kit_wave.stop").exists():
         return "global stop file kit_wave.stop"
     if not cfg.get("enabled"):
@@ -2771,6 +2805,7 @@ def place_rc0_no_odb(text):
 
 
 RULES = [
+    ("INFRA", r"^geom_tools$", r"KW_GEOM_TOOLS", "geometry tool closure could not be staged on the checkpoint host"),
     # KITRTL-FAIL-1115: a die src tree's own (older) bind.py lacks a flag the wave passes: tool skew, one stable reason
     ("FLOW", r"^kit_rtl$", r"bind\.py: error: unrecognized arguments", "kit_rtl tool skew (the die src tree's bind.py predates a wave flag; the wave falls back to the scheduler's bind.py)"),
     ("INFRA", r"^place$", place_rc0_no_odb, PLACE_NO_ODB_WHY),
@@ -3967,6 +4002,28 @@ def prov_resign_run(spec_path):
     return done("PASS" if p.returncode == 0 else "FAIL", txt)
 
 
+def gen_floor(cfg):
+    """the gen disk floor for this tick: measured kit peak (kit_peak_disk.floor) when a fresh measurement is in cfg, else cfg gen_disk_min_gb"""
+    try:
+        import kit_peak_disk
+        return kit_peak_disk.floor(cfg, 60)
+    except ImportError:
+        return int(cfg.get("gen_disk_min_gb", 60))
+
+
+def _du_dirs(host, dirs, AP):
+    """{dir: bytes} for existing dirs on host (one ssh; a missing dir is left out)"""
+    import shlex
+    cmd = "for d in %s; do [ -d \"$d\" ] && du -sk \"$d\"; done" % " ".join(shlex.quote(d) for d in dirs)
+    rc, out, _ = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, cmd], timeout=300)
+    res = {}
+    for ln in (out or "").splitlines():
+        k, _, d = ln.partition("\t")
+        if k.isdigit() and d:
+            res[d] = int(k) * 1024
+    return res
+
+
 GEN_DISK_MIN_GB = 60      # KW-FIX-24 11-06 (COORD 16:2x): cfg gen_disk_min_gb; 0 turns it off
 
 
@@ -4616,7 +4673,7 @@ def workroot_low(AP, cfg, run=None):
     S81/QC lane root /srv/opentallas-scratch3/claude/kw26-wave-1106 is the ROOT disk on most hosts (epyc6 root 94 GB
     gave gens while scratch2 looked fine).  One ssh per host: df of the lane root, or of its nearest existing parent.
     An unreachable host or unreadable df is unknown, never low.  Global or die option workroot_probe: false = off."""
-    floor = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB))
+    floor = gen_floor(cfg)
     # KW-FIX-35 11-08 (COORD 08:4x; OWNER 11-05 all disks are scratch, 11-06 root floor 150): a lane on the ROOT fs
     # ('/') must keep root_floor_gb free beyond the gen room: low there below root_floor_gb + root_gen_room_gb
     rfloor = int(cfg.get("root_floor_gb", 150)) + int(cfg.get("root_gen_room_gb", 40))
@@ -4917,7 +4974,7 @@ def alt_charge(cfg, h):
     if not alt:
         return
     need, free = int(cfg.get("gen_alt_charge_gb", GEN_ALT_CHARGE_GB)), cfg.setdefault("_workroot_free", {}).get(h) or {}
-    lim = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB)) + need              # entry needed +gen_need_gb; the burst may use it down to one kit above the floor
+    lim = gen_floor(cfg) + need              # entry needed +gen_need_gb; the burst may use it down to one kit above the floor
     for die in list(alt):
         free[die] = int(free.get(die, lim)) - need
         if free[die] < lim:
@@ -6310,6 +6367,42 @@ def ensure_future_lec(out, meta):
     return ""
 
 
+GEOM_TOOL_FILES = ("geom_check.sh", "geom_dump.tcl", "geom_grt.tcl", "geom_rules.py", "geom_png.py", "placed_scan.py", "geom_memory.py")
+
+
+def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None):
+    """Put the scheduler's complete tool closure beside the actual checkpoint, never move the checkpoint's host."""
+    q = shlex.quote
+    root = Path(tool_root or Path(__file__).resolve().parent)
+    blobs = {name: (root / name).read_bytes() for name in GEOM_TOOL_FILES}
+    hashes = {name: hashlib.sha256(blob).hexdigest() for name, blob in blobs.items()}
+    digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
+    local = Path(out) / (".geom-tools-" + digest[:16])
+    local.mkdir(exist_ok=True)
+    for name, blob in blobs.items():
+        f = local / name
+        if f.exists() and f.read_bytes() != blob:
+            raise OSError(f"KW_GEOM_TOOLS local snapshot differs: {f}")
+        if not f.exists():
+            f.write_bytes(blob)
+    target = str(Path(geom_dir) / local.name)
+    rc, txt = run("geom_tools_dir", remote_argv(host, hub, f"mkdir -p {q(target)}"), idempotent=True)
+    if rc:
+        raise OSError(f"KW_GEOM_TOOLS {host}: mkdir failed: {txt[-500:]}")
+    dest = f"{host}:{target}/" if _ssh(host, hub) else target + "/"
+    rc, txt = run("geom_tools_copy", ["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none", str(local) + "/", dest], idempotent=True)
+    if rc:
+        raise OSError(f"KW_GEOM_TOOLS {host}: copy failed: {txt[-500:]}")
+    check = ("import hashlib,json,pathlib; r=pathlib.Path(" + repr(target) + "); "
+             "w=json.loads(" + repr(json.dumps(hashes)) + "); "
+             "bad=[n for n,h in w.items() if not (r/n).is_file() or hashlib.sha256((r/n).read_bytes()).hexdigest()!=h]; "
+             "assert not bad, 'KW_GEOM_TOOLS hash mismatch: '+str(bad); print('KW_GEOM_TOOLS_OK " + digest[:16] + "')")
+    rc, txt = run("geom_tools_verify", remote_argv(host, hub, "python3 -I -c " + q(check)), idempotent=True)
+    if rc or "KW_GEOM_TOOLS_OK " + digest[:16] not in txt:
+        raise OSError(f"KW_GEOM_TOOLS {host}: verification failed: {txt[-500:]}")
+    return target
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     spec_bytes = Path(spec_path).read_bytes()
@@ -6473,20 +6566,13 @@ def run_item(spec_path):
         rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:
             return fail("geom_cfg", txt)
-        # KW-FIX-45 11-12 geom host has the src tree (COORD: hbm/hnx_fused_lane_c geom_run failed on a host without the HBM tree after
-        # gen_hosts was widened): geom_check.sh runs from the src tree, so run geom on a host that HAS it: the kit host if it does,
-        # else the gen host.  The kit's physical copy lives on the gen host after the place hand-off.
-        _gh = kh
+        # The physical checkpoint decides the host.  A missing old source tree
+        # requires staging tools there, never falling back to a host without the DB.
         try:
-            _r, _t = run("geom_src_" + kh, remote_argv(kh, hub, f"test -e {q(src)}/tools/autopilot/geom_check.sh && echo KW_SRC_OK || echo KW_SRC_MISSING"), idempotent=True)
-            if "KW_SRC_OK" not in _t and G != kh:
-                _gh = G
-                print(f"KW_GEOM_HOST src tree missing on {kh}: geom runs on the gen host {G}", flush=True)
-        except Exception as _e:
-            print(f"KW_GEOM_HOST check skipped: {_e}", flush=True)
-        if _gh != kh:                                    # the check config the stage wrote on the kit host must exist on the geom host too
-            run("geom_cfg_gh", remote_argv(_gh, hub, f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"), idempotent=True)
-        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [_gh]))
+            geom_tools = stage_geom_tools(out, gd, kh, hub, run)
+        except OSError as e:
+            return fail("geom_tools", f"KW_GEOM_TOOLS {kh}: {e}", f"{kh}:{gd}")
+        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(geom_tools)}/geom_check.sh {q(gd)}", [kh], roam=False))
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
         ps_line = placed_scan_line(txt)      # PLACED-SCAN-1115: advisory early-fail diagnostic, names the matched group
@@ -8262,7 +8348,7 @@ def tool_skew_measure(AP, cfg, st, die):
     cache[die] = res
     n, tot = len(res["refused"]), res.get("n_closure", 0)
     if not res["measured"]:
-        AP.log(f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: tree {d['src']} not readable")
+        AP.log(f"KIT-WAVE TOOL-SKEW UNMEASURED {die}: {res.get('why') or 'tree ' + str(d['src']) + ' not readable'}")
     elif not res["ok"]:
         if mode == "warn":
             AP.log(f"KIT-WAVE TOOL-SKEW WARN {die}: {n} of {tot} import-closure module(s) differ from {'pin ' + res['pin'] if res.get('pin') else 'main'} (warn, launching)")
@@ -8311,6 +8397,8 @@ def tool_skew_refuse(AP, cfg, st, die):
 def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if not scheduler_current(AP):
         return None
+    if hub_launch_held(cfg, die, r.get("item")):          # WAVE-FLOW-R 11-17: the hub floor holds hub writers only
+        return None
     if tool_skew_refuse(AP, cfg, st, die):
         return None
     try:                                                    # PUBTREE-1116: a "require" die runs only on its published marker tree
@@ -8347,8 +8435,16 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             return None
         _bl, _why, _chg = fail_key_gate(cfg, st, die, r.get("item"), r.get("block_sha"))
         if _bl:
-            AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: {_why}")
+            _rk = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}", {}).get("key", "")
+            _led = st.setdefault("refused_once", {})
+            _e = _led.get(f"{die}|{r.get('item')}")
+            if not _e or _e.get("key") != _rk:
+                _led[f"{die}|{r.get('item')}"] = {"key": _rk, "n": 1, "ts": time.time()}
+                AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: {_why} (recorded once; further ticks count in state refused_once until an input changes)")
+            else:
+                _e["n"] = int(_e.get("n") or 0) + 1
             return None
+        (st.get("refused_once") or {}).pop(f"{die}|{r.get('item')}", None)
         if _chg:
             AP.log(f"KIT-WAVE RELAUNCH-ON-FIX {die}/{r.get('item')}: changed {'+'.join(_chg)}")
     arm = r.get("arm") if isinstance(r.get("arm"), dict) else None      # KW-FIX-44 GRTARM_1111
@@ -9615,13 +9711,48 @@ HOST_FAIL_RE = re.compile(r"No space left|disk (?:full|floor)|ENOSPC|Errno 28|co
                           r"process terminated|NOT COMPLETED|unit stopped from outside|OOM|oom-kill|earlyoom|docker|no host qualifies|admission|ot-run: NOT RUN", re.I)
 
 
-def stage_tools_digest(root=None):
-    """FABLE-FLOWCLASS-RETRY-2030 P2: the digest of the tool files the generation / bind stages import (flow_guard.closure_files of gen.py, gen_phys.py,
-    bind.py), not the whole tools tree: rt/current changed 22 times in 4 h and re-armed every failed row each time"""
+BIND_STAGES = ("kit_rtl", "kit_topology", "bind", "elab")
+_TOOL_FILE_RE = re.compile(r"(?:tools|physical)/[A-Za-z0-9_./-]+\.(?:py|sh|tcl)")
+
+
+def tools_group(stage):
+    """WAVE-FLOW-R 11-17 (FABLE-FLOW-0300 item 5): the entry modules of the stage that failed: bind stages -> bind.py, gen -> gen.py + gen_phys.py,
+    any other stage '' (the whole gen/gen_phys/bind closure, as before)"""
+    if stage in BIND_STAGES:
+        return "bind"
+    return "gen" if stage == "gen" else ""
+
+
+def failed_tool_files(why, root=None):
+    """the tool files (tree-relative, existing in this rt tree) that the failure text names, e.g. traceback frames; [] when none"""
     root = Path(root) if root else Path(__file__).resolve().parents[2]
-    k = str(root)
+    out = []
+    for m in _TOOL_FILE_RE.findall(str(why or "")):
+        rel = m.split("/tools/", 1)[-1] if m.startswith("/") else m
+        if (root / rel).is_file() and rel not in out:
+            out.append(rel)
+    return sorted(out)[:12]
+
+
+def stage_tools_digest(root=None, group="", files=None):
+    """FABLE-FLOWCLASS-RETRY-2030 P2: the digest of the tool files the generation / bind stages import (flow_guard.closure_files of gen.py, gen_phys.py,
+    bind.py), not the whole tools tree: rt/current changed 22 times in 4 h and re-armed every failed row each time.
+    WAVE-FLOW-R: group narrows the entry modules to the failed stage ('gen' / 'bind'); files = exactly the tool files the failure named (content hash)"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    k = str(root) + "|" + str(group or "") + "|" + ",".join(files or ())
+    if files:
+        if k not in _STAGE_TOOLS:
+            h = hashlib.sha1()
+            for rel in files:
+                try:
+                    h.update(rel.encode()); h.update((root / rel).read_bytes())
+                except OSError:
+                    h.update(b"missing")
+            _STAGE_TOOLS[k] = h.hexdigest()[:16]
+        return _STAGE_TOOLS[k]
     if k in _STAGE_TOOLS:
         return _STAGE_TOOLS[k]
+    entry = {"bind": ("tools/die_plan/bind.py",), "gen": ("tools/die_plan/gen.py", "tools/die_plan/gen_phys.py")}.get(group) or FG.ENTRY_FILES
     def read(rel):
         try:
             return (root / rel).read_text()
@@ -9629,7 +9760,7 @@ def stage_tools_digest(root=None):
             return None
     h = hashlib.sha1()
     try:
-        for rel in FG.closure_files(read):
+        for rel in FG.closure_files(read, entry=entry):
             try:
                 h.update(rel.encode()); h.update((root / rel).read_bytes())
             except OSError:
@@ -9657,7 +9788,7 @@ def bind_context_digest(cfg, die, kit_rtl):
     return hashlib.sha1(json.dumps(hashes).encode()).hexdigest()
 
 
-def kit_digest_parts(cfg, die, rec=None):
+def kit_digest_parts(cfg, die, rec=None, group="", files=None):
     """what a (re)launch of an item builds on: plan block sha, src sha, source content hash, the stage tools closure.  From the attempt's own spec.json
     when rec is a failed attempt (what it ran on), else from the die config (what a launch would run on)."""
     d = (cfg.get("dies") or {}).get(die) or {}
@@ -9676,7 +9807,7 @@ def kit_digest_parts(cfg, die, rec=None):
         kr = dict(d.get("kit_rtl") or {}, **(ii.get("kit_rtl") or {}))
     return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
             "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
-            "tools": stage_tools_digest(),
+            "tools": stage_tools_digest(group=group, files=files),
             "bind_context": bind_context_digest(cfg, die, kr)}
 
 
@@ -9695,13 +9826,18 @@ def note_fail_key(cfg, st, rec, cls, why):
     """store the key of this fail (not for HOST / STOPPED fails).  -> the key or None"""
     if is_host_fail(cls, why):
         return None
-    parts = kit_digest_parts(cfg, rec["die"], rec)
+    stage = rec.get("stage") or FG.fail_stage(why)
+    group, tfiles = tools_group(stage), failed_tool_files(why)
+    parts = kit_digest_parts(cfg, rec["die"], rec, group=group, files=tfiles)
     key, dig = fail_key(parts, cls, why)
     store = st.setdefault("fail_keys", {})
     k = f"{rec['die']}|{rec['item']}"
     prev = store.get(k) or {}
     n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
+    sig = hashlib.sha1(f"{stage}|{FG.norm_class(cls, why)}".encode()).hexdigest()[:12]
+    sig_n = int(prev.get("sig_n") or 1) + 1 if prev.get("sig") == sig else 1
     store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
+                "tools_group": group, "tool_files": tfiles, "sig": sig, "sig_n": sig_n,
                 "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why),
                 "read_sha": {p: file_sha(cfg, rec["die"], p) for p in stage_reads(why)}}
     rec["fail_key"] = key
@@ -9908,7 +10044,8 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
     if not prev:
         return False, "", []
     d = (cfg.get("dies") or {}).get(die) or {}
-    now = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})))
+    now = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})),
+                           group=prev.get("tools_group") or "", files=prev.get("tool_files") or None)
     old = prev.get("parts") or {}
     # Older failure keys did not record bind context. Recover only from the
     # exact failed attempt's pinned spec; never treat rollout/missing metadata as
@@ -9941,6 +10078,10 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         # on identical text because the key held one hash for the whole die overlay.  With no file named in the error the old rule stands.
         if changed and set(changed) <= {"overlay", "tools"} and prev.get("read_sha"):
             changed = ["read-file"] if reads_changed(cfg, die, prev) else []
+    # WAVE-FLOW-R 11-17 (FABLE-FLOW-0500 item 5): the same stage + error signature twice in a row closes the key against tool changes; only a named input
+    # (block, src, overlay, the files the failure names, bind context) opens it again
+    if int(prev.get("sig_n") or 0) >= 2 and not prev.get("tool_files") and "tools" in changed:
+        changed = [c for c in changed if c != "tools"]
     if context_changed:
         changed.append("bind_context")
     if not changed:
@@ -11289,25 +11430,36 @@ def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=
     return dr
 
 
-def log_hold_releases(AP, ap_dir, entries, text, reset=False):
+def log_hold_releases(AP, ap_dir, entries, text, reset=False, summary_total=None):
     """HOLD-LOG-1116 (FABLE-FLOW-1113 #7: 12,624 HOLD-AUTO-RELEASE lines for 259 keys): the release is recomputed every tick, so it was logged every
-    tick.  Log one line per (die, key, condition) change: the logged set lives in <ap_dir>/hold_release_logged.json; reset=True (the first call of a
-    tick) first drops the keys that are no longer released, so a key released again later logs again."""
+    tick.  Log one line per (die, key, condition) change: the logged set lives in <ap_dir>/hold_release_logged.json.
+    HOLD-FLOW-R 11-17 (FABLE-FLOW-0300: 2,867 lines = 35 % of log.txt, the same 125 QC items every tick): two callers share the file, the
+    legacy hold_release_on pass (reset=True, only ITS entries) and the record pass.  reset used to drop every key the caller did not list,
+    i.e. all the record keys, which were then logged again by the second call, every tick.  Keys are now namespaced by TEXT and a reset only
+    drops its own namespace; an old un-namespaced key still counts as logged.  summary_total (the record pass, once per tick) adds ONE
+    summary line: released total / new this tick."""
     p = Path(ap_dir) / "hold_release_logged.json"
     try:
         seen = set(json.loads(p.read_text()))
     except (OSError, ValueError):
         seen = set()
-    cur = {f"{d}/{k}/{c}" for d, k, c in entries}
+    pre = text + "|"
+    other = {s.split("|", 1)[1] for s in seen if "|" in s and not s.startswith(pre)}      # logged by the other pass
+    cur = {f"{pre}{d}/{k}/{c}" for d, k, c in entries}
     if reset:
-        seen &= cur
+        seen = {s for s in seen if not s.startswith(pre) or s in cur}
     new = 0
     for d, k, c in entries:
-        key = f"{d}/{k}/{c}"
-        if key not in seen:
+        legacy = f"{d}/{k}/{c}"
+        key = pre + legacy
+        if key not in seen and legacy not in seen and legacy not in other:
             seen.add(key)
             new += 1
             AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {d}/{k}: {text} ({c})")
+        elif key not in seen:
+            seen.add(key)                    # an old key, or the other pass already logged this release: no second line
+    if summary_total is not None:
+        AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE summary: {summary_total} keys released by their terms, {new} new this pass")
     if not AP.DRY:
         try:
             p.write_text(json.dumps(sorted(seen)))
@@ -11367,7 +11519,8 @@ def _step(AP, ap_dir):
         _before = len(cfg.get("_hold_auto_released") or [])
         _tf, _mf = tree_gate(AP, cfg)
         compile_hold_records(cfg, None, _tf, _mf)
-        log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met")
+        log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met", reset=True,
+                          summary_total=len(cfg.get("_hold_auto_released") or []))
         import hold_records as _HR                       # tree_ready: switch dies.<die>.src / die_gen_env in memory, no lane needed
         for _die, _tree, _ch in _HR.apply_tree_switches(cfg, hold_ctx(cfg, None, _tf, _mf)):
             if (_die, _tree, tuple(_ch)) not in _TREE_LOGGED:
@@ -11466,7 +11619,13 @@ def _step(AP, ap_dir):
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
     global GEN_DISK_MIN_GB
-    GEN_DISK_MIN_GB = int(cfg.get("gen_disk_min_gb", 60))
+    try:      # FABLE-FLOW-0300 11-17: the floor follows the MEASURED kit disk (p90 of the newest finished kits), cfg gen_disk_min_gb is the fallback
+        import kit_peak_disk
+        kit_peak_disk.refresh(ap_dir, st, lambda h, ds: _du_dirs(h, ds, AP))
+        cfg["_gen_peak_gb"] = kit_peak_disk.load(ap_dir)
+    except Exception as e:
+        AP.log(f"KIT-WAVE GEN-PEAK skipped: {type(e).__name__}: {e}")
+    GEN_DISK_MIN_GB = gen_floor(cfg)
     low = sorted(h for h, v in status.items() if gen_disk_low(v))
     if low:
         txt = " ".join("%s=%s" % (h, status[h]["scratch_gb"]) for h in low)

@@ -74,7 +74,7 @@ def read_endpoints(text):
 
 
 def plan(rows, target=TARGET_PS, select=SELECT_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_TT_MAX_PS, tt_floor=TT_FLOOR_PS,
-         double_over=DOUBLE_OVER_PS, cap=MAX_PER_ENDPOINT):
+         double_over=DOUBLE_OVER_PS, cap=MAX_PER_ENDPOINT, pad_siblings=True):
     """-> {cells: [(capture_pin, n)], skipped: [(endpoint, reason)], summary}.  The worst path to a pin sets its need."""
     worst = {}
     skipped = []
@@ -104,6 +104,39 @@ def plan(rows, target=TARGET_PS, select=SELECT_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_
             partial += 1
             n = afford
         cells.append((e, n))
+    # SHARED NETS (bksel 11-17): re-routing a net after padding some of its sinks shortened it and the unpadded sink lost 14 ps
+    # (+10.3 -> -4.1).  Per touched net: pad EVERY capture sink or none.  A sibling gets max(1, cells for its own need), cut to its
+    # TT room; one that cannot pay a cell drops the whole net (reported), so nothing is half-padded.
+    dropped = []
+    if pad_siblings:
+        worst_all = {}
+        for r in rows:
+            e = r["endpoint"]
+            if r["start_kind"] == "port" or r["end_kind"] == "port" or not capture_pin(e, r["end_kind"]) or not r.get("net"):
+                continue
+            if e not in worst_all or r["ff"] < worst_all[e]["ff"]:
+                worst_all[e] = r
+        sel_net = {e: worst_all[e]["net"] for e, _ in cells if e in worst_all}
+        for net in sorted(set(sel_net.values())):
+            sibs = sorted(e for e, r in worst_all.items() if r["net"] == net and e not in sel_net)
+            add, ok = [], True
+            for e in sibs:
+                r = worst_all[e]
+                afford = int(math.floor((r["tt"] - tt_floor) / hb4_tt)) if r["tt"] > tt_floor else 0
+                if afford < 1:
+                    ok = False
+                    skipped.append((e, f"net {net}: sibling cannot pay one cell (TT {r['tt']:.2f}); the whole net is left unpadded"))
+                    break
+                add.append((e, min(max(1, need_to_cells(target - r["ff"], hb4_ff, double_over, cap)), afford)))
+            if ok:
+                cells.extend(add)
+            else:
+                dropped.append(net)
+                gone = [e for e, n_ in cells if sel_net.get(e) == net]
+                cells = [(e, n_) for e, n_ in cells if sel_net.get(e) != net]
+                for e in gone:
+                    skipped.append((e, f"net {net} left unpadded: a sibling sink cannot be padded"))
+        cells.sort()
     selected = {e for e, _ in cells}
     touched = {r.get("net") for r in rows if r["endpoint"] in selected and r.get("net")}
     siblings = {}
@@ -117,7 +150,7 @@ def plan(rows, target=TARGET_PS, select=SELECT_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_
     return dict(cells=cells, skipped=skipped, siblings=list(siblings.values()),
                 capture_kinds={r["endpoint"]: r["end_kind"] for r in rows if r["endpoint"] in selected}, summary=dict(
         endpoints=len(cells), hb4=total, partial=partial, skipped=len(skipped), target_ps=target,
-        unmodified_touched_siblings=len(siblings),
+        unmodified_touched_siblings=len(siblings), nets_left_unpadded=len(dropped), pad_siblings=pad_siblings,
         touched_net_coverage="reported" if all(r.get("net") for r in rows if r["endpoint"] in selected) else "not_measured",
         worst_ff_ps=min([r["ff"] for r in worst.values()] or [0.0]),
         selected_over_negative=f"{len(cells)} of {sum(1 for r in rows if r['ff'] < 0 and r['start_kind'] != 'port' and r['end_kind'] != 'port')}"))

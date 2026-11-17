@@ -317,9 +317,49 @@ def macro_libs(kit, corner):
     return list(dict.fromkeys(libs)), missing
 
 
+CONTAINER_MOUNTS = ("/work", "/base", "/sdc", "/out")      # the only host trees run_corner mounts into the sign-off container
+CONTAINER_IMAGE_ROOTS = ("/OpenROAD-flow-scripts/",)         # files that live in the image itself (platform libs / LEFs)
+
+
+def container_path_preflight(libconfig, work, corner):
+    """FLOW-2000 11-17 (headseg44 SRAM-libs failure): every library, LEF and macro path the ORFS config names must be
+    reachable from INSIDE the sign-off container.  Before the container starts, return the list of problems:
+      * a path outside /work and the image platform tree is not mounted (a host path such as <src>/physical/... named
+        by a config whose /src prefix was rewritten to the host tree);
+      * a /work path whose file is missing from the kit directory the container mounts as /work;
+    Make variable references ($(TC_NLDM_LIB_FILES) etc.) are the image's own libraries and are not checked here."""
+    problems = []
+    cfg = Path(libconfig)
+    if not cfg.is_file():
+        return [f"config {cfg} does not exist"]
+    root = Path(work) if work else cfg.parent
+    txt = cfg.read_text(errors="replace").replace("\\\n", " ")
+    fields = ("ADDITIONAL_LEFS", "ADDITIONAL_LIBS", "ADDITIONAL_GDS", {"tt": "TC_LIB_FILES", "ff": "BC_LIB_FILES", "ss": "WC_LIB_FILES"}[corner])
+    seen = set()
+    for m in re.finditer(r"^[ \t]*(?:export[ \t]+)?([A-Z_]+)[ \t]*[:+?]?=[ \t]*(.*)$", txt, re.M):
+        field = m.group(1)
+        if field not in fields:
+            continue
+        for w in m.group(2).split():
+            w = w.replace("$(KIT)", "/work").replace("${KIT}", "/work")
+            if "$(" in w or "${" in w:
+                continue            # a make variable (the image's own standard-cell lists)
+            if (field, w) in seen:
+                continue
+            seen.add((field, w))
+            if w.startswith(CONTAINER_IMAGE_ROOTS):
+                continue
+            if w.startswith("/work/"):
+                if not (root / w[len("/work/"):]).is_file():
+                    problems.append(f"{field}: {w} is missing from the kit mounted as /work ({root})")
+            elif w.startswith("/"):
+                problems.append(f"{field}: {w} is not mounted in the sign-off container (only {', '.join(CONTAINER_MOUNTS)} and the image are); copy it under the kit and name it /work/...")
+    return problems
+
+
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
                   "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py",
-                  "netlist_alias_check.py")
+                  "netlist_alias_check.py", "fwd_pad_check.py")
 OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
 
 
@@ -1765,6 +1805,9 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
         raise ValueError("signoff: exact corner libraries require --kit/config.mk (or an ECO dir's config_eco.mk) or explicit --library-config")
     mounts.append(("work", work or str(libconfig.parent)))
     mounts.append(("work/config.mk", str(libconfig)))
+    pre = container_path_preflight(libconfig, work, corner)
+    if pre:
+        raise ValueError("signoff: container preflight FAILED (" + corner + "): " + "; ".join(pre[:12]) + (f"; +{len(pre) - 12} more" if len(pre) > 12 else ""))
     core_overlay = copy_core_tap_overlay(Path(disc["sdc"]), od / "sdcdir")
     ptf = pair_target_file(disc, corner)
     if ptf is not None:
@@ -2425,6 +2468,14 @@ def evaluate(rec, insertion_target=None):
         if not nst["modules"]:
             probs = probs + [dict(kind="no_module", net=None)]
         put("netlist_alias", "FAIL" if probs else "PASS", problems=len(probs), first=probs[:5], netlist=fv, **nst)
+        # HEAD-DIE-R 11-17: subtree-balance pads on forwarded-clock outputs (blocking in both profiles)
+        try:
+            import fwd_pad_check as FPC
+        except ImportError:
+            FPC = None
+        if FPC is not None:
+            fr = FPC.check(Path(fv).read_text(errors="replace"))
+            put("fwd_pads", fr["verdict"], **{k: v for k, v in fr.items() if k != "verdict"})
     reasons = []
     fm = rec.get("ft_interface")
     if fm is not None:                        # 12.2a1 declared ft arcs (only kits with ft_ports.json)
@@ -2445,7 +2496,7 @@ def evaluate(rec, insertion_target=None):
         put("timing_modes", tm.get("verdict", "NOT RUN"), **{k: v for k, v in tm.items() if k != "verdict"})
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
             (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()) + \
-            (("netlist_alias",) if "netlist_alias" in ch else ()):
+            (("netlist_alias",) if "netlist_alias" in ch else ()) + (("fwd_pads",) if "fwd_pads" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))

@@ -759,6 +759,20 @@ def ft_hop_latched(plan, tn, slot, k):
     return schema.ft_hop_latched(plan, tn, slot, k)
 
 
+def core_input_latch(plan, tn, module, port):
+    """QC cb setup class 11-17 (FABLE-CLOSURE-STRATEGY 03:20, cbn_q01 u_lk_nk_u_t_0_3_tap -> u_t03/tap -108 .. -87 after r534):
+    True when the clock.core_input_lockup port keeps its negative-level lockup latch.  latch_except lists ports that keep
+    the lockup pipe register (core_input_pipe) but get NO latch: a latch 3 um from a core pin whose tap is delivered
+    413 ps early launches on the falling edge (T/2) into it, while the register alone has +313 ps setup and about +50 ps hold
+    at TT.  0 cycles (the latch is cycle-neutral).  Opt-in (absent = every port keeps its latch, byte-identical RTL);
+    the FF hold of the register-only path is read on the first build before the key is adopted for a family:
+      {"modules": {...}, "types": [...], "pipe": 1, "latch_except": {"<module>": ["<port>", ...]}}"""
+    if port not in core_input_lockup(plan, tn, module):
+        return False
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    return port not in set((cfg.get("latch_except") or {}).get(module) or ())
+
+
 def core_input_pipe(plan, tn, module, port=None):
     """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
     default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
@@ -4119,8 +4133,10 @@ class Binder:
                     if pn in core_gate_ports.get(c.module, ()):
                         e = [core_reset_gate(x, c, r, pn) for x in e]
                     if pn in core_input_lockup(self.plan, tn, c.module):
+                        has_latch = core_input_latch(self.plan, tn, c.module, pn)
                         lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
-                        decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
+                        if has_latch:
+                            decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
                         npipe = core_input_pipe(self.plan, tn, c.module, pn)
                         if npipe:
                             pq = short_id(f"pq_{sv_id(r)}_{pn}", 100)
@@ -4130,9 +4146,10 @@ class Binder:
                                         f".q({pq}));  // core_input_lockup pipe: +{npipe} DECLARED cycle(s)")
                             self.declare_core_input_pipe(tn, p, ci, pn, npipe)
                             e = [pq]
-                        body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
-                                    f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
-                        e = [lk]
+                        if has_latch:
+                            body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
+                                        f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
+                            e = [lk]
                     lpd = core_link_pipe_bits(self.plan, tn, c.module, pn, len(bits)) \
                         if core_link_pipe(self.plan, tn, c.module, pn) else None
                     if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources"):
@@ -4792,6 +4809,11 @@ def cmd_bind(a):
         strict_info["allowed_roots"] = [str(r) for r in roots]
         strict_info["allow_src_root_flag"] = list(getattr(a, "allow_src_root", None) or [])
         B.errors.extend(serrs)
+        # VIEW-DEFINES (COORD r535, S81 D5c 11-17): the die elab blackboxes hard cores, so a view built under another
+        # define set than the die one (for a define its RTL reads) is invisible here; compare each view bind_defines
+        import view_define_check
+        verrs, strict_info["view_defines"] = view_define_check.gate(raw, B.ab, B.base)
+        B.errors.extend(verrs)
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib

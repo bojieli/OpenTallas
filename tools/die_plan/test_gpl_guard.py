@@ -242,3 +242,22 @@ def test_gen_phys_sparse_overflow_default_s81_only(monkeypatch):
         monkeypatch.setenv("OT_GPL_SPARSE_OVERFLOW", bad)
         with pytest.raises(ValueError):
             P.gpl_sparse_overflow("s81")
+
+
+@needs_tcl
+def test_sparse_spread_caps_density_and_raises_pad_only_on_sparse_kits():
+    # FABLE-FIX-S81-SERDES 11-17: S81 serdes__t13 H3p packed 1.4 % of movable cells to the 0.5 target (DRT-0255)
+    env = "set ::env(OT_GPL_SPARSE_DENSITY) 0.3; set ::env(OT_GPL_SPARSE_PAD) 2"
+    out = _run(SPARSE, env=env)
+    want = NOROUTE.replace("-density 0.5 -pad_left 1 -pad_right 1", "-density 0.3 -pad_left 2 -pad_right 2")
+    assert "OT_GPL_SPARSE spread" in out and f"CALL 1: {want}\n" in out, out
+    out = _run(DENSE, env=env)                                   # a dense kit keeps its arguments
+    assert "OT_GPL_SPARSE spread" not in out and f"CALL 1: {ARGS}\n" in out, out
+    out = _run(SPARSE, env="set ::env(OT_GPL_SPARSE_DENSITY) 0.6")     # never raises a lower target, pad untouched
+    assert f"CALL 1: {NOROUTE}\n" in out, out
+    out = _run(SPARSE, "diverge_modal", env=env)                  # the plain retry is spread too
+    assert "CALL 2: " + PLAIN.replace("-density 0.5 -pad_left 1 -pad_right 1", "-density 0.3 -pad_left 2 -pad_right 2") in out, out
+    out = _run(SPARSE, call=PLAIN, env=env)                       # an already-plain call on a sparse kit is spread
+    assert "CALL 1: " + PLAIN.replace("-density 0.5 -pad_left 1 -pad_right 1", "-density 0.3 -pad_left 2 -pad_right 2") in out, out
+    out = _run(SPARSE, env="set ::env(OT_GPL_SPARSE_DENSITY) x")
+    assert "RC=1" in out and "OT_GPL_SPARSE_DENSITY must be a number" in out, out

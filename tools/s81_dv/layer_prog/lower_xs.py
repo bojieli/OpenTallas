@@ -444,6 +444,17 @@ def gb_provider_under_test():
     return True
 
 
+def frame_cohort(frame):
+    """Explicit source-owner frame-instance map; absent = the unchanged baseline calendar."""
+    path = os.environ.get('OT_XS_FRAME_COHORT_MAP')
+    if not path or frame is None:
+        return None
+    record = json.loads(Path(path).read_text())
+    if record.get('schema') != 'opentallas.s81.frame_cohort_map.v1':
+        raise ValueError('invalid frame cohort map')
+    return record['frames'].get(frame)
+
+
 _FRAME_PLAN_DIGEST = {}
 
 
@@ -476,7 +487,9 @@ def source_frame_schedule(master, frame_instance=None):
             scoped = directory / 'frames' / frame_instance
             if scoped.is_dir():
                 directory = scoped
-        path, chk = directory / (master + '_schedule.json'), directory / (master + '_check.json')
+        cohort = frame_cohort(frame_instance)
+        selected = master + ('__' + cohort if cohort else '')
+        path, chk = directory / (selected + '_schedule.json'), directory / (selected + '_check.json')
         if not chk.is_file():
             raise ValueError('as-built band frame needs its extracted frame schedule + plan check '
                              '(tools/s81_dv/frame_schedule_asb.py): ' + str(chk))
@@ -487,6 +500,10 @@ def source_frame_schedule(master, frame_instance=None):
         if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
         schedule = json.loads(path.read_text())
+        if schedule.get('frame_cohort') != cohort:
+            raise ValueError('selected frame calendar cohort differs from the instance map: ' + str(frame_instance))
+        if cohort and 'internal_visibility_profile' not in schedule:
+            raise ValueError('frame cohort calendar lacks its measured internal visibility profile')
         bound = schedule.get('bound_plan') or {}
         selected_frame = bound.get('frame_instance')
         if selected_frame is not None and selected_frame != frame_instance:
@@ -547,7 +564,7 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
     best = None
     for cand in ([pairs] if pairs else [q[:NPAIRS], q[len(q) - NPAIRS:], q[1:1 + NPAIRS]]):
         plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters,
-                            land_e=land_e(lk), frame_schedule=frame_schedule, ret_score=ret_score)
+                            land_e=land_e(lk), frame_schedule=frame_schedule, ret_score=ret_score, frame_cohort=frame_cohort(frame))
         finish_faults = ret_score(plan['ret']) if ret_score is not None else 0
         key = (plan['faults'] + finish_faults, plan['ret_words'])
         if best is None or key < best[0]:
@@ -704,6 +721,9 @@ def lower(die, op, ctx):
         if native:
             model = source_frame_schedule(p['master'], p['frame'])
             frames[-1]['source_schedule'] = dict(path=str(model), sha256=sha(model.read_bytes())) if model else None
+            cohort = frame_cohort(p['frame'])
+            if cohort is not None:
+                frames[-1]['source_schedule'].update(cohort=cohort, cohort_map_sha256=sha(Path(os.environ['OT_XS_FRAME_COHORT_MAP']).read_bytes()))
     ok = all(f['phase'] is None or f['faults'] == 0 for f in frames)
     rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
         schema='opentallas.s81_dv.xs_lowering.v1', op=op, slice=sl, slice_index=g, nseg=NSEG, rows_per_slice=sum(len(p['rows']) for p in pl),
@@ -830,6 +850,9 @@ def cmd_gen(a):
     if schedule is not None:
         (out / 'frame_schedule.json').write_bytes(schedule.read_bytes())
         meta['frame_schedule'] = dict(file='frame_schedule.json', sha256=sha(schedule.read_bytes()))
+        cohort = frame_cohort(p['frame'])
+        if cohort is not None:
+            meta['frame_schedule'].update(cohort=cohort, cohort_map_sha256=sha(Path(os.environ['OT_XS_FRAME_COHORT_MAP']).read_bytes()))
     (out / 'return_plan.json').write_text(json.dumps(plan, indent=1) + '\n')
     (out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
     (out / 'T').write_text(f'{a.cycles}\n')

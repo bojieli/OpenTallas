@@ -337,7 +337,10 @@ class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
     def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None, timing_profile="legacy_fg3", pio_extra=0,
-                 heads=None):
+                 heads=None, so_input_profile="legacy"):
+        if so_input_profile not in ('legacy', 'bridge6'):
+            raise ValueError('unknown SO input profile')
+        self.so_input_profile = so_input_profile
         self.pio_extra = int(pio_extra)
         self.hs = SVC_H if heads is None else int(heads)          # S81-SVCC-1: slice head width (16 = pre-R5)
         if self.hs not in (16, 8):
@@ -437,6 +440,8 @@ class Job:
         self.allq = ALLQ if allq is None else bool(allq)
         self.fx = fx
         self.so = self.allq and SMT                    # SOT + SO programme (RTLGAP-SUKV G-NORMALIZE-SO)
+        if self.so_input_profile == 'bridge6' and not (self.hs == 16 and self.so):
+            raise ValueError('bridge6 requires actual H16 ALLQ SO consumer')
         if owner_epoch is not None and owner_epoch not in range(4):
             raise ValueError('Static allocation epoch outside two bits')
         self.owner = None if owner_epoch is None else (owner_epoch << 18) | (USER << 8) | tag
@@ -509,7 +514,7 @@ class Job:
             # neither entry's done (booked retires) can precede the job's last q frame (ot_s81_svc_job: a done
             # before the job's q frames passed is a fault -- measured bench_sot cal run, E done 2962 < last q 3001)
             fr += so_frames(tag, cos, sin, pvu, mutant='hm_shift' if mut == 'so_hm_shift' else None,
-                            order=SO_ORDER)
+                            order=(list(range(H)) if getattr(self, 'so_input_profile', 'legacy') == 'bridge6' else SO_ORDER))
         if self.ik is not None:                       # TOK-DS-4: last frame, placed at >= attn.idx.newkey start
             fr.append(('IK_ROW', list(self.ik)))
         return fr
@@ -602,7 +607,7 @@ class Job:
             cos, sin = rope_cs_u32(self.fx)
             pvu = np.asarray(self.pv, np.float32).view(np.uint32)
             self.so_pv_u32 = pvu
-            fr += so_frames(tag, cos, sin, pvu, mutant='hm_shift' if mut == 'so_hm_shift' else None, order=SO_ORDER)
+            fr += so_frames(tag, cos, sin, pvu, mutant='hm_shift' if mut == 'so_hm_shift' else None, order=(list(range(H)) if getattr(self, 'so_input_profile', 'legacy') == 'bridge6' else SO_ORDER))
         if self.ik is not None:
             fr.append(('IK_ROW', list(self.ik)))
         return fr
@@ -684,7 +689,7 @@ class Job:
             if name == 'SMJ_SO':                       # after the last P.V word (both entries) + SO_GAP
                 t = max(t, self.go + self.pvo + PV_LAT + (2 * NPVQ if self.allq else NPVQ) - 1 + SO_GAP)
             if name.startswith('SMJ_OP') and not any(k.startswith('SMJ_OP') for k in at):   # first operand frame:
-                t = max(t, at['SMJ_SO'] + 6 + SO_CS_LEAD - 1)
+                t = max(t, at['SMJ_SO'] + (6 if getattr(self, 'so_input_profile', 'legacy') == 'bridge6' else 6 + SO_CS_LEAD - 1))
             if name == 'IK_ROW':
                 t = max(t, self.t_ik)
             at[name] = t
@@ -763,7 +768,7 @@ class Job:
                 pl = self.passes[-1]
                 t = max(t, pl['go'] + pl['pvo'] + PV_LAT + pl['npv'] - 1 + SO_GAP)
             if name.startswith('SMJ_OP') and not any(k_.startswith('SMJ_OP') for k_ in at):
-                t = max(t, at['SMJ_SO'] + 6 + SO_CS_LEAD - 1)
+                t = max(t, at['SMJ_SO'] + (6 if getattr(self, 'so_input_profile', 'legacy') == 'bridge6' else 6 + SO_CS_LEAD - 1))
             if name == 'IK_ROW':
                 t = max(t, self.t_ik)
             at[name] = t
@@ -1017,12 +1022,31 @@ def sot_booking_for(job, s):
         r0 = at[f'SMJ_OP{g}'] + 1
         stride = 2 if getattr(job, 'hs', 16) == 8 else 1
         wr[g] = (r0 - pw1 + SOT_W_LAT - SOT_SLACK, r0 + 31 * stride - pw1 + SOT_W_LAT + SOT_SLACK)
+    # Optional source-owned lifetime fence for externally generated q frames.
+    # Move actual read/retire reservations, never clamp the reported done pulse.
+    # Absent key preserves the historical booking.
+    last_q = s.get('job_last_q_edge')
+    if last_q is not None:
+        if type(last_q) is not int or last_q < 0:
+            raise ValueError('job_last_q_edge must be a nonnegative integer edge')
+        if last_q < max((c for c, _ in s.get('words', [])), default=0):
+            raise ValueError('job_last_q_edge precedes an actual source q word')
+    lifetime = {}
     heads, arr, done = {}, {}, {}
     for half in ('W', 'E'):
         hs = sorted(((t, d) for sd, (t, d, hf) in depth.items() if hf == half), key=lambda x: (wr[x[0]][1], x[0]))
         # arrival (entry pv pins) of head k's first word = pw1 + SOT_INST + DN_HOP d + read + GW_ARR + RT_HOP d
         lead = lambda d: SOT_INST + GW_ARR + (DN_HOP + RT_HOP) * d
         a0 = max(pw1 + wr[t][1] + 2 + lead(d) - GW_SP * k for k, (t, d) in enumerate(hs))
+        if last_q is not None:
+            # Real completion: gather arrival, return, retire, up-tree and JD.
+            done_offset = max(GW_SP * k - GW_ARR - RT_HOP * d +
+                              SO_RETIRE + UP_HOP * d for k, (_, d) in enumerate(hs)) + JD_SO
+            old_done = a0 + done_offset
+            shift = max(0, last_q + 2 - old_done)
+            a0 += shift
+            lifetime[half] = dict(read_retire_delay_edges=shift,
+                                  done_before=old_done, done_after=a0 + done_offset)
         last = 0
         for k, (t, d) in enumerate(hs):
             a = a0 + GW_SP * k
@@ -1040,14 +1064,17 @@ def sot_booking_for(job, s):
         heads[0]['last'] -= 8 + 2 * SOT_SLACK
     rec = booking(owner, 0x21, SO_JID, SO_OBASE, 1, install, heads, install + gf, install + gl)
     rec.update(arrival=arr, done=done, pw1=pw1, gx_zero=gx0, entry_window=(gx0 + gf, gx0 + gl))
+    if last_q is not None:
+        rec['lifetime_fence'] = dict(job_last_q_edge=last_q, halves=lifetime,
+                                      added_state_bits=0, added_data_edges=0)
     return rec
 
 
 def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None, timing_profile="legacy_fg3",
-          pio_extra=0, bound_routes=None, heads=None):
+          pio_extra=0, bound_routes=None, heads=None, so_input_profile="legacy"):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
     job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq, timing_profile=timing_profile,
-              pio_extra=pio_extra, heads=heads)
+              pio_extra=pio_extra, heads=heads, so_input_profile=so_input_profile)
     if sot_booking is not None:
         from sot_program import attach_to_job
         attach_to_job(job, sot_booking)
@@ -1069,6 +1096,8 @@ def finish(job, s, ag):
     if job.allq:                                     # both entries drain 320 words from the same pv_first
         dw = de = s['done']
     if job.so and 'SOT' in s['at']:                  # SMT: book the SOT from this schedule (same 3 q words, same cycles)
+        if getattr(job, 'so_input_profile', 'legacy') == 'bridge6':
+            s['job_last_q_edge'] = max(c for c, _ in s['words'])
         rec = sot_booking_for(job, s)
         i = [k for k, (n_, _) in enumerate(job.frames) if n_ == 'SOT'][0]
         job.frames[i] = ('SOT', list(rec['words']))
@@ -1128,6 +1157,9 @@ def bench_image(job, s, out, base=60):
                go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pio=job.pio, ppath=PPATH, pv_first=s['pv_first'] + off,
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
                st=ST, allq=job.allq, npv=s['npv'], so=job.so,
+               **(dict(so_input_profile='bridge6', so_op0_header_delta=6,
+                        sot_lifetime_fence=s['sot']['lifetime_fence'])
+                  if getattr(job, 'so_input_profile', 'legacy') == 'bridge6' else {}),
                **({} if job.npass == 1 else dict(slice_heads=job.hs, h8_calibrated=H8_CALIBRATED, passes=[
                    dict(k=p['k'], heads=p['heads'], more=p['more'], feed_interval=p['feed_interval'], go=p['go'] + off, pio=p['pio'], po=p['po'], pvo=p['pvo'],
                         npw=p['npw'], pv_first=p['pv_first'] + off, pv_last=p['pv_last'] + off,
@@ -1158,13 +1190,13 @@ def lower(die, op, ctx):
         raise ValueError('service programme requires an explicit svc_timing_profile')
     key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'),
            json.dumps(ctx.get('svc_sot_booking'), sort_keys=True), ctx.get('svc_timing_profile', 'legacy_fg3'), ctx.get('svc_allq'),
-           ctx.get('svc_heads'))
+           ctx.get('svc_heads'), ctx.get('svc_so_input_profile', 'legacy'))
     if key not in _CACHE:
         try:
             _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0),
                                 owner_epoch=ctx.get('svc_owner_epoch'), sot_booking=ctx.get('svc_sot_booking'),
                                 timing_profile=ctx.get('svc_timing_profile', 'legacy_fg3'), allq=ctx.get('svc_allq'),
-                                heads=ctx.get('svc_heads'))
+                                heads=ctx.get('svc_heads'), so_input_profile=ctx.get('svc_so_input_profile', 'legacy'))
         except AssertionError as e:
             _CACHE[key] = (None, str(e))
     job, s = _CACHE[key]
@@ -1300,7 +1332,15 @@ def main(argv=None):
     ap.add_argument('--die-src', default=None, help='die tree of the compile (dv_layer_compile --die-src); else DIE_REF')
     ap.add_argument('--heads', type=int, choices=(16, 8), default=None,
                     help='svc slice head width (default OT_SVC_H, else 16); 8 = the R5 two-pass job + its mutants')
+    ap.add_argument('--so-input-profile', choices=('legacy', 'bridge6'), default='legacy',
+                    help='explicit H16 SO source profile: legacy preserves the existing 45-edge lead/order; '
+                         'bridge6 matches actual ingress sequential heads and six-edge lead, with real SOT lifetime fencing')
+    ap.add_argument('--owner-epoch', default='0', choices=('0', '1', '2', '3', 'none'),
+                    help='SO source owner epoch stamped in CFG/PV (opt-in identity). Default 0 = the bench of record '
+                         '(run_svc_bench.sh builds PV_IDENTITY=1, whose launch check faults without an owner); '
+                         "'none' lowers the identity-off images for a PV_IDENTITY=0 build")
     a = ap.parse_args(argv)
+    owner_epoch = None if a.owner_epoch == 'none' else int(a.owner_epoch)
     sched = json.loads(Path(a.sched).read_text()) if a.sched else None
     die = None
     try:
@@ -1316,12 +1356,13 @@ def main(argv=None):
     if (a.heads or SVC_H) == 8:   # S81-SVCC-1: the two-pass negatives
         muts += ('hb_swap', 'pass_drop', 'pass_swap', 'more_off')
     for mut in muts:
-        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, timing_profile=a.timing_profile, heads=a.heads)
+        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, owner_epoch=owner_epoch,
+                       timing_profile=a.timing_profile, heads=a.heads, so_input_profile=a.so_input_profile)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
     if a.pio_safe:            # a parallel calibration image: PIO a.pio_safe edges later (same programme otherwise)
-        job, s = build(a.fixtures, sched, die, tag=a.tag, timing_profile=a.timing_profile, pio_extra=a.pio_safe,
-                       heads=a.heads)
+        job, s = build(a.fixtures, sched, die, tag=a.tag, owner_epoch=owner_epoch, timing_profile=a.timing_profile, pio_extra=a.pio_safe,
+                       heads=a.heads, so_input_profile=a.so_input_profile)
         rec = bench_image(job, s, Path(a.out) / 'base_safe')
         print('base_safe', json.dumps({k: rec[k] for k in ('go', 'pio', 'pv_first', 'done_w', 'done_e')}))
 

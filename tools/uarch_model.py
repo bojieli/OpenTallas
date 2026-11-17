@@ -18019,3 +18019,9 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
             composition="source-profile PHY internal RX term once per S81 receiver; never duplicate as ft lane hops; current REL241 programme must re-solve before any final rate"),
         exactness="AM face literal golden + reset/data/valid transport lockstep, short-stage mutant; RM local copies preserve global empty protocol and per-bank reset",
         qualification="candidate only: source-profile/compiler compose, exactness, reviewed full-shape kit, DRC0 TT>=-42ps FFhold>=0 LEC and sustained budget required")
+
+
+def qwen_kv_start_relay_model(stages, bound, baseline=None):
+    """Size emitted START/reset stages, including reset registers and date changes."""
+    from uarch_model_kv_start import model
+    return model(stages, bound, baseline)

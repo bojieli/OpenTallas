@@ -2443,7 +2443,7 @@ def pgcap_cfg():
     out = ["# DRT0255 C3b: GRT per-gcell capacity cut on the PG pair rows/columns (pg_pair_cap.tcl, sourced last in grt_pre.tcl)",
            "export OT_PGCAP = 1"]
     pats = {"OT_PGCAP_LAYERS": r"M[1-9]( M[1-9])*", "OT_PGCAP_ADJ": r"(0(\.\d+)?|1(\.0+)?)",
-            "OT_PGCAP_GCELL_UM": r"\d+(\.\d+)?", "OT_PGCAP_EPS_DBU": r"\d+", "OT_PGCAP_MARGIN_DBU": r"\d+"}
+            "OT_PGCAP_GCELL_UM": r"\d+(\.\d+)?", "OT_PGCAP_EPS_DBU": r"\d+", "OT_PGCAP_MARGIN_DBU": r"\d+", "OT_PGCAP_FINITE_EXTENT": r"[01]"}
     for k, pat in pats.items():
         v = os.environ.get(k, "").strip()
         if v:
@@ -5209,9 +5209,44 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
+def fixed_bb_default_parameters(mod, bb_text, rtl_files, root=None, staged=None):
+    """Preserve a fixed physical ABI while restoring omitted numeric default metadata.
+
+    A signed fixed-port blackbox can omit parameters that its logical caller still
+    sets. The defaults come from the unambiguous native declaration, never from
+    caller overrides; native_bb still rejects an elaborated value that differs.
+    """
+    import native_bb
+    if staged is None:
+        staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files if Path(f).is_file())
+    requested = set(_macro_instance_overrides(staged, mod))
+    present = native_bb.header_params(bb_text).get(mod, {})
+    missing = requested - set(present)
+    if not missing:
+        return None
+    headers = [(h, Path(f)) for f in rtl_files if Path(f).is_file()
+               and not Path(f).name.endswith(("_bb.v", "_bb.sv"))
+               and (h := _module_header(Path(f).read_text(errors="replace"), mod))]
+    if not headers and root:
+        headers = _tree_module_headers(Path(root) / "rtl", mod)
+    choices = []
+    for header, path in headers:
+        if "`" in header:
+            continue  # no guessing an inactive conditional declaration
+        params = native_bb.header_params(header + "\nendmodule").get(mod, {})
+        if missing <= set(params) and all(params[k][0] == "int" for k in missing):
+            choices.append({k: params[k][1] for k in missing})
+    if not choices or any(c != choices[0] for c in choices):
+        raise ValueError(f"macro {mod}: fixed blackbox lacks {sorted(missing)}; numeric native defaults are not unique")
+    declarations = "".join(f"    parameter {k} = {v};\n" for k, v in sorted(choices[0].items()))
+    if len(re.findall(r"\bendmodule\b", bb_text)) != 1:
+        raise ValueError(f"macro {mod}: fixed blackbox must contain exactly one module")
+    return re.sub(r"\bendmodule\b", declarations + "endmodule", bb_text, count=1)
+
+
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=(), plan_dir=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
-    and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
+    and that has no _bb view yet (or lacks numeric default metadata); header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
@@ -5227,6 +5262,14 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
         if f"{mod}_bb.v" in have or f"{mod}_bb.sv" in have:
             if mod in declared_ft:
                 raise ValueError(f"macro {mod}: explicit FT header conflicts with existing blackbox")
+            if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
+                continue
+            bb = next(Path(f) for f in rtl_files if Path(f).name in (f"{mod}_bb.v", f"{mod}_bb.sv"))
+            enriched = fixed_bb_default_parameters(mod, bb.read_text(), rtl_files, root, staged)
+            if enriched is not None:
+                dst = rtl_dir / bb.name
+                dst.write_text(enriched)
+                out.append(dst)
             continue
         if mod not in declared_ft and not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
             continue
@@ -6537,6 +6580,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
+    shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
     shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
     shutil.copyfile(Path(__file__).with_name("lec_completed_reference.py"), kd / "lec_completed_reference.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
@@ -6821,6 +6865,13 @@ if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resum
       exit 12
     fi
   fi
+fi
+# KWRS-END
+# STAGE-CAP block (COORD 11-17, FLEET-OPS-R): bounds the stage ODBs this kit writes from now on; refusal-free, no physical step  # KWRS-BEGIN
+# Keeps 1_synth, the step boundaries (2_floorplan 3_place 4_cts 5_1_grt = diagnosis anchors) and the latest final; drops the
+# other intermediates once the successor stage is written (stage_odb_cap.py).  OT_KEEP_STAGE_ODBS=1 or K/.keep_stage_odbs opts out.
+if [ "${OT_KEEP_STAGE_ODBS:-0}" != 1 ] && [ ! -f "$K/.keep_stage_odbs" ] && [ -f "$K/stage_odb_cap.py" ]; then
+  nohup python3 -I "$K/stage_odb_cap.py" --watch "$K/run/results/asap7" --kit "$K" --max-hours 36 >>"$K/stage_odb_cap.log" 2>&1 </dev/null &
 fi
 # KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then

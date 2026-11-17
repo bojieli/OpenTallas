@@ -108,7 +108,10 @@ GATE_SCRIPT = "/srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote"
 GATE_REMOTE = os.environ.get("MQ_GATE_REMOTE", f"ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --needs {GATE_SCRIPT} --dir "
                              f"/srv/opentallas-scratch2/claude/mq-gate -- bash {GATE_SCRIPT} "
                              "{key} 16")                       # '' = gate on the hub
-GATE_REMOTE_TIMEOUT = int(os.environ.get("MQ_GATE_REMOTE_TIMEOUT", "10800"))
+GATE_REMOTE_TIMEOUT = int(os.environ.get("MQ_GATE_REMOTE_TIMEOUT", "1500"))   # 11-17: was 10800; ot-run re-placed one gate for 45 min
+ITEM_SECS = int(os.environ.get("MQ_ITEM_SECS", "1200"))          # an approval whose prepare/gate runs longer is set aside (INFRA, retried next tick)
+STALL_SECS = int(os.environ.get("MQ_STALL_SECS", "2700"))        # nothing merged for this long with approvals pending -> ALERT
+ASIDE = []                                                       # keys of items set aside this tick (their threads may still run)
 GATE_PAR = int(os.environ.get("MQ_GATE_PAR", "3"))        # `gate` commands at once (11-15 14:3x: 7 lane gates queued behind 1)
 
 
@@ -760,18 +763,62 @@ MISSING_MARK_RE = re.compile(r"No such file|FileNotFoundError|ENOENT|[Cc]an'?not
                              r"[Uu]nable to (?:open|find)|does not exist|not found|[Mm]issing (?:file|source)")
 
 
+def missing_modules(wt, out):
+    """Recover an absent import only from one exact tracked module file; never guess among aliases."""
+    names = set(re.findall(r"ModuleNotFoundError: No module named ['\"]([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)['\"]", out or ""))
+    if not names:
+        return []
+    tracked = git("ls-tree", "-r", "--name-only", "HEAD", cwd=wt).stdout.splitlines()
+    missing = set()
+    for name in names:
+        suffix = name.replace(".", "/") + ".py"
+        matches = [f for f in tracked if f == suffix or f.endswith("/" + suffix)]
+        if len(matches) == 1 and not (wt / matches[0]).exists():
+            missing.add(matches[0])
+    return sorted(missing)
+
+
 def missing_src(wt, out):
     """repo paths an output names that exist in the gate tree's commit but are absent from its sparse checkout"""
+    modules = missing_modules(wt, out)
     out = "\n".join(l for l in (out or "").splitlines() if MISSING_MARK_RE.search(l))
     if not out:
-        return []
+        return modules
     try:
         cand = {m.group(1) for m in _path_lit_re(rev("HEAD", cwd=wt) or "HEAD", quoted=False).finditer(out or "")}
     except Exception:                                  # noqa: BLE001 - detection only
         return []
     cand = {c.rstrip(".") for c in cand}
     have = _tree_types("HEAD", cand, cwd=wt)
-    return sorted(x for x in have if not (wt / x).exists())
+    return sorted(set(modules) | {x for x in have if not (wt / x).exists()})
+
+
+WIDE_MAX = int(os.environ.get("MQ_GATE_WIDE_MAX", "4000"))     # widen a missing path to its 2-level dir when it holds <= this many files
+
+
+def widen_dirs(wt, paths, tops=None):
+    """MQ-PACK-FIX 11-17: dirs to add to the sparse tree for sources a run reported missing, so ONE retry finds the rest
+    (TOKEN-R gate 4918810761: dsfd_cfifo_crs.sv, then dsfd_bf_col.sv, ... one file per round ran out of rounds).
+    A path under a WHOLE_TOPS top (rtl/) -> that whole top; any other path -> its 2-level dir (physical/asap7_memory_macros_v2)
+    when that holds <= WIDE_MAX files (never physical/die_plan scale), else just its parent dir."""
+    tops = WHOLE_TOPS if tops is None else tops
+    out = set()
+    for x in paths:
+        parts = x.split("/")
+        if parts[0] in tops:
+            out.add(parts[0])
+            continue
+        par = os.path.dirname(x)
+        if not par:
+            continue
+        wide = "/".join(parts[:2]) if len(parts) > 2 else par
+        if wide != par:
+            r = git("ls-tree", "-r", "--name-only", "HEAD", wide, cwd=wt, check=False)
+            if r.returncode == 0 and 0 < len(r.stdout.split("\n")) <= WIDE_MAX:
+                out.add(wide)
+                continue
+        out.add(par)
+    return sorted(out)
 
 
 def gate(it, wt, base):
@@ -805,7 +852,7 @@ def gate(it, wt, base):
         # top-level dir when it is in WHOLE_TOPS (rtl/ ~0.9 GB; never physical/, 33 GB)
         paths = {x for m in miss for x in m.split(":", 1)[1].split()}
         if rnd < MISS_ROUNDS:
-            got = sorted({os.path.dirname(x) for x in paths} - {""})
+            got = widen_dirs(wt, paths)
         else:
             got = sorted({x.split("/")[0] for x in paths} & set(WHOLE_TOPS))
         got = [d for d in got if not _covered(d, pats + ["/" + x + "/" for x in need])]
@@ -1080,6 +1127,7 @@ def finish(st, it, status, detail, main_before, tip=None):
     it["updated"] = stamp()
     br = f"{it['branch']}@{it['sha_full'][:11]}" if it["branch"] else it["sha_full"][:11]
     if status == "MERGED":
+        st["last_merge_ts"] = time.time()
         body = (f"{br} -> main {main_before[:11]} -> {tip[:11]}, {it.get('mode')}, tags {it.get('tags')}. "
                 f"Gate: {it.get('note')}; tests: {' '.join(os.path.basename(t) for t in it.get('tests', [])[:12]) or 'none'}"
                 f"{' +' + str(len(it['tests']) - 12) if len(it.get('tests', [])) > 12 else ''}. Lane {it['lane']}.")
@@ -1128,12 +1176,55 @@ def gate_record(full, base, it):
             + ("" if m == base else f" (main since: no overlap)") + f": {r.get('note', '')}")
 
 
+def run_group(cmd, timeout):
+    """shell command in its own process group; on timeout the whole group (sh, ot-run, ssh) is killed, not just the sh"""
+    p = S.Popen(cmd, shell=True, stdout=S.PIPE, stderr=S.PIPE, text=True, cwd="/", start_new_session=True)
+    try:
+        out, err = p.communicate(timeout=timeout)
+    except S.TimeoutExpired:
+        try:
+            os.killpg(p.pid, 15)
+        except OSError:
+            pass
+        out, err = p.communicate()
+        raise S.TimeoutExpired(cmd, timeout, output=(out or "").encode())
+    return S.CompletedProcess(cmd, p.returncode, out, err)
+
+
+def stall_alert(st, pending):
+    """ALERT once per STALL_SECS when nothing merged for STALL_SECS while approvals wait (a stuck tick cannot post at its end)"""
+    now_ = time.time()
+    last = st.get("last_merge_ts")
+    if last is None:
+        st["last_merge_ts"] = last = now_
+    if pending and now_ - last > STALL_SECS and now_ - st.get("last_alert_ts", 0) > STALL_SECS:
+        st["last_alert_ts"] = now_
+        queue_post(st, "ALERT", "COORD", f"nothing merged for {int((now_ - last) // 60)} min with {pending} approval(s) pending; "
+                                         f"tick pid {os.getpid()} (log ~/merge-queue/log). Items running > {ITEM_SECS // 60} min are set aside.")
+        flush_posts(st)
+        save_state(st)
+
+
+def await_item(st, it, fut, pending):
+    """result of an item's prepare; sets it aside (INFRA, retried by the next tick) after ITEM_SECS so one slow gate cannot hold the rest"""
+    while True:
+        try:
+            return fut.result(timeout=5)
+        except CF.TimeoutError:
+            pass
+        stall_alert(st, pending)
+        t0 = it.get("t0")
+        if t0 and time.time() - t0 > ITEM_SECS:
+            ASIDE.append(it["key"])
+            return "INFRA", f"ASIDE: prepare/gate ran > {ITEM_SECS // 60} min; set aside, the rest of the tick goes on"
+
+
 def gate_remote(it, full, base):
     """run the item's gate on a build host (GATE_REMOTE, ot-run + ot-gate-remote; CLEAN-ALL 11-15 16:0x: hub scratch took
     5 gate trees, ~15 GB of churn an hour) -> (status, note), or None when the runner could not start (gate it here)"""
     cmd = GATE_REMOTE.format(key=f"{it['branch'] or '-'}@{full}")
     try:
-        r = S.run(cmd, shell=True, capture_output=True, text=True, timeout=GATE_REMOTE_TIMEOUT, cwd="/")
+        r = run_group(cmd, GATE_REMOTE_TIMEOUT)
     except S.TimeoutExpired as e:
         tail = ((e.stdout or b"") if isinstance(e.stdout, bytes) else (e.stdout or "").encode())[-300:].decode(errors="replace")
         return "INFRA", f"remote gate timed out after {GATE_REMOTE_TIMEOUT // 60} min ({cmd.split()[0]}): {tail}"
@@ -1154,6 +1245,7 @@ def gate_remote(it, full, base):
 
 def prepare(it, base, remote=True):
     """fetch + apply + gate in the item's own worktree (parallel part)"""
+    it["t0"] = time.time()
     try:
         full = fetch_sha(it["branch"], it["sha"])
         if not full:
@@ -1280,6 +1372,24 @@ def check_ready(text, st):
     return n_b
 
 
+def sync_hook_note(result):
+    """Report activation evidence before incidental stderr; rc 4 can follow a successful flip."""
+    lines = [line.strip() for line in (result.stdout or "").splitlines() if line.strip()]
+    current = next((line for line in reversed(lines) if line.startswith("rt/current -> ")), "")
+    smoke = next((line for line in lines if line.startswith("SMOKE-FAIL ")), "")
+    if current:
+        parts = [current]
+        parts += [line for line in lines if line.startswith("ALERT ")]
+    elif smoke:
+        parts = [smoke, "rt/current unchanged: smoke failed before activation"]
+    else:
+        parts = lines[-3:] or ["runtime activation state not reported"]
+    note = " ; ".join(parts)[:1600]
+    if (result.stderr or "").strip():
+        note += "; stderr context: " + result.stderr.strip()[-400:]
+    return note
+
+
 def tick(args):
     MQ.mkdir(parents=True, exist_ok=True)
     lockf = open(MQ / "lock", "w")
@@ -1330,10 +1440,12 @@ def tick(args):
     # gates run in parallel; each item LANDS as soon as its own gate and every gate before it are done (COORD 11-15 08:4x:
     # a 30-min gate of one item held 7 green items behind it).  land() re-tests on the moved main where files overlap.
     ex = CF.ThreadPoolExecutor(max_workers=max(1, PAR))
+    for it in todo:
+        it.pop("t0", None)
     futs = {it["key"]: ex.submit(prepare, it, base) for it in todo}
     landed = ""
     for it in todo:                                          # serial: priority HIGH approvals first, then queue order
-        status, detail = futs[it["key"]].result()
+        status, detail = await_item(st, it, futs[it["key"]], len(todo))
         it["tries"] = int(it.get("tries", 0)) + 1
         it["base"] = base
         log(f"{it['key']}: {status}: {detail if isinstance(detail, str) else detail}")
@@ -1360,7 +1472,7 @@ def tick(args):
         save_state(st)
         if it.get("status") in TERMINAL and not args.keep:
             wt_drop(it["id"])
-    ex.shutdown(wait=True)
+    ex.shutdown(wait=not ASIDE, cancel_futures=True)
     keep = "base-" + fetch_main()[:12]
     for name in [p.name for p in WT.glob("base-*")]:
         if name != keep:
@@ -1369,11 +1481,11 @@ def tick(args):
     if landed and SYNC_HOOK and not DRY:
         cmd = SYNC_HOOK.format(sha=landed)
         r = run(shlex.split(cmd), timeout=1800)
-        sync_note = (r.stdout or "").strip().splitlines()[-1:] or [f"rc={r.returncode}"]
+        sync_note = sync_hook_note(r)
         log(f"sync hook rc={r.returncode}: {sync_note}")
         if r.returncode:
             queue_post(st, "STATE", "COORD", f"ot-tools-sync for main {landed[:11]} failed rc={r.returncode}: "
-                                             f"{(r.stderr or r.stdout).strip()[-300:]}; rt/current not moved.")
+                                             f"{sync_note}")
     if landed and SRC_HOOK and not DRY:
         r = run(shlex.split(SRC_HOOK.format(old=base, new=landed)), timeout=3600)
         out = (r.stdout or "").strip().splitlines()
@@ -1429,4 +1541,7 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main() or 0)
+    _rc = main() or 0
+    if ASIDE:                                    # set-aside gate threads must not hold the process (state and posts are saved)
+        sys.stdout.flush(); os._exit(_rc)
+    sys.exit(_rc)

@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""PreToolUse hook (FLEET-OPS-R, COORD 11-17): refuse a raw recursive rm / find -delete / rmtree on /srv/opentallas-scratch*.
+Deletion goes through ot-delete (ot_delete_guard).  Exit 2 + message = blocked; anything else passes.  Install in ~/.claude/settings.json next to block-pkill.py."""
+import json, re, sys
+
+SCRATCH = r"/srv/opentallas-scratch[0-9]*"
+RM_R = re.compile(r"(?:^|[;&|(`\x27\x22\s])(?:sudo\s+)?(?:/bin/|/usr/bin/)?rm\s+(?:[^;&|\n]*?\s)?(?:-[a-zA-Z]*[rR][a-zA-Z]*|--recursive)(?=\s)[^;&|\n]*" + SCRATCH)
+FIND_DEL = re.compile(r"\bfind\s+[^;&|\n]*" + SCRATCH + r"[^;&|\n]*\s-delete\b")
+RMTREE = re.compile(r"rmtree\([^)]*" + SCRATCH)
+
+
+def blocked(cmd):
+    if "ot-delete" in cmd.split() and not RM_R.search(cmd):
+        return False
+    return bool(RM_R.search(cmd) or FIND_DEL.search(cmd) or RMTREE.search(cmd))
+
+
+def main():
+    try:
+        d = json.load(sys.stdin)
+    except Exception:
+        return 0
+    cmd = str((d.get("tool_input") or {}).get("command", ""))
+    if blocked(cmd):
+        print("BLOCKED: raw recursive delete on /srv/opentallas-scratch*. Use `ot-delete TREE...` (ot_delete_guard: protected / live trees are skipped, "
+              "whole trees only, df before/after).", file=sys.stderr)
+        return 2
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

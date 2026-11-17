@@ -19,6 +19,14 @@ set ff_site [[lindex $ff_rows 0] getSite]
 set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
+# Macro obstructions can remove whole row ranges. getRows count is not the
+# coordinate of the last legal row (coll_ucie: 3176 rows start at y=779.76 um).
+# Keep the actual Y coordinates so an east/west pin never clamps to a fictitious
+# row at core_y0 + (row_count-1)*height.
+set ff_row_ys [lsort -integer -unique [dict keys $ff_orient]]
+proc ff_row_index {row_ys pin_y} {
+  return [expr {max(0, min([llength $row_ys] - 1, [lsearch -bisect -integer $row_ys $pin_y]))}]
+}
 set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$}   ;# rst_o: reset wavefront outs, placed by reset_tree.tcl
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
@@ -230,16 +238,16 @@ foreach pass {INPUT OUTPUT} {
       continue
     }
     if {$face in {E W}} {
-      set row [expr {max(0, min(([llength $ff_rows] - 1), ($py - $ff_y0) / $ff_rh))}]
+      set row [ff_row_index $ff_row_ys $py]
       # nearest free (row, column) slot: columns inward, alternate rows around the pin row
       set placed 0
       for {set c 0} {$c < 400 && !$placed} {incr c} {
         foreach dr {0 1 -1 2 -2} {
           set r [expr {$row + $dr}]
-          if {$r < 0 || $r >= [llength $ff_rows] || [dict exists $ff_occ "$face,$r,$c"]} continue
+          if {$r < 0 || $r >= [llength $ff_row_ys] || [dict exists $ff_occ "$face,$r,$c"]} continue
           if {$ff_ew_stride > 1 && ($r + $c) % $ff_ew_stride} continue
           dict set ff_occ "$face,$r,$c" 1
-          set cy [expr {$ff_y0 + $r * $ff_rh}]
+          set cy [lindex $ff_row_ys $r]
           set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_ew_cpitch : $ff_x1 - $c * $ff_ew_cpitch - $w}]
           set placed 1; break
         }
@@ -1002,12 +1010,38 @@ proc ot_gpl_exit_args {argl v} {
  }
  return [concat $out [list -overflow $v]]
 }
+# SPARSE SPREAD (FABLE-FIX-S81-SERDES 11-17, opt-in): on a sparse kit GPL has no force below its target density, so the
+# cells pack to the target however empty the die is.  S81 serdes__t13 H3p: movable util 1.4 %, -density 0.5 -pad 0 ->
+# 585 10-um bins at 0.40-0.65 holding 52 % of the cell area (247k XOR cells of the KP4 encoder / syndrome), detail route
+# 176,457 violations at iteration 0 and DRT-0255.  OT_GPL_SPARSE_DENSITY caps the target density and OT_GPL_SPARSE_PAD
+# raises the GPL cell padding (sites) of a call the SPARSE rule judges sparse; unset / empty / 0 = unchanged.
+proc ot_gpl_spread_value {name} {
+ if {![info exists ::env($name)] || $::env($name) eq ""} { return 0 }
+ if {![string is double -strict $::env($name)] || $::env($name) < 0} { error "$name must be a number >= 0, got $::env($name)" }
+ return $::env($name)
+}
+proc ot_gpl_spread_args {argl dens pad} {
+ set out $argl
+ if {$dens > 0} {
+  set k [lsearch -exact $out -density]
+  if {$k >= 0 && [lindex $out [expr {$k+1}]] > $dens} { set out [lreplace $out [expr {$k+1}] [expr {$k+1}] $dens] }
+ }
+ if {$pad > 0} {
+  foreach key {-pad_left -pad_right} {
+   set k [lsearch -exact $out $key]
+   if {$k < 0} { lappend out $key $pad } elseif {[lindex $out [expr {$k+1}]] < $pad} { set out [lreplace $out [expr {$k+1}] [expr {$k+1}] $pad] }
+  }
+ }
+ return $out
+}
 # global_placement as called by ORFS global_place.tcl (the decision is taken at call time, after every hook above)
 proc ot_gpl_guarded {args} {
  set plain [ot_gpl_plain_args $args]
  set ovf [ot_gpl_sparse_overflow_value]
+ set sdens [ot_gpl_spread_value OT_GPL_SPARSE_DENSITY]
+ set spad [ot_gpl_spread_value OT_GPL_SPARSE_PAD]
  set modal [expr {[llength $plain] != [llength $args]}]
- if {!$modal && $ovf <= 0} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
+ if {!$modal && $ovf <= 0 && $sdens <= 0 && $spad <= 0} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
  set call $args
  if {[ot_gpl_sparse]} {
   if {$modal} {
@@ -1018,6 +1052,11 @@ proc ot_gpl_guarded {args} {
   if {$ovf > 0 && [lsearch -exact $call -overflow] < 0} { puts "OT_GPL_SPARSE exit overflow $ovf (OT_GPL_SPARSE_OVERFLOW)" }
   set call [ot_gpl_exit_args $call $ovf]
   set plain [ot_gpl_exit_args $plain $ovf]
+  if {$sdens > 0 || $spad > 0} {
+   puts "OT_GPL_SPARSE spread: density cap $sdens, pad >= $spad (OT_GPL_SPARSE_DENSITY / OT_GPL_SPARSE_PAD; 0 = unchanged)"
+   set call [ot_gpl_spread_args $call $sdens $spad]
+   set plain [ot_gpl_spread_args $plain $sdens $spad]
+  }
   puts "OT_GPL_SPARSE global_placement $call"
  }
  if {!$modal} { return [uplevel 1 [list ::ot_gpl_native {*}$call]] }

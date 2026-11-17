@@ -25,7 +25,31 @@ def ref_count(name, texts):
     return sum(len(rx.findall(t)) for t in texts)
 
 
+# kit_wave_state.json keeps every attempt ever made (11-17: 4252 rows, 3999 CANCELLED / FAIL).  A finished attempt names the src tree it ran
+# from, but nothing will start from that tree again; only a row that can still launch or resume needs it (COORD FABLE-FLOW-0300 11-17: this made every
+# superseded tree "referenced", so AUTO-RETIRE deleted 0 on 4 alerts).  A state text that is not the known {"items": {...}} shape is kept whole.
+LIVE_STATUS = frozenset({"ENQUEUED", "RUNNING", "ROUTE-HELD", "DEDUP", "DEDUP-WAIT", "RETRY-INFRA", "RETRY", "LAUNCHED", "QUEUED", "STARTING"})
+
+
+def live_state_text(text):
+    try:
+        d = json.loads(text)
+        items = d["items"]
+        if not isinstance(items, dict):
+            return text
+    except (TypeError, ValueError, KeyError):
+        return text
+    return json.dumps({k: v for k, v in items.items() if not isinstance(v, dict) or str(v.get("status") or "") in LIVE_STATUS or not v.get("status")})
+
+
 def live_reference_texts(cfg, texts):
+    out = list(_cfg_live_texts(cfg, texts))
+    if len(out) > 1 and out[1]:
+        out[1] = live_state_text(out[1])
+    return out
+
+
+def _cfg_live_texts(cfg, texts):
     """Only recognized queue metadata in the matching cfg text is not a live ref.
 
     State, markers, malformed/nonmatching config text and every other config key
@@ -133,6 +157,8 @@ def free_gb(path):
 def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None, free=None):
     texts = live_reference_texts(cfg, texts)
     free = free or (lambda: free_gb(root))
+    if not os.path.isdir(root):                           # a host with no kw45 (the hub): nothing to retire, not an error
+        return []
     names = [n for n in os.listdir(root) if n.startswith("src_") and os.path.isdir(os.path.join(root, n)) and not os.path.islink(os.path.join(root, n))]
     cand = select(names, cfg, texts, {n: os.lstat(os.path.join(root, n)).st_mtime for n in names}, root=root)
     res = []

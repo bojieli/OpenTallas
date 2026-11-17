@@ -146,6 +146,103 @@ proc ot_serdes_boot_release_registers {b} {
  return $ff
 }
 
+# Reach by fixed script (11-17): pull each native sync tail DFF farther than 405 um (Manhattan) from the stage-2 site
+# (tx,ty um) along its line to stage 2 until its span is <= 380 um (then 360 .. 260) on a macro/halo-free core site.
+# The DFF stays PLACED (DPL legalises); nets, stages and clocks are unchanged.  Returns {name old_span new_span} rows.
+proc ot_serdes_boot_tail_pull {b d tails tx ty macs core} {
+ set pulled {}
+ foreach tl $tails {
+  lassign $tl tn span
+  if {$span<=405.0} continue
+  set i [$b findInst $tn];lassign [$i getLocation] x y
+  if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} {error "OT_BOOT_RELEASE fixed tail $tn span $span cannot move"}
+  set m [$i getMaster];set ok 0
+  foreach goal {380.0 360.0 340.0 320.0 300.0 280.0 260.0} {
+   set f [expr {($span-$goal)/$span}]
+   set nx [expr {$x+($tx*$d-$x)*$f}];set ny [expr {$y+($ty*$d-$y)*$f}]
+   set nx [expr {round($nx/$d/0.054)*0.054*$d}];set ny [expr {round($ny/$d/0.27)*0.27*$d}]
+   set r [list $nx $ny [expr {$nx+[$m getWidth]}] [expr {$ny+[$m getHeight]}]]
+   if {[ot_reset_anchor::free $r $macs $core]} {set ok 1;break}
+  }
+  if {!$ok} {error "OT_BOOT_RELEASE tail $tn span $span: no macro-free pull site"}
+  $i setLocation [expr {int($nx)}] [expr {int($ny)}];$i setPlacementStatus PLACED
+  lappend pulled [list $tn $span [expr {abs($nx/$d-$tx)+abs($ny/$d-$ty)}]]
+ }
+ return $pulled
+}
+# Optional placement-only BOOT pipeline data-path localization. Source/sink FFs,
+# all nets and clock pins stay untouched. Only private BUF/INV chains move.
+proc ot_serdes_boot_private_chain {src dst} {
+ set pins {}
+ foreach t [$dst getITerms] {if {[[$t getMTerm] getName] eq "RESETN"} {lappend pins $t}}
+ if {[llength $pins]!=1} {error "OT_BOOT_PATH expected one RESETN on [$dst getName]"}
+ set pin [lindex $pins 0];set seen {};set chain {}
+ while {1} {
+  set net [$pin getNet]
+  if {$net eq "NULL" || [dict exists $seen [$net getName]]} {error "OT_BOOT_PATH absent/cyclic reset path"}
+  dict set seen [$net getName] 1
+  set drivers {};set sinks {}
+  foreach t [$net getITerms] {
+   if {[$t isOutputSignal]} {lappend drivers $t}
+   if {[$t isInputSignal]} {lappend sinks $t}
+  }
+  if {[llength $drivers]!=1 || [llength [$net getBTerms]]} {error "OT_BOOT_PATH external/multiple driver"}
+  set drv [[lindex $drivers 0] getInst]
+  if {$drv eq $src} {return [lreverse $chain]}
+  set m [$drv getMaster]
+  if {![regexp {^(BUF|INV)} [$m getName]] || [$m isBlock] || [$m isSequential]} {error "OT_BOOT_PATH non-buffer private path at [$drv getName]"}
+  if {[llength $sinks]!=1 || [lindex $sinks 0] ne $pin} {error "OT_BOOT_PATH shared control at [$drv getName]"}
+  if {[$drv getPlacementStatus] in {FIRM LOCKED COVER}} {error "OT_BOOT_PATH fixed cell [$drv getName]"}
+  set ins {}
+  foreach t [$drv getITerms] {if {[$t isInputSignal] && [$t getNet] ne "NULL"} {lappend ins $t}}
+  if {[llength $ins]!=1} {error "OT_BOOT_PATH ambiguous input at [$drv getName]"}
+  lappend chain $drv;set pin [lindex $ins 0]
+ }
+}
+proc ot_serdes_boot_path_plan {ff d macs core} {
+ set plans {};set summaries {}
+ for {set k 0} {$k<2} {incr k} {
+  set src [dict get $ff $k];set dst [dict get $ff [expr {$k+1}]]
+  set chain [ot_serdes_boot_private_chain $src $dst]
+  lassign [$src getLocation] sx sy;lassign [$dst getLocation] tx ty
+  set prev [list $sx $sy];set before 0.;set after 0.;set maxhop 0.;set next {}
+  set j 0;set n [llength $chain]
+  foreach i $chain {
+   incr j;lassign [$i getLocation] ox oy;lassign $prev px py
+   set before [expr {$before+abs($ox-$px)+abs($oy-$py)}];set prev [list $ox $oy]
+   set bx [expr {$sx+($tx-$sx)*double($j)/($n+1)}];set by [expr {$sy+($ty-$sy)*double($j)/($n+1)}]
+   set found 0;set m [$i getMaster]
+   foreach dy {0 5 -5 10 -10 20 -20} {
+    foreach dx {0 5 -5 10 -10 20 -20} {
+     set x [expr {round(($bx/$d+$dx)/0.054)*0.054*$d}];set y [expr {round(($by/$d+$dy)/0.27)*0.27*$d}]
+     set r [list $x $y [expr {$x+[$m getWidth]}] [expr {$y+[$m getHeight]}]]
+     if {[ot_reset_anchor::free $r $macs $core]} {set found 1;break}
+    }
+    if {$found} break
+   }
+   if {!$found} {error "OT_BOOT_PATH no macro-free path site [$i getName]"}
+   lappend next [list $i [expr {int($x)}] [expr {int($y)}]]
+  }
+  lassign $prev px py;set before [expr {($before+abs($tx-$px)+abs($ty-$py))/$d}]
+  set prev [list $sx $sy]
+  foreach v [concat $next [list [list $dst $tx $ty]]] {
+   lassign $v i x y;lassign $prev px py
+   set hop [expr {(abs($x-$px)+abs($y-$py))/$d}];set after [expr {$after+$hop}]
+   if {$hop>$maxhop} {set maxhop $hop};set prev [list $x $y]
+  }
+  if {$maxhop>405} {error "OT_BOOT_PATH new path hop $maxhop exceeds405"}
+  set plans [concat $plans $next]
+  lappend summaries [list $k [expr {$k+1}] cells $n before_um $before after_um $after maxhop_um $maxhop]
+ }
+ return [list $plans $summaries]
+}
+proc ot_serdes_boot_path_local {b d ff macs core} {
+ lassign [ot_serdes_boot_path_plan $ff $d $macs $core] plans summaries
+ # All graph, ownership and geometry checks complete before any mutation.
+ foreach v $plans {lassign $v i x y;$i setLocation $x $y;$i setPlacementStatus PLACED}
+ puts "OT_BOOT_PATH private_data_only [llength $plans] cells; $summaries; zero_added_cells_cycles; FF/clock/nets unchanged"
+}
+
 proc ot_serdes_boot_release_local {} {
  set b [ord::get_db_block];set d [expr {double([$b getDbUnitsPerMicron])}]
  set ff [ot_serdes_boot_release_registers $b]
@@ -176,7 +273,22 @@ proc ot_serdes_boot_release_local {} {
   lappend tails [list [$i getName] $span]
   if {$span>$max_tail} {set max_tail $span}
  }
- if {[llength $tails]!=4 || $max_tail>405.0} {error "OT_BOOT_RELEASE native sync scope/tail mismatch count=[llength $tails] max_um=$max_tail"}
+ if {[llength $tails]!=4} {error "OT_BOOT_RELEASE native sync scope/tail mismatch count=[llength $tails] max_um=$max_tail"}
+ # S81-SERDES-R2 H5 / FABLE-FIX-S81-SERDES (11-17): with a spread placement (PLACE_DENSITY 0.30) a native sync tail can land >405 um
+ # from the fixed stage-2 site.  Reach by fixed script: pull each such tail DFF along its line to stage 2 until its
+ # Manhattan span is <=380 um, on a macro/halo-free core site (PLACED; DPL legalises).  Same nets/stages/clocks.
+ if {$max_tail>405.0} {
+  set pulled [ot_serdes_boot_tail_pull $b $d $tails $tx $ty $macs $core]
+  set tails {};set max_tail 0.0
+  foreach i [$b getInsts] {
+   if {![regexp {u_core[.]rs_[rt]\\?\[} [$i getName]] || ![string match DFF* [[$i getMaster] getName]]} continue
+   lassign [$i getLocation] x y;set span [expr {abs($x/$d-$tx)+abs($y/$d-$ty)}]
+   lappend tails [list [$i getName] $span]
+   if {$span>$max_tail} {set max_tail $span}
+  }
+  puts "OT_BOOT_RELEASE tail pull: $pulled"
+  if {[llength $tails]!=4 || $max_tail>405.0} {error "OT_BOOT_RELEASE tail pull left count=[llength $tails] max_um=$max_tail"}
+ }
  # Validate the three new sites before changing either authority or relays.
  ot_reset_anchor::run
  # These are new soft pipeline sites, not boundary authorities. Leave them
@@ -187,6 +299,7 @@ proc ot_serdes_boot_release_local {} {
   if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} continue
   $i setLocation [expr {int($x)}] [expr {int($y)}];$i setPlacementStatus PLACED
  }
+ if {[info exists ::env(OT_SERDES_BOOT_PATH_LOCAL)] && $::env(OT_SERDES_BOOT_PATH_LOCAL) eq "1"} {ot_serdes_boot_path_local $b $d $ff $macs $core}
  puts "OT_BOOT_RELEASE placed3 kept RCK release stages; model hops316/363/340um; actual native tails_um=$tails max_um=$max_tail; original FIRM authority preserved"
 }
 if {[info exists ::env(OT_SERDES_BOOT_RELEASE_LOCAL)] && $::env(OT_SERDES_BOOT_RELEASE_LOCAL) eq "1"} {ot_serdes_boot_release_local}

@@ -15,7 +15,8 @@
 import hashlib, json, os, shutil, sys, time
 
 SKIP_DIRS = {"logs", "reports", "results", "run", "gate", "signoff", "verdict", "objects", ".git", "__pycache__", "future_lec"}
-SKIP_FILES = ("signoff.json", "gate.json", "verdict.json", "KIT_FORK.json", "resume.json", "result.json", "spec.json")
+SKIP_FILES = ("signoff.json", "gate.json", "verdict.json", "KIT_FORK.json", "resume.json", "result.json", "spec.json",
+              "grt_policy.json", "postcts_gate_tt.json", "postcts_gate_ff.json", "hold_gate.json", "setup_gate.json", "clock_gate.json")
 SKIP_PREFIX = ("FAIL_", "DONE", "PASS_", "GATE_")
 SKIP_SUFFIX = (".odb", ".log", ".lock")
 

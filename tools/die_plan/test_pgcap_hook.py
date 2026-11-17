@@ -39,12 +39,14 @@ def test_invalid_knob_fails_closed(monkeypatch, k, v):
 
 
 def test_install_appends_hook_last_only_when_on(monkeypatch, tmp_path):
+    (tmp_path / "config.mk").write_text("export OT_PGCAP = 0\n")
     (tmp_path / "grt_pre.tcl").write_text("# kit grt_pre\nsource pg_track_truth.tcl; ot_pgtt_add\n")
     monkeypatch.delenv("OT_PGCAP", raising=False)
     assert gen_phys.pgcap_install(tmp_path) is False
     assert (tmp_path / "grt_pre.tcl").read_text() == "# kit grt_pre\nsource pg_track_truth.tcl; ot_pgtt_add\n"
     assert not (tmp_path / "pg_pair_cap.tcl").exists()                      # default kit: byte-equal, no new file
     monkeypatch.setenv("OT_PGCAP", "1")
+    (tmp_path / "config.mk").write_text("export OT_PGCAP = 1\n")
     assert gen_phys.pgcap_install(tmp_path) is True
     assert gen_phys.pgcap_install(tmp_path) is True                         # idempotent
     t = (tmp_path / "grt_pre.tcl").read_text()

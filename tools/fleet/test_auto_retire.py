@@ -155,3 +155,22 @@ class ExplicitRollback(unittest.TestCase):
         row = dict(self.row, manual_protected=os.path.join(self.root, "src_head_d2"))
         self.assertNotIn("src_head_d2", self.select(row))
         self.assertNotIn("src_head_d5", self.select())  # pending newer adoption
+
+
+class LiveState(unittest.TestCase):
+    STATE = json.dumps({"items": {
+        "a": {"status": "CANCELLED", "kit": "/x/kw45/src_kv_d1/k"}, "b": {"status": "FAIL", "src": "/x/kw45/src_kv_d2"},
+        "c": {"status": "RUNNING", "src": "/x/kw45/src_kv_d3"}, "d": {"status": "ENQUEUED", "src": "/x/kw45/src_kv_d4"}}})
+
+    def test_finished_attempts_do_not_keep_a_tree_live_ones_do(self):
+        trees = ["src_kv_d1", "src_kv_d2", "src_kv_d3", "src_kv_d4", "src_kv_d5", "src_kv_d6"]
+        mt = {t: 10 * (i + 1) for i, t in enumerate(trees)}
+        cfg = {"dies": {"qwen_kvsys": {"src": "/x/kw45/src_kv_d6"}}}
+        out = A.select(trees, cfg, [json.dumps(cfg), self.STATE, ""], mt)
+        self.assertEqual(out, ["src_kv_d1", "src_kv_d2"])        # d3 running, d4 queued: kept; d5 = the one rollback; d1/d2 only named by CANCELLED / FAIL rows
+
+    def test_unknown_state_shape_is_kept_whole(self):
+        self.assertEqual(A.live_state_text("not json /x/src_kv_d1"), "not json /x/src_kv_d1")
+        self.assertEqual(A.live_state_text(json.dumps({"rows": []})), json.dumps({"rows": []}))
+        self.assertEqual(A.ref_count("src_kv_d1", [A.live_state_text(self.STATE)]), 0)
+        self.assertEqual(A.ref_count("src_kv_d4", [A.live_state_text(self.STATE)]), 1)

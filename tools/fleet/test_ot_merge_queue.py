@@ -21,6 +21,35 @@ def load(env=None):
 M = load()
 
 
+class SyncReporting(unittest.TestCase):
+    def test_partial_success_reports_activated_current_and_actual_alert(self):
+        r = subprocess.CompletedProcess([], 4,
+            "ALERT installed tools differ from rt/abcdef123456: epyc7 /usr/local/bin/ot-heavy-reconcile differs\n"
+            "rt/current -> abcdef123456 (was 0123456789ab); hosts epyc7:ok epyc8:FAIL 46 GB free < 50 GB\n",
+            "SyntaxWarning: invalid escape sequence\n")
+        note = M.sync_hook_note(r)
+        self.assertTrue(note.startswith("rt/current -> abcdef123456"))
+        self.assertIn("epyc8:FAIL 46 GB free < 50 GB", note)
+        self.assertIn("ot-heavy-reconcile differs", note)
+        self.assertIn("stderr context: SyntaxWarning", note)
+        self.assertNotIn("not moved", note)
+        self.assertNotIn("unchanged", note)
+
+    def test_smoke_failure_reports_no_activation_with_real_cause(self):
+        r = subprocess.CompletedProcess([], 3, "SMOKE-FAIL rt abcdef123456: ['syntax: kit_wave.py']\n", "SyntaxWarning: context\n")
+        note = M.sync_hook_note(r)
+        self.assertTrue(note.startswith("SMOKE-FAIL"))
+        self.assertIn("syntax: kit_wave.py", note)
+        self.assertIn("rt/current unchanged: smoke failed before activation", note)
+        self.assertIn("stderr context", note)
+
+    def test_unreported_state_never_claims_current_unchanged(self):
+        note = M.sync_hook_note(subprocess.CompletedProcess([], 1, "", "Traceback: failed after flip"))
+        self.assertIn("activation state not reported", note)
+        self.assertNotIn("unchanged", note)
+        self.assertIn("Traceback", note)
+
+
 class Parse(unittest.TestCase):
     def test_approvals_branch_sha_several_per_line_and_revoke(self):
         q = ("- 2026-11-14 19:30 PST [COORD] ruled: COORD APPROVED: claude/a-1114 @0123456789ab; COORD APPROVED: @abcdef1234\n"
@@ -571,6 +600,33 @@ class FailureOutputRetention(unittest.TestCase):
             self.assertTrue(all('command=' in s and 'rc=1' in s for s in texts))
 
 
+class WidenDirs(unittest.TestCase):
+    def _repo(self):
+        d = Path(tempfile.mkdtemp())
+        for f in ("rtl/hdc/a.sv", "rtl/v41rom/b.sv", "physical/asap7_memory_macros_v2/lef/x.lef", "physical/asap7_memory_macros_v2/v/y.v",
+                  "physical/die_plan/q/z.py", "physical/die_plan/q/w.py", "physical/die_plan/r/v.py"):
+            (d / f).parent.mkdir(parents=True, exist_ok=True); (d / f).write_text("x")
+        env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t", GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t")
+        for c in (["init", "-q"], ["add", "."], ["commit", "-qm", "x"]):
+            subprocess.run(["git", *c], cwd=d, env=env, check=True, capture_output=True)
+        return d
+
+    def test_rtl_miss_takes_whole_top_in_one_round(self):
+        d = self._repo()
+        self.assertEqual(M.widen_dirs(d, {"rtl/hdc/a.sv"}), ["rtl"]); shutil.rmtree(d)
+
+    def test_macro_dir_widens_to_two_levels(self):
+        d = self._repo()
+        self.assertEqual(M.widen_dirs(d, {"physical/asap7_memory_macros_v2/v/y.v"}), ["physical/asap7_memory_macros_v2"]); shutil.rmtree(d)
+
+    def test_big_two_level_dir_stays_parent(self):
+        from unittest.mock import patch
+        d = self._repo()
+        with patch.object(M, "WIDE_MAX", 2):
+            self.assertEqual(M.widen_dirs(d, {"physical/die_plan/q/z.py"}), ["physical/die_plan/q"])
+        shutil.rmtree(d)
+
+
 class PackGuard(unittest.TestCase):
     def _packs(self, n):
         d = Path(tempfile.mkdtemp()); (d / ".git" / "objects" / "pack").mkdir(parents=True)
@@ -624,6 +680,41 @@ class PackGuard(unittest.TestCase):
         self.assertEqual(seen["env"]["GIT_NO_LAZY_FETCH"], "1")
 
 
+class TickStall(unittest.TestCase):
+    def test_run_group_kills_the_whole_group_on_timeout(self):
+        import time as _t
+        t0 = _t.time()
+        with self.assertRaises(subprocess.TimeoutExpired):
+            M.run_group("sleep 30 & sleep 30", 1)
+        self.assertLess(_t.time() - t0, 10)
+
+    def test_await_item_sets_a_slow_item_aside(self):
+        import concurrent.futures as CF, threading
+        from unittest.mock import patch
+        ev = threading.Event(); ex = CF.ThreadPoolExecutor(1)
+        fut = ex.submit(ev.wait, 30)
+        it = {"key": "k", "t0": 1.0}
+        with patch.object(M, "ITEM_SECS", 1), patch.object(M, "stall_alert"):
+            M.ASIDE.clear()
+            self.assertEqual(M.await_item({}, it, fut, 1)[0], "INFRA")
+            self.assertEqual(M.ASIDE, ["k"])
+        ev.set(); ex.shutdown(); M.ASIDE.clear()
+
+    def test_stall_alert_posts_once_per_window(self):
+        import time as _t
+        from unittest.mock import patch
+        st = {"last_merge_ts": _t.time() - M.STALL_SECS - 5}
+        with patch.object(M, "flush_posts"), patch.object(M, "save_state"), patch.object(M, "log"):
+            M.stall_alert(st, 3); M.stall_alert(st, 3)
+        self.assertEqual([p["line"].split("[")[0].split()[-1] for p in st["posts"]], ["ALERT"])
+
+    def test_no_alert_without_pending_or_when_recent(self):
+        import time as _t
+        st = {"last_merge_ts": _t.time()}
+        M.stall_alert(st, 5); M.stall_alert({"last_merge_ts": 1.0}, 0)
+        self.assertNotIn("posts", st)
+
+
 class MainFetchFreshness(unittest.TestCase):
     def _run(self, advertisement, rc=0, object_rc=0):
         from unittest.mock import patch
@@ -656,3 +747,36 @@ class MainFetchFreshness(unittest.TestCase):
             with self.subTest(text=text, rc=rc):
                 _, calls = self._run(text, rc=rc)
                 self.assertIn('fetch', [c[0] for c in calls])
+
+
+class MissingModuleInventory(unittest.TestCase):
+    def repo(self, files):
+        d = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d)
+        for name in files:
+            f = d / name
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text("# tracked source\n")
+        env = dict(os.environ, GIT_AUTHOR_NAME="test", GIT_AUTHOR_EMAIL="test@test",
+                   GIT_COMMITTER_NAME="test", GIT_COMMITTER_EMAIL="test@test")
+        for cmd in (["init", "-q"], ["add", "--", *files], ["commit", "-qm", "inventory"]):
+            subprocess.run(["git", *cmd], cwd=d, env=env, check=True, capture_output=True)
+        return d
+
+    def test_unique_tracked_smwire_module_is_missing_source(self):
+        name = "tools/s81_dv/sm_target/smwire_cal.py"
+        d = self.repo([name])
+        (d / name).unlink()
+        self.assertEqual(M.missing_src(d, "E ModuleNotFoundError: No module named 'smwire_cal'"), [name])
+
+    def test_ambiguous_module_stays_a_failure_without_guessing(self):
+        files = ["tools/a/shared.py", "tools/b/shared.py"]
+        d = self.repo(files)
+        for name in files:
+            (d / name).unlink()
+        self.assertEqual(M.missing_modules(d, "ModuleNotFoundError: No module named 'shared'"), [])
+
+    def test_untracked_or_present_module_is_not_sparse_inventory(self):
+        d = self.repo(["tools/helper.py"])
+        for name in ["not_a_repo_module", "helper"]:
+            self.assertEqual(M.missing_modules(d, "ModuleNotFoundError: No module named '" + name + "'"), [])

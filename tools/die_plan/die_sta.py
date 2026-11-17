@@ -1224,6 +1224,138 @@ def die_seams(top_nl, part_dirs_by_module):
     return seams
 
 
+
+def classify_clock_transfers(seams, parts, inst_mods, cells):
+    """Separate proven clock wiring from register-D timing groups, never by port spelling.
+
+    A receiver must name the pin as a real clock in its SDC or extracted ILM
+    receipt. The source output must trace through real library BUF/INV/HB cells
+    to an explicitly declared source clock input. Unproved candidates stay data
+    seams, preserving the normal missing-path failure. Propagation is unchanged;
+    each classified transfer is checked again in the linked STA clock network.
+    """
+    cache = {}
+
+    def module(m):
+        if m in cache:
+            return cache[m]
+        d = Path(parts[m]); nl = next(iter(read_verilog(d / "6_final.v").values()))
+        declared = sdc_clock_ports(d / "6_final.sdc")
+        origin = "6_final.sdc"
+        if not declared and (d / "ilm.json").is_file():
+            receipt = json.loads((d / "ilm.json").read_text())
+            declared = set(receipt.get("clock_ports") or [])
+            origin = "ilm.json:clock_ports"
+        declared = set(declared or [])
+        aliases = dict(nl.assigns)
+
+        def root(n):
+            seen = set()
+            while n in aliases and n not in seen:
+                seen.add(n); n = aliases[n]
+            return n
+        clocks = {b for direction, base, b in nl.port_bits()
+                  if direction == "input" and (base in declared or b in declared)}
+        roots = {root(b): b for b in clocks}
+        drivers = defaultdict(list)
+        loads = defaultdict(list)
+        for cell, inst, conns in nl.insts:
+            info = cells.get(cell)
+            if not info:
+                continue
+            for pin, bits in conns:
+                if info["pins"].get(re.sub(r"\[\d+\]$", "", pin)) == "output":
+                    for b in bits:
+                        drivers[root(b)].append((cell, inst, dict(conns)))
+                elif info["pins"].get(re.sub(r"\[\d+\]$", "", pin)) == "input":
+                    for b in bits:
+                        loads[root(b)].append(f"{inst}/{pin}")
+
+        def trace(n):
+            chain = []; seen = set(); n = root(n); leaf = None
+            while n not in roots:
+                if n in seen or len(drivers.get(n, [])) != 1:
+                    return None
+                seen.add(n); cell, inst, co = drivers[n][0]; info = cells[cell]
+                ins = [name for name, direction in info["pins"].items() if direction == "input"]
+                outs = [name for name, direction in info["pins"].items() if direction == "output"]
+                if (info["seq"] or not cell.startswith(("BUF", "INV", "CKINV", "HB"))
+                        or len(ins) != 1 or len(outs) != 1 or len(co.get(ins[0], [])) != 1):
+                    return None
+                if leaf is None:
+                    leaf = f"{inst}/{outs[0]}"
+                chain.append(inst); n = root(co[ins[0]][0])
+            leaf = leaf or next(iter(loads.get(n, [])), None)
+            if leaf is None:
+                return None
+            return dict(source_clock_input=roots[n], source_buffer_chain=chain,
+                        source_leaf_pin=leaf, source_clock_declaration=origin)
+        clock_leaves = {b: loads.get(root(b), []) for b in clocks}
+        cache[m] = clocks, trace, origin, clock_leaves
+        return cache[m]
+
+    data, transfers = [], []
+    for seam in seams:
+        clocks, _, origin, leaves = module(inst_mods[seam["dst"]])
+        if seam["dst_pin"] not in clocks or not leaves.get(seam["dst_pin"]):
+            data.append(seam); continue
+        _, trace, _, _ = module(inst_mods[seam["src"]])
+        witness = trace(seam["src_pin"])
+        if witness is None:
+            data.append(seam); continue
+        transfers.append(dict(seam, kind="clock_transfer", receiver_clock_declaration=origin,
+                              receiver_leaf_pin=leaves[seam["dst_pin"]][0], **witness))
+    return data, transfers
+
+
+def clock_transfer_tcl(transfers, report):
+    """Linked-network witness plus pulse/min-period reports; no clocks or exceptions are changed."""
+    if not transfers:
+        return []
+    rows = []
+    for x in transfers:
+        name = f"{x['src']}->{x['dst']}/{x['dst_pin']}"
+        rows.append("{" + " ".join("{" + y + "}" for y in
+                     (name, f"{x['src']}/{x.get('source_leaf_pin', x['src_pin'])}",
+                      f"{x['dst']}/{x.get('receiver_leaf_pin', x['dst_pin'])}")) + "}")
+    return ["set ot_clock_transfers {" + " ".join(rows) + "}", r'''
+proc ot_transfer_clocks {pin} {
+  set out {}
+  catch {foreach c [get_property $pin clocks] {lappend out [get_full_name $c]}}
+  if {[llength $out]} {return [lsort -unique $out]}
+  # Hierarchical boundary pins may have no clock-property entry. Use the
+  # actual buffer pin's propagated-clock tags, not a data-arrival surrogate.
+  catch {
+    foreach v [$pin vertices] {
+      if {$v eq "NULL"} continue
+      foreach which {min max} {
+        set it [$v path_iterator rise $which]
+        while {[$it has_next]} {
+          set pa [$it next]; set tag [$pa tag]
+          if {[string first "(clock prop)" $tag] >= 0} {lappend out [lindex $tag 3]}
+        }
+        $it finish
+      }
+    }
+  }
+  return [lsort -unique $out]
+}
+foreach row $ot_clock_transfers {
+  lassign $row name src dst
+  set sp [get_pins -quiet $src]; set dp [get_pins -quiet $dst]
+  set status FAIL; set sc {}; set dc {}; set common {}
+  if {[llength $sp] == 1 && [llength $dp] == 1} {
+    set sc [ot_transfer_clocks [lindex $sp 0]]
+    set dc [ot_transfer_clocks [lindex $dp 0]]
+    foreach c $sc {if {[lsearch -exact $dc $c] >= 0} {lappend common $c}}
+    if {[llength $common]} {set status PASS}
+  }
+  puts $fh "CLOCK_TRANSFER $name $status source_clocks [llength $sc] receiver_clocks [llength $dc] common [llength $common]"
+}
+''', f"report_check_types -min_pulse_width -min_period -violators -digits 3 > {report}",
+            f"puts $fh \"CLOCK_PULSE_REPORT {report}\""]
+
+
 def clock_endpoint_catalog_tcl():
     """Actual linked sequential masters, using native OpenSTA APIs (no ODB dependency)."""
     return r'''set ot_ec_masters {}; set ot_ec_errors 0
@@ -1257,7 +1389,7 @@ def evaluate_clock_endpoint_coverage(libs, corner_result, expected_sha256):
 # --------------------------------------------------------------------------------------------------------------- STA tcl
 def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mode, period_ps, groups, spine=None,
             die_spef=None, etm_libs=None, seam_paths=100000, reduce=False, spine_model="ports", stitch=None,
-            extra_verilog=(), crpr_pairs=200, intra_pairs=0):
+            extra_verilog=(), crpr_pairs=200, intra_pairs=0, clock_transfers=()):
     """OpenSTA script of one die run.  stitch: dict(core={instance: core SPEF}, spef=stitch SPEF, die_core=die SPEF
     without the stitched nets | None) from write_stitch; when given, the partition (and die-clock-tree) SPEFs are
     read as their core SPEFs with -path and the stitch SPEF (all port-crossing nets) after them.  crpr_pairs: CPPR
@@ -1415,6 +1547,7 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
           "puts $fh \"WNS [sta::worst_slack_cmd max] WHS [sta::worst_slack_cmd min]\"",
           "puts $fh \"SECONDS [expr {([clock milliseconds]-$t0)/1000.0}]\"",
           "close $fh"]
+    L[-1:-1] = clock_transfer_tcl(clock_transfers, str(out_txt) + ".clock_pulse.rpt")
     return "\n".join(L) + "\n"
 
 
@@ -1439,6 +1572,10 @@ def parse_sta(txt):
             except (KeyError, ValueError):
                 catalog["complete"] = False
                 catalog["errors"] += 1
+        elif f[0] == "CLOCK_TRANSFER":
+            res.setdefault("clock_transfers", {})[f[1]] = dict(status=f[2], **dict(zip(f[3::2], f[4::2])))
+        elif f[0] == "CLOCK_PULSE_REPORT":
+            res["clock_pulse_report"] = f[1]
         elif f[0] == "SEAM":
             g, dly = f[1], f[2]
             if f[3] == "NO_PATH":
@@ -1631,12 +1768,15 @@ def cmd_run(a):
     missing = sorted({cell for cell, inst, _ in top.insts if cell not in parts})
     if missing:
         raise SystemExit(f"die_sta: die top instantiates modules without a PARTS dir: {missing}")
-    seams = die_seams(top, {m: parts[m] for m in set(inst_mods.values())})
+    all_seams = die_seams(top, {m: parts[m] for m in set(inst_mods.values())})
+    cells = read_liberty_cells(corner_libs("TT", a.libdir, a.lib))
+    seams, clock_transfers = classify_clock_transfers(all_seams, parts, inst_mods, cells)
+    (out / "clock_transfers.json").write_text(json.dumps(clock_transfers, indent=1) + "\n")
     groups = defaultdict(set)
     for s in seams:
         groups[f"{s['src']}->{s['dst']}/{s['dst_bus']}"].add((f"{s['dst']}/{s['dst_pin']}", f"{s['src']}/{s['src_pin']}"))
     groups = sorted((g, sorted(p)) for g, p in groups.items())
-    (out / "seams.json").write_text(json.dumps(dict(top=top.name, seams=seams), indent=0) + "\n")
+    (out / "seams.json").write_text(json.dumps(dict(top=top.name, seams=seams, clock_transfers=clock_transfers), indent=0) + "\n")
     # boundary-hold contract cells of budget stand-ins: write their liberty next to the run (fails closed: a stand-in
     # that instantiates the cell can never link to a black box)
     bh = bhold_cells_used(sorted(str(parts[m] / "6_final.v") for m in set(inst_mods.values())))
@@ -1684,6 +1824,7 @@ def cmd_run(a):
                spine="tree" if a.spine_tree else "branch" if a.spine_branch else ("routed" if a.die_spef else "ideal"),
                instances=inst_mods, parts={m: str(parts[m]) for m in mod_files or parts}, abstracts=abstracts, corners={},
                seam_groups=len(groups), seam_bits=len(seams))
+    res["clock_transfers"] = clock_transfers
     res["netlist_alias"] = part_netlist_alias(parts, set(inst_mods.values()))
     # Parent IO-HOLD qualification never treats a budget stand-in as a real view.
     from io_hold_qualification import view_snapshot
@@ -1746,7 +1887,8 @@ def cmd_run(a):
         tcl.write_text(sta_tcl(top_path, top.name, inst_mods, mod_files, corner, libs, txt, a.mode,
                                a.period_ps, groups, spine, a.die_spef, etm_libs, reduce=a.reduce,
                                spine_model=a.spine_model, stitch=stitch, extra_verilog=extra_v,
-                               crpr_pairs=a.crpr_pairs, intra_pairs=a.intra_pairs if a.mode == "flat" else 0))
+                               crpr_pairs=a.crpr_pairs, intra_pairs=a.intra_pairs if a.mode == "flat" else 0,
+                               clock_transfers=clock_transfers))
         if a.no_stitch and a.spine_tree and CTREE_INST in inst_spef:
             t = tcl.read_text().replace("puts \"OT_PARASITICS", f"read_spef -path {CTREE_INST} {inst_spef[CTREE_INST]}\nputs \"OT_PARASITICS", 1)
             tcl.write_text(t)
@@ -1840,6 +1982,12 @@ def verdict(res):
                                     for c in ("TT", "FF")}
     ran = {c for c, r in res["corners"].items() if r.get("exit") == 0}
     missing_seam_paths = missing_seam_arcs(res)
+    clock_names = {f"{x['src']}->{x['dst']}/{x['dst_pin']}" for x in res.get("clock_transfers", [])}
+    bad_clock_transfers = {c: sorted(n for n in clock_names
+                                    if res["corners"].get(c, {}).get("clock_transfers", {}).get(n, {}).get("status") != "PASS")
+                           for c in ("TT", "FF")}
+    if any(bad_clock_transfers.values()):
+        v["unproved_clock_transfers"] = bad_clock_transfers
     bad_netlists = sorted(m for m, x in (res.get("netlist_alias") or {}).items() if x.get("verdict") != "PASS")
     if bad_netlists:
         v["netlist_alias_fail"] = bad_netlists
@@ -1855,6 +2003,8 @@ def verdict(res):
         v["status"] = "FAIL"
         v["fail_reason"] = "part netlist alias cycle: " + ", ".join(
             f"{m} {res['netlist_alias'][m]['problems']}" for m in bad_netlists)
+    elif any(bad_clock_transfers.values()):
+        v["status"] = "FAIL (clock transfer is not propagated on a common clock)"
     elif any(missing_seam_paths.values()):
         # fail closed: a seam group (or a bit of one) without a TT setup / FF hold path is an untimed link, never PASS
         v["status"] = "FAIL"
