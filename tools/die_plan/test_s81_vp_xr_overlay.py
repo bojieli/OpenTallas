@@ -166,3 +166,50 @@ endmodule
     mutant.write_text(source.replace(".TREE_STAGES(1 + XR)) u_rr", ".TREE_STAGES(1)) u_rr"))
     bad = run(mutant, "early_stage")
     assert bad.returncode != 0 and "lane reset mismatch" in bad.stdout + bad.stderr
+
+
+@pytest.mark.skipif(shutil.which("iverilog") is None or shutil.which("vvp") is None, reason="iverilog not installed")
+def test_cfr_miter_and_bad_tag_mutant(tree, tmp_path):
+    X.main([str(tree), "--cfr-with-xr"])
+    assert ".CFR(VP_CFR || VP_XR)" in (tree / f"{SL}/ot_s81sl_slice.sv").read_text()
+    vp = tree / X.VP
+    relay = Path(__file__).resolve().parents[2] / "rtl/lib/ot_rst_relay.sv"
+    bench = tmp_path / "cfr_tb.sv"
+    bench.write_text(r'''
+`timescale 1ns/1ps
+module tb;
+ reg clk=0; always #5 clk=~clk;
+ reg rst_n=0,cv=0;reg [159:0]cd=0;
+ reg [127:0]rq0,rq1;integer i,j,checks=0,changes=0;
+ reg [31:0]lastcf;
+ ot_s81sl_vp #(.CFR(0),.XR(1)) a(.clk(clk),.rst_n(rst_n),.c_v(cv),.c_d(cd),.sw_v(1'b0),.cw_v(2'b0),.x_rv(1'b0),.x_wv(1'b0),.hq_v(1'b0));
+ ot_s81sl_vp #(.CFR(1),.XR(1)) b(.clk(clk),.rst_n(rst_n),.c_v(cv),.c_d(cd),.sw_v(1'b0),.cw_v(2'b0),.x_rv(1'b0),.x_wv(1'b0),.hq_v(1'b0));
+ initial begin
+  force a.rq0=rq0;force a.rq1=rq1;force b.rq0=rq0;force b.rq1=rq1;
+  for(i=0;i<2000;i=i+1) begin
+   @(negedge clk);
+   rst_n=(i>3 && !(i>=1000 && i<1004));cv=(i%32==8);cd=0;cd[3:0]=4'd2;cd[13:4]=$random;cd[23:14]=$random;
+   rq0={$random,$random,$random,$random};rq1={$random,$random,$random,$random};
+   @(posedge clk);#1;
+   for(j=0;j<20;j=j+1) if(a.cf[j] !== b.cf[j]) $fatal(1,"CFR mismatch cycle%0d word%0d",i,j);
+   if(a.cf[0] !== lastcf) changes=changes+1;lastcf=a.cf[0];checks=checks+1;
+  end
+  if(changes<30) $fatal(1,"vacuous CFR compare changes%0d",changes);
+  $display("PASS CFR coefficient bits checks=%0d word0_changes=%0d",checks,changes);$finish;
+ end
+endmodule
+''')
+    def run(source, tag):
+        out = tmp_path / (tag + ".vvp")
+        subprocess.run(["iverilog", "-g2012", "-i", "-s", "tb", "-o", str(out), str(relay), str(source), str(bench)],
+                       check=True, capture_output=True)
+        return subprocess.run(["vvp", "-n", str(out)], capture_output=True, text=True)
+    ok = run(vp, "cfr_positive")
+    assert ok.returncode == 0 and "checks=2000" in ok.stdout, ok.stdout + ok.stderr
+    mutant = tmp_path / "vp_cfr_mut.sv"
+    source = vp.read_text()
+    assert source.count("cfs_r[j] <= dv1 && dop1 == OP_POST && dsi1 == j;") == 1
+    mutant.write_text(source.replace("cfs_r[j] <= dv1 && dop1 == OP_POST && dsi1 == j;",
+                                     "cfs_r[j] <= dv1 && dop1 == OP_POST && dsi == j;"))
+    bad = run(mutant, "cfr_bad_tag")
+    assert bad.returncode != 0 and "CFR mismatch" in bad.stdout + bad.stderr
