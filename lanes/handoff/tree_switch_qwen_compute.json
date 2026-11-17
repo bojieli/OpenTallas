@@ -1,21 +1,21 @@
 {
  "die": "qwen_compute",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf",
- "manifest_hash": "c8e63f164faa013ba4a9e6b107497a1e3db07d6f0de2b3c0f93e9466b91eb39d",
- "src_manifest_sha": "c8e63f164faa013ba4a9e6b107497a1e3db07d6f0de2b3c0f93e9466b91eb39d",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2",
+ "manifest_hash": "fc19bea6c5232cc7bdf3dbfca4ef57ca26eb5fa636d395627e156b5f318e8f2a",
+ "src_manifest_sha": "fc19bea6c5232cc7bdf3dbfca4ef57ca26eb5fa636d395627e156b5f318e8f2a",
  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
   "epyc7",
   "epyc8"
  ],
  "smoke": "PASS",
- "smoke_detail": "Producer preflight230 bad[]; raw KFBQ strict0/R8 0/LAT1921; exact portable relocation native contract equal and bind_matches130. No gate rerun.",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9kf.json",
- "plan_sha256": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_jkf_portable.json",
+ "smoke_detail": "S4q9l2 raw bind S4Q9L2BQ errors0/r8rc0/LATCHECK1921/hcparam0/G0 2 inherited; relocation native contract equal, bind_matches 130, E7/E8 bytes equal (c6a7f109fd57); runtime assets byte-equal to Kf (c71a3feb/38336cfa/60098047/46a62e7f); self-review ADOPT-OK lanes/QC-PLAN-R-REVIEW-S4q9l2.md",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9l2.json",
+ "plan_sha256": "19be3f0a3bb42d8ea1a388412843e1d80e98563041d169899e54c22a47dffe82",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_jkf_portable.json",
  "asbuilt_sha256": "65000b87450ad40f14c9a178029fdc699dfcc8d15eb2df79897be4af14840f67",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9kf/bind_s29q103S4Q9KFBQ",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9KFBQ.json",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9l2/bind_s29q103S4Q9L2BQ",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9KFBQ.json",
  "die_gen_env": {
   "OT_PLACE_MAX_FANOUT": "64",
   "OT_GRT_NONPORT_HOLD": "1",
@@ -33,7 +33,7 @@
   "OT_GPL_SPARSE_UTIL": "0.10"
  },
  "config": {
-  "event": "s29q103S4Q9KF",
+  "event": "s29q103S4Q9L2",
   "gen_host": "epyc8",
   "gen_hosts": [
    "epyc7",
@@ -45,23 +45,14 @@
    "--max-wire-um",
    "120",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9KFBQ.json"
+   "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9KFBQ.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_jkf_portable.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9kf/bind_s29q103S4Q9KFBQ"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_jkf_portable.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9l2/bind_s29q103S4Q9L2BQ"
   },
-  "cancel_superseded": false,
-  "planned_events": [
-   "S4q6d",
-   "S4q6e",
-   "S4q7h",
-   "S4q8",
-   "S4q9l2",
-   "S4q9l2d",
-   "S4q9m"
-  ]
+  "cancel_superseded": false
  },
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
