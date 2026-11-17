@@ -50,3 +50,18 @@ class Reclaim(unittest.TestCase):
         a = AP()
         self.assertIn("not reclaimed", KW.reclaim_at_result(a, CFG, rec(att=1), "FLOW"))   # attempt 1's dir holds the later attempts
         self.assertEqual(a.cmds, [])
+
+
+class ReclaimGuard(unittest.TestCase):
+    def test_delete_goes_through_the_delete_guard_and_fails_closed(self):
+        a = AP()
+        KW.reclaim_at_result(a, CFG, rec(), "FLOW")
+        cmd = " ".join(" ".join(c) if isinstance(c, list) else c for c in a.cmds)
+        self.assertIn("ot_delete_guard.py", cmd)
+        self.assertIn("protected.txt", cmd)
+        self.assertIn(" check ", cmd)
+        self.assertIn("delete guard missing", cmd)
+        # the guard check precedes the delete
+        self.assertLess(cmd.index(" check "), cmd.index(") -delete"))
+        # missing module/list: skip branch exits before any delete
+        self.assertLess(cmd.index("delete guard missing"), cmd.index(") -delete"))

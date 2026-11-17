@@ -8331,6 +8331,10 @@ def grt_arm_withdraw(AP, cfg, rec, why):
     return "withdrawn" if rc == 0 else f"withdraw rc {rc}: {(err or out)[-160:]}"
 
 
+# r359 ruling: every deleter goes through ot_delete_guard.refuse(); a missing module/list fails closed (nothing is deleted)
+RECLAIM_GUARD = os.environ.get("OT_RECLAIM_GUARD", "/srv/opentallas-scratch2/claude/clean-all-1115/ot_delete_guard.py")
+
+
 def grt_arm_reclaim(AP, rec, hosts):
     """delete the run data (GRT_ARM_RECLAIM) of a stopped attempt under its OWN dir .../items/<item>/attempt_<n> on each host
     that may hold it.  Fail-closed: a dir that is not this record's attempt_<n> (attempt 1's dir holds the later attempts), or
@@ -8346,6 +8350,9 @@ def grt_arm_reclaim(AP, rec, hosts):
     cmd = (f"W=$(readlink -f {shlex.quote(w)}) || exit 0; [ -d \"$W\" ] || {{ echo KW_RECLAIM_SKIP absent; exit 0; }}; "
            f"case \"$W\" in *{shlex.quote(want)}) ;; *) echo KW_RECLAIM_SKIP resolves elsewhere; exit 0;; esac; "
            f"if find \"$W\" -name signoff.json -print -quit | grep -q .; then echo KW_RECLAIM_SKIP signoff.json; exit 0; fi; "
+           f"G={shlex.quote(RECLAIM_GUARD)}; L=$HOME/.local/state/ot-delete-guard/protected.txt; "
+           f"if [ ! -f \"$G\" ] || [ ! -f \"$L\" ]; then echo KW_RECLAIM_SKIP delete guard missing; exit 0; fi; "
+           f"if ! gr=$(python3 -I \"$G\" check \"$W\" \"$L\" 2>&1); then echo KW_RECLAIM_SKIP guard ${{gr:0:80}}; exit 0; fi; "
            f"b=$(du -sm \"$W\" | cut -f1); find \"$W\" -xdev -type f \\( {names} \\) -delete; "
            f"echo KW_RECLAIM $b $(du -sm \"$W\" | cut -f1)")
     out = []
