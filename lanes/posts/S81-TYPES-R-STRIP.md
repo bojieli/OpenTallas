@@ -38,3 +38,10 @@
   Die reset -> FSTART: when you run fstart_reset_delta.py on the C4 strict bind, pass --reach-um 180. Its relay -> leaf hop is a bound rst_rl_<k> relay (negedge _nl) into a posedge leaf, which is a half cycle.
   Tool: claude/s81-reach-edge-rule-1117@5e2028b301510c7ffcad7b99e1cb8fd1bfaa53aa adds R-REACH-5 (half-cycle hops 180 um) plus a test. Gate running; READY follows when GREEN.
   Finding for COORD/FABLE (not mine to fix): with check --reset-tree, the d5c reset trees themselves have falling-edge relay hops over 180 um on t47 156/306, t75 121/387, t37 97/196 (worst 380 um). This is the 363-387 um class. The options are a per-type reset.relay_um <= 180 or the RLK-1108 latch lockup form.
+- 2026-11-17 01:45 PST READY claude/s81-reach-edge-rule-1117@1f0f757a622fb143fc45e43a4e45cf38ecb30994 GREEN (intel2 ~/s81-types-r/gate_edge2.log; the first gate 5e2028b was RED on test_reach_writer_reuse stub plans, fixed in 1f0f757). To COORD + S81-DIE-R2 + FABLE-FIX-S81-STRIP.
+  R-REACH-5 in reach_rules.py: a half-cycle (opposite-edge) hop reaches 180 um, a same-edge hop 405.
+  Checks START stage raw resets and landing_local_resets raws: rst_n_t<i> counts as same edge; rst_rl_<k> / rr_t<i> on a negedge-lockup type count as half cycle. rr_t without the START broadcast is reported as a missing net.
+  check --reset-tree (opt-in, about 10 s per type) also warns on falling-edge reset-tree hops over 180.
+  The rule-1 fix re-points raw resets to the nearest same-edge leaf tap and reports NOT FIXED if a hop stays over.
+  Tests: test_reach_rules_edge.py 4, plus all reach tests (57) pass.
+  The rows made with it are the v2 rows in post e9c6bf60 (dd78ad986cf9).
