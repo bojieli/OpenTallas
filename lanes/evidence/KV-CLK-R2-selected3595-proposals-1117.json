@@ -1,0 +1,238 @@
+{
+  "status": "UNADOPTED_SELECTED3595_PROPOSALS",
+  "source_selected_sidecar_sha256": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
+  "candidate_scope": "All3595same crossing IDs/endpoints, depth8L430_0 andFREG1L754_2 preserved. No320 PC-PHY extra rings. Planning CA proof, not built full die.",
+  "candidates": {
+    "e8": {
+      "report": {
+        "status": "UNADOPTED_FIXED_HARDWARE_CONTRACT_CANDIDATE",
+        "ports": 3595,
+        "physical_regions": 160,
+        "virtual_stages": 80,
+        "virtual_stage_flops": 270,
+        "depth_preservation": [
+          {
+            "port": "L430_0",
+            "depth_before": 4,
+            "depth": 8
+          }
+        ],
+        "freg_preserved": {
+          "L754_2": 1
+        },
+        "sched_delta_histogram": {
+          "-1": 239,
+          "0": 3205,
+          "1": 147,
+          "-2": 4
+        },
+        "emitted_strap_changed_fields": 3681,
+        "verify": {
+          "identity_and_loop_errors": [],
+          "fundamental_cycles": 3595,
+          "samples": 500,
+          "sim_window_violations": 0,
+          "sim_min_margin_low_ps": 129.3,
+          "sim_min_margin_high_ps": 713.5,
+          "sim_worst_ports": {
+            "lo": "L903_0",
+            "hi": "L1101_0"
+          },
+          "sim_below_need": false,
+          "note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+        },
+        "old_source_unchanged": true,
+        "actual_stage_emit_counts": {
+          "stages": 80,
+          "flops": 460,
+          "die_inputs": 6,
+          "die_outputs": 153,
+          "direct_ports": 6,
+          "max_cell_to_stage_um": 8.100000000000364
+        }
+      },
+      "measured_ca": {
+        "scope": "CA interval check only; declared insertion and virtual start node+leg model, not actual stage routing or whole-die closure",
+        "source_sta_sha256": "1c1b6da521bc2710da6f6c528db4e9c4e55e5ab699862401103a341a21e3a7fa",
+        "contract_bind_sha256": "f30b2d0ade6b30ea980f0210158396827b0ed682acfed55fe1ebfad1963dfc80",
+        "proof": "Same measured intervals and K. Existing depth8 only expands high guard; existing FREG1 is outside ring and affects sched_lat, not ring lag.",
+        "corners": {
+          "TT": {
+            "crossings": 3595,
+            "fail": 0,
+            "margin_lo_ps": 167.5,
+            "margin_hi_ps": 835.1,
+            "start_skew": {
+              "tree_ports": 239,
+              "fail": 0,
+              "clkq_ps": [
+                61.2,
+                93.3
+              ]
+            },
+            "no_taps": 0,
+            "verdict": "PASS"
+          },
+          "FF": {
+            "crossings": 3595,
+            "fail": 0,
+            "margin_lo_ps": 170.3,
+            "margin_hi_ps": 780.9,
+            "start_skew": {
+              "tree_ports": 239,
+              "fail": 0,
+              "clkq_ps": [
+                43.5,
+                65.6
+              ]
+            },
+            "no_taps": 0,
+            "verdict": "PASS"
+          }
+        }
+      },
+      "files_sha256": {
+        "bind.json": "f30b2d0ade6b30ea980f0210158396827b0ed682acfed55fe1ebfad1963dfc80",
+        "sidecar.json": "10ef205dee9194025cac57f700fc25ef0e66260b78ad51ad94dc9ba8468bead9",
+        "straps.json": "4046e03f2fd0c87bc294f5e59af6a58e9ad0d6d5d52ce5d87a9e373598419321"
+      }
+    },
+    "e6a": {
+      "report": {
+        "status": "UNADOPTED_FIXED_HARDWARE_CONTRACT_CANDIDATE",
+        "ports": 3595,
+        "physical_regions": 160,
+        "virtual_stages": 72,
+        "virtual_stage_flops": 245,
+        "depth_preservation": [
+          {
+            "port": "L430_0",
+            "depth_before": 4,
+            "depth": 8
+          }
+        ],
+        "freg_preserved": {
+          "L754_2": 1
+        },
+        "sched_delta_histogram": {
+          "0": 3244,
+          "-1": 256,
+          "1": 92,
+          "-2": 3
+        },
+        "emitted_strap_changed_fields": 3683,
+        "verify": {
+          "identity_and_loop_errors": [],
+          "fundamental_cycles": 3595,
+          "samples": 500,
+          "sim_window_violations": 0,
+          "sim_min_margin_low_ps": 108.5,
+          "sim_min_margin_high_ps": 712.4,
+          "sim_worst_ports": {
+            "lo": "L1943_0",
+            "hi": "L503_1"
+          },
+          "sim_below_need": false,
+          "note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+        },
+        "old_source_unchanged": true
+      },
+      "measured_ca": {
+        "scope": "CA interval check only; declared insertion and virtual start node+leg model, not actual stage routing or whole-die closure",
+        "source_sta_sha256": "9ddf8d07c47117599852b36e608f07a89b458fa3930113a4624a212726161cc3",
+        "contract_bind_sha256": "d90c171cf60f305ad7be99652b03e678ad324c6385b71d1380675537261ac255",
+        "proof": "Same measured intervals and K. Existing depth8 only expands high guard; existing FREG1 is outside ring and affects sched_lat, not ring lag.",
+        "corners": {
+          "TT": {
+            "crossings": 3595,
+            "fail": 0,
+            "margin_lo_ps": 135.1,
+            "margin_hi_ps": 878.3,
+            "start_skew": {
+              "tree_ports": 231,
+              "fail": 0,
+              "clkq_ps": [
+                61.3,
+                93.4
+              ]
+            },
+            "no_taps": 0,
+            "verdict": "PASS"
+          },
+          "FF": {
+            "crossings": 3595,
+            "fail": 0,
+            "margin_lo_ps": 135.8,
+            "margin_hi_ps": 808.2,
+            "start_skew": {
+              "tree_ports": 231,
+              "fail": 0,
+              "clkq_ps": [
+                43.6,
+                65.6
+              ]
+            },
+            "no_taps": 0,
+            "verdict": "PASS"
+          }
+        }
+      },
+      "files_sha256": {
+        "bind.json": "d90c171cf60f305ad7be99652b03e678ad324c6385b71d1380675537261ac255",
+        "sidecar.json": "18fa0b3bad57a7633f63beb8769686abb02540780eb98a189f60ce38801794dc",
+        "straps.json": "b89aee3d6e29f3fd3c6a26d6293cc25284194be6be266e1486ed8d455b4b259d"
+      }
+    }
+  },
+  "e8_actual_stage_emit": {
+    "stages": 80,
+    "flops": 460,
+    "die_inputs": 6,
+    "die_outputs": 153,
+    "direct_ports": 6,
+    "max_cell_to_stage_um": 8.100000000000364
+  },
+  "e8_minimum_chain_bench": {
+    "verdict": "PASS_WITH_MUTANT_CAUGHT",
+    "chain": [
+      "st:h00000000000000",
+      "st:h0000000000000010000000000000",
+      "st:h000000000000001000000000000000000000000000"
+    ],
+    "stages": [
+      {
+        "id": "b8",
+        "pad": 0,
+        "edge_fall": true
+      },
+      {
+        "id": "b24",
+        "pad": 0,
+        "edge_fall": false
+      },
+      {
+        "id": "b64",
+        "pad": 0,
+        "edge_fall": false
+      }
+    ],
+    "root_settle": 64,
+    "cold_and_warm_reset": true,
+    "results": {
+      "nominal": {
+        "rc": 0,
+        "output": "CHECKS 220 ERRORS 0\n/srv/opentallas-scratch2/claude/kv-clk-r2/selected_contract_e8/chain_bench/tb.sv:12: $finish called at 216580000 (1fs)\n"
+      },
+      "mutant": {
+        "rc": 1,
+        "output": "CHECKS 220 ERRORS 4\nFATAL: /srv/opentallas-scratch2/claude/kv-clk-r2/selected_contract_e8/chain_bench/tb.sv:12: chain mismatch\n       Time: 216580000  Scope: tb\n"
+      }
+    },
+    "scope": "Minimum exact emitted three-stage chain; functional reset/START identity only. No physical timing or numerical payload claim."
+  },
+  "remaining": [
+    "Actual mapped stage clock loads/arrivals and START/reset data route timing",
+    "Explicit consumer ages/R8/source rebind/model adoption; TOKEN found77old target deficits",
+    "All current type view and die signoff obligations remain"
+  ]
+}
