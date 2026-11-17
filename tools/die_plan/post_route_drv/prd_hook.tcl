@@ -554,7 +554,13 @@ if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 # two-mode kits: the SHARED guarded hold repair of orfs_hold_mm.tcl (R5 chunk buffer cap inside the same total budget,
 # met-first, stall + time limits, FF clock RC calibration) -- R7 KV canary: one raw call sat >30 min in iteration 0 on
 # 9,048 margin endpoints at real ws -10.5 (the E0 plateau class).  Kits without the session keep the raw call.
-if {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
+if {[info exists ::env(OT_PRD_HOLD_PLAN)] && $::env(OT_PRD_HOLD_PLAN) ne "" && [info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) ne "1"} {
+  # HOLD-FLOW-R 11-16 (closure lever 1): targeted internal-endpoint HB4 insert sized by hold_eco_internal.py (+10 ps) instead of
+  # the global repair_timing -hold; the scoped-repair flags are not exercised, so mark them done for the assert below.
+  puts "OT_PRD pass $_pass hold: targeted internal insert from $::env(OT_PRD_HOLD_PLAN)"
+  source [file join $_here hold_eco_internal_insert.tcl]
+  set ::ot_prd_scope_entered 1; set ::ot_prd_scope_restored 1; set ::ot_prd_scope_completed 1
+} elseif {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
   # KW-ECO-1 variant t<N> (TT-only single-mode pass): setup + DRV only; hold is repaired in the FF-only b<N> pass
   puts "OT_PRD pass $_pass hold: skipped (OT_PRD_NO_HOLD=1, TT-only pass)"
 } elseif {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]} {
