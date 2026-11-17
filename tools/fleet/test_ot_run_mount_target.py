@@ -17,7 +17,7 @@ OT_DIR_ONROOT 1
 '''
 
 def test_root_bind_is_not_capacity_or_eligible_target():
-    with mock.patch.object(m, 'ROOT_SCRATCH_ROOTS', ()):
+    with mock.patch.object(m, 'ROOT_SCRATCH_ROOTS', ()), mock.patch.object(m, 'ROOT_SCRATCH_ROOTS_HOSTS', {}):
         status = m.scratch_disk({'disk_gb': 400}, None, PROBE, 'intel1')
         assert status['disk_gb'] == 9 and 'floor' in m.host_refusal(status)
         row = m.scratch_disk({'disk_gb': 400}, '/srv/opentallas-scratch3/claude/a', PROBE, 'intel1')
