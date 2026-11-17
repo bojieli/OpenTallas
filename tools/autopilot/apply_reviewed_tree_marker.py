@@ -133,6 +133,23 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
                     pilot=(dict(item=pilot, release="gen_pilot:%s:%s" % (die, want[:12]), hold_added=pilot_added) if pilot else "NONE"))
 
 
+def commit_apply(coord, res):
+    """FABLE-FLOW-1100 (6): the apply wrote kit_wave.json, the die's tree_switch marker and a receipt but committed nothing; the hub git sync then reported HUB-SYNC-FAILED
+    (22 times, 28+ min each) until some other lane's commit swept the files in.  The writer commits its own files through bin/coord-commit.sh.  -> 'ok' | 'FAILED rc' | 'skipped'"""
+    import subprocess
+    C = Path(coord); script = C / "bin/coord-commit.sh"
+    if not script.is_file():
+        return "skipped: no coord-commit.sh"
+    rel = ["autopilot/kit_wave.json", "lanes/handoff/" + HR.tree_marker_rel(res["applied"]).split("lanes/handoff/")[-1] if "lanes/handoff/" in str(HR.tree_marker_rel(res["applied"])) else str(HR.tree_marker_rel(res["applied"]))]
+    try:
+        rel.append(str(Path(res["receipt"]).relative_to(C)))
+    except (KeyError, ValueError):
+        pass
+    r = subprocess.run(["bash", str(script), "atomic apply %s %s (written by apply_reviewed_tree_marker)" % (res.get("applied"), str(res.get("event"))[:60]), *rel],
+                       cwd=str(C), capture_output=True, text=True, timeout=600)
+    return "ok" if r.returncode == 0 else "FAILED rc %d: %s" % (r.returncode, (r.stderr or r.stdout)[-160:])
+
+
 def main(argv=None):
     P = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     P.add_argument("--candidate", required=True, help="JSON marker or {marker: marker, hold_record: optional_record}")
@@ -142,10 +159,14 @@ def main(argv=None):
     P.add_argument("--no-pilot", action="store_true")
     P.add_argument("--keep-gen-hosts", action="store_true", help="keep the die's current gen_hosts (guard must cover exactly them)")
     P.add_argument("--coord", default="/home/ubuntu/coord")
+    P.add_argument("--no-commit", action="store_true", help="leave the written files uncommitted (the caller commits)")
     a = P.parse_args(argv)
     obj = json.loads(Path(a.candidate).read_text())
     obj["_path"] = a.candidate
-    print(json.dumps(apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts)))
+    res = apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts)
+    if not a.no_commit:
+        res["commit"] = commit_apply(a.coord, res)
+    print(json.dumps(res))
 
 
 if __name__ == "__main__":
