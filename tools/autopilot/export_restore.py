@@ -73,3 +73,103 @@ def restore(items, fetch, tmpdir, hash_ok=sha256_file):
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         os.replace(tmp, dst); done.append(dst)
     return done, fail
+
+# ---- request path (COORD 11-17: no hub key, no mirror): kit_snap queues RESTORE-NEEDED rows, a copy-only worker on rtx-pro pushes the hash-checked files ----
+import time
+
+
+def restore_rows(missing, provenance_of, host, now=None):
+    """missing: [(path, provenance.json path)] -> [{module, record, key, path, host, by, t, status}] for the paths that are export/* paths of their provenance"""
+    rows = []
+    for path, by in missing:
+        prov = provenance_of(by) or {}
+        ex = prov.get("export") if isinstance(prov.get("export"), dict) else {}
+        key = next((k for k, v in ex.items() if v == path), None)
+        if not key or not ex.get("signoff_sha256"):
+            continue
+        kit = prov.get("kit") if isinstance(prov.get("kit"), dict) else {}
+        rows.append({"module": kit.get("module") or "", "record": ex["signoff_sha256"], "key": key, "path": path, "host": host, "by": by,
+                     "lec_sha256_any": ex.get("lec_sha256_any") or [], "t": now or time.time(), "status": "NEEDED"})
+    return rows
+
+
+def queue_append(qfile, rows, done=()):
+    """append rows not already queued or done for the same (host, path); -> number appended"""
+    seen = {(r["host"], r["path"]) for r in read_jsonl(qfile)} | {(r["host"], r["path"]) for r in done}
+    new = [r for r in rows if (r["host"], r["path"]) not in seen]
+    if new:
+        os.makedirs(os.path.dirname(qfile), exist_ok=True)
+        with open(qfile, "a") as f:
+            for r in new:
+                f.write(json.dumps(r, sort_keys=True) + "\n")
+    return len(new)
+
+
+def read_jsonl(path):
+    out = []
+    try:
+        for ln in open(path):
+            ln = ln.strip()
+            if ln:
+                try:
+                    out.append(json.loads(ln))
+                except ValueError:
+                    pass
+    except OSError:
+        pass
+    return out
+
+
+def pending(queue_rows, done_rows):
+    d = {(r["host"], r["path"]) for r in done_rows}
+    return [r for r in queue_rows if (r["host"], r["path"]) not in d]
+
+
+def resolve(row, index_rows, root):
+    """-> (kind, source file, expected sha spec) or (None, why).  Same rules as plan(): odb / signoff / lec / dir."""
+    key, rid = row["key"], row["record"]
+    if key in ("kit", "base"):
+        return "dir", None, None
+    rows = [r for r in index_rows if r.get("record", "").startswith(rid[:12])]
+    if not rows:
+        return None, "no signed export row for record " + rid[:12], None
+    base = os.path.join(root, os.path.relpath(rows[0]["db"], "/archive/opentallas-signed-1114"))
+    if key == "odb":
+        return "odb", base, rows[0]["sha256"]
+    e = os.path.dirname(base)
+    if key == "signoff":
+        return "signoff", os.path.join(e, "signoff.json"), "id:" + rid
+    if key == "lec":
+        return "lec", os.path.join(e, "lec.json"), "any:" + ",".join(row.get("lec_sha256_any") or [])
+    return None, "kind " + key + " not in the export", None
+
+
+def check_sha(got, want):
+    if want.startswith("id:"):
+        return got.startswith(want[3:15])
+    if want.startswith("any:"):
+        return (not want[4:]) or got in want[4:].split(",")
+    return got == want
+
+
+def work(queue_rows, done_rows, index_rows, root, push, hash_file=sha256_file, now=None):
+    """push(host, src, dst) / push(host, None, dst) for dirs.  -> list of done rows (status DONE or FAILED reason).  A file whose hash does not match is never pushed."""
+    out = []
+    for r in pending(queue_rows, done_rows):
+        kind, src, want = resolve(r, index_rows, root)
+        if kind is None:
+            out.append(dict(r, status="UNRESTORABLE", why=src, done=now or time.time())); continue
+        try:
+            if kind == "dir":
+                push(r["host"], None, r["path"])
+            else:
+                if not os.path.exists(src):
+                    out.append(dict(r, status="UNRESTORABLE", why="export file missing: " + src, done=now or time.time())); continue
+                got = hash_file(src)
+                if not check_sha(got, want):
+                    out.append(dict(r, status="UNRESTORABLE", why="export file sha256 %s does not match the signed record" % got[:12], done=now or time.time())); continue
+                push(r["host"], src, r["path"])
+            out.append(dict(r, status="DONE", done=now or time.time()))
+        except Exception as e:
+            pass                                    # transient (host down): stays pending, retried next run
+    return out

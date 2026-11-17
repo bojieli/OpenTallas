@@ -7488,6 +7488,24 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
                 print(f"KW_KIT_SNAP_EXPORT_RESTORED {len(restored)} still_missing {len(vmiss)}", flush=True)
         except Exception as e:                       # the export is an optional last resort: never turns a degraded snapshot into a crash
             print(f"KW_KIT_SNAP_EXPORT_FAILED {type(e).__name__}: {e}"[:300], flush=True)
+    if vmiss and sp.get("restore_queue") is not False:
+        # COORD 11-17: the signed export is off the fleet; ask for the files instead.  One RESTORE-NEEDED row per missing export path (module, record id, path, host) goes to the
+        # hub queue; a copy-only cron on rtx-pro pushes the hash-checked files and the next tick's snapshot finds them.
+        try:
+            import export_restore as ER
+            qdir = os.path.expanduser("~/.local/state")
+            def _prov(by):
+                rc_, t_ = run("kit_snap_prov", remote(f"cat {shlex.quote(by)}"), idempotent=True)
+                try:
+                    return json.loads(t_[t_.index("{"):])
+                except ValueError:
+                    return None
+            rows = ER.restore_rows([(m["path"], m["by"]) for m in vmiss[:200]], _prov, G)
+            n = ER.queue_append(os.path.join(qdir, "restore_needed.jsonl"), rows, done=ER.read_jsonl(os.path.join(qdir, "restore_done.jsonl")))
+            if n:
+                print(f"KW_KIT_SNAP_RESTORE_NEEDED queued {n} of {len(rows)} (copy-only worker on rtx-pro restores them; retried next tick)", flush=True)
+        except Exception as e:
+            print(f"KW_KIT_SNAP_RESTORE_QUEUE_FAILED {type(e).__name__}: {e}"[:300], flush=True)
     if vmiss:
         names = "; ".join(f"{m['path']} (named by {m['by']})" for m in vmiss[:5])
         if sp.get("kit_snap_view_refs") == "strict":
