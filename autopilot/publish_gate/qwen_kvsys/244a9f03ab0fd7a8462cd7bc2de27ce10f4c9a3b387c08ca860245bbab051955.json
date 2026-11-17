@@ -1,0 +1,55 @@
+{
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/srv/opentallas-scratch2/claude/tools-converge/kv-r2/d12_publish_work/qwen_kvsys/244a9f03ab0f/kv3_hg_v1",
+   "gen_host": "epyc10",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "origin": "/srv/opentallas-scratch2/claude/tools-converge/kv-r2/d12_publish_work/qwen_kvsys/244a9f03ab0f/kv3_hg_v1/published_gen_origin.json",
+   "origin_sha256": "4bb14e2df8c43df53c35d72c94c9d938a8d60822fc3622bac891b5ae2e69ce96",
+   "published_gen_import_declined": "dry GEN did not finish",
+   "rc": 1,
+   "result": "FAIL",
+   "spec_sha256": "6c6ac39798268c32b56ae165ec5bf67152b31163a804c27ce911f35d275df314",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12",
+   "stage": "gen",
+   "verdict": "FAIL",
+   "why": "stage gen: Traceback (most recent call last):\nValueError: hard landing actual child proof failed: {'ring_reset': ['rst_xn[22]: no load']}"
+  },
+  "hashes": {
+   "findings": [],
+   "plan_sha256": "5c15509230caae3d9e57be35468115d95eb1a58b32d789b116430c0135d3e765",
+   "verdict": "PASS",
+   "views": 59
+  },
+  "pre_g0": {
+   "g0_rc": 0,
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12 plan=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json findings=0\n\nG0: dius=271.964/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_hg_v1p5: grid+explicit tap clk_t48 radius=271.964/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hg_v1p6: grid+explicit tap clk_t42 radius=215.716/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v1__cl141fc26e: grid+explicit tap clk_t40 radius=203.216/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v1__cl42bc8b12: grid+explicit tap clk_t39 radius=203.216/200.0 (advisory)\nTAP-LIMIT-INFO kv3_hgi_v2__cl2862d491: grid+explicit tap clk_t33 load=269/1200, radius=264.832/200.0, empty=False (info: not blocking; routed timing decides)\nTAP-RADIUS-TARGET kv3_hgi_v2__cl2862d491: grid+explicit tap clk_t33 radius=264.832/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v2__cle0015330: grid+explicit tap clk_t34 radius=213.248/200.0 (advisory)\nTAP-RADIUS-TARGET kv3_hgi_v8: grid+explicit tap clk_t22 radius=202.148/200.0 (advisory)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "hosts": [
+  "epyc10",
+  "epyc8",
+  "intel1"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "244a9f03ab0fd7a8462cd7bc2de27ce10f4c9a3b387c08ca860245bbab051955",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "5c15509230caae3d9e57be35468115d95eb1a58b32d789b116430c0135d3e765",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1794899885.2041802,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_5c155092_d12",
+ "verdict": "FAIL"
+}
