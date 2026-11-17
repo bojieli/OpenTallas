@@ -18025,3 +18025,28 @@ def qwen_kv_start_relay_model(stages, bound, baseline=None):
     """Size emitted START/reset stages, including reset registers and date changes."""
     from uarch_model_kv_start import model
     return model(stages, bound, baseline)
+
+
+def s81_serdes_xface_retime_model(replicas=1):
+    """Opt-in output wire retiming, compensated by one SRAM delay edge."""
+    if not isinstance(replicas, int) or replicas < 1:
+        raise ValueError("replicas must be a positive integer")
+    return dict(schema="opentallas.s81-serdes-xface-retime.v1",
+                status="CANDIDATE_NOT_ADOPTED", clock_ps=833, replicas=replicas,
+                word_bits=544, sustained_words_per_cycle=1,
+                MACs_per_cycle=0, SRAM_ports=2, SRAM_bytes_per_port_cycle=68.25,
+                SRAM_depth=64, SRAM_read_distance_before=55,
+                SRAM_read_distance_after=54, SRAM_macro_count_delta=0,
+                output_wire_edges_added=1, SRAM_delay_edges_removed=1,
+                mission_edges_added=0, boot_reset_edges_added=0,
+                new_FF_per_receiver=1088, new_FF=1088*replicas,
+                new_reset_FF=0, new_muxes=0, new_clock_sinks=1088*replicas,
+                x0_added_fanout_per_bit=1, midpoint_fanout_per_bit=1,
+                boundary_bits_per_cycle=544, target_max_hop_um=405,
+                measured_worst_original_direct_um=706.806,
+                proposed_worst_midpoint_leg_um=353.403,
+                FF_cell_body_um2=1088*replicas*.2916,
+                area_scope="TT RVT DFFHQNx1 0.2916um2 body floor; clock buffers, route tracks and actual banks must be measured",
+                data_scope="unchanged 512b payload/544b PMA; existing SRAM ports remain overlapped and active",
+                reset_scope="new data banks unreset; existing training must qualify first valid frame after reset",
+                evidence="results/uarch/s81_serdes_xface_retime_1117/model.json")

@@ -238,14 +238,27 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
 `endif
     // RCK extraction: x1 also feeds x2/the syndrome cone. A separate copy of
     // its NEXT data gives the output its own face flop, with ZERO added cycles.
-    generate if (PIN_X != 0) begin : g_x_face
-        reg [543:0] x_face;
+    // Optional output-only spatial retiming. Internal x1/history is retained.
+    // The extra word edge is compensated by DD-1 in the free-running SRAM tile.
+`ifdef OT_S81_RCK_XPIPE1
+    localparam integer XPIPE1 = 1;
+`else
+    localparam integer XPIPE1 = 0;
+`endif
+    generate if (PIN_X != 0 || XPIPE1 != 0) begin : g_x_face
+        (* keep = 1, dont_touch = 1, face_keep = 1 *) reg [543:0] x_face;
+        if (XPIPE1 != 0) begin : g_mid
+            (* keep = 1, dont_touch = 1 *) reg [543:0] x_mid;
+            always @(posedge clk) x_mid <= x0;
+            always @(posedge clk) x_face <= x_mid;
+        end else begin : g_direct
         (* keep = 1, dont_touch = 1, face_keep = 1 *) always @(posedge clk)
 `ifdef RCKRF_MUT_XFACE_DELAY
             x_face <= x1;
 `else
             x_face <= x0;
 `endif
+        end
         assign x_q = x_face;
     end else begin : g_x_plain
         assign x_q = x1;
