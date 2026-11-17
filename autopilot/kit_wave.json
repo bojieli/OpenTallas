@@ -39612,7 +39612,7 @@
    },
    "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9l2.json",
    "gen_host": "epyc8",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d3",
    "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "kit_rtl": {
     "mode": "bind",
@@ -39690,7 +39690,15 @@
     "coll_core@1",
     "sle_ctl__cl372cea1c@17",
     "sle_ctl__cl503337ff@19",
-    "sle_ctl__cla4f6f12f@10"
+    "sle_ctl__cla4f6f12f@10",
+    "sle_st_a_v1__cl67389ecd@2",
+    "sle_st_a_v1__cl989804f6__cl18eece69@2",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b@3",
+    "slw_st_a_v1__clb036e152@3",
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28@3",
+    "sle_ctl__cl372cea1c@19",
+    "sle_ctl__cl503337ff@22",
+    "sle_ctl__cla4f6f12f@13"
    ],
    "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "type_args": {
@@ -40414,7 +40422,7 @@
     "cbx_q10__cl89936551_h@6": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
     "cbx_q10__cl89936551@28": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
     "cbx_q10__cl94a12200_h@7": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
-    "sle_st_a_v1__cl989804f6__cl18eece69@2": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
+    "sle_st_a_v1__cl989804f6__cl18eece69@2": "FLOW-FIX QC-PLAN-R3: failed on pre-D2 source (param_wrap tail1 has no port table); faf8c5cd61f ordinary tail1 PORTS fix is in D2/D3 (D2 st_a producer kit-rtl rc0/23 files/unbound0); relaunch on D3.",
     "slw_st_a_v1__clb036e152@1": "FAIL-QCKV-1 (COORD): missing qcviews_1112 qfd_tile_nk_a0c lef restored on all QC gen hosts; relaunch.",
     "sle_sc_v2@5": "QC s29q103S2: plan minus 3 stale r8pad count_straps, rebound (bind_s29q103S2); only these two relaunch.",
     "sle_ctl__cl372cea1c@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
@@ -40424,7 +40432,14 @@
     "sle_ctl__cl67434795__v1@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
     "sle_ctl__cla4f6f12f@1": "qfd_dv_s8_tap_bounded form e SIGNED; view registered in prov_view_sources (KIT-OPS-3); relaunch.",
     "sle_ctl__cl372cea1c@17": "FLOW-FIX: raw4 immutable bind context restores exact original bound HDL matching original reset receipt; old relocation changed source-location comments only. Normal coll_core kit-rtl exit0 unit2741976; source/plan/cycles unchanged.",
-    "sle_ctl__cl503337ff@19": "FLOW-FIX: raw4 immutable bind context restores exact original bound HDL matching original reset receipt; old relocation changed source-location comments only. Normal coll_core kit-rtl exit0 unit2741976; source/plan/cycles unchanged."
+    "sle_ctl__cl503337ff@19": "FLOW-FIX: raw4 immutable bind context restores exact original bound HDL matching original reset receipt; old relocation changed source-location comments only. Normal coll_core kit-rtl exit0 unit2741976; source/plan/cycles unchanged.",
+    "sle_st_a_v1__cl67389ecd@2": "FLOW-FIX QC-PLAN-R3: failed on pre-D2 source (param_wrap tail1 has no port table); faf8c5cd61f ordinary tail1 PORTS fix is in D2/D3 (D2 st_a producer kit-rtl rc0/23 files/unbound0); relaunch on D3.",
+    "sle_st_a_v1__cl989804f6__cled3c1d7b@3": "FLOW-FIX QC-PLAN-R3: failed on pre-D2 source (param_wrap tail1 has no port table); faf8c5cd61f ordinary tail1 PORTS fix is in D2/D3 (D2 st_a producer kit-rtl rc0/23 files/unbound0); relaunch on D3.",
+    "slw_st_a_v1__clb036e152@3": "FLOW-FIX QC-PLAN-R3: failed on pre-D2 source (param_wrap tail1 has no port table); faf8c5cd61f ordinary tail1 PORTS fix is in D2/D3 (D2 st_a producer kit-rtl rc0/23 files/unbound0); relaunch on D3.",
+    "slw_st_a_v1__clfc5867a6__pvf82a6c28@3": "FLOW-FIX QC-PLAN-R3: failed on pre-D2 source (param_wrap tail1 has no port table); faf8c5cd61f ordinary tail1 PORTS fix is in D2/D3 (D2 st_a producer kit-rtl rc0/23 files/unbound0); relaunch on D3.",
+    "sle_ctl__cl372cea1c@19": "FLOW-FIX QC-PLAN-R3: hard landing requires SIGNED (old prove rejects LOCAL_PASS_NEEDS_PARENT); D3 carries merged b08d2ac81e hard_landing.py (canonical RMIN profile); prove PASS on all 8 sle_ctl landing children incl w517 (517 bits); relaunch on D3.",
+    "sle_ctl__cl503337ff@22": "FLOW-FIX QC-PLAN-R3: hard landing requires SIGNED (old prove rejects LOCAL_PASS_NEEDS_PARENT); D3 carries merged b08d2ac81e hard_landing.py (canonical RMIN profile); prove PASS on all 8 sle_ctl landing children incl w517 (517 bits); relaunch on D3.",
+    "sle_ctl__cla4f6f12f@13": "FLOW-FIX QC-PLAN-R3: hard landing requires SIGNED (old prove rejects LOCAL_PASS_NEEDS_PARENT); D3 carries merged b08d2ac81e hard_landing.py (canonical RMIN profile); prove PASS on all 8 sle_ctl landing children incl w517 (517 bits); relaunch on D3."
    },
    "gen_hosts": [
     "epyc8"
@@ -50833,18 +50848,6 @@
      "reason": "COORD r502: exact inherited NB 34.572um east overhang. Corrected N must prove production GEN macrofit/halo/reach and clockentry/collector bindings, placed macro/relay pin legality, post-CTS reloaded GRT overflow0 and TT>=-42/internalFF>=0 on changed clk_c6 actual RC. Generic cb-ready does not qualify this geometry; no full DRT wait.",
      "owner": "QC-PLAN-R3",
      "owner_since": "2026-11-17 06:30 PST WAVE-PILOT-FIX re-own (dead lane)"
-    },
-    {
-     "id": "qc-l2-d2-sta-hardlanding-lef-1117",
-     "plan_sha": "19be3f0a3bb42d8ea1a388412843e1d80e98563041d169899e54c22a47dffe82",
-     "reason": "Actual D2 GEN FAIL after ordinary PORTS producer PASS: hard_landing.emit KeyError lef at sta_cland_w1574_e_s26 (raw hard_cores[4]); QC physical owns real view/metadata fix. Prevent unchanged retry of this independent cause. Evidence E8 tools-converge/qc/sc_tail1_L2_1117_actual_sta/gen.log. Source-only promotion does not qualify this physical kit.",
-     "release": [
-      "result:CODEX-QC:sta-hard-landing-lef-ready"
-     ],
-     "keys": [
-      "sle_st_a_v1__cl67389ecd"
-     ],
-     "carry": true
     }
    ],
    "planned_events": [
@@ -50859,7 +50862,7 @@
     "s29q103S4Q9M",
     "s29q103S4Q9N"
    ],
-   "src_manifest_hash": "a535703479c0951f3a82a889344dc8983ab6e81ea3a2ad76d84755fe671c8cf8",
+   "src_manifest_hash": "f6917f02d13cc1852e974de328728d373537d1ad0411fd4da5c79d8e5ef92373",
    "tools_sha": "eb1e73448bd0",
    "only_items_prev_qcpin": [
     "cbf_q01",
