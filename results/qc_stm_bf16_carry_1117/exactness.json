@@ -1,0 +1,8 @@
+{
+  "verdict": "EXACT_PASS_MUTANT_CAUGHT",
+  "mechanism": "actual old33-bit sum vs opt-in16-bit parallel carry form",
+  "inputs": "all 2^32 FP32 bit patterns, no finite-only assumption",
+  "cycles_added": 0,
+  "default": "unchanged absent OT_QFD_BF16_CARRY",
+  "physical_status": "NOT_RUN"
+}

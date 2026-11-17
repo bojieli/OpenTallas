@@ -17802,3 +17802,24 @@ def s81_serdes_rx_transport_model(relay_stages=4, read_pointer_copies=1,
             composition="source-profile PHY internal RX term once per S81 receiver; never duplicate as ft lane hops; current REL241 programme must re-solve before any final rate"),
         exactness="AM face literal golden + reset/data/valid transport lockstep, short-stage mutant; RM local copies preserve global empty protocol and per-bank reset",
         qualification="candidate only: source-profile/compiler compose, exactness, reviewed full-shape kit, DRC0 TT>=-42ps FFhold>=0 LEC and sustained budget required")
+
+
+def qwen_stream_bf16_carry_model():
+    """Opt-in exact BF16 carry predicate; unchanged producer/consumer register edge."""
+    return dict(schema="opentallas.qwen.stream-bf16-carry.v1",
+                status="CANDIDATE_NOT_ADOPTED", clock_ps=833,
+                inputs_per_cycle=8, output_bf16_per_cycle=8,
+                replicated_output_banks=4, combinational_converters=32,
+                MACs_per_cycle=0, added_cycles=0, token_cycles_added=0,
+                input_bits_per_cycle=256, output_bits_per_cycle=512,
+                shared_boundary_bits_delta=0, memory_bytes_per_cycle_delta=0,
+                memory_port_count_delta=0, routing_tracks_delta=0,
+                replicas_delta=0, flop_count_delta=0,
+                mux_demux_fanout_delta=0, outline_delta_um2=0,
+                old_logic="33-bit constant-biased sum",
+                new_logic="exact low16 carry predicate then parallel upper16 prefix increment",
+                combinational_gate_upper_bound=32*(15+16+15),
+                area="gate topology estimate only; full-shape mapped and routed area pending",
+                slot_fit="unchanged stream partition; fresh full-shape physical qualification required",
+                latency_contribution="same wd_q -> lane_c register edge; zero added token cycles",
+                qualification="smallest lockstep SAT plus wrong-tie mutant; full-shape RTL timing required")
