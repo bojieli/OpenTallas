@@ -133,3 +133,36 @@ All three children have confirmed PARKED/HANDOFF DONE; reset_form instructed res
 **Latest reset fallback is unreviewed.** rm_select local-only /tmp/reset_q_balanced_fallback.json/.png and generator .py: q151[1320.516,229.5],q152[951.804,229.5],q182[1225.098,229.5], all affected hop max190.134um; move sourceINV_3 with q, preserve state/INV_2/collectors/FIRM. BOTH legs remain halfcycle. Image rendered but NOT LOOKED before reset; JSON REVIEWED label is erroneous and must be treated UNREVIEWED. No launch/legalization. Adjacent-only v1 /tmp/reset_q_pair_fallback.json is weaker (max371.952/fault182337.608). Current44-row clock pilot is still separate and not measured on fresh G3.
 
 J3 pending package exact intel2 L/rx_transport/J3_geometry/{combined.tcl,clock_taps_next.tcl,clock_config_next.mk,clock_ancestry_lib.tcl,native_ancestry.tcl,native_group_re.txt,placement_nodes.tcl,tx0_pairs.tcl,select_cone.tcl,target.tcl}. Source1c body SHA97a25a7b20475ddf0967f705639f4dde6d539ca49b4f720eddbcb5774472d2c2, footer preserved; NONE of these new J3 probes ran. J3 actual mapped hash412d43fe5c98, RM_LOCAL0. I2 additional families in L/I2/I2_stage_addendum.json; canonical worker post cb748369. J2 graph14770nodes/21949edges/max174.2um is geometry evidence only. Existing AM mechanism TT−35.437/FF+573.751/headerFF+201.848 remains useful positive evidence; whole form is pending.
+
+
+# FABLE-FIX-S81-SERDES restart 2026-11-17 01:2x PST (Fable; family owner of the 11 S81 SerDes types)
+
+L = /srv/opentallas-scratch2/claude/fable-fix-s81-serdes (per host). My logs: intel2 ~/fable-fix-s81-serdes/. My probes: E8 L/probes_fable_1117
+(dens.tcl + run_dens.sh TAG KIT ODB BIN; run_cts_worst.sh TAG KIT ODB). Partner lane: S81-SERDES-R2 (Opus) owns H5 + H4 reads.
+Gate R-MINIMAL: DRC 0, routed TT >= -42, internal reg FF hold >= 0; port hold advisory.
+
+## Form classes (plan_h2_2249 clock.keepouts_um)
+- H class (shore band, keepout y > 681): t13 (pilot), t16, t4, t15__cla2127225, t15__cla3d02796.
+- G/J class (lot keepout y > 238.76, 75 % of the partition): t1__clb45db5be (G pilot), t1__clfe1f0815, t2, t14 (J pilot).
+- t3 (keepout y > 452), t12 (keepout y > 840): own shapes, not yet piloted.
+
+## Finding 1: encoder clump = density target, not region (measured, H3p 5_1_grt.odb)
+385,433 movable cells, 56.8k um2, 1.4 % of free area. GPL: -density 0.5 -pad 0, routability mode dropped by OT_GPL_SPARSE.
+585 10-um bins at 0.40-0.65 hold 29.3k um2 (52 % of cell area). 247k anonymous XOR cells in two plates: u_enc x 870-990 y 670-780,
+u_dec.u_syn x 1230-1360 y 670-740. M8 shorts (7.7k at iteration 0) = M8-grant track obstructions, a separate normal class.
+Fix axis: lower the GPL target / pad cells. H5 = 0.30 (R2, epyc2 unit 121200-1794907016). H6 = H5 + 0.20 + GPL pad 2
+(mine, epyc2 unit oth-ubuntu-342711-1794908033, kit L/H6 on intel1+epyc2, log ~/fable-fix-s81-serdes/h6-route.out).
+Decision rule: first of H5/H6 with routed DRC 0 / TT >= -42 / FF >= 0 is the H-class form; then the same config lines go into the
+other four H-class kits and, as a flow default for sparse kits, into gen_phys (branch + gate + READY).
+
+## Finding 2: G4 keepout
+Plan type keepout for the G/J class is the whole logical PHY lot [0,238.76,2735.76,1226.88]; the kit PHY supply region (real no-core-cell
+zone, pdn.tcl) is only [240.192,947.16,2500.96,1226.88] for t1. Blanket sources: type clock.keepouts_um, die.io phy_macro rect_um
+(die_clock.keepouts), die.pg.domains rect_um (VDDPHY M8/M9 grid + bump rows over the lot; phy_macro_um already holds the PMA body).
+schema.tap_clear already avoids placement_boxes (real macros), so scoping = plan delta for S81-DIE-R2 (C4 or next event).
+G4 CTS r5 exit 0 (E8); post-CTS census running: E8 unit oth-ubuntu-763446-1794908124 -> probes_fable_1117/G4_cts.
+
+## Next
+1. Read H5/H6 GPL density (run_dens.sh on 3_place.odb), CTS TT, GRT TT, DRT. Do not route H4 (density 0.5).
+2. G4 census -> if local entries fix the G class, post the scoped-keepout delta (exact rects per lot) to S81-DIE-R2.
+3. On the first routed PASS: visual review, export AGIdock + rtx-pro, INDEX rows, then the 4 sibling H-class kits.
