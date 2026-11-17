@@ -1,0 +1,16 @@
+# S81-SERDES-R2 handoff (Opus; successor of S81-SERDES-R (Fable, weekly limit to 11-22))
+
+L = /srv/opentallas-scratch2/claude/fable-fix-s81-serdes (per host). Launch logs: intel2 ~/s81-serdes-r2/ (mine), ~/s81-serdes-r/ (predecessor).
+Probes: E8 L/probes_serdes_r_1116 (h_worst.tcl, run_worst.sh TAG KIT ODB, h_parse.py, stage_hold_packet.py).
+Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; export AGIdock /archive/opentallas-signed-1114 + rtx-pro.
+
+## 18:4x PST state
+- H (serdes__t13, E2): route running (unit oth-ubuntu-2519465, GRT). Pre-GRT FF hold repair after wns +2.27, setup still -147.62 (clk_t29 txl r[1]->q insertion skew, not t17/t26). Expect routed TT fail; H2 is the form fix.
+- H2 (E8 L/H2/serdes__t13/gen/serdes__t13): north-strip tap rows (north_rows.tcl, OT_NORTH_TAPS t24,t17,t18,t27,t28,t29,t30,t23, y>1195): 288 strip FF moved to north taps, 549 near FF moved off. CTS running (unit oth-ubuntu-3807941). it2: clk_t17 407 (was 785).
+- J4 (serdes__t14, E8 L/J4/serdes__t14/gen/serdes__t14): CTS exit 0 (pre-repair FF -353.02, 2303 ep, info). Approved HOLD-SDC be1 packet staged (J4_hold_packet_stage.json, sdc sha 3e0c65ac59ce8d4f, checker clean, backup J4_before_hold_packet). Route running (unit oth-ubuntu-3941217, J4_run_route.out). Post-CTS TT/FF census running (unit oth-ubuntu-3952985 -> probes J4_cts/).
+- G3 (serdes__t1__clb45db5be, E8): CTS running (unit oth-ubuntu-3768458) on existing 48 ports. t48: per S81-DIE-R row clk_t48 = second sink on clk_t13 leaf (t13 window, pair <= 0.2 ps, common <= 1.81 ps TT); G3 pose (570 native FF over 1014 um) does not fit one t48 pin, so t48 not used in G3.
+
+## Next
+1. J4 census -> classes; J4 routed TT/FF -> if pass: visual review, sign-off, export.
+2. H2 CTS -> census (run_worst.sh H2_cts) -> stage hold packet already present (H kit copy) -> route.
+3. G3 CTS -> census -> hold packet -> route.
