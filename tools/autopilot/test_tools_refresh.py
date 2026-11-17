@@ -163,9 +163,13 @@ def test_a_crash_before_compose_is_not_an_attempt_and_three_crashes_stop():
     posts, state = [], {}
     for n in (1, 2, 3):
         # the pass dies before its first step (e.g. an import error): nothing was recorded as attempted, the key is still open
-        assert "done" not in state and run(state=state)[0]["status"] in ("APPLIED", "SKIP", "DRY-OK") or True
+        key = TR.refresh_key("kv", LAG, SHA)
+        assert "done" not in state and "attempts" not in state                               # a pre-compose crash leaves no attempt record
+        assert TR.should_refresh(dict(die(), _die="kv"), LAG, state, key) == (True, "")      # ... so the key is still open for the next pass (n < 3)
         TR.record_crash(state, "kv", die(), LAG, SHA, ModuleNotFoundError("overlay_classify"), posts.append)
-        assert state["crashes"]["kv|abc|r535,r554"] == n
+        assert state["crashes"]["kv|abc|r535,r554"] == n and "done" not in state and "attempts" not in state
+        if n < 3:
+            assert not posts
     assert len(posts) == 1 and "crashed 3 times" in posts[0] and posts[0].startswith("NEEDS-LANE [TOOLS-REFRESH -> KV-R3]")
     ok, why = TR.should_refresh(dict(die(), _die="kv"), LAG, state, TR.refresh_key("kv", LAG, SHA))
     assert not ok and "crash stop" in why
