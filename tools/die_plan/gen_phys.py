@@ -5556,6 +5556,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
+    # S81-COL-HOLD-MARGIN 11-17 (COORD, FABLE-PD-S81-0720 B2): per-item knob.  OT_HOLD_FF_MARGIN_PS (kit_wave item_env) replaces the
+    # GRT-stage FF hold margin of THIS kit only; unset or empty = the caller's value (today's behaviour).
+    _hm = os.environ.get("OT_HOLD_FF_MARGIN_PS", "").strip()
+    if _hm:
+        hold_ff_margin = float(_hm)
     margins = rflow_margins(margins, P.name)    # R-FLOW defaults per kit class (explicit arguments win)
     max_wire_um = rflow_max_wire_um(max_wire_um, P.name)
     macro_moves = macro_move_table(t, tn)
@@ -5969,6 +5974,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # route / finish / abstract on the native corners; TT setup is checked unchanged by signoff.py.
            *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
              if hold_ff_margin is not None else []),
+           *(["export OT_S81_SSTN_M5_BLOCK = 1"] if os.environ.get("OT_S81_SSTN_M5_BLOCK") == "1" else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
@@ -6180,7 +6186,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "pinreg_pad.tcl",
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "sstn_m5_block.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
