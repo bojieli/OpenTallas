@@ -1,0 +1,12 @@
+{
+ "status":"READY_FOR_SOURCE_REVIEW_DEFAULT_OFF_NOT_ADOPTED",
+ "branch":"claude/s81-raw-reset-phase-1117",
+ "commit":"3ba97e3bdc4",
+ "source":"epyc8:/srv/opentallas-scratch2/claude/fable-fix-s81-cong/lane",
+ "change":"Preserve original ot_dp_rrelay versus ot_dp_rrelay_nl module kind in copied literal raw branches; validate original/copy kind as well as clk/D/Q; count the two-phase relay as two physical FF. Existing default landing relays registered after construction must match the assumed plain kind or fail closed. Generator now parses both kinds and actual s81p_TYPE.sv producer names.",
+ "tests":"21 targeted regressions PASS (landing_raw_branches, qc_raw_branches, fstart_reset_leaves). Existing pytest garbage-directory cleanup emits unrelated permission warnings; exit0.",
+ "component_proof":"results/s81_raw_reset_phase1117/proof.json; actual source cell RTL and emitted mixed-phase branch compared on 4000 halfedges,3980 checks,963 quarter-edge reset pulses; PASS. Mutant replacing the copied _nl with one posedge FF fails edge21.",
+ "producer":"tools/die_plan/prove_landing_raw_phase.py",
+ "actual_C3_generator_analysis":{"ot_s81sl_leaf__t47":{"branches":6,"copied_stages":18,"added_FF":30,"max_hop_um":271.0},"ot_s81sl_leaf__t75":{"branches":4,"copied_stages":11,"added_FF":18,"max_hop_um":300.6}},
+ "not_claimed":"No production rows adopted. Generated candidate sites have not passed macro/site occupancy, exact physical model, emitted placement/PDN image review or timing. No route launched. Current D5c source unchanged. t75 origin->reader START class is independent and remains unresolved."
+}
