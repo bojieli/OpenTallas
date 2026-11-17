@@ -5,3 +5,4 @@
 - 2026-11-17 08:42 PST sd9f ECO: 2 unrouted nets (clk_t8, clk_t11) restored from original wires; verification DRT + signoff running on E7 (run_eco3), watcher armed.
 - 2026-11-17 08:44 PST ACK COORD: lep_pair rebuild+re-sign queued behind HEAD-PLAN-R4 RTL merge; no hd_lep0N/hd_mesh kits until NF15f alloc+vert_access pass (0 unassigned, 0 reach-bad). sd9f run_eco3 continues.
 - 2026-11-17 09:18 PST sd9f ECO3 failed DRT-0206 on clk_t11 (copied wire); relaunched run_eco4 keeping clk_t8/clk_t11 un-ripped, watcher armed. lep_pair rebuild waits for HEAD-PLAN-R4; hd_lep0N/hd_mesh held per COORD.
+- 2026-11-17 09:19 PST ACK COORD: eco4 is the last hand attempt, no eco5; NEEDS-FABLE bundle on failure.
