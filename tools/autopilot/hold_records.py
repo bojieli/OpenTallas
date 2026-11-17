@@ -734,7 +734,8 @@ def pilot_item_for(cfg, die, d):
 def add_pilot_hold(cfg, die, d, marker):
     """PILOT wave mode (FLEET-OPS-R, COORD r393): after a tree switch the die is held (hold_items['*']) except ONE pilot item; the hold is
     released when `gen_pilot:<die>:<manifest sha[:12]>` is met = one GEN pilot built from the new tree passed GEN + preflight.  Fails OPEN:
-    no resolvable pilot item (or pilot_after_switch: false) adds no hold, so the die can never deadlock.  -> True when a record was added"""
+    no resolvable pilot item (or pilot_after_switch: false) adds no hold, so the die can never deadlock.  Superseded auto-pilots are retired only after a valid replacement is resolved;
+    manual/physical holds are preserved. -> True when a record was added or a superseded auto-pilot retired"""
     if d.get("pilot_after_switch") is False or cfg.get("pilot_after_switch") is False:
         return False
     sha = str(d.get("src_manifest_hash") or (marker or {}).get("manifest_hash") or "")[:12].lower()
@@ -743,11 +744,22 @@ def add_pilot_hold(cfg, die, d, marker):
         return False
     rid = f"pilot-{die}-{sha}"
     recs = d.setdefault("hold_records", [])
-    if any(r.get("id") == rid for r in recs):
-        return False
-    recs.append({"id": rid, "plan_sha": plan_id(d), "reason": f"PILOT after tree switch: one GEN pilot ({item}) from tree {sha} must pass GEN + preflight first",
-                 "release": [f"gen_pilot:{die}:{sha}"], "items": ["*"], "pilot_items": [item], "follow_plan": True, "auto_pilot": True})
-    return True
+    current = next((r for r in recs if r.get("id") == rid), None)
+    if current is not None and not current.get("auto_pilot"):
+        return False                              # a manual record with this id is never replaced
+    # A tree's pilot is meaningful only for that tree.  Keeping the old
+    # follow_plan auto-pilot would hold every other item forever after the
+    # current pilot passed.  Only retire after validating the new identity
+    # and pilot above; ordinary/physical holds are preserved verbatim.
+    keep = [r for r in recs if not r.get("auto_pilot") or r.get("id") == rid]
+    changed = len(keep) != len(recs)
+    if current is None:
+        keep.append({"id": rid, "plan_sha": plan_id(d), "reason": f"PILOT after tree switch: one GEN pilot ({item}) from tree {sha} must pass GEN + preflight first",
+                     "release": [f"gen_pilot:{die}:{sha}"], "items": ["*"], "pilot_items": [item], "follow_plan": True, "auto_pilot": True})
+        changed = True
+    if changed:
+        d["hold_records"] = keep
+    return changed
 
 
 def convert_keys(cfg, keymap):

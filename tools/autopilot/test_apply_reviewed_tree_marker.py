@@ -38,6 +38,23 @@ class Apply(unittest.TestCase):
         self.assertEqual(r["pilot"]["item"], "t1"); self.assertTrue(r["pilot"]["hold_added"])
         self.assertTrue((c / "lanes/handoff/tree_switch_kv.json").exists())
 
+    def test_superseded_auto_pilot_is_preserved_in_apply_receipt(self):
+        old = {"id": "pilot-kv-deadbeefdead", "plan_sha": "s0", "items": ["*"],
+               "pilot_items": ["t3"], "release": ["gen_pilot:kv:deadbeefdead"],
+               "reason": "old source", "auto_pilot": True, "follow_plan": True}
+        physical = {"id": "physical", "plan_sha": "s0", "items": ["t3"],
+                    "release": ["proof:cts"], "reason": "physical proof", "carry": True}
+        c = mk({"hold_records": [old, physical]})
+        result = A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)
+        after = json.loads((c / "autopilot/kit_wave.json").read_text())
+        records = after["dies"]["kv"]["hold_records"]
+        self.assertIn(physical, records)
+        self.assertNotIn(old, records)
+        receipt = json.loads(Path(result["receipt"]).read_text())
+        self.assertEqual(receipt["pilot"]["retired"], [old])
+        self.assertNotIn("retired_pilots", after)
+        self.assertNotIn("retired_pilots", after["dies"]["kv"])
+
     def test_default_pilot_item_is_the_smallest_known_item(self):
         c = mk()
         A.apply_marker(c, cand(), "/x/old", "E0", TC=TC)

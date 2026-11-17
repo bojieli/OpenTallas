@@ -44,6 +44,64 @@ class Pilot(unittest.TestCase):
             HR.apply_tree_switches(cfg, ctx())
             self.assertFalse([x for x in cfg["dies"]["s81"]["hold_records"] if x.get("auto_pilot")])
 
+    def test_two_switches_retire_only_superseded_auto_pilot(self):
+        cfg = cfg0(pilot_item="t5")
+        d = cfg["dies"]["s81"]
+        manual = {"id": "physical", "plan_sha": "p1", "items": ["t9"],
+                  "reason": "must finish physical proof", "release": ["proof:physical"], "carry": True}
+        d["hold_records"].append(manual)
+        d["src_manifest_hash"] = SHA
+        self.assertTrue(HR.add_pilot_hold(cfg, "s81", d, {}))
+        d["src_manifest_hash"] = "deadbeefdead" + "0" * 52
+        self.assertTrue(HR.add_pilot_hold(cfg, "s81", d, {}))
+        pilots = [r for r in d["hold_records"] if r.get("auto_pilot")]
+        self.assertEqual([r["id"] for r in pilots], ["pilot-s81-deadbeefdead"])
+        self.assertIn(manual, d["hold_records"])
+        HR.compile_holds(cfg, HR.Ctx(pilot_fn=lambda die, sha: sha == "deadbeefdead"))
+        self.assertEqual(d["hold_items"], {"t9": "must finish physical proof"})
+
+    def test_same_current_pilot_cleans_stale_records_without_duplicate(self):
+        cfg = cfg0(pilot_item="t5")
+        d = cfg["dies"]["s81"]
+        d["src_manifest_hash"] = SHA
+        HR.add_pilot_hold(cfg, "s81", d, {})
+        current = next(r for r in d["hold_records"] if r.get("auto_pilot"))
+        d["hold_records"].append(dict(current, id="pilot-s81-deadbeefdead",
+                                      release=["gen_pilot:s81:deadbeefdead"]))
+        self.assertTrue(HR.add_pilot_hold(cfg, "s81", d, {}))
+        self.assertEqual([r for r in d["hold_records"] if r.get("auto_pilot")], [current])
+        self.assertFalse(HR.add_pilot_hold(cfg, "s81", d, {}))
+
+    def test_invalid_or_disabled_replacement_preserves_old_pilot(self):
+        import copy
+        cfg = cfg0(pilot_item="t5")
+        d = cfg["dies"]["s81"]
+        d["src_manifest_hash"] = SHA
+        HR.add_pilot_hold(cfg, "s81", d, {})
+        before = copy.deepcopy(d["hold_records"])
+        for sha, disabled in (("invalid", False), ("deadbeefdead" + "0" * 52, True)):
+            d["src_manifest_hash"] = sha
+            d["pilot_after_switch"] = not disabled
+            self.assertFalse(HR.add_pilot_hold(cfg, "s81", d, {}))
+            self.assertEqual(d["hold_records"], before)
+        d["pilot_after_switch"] = True
+        d.pop("pilot_item")
+        cfg["_item_names"] = {}
+        self.assertFalse(HR.add_pilot_hold(cfg, "s81", d, {}))
+        self.assertEqual(d["hold_records"], before)
+
+    def test_manual_id_collision_preserves_all_records(self):
+        cfg = cfg0(pilot_item="t5")
+        d = cfg["dies"]["s81"]
+        d["src_manifest_hash"] = SHA
+        HR.add_pilot_hold(cfg, "s81", d, {})
+        d["src_manifest_hash"] = "deadbeefdead" + "0" * 52
+        manual = {"id": "pilot-s81-deadbeefdead", "release": ["proof:manual"]}
+        d["hold_records"].append(manual)
+        before = list(d["hold_records"])
+        self.assertFalse(HR.add_pilot_hold(cfg, "s81", d, {}))
+        self.assertEqual(d["hold_records"], before)
+
     def test_term_validation(self):
         cfg = cfg0()
         self.assertIsNone(HR.term_error("gen_pilot:s81:35eaaa5d65da", "s81", cfg))

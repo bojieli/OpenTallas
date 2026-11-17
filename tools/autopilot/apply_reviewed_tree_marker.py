@@ -89,12 +89,15 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         for rec in d.get("hold_records") or []:
             rec["release"] = [("tree_ready:" + die + ":" + tree) if x == "tree_ready:" + die + ":" + expect_source else x for x in rec.get("release") or []]
         pilot_added = False
+        prior_pilots = [r for r in d.get("hold_records") or [] if r.get("auto_pilot")]
         if pilot:
             d["pilot_item"] = pilot
             pilot_added = HR.add_pilot_hold(cfg, die, d, dict(marker, manifest_hash=want))
+        current_ids = {r.get("id") for r in d.get("hold_records") or []}
+        retired_pilots = [r for r in prior_pilots if r.get("id") not in current_ids]
         marker.update(manifest_hash=want, src_manifest_sha=want, status="ADOPTED reviewed tuple", written_by="root-authorized lane atomic apply")
         receipt = C / ("lanes/handoff/" + die + "_atomic_apply_" + str(time.time_ns()) + ".json")
-        atomic(receipt, dict(die=die, prior=old, marker=marker, pilot=dict(item=pilot, hold_added=pilot_added, release="gen_pilot:%s:%s" % (die, want[:12])) if pilot else "NONE",
+        atomic(receipt, dict(die=die, prior=old, marker=marker, pilot=dict(item=pilot, hold_added=pilot_added, retired=retired_pilots, release="gen_pilot:%s:%s" % (die, want[:12])) if pilot else "NONE",
                              guard=str(TC.location(C / "autopilot/tree_checks", ident) / "result.json"), candidate=str(obj.get("_path", ""))))
         atomic(C / HR.tree_marker_rel(die), marker)
         atomic(cfgpath, cfg)
