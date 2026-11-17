@@ -763,18 +763,34 @@ MISSING_MARK_RE = re.compile(r"No such file|FileNotFoundError|ENOENT|[Cc]an'?not
                              r"[Uu]nable to (?:open|find)|does not exist|not found|[Mm]issing (?:file|source)")
 
 
+def missing_modules(wt, out):
+    """Recover an absent import only from one exact tracked module file; never guess among aliases."""
+    names = set(re.findall(r"ModuleNotFoundError: No module named ['\"]([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)['\"]", out or ""))
+    if not names:
+        return []
+    tracked = git("ls-tree", "-r", "--name-only", "HEAD", cwd=wt).stdout.splitlines()
+    missing = set()
+    for name in names:
+        suffix = name.replace(".", "/") + ".py"
+        matches = [f for f in tracked if f == suffix or f.endswith("/" + suffix)]
+        if len(matches) == 1 and not (wt / matches[0]).exists():
+            missing.add(matches[0])
+    return sorted(missing)
+
+
 def missing_src(wt, out):
     """repo paths an output names that exist in the gate tree's commit but are absent from its sparse checkout"""
+    modules = missing_modules(wt, out)
     out = "\n".join(l for l in (out or "").splitlines() if MISSING_MARK_RE.search(l))
     if not out:
-        return []
+        return modules
     try:
         cand = {m.group(1) for m in _path_lit_re(rev("HEAD", cwd=wt) or "HEAD", quoted=False).finditer(out or "")}
     except Exception:                                  # noqa: BLE001 - detection only
         return []
     cand = {c.rstrip(".") for c in cand}
     have = _tree_types("HEAD", cand, cwd=wt)
-    return sorted(x for x in have if not (wt / x).exists())
+    return sorted(set(modules) | {x for x in have if not (wt / x).exists()})
 
 
 WIDE_MAX = int(os.environ.get("MQ_GATE_WIDE_MAX", "4000"))     # widen a missing path to its 2-level dir when it holds <= this many files
