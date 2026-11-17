@@ -22,3 +22,17 @@ Work dir epyc2 /srv/opentallas-scratch3/claude/fable-die-qc-r (same as FABLE-DIE
 1. CHAIN_DONE s4q9m_r: CA_C/D FAIL 0, serdes io_serdes_2 -> c_W5_bf_01 __0 ports (3) margin, STA_C COUNT-ALIGN TT+FF.
 2. l2d chain (chain/qc/s4q9m_l2d, unit oth-ubuntu-4106679-1794887119; Codex finalizer pid 4170674 runs rows_m on it after): full-type rows on l2d.
 3. S4q9m compose = l2d + rows + region_form sta (K/DEPTH/sched_lat on the built clock; rehearsal qcclk2/reh) -> G0, bind, LATCHECK.
+
+## 20:5x PST
+- s4q9m_r CHAIN_DONE: CA_C/D 2,993 FAIL 0 (depth 4: 2,953 / 8: 40, MC 300 0 viol, START 724/724 clean); STA_C COUNT-ALIGN PASS TT lo 105.0 / FF lo 110.3;
+  intra TT setup +403.1 neg 0. Serdes io_serdes_2 -> c_W5_bf_01 (3 ports __0) K 4 depth 4 lo 711.3 (was -107.1).
+- New rows check (qcclk2/chk.sh): die_sta_related on reg/proof with rows_r/plan.json: TAP-OFFSET-GATE PASS 0 / 84,512; FF kit-contract hold +10.00 (W 70, need 60, neg 0).
+- Tool: claude/qc-clk-r2-capin-1116 @060ba63e937 region_form sta --cap-in (built-clock ca_C instead of the fwd-model hull), GREEN 3/3, READY posted.
+  Without it the l2d rehearsal (qcclk2/reh) failed 91/2,434 crossings spuriously (model hull widened up to 5,666 ps).
+- --cap-in rehearsal on l2d (qcclk2/reh2, s4q9m_r ca_C): 2,525 crossings FAIL 0, K changed 1,219, sched cycles 6,766 -> 6,352,
+  lanes changed 936, BUT POST-CHECK FAIL: 23 lanes latency.lanes.*.clock_landing < 0 (c_E*_bn_11__b12 / tn_11__b12: -1/-2).
+  Cause: the count frame stays the fwd feed wall-aligned f_v while the comb clock lands regions whole cycles earlier;
+  the frame no longer describes the built clock. Fix = re-frame: plan clock.spine.feed = comb feed doc whose frame_offset =
+  round(built leaf TT arrival / T) per region (+ sidecar frame), CA re-run with --frame-plan, then sta --cap-in. Not built yet.
+- Opus self-review (no BLOCK): absolute SPEF offsets are calibrated to the GRT mean (LE 12 -> 16 moves cb clk_c offsets 22.6 ps median);
+  next proof = DRT + RCX of one cb region vs SPEF offsets; 4 single-instance cb types carry no same-type evidence.
