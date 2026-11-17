@@ -373,6 +373,14 @@ def sync(sha, hosts=True, tests=True):
         msg = "ALERT installed tools differ from rt/%s: %s" % (name, " ; ".join(diffs)[:1500])
         log(msg); print(msg)
         notes.append("ALERT installed != rt")
+    if all(":ok" in n for n in notes) and KEEP > 0:
+        pins = names_in_use_text()
+        for h in HOSTS:                                        # r536 only pruned the hub (build hosts held 203 snapshots each)
+            try:
+                rr = run(SSH + [h, f"OT_RT_KEEP={KEEP} python3 -I {RT}/current/tools/fleet/ot-tools-sync prune"], input=pins, timeout=900)
+                log(f"{h} prune: {(rr.stdout or rr.stderr).strip()[-120:]}")
+            except Exception as e:
+                log(f"{h} prune skipped: {type(e).__name__}: {e}")
     if all(":ok" in n for n in notes):
         try:
             prune_snapshots(RT, protect=(prev or "", name))
@@ -543,7 +551,7 @@ def status():
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["sync", "drift", "status"])
+    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune"])
     ap.add_argument("--sha", default="")
     ap.add_argument("--no-hosts", action="store_true")
     ap.add_argument("--no-tests", action="store_true", help="smoke without the wave test suite")
@@ -551,6 +559,10 @@ def main():
     a = ap.parse_args()
     if a.cmd == "sync":
         return sync(a.sha, hosts=not a.no_hosts, tests=not a.no_tests)
+    if a.cmd == "prune":                       # run ON a build host: prune its rt/ (text naming pinned snapshots arrives on stdin from the hub)
+        gone = prune_snapshots(RT, protect=(current() or "",), text=sys.stdin.read())
+        print(f"pruned {len(gone)}")
+        return 0
     if a.cmd == "status":
         return status()
     lines = drift()
