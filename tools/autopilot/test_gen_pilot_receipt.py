@@ -58,3 +58,12 @@ class GenPilotReceipt(unittest.TestCase):
         rec["item"] = "other"
         target.write_text(json.dumps(rec))
         self.assertEqual(K.pilot_passed_map(state, cfg), {})
+
+    def test_prepublication_dry_gen_is_not_a_live_source_pilot(self):
+        path, file, sp, digest, stages, cfg, state = self.setup_case()
+        sp["dry_gen"] = True
+        file.write_text(json.dumps(sp))
+        digest = hashlib.sha256(file.read_bytes()).hexdigest()
+        self.assertFalse(K.publish_gen_pilot_receipt(file, digest, stages))
+        self.assertFalse((path / "gen_pilot.json").exists())
+        self.assertEqual(K.pilot_passed_map(state, cfg), {})

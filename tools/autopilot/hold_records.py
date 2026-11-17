@@ -277,7 +277,7 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None, pilot_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None, pilot_fn=None, release_pilot_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
@@ -287,6 +287,7 @@ class Ctx:
         self.proof_fn = proof_fn or (lambda name: False)          # name -> a RESULT PASS line names this proof
         self.result_fn = result_fn or (lambda lane, tag: False)    # (lane, tag) -> a RESULT line of that lane says '<tag> PASS'
         self.lint_fn = lint_fn                                      # (die, item-or-pattern) -> True when no sdc_lint failure is known; None = old _lint_clean list
+        self.release_pilot_fn = release_pilot_fn or (lambda die, item, t0: False)    # (die, pilot item, release time) -> the pilot's attempt since then passed GEN
         self.pilot_fn = pilot_fn or (lambda die, sha12: False)    # (die, tree manifest sha[:12]) -> one GEN pilot from that tree passed GEN + preflight
         self.tree_fn = tree_fn or (lambda die, path: False)       # (die, tree) -> marker + smoke + replication on all gen hosts
         self.marker_fn = marker_fn or (lambda die: None)          # die -> parsed lanes/handoff/tree_switch_<die>.json or None
@@ -433,6 +434,21 @@ def add_record(cfg, die, rec):
     return rec
 
 
+RELEASE_PILOT_MIN = 3        # a release of MORE than this many items launches ONE pilot first (FABLE-FLOW-2200)
+
+
+def release_pilot_pick(cfg, die, d, ready):
+    """the one item of READY (explicit names only) that launches first: die.pilot_item when it is among them, else the one with the
+    fewest known cells, else the first by name.  '' = none usable (glob keys only): the gate fails open"""
+    names = sorted(k for k in ready if not GLOB.search(str(k)))
+    if not names:
+        return ""
+    if d.get("pilot_item") in names:
+        return str(d["pilot_item"])
+    cells = cfg.get("_item_cells") or {}
+    return sorted(names, key=lambda k: (cells.get((die, k)) if cells.get((die, k)) is not None else 10 ** 12, k))[0]
+
+
 def compile_holds(cfg, ctx=None):
     """expand every die's hold_records into cfg dies.<die>.hold_items (appended after any legacy key, never overriding one), dropping
     keys whose release terms are all met.  Fills cfg['_hold_compiled'][die] = {key: record id}, cfg['_hold_rec_info'][die] = [info],
@@ -484,9 +500,40 @@ def compile_holds(cfg, ctx=None):
             held = 0
             tname = "route_hold_items" if rec.get("route") else "hold_items"       # route: true = a ROUTE-HOLD (place/CTS/GRT still run)
             hold = d[tname]
+            # RELEASE PILOT (FABLE-FLOW-2200): when a record would release more than RELEASE_PILOT_MIN items at once, ONE pilot item
+            # launches first and the rest stay held until it passes GEN (the pilot rule the tree switch uses).  S81 11-16: a hold on 34
+            # types released, all 34 launched on an unfixed tree, 33 failed kit_rtl in 11 minutes.  State per record in
+            # cfg['_release_pilot'] (kit_wave persists it): {pilot, t, passed}.  Fails open: glob-only keys, no state store.
+            ready = [k for k in keys if rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel)]
+            gate = {}
+            store = cfg.get("_release_pilot")
+            sid = f"{die}|{rec.get('id')}"
+            if store is not None and rel and rec.get("pilot_release") is not False and not rec.get("auto_pilot"):
+                st_ = store.get(sid)
+                if st_ is None:
+                    launched = set((cfg.get("_item_active") or {}).get(die) or [])      # live attempts only: a FAIL / CANCELLED row is not a launch
+                    if len(ready) > RELEASE_PILOT_MIN and not (launched & set(ready)):
+                        pk = release_pilot_pick(cfg, die, d, ready)
+                        if pk:
+                            st_ = store[sid] = {"pilot": pk, "t": float(cfg.get("_now") or time.time()), "passed": False, "n": len(ready)}
+                    elif len(ready) > RELEASE_PILOT_MIN:       # some of them already launched: this release happened before the gate existed
+                        store[sid] = {"pilot": "", "t": 0.0, "passed": True, "n": len(ready)}
+                if st_ is not None and not st_.get("passed"):
+                    if ctx.release_pilot_fn(die, st_["pilot"], st_["t"]):
+                        st_["passed"] = True
+                    elif st_["pilot"] in ready:
+                        gate = {"pilot": st_["pilot"], "n": len(ready)}
             for k in keys:
                 if rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel):
-                    released.append((die, k, " + ".join(rel)))
+                    if not gate or k == gate["pilot"]:
+                        released.append((die, k, " + ".join(rel) + (" (release pilot)" if gate else "")))
+                        continue
+                    # held until the pilot passes GEN
+                    if k not in hold:
+                        hold[k] = f"RELEASE PILOT: {gate['pilot']} launches first, {gate['n'] - 1} more held until it passes GEN. " + str(rec.get("reason", ""))
+                        added.setdefault(die, []).append((tname, k))
+                    comp.setdefault(die, {})[k] = rec.get("id")
+                    held += 1
                     continue
                 if k not in hold:
                     hold[k] = rec.get("reason", "")

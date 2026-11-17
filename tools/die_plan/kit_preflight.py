@@ -5,6 +5,7 @@ Runs the existing SDC/FF-binding, cast-form, master-slice and staged-file checks
 This is a static gate; RTL elaboration, netlist LEC/face/fanout, PG and routed
 corner checks remain mandatory later stages, and are not reported as passed here.
 """
+import math
 import argparse
 import bisect
 import functools
@@ -437,6 +438,52 @@ def reset_tree_coherence(kit):
     return errors
 
 
+# ---- landing band legal-site preflight (KV-R 11-16, KV-HUB-WO class f5fa4d600f) ---------------------------------------
+CLAND_FAMILY_W_UM = 1.188   # widest master of the drive family the placer reserves per landing cell (cland_family_w)
+CLAND_ROW_H_UM = 0.27
+
+
+def cland_band_sites(kit, family_w=CLAND_FAMILY_W_UM, row_h=CLAND_ROW_H_UM):
+    """Fail when a literal-local-reset landing band has no row with a free x gap >= the placer's family width once the FIRM ft-station
+    cells (ft_bit_sites.tcl explicit sites) are in place.  A comb of ft flops landed FIRM first (1.08 um DFF every 2.16 um) leaves
+    1.08 um gaps, no 1.188 um cell fits, and global_place dies with 'OT_CLAND no legal nonoverlapping row/site in reserved band'
+    (kv3_hub_Wo, 8 min into place).  Static twin of the place-time dry pass: rows are assumed full width (only FIRM ft cells
+    block), so a band that passes here can still fail on a macro, but a band that fails here always fails at place."""
+    kit = Path(kit)
+    lp, fs = kit/'landing_placement.tcl', kit/'ft_bit_sites.tcl'
+    if not lp.is_file() or not fs.is_file():
+        return []
+    sizes = {m.group(1): (float(m.group(2)), float(m.group(3)))
+             for m in re.finditer(r'dict set ff_bit_site_cells \{(\w+)\} \{([\d.]+) ([\d.]+)\}', fs.read_text())}
+    cells = []
+    for m in re.finditer(r'dict set ff_bit_sites \{(\w+),\d+,\d+\} \{(-?[\d.]+) (-?[\d.]+)\}', fs.read_text()):
+        w, h = sizes.get(m.group(1), (None, None))
+        if w:
+            cells.append((float(m.group(2)), float(m.group(3)), w, h))
+    errors = []
+    seen = set()
+    for m in re.finditer(r'\{(u_cland_\S+)\s+\{(-?[\d.]+) (-?[\d.]+) (-?[\d.]+) (-?[\d.]+)\}\s+literal-local-reset\}', lp.read_text()):
+        name, (x0, y0, x1, y1) = m.group(1), map(float, m.groups()[1:])
+        if name in seen:
+            continue
+        seen.add(name)
+        near = [c for c in cells if c[0] < x1 and c[0] + c[2] > x0 and c[1] < y1 and c[1] + c[3] > y0]
+        r0, r1 = int(math.ceil(y0 / row_h - 1e-6)), int(math.floor(y1 / row_h + 1e-6))
+        best = 0.0
+        for r in range(r0, r1):
+            blocked = sorted((max(x0, c[0]), min(x1, c[0] + c[2])) for c in near if c[1] < (r + 1) * row_h - 1e-6 and c[1] + c[3] > r * row_h + 1e-6)
+            at = x0
+            for lo, hi in blocked:
+                best = max(best, lo - at)
+                at = max(at, hi)
+            best = max(best, x1 - at)
+        if best < family_w - 1e-6:
+            errors.append(f'{name}: landing band {x0:g},{y0:g} {x1:g},{y1:g} has no free gap >= {family_w:g} um in any of its '
+                          f'{max(0, r1 - r0)} rows after {len(near)} FIRM ft-station cells (best gap {best:.3f} um): the placer would '
+                          f'die with "no legal nonoverlapping row/site in reserved band"; move the raw-branch stage to a comb-free strip')
+    return errors
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -479,6 +526,7 @@ def check(kit, plan_dir=None, contract=False):
     run('module_closure', lambda: unresolved_modules(kit))
     run('reset_tree_coherence', lambda: reset_tree_coherence(kit))
     run('plan_pins_source', lambda: plan_pins_source(kit, plan_dir))
+    run('cland_band_legal_site', lambda: cland_band_sites(kit))
     # R-CAP (RULES-CAP-1, RULEBOOK 11-13): projected movable cells after place resize against the 400k place budget,
     # before any allocation.  Synth count, best first: a MEASURED count of the kit's synthesized top
     # (cap_estimate.measured_synth: native_cell_count.json, cap_projection.json, run/logs/.../1_synth.json), a staged

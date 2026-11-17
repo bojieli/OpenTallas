@@ -613,7 +613,7 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
         spec_path = Path(spec_path)
         raw = spec_path.read_bytes()
         sp = json.loads(raw)
-        if not isinstance(sp, dict):
+        if not isinstance(sp, dict) or sp.get("dry_gen"):
             return False
         sha = str(sp.get("src_manifest_hash") or "").lower()
         if (hashlib.sha256(raw).hexdigest() != spec_sha256
@@ -648,6 +648,7 @@ def gen_pilot_receipt_pass(path, die, item, spec, raw_spec):
             return False
         return (rec.get("schema") == "opentallas.gen_pilot.v1"
                 and rec.get("stage") == "gen_preflight" and rec.get("verdict") == "PASS"
+                and not spec.get("dry_gen")
                 and rec.get("die") == die == spec.get("die")
                 and rec.get("item") == item == spec.get("item")
                 and rec.get("source") == spec.get("src")
@@ -701,6 +702,13 @@ def pilot_passed_map(st, cfg):
     return {die: sorted(shas) for die, shas in out.items()}
 
 
+def release_pilot_passed(rows, die, item, t0):
+    """FABLE-FLOW-2200: the release pilot's attempt that started at or after the release is past GEN (PILOT_PASS_STATUS: PASS, ENQUEUED,
+    ROUTE-HELD, SIGNED); a FAIL or a running attempt is not a pass."""
+    return any(r.get("die") == die and r.get("item") == item and r.get("status") in PILOT_PASS_STATUS
+               and float(r.get("started") or 0) >= float(t0) - 60 for r in rows or [])
+
+
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
@@ -710,7 +718,8 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   cells_fn=lambda die, item: cells.get((die, item)),
                   proof_fn=proof_pass_fn(proofs),
                   tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item),
-                  pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []))
+                  pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []),
+                  release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0))
 
 
 RESULT_POST = r"^\s*-?\s*\d{4}-\d\d-\d\d\s+\S+\s+[A-Za-z]{2,4}\s+RESULT\s*\["        # a post OF TYPE RESULT: "- 2026-11-16 07:18 PST RESULT [LANE ->"
@@ -4800,6 +4809,21 @@ def waiter_guard(cfg, die, hs, stt, hub):
     return over or hs
 
 
+LOAD_RANK_STEP = 0.05
+
+
+def load_rank(cfg, h, v):
+    """FLEET-OPS-R (COORD 11-16, owner 'never pin, spread by load'): the gen-host order among hosts that fit = the LEAST LOADED first
+    (load1 / cores, in steps of 5 % so that noise does not decide), ties broken by the MOST free memory (admit GB minus GB already waiting),
+    then the host_share weight, then the configured order.  Returns a tuple where smaller is better.  Replaces WAVE-BALANCE-1's
+    free-cores x free-admits product, which let a big host at 80 % load beat a small host at 5 %."""
+    v = v or {}
+    cores = max(1, int(v.get("cores") or 0))
+    frac = float(v.get("load", 0)) / cores
+    free_mem = max(0.0, float(v.get("admit", 0)) - float(v.get("wait_gb", 0)))
+    return (round(frac / LOAD_RANK_STEP), -free_mem * host_share(cfg, h))
+
+
 def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
     GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used.
@@ -4833,7 +4857,7 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         # (and never onto a host under the die's gen disk floor: with no room anywhere the old score order decides)
         uncapped = [h for h in hs if key(h) and not over_load_cap(key(h)) and not die_disk_low(cfg, die, h, key(h))
                     and die not in low.get(h, {})]
-        best = (max(fits, key=lambda h: (host_capacity(key(h)) * host_share(cfg, h), -hs.index(h))) if fits
+        best = (min(fits, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)) if fits
                 else max(room or uncapped or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
@@ -6901,6 +6925,10 @@ def run_item(spec_path):
     # were only in the receipt and one log line; they go into result.json and the row.  Advisory: never stops the kit.
     _, rtxt = run("preflight_adv", remote(f"cat {q(W)}/{pfo}"), idempotent=True)
     res["preflight_advisory"] = preflight_advisory(rtxt)
+    if sp.get("dry_gen"):             # PUBLISH-GATE-1116: the pre-apply gate stops here: kit_snap, kit_rtl, gen, lint and preflight passed; no place
+        res.update(stage="preflight", verdict="DRY-PASS", evidence=f"{G}:{K}")
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        return 0
     if publish_gen_pilot_receipt(spec_path, spec_sha256, completed_stages):
         print("KW_GEN_PILOT_PASS source-specific GEN + preflight receipt", flush=True)
     _dg = sp.get("dedup_group") or ""
@@ -11170,6 +11198,16 @@ def _step(AP, ap_dir):
                 _names.setdefault(_r["die"], set()).add(_r["item"])
         cfg["_item_names"] = {d_: sorted(v) for d_, v in _names.items()}
         cfg["_pilot_passed"] = pilot_passed_map(st, cfg)
+        _act = {}
+        for _r in (st.get("items") or {}).values():
+            if _r.get("die") and _r.get("item") and _r.get("status") in ("RUNNING", "ENQUEUED", "PASS", "ROUTE-HELD", "SIGNED"):
+                _act.setdefault(_r["die"], set()).add(_r["item"])
+        cfg["_item_active"] = {d_: sorted(v) for d_, v in _act.items()}
+        cfg["_item_rows"] = list((st.get("items") or {}).values())       # FABLE-FLOW-2200 release pilot: attempts since the release
+        _rp = st.setdefault("hold_release_pilot", {})                     # persistent per record: {pilot, t, passed}
+        for _k, _v in (cfg.get("_release_pilot") or {}).items():
+            _rp.setdefault(_k, _v)
+        cfg["_release_pilot"] = _rp
         cfg["_lint_fail"] = lint_failures(cfg, (st.get("items") or {}).values())
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]

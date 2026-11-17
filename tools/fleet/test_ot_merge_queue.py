@@ -548,6 +548,42 @@ class FailureOutputRetention(unittest.TestCase):
             self.assertTrue(all('command=' in s and 'rc=1' in s for s in texts))
 
 
+class PackGuard(unittest.TestCase):
+    def _packs(self, n):
+        d = Path(tempfile.mkdtemp()); (d / ".git" / "objects" / "pack").mkdir(parents=True)
+        for i in range(n):
+            (d / ".git" / "objects" / "pack" / f"pack-{i}.pack").write_text("")
+        return d
+
+    def _calls(self, n):
+        from unittest.mock import patch
+        d = self._packs(n); calls = []
+        with patch.object(M, "git", side_effect=lambda *a, **k: calls.append(a) or subprocess.CompletedProcess([], 0, "", "")), patch.object(M, "log"):
+            M.pack_guard(d)
+        shutil.rmtree(d)
+        return [c[0] for c in calls]
+
+    def test_few_packs_untouched(self):
+        self.assertEqual(self._calls(5), [])
+
+    def test_many_packs_midx_only(self):
+        self.assertEqual(self._calls(M.PACK_LIMIT + 1), ["multi-pack-index"])
+
+    def test_huge_pack_count_repacks_then_midx_never_gc(self):
+        c = self._calls(M.PACK_REPACK + 1)
+        self.assertEqual(c, ["repack", "multi-pack-index"])
+        self.assertNotIn("gc", c); self.assertNotIn("prune", c)
+
+    def test_rev_never_lazy_fetches(self):
+        from unittest.mock import patch
+        seen = {}
+        def g(*a, **k):
+            seen.update(k); return subprocess.CompletedProcess([], 1, "", "")
+        with patch.object(M, "git", side_effect=g):
+            self.assertEqual(M.rev("0" * 40), "")
+        self.assertEqual(seen["env"]["GIT_NO_LAZY_FETCH"], "1")
+
+
 class MainFetchFreshness(unittest.TestCase):
     def _run(self, advertisement, rc=0, object_rc=0):
         from unittest.mock import patch

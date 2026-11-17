@@ -3,6 +3,16 @@ from pathlib import Path
 import apply_reviewed_tree_marker as A
 import hold_records as HR
 
+
+class PGOK:                                   # PUBLISH-GATE-1116: these tests are about the apply, the gate has its own tests
+    @staticmethod
+    def require_pass(*a): return ""
+
+
+def apply(*a, **k):
+    k.setdefault("PG", PGOK)
+    return A.apply_marker(*a, **k)
+
 SHA = "13f758a4fe342e4838cebd2401f11f37570e92e46e226642e518ad78245f776d"
 
 
@@ -30,9 +40,9 @@ def cand():
 class Apply(unittest.TestCase):
     def test_atomic_apply_adds_the_pilot_hold_and_queues_the_old_tree(self):
         c = mk()
-        r = A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)
+        r = apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
-        self.assertEqual(d["src"], "/x/new"); self.assertEqual(d["superseded_trees"], ["/x/old"])
+        self.assertEqual(d["src"], "/x/new"); self.assertEqual(d["rollback_tree"], "/x/old")
         rec = [x for x in d["hold_records"] if x.get("auto_pilot")][0]
         self.assertEqual(rec["release"], ["gen_pilot:kv:13f758a4fe34"]); self.assertEqual(rec["pilot_items"], ["t1"])
         self.assertEqual(r["pilot"]["item"], "t1"); self.assertTrue(r["pilot"]["hold_added"])
@@ -57,23 +67,23 @@ class Apply(unittest.TestCase):
 
     def test_default_pilot_item_is_the_smallest_known_item(self):
         c = mk()
-        A.apply_marker(c, cand(), "/x/old", "E0", TC=TC)
+        apply(c, cand(), "/x/old", "E0", TC=TC)
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
         self.assertEqual(d["pilot_item"], "t1")
 
     def test_no_resolvable_pilot_refuses_before_writing(self):
         c = mk({"hold_event_items": {}})
         with self.assertRaises(SystemExit):
-            A.apply_marker(c, cand(), "/x/old", "E0", TC=TC)
+            apply(c, cand(), "/x/old", "E0", TC=TC)
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
         self.assertEqual(d["src"], "/x/old")                         # untouched
-        r = A.apply_marker(c, cand(), "/x/old", "E0", no_pilot=True, TC=TC)
+        r = apply(c, cand(), "/x/old", "E0", no_pilot=True, TC=TC)
         self.assertEqual(r["pilot"], "NONE")
 
     def test_stale_expectation_refused(self):
         c = mk()
         with self.assertRaises(AssertionError):
-            A.apply_marker(c, cand(), "/x/other", "E0", pilot_item="t1", TC=TC)
+            apply(c, cand(), "/x/other", "E0", pilot_item="t1", TC=TC)
 
 
 class KeepGenHosts(unittest.TestCase):
@@ -95,14 +105,14 @@ class KeepGenHosts(unittest.TestCase):
         c = mk({"gen_hosts": ["epyc10", "epyc8"], "gen_host": "epyc8"})
         seen = []
         o = dict(cand(), config={"gen_hosts": ["epyc10"], "gen_host": "epyc10"})
-        A.apply_marker(c, {"marker": o, "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc(seen))
+        apply(c, {"marker": o, "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc(seen))
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
         self.assertEqual(d["gen_hosts"], ["epyc10", "epyc8"]); self.assertEqual(d["gen_host"], "epyc8")
         self.assertEqual(seen, [["epyc10", "epyc8"]])
 
     def test_flag_argument_equals_candidate_key(self):
         c = mk({"gen_hosts": ["epyc10", "epyc8"]})
-        A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]), keep_gen_hosts=True)
+        apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]), keep_gen_hosts=True)
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
         self.assertEqual(d["gen_hosts"], ["epyc10", "epyc8"]); self.assertEqual(d["gen_host"], "epyc10")
 
@@ -112,17 +122,17 @@ class KeepGenHosts(unittest.TestCase):
         def mutate():
             cfg = json.loads(p.read_text()); cfg["dies"]["kv"]["gen_hosts"] = ["epyc10"]; p.write_text(json.dumps(cfg))
         with self.assertRaises(AssertionError):
-            A.apply_marker(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([], mutate))
+            apply(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([], mutate))
         d = json.loads(p.read_text())["dies"]["kv"]
         self.assertEqual(d["src"], "/x/old"); self.assertFalse((c / "lanes/handoff/tree_switch_kv.json").exists())
 
     def test_no_current_hosts_refuses(self):
         c = mk()
         with self.assertRaises(AssertionError):
-            A.apply_marker(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+            apply(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
 
     def test_default_still_uses_candidate_hosts(self):
         c = mk({"gen_hosts": ["epyc10", "epyc8"]})
-        A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+        apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
         self.assertEqual(d["gen_hosts"], ["epyc10"])
