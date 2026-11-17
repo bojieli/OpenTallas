@@ -1,0 +1,610 @@
+{
+  "schema": "opentallas.native_stage_capacity.v1",
+  "plan_sha256": "bf364615f2b70dabfcdce4057910bf533e6f9a54e7bfa867d8cb0bec18936d58",
+  "macro_halo_um": 2,
+  "clock_rectangles": 628,
+  "row_pitch_um": 0.27,
+  "site_pitch_um": 0.054,
+  "tap_master_size_um": [
+    0.108,
+    0.27
+  ],
+  "tap_pitch_um": 25,
+  "tap_bound": "per legal fragment ceil(length/25)+3 tap/endcaps, width0.108; conservative even for clock-induced fragments",
+  "notes": [
+    "Measured CTS DFF masters and existing stage census; new same-width stages use explicitly listed projections.",
+    "Physical rows projected on measured lattice using candidate macro placement; all macro halos and clock rectangles subtracted.",
+    "Density55% opt-in FF-only reservation; buffers outside anchors.",
+    "Capacity does not qualify unresolved internal-memory reach or routing."
+  ],
+  "groups": [
+    {
+      "tag": "stage:pin_s0",
+      "rect_um": [
+        1782,
+        357,
+        1818,
+        393
+      ],
+      "cells": 1150,
+      "projection": null,
+      "raw_area_um2": 335.42748000000023,
+      "density": 0.55,
+      "reservation_um2": 620.5393800000002,
+      "legal_site_area_um2": 1281.17376,
+      "tap_endcap_upper_deduction_um2": 19.333080000000002,
+      "capacity_um2": 1261.8406800000002,
+      "margin_um2": 641.3013000000001,
+      "rows": 132,
+      "fragments": 133,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:pin_s1",
+      "rect_um": [
+        1762,
+        547,
+        1798,
+        583
+      ],
+      "cells": 1150,
+      "projection": null,
+      "raw_area_um2": 335.5149600000002,
+      "density": 0.55,
+      "reservation_um2": 620.7143400000003,
+      "legal_site_area_um2": 1291.46724,
+      "tap_endcap_upper_deduction_um2": 19.3914,
+      "capacity_um2": 1272.07584,
+      "margin_um2": 651.3614999999996,
+      "rows": 133,
+      "fragments": 133,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:pin_s2",
+      "rect_um": [
+        1500,
+        591.8,
+        1608,
+        603.8
+      ],
+      "cells": 1150,
+      "projection": "stage:pin_s1",
+      "raw_area_um2": 335.5149600000002,
+      "density": 0.55,
+      "reservation_um2": 620.7143400000003,
+      "legal_site_area_um2": 1060.37424,
+      "tap_endcap_upper_deduction_um2": 10.26432,
+      "capacity_um2": 1050.10992,
+      "margin_um2": 429.39557999999977,
+      "rows": 44,
+      "fragments": 54,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:pin_s3",
+      "rect_um": [
+        1230,
+        591.8,
+        1338,
+        603.8
+      ],
+      "cells": 1150,
+      "projection": "stage:pin_s1",
+      "raw_area_um2": 335.5149600000002,
+      "density": 0.55,
+      "reservation_um2": 620.7143400000003,
+      "legal_site_area_um2": 1157.9436,
+      "tap_endcap_upper_deduction_um2": 12.48048,
+      "capacity_um2": 1145.4631200000001,
+      "margin_um2": 524.7487799999998,
+      "rows": 44,
+      "fragments": 70,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:pout_s0",
+      "rect_um": [
+        1330,
+        548.6,
+        1438,
+        560.6
+      ],
+      "cells": 1137,
+      "projection": null,
+      "raw_area_um2": 332.78850000000097,
+      "density": 0.55,
+      "reservation_um2": 615.8154600000005,
+      "legal_site_area_um2": 1064.86488,
+      "tap_endcap_upper_deduction_um2": 9.3312,
+      "capacity_um2": 1055.53368,
+      "margin_um2": 439.7182199999995,
+      "rows": 44,
+      "fragments": 44,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:pout_s1",
+      "rect_um": [
+        1550,
+        548.6,
+        1658,
+        560.6
+      ],
+      "cells": 1137,
+      "projection": null,
+      "raw_area_um2": 333.4445999999992,
+      "density": 0.55,
+      "reservation_um2": 617.098500000002,
+      "legal_site_area_um2": 1049.23512,
+      "tap_endcap_upper_deduction_um2": 8.39808,
+      "capacity_um2": 1040.8370400000001,
+      "margin_um2": 423.7385399999981,
+      "rows": 44,
+      "fragments": 36,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:pout_s2",
+      "rect_um": [
+        1760,
+        450,
+        1796,
+        486
+      ],
+      "cells": 1137,
+      "projection": null,
+      "raw_area_um2": 331.65126,
+      "density": 0.55,
+      "reservation_um2": 613.5555600000007,
+      "legal_site_area_um2": 1291.46724,
+      "tap_endcap_upper_deduction_um2": 19.3914,
+      "capacity_um2": 1272.07584,
+      "margin_um2": 658.5202799999993,
+      "rows": 133,
+      "fragments": 133,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:pout_s3",
+      "rect_um": [
+        1828,
+        240,
+        1864,
+        276
+      ],
+      "cells": 1137,
+      "projection": "stage:pout_s2",
+      "raw_area_um2": 331.65126,
+      "density": 0.55,
+      "reservation_um2": 613.5555600000007,
+      "legal_site_area_um2": 1291.46724,
+      "tap_endcap_upper_deduction_um2": 19.3914,
+      "capacity_um2": 1272.07584,
+      "margin_um2": 658.5202799999993,
+      "rows": 133,
+      "fragments": 133,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:plw_s0",
+      "rect_um": [
+        1421,
+        591.8,
+        1449,
+        603.8
+      ],
+      "cells": 11,
+      "projection": null,
+      "raw_area_um2": 4.16988,
+      "density": 0.55,
+      "reservation_um2": 7.69824,
+      "legal_site_area_um2": 268.09704,
+      "tap_endcap_upper_deduction_um2": 5.773680000000001,
+      "capacity_um2": 262.32336000000004,
+      "margin_um2": 254.62512000000004,
+      "rows": 44,
+      "fragments": 42,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:plw_s1",
+      "rect_um": [
+        1726.308,
+        591.8,
+        1746.308,
+        603.8
+      ],
+      "cells": 11,
+      "projection": null,
+      "raw_area_um2": 4.16988,
+      "density": 0.55,
+      "reservation_um2": 7.69824,
+      "legal_site_area_um2": 237.3624,
+      "tap_endcap_upper_deduction_um2": 5.13216,
+      "capacity_um2": 232.23024,
+      "margin_um2": 224.532,
+      "rows": 44,
+      "fragments": 44,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:plw_s2",
+      "rect_um": [
+        1819.6,
+        856,
+        1869.6,
+        868
+      ],
+      "cells": 11,
+      "projection": null,
+      "raw_area_um2": 4.16988,
+      "density": 0.55,
+      "reservation_um2": 7.69824,
+      "legal_site_area_um2": 579.9195,
+      "tap_endcap_upper_deduction_um2": 6.2694,
+      "capacity_um2": 573.6501000000001,
+      "margin_um2": 565.95186,
+      "rows": 43,
+      "fragments": 43,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:txi0_s0",
+      "rect_um": [
+        1087.38,
+        591.8,
+        1151.38,
+        603.8
+      ],
+      "cells": 572,
+      "projection": null,
+      "raw_area_um2": 168.4573199999992,
+      "density": 0.55,
+      "reservation_um2": 311.6183399999998,
+      "legal_site_area_um2": 620.0874,
+      "tap_endcap_upper_deduction_um2": 8.68968,
+      "capacity_um2": 611.39772,
+      "margin_um2": 299.77938000000023,
+      "rows": 44,
+      "fragments": 58,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:txi1_s0",
+      "rect_um": [
+        920,
+        591.8,
+        984,
+        603.8
+      ],
+      "cells": 572,
+      "projection": null,
+      "raw_area_um2": 168.90929999999992,
+      "density": 0.55,
+      "reservation_um2": 312.5223000000004,
+      "legal_site_area_um2": 680.4194400000001,
+      "tap_endcap_upper_deduction_um2": 8.4564,
+      "capacity_um2": 671.96304,
+      "margin_um2": 359.44073999999955,
+      "rows": 44,
+      "fragments": 58,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:txi1_s1",
+      "rect_um": [
+        580,
+        591.8,
+        644,
+        603.8
+      ],
+      "cells": 572,
+      "projection": null,
+      "raw_area_um2": 168.4573199999992,
+      "density": 0.55,
+      "reservation_um2": 311.6183399999998,
+      "legal_site_area_um2": 634.05504,
+      "tap_endcap_upper_deduction_um2": 8.1648,
+      "capacity_um2": 625.8902400000001,
+      "margin_um2": 314.27190000000024,
+      "rows": 44,
+      "fragments": 52,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:txi2_s0",
+      "rect_um": [
+        880,
+        548.6,
+        944,
+        560.6
+      ],
+      "cells": 572,
+      "projection": null,
+      "raw_area_um2": 168.48647999999923,
+      "density": 0.55,
+      "reservation_um2": 311.67665999999986,
+      "legal_site_area_um2": 694.35792,
+      "tap_endcap_upper_deduction_um2": 7.4649600000000005,
+      "capacity_um2": 686.89296,
+      "margin_um2": 375.21630000000016,
+      "rows": 44,
+      "fragments": 44,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:txi2_s1",
+      "rect_um": [
+        560,
+        548.6,
+        624,
+        560.6
+      ],
+      "cells": 572,
+      "projection": null,
+      "raw_area_um2": 168.4718999999992,
+      "density": 0.55,
+      "reservation_um2": 311.64749999999987,
+      "legal_site_area_um2": 652.19256,
+      "tap_endcap_upper_deduction_um2": 7.23168,
+      "capacity_um2": 644.9608800000001,
+      "margin_um2": 333.3133800000002,
+      "rows": 44,
+      "fragments": 44,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:txi3_s0",
+      "rect_um": [
+        1351.4,
+        591.8,
+        1415.4,
+        603.8
+      ],
+      "cells": 572,
+      "projection": null,
+      "raw_area_um2": 168.4573199999992,
+      "density": 0.55,
+      "reservation_um2": 311.6183399999998,
+      "legal_site_area_um2": 621.9828,
+      "tap_endcap_upper_deduction_um2": 6.29856,
+      "capacity_um2": 615.68424,
+      "margin_um2": 304.0659000000002,
+      "rows": 44,
+      "fragments": 36,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:krx1_s0",
+      "rect_um": [
+        400,
+        643.5,
+        450,
+        655.5
+      ],
+      "cells": 559,
+      "projection": null,
+      "raw_area_um2": 169.98821999999967,
+      "density": 0.55,
+      "reservation_um2": 314.928000000001,
+      "legal_site_area_um2": 575.2539,
+      "tap_endcap_upper_deduction_um2": 7.20252,
+      "capacity_um2": 568.05138,
+      "margin_um2": 253.12337999999897,
+      "rows": 43,
+      "fragments": 51,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:krx1_s1",
+      "rect_um": [
+        740,
+        643.5,
+        790,
+        655.5
+      ],
+      "cells": 559,
+      "projection": null,
+      "raw_area_um2": 163.52927999999937,
+      "density": 0.55,
+      "reservation_um2": 302.52042,
+      "legal_site_area_um2": 579.9195,
+      "tap_endcap_upper_deduction_um2": 6.2694,
+      "capacity_um2": 573.6501000000001,
+      "margin_um2": 271.12968000000006,
+      "rows": 43,
+      "fragments": 43,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:krx1_s2",
+      "rect_um": [
+        1020,
+        591.8,
+        1070,
+        603.8
+      ],
+      "cells": 559,
+      "projection": "stage:krx1_s1",
+      "raw_area_um2": 163.52927999999937,
+      "density": 0.55,
+      "reservation_um2": 302.52042,
+      "legal_site_area_um2": 481.37328,
+      "tap_endcap_upper_deduction_um2": 5.94864,
+      "capacity_um2": 475.42464,
+      "margin_um2": 172.90422,
+      "rows": 44,
+      "fragments": 42,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:krx2_s0",
+      "rect_um": [
+        375,
+        548.6,
+        425,
+        560.6
+      ],
+      "cells": 559,
+      "projection": null,
+      "raw_area_um2": 172.1752199999997,
+      "density": 0.55,
+      "reservation_um2": 317.9752200000008,
+      "legal_site_area_um2": 491.81256,
+      "tap_endcap_upper_deduction_um2": 6.181920000000001,
+      "capacity_um2": 485.63064,
+      "margin_um2": 167.65541999999925,
+      "rows": 44,
+      "fragments": 44,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:krx2_s1",
+      "rect_um": [
+        695,
+        548.6,
+        745,
+        560.6
+      ],
+      "cells": 559,
+      "projection": null,
+      "raw_area_um2": 163.89377999999974,
+      "density": 0.55,
+      "reservation_um2": 303.20567999999986,
+      "legal_site_area_um2": 539.46,
+      "tap_endcap_upper_deduction_um2": 5.832000000000001,
+      "capacity_um2": 533.628,
+      "margin_um2": 230.42232000000018,
+      "rows": 44,
+      "fragments": 40,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:krx2_s2",
+      "rect_um": [
+        1015,
+        548.6,
+        1065,
+        560.6
+      ],
+      "cells": 559,
+      "projection": "stage:krx2_s1",
+      "raw_area_um2": 163.89377999999974,
+      "density": 0.55,
+      "reservation_um2": 303.20567999999986,
+      "legal_site_area_um2": 485.51400000000007,
+      "tap_endcap_upper_deduction_um2": 5.248800000000001,
+      "capacity_um2": 480.26520000000005,
+      "margin_um2": 177.0595200000002,
+      "rows": 44,
+      "fragments": 36,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:krx3_s0",
+      "rect_um": [
+        1450,
+        548.6,
+        1500,
+        560.6
+      ],
+      "cells": 559,
+      "projection": null,
+      "raw_area_um2": 174.79962000000086,
+      "density": 0.55,
+      "reservation_um2": 321.7660200000012,
+      "legal_site_area_um2": 485.51400000000007,
+      "tap_endcap_upper_deduction_um2": 5.248800000000001,
+      "capacity_um2": 480.26520000000005,
+      "margin_um2": 158.49917999999883,
+      "rows": 44,
+      "fragments": 36,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:hub_rid",
+      "rect_um": [
+        1170,
+        565,
+        1230,
+        601
+      ],
+      "cells": 1103,
+      "projection": null,
+      "raw_area_um2": 343.82556000000216,
+      "density": 0.55,
+      "reservation_um2": 631.1681999999983,
+      "legal_site_area_um2": 2136.2616000000003,
+      "tap_endcap_upper_deduction_um2": 23.094720000000002,
+      "capacity_um2": 2113.16688,
+      "margin_um2": 1481.998680000002,
+      "rows": 132,
+      "fragments": 132,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:mrd_bank0",
+      "rect_um": [
+        916,
+        643.5,
+        948,
+        655.5
+      ],
+      "cells": 256,
+      "projection": null,
+      "raw_area_um2": 82.02708000000038,
+      "density": 0.55,
+      "reservation_um2": 149.18256000000065,
+      "legal_site_area_um2": 371.14848,
+      "tap_endcap_upper_deduction_um2": 6.2694,
+      "capacity_um2": 364.87908000000004,
+      "margin_um2": 215.6965199999994,
+      "rows": 43,
+      "fragments": 43,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:mrd_bank1",
+      "rect_um": [
+        1453,
+        591.8,
+        1485,
+        603.8
+      ],
+      "cells": 256,
+      "projection": null,
+      "raw_area_um2": 82.1145600000004,
+      "density": 0.55,
+      "reservation_um2": 149.29920000000067,
+      "legal_site_area_um2": 303.73055999999997,
+      "tap_endcap_upper_deduction_um2": 6.24024,
+      "capacity_um2": 297.49032000000005,
+      "margin_um2": 148.1911199999994,
+      "rows": 44,
+      "fragments": 46,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:mrd_bank234",
+      "rect_um": [
+        932,
+        500,
+        965,
+        524
+      ],
+      "cells": 592,
+      "projection": null,
+      "raw_area_um2": 185.7929400000018,
+      "density": 0.55,
+      "reservation_um2": 340.4138400000011,
+      "legal_site_area_um2": 782.6544,
+      "tap_endcap_upper_deduction_um2": 12.8304,
+      "capacity_um2": 769.824,
+      "margin_um2": 429.4101599999989,
+      "rows": 88,
+      "fragments": 88,
+      "verdict": "PASS"
+    }
+  ]
+}
