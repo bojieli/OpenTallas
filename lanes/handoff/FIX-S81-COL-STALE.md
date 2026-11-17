@@ -48,3 +48,10 @@ On release the wave relaunches them; DEDUP collapses each base to its distinct k
 - QC equal11 st_b administrative split NOT APPLIED. Root/QC requested after Kf atomic switch; current still S4q6d last read. Rowproof has11 equal st_b,11 fw and3 su_c differ internal_stations. Preserve latter14 and all other S4q8/S4q6e holds until qualified. QC informed park.
 - KV3 obsolete source/port holds remain pending HG2c strictbind/R8/LAT proof: pc-sysc-01, mig004-k11, mig007-k12; KV worker owns qualification, no guessed successor matching.
 - Future S81 C4 adopt must explicitly carry qualified source terms to new current identity or they rehold; no generic history bypass added. No new job or edit after park except this handoff.
+
+## 2026-11-16 20:0x PST (COORD resume)
+- plan_event fix: claude/fix-s81-col-stale-plan-event-1116 @cca8efdc426cd227b25f7bf3bfa147a540a14da3 (Codex-built, reviewed by me: adopted_events() = event, plan_event, plan stem; prev/planned never release). Normal gate GREEN 140/140 on main 12fbf476346 (~/merge-queue/gates/cca8efdc...json). READY posted.
+- r414 (Codex) retyped mig024-k1/mig003/mig002/mig006 to event_adopt:3fa87b84b18; mig007-k7-k8 kept (coll_e view incomplete).
+- Audit of all live hold records: lanes/handoff/FIX-S81-COL-STALE-hold-audit.tsv (script intel2 W/audit.py).
+- QC: added qwen_compute-kf-clock-l2-1116 (27 uncovered clock types, event_adopt:S4q9l2* + lint_clean) and qwen_compute-kf-face-m-1116 (slw_fw_v3, coll_ftc, event_adopt:S4q9m* + lint_clean), bound to plan 9982b4d5, carry; planned_events += S4q9l2, S4q9l2d, S4q9m. Prefix * so the l2d / m_r plan names also release.
+- Next: D4 S81 src publication (Codex left STOP marker tools-converge/s81/d4col_1116/STOP; resume from candidate/finish.py), then col-wave1 pilot with S81-TYPES-R2.

@@ -1,0 +1,69 @@
+# FIX-S81-COL-STALE 2026-11-16 20:0x PST all-dies hold-record audit (after r414). die\trecord\tkeys\tlive_types\tverdict\tterms\troute
+qwen_compute	qwen_compute-mig-011-k6	5	5	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-006	1	4	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-008-k3	4	4	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-024	3	3	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-010-k5	3	3	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-012-k7	3	3	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-013-k8	3	3	DEAD	event_adopt:S4q6e => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-004	1	2	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-022	2	2	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-016-k11	2	2	DEAD	event_adopt:S4q6e => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-003	1	1	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-005	1	1	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-021	1	1	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-023	1	1	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-009-k4	1	1	DEAD	event_adopt:S4q6e => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_compute	qwen_compute-mig-014-k9	1	1	DEAD	event_adopt:S4q8 => DEAD(event key 's29q103S4Q6D' / plan 'zz_s29_qc103_s4q6d.json' never carry it; plan_event=None)	False
+qwen_kvsys	qwen_kvsys-hold-pc-sysc-01	3	9	DEAD	event_adopt:kvgeom7yhr => DEAD(event key 'KV-HG1' / plan 'plan_c.json' never carry it; plan_event=None)	False
+qwen_kvsys	qwen_kvsys-mig-004-k11	1	1	DEAD	event_adopt:KV-PCV3-R8 => DEAD(event key 'KV-HG1' / plan 'plan_c.json' never carry it; plan_event=None)	False
+qwen_kvsys	qwen_kvsys-mig-007-k12	1	1	DEAD	event_adopt:KV-PCDELTA => DEAD(event key 'KV-HG1' / plan 'plan_c.json' never carry it; plan_event=None)	False
+s81	s81-mig-002-k2-k3-k1	13	13	DEAD	event_adopt:3fa87b84b18 => MET | result:FABLE-FIX-S81-SVC:svc-ready => DEAD?(Fable lane, last post 2026-11-16 16:58)	False
+s81	s81-mig-007-k7-k8	1	1	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-006-k6-k7-k2	1	1	DEAD	event_adopt:3fa87b84b18 => MET | result:FABLE-FIX-S81-SVC:svc-ready => DEAD?(Fable lane, last post 2026-11-16 16:58)	False
+s81	s81-mig-009-k9-k10	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-010-k10-k11	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-011-k11-k12	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-012-k12-k13	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-013-k13-k14	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-014-k14-k15	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-015-k15-k16	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-016-k16-k17	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-017-k17-k18	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-018-k18-k19	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-019-k19-k20	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-020-k20-k21	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-021-k21-k22	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-mig-022-k22-k23	1	0	DEAD	event_adopt:B6gF2sv => DEAD(event key '3fa87b84b18' / plan 'plan_h2_2249.json' never carry it; plan_event=B6gF2s4tapfix1) | lint_clean:s81 => MET	False
+s81	s81-serdes-corrected-1116-codex	0	0	DEAD	result:FABLE-FIX-S81-SERDES:serdes-corrected => DEAD?(Fable lane, last post 2026-11-16 13:31)	False
+s81	s81-serdes-corrected-route-1116-codex	0	0	DEAD	result:FABLE-FIX-S81-SERDES:serdes-corrected => DEAD?(Fable lane, last post 2026-11-16 13:31)	True
+qwen_compute	qwen_compute-mig-007-k2	2	27	ALLMET	event_adopt:S4q6d => MET	False
+qwen_compute	qwen_compute-mig-019-k13	9	18	live	proof:DRT0255 => open	False
+qwen_compute	qwen_compute-mig-020-k14	7	11	live	proof:DRT0255 => open	False
+qwen_compute	qwen_compute-mig-002-k1	2	3	live	proof:DRT0255 => open	False
+qwen_compute	qwen_compute-mig-015-k10	1	3	ALLMET	event_adopt:S4q6d => MET	False
+qwen_kvsys	pilot-qwen_kvsys-7a4761d359fa	1	96	live	gen_pilot:qwen_kvsys:7a4761d359fa => open	False
+qwen_kvsys	qwen_kvsys-mig-005-k4	12	12	ALLMET	event_adopt:KV-HG1 => MET	False
+qwen_kvsys	qwen_kvsys-mig-012-k9	7	7	ALLMET	event_adopt:KV-HG1 => MET	False
+qwen_kvsys	qwen_kvsys-mig-006-k5	6	6	ALLMET	event_adopt:KV-HG1 => MET	False
+qwen_kvsys	qwen_kvsys-mig-003-k3	4	4	ALLMET	event_adopt:KV-HG1 => MET	False
+qwen_kvsys	qwen_kvsys-mig-008-k1	2	2	live	proof:DRT0255 => open	False
+qwen_kvsys	qwen_kvsys-mig-010-k7	2	2	ALLMET	event_adopt:KV-HG1 => MET	False
+qwen_kvsys	qwen_kvsys-mig-011-k8	2	2	live	proof:DRT0255 => open	False
+qwen_kvsys	qwen_kvsys-mig-013-k10	2	2	ALLMET	event_adopt:KV-HG1 => MET	False
+qwen_kvsys	qwen_kvsys-mig-001-k2	1	1	ALLMET	event_adopt:KV-HG1 => MET	False
+qwen_kvsys	qwen_kvsys-mig-009-k6	1	1	live	proof:DRT0255 => open	False
+qwen_kvsys	kv-hg1-pilot-cts	0	0	live	proof:kv-hg1-pilot-cts => open	False
+s81	s81-route-tree-01	1	418	ALLMET	tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3 => MET	True
+s81	s81-mig-024-k1	220	150	ALLMET	event_adopt:3fa87b84b18 => MET | lint_clean:s81 => MET	False
+s81	s81-mig-001-k1-k2-k1-k4	129	129	live	result:S81-TYPES-R2:col-wave1 => open(lane live 2026-11-16 19:45) | lint_clean:s81 => MET	False
+s81	s81-mig-001-k1-k2-k1-k3	82	82	live	result:S81-TYPES-R2:col-wave2 => open(lane live 2026-11-16 19:45) | lint_clean:s81 => MET	False
+s81	s81-mig-003-k3-k4	13	13	ALLMET	event_adopt:3fa87b84b18 => MET | lint_clean:s81 => MET	False
+s81	s81-mig-005-k5-k6-k2-k1	12	12	live	result:S81-TYPES-R2:col-wave2 => open(lane live 2026-11-16 19:45) | lint_clean:s81 => MET	False
+s81	s81-mig-005-k5-k6-k2-k2	8	8	live	result:S81-TYPES-R2:col-wave1 => open(lane live 2026-11-16 19:45) | lint_clean:s81 => MET	False
+s81	s81-mig-004-k4-k5	1	1	ALLMET	result:S81-BKSEL-O:bksel-hcparam => MET	False
+s81	s81-mig-008-k8-k9	1	0	ALLMET	result:S81-BKSEL-O:bksel-hcparam => MET	False
+s81	s81-serdes-source-1116-codex	0	0	ALLMET	tree_ready:s81:/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3 => MET	True
+s81_head	s81_head-mig-003	2	2	live	proof:DRT0255 => open	False
+s81_head	s81_head-mig-002	1	1	live	proof:DRT0255 => open	False
+s81_head	s81_head-hold-hdserdes-01	1	1	live	proof:head-serdes-fanout => open	False
