@@ -1,0 +1,77 @@
+{
+ "before": {
+  "id": "qwen_compute-mig-019-k13",
+  "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
+  "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+  "release": [
+   "event_adopt:s29q103S4Q9L2"
+  ],
+  "migrated": true,
+  "keys": [
+   "sl?_hc2*",
+   "slw_sc_v1__cl63e5a7a2",
+   "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "sl?_sc_v3*",
+   "sl?_stm_v2*",
+   "sle_su_l1__cl5ea486db",
+   "sle_su_l1__clc6d66f5b",
+   "coll_s"
+  ],
+  "carry": true,
+  "prev_release_fix_s81_col_stale_retype": [
+   "proof:DRT0255"
+  ],
+  "prev_release_qcplanr_l2_retype": [
+   "event_adopt:s29q103S4Q9KF"
+  ]
+ },
+ "remaining": {
+  "id": "qwen_compute-mig-019-k13",
+  "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
+  "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+  "release": [
+   "event_adopt:s29q103S4Q9L2"
+  ],
+  "migrated": true,
+  "keys": [
+   "sl?_hc2*",
+   "slw_sc_v1__cl63e5a7a2",
+   "sl?_sc_v3*",
+   "sl?_stm_v2*",
+   "sle_su_l1__cl5ea486db",
+   "sle_su_l1__clc6d66f5b",
+   "coll_s"
+  ],
+  "carry": true,
+  "prev_release_fix_s81_col_stale_retype": [
+   "proof:DRT0255"
+  ],
+  "prev_release_qcplanr_l2_retype": [
+   "event_adopt:s29q103S4Q9KF"
+  ]
+ },
+ "split": {
+  "id": "qwen_compute-mig-019-k13-scstreet",
+  "plan_sha": "19be3f0a3bb42d8ea1a388412843e1d80e98563041d169899e54c22a47dffe82",
+  "reason": "COORD inherited exact-two SC street failures: cl4590432d/cl5e017c6f unchanged in M without-SC subset. Release on corrected SC event N plus actual corrected-production GEN street/hop preflight, placed relay/pinhalo legality and GRT overflow0; no full DRT wait. QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+  "release": [
+   "event_adopt:s29q103S4Q9N",
+   "result:QC-PLAN-R:qc-sc-street-ready"
+  ],
+  "migrated": true,
+  "keys": [
+   "slw_sc_v1__cl64543eaf__cl4590432d",
+   "slw_sc_v1__cl64543eaf__cl5e017c6f"
+  ],
+  "carry": true,
+  "prev_release_fix_s81_col_stale_retype": [
+   "proof:DRT0255"
+  ],
+  "prev_release_qcplanr_l2_retype": [
+   "event_adopt:s29q103S4Q9KF"
+  ]
+ },
+ "criterion_owner": "QC-PLAN-R",
+ "scope": "exact two inherited failed geometries only; other seven SC and M clock/cb progress unblocked"
+}
