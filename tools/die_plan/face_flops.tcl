@@ -910,6 +910,20 @@ if {[file exists [file join [file dirname [file normalize [info script]]] cell_c
 #      / -virtual_cts* removed) instead of failing the kit (HBM ot_hfd_coll_q3_vm_core util 4.9 %, +85 %, GPL-0305 after
 #      47 m; ot_hgi_sfu_programme_store_r10 util 12.8 %, +115 %, GPL-0305 after 37 m).  Any other error, or a
 #      divergence of plain GPL itself, still fails the stage.  OT_GPL_FALLBACK=0 disables the retry.
+#  (3) SPARSE EXIT (FABLE-FIX-S81-STRIP 11-16, opt-in OT_GPL_SPARSE_OVERFLOW=V, gen_phys sets 0.25 on S81): a sparse kit
+#      (rule 1) whose call names no -overflow exits Nesterov at overflow V instead of the 0.10 default.  At < 1 % movable
+#      utilisation the last phase (overflow 0.25 -> 0.10) is not local spreading: on S81 strip leaf t75 (0.82 %, timing-
+#      driven off, same DB) the median movable cell moved 98 um in it, 61,962 of 125,066 cells > 100 um, and landing-ring
+#      logic left its FIRM flops by 150-300 um (HPWL 1.43e7 -> 2.20e7 um, minimum 1.39e7).  Target density 0.65 / 0.9,
+#      timing-driven off and keep-resize 0 all end the same way (1.30-2.07 x the minimum on t47 / t75); exit at 0.20 is
+#      on the knee (t47 1.26 x).  Exit at 0.25: 1.026 x, detailed placement average displacement 2.0 um, max 91.6 um.
+#      A timing-driven call keeps its second, non-virtual pass: OpenROAD fires it at overflow 0.20, which an exit at
+#      0.25 never reaches, and it is the pass that buffers by wire length (t47: 26,196 long wires; without it flop ->
+#      lane-pin nets keep one 812 um unbuffered segment, -986 ps at the CTS read against -167).  So the call also gets
+#      -timing_driven_net_reweight_overflow {64 R} with R = 100 x (V + 0.05), and -keep_resize_below_overflow is raised
+#      to V + 0.10 (pass at 0.30, buffers kept, then Nesterov settles them down to 0.25).  A call that names its own
+#      reweight list keeps it.
+#      The plain FALLBACK retry and an already plain call of a sparse kit get the same exit.  Unset / 0 = unchanged.
 # Placement quality is judged downstream as for every kit (DPL, CTS, GRT, STA, sign-off gates are unchanged).
 proc ot_gpl_sparse_util {blk} {
  set core [$blk getCoreArea]
@@ -968,17 +982,45 @@ proc ot_gpl_noroute_args {argl} {
  }
  return $out
 }
+# rule 3: the sparse exit overflow (0 = off); a value that is not a number in (0, 1) is an error, never a silent default
+proc ot_gpl_sparse_overflow_value {} {
+ if {![info exists ::env(OT_GPL_SPARSE_OVERFLOW)] || $::env(OT_GPL_SPARSE_OVERFLOW) eq ""} { return 0 }
+ set v $::env(OT_GPL_SPARSE_OVERFLOW)
+ if {![string is double -strict $v] || $v < 0 || $v >= 1} { error "OT_GPL_SPARSE_OVERFLOW must be 0 (off) or a number in (0, 1), got '$v'" }
+ return $v
+}
+proc ot_gpl_exit_args {argl v} {
+ if {$v <= 0 || [lsearch -exact $argl -overflow] >= 0} { return $argl }
+ set out $argl
+ if {[lsearch -exact $out -timing_driven] >= 0} {
+  set keep [format %g [expr {$v + 0.10}]]
+  set k [lsearch -exact $out -keep_resize_below_overflow]
+  if {$k < 0} { lappend out -keep_resize_below_overflow $keep } elseif {[lindex $out [expr {$k+1}]] < $keep} { lset out [expr {$k+1}] $keep }
+  if {[lsearch -exact $out -timing_driven_net_reweight_overflow] < 0} {
+   lappend out -timing_driven_net_reweight_overflow [list 64 [expr {int(round(100.0*($v + 0.05)))}]]
+  }
+ }
+ return [concat $out [list -overflow $v]]
+}
 # global_placement as called by ORFS global_place.tcl (the decision is taken at call time, after every hook above)
 proc ot_gpl_guarded {args} {
  set plain [ot_gpl_plain_args $args]
- if {[llength $plain] == [llength $args]} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
+ set ovf [ot_gpl_sparse_overflow_value]
+ set modal [expr {[llength $plain] != [llength $args]}]
+ if {!$modal && $ovf <= 0} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
  set call $args
  if {[ot_gpl_sparse]} {
-  set ::env(GPL_ROUTABILITY_DRIVEN) 0
-  set call [ot_gpl_noroute_args $args]
+  if {$modal} {
+   set ::env(GPL_ROUTABILITY_DRIVEN) 0
+   set call [ot_gpl_noroute_args $args]
+   if {[llength $call] == [llength $plain]} { set ::env(GPL_TIMING_DRIVEN) 0 }
+  }
+  if {$ovf > 0 && [lsearch -exact $call -overflow] < 0} { puts "OT_GPL_SPARSE exit overflow $ovf (OT_GPL_SPARSE_OVERFLOW)" }
+  set call [ot_gpl_exit_args $call $ovf]
+  set plain [ot_gpl_exit_args $plain $ovf]
   puts "OT_GPL_SPARSE global_placement $call"
-  if {[llength $call] == [llength $plain]} { set ::env(GPL_TIMING_DRIVEN) 0 }
  }
+ if {!$modal} { return [uplevel 1 [list ::ot_gpl_native {*}$call]] }
  if {![catch {uplevel 1 [list ::ot_gpl_native {*}$call]} res opts]} { return $res }
  if {[llength $call] == [llength $plain]} { return -options $opts $res }
  if {([info exists ::env(OT_GPL_FALLBACK)] && $::env(OT_GPL_FALLBACK) eq "0") || ![regexp {GPL-0305} $res]} {

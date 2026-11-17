@@ -66,7 +66,16 @@ def build_protected(coord, marker_dir=None):
     # FLEET-OPS-R (COORD 11-16, E8 wave-src 364 GB): every absolute scratch path in a die block of kit_wave.json is a protected root, whatever its key
     # (src_prev_*, item_inputs, kit_rtl, plan dirs, prov_view_sources ...).  The named keys above are only the common ones; a path under any other key
     # (dies.hbm.src_prev_kw43fsp = .../wave-src/20261110hbm2/hbm) must protect its tree too.
-    _walk_paths(s, cfg)
+    # superseded_trees is the recognized retirement queue, not a live owner.
+    # Drop only a well-formed direct die queue; other/nested keys stay protected.
+    # Manual protected paths are never subtracted from an existing list.
+    for d in cfg.values():
+        paths = d
+        if isinstance(d, dict):
+            queue = d.get("superseded_trees")
+            if isinstance(queue, list) and all(isinstance(p, str) and os.path.isabs(p) for p in queue):
+                paths = {k: v for k, v in d.items() if k != "superseded_trees"}
+        _walk_paths(s, paths)
     for f in glob.glob(os.path.join(marker_dir or os.path.join(coord, "lanes/handoff"), "tree_switch_*.json")):
         try:
             _add(s, json.load(open(f)).get("tree"))

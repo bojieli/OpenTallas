@@ -206,8 +206,41 @@ def x_edges(expected_x, shift=0, n=N):
     return {m: sorted(v) for m, v in out.items()}, ea
 
 
-def read_span(f):
-    return f['me_tiles'] * f['me_k'] * IL
+def read_span(f, ages=None, name=None):
+    span = f['me_tiles'] * f['me_k'] * IL
+    t = (ages or {}).get('tile', {})
+    if t.get('native_round96') and name and name.rstrip('+1') in ('o', 'down'):
+        op = name.rstrip('+1')
+        native_round = f['me_k'] * IL
+        period = t['round_period'][op]
+        if period < native_round:
+            raise LowerError('native round period shorter than actual operand reads')
+        span += (f['me_tiles'] - 1) * (period - native_round)
+    return span
+
+
+def native_phase_profile(ages, profile):
+    """Select explicit actual-source HR/AR and measured cache delays; legacy ages stay unchanged."""
+    if profile.get('schema') != 'opentallas.qwen.native-ar-phase-profile.v1':
+        raise LowerError('native AR phase source profile required')
+    keys = ('hr_receiver_edges', 'ar_receiver_edges', 'local_receiver_edges', 'go_delay_edges')
+    for key in keys:
+        v = profile.get(key)
+        if not isinstance(v, list) or len(v) != N or any(type(x) is not int or x < 0 for x in v):
+            raise LowerError('native AR phase requires twelve integer ' + key)
+    if any(not 2 <= x <= 65535 for x in profile['go_delay_edges']):
+        raise LowerError('native AR cache delay outside actual 16-bit implementation')
+    if not profile.get('native_epoch_receipt') or not profile.get('source_sha256'):
+        raise LowerError('native AR phase requires actual native epoch proof and selected source')
+    totals = [sum(profile[k][i] for k in keys) for i in range(N)]
+    if [x - totals[0] for x in totals] != [8*i for i in range(N)]:
+        raise LowerError('native AR phase does not compose to eight-edge returned row spacing')
+    return dict(ages, native_ar_phase=profile)
+
+
+def phase_delays(name, ages):
+    p = ages.get('native_ar_phase')
+    return p['go_delay_edges'] if p and name.rstrip('+1') in ('o', 'down') else [0] * N
 
 
 def consumer_ages(ages, name):
@@ -226,7 +259,8 @@ def lower_consumer(name, f, xs, ages, hr_at, go_at=None, prev_xt=None, prev2_end
     op}; prev2_end: {m: read end of op n-2}.  Returns the edges, the per-slice slack and the read windows."""
     ages = consumer_ages(ages, name)
     xt = {m: [e + ages['x_tap'] for e in v] for m, v in xs.items()}
-    go_min = max(max(v) + ages['go_lag'] - hr_at[m] for m, v in xt.items())
+    phase = phase_delays(name, ages)
+    go_min = max(max(v) + ages['go_lag'] - hr_at[m] - phase[m] for m, v in xt.items())
     xpf_max = min(min(v) - ages['xpf_lead'] - hr_at[m] for m, v in xt.items())
     lo = [-10 ** 9]
     if prev_xt:
@@ -238,14 +272,18 @@ def lower_consumer(name, f, xs, ages, hr_at, go_at=None, prev_xt=None, prev2_end
         raise LowerError(f'{name}: no XPF edge: needs >= {xpf_min} (previous writes / epoch reuse) and <= {xpf_max} '
                          '(first x beat)')
     xpf = xpf_max if xpf_at is None else xpf_at
+    # The cached command must be captured after its epoch descriptor is armed.
+    if ages.get('native_ar_phase'):
+        go_min = max(go_min, xpf + 1)
     go = go_min if go_at is None else max(go_at, go_min)
-    rs = read_span(f)
-    head_go = {m: go + hr_at[m] + ages['d_head'] for m in xt}
+    rs = read_span(f, ages, name)
+    head_go = {m: go + hr_at[m] + phase[m] + ages['d_head'] for m in xt}
     end = {m: head_go[m] + rs + ages['read_tail'] for m in xt}
     return dict(matvec=name, pc=f['pc'], xpf_w5=xpf, go_w5=go, go_min=go_min,
                 go_delay=0 if go_at is None else max(0, go_min - go_at),
                 xpf_window=[xpf_min, xpf_max],
-                slack_go={m: go + hr_at[m] - (max(v) + ages['go_lag']) for m, v in xt.items()},
+                slack_go={m: go + hr_at[m] + phase[m] - (max(v) + ages['go_lag']) for m, v in xt.items()},
+                go_phase_delay=phase,
                 slack_xpf={m: min(v) - ages['xpf_lead'] - (xpf + hr_at[m]) for m, v in xt.items()},
                 first_xt={m: min(v) for m, v in xt.items()}, last_xt={m: max(v) for m, v in xt.items()},
                 head_go=head_go, read_end=end, read_span=rs,
@@ -259,10 +297,16 @@ def tile_delivery(name, own_m, go, hr_at, ages, l8_ar, need_stagger):
     t = ages.get('tile')
     if not t:
         return dict(matvec=name, status='UNMEASURED (XT1 tile constants pending)')
-    base = {s: go + hr_at[s] + ages['d_head'] + t['d_clu'] + t.get('rs_age', 0) for s in range(N)}
+    phase = phase_delays(name, ages)
+    base = {s: go + hr_at[s] + phase[s] + ages['d_head'] + t['d_clu'] + t.get('rs_age', 0) for s in range(N)}
     rp = t['round_period'].get(name) if isinstance(t['round_period'], dict) else t['round_period']
     out = dict(matvec=name, tile_first={s: base[s] - go for s in range(N)}, round_period=rp)
-    if need_stagger:
+    if need_stagger and ages.get('native_ar_phase'):
+        p = ages['native_ar_phase']
+        returned = {s: base[s] + p['ar_receiver_edges'][s] + p['local_receiver_edges'][s] for s in range(N)}
+        out.update(hgd=phase, hgd_ok=rp == 96 and [returned[s] - returned[0] for s in range(N)] == [8*s for s in range(N)],
+                   returned_first=returned, note='Actual selected HR + held-GO phase + AR return composed once; eight-edge returned row spacing.')
+    elif need_stagger:
         # want far(s, r, 0) = M0 + 96 r + 6 s - l8_ar; as built = base[s] + rp r: per-slice delay so all slices align
         hgd = {s: 6 * s - (base[s] - base[0]) for s in range(N)}
         out.update(hgd=hgd, hgd_ok=all(v >= 0 for v in hgd.values()) and rp == 96,
@@ -316,7 +360,7 @@ def lower_layer(comp, ages=None, stage=1):
     ages = ages or load_ages()
     rec = L.ctlm_rec(stage)
     R, C = rec['relay'], rec['constants']
-    hr_at = hr_arrival()
+    hr_at = ages['native_ar_phase']['hr_receiver_edges'] if ages.get('native_ar_phase') else hr_arrival()
     ops = me_ops()
     sh = comp['calendar']['shifts']
     gos = {t['matvec']: t['go_w5'] for t in comp['composition']['tile']}

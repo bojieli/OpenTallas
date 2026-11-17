@@ -9,7 +9,7 @@ import argparse
 import json
 from pathlib import Path
 
-from head_boot_recipe import compile_recipe, defaults, provider
+from head_boot_recipe import compile_recipe, defaults, provider, host_provider
 from head_bootstrap_delta import apply as bootstrap_transport
 from head_entry_schedule import compile_entry, uint
 
@@ -38,7 +38,7 @@ def compile_programme(plan, offsets, inventory, job, timing, source_defaults):
         if row['kind'] in ('HBC_LOAD', 'HBC_COMMIT'):
             row['frame'] = (row['frame'] & ~mask) | (clock_id << (114 + 16))
     candidate = bootstrap_transport(plan)
-    hp, ht, content = provider(candidate, 'ot_s81hd_host_ep_core')
+    hp, ht, content, _, _ = host_provider(candidate)
     cp, _, _ = provider(candidate, 'ot_s81hd_ctl_core')
     content.setdefault('params', {}).update(entry['host_params'])
     if timing['host_counter_zero_edge'] < offsets['parts'][hp['name']]['release']:

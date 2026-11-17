@@ -9,6 +9,12 @@ import re
 class RawBranchError(ValueError):
     pass
 
+class RelayIndex(dict):
+    """Keep the legacy connectivity API and the independently checked relay kinds."""
+    def __init__(self):
+        super().__init__()
+        self.modules = {}
+
 class RawBranches:
     def __init__(self, tn, cfg, body, outline_um=None):
         self.tn=tn;self.rows=[];self.rtl=[];self.roles={};self.used={};self.names=set()
@@ -38,8 +44,12 @@ class RawBranches:
                 if not isinstance(xy,list) or len(xy)!=2 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in xy):raise RawBranchError(f"{tn}.{name}: finite stage xy required")
                 if outline_um is not None and not (0 <= xy[0] <= outline_um[0] and 0 <= xy[1] <= outline_um[1]):raise RawBranchError(f"{tn}.{name}: stage xy outside outline")
                 net=f'cland_raw_{name}_{i}';inst=f'u_cland_raw_{name}_{i}'
-                self.rtl += [f'    wire {net};',f'    (* keep = "true" *) ot_dp_rrelay {inst} (.clk(clk), .d({prev}), .q({net}));']
-                rec=dict(name=f'{name}_{i}',instance=inst,net=net,raw=prev,original=original,original_parent=original_parent,base=base,stage=i,xy_um=list(xy),added_flops=1,added_cycles=0,kind='literal_same_depth_raw_branch')
+                # A default landing ring relay can be registered after construction;
+                # those default relays are plain. validate() rejects any other kind.
+                modules=original_index.modules.get(original, ['ot_dp_rrelay'])
+                module=modules[0] if len(modules)==1 else 'ot_dp_rrelay'
+                self.rtl += [f'    wire {net};',f'    (* keep = "true" *) {module} {inst} (.clk(clk), .d({prev}), .q({net}));']
+                rec=dict(name=f'{name}_{i}',instance=inst,net=net,raw=prev,original=original,original_parent=original_parent,base=base,stage=i,xy_um=list(xy),module=module,added_flops=2 if module=='ot_dp_rrelay_nl' else 1,added_cycles=0,kind='literal_same_depth_raw_branch')
                 records.append(rec);self.rows.append(rec);prev=net;original_parent=original
             for c in consumers:
                 if c in self.roles:raise RawBranchError(f"{tn}: duplicate raw consumer {c}")
@@ -47,11 +57,12 @@ class RawBranches:
     @staticmethod
     def driver_index(text):
         """Index one immutable connectivity epoch, retaining every driver for uniqueness checks."""
-        drivers = {}
-        for m in re.finditer(r"\bot_dp_rrelay(?:_nl)?\s+(\w+)\s*\(([^;]*?)\);",text,re.S):
-            pins=dict(re.findall(r"\.(clk|d|q)\(\s*(\w+)\s*\)",m.group(2)))
+        drivers = RelayIndex()
+        for m in re.finditer(r"\b(ot_dp_rrelay(?:_nl)?)\s+(\w+)\s*\(([^;]*?)\);",text,re.S):
+            pins=dict(re.findall(r"\.(clk|d|q)\(\s*(\w+)\s*\)",m.group(3)))
             if 'q' in pins:
-                drivers.setdefault(pins['q'], []).append((m.group(1),pins))
+                drivers.setdefault(pins['q'], []).append((m.group(2),pins))
+                drivers.modules.setdefault(pins['q'], []).append(m.group(1))
         return drivers
     @staticmethod
     def driver(text,net,index=None):
@@ -84,6 +95,9 @@ class RawBranches:
             if inst!=inst0 or pins!=pins0:raise RawBranchError(f"{self.tn}: original relay of {row['original']} changed or duplicated in the emitted text")
             _,copy=self.driver(None,row['net'],emitted_index)
             if copy['d']!=row['raw']:raise RawBranchError(f"{self.tn}: copied raw D changed for {row['net']}")
+            module=original_index.modules[row['original']]
+            if module!=[row['module']] or emitted_index.modules[row['original']]!=module or emitted_index.modules[row['net']]!=module:
+                raise RawBranchError(f"{self.tn}: raw relay module/clock phase changed for {row['original']}")
         # Consumer defaults may be an alias of another equivalent copied branch.
         original_for={r['net']:r['original'] for r in self.rows}
         for role,old in self.used.items():
@@ -96,4 +110,4 @@ class RawBranches:
                 old=a.group(1)
             original=original_for.get(old,old)
             if original!=self.roles[role]['original']:raise RawBranchError(f"{self.tn}: {role} reset phase/equation differs: {original} != {self.roles[role]['original']}")
-        return dict(branches=len(self.names),flops=len(self.rows),consumers=dict(self.roles),status='literal source chains verified; cold admission still requires actual mechanism proof')
+        return dict(branches=len(self.names),flops=sum(r['added_flops'] for r in self.rows),consumers=dict(self.roles),status='literal source chains and relay clock phases verified; cold admission still requires actual mechanism proof')

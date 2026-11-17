@@ -670,6 +670,17 @@ def pilot_passed_map(st, cfg):
     """
     out = {}
     for die, d in (cfg.get("dies") or {}).items():
+        for record in d.get("hold_records") or []:
+            if not record.get("auto_pilot") or not record.get("published_gen_proof"):
+                continue
+            try:
+                import published_gen_origin as PGO
+                for pilot in record.get("pilot_items") or []:
+                    proved, _ = PGO.validate_reference(record["published_gen_proof"], cfg, die, pilot, sys.modules[__name__])
+                    if proved:
+                        out.setdefault(die, set()).add(proved[:12])
+            except (ImportError, AssertionError, OSError, ValueError, TypeError, KeyError, AttributeError):
+                pass                            # an unqualified import always leaves normal GEN available
         pilots = {i for r in d.get("hold_records") or [] if r.get("auto_pilot") for i in r.get("pilot_items") or []}
         if not pilots:
             continue
@@ -702,11 +713,43 @@ def pilot_passed_map(st, cfg):
     return {die: sorted(shas) for die, shas in out.items()}
 
 
-def release_pilot_passed(rows, die, item, t0):
-    """FABLE-FLOW-2200: the release pilot's attempt that started at or after the release is past GEN (PILOT_PASS_STATUS: PASS, ENQUEUED,
-    ROUTE-HELD, SIGNED); a FAIL or a running attempt is not a pass."""
-    return any(r.get("die") == die and r.get("item") == item and r.get("status") in PILOT_PASS_STATUS
-               and float(r.get("started") or 0) >= float(t0) - 60 for r in rows or [])
+def release_pilot_passed(rows, die, item, t0, cfg=None):
+    """A post-release selected attempt passed GEN, or reached a legacy PASS state.
+    The early path reads only the immutable LIVE receipt, not imported/dry or
+    prior-attempt evidence. It changes no physical result or hold.
+    """
+    for row in rows or []:
+        try:
+            if (row.get("die") != die or row.get("item") != item
+                    or float(row.get("started") or 0) < float(t0)):
+                continue
+            if row.get("status") in PILOT_PASS_STATUS:
+                return True
+            if cfg is None or not row.get("dir"):
+                continue
+            path = Path(row["dir"])
+            raw = (path / "spec.json").read_bytes()
+            spec = json.loads(raw)
+            if not isinstance(spec, dict) or (path / "gen_pilot.json").stat().st_mtime < float(t0):
+                continue
+            d = (cfg.get("dies") or {}).get(die) or {}
+            ii = (d.get("item_inputs") or {}).get(item) or {}
+            expected = {"src": ii.get("src") or d.get("src"),
+                        "src_manifest_hash": ii.get("src_manifest_hash") or d.get("src_manifest_hash"),
+                        "plan": ii.get("plan") or d.get("plan")}
+            if any(not value or spec.get(key) != value for key, value in expected.items()):
+                continue
+            args = list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
+            if item in (d.get("hard_wrappers") or []):
+                args += ["--hard-wrappers", item]
+            env = ({"OT_FLOW_TAG": str(d["flow_tag"])} if d.get("flow_tag") else {}) | item_env(d, item)
+            if spec.get("gen_args", []) != args or spec.get("gen_env", {}) != env:
+                continue
+            if gen_pilot_receipt_pass(path, die, item, spec, raw):
+                return True
+        except (OSError, ValueError, TypeError, KeyError):
+            continue
+    return False
 
 
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
@@ -719,7 +762,7 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   proof_fn=proof_pass_fn(proofs),
                   tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item),
                   pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []),
-                  release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0))
+                  release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0, cfg))
 
 
 RESULT_POST = r"^\s*-?\s*\d{4}-\d\d-\d\d\s+\S+\s+[A-Za-z]{2,4}\s+RESULT\s*\["        # a post OF TYPE RESULT: "- 2026-11-16 07:18 PST RESULT [LANE ->"

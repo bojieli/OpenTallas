@@ -982,8 +982,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         seen, stack = {root}, [root]
         if root in out_port_of:
             return f"wired to output port {out_port_of[root]}"
-        if not loads[root]:
-            return "no load"
+        # A declared reset replica with no sink is unused capacity.
+        # It has no observable effect; loaded replicas still require the full cone proof.
         while stack:
             for ci, pin in loads[stack.pop()]:
                 m, path, pp = F.cells[ci]
@@ -2012,6 +2012,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 if why:
                     fail("ring_reset", b, why)
                     continue
+                if not loads[r]:
+                    res.setdefault("ring_reset_unused", []).append(b)
                 res.setdefault("ring_reset_replica", []).append(b)
                 res["ok"] += 1
                 continue

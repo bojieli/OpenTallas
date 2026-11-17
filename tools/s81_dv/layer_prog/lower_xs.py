@@ -313,7 +313,7 @@ def frame_lk(die, frame):
     master = die.inst[frame]['master']
     value = die.strap(frame, 'lk')
     if is_asbuilt(master):
-        path = source_frame_schedule(master)
+        path = source_frame_schedule(master, frame)
         measured = json.loads(path.read_text()).get('landing_lk')
         if type(measured) is not int or not 0 <= measured < 4096:
             raise ValueError('as-built frame schedule lacks its measured cfifo lk: ' + master)
@@ -444,7 +444,20 @@ def gb_provider_under_test():
     return True
 
 
-def source_frame_schedule(master):
+_FRAME_PLAN_DIGEST = {}
+
+
+def frame_plan_digest(path):
+    """Hash a selected plan once per immutable file version within a compiler process."""
+    path = Path(path).resolve()
+    st = path.stat()
+    key = (str(path), st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns)
+    if key not in _FRAME_PLAN_DIGEST:
+        _FRAME_PLAN_DIGEST[key] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return _FRAME_PLAN_DIGEST[key]
+
+
+def source_frame_schedule(master, frame_instance=None):
     """LP models are immutable source-qualified inputs, never inferred flat timing."""
     if master.endswith('_gb'):
         raise ValueError('GB frame requires its own extracted schedule and qualified GO/TAG provider; '
@@ -456,6 +469,13 @@ def source_frame_schedule(master):
         # check bound to that exact schedule file (every frame link = the die plan's declared latency).
         directory = Path(os.environ.get('OT_XS_ASB_SCHEDULE_DIR',
                          str(ROOT / 'results/arch/s81_dv_1016/frame_lp/asb_schedule')))
+        record_dir = directory
+        if frame_instance is not None:
+            if not re.fullmatch(r'[A-Za-z_]\w*', frame_instance):
+                raise ValueError('invalid frame schedule instance: ' + frame_instance)
+            scoped = directory / 'frames' / frame_instance
+            if scoped.is_dir():
+                directory = scoped
         path, chk = directory / (master + '_schedule.json'), directory / (master + '_check.json')
         if not chk.is_file():
             raise ValueError('as-built band frame needs its extracted frame schedule + plan check '
@@ -466,9 +486,21 @@ def source_frame_schedule(master):
                              + ', '.join(c.get('fails', [])[:8]))
         if not path.is_file() or c.get('schedule_sha256') != hashlib.sha256(path.read_bytes()).hexdigest():
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
-        rsha = qualify_frame_source(json.loads(path.read_text()), master, *frame_manifest(), record_dir=directory)
+        schedule = json.loads(path.read_text())
+        bound = schedule.get('bound_plan') or {}
+        selected_frame = bound.get('frame_instance')
+        if selected_frame is not None and selected_frame != frame_instance:
+            raise ValueError('frame schedule selects another actual instance: ' + str(selected_frame))
+        if directory != record_dir and selected_frame != frame_instance:
+            raise ValueError('per-frame calendar has no matching actual instance identity')
+        selected_plan = os.environ.get('OT_S81_FRAME_PLAN')
+        if selected_plan:
+            plan_sha = frame_plan_digest(selected_plan)
+            if bound.get('plan_sha256') != plan_sha:
+                raise ValueError('frame schedule selects another bound plan: ' + master)
+        rsha = qualify_frame_source(schedule, master, *frame_manifest(), record_dir=record_dir)
         if rsha is not None:
-            GB_QUAL_USED[master] = rsha
+            GB_QUAL_USED[master + (':' + frame_instance if frame_instance else '')] = rsha
         return path
     if not master.endswith('_lp'):
         return None
@@ -481,7 +513,7 @@ def source_frame_schedule(master):
 
 
 # ------------------------------------------------------------------------------------------------ one frame programme
-def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None):
+def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None, frame_instance=None):
     """legalise + place one a_proj phase on one frame (field phase 0); returns (field, ph, plan, pairs)"""
     import frame_bench as B
     import frame_return_plan as P
@@ -491,7 +523,7 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
     if is_asbuilt(master):
         assert B.frame_pairs(master) == (q, _bf), ('as-built band frame pair numbering differs from its base', master)
     # plan_phase verifies every source hash in this extracted compiler schedule.
-    frame_schedule = source_frame_schedule(master)
+    frame_schedule = source_frame_schedule(master, frame_instance)
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'
     ret_score = None
     if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1':
@@ -642,7 +674,7 @@ def lower(die, op, ctx):
             continue
         mats, gidx = frame_mats(fx, p['rows'])
         field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
-                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None, frame_instance=p['frame'])
         if native:
             from layer_prog.aproj_native import phase_material
             material = phase_material(field)
@@ -670,7 +702,7 @@ def lower(die, op, ctx):
                            phase=dict((k, v) for k, v in ph.items() if k != 'matrices'),
                            emission=plan['emission']))
         if native:
-            model = source_frame_schedule(p['master'])
+            model = source_frame_schedule(p['master'], p['frame'])
             frames[-1]['source_schedule'] = dict(path=str(model), sha256=sha(model.read_bytes())) if model else None
     ok = all(f['phase'] is None or f['faults'] == 0 for f in frames)
     rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
@@ -749,7 +781,7 @@ def cmd_gen(a):
     assert p['rows'], f'{a.frame}: no a_proj rows'
     mats, gidx = frame_mats(fx, p['rows'])
     field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
-                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None, frame_instance=p['frame'])
     names, tmp = field_images(field, qa, q, bf, a.frame, out, p['rows'])
     xsn = xs_roms(tmp, out)
     # the frame bench instantiates the master with INSTANCE "f": the same images under the bench name
@@ -794,7 +826,7 @@ def cmd_gen(a):
                                                                          'weights/wkv.bin', 'weights/wkv.scale.bin',
                                                                          'ops/attn.norm.scale.bin', 'ops/attn.a_proj.bin')}),
                 images={n: sha((out / n).read_bytes()) for n in names + xsn})
-    schedule = source_frame_schedule(p['master'])
+    schedule = source_frame_schedule(p['master'], p['frame'])
     if schedule is not None:
         (out / 'frame_schedule.json').write_bytes(schedule.read_bytes())
         meta['frame_schedule'] = dict(file='frame_schedule.json', sha256=sha(schedule.read_bytes()))

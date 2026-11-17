@@ -93,9 +93,25 @@ def preprocess(text, defines):
     return body, macros
 
 
+def _selected_path(root, rel, manifest):
+    if not manifest:
+        return Path(root) / rel
+    try:
+        from . import slice_source
+    except ImportError:
+        import slice_source
+    _, ab, index, prefer = slice_source.manifest_selection(Path(root), manifest)
+    import bind_elab
+    master = Path(rel).stem
+    picked, ambiguous = bind_elab.pick(index, master, prefer)
+    if not picked or ambiguous:
+        raise ValueError('selected x-tier master missing/ambiguous: ' + master)
+    return Path(picked)
+
+
 @functools.lru_cache(maxsize=None)
-def _file(root, rel, defines):
-    raw = (Path(root) / rel).read_bytes()
+def _file(root, rel, defines, manifest=None):
+    raw = _selected_path(root, rel, manifest).read_bytes()
     text, macros = preprocess(raw.decode(), defines)
     mods = {m.group(1): m.group(2) for m in re.finditer(r'\bmodule\s+(\w+)(.*?)\bendmodule\b', text, re.S)}
     return text, macros, mods, hashlib.sha256(raw).hexdigest()
@@ -248,8 +264,8 @@ def _xr_choice(slice_text):
 
 
 @functools.lru_cache(maxsize=None)
-def _form(root, defines):
-    st, _, smods, ssha = _file(root, SLICE, defines)
+def _form(root, defines, manifest=None):
+    st, _, smods, ssha = _file(root, SLICE, defines, manifest)
     choice = _xr_choice(smods['ot_s81sl_slice'])
     fams = {m.rstrip('13') for m, _ in choice}
     if len(fams) != 1 or len(choice) != 2:
@@ -259,10 +275,10 @@ def _form(root, defines):
     if len(dl) != 1:
         raise ValueError('ot_s81sl_slice DL default unresolved')
     rec = dict(schema='opentallas.s81.xtier_land.v1', defines=sorted(defines), rtl_root=str(root), family=fam,
-               masters=sorted(m for m, _ in choice), slice_dl=dl.pop(), sources={SLICE: ssha})
+               masters=sorted(m for m, _ in choice), slice_dl=dl.pop(), sources={str(_selected_path(root, SLICE, manifest).relative_to(root)): ssha})
     if fam == 'ot_s81sl_xr':
-        _, _, xmods, xsha = _file(root, XR, defines)
-        rec['sources'][XR] = xsha
+        _, _, xmods, xsha = _file(root, XR, defines, manifest)
+        rec['sources'][str(_selected_path(root, XR, manifest).relative_to(root))] = xsha
         for m, _ in choice:
             if m not in xmods:
                 raise ValueError(f'{m} not defined in {XR}')
@@ -270,8 +286,8 @@ def _form(root, defines):
             raise ValueError(f'{XR} grew a landing parameter: extend xtier_land')
         rec.update(face_land=0, ring_land=0, face_edges=dict(lo=0, p=0, e=0), ring_edges=0)
         return rec
-    _, macros, xmods, xsha = _file(root, XRT, defines)
-    rec['sources'][XRT] = xsha
+    _, macros, xmods, xsha = _file(root, XRT, defines, manifest)
+    rec['sources'][str(_selected_path(root, XRT, manifest).relative_to(root))] = xsha
     per = {}
     for m, ov in sorted(choice):
         hdr = _params(xmods[m])
@@ -311,7 +327,7 @@ def form(defines=None, root=None):
     OT_S81_XTIER_FACE_OVERRIDE='{"lo": 0}' forces face edges (negative controls only: the xrt vpx gate's stale-constant
     control must FAIL on the xrt bench); a forced form carries face_edges_override."""
     d = selected_defines() if defines is None else frozenset(defines)
-    f = dict(_form(str(root or rtl_root()), d))
+    f = dict(_form(str(root or rtl_root()), d, os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST')))
     ov = _override()
     if ov:
         f['face_edges'] = {**f['face_edges'], **{k: int(v) for k, v in ov.items()}}

@@ -1582,3 +1582,22 @@ def test_ring_reset_replica_on_flop_clock_pin_fails():
 def test_non_ring_reset_bus_with_many_loads_still_shared():
     net = _rst_xn_net(9).replace("rst_xn", "rst_zz")
     assert "shared" in face_guard.guard(net, ring_reset=True)["fail_counts"]
+
+
+def test_declared_ring_reset_unused_capacity_is_reported():
+    net = NET_OK.replace("module top(clk, a, o);", "module top(clk, a, o, rst_xn); input [0:0] rst_xn;")
+    r = face_guard.guard(net, ring_reset=True)
+    assert r["verdict"] == "PASS", r
+    assert r["ring_reset_unused"] == ["rst_xn[0]"]
+    assert face_guard.guard(net)["verdict"] == "FAIL"
+    # A disconnected ordinary data input remains a dropped boundary register.
+    data = net.replace("rst_xn", "unused_data")
+    assert "dropped" in face_guard.guard(data, ring_reset=True)["fail_counts"]
+    # Turning the reserved bit into a clock, output or macro connection is never spare.
+    clock = net.replace(".CLK(clk)", ".CLK(rst_xn[0])", 1)
+    output = net.replace("endmodule", "assign o[0] = rst_xn[0]; endmodule", 1)
+    macro = net.replace("endmodule", "RAM64 block0 (.A(rst_xn[0]), .Y(dead)); endmodule", 1)
+    for mutant in (clock, output, macro):
+        assert face_guard.guard(mutant, ring_reset=True)["verdict"] == "FAIL"
+    for mutant in (clock, macro):
+        assert "ring_reset" in face_guard.guard(mutant, ring_reset=True)["fail_counts"]
