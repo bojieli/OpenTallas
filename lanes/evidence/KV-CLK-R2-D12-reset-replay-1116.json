@@ -1,0 +1,30 @@
+{
+  "candidate": "claude/kv-clk-r2-unused-reset-1117@7bcba8e9909",
+  "parent_guard_sha256": "febde1cc8345194787a8f7c044f4b86bb6f9fd4625f5a1d669628c57ed3745af",
+  "actual_hard_landing_prove": {
+    "kv_cland_w1057_ns_94a44": {
+      "verdict": "PASS",
+      "land_mux_bits": 1057,
+      "ring_reset_unused": [],
+      "fails": {},
+      "netlist_sha256": "9fb807bd1a9cef34c04358bd95031ead096b9796a0522f3c8b4002971b3dccc8"
+    },
+    "kv_cland_w1063_ew_dbe00": {
+      "verdict": "PASS",
+      "land_mux_bits": 1063,
+      "ring_reset_unused": [],
+      "fails": {},
+      "netlist_sha256": "ddcf17401d5e0661bdac6638e828f47e6e2e96101b814dcf3b090b85c90f3119"
+    },
+    "kv_cland_w652_ns_2a350": {
+      "verdict": "PASS",
+      "land_mux_bits": 652,
+      "ring_reset_unused": [
+        "rst_xn[22]"
+      ],
+      "fails": {},
+      "netlist_sha256": "b9876939286c46aea2c34d25582ae80ee7aba095fc59a8deb77d8bf14cfd8a22"
+    }
+  },
+  "note": "Original immutable D12 failure retained. Same manifests, historical tools, signoff/views and actual netlists; candidate guard supplied to original hard_landing.prove. No provenance/hash bypass."
+}
