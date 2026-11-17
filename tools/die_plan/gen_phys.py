@@ -5366,6 +5366,15 @@ def fixed_bb_default_parameters(mod, bb_text, rtl_files, root=None, staged=None)
     return re.sub(r"\bendmodule\b", declarations + "endmodule", bb_text, count=1)
 
 
+def append_new_src(srcs, entry):
+    """S81-KIT-DUPBB 11-17 (LOOP-GAP: 11 S81 dsdv_slice_*_C kits KIT_PREFLIGHT FAIL issues 4 duplicate_modules): macro_param_blackboxes
+    rewrites an EXISTING _bb view in place (numeric default parameters), so its file is already in the source list; appending it again
+    listed ot_s81sl_egn_bb.v / ot_s81sl_egg_bb.v twice.  Append only when the path is not listed yet."""
+    if entry not in srcs:
+        srcs.append(entry)
+    return srcs
+
+
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=(), plan_dir=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
     and that has no _bb view yet (or lacks numeric default metadata); header copied from the module's own RTL (exact staged files, their dirs, then
@@ -5779,7 +5788,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # header-only blackbox <module>_bb.v (the native_bb form, read -lib -overwrite like the SRAM _bb views).
     for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root, t.get("hard_cores", []),
                                     Path(P.path).parent if getattr(P, "path", None) else None):
-        srcs.append(f"/work/rtl/{f.name}")
+        append_new_src(srcs, f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     fsm_wires = fsm_none_wires(kd / "rtl", os.environ.get("OT_FSM_NONE_WIRES"))
