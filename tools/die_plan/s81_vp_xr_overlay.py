@@ -14,6 +14,10 @@ Optional --lane-reset-copies (off by default): XR leaves use16 independent, same
 their lane HI/core/HO reset pins. This replaces the single rs_p fanout; +32 relay FF at TREE_STAGES2, no further
 boot or data cycles. Physical placement and production-shape timing remain required.
 
+Optional --cfr-with-xr (off by default): selected XR leaves also use the existing registered CFR coefficient-row
+decode. It is cycle-exact, adds five RTL state bits and no further operation cycles, and preserves explicit legacy
+CFR bits on unselected leaves. Production-shape timing is still required.
+
 Latency contract (S81-DIE-R2 bind + LATCHECK): vp write availability +1 clk (SU x_w and sw/cw writes), hc_post
 write-back +1 clk, VP boot reset release +1 edge; vp read port latency unchanged.
 
@@ -139,7 +143,7 @@ HI_FWD = ".LF_CS_HI_D(LF_CS_HI_D)"
 LEAF_HI = re.compile(r"\.CS_HI_D\(LF_CS_HI_D\[4 \* (\w+) \+: 4\]\)")
 
 
-def patch_slice(s, f):
+def patch_slice(s, f, cfr_with_xr=False):
     """Leaf: VP_XR -> u_vp.XR.  Every slice wrapper that declares LF_CS_HI_D declares LF_VP_XR; every forward of
     LF_CS_HI_D forwards LF_VP_XR; every leaf taking CS_HI_D from LF_CS_HI_D[4*k] takes VP_XR from LF_VP_XR[k]."""
     n = 0
@@ -147,6 +151,10 @@ def patch_slice(s, f):
         s = sub_exact(s, "module ot_s81sl_leaf #(\n", "module ot_s81sl_leaf #(\n    parameter integer VP_XR = 0,  // "
                       f"{TAG}: u_vp.XR (+1 write availability, +1 hc_post, +1 boot reset edge)\n", 1, f"{f} leaf hdr")
         s = sub_exact(s, "ot_s81sl_vp #(.CS_HI_D", "ot_s81sl_vp #(.XR(VP_XR), .CS_HI_D", 1, f"{f} leaf u_vp")
+        if cfr_with_xr:
+            # Use the existing, cycle-exact registered coefficient row decode
+            # on selected XR leaves; preserve every explicit legacy CFR bit.
+            s = sub_exact(s, ".CFR(VP_CFR)", ".CFR(VP_CFR || VP_XR)", 1, f"{f} CFR with XR")
         n += 2
     k = len(HI_HDR.findall(s))
     s = HI_HDR.sub("parameter [4:0] LF_VP_XR = 5'd0, parameter [19:0] LF_CS_HI_D = ", s)
@@ -179,6 +187,8 @@ def main(argv=None):
     ap.add_argument("--die", action="append", default=[], metavar="PART=MASK")
     ap.add_argument("--lane-reset-copies", action="store_true",
                     help="XR leaves use16 same-depth local lane reset copies; +32 FF vs XR, no extra cycles")
+    ap.add_argument("--cfr-with-xr", action="store_true",
+                    help="XR leaves enable the existing cycle-exact CFR coefficient row decode")
     a = ap.parse_args(argv)
     root = Path(a.root)
     out = {}                                          # every edit is computed first; nothing is written on a miss
@@ -192,7 +202,7 @@ def main(argv=None):
             s = f.read_text(errors="replace")
             if "LF_CS_HI_D" not in s and "module ot_s81sl_leaf #(" not in s:
                 continue
-            t, n, ks = patch_slice(s, f)
+            t, n, ks = patch_slice(s, f, a.cfr_with_xr)
             if n:
                 out[f] = (t, f"hdr/fwd/leaf {ks}")
                 leaf_seen += "module ot_s81sl_leaf #(" in s
