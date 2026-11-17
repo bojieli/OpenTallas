@@ -157,6 +157,10 @@ proc stb::balance {} {
       set st $::stb::kids($p,PORT)
       while {[llength $st]} {
         set n [lindex $st end]; set st [lrange $st 0 end-1]
+        # A forwarded-clock output branch has no local sequential sink. Its
+        # measure sentinel is not an early arrival: padding it would add the
+        # per-round cap forever (HEAD n3_turn: 12 * 8 = 96 needless buffers).
+        if {$::stb::hi($p,$n) == -1e9} { continue }
         set gap [expr {$Tp - $::stb::hi($p,$n) - $::stb::tol}]
         set k [expr {$gap >= $::stb::stage ? max(1, int(floor(0.75 * $gap / $::stb::stage))) : 0}]
         if {$k > 12} { set k 12 }
