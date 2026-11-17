@@ -1,0 +1,56 @@
+{
+ "die": "s81_head",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1",
+  "event": "head_rp21z20NF13a",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1/physical/die_plan/s81_head/prep/NF13a/source_plan.json",
+  "plan_sha256": "ddebc47fddd315ec1abcf7ba77969cae19601b3b8c562e41bf4b5bb11a8b38e1",
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+   "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+  }
+ },
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1",
+  "manifest_hash": "bb999e2b6fe275e017585f6fdc0f9c987344a8d7b5753e40bc17543ff247b99d",
+  "src_manifest_sha": "bb999e2b6fe275e017585f6fdc0f9c987344a8d7b5753e40bc17543ff247b99d",
+  "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
+  "hosts": [
+   "epyc10"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "E10 head-die-r/nf15b_smoke: tree_smoke_assert OK, plan_gate_pre PASS, kit_rtl.sh 26/26 types PASS, frozen 45100-site KIT c1cefe64/ctree 9be20f57 exact. Plan = reviewed 8fc6cba9 up to in-tree path rewrite (reverse-verified), sidecar 6fcd1d3d byte-exact. CODE = exact deployed rt d0ee4a2afb10 tools/+physical/common_flow (171 files changed vs NF15a tree), RTL unchanged (main ad3192c01c3 + existing overlays). Gate evidence E7 fable-die-head/nf15b_gate + nf15_root2/results/nf15b_bind: bind/cohort 26/26/LATCHECK 329/329 PASS, CA 0/2000, G0 1 inherited 12-PMA native-release PENDING error (no new error). Review 279301 ADOPT-OK, COORD r380/r386.",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/prep/source_plan.json",
+  "plan_sha256": "1a85ef1196b125ea51ba96fdca39684936038ea1fc2e4a7895eb6b15817bb62b",
+  "plan_canonical_sha256": "8fc6cba9fd52af245a1b76afad7cae6cf5eaa6a608157460eeace3dc13f6e815",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/prep/source_sidecar.json",
+  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
+  "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/die_clock/kit_tree.json",
+  "physical_qualified": false,
+  "preserve_holds": "all inherited s81_head hold_records kept (mig-002/003 DRT0255, hdserdes-01); 12-PMA native release qualification fixed in the next delta (NF15c), not here",
+  "config": {
+   "event": "head_rp21z20NF15b",
+   "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
+   "gen_host": "epyc10",
+   "gen_hosts": [
+    "epyc10"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/prep/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ]
+  },
+  "written_by": "root-authorized lane atomic apply",
+  "status": "ADOPTED reviewed tuple"
+ },
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/c4817b6ddee3494b422ae6f40f85e6a3db071d62d60303febe512d834cf1e9e2/result.json",
+ "candidate": "/home/ubuntu/hdr/nf15b_candidate.json"
+}

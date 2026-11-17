@@ -1,25 +1,40 @@
 {
  "die": "s81_head",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1",
- "smoke": "PASS",
- "smoke_detail": "v2+data d1: kit_rtl 12/12 RC0 with all lane folders hidden (bwrap); plan_gate_pre PASS; tree_smoke_assert OK; tree_skew_check OK; nlink 1",
- "src_manifest_sha": "218139dc0a65773b811ccc840d57c8c69a1e7faf53e421142c13d7fc0ad40011",
- "tools_sha": "eb1e73448bd0",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1",
+ "manifest_hash": "bb999e2b6fe275e017585f6fdc0f9c987344a8d7b5753e40bc17543ff247b99d",
+ "src_manifest_sha": "bb999e2b6fe275e017585f6fdc0f9c987344a8d7b5753e40bc17543ff247b99d",
+ "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
  "hosts": [
   "epyc10"
  ],
- "hosts_verified": "src_manifest hash+ro at copy, links check after",
- "die_gen_env": {
-  "OT_PG_DIE_PHASE": "1",
-  "OT_PGCAP": "1",
-  "OT_TT_SETUP_REPAIR": "both",
-  "OT_PG_TRACK_TRUTH": "1",
-  "OT_PG_PIN_CHECK": "1",
-  "OT_GPL_SPARSE_UTIL": "0.10"
+ "smoke": "PASS",
+ "smoke_detail": "E10 head-die-r/nf15b_smoke: tree_smoke_assert OK, plan_gate_pre PASS, kit_rtl.sh 26/26 types PASS, frozen 45100-site KIT c1cefe64/ctree 9be20f57 exact. Plan = reviewed 8fc6cba9 up to in-tree path rewrite (reverse-verified), sidecar 6fcd1d3d byte-exact. CODE = exact deployed rt d0ee4a2afb10 tools/+physical/common_flow (171 files changed vs NF15a tree), RTL unchanged (main ad3192c01c3 + existing overlays). Gate evidence E7 fable-die-head/nf15b_gate + nf15_root2/results/nf15b_bind: bind/cohort 26/26/LATCHECK 329/329 PASS, CA 0/2000, G0 1 inherited 12-PMA native-release PENDING error (no new error). Review 279301 ADOPT-OK, COORD r380/r386.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/prep/source_plan.json",
+ "plan_sha256": "1a85ef1196b125ea51ba96fdca39684936038ea1fc2e4a7895eb6b15817bb62b",
+ "plan_canonical_sha256": "8fc6cba9fd52af245a1b76afad7cae6cf5eaa6a608157460eeace3dc13f6e815",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/prep/source_sidecar.json",
+ "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
+ "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/die_clock/kit_tree.json",
+ "physical_qualified": false,
+ "preserve_holds": "all inherited s81_head hold_records kept (mig-002/003 DRT0255, hdserdes-01); 12-PMA native release qualification fixed in the next delta (NF15c), not here",
+ "config": {
+  "event": "head_rp21z20NF15b",
+  "tools_sha": "d0ee4a2afb10ce509770b7cbe6987814fc01e72e",
+  "gen_host": "epyc10",
+  "gen_hosts": [
+   "epyc10"
+  ],
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+  },
+  "gen_args": [
+   "--clock-landing",
+   "/srv/opentallas-scratch2/claude/kw45/src_head_pin_d0ee4a2afb10_nf15b_pgr1/physical/die_plan/s81_head/prep/NF15b/prep/source_sidecar.json",
+   "--hold-ff-margin",
+   "0"
+  ]
  },
- "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 07:00:44 PST",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1/physical/die_plan/s81_head/prep/NF13a/source_plan.json",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1/physical/die_plan/s81_head/prep/NF13a/source_sidecar.json",
- "note": "plan, sidecar and every native_domains / sink_bins / eco99 input are IN the tree (data_pack, digests re-issued in wave_prepare.json): set dies.s81_head.plan and gen_args --clock-landing to these paths; HEAD-100 to confirm the two digests"
+ "written_by": "root-authorized lane atomic apply",
+ "status": "ADOPTED reviewed tuple"
 }
