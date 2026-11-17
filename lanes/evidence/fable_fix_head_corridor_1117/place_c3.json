@@ -1,0 +1,581 @@
+{
+ "schema": "opentallas.head_nf15f_relay_columns.v1",
+ "plan_in": "94de298f04822f4f4b55b3e7056ea7ebac9a620aa0d78804d9111f82de22c3bb",
+ "plan_out": "24914810544c62b3e8f8598b0a191caf8eca7f94cfc275e1b1282f1810d5419f",
+ "width_um": 10.8,
+ "jog_um": 8.64,
+ "columns": [
+  {
+   "tag": "stage:pin_r2",
+   "ff": 1150,
+   "rect_um": [
+    1654.56,
+    653.94,
+    1665.36,
+    808.56
+   ],
+   "h_um": 154.62,
+   "bits_feasible": 1150,
+   "height_ok": 1,
+   "bits_one_track": 1150,
+   "worst_bit_window_um": 154.6
+  },
+  {
+   "tag": "stage:pin_r4",
+   "ff": 1150,
+   "rect_um": [
+    1466.64,
+    682.48,
+    1477.44,
+    804.14
+   ],
+   "h_um": 121.66,
+   "bits_feasible": 1150,
+   "height_ok": 1,
+   "bits_one_track": 1150,
+   "worst_bit_window_um": 121.7
+  },
+  {
+   "tag": "stage:pout_r2",
+   "ff": 1137,
+   "rect_um": [
+    1369.44,
+    682.48,
+    1380.24,
+    743.36
+   ],
+   "h_um": 60.88,
+   "bits_feasible": 1137,
+   "height_ok": 0,
+   "bits_one_track": 1137,
+   "worst_bit_window_um": 60.9
+  },
+  {
+   "tag": "stage:pout_r4",
+   "ff": 1137,
+   "rect_um": [
+    1626.48,
+    605.04,
+    1637.28,
+    746.32
+   ],
+   "h_um": 141.28,
+   "bits_feasible": 1137,
+   "height_ok": 1,
+   "bits_one_track": 1137,
+   "worst_bit_window_um": 141.3
+  },
+  {
+   "tag": "stage:pout_r6",
+   "ff": 1137,
+   "rect_um": [
+    1799.28,
+    511.76,
+    1810.08,
+    635.32
+   ],
+   "h_um": 123.56,
+   "bits_feasible": 1137,
+   "height_ok": 1,
+   "bits_one_track": 1137,
+   "worst_bit_window_um": 123.6
+  },
+  {
+   "tag": "stage:pout_r0",
+   "ff": 1103,
+   "rect_um": [
+    1164.24,
+    720.28,
+    1175.04,
+    844.72
+   ],
+   "h_um": 124.44,
+   "bits_feasible": 1103,
+   "height_ok": 1,
+   "bits_one_track": 935,
+   "worst_bit_window_um": 124.4
+  },
+  {
+   "tag": "stage:ktx0_r0",
+   "ff": 553,
+   "rect_um": [
+    1207.44,
+    740.8,
+    1218.24,
+    844.72
+   ],
+   "h_um": 103.92,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 343,
+   "worst_bit_window_um": 103.9
+  },
+  {
+   "tag": "stage:txi1_r2",
+   "ff": 553,
+   "rect_um": [
+    710.64,
+    610.74,
+    721.44,
+    731.96
+   ],
+   "h_um": 121.22,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 553,
+   "worst_bit_window_um": 121.2
+  },
+  {
+   "tag": "stage:ktx1_r0",
+   "ff": 553,
+   "rect_um": [
+    339.12,
+    686.8,
+    349.92,
+    844.72
+   ],
+   "h_um": 157.92,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 255,
+   "worst_bit_window_um": 115.0
+  },
+  {
+   "tag": "stage:txi2_r2",
+   "ff": 553,
+   "rect_um": [
+    732.24,
+    599.4,
+    743.04,
+    741.84
+   ],
+   "h_um": 142.44,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 553,
+   "worst_bit_window_um": 142.4
+  },
+  {
+   "tag": "stage:ktx2_r0",
+   "ff": 553,
+   "rect_um": [
+    254.88,
+    656.8,
+    265.68,
+    844.72
+   ],
+   "h_um": 187.92,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 138,
+   "worst_bit_window_um": 41.1
+  },
+  {
+   "tag": "stage:ktx3_r0",
+   "ff": 553,
+   "rect_um": [
+    1693.44,
+    511.76,
+    1704.24,
+    654.48
+   ],
+   "h_um": 142.72,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 62,
+   "worst_bit_window_um": 41.4
+  },
+  {
+   "tag": "stage:krx1_r0",
+   "ff": 553,
+   "rect_um": [
+    362.88,
+    769.96,
+    373.68,
+    844.72
+   ],
+   "h_um": 74.76,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 419,
+   "worst_bit_window_um": 74.8
+  },
+  {
+   "tag": "stage:krx1_r2",
+   "ff": 553,
+   "rect_um": [
+    421.2,
+    656.8,
+    432.0,
+    819.96
+   ],
+   "h_um": 163.16,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 553,
+   "worst_bit_window_um": 163.2
+  },
+  {
+   "tag": "stage:krx1_r4",
+   "ff": 553,
+   "rect_um": [
+    745.2,
+    592.772,
+    756.0,
+    809.28
+   ],
+   "h_um": 216.51,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 553,
+   "worst_bit_window_um": 216.5
+  },
+  {
+   "tag": "stage:krx2_r0",
+   "ff": 553,
+   "rect_um": [
+    241.92,
+    653.94,
+    252.72,
+    761.88
+   ],
+   "h_um": 107.94,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 248,
+   "worst_bit_window_um": 40.3
+  },
+  {
+   "tag": "stage:krx2_r2",
+   "ff": 553,
+   "rect_um": [
+    544.32,
+    635.972,
+    555.12,
+    733.48
+   ],
+   "h_um": 97.51,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 553,
+   "worst_bit_window_um": 97.5
+  },
+  {
+   "tag": "stage:krx2_r4",
+   "ff": 553,
+   "rect_um": [
+    885.6,
+    649.22,
+    896.4,
+    763.48
+   ],
+   "h_um": 114.26,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 553,
+   "worst_bit_window_um": 114.3
+  },
+  {
+   "tag": "stage:krx3_r0",
+   "ff": 553,
+   "rect_um": [
+    1533.6,
+    661.088,
+    1544.4,
+    830.56
+   ],
+   "h_um": 169.47,
+   "bits_feasible": 553,
+   "height_ok": 1,
+   "bits_one_track": 288,
+   "worst_bit_window_um": 45.4
+  },
+  {
+   "tag": "stage:txi0_r0",
+   "ff": 552,
+   "rect_um": [
+    1032.48,
+    701.92,
+    1043.28,
+    822.28
+   ],
+   "h_um": 120.36,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 0,
+   "worst_bit_window_um": 120.4
+  },
+  {
+   "tag": "stage:txi1_r0",
+   "ff": 552,
+   "rect_um": [
+    1110.24,
+    661.088,
+    1121.04,
+    767.2
+   ],
+   "h_um": 106.11,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 552,
+   "worst_bit_window_um": 106.1
+  },
+  {
+   "tag": "stage:txi2_r0",
+   "ff": 552,
+   "rect_um": [
+    1008.72,
+    717.04,
+    1019.52,
+    804.82
+   ],
+   "h_um": 87.78,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 552,
+   "worst_bit_window_um": 87.8
+  },
+  {
+   "tag": "stage:txi3_r0",
+   "ff": 552,
+   "rect_um": [
+    1248.48,
+    672.54,
+    1259.28,
+    824.48
+   ],
+   "h_um": 151.94,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 552,
+   "worst_bit_window_um": 151.9
+  },
+  {
+   "tag": "stage:rxh_l0",
+   "ff": 552,
+   "rect_um": [
+    1045.44,
+    721.36,
+    1056.24,
+    844.72
+   ],
+   "h_um": 123.36,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 424,
+   "worst_bit_window_um": 93.8
+  },
+  {
+   "tag": "stage:rxh_l2",
+   "ff": 552,
+   "rect_um": [
+    922.32,
+    688.96,
+    933.12,
+    844.72
+   ],
+   "h_um": 155.76,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 296,
+   "worst_bit_window_um": 141.0
+  },
+  {
+   "tag": "stage:rxh_l1",
+   "ff": 552,
+   "rect_um": [
+    995.76,
+    717.04,
+    1006.56,
+    833.72
+   ],
+   "h_um": 116.68,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 256,
+   "worst_bit_window_um": 50.8
+  },
+  {
+   "tag": "stage:rxh_l3",
+   "ff": 552,
+   "rect_um": [
+    1274.4,
+    672.54,
+    1285.2,
+    844.72
+   ],
+   "h_um": 172.18,
+   "bits_feasible": 552,
+   "height_ok": 1,
+   "bits_one_track": 424,
+   "worst_bit_window_um": 78.4
+  }
+ ],
+ "old_rect_um": {
+  "stage:pin_r2": [
+   1665.36,
+   593.68,
+   1701.36,
+   629.68
+  ],
+  "stage:pin_r4": [
+   1391.04,
+   703.84,
+   1445.04,
+   727.84
+  ],
+  "stage:pout_r0": [
+   1114.56,
+   684.4,
+   1150.56,
+   720.4
+  ],
+  "stage:pout_r2": [
+   1317.6,
+   684.4,
+   1389.6,
+   702.4
+  ],
+  "stage:pout_r4": [
+   1598.4,
+   606.64,
+   1652.4,
+   630.64
+  ],
+  "stage:pout_r6": [
+   1810.08,
+   490.0,
+   1864.08,
+   514.0
+  ],
+  "stage:txi0_r0": [
+   1123.2,
+   723.28,
+   1165.867,
+   741.28
+  ],
+  "stage:txi1_r0": [
+   1080.0,
+   686.56,
+   1112.0,
+   710.56
+  ],
+  "stage:txi1_r2": [
+   756.0,
+   593.68,
+   788.0,
+   617.68
+  ],
+  "stage:txi2_r0": [
+   997.92,
+   718.96,
+   1040.587,
+   736.96
+  ],
+  "stage:txi2_r2": [
+   758.16,
+   535.36,
+   790.16,
+   559.36
+  ],
+  "stage:txi3_r0": [
+   1276.56,
+   673.6,
+   1308.56,
+   697.6
+  ],
+  "stage:krx1_r0": [
+   263.52,
+   820.48,
+   288.52,
+   844.48
+  ],
+  "stage:krx1_r2": [
+   542.16,
+   742.72,
+   567.16,
+   766.72
+  ],
+  "stage:krx1_r4": [
+   833.76,
+   699.52,
+   858.76,
+   723.52
+  ],
+  "stage:krx2_r0": [
+   244.08,
+   658.48,
+   269.08,
+   682.48
+  ],
+  "stage:krx2_r2": [
+   537.84,
+   636.88,
+   554.507,
+   672.88
+  ],
+  "stage:krx2_r4": [
+   855.36,
+   520.24,
+   888.693,
+   538.24
+  ],
+  "stage:krx3_r0": [
+   1550.88,
+   615.28,
+   1584.213,
+   633.28
+  ],
+  "stage:ktx0_r0": [
+   1192.32,
+   751.36,
+   1217.32,
+   775.36
+  ],
+  "stage:ktx1_r0": [
+   259.2,
+   768.64,
+   284.2,
+   792.64
+  ],
+  "stage:ktx2_r0": [
+   209.52,
+   639.04,
+   259.52,
+   651.04
+  ],
+  "stage:ktx3_r0": [
+   1529.28,
+   662.8,
+   1562.613,
+   680.8
+  ],
+  "stage:rxh_l0": [
+   1086.48,
+   712.48,
+   1111.48,
+   736.48
+  ],
+  "stage:rxh_l1": [
+   913.68,
+   628.24,
+   963.68,
+   640.24
+  ],
+  "stage:rxh_l2": [
+   881.28,
+   649.84,
+   906.28,
+   673.84
+  ],
+  "stage:rxh_l3": [
+   1289.52,
+   699.52,
+   1314.52,
+   723.52
+  ]
+ },
+ "keepout_overlaps": [],
+ "column_group_overlaps": [],
+ "infeasible": []
+}
