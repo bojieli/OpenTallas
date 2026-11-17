@@ -1,0 +1,537 @@
+{
+ "schema": "kv_hubc_split_rows.v1",
+ "base": "D21 plan 2433b9c21c26 (/srv/opentallas-scratch/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21)",
+ "type": "kv3_hub_C",
+ "note": "ESTIMATE rows, UNSIGNED where noted: 15 ring hard cores (9 signed masters) + pvfin pair (qkd_pv_fin_s8_pin signed s8pin2b). Placement is greedy nearest-to-bus-pin on the 8.64 grid, clear of hard core halos only (NOT clear of ft stations / taps / reset sites: the plan check G0 must place-check these). Ring pins from the KV-HG5 attempt_2 kit pins.json (D16-era, hub_C unchanged).",
+ "add_hard_cores": [
+  {
+   "inst": "cl_i_dNd_kv_rx_payload",
+   "module": "kv_cland_w549_ew_bf94f",
+   "origin_um": [
+    2108.16,
+    371.52
+   ],
+   "outline_um": [
+    41.904,
+    117.072
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_i_dNd_kv_rx_payload",
+   "physical_master": "kv_cland_w549_ew_bf94f",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 549,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 19,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 14114,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_dNd_kv_rx_payload as hard ring child core (master kv_cland_w549_ew_bf94f, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_dNd_kv_srx",
+   "module": "kv_cland_w523_ew_05742",
+   "origin_um": [
+    2108.16,
+    561.6
+   ],
+   "outline_um": [
+    41.472,
+    112.32
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_i_dNd_kv_srx",
+   "physical_master": "kv_cland_w523_ew_05742",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 523,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 19,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 13471,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_dNd_kv_srx as hard ring child core (master kv_cland_w523_ew_05742, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_ft14_i",
+   "module": "kv_cland_w300_ew_ba263",
+   "origin_um": [
+    2108.16,
+    682.56
+   ],
+   "outline_um": [
+    41.04,
+    67.824
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_ft14_i",
+   "physical_master": "kv_cland_w300_ew_ba263",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 300,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 7916,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_ft14_i as hard ring child core (master kv_cland_w300_ew_ba263, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_ft15_i",
+   "module": "kv_cland_w300_ew_ba263",
+   "origin_um": [
+    2064.96,
+    699.84
+   ],
+   "outline_um": [
+    41.04,
+    67.824
+   ],
+   "orient": "MY",
+   "physical_inst": "u_bound.u_cland_ft15_i",
+   "physical_master": "kv_cland_w300_ew_ba263",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 300,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 7916,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_ft15_i as hard ring child core (master kv_cland_w300_ew_ba263, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_embgw_bw",
+   "module": "kv_cland_w294_ew_a7ae4",
+   "origin_um": [
+    8.64,
+    743.04
+   ],
+   "outline_um": [
+    41.04,
+    66.528
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_i_embgw_bw",
+   "physical_master": "kv_cland_w294_ew_a7ae4",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 294,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 7761,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_embgw_bw as hard ring child core (master kv_cland_w294_ew_a7ae4, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_ft20_i",
+   "module": "kv_cland_w292_ew_81b3f",
+   "origin_um": [
+    8.64,
+    812.16
+   ],
+   "outline_um": [
+    41.04,
+    66.096
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_ft20_i",
+   "physical_master": "kv_cland_w292_ew_81b3f",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 292,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 7721,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_ft20_i as hard ring child core (master kv_cland_w292_ew_81b3f, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_ft21_i",
+   "module": "kv_cland_w292_ew_81b3f",
+   "origin_um": [
+    51.84,
+    794.88
+   ],
+   "outline_um": [
+    41.04,
+    66.096
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_ft21_i",
+   "physical_master": "kv_cland_w292_ew_81b3f",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 292,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 7721,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_ft21_i as hard ring child core (master kv_cland_w292_ew_81b3f, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    51.84,
+    1615.68
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "MX",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b_d1",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    103.68,
+    1615.68
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "MX",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b_d1",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b_d1 as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b_d2",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    155.52,
+    1615.68
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "MX",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b_d2",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b_d2 as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b_d3",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    207.36,
+    1615.68
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "MX",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b_d3",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b_d3 as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b_d4",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    51.84,
+    8.64
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b_d4",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b_d4 as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b_d5",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    103.68,
+    8.64
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b_d5",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b_d5 as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b_d6",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    155.52,
+    8.64
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b_d6",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b_d6 as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "cl_i_pvw_N__u_TNQN_N_rN_b_d7",
+   "module": "kv_cland_w259_ns_a43af",
+   "origin_um": [
+    207.36,
+    8.64
+   ],
+   "outline_um": [
+    46.656,
+    49.68
+   ],
+   "orient": "R0",
+   "physical_inst": "u_bound.u_cland_i_pvw_N__u_TNQN_N_rN_b_d7",
+   "physical_master": "kv_cland_w259_ns_a43af",
+   "param_wrap": {
+    "base": "ot_dp_clk_landing_cas",
+    "params": {
+     "W": 259,
+     "DEPTH": 4,
+     "STATUS_REG": 1,
+     "GUARD_REG": 1,
+     "WFALL": 1,
+     "WREG": 1,
+     "DSREP": 8,
+     "WRITE_CHUNK": 16,
+     "RSTREP": 11,
+     "PLACEREP": 1
+    }
+   },
+   "cells": 6902,
+   "note": "KV-HUBC-SPLIT: hub ring u_cland_i_pvw_N__u_TNQN_N_rN_b_d7 as hard ring child core (master kv_cland_w259_ns_a43af, exact parent params, 0 added cycles); UNSIGNED until its master signs off"
+  },
+  {
+   "inst": "pvfin_lo",
+   "module": "qkd_pv_fin_s8_pin",
+   "origin_um": [
+    311.04,
+    846.72
+   ],
+   "outline_um": [
+    207.36,
+    194.4
+   ],
+   "orient": "R0",
+   "pins_file": "cores/kv_pvfin/qkd_pv_fin_s8_pin_pins.json",
+   "physical_inst": "u_bound.u_pvfin.u_pair.g_sl[0].u_sl",
+   "physical_master": "qkd_pv_fin_s8_pin",
+   "sub_core_parent": "pvfin",
+   "sub_core_leaf_pin": "rst_n",
+   "cells": 0,
+   "note": "KV-HUBC-SPLIT: pvfin lane slice 0, hard core qkd_pv_fin_s8_pin (signed s8pin2b, IN_STAGE 1 +1 declared cycle); pair qkd_pv_fin_s2x8_pin_i1_rst2"
+  },
+  {
+   "inst": "pvfin_hi",
+   "module": "qkd_pv_fin_s8_pin",
+   "origin_um": [
+    522.72,
+    846.72
+   ],
+   "outline_um": [
+    207.36,
+    194.4
+   ],
+   "orient": "R0",
+   "pins_file": "cores/kv_pvfin/qkd_pv_fin_s8_pin_pins.json",
+   "physical_inst": "u_bound.u_pvfin.u_pair.g_sl[1].u_sl",
+   "physical_master": "qkd_pv_fin_s8_pin",
+   "sub_core_parent": "pvfin",
+   "sub_core_leaf_pin": "rst_n",
+   "cells": 0,
+   "note": "KV-HUBC-SPLIT: pvfin lane slice 1, hard core qkd_pv_fin_s8_pin (signed s8pin2b, IN_STAGE 1 +1 declared cycle); pair qkd_pv_fin_s2x8_pin_i1_rst2"
+  }
+ ],
+ "set_content_module": {
+  "inst": "pvfin",
+  "module": "qkd_pv_fin_s2x8_pin_i1_rst2"
+ },
+ "cells_removed_estimate": {
+  "rings_ge250_bits": 4622,
+  "rings_generic_cells_per_bit": 46.6,
+  "pvfin_cells": 265905
+ }
+}
