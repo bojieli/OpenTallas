@@ -8,7 +8,7 @@
 - TP2 DRC0 TT+12.06, internal FF-6.46/34 endpoints: targeted hold child. mesh/lep0N/ctl NF15c healthy.
 - hw4e1 singleTC KIT_MODES rejection diagnosed; Claude prepped narrow explicit-plan guard hw4e2; child owns launch + source guard port. hw4 original DRC0 TT-44.24 internalFF-15.54/40.
 
-## Handoff to Claude 2026-11-16 20:01 PST
+## Handoff to Claude 2026-11-16 19:51 PST
 - Parked on reset notice; no job killed. hw5 direct DRT E8 unit oth-ubuntu-473593-1794887144 remains live (script chains signoff_codex). Intel2 client2033370 log ~/head-codex-logs/hw5_drt_ready.log.
 - he12h v2 SIGNED DRC0 TT-24.28 internalFF+0.69; archived both stores s81_head/hd_host_e__he12h_drc2. Child handoff HEAD-HE12H-DRC.md.
 - hw4e2 progressed beyond KIT_MODES cause to DRT pin access, remote localhost oth-ubuntu-2066093-1794887221. Narrow explicit static-plan guard branch claude/head-hw-eco-staticplan-1116@1ed0608cac gate pending. HEAD-HW-ECO child handoff.
@@ -17,3 +17,5 @@
 - SPEPRD3 was archived before takeover; actual native export invalid alias cycle on566 pads, seam link_i null incorrectly PASS. SPE child source branch claude/head-speprd3-export-1116 in E7 fable-die-head/repo owns both exporter correction + failclosed seam; preserve failures, no physical rerun needed for ODB-derived corrected native successor. Historical E2 fdh_st diagnostic harness is NOT a current NF15c signoff claim.
 - Current NF15c actual integration next: top E7 fable-die-head/base/head/fdh_nf15c/kit/sta/die_top.v sha b860b3989c4b equals E2 fdh_st/kit/sta/die_top.v. No new die STA launched by this parent. Need stage exact NF15c plan/proof + signed he12h/currentSPE/TP2 after pass into a fresh real-parts run, keep remaining stand-ins explicit. sd9c qualification requires next plan event with u_chn origin1548.0,109.44 and coherent reset topology; canonical origin1900.8,250.56 differs. No cycle delta.
 - AB206 rip4 failed DRT0255 net30373 iteration4; no A/B comparison and no routekeep retry/generic claim.
+
+Handback correction: he12h ECO2 original automatic signoff was already SIGNED on the current report (runner had renamed stale JSON). Extra actual-frame check was redundant; both retained. No additional generic metric fix required for ECO2. hw4e2 source hook still needs confirmed actual targeted41HB4 insertion before claiming mechanism PASS. TP2 insert-only live; no reroute launched by child before park.
