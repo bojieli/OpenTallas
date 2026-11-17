@@ -1,0 +1,2313 @@
+[
+  {
+    "label": "original",
+    "unplanned": {
+      "('hub_Wi', 'hub_C')": 173,
+      "('hub_Wi', 'sys_SW')": 1,
+      "('sys_SW', 'sys_c')": 1
+    },
+    "unplanned_bits": [
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[1]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[2]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[3]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[4]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[5]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[6]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[7]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[8]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[9]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[10]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[11]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[12]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[13]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[14]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[15]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[16]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[17]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[18]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[19]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[20]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[21]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[22]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[23]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[24]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[25]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[26]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[27]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[28]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[29]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[30]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[31]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[32]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[33]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[34]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[35]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[36]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[37]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[38]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[39]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[40]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[41]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[42]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[43]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[44]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[45]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[46]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[47]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[48]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[49]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[50]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[51]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[52]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[53]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[54]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[55]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[56]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[57]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[58]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[59]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[60]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[61]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[62]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[63]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[64]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[65]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[66]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[67]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[68]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[69]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[70]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[71]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[72]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[73]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[74]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[75]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[76]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[77]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[78]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[79]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[80]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[81]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[82]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[83]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[84]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[85]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[86]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[87]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[88]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[89]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[90]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[91]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[92]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[93]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[94]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[95]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[96]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[97]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[98]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[99]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[100]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[101]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[102]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[103]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[104]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[105]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[106]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[107]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[108]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[109]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[110]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[111]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[112]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[113]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[114]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[115]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[116]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[117]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[118]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[119]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[120]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[121]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[122]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[123]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[124]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[125]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[126]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[127]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[128]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[129]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[130]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[131]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[132]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[133]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[134]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[135]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[136]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[137]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[138]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[139]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[140]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[141]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[142]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[143]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[144]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[145]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[146]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[147]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[148]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[149]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[150]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[151]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[152]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[153]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[154]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[155]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[156]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[157]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[158]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[159]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[160]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[161]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[162]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[163]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[164]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[165]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[166]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[167]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[168]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[169]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[170]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[171]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[172]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "hub_C",
+        "driver": "kvs_emb.o_ctx_svc[173]",
+        "sink_ports": [
+          "kvs_ctl.d2d__svc"
+        ]
+      },
+      {
+        "src_part": "hub_Wi",
+        "dst_part": "sys_SW",
+        "driver": "host.phy_tx_flit[521]",
+        "sink_ports": [
+          "core.tx_flit"
+        ]
+      },
+      {
+        "src_part": "sys_SW",
+        "dst_part": "sys_c",
+        "driver": "serdes_host.u_sub.u_W.tx_up[0]",
+        "sink_ports": [
+          "d2d_kv.serdes_up"
+        ]
+      }
+    ],
+    "unplanned_errors": [
+      "UNPLANNED hub_Wi -> hub_C: 173 as-built crossing bits with no plan lane path (673 b planned on direct lanes)",
+      "UNPLANNED hub_Wi -> sys_SW: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+      "UNPLANNED sys_SW -> sys_c: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)"
+    ],
+    "other_constructor_errors": [
+      "UNMAPPED $or$die_bound_native_ctx_hr4.v:16$5 ($or)"
+    ],
+    "service_links": [],
+    "scope": "constructor/map_cells/analyse/build_buses only; no R8,clock,type emission or physical readiness"
+  },
+  {
+    "label": "service174",
+    "unplanned": {},
+    "unplanned_bits": [],
+    "unplanned_errors": [],
+    "other_constructor_errors": [
+      "UNMAPPED $or$die_bound_native_ctx_hr4.v:16$5 ($or)"
+    ],
+    "service_links": [
+      {
+        "lane": "L2416",
+        "width": 174,
+        "cycles": 2,
+        "src": "hub_Wi",
+        "dst": "hub_C",
+        "sources": [
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 0
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 1
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 2
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 3
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 4
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 5
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 6
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 7
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 8
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 9
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 10
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 11
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 12
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 13
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 14
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 15
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 16
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 17
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 18
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 19
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 20
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 21
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 22
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 23
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 24
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 25
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 26
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 27
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 28
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 29
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 30
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 31
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 32
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 33
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 34
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 35
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 36
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 37
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 38
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 39
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 40
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 41
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 42
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 43
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 44
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 45
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 46
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 47
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 48
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 49
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 50
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 51
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 52
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 53
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 54
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 55
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 56
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 57
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 58
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 59
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 60
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 61
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 62
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 63
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 64
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 65
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 66
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 67
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 68
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 69
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 70
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 71
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 72
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 73
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 74
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 75
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 76
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 77
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 78
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 79
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 80
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 81
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 82
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 83
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 84
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 85
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 86
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 87
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 88
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 89
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 90
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 91
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 92
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 93
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 94
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 95
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 96
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 97
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 98
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 99
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 100
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 101
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 102
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 103
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 104
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 105
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 106
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 107
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 108
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 109
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 110
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 111
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 112
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 113
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 114
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 115
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 116
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 117
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 118
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 119
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 120
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 121
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 122
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 123
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 124
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 125
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 126
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 127
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 128
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 129
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 130
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 131
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 132
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 133
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 134
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 135
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 136
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 137
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 138
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 139
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 140
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 141
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 142
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 143
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 144
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 145
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 146
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 147
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 148
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 149
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 150
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 151
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 152
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 153
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 154
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 155
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 156
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 157
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 158
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 159
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 160
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 161
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 162
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 163
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 164
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 165
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 166
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 167
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 168
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 169
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 170
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 171
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 172
+          },
+          {
+            "cell": "kvs_emb",
+            "port": "o_ctx_svc",
+            "bit": 173
+          }
+        ]
+      }
+    ],
+    "scope": "constructor/map_cells/analyse/build_buses only; no R8,clock,type emission or physical readiness"
+  }
+]

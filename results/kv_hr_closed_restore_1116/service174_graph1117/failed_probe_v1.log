@@ -1,0 +1,15 @@
+ot-run: epyc10         admits   355 GB (avail 404, reserve 0, fresh 0, peak 0, headroom 0, waiters 0/0 GB) load 72/96 running 30 disk 100 GB 
+ot-run: -> epyc10
+ot-heavy: admitted on civil-redfish as oth-ubuntu-931941-1794903630 after 1 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/service174_graph_probe.py", line 12, in <module>
+    b=B.Binder(raw,yjs,P.parent,str(K));b.map_cells();b.analyse();b.build_buses()
+                                                                  ~~~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/kvr_c3/tree/tools/die_plan/bind.py", line 1973, in build_buses
+    native_istations.annotate(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/kvr_c3/tree/tools/die_plan/native_istations.py", line 64, in annotate
+    if unknown:raise ValueError(f'internal stations unknown types: {sorted(unknown)}')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: internal stations unknown types: ['kv3_pc_v1']
+ot-run: RAN on epyc10 (unit oth-ubuntu-931941-1794903630): exit 1

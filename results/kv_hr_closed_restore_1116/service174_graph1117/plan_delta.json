@@ -1,0 +1,112 @@
+{
+  "scope": "graph component only, not physical qualification",
+  "base_plan": "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/kvr_c3/tree/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "base_plan_sha256": "6e6140a2c269a32599a8a72ad615f32edd4fc556ecf7e80a74eaf2c611760058",
+  "candidate_plan": "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/kvr_c4/service174_preview/plan_c_service174.json",
+  "candidate_plan_sha256": "e89b1a2db7d7b1437fcecc48abff8e342f6af9544d4c57aa13dc20e992961f5f",
+  "C3_elaboration": "/srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/kvr_c3/gate/bind/asbuilt.json",
+  "C3_elaboration_sha256": "32e4022975771a6bc240b2cbc2b4277a31607ec558c58a448c81f1fa6c6b1f96",
+  "patch_semantics": "path tokens traverse dict/list; append appends to target list; replace/add sets final token; remove deletes final token",
+  "operations": [
+    {
+      "op": "add",
+      "path": [
+        "latency",
+        "lanes",
+        "L2416"
+      ],
+      "value": {
+        "cycles": 2,
+        "stations": 0,
+        "boundary": 2,
+        "faces": 1,
+        "fixed": 0,
+        "natural": 2,
+        "pad": 0,
+        "param": "LAT_L2416"
+      }
+    },
+    {
+      "op": "append",
+      "path": [
+        "lanes"
+      ],
+      "value": {
+        "id": "L2416",
+        "ports": [
+          "L2416_0"
+        ],
+        "note": "DIE-HBM-16 lane_add adj: hub_Wi->hub_C 174 b S1"
+      }
+    },
+    {
+      "op": "append",
+      "path": [
+        "ports"
+      ],
+      "value": {
+        "id": "L2416_0",
+        "src": {
+          "part": "hub_Wi",
+          "bus": "L2416_o"
+        },
+        "dst": {
+          "part": "hub_C",
+          "bus": "L2416_i"
+        },
+        "width": 174,
+        "kind": "data"
+      }
+    },
+    {
+      "op": "append",
+      "path": [
+        "partition_types",
+        "kv3_hub_C",
+        "buses"
+      ],
+      "value": {
+        "name": "L2416_i",
+        "dir": "in",
+        "width": 174,
+        "kind": "data",
+        "face": "W",
+        "window_um": [
+          907.609,
+          936.7757
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low",
+        "leaf": "kvs_ctl.d2d__svc"
+      }
+    },
+    {
+      "op": "append",
+      "path": [
+        "partition_types",
+        "kv3_hub_Wi",
+        "buses"
+      ],
+      "value": {
+        "name": "L2416_o",
+        "dir": "out",
+        "width": 174,
+        "kind": "data",
+        "face": "E",
+        "window_um": [
+          907.609,
+          936.7757
+        ],
+        "layers": [
+          "M6",
+          "M4"
+        ],
+        "order": "lsb_low",
+        "leaf": "kvs_emb.o_ctx_svc"
+      }
+    }
+  ]
+}
