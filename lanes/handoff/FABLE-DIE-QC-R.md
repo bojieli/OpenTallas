@@ -50,3 +50,8 @@ claude/fable-die-qc-r-1116 @d57188aede6 (= old branch 2bed6a4 + 6d932e7e0b + mer
 
 ## Own errors
 - 18:07 I removed the __pycache__ directories inside my own fresh src5 copy with find -exec rm -r, not through ot_delete_guard.
+
+## CODEX takeover 2026-11-16 19:4x
+- Current s4q9m_r healthy: kit template 198 copied / 0 refused / 42 embedded; stage STA stand-ins, CPU active. Retain exact current run.
+- Exact l2d follow-up launched in existing lane: epyc2 /srv/opentallas-scratch3/claude/fable-die-qc-r/chain/qc/s4q9m_l2d, bin/chain_l2d.sh. Client intel2 ~/fable-die-qc-r/chain_l2d.client.log PID2012222. Same approved template2/tools, exact l2d plan a915f1136c27 and mounted treeJ. Previous proof uses C geometry and cannot establish new coll_ftc/ftn rows.
+- Pre-route image LOOKED d_before_after.png; PASS-COND, recorded lane results/geom_review/qc_clock_l2d_20261116.md: longer coll_ftc abutment, freed empty strip only, no macro wall, face peak72->64. Need new tap/feed/STA on regenerated outlines before adopting.
