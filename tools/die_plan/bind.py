@@ -806,6 +806,34 @@ def core_input_uses_pad(plan):
     return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
 
 
+def lockup_key_errors(plan, seen):
+    """LATCH_EXCEPT_MODULE (FABLE-PLAN-QC-N 11-17): every module named in clock.core_input_lockup.latch_except / latch_except_hb4 must be a
+    BOUND lockup module (the leaf module the emitter really saw, e.g. qfd_tile_nk_rp2_romleaf_rr, not the plan hard-core name
+    qfd_tile_nk_a0c).  A key that matches nothing silently did nothing in the cbn_q01 pilot: 68/68 tiles kept the 508 latch, 0 pads."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    keys = sorted(set(cfg.get("latch_except") or {}) | set(cfg.get("latch_except_hb4") or {}))
+    return [f"LATCH_EXCEPT_MODULE {m}: matches no bound lockup module (bound lockup modules: {sorted(seen)}); "
+            "key the row on the bound leaf module" for m in keys if m not in seen]
+
+
+def rebase_lib_paths(paths, base):
+    """asbuilt_sources.json `lib` holds the absolute paths of the tree that was elaborated; a bind run on a copy of that tree (another host or
+    directory) finds none of them and bind.f then lacks every library module (strict bind: BIND_GROUP_MASTER).  A path that does not exist
+    is rebased onto `base` at its first /rtl/ or /physical/ component when that file exists there; anything else is kept as it was."""
+    import os
+    out = []
+    for p in paths:
+        p = str(p)
+        if not os.path.exists(p) and base:
+            for marker in ("/rtl/", "/physical/"):
+                i = p.find(marker)
+                if i >= 0 and os.path.exists(os.path.join(str(base), p[i + 1:])):
+                    p = os.path.join(str(base), p[i + 1:])
+                    break
+        out.append(p)
+    return out
+
+
 def core_input_pipe(plan, tn, module, port=None):
     """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
     default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
@@ -4166,6 +4194,7 @@ class Binder:
                     if pn in core_gate_ports.get(c.module, ()):
                         e = [core_reset_gate(x, c, r, pn) for x in e]
                     if pn in core_input_lockup(self.plan, tn, c.module):
+                        self.__dict__.setdefault("lockup_seen", set()).add(c.module)
                         has_latch = core_input_latch(self.plan, tn, c.module, pn)
                         xbits = {i_ for i_ in core_input_latch_except_bits(self.plan, tn, c.module, pn) if i_ < len(bits)} if has_latch else set()
                         if xbits:
@@ -4850,6 +4879,8 @@ def cmd_bind(a):
                                                                    B.out_bus.get(p, [])))
                                   for p, v in sorted(B._reg_hard.items())}
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
+    srcs["lib"] = rebase_lib_paths(srcs.get("lib", []), B.base)
+    B.errors.extend(lockup_key_errors(B.plan, getattr(B, "lockup_seen", set())))
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
     # HCPARAM-ALL 11-15: every hard core, built parameters vs the parameters the bound RTL really instantiates (nested + defaults)
