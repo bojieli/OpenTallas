@@ -50120,9 +50120,10 @@
     {
      "id": "qwen_compute-kf-cb18",
      "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
-     "reason": "FABLE-PD-QC-MCLK lever 4 via COORD 20:xx: all 18 cb types hold until the S4q9m die clock event (per-type region trees / cb instance spread); not released on Kf or L2. Lift = S4q9m adopt.",
+     "reason": "COORD 11-16 22:4x cb-ready: actual production cb pilot after CTS + reloaded GRT at matching M clock/station/tool contracts; TT >= -42 ps, internal FF >= 0, overflow 0; port advisories separate, no SDC relaxation. FABLE-PD-QC-MCLK lever 4 via COORD 20:xx: all 18 cb types hold until the S4q9m die clock event (per-type region trees / cb instance spread); not released on Kf or L2. Lift = S4q9m adopt.",
      "release": [
-      "event_adopt:s29q103S4Q9M"
+      "event_adopt:s29q103S4Q9M",
+      "result:FABLE-FIX-QC-DIECLK:cb-ready"
      ],
      "items": [
       "cbf_q00__cl1b5a6458",
@@ -50144,7 +50145,10 @@
       "cbx_q10__cl94a12200",
       "cbx_q10__cl94a12200_h"
      ],
-     "carry": true
+     "carry": true,
+     "prev_release_codex_cb_ready_1116": [
+      "event_adopt:s29q103S4Q9M"
+     ]
     }
    ],
    "planned_events": [
