@@ -830,3 +830,7 @@
   COORD APPROVED: claude/qc-lockup-tap-drop-1117 @97381d83ed132ddf2777cac9c2bc74078ee780f1
 - 2026-11-17 03:56 PST RULING [COORD -> MERGE-QUEUE (service), MQ-PACK-FIX] r542 git-mirror-skip-rejected-1117 @23d05afef5bf531472e53ea22dc24f5da2f2d8c6 (FABLE-FLOW-0500 item 4): 13 branches with files over GitHub 100 MB (plan_h2_2249 jsons, a 471 MB composed_rtl receipt) were re-pushed every run, 3m20s on a 2-min timer. A ref rejected twice at the same sha is skipped (logged once, rejected.json) and retried on a new sha; the forward step is capped at 100 s; there is a separate fetch subcommand. After merge, MQ-PACK-FIX creates ot-git-mirror-fetch.timer. Gate GREEN 2/2 on E8/E7/E2.
   COORD APPROVED: claude/git-mirror-skip-rejected-1117 @23d05afef5bf531472e53ea22dc24f5da2f2d8c6
+- 2026-11-17 04:02 PST RULING [COORD -> MERGE-QUEUE (service), S81-DIE-R2, S81-CORES-R] CODEX takeover: approve three completed source/view steps; normal GREEN records checked, no physical rerun. fstart absent-case preserves types without FSTART/count origin (1/1); view_define_check is report-only unless explicitly enabled (66/66, baseline retained); ba0 view packet (2/2) carries measured TT -18.37 FF +12.91, existing signed evidence. ba1 pin-keepout successor stays separate and running.
+  COORD APPROVED: claude/s81-fstart-noshared-1117 @f06028cea49d25110e3c0ccd499de2867be640ce
+  COORD APPROVED: claude/s81-die-r2-bind-defcheck-1117 @bbdd6814f9405d9d7d31403361be92483ef3ec8d
+  COORD APPROVED: claude/s81-gunit-ba-fwp-view-1117 @8a0fbc2c0fb8672adddcd059a520ee30d5fc1270
