@@ -7,6 +7,8 @@ PRE/G0 accept them.  This gate runs, on the gen host that holds the tree and bef
 
   schema   tree/tools/die_plan/schema.py validate PLAN       (the schema the tree's own PRE/G0/bind use)
   pre_g0   plan_gate_pre.py check (SCHEMA unknown keys, INPUT, TOOLS, GEOM, ROWS) + check.py PLAN (G0)  - both of the tree
+  contained the plan and every sidecar file it names lie INSIDE the tree (S81 D4: census/s81_lanes.tsv lived in a lane dir on one host,
+           so no other host could reproduce PRE/G0); a plan outside the tree, or a named /srv file outside it, is a FAIL
   hashes   every provenance hash the tree bytes can answer: each view's landing_evidence/manifest.json sha256 map against the
            files, provenance.json kit.face_guard_sha256 against landing_evidence/face_guard_source.py, the plan sha256
   dry_gen  kit_wave.py run-item with spec dry_gen on ONE representative item of the die (the pilot item): kit_snap, kit_rtl,
@@ -36,8 +38,10 @@ import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent if "__file__" in globals() else Path(".")   # shipped inline to the gen host (-c): no file
+if "__file__" in globals() and str(HERE) not in sys.path:      # python3 -I does not put the script directory on sys.path
+    sys.path.insert(0, str(HERE))
 SCHEMA_ID = "opentallas.publish_gate.v1"
-CHECKS = ("schema", "pre_g0", "hashes", "dry_gen")
+CHECKS = ("schema", "pre_g0", "hashes", "contained", "dry_gen")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -121,6 +125,42 @@ def check_hashes(tree, plan=None, plan_sha256=None):
     return out, n
 
 
+SIDECAR_EXT = (".json", ".tsv", ".gz", ".csv", ".v", ".sv", ".lef", ".lib", ".yaml", ".py", ".txt")
+
+
+def check_contained(tree, plan):
+    """-> findings.  The published tree must reproduce PRE/G0 on any host that holds it: the plan file is inside the tree (its sidecars
+    census/, core_conns.json ... are found relative to the plan dir), and every absolute /srv file path the plan names exists inside
+    the tree, not in a lane directory."""
+    out = []
+    root = os.path.realpath(tree) + os.sep
+    rp = os.path.realpath(plan)
+    if not (rp + os.sep).startswith(root):
+        out.append(f"CONTAINED plan {plan} is outside the tree: its sidecars (census/, core_conns.json, ...) live next to it, not in the published tree")
+        d = os.path.dirname(rp)
+        if os.path.isdir(os.path.join(d, "census")):
+            out.append(f"CONTAINED sidecar dir {d}/census is outside the tree")
+    try:
+        obj = json.loads(Path(plan).read_text())
+    except (OSError, ValueError):
+        return out
+    seen = set()
+
+    def walk(v):
+        if isinstance(v, dict):
+            for x in v.values():
+                walk(x)
+        elif isinstance(v, list):
+            for x in v:
+                walk(x)
+        elif isinstance(v, str) and v.startswith("/srv/") and v.endswith(SIDECAR_EXT) and v not in seen:
+            seen.add(v)
+            if os.path.isfile(v) and not (os.path.realpath(v) + os.sep).startswith(root):
+                out.append(f"CONTAINED plan names {v}, a file outside the tree")
+    walk(obj)
+    return out[:30]
+
+
 def _sub(argv, cwd, timeout=1800):
     try:
         p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=timeout)
@@ -138,7 +178,7 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None):
     res = {}
     if not os.path.isfile(plan):
         miss = {"verdict": "FAIL", "why": f"plan file missing: {plan}"}
-        return {c: dict(miss) for c in ("schema", "pre_g0", "hashes")}
+        return {c: dict(miss) for c in ("schema", "pre_g0", "hashes", "contained")}
     # schema.py imports its sibling modules; python3 -I drops the script directory from sys.path, so put the tree's in
     rc, txt = _sub([py, "-I", "-c", "import sys; sys.path.insert(0, %r); import schema; sys.exit(schema.main(['schema.py', 'validate', %r]))" % (dp, plan)], tree)
     res["schema"] = {"verdict": "PASS" if rc == 0 else "FAIL", "rc": rc, "tail": txt[-1500:]}
@@ -152,6 +192,8 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None):
     finds, n = check_hashes(tree, plan, plan_sha256)
     res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
                      **({"why": "no landing_evidence view found under the tree"} if not n and not finds else {})}
+    cf = check_contained(tree, plan)
+    res["contained"] = {"verdict": "PASS" if not cf else "FAIL", "findings": cf}
     return res
 
 
@@ -169,7 +211,7 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
     got = [ln[len("PG_STATIC "):] for ln in txt.splitlines() if ln.startswith("PG_STATIC ")]
     if not got:
         why = f"no PG_STATIC line (rc {p.returncode}): " + txt[-400:]
-        return {c: {"verdict": "FAIL", "why": why} for c in ("schema", "pre_g0", "hashes")}
+        return {c: {"verdict": "FAIL", "why": why} for c in ("schema", "pre_g0", "hashes", "contained")}
     return json.loads(got[-1])
 
 
@@ -244,7 +286,7 @@ def write_record(C, rec, commit=False, runner=subprocess.run):
 
 
 def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=None, hub=None, commit=False, run_unit=True, 
-             static_fn=None, dry_fn=None, TC=None):
+             static_fn=None, dry_fn=None, TC=None, gen_host=None, static_host=None):
     marker = dict(obj.get("marker", obj))
     die, tree = marker["die"], marker["tree"]
     want = marker.get("manifest_hash") or marker["src_manifest_sha"]
@@ -258,15 +300,18 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         text, die2, pick = project_cfg(C, obj, expect_source, expect_event, item, TC)
         cfgd = json.loads(text)["dies"][die]
         hosts = list(cfgd.get("gen_hosts") or hosts)
+        if gen_host:                               # run the gate on this host (one of the die's gen hosts), not hosts[0]
+            assert gen_host in hosts, f"--gen-host {gen_host} is not a gen host of the die {hosts}"
+            hosts = [gen_host] + [h for h in hosts if h != gen_host]
         rec["hosts"] = hosts
         if not pick:
             raise AssertionError("no representative item: pass --item or set die.pilot_item")
         rec["item"] = pick
         wr = str(cfgd.get("work_root") or json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("work_root") or "/tmp")
         st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub))))(
-            hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
+            static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
         rec["checks"].update(st)
-        if all((st.get(c) or {}).get("verdict") == "PASS" for c in ("schema", "pre_g0", "hashes")):
+        if all((st.get(c) or {}).get("verdict") == "PASS" for c in ("schema", "pre_g0", "hashes", "contained")):
             rec["checks"]["dry_gen"] = (dry_fn or (lambda t, d, i, k, h, w: dry_gen(t, d, i, k, work, hub, h, run_unit, w)))(
                 text, die, pick, kind, hosts[0], want)
         else:
@@ -291,6 +336,8 @@ def main(argv=None):
     r.add_argument("--commit", action="store_true", help="commit the record with bin/coord-commit.sh")
     r.add_argument("--work")
     r.add_argument("--hub")
+    r.add_argument("--static-host", help="host for the static checks when the plan sidecars live only there (DEBUGGING only: a gate that needs it is a FAIL on `contained`; default: the gen host)")
+    r.add_argument("--gen-host", help="run the static checks and the dry gen on this gen host of the die")
     s = sub.add_parser("static")
     s.add_argument("--tree", required=True)
     s.add_argument("--plan", required=True)
@@ -312,7 +359,7 @@ def main(argv=None):
         print(why or "PASS")
         return 1 if why else 0
     obj = json.loads(Path(a.candidate).read_text())
-    rec = run_gate(a.coord, obj, a.expect_source, a.expect_event, a.item, a.kind, a.work, a.hub, a.commit)
+    rec = run_gate(a.coord, obj, a.expect_source, a.expect_event, a.item, a.kind, a.work, a.hub, a.commit, gen_host=a.gen_host, static_host=a.static_host)
     print(json.dumps({k: (v if k != "checks" else {c: (x or {}).get("verdict") for c, x in v.items()}) for k, v in rec.items()}))
     return 0 if rec["verdict"] == "PASS" else 1
 

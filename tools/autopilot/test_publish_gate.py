@@ -37,7 +37,7 @@ def mk_tree(td, plan_obj=None, with_view=True):
     tree = Path(td) / "tree"
     tree.mkdir()
     os.symlink(REPO / "tools", tree / "tools")
-    plan = Path(td) / "plan.json"
+    plan = tree / "plan.json"
     plan.write_text(json.dumps(plan_obj if plan_obj is not None else json.loads(PLAN.read_text())))
     if with_view:
         mk_view(tree)
@@ -65,8 +65,10 @@ def local_static(host, tree, plan, asbuilt, plan_sha):
 def hash_static(host, tree, plan, asbuilt, plan_sha):
     """schema / PRE / G0 are exercised by the two real-tool tests (PRE alone takes ~20 s); the rest run the real hash check only"""
     f, n = PG.check_hashes(tree, plan, plan_sha)
+    cf = PG.check_contained(tree, plan)
     ok = {"verdict": "PASS"}
-    return {"schema": ok, "pre_g0": ok, "hashes": {"verdict": "PASS" if not f and n else "FAIL", "views": n, "findings": f}}
+    return {"schema": ok, "pre_g0": ok, "hashes": {"verdict": "PASS" if not f and n else "FAIL", "views": n, "findings": f},
+            "contained": {"verdict": "PASS" if not cf else "FAIL", "findings": cf}}
 
 
 def dry_pass(text, die, item, kind, host, want):
@@ -137,6 +139,35 @@ class Gate(unittest.TestCase):
         (v / "provenance.json").write_text(json.dumps({"kit": {"face_guard_sha256": sha(b"other")}}))
         rec = self.gate(tree, plan, dry=dry_must_not_run)
         self.assertTrue(any("provenance kit.face_guard_sha256" in f for f in rec["checks"]["hashes"]["findings"]))
+
+    def test_plan_outside_the_tree_refuses(self):         # S81 D4: plan + census sidecar in a lane dir on one host
+        tree, plan = mk_tree(self.td)
+        lane = Path(self.td) / "lane/die_plan/s81"
+        (lane / "census").mkdir(parents=True)
+        (lane / "census/s81_lanes.tsv").write_text("x\n")
+        outside = lane / "plan.json"
+        outside.write_text(plan.read_text())
+        rec = self.gate(tree, outside, dry=dry_must_not_run)
+        self.assertEqual(rec["verdict"], "FAIL")
+        c = rec["checks"]["contained"]
+        self.assertEqual(c["verdict"], "FAIL")
+        self.assertTrue(any("outside the tree" in f for f in c["findings"]), c)
+        with self.assertRaises(AssertionError):
+            self.apply(tree, outside)
+
+    def test_plan_naming_a_file_outside_the_tree_refuses(self):
+        side = Path(self.td) / "elsewhere.json"
+        side.write_text("{}")
+        p = json.loads(PLAN.read_text())
+        p["note"] = "x"
+        p["extra_input"] = str(side)
+        self.assertEqual(PG.check_contained(*self._tp(p)), [])      # not under /srv: not a sidecar path
+        p["extra_input"] = "/srv/definitely/missing.json"
+        self.assertEqual(PG.check_contained(*self._tp(p)), [])      # absent files are INPUT's business
+
+    def _tp(self, p):
+        tree, plan = mk_tree(tempfile.mkdtemp(dir=self.td), p)
+        return tree, plan
 
     def test_dry_gen_failure_refuses(self):
         tree, plan = mk_tree(self.td)
