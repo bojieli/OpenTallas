@@ -566,3 +566,5 @@
   COORD APPROVED: claude/kv-r-view-by-hash-1116 @a31ac3a1781e5cec7b1316217666ce7ce22d82cc
   RULING r428 kv-r-ctx-hostportmap-1116 @4b23f20e1a8faa6edfb4b7e004068c348f8b92bd: KV ctx source-event host port map emitter plus test, gate GREEN 1/1. Proof by a full C bind is still pending; if the running C2 bind disproves it, KV-R reverts by follow-up.
   COORD APPROVED: claude/kv-r-ctx-hostportmap-1116 @4b23f20e1a8faa6edfb4b7e004068c348f8b92bd
+- 2026-11-16 20:25 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r429 fleet-ops-r-gen-host-least-loaded-1116 @8c7687c05761f8d54de33ee0e2b2cbca2d0c4b1e: pick_gen_host chooses the least-loaded host among gen_hosts (load1 per core in 5% steps), ties broken by free memory, then host_share, then configured order; it routes around an overloaded host but never refuses a lone entry. 4 new tests, gate GREEN 138/138.
+  COORD APPROVED: claude/fleet-ops-r-gen-host-least-loaded-1116 @8c7687c05761f8d54de33ee0e2b2cbca2d0c4b1e
