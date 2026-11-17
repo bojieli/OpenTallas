@@ -773,6 +773,22 @@ def core_input_latch(plan, tn, module, port):
     return port not in set((cfg.get("latch_except") or {}).get(module) or ())
 
 
+def core_input_latch_except_bits(plan, tn, module, port):
+    """Bit-level latch_except (FABLE-PD-QC-0600 11-17): entries of the form "<port>[<bit>]" in the same latch_except list drop the
+    lockup latch of THAT bit only (the pipe register stays, 0 cycles); the other bits of the port keep their latch.  The
+    port-wide entry "<port>" stays as it was.  cbn_q01 qfd_tile_nk_a0c: only tap[0] (the go bit, its own core arc) may drop its
+    latch, port-wide the row failed hold on 1,744 of 1,776 tap pins.  Returns a set of bit indices (empty = none)."""
+    if port not in core_input_lockup(plan, tn, module):
+        return set()
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    out = set()
+    for ent in (cfg.get("latch_except") or {}).get(module) or ():
+        m = re.fullmatch(re.escape(port) + r"\[(\d+)\]", str(ent))
+        if m:
+            out.add(int(m.group(1)))
+    return out
+
+
 def core_input_pipe(plan, tn, module, port=None):
     """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
     default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
@@ -4134,6 +4150,9 @@ class Binder:
                         e = [core_reset_gate(x, c, r, pn) for x in e]
                     if pn in core_input_lockup(self.plan, tn, c.module):
                         has_latch = core_input_latch(self.plan, tn, c.module, pn)
+                        xbits = {i_ for i_ in core_input_latch_except_bits(self.plan, tn, c.module, pn) if i_ < len(bits)} if has_latch else set()
+                        if xbits:
+                            has_latch = False  # bit-level exception: the latch is emitted below for the other bits only
                         lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
                         if has_latch:
                             decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
@@ -4146,6 +4165,19 @@ class Binder:
                                         f".q({pq}));  // core_input_lockup pipe: +{npipe} DECLARED cycle(s)")
                             self.declare_core_input_pipe(tn, p, ci, pn, npipe)
                             e = [pq]
+                        if xbits:
+                            keep_ = [i_ for i_ in range(len(bits)) if i_ not in xbits]
+                            if len(e) == 1 and len(bits) > 1:
+                                e = [f"{e[0]}[{i_}]" for i_ in range(len(bits))]
+                            e = list(e)
+                            if keep_:
+                                lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
+                                decl.append(f"    wire [{len(keep_) - 1}:0] {lk};")
+                                body.append(f"    ot_dp_lk #(.W({len(keep_)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
+                                            f"(.clk(clk), .d({_concat([e[i_] for i_ in keep_])}), .q({lk}));  "
+                                            f"// core_input_lockup (NK hold class), bits {sorted(xbits)} keep the pipe register only")
+                                for j_, i_ in enumerate(keep_):
+                                    e[i_] = f"{lk}[{j_}]"
                         if has_latch:
                             body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
                                         f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")

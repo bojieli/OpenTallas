@@ -135,6 +135,41 @@ class CoreInputLatchExcept(unittest.TestCase):
         self.assertIn("e = [lk]", blk)
 
 
+
+class CoreInputLatchExceptBits(unittest.TestCase):
+    """FABLE-PD-QC-0600 11-17: bit-level latch_except; only tap[0] drops its latch, the other tap bits keep it."""
+
+    def _plan(self, ex):
+        return {"clock": {"core_input_lockup": {"modules": MODS, "types": ["cbn_q11"], "pipe": 1, "latch_except": ex}}}
+
+    def test_bit_entry_does_not_drop_the_port_latch_but_lists_the_bit(self):
+        p = self._plan({"qfd_tile_nk_a0c": ["tap[0]"]})
+        self.assertTrue(bind.core_input_latch(p, "cbn_q11", "qfd_tile_nk_a0c", "tap"))
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q11", "qfd_tile_nk_a0c", "tap"), {0})
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q11", "qfd_tile_nk_a0c", "n_a"), set())
+
+    def test_several_bits_other_module_and_port_wide_entry(self):
+        p = self._plan({"qfd_tile_nk_a0c": ["tap[0]", "tap[7]", "n_a[1]"]})
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q11", "qfd_tile_nk_a0c", "tap"), {0, 7})
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q11", "qfd_tile_nl_a0c", "tap"), set())
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q00", "qfd_tile_nk_a0c", "tap"), set())
+        q = self._plan({"qfd_tile_nk_a0c": ["tap"]})   # port-wide form unchanged
+        self.assertFalse(bind.core_input_latch(q, "cbn_q11", "qfd_tile_nk_a0c", "tap"))
+        self.assertEqual(bind.core_input_latch_except_bits(q, "cbn_q11", "qfd_tile_nk_a0c", "tap"), set())
+
+    def test_absent_key_is_byte_identical(self):
+        p = {"clock": {"core_input_lockup": {"modules": MODS, "types": ["cbn_q11"], "pipe": 1}}}
+        self.assertEqual(bind.core_input_latch_except_bits(p, "cbn_q11", "qfd_tile_nk_a0c", "tap"), set())
+        self.assertEqual(bind.core_input_latch_except_bits({}, "cbn_q11", "qfd_tile_nk_a0c", "tap"), set())
+
+    def test_emitter_latches_only_the_other_bits(self):
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bind.py")).read()
+        i = src.index("xbits = {i_ for i_ in core_input_latch_except_bits")
+        blk = src[i:i + 3200]
+        self.assertIn("keep_ = [i_ for i_ in range(len(bits)) if i_ not in xbits]", blk)
+        self.assertIn("ot_dp_lk #(.W({len(keep_)}))", blk)
+        self.assertIn("e[i_] = f\"{lk}[{j_}]\"", blk)
+
 if __name__ == "__main__":
     unittest.main()
 
