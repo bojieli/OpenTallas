@@ -30,6 +30,8 @@ MAX_PER_ENDPOINT = 4
 TT_FLOOR_PS = -42.0       # gate: routed TT WNS >= -42
 CAPTURE_PINS = ("D", "RESETN", "SETN")
 KINDS = ("reg", "port", "macro")
+MAX_ABS_SLACK_PS = 1e5      # a row beyond this is a unit error (seconds x1e12 twice), never a real slack
+NO_TT_PATH_PS = 1e6         # hold_eco_internal_dump.tcl writes this when the endpoint has no TT path
 
 
 def capture_pin(endpoint):
@@ -62,6 +64,8 @@ def read_endpoints(text):
         ffv, ttv = float(ff), float(tt)
         if not (math.isfinite(ffv) and math.isfinite(ttv)):
             raise ValueError(f"non finite slack in {ln!r}")
+        if abs(ffv) > MAX_ABS_SLACK_PS or (abs(ttv) > MAX_ABS_SLACK_PS and ttv != NO_TT_PATH_PS):
+            raise ValueError(f"slack outside +-{MAX_ABS_SLACK_PS:g} ps (wrong time unit?) in {ln!r}")
         rows.append(dict(endpoint=e, startpoint=s, start_kind=sk, end_kind=ek, ff=ffv, tt=ttv))
     return rows
 
