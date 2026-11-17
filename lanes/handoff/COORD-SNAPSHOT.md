@@ -1,4 +1,4 @@
-# COORD snapshot 2026-11-16 17:00 PST
+# COORD snapshot 2026-11-16 17:15 PST
 
 Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM). It is the freshest COORD state if Claude stops on a limit. Read it right after ~/coord/CODEX-HANDOFF.md (the hand-written method and lane table) and ~/coord/lanes/handoff/<LANE>.md (each lane's own state). Facts only; the queue is the source.
 
@@ -8,9 +8,7 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-16 16:43 PST MERGED [MERGE-QUEUE -> HEAD-SERDES-O] claude/head-hold-reference-1116@3725c0a65e7 -> main c390869fd3e -> 96199f1f34b, no-ff merge, tags flow-20261113-pw-*. Gate: remote gate record from renewed-glider 2026-11-17 00:41 UTC on main c390869fd3e: 126 test file(s) pass (+24 source dir(s) the tests name: physical/asap7_memory_macros physical/asap7_memory_macros_pa physical/asap7_memory_macros_v2 phys
 - 2026-11-16 16:46 PST MERGED [MERGE-QUEUE -> FABLE-DIE-KV] claude/fable-die-kv-1116@0140435505b -> main 96199f1f34b -> d0ee4a2afb1, no-ff merge, tags flow-20261113-px-*. Gate: gate record from loved-redfish 2026-11-17 00:22 UTC on main db8dce70fab (main since: no overlap): 57 test file(s) pass (+10 source dir(s) the tests name: physical/die_plan/hbm_arch/B2l physical/die_plan/hbm_arch_cores physical/die_plan/qwen_co
 
-## READY/ASK with no later COORD post naming them (31, heuristic: check each)
-- 2026-11-16 10:20 PST READY [S81-BKSEL-O -> COORD, MERGE-QUEUE-1; cc S81-CORES-1115, KIT-OPS-5] claude/s81-t51-native-1116b @eb79c43046c33adb3938323e623e8a4370f8effa fixes duplicate final reporting in physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py. A legacy finish already runs final_report (RCX+IR), then wrapper unconditionally ran do-finish again; native_e shows two invocations, first VSS solve about45mi
-- 2026-11-16 10:21 PST READY [FABLE-FIX-S81-SERDES -> COORD, MERGE-QUEUE-1; cc S81-SERDES-DPL] claude/fable-fix-s81-serdes-1116 @b3e9f4a365d fixes RXNEG hook selector (production u_rxf_q vector was invisible to C.q matcher), refuses missing requested chains and incomplete545-bit RXNEG. Focused gate22/22, actual hierarchy + missing-valid negative control. C t14 postGPL proved moved0/0; corrected real ODB finds545/545,
+## READY/ASK with no later COORD post naming them (29, heuristic: check each)
 - 2026-11-16 10:26 PST READY [FABLE-FIX-S81-SERDES -> COORD, MERGE-QUEUE-1; cc S81-SERDES-DPL] claude/fable-fix-s81-serdes-1116 @fe73c2c47bb optional phase-aware RXNEG face pairing, defaultoff, source gate25/25. C t14 raw CTS proves falling->rising face-pad -432.82. Actual ODB preview 544 halfcycle pairs max664.998->8.088um, FIRM PMA rows/halos preserved; scalar valid also paired. Zero RTL/stage/data-net/cycle change
 - 2026-11-16 10:44 PST READY [FABLE-FIX-S81-SERDES -> COORD, MERGE-QUEUE-1; cc S81-SERDES-DPL] claude/fable-fix-s81-serdes-1116 @96060812d90 adds defaultoff OT_S81_SERDES_RM_RPC8 to _rt nativeRM:8local3-bit bankreadpointercopies retain globalrp/gray/empty, controlresetrrst_nc and perbankoutputresets unchanged; qhierarchy/ports/cycles unchanged. UnifiedmodelbeforeRTL. Full512x8 lockstep7001readedges/5543nonidle/6reset
 - 2026-11-16 10:47 PST READY [HEAD-SERDES-O -> COORD, MERGE-QUEUE-1, TOOLS-CONVERGE-1115, KIT-OPS-5; cc FABLE-FIX-HEAD-TIMING] Shared TT-PG replay fix claude/head-tt-pg-replay-1116 @8df7c2f39188436136456c1d73d057271c9ee98e: normal remote gate GREEN65/65 test files on main2259ce1358a (record ~/merge-queue/gates/8df7c2f39188436136456c1d73d057271c9ee98e.json), focused30tests PASS. Actual changed-buffer two-net guide A/B
@@ -42,354 +40,348 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-16 16:42 PST READY [QC-PINACCESS-O -> COORD; cc MERGE-QUEUE,FABLE-FLOW-1000] FINAL producer-closure successor claude/qc-pinaccess-o-1116 @adfd9688bb05ec8d16742b32fb7d6e63ea9d8b08. All6 normal RED nodes locally reproduced as unconditional read of OPTIONAL adjacent kit_rtl.json (not ENOSPC); actual code fixed, malformed declared metadata remains fatal. With exact tracked generator assets restored in sparse cl
 
 ## Lane handoff files (age) and last queue post
-- ADMIT-TUNE-1: handoff 2742 min old; last post 2026-11-14 19:50 STATE
-- BUS-GEAR-2: handoff 6221 min old; last post none in recent queue
-- CLAND-BIN: handoff 2038 min old; last post none in recent queue
-- CLAND-GEOM: handoff 2742 min old; last post 2026-11-14 19:2x STATE
-- CLAND-MACRO-1: handoff 2770 min old; last post 2026-11-14 18:47 PLAN-ASK
-- CLAND-RELAY-2: handoff 5285 min old; last post none in recent queue
-- CLAND-RELAY-3: handoff 5220 min old; last post none in recent queue
-- CLEAN-2: handoff 5457 min old; last post none in recent queue
-- CLEAN-EPYC2-1115: handoff 1812 min old; last post none in recent queue
-- CLEAN-INTEL2-1115: handoff 1810 min old; last post none in recent queue
-- CLKSITE-RESERVE-1115: handoff 1841 min old; last post 2026-11-15 18:50 STATE
-- CODEX-FLEET-FLOW-CLAUDE-RESET-1116: handoff 212 min old; last post none in recent queue
-- CODEX-QC-PACK-RESET-1116: handoff 214 min old; last post none in recent queue
-- COL-SNAP-BUILD: handoff 3384 min old; last post 2026-11-14 10:51 STATE
-- COORD-COMMIT-SPEED-1: handoff 4718 min old; last post none in recent queue
-- CORE-BKSEL-1115: handoff 1928 min old; last post 2026-11-15 12:0x STATE
-- CORE-ELEMAB-1115: handoff 1951 min old; last post 2026-11-15 11:xx PUBLISHED
-- CORE-GUNIT-1115: handoff 2051 min old; last post none in recent queue
-- CORES-NOROW-1: handoff 2411 min old; last post 2026-11-15 00:5x STATE
-- DIE-HBM-100: handoff 5318 min old; last post none in recent queue
-- DIE-HBM-101: handoff 5727 min old; last post none in recent queue
-- DIE-HBM-102: handoff 5225 min old; last post none in recent queue
-- DIE-HEAD-ROUTE-1: handoff 2571 min old; last post 2026-11-15 03:26 RESULT
-- DIE-KV-100: handoff 4300 min old; last post none in recent queue
-- DIE-KV-99: handoff 5816 min old; last post none in recent queue
-- DIE-KV-ROUTE-1: handoff 2582 min old; last post 2026-11-14 22:00 STATE
-- DIE-PROTO-1: handoff 3012 min old; last post 2026-11-14 14:47 RESULT
-- DIE-PROTO-2: handoff 6297 min old; last post none in recent queue
-- DIE-QC-100: handoff 4299 min old; last post none in recent queue
-- DIE-QC-101: handoff 4013 min old; last post none in recent queue
-- DIE-QC-102: handoff 3970 min old; last post none in recent queue
-- DIE-QC-103: handoff 1133 min old; last post 2026-11-15 19:xx DONE
-- DIE-QC-GRT0-2: handoff 2428 min old; last post none in recent queue
-- DIE-QC-GRT0: handoff 2570 min old; last post 2026-11-14 22:1x STATE
-- DIE-ROUTE-ABS-1: handoff 1666 min old; last post 2026-11-15 11:5x READY
-- DIE-S81-88: handoff 4299 min old; last post none in recent queue
-- DIE-S81-89: handoff 4301 min old; last post none in recent queue
-- DIE-S81-90: handoff 3950 min old; last post none in recent queue
-- DIE-S81-91: handoff 3713 min old; last post none in recent queue
-- DIE-S81-92: handoff 1 min old; last post 2026-11-16 16:16 CURRENT-SOURCE-READY
-- DIE-S81-GRT0: handoff 2576 min old; last post 2026-11-14 22:1x STATE
-- DLY-SPREAD: handoff 2382 min old; last post none in recent queue
-- DRAIN-EPYC4: handoff 3874 min old; last post none in recent queue
-- DSDV-FORMS-2: handoff 4892 min old; last post none in recent queue
-- EXPLORER-P1: handoff 3807 min old; last post none in recent queue
-- EXPLORER-REVIEW-1: handoff 3834 min old; last post none in recent queue
-- EXPLORER-REVIEW-2: handoff 3813 min old; last post none in recent queue
-- FABLE-DIE-HEAD: handoff 20 min old; last post 2026-11-16 16:39 RESULT
-- FABLE-DIE-KV: handoff 210 min old; last post 2026-11-16 15:13 RESULT
-- FABLE-DIE-QC: handoff 0 min old; last post 2026-11-16 16:24 MEASURED
-- FABLE-DIE-S81: handoff 72 min old; last post 2026-11-16 14:01 RESULT
-- FABLE-FIX-HEAD-TIMING: handoff 39 min old; last post 2026-11-16 14:09 STATE
-- FABLE-FIX-HEAD-TYPES: handoff 1030 min old; last post 2026-11-16 02:23 STATE
-- FABLE-FIX-KV-HG: handoff 873 min old; last post 2026-11-16 02:04 REVIEW
-- FABLE-FIX-KV-PV: handoff 1078 min old; last post 2026-11-16 02:30 ACK
-- FABLE-FIX-KV-PVHUB: handoff 194 min old; last post 2026-11-16 13:43 READY
-- FABLE-FIX-QC-CBGLUE: handoff 208 min old; last post 2026-11-16 15:24 RUNNING
-- FABLE-FIX-QC-HCFE: handoff 22 min old; last post 2026-11-16 15:53 SOURCE-READY
-- FABLE-FIX-QC-KNEE-HC: handoff 174 min old; last post 2026-11-16 15:52 READY
-- FABLE-FIX-S81-COL: handoff 934 min old; last post 2026-11-16 01:53 ACK
-- FABLE-FIX-S81-COLTAP: handoff 164 min old; last post 2026-11-16 14:15 RESULT
-- FABLE-FIX-S81-CONG: handoff 0 min old; last post 2026-11-16 13:50 ROW
-- FABLE-FIX-S81-SERDES: handoff 0 min old; last post 2026-11-16 13:31 FINDING
-- FABLE-FIX-S81-SVC: handoff 1 min old; last post 2026-11-16 16:58 HANDOFF
-- FABLE-REVIEW-CLK: handoff 3133 min old; last post 2026-11-14 12:46 RESULT
-- FABLE-REVIEW-COL: handoff 3564 min old; last post none in recent queue
-- FABLE-REVIEW-CONG: handoff 2978 min old; last post 2026-11-14 15:21 RESULT
-- FABLE-REVIEW-CORES: handoff 2783 min old; last post 2026-11-14 18:5x RESULT
-- FABLE-S81-CORES: handoff 2697 min old; last post 2026-11-14 20:12 NOTE
-- FAIL-CLASS-2: handoff 3579 min old; last post none in recent queue
-- FAIL-QCKV-1: handoff 3492 min old; last post none in recent queue
-- FAIL-S81-1: handoff 2704 min old; last post 2026-11-14 19:55 STATE
-- FIX-CLASSIFY: handoff 3563 min old; last post none in recent queue
-- FIX-HOLDSTALL: handoff 3490 min old; last post none in recent queue
-- FIX-RELAYPOLY: handoff 3316 min old; last post 2026-11-14 09:43 RESULT
-- FIX-SELFCONT: handoff 3546 min old; last post none in recent queue
-- FIX-YOSYS: handoff 3570 min old; last post none in recent queue
-- FLEET-2: handoff 6074 min old; last post none in recent queue
-- FLOW-FIN-2: handoff 4883 min old; last post none in recent queue
-- FLOW-LATEECO: handoff 2028 min old; last post none in recent queue
-- FLOW-PGCAP-1: handoff 3476 min old; last post none in recent queue
-- FRAME-FORMS-1: handoff 4301 min old; last post none in recent queue
-- FRAME-FORMS-2: handoff 4893 min old; last post none in recent queue
-- GEN-CLASS-1: handoff 5850 min old; last post none in recent queue
-- GENBUG-IMPL: handoff 217 min old; last post 2026-11-16 14:43 READY
-- GEOM-VIS-15: handoff 2734 min old; last post 2026-11-14 19:3x STATE
-- GEOM-VIS-5: handoff 6334 min old; last post none in recent queue
-- GEOM-VIS-6: handoff 6282 min old; last post none in recent queue
-- GEOM-VIS-7: handoff 6192 min old; last post none in recent queue
-- GEOM-VIS-8: handoff 5905 min old; last post none in recent queue
-- GEOM-VIS-9: handoff 4304 min old; last post none in recent queue
-- GUNIT-CORE-1: handoff 4366 min old; last post none in recent queue
-- HARD-QC-FORMS-1: handoff 4412 min old; last post none in recent queue
-- HARD-S81-DSDV-1: handoff 4426 min old; last post none in recent queue
-- HARD-S81-SERDES-1: handoff 4350 min old; last post none in recent queue
-- HARD-S81-SVC-1: handoff 4301 min old; last post none in recent queue
-- HBM-CORES-B: handoff 6349 min old; last post none in recent queue
-- HBM-FORMS-1: handoff 5141 min old; last post none in recent queue
-- HCPARAM-ALL: handoff 1675 min old; last post 2026-11-15 13:04 READY
+- ADMIT-TUNE-1: handoff 2757 min old; last post 2026-11-14 19:50 STATE
+- BUS-GEAR-2: handoff 6236 min old; last post none in recent queue
+- CLAND-BIN: handoff 2053 min old; last post none in recent queue
+- CLAND-GEOM: handoff 2757 min old; last post 2026-11-14 19:2x STATE
+- CLAND-MACRO-1: handoff 2785 min old; last post 2026-11-14 18:47 PLAN-ASK
+- CLAND-RELAY-2: handoff 5300 min old; last post none in recent queue
+- CLAND-RELAY-3: handoff 5235 min old; last post none in recent queue
+- CLEAN-2: handoff 5472 min old; last post none in recent queue
+- CLEAN-EPYC2-1115: handoff 1827 min old; last post none in recent queue
+- CLEAN-INTEL2-1115: handoff 1825 min old; last post none in recent queue
+- CLKSITE-RESERVE-1115: handoff 1856 min old; last post 2026-11-15 18:50 STATE
+- CODEX-FLEET-FLOW-CLAUDE-RESET-1116: handoff 227 min old; last post none in recent queue
+- CODEX-FLEET-FLOW-RESET-1116-SECOND: handoff 11 min old; last post none in recent queue
+- CODEX-QC-PACK-RESET-1116: handoff 229 min old; last post none in recent queue
+- COL-SNAP-BUILD: handoff 3399 min old; last post 2026-11-14 10:51 STATE
+- COORD-COMMIT-SPEED-1: handoff 4733 min old; last post none in recent queue
+- CORE-BKSEL-1115: handoff 1943 min old; last post 2026-11-15 12:0x STATE
+- CORE-ELEMAB-1115: handoff 1966 min old; last post 2026-11-15 11:xx PUBLISHED
+- CORE-GUNIT-1115: handoff 2066 min old; last post none in recent queue
+- CORES-NOROW-1: handoff 2426 min old; last post 2026-11-15 00:5x STATE
+- DIE-HBM-100: handoff 5333 min old; last post none in recent queue
+- DIE-HBM-101: handoff 5742 min old; last post none in recent queue
+- DIE-HBM-102: handoff 5240 min old; last post none in recent queue
+- DIE-HEAD-ROUTE-1: handoff 2586 min old; last post 2026-11-15 03:26 RESULT
+- DIE-KV-100: handoff 4315 min old; last post none in recent queue
+- DIE-KV-99: handoff 5831 min old; last post none in recent queue
+- DIE-KV-ROUTE-1: handoff 2597 min old; last post 2026-11-14 22:00 STATE
+- DIE-PROTO-1: handoff 3027 min old; last post 2026-11-14 14:47 RESULT
+- DIE-PROTO-2: handoff 6312 min old; last post none in recent queue
+- DIE-QC-100: handoff 4314 min old; last post none in recent queue
+- DIE-QC-101: handoff 4028 min old; last post none in recent queue
+- DIE-QC-102: handoff 3985 min old; last post none in recent queue
+- DIE-QC-103: handoff 1148 min old; last post 2026-11-15 19:xx DONE
+- DIE-QC-GRT0-2: handoff 2443 min old; last post none in recent queue
+- DIE-QC-GRT0: handoff 2585 min old; last post 2026-11-14 22:1x STATE
+- DIE-ROUTE-ABS-1: handoff 1681 min old; last post 2026-11-15 11:5x READY
+- DIE-S81-88: handoff 4314 min old; last post none in recent queue
+- DIE-S81-89: handoff 4316 min old; last post none in recent queue
+- DIE-S81-90: handoff 3965 min old; last post none in recent queue
+- DIE-S81-91: handoff 3728 min old; last post none in recent queue
+- DIE-S81-92: handoff 16 min old; last post 2026-11-16 16:16 CURRENT-SOURCE-READY
+- DIE-S81-GRT0: handoff 2591 min old; last post 2026-11-14 22:1x STATE
+- DLY-SPREAD: handoff 2397 min old; last post none in recent queue
+- DRAIN-EPYC4: handoff 3889 min old; last post none in recent queue
+- DSDV-FORMS-2: handoff 4907 min old; last post none in recent queue
+- EXPLORER-P1: handoff 3822 min old; last post none in recent queue
+- EXPLORER-REVIEW-1: handoff 3849 min old; last post none in recent queue
+- EXPLORER-REVIEW-2: handoff 3828 min old; last post none in recent queue
+- FABLE-DIE-HEAD: handoff 35 min old; last post 2026-11-16 16:39 RESULT
+- FABLE-DIE-KV: handoff 226 min old; last post 2026-11-16 15:13 RESULT
+- FABLE-DIE-QC: handoff 15 min old; last post 2026-11-16 17:00 HANDOVER
+- FABLE-DIE-S81: handoff 14 min old; last post 2026-11-16 14:01 RESULT
+- FABLE-FIX-HEAD-TIMING: handoff 14 min old; last post 2026-11-16 14:09 STATE
+- FABLE-FIX-HEAD-TYPES: handoff 1045 min old; last post 2026-11-16 02:23 STATE
+- FABLE-FIX-KV-HG: handoff 888 min old; last post 2026-11-16 02:04 REVIEW
+- FABLE-FIX-KV-PV: handoff 1093 min old; last post 2026-11-16 02:30 ACK
+- FABLE-FIX-KV-PVHUB: handoff 11 min old; last post 2026-11-16 13:43 READY
+- FABLE-FIX-QC-CBGLUE: handoff 12 min old; last post 2026-11-16 17:02 HANDOFF
+- FABLE-FIX-QC-HCFE: handoff 14 min old; last post 2026-11-16 15:53 SOURCE-READY
+- FABLE-FIX-QC-KNEE-HC: handoff 189 min old; last post 2026-11-16 15:52 READY
+- FABLE-FIX-S81-COL: handoff 949 min old; last post 2026-11-16 01:53 ACK
+- FABLE-FIX-S81-COLTAP: handoff 14 min old; last post 2026-11-16 14:15 RESULT
+- FABLE-FIX-S81-CONG: handoff 15 min old; last post 2026-11-16 13:50 ROW
+- FABLE-FIX-S81-SERDES: handoff 14 min old; last post 2026-11-16 13:31 FINDING
+- FABLE-FIX-S81-SVC: handoff 16 min old; last post 2026-11-16 16:58 HANDOFF
+- FABLE-REVIEW-CLK: handoff 3148 min old; last post 2026-11-14 12:46 RESULT
+- FABLE-REVIEW-COL: handoff 3579 min old; last post none in recent queue
+- FABLE-REVIEW-CONG: handoff 2993 min old; last post 2026-11-14 15:21 RESULT
+- FABLE-REVIEW-CORES: handoff 2798 min old; last post 2026-11-14 18:5x RESULT
+- FABLE-S81-CORES: handoff 2712 min old; last post 2026-11-14 20:12 NOTE
+- FAIL-CLASS-2: handoff 3594 min old; last post none in recent queue
+- FAIL-QCKV-1: handoff 3507 min old; last post none in recent queue
+- FAIL-S81-1: handoff 2719 min old; last post 2026-11-14 19:55 STATE
+- FIX-CLASSIFY: handoff 3578 min old; last post none in recent queue
+- FIX-HOLDSTALL: handoff 3505 min old; last post none in recent queue
+- FIX-RELAYPOLY: handoff 3331 min old; last post 2026-11-14 09:43 RESULT
+- FIX-SELFCONT: handoff 3561 min old; last post none in recent queue
+- FIX-YOSYS: handoff 3585 min old; last post none in recent queue
+- FLEET-2: handoff 6089 min old; last post none in recent queue
+- FLOW-FIN-2: handoff 4898 min old; last post none in recent queue
+- FLOW-LATEECO: handoff 2043 min old; last post none in recent queue
+- FLOW-PGCAP-1: handoff 3491 min old; last post none in recent queue
+- FRAME-FORMS-1: handoff 4316 min old; last post none in recent queue
+- FRAME-FORMS-2: handoff 4908 min old; last post none in recent queue
+- GEN-CLASS-1: handoff 5865 min old; last post none in recent queue
+- GENBUG-IMPL: handoff 232 min old; last post 2026-11-16 14:43 READY
+- GEOM-VIS-15: handoff 2749 min old; last post 2026-11-14 19:3x STATE
+- GEOM-VIS-5: handoff 6349 min old; last post none in recent queue
+- GEOM-VIS-6: handoff 6297 min old; last post none in recent queue
+- GEOM-VIS-7: handoff 6207 min old; last post none in recent queue
+- GEOM-VIS-8: handoff 5920 min old; last post none in recent queue
+- GEOM-VIS-9: handoff 4319 min old; last post none in recent queue
+- GUNIT-CORE-1: handoff 4381 min old; last post none in recent queue
+- HARD-QC-FORMS-1: handoff 4427 min old; last post none in recent queue
+- HARD-S81-DSDV-1: handoff 4441 min old; last post none in recent queue
+- HARD-S81-SERDES-1: handoff 4365 min old; last post none in recent queue
+- HARD-S81-SVC-1: handoff 4316 min old; last post none in recent queue
+- HBM-CORES-B: handoff 6364 min old; last post none in recent queue
+- HBM-FORMS-1: handoff 5156 min old; last post none in recent queue
+- HCPARAM-ALL: handoff 1690 min old; last post 2026-11-15 13:04 READY
 - HEAD-100-unit-table-signedview: handoff 9 min old; last post none in recent queue
-- HEAD-100-unit-table: handoff 16 min old; last post none in recent queue
-- HEAD-100: handoff 1971 min old; last post 2026-11-16 02:47 COMPOSED
-- HEAD-95: handoff 5821 min old; last post none in recent queue
-- HEAD-96: handoff 5003 min old; last post 2026-11-14 19:2x STATE
-- HEAD-97: handoff 4583 min old; last post none in recent queue
-- HEAD-98: handoff 4167 min old; last post none in recent queue
-- HEAD-99: handoff 2202 min old; last post 2026-11-15 07:20 RESULT
-- HEAD-BIND-1: handoff 2671 min old; last post 2026-11-14 20:28 RESULT
-- HEAD-CLKFEED-1: handoff 2202 min old; last post none in recent queue
-- HEAD-EPC-RTL-1: handoff 2422 min old; last post none in recent queue
-- HEAD-HOST-CLOSE-1115: handoff 1445 min old; last post 2026-11-15 17:5x RESULT
-- HEAD-ROUTE-1: handoff 4917 min old; last post none in recent queue
-- HEAD-SERDES-O: handoff 163 min old; last post 2026-11-16 16:02 RESULT
-- HEAD-TYPES-O: handoff 181 min old; last post 2026-11-16 16:15 READY
-- HOLD-TAP-1: handoff 4303 min old; last post none in recent queue
-- HOLDTAP-FIN-2: handoff 4893 min old; last post none in recent queue
-- KIT-FIX-F: handoff 4192 min old; last post none in recent queue
-- KIT-OPS-1: handoff 4351 min old; last post none in recent queue
-- KIT-OPS-2: handoff 4170 min old; last post none in recent queue
-- KIT-OPS-3: handoff 2740 min old; last post 2026-11-14 19:20 STATE
-- KIT-OPS-4: handoff 2910 min old; last post none in recent queue
-- KIT-OPS-5: handoff 200 min old; last post 2026-11-16 13:56 READY
-- KIT-OPS-6: handoff 2609 min old; last post 2026-11-14 21:3x RESULT
-- KIT-SNAP-1: handoff 4280 min old; last post none in recent queue
-- KIT-STAGE-1: handoff 4908 min old; last post none in recent queue
-- KV-101-PC: handoff 4238 min old; last post none in recent queue
-- KV-101-PVFIN: handoff 4256 min old; last post none in recent queue
-- KV-101-SPLIT: handoff 4208 min old; last post none in recent queue
-- KV-101: handoff 4165 min old; last post none in recent queue
-- KV-102: handoff 0 min old; last post 2026-11-16 01:54 COMPOSED
-- KV-ABSPIN-1115: handoff 1246 min old; last post 2026-11-15 20:13 STATE
-- KV-ECTLK-RL: handoff 1943 min old; last post 2026-11-15 14:xx READY
-- KV-HGI-REFLOOR: handoff 2771 min old; last post 2026-11-14 19:54 STATE
-- KV-HGSPLIT-1115: handoff 1229 min old; last post 2026-11-16 01:52 COMPOSED
-- KV-PVGEN: handoff 1859 min old; last post 2026-11-16 05:1x RESULT
-- KV-PVHG-O: handoff 590 min old; last post 2026-11-16 16:49 RESULT
-- KV-PVSPLIT: handoff 1981 min old; last post none in recent queue
-- KV-Q2-CLK-1115: handoff 1126 min old; last post 2026-11-15 15:2x PROGRESS
-- KV-RAWFIX: handoff 1969 min old; last post none in recent queue
-- KV-VN2-FIN: handoff 2735 min old; last post 2026-11-14 19:57 STATE
-- KW-FIX-46: handoff 5818 min old; last post none in recent queue
-- LATCHECK-1: handoff 5759 min old; last post none in recent queue
-- LEAF-HOLD-1: handoff 4301 min old; last post none in recent queue
-- M7PIN-STRIPE-1116: handoff 214 min old; last post 2026-11-16 09:07 RESULT
-- MERGE-CENSUS: handoff 1662 min old; last post 2026-11-15 12:31 READY
-- MERGE-QUEUE-1: handoff 42 min old; last post 2026-11-16 14:26 STATE
-- NEARMISS-ECO: handoff 2753 min old; last post 2026-11-15 05:19 RESULT
-- NEARMISS-FIX-1: handoff 2586 min old; last post 2026-11-14 21:50 RESULT
-- NOPROG-WATCHDOG: handoff 2736 min old; last post 2026-11-16 14:30 STATE
-- ONBOARD-EPYC10: handoff 4228 min old; last post none in recent queue
-- OVERSIZE-1: handoff 2661 min old; last post 2026-11-14 20:38 RESULT
-- PG-AWARE-1: handoff 2645 min old; last post 2026-11-14 21:05 STATE
-- PG-PINBAND-1: handoff 2447 min old; last post 2026-11-15 00:2x RESULT
-- PHYS-KVHEAD: handoff 4250 min old; last post none in recent queue
-- PHYS-QC: handoff 4263 min old; last post none in recent queue
-- PHYS-S81: handoff 4256 min old; last post none in recent queue
-- PLAN-READERS-1: handoff 2577 min old; last post 2026-11-14 22:49 READY
-- PROFILE-1: handoff 4235 min old; last post none in recent queue
-- PROOF-CORES: handoff 4270 min old; last post none in recent queue
-- PROOF-QCKV: handoff 4270 min old; last post none in recent queue
-- PROOF-S81: handoff 4272 min old; last post none in recent queue
-- QC-CORES-HEAD: handoff 2738 min old; last post 2026-11-15 00:49 ASK
-- QC-CORES: handoff 2796 min old; last post none in recent queue
-- QC-FORMS-2: handoff 4398 min old; last post none in recent queue
-- QC-FWST: handoff 1984 min old; last post none in recent queue
-- QC-HC-STRIP-1115: handoff 1557 min old; last post 2026-11-15 15:12 READY-ROWS
-- QC-HOLDGRT-1: handoff 2416 min old; last post 2026-11-15 00:42 RESULT
-- QC-PHYSERDES: handoff 2033 min old; last post 2026-11-15 07:1x READY
-- QC-PINACCESS-O: handoff 215 min old; last post 2026-11-16 16:42 READY
-- QC-RING: handoff 3795 min old; last post none in recent queue
-- QC-S4Z: handoff 2035 min old; last post 2026-11-15 07:0x STATE
-- QC-SLECTL-CAP: handoff 2740 min old; last post 2026-11-14 19:4x STATE
-- QC-W515: handoff 2613 min old; last post 2026-11-14 21:4x STATE
-- REACH-FIN-2: handoff 2738 min old; last post 2026-11-14 19:20 STATE
-- REACH-FIX-2: handoff 5800 min old; last post none in recent queue
-- REBUILD-17: handoff 3940 min old; last post none in recent queue
-- RELAY-PLACE-1: handoff 5145 min old; last post none in recent queue
-- REPO-STATE-1: handoff 2694 min old; last post 2026-11-14 20:05 STATE
-- RESIGN-SWEEP: handoff 3520 min old; last post none in recent queue
-- ROM-VIAMAP-ASSY: handoff 1978 min old; last post 2026-11-15 08:01 READY
-- ROOT-MERGE-60: handoff 5777 min old; last post none in recent queue
-- ROOT-MERGE-62: handoff 4262 min old; last post none in recent queue
-- ROOT-MERGE-63: handoff 2705 min old; last post 2026-11-14 19:5x STATE
-- RULES-CAP-1: handoff 4506 min old; last post none in recent queue
-- RULES-FLOW-1: handoff 4746 min old; last post none in recent queue
-- RULES-REACH-1: handoff 4455 min old; last post none in recent queue
-- RULES-STREET-1: handoff 4484 min old; last post none in recent queue
-- S81-B3-CLK: handoff 3719 min old; last post none in recent queue
-- S81-B3-SVC: handoff 3580 min old; last post none in recent queue
-- S81-BKSEL-O: handoff 5 min old; last post 2026-11-16 14:00 RESULT
-- S81-CA-BAND: handoff 1915 min old; last post 2026-11-15 18:xx RESULT
-- S81-COL-INHERIT: handoff 2721 min old; last post 2026-11-14 20:2x STATE
-- S81-COL-O: handoff 214 min old; last post 2026-11-16 05:40 REVIEW
-- S81-COL-STREET: handoff 2385 min old; last post 2026-11-15 01:14 READY
-- S81-COLGEN-1: handoff 2549 min old; last post 2026-11-15 00:58 READY
-- S81-COLTAP: handoff 2013 min old; last post 2026-11-15 07:3x STATE
-- S81-CORES-1115: handoff 0 min old; last post 2026-11-16 11:01 ACK
-- S81-CORES-2: handoff 2683 min old; last post 2026-11-14 20:35 STATE
-- S81-FORMS-1: handoff 4301 min old; last post none in recent queue
-- S81-GOTAG-SETUP-1115: handoff 1576 min old; last post 2026-11-15 15:21 STATE
-- S81-IFN0-HALVES: handoff 48 min old; last post 2026-11-16 13:25 RESULT
-- S81-LEAF-PLAN: handoff 2147 min old; last post 2026-11-16 00:20 READY-ROWS
-- S81-LEAF-STRIP: handoff 2013 min old; last post 2026-11-15 07:26 STATE
-- S81-LEAF-T14: handoff 1977 min old; last post 2026-11-15 14:23 READY-ROWS
-- S81-PHYT1: handoff 1970 min old; last post 2026-11-15 16:3x RESULT
-- S81-R12BA-FIN: handoff 5551 min old; last post none in recent queue
-- S81-RESIGN-DEEP: handoff 2053 min old; last post none in recent queue
-- S81-RINGS-O: handoff 675 min old; last post 2026-11-16 05:41 RESULT
-- S81-SERDES-DPL: handoff 0 min old; last post 2026-11-16 11:26 RESULT
-- S81-STALE-RELAUNCH: handoff 2808 min old; last post 2026-11-14 18:15 STATE
-- S81-START-CAP: handoff 2028 min old; last post 2026-11-15 07:1x RESULT
-- S81-STRIP-O: handoff 403 min old; last post 2026-11-16 05:42 STATE
-- S81-SVC-H16: handoff 2611 min old; last post 2026-11-14 21:28 READY
-- S81-TAPROWS: handoff 1978 min old; last post none in recent queue
-- S81-TYPE-MEASURE: handoff 2819 min old; last post none in recent queue
-- S81-TYPEMERGE-IMPL: handoff 1978 min old; last post 2026-11-15 08:0x STATE
-- SERDES-FIN-2: handoff 4893 min old; last post none in recent queue
-- SERDES-TXPIPE: handoff 2704 min old; last post 2026-11-14 21:0x RESULT
-- SIGNED-DB-AUDIT: handoff 3400 min old; last post none in recent queue
-- SIGNED-RECOVER: handoff 3305 min old; last post 2026-11-14 09:35 ASK
-- SIGNED-TERMINAL-1115: handoff 1588 min old; last post 2026-11-15 15:51 READY
-- STA2204-1: handoff 6032 min old; last post none in recent queue
-- STRAP-MASTER-1115: handoff 1996 min old; last post none in recent queue
-- SVC-BAND-3: handoff 3982 min old; last post none in recent queue
-- SVC-MACRO-2: handoff 4893 min old; last post none in recent queue
-- TEST-BASELINE-1: handoff 3089 min old; last post none in recent queue
-- TL-COLH10R0P1: handoff 3616 min old; last post none in recent queue
-- TL-COLH10R0P4: handoff 2737 min old; last post 2026-11-14 19:57 STATE
-- TL-COLH9R0P1: handoff 2728 min old; last post 2026-11-14 19:58 STATE
-- TL-COLH9R0P2: handoff 2736 min old; last post 2026-11-14 19:58 STATE
-- TL-COLH9R0P3: handoff 3530 min old; last post none in recent queue
-- TL-COLH9R0P4: handoff 2731 min old; last post 2026-11-14 19:3x STATE
-- TL-COLH9R0P5: handoff 2727 min old; last post 2026-11-14 19:58 STATE
-- TL-COLH9R0P6: handoff 1914 min old; last post 2026-11-15 10:25 RESULT
-- TL-HDHOSTW: handoff 3579 min old; last post none in recent queue
-- TL-KVLEAFT5: handoff 3607 min old; last post none in recent queue
-- TL-KVPHY: handoff 3613 min old; last post none in recent queue
-- TL-KVSYSSD: handoff 3614 min old; last post none in recent queue
-- TL-LEAF42SETUP: handoff 2731 min old; last post 2026-11-14 19:50 STATE
-- TL-LEAFT14: handoff 1897 min old; last post 2026-11-15 09:25 RESULT
-- TL-LEAFT34: handoff 2760 min old; last post 2026-11-14 19:0x STATE
-- TL-LEAFT56: handoff 3610 min old; last post none in recent queue
-- TL-LEAFT62: handoff 3610 min old; last post none in recent queue
-- TL-LEAFT72: handoff 2737 min old; last post 2026-11-14 19:57 STATE
-- TL-QCPHYSD: handoff 2738 min old; last post 2026-11-14 19:21 STATE
-- TL-QCPHYSDB: handoff 3607 min old; last post none in recent queue
-- TL-QCREP4: handoff 2748 min old; last post 2026-11-14 19:11 STATE
-- TL-QCRING-1: handoff 3501 min old; last post none in recent queue
-- TL-QCRING-2: handoff 2739 min old; last post 2026-11-14 19:22 RESULT
-- TL-QCRING-3: handoff 3534 min old; last post none in recent queue
-- TL-QCRING-4: handoff 3586 min old; last post none in recent queue
-- TL-QCSTAV2: handoff 2732 min old; last post 2026-11-14 19:57 STATE
-- TL-QCSTBV1: handoff 2735 min old; last post 2026-11-14 19:57 STATE
-- TL-QCSTBV2: handoff 3616 min old; last post none in recent queue
-- TL-QCTAIL1: handoff 3202 min old; last post 2026-11-14 11:37 ASK
-- TL-QCTAPB: handoff 3409 min old; last post 2026-11-14 11:57 RESULT
-- TL-S81PHY: handoff 2722 min old; last post 2026-11-14 19:57 STATE
-- TL-SERDEST1: handoff 2658 min old; last post 2026-11-14 21:0x STATE
-- TL-SERDEST14: handoff 2702 min old; last post 2026-11-14 19:58 STATE
-- TL-SLC1XT8: handoff 2725 min old; last post 2026-11-14 19:59 STATE
-- TL-SLC3XT1: handoff 2727 min old; last post 2026-11-14 19:5x STATE
-- TL-SST27: handoff 3609 min old; last post none in recent queue
-- TL-SST36: handoff 3605 min old; last post none in recent queue
-- TOK-VERIFY-2: handoff 6259 min old; last post none in recent queue
-- TOK-VERIFY-3: handoff 0 min old; last post 2026-11-16 14:39 RESUMED
-- TYPE-COLH10R1: handoff 2727 min old; last post 2026-11-14 22:3x STATE
-- TYPE-COLH9P5: handoff 2725 min old; last post 2026-11-14 19:56 STATE
-- TYPE-COLH9R1: handoff 2726 min old; last post 2026-11-14 19:58 STATE
-- TYPE-COLH9R2: handoff 3641 min old; last post none in recent queue
-- TYPE-FLOWERR-2: handoff 2703 min old; last post 2026-11-14 20:06 READY
-- TYPE-GUNIT-L1F: handoff 2688 min old; last post 2026-11-14 20:12 STATE
-- TYPE-GUNIT-L1F2: handoff 2971 min old; last post none in recent queue
-- TYPE-HDCORE-ELEMAB: handoff 2694 min old; last post 2026-11-14 20:03 STATE
-- TYPE-HDCTL-REGS: handoff 2683 min old; last post 2026-11-14 20:3x RESULT
-- TYPE-HDCTLN: handoff 2730 min old; last post 2026-11-14 19:57 STATE
-- TYPE-HDEPC: handoff 2571 min old; last post 2026-11-14 22:2x RESULT
-- TYPE-HDHOSTW-LEC: handoff 3179 min old; last post none in recent queue
-- TYPE-HDSERDES: handoff 2723 min old; last post 2026-11-14 19:36 STATE
-- TYPE-KVHGI2: handoff 2560 min old; last post 2026-11-15 00:25 STATE
-- TYPE-KVHGI3: handoff 2701 min old; last post 2026-11-14 13:46 STATE
-- TYPE-KVHROOT: handoff 3255 min old; last post 2026-11-14 11:05 STATE
-- TYPE-KVIOCOR: handoff 2928 min old; last post 2026-11-14 16:3x STATE
-- TYPE-KVIOFT: handoff 2701 min old; last post 2026-11-14 19:58 STATE
-- TYPE-KVPCF: handoff 2728 min old; last post 2026-11-14 20:0x STATE
-- TYPE-KVPHY: handoff 3791 min old; last post none in recent queue
-- TYPE-LEAFHOLD: handoff 3643 min old; last post none in recent queue
-- TYPE-LEPE: handoff 2726 min old; last post 2026-11-14 19:58 STATE
-- TYPE-QC-FLOWERR: handoff 2808 min old; last post 2026-11-14 18:16 RESULT
-- TYPE-QCCB-GEN: handoff 2027 min old; last post 2026-11-15 07:55 INSTALLED
-- TYPE-QCCOLLN: handoff 2734 min old; last post 2026-11-14 20:03 STATE
-- TYPE-S81-FLOWERR: handoff 2806 min old; last post 2026-11-14 18:2x ASK
-- TYPE-S81-GRTCAP: handoff 3349 min old; last post 2026-11-14 20:06 STATE
-- TYPE-S81-MISC: handoff 2725 min old; last post 2026-11-14 19:59 STATE
-- TYPE-S81-PHYROOM: handoff 3471 min old; last post none in recent queue
-- TYPE-S81-T29: handoff 3856 min old; last post 2026-11-14 18:25 STATE
-- TYPE-S81LEAF29: handoff 2732 min old; last post 2026-11-14 19:5x STATE
-- TYPE-SEQHOST-LEC: handoff 2771 min old; last post none in recent queue
-- TYPE-SERDES-T4: handoff 2731 min old; last post 2026-11-14 19:58 STATE
-- TYPE-SLICE-HOLD: handoff 2731 min old; last post 2026-11-14 20:1x STATE
-- TYPE-SLICET30: handoff 2701 min old; last post 2026-11-14 19:58 STATE
-- TYPE-SVCMEM: handoff 2731 min old; last post 2026-11-14 20:2x STATE
-- TYPE-XS4: handoff 2730 min old; last post 2026-11-14 19:57 STATE
-- TYPES-KV-FAIL-1115: handoff 2041 min old; last post 2026-11-15 16:2x CORRECTION
-- TYPES-QC-FAIL-1115: handoff 2045 min old; last post 2026-11-15 07:2x NEEDS-LANE
-- TYPES-S81-FAIL-1115: handoff 2039 min old; last post 2026-11-15 07:1x STATE
-- UNOWNED-SWEEP: handoff 2815 min old; last post 2026-11-14 19:28 STATE
-- VARIANTS-1: handoff 2730 min old; last post 2026-11-14 19:29 STATE
-- VERIFY-PRICING-1: handoff 5063 min old; last post none in recent queue
-- VISLAYOUT2-QC: handoff 6289 min old; last post none in recent queue
-- VISLAYOUT3-KVHEAD: handoff 5313 min old; last post none in recent queue
-- WAVE-BALANCE-1: handoff 2564 min old; last post none in recent queue
-- WAVE-COPYBACK-1115: handoff 1892 min old; last post 2026-11-15 09:28 STATE
-- WAVE-FRICTION-1: handoff 2724 min old; last post 2026-11-14 19:36 STATE
-- WAVE-LONGRUN-1: handoff 1944 min old; last post 2026-11-15 08:43 RESULT
-- WAVE-PREPNR-1115: handoff 1955 min old; last post 2026-11-15 19:14 READY
-- WAVE-QCFIX-0715: handoff 2001 min old; last post 2026-11-15 08:11 RESULT
-- WAVE-RECIPE-1: handoff 2698 min old; last post 2026-11-14 20:0x READY
-- WAVE-TICK-PAR: handoff 2693 min old; last post 2026-11-14 19:54 STATE
-- WBQ: handoff 6271 min old; last post none in recent queue
+- HEAD-100-unit-table: handoff 14 min old; last post none in recent queue
+- HEAD-100: handoff 1986 min old; last post 2026-11-16 02:47 COMPOSED
+- HEAD-95: handoff 5836 min old; last post none in recent queue
+- HEAD-96: handoff 5018 min old; last post 2026-11-14 19:2x STATE
+- HEAD-97: handoff 4598 min old; last post none in recent queue
+- HEAD-98: handoff 4182 min old; last post none in recent queue
+- HEAD-99: handoff 2217 min old; last post 2026-11-15 07:20 RESULT
+- HEAD-BIND-1: handoff 2686 min old; last post 2026-11-14 20:28 RESULT
+- HEAD-CLKFEED-1: handoff 2217 min old; last post none in recent queue
+- HEAD-EPC-RTL-1: handoff 2437 min old; last post none in recent queue
+- HEAD-HOST-CLOSE-1115: handoff 1460 min old; last post 2026-11-15 17:5x RESULT
+- HEAD-ROUTE-1: handoff 4932 min old; last post none in recent queue
+- HEAD-SERDES-O: handoff 11 min old; last post 2026-11-16 16:02 RESULT
+- HEAD-TYPES-O: handoff 11 min old; last post 2026-11-16 16:15 READY
+- HOLD-TAP-1: handoff 4318 min old; last post none in recent queue
+- HOLDTAP-FIN-2: handoff 4908 min old; last post none in recent queue
+- KIT-FIX-F: handoff 4207 min old; last post none in recent queue
+- KIT-OPS-1: handoff 4366 min old; last post none in recent queue
+- KIT-OPS-2: handoff 4185 min old; last post none in recent queue
+- KIT-OPS-3: handoff 2755 min old; last post 2026-11-14 19:20 STATE
+- KIT-OPS-4: handoff 2925 min old; last post none in recent queue
+- KIT-OPS-5: handoff 215 min old; last post 2026-11-16 13:56 READY
+- KIT-OPS-6: handoff 2624 min old; last post 2026-11-14 21:3x RESULT
+- KIT-SNAP-1: handoff 4295 min old; last post none in recent queue
+- KIT-STAGE-1: handoff 4923 min old; last post none in recent queue
+- KV-101-PC: handoff 4253 min old; last post none in recent queue
+- KV-101-PVFIN: handoff 4271 min old; last post none in recent queue
+- KV-101-SPLIT: handoff 4223 min old; last post none in recent queue
+- KV-101: handoff 4180 min old; last post none in recent queue
+- KV-102: handoff 15 min old; last post 2026-11-16 01:54 COMPOSED
+- KV-ABSPIN-1115: handoff 1261 min old; last post 2026-11-15 20:13 STATE
+- KV-ECTLK-RL: handoff 1958 min old; last post 2026-11-15 14:xx READY
+- KV-HGI-REFLOOR: handoff 2786 min old; last post 2026-11-14 19:54 STATE
+- KV-HGSPLIT-1115: handoff 1244 min old; last post 2026-11-16 01:52 COMPOSED
+- KV-PVGEN: handoff 1874 min old; last post 2026-11-16 05:1x RESULT
+- KV-PVHG-O: handoff 605 min old; last post 2026-11-16 16:49 RESULT
+- KV-PVSPLIT: handoff 1996 min old; last post none in recent queue
+- KV-Q2-CLK-1115: handoff 1141 min old; last post 2026-11-15 15:2x PROGRESS
+- KV-RAWFIX: handoff 1984 min old; last post none in recent queue
+- KV-VN2-FIN: handoff 2750 min old; last post 2026-11-14 19:57 STATE
+- KW-FIX-46: handoff 5833 min old; last post none in recent queue
+- LATCHECK-1: handoff 5774 min old; last post none in recent queue
+- LEAF-HOLD-1: handoff 4316 min old; last post none in recent queue
+- M7PIN-STRIPE-1116: handoff 229 min old; last post 2026-11-16 09:07 RESULT
+- MERGE-CENSUS: handoff 1677 min old; last post 2026-11-15 12:31 READY
+- MERGE-QUEUE-1: handoff 13 min old; last post 2026-11-16 14:26 STATE
+- NEARMISS-ECO: handoff 2768 min old; last post 2026-11-15 05:19 RESULT
+- NEARMISS-FIX-1: handoff 2601 min old; last post 2026-11-14 21:50 RESULT
+- NOPROG-WATCHDOG: handoff 2751 min old; last post 2026-11-16 14:30 STATE
+- ONBOARD-EPYC10: handoff 4243 min old; last post none in recent queue
+- OVERSIZE-1: handoff 2676 min old; last post 2026-11-14 20:38 RESULT
+- PG-AWARE-1: handoff 2660 min old; last post 2026-11-14 21:05 STATE
+- PG-PINBAND-1: handoff 2462 min old; last post 2026-11-15 00:2x RESULT
+- PHYS-KVHEAD: handoff 4265 min old; last post none in recent queue
+- PHYS-QC: handoff 4278 min old; last post none in recent queue
+- PHYS-S81: handoff 4271 min old; last post none in recent queue
+- PLAN-READERS-1: handoff 2592 min old; last post 2026-11-14 22:49 READY
+- PROFILE-1: handoff 4250 min old; last post none in recent queue
+- PROOF-CORES: handoff 4285 min old; last post none in recent queue
+- PROOF-QCKV: handoff 4285 min old; last post none in recent queue
+- PROOF-S81: handoff 4287 min old; last post none in recent queue
+- QC-CORES-HEAD: handoff 2753 min old; last post 2026-11-15 00:49 ASK
+- QC-CORES: handoff 2811 min old; last post none in recent queue
+- QC-FORMS-2: handoff 4413 min old; last post none in recent queue
+- QC-FWST: handoff 1999 min old; last post none in recent queue
+- QC-HC-STRIP-1115: handoff 1572 min old; last post 2026-11-15 15:12 READY-ROWS
+- QC-HOLDGRT-1: handoff 2431 min old; last post 2026-11-15 00:42 RESULT
+- QC-PHYSERDES: handoff 2048 min old; last post 2026-11-15 07:1x READY
+- QC-PINACCESS-O: handoff 13 min old; last post 2026-11-16 17:01 PARKED
+- QC-RING: handoff 3810 min old; last post none in recent queue
+- QC-S4Z: handoff 2050 min old; last post 2026-11-15 07:0x STATE
+- QC-SLECTL-CAP: handoff 2755 min old; last post 2026-11-14 19:4x STATE
+- QC-W515: handoff 2628 min old; last post 2026-11-14 21:4x STATE
+- REACH-FIN-2: handoff 2753 min old; last post 2026-11-14 19:20 STATE
+- REACH-FIX-2: handoff 5815 min old; last post none in recent queue
+- REBUILD-17: handoff 3955 min old; last post none in recent queue
+- RELAY-PLACE-1: handoff 5160 min old; last post none in recent queue
+- REPO-STATE-1: handoff 2709 min old; last post 2026-11-14 20:05 STATE
+- RESIGN-SWEEP: handoff 3535 min old; last post none in recent queue
+- ROM-VIAMAP-ASSY: handoff 1993 min old; last post 2026-11-15 08:01 READY
+- ROOT-MERGE-60: handoff 5792 min old; last post none in recent queue
+- ROOT-MERGE-62: handoff 4277 min old; last post none in recent queue
+- ROOT-MERGE-63: handoff 2720 min old; last post 2026-11-14 19:5x STATE
+- RULES-CAP-1: handoff 4521 min old; last post none in recent queue
+- RULES-FLOW-1: handoff 4761 min old; last post none in recent queue
+- RULES-REACH-1: handoff 4470 min old; last post none in recent queue
+- RULES-STREET-1: handoff 4499 min old; last post none in recent queue
+- S81-B3-CLK: handoff 3734 min old; last post none in recent queue
+- S81-B3-SVC: handoff 3595 min old; last post none in recent queue
+- S81-BKSEL-O: handoff 20 min old; last post 2026-11-16 14:00 RESULT
+- S81-CA-BAND: handoff 1930 min old; last post 2026-11-15 18:xx RESULT
+- S81-COL-INHERIT: handoff 2736 min old; last post 2026-11-14 20:2x STATE
+- S81-COL-O: handoff 229 min old; last post 2026-11-16 05:40 REVIEW
+- S81-COL-STREET: handoff 2400 min old; last post 2026-11-15 01:14 READY
+- S81-COLGEN-1: handoff 2564 min old; last post 2026-11-15 00:58 READY
+- S81-COLTAP: handoff 2028 min old; last post 2026-11-15 07:3x STATE
+- S81-CORES-1115: handoff 14 min old; last post 2026-11-16 11:01 ACK
+- S81-CORES-2: handoff 2698 min old; last post 2026-11-14 20:35 STATE
+- S81-FORMS-1: handoff 4316 min old; last post none in recent queue
+- S81-GOTAG-SETUP-1115: handoff 1591 min old; last post 2026-11-15 15:21 STATE
+- S81-IFN0-HALVES: handoff 63 min old; last post 2026-11-16 13:25 RESULT
+- S81-LEAF-PLAN: handoff 2162 min old; last post 2026-11-16 00:20 READY-ROWS
+- S81-LEAF-STRIP: handoff 2028 min old; last post 2026-11-15 07:26 STATE
+- S81-LEAF-T14: handoff 1992 min old; last post 2026-11-15 14:23 READY-ROWS
+- S81-PHYT1: handoff 1985 min old; last post 2026-11-15 16:3x RESULT
+- S81-R12BA-FIN: handoff 5566 min old; last post none in recent queue
+- S81-RESIGN-DEEP: handoff 2068 min old; last post none in recent queue
+- S81-RINGS-O: handoff 690 min old; last post 2026-11-16 05:41 RESULT
+- S81-SERDES-DPL: handoff 14 min old; last post 2026-11-16 11:26 RESULT
+- S81-STALE-RELAUNCH: handoff 2823 min old; last post 2026-11-14 18:15 STATE
+- S81-START-CAP: handoff 2043 min old; last post 2026-11-15 07:1x RESULT
+- S81-STRIP-O: handoff 418 min old; last post 2026-11-16 05:42 STATE
+- S81-SVC-H16: handoff 2626 min old; last post 2026-11-14 21:28 READY
+- S81-TAPROWS: handoff 1993 min old; last post none in recent queue
+- S81-TYPE-MEASURE: handoff 2834 min old; last post none in recent queue
+- S81-TYPEMERGE-IMPL: handoff 1993 min old; last post 2026-11-15 08:0x STATE
+- S81-TYPES-R: handoff 0 min old; last post none in recent queue
+- SERDES-FIN-2: handoff 4908 min old; last post none in recent queue
+- SERDES-TXPIPE: handoff 2719 min old; last post 2026-11-14 21:0x RESULT
+- SIGNED-DB-AUDIT: handoff 3415 min old; last post none in recent queue
+- SIGNED-RECOVER: handoff 3320 min old; last post 2026-11-14 09:35 ASK
+- SIGNED-TERMINAL-1115: handoff 1603 min old; last post 2026-11-15 15:51 READY
+- STA2204-1: handoff 6047 min old; last post none in recent queue
+- STRAP-MASTER-1115: handoff 2011 min old; last post none in recent queue
+- SVC-BAND-3: handoff 3997 min old; last post none in recent queue
+- SVC-MACRO-2: handoff 4908 min old; last post none in recent queue
+- TEST-BASELINE-1: handoff 3104 min old; last post none in recent queue
+- TL-COLH10R0P1: handoff 3631 min old; last post none in recent queue
+- TL-COLH10R0P4: handoff 2752 min old; last post 2026-11-14 19:57 STATE
+- TL-COLH9R0P1: handoff 2743 min old; last post 2026-11-14 19:58 STATE
+- TL-COLH9R0P2: handoff 2751 min old; last post 2026-11-14 19:58 STATE
+- TL-COLH9R0P3: handoff 3545 min old; last post none in recent queue
+- TL-COLH9R0P4: handoff 2746 min old; last post 2026-11-14 19:3x STATE
+- TL-COLH9R0P5: handoff 2742 min old; last post 2026-11-14 19:58 STATE
+- TL-COLH9R0P6: handoff 1929 min old; last post 2026-11-15 10:25 RESULT
+- TL-HDHOSTW: handoff 3594 min old; last post none in recent queue
+- TL-KVLEAFT5: handoff 3622 min old; last post none in recent queue
+- TL-KVPHY: handoff 3628 min old; last post none in recent queue
+- TL-KVSYSSD: handoff 3629 min old; last post none in recent queue
+- TL-LEAF42SETUP: handoff 2746 min old; last post 2026-11-14 19:50 STATE
+- TL-LEAFT14: handoff 1912 min old; last post 2026-11-15 09:25 RESULT
+- TL-LEAFT34: handoff 2775 min old; last post 2026-11-14 19:0x STATE
+- TL-LEAFT56: handoff 3625 min old; last post none in recent queue
+- TL-LEAFT62: handoff 3625 min old; last post none in recent queue
+- TL-LEAFT72: handoff 2752 min old; last post 2026-11-14 19:57 STATE
+- TL-QCPHYSD: handoff 2753 min old; last post 2026-11-14 19:21 STATE
+- TL-QCPHYSDB: handoff 3622 min old; last post none in recent queue
+- TL-QCREP4: handoff 2763 min old; last post 2026-11-14 19:11 STATE
+- TL-QCRING-1: handoff 3516 min old; last post none in recent queue
+- TL-QCRING-2: handoff 2754 min old; last post 2026-11-14 19:22 RESULT
+- TL-QCRING-3: handoff 3549 min old; last post none in recent queue
+- TL-QCRING-4: handoff 3601 min old; last post none in recent queue
+- TL-QCSTAV2: handoff 2747 min old; last post 2026-11-14 19:57 STATE
+- TL-QCSTBV1: handoff 2750 min old; last post 2026-11-14 19:57 STATE
+- TL-QCSTBV2: handoff 3631 min old; last post none in recent queue
+- TL-QCTAIL1: handoff 3217 min old; last post 2026-11-14 11:37 ASK
+- TL-QCTAPB: handoff 3424 min old; last post 2026-11-14 11:57 RESULT
+- TL-S81PHY: handoff 2737 min old; last post 2026-11-14 19:57 STATE
+- TL-SERDEST1: handoff 2673 min old; last post 2026-11-14 21:0x STATE
+- TL-SERDEST14: handoff 2717 min old; last post 2026-11-14 19:58 STATE
+- TL-SLC1XT8: handoff 2740 min old; last post 2026-11-14 19:59 STATE
+- TL-SLC3XT1: handoff 2742 min old; last post 2026-11-14 19:5x STATE
+- TL-SST27: handoff 3624 min old; last post none in recent queue
+- TL-SST36: handoff 3620 min old; last post none in recent queue
+- TOK-VERIFY-2: handoff 6274 min old; last post none in recent queue
+- TOK-VERIFY-3: handoff 14 min old; last post 2026-11-16 14:39 RESUMED
+- TYPE-COLH10R1: handoff 2742 min old; last post 2026-11-14 22:3x STATE
+- TYPE-COLH9P5: handoff 2740 min old; last post 2026-11-14 19:56 STATE
+- TYPE-COLH9R1: handoff 2741 min old; last post 2026-11-14 19:58 STATE
+- TYPE-COLH9R2: handoff 3656 min old; last post none in recent queue
+- TYPE-FLOWERR-2: handoff 2718 min old; last post 2026-11-14 20:06 READY
+- TYPE-GUNIT-L1F: handoff 2703 min old; last post 2026-11-14 20:12 STATE
+- TYPE-GUNIT-L1F2: handoff 2986 min old; last post none in recent queue
+- TYPE-HDCORE-ELEMAB: handoff 2709 min old; last post 2026-11-14 20:03 STATE
+- TYPE-HDCTL-REGS: handoff 2698 min old; last post 2026-11-14 20:3x RESULT
+- TYPE-HDCTLN: handoff 2745 min old; last post 2026-11-14 19:57 STATE
+- TYPE-HDEPC: handoff 2586 min old; last post 2026-11-14 22:2x RESULT
+- TYPE-HDHOSTW-LEC: handoff 3194 min old; last post none in recent queue
+- TYPE-HDSERDES: handoff 2738 min old; last post 2026-11-14 19:36 STATE
+- TYPE-KVHGI2: handoff 2575 min old; last post 2026-11-15 00:25 STATE
+- TYPE-KVHGI3: handoff 2716 min old; last post 2026-11-14 13:46 STATE
+- TYPE-KVHROOT: handoff 3270 min old; last post 2026-11-14 11:05 STATE
+- TYPE-KVIOCOR: handoff 2943 min old; last post 2026-11-14 16:3x STATE
+- TYPE-KVIOFT: handoff 2716 min old; last post 2026-11-14 19:58 STATE
+- TYPE-KVPCF: handoff 2743 min old; last post 2026-11-14 20:0x STATE
+- TYPE-KVPHY: handoff 3806 min old; last post none in recent queue
+- TYPE-LEAFHOLD: handoff 3658 min old; last post none in recent queue
+- TYPE-LEPE: handoff 2741 min old; last post 2026-11-14 19:58 STATE
+- TYPE-QC-FLOWERR: handoff 2823 min old; last post 2026-11-14 18:16 RESULT
+- TYPE-QCCB-GEN: handoff 2042 min old; last post 2026-11-15 07:55 INSTALLED
+- TYPE-QCCOLLN: handoff 2749 min old; last post 2026-11-14 20:03 STATE
+- TYPE-S81-FLOWERR: handoff 2821 min old; last post 2026-11-14 18:2x ASK
+- TYPE-S81-GRTCAP: handoff 3364 min old; last post 2026-11-14 20:06 STATE
+- TYPE-S81-MISC: handoff 2740 min old; last post 2026-11-14 19:59 STATE
+- TYPE-S81-PHYROOM: handoff 3486 min old; last post none in recent queue
+- TYPE-S81-T29: handoff 3871 min old; last post 2026-11-14 18:25 STATE
+- TYPE-S81LEAF29: handoff 2747 min old; last post 2026-11-14 19:5x STATE
+- TYPE-SEQHOST-LEC: handoff 2786 min old; last post none in recent queue
+- TYPE-SERDES-T4: handoff 2746 min old; last post 2026-11-14 19:58 STATE
+- TYPE-SLICE-HOLD: handoff 2746 min old; last post 2026-11-14 20:1x STATE
+- TYPE-SLICET30: handoff 2716 min old; last post 2026-11-14 19:58 STATE
+- TYPE-SVCMEM: handoff 2746 min old; last post 2026-11-14 20:2x STATE
+- TYPE-XS4: handoff 2745 min old; last post 2026-11-14 19:57 STATE
+- TYPES-KV-FAIL-1115: handoff 2056 min old; last post 2026-11-15 16:2x CORRECTION
+- TYPES-QC-FAIL-1115: handoff 2060 min old; last post 2026-11-15 07:2x NEEDS-LANE
+- TYPES-S81-FAIL-1115: handoff 2054 min old; last post 2026-11-15 07:1x STATE
+- UNOWNED-SWEEP: handoff 2830 min old; last post 2026-11-14 19:28 STATE
+- VARIANTS-1: handoff 2745 min old; last post 2026-11-14 19:29 STATE
+- VERIFY-PRICING-1: handoff 5078 min old; last post none in recent queue
+- VISLAYOUT2-QC: handoff 6304 min old; last post none in recent queue
+- VISLAYOUT3-KVHEAD: handoff 5328 min old; last post none in recent queue
+- WAVE-BALANCE-1: handoff 2579 min old; last post none in recent queue
+- WAVE-COPYBACK-1115: handoff 1907 min old; last post 2026-11-15 09:28 STATE
+- WAVE-FRICTION-1: handoff 2739 min old; last post 2026-11-14 19:36 STATE
+- WAVE-LONGRUN-1: handoff 1959 min old; last post 2026-11-15 08:43 RESULT
+- WAVE-PREPNR-1115: handoff 1970 min old; last post 2026-11-15 19:14 READY
+- WAVE-QCFIX-0715: handoff 2016 min old; last post 2026-11-15 08:11 RESULT
+- WAVE-RECIPE-1: handoff 2713 min old; last post 2026-11-14 20:0x READY
+- WAVE-TICK-PAR: handoff 2708 min old; last post 2026-11-14 19:54 STATE
+- WBQ: handoff 6286 min old; last post none in recent queue
 
 ## ot-run status
-    ot-run status: epyc2 admits 429 GB (avail 469, reserve 0, fresh 0, peak 0) load 23/128 run 18 threads 582/128 root 84% scratch 55 GB
-    intel1 REFUSED (scratch disk /srv/opentallas-scratch has 21 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_F
+    ot-run status: epyc2 admits 415 GB (avail 455, reserve 0, fresh 0, peak 0) load 33/128 run 16 threads 584/128 root 84% scratch 58 GB
+    intel1 REFUSED (scratch disk /srv/opentallas-scratch has 33 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_F
     localhost REFUSED (scratch disk /srv/opentallas-scratch2 has 106 GB free < floor 150 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_
     epyc4 HELD (DRAIN DRAIN-EPYC4 11-13 23:xx OWNER terminate epyc4: no new ot-run job (running jobs untouched). Revert: delete this line (backup held_hosts.bak-dra
-    epyc7 admits 782 GB (avail 831, reserve 0, fresh 0, peak 0) load 7/96 run 5 threads 72/96 root 77% scratch 50 GB ONLY --dir on scratch2 (a job without one: ROOT
-    epyc8 admits 644 GB (avail 692, reserve 0, fresh 0, peak 0) load 15/96 run 18 threads 95/96 root 6% scratch 907 GB
-    epyc9 admits 709 GB (avail 757, reserve 0, fresh 0, peak 0) load 37/96 run 15 threads 336/96 root 6% scratch 96 GB
-    epyc10 admits 108 GB (avail 157, reserve 0, fresh 0, peak 0) load 154/96 run 52 threads 646/96 root 5% scratch 483 GB
+    epyc7 REFUSED (scratch disk /srv/opentallas-scratch has 49 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FL
+    epyc8 admits 628 GB (avail 677, reserve 0, fresh 0, peak 0) load 15/96 run 19 threads 133/96 root 6% scratch 901 GB
+    epyc9 admits 696 GB (avail 744, reserve 0, fresh 0, peak 0) load 36/96 run 14 threads 340/96 root 6% scratch 59 GB
+    epyc10 admits 119 GB (avail 167, reserve 0, fresh 0, peak 0) load 172/96 run 68 threads 696/96 root 5% scratch 480 GB
     next 16-thread 32 GB job -> epyc8
-    with --dir on scratch2 -> epyc7
 
 ## KIT-WAVE (autopilot log, last 6)
-    2026-11-16 16:59:35 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_kvsys/kv3_pv_v3n: no routed PROVISIONAL source yet for child core(s) kv_cland_w1057_ew_94a44 (prov_require_cands)
-    2026-11-16 16:59:35 PST AUTOPILOT: KIT-WAVE LAUNCH qwen_kvsys/kv3_pv_v4n (type, 1 replicas) event-key KV-HG1 plan plan_c.json@08d352df7ef0 src src_kv_pin_eb1e73448bd0_hg1A_pgr1_d3 unit kw-qwenkv-kv3pv
-    2026-11-16 16:59:35 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_kvsys/kv3_pv_v5n: no routed PROVISIONAL source yet for child core(s) kv_cland_w781_ns_9f2d9 (prov_require_cands)
-    2026-11-16 16:59:35 PST AUTOPILOT: KIT-WAVE WAIT-CHILD qwen_kvsys/kv3_pv_v6n: no routed PROVISIONAL source yet for child core(s) kv_cland_w288_ns_ad575 (prov_require_cands)
-    2026-11-16 16:59:35 PST AUTOPILOT: KIT-WAVE GRT-ARM LAUNCH-SKIP qwen_kvsys/kv3_hgi_v3: epyc8:/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d3 gen_phys.py has no def write_grt_
-    2026-11-16 16:59:40 PST AUTOPILOT: KIT-WAVE HOLD-AUDIT HELD-BUT-LAUNCHED=0 TERM-UNREACHABLE=0 HOLD-SUPERSEDED=46 HOLD-ZERO-MATCH=0 PROOF-HELD=0
+    2026-11-16 17:13:53 PST AUTOPILOT: KIT-WAVE FAIL qwen_kvsys/kv3_hub_Wo FLOW[design:place]: clock-landing band too small or blocked (band plan, or tool: this kit already reads its pinslot setting from 
+    2026-11-16 17:14:13 PST AUTOPILOT: KIT-WAVE RETRY-IGNORED qwen_compute/cbf_q11@4: attempt 5 is the latest of cbf_q11; cbf_q11@4 was consumed by its relaunch (or names an older attempt)
+    2026-11-16 17:14:18 PST AUTOPILOT: KIT-WAVE GEN-DISK-LOW epyc2=58 epyc9=64 GB < 100: new/restaged attempts go to gen hosts with room (KW-FIX-24)
+    2026-11-16 17:14:22 PST AUTOPILOT: KIT-WAVE GEN-DISK-LOW work_root epyc7: qwen_compute=50<100 GB free<needed (root-fs lane: root_floor_gb + root_gen_room_gb; scratch lane: gen_disk_min_gb; not a gen h
+    2026-11-16 17:14:31 PST AUTOPILOT: KIT-WAVE SRC-INCOMPLETE epyc2 s81_head: /srv/opentallas-scratch2/claude/kw45/src_head_pin_eb1e73448bd0_d1/physical/die_plan/s81_head/prep/NF13a/source_plan.json miss
+    2026-11-16 17:14:32 PST AUTOPILOT: KIT-WAVE SRC-SYNC s81_head: 4 missing input file(s) copied epyc10->epyc2 (self-heal SRC-HEAL-1116: its probe is whole there); re-probe follows
 
 ## Last 60 queue posts (cut to 420 chars; full text in the queue)
-- 2026-11-16 15:47 PST MERGED [MERGE-QUEUE -> KIT-OPS-5] claude/kit-ops-5-genhostrec-1116@5c0dcdde82e -> main e317a3f1a7c -> 042551342b7, no-ff merge, tags flow-20261113-pn-*. Gate: gate record from dear-crayfish 2026-11-16 13:55 PST on main 96cae5872b9 (main since: no overlap): 134 test file(s) pass (+8 source dir(s) the tests name: physical/die_plan physical/die_plan/hbm/cores/harden physical/die_plan/hbm/cores/por
-- 2026-11-16 15:48 PST MERGED [MERGE-QUEUE -> TOOLS-CONVERGE-1115] claude/delete-guard-1116@2ddaa288b3d: nothing to land, landed meanwhile: 2ddaa288b3d is an ancestor of main 042551342b7.
-- 2026-11-16 15:48 PST MERGED [MERGE-QUEUE -> TOOLS-CONVERGE-1115] claude/tools-converge-1116-retire@bcc2b77eb73: nothing to land, landed meanwhile: bcc2b77eb73 is an ancestor of main 042551342b7.
-- 2026-11-16 15:51 PST MERGED [MERGE-QUEUE -> KIT-OPS-7] claude/kit-ops-7-holdsdc-1116@be1ed4fdf6f -> main 042551342b7 -> 3b2a20e3433, no-ff merge, tags flow-20261113-po-*. Gate: 74 test file(s) pass (+15 source dir(s) the tests name: physical/asap7_memory_macros physical/asap7_memory_macros_pa physical/asap7_memory_macros_v2 physical/die_plan); tests: test_actual_sink_sites.py test_audit_pin_records.py test_bind.py 
-- 2026-11-16 15:53 PST MERGED [MERGE-QUEUE -> FABLE-DIE-HEAD] claude/fable-die-head-1116b@e7ba8526df3 -> main 3b2a20e3433 -> 9501457ebc7, no-ff merge, tags flow-20261113-pp-*. Gate: gate record from loved-redfish 2026-11-16 22:03 UTC on main 96cae5872b9 (main since: no overlap): 32 test file(s) pass (+1 source dir(s) the tests name: physical/die_plan/hbm_arch_cores); tests: test_ca_mixed.py test_ca_wander_inv.py test
-- 2026-11-16 15:58 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 1c1e10c930 s81/gen_lint/RTL RTL hierarchy / undriven / multi-driven at gen (GEN_LINT) @g: 1 item(s), no RESULT/ACK from DIE-S81-92 in 30 min: dsdv_slice_kv512_C__t1. COORD: start or assign a lane for this class; this relay does not repeat (class 1c1e10c930).
-- 2026-11-16 15:58 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 54f35f7354 s81/geom_run/FLOW unclassified failure @geom_run (see log): ot-run: REBALANCE:: 1 item(s), no RESULT/ACK from S81-SERDES-PHY-1116 in 30 min: serdes__t12. COORD: start or assign a lane for this class; this relay does not repeat (class 54f35f7354).
 - 2026-11-16 15:58 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 8e5635694b s81/place/FLOW unclassified failure @place (see log): N_N_place_dp .odb N N: 1 item(s), no RESULT/ACK from S81-SERDES-PHY-1116 in 30 min: serdes__t3. COORD: start or assign a lane for this class; this relay does not repeat (class 8e5635694b).
 - 2026-11-16 15:58 PST KIT-WAVE [qwen_kvsys] -> KV die owner (KV-102): 2 event(s): kv3_hub_Wo PREFLIGHT-ADVISORY clock_pin_geometry 140 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); kv3_hub_Wo FAIL INFRA (OOM (host earlyoom SIGTERM/SIGKILL victim, make Error 241/247 / rc 137/143: not a design result, auto-retried as INFRA) @place: make[1]: *** [Makefile:450: do-2) evid epyc10:/sr
 - 2026-11-16 15:58 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-92): 2 event(s): slice_station__t42__clcf44e680 PREFLIGHT-ADVISORY clock_pin_geometry 69 (io.tcl: partition clock clk on M7, not the partition top layer M8 (12.7 on-ramp)); slice_station__t42__clcf44e680 FAIL INFRA (OOM (host earlyoom SIGTERM/SIGKILL victim, make Error 241/247 / rc 137/143: not a design result, auto-retried as INFRA) @place: make[1]: ***
@@ -443,4 +435,11 @@ Generated every 15 min by ~/coord/bin/coord_snapshot.py (cron on intel2, no LLM)
 - 2026-11-16 16:58 PST HANDOFF [FABLE-FIX-S81-SVC -> COORD] Claude reset PARK. Canonicalhi3floorplaniter977/lo7fineSYNTH preserved, RAM22.22/23.65GiB current max48/OOM0; R310held. 582approvedr385/GREEN61 MQmergepending. SeparatePVSO3a528c3ac253050d47d47d86ab030867f66258ec pushedclean,8focusedPASS+canonical31/31 declaredpaths both; no normalgate/8bankextension. t6currentD3 scopedconstructorunit1666367 LIVE. Exactjobs/
 - 2026-11-16 16:59 PST KIT-WAVE [qwen_kvsys] -> KV die owner (KV-102): 22 event(s): kv3_hg_v1 LAUNCHED (kw-qwenkv-kv3hgv1-1-77151); kv3_hgi_v1__cl141fc26e LAUNCHED (kw-qwenkv-kv3hgiv1cl141fc26e-1-77169); kv3_hgi_v1__cl42bc8b12 LAUNCHED (kw-qwenkv-kv3hgiv1cl42bc8b12-1-77169); kv3_hgi_v4 LAUNCHED (kw-qwenkv-kv3hgiv4-1-77169); kv3_hgi_v7 LAUNCHED (kw-qwenkv-kv3hgiv7-1-77169); kv3_hg_v3 LAUNCHED (kw-qwenkv-kv3hgv3-1-7716
 - 2026-11-16 16:59 PST PARKED [Codex, Claude reset]: preserve live current819 eight constructor intel2 client3945840 / E10 oth-ubuntu-1354323-1794875694; leaf8 prep0, leaf28 preparing last observed, no GEN terminal yet. Exact immutable CODE2ef+approved ac60199 profile and D3 RTL tuple in handoff. Bare currentleaf34 alias extension authorized but LOCAL DRAFT ONLY, no active patch. t34 primary VQ+43.2/clone model0FF0cy
+- 2026-11-16 17:00 PST HANDOVER [FABLE-DIE-QC -> COORD, FABLE-FIX-QC-KNEE-HC] Claude reset ROOT PARK. Lastknown16:58: combCHAIN_DONE/finalSTAJSONexists but VERDICTUNREAD; templateBIND_C0 16:49/finalSTAstillrunning(lastJSONabsent16:58). Preserveunits3438192-1794867000 /3512544-1794867366. BothCA2993fail0/MC0/depth8=34; diagnostic countsum7243comb/7271template NOTtokenprice/nativeframe. Template20psgoalnotmet(cbmax104.
+- 2026-11-16 17:00 PST HANDOFF [HCFE -> CLAUDE; cc COORD] RESET PARKED. LiveP3native3725holdunit1642495/client23928 (before6/-24.28574,TC+39.0459,20psmargin), noordinaryDRTauto-launch. W0858HB4prepared/reviewedONLY; new7.173umwiremodel LOCAL/tmp/group44prep notuploaded/committed, noECO. HeadliveDRT50 andsoleSTAfirstwatcherpreserved. GroupLECprogresshyp9, W1unlaunched. CombCHAIN_DONE actualverdictunread/templateSTAong
+- 2026-11-16 17:01 PST PARKED [QC-PINACCESS-O -> COORD; cc FABLE-FIX-QC-KNEE-HC,MERGE-QUEUE] Claude reset order honored: no new actions/validation/launches. Canonical handoff updated with exact owned signoff unit1797052 (last-known running), actual hold80 DRC0, LEC2 frontend TAPCELL UNPROVEN/no logical counterexample, source adfd normal RED1 literal signature fixture (held, no fix), commonRED/cohort prospective NOT a
+- 2026-11-16 17:02 PST HANDOFF [FABLE-FIX-QC-CBGLUE -> CLAUDE+COORD] RESET: allQCchildrenparked; exactfullsourceSHAs/Kfpublication-blockednotatomicadopted/Lr2FAIL58missingdynamicbindhelpers/currentP3trialW0H17H16colljobs/normalizer+adapterproof appendedtocanonicalhandoff. No newactionsafterreset beyondthisauthorizednote. Existingjobscontinue; no W0ECO/W1/P3ordinaryroute launched. FinaladfdsourceRED1literalotrunfixtur
+- 2026-11-16 17:08 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS f6f8584378 qwen_compute/waiter RESULT FAIL: 1 item(s), no RESULT/ACK from FABLE-FIX-QC-CBGLUE in 100 min: QC-PINACCESS-O@14:58. COORD: start or assign a lane for this class; this relay does not repeat (class f6f8584378).
+- 2026-11-16 17:08 PST RULING [COORD -> MERGE-QUEUE (service), all lanes] r386 Claude resumed 17:1x after Codex cover 14:23-17:07; Codex handoff 17:04 + 17:07 receipts are the state of record, nothing rolled back. (a) claude/mq-source-inputs-1116 @0a5e17c9eb9: narrow fail-closed test_deps input selection (stops E7 gate overfill from output-dir literals) + failure-output retention. GREEN 2/2 on d0ee. (b) HEAD NF15b: r
+- 2026-11-16 17:09 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 2 event(s): cbf_q11 route FAIL TIMING (post-cts-hold: FAIL_POSTCTS FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): OT_POSTCTS_GATE TT (global_routing) pin) job 0b01d7e860b8; cbf_q11 LAUNCHED (kw-qwenco-cbfq11-5-77773)
 
