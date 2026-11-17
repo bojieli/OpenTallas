@@ -22,9 +22,9 @@
     "clock": "PASS",
     "evidence": "HG1A r354/r355: /srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/gate/gate.out actual pre0/G0errors0/strictbind0; LAT2404/2404. PGR1D3 uses original KV generator +approved PG-only authored8df hunk/6ce Tcl; native56/source payload identity and normal source preflight230 PASS. Only hg_v1/hg_v3/pv_v1n pilot release;31 CTS-proof holds retained."
    },
-   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d3/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+   "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
    "gen_host": "epyc10",
-   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d3",
+   "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5",
    "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "kit_rtl": {
     "mode": "bind",
@@ -36,7 +36,7 @@
     "--hold-ff-margin",
     "0",
     "--clock-landing",
-    "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d3/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
    ],
    "type_args": {
     "kv3_hub_Ei": [
@@ -264,7 +264,8 @@
     "kv3_hub_Wo@1",
     "kv3_pv_v1@25",
     "kv3_hub_C@2",
-    "kv3_pv_v1@26"
+    "kv3_pv_v1@26",
+    "kv3_hg_v1@1"
    ],
    "take_states": [
     "NEEDS-KIT",
@@ -595,12 +596,11 @@
     "kv3_pc_v3@7": "KV kvgeom4 (CLAND-GEOM stage xy / bands / bound_r8_straps): plan block changed (kv3_pc_v3: gen fix); relaunch. Unchanged types keep running.",
     "kv3_pv_v1@25": "FLOW-FIX: TOOLS-CONVERGE-1115 root-authorized portable manifest metadata fix: normal ROOT policy0, native56 equality, actualbind_matches56 LATCHECK2404 and actual hub_C KITRTL0; AB7f285ea9c8bd + new ctx2. Same source4312921fd6bb and plan723fd5b4b006; no circuit change.",
     "kv3_hub_C@2": "FLOW-FIX: root r352/r355 approved snapcopy863137e6e12 + snapkey7d8085c408f merged and full six-host sync db95 completed14:56:09; current cfg rebuilds its own verified snapshot. Sole capture e790 has missing eW table SHAe8b77b956217; no old snapshot mutation or source/AB churn.",
-    "kv3_pv_v1@26": "FLOW-FIX: root r352/r355 approved snapcopy863137e6e12 + snapkey7d8085c408f merged and full six-host sync db95 completed14:56:09; current cfg rebuilds its own verified snapshot. Sole capture e790 has missing eW table SHAe8b77b956217; no old snapshot mutation or source/AB churn."
+    "kv3_pv_v1@26": "FLOW-FIX: root r352/r355 approved snapcopy863137e6e12 + snapkey7d8085c408f merged and full six-host sync db95 completed14:56:09; current cfg rebuilds its own verified snapshot. Sole capture e790 has missing eW table SHAe8b77b956217; no old snapshot mutation or source/AB churn.",
+    "kv3_hg_v1@1": "source changed D3->D5, cause fixed (KV-R 11-16 18:5x: GEN FileNotFoundError kvhg1_views_1116/*/provenance.json; D5 7a4761d359fa carries provenance.json + landing_evidence for the views); pilot kv3_hg_v1 on the PILOT hold"
    },
    "only_items": [
-    "kv3_hg_v1",
-    "kv3_hg_v3",
-    "kv3_pv_v1n"
+    "kv3_hg_v1"
    ],
    "plan_items_from_allowlist": true,
    "only_items_note": "KW-FIX-4 11:0x (COORD 11:01 KV 10:46 ASK): the 6 plan_c types kv3_pv_v1n..v6n have no OWNERS row (ownership.py census reads physical/die_plan/qwen_kvsys/die_plan.json, not plan_c), so the wave never selected them. only_items = every KV OWNERS item at 11:0x (71) + the 6 n-types, plan_items_from_allowlist true (rows added for plan types). Remove only_items when the census reads plan_c.",
@@ -5782,21 +5782,6 @@
      "carry": true
     },
     {
-     "id": "qwen_kvsys-kvgeom7yhr-01",
-     "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
-     "release": [
-      "event_adopt:kvgeom7yhr"
-     ],
-     "items": [
-      "kv3_hub_Wo",
-      "kv3_hub_C",
-      "kv3_pv_v1",
-      "kv3_pv_v7",
-      "kv3_pv_v12"
-     ],
-     "reason": "HOLDGEN-1115 2026-11-16 (COORD request): KV hub_Wo / hub_C / pv_v1 / pv_v7 / pv_v12 fail the same way on 7uh; no unchanged relaunch until the kvgeom7yhr event adopts. Running attempts finish. Released automatically by event_adopt:kvgeom7yhr."
-    },
-    {
      "id": "qwen_kvsys-hold-pc-sysc-01",
      "plan_sha": "68a458bd58244c4eef868fe0cd9c4bf93e45c6b5ea2723448a2f4e8c6ad02926",
      "items": [
@@ -5850,6 +5835,22 @@
       "kv3_pv_v8"
      ],
      "carry": true
+    },
+    {
+     "id": "pilot-qwen_kvsys-7a4761d359fa",
+     "plan_sha": "08d352df7ef0ab9adad227d83d30a835262636d879ef7aa82bf38876d5313065",
+     "reason": "PILOT after tree switch: one GEN pilot (kv3_hg_v1) from tree 7a4761d359fa must pass GEN + preflight first",
+     "release": [
+      "gen_pilot:qwen_kvsys:7a4761d359fa"
+     ],
+     "items": [
+      "*"
+     ],
+     "pilot_items": [
+      "kv3_hg_v1"
+     ],
+     "follow_plan": true,
+     "auto_pilot": true
     }
    ],
    "planned_events": [
@@ -5881,7 +5882,7 @@
     },
     "src_manifest": "verify"
    },
-   "src_manifest_hash": "13f758a4fe342e4838cebd2401f11f37570e92e46e226642e518ad78245f776d",
+   "src_manifest_hash": "7a4761d359fa7bce181d4648cbcd7cde8005203d3211f6f7666d5b1bd3551fd7",
    "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
    "prev_widen1116": {
     "gen_host": "epyc10",
@@ -5896,7 +5897,11 @@
      "epyc10"
     ],
     "gen_host": "epyc9"
-   }
+   },
+   "superseded_trees": [
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d3"
+   ],
+   "pilot_item": "kv3_hg_v1"
   },
   "s81": {
    "enabled": true,
