@@ -1,5 +1,6 @@
 """KIT-WAVE-2: after the placed kit is back on the gen host, the PLACE-host and hub relay copies are removed"""
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -13,7 +14,9 @@ def fake_run_factory(calls, fail_stage=None):
         s = " ".join(argv)
         calls.append(s)
         out, rc = "", 0
-        if "run_kit.sh" in s:
+        if "KW_GEOM_TOOLS_OK" in s:
+            out = re.search(r"KW_GEOM_TOOLS_OK [0-9a-f]{16}", s).group(0) + "\n"
+        elif "run_kit.sh" in s:
             out = "ot-run: RAN on epyc2 (unit oth-1): exit 0\n"
         elif "3_place.odb" in s:
             out = "/w/gen/T/run/results/asap7/x/base/3_place.odb\nNumber of cells: 1000\n"
