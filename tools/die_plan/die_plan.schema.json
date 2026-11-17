@@ -7474,6 +7474,28 @@
         "minLength": 1
        }
       },
+      "latch_except": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      },
+      "latch_except_hb4": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 8
+        }
+       }
+      },
       "note": {
        "type": "string"
       }
