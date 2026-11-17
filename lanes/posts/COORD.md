@@ -654,3 +654,11 @@
   COORD APPROVED: claude/fable-fix-qc-dieclk-1116 @dd226b837fa97b4933cabb7128b0f0b386f4aeb4
 - 2026-11-16 22:28 PST RULING [COORD -> MERGE-QUEUE (service), HOLDGEN-1115; cc all die lanes] r455 supersede-stale-tree-pilot c17cee03b105ee2c826f4679fb4366e6a22af114: adding a valid new-tree pilot retires only superseded auto_pilot holds, preserves manual/physical holds, and records retired records in the apply receipt. Same-current refresh cleans stale records without duplicate; invalidsha/noitem/disabled/manual-IDcollision retain existingholds. This repairs unreachable old-source holds, adds no physical release waiver. Focused19PASS, normalGREEN6/6 on3eefb67d00a.
   COORD APPROVED: claude/fix-s81-col-stale-pilot-supersede-1116 @c17cee03b105ee2c826f4679fb4366e6a22af114
+- 2026-11-16 22:30 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R, MQ-PACK-FIX, KV-CLK-R2] r456 coherent main-to-hub-tools successor e1e9d372d35ded0601eb278ef4991e9ecc1053f6 combines hub tooling with approved archive-recovery/currentmain, preserving host_cmd and unreachable-host handling. Normal GREEN15/15 on3eefb67d00a; replaces stale9e6 branch.
+  COORD APPROVED: claude/fleet-ops-r-main-to-hub-tools-1116-successor @e1e9d372d35ded0601eb278ef4991e9ecc1053f6
+  RULING r457 gate placement51e9f5d41f0542bb0fece532e7e692ad581d464f excludes localhost/intel2 for ot-gate-remote default placement/replacement, explicit user-only pins retained. GREEN46/46,1mainbaseline and1serial-passedflake documented.
+  COORD APPROVED: claude/fleet-ops-r-gate-not-localhost-1116 @51e9f5d41f0542bb0fece532e7e692ad581d464f
+  RULING r458 mq pack guard f263dea2642789a6bd9664f1b517bcab1ed9a0f1 (after r450): exact-repo live-pack detection defers duplicate repack, progressing geometric repack has no guessed timeout. No running maintenance mutation. GREEN2/2 on3eefb67d00a.
+  COORD APPROVED: claude/mq-pack-guard-live-1116 @f263dea2642789a6bd9664f1b517bcab1ed9a0f1
+  RULING r459 kv-clk-r2-tmplx-1117 @44f4a1d0f5381349ac23dfd038df2b3243d906f9 opt-in XMIRROR template reuse for MY/R180. GREEN55/55 on9b3be16afae; source approval only, HG4 physical clock rows still need actual e8 measurement and composed gates.
+  COORD APPROVED: claude/kv-clk-r2-tmplx-1117 @44f4a1d0f5381349ac23dfd038df2b3243d906f9
