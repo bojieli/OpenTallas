@@ -74,3 +74,33 @@ Logs: intel2 ~/fable-fix-s81-serdes2/. Lane dirs: epyc2 + epyc9 /srv/opentallas-
    no -> single-worker debug dump (detailed_route_debug -dr -worker ... -dump_dr) on the failing box to find the hard edge.
 2. H17 GRT TT by class. Under -42 on an rck pair class -> structural call (centre trunk / AM cycle) with numbers to S81-DIE-R3.
 3. H17 DRT -> sign-off gates -> exports. If H17 dies in DRT for another reason, rerun only do-5_2_route from its 5_1_grt.odb.
+
+## State 14:55 PST (epyc9 date prints UTC = PST + 8)
+DONE
+- Branch 1 READY + approved r598: claude/s81-serdes-pg-row-guides-1117 @39c0d49c9809f9882ba42e2dde92d97bb28723f7 (guide move + rck 16 rounds default), gate GREEN 62/62.
+- G1/G2 stopped (ot-heavy-stop). H17 guide-only route stopped by exact unit; H17 GRT DB intact: epyc9 .../H17/serdes__t13/gen/serdes__t13/run/results/asap7/dp_serdes__t13/base/5_1_grt.odb
+  (GRT TT -27.17 / 39 ends policy PASS; internal FF hold +0.12, 0 negative).
+- Guide move alone: route converges to 607 = 544 PMA RX pad shorts (input buffer chain between die pin and macro pin) + 63 at dchn
+  (36 short + 21 EOL at cw_q top-edge pins beside the M5 VDD strap; 6 M6 spacing at clk / rst_n interior pins under the M6 pair).
+HOOKS (durable source: epyc9 .../fable-fix-s81-serdes2/drtx/eco/{pad_in_direct.tcl,pg_pin_notch.tcl,pg_row_guides.tcl,serdes_pre_drt.tcl})
+- pad_in_direct.tcl: walks single-fanout BUF chains from any INPUT BTerm whose pin lies on a block pin; 544 pads, 1557 buffers removed on H15 DB.
+- pg_pin_notch.tcl v2: v1 removed every PG via overlapping a notched box incl. the M1-M2 via row of a std rail -> new floating row at y 499.
+  v2 removes only vias landing on the notched layer with centre in the removed part. 44 boxes notched.
+RUNNING on epyc9 (logs intel2 ~/fable-fix-s81-serdes2/)
+- drtx/E1: proof route, H15 DB + three hooks (notch v1). 97585 -> 18313 after iteration 1. Read OT_STEP lines in drtx/E1/drt.log; target DRC 0.
+- drtx/pgchk3_E2: check_power_grid VDD with full error file on the E2 DB (hooks with notch v2). Diff its VDD.rpt bbox lines against
+  drtx/pgchk_base/VDD.rpt: there must be no entry outside y 921.24-1205.82 (base has only the north band). pgchk2-{base,E1} still doing VSS.
+- drtx/ttsk_H17 (v2): TT census (violating ends with q-side slack, p_d / txl rows, per-clock insertion). v1 crashed.
+- F1 (.../F1, unit 3281425-1794955725): floorplan-only kit with PRE_TAPCELL_TCL = phy_region_rows.tcl (region blockage before row cut).
+  Check with drtx/eco/north2.tcl on F1 2_floorplan.odb (run_north2.sh <dir>): W-north VDD M1/M2 rails must be > 31 (base: 31, all above y 1206).
+PG DEFECT (all serdes types with a PHY supply region): rows W/E of the PHY region overlap it (317.25 vs 314.928; 2567.70 vs 2575.69) -> no CORE
+followpin rails on 2108 rows, ~16k cells (15.7k taps, ~480 logic incl. 56 DFF). Straps are fine. H17 carries it; IR not run.
+NEXT
+1. E1 DRC 0? -> H17 route-only: copy the 4 hook files into the H17 kit, config.mk PRE_DETAIL_ROUTE_TCL = /work/serdes_pre_drt.tcl (replace the
+   pg_row_guides line), resume-only edits as in RESUME_NOTE_H16.txt (OT_PREGRT_FF_HOLD 0; tt_setup_repair.on -> off so 5_1_grt.odb is not re-repaired),
+   relaunch H17_run_route.sh via ot-run. Then sign-off gates, exports (AGIdock + rtx-pro, INDEX rows), IR sidecar (meaningless until PG fix).
+2. Branch 2 (from main): the two new hooks + serdes_pre_drt chain in gen_phys; pad_bump_dt.tcl rows for INPUT macro_pin pads (dont_touch before
+   buffer_ports) for every family; PHY-REGION-ROWS-1 in phy_pg_pdn (after F1 proves it); tests; ot-gate-remote; READY.
+3. COORD lever 5b: split clk_t42 (6528 sinks, tap insertion spread 163-554 vs target 250) into 2-3 taps in the serdes plan; decide on census v2.
+4. COORD lever 5c: CAPSKEW-ECO lane owns tools/die_plan/capskew_eco_run.py; give it census v2; no second tool.
+5. Other 10 types (and t13 again) from the fixed generator through the wave.
