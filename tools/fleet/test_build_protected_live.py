@@ -31,3 +31,30 @@ class Live(unittest.TestCase):
     def test_unreadable_kit_wave_refuses_an_empty_list(self):
         with self.assertRaises(SystemExit):
             B.build(tempfile.mkdtemp(), [])
+
+
+class Cutover(unittest.TestCase):
+    def test_a_prov_view_sources_current_kept_prev_dropped(self):
+        cfg = {"dies": {"s81": {"prov_view_sources": {"v": R + "views/cur/a/b"}, "prov_view_sources_prev_kw43": {"v": R + "views/old/a/b"}}}}
+        d = mk(cfg)
+        self.assertEqual(B.build(d, []), {R + "views/cur/a/b"})
+
+    def test_b_in_flight_event_json_recent_only(self):
+        d = mk({"dies": {}}); os.makedirs(d + "/autopilot/tree_checks")
+        json.dump({"bind": R + "events/c4/bind/x", "superseded_trees": [R + "kw45/src_x"]}, open(d + "/autopilot/tree_checks/aa", "w"))
+        old = d + "/autopilot/tree_checks/bb"; json.dump({"bind": R + "events/old/bind/y"}, open(old, "w")); os.utime(old, (1, 1))
+        out = set(); B.event_paths(d, out, os.path.normpath)
+        self.assertEqual(out, {R + "events/c4/bind/x"})
+
+    def test_c_cmdlines_and_units(self):
+        p = tempfile.mkdtemp(); os.makedirs(p + "/123"); open(p + "/123/cmdline", "wb").write(("ot-run --dir " + R + "lane/q/run/x --stage " + R + "t/a/b/c").encode().replace(b" ", b"\0"))
+        u = tempfile.mkdtemp(); open(u + "/a.service", "w").write("ExecStart=python3 " + R + "svc/tools/a/b.py")
+        out = set(); B.live_cmd_paths(out, os.path.normpath, proc=p, unit_dirs=(u,))
+        self.assertEqual(out, {R + "lane/q/run/x", R + "t/a/b/c", R + "svc/tools/a/b.py"})
+
+    def test_d_handoff_prose_last_24h_not_queue_not_coord(self):
+        d = tempfile.mkdtemp(); new = d + "/lane.md"; old = d + "/old.md"; q = d + "/COORD-REVIEW-QUEUE.md"; cd = d + "/COORD-X.md"
+        for f in (new, old, q, cd): open(f, "w").write("see " + R + ("n/e/w/" if f == new else "o/l/d/") + "path")
+        os.utime(old, (1, 1))
+        out = set(); B.prose_paths([new, old, q, cd], out, os.path.normpath)
+        self.assertEqual(out, {R + "n/e/w/path"})
