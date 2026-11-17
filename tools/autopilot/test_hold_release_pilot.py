@@ -102,6 +102,52 @@ class ReleasePilot(unittest.TestCase):
         c["dies"]["s81"]["hold_records"][0]["pilot_release"] = False             # a record may opt out
         self.assertEqual(len(compile_(c)), 34)
 
+    def test_live_gen_receipt_releases_before_place_and_only_after_release(self):
+        import hashlib, json, tempfile
+        path = Path(tempfile.mkdtemp())
+        spec = {"die":"s81", "item":"t00", "src":"/tree", "src_manifest_hash":"a"*64,
+                "plan":"/x/B6gG3.json", "gen_args":[], "gen_env":{}}
+        file = path/"spec.json"; file.write_text(json.dumps(spec))
+        stages = {stage:0 for stage in KW.GEN_PILOT_STAGES}
+        self.assertTrue(KW.publish_gen_pilot_receipt(file,hashlib.sha256(file.read_bytes()).hexdigest(),stages))
+        c = cfg(); c["_now"]=1000.0
+        c["dies"]["s81"].update(src="/tree",src_manifest_hash="a"*64)
+        self.assertEqual(compile_(c)[0][1],"t00")
+        c["dies"]["s81"]["hold_records"].append({"id":"physical","plan_sha":PLAN,"items":["t33"],
+            "reason":"physical proof still required","release":["result:PHYS:ready"]})
+        row={"die":"s81","item":"t00","status":"RUNNING","started":1000.0,"dir":str(path)}
+        self.assertFalse(KW.release_pilot_passed([dict(row,started=999.99)],"s81","t00",1000,c))
+        self.assertFalse(KW.release_pilot_passed([dict(row,item="t01")],"s81","t00",1000,c))
+        import os
+        receipt=path/"gen_pilot.json"
+        os.utime(receipt,(999.99,999.99))
+        self.assertFalse(KW.release_pilot_passed([row],"s81","t00",1000,c))
+        os.utime(receipt,(1001,1001))
+        self.assertTrue(KW.release_pilot_passed([row],"s81","t00",1000,c))
+        self.assertEqual(len(compile_(c,[row])),34)
+        self.assertEqual(c["dies"]["s81"]["hold_items"],{"t33":"physical proof still required"})
+        self.assertFalse((path/"result.json").exists())           # no whole-job/physical PASS was manufactured
+
+    def test_live_gen_receipt_rejects_wrong_source_spec_or_incomplete_stage(self):
+        import copy, hashlib, json, tempfile
+        path=Path(tempfile.mkdtemp())
+        spec={"die":"s81","item":"t00","src":"/tree","src_manifest_hash":"a"*64,
+              "plan":"/x/B6gG3.json","gen_args":[],"gen_env":{}}
+        file=path/"spec.json"; file.write_text(json.dumps(spec))
+        stages={stage:0 for stage in KW.GEN_PILOT_STAGES}
+        KW.publish_gen_pilot_receipt(file,hashlib.sha256(file.read_bytes()).hexdigest(),stages)
+        c=cfg(); c["dies"]["s81"].update(src="/tree",src_manifest_hash="a"*64)
+        row={"die":"s81","item":"t00","status":"RUNNING","started":1001,"dir":str(path)}
+        for field,value in (("src","/other"),("src_manifest_hash","b"*64),("plan","/other.json")):
+            changed=copy.deepcopy(c);changed["dies"]["s81"][field]=value
+            self.assertFalse(KW.release_pilot_passed([row],"s81","t00",1000,changed),field)
+        file.write_text(json.dumps(dict(spec,dry_gen=True)))
+        self.assertFalse(KW.release_pilot_passed([row],"s81","t00",1000,c))
+        file.write_text(json.dumps(spec))
+        receipt=path/"gen_pilot.json"; rec=json.loads(receipt.read_text());rec["stages"]["preflight"]=2
+        receipt.write_text(json.dumps(rec))
+        self.assertFalse(KW.release_pilot_passed([row],"s81","t00",1000,c))
+
     def test_kit_wave_wires_state_and_the_pass_test(self):
         src = (Path(__file__).resolve().parent / "kit_wave.py").read_text()
         self.assertIn('st.setdefault("hold_release_pilot", {})', src)
