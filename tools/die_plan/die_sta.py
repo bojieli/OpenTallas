@@ -1389,7 +1389,7 @@ def evaluate_clock_endpoint_coverage(libs, corner_result, expected_sha256):
 # --------------------------------------------------------------------------------------------------------------- STA tcl
 def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mode, period_ps, groups, spine=None,
             die_spef=None, etm_libs=None, seam_paths=100000, reduce=False, spine_model="ports", stitch=None,
-            extra_verilog=(), crpr_pairs=200, intra_pairs=0, clock_transfers=()):
+            extra_verilog=(), crpr_pairs=200, intra_pairs=0, clock_transfers=(), entry_phase=()):
     """OpenSTA script of one die run.  stitch: dict(core={instance: core SPEF}, spef=stitch SPEF, die_core=die SPEF
     without the stitched nets | None) from write_stitch; when given, the partition (and die-clock-tree) SPEFs are
     read as their core SPEFs with -path and the stitch SPEF (all port-crossing nets) after them.  crpr_pairs: CPPR
@@ -1449,6 +1449,7 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
           f"set_clock_uncertainty {UNC_HOLD_PS:.4f} -hold [all_clocks]",
           f"set fh [open {out_txt} w]",
           f"puts $fh \"mode {mode} corner {corner}\"",
+          *(__import__("pin_entry_phase").sta_tcl_lines(entry_phase) if entry_phase else ()),
           f"proc ot_ck {{pin}} {{ if {{[catch {{set a [get_property $pin arrival_max_rise]}}] || $a eq \"\"}} {{ return NA }}; "
           "return [format %.2f $a] }",
           "proc ot_ckpin {pin} { set i [file dirname $pin]; foreach c {CLK CK clk} { set q [get_pins -quiet $i/$c]; "
@@ -1888,7 +1889,8 @@ def cmd_run(a):
                                a.period_ps, groups, spine, a.die_spef, etm_libs, reduce=a.reduce,
                                spine_model=a.spine_model, stitch=stitch, extra_verilog=extra_v,
                                crpr_pairs=a.crpr_pairs, intra_pairs=a.intra_pairs if a.mode == "flat" else 0,
-                               clock_transfers=clock_transfers))
+                               clock_transfers=clock_transfers,
+                               entry_phase=json.loads(Path(a.entry_phase).read_text())["rows"] if a.entry_phase else ()))
         if a.no_stitch and a.spine_tree and CTREE_INST in inst_spef:
             t = tcl.read_text().replace("puts \"OT_PARASITICS", f"read_spef -path {CTREE_INST} {inst_spef[CTREE_INST]}\nputs \"OT_PARASITICS", 1)
             tcl.write_text(t)
@@ -2218,6 +2220,8 @@ def main(argv=None):
                                          "(die_clock.py): real die clock tree as instance u_dieclk (CPPR sees the common path)")
     r.add_argument("--no-stitch", action="store_true", help="old parasitics: partition SPEFs only (port nets lose RC)")
     r.add_argument("--crpr-pairs", type=int, default=200, help="CPPR search for the N worst related seam pairs")
+    r.add_argument("--entry-phase", help="pin_entry_phase rows JSON (pin_entry_phase.py rows --plan): declared reset/"
+                   "START entry capture edge per instance (setup multiplier + masked unselected capture)")
     r.add_argument("--intra-pairs", type=int, default=200, help="flat mode: worst-K internal setup / hold paths per "
                                                                    "partition instance for intra-partition pair skew (0 = off)")
     r.add_argument("--libdir")

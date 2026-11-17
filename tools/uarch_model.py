@@ -17810,6 +17810,37 @@ def s81_head_lep_vf_stage_calendar_model():
                       'native timing and parent pin/clock/reset joins remain required')
 
 
+def s81_head_lep_nf15f_stage_calendar_model():
+    """HEAD-PLAN-R4 11-17 NF15f: hop-halving tuple + RX head rank (RXH) register legs, priced per traversal.
+
+    Same rule as vF: every named register leg is charged once per traversal; FIFO residence and leases come from the
+    exact selected programme.  Ring traversal ro -> TX FIFO -> K link -> lane/peer -> K link -> RX release -> ri.
+    """
+    from s81_head.lep_calendar_1113.lep_calendar import VF, NF15F, Stages
+    nf15e = Stages(ktx=0x0000, krx=0x1330, txi=0x1221, pin=4, pout=4, plw=3, col0=2)
+    def ring(st, lane):   # forward register legs of one ring beat on this lane
+        return st.pin + st.lane('txi', lane) + st.lane('ktx', lane) + st.lane('krx', lane) + st.rxh + st.pout
+    def credit(st, lane):  # K-link credit round trip added by the forward + reverse legs
+        return 2 * (st.lane('ktx', lane) + st.lane('krx', lane))
+    per_lane = {f'lane{i}': dict(ring_vF=ring(VF, i), ring_nf15e=ring(nf15e, i), ring_nf15f=ring(NF15F, i),
+                                 ring_added_vs_nf15e=ring(NF15F, i) - ring(nf15e, i),
+                                 credit_rtt_added_vs_nf15e=credit(NF15F, i) - credit(nf15e, i))
+                for i in range(4)}
+    return dict(
+        schema='opentallas.head-lep-nf15f-register-legs.v1',
+        default_enabled=False, params=NF15F.params(),
+        added_cycles_per_explicit_register_leg=NF15F.legs(),
+        added_vs_nf15e={k: v - nf15e.legs().get(k, 0) for k, v in NF15F.legs().items()},
+        added_logical_stage_state_bits=NF15F.state_bits(),
+        ring_register_cycles_per_lane=per_lane,
+        landing_notification_added_cycles=NF15F.rxh,
+        calendar_qualified=False, programme_qualified=False, production_token_period_cycles=None,
+        composition='shift source-dated coherent tuple events at each named register leg once (lep_calendar.shift_events); '
+                    'K-link credit legs lengthen the credit round trip (CRED 12 / DR 12 unchanged)',
+        qualification='production compiler calendar must be rerun on this tuple (programme sha + static replay + '
+                      'removed-reservation mutant) before token credit')
+
+
 def s81_serdes_lpl_chunk_model(chunk_bits=0, dff_body_um2=0.2916):
     """Size existing OT_S81_LPL_CHUNK, preserving all eleven D4/K2 calendars."""
     if dff_body_um2 <= 0:

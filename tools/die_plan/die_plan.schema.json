@@ -4784,6 +4784,9 @@
        "pin_entry_fall": {
         "type": "boolean"
        },
+       "pin_entry_phase": {
+        "type": "boolean"
+       },
        "pin_entry_delay": {
         "type": "object",
         "additionalProperties": false,
@@ -6433,6 +6436,11 @@
        "minimum": 0
       }
      },
+     "reset_entry_phase": {
+      "type": "integer",
+      "minimum": -8,
+      "maximum": 8
+     },
      "note": {
       "type": "string"
      }
@@ -7472,6 +7480,28 @@
        "items": {
         "type": "string",
         "minLength": 1
+       }
+      },
+      "latch_except": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      },
+      "latch_except_hb4": {
+       "type": "object",
+       "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+         "type": "integer",
+         "minimum": 1,
+         "maximum": 8
+        }
        }
       },
       "note": {

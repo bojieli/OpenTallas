@@ -118,8 +118,11 @@ OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
 LANE = "KIT-WAVE-1"
 # STRUCTURAL (DIE-HBM-97 11-10, COORD): a design verdict the flow reached early (gpl-noconverge); held like FLOW/PLAN
 CLASSES = ("PLAN", "FLOW", "RTL", "INFRA", "STRUCTURAL")
-CELL_CAP = 400_000       # default kit run cap; a kit's own native_cell_count.json limit (--native-cell-cap) overrides it
-CELL_CAP_MAX = 517_000   # COORD 11-04 06:00 (2): 400k advisory up to the largest closed run; above stays stopped
+import importlib.util as _ilu
+_cc_spec = _ilu.spec_from_file_location("cell_cap", str(Path(__file__).resolve().parents[1] / "die_plan" / "cell_cap.py"))
+_cc = _ilu.module_from_spec(_cc_spec)
+_cc_spec.loader.exec_module(_cc)
+SPLIT_CELLS = _cc.SPLIT_CELLS   # WAVE-FLOW-R2 11-17: the ONE cell limit, checked at plan time (SPLIT-NEEDED); no run-time cell stop
 PLACE_POLL_S = float(os.environ.get("KW_PLACE_POLL_S", "60"))
 # run on the gen host by place_receipt(): argv K, service start time (epoch s)
 PLACE_RECEIPT = r"""
@@ -610,6 +613,8 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
             return False
         if stages.get("kit_topology", 0) != 0:
             return False
+        if stages.get("kit_rtl", 0) != 0:        # WAVE-PILOT-FIX 11-17: the kit_rtl canary; a pilot whose kit_rtl failed proves nothing
+            return False
         spec_path = Path(spec_path)
         raw = spec_path.read_bytes()
         sp = json.loads(raw)
@@ -626,6 +631,9 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
                        stages={stage: stages[stage] for stage in GEN_PILOT_STAGES})
         if "kit_topology" in stages:
             receipt["stages"]["kit_topology"] = stages["kit_topology"]
+        if "kit_rtl" in stages:
+            receipt["stages"]["kit_rtl"] = stages["kit_rtl"]
+        receipt["canary"] = "kit_rtl_v1"          # receipts with this mark carry the kit_rtl verdict (older receipts are grandfathered)
         target = spec_path.with_name("gen_pilot.json")
         temp = target.with_name(target.name + "." + str(os.getpid()) + ".tmp")
         temp.write_text(json.dumps(receipt, sort_keys=True) + "\n")
@@ -638,6 +646,18 @@ def publish_gen_pilot_receipt(spec_path, spec_sha256, stages):
         return True
     except (OSError, ValueError, TypeError, KeyError):
         return False
+
+
+def kit_rtl_canary_ok(rec, spec):
+    """WAVE-PILOT-FIX 11-17 (FABLE-FLOW-0900 B): no tree goes live without a pilot whose kit_rtl stage passed.  A stage rc recorded in the
+    receipt must be 0; a receipt with the kit_rtl_v1 canary mark of a die whose recipe runs kit_rtl (mode bind or a script) must carry the
+    stage.  Receipts written before the mark existed are grandfathered (they have no kit_rtl verdict to read)."""
+    stages = rec.get("stages") or {}
+    if "kit_rtl" in stages:
+        return stages["kit_rtl"] == 0
+    kr = spec.get("kit_rtl") if isinstance(spec, dict) else None
+    runs = isinstance(kr, dict) and (kr.get("mode") == "bind" or bool(kr.get("script")))
+    return not (rec.get("canary") == "kit_rtl_v1" and runs)
 
 
 def gen_pilot_receipt_pass(path, die, item, spec, raw_spec):
@@ -656,7 +676,8 @@ def gen_pilot_receipt_pass(path, die, item, spec, raw_spec):
                 and bool(re.fullmatch(r"[0-9a-f]{64}", str(rec.get("src_manifest_hash") or "")))
                 and rec.get("spec_sha256") == hashlib.sha256(raw_spec).hexdigest()
                 and all((rec.get("stages") or {}).get(stage) == 0 for stage in GEN_PILOT_STAGES)
-                and (rec.get("stages") or {}).get("kit_topology", 0) == 0)
+                and (rec.get("stages") or {}).get("kit_topology", 0) == 0
+                and kit_rtl_canary_ok(rec, spec))
     except (OSError, ValueError, TypeError):
         return False
 
@@ -882,7 +903,7 @@ def hold_audit_step(AP, cfg, st, t0):
     found = HR.audit(cfg, launched)
     summ = HR.summarize(found)
     AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
-           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD")))
+           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD", "PILOT-DEADLOCK")))
     # HOLD-FLOW-R 11-16 (FABLE-FLOW-2000): a held release term with no producer for 12 h is a wave alert line
     try:
         _ctx = hold_ctx(cfg)
@@ -1368,6 +1389,7 @@ def item_key(die, event, item, block=None):
 
 
 PLAN_BLOCK = {
+    "split": "SPLIT-NEEDED: estimated flat std cells over the one 400k type limit (die_plan/cell_cap.py): split the type; never launched",
     "hard": "plan entry: hard type (gen skips it unless die cfg hard_wrappers names it)",
     "contract": "plan entry fails kit preflight: clock.core_taps internal with parent_budget core taps (gen ContractError)",
     # AUTOBUILD-PIPE-1 10-30: not launched (gen would fail 'macros have LEF but no timing liberty'); no FAIL record, so
@@ -1464,7 +1486,7 @@ def plan_entry_block(d, item, kind=None):
 
 # ------------------------------------------------------------------------------------------------ KW-FIX-4 gen-time lint
 # OWNER 11-03 (COORD 06:11 RE-FORM template, GEN rules): before any kit launches, a lint fails the type on
-#   cells   estimated flat std cells > 150k (plan probe; die prelint_cells_max overrides);
+#   cells   estimated flat std cells > 400k = SPLIT-NEEDED (plan probe, blocks the launch; die_plan/cell_cap.py);
 #   memory  a memory over SYNTH_MEMORY_MAX_BITS that is not a macro (the type's GEN_LINT memory_bits verdict on this
 #           same plan block; a block change, or a retry row whose fix is named in retry_fix, clears it);
 #   view    a planned hard core without a signed view (probe flags planned / noview: these already wait as WAIT-DEP);
@@ -6544,8 +6566,6 @@ def run_item(spec_path):
             if count.get("schema") == "opentallas.native_cell_count.v1" and type(count.get("stdcells")) is int:
                 res["cells"] = count["stdcells"]
                 res["cells_basis"] = "actual synthesized top standard cells, excluding block macros"
-                if type(count.get("limit")) is int:
-                    res["cells_limit"] = min(count["limit"], CELL_CAP_MAX)
         if sp.get("cell_check") and res["cells"]:
             cc_cmd = (f"cd / && python3 -I {q(src)}/tools/die_plan/cell_check.py --plan {q(sp['plan'])} --type {q(T)} "
                       f"--cells {int(res['cells'])} --stat \"$(ls {q(K)}/run/reports/asap7/*/base/synth_stat.txt | head -1)\"")
@@ -6575,8 +6595,8 @@ def run_item(spec_path):
             # reuse the finished place DB and so carry no layout_review); warn and go on to geom/sign-off
             res["render_missing"] = True
             print(f"KW_RENDER_WARN {T}: place finished (3_place.odb present) but run/layout_review has no PNG; advisory only", flush=True)
-        if res["cells"] and res["cells"] > res.get("cells_limit", CELL_CAP):
-            return fail("cells", f"{res['cells']} cells", f"{kh}:{K}")
+        if res["cells"] and res["cells"] > SPLIT_CELLS:      # WAVE-FLOW-R2: reported, never a stop (the plan-time SPLIT-NEEDED check owns the limit)
+            print(f"KW_CELLS_INFO {T}: {res['cells']} cells above {SPLIT_CELLS} (advisory; plan-time SPLIT-NEEDED is the only cell check)", flush=True)
         olc = outline_cmd(K)
         _, ol = run("outline", rem(olc), idempotent=True)
         ol = ol.strip().splitlines()[-1] if ol.strip() else ""
@@ -7341,6 +7361,45 @@ def _snap_missing(txt):
     return next((ln.strip()[:400] for ln in txt.splitlines() if ln.startswith("KIT-STORE FAIL KIT-STORE MISSING")), "")
 
 
+def signed_export_restore(cfg, vmiss, run, remote, G, ER):
+    """cfg = {"root": export root, "ssh": host holding it or ''}.  -> restored paths.  The export index and the files are read from the export host (or a local root), staged on
+    the wave host, pushed to G at the same path; hashes are checked by export_restore before anything is placed."""
+    import tempfile, subprocess, shutil
+    root, host = cfg.get("root"), cfg.get("ssh") or ""
+    def fetch(src, dst):
+        cmd = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, f"cat {shlex.quote(src)}"] if host else ["cat", src]
+        with open(dst, "wb") as f:
+            r = subprocess.run(cmd, stdout=f, stderr=subprocess.PIPE, timeout=1200)
+        if r.returncode:
+            raise OSError(r.stderr.decode()[-120:])
+    tmp = tempfile.mkdtemp(prefix="kwexport.")
+    idx = os.path.join(tmp, "INDEX.tsv"); fetch(os.path.join(root, "INDEX.tsv"), idx)
+    rows = ER.load_index(tmp)
+    def prov(by):
+        rc, t = run("kit_snap_prov", remote(f"cat {shlex.quote(by)}"), idempotent=True)
+        try:
+            return json.loads(t[t.index("{"):])
+        except ValueError:
+            return None
+    items, _bad = ER.plan([(m["path"], m["by"]) for m in vmiss[:200]], prov, rows, root)
+    done, _fail = ER.restore([(os.path.join(tmp, "stage", i[0].lstrip("/")), *i[1:]) for i in items], fetch, tmp)
+    placed = []
+    for d in done:
+        dst = "/" + os.path.relpath(d, os.path.join(tmp, "stage"))
+        if G == "localhost":
+            os.makedirs(os.path.dirname(dst) if os.path.isfile(d) else dst, exist_ok=True)
+            if os.path.isfile(d): shutil.copyfile(d, dst)
+            placed.append(dst); continue
+        ssh = ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", G]
+        if os.path.isfile(d):
+            r1 = subprocess.run(ssh + [f"mkdir -p {shlex.quote(os.path.dirname(dst))}"], capture_output=True)
+            r2 = subprocess.run(["rsync", "-a", "--ignore-existing", "-e", "ssh -o BatchMode=yes -o ControlPath=none", d, f"{G}:{dst}"], capture_output=True)
+            if not (r1.returncode or r2.returncode): placed.append(dst)
+        elif not subprocess.run(ssh + [f"mkdir -p {shlex.quote(dst)}"], capture_output=True).returncode:
+            placed.append(dst)
+    return placed
+
+
 def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
     """-> ({orig: snapshot path}, '') or (None, why).  kit_store.py snap on the gen host; when G lacks a required input,
     snap on the first other die host that holds it, copy <snaps>/<id> to the same path on G and verify every sha256
@@ -7416,6 +7475,37 @@ def kit_snap_stage(sp, run, remote, res, W, plan, G, hub):
         if d4 is not None:
             doc = dict(d4, copied_from=doc.get("copied_from"))
         vmiss = doc.get("view_refs_missing") or []
+    if vmiss and sp.get("signed_export"):
+        # FLEET-OPS-R r585 (b): what no die host holds may still be in the SIGNED EXPORT (hash checked against its record); restore it and snapshot again
+        try:
+            import export_restore as ER
+            restored = signed_export_restore(sp["signed_export"], vmiss, run, remote, G, ER)
+            if restored:
+                rc5, t5 = run("kit_snap", remote(cmd), idempotent=True)
+                d5 = None if rc5 else _snap_doc(t5)
+                if d5 is not None:
+                    doc = dict(d5, copied_from=doc.get("copied_from")); vmiss = doc.get("view_refs_missing") or []
+                print(f"KW_KIT_SNAP_EXPORT_RESTORED {len(restored)} still_missing {len(vmiss)}", flush=True)
+        except Exception as e:                       # the export is an optional last resort: never turns a degraded snapshot into a crash
+            print(f"KW_KIT_SNAP_EXPORT_FAILED {type(e).__name__}: {e}"[:300], flush=True)
+    if vmiss and sp.get("restore_queue") is not False:
+        # COORD 11-17: the signed export is off the fleet; ask for the files instead.  One RESTORE-NEEDED row per missing export path (module, record id, path, host) goes to the
+        # hub queue; a copy-only cron on rtx-pro pushes the hash-checked files and the next tick's snapshot finds them.
+        try:
+            import export_restore as ER
+            qdir = os.environ.get("OT_RESTORE_QUEUE_DIR") or os.path.expanduser("~/.local/state")
+            def _prov(by):
+                rc_, t_ = run("kit_snap_prov", remote(f"cat {shlex.quote(by)}"), idempotent=True)
+                try:
+                    return json.loads(t_[t_.index("{"):])
+                except ValueError:
+                    return None
+            rows = ER.restore_rows([(m["path"], m["by"]) for m in vmiss[:200]], _prov, G)
+            n = ER.queue_append(os.path.join(qdir, "restore_needed.jsonl"), rows, done=ER.read_jsonl(os.path.join(qdir, "restore_done.jsonl")))
+            if n:
+                print(f"KW_KIT_SNAP_RESTORE_NEEDED queued {n} of {len(rows)} (copy-only worker on rtx-pro restores them; retried next tick)", flush=True)
+        except Exception as e:
+            print(f"KW_KIT_SNAP_RESTORE_QUEUE_FAILED {type(e).__name__}: {e}"[:300], flush=True)
     if vmiss:
         names = "; ".join(f"{m['path']} (named by {m['by']})" for m in vmiss[:5])
         if sp.get("kit_snap_view_refs") == "strict":
@@ -7559,7 +7649,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 5   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 7   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
@@ -7586,7 +7676,16 @@ try:
         baseline_path = a["identity_baseline_plan"]
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
     flags, deps, lint, pdeps, bound, pkeys, unbound = {}, {}, {}, {}, {}, {}, {}
-    cmax = int(a.get("cells_max") or 150000)
+    split = []
+    CE, CMODS, cells_mod = None, {}, None
+    if a.get("cells_dir") and a.get("cells_max"):
+        try:
+            sys.path.insert(0, a["cells_dir"])
+            import cells as cells_mod
+            CE = cells_mod.estimate(p, os.path.dirname(os.path.abspath(a["plan"])), modules=CMODS)[0]
+        except Exception:
+            CE = None
+    cmax = int(a.get("cells_max") or 0)          # 0 = no estimate check (the wave always passes SPLIT_CELLS)
     for t, v in pt.items():
         if not isinstance(v, dict):
             continue
@@ -7598,8 +7697,19 @@ try:
         if not isinstance(nc, (int, float)) or isinstance(nc, bool):
             cc = [c.get("cells") for c in (v.get("contents") or []) if isinstance(c, dict)]
             nc = sum(cc) if cc and all(isinstance(x, (int, float)) for x in cc) else None
-        if nc is not None and nc > cmax and not v.get("hard_cores") and not v.get("hard"):
-            li.append(f"cells: est {int(nc)} flat std cells > {cmax} (plan estimate): re-form into hard cores / a smaller slot")
+        note = ""
+        if v.get("hard_cores") and CE is None:
+            nc = None                                     # no cells tool / estimate: a cored type cannot be judged flat here
+        if CE is not None and not v.get("hard"):       # WAVE-FLOW-R2 (COORD r576): the flat part of a type with hard cores = total - bound-core cells
+            tot = CE.get(t)
+            if tot:
+                nc, note = cells_mod.flat_cells(v, tot[0], tot[1], CMODS)
+                note = note or ""
+        if cmax and nc is not None and nc > cmax and not v.get("hard"):
+            li.append(f"cells: SPLIT-NEEDED est {int(nc)} flat std cells > {cmax} (plan estimate{'; ' + note if note else ''}): split the type")
+            split.append(t)
+        elif cmax and nc is None and note:
+            li.append("cells: " + note)
         decl = [r.get("name") for r in (v.get("id_straps") or []) + (v.get("count_straps") or []) if isinstance(r, dict)]
         dup = sorted({n for n in decl if decl.count(n) > 1})
         if dup:
@@ -7657,6 +7767,8 @@ try:
                 str(tp.get("budget_owner", "")).startswith("parent_budget") for tp in taps):
             # DIE-KV-60/taps 11-01: = gen_phys.internal_core_taps_estimate (unsigned internal taps -> estimate form)
             flags[t] = "contract"
+    for t in split:
+        flags.setdefault(t, "split")
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V,
            "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
@@ -7686,7 +7798,7 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": d.get("prelint_cells_max"),
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": SPLIT_CELLS, "cells_dir": str(Path(__file__).resolve().parents[1] / "die_plan"),
             "block_ignore": d.get("block_ignore")}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
@@ -7949,7 +8061,7 @@ def flow_guard_gate(AP, cfg, st, die, go, picks, skip, now=None, rpy=None):
     hp = {}
     for r in held:
         hp.setdefault(FG.held_key(st, die, r["item"]), []).append(r["item"] not in pf)
-    for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now, {dn: breaker_inputs(cfg, dn) for dn in (cfg.get('dies') or {})}):
+    for key, why in FG.release_by_preflight(st, hp, now) + FG.breaker_tick(st, now, {dn: breaker_inputs(cfg, dn) for dn in (cfg.get('dies') or {})}, {dn: str((cfg['dies'][dn] or {}).get('src') or '') for dn in (cfg.get('dies') or {})}):
         AP.log(f"KIT-WAVE FLOW-GUARD RELEASE '{key}': {why}")
     try:
         tree_fn, marker_fn = tree_gate(AP, cfg)
@@ -8308,6 +8420,37 @@ def bind_restage(cfg, die, prev, sp):
         sp["gen_host"] = moved
 
 
+def tree_on_host(AP, cfg, host, tree):
+    """WAVE-PILOT-FIX 11-17 (COORD 3): does HOST hold the source tree (its .src-manifest.json)?  One probe per (host, tree) per pass.  Unknown
+    (no tree, probe error other than 'absent') = yes: never refuse blind."""
+    if not tree:
+        return True
+    cache = cfg.setdefault("_tree_host_ok", {})
+    key = (host, tree)
+    if key not in cache:
+        path = tree.rstrip("/") + "/.src-manifest.json"
+        hub = cfg.get("_hub") or getattr(AP, "HUB_NAME", "") or ""
+        argv = (["test", "-f", path] if host in (hub, "localhost") else
+                ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=8", "-o", "ControlPath=none", host, "test -f " + shlex.quote(path)])
+        try:
+            rc = AP.sh(argv, timeout=30)[0]
+        except Exception:
+            rc = 255
+        cache[key] = rc != 1                       # rc 1 = test -f says absent; ssh failure (255) / error = unknown = yes
+    return cache[key]
+
+
+def tree_host_for(AP, cfg, die, sp, item):
+    """the host a launch may use: sp's gen_host when it holds the item's tree, else the first other gen host of the die that does, else ''"""
+    tree = sp.get("src")
+    if tree_on_host(AP, cfg, sp["gen_host"], tree):
+        return sp["gen_host"]
+    for h in gen_hosts(cfg, die, item):
+        if h != sp["gen_host"] and tree_on_host(AP, cfg, h, tree):
+            return h
+    return ""
+
+
 def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
     """KW-FIX-7 11-04: one row's launch error never ends the pass.  06:28 a merge changed kit_resume.py under a reload pass:
     launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
@@ -8387,6 +8530,31 @@ def tool_skew_measure(AP, cfg, st, die):
     return res
 
 
+TOOLS_LAG_CACHE = {"t": 0.0, "rows": {}}
+
+
+def tools_lag_rows(AP, cfg, ttl=1800):
+    """WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1300 item 2): {die: 'TOOLS-LAG <die> N commits / missing rNNN ...'} = the approved die-tool fixes (ruling rNNN on a
+    die_plan / flow path) main has that each die's pinned tools lack; measured at most every 30 min, logged when it changes"""
+    now = time.time()
+    if now - TOOLS_LAG_CACHE["t"] < ttl and TOOLS_LAG_CACHE["rows"]:
+        return TOOLS_LAG_CACHE["rows"]
+    try:
+        spec = _ilu.spec_from_file_location("tools_lag", str(Path(__file__).resolve().parents[1] / "tools_lag.py"))
+        TL = _ilu.module_from_spec(spec)
+        spec.loader.exec_module(TL)
+        rows = {die: TL.line(die, r) for die, r in TL.measure(cfg, repo=cfg.get("tools_lag_repo") or TL.DEFAULT_REPO,
+                                                              main_ref=cfg.get("tools_lag_main") or "main").items()}
+    except Exception as e:                       # advisory: never stops the wave
+        AP.log(f"KIT-WAVE TOOLS-LAG not measured: {type(e).__name__}: {e}")
+        return TOOLS_LAG_CACHE["rows"]
+    for die, ln in rows.items():
+        if TOOLS_LAG_CACHE["rows"].get(die) != ln:
+            AP.log("KIT-WAVE " + ln)
+    TOOLS_LAG_CACHE.update(t=now, rows=rows)
+    return rows
+
+
 def tool_skew_measure_all(AP, cfg, st, ap_dir):
     """every enabled die, every tick, independent of launches (a held die such as S81 or KV launches nothing and used to have no
     reading); writes kit_wave_tool_skew.json = the numbers the SKEW table and NEEDS-LANE posts quote"""
@@ -8399,6 +8567,9 @@ def tool_skew_measure_all(AP, cfg, st, ap_dir):
             continue
         rows[die] = dict(mode=str(opt(cfg, die, "tool_skew")), tree=d.get("src"), measured=res["measured"], n_differ=len(res["refused"]),
                          n_closure=res.get("n_closure", 0), pin=res.get("pin"), modules=sorted(res["refused"])[:60])
+    lag_rows = tools_lag_rows(AP, cfg)
+    for die, ln in lag_rows.items():
+        rows.setdefault(die, {})["tools_lag"] = ln
     if rows and not AP.DRY:
         try:
             p = Path(ap_dir or AP.AP_DIR) / "kit_wave_tool_skew.json"
@@ -8557,6 +8728,13 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         if attempt > 1 or leafslew_item_env(cfg, die, r["item"]) is not None else (None, None)
     if ls_form:
         sp["leafslew_form"] = ls_form
+    _h = tree_host_for(AP, cfg, die, sp, r["item"])            # a launch / resume / relaunch goes only to a host that holds the item's tree
+    if not _h:
+        AP.log(f"KIT-WAVE LAUNCH-DEFER {die}/{r['item']}: no gen host holds the source tree {sp.get('src')} (.src-manifest.json); not launched (a host without it would fail src_manifest)")
+        return None
+    if _h != sp["gen_host"]:
+        AP.log(f"KIT-WAVE GEN-HOST-TREE {die}/{r['item']}: {sp['gen_host']} lacks tree {sp.get('src')}; launching on {_h} instead")
+        sp["gen_host"] = _h
     unit = f"kw-{re.sub(r'[^A-Za-z0-9]', '', die)[:6]}-{re.sub(r'[^A-Za-z0-9]', '', r['item'])[:28]}-{attempt}-{int(time.time()) % 100000}"
     if AP.DRY:
         AP.log(f"KIT-WAVE would launch {die}/{r['item']} unit {unit}: gen {sp['gen_host']}:{sp['work']} plan {sp['plan']}")
@@ -9847,6 +10025,54 @@ def bind_context_digest(cfg, die, kit_rtl):
     return hashlib.sha1(json.dumps(hashes).encode()).hexdigest()
 
 
+VIEW_SHA = {}
+
+
+def view_sha(host, p, ttl=300, now=None):
+    """sha1 of one staged view file on its host ('' = absent); local path first, then ssh to the candidate host; cached 5 min"""
+    now = time.time() if now is None else now
+    c = VIEW_SHA.get((host, p))
+    if c and now - c[0] < ttl:
+        return c[1]
+    out = ""
+    try:
+        if os.path.isfile(p):
+            out = hashlib.sha1(open(p, "rb").read()).hexdigest()
+    except OSError:
+        out = ""
+    if not out and host and host not in ("localhost", "hub"):
+        try:
+            r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "sha1sum", shlex.quote(p)],
+                               capture_output=True, text=True, timeout=30)
+            if r.returncode == 0 and r.stdout.split():
+                out = r.stdout.split()[0]
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    VIEW_SHA[(host, p)] = (now, out)
+    return out
+
+
+def view_inputs(cfg, die, item):
+    """WAVE-FLOW-R2 11-17 (COORD, KV-R3 gap): the staged child-view files the prov_views stage reads for this item = for every child module of the
+    item, every die-config prov_view_sources candidate's lef, tt/ff lib, detailed_lef and detailed_receipt (the kvview_stage files) -> {host:path: sha}.
+    A view fix (new receipt / LEF) changes it and releases the item."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    mods = list((d.get("_prov_deps") or {}).get(item) or (d.get("_plan_deps") or {}).get(item) or [])
+    out = {}
+    for m in mods:
+        lst = (d.get("prov_view_sources") or {}).get(m) or []
+        for c in lst if isinstance(lst, list) else [lst]:
+            if not isinstance(c, dict) or not c.get("dir"):
+                continue
+            names = [f"{m}.lef", f"{m}_tt.lib", f"{m}_ff.lib", c.get("detailed_lef"), c.get("detailed_receipt")]
+            for nm in names:
+                if not nm:
+                    continue
+                path = nm if str(nm).startswith("/") else os.path.join(str(c["dir"]), str(nm))
+                out[f"{c.get('host') or ''}:{path}"] = view_sha(c.get("host"), path)
+    return out
+
+
 def kit_digest_parts(cfg, die, rec=None, group="", files=None):
     """what a (re)launch of an item builds on: plan block sha, src sha, source content hash, the stage tools closure.  From the attempt's own spec.json
     when rec is a failed attempt (what it ran on), else from the die config (what a launch would run on)."""
@@ -9867,7 +10093,9 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
     return {"block": str((rec or {}).get("block_sha") or d.get("_plan_sha") or d.get("plan_sha") or ""),
             "src": str(sp.get("src_sha") or d.get("src_sha") or ""), "overlay": str(sp.get("src_overlay") or d.get("_src_overlay") or ""),
             "tools": stage_tools_digest(group=group, files=files),
-            "bind_context": bind_context_digest(cfg, die, kr)}
+            "bind_context": bind_context_digest(cfg, die, kr),
+            "views": hashlib.sha1(json.dumps(view_inputs(cfg, die, (rec or {}).get("item")), sort_keys=True).encode()).hexdigest()[:16]
+            if view_inputs(cfg, die, (rec or {}).get("item")) else ""}
 
 
 def fail_key(parts, cls, why):
@@ -10121,6 +10349,9 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         context_changed = bool(old_context and now.get("bind_context") and old_context != now["bind_context"])
     else:
         context_changed = False
+    # WAVE-FLOW-R2 11-17 (KV-R3): staged child-view files (receipt / LEF / libs of prov_view_sources) are item inputs; keys stored before this field exist release only
+    # on a real change of the files (a key without "views" is not released by their absence)
+    views_changed = "views" in (prev.get("parts") or {}) and now.get("views") != (prev.get("parts") or {}).get("views")
     # FABLE-FLOW-0015 (a): a missing-input fail releases only when what failed changes: the named input appears, or the plan block / src / overlay
     # (a repointed config) changes.  A tool merge that does not touch it is no reason (slice_station__t51 failed twice on the same missing input
     # after the 23:29 tool merge re-armed it)
@@ -10145,6 +10376,8 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
         changed = [c for c in changed if c != "tools"]
     if context_changed:
         changed.append("bind_context")
+    if views_changed and "views" not in changed:
+        changed.append("views")
     if not changed:
         return True, (f"same fail key {prev.get('key')} ({prev.get('cls')} @{prev.get('stage')}, x{prev.get('n')}): plan block, src, overlay, stage tools and measured bind context are "
                       f"unchanged since the last fail: {str(prev.get('why'))[:100]}"), []
@@ -10724,7 +10957,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", rec.get("geom_verdict") or "PASS", "--geom-ref", ref,
-            "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])), "--cells", str(min(int(cells * 1.3), CELL_CAP_MAX) if cells else 200000),
+            "--mem", str(place_mem_gb(cfg, rec["die"], rec["item"])), "--cells", str(int(cells * 1.3) if cells else 200000),
             "--lane", d.get("lane", LANE)]
     if AP.DRY:
         AP.log("KIT-WAVE would enqueue: " + " ".join(argv))

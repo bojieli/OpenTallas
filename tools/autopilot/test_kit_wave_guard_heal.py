@@ -28,8 +28,10 @@ class ProbeOne(unittest.TestCase):
         self.assertTrue(key.startswith("CLASS"))
         FG.breaker_tick(st, now=5000, inputs={DIE: "in2"})                       # the fix: inputs changed -> probe window
         self.assertEqual(FG.held_key(st, DIE, "cbf_q11", claim=True), "")        # the one probe
-        for it in ("coll_n", "cbx_q10__cl1", "slw_st_b_v1__cl2", "slw_st_b_v2__cl3", "cbf_q11__t3"):
-            self.assertTrue(FG.held_key(st, DIE, it, claim=True), it)            # no second probe in another family
+        self.assertEqual(FG.held_key(st, DIE, "coll_n", claim=True), "")         # WAVE-PILOT-FIX: probes 2 and 3 (three per class)
+        self.assertEqual(FG.held_key(st, DIE, "cbx_q10__cl1", claim=True), "")
+        for it in ("slw_st_b_v1__cl2", "slw_st_b_v2__cl3", "cbf_q11__t3"):
+            self.assertTrue(FG.held_key(st, DIE, it, claim=True), it)            # no fourth probe
         self.assertEqual(FG.held_key(st, DIE, "cbf_q11", claim=True), "")        # the probe itself stays free
 
     def test_probe_pass_releases_every_family_in_the_same_tick(self):
@@ -54,8 +56,10 @@ class ProbeOne(unittest.TestCase):
         st = opened()
         FG.breaker_tick(st, now=5000, inputs={DIE: "in2"})
         FG.held_key(st, DIE, "cbf_q11", claim=True)
-        self.assertEqual(FG.probe_result(st, DIE, "coll_n", "place", passed=True), [])
-        self.assertTrue(FG.held_key(st, DIE, "coll_n"))
+        self.assertEqual(FG.probe_result(st, DIE, "coll_n", "place", passed=True), [])    # coll_n never claimed a probe
+        self.assertEqual(FG.held_key(st, DIE, "cbx_q10__cl1", claim=True), "")
+        self.assertEqual(FG.held_key(st, DIE, "slw_st_b_v1__cl2", claim=True), "")        # probes 2 and 3 taken
+        self.assertTrue(FG.held_key(st, DIE, "coll_n", claim=True))
 
     def test_config_change_naming_the_class_opens_the_probe_window(self):
         a = KW.breaker_inputs({"dies": {DIE: {"event": "e"}}}, DIE)

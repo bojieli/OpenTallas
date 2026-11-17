@@ -920,6 +920,9 @@ SCHEMA = {
                         "local_taps_um": {"type": "array", "items": _xy},
                         # Measured J=1 synchronous entry window only: one falling pre-capture per input.
                         "pin_entry_fall": {"type": "boolean"},
+                        # FABLE-FIX-HEAD-RESET 11-17: strap-selected rising/falling capture + local handoff
+                        # (pin_entry_phase.py); needs the 1-bit id_strap strap_rst_ph; instances give reset_entry_phase.
+                        "pin_entry_phase": {"type": "boolean"},
                         # Exact physical input-to-capture technology chain; no new FF/cycle.
                         "pin_entry_delay": {"type": "object", "additionalProperties": False,
                             "required": ["cell", "reset", "start", "reset_sites_um", "start_sites_um", "max_hop_um"],
@@ -1062,6 +1065,9 @@ SCHEMA = {
                            # HEAD-BIND-4 10-27 (OWNER 10-25 option B): this INSTANCE's values of its type's declared
                            # partition ID straps (partition_types.<t>.id_straps), tied at the die top (gen_rtl.die_top)
                            "id_straps": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+                           # reset/START entry capture edge of this instance, in half cycles EARLIER than the nominal
+                           # next rising edge (type reset.pin_entry_phase); strap_rst_ph = value mod 2
+                           "reset_entry_phase": {"type": "integer", "minimum": -8, "maximum": 8},
                            "note": {"type": "string"}}}},
         "ports": {"type": "array", "items": {
             "type": "object", "required": ["id", "src", "dst", "width"],   # face/layers/window: or from the type
@@ -1448,6 +1454,13 @@ SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
                    "types": {"type": "array", "uniqueItems": True, "items": _name},
                    "pipe": {"type": "integer", "minimum": 0, "maximum": 4},
                    "pipe_except": {"type": "array", "uniqueItems": True, "items": _name},
+                   # r541 latch_except (bind.core_input_latch: "<port>" = port-wide, "<port>[<bit>]" = one bit) and the explicit
+                   # pad latch_except_hb4 (bind.core_input_latch_except_hb4): the code read the keys, the schema refused them
+                   # (plan_gate_pre SCHEMA-UNKNOWN-KEY), so no plan row could use them.
+                   "latch_except": {"type": "object", "additionalProperties": {
+                       "type": "array", "uniqueItems": True, "items": _name}},
+                   "latch_except_hb4": {"type": "object", "additionalProperties": {
+                       "type": "object", "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8}}},
                    "note": {"type": "string"}}}
 # KV-PVGEN 11-15: plan clock.core_link_pipe, read by bind.core_link_pipe (absent = off, byte-identical RTL): D register
 # stages (ot_dp_dly u_pc_lp_*) on named input ports of bound leaves/cores of the listed types; cycles DECLARED in
@@ -2082,7 +2095,11 @@ def _id_strap_errors(obj):
         for n, x in v.items():
             if x >= 1 << d[n]:
                 errs.append(f"partition {p.get('name')}: id_strap {n}={x} does not fit {d[n]} bits")
-    return errs
+    try:
+        from .pin_entry_phase import plan_errors
+    except ImportError:
+        from pin_entry_phase import plan_errors
+    return errs + plan_errors(obj)
 
 
 # ------------------------------------------------------------------------------------------------------- loader

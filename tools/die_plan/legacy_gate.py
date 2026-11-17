@@ -273,6 +273,32 @@ def grt_layer_check(kit):
     return dict(config=want, grt=got[-1], log=str(logs[-1]))
 
 
+ORFS_WS_RE = re.compile(r"report_worst_slack\n-+\nworst slack max\s+(-?[0-9.]+)")
+ORFS_TNS_RE = re.compile(r"report_tns\n-+\ntns max\s+(-?[0-9.]+)")
+
+
+def grt_frames(kit, result):
+    """WAVE-FLOW-R2 11-17 (COORD lever 8): the GRT setup number in both frames.  kit_orfs = the ORFS 5_global_route.rpt read (kit session, vclk at the
+    kit SDC value); signoff_frame = this policy session (golden SDC, nominal uncertainty policy, vclk bound to the routed pin-flop mean, TT setup /
+    FF hold, no derate) on global-route RC.  The remaining gap to routed sign-off is the extraction (OpenRCX on the detailed route)."""
+    kit = Path(kit)
+    orfs = None
+    for rpt in sorted(kit.glob("run/reports/*/*/base/5_global_route.rpt")):
+        text = rpt.read_text(errors="replace")
+        w, t = ORFS_WS_RE.search(text), ORFS_TNS_RE.search(text)
+        if w:
+            orfs = dict(worst_slack_ps=float(w.group(1)), tns_ps=float(t.group(1)) if t else None, report=str(rpt))
+    chk = result.get("checks") or {}
+    st, hf = chk.get("setup_tt") or {}, chk.get("hold_ff") or {}
+    return dict(kit_orfs=orfs,
+                signoff_frame=dict(setup_tt_wns_ps=st.get("wns_ps"), setup_tt_tns_ps=st.get("tns_ps"), hold_ff_wns_ps=hf.get("wns_ps"),
+                                   parasitics="global_routing", corners="TT setup / FF hold", derate="none",
+                                   sdc="golden SDC + nominal uncertainty policy + standard boundary-hold overlay (in_min/out_min)",
+                                   vclk=st.get("vclk_reference")),
+                signoff_extraction="OpenRCX on the detailed route (not available at GRT)",
+                delta_ps=None if not orfs or st.get("wns_ps") is None else round(float(st["wns_ps"]) - orfs["worst_slack_ps"], 2))
+
+
 def run(kit, stage, netlist=None, execute=subprocess.run):
     kit = Path(kit)
     marker = kit / ('FAIL_PREFLOOR' if stage == 'lec' else 'FAIL_POSTCTS')
@@ -384,6 +410,13 @@ def run(kit, stage, netlist=None, execute=subprocess.run):
                 parsed.get('clock_endpoint_masters'), parsed.get('clock_endpoint_mapping_errors'))
             corners[corner.lower()] = parsed
         result = policy_record(corners, policy, hold_ff_blocks(kit), setup_continue_ps(kit))
+        try:
+            result["frames"] = grt_frames(kit, result)
+            fr = result["frames"]
+            print(f'OT_GRT_FRAMES setup: kit ORFS read {(fr["kit_orfs"] or {}).get("worst_slack_ps")} ps, sign-off frame (policy session, GR RC) '
+                  f'{fr["signoff_frame"]["setup_tt_wns_ps"]} ps, delta {fr["delta_ps"]}; hold FF {fr["signoff_frame"]["hold_ff_wns_ps"]} ps')
+        except (OSError, ValueError, KeyError, TypeError, AttributeError) as error:      # advisory record: never fails the gate
+            result["frames"] = dict(error=f"{type(error).__name__}: {error}")
         timing_receipt.write_text(json.dumps(result, indent=1) + '\n')
         for k in result['advisory']:
             if (result['checks'][k]['verdict'] == 'FAIL' or

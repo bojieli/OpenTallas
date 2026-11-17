@@ -44,7 +44,8 @@ module dsdv_bksel_c #(
     // S81-CORES-R3 11-17 (S81-DIE-R3 NEEDS-LANE (a)): QRX = extra input edges inside each quarter (dsdv_bksel_q RFH 2: the
     // rising-edge face stage on lane / f_c / f_cr = 1).  The command -> status round trip grows by QRX, so the fixed waits
     // take it with the plan stations: XDX = 1 + ceil((RC + RS + QRX) / 2).  QRX 0 = as built.
-    parameter integer QRX = 0
+    parameter integer QRX = 0,
+    parameter integer LQH = 0   // DIE-S81-52 11-03 (47046ce95e0): 1 = one-hot landing FIFO count in u_c (0 cycles; dsfd_selt_c LQH)
 ) (
     input  wire [0:0]       ck,
     input  wire [0:0]       rst,
@@ -66,7 +67,7 @@ module dsdv_bksel_c #(
     always @(negedge ck[0]) rst_nf <= rst[0];
 `endif
     dsfd_selt_c #(.SEARCH_PIPE(SELOH != 0 ? 4 : 1), .DM(4 + `OT_BKSEL_DMX), .PACE(2), .MRG_PIPE(1), .RQPIPE(1),
-        .SLAT(4 + `OT_BKSEL_SLX), .XDX(1 + (`OT_BKSEL_RC + `OT_BKSEL_RS + QRX + 1) / 2 - `OT_BKSEL_XDM)) u_c (.ck(ck), .rst(RNF != 0 ? rst_nf : rst[0]),
+        .SLAT(4 + `OT_BKSEL_SLX), .XDX(1 + (`OT_BKSEL_RC + `OT_BKSEL_RS + QRX + 1) / 2 - `OT_BKSEL_XDM), .LQH(LQH)) u_c (.ck(ck), .rst(RNF != 0 ? rst_nf : rst[0]),
         .f_s({f_s_n, f_s_s}), .f_o({f_o_n, f_o_s}), .t_c(tc), .t_cr(tcr), .vd(vdw), .vf(vf_unused));
     // vdw[513], vdw[501:357]: constant 0; vdw[0]: unread (dropped pins).  Every port bit leaves a flop (+ OLL latch)
     dsdv_bk_oll #(.W(367 + 4*CB + 4), .EN(OLL)) u_oll (.ck(ck[0]),

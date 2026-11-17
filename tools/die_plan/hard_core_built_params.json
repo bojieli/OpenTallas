@@ -803,6 +803,21 @@
     "a878cad77fcead02ba0592a79a44cc5212b6e2e4b7e61335cb505e854a8dec9b",
     "af825197966cd7665e5c9b95b34011d680e709998038d683b464039ff8987321"
    ]
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "die": "s81",
+   "lib_contains": "cores/views/bksel_c3_1104/",
+   "records": [
+    "11f32154a3702de62b26f106d0d699aa23f926ba256e0c77d618653047684c89"
+   ],
+   "params": {
+    "OLL": 2,
+    "SELOH": 1,
+    "RNF": 1,
+    "LQH": 1
+   },
+   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k/lecrun/lec/gold.ys read_slang -G OLL=2 -G SELOH=1 -G RNF=1 -G LQH=1; build_commit 06c38ca5736 (LQH = 47046ce95e0, folded into main by S81-CORES-R3 11-17); kit dir since cleaned"
   }
  ]
 }

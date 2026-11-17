@@ -2,7 +2,7 @@
 """ot-delete TREE... : the one way to delete a whole tree under /srv/opentallas-scratch* (FLEET-OPS-R, COORD 11-17).
 Wraps ot_delete_guard.refuse(): a tree the guard refuses (protected by kit_wave.json / markers / receipts, a live process under it, a symlink,
 a partial delete inside a source tree) is SKIPPED, not an error (exit 0, 'SKIP <path>: <reason>').  An allowed tree is removed whole
-(chmod -R u+w first, for read-only published trees) and df before/after is printed.  --dry lists what would go.  Needs the guard list
+(directories made writable first, never files: a hardlinked file shares its inode with the base tree) and df before/after is printed.  --dry lists what would go.  Needs the guard list
 fleet-ops-r/protected_struct.txt or OT_GUARD_LIST (fail-closed: no list = every source tree is skipped)."""
 import importlib.util, os, shutil, subprocess, sys
 
@@ -32,7 +32,7 @@ def main(argv, guard=None, rmtree=None):
     if not targets:
         print(__doc__); return 2
     g = guard or load_guard()
-    rm = rmtree or (lambda t: (subprocess.run(["chmod", "-R", "u+w", t], check=False), shutil.rmtree(t)))
+    rm = rmtree or (lambda t: (subprocess.run(["find", t, "-type", "d", "-exec", "chmod", "u+w", "{}", "+"], check=False), shutil.rmtree(t)))
     lst = os.environ.get("OT_GUARD_LIST")
     protected = None
     if lst:

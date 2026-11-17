@@ -2,7 +2,12 @@
 `default_nettype none
 // DIE-HEAD-84 11-07: transaction bench for the opt-in hd_lep0N leg stages (ot_s81hd_lep0N_core KS / PIN / POUT / PLW).
 // Two cores with the real lane content (PAIR=0: lnland + safe8 coll lane per lane) run the same stimulus:
-//   ref = all stages 0 (the built netlist), dut = the stage counts `KTX_DUT / `KRX_DUT / `TXI_DUT / `PIN_DUT / `POUT_DUT / `PLW_DUT.
+//   ref = all stages 0 (the built netlist), dut = the stage counts `KTX_DUT / `KRX_DUT / `TXI_DUT / `PIN_DUT / `POUT_DUT / `PLW_DUT
+//   (+ `COL0_DUT, and `RXH_DUT = HEAD-PLAN-R4 NF15f RX head rank, `KCRED_DUT = K-link credit depth of both ends).
+// LEPK_RTT lines (always printed): the MEASURED K-link credit round trip per lane at the u_lep boundary, from the credit
+// pulses themselves (credits return in order): TX = min(credit j back - beat j out) + min(beat j+D out - credit j back),
+// RX = min(credit j out - beat j in) + min(beat j+D in - credit j out); the second term is the turnaround only while the
+// sender is credit-bound (bound=1), else the loop is an upper bound.  Full lane rate needs D >= the loop.
 // Each coll lane talks to a peer e-lane whose core side echoes every received word back (credit-correct: 12 lane
 // credits, a 16-deep echo FIFO, li_r per freed slot), so a ring beat goes ro -> TX FIFO -> K link -> lane -> peer ->
 // echo -> lane -> K link -> RX pair release -> ri.  MU windows (pair A / pair B / landing) exercise lanes 2 / 3, the
@@ -51,6 +56,12 @@ module tb_head_lepk_stages;
 `ifndef COL0_DUT
 `define COL0_DUT 0
 `endif
+`ifndef RXH_DUT
+`define RXH_DUT 0
+`endif
+`ifndef KCRED_DUT
+`define KCRED_DUT 12
+`endif
   reg ck = 0; always #1 ck = ~ck;
   reg rs = 0;
   reg [1103:0] ro; reg [44:0] unit; reg lepf;
@@ -60,7 +71,7 @@ module tb_head_lepk_stages;
     .coll_i0(ci_r[0]), .coll_i1(ci_r[1]), .coll_i2(ci_r[2]), .coll_i3(ci_r[3]),
     .coll_o0(co_r[0]), .coll_o1(co_r[1]), .coll_o2(co_r[2]), .coll_o3(co_r[3]),
     .lepk_i0(ro), .lepk_o0(ri_r), .lepf_i0(lepf), .unit_i0(unit), .ctrl_o0(rt_r), .fault_o0(f_r), .lw_o(lw_r));
-  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT)) u_dut(
+  ot_s81hd_lep0N_noidx_core #(.CH_B(4'b1111), .PAIR(0), .KTX(`KTX_DUT), .KRX(`KRX_DUT), .TXI(`TXI_DUT), .PIN(`PIN_DUT), .POUT(`POUT_DUT), .PLW(`PLW_DUT), .COL0(`COL0_DUT), .RXH(`RXH_DUT), .KCRED(`KCRED_DUT)) u_dut(
     .ck(ck), .rst_n(rs),
     .coll_i0(ci_d[0]), .coll_i1(ci_d[1]), .coll_i2(ci_d[2]), .coll_i3(ci_d[3]),
     .coll_o0(co_d[0]), .coll_o1(co_d[1]), .coll_o2(co_d[2]), .coll_o3(co_d[3]),
@@ -101,11 +112,41 @@ module tb_head_lepk_stages;
   always @(posedge ck) if (rs && !ftr_r && !u_ref.u.u_lep.u.fault && ((|u_ref.u.u_lep.u.ovf) || u_ref.u.u_lep.u.perr ||
       u_ref.u.u_lep.u.herr || u_ref.u.u_lep.u.slq || (|u_ref.u.u_lep.u.lfq) || (|u_ref.u.u_lep.u.lfbq) || u_ref.u.u_lep.u.mferr ||
       u_ref.u.u_lep.u.ie || u_ref.u.u_lep.u.merr)) `LEPK_FT("ref-pre", u_ref.u.u_lep.u);
+
+  // HEAD-PLAN-R4 11-17 (FABLE-PLAN-HEAD-NF15F 1): measured K-link credit round trip per lane (see header).
+  localparam integer RQ = 8192;
+  integer q_s [0:3][0:RQ-1]; integer q_r [0:3][0:RQ-1]; integer q_a [0:3][0:RQ-1]; integer q_c [0:3][0:RQ-1];
+  integer n_s [0:3]; integer n_r [0:3]; integer n_a [0:3]; integer n_c [0:3];
+  initial for (int l = 0; l < 4; l++) begin n_s[l] = 0; n_r[l] = 0; n_a[l] = 0; n_c[l] = 0; end
+  always @(posedge ck) if (rs) for (int l = 0; l < 4; l++) begin
+    if (u_dut.u.kv[l]  && n_s[l] < RQ) begin q_s[l][n_s[l]] = cyc; n_s[l] = n_s[l] + 1; end
+    if (u_dut.u.kr[l]  && n_r[l] < RQ) begin q_r[l][n_r[l]] = cyc; n_r[l] = n_r[l] + 1; end
+    if (u_dut.u.kiv[l] && n_a[l] < RQ) begin q_a[l][n_a[l]] = cyc; n_a[l] = n_a[l] + 1; end
+    if (u_dut.u.kir[l] && n_c[l] < RQ) begin q_c[l][n_c[l]] = cyc; n_c[l] = n_c[l] + 1; end
+  end
+  task automatic rtt_report;
+    integer l, j, a, b, D;
+    begin
+      D = `KCRED_DUT;
+      for (l = 0; l < 4; l = l + 1) begin
+        a = 1 << 30; b = 1 << 30;
+        for (j = 0; j < n_s[l] && j < n_r[l]; j = j + 1) if (q_r[l][j] - q_s[l][j] < a) a = q_r[l][j] - q_s[l][j];
+        for (j = 0; j + D < n_s[l] && j < n_r[l]; j = j + 1) if (q_s[l][j + D] - q_r[l][j] < b) b = q_s[l][j + D] - q_r[l][j];
+        $display("LEPK_RTT lane%0d TX beats=%0d credits=%0d out->back=%0d back->out=%0d loop=%0d bound=%0d D=%0d rate=%0.3f",
+          l, n_s[l], n_r[l], a, b, a + b, b <= 2, D, (a + b) > 0 ? 1.0 * D / (a + b) : 0.0);
+        a = 1 << 30; b = 1 << 30;
+        for (j = 0; j < n_a[l] && j < n_c[l]; j = j + 1) if (q_c[l][j] - q_a[l][j] < a) a = q_c[l][j] - q_a[l][j];
+        for (j = 0; j + D < n_a[l] && j < n_c[l]; j = j + 1) if (q_a[l][j + D] - q_c[l][j] < b) b = q_a[l][j + D] - q_c[l][j];
+        $display("LEPK_RTT lane%0d RX beats=%0d credits=%0d in->out=%0d out->in=%0d loop=%0d bound=%0d D=%0d rate=%0.3f",
+          l, n_a[l], n_c[l], a, b, a + b, -1, D, (a + b) > 0 ? 1.0 * D / (a + b) : 0.0);
+      end
+    end
+  endtask
   // DIE-HEAD-85: a hang (e.g. the replay wait never satisfied) is a FAIL with its phase, not a 50-min timeout
   always @(posedge ck) if (cyc > 60000) begin
     $display("LEPK_STAGES FAIL hang at cyc=%0d phase=%0d ri ref=%0d dut=%0d lw ref=%0d dut=%0d landed=%0d", cyc, phase,
       n_ri_r, n_ri_d, n_lw_r, n_lw_d, landed);
-    $fflush; $finish;
+    rtt_report; $fflush; $finish;
   end
   // ------------------------------------------------------------------ stimulus
   localparam integer TG = 1045, NB = 80;
@@ -192,7 +233,8 @@ module tb_head_lepk_stages;
     idle(1);
     repeat (6000) @(negedge ck);
     ri_exp = sent - landed;
-    $display("LEPK_STAGES COL0=%0d", `COL0_DUT);
+    $display("LEPK_STAGES COL0=%0d RXH=%0d KCRED=%0d", `COL0_DUT, `RXH_DUT, `KCRED_DUT);
+    rtt_report;
     $display("LEPK_STAGES release gap A<->B min ref=%0d dut=%0d (collisions dut %0d)", gmin_r, gmin_d, gcol_d);
     if (gcol_d != 0) begin $display("FAIL release gap: %0d dut cycles release both pairs", gcol_d); err = err + 1; end
     $display("LEPK_STAGES KTX=%h KRX=%h TXI=%h PIN=%0d POUT=%0d PLW=%0d sent=%0d landed=%0d ri ref=%0d dut=%0d rt ref=%0d dut=%0d lw ref=%0d dut=%0d",

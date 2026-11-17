@@ -162,5 +162,66 @@ class ReleasePilots(unittest.TestCase):
         self.assertEqual(len(c2["dies"]["s81"]["hold_items"]), 6)
 
 
+class PilotDeadlock(unittest.TestCase):
+    def pil(self, **k):
+        r = {"id": "pilot-s81-aaaaaaaaaaaa", "plan_sha": PLAN, "reason": "PILOT", "release": ["gen_pilot:s81:aaaaaaaaaaaa"],
+             "items": ["*"], "pilot_items": ["gunit__t1"], "follow_plan": True, "auto_pilot": True}
+        r.update(k)
+        return r
+
+    def cfg(self, rows=(), recs=None, sha="a" * 12):
+        c = cfg(items=["gunit__t1", "t2", "t3", "t4", "t5"])
+        c["dies"]["s81"].update(src_manifest_hash=sha + "0" * 52, hold_records=recs if recs is not None else [self.pil()])
+        c["_item_rows"] = list(rows)
+        return c
+
+    def test_launchable_pilot_keeps_the_hold(self):
+        c = self.cfg()
+        HR.compile_holds(c)
+        self.assertEqual(c["_pilot_deadlock"], [])
+        self.assertIn("*", c["dies"]["s81"]["hold_items"])
+
+    def test_failed_pilot_fails_open(self):
+        c = self.cfg(rows=[{"die": "s81", "item": "gunit__t1", "status": "FAIL", "attempt": 6}])
+        HR.compile_holds(c)
+        self.assertEqual(c["dies"]["s81"]["hold_items"], {})
+        self.assertEqual(c["_pilot_deadlock"][0][0:2], ("s81", "pilot-s81-aaaaaaaaaaaa"))
+        self.assertIn("PILOT-DEADLOCK", [f["code"] for f in HR.audit(c)])
+
+    def test_later_attempt_running_is_not_a_deadlock(self):
+        c = self.cfg(rows=[{"die": "s81", "item": "gunit__t1", "status": "FAIL", "attempt": 6},
+                           {"die": "s81", "item": "gunit__t1", "status": "RUNNING", "attempt": 7}])
+        HR.compile_holds(c)
+        self.assertEqual(c["_pilot_deadlock"], [])
+
+    def test_pilot_held_by_another_record_releases(self):
+        other = {"id": "o", "plan_sha": PLAN, "reason": "stop list", "release": ["proof:head-serdes-fanout"], "items": ["gunit__t1"], "owner": "LIVE", "cause": "x"}
+        c = self.cfg(recs=[self.pil(), other])
+        HR.compile_holds(c)
+        self.assertNotIn("*", c["dies"]["s81"]["hold_items"])
+        self.assertIn("gunit__t1", c["dies"]["s81"]["hold_items"])        # the other record still holds its own item
+
+    def test_stale_tree_record_is_dropped(self):
+        c = self.cfg(sha="b" * 12)
+        HR.compile_holds(c)
+        self.assertEqual(c["dies"]["s81"]["hold_items"], {})
+        self.assertIn("names tree aaaaaaaaaaaa", c["_pilot_deadlock"][0][2])
+
+    def test_add_pilot_hold_takes_only_a_launchable_pilot(self):
+        c = cfg(items=["gunit__t1", "t2", "t3"])
+        d = c["dies"]["s81"]
+        d.update(pilot_item="gunit__t1", src_manifest_hash="c" * 64)
+        c["_item_names"] = {"s81": ["gunit__t1", "t2", "t3"]}
+        c["_item_rows"] = [{"die": "s81", "item": "gunit__t1", "status": "FAIL", "attempt": 3}]
+        self.assertTrue(HR.add_pilot_hold(c, "s81", d, {}))
+        self.assertEqual(d["hold_records"][-1]["pilot_items"], ["t2"])       # next launchable item
+        c2 = cfg(items=["gunit__t1"])
+        d2 = c2["dies"]["s81"]
+        d2.update(pilot_item="gunit__t1", src_manifest_hash="c" * 64)
+        c2["_item_names"] = {"s81": ["gunit__t1"]}
+        c2["_item_rows"] = [{"die": "s81", "item": "gunit__t1", "status": "FAIL", "attempt": 3}]
+        self.assertFalse(HR.add_pilot_hold(c2, "s81", d2, {}))                # no launchable pilot: fail open, no hold
+
+
 if __name__ == "__main__":
     unittest.main()

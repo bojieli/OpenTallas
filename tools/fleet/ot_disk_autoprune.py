@@ -146,7 +146,7 @@ def main(argv=None):
         sz = int(subprocess.run(["du", "-xsm", t], capture_output=True, text=True).stdout.split()[0] or 0) if why is None or a.mode == "plan" else 0
         print(("KEEP %7dMB %s: %s" % (sz, t, why)) if why else ("%s %7dMB %s" % ("DEL " if a.mode != "plan" else "WOULD-DEL", sz, t)))
         if why is None and a.mode != "plan":
-            subprocess.run(["chmod", "-R", "u+w", t]); shutil.rmtree(t, ignore_errors=True)
+            subprocess.run(["find", t, "-type", "d", "-exec", "chmod", "u+w", "{}", "+"]); shutil.rmtree(t, ignore_errors=True)
             if os.path.exists(t):
                 subprocess.run(["sudo", "-n", "rm", "-rf", "--", t])
             freed += sz if not os.path.exists(t) else 0

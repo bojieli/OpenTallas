@@ -254,7 +254,7 @@ ROOT_SCRATCH_ROOTS = tuple(x for x in os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS"
 # EPYC2-S3 11-15 (COORD, FABLE-FLOW-0815 item 2): epyc2 scratch2 (880 GB nvme) sat at 100% while its 3.5 TB root disk
 # (scratch3 bind) was idle.  Per-host authorized second roots, in addition to OT_RUN_ROOT_SCRATCH_ROOTS (every host):
 # "host=root;root,host=root".  OT_RUN_ROOT_SCRATCH_ROOTS_HOSTS= (empty) turns the default off.
-_RSH = os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS_HOSTS", "epyc2=/srv/opentallas-scratch3")
+_RSH = os.environ.get("OT_RUN_ROOT_SCRATCH_ROOTS_HOSTS", ",".join(h + "=/srv/opentallas-scratch3" for h in ("epyc2", "intel1", "epyc7", "epyc8", "epyc9", "epyc10")))   # 11-17 COORD: scratch3 wherever it exists; usable = root free - root floor
 ROOT_SCRATCH_ROOTS_HOSTS = {k.strip(): tuple(r for r in v.split(";") if r) for k, _, v in (x.partition("=") for x in _RSH.split(","))
                             if k.strip() and v.strip()}
 
@@ -314,6 +314,7 @@ def sfloor(host=None):
 # already the reserve; demanding SCRATCH_DISK_FLOOR_GB on top refused intel2 at 21:2x (scratch2 29 GB, root 197 GB free,
 # usable 47 GB < 50) although jobs fit there.
 SCRATCH_SECOND_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_SECOND_FLOOR_GB", "20"))
+SCRATCH_SECOND_MARGIN_GB = int(os.environ.get("OT_RUN_SCRATCH_SECOND_MARGIN_GB", "50"))   # 11-17 COORD (job dirs on the disk with the most free space): a second root wins when its usable free beats the best separate disk by this margin, not only when that disk is under the floor
 # v13 DISK GUARD: a host whose root fs is more than this % full admits no new job (any host, md0 included).
 ROOTFS_MAX_PCT = int(os.environ.get("OT_RUN_ROOTFS_MAX_PCT", "85"))
 # COORD 2026-10-24 ~20:00 (owner split epyc1/epyc3 RAID1 -> separate scratch disk): on a host whose new work goes to
@@ -367,7 +368,7 @@ def scratch_disk(row, d, out, host=None):
         roots = disk_roots
         sr = SCRATCH_PIN if SCRATCH_PIN in second else (max(second, key=second.get) if second else None)
         extra["scratch_floor_gb"] = sfloor(host)
-        if sr and (sr == SCRATCH_PIN or (extra["scratch_disk_gb"] < sfloor(host)
+        if sr and (sr == SCRATCH_PIN or ((extra["scratch_disk_gb"] < sfloor(host) or second[sr] > extra["scratch_disk_gb"] + SCRATCH_SECOND_MARGIN_GB)
                                          and second[sr] >= SCRATCH_SECOND_FLOOR_GB)):
             extra.update(scratch_disk=sr, scratch_disk_gb=second[sr], scratch_second=True, root_floor_gb=rfl)
             roots = {sr: second[sr]}                          # new run dirs go to the second root
@@ -1217,10 +1218,10 @@ def scratch_env(host=None):
                # ROOTSCR_1101: a second root (root fs, ROOT_SCRATCH_ROOTS) is o=2 with usable free = free - root floor
                "case ' " + " ".join(second_roots(host)) + " ' in *\" $r \"*) [ $o = 1 ] && { o=2; f=$((${f:-0}-"
                + str(root_floor(host)) + ")); };; esac; echo $o $f $r; done | "
-               "awk -v fl=" + str(sfloor(host)) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
+               "awk -v fl=" + str(sfloor(host)) + " -v sfl=" + str(SCRATCH_SECOND_FLOOR_GB) + " -v mg=" + str(SCRATCH_SECOND_MARGIN_GB) + " -v pin=" + shlex.quote(SCRATCH_PIN or "-") + " "
                "'{o[NR]=$1; f[NR]=$2; r[NR]=$3; if ($1==0) {d=1; if ($2>bd) bd=$2} if ($1==2 && $2>bs) {bs=$2; bsr=$3} "
                "if ($3==pin && ($1==0 || ($1==2 && $2>=sfl))) pr=$3} "
-               "END {if (pr!=\"\") {print 0, pr; exit} if (d && bd<fl && bs>=sfl) {print 0, bsr; exit} "
+               "END {if (pr!=\"\") {print 0, pr; exit} if (d && (bd<fl || bs>bd+mg) && bs>=sfl) {print 0, bsr; exit} "
                "for (i=1; i<=NR; i++) if (o[i]==0) print f[i], r[i]}' "
                "| sort -n | tail -1 | awk '{print $2}'); OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
 
@@ -1234,6 +1235,7 @@ SECOND = set(os.environ.get("OT_RUN_PLACE_SECOND", "").split())          # ROOTS
 RFLOOR = int(os.environ.get("OT_RUN_PLACE_RFLOOR") or 150) << 30
 PIN = os.environ.get("OT_RUN_PLACE_PIN", "")
 MARK, MARGIN = ".ot-run-spill-copy", 50 << 30
+SMARGIN = int(os.environ.get("OT_RUN_PLACE_SMARGIN") or 50) << 30      # second root beats the best separate disk by this much -> it takes the new run dirs
 LANE = re.compile(r"^(/srv/opentallas-scratch[^/]*)/claude/([A-Za-z0-9_+-][A-Za-z0-9_.+-]*)(?:/(.*))?$")
 SAFE = re.compile(r"^/srv/opentallas-scratch[^\s$*?{}\[\]`~\\'\"]*$")
 say = lambda m: print("ot-run: SCRATCH2: " + m, file=sys.stderr)
@@ -1270,7 +1272,7 @@ best = max(disk or free, key=(disk or free).get) if free else None
 forced = None
 if PIN in second and second[PIN] >= SFLOOR or PIN in free:
     forced = PIN
-elif second and disk and max(disk.values()) < FLOOR and max(second.values()) >= SFLOOR:
+elif second and disk and (max(disk.values()) < FLOOR or max(second.values()) > max(disk.values()) + SMARGIN) and max(second.values()) >= SFLOOR:
     forced = max(second, key=second.get)
 if forced:
     best = forced
@@ -1389,7 +1391,7 @@ def scratch_place_sh(d, cmd, dry=False, tag="otrun", host=None):
     if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
         arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
     pe = (f'OT_RUN_PLACE_ROOTS={shlex.quote(" ".join(SCRATCH_ROOTS))} OT_RUN_PLACE_SECOND={shlex.quote(" ".join(second_roots(host)))} '
-          f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
+          f'OT_RUN_PLACE_RFLOOR={root_floor(host)} OT_RUN_PLACE_SFLOOR={SCRATCH_SECOND_FLOOR_GB} OT_RUN_PLACE_SMARGIN={SCRATCH_SECOND_MARGIN_GB} OT_RUN_PLACE_PIN={shlex.quote(SCRATCH_PIN)} ')
     return (f'pl=$({pe}OT_RUN_SCRATCH_DISK_FLOOR_GB={sfloor(host)} timeout 60 python3 -c "$(echo {code} | base64 -d)" '
             f'{shlex.quote(d or "")} {arg}' + (" dry" if dry else "") + ' 2>&1 >/dev/null); prc=$?; '
             '[ -n "$pl" ] && printf "%s\n" "$pl" | head -20 >&2; '

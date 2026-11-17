@@ -193,6 +193,31 @@ def keepouts(P):
         if io.get("rect_um") and io.get("kind", "") in ("phy_macro", "phy", "serdes", "hbm_phy"):
             x0, y0, x1, y1 = io["rect_um"]
             out.append((x0, y0, x1, y1, f"io/{io.get('name')}"))
+    out.extend(face_pin_keepouts(P))
+    return out
+
+
+def face_pin_keepouts(P):
+    """HEAD-PLAN-R4 11-17 (FABLE-CLOSURE lever 7, hd_mesh 7-net residual): the reserved-site carve as a GENERATOR rule.
+    Opt-in die.clock.face_pin_keepout_um = d > 0: every face bus window of every partition (buses[].face + window_um) is a
+    keepout strip of depth d inward from that face, so no die clock cell is sited over a partition's signal face pins
+    (hd_mesh north coll_oa33..37/321..325 sat inside two die clock-cell reservations).  Default 0 = no rect, trees unchanged."""
+    d = float((P.die.get("clock", {}) or {}).get("face_pin_keepout_um", 0) or 0)
+    if d <= 0:
+        return []
+    out = []
+    for n, p in P.parts.items():
+        t = P.types[p["type"]]
+        W, H = t["outline_um"]
+        for b in t.get("buses", []) or []:
+            f, win = b.get("face"), b.get("window_um")
+            if f not in ("N", "S", "E", "W") or not win or len(win) != 2:
+                continue
+            lo, hi = min(win), max(win)
+            r = {"N": (lo, H - d, hi, H), "S": (lo, 0.0, hi, d), "E": (W - d, lo, W, hi), "W": (0.0, lo, d, hi)}[f]
+            corners = [P.to_die(n, (x, y)) for x in (r[0], r[2]) for y in (r[1], r[3])]
+            out.append((min(x for x, y in corners), min(y for x, y in corners),
+                        max(x for x, y in corners), max(y for x, y in corners), f"{n}/face_pins/{b.get('name')}"))
     return out
 
 

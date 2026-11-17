@@ -163,7 +163,12 @@ def check_contained(tree, plan, roots=("/srv/",)):
     return out[:30]
 
 
-def _sub(argv, cwd, timeout=1800):
+# QC M5 11-17: the QC plan (37 MB, 133 types) takes ~48 min in check.py G0 on E8; a 1800 s cap failed a clean tree on time.
+# One wall-clock budget per static step, the same 6 h the dry gen already has; the remote static run gets all three steps.
+STEP_TIMEOUT_S = 6 * 3600
+
+
+def _sub(argv, cwd, timeout=STEP_TIMEOUT_S):
     try:
         p = subprocess.run(argv, cwd=cwd, capture_output=True, text=True, timeout=timeout)
         return p.returncode, (p.stdout + p.stderr)
@@ -269,7 +274,7 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
            f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}"
            + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else ""))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
-    p = runner(argv, capture_output=True, text=True, timeout=3600)
+    p = runner(argv, capture_output=True, text=True, timeout=3 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
     got = [ln[len("PG_STATIC "):] for ln in txt.splitlines() if ln.startswith("PG_STATIC ")]
     if not got:

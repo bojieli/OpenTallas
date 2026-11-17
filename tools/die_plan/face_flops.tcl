@@ -894,6 +894,8 @@ if {[file exists /work/ft_polarity_local.tcl]} {source /work/ft_polarity_local.t
 if {[file exists [file join [file dirname [file normalize [info script]]] cell_census.tcl]]} {
   uplevel #0 [list source [file join [file dirname [file normalize [info script]]] cell_census.tcl]]; ot_cell_census floorplan
 } else { puts "OT_CELL_CENSUS WARN stage=floorplan: cell_census.tcl is not in the kit, no recount" }
+# S81-COL-SSTN-M5 11-17 (opt-in OT_S81_SSTN_M5_BLOCK=1): M5 routing block over every ot_s81_sstn_* core before the first route.
+if {[info exists ::env(OT_S81_SSTN_M5_BLOCK)] && $::env(OT_S81_SSTN_M5_BLOCK) eq "1" && [file exists /work/sstn_m5_block.tcl]} { source /work/sstn_m5_block.tcl }
 # OT_GPL_GUARD begin -- KIT-TRIAGE-1/G4 11-01 (FLOW, default-on class fix for GPL-0305, every kit whose PRE_GLOBAL_PLACE
 # hook is this shared face_flops.tcl: gen_phys type kits AND the per-die core kit generators that copy it).  It runs
 # after every FIRM face / ring / station placement above and BEFORE ORFS global_place.tcl reads GPL_ROUTABILITY_DRIVEN /

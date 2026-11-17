@@ -114,14 +114,17 @@ module dsdv_bk_sel #(
             .t_s(fs[SB * g +: SB]), .t_o(fo[OB * g +: OB]));
 `endif
     end endgenerate
+    // S81-CORES-R3 11-17: the control is bound with the parameter set of its SIGNED view (bksel_c3_1104 rfd6, odb 11f32154:
+    // -G OLL=2 SELOH=1 RNF=1 LQH=1, ss29 LEC gold.ys); before this the die took the module defaults (SEARCH_PIPE 1 instead of
+    // the hardened 4) and HCPARAM-ALL allowlisted the core.  OT_BKQ_ECO3 adds QRX 1 (the re-signed QRX view).
 `ifdef OT_BKQ_ECO3
 `ifdef OT_BKQ_QRX_MUT
-    dsdv_bksel_c u_c (.ck(clk), .rst(rst_n),
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_n),
 `else
-    dsdv_bksel_c #(.QRX(1)) u_c (.ck(clk), .rst(rst_n),
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1)) u_c (.ck(clk), .rst(rst_n),
 `endif
 `else
-    dsdv_bksel_c u_c (.ck(clk), .rst(rst_n),
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_n),
 `endif
         .f_s_s(fs_c[0 +: 2*SB]), .f_s_n(fs_c[2*SB +: 2*SB]), .f_o_s(fo_c[0 +: 2*OB]), .f_o_n(fo_c[2*OB +: 2*OB]),
         .t_c_s(tc[0 +: 2*CB]), .t_c_n(tc[2*CB +: 2*CB]), .t_cr_s(tcr[1:0]), .t_cr_n(tcr[3:2]), .vd(vd));

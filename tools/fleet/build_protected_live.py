@@ -6,7 +6,7 @@ Running jobs, waiter command lines and units are NOT in the list: ot_delete_guar
 usage: build_protected_live.py COORD_DIR OUT [MARKER_DIR ...]"""
 import glob, importlib.util, json, os, re, sys, time
 
-HIST = re.compile(r"(^|_)(prev|previous|retired|superseded|history|old|note|notes|rollback_hist)(_|$)", re.I)
+HIST = re.compile(r"(^|_)(prev|previous|retired|superseded|history|old|note|notes|rollback_hist|source_qualification|qualification|smoke_detail)(_|$)", re.I)
 RX = re.compile(r"/srv/opentallas-scratch[0-9]*/claude/[A-Za-z0-9._+/@=~-]+")
 
 
@@ -38,7 +38,10 @@ def build(coord, markers=(), canon=os.path.normpath):
         for f in sorted(os.listdir(d)) if os.path.isdir(d) else []:
             if f.startswith("tree_switch_") and f.endswith(".json"):
                 try:
-                    paths_in(json.load(open(os.path.join(d, f))), out, canon)
+                    mk = json.load(open(os.path.join(d, f)))
+                    if isinstance(mk, dict) and str(mk.get("status") or "").upper().startswith("SUPERSEDED"):
+                        continue                       # a marker its owner / COORD marked SUPERSEDED no longer protects anything (kept for history)
+                    paths_in(mk, out, canon)
                 except (OSError, ValueError):
                     pass
     for f in ("PROTECTED-DBS.txt", "lanes/PROTECTED-DBS.txt"):
@@ -75,8 +78,8 @@ def event_paths(coord, out, canon, now=None, max_age_h=72.0):
     for pat in ("autopilot/tree_checks/*", "lanes/handoff/*.json", "autopilot/*candidate*.json", "autopilot/events/*.json"):
         for f in glob.glob(os.path.join(coord, pat)):
             try:
-                if now - os.stat(f).st_mtime > max_age_h * 3600:
-                    continue
+                if now - os.stat(f).st_mtime > max_age_h * 3600 or "_atomic_apply_" in os.path.basename(f):
+                    continue                        # a receipt of an apply that already happened is history, not an input
                 paths_in(json.load(open(f)), out, canon)
             except (OSError, ValueError):
                 pass
@@ -104,6 +107,20 @@ def live_cmd_paths(out, canon, proc="/proc", unit_dirs=("~/.config/systemd/user"
                 pass
 
 
+PROV_CACHE = os.path.expanduser("~/.local/state/prov_paths.json")
+
+
+def prov_cache_paths(cache, out, canon, max_age_h=72.0, now=None):
+    """provenance.json paths of every view in each die's CURRENT tree and rollback tree (prov_paths.py audit): never deleted.  A stale cache still protects (72 h);
+    a missing cache protects nothing (the first audit run builds it)."""
+    try:
+        d = json.load(open(cache))
+        for p in d.get("paths") or {}:
+            out.add(canon(p))
+    except (OSError, ValueError):
+        pass
+
+
 def main(argv):
     coord, outp, markers = argv[1], argv[2], argv[3:] or [os.path.join(argv[1], "lanes/handoff"), os.path.join(argv[1], "state")]
     here = os.path.dirname(os.path.realpath(__file__))
@@ -113,6 +130,7 @@ def main(argv):
     event_paths(coord, s, g.canon)
     prose_paths(glob.glob(os.path.join(coord, "lanes/handoff/*.md")), s, g.canon)
     live_cmd_paths(s, g.canon)
+    prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
     g.write_list(s, outp)
     print(len(s), "live protected roots ->", outp)
     return 0

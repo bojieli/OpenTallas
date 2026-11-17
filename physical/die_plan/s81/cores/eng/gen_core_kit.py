@@ -200,6 +200,9 @@ def main():
     assert "ot_unreg_pins" in ff and "puts $ff_unreg" in ff, "face_flops.tcl miss anchor changed"
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")
+    import importlib.util as _ilu   # KIT-COMMON-1117: the one shared kit helper list (tools/die_plan/kit_common_files.py)
+    _s = _ilu.spec_from_file_location("kit_common_files", Path(__file__).resolve().parents[5] / "tools/die_plan/kit_common_files.py")
+    _kcf = _ilu.module_from_spec(_s); _s.loader.exec_module(_kcf); _kcf.stage(kd)
     shutil.copyfile(HERE / "pin_audit_core.py", kd / "pin_audit.py")
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     # macro sites: snap y so the macro's M4 pins sit on the core M4 tracks (0.012 + k 0.048)
