@@ -1,15 +1,20 @@
 # HEAD-SD9A -> handoff to FABLE-FIX-HEAD-SERDES (hd_serdes). Lane HEAD-SD9A STOPS here (COORD FABLE-PD-HEAD-2045 s3).
 
-## sd9c run (LIVE, do not restart)
-- Kit: /srv/opentallas-scratch2/claude/head-sd9a/gen/hd_serdes (replicas same path on epyc7/8/9/10; reset_tree.tcl sha 5be86bfb2b5a).
-  Run host epyc8, ot-heavy unit oth-ubuntu-4115587-1794884149, intel2 client log ~/head-sd9a-logs/sd9c_route.log (client PID 1359873),
-  kit log run_route.log. Command: run_kit.sh KIT route 80 16 (gen/run_route.sh).
-- !! GOAL = route: run_kit continues into DRT automatically after GRT unless a gate stops it. If DRT must not be spent before the GRT
-  read, stop by exact unit (systemctl --user stop the unit above on epyc8, after a cmdline check) once 5_1_grt.odb + tt repair are written.
-- State 04:45 UTC: synth/place/CTS done. CTS TT repair wns -204.38 -> -15.70 (tns -12276.6 -> -114.3, 87 cells), KEEP. GRT in extra
-  iterations (24/30) at 04:45 UTC. Place render flags only fanout_spread=541.9 (sd9a had 1131.1).
-- Read at GRT (GRT RC frame of tt_setup_repair.tcl): copy of my measure script epyc7
-  .../head-types-r/sd9a_grt1/hd_serdes/sd9a_meas/{tail.tcl,meas.sh} (head -80 tt_setup_repair.tcl + violator dump); repoint K.
+## sd9c run: ENDED, FLOW ERROR AT GRT (not a design verdict). No 5_1_grt.odb, so there is no rem_q read
+- Kit: /srv/opentallas-scratch2/claude/head-sd9a/gen/hd_serdes (replicas at the same path on epyc7/8/9/10; reset_tree.tcl sha 5be86bfb2b5a).
+  epyc8 unit oth-ubuntu-4115587-1794884149 RAN, exit 2 (~04:5x UTC). intel2 client log ~/head-sd9a-logs/sd9c_route.log; kit log run_route.log.
+- Before the error: synth/place/CTS done; CTS TT repair wns -204.38 -> -15.70 (tns -12276.6 -> -114.3, 87 cells, KEEP), 4_cts.odb
+  written 04:14; GRT routed (extra iterations to 24+/30). Place render flags only fanout_spread=541.9 (sd9a: 1131.1).
+- ERROR global_route.tcl:195 "OT_VCLK_MEASURED_HOLD: pin-register mean unavailable (samples 1669 missing 0 clocks 2)".
+  Cause: NF15c gen sets config.mk OT_GRT_MEASURED_HOLD = 1, which the sd9a kit did not have. vclk_measured_hold.tcl ot_vmh_pinreg_mean
+  excludes only the OT_FWD_RING_INPUTS families. The native pad input pma_rx[*] (constraint.sdc "# OT_NATIVE_PAD_INPUT pma_rck pma_rx[*]",
+  input delay on pma_rck) puts pma_rck boundary registers into the census, so there are 2 clocks and it fails closed. Any kit with a native PHY pad clock is exposed.
+- FIX (source): in tools/die_plan/vclk_measured_hold.tcl, exclude the OT_NATIVE_PAD_INPUT ports (and their clock) from din, as is done
+  for OT_FWD_RING_INPUTS. Then resume from the kept CTS (4_cts.odb is TT-repaired): do-5_1_grt onward, by do-* targets or a resume.json
+  (the kit has no resume.json; a plain re-run of run_kit.sh route would rebuild from synth). Opt-out alternative (not structural):
+  OT_GRT_MEASURED_HOLD=0, which is what sd9a ran with. NOT relaunched (COORD: hand off and stop).
+- Read at GRT (in the GRT RC frame of tt_setup_repair.tcl): use my measure script on epyc7
+  .../head-types-r/sd9a_grt1/hd_serdes/sd9a_meas/{tail.tcl,meas.sh} (head -80 tt_setup_repair.tcl + violator dump) with K repointed.
 
 ## Form sd9c = sd9A on NF15c with a coherent reset tree
 - Plan copy epyc8 /srv/opentallas-scratch2/claude/head-sd9a/planA15b/prep = NF15c prep + ONE edit: u_phy.u_link.u_dec.u_chn origin
