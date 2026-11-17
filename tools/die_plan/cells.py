@@ -173,8 +173,8 @@ def _add_landing(types, out, by_type=None):
             out[tn] = (c + rings, f"landing cohort of {base}: {basis}" + (f" + landing rings {rings}" if rings else ""))
 
 
-def estimate(raw, plan_dir=None, evidence=(), auto=True):
-    """raw plan dict -> ({type: (cells, basis)}, [sources used])."""
+def estimate(raw, plan_dir=None, evidence=(), auto=True, modules=None):
+    """raw plan dict -> ({type: (cells, basis)}, [sources used]).  modules: an optional dict that receives the module cell table."""
     types = raw["partition_types"]
     parts = {p["name"]: p["type"] for p in raw["partitions"]}
     files = list(evidence) + (discover(plan_dir) if auto else [])
@@ -204,6 +204,8 @@ def estimate(raw, plan_dir=None, evidence=(), auto=True):
         else:
             for m, c in tab.items():
                 mods.setdefault(m, c)
+    if modules is not None:
+        modules.update(mods)
     out = {}
     for tn, t in types.items():
         if "cells" in t:
@@ -240,6 +242,27 @@ def estimate(raw, plan_dir=None, evidence=(), auto=True):
                 out[tn] = (tot, f"modules {found}/{n}" + ("" if found == n else " (lower bound)"))
     _add_landing(types, out, by_type)
     return out, [f for _, _, f in srcs]
+
+
+def flat_cells(t, total, basis, mods=None):
+    """WAVE-FLOW-R2 11-17 (COORD r576): the flat part of a type estimate = total minus the cells of the hard cores the kit does NOT build flat
+    (cores with a bound lef; a PLANNED core without a lef is inlined as soft RTL, so it stays in the flat part).  type.cells (basis "plan") is
+    the type's own movable logic but may still count its cores (KV split types), so the same subtraction applies.  -> (flat, note); flat None when a bound core's cell count is unknown."""
+    cores = [h for h in (t.get("hard_cores") or []) if isinstance(h, dict)]
+    if not cores:
+        return total, ""
+    sub, mods = 0, mods or {}
+    for h in cores:
+        if not h.get("lef"):
+            continue
+        c = h.get("cells")
+        if c is None:
+            m = h.get("module") or ""
+            c = mods.get(m, mods.get(re.sub(r"__.*$", "", m)))
+        if c is None:
+            return None, f"hard core {h.get('module') or h.get('inst')} (bound view) has no cell count: flat part unjudged"
+        sub += int(c)
+    return max(int(total) - sub, 0), (f"total {int(total)} - {sub} in bound hard cores" if sub else "")
 
 
 def over_cap(raw, est):
