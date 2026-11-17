@@ -81,5 +81,37 @@
   "tools_sha": "2efedf57b857ecfcd7300bb28cf1dd852ab8880e",
   "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6_1117_work",
   "written_by": "S81-DIE-R3"
+ },
+ "hold_record": {
+  "id": "s81-ft-channel-d6-1117",
+  "plan_sha": "0126890b808f8f5f6b4ed496ec75eb360e9b54375c77386399a40218600e2997",
+  "items": [
+   "ot_s81sl_leaf__t22",
+   "ot_s81sl_leaf__t2",
+   "ot_s81sl_leaf__t9",
+   "ot_s81sl_leaf__t71",
+   "ot_s81sl_leaf__t17",
+   "ot_s81sl_leaf__t13",
+   "ot_s81sl_leaf__t23",
+   "ot_s81sl_leaf__t67",
+   "ot_s81sl_leaf__t34",
+   "ot_s81sl_leaf__t73",
+   "dsdv_slice_c1x_C__t8",
+   "ot_s81sl_leaf__t57",
+   "ot_s81sl_leaf__t28",
+   "ot_s81sl_leaf__t46",
+   "dsdv_slice_iq_C__t1",
+   "dsdv_slice_c1x_C__t9",
+   "ot_s81sl_leaf__t43",
+   "ot_s81sl_leaf__t8",
+   "ot_s81sl_leaf__t14",
+   "ot_s81sl_leaf__t44__clf6cf8492"
+  ],
+  "cause": "ft-channel: N/S ft station bits over 0.70 of the vertical tracks in a channel beside a hard core (check.py ft_channel_tracks, 45.6 tracks/um, Fable t34 calibration); 25 channels in these 20 types on plan 0126890b (census epyc10 rows/f2s5_S81-DIE-R/d6/ft_channel_census_c4r3.json; t34 old-form GRT-0116 overflow 3516)",
+  "owner": "S81-DIE-R3",
+  "release": [
+   "result:S81-DIE-R3:ft-channel-d7"
+  ],
+  "reason": "COORD dispatch FABLE-PD-S81-1100 A + r581: no GEN/GRT for strip/slice types over 0.70 on D6; FABLE-FIX-S81-STRIP re-slot (rows_d7_strip, every channel <= 0.70) lands as D7; S81-DIE-R3 posts RESULT ft-channel-d7 at D7 apply"
  }
 }
