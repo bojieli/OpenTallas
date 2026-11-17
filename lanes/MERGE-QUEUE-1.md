@@ -840,3 +840,9 @@
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 100 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
 - 2026-11-17 11:07 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current 217d85807680 != hub 24c7347cc887 ; epyc7: rt/current 217d85807680 != hub 24c7347cc887 ; epyc8: rt/current 217d85807680 != hub 24c7347cc887 ; epyc9: rt/current 217d85807680 != hub 24c7347cc887
+- 2026-11-17 11:10 PST MERGED [MERGE-QUEUE -> FLEET-OPS-R-PROV-PATHS] claude/fleet-ops-r-prov-paths-1117@f3cf098c463 -> main b68fab5bf48 -> 4e0f325937a, no-ff merge, tags flow-20261113-yf-*. Gate: gate record from civil-redfish 2026-11-17 18:43 UTC on main 39da5f49b81 (main since: no overlap): 2 test file(s) pass; tests: test_build_protected_live.py test_prov_paths.py. Lane FLEET-OPS-R-PROV-PATHS.
+- 2026-11-17 11:10 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main 4e0f325937a failed rc=1: runtime activation state not reported; stderr context: ine 349, in sync
+    d = materialize(full)
+  File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
+    raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
+RuntimeError: /srv/opentallas-scratch2/claude/rt: 94 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
