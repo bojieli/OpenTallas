@@ -40,3 +40,9 @@ Last observed extra iterations: t28 13/30, t34 24/30, t62 11/30 (after its NDR r
 ## Source/coord state
 
 Only untracked `results/geom_review/s81_vpw_bank_1117/t75_report.json` in wt_xr is an obsolete v1 report; do not adopt. No source WIP was left. Canonical posts are `lanes/posts/CODEX-S81-STRIP.md` via post.sh. Gate logs intel2 `~/fable-fix-s81-strip/gate_raw_proof_1117.log` and `gate_B_census_1117.log`. No owner question is pending.
+
+## 00:39 integration and live-job update
+
+Before the next B full-context ELAB, account for this source-staging trap: `leaf_cs_depth.py` correctly counts the native shared+per-lane chains, so effective B HI3 can be checked against planHI3. However `stage_lfcs_netlist.py:leaf_depths` blindly writes the plan depth into source HI_D and defaults HI_GS=HI_D. Restaging a B planHI3 through that helper unchanged would create sourceHI_D3 plus XR1 = effectiveHI4. Keep sourceHI_D2/GS2 and represent/price the effective third per-lane stage in the plan. `--hi-gs2` alone cannot fix the double stage. An explicit XR-aware source-depth mapping is required for that source-staging path. No tool/source body was changed for this finding.
+
+Last GRT watch00:34: t28 extra14/30, t34 extra26/30, t72 extra12/30; no5_1 checkpoint. t62 restarted its extra iterations again because GRT disabled NDR on `clknet_0_fclk_in_ft4_i[0]` after extra11/30 (earlier fallbacks: `clknet_0_clk_t47`, `clknet_1_1_0_clk_t47`, then `fclk_in_ft4_i[0]`), now extra4/30. This is ongoing automatic congestion fallback, not a dead job or finished result. Preserve all four jobs.
