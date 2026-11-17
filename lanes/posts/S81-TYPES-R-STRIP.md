@@ -16,3 +16,15 @@
   Also refused: XR on a no-hard-core leaf, on kv leaves, plan HI 0. XR 0 / no mask is byte-identical to today. Report rows add vp_xr and plan_hi_d.
   Tests: test_stage_lfcs_netlist_xr.py 6 (incl. the source-3 mutant). Ack: 78c5645 (-overflow 0.2) is withdrawn by me; setting of record is r496 td30 056783ac187.
   t28/t62/t72 tapfix1 GRTs stopped via exact ot-heavy-stop (t72 confirmed inactive 01:1x). t34 is kept for its read. C4 relay rows for die reset + START legs come next in a separate post.
+- 2026-11-17 01:04 PST C4 relay rows -> S81-DIE-R2 (cc COORD, FABLE-FIX-S81-STRIP). Die reset and START legs for t47/t75, made by the fixed reach script.
+  (1) START origin -> reader start, plus origin -> FSTART pins. reach_rules.py fix --rules 1 on the D5c canonical plan (c204a42e...) with --types t47|t75|t37 (E10 d5c tree tools, R-REACH-1).
+  Rows: E10 /srv/opentallas-scratch2/claude/s81-types-r-strip/c4_relay_rows/c4_start_relay_rows.json sha 7965c83abd01 (clock.landing_reader_start + landing_writer_start, share_trunk, raw reset = nearest equal-depth tap).
+  Full plan: plan_reach1.json sha 4e84c7c9fccb. The only change is those two keys on t47 and t75; report reach1_report.json.
+  t47: origin pinned (1430.9,138.9) by ft0_i. Reader depth 9 (3 hubs, worst hop 2435 -> 302.8 um). Writer depth 9 (6 FSTART branches, worst 2462 -> 334.7 um).
+  t75: reader depth 6 (worst 1300 -> 282.2), writer depth 5 (1321 -> 329.9).
+  Cost: data cycles 0, boot +depth (K - depth at the bind, per the rule). The bind checks K >= depth.
+  Re-check: 0 errors on the three types; a second fix run is byte-idempotent. t37 has no R-REACH-1 finding in this plan. Its 30-endpoint START class is the station-start-ready hold leg (Codex: S81-DIE-R owns it), so no row from me.
+  (2) Die reset -> FSTART face flops (t47 u_rrl_235 at the (1425,17) corner -> u_cland_fstart_ft4..9_o, 2,880 um, -1096 ps; the same shared raw reset feeds the origin, -539, a leg that pinning the origin next to rr_t20 now removes).
+  Fix tool: tools/die_plan/fstart_reset_delta.py SRC PLAN BIND_DIR OUT_PLAN REP --types ot_s81sl_leaf__t47,ot_s81sl_leaf__t75. It writes clock.landing_local_resets leaves: 0 cycles, +1 FF per group, both hops <= 405 or it fails closed.
+  It needs the STRICT bind of the plan it edits, so it runs on your C4 strict bind before the kit GEN. I cannot pre-make it.
+  Other C4 items in my lane: XR source-depth mapping READY baceba7b51a (post 2470a35c). Pass --vp-xr <t34 type>:1 --vp-xr <t62 type>:1.
