@@ -118,6 +118,7 @@ def _same_tree(a, b):
 
 
 def test_kit_byte_identical_without_cut(monkeypatch):
+    monkeypatch.setenv("OT_PG_RAIL_CHECK", "0")   # PG-RAIL-CHECK-1 adds its own POST_PDN step to every kit; not the subject here
     P0 = schema.Plan(copy.deepcopy(PAIR))
     raw = copy.deepcopy(PAIR)
     raw["partition_types"]["fa"]["pg_island_cut"] = True                    # opted in but no hard core LEF: no window
