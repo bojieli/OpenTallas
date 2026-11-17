@@ -91,6 +91,69 @@ def qwen_native_kv_programme_candidate_model(replicas=1):
         qualification='component candidate only; actual replica inventory, area/slot/channel, routed SS/FF clock and source-profiled whole-stage timing remain open')
 
 
+
+def qwen_kv_context_service_candidate_model():
+    """Full production context/join source and ALL174-bit service seam; not a build admission.
+
+    Inventory and exactness are measured on the real NATIVE32/PJ1/ROPE1/DELAY1024/
+    OVL0/FIX1 wrapper, join4cal, row transmitter and word provider.  Source-derived
+    earliest slots exclude physical transport.  Producer placement and its internal
+    relays remain open, so this row gives neither timing nor token-rate credit.
+    """
+    service_bits, epoch_bits = 174, 1
+    ff = 2 * service_bits
+    ff_area = ff * .2916 + 2 * .37908
+    return dict(
+        schema="opentallas.qwen-kv-context-service-candidate.v1",
+        selected=False, build_ready=False, opt_in_default=False, replicas=1,
+        source="results/kv_hr_closed_restore_1116/full_production_1116/contract.json",
+        parameters=dict(NATIVE32=1, PIPE_JOIN=1, ROPE=1, ROPE_DELAY=1024, OVL=0,
+                        FIX_ROPE_SLOT_GUARD=1),
+        compute=dict(macs_per_cycle=0, new_rounding_points=0),
+        storage=dict(generic_ff_baseline=3625, generic_ff_candidate=6025,
+                     generic_ff_delta=2400, sram_64rows_512bits_baseline=1,
+                     sram_64rows_512bits_candidate=2, storage_bits_delta=32768,
+                     read_bytes_per_cycle_per_macro=64,
+                     write_bytes_per_cycle_per_macro=64,
+                     memory_port_capacity_is_sustained_claim=False),
+        service=dict(rtl_bits_per_cycle=service_bits, physical_epoch_bits=epoch_bits,
+                     bytes_per_cycle=service_bits/8, boundary_cycles=2,
+                     boundary_ff=ff+2, resetless_ff=ff, reset_ff=2,
+                     fanout_per_bit=1, new_mux_inputs=0, new_demux_outputs=0,
+                     FF_cell_floor_um2=ff_area, slot_floor_at_55pct_um2=ff_area/.55,
+                     lane="L2416", source_partition="hub_Wi", sink_partition="hub_C",
+                     source_leaf="kvs_emb.o_ctx_svc", sink_leaf="kvs_ctl.d2d__svc",
+                     seam_window_um=[13072.729, 13101.8957], layers=["M6", "M4"],
+                     tracks_required=service_bits+epoch_bits,
+                     conservative_29um_track_capacity=1058,
+                     track_fraction=(service_bits+epoch_bits)/1058,
+                     complete_producer_slot_fit=False,
+                     internal_relay_edges=None, CTS_hold_wire_area_um2=None),
+        ports=dict(context_local_input_bits=99, existing_header_port_bits=552,
+                   existing_join_input_bits_each=299, existing_join_input_ports=4,
+                   existing_calendar_input_bits=73, existing_service_input_bits=174,
+                   existing_transmit_payload_bits=548, existing_transmit_valid_bits=1,
+                   existing_slot_input_bits=1),
+        functional=dict(requests=4, packets=292, genuine_rope_words=32,
+                        packets_per_transmit_burst=73, transmit_burst_ii_cycles=1,
+                        calendar_drop_mutant="fault detected", minimum_request_ii=None),
+        timing=dict(period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                    accepted_to_rope_start_cycles=1024,
+                    source_ready_cycles="1081+16*(position%8), fixed accepted/calendar phase",
+                    source_derived_first_header_cycles=1193,
+                    source_derived_first_rope_cycles=1258,
+                    source_derived_last_packet_cycles=1265,
+                    reserved_observed_first_header_cycles=1206,
+                    reserved_observed_first_rope_cycles=1271,
+                    reserved_observed_last_packet_cycles=1278,
+                    earliest_dates_measured=False, physical_transport_included=False,
+                    additional_1024_charge=0, full_token_delta_cycles=None),
+        open_requirements=["complete producer/join/SRAM placement and relay budget",
+                           "coherent C source bind with exact selected clock topology",
+                           "per-tap added sink inventory and clock qualification",
+                           "TT setup/FF hold and full production request II"])
+
+
 def qwen_central_vm_native_bank_model():
     """Preserve four bank edges, isolate actual input/capture/output clock roots."""
     return dict(schema='opentallas.qwen-central-vm-native-bank.v1', opt_in_default=False,
