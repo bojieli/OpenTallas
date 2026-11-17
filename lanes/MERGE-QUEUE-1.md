@@ -871,3 +871,5 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN
   File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-17 12:07 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (4 new): epyc10: rt/current db5ba5f32662 != hub ba7a96a195ff ; epyc7: rt/current db5ba5f32662 != hub ba7a96a195ff ; epyc8: rt/current db5ba5f32662 != hub ba7a96a195ff ; epyc9: rt/current db5ba5f32662 != hub ba7a96a195ff. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-17 12:07 PST STATE [MERGE-QUEUE -> COORD] drift cleared: intel1: rt/current b34c0560d6fb != hub 24c7347cc887
