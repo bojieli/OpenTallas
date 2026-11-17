@@ -632,7 +632,7 @@ def plan_lanes(master, frame_parts=None):
     return {k: sorted(v) for k, v in out.items()}
 
 
-def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha, frame_parts=None):
+def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha, frame_parts=None, internal_profile=None):
     """Use direct return depths and validated station deltas; retain every physical plan latency check.
 
     Historical LP return calendars can themselves contain wrong region-crossing assignments (col_h9 has five).
@@ -709,21 +709,27 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha, 
     le = plan_map['latency_edges']
     plan = []
 
-    def prow(link, rtl, want, basis):
+    def prow(link, rtl, want, basis, internal_link=None):
+        if internal_profile is not None and internal_link is not None:
+            from frame_visibility_profile import link_delta
+            delta = link_delta(internal_profile, internal_link)
+            if delta:
+                want = [v + delta for v in want]
+                basis += f' + measured internal cohort {internal_profile["cohort"]} ({delta:+d} edges)'
         ok = rtl == want
         plan.append(dict(link=link, rtl_asbuilt=rtl, plan=want, basis=basis, verdict='PASS' if ok else 'FAIL'))
         if not ok:
             fails.append(link)
     if var == 'x':
         prow('x_i0 -> xo_o0', sorted({x[1] for x in meas_ab['links'].get('->xo', []) if x[0] == 'x'}),
-             [le['x_i0_to_xo_o0']], f'{PLAN_MAP.format(m=master)} latency_edges.x_i0_to_xo_o0')
+             [le['x_i0_to_xo_o0']], f'{PLAN_MAP.format(m=master)} latency_edges.x_i0_to_xo_o0', '->xo')
     lanes = plan_lanes(master, frame_parts)
     for k, v in sorted(meas_ab['links'].items()):
         mm = re.fullmatch(r'fint (r\d)->(r\d)', k)
         if mm:
             prow(f'frame_int {mm.group(1)}->{mm.group(2)} (band port to band port)', v,
                  lanes.get((mm.group(1), mm.group(2)), ['no plan lane']),
-                 'physical/die_plan/s81/die_plan.json latency.lanes fi_* cycles (boundary + stations + fixed_cycles)')
+                 'physical/die_plan/s81/die_plan.json latency.lanes fi_* cycles (boundary + stations + fixed_cycles)', k)
         mm = re.fullmatch(r'seam lpl_(\d+) (u_r\d)->(r\d)', k)
         if mm:
             seam = f'u_s{mm.group(2)[3:]}{mm.group(3)[1:]}'
@@ -731,7 +737,7 @@ def schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, master, var, src_sha, 
             prow(f'seam lpl_{mm.group(1)} {mm.group(2)[2:]}->{mm.group(3)} (writer data to reader station)', v,
                  [le['seam_K_plus_1'] + ext], f'{PLAN_MAP.format(m=master)} latency_edges.seam_K_plus_1'
                  + (f' + {ext} bound-plan stages on {seam} (frame compiler must schedule this read {ext} later)'
-                    if ext else ''))
+                    if ext else ''), k)
     sched = dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=src_sha,
                  landing_lk=meas_ab.get('landing_lk'),
                  spec=lp_sched['spec'], added_edges_per_crossing=lp_sched['added_edges_per_crossing'],
@@ -767,6 +773,10 @@ def main():
     ap.add_argument('--frame-instance', help='exact selected die instance; requires --bound-plan and binder map')
     ap.add_argument('--bound-plan', type=Path, default=None,
                     help='trace at this plan\'s bound fint seam depths and check against it (relay/type-safe event)')
+    ap.add_argument('--internal-visibility-profile', type=Path, default=None,
+                    help='opt-in measured native per-interface variant; requires --bound-plan and --frame-cohort')
+    ap.add_argument('--frame-cohort', default=None,
+                    help='explicit compiler cohort for an internal profile; default frame schedules stay unchanged')
     ap.add_argument('--control-seam-offset', action='append', default=[], metavar='SEAM=N',
                     help='FAILING CONTROL only: trace seam SEAM (u_s01 ...) N stages off the bound plan; the plan check '
                          'must then FAIL (the receipt is marked control and is never a schedule of record)')
@@ -844,6 +854,14 @@ def main():
     selected_json, selected_variants = selected_station_variants(selected_json, ab_top, ab, die_text, HARD_PARAMS(), a.frame_instance)
     (work / f'{ab_top}.selected.json').write_text(json.dumps(selected_json))
     meas_ab = measure(selected_json, ab_top, dict(SEAM_EXTRA) or None)
+    internal_profile = None
+    if a.internal_visibility_profile is not None:
+        if a.bound_plan is None or not a.frame_cohort:
+            raise ValueError('internal visibility profile requires bound plan and explicit frame cohort')
+        import frame_visibility_profile as FVP
+        internal_profile = json.loads(a.internal_visibility_profile.read_text())
+        FVP.validate_selection(internal_profile, sroot(), json.loads(a.bound_plan.read_text()), a.frame_cohort, ab_top)
+        meas_ab = FVP.apply(meas_ab, internal_profile)
     assert 'landing_lk' in meas_ab, ('as-built landing lk is not constant', ab_top)
     for nm, me in (('validate_' + lp_top, meas_v), (lp_top, meas_t), (ab_top, meas_ab)):
         (work / f'{nm}.meas.json').write_text(json.dumps(me, indent=1))
@@ -862,21 +880,27 @@ def main():
     a.out.mkdir(parents=True, exist_ok=True)
     # Return links are measured directly; station deltas still require their historic flat-calendar baseline.
     fails = ['VALIDATION ' + f for f in vfails if '.xs_' in f]
-    sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src, set(frame_parts.values()) if frame_parts else None)
+    sched, rows, plan, pf = schedule(meas_v, meas_t, meas_ab, lp_sched, plan_map, m, v, src, internal_profile=internal_profile, frame_parts=set(frame_parts.values()) if frame_parts else None)
     sched['selected_station_variants'] = selected_variants
+    if internal_profile is not None:
+        sched['internal_visibility_profile'] = dict(internal_profile, profile_sha256=hashlib.sha256(a.internal_visibility_profile.read_bytes()).hexdigest())
+        sched['frame_cohort'] = a.frame_cohort
+        src.update(internal_profile['source_sha256'])
+        src['tools/s81_dv/frame_visibility_profile.py'] = sha('tools/s81_dv/frame_visibility_profile.py')
     if bound is not None:
         sched['bound_plan'] = bound
     if a.source_root is not None:
         sched['source_root'] = str(sroot())
     fails += pf
-    sp = a.out / f'{ab_top}_schedule.json'
+    schedule_name = ab_top + ('__' + a.frame_cohort if internal_profile is not None else '')
+    sp = a.out / f'{schedule_name}_schedule.json'
     sp.write_text(json.dumps(sched, indent=1) + '\n')
     ssha = hashlib.sha256(sp.read_bytes()).hexdigest()
     changed = [r for r in rows if r['asbuilt'] != r['lp_schedule']]
     verdict = 'FAIL' if fails else 'PASS'
     if a.control_seam_offset:
         verdict = 'CONTROL_' + verdict
-    (a.out / f'{ab_top}_check.json').write_text(json.dumps(dict(
+    (a.out / f'{schedule_name}_check.json').write_text(json.dumps(dict(
         schema='opentallas.s81.frame_schedule_asb_check.v1', master=ab_top, verdict=verdict, schedule_sha256=ssha,
         fails=fails, validation=dict(rev=rev, twin=LP_TWIN.format(m=m), links=len(vrows), fails=vfails, rows=vrows,
                                 role='station baselines must match; return links come directly from current RTL'),

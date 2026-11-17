@@ -529,7 +529,7 @@ def golden_vals(mat, x, nseg):
 
 
 def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg_extra=None, assign=None, frame_schedule=None, ret_score=None,
-               kslot=1, nsr=None, slot_extra=None, stretch=None):
+               kslot=1, nsr=None, slot_extra=None, stretch=None, frame_cohort=None):
     """legalise one K-split phase of the frame: every q pair one segment; returns the plan (schedule data).
     land_e: the _l4 successor (dsfd_cfifo_crs4) with every x lane at landing latency E (one E per frame); None = crs
     seg_extra: optional MEASURED element-work term per segment (TOK-S81-GAPS/XS, PV trace), added to E(pair, seg) before
@@ -546,6 +546,9 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
     if frame_schedule:
         import hashlib
         schedule = json.loads(Path(frame_schedule).read_text())
+        if 'internal_visibility_profile' in schedule and frame_cohort != schedule.get('frame_cohort'):
+            raise ValueError('internal frame schedule requires its explicit compiler cohort: ' + str(schedule.get('frame_cohort')))
+
         # S81-PLAN-1 11-10: the schedule's sources are the FRAME sources (lower_xs.frame_manifest root), not this tree
         import os
         sroot = Path(os.environ.get('OT_S81_FRAME_SOURCE_ROOT') or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
@@ -648,6 +651,7 @@ def plan_phase(master, pairs, mat, x, nseg, seed=1, iters=4000, land_e=None, seg
                 rows=mat.rows, topology=dict(nodes=topo['nodes'], root=topo['root'], root_link=topo['root_link'],
                                              r1_skew=topo['r1_skew']),
                 frame_schedule=str(frame_schedule) if frame_schedule else None,
+                **({'frame_cohort': frame_cohort} if frame_cohort is not None else {}),
                 emission=dict(rule='E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)', e0=e0, off=off,
                               seg_extra=sx,
                               cfifo='dsfd_cfifo_crs' if land_e is None else 'dsfd_cfifo_crs4', land_e=land_e,
