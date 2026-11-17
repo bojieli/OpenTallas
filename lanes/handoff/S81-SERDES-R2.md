@@ -14,3 +14,13 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 1. J4 census -> classes; J4 routed TT/FF -> if pass: visual review, sign-off, export.
 2. H2 CTS -> census (run_worst.sh H2_cts) -> stage hold packet already present (H kit copy) -> route.
 3. G3 CTS -> census -> hold packet -> route.
+
+## 18:5x PST findings
+- J4 post-CTS census (E8 L/probes_serdes_r_1116/J4_cts/, placement RC): TT worst -506.42, 614 endpoints < -42. Classes:
+  - 394 = u_rm.g_rd[k].g_local.rpq / wp_g (clk_t12, insertion 539 ps; rm.mem 4096 FF at x~1733) -> u_rm.g_rd[k].q (clk_t14/t15, 297/~370 ps) at x 2350-2715. Data 983 ps = ~300 logic + 14 BUFx6f (~650 ps, 650-950 um). q's only load is u_bout_coll_o0 at x~2879 (east face). STRUCTURAL: rd.q placed too far east + t12 deep tree + -116 early source latency. H has rd.q beside mem (x~1080) and no such class.
+  - 352 = io_pma_rck internal (-486.8 rck_transport q -> syn.am_ok; -101 u_chn -> lpl_w data).
+  - FF worst -353.02: 400 = u_enc.d -> u_enc.d/ch_q split across clk_t22 (295 ps) / clk_t23 (656 ps).
+  => J4 route (running) is information only; J family needs a J5 form: rd.q + its mux on the t12/mem side (rpq->q short) or an added rd.q->bout_coll stage, enc on one tap.
+- G3 CTS 1st attempt exit 2: OT_RCK_AM_COHORT group 0 "far" (leaf_affinity radius 30 um from the majority leaf driver; FFs themselves compact, same as J4). Patched G3 kit rck_am_cohort.tcl (orig .G3_before_near): on "far" try each member leaf, nearest driver to centroid first, same clock/gating/cap checks, radius OT_RCK_AM_UM (default 60 um). Relaunched (unit oth-ubuntu-3991120, ~/s81-serdes-r2/g3-cts2.out; run dir G3 kit/r2_run_here because intel2 holds a stale G3 kit copy at the same path).
+  G3 tap balance (1st attempt) already shows clk_t14 927 ps with 6129 sinks, t9 895, t13 777: expect a cross-tap TT/FF census like J4.
+- Best candidate: H2 (H TT limiter was only cross-tap insertion skew).
