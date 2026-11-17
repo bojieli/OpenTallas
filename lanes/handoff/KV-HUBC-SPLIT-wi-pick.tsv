@@ -11,3 +11,4 @@ u_cland_i_dNd_kv_rec_rx	553	WREG1 DSREP8 WRITE_CHUNK16 RSTREP19	kv_cland_w553_ew
 u_cland_i_serdes_E_rx_flit	523	same RSTREP19 (no PLACEREP)	kv_cland_w523_ew_54d79	BUILDING	ew
 u_cland_i_serdes_W_rx_flit	524	same RSTREP19	kv_cland_w524_ew_5cd31	BUILDING	ew
 # total 10 rings, 5,295 bits (the 9-ring figure 5,340 in the COORD note missed the 257 ring and mis-summed: 4x300+523+524+553+2x1119 = 5,038 + 257 = 5,295)
+# MEASURED 11-17: rings are ~100k of 1,155k; u_host is 902,681 and flat in the kit RTL, so rings alone do not reach 400k (see post).
