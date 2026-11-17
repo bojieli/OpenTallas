@@ -44,3 +44,11 @@ Status script (localhost scratchpad snap.sh) = newest stage log per kit + client
   Content = D4 + r437 bind.py/test (3d763393b48) + form B tool r431/r432 (d1645b7afcd+1a183f5a920, 9 files) + event plan 819037bb + h2_2249/landed_sidecar_h2_psplit_all.json at in-tree paths; die plan path -> D5 tree.
   Apply: pilot gunit__t1; hold s81-strip-gpl-d5 keys ot_s81sl_leaf__* release result:S81-TYPES-R2:strip-gpl-tree; D4 pilot record retired (unreachable).
 - NEXT: D6 = D5 + strip GPL sparse exit (39ef73a234f on 588ce81; tree face_flops.tcl already = 588ce81 version, gen_phys needs the 39ef73 hunk on the D5 gen_phys) once FABLE-FIX-S81-STRIP posts READY; then post RESULT strip-gpl-tree to release the leaves. Watch that gunit__t1 pilot GENs on D5.
+
+## 11-17 01:3x update
+- APPLIED: D5 kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d5 manifest c0762a39663f (receipt lanes/handoff/s81_atomic_apply_1794894576645600486.json). Pilot gunit__t1 (record pilot-s81-c0762a39663f). Strip hold s81-strip-gpl-d5. D4 pilot record retired.
+- D5 gate findings (publish_gate static, branch 6a92124a8f9, epyc8): PRE FAIL = as-built base in lane dir B6gF2s4tapfix1/src (5 INPUT classes); G0 6 errors inherited from plan 819037bb; contained = provenance string clock.tap_offset.source.
+- D6 = D5 + plan_of_record (as-built rebased, hard_params, sidecar_new, latcheck): PUBLISHED epyc10 ONLY (manifest 23be5a8bcac2, PRE PASS). NOT applied. The epyc8 copy was stopped (disk at 0); the intel1 copy was cancelled. Dir tools-converge/s81/d5b_1117 (finish_d6.py prep/apply; candidate not written).
+- S5h (S81-DIE-R2, tree cohort_d5c 88b48c001d87, plan c204) carries every D5 tool delta + plan_of_record and passes contained/PRE. It supersedes D6. Do not apply D6 unless S5h fails; retire D6 after S5h lands.
+- Col closure: FABLE-FIX-S81-COL. The S81-DIE-R2 col relay-depth ask was routed there.
+- Strip GPL 0.25 (39ef73a234f): still provisional; carry it on top of S5h/C4 once READY, then post RESULT strip-gpl-tree to release the leaves.
