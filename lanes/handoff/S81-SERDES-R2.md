@@ -24,3 +24,9 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - G3 CTS 1st attempt exit 2: OT_RCK_AM_COHORT group 0 "far" (leaf_affinity radius 30 um from the majority leaf driver; FFs themselves compact, same as J4). Patched G3 kit rck_am_cohort.tcl (orig .G3_before_near): on "far" try each member leaf, nearest driver to centroid first, same clock/gating/cap checks, radius OT_RCK_AM_UM (default 60 um). Relaunched (unit oth-ubuntu-3991120, ~/s81-serdes-r2/g3-cts2.out; run dir G3 kit/r2_run_here because intel2 holds a stale G3 kit copy at the same path).
   G3 tap balance (1st attempt) already shows clk_t14 927 ps with 6129 sinks, t9 895, t13 777: expect a cross-tap TT/FF census like J4.
 - Best candidate: H2 (H TT limiter was only cross-tap insertion skew).
+
+## 19:0x PST
+- H2 CTS exit 0: tap spread 233 ps (193..425; empty taps t23 t24 t31 t34 t6). Post-CTS census (probes H2_cts/): TT worst -150.06, only 15 endpoints < -42 (H: 24, worst -147.62): the clk_t29 txl class is GONE. Remaining: 12 reset-relay half-cycle hops u_rrl_N/q (fall) -> u_rrl_M/state (rise) across taps (rrl_33 t4 -> rrl_38 t11 -150.1: launch insertion 297 vs capture 182, hop wire ~350 ps), 9 rck u_rxf_q[532..] -> u_face_am3.parts -81.0, rck_transport -> am_ok -21. FF worst -260.01 (rck lpl_r.o -> u_chn 283, face_q_d -> rm.mem 92; ft*_i port class advisory).
+- H2 hold packet (inherited from H, sdc f364d75fa1d07751, checker clean). H2 route launched E8 (unit oth-ubuntu-4059268, ~/s81-serdes-r2/h2-route.out).
+- J5 (E8 L/J5/serdes__t14/gen/serdes__t14) = J4 + rdq_local.tcl (POST_GLOBAL_PLACE wrapper: runs rck_transport_mid.tcl, then puts each u_rm.g_rd[k].q at its D-side mux driver like H). Place+CTS launched (unit oth-ubuntu-4079683, j5-cts.out).
+- Next for H family: if routed rrl hops still < -42, H3 = capture relay cohort on the launch tap (OT_TAP_GROUP_FIXED) or a tighter half-cycle hop (<= ~250 um).
