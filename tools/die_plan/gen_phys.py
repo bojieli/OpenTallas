@@ -3084,12 +3084,31 @@ def die_sta_sdc_lines(P, tn, side):
     return "\n".join(out) + "\n"
 
 
+def _lockup_pad_type(P, tn):
+    """True when clock.core_input_lockup lists type tn and declares a latch_except_hb4 pad."""
+    cfg = ((P.raw or {}).get("clock") or {}).get("core_input_lockup") or {}
+    if tn not in (cfg.get("types") or ()):
+        return False
+    return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
+
+
 def hold_pad_dont_touch_tcl(P, tn):
     """HOLDFORM-1 (DIE-QC-97 11-10): PRE_FLOORPLAN text keeping the gen_rtl.ot_dp_hd hold-pad cells (u_hdly_<bus>
     HB4xp67) through floorplan remove_buffers, timing-driven unbuffering and every repair / resizer pass, and failing the
     kit when the netlist lost any (N x width per bus, + N for an epoch bit).  "" for a type without hold_hb4 buses (byte-same)."""
     hb = [(int(b["hold_hb4"]), int(b["width"])) for b in P.types[tn].get("buses", [])
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
+    lk = _lockup_pad_type(P, tn)
+    if not hb and lk:
+        return ("# latch_except_hb4 (clock.core_input_lockup): keep the bit-level lockup hold pads (u_hdly_lk_*, HB4xp67)\n"
+                "set ot_hb {}\n"
+                "foreach i [[ord::get_db_block] getInsts] {\n"
+                "  if {[string match *u_hdly_lk_* [$i getName]] && [string match HB*xp67* [[$i getMaster] getName]]} "
+                "{ lappend ot_hb $i }\n"
+                "}\n"
+                "foreach i $ot_hb { $i setDoNotTouch 1 }\n"
+                "puts \"OT_HOLDPAD_LK dont_touch [llength $ot_hb] latch_except_hb4 pad cells\"\n"
+                "if {![llength $ot_hb]} { error \"OT_HOLDPAD_LK: plan declares latch_except_hb4 for this type but the netlist has no pad cell\" }\n")
     if not hb:
         return ""
     lo, hi = sum(n * w for n, w in hb), sum(n * (w + 1) for n, w in hb)     # without / with the epoch bit
