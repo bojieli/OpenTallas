@@ -233,6 +233,25 @@ def read_queue_text():
     return out if rc == 0 else ""
 
 
+import importlib.util as _ilu_cc
+_cc_spec = _ilu_cc.spec_from_file_location("cell_cap", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "die_plan", "cell_cap.py"))
+_cc = _ilu_cc.module_from_spec(_cc_spec)
+_cc_spec.loader.exec_module(_cc)
+SPLIT_CELLS = _cc.SPLIT_CELLS          # WAVE-FLOW-R2 11-17: the ONE cell limit
+
+
+def cell_waiver_for(die, typ):
+    """the ruling id lanes/CELL-WAIVER.tsv names for this die / type ('' = none); only rNNN counts"""
+    try:
+        for ln in read_coord("lanes/CELL-WAIVER.tsv").splitlines():
+            f = ln.split("\t")
+            if len(f) >= 3 and f[0] == die and f[1] == typ and re.fullmatch(r"r\d{3,4}", f[2].strip()):
+                return f[2].strip()
+    except (OSError, ValueError, AttributeError):
+        pass
+    return ""
+
+
 def read_coord(rel):
     """a coord/state file (lanes/GEOM-REVIEW.md ...) as of the last fetch; '' if missing (read-only)"""
     if COORD_FILES:
@@ -340,6 +359,10 @@ def validate_row(r):
         c = float(r["cells"])
     except ValueError:
         return "cells not a number (expected std cells required)"
+    # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): the one cell limit (die_plan/cell_cap.py) is enforced at enqueue, whatever launched the kit; waiver = a
+    # ruling id in lanes/CELL-WAIVER.tsv (die<TAB>type<TAB>rNNN)
+    if c > SPLIT_CELLS and not cell_waiver_for(r.get("die"), r.get("type")):
+        return f"SPLIT-NEEDED: cells {int(c)} > {SPLIT_CELLS} (the one cell limit); split the type or waive with a ruling id in lanes/CELL-WAIVER.tsv"
     if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt"):
         return "goal must be route|finish|auto|cts|grt"
     if r["goal"] in ("cts", "grt") and not r["runner"]:
@@ -1637,6 +1660,7 @@ def late_eco_on():
 
 
 NEAR_COUNT_FILE = "lanes/NEAR-COUNT.tsv"
+CELL_WAIVER_FILE = "lanes/CELL-WAIVER.tsv"
 
 
 def parse_near_count(text):

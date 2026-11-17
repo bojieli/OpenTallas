@@ -83,9 +83,9 @@ class TestQueue(Base):
     def test_cell_cap_and_mem_and_paths(self):
         bad = {6: "517001", 5: "lots"}
         r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["517001"] + ROW[8:])).values())[0]
-        self.assertEqual(r["error"], "")           # WAVE-FLOW-R2: no run-time / enqueue cell cap (plan-time SPLIT-NEEDED owns it)
-        r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["517000"] + ROW[8:])).values())[0]
-        self.assertEqual(r["error"], "")
+        self.assertIn("SPLIT-NEEDED", r["error"])  # WAVE-FLOW-R2 (FABLE-FLOW-1500 D): the one cell limit is enforced at enqueue unless a ruling id waives it
+        r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["400000"] + ROW[8:])).values())[0]
+        self.assertEqual(r["error"], "")           # at the limit: allowed
         r = list(self.ap.parse_queue("\t".join(ROW[:6] + ["lots"] + ROW[7:])).values())[0]
         self.assertIn("mem_gb", r["error"])
         r = list(self.ap.parse_queue("\t".join(ROW[:2] + ["epyc2:/home/ubuntu/kit"] + ROW[3:])).values())[0]

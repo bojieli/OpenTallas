@@ -35,10 +35,29 @@ Projection of the post-resize movable count from what a plan / kit knows before 
 import argparse
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
 BUDGET = dict(synth=280_000, place=400_000, cts=420_000, grt=460_000)
+try:                                  # WAVE-FLOW-R2 11-17: the ONE cell limit (cell_cap.py); a kit staged without it keeps the same number
+    from cell_cap import SPLIT_CELLS
+except ImportError:
+    SPLIT_CELLS = 400_000
+WAIVER_RE = re.compile(r"r\d{3,4}")
+
+
+def cell_waiver(kit=None, env=None):
+    """the ruling id that waives the cell limit for this kit: env OT_CELL_WAIVER, else the first line of KIT/CELL_WAIVER; '' = no waiver.
+    Only a ruling id (rNNN) counts."""
+    import os
+    v = (env if env is not None else os.environ).get("OT_CELL_WAIVER", "").strip()
+    if not v and kit is not None:
+        try:
+            v = (Path(kit) / "CELL_WAIVER").read_text().split("\n", 1)[0].strip()
+        except OSError:
+            v = ""
+    return v if WAIVER_RE.fullmatch(v) else ""
 TARGET = 250_000
 BAND = 0.25
 K_PIN = 0.395          # repeaters per signal pin per 100 um of half perimeter
@@ -211,7 +230,17 @@ def check_kit(kit, synth=None):
     s, basis, pins, outline, macros = got
     e = project(s, pins, outline, macros)
     e["synth_basis"] = basis
-    return [], e      # LIMIT-BIND-1 11-14 (OWNER: R-CAP removed): the projection is recorded, never an error
+    # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): a kit whose flat estimate / measured synth is over the r576 limit is refused whatever launched it, unless a
+    # ruling id waives it (OT_CELL_WAIVER or KIT/CELL_WAIVER).  svc lo7 ran 7.7 h at 5.69M.
+    w = cell_waiver(kit)
+    if s is not None and s > SPLIT_CELLS:
+        e["split_needed"] = True
+        if w:
+            e["cell_waiver"] = w
+        else:
+            return [f"SPLIT-NEEDED: kit flat standard cells {int(s)} > {SPLIT_CELLS} ({basis}); split the type, or waive with a ruling id "
+                    f"(OT_CELL_WAIVER=rNNN or KIT/CELL_WAIVER)"], e
+    return [], e
 
 
 # ---- plan (G0) -------------------------------------------------------------------------------------------------
