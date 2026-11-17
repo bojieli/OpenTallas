@@ -12,7 +12,7 @@ sys.path.insert(0, str(HERE))
 import hold_eco_internal as H
 
 HEADER = "endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps\ttt_setup_slack_ps\tnet\n"
-OPENROAD = os.environ.get("OPENROAD_BIN") or shutil.which("openroad")
+OPENROAD = os.environ.get("OPENROAD_BIN")
 
 
 def test_macro_capture_is_selected_and_plan_roundtrips(tmp_path):
@@ -75,8 +75,20 @@ ot_hei_auto_plan {{}} {{}} {output}
     assert "unmodified_touched_siblings=1" in run.stdout
 
 
-@pytest.mark.skipif(not OPENROAD, reason="OpenROAD required for actual macro classification")
 def test_actual_sta_macro_with_non_flop_input_name(tmp_path):
+    if OPENROAD:
+        command = [OPENROAD]
+    else:
+        # The distro 2024 reader crashes on this valid macro fixture before reaching the helper. Use the same
+        # already-installed image as production; never pull an image or silently substitute a different tool.
+        docker = shutil.which("docker")
+        if not docker or subprocess.run([docker, "image", "inspect", "openroad/orfs:asap7lock"],
+                                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode:
+            pytest.skip("explicit OPENROAD_BIN or locally installed pinned ORFS image required")
+        repo = HERE.parents[1]
+        command = [docker, "run", "--rm", "--network", "none", "-v", f"{repo}:{repo}:ro",
+                   "-v", f"{tmp_path}:{tmp_path}", "openroad/orfs:asap7lock",
+                   "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad"]
     spec = importlib.util.spec_from_file_location("capture_fixture", HERE / "post_route_drv/test_nonport_scope_sta.py")
     fixture = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(fixture)
@@ -112,7 +124,7 @@ exit
 """
     path = tmp_path / "actual.tcl"
     path.write_text(script)
-    run = subprocess.run([OPENROAD, "-no_init", "-exit", str(path)], capture_output=True, text=True)
+    run = subprocess.run(command + ["-no_init", "-exit", str(path)], capture_output=True, text=True)
     assert run.returncode == 0, run.stdout + run.stderr
     assert "MACRO_INFO macro" in run.stdout
     assert "MACRO_CLOCK other" in run.stdout and "MACRO_OUTPUT other" in run.stdout
