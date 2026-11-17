@@ -94,8 +94,9 @@ module ot_qc_su_mem9_qfd_dv_lane_h_safe1 #(parameter integer CONTROL_SAFE=1) (
 endmodule
 
 // safe2 = safe1 with fixed-age rings <=2048bits in flops; MIF1 adds a separate133-bit reply stage: ot_qc_su_mem9_qfd_dv_s1_flop_ring (16-bit slices, own pointer,
-// N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
-module qfd_dv_lane_h_su_mem9 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=3, MEMORY_READ_EXTRA=4, KV_WR_PIPE=0) (
+// N = D - 1 slots, write and read the same slot each edge = age D). Default uses no 32x64 macros;
+// opt-in SEGMENTED_MEMORY_DELAY uses native SRAM for long payload delays. TLS 128x64 natives kept.
+module qfd_dv_lane_h_su_mem9 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=3, MEMORY_READ_EXTRA=4, KV_WR_PIPE=0, SEGMENTED_MEMORY_DELAY=0) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              emit0,
@@ -180,7 +181,7 @@ module qfd_dv_lane_h_su_mem9 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMEN
 `ifndef SYNTHESIS
     initial if (MEMORY_ALIGNMENT != 0 && MEMORY_ALIGNMENT != 3) $fatal(1,"S8 memory alignment must be0 or3");
 `endif
-    ot_qc_su_mem9_qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT+MEMORY_READ_EXTRA), .KV_WR_PIPE(KV_WR_PIPE)) u_h (
+    ot_qc_su_mem9_qfd_dv_safe1_head #(.FLOP(1), .SEGMENTED_MEMORY_DELAY(SEGMENTED_MEMORY_DELAY), .ML(5+MEMORY_ALIGNMENT+MEMORY_READ_EXTRA), .KV_WR_PIPE(KV_WR_PIPE)) u_h (
         .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
         .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
         .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
@@ -224,6 +225,7 @@ module ot_qc_su_mem9_qfd_dv_safe1_head #(
     parameter integer WR = 16, AW = 24, NW = 18, KV_FP8 = 1, ML = 5, RD = 2, QLA = 4, QLM = 5, FLOP = 0,
     // KV_WR_PIPE 1 (DIE-QC-58 10-31): the lane's kv_wdata flop carries the fp8r pre-word (fp8r_pre) and this head's
     // existing kv_wdata out flop finishes it (fp8r_fin): the same function, the same cycle, no added register.
+    parameter integer SEGMENTED_MEMORY_DELAY = 0,
     parameter integer KV_WR_PIPE = 0
 ) (
     input  wire              clk,
@@ -342,7 +344,7 @@ module ot_qc_su_mem9_qfd_dv_safe1_head #(
     wire [1:0]    n_red;
     wire [AW-1:0] n_raddr;
     ot_qc_su_mem9_qfd_dv_safe1_lane #(.WR(WR), .AW(AW), .NW(NW), .LANE(0), .KV_FP8(KV_FP8), .KV_WR_PIPE(KV_WR_PIPE), .ML(ML + 2 + 2 * RD), .QLA(QLA), .QLM(QLM),
-                        .NL(NL), .FLOP(FLOP)) u_lane (
+                        .NL(NL), .FLOP(FLOP), .SEGMENTED_MEMORY_DELAY(SEGMENTED_MEMORY_DELAY)) u_lane (
         .clk(clk), .rl(rl), .rbr(r_br[3]), .ron(q_ron), .coh(q_coh),
         .emit0(q_emit0), .live(q_live), .i(q_i), .fin_th(q_fin_th), .i_last_r(q_ilast),
         .cura0(q_cura), .curb0(q_curb), .curc0(q_curc), .curd0(q_curd), .rrow(q_rrow),
@@ -422,6 +424,7 @@ endmodule
 
 module ot_qc_su_mem9_qfd_dv_safe1_lane #(
     parameter integer WR = 16, AW = 24, NW = 18, LANE = 0, KV_FP8 = 1, ML = 11, QLA = 4, QLM = 5, NL = 11, FLOP = 0,
+    parameter integer SEGMENTED_MEMORY_DELAY = 0,
     parameter integer KV_WR_PIPE = 0   // 1: kv_wdata carries fp8r_pre(out); the head's out flop applies fp8r_fin
 ) (
     input  wire              clk,
@@ -608,13 +611,13 @@ module ot_qc_su_mem9_qfd_dv_safe1_lane #(
     wire [TT-1:0] e_tail = {e_mc, e_md, e_dst, e_daddr, e_red, e_redsq, e_raddr, e_ifirst, e_first8, e_final, e_last, e_p};
     wire packed_ml_v, m_asrc, m_bsrc, m_csrc;
     wire [LW-1:0] m_lane;
-    ot_qc_su_mem9_qfd_dv_s1_delay #(.W(HW), .D(ML), .FLOP(FLOP)) u_ml_head (.clk(clk), .rbr(rbr), .rst_n(r_ml),
+    ot_qc_su_mem9_qfd_dv_s1_delay #(.W(HW), .D(ML), .FLOP(FLOP), .SEGMENTED(SEGMENTED_MEMORY_DELAY)) u_ml_head (.clk(clk), .rbr(rbr), .rst_n(r_ml),
         .d({e_v, e_asrc, e_bsrc, e_csrc, e_lane}), .q({packed_ml_v, m_asrc, m_bsrc, m_csrc, m_lane}));
     wire [31:0] r2_imm1, r2_imm2;
     wire [1:0]  r2_ma, r2_mb;
     wire [2:0]  r2_ad;
     wire [TT-1:0] r2_tail;
-    ot_qc_su_mem9_qfd_dv_s1_delay #(.W(SW), .D(ML + 2), .FLOP(FLOP)) u_ml_s2 (.clk(clk), .rbr(rbr), .rst_n(r_ml),
+    ot_qc_su_mem9_qfd_dv_s1_delay #(.W(SW), .D(ML + 2), .FLOP(FLOP), .SEGMENTED(SEGMENTED_MEMORY_DELAY)) u_ml_s2 (.clk(clk), .rbr(rbr), .rst_n(r_ml),
         .d({e_imm1, e_ma, e_mb, e_ad, e_imm2, e_tail}), .q({r2_imm1, r2_ma, r2_mb, r2_ad, r2_imm2, r2_tail}));
     wire e_v_m = packed_ml_v && valid_boot_age >= ML;
     reg s1_v, s2_v, s3_v;
@@ -954,10 +957,27 @@ module ot_qc_su_mem9_qfd_dv_s1_valid_guards #(parameter integer LIMIT = 136, W =
 endmodule
 
 // fixed-age delay: native SRAM ring (FLOP 0) or flop ring (FLOP 1), same age D
-module ot_qc_su_mem9_qfd_dv_s1_delay #(parameter integer W = 32, D = 3, FLOP = 0) (
+module ot_qc_su_mem9_qfd_dv_s1_delay #(parameter integer W = 32, D = 3, FLOP = 0, SEGMENTED = 0) (
     input wire clk, rbr, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
 );
-    generate if (FLOP != 0 && W == 133 && D >= 17) begin : g_mif_reply_edge
+    generate if (FLOP != 0 && SEGMENTED != 0 && D > 33) begin : g_segmented
+        // Candidate only: bounded local rings for narrow S1, native SRAM for S2.
+        // Each segment preserves its declared fixed age; no original ring limit changes.
+        localparam integer NS = (D + 31) / 32;
+        wire [W-1:0] stage [0:NS];
+        assign stage[0] = d;
+        for (genvar si=0; si<NS; si=si+1) begin : g_stage
+            localparam integer SD = D / NS + ((si < D % NS) ? 1 : 0);
+            if (W <= 16) begin : g_tag
+                ot_qc_su_mem9_qfd_dv_s1_flop_ring #(.W(W), .D(SD)) u (
+                    .clk(clk), .rbr(rbr), .d(stage[si]), .q(stage[si+1]));
+            end else begin : g_payload
+                ot_qc_su_mem9_qfd_dv_s1_sram_delay #(.W(W), .D(SD)) u (
+                    .clk(clk), .rst_n(rst_n), .d(stage[si]), .q(stage[si+1]));
+            end
+        end
+        assign q = stage[NS];
+    end else if (FLOP != 0 && W == 133 && D >= 17) begin : g_mif_reply_edge
         // Private generalization of MIF1: preserve the same D16/1995-bit ring.
         // ML12 needs D20 here, so four explicit reply stages add532 bits.
         // The2048-bit ring cap below is unchanged; no larger ring is permitted.

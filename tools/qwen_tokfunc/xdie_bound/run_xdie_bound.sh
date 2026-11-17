@@ -14,10 +14,12 @@ set -u
 OUT=$1; shift
 R=$(pwd)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-X=tools/qwen_tokfunc/xdie_bound
+X=$(cd "$(dirname "$0")" && pwd)   # the scripts of THIS file (run_binds.sh may run them on another source tree)
 D=rtl/qwen_sys/d2d_static_20261015; S=rtl/qwen_sys/split_20261014; Q=rtl/qwen_split
 B=$(python3 -c "import json;print(json.load(open('physical/die_plan/qwen_compute/bind/bound_r8/regen/constants.json'))['constants']['XDIE_DIE_STAGES']['value'])" 2>/dev/null)
 [ -n "$B" ] || B='2,2,2,3,2,2/34,34,32,32,32,31,31'
+# run_binds.sh: seam stages of two bind dirs given as arguments (XB_STAGES=C/K) replace the repo's bound_r8 record
+[ -z "${XB_STAGES:-}" ] || B=$XB_STAGES
 OLD='2,2,2,3,2,2/11,11,9,9,9,9,9'      # the seam the bound calendar images were compiled for (K22 pair image)
 LAW='--c-real 1 --k-real 3 --kv-codec 2 --attn-tx-shift 1 --status-delay 213'
 G='-GC_REAL=1 -GK_REAL=4 -GK_NTX=3 -GPOS_P=255 -DXQ_K_SFM -DXB_C_OVL'
@@ -82,7 +84,7 @@ want=("$@")
 one() {
   local name=$1 exp=$2 calf=$3 gf="$4 ${XQ_G:-}" mod=${5:-} o=$OUT/$1
   mkdir -p "$o"
-  python3 tools/qwen_split/xdie_exchange_cal.py --out "$o/cal" $calf > "$o/cal.log" 2>&1 || { echo "$name expect=$exp got=CAL_FAIL -> UNEXPECTED"; tail -3 "$o/cal.log"; return; }
+  python3 "$X/../../qwen_split/xdie_exchange_cal.py" --out "$o/cal" $calf > "$o/cal.log" 2>&1 || { echo "$name expect=$exp got=CAL_FAIL -> UNEXPECTED"; tail -3 "$o/cal.log"; return; }
   local src=("${SRC[@]}") m
   for m in ${mod//,/ }; do
   case "$m" in
@@ -92,7 +94,7 @@ one() {
      grep -q 'obsmask DIAGNOSTIC' "$o/ot_qwen_status_observers_v1_obsmask.sv" || { echo "$name got=MOD_FAIL -> UNEXPECTED"; return; }
      src=("${src[@]/$D\/ot_qwen_status_observers_v1.sv/$o/ot_qwen_status_observers_v1_obsmask.sv}");;
    asbound_img)   # calendars compiled for the OLD seam (what the bound dcal / sys_face images hold); seam + KV TXDP as bound
-     python3 tools/qwen_split/xdie_exchange_cal.py --out "$o/cal_b" $LAW --stages $B >> "$o/cal.log" 2>&1 || { echo "$name got=CAL_FAIL -> UNEXPECTED"; return; }
+     python3 "$X/../../qwen_split/xdie_exchange_cal.py" --out "$o/cal_b" $LAW --stages $B >> "$o/cal.log" 2>&1 || { echo "$name got=CAL_FAIL -> UNEXPECTED"; return; }
      python3 - "$o/cal/xdie_params.svh" "$o/cal_b/xdie_params.svh" <<'PY'
 import re, sys
 a, b = open(sys.argv[1]).read(), open(sys.argv[2]).read()

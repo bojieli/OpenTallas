@@ -21,6 +21,19 @@ class Retire(unittest.TestCase):
         for k in ("a2", "c1", "d1", "e2"):
             self.assertEqual(it[k]["status"], "ENQUEUED", k)      # current event, SIGNED, RUNNING untouched
 
+    def test_dedup_members_of_an_old_event_or_a_retired_owner_are_retired(self):
+        st = {"items": {
+            "m1": {"die": "d", "item": "m1", "event": "e1", "status": "DEDUP", "dedup_owner": "o1"},
+            "m2": {"die": "d", "item": "m2", "event": "e2", "status": "DEDUP", "dedup_owner": "o2"},
+            "m3": {"die": "d", "item": "m3", "event": "e2", "status": "DEDUP", "dedup_owner": "o3"},
+            "o2": {"die": "d", "item": "o2", "event": "e2", "status": "CANCELLED", "class": "SUPERSEDED"},
+            "o3": {"die": "d", "item": "o3", "event": "e2", "status": "RUNNING"}}}
+        KW.retire_superseded_rows(None, CFG, st, now=9)
+        it = st["items"]
+        self.assertEqual((it["m1"]["status"], it["m1"]["retire"]), ("CANCELLED", "dedup"))
+        self.assertEqual(it["m2"]["status"], "CANCELLED")
+        self.assertEqual(it["m3"]["status"], "DEDUP")                 # current event, live owner: still a member
+
     def test_idempotent(self):
         st = {"items": {"b1": row("b", "e1")}}
         KW.retire_superseded_rows(None, CFG, st)

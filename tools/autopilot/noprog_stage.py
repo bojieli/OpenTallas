@@ -20,7 +20,7 @@ Per-stage metric (all read from the stage log):
   cts       4_*          repair_timing table when active, else log events (CTS tap/clock lines)
   grt       5_1          repair tables (Remaining/Viol/TNS); GRT-0096 congestion total; the GRT-0102 extra-iteration loop counter (k/N)
                          is an event (epyc9 col_h9_r0_p5 jobs at iteration 19/30 were wrongly NO-PROGRESS when it was noise)
-  route     5_2 drt.log  DRT-0199 violations per optimization iteration; `Completing N%` lines are events
+  route     5_2 drt.log  DRT-0199 completed totals; `Completing N%` counts within the active iteration are a separate metric
   sta       6_* signoff  log events (STA/report steps write a line per command)
   lec       lec          newest write of lec/* and *lec*.log (LEC has no metric)
   other     prep, lint.. log events
@@ -126,7 +126,21 @@ def parse_stage(kind, text):
     elif kind == "route":
         ser = [(i, float(m.group(1))) for i, ln in enumerate(lines) for m in [W.DRT_ITER.search(ln)] if m]
         pct = [i for i, ln in enumerate(lines) if DRT_PCT.search(ln) or DRT_ITER_START.search(ln)]
-        res.update(name="drt_violations", series=ser, events=pct or mean)
+        # A long optimization iteration can improve for hours before DRT-0199.
+        # Compare its partial counts only with one another, never with another
+        # iteration or a completed total (partial route states are different).
+        partial, previous_pct = [], -1
+        for i, ln in enumerate(lines):
+            if DRT_ITER_START.search(ln) or W.DRT_ITER.search(ln):
+                partial, previous_pct = [], -1
+            m = DRT_PCT.search(ln)
+            if m:
+                progress, violations = int(m.group(1)), float(m.group(2))
+                if progress <= previous_pct:
+                    partial = []             # restart/rewind without a header
+                partial.append((i, violations))
+                previous_pct = progress
+        res.update(name="drt_violations", series=ser, events=pct or mean, partial_series=partial)
     elif kind == "grt":
         tot = [(i, float(m.group(3))) for i, ln in enumerate(lines) for m in [W.GRT_TOTAL.match(ln)] if m]
         if tot and (not mean or tot[-1][0] >= mean[-1] - 40):
@@ -198,6 +212,14 @@ def classify(kind, res, anchors, now, job_age_s, log_mtime, cores_now=None, exac
         return ("NO-PROGRESS", "empty log, cpu idle (hung)") if idle and span >= HUNG_S else ("PROGRESSING", "no log output yet")
     if silent >= HUNG_S and idle:
         return "NO-PROGRESS", f"{base}, cpu idle (hung)"
+    partial = res.get("partial_series", []) if kind == "route" else []
+    if len(partial) >= 2:
+        part = dict(res, name="drt_active_iteration_violations", series=partial)
+        imp, stagnant, imp2, detail = quality_verdict(part, anchors, now, win, span)
+        if imp >= MIN_IMPROVE:
+            # A partial count is a progress witness, not sign-off or a replacement
+            # for completed totals. A stale witness cannot keep a flat job alive.
+            return ("SLOW" if imp2 <= 0 and stagnant >= SLOW_S else "PROGRESSING"), f"{detail}; {base}"
     if res["series"] and len(res["series"]) >= 2:
         imp, stagnant, imp2, detail = quality_verdict(res, anchors, now, win, span)
         ev = f"{detail}; stagnant {stagnant / 3600:.1f} h; {base}"

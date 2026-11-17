@@ -1303,7 +1303,7 @@ def view_core_tap_values(P, tp, view_tt_ps, corner="TT", t=None):
     c = "FF" if str(corner).upper().startswith("F") else "TT"
     ins = view_tt_ps if c == "TT" else round(S.FF_TT_INSERTION_RATIO * view_tt_ps, 3)
     lat = S.common_latency_ps(P, c, t)
-    return max(0.0, min(ins - lat, lat)), ins
+    return max(0.0, min(ins - lat + S.core_tap_lead_ps(t, c), lat)), ins
 
 
 def core_tap_view_report(P, tn):
@@ -1321,7 +1321,7 @@ def core_tap_view_report(P, tn):
                 out.append(dict(port=n, inst=c, plan_pin=plan_pin, view_pin=pin,
                                 plan_insertion_ps=S.core_tap_insertion_ps(tp), view_insertion_ps=ins,
                                 plan_early_ps=S.core_tap_early_ps(P, tp, 'TT', P.types[tn]), early_ps=early,
-                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) > early))
+                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) + S.core_tap_lead_ps(P.types[tn]) > early))
             break
     return out
 
@@ -2303,6 +2303,27 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def explicit_pg_cfg(cfg):
+    """Carry explicitly requested PG booleans even when R-FLOW/CONS defaults are off.
+
+    Unset keys add no lines and retain the existing generation fast path/defaults.
+    Do not duplicate values already emitted by the selected kit profile.
+    """
+    keys = ("OT_PG_TRACK_TRUTH", "OT_PG_TRACK_TRUTH_WIDE_SPACING", "OT_PG_CELL_KEEPOUT")
+    requested = {k: os.environ.get(k, "").strip() for k in keys
+                 if os.environ.get(k, "").strip() in ("0", "1")}
+    if not requested:
+        return []
+    import re
+    emitted = {}
+    for line in cfg:
+        m = re.match(r"^export\s+(\w+)\s*=\s*(.*?)\s*$", line)
+        if m:
+            emitted[m[1]] = m[2]
+    out = [f"export {k} = {v}" for k, v in requested.items() if emitted.get(k) != v]
+    return (["# Explicit PG gen intent (independent of R-FLOW/CONS defaults)."] + out) if out else []
+
+
 def tt_setup_repair_mode():
     """effective OT_TT_SETUP_REPAIR of this kit: cts | grt | both | off (the mapping of the step files in write_type_kit)"""
     return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
@@ -2314,7 +2335,7 @@ def kit_effective_env():
     appear in config.mk).  Sorted; only variables that are set are listed."""
     out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
     for k in sorted(os.environ):
-        if k.startswith(("OT_PG_", "OT_PGCAP_")) and os.environ[k].strip() != "":
+        if (k == "OT_PGCAP" or k.startswith(("OT_PG_", "OT_PGCAP_"))) and os.environ[k].strip() != "":
             out[k] = os.environ[k].strip()
     return out
 
@@ -2413,8 +2434,10 @@ if {[info exists ::env(OT_PGCAP)] && $::env(OT_PGCAP) eq "1"} {
 
 
 def pgcap_install(kd):
-    """OT_PGCAP=1 only: copy pg_pair_cap.tcl into the kit and append PGCAP_HOOK to the kit's grt_pre.tcl (kits without it stay byte-equal)."""
-    if os.environ.get("OT_PGCAP", "").strip() != "1":
+    """Stage dependencies from the final generated OT_PGCAP value (not the caller environment)."""
+    values = re.findall(r"^\s*(?:override\s+)?export\s+OT_PGCAP\s*(?::=|=)\s*([01])\s*$",
+                        (kd / "config.mk").read_text(), re.M)
+    if not values or values[-1] != "1":
         return False
     shutil.copyfile(Path(__file__).with_name("pg_pair_cap.tcl"), kd / "pg_pair_cap.tcl")
     g = kd / "grt_pre.tcl"
@@ -2629,7 +2652,8 @@ def tap_offset_table(P, tn):
         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
         res = {}
         for c in ("TT", "FF"):
-            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, getattr(P, "types", {}).get(tn))) if n in core else 0.0)
+            ty = getattr(P, "types", {}).get(tn)
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, ty) + S.core_tap_lead_ps(ty, c)) if n in core else 0.0)
         if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
             raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row
@@ -3338,7 +3362,36 @@ def tap_group_exports(t):
         raise ValueError("clock.tap_group.re must be a non-empty capture regex without '#', '$' or whitespace")
     import re as _re
     _re.compile(rx)
-    return [f"export OT_TAP_GROUP_RE = {rx}"]
+    out = [f"export OT_TAP_GROUP_RE = {rx}"]
+    fixed = clock["tap_group"].get("fixed_taps", {})
+    if not isinstance(fixed, dict):
+        raise ValueError("clock.tap_group.fixed_taps must be a group-to-port map")
+    for group, port in fixed.items():
+        if not _re.fullmatch(r"[A-Za-z0-9_./-]+", str(group)) or not _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", str(port)):
+            raise ValueError("clock.tap_group.fixed_taps uses unsafe group or port name")
+    if fixed:
+        out.append("export OT_TAP_GROUP_FIXED = " + ",".join(f"{g}:{fixed[g]}" for g in sorted(fixed)))
+    return out
+
+
+def ft_stage0_exports(t):
+    """Default-off explicit stage0 placement for selected unlanded FT slots."""
+    slots = []
+    import re as _re
+    for slot in t.get("ft_slots", []):
+        flag = slot.get("explicit_stage0", False)
+        if not isinstance(flag, bool):
+            raise ValueError("ft_slots.explicit_stage0 must be boolean")
+        if not flag:
+            continue
+        name = slot["name"]
+        k = int(slot.get("stations", 1))
+        if not _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+            raise ValueError("explicit stage0 slot has unsafe name")
+        if len(slot.get("regs_um", [])) < k:
+            raise ValueError("explicit stage0 needs all stage waypoints")
+        slots.append(name)
+    return ["export OT_FT_EXPLICIT_STAGE0 = " + " ".join(slots)] if slots else []
 
 
 def private_leaf_exports(t):
@@ -4930,6 +4983,21 @@ def _module_header(text, mod):
     return None
 
 
+def _tree_module_headers(rtl_root, mod):
+    """[(header, file)] for every .sv/.v under rtl_root that declares module mod, in sorted path order."""
+    out, key = [], mod.encode()
+    for c in sorted(set(Path(rtl_root).rglob("*.sv")) | set(Path(rtl_root).rglob("*.v"))):
+        try:
+            if not c.is_file() or key not in c.read_bytes():
+                continue
+        except OSError:
+            continue
+        h = _module_header(c.read_text(errors="replace"), mod)
+        if h:
+            out.append((h, c))
+    return out
+
+
 def _header_localparams(text, mod, hdr):
     """DIE-HBM-92-GEN 11-08 (HBM q_b002 GEN_LINT "Identifier NKT is implicitly declared" in ot_hbm_idx_tail_native_bb.v):
     the module-scope `localparam ...;` statements of mod's body (text = its source) that the header's port list uses
@@ -5144,6 +5212,17 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
         hit = next(((h, c) for h, c in ((_module_header(c.read_text(errors="replace"), mod), c) for c in cands
                                         if c.is_file()) if h), None)
+        if hit is None and root:
+            # FABLE-FIX-KV-PVHUB 11-16 (KV pv types with OT_HCPARAM_ALL=1): the bound wrapper instantiates
+            # ot_qwen_tp8_pv_join_t #(.RESET_PIN(1)), and that module is declared in ot_qwen_tp8_pv_wide_pair.sv, a
+            # multi-module source that the kit does not stage (every module in it is a hard core) and that is not named
+            # after the module.  Last resort: the tree file that declares it.  Two different headers stop the kit.
+            found = _tree_module_headers(Path(root) / "rtl", mod)
+            if len({" ".join(h.split()) for h, _c in found}) > 1:
+                raise ValueError(f"macro {mod}: {len(found)} tree files declare it with different headers "
+                                 f"({', '.join(str(c) for _h, c in found[:4])}); stage the one the view was built from")
+            hit = found[0] if found else None
+            cands += [c for _h, c in found]
         hdr = hit[0] if hit else None
         if hdr is None:
             raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "
@@ -5251,19 +5330,127 @@ def macro_move_table(t, tn, env=None):
     return out
 
 
-def txl_mid_exports(cfg, kd, env=None):
+# SERDES-TXPIPE 11-14: a serdes pipe form brings its own placement (txl_mid.tcl face mode), so a type that sets the define
+# in its plan verilog_defines gets the hook without a generation env (wave kits, private kits alike).
+SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE": ("u_rxf", "u_dec.u_face_p_d"),
+                     "OT_S81_SERDES_RXNEG": ("u_rxf", "u_dec.u_face_p_d")}
+
+
+def s81_rck4_source_contract(cfg, kd, names):
+    """Refuse the observed stale native closure before emitting the opt-in RCK4 hook.
+    These are source-shape checks, not a replacement for actual synthesized FF inventory.
+    """
+    required = {"OT_S81_KP4_AM_FACE3", "OT_S81_SERDES_RXNEG"}
+    missing = sorted(required - names)
+    assert not missing, "S81 RCK4: missing required source defines " + ", ".join(missing)
+    entries = [line.split("=", 1)[1].split() for line in cfg if line.startswith("export VERILOG_FILES =")]
+    assert len(entries) == 1, "S81 RCK4: actual VERILOG_FILES missing or ambiguous"
+    files = [Path(kd) / path.removeprefix("/work/") for path in entries[0]]
+    body = "\n".join(re.sub(r"/\*.*?\*/|//[^\n]*", "", path.read_text(), flags=re.S) for path in files)
+    native = re.search(r"\bmodule\s+ot_s81_kp4_dec_native_flat_lp\b.*?\bendmodule\b", body, re.S)
+    assert native, "S81 RCK4: actual native LP module absent (stale frozen capsule)"
+    for width, inst in ((554, "u_rck_transport4"), (1, "u_rck_reset4")):
+        pattern = (r"\bot_pl_pad\s*#\s*\(\s*\.W\s*\(\s*" + str(width) +
+                   r"\s*\)\s*,\s*\.N\s*\(\s*4\s*\)\s*\)\s*" + inst + r"\b")
+        assert re.search(pattern, native[0]), (
+            f"S81 RCK4: actual {inst} W={width} N=4 absent (stale frozen capsule)")
+    am = re.search(r"\bmodule\s+ot_s81_kp4_am_face3\b.*?\bendmodule\b", body, re.S)
+    assert am and re.search(r"\boutput\s+reg\s*\[\s*8\s*:\s*0\s*\]\s*parts\b", am[0]), (
+        "S81 RCK4: actual 9-bit AM_FACE3 register module absent")
+    if re.search(r"\bot_pdie_pma_release_chain\s*#", body):
+        assert re.search(r"\bmodule\s+ot_pdie_pma_release_chain\b", body), (
+            "S81 RCK4: actual default0 boot release module absent; stage current locksafe dependency")
+    empty = "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names
+    rpc = "OT_S81_SERDES_RM_RPC8" in names
+    assert not empty or rpc, "S81 LOCAL_EMPTY8 requires RPC8"
+    if empty:
+        assert re.search(r"\bg_empty_local\b", body) and re.search(r"\breg\s+rpw\b", body), (
+            "S81 LOCAL_EMPTY8: actual kept local wrap/empty mechanism absent")
+    if rpc:
+        assert "OT_S81_SERDES_RST_TREE" in names and "OT_S81_RM_STAGED" not in names, (
+            "S81 RCK4 RPC8: requires RST_TREE native _rt caller and no RM_STAGED")
+        rm = re.search(r"\bmodule\s+ot_s81_rate_match_rt\b.*?\bendmodule\b", body, re.S)
+        assert rm and all(re.search(pattern, rm[0]) for pattern in (
+            r"\bOT_S81_SERDES_RM_RPC8\b", r"\bg_local\b", r"\breg\s*\[\s*2\s*:\s*0\s*\]\s*rpq\b")), (
+            "S81 RCK4 RPC8: actual native local read-pointer mechanism absent")
+    chunk = "OT_S81_LPL_CHUNK" in names
+    if chunk:
+        assert all(re.search(r"\bmodule\s+" + module + r"\b", body) for module in
+                   ("ot_pl_land_local_w", "ot_pl_land_local_r")), (
+            "S81 LPL_CHUNK: actual local writer/reader modules absent")
+        assert re.search(r"\bCB\s*=\s*24\b", body), "S81 LPL_CHUNK: actual24-bit chunk shape absent"
+    record = {"source_defines": sorted(names), "source_sha256": {
+        str(path.relative_to(kd)): _hashlib.sha256(path.read_bytes()).hexdigest() for path in files},
+        "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0, "LOCAL_EMPTY": 8 if empty else 0},
+        "scope": "Actual emitted source guard; synthesized inventory remains required before P&R",
+        "RX_added_edges": 4, "TX_added_edges": 0, "RPC_added_edges": 0}
+    if chunk:
+        record["expected_actual_synth_ff"].update(LPL_read_onehot=356, LPL_write_onehot=356)
+        record["expected_local_ring_instances"] = {"read": 89, "write": 89}
+    (Path(kd) / "rck4_source_contract.json").write_text(json.dumps(record, indent=2) + "\n")
+
+
+def ft_keep_firm_exports(t):
+    names = []
+    for slot in t.get("ft_slots", []):
+        enabled = slot.get("keep_firm", False)
+        if not isinstance(enabled, bool):
+            raise ValueError("ft_slots.keep_firm must be boolean")
+        if enabled:
+            name = slot.get("name", "")
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+                raise ValueError("unsafe FT keep_firm slot name")
+            names.append(name)
+    return ["export OT_FT_KEEP_FIRM = " + " ".join(names)] if names else []
+
+
+def txl_mid_exports(cfg, kd, env=None, defines=()):
     """KW-FIX-43 11-10 (DIE-S81-85 serdes TXL4, COORD): opt-in at generation (OT_TXL_MID=1; OT_TXL_MID_CHAINS = instance
     chains, spaces or commas, default u_txl in the hook): copy txl_mid.tcl into the kit and run it as POST_GLOBAL_PLACE_TCL
     (each relay row and its hop buffers / inverters placed evenly from source to sink; placement only, no netlist change).
+    SERDES-TXPIPE 11-14: the type defines OT_S81_SERDES_TXPIPE / OT_S81_SERDES_RXPIPE (defines: the kit VERILOG_DEFINES,
+    bare or -D) turn it on by themselves with their chains (SERDES_PIPE_CHAINS, after any env chains) and the macro-face
+    rule OT_TXL_MID_FACE = 1 (the row next to the PMA macro sits at its pin).
+    RCK_RELAY4 additionally requires the actual current native/AM source and emits the joint RX+4 hook.
     Unset = no lines, the kit is byte-identical."""
     env = os.environ if env is None else env
-    if env.get("OT_TXL_MID") != "1":
+    names = {(d[2:] if d.startswith("-D") else d).split("=", 1)[0] for d in defines}
+    rck4 = "OT_S81_RCK_RELAY4" in names
+    am_clock = env.get("OT_S81_RCK_AM_COHORT") == "1"
+    rm_local = env.get("OT_SERDES_RM_LOCAL") == "1"
+    assert not rm_local or rck4, "S81 RM locality requires the actual RCK4 native source profile"
+    assert not am_clock or rck4, "S81 AM cohort requires the actual RCK4 source profile"
+    if rck4:
+        s81_rck4_source_contract(cfg, kd, names)
+    pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
+    if env.get("OT_TXL_MID") != "1" and not pipe:
         return []
     assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") for c in cfg), "OT_TXL_MID: POST_GLOBAL_PLACE_TCL in use"
-    chains = " ".join(env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split())
+    chains = env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split() if env.get("OT_TXL_MID") == "1" else []
+    if pipe:
+        chains = list(dict.fromkeys(chains + pipe))
+    chains = " ".join(chains)
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
+    if rck4:
+        shutil.copyfile(Path(__file__).with_name("rck_transport_mid.tcl"), Path(kd) / "rck_transport_mid.tcl")
+    post_gpl = "rck_transport_mid.tcl" if rck4 else "txl_mid.tcl"
+    if rm_local:
+        shutil.copyfile(Path(__file__).with_name("serdes_rm_local.tcl"), Path(kd) / "serdes_rm_local.tcl")
+        (Path(kd) / "serdes_post_gpl.tcl").write_text(
+            "source /work/rck_transport_mid.tcl\nsource /work/serdes_rm_local.tcl\n")
+        post_gpl = "serdes_post_gpl.tcl"
+    if am_clock:
+        shutil.copyfile(Path(__file__).with_name("rck_am_cohort.tcl"), Path(kd) / "rck_am_cohort.tcl")
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
-            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []), "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"]
+            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
+            *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
+            *(["# S81 RCK4: source-qualified RX+4 coherent transport; no netlist/clock change",
+               "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
+               "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
+            *(["export OT_S81_RCK_AM_COHORT = 1"] if am_clock else []),
+            *(["export OT_SERDES_RM_LOCAL = 1",
+               "export OT_SERDES_RM_LOCAL_EMPTY8 = " + ("1" if "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names else "0")] if rm_local else []),
+            "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
@@ -5789,7 +5976,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else []),
            *(["export PRE_MACRO_PLACE_TCL = /work/macro_skip_rtlmp.tcl"] if macros and _macros_all_plan_fixed(t) else [])]
     if macros:
-        (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+        macro_script = "\n".join(mplace) + "\n"
+        if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
+            import s81_svc_live_sites
+            macro_script = s81_svc_live_sites.wrap(tn, macro_script, enabled=True)
+        (kd / "macro_place.tcl").write_text(macro_script)
         if _macros_all_plan_fixed(t):       # KW-FIX-45 11-12: plan-fixed macros: rtl_macro_placer skipped
             shutil.copyfile(Path(__file__).with_name("macro_skip_rtlmp.tcl"), kd / "macro_skip_rtlmp.tcl")
         if macro_moves:
@@ -5838,6 +6029,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
     shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
+    shutil.copyfile(Path(__file__).with_name("hold_sdc_guard.tcl"), kd / "hold_sdc_guard.tcl")      # HOLD-SDC-1116
+    cfg.append("export OT_SIGNOFF_SDC_SHA = " + _hashlib.sha256((kd / "constraint.sdc").read_bytes()).hexdigest()[:16])
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -5865,6 +6058,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
+    cfg += ft_stage0_exports(t)
+    cfg += ft_keep_firm_exports(t)
     cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)
@@ -5874,7 +6069,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cons = cons_kit_settings()
     if cons:
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
-    cfg += txl_mid_exports(cfg, kd)
+    cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
+    cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
@@ -6217,6 +6413,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Signal grants/CONS may raise routing above the unchanged physical clock-pin layer.
+    # No extra metadata for ordinary kits: preserve their existing budget bytes.
+    if top != P.layer_budget["partition_signal_max"]:
+        bud["clock"]["pin_layer"] = P.layer_budget["partition_signal_max"]
     # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
     for row in bud["clock"]["core_taps"]:
         # QC-CB-GEN-1115 L4/L6: core_tap_rows names the PHYSICAL instance (u_bound.u_t22) once the kit declares physical_inst, the plan core the
@@ -6279,6 +6479,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     (kd / "kit_effective_env.json").write_text(json.dumps(kit_effective_env(), indent=1) + "\n")   # r214 audit
     if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
         shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
+        shutil.copyfile(Path(__file__).with_name("grt_pg_replay.tcl"), kd / "grt_pg_replay.tcl")
         shutil.copyfile(Path(__file__).with_name("tt_setup_keep.py"), kd / "tt_setup_keep.py")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
@@ -6394,6 +6595,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         import secondary_clock as _SEC
         _f = _sec.split(":")
         _SEC.install(kd, dict(port=_f[1], clock=_f[2], target=int(_f[3]), dmax_um=float(_f[4]), radius_um=float(_f[5])))
+    # Bind repair to the final golden SDC after every native/secondary-clock installer.
+    import hold_flow
+    hold_flow.install(kd)
+    import hold_sdc_check as _HSC
+    _hf = _HSC.kit_findings(kd)
+    if _hf:
+        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
         import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
@@ -7577,10 +7785,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                        "have no bound RTL (landing kits use the landed wrapper)")
         else:
             gtypes = None          # the landed emitter checks every copy of every type
-    if kit_rtl and gtypes == [] and landing is None:
+    if kit_rtl and gtypes == []:
         # Every selected kit already has its complete bound RTL filelist.
         # Keep the same plan validation, but do not build an unused whole-die
         # top/pad map (including every unrelated partition and reset relay).
+        # With a declaration-only landing sidecar, Landings and the bound RTL
+        # land-slot/collector checks below still validate that exact contract.
         errs = (S.scope_errors_typed(S.validate(raw), types, raw) if overlay_receipt else
                 S.scope_errors(S.validate(raw), types))
         if errs:

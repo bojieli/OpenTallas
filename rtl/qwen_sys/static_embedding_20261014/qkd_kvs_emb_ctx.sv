@@ -12,7 +12,7 @@
 //     register together);
 //   - emb_fault = ctx_start | join | row_tx sticky faults (previously internal; owner of the health sink: KV-HEALTH).
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0, parameter integer ROPE=0, parameter integer ROPE_DELAY=1024, parameter integer OVL=0) (
+module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0, parameter integer ROPE=0, parameter integer ROPE_DELAY=1024, parameter integer OVL=0, parameter integer FIX_ROPE_SLOT_GUARD=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [98:0]   i_ctx,
@@ -83,7 +83,7 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
         .word_v(w_v), .word_data(w_data), .word_token(w_token), .word_index(w_index), .word_scale(w_scale),
         .word_epoch(w_epoch), .fault(jf));
     generate if(ROPE)begin:g_rope
-    qkd_embedding_row_tx_rope u_rowtx (.ck(ck),.rst_n(rst_n),.fill_begin(st),.fill_token(tok),.fill_epoch(tep),
+    qkd_embedding_row_tx_rope #(.FIX_ROPE_SLOT_GUARD(FIX_ROPE_SLOT_GUARD)) u_rowtx (.ck(ck),.rst_n(rst_n),.fill_begin(st),.fill_token(tok),.fill_epoch(tep),
         .fill_position(accepted_owner[18:6]),.word_v(w_v),.word_data(w_data),.word_token(w_token),
         .word_index(w_index),.word_scale(w_scale),.word_epoch(w_epoch),.emb_tx_slot(d2d__emb_tx_slot[0]),
         .emb_tx_v(rowtx__emb_tx_v),.emb_tx_payload(rowtx__emb_tx_payload),.fault(rf),.row_ready(),.row_open(row_open));

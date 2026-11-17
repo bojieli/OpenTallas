@@ -337,6 +337,18 @@ def select_tests(changed, all_tests, read):
 
 # ---------------------------------------------------------------- worktrees
 
+def changed_checkout_entries(files):
+    """Keep shallow result records exact: their parent can contain unrelated large evidence."""
+    return sorted({"file:" + f if f.startswith("results/") and f.count("/") <= 2
+                   else os.path.dirname(f) for f in files})
+
+
+def extra_sparse_patterns(entries):
+    """Directory dependencies keep their old form; explicit files never select sibling evidence."""
+    return sorted({"/" + e[5:].strip("/") if e.startswith("file:") else "/" + e.strip("/") + "/"
+                   for e in entries if e and e not in (".", "/")})
+
+
 def wt_make(name, ref, extra_dirs=()):
     """a detached sparse worktree of the queue clone at ref (reused if present)"""
     p = WT / name
@@ -347,7 +359,7 @@ def wt_make(name, ref, extra_dirs=()):
             WT.mkdir(parents=True, exist_ok=True)
             git("worktree", "prune")
             git("worktree", "add", "-q", "--detach", "--no-checkout", str(p), ref)
-    pats = list(SPARSE) + sorted({"/" + d.strip("/") + "/" for d in extra_dirs if d and d not in (".", "/")})
+    pats = list(SPARSE) + extra_sparse_patterns(extra_dirs)
     git("sparse-checkout", "set", "--no-cone", *pats, cwd=p)
     for a in (("cherry-pick", "--abort"), ("merge", "--abort")):
         git(*a, cwd=p, check=False)
@@ -398,6 +410,13 @@ def wt_drop(name):
 
 def fetch_main():
     with CLONE_LOCK():
+        local = rev(f"refs/remotes/{REMOTE}/{MAIN}")
+        if local:
+            advertised = git("ls-remote", "--exit-code", REMOTE, f"refs/heads/{MAIN}", check=False, timeout=300)
+            rows = [line.split() for line in advertised.stdout.splitlines() if line.strip()]
+            if (advertised.returncode == 0 and rows == [[local, f"refs/heads/{MAIN}"]]
+                    and git("cat-file", "-e", f"{local}^{{commit}}", check=False).returncode == 0):
+                return local
         git("fetch", "-q", REMOTE, f"+refs/heads/{MAIN}:refs/remotes/{REMOTE}/{MAIN}", timeout=300)
     return rev(f"{REMOTE}/{MAIN}")
 
@@ -515,6 +534,13 @@ def pytest(wt, items, tag, n):
     timeout = FLEET_TIMEOUT if all(i.startswith("tools/fleet/") for i in items) and len(items) == 1 else TEST_TIMEOUT
     p = run(cmd, cwd=wt, timeout=timeout, env=env)
     out = (p.stdout or "") + (p.stderr or "")
+    if p.returncode:
+        dest = MQ / "failure-output"
+        dest.mkdir(parents=True, exist_ok=True)
+        record = dest / (re.sub(r"[^A-Za-z0-9_.-]", "_", tag) + f"-{time.time_ns()}.log")
+        with record.open("x") as stream:
+            stream.write(f"cwd={wt}\ncommand={shlex.join(cmd)}\nrc={p.returncode}\n\n" + out)
+        log(f"pytest failure output retained: {record}")
     fails = {m.group(2) for m in map(FAIL_RE.match, out.splitlines()) if m}
     tail = " | ".join(l for l in out.strip().splitlines()[-2:])[:300]
     if p.returncode == 124:
@@ -563,6 +589,9 @@ def baseline(base, fails, extra=(), tag=""):
         on_main |= pytest(p, rest, name + "-a", min(XDIST, max(2, 4 * len(rest))))[1]
     for f in fleet:
         on_main |= pytest(p, [f], name + "-f", min(4, XDIST))[1]
+    missing = sorted(f for f in on_main if f.startswith("MISSING-SOURCE:"))
+    if missing:
+        raise GitError("baseline fixture input missing; cannot classify candidate failures: " + " ".join(missing))
     # a failure on main is baseline when the same nodeid (or its whole file, for a collection ERROR) fails there too
     return {f for f in fails if f in on_main or f.split("::")[0] in on_main}
 
@@ -601,10 +630,12 @@ def test_deps(wt, base, tests):
     files and the local modules it imports (11-15 kv-pvgen: test_pvgen_vport_selrep compiles rtl/test/kv_bootage_1019/*.sv
     and rtl/qwen_sys/... that the branch does not touch; the sparse gate tree lacked them and the sims timed out at 2400 s)"""
     files = set(tests)
+    explicit = set(tests)
     for t in tests:
         d = os.path.dirname(t)
         while d:
             files.add(f"{d}/conftest.py")
+            explicit.add(f"{d}/conftest.py")
             d = os.path.dirname(d)
         try:
             txt = (wt / t).read_text(errors="replace")
@@ -614,18 +645,23 @@ def test_deps(wt, base, tests):
             mod = (m.group(1) or m.group(2)).split(".")[0]
             for c in (f"{os.path.dirname(t)}/{mod}.py", f"tools/die_plan/{mod}.py", f"tools/{mod}.py"):
                 files.add(c)
-    lit, paths = _path_lit_re(base), set()
+    lit, paths, directory_inputs = _path_lit_re(base), set(), set()
     for f in files:
         try:
             txt = (wt / f).read_text(errors="replace")
         except OSError:
             continue
-        paths |= {m.group(1) for m in lit.finditer(txt)}
+        named = {m.group(1) for m in lit.finditer(txt)}
+        paths |= named
+        if f in explicit:
+            directory_inputs |= named
     dirs = set()
     for x, kind in _tree_types(base, paths).items():
         if kind == "blob":
             dirs.add(os.path.dirname(x))
-        elif x.count("/") >= 1:                  # a named directory, never a whole top-level dir (rtl/, physical/)
+        elif x in directory_inputs and x.count("/") >= 1:
+            # Imported implementations also name output roots and unrelated defaults.
+            # Real dynamic input misses still use fail-closed runtime discovery.
             dirs.add(x)
     return {d for d in dirs if d}
 
@@ -666,7 +702,7 @@ def gate(it, wt, base):
     it["tests"] = tests
     if not tests:
         return "GREEN", f"no tests select for {len(ch)} changed file(s); static check only"
-    pats = list(SPARSE) + ["/" + d.strip("/") + "/" for d in it.get("extra", ())]
+    pats = list(SPARSE) + extra_sparse_patterns(it.get("extra", ()))
     need = sorted(d for d in test_deps(wt, base, tests) if not _covered(d, pats))
     if need:
         git("sparse-checkout", "add", *["/" + d + "/" for d in need], cwd=wt, timeout=1800)
@@ -1043,7 +1079,7 @@ def prepare(it, base, remote=True):
         if is_ancestor(full, base):
             return "ALREADY", f"{full[:11]} is an ancestor of main {base[:11]}"
         mb = git("merge-base", base, full).stdout.strip()
-        it["extra"] = sorted({os.path.dirname(f) for f in changed_files(REPO, mb, full)})
+        it["extra"] = changed_checkout_entries(changed_files(REPO, mb, full))
         wt = wt_make(it["id"], base, it["extra"])
         status, detail = apply(wt, base, full, it["branch"])
         if status != "OK":

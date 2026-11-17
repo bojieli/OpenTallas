@@ -31,11 +31,17 @@ import os
 import re
 import sys
 
-TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready")
+TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready", "result")
 LEGACY_OK = ("merge",)          # still evaluated (ancestor of origin/main); accepted in new records too
 GLOB = re.compile(r"[*?\[]")
 PROOF_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
 CENSUS = re.compile(r"^(\d+)(k?)$", re.I)
+
+
+def split_result(val):
+    """'FABLE-FIX-S81-SVC:svc-ready' -> ('FABLE-FIX-S81-SVC', 'svc-ready')"""
+    lane, _, tag = str(val).partition(":")
+    return lane.strip(), tag.strip()
 
 
 def split_tree(val):
@@ -126,6 +132,11 @@ def term_error(term, die, cfg, migrated=False):
         if not tp.startswith("/") or tp.endswith("/") or ".." in tp.split("/"):
             return f"{term!r}: tree_ready needs <die>:<absolute tree path without trailing slash>"
         return None
+    if kind == "result":
+        lane, tag = split_result(val)
+        if not (PROOF_NAME.match(lane) and PROOF_NAME.match(tag)):
+            return f"{term!r}: result needs <lane>:<tag> (one token each); released by a RESULT line of that lane with '<tag> PASS'"
+        return None
     if kind == "proof":
         return None if PROOF_NAME.match(val) else f"{term!r}: proof needs one name token (a RESULT PASS post naming it)"
     if kind == "census_lt":
@@ -156,6 +167,9 @@ def unreachable_why(term, die, cfg):
     if kind == "tree_ready":
         td, tp = split_tree(val)
         return None if td == die and tp.startswith("/") else "tree_ready die or path malformed"
+    if kind == "result":
+        lane, tag = split_result(val)
+        return None if PROOF_NAME.match(lane) and PROOF_NAME.match(tag) else "result lane or tag malformed"
     if kind == "proof":
         return None if PROOF_NAME.match(val) else "proof name not one token"
     if kind == "census_lt":
@@ -168,7 +182,7 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
@@ -176,6 +190,7 @@ class Ctx:
         self.kit_snap_fn = kit_snap_fn or (lambda cfg, die: False)
         self.exists_fn = exists_fn or os.path.exists
         self.proof_fn = proof_fn or (lambda name: False)          # name -> a RESULT PASS line names this proof
+        self.result_fn = result_fn or (lambda lane, tag: False)    # (lane, tag) -> a RESULT line of that lane says '<tag> PASS'
         self.lint_fn = lint_fn                                      # (die, item-or-pattern) -> True when no sdc_lint failure is known; None = old _lint_clean list
         self.tree_fn = tree_fn or (lambda die, path: False)       # (die, tree) -> marker + smoke + replication on all gen hosts
         self.marker_fn = marker_fn or (lambda die: None)          # die -> parsed lanes/handoff/tree_switch_<die>.json or None
@@ -209,6 +224,9 @@ def term_met(term, rec, die, item, cfg, ctx):
         if kind == "tree_ready":
             td, tp = split_tree(val)
             return td == die and bool(ctx.tree_fn(td, tp))
+        if kind == "result":
+            lane, tag = split_result(val)
+            return bool(ctx.result_fn(lane, tag))
         if kind == "proof":
             return bool(ctx.proof_fn(val))
         if kind == "census_lt":
@@ -228,6 +246,8 @@ def proof_exclusions(rec, d):
     out = set()
     for t in rec.get("release") or []:
         kind, val = split_term(t)
+        if kind == "result":
+            val, kind = split_result(val)[1], "proof"          # result:<lane>:<tag> names its proof items by <tag>
         if kind == "proof":
             out.update(str(i) for i in ((d or {}).get("proof_items") or {}).get(val) or [])
     return out
@@ -492,11 +512,27 @@ def apply_tree_switches(cfg, ctx):
                 if m.get("manifest_hash") and d.get("src_manifest_hash") != m["manifest_hash"]:
                     d["src_manifest_hash"] = m["manifest_hash"]
                     ch.append("src_manifest_hash")
+                # A marker can repoint plan via explicit config below. Carry
+                # its declared digest with that adoption, never calculate a new
+                # declaration from arbitrary plan bytes. Explicit config wins.
+                if m.get("plan_sha256") and "plan_sha256" not in (m.get("config") or {}):
+                    if d.get("plan_sha256") != m["plan_sha256"]:
+                        d["plan_sha256"] = m["plan_sha256"]
+                        ch.append("plan_sha256")
                 for k, v in (m.get("die_gen_env") or {}).items():
                     env = d.setdefault("die_gen_env", {})
                     if env.get(k) != v:
                         env[k] = v
                         ch.append(f"die_gen_env.{k}")
+                # The tree base is source identity; tools_sha can legitimately
+                # name a different tooling revision. Apply defaults before the
+                # marker explicit config, so composed identities stay explicit.
+                main_sha = str(m.get("_validated_main_sha") or "")
+                if re.fullmatch(r"[0-9a-f]{40}", main_sha):
+                    for k, v in (("src_sha", main_sha), ("queue_src", "main@" + main_sha)):
+                        if k not in (m.get("config") or {}) and d.get(k) != v:
+                            d[k] = v
+                            ch.append(k)
                 for k, v in (m.get("config") or {}).items():
                     before = json.dumps(d.get(k), sort_keys=True, default=str)
                     if isinstance(v, dict) and isinstance(d.get(k), dict):

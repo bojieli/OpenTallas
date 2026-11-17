@@ -50,6 +50,7 @@ from __future__ import annotations
 
 import json
 import math
+import os
 import struct
 import sys
 from pathlib import Path
@@ -359,7 +360,9 @@ class Sched:
         return [dict(edge=e, cmd=f'{c:029x}', label=l) for e, (c, l) in sorted(self.cmds.items())]
 
 
-def load_ages(path=AGES_VEC):
+def load_ages(path=None):
+    """Explicit path wins; DV_VEC_AGES selects a measured profile; legacy default remains unchanged."""
+    path = os.environ.get('DV_VEC_AGES', AGES_VEC) if path is None else path
     p = Path(path) if Path(path).is_absolute() else ROOT / path
     if not p.exists():
         raise LowerError(f'{path} missing: measure it (rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate)')

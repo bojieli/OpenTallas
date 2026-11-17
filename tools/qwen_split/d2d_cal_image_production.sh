@@ -22,10 +22,13 @@ if [ -n "${D2D_C_DIE_V:-}" ]; then
   C=$(python3 tools/qwen_split/record_bundles.py seam-stages "$D2D_C_DIE_V")
   STAGES="$C/${D2D_K_STAGES:-${STAGES#*/}}"
 fi
-TP=results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz
+TP=${D2D_TOKEN_PATH:-results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz}
+[ -f "$TP" ] || { echo "selected token path missing: $TP" >&2; exit 2; }
 # HKV-DIE 10-19: KV attention codec edges read from the instantiated qkd_kvs_attn (.LAND(1) -> 2), never assumed
 KV_CODEC=${D2D_KV_CODEC:-$(python3 -c "import sys; sys.path[:0]=['tools/qwen_layerbench','tools','tools/qwen_split']; import layer_compile as C; print(C.kv_codec_edges(open('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read()))")}
 MU_ARGS=()
+# Explicit measured/source-composed layer floor; no default schedule change.
+[ -z "${D2D_LAYER_PERIOD_MIN:-}" ] || MU_ARGS+=(--layer-period-min "$D2D_LAYER_PERIOD_MIN")
 [ "${D2D_ROPE:-0}" = 1 ] && MU_ARGS+=(--rope)
 [ -n "${D2D_HEAD_PREPARE_EDGES:-}" ] && MU_ARGS+=(--head-prepare-edges "$D2D_HEAD_PREPARE_EDGES")
 # One explicit source/profile value reaches BOTH pair-image generation and the
@@ -59,7 +62,10 @@ EMB_STAGES=${D2D_EMB_STAGES:-0}
 # anchor measurement supplies it. It changes RX calendars, never clock timing.
 CAL_OFS=${D2D_CAL_OFS:-0}
 mkdir -p "$OUT"
-gunzip -c "$TP" > "$OUT/token_path_compiled.json"
+case "$TP" in
+  *.gz) gunzip -c "$TP" > "$OUT/token_path_compiled.json";;
+  *) cp "$TP" "$OUT/token_path_compiled.json";;
+esac
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" --kv-codec "$KV_CODEC" \
   "${MU_ARGS[@]}" --host-stages "$HOST_STAGES" --emb-stages "$EMB_STAGES" --ofs "$CAL_OFS" --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
   --token-path "$OUT/token_path_compiled.json" > "$OUT/program.log"

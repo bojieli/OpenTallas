@@ -71,6 +71,19 @@ AGIDOCK_SSH = "ssh -o ControlPath=none -o BatchMode=yes -o ConnectTimeout=10 -i 
 ARCHIVE_ROOT = "/archive/opentallas-signed-1106"
 AGE_S = 6 * 3600
 # COORD 11-12 emergency hold (autoclean emptied die-hbm-92-su/ab on 3 hosts; live HBM binds named it): never deleted, any class
+try:                                                      # CLEAN-ALL-1115: the shared pre-delete guard (fails closed if absent)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ot_delete_guard as _dg
+except ImportError:
+    _dg = None
+
+
+def guard_refuse(path):
+    if _dg is None:
+        return "ot_delete_guard module missing (fail closed)"
+    return _dg.refuse(path)
+
+
 EMERGENCY_HOLD_RE = re.compile(r"/claude/die-hbm-[^/]+/ab(?:/|$)")      # src_* trees are held by reference (kit-wave keep + bind refs + live lane), not by name (COORD 11-12 epyc2)
 CTIME_GRACE = True          # a src_* copy keeps the source's old mtimes: its inode change time says when it landed
 EMERGENCY_ANC_RE = re.compile(r"/claude/die-hbm-[^/]+/ab/|/claude/[^/]+/src_[^/]+/")
@@ -2259,6 +2272,9 @@ class Job:
         for f in files:
             if EMERGENCY_HOLD_RE.search(os.path.realpath(f) + "/") or EMERGENCY_HOLD_RE.search(f + "/"):
                 raise OSError("emergency hold " + f)
+            _gr = guard_refuse(f)
+            if _gr:
+                raise OSError("delete guard: " + _gr)
             try:                                              # per-delete journal: the manifest is written only when a run ends
                 with open(os.path.join(self.a.state, "deleted.log"), "a") as jf:  # noqa
                     jf.write(f"{time.strftime('%F %T')}\t{cls}\t{f}\n")
@@ -3176,6 +3192,16 @@ class Driver:
         try:
             os.makedirs(os.path.join(tb, "tools"))
             shutil.copy(self.script, os.path.join(tb, "tools/ot-autoclean.py"))
+            gm = os.path.join(here, "ot_delete_guard.py")
+            if os.path.exists(gm):
+                shutil.copy(gm, os.path.join(tb, "tools/ot_delete_guard.py"))
+            if _dg is not None:                           # protected list for the host guard (kit_wave.json src/bind of record, markers)
+                try:
+                    os.makedirs(os.path.join(tb, "guard"))
+                    _dg.write_list(_dg.build_protected([self.a.coord] + [c for c in os.environ.get("OT_GUARD_EXTRA_COORDS", "").split(",") if c]),
+                                   os.path.join(tb, "guard/protected.txt"))
+                except (OSError, ValueError, KeyError):
+                    pass
             wr = os.path.join(here, "wt-reaper.py")
             if os.path.exists(wr):
                 shutil.copy(wr, os.path.join(tb, "tools/wt-reaper.py"))
@@ -3185,6 +3211,7 @@ class Driver:
             shutil.rmtree(tb, ignore_errors=True)
         st, td = shlex.quote(self.rstate), shlex.quote(self.tools)
         cmd = (f"set -e; mkdir -p {st} {td}; T=$(mktemp -d {st}/.push.XXXXXX); tar -C $T -xf -; "
+               f"if [ -f $T/guard/protected.txt ]; then mkdir -p ~/.local/state/ot-delete-guard; cp $T/guard/protected.txt ~/.local/state/ot-delete-guard/protected.txt; fi; "
                f"cp $T/tools/* {td}/; rm -rf {st}/snapshot.old; if [ -d {st}/snapshot ]; then mv {st}/snapshot "
                f"{st}/snapshot.old; fi; mv $T/snapshot {st}/snapshot; rm -rf $T {st}/snapshot.old")
         r = self.r.host(h, cmd, inp=data, binary=True)

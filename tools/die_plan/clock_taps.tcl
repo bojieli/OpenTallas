@@ -4,7 +4,7 @@
 # one local tree per tap (radius <= ~300 um) instead of one tree from one interior tap (CP1: 1176 ps, 29-32 levels).
 # QC-A0 10-24: the tap port family is OT_TAP_PORT (default clk: plan partitions clk / clk_t<i>; the A0 hard cores
 # ck / ck_t<i>), so hard-core kits use this tool unchanged instead of private copies.
-global ct_taps ct_k ct_pinned ct_grp ct_blk ct_fre
+global ct_taps ct_k ct_pinned ct_grp ct_blk ct_fre ct_group_owned ct_fixed ct_fixed_taps
 set ct_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
 set ct_blk [ord::get_db_block]
 set ct_taps {}
@@ -146,12 +146,44 @@ if {[llength $ct_taps] < 2} {
 # pinned: the cap pass and the small-tap merge below move whole taps or ungrouped sinks only.
 global ct_taps ct_k ct_pinned  ;# sourced from inside an ORFS proc: procs below read these as globals
 set ct_pinned {}
+set ct_group_owned {}
 # FLOW-CANARY 10-25: OPT-IN (default off = the 202a nearest-sink assignment).  On by default it regressed every
 # gen_phys canary (s81 t12 / KV io_ft / QC coll_ftm structural FF hold -311.8/-152.0/-144.8 vs 202a PASS; a whole
 # long station row on the tap nearest its centroid left 4-8 taps EMPTY and grew 460-556 ps trees; A/B with 202a
 # clock_taps on the same kits: 0 empty taps, hold gate PASS).  Opt in with OT_TAP_GROUP_RE (the station form is
 # OT_TAP_GROUP_RE='(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]') once a variant passes the canaries.
 set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE) : {}}]
+# A declared fixed group shares an existing clock port, e.g. data output
+# registers and the already-declared forwarded output clock. Default off.
+set ct_fixed {}; set ct_fixed_taps {}
+if {[info exists ::env(OT_TAP_GROUP_FIXED)] && $::env(OT_TAP_GROUP_FIXED) ne ""} {
+  if {$ct_gre eq "" && !([info exists ::env(OT_SERDES_RESET_COHORT)] && $::env(OT_SERDES_RESET_COHORT) eq "1") && !([info exists ::env(OT_SERDES_INGRESS_COHORT)] && $::env(OT_SERDES_INGRESS_COHORT) eq "1")} {error "OT_TAP_GROUP_FIXED needs an explicit group regex"}
+  foreach spec [split $::env(OT_TAP_GROUP_FIXED) ,] {
+    set pair [split $spec :]
+    if {[llength $pair] != 2 || [lindex $pair 0] eq "" || [lindex $pair 1] eq ""} {error "OT_TAP_GROUP_FIXED malformed group:port"}
+    dict set ct_fixed [lindex $pair 0] [lindex $pair 1]
+    dict set ct_fixed_taps [lindex $pair 1] 1
+  }
+}
+proc ct_fixed_target {group} {
+  global ct_fixed ct_taps
+  if {![dict exists $ct_fixed $group]} {return {}}
+  set name [dict get $ct_fixed $group]
+  foreach tap $ct_taps {if {[lindex $tap 0] eq $name} {return $tap}}
+  error "OT_TAP_GROUP_FIXED unknown or non-grid clock port: $name"
+}
+proc ct_reassert_fixed_groups {} {
+  global ct_fixed ct_grp ct_pinned ct_group_owned
+  dict for {group name} $ct_fixed {
+    if {![dict exists $ct_grp $group]} {error "OT_TAP_GROUP_FIXED group has no sinks: $group"}
+    set target [ct_fixed_target $group]
+    foreach pin [dict get $ct_grp $group] {
+      if {[$pin getNet] ne [lindex $target 1]} {$pin disconnect; $pin connect [lindex $target 1]}
+      dict set ct_pinned $pin 1
+      dict set ct_group_owned $pin 1
+    }
+  }
+}
 set ct_fre [expr {[info exists ::env(OT_TAP_FOLLOW_RE)] ? $::env(OT_TAP_FOLLOW_RE) : {(?:^|[/.])(u_rrl_[0-9]+)[/.]}}]
 proc ct_tapnets {} { global ct_taps; set d {}; foreach tp $ct_taps { dict set d [[lindex $tp 1] getName] $tp }; return $d }
 proc ct_clk_iterm {inst} {
@@ -164,12 +196,17 @@ proc ct_clk_iterm {inst} {
 }
 # followers (reset relays): tap of the majority of the flops their output tree (through buf/inv) reaches
 proc ct_follow {} {
-  global ct_blk ct_fre ct_pinned
+  global ct_blk ct_fre ct_pinned ct_group_owned
   set ct_fmoved 0; set ct_fn 0
   foreach inst [$ct_blk getInsts] {
     if {$ct_fre eq "" || ![regexp -- $ct_fre [$inst getName]]} continue
     set cit [ct_clk_iterm $inst]
     if {$cit eq ""} continue
+    # Explicit cohorts are atomic: a reset member must not follow a remote
+    # descendant onto another tap after its group was assigned. Keep this
+    # distinct from ct_pinned, which also contains ordinary followers and
+    # must remain eligible for the post-cap follower update.
+    if {[dict exists $ct_group_owned $cit]} continue
     set votes {}; set seen {}; set todo {}
     foreach it [$inst getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT" && [$it getNet] ne "NULL"} { lappend todo [$it getNet] } }
     while {[llength $todo]} {
@@ -197,13 +234,104 @@ proc ct_follow {} {
   }
   return [list $ct_fn $ct_fmoved]
 }
-if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
+# Default-off SerDes clock cohorts. The incoming forwarded writer is untouched:
+# only pins already on the local core clock tap family are considered below.
+set ct_ingress [expr {[info exists ::env(OT_SERDES_INGRESS_COHORT)] && $::env(OT_SERDES_INGRESS_COHORT) eq "1"}]
+set ct_reset_family [expr {[info exists ::env(OT_SERDES_RESET_COHORT)] && $::env(OT_SERDES_RESET_COHORT) eq "1"}]
+set ct_ingress_bin 0;set ct_ingress_enc 0
+set ct_reset_members {};set ct_reset_used {};set ct_reset_map {};set ct_reset_available {}
+proc ct_has_clock_pin {inst} {
+  foreach pin [$inst getITerms] {
+    if {[[$pin getMTerm] getName] in {CLK CLKN CK CKN}} {return 1}
+  }
+  return 0
+}
+# Trace compiled reset/data authority through combinational logic, stopping at
+# every sequential/PHY boundary. A merged relay is identified by its REAL driver,
+# never guessed from the collector's numeric name. No data or clock net is edited.
+proc ct_rl_sources {net depth seen} {
+  if {$net eq "NULL" || $net eq "" || $depth<=0 || [dict exists $seen [$net getName]]} {return {}}
+  dict set seen [$net getName] 1;set found {}
+  foreach pin [$net getITerms] {
+    if {[[$pin getMTerm] getIoType] ne "OUTPUT"} continue
+    set inst [$pin getInst];set name [$inst getName]
+    if {[regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $name -> owner] && [ct_clk_iterm $inst] ne ""} {
+      dict set found $owner 1;continue
+    }
+    if {[ct_has_clock_pin $inst]} continue
+    if {![catch {[[$inst getMaster] isBlock]} hard] && $hard eq "1"} continue
+    foreach input [$inst getITerms] {
+      if {[[$input getMTerm] getIoType] ne "INPUT" || [[$input getMTerm] getName] in {VDD VSS VPWR VGND}} continue
+      set found [dict merge $found [ct_rl_sources [$input getNet] [expr {$depth-1}] $seen]]
+    }
+  }
+  return $found
+}
+if {$ct_reset_family} {
+  set ct_collectors {}
+  foreach tap $ct_taps {
+    foreach pin [[lindex $tap 1] getITerms] {
+      if {[[$pin getMTerm] getName] ni {CLK CLKN CK CKN}} continue
+      set inst [$pin getInst];set name [$inst getName]
+      if {[regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $name -> owner]} {dict set ct_reset_available $owner 1}
+      if {[regexp {^(.*(?:^|[/.])u_cland_collect_rst_rl_[0-9]+)[/.]} $name -> collector]} {
+        dict set ct_collectors $collector $name $inst
+      }
+    }
+  }
+  if {![dict size $ct_collectors]} {error "OT_SERDES_RESET_COHORT no compiled local-clock collectors"}
+  # Typed rows are sized on the actual compiled driver graph before CTS. Each
+  # bounded group has a fixed existing light-clock tap, not the encoder root.
+  if {[info exists ::env(OT_SERDES_RELAY_COHORTS)] && $::env(OT_SERDES_RELAY_COHORTS) ne ""} {
+    foreach row [split $::env(OT_SERDES_RELAY_COHORTS) {;}] {
+      set ids [split $row ,];set key [lindex $ids 0]
+      foreach id $ids {
+        if {![regexp {^[0-9]+$} $id] || ![dict exists $ct_reset_available $id] || [dict exists $ct_reset_map $id]} {error "OT_SERDES_RELAY_COHORTS missing/duplicate compiled relay $id"}
+        dict set ct_reset_map $id $key
+      }
+    }
+    if {[dict size $ct_reset_map]!=[dict size $ct_reset_available]} {error "OT_SERDES_RELAY_COHORTS incomplete compiled relay coverage"}
+  } else {
+    dict for {id unused} $ct_reset_available {dict set ct_reset_map $id $id}
+  }
+  dict for {collector instances} $ct_collectors {
+    set owners {}
+    dict for {name inst} $instances {
+      foreach pin [$inst getITerms] {
+        if {[[$pin getMTerm] getName] ni {D RESETN SETN}} continue
+        set owners [dict merge $owners [ct_rl_sources [$pin getNet] 12 {}]]
+      }
+    }
+    if {[dict size $owners]!=1} {error "OT_SERDES_RESET_COHORT ambiguous/missing compiled RRL authority for $collector: [dict keys $owners]"}
+    set owner [lindex [dict keys $owners] 0]
+    dict set ct_reset_used $owner 1
+    dict for {name inst} $instances {dict set ct_reset_members $name $owner}
+    puts "OT_SERDES_RESET_COHORT compiled $collector <- u_rrl_$owner ([dict size $instances] clock pins)"
+  }
+}
+
+if {[llength $ct_taps] >= 2 && ($ct_gre ne "" || $ct_ingress || $ct_reset_family)} {
   set ct_grp {}
   foreach tp $ct_taps {
     foreach it [[lindex $tp 1] getITerms] {
       if {[[$it getMTerm] getIoType] ne "INPUT"} continue
-      if {[regexp -- $ct_gre [[$it getInst] getName] -> g]} { dict lappend ct_grp $g $it }
+      set ct_iname [[$it getInst] getName];set g ""
+      if {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_bin_coll_i0[/.]q} $ct_iname]} {
+        set g u_enc;incr ct_ingress_bin
+      } elseif {$ct_ingress && [[$it getMTerm] getName] in {CLK CLKN CK CKN} && [regexp {(?:^|[/.])u_enc[/.]} $ct_iname]} {
+        set g u_enc;incr ct_ingress_enc
+      } elseif {$ct_reset_family && [dict exists $ct_reset_members $ct_iname]} {
+        set g serdes_rst_[dict get $ct_reset_map [dict get $ct_reset_members $ct_iname]]
+      } elseif {$ct_reset_family && [regexp {(?:^|[/.])u_rrl_([0-9]+)[/.]} $ct_iname -> owner] && [dict exists $ct_reset_map $owner]} {
+        set g serdes_rst_[dict get $ct_reset_map $owner]
+      } elseif {$ct_gre ne ""} {regexp -- $ct_gre $ct_iname -> g}
+      if {$g ne ""} {dict lappend ct_grp $g $it}
     }
+  }
+  if {$ct_ingress} {
+    set expected [expr {[info exists ::env(OT_SERDES_INGRESS_BITS)] ? $::env(OT_SERDES_INGRESS_BITS) : 512}]
+    if {$expected<=0 || $ct_ingress_bin!=$expected || $ct_ingress_enc<=0} {error "OT_SERDES_INGRESS_COHORT capture mismatch bin=$ct_ingress_bin expected=$expected encoder=$ct_ingress_enc"}
+    puts "OT_SERDES_INGRESS_COHORT bin=$ct_ingress_bin encoder=$ct_ingress_enc; local core clock only; forwarded writer unchanged"
   }
   set ct_gmoved 0; set ct_gsplit 0
   dict for {g its} $ct_grp {
@@ -214,6 +342,15 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
       dict set owners [[$it getNet] getName] 1
     }
     if {[dict size $owners] > 1} { incr ct_gsplit }
+    if {[string match serdes_rst_* $g]} {
+      set xs {};set ys {}
+      foreach it $its {lassign [[$it getInst] getLocation] x y;lappend xs $x;lappend ys $y}
+      set xs [lsort -integer $xs];set ys [lsort -integer $ys]
+      set du [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
+      set span [expr {([lindex $xs end]-[lindex $xs 0]+[lindex $ys end]-[lindex $ys 0])/$du}]
+      if {$span>405.0 || [llength $its]>64} {error "OT_SERDES_RELAY_COHORTS unsized group $g span_um=$span FF=[llength $its]"}
+      puts "OT_SERDES_RELAY_COHORTS $g FF=[llength $its] bbox_span_um=$span"
+    }
     set cx [expr {$sx / [llength $its]}]; set cy [expr {$sy / [llength $its]}]
     set best ""; set bd 0
     foreach tp $ct_taps {
@@ -221,9 +358,12 @@ if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
       set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3])}]
       if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
     }
+    set ct_forced [ct_fixed_target $g]
+    if {[llength $ct_forced]} {set best $ct_forced}
     foreach it $its {
       if {[$it getNet] ne [lindex $best 1]} { $it disconnect; $it connect [lindex $best 1]; incr ct_gmoved }
       dict set ct_pinned $it 1
+      dict set ct_group_owned $it 1
     }
   }
   lassign [ct_follow] ct_fn ct_fmoved
@@ -286,6 +426,7 @@ if {[llength $ct_taps] >= 2} {
       # on their own nets) that costs the least extra centroid distance to a tap with room for all of it
       set gbest ""; set gbd 0; set gtgt ""
       dict for {g its} $ct_grp {
+        if {[dict exists $ct_fixed $g]} continue
         if {[[lindex $its 0] getNet] ne [lindex $over 1]} continue
         set sx 0.0; set sy 0.0
         foreach it $its { lassign [[$it getInst] getLocation] x y; set sx [expr {$sx + $x}]; set sy [expr {$sy + $y}] }
@@ -369,6 +510,7 @@ if {[llength $ct_taps] >= 2 && $ct_min > 0} {
   set ct_merged {}
   foreach tp [lsort -command {apply {{a b} {global ct_k; expr {[llength [dict get $ct_k [lindex $a 0]]] - [llength [dict get $ct_k [lindex $b 0]]]}}}} $ct_taps] {
     set n [llength [dict get $ct_k [lindex $tp 0]]]
+    if {[dict exists $ct_fixed_taps [lindex $tp 0]]} continue
     if {$n == 0 || $n >= $ct_min} continue
     set best ""; set bd 0
     foreach t2 $ct_taps {
@@ -444,6 +586,7 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_TAP_POST_MIN_SINKS)] && $::
     set its [dict get $ct_pk $nm]
     set n [llength $its]
     if {$n == 0 || $n >= $ct_pmin} continue
+    if {[dict exists $ct_fixed_taps $nm]} {lappend ct_pkept [format {%s(%s):fixed} $nm $n]; continue}
     if {[dict get $ct_pblk $nm]} { lappend ct_pkept "${nm}($n):core"; continue }
     if {$nm eq $ct_port} { lappend ct_pkept "${nm}($n):root"; continue }
     set best ""; set bd 0
@@ -467,6 +610,9 @@ if {[llength $ct_taps] >= 2 && [info exists ::env(OT_TAP_POST_MIN_SINKS)] && $::
   }
   puts "OT_CLOCK_TAPS POST_MIN $ct_pmin sinks/tap (radius [expr {$ct_prad / $ct_dbu}] um): [llength $ct_pmerged] small taps merged [join $ct_pmerged { }]; kept [llength $ct_pkept] [join $ct_pkept { }]"
 }
+# Fixed declared source clocks take priority over automatic affinity heuristics.
+# Reassert before lockup latches follow their launch clocks, not after them.
+ct_reassert_fixed_groups
 # TYPE-SAFE-1 11-06 (OWNER 18:5x, clock follows data): every ft hop lockup latch u_fl_* (gen_rtl.ft_hop_lockup) is
 # clocked from the tap of the station flop that drives its D (the LAUNCH station), after every other assignment pass
 # above (nearest / group / cap / min-merge / chain affinity), so the station -> latch check shares the launch tap
@@ -665,3 +811,6 @@ if {[llength $ct_taps] >= 2} {
   # VSN6-B 11-11 S7: the final count never passes silently over the cap
   if {[llength $ct_oc]} { puts "OT_CLOCK_TAPS WARN OVER_CAP [llength $ct_oc] taps > cap $ct_cap sinks in the final assignment: [join $ct_oc { }]" }
 }
+
+# Rebind only the typed PHY export whose actual source changed in this tap split.
+if {[file exists /work/phy_clock_export_source.tcl]} {source /work/phy_clock_export_source.tcl}

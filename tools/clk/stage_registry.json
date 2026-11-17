@@ -621,6 +621,66 @@
      "rms_built_ps": 25.5
     }
    }
+  },
+  {
+   "id": "inv_ndr_kv_7yhr_b7d",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "inv",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": null
+   },
+   "basis": "ot_clk refit (kv fable_die_kv_7yhr_g) of stack inv/ndr on routed legs /srv/opentallas-scratch2/claude/fable-die-kv/refit_b7d/grt_<C>; TT 21536 legs rms 5.52 ps (old model 8.93), FF 21536 legs rms 5.04 ps (old model 8.03)",
+   "source": {
+    "file": "/srv/opentallas-scratch2/claude/fable-die-kv/refit_b7d/cal.json",
+    "sha256": "22f6479ebc608cd400511e3c2ec60b022db21fdbb2366f97111b40bba87377f1",
+    "tree": "/srv/opentallas-scratch2/claude/fable-die-kv/refit_b7d/tree.json",
+    "arrivals": "/srv/opentallas-scratch2/claude/fable-die-kv/refit_b7d/grt",
+    "rep_um": 150.0,
+    "even_legs": false,
+    "built_with": "/srv/opentallas-scratch2/claude/fable-die-kv/refit_b7d/cal.built_with.json",
+    "tap_from": "/srv/opentallas-scratch2/claude/fable-die-kv/refit_b7d/built_cal.json"
+   },
+   "leg": [
+    15.926888,
+    0.116552,
+    0.000415,
+    6.572537
+   ],
+   "tap": [
+    0.146559,
+    0.000484
+   ],
+   "leg_FF": [
+    13.337814,
+    0.11678,
+    0.000305,
+    4.792958
+   ],
+   "tap_FF": [
+    0.146559,
+    0.000484
+   ],
+   "coeff_sha": "e77ec4d9c33088b1",
+   "fit": {
+    "TT": {
+     "legs": 21536,
+     "rms_ps": 5.52,
+     "rms_built_ps": 8.93
+    },
+    "FF": {
+     "legs": 21536,
+     "rms_ps": 5.04,
+     "rms_built_ps": 8.03
+    }
+   }
   }
  ]
 }

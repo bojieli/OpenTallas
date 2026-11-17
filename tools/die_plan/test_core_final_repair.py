@@ -6,7 +6,8 @@ import pytest
 HOOK = Path(__file__).with_name('core_final_repair.tcl')
 
 @pytest.mark.parametrize('overlap,fail', [(False, False), (True, False), (False, True)])
-def test_final_clock_placement_contract(overlap, fail):
+@pytest.mark.parametrize('resistance', [None, '0', '1'])
+def test_final_clock_placement_contract(overlap, fail, resistance):
     stub = r'''
 set ::ot_mm_active 1
 proc ot_mm_sc {} {return TC}
@@ -38,7 +39,7 @@ proc estimate_parasitics {arg} {
  # Native bulk GR estimation does not drain prior invalid-net callbacks.
  if {$arg eq "-placement"} {set ::invalid 0}
 }
-proc global_route {args} {}
+proc global_route {args} {set ::last_route $args}
 proc check_placement {args} {}
 proc ot_mm_sync {} {}
 proc ot_mm_ws {args} {return -1}
@@ -52,8 +53,15 @@ proc detailed_placement {args} {
 }
 '''
     stub += f'\nset ::x1 {5 if overlap else 20}\nset ::expected {"PLACED" if overlap else "FIRM"}\nset ::fail {int(fail)}\n'
+    if resistance is None:
+        stub += 'unset -nocomplain ::env(ENABLE_RESISTANCE_AWARE)\n'
+    else:
+        stub += f'set ::env(ENABLE_RESISTANCE_AWARE) {resistance}\n'
     stub += 'set rc [catch {source {' + str(HOOK) + '}} msg]\n'
     stub += f'if {{$rc != {int(fail)}}} {{error "unexpected hook result $rc/$msg"}}\n'
+    if not fail:
+        expected = int(resistance != '0')
+        stub += f'if {{([lsearch -exact $::last_route -resistance_aware] >= 0) != {expected}}} {{error "kit routing policy changed"}}\n'
     stub += '''
 foreach i {i0 i1} {if {$::status($i) ne "PLACED"} {error "clock status leaked after DPL"}}
 if {[llength $::repairs] != 2 || "-setup" ni [lindex $::repairs 0] || "-hold" ni [lindex $::repairs 1]} {error "missing ordered setup/hold repairs"}

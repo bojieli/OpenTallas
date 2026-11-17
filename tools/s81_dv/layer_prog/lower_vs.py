@@ -291,6 +291,27 @@ def _eng_reduce_ctls(ctx, sl):
     return [tuple(g) for g in table[sl]['eng_ctls']]
 
 
+def eng_ver_profile(die, sl):
+    """Selected leaf response stations, separate from die/FT transport.
+
+    LF_CS_VER_D packs five 4-bit depths (L0 at the low nibble). The
+    ot_s81sl_leaf u_cst_ver delays ve partial/add response, valid and fault
+    together. CS_VE_D (the request direction) is a separate parameter.
+    """
+    params = die.slices()[sl].get('params', '')
+    matches = re.findall(r"\.LF_CS_VER_D\s*\(\s*(20\s*'h[0-9a-fA-F_]+|0)\s*\)", params)
+    if '.LF_CS_VER_D' in params and len(matches) != 1:
+        raise ValueError('selected LF_CS_VER_D needs one explicit 20-bit hex literal: ' + sl)
+    value = int(matches[0].split('h')[1].replace('_', ''), 16) if matches and matches[0] != '0' else 0
+    if value >= (1 << 20):
+        raise ValueError('LF_CS_VER_D exceeds five leaf nibbles: ' + sl)
+    depths = [(value >> (4 * k)) & 15 for k in range(5)]
+    return dict(parameter='LF_CS_VER_D', packed=value, response_edges=depths,
+                hload_added_edges=max(depths), transport_included=False,
+                affected='OP14 REDUCE partial publication/done; OP14 ADD write flush/done',
+                unaffected='CS_VE_D requests and OP8..13')
+
+
 def lower_eng(die, op, ctx, sl, sid):
     """TOK-S81-GAPS/VS: Engram mix words on every leaf of the slice: vp HSTORE -> vs op 14 REDUCE at eng.dot (eng.hh is
     the same REDUCE: hh partials ride with kk / dd), vs op 14 ADD at eng.add -> vp HLOAD.  A0 = the layer's K / W / V region
@@ -298,9 +319,10 @@ def lower_eng(die, op, ctx, sl, sid):
     + eg -> g_v) and the K / W / V rows (svc Engram row read, eng.hbm_read) are other families; no family bench yet."""
     import json
     name, layer = op['op'], ctx.get('layer')
+    ver_profile = eng_ver_profile(die, sl)
     rm = json.loads((ROOT / 'results/arch/s81_dv_1016/eng/kv_rowmap.json').read_text())['layers']
     base = dict(unit='slice vp + vs op 14 + ve (Engram mix)', insts=[sl], gunit_rows=[], svc_jobs=[], files={}, sid=sid,
-                bench=None, depends='K / W / V rows at A0 (svc Engram read + capture, kv_rowmap), xfin ENG go, eg gates')
+                bench=None, source_profile=ver_profile, depends='K / W / V rows at A0 (svc Engram read + capture, kv_rowmap), xfin ENG go, eg gates')
     if layer not in rm:
         return dict(base, status='GAP', rows=[], templates=[], events=[],
                     gap=dict(module='results/arch/s81_dv_1016/eng/kv_rowmap.json', port='layers', missing=f'no A0 for {layer}'))
@@ -316,7 +338,7 @@ def lower_eng(die, op, ctx, sl, sid):
         dur = None
     else:
         cmds = [(t, 'ADD', vp_cmd(14, a0=A0, a1=ENG_HB2, n=32, imm=1 << 30)),
-                (t + ENG_ADD_DUR + GUARD, 'HLOAD', vp_cmd(3, a0=ENG_HB2))]
+                (t + ENG_ADD_DUR + ver_profile['hload_added_edges'] + GUARD, 'HLOAD', vp_cmd(3, a0=ENG_HB2))]
     # S81-SVC-9: the REDUCE may split into per-round-trip CTLs (leaf_transport.eng_ctls); every other beat stays mask 11111
     avoid = (ctx.get('line_avoid') or {}).get(sl[-1], frozenset())
     expanded = []
