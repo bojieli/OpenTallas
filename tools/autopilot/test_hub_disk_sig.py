@@ -36,11 +36,11 @@ def test_gate_posts_once_and_stops_launches(monkeypatch):
     monkeypatch.setattr(KW, "hub_disk_low", lambda cfg, **k: "hub disk low: / 10 GB free < 64 GB")
     KW.hub_disk_gate(ap, cfg, st)
     KW.hub_disk_gate(ap, cfg, st)
-    assert len(ap.q) == 1 and "STATE" in ap.q[0]
+    assert len(ap.q) == 2 and "STATE" in ap.q[0] and "ALERT" in ap.q[1]      # the second refused tick adds one ALERT
     assert KW.stop_reason(cfg, "d", "/nonexistent") == "hub disk low: / 10 GB free < 64 GB"
     monkeypatch.setattr(KW, "hub_disk_low", lambda cfg, **k: "")
     KW.hub_disk_gate(ap, cfg, st)
-    assert len(ap.q) == 2 and "resume" in ap.q[1] and KW.stop_reason(cfg, "d", "/nonexistent") is None
+    assert len(ap.q) == 3 and "resume" in ap.q[2] and KW.stop_reason(cfg, "d", "/nonexistent") is None
 
 
 def test_alternating_text_same_stage_is_one_signature():
