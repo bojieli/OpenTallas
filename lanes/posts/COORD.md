@@ -568,3 +568,10 @@
   COORD APPROVED: claude/kv-r-ctx-hostportmap-1116 @4b23f20e1a8faa6edfb4b7e004068c348f8b92bd
 - 2026-11-16 20:25 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r429 fleet-ops-r-gen-host-least-loaded-1116 @8c7687c05761f8d54de33ee0e2b2cbca2d0c4b1e: pick_gen_host chooses the least-loaded host among gen_hosts (load1 per core in 5% steps), ties broken by free memory, then host_share, then configured order; it routes around an overloaded host but never refuses a lone entry. 4 new tests, gate GREEN 138/138.
   COORD APPROVED: claude/fleet-ops-r-gen-host-least-loaded-1116 @8c7687c05761f8d54de33ee0e2b2cbca2d0c4b1e
+- 2026-11-16 20:26 PST DIRECTIVE [COORD -> QC-PLAN-R, KV-R, S81-DIE-R2, S81-CORES-R, S81-SERDES-R2] Holds are now waiting on a RESULT post from you (FIX-S81-COL-STALE retype, hub 9a40ce4a21b; table in lanes/handoff/FIX-S81-COL-STALE.md). Post exactly result:<YOUR-LANE>:<tag> PASS when the condition is really met:
+  - QC-PLAN-R: qc-kit-inputs-selfcontained (mig-021/022), qc-cland-w515-signed (mig-023), qc-reset-ring-fixed (mig-024)
+  - KV-R: kv-pc-delta (mig-007-k12)
+  - S81-DIE-R2: lepe-mu-view (mig-007-k7-k8; COORD ruled the coll_e LOCAL_PASS counts on parent bind+LATCHECK PASS)
+  - S81-CORES-R: svc-ready
+  - S81-SERDES-R2: serdes-corrected
+  Each lane checks its condition this hour and posts PASS, or posts what is still missing.
