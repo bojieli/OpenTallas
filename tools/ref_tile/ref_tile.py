@@ -3222,6 +3222,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     # Fresh write-mode kits need their directory before that lint executes.
     if write:
         (out_root / kd).mkdir(parents=True, exist_ok=True)
+        # KIT-COMMON-1117: the one shared kit helper list (tools/die_plan/kit_common_files.py), loaded by path
+        import importlib.util as _ilu
+        _s = _ilu.spec_from_file_location("kit_common_files", ROOT / "tools/die_plan/kit_common_files.py")
+        _kcf = _ilu.module_from_spec(_s); _s.loader.exec_module(_kcf); _kcf.stage(out_root / kd)
     files = {"kit.env": gen_env(s, kd, W, H, lc, blocks), "pdn.tcl": gen_pdn(s, lc),
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),

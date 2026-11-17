@@ -6611,6 +6611,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if _hc in ("1", "warn"):
         shutil.copyfile(Path(__file__).with_name("hop_census.py"), kd / "hop_census.py")
         (kd / "hop_census.on").write_text(_hc + "\n")
+    shutil.copyfile(Path(__file__).with_name("hold_gate.tcl"), kd / "hold_gate.tcl")
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
