@@ -102,3 +102,5 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - H3p GRT: setup ws +103.41 tns 0, hold ws +0.096 tns 0, 0 timing violations, overflow 0, antenna 0. DRV: boot_release slew -81/-57/-45/-39/-31 (advisory). DRT running (E8 unit oth-ubuntu-1999210).
 
 - 00:5x RECONCILE: H3p GRT TT setup = -54.29 (grt_policy.json TT, rck_transport4.q[544]->u_syn.am_ok); +103.41 was ORFS 5_1_grt.json FF/bc corner. Never quote 5_1_grt.json as TT. H4 only if routed H3p fails; J6c via S81-DIE-R2 C4; G4 blocked by PHY keepout.
+
+- 01:1x H3p ROUTE FAIL: DRT-0255 net148630 @893,709 after iter0 176457 viol; 20% util, PLACE_DENSITY 0.5 clumps XOR logic (595 cells/13x12um, local density 0.742, GRT max 92%). GRT TT -54.29. No signoff/export. Next: H4 = H3p + density spread (~0.3 or padding u_enc/u_dec) + am_ok stage. Probe: probes_serdes_r_1116/net_probe.tcl.
