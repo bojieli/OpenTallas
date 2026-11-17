@@ -45,7 +45,7 @@ def blob_history(repo, main, paths, since=None):
         return ids
     # one pass over the history of the directories the paths live in (a pathspec per file made git walk once per path: minutes for 170 files)
     dirs = sorted({p.split("/")[0] if "/" not in p.split("/", 1)[1:] and p.count("/") < 2 else "/".join(p.split("/")[:2]) for p in paths})
-    out = git(repo, "log", f"{since}..{main}" if since else main, "--format=", "--raw", "--no-abbrev", "--", *dirs).decode(errors="replace")
+    out = git(repo, "log", "-m", f"{since}..{main}" if since else main, "--format=", "--raw", "--no-abbrev", "--", *dirs).decode(errors="replace")
     for ln in out.splitlines():
         if not ln.startswith(":") or "\t" not in ln:
             continue
@@ -108,6 +108,8 @@ def classify_path(repo, base, main, path, overlay, history=None, base_blob="?", 
     cur = show(repo, main, path) if cur == "?" else cur
     b = show(repo, base, path) if base_blob == "?" else base_blob
     oid = blob_sha1(overlay)
+    if cur is not None and overlay == cur:        # r612: byte-equal to main HEAD (the blob may exist only in a hand-resolved merge commit, which a plain git log --raw omits)
+        return dict(cls="a", why="overlay is byte-equal to main's current file")
     if oid in history or (b is not None and oid == blob_sha1(b)):
         return dict(cls="a", why="overlay blob " + oid[:12] + " is a version of the file in main's history")
     if cur is None:
