@@ -50,3 +50,12 @@ conn "bus:<bus>", from_um/to_um/regs_um, bit_sites_um; realize_internal_stations
 (obstacle-aware, NO legal sites allocated yet), ring_to_bin_measured_geometry.json (607 paths, 20 buses, worst 1,436 um).
 Steps: allocate legal sites off macros/rows-B reservations -> rows JSON -> compose plan -> PRE/G0/strict bind/LATCHECK (cycles
 priced; bank re-site only if a latency group breaks) on the final tree -> publish dry GEN -> apply. Fable diff review in parallel.
+
+## 11-17 HG6 v3 (after FABLE-PLAN-KV-HG6)
+- reach_fix fix run stopped (exact PID 2761681 on epyc10); its output plan unused.
+- composer v3 epyc10 kv-r3/compose_hg6.py (copy on epyc8 kv-r3/): blocks = cores+2.16 (nominal+track offset), ALL post-carve reserved_sites_um rects of the 3 PC types (S1), macro gaps <12 um (S2, 36 slots), footprint 1.404x0.27; u_bin pinned via face_bit_sites_um at L/(k+1), stations at L(j+1)/(k+1), last at old bin (S3); every site <=195 um from a grid tap (S5, no tap re-cut).
+- plan_hg6_v3.json sha 3ec92f084ef8 (latency regenerated 2404 lanes); audit_hg6.py: on_reserved 0, in_slot 0, core_clear 0, overlaps 0, tap_max 195 (all 3 types); PRE RC0; reach c1 2/205.1 c2 1 c4 0 = D16 baseline. 40 banks/type, 1208 station flops + 607 u_bin sites, +960 lane-cycles, worst bit hop 402.9.
+- D18 tree epyc8 /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_3ec92f08_d18 manifest 8ac400a6ffd9 (rsync of D16 + plan swap), protected.
+- gate: epyc8 kv-r3/run_gate_d18.sh via ot-run --priority plan -> kv-r3/d18gate/gate.out.
+- publish runner intel2 tools-converge/kv-r3/run_d18_publish.py ITEM commit|nocommit; run 1 = kv3_pc_v1__cl23f6a148 nocommit (Fable S6 dry GEN), log d18_drygen_pc.log; then kv3_hg_v1 commit, then apply.
+- epyc10 scratch2 hit 5 GB free 11-17 (recovered to 153 GB); D17 tree unprotected but ot-delete SKIP (kit_wave ref) -> left.
