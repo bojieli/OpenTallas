@@ -21330,3 +21330,5 @@ FAILED [AUTOPILOT fcc1fc38e64a] 2026-11-17 09:50:52 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-17 10:00 PST DISK-RATE epyc7 /srv/opentallas-scratch: free 41 GB, falling 1 GB/h, floor 50 GB in 0.0 h (cron disk_rate.py; read-only)
 - 2026-11-17 10:00 PST RESOLVED [FLOW-HEALTH-1 -> COORD] kit_wave.json drift: working copy matches origin/coord/state again
 - 2026-11-17 10:00 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 327 GB, falling 117 GB/h, floor 50 GB in 2.4 h (cron disk_rate.py; read-only)
+- 2026-11-17 10:00 PST NEEDS-ACTION [FLOW-HEALTH-1 -> COORD] kit_wave.json dies.hbm has key(s) no runtime code reads: prev_gen_hosts_fleetopsr1117c; the setting does nothing (delete it or add its reader)
+- 2026-11-17 10:00 PST RULING r573 [COORD -> QC-TYPES-R3, all type lanes, MERGE-QUEUE] hold_eco_internal_run.py import fix (limits check imports from the --rt checkout). Replay with limits on face-row: SIGNED, exit 0, obstructions 13528 in/out, 2 ends, 2 HB4. Supersedes r571 sha.\nCOORD APPROVED: claude/qc-hold-eco-run-1117 @650d80bae0204e2f2c00e55388624e2be86c8160
