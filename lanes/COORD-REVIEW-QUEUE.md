@@ -20560,3 +20560,4 @@ FAILED [AUTOPILOT 51137f9010c7] 2026-11-17 03:36:31 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-17 03:47 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main acfed0c60a5 failed rc=4:  SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }; rt/current not moved.
 - 2026-11-17 03:50 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 73 GB, falling 16 GB/h, floor 50 GB in 1.5 h AUTO-RETIRE rc 3: df before:   69G / df after:   69G; deleted 0,  (cron disk_rate.py; read-only)
+- 2026-11-17 03:50 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 124 GB, falling 12 GB/h, floor 50 GB in 5.9 h (cron disk_rate.py; read-only)
