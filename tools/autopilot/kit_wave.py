@@ -595,6 +595,30 @@ def verified_source_probes(AP, cfg, st, die, tree_fn, marker_fn, read_check=None
     return out
 
 
+PILOT_PASS_STATUS = ("PASS", "ENQUEUED", "ROUTE-HELD", "SIGNED")
+
+
+def pilot_passed_map(st, cfg):
+    """{die: [manifest sha[:12], ...]}: a pilot item's attempt whose spec pinned that tree manifest and whose result is past GEN + preflight
+    (collected PASS, or later in the queue).  Used by the typed release term gen_pilot:<die>:<sha12> (PILOT wave mode)."""
+    out = {}
+    for die, d in (cfg.get("dies") or {}).items():
+        pilots = {i for r in d.get("hold_records") or [] if r.get("auto_pilot") for i in r.get("pilot_items") or []}
+        if not pilots:
+            continue
+        for r in (st.get("items") or {}).values():
+            if r.get("die") != die or r.get("item") not in pilots or r.get("status") not in PILOT_PASS_STATUS:
+                continue
+            try:
+                sp = json.loads((Path(r["dir"]) / "spec.json").read_text())
+            except (OSError, ValueError, KeyError, TypeError):
+                continue
+            sha = str(sp.get("src_manifest_hash") or "")[:12].lower()
+            if sha:
+                out.setdefault(die, []).append(sha)
+    return out
+
+
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
@@ -603,7 +627,8 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   kit_snap_fn=lambda c, die: bool(opt(c, die, "kit_snap")),
                   cells_fn=lambda die, item: cells.get((die, item)),
                   proof_fn=proof_pass_fn(proofs),
-                  tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item))
+                  tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item),
+                  pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []))
 
 
 RESULT_POST = r"^\s*-?\s*\d{4}-\d\d-\d\d\s+\S+\s+[A-Za-z]{2,4}\s+RESULT\s*\["        # a post OF TYPE RESULT: "- 2026-11-16 07:18 PST RESULT [LANE ->"
@@ -10918,6 +10943,7 @@ def _step(AP, ap_dir):
             if _r.get("die") and _r.get("item"):
                 _names.setdefault(_r["die"], set()).add(_r["item"])
         cfg["_item_names"] = {d_: sorted(v) for d_, v in _names.items()}
+        cfg["_pilot_passed"] = pilot_passed_map(st, cfg)
         cfg["_lint_fail"] = lint_failures(cfg, (st.get("items") or {}).values())
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
