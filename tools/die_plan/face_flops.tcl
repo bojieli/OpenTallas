@@ -19,6 +19,14 @@ set ff_site [[lindex $ff_rows 0] getSite]
 set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
+# Macro obstructions can remove whole row ranges. getRows count is not the
+# coordinate of the last legal row (coll_ucie: 3176 rows start at y=779.76 um).
+# Keep the actual Y coordinates so an east/west pin never clamps to a fictitious
+# row at core_y0 + (row_count-1)*height.
+set ff_row_ys [lsort -integer -unique [dict keys $ff_orient]]
+proc ff_row_index {row_ys pin_y} {
+  return [expr {max(0, min([llength $row_ys] - 1, [lsearch -bisect -integer $row_ys $pin_y]))}]
+}
 set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$}   ;# rst_o: reset wavefront outs, placed by reset_tree.tcl
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
@@ -230,16 +238,16 @@ foreach pass {INPUT OUTPUT} {
       continue
     }
     if {$face in {E W}} {
-      set row [expr {max(0, min(([llength $ff_rows] - 1), ($py - $ff_y0) / $ff_rh))}]
+      set row [ff_row_index $ff_row_ys $py]
       # nearest free (row, column) slot: columns inward, alternate rows around the pin row
       set placed 0
       for {set c 0} {$c < 400 && !$placed} {incr c} {
         foreach dr {0 1 -1 2 -2} {
           set r [expr {$row + $dr}]
-          if {$r < 0 || $r >= [llength $ff_rows] || [dict exists $ff_occ "$face,$r,$c"]} continue
+          if {$r < 0 || $r >= [llength $ff_row_ys] || [dict exists $ff_occ "$face,$r,$c"]} continue
           if {$ff_ew_stride > 1 && ($r + $c) % $ff_ew_stride} continue
           dict set ff_occ "$face,$r,$c" 1
-          set cy [expr {$ff_y0 + $r * $ff_rh}]
+          set cy [lindex $ff_row_ys $r]
           set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_ew_cpitch : $ff_x1 - $c * $ff_ew_cpitch - $w}]
           set placed 1; break
         }
