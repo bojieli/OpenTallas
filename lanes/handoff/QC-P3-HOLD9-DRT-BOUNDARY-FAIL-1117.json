@@ -1,0 +1,233 @@
+{
+  "verdict": "ROUTE_FAIL_DRT0255_NO_FINAL_SIGNOFF",
+  "vehicle": "P3 full-shape fixedE1 GRT +targeted9HB4/6captures, zero newcycles or RTLchange",
+  "route_unit": "oth-ubuntu-3201033-1794897006",
+  "stage": "1st optimization iteration after full 0th route",
+  "failure": "Maze Route cannot find path at synthetic worker boundary APs, two existing XL2 nets",
+  "points": [
+    {
+      "ap_dbu": [
+        226290,
+        162120
+      ],
+      "routebox_dbu": [
+        222300,
+        158460,
+        226290,
+        162450
+      ],
+      "on_worker_boundary": true,
+      "nearest_new_HB4_um": 89.89747159959505,
+      "nearest_actual_net_endpoint_bbox_um": 7.212
+    },
+    {
+      "ap_dbu": [
+        231672,
+        162450
+      ],
+      "routebox_dbu": [
+        230280,
+        158460,
+        234270,
+        162450
+      ],
+      "on_worker_boundary": true,
+      "nearest_new_HB4_um": 89.08309011254605,
+      "nearest_actual_net_endpoint_bbox_um": 12.595286261137536
+    },
+    {
+      "ap_dbu": [
+        242250,
+        162264
+      ],
+      "routebox_dbu": [
+        238260,
+        158460,
+        242250,
+        162450
+      ],
+      "on_worker_boundary": true,
+      "nearest_new_HB4_um": 89.07552795240677,
+      "nearest_actual_net_endpoint_bbox_um": 20.784
+    },
+    {
+      "ap_dbu": [
+        258210,
+        162120
+      ],
+      "routebox_dbu": [
+        254220,
+        158460,
+        258210,
+        162450
+      ],
+      "on_worker_boundary": true,
+      "nearest_new_HB4_um": 89.43945055734633,
+      "nearest_actual_net_endpoint_bbox_um": 4.824
+    },
+    {
+      "ap_dbu": [
+        258210,
+        326816
+      ],
+      "routebox_dbu": [
+        254220,
+        326040,
+        258210,
+        330030
+      ],
+      "on_worker_boundary": true,
+      "nearest_new_HB4_um": 25.30838319608742,
+      "nearest_actual_net_endpoint_bbox_um": 16.888411766652304
+    }
+  ],
+  "net_pins": [
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_0/wo_d\\[568\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "D",
+      "net": "u_bound.u_u_xl2_0/wd\\[568\\]",
+      "x0": "283662",
+      "y0": "161730",
+      "x1": "284742",
+      "y1": "162000",
+      "orient": "MX"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_0/_37931_",
+      "master": "OR3x1_ASAP7_75t_R",
+      "pin": "A",
+      "net": "u_bound.u_u_xl2_0/wd\\[568\\]",
+      "x0": "218754",
+      "y0": "162000",
+      "x1": "219078",
+      "y1": "162270",
+      "orient": "R0"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_0/_31294_",
+      "master": "OR3x1_ASAP7_75t_R",
+      "pin": "A",
+      "net": "u_bound.u_u_xl2_0/wd\\[568\\]",
+      "x0": "218484",
+      "y0": "160920",
+      "x1": "218808",
+      "y1": "161190",
+      "orient": "R0"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_0/_29686_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pin": "Y",
+      "net": "u_bound.u_u_xl2_0/wd\\[568\\]",
+      "x0": "263034",
+      "y0": "162000",
+      "x1": "263196",
+      "y1": "162270",
+      "orient": "R0"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_4/wd\\[522\\]$_DFF_P_",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "pin": "QN",
+      "net": "u_bound.u_u_xl2_4/_06259_",
+      "x0": "290952",
+      "y0": "309420",
+      "x1": "292032",
+      "y1": "309690",
+      "orient": "R0"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_4/_46438_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "net": "u_bound.u_u_xl2_4/_06259_",
+      "x0": "278208",
+      "y0": "326970",
+      "x1": "278532",
+      "y1": "327240",
+      "orient": "MX"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_4/_38808_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "net": "u_bound.u_u_xl2_4/_06259_",
+      "x0": "229014",
+      "y0": "317520",
+      "x1": "229338",
+      "y1": "317790",
+      "orient": "R0"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_4/_36750_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "net": "u_bound.u_u_xl2_4/_06259_",
+      "x0": "228474",
+      "y0": "328320",
+      "x1": "228798",
+      "y1": "328590",
+      "orient": "R0"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_4/_31538_",
+      "master": "AND2x2_ASAP7_75t_R",
+      "pin": "A",
+      "net": "u_bound.u_u_xl2_4/_06259_",
+      "x0": "241002",
+      "y0": "326160",
+      "x1": "241326",
+      "y1": "326430",
+      "orient": "R0"
+    },
+    {
+      "kind": "net_pin",
+      "name": "u_bound.u_u_xl2_4/_29732_",
+      "master": "INVx1_ASAP7_75t_R",
+      "pin": "A",
+      "net": "u_bound.u_u_xl2_4/_06259_",
+      "x0": "290358",
+      "y0": "322650",
+      "x1": "290520",
+      "y1": "322920",
+      "orient": "MX"
+    }
+  ],
+  "inserted_hb4_count": 9,
+  "direct_failure_nets_contain_HB4": false,
+  "geometry_review": {
+    "image": "actual_failed_ap_geometry.png",
+    "sha256": "1f40f43e404696afca49ca0f266ca5cb87e2ce2fb63fcd2e4199a4758334c149",
+    "personally_viewed": true,
+    "observed": "All5failedAPs are worker-boundary locations; no actual net endpoints/newholdcells at APs. Closest HB4 25.308um, other4 APs89+um. No placement change justified by these measured sites."
+  },
+  "guides": {
+    "size": "106MB",
+    "nets": 369744,
+    "full_guides_present": true
+  },
+  "preserved_GRT": {
+    "FF_before_n": 6,
+    "FF_before_wns_ps": -24.28574,
+    "FF_after_n": 0,
+    "FF_after_wns_ps": 0.0072164497,
+    "TT_native_before_and_after_ps": 39.045905553847334,
+    "final_RCX": "NOT RUN"
+  },
+  "watcher": {
+    "terminal": "2026-11-17T00:25:17-08:00 route ended without terminal marker; inspect route.log; no gate launched",
+    "refused_final_gate": true
+  },
+  "limits": "Baseline worker-boundary routing failure class; no direct newHB4 pin/placement obstruction. An unmodified baseline fullDRT comparison is not available, so no assertion of zero indirect congestion interaction. Local PG query produced no decoded rectangles; not evidence of absent PG obstacles. No same-kit retry, clock relaxation, cell move or reset change performed.",
+  "next": "Inspect router worker boundary/guide connectivity using preserved failing nets/routeboxes before a causal router-flow fix. Do not move real pins or reject exact hold plan based on synthetic worker AP report. Any future route needs reviewed changed cause and fresh failure output."
+}
