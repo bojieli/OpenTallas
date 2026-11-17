@@ -15,3 +15,9 @@ All active HEAD children instructed to park immediately. No new physical launche
 - **Approvals already closed:** staticplan1ed0608cacf0d450ac5878f17bea09a93e492342 r506; FF-groupdf3821c4cdd5975269a8b1c35486fb0b55ae8d8a r507; pad-searchf3c465700de5b75807a38dc574bac838a198113c r477; CTL2ab82 r490. No repeat approval audit or gate reruns.
 
 FOR-CLAUDE: physical routes/coupons remain measurements, not qualification claims. Resume exact owned next steps above. No new OWNER? question.
+
+## Final parked child receipts
+- All four children PARKED. Authoritative detail: HEAD-HW-ECO.md, FABLE-FIX-HEAD-SERDES.md (815812747083), HEAD-TYPES-R2-CODEX-OTHER.md and HEAD-DIE-R.md.
+- NF15e preparation actually progressed to r4, client2183919, intel2 ~/head-types-r2-logs/nf15e_prepare_memory_r4.log; preserve it. Explicit remaining TX producer scope is ROQ1104 FF through fr mux plus IQ/PH/PK/tag, not PIN directly into TXI. ROQ census/anchors and TXI write-bank reach remain unfinished. New-clock capacity has not yet been recomputed.
+- SPE proof checkpoint full SHA be2d5fa350cb1ba91fe7bf87a21b3067a0a16be6, clean pushed branch claude/head-reset-entry-fall-1117; N30 fork model is measured cell-only and NOT yet integrated into unified model/committed/rendered/routed.
+- sd9e exact active client784568 on intel2, kit /srv/opentallas-scratch2/claude/fable-fix-head-serdes/sd9e_lane/sd9e/gen/hd_serdes, ~/fable-fix-head-serdes-logs/sd9e_grt.log; sd9f same lane prefix sd9f_lane/sd9f/gen/hd_serdes on E7, client1848974. No terminal qualification claims.
