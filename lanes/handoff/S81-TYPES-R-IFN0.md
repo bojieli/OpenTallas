@@ -31,3 +31,10 @@ W = epyc2 /srv/opentallas-scratch2/claude/s81-ifn0-halves. My tools: W/read_type
 - HW bal: internal 0 violators at TT and FF. Port only: TT input setup -4.77 (5), FF input hold -34.22 (541). CK TT: gated 430..436, root 426..428, IR 422..437; FF 345..351 / 330..333 / 328..343.
 - he_splitclk1 evidence GRT (unbalanced) ended rc 0; not routed.
 - Route: HE client 1008865 (~/s81-types-r-ifn0-he-bal1-route.log), HW client launched 18:4x (~/s81-types-r-ifn0-hw-bal1-route.log). Kit log KIT/run_split_route.log.
+
+## 19:4x routed (6_final.odb + 6_final.spef; clock_profiles_r/routed; R-MINIMAL internal = reg2reg, ports excluded)
+- HE bal: DRC 0 ANT 0. TT WNS -29.57 (port: 6 input setup); internal setup -2.35 (1). Internal FF hold -22.45 (221), all IR -> fw_q (fw_q on the late main tree); QB->IR +31 (lever 2b class closed). Port FF hold -51.5 (559, parent side).
+- HW bal: DRC 0 ANT 0. TT WNS -15.97 (52 internal setup, inside -42). Internal FF hold -50.52 (406). Port FF hold -51.4 (550).
+- Routed CK TT: gated547 443..455 (HE) / 445..455 (HW), up from 365..375 at CTS (gated branch picks up route RC + GRT hold buffers); root57 399 / 422, IR 398..417 / 423..441.
+- Both: eco_loop check = ECO_ELIGIBLE (R-MINIMAL only internal FF hold). ONE hold ECO each (reg2reg scope, margin 5, max_iter 1; force_pa_reset.tcl replaced by Codex reentry-guarded version, originals kept *.pre_guard): HE client 1610335 (~/s81-types-r-ifn0-he-bal1-eco.log, KIT/eco_hold1), HW client 1762340 (~/s81-types-r-ifn0-hw-bal1-eco.log). Tools W/read_types_r/rmin_tools (copy of Codex rmin_hold_inventory1116).
+- Legacy signoff.py verdicts NOT SIGNED (all-path hold incl ports, DRV slew advisory, face_guard NOT RUN: no 1_synth.v in these kits).
