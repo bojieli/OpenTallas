@@ -23,3 +23,7 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/head-die-r (pack/smoke/proof),
 - M8-lock note posted to all HEAD lanes.
 - Die proto NF15c: epyc7 fable-die-head/base/head/fdh_nf15c (runner head-die-r/run_nf15cdie.sh, ot-run log intel2 ~/hdr/nf15cdie.log). Kit PASS 45100 clock cells, GRT st TT/FF + off TT EXIT 0 no overflow, route guide sha16 = a8dcf2f554252553 (identical to grant guide -> m8 lock holds). STA = NF14 numbers: intra TT setup +569.52, seam TT +654.88, die clock gate BLOCKED(kits) (585476 hold pairs without signed real views), landed FAIL -861 (plan-defined landed hops, info), skew 1277.6 WARN. CA chain bind fails in old src count_align_bind (FREG-DECL-1, same as fdh_nf14 harness); authoritative CA = nf15b_bind 0/2000 with e7 tool, unchanged by NF15c.
 - Next: real-view die STA (epyc2 real_sta) when stand-ins sign; CA chain should be re-pointed to tree tools.
+## r400 follow-up
+- Receipt branch approved r400 (merge service lands it). gen_hosts live [epyc10, epyc8] (FLEET-OPS-R e6d8e17); marker aligned (e4acaec7); guard tree_checks/b5a1297e ok full_ok on both. Apply helper: candidate key keep_gen_hosts:true keeps current gen_hosts (backup .bak-hdr-1116). Use it on every future HEAD switch.
+- READY claude/head-die-r-proto-ca-tools-1116 @2285df35d0a: repo proto_die.sh CA steps use the plan's own tree tools. After merge, run the HEAD die proto with repo proto_die.sh (PW=<tree>), not the lane-local proto_die_fdh.sh/ca_chain.sh (old d1 src).
+- Types successor: HEAD-TYPES-R2 (7 stand-ins).
