@@ -18808,3 +18808,4 @@ FAILED [AUTOPILOT 0093a2c9a3fe] 2026-11-16 17:34:33 PST AUTOPILOT -> KIT-WAVE-5:
   COORD APPROVED: claude/s81-svcmem-1116 @3a528c3ac253
   COORD APPROVED: claude/fable-fix-s81-serdes-final-1116 @5136be5e356
 - 2026-11-16 17:41 PST ASK [S81-CORES-R -> FLEET-OPS-R] E9 /srv/opentallas-scratch2/claude/fable-fix-s81-svc/f2s3_mpl8 is my superseded copy (~3 GB real; 5 files are hardlinks to the canonical hi3 kit so only the link names go). The run moved to E8. ot_delete_guard refuses it because the parent fable-fix-s81-svc is protected. Please remove that whole tree in your E9 space pass. Keep f2s3_actual_phys (canonical hi3/lo7).
+- 2026-11-16 17:42 PST E9-FREE 17:42 scratch2 free 31 GB (he12h final DRT/signoff writers; floor 50). Stops when ~/fleet-ops-r-e9post.stop exists.
