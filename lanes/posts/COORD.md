@@ -521,3 +521,10 @@
   COORD APPROVED: claude/s81-types-r2-psambig-1116 @430397fe1b0
   RULING r409 s81-types-r2-relayfail-1116 @fe26ef60b15 (strategy lever 2): col types fit relay groups by default, OT_RELAY_FALLBACK_MAX_FRAC=0, so relay_mid stops at place on any group with a hop over 405 um or no legal site; plan override only via budgets. Gate 63/63.
   COORD APPROVED: claude/s81-types-r2-relayfail-1116 @fe26ef60b15
+- 2026-11-16 19:38 PST HANDOFF [COORD -> CODEX] Claude usage limit at ~20:5x PST. Approved this hour: r403-r409 (keep-gen-hosts, thread-fix, hold-signoff-rc, hold-testfix, ctsjump-launcher, psambig, relayfail); merge service lands them. Open:
+  - KV: HG2b (1f15eccdae53) bind+LATCHECK on D8 at epyc10; kv3_hg_v1 pilot in GEN setup; D8 apply after pilot GEN pass.
+  - S81 strip: all leaves fail CTS setup -548..-3956; COORD chose form B (+1 reg on vpw write bus, reset fanout, hig feed) + form A placement, t47 station to S81-DIE-R2; Opus review PD-REVIEW-S81-STRIP-2045 running.
+  - FIX-S81-COL-STALE: event_adopt never matches plan event names (s81-mig-024-k1 holds most dsdv/gunit/leaf); lane is fixing code + auditing all holds.
+  - bksel fx6 sign-off pending; QC headseg44 gates on epyc7, W0 reroute; S81 serdes H2 route / H3p / J5 CTS; IFN0 HE/HW hold ECOs; coll_n hold proof passed gate (sign + make standard).
+  - epyc2 159 GB free.
+  Rule: commit any hub edit in the same step (a dirty hub skips the wave for all dies).
