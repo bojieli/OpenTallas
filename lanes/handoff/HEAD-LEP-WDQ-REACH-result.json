@@ -1,0 +1,115 @@
+{
+  "schema": "opentallas.native_bank_reach.v1",
+  "rows": [
+    {
+      "tag": "stage:wdq_bank0",
+      "bits": [
+        0,
+        255
+      ],
+      "full_macro_rect_um": [
+        613.548,
+        604.812,
+        705.348,
+        644.244
+      ],
+      "ff_rect_um": [
+        620,
+        648,
+        656,
+        660
+      ],
+      "full_rect_manhattan_max_um": 140.53599999999994,
+      "budget_um": 405,
+      "cycles_added": 0
+    },
+    {
+      "tag": "stage:wdq_bank1",
+      "bits": [
+        256,
+        511
+      ],
+      "full_macro_rect_um": [
+        1520.748,
+        604.812,
+        1612.548,
+        644.244
+      ],
+      "ff_rect_um": [
+        1540,
+        648,
+        1576,
+        660
+      ],
+      "full_rect_manhattan_max_um": 127.73599999999999,
+      "budget_um": 405,
+      "cycles_added": 0
+    },
+    {
+      "tag": "stage:wdq_bank2",
+      "bits": [
+        512,
+        767
+      ],
+      "full_macro_rect_um": [
+        861.0,
+        350.0,
+        952.8,
+        389.432
+      ],
+      "ff_rect_um": [
+        955,
+        350,
+        965,
+        389
+      ],
+      "full_rect_manhattan_max_um": 143.43200000000002,
+      "budget_um": 405,
+      "cycles_added": 0
+    },
+    {
+      "tag": "stage:wdq_bank3",
+      "bits": [
+        768,
+        1023
+      ],
+      "full_macro_rect_um": [
+        861.0,
+        393.2,
+        952.8,
+        432.632
+      ],
+      "ff_rect_um": [
+        955,
+        394,
+        965,
+        433
+      ],
+      "full_rect_manhattan_max_um": 143.8,
+      "budget_um": 405,
+      "cycles_added": 0
+    },
+    {
+      "tag": "stage:wdq_bank4",
+      "bits": [
+        1024,
+        1103
+      ],
+      "full_macro_rect_um": [
+        861.0,
+        436.4,
+        952.8,
+        475.832
+      ],
+      "ff_rect_um": [
+        955,
+        438,
+        965,
+        476
+      ],
+      "full_rect_manhattan_max_um": 143.60000000000002,
+      "budget_um": 405,
+      "cycles_added": 0
+    }
+  ]
+}
