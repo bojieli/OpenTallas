@@ -6702,8 +6702,27 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
     shutil.copyfile(here.parent / "autopilot" / "gp_noconverge.py", kd / "gp_noconverge.py")
     return ["# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
             "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"] + (
+        [f"# PLACE-HPWL (FABLE-PD-S81-STRIP): GPL exit HPWL > {hr} x the run minimum ends the run before resize",
+         f"export OT_GPL_HPWL_RATIO = {hr}"] if (hr := gpl_hpwl_ratio(die)) else []) + (
         [f"# KW-FIX-45 PLACE-FANOUT: place-stage repair_design limit (gp_noconverge_gate.tcl set_max_fanout)",
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
+
+
+def gpl_hpwl_ratio(die=None):
+    """PLACE-HPWL (FABLE-PD-S81-STRIP 11-16): the gen environment's OT_GPL_HPWL_RATIO (a number > 1; 0 = off) -> the kit's
+    PLACE-HPWL limit, else 1.3 on the S81 die (strip leaves t47 / t75 / t8fix diverged to 1.8-2.4 x, good leaves 1.01-1.05)
+    and off elsewhere: other dies' exit / minimum ratio is not yet measured (their table minimum can sit at a clustered
+    initial placement)."""
+    v = os.environ.get("OT_GPL_HPWL_RATIO", "").strip()
+    if v:
+        try:
+            r = float(v)
+        except ValueError:
+            raise ValueError(f"OT_GPL_HPWL_RATIO must be a number (0 = off, else > 1), got {v!r}") from None
+        if r != 0 and r <= 1:
+            raise ValueError(f"OT_GPL_HPWL_RATIO must be 0 (off) or > 1, got {v!r}")
+        return r or None
+    return 1.3 if str(die or "").split("_")[0] == "s81" else None
 
 
 def place_max_fanout(die=None):
