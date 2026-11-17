@@ -118,3 +118,31 @@ class History(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FlatPart(unittest.TestCase):
+    """WAVE-FLOW-R2 11-17 (COORD r576): a type with hard cores is judged on its flat part = total - the cells of its bound hard cores"""
+
+    def run_probe(self, types, table):
+        with tempfile.TemporaryDirectory() as d:
+            plan = {"partition_types": types, "partitions": [{"name": f"p_{t}", "type": t} for t in types]}
+            (Path(d) / "plan.json").write_text(json.dumps(plan))
+            (Path(d) / "cells_evidence.json").write_text(json.dumps({"cells_per_type": table}))
+            a = dict(plan=str(Path(d) / "plan.json"), cells_max=400000, cells_dir=str(Path(KW.__file__).resolve().parents[1] / "die_plan"))
+            out = subprocess.run([sys.executable, "-c", KW.PROBE_PLAN, json.dumps(a)], capture_output=True, text=True, cwd=d)
+            return json.loads(out.stdout.split("AP_JSON ", 1)[1])
+
+    def test_flat_part(self):
+        core = lambda lef, cells=None: {"inst": "c", "module": "m", "lef": lef, "lib": "c.lib", **({"cells": cells} if cells else {})}
+        types = {"planned_big": {"hard_cores": [core(None)]},                       # planned core: inlined, stays in the flat part
+                 "bound_small": {"hard_cores": [core("c.lef", 700000)]},            # 850k total - 700k in the bound core = 150k flat
+                 "bound_big": {"hard_cores": [core("c.lef", 100000)]},              # 850k - 100k = 750k flat
+                 "bound_unknown": {"hard_cores": [core("c.lef")]}}                  # no count for the bound core: unjudged, not a split
+        res = self.run_probe(types, {t: {"flat_k": 850} for t in types})
+        self.assertEqual(res["flags"].get("planned_big"), "planned")                 # the planned-core WAIT-DEP flag keeps precedence
+        self.assertIn("planned_big", res["lint"])
+        self.assertNotIn("bound_small", res["lint"])
+        self.assertEqual(res["flags"].get("bound_big"), "split")
+        self.assertIn("750000", res["lint"]["bound_big"][0])
+        self.assertNotIn("split", res["flags"].get("bound_unknown", ""))
+        self.assertIn("unjudged", res["lint"]["bound_unknown"][0])

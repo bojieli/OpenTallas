@@ -7561,7 +7561,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 6   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 7   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
@@ -7589,6 +7589,14 @@ try:
         baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
     flags, deps, lint, pdeps, bound, pkeys, unbound = {}, {}, {}, {}, {}, {}, {}
     split = []
+    CE, CMODS, cells_mod = None, {}, None
+    if a.get("cells_dir") and a.get("cells_max"):
+        try:
+            sys.path.insert(0, a["cells_dir"])
+            import cells as cells_mod
+            CE = cells_mod.estimate(p, os.path.dirname(os.path.abspath(a["plan"])), modules=CMODS)[0]
+        except Exception:
+            CE = None
     cmax = int(a.get("cells_max") or 0)          # 0 = no estimate check (the wave always passes SPLIT_CELLS)
     for t, v in pt.items():
         if not isinstance(v, dict):
@@ -7601,9 +7609,19 @@ try:
         if not isinstance(nc, (int, float)) or isinstance(nc, bool):
             cc = [c.get("cells") for c in (v.get("contents") or []) if isinstance(c, dict)]
             nc = sum(cc) if cc and all(isinstance(x, (int, float)) for x in cc) else None
-        if cmax and nc is not None and nc > cmax and not v.get("hard_cores") and not v.get("hard"):
-            li.append(f"cells: SPLIT-NEEDED est {int(nc)} flat std cells > {cmax} (plan estimate): split the type or re-form into hard cores")
+        note = ""
+        if v.get("hard_cores") and CE is None:
+            nc = None                                     # no cells tool / estimate: a cored type cannot be judged flat here
+        if CE is not None and not v.get("hard"):       # WAVE-FLOW-R2 (COORD r576): the flat part of a type with hard cores = total - bound-core cells
+            tot = CE.get(t)
+            if tot:
+                nc, note = cells_mod.flat_cells(v, tot[0], tot[1], CMODS)
+                note = note or ""
+        if cmax and nc is not None and nc > cmax and not v.get("hard"):
+            li.append(f"cells: SPLIT-NEEDED est {int(nc)} flat std cells > {cmax} (plan estimate{'; ' + note if note else ''}): split the type")
             split.append(t)
+        elif cmax and nc is None and note:
+            li.append("cells: " + note)
         decl = [r.get("name") for r in (v.get("id_straps") or []) + (v.get("count_straps") or []) if isinstance(r, dict)]
         dup = sorted({n for n in decl if decl.count(n) > 1})
         if dup:
@@ -7692,7 +7710,7 @@ def plan_names(AP, st, d):
     mode = d.get("block_identity", "raw")
     if mode == "raw" and c and c.get("blocks") and c.get("probe_v") == PROBE_V and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": SPLIT_CELLS,
+    args = {"plan": d["plan"], "core_views": bool(d.get("core_kit")), "cells_max": SPLIT_CELLS, "cells_dir": str(Path(__file__).resolve().parents[1] / "die_plan"),
             "block_ignore": d.get("block_ignore")}
     if mode != "raw":
         args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
