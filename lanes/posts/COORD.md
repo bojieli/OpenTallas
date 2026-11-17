@@ -973,3 +973,5 @@
   COORD APPROVED: claude/wave-flow-r2-classrel-1117 @6113d54e935e8c552fd390dcf6544d1fd163e73e
 - 2026-11-17 14:08 PST RULING r604 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] r576 cell limit enforced at kit preflight (SPLIT-NEEDED), enqueue, and native_cell_cap.tcl, whatever launched the kit; waiver only by ruling id (OT_CELL_WAIVER, KIT/CELL_WAIVER, lanes/CELL-WAIVER.tsv). Gate 49/49.
   COORD APPROVED: claude/wave-flow-r2-cellcap-1117 @24c494a4e7529f788c9001a671086cd8b12a8160
+- 2026-11-17 14:08 PST RULING r605 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] autopilot/tools_refresh.py: tools-only delta tree (plan+RTL byte-identical) when TOOLS-LAG names a missing die-tool ruling; guard + strict bind must reproduce native_topology of record, else NEEDS-LANE. Opt-in per die (dies.<die>.tools_refresh true|dry). Roll out dry first on one die. Gate 156/156.
+  COORD APPROVED: claude/wave-flow-r2-toolsrefresh-1117 @d1bd82b530be6c83994d4080e0cc7eb2b2eb203f
