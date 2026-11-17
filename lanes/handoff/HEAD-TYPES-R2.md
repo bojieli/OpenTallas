@@ -23,3 +23,9 @@ Logs: intel2 ~/head-types-r2-logs/. Children: HEAD-HE12H-DRC (handoff HEAD-HE12H
 - hd_mesh NF15c: E9 unit oth-ubuntu-2687523-1794885716, GRT congestion iterations; log ~/head-types-r2-logs/route_hd_mesh.log. NEXT: sign-off read; one r417 HEI pass if only internal FF fails.
 - hd_serdes -> FABLE-FIX-HEAD-SERDES (sd9c GRT flow error vclk_measured_hold native pad inputs; HEAD-SD9A.md).
 - READY posted: reset-tree-coherence b56e08e96e1; hw-eco-staticplan 1ed0608cac (approved r506); head-spe-export 9dd182a70bd.
+
+## CODEX 2026-11-17 04:20 PST
+- Tile land1 collected, signed/exported/actualpairPASS (HEAD-TILE-LAND handoff). Both-store entry hd_tile__nf15c_tp2_land1_1117.
+- CTL mchk_local original route TT-4.89/internalFF-6.23/DRC0. HEI1 E7 mchk_local/hei1 (23ends/23HB4, no partial; image LOOKED), unit3728437-1794917344 log ~/fable-fix-head-ctl-logs/hei1_codex.log. Insert running. Separate UNRUN resume_after_insert.sh handles root-owned libraries.json cp using atomiccopy+mv if original recipe hits that known permission. Do not reinsert; collect original terminal first.
+- n3_turn remove192: route_contact_r2 complete; export_contact_r2 aliasPASS. signoff_contact_r2 uppercase-corner FAILKeyErrorTT retained; signoff_contact_r2_lc TT+44.28/internalFF16ends-11.23, DRCNOTRUN because nonstandardcustombase. HEI1 E8 head-die-r/fclk_recovery_u1/hei1: 16ends/16HB4, no partial, image LOOKED. First job inserted16then cp libraries permissionFAIL; resumed AFTERinsert only unit2826139-1794917891, client389408 ~/hdr/fclk_hei1_resume_codex.log. Final path hei1/run/results/asap7/dp_hd_st_n3_turn/base, reportpath normal; alias-safe export then signoff, original failures retained.
+- Hostw already SIGNED, hw5 remains parked. Mesh GRT186 assigned head_mesh child; parent owns plan/real5 integration. Entry coupon owned head_entry.
