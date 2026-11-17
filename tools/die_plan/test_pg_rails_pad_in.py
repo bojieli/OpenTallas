@@ -159,4 +159,17 @@ def test_every_generated_kit_runs_the_rail_check_last(monkeypatch):
         cfg = (Path(d) / "fa" / "config.mk").read_text()
         assert "export POST_PDN_TCL = /work/pg_rail_check_hook.tcl" in cfg or "export POST_PDN_TCL = /work/post_pdn.tcl" in cfg
         assert (Path(d) / "fa" / "pg_rail_check.tcl").read_bytes() == (HERE / "pg_rail_check.tcl").read_bytes()
-        assert "set ::env(OT_PG_RAIL_CHECK_FAIL) 1" in (Path(d) / "fa" / "pg_rail_check_hook.tcl").read_text()
+        # a kit without a PHY supply region: advisory (COORD 11-17, R-MINIMAL)
+        assert "set ::env(OT_PG_RAIL_CHECK_FAIL) 0" in (Path(d) / "fa" / "pg_rail_check_hook.tcl").read_text()
+
+
+def test_rail_check_blocks_only_on_phy_region_kits(monkeypatch):
+    monkeypatch.delenv("OT_PG_RAIL_CHECK", raising=False)
+    assert G.pg_rail_check_blocking(True) == 1 and G.pg_rail_check_blocking(False) == 0
+    monkeypatch.setenv("OT_PG_RAIL_CHECK", "warn")
+    assert G.pg_rail_check_blocking(True) == 0
+    monkeypatch.setenv("OT_PG_RAIL_CHECK", "fail")
+    assert G.pg_rail_check_blocking(False) == 1
+    t = (HERE / "pg_rail_check.tcl").read_text()
+    assert "ADVISORY_FAIL" in t and "opentallas.pg_rail_check.v1" in t
+    assert t.index("pg_rail_check.json") < t.index("error \"OT_PG_RAIL_CHECK FAIL")     # the record is written before a FAIL stops the kit

@@ -5,7 +5,9 @@
 # PG special-wire rail on the lowest routing layer that covers the row span (gaps <= OT_PG_RAIL_CHECK_GAP_UM, default 0.6), one edge
 # POWER and the other GROUND, and each of the two rails must carry at least one PG via with a top layer above the rail's own via
 # pair inside the row span (the stack up to a strap).  Prints one OT_PG_RAIL_CHECK line with counts and the first failing rows.
-# FAIL raises an error unless OT_PG_RAIL_CHECK_FAIL=0 (report only).  OT_PG_RAIL_CHECK=0 turns the check off.
+# OT_PG_RAIL_CHECK_FAIL=1: a bad row raises an error (FAIL).  =0: advisory, the line says ADVISORY_FAIL and the kit goes on (R-MINIMAL:
+# blocking only where the generator sets it, i.e. kits with a PHY supply region).  Either way pg_rail_check.json records the verdict.
+# OT_PG_RAIL_CHECK=0 turns the check off.
 namespace eval prc {}
 proc prc::env {n d} { if {[info exists ::env($n)] && $::env($n) ne ""} { return $::env($n) }; return $d }
 # does the sorted interval list cover [a, b] with no gap larger than g ?
@@ -55,8 +57,15 @@ proc prc::run {} {
     if {[llength $bad] < 5} { lappend bad [format "%s(%s %.3f..%.3f y %.3f)" [$r getName] $why [expr {$x0/double($dbu)}] [expr {$x1/double($dbu)}] [expr {[$b yMin]/double($dbu)}]] }
   }
   set nbad [expr {$norail + $nostack + $samepol}]
-  puts "OT_PG_RAIL_CHECK rows $n bad $nbad (no rail $norail, rail without stack via $nostack, both edges same polarity $samepol) [expr {$nbad ? "FAIL" : "PASS"}] $bad"
-  if {$nbad && [prc::env OT_PG_RAIL_CHECK_FAIL 1] ne "0"} { error "OT_PG_RAIL_CHECK FAIL: $nbad of $n rows without connected VDD/VSS rails" }
+  set blocking [expr {[prc::env OT_PG_RAIL_CHECK_FAIL 1] ne "0"}]
+  set verdict [expr {!$nbad ? "PASS" : ($blocking ? "FAIL" : "ADVISORY_FAIL")}]
+  puts "OT_PG_RAIL_CHECK rows $n bad $nbad (no rail $norail, rail without stack via $nostack, both edges same polarity $samepol) $verdict $bad"
+  # one record per kit for the failure census (advisory kits keep building; R-MINIMAL: not a blocking gate there)
+  if {![catch {open [prc::env OT_PG_RAIL_CHECK_JSON /work/pg_rail_check.json] w} fh]} {
+    puts $fh "{\"schema\": \"opentallas.pg_rail_check.v1\", \"rows\": $n, \"bad\": $nbad, \"no_rail\": $norail, \"no_stack_via\": $nostack, \"same_polarity\": $samepol, \"blocking\": $blocking, \"verdict\": \"$verdict\"}"
+    close $fh
+  }
+  if {$nbad && $blocking} { error "OT_PG_RAIL_CHECK FAIL: $nbad of $n rows without connected VDD/VSS rails" }
 }
 if {[info exists ::env(OT_PG_RAIL_CHECK_ODB)]} { read_db $::env(OT_PG_RAIL_CHECK_ODB) }
 if {![info exists ::env(OT_PG_RAIL_CHECK_NO_RUN)]} { prc::run }

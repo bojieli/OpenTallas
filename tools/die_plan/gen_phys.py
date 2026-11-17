@@ -1927,8 +1927,17 @@ def pg_pin_check_mode():
 
 
 def pg_rail_check_on():
-    """PG-RAIL-CHECK-1 (COORD 11-17): on for every kit; gen env OT_PG_RAIL_CHECK=0 off, =warn report only."""
+    """PG-RAIL-CHECK-1 (COORD 11-17): runs on every kit (blocking or advisory: pg_rail_check_blocking); gen env OT_PG_RAIL_CHECK=0 off."""
     return os.environ.get("OT_PG_RAIL_CHECK", "").strip() != "0"
+
+
+def pg_rail_check_blocking(phy_region):
+    """1 = a row without rails fails the kit, 0 = advisory (ADVISORY_FAIL line + pg_rail_check.json, kit goes on).
+    COORD 11-17 (owner R-MINIMAL: new checks are advisory outside the blocking set): blocking only on kits with a PHY supply
+    region, where PHY-REGION-ROWS-1 applies and the defect was measured; advisory everywhere else.  Gen env
+    OT_PG_RAIL_CHECK=warn makes it advisory everywhere, =fail blocking everywhere."""
+    mode = os.environ.get("OT_PG_RAIL_CHECK", "").strip()
+    return 0 if mode == "warn" else 1 if mode == "fail" else int(bool(phy_region))
 
 
 def phy_region_rows_tcl(rects):
@@ -5931,7 +5940,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).with_name("pg_rail_check.tcl"), kd / "pg_rail_check.tcl")
         (kd / "pg_rail_check_hook.tcl").write_text(
             "# GENERATED (PG-RAIL-CHECK-1): ORFS sources POST_PDN_TCL inside a proc: run at global scope\n"
-            f"set ::env(OT_PG_RAIL_CHECK_FAIL) {0 if os.environ.get('OT_PG_RAIL_CHECK', '').strip() == 'warn' else 1}\n"
+            f"set ::env(OT_PG_RAIL_CHECK_FAIL) {pg_rail_check_blocking(bool(phy_doms))}\n"
             "uplevel #0 {source /work/pg_rail_check.tcl}\n")
         post_pdn.append("/work/pg_rail_check_hook.tcl")
     if len(post_pdn) > 1:
