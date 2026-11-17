@@ -249,6 +249,7 @@ def test_publish_tcl_net_from_master_use_and_overlap_guard():
 
 
 def test_kit_post_pdn_publish_and_composition(monkeypatch):
+    monkeypatch.setenv("OT_PG_RAIL_CHECK", "0")   # PG-RAIL-CHECK-1 adds its own POST_PDN step to every kit; not the subject here
     P1 = schema.Plan(copy.deepcopy(PAIR))
     monkeypatch.setattr(gen_phys, "core_pg_published", lambda *a, **k: ["u_x"])
     monkeypatch.setattr(gen_phys, "core_pg_unconnected", lambda *a, **k: [])
