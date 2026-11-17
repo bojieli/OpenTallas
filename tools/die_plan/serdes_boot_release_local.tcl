@@ -146,6 +146,30 @@ proc ot_serdes_boot_release_registers {b} {
  return $ff
 }
 
+# Reach by fixed script (11-17): pull each native sync tail DFF farther than 405 um (Manhattan) from the stage-2 site
+# (tx,ty um) along its line to stage 2 until its span is <= 380 um (then 360 .. 260) on a macro/halo-free core site.
+# The DFF stays PLACED (DPL legalises); nets, stages and clocks are unchanged.  Returns {name old_span new_span} rows.
+proc ot_serdes_boot_tail_pull {b d tails tx ty macs core} {
+ set pulled {}
+ foreach tl $tails {
+  lassign $tl tn span
+  if {$span<=405.0} continue
+  set i [$b findInst $tn];lassign [$i getLocation] x y
+  if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} {error "OT_BOOT_RELEASE fixed tail $tn span $span cannot move"}
+  set m [$i getMaster];set ok 0
+  foreach goal {380.0 360.0 340.0 320.0 300.0 280.0 260.0} {
+   set f [expr {($span-$goal)/$span}]
+   set nx [expr {$x+($tx*$d-$x)*$f}];set ny [expr {$y+($ty*$d-$y)*$f}]
+   set nx [expr {round($nx/$d/0.054)*0.054*$d}];set ny [expr {round($ny/$d/0.27)*0.27*$d}]
+   set r [list $nx $ny [expr {$nx+[$m getWidth]}] [expr {$ny+[$m getHeight]}]]
+   if {[ot_reset_anchor::free $r $macs $core]} {set ok 1;break}
+  }
+  if {!$ok} {error "OT_BOOT_RELEASE tail $tn span $span: no macro-free pull site"}
+  $i setLocation [expr {int($nx)}] [expr {int($ny)}];$i setPlacementStatus PLACED
+  lappend pulled [list $tn $span [expr {abs($nx/$d-$tx)+abs($ny/$d-$ty)}]]
+ }
+ return $pulled
+}
 proc ot_serdes_boot_release_local {} {
  set b [ord::get_db_block];set d [expr {double([$b getDbUnitsPerMicron])}]
  set ff [ot_serdes_boot_release_registers $b]
@@ -176,7 +200,22 @@ proc ot_serdes_boot_release_local {} {
   lappend tails [list [$i getName] $span]
   if {$span>$max_tail} {set max_tail $span}
  }
- if {[llength $tails]!=4 || $max_tail>405.0} {error "OT_BOOT_RELEASE native sync scope/tail mismatch count=[llength $tails] max_um=$max_tail"}
+ if {[llength $tails]!=4} {error "OT_BOOT_RELEASE native sync scope/tail mismatch count=[llength $tails] max_um=$max_tail"}
+ # S81-SERDES-R2 H5 / FABLE-FIX-S81-SERDES (11-17): with a spread placement (PLACE_DENSITY 0.30) a native sync tail can land >405 um
+ # from the fixed stage-2 site.  Reach by fixed script: pull each such tail DFF along its line to stage 2 until its
+ # Manhattan span is <=380 um, on a macro/halo-free core site (PLACED; DPL legalises).  Same nets/stages/clocks.
+ if {$max_tail>405.0} {
+  set pulled [ot_serdes_boot_tail_pull $b $d $tails $tx $ty $macs $core]
+  set tails {};set max_tail 0.0
+  foreach i [$b getInsts] {
+   if {![regexp {u_core[.]rs_[rt]\\?\[} [$i getName]] || ![string match DFF* [[$i getMaster] getName]]} continue
+   lassign [$i getLocation] x y;set span [expr {abs($x/$d-$tx)+abs($y/$d-$ty)}]
+   lappend tails [list [$i getName] $span]
+   if {$span>$max_tail} {set max_tail $span}
+  }
+  puts "OT_BOOT_RELEASE tail pull: $pulled"
+  if {[llength $tails]!=4 || $max_tail>405.0} {error "OT_BOOT_RELEASE tail pull left count=[llength $tails] max_um=$max_tail"}
+ }
  # Validate the three new sites before changing either authority or relays.
  ot_reset_anchor::run
  # These are new soft pipeline sites, not boundary authorities. Leave them
