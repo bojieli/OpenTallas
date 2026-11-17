@@ -4781,6 +4781,9 @@
          "maxItems": 2
         }
        },
+       "pin_entry_fall": {
+        "type": "boolean"
+       },
        "pin_root_copies": {
         "type": "object",
         "additionalProperties": false,

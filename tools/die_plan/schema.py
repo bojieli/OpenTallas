@@ -918,6 +918,8 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # Measured J=1 synchronous entry window only: one falling pre-capture per input.
+                        "pin_entry_fall": {"type": "boolean"},
                         "pin_root_copies": {"type": "object", "additionalProperties": False,
                             "required": ["max_loads", "sites_um"], "properties": {
                                 "max_loads": {"type": "integer", "minimum": 1, "maximum": 48},

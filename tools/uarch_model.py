@@ -40,6 +40,38 @@ from uarch_model_qwen_native_stn55 import model as qwen_native_stn55_model
 
 
 
+
+def head_reset_start_entry_phase_model(replicas=1, period_ps=833.0):
+    """Two-bit control entry using existing ot_die_start_relay EDGE_FALL=1.
+
+    Sizing before a physical candidate: append a native falling-edge capture to
+    each existing positive-edge RESET/START register. The count-align J() law and
+    measured rise/fall clock/data intervals must choose the deterministic boot
+    frame before adoption; this price takes the conservative extra entry cycle.
+    Source: ASAP7 TT RVT DFFLQNx1 area .2916 um2/CLK .480775 fF,
+    INVx1 area .04374 um2, existing tools/die_plan/start_stage_emit.py RELAY_RTL.
+    """
+    if not isinstance(replicas, int) or replicas < 1 or period_ps <= 0:
+        raise ValueError("entry phase model needs positive replicas and period")
+    return dict(schema="opentallas.control_entry_phase_model.v1", die="s81_head",
+        candidate="existing ot_die_start_relay RESET_RELAY=1 EDGE_FALL=1",
+        replicas=replicas, input_bits=2, output_bits=2, macs_per_cycle=0,
+        compute_intensity=0, communication_bits_per_cycle=2 * replicas,
+        memory_bytes_per_cycle=0, boundary_bits_per_cycle=2 * replicas,
+        additional_boundary_bits=0, additional_lane_routing_tracks=0,
+        local_data_wires=2 * replicas, added_falling_flops=2 * replicas,
+        added_output_inverters=2 * replicas, mux_demux_cost=0,
+        extra_clock_sinks=2 * replicas, extra_clock_cap_ff=.96155 * replicas,
+        cell_area_um2=.67068 * replicas, cell_only_floorplan_um=[2.484, .27],
+        floorplan_requirement="two local FF sites beside existing entry registers; actual review/route required",
+        period_ps=period_ps, entry_stages="fall capture then existing rise capture",
+        conservative_extra_boot_start_cycles=1, conservative_extra_boot_start_ps=period_ps,
+        token_latency_delta_cycles=0, token_latency_delta_ps=0,
+        boot_frame_rule="count_align_plan.J(measured clock-minus-data interval, T, measured fall edge); no phase waiver",
+        qualification="MODEL ONLY; measured fall/interval boot miter and TT/FF physical coupon required",
+        release_default="off; no production plan or RTL change")
+
+
 def qwen_qc_tail1_parameter_view_model():
     """Actual J's 24 unsigned tail1 obligations; no new delay versus published J."""
     variants = [(17, 9, 10, 4), (16, 9, 10, 4),
