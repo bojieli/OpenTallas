@@ -50,7 +50,7 @@ namespace eval sta {}
 proc ord::get_db_block {} { return blk }
 proc ord::get_db {} { return db }
 proc db {m args} { if {$m eq "findMaster"} { return M_[lindex $args 0] } }
-foreach {m blk} {M_BUFx4_ASAP7_75t_R 0 M_BUFx2_ASAP7_75t_R 0 M_DFFHQNx1_ASAP7_75t_R 0 M_SRAM 1} {
+foreach {m blk} {M_BUFx4_ASAP7_75t_R 0 M_INVx4_ASAP7_75t_R 0 M_BUFx2_ASAP7_75t_R 0 M_DFFHQNx1_ASAP7_75t_R 0 M_SRAM 1} {
   proc $m {op args} "switch \$op { isBlock { return $blk } getName { return [string range $m 2 end] } }"
 }
 # objects: A(obj,attr)
@@ -194,3 +194,28 @@ def test_forwarded_output_without_local_sinks_is_not_padded(tmp_path):
     mutant.write_text(text.replace(guard, "", 1))
     _, bad = _run(env, hook=mutant, after=after)
     assert bad["fwd"] == 10 + 96 * 20
+
+
+def test_inverter_pair_pads_and_span_acceptance():
+    """S81-RCK-BALANCE: OT_STB_PAIR=1 pads with two inverters per stage (mock: +20 ps each), the span line reports PASS/FAIL."""
+    env = ("set ::env(OT_STB_EST) placement\nset ::env(OT_STB_PORTS) clk\nset ::env(OT_STB_PAIR) 1\n"
+           "set ::env(OT_STB_CELL) INVx4_ASAP7_75t_R\nset ::env(OT_STB_STAGE) 40\nset ::env(OT_STB_SPAN_MAX) 30\n")
+    out, arr = _run(env, after='puts "NINV [llength [lsearch -all -inline -not [info commands delaybuf_otstb_*] *.*]]"\n')
+    assert "OT_STB ERROR" not in out, out
+    assert arr["f1"] == 60 and arr["f3"] == 80, (arr, out)               # one pair (+40) on b1's subtree
+    assert "NINV 2" in out, out                                             # exactly two inverters for one pair
+    assert "OT_STB_SPAN clk sinks 3 min 60.0 max 80.0 span 20.0 limit 30.0 PASS" in out, out
+    tight = env.replace("SPAN_MAX) 30", "SPAN_MAX) 10") + "set ::env(OT_STB_SPAN_FAIL) 1\n"
+    out2, _ = _run(tight)
+    assert "OT_STB_SPAN clk" in out2 and "FAIL" in out2 and "OT_STB ERROR" in out2, out2
+
+
+def test_rck_balance_hook_is_opt_in_after_leaf_repeat_and_staged():
+    post = (HERE / "cts_post.tcl").read_text()
+    assert 'OT_S81_RCK_BALANCE) eq "1"' in post and "rck_balance.tcl" in post
+    assert post.index("leaf_affinity.tcl") < post.index("rck_balance.tcl")
+    rb = (HERE / "rck_balance.tcl").read_text()
+    for need in ("OT_STB_PAIR) 1", "OT_STB_EST) placement", "INVx4_ASAP7_75t_R", "OT_STB_SPAN_MAX", "io_pma_rck[0]", "subtree_balance.tcl"):
+        assert need in rb, need
+    gp = (HERE / "gen_phys.py").read_text()
+    assert '"rck_balance.tcl"' in gp and "OT_S81_RCK_BALANCE" in gp
