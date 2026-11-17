@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.s81.ffn.actual-emission-capture-inputs.v1",
+  "status": "PARTIAL_ACTUAL_INPUTS_NO_CAPTURE_EPOCH",
+  "nominal_top_price": {
+    "id": "L0.ffn.down",
+    "op": "ffn.down",
+    "cls": "field",
+    "start": 13004.3,
+    "end": 14650.1,
+    "cycles": 1645.8,
+    "delta": 128.1,
+    "critical": true
+  },
+  "emitted_calendar": {
+    "slice": "u_s_0S",
+    "phase_count": 35,
+    "period_rising_edges": 127,
+    "first_launch": 103,
+    "last_launch": 4421,
+    "launch_separation_edges": 4318,
+    "predicted_frame_root_RET_span": 4625,
+    "predicted_span_definition": "spine go of the first phase -> last frame-root RET word = (nphases - 1) x period + 307 (measured law); die wire / CAP tail not included",
+    "span_tail": 307,
+    "tail_evidence": "results/rtl/s81_romopt_1020/a/fseq_o1o2c/*/down/check_P127.json",
+    "calendar_rows": 2382,
+    "layer_window": {
+      "op": "ffn.down",
+      "start": 15363,
+      "base": 7300,
+      "rows": 2382,
+      "first_accept": 15707,
+      "last_retire": 20158,
+      "nphases": 35,
+      "period": 127
+    },
+    "layer_static_PASS": true,
+    "production_absolute_start": null
+  },
+  "units": "Both top node cycles and XS rising-edge timestamps use core cycles. half_cycle=True affects interconnect-hop pricing; no x2 scaling is applied to accepted_cost.solve node cycles.",
+  "known_emitted_RDOUT_commands": {
+    "capture": {
+      "count": 96,
+      "latest_slice_pin_cycle": 9118
+    },
+    "scratch": {
+      "count": 6,
+      "latest_slice_pin_cycle": 9160,
+      "commands": [
+        {
+          "slice_pin_cycle": 7501,
+          "inst": "u_s_7N",
+          "row": 304,
+          "pairs": 4,
+          "leafmask": 16,
+          "template": "vpx.u_s_7N.rdout38",
+          "last_SRAM_read_cycle": null,
+          "missing": "selected native pin-to-registeredCV/read offset and complete producer/consumer lifetime"
+        },
+        {
+          "slice_pin_cycle": 8396,
+          "inst": "u_s_0N",
+          "row": 304,
+          "pairs": 4,
+          "leafmask": 2,
+          "template": "vpx.u_s_0N.rdout38",
+          "last_SRAM_read_cycle": null,
+          "missing": "selected native pin-to-registeredCV/read offset and complete producer/consumer lifetime"
+        },
+        {
+          "slice_pin_cycle": 8876,
+          "inst": "u_s_0N",
+          "row": 304,
+          "pairs": 4,
+          "leafmask": 4,
+          "template": "vpx.u_s_0N.rdout38",
+          "last_SRAM_read_cycle": null,
+          "missing": "selected native pin-to-registeredCV/read offset and complete producer/consumer lifetime"
+        },
+        {
+          "slice_pin_cycle": 9046,
+          "inst": "u_s_7N",
+          "row": 304,
+          "pairs": 4,
+          "leafmask": 8,
+          "template": "vpx.u_s_7N.rdout38",
+          "last_SRAM_read_cycle": null,
+          "missing": "selected native pin-to-registeredCV/read offset and complete producer/consumer lifetime"
+        },
+        {
+          "slice_pin_cycle": 9157,
+          "inst": "u_s_7S",
+          "row": 304,
+          "pairs": 4,
+          "leafmask": 8,
+          "template": "vpx.u_s_7S.rdout38",
+          "last_SRAM_read_cycle": null,
+          "missing": "selected native pin-to-registeredCV/read offset and complete producer/consumer lifetime"
+        },
+        {
+          "slice_pin_cycle": 9160,
+          "inst": "u_s_0S",
+          "row": 304,
+          "pairs": 4,
+          "leafmask": 8,
+          "template": "vpx.u_s_0S.rdout38",
+          "last_SRAM_read_cycle": null,
+          "missing": "selected native pin-to-registeredCV/read offset and complete producer/consumer lifetime"
+        }
+      ]
+    },
+    "assembled": {
+      "count": 68,
+      "latest_slice_pin_cycle": 8966
+    },
+    "combined_source": {
+      "count": 14,
+      "latest_slice_pin_cycle": 11043
+    },
+    "canonical_combined": {
+      "count": 11,
+      "latest_slice_pin_cycle": 11049
+    }
+  },
+  "last_VPX_reader_qualified": false,
+  "CAP_ready_qualified": false,
+  "hook": {
+    "path": "tools/s81_dv/layer_prog/xs_place.py",
+    "initialize_empty_events_line": 1090,
+    "compile_calendar_hook": "XF.emit_files at1139",
+    "unconditional_PARTIAL_line": 1166,
+    "needed": "Export actual is_d/GO/phase events and frame-specific ret trains, retain explicit epoch until selected publication path/native CAP commits are bound."
+  },
+  "existing_minimum_capture_vehicle": "tools/s81_dv/final_ffn_source_1131/tb_cap_source.sv logs actual selected CAP word commits at833ps; completed isolated tests need not repeat.",
+  "conditional_join": "final_ffn_source_1131/join_source_events.py and readiness_constraints.py retain unknown frame epochs; hardcoded old frame/126word/aligned-scoring scope prevents current107/53 adoption.",
+  "next_mechanism": "One actual six-frame slice return train with unchanged107 source span, per-source padded72word descriptors, actual native CAP wrapper and cfg lifetime; record all write edges/ports and simultaneous-frame faults. Needs runtime input/tag emission, not new RTL.",
+  "no_overlap_claim": true,
+  "reason": "All65 R4 ops remain PARTIAL; existing RDOUT command timestamps do not prove every reader/writer or current CAP epoch. Calendar span is not a qualified token-latency extension.",
+  "full_input_receipt_sha256": "f34a54d9ac259c1c3ad643862a6074886c1338f7b5a7f16367bfb2f23972b66b",
+  "full_input_packet": "intel2:~/ffn_capture_inputs_0030.tar.gz"
+}

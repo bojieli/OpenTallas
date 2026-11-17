@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.s81.ffn.current-plan-versus-calendar-fallback.v1",
+  "status": "COMPOSITION_INPUTS_OPEN_NOT_MEASURED_SLOWDOWN",
+  "current_frame_plan": {
+    "hook": "xs_place.py phase_plan456 passes LX.source_frame_schedule(master,frame_instance) to P.plan_phase465",
+    "scope": "Actual current819 per-frame FSA controls the source return plan. It does not replace multi-phase pipeline period or tail constants."
+  },
+  "emitted_multi_phase_calendar": {
+    "hook": "xs_field_calendar.op_calendar146: P=floor_rec(op) when no explicit period override; compile_pipeline emits timestamps from P",
+    "period": 127,
+    "period_source": "FLOORS['ffn.down']78, fixed11-11 station-depth frame benchmark",
+    "tail": 307,
+    "tail_source": "ROMOPT_TAIL[(12,1)]['ffn.down']128, old single u_f_0L01 col_h10 benchmark",
+    "tail_selection": "op_calendar180 chooses by NPAIRS/COMPACT_TAILS and topology/GU_MERGE flags; no current frame-FSA keyed override",
+    "phase_count": 35,
+    "first_launch": 103,
+    "last_launch": 4421,
+    "launch_separation_rising_edges": 4318,
+    "predicted_span_equation": "(35-1)*127+307=4625 frame-root RET edges; excludes die/CAP tail",
+    "actual_current819_period_and_tail_measured": false
+  },
+  "nominal_node_price": {
+    "hook": "dv_layer_compile.schedule439..481: accepted_cost.solve over nodes cycles+DV deltas, independent from emitted XS phase calendar",
+    "ffn_down_cycles": 1645.8,
+    "unit": "core cycles; half-cycle mode affects interconnect-hop pricing, not a conversion of all node cycles"
+  },
+  "conclusion": "Both artifacts exist but are not composed. Do not claim4625 a measured current819 down latency or2979.2 additional token cycles. Need current multi-phase source publication epochs, phase/tail qualification and native CAP commit/lease binding. No overlap with down can be claimed from either nominal price."
+}

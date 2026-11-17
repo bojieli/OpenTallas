@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.s81.ffn.relocation-fair-restrictedbulk-comparison.v1",
+ "status": "MODEL_ONLY_PRICED_EXTENSION_SCHEDULE_OPEN",
+ "policy": "Both candidates only bulk fullmask singleleg local/wide<=4; any V/multileg/partial staysonepair with2rowscratch.",
+ "canonical": {
+  "packets": 7602,
+  "controls": 15204,
+  "separate_rank_engine_floor": 2128,
+  "aliased_rank_engine_floor": 8092,
+  "packet_sizes": {
+   "4": 308,
+   "1": 7042,
+   "2": 252
+  }
+ },
+ "relocated": {
+  "packets": 4752,
+  "controls": 9504,
+  "separate_rank_engine_floor": 1232,
+  "aliased_rank_engine_floor": 4864
+ },
+ "relocation_saving": {
+  "control_words": 5700,
+  "separate_rank_control_floor": 896,
+  "aliased_rank_control_floor": 3228
+ },
+ "additional_relocation_storage_bytes_per_rank": 5120,
+ "remaining": "Candidate localtransport issuefloor1232 exceedsoldnominal827by405beforeVS13/POST/controlpaths/peer/reload. Report honestextension and pricedfusionimprovement. No RTLqualification until completecalendar/leases/candidateages/context.",
+ "owner_policy": "827cycles is nominal/incomplete, not an adoption ceiling. Closure-cost extension is preapproved; scheduling/leases/context gates remain.",
+ "minimum_transport_extension_over_nominal_cycles": 405,
+ "historical_prior_record": "fair_bulk_comparison.json preserved; its NOT_FIT_827 label describes nominal comparison only and is not an owner rejection."
+}
