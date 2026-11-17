@@ -40,6 +40,14 @@ reap() {
 trap reap EXIT
 mkdir -p $S
 reap
+# 11-17: ask the mirror for the newest main first (0.5 s); its 2-min sync can trail a merge by minutes, and a gate on a stale main
+# is re-run by the queue ("mirror hasn't synced").  Failure is ignored: the gate then uses what the mirror has.
+if [ "$(hostname -s)" = tolerant-swine ]; then
+  ot_mirror_main() { timeout 60 python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-git-mirror fetch; }
+else
+  ot_mirror_main() { timeout 60 ssh -n -o BatchMode=yes -o ConnectTimeout=10 ubuntu@185.8.106.226 "python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-git-mirror fetch"; }
+fi
+ot_mirror_main >/dev/null 2>&1 || echo "ot-gate-remote: mirror main refresh skipped"
 if [ ! -d $S/repo/.git ]; then
   rm -rf $S/repo
   git clone -q --filter=blob:none --no-checkout "$M" $S/repo || { echo "INFRA clone of $M failed"; exit 3; }

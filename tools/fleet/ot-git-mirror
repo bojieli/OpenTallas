@@ -12,7 +12,7 @@ Build hosts have no GitHub key; only intel2 has one.  Lanes therefore cloned the
     - claude/* is fetched WITHOUT force: a GitHub fetch never rewinds a lane push that is not forwarded yet
     - daily `git gc` (gc.auto=0 so a push never pays for it)
 
-usage: ot-git-mirror sync | fetch | install | status
+usage: ot-git-mirror sync | fetch | fetch-all | install | status
 Clones: tools/fleet/ot-lane-clone (never ~/OpenTallas).
 """
 import fcntl
@@ -218,6 +218,20 @@ def sync(fetch_only=False, forward=True):
     return rc
 
 
+def fetch_main():
+    """11-17: refresh refs/heads/main from GitHub alone.  The full `sync` fetch walks every claude/* ref (minutes); a lane gate needs
+    the new main within seconds of a merge (measured lag of the mirror's main behind GitHub: up to one 3.5-min sync cycle)."""
+    lockf = open(MIRROR / "fetch-main.lock", "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return 0
+    f = git("fetch", "-q", "origin", "+refs/heads/main:refs/heads/main", check=False, timeout=120)
+    if f.returncode:
+        print(f"fetch main rc={f.returncode}: {f.stderr.strip()[-300:]}")
+    return f.returncode
+
+
 def status():
     h = mirror_heads()
     main = git("rev-parse", "-q", "--verify", "refs/heads/main", check=False).stdout.strip()
@@ -236,7 +250,9 @@ def main():
         return 0
     if cmd == "sync":
         return sync()
-    if cmd == "fetch":                                     # own timer: fetch only, never blocked by a slow forward
+    if cmd == "fetch":                                     # own 30 s timer: main only (0.5 s), never blocked by a slow sync
+        return fetch_main()
+    if cmd == "fetch-all":
         return sync(fetch_only=True)
     if cmd == "status":
         return status()
