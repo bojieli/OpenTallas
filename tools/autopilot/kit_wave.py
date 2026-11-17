@@ -9723,14 +9723,52 @@ def tools_group(stage):
     return "gen" if stage == "gen" else ""
 
 
+_SYM_RES = (re.compile(r", in ([A-Za-z_]\w{3,})\b"), re.compile(r"has no attribute '([A-Za-z_]\w{3,})'"),
+            re.compile(r"name '([A-Za-z_]\w{3,})' is not defined"), re.compile(r"cannot import name '([A-Za-z_]\w{3,})'"))
+_CLOSURE_FILES = {}
+
+
+def failed_tool_symbols(why):
+    """WAVE-FLOW-R2 11-17: the function / attribute names the failure text names (traceback frames, AttributeError, NameError, ImportError)"""
+    out = []
+    for rx in _SYM_RES:
+        for m in rx.findall(str(why or "")):
+            if m not in out and m not in ("module", "main", "run", "wrapper", "inner"):
+                out.append(m)
+    return out[:12]
+
+
 def failed_tool_files(why, root=None):
-    """the tool files (tree-relative, existing in this rt tree) that the failure text names, e.g. traceback frames; [] when none"""
+    """the tool files (tree-relative, existing in this rt tree) that the failure names: a path in the text (traceback frames), else the closure
+    files that define a function / class named in the text (WAVE-FLOW-R2); [] when none"""
     root = Path(root) if root else Path(__file__).resolve().parents[2]
     out = []
     for m in _TOOL_FILE_RE.findall(str(why or "")):
         rel = m.split("/tools/", 1)[-1] if m.startswith("/") else m
         if (root / rel).is_file() and rel not in out:
             out.append(rel)
+    if not out:
+        syms = failed_tool_symbols(why)
+        if syms:
+            files = _CLOSURE_FILES.get(str(root))
+            if files is None:
+                def read(rel):
+                    try:
+                        return (root / rel).read_text()
+                    except (OSError, UnicodeDecodeError):
+                        return None
+                try:
+                    files = sorted(FG.closure_files(read, entry=tuple(FG.ENTRY_FILES)))
+                except Exception:
+                    files = []
+                _CLOSURE_FILES[str(root)] = files
+            for rel in files:
+                try:
+                    txt = (root / rel).read_text()
+                except (OSError, UnicodeDecodeError):
+                    continue
+                if any(re.search(r"^\s*(?:def|class) " + re.escape(x) + r"\b|^" + re.escape(x) + r"\s*=", txt, re.M) for x in syms) and rel not in out:
+                    out.append(rel)
     return sorted(out)[:12]
 
 
@@ -10080,7 +10118,9 @@ def fail_key_gate(cfg, st, die, item, block_sha=None):
             changed = ["read-file"] if reads_changed(cfg, die, prev) else []
     # WAVE-FLOW-R 11-17 (FABLE-FLOW-0500 item 5): the same stage + error signature twice in a row closes the key against tool changes; only a named input
     # (block, src, overlay, the files the failure names, bind context) opens it again
-    if int(prev.get("sig_n") or 0) >= 2 and not prev.get("tool_files") and "tools" in changed:
+    # WAVE-FLOW-R2 11-17: a tool change releases only when it touches a file / function the failure message names (tool_files, resolved at note
+    # time from the traceback paths or the function / attribute names); a failure that names none is not released by any tool change
+    if not prev.get("tool_files") and "tools" in changed:
         changed = [c for c in changed if c != "tools"]
     if context_changed:
         changed.append("bind_context")
