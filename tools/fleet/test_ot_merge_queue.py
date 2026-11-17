@@ -21,6 +21,35 @@ def load(env=None):
 M = load()
 
 
+class SyncReporting(unittest.TestCase):
+    def test_partial_success_reports_activated_current_and_actual_alert(self):
+        r = subprocess.CompletedProcess([], 4,
+            "ALERT installed tools differ from rt/abcdef123456: epyc7 /usr/local/bin/ot-heavy-reconcile differs\n"
+            "rt/current -> abcdef123456 (was 0123456789ab); hosts epyc7:ok epyc8:FAIL 46 GB free < 50 GB\n",
+            "SyntaxWarning: invalid escape sequence\n")
+        note = M.sync_hook_note(r)
+        self.assertTrue(note.startswith("rt/current -> abcdef123456"))
+        self.assertIn("epyc8:FAIL 46 GB free < 50 GB", note)
+        self.assertIn("ot-heavy-reconcile differs", note)
+        self.assertIn("stderr context: SyntaxWarning", note)
+        self.assertNotIn("not moved", note)
+        self.assertNotIn("unchanged", note)
+
+    def test_smoke_failure_reports_no_activation_with_real_cause(self):
+        r = subprocess.CompletedProcess([], 3, "SMOKE-FAIL rt abcdef123456: ['syntax: kit_wave.py']\n", "SyntaxWarning: context\n")
+        note = M.sync_hook_note(r)
+        self.assertTrue(note.startswith("SMOKE-FAIL"))
+        self.assertIn("syntax: kit_wave.py", note)
+        self.assertIn("rt/current unchanged: smoke failed before activation", note)
+        self.assertIn("stderr context", note)
+
+    def test_unreported_state_never_claims_current_unchanged(self):
+        note = M.sync_hook_note(subprocess.CompletedProcess([], 1, "", "Traceback: failed after flip"))
+        self.assertIn("activation state not reported", note)
+        self.assertNotIn("unchanged", note)
+        self.assertIn("Traceback", note)
+
+
 class Parse(unittest.TestCase):
     def test_approvals_branch_sha_several_per_line_and_revoke(self):
         q = ("- 2026-11-14 19:30 PST [COORD] ruled: COORD APPROVED: claude/a-1114 @0123456789ab; COORD APPROVED: @abcdef1234\n"
