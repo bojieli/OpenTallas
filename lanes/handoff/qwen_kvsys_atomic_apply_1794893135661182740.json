@@ -1,0 +1,165 @@
+{
+ "die": "qwen_kvsys",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5",
+  "event": "KV-HG1",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "plan_sha256": "08d352df7ef0ab9adad227d83d30a835262636d879ef7aa82bf38876d5313065",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kv-r/hg2cgate/bind",
+   "note": "KIT-OPS-5 KV kvgeom7uh (KV-102 READY+ADOPT 23:13: plan_c 68a458bd5824, strict bind 0 with OT_HCPARAM_ALL=1, R8 0, LATCHECK 2404/2404; src/plan/asbuilt/landing/bind all on the c1 tree: the old kvbind_kvgeom7u/out + src_kv_kvgeom7u paths named kv102t18 files = fail classes 4a41d4597f/54b807b7fa) | WAVE-HOLDS-1115 2026-11-15 15:19 PST KV kvgeom7u (KV-102 READY+ADOPT 14:47, COORD r168: plan_c b7156937f334, G0 0, pinned strict bind 0, LATCHECK 2404/2404, 56 types CHANGED; src = kv102t18_kvgeom7u + main replica_keep.py/gen_phys.py/ot_keep_regs.tcl + kvgeom7q_views). Revert: dies.qwen_kvsys.prev_wavehold1115_kvgeom6 | KIT-OPS-5 KV kvgeom6 (KV-102 READY+ADOPT 22:10: G0 0, strict bind 0 160/56/2545, LATCHECK 2404/2404; kvgeom5 + early core taps on 7 kv3_pc types + tap_pair_affinity on kv3_io_ft,"
+  }
+ },
+ "marker": {
+  "die": "qwen_kvsys",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10",
+  "manifest_hash": "3fbbcd9f69fc937957ee1b5ba773dee75f245997b7fe805e5a222d293b318e41",
+  "src_manifest_sha": "3fbbcd9f69fc937957ee1b5ba773dee75f245997b7fe805e5a222d293b318e41",
+  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "hosts": [
+   "epyc10"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "D10 = D9 + w652/w653/w672 face tool repair (7ecd3a0d). D5 = D4 + 204 files (12 more kv_cland view dirs: w259 w269 w288 w397 w416 w525 w544 w653 w672 w781 w800 w909); D4 = D3 tree + 192 view files (provenance/gates/core/landing_evidence for 16 kv_cland views, KV-R 11-16); asbuilt/bind_out still the D3-era ones (identical RTL/plan bytes). Actual approved raw A pre0/G0errors0/strictbind0/LAT2404. Original KV r305 generator plus authored8df one-line PG replay copy; approved6ce TT/replay Tcl. Exact normal source/import preflight230 modules PASS, portable path policy0/native56/selected payload identity/canonical56matches. No ELAB/GEN smoke replay.",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+  "plan_sha256": "fac383f38bc4989b0ca08ca6e9c246e16aa0e387354b824fe11fe113e8829421",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+  "bind_out": "/srv/opentallas-scratch2/claude/kv-r/hg2cgate/bind",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+  "sidecar_sha256": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
+   "OT_PLACE_MAX_FANOUT": "64",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1"
+  },
+  "flow_tools_source": {
+   "original_generator_sha256": "dbce5ede720b05553be59c7e0ebea7581aa3e3598ab3e02d2cdae749852e82f3",
+   "composed_generator_sha256": "64c62fd1d174a756f66570227ad2b24567b59ab7825f665d56739f348aab80fc",
+   "authored_patch": "8df7c2f39188436136456c1d73d057271c9ee98e",
+   "changed_lines": 1,
+   "normal_tree_code_result": {
+    "digest": "1d2eea37799c0907",
+    "bad": [],
+    "n": 230
+   },
+   "probe_view": "/srv/opentallas-scratch2/claude/tools-converge/kv/hg1A_pg_composed_probe_1116",
+   "profile": {
+    "die": "qwen_kvsys",
+    "OT_RFLOW": "unset; default rflow_on=True",
+    "actual_previous_config_pg_truth": 1
+   }
+  },
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply",
+  "config": {
+   "event": "KV-HG1",
+   "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+   "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
+   "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+   "plan_sha256": "fac383f38bc4989b0ca08ca6e9c246e16aa0e387354b824fe11fe113e8829421",
+   "gen_host": "epyc10",
+   "gen_hosts": [
+    "epyc10"
+   ],
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   ],
+   "stage_resume_off": [
+    "kv3_hgi_v4",
+    "kv3_hgi_v5",
+    "kv3_hroot",
+    "kv3_pc__cl254f2e73",
+    "kv3_pc__cl5a95b461",
+    "kv3_pc_v1__cl4ea58a5c",
+    "kv3_pc_v1__cl23f6a148",
+    "kv3_pc_v1__cl7f648944",
+    "kv3_pc_v3",
+    "kv3_io_ft_v1",
+    "kv3_hub_Eo",
+    "kv3_hub_Ei",
+    "kv3_sys_c",
+    "kv3_hgi_v6",
+    "kv3_hgi",
+    "kv3_io_cor_v1",
+    "kv3_pv_v2n",
+    "kv3_pv_v3",
+    "kv3_astk",
+    "ot_qwen_tp8_pv_join_t__v5ebb1b850396",
+    "ot_qwen_tp8_pv_join_t__v9d707d929550",
+    "ot_qwen_tp8_pv_join_t__vde688492fadf",
+    "qkd_ahub",
+    "qkd_hr_cdc_ci",
+    "qkd_hr_cdc_hi",
+    "qkd_hr_cdc_pc",
+    "qkd_hr_core_guard",
+    "qkd_hr_core_order",
+    "qkd_hr_core_peer",
+    "qkd_hr_core_prompt",
+    "qkd_hr_core_queue",
+    "qkd_hr_core_rx",
+    "qkd_hr_ingest_eng",
+    "qkd_hr_phy_adp",
+    "qkd_hr_phy_pad",
+    "qkd_kvs_ctl",
+    "qkd_kvs_pc__v4128d4b721bf",
+    "qkd_kvs_pc__vc499977aa713",
+    "qkd_kvs_pc_h_head_p",
+    "qkd_kvs_pc",
+    "kv3_hgi_v7",
+    "kv3_hub_C",
+    "kv3_hub_Wo",
+    "kv3_pv_v12",
+    "kv3_pv_v2",
+    "kv3_pv_v4",
+    "kv3_pv_v6",
+    "kv3_pv_v7",
+    "kv3_hub_Wi",
+    "kv3_pv_v3n",
+    "kv3_pv_v6n",
+    "kv3_hgi_v8",
+    "kv3_pv_v1",
+    "kv3_pv_v5n",
+    "kv3_pv_v5",
+    "kv3_io_ft",
+    "kv3_hgi_v1__cl42bc8b12",
+    "kv3_hg_v3",
+    "kv3_hgi_v2__cl2862d491",
+    "kv3_hg_v1",
+    "kv3_pv_v1n"
+   ],
+   "cancel_superseded": false,
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_hg1A_pgr1_d3/asbuilt_portable.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_hg1A_pgr1_d3/out_ctx1"
+   },
+   "gate": {
+    "evidence": "HG1A r354/r355: /srv/opentallas-scratch2/claude/fable-fix-kv-pvhub/hg1/gate/gate.out actual pre0/G0errors0/strictbind0; LAT2404/2404. PGR1D3 uses original KV generator +approved PG-only authored8df hunk/6ce Tcl; native56/source payload identity and normal source preflight230 PASS. Only hg_v1/hg_v3/pv_v1n pilot release;31 CTS-proof holds retained."
+   }
+  }
+ },
+ "pilot": {
+  "item": "kv3_hg_v1",
+  "hold_added": true,
+  "release": "gen_pilot:qwen_kvsys:3fbbcd9f69fc"
+ },
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/be2a2c21a137ecbede84f3d3b66ff1a7c17c2c8ce991ea4aa55063674a8ea72f/result.json",
+ "candidate": "/home/ubuntu/coord/lanes/handoff/HG2C_D10_ADOPT_candidate_1116.json"
+}

@@ -1,20 +1,19 @@
 {
  "die": "qwen_kvsys",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5",
- "manifest_hash": "7a4761d359fa7bce181d4648cbcd7cde8005203d3211f6f7666d5b1bd3551fd7",
- "src_manifest_sha": "7a4761d359fa7bce181d4648cbcd7cde8005203d3211f6f7666d5b1bd3551fd7",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10",
+ "manifest_hash": "3fbbcd9f69fc937957ee1b5ba773dee75f245997b7fe805e5a222d293b318e41",
+ "src_manifest_sha": "3fbbcd9f69fc937957ee1b5ba773dee75f245997b7fe805e5a222d293b318e41",
  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
   "epyc10"
  ],
  "smoke": "PASS",
- "smoke_detail": "D5 = D4 + 204 files (12 more kv_cland view dirs: w259 w269 w288 w397 w416 w525 w544 w653 w672 w781 w800 w909); D4 = D3 tree + 192 view files (provenance/gates/core/landing_evidence for 16 kv_cland views, KV-R 11-16); asbuilt/bind_out still the D3-era ones (identical RTL/plan bytes). Actual approved raw A pre0/G0errors0/strictbind0/LAT2404. Original KV r305 generator plus authored8df one-line PG replay copy; approved6ce TT/replay Tcl. Exact normal source/import preflight230 modules PASS, portable path policy0/native56/selected payload identity/canonical56matches. No ELAB/GEN smoke replay.",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
- "plan_sha256": "08d352df7ef0ab9adad227d83d30a835262636d879ef7aa82bf38876d5313065",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_hg1A_pgr1_d3/asbuilt_portable.json",
- "asbuilt_sha256": "ef6242fa58313eacc1aa9c2ca4504cf1a1dad186c4ef2df71611b721639980ac",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/kvbind_pin_eb1e73448bd0_hg1A_pgr1_d3/out_ctx1",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
+ "smoke_detail": "D10 = D9 + w652/w653/w672 face tool repair (7ecd3a0d). D5 = D4 + 204 files (12 more kv_cland view dirs: w259 w269 w288 w397 w416 w525 w544 w653 w672 w781 w800 w909); D4 = D3 tree + 192 view files (provenance/gates/core/landing_evidence for 16 kv_cland views, KV-R 11-16); asbuilt/bind_out still the D3-era ones (identical RTL/plan bytes). Actual approved raw A pre0/G0errors0/strictbind0/LAT2404. Original KV r305 generator plus authored8df one-line PG replay copy; approved6ce TT/replay Tcl. Exact normal source/import preflight230 modules PASS, portable path policy0/native56/selected payload identity/canonical56matches. No ELAB/GEN smoke replay.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "fac383f38bc4989b0ca08ca6e9c246e16aa0e387354b824fe11fe113e8829421",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json",
+ "bind_out": "/srv/opentallas-scratch2/claude/kv-r/hg2cgate/bind",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json",
  "sidecar_sha256": "e8b77b956217b60c2c62f9f24b8e95264c49ba18437a9ada5d7652704d23ee1e",
  "die_gen_env": {
   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
@@ -57,7 +56,7 @@
   "src_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
   "queue_src": "main@eb1e73448bd042684261a13c50cd0fb5ce21a513",
   "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
-  "plan_sha256": "08d352df7ef0ab9adad227d83d30a835262636d879ef7aa82bf38876d5313065",
+  "plan_sha256": "fac383f38bc4989b0ca08ca6e9c246e16aa0e387354b824fe11fe113e8829421",
   "gen_host": "epyc10",
   "gen_hosts": [
    "epyc10"
@@ -66,7 +65,7 @@
    "--hold-ff-margin",
    "0",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
+   "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10/physical/die_plan/qwen_kvsys/plan_of_record/eW_sidecar.json"
   ],
   "stage_resume_off": [
    "kv3_hgi_v4",
