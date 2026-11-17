@@ -8,3 +8,4 @@
 - 2026-11-17 09:19 PST ACK COORD: eco4 is the last hand attempt, no eco5; NEEDS-FABLE bundle on failure.
 - 2026-11-17 10:13 PST NEEDS-FABLE sd9f: eco1-4 all reach DRT 0 violations but clk_t8 + clk_t11 end unrouted (copy-back of original wire = DRT-0206 on clk_t11). Moved neighbours clk_t8_tb0_d3 / clk_t11_tb0_d3. Carved DB + eco1-4 logs listed in lanes/handoff/HEAD-TYPES-R4.md. No eco5 per COORD.
 - 2026-11-17 12:16 PST ACK COORD r594: lep_pair KCRED28 rebuild+re-sign starts when claude/head-lep-rxh-rank-1117 @3cc88ac6 is on main; will post sign-off for HEAD-PLAN-R4 bind.
+- 2026-11-17 12:22 PST lep_pair KCRED28 kit staged from head_lep_pair_kit.py on main 8c601253712 and route+signoff LAUNCHED on epyc9 (unit oth-ubuntu-2147884-1794946935); watcher armed. Note: main driver needs a one-line io_tcl clock_entry kwarg fix.
