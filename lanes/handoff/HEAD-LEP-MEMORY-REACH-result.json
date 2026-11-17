@@ -1,0 +1,163 @@
+{
+  "schema": "opentallas.native_memory_chain.v1",
+  "cycles_added": 0,
+  "reach": [
+    {
+      "tag": "stage:mlwd_low",
+      "bits": [
+        0,
+        551
+      ],
+      "source_macro_to_mlwd_max_um": 393.65200000000004,
+      "mlwd_to_wdq_max_um": 401.5,
+      "budget_um": 405,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:txi0_s0",
+      "bits": [
+        552,
+        679
+      ],
+      "source_macro_to_mlwd_max_um": 390.2120000000001,
+      "mlwd_to_wdq_max_um": 350.18000000000006,
+      "budget_um": 405,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:mlwd_h1",
+      "bits": [
+        680,
+        807
+      ],
+      "source_macro_to_mlwd_max_um": 357.76,
+      "mlwd_to_wdq_max_um": 366.79999999999995,
+      "budget_um": 405,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:mlwd_h2",
+      "bits": [
+        808,
+        935
+      ],
+      "source_macro_to_mlwd_max_um": 404.41999999999996,
+      "mlwd_to_wdq_max_um": 400.29999999999995,
+      "budget_um": 405,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:mlwd_h3",
+      "bits": [
+        936,
+        1063
+      ],
+      "source_macro_to_mlwd_max_um": 401.23199999999997,
+      "mlwd_to_wdq_max_um": 343,
+      "budget_um": 405,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:mlwd_h4",
+      "bits": [
+        1064,
+        1103
+      ],
+      "source_macro_to_mlwd_max_um": 389.74,
+      "mlwd_to_wdq_max_um": 401.70000000000005,
+      "budget_um": 405,
+      "verdict": "PASS"
+    },
+    {
+      "tag": "stage:wdq_bank0",
+      "wdq_to_macro_max_um": 140.53599999999994,
+      "budget_um": 405
+    },
+    {
+      "tag": "stage:wdq_bank1",
+      "wdq_to_macro_max_um": 180.29600000000005,
+      "budget_um": 405
+    },
+    {
+      "tag": "stage:wdq_bank2",
+      "wdq_to_macro_max_um": 243.0,
+      "budget_um": 405
+    },
+    {
+      "tag": "stage:wdq_bank3",
+      "wdq_to_macro_max_um": 367.8,
+      "budget_um": 405
+    },
+    {
+      "tag": "stage:wdq_bank4",
+      "wdq_to_macro_max_um": 171.60000000000002,
+      "budget_um": 405
+    },
+    {
+      "tag": "RID:stage:mlwd_low",
+      "bits": [
+        1,
+        551
+      ],
+      "mrd_to_rid_max_um": 235,
+      "rid_to_pout0_max_um": 368.4
+    },
+    {
+      "tag": "RID:stage:txi0_s0",
+      "bits": [
+        552,
+        679
+      ],
+      "mrd_to_rid_max_um": 323.18000000000006,
+      "rid_to_pout0_max_um": 205.81999999999982
+    },
+    {
+      "tag": "RID:stage:mlwd_h1",
+      "bits": [
+        680,
+        807
+      ],
+      "mrd_to_rid_max_um": 339.79999999999995,
+      "rid_to_pout0_max_um": 141.19999999999993
+    },
+    {
+      "tag": "RID:stage:mlwd_h2",
+      "bits": [
+        808,
+        935
+      ],
+      "mrd_to_rid_max_um": 400.29999999999995,
+      "rid_to_pout0_max_um": 203.69999999999993
+    },
+    {
+      "tag": "RID:stage:mlwd_h3",
+      "bits": [
+        936,
+        1063
+      ],
+      "mrd_to_rid_max_um": 343,
+      "rid_to_pout0_max_um": 227.39999999999998
+    },
+    {
+      "tag": "RID:stage:mlwd_h4",
+      "bits": [
+        1064,
+        1103
+      ],
+      "mrd_to_rid_max_um": 401.70000000000005,
+      "rid_to_pout0_max_um": 149.80000000000007
+    },
+    {
+      "tag": "POUT0->1",
+      "max_um": 380.0
+    },
+    {
+      "tag": "POUT1->2",
+      "max_um": 404.6
+    },
+    {
+      "tag": "POUT2->3",
+      "max_um": 370
+    }
+  ]
+}
