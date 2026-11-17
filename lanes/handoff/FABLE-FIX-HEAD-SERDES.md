@@ -57,3 +57,25 @@ Gates: DRC 0, routed TT >= -42, internal FF hold >= 0. 0 added cycles vs sd9c (+
   5_1_grt.odb + route.guide in the sd9d kit (kit idle; copy+mv), resume.json start=route, GOAL=route; port the fix to
   tools/die_plan/tt_setup_repair.tcl on a branch. If wns stays near -88 on u_rm.mem: that family (pma_rck rp_g2 -> mem write enable, 3072+
   loads) needs its own structural form (enable register per mem row group / placement bound of u_rm next to its taps), 0 cycles preferred.
+
+## 11-17 03:10 PST (11:10 UTC)
+- Private TT repair of a3 (meas/sd9d_ttfix) ALSO died RSZ-0074 at the same net (net41592, grid 1614.5,57.3) without any GRT-0304: the
+  incremental-route re-open is not the cure for that crash; it happened while the repair hammered the u_rm.mem paths in the 100 % blob.
+- CAUSE of the u_rm.mem family (per-tap clock census, meas/sd9d_ck/ck_arr.tsv, 26k clock pins): launch tap ot_dtap 900000 at 1148 ps,
+  capture taps ~1020 -> skew -128 ps in the TT gate frame. Landed clk taps 441..531 in that frame.
+- FRAME FINDING: the TT gate / tt_setup_repair frame (OT_RC_SIGNAL table mode, scale 1.13) swaps the SIGNAL unit C into the one layer table, so
+  CLOCK nets are priced with it too. hd_serdes has long trees (pma_rck insertion ~1.1 ns): in the clock-fit GRT frame (tapbal_grt.tcl / OT_STB)
+  pma_rck sinks read 887..968 before and 938..967 after subtree balance (spread 81 -> 29); the SAME a4 DB in the TT gate frame reads density-tap
+  means 1042..1147 (spread 105) and clk taps 463..537 (clock-fit: 405..471). About 75 ps of the inter-tap skew in the GRT TT numbers of this
+  type (incl. sd9A rem_q -40 and the -159 below) is the frame, not the tree. Routed RCX decides; a class fix would time clock nets on the
+  clock table and signal nets on the signal table (not built).
+- sd9d a4 (same kit; a3 + config.mk OT_TAP_GRT_PRE = 1 + tt_setup_repair.tcl with the re-open; resume from 3_place.odb; unit
+  oth-ubuntu-349761-1794906793, client ~/fable-fix-head-serdes-logs/sd9d_grt_a4.log): GRT-RC pre-pass tap_balance 0 cells (means 405..471),
+  OT_STB 839 delay buffers on 24 trees (pma_rck spread 81 -> 29); placement-RC TT after CTS repair -0.47 (a3/sd9c: -15.70); pregrt hold 12705
+  cells, setup unchanged; GRT 0 overflow, measured-hold PASS, GRT hold +22 cells ws +0.50. GRT RC TT before repair -158.94 / tns -102887
+  (a3 -169.19 / -190435); after repair_design -129.85; repair_timing running at 11:07 UTC: wns -76.8 (u_syn thq), tns -47.5k, past
+  iteration 720 with no tool error. Unrepaired families (meas/a4_grt): u_rm.mem 1828 (-158.9), rem_q 244 (-153.9), u_rm.r_d recovery 102,
+  u_syn bm ~600, enc pp1 137. HB4 on D with TT < 0: 67.
+- NEXT: when the kit GRT step ends: read OT_POSTCTS_GATE TT; meas.sh on the kept 5_1_grt.odb; LOOK grt render; then route a4 to sign-off
+  (resume.json start=route, GOAL=route) -- the routed RCX number is the only frame without the clock-table artefact; one HEI pass; export.
+  If the kit repair dies again the unrepaired DB is kept (FALLBACK): do not route that; rerun the repair privately with catch + full re-route.
