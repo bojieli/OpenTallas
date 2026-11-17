@@ -28,3 +28,25 @@ PRE 0, G0 0 errors, bind 0 errors / 2545 crossings / 429530 bits, LATCHECK 2404/
 
 ## Not mine / preserved
 E7 D14 restore + intel1 copy 3777547 (stopped, preserved); E7 kv-r/d14_prefix_closure_1117 (Codex evidence); epyc7 disk 47 GB (floor 50).
+
+## UPDATE 07:3x PST — D16 APPLIED
+- D16 fresh gates (E10 kv-r3/d16gate): PRE 0, G0 0 err, strict bind 0 err / 2545 crossings, LATCHECK 2404/2404 delta {}.
+- Publish r471 PASS (record commit bf398cf88bd): dry GEN kv3_hg_v1 on E10 DRY-PASS, **GEN_LINT PASS all 6** (kit_rtl_paths PASS, rtl_check PASS, memory_bits PASS).
+- Applied 07:17 (KW00 apply_reviewed_tree_marker, expect D10/KV-HG1): die src = kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d16,
+  event KV-HG5, gen_hosts [epyc10], pilot kv3_hg_v1, hold release gen_pilot:qwen_kvsys:d9187b9c24f1. Receipt
+  lanes/handoff/qwen_kvsys_atomic_apply_1794928647528162651.json; kit_wave commit 39a8a324aad, switch record 794ae124a26.
+- 9 "waits on child core" rows (kv3_hub_Eo/Wi/Wo, kv3_pc__cl254f2e73/__cl5a95b461, kv3_pc_v1 x3, kv3_pc_v3) are LINT-ADVISORY
+  (launch on PROVISIONAL child views, KW-PROV-1) on the old D10 plan; they release with the pilot hold once the wave's kv3_hg_v1 GEN
+  on D16 passes. Not hand-released (system gen_pilot check).
+- ECTL branch READY posted: claude/kv-ectlk-hardcore-noparam-1117@ca21e3176e49 GREEN 1/1 (main 2382f7a6fba).
+- FLEET: replicate D16 to more gen hosts if wanted (only on E10 now).
+
+## HG6 (COORD dispatch 07:3x, FABLE-CLOSURE-STRATEGY lever 3) — NEXT, NOT STARTED
+One event on D16 plan 340b90be33dd: (a) bays-only carve rows E9 kv-pc-delta/wt/results/kv_pc_delta_1117/HG6_PC_bay_rows.json
+(branch claude/kv-pc-delta-1115@51a44abe9f2 / 60939a26af: 0 collisions, 36,718 of 36,984 um2 kept, clock rows byte-identical);
+(b) 25 ring->bin stations on the 3 kv3_pc_v1 types as partition_types.<t>.internal_stations (schema form exists:
+conn "bus:<bus>", from_um/to_um/regs_um, bit_sites_um; realize_internal_stations true). Inputs: ring_to_bin_model_lower_bound.json
+(mechanism: move u_bin to first <=380 um segment + uniform payload/epoch stations, last at old bin), ring_to_bin_macro_clear_plan.json
+(obstacle-aware, NO legal sites allocated yet), ring_to_bin_measured_geometry.json (607 paths, 20 buses, worst 1,436 um).
+Steps: allocate legal sites off macros/rows-B reservations -> rows JSON -> compose plan -> PRE/G0/strict bind/LATCHECK (cycles
+priced; bank re-site only if a latency group breaks) on the final tree -> publish dry GEN -> apply. Fable diff review in parallel.
