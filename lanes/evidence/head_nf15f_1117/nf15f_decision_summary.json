@@ -1,0 +1,1192 @@
+{
+ "schema": "opentallas.head_nf15f_corridor_decision.v1",
+ "inputs": {
+  "plan": "model/corridor_complete_plan.json 7dc26079",
+  "edges": "model/corridor_complete_bit_edges.json",
+  "grant": "kit_rtl_final52/bootstrap/hd_lep0N/m8_grant.json"
+ },
+ "runs": {
+  "w_base.json": {
+   "sha256": "02c67fa24752f368e4b84e082f9218eb213ff7b45f0f8ca68d3c3493ee5ee4ce",
+   "nets": 40670,
+   "assigned": 34389,
+   "unassigned": 6281,
+   "relay_ff": 0,
+   "grow": 0,
+   "relay_t": 1000000000.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 6270,
+    "M6": 3620,
+    "M8": 1362
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 8627,
+    "f": 0.9923
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 8627,
+    "f": 0.6619
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 8138,
+    "f": 0.7898
+   },
+   "worst_witness": 0.7808,
+   "unassigned_by_source": {
+    "FF:u_core.u.g_pout.g_s": 1508,
+    "FF:u_core.u.g_pin.g_s": 1291,
+    "FF:u_core.u.u_lep.u.g_tx": 1141,
+    "FF:u_core.u.g_kl": 1130,
+    "RTL:u_core.u.u_lep.u.fr": 674,
+    "FF:u_core.u.u_lep.u.ml_wd": 140,
+    "FF:u_core.u.u_lep.u.rid": 137,
+    "FF:u_core.u.u_lep.u.g_rxm.mrd": 115,
+    "MACRO:u_core.u.g_pp": 112,
+    "FF:u_core.u.u_lep.u.lo3_d": 33
+   },
+   "relay_edges_by_kind": {}
+  },
+  "w_final_knobF_g60.json": {
+   "sha256": "d8418d7948ced458925276c2de617fedf1a21d1a5e043b05a18ae0febcc1e594",
+   "nets": 40670,
+   "assigned": 40670,
+   "unassigned": 0,
+   "relay_ff": 17239,
+   "grow": 60.48,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 7530,
+    "M6": 4348,
+    "M8": 1618
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 10871,
+    "f": 0.7875
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 10871,
+    "f": 0.5253
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 10382,
+    "f": 0.6191
+   },
+   "worst_witness": 0.7875,
+   "unassigned_by_source": {},
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "shared RX head to MLWD": 2208,
+    "shared RX head to RID": 2079,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_grow60.json": {
+   "sha256": "815e032d95c68e57b2da92f661948097519b05d0252b05b25618d2f35cea35c4",
+   "nets": 40670,
+   "assigned": 34389,
+   "unassigned": 6281,
+   "relay_ff": 0,
+   "grow": 60.48,
+   "relay_t": 1000000000.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 7530,
+    "M6": 4348,
+    "M8": 1618
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 10871,
+    "f": 0.7875
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 10871,
+    "f": 0.5253
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 10382,
+    "f": 0.6191
+   },
+   "worst_witness": 0.6196,
+   "unassigned_by_source": {
+    "FF:u_core.u.g_pout.g_s": 1508,
+    "FF:u_core.u.g_pin.g_s": 1291,
+    "FF:u_core.u.u_lep.u.g_tx": 1141,
+    "FF:u_core.u.g_kl": 1130,
+    "RTL:u_core.u.u_lep.u.fr": 674,
+    "FF:u_core.u.u_lep.u.ml_wd": 140,
+    "FF:u_core.u.u_lep.u.rid": 137,
+    "FF:u_core.u.u_lep.u.g_rxm.mrd": 115,
+    "MACRO:u_core.u.g_pp": 112,
+    "FF:u_core.u.u_lep.u.lo3_d": 33
+   },
+   "relay_edges_by_kind": {}
+  },
+  "w_knob200_g60.json": {
+   "sha256": "7c871dd54e97905653a133ca39cf34d1b2da8fb6e120c64d0bf5fd8e99c4ef75",
+   "nets": 40670,
+   "assigned": 40484,
+   "unassigned": 186,
+   "relay_ff": 12576,
+   "grow": 60.48,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 7530,
+    "M6": 4348,
+    "M8": 1618
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 10871,
+    "f": 0.7875
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 10871,
+    "f": 0.5253
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 10382,
+    "f": 0.6191
+   },
+   "worst_witness": 0.7875,
+   "unassigned_by_source": {
+    "FF:u_core.u.g_pout.g_s": 186
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 2274,
+    "PIN stage": 2300,
+    "shared frame to TXI": 1656,
+    "TX output FF to K core input": 238,
+    "TXI stage": 1106,
+    "K core to KRX": 584,
+    "KRX stage": 2212,
+    "shared RX head to RID": 1527,
+    "RID to POUT0": 551,
+    "shared RX head to MLWD": 1400
+   }
+  },
+  "w_knob8F_g34.json": {
+   "sha256": "7ecbbcc0f02fb746d1928766e7a8c7573cd112921b496910113c3a6a35a6ad38",
+   "nets": 40670,
+   "assigned": 40591,
+   "unassigned": 79,
+   "relay_ff": 15031,
+   "grow": 34.56,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 6990,
+    "M6": 4036,
+    "M8": 1503
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 9904,
+    "f": 0.8644
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 9904,
+    "f": 0.5765
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 9415,
+    "f": 0.6826
+   },
+   "worst_witness": 0.8569,
+   "unassigned_by_source": {
+    "FF:u_core.u.g_kl": 74,
+    "FF:u_core.u.u_lep.u.rid": 5
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_knob8F_g60.json": {
+   "sha256": "8b7286cd0a6b936fd1b2bfb214f8abb206ce75a77d2123c4a85e60934ecfb86b",
+   "nets": 40670,
+   "assigned": 40596,
+   "unassigned": 74,
+   "relay_ff": 15031,
+   "grow": 60.48,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 7530,
+    "M6": 4348,
+    "M8": 1618
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 10871,
+    "f": 0.7875
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 10871,
+    "f": 0.5253
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 10382,
+    "f": 0.6191
+   },
+   "worst_witness": 0.7807,
+   "unassigned_by_source": {
+    "FF:u_core.u.g_kl": 74
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_knob8F_g86.json": {
+   "sha256": "75860ca9352ee996f6b7abf284e9801a8f5419d50726368909f7b763edfbf92e",
+   "nets": 40670,
+   "assigned": 40596,
+   "unassigned": 74,
+   "relay_ff": 15031,
+   "grow": 86.4,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 8070,
+    "M6": 4660,
+    "M8": 1812
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 11917,
+    "f": 0.7184
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 11917,
+    "f": 0.4791
+   },
+   "worst_center": {
+    "x": 990,
+    "n": 6715,
+    "cap": 11917,
+    "f": 0.5635
+   },
+   "worst_witness": 0.7122,
+   "unassigned_by_source": {
+    "FF:u_core.u.g_kl": 74
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_knobF_g0.json": {
+   "sha256": "31b455d5a677e57180031ab46a506487a414e8f4a7b3e33d61216d8ec292fe4f",
+   "nets": 40670,
+   "assigned": 39053,
+   "unassigned": 1617,
+   "relay_ff": 17239,
+   "grow": 0,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 6270,
+    "M6": 3620,
+    "M8": 1362
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 8627,
+    "f": 0.9923
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 8627,
+    "f": 0.6619
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 8138,
+    "f": 0.7898
+   },
+   "worst_witness": 0.8439,
+   "unassigned_by_source": {
+    "RTL:u_core.u.u_lep.u.fr": 1053,
+    "FF:u_core.u.g_pin.g_s": 336,
+    "RTL:u_core.u.u_lep.u.rhd": 228
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "shared RX head to MLWD": 2208,
+    "shared RX head to RID": 2079,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_knobF_g120.json": {
+   "sha256": "3eb58f4e926af57a1960f7067c0965d19a8819031873fdd1cd367e267da89a18",
+   "nets": 40670,
+   "assigned": 40670,
+   "unassigned": 0,
+   "relay_ff": 17239,
+   "grow": 120.96,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 8790,
+    "M6": 5076,
+    "M8": 2050
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 13291,
+    "f": 0.6441
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 13291,
+    "f": 0.4296
+   },
+   "worst_center": {
+    "x": 990,
+    "n": 6715,
+    "cap": 13291,
+    "f": 0.5052
+   },
+   "worst_witness": 0.6441,
+   "unassigned_by_source": {},
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "shared RX head to MLWD": 2208,
+    "shared RX head to RID": 2079,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_knobF_g60.json": {
+   "sha256": "95485e95a0013af980d97fbc2ffd79fcea7dda4e3f171ce5cb7eb43ac3cacbdb",
+   "nets": 40670,
+   "assigned": 40670,
+   "unassigned": 0,
+   "relay_ff": 17239,
+   "grow": 60.48,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 7530,
+    "M6": 4348,
+    "M8": 1618
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 10871,
+    "f": 0.7875
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 10871,
+    "f": 0.5253
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 10382,
+    "f": 0.6191
+   },
+   "worst_witness": 0.7875,
+   "unassigned_by_source": {},
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "shared RX head to MLWD": 2208,
+    "shared RX head to RID": 2079,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_knobF_g86.json": {
+   "sha256": "685ad5c4514b408f87574efc8cfcb9695e31765c02ad3046f9eeb9ffc77997d9",
+   "nets": 40670,
+   "assigned": 40670,
+   "unassigned": 0,
+   "relay_ff": 17239,
+   "grow": 86.4,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 8070,
+    "M6": 4660,
+    "M8": 1812
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 11917,
+    "f": 0.7184
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 11917,
+    "f": 0.4791
+   },
+   "worst_center": {
+    "x": 990,
+    "n": 6715,
+    "cap": 11917,
+    "f": 0.5635
+   },
+   "worst_witness": 0.7184,
+   "unassigned_by_source": {},
+   "relay_edges_by_kind": {
+    "POUT stage": 3411,
+    "PIN stage": 2300,
+    "shared frame to TXI": 2208,
+    "TX output FF to K core input": 1839,
+    "TXI stage": 1106,
+    "K core to KRX": 1444,
+    "KRX stage": 2212,
+    "shared RX head to MLWD": 2208,
+    "shared RX head to RID": 2079,
+    "RID to POUT0": 1063
+   }
+  },
+  "w_relay150.json": {
+   "sha256": "bbd87618a9c1f82b43cf48de3011652f1afddaad4f2e578a069b1228dc0031d9",
+   "nets": 40670,
+   "assigned": 38884,
+   "unassigned": 1786,
+   "relay_ff": 20929,
+   "grow": 0,
+   "relay_t": 150.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 6270,
+    "M6": 3620,
+    "M8": 1362
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 8627,
+    "f": 0.9923
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 8627,
+    "f": 0.6619
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 8138,
+    "f": 0.7898
+   },
+   "worst_witness": 0.8689,
+   "unassigned_by_source": {
+    "RTL:u_core.u.u_lep.u.fr": 552,
+    "FF:u_core.u.g_pin.g_s": 535,
+    "RTL:u_core.u.u_lep.u.rhd": 251,
+    "FF:u_core.u.g_kl": 205,
+    "FF:u_core.u.g_pout.g_s": 186,
+    "FF:u_core.u.u_lep.u.g_rxm.mrd": 29,
+    "FF:u_core.u.u_lep.u.ml_wd": 28
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 2274,
+    "PIN stage": 2300,
+    "PIN to native ROP": 1104,
+    "shared frame to TXI": 1656,
+    "TXI to SRAM write FF": 1403,
+    "TX write FF to SRAM port": 513,
+    "TX output FF to K core input": 562,
+    "TXI stage": 1106,
+    "TX SRAM to read FF": 512,
+    "TX read FF to output FF": 256,
+    "KRX to RX DQ": 745,
+    "K core to KRX": 848,
+    "KRX stage": 2212,
+    "RX write FF to SRAM port": 471,
+    "shared RX head to MLWD": 1784,
+    "MLWD to MU write capture": 976,
+    "MU SRAM to replay capture": 768,
+    "shared RX head to RID": 1695,
+    "RID to POUT0": 679,
+    "MU replay capture to RID": 464,
+    "MU write capture to SRAM": 256
+   }
+  },
+  "w_relay200.json": {
+   "sha256": "61849bdbad2038fb344e8225d782e836f978c8c7587a48db2363e0e556d50a51",
+   "nets": 40670,
+   "assigned": 39135,
+   "unassigned": 1535,
+   "relay_ff": 16892,
+   "grow": 0,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 6270,
+    "M6": 3620,
+    "M8": 1362
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 8627,
+    "f": 0.9923
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 8627,
+    "f": 0.6619
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 8138,
+    "f": 0.7898
+   },
+   "worst_witness": 0.8822,
+   "unassigned_by_source": {
+    "RTL:u_core.u.u_lep.u.fr": 501,
+    "RTL:u_core.u.u_lep.u.rhd": 408,
+    "FF:u_core.u.g_pin.g_s": 399,
+    "FF:u_core.u.g_pout.g_s": 186,
+    "FF:u_core.u.g_kl": 41
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 2274,
+    "PIN stage": 2300,
+    "shared frame to TXI": 1656,
+    "TXI to SRAM write FF": 978,
+    "TX output FF to K core input": 238,
+    "TX write FF to SRAM port": 385,
+    "TXI stage": 1106,
+    "TX SRAM to read FF": 256,
+    "TX read FF to output FF": 256,
+    "KRX to RX DQ": 302,
+    "K core to KRX": 584,
+    "KRX stage": 2212,
+    "RX write FF to SRAM port": 99,
+    "MLWD to MU write capture": 768,
+    "MU SRAM to replay capture": 768,
+    "shared RX head to RID": 1527,
+    "RID to POUT0": 551,
+    "shared RX head to MLWD": 1400,
+    "MU replay capture to RID": 384,
+    "MU write capture to SRAM": 120
+   }
+  },
+  "w_relay200_grow34.json": {
+   "sha256": "2d5e3d6722736f354f4a1875547731f318ad39191b7172318d085a7e9bc5d214",
+   "nets": 40670,
+   "assigned": 40218,
+   "unassigned": 452,
+   "relay_ff": 16892,
+   "grow": 34.56,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 6990,
+    "M6": 4036,
+    "M8": 1503
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 9904,
+    "f": 0.8644
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 9904,
+    "f": 0.5765
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 9415,
+    "f": 0.6826
+   },
+   "worst_witness": 0.8644,
+   "unassigned_by_source": {
+    "FF:u_core.u.u_lep.u.rid": 266,
+    "FF:u_core.u.g_pout.g_s": 186
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 2274,
+    "PIN stage": 2300,
+    "shared frame to TXI": 1656,
+    "TXI to SRAM write FF": 978,
+    "TX output FF to K core input": 238,
+    "TX write FF to SRAM port": 385,
+    "TXI stage": 1106,
+    "TX SRAM to read FF": 256,
+    "TX read FF to output FF": 256,
+    "KRX to RX DQ": 302,
+    "K core to KRX": 584,
+    "KRX stage": 2212,
+    "RX write FF to SRAM port": 99,
+    "MLWD to MU write capture": 768,
+    "MU SRAM to replay capture": 768,
+    "shared RX head to RID": 1527,
+    "RID to POUT0": 551,
+    "shared RX head to MLWD": 1400,
+    "MU replay capture to RID": 384,
+    "MU write capture to SRAM": 120
+   }
+  },
+  "w_relay200_grow60.json": {
+   "sha256": "59da4dec2034c1d224a9819b974b27bad7248bc2938db3b9ae7b56a45d013cc3",
+   "nets": 40670,
+   "assigned": 40484,
+   "unassigned": 186,
+   "relay_ff": 16892,
+   "grow": 60.48,
+   "relay_t": 200.0,
+   "m8_all": false,
+   "rows": {
+    "M4": 7530,
+    "M6": 4348,
+    "M8": 1618
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 10871,
+    "f": 0.7875
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 10871,
+    "f": 0.5253
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 10382,
+    "f": 0.6191
+   },
+   "worst_witness": 0.7875,
+   "unassigned_by_source": {
+    "FF:u_core.u.g_pout.g_s": 186
+   },
+   "relay_edges_by_kind": {
+    "POUT stage": 2274,
+    "PIN stage": 2300,
+    "shared frame to TXI": 1656,
+    "TXI to SRAM write FF": 978,
+    "TX output FF to K core input": 238,
+    "TX write FF to SRAM port": 385,
+    "TXI stage": 1106,
+    "TX SRAM to read FF": 256,
+    "TX read FF to output FF": 256,
+    "KRX to RX DQ": 302,
+    "K core to KRX": 584,
+    "KRX stage": 2212,
+    "RX write FF to SRAM port": 99,
+    "MLWD to MU write capture": 768,
+    "MU SRAM to replay capture": 768,
+    "shared RX head to RID": 1527,
+    "RID to POUT0": 551,
+    "shared RX head to MLWD": 1400,
+    "MU replay capture to RID": 384,
+    "MU write capture to SRAM": 120
+   }
+  },
+  "w_relay200_m8all.json": {
+   "sha256": "d6b1507bfdad1f6aa4588c61dcde34b6867029a42d67efb12fe4ac97a152a97a",
+   "nets": 40670,
+   "assigned": 40670,
+   "unassigned": 0,
+   "relay_ff": 16892,
+   "grow": 0,
+   "relay_t": 200.0,
+   "m8_all": true,
+   "rows": {
+    "M4": 6270,
+    "M6": 3620,
+    "M8": 3762
+   },
+   "worst_full_rect": {
+    "x": 980,
+    "n": 8561,
+    "cap": 11027,
+    "f": 0.7764
+   },
+   "worst_mandatory": {
+    "x": 980,
+    "n": 5710,
+    "cap": 11027,
+    "f": 0.5178
+   },
+   "worst_center": {
+    "x": 1010,
+    "n": 6427,
+    "cap": 10538,
+    "f": 0.6099
+   },
+   "worst_witness": 0.7764,
+   "unassigned_by_source": {},
+   "relay_edges_by_kind": {
+    "POUT stage": 2274,
+    "PIN stage": 2300,
+    "shared frame to TXI": 1656,
+    "TXI to SRAM write FF": 978,
+    "TX output FF to K core input": 238,
+    "TX write FF to SRAM port": 385,
+    "TXI stage": 1106,
+    "TX SRAM to read FF": 256,
+    "TX read FF to output FF": 256,
+    "KRX to RX DQ": 302,
+    "K core to KRX": 584,
+    "KRX stage": 2212,
+    "RX write FF to SRAM port": 99,
+    "MLWD to MU write capture": 768,
+    "MU SRAM to replay capture": 768,
+    "shared RX head to RID": 1527,
+    "RID to POUT0": 551,
+    "shared RX head to MLWD": 1400,
+    "MU replay capture to RID": 384,
+    "MU write capture to SRAM": 120
+   }
+  }
+ },
+ "relay_hops": {
+  "POUT stage | FF:u_core.u.g_pout.g_s[0].u_st.g_c.qc | FF:u_core.u.g_pout.g_s[1].u_st.g_c.qc": {
+   "bits": 1,
+   "xm": [
+    1354.0,
+    1354.0
+   ],
+   "y": [
+    688.524,
+    688.524
+   ]
+  },
+  "POUT stage | FF:u_core.u.g_pout.g_s[0].u_st.q | FF:u_core.u.g_pout.g_s[1].u_st.q": {
+   "bits": 1136,
+   "xm": [
+    1354.0,
+    1354.0
+   ],
+   "y": [
+    548.6039999999999,
+    716.816
+   ]
+  },
+  "PIN stage | FF:u_core.u.g_pin.g_s[1].u_st.g_c.qc | FF:u_core.u.g_pin.g_s[2].u_st.g_c.qc": {
+   "bits": 1,
+   "xm": [
+    1649.0,
+    1649.0
+   ],
+   "y": [
+    640.976,
+    640.976
+   ]
+  },
+  "PIN stage | FF:u_core.u.g_pin.g_s[1].u_st.q | FF:u_core.u.g_pin.g_s[2].u_st.q": {
+   "bits": 1149,
+   "xm": [
+    1649.0,
+    1649.0
+   ],
+   "y": [
+    513.036,
+    779.5319999999999
+   ]
+  },
+  "POUT stage | FF:u_core.u.g_pout.g_s[1].u_st.g_c.qc | FF:u_core.u.g_pout.g_s[2].u_st.g_c.qc": {
+   "bits": 1,
+   "xm": [
+    1608.0,
+    1608.0
+   ],
+   "y": [
+    615.0559999999999,
+    615.0559999999999
+   ]
+  },
+  "POUT stage | FF:u_core.u.g_pout.g_s[1].u_st.q | FF:u_core.u.g_pout.g_s[2].u_st.q": {
+   "bits": 1136,
+   "xm": [
+    1608.0,
+    1608.0
+   ],
+   "y": [
+    593.1959999999999,
+    688.52
+   ]
+  },
+  "PIN stage | FF:u_core.u.g_pin.g_s[2].u_st.g_c.qc | FF:u_core.u.g_pin.g_s[3].u_st.g_c.qc": {
+   "bits": 1,
+   "xm": [
+    1419.0,
+    1419.0
+   ],
+   "y": [
+    720.636,
+    720.636
+   ]
+  },
+  "PIN stage | FF:u_core.u.g_pin.g_s[2].u_st.q | FF:u_core.u.g_pin.g_s[3].u_st.q": {
+   "bits": 1149,
+   "xm": [
+    1419.0,
+    1419.0
+   ],
+   "y": [
+    720.656,
+    755.9639999999999
+   ]
+  },
+  "POUT stage | FF:u_core.u.g_pout.g_s[2].u_st.g_c.qc | FF:u_core.u.g_pout.g_s[3].u_st.g_c.qc": {
+   "bits": 1,
+   "xm": [
+    1783.0,
+    1783.0
+   ],
+   "y": [
+    573.0,
+    573.0
+   ]
+  },
+  "POUT stage | FF:u_core.u.g_pout.g_s[2].u_st.q | FF:u_core.u.g_pout.g_s[3].u_st.q": {
+   "bits": 1136,
+   "xm": [
+    1783.0,
+    1783.0
+   ],
+   "y": [
+    533.2919999999999,
+    590.0759999999999
+   ]
+  },
+  "shared frame to TXI | RTL:u_core.u.u_lep.u.fr | FF:u_core.u.u_lep.u.g_tx[2].g_txi.g_s[0].u_st/d_o": {
+   "bits": 552,
+   "xm": [
+    1032.0,
+    1032.0
+   ],
+   "y": [
+    733.02,
+    751.952
+   ]
+  },
+  "shared frame to TXI | RTL:u_core.u.u_lep.u.fr | FF:u_core.u.u_lep.u.g_tx[0].g_txi.g_s[0].u_st/d_o": {
+   "bits": 552,
+   "xm": [
+    1032.0,
+    1032.0
+   ],
+   "y": [
+    733.02,
+    751.952
+   ]
+  },
+  "TX output FF to K core input | FF:u_core.u.u_lep.u.lo0_d | MACRO:u_core.u.g_pp[0].u_pair.k_lo_d": {
+   "bits": 492,
+   "xm": [
+    1024.116,
+    1401.1799999999998
+   ],
+   "y": [
+    561.372,
+    793.68
+   ]
+  },
+  "shared frame to TXI | RTL:u_core.u.u_lep.u.fr | FF:u_core.u.u_lep.u.g_tx[3].g_txi.g_s[0].u_st/d_o": {
+   "bits": 552,
+   "xm": [
+    1061.5,
+    1300.7
+   ],
+   "y": [
+    756.588,
+    776.016
+   ]
+  },
+  "shared frame to TXI | RTL:u_core.u.u_lep.u.fr | FF:u_core.u.u_lep.u.g_tx[1].g_txi.g_s[0].u_st/d_o": {
+   "bits": 552,
+   "xm": [
+    1061.5,
+    1300.7
+   ],
+   "y": [
+    756.588,
+    776.016
+   ]
+  },
+  "TXI stage | FF:u_core.u.u_lep.u.g_tx[1].g_txi.g_s[0].u_st/d_o | FF:u_core.u.u_lep.u.g_tx[1].g_txi.g_s[1].u_st/d_o": {
+   "bits": 553,
+   "xm": [
+    774.5,
+    774.5
+   ],
+   "y": [
+    707.1959999999999,
+    733.0079999999999
+   ]
+  },
+  "TX output FF to K core input | FF:u_core.u.u_lep.u.lo1_d | MACRO:u_core.u.g_pp[1].u_pair.k_lo_d": {
+   "bits": 444,
+   "xm": [
+    112.596,
+    400.02
+   ],
+   "y": [
+    663.948,
+    689.2439999999999
+   ]
+  },
+  "TXI stage | FF:u_core.u.u_lep.u.g_tx[2].g_txi.g_s[0].u_st/d_o | FF:u_core.u.u_lep.u.g_tx[2].g_txi.g_s[1].u_st/d_o": {
+   "bits": 553,
+   "xm": [
+    752.0,
+    752.0
+   ],
+   "y": [
+    673.788,
+    687.312
+   ]
+  },
+  "TX output FF to K core input | FF:u_core.u.u_lep.u.lo2_d | MACRO:u_core.u.g_pp[2].u_pair.k_lo_d": {
+   "bits": 478,
+   "xm": [
+    64.908,
+    530.7
+   ],
+   "y": [
+    650.3159999999999,
+    694.288
+   ]
+  },
+  "TX output FF to K core input | FF:u_core.u.u_lep.u.lo3_d | MACRO:u_core.u.g_pp[3].u_pair.k_lo_d": {
+   "bits": 425,
+   "xm": [
+    1439.2199999999998,
+    1603.524
+   ],
+   "y": [
+    549.264,
+    793.64
+   ]
+  },
+  "K core to KRX | MACRO:u_core.u.g_pp[1].u_pair.k_li_d | FF:u_core.u.g_kl[1].g_rxf.g_s[0].u_st.q": {
+   "bits": 454,
+   "xm": [
+    246.272,
+    416.18399999999997
+   ],
+   "y": [
+    674.52,
+    733.48
+   ]
+  },
+  "KRX stage | FF:u_core.u.g_kl[1].g_rxf.g_s[0].u_st.q | FF:u_core.u.g_kl[1].g_rxf.g_s[1].u_st.q": {
+   "bits": 553,
+   "xm": [
+    537.5,
+    537.5
+   ],
+   "y": [
+    701.328,
+    718.736
+   ]
+  },
+  "KRX stage | FF:u_core.u.g_kl[1].g_rxf.g_s[1].u_st.q | FF:u_core.u.g_kl[1].g_rxf.g_s[2].u_st.q": {
+   "bits": 553,
+   "xm": [
+    822.5,
+    822.5
+   ],
+   "y": [
+    758.672,
+    806.6
+   ]
+  },
+  "K core to KRX | MACRO:u_core.u.g_pp[2].u_pair.k_li_d | FF:u_core.u.g_kl[2].g_rxf.g_s[0].u_st.q": {
+   "bits": 454,
+   "xm": [
+    248.772,
+    418.68399999999997
+   ],
+   "y": [
+    622.0319999999999,
+    694.236
+   ]
+  },
+  "KRX stage | FF:u_core.u.g_kl[2].g_rxf.g_s[0].u_st.q | FF:u_core.u.g_kl[2].g_rxf.g_s[1].u_st.q": {
+   "bits": 553,
+   "xm": [
+    560.0,
+    560.0
+   ],
+   "y": [
+    654.492,
+    673.744
+   ]
+  },
+  "KRX stage | FF:u_core.u.g_kl[2].g_rxf.g_s[1].u_st.q | FF:u_core.u.g_kl[2].g_rxf.g_s[2].u_st.q": {
+   "bits": 553,
+   "xm": [
+    880.0,
+    880.0
+   ],
+   "y": [
+    687.324,
+    701.3199999999999
+   ]
+  },
+  "K core to KRX | MACRO:u_core.u.g_pp[3].u_pair.k_li_d | FF:u_core.u.g_kl[3].g_rxf.g_s[0].u_st.q": {
+   "bits": 536,
+   "xm": [
+    1445.016,
+    1585.9279999999999
+   ],
+   "y": [
+    549.852,
+    790.38
+   ]
+  },
+  "shared RX head to MLWD | RTL:u_core.u.u_lep.u.rhd | FF:u_core.u.u_lep.u.ml_wd": {
+   "bits": 2208,
+   "xm": [
+    888.5,
+    1410.2359999999999
+   ],
+   "y": [
+    511.932,
+    834.512
+   ]
+  },
+  "shared RX head to RID | RTL:u_core.u.u_lep.u.rhd | FF:u_core.u.u_lep.u.rid": {
+   "bits": 2079,
+   "xm": [
+    899.5,
+    1410.2359999999999
+   ],
+   "y": [
+    511.932,
+    834.492
+   ]
+  },
+  "RID to POUT0 | FF:u_core.u.u_lep.u.rid | FF:u_core.u.g_pout.g_s[0].u_st.q": {
+   "bits": 1063,
+   "xm": [
+    1111.0,
+    1217.15
+   ],
+   "y": [
+    553.744,
+    810.828
+   ]
+  }
+ },
+ "decision": {
+  "stage_tuple": {
+   "PIN": 6,
+   "POUT": 8,
+   "TXI": "16h2442",
+   "KTX": "16h1111",
+   "KRX": "16h2660"
+  },
+  "rx_head_rank_ff": 2208,
+  "corridor_growth_total_um": 181.44,
+  "lep_outline_um": [
+   1892.16,
+   1408.32
+  ],
+  "die_outline_um": [
+   17712.0,
+   17737.92
+  ],
+  "functional_plan_sha256": "3210bf1f1390a8c3a1aab968de8c7bd7e6ff452f3783be2ae3d2f336f90b60f9",
+  "scope": "horizontal trunk witness only; no route credit"
+ }
+}
