@@ -114,3 +114,20 @@ class Guard(unittest.TestCase):
         with self.assertRaises(RuntimeError) as c:
             m.materialize("a" * 40)
         self.assertIn("OT_RT_MIN_FREE_GB", str(c.exception)); self.assertEqual(list(d.iterdir()), [])
+
+
+class InstalledDiff(unittest.TestCase):
+    def test_a_live_only_copy_that_differs_is_an_alert_a_symlinked_one_is_not(self):
+        m = Guard.load(Guard())
+        import types
+        def runner(cmd, **kw):
+            return types.SimpleNamespace(stdout=json.dumps({"/usr/local/bin/ot-heavy": "DIFF ot-heavy", "/srv/x/rt/abc/tools/fleet/ot-run": "DIFF ot-run", "/usr/local/bin/ot-ok": "OK"}) + "\n")
+        out = m.installed_diffs({"tools/fleet/ot-heavy": "aa"}, hosts=["h1"], runner=runner)
+        self.assertEqual(len(out), 2)                       # intel2 + h1, once each: the /rt/ path is in step by construction
+        self.assertTrue(all("/usr/local/bin/ot-heavy differs" in l for l in out), out)
+
+    def test_in_step_is_empty(self):
+        m = Guard.load(Guard())
+        import types
+        out = m.installed_diffs({"tools/fleet/ot-heavy": "aa"}, hosts=["h1"], runner=lambda c, **k: types.SimpleNamespace(stdout=json.dumps({"/usr/local/bin/ot-heavy": "OK"}) + "\n"))
+        self.assertEqual(out, [])
