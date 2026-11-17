@@ -41976,6 +41976,20 @@
       "dir": "/srv/opentallas-scratch3/claude/kw32-views/qwen_compute/core-rows-1115/sta_region_nb0_h16_n9_s11",
       "job": "SIGNED sta_region_nb0_h16_n9_s11 epyc9:/srv/opentallas-scratch2/claude/core-rows-1115/eco_hc_h16_n9_s11_u5/i1/signoff/signoff.json (st_a_v2 re-master for the bound HI_PAD, util 0.5, 1 nonport hold ECO, SIGNED, LEC EQUIVALENT); export_view complete; archived rtx-pro + AGIdock opentallas-signed-1114 (DIE-QC-103)"
      }
+    ],
+    "qc_cland_w515_n_d8_local32_codex": [
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/qc-plan-h2-1116/views/qc_cland_w515_n_d8_local32_codex",
+      "job": "COUNTED qc_cland_w515_n_d8_local32_codex epyc7 signed local32 run (SIGNED: DRC 0, TT +40.94, FF hold +14.96; signoff sha 420af10bfb3b; archived AGIdock+rtx-pro) export_view QC-PLAN-H2 11-16, complete=true, provenance b6d17a3a97be; dir sha 9bd668452c3d identical on all 7 hosts"
+     }
+    ],
+    "sle_cland_w517_n_s10_1": [
+     {
+      "host": "epyc8",
+      "dir": "/srv/opentallas-scratch2/claude/qc-plan-h2-1116/views2/sle_cland_w517_n_s10_1",
+      "job": "COUNTED sle_cland_w517_n_s10_1 epyc10:/srv/opentallas-scratch2/claude/die-qc-103/rk2/sle_cland_w517_n_s10_1/kits/sle_cland_w517_n_s10_1_synth0/signoff/signoff.json (LOCAL_PASS_NEEDS_PARENT: DRC 0, TT +149, internal reg-to-reg FF hold 0 viol / worst +9.29; port rst_xn -1.34 advisory) export_view QC-PLAN-H2 11-16 with provenance+landing_evidence (provenance dc51ce2821ec); dir sha 2c76419bef9b identical on all 7 hosts"
+     }
     ]
    },
    "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
@@ -50357,7 +50371,12 @@
      "intel1"
     ],
     "gen_host": "epyc2"
-   }
+   },
+   "prov_view_sources_prev_qcplanr_h2": {
+    "qc_cland_w515_n_d8_local32_codex": null,
+    "sle_cland_w517_n_s10_1": null
+   },
+   "note_prov_view_sources_qcplanr_h2": "QC-PLAN-R 2026-11-16 21:5x: registered views for qc_cland_w515_n_d8_local32_codex (signed, mig-023) and sle_cland_w517_n_s10_1 (had no entry / no provenance; reset-ring proof needs it, mig-024). Revert: restore these keys from prov_view_sources_prev_qcplanr_h2."
   },
   "hbm": {
    "enabled": true,
