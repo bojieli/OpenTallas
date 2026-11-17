@@ -803,6 +803,21 @@
     "a878cad77fcead02ba0592a79a44cc5212b6e2e4b7e61335cb505e854a8dec9b",
     "af825197966cd7665e5c9b95b34011d680e709998038d683b464039ff8987321"
    ]
+  },
+  {
+   "die": "s81",
+   "module": "dsdv_bksel_q",
+   "records": [
+    "3a374028043fd3728b8a24c547f47166811584827191f0238c07baa1d11bc2dc",
+    "ac34039bf1b1d98894b9777d4a8a6c4368e9408136a96b880c572ccd59bb3993"
+   ],
+   "params": {
+    "OLL": 2,
+    "RFH": 2,
+    "HLAT": 1
+   },
+   "source": "actual SIGNED eco3 kit config.mk VERILOG_TOP_PARAMS = OLL 2 RFH 2 HLAT 1, epyc2:/srv/opentallas-scratch2/claude/fable-fix-bksel/fx6/hei_fable/eco3/i1/config.mk line8; config SHA256 d77b25fdd3dca2fb4abf8c98960536252b9399aeae0af93006bbbffb68911535; signoff/ODB SHA256 in records; both archives s81/dsdv_bksel_q; no allowlist waiver",
+   "config_sha256": "d77b25fdd3dca2fb4abf8c98960536252b9399aeae0af93006bbbffb68911535"
   }
  ]
 }
