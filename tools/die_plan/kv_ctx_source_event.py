@@ -26,6 +26,37 @@ def once(text, pattern, fn, label):
     return result
 
 
+
+def host_port_map(source_map, parent_text, old_module, new_module):
+    """Carry the existing die-bundle aliases to an ABI-identical restored parent.
+
+    Rewire templates use the flattened leaf module, not the old wrapper name.
+    Validate every bundled RTL port and width before adding the new alias.
+    """
+    result = json.loads(json.dumps(source_map))
+    candidates = [(k, v) for k, v in result.get('masters', {}).items()
+                  if v.get('module') == old_module]
+    if len(candidates) != 1:
+        raise ValueError('host port-map requires exactly one old parent module')
+    ports = {}
+    for match in re.finditer(r'^\s*(?:input|output|inout)\s+(?:(?:wire|reg|logic)\s+)?(?:\[(\d+):(\d+)\]\s+)?([A-Za-z_][A-Za-z0-9_$]*)\s*;', parent_text, re.M):
+        hi, lo, name = match.groups()
+        ports[name] = abs(int(hi)-int(lo))+1 if hi is not None else 1
+    old_key, value = candidates[0]
+    for bundle in value.get('bundles', {}).values():
+        names = bundle.get('rtl_ports', [])
+        if not names or any(name not in ports for name in names):
+            raise ValueError('restored host port-map RTL port missing: '+repr(names))
+        width = sum(ports[name] for name in names)
+        if width != int(bundle['rtl_bits']):
+            raise ValueError('restored host port-map width mismatch: '+repr(names))
+    key = old_key+'__restored_host'
+    if key in result['masters'] or any(v.get('module') == new_module for v in result['masters'].values()):
+        raise ValueError('restored host port-map alias already exists')
+    result['masters'][key] = dict(value, module=new_module)
+    return result
+
+
 def emit(a):
     root = Path(a.root).resolve()
     native = Path(a.native).resolve()
@@ -124,6 +155,14 @@ def emit(a):
     old_map = Path(ab['map_file'])
     if not old_map.is_absolute(): old_map = ab_path.parent/old_map
     shutil.copy2(old_map, out/'asbuilt_map_base.json')
+    old_port_map = Path(ab['rewires']['port_map'])
+    if not old_port_map.is_absolute(): old_port_map = root/old_port_map
+    mapped = host_port_map(json.loads(old_port_map.read_text()), parent.read_text(),
+                           'qkd_host_root_admission_obsx_bo1_c45', a.host_module)
+    port_map_out = out/'port_map_ctx_hr.json'
+    port_map_out.write_text(json.dumps(mapped, indent=2)+'\n')
+    ab['rewires']['port_map'] = str(port_map_out.relative_to(root))
+    ab['port_names'] = str(port_map_out.relative_to(root))
     ab['base'] = os.path.relpath(root, out)
     ab['map_file'] = 'asbuilt_map_base.json'
     ab['netlist'] = [str((out/'die_bound_native_ctx_hr4.v.gz').relative_to(root))]
