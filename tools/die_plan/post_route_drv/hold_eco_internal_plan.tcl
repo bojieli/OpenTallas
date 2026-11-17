@@ -63,31 +63,64 @@ proc ot_hei_auto_plan {ffargs ttargs out} {
   }
   set fh [open $out w]
   puts $fh "# hold_eco_internal auto plan: capture_pin\tn_hb4"
-  set cells 0; set eps 0; set cut 0; set none 0; set selected [dict create]; set touched [dict create]; set uncovered 0
+  set none 0; set cut 0; set sel [dict create]; set selnet [dict create]; set lines {}; set notes {}
   foreach en [lsort [dict keys $worst]] {
     set sl [dict get $worst $en]
     set n [ot_hei_size [expr {$target - $sl}] $hb4_ff 25.0 4]
     if {$n < 1} continue
     set ttv [expr {[dict exists $tt $en] ? [dict get $tt $en] : 1e6}]
     set a [ot_hei_afford $ttv $hb4_tt $floor]
-    if {$a < 1} { incr none; puts $fh "# skipped $en: TT slack [format %.2f $ttv] cannot pay one cell"; continue }
+    if {$a < 1} { incr none; lappend notes "# skipped $en: TT slack [format %.2f $ttv] cannot pay one cell"; continue }
     if {$a < $n} { incr cut; set n $a }
     lassign [dict get $info $en] kind net
+    dict set sel $en [list $n $kind $net]
+  }
+  # SHARED NETS (bksel 11-17): padding some sinks of a net and re-routing it cost the unpadded sink 14 ps.  Per touched net: pad EVERY
+  # capture sink or none; a sibling gets max(1, cells for its own need) cut to its TT room; one that cannot pay a cell drops the net.
+  set pad [ot_hei_env OT_HEI_PAD_SIBLINGS 1]; set dropped 0
+  if {$pad ne "0"} {
+    set nets [dict create]
+    dict for {en v} $sel { if {[lindex $v 2] ne ""} { dict set nets [lindex $v 2] 1 } }
+    foreach net [lsort [dict keys $nets]] {
+      set add {}; set ok 1
+      foreach en [lsort [dict keys $ff]] {
+        lassign [dict get $info $en] kind n2
+        if {$n2 ne $net || [dict exists $sel $en]} continue
+        set sl [dict get $ff $en]
+        set ttv [expr {[dict exists $tt $en] ? [dict get $tt $en] : 1e6}]
+        set a [ot_hei_afford $ttv $hb4_tt $floor]
+        if {$a < 1} { set ok 0; lappend notes "# skipped $en: net $net sibling cannot pay one cell (TT [format %.2f $ttv]); the whole net is left unpadded"; break }
+        set n [ot_hei_size [expr {$target - $sl}] $hb4_ff 25.0 4]
+        if {$n < 1} { set n 1 }
+        if {$n > $a} { set n $a }
+        lappend add [list $en $n $kind $net]
+      }
+      if {$ok} {
+        foreach x $add { dict set sel [lindex $x 0] [lrange $x 1 3] }
+      } else {
+        incr dropped
+        foreach en [dict keys $sel] { if {[lindex [dict get $sel $en] 2] eq $net} { dict unset sel $en; lappend notes "# skipped $en: net $net left unpadded: a sibling sink cannot be padded" } }
+      }
+    }
+  }
+  set cells 0; set eps 0; set touched [dict create]; set uncovered 0
+  foreach en [lsort [dict keys $sel]] {
+    lassign [dict get $sel $en] n kind net
     set tag [expr {$kind eq "macro" ? "\tmacro" : ""}]
     puts $fh "$en\t$n$tag"; incr cells $n; incr eps
-    dict set selected $en 1
     if {$net ne ""} { dict set touched $net 1 } else { incr uncovered }
   }
+  foreach l $notes { puts $fh $l }
   set siblings 0
   dict for {en sl} $ff {
     lassign [dict get $info $en] kind net
-    if {![dict exists $selected $en] && $net ne "" && [dict exists $touched $net]} {
+    if {![dict exists $sel $en] && $net ne "" && [dict exists $touched $net]} {
       puts $fh "# reroute sibling $en net=$net ff_ps=[format %.3f $sl]; post-route hold must be measured"
       incr siblings
     }
   }
-  puts $fh "# summary endpoints=$eps hb4=$cells partial=$cut tt_skipped=$none port_or_noncapture_skipped=$skipped negative_internal=$negint unmodified_touched_siblings=$siblings net_unmeasured=$uncovered"
+  puts $fh "# summary endpoints=$eps hb4=$cells partial=$cut tt_skipped=$none port_or_noncapture_skipped=$skipped negative_internal=$negint unmodified_touched_siblings=$siblings net_unmeasured=$uncovered nets_left_unpadded=$dropped"
   close $fh
-  puts "OT_HEI_PLAN endpoints=$eps hb4=$cells partial=$cut tt_skipped=$none port_or_noncapture_skipped=$skipped negative_internal=$negint unmodified_touched_siblings=$siblings net_unmeasured=$uncovered"
+  puts "OT_HEI_PLAN endpoints=$eps hb4=$cells partial=$cut tt_skipped=$none port_or_noncapture_skipped=$skipped negative_internal=$negint unmodified_touched_siblings=$siblings net_unmeasured=$uncovered nets_left_unpadded=$dropped"
   return $eps
 }
