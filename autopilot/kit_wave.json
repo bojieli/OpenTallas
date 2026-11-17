@@ -36629,19 +36629,65 @@
           ]
         },
         {
-          "id": "s81-mig-005-k5-k6-k2-k2",
+          "id": "s81-mig-005-k5-k6-k2-k2-h10r2",
           "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-          "reason": "FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave src tree carries c0ddf60 relay regex + 430397fe psambig + fe26ef60 relay fail-closed) + lint_clean. | DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
+          "reason": "S81-TYPES-R3 11-17 06:5x PST, OWNER 06:11 rule + COORD authorization: dead term result:S81-TYPES-R2:col-wave1 dropped, per-instance hold/route repair per member. PROPOSED CODEX 11-17 split per FABLE-FIX-S81-COL03:25: independent family physical pilot; all previous non-wave terms kept; h9r1 additionally requires ordered-row source in selected tree. Original: FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave ",
           "release": [
-            "result:S81-TYPES-R2:col-wave1",
             "lint_clean:s81"
           ],
           "migrated": true,
           "keys": [
             "col_h10_r2__t1__cl1f5d6c2a",
-            "col_h10_r2__t1__cl99efd374",
+            "col_h10_r2__t1__cl99efd374"
+          ],
+          "carry": true,
+          "prev_release_dies81_92_f2s4": [
+            "event_adopt:B6gF2s3",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ],
+          "prev_release_fix_s81_col_stale": [
+            "event_adopt:B6gF2s4",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ],
+          "pilot_release": false
+        },
+        {
+          "id": "s81-mig-005-k5-k6-k2-k2-h9r1",
+          "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+          "reason": "PROPOSED CODEX 11-17 split per FABLE-FIX-S81-COL03:25: independent family physical pilot; all previous non-wave terms kept; h9r1 additionally requires ordered-row source in selected tree. Original: FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave src tree carries c0ddf60 relay regex + 430397fe psambig + fe26ef60 relay fail-closed) + lint_clean. | DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST (COORD r136/r131): all col types (216; Lef58EolKeepOut from the col abstract + reset recovery/removal). Running attempts finish. Lift = delete key when Event F adopts AND S81-COLABS-1115's new view is in.",
+          "release": [
+            "result:FABLE-FIX-S81-COL:col-h9r1",
+            "lint_clean:s81",
+            "result:FABLE-FIX-S81-COL:col-h9r1-rows"
+          ],
+          "migrated": true,
+          "keys": [
             "col_h9_r1__t1__cl49d7a23e",
-            "col_h9_r1__t1__clf32cde8d",
+            "col_h9_r1__t1__clf32cde8d"
+          ],
+          "carry": true,
+          "prev_release_dies81_92_f2s4": [
+            "event_adopt:B6gF2s3",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ],
+          "prev_release_fix_s81_col_stale": [
+            "event_adopt:B6gF2s4",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ]
+        },
+        {
+          "id": "s81-mig-005-k5-k6-k2-k2-h9r2",
+          "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+          "reason": "S81-TYPES-R3 11-17 06:5x PST, OWNER 06:11 rule + COORD authorization: dead term result:S81-TYPES-R2:col-wave1 dropped, per-instance hold/route repair per member. PROPOSED CODEX 11-17 split per FABLE-FIX-S81-COL03:25: independent family physical pilot; all previous non-wave terms kept; h9r1 additionally requires ordered-row source in selected tree. Original: FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave ",
+          "release": [
+            "lint_clean:s81"
+          ],
+          "migrated": true,
+          "keys": [
             "col_h9_r2__t1__cl774acf45",
             "col_h9_r2__t1__clb8d86cd5",
             "col_h9_r2__t1__clc9ad8f7e",
@@ -36657,7 +36703,8 @@
             "event_adopt:B6gF2s4",
             "result:FABLE-FIX-S81-COLTAP:col-wave1",
             "lint_clean:s81"
-          ]
+          ],
+          "pilot_release": false
         },
         {
           "id": "s81-mig-001-k1-k2-k1-k3",
@@ -36765,11 +36812,10 @@
           ]
         },
         {
-          "id": "s81-mig-001-k1-k2-k1-k4",
+          "id": "s81-mig-001-k1-k2-k1-k4-h10r2",
           "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-          "reason": "FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave src tree carries c0ddf60 relay regex + 430397fe psambig + fe26ef60 relay fail-closed) + lint_clean. | DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
+          "reason": "S81-TYPES-R3 11-17 06:5x PST, OWNER 06:11 rule + COORD authorization: dead term result:S81-TYPES-R2:col-wave1 dropped, per-instance hold/route repair per member. PROPOSED CODEX 11-17 split per FABLE-FIX-S81-COL03:25: independent family physical pilot; all previous non-wave terms kept; h9r1 additionally requires ordered-row source in selected tree. Original: FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave ",
           "release": [
-            "result:S81-TYPES-R2:col-wave1",
             "lint_clean:s81"
           ],
           "migrated": true,
@@ -36784,7 +36830,32 @@
             "col_h10_r2__t1__cl1f5d6c2a__pv16277ca6",
             "col_h10_r2__t1__cl1f5d6c2a__pvcd889288",
             "col_h10_r2__t1__cl1f5d6c2a__pvf1512c16",
-            "col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0",
+            "col_h10_r2__t1__cl1f5d6c2a__pv418d3dc0"
+          ],
+          "carry": true,
+          "prev_release_dies81_92_f2s4": [
+            "event_adopt:B6gF2s3",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ],
+          "prev_release_fix_s81_col_stale": [
+            "event_adopt:B6gF2s4",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ],
+          "pilot_release": false
+        },
+        {
+          "id": "s81-mig-001-k1-k2-k1-k4-h9r1",
+          "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+          "reason": "PROPOSED CODEX 11-17 split per FABLE-FIX-S81-COL03:25: independent family physical pilot; all previous non-wave terms kept; h9r1 additionally requires ordered-row source in selected tree. Original: FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave src tree carries c0ddf60 relay regex + 430397fe psambig + fe26ef60 relay fail-closed) + lint_clean. | DIE-S81-92 2026-11-16 COORD: F2s3 col half pairs overlap (372 swapped pairs, half 268.38 on 267.84 pitch); COLTAP rows_F2s4_colfix folded into B6gF2s4 (366 pairs +4.32 um, 6 h10_r0_p4 unswapped). Held to event_adopt:B6gF2s4. WAVE-HOLDS-1115 2026-11-15 13:32 PST B6gE adopt (FABLE-PD-S81-1045, COORD r131; lanes/handoff/S81-B6gE-holds.tsv): reset recovery/removal by structure (FABLE-PD-S81-1045 sec3). Running attempts finish. Lift = delete this key on Event F adopt.",
+          "release": [
+            "result:FABLE-FIX-S81-COL:col-h9r1",
+            "lint_clean:s81",
+            "result:FABLE-FIX-S81-COL:col-h9r1-rows"
+          ],
+          "migrated": true,
+          "keys": [
             "col_h9_r1__t1__cl49d7a23e__pvc382fb14",
             "col_h9_r1__t1__cl49d7a23e__pv11dcdcd2",
             "col_h9_r1__t1__cl49d7a23e__pv62bca836",
@@ -36843,7 +36914,29 @@
             "col_h9_r1__t1__clf32cde8d__pv48cfde67",
             "col_h9_r1__t1__clf32cde8d__pv3b9ba75c",
             "col_h9_r1__t1__clf32cde8d__pvee46d7b8",
-            "col_h9_r1__t1__clf32cde8d__pvd9381c1d",
+            "col_h9_r1__t1__clf32cde8d__pvd9381c1d"
+          ],
+          "carry": true,
+          "prev_release_dies81_92_f2s4": [
+            "event_adopt:B6gF2s3",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ],
+          "prev_release_fix_s81_col_stale": [
+            "event_adopt:B6gF2s4",
+            "result:FABLE-FIX-S81-COLTAP:col-wave1",
+            "lint_clean:s81"
+          ]
+        },
+        {
+          "id": "s81-mig-001-k1-k2-k1-k4-h9r2",
+          "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+          "reason": "S81-TYPES-R3 11-17 06:5x PST, OWNER 06:11 rule + COORD authorization: dead term result:S81-TYPES-R2:col-wave1 dropped, per-instance hold/route repair per member. PROPOSED CODEX 11-17 split per FABLE-FIX-S81-COL03:25: independent family physical pilot; all previous non-wave terms kept; h9r1 additionally requires ordered-row source in selected tree. Original: FIX-S81-COL-STALE 2026-11-16 19:4x PST: event_adopt:B6gF2s4 can never be met by the code (die event key is the sha 3fa87b84b18, plan file plan_h2_2249; die IS on the F2s4 lineage B6gF2s4tapfix1) and FABLE-FIX-S81-COLTAP is limited (no RESULT since 14:15), so 202 col types sat held with no live owner. Release = S81-TYPES-R2 (live col owner) RESULT 'col-wave1 PASS' (post only when a pilot on the wave ",
+          "release": [
+            "lint_clean:s81"
+          ],
+          "migrated": true,
+          "keys": [
             "col_h9_r2__t1__clc9ad8f7e__pvfef7c177",
             "col_h9_r2__t1__clc9ad8f7e__pv45d0c698",
             "col_h9_r2__t1__clc9ad8f7e__pv81a5dbf4",
@@ -36914,7 +37007,8 @@
             "event_adopt:B6gF2s4",
             "result:FABLE-FIX-S81-COLTAP:col-wave1",
             "lint_clean:s81"
-          ]
+          ],
+          "pilot_release": false
         },
         {
           "id": "s81-serdes-source-1116-codex",
