@@ -1,0 +1,136 @@
+{
+ "schema": "opentallas.qwen-kv-context-transport-candidate.v1",
+ "state": "ANALYTICAL_ONLY_NOT_BUILD_READY",
+ "opt_in_default": false,
+ "selected": false,
+ "hardware_implemented": false,
+ "source_mapped_sha256": "4cebef8fa7bc26db3fac24b039887546eb9328e420c37a67c8c9a53f6ef8832f",
+ "input_ports": {
+  "d2d__svc": {
+   "declared_bits": 174,
+   "used_bits": 139
+  },
+  "d2d__emb_tx_slot": {
+   "declared_bits": 1,
+   "used_bits": 1
+  },
+  "i_ctl": {
+   "declared_bits": 73,
+   "used_bits": 73
+  },
+  "i_hroot_WS": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_hroot_WN": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_hroot_ES": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_hroot_EN": {
+   "declared_bits": 299,
+   "used_bits": 299
+  },
+  "i_head_record": {
+   "declared_bits": 552,
+   "used_bits": 98
+  }
+ },
+ "output_ports": {
+  "rowtx__emb_tx_v": {
+   "declared_bits": 1,
+   "nonconstant_bits": 1
+  },
+  "rowtx__emb_tx_payload": {
+   "declared_bits": 548,
+   "nonconstant_bits": 537
+  },
+  "px_tok": {
+   "declared_bits": 18,
+   "nonconstant_bits": 18
+  },
+  "px_tep": {
+   "declared_bits": 16,
+   "nonconstant_bits": 16
+  },
+  "o_ctx_svc": {
+   "declared_bits": 174,
+   "nonconstant_bits": 174
+  },
+  "emb_fault": {
+   "declared_bits": 1,
+   "nonconstant_bits": 1
+  }
+ },
+ "input_stages": 4,
+ "output_stages": 2,
+ "added_component_latency_cycles": 6,
+ "added_component_latency_ps": 4998,
+ "raw_input_bits_per_cycle": 1996,
+ "used_input_bits_per_cycle": 1507,
+ "output_bits_per_cycle": 758,
+ "nonconstant_output_bits_per_cycle": 747,
+ "transport_FF_declared_upper": 9500,
+ "transport_FF_observed_used_bits_floor": 7522,
+ "output_bank_policy": "keep distinct physical output banks; do not share aliased px_tok/px_tep with service seam bits across different faces",
+ "transport_data_FF_area_floor_um2": 2193.4152000000004,
+ "transport_FF_CLK_cap_TT_floor_fF": 3570.964192,
+ "epoch_control_FF_candidate": 6,
+ "epoch_control_FF_area_floor_um2": 2.2744799999999996,
+ "source_component_mapped_FF": 5502,
+ "source_component_logic_area_um2": 2431.22958,
+ "macro_count": 2,
+ "macro_memory_bytes_per_cycle_each": {
+  "read": 64,
+  "write": 64
+ },
+ "compute": {
+  "macs_per_cycle": 0,
+  "added_rounding_points": 0
+ },
+ "replicas": 1,
+ "mux_demux_added": 0,
+ "throughput": {
+  "pipe_items_per_cycle": 1,
+  "component_demonstrated_request_spacing_cycles": 1270,
+  "new_composed_request_spacing_qualified": false
+ },
+ "source_dates": {
+  "first_header": 1193,
+  "first_rope": 1258,
+  "last_packet": 1265
+ },
+ "candidate_dates": {
+  "first_header": 1199,
+  "first_rope": 1264,
+  "last_packet": 1271
+ },
+ "physical_service_boundary": {
+  "existing_cycles": 2,
+  "with_wrapper_cycles_from_original_inputs": 8,
+  "bits_per_cycle": 174,
+  "extra_epoch_bits": 1
+ },
+ "placement_scope": {
+  "producer_geometry": "GEOMETRY_FIT_ONLY_NOT_BUILD_READY",
+  "internal_direct_max_um": 357.0720000000001,
+  "transport_stage_sites_unplaced": true
+ },
+ "admission": {
+  "measured_prior_component": "oth-ubuntu-986963-1794903354, Verilator -j2 PASS; new simulator measured CPU/RAM not yet available",
+  "next_vehicle": "actual same production component plus opt-in uniform-delay wrapper and latency-aligned lockstep; port-delay bypass mutant must fail",
+  "CPU_threads": 2,
+  "RAM_GB": null,
+  "capacity_policy": "derive from retained prior ot-heavy peak/admission before launch; no guessed protective limit or wall-time cap"
+ },
+ "open_requirements": [
+  "Four input stages must delay every used input including the slot/CTL/config/host-context and passthrough-service bits consistently.",
+  "Place per-port transport registers on actual source-to-consumer paths, including shared valid/epoch with payload; four stages only establish capacity for five <=380um hops, not obstacle-aware reach.",
+  "Determine reset assertion/release treatment explicitly and prove complete reset epochs; a uniform delay does not authorize silently changing reset behavior.",
+  "Global calendar and QC word-provider lifetime must consume the +6-cycle delivery event before source adoption.",
+  "Per-tap new sink inventory,6controlFF realization and TT/FF/route qualification remain open."
+ ]
+}

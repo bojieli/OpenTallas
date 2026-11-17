@@ -160,6 +160,40 @@ def qwen_kv_context_service_candidate_model():
                            "TT setup/FF hold and global consumer lifetime/request II"])
 
 
+def qwen_kv_context_transport_candidate_model():
+    """Analytical C4 uniform transport; the current release source remains unchanged.
+
+    Exact widths come from the actual TT-mapped qkd_kvs_emb_rope interface. Four
+    input and two output edges give a component latency delta of six cycles.
+    Physical paths, reset epochs and parent calendar consumption remain open;
+    neither this price nor the producer slot fit authorizes an RTL build.
+    """
+    return dict(schema='opentallas.qwen-kv-context-transport-candidate.v1',
+        selected=False, build_ready=False, opt_in_default=False, hardware_implemented=False,
+        source_component='qwen_kv_context_service_candidate_model',
+        evidence='results/kv_hr_closed_restore_1116/producer_placement1117/transport_model.json',
+        compute=dict(macs_per_cycle=0, added_rounding_points=0), replicas=1,
+        input_stages=4, output_stages=2, component_added_cycles=6,
+        input_declared_bits_per_cycle=1996, input_used_bits_per_cycle=1507,
+        output_declared_bits_per_cycle=758, output_nonconstant_bits_per_cycle=747,
+        data_FF_observed_used_floor=7522, data_FF_declared_upper=9500,
+        data_FF_area_floor_um2=2193.4152, data_FF_CLK_TT_floor_fF=3570.964192,
+        epoch_control_FF_candidate=6, epoch_control_area_floor_um2=2.27448,
+        clock_buffer_wire_hold_cost_unpriced=True,
+        source_dates=dict(first_header=1193, first_rope=1258, last_packet=1265),
+        candidate_dates=dict(first_header=1199, first_rope=1264, last_packet=1271),
+        service_existing_boundary_cycles=2, service_candidate_total_cycles=8,
+        component_demonstrated_request_II=1270, candidate_request_II_qualified=False,
+        producer_macro_count=2, producer_mapped_FF=5502,
+        producer_logic_region_um=[1069.2, 853.2, 1155.6, 939.6],
+        producer_logic_util=0.325685546875, producer_direct_internal_reach_um=357.072,
+        transport_register_sites_qualified=False, global_token_delta_cycles=None,
+        open_requirements=['obstacle-aware complete per-bit transport sites and channel demand',
+            'reset-epoch treatment and actual component lockstep plus bypass mutant',
+            'global calendar and QC consumer lifetime +6-cycle event',
+            'per-tap sink composition and TT/FF routed qualification'])
+
+
 def qwen_central_vm_native_bank_model():
     """Preserve four bank edges, isolate actual input/capture/output clock roots."""
     return dict(schema='opentallas.qwen-central-vm-native-bank.v1', opt_in_default=False,
