@@ -859,3 +859,9 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 93 GB free < 100 GB (OT_RT_MIN
   File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-17 11:50 PST MERGED [MERGE-QUEUE -> WAVE-FLOW-R2] claude/wave-flow-r2-1117@a8c31abb21c -> main b1204227591 -> be66cd6f6b6, no-ff merge, tags flow-20261113-yj-*. Gate: gate record from dear-crayfish 2026-11-17 11:45 PST on main b1204227591: 146 test file(s) pass (+4 source dir(s) the tests name: physical/die_plan/hbm/cores/harden physical/die_plan/hbm/cores/ports physical/die_plan/hbm_arch_cores physical/die_plan/s81/kit_wave) (1 order/load-flaky failure(s) passed on a serial rerun: tools/autopilot/test_kit_wave_guard_kill.py::Step::test_guard_kills_retry_for_free_and_never_block_or_count); tests: test_attempt_gen_host.py test_autobuild_pipe.py test_autobuild_pipe2.py test_cancel_stops_containers.py test_capture_frontend.py test_class_breaker.py test_config_drift.py test_export_restore.py test_failfast_rules.py test_failkey.py test_flow0015.py test_flow0445.py +134. Lane WAVE-FLOW-R2.
+- 2026-11-17 11:50 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main be66cd6f6b6 failed rc=1: runtime activation state not reported; stderr context: ine 349, in sync
+    d = materialize(full)
+  File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
+    raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
+RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
