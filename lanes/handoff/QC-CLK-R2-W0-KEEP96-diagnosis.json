@@ -1,0 +1,42 @@
+{
+ "classification": "Functional dead-state removal under LANE=0; no evidence of parser loss or live state alias. Physical registered-pin contract remains unqualified until existing proof/contract checks complete.",
+ "lec_dir": "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/runs_route3/group44_w0_nominal/work/orfs/lec_final",
+ "source": "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete",
+ "actual_lrly": "u_dut.u_u_lrly0",
+ "field_map": {
+  "c_dsi": [
+   503,
+   526
+  ],
+  "c_csi": [
+   527,
+   550
+  ],
+  "c_bsi": [
+   551,
+   574
+  ],
+  "c_asi": [
+   575,
+   598
+  ]
+ },
+ "bits": 96,
+ "evidence": [
+  "gold.aliases.json bit identity maps four 24-bit stride wires exactly onto idr503..598",
+  "qfd_dv_s5_leaves.sv724..739 explicitly kept posedge idr<=pdw then stride concatenation",
+  "qfd_dv_lane_h_su_mem9.sv346 selects LANE(0);497..500 only address uses are curX0 + LANE*Xsi",
+  "gold.map retains idr bits; gate.map has none",
+  "lec.py kept_functionally_unobservable only excludes dead kept bits after ALL compare points proven; unresolved93EXP+1 cannot bypass condition"
+ ],
+ "source_sha256": {
+  "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "97d84d865584bbf8eb747f1f082da48cf897bfe2f6fba2c78033d16bed135b22",
+  "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/physical/qfd_qc_su_lane_w_l0_m44s1.sv": "3d70de8c7065d6def988f3bd89c05612d65fe6d71c320f3d0b040f00e3e62c61",
+  "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/physical/qfd_dv_lane_h_su_mem9.sv": "6aadb6ea7e868120c514e5cb447ed3616d82b66d7e3f2f52421afeaf2e922c94",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/tools/die_plan/lec.py": "6fd756b800b0b74cb7eda5a1ef6f93b89c56f619133d56ecb4c86d11110f85cb",
+  "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/runs_route3/group44_w0_nominal/work/orfs/lec_final/lec.json": "807d42b69eda10194c959d4369c5025871e9403cfec8d6978f6d9a0879a76117",
+  "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/runs_route3/group44_w0_nominal/work/orfs/lec_final/gold.map": "d05965652c6cd8eae38b9d6f3620de94410126b5754ed979084dc0425780d4b4",
+  "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/runs_route3/group44_w0_nominal/work/orfs/lec_final/gate.map": "75f328b8b4352d44ce56ff343ff1f91fd92cc0400523a80dab8292f0b2d7c1a0"
+ },
+ "status": "DIAGNOSIS_ONLY_NO_WAIVER_NO_SOURCE_EDIT_NO_NEW_LEC"
+}
