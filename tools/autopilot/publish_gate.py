@@ -156,17 +156,15 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None):
 
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
-def host_cmd(ot_run, host, work_dir, shell_cmd, mem=6, threads=2):
-    """a gate stage on the gen host goes through ot-run (admission), never straight onto a loaded host"""
-    return [ot_run, "--mem", str(mem), "--threads", str(threads), "--dir", work_dir, "--hosts", host, "--", "bash", "-c", shell_cmd]
-
-
-def static_remote(ot_run, host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run):
-    """ships this file inline (the gen host has no checkout of the tool); -> the static result dict"""
+def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",)):
+    """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
+    of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
+    ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
     q = shlex.quote
-    cmd = (f"python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} --plan-sha256 {q(plan_sha256)}"
-           + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}")
-    p = runner(host_cmd(ot_run, host, work_dir, cmd), capture_output=True, text=True, timeout=3600)
+    cmd = (f"mkdir -p {q(work_dir)} && nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
+           f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}")
+    argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
+    p = runner(argv, capture_output=True, text=True, timeout=3600)
     txt = (p.stdout or "") + (p.stderr or "")
     got = [ln[len("PG_STATIC "):] for ln in txt.splitlines() if ln.startswith("PG_STATIC ")]
     if not got:
@@ -245,7 +243,7 @@ def write_record(C, rec, commit=False, runner=subprocess.run):
     return p
 
 
-def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=None, hub=None, commit=False, run_unit=True, ot_run=None,
+def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=None, hub=None, commit=False, run_unit=True, 
              static_fn=None, dry_fn=None, TC=None):
     marker = dict(obj.get("marker", obj))
     die, tree = marker["die"], marker["tree"]
@@ -265,7 +263,7 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             raise AssertionError("no representative item: pass --item or set die.pilot_item")
         rec["item"] = pick
         wr = str(cfgd.get("work_root") or json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("work_root") or "/tmp")
-        st = (static_fn or (lambda h, t, p, ab, ps: static_remote(ot_run or "ot-run", h, wr + "/pubgate", t, p, ab, ps)))(
+        st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub))))(
             hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
         rec["checks"].update(st)
         if all((st.get(c) or {}).get("verdict") == "PASS" for c in ("schema", "pre_g0", "hashes")):
@@ -289,7 +287,7 @@ def main(argv=None):
     r.add_argument("--expect-event", required=True)
     r.add_argument("--item")
     r.add_argument("--kind", default="type")
-    r.add_argument("--coord", default="/home/ubuntu/coord")
+    r.add_argument("--coord", default=os.path.expanduser("~/coord"))
     r.add_argument("--commit", action="store_true", help="commit the record with bin/coord-commit.sh")
     r.add_argument("--work")
     r.add_argument("--hub")
@@ -300,7 +298,7 @@ def main(argv=None):
     s.add_argument("--plan-sha256")
     s.add_argument("--work")
     c = sub.add_parser("check")
-    c.add_argument("--coord", default="/home/ubuntu/coord")
+    c.add_argument("--coord", default=os.path.expanduser("~/coord"))
     c.add_argument("--die", required=True)
     c.add_argument("--tree", required=True)
     c.add_argument("--manifest", required=True)
