@@ -218,7 +218,7 @@ def frame_variant(die_master):
     return None if v == 'l4' else v
 
 
-def frame_topology(master, frame=None):
+def frame_topology(master, frame=None, frame_instance=None):
     """the return topology the BF partials are composed on: the recorded _l4 frame topology, or (frame 'lp') the LP
     frame's source-pinned landed schedule topology (link edges include its landed crossings; sources hash-checked).
     The schedule attributes the landed crossings for the q leaves only (its station inputs list no BF pair): a BF leaf
@@ -231,7 +231,7 @@ def frame_topology(master, frame=None):
     import os
     import lower_xs
     selected = master + '_l4_lp' + ('_' + frame if frame in ('asb_x', 'asb_nx') else '')
-    sch = json.loads(lower_xs.source_frame_schedule(selected).read_text())
+    sch = json.loads(lower_xs.source_frame_schedule(selected, frame_instance).read_text())
     selected_root=Path(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT',str(ROOT)))
     for f, sha in sch['source_sha256'].items():
         assert hashlib.sha256((selected_root / f).read_bytes()).hexdigest() == sha, f'stale landed schedule: {f}'
@@ -245,7 +245,7 @@ def load_meas():
     return json.loads(p.read_text()) if p.exists() else {}
 
 
-def qualify_asbuilt_measurement(rec, master, land_e, frame):
+def qualify_asbuilt_measurement(rec, master, land_e, frame, frame_instance=None):
     """A candidate BF calendar must bind its static replay to this selected source.
 
     The explicit candidate file does not qualify a whole token. Its scope is a
@@ -273,20 +273,20 @@ def qualify_asbuilt_measurement(rec, master, land_e, frame):
         path=(root/name).resolve()
         if not path.is_relative_to(root) or not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=expected:
             raise ValueError('as-built BF measurement source changed: '+name)
-    schedule=lower_xs.source_frame_schedule(master+'_l4_lp_'+frame)
+    schedule=lower_xs.source_frame_schedule(master+'_l4_lp_'+frame, frame_instance)
     if hashlib.sha256(schedule.read_bytes()).hexdigest()!=q.get('schedule_sha256'):
         raise ValueError('as-built BF measurement return schedule changed')
     return 'measured_bf_active_idle_q'
 
 
-def meas_for(meas, master, land_e, frame=None, op=None):
+def meas_for(meas, master, land_e, frame=None, op=None, frame_instance=None):
     """the shape's measurement, or the same master measured at another lane latency E' moved by E - E' edges (every
     frame-internal event rides the landed lanes: frame_return_plan.x_shift; the programme is go-relative, unchanged);
     returns (record, 'measured_shape' | 'predicted_lane_shift') or (None, None)"""
     k = shape_key(master, land_e, frame)
     if k in meas:
         if frame in ('asb_x','asb_nx'):
-            how=qualify_asbuilt_measurement(meas[k],master,land_e,frame)
+            how=qualify_asbuilt_measurement(meas[k],master,land_e,frame,frame_instance)
             supported=meas[k]['asbuilt_source_qualification'].get('validated_ops',['attn.wo_a','ffn.router'])
             if op is not None and op not in supported:return None,None
             return meas[k],how
@@ -326,7 +326,7 @@ def place_bf(assign_slots, s, n):
     return place
 
 
-def bf_plan(master, bf_pairs, rows_vals, s, n, meas=None, base=None, frame=None):
+def bf_plan(master, bf_pairs, rows_vals, s, n, meas=None, base=None, frame=None, frame_instance=None):
     """placement (super row R -> BF pair R), programme descriptors (the shape's measured descriptor with this phase's
     ROM base) and return calendar of a BF phase: segment s of n of every row (no in-frame merge: one segment per row)"""
     import frame_return_plan as P
@@ -339,7 +339,7 @@ def bf_plan(master, bf_pairs, rows_vals, s, n, meas=None, base=None, frame=None)
     if meas is None:
         rec['calendar'] = 'calendar_unmeasured'
         return rec
-    topo = frame_topology(master, frame)
+    topo = frame_topology(master, frame, frame_instance)
     corr = meas.get('leaf_ret_corr') or {}
     # DIE-S81-51/RF-H 11-03 (TOK-VERIFY-1): a BF column form that adds bf_add edges to the BF partials moves every
     # measured partial edge by bf_add, unless the record was measured on that form (bf_col_form)
@@ -461,7 +461,7 @@ def cmd_measure(a):
         p_ = next(p for p, (RR, _) in zip(meta['bf']['pairs'], meta['bf']['assign']) if RR == R_)
         if leaf(p_, r_ % 2) in edges:
             ret_lat[leaf(p_, r_ % 2)] = e_ - edges[leaf(p_, r_ % 2)][0]
-    topo0 = frame_topology(meta['master'], a.frame)
+    topo0 = frame_topology(meta['master'], a.frame, meta.get('die_frame'))
     corr = {}
     if a.frame == 'lp':
         corr = {k: v - P.leaf_path(topo0, k)[0] for k, v in ret_lat.items() if v != P.leaf_path(topo0, k)[0]}

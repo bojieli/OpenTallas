@@ -222,6 +222,13 @@ class Die:
         self.E = {l['link']: l for l in self.land['links']}
         self.blocks = {b_['name']: b_ for b_ in self.plan['blocks']}
         self._links()
+        # Source-selected direct PF frame words replace some retired w_x_* chains.
+        # Keep their real endpoint identity; strict bound-data re-ages the wire.
+        from layer_prog.direct_frame_links import direct_frame_links
+        direct = direct_frame_links(self.inst, raw)
+        if self.links.keys() & direct.keys():
+            raise ValueError('direct PF frame wire collides with a legacy link name')
+        self.links.update(direct)
         try:                                    # S81-RATE3: physical frames per slice for the field dealing
             import xs_topo
         except ImportError:

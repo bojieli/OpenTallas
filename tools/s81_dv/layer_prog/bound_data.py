@@ -33,6 +33,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -91,11 +92,18 @@ def load_bind(bound, manifest=None, root=None, *, diagnostic=False):
     if manifest is not None:
         if prov.get('manifest') != manifest:
             raise ValueError(f'bind manifest {prov.get("manifest")} != selected {manifest}')
-        m = json.loads((Path(root) / manifest).read_text())
+        manifest_path = Path(root) / manifest
+        m = json.loads(manifest_path.read_text())
         nl = m['netlist'] if isinstance(m['netlist'], list) else [m['netlist']]
         if len(nl) != 1:
             raise ValueError(f'manifest names {len(nl)} netlists; bound data needs exactly one die top')
-        netlist_path = Path(root) / nl[0]
+        base = Path(m.get('base', '.'))
+        if not base.is_absolute():
+            base = manifest_path.parent / base
+        netlist_path = Path(nl[0])
+        if not netlist_path.is_absolute():
+            netlist_path = base / netlist_path
+        netlist_path = netlist_path.resolve()
         netlist_sha = file_sha(netlist_path)
     groups = json.loads((bound / 'bus_groups.json').read_text())
     lat = json.loads((bound / 'bind_latency.json').read_text())
@@ -159,6 +167,12 @@ def rebind_links(die, B, *, diagnostic=False):
     inner = defaultdict(list)
     for m in B.get('internal') or []:
         inner[(_top(m['source']), _top(m['sink']))].append(m)
+    aliases = None
+    selected_root = os.environ.get('OT_S81_SELECTED_SOURCE_ROOT')
+    selected_manifest = os.environ.get('OT_S81_SELECTED_ASBUILT_MANIFEST')
+    if selected_root and selected_manifest:
+        from .endpoint_aliases import SelectedInputAliases
+        aliases = SelectedInputAliases(die, selected_root, selected_manifest)
     def select(lk, L):
         S = {x[0] for x in L['src']}
         D = {x[0] for x in L['dst']}
@@ -172,6 +186,10 @@ def rebind_links(die, B, *, diagnostic=False):
         # port identity: the die-level port names when they reach the leaf; else the pair must be unambiguous
         exact = [(m, r) for m, r in cand if (r or m['kport'] in dp) and m['sport'] in sp]
         portk = [(m, r) for m, r in cand if (r or m['kport'] in dp)]
+        if not exact and not portk and aliases is not None:
+            direct = [(m,r) for m,r in cand if not r and aliases.matches(m['sink'],m['kport'],dp)]
+            if direct:
+                return direct, 'selected_direct_wrapper_input'
         return ((exact, 'ports') if exact else ((portk, 'sink_port') if portk else (cand, 'pair')))
 
     rows, new = {}, {}
@@ -299,5 +317,5 @@ def rebind_links(die, B, *, diagnostic=False):
                counts=dict(stat), links=len(rows), changed=changed, lane_depth_below_lane=lane_err[:50],
                scope='die-level link ages only; the priced p4l layer schedule and intra-frame calendars keep their own '
                      'sources (not re-aged here)',
-               rows=rows)
+               rows=rows, selected_input_aliases={} if aliases is None else aliases.used)
     return rec
