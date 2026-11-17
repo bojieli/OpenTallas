@@ -388,6 +388,7 @@ if {[dict size $nx_moved]} {
   set nx_spread [expr {$nc_chains - $nc_chains_before}]
 }
 puts "OT_XSTN_SITE xstn $nx_seen kept $nx_kept kept_external $nx_keep_ext moved [dict size $nx_moved] cells_moved $nx_cells p90_um_from_face_strip_before [format %.0f $nx_before] after [format %.0f $nx_after] reach_um $nx_reach_um a_d_chains_spread $nx_spread faces [dict values $nx_moved]"
+catch {puts "OT_NK_HEADHOP_RESITE shared_hops $nc_hh_shared shared_hop_cells_resited $nc_hh_shared_moved shared_hops_checked $nc_hh_seen path_over_3x_direct_after $nc_hh_stretch"}
 }
 # CBF-R8-CORRIDOR: an INNER strap bank has a fixed common prefix, a selectable count bank and a final NK pipe.
 # The mux is not a register chain: discover it by the kept bank identity, then verify ALL dynamic cone roots.
@@ -650,4 +651,3 @@ foreach inst [dict keys $nc_cnt_targets] { lassign [dict get $nc_cnt_targets $in
 puts "OT_NK_R8_COUNT_CHAIN eligible_bits $nc_cnt_seen placed_bits $nc_cnt_chains stages_moved $nc_cnt_stages mux_cells_moved $nc_cnt_mux refused_bits $nc_cnt_refused min_count_max_hop_um $nc_cnt_worst"
 }
 }
-puts "OT_NK_HEADHOP_RESITE shared_hops $nc_hh_shared shared_hop_cells_resited $nc_hh_shared_moved shared_hops_checked $nc_hh_seen path_over_3x_direct_after $nc_hh_stretch"
