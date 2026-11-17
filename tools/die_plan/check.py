@@ -2705,6 +2705,29 @@ def g0c_summary(P, R):
                 g3_eligible=sorted(tn for tn in P.types if tn not in bad and not die), by_type=bad)
 
 
+def find_native_reset_receipt(P, repo_root=None):
+    """HEAD-DIE-R 11-16 (COORD): every G0 of a plan picks up the native reset release receipt bound to THAT plan, so no
+    caller has to remember --native-reset-receipt.  Looks in <root>/results/*/native_release_receipt.json (root =
+    --repo-root, else this checkout) for schema opentallas.head_native_release.v1 whose plan_sha256 equals this plan's
+    digest; the receipt is then fully re-verified by head_native_release.qualify (sources, proof logs, all targets).
+    No match -> None: the native release stays PENDING (unchanged default).  An explicit --native-reset-receipt wins."""
+    import head_native_release as HNR
+    root = Path(repo_root) if repo_root else Path(__file__).resolve().parents[2]
+    want = None
+    for f in sorted((root / "results").glob("*/native_release_receipt.json")):
+        try:
+            r = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        if not isinstance(r, dict) or r.get("schema") != "opentallas.head_native_release.v1":
+            continue
+        if want is None:
+            want = HNR.digest(P.raw)
+        if r.get("plan_sha256") == want:
+            return str(f)
+    return None
+
+
 def _plan_geom_default():
     import plan_geom as PGEO
     return PGEO.DEFAULT_MODE
@@ -2729,10 +2752,17 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         return R, dict()
     # Plan-relative declarations (core pins_file for the reset wavefront) resolve against the plan's own directory.
     P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
+    if native_reset_receipt is None:
+        native_reset_receipt = find_native_reset_receipt(P, repo_root)
     if native_reset_receipt is not None:
         P._native_reset_release_receipt = native_reset_receipt
+        summ_receipt = str(native_reset_receipt)
+    else:
+        summ_receipt = None
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
+    if summ_receipt:
+        summ["native_reset_receipt"] = summ_receipt
     if any(t.get("infra_ports") for t in P.types.values()):
         import infra_rtl as IR
         try:

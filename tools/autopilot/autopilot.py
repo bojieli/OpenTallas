@@ -653,6 +653,27 @@ txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog = rd(os.path.join(K, "run_%s.log" % goal), 400000)
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
+# HOLD-FLOW-R 11-16 (closure lever 4, WARNING ONLY, never a verdict): the CTS hold-buffer count of this run against the kit's
+# previous form (tools/die_plan/cts_hold_jump.py, same sum of RSZ-0032 "Inserted N hold buffers" and the same 2x / 200 rule).
+# The previous count lives in K/cts_hold_count.json, advanced only when the CTS log is a new file (mtime), so re-probing the
+# same run never compares it with itself.
+try:
+    _c = [p for p in logs if os.path.basename(p).startswith("4_1_cts")]
+    if _c:
+        _n = sum(int(x.replace(",", "")) for x in re.findall(r"Inserted\s+([0-9][0-9,]*)\s+hold\s+buffers?", rd(_c[-1], 4000000), re.I))
+        _m = os.path.getmtime(_c[-1]); _pf = os.path.join(K, "cts_hold_count.json"); _st = (jl(_pf) or {}) if os.path.isfile(_pf) else {}
+        _prev = _st.get("previous") if _st.get("mtime") == _m else _st.get("current")
+        out["cts_hold"] = {"current": _n, "previous": _prev}
+        if _prev and _n >= 200 and _n >= 2 * _prev:
+            out["cts_hold_jump"] = "OT_CTS_HOLD_JUMP FLAG: %d CTS hold buffers vs %d in the previous form (%.1fx >= 2x): read the CTS hold scope / margin before detail route" % (_n, _prev, _n / float(_prev))
+            sys.stderr.write("WARN " + out["cts_hold_jump"] + " kit=" + K + "\n")
+        if _st.get("mtime") != _m:
+            try:
+                json.dump({"current": _n, "previous": _prev, "mtime": _m}, open(_pf, "w"))
+            except OSError:
+                pass
+except Exception as _e:
+    out["cts_hold_error"] = str(_e)[:120]
 # A legacy gate can write a PASS receipt, then throw in its clock-source census.
 # This is a tool failure, not a timing verdict. Require all three current-run
 # witnesses; PASS/exit 1 alone must never override a real setup/hold failure.

@@ -192,12 +192,28 @@ def _cland_pinslot(budgets, tn, extra=()):
 
 
 
+def _is_col_type(tn):
+    return tn is not None and tn.split("__")[0].startswith("col_")
+
+
+def _relay_fallback_max_frac(budgets, tn):
+    """S81-TYPES-R2 11-16 (COORD CLOSURE-STRATEGY-2100 lever 2): a col kit fails closed at place when ANY relay group
+    takes the old nearest-free fallback (relay_mid.tcl OT_RELAY_FALLBACK_MAX_FRAC = 0): an unfitted group means a hop
+    over OT_RELAY_MID_MAX_HOP_UM (405) or no site, i.e. a plan relay-depth row, never a routable kit (col_h10_r0_p1:
+    18 of 95 unfitted, hops 1,118-1,561 um, CTS -508.5).  budgets.relay_fallback_max_frac overrides (null = advisory)."""
+    if "relay_fallback_max_frac" in budgets:
+        return budgets["relay_fallback_max_frac"]
+    return 0 if _is_col_type(tn) else None
+
+
 def _relay_mid_fit(budgets, tn):
     """S81-TYPES-5 11-07 CHANNEL class (relay_mid.tcl FIT), opt-in three ways, absent = unchanged kits: plan-wide
     budgets.relay_mid_fit, per type budgets.relay_mid_fit_types (types or unsplit base names), or per kit-wave row
     through item_env (GEN env OT_RELAY_MID_FIT=1), so a pilot or a class batch needs no plan event."""
     if os.environ.get("OT_RELAY_MID_FIT") == "1" or budgets.get("relay_mid_fit"):
         return True
+    if _is_col_type(tn) and budgets.get("relay_mid_fit") is not False:
+        return True       # S81-TYPES-R2 11-16 (COORD lever 2): col types always FIT, so the fail-closed count below exists
     on = list(budgets.get("relay_mid_fit_types") or [])
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
@@ -978,7 +994,9 @@ def io_tcl(P, tn, pins):
 
 # soft relay instances placed by relay_mid.tcl: the kept ot_s81_rly relays of the S81 frame bands (u_r<k>.u_y_<lane>);
 # a plan may override it with budgets.relay_mid_re (first capture = the relay group)
-RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
+# S81-TYPES-R2 11-16: [._] before u_y_ -- synthesis flattens u_r0.u_y_xo0_0 to u_u_r0_u_y_xo0_0 (col types); the [.]-only
+# form matched 5 of 80 relay groups on col_h10_r2 (CTS 14 endpoints under -42 -> 2 with [._], 7,014 relay flops placed)
+RELAY_MID_RE = r"^(.*[._]u_y_[A-Za-z0-9_]+)[.]"
 
 
 def _snap_tap(P, x, y, pg_legal=True):
@@ -3303,7 +3321,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
 # GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
-HOLD_FF_MARGIN_DEFAULT = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
+HOLD_FF_MARGIN_DEFAULT = 10.0   # HOLD-FLOW-R 11-16 (closure strategy lever 1): 10 ps repair target on INTERNAL endpoints only (the in-flow repair scope is reg2reg: input starts and output ends are excluded), never 20; GRT repair closes to 0 on the estimate and extraction then moves short paths by 9-17 ps; the GATE stays FF hold >= 0; was 0 (OWNER 11-02)
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
@@ -5958,6 +5976,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
+             if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
            *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),

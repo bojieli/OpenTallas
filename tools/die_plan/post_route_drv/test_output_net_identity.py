@@ -67,6 +67,6 @@ def test_existing_replacement_name_fails_closed():
 
 def test_prd_mk_stages_and_runs_it_before_clock_freeze_assert():
     t = TCL.with_name("prd_mk.sh").read_text()
-    assert "output_net_identity.tcl prd_hook.tcl" in t
+    assert "hold_eco_internal_plan.tcl output_net_identity.tcl; do cp" in t
     i = t.index("echo 'ot_output_net_identity'")
     assert t.index("ot_pg_require_bound post_route_drv") < i < t.index("{ot_clk_freeze_assert post_chain}")

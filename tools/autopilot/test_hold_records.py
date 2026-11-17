@@ -47,6 +47,27 @@ class T(unittest.TestCase):
         self.assertEqual(c["dies"]["s81"]["hold_items"], {})
         self.assertEqual(len(c["_hold_auto_released"]), 2)
 
+    def test_plan_event_is_adopted_in_both_evaluators(self):
+        c = base()
+        d = c["dies"]["s81"]
+        d.update(event="3fa87b84b18", plan="/x/plan_h2_2249.json", plan_event="B6gF2s4tapfix1")
+        term = "event_adopt:B6gF2s4tapfix1"
+        self.assertIsNone(HR.term_error(term, "s81", c))
+        self.assertIsNone(HR.unreachable_why(term, "s81", c))
+        for ctx in (HR.Ctx(), HR.Ctx(event_met=KW._hold_term_met)):
+            self.assertTrue(HR.term_met(term, {}, "s81", "col_a__t1", c, ctx))
+            self.assertFalse(HR.term_met("event_adopt:B6gF2s4", {}, "s81", "col_a__t1", c, ctx))
+            self.assertTrue(HR.term_met("event_adopt:B6gF2s4*", {}, "s81", "col_a__t1", c, ctx))
+            self.assertFalse(HR.term_met("event_adopt:B6gF2s3", {}, "s81", "col_a__t1", c, ctx))
+
+    def test_previous_and_planned_events_do_not_release(self):
+        c = base()
+        c["dies"]["s81"].update(event_prev="B6gF2s3", plan_event="B6gF2s4tapfix1")
+        for term in ("event_adopt:B6gF2s3", "event_adopt:B6gG3b"):
+            self.assertIsNone(HR.term_error(term, "s81", c))
+            for ctx in (HR.Ctx(), HR.Ctx(event_met=KW._hold_term_met)):
+                self.assertFalse(HR.term_met(term, {}, "s81", "col_a__t1", c, ctx))
+
     def test_lint_clean_is_per_item(self):
         c = base()
         HR.add_record(c, "s81", rec(release=["lint_clean:s81"]))

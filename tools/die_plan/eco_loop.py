@@ -61,7 +61,7 @@ HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
 MAX_ITER = 1                  # OWNER 11-07 05:3x: one late-stage iteration per routed form; was 3
-HOLD_MARGIN_PS = 5            # COORD 11-09 04:4x (KW-FIX-42): hold REPAIR TARGET 5 ps for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
+HOLD_MARGIN_PS = 10           # HOLD-FLOW-R 11-16 (lever 1): hold REPAIR TARGET 10 ps on internal (reg2reg) endpoints, was 5 (COORD 11-09 KW-FIX-42): a repair to +0..+5 lands negative after re-extraction (9-17 ps) for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}
@@ -167,6 +167,7 @@ def eco_vclk_frame(pass_dir, variant, prev):
 
 
 _LATE_HOLD_SCOPE = ContextVar("late_eco_hold_scope", default=None)
+_HOLD_TARGETED = ContextVar("late_eco_hold_targeted", default=False)
 
 
 def hold_scope():
@@ -174,6 +175,18 @@ def hold_scope():
     if "OT_HOLD_REPAIR_SCOPE" in os.environ:
         return (os.environ.get("OT_HOLD_REPAIR_SCOPE") or "").strip().lower()
     return _LATE_HOLD_SCOPE.get() or ""
+
+
+def targeted_hold_case(base_signoff):
+    """HOLD-FLOW-R 11-16: the standard hold_eco step.  A routed kit whose sign-off fails ONLY internal FF hold (DRC and TT
+    pass, R-MINIMAL) gets the targeted internal HB4 insert sized for +10 ps (OT_PRD_HOLD_TARGETED=1 -> hold_eco_internal_plan.tcl
+    + hold_eco_internal_insert.tcl in prd_hook.tcl) instead of the global repair_timing -hold.  OT_ECO_HOLD_TARGETED=0 opts out."""
+    if os.environ.get("OT_ECO_HOLD_TARGETED", "1").strip() == "0":
+        return False
+    try:
+        return bool(minimal_hold_only(load(Path(base_signoff))))
+    except Exception:
+        return False
 
 
 def late_hold_scope(kit):
@@ -870,6 +883,8 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
             env["OT_PRD_REPAIR_RC"] = repair_rc
+        if _HOLD_TARGETED.get() and v[0] in "mb":
+            env["OT_PRD_HOLD_TARGETED"] = "1"      # the hold pass of a hold-only case: targeted internal insert (HOLD-FLOW-R)
         # KIT-OPS-4: no OT_VCLK_CORNER override here: a TT-only pass must not see ff (kit_modes), the b pass gets ff from variant.env (prd_mk.sh)
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
@@ -1068,9 +1083,11 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     if route_hold_form:
         return _run_loop(**options)
     token = _LATE_HOLD_SCOPE.set(late_hold_scope(kit))
+    t2 = _HOLD_TARGETED.set(targeted_hold_case(base_signoff))
     try:
         return _run_loop(**options)
     finally:
+        _HOLD_TARGETED.reset(t2)
         _LATE_HOLD_SCOPE.reset(token)
 
 
