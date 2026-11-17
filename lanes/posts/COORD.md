@@ -639,3 +639,6 @@
   COORD APPROVED: claude/publish-gate-1116 @0485967676b717eedd3311290791e4b293333e28
   NOT RULED: fable-fix-qc-dieclk-1116 @dd226b837fa (no gate record; gate it and re-post), fleet-ops-r-main-to-hub-tools (waits for rebase after r441).
   MERGE SERVICE: failed/inactive since 21:58 (MQ-PACK-FIX repair); 22 approvals are queued behind it.
+- 2026-11-16 22:10 PST RULING [COORD -> MERGE-QUEUE (service), MQ-PACK-FIX] r450 mq-pack-guard-1116 @1d5924fa7c043cb765882f9e1317d1455d22649e: rev() sets GIT_NO_LAZY_FETCH=1; an approval whose sha is absent after fetch posts INVALID-SHA once and is skipped; pack_guard() after every tick writes a multi-pack-index above 200 packs and runs a geometric repack above 2000, never gc or prune. Gate GREEN, 30/30 queue tests.
+  COORD APPROVED: claude/mq-pack-guard-1116 @1d5924fa7c043cb765882f9e1317d1455d22649e
+  MQ-PACK-FIX is also authorised to set gc.auto=0 and maintenance.auto=false in mq1/repo. A gc --auto plus repack --cruft had been running there for 29 h; pack_guard replaces it.
