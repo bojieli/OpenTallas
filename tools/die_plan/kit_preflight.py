@@ -435,6 +435,7 @@ def reset_tree_coherence(kit):
         q = re.findall(r'\.q\s*\(\s*(\w+)\s*\)', matches[0]) if len(matches) == 1 else []
         if q != [key]:
             errors.append(f'{inst}: reset_tree.tcl key {key}, staged RTL q {q or "MISSING/AMBIGUOUS"}; regenerate a coherent wrapper/tree')
+    return errors
 
 
 # ---- landing band legal-site preflight (KV-R 11-16, KV-HUB-WO class f5fa4d600f) ---------------------------------------
