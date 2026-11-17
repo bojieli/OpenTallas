@@ -2002,6 +2002,15 @@ DME_TEMPLATE_TYPES = None      # {partition: type}, set by clock_kit
 # (_dme_template_site), so no copy is refused for an illegal site (S4q9m comb_t: 17 regions of cbn_q00 / cbx_q10_h / cbf_q11
 # kept their own tree and those three types kept a 55..69 ps instance spread while every fully copied type was under 5 ps).
 DME_TEMPLATE_COMMON = os.environ.get("OT_CLK_DME_TEMPLATE", "0") == "2"
+# KV-CLK-R2 11-17 opt-in OT_CLK_DME_TEMPLATE_XMIRROR=1: the template also copies onto an x-mirrored instance (MY / R180 of an
+# R0 / MX template; x' = -x + dx), returned as the 4-tuple (dx, sy, cy, -1.0).  KV e7: every hg / pc type sits R0 / MX / MY /
+# R180, so only the MX copy was taken and the MY / R180 pair kept its own embedding (tol up to 66 ps on kv3_pc_v1, 50 on kv3_hg).
+DME_TEMPLATE_XMIRROR = os.environ.get("OT_CLK_DME_TEMPLATE_XMIRROR", "0") not in ("", "0")
+
+
+def _xf4(xf):
+    """(dx, sy, cy, sx) of a template xform (3-tuple = sx +1)"""
+    return (xf[0], xf[1], xf[2], xf[3] if len(xf) > 3 else 1.0)
 
 
 def _dme_template_site(site, ctaps, xfs, pad=5.0):
@@ -2021,11 +2030,13 @@ def _dme_template_site(site, ctaps, xfs, pad=5.0):
         return None
     rect = tuple(rect[:4])
     forb = [r for r in site.forb if near(r, rect)]
-    for dx, sy, cy in xfs:
-        q = own(cx + dx, sy * cy0 + cy)
+    for xf in xfs:
+        dx, sy, cy, sx = _xf4(xf)
+        q = own(sx * cx + dx, sy * cy0 + cy)
         if q is None:
             return None
-        back = lambda r: (r[0] - dx, min(sy * (r[1] - cy), sy * (r[3] - cy)), r[2] - dx, max(sy * (r[1] - cy), sy * (r[3] - cy)))
+        back = lambda r: (min(sx * (r[0] - dx), sx * (r[2] - dx)), min(sy * (r[1] - cy), sy * (r[3] - cy)),
+                          max(sx * (r[0] - dx), sx * (r[2] - dx)), max(sy * (r[1] - cy), sy * (r[3] - cy)))
         b = back(q)
         rect = (max(rect[0], b[0]), max(rect[1], b[1]), min(rect[2], b[2]), min(rect[3], b[3]))
         forb += [back(r) + tuple(r[4:]) for r in site.forb if near(r, q)]
@@ -2052,23 +2063,24 @@ def _dme_template_xform(ctaps, itaps, tol=2e-3):
     if set(c) != set(i) or len(c) != len(ctaps) or len(i) != len(itaps):
         return None
     k0 = sorted(c)[0]
-    dx = i[k0][2] - c[k0][2]
-    if any(abs(i[k][2] - c[k][2] - dx) > tol for k in c):
-        return None
-    for sy in (1.0, -1.0):
-        cy = i[k0][3] - sy * c[k0][3]
-        if all(abs(i[k][3] - sy * c[k][3] - cy) <= tol for k in c):
-            return dx, sy, cy
+    for sx in ((1.0, -1.0) if DME_TEMPLATE_XMIRROR else (1.0,)):
+        dx = i[k0][2] - sx * c[k0][2]
+        if any(abs(i[k][2] - sx * c[k][2] - dx) > tol for k in c):
+            continue
+        for sy in (1.0, -1.0):
+            cy = i[k0][3] - sy * c[k0][3]
+            if all(abs(i[k][3] - sy * c[k][3] - cy) <= tol for k in c):
+                return (dx, sy, cy) if sx > 0 else (dx, sy, cy, sx)
     return None
 
 
 def _dme_template_copy(site, tree, ctaps, itaps, xf):
     """the template tree (dme_region_tree result) moved by xf onto the instance taps; None if a moved cell site is illegal"""
     dn, droot, dst = tree
-    dx, sy, cy = xf
+    dx, sy, cy, sx = _xf4(xf)
     imap = {t[1]: t for t in itaps}
     cpart, ipart = ctaps[0][0], itaps[0][0]
-    mv = lambda x, y: (round(x + dx, 3), round(sy * y + cy, 3))
+    mv = lambda x, y: (round(sx * x + dx, 3), round(sy * y + cy, 3))
     out = []
     for d in dn:
         q = mv(d["x"], d["y"])
