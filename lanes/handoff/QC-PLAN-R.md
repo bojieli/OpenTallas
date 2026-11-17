@@ -13,5 +13,5 @@
 - Bind RUNNING: E2 bin/chain_s4q9l2.sh, tag s29q103S4Q9L2BQ, client intel2 ~/fable-fix-qc-knee-hc/chain_s4q9l2.client.log (started 17:22). Fable review FABLE-PD-QC-S4q9l2 running in parallel.
 - Adopt after Kf adopts: bind errors 0, r8rc 0, LATCHECK PASS, hcparam 0, G0 = 2 inherited faces rows, no Fable BLOCK.
 
-## S4q9m: child QC-PLAN-M composing on l2 (comb feed + CA re-plan check + (d) 72-pin window). Template form (2bed6a4) not adopted: cb tol 129->104 only.
+## S4q9m: COORD 17:4x scope: FABLE-DIE-QC-R owns die clock design (feed, per-type trees, need+10, serdes proof) and hands rows; QC-PLAN-R composes + binds S4q9m. Child QC-PLAN-M narrowed to item (d) only (72-pin window sl_W5_fw.W / coll_f4.E) -> zz_s29_qc103_s4q9l2d.json. Template form (2bed6a4) not adopted: cb tol 129->104 only.
 ## io_serdes_2 -> c_W5_bf_01: CONFIRMED. dec8cc442a in main; gate_main (before) CA TT/FF fail 3 (-107.1/-67.0), gate_main3 (after) fail 0 (lo 109.9/105.1), 2993 PASS. No +1K plan row: fixed planner picks it in C; native N43 maps both same-region (delta 0).
