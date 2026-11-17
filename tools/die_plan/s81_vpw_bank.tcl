@@ -5,7 +5,7 @@ uplevel #0 {
 set vb_b [ord::get_db_block]
 set vb_u [[ord::get_db_tech] getDbUnitsPerMicron]
 set vb_core [$vb_b getCoreArea]
-set vb_banks {}; set vb_ffs {}; set vb_blocks {}
+set vb_banks {}; set vb_ffs {}; set vb_blocks {};set vb_groups {}
 foreach i [$vb_b getInsts] {
   set m [$i getMaster]; set n [$i getName]
   if {[$m isBlock]} {
@@ -15,10 +15,14 @@ foreach i [$vb_b getInsts] {
   }
   if {[regexp {(^|[._/])vp[._/]g_wr1[._/]u_w[._/]} $n] && [string match *DFF* [$m getName]]} {
     lappend vb_ffs $i
+    regexp {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]} $n -> group
+    dict set vb_groups $group 1
   }
 }
 if {[llength $vb_banks] != 2} {error "OT_VPW_BANK needs exactly two real VP SRAM macros, got [llength $vb_banks]"}
 if {![llength $vb_ffs]} {error "OT_VPW_BANK found no VPW FFs; hierarchy/RTL mismatch"}
+if {[dict size $vb_groups]!=1} {error "OT_VPW_BANK needs one leaf write-port group"}
+set vb_group [lindex [dict keys $vb_groups] 0]
 set vb_x0 1e30;set vb_y0 1e30;set vb_x1 -1e30;set vb_y1 -1e30
 foreach i $vb_banks {
   set q [$i getBBox]
@@ -95,9 +99,9 @@ foreach bt [$vb_b getBTerms] {
 }
 if {$vb_tap eq ""} {error "OT_VPW_BANK no standard clock tap"}
 set vb_clk [open /work/vpw_bank_clock.tcl w]
-puts $vb_clk {if {[info exists ::env(OT_TAP_GROUP_RE)] && $::env(OT_TAP_GROUP_RE) ne "" && $::env(OT_TAP_GROUP_RE) ne {^(u_bound[.]u_u_vp_g_wr1_u_w)[.]}} {error "OT_VPW_BANK conflicts with an existing clock group; combine groups explicitly"}}
-puts $vb_clk {set ::env(OT_TAP_GROUP_RE) {^(u_bound[.]u_u_vp_g_wr1_u_w)[.]}}
-puts $vb_clk "set ::env(OT_TAP_GROUP_FIXED) {u_bound.u_u_vp_g_wr1_u_w:$vb_tap}"
+puts $vb_clk {if {[info exists ::env(OT_TAP_GROUP_RE)] && $::env(OT_TAP_GROUP_RE) ne "" && $::env(OT_TAP_GROUP_RE) ne {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]}} {error "OT_VPW_BANK conflicts with an existing clock group; combine groups explicitly"}}
+puts $vb_clk {set ::env(OT_TAP_GROUP_RE) {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]}}
+puts $vb_clk "set ::env(OT_TAP_GROUP_FIXED) {$vb_group:$vb_tap}"
 close $vb_clk
 puts "OT_VPW_BANK_CLOCK $vb_tap at [expr {$vb_td/double($vb_u)}]um from bank centroid"
 puts "OT_VPW_BANK placed $vb_n FFs FIRM, nearest-bank max [expr {$vb_worst/double($vb_u)}]um; legal sites [llength $vb_rows]; bounds [list [expr {$vb_rx0/$vb_u}] [expr {$vb_ry0/$vb_u}] [expr {$vb_rx1/$vb_u}] [expr {$vb_ry1/$vb_u}]]"
