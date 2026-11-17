@@ -21221,3 +21221,4 @@ FAILED [AUTOPILOT a8d913e44d4a] 2026-11-17 08:45:23 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-17 08:58 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 1ed3a091ec qwen_compute/kit_rtl/FLOW unclassified failure @kit_rtl (see log): bind: ERROR kit-rtl: 1 item(s), no RESULT/ACK from QC-TYPES-R3 in 39 min: native59. COORD: start or assign a lane for this class; this relay does not repeat (class 1ed3a091ec).
 - 2026-11-17 08:59 PST KIT-WAVE [qwen_compute] -> QC die owner (DIE-QC-103): 1 event(s): slw_stm_v1__cle34a73c3 SIGNED OFF -> count (signed off (R-MINIMAL), archived epyc10:/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/slw_stm_v1__cle34a)
 - 2026-11-17 09:00 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 121 GB, falling 16 GB/h, floor 50 GB in 4.6 h (cron disk_rate.py; read-only)
+- 2026-11-17 09:00 PST DISK-RATE epyc7 /srv/opentallas-scratch: free 42 GB, falling 1 GB/h, floor 50 GB in 0.0 h (cron disk_rate.py; read-only)
