@@ -1,0 +1,33 @@
+# S81-DIE-R (successor of FABLE-DIE-S81 + DIE-S81-92): S81 whole-die plan, clock, adoption
+
+MEASURED = files/runs I read or ran. Base: current819/D3 adopted (ADOPT fb0a249ce735), raw 819037bbe371, source epyc10 kw45/src_s81_pin_3c913dbdfb23_f2s4_cohort_d3.
+Work dir: epyc10 `/srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R` (E). Clock dir: epyc10 `/srv/opentallas-scratch2/claude/fable-die-s81` (W), run `W/s81/F2s4currentECOv3` (R). Logs: intel2 `~/fable-die-s81/current8190_v3_R4{c,d}.log`, `~/s81-die-r/`.
+
+## 2026-11-16 17:5x PST state
+
+### 1. Die clock on 819 (ECOv3 tree cda34b3a)
+- GRT TT/FF: overflow 0 on M4-M9, 0 errors (R/grt_st_{TT,FF}/combo_*.log). Usage M4 2.7 / M5 4.0 / M6 4.4 / M7 2.2 %.
+- Ordinary STA (unit 1715200, exit 0, R/sta/die_sta_related.json): TT setup intra +340.60, seam +270.13, 0 negative pairs. Skew intra 326.7, seam 452.4 (fW1_p4_b0.clk_c6 <-> fW1_p3_b0.clk_t35), WARN only.
+- Hold: UNMEASURED. 0 signed views fed (3,374,386 pairs; 41 cores + types missing). Arrival contract needs 266 intra / 386 seam against 37 / 40 declared (advisory under R-MINIMAL). Per-port kit windows: R/kitwin.json (395 types, 21,571 ports).
+- Landed pairs: single-cycle FAIL as designed (damage 3769 TT / 3379 FF). Covered by the K table below once composed.
+- R4 (client 4065010, unit 1553643) exited 2: the D3 `count_align_plan.py` has no `--strap-window` / `--min-lat-cycles` (those 3 opt-in hunks live only in epyc10 die-clk-s81-b6/ca_tools). Failed r4/ kept. Phase/OCV inputs of r4/ were complete and are reused.
+- R4c (same recipe, ca_tools planner; unit 2116733): 993 crossings, fail 0, start 376/376 clean, strap sim 0 violations, min margin +106.2 / +107.0. 60 depth changes vs adopted (22 of them 8->4).
+- R4d (R4c + opt-in `--depth-floor` = adopted depth; unit 2526812; driver W/reach_codex/run_current_r4_ca_floor.sh): same margins; delta vs the adopted sidecar table: K 795 ties, depth 4->8 on 38 crossings (16,855 bits, 37 lanes, 15 receiving types), no 8->4, sched_lat changed on 294 crossings / 206 lanes, sum 2522 -> 2561. R/r4d/{plan.json,regions_ca_strap.json,straps.json,delta_vs_adopted.json}.
+- The adopted K table is still the B6gsh-kit table. The landed margin of record is therefore not measured on this clock until R4d is composed and bound (item CA_R4_ECOv3 of the F2s5 ledger).
+- Node 248 (feed std_bg_72_0 -> std_bg_91_0 around the lk PHY): 13 stages, 2275.8 um detour, max hop 234.4 um, legal. Node 19 (cap/xr overflight, std_bg_54_0 -> std_bg_64_0): 8 stages, max hop 343.4 um, 423.6 ps. Both are inside the measured TT/FF arrivals; neither is in a worst pair.
+- NOT closed: no type reserves the 93,626 die clock cell sites. R2 candidate plan W/reach_codex/f2s4_current8190_native_R2.json differs from 819 only by clock.reserved_sites_um on 395/395 types (93,506 windows, M1-M7) and die.channels. Adopting it re-keys every type; needs a ruling + an occupancy census on signed/routed DBs.
+
+### 2. CFIFO 72-row K2 / E[2,3]
+W/reach_codex/current8190_frame_lk_DIE_EPOCH.json (script derive_current_frame_lk_die_epoch.py). The six CFIFO root pins have no core tap; under the kit rule (nearest generic tap to the PIN) they hang on 2 taps (6 rows) or 4 taps (66 rows). Measured ECOv3 tap pairs (TT+FF, rise+fall, CPPR at LCA): die xk-cr in [-106.7, +142.2] ps (model assumed 80). 72/72 rows keep K=2 and legal E [2,3]; remaining kit CTS allowance >= 514 ps. Still kit gates: kit CTS skew xk vs cr, reset recovery/removal (R0-G0 = 0), provider 1-cycle bank->o.
+
+### 3. SerDes clk_t48
+E/t48/t48_feed_decision.json. Row: serdes__t1__clb45db5be clock.added_taps += clk_t48 [1992.6, 228.96] (die 24679.072, 332.64). The earlier [1985.048, 228.96] site is refused by schema (tap spacing 8.64). Feed: second sink on leaf net n30607 of b30607 (clk_t13 leaf), 0 new cells, common13/48 not split. Bounds (primitive NLDM, model): +3.94 fF, common shift <= 1.81 ps TT, 13-48 pair <= 0.2 ps. Kit rule: clk_t48 takes the clk_t13 window, one common clock. Waits: SERDES source port + successor graph tap row.
+
+### 4. T51 native_e -> signed 1116 view
+E/t51e/{t51_e_signed1116_rows.json (207 patches), overlay/ (11 files), t51_e_signed1116_report.json, plan_819_plus_t51e.json dabeea89}. Signed LEF == D3 _rphase1116 LEF; 11145/11145 ledger pins == signed pins.json; 43 M7 roots +0.020 um x; lib -> 1116 tt; insertion 254.88 / 195.31 on 41 taps. W child untouched (unsigned). G0 of the candidate: E/g0/t51e, unit oth-ubuntu-2472551-1794879363, intel2 ~/s81-die-r/g0_t51e.log (expect the 6 inherited errors, 0 new).
+
+### 5. Next event
+E/F2s5_ledger.json. Ready: CA_R4_ECOv3 (compose next), T51_E_signed1116. Row ready, waits source: clk_t48. Waiting on owners: SVC t6 stage 9, COLTAP reset-chain sites (none needed so far), IFN0 halves (unsigned), CONG t43 (SOURCE_HOLD). Needs ruling: R2 reservation.
+
+## Next steps
+1. Read G0 t51e. 2. Compose CA R4d on the 819 lineage (fallback_land compose; check the 38 deeper rings fit their bands), regenerate lanes, estimate before build. 3. F2s5 = 819 + T51 + CA (+ SVC stage 9 if delivered): source cohort with the overlay and the ca planner hunks from TOOLS-CONVERGE, fresh elab, strict bind, LATCHECK, G0; Fable review in parallel. 4. R2 ruling and census.
