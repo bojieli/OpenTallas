@@ -33,20 +33,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from uarch_model_qwen_native_stn55 import model as qwen_native_stn55_model
-from uarch_model_qwen_native_round96 import model as qwen_native_round96_model
-from uarch_model_qwen_native_ar_cache import model as qwen_native_ar_go_cache_model
-
-
-def qwen_native_local_kv_address_model():
-    """Opt-in source adapter budget; zero added state/edges from its exact model."""
-    source = ROOT / 'results/uarch/qwen_native_local_kv_address_1116/model.json'
-    value = json.loads(source.read_text())
-    if value.get('candidate') != 'native_local_KV_dimension_adapter' or value.get('enabled_default') is not False:
-        raise ValueError('explicit default-off native local KV adapter model required')
-    if value.get('added_flops') != 0 or value.get('added_pipeline_edges') != 0:
-        raise ValueError('native local KV adapter contract changed; price new state/edges before build')
-    return value
-
 
 
 
