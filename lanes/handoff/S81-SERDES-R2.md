@@ -60,3 +60,9 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 ## 20:4x PST - H3p attempt 1 failed at GPL, resumed
 - H3p synth+floorplan OK, 3_3 GPL hook failed: "OT_BOOT_RELEASE expected3 kept stages, found 2" (serdes_boot_release_local.tcl, sourced by post_global_boot3.tcl). Fresh Yosys names stage2's DFF u_boot_release.released_n (rq kept only as a net alias); the older selector matched only g_stage[k].rq. The newer H_boot_selector_public.tcl already handles this (reproduced: it finds 0 1 2 on H3p 3_2_place_iop.odb).
 - Fix (kit copy+mv, orig .H3p_before_alias): the same released_n -> stage2 rule in serdes_boot_release_local.tcl. Resumed at place (resume.json start place, reuse synth/floorplan), ~/s81-serdes-r2/h3p-cts.out. This is a flow-family bug for any SerDes t13 kit that resynthesizes; worth a source fix in tools (serdes_boot_release_local.tcl).
+
+## 21:0x PST
+- Boot-release fix is already on main: 02cb43ff45e "select mapped BOOT3 release alias exactly" (+ tests/test_serdes_boot_release_alias.tcl). No branch needed. H/H2-derived kits carry the pre-fix copy; my H3p kit patch applies the same rule.
+- S81-DIE-R2 20:09 CONFIRM: B6gF2s5f (plan C3 c20ec9e4c3c4) drops all 11 serdes types from reset.relay_lockup.types -> bind emits plain relays; H3p counts once s5f is adopted.
+- Source mirror for branches: intel2 /srv/opentallas-scratch2/git/OpenTallas.git (hub:OpenTallas is stale at 22c217df54). Deleted my stale clone via ot_delete_guard.
+- H3p place+CTS attempt 2 running E8 (~/s81-serdes-r2/h3p-cts.out).
