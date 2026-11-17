@@ -1,19 +1,45 @@
 {
  "checks": {
-  "gate": {
-   "verdict": "FAIL",
-   "why": "AssertionError: no representative item: pass --item or set die.pilot_item"
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "verdict": "SKIP",
+   "why": "an earlier check failed (the dry gen would only repeat it)"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 33
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "FAIL"
+   },
+   "g0_rc": 99,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-1tqkuhad/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9m5 plan=/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9m5/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m5.json findings=0\n\nG0: TimeoutExpired: Command '['/usr/bin/python3', '-I', '/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9m5/tools/die_plan/check.py', '/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9m5/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m5.json', '--quiet', '--out', '/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/pubgate/g0-1tqkuhad']' timed out after 1800 seconds",
+   "verdict": "FAIL"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9m5/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m5.json: PASS (0 errors)\n",
+   "verdict": "PASS"
   }
  },
  "die": "qwen_compute",
  "hosts": [
   "epyc8"
  ],
+ "item": "sle_st_a_v2__pv4242de79",
  "manifest_hash": "4a6fbfa3a817e4e21974cb2704cbe21d7f9f006686f2e7627f45cea6c647075b",
  "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9m5/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9m5.json",
  "plan_sha256": "cf3ee3ca9c406f99221242704938b895c7cc2c111c9f06296f579ed1b6cb87e9",
  "schema": "opentallas.publish_gate.v1",
- "t": 1794936798.9920354,
+ "t": 1794938000.3893728,
  "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9m5",
  "verdict": "FAIL"
 }
