@@ -118,5 +118,31 @@ class ThreadCap(unittest.TestCase):
         self.assertEqual(r.returncode, 75)                # load1 9 + 8 > 10: busy host still holds
 
 
+    def test_child_of_an_admitted_unit_is_not_held_by_the_declared_cap(self):
+        self.commit(4, 8)                                         # declared 32 > cap 10, load 1.0: a plain job at 8 threads is held (measured 9 > 6)
+        r, ran = self.run_('8')
+        self.assertFalse(ran)
+        (self.d / 'state' / 'res.parentunit').write_text('parentunit 4\n')
+        r, ran = self.run_('8', {'OT_HEAVY_PARENT_UNIT': 'parentunit'})
+        self.assertTrue(ran, r.stderr)
+        self.assertIn('child of admitted parentunit', (self.d / 'state' / 'admit.log').read_text())
+
+    def test_child_of_a_dead_or_unnamed_parent_is_a_plain_job(self):
+        self.commit(4, 8)
+        r, ran = self.run_('8', {'OT_HEAVY_PARENT_UNIT': 'gone'})     # no res.gone
+        self.assertFalse(ran)
+        (self.d / 'state' / 'res.parentunit').write_text('parentunit 4\n')
+        r, ran = self.run_('8', {'OT_HEAVY_PARENT_UNIT': 'parentunit', 'THREAD_CHILD_FACTOR': '0'})
+        self.assertFalse(ran)                                          # factor 0: children obey the cap
+
+    def test_child_still_waits_when_the_host_is_really_busy(self):
+        self.commit(4, 8); (self.d / 'state' / 'res.parentunit').write_text('parentunit 4\n')
+        self.load.write_text('9.0 9.0 9.0 1/1 1\n')
+        env = dict(os.environ, PATH=f'{self.d}/bin:' + os.environ['PATH'], OUT_ARGS=str(self.d / 'args'), OT_VL_JCAP='0', OT_HEAVY_SYSTEM_TOOLS='1',
+                   OT_HEAVY_THREADS='8', OT_HEAVY_PARENT_UNIT='parentunit')
+        r = subprocess.run([str(self.h), '--mem', '4', '--max-wait', '1', '--', 'true'], capture_output=True, text=True, env=env, timeout=60)
+        self.assertEqual(r.returncode, 75)                             # load1 9 + 8 > 1.5 x 10
+
+
 if __name__ == "__main__":
     unittest.main()
