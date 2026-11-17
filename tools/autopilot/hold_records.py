@@ -507,6 +507,11 @@ def apply_tree_switches(cfg, ctx):
                 m = ctx.marker_fn(die) or {}
                 ch = []
                 if d.get("src") != tp:
+                    old_src = d.get("src")
+                    if old_src:                      # FLEET-OPS-R: the replaced tree is queued for guarded retirement (retire_superseded.py)
+                        sup = d.setdefault("superseded_trees", [])
+                        if old_src not in sup:
+                            sup.append(old_src)
                     d["src"] = tp
                     ch.append("src")
                 if m.get("manifest_hash") and d.get("src_manifest_hash") != m["manifest_hash"]:
