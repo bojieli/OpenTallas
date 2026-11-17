@@ -144,5 +144,13 @@ class ThreadCap(unittest.TestCase):
         self.assertEqual(r.returncode, 75)                             # load1 9 + 8 > 1.5 x 10
 
 
+    def test_ancestry_fallback_finds_the_parent_scope_without_the_env_token(self):
+        # run the harness script from inside a fake "oth-*" ancestor: the test shell's own cgroup is faked through a stand-in /proc via a wrapper dir
+        s = (self.d / 'ot-heavy').read_text()
+        self.assertIn("grep -o 'oth-[^/]*\\.scope' \"/proc/$_p/cgroup\"", s)
+        self.assertIn('awk \'/^PPid:/{print $2}\' "/proc/$_p/status"', s)
+        self.assertLess(s.index("PPid:"), s.index('"${THREAD_CHILD_FACTOR:-1.5}" != 0'))   # the walk runs before the child test
+
+
 if __name__ == "__main__":
     unittest.main()

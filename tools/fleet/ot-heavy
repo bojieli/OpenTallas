@@ -209,6 +209,17 @@ while :; do
     # admission, and res.<parent> still exists here) is not held by the declared-thread cap; it passes on measured CPU with a ceiling ABOVE the thread count:
     # load1 + fresh + job < THREAD_CHILD_FACTOR (default 1.5) x nproc.  Memory admission above is unchanged.  THREAD_CHILD_FACTOR=0 = children obey the cap too.
     _child=0
+    # fallback (parents admitted before the env token existed): walk this process's ancestry; the first ancestor inside an oth-*.scope other than our own whose
+    # res.<unit> is live on this host is the parent.  /proc/<pid>/cgroup carries the scope; PPid chain from /proc/<pid>/status.
+    if [ -z "${OT_HEAVY_PARENT_UNIT:-}" ]; then
+      _p=$PPID; _n=0
+      while [ -n "$_p" ] && [ "$_p" -gt 1 ] 2>/dev/null && [ "$_n" -lt 40 ]; do
+        _u=$(grep -o 'oth-[^/]*\.scope' "/proc/$_p/cgroup" 2>/dev/null | head -n1); _u=${_u%.scope}
+        if [ -n "$_u" ] && [ "$_u" != "$UNIT" ] && [ -e "$D/res.$_u" ]; then OT_HEAVY_PARENT_UNIT=$_u; break; fi
+        _p=$(awk '/^PPid:/{print $2}' "/proc/$_p/status" 2>/dev/null); _n=$((_n + 1))
+      done
+      unset _p _n _u
+    fi
     if [ -n "${OT_HEAVY_PARENT_UNIT:-}" ] && [ -e "$D/res.${OT_HEAVY_PARENT_UNIT}" ] && [ "${THREAD_CHILD_FACTOR:-1.5}" != 0 ]; then
       _child=$(awk -v m="$_mt" -v n="$(nproc)" -v k="${THREAD_CHILD_FACTOR:-1.5}" 'NR==1{print ($1 + m < k * n) ? 1 : 0}' /proc/loadavg)
       [ "$_child" = 1 ] && echo "$(date -Is) child of admitted ${OT_HEAVY_PARENT_UNIT}: thread cap skipped, measured CPU under ${THREAD_CHILD_FACTOR:-1.5} x nproc" >> "$D/admit.log"
