@@ -35,3 +35,19 @@ def test_proto_die_calls_the_ca_chain():
     s = (HERE / "proto_die.sh").read_text()
     assert "die_chain_ca.sh" in s and "CA_CHAIN" in s
     assert "die_sta_related.py $D/proof --plan $P --out $D/sta --corner TT" not in s
+
+
+def test_proto_die_ca_uses_the_plan_tree_tools(tmp_path):
+    """HEAD-DIE-R 11-16: the CA block resolves tools from the plan's published tree (.src-manifest.json ancestor)."""
+    s = (HERE / "proto_die.sh").read_text()
+    blk = s[s.index("CAT=${CA_TOOLS:-}"):s.index("CA_TOOLS=$CAT bash")]
+    tree = tmp_path / "tree"; (tree / "tools/die_plan").mkdir(parents=True); (tree / ".src-manifest.json").write_text("{}")
+    (tree / "tools/die_plan/die_chain_ca.sh").write_text("")
+    plan = tree / "physical/die_plan/x/prep"; plan.mkdir(parents=True); (plan / "p.json").write_text("{}")
+    sh = "log(){ :; }; S=/wt/tools/die_plan; P=%s\n%s\necho $CAT\n" % (plan / "p.json", blk)
+    r = subprocess.run(["bash", "-c", sh], capture_output=True, text=True, env={k: v for k, v in os.environ.items() if k != "CA_TOOLS"})
+    assert r.stdout.strip() == str(tree / "tools/die_plan"), r.stdout + r.stderr
+    loose = tmp_path / "loose"; loose.mkdir(); (loose / "p.json").write_text("{}")
+    r = subprocess.run(["bash", "-c", "log(){ :; }; S=/wt/tools/die_plan; P=%s\n%s\necho $CAT\n" % (loose / "p.json", blk)],
+                       capture_output=True, text=True, env={k: v for k, v in os.environ.items() if k != "CA_TOOLS"})
+    assert r.stdout.strip() == "/wt/tools/die_plan"
