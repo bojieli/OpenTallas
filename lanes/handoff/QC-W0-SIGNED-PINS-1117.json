@@ -1,0 +1,502 @@
+{
+  "schema": "opentallas.qc.actual_signed_pin_prep.v1",
+  "scope": "Frozen44868 prospective N43 rows only, not common+REDv2 nor actual successor plan adoption",
+  "plan": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/n43_event_v5/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9k_sunorm43_private44868_pinv5.json",
+  "plan_sha256": "9e70476f8dedc898d9acbc9114b7536d8044c8a63f4b9621eeaeece6365648ab",
+  "master": "qfd_qc_su_lane_w_l0_m44s1",
+  "pin_count": 1064,
+  "actual_views": "/srv/opentallas-scratch2/claude/qc-types-r/w0_hold858/r2/views_v3",
+  "view_hashes": {
+    "qfd_qc_su_lane_w_l0_m44s1_pins.json": "1219aee9e273de23ddff1a7c4521017c6c2e60561fcdf6cb113d7341ba858d03",
+    "qfd_qc_su_lane_w_l0_m44s1.lef": "6e70004187da3daf1afdeb388eb8301050237a0df14daddcfade5681a8b26d9d",
+    "qfd_qc_su_lane_w_l0_m44s1_ff.lib": "91b91ac0a01aaf3fc587efd74ecfa3cd2ec7442eb396cac75ce311e2e2a7fb33",
+    "child_lint.json": "76d8ae15cc1ec69e4bc9c3466c3a2ea5bf630c267acdc7f1181f650b7e4aa69d",
+    "selected_corner_check.json": "0f3cc537f187f6b8da06cece341dd2183c823447d007ecf8901ee1dbda8c6f52",
+    "qfd_qc_su_lane_w_l0_m44s1_tt.lib": "485856b2fa80572dbc7014803dfc0adf30a62372d6ad6840110a6075dca00e13",
+    "recovery.json": "773ba13a91f45acd4f96313fc6210dc94d575be92c7a67972989b35598f37593",
+    "qfd_qc_su_lane_w_l0_m44s1_bb.v": "0f615967c64c1c518873b153a42d617953eb206125adec7ec214a6145b0f3141",
+    "abstract.json": "e9f1a25253ab7820f2a1635561162bbe915d6515839ead30a04c835fab17d1f4"
+  },
+  "physical_signoff": "SIGNED TT+12.39ps / FF0 / DRC0, canonical833/0/25",
+  "normal_final_lec": "Active sole final64 run; original failure preserved",
+  "adoptable": false,
+  "rows": [
+    {
+      "type": "slw_su_l0__cl76fb247e",
+      "inst": "u_lane0",
+      "module": "qfd_qc_su_lane_w_l0_m44s1",
+      "origin_um": [
+        190.08,
+        43.2
+      ],
+      "outline_um": [
+        414.72,
+        267.84
+      ],
+      "orient": "R0",
+      "preserve_bound_group": {
+        "kind": "exact_post_bind_group",
+        "reset_pin": "rst_n",
+        "memory_alignment": 3,
+        "kv_wr_pipe": 1,
+        "members": [
+          {
+            "inst": "u_exp0",
+            "module": "ot_hdc_sfu_exp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_head0",
+            "module": "qfd_dv_lane_h_safe2",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_lrly0",
+            "module": "qfd_dv_s5_lrly",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rcp0",
+            "module": "ot_hdc_sfu_rcp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rsq0",
+            "module": "ot_hdc_sfu_rsq_t",
+            "reset_pin": "rst_n"
+          }
+        ],
+        "memory_read_extra": 44,
+        "segmented_memory_delay": 1,
+        "input_abi": {
+          "reference_rtl": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+          "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c",
+          "reference_module": "qfd_qc_su_lane_w_l0",
+          "retarget_module": "qfd_qc_su_lane_w_l0_m44s1",
+          "aliases_file": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/input_aliases.json",
+          "source_type": "slw_su_l0__cl76fb247e",
+          "source_partition": "sl_W1_su_l0"
+        }
+      },
+      "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+      "old_pin_sha256": "e96f11f38b2c80f017b29627793e8efa251a113227fbecce7fca418bee70c76c",
+      "actual_pins_file": "/srv/opentallas-scratch2/claude/qc-types-r/w0_hold858/r2/views_v3/qfd_qc_su_lane_w_l0_m44s1_pins.json",
+      "actual_pin_sha256": "1219aee9e273de23ddff1a7c4521017c6c2e60561fcdf6cb113d7341ba858d03",
+      "changed_pins": 1064,
+      "max_pin_l1_delta_um": 280.71,
+      "clock_reset": [
+        {
+          "name": "clk",
+          "from_um": [
+            207.324,
+            0.096
+          ],
+          "to_um": [
+            194.316,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.71
+        },
+        {
+          "name": "rst_n",
+          "from_um": [
+            207.18,
+            0.096
+          ],
+          "to_um": [
+            194.46,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.422
+        }
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl1e5219ea",
+      "inst": "u_lane0",
+      "module": "qfd_qc_su_lane_w_l0_m44s1",
+      "origin_um": [
+        190.08,
+        43.2
+      ],
+      "outline_um": [
+        414.72,
+        267.84
+      ],
+      "orient": "R0",
+      "preserve_bound_group": {
+        "kind": "exact_post_bind_group",
+        "reset_pin": "rst_n",
+        "memory_alignment": 3,
+        "kv_wr_pipe": 1,
+        "members": [
+          {
+            "inst": "u_exp0",
+            "module": "ot_hdc_sfu_exp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_head0",
+            "module": "qfd_dv_lane_h_safe2",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_lrly0",
+            "module": "qfd_dv_s5_lrly",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rcp0",
+            "module": "ot_hdc_sfu_rcp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rsq0",
+            "module": "ot_hdc_sfu_rsq_t",
+            "reset_pin": "rst_n"
+          }
+        ],
+        "memory_read_extra": 44,
+        "segmented_memory_delay": 1,
+        "input_abi": {
+          "reference_rtl": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+          "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c",
+          "reference_module": "qfd_qc_su_lane_w_l0",
+          "retarget_module": "qfd_qc_su_lane_w_l0_m44s1",
+          "aliases_file": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/input_aliases.json",
+          "source_type": "slw_su_l0__cl1e5219ea",
+          "source_partition": "sl_W2_su_l0"
+        }
+      },
+      "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+      "old_pin_sha256": "e96f11f38b2c80f017b29627793e8efa251a113227fbecce7fca418bee70c76c",
+      "actual_pins_file": "/srv/opentallas-scratch2/claude/qc-types-r/w0_hold858/r2/views_v3/qfd_qc_su_lane_w_l0_m44s1_pins.json",
+      "actual_pin_sha256": "1219aee9e273de23ddff1a7c4521017c6c2e60561fcdf6cb113d7341ba858d03",
+      "changed_pins": 1064,
+      "max_pin_l1_delta_um": 280.71,
+      "clock_reset": [
+        {
+          "name": "clk",
+          "from_um": [
+            207.324,
+            0.096
+          ],
+          "to_um": [
+            194.316,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.71
+        },
+        {
+          "name": "rst_n",
+          "from_um": [
+            207.18,
+            0.096
+          ],
+          "to_um": [
+            194.46,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.422
+        }
+      ]
+    },
+    {
+      "type": "slw_su_l0__cl1a1c1f8f",
+      "inst": "u_lane0",
+      "module": "qfd_qc_su_lane_w_l0_m44s1",
+      "origin_um": [
+        190.08,
+        43.2
+      ],
+      "outline_um": [
+        414.72,
+        267.84
+      ],
+      "orient": "R0",
+      "preserve_bound_group": {
+        "kind": "exact_post_bind_group",
+        "reset_pin": "rst_n",
+        "memory_alignment": 3,
+        "kv_wr_pipe": 1,
+        "members": [
+          {
+            "inst": "u_exp0",
+            "module": "ot_hdc_sfu_exp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_head0",
+            "module": "qfd_dv_lane_h_safe2",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_lrly0",
+            "module": "qfd_dv_s5_lrly",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rcp0",
+            "module": "ot_hdc_sfu_rcp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rsq0",
+            "module": "ot_hdc_sfu_rsq_t",
+            "reset_pin": "rst_n"
+          }
+        ],
+        "memory_read_extra": 44,
+        "segmented_memory_delay": 1,
+        "input_abi": {
+          "reference_rtl": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+          "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c",
+          "reference_module": "qfd_qc_su_lane_w_l0",
+          "retarget_module": "qfd_qc_su_lane_w_l0_m44s1",
+          "aliases_file": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/input_aliases.json",
+          "source_type": "slw_su_l0__cl1a1c1f8f",
+          "source_partition": "sl_W0_su_l0"
+        }
+      },
+      "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+      "old_pin_sha256": "e96f11f38b2c80f017b29627793e8efa251a113227fbecce7fca418bee70c76c",
+      "actual_pins_file": "/srv/opentallas-scratch2/claude/qc-types-r/w0_hold858/r2/views_v3/qfd_qc_su_lane_w_l0_m44s1_pins.json",
+      "actual_pin_sha256": "1219aee9e273de23ddff1a7c4521017c6c2e60561fcdf6cb113d7341ba858d03",
+      "changed_pins": 1064,
+      "max_pin_l1_delta_um": 280.71,
+      "clock_reset": [
+        {
+          "name": "clk",
+          "from_um": [
+            207.324,
+            0.096
+          ],
+          "to_um": [
+            194.316,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.71
+        },
+        {
+          "name": "rst_n",
+          "from_um": [
+            207.18,
+            0.096
+          ],
+          "to_um": [
+            194.46,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.422
+        }
+      ]
+    },
+    {
+      "type": "sle_su_l0__cl7a55c676",
+      "inst": "u_lane0",
+      "module": "qfd_qc_su_lane_w_l0_m44s1",
+      "origin_um": [
+        190.08,
+        43.2
+      ],
+      "outline_um": [
+        414.72,
+        267.84
+      ],
+      "orient": "R0",
+      "preserve_bound_group": {
+        "kind": "exact_post_bind_group",
+        "reset_pin": "rst_n",
+        "memory_alignment": 3,
+        "kv_wr_pipe": 1,
+        "members": [
+          {
+            "inst": "u_exp0",
+            "module": "ot_hdc_sfu_exp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_head0",
+            "module": "qfd_dv_lane_h_safe2",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_lrly0",
+            "module": "qfd_dv_s5_lrly",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rcp0",
+            "module": "ot_hdc_sfu_rcp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rsq0",
+            "module": "ot_hdc_sfu_rsq_t",
+            "reset_pin": "rst_n"
+          }
+        ],
+        "memory_read_extra": 44,
+        "segmented_memory_delay": 1,
+        "input_abi": {
+          "reference_rtl": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+          "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c",
+          "reference_module": "qfd_qc_su_lane_w_l0",
+          "retarget_module": "qfd_qc_su_lane_w_l0_m44s1",
+          "aliases_file": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/input_aliases.json",
+          "source_type": "sle_su_l0__cl7a55c676",
+          "source_partition": "sl_E0_su_l0"
+        }
+      },
+      "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+      "old_pin_sha256": "e96f11f38b2c80f017b29627793e8efa251a113227fbecce7fca418bee70c76c",
+      "actual_pins_file": "/srv/opentallas-scratch2/claude/qc-types-r/w0_hold858/r2/views_v3/qfd_qc_su_lane_w_l0_m44s1_pins.json",
+      "actual_pin_sha256": "1219aee9e273de23ddff1a7c4521017c6c2e60561fcdf6cb113d7341ba858d03",
+      "changed_pins": 1064,
+      "max_pin_l1_delta_um": 280.71,
+      "clock_reset": [
+        {
+          "name": "clk",
+          "from_um": [
+            207.324,
+            0.096
+          ],
+          "to_um": [
+            194.316,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.71
+        },
+        {
+          "name": "rst_n",
+          "from_um": [
+            207.18,
+            0.096
+          ],
+          "to_um": [
+            194.46,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.422
+        }
+      ]
+    },
+    {
+      "type": "sle_su_l0__cl086d85ba",
+      "inst": "u_lane0",
+      "module": "qfd_qc_su_lane_w_l0_m44s1",
+      "origin_um": [
+        190.08,
+        43.2
+      ],
+      "outline_um": [
+        414.72,
+        267.84
+      ],
+      "orient": "R0",
+      "preserve_bound_group": {
+        "kind": "exact_post_bind_group",
+        "reset_pin": "rst_n",
+        "memory_alignment": 3,
+        "kv_wr_pipe": 1,
+        "members": [
+          {
+            "inst": "u_exp0",
+            "module": "ot_hdc_sfu_exp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_head0",
+            "module": "qfd_dv_lane_h_safe2",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_lrly0",
+            "module": "qfd_dv_s5_lrly",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rcp0",
+            "module": "ot_hdc_sfu_rcp_t",
+            "reset_pin": "rst_n"
+          },
+          {
+            "inst": "u_rsq0",
+            "module": "ot_hdc_sfu_rsq_t",
+            "reset_pin": "rst_n"
+          }
+        ],
+        "memory_read_extra": 44,
+        "segmented_memory_delay": 1,
+        "input_abi": {
+          "reference_rtl": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/reference_rtl/qfd_qc_su_lane_w_l0.sv",
+          "reference_sha256": "15cb6c3f072feb4b914283211326f87291556d1a53045f48caf320e6ee7fe14c",
+          "reference_module": "qfd_qc_su_lane_w_l0",
+          "retarget_module": "qfd_qc_su_lane_w_l0_m44s1",
+          "aliases_file": "physical/die_plan/qwen_compute/qc_start_1106/runtime/su_norm43_abi/input_aliases.json",
+          "source_type": "sle_su_l0__cl086d85ba",
+          "source_partition": "sl_E5_su_l0"
+        }
+      },
+      "old_pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
+      "old_pin_sha256": "e96f11f38b2c80f017b29627793e8efa251a113227fbecce7fca418bee70c76c",
+      "actual_pins_file": "/srv/opentallas-scratch2/claude/qc-types-r/w0_hold858/r2/views_v3/qfd_qc_su_lane_w_l0_m44s1_pins.json",
+      "actual_pin_sha256": "1219aee9e273de23ddff1a7c4521017c6c2e60561fcdf6cb113d7341ba858d03",
+      "changed_pins": 1064,
+      "max_pin_l1_delta_um": 280.71,
+      "clock_reset": [
+        {
+          "name": "clk",
+          "from_um": [
+            207.324,
+            0.096
+          ],
+          "to_um": [
+            194.316,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.71
+        },
+        {
+          "name": "rst_n",
+          "from_um": [
+            207.18,
+            0.096
+          ],
+          "to_um": [
+            194.46,
+            267.798
+          ],
+          "old_layer": "M5",
+          "new_layer": "M5",
+          "l1_um": 280.422
+        }
+      ]
+    }
+  ],
+  "requires": [
+    "Actual successor source bind/seal and correct model epoch",
+    "Replace old reserved pin coordinates with signed actual pins",
+    "Regenerate reset landing/clock/reach against actual pins; preserve or price boot changes",
+    "W1 signed shared master and its final view/LEC",
+    "Full successor bind/LATCHECK/G0"
+  ]
+}
