@@ -26,6 +26,7 @@ sys.path.insert(0, str(HERE.parent))
 sys.path.insert(0, str(HERE))              # python3 -I does not put the script dir on sys.path: overlay_classify lives here
 import tools_lag as TL  # noqa: E402
 import overlay_classify as OC  # noqa: E402
+import flow_guard as FG  # noqa: E402
 
 TOOL_PATHS = ("tools", "physical/common_flow")
 SM = str(HERE / "src_manifest.py")
@@ -104,6 +105,7 @@ class Ops:
     def __init__(self, d, repo, main_sha, run=None):
         self.d, self.repo, self.sha = d, repo, main_sha
         self.overlay_report = {}
+        self.delta_paths = None            # the files the tools-only pack changes (read from delta.json before the pack is removed)
         self.run = run or self._run
         self.host = d.get("gen_host") or (d.get("gen_hosts") or [None])[0]
 
@@ -163,6 +165,12 @@ class Ops:
             rc, out = self.run(self.host, c)
             if rc:
                 return False, f"{c.split()[3] if len(c.split()) > 3 else c}: rc {rc}: {out[-400:]}", ""
+        rc, dj = self.run(self.host, f"cat {shlex.quote(new + '.pack')}/delta.json")
+        try:
+            dd = json.loads(dj)
+            self.delta_paths = sorted(set(dd.get("add") or {}) | set(dd.get("delete") or []))
+        except (ValueError, TypeError):
+            self.delta_paths = None
         self.run(self.host, f"rm -rf {shlex.quote(new + '.pack')}")
         rc, h = self.run(self.host, f"cat {shlex.quote(new)}/.src-manifest.sha256")
         return rc == 0, "composed", h.strip()
@@ -177,14 +185,36 @@ class Ops:
 
     def bind_cmd(self, new, out):
         kr = self.d.get("kit_rtl") or {}
-        tpl = self.d.get("tools_refresh_bind_cmd") or kr.get("prep_cmd") or \
-            "python3 tools/die_plan/bind.py bind {plan} --out {out} --asbuilt {asbuilt} --strict"
+        tpl = self.d.get("tools_refresh_bind_cmd") or ""
         return f"cd {shlex.quote(new)} && " + tpl.format(plan=self.d.get("plan", "").replace(self.d.get("src", ""), new), out=out,
                                                         bind=out, asbuilt=(kr.get("asbuilt") or "").replace(self.d.get("src", ""), new), tree=new)
+
+    def bind_closure_touched(self):
+        """-> sorted delta files inside the import closure of tools/die_plan/bind.py (main's), None when the delta is unknown"""
+        if self.delta_paths is None:
+            return None
+        root = Path(__file__).resolve().parents[2]
+
+        def read(rel):
+            try:
+                return (root / rel).read_text()
+            except (OSError, UnicodeDecodeError):
+                return None
+        closure = set(FG.closure_files(read, entry=("tools/die_plan/bind.py",)))
+        return sorted(p for p in self.delta_paths if p in closure)
 
     def bind(self, new):
         """strict bind with the new tree's tools into a scratch dir; unchanged = native_topology.json equals the bind of record"""
         kr = self.d.get("kit_rtl") or {}
+        if not self.d.get("tools_refresh_bind_cmd"):
+            # no bind recipe named for this die: the bind of record is unchanged by construction when the delta touches nothing bind.py imports
+            touched = self.bind_closure_touched()
+            if touched is None:
+                return False, False, "the tools delta is unknown (delta.json unreadable): cannot show the bind closure is untouched"
+            if not touched:
+                return True, True, f"bind closure untouched: none of the {len(self.delta_paths)} delta files is in bind.py's import closure"
+            return False, False, (f"the delta touches bind.py's import closure ({len(touched)}: {', '.join(touched[:8])}) and dies.{self.d.get('_die', '<die>')}.tools_refresh_bind_cmd "
+                                  f"names no strict-bind recipe to re-run (a bind recipe is per die: env such as OT_HCPARAM_ALL, packaged elaboration): the die owner gives it")
         record = (kr.get("bind_out") or "").rstrip("/")
         if not record:
             return False, False, "no kit_rtl.bind_out of record: cannot compare"
