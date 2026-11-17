@@ -37,3 +37,24 @@ Owner of strip leaf closure end to end. Executor: S81-TYPES-R-STRIP (Opus). Bind
 - Geometry/DPL proof ONLY (original nonXR copiedDBs, no signoff claim): intel1 fable-fix-s81-strip/bank_t34_dpl placed317VPWFF FIRM,maxbankdistance11.328um,clk_t33 standard118.2um frombankcentroid,DPL0failures/check_placementPASS,maxneighbor1.2um. epyc7 bank_t62_dpl317FF,max13.488um,clk_t36 standard97.8um,DPL0failures/check_placementPASS,maxneighbor1.1um. LOOKED gap-cluster images PASS-COND. Both prove bank-end mechanism, not fullB timing. B adds907XRFF ->1224cohort,<1500tap budget,stillrequiresfreshbind/fullshape.
 - t75 actualreach defect isolated390bits onft0station4->5,max442.8um. Simple43.2umshift FAILED545macro overlaps (E8 cong/t75_ft0_shift43.json). Initial south-onlyrepack superseded due narrowroutecorridor. Finalv2 E8 fable-fix-s81-cong/t75_ft0_repack_v2/{rows,report}.json,review.png; builder../repack_t75_v2.py:ONLYstation4(bit_sitesindex3,regsindex4),1105bitsinclpad,maxadjacent380.7um,0macro/otherFT hits,0FF/0cycles. Fullheight east-of-ve_s band399.6,4.32..418.284,54.0,≥2.16macroclearance; LOOKED PASS-COND. DeliveredDIE geometry,notadopted; generatedfixed/clock/PDN review pending.
 - Originalt28/t34/t62/t72 stillGRTextraiterations,no5_1_grt.odb; preserveprogressing jobs. At22:37,t34iteration14/30,t28~6,t62~9,t72~5; rankonlywhenreloadedGRTexists.
+
+## 00:55 PST 11-17 Fable resumed (decision post a546ed82)
+- GPL setting of record: claude/s81-strip-gpl-td30-1117 @056783ac187 (r496, GREEN 94/94): sparse exit 0.25 + second TD pass at 0.30 + buffers kept below 0.35.
+  x1.45 CTS census WNS / paths: t47 -3956 / 15,893 (0.10) -> -1538 / 1,486; t75 -1454 / 10,091 -> -531 / 867. 39ef73a alone and 78c5645 (-overflow 0.2 on all S81 kits) withdrawn.
+  Pilot data: intel1 / epyc7 fable-fix-s81-strip/{gpl,sta}/<t>_ov25td30; drivers pilot5.sh (full chain), cls.py (class table).
+- Left on t47 at kit RC (655 endpoints below -42): die reset 106 / -1096, die START 63 / -463, VP coefficient controls 202 / -264, vpw 281 / -249.
+- Strip form for the pilot (decided): XR + 16 dswp copies (r432 1a183f5a920) + bank placement OT_S81_VPW_BANK=1 (r494 e1b62d6096a)
+  + CFR with XR (r454 46684a7f11b) + lane reset copies (r495 d5946a58004). One form, t34 (3S=01000) and t62 (6N=00010) in C4.
+- Asked of S81-DIE-R2 for C4: the two masks with CFR + reset copies, t75 ft0 station-4 repack v2, relay rows for die reset -> fstart
+  and START origin -> reader start (hops within 405 um). Source HI_D stays 2 / GS 2 on XR leaves (stage_lfcs_netlist.leaf_depths trap);
+  strip worker owes an XR-aware mapping branch with a test before the C4 ELAB.
+- No qualified B physical kit exists: partial-context binds cannot emit (native_istations on omitted columns). Vehicle = fresh C4 full bind + LATCHECK.
+- Inherited tapfix1 GRT kits still in extra iterations at 00:45 (t28 14/30, t34 27/30, t62 6/30 after NDR restarts, t72 12/30), no 5_1_grt.odb.
+  Read with epyc7 fable-fix-s81-coltap/an/stage_sta.sh KIT OUT grt, rank with fable-fix-s81-strip/rank_strip.py, then stop by exact unit.
+
+## Next (replaces the list above)
+1. t34 GRT read (first to finish): class table at route RC; confirm vpw / VP driver / reset shares before C4 seals.
+2. C4 lands -> generate t34 / t62 from the tree with 056783ac187, OT_S81_VPW_BANK=1; image review (XR + vpw cohort about 1,219 FF at the banks,
+   one standard tap); run to GRT; read TT (gate -42) and internal FF hold; then route, sign-off, export to AGIdock /archive/opentallas-signed-1114 + rtx-pro.
+3. t34 form B GRT margin decides the 9 far types (t65 t3 t10 t74 t38 t13 t42 t31 t34): below +42 -> VS move about 100 um as a plan row.
+4. All 75 leaf types take XR in the following bind; waves of leaf kits after that. Hold s81-strip-gpl-d5 stays until then.
