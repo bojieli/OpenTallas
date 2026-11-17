@@ -59,6 +59,25 @@ class CtxView:
             raise ValueError(f"{path}.{port}{bits or ''}: shifts {sorted(v)} (one value required)")
         return v.pop() if v else 0
 
+    def hi_pad_targets(self):
+        """FABLE-FIX-QC-N 11-17 (QC event N2): {station leaf path: HI_PAD} of every plan hard core whose param_wrap pins
+        HI_PAD.  A hard master is built with that pad, so it is an input: derive() balances the pair sums with uniform
+        head-column pads on the other side instead of asking for another master (N START: +1 on hc2->cws2 raised HI_PAD on
+        44 st_a rows).  A plan whose masters already match needs k = 0 and binds the same RTL as before."""
+        ctx = self.ctx
+        pt = ctx.plan.get("partition_types") or {}
+        out = {}
+        for p in ctx.plan.get("partitions") or []:
+            for hc in (pt.get(p["type"]) or {}).get("hard_cores") or []:
+                hp = ((hc.get("param_wrap") or {}).get("params") or {}).get("HI_PAD")
+                if hp is None:
+                    continue
+                hit = [ci for ci in (ctx.members.get(p["name"]) or []) if hc["inst"] in (ctx.rel_of(ci), "u_" + ctx.rel_of(ci))]
+                if len(hit) != 1:
+                    raise ValueError(f"HI_PAD hold {p['name']}: hard core {hc['inst']} binds {len(hit)} leaves (need 1)")
+                out[ctx.F.cells[hit[0]].path] = int(hp)
+        return out
+
     def source(self, path, port):
         for d in self._bits(path, port).values():
             for x in self._leafs(d):
@@ -139,8 +158,32 @@ def _heads(view, s, side):
 
 def derive(view):
     params, slices, flops = {}, {}, dict(head=0, hi=0, rd=0, nb_out=0, nb_in=0)
+    targets = view.hi_pad_targets() if hasattr(view, "hi_pad_targets") else {}
     for s in SLICES:
         pads = {side: _column_pads(view, s, side) for side in "SN"}
+        hold = None
+        if targets:
+            # HI_PAD = S far arrival - N far arrival.  A uniform pad k on all four head columns of one side moves both pair
+            # words of that side by k (joins stay balanced, SKEW unchanged), so HI_PAD moves by k and nothing else in the
+            # station changes.  One k for the whole slice is required (the heads are shared by its regions).
+            sub = f"dvs_{s}.u_core.u_sub"
+            need = set()
+            for r in range(8):
+                u = f"{sub}.u_r{r}"
+                if u not in targets:
+                    continue
+                sh = _cluster(view, s, FAR["S"], pads["S"])[0] + view.delta(f"{sub}.u_frs", "rs_s", (514, 1027)) + view.delta(u, "rs_s_hi_p")
+                nh = _cluster(view, s, FAR["N"], pads["N"])[0] + view.delta(f"{sub}.u_fn", "rs_n", (514, 1027)) + view.delta(u, "rs_n_hi_p")
+                need.add(sh - nh - targets[u])
+            if len(need) > 1:
+                raise ValueError(f"{s}: HI_PAD hold needs different head pads per region {sorted(need)} (one value required)")
+            k = need.pop() if need else 0
+            if k:
+                side = "N" if k > 0 else "S"
+                pads[side] = tuple(p + abs(k) for p in pads[side])
+                if max(pads[side]) > MAX_COLUMN_PAD:
+                    raise ValueError(f"{s}: HI_PAD hold needs {side} column pads {pads[side]} above {MAX_COLUMN_PAD}")
+            hold = dict(side=("N" if k > 0 else "S") if k else None, uniform_pad=abs(k))
         for side in "SN":
             for c, head in enumerate(_heads(view, s, side)):
                 if pads[side][c]:
@@ -173,6 +216,8 @@ def derive(view):
             if not (3 <= sks <= 27 and 3 <= skn <= 27):
                 raise ValueError(f"{u}: skew {sks}/{skn} outside the delay-line range 3..27")
             rows[r] = dict(SKEW_S=sks, SKEW_N=skn, HI_PAD=sh - nh, E=sh)
+            if u in targets and rows[r]["HI_PAD"] != targets[u]:
+                raise ValueError(f"{u}: HI_PAD {rows[r]['HI_PAD']} after the hold, plan hard core has {targets[u]}")
         rd = [rows[r]["E"] + view.delta(f"{sub}.u_ctl", "r_d", (64 * r, 64 * r + 63)) for r in range(8)]
         if rd[0] != max(rd):
             raise ValueError(f"{s}: r_d of region 0 is not the latest; its r_v would need a pad")
@@ -201,6 +246,8 @@ def derive(view):
             flops["nb_out"] += row["NB_PAD"] * W_NB
             flops["nb_in"] += row["NB_IN_PAD"] * W_NB
         slices[s] = dict(column_pads=pads, roots=root, lanes=lane, regions=rows)
+        if hold is not None:
+            slices[s]["hi_pad_hold"] = hold
     return params, dict(rule=__doc__.split("\n\n")[0], slices=slices, added_flops=flops, added_flops_total=sum(flops.values()))
 
 
