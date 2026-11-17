@@ -42,5 +42,20 @@ class ExactOwnerTests(unittest.TestCase):
         self.assertEqual(fr.explicit_owner(self.coord, "qwen_kvsys", {"a": 1}, {"KV-R": 10, "KV-CLK-R2": 20}), "KV-R")
 
 
+class CoordinatorSummaryTests(unittest.TestCase):
+    def test_only_exact_codex_coordinator_is_excluded(self):
+        posts = [
+            {"lane": "CODEX", "tag": "RESULT", "t": 100, "text": "HEAD proof FAIL preserved", "stamp": "2026-11-16 19:46"},
+            {"lane": "CODEX-TOKEN", "tag": "RESULT", "t": 100, "text": "QC component FAIL actual", "stamp": "2026-11-16 19:46"},
+        ]
+        classes = fr.build_classes(Path("/nonexistent"), {}, posts, 101, 1, 3)
+        self.assertEqual(len(classes), 1)
+        cls = next(iter(classes.values()))
+        self.assertEqual(cls["die"], "qwen_compute")
+        self.assertEqual(set(cls["items"]), {"CODEX-TOKEN@19:46"})
+        self.assertNotIn("CODEX", fr.live_lanes(posts, 101, 3))
+        self.assertIn("CODEX-TOKEN", fr.live_lanes(posts, 101, 3))
+
+
 if __name__ == "__main__":
     unittest.main()

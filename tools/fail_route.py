@@ -89,7 +89,7 @@ def live_lanes(posts, now, live_h):
     """lane -> (last post epoch) for lanes that posted within live_h hours; reviewers and infra lanes are not owners."""
     last = {}
     for p in posts:
-        if p["lane"].startswith(NOT_OWNER) and not p["lane"].startswith(OWNER_OK):
+        if p["lane"] == "CODEX" or (p["lane"].startswith(NOT_OWNER) and not p["lane"].startswith(OWNER_OK)):
             continue
         last[p["lane"]] = max(last.get(p["lane"], 0), p["t"])
     return {k: v for k, v in last.items() if now - v <= live_h * 3600}
@@ -183,7 +183,7 @@ def build_classes(coord, state, posts, now, window_h, live_h):
         add(die, "kit", label + " " + mask(reason)[:60], item, family(item), last,
             f"kit|{die}|{cls}|{stage}|{mask(reason)}|{forced}", forced)
     for p in posts:
-        if p["tag"] != "RESULT" or p["lane"].startswith(NOT_OWNER) or now - p["t"] > window_h * 3600:
+        if p["tag"] != "RESULT" or p["lane"] == "CODEX" or p["lane"].startswith(NOT_OWNER) or now - p["t"] > window_h * 3600:
             continue
         if not VERDICT.search(p["text"][:300]):
             continue
