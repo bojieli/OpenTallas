@@ -30,6 +30,7 @@ import json
 import os
 import re
 import sys
+import time
 
 TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready", "result", "gen_pilot")
 LEGACY_OK = ("merge",)          # still evaluated (ancestor of origin/main); accepted in new records too
@@ -115,6 +116,76 @@ def _event_token_in(name, hay):
     return any(event_re(name).search(h) for h in hay)
 
 
+
+# ---------------------------------------------------------------- dead-term guard (HOLD-FLOW-R 11-16, FABLE-FLOW-2000)
+# Dead release terms were the biggest loss of 11-16: a hold waiting for an event / lane / proof that nothing would ever produce.
+# (a) a record is refused unless every term resolves to a planned or adopted plan event, a LIVE lane (agent_ids / OWNERS /
+#     active in the queue) by EXACT name, or a known system check;  (b) term_alerts() names any held term with no producer for 12 h.
+POST_HEAD = re.compile(r"^\s*-?\s*(\d{4}-\d\d-\d\d)\s+(\d\d:\d\d)\s+\S+\s+[A-Za-z]{2,5}\s+\[([A-Za-z0-9_.-]+)\s*->")
+LANE_ACTIVE_H = 48
+SYSTEM_CHECKS = ("lint_clean", "kit_snap", "digest_changed", "input_staged", "tree_ready", "gen_pilot", "census_lt", "merge")
+
+
+def lane_activity(lines):
+    """{lane: epoch of its latest post} from queue lines '- 2026-11-16 07:18 PST RESULT [LANE -> ...'"""
+    out = {}
+    for ln in lines or []:
+        m = POST_HEAD.match(ln)
+        if not m:
+            continue
+        try:
+            ts = time.mktime(time.strptime(m.group(1) + " " + m.group(2), "%Y-%m-%d %H:%M"))
+        except ValueError:
+            continue
+        if ts > out.get(m.group(3), 0):
+            out[m.group(3)] = ts
+    return out
+
+
+def registry_lanes(agent_ids_text, owners_text):
+    """lane names of lanes/agent_ids.tsv (column 1) and autopilot OWNERS.tsv (owner and default_owner columns)"""
+    names = set()
+    for ln in (agent_ids_text or "").splitlines():
+        if ln.strip() and not ln.startswith("#"):
+            names.add(ln.split("\t")[0].strip())
+    cols = None
+    for ln in (owners_text or "").splitlines():
+        if ln.startswith("#") or not ln.strip():
+            continue
+        f = ln.split("\t")
+        if f[0] == "die":
+            cols = [i for i, c in enumerate(f) if c in ("owner", "default_owner")]
+            continue
+        for i in cols or []:
+            if i < len(f) and f[i].strip() not in ("", "-"):
+                names.add(f[i].strip())
+    return names
+
+
+def lane_known(cfg, lane, now=None):
+    """-> (ok, why).  Exact name only (a lane named in a different case is not the lane).  cfg['_registry_lanes'] absent = lanes are not
+    checkable here (old callers, tests): ok.  Live = in the registry, or posted within LANE_ACTIVE_H hours."""
+    reg = cfg.get("_registry_lanes")
+    if reg is None:
+        return True, ""
+    act = cfg.get("_lane_activity") or {}
+    now = now or time.time()
+    if lane in reg or now - act.get(lane, 0) <= LANE_ACTIVE_H * 3600:
+        return True, ""
+    same = sorted({n for n in set(reg) | set(act) if n.lower() == lane.lower()})
+    if same:
+        return False, f"lane {lane!r} is not a live lane by exact name (did you mean {same[0]!r}?)"
+    return False, f"lane {lane!r} is in neither agent_ids / OWNERS nor posted in {LANE_ACTIVE_H} h: nothing will produce this term"
+
+
+def event_variants(name, d):
+    """known events of the die that differ from NAME only by suffix (s4q9l2 vs s4q9l2d): an exact-name term fires for one of them only"""
+    base = name[:-1] if name.endswith("*") else name
+    if name.endswith("*"):
+        return []
+    return sorted(e for e in known_events(d) if e != base and e.startswith(base) and re.fullmatch(r"[a-z0-9]*", e[len(base):]))
+
+
 def term_error(term, die, cfg, migrated=False):
     """why a term cannot be written (None = valid).  migrated terms are not validated (they are audited)"""
     if migrated:
@@ -126,7 +197,9 @@ def term_error(term, die, cfg, migrated=False):
         if not event_name_ok(name):
             return f"{term!r}: event name must be one token of 3+ characters (one trailing * = prefix)"
         if not any(_event_token_in(name, [e]) for e in known_events(d)):
-            return f"{term!r}: no event {name!r} of die {die} (current, previous or planned_events)"
+            var = event_variants(name, d)
+            hint = f"; known variants {var}: use the exact name or '{name}*' for a prefix" if var else ""
+            return f"{term!r}: no event {name!r} of die {die} (current, previous or planned_events){hint}"
         return None
     if kind in ("lint_clean", "kit_snap"):
         if val not in (cfg.get("dies") or {}):
@@ -154,7 +227,8 @@ def term_error(term, die, cfg, migrated=False):
         lane, tag = split_result(val)
         if not (PROOF_NAME.match(lane) and PROOF_NAME.match(tag)):
             return f"{term!r}: result needs <lane>:<tag> (one token each); released by a RESULT line of that lane with '<tag> PASS'"
-        return None
+        ok, why = lane_known(cfg, lane)
+        return None if ok else f"{term!r}: {why}"
     if kind == "proof":
         return None if PROOF_NAME.match(val) else f"{term!r}: proof needs one name token (a RESULT PASS post naming it)"
     if kind == "census_lt":
@@ -454,6 +528,17 @@ def audit(cfg, launched=()):
                 why = unreachable_why(t, die, cfg)
                 if why:
                     add("TERM-UNREACHABLE", die, rid, f"{t[:90]}: {why}", n=inf["held"])
+                k_, v_ = split_term(t)
+                if k_ == "event_adopt":
+                    nm_ = re.sub(r"^event\s+", "", v_, flags=re.I).strip().lower()
+                    var_ = event_variants(nm_, (cfg.get("dies") or {}).get(die) or {}) if event_name_ok(nm_) else []
+                    if var_:
+                        add("TERM-VARIANT", die, rid, f"{t[:90]}: exact name; the die also knows {var_} (a suffix variant does NOT fire it; "
+                                                      f"use '{nm_}*' if either is meant)", n=inf["held"])
+                elif k_ == "result":
+                    ok_, why_ = lane_known(cfg, split_result(v_)[0])
+                    if not ok_:
+                        add("TERM-UNREACHABLE", die, rid, f"{t[:90]}: {why_}", n=inf["held"])
     for die, d in (cfg.get("dies") or {}).items():          # legacy prose keys: a hold_items key with no record has no machine release
         owned = {k for r in d.get("hold_records") or [] for k in (r.get("keys") or []) + (r.get("items") or [])}
         loose = [k for k in (d.get("hold_items") or {}) if k not in owned and k not in (cfg.get("_hold_added") or {}).get(die, [])]
@@ -469,6 +554,61 @@ def audit(cfg, launched=()):
                 add("HELD-BUT-LAUNCHED", die, (cfg.get("_hold_compiled") or {}).get(die, {}).get(pat) or "legacy", f"key {pat}", item=item)
                 break
     return list(out.values())
+
+
+def producer_why(term, die, cfg, now, hours=12.0):
+    """None when the term has a producer, else why not.  Producers: a planned / current / previous plan event; a lane that is in the
+    registry or posted within HOURS; a queue line within HOURS naming a proof; system checks always."""
+    kind, val = split_term(term)
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if kind in SYSTEM_CHECKS:
+        return None
+    if kind == "event_adopt":
+        name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
+        if event_name_ok(name) and any(_event_token_in(name, [e]) for e in known_events(d)):
+            return None
+        return f"no plan event {name!r} is planned or adopted"
+    if kind == "result":
+        lane = split_result(val)[0]
+        reg, act = cfg.get("_registry_lanes"), cfg.get("_lane_activity") or {}
+        if reg is None:
+            return None
+        if lane in reg or now - act.get(lane, 0) <= hours * 3600:
+            return None
+        return f"lane {lane!r} is not registered and has not posted in {hours:g} h"
+    if kind == "proof":
+        recent = [ln for ln in cfg.get("_queue_recent") or [] if val in ln]
+        return None if recent or cfg.get("_queue_recent") is None else f"no queue post names proof {val!r} in {hours:g} h"
+    return None
+
+
+def term_alerts(cfg, seen, now=None, hours=12.0, is_met=None):
+    """(b) wave alert lines for held release terms with no producer for HOURS.  seen = persistent {key: first epoch without producer},
+    updated in place (a producer, or a met term, resets it).  -> [{die,id,term,why,since_h,n}]"""
+    now = now or time.time()
+    out, live = [], set()
+    recs = {die: {r.get("id"): r for r in (d.get("hold_records") or [])} for die, d in (cfg.get("dies") or {}).items()}
+    for die, lst in (cfg.get("_hold_rec_info") or {}).items():
+        for inf in lst:
+            if not inf.get("held"):
+                continue
+            for t in inf["release"]:
+                key = f"{die}|{inf['id']}|{t}"
+                try:
+                    met = bool(is_met(t, die, recs.get(die, {}).get(inf["id"]) or {})) if is_met else False
+                except Exception:
+                    met = False
+                why = None if met else producer_why(t, die, cfg, now, hours)
+                if not why:
+                    seen.pop(key, None)
+                    continue
+                live.add(key)
+                first = seen.setdefault(key, now)
+                if now - first >= hours * 3600:
+                    out.append(dict(die=die, id=inf["id"], term=t, why=why, since_h=round((now - first) / 3600, 1), n=inf["held"]))
+    for k in [k for k in seen if k not in live]:
+        seen.pop(k, None)
+    return out
 
 
 def summarize(findings):
