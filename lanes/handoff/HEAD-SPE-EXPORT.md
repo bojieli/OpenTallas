@@ -18,3 +18,9 @@
 - 18 real: ctl_e host_e(he12h_drc2) host_n mesh_e spn spn_end(fix) spn_eshim_rx/tx spn_wshim_rx st_k5 st_m st_n3_transit st_n3_turn st_n4 st_str st_turn tile turn_a.
 - 8 stand-ins: hd_ctl hd_host_w hd_lep0N hd_mesh hd_serdes (no signed entry), hd_ctl_n (archive NOT SIGNED), hd_spn_wshim_tx hd_turn_b (archive has ODB only, needs V/SPEF re-export).
 - Launched ot-run client intel2 (log ~/head-spe-export-logs/nf15c_real.log); results run/die_sta.json, RUN.log.
+
+## Results 2026-11-16 ~21:20 PST
+- run1 (old hd_tile) and run2 (E7 nf15c_real2, TP2 hd_tile__nf15c_tp2_hold1_1116) both verdict FAIL (fail closed): 379/1182 seam groups untimed at TT and FF. Every untimed seam captures in a u_cland_* landing ring clocked by fclk_*/cland_* ports that the NF15c die_top.v lacks (0 refs). Real-view landed-hop timing needs a die top generated with the landing/fclk network. Old E2 fdh_st/real_sta had the same blind spot (355/1148 null).
+- Timed seams only (run2): TT setup -396.17 (sp4->sp3/start_i, 1693 neg), FF hold -1442.41 (lk_HOST1->lk_ES0 arst_n/start_i on serdes stand-ins, 8814 neg), FF setup -197.51, TT hold -1626.15. Part netlist alias: all PASS.
+- hd_spn NF13a view = NF15c pins exactly (6371 pins name/layer/centre, outline 587.52x2073.6); record E7 head-spe-export/hd_spn_pin_diff.json.
+- Next owner: die top with landing network (HEAD-DIE-R / plan), then rerun the run2 recipe (run_nf15c2.sh, build_nf15c.py, select_views.py in the run dir). host_w coll_o0 port hold to check first when host_w signs.
