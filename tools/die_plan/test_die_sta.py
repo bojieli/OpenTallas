@@ -450,3 +450,69 @@ def test_ilm_escaped_bracket_scalar(tmp_path):
     assert ".A(\\fl_d[0] )" in v and ".Y(bus[0])" in v and ".Y(o[1])" in v and "assign o[0] = bus[0];" in v
     back = D.read_verilog(tmp_path / "m.v")["m"]
     assert {i: dict(c) for _, i, c in back.insts}["b0"]["A"] == ["fl_d[0]"]
+
+
+def test_verdict_missing_seam_arc_fails_closed():
+    ok = {"max": dict(worst=5.0, neg=0, paths=2, bits=2), "min": dict(worst=13.0, neg=0, paths=2, bits=2)}
+    def res_for(seams_tt, seams_ff=None, groups=None):
+        r = dict(mode="flat", corners={"TT": dict(exit=0, seams=seams_tt), "FF": dict(exit=0, seams=seams_ff or seams_tt)})
+        if groups is not None:
+            r["seam_groups"] = groups
+        for c in ("TT", "FF"):
+            r["corners"][c]["clock_endpoint_coverage"] = dict(verdict="PASS", status="NO_UNEXPANDED_CHILD_ETM")
+        return r
+    assert D.verdict(res_for({"a": dict(ok)}, groups=1))["status"] == "PASS"
+    # SPEPRD3 11-16: link_i max/min null (aliased output) reported PASS from the other seams' slacks
+    v = D.verdict(res_for({"a": dict(ok), "sp5->shim/link_i": {"max": None, "min": None}}, groups=2))
+    assert v["status"] == "FAIL" and v["missing_seam_paths"]["TT"] == ["sp5->shim/link_i"]
+    assert v["missing_seam_paths"]["FF"] == ["sp5->shim/link_i"] and "seam timing path coverage" in v["fail_reason"]
+    assert v["setup_TT"] == 5.0                                    # numbers of the timed seams are still reported
+    # hold side only missing at FF
+    v = D.verdict(res_for({"a": dict(ok)}, {"a": {"max": ok["max"], "min": None}}, groups=1))
+    assert v["status"] == "FAIL" and v["missing_seam_paths"] == {"TT": [], "FF": ["a"]}
+    # a group with fewer timed bits than bits
+    part = {"max": dict(worst=5.0, neg=0, paths=1, bits=2), "min": ok["min"]}
+    v = D.verdict(res_for({"a": part}, {"a": dict(ok)}, groups=1))
+    assert v["status"] == "FAIL" and v["missing_seam_paths"]["TT"] == ["a (1/2 bits untimed)"]
+    # seam groups absent from the report (STA stopped early)
+    v = D.verdict(res_for({"a": dict(ok)}, groups=3))
+    assert v["status"] == "FAIL" and v["missing_seam_paths"]["TT"] == ["<2 of 3 seam groups not reported>"]
+    # a corner that did not run stays NOT RUN, not a missing-arc FAIL
+    r = res_for({"a": dict(ok)}, groups=1)
+    r["corners"]["FF"]["exit"] = 1
+    assert D.verdict(r)["status"].startswith("NOT RUN")
+
+
+def test_parse_seam_bits_and_no_path(tmp_path):
+    t = tmp_path / "s.txt"
+    t.write_text("SEAM g1 max paths 1 worst 3.000 neg 0 tns 0.000 launch 1 capture 2 from a to b bits 2\n"
+                 "SEAM g1 min NO_PATH bits 2\n"
+                 "SEAM g2 max paths 1 worst 4.000 neg 0 tns 0.000 launch 1 capture 2 from a to b\n")
+    s = D.parse_sta(t)["seams"]
+    assert s["g1"]["max"]["bits"] == 2 and s["g1"]["max"]["paths"] == 1 and s["g1"]["min"] is None
+    assert "bits" not in s["g2"]["max"]                            # older report: bit-level check not applicable
+    src = Path(D.__file__).read_text()
+    assert "NO_PATH bits [llength $bits]" in src and "from %s to %s bits %d" in src
+
+
+def test_verdict_zero_seams_and_bad_part_netlist_fail(tmp_path):
+    ok = {"max": dict(worst=5.0, neg=0, paths=1, bits=1), "min": dict(worst=13.0, neg=0, paths=1, bits=1)}
+    def res_for(seams):
+        r = dict(mode="flat", corners={"TT": dict(exit=0, seams=seams), "FF": dict(exit=0, seams=seams)})
+        for c in ("TT", "FF"):
+            r["corners"][c]["clock_endpoint_coverage"] = dict(verdict="PASS", status="NO_UNEXPANDED_CHILD_ETM")
+        return r
+    v = D.verdict(res_for({}))                              # zero seam groups measured
+    assert v["status"] == "FAIL" and v["missing_seam_paths"]["TT"] == ["<0 seam groups measured>"]
+    r = res_for({"a": dict(ok)})
+    r["netlist_alias"] = {"spe": dict(verdict="FAIL", problems=566), "tile": dict(verdict="PASS", problems=0)}
+    v = D.verdict(r)
+    assert v["status"] == "FAIL" and v["netlist_alias_fail"] == ["spe"] and "spe 566" in v["fail_reason"]
+    # part_netlist_alias re-reads each part's netlist; a missing netlist is a FAIL, not a skip
+    good, bad = tmp_path / "good", tmp_path / "bad"
+    good.mkdir(); bad.mkdir()
+    (good / "6_final.v").write_text("module g (o, i);\n output o; input i;\n assign o = i;\nendmodule\n")
+    (bad / "6_final.v").write_text("module b (o);\n output o;\n wire n;\n BUFx2_ASAP7_75t_R u (.A(o), .Y(n));\n"
+                                   " assign o = n;\nendmodule\n")
+    out = D.part_netlist_alias({"g": good, "b": bad, "m": tmp_path / "none"}, {"g", "b", "m"})
+    assert out["g"]["verdict"] == "PASS" and out["b"]["verdict"] == "FAIL" and out["m"]["verdict"] == "FAIL"

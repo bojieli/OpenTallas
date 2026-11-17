@@ -318,7 +318,8 @@ def macro_libs(kit, corner):
 
 
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
-                  "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py")
+                  "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py",
+                  "netlist_alias_check.py")
 OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
 
 
@@ -360,6 +361,7 @@ KIT_TOOL_DEPENDENCIES = {
     "hhp_clock_mesh_role.py": ("ft_ports.py", "sdc_lint.py"),
     "orfs_hold_mm.tcl": ("macro_cts_cluster.tcl",),
     "die_sta_related.py": ("clock_components.py", "data_droop.py", "pair_slack_gate.py", "die_sta.py"),
+    "die_sta.py": ("netlist_alias_check.py",),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py", "cap_estimate.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
@@ -2414,6 +2416,15 @@ def evaluate(rec, insertion_target=None):
         n = max(int(x["pg_open"]) for x in pgc.values())
         put("pg", "PASS" if n == 0 else "FAIL", open_terms=n, pg_terms=int(max(x["pg_terms"] for x in pgc.values())),
             first=next((x.get("pg_first_open") for x in pgc.values() if x.get("pg_first_open")), None))
+    # SPEPRD3 11-16: re-read the exported netlist; an assign/alias cycle or an output alias that resolves back to
+    # itself (write_verilog over a moved output BTerm) is an unusable view even when the ODB is correct
+    fv = (rec.get("inputs") or {}).get("final_v")
+    if fv and Path(fv).is_file():
+        import netlist_alias_check as NAC
+        probs, nst = NAC.check(Path(fv).read_text(errors="replace"))
+        if not nst["modules"]:
+            probs = probs + [dict(kind="no_module", net=None)]
+        put("netlist_alias", "FAIL" if probs else "PASS", problems=len(probs), first=probs[:5], netlist=fv, **nst)
     reasons = []
     fm = rec.get("ft_interface")
     if fm is not None:                        # 12.2a1 declared ft arcs (only kits with ft_ports.json)
@@ -2433,7 +2444,8 @@ def evaluate(rec, insertion_target=None):
     if tm is not None:
         put("timing_modes", tm.get("verdict", "NOT RUN"), **{k: v for k, v in tm.items() if k != "verdict"})
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
-            (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()):
+            (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()) + \
+            (("netlist_alias",) if "netlist_alias" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))
