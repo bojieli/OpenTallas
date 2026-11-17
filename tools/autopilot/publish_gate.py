@@ -22,6 +22,8 @@ script refuses without a PASS record whose die, tree, manifest sha and plan sha2
     publish_gate.py static --tree T --plan P [--asbuilt A] [--plan-sha256 S] [--work DIR]   (runs on the gen host, prints PG_STATIC {json})
     publish_gate.py check --coord C --die D --tree T --manifest SHA --plan-sha256 S           (exit 0 = a matching PASS record)
 
+Reviewed inherited G0 findings require candidate.g0_baseline={path,sha256}: a pinned record naming the exact reviewed plan hash, G0 report hash and complete ERROR identities. Only the same or a subset of those identities may pass; PRE/schema errors and every new finding still fail.
+
 Nothing here changes a live config: the apply is projected on a scratch copy of the coord config, the dry gen runs in its own
 work root, the only coord write is the record (committed by bin/coord-commit.sh with --commit)."""
 import argparse
@@ -169,7 +171,59 @@ def _sub(argv, cwd, timeout=1800):
         return 99, f"{type(e).__name__}: {e}"
 
 
-def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None):
+def load_g0_baseline(spec):
+    """Read an explicitly pinned review record; it never changes plan or check output."""
+    if not spec:
+        return None
+    path, want = spec.get("path"), spec.get("sha256")
+    if not path or not HEX64.fullmatch(str(want or "")) or sha256_file(path) != want:
+        raise ValueError("G0 baseline record path/hash mismatch")
+    record = json.loads(Path(path).read_text())
+    record["_record_sha256"] = want
+    return record
+
+
+def g0_baseline_check(plan, report, baseline, rc):
+    """Compare complete ERROR identity/context multisets, with no numeric/path masking."""
+    if baseline is None:
+        return {"verdict": "PASS" if rc == 0 else "FAIL", "inherited": False}
+    def refuse(why):
+        return {"verdict": "FAIL", "inherited": False, "why": why}
+    if baseline.get("schema") != "opentallas.publish_gate.g0_baseline.v1":
+        return refuse("invalid G0 baseline schema")
+    if baseline.get("reviewed_plan_sha256") != sha256_file(plan):
+        return refuse("G0 baseline reviewed plan hash differs from candidate")
+    if not HEX64.fullmatch(str(baseline.get("reviewed_g0_sha256") or "")) or not baseline.get("review"):
+        return refuse("G0 baseline needs a pinned reviewed G0 report and review")
+    accepted = baseline.get("accepted_errors")
+    if not isinstance(accepted, list) or any(not isinstance(x, dict) or x.get("level") != "ERROR"
+                                           or not x.get("check") or not x.get("msg") for x in accepted):
+        return refuse("G0 baseline accepted_errors must contain complete ERROR identities")
+    if rc == 0:
+        return {"verdict": "PASS", "inherited": False, "record_sha256": baseline.get("_record_sha256")}
+    if rc != 1 or not isinstance(report, dict) or report.get("schema") != "opentallas.die_plan.g0.v1":
+        return refuse("G0 did not produce a complete failing report")
+    current = [x for x in report.get("findings", []) if isinstance(x, dict) and x.get("level") == "ERROR"]
+    if report.get("verdict") != "FAIL" or not current or report.get("errors") != len(current):
+        return refuse("G0 exit/report/error census mismatch")
+    # Canonical serialization normalizes dictionary order only; message values,
+    # coordinates, bus widths, instance names and every context field stay exact.
+    remaining = [json.dumps(x, sort_keys=True, separators=(",", ":")) for x in accepted]
+    extra = []
+    for error in current:
+        identity = json.dumps(error, sort_keys=True, separators=(",", ":"))
+        if identity in remaining:
+            remaining.remove(identity)
+        else:
+            extra.append(error)
+    if extra:
+        return dict(refuse("new G0 ERROR identities outside the reviewed baseline"), new_errors=extra)
+    return {"verdict": "PASS", "inherited": True, "errors": len(current), "accepted": len(accepted),
+            "review": baseline["review"], "reviewed_plan_sha256": baseline["reviewed_plan_sha256"],
+            "reviewed_g0_sha256": baseline["reviewed_g0_sha256"], "record_sha256": baseline.get("_record_sha256")}
+
+
+def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
     tree, plan = str(tree), str(plan)
     work = work or tempfile.mkdtemp(prefix="pubgate-")
@@ -186,9 +240,17 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None):
     if asbuilt:
         pre += ["--asbuilt", str(asbuilt)]
     rc1, t1 = _sub(pre, tree)
-    rc2, t2 = _sub([py, "-I", os.path.join(dp, "check.py"), plan, "--quiet", "--out", os.path.join(work, "g0")], tree)
-    res["pre_g0"] = {"verdict": "PASS" if rc1 == 0 and rc2 == 0 else "FAIL", "pre_rc": rc1, "g0_rc": rc2,
-                     "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
+    Path(work).mkdir(parents=True, exist_ok=True)
+    g0_dir = tempfile.mkdtemp(prefix="g0-", dir=work)  # never accept a stale report after a crashed checker
+    rc2, t2 = _sub([py, "-I", os.path.join(dp, "check.py"), plan, "--quiet", "--out", g0_dir], tree)
+    try:
+        g0_report = json.loads(Path(g0_dir, "g0_report.json").read_text())
+    except (OSError, ValueError):
+        g0_report = None
+    allowance = g0_baseline_check(plan, g0_report, g0_baseline, rc2)
+    res["pre_g0"] = {"verdict": "PASS" if rc1 == 0 and allowance["verdict"] == "PASS" else "FAIL",
+                     "pre_rc": rc1, "g0_rc": rc2, "g0_report": str(Path(g0_dir, "g0_report.json")),
+                     "baseline": allowance, "tail": ("PRE: " + t1[-900:] + "\nG0: " + t2[-900:])}
     finds, n = check_hashes(tree, plan, plan_sha256)
     res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
                      **({"why": "no landing_evidence view found under the tree"} if not n and not finds else {})}
@@ -198,13 +260,14 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None):
 
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
-def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",)):
+def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
     q = shlex.quote
     cmd = (f"mkdir -p {q(work_dir)} && nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
-           f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}")
+           f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}"
+           + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else ""))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
     p = runner(argv, capture_output=True, text=True, timeout=3600)
     txt = (p.stdout or "") + (p.stderr or "")
@@ -308,7 +371,8 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
             raise AssertionError("no representative item: pass --item or set die.pilot_item")
         rec["item"] = pick
         wr = str(cfgd.get("work_root") or json.loads((Path(C) / "autopilot/kit_wave.json").read_text()).get("work_root") or "/tmp")
-        st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub))))(
+        baseline = load_g0_baseline(marker.get("g0_baseline") or obj.get("g0_baseline"))
+        st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline)))(
             static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
         rec["checks"].update(st)
         if all((st.get(c) or {}).get("verdict") == "PASS" for c in ("schema", "pre_g0", "hashes", "contained")):
@@ -344,6 +408,7 @@ def main(argv=None):
     s.add_argument("--asbuilt")
     s.add_argument("--plan-sha256")
     s.add_argument("--work")
+    s.add_argument("--g0-baseline-json", help="pinned review record (normally shipped by run from candidate.g0_baseline)")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
     c.add_argument("--die", required=True)
@@ -352,7 +417,7 @@ def main(argv=None):
     c.add_argument("--plan-sha256", required=True)
     a = P.parse_args(argv)
     if a.cmd == "static":
-        print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work)))
+        print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)
