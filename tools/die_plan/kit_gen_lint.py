@@ -210,13 +210,23 @@ def kit_rtl_paths(kd):
         import hashlib
         roots = [Path(r) for r in closure["roots"]]
         errs = []
-        for x in d.get("files", []):
-            # Compare lexical producer paths: realpath on another host may resolve a
-            # scratch alias differently. Content hashes bind each staged file to its
-            # producer-validated original path without expanding permitted roots.
+        files = d.get("files", [])
+        if not files:
+            return ["kit RTL closure has no source files"], True
+        # A copy-back may rewrite .f path prefixes while leaving JSON untouched.
+        # Recover only the current package prefix from a unique exact relative
+        # manifest path; never infer a new permitted source/bind root.
+        first = Path(files[0])
+        matches = [Path(k) for k in closure["files"]
+                   if str(first).endswith("/" + k) and not Path(k).is_absolute()
+                   and ".." not in Path(k).parts]
+        if len(matches) != 1:
+            return [f"kit RTL closure cannot identify current package root: {first}"], True
+        package_root = first.parents[len(matches[0].parts) - 1]
+        for x in files:
             p = Path(x)
             try:
-                rel = str(p.relative_to(Path(closure["producer_directory"])))
+                rel = str(p.relative_to(package_root))
             except ValueError:
                 errs.append(f"kit RTL closure path outside package: {p}")
                 continue

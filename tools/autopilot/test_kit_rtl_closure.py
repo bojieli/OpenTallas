@@ -57,3 +57,20 @@ def test_lexical_attempt_path_survives_changed_scratch_alias(tmp_path):
     assert all(str(alias) in x for x in (kd/'kit_rtl.f').read_text().splitlines())
     receipt(alias/'rtl')
     assert L.kit_rtl_paths(alias/'rtl')==([],True)
+
+
+def test_copyback_rewrites_filelist_prefix_but_not_json(tmp_path):
+    src,bind,kd=vehicle(tmp_path)
+    C.package(kd,src)
+    dest=tmp_path/'relocated'/'rtl'
+    shutil.copytree(kd,dest)
+    old_files=(kd/'kit_rtl.f').read_text().splitlines()
+    new_files=[str(dest)+p[len(str(kd)):] for p in old_files]
+    meta=json.loads((dest/'kit_rtl.json').read_text())
+    (dest/'kit_rtl_paths.json').write_text(json.dumps(dict(
+        src_tree=str(src),filelist=str(kd/'kit_rtl.f'),files=new_files,
+        input_closure=meta['input_closure'])))
+    shutil.rmtree(kd);shutil.rmtree(src);shutil.rmtree(bind)
+    assert L.kit_rtl_paths(dest)==([],True)
+    Path(new_files[-1]).write_text('wrong copied bytes')
+    assert 'content mismatch' in L.kit_rtl_paths(dest)[0][0]
