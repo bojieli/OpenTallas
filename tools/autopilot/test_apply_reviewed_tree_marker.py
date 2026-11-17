@@ -131,11 +131,27 @@ class KeepGenHosts(unittest.TestCase):
         with self.assertRaises(AssertionError):
             apply(c, {"marker": cand(), "keep_gen_hosts": True}, "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
 
-    def test_default_still_uses_candidate_hosts(self):
-        c = mk({"gen_hosts": ["epyc10", "epyc8"]})
-        apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+    def test_default_never_narrows_the_die_it_replicates_or_refuses(self):
+        """FABLE-FLOW-1700 item 3: the candidate lists only epyc10 but the die serves epyc10 and epyc8: the tree is replicated to epyc8 (and verified) before the switch, else nothing is applied"""
+        seen = []
+        orig = A.ensure_tree_on_hosts
+        A.ensure_tree_on_hosts = lambda tree, want, cur, hosts, rt, run=None, link_from="": (seen.append((cur, hosts)) or (list(hosts) + [h for h in cur if h not in hosts], ["replicated"]))
+        try:
+            c = mk({"gen_hosts": ["epyc10", "epyc8"]})
+            apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+        finally:
+            A.ensure_tree_on_hosts = orig
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
-        self.assertEqual(d["gen_hosts"], ["epyc10"])
+        self.assertEqual(seen, [(["epyc10", "epyc8"], ["epyc10"])])
+        self.assertEqual(sorted(d["gen_hosts"]), ["epyc10", "epyc8"])
+        c2 = mk({"gen_hosts": ["epyc10", "epyc8"]})
+        A.ensure_tree_on_hosts = lambda *a, **k: (_ for _ in ()).throw(SystemExit("REPLICATE: failed; nothing applied"))
+        try:
+            with self.assertRaises(SystemExit):
+                apply(c2, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+        finally:
+            A.ensure_tree_on_hosts = orig
+        self.assertEqual(json.loads((c2 / "autopilot/kit_wave.json").read_text())["dies"]["kv"]["src"], "/x/old")           # untouched
 
 
 def test_commit_apply_commits_the_written_files_through_coord_commit(tmp_path):
