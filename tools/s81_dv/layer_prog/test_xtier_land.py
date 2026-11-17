@@ -133,3 +133,19 @@ def test_asbuilt_period_is_the_emitted_leg_period():
     assert gaps == {LV.beat_period()} == {LV.beat_period(LV.LO_AFTER_CTL)}
     tr = [c['cycle'] for c in leg['ctl'] if c['target'] == 0]
     assert {b - a for a, b in zip(tr, tr[1:])} == {LV.beat_period()}
+
+
+def test_selected_manifest_resolves_x_tier_source_without_legacy_path(tmp_path, monkeypatch):
+    selected = tmp_path / 'physical/portfix/ot_s81sl_slice.sv'
+    selected.parent.mkdir(parents=True)
+    selected.write_text('module ot_s81sl_slice; endmodule\n')
+    manifest = tmp_path / 'selection.json'
+    manifest.write_text(json.dumps(dict(base='.', files=[str(selected.relative_to(tmp_path))], defines=[])))
+    monkeypatch.setenv('OT_S81_SELECTED_DEFINES', '')
+    path = XT._selected_path(tmp_path, XT.SLICE, str(manifest))
+    assert path == selected
+    assert XT._file(str(tmp_path), XT.SLICE, frozenset(), str(manifest))[2] == {'ot_s81sl_slice': '; '}
+    # A removed selected definition never falls back to the conventional tree path.
+    selected.write_text('module unrelated; endmodule\n')
+    with pytest.raises(ValueError, match='missing/ambiguous'):
+        XT._selected_path(tmp_path, XT.SLICE, str(manifest))

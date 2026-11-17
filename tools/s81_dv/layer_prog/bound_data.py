@@ -91,11 +91,18 @@ def load_bind(bound, manifest=None, root=None, *, diagnostic=False):
     if manifest is not None:
         if prov.get('manifest') != manifest:
             raise ValueError(f'bind manifest {prov.get("manifest")} != selected {manifest}')
-        m = json.loads((Path(root) / manifest).read_text())
+        manifest_path = Path(root) / manifest
+        m = json.loads(manifest_path.read_text())
         nl = m['netlist'] if isinstance(m['netlist'], list) else [m['netlist']]
         if len(nl) != 1:
             raise ValueError(f'manifest names {len(nl)} netlists; bound data needs exactly one die top')
-        netlist_path = Path(root) / nl[0]
+        base = Path(m.get('base', '.'))
+        if not base.is_absolute():
+            base = manifest_path.parent / base
+        netlist_path = Path(nl[0])
+        if not netlist_path.is_absolute():
+            netlist_path = base / netlist_path
+        netlist_path = netlist_path.resolve()
         netlist_sha = file_sha(netlist_path)
     groups = json.loads((bound / 'bus_groups.json').read_text())
     lat = json.loads((bound / 'bind_latency.json').read_text())
