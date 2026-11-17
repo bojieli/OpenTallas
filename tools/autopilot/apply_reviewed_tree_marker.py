@@ -24,7 +24,7 @@ def atomic(path, data):
     os.replace(tmp, path)
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, drop_gen_hosts=False):
     C = Path(C)
     marker = dict(obj.get("marker", obj))
     die = marker["die"]
@@ -58,6 +58,12 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         if keep:
             assert sorted(d.get("gen_hosts") or []) == sorted(hosts), "keep_gen_hosts: gen_hosts changed since the guard read; nothing applied"
         old = dict(src=d["src"], event=d["event"], plan=d.get("plan"), plan_sha256=d.get("plan_sha256"), kit_rtl=d.get("kit_rtl"))
+        # FLEET-OPS-R (COORD 11-16): a tree apply replicates to EVERY gen host first, or drops the hosts that lack it ON PURPOSE.  S81 D5 was applied while
+        # intel1 (a gen host) held only D4 and the apply silently reset gen_hosts to the verified hosts.
+        dropped = [h for h in (d.get("gen_hosts") or []) if h not in hosts]
+        if dropped and not (drop_gen_hosts or obj.get("drop_gen_hosts")):
+            raise SystemExit("APPLY REFUSED: it would drop gen_hosts %s (the tree is not verified there). Replicate the tree to them first "
+                             "(src_manifest replicate), pass --keep-gen-hosts once verified on all, or --drop-gen-hosts to drop them on purpose; nothing applied" % dropped)
         # decide the pilot BEFORE any write: a refusal leaves everything untouched
         pilot = ""
         if not no_pilot:
@@ -104,7 +110,7 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         atomic(C / HR.tree_marker_rel(die), marker)
         atomic(cfgpath, cfg)
         return dict(applied=die, event=d.get("event"), source=tree, receipt=str(receipt), holds_preserved=True,
-                    pilot=(dict(item=pilot, release="gen_pilot:%s:%s" % (die, want[:12]), hold_added=pilot_added) if pilot else "NONE"))
+                    dropped_gen_hosts=dropped, pilot=(dict(item=pilot, release="gen_pilot:%s:%s" % (die, want[:12]), hold_added=pilot_added) if pilot else "NONE"))
 
 
 def main(argv=None):
@@ -114,12 +120,13 @@ def main(argv=None):
     P.add_argument("--expect-event", required=True)
     P.add_argument("--pilot-item")
     P.add_argument("--no-pilot", action="store_true")
+    P.add_argument("--drop-gen-hosts", action="store_true", help="allow the apply to drop current gen_hosts the tree is not verified on")
     P.add_argument("--keep-gen-hosts", action="store_true", help="keep the die's current gen_hosts (guard must cover exactly them)")
     P.add_argument("--coord", default="/home/ubuntu/coord")
     a = P.parse_args(argv)
     obj = json.loads(Path(a.candidate).read_text())
     obj["_path"] = a.candidate
-    print(json.dumps(apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts)))
+    print(json.dumps(apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts, drop_gen_hosts=a.drop_gen_hosts)))
 
 
 if __name__ == "__main__":

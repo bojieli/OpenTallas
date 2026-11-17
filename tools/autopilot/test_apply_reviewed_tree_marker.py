@@ -106,6 +106,6 @@ class KeepGenHosts(unittest.TestCase):
 
     def test_default_still_uses_candidate_hosts(self):
         c = mk({"gen_hosts": ["epyc10", "epyc8"]})
-        A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
+        A.apply_marker(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]), drop_gen_hosts=True)   # candidate hosts replace gen_hosts only on purpose (FLEET-OPS-R)
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
         self.assertEqual(d["gen_hosts"], ["epyc10"])
