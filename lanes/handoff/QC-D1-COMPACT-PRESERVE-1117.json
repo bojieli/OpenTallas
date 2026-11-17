@@ -1,0 +1,105 @@
+{
+  "at": "2026-11-17T04:50:54.275609-08:00",
+  "status": "COMPACT PRESERVED; normal guarded retirement authorized after reference update and fresh process check",
+  "preservation": {
+    "schema": "opentallas.compact_source_preservation.v1",
+    "source": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d1",
+    "source_inode": 36967285,
+    "source_device": 66309,
+    "source_manifest": "2178dc3e9a7c398fcef94ec29b70feb24f1085fe1c21c9b0bbb3ad953607c377",
+    "source_main": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+    "root_entries": [
+      ".src-manifest.json",
+      ".src-manifest.sha256",
+      "physical",
+      "results",
+      "rtl",
+      "tools"
+    ],
+    "preserved_gen_phys_sha256": "d9a8e1459a414ddcf0f7f4f22a12bef8e75b5b7657fbe01a0e8b1385e5959207",
+    "preserved_param_wrap_sha256": "a5e86017976ac5951d56bd9893b170c663ccb2ba49cff8c348696c723ef04f2b",
+    "d2_anchor": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2",
+    "d2_manifest": "a535703479c0951f3a82a889344dc8983ab6e81ea3a2ad76d84755fe671c8cf8",
+    "files": 323767,
+    "reconstruct": "Copy the protected D2 tree unshared, restore tools/die_plan/param_wrap.py from D1.param_wrap.py, restore exact D1 manifest and sha files. All 323767 payload hashes equal the preserved D1 ledger; one changed file, no added/deleted paths. Alternatively protected BASE plus preserved exact header delta reconstructs D1.",
+    "unique_wip": "Entire sc_header_L2_1117 copied, including original patches, PASS, source pins, normal publication receipt, actual SC GEN outputs and harness correction; original work directory retained.",
+    "adoption": "Never adopted; original pending marker and protected refs preserved; live process absence is rechecked at retirement."
+  },
+  "lineage": {
+    "time_utc": "2026-11-17T12:47:32Z",
+    "base": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2",
+    "d1": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d1",
+    "d2": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2",
+    "manifests": [
+      "fc19bea6c5232cc7bdf3dbfca4ef57ca26eb5fa636d395627e156b5f318e8f2a",
+      "2178dc3e9a7c398fcef94ec29b70feb24f1085fe1c21c9b0bbb3ad953607c377",
+      "a535703479c0951f3a82a889344dc8983ab6e81ea3a2ad76d84755fe671c8cf8"
+    ],
+    "files": [
+      323767,
+      323767,
+      323767
+    ],
+    "base_to_d1": {
+      "changed": [
+        "tools/die_plan/gen_phys.py"
+      ],
+      "added": [],
+      "deleted": [],
+      "same_main": true,
+      "same_scope": true
+    },
+    "d1_to_d2": {
+      "changed": [
+        "tools/die_plan/param_wrap.py"
+      ],
+      "added": [],
+      "deleted": [],
+      "same_main": true,
+      "same_scope": true
+    },
+    "d2_normal_publisher": "PASS",
+    "d2_normal_receipt": {
+      "basis": "completed content verification cache plus current read-only unshared inventory",
+      "cache_mtime_ns": 1794919540857946228,
+      "cache_path": "/home/ubuntu/.cache/src-manifest/2c5667e3f2cf479400a4ea19f769e95c.json",
+      "cache_sha256": "b60e1524fa8ba5e53cb4054cb25f3bb423dfa48379d9bff1e4f1fafce298dfb5",
+      "files": 323767,
+      "main_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+      "manifest_hash": "a535703479c0951f3a82a889344dc8983ab6e81ea3a2ad76d84755fe671c8cf8",
+      "schema": "opentallas.src_manifest.cached_receipt.v1",
+      "signature": "323770:1794919079659063309:59226226370",
+      "source": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2",
+      "verdict": "PASS"
+    },
+    "d1_active_consumers": [],
+    "d1_reconstructible_from": "immutable BASE plus retained sc_header_L2_1117/pack onefile delta; all RTL/view/model/plan payloads unchanged",
+    "sc_actual_proof": "sc_header_L2_1117/actual_sc_d1/harness_correction.json"
+  },
+  "original_pending_marker": {
+    "die": "qwen_compute",
+    "status": "PENDING SOURCE SUCCESSOR NOT ADOPTED",
+    "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d1",
+    "candidate_paths": [
+      "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d1",
+      "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d1.building"
+    ],
+    "reason": "root authorized exact approved316b74af two-hunk gen_phys header fallback, functional RTL unchanged",
+    "owner": "TOOLS-CONVERGE/CODEX-FLEET"
+  },
+  "archive_hosts": [
+    "epyc8",
+    "epyc10"
+  ],
+  "archive": "/srv/opentallas-scratch2/claude/fleet-ops-r-preserve-1117/qc_L2_D1_compact_preservation_1117.tar.gz",
+  "archive_bytes": 17379228,
+  "archive_sha256": "2b333f2817b4317357bda27587604b464b213cd07bf32eacf19c77a5e7672a33",
+  "archive_check": "gzip -t source PASS; epyc10 copy sha256 PASS",
+  "current_consumers": {
+    "canonical_kit_wave_json": 0,
+    "canonical_kit_wave_state_json": 0,
+    "hub_kit_wave_json": 0,
+    "hub_kit_wave_state_json": 0
+  },
+  "retirement_scope": "Only never-adopted source candidate; canonical BASE, D2, rollback, proof work dirs and active jobs remain retained"
+}
