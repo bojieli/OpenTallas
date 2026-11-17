@@ -1,0 +1,17 @@
+{
+ "plan": "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/reframe_l2d/plan_m_clock_D8_fwd.json",
+ "plan_sha256": "12f2493f9a4298bb36af52d35a795dd19f66edd3c934c2374fde33c60106818b",
+ "sidecar": "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/reframe_l2d/side_m_clock_D8.json",
+ "sidecar_sha256": "846056c27104994dc72dab8f242224d0da8d49f8448340a5280c687c0e664fa2",
+ "feed_sha256": "dbdd8008624a49a8b955b673d5edae6a4427d566d9289eaa73ac82659ce17353",
+ "schema_errors": [],
+ "only_change": "clock.spine.feed.form comb_built_tt -> fwd",
+ "count_frame_identity_equal": true,
+ "source_basis": [
+  "schema.py1247 requires fwd metadata tag",
+  "die_trial.py3358+ reads explicit feed parent/tap/root, not form",
+  "count_frame.load reads frame/frame_offset/hash, ignores form",
+  "region_form.sta branches on spine.topology, not feed.form"
+ ],
+ "physical_latency_delta_cycles": 0
+}
