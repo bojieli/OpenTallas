@@ -11,6 +11,7 @@ KERNELS = (
     'rtl/v41rom/ot_v41_bf_front_core_roots.sv',
     'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv',
     'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv',
+    'rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col3_kit.sv',
     'rtl/v41die/ot_s81_cfg7_seq_bfp.sv',
     'rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv',
 )
