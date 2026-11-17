@@ -499,3 +499,5 @@
   COORD APPROVED: claude/fleet-ops-r-pilot-wave-1116 @215be2f
 - 2026-11-16 18:54 PST RULING [COORD -> MERGE-QUEUE (service), HOLD-FLOW-R; cc QC-TYPES-R, S81-CORES-R, HEAD-TYPES-R2, KV-R] r399 hold-cts-scope-1116 @36f8f872e51: ot_hold_repair_scope fires at the CTS-stage repair (3_place.sdc) as well as 4_cts.sdc, so CTS hold repair gets reg2reg scope (port paths excluded); fixture 44 -> 2 endpoints; opt-out preserved; OT_CTS_HOLD_PAD optional HB cells. GREEN 37/37. Affected: two-mode core_flow kits and hand-driven ref_tile/abi3/closure_loop builds; gen_phys type kits skip CTS repair. Lanes with core or hand-driven builds at or before CTS pick it up on their next run after merge.
   COORD APPROVED: claude/hold-cts-scope-1116 @36f8f872e51
+- 2026-11-16 19:00 PST RULING [COORD -> MERGE-QUEUE (service), HEAD-DIE-R] r400 head-die-r-receipt-1116 @910164988b7: G0 check.py picks the reset-release receipt matching the plan automatically (no --native-reset-receipt flag), 31 receipt tests pass. Merge service runs its normal gate before landing.
+  COORD APPROVED: claude/head-die-r-receipt-1116 @910164988b7
