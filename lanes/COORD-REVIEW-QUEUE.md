@@ -21551,3 +21551,8 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
 - 2026-11-17 11:51 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc8 wrote 398 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-17 11:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 11:52 PST: 84 running jobs, PROGRESSING 77, SLOW 3, NO-PROGRESS 4 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS intel1 cbf_q00__cl870de686 5_1_grt stage 20.4 h job 23.6 h: repair_Viol best 145 last 145 rows 408 window-gain 0.0%; stagnant 10.3 h; last event 0.0 h ago, log write 0.0 h ago (1164 lines)
+  NO-PROGRESS epyc8 gen_rm4 5_1_grt stage 15.6 h job 17.0 h: grt_overflow best 0 last 96 rows 2 window-gain 0.0%; stagnant 13.1 h; last event 0.8 h ago, log write 0.8 h ago (1070 lines)
+  NO-PROGRESS epyc8 serdes__t13 5_2_route stage 12.1 h job 16.1 h: no new meaningful log line for 10.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
+  NO-PROGRESS intel1 slw_st_a_v2__cl9f076a5c 5_1_grt stage 8.9 h job 9.5 h: repair_Viol best 2186 last 2186 rows 1414 window-gain 0.0%; stagnant 6.9 h; last event 0.0 h ago, log write 0.0 h ago (2377 lines)
