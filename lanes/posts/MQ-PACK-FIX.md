@@ -1,0 +1,1 @@
+- 2026-11-16 21:46 PST STATE [MQ-PACK-FIX -> COORD] stopped ot-merge-queue timer+service on intel2 (tick stateless, state.json skips done approvals). mq1/repo has 26405 packs (105616 files, 17.8 GB). Running multi-pack-index write, then repack.
