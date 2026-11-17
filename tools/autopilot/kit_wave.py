@@ -9293,7 +9293,24 @@ def collect(AP, cfg, st, notices):
         elif cls == "INFRA":
             if not free_place_no_odb(rec):                 # WAVE-COPYBACK-1115: RC=0 + odb elsewhere is no attempt either
                 free_not_run(rec, (res.get("errors") or "") + "\n" + (res.get("tail") or ""))   # KW-FIX-45 11-11: NOT RUN is no attempt
-        if cls == "INFRA" and KILL_RE.search(why or "") and not NO_HOST.search(why or ""):
+        _ghit = None
+        if cls == "INFRA" and not NO_HOST.search(why or ""):
+            try:
+                _gg = json.loads((Path(rec["dir"]) / "spec.json").read_text()).get("gen_host")
+            except (OSError, ValueError, KeyError, TypeError):
+                _gg = None
+            try:
+                _end = (Path(rec["dir"]) / "result.json").stat().st_mtime          # the kill must fall inside this attempt's run, not just before the tick that reads it
+            except (OSError, KeyError, TypeError):
+                _end = None
+            _ghit = guard_kill_for(AP, rec, why, [res.get("ran_on"), _gg] + list(rec.get("q_hosts") or []), now=_end)
+        if _ghit:
+            # INFRA_KILLED: the plan guard's SIGKILL.  Free retry on another host; no kill_digest / INFRA-REPEAT block, no repeat-stop, no class breaker
+            why = guard_why(_ghit, why)
+            rec.update(reason=why, kill_kind="guard", kill_host=_ghit[0], infra_base=int(rec.get("infra_base") or 0) + 1, no_host_at=0, status="RETRY-INFRA")
+            AP.log(f"KIT-WAVE INFRA-KILLED {rec['die']}/{rec['item']}@{rec.get('attempt')}: ot-oom-age GUARD SIGKILL pid {_ghit[2]} {_ghit[3]} on {_ghit[0]}; "
+                   f"free retry on another host, not counted toward repeat-stop")
+        elif cls == "INFRA" and KILL_RE.search(why or "") and not NO_HOST.search(why or ""):
             # KIT-OPS-4 11-14 (COORD class fix): an attempt killed from outside (earlyoom rc 143 / Error 241, signal) is retried ONCE,
             # at the next tick, on another host (the killer host is avoided), charge-free and without a retry key.  A second kill on
             # the same inputs stops here and is posted (the budget below would otherwise count every attempt number)
@@ -9340,7 +9357,7 @@ def collect(AP, cfg, st, notices):
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
-            if rec.get("stage_class") != "stopped" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
+            if rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))
@@ -9382,7 +9399,80 @@ def cell_check_note(AP, st, rec, res, notices):
         "; ".join(cc["flags"]), cc.get("plan_change") or "-", "-", "-")))
 
 
-KILL_RE = re.compile(r"Error 241|exit 143|rc 143|exit 137|process terminated|earlyoom|interrupted \(signal|\bKilled\b")
+KILL_RE = re.compile(r"INFRA_KILLED|Error 241|exit 143|rc 143|exit 137|process terminated|earlyoom|interrupted \(signal|\bKilled\b")
+
+# INFRA_KILLED (COORD 11-16, KV-HUB-WO): ot-oom-age's plan guard SIGKILLs the youngest build when a plan job runs and MemAvailable < 5 percent; the build
+# exits rc 247 / make Error 247 and the kill is one GUARD line in /var/tmp/ot-oom-age/kills.log on that host.  An attempt whose SIGKILL signature
+# matches such a line (same host, kill inside the attempt's run) is INFRA_KILLED: free retry on another host, never a repeat-stop / class-breaker
+# / INFRA-REPEAT input (it says nothing about the design).
+GUARD_LOG = "/var/tmp/ot-oom-age/kills.log"
+GUARD_SIG_RE = re.compile(r"\] Error 247\b|\brc[ =]+(?:247|137)\b|\bexit(?: status| code)? (?:247|137)\b|\bexit -9\b|\bKilled\s*$|terminated by signal 9", re.M)
+GUARD_LINE_RE = re.compile(r"^(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) GUARD SIGKILL (\d+) (\S+)", re.M)
+GUARD_CACHE = {}        # host -> (fetched_at, [(epoch, pid, comm)])
+GUARD_CACHE_S = 90
+GUARD_SLACK_S = 90
+
+
+def parse_guard_kills(text):
+    """'<+hhmm>\\n<kills.log lines>' (the host's UTC offset first: kills.log is stamped in the host's local time) -> [(epoch, pid, comm)]"""
+    import calendar
+    lines = (text or "").split("\n", 1)
+    m = re.match(r"^([+-])(\d\d)(\d\d)$", lines[0].strip())
+    off = (1 if not m or m.group(1) == "+" else -1) * ((int(m.group(2)) * 3600 + int(m.group(3)) * 60) if m else 0)
+    out = []
+    for ts, pid, comm in GUARD_LINE_RE.findall(lines[1] if len(lines) > 1 else ""):
+        try:
+            out.append((calendar.timegm(time.strptime(ts, "%Y-%m-%d %H:%M:%S")) - off, int(pid), comm))
+        except ValueError:
+            continue
+    return out
+
+
+def guard_kills(AP, host, fetch=None):
+    """the GUARD SIGKILL lines of host's kills.log (cached 90 s per host); [] when the host cannot be read"""
+    now = time.time()
+    hit = GUARD_CACHE.get(host)
+    if hit and now - hit[0] < GUARD_CACHE_S:
+        return hit[1]
+    cmd = f"date +%z; grep 'GUARD SIGKILL' {GUARD_LOG} 2>/dev/null | tail -n 400; true"
+    try:
+        if fetch is not None:
+            txt = fetch(host, cmd)
+        elif AP.ssh_host(host) == "localhost":
+            rc, txt, _ = AP.sh(["bash", "-c", cmd], timeout=20)
+        else:
+            rc, txt, _ = AP.sh(["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=10", AP.ssh_host(host), cmd], timeout=30)
+    except Exception:
+        txt = ""
+    kills = parse_guard_kills(txt or "")
+    GUARD_CACHE[host] = (now, kills)
+    return kills
+
+
+def guard_kill_for(AP, rec, why, hosts, now=None, fetch=None):
+    """(host, epoch, pid, comm) of the ot-oom-age GUARD kill that ended this attempt, or None.  Needs the SIGKILL signature in the failure text, one of
+    hosts (where it ran: ran_on, gen_host, q_hosts), and a kill on that host between the attempt's start and now (+ slack)"""
+    if not GUARD_SIG_RE.search(why or ""):
+        return None
+    try:
+        t0 = float(rec.get("started") or 0)
+    except (TypeError, ValueError):
+        return None
+    t1 = (now if now is not None else time.time()) + GUARD_SLACK_S
+    if t0 <= 0:
+        return None
+    best = None
+    for h in dict.fromkeys(x for x in hosts if x):
+        for ep, pid, comm in guard_kills(AP, h, fetch):
+            if t0 - GUARD_SLACK_S <= ep <= t1 and (best is None or ep > best[1]):
+                best = (h, ep, pid, comm)
+    return best
+
+
+def guard_why(hit, why):
+    h, ep, pid, comm = hit
+    return (f"INFRA_KILLED: ot-oom-age GUARD SIGKILL pid {pid} {comm} on {h} at {time.strftime('%F %T', time.gmtime(ep))} UTC "
+            f"(plan job running, MemAvailable < 5 percent; kills.log): not a design result, free retry on another host | {why}")[:600]
 
 
 TOOL_INFRA_RE = re.compile(r"python exception|plan-schema|tool or source skew|Traceback|ModuleNotFoundError|AttributeError|ImportError")
@@ -9644,6 +9734,12 @@ def repeat_queue_outcomes(AP, cfg, st):
         try:
             if status == "SIGNED":
                 RS.record(st, rec["die"], rec["item"], rec.get("attempt"), "signoff", "", "", ok=True)
+            elif rec.get("kill_kind") == "guard" or (cls == "INFRA" and guard_kill_for(
+                    AP, dict(rec, started=float(rec.get("q_updated") or 0) - 1800), why,
+                    list(rec.get("q_hosts") or []) + [rec.get("gen_host")], now=float(rec.get("q_updated") or 0) or None)):
+                # INFRA_KILLED at the route stage too: the job ended in the last 30 min on a host whose kills.log has a plan-guard line
+                rec["kill_kind"] = "guard"
+                continue                                 # INFRA_KILLED (plan guard SIGKILL): says nothing about the design, never a repeat-stop input
             elif not is_host_fail(cls, why) or RS.is_oom(cls, why):
                 ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), stage, cls, why, inputs=repeat_inputs(cfg, rec, why))
                 if ev:
