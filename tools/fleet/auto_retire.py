@@ -181,7 +181,7 @@ def run(root, cfg, texts, ids, refuse, log, target_gb, apply=False, delete=None,
             rec["result"] = "WOULD-DELETE"
         else:
             b = free()
-            (delete or (lambda p: (os.system("chmod -R u+w " + p), shutil.rmtree(p, ignore_errors=True))))(t)
+            (delete or (lambda p: (os.system("find " + p + " -type d -exec chmod u+w {} +"), shutil.rmtree(p, ignore_errors=True))))(t)
             rec.update(result="DELETED" if not os.path.exists(t) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
         log(rec); res.append(rec)
     return res
@@ -253,7 +253,7 @@ def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, fre
             rec["result"] = "WOULD-DELETE"; gone.append(p)
         else:
             b = free()
-            (delete or (lambda q: (os.system("chmod -R u+w " + q), shutil.rmtree(q, ignore_errors=True))))(p)
+            (delete or (lambda q: (os.system("find " + q + " -type d -exec chmod u+w {} +"), shutil.rmtree(q, ignore_errors=True))))(p)
             rec.update(result="DELETED" if not os.path.exists(p) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
             if rec["result"] == "DELETED": gone.append(p)
         log(rec); res.append(rec)

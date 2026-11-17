@@ -93,7 +93,7 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
         try:
             if rm: rm(d)
             else:
-                run(["chmod", "-R", "u+w", "--", str(d)])
+                run(["find", str(d), "-type", "d", "-exec", "chmod", "u+w", "{}", "+"])
                 run(["rm", "-rf", "--one-file-system", "--", str(d)])
                 (Path(root) / f"{d.name}.manifest.json").unlink(missing_ok=True)
             gone.append(d.name)

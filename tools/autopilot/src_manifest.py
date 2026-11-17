@@ -34,6 +34,7 @@ import tempfile
 
 MANIFEST = ".src-manifest.json"
 HASHFILE = ".src-manifest.sha256"
+LINKBASE = ".link-base"          # STAGE A (COORD 11-17, QC D-steps wrote 57 GB each): text file naming the published base tree whose inodes this tree shares
 DEFAULT_SCOPE = ["tools", "rtl", "physical", "plans"]
 SKIP_DIRS = ("__pycache__", ".git", ".pytest_cache")
 SKIP_FILES = ("*.pyc", "*.bak*", "*.orig", "*.rej")
@@ -67,7 +68,7 @@ def walk_tree(root):
         for f in sorted(fn):
             p = os.path.join(dp, f)
             rel = os.path.relpath(p, root)
-            if rel in (MANIFEST, HASHFILE) or skipped(rel):
+            if rel in (MANIFEST, HASHFILE, LINKBASE) or skipped(rel):
                 continue
             out[rel] = p
     return out
@@ -92,6 +93,25 @@ def signature(root):
             z += st.st_size
             m = max(m, st.st_mtime_ns)
     return f"{n}:{m}:{z}"
+
+
+def link_base(root):
+    """the declared base tree of a link-published tree ('' = none).  Only a path that is itself a manifest tree counts."""
+    try:
+        b = open(os.path.join(root, LINKBASE)).read().strip()
+    except OSError:
+        return ""
+    return b if b and os.path.isfile(os.path.join(b, MANIFEST)) else ""
+
+
+def shares_with_base(path, rel, base):
+    """True when the file is the same inode as the file at rel in the declared base (an intended link, not a cp -al copy elsewhere)"""
+    if not base:
+        return False
+    try:
+        return os.lstat(path).st_ino == os.lstat(os.path.join(base, rel)).st_ino
+    except OSError:
+        return False
 
 
 def load_manifest(root):
@@ -132,6 +152,7 @@ def verify(root, expect="", ro=False, full=False):
             pass
     want = m.get("files") or {}
     have = walk_tree(root)
+    lbase = link_base(root)
     for rel in sorted(want):
         p = have.get(rel)
         if p is None:
@@ -140,7 +161,7 @@ def verify(root, expect="", ro=False, full=False):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (modified: not the manifest content)")
         elif ro and writable(p):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
-        elif ro and not os.path.islink(p) and os.lstat(p).st_nlink > 1:
+        elif ro and not os.path.islink(p) and os.lstat(p).st_nlink > 1 and not shares_with_base(p, rel, lbase):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (hardlinked, nlink {os.lstat(p).st_nlink}: a write or chmod elsewhere reaches this file)")
     nshared = sum(1 for e in errs if "hardlinked, nlink" in e)
     if nshared:
@@ -228,6 +249,7 @@ def shared_inodes(root, limit=0):
     another path (a `cp -al` copy in some lane's tree) can change.  A published tree must have none (TOOLS-CONVERGE-1116, 2nd
     occurrence: S81 cmp_B6gF2s, HEAD fable-fix-head-serdes/tree5)."""
     out = []
+    lbase = link_base(root)
     for dp, dn, fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP_DIRS]
         for f in fn:
@@ -236,7 +258,7 @@ def shared_inodes(root, limit=0):
                 st = os.lstat(p)
             except OSError:
                 continue
-            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1:
+            if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not shares_with_base(p, os.path.relpath(p, root), lbase):
                 out.append((os.path.relpath(p, root), st.st_nlink))
                 if limit and len(out) >= limit:
                     return out
@@ -453,9 +475,10 @@ def make_ro(root):
     for dp, dn, fn in os.walk(root, topdown=False):
         for f in fn:
             p = os.path.join(dp, f)
-            if not os.path.islink(p):
-                os.chmod(p, os.lstat(p).st_mode & ~0o222)
-        os.chmod(dp, os.lstat(dp).st_mode & ~0o222)
+            if not os.path.islink(p) and os.lstat(p).st_mode & 0o222:
+                os.chmod(p, os.lstat(p).st_mode & ~0o222)           # a file already a-w (e.g. one linked from the base) is left alone: no chmod of a shared inode
+        if os.lstat(dp).st_mode & 0o222:
+            os.chmod(dp, os.lstat(dp).st_mode & ~0o222)
 
 
 def switch_pointer(pointer, tree):
@@ -547,7 +570,25 @@ def delta_make(repo, old_tree, new_sha, out, drop_overlay=()):
     return len(add), len(delete)
 
 
-def delta_apply(pack, old_tree, out):
+def link_tree(src, dst):
+    """STAGE A: dst = the directory structure of src with every regular file HARDLINKED from src (unchanged files cost nothing), symlinks recreated.  src must be a
+    read-only published tree: the links are made once, into the new tree, which is then made read-only; nothing ever writes through them (delta-apply unlinks a path
+    before it writes a new copy, retire tools chmod directories only)."""
+    for dp, dn, fn in os.walk(src):
+        rel = os.path.relpath(dp, src)
+        d = os.path.join(dst, rel) if rel != "." else dst
+        os.makedirs(d, exist_ok=True)
+        for f in fn:
+            sp_, dp_ = os.path.join(dp, f), os.path.join(d, f)
+            if os.path.islink(sp_):
+                os.symlink(os.readlink(sp_), dp_)
+            else:
+                os.link(sp_, dp_)
+        for x in dn:                                              # keep the source's directory modes (made writable by the caller)
+            os.makedirs(os.path.join(d, x), exist_ok=True)
+
+
+def delta_apply(pack, old_tree, out, link=False, expect=""):
     """out = a real copy (cp -a, fresh inodes, never links) of old_tree + the pack; new manifest = old manifest with the changed paths;
     nothing is trusted: the caller runs publish (full verify) afterwards."""
     d = json.load(open(os.path.join(pack, "delta.json")))
@@ -558,7 +599,10 @@ def delta_apply(pack, old_tree, out):
         raise SystemExit(f"refuse: {out} exists")
     tmp = out + ".building"
     shutil.rmtree(tmp, ignore_errors=True)
-    subprocess.run(["cp", "-a", "--reflink=never", old_tree, tmp], check=True)
+    if link:
+        link_tree(old_tree, tmp)
+    else:
+        subprocess.run(["cp", "-a", "--reflink=never", old_tree, tmp], check=True)
     for dp, dn, fn in os.walk(tmp):
         os.chmod(dp, os.lstat(dp).st_mode | stat.S_IWUSR)
     files = dict(m["files"])
@@ -592,6 +636,17 @@ def delta_apply(pack, old_tree, out):
         json.dump(nm, f, indent=0, sort_keys=True)
     with open(os.path.join(tmp, HASHFILE), "w") as f:
         f.write(nm["manifest_hash"] + "\n")
+    if link:
+        with open(os.path.join(tmp, LINKBASE), "w") as f:
+            f.write(os.path.realpath(old_tree) + "\n")
+    if expect or link:                                           # (4) hash equality BEFORE the tree can be published or applied
+        errs, _info = verify(tmp, expect=expect, full=True)
+        if errs:
+            for dp, dn, fn in os.walk(tmp):                      # directories only: a file chmod would reach the shared inode in the base
+                os.chmod(dp, os.lstat(dp).st_mode | stat.S_IWUSR)
+            shutil.rmtree(tmp, ignore_errors=True)
+            report(errs)
+            raise SystemExit("delta-apply refused: composed tree does not match the manifest" + (f" / expected {expect[:12]}" if expect else ""))
     os.rename(tmp, out)
     return nm
 
@@ -739,6 +794,8 @@ def main(argv=None):
     da.add_argument("pack")
     da.add_argument("--old", required=True)
     da.add_argument("--out", required=True)
+    da.add_argument("--link", action="store_true", help="STAGE A: hardlink unchanged files from --old (a D-step costs the delta); the new tree is verified before it is kept")
+    da.add_argument("--expect", default="", help="manifest hash the composed tree must have (checked before the rename)")
     rt = sp.add_parser("retire", help="delete superseded <base>_dN siblings of TREE (older N), unless referenced or in use")
     rt.add_argument("tree")
     rt.add_argument("--refs", nargs="*", default=[], help="files that may name a tree (kit_wave.json, handoff markers): a named tree is kept")
@@ -786,7 +843,7 @@ def main(argv=None):
         n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out, a.drop_overlay)
         print(f"SRC_MANIFEST DELTA {a.out}: {n} changed/added, {dl} deleted")
     elif a.cmd == "delta-apply":
-        nm = delta_apply(a.pack, os.path.abspath(a.old), a.out)
+        nm = delta_apply(a.pack, os.path.abspath(a.old), a.out, a.link, a.expect)
         print(f"SRC_MANIFEST DELTA-APPLIED {a.out} main {nm['main_sha'][:12]} hash {nm['manifest_hash']} (run publish next)")
     elif a.cmd == "retire":
         retire(os.path.abspath(a.tree), a.refs, a.keep, a.dry)
