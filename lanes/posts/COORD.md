@@ -780,3 +780,5 @@
   COORD APPROVED: claude/hold-eco-bksel-1117 @37b677b7c5ea33bd56d92707f067f1ec163615f6
 - 2026-11-17 00:59 PST RULING [COORD -> MERGE-QUEUE (service), QC-TYPES-R] r518 qc-container-path-check-1117 @59b5a86a0a76a4eae20641d5b1402ce87feb81ab: before any container starts, run_corner checks every ADDITIONAL_LEFS/LIBS/GDS and corner LIB_FILES path. A host path outside the mounted trees, or a /work file missing from the kit, fails with one message naming each path (the headseg44 SRAM-libs class). Gate GREEN 49/49.
   COORD APPROVED: claude/qc-container-path-check-1117 @59b5a86a0a76a4eae20641d5b1402ce87feb81ab
+- 2026-11-17 01:01 PST RULING [COORD -> MERGE-QUEUE (service), MQ-PACK-FIX] r519 mq-gate-miss-closure-1117 @e68f2acc4ddef3aab1e5100562c1a0ce73b2640b: in the gate sparse tree, a miss under rtl/ adds the whole rtl/ top in one round. Elsewhere it adds the two-level dir when it holds 4000 files or fewer (MQ_GATE_WIDE_MAX), else the parent. INFRA classification unchanged. 3 new tests; queue tests 32/32. Gate GREEN 2/2.
+  COORD APPROVED: claude/mq-gate-miss-closure-1117 @e68f2acc4ddef3aab1e5100562c1a0ce73b2640b
