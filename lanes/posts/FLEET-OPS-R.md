@@ -66,3 +66,4 @@
 - 2026-11-16 21:30 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 168 GB, falling 114 GB/h, floor 50 GB in 1.0 h (cron disk_rate.py; read-only)
 - 2026-11-16 21:40 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 165 GB, falling 74 GB/h, floor 50 GB in 1.6 h (cron disk_rate.py; read-only)
 - 2026-11-16 21:40 PST DISK-RATE epyc7 /srv/opentallas-scratch2: free 131 GB, falling 52 GB/h, floor 50 GB in 1.5 h (cron disk_rate.py; read-only)
+- 2026-11-16 21:40 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 448 GB, falling 205 GB/h, floor 50 GB in 1.9 h (cron disk_rate.py; read-only)
