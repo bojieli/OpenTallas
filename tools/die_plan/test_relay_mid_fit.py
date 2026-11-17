@@ -160,9 +160,11 @@ def test_enable_switches_env_types_and_plan(monkeypatch):
     import gen_phys as G
     monkeypatch.delenv("OT_RELAY_MID_FIT", raising=False)
     monkeypatch.delenv("OT_GUTTER_BLOCK_UM", raising=False)
-    assert not G._relay_mid_fit({}, "col_h10_r1__t1__cl95b37463") and G._gutter_block_um({}, "x__t1") is None
+    assert G._relay_mid_fit({}, "col_h10_r1__t1__cl95b37463") and G._gutter_block_um({}, "x__t1") is None   # col: FIT default (11-16)
+    assert not G._relay_mid_fit({"relay_mid_fit": False}, "col_h10_r1__t1__cl95b37463")
+    assert not G._relay_mid_fit({}, "ot_s81sl_leaf__t34")
     assert G._relay_mid_fit({"relay_mid_fit_types": ["col_h10_r1"]}, "col_h10_r1__t1__cl95b37463")
-    assert not G._relay_mid_fit({"relay_mid_fit_types": ["col_h9_r2"]}, "col_h10_r1__t1__cl95b37463")
+    assert not G._relay_mid_fit({"relay_mid_fit_types": ["row_h9_r2"]}, "row_h10_r1__t1__cl95b37463")
     assert G._gutter_block_um({"gutter_block_um": 45}, "a__t1") == 45
     assert G._gutter_block_um({"gutter_block_um": 45, "gutter_block_types": ["b"]}, "a__t1") is None
     monkeypatch.setenv("OT_RELAY_MID_FIT", "1")
@@ -187,3 +189,21 @@ def test_gutter_min_span_switch(monkeypatch):
     assert G._gutter_block_min_span_um({"gutter_block_min_span_um": 200}) == 200.0
     monkeypatch.setenv("OT_GUTTER_BLOCK_MIN_SPAN_UM", "150")
     assert G._gutter_block_min_span_um({"gutter_block_min_span_um": 200}) == 150.0
+
+
+def test_col_relay_fallback_fails_closed_by_default():
+    import sys
+    sys.path.insert(0, str(HERE))
+    import gen_phys as G
+    assert G._relay_fallback_max_frac({}, "col_h10_r0_p1__t1__cl574cc59d") == 0
+    assert G._relay_fallback_max_frac({}, "ot_s81sl_leaf__t34") is None
+    assert G._relay_fallback_max_frac({"relay_fallback_max_frac": 0.05}, "col_h9_r2__t1") == 0.05
+    assert G._relay_fallback_max_frac({"relay_fallback_max_frac": None}, "col_h9_r2__t1") is None
+
+
+def test_fit_strict_names_unfitted_group():
+    # a 50-um hop bound cannot reach the 450 -> 950 line from any site: the strict count stops the hook and names the group
+    with pytest.raises(AssertionError) as e:
+        _run({"OT_RELAY_MID_FIT": "1", "OT_RELAY_MID_MAX_HOP_UM": "50", "OT_RELAY_FALLBACK_MAX_FRAC": "0"})
+    assert "OT_HOOK_COVERAGE relay_mid: 1 of 1 stations on the old fallback" in str(e.value)
+    assert "u_y_a:250" in str(e.value)
