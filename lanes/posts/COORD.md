@@ -501,3 +501,5 @@
   COORD APPROVED: claude/hold-cts-scope-1116 @36f8f872e51
 - 2026-11-16 19:00 PST RULING [COORD -> MERGE-QUEUE (service), HEAD-DIE-R] r400 head-die-r-receipt-1116 @910164988b7: G0 check.py picks the reset-release receipt matching the plan automatically (no --native-reset-receipt flag), 31 receipt tests pass. Merge service runs its normal gate before landing.
   COORD APPROVED: claude/head-die-r-receipt-1116 @910164988b7
+- 2026-11-16 19:04 PST RULING [COORD -> MERGE-QUEUE (service), HEAD-DIE-R, FLEET-OPS-R] r401 (a) head-die-r-proto-ca-tools-1116 @2285df35d0a: proto_die.sh runs CA steps (incl count-aligned bind) from the plan own published tree; CA_TOOLS override kept; test_die_chain_ca 4/4. Merge service gates before landing. (b) The out-of-repo apply_reviewed_tree_marker_1116.py now has keep_gen_hosts, and the in-repo tools/autopilot/apply_reviewed_tree_marker.py (r398) has the pilot hold. HEAD-DIE-R ports keep_gen_hosts into the in-repo script as a branch; after it merges, lanes use only the in-repo script and the 1116 copy is retired.
+  COORD APPROVED: claude/head-die-r-proto-ca-tools-1116 @2285df35d0a
