@@ -90,21 +90,27 @@ def test_dry_mode_reports_only():
 
 def test_real_command_text():
     o = TR.Ops(die(), "/repo.git", SHA)
-    cmds = o.compose_cmds(OLD, TR.new_tree_path(OLD, SHA))
-    assert "delta-make" in cmds[0] and "--paths tools physical/common_flow" in cmds[0]
-    assert "delta-apply" in cmds[1] and "--link" in cmds[1] and "verify" in cmds[2] and "publish" in cmds[3]
-    assert "replicate" in cmds[4] and "--hosts epyc8" in cmds[4] and "--link-from src_kv_pin_abc_d16" in cmds[4]
-    assert "bind.py bind" in o.bind_cmd(TR.new_tree_path(OLD, SHA), "/o") and "--strict" in o.bind_cmd("/n", "/o")
+    new = TR.new_tree_path(OLD, SHA)
+    pc = o.pack_cmd(OLD, new)                                            # built on the hub: the gen host has no git store of main
+    assert "delta-make" in pc and "--paths tools physical/common_flow" in pc and "cat " + OLD + "/.src-manifest.json" in pc
+    assert "rsync" in pc and "epyc10:" in pc and new + ".pack" in pc and "--repo /repo.git" in pc
+    cmds = o.compose_cmds(OLD, new)
+    assert "delta-apply" in cmds[0] and "--link" in cmds[0] and "verify" in cmds[1] and "publish" in cmds[2]
+    assert "replicate" in cmds[3] and "--hosts epyc8" in cmds[3] and "--link-from src_kv_pin_abc_d16" in cmds[3]
+    assert "bind.py bind" in o.bind_cmd(new, "/o") and "--strict" in o.bind_cmd("/n", "/o")
 
 
 def test_ops_compose_stops_at_the_first_failing_step():
     seen = []
 
     def run_(host, cmd, timeout=0):
-        seen.append(cmd)
+        seen.append((host, cmd))
         return (1, "boom") if "delta-apply" in cmd else (0, "hash")
     ok, detail, h = TR.Ops(die(), "/r", SHA, run=run_).compose(OLD, "/n")
-    assert not ok and len(seen) == 2 and "rc 1" in detail
+    assert not ok and len(seen) == 2 and "rc 1" in detail and seen[0][0] is None and seen[1][0] == "epyc10"
+    seen.clear()
+    ok, detail, h = TR.Ops(die(), "/r", SHA, run=lambda host, cmd, timeout=0: (3, "no sha")).compose(OLD, "/n")
+    assert not ok and "delta-make (hub)" in detail
 
 
 def test_wave_tick_starts_one_refresh_per_key(monkeypatch):
@@ -127,3 +133,11 @@ def test_wave_tick_starts_one_refresh_per_key(monkeypatch):
     KW.TOOLS_LAG_CACHE["raw"]["kv"] = {"pin": "abc", "n_commits": 20, "missing": ["r535", "r554", "r600"]}
     KW.tools_refresh_tick(AP, cfg, st)                                   # a new ruling = a new key
     assert len(launched) == 2
+
+
+def test_overlay_clash_is_not_dropped_silently():
+    ops = FakeOps(compose=False)
+    ops.compose = lambda old, new: (False, "delta-make (hub): rc 1: refuse: paths changed on main are overlaid by the tree: tools/autopilot/kit_wave.py, tools/die_plan/bind.py", "")
+    rec, posts, edits, _ = run(ops=ops)
+    assert rec["status"] == "OVERLAY-CLASH" and not edits
+    assert posts[0].startswith("NEEDS-LANE [TOOLS-REFRESH -> KV-R3]") and "kit_wave.py" in posts[0] and "drop-overlay" in posts[0]
