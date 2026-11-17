@@ -1,20 +1,17 @@
-# HEAD-HW-ECO handoff (child of HEAD-TYPES-R2; owns HEAD hd_host_w forms eco_hw4 + hw5)
+# HEAD-HW-ECO handoff (child of HEAD-TYPES-R2; owns HEAD hd_host_w forms eco_hw4 + hw5) -- 11-16 20:0x PST
 
 ## RESET section (read first)
-- eco_hw4 tree /srv/opentallas-scratch2/claude/fable-fix-head-types/eco_hw4 now on E10, intel2, epyc8, intel1, epyc7 (i1t, so, so_m516, hei2, hw4e1).
-- i1t (routed PRD t5, DRC 0). Old signoff r2: NOT SIGNED, TT -44.24 (16 viol; worst SRAM rb_safe bank[4] depth[1] -> u_ep.b_pay[260]: t5 slew buffers wire33078/wire33077 sized on the placement estimate, routed slew 274 ps at D),
-  FF std -31.82 (worst port coll_o0, the parent's), INTERNAL FF -15.54 on 40 ends. Parent ac92 re-sign FAILED at once (so_ac92 had 3 of 10 bundle files); not rerun.
-- so_m516 = tools + physical/common_flow of main 516226ace43 (own sparse clone intel2 /srv/opentallas-scratch2/claude/head-hw-eco/src). HOLD-FLOW-R lever 1 is merged in main; signoff.py = ac92344e.
-- hei2: FF/TT endpoint dump in the signoff_r2 session scenes -> hold_endpoints.tsv (1150 FF<0 rows, 26408 TT rows <600 ps) -> hold_eco_internal.py plan: 40 internal endpoints, 41 HB4, 0 partial, 1110 port paths skipped.
-  BUG (repo tools/die_plan/post_route_drv/hold_eco_internal_dump.tcl): it multiplies get_property slack by 1e12, but the property is already ps -> slacks x1e12, plan gives 4 HB4 on every endpoint (hei1 shows it). My dump drops the factor. Owner: HOLD-FLOW-R.
-- hw4e1 = prd_mk i1t t5, OT_PRD_FROM=route, OT_PRD_HOLD_PLAN=hei2/plan.tsv, OT_PRD_NO_HOLD=0 appended (TT scene: repair_design + setup margin 10 on routed SPEF, then targeted 41 HB4 insert), MAX_PASS 1, OT_PRD_POST=0.
-  Launched via ot-run (intel2 client log ~/head-hw-eco-logs/hw4e1.log; physical log hw4e1/physical.log). E1_ATTEMPTED guards a repeat. Do not restart.
-- NEXT: on finish: DRC from 5_2_route.json, LOOK (layout around inserts + b_pay path), sign-off with the hw4e1 bundle (main signoff.py) -> export if DRC 0 / TT >= -42 / internal FF >= 0.
-- hw5: epyc8 head-types-r/hw5 GOAL grt live (client intel2 306907); not touched. At GRT: read OT_HW5_BANK_TAP, clk_t6 balance, TT/FF; then the same hold stage.
-
-## CODEX handback 2026-11-16 19:50 PST
-- hw4e1 terminal FAIL exit2: single-TC kit_modes_eco rejected explicit targeted FF-sized plan. Failed evidence preserved.
-- Claude-prepared hw4e2 launched, log intel2 ~/head-hw-eco-logs/hw4e2.log, client2064990, remote alias localhost (tolerant-swine via intel2 ssh localhost), unit oth-ubuntu-2066093-1794887221. Current DRT pin-access / initial route; no restart. Read physical.log, run_prd.log, prd_result.json. E2_ATTEMPTED guards repeat. Source i1t final placement/congestion images LOOKED and review in hw4e2/results/geom_review/codex_1116.txt.
-- Generic source guard fix pushed existing lane clone intel2 head-hw-eco/src branch claude/head-hw-eco-staticplan-1116 @1ed0608cac. Nonempty explicit OT_PRD_HOLD_PLAN allows TC static insertion; ordinary timing-driven TC hold stays refused and FF-vclk mismatch stays refused. Six runtime guard/actual-dispatch tests PASS; sparse clone full file 17pass/3 missing orfs_hold_mm assets. Normal gate is RUNNING (client2137106), log ~/head-hw-eco-logs/staticplan_gate.log. Await GREEN then READY/COORD approval; do not claim merged.
-- Four-net AB206 rip comparison collected E10 eco_ab206_rip4/i1t: terminal FAIL route_rc2, DRT0255 net30373 at iteration4 routeBox338580,95190..342570,99180, elapsed5h02 peak25GB. No completed A/B, no generic route-keep claim; no rerun. Actual he12h geometry fix supersedes that speculative route.
-- NEXT hw4e2: finish -> inspect targeted41HB4 insert + TT/FF and actual DRC -> fresh signoff with complete bundled helpers -> export if SIGNED. In current run_prd.log the hook messages had not appeared yet despite DRT start: check physical.log / detailed global-route logs for targeted insert before claiming mechanism applied.
+One signed form of hd_host_w is enough: whichever of hw5 / hw4e2 signs first gets exported (ffht_export.sh pattern, rtx-pro scratchpad copy).
+- hw5 (structural: u_bout_coll_o0 bank on own tap clk_t6): GRT TT -0.92 FF +0.22 (Codex). Direct DRT LIVE E8 unit oth-ubuntu-473593-1794887144,
+  client intel2 2033370, log ~/head-codex-logs/hw5_drt_ready.log; kit epyc8 /srv/opentallas-scratch2/claude/head-types-r/hw5/hd_host_w, run_drt_codex.sh
+  chains 5_2_route..generate_abstract, pin audit, then signoff.py -> signoff_codex/ (log signoff_codex.log). DRT iter0 60% at 20:02. Do not restart.
+  CTS note: OT_TAP_BALANCE left clk_t6 at mean 356 (346-472, 514 sinks) vs target 450.
+- hw4e2 (eco_hw4/hw4e2, intel2 localhost unit oth-ubuntu-2066093-1794887221, client log ~/head-hw-eco-logs/hw4e2.log): route-keeping t5 PRD from i1t with
+  OT_PRD_HOLD_PLAN=hei2/plan.tsv + patched kit_modes_eco.tcl. MEASURED in 5_1_grt.tmp.log: repair_design 249 buffers / 627 nets; setup repair
+  -44.24 -> -31.32 session estimate (b_pay[260] still worst); "OT_HEI inserted 41 HB4 at 40 capture pins". DRT running 20:0x. MAX_PASS 1, OT_PRD_POST=0:
+  sign off myself after finish (python3 -I hw4e2/signoff.py run --kit hw4e2 --base hw4e2/run/results/asap7/dp_hd_host_w/base --out hw4e2/signoff_e2).
+- hw4e1 died at GRT (KIT_MODES single-mode tc guard). Kept as evidence.
+- Branches: claude/head-hw-eco-staticplan-1116 @1ed0608cac GATE GREEN 3/3, READY posted 20:0x.
+  claude/hold-eco-dump-units-1116 @54ee4a41c71 (dump x1e12 unit fix + plan refuses |slack|>1e5 ps): gate running, log intel2 ~/head-hw-eco-logs/gate_54ee4a4.log; post READY when GREEN.
+- Old data: i1t signoff r2 TT -44.24, FF std -31.82 (port), internal -15.54 on 40 ends. hei2 plan: 40 ends, 41 HB4.
+- Tools: own clone intel2 /srv/opentallas-scratch2/claude/head-hw-eco/src (+ worktree dumpfix); so_m516 = main 516226ace43 tools on E10/intel2/epyc8/intel1/epyc7.
