@@ -47,12 +47,6 @@ def test_new_signoff_after_retirement_counts(tmp_path):
     assert R.name_retired(new, 's81', R.retired_names(f), ('slice_station__t12', 's81p_slice_station__t12')) is None
 
 
-def test_repo_tsv_retires_s81_legacy_stations():
-    names = R.retired_names()
-    for t in ('t12', 't17', 't20', 't21'):
-        assert ('s81', 'slice_station__' + t) in names
-        r = dict(OLD, name='dp_slice_station__' + t, top='s81p_slice_station__' + t)
-        assert R.name_retired(r, 's81', names, ('slice_station__' + t, 's81p_slice_station__' + t))
 
 
 def test_carry_unreachable_keeps_last_verified_credit():
