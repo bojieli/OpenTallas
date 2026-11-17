@@ -37462,9 +37462,9 @@
         {
           "id": "s81-kit-dupbb-1117",
           "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
-          "reason": "FIX-S81-KIT-DUPBB: 11 dsdv_slice_*_C kits fail KIT_PREFLIGHT issues 4 (duplicate_modules: ot_s81sl_egn_bb.v and ot_s81sl_egg_bb.v listed twice in the source list); generator fix claude/s81-kit-dupbb-1117 @25ac67bc9c17, released when it is merged to main.",
+          "reason": "FIX-S81-KIT-DUPBB: 11 dsdv_slice_*_C kits fail KIT_PREFLIGHT issues 4 (duplicate_modules: ot_s81sl_egn_bb.v and ot_s81sl_egg_bb.v listed twice in the source list); generator fix claude/s81-kit-dupbb-1117 @25ac67bc9c17, released when it is merged to main. | 11-17 COORD r616: kits use the S81 tree's pinned tools, a main merge alone does not fix the next kit; released by RESULT S81-TYPES-R3 dupbb-in-tree after a freshly generated slice_C kit shows no duplicate _bb in VERILOG_FILES.",
           "release": [
-            "merge:25ac67bc9c172d8d7c68aab1cd51e497ad8f9098"
+            "result:S81-TYPES-R3:dupbb-in-tree"
           ],
           "migrated": true,
           "carry": true,
