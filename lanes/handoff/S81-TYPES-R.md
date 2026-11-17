@@ -18,3 +18,9 @@ Owns S81 col (216), strip leaves, IFN0 halves. Three tracks:
 - gen_phys integration: epyc7 fable-fix-s81-coltap/repo branch claude/s81-types-r-resetspread-1116 @3f38c8287f1 (commit f3a0695f5b + merge of main), gate log intel2 ~/fable-fix-s81-coltap/gate_3f38c82.log. Post READY when GREEN.
 - Row posted to S81-DIE-R: core_pin_lead_ps cfg7_seq 100 -> 40 on 132 types.
 - Workers: IFN0 (told: balance the 512 IR sinks to the gated cohort in CTS, no hold buffers; no old-form numbers), STRIP.
+
+## 18:1x CTS reads, three in route
+- Gate GREEN 61/61, READY posted: claude/s81-types-r-resetspread-1116 @3f38c8287f1 (awaits COORD approve).
+- CTS reads (epyc8 fable-fix-s81-coltap/an/p5_<fam>_cts + .out): r2 -46.8 (1 under -42; reset class gone, ROM q -11.4, a -21.2); r1 -93.4 (9; lpl_r chunk -> t payload 763 um); h10_r2 -204.2 (14; t/so -> ist_frame_int_o 1135 um, y_rt_a -> n/a 712 um). Place images LOOKED PASS (localhost scratchpad col5/).
+- Route clients intel2: 687024 (r2) 687025 (r1) 687026 (h10_r2), logs pilot5_<fam>_route.log. Still at cts goal: 313861 (h9_r0_p2), 313862 (h10_r0_p1): LOOK + stage_sta cts, then same route command.
+- TODO at GRT: stage_sta.sh KIT OUT grt (r310), GRT overflow, post-DPL reset hop table, FF hold; post col-wave1 / col-wave2 RESULT; then sign-off + export (AGIdock /archive/opentallas-signed-1114 + rtx-pro).
