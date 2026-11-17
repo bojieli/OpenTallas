@@ -108,9 +108,17 @@ def native_core_aliases(txt, cores):
             continue
         tail = re.escape(flat_of(core[len("u_lf."):]))
         candidates = set(re.findall(rf"\b(?:w_|g_|u_)(u_lf\d+)_{tail}(?:_|\b)", txt))
+        if re.search(rf"\b(?:w_|g_|u_){tail}(?:_|\b)", txt):
+            candidates.add("")
         if len(candidates) > 1:
             raise ValueError("bus bit owners: ambiguous native leaf prefixes for " + core + ": " + ", ".join(sorted(candidates)))
-        aliases[core] = next(iter(candidates)) + core[len("u_lf"):] if candidates else core
+        # A native top can dissolve the leaf prefix entirely. It is still a
+        # source-observed alias, not an assumed fallback for an unknown core.
+        if candidates:
+            prefix = next(iter(candidates))
+            aliases[core] = prefix + core[len("u_lf"):] if prefix else core[len("u_lf."):]
+        else:
+            aliases[core] = core
     if len(set(aliases.values())) != len(aliases):
         raise ValueError("bus bit owners: ambiguous plan cores map to the same native instance")
     return aliases
