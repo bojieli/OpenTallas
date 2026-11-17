@@ -1,2 +1,3 @@
 - 2026-11-17 06:50 PST START successor of HEAD-R3. Unsigned HEAD types: hd_serdes (sd9f), hd_lep0N, hd_mesh. sd9f 28 DRC = 19 M7 Short + 9 M2 spacing on clk_t* tap nets (he12h-class reserved-site obstruction over tap pin); diagnosing, ECO next.
 - 2026-11-17 07:04 PST sd9f DRC cause found: M7 reserved-site obstructions over clock-tap pins (19 shorts) + cells abutting site edge (9 M2). ECO (M7 carve + 3-site pad + rip 111 nets + incr DRT) LIVE on E7 head-types-r4/sd9f_eco. hd_lep0N/hd_mesh need NF15f geometry event.
+- 2026-11-17 07:17 PST sd9f ECO DRT running on E7 (log intel2 ~/head-types-r4-logs/sd9f_eco.log); signoff_r4eco follows automatically. Handoff updated.
