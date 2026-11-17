@@ -25,3 +25,9 @@ W = epyc2 /srv/opentallas-scratch2/claude/s81-ifn0-halves. My tools: W/read_type
 2. run_stage2.sh KIT route, then finish; pin_audit, corners.tcl, signoff.py (copied from he1p into he_splitclk1; copy to the bal kits), gates DRC 0 / TT >= -42 / internal FF hold >= 0.
 3. Views (lib TT/FF, LEF, pin contract from THIS routed DB), export AGIdock /archive/opentallas-signed-1114 + rtx-pro, INDEX.tsv append.
 4. Rows to S81-DIE-R (post.sh S81-IFN0-HALVES): views + hashes, .IFN(0) at gb_split (claude/s81-gotag-setup-1115 @a6fe65df8ac), core tap insertion from the split-form per-port table, sequencer lead 0, ROM lead measured.
+
+## 18:4x GRT reads (reloaded 5_1_grt.odb, global-routing RC, clock_profiles_r/grt)
+- HE bal (GRT 3229 s): internal reg2reg setup and hold 0 violators at TT and FF. Port only: TT input setup -17.24 (6), FF input hold -30.00 (560, parent side). CK TT: gated547 421..431, root57 403, IR 401..415; FF 338..347 / 313 / 313..326.
+- HW bal: internal 0 violators at TT and FF. Port only: TT input setup -4.77 (5), FF input hold -34.22 (541). CK TT: gated 430..436, root 426..428, IR 422..437; FF 345..351 / 330..333 / 328..343.
+- he_splitclk1 evidence GRT (unbalanced) ended rc 0; not routed.
+- Route: HE client 1008865 (~/s81-types-r-ifn0-he-bal1-route.log), HW client launched 18:4x (~/s81-types-r-ifn0-hw-bal1-route.log). Kit log KIT/run_split_route.log.
