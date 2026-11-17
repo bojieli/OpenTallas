@@ -187,6 +187,26 @@ def pack_count(repo=REPO):
         return 0
 
 
+def live_pack_processes(repo, proc=Path("/proc")):
+    # Preserve an inherited progressing repack; a second pack would duplicate
+    # its working set and write load. Match the repository and exact executable.
+    found = []
+    wanted = Path(repo).resolve()
+    for entry in proc.iterdir():
+        if not entry.name.isdigit():
+            continue
+        try:
+            if (entry / "cwd").resolve() != wanted:
+                continue
+            args = (entry / "cmdline").read_bytes().split(b"\0")
+            exe = Path(os.fsdecode(args[0])).name
+            if exe == "git" and len(args) > 1 and args[1] == b"repack" or exe == "pack-objects":
+                found.append(int(entry.name))
+        except (OSError, ValueError):
+            continue
+    return sorted(found)
+
+
 def pack_guard(repo=REPO):
     """MQ-PACK-FIX 11-16: lazy blob fetches leave one pack each (105k files once); keep the count bounded after every tick.
     multi-pack-index write makes object lookup one probe; above PACK_REPACK a geometric repack merges the small packs.
@@ -196,9 +216,13 @@ def pack_guard(repo=REPO):
     n = pack_count(repo)
     if n <= PACK_LIMIT:
         return n
+    active = live_pack_processes(repo)
+    if active:
+        log(f"pack guard: defer to progressing pack process(es) {active}")
+        return n
     try:
         if n > PACK_REPACK:
-            r = git("repack", "-d", "-q", "--geometric=2", "--write-midx", cwd=repo, check=False, timeout=3000)
+            r = git("repack", "-d", "-q", "--geometric=2", "--write-midx", cwd=repo, check=False, timeout=None)
             log(f"pack guard: {n} packs, geometric repack rc={r.returncode} -> {pack_count(repo)} packs")
         r = git("multi-pack-index", "write", cwd=repo, check=False, timeout=900)
         log(f"pack guard: {n} packs, multi-pack-index write rc={r.returncode}")

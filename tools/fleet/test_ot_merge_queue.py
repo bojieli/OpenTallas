@@ -574,6 +574,23 @@ class PackGuard(unittest.TestCase):
         self.assertEqual(c, ["repack", "multi-pack-index"])
         self.assertNotIn("gc", c); self.assertNotIn("prune", c)
 
+    def test_progressing_pack_is_preserved_without_second_repack(self):
+        from unittest.mock import patch
+        d = self._packs(M.PACK_REPACK + 1)
+        with patch.object(M, "live_pack_processes", return_value=[123]), patch.object(M, "git") as git, patch.object(M, "log"):
+            M.pack_guard(d)
+        git.assert_not_called()
+        shutil.rmtree(d)
+
+    def test_live_pack_process_match_is_repository_and_executable_exact(self):
+        root = Path(tempfile.mkdtemp()); repo = root / "repo"; repo.mkdir()
+        proc = root / "proc"; proc.mkdir()
+        for pid, cwd, cmd in [(1, repo, b"git\0repack\0-d\0"), (2, repo, b"/usr/lib/git-core/git\0status\0"),
+                              (3, root, b"pack-objects\0--stdin-packs\0"), (4, repo, b"/usr/lib/git-core/pack-objects\0--stdin-packs\0")]:
+            d = proc / str(pid); d.mkdir(); (d / "cwd").symlink_to(cwd); (d / "cmdline").write_bytes(cmd)
+        self.assertEqual(M.live_pack_processes(repo, proc), [1, 4])
+        shutil.rmtree(root)
+
     def test_rev_never_lazy_fetches(self):
         from unittest.mock import patch
         seen = {}
