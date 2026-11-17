@@ -257,6 +257,18 @@ def main():
             out += ['- ' + x for x in lines]
     except (OSError, ValueError):
         pass
+    # WAVE-FLOW-R2 11-17 (COORD lever 6): per-die summary of the OT_TAP_INSERTION lines kits print after CTS (advisory data for splitting oversized taps)
+    try:
+        rpt = '/srv/opentallas-scratch2/claude/rt/current/tools/autopilot/tap_insertion_report.py'
+        if os.path.exists(rpt) and not os.environ.get('OT_FB_NO_TAPINS'):
+            import subprocess as _sp
+            r = _sp.run(['python3', '-I', rpt, '--update'], capture_output=True, text=True, timeout=300)
+            tl = [x for x in r.stdout.splitlines() if x.startswith('TAP-INSERTION') and ':' in x and 'no kit' not in x]
+            if tl:
+                out.append('### TAP-INSERTION · measured per-tap insertion after CTS (advisory)')
+                out += ['- ' + x for x in tl]
+    except Exception as e:                           # advisory: the breakdown is still written
+        out.append('### TAP-INSERTION · not collected: %s: %s' % (type(e).__name__, str(e)[:160]))
     out.append(END)
     block = '\n'.join(out)
 
