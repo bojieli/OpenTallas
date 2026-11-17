@@ -44280,6 +44280,30 @@
       "item_inputs": {
         "phy_serdes_b": {
           "plan": "/srv/opentallas-scratch2/claude/tl-qcphysdb/por/plan_s29_qc103_phyb.json"
+        },
+        "coll_core": {
+          "kit_rtl": {
+            "bind_out": "/srv/opentallas-scratch2/claude/qc-collcore-reset-1117/bind_L2BQ_raw4"
+          },
+          "note_codex_raw_reset_1117": "Raw L2BQ HDL restored byte-exact to original reset-emission receipt; only relocated source-location comments differed; native bind_matches PASS; same source,plan,cycles."
+        },
+        "sle_ctl__cl372cea1c": {
+          "kit_rtl": {
+            "bind_out": "/srv/opentallas-scratch2/claude/qc-collcore-reset-1117/bind_L2BQ_raw4"
+          },
+          "note_codex_raw_reset_1117": "Raw L2BQ HDL restored byte-exact to original reset-emission receipt; only relocated source-location comments differed; native bind_matches PASS; same source,plan,cycles."
+        },
+        "sle_ctl__cl503337ff": {
+          "kit_rtl": {
+            "bind_out": "/srv/opentallas-scratch2/claude/qc-collcore-reset-1117/bind_L2BQ_raw4"
+          },
+          "note_codex_raw_reset_1117": "Raw L2BQ HDL restored byte-exact to original reset-emission receipt; only relocated source-location comments differed; native bind_matches PASS; same source,plan,cycles."
+        },
+        "sle_ctl__cla4f6f12f": {
+          "kit_rtl": {
+            "bind_out": "/srv/opentallas-scratch2/claude/qc-collcore-reset-1117/bind_L2BQ_raw4"
+          },
+          "note_codex_raw_reset_1117": "Raw L2BQ HDL restored byte-exact to original reset-emission receipt; only relocated source-location comments differed; native bind_matches PASS; same source,plan,cycles."
         }
       },
       "notes_kw42": {
