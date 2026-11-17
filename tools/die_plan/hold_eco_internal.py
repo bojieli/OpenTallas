@@ -15,8 +15,8 @@ kind is reg | port | macro.  Only reg/macro starts to a reg capture pin (D, RESE
 starts at an input port or ends at an output port is the parent's and never gets a cell (no port-only padding).
 OUT.tsv (read by hold_eco_internal_insert.tcl via OT_PRD_HOLD_PLAN): capture_pin<TAB>n_hb4, then a comment trailer.
 Sizing: need = target - slack.  One HB4 covers need <= DOUBLE_OVER_PS (25), else ceil(need / HB4_FF_PS) and at least two.
-Each HB4 costs HB4_TT_MAX_PS of TT setup; an endpoint whose TT slack minus that cost would fall under TT_FLOOR_PS (-42, the
-gate) is skipped and listed, never silently dropped.
+Each HB4 costs HB4_TT_MAX_PS of TT setup.  The count is cut to what the endpoint's TT slack can pay inside TT_FLOOR_PS
+(-42, the gate); a cut endpoint is counted as partial, and one that cannot pay even one cell is skipped and listed.
 """
 import json
 import math
@@ -24,7 +24,7 @@ import sys
 
 TARGET_PS = 10.0          # hold repair target; the gate stays FF hold >= 0
 HB4_FF_PS = 29.8         # FF MIN delay of one HB4xp67 (coll_n pilot model 29.81 at the conservative slew domain)
-HB4_TT_MAX_PS = 171.24    # TT delay of one HB4xp67 at slew <= 320 (coll_n pilot)
+HB4_TT_MAX_PS = 132.8     # TT max delay of one HB4xp67 at the observed slews (coll_n pilot model: 132.796; 171.24 is the slew <= 320 bound)
 DOUBLE_OVER_PS = 25.0     # need above this gets two cells at least
 MAX_PER_ENDPOINT = 4
 TT_FLOOR_PS = -42.0       # gate: routed TT WNS >= -42
@@ -85,16 +85,21 @@ def plan(rows, target=TARGET_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_TT_MAX_PS, tt_floo
         if cur is None or r["ff"] < cur["ff"]:
             worst[e] = r
     cells = []
+    partial = 0
     for e in sorted(worst):
         r = worst[e]
         n = need_to_cells(target - r["ff"], hb4_ff, double_over, cap)
-        if r["tt"] - n * hb4_tt < tt_floor:
-            skipped.append((e, f"TT slack {r['tt']:.2f} - {n} x {hb4_tt:g} < {tt_floor:g}"))
+        afford = int(math.floor((r["tt"] - tt_floor) / hb4_tt)) if r["tt"] > tt_floor else 0
+        if afford < 1:
+            skipped.append((e, f"TT slack {r['tt']:.2f} - 1 x {hb4_tt:g} < {tt_floor:g}"))
             continue
+        if afford < n:
+            partial += 1
+            n = afford
         cells.append((e, n))
     total = sum(n for _, n in cells)
     return dict(cells=cells, skipped=skipped, summary=dict(
-        endpoints=len(cells), hb4=total, skipped=len(skipped), target_ps=target,
+        endpoints=len(cells), hb4=total, partial=partial, skipped=len(skipped), target_ps=target,
         worst_ff_ps=min([r["ff"] for r in worst.values()] or [0.0]),
         selected_over_negative=f"{len(cells)} of {sum(1 for r in rows if r['ff'] < 0 and r['start_kind'] != 'port' and r['end_kind'] != 'port')}"))
 

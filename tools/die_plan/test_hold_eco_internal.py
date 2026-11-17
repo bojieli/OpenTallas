@@ -50,9 +50,12 @@ def test_worst_path_to_a_pin_sets_its_need():
 
 
 def test_tt_room_is_kept_inside_the_gate():
-    # 1 cell costs 171.24 ps TT: slack 100 -> -71.24 < -42, skipped and listed, not dropped
-    p = H.plan(rows(("u/a/D", "s", "reg", "reg", -5, 100), ("u/b/D", "s", "reg", "reg", -5, 140)))
+    # one cell costs 132.8 ps TT: slack 80 -> -52.8 < -42 skipped and listed; slack 100 -> -32.8 fits
+    p = H.plan(rows(("u/a/D", "s", "reg", "reg", -5, 80), ("u/b/D", "s", "reg", "reg", -5, 100)))
     assert p["cells"] == [("u/b/D", 1)] and p["skipped"][0][0] == "u/a/D"
+    # need for 3 cells but TT slack pays 2: partial, never dropped
+    p = H.plan(rows(("u/c/D", "s", "reg", "reg", -58.19, 330)))
+    assert p["cells"] == [("u/c/D", 2)] and p["summary"]["partial"] == 1
 
 
 def test_reset_pins_and_wd_in_are_supported():
@@ -112,3 +115,19 @@ def test_pre_route_margin_is_10_internal_only():
     assert "return reg2reg" in mm                          # in-flow repair scope: input starts and output ends excluded
     import eco_loop
     assert eco_loop.HOLD_MARGIN_PS == 10
+
+
+def test_tcl_files_are_complete_and_use_the_proven_calls():
+    import shutil
+    d = HERE / "post_route_drv"
+    for f in ("hold_eco_internal_insert.tcl", "hold_eco_internal_route.tcl", "hold_eco_internal_dump.tcl"):
+        txt = (d / f).read_text()
+        assert "[$bb xMin]" in txt or "xMin" not in txt        # a bare `$bb xMin` inside expr was the proof-run bug
+        assert "$bb xMin +" not in txt
+        if shutil.which("tclsh"):
+            r = subprocess.run(["tclsh"], input=f"set fh [open {d / f}]; exit [expr {{![info complete [read $fh]]}}]",
+                               capture_output=True, text=True)
+            assert r.returncode == 0, f
+    ins = (d / "hold_eco_internal_insert.tcl").read_text()
+    assert "row segment ends where its macro cut starts" in ins and "[$it getBBox]" in ins
+    assert "isBlock" in ins                                    # a macro spans many rows

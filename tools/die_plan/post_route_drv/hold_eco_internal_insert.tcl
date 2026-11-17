@@ -26,18 +26,27 @@ proc ot_hei_run {} {
   set master [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]
   if {$master eq "NULL"} { error "OT_HEI no HB4xp67 master in the DB" }
   set mw [$master getWidth]
-  # occupancy of every non-filler instance per row y (fillers are removable)
+  # rows first: a macro spans many rows, so its occupancy (plus a halo) goes into every row it overlaps
+  set rows {}; set rowh 0
+  foreach r [$blk getRows] {
+    set bb [$r getBBox]; lappend rows [list [$bb yMin] [$bb xMin] [$bb xMax] [$r getOrient] [[$r getSite] getWidth]]
+    set rowh [expr {max($rowh, [$bb yMax] - [$bb yMin])}]
+  }
+  set halo [expr {round([expr {[info exists ::env(OT_HEI_MACRO_HALO_UM)] && $::env(OT_HEI_MACRO_HALO_UM) ne "" ? $::env(OT_HEI_MACRO_HALO_UM) : 0.0}] * $dbu)}]
   set occ [dict create]; set fill [dict create]
   foreach i [$blk getInsts] {
     set bb [$i getBBox]; set y [$bb yMin]
     if {[string match FILLER* [$i getName]] || [[$i getMaster] getType] eq "CORE_SPACER"} {
       dict lappend fill $y [list [$bb xMin] [$bb xMax] $i]
+    } elseif {[[$i getMaster] isBlock] || ([$bb yMax] - $y) > $rowh} {
+      foreach rw $rows {
+        set ry [lindex $rw 0]
+        if {$ry < [$bb yMax] + $halo && $ry + $rowh > $y - $halo} { dict lappend occ $ry [list [expr {[$bb xMin] - $halo}] [expr {[$bb xMax] + $halo}]] }
+      }
     } else {
       dict lappend occ $y [list [$bb xMin] [$bb xMax]]
     }
   }
-  set rows {}
-  foreach r [$blk getRows] { set bb [$r getBBox]; lappend rows [list [$bb yMin] [$bb xMin] [$bb xMax] [$r getOrient] [[$r getSite] getWidth]] }
   set total 0; set nruns 0; set removed 0; set out [open $::env(RESULTS_DIR)/hold_eco_internal_cells.tsv w]
   puts $out "capture\tstage\tname\tx_um\ty_um\torient"
   foreach row $plan {
@@ -49,7 +58,10 @@ proc ot_hei_run {} {
     set oldnet [$it getNet]
     if {$oldnet eq "NULL" || [$oldnet getSigType] ne "SIGNAL"} { error "OT_HEI capture not on an ordinary data net: $capture" }
     set inst [$it getInst]
-    set bb [$inst getBBox]; set cx [expr {($bb xMin + [$bb xMax]) / 2}]; set cy [expr {($bb yMin + [$bb yMax]) / 2}]
+    # the capture PIN decides the radius (a macro input pin sits at the macro edge, not at the macro centre)
+    set bb [$it getBBox]
+    if {$bb eq "NULL" || $bb eq ""} { set bb [$inst getBBox] }
+    set cx [expr {([$bb xMin] + [$bb xMax]) / 2}]; set cy [expr {([$bb yMin] + [$bb yMax]) / 2}]
     set rad [expr {round($radius * $dbu)}]
     set cands {}
     foreach rw $rows {
@@ -59,6 +71,7 @@ proc ot_hei_run {} {
       set x $rx0
       foreach b [concat $busy [list [list $rx1 $rx1]]] {
         lassign $b b0 b1
+        if {$b0 > $rx1} { set b0 $rx1 }   ;# a row segment ends where its macro cut starts: never plan past the segment
         # free gap [x, b0): candidate x positions snapped to the site grid
         for {set px [expr {$rx0 + (($x - $rx0 + $sw - 1) / $sw) * $sw}]} {$px + $mw <= $b0} {incr px $sw} {
           set d [expr {abs($px + $mw / 2 - $cx) + abs($ry - $cy)}]
@@ -91,14 +104,20 @@ proc ot_hei_run {} {
     set oldn [$oldnet getName]; set k 0; set prev {}
     foreach s $chosen {
       lassign $s px ry ror
-      set name hold_int_[string map {/ _ [ _ ] _ \\ {}} $capture]_$k
+      regsub -all {[^A-Za-z0-9_]} $capture _ safe
+      set name hold_int_${safe}_$k
       if {[$blk findInst $name] ne "NULL"} { error "OT_HEI existing name $name" }
       set x [expr {double($px) / $dbu}]; set y [expr {double($ry) / $dbu}]
       set before [llength [$blk getInsts]]
       insert_buffer -buffer_cell HB4xp67_ASAP7_75t_R -load_pins [list $p] -location [list $x $y] -buffer_name $name -net_name ${name}_n
       if {[llength [$blk getInsts]] != $before + 1} { error "OT_HEI insert_buffer made no single cell for $capture" }
-      set ni [$blk findInst $name]
-      if {$ni eq "NULL"} { error "OT_HEI inserted cell $name not found" }
+      # the new cell drives the capture pin's net (the name asked for is a hint, as in the QC coll_n pilot)
+      set drivers {}
+      foreach pt [[$it getNet] getITerms] { if {[[$pt getMTerm] getIoType] eq "OUTPUT"} { lappend drivers [$pt getInst] } }
+      if {[llength $drivers] != 1} { error "OT_HEI insert_buffer did not leave one driver on $capture" }
+      set ni [lindex $drivers 0]
+      if {[[$ni getMaster] getName] ne "HB4xp67_ASAP7_75t_R"} { error "OT_HEI inserted master identity $capture" }
+      set name [$ni getName]
       $ni setOrient $ror; $ni setLocation $px $ry; $ni setPlacementStatus PLACED
       foreach mt [[$ni getMaster] getMTerms] {
         if {[$mt getSigType] ni {POWER GROUND}} continue
