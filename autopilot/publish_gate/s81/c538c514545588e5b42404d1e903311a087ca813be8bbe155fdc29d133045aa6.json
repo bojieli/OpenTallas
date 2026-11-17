@@ -1,8 +1,49 @@
 {
  "checks": {
-  "gate": {
-   "verdict": "FAIL",
-   "why": "AssertionError: exact current normal source guard is not ready"
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81/c538c5145455/ot_s81sl_leaf__t62",
+   "gen_host": "epyc10",
+   "item": "ot_s81sl_leaf__t62",
+   "kind": "type",
+   "origin_capture_error": "spec changed before origin capture",
+   "preflight_fail_advisory": null,
+   "published_gen_import_declined": "[Errno 2] No such file or directory: '/home/ubuntu/.local/state/publish-gate/s81/c538c5145455/ot_s81sl_leaf__t62/published_gen_origin.json'",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_c4b_1117",
+   "stage": "preflight",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "accepted": 5,
+    "errors": 5,
+    "inherited": true,
+    "record_sha256": "588c47146a6747a06edf801e3dbbeb3a0c8f0bcea7e4a18fe4c6666c9e40217f",
+    "review": "S81-DIE-R3 2026-11-17: C4r3 (plan 0126890b, Codex formB_hi3 201eef7c + 24 eco3 bksel rows reversed) strict bind 0 / LATCHECK 873/873; G0 5 ERROR = strict subset of the D5e-r3b reviewed baseline (15c0703a, 6): the svc_lo_dsdv_svc_rs__t6 ft2 stage-9 macro overlap cleared, 0 new identities.",
+    "reviewed_g0_sha256": "cd60673fa362a1e704e09a51a2920cf58b2ee82186a1980d422103a6401a0e6e",
+    "reviewed_plan_sha256": "0126890b808f8f5f6b4ed496ec75eb360e9b54375c77386399a40218600e2997",
+    "verdict": "PASS"
+   },
+   "g0_rc": 1,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/pubgate/g0-9td3wq64/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_c4b_1117 plan=/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_c4b_1117/physical/die_plan/s81/plan_h2_2249.json findings=0\n\nG0: 40 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t41 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t42 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t43 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t44 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t45 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO svc_lo_dsdv_svc_rs_w__t1: explicit tap clk_t47 load=0/1500, radius=0/100.0, empty=True (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_c4b_1117/physical/die_plan/s81/plan_h2_2249.json: PASS (0 errors)\n",
+   "verdict": "PASS"
   }
  },
  "die": "s81",
@@ -11,11 +52,12 @@
   "epyc8",
   "intel1"
  ],
+ "item": "ot_s81sl_leaf__t62",
  "manifest_hash": "c538c514545588e5b42404d1e903311a087ca813be8bbe155fdc29d133045aa6",
  "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_c4b_1117/physical/die_plan/s81/plan_h2_2249.json",
  "plan_sha256": "0126890b808f8f5f6b4ed496ec75eb360e9b54375c77386399a40218600e2997",
  "schema": "opentallas.publish_gate.v1",
- "t": 1794934508.290127,
+ "t": 1794934811.239976,
  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_c4b_1117",
- "verdict": "FAIL"
+ "verdict": "PASS"
 }
