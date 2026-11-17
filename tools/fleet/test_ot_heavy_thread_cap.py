@@ -145,11 +145,18 @@ class ThreadCap(unittest.TestCase):
 
 
     def test_ancestry_fallback_finds_the_parent_scope_without_the_env_token(self):
-        # run the harness script from inside a fake "oth-*" ancestor: the test shell's own cgroup is faked through a stand-in /proc via a wrapper dir
-        s = (self.d / 'ot-heavy').read_text()
-        self.assertIn("grep -o 'oth-[^/]*\\.scope' \"/proc/$_p/cgroup\"", s)
-        self.assertIn('awk \'/^PPid:/{print $2}\' "/proc/$_p/status"', s)
-        self.assertLess(s.index("PPid:"), s.index('"${THREAD_CHILD_FACTOR:-1.5}" != 0'))   # the walk runs before the child test
+        fake = self.d / 'proc'; pid = os.getpid()
+        (fake / str(pid)).mkdir(parents=True)
+        (fake / str(pid) / 'cgroup').write_text('0::/user.slice/user-1000.slice/user@1000.service/app.slice/oth-parentunit.scope\n')
+        (fake / str(pid) / 'status').write_text('Name:\tpytest\nPPid:\t1\n')
+        self.h.write_text(self.h.read_text().replace('/proc/$_p/', f'{fake}/$_p/')); self.h.chmod(0o755)
+        self.commit(4, 8)
+        r, ran = self.run_('8')                                        # parent has no res.<unit> yet: plain job, held
+        self.assertFalse(ran)
+        (self.d / 'state' / 'res.parentunit').write_text('parentunit 4\n')
+        r, ran = self.run_('8')                                        # no OT_HEAVY_PARENT_UNIT in the env: found through the ancestry
+        self.assertTrue(ran, r.stderr)
+        self.assertIn('child of admitted parentunit', (self.d / 'state' / 'admit.log').read_text())
 
 
 if __name__ == "__main__":
