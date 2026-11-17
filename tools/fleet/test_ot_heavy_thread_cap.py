@@ -153,10 +153,10 @@ class ThreadCap(unittest.TestCase):
         self.commit(4, 8)
         r, ran = self.run_('8')                                        # parent has no res.<unit> yet: plain job, held
         self.assertFalse(ran)
-        (self.d / 'state' / 'res.parentunit').write_text('parentunit 4\n')
+        (self.d / 'state' / 'res.oth-parentunit').write_text('oth-parentunit 4\n')
         r, ran = self.run_('8')                                        # no OT_HEAVY_PARENT_UNIT in the env: found through the ancestry
         self.assertTrue(ran, r.stderr)
-        self.assertIn('child of admitted parentunit', (self.d / 'state' / 'admit.log').read_text())
+        self.assertIn('child of admitted oth-parentunit', (self.d / 'state' / 'admit.log').read_text())
 
 
 if __name__ == "__main__":
