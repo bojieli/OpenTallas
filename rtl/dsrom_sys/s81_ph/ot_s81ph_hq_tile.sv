@@ -219,7 +219,15 @@ endmodule
 
 module dsfd_selt_q_hq #(
     parameter integer DM  = 4,
-    parameter integer MUT = 0          // slice witnesses (ot_s81ph_hq_slice MUT)
+    parameter integer MUT = 0,         // slice witnesses (ot_s81ph_hq_slice MUT)
+    // S81-CORES-R3 11-17: the RF-H / HLAT parameters of the signed eco3 quarter (dsdv_bksel_q RFH / HLAT), so ONE
+    // dsdv_bksel_c.sv elaborates against this source too.  This (canonical, hq3) form models them by their EDGES only:
+    // FACE 1 = the reset reaches the quarter through one posedge relay flop (assert and release +1 edge, as the eco3
+    // per-consumer kept copies); HLAT = negative-level lockup latches on zero-logic hops, 0 cycles, so no edge change here.
+    // The eco3 structure itself (kept select / reset copies, u_fl_* latches) is the legacy profile bkr1c8_hlat_1113 source
+    // the hard core is built and LEC-proved from.  FACE 0 / HLAT 0 = byte-identical function to the old form.
+    parameter integer HLAT = 0,
+    parameter integer FACE = 0
 ) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,        // landed die reset (active low)
@@ -231,7 +239,9 @@ module dsfd_selt_q_hq #(
 );
     localparam integer W = 16, IW = 20, K = 512, AW = 8, KW = 10, CB = 11, EW = 37, GW = CB + 4;
     localparam integer CW = $clog2(DM + 1);
-    wire rst_n = rst[0];
+    reg rst_fc;                                         // FACE 1 reset relay (unloaded and removed at FACE 0)
+    always @(posedge ck[0]) rst_fc <= rst[0];
+    wire rst_n = FACE != 0 ? rst_fc : rst[0];
     wire b_v, b_last, h_v, act, e_fmt, e_orphan, e_link;
     wire [15:0] b_lv; wire [255:0] b_val; wire [319:0] b_idx; wire [1:0] h_q, act_q; wire [9:0] h_k; wire [7:0] h_tag;
     ot_s81ph_hq_in u_in (.clk(ck[0]), .rst_n(rst_n), .lane(lane), .b_v(b_v), .b_lv(b_lv), .b_val(b_val),
