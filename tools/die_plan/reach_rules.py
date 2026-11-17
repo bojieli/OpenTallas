@@ -607,7 +607,7 @@ def raw_hops(P, t, tn, tree=None):
     try:
         bc = RT.start_broadcast(P)
     except Exception:
-        bc = False
+        bc = None              # not a reset-tree plan object: rr_t existence cannot be judged here (the emitter checks it)
     taps = None
     rows = []
     items = [(f"{k.split('_', 1)[1]}:{b}:{i}", st.get("raw_reset"), st.get("xy_um")) for k, b, i, st in _start_stages(t)]
@@ -618,7 +618,7 @@ def raw_hops(P, t, tn, tree=None):
         if not m or not isinstance(xy, list) or len(xy) != 2:
             continue
         fam, k = m.group(1), int(m.group(2))
-        if fam == "rr_t" and not bc:
+        if fam == "rr_t" and bc is False:
             rows.append((where, raw, "missing", None, 0.0))
             continue
         if fam == "rst_rl_":
@@ -691,7 +691,11 @@ def _fix_raw_edges(P, t, tn, rep):
     """rule-1 fix tail: re-point START stage raw resets that name a missing net or exceed their edge reach to the
     nearest same-edge leaf tap (rst_n_t<i> without the START broadcast).  Raises when a hop stays over."""
     import reset_tree as RT
-    bad = {(h[0]) for h in raw_hops(P, t, tn) if h[2] == "missing" or (h[3] is not None and h[3] > h[4] + EPS)}
+    try:
+        hops = raw_hops(P, t, tn)
+    except Exception:          # no evaluable reset tree (bare plan stubs): rule 5 check reports it as unreadable
+        return rep
+    bad = {(h[0]) for h in hops if h[2] == "missing" or (h[3] is not None and h[3] > h[4] + EPS)}
     bad = {w for w in bad if not w.startswith("local_reset:")}
     if not bad:
         return rep
