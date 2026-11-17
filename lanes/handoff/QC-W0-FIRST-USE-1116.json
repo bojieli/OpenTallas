@@ -1,0 +1,68 @@
+{
+  "scope": "Minimum actual production MEM44 head + EXP first-use and exact EXP control/data cone; no engine RTL, arithmetic, boot policy, clock or uncertainty change",
+  "formal": {
+    "property": "!rst_n || !(vd[T_R1] && lo_d[30])",
+    "arbitrary": "nk8 and valid fresh arbitrary each clock; initial datapath arbitrary; one asserted reset edge then deasserted",
+    "T_R1": 12,
+    "LA": 4,
+    "LM": 5,
+    "induction": "Base PASS + induction step PASS at depth5",
+    "unit": "oth-ubuntu-3048919-1794901755",
+    "mutant": "actual consumer valid tap bypass T_R1->0 FAIL",
+    "bounded_unit": "oth-ubuntu-3011443-1794901652",
+    "consumer_source": "ot_hdc_sfu_q.sv: actual a_r instance uses vd[T_R1], T_R1=T_K+LA, T_K=(1+LM+1)+1; LA4/LM5=>12. Exactly same valid wiring in cone, not reconstructed datapath.",
+    "steady_state": "unbounded temporal induction PASS depth5; initial data unconstrained; rst asserted at first edge then high; safe while deasserted"
+  },
+  "witness": {
+    "vehicle": "actual qfd_dv_lane_h_su_mem9 MEMORY_ALIGNMENT3/MEMORY_READ_EXTRA44/KV_WR_PIPE1/SEGMENTED_MEMORY_DELAY1 plus actual ot_hdc_sfu_exp_t defaultLA4LM5, real SRAM behavioral models",
+    "command": "EXP bypass-mul/bypass-add with nativeVM0, expected exp(0)=3f800000; command offered immediately upon reset release",
+    "cold_and_warm": "poison a_lo30/d_lo126 then64headresetedges; both flush duringreset withrt0;8headissues/8EXPconsumers/8correctvalidoutputs/8retirements each epoch",
+    "trace": "RESET epoch=0 heldedges=64 a_lo30=0 d_lo126=0 rt=0\nACCEPT_AUTHORITY epoch=0 pin_accept=65 captured_accept=70 real_head_issue=71 actual_exp_consumer=156\nFIRST_USE epoch=0 first_head_emit=71 first_exp_send=143 first_exp_consumer=156 first_valid_output=216 accepted=8 sent=8 consumer=8 outputs=8 retired=8\nRESET epoch=1 heldedges=64 a_lo30=0 d_lo126=0 rt=0\nACCEPT_AUTHORITY epoch=1 pin_accept=391 captured_accept=396 real_head_issue=397 actual_exp_consumer=482\nFIRST_USE epoch=1 first_head_emit=397 first_exp_send=469 first_exp_consumer=482 first_valid_output=542 accepted=8 sent=8 consumer=8 outputs=8 retired=8\nFIRST_USE_PASS cold+warm actualheadMEM44+actualEXP noaddedboot\ntb_accept_authority.sv:124: $finish called at 6520000 (1ps)\n",
+    "unit": "oth-ubuntu-3092961-1794901923",
+    "mutant": "RESET epoch=0 heldedges=64 a_lo30=0 d_lo126=0 rt=0\nFATAL: tb.sv:95: WRONG valid exp y=3f800001 fault=0\n       Time: 2155000  Scope: tb\n",
+    "mutant_unit": "oth-ubuntu-2992907-1794901575",
+    "accepted_authority": "real head.u_h.q_accept after reset landing; cold pin65/captured70/headissue71/EXPconsumer156; warm391/396/397/482"
+  },
+  "pricing": {
+    "new_boot_edges": 0,
+    "new_latency_cycles": 0,
+    "new_state_bits": 0,
+    "new_clock_sinks": 0,
+    "existing_64edge_boot_ns_at833ps": 53.312
+  },
+  "source_sha256": {
+    "rtl/physical/qfd_dv_lane_h_su_mem9.sv": "6aadb6ea7e868120c514e5cb447ed3616d82b66d7e3f2f52421afeaf2e922c94",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "4ce896e46dfbb559c2b15b3aa0abd04b2f62dd0e1973a9e60dd0154d42ab3c51",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "8165ec2905ae85c84c193853549dd91bb44b16fdd55ec1bf6ae39aaaf47acde1",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "d275d61a0f0cf5f45cdc6a89793bf8b858dad2d538f9368e2c75a189efee1db1",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "beda092cdefc881ec19918b76ef22fc86d8fefa108dd8bd8a1171b54e3b1bd94",
+    "rtl/hdc/ot_hdc_delay.sv": "6eba4602d80a0020b8af7666579f445ec04caaa6f50fc589f1c70168fbc7450f",
+    "rtl/hdc/ot_hdc_vstream_sfu_t.sv": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+    "rtl/hdc/ot_hdc_sfu_q.sv": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+    "rtl/hdc/ot_hdc_sfu.sv": "b5b81d32cd4c5d56b5c8f19796a1763e565cf475980eef1d37377e198b0ba2ce",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/physical/qfd_dv_lane_h_su_mem9.sv": "6aadb6ea7e868120c514e5cb447ed3616d82b66d7e3f2f52421afeaf2e922c94",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_fp32_add_lat.sv": "4ce896e46dfbb559c2b15b3aa0abd04b2f62dd0e1973a9e60dd0154d42ab3c51",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_fp32_mul_lat.sv": "8165ec2905ae85c84c193853549dd91bb44b16fdd55ec1bf6ae39aaaf47acde1",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_fastfp.sv": "d275d61a0f0cf5f45cdc6a89793bf8b858dad2d538f9368e2c75a189efee1db1",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "beda092cdefc881ec19918b76ef22fc86d8fefa108dd8bd8a1171b54e3b1bd94",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_delay.sv": "6eba4602d80a0020b8af7666579f445ec04caaa6f50fc589f1c70168fbc7450f",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_vstream_sfu_t.sv": "b60253072de05ac308c72cac92d78d4b042955847830bd680b266e02c2fc57df",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_sfu_q.sv": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_sfu.sv": "b5b81d32cd4c5d56b5c8f19796a1763e565cf475980eef1d37377e198b0ba2ce",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v": "03a15da7f7691bfcf973a4d4e833fc4853c3d56bd8146092c8390705f0108083"
+  },
+  "guard_source": {
+    "scope": "Exact actual EXP valid line and table/delay cone; arbitrary nk and arbitrary valid every clock; one asserted reset edge then release; no parent64edge assumption",
+    "actual_LA": 4,
+    "actual_LM": 5,
+    "source": "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_sfu_q.sv",
+    "vline_sha256": "96afb156dc18d4dafbaf6dec11f77445051b963b00e60b8af86f597a0bb5ceb9",
+    "parameters": "localparam integer T_N = 1 + LM + 1;        // n registered\n    localparam integer T_K = T_N + 1;           // table products registered\n    localparam integer T_R1 = T_K + LA;\n    localparam integer T_R = T_R1 + LA;\n    localparam integer T_P = T_R + 6 * (LM + LA);\n    localparam integer DEPTH = T_P + 1;         // 49\n    ",
+    "mutant": "Bypass actual T_R1 valid delay to vd0"
+  },
+  "limit": "Accepted EXP command witness ends at actual head input and real registered q_accept; global LRLY/START programme authority remains separate. Protocol theorem accepts arbitrary valid traffic, so its EXP safety holds for every upstream legal or adversarial valid sequence. Original whole W0 KEEPFAIL unchanged; no EQUIVALENT verdict from debug reuse.",
+  "reproduce": "Generate with QC-W0-FIRST-USE-formal-1116.py, run valid_flush_induct.ys / valid_flush_mutant.ys against exact table_chain + actual_vline; real two-component bench QC-W0-FIRST-USE-actual-head-exp-1116.sv and source hashes above."
+}
