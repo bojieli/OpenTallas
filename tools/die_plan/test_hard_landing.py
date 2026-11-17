@@ -60,3 +60,22 @@ def test_external_evidence_path_rejected(tmp_path):
     land = specs(tmp_path)
     p = tmp_path / 'land_slots.json'; p.write_text(json.dumps(dict(buses=land)))
     with pytest.raises(ValueError, match='inside the kit'): F.kit_land(p)
+
+
+def _selected_row(**view):
+    row = dict(inst='cl_a', module='ring_a', physical_inst='u_bound.u_cland_a', physical_master='ring_a',
+               param_wrap=dict(base='ot_dp_clk_landing_cas', params=dict(DEPTH=4, WREG=1)), **view)
+    return dict(hard_cores=[row]), dict(schema='land_slots/3', buses=dict(a=dict(D=4, form='hold_mux')))
+
+
+@pytest.mark.parametrize('view,missing', [({}, 'lef/lib'), (dict(lef='x.lef'), 'lib'), (dict(lib='x.lib'), 'lef')])
+def test_selected_landing_without_provider_view_names_it(tmp_path, view, missing):
+    t, land = _selected_row(**view)
+    with pytest.raises(ValueError, match=f'u_bound.u_cland_a: selected hard landing ring_a has no {missing} view'):
+        H.emit(t, land, tmp_path, tmp_path)
+
+
+def test_unselected_row_without_view_is_untouched(tmp_path):
+    t, land = _selected_row()
+    t['hard_cores'][0]['physical_inst'] = 'u_bound.u_other'
+    assert H.emit(t, land, tmp_path, tmp_path) == land
