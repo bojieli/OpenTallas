@@ -4275,6 +4275,52 @@ ITEM_SYNC_MAX_PER_TICK = 8
 _ITEM_SYNC_OK = re.compile(r"^/srv/opentallas-scratch[0-9]*/claude/[^\s'\"$;|&`]+$")
 
 
+SELF_HEAL_MAX_TRIES = 2
+
+
+def _heal_path():
+    return os.environ.get("OT_SELF_HEAL_STATE") or os.path.expanduser("~/.local/state/kit-wave-self-heal-tries.json")
+
+
+def heal_tries_load():
+    try:
+        return json.loads(Path(_heal_path()).read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def heal_tries_save(t):
+    try:
+        p = Path(_heal_path())
+        p.parent.mkdir(parents=True, exist_ok=True)
+        tmp = p.with_name(p.name + ".tmp")
+        tmp.write_text(json.dumps(t, sort_keys=True))
+        os.replace(tmp, p)
+    except OSError:
+        pass
+
+
+def heal_blocked(tries, key):
+    """self-heal stops after SELF_HEAL_MAX_TRIES attempts of the same (kind, host, die/item, path)"""
+    return int(tries.get(key, 0)) >= SELF_HEAL_MAX_TRIES
+
+
+def heal_count(tries, key):
+    tries[key] = int(tries.get(key, 0)) + 1
+
+
+def heal_prune(tries, live_keys):
+    """a key whose problem is gone (the probe lists the path whole again) starts from zero next time"""
+    for k in [k for k in tries if k not in live_keys]:
+        del tries[k]
+
+
+def heal_stop_note(AP, tries, key, what):
+    if tries.get(key) == SELF_HEAL_MAX_TRIES:
+        tries[key] += 1                                   # logged once
+        AP.log("KIT-WAVE %s: STOPPED after %d self-heal tries (needs an owner)" % (what, SELF_HEAL_MAX_TRIES))
+
+
 def sync_item_inputs(AP, cfg, run=None):
     """FIX-SELFCONT 11-14 (COORD fail class KIT_NOT_SELF_CONTAINED / 'landed_sidecar_aor3.json missing'): an item's own input
     (type_args --clock-landing sidecar, item_env file, item plan) existed on ONE gen host (epyc7); every other host was
@@ -4293,12 +4339,18 @@ def sync_item_inputs(AP, cfg, run=None):
         def run(argv, inp=None):
             return AP.sh(argv, timeout=900)[0]
     ssh = ["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
+    tries, live = heal_tries_load(), set()
     for h in sorted(inc):
         for die, items in sorted(inc[h].items()):
             for item, why in sorted(items.items()):
                 for part in str(why).split("; "):
                     p = part.split(": ")[0].replace(" missing", "").strip()
                     if not _ITEM_SYNC_OK.match(p) or ".." in p or len(done) >= ITEM_SYNC_MAX_PER_TICK:
+                        continue
+                    hk = "item|%s|%s|%s|%s" % (h, die, item, p)
+                    live.add(hk)
+                    if heal_blocked(tries, hk):
+                        heal_stop_note(AP, tries, hk, "ITEM-SYNC %s/%s %s on %s" % (die, item, p, h))
                         continue
                     src = next((g for g in sorted(inc) if g != h and g in (cfg["dies"][die].get("gen_hosts") or [])
                                 and p not in str((inc[g].get(die) or {}).get(item) or "")), None)
@@ -4319,7 +4371,10 @@ def sync_item_inputs(AP, cfg, run=None):
                         AP.log(f"KIT-WAVE ITEM-SYNC {src}->{h} {p}: skipped: {e}")
                         continue
                     AP.log(f"KIT-WAVE ITEM-SYNC {die}/{item}: {p} {src}->{h} rc={rc} (item input missing on {h}; self-heal FIX-SELFCONT)")
+                    heal_count(tries, hk)
                     done.append((h, p, src))
+    heal_prune(tries, live)
+    heal_tries_save(tries)
     return done
 
 
@@ -4340,10 +4395,16 @@ def sync_die_inputs(AP, cfg, run=None):
         def run(argv, inp=None):
             return AP.sh(argv, timeout=1800)[0]
     ssh = ["ssh", "-n", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", "-o", "ControlPath=none"]
+    tries, live = heal_tries_load(), set()
     for h in sorted(inc):
         for die, why in sorted(inc[h].items()):
             d = (cfg.get("dies") or {}).get(die) or {}
             if d.get("src_sync") is False:
+                continue
+            hk = "src|%s|%s" % (h, die)
+            live.add(hk)
+            if heal_blocked(tries, hk):
+                heal_stop_note(AP, tries, hk, "SRC-SYNC %s on %s" % (die, h))
                 continue
             paths = sorted({p[:-len(" missing")].strip() for p in str(why).split("; ")
                             if p.endswith(" missing") and ": " not in p})
@@ -4367,9 +4428,12 @@ def sync_die_inputs(AP, cfg, run=None):
                     continue
                 if rc in (0, 2):                                 # tar --keep-old-files returns 2 when a file already exists
                     ok += len(part)
+            heal_count(tries, hk)
             if ok:
                 AP.log(f"KIT-WAVE SRC-SYNC {die}: {ok} missing input file(s) copied {src}->{h} (self-heal SRC-HEAL-1116: its probe is whole there); re-probe follows")
                 done.append((h, die, ok, src))
+    heal_prune(tries, live)
+    heal_tries_save(tries)
     return done
 
 
