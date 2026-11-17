@@ -41,3 +41,9 @@ Client logs intel2 ~/fable-fix-qc-dieclk/. Lanes directed by posts: QC-CLK-R2 (r
 
 ## Not checked
 - Routed (RCX) hold of the padded pairs; other cb types' own DBs; whether the l2d cb rows equal the s4q9m_r cb rows to 1 ps.
+
+## CODEX takeover 2026-11-16 22:2x PST
+- Actual live pilot is pilot2, not pilot1. Pilot1 FAIL kit_rtl21:56: symlink farm resolved6 HDL paths outside the source tree. Failed evidence kept. Claude corrected to full cp-a src_l2cb3 and restarted as pilot2; first mkcopy read-only cp refusal retained, then corrected successfully.
+- pilot2 GEN live E8 PID2011528, unit2011243-1794895727;99.9%CPU/RSS585MB at22:26. Intel2 run-item50864, watcher172958 (chain_route.sh50864) will route after placement; no duplicate started. Work: E8 fable-fix-qc-dieclk/pilot2/items/cbn_q01__clab6e67f2/attempt_1. Intel2 logs ~/fable-fix-qc-dieclk/pilot2. Localized actual kit filelist DOES contain r301 ot_qfd_xcst_rep source, unlike old failed source.
+- dd226 normal25/25 GREEN record recovered byte-identically from intel2-local mq-gate slot0 into ~/merge-queue/gates (original scp-to-self failed). Source now APPROVED r454, no rerun. Exact authored delta onto frozen L2 is E8 fable-fix-qc-dieclk/dd226_on_eb1e_L2_exact.patch SHA04db50aa87b25a0de236f4bf45a35d5610fd915141f2e27e02386800c627fe3f (68lines/2files), sibling JSON before/after hashes. Parent QC-PLAN-R has path for M source composition.
+- Personally viewed plan render exact511500f23114: four regular cores,147um central/78um horizontal channels, continuous edge FT streets, broadbus pins beside sourcecolumn, centre/per-core taps. PASS-COND plan scope; record+PNG E8 fable-fix-qc-dieclk/results/geom_review/cb_pilot2_plan_511500f23114.*. Actual placement/PDN still to inspect when ready; no physical signoff inferred.
