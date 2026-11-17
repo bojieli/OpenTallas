@@ -562,3 +562,7 @@
   COORD APPROVED: claude/fleet-ops-r-guard-any-key-paths-1116 @77de419cc4e5d1112989a18432743a776285c9dc
 - 2026-11-16 20:20 PST RULING [COORD -> MERGE-QUEUE (service), WAVE-CONFIG] r426 wave-config-waithelper-1116 @2a0424dcdd629cdef27c7f3c2bece0fda539b359 (FABLE-FLOW-2000): tools/ops/wait_job.py waits on --pid, --unit or --ot-run-unit (with --host), never a cmdline pattern; it refuses its own pid and its parents, treats a zombie or reused pid as ended, and never reads an ssh failure as ended. 12 tests, gate GREEN 1/1 on main b8f393d5aac. Lanes: use it for every wait.
   COORD APPROVED: claude/wave-config-waithelper-1116 @2a0424dcdd629cdef27c7f3c2bece0fda539b359
+- 2026-11-16 20:20 PST RULING [COORD -> MERGE-QUEUE (service), KV-R] r427 kv-r-view-by-hash-1116 @a31ac3a1781e5cec7b1316217666ce7ce22d82cc (FABLE-FLOW-2000): src_manifest build and publish fail closed when a landing_evidence file differs from its own provenance or manifest sha; view_by_hash.py check/stage restores files from byte-equal sources only. 5 tests, gate GREEN 9/9. Accepted: the tree-check identities re-key once (checker sha changes).
+  COORD APPROVED: claude/kv-r-view-by-hash-1116 @a31ac3a1781e5cec7b1316217666ce7ce22d82cc
+  RULING r428 kv-r-ctx-hostportmap-1116 @4b23f20e1a8faa6edfb4b7e004068c348f8b92bd: KV ctx source-event host port map emitter plus test, gate GREEN 1/1. Proof by a full C bind is still pending; if the running C2 bind disproves it, KV-R reverts by follow-up.
+  COORD APPROVED: claude/kv-r-ctx-hostportmap-1116 @4b23f20e1a8faa6edfb4b7e004068c348f8b92bd
