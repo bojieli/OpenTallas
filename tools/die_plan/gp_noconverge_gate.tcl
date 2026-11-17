@@ -74,3 +74,8 @@ if {[info exists ::env(OT_GPL_HPWL_RATIO)] && [string is double -strict $::env(O
     }
   }
 }
+
+# POST-PLACE built-wire check of zero-logic register-to-register paths (lever 7, HOLD-FLOW-R 11-17): place_wire_ratio.tcl, report-only
+# unless OT_PLACE_WIRE_RATIO = fail (0 = off).  Runs last so a gate above that already stopped the run is not delayed by it.
+# (a kit that carries core_input_chain.tcl runs it from the end of that file instead: after the chain spread, not before)
+if {[file exists [file join $gpnc_dir place_wire_ratio.tcl]] && ![file exists [file join $gpnc_dir core_input_chain.tcl]]} { source [file join $gpnc_dir place_wire_ratio.tcl] }

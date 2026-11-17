@@ -616,3 +616,5 @@ foreach inst [dict keys $nc_cnt_targets] { lassign [dict get $nc_cnt_targets $in
 puts "OT_NK_R8_COUNT_CHAIN eligible_bits $nc_cnt_seen placed_bits $nc_cnt_chains stages_moved $nc_cnt_stages mux_cells_moved $nc_cnt_mux refused_bits $nc_cnt_refused min_count_max_hop_um $nc_cnt_worst"
 }
 }
+# lever 7 (HOLD-FLOW-R 11-17): this kit's PRE_RESIZE hook is this file, not the gp_noconverge gate: run the post-place wire check here
+if {[file exists [file join [file dirname [file normalize [info script]]] place_wire_ratio.tcl]]} { source [file join [file dirname [file normalize [info script]]] place_wire_ratio.tcl] }

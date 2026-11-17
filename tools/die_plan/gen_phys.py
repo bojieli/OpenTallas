@@ -6257,7 +6257,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             mk = (kd / "config.mk").read_text()
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport OT_DLY_SPREAD = warn\n")
     if core_input_place(P.raw, tn):
-        for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl"):
+        for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl", "place_wire_ratio.tcl"):
             shutil.copyfile(Path(__file__).with_name(f_), kd / f_)
         with (kd / "face_flops.tcl").open("a") as f_:
             f_.write(CORE_INPUT_PLACE_ANCHOR)
@@ -6717,6 +6717,7 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
     shutil.copyfile(here / "gp_noconverge_gate.tcl", kd / "gp_noconverge_gate.tcl")
     fo = place_max_fanout(die)
     shutil.copyfile(here.parent / "autopilot" / "gp_noconverge.py", kd / "gp_noconverge.py")
+    shutil.copyfile(here / "place_wire_ratio.tcl", kd / "place_wire_ratio.tcl")      # lever 7: post-place zero-logic wire check (report-only)
     return ["# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
             "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"] + (
         [f"# PLACE-HPWL (FABLE-PD-S81-STRIP): GPL exit HPWL > {hr} x the run minimum ends the run before resize",
