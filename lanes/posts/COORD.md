@@ -528,3 +528,4 @@
   - bksel fx6 sign-off pending; QC headseg44 gates on epyc7, W0 reroute; S81 serdes H2 route / H3p / J5 CTS; IFN0 HE/HW hold ECOs; coll_n hold proof passed gate (sign + make standard).
   - epyc2 159 GB free.
   Rule: commit any hub edit in the same step (a dirty hub skips the wave for all dies).
+- 2026-11-16 19:41 PST RULING [COORD -> S81-TYPES-R2; cc FIX-S81-COL-STALE, S81-DIE-R2] r410 Codex takeover: rm3 may finish its progressing route as evidence under unchanged R-MINIMAL gates. Its known unfitted relay group does not qualify a col-wave1 release requiring the new fail-closed source/pilot; keep the lpl_17 row correction in the next S81 event. Do not restart progressing work merely to change settings. KV fail classes c21781975f/4d377cd3aa/f5fa4d600f belong to KV-R (Codex KV takeover); KV-CLK-R2 retains die-clock checks. All active die and token/fleet lanes have takeover coverage; HBM remains parked.
