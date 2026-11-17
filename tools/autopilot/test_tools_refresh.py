@@ -266,3 +266,24 @@ def test_compose_reads_the_delta_paths():
     OC.classify_die = lambda repo, d, main, prefixes=None: {}
     ok, detail, h = o.compose(OLD, "/n")
     assert ok and o.delta_paths == ["tools/die_plan/a.py", "tools/die_plan/b.py"]
+
+
+def test_bind_recipes_kv_style_subdir_and_head_style_pass_line():
+    """KV: native_topology.json lands in {out}/bind (tools_refresh_bind_sub); HEAD: head_die_portbind prints a PASS line and has no comparable output (tools_refresh_bind_pass)"""
+    seen = []
+
+    def run_kv(host, cmd, timeout=0):
+        seen.append(cmd)
+        return (0, "same\nsame") if "sha256sum" in cmd else (0, "")
+    kv = die(tools_refresh_bind_cmd="mkdir -p {out}/bind && echo run {tree}", tools_refresh_bind_sub="bind")
+    o = TR.Ops(kv, "/r", SHA, run=run_kv)
+    assert o.bind("/n")[:2] == (True, True)
+    sha = next(c for c in seen if "sha256sum" in c)
+    assert "/n.bindcheck/bind/native_topology.json" in sha and "/physical/native_bind/out/native_topology.json" in sha
+    seen.clear()
+    head = die(tools_refresh_bind_cmd="python3 -I tools/s81_head/head_die_portbind.py p.json --out {out_rel}", tools_refresh_bind_pass=r"HEAD_DIE_PORTBIND PASS module_missing=0")
+    ok = TR.Ops(head, "/r", SHA, run=lambda host, cmd, timeout=0: (seen.append(cmd) or (0, "HEAD_DIE_PORTBIND PASS module_missing=0 port_bind_rc=0")))
+    assert ok.bind("/tree/n") == (True, True, "strict bind PASS (no bind output to compare; PASS line matched)")
+    assert "--out ../n.bindcheck" in seen[0] and any("rm -rf /tree/n.bindcheck" in c for c in seen)
+    bad = TR.Ops(head, "/r", SHA, run=lambda host, cmd, timeout=0: (0, "HEAD_DIE_PORTBIND FAIL"))
+    assert not bad.bind("/tree/n")[0]
