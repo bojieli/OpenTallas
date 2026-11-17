@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS_COND_ROUTE",
+  "viewer": "CODEX P3 worker",
+  "actual_inserted_odb": "../../ins.odb",
+  "image": "actual_hold9_geometry.png",
+  "actual_cells": 9,
+  "capture_pins": 6,
+  "check_placement": "exit0",
+  "removed_filler_cells": 0,
+  "added_area_um2": 0.91854,
+  "latency_cycles_added": 0,
+  "clock_sinks_added": 0,
+  "findings": [
+    "Personally inspected all six actual capture neighborhoods:9HB4 occupy existing free row sites adjacent to4data capture flops and2RESETN captures.",
+    "No overlaps or macro/channel obstruction; existing nearby cells remain at original locations, none removed. Data neighborhoods are dense but new buffers sit in visible row gaps; reset neighborhoods retain broad whitespace.",
+    "No clocks or PDN geometry move; no long new relay hop; insertion radius7.2um is checked by the approved inserter. FinalRCX slew/load and DRC/TT/FF still required.",
+    "Source checkpoint is GRT-only, so upcoming detailed_route routes the entire400k-cell block; only new HB4 nets are newly globally routed, no selected-only DRT claim.",
+    "Routing keeps source signalsM2-M8 and platform clockM4-M8; helper default clockM2 floor is raised to original M4."
+  ]
+}

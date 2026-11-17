@@ -1,0 +1,127 @@
+{
+  "vehicle": "full-shape P3 fixed E1 GRT",
+  "source_odb": "../p3_fault_split_e1_pg_1116/5_1_grt_fx.odb",
+  "expected_internal_failures": 6,
+  "candidate": "one targeted HB4 at each exact negative internal capture; size only after TT all-start room read",
+  "zero_changes": [
+    "engine RTL",
+    "port ABI",
+    "macro inventory",
+    "clock sinks",
+    "flop count",
+    "pipeline cycles",
+    "floorplan outline",
+    "clock and uncertainty constraints"
+  ],
+  "slot_outline_um": [
+    613.44,
+    717.12
+  ],
+  "HB4_area_um2": 0.10206,
+  "max_candidate_added_area_um2": 0.61236,
+  "HB4_bounds": {
+    "source": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_clock_diag/hb4_liberty_model.json",
+    "sha256": "36c467e060e8a6981d3b5c9141b2b91ed570fed8502550e25bbd643db2f0f7e1",
+    "FF_min_delay_ps": 29.8081,
+    "TT_max_delay_ps": 171.239,
+    "domain": "input slew0..320ps/output load0..2.88fF; conservatively extrapolated low slew",
+    "conditional_until_actual_RC_measurement": true
+  },
+  "flow_helper_sha256": "d71c890d963b436e8ea371d0a5f1393922230da7472231e28fa02b51a8c67378",
+  "acceptance": {
+    "DRC": 0,
+    "TT_min_ps": -42,
+    "internal_FF_min_ps": 0
+  },
+  "prelaunch_requirement": "actual inserted placement+nearby cell rectangles rendered and personally inspected before GRT/DRT",
+  "existing_evidence": {
+    "mapped_LEC": "111691/111691 EQUIVALENT",
+    "mechanism": "sticky-fault split exact lockstep597188 comparisons plus dropped-cause mutant FAIL"
+  },
+  "planner": "approved hold_eco_internal.plan(rows,hb4_tt=171.239); target10ps",
+  "planner_sha256": "51e8056ce5f1c73461f03d6edf37d33cf0a9cd24fea2aaaa3e31635be24589a1",
+  "actual_plan": {
+    "cells": [
+      [
+        "u_bound.u_u_xh2.b_vc[4]$_DFF_PN0_/RESETN",
+        1
+      ],
+      [
+        "u_bound.u_u_xh2.b_vc[6]$_DFF_PN0_/RESETN",
+        1
+      ],
+      [
+        "u_bound.u_u_xl2_4/wo_d[640]$_DFF_P_/D",
+        2
+      ],
+      [
+        "u_bound.u_u_xl2_4/wo_d[690]$_DFF_P_/D",
+        2
+      ],
+      [
+        "u_bound.u_u_xl2_4/wo_d[694]$_DFF_P_/D",
+        2
+      ],
+      [
+        "u_bound.u_u_xl2_4/wo_d[696]$_DFF_P_/D",
+        1
+      ]
+    ],
+    "skipped": [],
+    "summary": {
+      "endpoints": 6,
+      "hb4": 9,
+      "partial": 0,
+      "skipped": 0,
+      "target_ps": 10.0,
+      "worst_ff_ps": -24.28574,
+      "selected_over_negative": "6 of 6"
+    }
+  },
+  "added_area_um2": 0.91854,
+  "actual_budget": {
+    "u_bound.u_u_xl2_4/wo_d[640]$_DFF_P_/D": {
+      "TT_all_start_slack_ps": 701.707031,
+      "FF_before_ps": -24.28574,
+      "hb4": 2,
+      "conditional_TT_lower_bound_ps": 359.229031,
+      "conditional_FF_lower_bound_ps": 35.33046
+    },
+    "u_bound.u_u_xl2_4/wo_d[690]$_DFF_P_/D": {
+      "TT_all_start_slack_ps": 703.855774,
+      "FF_before_ps": -23.38596,
+      "hb4": 2,
+      "conditional_TT_lower_bound_ps": 361.377774,
+      "conditional_FF_lower_bound_ps": 36.230239999999995
+    },
+    "u_bound.u_u_xl2_4/wo_d[694]$_DFF_P_/D": {
+      "TT_all_start_slack_ps": 695.30249,
+      "FF_before_ps": -17.755131,
+      "hb4": 2,
+      "conditional_TT_lower_bound_ps": 352.82449,
+      "conditional_FF_lower_bound_ps": 41.861069
+    },
+    "u_bound.u_u_xh2.b_vc[4]$_DFF_PN0_/RESETN": {
+      "TT_all_start_slack_ps": 717.553101,
+      "FF_before_ps": -8.231249,
+      "hb4": 1,
+      "conditional_TT_lower_bound_ps": 546.3141009999999,
+      "conditional_FF_lower_bound_ps": 21.576850999999998
+    },
+    "u_bound.u_u_xh2.b_vc[6]$_DFF_PN0_/RESETN": {
+      "TT_all_start_slack_ps": 713.214905,
+      "FF_before_ps": -3.490652,
+      "hb4": 1,
+      "conditional_TT_lower_bound_ps": 541.975905,
+      "conditional_FF_lower_bound_ps": 26.317448
+    },
+    "u_bound.u_u_xl2_4/wo_d[696]$_DFF_P_/D": {
+      "TT_all_start_slack_ps": 690.717285,
+      "FF_before_ps": -0.979855,
+      "hb4": 1,
+      "conditional_TT_lower_bound_ps": 519.4782849999999,
+      "conditional_FF_lower_bound_ps": 28.828245
+    }
+  },
+  "state": "MODELED_BEFORE_INSERTION"
+}
