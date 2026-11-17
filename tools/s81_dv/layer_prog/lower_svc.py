@@ -1300,7 +1300,12 @@ def main(argv=None):
     ap.add_argument('--die-src', default=None, help='die tree of the compile (dv_layer_compile --die-src); else DIE_REF')
     ap.add_argument('--heads', type=int, choices=(16, 8), default=None,
                     help='svc slice head width (default OT_SVC_H, else 16); 8 = the R5 two-pass job + its mutants')
+    ap.add_argument('--owner-epoch', default='0', choices=('0', '1', '2', '3', 'none'),
+                    help='SO source owner epoch stamped in CFG/PV (opt-in identity). Default 0 = the bench of record '
+                         '(run_svc_bench.sh builds PV_IDENTITY=1, whose launch check faults without an owner); '
+                         "'none' lowers the identity-off images for a PV_IDENTITY=0 build")
     a = ap.parse_args(argv)
+    owner_epoch = None if a.owner_epoch == 'none' else int(a.owner_epoch)
     sched = json.loads(Path(a.sched).read_text()) if a.sched else None
     die = None
     try:
@@ -1316,11 +1321,12 @@ def main(argv=None):
     if (a.heads or SVC_H) == 8:   # S81-SVCC-1: the two-pass negatives
         muts += ('hb_swap', 'pass_drop', 'pass_swap', 'more_off')
     for mut in muts:
-        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, timing_profile=a.timing_profile, heads=a.heads)
+        job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut, owner_epoch=owner_epoch,
+                       timing_profile=a.timing_profile, heads=a.heads)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
     if a.pio_safe:            # a parallel calibration image: PIO a.pio_safe edges later (same programme otherwise)
-        job, s = build(a.fixtures, sched, die, tag=a.tag, timing_profile=a.timing_profile, pio_extra=a.pio_safe,
+        job, s = build(a.fixtures, sched, die, tag=a.tag, owner_epoch=owner_epoch, timing_profile=a.timing_profile, pio_extra=a.pio_safe,
                        heads=a.heads)
         rec = bench_image(job, s, Path(a.out) / 'base_safe')
         print('base_safe', json.dumps({k: rec[k] for k in ('go', 'pio', 'pv_first', 'done_w', 'done_e')}))

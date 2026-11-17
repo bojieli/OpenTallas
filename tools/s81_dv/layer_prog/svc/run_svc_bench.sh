@@ -15,6 +15,10 @@ case "$PROFILE" in
   ENGDEF=()
   RS_DEF+=(-DOT_SVC_ALLQ -DOT_ATTN_HCORE -DOT_S81C_HCORE_CTLA -DOT_S81C_HCORE_RST_TIMED)
   RS_SRC+=(rtl/hdc/v41x/ot_s81c_attn_hcore.sv rtl/hdc/v41x/ot_s81c_attn_hcore_h8.sv rtl/hdc/v41x/ot_s81c_attn_h8_rt2.sv)
+  # ALLQ bench of record: the macro-backed attention memories (ALLQ run allq_current1116_r4) and the SO source identity
+  RS_SRC+=($D/dsdv_svc_mem_ar.sv $D/dsdv_svc_mem_la.sv $D/dsdv_svc_mem_lr.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_32x128_m1_r0c0/ot_sram_1r1w_32x128_m1_r0c0.v)
+  RS_SRC+=(physical/asap7_memory_macros_v2/ot_sram_1r1w_160x256_m1_r0c0/ot_sram_1r1w_160x256_m1_r0c0.v)
+  RS_DEF+=(-DOT_SVC_ATT_MEM_MACRO)
   ;;
  legacy_fg3) ENGDEF=(-DSVCQ_ENG_FG3);;
  *) echo "unknown SVC engine profile $PROFILE" >&2;exit 2;;
@@ -40,7 +44,7 @@ lib() {
   local L=$O/pl_$1
   [ -f "$L/lib$1_pl.a" ] && return 0
   "$VL" --cc --build -j "$JOBS" --protect-lib "$1_pl" --top-module "$1" -Mdir "$L" \
-    -GMUT=0 -GDIE_ID=0 -GST=0 "${COMMON[@]}" "${RS_SRC[@]}" "${RS_LIB[@]}" > "$O/build_$1.log" 2>&1
+    -GMUT=0 -GDIE_ID=0 -GST=0 -GPV_IDENTITY=1 "${COMMON[@]}" "${RS_SRC[@]}" "${RS_LIB[@]}" > "$O/build_$1.log" 2>&1
 }
 TB=tools/s81_dv/layer_prog/svc/tb_svc_lower.sv
 if [ ! -x "$O/obj/Vtb_svc_lower" ]; then
