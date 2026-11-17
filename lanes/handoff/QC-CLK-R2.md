@@ -43,3 +43,11 @@ Work dir epyc2 /srv/opentallas-scratch3/claude/fable-die-qc-r (same as FABLE-DIE
 - Reframe pipeline CA --frame-plan then region_form sta --cap-in running from intel2 client373347 log ~/qc-clk-r2/reframe_l2d_retry1.client.log. E2 qcclk2/reframe_l2d/run2.sh, outputs ca_framed.json, plan_m_clock.json, side_m_clock.json, READY.json. Explicit check no negative clock_landing and no region_form post errors.
 - First attempt stopped before CA due python -I sibling import; failure ca.log and reframe_l2d.client.log retained. Retry uses explicit sibling-path bootstrap run_cap.py (no production source modification).
 - Parent composes G/w515 then ONE final strict bind/LATCHECK/G0; do not duplicate final bind here. cap-in dependency remains claude/qc-clk-r2-capin-1116 @060ba63e937.
+
+## CODEX M clock READY 2026-11-16 22:38 PST
+- E2 qcclk2/reframe_l2d/READY.json; plan_m_clock.json sha02a32c37bb605af6153ba3e01a8c50d57d27b3bd86dae108dc8c22e315cbeda9, side_m_clock.json sha1b43f2b63bfb466661e36ed2a812c3470c94e798f532d2323bf4f40f225b69a0.
+- Comb feed sha dbdd8008624a49a8b955b673d5edae6a4427d566d9289eaa73ac82659ce17353; copy exact bytes to treeJ plan_of_record/feed_s4q9m.json, use relative path in final plan (hash unchanged); restore region_map path plan_of_record/regions_s29.json with original hash. Full instructions RELOCATION.txt.
+- CA --frame-plan: 2993 FAIL0, frame_min_lat1, START724/724clean, margin105.1/112.5. region_form --cap-in:2525FAIL0, post_check[], negativeclock_landing0. K changes1219; crossing cycles7002->6588 on reframed basis,879lanechanges (changed-lane sums11093->10912),30straps narrowed7->6. Physical frame relabel adds0cycles; subsequent physical K changes priced in report.
+- Exact l2d clock rows130types/15386ports, minmargin10.05, tolmax46.3, tables0errors, seam160. Prior old-row TAP-OFFSET FAIL is historical; replacement rows are generated directly from exact TT/FF SPEF proof.
+- Parent composes G/w515 then ONE final bind/LATCHECK/G0. Proposed clock plan is ready; no signed real-view die claim.
+- Diagnosed/fixed leftover auto-finalizer: counted gate STA omits plain seam kit_contract_window_needed_ps field; stopped helper now uses REG_STA. Failed script preserved as bin/finalize_l2d_rows_gate_summary_failed.sh and chain_l2d_finalize.log; corrected rows already generated, no duplicate job.

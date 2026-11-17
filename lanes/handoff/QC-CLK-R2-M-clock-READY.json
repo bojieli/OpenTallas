@@ -1,0 +1,80 @@
+{
+ "plan": "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/reframe_l2d/plan_m_clock.json",
+ "sha256": "02a32c37bb605af6153ba3e01a8c50d57d27b3bd86dae108dc8c22e315cbeda9",
+ "sidecar": "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/reframe_l2d/side_m_clock.json",
+ "ca_crossings": 2993,
+ "clock_landing_negative": 0,
+ "post_check": [],
+ "region_form_summary": {
+  "crossings": 2525,
+  "fail": 0,
+  "changed": 1219,
+  "K_changed": 1219,
+  "cycles_old": 7002,
+  "cycles_new": 6588,
+  "delta_hist": {
+   "-4": 46,
+   "-3": 10,
+   "-2": 215,
+   "-1": 540,
+   "0": 1306,
+   "1": 313,
+   "2": 13,
+   "3": 13,
+   "5": 28,
+   "6": 35,
+   "7": 6
+  },
+  "depth_new": {
+   "4": 2485,
+   "8": 40
+  },
+  "depth_changed": 161,
+  "lanes_changed": 879,
+  "lane_cycles_old": 11093,
+  "lane_cycles_new": 10912,
+  "worst_margin_lo_ps": 105.1,
+  "worst_margin_hi_ps": 112.5,
+  "below_100ps": 0,
+  "sta_interval": {
+   "corners": [
+    "FF",
+    "TT"
+   ],
+   "rows": 2993,
+   "widened": 2058,
+   "max_widen_ps": 922.9,
+   "max_widen_port": "c_E4_bn_10__bc21__0",
+   "missing": 0,
+   "missing_ports": [],
+   "interval": "port (die_sta_related.count_align_port_intervals)",
+   "rows_without_measured_fall": 0,
+   "unbound": 0,
+   "unbound_tags": [],
+   "proof": "/srv/opentallas-scratch3/claude/fable-die-qc-r/chain/qc/s4q9m_l2d/reg/proof",
+   "plan": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9l2d.json",
+   "clock_cal": "none",
+   "cppr_lca": true,
+   "clock_ocv": "none",
+   "model": "hull(landed_phase_ocv derated, die_sta_related.count_align_port_intervals)",
+   "clock_cell": {
+    "cell": "inv",
+    "basis": "--clock-cell inv2",
+    "aocv_class": "Ainv"
+   }
+  },
+  "start_retime": [
+   "cap-in /srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/reframe_l2d/ca_framed.json"
+  ],
+  "count_straps": {
+   "straps": 30,
+   "types": 10,
+   "widened": 0,
+   "narrowed": 30,
+   "width_change": {
+    "7->6": 30
+   }
+  }
+ },
+ "proof": "/srv/opentallas-scratch3/claude/fable-die-qc-r/chain/qc/s4q9m_l2d/reg/proof"
+}
