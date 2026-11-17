@@ -6372,6 +6372,7 @@ GEOM_TOOL_FILES = ("geom_check.sh", "geom_dump.tcl", "geom_grt.tcl", "geom_rules
 
 def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None):
     """Put the scheduler's complete tool closure beside the actual checkpoint, never move the checkpoint's host."""
+    q = shlex.quote
     root = Path(tool_root or Path(__file__).resolve().parent)
     blobs = {name: (root / name).read_bytes() for name in GEOM_TOOL_FILES}
     hashes = {name: hashlib.sha256(blob).hexdigest() for name, blob in blobs.items()}
