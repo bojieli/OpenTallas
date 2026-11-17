@@ -56,3 +56,16 @@ Read lanes/handoff/HEAD-R3.md for the NF15e -> NF15f decision (hop halving + cor
   credit depth 16 fails, 24 passes (ri/rt/lw exact, gap 4).  Isolation of which credit end (lep DR/CRED vs lane CORE_CRED;
   the lane CRED12 view is CLOSED) running x_c24k / x_c24L / x_c24kr (RXH 1).
 - Evidence: ~/coord/lanes/evidence/head_plan_r4_1117/.
+
+## (5) 11-17 afternoon: credit RTL gated, rs7 integrated
+- Branch claude/head-lep-rxh-rank-1117 @3cc88ac6 GREEN 24/24 (main ba7a96a1), READY posted: RXH + KCRED (both ends, default 12)
+  + LOCAL_POP(CORE_CRED>=12) + calendar kcred/credit_rtt (measured) + tb LEPK_RTT + bench cases + uarch entry + face keepout.
+- Measured credit loop (LEPK_RTT, k12 credit-bound): RX 14/24/24/21, TX <= 17 -> KCRED 28.  Isolation: lep+lane 24 / peer 12
+  PASS (peer type unchanged); lep-only 24 FAIL (pair CORE_CRED binding) -> HEAD-TYPES-R4 rebuild + re-sign ot_s81hd_lep_pair.
+- rs7 (plan 10e41a91ec8c73d7, epyc9 hr4/prep_rs7): main be66cd6f tools (r564 + r588) + event rtl + RXH + KCRED 28 (contents AND
+  native_stage_groups params) + r564 rows (OLD-clock labels) + grid straps 10.016 / 566.752: compose, receipt, kit RTL
+  hd_lep0N + hd_tile, bind, cohort 26/26, LATCHECK 329/329, G0 0 errors all PASS; r588 kit-common files staged in kits.
+- Open: relay rects = g1e (stage-vs-macro 4, groups over reserved sites 32) -> FABLE-FIX-HEAD-CORRIDOR (g2 it3 seed);
+  labels + strap values from the NF15f clock census after the clock GEN; mesh PG knobs + north clock re-site in that GEN;
+  reset seam timing after the census; production token calendar rerun on NF15F; no kits until the corridor fix lands.
+- Harness lessons: one attempt per run dir; run_rs6.sh is the current runner (code_rs6); republish_g1.py takes HR4_CODE.
