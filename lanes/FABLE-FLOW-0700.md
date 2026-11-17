@@ -233,3 +233,33 @@ with a counter); the eshim row needs a missing-attempt-dir state instead of a re
 4. WAVE-FLOW-R: tools-change reopen limited to the failed stage's import closure; "requires SIGNED child"
    as WAIT-CHILD; drop ODBs of non-latest unsigned attempts.
 5. FLEET-OPS-R with WAVE-FLOW-R: pilot the base-plus-delta tree on one die and one host (class A item 2).
+
+## Addendum 06:22 PST: epyc7 scan and epyc7 root
+
+epyc7 scratch2, scan ended 06:19 (after the 06:03 manual free; 150 GB free): 6,596 GB unshared, 521 GB new
+in 6 h (87 GB/h), 117 GB new in the last hour.
+
+| Category | Stock GB | New <1 h | New <6 h |
+|---|---|---|---|
+| Lane directories | 4,261 | 57 | 105 |
+| Wave source trees kw45/src_* | 500 | 0 | 144 |
+| Wave runs kw43-wave-1109n | 397 | 2 | 117 |
+| ot-jobs (live wave job dirs) | 96 | 56 | 84 |
+| ot-store objects | 839 | 0 | 49 |
+| Other (wt/moved 351, old wave-src 50, archives 35, kit-store 32, mq-gate 21, rt 15) | 504 | 1 | 22 |
+
+- Source trees: three KV D-steps of 48 GB each in 6 h (hg3b d12, hg3b_checker d14, hg5 d15).
+- Lane directories: the QC-PLAN-R3 clone is 50 GB of the last hour (physical/ 31, .git 10, results/ 9): the
+  two directories that ot-lane-clone leaves out are 40 of the 50 GB.
+- Idle stock: claude/kw44 524 GB, s87bind 384 GB and s81-leaf-plan 309 GB have 0 GB changed in 24 h
+  (1,217 GB). FLEET-OPS-R's 06:03 post says the guard refused whole-directory deletes of s87bind, kw42 and
+  wave-src on kit_wave.json references; those are history keys (s87bind appears under prev_kw46_r11p and
+  prev_kitops1_r12bA only in my key listing).
+- ot-jobs: three live route job dirs for one type, sle_fe_v1__cl1cbb7497 (20, 17 and 15 GB; units started
+  11-16 21:09, 22:08 and 23:19 PST, all three processes alive at 05:55). I did not decode which event or
+  attempt each belongs to. WAVE-FLOW-R should check them against "one live attempt per item".
+- ODB files: 184 GB of the 521 GB (35%).
+
+epyc7 root disk reached 0 MB at 06:21. The S81-TYPES-R3 checkout got to 47 GB in
+/srv/opentallas-scratch3/claude/s81-types-r3/wt, failed, and the lane started it again
+(`git checkout -q -f -B rck-depth-balance-1117 origin/main`, pid 960862). Nothing was stopped by me.
