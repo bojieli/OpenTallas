@@ -104,3 +104,29 @@ NEXT
 3. COORD lever 5b: split clk_t42 (6528 sinks, tap insertion spread 163-554 vs target 250) into 2-3 taps in the serdes plan; decide on census v2.
 4. COORD lever 5c: CAPSKEW-ECO lane owns tools/die_plan/capskew_eco_run.py; give it census v2; no second tool.
 5. Other 10 types (and t13 again) from the fixed generator through the wave.
+
+## State 15:15 PST
+DONE since 14:55
+- DRC 0 route: epyc9 drtx/E1 (H15 DB + 3 hooks, notch v1): 97585 -> 18313 -> 11706 -> 171 -> 6 -> 0 at iteration 5.
+- Branch 2 READY, gate GREEN 62/62 on main 48ab33e1375: claude/s81-serdes-pad-pg-rails-1117 @c8ce59b7a01ead0a6dec691dfdc416fc4b5be2bd
+  (PHY-REGION-ROWS-1 row cut, PG-RAIL-CHECK-1 on every kit, input macro_pin pads dont_touch, PG face/island cut default for macro_pin pad
+  types, ECO hooks pad_in_direct.tcl + pg_pin_notch.tcl v2 as tools). Worktree epyc9 .../wt on that branch.
+- Rail fix proof: kit F2 floorplan: OT_PHY_REGION_ROWS 1054 rows -> 2108 pieces; OT_PG_RAIL_CHECK rows 6726 bad 0 (H17 floorplan: 6664 / 2046 bad).
+  F1 (blockage before tapcell) did not work. Rail check sample on other dies (drtx/rail_sample/summary.txt): 11 of 19 done, all PASS.
+- PG cause: missing M1/M2 rails on rows overlapping the PHY region (NOT missing straps). VSS fails the same way (north band only).
+- Tap insertion (H17 4_1_cts.log OT_TAP_BALANCE it3): clk_t42 554 ps / 6502 sinks; taps <= 1650 sinks sit at ~255. Recommendation posted:
+  split clk_t42 into 4 taps (plan row, S81-DIE-R3). North taps t17/18/22/27/28/29/30 at 390-417.
+- TT census (drtx/eco/ttsk.tcl) crashes OpenSTA with signal 11 right after the endpoint count, twice. Not fixed. Use kit pair_skew.tsv.
+RUNNING (epyc9)
+- H17 route-only rerun with the 3 hooks (notch v2): unit oth-ubuntu-3409413-1794956321, log intel2 ~/fable-fix-s81-serdes2/H17-route-1117-r2.out,
+  kit note RESUME_NOTE_H17.txt. MEASUREMENT ONLY (rail defect): read routed TT / FF hold, never export. Expect ~2 h. The 5_2_route.tmp.log
+  with mtime before RESUME_NOTE_H17.txt is the OLD stopped run.
+- drtx/pgchk3_E2: check_power_grid VDD on the notch-v2 DB; diff VDD.rpt bbox lines against drtx/pgchk_base/VDD.rpt (expect no entry outside
+  y 921.24-1205.82; the 10000+10000 cap makes line-level diffs noisy, judge by y range).
+- drtx/rail_sample: remaining 8 kits.
+OPEN, NOT MINE TO FINISH ALONE (posted 15:1x as STRUCTURAL)
+(A) clk_t42 split into 4 taps: plan row, S81-DIE-R3.
+(B) The H form (H3p -> H5 -> H17) is a hand-kit lineage (about 40 H_* stage files, h4_meta_reflow.tcl, PLACE_DENSITY 0.30): not in gen_phys.
+    The other 10 types cannot be released on it through the wave until a lane ports it; a generator rebuild of t13 is not this placement.
+HOLD: S81-TYPES-R3 was asked to hold the 11 serdes items on result:FABLE-FIX-S81-SERDES2:rail-gen; post that result only after branch 2 is merged.
+NO SIGN-OFF EXISTS for any serdes type; nothing was exported to AGIdock or rtx-pro.
