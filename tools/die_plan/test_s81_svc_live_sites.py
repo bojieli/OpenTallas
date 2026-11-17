@@ -154,3 +154,75 @@ def test_real_odb_mixed_presence_refuses_before_placement(tmp_path):
 
 def test_real_odb_unrelated_missing_still_native_mpl_failure(tmp_path):
     _run(tmp_path, "svc_hi_dsdv_svc_rs__t3", 0, unrelated=True)
+
+
+
+def _pdn(t):
+    names = ["other_live_a", *s.expected_names(t), "other_live_b"]
+    pats = " ".join("{^%s$}" % n.replace(".", "\\.").replace("[", "\\\\\\[").replace("]", "\\\\\\]") for n in names)
+    return ("# GENERATED pdn\nset_voltage_domain -name {CORE} -power {VDD} -ground {VSS}\n"
+            "define_pdn_grid -macro -name {core_pg_M4} -instances {%s} -voltage_domains {CORE}\n" % pats)
+
+
+def test_pdn_default_unrelated_and_no_grid_are_byte_identical():
+    t = "svc_hi_dsdv_svc_rs__t3"
+    text = _pdn(t)
+    assert s.wrap_pdn(t, text) == text
+    assert s.wrap_pdn("unrelated_type", text, enabled=True) == text
+    plain = "define_pdn_grid -name {top} -voltage_domains {CORE} -pins {M7}\n"
+    assert s.wrap_pdn(t, plain, enabled=True) == plain
+
+
+def test_pdn_partial_declaration_refuses():
+    t = "svc_hi_dsdv_svc_rs__t3"
+    first = s.expected_names(t)[0].replace(".", "\\.").replace("[", "\\\\\\[").replace("]", "\\\\\\]")
+    text = _pdn(t)
+    assert first in text
+    with pytest.raises(ValueError, match="exact eight"):
+        s.wrap_pdn(t, text.replace(first, "other_macro"), enabled=True)
+
+
+@pytest.mark.parametrize("present", (0, 8, 7))
+def test_pdn_real_odb_cohort(tmp_path, present):
+    exe = os.environ.get("OPENROAD_BIN")
+    docker = shutil.which("docker")
+    if not exe and (not docker or subprocess.run(
+            [docker, "image", "inspect", "openroad/orfs:asap7lock"],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode):
+        pytest.skip("qualified OpenROAD image unavailable (or set OPENROAD_BIN)")
+    t = "svc_hi_dsdv_svc_rs__t3"
+    (tmp_path / "m.lef").write_text(LEF)
+    (tmp_path / "t.v").write_text("module t(input clk); endmodule\n")
+    (tmp_path / "pdn.tcl").write_text(s.wrap_pdn(t, _pdn(t), enabled=True))
+    names = ["other_live_a", *s.expected_names(t)[:present], "other_live_b"]
+    create = "\n".join("odb::dbInst_create $b $m {%s}" % n.replace("[", "\\[").replace("]", "\\]") for n in names)
+    script = '''read_lef {%s/m.lef}
+read_verilog {%s/t.v}
+link_design t
+set b [ord::get_db_block]
+set m [[ord::get_db] findMaster ot_sram_1r1w_32x128_m1_r0c0]
+%s
+set ::got {}
+rename ::define_pdn_grid ::real_dpg
+proc ::define_pdn_grid {args} { set k [lsearch -exact $args -instances]; if {$k >= 0} {set ::got [lindex $args [expr {$k+1}]]} }
+proc ::set_voltage_domain {args} {}
+set rc [catch {source {%s/pdn.tcl}} message]
+puts "RESULT $rc $message"
+puts "GOT [llength $::got]"
+if {[llength [info commands ::s81_svc_r369::original_define_pdn_grid]]} {error "native command not restored"}
+puts FIXTURE_CHECK_PASS
+''' % (tmp_path, tmp_path, create, tmp_path)
+    (tmp_path / "run.tcl").write_text(script)
+    args = ["-no_init", "-exit", str(tmp_path / "run.tcl")]
+    cmd = ([exe, *args] if exe else [
+        docker, "run", "--rm", "--network=none", "--user", f"{os.getuid()}:{os.getgid()}",
+        "-v", f"{tmp_path}:{tmp_path}:ro", "openroad/orfs:asap7lock", "bash", "-lc",
+        'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; exec openroad "$@"', "bash", *args])
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    assert "FIXTURE_CHECK_PASS" in r.stdout, r.stdout + r.stderr
+    if present == 7:
+        assert "RESULT 1" in r.stdout and "mixed bank presence" in r.stdout
+    else:
+        assert "RESULT 0" in r.stdout, r.stdout
+        assert f"GOT {10 if present == 8 else 2}" in r.stdout, r.stdout
+        assert f"pdn skipped={0 if present == 8 else 8}" in r.stdout

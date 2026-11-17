@@ -5653,6 +5653,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     if pg_die_phase_on():
         pdn = pdn_die_phase(pdn, kit_core_area(t))
+    if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
+        import s81_svc_live_sites
+        pdn = s81_svc_live_sites.wrap_pdn(tn, pdn, enabled=True)
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
         # WAVE-RECIPE-1: an M9 kit's M9 grant rides in the same file (extra_grants), so the kit's existing fixlef step (run_kit
