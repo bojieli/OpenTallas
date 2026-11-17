@@ -63,3 +63,18 @@ Parent lane S81-TYPES-R (columns + IFN0 are NOT here). Predecessor FABLE-FIX-S81
 - Fix 2 form B: XR branch claude/s81-strip-vp-xr-1116@d1645b7afcd GREEN (worktree epyc8 fable-fix-s81-cong/wt_xr). Tool tools/die_plan/s81_vp_xr_overlay.py ROOT --die 3S=01000 --die 6N=00010 on a WRP source tree (D3). S81-DIE-R2 binds it (latency post 455558d5). After the bind: t34/t62 kits get a bank-end region (vpw + XR flops at u_b0/u_b1), image review, GRT read. No form B for t47/t75/t8 until fix 1 is in.
 - Fix 3 dswp: DSR (16 kept dswp copies, active with XR) added to the overlay in scratchpad + wt_xr (uncommitted until the iverilog elaboration of XR=0/1 with the D3 deps passes).
 - t47 polarity: claude/s81-ft-port-polarity-1116@d7f31e5f8cd (gen_phys _ft_polarity_local opt-in + test_ft_polarity_local.py, merged origin/main) re-gating, log intel2 ~/s81-types-r/gate_ftpol_d7f31e5.log. Fable: no station move needed.
+
+## 01:05 PST 11-17 (strip fork, Opus)
+- DONE: XR-aware source depth READY claude/s81-strip-xr-lfcs-1117@baceba7b51a457dcaf5629c1ae57af49051c80b3, GREEN 69/69 (post 2470a35c). Completes Codex WIP bbd0da4c1ba.
+  `--vp-xr TYPE:1` stages source HI_D = plan HI - 1 (plan 3 -> 2 / GS 2). The LF_VP_XR mask is checked against the contracts on every run, so the old path on an XR netlist refuses.
+  Worktree: E8 fable-fix-s81-cong/wt_xr (now on that branch).
+- DONE: C4 relay rows sent to S81-DIE-R2 (post 1f13b807).
+  START legs: reach_rules fix --rules 1 on the d5c canonical plan; rows in E10 /srv/opentallas-scratch2/claude/s81-types-r-strip/c4_relay_rows/c4_start_relay_rows.json (7965c83abd01).
+  t47 reader/writer depth 9/9 (worst hop 302.8/334.7); t75 6/5 (282.2/329.9); 0 data cycles; idempotent.
+  Die reset -> FSTART: fstart_reset_delta.py on DIE-R2's C4 strict bind (it needs a bind dir; it cannot be pre-made).
+- 78c5645 (-overflow 0.2) is withdrawn; the setting of record is r496 056783ac187.
+- Stopped by exact ot-heavy-stop: t28 (intel1), t62 and t72 (epyc7, all inactive). t34 is kept and was at extra iteration 29/30 at 01:04; grtread2 reads it at FX DONE, then stopper2 stops it.
+- Leftover: E8 fable-fix-s81-cong/clone_depth is a partial clone (timed out, unused); delete via ot_delete_guard.
+## Next
+1. t34 GRT class table at route RC, posted (vpw / VP driver / reset shares) before C4 seals.
+2. After C4: generate t34/t62 from the tree with 056783ac187 + OT_S81_VPW_BANK=1; image review; GRT; TT >= -42 and internal FF hold >= 0; route; sign-off; export to both archives.
