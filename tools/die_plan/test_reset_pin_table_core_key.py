@@ -67,3 +67,27 @@ def test_two_identical_matching_tables_are_not_ambiguous(tmp_path, monkeypatch):
     t = dict(core="m", pins=PINS)
     _tree(tmp_path, monkeypatch, [t, t])
     assert [o["inst"] for o in RT.core_reset_targets(_plan(), "src")] == ["u_c"]
+
+
+# QC-CLK-R2 11-17: bare pin lists (qwen_compute cores/su/signed/*_pins.json carry no module key) resolve when unique.
+def test_bare_list_pin_table_resolves(tmp_path, monkeypatch):
+    _tree(tmp_path, monkeypatch, [PINS])
+    assert [o["inst"] for o in RT.core_reset_targets(_plan(), "src")] == ["u_c"]
+
+
+def test_two_differing_bare_lists_raise_ambiguity(tmp_path, monkeypatch):
+    _tree(tmp_path, monkeypatch, [PINS, [dict(name="rst_n", layer="M4", x=0, y=140)]])
+    with pytest.raises(RT.ResetError, match="cannot uniquely resolve"):
+        RT.core_reset_targets(_plan(), "src")
+
+
+def test_bare_list_not_picked_when_a_table_names_another_module(tmp_path, monkeypatch):
+    _tree(tmp_path, monkeypatch, [PINS, dict(core="other", pins=PINS)])
+    with pytest.raises(RT.ResetError, match="cannot uniquely resolve"):
+        RT.core_reset_targets(_plan(), "src")
+
+
+def test_keyed_table_wins_over_bare_list(tmp_path, monkeypatch):
+    _tree(tmp_path, monkeypatch, [[dict(name="rst_n", layer="M4", x=0, y=140)], dict(core="m", pins=PINS)])
+    out = RT.core_reset_targets(_plan(), "src")
+    assert [o["inst"] for o in out] == ["u_c"]

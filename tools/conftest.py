@@ -70,3 +70,18 @@ def _reap_lec_watchers():
     yield
     left = reap_lec_watchers()
     assert not left, f"lec_async.sh watch process(es) left behind by this test: {left}"
+
+
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _fixed_hub_disk(monkeypatch):
+    """WAVE-FLOW-R 11-17 (FABLE-FLOW-0500 item 1): the wave tests read a fixed hub disk (500 GB free), never the live hub, so a hub under its floor cannot fail
+    the rt smoke tests (9 syncs in a row failed 01:51-02:31).  A test that needs another value passes statvfs= explicitly."""
+    try:
+        import types
+        import kit_wave
+    except Exception:
+        return
+    monkeypatch.setattr(kit_wave, "_HUB_STATVFS", lambda p: types.SimpleNamespace(f_bavail=500, f_frsize=2**30), raising=False)

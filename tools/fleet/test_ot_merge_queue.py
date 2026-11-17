@@ -95,6 +95,29 @@ class Select(unittest.TestCase):
         self.assertEqual(self.sel(["tools/fleet/ot-mem-grow", "tools/fleet/test_ot_mem_grow.py"]), ["tools/fleet/test_ot_mem_grow.py"])
         self.assertEqual(self.sel(["physical/common_flow/grt183_make.sh"]), ["tools/fleet/test_grt.py"])
 
+    def test_proved_new_evidence_copy_keeps_exact_consumer_not_basenames(self):
+        f = "results/component/copied_operator.sv"
+        tests = ["tools/test_real.py", "tools/test_record.py", "tools/test_new.py"]
+        texts = {tests[0]: "copied_operator.sv", tests[1]: f}
+        got, _ = M.select_tests([f, tests[2]], tests, lambda t: texts.get(t, ""), copies={f: "rtl/copied_operator.sv"})
+        self.assertEqual(got, [tests[2], tests[1]])
+        ordinary, _ = M.select_tests([f], tests, lambda t: texts.get(t, ""))
+        self.assertEqual(ordinary, [tests[0], tests[1]])
+        copied_test = "results/component/test_real.py"
+        got, _ = M.select_tests([copied_test], [copied_test] + tests, lambda t: texts.get(t, ""), copies={copied_test: tests[0]})
+        self.assertEqual(got, [])
+
+    def test_copy_proof_requires_added_path_identical_blob_and_unchanged_authority(self):
+        from unittest.mock import patch
+        old = "results/old/operator.sv"; new = "results/new/operator.sv"; bad = "results/bad/operator.sv"
+        index = ("100644 abc 0\trtl/operator.sv\0" + "100644 abc 0\t" + old + "\0" +
+                 "100644 abc 0\t" + new + "\0" + "100644 xyz 0\t" + bad + "\0")
+        def g(*a, **kw):
+            return subprocess.CompletedProcess([], 0, new + "\n" + bad if a[0] == "diff" else index, "")
+        with patch.object(M, "git", side_effect=g):
+            self.assertEqual(M.evidence_copies(Path("/unused"), "base", "tip", [old, new, bad]), {new: "rtl/operator.sv"})
+            self.assertEqual(M.evidence_copies(Path("/unused"), "base", "tip", [old, new, bad, "rtl/operator.sv"]), {})
+
     def test_docs_select_nothing(self):
         self.assertEqual(self.sel(["docs/X.md"]), [])
 
@@ -546,6 +569,121 @@ class FailureOutputRetention(unittest.TestCase):
             self.assertTrue(any('first traceback' in s for s in texts))
             self.assertTrue(any('second traceback' in s for s in texts))
             self.assertTrue(all('command=' in s and 'rc=1' in s for s in texts))
+
+
+class WidenDirs(unittest.TestCase):
+    def _repo(self):
+        d = Path(tempfile.mkdtemp())
+        for f in ("rtl/hdc/a.sv", "rtl/v41rom/b.sv", "physical/asap7_memory_macros_v2/lef/x.lef", "physical/asap7_memory_macros_v2/v/y.v",
+                  "physical/die_plan/q/z.py", "physical/die_plan/q/w.py", "physical/die_plan/r/v.py"):
+            (d / f).parent.mkdir(parents=True, exist_ok=True); (d / f).write_text("x")
+        env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t", GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t")
+        for c in (["init", "-q"], ["add", "."], ["commit", "-qm", "x"]):
+            subprocess.run(["git", *c], cwd=d, env=env, check=True, capture_output=True)
+        return d
+
+    def test_rtl_miss_takes_whole_top_in_one_round(self):
+        d = self._repo()
+        self.assertEqual(M.widen_dirs(d, {"rtl/hdc/a.sv"}), ["rtl"]); shutil.rmtree(d)
+
+    def test_macro_dir_widens_to_two_levels(self):
+        d = self._repo()
+        self.assertEqual(M.widen_dirs(d, {"physical/asap7_memory_macros_v2/v/y.v"}), ["physical/asap7_memory_macros_v2"]); shutil.rmtree(d)
+
+    def test_big_two_level_dir_stays_parent(self):
+        from unittest.mock import patch
+        d = self._repo()
+        with patch.object(M, "WIDE_MAX", 2):
+            self.assertEqual(M.widen_dirs(d, {"physical/die_plan/q/z.py"}), ["physical/die_plan/q"])
+        shutil.rmtree(d)
+
+
+class PackGuard(unittest.TestCase):
+    def _packs(self, n):
+        d = Path(tempfile.mkdtemp()); (d / ".git" / "objects" / "pack").mkdir(parents=True)
+        for i in range(n):
+            (d / ".git" / "objects" / "pack" / f"pack-{i}.pack").write_text("")
+        return d
+
+    def _calls(self, n):
+        from unittest.mock import patch
+        d = self._packs(n); calls = []
+        with patch.object(M, "git", side_effect=lambda *a, **k: calls.append(a) or subprocess.CompletedProcess([], 0, "", "")), patch.object(M, "log"):
+            M.pack_guard(d)
+        shutil.rmtree(d)
+        return [c[0] for c in calls]
+
+    def test_few_packs_untouched(self):
+        self.assertEqual(self._calls(5), [])
+
+    def test_many_packs_midx_only(self):
+        self.assertEqual(self._calls(M.PACK_LIMIT + 1), ["multi-pack-index"])
+
+    def test_huge_pack_count_repacks_then_midx_never_gc(self):
+        c = self._calls(M.PACK_REPACK + 1)
+        self.assertEqual(c, ["repack", "multi-pack-index"])
+        self.assertNotIn("gc", c); self.assertNotIn("prune", c)
+
+    def test_progressing_pack_is_preserved_without_second_repack(self):
+        from unittest.mock import patch
+        d = self._packs(M.PACK_REPACK + 1)
+        with patch.object(M, "live_pack_processes", return_value=[123]), patch.object(M, "git") as git, patch.object(M, "log"):
+            M.pack_guard(d)
+        git.assert_not_called()
+        shutil.rmtree(d)
+
+    def test_live_pack_process_match_is_repository_and_executable_exact(self):
+        root = Path(tempfile.mkdtemp()); repo = root / "repo"; repo.mkdir()
+        proc = root / "proc"; proc.mkdir()
+        for pid, cwd, cmd in [(1, repo, b"git\0repack\0-d\0"), (2, repo, b"/usr/lib/git-core/git\0status\0"),
+                              (3, root, b"pack-objects\0--stdin-packs\0"), (4, repo, b"/usr/lib/git-core/pack-objects\0--stdin-packs\0")]:
+            d = proc / str(pid); d.mkdir(); (d / "cwd").symlink_to(cwd); (d / "cmdline").write_bytes(cmd)
+        self.assertEqual(M.live_pack_processes(repo, proc), [1, 4])
+        shutil.rmtree(root)
+
+    def test_rev_never_lazy_fetches(self):
+        from unittest.mock import patch
+        seen = {}
+        def g(*a, **k):
+            seen.update(k); return subprocess.CompletedProcess([], 1, "", "")
+        with patch.object(M, "git", side_effect=g):
+            self.assertEqual(M.rev("0" * 40), "")
+        self.assertEqual(seen["env"]["GIT_NO_LAZY_FETCH"], "1")
+
+
+class TickStall(unittest.TestCase):
+    def test_run_group_kills_the_whole_group_on_timeout(self):
+        import time as _t
+        t0 = _t.time()
+        with self.assertRaises(subprocess.TimeoutExpired):
+            M.run_group("sleep 30 & sleep 30", 1)
+        self.assertLess(_t.time() - t0, 10)
+
+    def test_await_item_sets_a_slow_item_aside(self):
+        import concurrent.futures as CF, threading
+        from unittest.mock import patch
+        ev = threading.Event(); ex = CF.ThreadPoolExecutor(1)
+        fut = ex.submit(ev.wait, 30)
+        it = {"key": "k", "t0": 1.0}
+        with patch.object(M, "ITEM_SECS", 1), patch.object(M, "stall_alert"):
+            M.ASIDE.clear()
+            self.assertEqual(M.await_item({}, it, fut, 1)[0], "INFRA")
+            self.assertEqual(M.ASIDE, ["k"])
+        ev.set(); ex.shutdown(); M.ASIDE.clear()
+
+    def test_stall_alert_posts_once_per_window(self):
+        import time as _t
+        from unittest.mock import patch
+        st = {"last_merge_ts": _t.time() - M.STALL_SECS - 5}
+        with patch.object(M, "flush_posts"), patch.object(M, "save_state"), patch.object(M, "log"):
+            M.stall_alert(st, 3); M.stall_alert(st, 3)
+        self.assertEqual([p["line"].split("[")[0].split()[-1] for p in st["posts"]], ["ALERT"])
+
+    def test_no_alert_without_pending_or_when_recent(self):
+        import time as _t
+        st = {"last_merge_ts": _t.time()}
+        M.stall_alert(st, 5); M.stall_alert({"last_merge_ts": 1.0}, 0)
+        self.assertNotIn("posts", st)
 
 
 class MainFetchFreshness(unittest.TestCase):

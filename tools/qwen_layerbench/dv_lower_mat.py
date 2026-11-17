@@ -53,6 +53,7 @@ results/rtl/qlb_c4b_1018/dv_lower_mat/stn_ages.json.
 from __future__ import annotations
 
 import json
+import os
 import math
 from pathlib import Path
 
@@ -113,17 +114,36 @@ def stn_result_shift_max():
 
 
 def load_ages(path=None):
-    path = path or STN_AGES
+    path = path or os.environ.get("DV_MAT_AGES") or STN_AGES
     p = ROOT / path
     if not p.exists():
         raise LowerError(f'{path} missing: measure it (rtl/test/qwen_dv/dv_lower_mat_bench.py --calibrate)')
     a = json.loads(p.read_text())
-    for k in ('l8_ar', 'ar_hop', 'amax_ami', 'arx_after_amv', 'xc_cc'):
+    for k in (('l8_ar', 'ar_hop', 'xc_cc') if a.get('native_component_profile') else ('l8_ar', 'ar_hop', 'amax_ami', 'arx_after_amv', 'xc_cc')):
         if k not in a:
             raise LowerError(f'{path}: no {k}')
     if a['ar_hop'] != 2:
         raise LowerError(f'measured AR outbound hop {a["ar_hop"]} != 2 (slice2 chu_q pin + ch_dn_o register)')
+    if a.get('native_component_profile'):
+        flags={x.split('=',1)[0] for x in os.environ.get('DV_LOWER_VFLAGS','').split()}
+        if '-DOT_QC_AR_ROUND96' not in flags:
+            raise LowerError('native matrix profile requires explicit OT_QC_AR_ROUND96 selected source')
+        if D.SLICE_RTL != 's8' or a.get('slice_rtl') != 's8':
+            raise LowerError('native matrix component profile requires DV2_S8DIE=1')
+        if a.get('source_scope') != 'native_zero_parent_transport':
+            raise LowerError('native matrix profile has no explicit parent transport contract')
+        D.check_memory_profile(a, 'DV_MAT_AGES')
+        for k in ('station_r_v', 'result_age', 'stn_lead', 'command_to_stn_cfg', 'tile'):
+            if k not in a: raise LowerError(f'native matrix profile missing {k}')
     return a
+
+
+def result_age(ages, level, dst):
+    if ages.get('native_component_profile'):
+        name = 'ar' if dst == DST_AR else 'vm'
+        try: return ages['result_age'][name][str(level)]
+        except KeyError: raise LowerError(f'native matrix {name}/L{level} not qualified')
+    return ages['l8_ar'] + (7 if level == 9 else 0) - (7 if level == 7 else 0)
 
 
 # ------------------------------------------------------------------------------------------------ VM regions
@@ -255,10 +275,17 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
     dst = {'qkv': DST_VM, 'gu': DST_VM, 'o': DST_AR, 'down': DST_AR, 'lm_head': 0}[name]
     amax = int(name == 'lm_head')
     LAR = ages['l8_ar']
-    rv = LAR + (7 if lv == 9 else 0) - (7 if lv == 7 else 0)   # far word -> own AR word (L8 measured; L9 +1 add, L7 -1)
+    native = ages.get('native_component_profile', False)
+    if native and name == 'lm_head': raise LowerError('native LM/amax station profile is separately required')
+    rv = result_age(ages, lv, dst) # destination-specific native age; legacy retains its old level offsets
+    running_k = running_k or native
+    lead = ages['stn_lead'][name] if native else STN_LEAD
+    busy_age = ages['station_r_v'][str(lv)] if native else rv
+    result_guard = 1 if native else RV_SLACK
+    if native: period = ages['tile']['round_period'][name]
     kc = STN_KC[name]
     prefix_edges = (kc - 1) * 8 if running_k else 0
-    if running_k and dst != DST_AR:
+    if running_k and dst != DST_AR and not native:
         # All input k blocks must follow cfg, after the previous round drains.
         period = max(period, prefix_edges + rv + RV_SLACK + STN_LEAD + 8
                      + max(stn_busy_shift(s) - stn_cfg_shift(s) for s in range(N)))
@@ -273,8 +300,14 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
             else:
                 far = [t0 + r * period + j for j in range(sum(words_of(b) for b in bl) if lv != 7 else words_of(bl[0]))]
             nw = sum(words_of(b) for b in bl)
-            land = far[0] + stn_cfg_shift(s) - prefix_edges - STN_LEAD
-            lo = last_far.get(s, -10 ** 9) + rv + stn_busy_shift(s) + RV_SLACK
+            land = far[0] + stn_cfg_shift(s) - prefix_edges - lead
+            lo = last_far.get(s, -10 ** 9) + busy_age + stn_busy_shift(s) + result_guard
+            if native and name in ('o', 'down'):
+                # Late config follows the entire raw-near burst. Chain.put may move
+                # only inside this real gap, never onto a live near input.
+                raw_far = far[0] - prefix_edges
+                lo = max(lo, raw_far - ages['tile']['native_far'] + ages['tile']['native_near']
+                         + kc * 8 - ages['command_to_stn_cfg'])
             if land < lo:
                 raise LowerError(f'{name} round {r} slice {s}: STN window empty (land {land} < previous results {lo})')
             if role == 'snd':
@@ -300,13 +333,13 @@ def lower_matvec(name, t0, ages, chain, own=None, regions=None, row0=0, period=L
                         exp_vm.setdefault(s, {})[db + 16 * j] = BLOCK * b['block'] + 16 * jj
             e = chain.put(land, s, c, f'STN {name} r{r} s{s} {role}', earliest=lo)
             stn.append(dict(slice=s, round=r, role=role, entry=e, land=e + chain.arr[s], cmd=f'{c:029x}', nwords=nw,
-                            blocks=[b['block'] for b in bl]))
+                            blocks=[b['block'] for b in bl], **({'cfg_pin':e+chain.arr[s]+ages['command_to_stn_cfg']} if native else {})))
             # far-word deliveries: L7 lower pair (rs_s) = bl[0], upper pair (rs_n) = bl[1], same edges
             deliveries.append(dict(slice=s, round=r, role=role, far=far, blocks=[b['block'] for b in bl],
                                    words=[words_of(b) for b in bl]))
             last_far[s] = far[-1]
     return dict(name=name, level=lv, mode=MODE[lv], dst=dst, kc=kc, running_k=running_k,
-                k_block_words=8, period=period, prefix_edges=prefix_edges,
+                k_block_words=8, period=period, prefix_edges=prefix_edges, stn_lead=lead, result_age=rv, station_busy_age=busy_age,
                 stn=stn, deliveries=deliveries, expected_ar=exp_ar,
                 expected_vm=exp_vm, btab=lay)
 

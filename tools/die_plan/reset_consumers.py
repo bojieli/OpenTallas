@@ -108,8 +108,32 @@ def localize(text, declarations, tree, native_roles=None):
         # The shared root input must also be an actual relay on this same core clock.
         root = [c for c in calls.values() if c['module'] == 'ot_dp_rrelay'
                 and c['ports'].get('q', (None,))[0] == 'rst_root_n']
-        if len(root) != 1 or root[0]['ports'].get('clk', (None,))[0] != clock:
-            raise ResetConsumerError('unknown/different-clock common reset root')
+        relay_root = (tree.get('entry') != 'sync' and len(root) == 1
+                      and root[0]['ports'].get('clk', (None,))[0] == clock)
+        if not relay_root:
+            # QC SC die-root type: the declared synchronous-entry graph starts at
+            # the canonical two-flop root synchronizer, rather than u_rst_in.
+            # Both relocated branches still trace to this ONE actual same-clock
+            # root. Keep the ordinary relayed-root contract unchanged.
+            def canonical_sync_root(name, source, output):
+                c = calls.get(name)
+                if not c or c['module'] != 'ot_dp_rsync_s2':
+                    return False
+                ps = c['ports']
+                if set(ps) != {'clk', 'async_rst_n', 'sync_rst_n'}:
+                    return False
+                if (ps['clk'][0], ps['async_rst_n'][0], ps['sync_rst_n'][0]) != (clock, source, output):
+                    return False
+                drivers = [n for n, v in calls.items()
+                           if any(v['ports'].get(p, (None,))[0] == output for p in ('q', 'sync_rst_n'))]
+                return drivers == [name]
+
+            sync_root = (tree.get('entry') == 'sync' and tree.get('sync_stages') == 2
+                         and canonical_sync_root('u_rst_root', 'arst_n', 'rst_root_n'))
+            if sync_root and tree.get('start'):
+                sync_root = canonical_sync_root('u_run_root', 'start_i', 'run_root')
+            if not sync_root:
+                raise ResetConsumerError('unknown/different-clock common reset root')
         return first, depth
 
     required = {'instance', 'pin', 'old_reset', 'new_reset', 'clock_net'}

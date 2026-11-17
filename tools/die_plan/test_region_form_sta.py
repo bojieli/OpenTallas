@@ -114,3 +114,42 @@ def test_clock_start_retimes_by_default_and_can_be_turned_off(tmp_path, stubs, m
     assert "--start-retime-up" not in stubs["argv"] and "--start-lift" not in stubs["argv"]
     run(tmp_path, None, stubs, monkeypatch)                          # data START: retime needs a clock START tree
     assert "--start-retime-up" not in stubs["argv"]
+
+
+def _cap_file(tmp, fr, form="clock", proof="/p", fail=0, depth=4):
+    c = dict(summary=dict(frame=fr.meta(offsets=True), start_tree=dict(form=form),
+                          sta_interval=dict(proof=proof) if proof else {}, fail=fail,
+                          worst_margin_lo_ps=150.0, worst_margin_hi_ps=160.0),
+             crossings=[dict(port="ab", depth=depth, lat_cycles=4 if depth else None, frame_shift=1,
+                             margin_lo_ps=150.0, margin_hi_ps=160.0)])
+    p = tmp / "cap_in.json"
+    p.write_text(json.dumps(c))
+    return p
+
+
+def test_cap_in_uses_the_built_clock_result_not_the_model(tmp_path, stubs, monkeypatch):
+    pp, sp, fr = fixture(tmp_path, "clock")
+    monkeypatch.setattr(CF, "load", lambda plan, path=None, base=None: fr)
+    monkeypatch.setattr(LO, "score", lambda *a: (_ for _ in ()).throw(AssertionError("model must not run")))
+    rep = RF.sta(pp, tmp_path / "out.json", sp, tmp_path / "so.json", None, cap_in=_cap_file(tmp_path, fr))
+    assert "argv" not in stubs                                       # count_align_plan not re-run
+    p = rep["ports"][0]
+    assert (p["old"], p["new"], p["K_old"], p["K_new"]) == (2, 4, 1, 3)   # K absorbs, same frame
+    assert rep["proof"] == "/p" and not rep["post_check"] and rep["summary"]["start_retime"][0].startswith("cap-in")
+    out = json.loads((tmp_path / "out.json").read_text())
+    assert out["clock"]["landing_network"]["count_aligned_cycles"]["ab"] == 4
+
+
+def test_cap_in_fails_closed(tmp_path, stubs, monkeypatch):
+    pp, sp, fr = fixture(tmp_path, "clock")
+    monkeypatch.setattr(CF, "load", lambda plan, path=None, base=None: fr)
+    other = CF.Frame("wall_aligned", dict(a=0, b=1), dict(a="a", b="b"), "x", "0" * 64, "e" * 64)
+    with pytest.raises(RF.Conflict, match="count frame"):
+        RF.sta(pp, tmp_path / "o.json", sp, tmp_path / "s.json", None, cap_in=_cap_file(tmp_path, other))
+    with pytest.raises(RF.Conflict, match="START form"):
+        RF.sta(pp, tmp_path / "o.json", sp, tmp_path / "s.json", None, cap_in=_cap_file(tmp_path, fr, form="data"))
+    with pytest.raises(RF.Conflict, match="sta-proof"):
+        RF.sta(pp, tmp_path / "o.json", sp, tmp_path / "s.json", None, cap_in=_cap_file(tmp_path, fr, proof=None))
+    rep = RF.sta(pp, tmp_path / "o.json", sp, tmp_path / "s.json", None,
+                 cap_in=_cap_file(tmp_path, fr, fail=1, depth=None))
+    assert rep["summary"]["fail"] == 1 and "FAIL the CA ring" in rep["post_check"][0]

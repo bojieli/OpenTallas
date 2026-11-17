@@ -218,6 +218,17 @@ def _relay_mid_fit(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _ft_polarity_local(budgets, tn):
+    """S81-STRIP 11-16 (t47 ft2_o/ft6_o CTS -3956 ps: the QN inverter + port buffer of a face-edge FT station landed ~1000 um
+    from the station): ft_polarity_local.tcl keeps the polarity inverter beside its station.  Opt-in three ways like
+    relay_mid_fit, absent = unchanged kits: GEN env OT_FT_POLARITY_LOCAL=1, plan-wide budgets.ft_polarity_local, or per
+    type budgets.ft_polarity_local_types (types or unsplit base names)."""
+    if os.environ.get("OT_FT_POLARITY_LOCAL") == "1" or budgets.get("ft_polarity_local"):
+        return True
+    on = list(budgets.get("ft_polarity_local_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
 def _relay_polylines(P, tn):
     """FIX-RELAYPOLY 11-14 (FABLE-REVIEW-COL R-COL-4): opt-in plan partition_types.<t>.relay_polylines = [{group_re, sink,
     polyline_um [[x, y], ...], max_hop_um}], absent = unchanged kits.  One point = the source point of a soft-source head
@@ -2432,7 +2443,7 @@ def pgcap_cfg():
     out = ["# DRT0255 C3b: GRT per-gcell capacity cut on the PG pair rows/columns (pg_pair_cap.tcl, sourced last in grt_pre.tcl)",
            "export OT_PGCAP = 1"]
     pats = {"OT_PGCAP_LAYERS": r"M[1-9]( M[1-9])*", "OT_PGCAP_ADJ": r"(0(\.\d+)?|1(\.0+)?)",
-            "OT_PGCAP_GCELL_UM": r"\d+(\.\d+)?", "OT_PGCAP_EPS_DBU": r"\d+", "OT_PGCAP_MARGIN_DBU": r"\d+"}
+            "OT_PGCAP_GCELL_UM": r"\d+(\.\d+)?", "OT_PGCAP_EPS_DBU": r"\d+", "OT_PGCAP_MARGIN_DBU": r"\d+", "OT_PGCAP_FINITE_EXTENT": r"[01]"}
     for k, pat in pats.items():
         v = os.environ.get(k, "").strip()
         if v:
@@ -5198,9 +5209,44 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
+def fixed_bb_default_parameters(mod, bb_text, rtl_files, root=None, staged=None):
+    """Preserve a fixed physical ABI while restoring omitted numeric default metadata.
+
+    A signed fixed-port blackbox can omit parameters that its logical caller still
+    sets. The defaults come from the unambiguous native declaration, never from
+    caller overrides; native_bb still rejects an elaborated value that differs.
+    """
+    import native_bb
+    if staged is None:
+        staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files if Path(f).is_file())
+    requested = set(_macro_instance_overrides(staged, mod))
+    present = native_bb.header_params(bb_text).get(mod, {})
+    missing = requested - set(present)
+    if not missing:
+        return None
+    headers = [(h, Path(f)) for f in rtl_files if Path(f).is_file()
+               and not Path(f).name.endswith(("_bb.v", "_bb.sv"))
+               and (h := _module_header(Path(f).read_text(errors="replace"), mod))]
+    if not headers and root:
+        headers = _tree_module_headers(Path(root) / "rtl", mod)
+    choices = []
+    for header, path in headers:
+        if "`" in header:
+            continue  # no guessing an inactive conditional declaration
+        params = native_bb.header_params(header + "\nendmodule").get(mod, {})
+        if missing <= set(params) and all(params[k][0] == "int" for k in missing):
+            choices.append({k: params[k][1] for k in missing})
+    if not choices or any(c != choices[0] for c in choices):
+        raise ValueError(f"macro {mod}: fixed blackbox lacks {sorted(missing)}; numeric native defaults are not unique")
+    declarations = "".join(f"    parameter {k} = {v};\n" for k, v in sorted(choices[0].items()))
+    if len(re.findall(r"\bendmodule\b", bb_text)) != 1:
+        raise ValueError(f"macro {mod}: fixed blackbox must contain exactly one module")
+    return re.sub(r"\bendmodule\b", declarations + "endmodule", bb_text, count=1)
+
+
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=(), plan_dir=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
-    and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
+    and that has no _bb view yet (or lacks numeric default metadata); header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
@@ -5216,6 +5262,14 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
         if f"{mod}_bb.v" in have or f"{mod}_bb.sv" in have:
             if mod in declared_ft:
                 raise ValueError(f"macro {mod}: explicit FT header conflicts with existing blackbox")
+            if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
+                continue
+            bb = next(Path(f) for f in rtl_files if Path(f).name in (f"{mod}_bb.v", f"{mod}_bb.sv"))
+            enriched = fixed_bb_default_parameters(mod, bb.read_text(), rtl_files, root, staged)
+            if enriched is not None:
+                dst = rtl_dir / bb.name
+                dst.write_text(enriched)
+                out.append(dst)
             continue
         if mod not in declared_ft and not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
             continue
@@ -5976,6 +6030,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
            *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
@@ -6015,6 +6070,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import fully_fixed_macros as FFM
     cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
     cfg += install_gp_noconverge_gate(kd, cfg, P.name)
+    cfg += gpl_sparse_overflow_cfg(P.name)
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -6301,6 +6357,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             f.write("\nsource /work/reset_physical_stages.tcl\n")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
+    if os.environ.get("OT_S81_VPW_BANK") == "1":
+        # Strip form B: physical bank-end clustering only; RTL and cycles come from the bound XR source.
+        import s81_vpw_bank
+        s81_vpw_bank.install(kd)
     if region_guide:
         # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D, opt-in gen phys --region-guide TYPE=SPEC): soft GPL region
         # guides per failing r2r bit slice (tools/die_plan/region_guide.py plan of the kit's last AUTO-GEOM), sourced
@@ -6520,6 +6580,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
+    shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
     shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
     shutil.copyfile(Path(__file__).with_name("lec_completed_reference.py"), kd / "lec_completed_reference.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
@@ -6702,8 +6763,52 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
     shutil.copyfile(here.parent / "autopilot" / "gp_noconverge.py", kd / "gp_noconverge.py")
     return ["# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
             "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"] + (
+        [f"# PLACE-HPWL (FABLE-PD-S81-STRIP): GPL exit HPWL > {hr} x the run minimum ends the run before resize",
+         f"export OT_GPL_HPWL_RATIO = {hr}"] if (hr := gpl_hpwl_ratio(die)) else []) + (
         [f"# KW-FIX-45 PLACE-FANOUT: place-stage repair_design limit (gp_noconverge_gate.tcl set_max_fanout)",
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
+
+
+def gpl_sparse_overflow(die=None):
+    """SPARSE EXIT (FABLE-FIX-S81-STRIP 11-16): the gen environment's OT_GPL_SPARSE_OVERFLOW (0 = off, else a number in
+    (0, 1)) -> the Nesterov exit overflow of a sparse kit (face_flops.tcl OT_GPL_GUARD rule 3), else 0.25 on the S81 die
+    and off elsewhere.  S81 strip leaves (movable util < 1 %): the phase from overflow 0.25 to the 0.10 default moved the
+    median cell 98 um on t75 and left t47 / t75 / t8fix at 1.8-2.4 x the HPWL the run had reached; exit at 0.25 is
+    1.026 x with 2.0 um average detailed-placement displacement.  Not measured on the other dies."""
+    v = os.environ.get("OT_GPL_SPARSE_OVERFLOW", "").strip()
+    if v:
+        try:
+            r = float(v)
+        except ValueError:
+            raise ValueError(f"OT_GPL_SPARSE_OVERFLOW must be a number (0 = off, else in (0, 1)), got {v!r}") from None
+        if not 0 <= r < 1:
+            raise ValueError(f"OT_GPL_SPARSE_OVERFLOW must be 0 (off) or in (0, 1), got {v!r}")
+        return r or None
+    return 0.25 if str(die or "").split("_")[0] == "s81" else None
+
+
+def gpl_sparse_overflow_cfg(die=None):
+    """config.mk lines of the sparse exit (none when it is off)."""
+    v = gpl_sparse_overflow(die)
+    return [f"# SPARSE EXIT (FABLE-FIX-S81-STRIP): a sparse kit leaves global placement at overflow {v:g}, before the die-scale drift",
+            f"export OT_GPL_SPARSE_OVERFLOW = {v:g}"] if v else []
+
+
+def gpl_hpwl_ratio(die=None):
+    """PLACE-HPWL (FABLE-PD-S81-STRIP 11-16): the gen environment's OT_GPL_HPWL_RATIO (a number > 1; 0 = off) -> the kit's
+    PLACE-HPWL limit, else 1.3 on the S81 die (strip leaves t47 / t75 / t8fix diverged to 1.8-2.4 x, good leaves 1.01-1.05)
+    and off elsewhere: other dies' exit / minimum ratio is not yet measured (their table minimum can sit at a clustered
+    initial placement)."""
+    v = os.environ.get("OT_GPL_HPWL_RATIO", "").strip()
+    if v:
+        try:
+            r = float(v)
+        except ValueError:
+            raise ValueError(f"OT_GPL_HPWL_RATIO must be a number (0 = off, else > 1), got {v!r}") from None
+        if r != 0 and r <= 1:
+            raise ValueError(f"OT_GPL_HPWL_RATIO must be 0 (off) or > 1, got {v!r}")
+        return r or None
+    return 1.3 if str(die or "").split("_")[0] == "s81" else None
 
 
 def place_max_fanout(die=None):
@@ -6759,6 +6864,13 @@ if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resum
       exit 12
     fi
   fi
+fi
+# KWRS-END
+# STAGE-CAP block (COORD 11-17, FLEET-OPS-R): bounds the stage ODBs this kit writes from now on; refusal-free, no physical step  # KWRS-BEGIN
+# Keeps 1_synth, the step boundaries (2_floorplan 3_place 4_cts 5_1_grt = diagnosis anchors) and the latest final; drops the
+# other intermediates once the successor stage is written (stage_odb_cap.py).  OT_KEEP_STAGE_ODBS=1 or K/.keep_stage_odbs opts out.
+if [ "${OT_KEEP_STAGE_ODBS:-0}" != 1 ] && [ ! -f "$K/.keep_stage_odbs" ] && [ -f "$K/stage_odb_cap.py" ]; then
+  nohup python3 -I "$K/stage_odb_cap.py" --watch "$K/run/results/asap7" --kit "$K" --max-hours 36 >>"$K/stage_odb_cap.log" 2>&1 </dev/null &
 fi
 # KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then

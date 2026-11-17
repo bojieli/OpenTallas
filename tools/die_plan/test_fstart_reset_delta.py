@@ -75,3 +75,20 @@ def test_generator_accepts_the_rows_and_far_leaf_fails_closed():
         F.apply_kit(RTL, tcl, bad, "t")
     with pytest.raises(D.DeltaError):
         D.type_delta("t", typ(), RTL, A, ".", span=200.0, reach=30.0)
+
+
+def test_type_without_fstart_flops_is_byte_as_plan():
+    # S81 C4R1 t37: no FSTART face flop, no count origin -> no cland_start_raw; nothing to do, no error
+    import re
+    rtl = re.sub(r"\n.*cland_[^\n]*", "", RTL)
+    assert "cland" not in rtl
+    t = typ()
+    before = copy.deepcopy(t)
+    assert D.type_delta("t", t, rtl, A, ".", span=200.0) == ([], [])
+    assert t == before
+
+
+def test_fstart_flops_without_the_shared_raw_still_fail_closed():
+    rtl = RTL.replace("    assign cland_start_raw = cland_reset_a_i;\n", "")
+    with pytest.raises(D.DeltaError, match="no cland_start_raw"):
+        D.type_delta("t", typ(), rtl, A, ".", span=200.0)

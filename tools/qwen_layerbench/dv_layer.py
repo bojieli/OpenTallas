@@ -27,6 +27,7 @@ Usage: dv_layer.py --out FILE.json [--stage 1] [--tile-first 40] [--ar-order row
 from __future__ import annotations
 
 import argparse
+import os
 import json
 import sys
 from pathlib import Path
@@ -104,6 +105,14 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     P = {p['pc']: p for p in plan if p['pc'] is not None and p['kind'] in ('SU', 'ME', 'NATIVE', 'END')}
     XCp = [p for p in plan if p['kind'] == 'XC']
     ages = M.load_ages()
+    native_mat = ages.get('native_component_profile', False)
+    if native_mat:
+        if not D.load_ages().get('composition', {}).get('native_zero_parent_transport'):
+            raise ValueError('native matrix profile requires explicit native zero-parent SU ages')
+        if D.stn_transport():
+            raise ValueError('native matrix base profile cannot absorb an unqualified parent station transport')
+        tile_mode = 'native_component'
+        tile_meas = ages['tile_meas']
     own = D.ownership()
     smap = D.slice_map()
     gaps, notes = [], []
@@ -140,19 +149,41 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
     sl, _ = fam['silu']
     sl_c0 = min(c['edge'] for c in sl['commands'])
     sl_end = max(x['edge_e5'] for x in sl['expected']['x'])
-    rv = {7: ages['l8_ar'] - 7, 8: ages['l8_ar'], 9: ages['l8_ar'] + 7}
+    rv = ({7:M.result_age(ages,7,M.DST_VM),8:M.result_age(ages,8,M.DST_AR),9:M.result_age(ages,9,M.DST_VM)}
+          if native_mat else {7: ages['l8_ar'] - 7, 8: ages['l8_ar'], 9: ages['l8_ar'] + 7})
 
     def go_w5(at):
         return at + C['ISSUE_TO_ROM'] + R['R_HR']
 
     tile_note = []
+    native_stn_windows = []
+    def matrix_windows(low):
+        if not native_mat: return
+        for row, delivery in zip(low['stn'], low['deliveries']):
+            raw_far = delivery['far'][0] - low['prefix_edges']
+            cfg = row['cfg_pin']
+            if low['name'] in ('o', 'down'):
+                earliest = raw_far - 55 + low['kc'] * 8
+                latest = raw_far - 3
+                if not earliest <= cfg <= latest:
+                    raise M.LowerError(f"{low['name']} native late cfg {cfg} outside [{earliest},{latest}]")
+            else:
+                earliest = None; latest = raw_far - 55 - 3
+                if cfg > latest:
+                    raise M.LowerError(f"{low['name']} native pre-near cfg {cfg} later than {latest}")
+            native_stn_windows.append(dict(matvec=low['name'],slice=row['slice'],round=row['round'],
+                                           flat_command=row['land'],cfg_pin=cfg,earliest=earliest,latest=latest,raw_far=raw_far))
     ar_messages = []
 
     def mv_land(name, at, done):
         """VM-destination matvec: the column tiles deliver the far words; with tile_first the DV tail is lowered, the
         tile compute is the ctlm price (the last result lands no earlier than the priced ME done)"""
         tf = tile_first
-        if tile_mode == 'measured':                      # tiles: first rs word / last final word measured from hr go
+        if native_mat:
+            m = tile_meas[name]
+            tf = m['first_final'] + m['far']
+            done = go_w5(at) + m['last_final'] + m['far'] + rv[own[name]['level']]
+        elif tile_mode == 'measured':                      # tiles: first rs word / last final word measured from hr go
             m = tile_meas[name]
             tf = m['first_rs'] + m['far']
             done = go_w5(at) + m['last_final'] + m['far'] + rv[own[name]['level']] + M.stn_result_shift_max()
@@ -165,20 +196,25 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
             tf += done - land
         tile_note.append(dict(matvec=name, tile_first_eff=tf, dv_tail=land - (go_w5(at) + tf), land=land, priced_done=done,
                               go_w5=go_w5(at)))
+        matrix_windows(low)
         return low, ch, go_w5(at) + tf, land
 
     def mv_ar(name, at, done):
         tf = tile_first
-        if tile_mode == 'priced':                        # the last AR word leaves W5 no earlier than the priced ME done
+        if native_mat:
+            m = tile_meas[name]
+            tf = m['first_final'] + m['far'] + ages['native_ar_hgd_base']
+        elif tile_mode == 'priced':                        # the last AR word leaves W5 no earlier than the priced ME done
             tf = max(tf, done - 255 - go_w5(at) - ages['l8_ar'] - M.stn_result_shift_max() - 2 * (N - 1))
         elif tile_mode == 'measured':                    # first AR word after the first measured final word, last after the last
             m = tile_meas[name]
             tf = max(m['first_final'] + m['far'], m['last_final'] + m['far'] - 255)
         tile_note.append(dict(matvec=name, tile_first_eff=tf, priced_done=done, go_w5=go_w5(at)))
         ch = M.Chain(smap)
-        t0 = go_w5(at) + tf + ages['l8_ar'] + M.stn_result_shift_max() + 2 * (N - 1)
+        t0 = go_w5(at) + tf + ages['l8_ar'] + M.stn_result_shift_max() + (0 if native_mat else 2 * (N - 1))
         x = M.lower_xc(ch, ages, t0, 4096 // 16, 0)
         low = M.lower_matvec(name, t0, ages, ch, own=own)
+        matrix_windows(low)
         coll = M.ar_collisions(low, ages)
         if coll:
             gaps.append(f'{name}: AR outbound lane collisions {coll[:2]}')
@@ -448,6 +484,15 @@ def compose(stage=1, tile_first=40, ar_order='row', lane_ages=LANE_AGES, tile_mo
                                                          'ctlm')}),
         capacity=cap, ar_framing=ar_framing, gaps=gaps, notes=notes,
         events=[dict(edge_w5=e + R['R_CMD'], cmd=f'{c:029x}', label=l) for e, c, l in events])
+    if native_mat:
+        for stage_row in out['composition']['stages']:
+            if 'matvec' in stage_row['stage']:
+                stage_row['source'] = 'Explicit native matrix component profile: selected tile51/CBnear165/far220, actual running-K dates, station55, destination-specific publication and source-qualified round96'
+        out['gaps'] = [g for g in out['gaps'] if not g.startswith('TILE DELIVERY:')]
+        out['gaps'].append('NATIVE MATRIX SOURCE BIND: component timing and exact config windows are composed; select measured CB55 station, round96 head/tile and separately qualified GO-phase cache in the actual bound source. Final parent transport and physical views remain separate.')
+        out['native_matrix'] = dict(profile=os.environ.get('DV_MAT_AGES'), source_scope=ages['source_scope'],
+                                    ages=ages, station_config_windows=native_stn_windows, installed=False,
+                                    bound_parent_transport_qualified=False)
     if correct_residual2:
         out['native_residual2_operand'] = 'PS2'
     return out

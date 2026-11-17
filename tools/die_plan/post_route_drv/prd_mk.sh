@@ -160,14 +160,27 @@ if [ -z "$(echo $ML_TT)" ]; then
   ML_TT=$(sed -n 's/^\(override \)\{0,1\}export TC_LIB_FILES *[?:+]\{0,1\}= *//p' $OUT/config.mk | tail -n 1 |
           tr ' ' '\n' | { grep -v -e '^\$(' -e '^$' || true; } | tr '\n' ' ' | sed 's/ $//')
 fi
-# macro libs: *_tt.lib -> *_ff.lib; explicit ASAP7 standard-cell libs (e.g. INVBUF_LVT of an LVT clock context, platform
-# path or a /work copy): <group>_<VT>_TT_nldm_ -> _FF_nldm_ (same release dates in the PDK); platform paths live in the
-# image, not in the kit (DIE-KV-46 10-30: the TT LVT lib was taken as a missing FF macro lib)
-ML_FF=$(echo "$ML_TT" | sed -E 's/_tt\.lib/_ff.lib/g; s/(asap7sc7p5t_[A-Z]+_(RVT|LVT|SLVT))_TT_nldm_/\1_FF_nldm_/g')
-for f in $ML_FF; do
-  case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
-  test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
-done
+# A declared BC list owns the corner mapping, including custom names such as
+# pk2_tc.lib -> pk2_BC.lib. Keep its RHS; guessing from ADDITIONAL_LIBS would
+# silently append the TT macro back into the BC session.
+BC_LINE=$(sed -n '/^\(override \)\{0,1\}export BC_LIB_FILES *[?:+]\{0,1\}=/p' "$OUT/config.mk" | tail -n 1)
+if [ -n "$BC_LINE" ]; then
+  BC_RHS=$(printf '%s\n' "$BC_LINE" | sed 's/^[^=]*= *//')
+  for f in $BC_RHS; do
+    case "$f" in
+      /work/*) test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing declared FF macro lib $f"; exit 2; } ;;
+    esac
+  done
+else
+  # No explicit BC list: retain the established macro / ASAP7 suffix fallback.
+  # Platform standard-cell libraries live in the image, not in the kit.
+  ML_FF=$(echo "$ML_TT" | sed -E 's/_tt\.lib/_ff.lib/g; s/(asap7sc7p5t_[A-Z]+_(RVT|LVT|SLVT))_TT_nldm_/\1_FF_nldm_/g')
+  for f in $ML_FF; do
+    case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
+    test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
+  done
+  BC_RHS='$(BC_NLDM_LIB_FILES)'" $ML_FF"
+fi
 # KV-ECTLK-RL 11-15: the marker is the block's own PRE_GLOBAL_ROUTE_TCL line, not the comment: a kit that carries the
 # comment text (KV-50 / KV-51 note) made prd_mk skip the whole block (eco_grt_pre.tcl, eco_post.tcl): NO-OP ECO, no clk_freeze_pre.tsv
 if ! grep -q '^override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl$' $OUT/config.mk; then
@@ -191,7 +204,7 @@ test -z "$KPRE" -o "$KPRE" = /work/eco_drt_pre.tcl || echo "override export OT_E
 cat >> $OUT/config.mk <<CFG
 override export PRE_DETAIL_ROUTE_TCL = /work/eco_drt_pre.tcl
 export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES) $ML_TT
-export BC_LIB_FILES = \$(BC_NLDM_LIB_FILES) $ML_FF
+export BC_LIB_FILES = $BC_RHS
 override export PWR_NETS_VOLTAGES =
 override export GND_NETS_VOLTAGES =
 CFG

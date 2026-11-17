@@ -254,6 +254,48 @@ class KitWave(Base):
         self.assertEqual(a, b)
 
 
+class ViewHashGate(Base):
+    """KV-R 11-16 (FABLE-FLOW-2000): a tree with a frozen view whose bytes differ from the sha its provenance records cannot be built"""
+
+    def _evidence(self, bad):
+        import hashlib
+        h = lambda b: hashlib.sha256(b).hexdigest()
+        good_tool, tool = b"frozen tool", (b"edited later" if bad else b"frozen tool")
+        so, lef, lib = b"{}", b"LEF", b"LIB"
+        prov = {"kit": {"face_guard_sha256": h(good_tool)},
+                "export": {"signoff_sha256": h(so), "files_sha256": {"m1.lef": h(lef), "m1_tt.lib": h(lib)}}}
+        files = {"provenance.json": json.dumps(prov).encode(), "signoff.json": so, "m1.lef": lef, "m1_tt.lib": lib, "face_guard_source.py": tool}
+        files["manifest.json"] = json.dumps({"master": "m1", "sha256": {k: h(v) for k, v in files.items() if k != "provenance.json"}}).encode()
+        ov = json.load(open(self.ovj))
+        for n, b in files.items():
+            open(self.t + "/ov/ev_" + n, "wb").write(b)
+            ov["files"]["tools/die_plan/v/m1/landing_evidence/" + n] = {"from": "ev_" + n, "sha256": h(b)}
+        json.dump(ov, open(self.ovj, "w"))
+
+    def test_good_view_builds(self):
+        self._evidence(bad=False)
+        m = self.build()
+        self.assertTrue(m["manifest_hash"])
+        self.assertEqual(SM.view_hash_errors(self.out), [])
+
+    def test_wrong_bytes_view_refuses_and_leaves_no_tree(self):
+        self._evidence(bad=True)
+        with self.assertRaises(SystemExit) as c:
+            self.build()
+        self.assertIn("frozen view hash mismatch", str(c.exception))
+        self.assertIn("face_guard_source.py", str(c.exception))
+        self.assertFalse(os.path.exists(self.out))
+        self.assertFalse(os.path.exists(self.out + ".building"))
+
+    def test_view_hash_errors_names_a_stale_tree_view(self):
+        self._evidence(bad=False)
+        self.build()
+        ev = self.out + "/tools/die_plan/v/m1/landing_evidence/face_guard_source.py"
+        os.chmod(ev, 0o644)
+        open(ev, "wb").write(b"edited later")
+        self.assertTrue(any("face_guard_source.py" in e for e in SM.view_hash_errors(self.out)))
+
+
 if __name__ == "__main__":
     unittest.main()
 

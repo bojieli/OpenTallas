@@ -4,7 +4,7 @@
 // Issue authority is compiled START dates; physical codecs are in ot_s81hd_ctl_core.
 // The current spine root already merges north/south; feeding both comparison inputs the same
 // root record preserves that record exactly and retains the established two-edge pick latency.
-module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0, parameter integer SRAM_RAW_CAPTURE=0, parameter integer SRAM_PARTIAL_CAPTURE=0, parameter integer CTL_PRE=0, parameter integer CTL_WINDOW_PRE=0) (
+module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT_STATIC=0, parameter integer MUT_DRAFT_EARLY=0, parameter integer ING_STAGE=0, parameter integer SEQ_WB=0, parameter integer SEQ_FAN=0, parameter integer SEQ_RST=0, parameter integer SRAM_RAW_CAPTURE=0, parameter integer SRAM_PARTIAL_CAPTURE=0, parameter integer CTL_PRE=0, parameter integer CTL_WINDOW_PRE=0, parameter integer MCHK_LOCAL=0) (
     input wire start_i, input wire adapter_fault,
     output wire job_active_o,
     input  wire              ck,
@@ -465,9 +465,18 @@ module ot_s81hd_ctl_hsf0_static #(parameter integer SK=11, parameter integer MUT
     always @(posedge ck) begin
         mg_t <= r_own[80:50];
         mchk_tag <= (r_p0[80:50] != r_own[80:50]) || (r_p1[80:50] != r_own[80:50]) || (r_p2[80:50] != r_own[80:50]);
-        mchk_cpy <= (r_p0 != r_p0b) || (r_p1 != r_p1b) || (r_p2 != r_p2b);
+
         mchk_nan <= isnan(r_own[49:18]) || isnan(r_p0[49:18]) || isnan(r_p1[49:18]) || isnan(r_p2[49:18]);
     end
+    // No added cycle: OR of registered local mismatch bits equals the old
+    // registered OR, including record updates on consecutive edges.
+    generate if(MCHK_LOCAL)begin:g_mchk_local
+        wire local_cpy;
+        ot_s81hd_ctl_copycheck u_check(.ck(ck),.a({r_p2,r_p1,r_p0}),.b({r_p2b,r_p1b,r_p0b}),.mismatch(local_cpy));
+        always@* mchk_cpy=local_cpy;
+    end else begin:g_mchk_global
+        always@(posedge ck) mchk_cpy <= (r_p0 != r_p0b) || (r_p1 != r_p1b) || (r_p2 != r_p2b);
+    end endgenerate
     always @(posedge ck or negedge rr[6]) if (!rr[6]) begin mg1 <= 1'b0; mg2 <= 1'b0; mg3 <= 1'b0; mg4 <= 1'b0; end
                                            else begin mg1 <= mg_fire; mg2 <= mg1; mg3 <= mg2; mg4 <= mg3; end
     // ================================================================== RESULT -> dsfd_mtp_seq
@@ -791,4 +800,26 @@ module ot_s81hd_ctl_grx #(parameter integer W = 512) (
             v0 <= l_v; v1 <= v0;
             hv <= (hv && !pop) || v1;
         end
+endmodule
+
+// HEAD-CTL-MCHK-LOCAL: register each duplicate-record word comparison at its
+// producer, then carry only one bit per word to the sticky-fault collector.
+// Exactly the same one-edge check as registering the combined comparison.
+module ot_s81hd_ctl_copycheck #(parameter integer W=81, P=3, WORD=32,
+ parameter integer MUT=0)(input wire ck,input wire[P*W-1:0]a,b,output wire mismatch);
+ localparam integer NW=(W+WORD-1)/WORD;
+ wire[P*NW-1:0]part;
+ genvar k,g;
+ generate for(k=0;k<P;k=k+1)begin:g_pair
+  for(g=0;g<NW;g=g+1)begin:g_word
+   localparam integer L=(W-g*WORD<WORD)?W-g*WORD:WORD;
+   (* keep=1 *) reg diff;
+   always@(posedge ck)diff<=a[k*W+g*WORD+:L]!=b[k*W+g*WORD+:L];
+   if(MUT==1 && k==P-1 && g==1)begin:g_drop assign part[k*NW+g]=1'b0;end
+   else begin:g_normal assign part[k*NW+g]=diff;end
+  end
+ end endgenerate
+ wire combined=|part;
+ generate if(MUT==2)begin:g_late reg q;always@(posedge ck)q<=combined;assign mismatch=q;end
+ else begin:g_exact assign mismatch=combined;end endgenerate
 endmodule

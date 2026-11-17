@@ -351,8 +351,32 @@ module ot_s81_rate_match #(parameter integer RLEAF = 0, parameter integer RPC = 
     always @(posedge rclk or negedge rrn_c)
         if (!rrn_c) begin rp <= 0; rp_g <= 0; end
         else if (!empty) begin rp <= rp + 1'b1; rp_g <= (rp + 1'b1) ^ ((rp + 1'b1) >> 1); end
+    // HEAD sd9e: retain the RPC read-selector replicas in the staged form.
+    // Their state is the same read pointer as in the unstaged RPC form; only
+    // the captured word has the one explicitly priced rclk pipeline edge.
+    generate if (RPC <= 1) begin : g_staged_rp1
+        always @(posedge rclk) r_m <= empty ? 512'd2 : mem[rp[2:0]];
+    end else begin : g_staged_rpc
+        localparam integer RSW = (512 + RPC - 1) / RPC;
+        localparam [511:0] RIDLE = 512'd2;
+        genvar gc;
+        for (gc = 0; gc * RSW < 512; gc = gc + 1) begin : g_c
+            localparam integer LO = gc * RSW, SW = (LO + RSW > 512) ? (512 - LO) : RSW;
+            (* keep *) reg [2:0] rpq;
+            wire [511:0] rw = mem[rpq];
+            always @(posedge rclk or negedge rrn_c)
+                if (!rrn_c) rpq <= 3'd0;
+                else if (!empty) begin
+`ifdef RMSTAGED_MUT_STALE
+                    if (gc != 5 || rp[3]) rpq <= rpq + 3'd1;
+`else
+                    rpq <= rpq + 3'd1;
+`endif
+                end
+            always @(posedge rclk) r_m[LO +: SW] <= empty ? RIDLE[LO +: SW] : rw[LO +: SW];
+        end
+    end endgenerate
     always @(posedge rclk) begin
-        r_m <= empty ? 512'd2 : mem[rp[2:0]];
 `ifdef RMMUT_NOSTAGE
         r_d <= empty ? 512'd2 : mem[rp[2:0]];
 `else

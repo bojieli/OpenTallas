@@ -180,6 +180,18 @@ def test_hop_latch_follows_launch_station_tap(tmp_path):
     assert 'hop latches: 1 on their launch station' in out and '(1 re-hung)' in out, out
 
 
+def test_nk_lockup_latch_follows_launch_register_tap(tmp_path):
+    # QC-MCLK lever 2: u_lk_nk_* (NK core-input lockup latch) rides the tap of the register that drives it
+    fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
+    src = HOPLATCH.replace('u_fl_ft0_s0', 'u_lk_nk_u_t_0_2_tap').replace('u_ft_ft0_s0', 'u_pc_nk_u_t_0_2_tap')
+    p = run(tmp_path, src + fill)
+    assert p.returncode == 0, p.stderr
+    out = p.stdout
+    assert 'NET ck_u_lk_nk_u_t_0_2_tap/q_0 nclk' in out, out
+    assert 'NET ck_plain nt1' in out
+    assert 'hop latches: 1 on their launch station' in out and '(1 re-hung)' in out, out
+
+
 CORETAP = r"""
 # DIE-HEAD-87 11-08: OpenDB stores generate-loop instance names with escaped brackets; core_taps.txt carries the
 # plain name.  The core tap must still find the pair macro and move its clock pin to clk_c0.

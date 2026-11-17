@@ -202,9 +202,17 @@ def judge(rec, die=None):
                                                             f"(P_die {die_period_ps(die):g} ps)"))
     if gates["hold_ff"] != "PASS":
         reasons.append(f"hold_ff: {gates['hold_ff']}" + ("" if ff is None else f" WNS {ff:+.2f} ps < {HOLD_MIN_PS:g}"))
+    # HEAD-DIE-R 11-17 (COORD): balance pads on a forwarded-clock output (fwd_pad_check.py) shift the receiver's
+    # landing clock by ns at die level while the type STA stays clean: blocking whenever the record measured it
+    fp = (rec.get("checks") or {}).get("fwd_pads")
+    if isinstance(fp, dict) and fp.get("verdict") in ("PASS", "FAIL"):
+        gates["fwd_pads"] = fp["verdict"]
+        if fp["verdict"] == "FAIL":
+            reasons.append(f"fwd_pads: FAIL {', '.join(fp.get('failing') or [])} max {fp.get('max_pads')} "
+                           f"delaybuf_otstb > {fp.get('limit')} on fclk_out")
     adv = []
     for k, v in sorted((rec.get("checks") or {}).items()):
-        if k in MINIMAL_GATES or not isinstance(v, dict):
+        if k in MINIMAL_GATES or k == "fwd_pads" or not isinstance(v, dict):
             continue
         if v.get("verdict") not in ("PASS", "REPORT", "WARN", None):
             adv.append(f"{k}: {v.get('verdict')}")

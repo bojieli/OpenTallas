@@ -477,6 +477,11 @@ def _vid(name):
     return "\\" + name + " "
 
 
+def _vid_identifier(name):
+    """A whole instance identifier: brackets are literal, never a bus select."""
+    return name if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_$]*", name) else chr(92) + name + " "
+
+
 # ----------------------------------------------------------------------------------------------------------------- ILM
 def extract_ilm(nl, cells, clock_ports=None):
     """reduce a flat netlist to its interface logic model (see module doc).  -> (Netlist, kept nets, stats)."""
@@ -666,7 +671,7 @@ def write_ilm_verilog(nl, red, wires, path):
                 cs.append(f".{_vid(p).strip()}()")
                 continue
             cs.append(f".{_vid(p).strip()}({ex(bits[0]) if len(bits) == 1 else '{' + ', '.join(ex(x) for x in bits) + '}'})")
-        L.append(f"  {_vid(cell)} {_vid(inst)} ({', '.join(cs)});")
+        L.append(f"  {_vid(cell)} {_vid_identifier(inst)} ({', '.join(cs)});")
     L.append("endmodule\n")
     Path(path).write_text("\n".join(L))
 

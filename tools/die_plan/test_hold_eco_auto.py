@@ -106,5 +106,50 @@ class AutoPlanSta(unittest.TestCase):
             self.assertTrue(all(1 <= n <= 4 for _, n in rows))
 
 
+@unittest.skipUnless(shutil.which("tclsh"), "tclsh missing")
+class TwoModeCell(unittest.TestCase):
+    """COORD 11-16: a two-mode kit loads HB4 twice (TC + BC): two handles, one cell name."""
+    INS = HERE / "post_route_drv/hold_eco_internal_insert.tcl"
+
+    def snippet(self, handles):
+        txt = self.INS.read_text()
+        a = txt.index("  set cells [get_lib_cells")
+        b = txt.index("unset_dont_use $cells")
+        body = txt[a:b]
+        script = ("proc get_lib_cells {args} {return {%s}}\nproc get_name {c} {return [lindex [split $c :] 0]}\n"
+                  "if {[catch {%s\nputs OK:[llength $cells]} m]} {puts \"ERR:$m\"}\n") % (" ".join(handles), body)
+        r = subprocess.run(["tclsh"], input=script, capture_output=True, text=True)
+        return r.stdout.strip()
+
+    def test_same_name_twice_is_one_cell(self):
+        self.assertEqual(self.snippet(["HB4xp67_ASAP7_75t_R:tc", "HB4xp67_ASAP7_75t_R:bc"]), "OK:2")
+
+    def test_one_handle_still_works(self):
+        self.assertEqual(self.snippet(["HB4xp67_ASAP7_75t_R:tc"]), "OK:1")
+
+    def test_missing_or_different_cells_still_fail_closed(self):
+        self.assertIn("not unique", self.snippet([]))
+        self.assertIn("not unique", self.snippet(["HB4xp67_ASAP7_75t_R:tc", "HB4xp33_ASAP7_75t_R:bc"]))
+
+
+class Selection(unittest.TestCase):
+    def test_only_failing_endpoints_plus_the_guard_band_are_selected(self):
+        hdr = "endpoint\tstartpoint\tstart_kind\tend_kind\tff_hold_slack_ps\ttt_setup_slack_ps\n"
+        rows = "".join(f"u/ok{i}/D\ts\treg\treg\t{3.0 + (i % 6)}\t400\n" for i in range(1440))     # +3 .. +8: under +10, not failing
+        rows += "u/bad/D\ts\treg\treg\t-12.5\t400\nu/edge/D\ts\treg\treg\t1.5\t400\n"          # failing, and inside the 2 ps guard band
+        p = H.plan(H.read_endpoints(hdr + rows))
+        self.assertEqual([e for e, _ in p["cells"]], ["u/bad/D", "u/edge/D"])
+        self.assertEqual(dict(p["cells"])["u/bad/D"], H.need_to_cells(22.5))             # still sized to +10
+        self.assertEqual(dict(p["cells"])["u/edge/D"], 1)
+
+    def test_tcl_planner_uses_the_same_selection(self):
+        txt = PLAN.read_text()
+        self.assertIn("OT_HEI_SELECT_PS 2.0", txt)
+        # Positive siblings must remain visible for shared-net reroute risk; selection is applied per endpoint below.
+        self.assertIn("unmodified_touched_siblings", txt)
+        self.assertIn("if {$sl >= $select} continue", txt)
+        self.assertEqual(H.SELECT_PS, 2.0)
+
+
 if __name__ == "__main__":
     unittest.main()

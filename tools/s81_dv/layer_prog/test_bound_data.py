@@ -173,3 +173,28 @@ if __name__ == '__main__':
             n += 1
             print('PASS', k)
     print(f'{n}/{n} PASS')
+
+
+def test_manifest_base_selects_actual_netlist_instead_of_compiler_cache(tmp_path):
+    import hashlib
+    compiler = tmp_path / 'compiler'
+    selected = tmp_path / 'selected'
+    manifests = tmp_path / 'manifests'
+    for p in (compiler, selected, manifests): p.mkdir()
+    (compiler / 'die.v').write_text('module stale_compiler_cache; endmodule\n')
+    actual = selected / 'die.v'
+    actual.write_text('module current_selected_source; endmodule\n')
+    manifest = manifests / 'current.json'
+    manifest.write_text(json.dumps(dict(base='../selected', netlist=['die.v'])))
+    out = bind_dir(tmp_path / 'bind')
+    (out / 'provenance_bind.json').write_text(json.dumps(dict(provenance=dict(manifest=str(manifest)))))
+    got = BD.load_bind(out, manifest=str(manifest), root=compiler)
+    assert got['netlist_path'] == actual.resolve()
+    assert got['netlist_sha256'] == hashlib.sha256(actual.read_bytes()).hexdigest()
+    actual.unlink()
+    try:
+        BD.load_bind(out, manifest=str(manifest), root=compiler)
+    except FileNotFoundError:
+        pass
+    else:
+        raise AssertionError('missing actual source silently fell back to compiler cache')

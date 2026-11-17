@@ -46,6 +46,62 @@ COMMIT = os.environ.get("MQ_COORD_COMMIT", str(COORD / "bin/coord-commit.sh"))
 SSH = ["timeout", "300", "ssh", "-o", "ControlPath=none", "-o", "BatchMode=yes", "-o", "ConnectTimeout=20"]   # no -n: some calls feed stdin
 ME = "MERGE-QUEUE"
 SKIP_DIRS = {".git", "__pycache__", ".pytest_cache"}
+# FLEET-OPS-R 11-17 (COORD URGENT: the hub scratch disk hit 0 bytes, 278 snapshots of ~435 MB each, rt/current stuck because the sync could not write):
+# a sync writes nothing under RT when its disk has less than OT_RT_MIN_FREE_GB (default 100) free, a host copy needs OT_RT_HOST_MIN_FREE_GB (50, the
+# ot-run scratch floor), and after a good sync only the newest OT_RT_KEEP (10) snapshots stay: current, the previous one, a snapshot a process or a
+# coord json / crontab names, and the newest N.  OT_RT_KEEP=0 turns pruning off.
+MIN_FREE_GB = float(os.environ.get("OT_RT_MIN_FREE_GB", "100"))
+HOST_MIN_FREE_GB = float(os.environ.get("OT_RT_HOST_MIN_FREE_GB", "50"))
+KEEP = int(os.environ.get("OT_RT_KEEP", "10"))
+
+
+def free_gb(path):
+    p = Path(path)
+    while not p.exists() and p != p.parent:
+        p = p.parent
+    st = os.statvfs(p)
+    return st.f_bavail * st.f_frsize / 2**30
+
+
+def names_in_use_text():
+    """text in which a snapshot sha may be named: coord autopilot / handoff json, the crontab, user units (read-only, best effort)"""
+    t = ""
+    for pat in ("autopilot/*.json", "lanes/handoff/tree_switch_*.json"):
+        for f in COORD.glob(pat):
+            try: t += f.read_text(errors="replace")
+            except OSError: pass
+    for cmd in (["crontab", "-l"], ["systemctl", "--user", "cat", "*"]):
+        try: t += S.run(cmd, capture_output=True, text=True, timeout=30).stdout
+        except Exception: pass
+    return t
+
+
+def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
+    """-> [removed names].  Snapshots are RT/<12 hex>; the newest `keep`, current, `protect`, any in_use() or named in `text` stay."""
+    keep = KEEP if keep is None else keep
+    if keep <= 0:
+        return []
+    snaps = sorted((d for d in Path(root).iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink()),
+                   key=lambda d: d.stat().st_mtime, reverse=True)
+    cur = current(root)
+    stay = {d.name for d in snaps[:keep]} | {cur, *protect}
+    text = names_in_use_text() if text is None else text
+    gone = []
+    for d in snaps:
+        if d.name in stay or d.name in text or in_use(d):
+            continue
+        try:
+            if rm: rm(d)
+            else:
+                run(["chmod", "-R", "u+w", "--", str(d)])
+                run(["rm", "-rf", "--one-file-system", "--", str(d)])
+                (Path(root) / f"{d.name}.manifest.json").unlink(missing_ok=True)
+            gone.append(d.name)
+        except Exception as e:
+            log(f"prune {d.name} failed: {e}")
+    if gone:
+        log(f"pruned {len(gone)} old snapshots (kept {keep} newest + current): {' '.join(gone[:6])}{' ...' if len(gone) > 6 else ''}")
+    return gone
 
 
 def now():
@@ -196,6 +252,12 @@ def materialize(full):
     if d.is_dir() and ok.is_file():
         return d
     RT.mkdir(parents=True, exist_ok=True)
+    fg = free_gb(RT)
+    if fg < MIN_FREE_GB:
+        pruned = prune_snapshots(RT, protect=(current() or "",))          # make room by dropping the oldest unused snapshots first
+        fg = free_gb(RT)
+        if fg < MIN_FREE_GB:
+            raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
     if d.exists():                                         # a partial earlier attempt (no manifest): rebuild it if unused
         if in_use(d):
             raise RuntimeError(f"{d} is partial but in use; not touched")
@@ -219,7 +281,15 @@ def materialize(full):
 
 def host_sync(host, name, prev):
     """copy RT/<name> (HOST_PATHS) to host, smoke it there (parse), flip host RT/current -> (ok, note)"""
-    r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || mkdir -p {RT}/.{name}.partial"], input="")
+    r = run(SSH + [host, f"test -f {RT}/{name}.manifest.json && echo HAVE || df -BG --output=avail {RT}/.. | tail -n1"], input="")
+    if r.returncode == 0 and "HAVE" not in r.stdout:
+        try:
+            hf = float(r.stdout.strip().split()[-1].rstrip("G"))
+        except (ValueError, IndexError):
+            hf = None
+        if hf is not None and hf < HOST_MIN_FREE_GB:
+            return False, f"{hf:.0f} GB free < {HOST_MIN_FREE_GB:g} GB (OT_RT_HOST_MIN_FREE_GB); not copied"
+        r = run(SSH + [host, f"mkdir -p {RT}/.{name}.partial"], input="")
     if r.returncode:
         return False, f"ssh: {(r.stderr or r.stdout).strip()[:160]}"
     if "HAVE" not in r.stdout:
@@ -294,6 +364,20 @@ def sync(sha, hosts=True, tests=True):
             notes.append(f"{h}:{'ok' if ok else 'FAIL ' + note}")
             with open(RT / "history.log", "a") as f:
                 f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else 'FAILED ' + note}\n")
+    try:
+        man_now = json.loads((RT / f"{name}.manifest.json").read_text()).get("files", {})
+        diffs = installed_diffs(man_now) if hosts else []
+    except Exception as e:
+        diffs = [f"installed-tools check failed: {type(e).__name__}: {e}"]
+    if diffs:
+        msg = "ALERT installed tools differ from rt/%s: %s" % (name, " ; ".join(diffs)[:1500])
+        log(msg); print(msg)
+        notes.append("ALERT installed != rt")
+    if all(":ok" in n for n in notes):
+        try:
+            prune_snapshots(RT, protect=(prev or "", name))
+        except Exception as e:
+            log(f"prune skipped: {type(e).__name__}: {e}")
     log(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     print(f"rt/current -> {name} (was {prev or '-'}); hosts {' '.join(notes) or 'skipped'}")
     return 0 if all(":ok" in n for n in notes) else 4
@@ -403,6 +487,20 @@ def _backend_lines(host, r):
         return [f"{host}: ot-run backend check failed"]
     return [f"{host} {p} differs from main tools/fleet/{v[5:]} (live-only copy)"
             for p, v in sorted(res.items()) if v.startswith("DIFF") and "/rt/" not in p]
+
+
+def installed_diffs(man_files, hosts=None, runner=None):
+    """FLEET-OPS-R 11-17 (COORD FABLE-FLOW-0500 (2): /usr/local/bin/ot-heavy differed from rt/current on 7/7 hosts, r533 half deployed): every installed
+    ot-* backend (BACKEND_ROOTS, hub + hosts) whose bytes differ from rt/current tools/fleet is an ALERT, not a note.  -> list of strings (empty = in step).
+    A wrapper that resolves into an rt/ tree is in step by construction (symlink install), so only live-only copies are reported."""
+    runner = runner or run
+    want = json.dumps({k.split("/")[-1]: v for k, v in (man_files or {}).items()
+                       if k.startswith("tools/fleet/") and k.count("/") == 2 and not v.startswith("link:")})
+    out = _backend_lines("intel2", runner(["python3", "-I", "-c", BACKEND_PY, want, json.dumps(BACKEND_ROOTS)], timeout=60))
+    for h in (HOSTS if hosts is None else hosts):
+        r = runner(SSH + [h, "python3", "-I", "-c", shlex.quote(BACKEND_PY), shlex.quote(want), shlex.quote(json.dumps(BACKEND_ROOTS))], timeout=120, input="")
+        out += _backend_lines(h, r)
+    return sorted(out)
 
 
 def post_drift(lines):
