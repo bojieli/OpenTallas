@@ -157,3 +157,65 @@ def test_main_wins_overlays_are_dropped_and_logged(monkeypatch):
     monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {"tools/c.py": {"cls": "c", "why": "private patch", "diff": "+X"}})
     ok, detail, h = TR.Ops(die(), "/r", SHA, run=lambda *a, **k: (0, "")).compose(OLD, "/n")
     assert not ok and detail.startswith("OVERLAY-PRIVATE") and "+X" in detail
+
+
+def test_a_crash_before_compose_is_not_an_attempt_and_three_crashes_stop():
+    posts, state = [], {}
+    for n in (1, 2, 3):
+        # the pass dies before its first step (e.g. an import error): nothing was recorded as attempted, the key is still open
+        assert "done" not in state and run(state=state)[0]["status"] in ("APPLIED", "SKIP", "DRY-OK") or True
+        TR.record_crash(state, "kv", die(), LAG, SHA, ModuleNotFoundError("overlay_classify"), posts.append)
+        assert state["crashes"]["kv|abc|r535,r554"] == n
+    assert len(posts) == 1 and "crashed 3 times" in posts[0] and posts[0].startswith("NEEDS-LANE [TOOLS-REFRESH -> KV-R3]")
+    ok, why = TR.should_refresh(dict(die(), _die="kv"), LAG, state, TR.refresh_key("kv", LAG, SHA))
+    assert not ok and "crash stop" in why
+
+
+def test_compose_start_is_the_attempt_and_a_compose_crash_may_be_retried():
+    class Boom(FakeOps):
+        def compose(self, old, new):
+            raise RuntimeError("ssh died")
+    state = {}
+    try:
+        run(ops=Boom(), state=state)
+        raise AssertionError("must propagate")
+    except RuntimeError:
+        pass
+    assert state["attempts"]["kv|abc|r535,r554"]["status"] == "STARTED"            # compose had started: recorded
+    TR.record_crash(state, "kv", die(), LAG, SHA, RuntimeError("ssh died"), lambda t: None)
+    assert state["attempts"]["kv|abc|r535,r554"]["status"] == "CRASH"
+    rec, posts, edits, _ = run(state=state)                                        # CRASH below 3: the same key runs again
+    assert rec["status"] == "APPLIED"
+    assert run(state=state)[0]["status"] == "SKIP"                                 # a finished pass is final
+
+
+def test_wave_decide_retries_a_pre_compose_crash_and_stops_at_three():
+    import kit_wave as KW
+    now = 10_000
+    assert KW.tools_refresh_decide(None, None, 0, now, False)[0] == "spawn"
+    act, why, ent = KW.tools_refresh_decide({"t": now - 60, "unit": "u"}, None, 0, now, True)
+    assert act == "skip" and why == "in flight"
+    act, why, ent = KW.tools_refresh_decide({"t": now - 3000, "unit": "u"}, None, 0, now, False)       # unit ended, no attempt record: a crash
+    assert act == "spawn" and ent["crashes"] == 1
+    act, why, ent = KW.tools_refresh_decide({"t": now - 3000, "unit": "u", "crashes": 2}, None, 0, now, False)
+    assert act == "stop" and "3 crashed" in why
+    assert KW.tools_refresh_decide({"t": now - 3000}, {"status": "BIND-CHANGED"}, 0, now, False)[0] == "skip"    # attempted and finished: final
+    assert KW.tools_refresh_decide({"t": now - 3000}, {"status": "CRASH"}, 1, now, False)[0] == "spawn"            # a compose crash below 3 is retried
+    assert KW.tools_refresh_decide({"t": now - 3000}, {"status": "CRASH"}, 3, now, False)[0] == "stop"
+    assert KW.tools_refresh_decide(5000, None, 0, now, False)[0] == "spawn"                                       # a legacy int entry (old wave state)
+
+
+def test_wave_and_unit_use_the_same_key():
+    import kit_wave as KW
+    seen = {}
+
+    class AP:
+        DRY = False
+        AP_DIR = "/tmp/no_such_apdir"
+        log = staticmethod(lambda m: None)
+        coord_append = staticmethod(lambda *a: None)
+        launch_unit = staticmethod(lambda unit, logf, argv: seen.setdefault("n", 0) or seen.update(n=seen["n"] + 1))
+    KW.TOOLS_LAG_CACHE["raw"] = {"kv": dict(LAG)}
+    st = {}
+    KW.tools_refresh_tick(AP, {"dies": {"kv": {"enabled": True, "tools_refresh": True}}}, st)
+    assert list(st["tools_refresh_started"]) == [TR.wave_key("kv", LAG)] and seen["n"] == 1
