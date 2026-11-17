@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-17 02:1x PST: S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=5/5 HEAD.TYPES=22/26 QC.CORES=70/70 QC.TYPES=8/127 KV.CORES=62/62 KV.TYPES=6/56 HBM.CORES=90/118 HBM.TYPES=1/84. Count flat: S81 bksel (ck pin M5 vs plan M3) and gunit bf (216 outline) credit on the S5h apply; QC M2 dead -> M3 (pad-class ctl variants + 027d seed); merges unblocked (r528); disk low intel1 24/E7 38/E8 40 -> FLEET-OPS-R urgent; KV D14 waits on replication.
+2026-11-17 03:1x PST: S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=5/5 HEAD.TYPES=22/26 QC.CORES=70/70 QC.TYPES=8/127 KV.CORES=62/62 KV.TYPES=6/56 HBM.CORES=90/118 HBM.TYPES=1/84. Count flat. Disk recovered on all hosts (77-281 GB, hub 175). S81: D5d (4 gunit defines) + ba0/ba1 FWPIPE builds; C4R1 bind running (relay_um 180). QC: M4 compose + full pre-bind replay. KV: D14 copying. Token: base s1 PASS.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
