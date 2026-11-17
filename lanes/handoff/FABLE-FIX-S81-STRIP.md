@@ -115,3 +115,7 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
 ## 2026-11-17 11:3x PST READY posted
 - D7-strip chain PASS: strict bind 0 / 395 / 873, LATCHECK 873/873, G0 5 = C4r3 baseline, PRE PASS, census 0 over (worst 0.695). READY post names branch 02e762e464c, rows cand/rows_d7_strip.json, work tree d7strip_1117_work (not published).
 - Waiting on: S81-DIE-R3 to take the rows into D7; S81-TYPES-R3 t22 GRT calibration; then per-um from the measured table.
+
+## 2026-11-17 11:5x PST r581 approved; waiting on t22
+- COORD: region mode is NOT the default (DRT-0255 on H15): 45.6 stands, 41.9 case moot. S81-DIE-R3 takes the rows into D7; S81-TYPES-R3 launches t22 from D7.
+- This lane: no kit build. Read the t22 GRT when S81-TYPES-R3 posts it (5_1_grt.log per-layer overflow, congestion.rpt over vsw / vq / rxsf and in the VE_s|vn_b 26-um gap). Over-core overflow -> lower OVER_USE (0.6 of M7) in ft_channel_route.py on a new branch, re-run cand.sh, re-bind. Else retire.
