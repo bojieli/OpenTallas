@@ -38,6 +38,12 @@ class HoldReleaseOn(unittest.TestCase):
         c = KW.load_config(cfg(event="kvgeom7j", plan="/x/p.json", hold_items={"k": "r"}, hold_release_on={"k": "event_adopt:kvgeom7"}))
         self.assertIn("k", c["dies"]["qwen_compute"]["hold_items"])   # kvgeom7j is not kvgeom7
 
+    def test_plan_event_with_hash_event_and_generic_filename(self):
+        c = KW.load_config(cfg(event="3fa87b84b18", plan="/x/plan_h2_2249.json",
+                              plan_event="B6gF2s4tapfix1", hold_items={"k": "r", "old": "r"},
+                              hold_release_on={"k": "event_adopt:B6gF2s4tapfix1", "old": "event_adopt:B6gF2s3"}))
+        self.assertEqual(c["dies"]["qwen_compute"]["hold_items"], {"old": "r"})
+
     def test_merge_error_is_not_released(self):
         def boom(r):
             raise RuntimeError("no git")

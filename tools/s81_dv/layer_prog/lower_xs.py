@@ -455,7 +455,20 @@ def frame_cohort(frame):
     return record['frames'].get(frame)
 
 
-def source_frame_schedule(master, frame=None):
+_FRAME_PLAN_DIGEST = {}
+
+
+def frame_plan_digest(path):
+    """Hash a selected plan once per immutable file version within a compiler process."""
+    path = Path(path).resolve()
+    st = path.stat()
+    key = (str(path), st.st_dev, st.st_ino, st.st_size, st.st_mtime_ns)
+    if key not in _FRAME_PLAN_DIGEST:
+        _FRAME_PLAN_DIGEST[key] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return _FRAME_PLAN_DIGEST[key]
+
+
+def source_frame_schedule(master, frame_instance=None):
     """LP models are immutable source-qualified inputs, never inferred flat timing."""
     if master.endswith('_gb'):
         raise ValueError('GB frame requires its own extracted schedule and qualified GO/TAG provider; '
@@ -467,7 +480,14 @@ def source_frame_schedule(master, frame=None):
         # check bound to that exact schedule file (every frame link = the die plan's declared latency).
         directory = Path(os.environ.get('OT_XS_ASB_SCHEDULE_DIR',
                          str(ROOT / 'results/arch/s81_dv_1016/frame_lp/asb_schedule')))
-        cohort = frame_cohort(frame)
+        record_dir = directory
+        if frame_instance is not None:
+            if not re.fullmatch(r'[A-Za-z_]\w*', frame_instance):
+                raise ValueError('invalid frame schedule instance: ' + frame_instance)
+            scoped = directory / 'frames' / frame_instance
+            if scoped.is_dir():
+                directory = scoped
+        cohort = frame_cohort(frame_instance)
         selected = master + ('__' + cohort if cohort else '')
         path, chk = directory / (selected + '_schedule.json'), directory / (selected + '_check.json')
         if not chk.is_file():
@@ -481,12 +501,23 @@ def source_frame_schedule(master, frame=None):
             raise ValueError('as-built frame plan check is not bound to this schedule: ' + str(path))
         schedule = json.loads(path.read_text())
         if schedule.get('frame_cohort') != cohort:
-            raise ValueError('selected frame calendar cohort differs from the instance map: ' + str(frame))
+            raise ValueError('selected frame calendar cohort differs from the instance map: ' + str(frame_instance))
         if cohort and 'internal_visibility_profile' not in schedule:
             raise ValueError('frame cohort calendar lacks its measured internal visibility profile')
-        rsha = qualify_frame_source(schedule, master, *frame_manifest(), record_dir=directory)
+        bound = schedule.get('bound_plan') or {}
+        selected_frame = bound.get('frame_instance')
+        if selected_frame is not None and selected_frame != frame_instance:
+            raise ValueError('frame schedule selects another actual instance: ' + str(selected_frame))
+        if directory != record_dir and selected_frame != frame_instance:
+            raise ValueError('per-frame calendar has no matching actual instance identity')
+        selected_plan = os.environ.get('OT_S81_FRAME_PLAN')
+        if selected_plan:
+            plan_sha = frame_plan_digest(selected_plan)
+            if bound.get('plan_sha256') != plan_sha:
+                raise ValueError('frame schedule selects another bound plan: ' + master)
+        rsha = qualify_frame_source(schedule, master, *frame_manifest(), record_dir=record_dir)
         if rsha is not None:
-            GB_QUAL_USED[master] = rsha
+            GB_QUAL_USED[master + (':' + frame_instance if frame_instance else '')] = rsha
         return path
     if not master.endswith('_lp'):
         return None
@@ -499,7 +530,7 @@ def source_frame_schedule(master, frame=None):
 
 
 # ------------------------------------------------------------------------------------------------ one frame programme
-def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None, frame=None):
+def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None, frame_instance=None):
     """legalise + place one a_proj phase on one frame (field phase 0); returns (field, ph, plan, pairs)"""
     import frame_bench as B
     import frame_return_plan as P
@@ -509,7 +540,7 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
     if is_asbuilt(master):
         assert B.frame_pairs(master) == (q, _bf), ('as-built band frame pair numbering differs from its base', master)
     # plan_phase verifies every source hash in this extracted compiler schedule.
-    frame_schedule = source_frame_schedule(master, frame)
+    frame_schedule = source_frame_schedule(master, frame_instance)
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'
     ret_score = None
     if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1':
@@ -659,8 +690,8 @@ def lower(die, op, ctx):
             frames.append(dict(p, phase=None, note='idle actual frame: no a_proj rows in selected ownership map'))
             continue
         mats, gidx = frame_mats(fx, p['rows'])
-        field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'], frame=p['frame'],
-                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+        field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None, frame_instance=p['frame'])
         if native:
             from layer_prog.aproj_native import phase_material
             material = phase_material(field)
@@ -769,8 +800,8 @@ def cmd_gen(a):
     p = next(x for x in pl if x['frame'] == a.frame)
     assert p['rows'], f'{a.frame}: no a_proj rows'
     mats, gidx = frame_mats(fx, p['rows'])
-    field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'], frame=p['frame'],
-                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+    field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
+                           cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None, frame_instance=p['frame'])
     names, tmp = field_images(field, qa, q, bf, a.frame, out, p['rows'])
     xsn = xs_roms(tmp, out)
     # the frame bench instantiates the master with INSTANCE "f": the same images under the bench name

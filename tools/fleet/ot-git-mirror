@@ -12,10 +12,11 @@ Build hosts have no GitHub key; only intel2 has one.  Lanes therefore cloned the
     - claude/* is fetched WITHOUT force: a GitHub fetch never rewinds a lane push that is not forwarded yet
     - daily `git gc` (gc.auto=0 so a push never pays for it)
 
-usage: ot-git-mirror sync | install | status
+usage: ot-git-mirror sync | fetch | install | status
 Clones: tools/fleet/ot-lane-clone (never ~/OpenTallas).
 """
 import fcntl
+import json
 import os
 import subprocess as S
 import sys
@@ -26,6 +27,8 @@ MIRROR = Path(os.environ.get("OT_GIT_MIRROR", "/srv/opentallas-scratch2/git/Open
 UPSTREAM = os.environ.get("OT_GIT_UPSTREAM", "git@github.com:bojieli/OpenTallas.git")
 GC_EVERY = int(os.environ.get("OT_GIT_MIRROR_GC_S", str(24 * 3600)))
 LANE_PREFIX = "refs/heads/claude/"
+BUDGET_S = int(os.environ.get("OT_GIT_MIRROR_BUDGET_S", "100"))   # a sync run stays under the 2-min timer interval
+REJECT_LIMIT = int(os.environ.get("OT_GIT_MIRROR_REJECT_LIMIT", "2"))   # pushes GitHub rejects this often for the same sha are skipped
 
 PRE_RECEIVE = r"""#!/bin/bash
 # ot-git-mirror: lanes push claude/* branches only; main moves only through the merge queue on GitHub
@@ -109,6 +112,28 @@ def upstream_heads():
     return {r: s for s, r in (l.split("\t") for l in p.stdout.splitlines() if "\t" in l)}
 
 
+def load_rejected():
+    try:
+        return json.loads((MIRROR / "rejected.json").read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def save_rejected(rej):
+    tmp = MIRROR / "rejected.json.tmp"
+    tmp.write_text(json.dumps(rej, indent=1, sort_keys=True))
+    os.replace(tmp, MIRROR / "rejected.json")
+
+
+def reject_reason(stderr):
+    """the GitHub reason line of a refused push (file size limit etc.), else the last line"""
+    lines = [l.replace("remote: error:", "").replace("remote:", "").strip() for l in (stderr or "").splitlines()]
+    for l in lines:
+        if "exceeds" in l or "GH0" in l or "secret" in l.lower():
+            return l[:300]
+    return (lines[-1] if lines else "")[:300]
+
+
 def mirror_heads():
     out = git("for-each-ref", "--format=%(objectname) %(refname)", LANE_PREFIX).stdout
     return {r: s for s, r in (l.split(" ", 1) for l in out.splitlines() if " " in l)}
@@ -118,9 +143,12 @@ def is_ancestor(a, b):
     return git("merge-base", "--is-ancestor", a, b, check=False).returncode == 0
 
 
-def sync():
-    """fetch main + claude/* from GitHub, then re-forward claude/* refs the mirror has ahead of GitHub -> exit code"""
-    lockf = open(MIRROR / "sync.lock", "w")
+def sync(fetch_only=False, forward=True):
+    """fetch main + claude/* from GitHub, then re-forward claude/* refs the mirror has ahead of GitHub -> exit code.
+    11-17: a ref GitHub rejected REJECT_LIMIT times at the same sha is skipped (logged once, listed in rejected.json, retried
+    only when its sha changes), and the forward step stops at BUDGET_S so the run stays under its timer interval."""
+    t_start = time.time()
+    lockf = open(MIRROR / ("fetch.lock" if fetch_only else "sync.lock"), "w")
     try:
         fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:
@@ -131,7 +159,8 @@ def sync():
         # a rejected non-forced claude/* update (GitHub moved a branch the mirror holds differently) is reported, not fatal
         print(f"fetch rc={f.returncode}: {f.stderr.strip()[-600:]}")
         rc = 1
-    up = upstream_heads()
+    up = upstream_heads() if forward and not fetch_only else None
+    rej = load_rejected()
     if up is not None:
         todo = []
         hub_only = set()
@@ -142,13 +171,16 @@ def sync():
         for ref, sha in sorted(mirror_heads().items()):
             if ref in hub_only or ref[len("refs/heads/"):] in hub_only:
                 continue
+            r0 = rej.get(ref)
+            if r0 and r0.get("sha") == sha and r0.get("n", 0) >= REJECT_LIMIT:
+                continue
             u = up.get(ref)
             if u == sha:
                 continue
             if u is None or (git("cat-file", "-e", u, check=False).returncode == 0 and is_ancestor(u, sha)):
                 todo.append((ref, sha))
         try:
-            batch = bool(todo) and git("push", "-q", "origin", *[f"{s}:{r}" for r, s in todo], check=False,
+            batch = bool(todo) and time.time() - t_start < BUDGET_S and git("push", "-q", "origin", *[f"{s}:{r}" for r, s in todo], check=False,
                                        timeout=3600).returncode == 0
         except S.TimeoutExpired:
             batch = False
@@ -157,13 +189,28 @@ def sync():
                 print(f"re-forward {ref[len('refs/heads/'):]} @{sha[:11]}: ok")
             todo = []
         for ref, sha in todo:                              # the batch failed: one by one, so one bad ref blocks only itself
+            if time.time() - t_start > BUDGET_S:
+                print(f"budget {BUDGET_S} s used; {len(todo)} ref(s) left for the next run")
+                break
             try:
-                p = git("push", "-q", "origin", f"{sha}:{ref}", check=False, timeout=300)
-                why = "ok" if p.returncode == 0 else "FAILED " + p.stderr.strip()[-200:]
+                p = git("push", "-q", "origin", f"{sha}:{ref}", check=False, timeout=min(300, max(30, int(BUDGET_S - (time.time() - t_start)))))
+                why = "ok" if p.returncode == 0 else "FAILED " + reject_reason(p.stderr)
             except S.TimeoutExpired:                       # 16:29 11-15: one timed-out ref killed the whole sync
-                p, why = None, "FAILED push timed out (300 s)"
+                p, why = None, "FAILED push timed out"
+            if p is not None and p.returncode == 0:
+                rej.pop(ref, None)
+            elif p is not None and "rejected" in (p.stderr or ""):
+                r0 = rej.get(ref) if rej.get(ref, {}).get("sha") == sha else {"sha": sha, "n": 0}
+                r0["n"] += 1; r0["why"] = reject_reason(p.stderr); r0["at"] = time.strftime("%F %T")
+                rej[ref] = r0
+                if r0["n"] >= REJECT_LIMIT:
+                    print(f"SKIPPING {ref[len('refs/heads/'):]} @{sha[:11]} from now on (GitHub rejected it {r0['n']}x: {r0['why']}); "
+                          f"retried when the branch moves; list in rejected.json")
             print(f"re-forward {ref[len('refs/heads/'):]} @{sha[:11]}: {why}")
             rc |= 0 if p is not None and p.returncode == 0 else 1
+        save_rejected(rej)
+    if fetch_only:
+        return rc
     stamp = MIRROR / "gc.stamp"
     if not stamp.exists() or time.time() - stamp.stat().st_mtime > GC_EVERY:
         stamp.touch()
@@ -189,6 +236,8 @@ def main():
         return 0
     if cmd == "sync":
         return sync()
+    if cmd == "fetch":                                     # own timer: fetch only, never blocked by a slow forward
+        return sync(fetch_only=True)
     if cmd == "status":
         return status()
     print(__doc__)

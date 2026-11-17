@@ -108,7 +108,9 @@ def test_fail_safe_conditions(tmp_path):
     _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
     assert "TT setup loss" in t and "no hold gain" in t and "tool error" in t
-    assert "proc pg_verdict" in t and "[pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]" in t
+    assert "proc pg_verdict" in t and "[pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1 [sta::endpoint_violation_count min] $pg_tn0 [pg_tns]]" in t
+    # QC-MCLK lever 3: the pass loop goes on while a pass still removes >= 5 % of the violating endpoints
+    assert "[sta::endpoint_violation_count min] > 0.95 * $pg_np" in t
 
 
 def _verdict(tmp_path, args, env=None):
@@ -136,6 +138,11 @@ def _verdict(tmp_path, args, env=None):
     ((-100.0, 4.9, 100, -20.0, -80.0), False),         # 60 ps loss through the gate: still rejected
     ((-84.15, -84.15, 515, -562.4, -562.4), False),    # no hold gain
     ((0.0, 0.0, 0, -50.0, -50.0), True),               # no debt, nothing changed
+    # QC-MCLK lever 3 (args + n1 t0 t1): cbn_q01 kept its worst latch endpoint, 21,467 -> 2,707 endpoints, TNS -1.26 us -> -78 ns
+    ((-211.66, -211.66, 21467, -461.86, -461.86, 2707, -1260000.0, -78000.0), True),
+    ((-211.66, -211.66, 21467, -461.86, -461.86, 21467, -1260000.0, -1260000.0), False),   # nothing closed
+    ((-211.66, -211.66, 21467, -461.86, -461.86, 2707, -1260000.0, -1300000.0), False),    # fewer endpoints, worse TNS
+    ((-211.66, -211.66, 21467, -20.0, -80.0, 2707, -1260000.0, -78000.0), False),           # setup gate still rejects
 ])
 def test_accept_verdict(tmp_path, args, ok):
     v = _verdict(tmp_path, args)

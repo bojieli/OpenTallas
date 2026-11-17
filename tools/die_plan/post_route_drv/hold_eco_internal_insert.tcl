@@ -19,9 +19,13 @@ proc ot_hei_run {} {
   set plan [ot_hei_read_plan $::env(OT_PRD_HOLD_PLAN)]
   set radius [expr {[info exists ::env(OT_HOLD_SLOT_RADIUS_UM)] && $::env(OT_HOLD_SLOT_RADIUS_UM) ne "" ? $::env(OT_HOLD_SLOT_RADIUS_UM) : 7.2}]
   set blk [ord::get_db_block]
+  set initial_inst_count [llength [$blk getInsts]]
   set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+  # a two-mode session loads the cell twice (TC and BC libraries): several handles, ONE cell name.  unset/set_dont_use take all handles.
   set cells [get_lib_cells -quiet */HB4xp67_ASAP7_75t_R]
-  if {[llength $cells] != 1} { error "OT_HEI HB4 source is not unique" }
+  set cnames {}
+  foreach c $cells { lappend cnames [get_name $c] }
+  if {![llength $cells] || [llength [lsort -unique $cnames]] != 1} { error "OT_HEI HB4 source is not unique: [lsort -unique $cnames]" }
   unset_dont_use $cells
   set master [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]
   if {$master eq "NULL"} { error "OT_HEI no HB4xp67 master in the DB" }
@@ -74,7 +78,11 @@ proc ot_hei_run {} {
         lassign $b b0 b1
         if {$b0 > $rx1} { set b0 $rx1 }   ;# a row segment ends where its macro cut starts: never plan past the segment
         # free gap [x, b0): candidate x positions snapped to the site grid
-        for {set px [expr {$rx0 + (($x - $rx0 + $sw - 1) / $sw) * $sw}]} {$px + $mw <= $b0} {incr px $sw} {
+        # Bound enumeration before walking sites: outside this horizontal radius the original
+        # Manhattan-distance filter cannot accept a site. Same accepted sites and stable order.
+        set pxlo [expr {max($x, $cx - $rad - $mw / 2)}]
+        set pxhi [expr {min($b0 - $mw, $cx + $rad - $mw / 2)}]
+        for {set px [expr {$rx0 + (($pxlo - $rx0 + $sw - 1) / $sw) * $sw}]} {$px <= $pxhi} {incr px $sw} {
           set d [expr {abs($px + $mw / 2 - $cx) + abs($ry - $cy)}]
           if {$d <= $rad} { lappend cands [list $d $px $ry $ror] }
         }
@@ -114,9 +122,7 @@ proc ot_hei_run {} {
       set name hold_int_${safe}_$k
       if {[$blk findInst $name] ne "NULL"} { error "OT_HEI existing name $name" }
       set x [expr {double($px) / $dbu}]; set y [expr {double($ry) / $dbu}]
-      set before [llength [$blk getInsts]]
       insert_buffer -buffer_cell HB4xp67_ASAP7_75t_R -load_pins [list $p] -location [list $x $y] -buffer_name $name -net_name ${name}_n
-      if {[llength [$blk getInsts]] != $before + 1} { error "OT_HEI insert_buffer made no single cell for $capture" }
       # the new cell drives the capture pin's net (the name asked for is a hint, as in the QC coll_n pilot)
       set drivers {}
       foreach pt [[$it getNet] getITerms] { if {[[$pt getMTerm] getIoType] eq "OUTPUT"} { lappend drivers [$pt getInst] } }
@@ -141,6 +147,8 @@ proc ot_hei_run {} {
   # fail closed: every cell we report must still be in the block, and the census must match the plan
   foreach nm $allnames { if {[$blk findInst $nm] eq "NULL"} { error "OT_HEI inserted cell lost: $nm" } }
   set want 0; foreach row $plan { incr want [lindex $row 1] }
+  set final_inst_count [llength [$blk getInsts]]
+  if {$final_inst_count != $initial_inst_count - $removed + $total} {error "OT_HEI instance census mismatch: $initial_inst_count - $removed + $total != $final_inst_count"}
   if {$total != $want} { error "OT_HEI inserted $total HB4 but the plan asks $want" }
   puts "OT_HEI inserted $total HB4 at $nruns capture pins, removed $removed filler cells (radius $radius um)"
   set_dont_use $cells

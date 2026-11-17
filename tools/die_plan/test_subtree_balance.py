@@ -140,11 +140,11 @@ set ::env(OT_STB_PORTS) {clk ck2}
 '''
 
 
-def _run(env=""):
+def _run(env="", *, hook=HOOK, after=""):
     if not shutil.which("tclsh"):
         pytest.skip("no tclsh")
-    body = (MOCK + TREE + env + f"\nproc wrap {{}} {{ source {{{HOOK}}} }}\nwrap\n"
-            + 'foreach p {f1 f2 f3 g1 g2 u_mem} { puts "ARR $p [get_property $p.CLK arrival_max_rise]" }\n')
+    body = (MOCK + TREE + env + f"\nproc wrap {{}} {{ source {{{hook}}} }}\nwrap\n"
+            + 'foreach p {f1 f2 f3 g1 g2 u_mem} { puts "ARR $p [get_property $p.CLK arrival_max_rise]" }\n' + after)
     r = subprocess.run(["tclsh"], input=body, text=True, capture_output=True)
     assert r.returncode == 0 and not r.stderr, r.stdout + r.stderr
     arr = {ln.split()[1]: float(ln.split()[2]) for ln in r.stdout.splitlines() if ln.startswith("ARR ")}
@@ -174,3 +174,23 @@ def test_report_and_off_modes_change_nothing():
     for env, word in (("set ::env(OT_STB) report\n", "OT_STB before"), ("set ::env(OT_STB) 0\n", "OT_STB skipped")):
         out, arr = _run(env)
         assert word in out and arr == {"f1": 20, "f2": 20, "f3": 80, "g1": 20, "g2": 60, "u_mem": 20}, (env, arr, out)
+
+
+def test_forwarded_output_without_local_sinks_is_not_padded(tmp_path):
+    # A real sink-bearing tree also forks into an output-only clock buffer.
+    # No receiver is present during partition hardening, so that fork has no
+    # local sequential sink. The positive case runs the real balancing hook.
+    env = "set ::env(OT_STB_EST) placement\ncell fwd M_BUFx2_ASAP7_75t_R n_b0 n_fwd\n"
+    after = 'puts "ARR fwd [get_property fwd.A arrival_max_rise]"\n'
+    out, arr = _run(env, after=after)
+    assert "OT_STB ERROR" not in out
+    assert arr["fwd"] == 10, out
+    # Mutant reproduces the measured silicon defect: twelve gratuitous stages
+    # on each of eight rounds, even though legitimate local sinks still close.
+    mutant = tmp_path / "sinkless_mutant.tcl"
+    text = HOOK.read_text()
+    guard = "        if {$::stb::hi($p,$n) == -1e9} { continue }\n"
+    assert guard in text
+    mutant.write_text(text.replace(guard, "", 1))
+    _, bad = _run(env, hook=mutant, after=after)
+    assert bad["fwd"] == 10 + 96 * 20

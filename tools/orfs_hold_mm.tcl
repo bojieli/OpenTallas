@@ -246,6 +246,7 @@ proc ot_mm_ws {check scene} {
 # parasitics): set_wire_rc -clock, and only when a clock spine was built in this session (a TritonCTS tree's low-layer
 # clock wiring is NOT over-estimated: the clock-wide value moved hcoll -16 ps the wrong way).  Data wires on M6 / M7
 # also get the lower C, which only makes them faster under a min-delay check (conservative for hold).
+# HOLD-FLOW-R 11-16: the HOLD repair uses this table only with OT_RC_CAL_HOLD=1 (default: the kit's sign-off table); spine balancing is unchanged.
 # Knobs: OT_RC_CAL=0 off; OT_RC_CAL_R / OT_RC_CAL_C in setRC.tcl units (defaults 1.40E-02 = 14 ohm/um, 1.05E-01 fF/um),
 # OT_RC_CAL_LAYERS (default "M6 M7").  asap7 only.  The spine balancing (clock_spine.tcl) uses the same procs.
 proc ot_rc_cal_on {} {
@@ -270,6 +271,10 @@ proc ot_rc_cal_spine {} {
 # calls ot_rc_cal_restore)
 proc ot_rc_cal_apply {kind} {
   if {![ot_rc_cal_on]} { return 0 }
+  # HOLD-FLOW-R 11-16 (CLOSURE-STRATEGY-2100 lever 1): every hold repair pass (CTS, GRT, post-route ECO) is timed on the kit's
+  # SIGN-OFF RC table.  The calibrated repair table read +6.92 where the kit table reads -28.38 on the same bksel netlist, so a
+  # repair on it closes to a number sign-off never sees.  The calibrated hold table is now opt-in: OT_RC_CAL_HOLD=1.
+  if {$kind eq "hold" && (![info exists ::env(OT_RC_CAL_HOLD)] || $::env(OT_RC_CAL_HOLD) ne "1")} { return 0 }
   lassign [ot_rc_cal_rc] r c
   set mode [ot_rc_cal_mode]
   if {$mode eq "-global_routing"} {
@@ -1051,4 +1056,17 @@ if {[info commands ot_mcc_cts_orig] eq ""} {
     set ot_mcc_file [file join [file dirname $ot_mcc_dir] physical common_flow macro_cts_cluster.tcl]
   }
   if {[file isfile $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
+}
+
+# CTS-TRUNK-RESEAT (2026-11-16): opt-in (OT_CTS_TRUNK_RESEAT=1) clock_tree_synthesis wrapper that seats every CTS trunk
+# buffer at the centroid of its loads (physical/common_flow/cts_trunk_reseat.tcl; S81 rom_q half: TritonCTS left trunk
+# buffers at the macro edge driving 10-15 leaf buffers through one 100-150 um net).  Asked for and missing = error.
+if {[info exists ::env(OT_CTS_TRUNK_RESEAT)] && $::env(OT_CTS_TRUNK_RESEAT) eq "1" && [info commands ot_ctr_cts_orig] eq ""} {
+  set ot_ctr_dir [file dirname [file normalize [info script]]]
+  set ot_ctr_file [file join $ot_ctr_dir cts_trunk_reseat.tcl]
+  if {![file isfile $ot_ctr_file]} {
+    set ot_ctr_file [file join [file dirname $ot_ctr_dir] physical common_flow cts_trunk_reseat.tcl]
+  }
+  if {![file isfile $ot_ctr_file]} { error "OT_CTS_RESEAT: OT_CTS_TRUNK_RESEAT=1 but $ot_ctr_file is missing" }
+  source $ot_ctr_file
 }

@@ -560,6 +560,22 @@ if {[info exists ::env(OT_PRD_HOLD_PLAN)] && $::env(OT_PRD_HOLD_PLAN) ne "" && [
   puts "OT_PRD pass $_pass hold: targeted internal insert from $::env(OT_PRD_HOLD_PLAN)"
   source [file join $_here hold_eco_internal_insert.tcl]
   set ::ot_prd_scope_entered 1; set ::ot_prd_scope_restored 1; set ::ot_prd_scope_completed 1
+} elseif {[info exists ::env(OT_PRD_HOLD_TARGETED)] && $::env(OT_PRD_HOLD_TARGETED) eq "1" && [info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) ne "1"} {
+  # HOLD-FLOW-R 11-16: the standard hold_eco step for a routed kit that fails only internal FF hold: plan in this session (FF scene BC
+  # hold, TT scene setup), insert, let the normal incremental GRT + route-keep DRT route only the touched nets.
+  source [file join $_here hold_eco_internal_plan.tcl]
+  set _hei_sync 0
+  if {[llength [info commands ot_mm_sync]] && [info exists ::ot_mm_active] && ![info exists ::ot_mm_synced]} { ot_mm_sync; set _hei_sync 1 }
+  set _hei_ff {}; set _hei_tt {}
+  if {[info exists ::ot_mm_synced]} { set _hei_ff {-scenes BC}; set _hei_tt [list -scenes [ot_mm_sc]] }
+  set _hei_plan $::env(RESULTS_DIR)/hold_eco_internal_plan.tsv
+  set _hei_n [ot_hei_auto_plan $_hei_ff $_hei_tt $_hei_plan]
+  if {$_hei_sync} { ot_mm_unsync }
+  if {$_hei_n > 0} {
+    set ::env(OT_PRD_HOLD_PLAN) $_hei_plan
+    source [file join $_here hold_eco_internal_insert.tcl]
+  } else { puts "OT_PRD pass $_pass hold: targeted plan empty, nothing to insert" }
+  set ::ot_prd_scope_entered 1; set ::ot_prd_scope_restored 1; set ::ot_prd_scope_completed 1
 } elseif {[info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
   # KW-ECO-1 variant t<N> (TT-only single-mode pass): setup + DRV only; hold is repaired in the FF-only b<N> pass
   puts "OT_PRD pass $_pass hold: skipped (OT_PRD_NO_HOLD=1, TT-only pass)"

@@ -364,6 +364,44 @@ def tool_overlay_errors(ov, die, allow_file, now=None):
     return errs
 
 
+# ---- frozen views by content hash (KV-R 11-16, FABLE-FLOW-2000) ------------------------------------------------------
+
+def view_hash_errors(root):
+    """[error] for every <view>/landing_evidence (provenance.json + manifest.json) under root whose frozen files do not have the
+    sha256 the view's own provenance records (signoff.json, <m>.lef, <m>_tt.lib, face_guard_source.py), or whose manifest.json lists a
+    stale hash.  A tree with such a view must not be built or published (w652/w653/w672: face tool 5083985a != frozen 7ecd3a0d failed
+    hard_landing.prove at gen).  Same rule as tools/autopilot/view_by_hash.py check; stdlib only, because this file ships alone."""
+    errs = []
+    for dp, dn, fn in os.walk(root):
+        if os.path.basename(dp) != "landing_evidence" or "provenance.json" not in fn or "manifest.json" not in fn:
+            continue
+        rel = os.path.relpath(dp, root)
+        try:
+            prov = json.load(open(os.path.join(dp, "provenance.json")))
+            man = json.load(open(os.path.join(dp, "manifest.json")))
+            master = man["master"]
+            exp = prov.get("export") or {}
+            want = {"signoff.json": exp.get("signoff_sha256"), "face_guard_source.py": (prov.get("kit") or {}).get("face_guard_sha256")}
+            for name, sha in (exp.get("files_sha256") or {}).items():
+                if name in (master + ".lef", master + "_tt.lib"):
+                    want[name] = sha
+            for name, sha in want.items():
+                if not sha:
+                    continue
+                f = os.path.join(dp, name)
+                if not os.path.isfile(f):
+                    errs.append(f"VIEW-HASH {rel}: {name} missing")
+                elif sha256_file(f) != sha:
+                    errs.append(f"VIEW-HASH {rel}: {name} {sha256_file(f)[:8]} != provenance {sha[:8]}")
+            for name, sha in (man.get("sha256") or {}).items():
+                f = os.path.join(dp, name)
+                if os.path.isfile(f) and sha256_file(f) != sha:
+                    errs.append(f"VIEW-HASH {rel}: manifest.json stale hash for {name}")
+        except (OSError, ValueError, KeyError) as e:
+            errs.append(f"VIEW-HASH {rel}: unreadable evidence ({type(e).__name__}: {e})")
+    return errs
+
+
 def build(repo, sha, overlay_json, scope, out, die="", allow_file="", main_ref="origin/main", rt_root=""):
     if os.path.exists(out):
         raise SystemExit(f"refuse: {out} exists (a tree is built once into a new dir, never rebuilt in place)")
@@ -395,6 +433,10 @@ def build(repo, sha, overlay_json, scope, out, die="", allow_file="", main_ref="
             os.unlink(dest)
         shutil.copyfile(src, dest)                      # a fresh inode, never a link
         os.chmod(dest, os.stat(src).st_mode & 0o755 | 0o644)
+    vh = view_hash_errors(tmp)
+    if vh:                                              # fail closed: a view whose bytes differ from its provenance never ships
+        shutil.rmtree(tmp, ignore_errors=True)
+        raise SystemExit("refuse: frozen view hash mismatch:\n  " + "\n  ".join(vh[:20]))
     files = {rel: tree_hash(p) for rel, p in walk_tree(tmp).items()}
     m = {"version": 1, "main_sha": sha, "scope": list(scope), "overlay": {r: e["sha256"] for r, e in sorted(ov.items())},
          "files": files}
@@ -430,6 +472,11 @@ def publish(tree, pointer=""):
     if errs:
         report(errs)
         raise SystemExit("publish refused: tree does not match its manifest")
+    vh = view_hash_errors(tree)
+    if vh:
+        for e in vh[:MAX_SHOW]:
+            print(e)
+        raise SystemExit("publish refused: frozen view hash mismatch (view_by_hash.py stage repairs it by the recorded sha)")
     make_ro(tree)
     errs, info = verify(tree, ro=True, full=True)
     if errs:

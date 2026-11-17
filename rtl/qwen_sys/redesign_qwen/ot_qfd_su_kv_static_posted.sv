@@ -9,7 +9,7 @@
 // the existing KVN class wire. The receiver's layer/position descriptor must
 // describe the SAME admitted epoch; this module does not fabricate that link.
 module ot_qfd_su_kv_static_posted #(
- parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0, SAFE=0, LOCAL_CTL=0, SEAT_HT=0
+ parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0, SAFE=0, LOCAL_CTL=0, SEAT_HT=0, LOCAL_DIM_INPUT=0
 )(
  input wire clk,rst_n,
  input wire epoch_begin,input wire [17:0] epoch_pos,
@@ -43,6 +43,16 @@ module ot_qfd_su_kv_static_posted #(
    else if(e==119&&m[21:0]==0)encode={1'b0,b[31],5'd0,1'b1,m[22]};
    else if(e==118&&m==0)encode={1'b0,b[31],7'd1};
    else encode={1'b1,8'd0};
+  end
+ endfunction
+ // Native local dimension adapter uses the existing authenticated, held epoch pos.
+ // Only the actual SAFE2 seat-predecoded branch is supported; legacy packed input stays default.
+ initial if(LOCAL_DIM_INPUT && !(SAFE==2 && LOCAL_CTL==0 && SEAT_HT!=0))
+  $fatal(1,"LOCAL_DIM_INPUT requires SAFE2 LOCAL_CTL0 SEAT_HT1");
+ function automatic [23:0] packed_local_address(input [23:0] d,input [12:0] p);
+  begin
+   if(d[20]) packed_local_address={3'b0,1'b1,p,d[6:0]};
+   else packed_local_address={4'b0,p[12:4],d[6:0],p[3:0]};
   end
  endfunction
  localparam integer VBASE=HEADS*65536, NBYTES=HEADS*256, NWORDS=HEADS*4;
@@ -115,7 +125,12 @@ module ot_qfd_su_kv_static_posted #(
     permit=issued;if(iv_q&&ik_q<3)permit[ik_q]=1;
     if(|we_q[63:8])de[0]<=1;
     for(j=0;j<8;j=j+1)begin
-     da=wa_q[24*j+:24];aa=da[23:4];ww=aa-VBASE;co=encode(wd_q[32*j+:32]);
+     da=wa_q[24*j+:24];
+     if(LOCAL_DIM_INPUT!=0)begin
+      if(we_q[j] && ((|da[23:21]) || (|da[19:7])))de[0]<=1;
+      da=packed_local_address(da,pos);
+     end
+     aa=da[23:4];ww=aa-VBASE;co=encode(wd_q[32*j+:32]);
      if(aa<VBASE)begin ix={1'b0,aa[6:0]};dp={aa[15:7],da[3:0]};end
      else begin ix={1'b1,ww[2:0],da[3:0]};dp=ww[15:3];end
      ixm=ix^8'(MUT_LANE!=0);

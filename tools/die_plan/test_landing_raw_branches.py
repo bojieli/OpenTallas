@@ -131,3 +131,26 @@ def test_indices_are_rebuilt_for_each_validation_epoch():
     # A later baseline addition must not be hidden by a cached first-epoch index.
     g.baseline_relay('ot_dp_rrelay u_duplicate (.clk(clk), .d(r0), .q(r1));')
     with pytest.raises(RawBranchError): g.validate(emitted(g))
+
+
+def test_mixed_phase_chain_preserves_module_and_physical_state_count():
+    body = BODY.replace('ot_dp_rrelay u_r1', 'ot_dp_rrelay_nl u_r1')
+    g, _ = graph(['r1', 'r2'], body)
+    text = body + '\n' + '\n'.join(g.rtl)
+    assert 'ot_dp_rrelay_nl u_cland_raw_b_0' in text
+    assert [r['added_flops'] for r in g.rows] == [2, 1]
+    assert g.validate(text)['flops'] == 3
+    # Same pins and connectivity are insufficient: the middle edge is part of
+    # the original release equation, including when only the copy is mutated.
+    for old, new in [('ot_dp_rrelay_nl u_cland_raw_b_0', 'ot_dp_rrelay u_cland_raw_b_0'),
+                     ('ot_dp_rrelay_nl u_r1', 'ot_dp_rrelay u_r1')]:
+        with pytest.raises(RawBranchError, match='module/clock phase'):
+            g.validate(text.replace(old, new))
+
+
+def test_late_baseline_mixed_phase_is_rejected_instead_of_guessed():
+    g, _ = graph(['r1', 'late'])
+    line = 'ot_dp_rrelay_nl u_late (.clk(clk), .d(r1), .q(late));'
+    g.baseline_relay(line)
+    with pytest.raises(RawBranchError, match='module/clock phase'):
+        g.validate(emitted(g, line))

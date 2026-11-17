@@ -96,6 +96,27 @@ class ThreadCap(unittest.TestCase):
         r, ran = self.run_('8')
         self.assertTrue(ran, r.stderr)
 
+    def test_idle_cpu_admits_past_the_declared_ceiling(self):
+        self.commit(4, 8)                                 # 32 declared threads on 10 cores, load1 1.0
+        r, ran = self.run_('8')                           # measured 1 + 8 = 9 > 0.6 x 10 = 6: held
+        self.assertFalse(ran)
+        self.assertIn('measured CPU', r.stderr)
+        r, ran = self.run_('8', {'THREAD_MEASURED_FACTOR': '1.0'})   # 9 < 10: measured CPU has room
+        self.assertTrue(ran, r.stderr)
+        self.assertIn('admitted on measured CPU', (self.d / 'state' / 'admit.log').read_text())
+
+    def test_busy_cpu_holds_and_factor_zero_restores_declared_cap(self):
+        self.commit(4, 8)
+        r, ran = self.run_('8', {'THREAD_MEASURED_FACTOR': '0'})
+        self.assertFalse(ran)
+        self.assertEqual(r.returncode, 75)
+        (self.d / 'state' / 'admit.log').unlink(missing_ok=True)
+        self.load.write_text('9.0 9.0 9.0 1/1 1\n')
+        env = dict(os.environ, PATH=f'{self.d}/bin:' + os.environ['PATH'], OUT_ARGS=str(self.d / 'args'), OT_VL_JCAP='0', OT_HEAVY_SYSTEM_TOOLS='1',
+                   OT_HEAVY_THREADS='8', THREAD_MEASURED_FACTOR='1.0')
+        r = subprocess.run([str(self.h), '--mem', '4', '--max-wait', '1', '--', 'true'], capture_output=True, text=True, env=env, timeout=60)
+        self.assertEqual(r.returncode, 75)                # load1 9 + 8 > 10: busy host still holds
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -68,6 +68,39 @@ class NativeBaseTest(unittest.TestCase):
         self.manifest.write_text(json.dumps({"base": str(mirror), "clock_landing_table": "runtime/landing.json"}))
         self.assertEqual(got, kit_topology.native_contract(raw, self.manifest, self.plan))
 
+    def snapshot_manifest(self, live_base, table="landing.json"):
+        snap = self.root / "kit-store" / "snaps" / "abc" / "root"
+        live_manifest = self.root / "producer" / "asbuilt.json"
+        manifest = snap / live_manifest.relative_to(live_manifest.anchor)
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(json.dumps({"base": str(live_base), "clock_landing_table": table}))
+        mirror = snap / live_base.relative_to(live_base.anchor)
+        return snap, manifest, mirror
+
+    def test_snapshot_absolute_base_relative_table_uses_mirror_even_when_live_exists(self):
+        snap, manifest, mirror = self.snapshot_manifest(self.native)
+        mirror.mkdir(parents=True)
+        (mirror / "landing.json").write_text('{"collector":{"types":{}},"epoch":"snapshot"}')
+        raw = {"partition_types": {"t": {"buses": []}}, "asbuilt": {}}
+        got = kit_topology.native_contract(raw, manifest, self.plan)
+        expected = dict(raw, asbuilt={"base": str(mirror), "clock_landing_table": "landing.json"})
+        self.assertEqual(got, kit_topology.native_contract(expected, plan_path=self.plan))
+        live = dict(raw, asbuilt={"base": str(self.native), "clock_landing_table": "landing.json"})
+        self.assertNotEqual(got["clock_table_sha256"], kit_topology.native_contract(live, plan_path=self.plan)["clock_table_sha256"])
+
+    def test_missing_snapshot_table_never_falls_back_to_live(self):
+        _, manifest, mirror = self.snapshot_manifest(self.native)
+        mirror.mkdir(parents=True)
+        with self.assertRaises(FileNotFoundError):
+            kit_topology.native_contract({"partition_types": {}}, manifest, self.plan)
+
+    def test_snapshot_absolute_base_symlink_escape_refused(self):
+        _, manifest, mirror = self.snapshot_manifest(self.native)
+        mirror.parent.mkdir(parents=True, exist_ok=True)
+        mirror.symlink_to(self.native, target_is_directory=True)
+        with self.assertRaisesRegex(ValueError, "inside its manifest snapshot"):
+            kit_topology.native_contract({"partition_types": {}}, manifest, self.plan)
+
     def test_absolute_table_without_snapshot_copy_still_refused(self):
         outside = self.root / "elsewhere" / "landing.json"
         outside.parent.mkdir()

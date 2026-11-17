@@ -594,6 +594,7 @@ def scope_cg(unit):
 
 
 def main():
+    reap_completed_thread_charges()
     try:
         st = json.load(open(STATE))
     except (OSError, ValueError):
@@ -1161,6 +1162,80 @@ def holds_admit_lock(fd=8):
     return (a.st_dev, a.st_ino) == (b.st_dev, b.st_ino)
 
 
+def reap_completed_thread_charges():
+    """Retire only terminal thread receipts; never release memory or touch jobs.
+
+    THREADCAP_1116 counted completed res/cthr pairs forever. A real completion,
+    reachable user manager, empty inactive scope and absence of a matching
+    running container are all required. Uncertain legacy/detached jobs retain
+    their charge. Admission already passes its lock on fd8; cron takes it here.
+    """
+    if holds_admit_lock():
+        return _reap_completed_thread_charges_locked()
+    with open(LOCK, "a") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        return _reap_completed_thread_charges_locked()
+
+
+def _reap_completed_thread_charges_locked():
+    import shlex
+    if not sh("systemctl", "--user", "is-system-running"):
+        return []
+    candidates = []
+    for path in glob.glob(f"{D}/cthr.*"):
+        unit = os.path.basename(path)[5:]
+        if os.path.exists(f"{D}/res.{unit}") and completion_status(unit).isdigit():
+            candidates.append((unit, path))
+    if not candidates:
+        return []
+    try:
+        ids = subprocess.run(["docker", "ps", "-q"], capture_output=True, text=True, check=True).stdout.split()
+        running = json.loads(subprocess.run(["docker", "inspect", *ids], capture_output=True,
+                                            text=True, check=True).stdout) if ids else []
+        if not isinstance(running, list):
+            return []
+    except (OSError, ValueError, subprocess.SubprocessError):
+        return []
+    inventory = json.dumps(running)
+    commands = launches()
+    retired = []
+    for unit, path in candidates:
+        state = sh("systemctl", "--user", "show", f"{unit}.scope", "-p", "LoadState",
+                   "-p", "ActiveState", "-p", "ControlGroup")
+        fields = dict(line.split("=", 1) for line in state.splitlines() if "=" in line)
+        if fields.get("LoadState") != "not-found" or fields.get("ActiveState") != "inactive" or fields.get("ControlGroup") != "":
+            continue
+        # A finished launcher can leave a Docker payload. Preserve both exact
+        # unit matches and the launch's explicit kit/path/container identity.
+        try:
+            tokens = shlex.split(commands.get(unit, (0, ""))[1])
+        except ValueError:
+            continue
+        identities = [unit]
+        identities += [t for t in tokens if t.startswith("/") and len(t) > 10]
+        identities += [tokens[i + 1] for i, t in enumerate(tokens[:-1]) if t == "--name"]
+        if any(identity in inventory for identity in identities):
+            continue
+        receipt = f"{D}/completed-thread-ledger/{unit}.json"
+        record = dict(unit=unit, threads=rd(path).strip(), completion=rd(f"{D}/completions/{unit}").strip(),
+                      scope=fields, retired_at=time.time())
+        try:
+            os.makedirs(os.path.dirname(receipt), exist_ok=True)
+            with open(receipt, "x") as f:
+                json.dump(record, f, sort_keys=True)
+        except FileExistsError:
+            # A reused/mutated charge must not inherit an old completion receipt.
+            continue
+        except OSError:
+            continue
+        try:
+            os.unlink(path)
+        except OSError:
+            continue
+        retired.append(unit)
+    return retired
+
+
 def gate(mem, argv):
     """ot-heavy asks under its admission lock: may this request start now, and at what charge.  v12: a caller that does
     not hold the lock gets it taken here, so two admissions never read the same books."""
@@ -1406,6 +1481,7 @@ def waiter_pid(start=None):
 
 
 def gate_locked(mem, argv):
+    _reap_completed_thread_charges_locked()
     cls = classify(argv)
     table = sizes()
     a = admit_size(mem, cls, table, argv)

@@ -11,6 +11,7 @@ main tools + the die's plan, nothing else.
             (private tool) or missing from the die tree (stale tree)
   allowlist tools/autopilot/tool_skew_allow.json (reviewed with main):
               {"<die>": {"<tools/... module or fnmatch glob>": {"expires": "YYYY-MM-DD", "why": "unmerged die feature"}}}
+            Optional tree_sha256/reference_sha256 bind an exception to exact overlay and baseline bytes.
             An entry covers a module only until its expiry date; an expired entry is a skew again and is reported.
   CLI       tool_skew.py manifest TREE      -> JSON {module: sha256} of the closure (also runs remotely over ssh stdin)
             tool_skew.py check DIE TREE [--main DIR] [--allow FILE] [--host H]
@@ -161,7 +162,7 @@ def load_allow(path):
         return {}
 
 
-def apply_allow(skew, die_allow, today):
+def apply_allow(skew, die_allow, today, tree_m=None, reference_m=None):
     """-> (refused, allowed, expired): refused {module: kind} not covered by a live entry; allowed {module: why};
     expired {module: expiry} covered only by an entry past its date (those count as refused)"""
     refused, allowed, expired = {}, {}, {}
@@ -171,6 +172,10 @@ def apply_allow(skew, die_allow, today):
             if rel == pat or fnmatch.fnmatchcase(rel, pat):
                 exp = str((ent or {}).get("expires", ""))
                 if exp and exp >= today:
+                    # Optional exact-byte policy for approved pinned overlays. Missing inventories fail closed.
+                    if any(key in ent and (inventory or {}).get(rel) != ent[key]
+                           for key, inventory in (("tree_sha256", tree_m), ("reference_sha256", reference_m))):
+                        continue
                     hit = (pat, ent)
                     break
                 expired[rel] = exp or "no expiry"
@@ -188,10 +193,26 @@ def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=No
     today = today or datetime.date.today().isoformat()
     if tools_sha:                                        # pin mode: reference = the die's pinned tools_sha, whole TOOLS scope
         ref = pin_manifest(tools_sha, rt_root)
-        if ref is None:
-            return dict(ok=not strict, measured=False, refused={f"rt/{str(tools_sha)[:12]}": "missing"} if strict else {},
-                        allowed={}, expired={}, n_closure=0, pin=str(tools_sha)[:12])
         mk = v2_marker(tree) if Path(tree).is_dir() else None
+        if ref is None:
+            # WAVE-FLOW-R 11-17: a pin with no rt manifest (s81 pin 2efedf57b857 was never published) read as "tree not readable" on 24 of 24
+            # ticks.  The v2 tree's own base (main_sha) is the pin it was built on: use its manifest, say so; else name the missing pin.
+            if tree_m is None and Path(tree).is_dir():
+                tree_m = tree_scope_manifest(tree)
+            if tree_m is None and host:
+                remote = remote_scope_manifest(host, tree)
+                if remote is not None:
+                    tree_m, mk = remote["files"], remote.get("marker")
+            base = str((mk or {}).get("main_sha") or "")
+            ref = pin_manifest(base, rt_root) if base else None
+            if ref is None:
+                return dict(ok=not strict, measured=False, refused={f"rt/{str(tools_sha)[:12]}": "missing"} if strict else {},
+                            allowed={}, expired={}, n_closure=0, pin=str(tools_sha)[:12],
+                            why=f"pin manifest rt/{str(tools_sha)[:12]}.manifest.json missing on the hub"
+                                + ("" if tree_m is not None else " and tree unreadable"))
+            tools_sha = base
+        if mk is None and Path(tree).is_dir():
+            mk = v2_marker(tree)
         if tree_m is None and Path(tree).is_dir():
             tree_m = tree_scope_manifest(tree)
         if tree_m is None and host:
@@ -206,7 +227,7 @@ def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=No
         # marker main_sha is the pin is compared on the pin's own files; the files the baseline does not list are main's, not private.
         if mk and str(mk["main_sha"])[:12] == str(tools_sha)[:12]:
             tree_m = {k: v for k, v in tree_m.items() if k in ref}
-        refused, allowed, expired = apply_allow(diff(tree_m, ref), (allow or {}).get(die) or {}, today)
+        refused, allowed, expired = apply_allow(diff(tree_m, ref), (allow or {}).get(die) or {}, today, tree_m, ref)
         return dict(ok=not refused, measured=True, refused=refused, allowed=allowed, expired=expired, n_closure=len(ref),
                     pin=str(tools_sha)[:12])
     main_m = main_m if main_m is not None else manifest(main_root)
@@ -220,7 +241,7 @@ def check_die(die, tree, main_root, allow=None, host=None, today=None, tree_m=No
     if only is not None:                                 # one closure for the wave gate and the FLOW-HEALTH SKEW table (flow_guard.closure_files)
         main_m = {k: v for k, v in main_m.items() if k in only}
         tree_m = {k: v for k, v in tree_m.items() if k in only}
-    refused, allowed, expired = apply_allow(diff(tree_m, main_m), (allow or {}).get(die) or {}, today)
+    refused, allowed, expired = apply_allow(diff(tree_m, main_m), (allow or {}).get(die) or {}, today, tree_m, main_m)
     return dict(ok=not refused, measured=True, refused=refused, allowed=allowed, expired=expired, n_closure=len(main_m))
 
 

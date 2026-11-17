@@ -3,7 +3,12 @@
 Moved into the repo (tools/autopilot) from tools-converge/apply_reviewed_tree_marker_1116.py (FLEET-OPS-R, COORD r397) and extended with
 PILOT wave mode: the atomic apply switches die.src in kit_wave.json itself, so hold_records.apply_tree_switches never sees a switch;
 this adds the pilot hold (all items held but one pilot, released by gen_pilot:<die>:<manifest sha12>) in the same locked write.
+PUBLISH-GATE-1116: refuses without a PASS record of tools/autopilot/publish_gate.py (run it first; no opt-out flag).
 usage: apply_reviewed_tree_marker.py --candidate JSON --expect-source OLD_TREE --expect-event OLD_EVENT [--pilot-item ITEM | --no-pilot]
+       [--keep-gen-hosts]
+--keep-gen-hosts (or candidate key keep_gen_hosts: true; HEAD-DIE-R, COORD r400/r401): keep the die's CURRENT gen_hosts (e.g. a
+replica FLEET-OPS added after the candidate was written) instead of the candidate list.  The normal source guard must be full_ok on
+exactly those hosts, and the apply refuses when gen_hosts changed between that guard read and the locked write.
 The pilot item is --pilot-item, else die.pilot_item, else the smallest item of the die's hold_event_items; none resolvable = refuse
 (--no-pilot is the explicit opt-out; the output then says PILOT NONE)."""
 import argparse, fcntl, json, os, sys, time
@@ -20,7 +25,7 @@ def atomic(path, data):
     os.replace(tmp, path)
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None):
     C = Path(C)
     marker = dict(obj.get("marker", obj))
     die = marker["die"]
@@ -28,7 +33,21 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
     want = marker.get("manifest_hash") or marker["src_manifest_sha"]
     mc = dict(marker.get("config") or {})
     hosts = list(mc.get("gen_hosts") or marker.get("hosts") or [])
+    keep = bool(keep_gen_hosts or obj.get("keep_gen_hosts"))
+    if keep:
+        cur = json.loads((C / "autopilot/kit_wave.json").read_text())["dies"][die]
+        hosts = list(cur.get("gen_hosts") or [])
+        assert hosts, "keep_gen_hosts: the die has no current gen_hosts"
+        mc.pop("gen_hosts", None)
+        mc.pop("gen_host", None)
     assert hosts and marker.get("smoke") == "PASS" and marker.get("plan") and marker.get("plan_sha256")
+    # PUBLISH-GATE-1116: no switch without a PASS record of the pre-apply gate (schema, PRE/G0, provenance hashes, dry gen) keyed to
+    # this tree manifest sha.  PG=False is only publish_gate.project_cfg() projecting the apply on a scratch copy.
+    if PG is not False:
+        if PG is None:
+            import publish_gate as PG
+        why = PG.require_pass(C, die, tree, want, marker["plan_sha256"])
+        assert not why, why
     if TC is None:
         import tree_check as TC
     rt = rt or HERE
@@ -44,6 +63,8 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         cfg = json.loads(cfgpath.read_text())
         d = cfg["dies"][die]
         assert d["src"] == expect_source and d["event"] == expect_event, "die changed since reviewed candidate"
+        if keep:
+            assert sorted(d.get("gen_hosts") or []) == sorted(hosts), "keep_gen_hosts: gen_hosts changed since the guard read; nothing applied"
         old = dict(src=d["src"], event=d["event"], plan=d.get("plan"), plan_sha256=d.get("plan_sha256"), kit_rtl=d.get("kit_rtl"))
         # decide the pilot BEFORE any write: a refusal leaves everything untouched
         pilot = ""
@@ -52,11 +73,17 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             if not pilot:
                 raise SystemExit("PILOT: no pilot item for die %s (--pilot-item ITEM, die.pilot_item, or --no-pilot); nothing applied" % die)
         HR._deep_set(d, mc)
+        # FABLE-FLOW-2200: keep the CURRENT tree and ONE rollback (the tree just replaced); the rollback of the previous switch is now two versions back
+        # and becomes superseded (retired whole through the guard by retire_superseded.py)
         sup = d.setdefault("superseded_trees", [])
-        if old["src"] and old["src"] != tree and old["src"] not in sup:
-            sup.append(old["src"])
+        rb = d.get("rollback_tree")
+        if rb and rb != tree and rb != old["src"] and rb not in sup:
+            sup.append(rb)
+        if old["src"] and old["src"] != tree:
+            d["rollback_tree"] = old["src"]
         d.update(src=tree, src_manifest=True, src_manifest_hash=want, plan=marker["plan"], plan_sha256=marker["plan_sha256"], gen_hosts=hosts,
-                 gen_host=mc.get("gen_host") or hosts[0], cancel_superseded=False)
+                 gen_host=mc.get("gen_host") or (d.get("gen_host") if keep and d.get("gen_host") in hosts else hosts[0]),
+                 cancel_superseded=False)
         d.setdefault("src_sha", main)
         d.setdefault("queue_src", "main@" + main)
         if "src_sha" not in mc:
@@ -75,12 +102,30 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         for rec in d.get("hold_records") or []:
             rec["release"] = [("tree_ready:" + die + ":" + tree) if x == "tree_ready:" + die + ":" + expect_source else x for x in rec.get("release") or []]
         pilot_added = False
+        prior_pilots = [r for r in d.get("hold_records") or [] if r.get("auto_pilot")]
         if pilot:
             d["pilot_item"] = pilot
             pilot_added = HR.add_pilot_hold(cfg, die, d, dict(marker, manifest_hash=want))
+        current_ids = {r.get("id") for r in d.get("hold_records") or []}
+        retired_pilots = [r for r in prior_pilots if r.get("id") not in current_ids]
+        published_gen_import = {"status": "NORMAL-GEN"}
+        if pilot and PG is not False:
+            try:
+                import published_gen_origin as PGO
+                import kit_wave as KW
+                ref, why = PGO.reference_for_apply(C, cfg, die, pilot, KW, recipe_archive=obj.get("published_gen_recipe_archive"))
+                pilot_record = next((r for r in d.get("hold_records") or []
+                                     if r.get("id") == "pilot-%s-%s" % (die, want[:12]) and r.get("auto_pilot")), None)
+                if ref and pilot_record is not None:
+                    pilot_record["published_gen_proof"] = ref
+                    published_gen_import = {"status": "IMPORTED", "proof": ref}
+                else:
+                    published_gen_import["why"] = why or "no automatic pilot hold"
+            except (ImportError, AssertionError, OSError, ValueError, TypeError, KeyError, AttributeError) as e:
+                published_gen_import["why"] = str(e)
         marker.update(manifest_hash=want, src_manifest_sha=want, status="ADOPTED reviewed tuple", written_by="root-authorized lane atomic apply")
         receipt = C / ("lanes/handoff/" + die + "_atomic_apply_" + str(time.time_ns()) + ".json")
-        atomic(receipt, dict(die=die, prior=old, marker=marker, pilot=dict(item=pilot, hold_added=pilot_added, release="gen_pilot:%s:%s" % (die, want[:12])) if pilot else "NONE",
+        atomic(receipt, dict(die=die, prior=old, marker=marker, published_gen_import=published_gen_import, pilot=dict(item=pilot, hold_added=pilot_added, retired=retired_pilots, release="gen_pilot:%s:%s" % (die, want[:12])) if pilot else "NONE",
                              guard=str(TC.location(C / "autopilot/tree_checks", ident) / "result.json"), candidate=str(obj.get("_path", ""))))
         atomic(C / HR.tree_marker_rel(die), marker)
         atomic(cfgpath, cfg)
@@ -95,11 +140,12 @@ def main(argv=None):
     P.add_argument("--expect-event", required=True)
     P.add_argument("--pilot-item")
     P.add_argument("--no-pilot", action="store_true")
+    P.add_argument("--keep-gen-hosts", action="store_true", help="keep the die's current gen_hosts (guard must cover exactly them)")
     P.add_argument("--coord", default="/home/ubuntu/coord")
     a = P.parse_args(argv)
     obj = json.loads(Path(a.candidate).read_text())
     obj["_path"] = a.candidate
-    print(json.dumps(apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot)))
+    print(json.dumps(apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts)))
 
 
 if __name__ == "__main__":

@@ -120,13 +120,38 @@ proc nc_dpin {inst} { foreach t [$inst getITerms] { if {[[$t getMTerm] getName] 
 proc nc_ctr {o} { set b [$o getBBox]; return [list [expr {([$b xMin]+[$b xMax])/2}] [expr {([$b yMin]+[$b yMax])/2}]] }
 # head-hop cells are sited only when each drives nothing but this chain (a buffer that also feeds another load stays put)
 proc nc_headhop_single {head bs} { foreach b $bs { if {[nc_loads $b] != 1} { return 0 } }; return 1 }
-set nc_hh_moved 0; set nc_hh_shared 0
+# FLOW-QC-CB 11-17 (cbn_q01 setup -302.85, 147 ends): a head hop whose cells are shared (a QN inverter that feeds more than this
+# chain) used to be skipped whole, so after the xstn was re-sited the inverter and the dedicated place* buffer chain behind it
+# stayed at their GPL positions (1,105 um apart) and the built path was 1,740 um for a 280 um pair.  Plan for a shared head hop,
+# bs nearest-first with their load counts lc: a shared cell (loads > 1) belongs to the head register and goes to the head, every
+# dedicated cell (one load) is spread along the first route hop as in the unshared case.  Pure function: {{q x y} ...}.
+# post-place check (report only): built head-hop path (head -> cells -> stage 0, Manhattan) over the direct head -> stage 0 distance
+proc nc_hop_stretch {head stage bs} {
+  global nc_hh_stretch nc_hh_seen
+  lassign [nc_ctr [$head getInst]] px py; lassign [nc_ctr $stage] sx sy
+  set direct [expr {abs($sx-$px)+abs($sy-$py)}]; set len 0
+  foreach b [lreverse $bs] { lassign [nc_ctr $b] x y; set len [expr {$len+abs($x-$px)+abs($y-$py)}]; set px $x; set py $y }
+  set len [expr {$len+abs($sx-$px)+abs($sy-$py)}]
+  incr nc_hh_seen
+  if {$direct > 0 && $len > 3.0*$direct} { incr nc_hh_stretch }
+}
+proc nc_headhop_plan {lc hx hy route hops} {
+  set nb [llength $lc]; set out {}
+  for {set q 0} {$q < $nb} {incr q} {
+    if {[lindex $lc $q] > 1} { lappend out [list $q $hx $hy]; continue }
+    set f [expr {(1.0 - double($q+1)/($nb+1)) / $hops}]
+    lassign [nc_at $route $f] x y
+    lappend out [list $q $x $y]
+  }
+  return $out
+}
+set nc_hh_moved 0; set nc_hh_shared 0; set nc_hh_shared_moved 0; set nc_hh_stretch 0; set nc_hh_seen 0
 set nc_corefix 0; set nc_chains 0; set nc_moved 0; set nc_l0 {}; set nc_l1 {}; set nc_rc {}
 proc nc_cluster {inst} { if {[regexp {^(.*)\.u_st\.} [string map {\\ {}} [$inst getName]] -> c]} { return $c }; return "" }
 # one chain: walk back from the tail register $pc, spread its zero-logic stages and hop buffers along the macro-avoiding route.
 # gate (CB-XSTN): empty = always; else a dict of xstn clusters, and only chains whose tail or head sits in one are spread.
 proc nc_chain_one {pc {gate ""}} {
-  global nc_blk nc_dbu nc_corefix nc_chains nc_moved nc_l0 nc_l1 nc_rc nc_hh_moved nc_hh_shared
+  global nc_blk nc_dbu nc_corefix nc_chains nc_moved nc_l0 nc_l1 nc_rc nc_hh_moved nc_hh_shared nc_hh_shared_moved
   # backward: hops {stage_inst bufs_on_its_D}, stages = movable fanout-1 zero-logic chain registers
   set seq {}; set hopb {}; set cur $pc; set head ""
   while {[llength $seq] < 24} {
@@ -183,7 +208,16 @@ proc nc_chain_one {pc {gate ""}} {
     set bs [lindex $hopb $k]; set nb [llength $bs]; if {!$nb} continue
     set hopi [expr {$n - $k}]   ;# hop index: from position hopi to hopi+1 (sink side)
     set headhop [expr {$k == $n}]
-    if {$headhop && ![nc_headhop_single $head $bs]} { incr nc_hh_shared; continue }
+    if {$headhop && ![nc_headhop_single $head $bs]} {
+      incr nc_hh_shared
+      set lc {}; foreach b $bs { lappend lc [nc_loads $b] }
+      foreach pl [nc_headhop_plan $lc $hx $hy $route $hops] {
+        lassign $pl q x y; set bi [lindex $bs $q]
+        if {[nc_mov $bi]} { nc_put $bi $x $y; incr nc_hh_shared_moved }
+      }
+      nc_hop_stretch $head [lindex $seq 0] $bs
+      continue
+    }
     for {set q 0} {$q < $nb} {incr q} {
       set bi [lindex $bs $q]; if {![nc_mov $bi]} continue
       set f [expr {($hopi + 1 - double($q+1)/($nb+1)) / $hops}]
@@ -354,6 +388,7 @@ if {[dict size $nx_moved]} {
   set nx_spread [expr {$nc_chains - $nc_chains_before}]
 }
 puts "OT_XSTN_SITE xstn $nx_seen kept $nx_kept kept_external $nx_keep_ext moved [dict size $nx_moved] cells_moved $nx_cells p90_um_from_face_strip_before [format %.0f $nx_before] after [format %.0f $nx_after] reach_um $nx_reach_um a_d_chains_spread $nx_spread faces [dict values $nx_moved]"
+catch {puts "OT_NK_HEADHOP_RESITE shared_hops $nc_hh_shared shared_hop_cells_resited $nc_hh_shared_moved shared_hops_checked $nc_hh_seen path_over_3x_direct_after $nc_hh_stretch"}
 }
 # CBF-R8-CORRIDOR: an INNER strap bank has a fixed common prefix, a selectable count bank and a final NK pipe.
 # The mux is not a register chain: discover it by the kept bank identity, then verify ALL dynamic cone roots.

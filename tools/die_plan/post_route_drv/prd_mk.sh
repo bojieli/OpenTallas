@@ -120,7 +120,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py hold_eco_internal_insert.tcl; do cp --remove-destination $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py hold_eco_internal_insert.tcl hold_eco_internal_plan.tcl output_net_identity.tcl; do cp --remove-destination $HERE/$f $OUT/; done
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp --remove-destination "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
 if [ "$CLOCK_INVENTORY" = 1 ]; then
@@ -147,6 +147,8 @@ python3 -I "$HERE/post_grt_chain.py" "$OUT"
   echo 'source /work/pg_connect.tcl'
   echo 'if {(![info exists ::env(OT_PG_STRICT)] || $::env(OT_PG_STRICT) ne "1") && [llength [[ord::get_db_block] getGlobalConnects]]} {ot_pg_connect_all post_route_drv}'
   echo 'ot_pg_require_bound post_route_drv'
+  echo 'source /work/output_net_identity.tcl'
+  echo 'ot_output_net_identity'
   echo 'if {[llength [info commands ot_clk_freeze_assert]]} {ot_clk_freeze_assert post_chain}'; } > $OUT/eco_post.tcl
 python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk | tail -n 1)
@@ -158,14 +160,27 @@ if [ -z "$(echo $ML_TT)" ]; then
   ML_TT=$(sed -n 's/^\(override \)\{0,1\}export TC_LIB_FILES *[?:+]\{0,1\}= *//p' $OUT/config.mk | tail -n 1 |
           tr ' ' '\n' | { grep -v -e '^\$(' -e '^$' || true; } | tr '\n' ' ' | sed 's/ $//')
 fi
-# macro libs: *_tt.lib -> *_ff.lib; explicit ASAP7 standard-cell libs (e.g. INVBUF_LVT of an LVT clock context, platform
-# path or a /work copy): <group>_<VT>_TT_nldm_ -> _FF_nldm_ (same release dates in the PDK); platform paths live in the
-# image, not in the kit (DIE-KV-46 10-30: the TT LVT lib was taken as a missing FF macro lib)
-ML_FF=$(echo "$ML_TT" | sed -E 's/_tt\.lib/_ff.lib/g; s/(asap7sc7p5t_[A-Z]+_(RVT|LVT|SLVT))_TT_nldm_/\1_FF_nldm_/g')
-for f in $ML_FF; do
-  case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
-  test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
-done
+# A declared BC list owns the corner mapping, including custom names such as
+# pk2_tc.lib -> pk2_BC.lib. Keep its RHS; guessing from ADDITIONAL_LIBS would
+# silently append the TT macro back into the BC session.
+BC_LINE=$(sed -n '/^\(override \)\{0,1\}export BC_LIB_FILES *[?:+]\{0,1\}=/p' "$OUT/config.mk" | tail -n 1)
+if [ -n "$BC_LINE" ]; then
+  BC_RHS=$(printf '%s\n' "$BC_LINE" | sed 's/^[^=]*= *//')
+  for f in $BC_RHS; do
+    case "$f" in
+      /work/*) test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing declared FF macro lib $f"; exit 2; } ;;
+    esac
+  done
+else
+  # No explicit BC list: retain the established macro / ASAP7 suffix fallback.
+  # Platform standard-cell libraries live in the image, not in the kit.
+  ML_FF=$(echo "$ML_TT" | sed -E 's/_tt\.lib/_ff.lib/g; s/(asap7sc7p5t_[A-Z]+_(RVT|LVT|SLVT))_TT_nldm_/\1_FF_nldm_/g')
+  for f in $ML_FF; do
+    case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
+    test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
+  done
+  BC_RHS='$(BC_NLDM_LIB_FILES)'" $ML_FF"
+fi
 # KV-ECTLK-RL 11-15: the marker is the block's own PRE_GLOBAL_ROUTE_TCL line, not the comment: a kit that carries the
 # comment text (KV-50 / KV-51 note) made prd_mk skip the whole block (eco_grt_pre.tcl, eco_post.tcl): NO-OP ECO, no clk_freeze_pre.tsv
 if ! grep -q '^override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl$' $OUT/config.mk; then
@@ -189,7 +204,7 @@ test -z "$KPRE" -o "$KPRE" = /work/eco_drt_pre.tcl || echo "override export OT_E
 cat >> $OUT/config.mk <<CFG
 override export PRE_DETAIL_ROUTE_TCL = /work/eco_drt_pre.tcl
 export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES) $ML_TT
-export BC_LIB_FILES = \$(BC_NLDM_LIB_FILES) $ML_FF
+export BC_LIB_FILES = $BC_RHS
 override export PWR_NETS_VOLTAGES =
 override export GND_NETS_VOLTAGES =
 CFG
@@ -248,6 +263,7 @@ done
 [ -z "${OT_PRD_UNFOLD_CHAINS:-}" ] || printf 'OT_PRD_UNFOLD_CHAINS=%q\n' "$OT_PRD_UNFOLD_CHAINS" >> $OUT/variant.env
 # HOLD-FLOW-R 11-16: targeted internal hold insert plan (hold_eco_internal.py plan), staged beside the hook
 if [ -n "${OT_PRD_HOLD_PLAN:-}" ]; then cp --remove-destination "$OT_PRD_HOLD_PLAN" $OUT/hold_plan.tsv && echo 'OT_PRD_HOLD_PLAN=/work/hold_plan.tsv' >> $OUT/variant.env; fi
+[ "${OT_PRD_HOLD_TARGETED:-0}" != 1 ] || echo 'OT_PRD_HOLD_TARGETED=1' >> $OUT/variant.env
 [ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_SLEW_PS:-}" ] || printf 'OT_PRD_TARGET_SLEW_PS=%q\n' "$OT_PRD_TARGET_SLEW_PS" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_FANOUT:-}" ] || [ "${OT_PRD_TARGET_FANOUT}" = 0 ] || printf 'OT_PRD_TARGET_FANOUT=%q\n' "$OT_PRD_TARGET_FANOUT" >> $OUT/variant.env

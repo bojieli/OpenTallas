@@ -134,9 +134,11 @@ def test_mk_stages_two_mode_session_and_keeps_kit_runner(tmp_path):
     eco = (p1 / "eco_post.tcl").read_text().splitlines()
     assert eco[:3] == ["source /work/kit_modes_eco.tcl", "source /work/prd_hook.tcl", "kit_modes_eco_done"]
     assert eco[-1] == "if {[llength [info commands ot_clk_freeze_assert]]} {ot_clk_freeze_assert post_chain}"   # S81-CORES-1115
-    assert eco[-4] == "source /work/pg_connect.tcl"
-    assert "OT_PG_STRICT" in eco[-3] and "getGlobalConnects" in eco[-3] and "ot_pg_connect_all post_route_drv" in eco[-3]
-    assert eco[-2] == "ot_pg_require_bound post_route_drv"
+    assert eco[-6] == "source /work/pg_connect.tcl"
+    assert "OT_PG_STRICT" in eco[-5] and "getGlobalConnects" in eco[-5] and "ot_pg_connect_all post_route_drv" in eco[-5]
+    assert eco[-4] == "ot_pg_require_bound post_route_drv"
+    assert eco[-3:-1] == ["source /work/output_net_identity.tcl", "ot_output_net_identity"]   # SPEPRD3 alias cycle
+    assert (p1 / "output_net_identity.tcl").is_file()
     assert (p1 / "pg_connect.tcl").read_text() == (ROOT / "tools/die_plan/pg_connect.tcl").read_text()
     base = p1 / "run/results/asap7" / NICK / "base"
     assert (base / "4_cts.odb").read_text() == "kit grt\n" and (base / "6_final.spef").read_text() == "*SPEF kit routed\n"
@@ -191,6 +193,35 @@ def test_mk_keeps_macro_libs_listed_in_tc_lib_files(tmp_path):
     r = mk(make_kit(tmp_path / "k2"), tmp_path / "p2")
     tc = [l for l in (tmp_path / "p2" / "config.mk").read_text().splitlines() if l.startswith("export TC_LIB_FILES")][-1]
     assert r.returncode == 0 and tc.split()[3:] == ["$(TC_NLDM_LIB_FILES)"]
+
+
+@pytest.mark.parametrize("rhs", ["$(BC_NLDM_LIB_FILES) /work/macros/pk2_BC.lib",
+                                  "/work/macros/pk2_BC.lib"])
+def test_mk_preserves_explicit_custom_bc_lib_rhs(tmp_path, rhs):
+    # Bksel's actual custom TC/BC names do not obey the _tt -> _ff fallback.
+    kit = make_kit(tmp_path)
+    (kit / "macros").mkdir()
+    for name in ("pk2_tc.lib", "pk2_BC.lib"):
+        (kit / "macros" / name).write_text("library(x) {}\n")
+    cfg = (kit / "config.mk").read_text().replace(
+        "export ADDITIONAL_LIBS =\n", "export ADDITIONAL_LIBS = /work/macros/pk2_tc.lib\n")
+    (kit / "config.mk").write_text(cfg + f"export BC_LIB_FILES = {rhs}\n")
+    r = mk(kit, tmp_path / "p1")
+    assert r.returncode == 0, r.stdout + r.stderr
+    lines = (tmp_path / "p1/config.mk").read_text().splitlines()
+    assert [line for line in lines if line.startswith("export BC_LIB_FILES")][-1] == f"export BC_LIB_FILES = {rhs}"
+    assert [line for line in lines if line.startswith("export TC_LIB_FILES")][-1].endswith(" /work/macros/pk2_tc.lib")
+
+
+def test_mk_refuses_missing_explicit_bc_even_when_tc_exists(tmp_path):
+    kit = make_kit(tmp_path)
+    (kit / "macros").mkdir()
+    (kit / "macros/pk2_tc.lib").write_text("library(x) {}\n")
+    cfg = (kit / "config.mk").read_text().replace(
+        "export ADDITIONAL_LIBS =\n", "export ADDITIONAL_LIBS = /work/macros/pk2_tc.lib\n")
+    (kit / "config.mk").write_text(cfg + "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/pk2_BC.lib\n")
+    r = mk(kit, tmp_path / "p1")
+    assert r.returncode == 2 and "missing declared FF macro lib /work/macros/pk2_BC.lib" in r.stdout
 
 
 def test_mk_no_fanout_limit_by_default(tmp_path):
@@ -669,7 +700,7 @@ def test_prd_pg_preserves_native_ownership_and_checks_actual_binding(tmp_path, s
     out = tmp_path / 'p1'
     result = mk(kit, out)
     assert result.returncode == 0, result.stdout + result.stderr
-    tail = (out / 'eco_post.tcl').read_text().splitlines()[-3:-1]
+    tail = (out / 'eco_post.tcl').read_text().splitlines()[-5:-3]
     script = ('namespace eval ord {}\n'
               'proc ord::get_db_block {} {return block}\n'
               'proc block {m} {return {' + ('r1' if rules else '') + '}}\n'

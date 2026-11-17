@@ -48,6 +48,21 @@ THE RULES (numbers; the why and the evidence are in ~/coord/lanes/RULEBOOK-1113.
                         nearer tap exists, never a tap that no longer exists.  FIX: re-point source_clock_port to
                         the nearest tap (0 cycles, same clock family).
 
+  R-REACH-5 edge_reach  A registered hop whose launch and capture flops use OPPOSITE clock edges has half a cycle:
+                        it reaches HALF_REACH_UM (180 um), not REACH_UM (S81-STRIP 11-17, COORD 01:55: t47's reset class
+                        is falling-edge relay -> relay hops of 363-387 um against a ~416 ps budget, worst -232 ps).  Under
+                        reset.relay_lockup "negedge" every internal reset relay (rst_rl_<k>, raw copies rr_t<i>) is an
+                        ot_dp_rrelay_nl (posedge state, NEGEDGE q); leaf taps rst_n_t<i> stay plain posedge.  Checked:
+                        (a) every START relay stage's raw reset (landing_reader_start / landing_writer_start raw_reset;
+                        the stages are posedge ot_dp_landing_relay) and every clock.landing_local_resets raw: rst_n_t<i>
+                        = same edge (REACH_UM from the tap), rr_t<i> / rst_rl_<k> on a negedge type = half cycle
+                        (HALF_REACH_UM from the tap / relay site); rr_t<i> needs the START broadcast (reset.start
+                        "broadcast"), else the net does not exist (start_raw_net); (b) opt-in (check --reset-tree,
+                        ~10 s per type): every relay -> relay hop of the type reset tree launched by a negedge relay.
+                        FIX (rule 1 fix): raw resets are re-pointed to the nearest SAME-EDGE leaf tap rst_n_t<i> when the
+                        plan has no START broadcast (rr_t<i> only with it); a half-cycle hop the nearest tap cannot
+                        close is NOT FIXED (needs reset.local_taps_um or the latch lockup form).
+
 G0: check.py calls check_plan(); a finding is a WARNING (check "r_reach") by default; budgets.r_reach "error" makes it
 an ERROR (opt-in, REACH-FIN-2 11-13: defaults of existing plans preserved), "off" skips; rule 3 is always a warning.  The fix is idempotent: a fixed plan run again changes nothing.
 """
@@ -79,9 +94,11 @@ DETOUR_UM = 1.0         # a route longer than the Manhattan distance by more tha
 EDGE_IN_UM = 12.0       # origin home: this far inside the face of the START pin (KV corridor form EDGE_Y)
 PAD_PITCH_UM = 5.4      # dwell stages of a short trunk sit side by side at the origin home
 PAD_SPAN_UM = 30.0      # ... never farther than this from the home (the trunk's first hop is planned this much shorter)
-RULES = ("1", "2", "3", "4")
-RULE_NAME = {"1": "start_fan", "2": "macro_barrier", "3": "bus_window", "4": "fwd_source"}
+RULES = ("1", "2", "3", "4", "5")
+RULE_NAME = {"1": "start_fan", "2": "macro_barrier", "3": "bus_window", "4": "fwd_source", "5": "edge_reach"}
 EPS = 1e-6
+HALF_REACH_UM = 180.0   # R-REACH-5: a HALF-CYCLE hop (launch and capture on opposite clock edges) reaches this far
+HALF_CYCLE_CELLS = ("ot_dp_rrelay_nl",)   # reset relays that launch on the FALLING edge (CLK form #7 negedge lockup)
 
 
 def man(a, b):
@@ -418,7 +435,7 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
     row0, f0 = start_findings(t, tn, reach)
     rep = dict(type=tn, before=row0, changed=[])
     if not f0:
-        return rep
+        return _fix_raw_edges(P, t, tn, rep)
     W, H = t["outline_um"]
     ck = t["clock"]
     bands = [b["rect_um"] for b in si["bands"].values() if b.get("rect_um")]
@@ -432,7 +449,7 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
     else:
         o = _home(t, si, obs)
     taps = RT.consumer_taps(P, tn)
-    raw_prefix = "rst_n_t" if (t.get("reset") or {}).get("start_role") == "bootstrap" else "rr_t"
+    raw_prefix = _raw_prefix(P, t)
 
     def raw_of(xy):
         return f"{raw_prefix}{min(range(len(taps)), key=lambda j: (man(xy, taps[j][1:]), j))}"
@@ -546,6 +563,158 @@ def _fix_start(P, t, tn, obs, reach=REACH_UM):
         raise ValueError(f"{tn}: fix leaves {[f['kind'] for f in f1]} ({f1[0]['msg'][:120]})")
     ck.update(new)
     rep["after"] = row1
+    return _fix_raw_edges(P, t, tn, rep)
+
+
+# ------------------------------------------------------------------------------ rule 5: half-cycle (mixed-edge) hops
+_RAW = re.compile(r"^(rst_n_t|rr_t|rst_rl_)(\d+)$")
+
+
+def _raw_prefix(P, t):
+    """the START stage raw reset net family: rr_t<i> (raw copy of tap i) exists only with the START broadcast; else
+    (and for a bootstrap START role) the leaf tap net rst_n_t<i> IS the raw reset (plain posedge relay)."""
+    import reset_tree as RT
+    if (t.get("reset") or {}).get("start_role") == "bootstrap":
+        return "rst_n_t"
+    try:
+        return "rr_t" if RT.start_broadcast(P) else "rst_n_t"
+    except Exception:
+        return "rr_t"
+
+
+def negedge_type(P, tn):
+    """True when type tn's internal reset relays are falling-edge ot_dp_rrelay_nl (reset.relay_lockup negedge)."""
+    import reset_tree as RT
+    try:
+        return bool(RT.relay_lockup(P, tn)) and RT.relay_lockup_form(P) == "negedge"
+    except Exception:
+        return False
+
+
+def _start_stages(t):
+    ck = t.get("clock") or {}
+    for key in ("landing_reader_start", "landing_writer_start"):
+        for b, br in sorted(((ck.get(key) or {}).get("branches") or {}).items()):
+            for i, st in enumerate((br.get("stages") or []) if isinstance(br, dict) else []):
+                yield key, b, i, st
+
+
+def raw_hops(P, t, tn, tree=None):
+    """[(where, raw net, edge 'same' | 'half' | 'missing', hop um or None, limit um)] of every START stage raw reset and
+    landing_local_resets raw of type t.  tree = reset_tree.for_type (needed only for rst_rl_<k> raws)."""
+    import reset_tree as RT
+    neg = negedge_type(P, tn)
+    try:
+        bc = RT.start_broadcast(P)
+    except Exception:
+        bc = None              # not a reset-tree plan object: rr_t existence cannot be judged here (the emitter checks it)
+    taps = None
+    rows = []
+    items = [(f"{k.split('_', 1)[1]}:{b}:{i}", st.get("raw_reset"), st.get("xy_um")) for k, b, i, st in _start_stages(t)]
+    items += [(f"local_reset:{lr.get('name')}", lr.get("raw"), lr.get("xy_um"))
+              for lr in ((t.get("clock") or {}).get("landing_local_resets") or []) if isinstance(lr, dict)]
+    for where, raw, xy in items:
+        m = _RAW.match(str(raw or ""))
+        if not m or not isinstance(xy, list) or len(xy) != 2:
+            continue
+        fam, k = m.group(1), int(m.group(2))
+        if fam == "rr_t" and bc is False:
+            rows.append((where, raw, "missing", None, 0.0))
+            continue
+        if fam == "rst_rl_":
+            if tree is None:
+                tree = RT.for_type(P, tn)
+            site = next((r["xy"] for r in tree["relays"] if r["q"] == raw), None)
+            if site is None:
+                rows.append((where, raw, "missing", None, 0.0))
+                continue
+        else:
+            if taps is None:
+                taps = RT.consumer_taps(P, tn)
+            if k >= len(taps):
+                rows.append((where, raw, "missing", None, 0.0))
+                continue
+            site = taps[k][1:]
+        half = neg and fam != "rst_n_t"
+        rows.append((where, raw, "half" if half else "same", round(man(site, xy), 1),
+                     HALF_REACH_UM if half else REACH_UM))
+    return rows
+
+
+def tree_half_hops(P, tn, T=None):
+    """[(hop um, launch relay, capture relay)] of the type reset tree hops launched by a falling-edge relay."""
+    import reset_tree as RT
+    T = T or RT.for_type(P, tn)
+    q = {r["q"]: r for r in T["relays"]}
+    out = []
+    for r in T["relays"]:
+        p = q.get(r["d"])
+        if p is not None and RT.relay_cell(T, p) in HALF_CYCLE_CELLS:
+            out.append((round(man(p["xy"], r["xy"]), 1), p["name"], r["name"]))
+    return sorted(out, reverse=True)
+
+
+def edge_findings(P, t, tn, tree_hops=False):
+    """-> (row, [finding]) of R-REACH-5 for one type."""
+    hops = raw_hops(P, t, tn)
+    out = []
+    miss = [h for h in hops if h[2] == "missing"]
+    over = [h for h in hops if h[3] is not None and h[3] > h[4] + EPS]
+    row = dict(type=tn, negedge=negedge_type(P, tn), raw_hops=len(hops),
+               raw_half=sum(h[2] == "half" for h in hops), raw_over=len(over), raw_missing=len(miss),
+               raw_worst_half_um=max((h[3] for h in hops if h[2] == "half"), default=0.0))
+    if miss:
+        out.append(dict(rule="5", kind="start_raw_net", type=tn, value=len(miss), limit=0, n=len(miss),
+                        msg=f"{len(miss)} START / local reset raw nets do not exist in this plan's reset tree, e.g. "
+                            f"{miss[0][0]} {miss[0][1]} (rr_t<i> needs reset.start broadcast; fix: reach_rules.py fix "
+                            f"--rules 1 re-points to rst_n_t<i>)"))
+    if over:
+        w = max(over, key=lambda h: h[3])
+        out.append(dict(rule="5", kind="edge_reach", type=tn, value=w[3], limit=w[4], n=len(over),
+                        msg=f"{len(over)} raw reset hops over their edge reach; worst {w[0]} <- {w[1]} {w[3]:.0f} um "
+                            f"({'half cycle: falling-edge relay -> posedge stage' if w[2] == 'half' else 'same edge'}, "
+                            f"limit {w[4]:g} um)"))
+    if tree_hops and row["negedge"]:
+        th = tree_half_hops(P, tn)
+        far = [h for h in th if h[0] > HALF_REACH_UM + EPS]
+        row.update(tree_half_hops=len(th), tree_half_over=len(far), tree_half_worst_um=th[0][0] if th else 0.0)
+        if far:
+            out.append(dict(rule="5", kind="reset_half_cycle", type=tn, value=far[0][0], limit=HALF_REACH_UM,
+                            n=len(far), warn=True,
+                            msg=f"reset tree: {len(far)}/{len(th)} falling-edge relay hops longer than "
+                                f"{HALF_REACH_UM:g} um (half cycle), worst {far[0][1]} -> {far[0][2]} {far[0][0]:.0f} um "
+                                f"(fix: per-type reset.relay_um <= {HALF_REACH_UM:g}, or reset.relay_lockup latch form)"))
+    return row, out
+
+
+def _fix_raw_edges(P, t, tn, rep):
+    """rule-1 fix tail: re-point START stage raw resets that name a missing net or exceed their edge reach to the
+    nearest same-edge leaf tap (rst_n_t<i> without the START broadcast).  Raises when a hop stays over."""
+    import reset_tree as RT
+    try:
+        hops = raw_hops(P, t, tn)
+    except Exception:          # no evaluable reset tree (bare plan stubs): rule 5 check reports it as unreadable
+        return rep
+    bad = {(h[0]) for h in hops if h[2] == "missing" or (h[3] is not None and h[3] > h[4] + EPS)}
+    bad = {w for w in bad if not w.startswith("local_reset:")}
+    if not bad:
+        return rep
+    taps = RT.consumer_taps(P, tn)
+    pre = _raw_prefix(P, t)
+    n = 0
+    for key, b, i, st in _start_stages(t):
+        if f"{key.split('_', 1)[1]}:{b}:{i}" in bad:
+            j = min(range(len(taps)), key=lambda j: (man(st["xy_um"], taps[j][1:]), j))
+            st["raw_reset"] = f"{pre}{j}"
+            n += 1
+    left = [h for h in raw_hops(P, t, tn) if not h[0].startswith("local_reset:") and
+            (h[2] == "missing" or (h[3] is not None and h[3] > h[4] + EPS))]
+    if left:
+        raise ValueError(f"{tn}: {len(left)} START raw reset hops stay over their edge reach after re-pointing, worst "
+                         f"{max(left, key=lambda h: h[3] or 0)} (needs reset.local_taps_um or the latch lockup form)")
+    rep["raw_repoints"] = n
+    if "raw_reset" not in rep["changed"]:
+        rep["changed"].append("raw_reset")
     return rep
 
 
@@ -939,11 +1108,12 @@ def fix_fwd(P, t, tn, reach=REACH_UM):
 
 
 # ------------------------------------------------------------------------------------------------------- plan level
-def type_findings(P, tn, rules=RULES):
+def type_findings(P, tn, rules=RULES, tree_hops=False):
     t = P.types[tn]
     rows, out = {}, []
     for r, fn in (("1", lambda: start_findings(t, tn)), ("2", lambda: barrier_findings(P, t, tn)),
-                  ("3", lambda: window_rows(P, t, tn)), ("4", lambda: fwd_findings(P, t, tn))):
+                  ("3", lambda: window_rows(P, t, tn)), ("4", lambda: fwd_findings(P, t, tn)),
+                  ("5", lambda: edge_findings(P, t, tn, tree_hops))):
         if r not in rules:
             continue
         try:
@@ -957,10 +1127,10 @@ def type_findings(P, tn, rules=RULES):
     return rows, out
 
 
-def plan_findings(P, rx=None, rules=RULES):
+def plan_findings(P, rx=None, rules=RULES, tree_hops=False):
     rows, out = {}, []
     for tn in used_types(P.raw, rx):
-        r, fs = type_findings(P, tn, rules)
+        r, fs = type_findings(P, tn, rules, tree_hops)
         rows[tn] = r
         out += fs
     return rows, out
@@ -1008,7 +1178,7 @@ def _load(path, repo=None):
 
 def cmd_check(a):
     raw, P = _load(a.plan, a.repo)
-    rows, fs = plan_findings(P, a.types, tuple(a.rules.split(",")))
+    rows, fs = plan_findings(P, a.types, tuple(a.rules.split(",")), getattr(a, "reset_tree", False))
     errs = [f for f in fs if not f.get("warn")]
     if a.json:
         Path(a.json).write_text(json.dumps(dict(schema=SCHEMA, plan=a.plan, rows=rows, findings=fs), indent=1))
@@ -1092,7 +1262,9 @@ def main(argv=None):
     for s in (c, f):
         s.add_argument("--repo")
         s.add_argument("--types")
-    c.add_argument("--rules", default="1,2,3,4")
+    c.add_argument("--rules", default="1,2,3,4,5")
+    c.add_argument("--reset-tree", action="store_true",
+                   help="R-REACH-5 (b): also check every falling-edge reset tree hop (~10 s per negedge type)")
     f.add_argument("--rules", default="1,4")
     n = sub.add_parser("census")
     n.add_argument("plans", nargs="+")
