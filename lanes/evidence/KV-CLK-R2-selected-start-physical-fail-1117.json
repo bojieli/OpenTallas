@@ -1,0 +1,3335 @@
+{
+  "verdict": "FAIL_PHYSICAL_RESET_HOP_AND_SETUP",
+  "scope": "Actual mapped emitted80-stage component on E8 full clock+abstract substrate; native hub_C root generation and consumer adoption absent. Boundary reset/start explicitly separate component inputs. No whole-die signoff.",
+  "period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "cells": {
+    "DFFHQNx1_ASAP7_75t_R": 400,
+    "DFFLQNx1_ASAP7_75t_R": 60,
+    "INVx1_ASAP7_75t_R": 271,
+    "NOR2xp33_ASAP7_75t_R": 240
+  },
+  "cell_count": 971,
+  "cell_area_um2": 159.98634,
+  "mapped_equivalence": {
+    "verdict": "PASS",
+    "proven": 1133,
+    "unproven": 0,
+    "tool": "Yosys0.67",
+    "evidence": "equiv_v3.log",
+    "prior_unproven_evidence": "equiv_v2.log"
+  },
+  "mapped_simulation": {
+    "verdict": "PASS",
+    "checks": 19192,
+    "errors": 0,
+    "negative_edge_polarity_mutant_errors": 19192
+  },
+  "clock_caps": {
+    "scope": "Exact mapped CLK pin capacitance from TT RVT library; excludes wire capacitance and other stage logic pins",
+    "lib_caps_fF": {
+      "DFFHQNx1_ASAP7_75t_R": 0.474736,
+      "DFFLQNx1_ASAP7_75t_R": 0.480775
+    },
+    "total_clock_cap_fF": 218.74089999999998,
+    "stages": {
+      "b60": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b80": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b72": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b76": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "r4032_0": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "r4113_0": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "r3870_0": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "r3951_0": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b7837": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b104": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b96": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b100": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b116": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b128": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b120": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b124": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b156": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b140": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b9205": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b148": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b152": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b9098": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b168": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b172": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b184": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b176": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b180": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b10517": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b200": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b11809": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b212": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b204": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b208": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b224": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b228": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b240": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b232": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b236": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b264": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b252": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b276": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b280": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b288": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b14549": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b300": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b298": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b322": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b324": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b312": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b17101": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b304": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b308": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b336": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b328": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b332": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b344": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b352": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b368": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b398": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b394": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b388": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b21873": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b410": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b414": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b22928": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "r23394_0": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b56": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b64": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b68": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b50": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b32": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b28": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b26": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b24": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b20": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b14": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b16": {
+        "ff": 5,
+        "cap_fF": 2.37368,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5
+        }
+      },
+      "b8": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b2": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      },
+      "b4": {
+        "ff": 7,
+        "cap_fF": 3.3352299999999997,
+        "masters": {
+          "DFFHQNx1_ASAP7_75t_R": 5,
+          "DFFLQNx1_ASAP7_75t_R": 2
+        }
+      }
+    }
+  },
+  "corners": {
+    "TT": {
+      "grt_overflow": 0,
+      "completion_marker": true,
+      "witness_count": 460,
+      "actual_clock_pin_count": 460,
+      "worst_setup": {
+        "slack_ps": -171126.86,
+        "type": "max",
+        "start": "ps_850",
+        "end": "ps_818",
+        "start_stage": "b212",
+        "end_stage": "b300"
+      },
+      "worst_hold": {
+        "slack_ps": 20.94,
+        "type": "min",
+        "start": "ps_903",
+        "end": "ps_904",
+        "start_stage": "b104",
+        "end_stage": "b104"
+      },
+      "worst_clock_slew_ps": 381.335236,
+      "worst_clock_slew_stage": "b322",
+      "worst_clock_slew_pin": "ps_808/CLK",
+      "max_rise_row_span_late_ps": 9.744538548374749,
+      "max_fall_row_span_late_ps": 9.691913976797196,
+      "peak_rss_kB": 7662188,
+      "stages": {
+        "b4": {
+          "rise_min": 575.9597821707722,
+          "rise_max": 659.1274219450327,
+          "fall_min": 987.7378954247969,
+          "fall_max": 1069.9139395006512,
+          "clock_pins": [
+            "ps_748/CLK",
+            "ps_749/CLK",
+            "ps_750/CLK",
+            "ps_967/CLK",
+            "ps_968/CLK",
+            "ps_969/CLK",
+            "ps_970/CLK"
+          ],
+          "rise_row_span_late_ps": 2.5356383760732797,
+          "fall_row_span_late_ps": 2.5219826328159343
+        },
+        "b2": {
+          "rise_min": 629.3535717739672,
+          "rise_max": 723.6719030740601,
+          "fall_min": 1040.7186265500297,
+          "fall_max": 1133.8353634657694,
+          "clock_pins": [
+            "ps_745/CLK",
+            "ps_746/CLK",
+            "ps_747/CLK",
+            "ps_963/CLK",
+            "ps_964/CLK",
+            "ps_965/CLK",
+            "ps_966/CLK"
+          ],
+          "rise_row_span_late_ps": 0.13150591779231036,
+          "fall_row_span_late_ps": 0.1324496073671071
+        },
+        "b8": {
+          "rise_min": 590.2945933439528,
+          "rise_max": 671.8560179509186,
+          "fall_min": 1001.9988212553934,
+          "fall_max": 1082.830829332266,
+          "clock_pins": [
+            "ps_742/CLK",
+            "ps_743/CLK",
+            "ps_744/CLK",
+            "ps_959/CLK",
+            "ps_960/CLK",
+            "ps_961/CLK",
+            "ps_962/CLK"
+          ],
+          "rise_row_span_late_ps": 0.21976864860266687,
+          "fall_row_span_late_ps": 0.21893598133101477
+        },
+        "b16": {
+          "rise_min": 1048.6251908737931,
+          "rise_max": 1189.918723868017,
+          "fall_min": 1464.7166871291759,
+          "fall_max": 1606.1911864771366,
+          "clock_pins": [
+            "ps_739/CLK",
+            "ps_740/CLK",
+            "ps_741/CLK",
+            "ps_957/CLK",
+            "ps_958/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1262323584041951,
+          "fall_row_span_late_ps": 0.1255662245869189
+        },
+        "b14": {
+          "rise_min": 1061.4837939963822,
+          "rise_max": 1225.9081576672827,
+          "fall_min": 1474.1988799757833,
+          "fall_max": 1637.68943505694,
+          "clock_pins": [
+            "ps_736/CLK",
+            "ps_737/CLK",
+            "ps_738/CLK",
+            "ps_955/CLK",
+            "ps_956/CLK"
+          ],
+          "rise_row_span_late_ps": 9.744538548374749,
+          "fall_row_span_late_ps": 9.691913976797196
+        },
+        "b20": {
+          "rise_min": 1252.6486564783465,
+          "rise_max": 1424.9604886369107,
+          "fall_min": 1668.287403782478,
+          "fall_max": 1839.8597163813843,
+          "clock_pins": [
+            "ps_733/CLK",
+            "ps_734/CLK",
+            "ps_735/CLK",
+            "ps_953/CLK",
+            "ps_954/CLK"
+          ],
+          "rise_row_span_late_ps": 0.18829382572880604,
+          "fall_row_span_late_ps": 0.18818280342611615
+        },
+        "b24": {
+          "rise_min": 1149.323862899599,
+          "rise_max": 1308.147817522702,
+          "fall_min": 1566.3257420388118,
+          "fall_max": 1725.4563402625417,
+          "clock_pins": [
+            "ps_730/CLK",
+            "ps_731/CLK",
+            "ps_732/CLK",
+            "ps_951/CLK",
+            "ps_952/CLK"
+          ],
+          "rise_row_span_late_ps": 0.15876189315576994,
+          "fall_row_span_late_ps": 0.1579847370353491
+        },
+        "b26": {
+          "rise_min": 1247.1915772236011,
+          "rise_max": 1428.5943596333316,
+          "fall_min": 1659.182908810357,
+          "fall_max": 1840.5373965183232,
+          "clock_pins": [
+            "ps_727/CLK",
+            "ps_728/CLK",
+            "ps_729/CLK",
+            "ps_949/CLK",
+            "ps_950/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12490009076941533,
+          "fall_row_span_late_ps": 0.12434497925482901
+        },
+        "b28": {
+          "rise_min": 1235.2671157576644,
+          "rise_max": 1416.2007179153134,
+          "fall_min": 1645.1030603558004,
+          "fall_max": 1825.3982842717392,
+          "clock_pins": [
+            "ps_724/CLK",
+            "ps_725/CLK",
+            "ps_726/CLK",
+            "ps_947/CLK",
+            "ps_948/CLK"
+          ],
+          "rise_row_span_late_ps": 2.7399194134204663,
+          "fall_row_span_late_ps": 2.7280400270096834
+        },
+        "b32": {
+          "rise_min": 1192.5681601045692,
+          "rise_max": 1363.5436168030521,
+          "fall_min": 1605.5181692769195,
+          "fall_max": 1775.4565666439562,
+          "clock_pins": [
+            "ps_721/CLK",
+            "ps_722/CLK",
+            "ps_723/CLK",
+            "ps_945/CLK",
+            "ps_946/CLK"
+          ],
+          "rise_row_span_late_ps": 0.16675549896513076,
+          "fall_row_span_late_ps": 0.16764367738824149
+        },
+        "b50": {
+          "rise_min": 1714.4631338733816,
+          "rise_max": 1952.1140337828724,
+          "fall_min": 2128.649487410895,
+          "fall_max": 2365.917471397662,
+          "clock_pins": [
+            "ps_718/CLK",
+            "ps_719/CLK",
+            "ps_720/CLK",
+            "ps_941/CLK",
+            "ps_942/CLK",
+            "ps_943/CLK",
+            "ps_944/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9319212105940551,
+          "fall_row_span_late_ps": 0.9277023630834265
+        },
+        "b68": {
+          "rise_min": 1725.686489496466,
+          "rise_max": 1971.4465694325243,
+          "fall_min": 2140.187813307324,
+          "fall_max": 2386.3340288128898,
+          "clock_pins": [
+            "ps_715/CLK",
+            "ps_716/CLK",
+            "ps_717/CLK",
+            "ps_939/CLK",
+            "ps_940/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1219024885908766,
+          "fall_row_span_late_ps": 0.12145839937920755
+        },
+        "b64": {
+          "rise_min": 1696.9942186003123,
+          "rise_max": 1932.152001675743,
+          "fall_min": 2118.945472003081,
+          "fall_max": 2355.7744738041574,
+          "clock_pins": [
+            "ps_712/CLK",
+            "ps_713/CLK",
+            "ps_714/CLK",
+            "ps_937/CLK",
+            "ps_938/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12212453319671113,
+          "fall_row_span_late_ps": 0.12145839937920755
+        },
+        "b56": {
+          "rise_min": 1776.1880925978048,
+          "rise_max": 2028.4527472165278,
+          "fall_min": 2199.7028730924003,
+          "fall_max": 2452.0818806831167,
+          "clock_pins": [
+            "ps_709/CLK",
+            "ps_710/CLK",
+            "ps_711/CLK",
+            "ps_935/CLK",
+            "ps_936/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11413092738757769,
+          "fall_row_span_late_ps": 0.11657341805130272
+        },
+        "b60": {
+          "rise_min": 1822.0245385310275,
+          "rise_max": 2077.247937522199,
+          "fall_min": 2243.053085574343,
+          "fall_max": 2498.815386823821,
+          "clock_pins": [
+            "ps_511/CLK",
+            "ps_512/CLK",
+            "ps_513/CLK",
+            "ps_931/CLK",
+            "ps_932/CLK",
+            "ps_933/CLK",
+            "ps_934/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1703082126582558,
+          "fall_row_span_late_ps": 0.1647570975128474
+        },
+        "b80": {
+          "rise_min": 1688.9791854866094,
+          "rise_max": 1930.9780518448133,
+          "fall_min": 2100.5868239945216,
+          "fall_max": 2341.3284737946165,
+          "clock_pins": [
+            "ps_514/CLK",
+            "ps_515/CLK",
+            "ps_516/CLK",
+            "ps_929/CLK",
+            "ps_930/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12412293464899449,
+          "fall_row_span_late_ps": 0.1256772468896088
+        },
+        "b72": {
+          "rise_min": 1751.860330473497,
+          "rise_max": 2003.0355232338022,
+          "fall_min": 2173.151445263186,
+          "fall_max": 2424.73309067443,
+          "clock_pins": [
+            "ps_517/CLK",
+            "ps_518/CLK",
+            "ps_519/CLK",
+            "ps_927/CLK",
+            "ps_928/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11057821369468002,
+          "fall_row_span_late_ps": 0.10680345539549307
+        },
+        "b76": {
+          "rise_min": 1742.4445289640275,
+          "rise_max": 1992.9060703612518,
+          "fall_min": 2164.053611629239,
+          "fall_max": 2414.2468121203397,
+          "clock_pins": [
+            "ps_520/CLK",
+            "ps_521/CLK",
+            "ps_522/CLK",
+            "ps_925/CLK",
+            "ps_926/CLK"
+          ],
+          "rise_row_span_late_ps": 1.6013856971180758,
+          "fall_row_span_late_ps": 1.5571988205615526
+        },
+        "r4032_0": {
+          "rise_min": 2105.577276510153,
+          "rise_max": 2398.6110971128564,
+          "fall_min": 2525.8117920430836,
+          "fall_max": 2818.1301849258602,
+          "clock_pins": [
+            "ps_523/CLK",
+            "ps_524/CLK",
+            "ps_525/CLK",
+            "ps_921/CLK",
+            "ps_922/CLK",
+            "ps_923/CLK",
+            "ps_924/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8002487593475962,
+          "fall_row_span_late_ps": 0.7946976442021878
+        },
+        "r4113_0": {
+          "rise_min": 2112.3678446451036,
+          "rise_max": 2407.9791590320765,
+          "fall_min": 2532.8848009166277,
+          "fall_max": 2827.771583754835,
+          "clock_pins": [
+            "ps_526/CLK",
+            "ps_527/CLK",
+            "ps_528/CLK",
+            "ps_917/CLK",
+            "ps_918/CLK",
+            "ps_919/CLK",
+            "ps_920/CLK"
+          ],
+          "rise_row_span_late_ps": 2.521316498998658,
+          "fall_row_span_late_ps": 2.502664752109922
+        },
+        "r3870_0": {
+          "rise_min": 2106.110183564102,
+          "rise_max": 2418.2544952106455,
+          "fall_min": 2524.674479572113,
+          "fall_max": 2836.6327178389856,
+          "clock_pins": [
+            "ps_529/CLK",
+            "ps_530/CLK",
+            "ps_531/CLK",
+            "ps_913/CLK",
+            "ps_914/CLK",
+            "ps_915/CLK",
+            "ps_916/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11901590871548251,
+          "fall_row_span_late_ps": 0.11346479357007411
+        },
+        "r3951_0": {
+          "rise_min": 2106.7117024012477,
+          "rise_max": 2418.4765398164577,
+          "fall_min": 2525.1221214974307,
+          "fall_max": 2836.686674678198,
+          "clock_pins": [
+            "ps_532/CLK",
+            "ps_533/CLK",
+            "ps_534/CLK",
+            "ps_909/CLK",
+            "ps_910/CLK",
+            "ps_911/CLK",
+            "ps_912/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1172395518688063,
+          "fall_row_span_late_ps": 0.11213252593506695
+        },
+        "b7837": {
+          "rise_min": 2302.3030241000797,
+          "rise_max": 2645.5304719358605,
+          "fall_min": 2719.6867089389866,
+          "fall_max": 3062.9745529075485,
+          "clock_pins": [
+            "ps_535/CLK",
+            "ps_536/CLK",
+            "ps_537/CLK",
+            "ps_905/CLK",
+            "ps_906/CLK",
+            "ps_907/CLK",
+            "ps_908/CLK"
+          ],
+          "rise_row_span_late_ps": 7.898570717954499,
+          "fall_row_span_late_ps": 7.946532352809754
+        },
+        "b104": {
+          "rise_min": 2245.1856019685642,
+          "rise_max": 2557.2020159221593,
+          "fall_min": 2672.346798979809,
+          "fall_max": 2986.307213457291,
+          "clock_pins": [
+            "ps_538/CLK",
+            "ps_539/CLK",
+            "ps_540/CLK",
+            "ps_903/CLK",
+            "ps_904/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11990408713836587,
+          "fall_row_span_late_ps": 0.11923795332131704
+        },
+        "b96": {
+          "rise_min": 2311.3981931987564,
+          "rise_max": 2636.511686181583,
+          "fall_min": 2740.1958589548376,
+          "fall_max": 3066.879207300757,
+          "clock_pins": [
+            "ps_541/CLK",
+            "ps_542/CLK",
+            "ps_543/CLK",
+            "ps_901/CLK",
+            "ps_902/CLK"
+          ],
+          "rise_row_span_late_ps": 0.08948397614267378,
+          "fall_row_span_late_ps": 0.09170442220010955
+        },
+        "b100": {
+          "rise_min": 2326.4661401491776,
+          "rise_max": 2652.532204490939,
+          "fall_min": 2753.792538347147,
+          "fall_max": 3081.2503782781396,
+          "clock_pins": [
+            "ps_544/CLK",
+            "ps_545/CLK",
+            "ps_546/CLK",
+            "ps_897/CLK",
+            "ps_898/CLK",
+            "ps_899/CLK",
+            "ps_900/CLK"
+          ],
+          "rise_row_span_late_ps": 0.13233858506418983,
+          "fall_row_span_late_ps": 0.12900791597712669
+        },
+        "b116": {
+          "rise_min": 2166.346000139645,
+          "rise_max": 2480.0637198629743,
+          "fall_min": 2588.8704616923183,
+          "fall_max": 2902.0557184509094,
+          "clock_pins": [
+            "ps_547/CLK",
+            "ps_548/CLK",
+            "ps_549/CLK",
+            "ps_895/CLK",
+            "ps_896/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12700951452461595,
+          "fall_row_span_late_ps": 0.1256772468896088
+        },
+        "b128": {
+          "rise_min": 2184.2132634355416,
+          "rise_max": 2494.6609322490735,
+          "fall_min": 2594.5925511841006,
+          "fall_max": 2904.2424137289486,
+          "clock_pins": [
+            "ps_550/CLK",
+            "ps_551/CLK",
+            "ps_552/CLK",
+            "ps_893/CLK",
+            "ps_894/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1261213361017326,
+          "fall_row_span_late_ps": 0.12700951452461595
+        },
+        "b120": {
+          "rise_min": 2211.335345901694,
+          "rise_max": 2528.430364079428,
+          "fall_min": 2631.5714157468656,
+          "fall_max": 2948.786115967132,
+          "clock_pins": [
+            "ps_553/CLK",
+            "ps_554/CLK",
+            "ps_555/CLK",
+            "ps_891/CLK",
+            "ps_892/CLK"
+          ],
+          "rise_row_span_late_ps": 0.0841549056030999,
+          "fall_row_span_late_ps": 0.08237854875596895
+        },
+        "b124": {
+          "rise_min": 2194.799462062248,
+          "rise_max": 2509.8558887140193,
+          "fall_min": 2614.294569057824,
+          "fall_max": 2929.318133107935,
+          "clock_pins": [
+            "ps_556/CLK",
+            "ps_557/CLK",
+            "ps_558/CLK",
+            "ps_889/CLK",
+            "ps_890/CLK"
+          ],
+          "rise_row_span_late_ps": 1.377564734459611,
+          "fall_row_span_late_ps": 1.3575807199363226
+        },
+        "b156": {
+          "rise_min": 2785.861330541585,
+          "rise_max": 3173.3729104713548,
+          "fall_min": 3217.1894166255033,
+          "fall_max": 3607.958390922539,
+          "clock_pins": [
+            "ps_559/CLK",
+            "ps_560/CLK",
+            "ps_561/CLK",
+            "ps_887/CLK",
+            "ps_888/CLK"
+          ],
+          "rise_row_span_late_ps": 0.15565326867454132,
+          "fall_row_span_late_ps": 0.15498713485703774
+        },
+        "b140": {
+          "rise_min": 2712.3048360187577,
+          "rise_max": 3098.477709020085,
+          "fall_min": 3139.99849599474,
+          "fall_max": 3527.275152731561,
+          "clock_pins": [
+            "ps_562/CLK",
+            "ps_563/CLK",
+            "ps_564/CLK",
+            "ps_885/CLK",
+            "ps_886/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8235634429579477,
+          "fall_row_span_late_ps": 0.8189005062358774
+        },
+        "b9205": {
+          "rise_min": 2819.6214364984953,
+          "rise_max": 3222.765178722055,
+          "fall_min": 3238.2128219484152,
+          "fall_max": 3641.8503913753016,
+          "clock_pins": [
+            "ps_565/CLK",
+            "ps_566/CLK",
+            "ps_567/CLK",
+            "ps_881/CLK",
+            "ps_882/CLK",
+            "ps_883/CLK",
+            "ps_884/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12900791597712669,
+          "fall_row_span_late_ps": 0.12834178215916836
+        },
+        "b148": {
+          "rise_min": 2834.475998582731,
+          "rise_max": 3234.794667286541,
+          "fall_min": 3268.024530724772,
+          "fall_max": 3671.079011016795,
+          "clock_pins": [
+            "ps_568/CLK",
+            "ps_569/CLK",
+            "ps_570/CLK",
+            "ps_879/CLK",
+            "ps_880/CLK"
+          ],
+          "rise_row_span_late_ps": 0.0874855746897083,
+          "fall_row_span_late_ps": 0.08948397614221903
+        },
+        "b152": {
+          "rise_min": 2868.3457945749124,
+          "rise_max": 3272.3861529167425,
+          "fall_min": 3299.8810482760537,
+          "fall_max": 3706.364563415636,
+          "clock_pins": [
+            "ps_571/CLK",
+            "ps_572/CLK",
+            "ps_573/CLK",
+            "ps_875/CLK",
+            "ps_876/CLK",
+            "ps_877/CLK",
+            "ps_878/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1298960944004648,
+          "fall_row_span_late_ps": 0.1265654253129469
+        },
+        "b9098": {
+          "rise_min": 2772.1693940133823,
+          "rise_max": 3175.5709300242906,
+          "fall_min": 3194.8408490951033,
+          "fall_max": 3597.615553183803,
+          "clock_pins": [
+            "ps_574/CLK",
+            "ps_575/CLK",
+            "ps_576/CLK",
+            "ps_871/CLK",
+            "ps_872/CLK",
+            "ps_873/CLK",
+            "ps_874/CLK"
+          ],
+          "rise_row_span_late_ps": 3.150590911870495,
+          "fall_row_span_late_ps": 3.128830540500985
+        },
+        "b168": {
+          "rise_min": 2596.116665358396,
+          "rise_max": 2973.467040036984,
+          "fall_min": 3018.4359576952984,
+          "fall_max": 3395.8160863510657,
+          "clock_pins": [
+            "ps_577/CLK",
+            "ps_578/CLK",
+            "ps_579/CLK",
+            "ps_869/CLK",
+            "ps_870/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8149037033308559,
+          "fall_row_span_late_ps": 0.8106848558209094
+        },
+        "b172": {
+          "rise_min": 2586.322943929834,
+          "rise_max": 2960.8151604424065,
+          "fall_min": 3007.2566779264675,
+          "fall_max": 3381.3534329960885,
+          "clock_pins": [
+            "ps_580/CLK",
+            "ps_581/CLK",
+            "ps_582/CLK",
+            "ps_867/CLK",
+            "ps_868/CLK"
+          ],
+          "rise_row_span_late_ps": 0.09414691286428933,
+          "fall_row_span_late_ps": 0.09370282365262028
+        },
+        "b184": {
+          "rise_min": 2682.772681401119,
+          "rise_max": 3061.9222835206037,
+          "fall_min": 3092.069279651737,
+          "fall_max": 3469.9532275180923,
+          "clock_pins": [
+            "ps_583/CLK",
+            "ps_584/CLK",
+            "ps_585/CLK",
+            "ps_865/CLK",
+            "ps_866/CLK"
+          ],
+          "rise_row_span_late_ps": 0.17008616805196652,
+          "fall_row_span_late_ps": 0.17075230186992485
+        },
+        "b176": {
+          "rise_min": 2705.695678326755,
+          "rise_max": 3091.0574223830504,
+          "fall_min": 3124.397197901158,
+          "fall_max": 3510.475923989621,
+          "clock_pins": [
+            "ps_586/CLK",
+            "ps_587/CLK",
+            "ps_588/CLK",
+            "ps_863/CLK",
+            "ps_864/CLK"
+          ],
+          "rise_row_span_late_ps": 0.08593126244932137,
+          "fall_row_span_late_ps": 0.08393286099726538
+        },
+        "b180": {
+          "rise_min": 2693.8311689043876,
+          "rise_max": 3077.979439189919,
+          "fall_min": 3112.086378821108,
+          "fall_max": 3496.763115268472,
+          "clock_pins": [
+            "ps_589/CLK",
+            "ps_590/CLK",
+            "ps_591/CLK",
+            "ps_861/CLK",
+            "ps_862/CLK"
+          ],
+          "rise_row_span_late_ps": 1.3935519460778778,
+          "fall_row_span_late_ps": 1.3726797531312513
+        },
+        "b10517": {
+          "rise_min": 2721.0744877253137,
+          "rise_max": 3120.9408515670843,
+          "fall_min": 3145.281381256226,
+          "fall_max": 3544.8746302328477,
+          "clock_pins": [
+            "ps_592/CLK",
+            "ps_593/CLK",
+            "ps_594/CLK",
+            "ps_857/CLK",
+            "ps_858/CLK",
+            "ps_859/CLK",
+            "ps_860/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11568523962841937,
+          "fall_row_span_late_ps": 0.11479706120508126
+        },
+        "b200": {
+          "rise_min": 3196.919186605506,
+          "rise_max": 3651.4729164127825,
+          "fall_min": 3627.5231852298703,
+          "fall_max": 4083.9345402093722,
+          "clock_pins": [
+            "ps_595/CLK",
+            "ps_596/CLK",
+            "ps_597/CLK",
+            "ps_855/CLK",
+            "ps_856/CLK"
+          ],
+          "rise_row_span_late_ps": 0.09414691286428933,
+          "fall_row_span_late_ps": 0.09325873444095123
+        },
+        "b11809": {
+          "rise_min": 3181.904086271268,
+          "rise_max": 3635.220361490353,
+          "fall_min": 3607.4978704100845,
+          "fall_max": 4061.4973768812533,
+          "clock_pins": [
+            "ps_598/CLK",
+            "ps_599/CLK",
+            "ps_600/CLK",
+            "ps_851/CLK",
+            "ps_852/CLK",
+            "ps_853/CLK",
+            "ps_854/CLK"
+          ],
+          "rise_row_span_late_ps": 0.14122036929666137,
+          "fall_row_span_late_ps": 0.13899992323831611
+        },
+        "b212": {
+          "rise_min": 3353.86741942101,
+          "rise_max": 3819.0855075562386,
+          "fall_min": 3790.8809576367516,
+          "fall_max": 4259.950187415188,
+          "clock_pins": [
+            "ps_601/CLK",
+            "ps_602/CLK",
+            "ps_603/CLK",
+            "ps_849/CLK",
+            "ps_850/CLK"
+          ],
+          "rise_row_span_late_ps": 0.19184653942193108,
+          "fall_row_span_late_ps": 0.19051427178692393
+        },
+        "b204": {
+          "rise_min": 3398.4670768998585,
+          "rise_max": 3876.104785971985,
+          "fall_min": 3837.1452835253745,
+          "fall_max": 4317.289210063304,
+          "clock_pins": [
+            "ps_604/CLK",
+            "ps_605/CLK",
+            "ps_606/CLK",
+            "ps_847/CLK",
+            "ps_848/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11279865975257053,
+          "fall_row_span_late_ps": 0.11413092738712294
+        },
+        "b208": {
+          "rise_min": 3454.554656149616,
+          "rise_max": 3937.962416348381,
+          "fall_min": 3890.9551292087103,
+          "fall_max": 4377.167534823489,
+          "clock_pins": [
+            "ps_607/CLK",
+            "ps_608/CLK",
+            "ps_609/CLK",
+            "ps_843/CLK",
+            "ps_844/CLK",
+            "ps_845/CLK",
+            "ps_846/CLK"
+          ],
+          "rise_row_span_late_ps": 0.16830981120574506,
+          "fall_row_span_late_ps": 0.16253665145450213
+        },
+        "b224": {
+          "rise_min": 3091.774626459824,
+          "rise_max": 3537.893103736898,
+          "fall_min": 3512.6386384502325,
+          "fall_max": 3959.262711294741,
+          "clock_pins": [
+            "ps_610/CLK",
+            "ps_611/CLK",
+            "ps_612/CLK",
+            "ps_841/CLK",
+            "ps_842/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8235634429579477,
+          "fall_row_span_late_ps": 0.8189005062354227
+        },
+        "b228": {
+          "rise_min": 3086.406031980495,
+          "rise_max": 3530.2017006361666,
+          "fall_min": 3506.1309551430863,
+          "fall_max": 3950.0727291493827,
+          "clock_pins": [
+            "ps_613/CLK",
+            "ps_614/CLK",
+            "ps_615/CLK",
+            "ps_839/CLK",
+            "ps_840/CLK"
+          ],
+          "rise_row_span_late_ps": 0.0963673589226346,
+          "fall_row_span_late_ps": 0.09592326971096554
+        },
+        "b240": {
+          "rise_min": 3196.2825847206423,
+          "rise_max": 3646.5499654573186,
+          "fall_min": 3604.8411067015404,
+          "fall_max": 4053.6161256425526,
+          "clock_pins": [
+            "ps_616/CLK",
+            "ps_617/CLK",
+            "ps_618/CLK",
+            "ps_837/CLK",
+            "ps_838/CLK"
+          ],
+          "rise_row_span_late_ps": 0.20849988485770155,
+          "fall_row_span_late_ps": 0.20783375104065271
+        },
+        "b232": {
+          "rise_min": 3236.942948847775,
+          "rise_max": 3695.6724495119574,
+          "fall_min": 3654.655259703284,
+          "fall_max": 4113.476242745061,
+          "clock_pins": [
+            "ps_619/CLK",
+            "ps_620/CLK",
+            "ps_621/CLK",
+            "ps_835/CLK",
+            "ps_836/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1121325259355217,
+          "fall_row_span_late_ps": 0.10835776763633476
+        },
+        "b236": {
+          "rise_min": 3231.547931060354,
+          "rise_max": 3690.0544989403006,
+          "fall_min": 3649.265348941797,
+          "fall_max": 4107.500578313441,
+          "clock_pins": [
+            "ps_622/CLK",
+            "ps_623/CLK",
+            "ps_624/CLK",
+            "ps_833/CLK",
+            "ps_834/CLK"
+          ],
+          "rise_row_span_late_ps": 1.614264284255114,
+          "fall_row_span_late_ps": 1.5685230954577492
+        },
+        "b264": {
+          "rise_min": 3906.349037640464,
+          "rise_max": 4447.499719625317,
+          "fall_min": 4349.2791764226795,
+          "fall_max": 4895.629698986444,
+          "clock_pins": [
+            "ps_625/CLK",
+            "ps_626/CLK",
+            "ps_627/CLK",
+            "ps_831/CLK",
+            "ps_832/CLK"
+          ],
+          "rise_row_span_late_ps": 0.15853984855039016,
+          "fall_row_span_late_ps": 0.15809575933781161
+        },
+        "b252": {
+          "rise_min": 3829.969245954733,
+          "rise_max": 4371.406365481084,
+          "fall_min": 4266.956138817777,
+          "fall_max": 4810.323270057848,
+          "clock_pins": [
+            "ps_628/CLK",
+            "ps_629/CLK",
+            "ps_630/CLK",
+            "ps_829/CLK",
+            "ps_830/CLK"
+          ],
+          "rise_row_span_late_ps": 0.938804593374698,
+          "fall_row_span_late_ps": 0.9281464522946408
+        },
+        "b276": {
+          "rise_min": 3654.0608462935247,
+          "rise_max": 4178.264861918179,
+          "fall_min": 4073.80308893537,
+          "fall_max": 4597.78039701749,
+          "clock_pins": [
+            "ps_631/CLK",
+            "ps_632/CLK",
+            "ps_633/CLK",
+            "ps_827/CLK",
+            "ps_828/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9467981991838315,
+          "fall_row_span_late_ps": 0.9352518796813456
+        },
+        "b280": {
+          "rise_min": 3656.4607043931437,
+          "rise_max": 4178.456264368389,
+          "fall_min": 4075.0838422216952,
+          "fall_max": 4596.580912056892,
+          "clock_pins": [
+            "ps_634/CLK",
+            "ps_635/CLK",
+            "ps_636/CLK",
+            "ps_825/CLK",
+            "ps_826/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1292299605829612,
+          "fall_row_span_late_ps": 0.12789769294795406
+        },
+        "b288": {
+          "rise_min": 3690.1073455564842,
+          "rise_max": 4208.627685406162,
+          "fall_min": 4099.403943807102,
+          "fall_max": 4616.009815065467,
+          "clock_pins": [
+            "ps_637/CLK",
+            "ps_638/CLK",
+            "ps_639/CLK",
+            "ps_823/CLK",
+            "ps_824/CLK"
+          ],
+          "rise_row_span_late_ps": 0.15853984854948067,
+          "fall_row_span_late_ps": 0.1589839377620592
+        },
+        "b14549": {
+          "rise_min": 3909.244499300256,
+          "rise_max": 4465.748233509394,
+          "fall_min": 4339.649545957813,
+          "fall_max": 4898.073521918014,
+          "clock_pins": [
+            "ps_640/CLK",
+            "ps_641/CLK",
+            "ps_642/CLK",
+            "ps_819/CLK",
+            "ps_820/CLK",
+            "ps_821/CLK",
+            "ps_822/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9028333672331428,
+          "fall_row_span_late_ps": 0.8988365643281213
+        },
+        "b300": {
+          "rise_min": 4437.027651925999,
+          "rise_max": 5057.453587256375,
+          "fall_min": 4877.202661239295,
+          "fall_max": 5500.820709822829,
+          "clock_pins": [
+            "ps_643/CLK",
+            "ps_644/CLK",
+            "ps_645/CLK",
+            "ps_815/CLK",
+            "ps_816/CLK",
+            "ps_817/CLK",
+            "ps_818/CLK"
+          ],
+          "rise_row_span_late_ps": 2.326139290489664,
+          "fall_row_span_late_ps": 2.2395418942232936
+        },
+        "b298": {
+          "rise_min": 4459.614917407646,
+          "rise_max": 5074.807261379027,
+          "fall_min": 4899.113134762428,
+          "fall_max": 5518.928891516031,
+          "clock_pins": [
+            "ps_646/CLK",
+            "ps_647/CLK",
+            "ps_648/CLK",
+            "ps_811/CLK",
+            "ps_812/CLK",
+            "ps_813/CLK",
+            "ps_814/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9321432552005717,
+          "fall_row_span_late_ps": 0.9277023630838812
+        },
+        "b322": {
+          "rise_min": 4235.585676908619,
+          "rise_max": 4829.643371209575,
+          "fall_min": 4647.808378974631,
+          "fall_max": 5241.419763617904,
+          "clock_pins": [
+            "ps_649/CLK",
+            "ps_650/CLK",
+            "ps_651/CLK",
+            "ps_807/CLK",
+            "ps_808/CLK",
+            "ps_809/CLK",
+            "ps_810/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9325873444113313,
+          "fall_row_span_late_ps": 0.9277023630829717
+        },
+        "b324": {
+          "rise_min": 4225.0887402134495,
+          "rise_max": 4819.265006333909,
+          "fall_min": 4635.254421051216,
+          "fall_max": 5229.0985084413815,
+          "clock_pins": [
+            "ps_652/CLK",
+            "ps_653/CLK",
+            "ps_654/CLK",
+            "ps_803/CLK",
+            "ps_804/CLK",
+            "ps_805/CLK",
+            "ps_806/CLK"
+          ],
+          "rise_row_span_late_ps": 3.6024516846982806,
+          "fall_row_span_late_ps": 3.5837999378099994
+        },
+        "b312": {
+          "rise_min": 4450.799302467687,
+          "rise_max": 5068.164130862336,
+          "fall_min": 4898.449221391049,
+          "fall_max": 5522.465617997409,
+          "clock_pins": [
+            "ps_655/CLK",
+            "ps_656/CLK",
+            "ps_657/CLK",
+            "ps_801/CLK",
+            "ps_802/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12168044398549682,
+          "fall_row_span_late_ps": 0.12168044398458733
+        },
+        "b17101": {
+          "rise_min": 4380.930302713585,
+          "rise_max": 5004.488399253549,
+          "fall_min": 4816.12973649984,
+          "fall_max": 5442.661898490053,
+          "clock_pins": [
+            "ps_658/CLK",
+            "ps_659/CLK",
+            "ps_660/CLK",
+            "ps_797/CLK",
+            "ps_798/CLK",
+            "ps_799/CLK",
+            "ps_800/CLK"
+          ],
+          "rise_row_span_late_ps": 0.07016609543734376,
+          "fall_row_span_late_ps": 0.06972200622476521
+        },
+        "b304": {
+          "rise_min": 4530.536852682511,
+          "rise_max": 5164.896087027608,
+          "fall_min": 4979.8090294959375,
+          "fall_max": 5619.388088434468,
+          "clock_pins": [
+            "ps_661/CLK",
+            "ps_662/CLK",
+            "ps_663/CLK",
+            "ps_795/CLK",
+            "ps_796/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11413092738803243,
+          "fall_row_span_late_ps": 0.11679546265713725
+        },
+        "b308": {
+          "rise_min": 4578.745401139627,
+          "rise_max": 5217.057029468181,
+          "fall_min": 5025.517355691606,
+          "fall_max": 5669.207348462146,
+          "clock_pins": [
+            "ps_664/CLK",
+            "ps_665/CLK",
+            "ps_666/CLK",
+            "ps_791/CLK",
+            "ps_792/CLK",
+            "ps_793/CLK",
+            "ps_794/CLK"
+          ],
+          "rise_row_span_late_ps": 0.17053025726363558,
+          "fall_row_span_late_ps": 0.1647570975128474
+        },
+        "b336": {
+          "rise_min": 4194.689945499325,
+          "rise_max": 4781.624892935035,
+          "fall_min": 4603.561550374418,
+          "fall_max": 5189.095396347453,
+          "clock_pins": [
+            "ps_667/CLK",
+            "ps_668/CLK",
+            "ps_669/CLK",
+            "ps_789/CLK",
+            "ps_790/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1256772468896088,
+          "fall_row_span_late_ps": 0.12612133610127785
+        },
+        "b328": {
+          "rise_min": 4248.925672736608,
+          "rise_max": 4845.995180070803,
+          "fall_min": 4666.59068809108,
+          "fall_max": 5263.00294339207,
+          "clock_pins": [
+            "ps_670/CLK",
+            "ps_671/CLK",
+            "ps_672/CLK",
+            "ps_787/CLK",
+            "ps_788/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11057821369468002,
+          "fall_row_span_late_ps": 0.10658141079056804
+        },
+        "b332": {
+          "rise_min": 4252.558766576909,
+          "rise_max": 4853.619747745185,
+          "fall_min": 4671.11773351438,
+          "fall_max": 5271.289648080984,
+          "clock_pins": [
+            "ps_673/CLK",
+            "ps_674/CLK",
+            "ps_675/CLK",
+            "ps_785/CLK",
+            "ps_786/CLK"
+          ],
+          "rise_row_span_late_ps": 1.6013856971185305,
+          "fall_row_span_late_ps": 1.5569767759561728
+        },
+        "b344": {
+          "rise_min": 4963.3861663608495,
+          "rise_max": 5661.89053461142,
+          "fall_min": 5410.9761332406415,
+          "fall_max": 6114.108355165551,
+          "clock_pins": [
+            "ps_676/CLK",
+            "ps_677/CLK",
+            "ps_678/CLK",
+            "ps_783/CLK",
+            "ps_784/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9467981991838315,
+          "fall_row_span_late_ps": 0.9352518796813456
+        },
+        "b352": {
+          "rise_min": 5036.8829308847135,
+          "rise_max": 5736.312336963098,
+          "fall_min": 5490.946386202357,
+          "fall_max": 6197.787197133543,
+          "clock_pins": [
+            "ps_679/CLK",
+            "ps_680/CLK",
+            "ps_681/CLK",
+            "ps_781/CLK",
+            "ps_782/CLK"
+          ],
+          "rise_row_span_late_ps": 0.07860379045723676,
+          "fall_row_span_late_ps": 0.08215650415058917
+        },
+        "b368": {
+          "rise_min": 4676.461458997859,
+          "rise_max": 5340.778507469936,
+          "fall_min": 5095.934805622065,
+          "fall_max": 5759.098998500765,
+          "clock_pins": [
+            "ps_682/CLK",
+            "ps_683/CLK",
+            "ps_684/CLK",
+            "ps_779/CLK",
+            "ps_780/CLK"
+          ],
+          "rise_row_span_late_ps": 0.127453603736285,
+          "fall_row_span_late_ps": 0.1256772468896088
+        },
+        "b398": {
+          "rise_min": 5429.599014330117,
+          "rise_max": 6196.053028762149,
+          "fall_min": 5883.738852992159,
+          "fall_max": 6658.508437911862,
+          "clock_pins": [
+            "ps_685/CLK",
+            "ps_686/CLK",
+            "ps_687/CLK",
+            "ps_775/CLK",
+            "ps_776/CLK",
+            "ps_777/CLK",
+            "ps_778/CLK"
+          ],
+          "rise_row_span_late_ps": 7.994938076876679,
+          "fall_row_span_late_ps": 8.077538670238937
+        },
+        "b394": {
+          "rise_min": 5435.5293816621515,
+          "rise_max": 6200.382010397066,
+          "fall_min": 5895.2172268450195,
+          "fall_max": 6669.023582264707,
+          "clock_pins": [
+            "ps_688/CLK",
+            "ps_689/CLK",
+            "ps_690/CLK",
+            "ps_771/CLK",
+            "ps_772/CLK",
+            "ps_773/CLK",
+            "ps_774/CLK"
+          ],
+          "rise_row_span_late_ps": 1.7386092635106252,
+          "fall_row_span_late_ps": 1.6551204917241193
+        },
+        "b388": {
+          "rise_min": 5431.561000467074,
+          "rise_max": 6192.702375660442,
+          "fall_min": 5883.5967444444395,
+          "fall_max": 6651.299093650348,
+          "clock_pins": [
+            "ps_691/CLK",
+            "ps_692/CLK",
+            "ps_693/CLK",
+            "ps_769/CLK",
+            "ps_770/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8233413983525679,
+          "fall_row_span_late_ps": 0.8189005062358774
+        },
+        "b21873": {
+          "rise_min": 5567.351935062361,
+          "rise_max": 6350.796358641937,
+          "fall_min": 6011.664967649575,
+          "fall_max": 6800.473544816365,
+          "clock_pins": [
+            "ps_694/CLK",
+            "ps_695/CLK",
+            "ps_696/CLK",
+            "ps_765/CLK",
+            "ps_766/CLK",
+            "ps_767/CLK",
+            "ps_768/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8824052634981854,
+          "fall_row_span_late_ps": 0.8784084605940734
+        },
+        "b410": {
+          "rise_min": 5105.1065801097475,
+          "rise_max": 5827.288008767293,
+          "fall_min": 5524.110968526478,
+          "fall_max": 6245.88960826908,
+          "clock_pins": [
+            "ps_697/CLK",
+            "ps_698/CLK",
+            "ps_699/CLK",
+            "ps_761/CLK",
+            "ps_762/CLK",
+            "ps_763/CLK",
+            "ps_764/CLK"
+          ],
+          "rise_row_span_late_ps": 1.4801493423447027,
+          "fall_row_span_late_ps": 1.469491201265555
+        },
+        "b414": {
+          "rise_min": 5088.214314677973,
+          "rise_max": 5807.823578621788,
+          "fall_min": 5505.8557933042275,
+          "fall_max": 6224.844220530193,
+          "clock_pins": [
+            "ps_700/CLK",
+            "ps_701/CLK",
+            "ps_702/CLK",
+            "ps_757/CLK",
+            "ps_758/CLK",
+            "ps_759/CLK",
+            "ps_760/CLK"
+          ],
+          "rise_row_span_late_ps": 0.828226379680018,
+          "fall_row_span_late_ps": 0.8202327738708846
+        },
+        "b22928": {
+          "rise_min": 6015.184818740911,
+          "rise_max": 6858.877493393956,
+          "fall_min": 6465.938477164317,
+          "fall_max": 7315.99450613073,
+          "clock_pins": [
+            "ps_703/CLK",
+            "ps_704/CLK",
+            "ps_705/CLK",
+            "ps_755/CLK",
+            "ps_756/CLK"
+          ],
+          "rise_row_span_late_ps": 0.0781597012455677,
+          "fall_row_span_late_ps": 0.07371880912978668
+        },
+        "r23394_0": {
+          "rise_min": 6069.220261743752,
+          "rise_max": 6941.589553148241,
+          "fall_min": 6485.043195048405,
+          "fall_max": 7357.277927421772,
+          "clock_pins": [
+            "ps_706/CLK",
+            "ps_707/CLK",
+            "ps_708/CLK",
+            "ps_751/CLK",
+            "ps_752/CLK",
+            "ps_753/CLK",
+            "ps_754/CLK"
+          ],
+          "rise_row_span_late_ps": 7.760014883927397,
+          "fall_row_span_late_ps": 7.446931989732548
+        }
+      }
+    },
+    "FF": {
+      "grt_overflow": 0,
+      "completion_marker": true,
+      "witness_count": 460,
+      "actual_clock_pin_count": 460,
+      "worst_setup": {
+        "slack_ps": -204506.03,
+        "type": "max",
+        "start": "ps_850",
+        "end": "ps_818",
+        "start_stage": "b212",
+        "end_stage": "b300"
+      },
+      "worst_hold": {
+        "slack_ps": 4.91,
+        "type": "min",
+        "start": "ps_903",
+        "end": "ps_904",
+        "start_stage": "b104",
+        "end_stage": "b104"
+      },
+      "worst_clock_slew_ps": 385.651184,
+      "worst_clock_slew_stage": "b322",
+      "worst_clock_slew_pin": "ps_808/CLK",
+      "max_rise_row_span_late_ps": 10.152989600766432,
+      "max_fall_row_span_late_ps": 10.197842611140459,
+      "peak_rss_kB": 7664632,
+      "stages": {
+        "b4": {
+          "rise_min": 516.8135939871015,
+          "rise_max": 598.4335273476988,
+          "fall_min": 925.7799008865738,
+          "fall_max": 1006.0371465013012,
+          "clock_pins": [
+            "ps_748/CLK",
+            "ps_749/CLK",
+            "ps_750/CLK",
+            "ps_967/CLK",
+            "ps_968/CLK",
+            "ps_969/CLK",
+            "ps_970/CLK"
+          ],
+          "rise_row_span_late_ps": 2.6937341354116597,
+          "fall_row_span_late_ps": 2.6864066634198025
+        },
+        "b2": {
+          "rise_min": 559.1942486977648,
+          "rise_max": 648.9432905883011,
+          "fall_min": 967.9812545780437,
+          "fall_max": 1056.1405126021157,
+          "clock_pins": [
+            "ps_745/CLK",
+            "ps_746/CLK",
+            "ps_747/CLK",
+            "ps_963/CLK",
+            "ps_964/CLK",
+            "ps_965/CLK",
+            "ps_966/CLK"
+          ],
+          "rise_row_span_late_ps": 0.13444800881939045,
+          "fall_row_span_late_ps": 0.13467005342522498
+        },
+        "b8": {
+          "rise_min": 530.2305837821569,
+          "rise_max": 611.7577580086762,
+          "fall_min": 939.4565163369753,
+          "fall_max": 1019.2821072380036,
+          "clock_pins": [
+            "ps_742/CLK",
+            "ps_743/CLK",
+            "ps_744/CLK",
+            "ps_959/CLK",
+            "ps_960/CLK",
+            "ps_961/CLK",
+            "ps_962/CLK"
+          ],
+          "rise_row_span_late_ps": 0.22282176193255054,
+          "fall_row_span_late_ps": 0.22271073962974697
+        },
+        "b16": {
+          "rise_min": 929.6899953726252,
+          "rise_max": 1069.3818096028222,
+          "fall_min": 1344.0543176616968,
+          "fall_max": 1482.818540551113,
+          "clock_pins": [
+            "ps_739/CLK",
+            "ps_740/CLK",
+            "ps_741/CLK",
+            "ps_957/CLK",
+            "ps_958/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12634338070733975,
+          "fall_row_span_late_ps": 0.12634338070733975
+        },
+        "b14": {
+          "rise_min": 937.7418878908928,
+          "rise_max": 1095.902373231829,
+          "fall_min": 1348.8439308313705,
+          "fall_max": 1505.6492779430343,
+          "clock_pins": [
+            "ps_736/CLK",
+            "ps_737/CLK",
+            "ps_738/CLK",
+            "ps_955/CLK",
+            "ps_956/CLK"
+          ],
+          "rise_row_span_late_ps": 10.152989600766432,
+          "fall_row_span_late_ps": 10.197842611140459
+        },
+        "b20": {
+          "rise_min": 1109.4968321780798,
+          "rise_max": 1275.2503548593725,
+          "fall_min": 1521.125897990453,
+          "fall_max": 1685.0273466146655,
+          "clock_pins": [
+            "ps_733/CLK",
+            "ps_734/CLK",
+            "ps_735/CLK",
+            "ps_953/CLK",
+            "ps_954/CLK"
+          ],
+          "rise_row_span_late_ps": 0.19084733869567572,
+          "fall_row_span_late_ps": 0.19162449481609656
+        },
+        "b24": {
+          "rise_min": 1018.6930228987836,
+          "rise_max": 1173.782631341336,
+          "fall_min": 1432.4063104036138,
+          "fall_max": 1585.8819876288194,
+          "clock_pins": [
+            "ps_730/CLK",
+            "ps_731/CLK",
+            "ps_732/CLK",
+            "ps_951/CLK",
+            "ps_952/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1604272276993015,
+          "fall_row_span_late_ps": 0.16053825000221877
+        },
+        "b26": {
+          "rise_min": 1106.4942339959832,
+          "rise_max": 1278.9954702033053,
+          "fall_min": 1517.2908545811663,
+          "fall_max": 1688.8591703771679,
+          "clock_pins": [
+            "ps_727/CLK",
+            "ps_728/CLK",
+            "ps_729/CLK",
+            "ps_949/CLK",
+            "ps_950/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12534417998108438,
+          "fall_row_span_late_ps": 0.12523315767816712
+        },
+        "b28": {
+          "rise_min": 1094.6021910424952,
+          "rise_max": 1268.0636591476523,
+          "fall_min": 1502.3149451198542,
+          "fall_max": 1674.3841935465684,
+          "clock_pins": [
+            "ps_724/CLK",
+            "ps_725/CLK",
+            "ps_726/CLK",
+            "ps_947/CLK",
+            "ps_948/CLK"
+          ],
+          "rise_row_span_late_ps": 2.874034355331105,
+          "fall_row_span_late_ps": 2.8698155078207037
+        },
+        "b32": {
+          "rise_min": 1049.9943179132317,
+          "rise_max": 1213.561256338788,
+          "fall_min": 1463.1587111524939,
+          "fall_max": 1625.9046396480594,
+          "clock_pins": [
+            "ps_721/CLK",
+            "ps_722/CLK",
+            "ps_723/CLK",
+            "ps_945/CLK",
+            "ps_946/CLK"
+          ],
+          "rise_row_span_late_ps": 0.16997514574927663,
+          "fall_row_span_late_ps": 0.17053025726386295
+        },
+        "b50": {
+          "rise_min": 1530.1433514770954,
+          "rise_max": 1758.3727877396684,
+          "fall_min": 1938.7325156135955,
+          "fall_max": 2164.58962730767,
+          "clock_pins": [
+            "ps_718/CLK",
+            "ps_719/CLK",
+            "ps_720/CLK",
+            "ps_941/CLK",
+            "ps_942/CLK",
+            "ps_943/CLK",
+            "ps_944/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9192646680628513,
+          "fall_row_span_late_ps": 0.9190426234567894
+        },
+        "b68": {
+          "rise_min": 1535.0226706675173,
+          "rise_max": 1765.816722127222,
+          "fall_min": 1949.3071679207994,
+          "fall_max": 2179.6300407269705,
+          "clock_pins": [
+            "ps_715/CLK",
+            "ps_716/CLK",
+            "ps_717/CLK",
+            "ps_939/CLK",
+            "ps_940/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1237898677402427,
+          "fall_row_span_late_ps": 0.12367884543755281
+        },
+        "b64": {
+          "rise_min": 1498.5024392380574,
+          "rise_max": 1724.4717944803701,
+          "fall_min": 1916.3803953695026,
+          "fall_max": 2141.1044134401172,
+          "clock_pins": [
+            "ps_712/CLK",
+            "ps_713/CLK",
+            "ps_714/CLK",
+            "ps_937/CLK",
+            "ps_938/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12423395695191175,
+          "fall_row_span_late_ps": 0.12434497925505639
+        },
+        "b56": {
+          "rise_min": 1563.2392109957182,
+          "rise_max": 1804.2345467579537,
+          "fall_min": 1981.7498832314257,
+          "fall_max": 2221.6941708520485,
+          "clock_pins": [
+            "ps_709/CLK",
+            "ps_710/CLK",
+            "ps_711/CLK",
+            "ps_935/CLK",
+            "ps_936/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11757261877778546,
+          "fall_row_span_late_ps": 0.11923795332131704
+        },
+        "b60": {
+          "rise_min": 1608.0681295300678,
+          "rise_max": 1851.8744389795836,
+          "fall_min": 2023.9865420152196,
+          "fall_max": 2266.480567844385,
+          "clock_pins": [
+            "ps_511/CLK",
+            "ps_512/CLK",
+            "ps_513/CLK",
+            "ps_931/CLK",
+            "ps_932/CLK",
+            "ps_933/CLK",
+            "ps_934/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1657562982388754,
+          "fall_row_span_late_ps": 0.16031620539661162
+        },
+        "b80": {
+          "rise_min": 1482.338258068741,
+          "rise_max": 1711.7839436596507,
+          "fall_min": 1896.255382521707,
+          "fall_max": 2124.9111444274395,
+          "clock_pins": [
+            "ps_514/CLK",
+            "ps_515/CLK",
+            "ps_516/CLK",
+            "ps_929/CLK",
+            "ps_930/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12911893827981658,
+          "fall_row_span_late_ps": 0.13034018361213384
+        },
+        "b72": {
+          "rise_min": 1540.029887550887,
+          "rise_max": 1778.0799126393254,
+          "fall_min": 1966.1656825724908,
+          "fall_max": 2204.8567504379093,
+          "clock_pins": [
+            "ps_517/CLK",
+            "ps_518/CLK",
+            "ps_519/CLK",
+            "ps_927/CLK",
+            "ps_928/CLK"
+          ],
+          "rise_row_span_late_ps": 0.10658141078988592,
+          "fall_row_span_late_ps": 0.10258460788554657
+        },
+        "b76": {
+          "rise_min": 1531.4077844848935,
+          "rise_max": 1769.8219627268638,
+          "fall_min": 1956.7554321781665,
+          "fall_max": 2195.59948877699,
+          "clock_pins": [
+            "ps_520/CLK",
+            "ps_521/CLK",
+            "ps_522/CLK",
+            "ps_925/CLK",
+            "ps_926/CLK"
+          ],
+          "rise_row_span_late_ps": 1.5729639875742123,
+          "fall_row_span_late_ps": 1.5278889325945784
+        },
+        "r4032_0": {
+          "rise_min": 1852.9974295734792,
+          "rise_max": 2137.6560607118527,
+          "fall_min": 2271.796537752137,
+          "fall_max": 2554.9962248080205,
+          "clock_pins": [
+            "ps_523/CLK",
+            "ps_524/CLK",
+            "ps_525/CLK",
+            "ps_921/CLK",
+            "ps_922/CLK",
+            "ps_923/CLK",
+            "ps_924/CLK"
+          ],
+          "rise_row_span_late_ps": 0.789812662874283,
+          "fall_row_span_late_ps": 0.7871481276047234
+        },
+        "r4113_0": {
+          "rise_min": 1860.4081682924639,
+          "rise_max": 2147.6873698686336,
+          "fall_min": 2279.5880829700895,
+          "fall_max": 2565.4258819876286,
+          "clock_pins": [
+            "ps_526/CLK",
+            "ps_527/CLK",
+            "ps_528/CLK",
+            "ps_917/CLK",
+            "ps_918/CLK",
+            "ps_919/CLK",
+            "ps_920/CLK"
+          ],
+          "rise_row_span_late_ps": 2.678302035307752,
+          "fall_row_span_late_ps": 2.6711966079215017
+        },
+        "r3870_0": {
+          "rise_min": 1854.9529764168678,
+          "rise_max": 2152.4069279651735,
+          "fall_min": 2274.0509566349488,
+          "fall_max": 2571.7157395364734,
+          "clock_pins": [
+            "ps_529/CLK",
+            "ps_530/CLK",
+            "ps_531/CLK",
+            "ps_913/CLK",
+            "ps_914/CLK",
+            "ps_915/CLK",
+            "ps_916/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11413092738712294,
+          "fall_row_span_late_ps": 0.10857981224216928
+        },
+        "r3951_0": {
+          "rise_min": 1854.6696474998514,
+          "rise_max": 2152.4930812722287,
+          "fall_min": 2273.6039808434484,
+          "fall_max": 2571.563416936886,
+          "clock_pins": [
+            "ps_532/CLK",
+            "ps_533/CLK",
+            "ps_534/CLK",
+            "ps_909/CLK",
+            "ps_910/CLK",
+            "ps_911/CLK",
+            "ps_912/CLK"
+          ],
+          "rise_row_span_late_ps": 0.112576615146736,
+          "fall_row_span_late_ps": 0.10724754460716213
+        },
+        "b7837": {
+          "rise_min": 2031.9892516532998,
+          "rise_max": 2353.8666665510186,
+          "fall_min": 2449.9637971882735,
+          "fall_max": 2771.425988673123,
+          "clock_pins": [
+            "ps_535/CLK",
+            "ps_536/CLK",
+            "ps_537/CLK",
+            "ps_905/CLK",
+            "ps_906/CLK",
+            "ps_907/CLK",
+            "ps_908/CLK"
+          ],
+          "rise_row_span_late_ps": 8.087086588289367,
+          "fall_row_span_late_ps": 8.121059412977957
+        },
+        "b104": {
+          "rise_min": 1977.989113742783,
+          "rise_max": 2274.636044171264,
+          "fall_min": 2400.17029433487,
+          "fall_max": 2696.1746276741305,
+          "clock_pins": [
+            "ps_538/CLK",
+            "ps_539/CLK",
+            "ps_540/CLK",
+            "ps_903/CLK",
+            "ps_904/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12212453319671113,
+          "fall_row_span_late_ps": 0.12234657780254565
+        },
+        "b96": {
+          "rise_min": 2030.6429952082601,
+          "rise_max": 2339.430214459527,
+          "fall_min": 2453.8817742578312,
+          "fall_max": 2762.258877122163,
+          "clock_pins": [
+            "ps_541/CLK",
+            "ps_542/CLK",
+            "ps_543/CLK",
+            "ps_901/CLK",
+            "ps_902/CLK"
+          ],
+          "rise_row_span_late_ps": 0.08992806535388809,
+          "fall_row_span_late_ps": 0.09103828838306072
+        },
+        "b100": {
+          "rise_min": 2047.8006039439806,
+          "rise_max": 2356.17837294213,
+          "fall_min": 2468.7791909509883,
+          "fall_max": 2776.677787689795,
+          "clock_pins": [
+            "ps_544/CLK",
+            "ps_545/CLK",
+            "ps_546/CLK",
+            "ps_897/CLK",
+            "ps_898/CLK",
+            "ps_899/CLK",
+            "ps_900/CLK"
+          ],
+          "rise_row_span_late_ps": 0.13233858506418983,
+          "fall_row_span_late_ps": 0.12922996058250646
+        },
+        "b116": {
+          "rise_min": 1906.1929888548352,
+          "rise_max": 2200.9603116951153,
+          "fall_min": 2332.9502867281076,
+          "fall_max": 2627.97518131113,
+          "clock_pins": [
+            "ps_547/CLK",
+            "ps_548/CLK",
+            "ps_549/CLK",
+            "ps_895/CLK",
+            "ps_896/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12900791597667194,
+          "fall_row_span_late_ps": 0.12767564834211953
+        },
+        "b128": {
+          "rise_min": 1913.0908045343938,
+          "rise_max": 2206.754787728393,
+          "fall_min": 2327.647195407493,
+          "fall_max": 2620.7935926253435,
+          "clock_pins": [
+            "ps_550/CLK",
+            "ps_551/CLK",
+            "ps_552/CLK",
+            "ps_893/CLK",
+            "ps_894/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12967404979463026,
+          "fall_row_span_late_ps": 0.13189449585252078
+        },
+        "b120": {
+          "rise_min": 1939.2645344891218,
+          "rise_max": 2238.107708113692,
+          "fall_min": 2365.738503445378,
+          "fall_max": 2665.182529773276,
+          "clock_pins": [
+            "ps_553/CLK",
+            "ps_554/CLK",
+            "ps_555/CLK",
+            "ps_891/CLK",
+            "ps_892/CLK"
+          ],
+          "rise_row_span_late_ps": 0.08415490560264516,
+          "fall_row_span_late_ps": 0.08215650415058917
+        },
+        "b124": {
+          "rise_min": 1923.8193337534256,
+          "rise_max": 2221.2929362493455,
+          "fall_min": 2348.954817825845,
+          "fall_max": 2646.8494168943853,
+          "clock_pins": [
+            "ps_556/CLK",
+            "ps_557/CLK",
+            "ps_558/CLK",
+            "ps_889/CLK",
+            "ps_890/CLK"
+          ],
+          "rise_row_span_late_ps": 1.3788970020941633,
+          "fall_row_span_late_ps": 1.3589129875713297
+        },
+        "b156": {
+          "rise_min": 2452.189572316936,
+          "rise_max": 2818.489009008853,
+          "fall_min": 2878.282290685012,
+          "fall_max": 3244.138304299122,
+          "clock_pins": [
+            "ps_559/CLK",
+            "ps_560/CLK",
+            "ps_561/CLK",
+            "ps_887/CLK",
+            "ps_888/CLK"
+          ],
+          "rise_row_span_late_ps": 0.15742962552121753,
+          "fall_row_span_late_ps": 0.15787371473243184
+        },
+        "b140": {
+          "rise_min": 2385.8044524280276,
+          "rise_max": 2749.282146269282,
+          "fall_min": 2805.6534985252683,
+          "fall_max": 3167.9570204909874,
+          "clock_pins": [
+            "ps_562/CLK",
+            "ps_563/CLK",
+            "ps_564/CLK",
+            "ps_885/CLK",
+            "ps_886/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8346656732483098,
+          "fall_row_span_late_ps": 0.8317790933729157
+        },
+        "b9205": {
+          "rise_min": 2483.228743674222,
+          "rise_max": 2864.6141129296316,
+          "fall_min": 2898.8798144539765,
+          "fall_max": 3278.373141623259,
+          "clock_pins": [
+            "ps_565/CLK",
+            "ps_566/CLK",
+            "ps_567/CLK",
+            "ps_881/CLK",
+            "ps_882/CLK",
+            "ps_883/CLK",
+            "ps_884/CLK"
+          ],
+          "rise_row_span_late_ps": 0.13100631742963742,
+          "fall_row_span_late_ps": 0.12967404979463026
+        },
+        "b148": {
+          "rise_min": 2488.886662274925,
+          "rise_max": 2865.8038279275734,
+          "fall_min": 2916.4855092042258,
+          "fall_max": 3293.387575823679,
+          "clock_pins": [
+            "ps_568/CLK",
+            "ps_569/CLK",
+            "ps_570/CLK",
+            "ps_879/CLK",
+            "ps_880/CLK"
+          ],
+          "rise_row_span_late_ps": 0.08926193153638451,
+          "fall_row_span_late_ps": 0.08970602074805356
+        },
+        "b152": {
+          "rise_min": 2523.2414036862006,
+          "rise_max": 2903.627350170849,
+          "fall_min": 2947.954780962971,
+          "fall_max": 3328.166866521268,
+          "clock_pins": [
+            "ps_571/CLK",
+            "ps_572/CLK",
+            "ps_573/CLK",
+            "ps_875/CLK",
+            "ps_876/CLK",
+            "ps_877/CLK",
+            "ps_878/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1298960944004648,
+          "fall_row_span_late_ps": 0.12678746991878143
+        },
+        "b9098": {
+          "rise_min": 2447.3994040357475,
+          "rise_max": 2829.493761717515,
+          "fall_min": 2863.9397634617794,
+          "fall_max": 3243.853865159076,
+          "clock_pins": [
+            "ps_574/CLK",
+            "ps_575/CLK",
+            "ps_576/CLK",
+            "ps_871/CLK",
+            "ps_872/CLK",
+            "ps_873/CLK",
+            "ps_874/CLK"
+          ],
+          "rise_row_span_late_ps": 3.3109071172671065,
+          "fall_row_span_late_ps": 3.3053560021212434
+        },
+        "b168": {
+          "rise_min": 2278.141906452434,
+          "rise_max": 2631.664452436701,
+          "fall_min": 2707.628354575745,
+          "fall_max": 3061.663379510227,
+          "clock_pins": [
+            "ps_577/CLK",
+            "ps_578/CLK",
+            "ps_579/CLK",
+            "ps_869/CLK",
+            "ps_870/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8264500228333418,
+          "fall_row_span_late_ps": 0.8240075321696168
+        },
+        "b172": {
+          "rise_min": 2269.2796621452544,
+          "rise_max": 2619.6271923110116,
+          "fall_min": 2696.0369600185268,
+          "fall_max": 3046.5599054228755,
+          "clock_pins": [
+            "ps_580/CLK",
+            "ps_581/CLK",
+            "ps_582/CLK",
+            "ps_867/CLK",
+            "ps_868/CLK"
+          ],
+          "rise_row_span_late_ps": 0.09747758195180722,
+          "fall_row_span_late_ps": 0.09725553734551795
+        },
+        "b184": {
+          "rise_min": 2348.371728690982,
+          "rise_max": 2706.526347197099,
+          "fall_min": 2763.5058796284047,
+          "fall_max": 3121.255710818126,
+          "clock_pins": [
+            "ps_583/CLK",
+            "ps_584/CLK",
+            "ps_585/CLK",
+            "ps_865/CLK",
+            "ps_866/CLK"
+          ],
+          "rise_row_span_late_ps": 0.17275070332198084,
+          "fall_row_span_late_ps": 0.1731947925336499
+        },
+        "b176": {
+          "rise_min": 2368.8973100076632,
+          "rise_max": 2731.847425865508,
+          "fall_min": 2795.913067802101,
+          "fall_max": 3159.742702343568,
+          "clock_pins": [
+            "ps_586/CLK",
+            "ps_587/CLK",
+            "ps_588/CLK",
+            "ps_863/CLK",
+            "ps_864/CLK"
+          ],
+          "rise_row_span_late_ps": 0.08548717323765231,
+          "fall_row_span_late_ps": 0.0837108163909761
+        },
+        "b180": {
+          "rise_min": 2357.8870061838556,
+          "rise_max": 2720.3137629058006,
+          "fall_min": 2783.8864658174907,
+          "fall_max": 3147.000006505213,
+          "clock_pins": [
+            "ps_589/CLK",
+            "ps_590/CLK",
+            "ps_591/CLK",
+            "ps_861/CLK",
+            "ps_862/CLK"
+          ],
+          "rise_row_span_late_ps": 1.3926637676545397,
+          "fall_row_span_late_ps": 1.3711254408908644
+        },
+        "b10517": {
+          "rise_min": 2397.8128467549614,
+          "rise_max": 2773.4195051441056,
+          "fall_min": 2828.6921806905325,
+          "fall_max": 3204.6285753193083,
+          "clock_pins": [
+            "ps_592/CLK",
+            "ps_593/CLK",
+            "ps_594/CLK",
+            "ps_857/CLK",
+            "ps_858/CLK",
+            "ps_859/CLK",
+            "ps_860/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11790568568630988,
+          "fall_row_span_late_ps": 0.1181277302921444
+        },
+        "b200": {
+          "rise_min": 2812.047050905027,
+          "rise_max": 3237.4509869058734,
+          "fall_min": 3235.275171813519,
+          "fall_max": 3660.1997135104166,
+          "clock_pins": [
+            "ps_595/CLK",
+            "ps_596/CLK",
+            "ps_597/CLK",
+            "ps_855/CLK",
+            "ps_856/CLK"
+          ],
+          "rise_row_span_late_ps": 0.09747758195135248,
+          "fall_row_span_late_ps": 0.09725553734551795
+        },
+        "b11809": {
+          "rise_min": 2796.407561139245,
+          "rise_max": 3221.2319607189215,
+          "fall_min": 3216.904533396246,
+          "fall_max": 3640.822546894997,
+          "clock_pins": [
+            "ps_598/CLK",
+            "ps_599/CLK",
+            "ps_600/CLK",
+            "ps_851/CLK",
+            "ps_852/CLK",
+            "ps_853/CLK",
+            "ps_854/CLK"
+          ],
+          "rise_row_span_late_ps": 0.14166445850833043,
+          "fall_row_span_late_ps": 0.14188650311416495
+        },
+        "b212": {
+          "rise_min": 2950.7554295760815,
+          "rise_max": 3388.435989787683,
+          "fall_min": 3381.4302604296995,
+          "fall_max": 3819.0770698612178,
+          "clock_pins": [
+            "ps_601/CLK",
+            "ps_602/CLK",
+            "ps_603/CLK",
+            "ps_849/CLK",
+            "ps_850/CLK"
+          ],
+          "rise_row_span_late_ps": 0.19073631639275845,
+          "fall_row_span_late_ps": 0.19051427178692393
+        },
+        "b204": {
+          "rise_min": 2982.6252698037115,
+          "rise_max": 3432.2897994356076,
+          "fall_min": 3414.0612695660548,
+          "fall_max": 3863.7924125796944,
+          "clock_pins": [
+            "ps_604/CLK",
+            "ps_605/CLK",
+            "ps_606/CLK",
+            "ps_847/CLK",
+            "ps_848/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11679546265713725,
+          "fall_row_span_late_ps": 0.11768364108047535
+        },
+        "b208": {
+          "rise_min": 3036.6984603895407,
+          "rise_max": 3490.994840498681,
+          "fall_min": 3465.813649931934,
+          "fall_max": 3920.2157232734407,
+          "clock_pins": [
+            "ps_607/CLK",
+            "ps_608/CLK",
+            "ps_609/CLK",
+            "ps_843/CLK",
+            "ps_844/CLK",
+            "ps_845/CLK",
+            "ps_846/CLK"
+          ],
+          "rise_row_span_late_ps": 0.1638689190895093,
+          "fall_row_span_late_ps": 0.1585398485499354
+        },
+        "b224": {
+          "rise_min": 2709.2113105705807,
+          "rise_max": 3127.000226815095,
+          "fall_min": 3139.2459868256424,
+          "fall_max": 3557.8176103056453,
+          "clock_pins": [
+            "ps_610/CLK",
+            "ps_611/CLK",
+            "ps_612/CLK",
+            "ps_841/CLK",
+            "ps_842/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8346656732483098,
+          "fall_row_span_late_ps": 0.8317790933729157
+        },
+        "b228": {
+          "rise_min": 2704.3820624387695,
+          "rise_max": 3119.8226349322135,
+          "fall_min": 3132.0115515236726,
+          "fall_max": 3547.900876165463,
+          "clock_pins": [
+            "ps_613/CLK",
+            "ps_614/CLK",
+            "ps_615/CLK",
+            "ps_839/CLK",
+            "ps_840/CLK"
+          ],
+          "rise_row_span_late_ps": 0.09969802800969774,
+          "fall_row_span_late_ps": 0.09947598340386321
+        },
+        "b240": {
+          "rise_min": 2797.6110429027476,
+          "rise_max": 3222.75274422413,
+          "fall_min": 3214.336365485421,
+          "fall_max": 3639.140559005969,
+          "clock_pins": [
+            "ps_616/CLK",
+            "ps_617/CLK",
+            "ps_618/CLK",
+            "ps_837/CLK",
+            "ps_838/CLK"
+          ],
+          "rise_row_span_late_ps": 0.20938806328103965,
+          "fall_row_span_late_ps": 0.2089439740693706
+        },
+        "b232": {
+          "rise_min": 2833.612023021515,
+          "rise_max": 3265.5394074965207,
+          "fall_min": 3261.736005443562,
+          "fall_max": 3694.7540730223177,
+          "clock_pins": [
+            "ps_619/CLK",
+            "ps_620/CLK",
+            "ps_621/CLK",
+            "ps_835/CLK",
+            "ps_836/CLK"
+          ],
+          "rise_row_span_late_ps": 0.10769163381883118,
+          "fall_row_span_late_ps": 0.10413892012593351
+        },
+        "b236": {
+          "rise_min": 2828.447931624139,
+          "rise_max": 3261.499083849161,
+          "fall_min": 3255.7043857712774,
+          "fall_max": 3689.677245155026,
+          "clock_pins": [
+            "ps_622/CLK",
+            "ps_623/CLK",
+            "ps_624/CLK",
+            "ps_833/CLK",
+            "ps_834/CLK"
+          ],
+          "rise_row_span_late_ps": 1.5845103070764708,
+          "fall_row_span_late_ps": 1.5374368506445535
+        },
+        "b264": {
+          "rise_min": 3433.879416768618,
+          "rise_max": 3942.05425434429,
+          "fall_min": 3869.4061443038404,
+          "fall_max": 4377.7630584562785,
+          "clock_pins": [
+            "ps_625/CLK",
+            "ps_626/CLK",
+            "ps_627/CLK",
+            "ps_831/CLK",
+            "ps_832/CLK"
+          ],
+          "rise_row_span_late_ps": 0.16031620539661162,
+          "fall_row_span_late_ps": 0.16031620539706637
+        },
+        "b252": {
+          "rise_min": 3365.0280474429524,
+          "rise_max": 3873.4287043827353,
+          "fall_min": 3792.7496850392677,
+          "fall_max": 4300.215312143975,
+          "clock_pins": [
+            "ps_628/CLK",
+            "ps_629/CLK",
+            "ps_630/CLK",
+            "ps_829/CLK",
+            "ps_830/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9419132178554719,
+          "fall_row_span_late_ps": 0.9330314336230003
+        },
+        "b276": {
+          "rise_min": 3202.0946022777784,
+          "rise_max": 3693.0636474382686,
+          "fall_min": 3633.2113018969635,
+          "fall_max": 4125.334756963071,
+          "clock_pins": [
+            "ps_631/CLK",
+            "ps_632/CLK",
+            "ps_633/CLK",
+            "ps_827/CLK",
+            "ps_828/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9501288682704399,
+          "fall_row_span_late_ps": 0.9405809502204647
+        },
+        "b280": {
+          "rise_min": 3204.240219303743,
+          "rise_max": 3693.7295592111,
+          "fall_min": 3632.90821101003,
+          "fall_max": 4123.212010531506,
+          "clock_pins": [
+            "ps_634/CLK",
+            "ps_635/CLK",
+            "ps_636/CLK",
+            "ps_825/CLK",
+            "ps_826/CLK"
+          ],
+          "rise_row_span_late_ps": 0.13100631742918267,
+          "fall_row_span_late_ps": 0.12967404979463026
+        },
+        "b288": {
+          "rise_min": 3227.8524426858203,
+          "rise_max": 3717.486555676167,
+          "fall_min": 3647.0768773069112,
+          "fall_max": 4136.523140560741,
+          "clock_pins": [
+            "ps_637/CLK",
+            "ps_638/CLK",
+            "ps_639/CLK",
+            "ps_823/CLK",
+            "ps_824/CLK"
+          ],
+          "rise_row_span_late_ps": 0.16253665145450213,
+          "fall_row_span_late_ps": 0.16342482987784024
+        },
+        "b14549": {
+          "rise_min": 3441.590137750055,
+          "rise_max": 3964.19654243589,
+          "fall_min": 3866.2802003432153,
+          "fall_max": 4388.434522211616,
+          "clock_pins": [
+            "ps_640/CLK",
+            "ps_641/CLK",
+            "ps_642/CLK",
+            "ps_819/CLK",
+            "ps_820/CLK",
+            "ps_821/CLK",
+            "ps_822/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8912870477306569,
+          "fall_row_span_late_ps": 0.8899547800956498
+        },
+        "b300": {
+          "rise_min": 3903.2559562814986,
+          "rise_max": 4482.983779901754,
+          "fall_min": 4336.656384671463,
+          "fall_max": 4916.183035878852,
+          "clock_pins": [
+            "ps_643/CLK",
+            "ps_644/CLK",
+            "ps_645/CLK",
+            "ps_815/CLK",
+            "ps_816/CLK",
+            "ps_817/CLK",
+            "ps_818/CLK"
+          ],
+          "rise_row_span_late_ps": 2.2715163174598274,
+          "fall_row_span_late_ps": 2.2915003319822063
+        },
+        "b298": {
+          "rise_min": 3930.8036982569934,
+          "rise_max": 4510.423608198824,
+          "fall_min": 4360.045675269305,
+          "fall_max": 4938.972806041001,
+          "clock_pins": [
+            "ps_646/CLK",
+            "ps_647/CLK",
+            "ps_648/CLK",
+            "ps_811/CLK",
+            "ps_812/CLK",
+            "ps_813/CLK",
+            "ps_814/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9197087572747478,
+          "fall_row_span_late_ps": 0.9192646680621692
+        },
+        "b322": {
+          "rise_min": 3727.667522897266,
+          "rise_max": 4286.721217359552,
+          "fall_min": 4150.8752157020235,
+          "fall_max": 4710.470699002491,
+          "clock_pins": [
+            "ps_649/CLK",
+            "ps_650/CLK",
+            "ps_651/CLK",
+            "ps_807/CLK",
+            "ps_808/CLK",
+            "ps_809/CLK",
+            "ps_810/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9197087572747478,
+          "fall_row_span_late_ps": 0.9192646680630787
+        },
+        "b324": {
+          "rise_min": 3717.13061817305,
+          "rise_max": 4277.25723217062,
+          "fall_min": 4137.210590660336,
+          "fall_max": 4697.66094569318,
+          "clock_pins": [
+            "ps_652/CLK",
+            "ps_653/CLK",
+            "ps_654/CLK",
+            "ps_803/CLK",
+            "ps_804/CLK",
+            "ps_805/CLK",
+            "ps_806/CLK"
+          ],
+          "rise_row_span_late_ps": 3.7787551017127043,
+          "fall_row_span_late_ps": 3.7765346556552686
+        },
+        "b312": {
+          "rise_min": 3911.261996588666,
+          "rise_max": 4490.0217057275795,
+          "fall_min": 4350.876121227681,
+          "fall_max": 4930.258887530504,
+          "clock_pins": [
+            "ps_655/CLK",
+            "ps_656/CLK",
+            "ps_657/CLK",
+            "ps_801/CLK",
+            "ps_802/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12390089004293259,
+          "fall_row_span_late_ps": 0.12434497925460164
+        },
+        "b17101": {
+          "rise_min": 3854.64728344471,
+          "rise_max": 4439.100660365862,
+          "fall_min": 4284.563387880267,
+          "fall_max": 4868.700573282743,
+          "clock_pins": [
+            "ps_658/CLK",
+            "ps_659/CLK",
+            "ps_660/CLK",
+            "ps_797/CLK",
+            "ps_798/CLK",
+            "ps_799/CLK",
+            "ps_800/CLK"
+          ],
+          "rise_row_span_late_ps": 0.07238654149477952,
+          "fall_row_span_late_ps": 0.07194245228311047
+        },
+        "b304": {
+          "rise_min": 3976.3250628945684,
+          "rise_max": 4570.2939393532,
+          "fall_min": 4416.61908811658,
+          "fall_max": 5011.3775551934805,
+          "clock_pins": [
+            "ps_661/CLK",
+            "ps_662/CLK",
+            "ps_663/CLK",
+            "ps_795/CLK",
+            "ps_796/CLK"
+          ],
+          "rise_row_span_late_ps": 0.11768364108047535,
+          "fall_row_span_late_ps": 0.11945999792715156
+        },
+        "b308": {
+          "rise_min": 4023.3638803682643,
+          "rise_max": 4621.18567482695,
+          "fall_min": 4461.002252104761,
+          "fall_max": 5059.301886555156,
+          "clock_pins": [
+            "ps_664/CLK",
+            "ps_665/CLK",
+            "ps_666/CLK",
+            "ps_791/CLK",
+            "ps_792/CLK",
+            "ps_793/CLK",
+            "ps_794/CLK"
+          ],
+          "rise_row_span_late_ps": 0.16608936514694506,
+          "fall_row_span_late_ps": 0.15987211618448782
+        },
+        "b336": {
+          "rise_min": 3667.842710887081,
+          "rise_max": 4222.549882190591,
+          "fall_min": 4088.8870230974094,
+          "fall_max": 4643.821790121878,
+          "clock_pins": [
+            "ps_667/CLK",
+            "ps_668/CLK",
+            "ps_669/CLK",
+            "ps_789/CLK",
+            "ps_790/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12967404979372077,
+          "fall_row_span_late_ps": 0.13056222821796837
+        },
+        "b328": {
+          "rise_min": 3716.585720710387,
+          "rise_max": 4280.524840589754,
+          "fall_min": 4148.4420509115325,
+          "fall_max": 4713.651710025358,
+          "clock_pins": [
+            "ps_670/CLK",
+            "ps_671/CLK",
+            "ps_672/CLK",
+            "ps_787/CLK",
+            "ps_788/CLK"
+          ],
+          "rise_row_span_late_ps": 0.10658141078965855,
+          "fall_row_span_late_ps": 0.10302869709721563
+        },
+        "b332": {
+          "rise_min": 3720.772371752977,
+          "rise_max": 4289.902228382418,
+          "fall_min": 4153.046367857655,
+          "fall_max": 4723.699672527575,
+          "clock_pins": [
+            "ps_673/CLK",
+            "ps_674/CLK",
+            "ps_675/CLK",
+            "ps_785/CLK",
+            "ps_786/CLK"
+          ],
+          "rise_row_span_late_ps": 1.5729639875744397,
+          "fall_row_span_late_ps": 1.528110977200413
+        },
+        "b344": {
+          "rise_min": 4360.233969095034,
+          "rise_max": 5012.901225278564,
+          "fall_min": 4796.752347839814,
+          "fall_max": 5449.335227073136,
+          "clock_pins": [
+            "ps_676/CLK",
+            "ps_677/CLK",
+            "ps_678/CLK",
+            "ps_783/CLK",
+            "ps_784/CLK"
+          ],
+          "rise_row_span_late_ps": 0.9499068236646053,
+          "fall_row_span_late_ps": 0.9405809502213742
+        },
+        "b352": {
+          "rise_min": 4416.859784469281,
+          "rise_max": 5072.338569451606,
+          "fall_min": 4861.558730581397,
+          "fall_max": 5518.430623420589,
+          "clock_pins": [
+            "ps_679/CLK",
+            "ps_680/CLK",
+            "ps_681/CLK",
+            "ps_781/CLK",
+            "ps_782/CLK"
+          ],
+          "rise_row_span_late_ps": 0.08304468257392728,
+          "fall_row_span_late_ps": 0.08437695020893443
+        },
+        "b368": {
+          "rise_min": 4095.5581312344334,
+          "rise_max": 4721.041798596001,
+          "fall_min": 4529.2405562737795,
+          "fall_max": 5156.074254838686,
+          "clock_pins": [
+            "ps_682/CLK",
+            "ps_683/CLK",
+            "ps_684/CLK",
+            "ps_779/CLK",
+            "ps_780/CLK"
+          ],
+          "rise_row_span_late_ps": 0.12878587137038267,
+          "fall_row_span_late_ps": 0.12789769294795406
+        },
+        "b398": {
+          "rise_min": 4762.180002714842,
+          "rise_max": 5476.5450171585835,
+          "fall_min": 5209.7610878104015,
+          "fall_max": 5926.045011737573,
+          "clock_pins": [
+            "ps_685/CLK",
+            "ps_686/CLK",
+            "ps_687/CLK",
+            "ps_775/CLK",
+            "ps_776/CLK",
+            "ps_777/CLK",
+            "ps_778/CLK"
+          ],
+          "rise_row_span_late_ps": 8.253397998042601,
+          "fall_row_span_late_ps": 8.296474651569952
+        },
+        "b394": {
+          "rise_min": 4771.067560107084,
+          "rise_max": 5483.046927305979,
+          "fall_min": 5225.536912964152,
+          "fall_max": 5940.913118542763,
+          "clock_pins": [
+            "ps_688/CLK",
+            "ps_689/CLK",
+            "ps_690/CLK",
+            "ps_771/CLK",
+            "ps_772/CLK",
+            "ps_773/CLK",
+            "ps_774/CLK"
+          ],
+          "rise_row_span_late_ps": 1.6506795996083383,
+          "fall_row_span_late_ps": 1.6293633174509523
+        },
+        "b388": {
+          "rise_min": 4767.09695846595,
+          "rise_max": 5478.67087221463,
+          "fall_min": 5207.231555660988,
+          "fall_max": 5919.091462861956,
+          "clock_pins": [
+            "ps_691/CLK",
+            "ps_692/CLK",
+            "ps_693/CLK",
+            "ps_769/CLK",
+            "ps_770/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8344436286424752,
+          "fall_row_span_late_ps": 0.8317790933733704
+        },
+        "b21873": {
+          "rise_min": 4903.262260266636,
+          "rise_max": 5636.826583596541,
+          "fall_min": 5340.186980640052,
+          "fall_max": 6073.526594828876,
+          "clock_pins": [
+            "ps_694/CLK",
+            "ps_695/CLK",
+            "ps_696/CLK",
+            "ps_765/CLK",
+            "ps_766/CLK",
+            "ps_767/CLK",
+            "ps_768/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8704148547840305,
+          "fall_row_span_late_ps": 0.8690825871490233
+        },
+        "b410": {
+          "rise_min": 4467.188414822692,
+          "rise_max": 5146.438851214068,
+          "fall_min": 4902.844372318497,
+          "fall_max": 5583.54564816425,
+          "clock_pins": [
+            "ps_697/CLK",
+            "ps_698/CLK",
+            "ps_699/CLK",
+            "ps_761/CLK",
+            "ps_762/CLK",
+            "ps_763/CLK",
+            "ps_764/CLK"
+          ],
+          "rise_row_span_late_ps": 1.5072387842537864,
+          "fall_row_span_late_ps": 1.499689267656322
+        },
+        "b414": {
+          "rise_min": 4452.236819245716,
+          "rise_max": 5128.9839247511645,
+          "fall_min": 4886.000512610789,
+          "fall_max": 5563.664662338242,
+          "clock_pins": [
+            "ps_700/CLK",
+            "ps_701/CLK",
+            "ps_702/CLK",
+            "ps_757/CLK",
+            "ps_758/CLK",
+            "ps_759/CLK",
+            "ps_760/CLK"
+          ],
+          "rise_row_span_late_ps": 0.8339995394308062,
+          "fall_row_span_late_ps": 0.8251177551983346
+        },
+        "b22928": {
+          "rise_min": 5274.837032703441,
+          "rise_max": 6064.787807322528,
+          "fall_min": 5715.374418813423,
+          "fall_max": 6505.054743102631,
+          "clock_pins": [
+            "ps_703/CLK",
+            "ps_704/CLK",
+            "ps_705/CLK",
+            "ps_755/CLK",
+            "ps_756/CLK"
+          ],
+          "rise_row_span_late_ps": 0.07460698755312478,
+          "fall_row_span_late_ps": 0.07149836307144142
+        },
+        "r23394_0": {
+          "rise_min": 5305.521820869851,
+          "rise_max": 6125.896703288125,
+          "fall_min": 5741.049880672708,
+          "fall_max": 6562.579839130418,
+          "clock_pins": [
+            "ps_706/CLK",
+            "ps_707/CLK",
+            "ps_708/CLK",
+            "ps_751/CLK",
+            "ps_752/CLK",
+            "ps_753/CLK",
+            "ps_754/CLK"
+          ],
+          "rise_row_span_late_ps": 7.468248271889934,
+          "fall_row_span_late_ps": 7.2888362303938266
+        }
+      }
+    }
+  },
+  "failures_preserved": [
+    "synth.log: ABC multi-library status8B",
+    "equiv.log: unsupported missing ICG output function",
+    "equiv_v2.log:137 unproven equivalence cells at insufficient induction depth",
+    "grt_TT.log:missing OpenROAD PATH",
+    "sta_v3_TT.log:read_guides cannot restore GRT route parasitics,segfault139",
+    "grt_v4_TT.log:unsupported reset_path Tcl command",
+    "grt_v5_TT.log:broad version-path substitution touched LEFs,pre-route failure"
+  ],
+  "rc_model": "OpenROAD estimate_parasitics -global_routing on zero-overflow actual component route. Distinct from E8 exact-length clock_spef model; GRT gcell quantization remains represented. No fabricated minimum arrivals.",
+  "stage_to_stage_geometry": {
+    "edges": 74,
+    "over405_um": 74,
+    "max_um": 3027.483,
+    "worst": [
+      {
+        "source": "b16",
+        "destination": "r4032_0",
+        "manhattan_um": 3027.483
+      },
+      {
+        "source": "b16",
+        "destination": "r4113_0",
+        "manhattan_um": 3027.483
+      },
+      {
+        "source": "b14",
+        "destination": "r3870_0",
+        "manhattan_um": 3027.483
+      },
+      {
+        "source": "b14",
+        "destination": "r3951_0",
+        "manhattan_um": 3027.483
+      },
+      {
+        "source": "b8",
+        "destination": "b50",
+        "manhattan_um": 2998.08
+      },
+      {
+        "source": "b212",
+        "destination": "b300",
+        "manhattan_um": 2998.08
+      },
+      {
+        "source": "b212",
+        "destination": "b298",
+        "manhattan_um": 2998.08
+      },
+      {
+        "source": "b240",
+        "destination": "b322",
+        "manhattan_um": 2998.08
+      },
+      {
+        "source": "b240",
+        "destination": "b324",
+        "manhattan_um": 2998.08
+      },
+      {
+        "source": "b312",
+        "destination": "b398",
+        "manhattan_um": 2998.08
+      }
+    ]
+  },
+  "remaining": "Replan legal <=405um physical START/reset relay chain, price added cycles/reset release/count alignment, then map/place/route and recheck. Component outputs remain unbound to production consumers. This report does not adopt selected3595 or any new clock table.",
+  "register_hop_inventory": {
+    "scope": "All sourceFF\u2192destinationFF data-cone edges in actual mapped80-stage component; includes combinational inversion/reset gating. FF anchor Manhattan lengths are lower bounds on routed paths. Boundary root inputs and unbound consumer outputs excluded.",
+    "rules": [
+      {
+        "file": "/home/ubuntu/coord/METHODOLOGY.md",
+        "line": 16,
+        "section": "1.3",
+        "text": "Neighbour-only pipelined hops, each <=405um per cycle; latency known to compiler."
+      },
+      {
+        "file": "/home/ubuntu/coord/METHODOLOGY.md",
+        "line": 94,
+        "section": "4.2",
+        "text": "Neighbour reset wavefront; relays every <=405um."
+      },
+      {
+        "file": "/home/ubuntu/coord/METHODOLOGY.md",
+        "line": 231,
+        "section": "9.3 clarification",
+        "text": "reach=405um on every layer."
+      }
+    ],
+    "summary": {
+      "reset_wave": {
+        "register_pairs": 184,
+        "cross_stage": 74,
+        "over405": 74,
+        "max_manhattan_um": 3029.643,
+        "sum_min_additional_hops": 317
+      },
+      "start_wave": {
+        "register_pairs": 264,
+        "cross_stage": 74,
+        "over405": 74,
+        "max_manhattan_um": 3028.563,
+        "sum_min_additional_hops": 317
+      },
+      "local_reset_control": {
+        "register_pairs": 240,
+        "cross_stage": 0,
+        "over405": 0,
+        "max_manhattan_um": 5.4,
+        "sum_min_additional_hops": 0
+      }
+    }
+  },
+  "all460_functional_clock_pins": "clockpins_typed.json",
+  "stage_clock_interval_exports": [
+    "stage_arrivals_actual_v6_TT.txt",
+    "stage_arrivals_actual_v6_FF.txt"
+  ],
+  "clock_interval_normalization": "All stage source clocks use true root polarity by emitted A/Y source rule. T is physicalrise graph-tag interval. F is physicalfall interval less416.5ps, preserving separate falling-edge latency. Bounds envelope every actual mapped FF clock pin in stage; no node+medianleg proxy. Use with matching new all-tap GRT arrivals, not mixed into exact-length SPEF proof.",
+  "full_typed_paths": [
+    "WORST_RESET_PATH_TT.txt",
+    "WORST_RESET_PATH_FF.txt"
+  ]
+}
