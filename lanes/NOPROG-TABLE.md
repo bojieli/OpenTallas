@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 09:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 09:15 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 8, 'NO-DATA': 4, 'EXCLUDED': 39}. Hosts without report: none.
 
@@ -54,4 +54,4 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 8, 'NO-DATA'
 | intel1 | dpkit-slw_su_l1__clcc9d0155-2367146 | slw_su_l1 | 5_2_route | 4.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261116_023111_238129-i1g-692412 | eco_20261116_023111_238129-i1g | 5_2_route | 2.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261117_084547_311459-i1t-1920177 | eco_20261117_084547_311459-i1t | 5_1_grt | 0.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 11.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 12.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
