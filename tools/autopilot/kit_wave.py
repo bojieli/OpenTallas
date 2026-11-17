@@ -4849,6 +4849,17 @@ def input_hash(sp, prov_key=None):
     return hashlib.sha256(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()
 
 
+def same_inputs(old, cand, old_prov=None, cand_prov=None):
+    """True when the next launch builds the same kit inputs as the failed attempt.  FLEET-OPS-R (KV-R flow bug, COORD r398): the source tree's
+    .src-manifest sha is part of the key.  A tree swap on the same main sha (KV D3 -> D5) changes no plan block, overlay hash or stage tool
+    hash, so items that failed on the old tree were refused after the fix tree was applied.  Compared only when BOTH specs carry it (a kit
+    built before the field existed is never held on a value nobody measured)."""
+    mo, mc = str(old.get("src_manifest_hash") or ""), str(cand.get("src_manifest_hash") or "")
+    if mo and mc and mo != mc:
+        return False
+    return input_hash(old, old_prov) == input_hash(cand, cand_prov)
+
+
 def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
     """True: a design FAIL whose relaunch would build the same inputs.  INFRA and unreadable records are never held.
     COORD 11-07 05:24: after a TIMING or ROUTING FAIL a new source alone is no change: the retry entry's retry_fix text must
@@ -4882,7 +4893,7 @@ def unchanged_fail(cfg, st, die, item, rec, parent=None, kind="type"):
             return False
         if not old.get("src_overlay"):                  # a kit built before the field existed: compare without it, as before
             old.pop("src_overlay", None); cand.pop("src_overlay", None)
-        return input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
+        return same_inputs(old, cand, rec.get("prov_key"), (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
     except (OSError, ValueError, KeyError, TypeError):
         return False
 
@@ -4943,7 +4954,7 @@ def same_kit_inputs(cfg, st, die, item, rec, parent=None, kind="type"):
             old.pop("src_overlay", None)
             cand.pop("src_overlay", None)
         d = cfg["dies"][die]
-        return input_hash(old, rec.get("prov_key")) == input_hash(cand, (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
+        return same_inputs(old, cand, rec.get("prov_key"), (d.get("_prov_keys") or {}).get(item) or rec.get("prov_key"))
     except (OSError, ValueError, KeyError, TypeError, AttributeError):
         return False
 
