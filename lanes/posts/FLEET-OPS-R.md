@@ -190,3 +190,4 @@
 - 2026-11-17 09:20 PST DISK-RATE epyc7 /srv/opentallas-scratch2: free 84 GB, falling 60 GB/h, floor 50 GB in 0.6 h AUTO-RETIRE rc 0: df before:   78G / df after:   78G; deleted 0,  (cron disk_rate.py; read-only)
 - 2026-11-17 09:30 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 187 GB, falling 42 GB/h, floor 50 GB in 3.3 h (cron disk_rate.py; read-only)
 - 2026-11-17 09:40 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 42 GB, falling 94 GB/h, floor 50 GB in 0.0 h AUTO-RETIRE rc 0: df before:   39G / df after:   39G; deleted 1, REFUSED: protected (kit_wave.json src/bind of record/marker/prov): /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_; REFUSED: protected (kit_wave.json src/bind of record/marker/prov): /s (cron disk_rate.py; read-only)
+- 2026-11-17 09:40 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc7 wrote 165 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
