@@ -789,6 +789,23 @@ def core_input_latch_except_bits(plan, tn, module, port):
     return out
 
 
+def core_input_latch_except_hb4(plan, tn, module, port, bit):
+    """Explicit hold pad of a latch-less bit (FABLE-CLOSURE-STRATEGY 11-17): clock.core_input_lockup.latch_except_hb4
+    {"<module>": {"<port>[<bit>]": N}} puts N kept HB4xp67 (gen_rtl.ot_dp_hd, instance u_hdly_*, ~37 ps FF each) between the
+    pipe register and the core pin of that bit.  Only meaningful for a bit in latch_except; bit-level, never port-wide.
+    cbn_q01 tap[0]: N = 3 (120-170 ps TT; t12 FF hold -14.0 without it).  0 = none (absent key, byte-identical RTL)."""
+    if port not in core_input_lockup(plan, tn, module):
+        return 0
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    return int(((cfg.get("latch_except_hb4") or {}).get(module) or {}).get(f"{port}[{bit}]") or 0)
+
+
+def core_input_uses_pad(plan):
+    """any module of clock.core_input_lockup declares a latch_except_hb4 pad (the cell file then carries ot_dp_hd)."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
+
+
 def core_input_pipe(plan, tn, module, port=None):
     """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
     default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
@@ -3331,8 +3348,8 @@ class Binder:
         if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
                 and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
             cells += "\n" + wavefront_cells_text_only(["ot_dp_rrelay"])
-        if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
-            cells += "\n" + gen_rtl.HOLD_CELLS
+        if (gen_rtl.uses_hold_hb4(self.plan) or core_input_uses_pad(self.plan)) and "module ot_dp_hd " not in cells:
+            cells += "\n" + gen_rtl.HOLD_CELLS     # HOLDFORM-1 hold pads / latch_except_hb4 (absent = byte-identical cell file)
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
         self._native_glue = None
@@ -4178,6 +4195,15 @@ class Binder:
                                             f"// core_input_lockup (NK hold class), bits {sorted(xbits)} keep the pipe register only")
                                 for j_, i_ in enumerate(keep_):
                                     e[i_] = f"{lk}[{j_}]"
+                            for i_ in sorted(xbits):
+                                npad = core_input_latch_except_hb4(self.plan, tn, c.module, pn, i_)
+                                if npad:
+                                    pw = short_id(f"lkpad_{sv_id(r)}_{pn}_{i_}", 100)
+                                    decl.append(f"    wire {pw};")
+                                    body.append(f"    ot_dp_hd #(.W(1), .N({npad})) "
+                                                f"{short_id('u_hdly_lk_' + sv_id(r) + '_' + pn + '_' + str(i_), 100)} "
+                                                f"(.a({e[i_]}), .y({pw}));  // latch_except_hb4: {npad} x HB4, no cycle")
+                                    e[i_] = pw
                         if has_latch:
                             body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
                                         f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")

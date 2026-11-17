@@ -130,7 +130,7 @@ class CoreInputLatchExcept(unittest.TestCase):
         src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bind.py")).read()
         self.assertIn("has_latch = core_input_latch(self.plan, tn, c.module, pn)", src)
         i = src.index("has_latch = core_input_latch")
-        blk = src[i:i + 2600]
+        blk = src[i:i + 4600]
         self.assertIn("if has_latch:\n                            body.append(f\"    ot_dp_lk", blk)
         self.assertIn("e = [lk]", blk)
 
@@ -169,6 +169,42 @@ class CoreInputLatchExceptBits(unittest.TestCase):
         self.assertIn("keep_ = [i_ for i_ in range(len(bits)) if i_ not in xbits]", blk)
         self.assertIn("ot_dp_lk #(.W({len(keep_)}))", blk)
         self.assertIn("e[i_] = f\"{lk}[{j_}]\"", blk)
+
+
+class CoreInputLatchExceptPad(unittest.TestCase):
+    """FABLE-CLOSURE-STRATEGY 11-17: explicit HB4 pad on the latch-less bit (bit-level, never port-wide)."""
+
+    def _plan(self, pad):
+        return {"clock": {"core_input_lockup": {"modules": MODS, "types": ["cbn_q11"], "pipe": 1,
+                                                  "latch_except": {"qfd_tile_nk_a0c": ["tap[0]"]},
+                                                  "latch_except_hb4": pad}}}
+
+    def test_pad_count_is_per_bit_and_per_module(self):
+        p = self._plan({"qfd_tile_nk_a0c": {"tap[0]": 3}})
+        self.assertEqual(bind.core_input_latch_except_hb4(p, "cbn_q11", "qfd_tile_nk_a0c", "tap", 0), 3)
+        self.assertEqual(bind.core_input_latch_except_hb4(p, "cbn_q11", "qfd_tile_nk_a0c", "tap", 1), 0)
+        self.assertEqual(bind.core_input_latch_except_hb4(p, "cbn_q11", "qfd_tile_nk_a0c", "n_a", 0), 0)
+        self.assertEqual(bind.core_input_latch_except_hb4(p, "cbn_q00", "qfd_tile_nk_a0c", "tap", 0), 0)
+        self.assertTrue(bind.core_input_uses_pad(p))
+
+    def test_absent_key_is_byte_identical(self):
+        p = {"clock": {"core_input_lockup": {"modules": MODS, "types": ["cbn_q11"], "pipe": 1}}}
+        self.assertEqual(bind.core_input_latch_except_hb4(p, "cbn_q11", "qfd_tile_nk_a0c", "tap", 0), 0)
+        self.assertFalse(bind.core_input_uses_pad(p))
+        self.assertFalse(bind.core_input_uses_pad({}))
+
+    def test_emitter_pads_only_the_excepted_bit_through_ot_dp_hd(self):
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bind.py")).read()
+        i = src.index("npad = core_input_latch_except_hb4(")
+        blk = src[i - 200:i + 900]
+        self.assertIn("for i_ in sorted(xbits):", blk)
+        self.assertIn("ot_dp_hd #(.W(1), .N({npad}))", blk)
+        self.assertIn("u_hdly_lk_", blk)
+        self.assertIn("e[i_] = pw", blk)
+
+    def test_cell_file_carries_ot_dp_hd_only_with_the_pad(self):
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "bind.py")).read()
+        self.assertIn("core_input_uses_pad(self.plan)) and \"module ot_dp_hd \" not in cells", src)
 
 if __name__ == "__main__":
     unittest.main()
