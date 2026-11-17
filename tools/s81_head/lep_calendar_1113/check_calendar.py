@@ -1,5 +1,5 @@
 """Small calendar mechanism check; no arithmetic or whole-HEAD claim."""
-from lep_calendar import VF, STRESS, require_matching_receipt
+from lep_calendar import VF, STRESS, NF15F, Stages, require_matching_receipt
 
 rows = [dict(id=n, leg=leg, cycle=100+n) for n, leg in enumerate(VF.legs())]
 a = VF.shift_events(rows)
@@ -32,3 +32,22 @@ else:
 
 assert VF.state_bits()==14023
 print('PASS vF logical stage storage 14023 bits (no clock/reset/placement overhead claim)')
+
+# HEAD-PLAN-R4 11-17 NF15f: RXH is a priced provider leg; RXH 0 keeps the pre-R4 parameter set byte-identical.
+assert 'RXH' not in VF.params() and NF15F.params()['RXH'] == 1
+assert VF.legs()['rx_head.ri+mu_rt+ml_w'] == 0 and NF15F.legs()['rx_head.ri+mu_rt+ml_w'] == 1
+f0 = Stages(ktx=0x1111, krx=0x2660, txi=0x2442, pin=6, pout=8, plw=3, col0=2)
+assert NF15F.state_bits() - f0.state_bits() == 2208 + 44
+assert f0.state_bits() - VF.state_bits() > 0
+try:
+    Stages(rxh=2)
+except ValueError:
+    print('CAUGHT RXH depth 2 (one rank only)')
+else:
+    raise AssertionError('RXH 2 accepted')
+# FABLE-PLAN-HEAD-NF15F 1: credit depth covers the modelled K-link round trip on every lane (bench: 12 FAIL, 16 FAIL, 24 / 28 PASS)
+assert 'KCRED' not in VF.params() and not VF.credit_ok()   # vF runs under full rate on RX lanes 1/2 (lane cap)
+assert NF15F.params()['KCRED'] == 28 and NF15F.credit_ok()
+assert [max(NF15F.credit_rtt(i).values()) for i in range(4)] == [17, 24, 24, 21]   # measured LEPK_RTT
+assert not Stages(ktx=0x1111, krx=0x2660, txi=0x2442, pin=6, pout=8, plw=3, col0=2, rxh=1, kcred=16).credit_ok()
+print(f'PASS NF15f tuple + RXH 1: {NF15F.state_bits()} logical stage bits, rx_head leg +1')

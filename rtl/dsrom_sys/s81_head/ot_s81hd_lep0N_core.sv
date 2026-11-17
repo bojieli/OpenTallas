@@ -21,6 +21,12 @@
 //  COL0 = DIE-HEAD-85 11-07: stages on BOTH coll0 legs (die pins on the N face -> lane 0 at pair0, ~1583 / 1361 um):
 //         coll_i0 {live, fault} are control (reset), data reset-free; coll_o0 all data.  The coll link is end-to-end
 //         credit based through the peer e-lane, so a stage adds link latency (2 x COL0 round trip), never a beat.
+//  KCRED = HEAD-PLAN-R4 11-17 NF15f (FABLE-PLAN-HEAD-NF15F 1): K-link credit depth of all four lanes, both ends: u_lep DR / CRED
+//         and the lane CORE_CRED (pair core).  A credit link of round trip RTT and depth D carries D/RTT beats/cycle; the
+//         KTX / KRX stages add 2 edges each to RTT (TX ~14, RX ~12 at 0 stages, ot_s81_mu72_lnland), and below the lane
+//         rate the beats bunch and the pair A/B release stagger collapses (perr relp collision).  Default 12 = unchanged.
+//  RXH  = HEAD-PLAN-R4 11-17 NF15f: one rank on u_lep's shared RX head word before ri / ml_wd (generated
+//         ot_s81hd_lep_nr.sv g_rxh): ri (lepk_o0), mu_rt (ctrl_o0) and the landing (lw_o) all +RXH edges together.
 //  PIN  = stages on every input leg {lepk_i0, unit_i0, lepf_i0} (one count: ro and mu_c keep the same relative timing;
 //         rc moves with them).  POUT = stages on every result leg {lepk_o0, ctrl_o0, fault_o0} (ri and mu_rt stay
 //         aligned).  PLW = stages after the lw_o notification register.
@@ -66,7 +72,8 @@ endmodule
 module ot_s81hd_lep0N_core #(
  parameter [3:0] CH_B=4'b1111, parameter integer IDX_EN=1, parameter integer PAIR=0,
  parameter [15:0] KTX=16'h0000, parameter [15:0] KRX=16'h0000, parameter [15:0] TXI=16'h0000,
- parameter integer PIN=0, parameter integer POUT=0, parameter integer PLW=0, parameter integer COL0=0
+ parameter integer PIN=0, parameter integer POUT=0, parameter integer PLW=0, parameter integer COL0=0,
+ parameter integer RXH=0, parameter integer KCRED=12
 )(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
@@ -109,8 +116,8 @@ module ot_s81hd_lep0N_core #(
  // The controller counts these notifications before issuing its replay command.
  always@(posedge ck or negedge rst_n)
   if(!rst_n)lw_r<=0;else lw_r<={mwd[1056:1047],mwv};
- ot_s81hd_lep_idx_nr #(.DT(512),.DR(12),.CRED(12),.SRAM(1),
-  .NB(80),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1),.IDX_EN(IDX_EN),.TXI(TXI))u_lep(
+ ot_s81hd_lep_idx_nr #(.DT(512),.DR(KCRED),.CRED(KCRED),.SRAM(1),
+  .NB(80),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1),.IDX_EN(IDX_EN),.TXI(TXI),.RXH(RXH))u_lep(
   .clk(ck),.rst_n(rst_n),.ro(lepk_ix),.ri(lepk_ox),
   .lo0_v(kv[0]),.lo0_r(kr[0]),.lo0_d(kd[0]),
   .lo1_v(kv[1]),.lo1_r(kr[1]),.lo1_d(kd[1]),
@@ -157,7 +164,7 @@ module ot_s81hd_lep0N_core #(
  // child g_pp[k].u_pair (same instances/params/nets, 0 cycles).  PAIR=0 default
  // keeps the original g_lane[k] loop and instance paths unchanged.
  generate for(i=0;i<(PAIR?4:0);i=i+1)begin:g_pp
-  ot_s81hd_lep_pair #(.CHB(CH_B[i]))u_pair(.clk(ck),.rst_n(rst_n),
+  ot_s81hd_lep_pair #(.CHB(CH_B[i]),.KCRED(KCRED))u_pair(.clk(ck),.rst_n(rst_n),
    .k_lo_v(pkv[i]),.k_lo_r(pkr[i]),.k_lo_d(pkd[i]),
    .k_li_v(pkiv[i]),.k_li_r(pkir[i]),.k_li_d(pkid[i]),
    .k_rxv(pkrx[i]),.k_flt(pkf[i]),.coll_i(coll_i[i]),.coll_o(coll_o[i]));
@@ -171,7 +178,7 @@ module ot_s81hd_lep0N_core #(
    .n_lo_v(lv[i]),.n_lo_r(lr[i]),.n_lo_d(ld[i]),
    .n_li_v(liv[i]),.n_li_r(lir[i]),.n_li_d(lid[i]),
    .n_rxv(lrx[i]),.n_flt(lf[i]));
-  dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12))u_lane(
+  dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(KCRED))u_lane(
    .ck(ck),.rs(rst_n),.chb(CH_B[i]),
    .rx({coll_i[i][512],coll_i[i][513],coll_i[i][511:0],lrx[i]}),
    .tx(coll_o[i]),.lo_v(lv[i]),.lo_r(lr[i]),.lo_d(ld[i]),
@@ -183,7 +190,7 @@ endmodule
 // parameter-proven constant dead outputs. The generic provider default stays1.
 module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer PAIR=0,
  parameter[15:0]KTX=16'h0000,parameter[15:0]KRX=16'h0000,parameter[15:0]TXI=16'h0000,
- parameter integer PIN=0,parameter integer POUT=0,parameter integer PLW=0,parameter integer COL0=0)(
+ parameter integer PIN=0,parameter integer POUT=0,parameter integer PLW=0,parameter integer COL0=0,parameter integer RXH=0,parameter integer KCRED=12)(
  input wire ck,rst_n,
  input wire[513:0]coll_i0,coll_i1,coll_i2,coll_i3,
  output wire[511:0]coll_o0,coll_o1,coll_o2,coll_o3,
@@ -191,7 +198,7 @@ module ot_s81hd_lep0N_noidx_core #(parameter[3:0]CH_B=4'b1111,parameter integer 
  input wire lepf_i0,input wire[44:0]unit_i0,
  output wire[31:0]ctrl_o0,output wire fault_o0,output wire[10:0]lw_o
 );
- ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.PIN(PIN),.POUT(POUT),.PLW(PLW),.COL0(COL0))u(
+ ot_s81hd_lep0N_core #(.CH_B(CH_B),.IDX_EN(0),.PAIR(PAIR),.KTX(KTX),.KRX(KRX),.TXI(TXI),.PIN(PIN),.POUT(POUT),.PLW(PLW),.COL0(COL0),.RXH(RXH),.KCRED(KCRED))u(
  .ck(ck),.rst_n(rst_n),.coll_i0(coll_i0),.coll_i1(coll_i1),.coll_i2(coll_i2),.coll_i3(coll_i3),
  .coll_o0(coll_o0),.coll_o1(coll_o1),.coll_o2(coll_o2),.coll_o3(coll_o3),
  .lepk_i0(lepk_i0),.lepk_o0(lepk_o0),.lepf_i0(lepf_i0),.unit_i0(unit_i0),
