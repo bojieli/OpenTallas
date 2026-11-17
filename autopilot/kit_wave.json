@@ -37458,6 +37458,31 @@
           ],
           "cause": "std-cell rows beside the PHY lot get no M1/M2 followpin rails (2046 of 6664 rows on H17), measured on the shared serdes generator",
           "owner": "FABLE-FIX-S81-SERDES2"
+        },
+        {
+          "id": "s81-kit-dupbb-1117",
+          "plan_sha": "2125354ef9404d35ba9b525254b719916e0938b5605bc2389c6b86e37d9305fa",
+          "reason": "FIX-S81-KIT-DUPBB: 11 dsdv_slice_*_C kits fail KIT_PREFLIGHT issues 4 (duplicate_modules: ot_s81sl_egn_bb.v and ot_s81sl_egg_bb.v listed twice in the source list); generator fix claude/s81-kit-dupbb-1117 @25ac67bc9c17, released when it is merged to main.",
+          "release": [
+            "merge:25ac67bc9c172d8d7c68aab1cd51e497ad8f9098"
+          ],
+          "migrated": true,
+          "carry": true,
+          "keys": [
+            "dsdv_slice_c1x_C__t1",
+            "dsdv_slice_c1x_C__t3",
+            "dsdv_slice_c1x_C__t4",
+            "dsdv_slice_c1x_C__t5",
+            "dsdv_slice_c1x_C__t6",
+            "dsdv_slice_c1x_C__t8",
+            "dsdv_slice_c1x_C__t10",
+            "dsdv_slice_iq_C__t1",
+            "dsdv_slice_c3x_C__t1",
+            "dsdv_slice_lepe_mu_C__t1",
+            "dsdv_slice_lepw_mu_C__t1"
+          ],
+          "cause": "gen_phys appends an existing _bb view that macro_param_blackboxes rewrote in place a second time to the source list (shared generator defect, same on the D6z tools)",
+          "owner": "S81-TYPES-R3"
         }
       ],
       "planned_events": [
