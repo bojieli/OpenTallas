@@ -41,3 +41,8 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - G3 CTS exit 0 after the cohort fallback (group 0 nearest leaf clknet_leaf_434, worst member 30.2 um). Census (probes G3_cts/): TT -974.56, 1022 endpoints < -42; FF -645.75. Tap insertion 219..927 ps (t13 1163, t14 1240, t20 1146, t9 1189 max): rrl relay cross-tap hops -700..-975, rm rd.q class -717 (same as J4). G3 PARKED: no route. Its tap plan needs re-pitching (OT_TAP_CHECK says <= 117 um) plus the J5/H3 fixes before it is worth another CTS.
 - J5 at GPL (3_3); H3 at synth. H route E2 + H2 route E8 + J4 route E8 running.
 - Order to close: H2 routed numbers -> if only rrl class remains, H3 is the sign-off candidate (needs the bind rule adopted).
+
+## 19:4x PST - H3 replaced by H3p
+- H3 (hand-edited bound.sv, 25 relays) STOPPED by me (unit oth-ubuntu-4181890, exact cmdline checked) after synth: hand edit left rtl/bound_reset.json bound_rtl_sha256 stale. Tree L/H3 superseded (delete later via ot_delete_guard; contains root-owned docker files).
+- H3p = H2 kit + the sanctioned tool tools/die_plan/bound_reset_edit.py --plain (copy at E8 L/probes_serdes_r_1116/die_plan_tools/): all 90 ot_dp_rrelay_nl -> ot_dp_rrelay, relay_lockup removed from the tree, depth map unchanged (134 relays), hashes restaged (H3p_plain_edit.json, bound sha e55e8d12...). Resynth -> CTS running E8 (~/s81-serdes-r2/h3p-cts.out). lec_async.sh kept.
+- Die-bind side: this is plan event "relay_lockup.types minus the serdes types" (results/die_s81_85_serdes_plainrelay_1109). Asked S81-DIE-R2 to apply it to s81 reset.relay_lockup so the bind emits plain relays for serdes types.
