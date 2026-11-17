@@ -571,6 +571,33 @@ class FailureOutputRetention(unittest.TestCase):
             self.assertTrue(all('command=' in s and 'rc=1' in s for s in texts))
 
 
+class WidenDirs(unittest.TestCase):
+    def _repo(self):
+        d = Path(tempfile.mkdtemp())
+        for f in ("rtl/hdc/a.sv", "rtl/v41rom/b.sv", "physical/asap7_memory_macros_v2/lef/x.lef", "physical/asap7_memory_macros_v2/v/y.v",
+                  "physical/die_plan/q/z.py", "physical/die_plan/q/w.py", "physical/die_plan/r/v.py"):
+            (d / f).parent.mkdir(parents=True, exist_ok=True); (d / f).write_text("x")
+        env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@t", GIT_COMMITTER_NAME="t", GIT_COMMITTER_EMAIL="t@t")
+        for c in (["init", "-q"], ["add", "."], ["commit", "-qm", "x"]):
+            subprocess.run(["git", *c], cwd=d, env=env, check=True, capture_output=True)
+        return d
+
+    def test_rtl_miss_takes_whole_top_in_one_round(self):
+        d = self._repo()
+        self.assertEqual(M.widen_dirs(d, {"rtl/hdc/a.sv"}), ["rtl"]); shutil.rmtree(d)
+
+    def test_macro_dir_widens_to_two_levels(self):
+        d = self._repo()
+        self.assertEqual(M.widen_dirs(d, {"physical/asap7_memory_macros_v2/v/y.v"}), ["physical/asap7_memory_macros_v2"]); shutil.rmtree(d)
+
+    def test_big_two_level_dir_stays_parent(self):
+        from unittest.mock import patch
+        d = self._repo()
+        with patch.object(M, "WIDE_MAX", 2):
+            self.assertEqual(M.widen_dirs(d, {"physical/die_plan/q/z.py"}), ["physical/die_plan/q"])
+        shutil.rmtree(d)
+
+
 class PackGuard(unittest.TestCase):
     def _packs(self, n):
         d = Path(tempfile.mkdtemp()); (d / ".git" / "objects" / "pack").mkdir(parents=True)
