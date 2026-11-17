@@ -201,7 +201,7 @@ def write_images(cal, phase, stream, out):
 
 
 # ------------------------------------------------------------------------------------------------ die emission
-def layer_field(fx, layer, master, lk, iters=4000):
+def layer_field(fx, layer, master, lk, iters=4000, frame_instance=None):
     """the slice field phases of attn.wq_b (+ attn.idx.q on sparse layers) of the die placement and their stream:
     returns phase words, stream words, per-phase op list, and per slice the rows / frame / phase"""
     import xs_place as XP
@@ -221,12 +221,12 @@ def layer_field(fx, layer, master, lk, iters=4000):
         q, _ = B.frame_pairs(LX.base_master(master))
         qa = q[:XP.NPAIRS]
         qa = qa[:(len(qa) // nseg) * nseg]          # as xs_place.compile_frame
-        plan = XP.phase_plan(master, lk, qa, 0, m, grp['x'], nseg, iters)
+        plan = XP.phase_plan(master, lk, qa, 0, m, grp['x'], nseg, iters, frame_instance=frame_instance)
         assert plan['faults'] == 0, (layer, op, c, plan['faults'])
         w = plan['stream']
         sel2 = XP.TP.chunk(grp, grp['groups'][-1][-1], c, R)
         if sel2:
-            p2 = XP.phase_plan(master, lk, qa, 0, XP.make_mat(fx, grp, sel2, op), grp['x'], nseg, max(200, iters // 20))
+            p2 = XP.phase_plan(master, lk, qa, 0, XP.make_mat(fx, grp, sel2, op), grp['x'], nseg, max(200, iters // 20), frame_instance=frame_instance)
             assert p2['stream'] == w, ('stream depends on the rows', layer, op, c)
         rows = max(len(XP.TP.chunk(grp, fr, c, R)) for sl in grp['groups'] for fr in sl)
         phase.extend([m.K << 1 | len(w) << 14 | len(stream) << 30 | rows << 46, 0])

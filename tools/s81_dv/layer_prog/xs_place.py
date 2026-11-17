@@ -1128,7 +1128,7 @@ def lower_placed(die, op, ctx):
         import xs_wqb_die as WD
         fr0 = die.frames_of(sl)[0]
         ops_, phase_, stream_, plist_, _ = WD.layer_field(fx, ctx.get('layer', 'L0'), die.inst[fr0]['master'],
-                                                          LX.frame_lk(die, fr0))
+                                                          LX.frame_lk(die, fr0), frame_instance=fr0)
         mode_ = ctx.get('wqb_calendar') or 'pipeline'
         cal_ = WD.wqb_calendar(phase_, stream_, list(range(len(plist_))), slc=g, mode=mode_)
         crec = dict(WD.calendar_record(cal_), schema='opentallas.s81_dv.xs_wqb_calendar.v1', layer=ctx.get('layer'),
