@@ -27,6 +27,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
+  ft_channel_tracks (ERROR; budgets.ft_channel_tracks warn|off) ft bit sites in each vertical channel beside a hard core
+              <= budgets.ft_channel_track_max (0.70) of budgets.ft_channel_tracks_per_um (45.6) tracks/um
   pin_sites   (ERROR, pin_sites.py) two different interior pins of a type (taps incl. arst_n / start_i, reset outs, straps,
               reset spine, landing_contract pins) on one layer site: GRT-0080 'Invalid pin placement' at route
   collector_reach (ERROR, SEAM-HOP-1, collector_reach.py) every ACTIVE reverse-collector edge (reset relay -> parent on the path
@@ -243,6 +245,67 @@ def check_ft_macro_sites(P, R):
                 j, bit, macro = example; count += hits
                 R.err('geometry', f'type {tn} slot {name}: {hits} actual-bit station cells/sites intersect physical macros (stage {j}, bit {bit}, macro {macro})', type=tn)
     return count
+
+
+FT_CHANNEL_TRACKS_PER_UM = 45.6      # FABLE-PD-S81-0720: t34 west seam, 1,385 GRT-usable vertical tracks over 30.37 um
+FT_CHANNEL_TRACK_MAX = 0.70          # FABLE-CLOSURE-STRATEGY 11-17: blocking per-channel use
+
+
+def ft_channels(t, per_um=FT_CHANNEL_TRACKS_PER_UM):
+    """[(rect, bits, util)] of every vertical channel beside a placed macro of type t: the strip from the macro's west
+    (east) face to the nearest macro or outline edge on that side whose y span overlaps it, over the macro's y span.
+    bits = explicit ft station bit sites (bit_sites_um, every stage, of the N/S-face slots) whose lower-left lies inside the strip;
+    util = bits / (per_um x width).  Abutted faces (width <= EPS) carry no channel."""
+    boxes = list(S.placed_macro_boxes(t).values())
+    W = float((t.get("outline_um") or [0, 0])[0])
+    sites = [xy for sl in t.get("ft_slots") or [] if {sl.get("in_face"), sl.get("out_face")} <= {"N", "S"}
+             for st in sl.get("bit_sites_um") or [] for xy in st]          # N/S lanes run along a vertical channel; E/W cross it
+    seen, out = set(), []
+    for (x0, y0, x1, y1) in boxes:
+        ov = [b for b in boxes if b[1] < y1 - EPS and b[3] > y0 + EPS]
+        west = max([b[2] for b in ov if b[2] <= x0 + EPS] + [0.0])
+        east = min([b[0] for b in ov if b[0] >= x1 - EPS] + [W])
+        for lo, hi in ((west, x0), (x1, east)):
+            key = (round(lo, 3), round(hi, 3), round(y0, 3), round(y1, 3))
+            if hi - lo <= EPS or key in seen:
+                continue
+            seen.add(key)
+            bits = sum(1 for x, y in sites if lo - EPS <= x < hi - EPS and y0 - EPS <= y <= y1 + EPS)
+            if bits:
+                out.append(((lo, y0, hi, y1), bits, bits / (per_um * (hi - lo))))
+    return out
+
+
+def check_ft_channel_tracks(P, R, max_msgs=40):
+    """FT-CHANNEL-TRACKS-1 (S81-DIE-R3 11-17, FABLE-CLOSURE-STRATEGY): ft station bits packed into a narrow channel beside a
+    hard core overflow its vertical tracks at GRT (S81 strip t34: 1,766 bits in the 30.4-um VE_m west seam, util 1.12 ->
+    GRT-0116 M6/M8 overflow).  ERROR when bits / (budgets.ft_channel_tracks_per_um x width) > budgets.ft_channel_track_max
+    (0.70); budgets.ft_channel_tracks = "warn" reports only, "off" skips.  Fix = move the core (core_place seed) or the slot."""
+    B = P.budgets
+    mode = B.get("ft_channel_tracks", "error")
+    if mode == "off":
+        return {}
+    lim = float(B.get("ft_channel_track_max", FT_CHANNEL_TRACK_MAX)); per = float(B.get("ft_channel_tracks_per_um", FT_CHANNEL_TRACKS_PER_UM))
+    say = R.err if mode == "error" else R.warn
+    worst, over, n = {}, 0, 0
+    for tn, t in sorted(P.types.items()):
+        if not t.get("ft_slots"):
+            continue
+        try:
+            chans = ft_channels(t, per)
+        except ValueError:
+            continue                                    # check_ft_macro_sites reports the bad macro record
+        for (lo, y0, hi, y1), bits, u in chans:
+            if u > worst.get(tn, (0,))[0]:
+                worst[tn] = (round(u, 3), bits, round(hi - lo, 2), [round(lo, 2), round(y0, 2), round(hi, 2), round(y1, 2)])
+            if u > lim + EPS:
+                over += 1
+                if n < max_msgs:
+                    n += 1
+                    say("ft_channel_tracks", f"type {tn}: {bits} ft bit sites in the {hi - lo:.2f}-um channel x {lo:.2f}-{hi:.2f} "
+                        f"y {y0:.2f}-{y1:.2f} = {u:.2f} of {per:g} tracks/um > {lim:g}", type=tn)
+    top = sorted(worst.items(), key=lambda kv: -kv[1][0])[:10]
+    return dict(limit=lim, tracks_per_um=per, mode=mode, over=over, worst={k: v for k, v in top})
 
 
 def check_clock_entry_macro(P, R, plan_dir=None, macros_file=None, entries_file=None, eps=1e-3):
@@ -2807,6 +2870,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         import plan_timing_audit as PTA
         summ["timing_audit"] = PTA.g0(P, R, root=repo_root, mode=timing_audit, geo=geo)
     summ["ft_s0_window"] = check_ft_s0_window(P, R)
+    summ["ft_channel_tracks"] = check_ft_channel_tracks(P, R)
     summ["xtap_latency"] = check_xtap_latency(P, R)
     if tap_sink_cap != "off":
         summ["tap_sink_cap"] = check_tap_sink_cap(P, R, severity=tap_sink_cap)
