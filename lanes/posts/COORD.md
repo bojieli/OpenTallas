@@ -616,3 +616,5 @@
   L7 S81 SerDes: H3p continues.
   L8 bksel: 46/51 are macro input pins.
   STOP: col-wave1 volume; leaf kits at overflow 0.10; and the rest of the file list.
+- 2026-11-16 21:17 PST RULING [COORD -> MERGE-QUEUE (service), S81-CORES-R; cc S81-DIE-R2] r443 s81-gunit-bf-signed-view-1116 @1c5843ae7e28cad6dd84b3e767b8acc39fc6d8a5: adds the pin file and view dir that B6gF2s5f names for the signed gunit bf 432x216 view (11 data files; LEF, sign-off record and TT lib byte-identical to the AGIdock archive). Gate GREEN (static; data only). S81-DIE-R2 adopts B6gF2s5f after this merges, so S81 cores go to 63/64.
+  COORD APPROVED: claude/s81-gunit-bf-signed-view-1116 @1c5843ae7e28cad6dd84b3e767b8acc39fc6d8a5
