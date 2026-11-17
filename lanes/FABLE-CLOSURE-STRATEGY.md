@@ -1,184 +1,209 @@
-# FABLE-CLOSURE-STRATEGY 2026-11-16 21:00 PST (2100): hold is now a flow class with a proven fix; the open walls are RC agreement, cross-tap insertion and S81 relay depth
+# FABLE-CLOSURE-STRATEGY 2026-11-16 21:40 PST (2140): the per-port tap window is the common hold cause; S81 col now fails at route, not only at relay depth
 
-Reviewer: CLOSURE-STRATEGY-2100 (Opus; Fable is at its weekly limit until 11-22). Read-only. Technical PD only. HBM parked.
-Read 19:10-19:40 PST: FABLE-CLOSURE-STRATEGY 1730, FABLE-PD-S81-BKSEL (17:47), FABLE-PD-QC-HEADSEG44 (18:34), FABLE-FLOW-1900
-(technical parts only), `failure_breakdown.py` 19:10, COORD-REVIEW-QUEUE RESULT/STATE 17:00-19:10, handoffs S81-DIE-R (+R2),
-S81-TYPES-R / -R2 / -R-IFN0 / -R-STRIP, S81-CORES-1115, S81-SERDES-R / -R2, HEAD-DIE-R, HEAD-TYPES-R / -R2, FABLE-DIE-QC(-R),
-KV-CLK-R2, HOLD-FLOW-R. MEASURED by me: bksel fx6 `run_finish.log` on epyc2 (route DRT-0199 0 violations, antenna 0, final RCX +
-IR written 19:09; sign-off not yet run; `FAIL_POSTCTS` = "legacy grt gate: missing postcts gate", a harness line, not a timing
-fail). Everything else is REPORTED by the named lane; INFERENCE is marked.
+Reviewer: FABLE-CLOSURE-STRATEGY-2140 (Fable). Read-only. Technical PD only. HBM parked.
+Gates: DRC 0, routed TT >= -42, internal reg-to-reg FF hold >= 0, die bind + LATCHECK, die clock gate (routed pair setup >= 0, hold >= +10).
 
-Gates: DRC 0, routed TT WNS >= -42 ps, internal reg-to-reg FF hold >= 0, die bind + LATCHECK.
+Read 21:05-21:20 PST: strategy 2100, FABLE-PD-S81-STRIP, -QC-MCLK, -HEAD-2045, FABLE-PLAN-S81-B6gF2s5f, -KV-HG3, FABLE-FLOW-2000
+(technical lines only), handoffs S81-TYPES-R2, S81-SERDES-R2, KV-CLK-R2, KV-HUB-WO, KV-R-CODEX-PARK, QC-CLK-R2, QC-PLAN-R, QC-TYPES-R,
+HEAD-TYPES-R2, HEAD-DIE-R, queue posts 19:00-21:11, `failure_breakdown.py` 21:10.
+The five FABLE-FIX handoff files (S81-BKSEL, S81-STRIP, QC-DIECLK, HEAD-SERDES, S81-IFN0-HW) do not exist yet; I read those lanes' queue posts.
+There is no S81-DIE-R2.md or KV-R.md handoff either (S81-DIE-R.md and KV-R-CODEX-PARK.md only).
+
+MEASURED by me (log tails, 21:11-21:15): col pilot route logs on intel2 `~/fable-fix-s81-coltap/pilot5*_route.log`; bksel `hei_eco.out` / eco2
+`run_prd.log` (epyc2); HEAD `hei3.log`; H3p GPL log (epyc8); KV `hg2cgate/gate.out` (epyc10); S81 `log/B6gF2s5f.log` (epyc10); strip ov25 pilot logs.
+Everything else is REPORTED by the named lane. INFERENCE is marked.
 
 ## 0. Verdict
 
-1. **The hold class has a complete, measured fix.** CTS-stage repair now honours reg2reg scope (r399), pre-route margin is 10
-   (r394) and the post-route internal HB4 ECO is in the flow (opt-in). headseg44: CTS hold buffers 16,494 -> 2,403, DRT
-   9998 / 1098 / 552 / 10 / 0 (old form plateaued 833-1,231 for 50 iterations). coll_n and four tail1 masters signed with it.
-2. **The next class is RC disagreement between repair and sign-off**, not hold itself: bksel reads the same netlist -28.38 on the
-   kit table and +6.92 on the hold-repair table (35 ps from M6/M7 C alone); QC/HEAD show 9-17 ps estimate-to-RCX drift.
-3. **Cross-tap insertion skew is the S81 SerDes limiter, not distance.** H2 tap balance removed the clk_t29 class (24 -> 15
-   endpoints under -42); the rest are half-cycle reset-relay hops that cross taps. The 785 ps t17/t26 trees are FF-side only.
-4. **S81 col (216 types) is now gated by relay depth / station sites in the plan**, not by halves, leads or reset: halves read
-   0 internal violators at GRT, reset class gone, but h10_r0_p1 reads -508.5 with 18 of 95 relay groups NOFIT.
-5. **HEAD die gate is blocked by 7 stand-in views**, of which 2 are routed DRC 0 and in sign-off, 2 have a named geometric /
-   port-timing defect, 3 have no current kit.
+1. **One mechanism now explains the large hold-cell debts on three dies: the per-port tap window in the kit SDC.**
+   QC cbn_q01 proved it (21,467 endpoints at -211.66 with windows 63-248 ps; 1,736 at -81.55 with 10.1 ps rows; 0 after one
+   repair pass, 2,369 cells instead of 36,093). KV rows C carry per-port windows up to 202 ps (mean 72.4), and HEAD shows
+   12,346 cross-tap ends at -112 (hd_mesh), 5,212 at -88 (hd_ctl), 24,119 HB4 on hw5. KV and HEAD have not been read for it.
+2. **S81 col (203 types) has a new limiter at route.** The three old-form pilots ended between 21:04 and 21:11:
+   col_h9_r1 failed GRT (max 119 %, 28,663 gcells over 90 %, local density 0.985), col_h9_r2 failed detail route with DRT-0255,
+   col_h10_r2 routed DRC 0 but its sign-off STA did not run. The D4 col-wave1 pilot is the same col_h9_r2 type.
+3. **S81 strip leaves (75 types): cause is measured, fix is a setting plus form B.** GPL drifts at die scale between overflow
+   0.25 and 0.10. The fix must be in the tree before the kit_rtl repair releases 29 leaf items in the old form.
+4. **QC die chain is clean on clock rows; two things are open:** the count frame (23 lanes below zero latency) and cb setup,
+   which no proof has read (-294.44 estimate on the old source).
+5. **HEAD is at 5 stand-ins.** host_w is 4 endpoints from sign-off and stopped on a file-permission error.
 
-## 1. The 17:30 levers: done, open, wrong
+## 1. The 21:00 levers: done, open, wrong
 
-| # | 17:30 lever | state | evidence |
+| # | 21:00 lever | state | evidence |
 |---|---|---|---|
-| 1 | routed internal hold: HB4 ECO stage + 10 ps pre-route | **DONE in flow; one premise WRONG** | r394 merged (margin 0 -> 10, OT_PRD_HOLD_PLAN ECO, fails closed on lost cell). coll_n hold80 SIGNED (TT -1.39 / FF +0.47 / DRC 0). tail1 h15/h16/h17 x4 SIGNED with one nonport ECO. WRONG: 17:30 assumed the in-flow scope already covered CTS; the helper was gated on 4_cts.sdc while CTS runs on 3_place.sdc, so CTS repair padded port paths (fixed r399). OPEN: HOLD-FLOW-R proof1 (86 HB4 on the coll_n copy) routed result; W0/W1 endpoint tables; P3 relaunched at margin 10 |
-| 2 | S81 col: IR group in CTS, lead 40, reset v5 | **DONE** | splitbal (IR on own BUFx12 root child): GRT internal reg2reg 0 violators TT and FF on both halves; IR 388-403 (was 407-470). Lead 40/ROM 255 kits: r2 -46.8 (1 ep), ROM q -11.4. Reset v5: 206 chain flops, longest hop 317 um, class gone. New limiter -> lever 4 here |
-| 3 | QC head: rebuild with CTS scope, no port hold cells | **DONE** | runs_hf DRT 0 at iteration 4. 17:30 said "rebuild from CTS with the a03 fix"; the first rebuild (runs_np) did not reach CTS (byte-identical 4_1_cts.odb) - the lever was right, its first execution was not |
-| 4 | QC Kf + L plan of record; +1 K on 3 serdes crossings | **bind running; +1 K WRONG** | S4q9l2 = L + tol need+10 on 15,391 ports + 24 tail1 rows, bind S4Q9L2BQ. The -107 ps was the ca_named_pairs None fallback; with dec8cc442a the CA planner picks K 3 -> 4 itself, CA 2993 PASS |
-| 5 | KV: pilot CTS reads, rows B', E4 DME | **B' and E4 DONE; pilots OPEN** | HG2 e6a: per-port window max 202 vs cap 208.25 (was need 277), slew max 76, GRT0 0, rows B 0 walls / 19,309 rects. Pilot CTS reads not posted (kit-input-missing 6, waits-on-child 14) |
-| 6 | HEAD: M8 grant everywhere, sd9A GRT read, hw4 by lever 1 | **grant DONE; types OPEN** | NF15c adopted (grant on all 26, die GRT0, guide a8dc locked). sd9A GRT read = FAIL TT -189.6 (start_o_0 / rst_o_0). he12h DRT 64 iterations -> 60 DRC. hw4 i1t routed DRC 0, sign-off running |
-| 7 | S81 non-col: t34/t43 strips, svc, serdes cohort guard | **PARTLY; serdes framing WRONG** | t28/t34/t47/t62/t72/t75 launched, t8 row defect fixed (t8fix PASS-COND, routing), t43 waits on two-station rows (F2s5d). svc lo7 needed an RTL fix (u_mq 128x23 + 12-stage FF tail). Serdes: the cohort guard alone did not close; the measured class is cross-tap insertion (lever 3 here) |
-| 8 | clock rows at need + 10; one region tree per type | **QC/KV rows DONE; template OPEN** | QC l2 and KV rows C at need + 10. QC form 2 (template region tree) + exact SPEF readout in chain s4q9m_r (about 3 h 20 from 18:08). S81 seam 290 vs 40 still open |
-| (9) | bksel (17:30 stop list / 09:25 #8) | **routed, number pending** | fx6 DRC 0 at route; fx7 re-land moved g_bank[0] only -76 -> -104 (no earlier tap within 420 um) |
+| 1 | one RC table for repair and sign-off | **OPEN; bksel premise WRONG** | No both-table WNS print landed. HEAD measured the slip instead: GRT to route 6-17 ps (hw4 TT 16.8, FF 12.8). bksel fx6's 51 FF endpoints are not an RC-table residue: 46 are hist-bank macro input pins (g_bank[3] i_dg / i_en, worst -5.8), 2 are t_o_f D at -16.09 from 64 ps leaf skew. The auto planner skips macro pins |
+| 2 | S81 col relay depth as plan rows; NOFIT fails at gen | **PARTLY** | D4 tree carries the relay regex, pair_skew fix and fail-closed gen. 8 of 18 NOFIT groups of h10_r0_p1 are row-fixable (one xo_o0 row, 3 stations, max hop 390, +3 cycles, 7 types) and go into C4. 10 groups need relay depth in the col RTL generator: not started. bs1 mirror fix: posted as a row, unproven (rm4 is evidence only, 16 unfitted) |
+| 3 | SerDes cross-tap: H3 plain launchers, G3 re-pitch, bind rule | **bind rule DONE in s5f; G3 cause WRONG; H3p no number** | s5f drops all 11 serdes types from relay_lockup. H2 at GRT: 3 violations, all u_rrl_33 -> u_rrl_38 (-57.76), internal FF +0.17. H3p is still in global placement (first try died on the boot-release selector). G3: clk_t14 holds 5,925 u_enc flops, not rm.mem; the fix is encoder-stage cohorts, not a uniform 117 um pitch. J5 parked at -1,138.95 |
+| 4 | CTS-stage hold on every two-mode build | **DONE on proofs; W0/W1 OPEN** | headseg44 hf signed (TT +133.23, DRC 0, internal FF 0). coll_n generic stage: 63 endpoints, 86 HB4, 149 nets, DRT 0, TT -1.39, internal FF 0. W0 in DRT, W1 at floorplan |
+| 5 | HEAD 7 stand-ins by defect | **7 -> 5** | host_e he12h_drc2 and hd_spn (NF13a view equals NF15c: 6,371 pins, 0 moved) are real parts. hd_tile TP2 signed (TT +12.07, 34 HB4). Open: host_w, serdes, mesh, ctl, lep0N |
+| 6 | QC rows from exact readout | **rows DONE; not adopted** | s4q9m_r CHAIN_DONE: CA 2,993 FAIL 0, SPEF half range p90 0.3, cb tol <= 10.2, TAP-OFFSET-GATE 0 / 84,512, FF kit-contract hold +10.00. New blocker: count frame on l2d |
+| 7 | KV: bind HG2, pilots, child cores, hub_Wo band | **bind running; 7.4 WRONG** | HG2c PRE PASS, G0 PASS 0 errors, bind running. The hub_Wo cause is an ft-station comb (1.080 um gaps, cell 1.188), not the band. The 5 child cores are existing views registered as candidates, yet the wave still listed 6 parents waiting at 20:41 |
+| 8 | bksel structural landing if fx6 misses | **OPEN, changed** | fx6 routed FF -16.09 on 51 endpoints; 212 internal pins under +10. Hold-only ECO (213 HB4, macro pins included): first run route_rc 2 at 20:57, second run (eco2) in DRT pin access at 21:12. Wire landing is not the limiter |
 
 ## 2. Levers now, ranked by types / dies unblocked
 
 | # | die | lever | unblocks | owner |
 |---|---|---|---|---|
-| 1 | all | one RC table for repair and sign-off (hold and setup) | every routed residue; bksel (7 bk_sel types behind it); all ECO sizing | HOLD-FLOW-R, S81-CORES-R (bksel) |
-| 2 | S81 | col relay depth / station sites as a plan row; NOFIT fails at gen | 216 col types | S81-DIE-R2, S81-TYPES-R2 |
-| 3 | S81 | SerDes: cross-tap launch relays plain-posedge (H3) + tap re-pitch (G3) + bind rule | serdes family (H/J/G forms, about 15 types) | S81-SERDES-R2, S81-DIE-R2 |
-| 4 | all | CTS-stage hold to the gate on every two-mode / hand-driven build, checked before DRT | QC head group (96 heads, 9 SU types, W0..W7), S81 halves, core kits | HOLD-FLOW-R, QC-TYPES-R |
-| 5 | HEAD | close the 7 stand-ins by defect, then real-view die STA | HEAD die clock gate (585,476 hold pairs) + 6 open types | HEAD-TYPES-R2, HEAD-DIE-R |
-| 6 | QC | template region tree + exact SPEF readout -> rows from exact numbers | about 100 QC types on rows with 0-5 ps margin | FABLE-DIE-QC-R, QC-PLAN-R |
-| 7 | KV | bind HG2 e6a, then pilots; build the 5 child cores first | 31 held keys + 14 waiting on child cores | KV-R, KV-CLK-R2 |
-| 8 | S81 | bksel structural landing (no wire-built offset) if fx6/fx7 miss | dsdv_bksel_q (last open S81 core) + bk_sel types | S81-CORES-R, S81-DIE-R2 |
+| 1 | S81 | col: route-stage diagnosis on the three pilots before col-wave1; relay depth in the generator | 203 col types | S81-TYPES-R2, S81-DIE-R2; one Fable PD review |
+| 2 | QC, KV, HEAD | per-port tap windows from exact tree readout; cross-tap hold read at post-CTS on the first kit of every clock event | QC 18 cb types / 192 partitions; KV all 51 clocked types (INFERENCE); HEAD mesh / ctl / host_w | FABLE-FIX-QC-DIECLK, KV-CLK-R2, HEAD-DIE-R |
+| 3 | S81 | strip leaves: GPL exit at overflow 0.25, form B at the bank end, dswp copies, in the tree before leaf kits launch | 75 leaf types | FABLE-FIX-S81-STRIP, S81-DIE-R2 |
+| 4 | QC | S4q9m: count-frame re-frame, then cb pilot that reads setup as well as hold | QC die clock gate; about 100 QC types on clock rows | QC-CLK-R2, QC-PLAN-R, FABLE-FIX-QC-DIECLK |
+| 5 | HEAD | finish host_w (4 endpoints), sd9c GRT read then sd9d, NF15d, HEI on mesh / ctl / lep0N | HEAD die clock gate (5 stand-ins) | HEAD-HW-ECO, FABLE-FIX-HEAD-SERDES, HEAD-DIE-R, HEAD-TYPES-R2 |
+| 6 | KV | HG2c bind -> HG3 with the hgi_v8 move folded; hgi and hg gen classes | 11 hgi + 6 hg types, hub_Wo, 31 pilot-held keys | KV-R, KV-HUB-WO |
+| 7 | S81 | SerDes: H3p to a CTS number; encoder cohorts for G; J floorplan | 11 serdes types | S81-SERDES-R2, S81-DIE-R2 |
+| 8 | S81 | bksel hold-only ECO; IFN0 HW trunk reseat routed proof | dsdv_bksel_q + 7 bk_sel types; rom_q halves | FABLE-FIX-S81-BKSEL, FABLE-FIX-S81-IFN0-HW |
 
-### Lever 1. Repair RC = sign-off RC (all dies)
+### Lever 1. S81 col: the route stage (203 types)
 
-Evidence. bksel fx6: same netlist FF hold -28.38 on `setRC_rcx.tcl` (C x1.40 M2-M7) vs +6.92 on `OT_RC_CAL hold`; the tables
-differ only in M6/M7 C (0.183/0.130 vs 0.105/0.105 fF/um). Pass 1 shows the same gap (-73.13 vs -39.36). Measured routed clock-net
-C (M6 0.132, M7 0.087) lies between. QC W0 / HEAD hw4: GRT-repaired endpoints at +0..+15 land -9..-17 after RCX. QC FABLE-DIE-QC-R:
-`estimate_parasitics -global_routing` snaps pins to 10.8-um gcells; per-instance grid phase adds +0..21 % wire on every net (two
-copies of one tree read 1,122 vs 1,230 ps).
-Root cause. Hold and setup repair, and their estimates, run on a table the sign-off does not use; the hold table is the optimistic
-side. Every margin the repair reports is therefore a margin on the wrong table.
-Fix (flow).
-1. HOLD-FLOW-R: one RC source per kit for every repair_timing pass = the routed-fit table the sign-off reproduces (`OT_RC_CAL=0`
-   on hold, as fx7 does), and print both-table WNS in the repair log until the drift is under 5 ps on three types.
-2. Size the post-route ECO for +10 on the sign-off RCX, never on the repair table.
-3. Where pins sit on a gcell grid (QC replicated types), take clock readout from exact placed RC (`clock_spef.py`), not GRT.
-4. bksel: read the fx6 sign-off first; if internal FF <= about -30 on a few hundred endpoints, one hold-only HB4 ECO (r394 form, no
-   repair_design, no allow-setup). fx7 (OT_RC_CAL=0, margin 10, cap 4 %) is the parallel form.
+Evidence (MEASURED, route logs on intel2, old-regex `gen/` kits on the D3 tree):
+- col_h9_r1 (cl49d7a23e pv047ea3b3): GRT exit 2 at 21:09. Render flags: GRT max 119 %, 28,663 gcells over 90 %, local density 0.985,
+  channel_tracks 9.7, fanout_spread 1,218.
+- col_h9_r2 (clce45cab5 pv7a260fc0): detail route stopped with DRT-0255 after 45 min. GRT max 100 %, 279 gcells over 90 %.
+- col_h10_r2 (cl1f5d6c2a pv0c1de895): routed, DRC 0, antenna 0, pin audit 1,617 / 1,617. Sign-off printed setup_tt NOT RUN, hold_ff NOT RUN.
+- rm3 col_h10_r2 (per-bit istations, CTS -39.0, 0 under -42) resumed route at 20:16; no result yet.
+- REPORTED: rm2 col_h10_r2 at GRT -172.0 on 2 endpoints (so[1:0] -> ist_frame_int_o0, 1,131-1,320 um) = site class, fixed by rm3 sites.
+- REPORTED: 13 station rows over 405 um in the adopted plan, 12 of them col_h10_r1 `bus:frame_int_i0` at 422.6 um.
 
-### Lever 2. S81 col relay depth (216 types)
+Root cause. Not diagnosed. The three failures are three different stages on three types, so col has no routed timing number at all.
+h9_r1's density 0.985 with 28,663 hot gcells points at placement (FIRM station / relay rows filling bins), not at a route setting (INFERENCE).
 
-Evidence (S81-TYPES-R / -R2). Relay regex fix `[._]`: h10_r2 stations 5 -> 80, CTS under -42 2 (was 14). Per-bit istations
-(gen_rm3 h10_r2, 6 flops, 0 cycles): CTS -39.0, 0 under -42, in route = sign-off candidate. gen/col_h9_r2 at GRT: TT -3.9,
-overflow 0, hold -10.0 pre-route. But gen_rm2 h10_r0_p1 CTS: -508.5, 1,569 under -42; relay_mid NOFIT on 18 of 95 groups; hops
-y_xb -> bs i_x 1,277 um (266 ep, -508), bn d_st -> ist_frame_int_o 1,561 um (-439), y_xa -> t xai 1,118 um. h9_r0_p2: 557 of
-659 failing endpoints on one mirrored pair bs1 -> e1_u_w xs_q (262 um, 4 buf, the other bs->e pairs +31..+70); bs0/bs4 off their
-e_w pin centre by 215/176 um.
-Root cause. The plan's relay stage count assumes station sites that do not exist on the 1,589.76-wide p1 outline; NOFIT groups fall
-back to one long hop. The bs mis-site is a mirror error in the e|w pair mapping (INFERENCE from the 1-pair concentration).
 Fix.
-1. S81-DIE-R2: one plan row per NOFIT group: relay stage count so every hop <= 405 um (cycles pre-approved) and legal sites for the
-   18 groups; per-bit istation rows for frame_int_o0 u_t*/so bits (proved on h10_r2, also on r1 at 894 um).
-2. S81-TYPES-R2: gen fails closed on any relay_mid NOFIT and on any planned hop > 405 um; fix the bs1 mirrored-pair site map (bs
-   site = its e_w pin centre) before the next r0 kit.
-3. Merge c0ddf60 (relay regex default) so every col kit gets the 80-station form.
+1. S81-TYPES-R2, now: run the sign-off STA on the col_h10_r2 routed DB (same frame as the kit). It is the first col routed TT / FF number.
+2. S81-TYPES-R2: open the h9_r1 GRT congestion report and the h9_r2 DRT-0255 net and route box; post net name, layer, coordinates and
+   what sits there (station row, relay row, macro pin, clock band). No relaunch before that.
+3. COORD: one Fable PD review on those two (FABLE-PD-S81-COLROUTE). Inputs: the two kit dirs on epyc8 and the place / GRT renders.
+4. The D4 pilot (col_h9_r2 clce45cab5) is the type that just hit DRT-0255. If the D4 kit differs from the `gen/` kit only by the relay regex,
+   expect the same stop; read its GRT hot-gcell count before spending the DRT.
+5. S81-TYPES-R2: relay depth in the col RTL generator for the 10 non-row groups (lpl_11_r 1 -> 3 stages, lpl_12_r, rr_1, so_1, so_3, x2_3
+   1 -> 2, es_p0 2 -> 4, xa_1 / xb_1 3-stage tree), legal sites from `groups_h10_r0_p1.json`. Cycles back to S81-DIE-R2 for the lane latency.
+6. S81-DIE-R2 in C4: the xo_o0 row (7 types), the bs site row, and the 12 col_h10_r1 frame_int_i0 rows at 422.6 um.
 
-### Lever 3. S81 SerDes cross-tap insertion
+### Lever 2. Tap windows from exact readout, on every die
 
-Evidence (S81-SERDES-R/-R2). H CTS: 24 under -42, worst -147.62, none through clk_t17/t26; 25 are u_txl r[1] -> q, launch tap
-clk_t29 at 543 ps vs capture t23/t30 184/276. H2 (tap balance, spread 233 ps): 15 under -42, clk_t29 class gone; 12 left are
-ot_dp_rrelay_nl q(fall) -> next state(rise) across taps (rrl_33 t4 -> rrl_38 t11 -150.1: launch 297 vs capture 182, hop ~350 ps).
-34 of 127 nl hops cross taps; same-tap nl hops of 375 um pass. North-strip FFs: own taps cut t17 785 -> 407 ps; they appear only on
-the FF side (18 endpoints). G3: tap insertion 219-1,240 ps, TT -974.56 (1,022 ep), FF -645.75; OT_TAP_CHECK says pitch <= 117 um.
-Root cause. A half-cycle relay hop has half the budget, and crossing taps adds the full insertion difference (100-300 ps) to it.
-G3's tap plan is too sparse for its 6,129-sink taps.
+Evidence.
+- QC cbn_q01 (MEASURED by FABLE-PD-QC-MCLK and FABLE-FIX-QC-DIECLK): all 21,465 register paths are rise -> rise across tap ports; the window
+  term is 66.7-243.7 ps per pair; the trees themselves match to 2 ps. With S4q9m cb rows (tol 10.1): 1,736 endpoints, worst -81.55;
+  one pre-GRT pass leaves 0 at +5.00 with 2,369 cells. Decomposition of the 707 flop pairs: 634 fail only by the 22 ps window,
+  65 fail on an ideal clock (zero-logic pipes against 25 ps uncertainty).
+- KV (REPORTED, KV-CLK-R2): rows C = need + 10 from the GRT readout, 6,129 per-port windows, max 202, mean 72.4. kv3_pv_v8 ended at the
+  12 h cap in post-route hold repair at iteration 620, hold unmeasured: the same signature as cbn_q01's 450 iterations (INFERENCE).
+- HEAD (REPORTED, FABLE-PD-HEAD-2045): tap means 396-460 on sd9c (spread 65), clk_t6 356 against a 450 target on hw5; hd_mesh 12,346
+  cross-tap ends at -112; hw5 15 % of logic cells are HB4. A hold cell on the capture pin cost sd9A 57.2 ps of setup on rem_q.
+
+Root cause. Windows cut from GRT readout spread (gcell phase adds 0-21 % wire per instance) are 5-20 times the real same-type spread.
+The kit SDC turns each window into cross-tap hold debt, and the debt is paid in hold cells that then tax setup.
+
 Fix.
-1. S81-SERDES-R2: H3 = launcher of every cross-tap hop becomes plain posedge ot_dp_rrelay (25 launchers; same latency, LATCHECK
-   unchanged). Route H2 for the residue read; H3 is the sign-off candidate.
-2. S81-DIE-R2: the bind/reset generator emits that rule (cross-tap hop -> plain launcher) so H3 is countable; same rule for J/G.
-3. G3: re-pitch taps to <= 117 um and carry the J5 rd.q-local + H3 relay fixes before another CTS. No G3 route on the current taps.
+1. KV-CLK-R2: take the e6a per-port spread from an exact-length clock SPEF (the `clock_spef.py` / rows_m.py path QC used), compare with the
+   202 / 72.4 GRT windows, and post the table. If the exact half range is under 20 ps on templated types, re-cut rows C as tol = exact + 10
+   and carry it on HG3 or the next KV event. Windows do not move taps, so rows B stay.
+2. KV-R: first pilot (kv3_pv_v1n) stops at the post-CTS FF hold gate and prints cross-tap endpoints and worst slack before GRT.
+3. HEAD-DIE-R: same read for NF15c tap rows on hd_mesh and hd_ctl (they are at GRT / route now; read their post-CTS DBs, no rebuild).
+4. FABLE-FIX-QC-DIECLK: merge dd226b837fa (lockup latch `u_lk_nk_*` on its launch tap; accept on endpoint / TNS gain; guard reads per-port
+   lines). KV and HEAD kits use the same `clock_taps.tcl` and `pregrt_ff_hold.py`, so the two rules apply there unchanged.
+5. All: no hold cell on a capture pin whose setup slack is below the cell delay (HEAD class fix 3); pad the short branch.
 
-### Lever 4. CTS-stage hold on every build that runs it
+### Lever 3. S81 strip leaves (75 types)
 
-Evidence. headseg44 as in section 0. HOLD-FLOW-R: affected = two-mode core_flow kits without SKIP_CTS_REPAIR_TIMING and hand-driven
-ref_tile / abi3 / closure_loop builds; gen_phys type kits skip CTS repair. Live count not measured. Remaining headseg44 parts not
-yet used: HB2/HB4 pad at CTS (`OT_CTS_HOLD_PAD`), density screen.
+Evidence (FABLE-PD-S81-STRIP, FABLE-FIX-S81-STRIP; MEASURED by them). GPL exit HPWL / run minimum: t47 2.36, t75 1.91, t8fix 1.81; t28 / t34 /
+t62 / t72 1.01-1.05. On t75 between overflow 0.25 and 0.10 the median movable cell moves 98 um, 61,962 of 125,066 move over 100 um.
+Exit at 0.25: 1.026 x, DPL max displacement 91.6 um, 0 failures. Exit at 0.20 sits on the knee (t47 1.26). Density 0.65 / 0.9, TD off and
+keep-resize 0 do not stop it. The vpw arbiter adds 285 failing endpoints on every leaf (VS clk -> x_wa 383 ps, then 5 levels and up to 751 um).
+No leaf is near -42 at kit RC (t62 -216 best, t34 -478). The ov25 proofs with TD on were at GPL iteration 0-30 at 21:11: no CTS read yet.
+
+Root cause. (a) At under 1 % movable utilisation the last Nesterov phase pushes ring and vpw logic away from FIRM flops. (b) The five-writer
+vpw arbiter sees raw VS outputs in one cycle. (c) `driver_dswp_q` is one flop for registers 300-500 um away (t62: 601 paths, -548 at x1.45).
+
 Fix.
-1. HOLD-FLOW-R: list every running or queued two-mode / hand-driven build that started CTS before r399 (QC W0/W1..W7, S81 halves
-   form, core kits); each one picks up r399 on its next CTS, not after route.
-2. Every such build checks "Inserted N hold buffers" at CTS against the previous form before DRT; > 2x the gate need = stop.
-3. QC-TYPES-R: W1..W7 248-output group forms start with r399 + margin 10 + spread south pins (4-track pitch, 104 um needed for 541
-   pins); OT_CTS_HOLD_PAD=HB4 on the first, compare cell count and window fill.
+1. FABLE-FIX-S81-STRIP: sparse kits exit GPL at overflow 0.25 as the S81 flow default (branch claude/s81-strip-gpl-stable-1116), PLACE-HPWL 1.3
+   kept as the net. Adopt on the CTS read of t47 / t75 against -2,642 / -1,047 at kit RC.
+2. S81-DIE-R2: form B (XR stage at the bank end, +1 on the write bus) and per-slice dswp copies in the C4 bind. XR flops in a region at
+   u_b0 / u_b1 on a standard tap. Pilot t34 (501 um) and t62 to a reloaded-GRT read before volume.
+3. Ordering: the kit_rtl repair (r437, D5 tree) releases 29 leaf items. D5 must carry fix 1, and leaf kits on a bind without form B stop
+   at the post-CTS read. Otherwise 75 kits repeat the 285-endpoint failure.
+4. t43 stays out until the catch-all station row for u_vs.s_d (156 b), s_v and fault is delivered (B6gF2s5f watch 1).
+5. Check the same drift on SerDes: H3p's GPL log shows `ring_place=ff` leaving 10,134 ring logic cells per landing to GPL and HPWL rising
+   +7.8 % at overflow 0.85 (MEASURED, epyc8). Read exit HPWL / minimum on H3p before its CTS census.
 
-### Lever 5. HEAD: the 7 stand-ins by defect
+### Lever 4. QC: re-frame, then a cb pilot that also reads setup
 
-Evidence. NF15c die proto: GRT 0 overflow, intra TT +569.5, seam TT +654.9; clock gate BLOCKED on 585,476 hold pairs without signed
-views. Per stand-in (HEAD-TYPES-R2): hd_host_w hw4 i1t routed DRC 0, sign-off running (31 internal endpoints, TT room >= 173);
-hd_spn (spn_end PRD3) in DRT, pre-DRT session hold +20.0 with 370 buffers, RC sentinel exact; hd_host_e he12h 60 DRC after 64
-iterations (M6 at the u_epc W edge x = 423, M7 y ~ 60, M2 W-edge clk_t7/t8 tb0 + relay nets); hd_serdes sd9A GRT TT -189.6 after
-repair on start_o_0 / rst_o_0; hd_mesh, hd_lep0N, hd_ctl: no current-tree kit (cancelled superseded).
+Evidence. `--cap-in` rehearsal on l2d: 2,525 crossings FAIL 0, but 23 lanes have clock_landing below zero (c_E*_bn_11__b12 / tn_11__b12,
+-1 / -2). The count frame is still the forward-feed wall-aligned frame while the comb clock lands regions whole cycles earlier.
+cb setup: the what-if kept TT setup estimate -294.44 at post-CTS (old S4Q6D source, placement RC). cbx_q10 read -1,803 / -1,928 without the
+r301 xcst fanout fix. slw_st_b_v1 failed the post-CTS setup triage at 21:09 on the current event.
+
 Fix.
-1. HEAD-TYPES-R2: he12h - no more DRT iterations; fix the u_epc W-edge pin access (spread the clk_t7/t8 tb0 and relay pins, or a
-   partial blockage at x 415-430 under the M6/M7 hot spot) and re-route touched nets only.
-2. sd9A: start_o/rst_o are register-to-port paths; put the launch flop at the face (pin-adjacent placement or one face register,
-   cycle pre-approved) instead of more repair. sd9B stays dropped.
-3. hd_mesh / hd_lep0N / hd_ctl: generate on NF15c with the M8 grant now; they carry no known defect.
-4. HEAD-DIE-R: swap each signed view into real_sta as it lands; the gate is per-pair, so partial swaps already shrink the blocked set.
+1. QC-CLK-R2: plan `clock.spine.feed` = comb feed with frame_offset = round(built leaf TT arrival / T) per region, CA re-run with
+   `--frame-plan`, then `sta --cap-in`. Pass = 0 lanes below zero and LATCHECK equal on unchanged lanes.
+2. FABLE-FIX-QC-DIECLK: the cb pilot (cbn_q01__clab6e67f2, S4q9m cb rows, r301 source) also prints post-CTS TT setup by class.
+   Gate for the wave: cross_tap <= 2,000, ws >= -90, 0 latch endpoints, and TT setup estimate >= -100 with the worst class named.
+3. QC-CLK-R2: DRT + RCX of one cb region against the SPEF offsets (offsets are calibrated to the GRT mean; LE 12 -> 16 moved them 22.6 ps).
+4. QC-TYPES-R: read the slw_st_b_v1 worst path (job d109c3f8af24) before any relaunch.
 
-### Lever 6. QC: rows from exact readout
+### Lever 5. HEAD: 5 stand-ins
 
-Evidence. FABLE-DIE-QC-R: same-type half range 15,391 ports, GRT readout max 104.1 / 2,440 ports over 10 ps; exact RC max 76.9 /
-347 over 10 ps, all on the 3 refused types (cbn_q00 7, cbx_q10_h 8, cbf_q11 2 refused copies) + H-tree sc_v2/fe (<= 28 ps).
-Every fully templated type is under 6 ps. 0 of 69,979 clock nets detour.
-Root cause. The 129 ps spread that forced need+10 rows was a gcell-phase readout artefact plus per-instance tree embedding.
-Fix (FABLE-DIE-QC-R -> QC-PLAN-R). Finish s4q9m_r (template=2 + comb feed + SPEF); want 0 refused templates; then cut tol =
-ceil(half range + 10) from exact RC. Re-sign risk on 52 QC types at each tap move drops to the 3 refused types.
+Evidence. hw4e2 sign-off: DRC 0, TT -29.73, internal FF -10.77 on 4 endpoints. hei3 inserted 4 HB4 at 4 pins, then exit 1 on
+`cp ... hei3/libraries.json: Permission denied` (MEASURED, 21:08): no route ran. sd9c GRT: 0 overflow, then a flow error (measured-hold
+census saw 2 clocks); fixed in the kit and resumed from 4_cts.odb at 21:05. mesh post-CTS TT -5.80, ctl +1.60, lep0N in CTS at 310,983 cells.
+The wave's own hd_host_w (job c03e0b859913) ended TT -43.57 after one late ECO: 1.6 ps short, superseded by hw4e2 / hw5.
 
-### Lever 7. KV: bind HG2, child cores first
-
-Evidence. KV-CLK-R2: e6a GRT0 0, setup +482/+543, windows 0 over 208.25 (max 202, i.e. 6 ps under the guard), seam need 155.3 ->
-170, CA 3915/3915. Real-view hold 4,096 pairs, 27 negative (worst -38.5), all capturing at landing cores whose D is a partition
-input port; the reviewer traced all 27 cones and found no launch core. e6a needs a 31 ps wider FF intra hold window than e6b.
-14 parent types wait on 5 child cores without a routed view (kv_cland_w1057_ew / w288_ns / w781_ns, qkd_hr_core_order / _peer).
-kv3_hub_Wo fails "clock-landing band too small or blocked".
 Fix.
-1. KV-R: bind HG2 c15e87e46597 + LATCHECK; first pilot kv3_pv_v1n on rows B.
-2. KV-CLK-R2: make die_sta_related drop the 27 non-edge pairs by netlist connectivity, not by argument, so the gate reads them as
-   absent rather than negative.
-3. Build the 5 child cores now (they gate 14 types; nothing else does).
-4. kv3_hub_Wo: band sized from e6a's own window for hub_W, not HG1 (INFERENCE: the band predates e6a).
+1. HEAD-HW-ECO: rerun hei3 in a directory the job user owns (the insert plan is 4 cells), route touched nets, sign-off. Fastest view of the five.
+2. FABLE-FIX-HEAD-SERDES: at sd9c GRT read rem_q slack, launch / capture arrival and any HB4 on its D pin. At <= -25 skip DRT and build
+   sd9d (all u_enc.rem_q on one tap, no capture-pin hold cell under 60 ps setup slack).
+3. HEAD-DIE-R: NF15d (u_chn 1548.0, 109.44) through G0, bind, LATCHECK; real-view die STA real3 (21 real parts) for the first seam read,
+   host_w coll_o0 port hold first.
+4. HEAD-TYPES-R2: one HEI pass each on mesh, ctl, lep0N at first sign-off; lep0N cell count after hold cells against the 400k cap.
 
-### Lever 8. bksel landing (S81 core)
+### Lever 6. KV
 
-Evidence. 16 of 17 ETM macros land -149..-202 vs the -180 target; g_bank[0] -78.9 (fx6) / -104.4 (fx7, best tap within 420 um).
-4,170 HB4 overall in fx6; the offset is built from unbalanced wire (one BUFx24 per pin over 28-210 um).
-Fix. If fx6/fx7 sign-off misses: let CTS balance the macros natively (both ETM libs carry `clock_tree_path`; the post-CTS re-hook
-bypasses it), or add the existing low-phase `g_lat` stage on the g_bank[0] input bus only. The die-side early tap for g_bank[0]
-(S81-DIE-R2 conditional row) is the plan form if the core-side fix cannot reach -150.
+Evidence. HG2c: PRE PASS, G0 PASS (0 errors, 56 types / 160 partitions), bind running (MEASURED 21:12). HG3 = HG2c + 13 leaves; hub_Wo windows
+at x 545.6 / 550.5 give 45 slots in 15 of 15 rows. Model sweep of 5,170 raw-stage windows: kv3_hgi_v8 fs_ft11_o stages 1 and 2 have 0 slots.
+Gen classes: 11 hgi types `core_cloc` plan metadata, 6 hg types frozen-tool mismatch (views w652 / w653 / w672 packaged with tool 5083985a
+instead of 7ecd3a0d).
+
+Fix.
+1. KV-R: fold the two hgi_v8 moves ((1215.0, 771.048), (1215.0, 391.074), hops 379.2 / 380.0) into HG3 if its bind has not passed G0; else next event.
+2. KV-R: repackage the three views with the frozen tool by content hash; one dry gen of kv3_hg_v1 and one hgi type on D11 before the switch.
+3. Lever 2 items 1-2 on the first pilot.
+
+### Lever 7. S81 SerDes (11 types)
+
+Fix. S81-SERDES-R2: H3p to CTS census, then route; it is the only sign-off form (H2 leaves one relay hop at -57.76). Every SerDes kit generated
+before 02cb43ff45e takes main's `serdes_boot_release_local.tcl`. G family: encoder-stage cohorts with tap rows near d0 (2387, 473),
+d1 (2315, 592), d2-4 (2289, 673), d5 (2254, 704), CRC (2227, 607). J family: move rm toward the east face or add an rd.q -> bout_coll stage.
+S81-DIE-R2 owns the G and J plan rows.
+
+### Lever 8. bksel and IFN0 HW
+
+- bksel (FABLE-FIX-S81-BKSEL): eco2 result decides. If DRT fails again, read the route_rc 2 cause of the first run before a third; the plan
+  itself (213 HB4, target +10, no repair_design) is right. The 138 pins on g_bank[3] are one macro: a g_lat-style stage on that input bus
+  is the structural form if the ECO cannot route.
+- IFN0 HW (FABLE-FIX-S81-IFN0-HW): trunk reseat CTS read u_c0 p99-p1 118 -> 52, clk_regs 143 -> 35. Routed proof on hw_reseat2 is in GRT.
+  Pass = TT >= -42 with internal FF >= 0 (was -144.3). HE needs one endpoint at -0.21: one HB4.
 
 ## 3. Stop list
 
-1. Any relaunch from a placed / CTS DB with a flag that only the GRT helper reads; any DRT on a build whose CTS hold-buffer count
-   was not compared with its previous form.
-2. Quoting FF hold from the hold-repair table as progress; any hold or setup repair on a table other than the sign-off fit.
-3. More bksel re-land tries from wire (no tap earlier than -104 within 420 um); route-keep ECOs with repair_design / allow-setup.
-4. G3 route or CTS on the current tap pitch; nl reset relays on cross-tap hops in any new serdes kit; any t17/t26 TT fix (FF only).
-5. Routing S81 col kits with relay_mid NOFIT groups (h10_r0_p1 form); bs site maps from the mirrored e|w table.
-6. The +1 K plan row on QC io_serdes_2 -> c_W5_bf_01 (CA planner already picks K 4).
-7. Further DRT iterations on he12h; relaunching sd9A unchanged; sd9B.
-8. Row tolerances from GRT-readout spread on QC replicated types; rows cut at exact measured need (0 margin).
-9. Hold-cell fixes on the 27 KV landing-core pairs (they are not data edges).
-10. Still valid from 1730: S81 numbers from the old ICG-bypass halves; KV rows B as merged; a 20 ps pre-route hold target; hold cells
-    on port-only paths; F2s3 col GEN outputs; the K2 clock kit.
+1. col-wave1 volume, or any col DRT, before the h9_r1 congestion and h9_r2 DRT-0255 causes are named.
+2. Routing h10_r0_p1-form kits with NOFIT groups; more rm2 / rm4 runs (site class is known).
+3. Leaf kits (t47, t75, t8fix first) on GPL overflow 0.10; density, TD-off and keep-resize pilots; form B kits before the GPL rule; a second
+   XR stage on all 75; stations or cycles for the t47 "2,538 um" path.
+4. Any cb kit on S4Q3B / S4Q3C / S4Q6D sources or S4q9l2 rows; longer GRT hold caps; a uniform hold guard; RTL or CA / K changes for the cb
+   lockup; tighter tol or per-pair budgets for the 707 residual pairs.
+5. Clock rows cut from GRT readout spread on any die, KV rows C included, once an exact readout exists.
+6. HEAD: t-pass setup repair on hw4, hw4e1, a second host_w rebuild, sd9A / sd9B / Form C retime, restarting sd9c GRT for the one tap gcell,
+   four-net rip reruns (DRT-0255, no evidence).
+7. G3 CTS or route on the current encoder placement; uniform 117 um tap re-pitch as the G3 fix; J5.
+8. bksel: wire re-land tries, the Codex sibling ECO (fx_repair and allow-setup after the rip selection), sign-off from it.
+9. A second hold ECO on the HW half before the trunk reseat routed read.
+10. Still valid from 21:00: hold cells on the 27 KV landing-core pairs; +1 K row on io_serdes_2; quoting FF hold from the repair table.
 
 ## 4. Not checked
 
-- bksel fx6 routed TT / FF: route done (DRT 0), sign-off not run when I read (19:09).
-- HOLD-FLOW-R proof1 routed result on the coll_n copy.
-- headseg44 hf sign-off numbers (in 6_report at 19:04).
-- QC "other flow error 26" (phy_serdes, +25) and KV "other flow error 16": not opened; KV's are plan-contract metadata
-  (core_cloc) and KIT_NOT_SELF_CONTAINED, not physical.
-- The bs mirrored-pair cause and the kv3_hub_Wo band origin are INFERENCE.
-- S81-SERDES-R2 lines stamped 19:2x / 19:3x (H3, G3 census) were in the handoff at 19:10; read as reported.
+- The h9_r1 GRT report and the h9_r2 DRT-0255 net: I read the route log tails only. The root cause in lever 1 is INFERENCE.
+- KV and HEAD exact tap spread: lever 2 on those dies is INFERENCE from the QC measurement and the reported window sizes.
+- Why the first bksel hold-only ECO ended route_rc 2.
+- ov25 CTS reads (t47 / t75), H3p CTS, sd9c GRT rem_q, hw_reseat2 routed, HG2c bind / LATCHECK, s5f strict rebind (prove PASS under 27
+  defines at 20:56; BIND_RC 2 and CHAIN_CA_RC 4 in the log are from the earlier run), NF15c real3 die STA: all still running at 21:15.
+- S81 "other flow error 7", QC "other flow error 7": not opened. Renders were not opened by me.
