@@ -14,6 +14,12 @@
     "qkd_ectl3_kiss_st_cols definition 34/18 differs from actual bound instantiation 37/26; KV owns parameter/source pairing repair"
   ],
   "release_rule": "NO GEN or adoption from this candidate until a repaired successor manifest qualifies; source-manifest publish PASS alone does not release it",
-  "source_publication": "E10 local derivative running normal full publisher under unit oth-ubuntu-757623-1794920924; preserve progressing job",
-  "repair_owner": "KV-R"
+  "source_publication": "E7 original plus E10 local derivative source-only publication PASS; target remains BLOCKED PAYLOAD, NOT ADOPTED",
+  "repair_owner": "KV-R",
+  "source_publication_receipt": "/home/ubuntu/coord/lanes/handoff/KV-D15-E10-PUBLISH-1117.json",
+  "source_manifest": "e542e4f58941d84a401aeff517418a7ca9100433bd7a9ea65752dda45e90ea29",
+  "source_hosts": [
+    "epyc7",
+    "epyc10"
+  ]
 }

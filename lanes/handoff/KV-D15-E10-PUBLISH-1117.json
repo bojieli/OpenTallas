@@ -1,0 +1,63 @@
+{
+  "at": "2026-11-17T05:21:49.039900-08:00",
+  "scope": "SOURCE PUBLICATION ONLY; known payload failure remains blocked",
+  "derivation": {
+    "phase": "NORMAL_FULL_PUBLISH_AND_ATOMIC_RENAME_PASS",
+    "base": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14",
+    "base_manifest": "8bd4818ec021b095fc372aa4fe9e8847b905af0dafdf6751935169a5d55a0329",
+    "target": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15",
+    "expected_manifest": "e542e4f58941d84a401aeff517418a7ca9100433bd7a9ea65752dda45e90ea29",
+    "plan_sha256": "340b90be33dd8a495ba69fab7282569432c5bfed53ffd8a83d25e054dd7edc41",
+    "files": 323676,
+    "building_publisher_receipt": "/srv/opentallas-scratch2/claude/fleet-ops-r/kv_D15_packet_1117/building_published_receipt.json",
+    "same_inode_atomic_rename": true,
+    "inode": 75461085,
+    "device": 66308,
+    "root_read_only": true,
+    "later_gate": "Normal source guard on final root required before GEN or apply; no cache promotion or additional publication claim.",
+    "bind": "not copied while original producer active",
+    "time": "2026-11-17T13:18:58.059856+00:00"
+  },
+  "normal_building_publication": {
+    "phase": "NORMAL_FULL_PUBLISH_PASS",
+    "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15.building",
+    "info": {
+      "manifest_hash": "e542e4f58941d84a401aeff517418a7ca9100433bd7a9ea65752dda45e90ea29",
+      "main_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+      "files": 323676,
+      "drift": 0
+    },
+    "publisher": "/srv/opentallas-scratch2/claude/rt/e6cae044425e/tools/autopilot/src_manifest.py",
+    "publisher_sha256": "000680d262bb702c51a5bcbb8cb6805f5b03e992f7521eb81a9c8fcfbfa1da36",
+    "time": "2026-11-17T13:18:58.058872+00:00"
+  },
+  "payload_manifest_comparison": {
+    "old_tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg3b_checker_d14",
+    "new_tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d15",
+    "old_manifest": "8bd4818ec021b095fc372aa4fe9e8847b905af0dafdf6751935169a5d55a0329",
+    "new_manifest": "e542e4f58941d84a401aeff517418a7ca9100433bd7a9ea65752dda45e90ea29",
+    "files": 323676,
+    "changed": [
+      "physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json"
+    ],
+    "added": [],
+    "deleted": [],
+    "same_main": true,
+    "same_scope": true,
+    "plan_sha256": "340b90be33dd8a495ba69fab7282569432c5bfed53ffd8a83d25e054dd7edc41",
+    "bind": "not copied while producer active",
+    "payload_copies": "fresh cp -a, no hardlinks; only plan payload plus exact immutable metadata replaced"
+  },
+  "unit": "oth-ubuntu-757623-1794920924",
+  "result": "exit 0; normal full publish, read-only/unshared verification, same-inode atomic rename",
+  "payload_hold_commit": "486a55626b01a74a83b78b881e714c607fc0e639",
+  "payload_release": "NO GEN or adoption of old D15; KV owns repaired successor manifest for gen_lint source localization and qkd_ectl3_kiss_st_cols 34/18 versus 37/26 pairing failure",
+  "bind": "No producer-inflight HG5 bind copy",
+  "final_guard": "Normal final-root source guard remains required before any eligible future use; no verification-cache promotion",
+  "optional_intel1_sender": {
+    "pid": 3777547,
+    "state": "T / SIGSTOP preserved",
+    "resume": "Only root recorded adoption and capacity conditions; not resumed"
+  },
+  "e10_free_bytes_after": 68425928704
+}
