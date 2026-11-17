@@ -1,0 +1,58 @@
+{
+  "status": "PARKED on OWNER handback; no further manual launches/edits/apply",
+  "qc_d2": {
+    "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9l2_d2",
+    "manifest": "a535703479c0951f3a82a889344dc8983ab6e81ea3a2ad76d84755fe671c8cf8",
+    "publication": "PASS RO/unshared 323767 files; only qualified gen_phys/param_wrap changes",
+    "guard": "~/coord/autopilot/tree_checks/13b295c0233910e79aaa6ce2a3d4b27b628fa9d55d56bcf18f89acd9cc3835dc PASS ok/full_ok true, checker000680",
+    "global_apply": "NOT ENTERED; current BASE s4q9l2 fc19bea6c523, event s29q103S4Q9L2, plan19be3f0a3bb4, 17 item_inputs must be preserved",
+    "running": {
+      "host": "epyc8",
+      "unit": "oth-ubuntu-3189868-1794919691",
+      "GEN_pid_last": 3291135,
+      "client_intel2": 809977,
+      "log": "/srv/opentallas-scratch2/claude/tools-converge/qc/sc_tail1_L2_1117_actual_sta_scopefix.client.log",
+      "output": "/srv/opentallas-scratch2/claude/tools-converge/qc/sc_tail1_L2_1117_actual_sta"
+    },
+    "results": "actual st_a kit-rtl rc0 /23files/unbound0; GEN still running. Actual SC D1 GEN0/config/dn0 BB PASS in retained harness_correction.json; original failed >=2 harness expectation retained, no rerun",
+    "next": "Collect GEN terminal/config. Fresh compare current BASE/event/plan and preserve all17 item_inputs/environment/holds; use l2_d2_candidate.PENDING.json and normal atomic helper only if unchanged. Compose retained SC proof plus D2 actual st_a GEN."
+  },
+  "kv_d14_e10_restore": {
+    "client_intel2": 339924,
+    "unit_epyc7": "oth-ubuntu-3812945-1794917715",
+    "rsync_epyc7": 3814199,
+    "status": "healthy 47.5GB transferred at05:04; E10 .part exists, final not yet",
+    "log": "/srv/opentallas-scratch2/claude/fleet-ops-r/codex_restore_d14_e10_1117.log",
+    "expected_manifest": "8bd4818ec021b095fc372aa4fe9e8847b905af0dafdf6751935169a5d55a0329",
+    "script": "codex_restore_d14_e10_1117.sh also correct host-qualified bind copies E10/E8 after source publication"
+  },
+  "kv_d15_e10": {
+    "watcher_intel2": 972345,
+    "status": "armed waiting, no heavy job yet; preserve watcher",
+    "log": "/srv/opentallas-scratch2/claude/fleet-ops-r/derive_d15_e10_1117.log",
+    "packet": "/srv/opentallas-scratch2/claude/fleet-ops-r/kv_D15_packet_1117 on E7/E10 protected74ea043ad34399cfe11cc30f3b23c140250f09a0",
+    "expected_manifest": "e542e4f58941d84a401aeff517418a7ca9100433bd7a9ea65752dda45e90ea29",
+    "action": "After D14 final expected hash and restore log epcy10 OK, ONE ot-run E10 mem4/thread1 local derive D14 +52MB plan only, normal publish/fullRO check + atomic rename; no duplicate WAN49GB, no E8 target, no bind copy while producer active. Normal guard before GEN/apply."
+  },
+  "optional_intel1_replica": {
+    "status": "DEFERRED by COORD; sender E7 PID3777547 SIGSTOP, partial protected",
+    "record": "lanes/handoff/CODEX-D14-REPLICA-PAUSE-1117.json commit7b9e02d82b7bdd1d6d96c3a7b88d1674bdb57339",
+    "resume": "Only actual new KV adoption + fresh protected union permits old D10 retirement and measured free >= remaining allocation +50GiB. Same process SIGCONT only, never restart. No extra archive cleanup solely for this optional copy. Capacity watcher685624 exited after correct pause04:44; normal disk crons continue."
+  },
+  "completed": {
+    "qc_m4_exports": "All5 new masters RMIN/views BOTH AGI+RTX, 5 INDEX rows each, original packs retained. Final actual routed LEC supplements BOTH, all 0diff/0undecided. Commits a935c03519fe23dfbce6c7ec1acff53ac4495b85 +9c6780ff750a0802b7733553130cf6594ff58d24",
+    "e8_d1_retirement": "Normal guard ALLOW, 148SIGNED0missing. Compact17.4MB all unique evidence preserved E8/E10 SHA2b333f2817b4317357bda27587604b464b213cd07bf32eacf19c77a5e7672a33; reconstruct all323767 files from D2+oldparam/manifest. Free61.89->122.18GB. Preserve/ref commit7233c93ac8b4dfd3b33daee4ca772113d9c4b2da, result44bd7a8c92cd071b4e80d7056ab1b272a922bd79",
+    "intel1_cleanup": "Only obsolete stage outputs + complete archives of inactive type-safe-5/variants-1; both archives persistently protected and hashed. Receipt d30d700457fe59043b8436ad02c3a3397995dbe2; no active source/output deleted",
+    "runtime": "Main-only mirror fetch timer30sec active. All7 ot-heavy/stop/oom-age follow approved runtime; hub reconcile aligned. Backups .bak-codex-1117-0433. Old stop differed only missing approved ownpid exclusion, oom comments only; no unique live intent lost. No running job restart",
+    "hourly": "Forced04:47 completed04:49 rc0 commit97f599150003512f4d225efefb0ed16f80590b76. Current-plan counts S81 62/64+41/394 HEAD5/5+22/26 QC70/70+8/127 KV62/62+6/56 HBM parked90/118+1/84. Five new standalone QC archive closures separate actual progress; no stale hardcoded summary."
+  },
+  "qualified_source_branches": {
+    "watcher_import": "cafa7717df487be9a078a90c08b0d906487a2eeb GREEN1/1, 2 beforeFAIL/afterPASS",
+    "kit_fork": "64da3c358dc9142d06f9839e19a7383ab804a869 GREEN2/2 merged9c322; excludes6 stale result JSONs, originals retained",
+    "sync_report": "70b7aa0705700b1cd4807ff446bc58fa22caedfa GREEN2/2 merged5dfa; actual activation/ALERT before stderr warnings",
+    "geom_host": "1859f551f9f1b244453669ae5cbfedea4bbcc0b2 GREEN145/145 ZERO baselines, READY17d0e355; stages7-file closure actual DB host/no roaming. Old8a5 q NameError and1a async fixture failures preserved, fixed final",
+    "clock_CLI": "43c14590972fc2c1593bd8837bad8e78d3ea86a7 GREEN5/5 READY0dd7350; 2line HERE fixes python-I startup. Pinned D3 unchanged."
+  },
+  "ownership_closed": "Historical c17/6c failures superseded by merged00b48fe8d83bc70b1660bec8582f1ca91bf13b2b/main17e5. HOLD407 conflict successor81b5 GREEN68/68 owned MERGE-OPS. QCcollucie row helper a271 GREEN38/38 future exact patch only, private physical pilot owned QC; do not wholesale replace frozen L2 helper. E7 writer scan ~0.6GiB/5min no current runaway; inactive land-ring candidate audit retained, no archive/deletion started.",
+  "children": "All3 told PARK; gates source tracked clean/pushed, healthy SDK and replication jobs/watchers preserved. No new OWNER questions."
+}
