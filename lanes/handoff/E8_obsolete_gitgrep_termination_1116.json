@@ -1,0 +1,1366 @@
+{
+  "authorization": "ROOT exact SIGTERM obsolete inherited KITPACK metadata query only",
+  "timestamp": "2026-11-17T00:34:08.973874+00:00",
+  "identity_before": {
+    "pid": 1531667,
+    "cmd": "git grep -l ot-gate-remote origin/main -- .",
+    "cwd": "/srv/opentallas-scratch2/lanes/kitpack-close-1115",
+    "ppid": 1531200,
+    "start_ticks": "47699671",
+    "uid": 1000,
+    "parent_uid": 1000,
+    "parent_cmd": "bash -c cd /srv/opentallas-scratch2/lanes/kitpack-close-1115 && git fetch -q origin main 2>&1|tail -1; git ls-tree -r --name-only origin/main | grep -i \"gate.remote\\|gate_remote\\|ot-gate\" | head; git grep -l \"ot-gate-remote\" origin/main -- . 2>/dev/null | head ",
+    "parent_cwd": "/srv/opentallas-scratch2/lanes/kitpack-close-1115",
+    "lane_uid": 1000
+  },
+  "free_before": 106237952,
+  "deleted_open_count": 268,
+  "deleted_held_bytes": 965692985344,
+  "deleted_open_files": [
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e40c1da39305e0faa3ce7e41314f1056cc0ab63e.pack (deleted)",
+      "bytes": 2610876605,
+      "blocks": 2610884608
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-49a69cb0d292c9cff169cc337d2ee291045dc9f9.pack (deleted)",
+      "bytes": 2650436085,
+      "blocks": 2650443776
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-dcd4dbc0fbb73d93a5ce2b0d30b9a2431a605970.pack (deleted)",
+      "bytes": 2728200145,
+      "blocks": 2728206336
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-b384bc0fdff76267164c53c45ec3cf3eae97b8a8.pack (deleted)",
+      "bytes": 2741226372,
+      "blocks": 2741231616
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4e0c9853fc5ff5512fb629cec0c438fc294a0d03.pack (deleted)",
+      "bytes": 2746058633,
+      "blocks": 2746064896
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ab5b24bf417a55d2229fea5d75242cc548a621bb.pack (deleted)",
+      "bytes": 2748696828,
+      "blocks": 2748702720
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c381cd617cfbab523198ddcb6d1e7b509d97d153.pack (deleted)",
+      "bytes": 2754553797,
+      "blocks": 2754560000
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-6deb1fba1e9222aa50681b34e0dfe532d613f83c.pack (deleted)",
+      "bytes": 2867014527,
+      "blocks": 2867019776
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-15923056c8b46975a4c025394bfa46b54c011a1c.pack (deleted)",
+      "bytes": 2890963351,
+      "blocks": 2890969088
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-5d8c340fdc263bc91712702ecd94fe36e60d3609.pack (deleted)",
+      "bytes": 2911746235,
+      "blocks": 2911752192
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d83b6cbb74d1b0d1ec020936e352aa9cfce4219b.pack (deleted)",
+      "bytes": 2915842833,
+      "blocks": 2915848192
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-9d6f02a6c6495914f53b59b507903cbf14cc5d7b.pack (deleted)",
+      "bytes": 2921717456,
+      "blocks": 2921721856
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-621dadbb5e3be30568d82e1a3e643c2141698ad4.pack (deleted)",
+      "bytes": 2932023701,
+      "blocks": 2932031488
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-5e54b886227565575b9a532fb53bb1503e4eb359.pack (deleted)",
+      "bytes": 2932361875,
+      "blocks": 2932367360
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-08b3dae3750553ebbfdd4bcaab0ad84760047b2d.pack (deleted)",
+      "bytes": 2935337743,
+      "blocks": 2935345152
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f9bcadfa3a60824537a7ce1650507569c0649027.pack (deleted)",
+      "bytes": 2939907527,
+      "blocks": 2939912192
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-eded04097b4180b4e0a6cbb9ba0a07c5bbd91784.pack (deleted)",
+      "bytes": 2954351342,
+      "blocks": 2954358784
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-159f7657ee7c82784e2c12c3fad6ad895ee98bd9.pack (deleted)",
+      "bytes": 2957346664,
+      "blocks": 2957352960
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-83bfe2bc349c72652a9d9022100ec627dcdda075.pack (deleted)",
+      "bytes": 2957656195,
+      "blocks": 2957664256
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ce8861004a5bd19d981defbfbda99881d1c46ed0.pack (deleted)",
+      "bytes": 2964453832,
+      "blocks": 2964459520
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a33d8a8ae537f8c1796322f611195d5b3d67f54b.pack (deleted)",
+      "bytes": 2965658113,
+      "blocks": 2965663744
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-1bd548409300ecce017c101e8f17dd0ce50762fa.pack (deleted)",
+      "bytes": 2968085324,
+      "blocks": 2968092672
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-3390938d1efa053cb6c8ba2bc58ad68e6d20d76d.pack (deleted)",
+      "bytes": 2976858745,
+      "blocks": 2976866304
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-30fb7883c4df5454f4fb50a81119e1983f2cbee9.pack (deleted)",
+      "bytes": 2983719008,
+      "blocks": 2983727104
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-8868fe2b802809cca0886d33cebe1ae49213abf3.pack (deleted)",
+      "bytes": 2983945416,
+      "blocks": 2983952384
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a1b233ac1da840153af51dc5bb093c4ab574d763.pack (deleted)",
+      "bytes": 2986680307,
+      "blocks": 2986684416
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a6373c313307d36b64239f3dd000c8cca75ee7b3.pack (deleted)",
+      "bytes": 3005342320,
+      "blocks": 3005349888
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f01f7e3135f0605e89caef96b9b0acab5b2b32c6.pack (deleted)",
+      "bytes": 3013742804,
+      "blocks": 3013750784
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2f755be58d21a8d06f66d847239c541cac683ff6.pack (deleted)",
+      "bytes": 3022276840,
+      "blocks": 3022282752
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-afdd30dd05978ff19a65c12ba1811b500acc8c47.pack (deleted)",
+      "bytes": 3024079539,
+      "blocks": 3024084992
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-654b1559a569da64640d0dcaf3a73961245a97c9.pack (deleted)",
+      "bytes": 3027797652,
+      "blocks": 3027804160
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ccc7647558ab3916440979e269d8ef1191747f28.pack (deleted)",
+      "bytes": 3031288639,
+      "blocks": 3031293952
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ece231961c121a4cb16b3cfe01b4fe4ce55243b2.pack (deleted)",
+      "bytes": 3045412132,
+      "blocks": 3045416960
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e52f03c2d3a7a0935a61aea52de0c44eeccc559c.pack (deleted)",
+      "bytes": 3054350425,
+      "blocks": 3054358528
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-8fee47e098905537f46fd5f97125f51d1768ef50.pack (deleted)",
+      "bytes": 3055524954,
+      "blocks": 3055529984
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-7e9b01364e15de36905632479292dff1fd02771d.pack (deleted)",
+      "bytes": 3056300471,
+      "blocks": 3056308224
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-716b391f6210a182f2aa0c10291aa82d6af424c9.pack (deleted)",
+      "bytes": 3056730588,
+      "blocks": 3056738304
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4c9b51feb073aa2770a1c2fa8c57882371e227b3.pack (deleted)",
+      "bytes": 3051663999,
+      "blocks": 3051671552
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-476ac5a70aaeb28c4ef281687ca9c3a38f8442e4.pack (deleted)",
+      "bytes": 3052532338,
+      "blocks": 3052539904
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2691e63b4238f55c62e0bf7d094773a0bf15a330.pack (deleted)",
+      "bytes": 3059676539,
+      "blocks": 3059683328
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4acfa841d59362b8f64abe591e8730d61a627294.pack (deleted)",
+      "bytes": 3064308074,
+      "blocks": 3064315904
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-6ac4d372ce6f6dc9041c92f512e2b3a000b50c0b.pack (deleted)",
+      "bytes": 3076425820,
+      "blocks": 3076431872
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ca7b394d3e83468ef20c9b3ded072a2ab4f97f8a.pack (deleted)",
+      "bytes": 3078463896,
+      "blocks": 3078471680
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a2985c99e376cb661644fdb9c37bac83c67a8a1b.pack (deleted)",
+      "bytes": 3080440806,
+      "blocks": 3080445952
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-aa2421aefb052128655287969c947247c6dab6d8.pack (deleted)",
+      "bytes": 3081017880,
+      "blocks": 3081023488
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-477fdf91b25e14effaac775ece665bf64b0d215d.pack (deleted)",
+      "bytes": 3090289363,
+      "blocks": 3090296832
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-bc0cb6ad69bde9ed620cb926ba71570bf34b687c.pack (deleted)",
+      "bytes": 3092712967,
+      "blocks": 3092717568
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-5ffc227d9b558efd2d1f072b2fb739906305166d.pack (deleted)",
+      "bytes": 3095379842,
+      "blocks": 3095384064
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-bdb7726a4e7b82f5848121c9d14704b829452130.pack (deleted)",
+      "bytes": 3099817119,
+      "blocks": 3099824128
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2d3439984585a7dd16171c4b71c5b4847abd8f1c.pack (deleted)",
+      "bytes": 3101990224,
+      "blocks": 3101999104
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-1f509d3860b7e224280260dcb1815fbd367a6690.pack (deleted)",
+      "bytes": 3103491490,
+      "blocks": 3103502336
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-6445f292dbc9f803607cb9f435061dfbc0b2d9f4.pack (deleted)",
+      "bytes": 3122198131,
+      "blocks": 3122208768
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a0fe4cd0d659aebfe1eef329b370f4e6b126eef6.pack (deleted)",
+      "bytes": 3167474110,
+      "blocks": 3167490048
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e03a04a0cc9bc8a433ba6e99ccfd5b751a59f55d.pack (deleted)",
+      "bytes": 3167565785,
+      "blocks": 3167584256
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-38707f9eb9558c0c1575bba715c7faa51f1682a1.pack (deleted)",
+      "bytes": 3167752545,
+      "blocks": 3167789056
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-fe3c269dd65194f024b75b83cea545d0a6b5a6b6.pack (deleted)",
+      "bytes": 3167914899,
+      "blocks": 3167948800
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-491747fb90aef472ee98ccde625b3df7e6a5ea3f.pack (deleted)",
+      "bytes": 3168198590,
+      "blocks": 3168231424
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-38f0951fe97875170614a81a5d8a36a57638c512.pack (deleted)",
+      "bytes": 3171850594,
+      "blocks": 3171893248
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f07c3aaa5fdce86eb898d88397440cd1a4b104cc.pack (deleted)",
+      "bytes": 3172254569,
+      "blocks": 3172302848
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-604d40f92c20e0a7aed1abca2219fb7327f995cb.pack (deleted)",
+      "bytes": 3172464509,
+      "blocks": 3172470784
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-cad899785f41a8b84ff82c7f0cf4fad45e0124b9.pack (deleted)",
+      "bytes": 3172719133,
+      "blocks": 3172724736
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-dce429412ebfee54961ecd335fdcdf45a51d7599.pack (deleted)",
+      "bytes": 3223135042,
+      "blocks": 3223142400
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-94a85e5dd29b066c0374cdf2592330174e24bd53.pack (deleted)",
+      "bytes": 3228723533,
+      "blocks": 3228729344
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-158b0efeaa395655ccd6cebcdf8135cd70c141d0.pack (deleted)",
+      "bytes": 3239186772,
+      "blocks": 3239194624
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c82c988ed747143e3cde499b90d699edd05b0c83.pack (deleted)",
+      "bytes": 3255571184,
+      "blocks": 3255607296
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c001c55714325c2754a7340ab76067762773b915.pack (deleted)",
+      "bytes": 3257473520,
+      "blocks": 3257532416
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-6c129a148949cc3974e85dfa87dbd87266b2e858.pack (deleted)",
+      "bytes": 3257938247,
+      "blocks": 3257987072
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-03740a758abf2ec94f13701d41a78515fce6f731.pack (deleted)",
+      "bytes": 3259651986,
+      "blocks": 3259707392
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2ae3f5fbbdd4809e70cefa7cd98ae1eed26b5847.pack (deleted)",
+      "bytes": 3263347760,
+      "blocks": 3263397888
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-254a6fc396a319c2383897e7f328265dc39f7b1f.pack (deleted)",
+      "bytes": 3274606576,
+      "blocks": 3274645504
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-884892da159809f705de3682d294afcd62281aa7.pack (deleted)",
+      "bytes": 3336517918,
+      "blocks": 3336564736
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2d50239ec1b2e9092d0e411350166df8660375dd.pack (deleted)",
+      "bytes": 3343091604,
+      "blocks": 3343106048
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d56cce0185f5f0f032f00504931b20e17f6f0c03.pack (deleted)",
+      "bytes": 3346917321,
+      "blocks": 3346976768
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4c16a17f8d5458a095db23556fb986840bae4610.pack (deleted)",
+      "bytes": 3351117764,
+      "blocks": 3351175168
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a29e76cbc9cad2163e7166bc54daf5a1cf0ff219.pack (deleted)",
+      "bytes": 3351882731,
+      "blocks": 3351937024
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f42dfef41794472cc1e6edf7870a5caf27c91314.pack (deleted)",
+      "bytes": 3352210487,
+      "blocks": 3352297472
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2625c0e292132db81cdacd0671af92906fc74f69.pack (deleted)",
+      "bytes": 3352602777,
+      "blocks": 3352670208
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-25504884d434f54aced159cea88c850c049a870d.pack (deleted)",
+      "bytes": 3353031615,
+      "blocks": 3353096192
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-479c47c3a8eab9731f6797333577542a16e90e1c.pack (deleted)",
+      "bytes": 3353358064,
+      "blocks": 3353427968
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4f9ee5a43ed35e99e8cce4e1f03ef69866ceec33.pack (deleted)",
+      "bytes": 3353902581,
+      "blocks": 3353980928
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-b8a29bb0e972a13a9f527ed19b0fb640170b4279.pack (deleted)",
+      "bytes": 3354402220,
+      "blocks": 3354476544
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-29383f394f41214781462add4759f269415ad554.pack (deleted)",
+      "bytes": 3354675635,
+      "blocks": 3354750976
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-01c010490408b66d457b2d468ed0bacacbd5984d.pack (deleted)",
+      "bytes": 3355115434,
+      "blocks": 3355197440
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-457d7ae65c451d56e9f79f227126bf5eca72cd14.pack (deleted)",
+      "bytes": 3355373553,
+      "blocks": 3355459584
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ee9e3d7e6c3488be4bd64f6e29079677213c5399.pack (deleted)",
+      "bytes": 3355526538,
+      "blocks": 3355607040
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-383c65cf50ccaf8466f01bd36c25ded2d4b13d0f.pack (deleted)",
+      "bytes": 3355777060,
+      "blocks": 3355848704
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e628a168557e51f220f181b3885af926b1b920e7.pack (deleted)",
+      "bytes": 3356146166,
+      "blocks": 3356151808
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-dab42bbb6cd991009eca897d57992aa2ce32ff1f.pack (deleted)",
+      "bytes": 3356546983,
+      "blocks": 3356614656
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d2f06275d8cfbddc55a067bce49f26798d23eccf.pack (deleted)",
+      "bytes": 3356925812,
+      "blocks": 3356930048
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-97d285e96ada89b478bba2792ff3fbcea8b9429a.pack (deleted)",
+      "bytes": 3357322075,
+      "blocks": 3357327360
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-60fa14cc856e586c02262ce7da6127daca36467a.pack (deleted)",
+      "bytes": 3357755904,
+      "blocks": 3357761536
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-28dfd53ce1eae877bcd6582f7bff16ebc60b5c8e.pack (deleted)",
+      "bytes": 3358275479,
+      "blocks": 3358281728
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-58f64c0f84408d74247e55861e1d50fe0c1cbc8b.pack (deleted)",
+      "bytes": 3366951366,
+      "blocks": 3366957056
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c7e2e451a33cd8420e26331b26c033360afe19ef.pack (deleted)",
+      "bytes": 3371790487,
+      "blocks": 3371798528
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e32e03af99953b8cb88ddcab7f36afc2de6f6be2.pack (deleted)",
+      "bytes": 3379141390,
+      "blocks": 3379146752
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-b4cc4daa27cd9dc134f0d6ce62b9ff5b0b1eb324.pack (deleted)",
+      "bytes": 3382420591,
+      "blocks": 3382497280
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-6b2f46f014012eb7a201d07ca1a4237878e2f7a6.pack (deleted)",
+      "bytes": 3383293843,
+      "blocks": 3383406592
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-b7e75f472b633b2865c10e982ea6287e6e420bb2.pack (deleted)",
+      "bytes": 3383674233,
+      "blocks": 3383738368
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-932738e5ecd5df4675b635207dd73d6fafdd88b8.pack (deleted)",
+      "bytes": 3387886082,
+      "blocks": 3387994112
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e707cd271a1c16f2466d05e1f6dc6a87f408bd67.pack (deleted)",
+      "bytes": 3389700631,
+      "blocks": 3389779968
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e48c08c67f9f128b6da824276eb6589e82f4dbd5.pack (deleted)",
+      "bytes": 3390269394,
+      "blocks": 3390275584
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-755a19fff2a1bd92ce6dac7e0d1573ad51671a53.pack (deleted)",
+      "bytes": 3395856366,
+      "blocks": 3395862528
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-65382ba0663951afd9623743a13da56aee208b9a.pack (deleted)",
+      "bytes": 3396570344,
+      "blocks": 3396575232
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-17d342ee643370dcc61f6c173288e604187a688b.pack (deleted)",
+      "bytes": 3399029667,
+      "blocks": 3399036928
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4f868d97197205cda87f1d4287def1c48587a718.pack (deleted)",
+      "bytes": 3408503738,
+      "blocks": 3408510976
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4c5e7261fc88c61ae3ec155a2dbc6fa3dfd0b4a6.pack (deleted)",
+      "bytes": 3409688138,
+      "blocks": 3409694720
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d8f912880f1eae0d889e774ff8ef39b774b56b0c.pack (deleted)",
+      "bytes": 3410762110,
+      "blocks": 3410767872
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-712e4c15adfd0b9939e409f4c3d752e0ddd9f646.pack (deleted)",
+      "bytes": 3412104763,
+      "blocks": 3412111360
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-41dd340acf4f6464773e4cc93634d96f90ee30f8.pack (deleted)",
+      "bytes": 3414170790,
+      "blocks": 3414183936
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-84158b402d78b8623b8b820eeccc4502c941809d.pack (deleted)",
+      "bytes": 3420050098,
+      "blocks": 3420065792
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4fe31d4e8749dbc0db21060969f86ad34ab89760.pack (deleted)",
+      "bytes": 3422497770,
+      "blocks": 3422511104
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-9d453f162365dd67d3facad85942e57c6d41beb0.pack (deleted)",
+      "bytes": 3425009941,
+      "blocks": 3425017856
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a314597ced098953772c0f6bbac33b46c92e96f7.pack (deleted)",
+      "bytes": 3427110585,
+      "blocks": 3427164160
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c16f075063011fdfd11b5216cd28e0c0192ccc74.pack (deleted)",
+      "bytes": 3433110702,
+      "blocks": 3433140224
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-db972da7d8c351556fe0ca9071ea949048ba7d61.pack (deleted)",
+      "bytes": 3451739444,
+      "blocks": 3451809792
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0e568dccdcb67e91d6848901db360163e798e8bb.pack (deleted)",
+      "bytes": 3454364684,
+      "blocks": 3454431232
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d4fe06a7c491752d8b22499526be2dcb1e0dd3e8.pack (deleted)",
+      "bytes": 3458525446,
+      "blocks": 3458621440
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-644df413eed91eee5ad0932b2463241f38bbb46a.pack (deleted)",
+      "bytes": 3463625142,
+      "blocks": 3463745536
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f2f8175d69348c7aaf0f84691cf507b3b37b7341.pack (deleted)",
+      "bytes": 3465749680,
+      "blocks": 3465891840
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-eafdc379b5cd4de07d39e493fdd613ea38b2ca8c.pack (deleted)",
+      "bytes": 3470864753,
+      "blocks": 3471101952
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ce38b8ae94620c159c03d992c0a75d13552ebb40.pack (deleted)",
+      "bytes": 3471887403,
+      "blocks": 3472089088
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0ff65bad643d362f005d7d4818fd14fa7a836d2b.pack (deleted)",
+      "bytes": 3475849635,
+      "blocks": 3476140032
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-926a19ae830ee7d53d9d7aca1a4592749a528387.pack (deleted)",
+      "bytes": 3480232312,
+      "blocks": 3480436736
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-382038d60ebbc45c57c1d4dee7b7d2331f12745a.pack (deleted)",
+      "bytes": 3498144663,
+      "blocks": 3498151936
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-b54c97e3a0512f0d92719a47f99aab05e9e0bc40.pack (deleted)",
+      "bytes": 3499946303,
+      "blocks": 3499954176
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2e89ecdad8383620cf0a463a309eaedf01d510f5.pack (deleted)",
+      "bytes": 3501602853,
+      "blocks": 3501608960
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-7051e99caeb553de64f3fe02da2a7a2d00769d7c.pack (deleted)",
+      "bytes": 3515350628,
+      "blocks": 3515355136
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f5c5b492b0d8776d448a37ec2367abebcd363c6c.pack (deleted)",
+      "bytes": 3523462324,
+      "blocks": 3523469312
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-b0c51a948abdd1082bd29b57987034123b7ce560.pack (deleted)",
+      "bytes": 3531438258,
+      "blocks": 3531448320
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a080e9a2f9fbe0158762604f04cba48e52c3fd2b.pack (deleted)",
+      "bytes": 3547200027,
+      "blocks": 3547205632
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-3b50358e84263a1fb3265ab019ef14c541553204.pack (deleted)",
+      "bytes": 3561849833,
+      "blocks": 3561857024
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f232d4ea87a445858a04033368a4ae9cd4c061bc.pack (deleted)",
+      "bytes": 3569006252,
+      "blocks": 3569012736
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-836845bb3d79ba0ecddb5b2101321132aa47d9fd.pack (deleted)",
+      "bytes": 3577383138,
+      "blocks": 3577389056
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-536d407480aa77e3df99ec100445d5331bdef7ae.pack (deleted)",
+      "bytes": 3585739425,
+      "blocks": 3585744896
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-543170c38ecefac3276048bba092ea674b460d67.pack (deleted)",
+      "bytes": 3605385737,
+      "blocks": 3605393408
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-dc05d9f97cead835477770fb0a4676773a0d1f3b.pack (deleted)",
+      "bytes": 3610956073,
+      "blocks": 3610968064
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-08e687670963722454f886f8146534884c3b96d7.pack (deleted)",
+      "bytes": 3614183658,
+      "blocks": 3614191616
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0010aa374cbc8a124c5b90084b040ed7c3ede9b3.pack (deleted)",
+      "bytes": 3623528481,
+      "blocks": 3623534592
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-dcf4978afbee5d1e858c1e3fbe499c95322b49d5.pack (deleted)",
+      "bytes": 3647011567,
+      "blocks": 3647016960
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-cfeb148c532069cf4b32469f90869f8056a43452.pack (deleted)",
+      "bytes": 3658030715,
+      "blocks": 3658035200
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-addf660d180288a1c83f0fd270d791e38a677524.pack (deleted)",
+      "bytes": 3666082253,
+      "blocks": 3666087936
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-fcbe29e5d372af29baf0dc336e979b00726a0b6b.pack (deleted)",
+      "bytes": 3667122825,
+      "blocks": 3667128320
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4bd0c8bc9986cff108471e2552d20c2d14d6d471.pack (deleted)",
+      "bytes": 3673359444,
+      "blocks": 3673366528
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-554fc7ea376448555759ff2feef53d4e99fde002.pack (deleted)",
+      "bytes": 3681813712,
+      "blocks": 3681820672
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-30df3a63e53293dceef8daea49efc4e5a8414712.pack (deleted)",
+      "bytes": 3684212138,
+      "blocks": 3684225024
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-22cbf09f91b6365e6980e78d34173830ace00d86.pack (deleted)",
+      "bytes": 3688681384,
+      "blocks": 3688710144
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-406c2dff0a0ba1feafde753b5f513810d8fb9183.pack (deleted)",
+      "bytes": 3689494110,
+      "blocks": 3689598976
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-5d94582003d187051d56d5d5f32ae94137bfed36.pack (deleted)",
+      "bytes": 3692704648,
+      "blocks": 3692802048
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-93660d618a93822673813bab3eadb1d0a0387877.pack (deleted)",
+      "bytes": 3695692159,
+      "blocks": 3695808512
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a09e761a6369685878709c37e28aeb12af51fa58.pack (deleted)",
+      "bytes": 3696557113,
+      "blocks": 3696726016
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ae87b077695a9439565115d676a64fcb5b630481.pack (deleted)",
+      "bytes": 3697042962,
+      "blocks": 3697176576
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c63d53fc6b6f6c5df1921c38781dd968b33111de.pack (deleted)",
+      "bytes": 3698133147,
+      "blocks": 3698294784
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-56933ee8a543ac2ad2d74133e783d057ed140062.pack (deleted)",
+      "bytes": 3698759051,
+      "blocks": 3698995200
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ba3564b10107a472a6c4759da81d3c143b08af0b.pack (deleted)",
+      "bytes": 3702181677,
+      "blocks": 3702190080
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-69b5b41dc1dbd05d3d7f35a8a20d1274b55786cf.pack (deleted)",
+      "bytes": 3709068331,
+      "blocks": 3709079552
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-56837352d05751febec047671174ca0b814e2681.pack (deleted)",
+      "bytes": 3712394566,
+      "blocks": 3712405504
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-12e8c479c705bde80660bf7f05382acd08b7438b.pack (deleted)",
+      "bytes": 3713336913,
+      "blocks": 3713351680
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0d45a01e8567e242872bebec090685b3dd17ec8c.pack (deleted)",
+      "bytes": 3719245148,
+      "blocks": 3719249920
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a7f851c033e6e858881bf312cb565e6a141af20b.pack (deleted)",
+      "bytes": 3720396667,
+      "blocks": 3720400896
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-eef54d162374454ea05ccd59ed1e0fe81ee9ede3.pack (deleted)",
+      "bytes": 3727486700,
+      "blocks": 3727491072
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0680a6a5513272afa6f7c66684e26f5a6b65e4c1.pack (deleted)",
+      "bytes": 3728312216,
+      "blocks": 3728318464
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4dd68e1b81fcc2fd3c147a65405031848ce408fb.pack (deleted)",
+      "bytes": 3763359055,
+      "blocks": 3763363840
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d913175b08373d1b1fc1bfd749d6f92c92887805.pack (deleted)",
+      "bytes": 3766509064,
+      "blocks": 3766513664
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-82705efa8534bc086f843065e5707acdf9564200.pack (deleted)",
+      "bytes": 3779844660,
+      "blocks": 3779850240
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d7e89b0bbc457a7cbd98a3137e54c670cdd1d319.pack (deleted)",
+      "bytes": 3780643376,
+      "blocks": 3780648960
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2032aefba1299a6bfb3751aeeacd2200f9d4501c.pack (deleted)",
+      "bytes": 3781632955,
+      "blocks": 3781640192
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-385ca80692553621af073affed3b881876ce4b98.pack (deleted)",
+      "bytes": 3788027471,
+      "blocks": 3788034048
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0e3a610480c4ce6283883ab26858512d4922ecd6.pack (deleted)",
+      "bytes": 3797268780,
+      "blocks": 3797274624
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-3b56923dfa4e4cefe0c3f0a3b22c3e8d1943378f.pack (deleted)",
+      "bytes": 3807497630,
+      "blocks": 3807502336
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-edbb7a93bc1759fbac67b768f37ec6687acf8978.pack (deleted)",
+      "bytes": 3814506402,
+      "blocks": 3814510592
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-498426328ac1f6e7b46aff6376bdf8a14663302c.pack (deleted)",
+      "bytes": 3818400969,
+      "blocks": 3818405888
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ebdb274dd2ab40d72e3952454d67d2fcdbea5251.pack (deleted)",
+      "bytes": 3823363299,
+      "blocks": 3823370240
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-462c0f83cba0f60244ef871c7a9edc3b45f0a598.pack (deleted)",
+      "bytes": 3825225151,
+      "blocks": 3825229824
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a756c2796646c7ed6b1c9b5a020d517501e9f131.pack (deleted)",
+      "bytes": 3828128376,
+      "blocks": 3828133888
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-8a324691e85a56e62d9ac30a18b76a4f7c65c009.pack (deleted)",
+      "bytes": 3829742152,
+      "blocks": 3829747712
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-dfb05297de0ac58f059648e3e624fd3717d9274a.pack (deleted)",
+      "bytes": 3832430147,
+      "blocks": 3832434688
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-3108458b73a45950b2b6966ba1005960e88bbb79.pack (deleted)",
+      "bytes": 3836931141,
+      "blocks": 3836936192
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0523e4b5d79e103aa34e0fd3a0a5f2115ddec8fc.pack (deleted)",
+      "bytes": 3850695058,
+      "blocks": 3850702848
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ed91dc382ac3ac1e4a4e6ca9dd7cf3a016efde76.pack (deleted)",
+      "bytes": 3867960839,
+      "blocks": 3867967488
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-366a752abade05ab4c8de05dedb5459fcf370b6f.pack (deleted)",
+      "bytes": 3868879616,
+      "blocks": 3868884992
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-396579c7b99c249e7dfe2b40673728f8e145f4e2.pack (deleted)",
+      "bytes": 3869643033,
+      "blocks": 3869650944
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-7eae63cfa94ec37ad0f3409acc3e8d43c9942a06.pack (deleted)",
+      "bytes": 3870561144,
+      "blocks": 3870568448
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-68e87ef5cf65088dbd78e1e5b8571ca7c68cc380.pack (deleted)",
+      "bytes": 3871823281,
+      "blocks": 3871830016
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0539fc978c2e13682488f972a5ce448dbf629470.pack (deleted)",
+      "bytes": 3873203045,
+      "blocks": 3873210368
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0f44488931d8a20d6f1474ff4ec6c760a7267b62.pack (deleted)",
+      "bytes": 3873616280,
+      "blocks": 3873624064
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-fbb05b3a194b7879a36e33d828b8abd0fd3ac735.pack (deleted)",
+      "bytes": 3874247434,
+      "blocks": 3874254848
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-7f3c4a577af55f98d2b5b40f3d02708290c5372d.pack (deleted)",
+      "bytes": 3878844993,
+      "blocks": 3878850560
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4ed6529558b99b2ea8f74944642383c84b14f63c.pack (deleted)",
+      "bytes": 3879570683,
+      "blocks": 3879575552
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-267a8e9fddbf9b7c99d415e65316439760d33155.pack (deleted)",
+      "bytes": 3883295015,
+      "blocks": 3883302912
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-53bd2c2d07a78e06f8fdef8a8c4b28bf495b2ce7.pack (deleted)",
+      "bytes": 3884486252,
+      "blocks": 3884490752
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d815e5e15eb0b0182e6248fd02b62667fda42344.pack (deleted)",
+      "bytes": 3897698137,
+      "blocks": 3897704448
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4392c361dd71fbbed5ae2b10e3f2ce50fa01b290.pack (deleted)",
+      "bytes": 3898544976,
+      "blocks": 3898552320
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-1451f0fd61c5655210d1dce9852ed85d4eba3c6c.pack (deleted)",
+      "bytes": 3899902864,
+      "blocks": 3899908096
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-853ea20a9b1da5c0c0f49089ac3a3fc505db3c43.pack (deleted)",
+      "bytes": 3901710949,
+      "blocks": 3901718528
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-75888027bf72d1fa62046e5507cfab9ad94220f9.pack (deleted)",
+      "bytes": 3902370424,
+      "blocks": 3902377984
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-73249d13dfea24bdd9f382a145ba8f032b599aff.pack (deleted)",
+      "bytes": 3909804735,
+      "blocks": 3909812224
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d64e910e3923b4563e3971a70f5574587fd4203a.pack (deleted)",
+      "bytes": 3932581783,
+      "blocks": 3932585984
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d5a213d57c40559aea1b726daf0b10d565921322.pack (deleted)",
+      "bytes": 3940717146,
+      "blocks": 3940724736
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2a5790ac6efbcc0bc17c9f0f09edbe79c30b8368.pack (deleted)",
+      "bytes": 3960575888,
+      "blocks": 3960582144
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0bc00c7b475fae3f55ed3eeaa478ae5d45ce6db7.pack (deleted)",
+      "bytes": 3961823659,
+      "blocks": 3961831424
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-83ccf894c78d7020359bcff50e5d904a4b5b556d.pack (deleted)",
+      "bytes": 3967330529,
+      "blocks": 3967336448
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-1cb1375a45812398ef11ecd4d97b17a3d75aa266.pack (deleted)",
+      "bytes": 3980719603,
+      "blocks": 3980726272
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-b160e99c8787a94ee37ec4389426bc9d113d0678.pack (deleted)",
+      "bytes": 3993034939,
+      "blocks": 3993042944
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-99cb00fba5c41e56ae1e65673baf20074bef29c8.pack (deleted)",
+      "bytes": 3999515100,
+      "blocks": 3999522816
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4dccc5cc4acd9053fc6e48c0c5b7269514775e3f.pack (deleted)",
+      "bytes": 4002032297,
+      "blocks": 4002037760
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0685e8f6004872715ace5f47d6fc29a56a0e6c52.pack (deleted)",
+      "bytes": 4015333017,
+      "blocks": 4015337472
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-9539eacf6649cfe14a0294e4071f228562280681.pack (deleted)",
+      "bytes": 4028194062,
+      "blocks": 4028198912
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-bd324fd71beac879a6e1f5e70fccdfcd609b7d5a.pack (deleted)",
+      "bytes": 4034959492,
+      "blocks": 4034965504
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-dfc0d25b8891bb9fe60e6f3f0b75508ba7d0194e.pack (deleted)",
+      "bytes": 4049080064,
+      "blocks": 4049084416
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2de4743a01814c8e109299132627548757f7c55f.pack (deleted)",
+      "bytes": 4053083271,
+      "blocks": 4053090304
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e691b3c838a6e8e13fa13b63cfb1ca3912774ec1.pack (deleted)",
+      "bytes": 4057029235,
+      "blocks": 4057034752
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-5cbad2120bdd5574cf97f46a6a0ee98f9d4ea824.pack (deleted)",
+      "bytes": 4060295684,
+      "blocks": 4060303360
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0394a84c5f052c9aececd040ef52adeca9baa073.pack (deleted)",
+      "bytes": 4061628109,
+      "blocks": 4061634560
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-9ae15632f2558b890e437bde8c38f52587b634bb.pack (deleted)",
+      "bytes": 4064556836,
+      "blocks": 4064563200
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-51530851bdfbb231b5fa353d699cbf49ca57f9db.pack (deleted)",
+      "bytes": 4065993787,
+      "blocks": 4066000896
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f49304b62d6a1084c9316c2c3f9ef3b8baf126fd.pack (deleted)",
+      "bytes": 4067283626,
+      "blocks": 4067291136
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2811a64212add68fbd6eb504c59e2f0ec661fba2.pack (deleted)",
+      "bytes": 4067527278,
+      "blocks": 4067532800
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-cabd292c4174d7c193811452fe4eb8e3a5a1f0bb.pack (deleted)",
+      "bytes": 4069565204,
+      "blocks": 4069572608
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c220ee80ce483fe039cc895bd5407fabf386bc44.pack (deleted)",
+      "bytes": 4070884759,
+      "blocks": 4070891520
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-13cb062826f7759a48d0a9dc1478582b2d675786.pack (deleted)",
+      "bytes": 4071834001,
+      "blocks": 4071841792
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-505c7a34c609b55ff3c095330827a3dea26fd8d8.pack (deleted)",
+      "bytes": 4072591800,
+      "blocks": 4072599552
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-939a870fb398457f630b62d8d0a7aa6a1829ba05.pack (deleted)",
+      "bytes": 4074232292,
+      "blocks": 4074237952
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-668fa35ba34a74a50dba6915a0542bca0dcb57fe.pack (deleted)",
+      "bytes": 4075028176,
+      "blocks": 4075032576
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-85c88c6a54949b6cd4b2a58f245efe6f27bf41f8.pack (deleted)",
+      "bytes": 4080133120,
+      "blocks": 4080140288
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d81842e0550297941075b8a1342d3ba8028c0527.pack (deleted)",
+      "bytes": 4081727402,
+      "blocks": 4081733632
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-6b63b9a30b2ee8eac4078a96df7f980908ebd238.pack (deleted)",
+      "bytes": 4082855508,
+      "blocks": 4082860032
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-e0ca43cc21f8c6d584d2b6d2a8305fa06f46825e.pack (deleted)",
+      "bytes": 4083769711,
+      "blocks": 4083781632
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-bb37a207aecf18d58afd2cc6300aba87897e6dbf.pack (deleted)",
+      "bytes": 4084760850,
+      "blocks": 4084772864
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-8f4f1f9a7d324ce46bd1d15c7cc1e2c187c1cb9c.pack (deleted)",
+      "bytes": 4095494600,
+      "blocks": 4095500288
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ad76dd8c129aa4423a07b9a20c9e7331d770289d.pack (deleted)",
+      "bytes": 4095828456,
+      "blocks": 4095836160
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-585939d4bc22fb8879149e019bc573ff1dbdfc2c.pack (deleted)",
+      "bytes": 4097379222,
+      "blocks": 4097384448
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-7aea82f89fac327f80b784d8df74e8ac52101837.pack (deleted)",
+      "bytes": 4100176328,
+      "blocks": 4100182016
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-c160e18d9871e9c9ffacc4ef4d491a4eae81fc29.pack (deleted)",
+      "bytes": 4101457450,
+      "blocks": 4101472256
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-fc0447159a6608982fec270a706680570a0fe4e7.pack (deleted)",
+      "bytes": 4111572640,
+      "blocks": 4111605760
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-29cbf62a3495c34104fe1ac9ef01ff88c71f7650.pack (deleted)",
+      "bytes": 4111984596,
+      "blocks": 4112048128
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-67777ee65f3980908a894533ad4810dd8b899cd0.pack (deleted)",
+      "bytes": 4113158161,
+      "blocks": 4113240064
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-89d0c4e5c8044d2abe620a1c4f460371409ccd18.pack (deleted)",
+      "bytes": 4116799980,
+      "blocks": 4116967424
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-afe3358989107bcd33994eec79393349e09476ab.pack (deleted)",
+      "bytes": 4260700134,
+      "blocks": 4260962304
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a9d080f60e59d2832cc442c1eb310f8bfcbb0a57.pack (deleted)",
+      "bytes": 4302239278,
+      "blocks": 4302245888
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-6d387a5a40c4082ab340b3db8b66d42ff6d5944b.pack (deleted)",
+      "bytes": 4310025977,
+      "blocks": 4310032384
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a495786186d27c8f6ddd52f0ad21dcfd02cfa07e.pack (deleted)",
+      "bytes": 4312194483,
+      "blocks": 4312199168
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d6d69ee4f94a86d94f484bb3205bdf02e7c2ad2f.pack (deleted)",
+      "bytes": 4318419163,
+      "blocks": 4318466048
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0fc28e7b2f9bc23ba649f25433ab0a7883a4aded.pack (deleted)",
+      "bytes": 4318486411,
+      "blocks": 4318531584
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-2427bc78af15e239bc196b8191b897e21465fd4b.pack (deleted)",
+      "bytes": 4318854896,
+      "blocks": 4318941184
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-f39a78c4c26703016b9208b9ee533fb6144febb7.pack (deleted)",
+      "bytes": 4318953014,
+      "blocks": 4319059968
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-65adf20159c489f07c4e611ffb3337f6efba1202.pack (deleted)",
+      "bytes": 4319098647,
+      "blocks": 4319207424
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d1ff851ce94c33f666ab5b84dd43222f6d16fb7a.pack (deleted)",
+      "bytes": 4321108326,
+      "blocks": 4321193984
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-aecbd5153cf5d33b506532d381fec2158e3fad64.pack (deleted)",
+      "bytes": 4321155802,
+      "blocks": 4321296384
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d516b9b5c4221b3db9f769a3ab6185ab94f58abe.pack (deleted)",
+      "bytes": 4321192257,
+      "blocks": 4321353728
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-4079cd02293e6b4ce765f57a6d08e5ede73f5eba.pack (deleted)",
+      "bytes": 4324002262,
+      "blocks": 4324163584
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-3503b429a14b3b5b5b0ac44f1012a03480c4e705.pack (deleted)",
+      "bytes": 4324706790,
+      "blocks": 4324909056
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-43d1653f9ff231295334c4aa965138d53414ae39.pack (deleted)",
+      "bytes": 4324936747,
+      "blocks": 4325117952
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-8cdee8735307167fa441aeebea0f054a8f642257.pack (deleted)",
+      "bytes": 4327007969,
+      "blocks": 4327256064
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-437ffd2057a379f2c1975f5f519ba68532889765.pack (deleted)",
+      "bytes": 4344953683,
+      "blocks": 4345376768
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-ce3c4b244c08734ff3bccf2d4c10118e7ca48d48.pack (deleted)",
+      "bytes": 4346407114,
+      "blocks": 4346916864
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-d4c7d1f4eb4773a4f836d96d75ddb13482a02c12.pack (deleted)",
+      "bytes": 4352388387,
+      "blocks": 4353191936
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-da8b1d9729aa1a778c967777eb7a2cf38096204c.pack (deleted)",
+      "bytes": 4358277749,
+      "blocks": 4358287360
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-7175f8032efe53414fc8f424a281f15b92ded98f.pack (deleted)",
+      "bytes": 4358638251,
+      "blocks": 4358651904
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-416b95701f0430994ce2c1ee744053384f38ad13.pack (deleted)",
+      "bytes": 4359884845,
+      "blocks": 4359917568
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-06bb2ce484dfade1ae2c1f5161d347cb2bc7f28f.pack (deleted)",
+      "bytes": 4360031046,
+      "blocks": 4360069120
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-1e756654351e48dcc36d22a656317da64cfab10a.pack (deleted)",
+      "bytes": 4360263833,
+      "blocks": 4360306688
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-0113be650ca43ddc46511dea9b17dd284e508802.pack (deleted)",
+      "bytes": 4360674758,
+      "blocks": 4360769536
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-5c4243708efbf2ea4f0238dab70c9426282bc904.pack (deleted)",
+      "bytes": 4360913870,
+      "blocks": 4361039872
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-1d0ed790d8aceacced0df0718b2a36b8925925cb.pack (deleted)",
+      "bytes": 4361021384,
+      "blocks": 4361158656
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-60c03683292f18213e257f196ff25dd4999b8b1d.pack (deleted)",
+      "bytes": 4362576873,
+      "blocks": 4362731520
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-277b622f6afb748e3238fe7a5a46c50d1fc018ee.pack (deleted)",
+      "bytes": 4363350265,
+      "blocks": 4363522048
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-a6e6969d1de06f3a3d06d0a21e5874b9ea8c5140.pack (deleted)",
+      "bytes": 4366903561,
+      "blocks": 4367241216
+    },
+    {
+      "path": "/srv/opentallas-scratch2/lanes/kitpack-close-1115/.git/objects/pack/pack-8c7a09f63dcaec7194afa94af92d18581d720809.pack (deleted)",
+      "bytes": 4376653263,
+      "blocks": 4377747456
+    }
+  ],
+  "signal": "SIGTERM exactPID only",
+  "query_present": true,
+  "free_after": 99024896,
+  "parent_untouched": true,
+  "no_files_deleted": true
+}

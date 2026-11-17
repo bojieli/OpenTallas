@@ -1,0 +1,9 @@
+ot-run: epyc8          admits   674 GB (avail 722, reserve 0, fresh 0, peak 0, headroom 0, waiters 0/0 GB) load 22/96 running 18 disk 910 GB 
+ot-run: -> epyc8
+ot-heavy: admitted on outgoing-giraffe as oth-ubuntu-2767061-1794876150 after 1 s
+.
+----------------------------------------------------------------------
+Ran 1 test in 4.343s
+
+OK
+ot-run: RAN on epyc8 (unit oth-ubuntu-2767061-1794876150): exit 0
