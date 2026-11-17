@@ -24,6 +24,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 import tools_lag as TL  # noqa: E402
+import overlay_classify as OC  # noqa: E402
 
 TOOL_PATHS = ("tools", "physical/common_flow")
 SM = str(HERE / "src_manifest.py")
@@ -90,6 +91,7 @@ class Ops:
 
     def __init__(self, d, repo, main_sha, run=None):
         self.d, self.repo, self.sha = d, repo, main_sha
+        self.overlay_report = {}
         self.run = run or self._run
         self.host = d.get("gen_host") or (d.get("gen_hosts") or [None])[0]
 
@@ -102,16 +104,17 @@ class Ops:
             return 255, f"{type(e).__name__}: {e}"
         return r.returncode, (r.stdout + r.stderr).strip()
 
-    def pack_cmd(self, old, new):
+    def pack_cmd(self, old, new, drop=()):
         """hub side: the gen host has no git store of main, so the pack is built on the hub from the tree's manifest alone (delta-make reads only
         OLD/.src-manifest.json) and rsynced to the gen host"""
         q = shlex.quote
         work = os.path.expanduser("~/.cache/tools-refresh/" + os.path.basename(new))
         paths = " ".join(q(p) for p in TOOL_PATHS)
+        dropping = (" --drop-overlay " + " ".join(q(p) for p in drop)) if drop else ""
         sm = f"python3 -I {q(SM)}"
         ssh = "ssh -n -o ControlPath=none -o BatchMode=yes"
         cmd = (f"rm -rf {q(work)} && mkdir -p {q(work)}/stub && {ssh} {q(self.host)} {q('cat ' + old + '/.src-manifest.json')} > {q(work)}/stub/.src-manifest.json "
-               f"&& {sm} delta-make {q(work)}/stub --repo {q(self.repo)} --sha {q(self.sha)} --paths {paths} --out {q(work)}/pack "
+               f"&& {sm} delta-make {q(work)}/stub --repo {q(self.repo)} --sha {q(self.sha)} --paths {paths}{dropping} --out {q(work)}/pack "
                f"&& rsync -a -e 'ssh -o ControlPath=none -o BatchMode=yes' {q(work)}/pack/ {q(self.host)}:{q(new + '.pack')}/ ; rc=$?; rm -rf {q(work)}/stub; exit $rc")
         return cmd
 
@@ -127,8 +130,21 @@ class Ops:
             cmds.append(f"{sm} replicate {q(new)} --hosts {q(','.join(others))} --link-from {q(os.path.basename(old))}")
         return cmds
 
+    def classify_overlay(self):
+        """r610: overlay paths of the tree that main also changed, classified against the hub repo: (a) main has the blob, (b) the change is contained in main ->
+        main wins (dropped from the overlay, logged); (c) a private patch -> stop.  -> (drop paths, {path: result of the private ones})"""
+        res = OC.classify_die(self.repo, dict(self.d, src=self.d["src"]), self.sha)
+        self.overlay_report = {p: v["cls"] for p, v in res.items()}
+        return sorted(p for p, v in res.items() if v["cls"] in "ab"), {p: v for p, v in res.items() if v["cls"] == "c"}
+
     def compose(self, old, new):
-        rc, out = self.run(None, self.pack_cmd(old, new))
+        try:
+            drop, private = self.classify_overlay()
+        except (ValueError, OSError, KeyError, subprocess.SubprocessError) as e:
+            return False, f"overlay classification failed: {type(e).__name__}: {e}"[:400], ""
+        if private:
+            return False, "OVERLAY-PRIVATE: " + "; ".join(f"{p}: {v['why']}\n{v.get('diff', '')[:700]}" for p, v in list(private.items())[:6]), ""
+        rc, out = self.run(None, self.pack_cmd(old, new, drop))
         if rc:
             return False, f"delta-make (hub): rc {rc}: {out[-400:]}", ""
         for c in self.compose_cmds(old, new):
@@ -183,11 +199,14 @@ def refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.t
     rec = dict(key=key, old=old, new=new, missing=lag["missing"], ts=int(now()), owner=d.get("owner_lane", ""))
     state.setdefault("done", {})[key] = rec
     good, detail, h = ops.compose(old, new)
-    if not good and "overlaid by the tree" in detail:
-        # the tree carries overlay copies of tools files that main also changed: dropping them silently could undo a private patch -> the die owner decides
-        rec.update(status="OVERLAY-CLASH", why=detail)
-        post(f"NEEDS-LANE [TOOLS-REFRESH -> {rec['owner'] or die}] {die}: tools-only refresh of {old} is blocked, the tree overlays files main changed "
-             f"(main rulings {', '.join(lag['missing'][:12])}): {detail[detail.find('overlaid by the tree'):][:500]}; re-derive the overlay (delta-make --drop-overlay) or say which entries main wins")
+    rep = getattr(ops, "overlay_report", None) or {}
+    if rep:
+        rec["overlay_main_wins"] = sorted(p for p, c in rep.items() if c in "ab")       # logged: the fix is already in main (a: blob in history, b: contained)
+    if not good and "OVERLAY-PRIVATE" in detail:
+        # r610: only an overlay whose change is NOT in main stops the refresh; those paths go to the die owner with their diff
+        rec.update(status="OVERLAY-PRIVATE", why=detail[:3000])
+        post(f"NEEDS-LANE [TOOLS-REFRESH -> {rec['owner'] or die}] {die}: tools-only refresh of {old} is blocked by private tools patches in the tree overlay "
+             f"(main wins on {len(rec.get('overlay_main_wins', []))} other overlay paths): {detail[len('OVERLAY-PRIVATE: '):][:1800]}")
         return rec
     if not good:
         rec.update(status="COMPOSE-FAIL", why=detail)

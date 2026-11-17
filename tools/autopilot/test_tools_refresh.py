@@ -100,7 +100,9 @@ def test_real_command_text():
     assert "bind.py bind" in o.bind_cmd(new, "/o") and "--strict" in o.bind_cmd("/n", "/o")
 
 
-def test_ops_compose_stops_at_the_first_failing_step():
+def test_ops_compose_stops_at_the_first_failing_step(monkeypatch):
+    import overlay_classify as OC
+    monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {})
     seen = []
 
     def run_(host, cmd, timeout=0):
@@ -135,9 +137,23 @@ def test_wave_tick_starts_one_refresh_per_key(monkeypatch):
     assert len(launched) == 2
 
 
-def test_overlay_clash_is_not_dropped_silently():
+def test_a_private_overlay_patch_stops_the_refresh_with_its_diff():
     ops = FakeOps(compose=False)
-    ops.compose = lambda old, new: (False, "delta-make (hub): rc 1: refuse: paths changed on main are overlaid by the tree: tools/autopilot/kit_wave.py, tools/die_plan/bind.py", "")
+    ops.overlay_report = {"tools/a.py": "a", "tools/b.py": "b", "tools/c.py": "c"}
+    ops.compose = lambda old, new: (False, "OVERLAY-PRIVATE: tools/c.py: private patch: the change is not in main\n--- base/tools/c.py\n+++ overlay/tools/c.py\n+X=1", "")
     rec, posts, edits, _ = run(ops=ops)
-    assert rec["status"] == "OVERLAY-CLASH" and not edits
-    assert posts[0].startswith("NEEDS-LANE [TOOLS-REFRESH -> KV-R3]") and "kit_wave.py" in posts[0] and "drop-overlay" in posts[0]
+    assert rec["status"] == "OVERLAY-PRIVATE" and not edits and rec["overlay_main_wins"] == ["tools/a.py", "tools/b.py"]
+    assert posts[0].startswith("NEEDS-LANE [TOOLS-REFRESH -> KV-R3]") and "tools/c.py" in posts[0] and "+X=1" in posts[0] and "main wins on 2" in posts[0]
+
+
+def test_main_wins_overlays_are_dropped_and_logged(monkeypatch):
+    seen = []
+    import overlay_classify as OC
+    monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {"tools/a.py": {"cls": "a", "why": "x"}, "tools/b.py": {"cls": "b", "why": "y"}})
+    o = TR.Ops(die(), "/r", SHA, run=lambda host, cmd, timeout=0: (seen.append(cmd) or (0, "h")))
+    ok, detail, h = o.compose(OLD, "/n")
+    assert ok and o.overlay_report == {"tools/a.py": "a", "tools/b.py": "b"}
+    assert "--drop-overlay tools/a.py tools/b.py" in seen[0]                      # the pack drops exactly the main-wins overlays
+    monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {"tools/c.py": {"cls": "c", "why": "private patch", "diff": "+X"}})
+    ok, detail, h = TR.Ops(die(), "/r", SHA, run=lambda *a, **k: (0, "")).compose(OLD, "/n")
+    assert not ok and detail.startswith("OVERLAY-PRIVATE") and "+X" in detail
