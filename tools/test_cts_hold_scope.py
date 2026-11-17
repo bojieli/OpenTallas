@@ -47,7 +47,7 @@ class CtsHoldScope(unittest.TestCase):
             s += env
             s += ("proc seen {} { set_scene BC; report_checks -path_delay min -scenes BC -group_path_count 1000 "
                   f"-endpoint_path_count 1 -unique_paths_to_endpoint > {{{d}/seen.rpt}} }}\n")
-            s += "ot_hold_repair_scope { seen }\nexit\n"
+            s += "ot_hold_repair_scope { ot_cts_hold_pad { seen } }\nexit\n"
             (d / "t.tcl").write_text(s)
             p = subprocess.run([OPENROAD, "-no_init", "-exit", str(d / "t.tcl")], capture_output=True, text=True, timeout=60)
             self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
@@ -79,7 +79,8 @@ class StaticWiring(unittest.TestCase):
         txt = (HERE / "orfs_hold_mm.tcl").read_text()
         i = txt.index("proc ot_hold_repair_scope")
         self.assertIn("ni {3_place.sdc 4_cts.sdc}", txt[i:i + 2500])
-        self.assertIn("unset_dont_use $pad", txt[i - 1500:i + 1500])
+        self.assertIn("unset_dont_use $pad", txt)
+        self.assertEqual(txt[txt.index("proc ot_repair_timing"):txt.index("proc ot_repair_hold_guarded")].count("ot_cts_hold_pad {"), 4)
 
 
 if __name__ == "__main__":
