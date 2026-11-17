@@ -13837,3 +13837,6 @@ FFNtimingcorrection: current35GOlaunchesspan4318coreedges,predicted4625includesl
 
 ## Handoff to Claude 2026-11-17 00:43 PST — FLEET
 Full source/jobs/outcomes/pending: lanes/handoff/CODEX-FLEET-2218-RESET-1117.md (prepark87955ee). AllchildrenPARKrequested. Preserve soleprogressingMQpack1391464 (service1173597), ALLQE7unit416083-1794901681 actual384GiBcharge/memory~240GiB, D12E7copy1682022/E10unit505406. No newlaunches/edits afterreset. Runtimeactual17e5, approvalsqueuednormalbatch. E9guarded74.55GB/444oldDBreclaimed, actual98GiB withwriters; no source/finaldeleted. Auto-retireONlimitedapprovedscope. Localhelperclone4f18630234b testonlycleanpushed pendingnormalgate; childwillACKifalreadylaunched. No newOWNER? item.
+
+## Handoff to Claude — 2026-11-17 reset: HEAD
+All HEAD children parked; progressing routes and native repair jobs retained. Complete concise per-lane/job/failure handoff: lanes/handoff/HEAD-CODEX-FINAL-1117.md. NF15d2r1 adopted; 192 route and independent incoming2bit coupon active, separate sp4 START counted windows failed and physical two-FF fork only modeled. NF15e final control resite and remaining physical SerDes/ctl/mesh closure owned. No terminal wait, new launches or pending owner dialog.
