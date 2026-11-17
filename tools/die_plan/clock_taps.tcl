@@ -37,6 +37,76 @@ foreach bt [$ct_blk getBTerms] {
   }
   lappend ct_taps [list $n $net [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
+# SerDes physical clock edits may change a grid tap, never a functional clock
+# gate, inversion edge, forwarded-clock authority, or a gated FF's clock net.
+# Capture BEFORE even the ordinary nearest-tap pass. Buffer-only clock wiring
+# is transparent; every INV and functional driver/control net remains explicit.
+global ct_clock_guard_on ct_clock_guard_roots ct_clock_guard_before ct_clock_guard_cache
+set ct_clock_guard_on [expr {([info exists ::env(OT_TAP_CLOCK_ANCESTRY_GUARD)] && $::env(OT_TAP_CLOCK_ANCESTRY_GUARD) eq "1") || ([info exists ::env(OT_SERDES_INGRESS_COHORT)] && $::env(OT_SERDES_INGRESS_COHORT) eq "1") || ([info exists ::env(OT_SERDES_RESET_COHORT)] && $::env(OT_SERDES_RESET_COHORT) eq "1")}]
+set ct_clock_guard_roots {};set ct_clock_guard_before {};set ct_clock_guard_cache {}
+foreach tap $ct_taps {dict set ct_clock_guard_roots [[lindex $tap 1] getName] 1}
+proc ct_clock_signature {net {depth 0}} {
+ global ct_clock_guard_roots ct_clock_guard_cache
+ if {$net eq "NULL" || $net eq ""} {return {DISCONNECTED}}
+ set name [$net getName]
+ if {[dict exists $ct_clock_guard_roots $name]} {return {LOCAL_CORE_TAP}}
+ if {[dict exists $ct_clock_guard_cache $name]} {return [dict get $ct_clock_guard_cache $name]}
+ if {$depth>128} {error "clock ancestry recursion/cycle at $name"}
+ set ports {}
+ if {![catch {$net getBTerms} bterms]} {
+  foreach bt $bterms {if {[$bt getIoType] in {INPUT INOUT}} {lappend ports [$bt getName]}}
+ }
+ if {[llength $ports]} {set sig [list PORT [lsort $ports]]} else {
+  set drivers {};set transparent {}
+  foreach pin [$net getITerms] {
+   if {[[$pin getMTerm] getIoType] ne "OUTPUT"} continue
+   set inst [$pin getInst];set master [[$inst getMaster] getName]
+   set inputs {};set wiring {}
+   foreach ip [$inst getITerms] {
+    if {[[$ip getMTerm] getIoType] ne "INPUT"} continue
+    set pn [[$ip getMTerm] getName];set nn [$ip getNet]
+    if {$nn eq "NULL" || $nn eq ""} {set is {DISCONNECTED}
+    } elseif {[dict exists $ct_clock_guard_roots [$nn getName]] || [regexp {^(BUF|INV)} $master] || $pn in {CLK CLKN CK CKN CP CLKIN CKIN}} {
+      set is [ct_clock_signature $nn [expr {$depth+1}]]
+    } else {set is [list CONTROL_NET [$nn getName]]}
+    lappend inputs [list $pn $is];lappend wiring $is
+   }
+   set pass_buffer 0
+   if {[regexp {^BUF} $master] && [llength $wiring]==1} {set ds [lindex $wiring 0];set pass_buffer 1
+   } elseif {[regexp {^INV} $master] && [llength $wiring]==1} {set ds [list INV [$inst getName] $master [lindex $wiring 0]]
+   } else {set ds [list FUNCTIONAL [$inst getName] $master [[$pin getMTerm] getName] [lsort $inputs]]}
+   lappend drivers $ds;lappend transparent $pass_buffer
+  }
+  if {[llength $drivers]==1 && [lindex $transparent 0]} {set sig [lindex $drivers 0]
+  } else {set sig [expr {[llength $drivers] ? [list DRIVERS [lsort $drivers]] : [list UNDRIVEN $name]}]}
+ }
+ dict set ct_clock_guard_cache $name $sig
+ return $sig
+}
+proc ct_clock_guard_snapshot {} {
+ global ct_blk ct_clock_guard_cache
+ set ct_clock_guard_cache {};set result {}
+ foreach inst [$ct_blk getInsts] {
+  if {![regexp {^(DFF|SDF)} [[$inst getMaster] getName]]} continue
+  foreach pin [$inst getITerms] {
+   set pn [[$pin getMTerm] getName]
+   if {[[$pin getMTerm] getIoType] ne "INPUT" || $pn ni {CLK CLKN CK CKN}} continue
+   dict set result [list [$inst getName] $pn] [list [[$inst getMaster] getName] [ct_clock_signature [$pin getNet]]]
+  }
+ }
+ return $result
+}
+proc ct_clock_guard_verify {} {
+ global ct_clock_guard_before
+ set after [ct_clock_guard_snapshot]
+ if {[dict size $after]!=[dict size $ct_clock_guard_before]} {error "clock ancestry clock-pin inventory changed"}
+ dict for {pin signature} $ct_clock_guard_before {
+  if {![dict exists $after $pin] || [dict get $after $pin] ne $signature} {error "clock ancestry changed for $pin: before=$signature after=[expr {[dict exists $after $pin] ? [dict get $after $pin] : {MISSING}}]"}
+ }
+ puts "OT_CLOCK_ANCESTRY PASS [dict size $after] FF clock pins; functional gates, INV edges and noncore roots preserved"
+}
+if {$ct_clock_guard_on} {set ct_clock_guard_before [ct_clock_guard_snapshot]}
+
 # CP2 (COORD 10-23): EARLY core taps (gen.py phys core_taps.txt, env OT_CORE_TAPS; plan clock.taps[] kind 'core' with
 # clock.core_taps 'early').  Each line `port inst pin|*`: the hard core's clock pin(s) leave the clk net for the core
 # tap port's own net BEFORE the nearest-tap split, so the core hangs on the tap the spine delivers early (its internal
@@ -846,3 +916,5 @@ if {[llength $ct_taps] >= 2} {
   # VSN6-B 11-11 S7: the final count never passes silently over the cap
   if {[llength $ct_oc]} { puts "OT_CLOCK_TAPS WARN OVER_CAP [llength $ct_oc] taps > cap $ct_cap sinks in the final assignment: [join $ct_oc { }]" }
 }
+
+if {$ct_clock_guard_on} {ct_clock_guard_verify}

@@ -487,3 +487,89 @@ def test_full_local_readside_stops_before_origin_and_forwarded_face(tmp_path):
     assert 'NET ck_u_bound.u_cland_reader_start_coll_i0_0/start nt1' in p.stdout
     assert 'NET ck_u_bound.u_cland_origin/s2 nclk' in p.stdout
     assert 'NET ck_u_bound.u_cland_fstart_coll_o0/q nclk' in p.stdout
+
+# The guard runs before the ordinary split, not only on visible shallow roots.
+GATED_CLOCK = r'''
+mkflop gated_ff 800
+foreach n {ngated nctrl} {proc $n {m args} "netproc $n \$m {*}\$args"}
+set NET(ck_gated_ff) ngated
+proc gm {m} {return ICGx1}
+proc ge {m} {if {$m eq "getIoType"} {return INPUT}; return EN}
+proc gate {m args} {switch $m {getName {return gate} getLocation {return {900 0}} getMaster {return gm} getITerms {return {gck gen gout}}}}
+proc gck {m args} {global NET;switch $m {getMTerm {return inp} getInst {return gate} getNet {return $NET(gck)} disconnect {set NET(gck) NULL} connect {set NET(gck) [lindex $args 0]}}}
+proc gen {m args} {global NET;switch $m {getMTerm {return ge} getInst {return gate} getNet {return $NET(gen)} disconnect {set NET(gen) NULL} connect {set NET(gen) [lindex $args 0]}}}
+proc gout {m args} {switch $m {getMTerm {return outp} getInst {return gate} getNet {return ngated}}}
+set NET(gck) nclk;set NET(gen) nctrl;set NET(gout) ngated
+lappend INSTS gate
+'''
+GUARD_ON='set ::env(OT_TAP_CLOCK_ANCESTRY_GUARD) 1'
+
+
+def test_clock_ancestry_preserves_dynamic_gate_enable_and_gated_leaf(tmp_path):
+    p=run(tmp_path,GATED_CLOCK,env=GUARD_ON)
+    assert p.returncode == 0,p.stderr
+    assert 'OT_CLOCK_ANCESTRY PASS 1 FF clock pins' in p.stdout
+    assert 'NET ck_gated_ff ngated' in p.stdout
+    assert '1 sinks moved off clk: clk_t1 1' in p.stdout  # gate input retarget, gate retained
+
+
+def test_clock_ancestry_catches_shallow_gate_bypass_mutant(tmp_path,monkeypatch):
+    global HOOK
+    path=tmp_path/'clock_mutant.tcl'
+    path.write_text(HOOK.read_text().replace(
+        'if {$ct_clock_guard_on} {ct_clock_guard_verify}',
+        'ck_gated_ff disconnect; ck_gated_ff connect nclk\nif {$ct_clock_guard_on} {ct_clock_guard_verify}'))
+    monkeypatch.setitem(globals(),'HOOK',path)
+    p=run(tmp_path,GATED_CLOCK,env=GUARD_ON)
+    assert p.returncode != 0 and 'clock ancestry changed' in p.stderr
+
+
+def test_clock_ancestry_catches_gate_enable_tie_mutant(tmp_path,monkeypatch):
+    path=tmp_path/'enable_mutant.tcl'
+    path.write_text(HOOK.read_text().replace(
+        'if {$ct_clock_guard_on} {ct_clock_guard_verify}',
+        'gen disconnect; gen connect nclk\nif {$ct_clock_guard_on} {ct_clock_guard_verify}'))
+    monkeypatch.setitem(globals(),'HOOK',path)
+    p=run(tmp_path,GATED_CLOCK,env=GUARD_ON)
+    assert p.returncode != 0 and 'clock ancestry changed' in p.stderr
+
+
+def test_clock_ancestry_preserves_inversion_edge(tmp_path):
+    body=GATED_CLOCK+ '\nproc gm {m} {return INVx1}\nproc gate {m args} {switch $m {getName {return gate} getLocation {return {900 0}} getMaster {return gm} getITerms {return {gck gout}}}}\n'
+    p=run(tmp_path,body,env=GUARD_ON)
+    assert p.returncode == 0,p.stderr
+    assert 'NET ck_gated_ff ngated' in p.stdout
+
+
+def test_clock_ancestry_catches_inversion_bypass_mutant(tmp_path,monkeypatch):
+    path=tmp_path/'inv_mutant.tcl'
+    path.write_text(HOOK.read_text().replace(
+        'if {$ct_clock_guard_on} {ct_clock_guard_verify}',
+        'ck_gated_ff disconnect; ck_gated_ff connect nclk\nif {$ct_clock_guard_on} {ct_clock_guard_verify}'))
+    monkeypatch.setitem(globals(),'HOOK',path)
+    body=GATED_CLOCK+ '\nproc gm {m} {return INVx1}\nproc gate {m args} {switch $m {getName {return gate} getLocation {return {900 0}} getMaster {return gm} getITerms {return {gck gout}}}}\n'
+    p=run(tmp_path,body,env=GUARD_ON)
+    assert p.returncode != 0 and 'clock ancestry changed' in p.stderr
+
+
+def test_clock_ancestry_catches_clock_pin_polarity_mutant(tmp_path,monkeypatch):
+    path=tmp_path/'pin_mutant.tcl'
+    path.write_text(HOOK.read_text().replace(
+        'if {$ct_clock_guard_on} {ct_clock_guard_verify}',
+        'proc inp {m} {if {$m eq "getIoType"} {return INPUT};return CLKN}\nif {$ct_clock_guard_on} {ct_clock_guard_verify}'))
+    monkeypatch.setitem(globals(),'HOOK',path)
+    p=run(tmp_path,'mkflop plain_ff 100\n',env=GUARD_ON)
+    assert p.returncode != 0 and 'clock ancestry changed' in p.stderr
+
+
+def test_clock_ancestry_allows_buffer_only_clock_rewire(tmp_path,monkeypatch):
+    path=tmp_path/'buf_only.tcl'
+    path.write_text(HOOK.read_text().replace(
+        'if {$ct_clock_guard_on} {ct_clock_guard_verify}',
+        'ck_gated_ff disconnect; ck_gated_ff connect nclk\nif {$ct_clock_guard_on} {ct_clock_guard_verify}'))
+    monkeypatch.setitem(globals(),'HOOK',path)
+    body=GATED_CLOCK+ '\nproc gm {m} {return BUFx1}\nproc gate {m args} {switch $m {getName {return gate} getLocation {return {900 0}} getMaster {return gm} getITerms {return {gck gout}}}}\n'
+    p=run(tmp_path,body,env=GUARD_ON)
+    assert p.returncode == 0,p.stderr
+    assert 'OT_CLOCK_ANCESTRY PASS 1 FF clock pins' in p.stdout
+    assert 'NET ck_gated_ff nclk' in p.stdout
