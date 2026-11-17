@@ -34,7 +34,9 @@ def leaf(rsi):
 
 def chain(name, width, depth, ck, rs, inp, *, kept=False):
     """A whole pipeline; all data stages use the same reset epoch."""
-    out = []
+    final = f'{name}_enabled'
+    out = [f'    wire [{width-1}:0] {final};',
+           f'    generate if (COLRELAY_P1) begin : g_{name}']
     prev = inp
     for j in range(depth):
         net = f'{name}_s{j}'
@@ -44,7 +46,11 @@ def chain(name, width, depth, ck, rs, inp, *, kept=False):
         out.append(f'    {prim} #(.W({width}), .RSREG(1){extra}) u_y_cr_{name}_{j} '
                    f'(.ck({ck}), .rs({rs}), .i({prev}), .o({net}));')
         prev = net
-    return out, prev
+    out.extend([f'    assign {final} = {prev};',
+                f'    end else begin : g_{name}_off',
+                f"    assign {final} = {{{width}{{1'b0}}}};",
+                '    end endgenerate'])
+    return out, final
 
 
 def transform(text):
