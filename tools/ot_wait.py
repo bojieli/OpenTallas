@@ -25,7 +25,7 @@ import time
 LIVE_ACTIVE = ("active", "activating", "reloading", "deactivating")
 RAN_RE = re.compile(r"ot-run: RAN on \S+(?: \(unit \S+\))?: exit (-?\d+)")
 NOTRUN_RE = re.compile(r"ot-run: NOT RUN\b[^\n]*")
-PROPS = "LoadState,ActiveState,SubState,Result,ExecMainStatus,ExecMainCode,MainPID,ControlGroup,Type"
+PROPS = "Id,LoadState,ActiveState,SubState,Result,ExecMainStatus,ExecMainCode,MainPID,ControlGroup,Type"
 LOCAL = (None, "", "localhost", "hub")
 
 
@@ -96,6 +96,13 @@ def classify_unit(props, pids, tail):
     if act in LIVE_ACTIVE:           # active / deactivating with no live process: it exited (the 85-minute false RUNNING)
         rc = code if code is not None else (ex[1] if ex and ex[0] == "RAN" else None)
         return ("DONE" if rc == 0 and ex != ("NOT RUN", None) else "FAILED"), rc, f"{act}/{sub} but no live process"
+    is_scope = props.get("Type", "") == "scope" or (props.get("Id") or "").endswith(".scope")
+    if act == "failed" and res in ("", "success") and is_scope:
+        # a .scope carries no ExecMainStatus (nothing is exec'd by systemd): ot-heavy runs the job in a scope and systemd marks the scope `failed` with Result=success when its processes were
+        # stopped (cgroup torn down) after the job had exited; the exit status is the one the ot-run client logged (HEAD-PLAN-R4: two jobs that logged exit 0 were reported FAILED)
+        if ex and ex[0] == "RAN":
+            return ("DONE" if ex[1] == 0 else "FAILED"), ex[1], f"scope {act}/{sub} Result={res}: exit status {ex[1]} from the client log"
+        return "FAILED", None, f"scope {act}/{sub} Result={res}: no exit status in the client log"
     if act == "failed" or res not in ("", "success"):
         return "FAILED", code, f"{act}/{sub} Result={res} exit {code}"
     if ex and ex[0] == "NOT RUN":
