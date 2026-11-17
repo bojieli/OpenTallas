@@ -67,9 +67,9 @@ def interior(p, w, h):
 
 def io_tcl_interior(orig):
     """gen_core_kit_hbm.io_tcl with the 12.8a interior entry case (gen_core_kit_kv form)."""
-    def io_tcl(pins, w, h, tag):
+    def io_tcl(pins, w, h, tag, clock_entry=None):   # gen_core_kit_hbm.io_tcl grew the opt-in clock_entry kwarg (off = unchanged)
         face = [p for p in pins if not interior(p, w, h)]
-        out, rows = orig(face, w, h, tag)
+        out, rows = orig(face, w, h, tag, clock_entry=clock_entry) if clock_entry else orig(face, w, h, tag)
         lines = [out.rstrip("\n")]
         for p in pins:
             if not interior(p, w, h):
@@ -114,7 +114,7 @@ def sram_sites(srams, w, h):
     return out
 
 
-def build_inputs(plan_f, work):
+def build_inputs(plan_f, work, kcred=12):
     plan = json.loads(plan_f.read_text())
     t = plan["partition_types"]["hd_lep0N"]
     cores = [c for c in t.get("hard_cores", []) if c["module"] == MODULE]
@@ -156,7 +156,7 @@ def build_inputs(plan_f, work):
     # refuses the sized-literal override "CHB=1'b1" (first lep_pair diag run: LEC UNPROVEN, elaboration failed)
     if not re.search(r"parameter\s*\[0:0\]\s*CHB\s*=\s*1'b1", (ROOT / SV).read_text()):
         raise SystemExit("ot_s81hd_lep_pair CHB default is no longer 1'b1: set the parameter explicitly")
-    rec = {MODULE: dict(top=MODULE, files=FILES, defines=list(DEFINES), params={},
+    rec = {MODULE: dict(top=MODULE, files=FILES, defines=list(DEFINES), params=({} if kcred == 12 else {"KCRED": kcred}),
                         macros=sorted({c["module"] for c in srams}),
                         source="HEAD-KITS-3 head_lep_pair_kit.py: ot_s81hd_lep_pair (DIE-HEAD-9 LEP split child)")}
     return vf, mf, rec, clk, len(srams)
@@ -212,11 +212,12 @@ def fix_interior(kd, w, h):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--kcred", type=int, default=12, help="K-link credit depth (ot_s81hd_lep_pair KCRED; CORE_CRED of the lane). 12 = RTL default (no top param); NF15f = 28")
     ap.add_argument("--plan", default=str(ROOT / "physical/die_plan/s81_head/die_plan.json"))
     ap.add_argument("rest", nargs="*", help="extra gen_core_kit_hbm.py args (after --)")
     a = ap.parse_args()
     out = Path(a.out)
-    vf, mf, rec, clk, nm = build_inputs(Path(a.plan), out / "_inputs")
+    vf, mf, rec, clk, nm = build_inputs(Path(a.plan), out / "_inputs", a.kcred)
     G.io_tcl = io_tcl_interior(G.io_tcl)
     sys.argv = ["gen_core_kit_hbm.py", "--views", str(vf), "--view", f"{MODULE}@kit", "--out", str(out),
                 "--recipe-key", MODULE, "--face-shell", "off", "--core-insertion", "none",
