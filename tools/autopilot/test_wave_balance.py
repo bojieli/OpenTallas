@@ -1,4 +1,5 @@
 """WAVE-BALANCE-1 11-11: waiter migration selection, never moving a started unit, gen host by capacity"""
+import json
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -262,3 +263,16 @@ def test_waiter_guard_skips_hosts_over_20_waiters():
     # no overflow configured or no calm host: unchanged; cap 0 = off
     assert K.pick_gen_host(c(["epyc9"]), "s81") == "epyc9"
     assert K.pick_gen_host(c(["epyc9", "epyc7"], gen_waiter_cap=0), "s81", take=48) == "epyc9"
+
+
+def test_sealed_waiter_matches_on_the_job_spec_kit(tmp_path):
+    """WAVE-FLOW-R2 11-17: a sealed waiter's wrapper cds into ot-jobs; the kit is the --job spec's work.at"""
+    spec = tmp_path / "sealed-x.json"
+    spec.write_text(json.dumps({"work": {"at": "/srv/s/kit/a1/gen/k/"}}))
+
+    class O:
+        def client_argv(self, pid):
+            return ["ot-run", "--dir", "/srv/s/claude/ot-jobs", "--job", str(spec), "--", "x"]
+    assert W.waiter_kit({"dir": "/srv/s/claude/ot-jobs", "client_pid": 1}, O()) == "/srv/s/kit/a1/gen/k"
+    assert W.waiter_kit({"dir": "/srv/s/kit/a1/gen/k/", "client_pid": 1}, O()) == "/srv/s/kit/a1/gen/k"
+    assert W.job_spec_kit(["ot-run"]) == ""
