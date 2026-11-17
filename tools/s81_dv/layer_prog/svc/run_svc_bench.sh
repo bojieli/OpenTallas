@@ -31,8 +31,10 @@ PYPROFILE
 O=${O}_${PROFILE} # qualified libraries are never reused across source profiles
 mkdir -p "$O"
 "$VL" --version > "$O/verilator.version"
+# Keep fast/slow optimization in make variables: a global -CFLAGS -O1
+# also reaches generated Slow units and defeats their -O0 memory policy.
 COMMON=(-Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline
-        --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 -I$D -DRS_OBS "${ENGDEF[@]}"
+        --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS "OPT_SLOW=-O0 OPT_FAST=-O1" -I$D -DRS_OBS "${ENGDEF[@]}"
         "${RS_DEF[@]}" -DMUT=0 ${MUTDEF:+-D$MUTDEF} ${SVC_DEFS:-})   # SVC_DEFS: e.g. -DOT_SVC_ALLQ (RTLGAP-SO)
 lib() {
   local L=$O/pl_$1
