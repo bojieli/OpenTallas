@@ -77,3 +77,19 @@ Read lanes/handoff/HEAD-R3.md for the NF15e -> NF15f decision (hop halving + cor
 - Still open on rs7, all in the anchor form: 4,295 unassigned, cut 0.903 (just over 0.9), 4 stage-on-macro and 32 reserved-site rects (g1e column-centre relay rects).
 - Next: when FABLE-FIX-HEAD-CORRIDOR posts the hybrid (unassigned 0), apply its apply_stage_rects.py onto rs7 source_plan, then rerun the rs6/rs7 pipeline (compose, strap, KCRED 28, republish, bind, cohort, LATCHECK, G0, keepout count = 0). Then the HEAD type kits. Kits stay held until then.
 - 11-17 late (COORD r597): rs7 used main be66cd6f tools, which are from before r597 (tap escape). Staged hr4/code_rs8 = code_rs6 with tools/ from main 26f27e90 (contains e24301f0d9a; every code_rs6 tool overlay is byte-identical in main because the RXH/KCRED branch is merged; physical/common_flow unchanged). gen_phys.py tap_escape refs=6, on by default (per-site opt-out only); test_clksite_kit + test_die_clock_face_keepout 9 passed. New runner hr4/run_rs8.sh RUN HYB: code_rs8, PRECHECK exits 78 if gen_phys has no tap_escape, applies FABLE apply_stage_rects.py after the KCRED step, keepout must be 0 0. No rs8 launched until the hybrid rows land. HEAD kits (hd_lep0N, hd_mesh) only from code_rs8 or a later main.
+
+## (7) 11-17 night: rs8b PASS, clock GEN PASS, apply next
+- rs8b (hr4/run_rs8.sh rs8 hr4/in_rs8/c3_plan.json, code_rs8 = main 26f27e90 tools): plan prep_rs8/source_plan.json 65606a72 (= FABLE fc4). G0 0 errors / 0 pending / 220 warnings; bind PASS, nested unbound 0; cohort 26/26; LATCHECK 329/329; keepout 0 macro / 0 reserved. hd_lep0N SRAM u_m binds ot_sram_1r1w_512x128_m4_r0c0.
+- The first rs8 launch was REFUSED by ot-run ISOLATION (input path outside --dir) and my log-grep watch missed it. Inputs are now staged in hr4/in_rs8/.
+- ot_wait.py --unit X.scope reports FAILED ("collected, no exit status") for units that ot-run logs as exit 0. Seen twice; reported to WAVE-FLOW.
+- Clock GEN: hr4/clock_rs8 (GEN3 feedrepair config of head-die-r/nf15e_clock unchanged except event name and paths; fresh GEN, no graft; code_rs8 ot_clk). Attempt 1 (tree/) failed in 3 s because the plan copy sat outside its dir and native_domains did not resolve. Attempt 2 (tree2/), input prep_rs8/source_plan_clock_input_65606a72.json: rc 0, stage_check PASS, 346 s; 44,509 clock cells; max packed reach 387.288 um, 0 over 405; max move 1.08 um; 13,122 taps (lep0N 195). Geometry only; no GRT/STA.
+- Apply, next steps (tools/autopilot):
+  1. Build the overlay: event rtl diff vs main, prep NF15f (prep_rs8 to physical/die_plan/s81_head/prep/NF15f/prep, tree2/kit to .../NF15f/die_clock).
+  2. src_manifest.py build at main 26f27e90 into kw45/src_head_<sha>_nf15f.
+  3. data_pack make for lane-folder inputs.
+  4. publish, then replicate to epyc8 epyc9 epyc10 intel1, then verify on each host.
+  5. kit_rtl smoke.
+  6. Candidate JSON (template lanes/handoff/tree_switch_s81_head.json).
+  7. publish_gate.py run (dry gen on the pilot).
+  8. apply_reviewed_tree_marker.py --expect-source <NF15d2 tree> --expect-event head_rp21z20NF15d2r1.
+  9. Release hd_lep0N and hd_mesh.
