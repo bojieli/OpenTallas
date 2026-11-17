@@ -6027,6 +6027,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import fully_fixed_macros as FFM
     cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
     cfg += install_gp_noconverge_gate(kd, cfg, P.name)
+    cfg += gpl_sparse_overflow_cfg(P.name)
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -6722,6 +6723,31 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
          f"export OT_GPL_HPWL_RATIO = {hr}"] if (hr := gpl_hpwl_ratio(die)) else []) + (
         [f"# KW-FIX-45 PLACE-FANOUT: place-stage repair_design limit (gp_noconverge_gate.tcl set_max_fanout)",
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
+
+
+def gpl_sparse_overflow(die=None):
+    """SPARSE EXIT (FABLE-FIX-S81-STRIP 11-16): the gen environment's OT_GPL_SPARSE_OVERFLOW (0 = off, else a number in
+    (0, 1)) -> the Nesterov exit overflow of a sparse kit (face_flops.tcl OT_GPL_GUARD rule 3), else 0.25 on the S81 die
+    and off elsewhere.  S81 strip leaves (movable util < 1 %): the phase from overflow 0.25 to the 0.10 default moved the
+    median cell 98 um on t75 and left t47 / t75 / t8fix at 1.8-2.4 x the HPWL the run had reached; exit at 0.25 is
+    1.026 x with 2.0 um average detailed-placement displacement.  Not measured on the other dies."""
+    v = os.environ.get("OT_GPL_SPARSE_OVERFLOW", "").strip()
+    if v:
+        try:
+            r = float(v)
+        except ValueError:
+            raise ValueError(f"OT_GPL_SPARSE_OVERFLOW must be a number (0 = off, else in (0, 1)), got {v!r}") from None
+        if not 0 <= r < 1:
+            raise ValueError(f"OT_GPL_SPARSE_OVERFLOW must be 0 (off) or in (0, 1), got {v!r}")
+        return r or None
+    return 0.25 if str(die or "").split("_")[0] == "s81" else None
+
+
+def gpl_sparse_overflow_cfg(die=None):
+    """config.mk lines of the sparse exit (none when it is off)."""
+    v = gpl_sparse_overflow(die)
+    return [f"# SPARSE EXIT (FABLE-FIX-S81-STRIP): a sparse kit leaves global placement at overflow {v:g}, before the die-scale drift",
+            f"export OT_GPL_SPARSE_OVERFLOW = {v:g}"] if v else []
 
 
 def gpl_hpwl_ratio(die=None):
