@@ -204,7 +204,7 @@ def g0_baseline_check(plan, report, baseline, rc):
     if rc != 1 or not isinstance(report, dict) or report.get("schema") != "opentallas.die_plan.g0.v1":
         return refuse("G0 did not produce a complete failing report")
     current = [x for x in report.get("findings", []) if isinstance(x, dict) and x.get("level") == "ERROR"]
-    if report.get("verdict") != "FAIL" or not current or report.get("errors") != len(current):
+    if report.get("verdict") != "FAIL" or not current or report.get("errors") != len(current) or report.get("pending_view", 0):
         return refuse("G0 exit/report/error census mismatch")
     # Canonical serialization normalizes dictionary order only; message values,
     # coordinates, bus widths, instance names and every context field stay exact.

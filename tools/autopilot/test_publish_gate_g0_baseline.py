@@ -51,7 +51,7 @@ class Baseline(unittest.TestCase):
     def test_checker_crash_or_stale_report_never_waived(self):
         for rc in (2, 99):
             self.assertEqual(self.check(rc=rc)["verdict"], "FAIL")
-        for report in ({}, dict(self.report, verdict="PASS"), dict(self.report, errors=0)):
+        for report in ({}, dict(self.report, verdict="PASS"), dict(self.report, errors=0), dict(self.report, pending_view=1)):
             self.assertEqual(self.check(report=report)["verdict"], "FAIL")
 
     def test_default_zero_error_policy_unchanged(self):
