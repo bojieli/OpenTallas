@@ -6838,6 +6838,10 @@ def run_item(spec_path):
     # were only in the receipt and one log line; they go into result.json and the row.  Advisory: never stops the kit.
     _, rtxt = run("preflight_adv", remote(f"cat {q(W)}/{pfo}"), idempotent=True)
     res["preflight_advisory"] = preflight_advisory(rtxt)
+    if sp.get("dry_gen"):             # PUBLISH-GATE-1116: the pre-apply gate stops here: kit_snap, kit_rtl, gen, lint and preflight passed; no place
+        res.update(stage="preflight", verdict="DRY-PASS", evidence=f"{G}:{K}")
+        (out / "result.json").write_text(json.dumps(res, indent=1))
+        return 0
     _dg = sp.get("dedup_group") or ""
     if _dg:                                       # WF-1 11-14 (friction 7): one build per kit identity
         try:
