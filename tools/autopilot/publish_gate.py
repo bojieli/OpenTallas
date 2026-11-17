@@ -245,7 +245,64 @@ def check_proofs_contained(tree, rows_proofs):
     return out
 
 
-def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None):
+_PATH_RE = re.compile(r"/[A-Za-z0-9_.+@=-]+(?:/[A-Za-z0-9_.+@=-]+)+")
+
+
+def check_foreign_trees(tree, files, max_depth=12):
+    """FABLE-FLOW-1700 11-17: a candidate's inputs must not name another published tree (stale pre-rename names broke QC N1B
+    SRC-INCOMPLETE, the sd9f plan, KV D21 bind.f and HEAD prep).  Every absolute path in FILES (plan, asbuilt, sidecar, the
+    bind_out bind.f / injected manifest) is resolved to the nearest ancestor holding .src-manifest.sha256; an ancestor that is
+    not the candidate tree is a finding.  Paths outside any published tree (lane dirs, bind outputs, PDK) pass."""
+    root = os.path.realpath(str(tree))
+    roots, out, seen = {}, [], set()
+
+    def tree_of(path):
+        d = os.path.dirname(path)
+        chain = []
+        for _ in range(max_depth):
+            if d in roots:
+                hit = roots[d]
+                break
+            chain.append(d)
+            if os.path.isfile(os.path.join(d, ".src-manifest.sha256")):
+                hit = d
+                break
+            nd = os.path.dirname(d)
+            if nd == d:
+                hit = None
+                break
+            d = nd
+        else:
+            hit = None
+        for c in chain:
+            roots[c] = hit
+        return hit
+
+    for f in files or []:
+        if not f or not os.path.isfile(str(f)):
+            continue
+        try:
+            txt = Path(f).read_text(errors="replace")
+        except OSError:
+            continue
+        for m in set(_PATH_RE.findall(txt)):
+            if m == root or m.startswith(root + os.sep) or m in seen:
+                continue
+            seen.add(m)
+            t = tree_of(m)
+            if t and os.path.realpath(t) != root:
+                out.append(f"FOREIGN-TREE {f} names {m} (published tree {t}, not the candidate tree {root})")
+                continue
+            # a sibling of the candidate tree that does not exist here = a stale tree name (renamed / not replicated)
+            parent = os.path.dirname(root) + os.sep
+            if m.startswith(parent):
+                top = parent + m[len(parent):].split(os.sep, 1)[0]
+                if not os.path.exists(top):
+                    out.append(f"FOREIGN-TREE {f} names {m} (sibling {top} of the candidate tree is missing on this host)")
+    return sorted(out)
+
+
+def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baseline=None, rows_proofs=None, scan=None):
     """-> {schema, pre_g0, hashes: {verdict, ...}}.  Uses the TREE's own tools (the ones PRE/G0/bind will run), python3 -I."""
     tree, plan = str(tree), str(plan)
     work = work or tempfile.mkdtemp(prefix="pubgate-")
@@ -279,14 +336,15 @@ def run_static(tree, plan, asbuilt=None, plan_sha256=None, work=None, g0_baselin
     finds, n = check_hashes(tree, plan, plan_sha256)
     res["hashes"] = {"verdict": "PASS" if not finds and n else "FAIL", "views": n, "findings": finds[:40],
                      **({"why": "no landing_evidence view found under the tree"} if not n and not finds else {})}
-    cf = check_contained(tree, plan) + check_proofs_contained(tree, rows_proofs)
+    ft = check_foreign_trees(tree, [plan, asbuilt] + list(scan or []))
+    cf = check_contained(tree, plan) + check_proofs_contained(tree, rows_proofs) + ft[:40]
     res["contained"] = {"verdict": "PASS" if not cf else "FAIL", "findings": cf}
     return res
 
 
 # --------------------------------------------------------------------------------------------------- orchestration (hub)
 def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subprocess.run, hub_names=("localhost",), g0_baseline=None,
-                  rows_proofs=None):
+                  rows_proofs=None, scan=None):
     """runs the static checks ON the gen host that holds the tree: this file is shipped inline (python3 -I -c, the host has no checkout
     of the tool).  Read-only, ~20 s of one core (PRE imports the tree's tool modules), so plain ssh under nice, not an ot-run job:
     ot-run refuses a job that names a 300k-file tree outside its --dir and would SPILL-copy it."""
@@ -294,7 +352,8 @@ def static_remote(host, work_dir, tree, plan, asbuilt, plan_sha256, runner=subpr
     cmd = (f"mkdir -p {q(work_dir)} && nice -n 10 python3 -I -c {q(Path(__file__).read_text())} static --tree {q(tree)} --plan {q(plan)} "
            f"--plan-sha256 {q(plan_sha256)}" + (f" --asbuilt {q(asbuilt)}" if asbuilt else "") + f" --work {q(work_dir)}"
            + (f" --g0-baseline-json {q(json.dumps(g0_baseline))}" if g0_baseline is not None else "")
-           + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or []))
+           + "".join(f" --rows-proof {q(str(rp))}" for rp in rows_proofs or [])
+           + "".join(f" --scan {q(str(x))}" for x in scan or []))
     argv = ["bash", "-c", cmd] if host in hub_names else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", host, "bash -c " + q(cmd)]
     p = runner(argv, capture_output=True, text=True, timeout=3 * STEP_TIMEOUT_S + 600)
     txt = (p.stdout or "") + (p.stderr or "")
@@ -407,8 +466,14 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         baseline = load_g0_baseline(marker.get("g0_baseline") or obj.get("g0_baseline"))
         rows_proofs = list(marker.get("rows_proofs") or obj.get("rows_proofs") or [])
         rec["rows_proofs"] = rows_proofs
+        kr = (marker.get("config") or {}).get("kit_rtl") or {}
+        bo = marker.get("bind_out") or kr.get("bind_out")
+        scan = [x for x in (marker.get("sidecar"), kr.get("asbuilt")) if x]
+        if bo:
+            scan += [os.path.join(bo, "bind.f"), os.path.join(bo, "asbuilt_manifest_injected.json")]
+        rec["foreign_tree_scan"] = scan
         st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
-                                                                   rows_proofs=rows_proofs)))(
+                                                                   rows_proofs=rows_proofs, scan=scan)))(
             static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
         rec["checks"].update(st)
         if all((st.get(c) or {}).get("verdict") == "PASS" for c in ("schema", "pre_g0", "hashes", "contained")):
@@ -446,6 +511,7 @@ def main(argv=None):
     s.add_argument("--work")
     s.add_argument("--g0-baseline-json", help="pinned review record (normally shipped by run from candidate.g0_baseline)")
     s.add_argument("--rows-proof", action="append", default=[], help="rows proof file inside the tree for PRE (normally shipped by run from candidate.rows_proofs)")
+    s.add_argument("--scan", action="append", default=[], help="extra input file checked for names of another published tree (sidecar, bind.f ...)")
     c = sub.add_parser("check")
     c.add_argument("--coord", default=os.path.expanduser("~/coord"))
     c.add_argument("--die", required=True)
@@ -455,7 +521,7 @@ def main(argv=None):
     a = P.parse_args(argv)
     if a.cmd == "static":
         print("PG_STATIC " + json.dumps(run_static(a.tree, a.plan, a.asbuilt, a.plan_sha256, a.work, json.loads(a.g0_baseline_json) if a.g0_baseline_json else None,
-                                                   rows_proofs=a.rows_proof)))
+                                                   rows_proofs=a.rows_proof, scan=a.scan)))
         return 0
     if a.cmd == "check":
         why = require_pass(a.coord, a.die, a.tree, a.manifest, a.plan_sha256)

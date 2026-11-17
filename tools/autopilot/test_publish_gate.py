@@ -299,3 +299,60 @@ class RowsProof(unittest.TestCase):
             PG.static_remote = orig
         self.assertEqual(seen.get("rows_proofs"), ["plan_of_record/zz.rows_proof.json"])
         self.assertEqual(rec["rows_proofs"], ["plan_of_record/zz.rows_proof.json"])
+
+
+class ForeignTree(unittest.TestCase):
+    """FABLE-FLOW-1700 11-17: inputs naming another published tree (stale pre-rename names) fail the contained step"""
+    def setUp(self):
+        self.td = Path(tempfile.mkdtemp(prefix="pgft-"))
+        self.tree = self.td / "src_x_d2"; self.old = self.td / "src_x"
+        for t in (self.tree, self.old):
+            (t / "rtl").mkdir(parents=True)
+            (t / ".src-manifest.sha256").write_text("ab" * 32 + "\n")
+        self.bind = self.td / "bind_out"; self.bind.mkdir()
+
+    def test_stale_tree_name_in_bind_f_is_a_finding(self):
+        (self.bind / "bind.f").write_text(f"{self.tree}/rtl/a.sv\n{self.old}/rtl/b.sv\n/opt/pdk/asap7/lib.v\n{self.bind}/x.sv\n")
+        f = PG.check_foreign_trees(self.tree, [str(self.bind / "bind.f")])
+        self.assertEqual(len(f), 1, f)
+        self.assertIn(str(self.old / "rtl/b.sv"), f[0])
+
+    def test_missing_sibling_tree_name_is_a_finding(self):
+        (self.bind / "bind.f").write_text(f"{self.td}/src_x_gone/rtl/c.sv\n{self.bind}/y.sv\n")
+        f = PG.check_foreign_trees(self.tree, [str(self.bind / "bind.f")])
+        self.assertEqual(len(f), 1, f)
+        self.assertIn("missing", f[0])
+
+    def test_own_tree_and_non_tree_paths_pass(self):
+        plan = self.tree / "plan.json"
+        plan.write_text(json.dumps({"a": f"{self.tree}/rtl/a.sv", "b": "/srv/lane/side.json", "c": "rel/x.json"}))
+        self.assertEqual(PG.check_foreign_trees(self.tree, [str(plan), None, str(self.td / "missing.f")]), [])
+
+    def test_run_static_contained_fails_on_a_foreign_tree_in_scan(self):
+        plan = self.tree / "plan.json"; plan.write_text("{}")
+        (self.bind / "bind.f").write_text(f"{self.old}/rtl/b.sv\n")
+        orig = PG._sub
+        PG._sub = lambda argv, cwd, timeout=None: (0, "")
+        try:
+            res = PG.run_static(self.tree, plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgftw-"), scan=[str(self.bind / "bind.f")])
+        finally:
+            PG._sub = orig
+        self.assertEqual(res["contained"]["verdict"], "FAIL")
+        self.assertTrue(any("FOREIGN-TREE" in x for x in res["contained"]["findings"]))
+
+    def test_run_gate_scans_sidecar_and_bind_out(self):
+        c = mk_coord(str(self.td))
+        tree, plan = mk_tree(tempfile.mkdtemp(prefix="pgftt-"))
+        seen = {}
+        orig = PG.static_remote
+
+        def fake(host, work_dir, t, p, ab, ps, **kw):
+            seen.update(kw)
+            return {k: {"verdict": "FAIL", "why": "stub"} for k in ("schema", "pre_g0", "hashes", "contained")}
+        PG.static_remote = fake
+        try:
+            obj = dict(cand(tree, plan), sidecar="/s/side.json", config={"kit_rtl": {"bind_out": "/b/out"}})
+            PG.run_gate(c, obj, "/x/old", "E0", dry_fn=dry_must_not_run, TC=TC)
+        finally:
+            PG.static_remote = orig
+        self.assertEqual(seen.get("scan"), ["/s/side.json", "/b/out/bind.f", "/b/out/asbuilt_manifest_injected.json"])
