@@ -65,3 +65,31 @@ def test_contained_and_deletion_semantics():
     assert not OC.contained(base, over, V1.splitlines())                                   # main still has the old text
     assert not OC.contained(base, V1.splitlines()[:3], V1.splitlines())                    # a deletion main did not make
     assert OC.blob_sha1(b"abc") == "f2ba8f84ab5c1bce84a7b441cb1959cfc7093b7f"              # git hash-object of "abc"
+
+
+def test_overlay_byte_equal_to_main_head_is_a_even_when_the_blob_only_exists_in_a_merge(tmp_path):
+    """r612 (QC-PLAN-R3): signoff.py / hold_eco_internal_insert.tcl / ot-merge-queue were byte-equal to main HEAD yet classed (c): the main blob came in
+    through a hand-resolved merge commit, so `git log --raw` (no -m) never listed it"""
+    r = tmp_path / "repo2"
+    r.mkdir()
+    git(r, "init", "-q", "-b", "main")
+    base = commit(r, {"tools/s.py": "a=1\nb=2\nc=3\n"}, "base")
+    git(r, "checkout", "-q", "-b", "side")
+    commit(r, {"tools/s.py": "a=1\nb=2\nc=SIDE\n"}, "side change")
+    git(r, "checkout", "-q", "main")
+    commit(r, {"tools/s.py": "a=MAIN\nb=2\nc=3\n"}, "main change")
+    subprocess.run(["git", "-C", str(r), "-c", "user.name=t", "-c", "user.email=t@t", "merge", "-q", "--no-commit", "side"], capture_output=True)
+    resolved = "a=MAIN\nb=2\nc=SIDE\n"                               # hand-resolved: equals neither parent
+    (r / "tools/s.py").write_text(resolved)
+    git(r, "add", "-A")
+    git(r, "commit", "-q", "-m", "Merge side (hand-resolved)")
+    repo = r / ".git"
+    manifest = {"main_sha": base, "overlay": {"tools/s.py": "x"}}
+    plain = OC.git(repo, "log", f"{base}..main", "--format=", "--raw", "--no-abbrev", "--", "tools").decode()
+    assert OC.blob_sha1(resolved.encode()) not in plain                          # the bug: a plain log does not list the merge-only blob
+    res = OC.classify_tree(repo, manifest, lambda paths: {p: resolved.encode() for p in paths}, "main")
+    assert res["tools/s.py"]["cls"] == "a" and "byte-equal" in res["tools/s.py"]["why"]
+    assert OC.blob_sha1(resolved.encode()) in OC.blob_history(repo, "main", ["tools/s.py"], since=base)["tools/s.py"]     # -m lists it
+    older = commit(r, {"tools/s.py": "later\n"}, "later")
+    res = OC.classify_tree(repo, manifest, lambda paths: {p: resolved.encode() for p in paths}, "main")
+    assert res["tools/s.py"]["cls"] == "a" and "history" in res["tools/s.py"]["why"]      # an older merge-only version still counts (a)
