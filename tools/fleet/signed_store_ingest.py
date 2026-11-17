@@ -124,11 +124,9 @@ def marker_sweep(fails, cache=None):
     add = []
     for h, ds in sorted(need.items()):
         try:
-            r = run(host_cmd(h, python3 -I -c  + shlex.quote(MARKER_PY)), 
-.join(sorted(ds)) + 
-, 600)
+            r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(MARKER_PY)), '\n'.join(sorted(ds)) + '\n', 600)
             if r.returncode != 0 or not r.stdout.strip():          # a terminated / unreachable host has no markers to read
-                say(marker sweep skipped, host unreachable:, h, rc, r.returncode, (r.stderr or )[-80:].strip()); continue
+                say('marker sweep skipped, host unreachable:', h, 'rc', r.returncode, (r.stderr or '')[-80:].strip()); continue
             found = json.loads(r.stdout)
         except Exception as e:
             fails.append([h, '*', 'marker sweep', str(e)[:200]]); continue
