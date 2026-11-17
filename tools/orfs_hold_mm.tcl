@@ -707,7 +707,8 @@ proc ot_hold_scope_default {} {
 proc ot_hold_repair_scope {body} {
   set scope [ot_hold_scope_default]
   if {$scope ni {reg2reg nonport} ||
-      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} {
+    # HOLD-FLOW-R 11-16: the CTS repair runs in the 3_place.sdc stage and was never scoped (headseg44: 16,494 hold BUFx2 in port paths)
     return [uplevel 1 $body]
   }
   set entry [sta::cmd_mode_name]
