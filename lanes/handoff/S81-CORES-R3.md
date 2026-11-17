@@ -31,3 +31,20 @@
 1. Read the LEC verdict and post it. On EQUIVALENT, MERGE the branch.
 2. Control: open a lane (or do it here) to recover the dsdv_bksel_c LQH source and re-sign with QRX 1. Until then C4 keeps hq3.
 3. Clean up after merge: the wt, bench_out and lec_merged on epyc2 /srv/opentallas-scratch3/claude/s81-cores-r3 (ot-delete), and bf-wt (no changes).
+
+## Update 2026-11-17 08:1x PST (COORD r561: I own the control re-sign)
+- LQH RECOVERED: claude/die-s81-52-bkc-1103 commit 47046ce95e0 adds the one-hot landing FIFO count to dsfd_selt_c (LQH, 0 cycles).
+  That branch head 06c38ca5736 = the build_commit of signed control bksel_c3_1104 (PROVENANCE). It was never merged to main.
+- Branch claude/s81-bksel-rfh-merge-1117 @c8967beb59e, gate GREEN (1 test file, main e251fda2da5):
+  LQH cherry-picked into ot_s81ph_sel_tile.sv dsfd_selt_c + dsdv_bksel_c.sv. dsdv_bk_sel now binds u_c at the signed set
+  OLL 2 SELOH 1 RNF 1 LQH 1 (+QRX 1 under OT_BKQ_ECO3). NOTE for S81-DIE-R3: the die used to take the control defaults, so
+  SEARCH_PIPE was 1 against the hardened 4, and bound RTL selector timing changes when a tree picks this up.
+  Registry: dsdv_bksel_c entry scoped to bksel_c3_1104/, record 11f32154. Allowlist: dsdv_bksel_c removed.
+  New test tools/die_plan/test_bksel_hard_params.py (real RTL, parsed as the gate parses it); 27/27 pass with test_hard_core_param_all.
+- Bench r2 (signed control params): base PASS, eco3 PASS, qrxmut FAIL 630. lqhmut row running: wt/bench_out/r2m, log intel2 ~/s81-cores-r3/bench_r2m.log.
+- Control re-sign: kit /srv/opentallas-scratch3/claude/s81-cores-r3/kits/dsdv_bksel_c_rfdq (gen_core_kit_legacy + recipes_rfdq.json,
+  plan = C4r3 0126890b copy, 388.8x129.6, pins c3_1104 = r130, VERILOG_TOP_PARAMS OLL 2 SELOH 1 RNF 1 LQH 1 QRX 1). Running on epyc2,
+  unit oth-ubuntu-1132464-1794930252, log intel2 ~/s81-cores-r3/kit_bksel_c_rfdq.log. Then R-MINIMAL signoff, export view
+  cores/views/bksel_c_qrx_1117 + archive both, and a registry entry with QRX 1 scoped to the new view.
+- The quarter LEC (merged vs eco3 6_final.v) is still running.
+- NOTE: epyc2 /srv/opentallas-scratch3 is on the root fs (ot-run warns). Next lane dirs go on scratch2.
