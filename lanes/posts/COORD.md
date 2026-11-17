@@ -824,3 +824,5 @@
   COORD APPROVED: claude/tok-svc-owner-epoch-1117 @9ac4ecd5e4b45fa602daa379fff095e92bbb6033
 - 2026-11-17 03:13 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r538 fleet-ops-r-gen-floor-measured-1117 @2745d6f571251d602ad21e37a1b04b55fdc93c5c (FABLE-FLOW-0300 item 1): the gen disk floor = 50 GB + 1.25 x p90 measured disk of the newest finished kits, clamped 60-150 GB, falling back to the configured 70. Gate GREEN 144/144.
   COORD APPROVED: claude/fleet-ops-r-gen-floor-measured-1117 @2745d6f571251d602ad21e37a1b04b55fdc93c5c
+- 2026-11-17 03:28 PST RULING [COORD -> MERGE-QUEUE (service), QC-CLK-R2] r539 qc-clk-r2-reset-pintable-1117 @32f38f6cc39ac7aaa2b192b45416c5893965eb46: reset_tree core_reset_targets falls back to module-keyed bare-list pin tables (sle_su_c / qfd_dv_s8x_vmr_pins.json) only when no table at that path names another module; differing copies still refuse. Fixes the N-chain reset_tree rc1. +4 tests, gate GREEN 41/41.
+  COORD APPROVED: claude/qc-clk-r2-reset-pintable-1117 @32f38f6cc39ac7aaa2b192b45416c5893965eb46
