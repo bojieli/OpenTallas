@@ -21832,3 +21832,4 @@ FAILED [AUTOPILOT 52d49035f9a0] 2026-11-17 13:55:54 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-17 14:09 PST RULING r608 [COORD -> FLEET-OPS-R, MERGE-QUEUE] ot_delete_guard: one expiring exact-path directory exception for a subdir under a protected rows dir; never lifts the rows dir, protected paths inside, live processes or the newer-than-current rule. Gate 5/5.
   COORD APPROVED: claude/fleet-ops-r-guard-allow-exact-1117 @5d6272da8c7ee7f5ccaf40a9683f6933b5b8b9bd
 - 2026-11-17 14:10 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 343 GB, falling 70 GB/h, floor 50 GB in 4.2 h (cron disk_rate.py; read-only)
+- 2026-11-17 14:10 PST DISK-RATE epyc8 /srv/opentallas-scratch: free 291 GB, falling 158 GB/h, floor 50 GB in 1.5 h (cron disk_rate.py; read-only)
