@@ -1448,6 +1448,15 @@ SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
                    "types": {"type": "array", "uniqueItems": True, "items": _name},
                    "pipe": {"type": "integer", "minimum": 0, "maximum": 4},
                    "pipe_except": {"type": "array", "uniqueItems": True, "items": _name},
+                   # r553 / r560 (FABLE-PD-QC-0600, FABLE-CLOSURE-STRATEGY 11-17): bind.core_input_latch_on /
+                   # core_input_latch_except_bits read latch_except {module: [port | "port[bit]"]}, bind / gen_phys read
+                   # latch_except_hb4 {module: {"port[bit]": N}}.  The code read the keys; the schema rejected them.
+                   "latch_except": {"type": "object", "additionalProperties": {
+                       "type": "array", "uniqueItems": True,
+                       "items": {"type": "string", "pattern": r"^[A-Za-z_][A-Za-z0-9_]*(\[[0-9]+\])?$"}}},
+                   "latch_except_hb4": {"type": "object", "additionalProperties": {
+                       "type": "object", "propertyNames": {"pattern": r"^[A-Za-z_][A-Za-z0-9_]*\[[0-9]+\]$"},
+                       "additionalProperties": {"type": "integer", "minimum": 0, "maximum": 8}}},
                    "note": {"type": "string"}}}
 # KV-PVGEN 11-15: plan clock.core_link_pipe, read by bind.core_link_pipe (absent = off, byte-identical RTL): D register
 # stages (ot_dp_dly u_pc_lp_*) on named input ports of bound leaves/cores of the listed types; cycles DECLARED in
