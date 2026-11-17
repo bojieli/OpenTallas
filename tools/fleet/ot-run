@@ -285,9 +285,25 @@ SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "
 SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 # v13: on a host with a separate scratch disk, new work goes ONLY there; below this free space the host admits nothing
 # (NOT RUN / placed elsewhere) instead of falling back to the root fs.
-SCRATCH_DISK_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"))
+HARD_SCRATCH_FLOOR_GB = 50     # COORD 11-17: lanes lowered OT_RUN_SCRATCH_DISK_FLOOR_GB to launch on full disks; a value below this is refused (clamped) and logged
+
+
+def clamp_floor(value, where, minimum=HARD_SCRATCH_FLOOR_GB, default=HARD_SCRATCH_FLOOR_GB):
+    """-> int GB >= minimum.  A lower or unreadable value is replaced by the minimum / default with one stderr line (the env override may only RAISE the floor)."""
+    try:
+        v = int(str(value).strip())
+    except (TypeError, ValueError):
+        print(f"ot-run: FLOOR-OVERRIDE refused: {where}={value!r} is not a number; using {default} GB", file=sys.stderr)
+        return default
+    if v < minimum:
+        print(f"ot-run: FLOOR-OVERRIDE refused: {where}={v} GB is below the {minimum} GB minimum; using {minimum} GB", file=sys.stderr)
+        return minimum
+    return v
+
+
+SCRATCH_DISK_FLOOR_GB = clamp_floor(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB", "50"), "OT_RUN_SCRATCH_DISK_FLOOR_GB")
 # KW-FIX-42 11-09 (COORD 08:3x): per-host scratch-disk floor "host=gb,..." (epyc4=50 while the wave keeps 100 elsewhere).
-SCRATCH_DISK_FLOOR_GB_HOSTS = {k.strip(): int(v) for k, _, v in (x.partition("=") for x in os.environ.get(
+SCRATCH_DISK_FLOOR_GB_HOSTS = {k.strip(): clamp_floor(v, "OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS[%s]" % k.strip()) for k, _, v in (x.partition("=") for x in os.environ.get(
     "OT_RUN_SCRATCH_DISK_FLOOR_GB_HOSTS", "localhost=150").split(",")) if k.strip() and v.strip()}
 
 
@@ -1222,7 +1238,10 @@ LANE = re.compile(r"^(/srv/opentallas-scratch[^/]*)/claude/([A-Za-z0-9_+-][A-Za-
 SAFE = re.compile(r"^/srv/opentallas-scratch[^\s$*?{}\[\]`~\\'\"]*$")
 say = lambda m: print("ot-run: SCRATCH2: " + m, file=sys.stderr)
 d, cmd, dry = sys.argv[1], json.loads(base64.b64decode(sys.argv[2])), len(sys.argv) > 3
-FLOOR = int(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB") or 50) << 30
+def _fl(v):    # same minimum as ot-run's clamp_floor (this snippet runs on the host with only the env it was given)
+    try: return max(50, int(v))
+    except (TypeError, ValueError): return 50
+FLOOR = _fl(os.environ.get("OT_RUN_SCRATCH_DISK_FLOOR_GB") or 50) << 30
 SFLOOR = int(os.environ.get("OT_RUN_PLACE_SFLOOR") or (FLOOR >> 30)) << 30   # QUEUE-BAL-2: second-root usable floor
 free, devs, onroot, second = {}, set(), set(), {}
 try:
