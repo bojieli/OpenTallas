@@ -1,0 +1,7 @@
+# WAVE-PILOT-FIX handoff (11-17 06:5x)
+Branch claude/wave-pilot-fix-1117 (lane clone epyc7:/srv/opentallas-scratch2/claude/wave-pilot-fix/c2/src, commit e888a59ca1..., push in flight; READY post follows with the full sha).
+Done: coord 7f3de6f2a40 re-owned 22 hold records whose result:<dead lane>:<tag> terms could never release (S81-BKSEL-O, S81-DIE-R/R2 -> S81-DIE-R3; S81-CORES-R, S81-TYPES-R2, S81-SERDES-R2, FABLE-FIX-S81-COL -> S81-TYPES-R3; KV-R -> KV-R3; QC-PLAN-R -> QC-PLAN-R3; FABLE-FIX-QC-DIECLK -> QC-TYPES-R3). Fields owner + owner_since added. col_h9_r2/h10_r2 records untouched (S81-TYPES-R3 owns). CODEX-QC term kept (posted <1 h ago).
+No family released outright: every held family names a shared cause (event adopt / tree / view / ring fix); the QC kit-inputs rows (mig-021/022, KIT_NOT_SELF_CONTAINED, input only on epyc2) are rule 1 infra: QC-TYPES-R3 should replicate the view to roam hosts, then release.
+Code: pilot_fail_scope (infra/instance/shared), 3 pilots (gate + release pilots), owner+cause required on new records, liveness = post <6 h, record expires after 6 h owner silence unless renewed_at, kit_wave_edit lock fix for the linked ~/coord worktree.
+Tests: test_wave_pilot_fix (16), hold_records/terms/release_pilot/pilot_wave etc. green; test_kit_wave.py has 6 pre-existing Step failures (same on main).
+Open: ot-gate-remote not run yet; merge when gated; after merge the expiry is live: any record with an owner (the 22) expires 6 h after its last post or renewal.
