@@ -136,3 +136,4 @@
 - 2026-11-17 04:30 PST DISK-RATE epyc7 /srv/opentallas-scratch2: free 90 GB, falling 129 GB/h, floor 50 GB in 0.3 h AUTO-RETIRE rc 0: df before:   83G / df after:   83G; deleted 0,  (cron disk_rate.py; read-only)
 - 2026-11-17 04:30 PST DISK-RATE epyc7 /srv/opentallas-scratch: free 63 GB, falling 3 GB/h, floor 50 GB in 5.2 h (cron disk_rate.py; read-only)
 - 2026-11-17 04:30 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 130 GB, falling 146 GB/h, floor 50 GB in 0.5 h AUTO-RETIRE rc 0: df before:  122G / df after:  122G; deleted 0, REFUSED: protected (kit_wave.json src/bind of record/marker/prov): /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_ (cron disk_rate.py; read-only)
+- 2026-11-17 04:40 PST DISK-RATE intel2 /srv/opentallas-scratch: free 70 GB, falling 3 GB/h, floor 50 GB in 5.9 h (cron disk_rate.py; read-only)
