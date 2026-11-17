@@ -11289,25 +11289,36 @@ def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=
     return dr
 
 
-def log_hold_releases(AP, ap_dir, entries, text, reset=False):
+def log_hold_releases(AP, ap_dir, entries, text, reset=False, summary_total=None):
     """HOLD-LOG-1116 (FABLE-FLOW-1113 #7: 12,624 HOLD-AUTO-RELEASE lines for 259 keys): the release is recomputed every tick, so it was logged every
-    tick.  Log one line per (die, key, condition) change: the logged set lives in <ap_dir>/hold_release_logged.json; reset=True (the first call of a
-    tick) first drops the keys that are no longer released, so a key released again later logs again."""
+    tick.  Log one line per (die, key, condition) change: the logged set lives in <ap_dir>/hold_release_logged.json.
+    HOLD-FLOW-R 11-17 (FABLE-FLOW-0300: 2,867 lines = 35 % of log.txt, the same 125 QC items every tick): two callers share the file, the
+    legacy hold_release_on pass (reset=True, only ITS entries) and the record pass.  reset used to drop every key the caller did not list,
+    i.e. all the record keys, which were then logged again by the second call, every tick.  Keys are now namespaced by TEXT and a reset only
+    drops its own namespace; an old un-namespaced key still counts as logged.  summary_total (the record pass, once per tick) adds ONE
+    summary line: released total / new this tick."""
     p = Path(ap_dir) / "hold_release_logged.json"
     try:
         seen = set(json.loads(p.read_text()))
     except (OSError, ValueError):
         seen = set()
-    cur = {f"{d}/{k}/{c}" for d, k, c in entries}
+    pre = text + "|"
+    other = {s.split("|", 1)[1] for s in seen if "|" in s and not s.startswith(pre)}      # logged by the other pass
+    cur = {f"{pre}{d}/{k}/{c}" for d, k, c in entries}
     if reset:
-        seen &= cur
+        seen = {s for s in seen if not s.startswith(pre) or s in cur}
     new = 0
     for d, k, c in entries:
-        key = f"{d}/{k}/{c}"
-        if key not in seen:
+        legacy = f"{d}/{k}/{c}"
+        key = pre + legacy
+        if key not in seen and legacy not in seen and legacy not in other:
             seen.add(key)
             new += 1
             AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE {d}/{k}: {text} ({c})")
+        elif key not in seen:
+            seen.add(key)                    # an old key, or the other pass already logged this release: no second line
+    if summary_total is not None:
+        AP.log(f"KIT-WAVE HOLD-AUTO-RELEASE summary: {summary_total} keys released by their terms, {new} new this pass")
     if not AP.DRY:
         try:
             p.write_text(json.dumps(sorted(seen)))
@@ -11367,7 +11378,8 @@ def _step(AP, ap_dir):
         _before = len(cfg.get("_hold_auto_released") or [])
         _tf, _mf = tree_gate(AP, cfg)
         compile_hold_records(cfg, None, _tf, _mf)
-        log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met")
+        log_hold_releases(AP, ap_dir, (cfg.get("_hold_auto_released") or [])[_before:], "release terms met", reset=True,
+                          summary_total=len(cfg.get("_hold_auto_released") or []))
         import hold_records as _HR                       # tree_ready: switch dies.<die>.src / die_gen_env in memory, no lane needed
         for _die, _tree, _ch in _HR.apply_tree_switches(cfg, hold_ctx(cfg, None, _tf, _mf)):
             if (_die, _tree, tuple(_ch)) not in _TREE_LOGGED:
