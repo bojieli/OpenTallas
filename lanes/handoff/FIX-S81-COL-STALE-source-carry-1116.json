@@ -1,0 +1,41 @@
+{
+ "plan_sha256": "819037bbe371ad99945d4a9b3f11a536060280b59bd1c4ac48167d9cf77b140d",
+ "event": "3fa87b84b18",
+ "source_manifest": "35eaaa5d65dae530b163ca2fba251d2dfd309006d6b61ab22fa126e79cdaea59",
+ "gen_phys_sha256": "ea3b76eca0d7755d50ab8d905a1ebde33e8cecfe3960ab17548cc74fc41d9697",
+ "records": [
+  {
+   "id": "s81-mig-024-k1",
+   "before": [
+    "event_adopt:B6gF2s3",
+    "lint_clean:s81"
+   ],
+   "after": [
+    "event_adopt:3fa87b84b18",
+    "lint_clean:s81"
+   ]
+  },
+  {
+   "id": "s81-mig-002-k2-k3-k1",
+   "before": [
+    "event_adopt:B6gF2s3",
+    "result:FABLE-FIX-S81-SVC:svc-ready"
+   ],
+   "after": [
+    "event_adopt:3fa87b84b18",
+    "result:FABLE-FIX-S81-SVC:svc-ready"
+   ]
+  },
+  {
+   "id": "s81-mig-006-k6-k7-k2",
+   "before": [
+    "event_adopt:B6gF2s3",
+    "result:FABLE-FIX-S81-SVC:svc-ready"
+   ],
+   "after": [
+    "event_adopt:3fa87b84b18",
+    "result:FABLE-FIX-S81-SVC:svc-ready"
+   ]
+  }
+ ]
+}
