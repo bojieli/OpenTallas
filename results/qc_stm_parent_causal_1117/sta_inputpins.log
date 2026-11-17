@@ -1,0 +1,1085 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_TIMING_LIBS TT exact_count 6 receipt /out/libraries.json
+SO PG 8201008 0 -
+[WARNING STA-1652] /base/6_final.spef line 4578908, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 4764622, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 4767538, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 4767794, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 4855238, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 5086565, pin cland_fwd_fclk_out_x_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 5439030, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 5439153, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 5439154, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 5457498, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 5493112, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 5508967, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 5509616, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 5814638, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 5814639, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 5879288, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 5879313, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 5995381, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 6034810, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 6092198, pin cland_fwd_fclk_out_x_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 6099345, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 6101908, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 6101915, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 6101926, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 6104130, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 6104131, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 6864870, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7048550, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7226416, pin cland_fwd_fclk_out_b_tw_data_ctl_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7286235, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7286843, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7286968, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287099, pin cland_fwd_fclk_out_b_tw_data_ctl_o:41 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287100, pin cland_fwd_fclk_out_b_tw_data_ctl_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287101, pin cland_fwd_fclk_out_b_tw_data_ctl_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287102, pin cland_fwd_fclk_out_b_tw_data_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287103, pin cland_fwd_fclk_out_b_tw_data_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287104, pin cland_fwd_fclk_out_b_tw_data_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287107, pin cland_fwd_fclk_out_b_tw_data_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287108, pin cland_fwd_fclk_out_b_tw_data_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287109, pin cland_fwd_fclk_out_b_tw_data_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287110, pin cland_fwd_fclk_out_b_tw_data_ctl_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287112, pin cland_fwd_fclk_out_b_tw_data_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287113, pin cland_fwd_fclk_out_b_tw_data_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287113, pin cland_fwd_fclk_out_b_tw_data_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287114, pin cland_fwd_fclk_out_b_tw_data_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287114, pin cland_fwd_fclk_out_b_tw_data_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287115, pin cland_fwd_fclk_out_b_tw_data_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287115, pin cland_fwd_fclk_out_b_tw_data_ctl_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287116, pin cland_fwd_fclk_out_b_tw_data_ctl_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287116, pin cland_fwd_fclk_out_b_tw_data_ctl_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287117, pin cland_fwd_fclk_out_b_tw_data_ctl_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287118, pin cland_fwd_fclk_out_b_tw_data_ctl_o:41 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287128, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287129, pin cland_fwd_fclk_out_cland_up:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287130, pin cland_fwd_fclk_out_cland_up:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287131, pin cland_fwd_fclk_out_cland_up:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287132, pin cland_fwd_fclk_out_cland_up:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287133, pin cland_fwd_fclk_out_cland_up:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287134, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287135, pin cland_fwd_fclk_out_cland_up:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287136, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287137, pin cland_fwd_fclk_out_cland_up:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287138, pin cland_fwd_fclk_out_cland_up:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287141, pin cland_fwd_fclk_out_cland_up:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287142, pin cland_fwd_fclk_out_cland_up:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287143, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287144, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287145, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287146, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287147, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287148, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287149, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287150, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287151, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287152, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287153, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287154, pin cland_fwd_fclk_out_cland_up:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287155, pin cland_fwd_fclk_out_cland_up:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287156, pin cland_fwd_fclk_out_cland_up:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287157, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287158, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287159, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287161, pin cland_fwd_fclk_out_cland_up:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287162, pin cland_fwd_fclk_out_cland_up:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287162, pin cland_fwd_fclk_out_cland_up:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287163, pin cland_fwd_fclk_out_cland_up:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287163, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287164, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287164, pin cland_fwd_fclk_out_cland_up:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287165, pin cland_fwd_fclk_out_cland_up:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287165, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287166, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287166, pin cland_fwd_fclk_out_cland_up:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287167, pin cland_fwd_fclk_out_cland_up:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287167, pin cland_fwd_fclk_out_cland_up:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287168, pin cland_fwd_fclk_out_cland_up:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287168, pin cland_fwd_fclk_out_cland_up:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287169, pin cland_fwd_fclk_out_cland_up:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287169, pin cland_fwd_fclk_out_cland_up:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287170, pin cland_fwd_fclk_out_cland_up:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287170, pin cland_fwd_fclk_out_cland_up:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287171, pin cland_fwd_fclk_out_cland_up:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287171, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287172, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287182, pin cland_fwd_fclk_out_cws1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287183, pin cland_fwd_fclk_out_cws1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287184, pin cland_fwd_fclk_out_cws1_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287185, pin cland_fwd_fclk_out_cws1_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287186, pin cland_fwd_fclk_out_cws1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287187, pin cland_fwd_fclk_out_cws1_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287188, pin cland_fwd_fclk_out_cws1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287192, pin cland_fwd_fclk_out_cws1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287193, pin cland_fwd_fclk_out_cws1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287194, pin cland_fwd_fclk_out_cws1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287195, pin cland_fwd_fclk_out_cws1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287196, pin cland_fwd_fclk_out_cws1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287198, pin cland_fwd_fclk_out_cws1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287199, pin cland_fwd_fclk_out_cws1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287199, pin cland_fwd_fclk_out_cws1_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287200, pin cland_fwd_fclk_out_cws1_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287200, pin cland_fwd_fclk_out_cws1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287201, pin cland_fwd_fclk_out_cws1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287201, pin cland_fwd_fclk_out_cws1_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287202, pin cland_fwd_fclk_out_cws1_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287202, pin cland_fwd_fclk_out_cws1_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287203, pin cland_fwd_fclk_out_cws1_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287203, pin cland_fwd_fclk_out_cws1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287204, pin cland_fwd_fclk_out_cws1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287204, pin cland_fwd_fclk_out_cws1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287205, pin cland_fwd_fclk_out_cws1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287215, pin cland_fwd_fclk_out_x_fe_o:50 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287216, pin cland_fwd_fclk_out_x_fe_o:40 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287217, pin cland_fwd_fclk_out_x_fe_o:38 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287218, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287219, pin cland_fwd_fclk_out_x_fe_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287220, pin cland_fwd_fclk_out_x_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287221, pin cland_fwd_fclk_out_x_fe_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287222, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287223, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287224, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287225, pin cland_fwd_fclk_out_x_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287226, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287227, pin cland_fwd_fclk_out_x_fe_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287228, pin cland_fwd_fclk_out_x_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287229, pin cland_fwd_fclk_out_x_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287230, pin cland_fwd_fclk_out_x_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287231, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287232, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287233, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287234, pin cland_fwd_fclk_out_x_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287235, pin cland_fwd_fclk_out_x_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287236, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287237, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287238, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287239, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287240, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287241, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287242, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287243, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287244, pin cland_fwd_fclk_out_x_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287245, pin cland_fwd_fclk_out_x_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287246, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287247, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287248, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287249, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287250, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287251, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287252, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287253, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287254, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287255, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287256, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287257, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287258, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287259, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287260, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287261, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287262, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287263, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287264, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287265, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287267, pin cland_fwd_fclk_out_x_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287268, pin cland_fwd_fclk_out_x_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287268, pin cland_fwd_fclk_out_x_fe_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287269, pin cland_fwd_fclk_out_x_fe_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287269, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287270, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287270, pin cland_fwd_fclk_out_x_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287271, pin cland_fwd_fclk_out_x_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287271, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287272, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287272, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287273, pin cland_fwd_fclk_out_x_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287273, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287274, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287274, pin cland_fwd_fclk_out_x_fe_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287275, pin cland_fwd_fclk_out_x_fe_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287275, pin cland_fwd_fclk_out_x_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287276, pin cland_fwd_fclk_out_x_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287276, pin cland_fwd_fclk_out_x_fe_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287277, pin cland_fwd_fclk_out_x_fe_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287277, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287278, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287278, pin cland_fwd_fclk_out_x_fe_o:38 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287279, pin cland_fwd_fclk_out_x_fe_o:38 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287279, pin cland_fwd_fclk_out_x_fe_o:40 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287280, pin cland_fwd_fclk_out_x_fe_o:40 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287280, pin cland_fwd_fclk_out_x_fe_o:50 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287281, pin cland_fwd_fclk_out_x_fe_o:50 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287291, pin cland_fwd_fclk_out_x_fe_p1_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287292, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287293, pin cland_fwd_fclk_out_x_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287294, pin cland_fwd_fclk_out_x_fe_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287295, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287296, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287297, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287298, pin cland_fwd_fclk_out_x_fe_p1_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287299, pin cland_fwd_fclk_out_x_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287300, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287301, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287302, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287303, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287304, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287305, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287306, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287307, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287308, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287309, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287310, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287311, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287312, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287313, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287314, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287315, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287316, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287317, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287318, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287319, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287320, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287321, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287322, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287323, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287324, pin cland_fwd_fclk_out_x_fe_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287325, pin cland_fwd_fclk_out_x_fe_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287326, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287327, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287328, pin cland_fwd_fclk_out_x_fe_p1_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287329, pin cland_fwd_fclk_out_x_fe_p1_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287330, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287331, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287332, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287333, pin cland_fwd_fclk_out_x_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287334, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287335, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287336, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287337, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287338, pin cland_fwd_fclk_out_x_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287339, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287340, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287341, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287342, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287343, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287344, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287346, pin cland_fwd_fclk_out_x_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287347, pin cland_fwd_fclk_out_x_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287347, pin cland_fwd_fclk_out_x_fe_p1_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287348, pin cland_fwd_fclk_out_x_fe_p1_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287348, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287349, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287349, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287350, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287350, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287351, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287351, pin cland_fwd_fclk_out_x_fe_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287352, pin cland_fwd_fclk_out_x_fe_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287352, pin cland_fwd_fclk_out_x_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287353, pin cland_fwd_fclk_out_x_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287353, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287354, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287354, pin cland_fwd_fclk_out_x_fe_p1_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287355, pin cland_fwd_fclk_out_x_fe_p1_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287365, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:40 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287366, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:38 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287367, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287368, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287369, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287370, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287371, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287372, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287373, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287374, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287375, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287376, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287377, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287378, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287379, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287381, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287382, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287382, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287383, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287383, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287384, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287384, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287385, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287385, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287386, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287386, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287387, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287387, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287388, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287388, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287389, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287389, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:38 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287390, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:38 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287390, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:40 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287391, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:40 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287401, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287402, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287403, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287404, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287405, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287406, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287407, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287408, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287409, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287410, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287411, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287412, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287413, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287414, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287415, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287416, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287417, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287418, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287419, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287420, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287421, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287422, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287423, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287424, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287426, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287427, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287427, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287428, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287428, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287429, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287429, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287430, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287430, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287431, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287431, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287432, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287442, pin cland_fwd_fclk_out_x_fw_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287443, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287444, pin cland_fwd_fclk_out_x_fw_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287445, pin cland_fwd_fclk_out_x_fw_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287446, pin cland_fwd_fclk_out_x_fw_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287447, pin cland_fwd_fclk_out_x_fw_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287448, pin cland_fwd_fclk_out_x_fw_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287449, pin cland_fwd_fclk_out_x_fw_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287450, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287451, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287452, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287453, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287455, pin cland_fwd_fclk_out_x_fw_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287456, pin cland_fwd_fclk_out_x_fw_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287456, pin cland_fwd_fclk_out_x_fw_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287457, pin cland_fwd_fclk_out_x_fw_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287457, pin cland_fwd_fclk_out_x_fw_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287458, pin cland_fwd_fclk_out_x_fw_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287458, pin cland_fwd_fclk_out_x_fw_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287459, pin cland_fwd_fclk_out_x_fw_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287459, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287460, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287460, pin cland_fwd_fclk_out_x_fw_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287461, pin cland_fwd_fclk_out_x_fw_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287471, pin cland_fwd_fclk_out_x_fw_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287472, pin cland_fwd_fclk_out_x_fw_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287473, pin cland_fwd_fclk_out_x_fw_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287474, pin cland_fwd_fclk_out_x_fw_fe_p1_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287475, pin cland_fwd_fclk_out_x_fw_fe_p1_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287476, pin cland_fwd_fclk_out_x_fw_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287477, pin cland_fwd_fclk_out_x_fw_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287478, pin cland_fwd_fclk_out_x_fw_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287479, pin cland_fwd_fclk_out_x_fw_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287480, pin cland_fwd_fclk_out_x_fw_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287481, pin cland_fwd_fclk_out_x_fw_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287483, pin cland_fwd_fclk_out_x_fw_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287484, pin cland_fwd_fclk_out_x_fw_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287484, pin cland_fwd_fclk_out_x_fw_fe_p1_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287485, pin cland_fwd_fclk_out_x_fw_fe_p1_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287485, pin cland_fwd_fclk_out_x_fw_fe_p1_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287486, pin cland_fwd_fclk_out_x_fw_fe_p1_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287486, pin cland_fwd_fclk_out_x_fw_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287487, pin cland_fwd_fclk_out_x_fw_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287487, pin cland_fwd_fclk_out_x_fw_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287488, pin cland_fwd_fclk_out_x_fw_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287488, pin cland_fwd_fclk_out_x_fw_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287489, pin cland_fwd_fclk_out_x_fw_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287499, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287500, pin cland_fwd_fclk_out_x_fw_fe_p2_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287501, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287502, pin cland_fwd_fclk_out_x_fw_fe_p2_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287503, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287504, pin cland_fwd_fclk_out_x_fw_fe_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287505, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287507, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287508, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287509, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287510, pin cland_fwd_fclk_out_x_fw_fe_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287511, pin cland_fwd_fclk_out_x_fw_fe_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287512, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287513, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287514, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287515, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287516, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287517, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287518, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287519, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287520, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287521, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287522, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287523, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287524, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287525, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287526, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287527, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287528, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287529, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287530, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287531, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287533, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287534, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287534, pin cland_fwd_fclk_out_x_fw_fe_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287535, pin cland_fwd_fclk_out_x_fw_fe_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287535, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287536, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287536, pin cland_fwd_fclk_out_x_fw_fe_p2_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287537, pin cland_fwd_fclk_out_x_fw_fe_p2_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287537, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287538, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287538, pin cland_fwd_fclk_out_x_fw_fe_p2_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287539, pin cland_fwd_fclk_out_x_fw_fe_p2_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287539, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287540, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287550, pin cland_fwd_fclk_out_x_fw_sc_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287551, pin cland_fwd_fclk_out_x_fw_sc_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287552, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287553, pin cland_fwd_fclk_out_x_fw_sc_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287554, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287555, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287556, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287557, pin cland_fwd_fclk_out_x_fw_sc_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287558, pin cland_fwd_fclk_out_x_fw_sc_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287559, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287559, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287560, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287561, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287562, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287563, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287564, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287565, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287566, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287568, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287569, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287569, pin cland_fwd_fclk_out_x_fw_sc_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287570, pin cland_fwd_fclk_out_x_fw_sc_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287570, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287571, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287571, pin cland_fwd_fclk_out_x_fw_sc_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287572, pin cland_fwd_fclk_out_x_fw_sc_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287572, pin cland_fwd_fclk_out_x_fw_sc_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287573, pin cland_fwd_fclk_out_x_fw_sc_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287583, pin cland_fwd_fclk_out_x_fw_st_b_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287584, pin cland_fwd_fclk_out_x_fw_st_b_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287585, pin cland_fwd_fclk_out_x_fw_st_b_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287586, pin cland_fwd_fclk_out_x_fw_st_b_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287587, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287588, pin cland_fwd_fclk_out_x_fw_st_b_o:6 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287589, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287590, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287591, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287592, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287593, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287594, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287595, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287596, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287597, pin cland_fwd_fclk_out_x_fw_st_b_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287599, pin cland_fwd_fclk_out_x_fw_st_b_o:6 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287600, pin cland_fwd_fclk_out_x_fw_st_b_o:6 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287600, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287601, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287601, pin cland_fwd_fclk_out_x_fw_st_b_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287602, pin cland_fwd_fclk_out_x_fw_st_b_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287602, pin cland_fwd_fclk_out_x_fw_st_b_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287603, pin cland_fwd_fclk_out_x_fw_st_b_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287603, pin cland_fwd_fclk_out_x_fw_st_b_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287604, pin cland_fwd_fclk_out_x_fw_st_b_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287604, pin cland_fwd_fclk_out_x_fw_st_b_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287605, pin cland_fwd_fclk_out_x_fw_st_b_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287615, pin cland_fwd_fclk_out_x_st_a_fe_o:48 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287616, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287617, pin cland_fwd_fclk_out_x_st_a_fe_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287618, pin cland_fwd_fclk_out_x_st_a_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287619, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287620, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287621, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287622, pin cland_fwd_fclk_out_x_st_a_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287623, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287624, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287625, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287626, pin cland_fwd_fclk_out_x_st_a_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287627, pin cland_fwd_fclk_out_x_st_a_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287628, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287629, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287630, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287631, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287632, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287633, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287634, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287635, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287636, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287637, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287638, pin cland_fwd_fclk_out_x_st_a_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287639, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287640, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287641, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287642, pin cland_fwd_fclk_out_x_st_a_fe_o:48 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287643, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287644, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287644, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287646, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287647, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287647, pin cland_fwd_fclk_out_x_st_a_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287648, pin cland_fwd_fclk_out_x_st_a_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287648, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287649, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287649, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287650, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287650, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287651, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287651, pin cland_fwd_fclk_out_x_st_a_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287652, pin cland_fwd_fclk_out_x_st_a_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287652, pin cland_fwd_fclk_out_x_st_a_fe_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287653, pin cland_fwd_fclk_out_x_st_a_fe_o:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287653, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287654, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287654, pin cland_fwd_fclk_out_x_st_a_fe_o:48 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287655, pin cland_fwd_fclk_out_x_st_a_fe_o:48 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287665, pin cland_fwd_fclk_out_x_su_c_ctl_o:25 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287666, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287667, pin cland_fwd_fclk_out_x_su_c_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287668, pin cland_fwd_fclk_out_x_su_c_ctl_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287669, pin cland_fwd_fclk_out_x_su_c_ctl_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287670, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287671, pin cland_fwd_fclk_out_x_su_c_ctl_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287672, pin cland_fwd_fclk_out_x_su_c_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287673, pin cland_fwd_fclk_out_x_su_c_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287674, pin cland_fwd_fclk_out_x_su_c_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287675, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287676, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287677, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287678, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287679, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287680, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287681, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287682, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287683, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287684, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287685, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287686, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287687, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287688, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287689, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287690, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287691, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287692, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287693, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287694, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287695, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287696, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287697, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287698, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287699, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287700, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287701, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287702, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287703, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287704, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287705, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287706, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287707, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287708, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287709, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287710, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287711, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287712, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287713, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287714, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287715, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287716, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287717, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287718, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287719, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287720, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287721, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287722, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287723, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287724, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287725, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287726, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287727, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287728, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287729, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287730, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287731, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287732, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287733, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287734, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287735, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287736, pin cland_fwd_fclk_out_x_su_c_ctl_o:25 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287737, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287738, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287740, pin cland_fwd_fclk_out_x_su_c_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287741, pin cland_fwd_fclk_out_x_su_c_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287741, pin cland_fwd_fclk_out_x_su_c_ctl_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287742, pin cland_fwd_fclk_out_x_su_c_ctl_o:10 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287742, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287743, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287743, pin cland_fwd_fclk_out_x_su_c_ctl_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287744, pin cland_fwd_fclk_out_x_su_c_ctl_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287744, pin cland_fwd_fclk_out_x_su_c_ctl_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287745, pin cland_fwd_fclk_out_x_su_c_ctl_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287745, pin cland_fwd_fclk_out_x_su_c_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287746, pin cland_fwd_fclk_out_x_su_c_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287746, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287747, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7287748, pin cland_fwd_fclk_out_x_su_c_ctl_o:25 not found.
+[WARNING STA-1652] /base/6_final.spef line 7289033, pin cland_fwd_fclk_out_cws1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7289082, pin cland_fwd_fclk_out_cws1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7289083, pin cland_fwd_fclk_out_cws1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7290933, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7290962, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7292017, pin cland_fwd_fclk_out_x_fw_st_b_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7292231, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7295341, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7295342, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7295948, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7301508, pin cland_fwd_fclk_out_b_tw_data_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 7301509, pin cland_fwd_fclk_out_b_tw_data_ctl_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 7308521, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 7308731, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7308732, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7322714, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7322715, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 7334780, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7336434, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7338821, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 7343265, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 7365812, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7373123, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7384606, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7410937, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7410938, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7421272, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 7501079, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 8546577, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 8546581, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 8589371, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 8868543, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 8921220, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 8925723, pin cland_fwd_fclk_out_x_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 8928255, pin cland_fwd_fclk_out_x_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 8945417, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 8945418, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 8945527, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 8945528, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 9029206, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 9225164, pin cland_fwd_fclk_out_x_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 9231066, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 9263023, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 9267286, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 9282449, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 9384803, pin cland_fwd_fclk_out_x_fe_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 9384804, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 9384805, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 9384806, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 9384807, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 9399388, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 9452717, pin cland_fwd_fclk_out_x_fe_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 9491652, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 9984816, pin cland_fwd_fclk_out_x_fw_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 10389263, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 10389571, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 10389881, pin cland_fwd_fclk_out_x_fe_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 10411628, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 10411629, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 10412002, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 10412003, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 10464504, pin cland_fwd_fclk_out_x_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 11056134, pin cland_fwd_fclk_out_x_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 11124985, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 11252626, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 11293804, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 11312677, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 11314498, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 11625909, pin cland_fwd_fclk_out_x_fw_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 11627550, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 11633586, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 11634409, pin cland_fwd_fclk_out_x_fw_fe_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 11636721, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12069856, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12069857, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12131028, pin cland_fwd_fclk_out_x_fw_st_b_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12840165, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 12840611, pin cland_fwd_fclk_out_x_fw_sc_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12847581, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 12848606, pin cland_fwd_fclk_out_x_st_a_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12848688, pin cland_fwd_fclk_out_x_fw_fe_p2_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12848873, pin cland_fwd_fclk_out_x_fw_sc_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 12848874, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 12850155, pin cland_fwd_fclk_out_x_fw_sc_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12851358, pin cland_fwd_fclk_out_x_st_a_fe_o:14 not found.
+[WARNING STA-1652] /base/6_final.spef line 12865218, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 12865219, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 12869066, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 12869067, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 13016909, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13055797, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13055798, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13088291, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13097695, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13126532, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13133555, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13134986, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13160326, pin cland_fwd_fclk_out_x_su_c_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 13164728, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13166311, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13174017, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13174487, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13174488, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13177347, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13177581, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13177715, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13185669, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13185800, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13187832, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13192811, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13354880, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13355440, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13365533, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13383336, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13383337, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13393798, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13395114, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13406468, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13407141, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13412747, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13415208, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13419610, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13425429, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13426845, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13435737, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13440830, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13445362, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13445589, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13445615, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13447786, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13453732, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13460146, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13464657, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13552776, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 13583970, pin cland_fwd_fclk_out_x_fw_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 13662565, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 13665678, pin cland_fwd_fclk_out_x_fw_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 13747099, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 13747283, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 14217633, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 16205316, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 16205317, pin cland_fwd_fclk_out_x_st_a_fe_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 16205318, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 16205319, pin cland_fwd_fclk_out_x_st_a_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 16393901, pin cland_fwd_fclk_out_cland_up:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 16483276, pin cland_fwd_fclk_out_cland_up:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 16486950, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 17049537, pin cland_fwd_fclk_out_x_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 17050538, pin cland_fwd_fclk_out_x_fe_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 17168326, pin cland_fwd_fclk_out_b_tw_data_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 17267327, pin cland_fwd_fclk_out_x_fe_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 17353902, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 17447580, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 17447581, pin cland_fwd_fclk_out_x_fe_p1_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 17447582, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 17447583, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 17447584, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 17447585, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 17505352, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 17508501, pin cland_fwd_fclk_out_x_fe_p1_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 17572527, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 17574557, pin cland_fwd_fclk_out_x_fe_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 17576683, pin cland_fwd_fclk_out_x_fe_p1_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 17576769, pin cland_fwd_fclk_out_x_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 17576982, pin cland_fwd_fclk_out_x_fe_p1_o:34 not found.
+[WARNING STA-1652] /base/6_final.spef line 17796921, pin cland_fwd_fclk_out_x_fw_fe_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 18174736, pin cland_fwd_fclk_out_cland_up:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 18180055, pin cland_fwd_fclk_out_cland_up:30 not found.
+[WARNING STA-1652] /base/6_final.spef line 18228199, pin cland_fwd_fclk_out_cws1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 18229798, pin cland_fwd_fclk_out_cland_up:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 18238476, pin cland_fwd_fclk_out_cws1_o:22 not found.
+[WARNING STA-1652] /base/6_final.spef line 18526746, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 18529979, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18529980, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18531008, pin cland_fwd_fclk_out_x_st_a_fe_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 18531009, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18531756, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18531757, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18532015, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18532261, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18533276, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18536352, pin cland_fwd_fclk_out_x_st_a_fe_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 18536664, pin cland_fwd_fclk_out_x_fw_sc_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18536665, pin cland_fwd_fclk_out_x_st_a_fe_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 18537097, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 18593595, pin cland_fwd_fclk_out_x_fw_fe_p1_o:26 not found.
+[WARNING STA-1652] /base/6_final.spef line 19019955, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 19022851, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 19023375, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:18 not found.
+[WARNING STA-1652] /base/6_final.spef line 19165159, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 19165160, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 19165717, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 19165972, pin cland_fwd_fclk_out_cland_up:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 19167254, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 19181440, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 19970966, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 19970989, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 20560303, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 20574422, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 20574423, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 20574424, pin cland_fwd_fclk_out_x_fw_fe_p2_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 20712435, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 21012243, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 21012369, pin cland_fwd_fclk_out_x_fe_o:36 not found.
+[WARNING STA-1652] /base/6_final.spef line 21018629, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 21024564, pin cland_fwd_fclk_out_x_fw_fe_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 21033279, pin cland_fwd_fclk_out_x_fw_fe_p2_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 21501050, pin cland_fwd_fclk_out_x_fw_fe_p1_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 21756107, pin cland_fwd_fclk_out_x_su_c_ctl_o:8 not found.
+[WARNING STA-1652] /base/6_final.spef line 21762142, pin cland_fwd_fclk_out_x_su_c_ctl_o:12 not found.
+[WARNING STA-1652] /base/6_final.spef line 21781986, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 21782826, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22006996, pin cland_fwd_fclk_out_x_fw_ctl_p1_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 22037293, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:28 not found.
+[WARNING STA-1652] /base/6_final.spef line 22040104, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22040708, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22041768, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22042300, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22043035, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22043577, pin cland_fwd_fclk_out_x_fw_ctl_p2_o:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22063922, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22064053, pin cland_fwd_fclk_out_x_fw_fe_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22118876, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22119263, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22120906, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22121492, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22122160, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22124390, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22125551, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22125608, pin cland_fwd_fclk_out_x_fw_fe_p2_o:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22210601, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 22211498, pin cland_fwd_fclk_out_x_st_a_fe_o:32 not found.
+[WARNING STA-1652] /base/6_final.spef line 22211931, pin cland_fwd_fclk_out_x_st_a_fe_o:48 not found.
+[WARNING STA-1652] /base/6_final.spef line 22222359, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22222419, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22223011, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22223135, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22223411, pin cland_fwd_fclk_out_x_su_c_ctl_o:20 not found.
+[WARNING STA-1652] /base/6_final.spef line 22223567, pin cland_fwd_fclk_out_x_su_c_ctl_o:25 not found.
+[WARNING STA-1652] /base/6_final.spef line 22232790, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22232976, pin cland_fwd_fclk_out_cland_up:16 not found.
+[WARNING STA-1652] /base/6_final.spef line 22240014, pin cland_fwd_fclk_out_cland_up:24 not found.
+[WARNING STA-1652] /base/6_final.spef line 22240015, pin cland_fwd_fclk_out_cland_up:32 not found.
+SO UNC_POLICY nominal setup 0 hold 25 kinds setup errors 0
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+SO CORNER TT
+SO PARASITICS spef
+SO DESIGN slw_stm_v1__cle34a73c3
+SO CELLS 4100504
+SO CLOCK_ENDPOINT_MASTERS DFFASRHQNx1_ASAP7_75t_R DFFHQNx1_ASAP7_75t_R DFFHQNx2_ASAP7_75t_R DFFHQNx3_ASAP7_75t_R DFFLQNx1_ASAP7_75t_R DFFLQNx2_ASAP7_75t_R ot_rom_4096x266_m8
+SO CLOCK_ENDPOINT_MAPPING_ERRORS 0
+SO CLOCK_PORTS clk clk_t1 clk_t10 clk_t11 clk_t12 clk_t13 clk_t14 clk_t15 clk_t16 clk_t17 clk_t18 clk_t19 clk_t2 clk_t20 clk_t21 clk_t22 clk_t23 clk_t24 clk_t25 clk_t26 clk_t27 clk_t28 clk_t29 clk_t3 clk_t30 clk_t31 clk_t32 clk_t33 clk_t34 clk_t35 clk_t36 clk_t37 clk_t38 clk_t39 clk_t4 clk_t40 clk_t41 clk_t42 clk_t43 clk_t44 clk_t45 clk_t46 clk_t47 clk_t48 clk_t49 clk_t5 clk_t50 clk_t51 clk_t52 clk_t53 clk_t54 clk_t55 clk_t56 clk_t57 clk_t58 clk_t59 clk_t6 clk_t60 clk_t61 clk_t62 clk_t63 clk_t64 clk_t65 clk_t66 clk_t67 clk_t68 clk_t69 clk_t7 clk_t70 clk_t71 clk_t72 clk_t73 clk_t74 clk_t75 clk_t76 clk_t77 clk_t78 clk_t8 clk_t9 fclk_in_cland_dn_1[0] fclk_in_cws1_i[0] fclk_in_flt_ctl_i[0] fclk_in_x_ctl_fw_p1_i[0] fclk_in_x_ctl_i[0] fclk_in_x_fe_fw_i[0] fclk_in_x_fe_fw_p1_i[0] fclk_in_x_fe_i[0] fclk_in_x_fe_p1_i[0] fclk_in_x_sc_fw_i[0] fclk_in_x_su_c_ctl_i[0] fclk_in_x_su_l0_i[0] fclk_in_x_su_l1_i[0] fclk_out_b_tw_data_ctl_o[0] fclk_out_cland_up[0] fclk_out_cws1_o[0] fclk_out_x_fe_o[0] fclk_out_x_fe_p1_o[0] fclk_out_x_fw_ctl_p1_o[0] fclk_out_x_fw_ctl_p2_o[0] fclk_out_x_fw_fe_o[0] fclk_out_x_fw_fe_p1_o[0] fclk_out_x_fw_fe_p2_o[0] fclk_out_x_fw_sc_o[0] fclk_out_x_fw_st_b_o[0] fclk_out_x_st_a_fe_o[0] fclk_out_x_su_c_ctl_o[0]
+SO INPUTS arst_n cland_dn_fault_0 cland_dn_fault_1 cland_dn_ready_0 cland_dn_ready_1 cland_fstart_in_cws1_i cland_fstart_in_flt_ctl_i cland_fstart_in_x_ctl_fw_p1_i cland_fstart_in_x_ctl_i cland_fstart_in_x_fe_fw_i cland_fstart_in_x_fe_fw_p1_i cland_fstart_in_x_fe_i cland_fstart_in_x_fe_p1_i cland_fstart_in_x_sc_fw_i cland_fstart_in_x_su_c_ctl_i cland_fstart_in_x_su_l0_i cland_fstart_in_x_su_l1_i cland_tstart_in cws1_i flt_ctl_i start_i strap_ca_efall strap_ca_k_cws1_i strap_ca_k_flt_ctl_i strap_ca_k_x_ctl_fw_p1_i strap_ca_k_x_ctl_i strap_ca_k_x_fe_fw_i strap_ca_k_x_fe_fw_p1_i strap_ca_k_x_fe_i strap_ca_k_x_fe_p1_i strap_ca_k_x_sc_fw_i strap_ca_k_x_su_c_ctl_i strap_ca_k_x_su_l0_i strap_ca_k_x_su_l1_i strap_ca_pad x_ctl_fw_p1_i x_ctl_i x_fe_fw_i x_fe_fw_p1_i x_fe_i x_fe_p1_i x_fw_ctl_p1_i x_fw_ctl_p2_i x_fw_fe_i x_fw_fe_p1_i x_fw_fe_p2_i x_fw_i x_fw_p1_i x_fw_sc_i x_fw_st_b_i x_sc_fw_i x_st_a_fe_i x_su_c_ctl_i x_su_l0_i x_su_l1_i
+SO FWD_RING_INPUTS clocks fclk_in_cws1_i fclk_in_flt_ctl_i fclk_in_x_ctl_fw_p1_i fclk_in_x_ctl_i fclk_in_x_fe_fw_i fclk_in_x_fe_fw_p1_i fclk_in_x_fe_i fclk_in_x_fe_p1_i fclk_in_x_sc_fw_i fclk_in_x_su_c_ctl_i fclk_in_x_su_l0_i fclk_in_x_su_l1_i ports 3996
+SO OUTPUTS b_tw_data_ctl_o cland_fstart_out_b_tw_data_ctl_o cland_fstart_out_cws1_o cland_fstart_out_x_fe_o cland_fstart_out_x_fe_p1_o cland_fstart_out_x_fw_ctl_p1_o cland_fstart_out_x_fw_ctl_p2_o cland_fstart_out_x_fw_fe_o cland_fstart_out_x_fw_fe_p1_o cland_fstart_out_x_fw_fe_p2_o cland_fstart_out_x_fw_sc_o cland_fstart_out_x_fw_st_b_o cland_fstart_out_x_st_a_fe_o cland_fstart_out_x_su_c_ctl_o cland_rstart_out cland_up_fault cland_up_ready cws1_o fclk_out_b_tw_data_ctl_o fclk_out_cland_up fclk_out_cws1_o fclk_out_x_fe_o fclk_out_x_fe_p1_o fclk_out_x_fw_ctl_p1_o fclk_out_x_fw_ctl_p2_o fclk_out_x_fw_fe_o fclk_out_x_fw_fe_p1_o fclk_out_x_fw_fe_p2_o fclk_out_x_fw_sc_o fclk_out_x_fw_st_b_o fclk_out_x_st_a_fe_o fclk_out_x_su_c_ctl_o flt_o rst_o_0 start_o_0 x_ctl_fw_p1_o x_fe_fw_o x_fe_fw_p1_o x_fe_o x_fe_p1_o x_fw_ctl_p1_o x_fw_ctl_p2_o x_fw_fe_o x_fw_fe_p1_o x_fw_fe_p2_o x_fw_o x_fw_p1_o x_fw_sc_o x_fw_st_b_o x_sc_fw_o x_st_a_fe_o x_su_c_ctl_o
+SO CLOCKS clk fclk_in_cws1_i fclk_in_flt_ctl_i fclk_in_x_ctl_fw_p1_i fclk_in_x_ctl_i fclk_in_x_fe_fw_i fclk_in_x_fe_fw_p1_i fclk_in_x_fe_i fclk_in_x_fe_p1_i fclk_in_x_sc_fw_i fclk_in_x_su_c_ctl_i fclk_in_x_su_l0_i fclk_in_x_su_l1_i fclk_in_cland_dn_1 vclk fclk_out_b_tw_data_ctl_o fclk_out_cws1_o fclk_out_x_fe_o fclk_out_x_fe_p1_o fclk_out_x_fw_ctl_p1_o fclk_out_x_fw_ctl_p2_o fclk_out_x_fw_fe_o fclk_out_x_fw_fe_p1_o fclk_out_x_fw_fe_p2_o fclk_out_x_fw_sc_o fclk_out_x_fw_st_b_o fclk_out_x_st_a_fe_o fclk_out_x_su_c_ctl_o fclk_out_cland_up
+SO VCLKS vclk
+SO PERIOD clk 833.000000
+SO PERIOD fclk_in_cws1_i 833.000000
+SO PERIOD fclk_in_flt_ctl_i 833.000000
+SO PERIOD fclk_in_x_ctl_fw_p1_i 833.000000
+SO PERIOD fclk_in_x_ctl_i 833.000000
+SO PERIOD fclk_in_x_fe_fw_i 833.000000
+SO PERIOD fclk_in_x_fe_fw_p1_i 833.000000
+SO PERIOD fclk_in_x_fe_i 833.000000
+SO PERIOD fclk_in_x_fe_p1_i 833.000000
+SO PERIOD fclk_in_x_sc_fw_i 833.000000
+SO PERIOD fclk_in_x_su_c_ctl_i 833.000000
+SO PERIOD fclk_in_x_su_l0_i 833.000000
+SO PERIOD fclk_in_x_su_l1_i 833.000000
+SO PERIOD fclk_in_cland_dn_1 833.000000
+SO PERIOD vclk 833.000000
+SO PERIOD fclk_out_b_tw_data_ctl_o 0.000000
+SO PERIOD fclk_out_cws1_o 0.000000
+SO PERIOD fclk_out_x_fe_o 0.000000
+SO PERIOD fclk_out_x_fe_p1_o 0.000000
+SO PERIOD fclk_out_x_fw_ctl_p1_o 0.000000
+SO PERIOD fclk_out_x_fw_ctl_p2_o 0.000000
+SO PERIOD fclk_out_x_fw_fe_o 0.000000
+SO PERIOD fclk_out_x_fw_fe_p1_o 0.000000
+SO PERIOD fclk_out_x_fw_fe_p2_o 0.000000
+SO PERIOD fclk_out_x_fw_sc_o 0.000000
+SO PERIOD fclk_out_x_fw_st_b_o 0.000000
+SO PERIOD fclk_out_x_st_a_fe_o 0.000000
+SO PERIOD fclk_out_x_su_c_ctl_o 0.000000
+SO PERIOD fclk_out_cland_up 0.000000
+SO SDC_WNS_MAX -53.45
+SO SDC_WNS_MIN -105.97
+SO SDC_TNS_MAX -765.76
+SO SDC_TNS_MIN -139732.78
+SO SDC_NVIOL_MAX 42
+SO SDC_NVIOL_MIN 3274
+ACTUAL_TARGETS 1 1
+Startpoint: u_bound.u_core.u_stream.wd_q[97]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_bound.u_core.u_stream.lane_c[317]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout         Cap        Slew       Delay        Time   Description
+---------------------------------------------------------------------------------------------
+                                  0.000000    0.000000   clock clk (rise edge)
+                                 13.200000   13.200000   clock source latency
+     1    0.639853    0.000000    0.000000   13.200000 ^ clk_t35 (in)
+                                                         clk_t35 (net)
+                      0.133000    0.041957   13.241957 ^ clk_t35_tb0_d0/A (BUFx4_ASAP7_75t_R)
+     1    0.612519    8.940985   19.267761   32.509716 ^ clk_t35_tb0_d0/Y (BUFx4_ASAP7_75t_R)
+                                                         clk_t35_tb0_n0 (net)
+                      8.941027    0.028533   32.538250 ^ clk_t35_tb0_d1/A (BUFx4_ASAP7_75t_R)
+     1    0.616242    8.905764   21.946438   54.484688 ^ clk_t35_tb0_d1/Y (BUFx4_ASAP7_75t_R)
+                                                         clk_t35_tb0_n1 (net)
+                      8.905809    0.028654   54.513344 ^ clk_t35_tb0_d2/A (BUFx4_ASAP7_75t_R)
+     1    0.613155    8.899858   21.931522   76.444862 ^ clk_t35_tb0_d2/Y (BUFx4_ASAP7_75t_R)
+                                                         clk_t35_tb0_n2 (net)
+                      8.899903    0.028554   76.473419 ^ clk_t35_tb0_d3/A (BUFx4_ASAP7_75t_R)
+     1    9.701925   32.390602   29.629917  106.103333 ^ clk_t35_tb0_d3/Y (BUFx4_ASAP7_75t_R)
+                                                         clk_t35_tb0_tree (net)
+                     40.546101    8.322731  114.426064 ^ clkbuf_0_clk_t35/A (BUFx24_ASAP7_75t_R)
+     2   12.728164   14.521504   34.125744  148.551804 ^ clkbuf_0_clk_t35/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_0_clk_t35 (net)
+                     17.603491    3.236550  151.788361 ^ clkbuf_1_1_0_clk_t35/A (BUFx24_ASAP7_75t_R)
+     2    9.823318   12.172233   25.979191  177.767548 ^ clkbuf_1_1_0_clk_t35/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_1_1_0_clk_t35 (net)
+                     16.968781    3.866268  181.633820 ^ clkbuf_2_3_0_clk_t35/A (BUFx24_ASAP7_75t_R)
+    15   46.114780   32.764301   30.509457  212.143280 ^ clkbuf_2_3_0_clk_t35/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_2_3_0_clk_t35 (net)
+                     53.855927   13.999399  226.142670 ^ clkbuf_leaf_45_clk_t35/A (BUFx24_ASAP7_75t_R)
+    43   32.393848   27.324623   41.118732  267.261414 ^ clkbuf_leaf_45_clk_t35/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_leaf_45_clk_t35 (net)
+                     31.175562    5.332845  272.594269 ^ u_bound.u_core.u_stream.wd_q[97]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     1    1.354078   24.196894   58.070354  330.664612 v u_bound.u_core.u_stream.wd_q[97]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+                                                         _000227_ (net)
+                     24.206717    0.233230  330.897827 v _060681_/A (AND4x1_ASAP7_75t_R)
+     1    0.553656    7.464488   19.592440  350.490265 v _060681_/Y (AND4x1_ASAP7_75t_R)
+                                                         _038994_ (net)
+                      7.466140    0.023204  350.513489 v _060682_/A (AND5x1_ASAP7_75t_R)
+     1    0.685262    8.886023   19.477587  369.991058 v _060682_/Y (AND5x1_ASAP7_75t_R)
+                                                         _038995_ (net)
+                      8.887336    0.057093  370.048157 v _060685_/A2 (AO21x2_ASAP7_75t_R)
+     1    2.379307   14.759961   26.807806  396.855957 v _060685_/Y (AO21x2_ASAP7_75t_R)
+                                                         _038998_ (net)
+                     14.769012    0.185546  397.041504 v rebuffer129359/A (BUFx12f_ASAP7_75t_R)
+     2   11.580162    8.210623   19.064445  416.105957 v rebuffer129359/Y (BUFx12f_ASAP7_75t_R)
+                                                         net129355 (net)
+                     52.362850   16.329187  432.435150 v _060686_/A (OR2x6_ASAP7_75t_R)
+     1   11.867782   25.392002   41.360527  473.795685 v _060686_/Y (OR2x6_ASAP7_75t_R)
+                                                         _038999_ (net)
+                     53.158550   14.950263  488.745941 v wire21552/A (BUFx16f_ASAP7_75t_R)
+     1    4.097726    9.798903   33.456295  522.202209 v wire21552/Y (BUFx16f_ASAP7_75t_R)
+                                                         net21551 (net)
+                     10.379432    1.392553  523.594788 v wire85582/A (BUFx12f_ASAP7_75t_R)
+     2   17.384907    8.671917   17.746248  541.341003 v wire85582/Y (BUFx12f_ASAP7_75t_R)
+                                                         net85578 (net)
+                     82.605186   25.897341  567.238342 v _060687_/A (OR5x1_ASAP7_75t_R)
+     3    2.023017   27.232552   62.087780  629.326172 v _060687_/Y (OR5x1_ASAP7_75t_R)
+                                                         _039000_ (net)
+                     27.236595    0.144385  629.470520 v _060688_/A (OR4x1_ASAP7_75t_R)
+     2    1.507006   19.830219   41.289749  670.760254 v _060688_/Y (OR4x1_ASAP7_75t_R)
+                                                         _039001_ (net)
+                     19.832350    0.083100  670.843384 v _060689_/A (OR3x1_ASAP7_75t_R)
+     3    2.448014   24.725971   37.252758  708.096130 v _060689_/Y (OR3x1_ASAP7_75t_R)
+                                                         _039002_ (net)
+                     24.730059    0.141220  708.237366 v _060690_/A (OR3x1_ASAP7_75t_R)
+     3    1.972075   21.244459   36.695923  744.933289 v _060690_/Y (OR3x1_ASAP7_75t_R)
+                                                         _039003_ (net)
+                     21.245684    0.059508  744.992798 v _060691_/A (OR2x2_ASAP7_75t_R)
+     2    1.362601   11.121806   27.338575  772.331360 v _060691_/Y (OR2x2_ASAP7_75t_R)
+                                                         _039004_ (net)
+                     11.125896    0.095479  772.426819 v rebuffer129368/A (BUFx3_ASAP7_75t_R)
+     2    2.066429    9.510775   19.677759  792.104614 v rebuffer129368/Y (BUFx3_ASAP7_75t_R)
+                                                         net129364 (net)
+                      9.515884    0.107858  792.212463 v _063471_/A (XOR2x2_ASAP7_75t_R)
+     1    2.462531   18.215063   36.241508  828.453979 ^ _063471_/Y (XOR2x2_ASAP7_75t_R)
+                                                         _000249_ (net)
+                     18.225958    0.221989  828.675964 ^ wire19486/A (BUFx12f_ASAP7_75t_R)
+     1    5.699279   10.044265   18.839596  847.515564 ^ wire19486/Y (BUFx12f_ASAP7_75t_R)
+                                                         net19485 (net)
+                     13.288539    2.938316  850.453857 ^ wire84626/A (BUFx12f_ASAP7_75t_R)
+     3   25.128536   11.003038   18.113344  868.567200 ^ wire84626/Y (BUFx12f_ASAP7_75t_R)
+                                                         net84622 (net)
+                    139.805283   44.326653  912.893860 ^ wire19485/A (BUFx12f_ASAP7_75t_R)
+     1   19.584356   15.448874   38.347435  951.241333 ^ wire19485/Y (BUFx12f_ASAP7_75t_R)
+                                                         net19484 (net)
+                    109.404144   34.297787  985.539124 ^ wire19484/A (BUFx12f_ASAP7_75t_R)
+     1    9.402513   16.978300   34.822922 1020.362000 ^ wire19484/Y (BUFx12f_ASAP7_75t_R)
+                                                         net19483 (net)
+                     29.436193    7.724266 1028.086304 ^ wire84562/A (BUFx12f_ASAP7_75t_R)
+     2    9.990947   14.473866   21.912806 1049.999146 ^ wire84562/Y (BUFx12f_ASAP7_75t_R)
+                                                         net84558 (net)
+                     31.599916    9.035661 1059.034790 ^ u_bound.u_core.u_stream.lane_c[317]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+                                           1059.034790   data arrival time
+
+                                833.000000  833.000000   clock clk (rise edge)
+                                -13.300000  819.699951   clock source latency
+     2   10.449229    0.000000    0.000000  819.699951 ^ clk_t59 (in)
+                                                         clk_t59 (net)
+                      9.722042    3.066991  822.766968 ^ clkbuf_regs_8_clk/A (BUFx24_ASAP7_75t_R)
+     1    2.412671    8.928002   22.103930  844.870911 ^ clkbuf_regs_8_clk/Y (BUFx24_ASAP7_75t_R)
+                                                         clk_t59_regs (net)
+                      8.949174    0.451195  845.322083 ^ clkbuf_0_clk_t59_regs/A (BUFx24_ASAP7_75t_R)
+     2    8.646586   11.173376   22.584156  867.906250 ^ clkbuf_0_clk_t59_regs/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_0_clk_t59_regs (net)
+                     19.891859    5.339174  873.245422 ^ clkbuf_1_1_0_clk_t59_regs/A (BUFx24_ASAP7_75t_R)
+     2   12.435260   12.889005   26.839697  900.085144 ^ clkbuf_1_1_0_clk_t59_regs/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_1_1_0_clk_t59_regs (net)
+                     23.125952    6.002421  906.087524 ^ clkbuf_2_3_0_clk_t59_regs/A (BUFx24_ASAP7_75t_R)
+     2    9.881847   12.445223   27.897240  933.984802 ^ clkbuf_2_3_0_clk_t59_regs/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_2_3_0_clk_t59_regs (net)
+                     15.540543    3.009482  936.994263 ^ clkbuf_3_7_0_clk_t59_regs/A (BUFx24_ASAP7_75t_R)
+     4   14.683864   15.245479   26.209368  963.203613 ^ clkbuf_3_7_0_clk_t59_regs/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_3_7_0_clk_t59_regs (net)
+                     16.663708    2.142619  965.346252 ^ clkbuf_5_28_0_clk_t59_regs/A (BUFx24_ASAP7_75t_R)
+     4   10.073837   12.730591   26.114666  991.460938 ^ clkbuf_5_28_0_clk_t59_regs/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_5_28_0_clk_t59_regs (net)
+                     13.770804    1.766476  993.227417 ^ clkbuf_leaf_19_clk_t59_regs/A (BUFx24_ASAP7_75t_R)
+    27   13.816307   14.739748   25.711988 1018.939392 ^ clkbuf_leaf_19_clk_t59_regs/Y (BUFx24_ASAP7_75t_R)
+                                                         clknet_leaf_19_clk_t59_regs (net)
+                     14.841277    0.557332 1019.496704 ^ u_bound.u_core.u_stream.lane_c[317]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+                                  0.000000 1019.496704   clock reconvergence pessimism
+                                -13.908233 1005.588501   library setup time
+                                           1005.588501   data required time
+---------------------------------------------------------------------------------------------
+                                           1005.588501   data required time
+                                           -1059.034790   data arrival time
+---------------------------------------------------------------------------------------------
+                                            -53.446247   slack (VIOLATED)
+
+
+ACTUAL_STM_DIAG_DONE

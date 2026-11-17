@@ -1,0 +1,380 @@
+{
+  "verdict": "ACTUAL_ROUTED_PATH_DECOMPOSED",
+  "wns_ps": -53.446247,
+  "clock_launch_ps": 272.594269,
+  "clock_capture_ps": 186.500036,
+  "source_skew_ps": -26.5,
+  "network_skew_ps": -59.594233,
+  "contributions": {
+    "wire": 158.244639,
+    "clkq": 58.070354,
+    "buffer_cell": 221.98085,
+    "nonbuffer_cell": 348.144653
+  },
+  "total_data_ps": 786.440496,
+  "direct_DEF_L1_um": 539.676,
+  "cell_origins_polyline_L1_um": 544.536,
+  "cell_polyline_stretch": 1.0090054,
+  "limits": "Exact SPEF STA wire/cell delays. DEF cell polyline is not actual routed metal length; no stranded-cell detour observed. Zero-skew hypothetical is NOT an available fix.",
+  "arcs": [
+    {
+      "inst": "u_bound.u_core.u_stream.wd_q[97]$_DFF_P_",
+      "pin": "QN",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "kind": "clkq",
+      "delay_ps": 58.070354,
+      "time_ps": 330.664612
+    },
+    {
+      "inst": "_060681_",
+      "pin": "A",
+      "cell": "AND4x1_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.23323,
+      "time_ps": 330.897827
+    },
+    {
+      "inst": "_060681_",
+      "pin": "Y",
+      "cell": "AND4x1_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 19.59244,
+      "time_ps": 350.490265
+    },
+    {
+      "inst": "_060682_",
+      "pin": "A",
+      "cell": "AND5x1_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.023204,
+      "time_ps": 350.513489
+    },
+    {
+      "inst": "_060682_",
+      "pin": "Y",
+      "cell": "AND5x1_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 19.477587,
+      "time_ps": 369.991058
+    },
+    {
+      "inst": "_060685_",
+      "pin": "A2",
+      "cell": "AO21x2_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.057093,
+      "time_ps": 370.048157
+    },
+    {
+      "inst": "_060685_",
+      "pin": "Y",
+      "cell": "AO21x2_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 26.807806,
+      "time_ps": 396.855957
+    },
+    {
+      "inst": "rebuffer129359",
+      "pin": "A",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.185546,
+      "time_ps": 397.041504
+    },
+    {
+      "inst": "rebuffer129359",
+      "pin": "Y",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 19.064445,
+      "time_ps": 416.105957
+    },
+    {
+      "inst": "_060686_",
+      "pin": "A",
+      "cell": "OR2x6_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 16.329187,
+      "time_ps": 432.43515
+    },
+    {
+      "inst": "_060686_",
+      "pin": "Y",
+      "cell": "OR2x6_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 41.360527,
+      "time_ps": 473.795685
+    },
+    {
+      "inst": "wire21552",
+      "pin": "A",
+      "cell": "BUFx16f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 14.950263,
+      "time_ps": 488.745941
+    },
+    {
+      "inst": "wire21552",
+      "pin": "Y",
+      "cell": "BUFx16f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 33.456295,
+      "time_ps": 522.202209
+    },
+    {
+      "inst": "wire85582",
+      "pin": "A",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 1.392553,
+      "time_ps": 523.594788
+    },
+    {
+      "inst": "wire85582",
+      "pin": "Y",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 17.746248,
+      "time_ps": 541.341003
+    },
+    {
+      "inst": "_060687_",
+      "pin": "A",
+      "cell": "OR5x1_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 25.897341,
+      "time_ps": 567.238342
+    },
+    {
+      "inst": "_060687_",
+      "pin": "Y",
+      "cell": "OR5x1_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 62.08778,
+      "time_ps": 629.326172
+    },
+    {
+      "inst": "_060688_",
+      "pin": "A",
+      "cell": "OR4x1_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.144385,
+      "time_ps": 629.47052
+    },
+    {
+      "inst": "_060688_",
+      "pin": "Y",
+      "cell": "OR4x1_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 41.289749,
+      "time_ps": 670.760254
+    },
+    {
+      "inst": "_060689_",
+      "pin": "A",
+      "cell": "OR3x1_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.0831,
+      "time_ps": 670.843384
+    },
+    {
+      "inst": "_060689_",
+      "pin": "Y",
+      "cell": "OR3x1_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 37.252758,
+      "time_ps": 708.09613
+    },
+    {
+      "inst": "_060690_",
+      "pin": "A",
+      "cell": "OR3x1_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.14122,
+      "time_ps": 708.237366
+    },
+    {
+      "inst": "_060690_",
+      "pin": "Y",
+      "cell": "OR3x1_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 36.695923,
+      "time_ps": 744.933289
+    },
+    {
+      "inst": "_060691_",
+      "pin": "A",
+      "cell": "OR2x2_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.059508,
+      "time_ps": 744.992798
+    },
+    {
+      "inst": "_060691_",
+      "pin": "Y",
+      "cell": "OR2x2_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 27.338575,
+      "time_ps": 772.33136
+    },
+    {
+      "inst": "rebuffer129368",
+      "pin": "A",
+      "cell": "BUFx3_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.095479,
+      "time_ps": 772.426819
+    },
+    {
+      "inst": "rebuffer129368",
+      "pin": "Y",
+      "cell": "BUFx3_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 19.677759,
+      "time_ps": 792.104614
+    },
+    {
+      "inst": "_063471_",
+      "pin": "A",
+      "cell": "XOR2x2_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.107858,
+      "time_ps": 792.212463
+    },
+    {
+      "inst": "_063471_",
+      "pin": "Y",
+      "cell": "XOR2x2_ASAP7_75t_R",
+      "kind": "nonbuffer_cell",
+      "delay_ps": 36.241508,
+      "time_ps": 828.453979
+    },
+    {
+      "inst": "wire19486",
+      "pin": "A",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 0.221989,
+      "time_ps": 828.675964
+    },
+    {
+      "inst": "wire19486",
+      "pin": "Y",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 18.839596,
+      "time_ps": 847.515564
+    },
+    {
+      "inst": "wire84626",
+      "pin": "A",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 2.938316,
+      "time_ps": 850.453857
+    },
+    {
+      "inst": "wire84626",
+      "pin": "Y",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 18.113344,
+      "time_ps": 868.5672
+    },
+    {
+      "inst": "wire19485",
+      "pin": "A",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 44.326653,
+      "time_ps": 912.89386
+    },
+    {
+      "inst": "wire19485",
+      "pin": "Y",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 38.347435,
+      "time_ps": 951.241333
+    },
+    {
+      "inst": "wire19484",
+      "pin": "A",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 34.297787,
+      "time_ps": 985.539124
+    },
+    {
+      "inst": "wire19484",
+      "pin": "Y",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 34.822922,
+      "time_ps": 1020.362
+    },
+    {
+      "inst": "wire84562",
+      "pin": "A",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 7.724266,
+      "time_ps": 1028.086304
+    },
+    {
+      "inst": "wire84562",
+      "pin": "Y",
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "kind": "buffer_cell",
+      "delay_ps": 21.912806,
+      "time_ps": 1049.999146
+    },
+    {
+      "inst": "u_bound.u_core.u_stream.lane_c[317]$_DFF_P_",
+      "pin": "D",
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "kind": "wire",
+      "delay_ps": 9.035661,
+      "time_ps": 1059.03479
+    }
+  ],
+  "clock_ports": {
+    "launch": "clk_t35",
+    "capture": "clk_t59",
+    "launch_source_late_ps": 13.2,
+    "capture_source_early_ps": -13.3,
+    "launch_network_ps": 259.394269,
+    "capture_network_ps": 199.800036,
+    "old_mid_tol_ps": {
+      "clk_t35": [
+        3.2,
+        10
+      ],
+      "clk_t59": [
+        -3.3,
+        10
+      ]
+    }
+  },
+  "M4_row_diagnostic_only": {
+    "plan": "zz_s29_qc103_s4q9m4.json",
+    "type": "slw_stm_v1__cle34a73c3",
+    "new_mid_tol_ps": {
+      "clk_t35": [
+        -2.9,
+        10.1
+      ],
+      "clk_t59": [
+        1.4,
+        10.1
+      ]
+    },
+    "new_source_setup_skew_ps": -15.9,
+    "old_source_setup_skew_ps": -26.5,
+    "source_only_gain_ps": 10.6,
+    "projected_old_physical_WNS_ps": -42.846247,
+    "qualified": false,
+    "requires": "Parent compares fresh M5 exact geometry/port/cell identity; this substitutes no real physical proof and assumes no available free clock skew."
+  },
+  "next_owner": "QC plan/clock owner: actual M5 clock-row/context read. No speculative arithmetic RTL or blind physical retry. BF16 prototype NOT ADOPTED."
+}
