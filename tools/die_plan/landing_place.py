@@ -28,10 +28,13 @@ def _native_stage_groups(t, groups):
     rows = cfg['groups']
     if not isinstance(rows, list) or not rows:
         raise ValueError('native_stage_groups needs nonempty groups')
-    width, height = t['outline_um']; seen = {x[0] for x in groups}; added = []
+    width, height = t['outline_um']; seen = {x[0] for x in groups}; added = []; leaf = {}
     for row in rows:
-        if not isinstance(row, dict) or set(row) != {'prefix', 'rect_um', 'tag'}:
+        if not isinstance(row, dict) or set(row) not in ({'prefix', 'rect_um', 'tag'}, {'prefix', 'rect_um', 'tag', 'match'}):
             raise ValueError('native_stage_groups group fields')
+        mode = row.get('match', 'prefix')
+        if mode not in ('prefix', 'cell'):
+            raise ValueError('native_stage_groups match must be prefix or cell')
         prefix, rect, tag = row['prefix'], row['rect_um'], row['tag']
         if not isinstance(prefix, str) or not prefix.startswith(re.escape(cfg['content'])) or any(x in prefix for x in '{}\n\r\t\0') or prefix in seen:
             raise ValueError('native_stage_groups invalid/duplicate prefix')
@@ -46,6 +49,8 @@ def _native_stage_groups(t, groups):
         if not (0 <= rect[0] < rect[2] <= width and 0 <= rect[1] < rect[3] <= height):
             raise ValueError('native_stage_groups rectangle outside outline')
         seen.add(prefix); added.append((prefix, rect, tag))
+        if mode == 'cell':
+            leaf[prefix] = '^' + prefix + '$'
     # Use the exact matcher that the later placement loop uses.
     entries = ' '.join('{' + p + '}' for p, _, _ in added)
     check = '\n'.join(['foreach cland_native_prefix {%s} {' % entries,
@@ -56,7 +61,32 @@ def _native_stage_groups(t, groups):
         ' if {!$cland_native_found} {',
         '  error "OT_CLAND missing native stage group $cland_native_prefix"',
         ' }', '}', 'unset -nocomplain cland_native_prefix cland_native_found cland_native_i', ''])
+    if leaf:
+        init = 'set ::cland_native_leaf_regex [dict create]\n'
+        init += ''.join('dict set ::cland_native_leaf_regex {' + p + '} {' + pat + '}\n' for p, pat in leaf.items())
+        check = check.replace(' set cland_native_found 0',
+            ' set cland_native_found 0\n set cland_native_re [format {(^|[/.])%s[/.]} $cland_native_prefix]\n if {[dict exists $::cland_native_leaf_regex $cland_native_prefix]} {set cland_native_re [dict get $::cland_native_leaf_regex $cland_native_prefix]}')
+        check = check.replace('regexp [format {(^|[/.])%s[/.]} $cland_native_prefix]', 'regexp $cland_native_re')
+        check = init + check
     return groups + added, check
+
+
+def _native_stage_placement_source(t, source):
+    cfg = (t or {}).get('clock', {}).get('landing_contract', {}).get('native_stage_groups', {})
+    if not any(row.get('match') == 'cell' for row in cfg.get('groups', [])):
+        return source
+    marker = 'proc cland_group_insts {prefix} {\n global ff_blk cland_instance_index\n'
+    if source.count(marker) != 1:
+        raise ValueError('native leaf matcher source marker missing')
+    extra = ''' if {[dict exists $::cland_native_leaf_regex $prefix]} {
+  set hit {}
+  foreach i [$ff_blk getInsts] {
+   if {[regexp [dict get $::cland_native_leaf_regex $prefix] [$i getName]]} {lappend hit $i}
+  }
+  return $hit
+ }
+'''
+    return source.replace(marker, marker + extra)
 
 
 def _group_rect_overrides(t, groups, stale=None):
@@ -831,7 +861,7 @@ def tcl(P,tn,macro_moves=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, P.types[tn])
-    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_placement_source(bool(role_config))
+    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(P.types[tn], getattr(P, 'clock', None))+_native_stage_placement_source(P.types[tn], _placement_source(bool(role_config)))
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -853,4 +883,4 @@ def _dataflow_tcl(tn,c,t=None):
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
     role_config = _native_role_config(tn, t or {})
-    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(t or {})+_placement_source(bool(role_config))
+    return '\n'.join(out)+'\n'+override_check+native_check+role_config+_local_chunk_config(t or {})+_native_stage_placement_source(t or {}, _placement_source(bool(role_config)))
