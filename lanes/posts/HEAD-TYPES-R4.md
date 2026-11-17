@@ -1,0 +1,1 @@
+- 2026-11-17 06:50 PST START successor of HEAD-R3. Unsigned HEAD types: hd_serdes (sd9f), hd_lep0N, hd_mesh. sd9f 28 DRC = 19 M7 Short + 9 M2 spacing on clk_t* tap nets (he12h-class reserved-site obstruction over tap pin); diagnosing, ECO next.
