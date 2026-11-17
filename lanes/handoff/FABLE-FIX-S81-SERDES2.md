@@ -130,3 +130,42 @@ OPEN, NOT MINE TO FINISH ALONE (posted 15:1x as STRUCTURAL)
     The other 10 types cannot be released on it through the wave until a lane ports it; a generator rebuild of t13 is not this placement.
 HOLD: S81-TYPES-R3 was asked to hold the 11 serdes items on result:FABLE-FIX-S81-SERDES2:rail-gen; post that result only after branch 2 is merged.
 NO SIGN-OFF EXISTS for any serdes type; nothing was exported to AGIdock or rtx-pro.
+
+## For S81-SERDES-GEN (written 15:3x PST; V = I opened it, R = from another lane handoff, ? = not found)
+I took the H lineage over at H12 and never generated the base kit, so (1) and (2) are what the records show, not my own run.
+(1) Plan JSON path and sha
+- ? The plan file the H base kit was generated from is NOT recorded in the kit or next to it (epyc8/epyc2 L/H, H2, H3, H3p hold only gen/; no
+  gen.log, no kit_rtl.log kept).
+- V kit record: H17 kit budget.json io_hold.plan_sha256 = cd773b61a1a79877534cf1f0595c5b503ada0fa035d62b5360dc5b0dbbbd28e0.
+  No *.json > 100 kB under epyc8 /srv/opentallas-scratch2/claude/s81-b3-clk/{ev,run/b/*} has that raw sha256 (so it is either a canonical-form
+  hash or a plan outside that tree). Recompute with the Plan loader of the tree below before trusting any candidate.
+- V kit record: kit_rtl_paths.json src_tree = /srv/opentallas-scratch2/claude/s81-b3-clk/run/b/B6gF2s4strip3/src  (so the bind/RTL side is the
+  B6gF2s4strip3 event tree; the plan is most likely that event, on base physical/die_plan/s81/plan_h2_2249.json).
+- R form name: plan_h2_2249 (clock.keepouts_um classes), FABLE-FIX-S81-SERDES handoff line 144.
+(2) gen command line and environment
+- V the recipe file exists: epyc8 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes/gen2.sh (gen.sh = same without PREP_PLAN), usage
+  `gen2.sh FORM TYPE [extra gen args]`, env PLAN/BIND/ASB/SIDE/SRC/ITEM_ENV/PREP_PLAN override. Its defaults are the G3b plan of record
+  (PLAN=$M/ev/B6gG3b.json, SRC=kw45/src_s81_pin_eb1e73448bd0), which is NOT what the H kit used (see src_tree above); the overrides used for H
+  are ? (not recorded). Steps, in $SRC:
+    OT_NATIVE_RESET_SCOPE=selected python3 tools/die_plan/bind.py kit-rtl $PLAN --out $BIND --asbuilt $ASB --type T --src-tree $SRC --kit $W/rtl
+    python3 -I tools/die_plan/kit_topology.py prepare-stations $PLAN T $W/rtl --native-plan $PLAN --asbuilt $ASB
+    python3 tools/die_plan/gen.py phys $PLAN --out $W/gen --types T --rtl-root $SRC --kit-rtl T=$W/rtl/kit_rtl.f --hold-ff-margin 0
+        --max-wire-um 100 --clock-landing $SIDE
+  env for gen.py phys: OT_FLOW_TAG=flow-20261108-eg-s81 OT_SIGNED_VIEW_SHA=/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_s81.json
+    OT_PLACE_MAX_FANOUT=64 OT_GRT_NONPORT_HOLD=1 OT_CORE_TAP_REACH_UM=0 OT_PREGRT_FF_HOLD_AUTO=-1 OT_MAX_BUFFER_PERCENT=100 OT_GRT_POST_MAX_S=0
+    OT_HOLD_STOP_PS=-1000000 OT_GRT_ALLOW_CONGESTION=1 OT_CONS_MAX_LAYER=M9 OT_CLAND_STRIP_DENS=1.0 OT_TT_SETUP_REPAIR=both OT_PG_DIE_PHASE=1
+    OT_PG_TRACK_TRUTH=1 OT_PG_TRACK_TRUTH_WIDE_SPACING=1 OT_PG_CELL_KEEPOUT=0 OT_PG_PIN_CHECK=1 OT_PGCAP=1 OT_GEN_M8_GRANT=1 OT_CONS_KIT=1
+    OT_CONS_UTIL=0.25 OT_CONS_STRIP_ROWS=1  (+ ITEM_ENV = the item_env of kit_wave.json s81 11-16 for the type)
+  Cross-check against the H17 config.mk (epyc9 .../fable-fix-s81-serdes2/H17/serdes__t13/gen/serdes__t13/config.mk): it has OT_PG_TRACK_TRUTH = 1,
+  OT_GRT_NONPORT_HOLD = 1, OT_PLACE_MAX_FANOUT = 64, OT_TT_SETUP_REPAIR = both, -allow_congestion; it has NO ref_tile trace: the kit is gen.py phys.
+- V everything after generation is hand work on the kit copy; the saved config.mk.H_before_north / .H_before_family / .H_before_corrective_dpl /
+  .H_dpl_source and clock_taps.tcl.H_before_north / clock_taps.H_before_family.tcl in the kit are the checkpoints between the hand steps
+  (diff them in that order to get each step as a delta); the last hand lines are in config.mk from "# S81-SERDES-R H2: north-strip tap rows" down.
+(3) The 90 plain relays
+- R (S81-SERDES-R2 handoff lines 45-48, 66): H3p = H2 kit + tools/die_plan/bound_reset_edit.py --plain on the kit bound RTL: all 90 ot_dp_rrelay_nl
+  -> ot_dp_rrelay, relay_lockup removed, depth map unchanged (134 taps). V the record is in the kit: H3p_plain_edit.json (plain true,
+  relays_to_plain 90, bound_rtl_sha256 e55e8d12e239bd943a4dc1cf16f597c957090c074f75d5e87615e6ec9e06ec93).
+- R S81-DIE-R2 confirmed 11-16 20:09 that B6gF2s5f (plan C3 c20ec9e4c3c4) drops all 11 serdes types from reset.relay_lockup.types, so the bind
+  emits plain relays for them. So: it is a PLAN change and it is already in B6gF2s5f; no generator rule and no bound_reset_edit are needed for a
+  kit generated from an s5f-or-later bind. I did not open the s5f plan myself: check reset.relay_lockup.types there, and check that the generated
+  bound RTL sha equals e55e8d12... (or differs only by the later events) before placing.
