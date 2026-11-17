@@ -128,7 +128,7 @@ def check_hashes(tree, plan=None, plan_sha256=None):
 SIDECAR_EXT = (".json", ".tsv", ".gz", ".csv", ".v", ".sv", ".lef", ".lib", ".yaml", ".py", ".txt")
 
 
-def check_contained(tree, plan):
+def check_contained(tree, plan, roots=("/srv/",)):
     """-> findings.  The published tree must reproduce PRE/G0 on any host that holds it: the plan file is inside the tree (its sidecars
     census/, core_conns.json ... are found relative to the plan dir), and every absolute /srv file path the plan names exists inside
     the tree, not in a lane directory."""
@@ -153,7 +153,7 @@ def check_contained(tree, plan):
         elif isinstance(v, list):
             for x in v:
                 walk(x)
-        elif isinstance(v, str) and v.startswith("/srv/") and v.endswith(SIDECAR_EXT) and v not in seen:
+        elif isinstance(v, str) and v.startswith(tuple(roots)) and v.endswith(SIDECAR_EXT) and v not in seen:
             seen.add(v)
             if os.path.isfile(v) and not (os.path.realpath(v) + os.sep).startswith(root):
                 out.append(f"CONTAINED plan names {v}, a file outside the tree")

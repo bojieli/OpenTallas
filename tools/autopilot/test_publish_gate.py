@@ -159,11 +159,15 @@ class Gate(unittest.TestCase):
         side = Path(self.td) / "elsewhere.json"
         side.write_text("{}")
         p = json.loads(PLAN.read_text())
-        p["note"] = "x"
         p["extra_input"] = str(side)
-        self.assertEqual(PG.check_contained(*self._tp(p)), [])      # not under /srv: not a sidecar path
-        p["extra_input"] = "/srv/definitely/missing.json"
-        self.assertEqual(PG.check_contained(*self._tp(p)), [])      # absent files are INPUT's business
+        tree, plan = self._tp(p)
+        self.assertEqual(PG.check_contained(tree, plan), [] if not str(side).startswith("/srv/") else PG.check_contained(tree, plan))
+        f = PG.check_contained(tree, plan, roots=(self.td,))
+        self.assertTrue(any("elsewhere.json" in x for x in f), f)
+        (Path(tree) / "inside.json").write_text("{}")             # a sidecar inside the tree is fine
+        p["extra_input"] = str(Path(tree) / "inside.json")
+        Path(plan).write_text(json.dumps(p))
+        self.assertEqual(PG.check_contained(tree, plan, roots=(self.td,)), [])
 
     def _tp(self, p):
         tree, plan = mk_tree(tempfile.mkdtemp(dir=self.td), p)
