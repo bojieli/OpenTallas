@@ -1,0 +1,38 @@
+{
+  "gp": {
+    "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err[1]": 56818,
+    "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err[0]": 94952
+  },
+  "tp": {
+    "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err[0]": 60029
+  },
+  "gc": {
+    "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err[1]": 0,
+    "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err[0]": 2457475
+  },
+  "tc": {
+    "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err[0]": 225010
+  },
+  "aliases": [],
+  "relaid": [],
+  "hyp": [
+    [
+      "gate",
+      "ff:__gate_anon_28625",
+      [
+        "eq",
+        "gate",
+        "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err#t[0]",
+        1
+      ]
+    ],
+    [
+      "gold",
+      "ff:u_dut.u_u_exp0.u_exp.a_r.g_l.u.s1_err[1]",
+      [
+        "const",
+        0
+      ]
+    ]
+  ]
+}

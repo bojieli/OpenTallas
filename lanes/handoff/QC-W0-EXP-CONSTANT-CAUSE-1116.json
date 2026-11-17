@@ -1,0 +1,25 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/fable-fix-qc-cbglue/headseg44/group44/src_804_complete/rtl/hdc/ot_hdc_sfu_q.sv",
+  "source_sha256": "8f85ffb2887117ef0a0db3f649a60d32c943e226903e6595885fc9af8acc132a",
+  "function_sha256": "8930492a47a6eba75414434034a02d5e01730fd71a1bc785a88a1cdff17f5ac4",
+  "actual_entries": 254,
+  "default": "64d0",
+  "bit30_zero_all_literal_entries": true,
+  "bit126": "32*3+30: final D4 delay stage bit30",
+  "register_chain_edges": 5,
+  "arithmetic_reimplemented": false,
+  "source_unchanged": true,
+  "reset_contract_not_changed": true,
+  "scope": "Exact actual ln2_nk function and actual ot_hdc_delay.W32/D4/RESET0 plus original registered a_hi/a_lo assignment. nk arbitrary8bits; numericalFP datapath not simulated or replaced.",
+  "mutant": "real nk130 lowword bit30 B93CBF94->F93CBF94",
+  "results": {
+    "table": "PASS",
+    "chain4": "FAIL",
+    "chain5": "FAIL",
+    "chain6": "PASS",
+    "mutant": "FAIL"
+  },
+  "sat_timeframe": "Yosysstep1 is freeinitialstate;6frames correspond5clocktransitions",
+  "diagnosis": "LEC default4resetedges is insufficient toproveunreset d_lo[126] constantaftera_lo register+4delays. Exacttablebit30 is universally0; chainbecomes0after5edges. No declaredresetcontract changed; debugrawbaseoverride prohibitedforrelease.",
+  "whole_W0_LEC_verdict": "KEEP FAIL remains until actualbootcontract+remainingstatepair areproven"
+}
