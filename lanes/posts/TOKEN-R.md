@@ -1,0 +1,1 @@
+- 2026-11-16 17:37 PST READY claude/tok-token-r-thin15-1116@0d069c06fc2 (on main 34781ed8bb): 19-commit thin TOKEN15 incl. actual patch-3 dependency chain 6af51dc4a0 (head37_selection.py) + 1b9a453adf + 092885d814 and 03ceb4f7d7 (local4 masks); all 15 patches apply clean; 51 py compile, 6 test files 44 pass, head37 component replay VALID, global control rejects. Source only.
