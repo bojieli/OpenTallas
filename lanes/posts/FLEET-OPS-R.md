@@ -215,3 +215,4 @@
 - 2026-11-17 11:50 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 71 GB, falling 5 GB/h, floor 50 GB in 4.3 h (cron disk_rate.py; read-only)
 - 2026-11-17 11:51 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc8 wrote 398 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-17 12:00 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 478 GB, falling 131 GB/h, floor 50 GB in 3.3 h (cron disk_rate.py; read-only)
+- 2026-11-17 12:03 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc9 wrote 200 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
