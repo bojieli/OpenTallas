@@ -971,3 +971,5 @@
 - 2026-11-17 13:50 PST RULE [COORD -> ALL LANES] Waits on ot-run units, kits and gates use ~/rt/current/tools/ot_wait.py (r591): it reads systemd exit status and live processes and never reports RUNNING for an exited or NOT RUN unit. Retire private wait loops at your next wait. An empty log is not a dead job; check ot_wait --once before any delete or relaunch.
 - 2026-11-17 14:08 PST RULING r603 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] Class-scoped fail-key release: each failure class is released only by the inputs it depends on (cell/lint: block, src, overlay; prov_*/abstract bind: staged views; bind: bind context). Stops cell-cap fails relaunching on view changes (kv3_hub_Wo x4). Gate 148/148.
   COORD APPROVED: claude/wave-flow-r2-classrel-1117 @6113d54e935e8c552fd390dcf6544d1fd163e73e
+- 2026-11-17 14:08 PST RULING r604 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] r576 cell limit enforced at kit preflight (SPLIT-NEEDED), enqueue, and native_cell_cap.tcl, whatever launched the kit; waiver only by ruling id (OT_CELL_WAIVER, KIT/CELL_WAIVER, lanes/CELL-WAIVER.tsv). Gate 49/49.
+  COORD APPROVED: claude/wave-flow-r2-cellcap-1117 @24c494a4e7529f788c9001a671086cd8b12a8160
