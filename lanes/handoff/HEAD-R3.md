@@ -2,14 +2,9 @@
 Started 2026-11-17 05:28 PST. Client logs: intel2 ~/head-r3-logs/. Nothing deleted, no kills.
 
 ## Live jobs (collect; R-MINIMAL = DRC 0, routed TT >= -42, internal reg-to-reg FF hold >= 0)
-- hd_ctl HEI: Codex hei1 route (E7 unit3887706) FAILED DRT-0206: unchanged net cland_fwd_fclk_out_b7_tx_o "1 pin not
-  visited" (legacy pin-contact class, same as n3_turn route_contact_r2). Failure kept at E7 mchk_local/hei1.
-  Successor hei1r2 = same hei_insert.odb (23 HB4) + that net added to the re-routed set (private
-  hold_eco_internal_route_extra.tcl, OT_HEI_EXTRA_NETS). E7 was disk-refused, so kit+inputs were copied to E9 same path
-  /srv/opentallas-scratch2/claude/head-types-r2/mchk_local/{kit_hd_ctl,hei1,hei1r2}. E9 unit oth-ubuntu-3558344-1794922883,
-  log ~/head-r3-logs/ctl_hei1r2.log; route -> fill/finish -> signoff.py -> hei1r2/kit_hd_ctl/signoff_hei/signoff.json.
-  ROUTE_ATTEMPTED guards a repeat. If SIGNED: LOOK final render, export with rtx-pro ~/head-spe-export/ffht_export_v2.sh
-  epyc9 hd_ctl__nf15d2_mchk_local_hei1r2_1117 <base> <signoff.json> "<note>".
+- hd_ctl: DONE, SIGNED + exported (see Collected). Codex hei1 route (E7 unit3887706) had FAILED DRT-0206 on the unchanged net
+  cland_fwd_fclk_out_b7_tx_o (legacy pin-contact class); failure kept at E7 mchk_local/hei1. Successor hei1r2 on E9 (same
+  path; E7 was disk-refused) re-routed that net with the 23 HB4 nets (hold_eco_internal_route_extra.tcl, OT_HEI_EXTRA_NETS).
 - hd_st_n3_turn 192-pad recovery: hei1 (E8 unit2826139) NOT SIGNED, DRC 0, TT +43.85, one new internal end
   u_ft_u1_s5/q[366] FF -1.035. Codex hei2 (1 HB4) E8 unit oth-ubuntu-3532638-1794921683, log ~/hdr/fclk_hei2_route_codex.log,
   out E8 head-die-r/fclk_recovery_u1/hei2/signoff/signoff.json. Custom base (run_route_signoff.sh) -> export from hei2/run/results/...
@@ -57,6 +52,10 @@ forward and credit). The token/compiler calendar for this tuple is NOT regenerat
   rst_start_raw_* advisory, parent). Exported BOTH s81_head/hd_st_n3_turn__nf15_fclk192_hei2_1117, ODB sha
   0765cc9e970cf7df77f4ee9ce94d353b9f877a2475e3768014061372cbd57541; INDEX rows on rtx-pro + AGIdock. Final render not re-looked
   (1 HB4 after the reviewed hei1 image). NEXT: swap into die STA (E7 head-die-r/nf15c_real4/run_nf15c4.sh), remeasure ring hold.
+- hd_ctl hei1r2 (E9 unit3558344): SIGNED R-MINIMAL, DRC 0, ANT 0, TT -4.82 (14 ends, achieved 837.82 ps), internal FF hold 0
+  (complete census; 308 port ends -11.40 advisory, parent h_rx_i/lepk_i0). final_placement LOOKED. Exported BOTH
+  s81_head/hd_ctl__nf15d2_mchk_local_hei1r2_1117, ODB sha 835ee68007cbd7c4ca8ab3bddd95d9014421e03aa2caa11598c8c6ed3856e068.
+  NEXT: stand-in swap in die STA. E9 copy of kit_hd_ctl + hei1r2 can go after the die STA swap (ot-delete only).
 - BUF64 coupon: export_r2 alias PASS (E7 buf4_64/export_r2/6_final.*), routed pair tE1o0->tE0b1 hold TT +386.45 / FF +106.09,
   2 endpoints, 0 negative (buf4_64/pair_routed_r2). Model said 171 TT / 115 FF margin. Coupon only; phase contract owner decides.
 
