@@ -27,7 +27,7 @@ NETLIST = ("module top(input CK, input [%d:0] DIN, output R2O);\nwire q0, q1;\n"
 
 @unittest.skipUnless(OPENROAD, "OpenROAD required")
 class CtsHoldScope(unittest.TestCase):
-    def endpoints_seen(self, stage, scope="reg2reg"):
+    def endpoints_seen(self, stage, scope="reg2reg", env=""):
         with tempfile.TemporaryDirectory(prefix="cts-hold-scope-") as td:
             d = Path(td)
             (d / "f.lib").write_text(fixture.LIB)
@@ -44,6 +44,7 @@ class CtsHoldScope(unittest.TestCase):
             s += "proc ot_hold_stats {} {return [sta::worst_slack_cmd min]}\n" + fixture.production_helper(True) + "\n"
             if scope is not None:
                 s += f"set ::env(OT_HOLD_REPAIR_SCOPE) {{{scope}}}\n"
+            s += env
             s += ("proc seen {} { set_scene BC; report_checks -path_delay min -scenes BC -group_path_count 1000 "
                   f"-endpoint_path_count 1 -unique_paths_to_endpoint > {{{d}/seen.rpt}} }}\n")
             s += "ot_hold_repair_scope { seen }\nexit\n"
@@ -63,6 +64,11 @@ class CtsHoldScope(unittest.TestCase):
         allp = self.endpoints_seen("3_place.sdc", scope="")
         self.assertGreaterEqual(allp, NPORT, "opt-out (explicit empty scope) must keep the old all-path repair")
 
+    def test_hold_pad_setting_runs_and_rejects_bad_cells(self):
+        self.assertEqual(self.endpoints_seen("3_place.sdc", env="set ::env(OT_CTS_HOLD_PAD) HB2,HB4\n"), 2)
+        with self.assertRaises(AssertionError):
+            self.endpoints_seen("3_place.sdc", env="set ::env(OT_CTS_HOLD_PAD) HB9\n")
+
     def test_default_scope_is_reg2reg_at_cts(self):
         self.assertLessEqual(self.endpoints_seen("3_place.sdc", scope=None), 2)
 
@@ -72,7 +78,8 @@ class StaticWiring(unittest.TestCase):
     def test_scope_guard_accepts_the_cts_stage(self):
         txt = (HERE / "orfs_hold_mm.tcl").read_text()
         i = txt.index("proc ot_hold_repair_scope")
-        self.assertIn("ni {3_place.sdc 4_cts.sdc}", txt[i:i + 700])
+        self.assertIn("ni {3_place.sdc 4_cts.sdc}", txt[i:i + 2500])
+        self.assertIn("unset_dont_use $pad", txt[i - 1500:i + 1500])
 
 
 if __name__ == "__main__":

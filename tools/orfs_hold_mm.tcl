@@ -704,7 +704,23 @@ proc ot_hold_scope_default {} {
   if {[info exists ::env(OT_HOLD_PORT_SCOPE_OFF)] && $::env(OT_HOLD_PORT_SCOPE_OFF) eq "1"} { return "" }
   return reg2reg
 }
+# HOLD-FLOW-R 11-16 (COORD): OT_CTS_HOLD_PAD = HB2 | HB4 | HB2,HB4 lets the CTS-stage hold repair (stage 3_place.sdc) pad with the
+# slow delay cells instead of BUFx2 chains (fewer cells and M1 pins per ps; ORFS DONT_USE '*xp*' bars them).  The cells are lifted
+# only around the scoped hold repair and put back afterwards, so setup repair and CTS never see them.  Unset = unchanged.
 proc ot_hold_repair_scope {body} {
+  set pad {}
+  if {[info exists ::env(OT_CTS_HOLD_PAD)] && $::env(OT_CTS_HOLD_PAD) ne "" && [info exists ::ot_mm_stage] && $::ot_mm_stage eq "3_place.sdc"} {
+    foreach k [split $::env(OT_CTS_HOLD_PAD) ,] {
+      if {$k ni {HB2 HB4}} { error "OT_CTS_HOLD_PAD: $k is not HB2 or HB4" }
+      foreach c [get_lib_cells -quiet */${k}xp67_ASAP7_75t_R] { lappend pad $c }
+    }
+    if {[llength $pad]} { unset_dont_use $pad; puts "OT_CTS_HOLD_PAD: [llength $pad] delay cell(s) usable for the CTS hold repair" }
+  }
+  set rc [catch {uplevel 1 [list ot_hold_repair_scope_core $body]} out opts]
+  if {[llength $pad]} { set_dont_use $pad }
+  return -options $opts $out
+}
+proc ot_hold_repair_scope_core {body} {
   set scope [ot_hold_scope_default]
   if {$scope ni {reg2reg nonport} ||
       ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} {
