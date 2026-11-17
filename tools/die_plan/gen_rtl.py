@@ -901,7 +901,9 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                 L.validate_observer_native(lambda tn: leaf_headers(P.types[tn], rtl_root), parse_leaf_ports)
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
-    (out / "ot_dp_cells.sv").write_text(CELLS + (ENTRY_FALL_CELLS if uses_entry_fall(P.raw) else "")
+    import pin_entry_delay as PED
+    (out / "ot_dp_cells.sv").write_text(CELLS + (PED.CELL_RTL if PED.uses(P.raw) else "")
+                                        + (ENTRY_FALL_CELLS if uses_entry_fall(P.raw) else "")
                                         + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
                                         + (HOLD_CELLS if uses_hold_hb4(P.raw) else ""))
     files = [out / "ot_dp_cells.sv"]
