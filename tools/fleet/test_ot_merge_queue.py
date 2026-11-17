@@ -718,3 +718,36 @@ class MainFetchFreshness(unittest.TestCase):
             with self.subTest(text=text, rc=rc):
                 _, calls = self._run(text, rc=rc)
                 self.assertIn('fetch', [c[0] for c in calls])
+
+
+class MissingModuleInventory(unittest.TestCase):
+    def repo(self, files):
+        d = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d)
+        for name in files:
+            f = d / name
+            f.parent.mkdir(parents=True, exist_ok=True)
+            f.write_text("# tracked source\n")
+        env = dict(os.environ, GIT_AUTHOR_NAME="test", GIT_AUTHOR_EMAIL="test@test",
+                   GIT_COMMITTER_NAME="test", GIT_COMMITTER_EMAIL="test@test")
+        for cmd in (["init", "-q"], ["add", "--", *files], ["commit", "-qm", "inventory"]):
+            subprocess.run(["git", *cmd], cwd=d, env=env, check=True, capture_output=True)
+        return d
+
+    def test_unique_tracked_smwire_module_is_missing_source(self):
+        name = "tools/s81_dv/sm_target/smwire_cal.py"
+        d = self.repo([name])
+        (d / name).unlink()
+        self.assertEqual(M.missing_src(d, "E ModuleNotFoundError: No module named 'smwire_cal'"), [name])
+
+    def test_ambiguous_module_stays_a_failure_without_guessing(self):
+        files = ["tools/a/shared.py", "tools/b/shared.py"]
+        d = self.repo(files)
+        for name in files:
+            (d / name).unlink()
+        self.assertEqual(M.missing_modules(d, "ModuleNotFoundError: No module named 'shared'"), [])
+
+    def test_untracked_or_present_module_is_not_sparse_inventory(self):
+        d = self.repo(["tools/helper.py"])
+        for name in ["not_a_repo_module", "helper"]:
+            self.assertEqual(M.missing_modules(d, "ModuleNotFoundError: No module named '" + name + "'"), [])
