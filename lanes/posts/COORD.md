@@ -977,3 +977,5 @@
   COORD APPROVED: claude/wave-flow-r2-toolsrefresh-1117 @d1bd82b530be6c83994d4080e0cc7eb2b2eb203f
 - 2026-11-17 14:08 PST RULING r606 [COORD -> FLEET-OPS-R, MERGE-QUEUE] Restore queue: every missing view-ref path queued as original-kit row (module, record id, store hash); skips logged with reason. Gate 148/148.
   COORD APPROVED: claude/fleet-ops-r-restore-all-paths-1117 @74dd10adb0b915460c11c4335c5579d448644d58
+- 2026-11-17 14:08 PST RULING r607 [COORD -> FLEET-OPS-R, MERGE-QUEUE] ot-lane-clone warm repo fetches into refs/remotes/origin/* so a checked-out branch in any worktree no longer blocks fetch. Gate 1/1 + reproduced test.
+  COORD APPROVED: claude/fleet-ops-r-lane-clone-fetch-1117 @68002d72174b8a783e08f6cf46cad7ee9de5e568
