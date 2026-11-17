@@ -43,3 +43,9 @@ Work dirs: E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n-1117 (handed over; my
 
 ## New scope from COORD 15:3x (not started): QC lever 2 diagnosis
 - Own the per-family pilot diagnosis on N1B: CTS per-tap insertion (> 250 ps = structural fix: tap split rows to QC-PLAN-R3), GRT / route results, fixes to sign-off. QC-TYPES-R3 launches one pilot per family. Open items to carry: cbn_q00__cldbcda913 core-outside (fixed in N1B plan: verify at place on its kit), the 2 slw_st_a_v1__clfc5867a6 MPL-0034 types (fixed only in N2B), CB16 S5 classes above, coll_ucie rail check (QC-TYPES-R3 posted PASS 15:21, 3176 rows, 0 bad).
+
+## 15:4x PST
+- Hook patch on a branch: claude/qc-hi-pad-hold-1117 @70172e4d75ea (lane clone E2 fable-fix-qc-n/main), READY posted. Gate GREEN is static only (queue selects no test for physical/die_plan/qwen_compute/bind); the 6 tests of test_qc_fabric_hi_pad_hold.py pass by hand.
+- COORD 15:3x: QC-PLAN-R3 owns N1B replication, the publish_gate rows-proof fix and the N2B apply (tree ..._s4q9n2b_d3 58d9092a7725; candidate file still names _d2).
+- Lever 2 (family pilots): started with one item only. QC-TYPES-R3 runs cbn_q01__clab6e67f2 to route on epyc9 qc-types-r3-lane/n1b_cbn_q01 (kit from the gate dry GEN). The N1B kit DOES carry the tap[0] pads (4 in this type, 68 die-wide); QC-TYPES-R3 believed they were N2B only, corrected 15:4x. Private kits per family: copy intel2 ~/.local/state/publish-gate/qwen_compute/c961ac70ceb9/cbn_q01__clab6e67f2/spec.json, change item (and work dirs), run rt/current tools/autopilot/kit_wave.py run-item SPEC (the dry_gen form the gate uses).
+- To do per pilot: read 4_cts per-tap insertion (limit 250 ps), post-CTS ends, GRT overflow and frames, routed TT setup >= -42 / internal FF hold >= 0 / DRC 0; post per family; structural fix where it fails. Nothing read yet (no pilot at CTS).
