@@ -1,0 +1,15 @@
+{
+ "status":"ACTUAL_GRT_CAUSE_DIAGNOSED_NO_ROUTE",
+ "item":"slice_station__t37",
+ "event":"3fa87b84b18",
+ "original":"epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/slice_station__t37/attempt_6/gen/slice_station__t37",
+ "probe":"epyc10:/srv/opentallas-scratch2/claude/s81-t37-diag1117/probe_grt",
+ "client":2056551,
+ "unit":"oth-ubuntu-1139151-1794904244",
+ "result":"EXIT0 read-only query; reproduced original TT global-routing setup -250.516ps, hold -14.928ps, boundary mean272.27ps n12937; forwarded and primary clocks propagated, exact5libs, signal calibratedRC",
+ "setup":{"reported_violating_paths":32,"START_origin_to_reader":30,"worst":"u_bound.u_cland_origin/s2$_SDFF_PN0_ -> u_bound.u_cland_reader_start_ft16_i_0/g_x[0].u_r/q$_SDFF_PN0_, -250.516ps","other_reader_groups":["ft17_i","ft19_i","ft20_i"],"raw_reset":["u_bound.u_rrl_279/q -> u_cland_fstart_ft9_o/q -232.419ps","u_bound.u_rrl_279/q -> u_cland_fstart_ft8_o/q -206.932ps"]},
+ "hold":{"reported_paths":20,"class":"input ports to first FT registers","worst":"ft6_i[342] -> u_bound.u_ft_ft6_o_0/q[342], -14.928ps","scope":"TT triage, not FF final hold; root HOLDGEN owns hold work"},
+ "reports":["setup.rpt","hold.rpt","endpoint_classes.json","postcts_gate_tt.json","postcts_gate_tt.libraries.json","probe.log"],
+ "failures_diagnosed":"Initial priority-plan refusal: a timing probe is not bind/LAT/G0; corrected normal. E9 normal admission refused scratch30GB below50GB guard; copied read-only root+RTL closure1.4GB to E10 admitted guard. Initial E10 probe omitted OT_POSTCTS_GRT and produced placement-only -271.019/13.46; retained under probe/, corrected explicitGRT under probe_grt/ reproduces original exact numbers.",
+ "next":"Source/model START distribution to local reader groups; exact same-phase raw-reset local branches for two FSTART paths may use default-off modulekind-preserving source fix3ba97 once geometry and mechanism qualified. No new rows, clock budgets, source epoch or route adopted here."
+}
