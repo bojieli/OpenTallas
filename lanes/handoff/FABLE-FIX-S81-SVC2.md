@@ -51,3 +51,9 @@ W4 shell recount with cores black-boxed; W5 census of the other svc types (hi3, 
 - Shell kit (cores as macros) build after cores sign; R-MINIMAL sign-off; export AGIdock + rtx-pro.
 - GPL -2.57 ns data path still unmeasured; measure on the first placed shell.
 No job of mine running. No kit patched. Nothing deleted. Old kit E8 scratch3 fable-fix-s81-svc/lo7_floorplan_fix1117 kept as evidence (FLEET-OPS may reclaim results/*.odb, 30 GB, once the worker no longer needs 1_1_yosys_canonicalize.rtlil).
+
+## UPDATE 11-17 ~14:0x PST (COORD message)
+- Scope of the form = whole svc family, svc_hi included (hi3 dp_svc_hi_dsdv_svc_rs__t3, 4.20M std cells + 140 macros flat). W5 (census of hi3/t6/pvso for the same masters) is REQUIRED before plan rows, not optional.
+- hi3 flat run (S81-TYPES-R3, E8 unit 3543253, container dpkit-svc_hi_dsdv_svc_rs__t3-3543364, in CTS final report, 56 GB; CTS detailed placement 10,052 s) keeps running to GRT as a data point only: I take its GRT congestion map, overflow and frame TT (plus the worst DATA path start/end/stage count from 4_cts_final.rpt) into the form. It is not the release path and I do not wait for its sign-off; S81-TYPES-R3 keeps owning the job.
+- COORD relayed W1-W5 to S81-SVC-SPLIT (my SendMessage did not reach it).
+- NOT YET READ by me: hi3 4_cts_final.rpt (the first placed svc timing; it answers the open -2.57 ns data-path question for the family).
