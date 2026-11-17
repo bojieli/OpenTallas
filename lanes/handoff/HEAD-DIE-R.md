@@ -67,3 +67,9 @@ Lane dirs: epyc10 /srv/opentallas-scratch2/claude/head-die-r (pack/smoke/proof),
 - NF15d2r1 adopted by Codex (bdd769, 3 gen hosts); not redone. TOOL-SKEW waits r509 8f88 runtime rollout, then fresh skew check on same tree.
 - Landing-ring hold -2023 TT nst3_turn->nst4/u1_i diagnosed: real view defect, not die-STA model. hd_st_n3_turn fclk_out_u1_o/d1_o each 96 delaybuf_otstb (subtree_balance sinkless-branch 12x8 cap); other 25 HEAD views 0. Tool fix on main 47a7685132a; view fix = 192-pad recovery E8 unit3667957 (preserve). After it signs: swap view into nf15c_real4-style die STA (E7 head-die-r/nf15c_real4/run_nf15c4.sh) and remeasure.
 - Next owned: collect 192 route -> export_contact_r2 -> run_signoff_contact_r2.sh; stand-in swaps (ctl, lep0N, mesh, serdes; host_w now SIGNED outpad5); next event tap offset rows (E7 head-die-r/tapwin) + re-derived seam in_min/out_min.
+
+## Claude 01:3x
+- fwd_pads sign-off check branch claude/head-fwd-pad-check-1117 @e72d324b GREEN 49/49, READY posted (record in gates/).
+- NF15e: took over memory prepare from parked other_types child. E8 disk full, so work copy at E10 head-die-r/nf15e_e10 (E7 copy nf15e_e7 lacks d1 tree refs). r5 PASS -> stage/prep/memory_prepared_plan.json sha 253926800553 (chain_resite.py DP fixed lepk_i0 405.61). Next: native_stage_groups from memory_geometry_final_groups.json, capacity recompute, render LOOK, wrapper/receipt, GEN/G0/bind/LAT.
+- Reset/START: 508/714 arst_n/start_i min seams neg (TT), all setup+hold>=0; form = last crossing relay inside receiver clock region (reset_tree relay rows). sp4->sp3 setup via SPE N30 fork.
+- Then tap offset rows (E7 head-die-r/tapwin) + in/out_min.
