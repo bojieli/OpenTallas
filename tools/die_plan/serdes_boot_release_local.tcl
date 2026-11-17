@@ -129,16 +129,27 @@ namespace eval ot_reset_anchor {
 
 # Apply only to the unchanged t13 outline with a legal north pocket and the
 # modelled PMA-pair Y-27 translation. M6/M7 carry reset; M8 stays clock/PG.
-proc ot_serdes_boot_release_local {} {
- set b [ord::get_db_block];set d [expr {double([$b getDbUnitsPerMicron])}]
- set ff {};set target {{1656.72 905.85} {1450.008 750.06} {1235.034 625.05}}
+# Yosys preserves final rq as a net alias but may name its physical DFF
+# released_n. Select the exact kept stage identity, never arbitrary rq nets.
+proc ot_serdes_boot_release_registers {b} {
+ set ff {}
  foreach i [$b getInsts] {
-  if {[regexp {u_boot_release[.]g_stage\\?\[([0-2])\\?\][.]rq} [$i getName] -> k] && [string match DFF* [[$i getMaster] getName]]} {
-   if {[dict exists $ff $k]} {error "OT_BOOT_RELEASE duplicate stage $k"}
-   dict set ff $k $i
-  }
+  if {![string match DFF* [[$i getMaster] getName]]} continue
+  set k {}
+  if {[regexp {u_boot_release[.]g_stage\\?\[([0-2])\\?\][.]rq} [$i getName] -> k]} {
+  } elseif {[regexp {u_boot_release[.]released_n(?:[$]|$)} [$i getName]]} {set k 2}
+  if {$k eq {}} continue
+  if {[dict exists $ff $k]} {error "OT_BOOT_RELEASE duplicate stage $k"}
+  dict set ff $k $i
  }
  if {[dict size $ff]!=3} {error "OT_BOOT_RELEASE expected3 kept stages, found [dict size $ff]"}
+ return $ff
+}
+
+proc ot_serdes_boot_release_local {} {
+ set b [ord::get_db_block];set d [expr {double([$b getDbUnitsPerMicron])}]
+ set ff [ot_serdes_boot_release_registers $b]
+ set target {{1656.72 905.85} {1450.008 750.06} {1235.034 625.05}}
  set ca [$b getCoreArea];set core [list [$ca xMin] [$ca yMin] [$ca xMax] [$ca yMax]]
  set macs {};set halo [expr {8.64*$d}]
  foreach i [$b getInsts] {
