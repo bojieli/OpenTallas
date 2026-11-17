@@ -13,17 +13,17 @@ NOW = time.mktime(time.strptime("2026-11-16 20:00", "%Y-%m-%d %H:%M"))
 
 
 def cfg(**extra):
-    c = {"dies": {"qwen_compute": {"event": "s29q103S4Q9KF", "plan": "/p/zz_s29_qc103_s4q9kf.json", "plan_sha256": PLAN,
+    c = {"_now": NOW, "dies": {"qwen_compute": {"event": "s29q103S4Q9KF", "plan": "/p/zz_s29_qc103_s4q9kf.json", "plan_sha256": PLAN,
                                    "planned_events": ["S4q9l2", "S4q9l2d", "S4q9m"],
                                    "hold_event_items": {PLAN: ["a__t1", "b__t1"]}}},
          "_registry_lanes": {"QC-PLAN-R", "S81-TYPES-R2"},
-         "_lane_activity": {"FABLE-FIX-S81-SVC": NOW - 3600, "S81-BKSEL-O": NOW - 30 * 3600, "OLD-LANE": NOW - 400 * 3600}}
+         "_lane_activity": {"FABLE-FIX-S81-SVC": NOW - 3600, "QC-PLAN-R": NOW - 2 * 3600, "S81-BKSEL-O": NOW - 30 * 3600, "OLD-LANE": NOW - 400 * 3600}}
     c.update(extra)
     return c
 
 
 def rec(term, **k):
-    r = {"id": "r1", "plan_sha": PLAN, "reason": "why", "release": [term], "items": ["a__t1"]}
+    r = {"id": "r1", "plan_sha": PLAN, "reason": "why", "release": [term], "items": ["a__t1"], "owner": "FABLE-FIX-S81-SVC", "cause": "shared test cause"}
     r.update(k)
     return r
 
@@ -39,9 +39,10 @@ def accepted(term, c=None):
 
 class WriteGuard(unittest.TestCase):
     def test_lane_terms_need_a_live_lane_by_exact_name(self):
-        self.assertTrue(accepted("result:QC-PLAN-R:kf-ready"))            # registry
+        self.assertTrue(accepted("result:QC-PLAN-R:kf-ready"))            # posted 2 h ago
         self.assertTrue(accepted("result:FABLE-FIX-S81-SVC:svc-ready"))   # posted 1 h ago
-        self.assertTrue(accepted("result:S81-BKSEL-O:bksel"))             # posted 30 h ago, inside 48 h
+        self.assertFalse(accepted("result:S81-BKSEL-O:bksel"))            # posted 30 h ago: outside the 6 h liveness window (WAVE-PILOT-FIX)
+        self.assertFalse(accepted("result:S81-TYPES-R2:x"))               # registry row only: a dead lane keeps its row
         self.assertFalse(accepted("result:OLD-LANE:x"))                   # silent for 400 h
         self.assertFalse(accepted("result:NO-SUCH-LANE:x"))
         self.assertFalse(accepted("result:qc-plan-r:kf-ready"))           # case variant is not the lane

@@ -14,7 +14,7 @@ def base():
 
 
 def rec(**k):
-    r = {"id": "r1", "plan_sha": PLAN, "reason": "why", "release": ["event_adopt:B6gG3b"], "patterns": ["col_a__*"]}
+    r = {"id": "r1", "plan_sha": PLAN, "reason": "why", "release": ["event_adopt:B6gG3b"], "patterns": ["col_a__*"], "owner": "TEST-LANE", "cause": "shared test cause"}
     r.update(k)
     return r
 
