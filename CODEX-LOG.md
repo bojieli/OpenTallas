@@ -13723,3 +13723,14 @@ All nine parent groups and their children have confirmed parked. The following l
 - QC final36120883d57033163e821a2a0ae9ee9e6e432366, allchildrenparked; details in FABLE-FIX-QC-CBGLUE.md and associatedphysical notes above. P3 optin20psrepair targets26258nearhold endpoints even thoughonly6initialnegative; actualcellcost pending, preserveprogressingtrial. W0/W1/H17/H16 no newinserts/pilots claimed. ABI formatter11casecandidate NEVERlaunched. Produceradfd normalRED1 fixture stillneeds successor; owner94+12checks were not normalgateGREEN.
 - TOKEN final195cbdc83573a1caf9bd65f52b8759dc07fd4d6e, S81core947b0d30681a85fac4cb93bfa02fa9c6c99627c6, CONG9c5b0f94705a, S81plans2aa53f5d41d2cf1f49555f718e7b61b90654c173, MQ6f20c7da67e9b5872bafe9575caf3dfcc3a4bf25 all confirmed parked. No TOKENjobs live; uncommittedadapter/cache/compiler work remains safelypreserved in inheritedclones/scratch as detailed.
 - Root's full handoff section committed edead69db177effdc91c3dc4b5bb3c8b840e6a4e; this final receipt addendum is the only subsequent rootwrite. No further project action is authorized to Codex after handback; Claude owns continuing work.
+
+## CODEX takeover 2026-11-16 19:42 PST
+Full lane takeover in inherited Claude clones; no duplicate lane worktrees.
+- S81 die/types/cores/strip/serdes/IFN0: /root/s81 team; B6gF2s5e bind epyc10 running; col corrected-source pilots next; strip XR input stage + reset/hig stage forms A/B; cores and IFN0 result collection. Known strip CTS -548..-3956 ps: structural fixes executing.
+- HEAD die/types/serdes: /root/head team; he12h epyc9 ECO route; HW4 FAIL DRC0 TT-44.24 FF-31.82, HW5 GRT -0.92/+0.22 successor; SPEPRD3 SIGNED TT+19.64 DRC0 internalFF0 pending export/integration; sd9c progression.
+- QC plan/publication/types/physical: /root/qc team; Kf E8 publish+bind relocation PASS, E7 copy running; guard/apply then L2; headseg44/W0/coll_n next.
+- KV plan/clock/types: /root/kv team; HG2b D8 schema failure diagnosed pinned die_tree schema; successor packaging next, existing bind preserved; Wo band open, per-pin/provenance fixes staged.
+- Generic holds FIX-S81-COL-STALE/HOLDGEN: /root/holds; repair plan_event matching + audit; retype QC two holds from proved equal rows.
+- Fleet/tools/wave/merge: /root/fleet; merge service + r408/r409, source propagation, disk/admission and source drift. TOKEN child covers TOK-VERIFY-3/TOKEN-R and all model/token scopes.
+- HBM: parked by latest owner handoff; no new HBM work.
+Root: coordinator approvals, cross-lane decisions and uncovered failures. Review-before-route remains required. Owner questions plain text in CODEX-LOG.md.
