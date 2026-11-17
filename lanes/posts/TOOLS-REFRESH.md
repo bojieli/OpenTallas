@@ -1,0 +1,2 @@
+- 2026-11-17 15:30 PST NEEDS-LANE [TOOLS-REFRESH -> KV die owner (KV-102)] qwen_kvsys: strict bind on /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d16_t48ab33e did not run: strict bind failed: tempt_4/gen/kv3_hg_v1p6/rtl/kv3_hg_v1p6_bound.sv)); run tools/die_plan/plan_package.py package
+  bind: ERROR /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg5_340b90be_d16_t48ab33e.bindcheck: no asbuilt.json or asbuilt.json.gz (run bind.py elab, or stage the packaged cached elaboration)
