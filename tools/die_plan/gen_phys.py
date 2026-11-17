@@ -978,7 +978,9 @@ def io_tcl(P, tn, pins):
 
 # soft relay instances placed by relay_mid.tcl: the kept ot_s81_rly relays of the S81 frame bands (u_r<k>.u_y_<lane>);
 # a plan may override it with budgets.relay_mid_re (first capture = the relay group)
-RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
+# S81-TYPES-R2 11-16: [._] before u_y_ -- synthesis flattens u_r0.u_y_xo0_0 to u_u_r0_u_y_xo0_0 (col types); the [.]-only
+# form matched 5 of 80 relay groups on col_h10_r2 (CTS 14 endpoints under -42 -> 2 with [._], 7,014 relay flops placed)
+RELAY_MID_RE = r"^(.*[._]u_y_[A-Za-z0-9_]+)[.]"
 
 
 def _snap_tap(P, x, y, pg_legal=True):
