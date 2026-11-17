@@ -751,6 +751,32 @@ def retire(new_tree, refs=(), keep=0, dry=False, guard=None):
 SSH = ["timeout", "900", "ssh", "-n", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=20"]
 
 
+REPL_FLOOR_GB = 50          # ot-run's scratch floor (never lower)
+REPL_MARGIN_GB = 20         # COORD FABLE-FLOW-1100: a copy must leave floor + 20 GB free on the target
+
+
+def room_after_copy(free_gb, tree_gb, part_gb=0.0, floor_gb=REPL_FLOOR_GB, margin_gb=REPL_MARGIN_GB):
+    """-> (ok, free_after_gb).  part_gb = bytes already written into the target's .part (they are not charged twice)."""
+    after = free_gb + part_gb - tree_gb
+    return after >= floor_gb + margin_gb, after
+
+
+def tree_gb(path):
+    out = subprocess.run(["du", "-sb", path], capture_output=True, text=True).stdout.split()
+    return int(out[0]) / 2**30 if out else 0.0
+
+
+def remote_free_gb(host, directory, part):
+    """(free GB of the target's disk, GB already in <part>) over ssh; (None, 0) when the host does not answer"""
+    cmd = f"df -BM --output=avail {shlex.quote(directory)} | tail -n1 | tr -dc 0-9; echo; du -sb {shlex.quote(part)} 2>/dev/null | cut -f1"
+    p = subprocess.run(SSH + [host, cmd], capture_output=True, text=True)
+    ls = [x.strip() for x in p.stdout.splitlines()]
+    try:
+        return int(ls[0]) / 1024, (int(ls[1]) / 2**30 if len(ls) > 1 and ls[1] else 0.0)
+    except (ValueError, IndexError):
+        return None, 0.0
+
+
 def remote_verify(host, path, expect, ro=True):
     script = open(os.path.abspath(__file__)).read()
     cmd = f"python3 -I -c {shlex.quote(script)} verify {shlex.quote(path)}" + (f" --expect {expect}" if expect else "") + \
@@ -884,9 +910,19 @@ def main(argv=None):
         if not m:
             raise SystemExit("not a manifest tree")
         bad = 0
+        size = tree_gb(tree)
         for host in a.hosts.split(","):
             part = f"{tree}.part"
-            if subprocess.run(SSH + [host, f"test ! -e {shlex.quote(tree)} && rm -rf {shlex.quote(part)} && mkdir -p {shlex.quote(os.path.dirname(tree))}"]).returncode:
+            free, have = remote_free_gb(host, os.path.dirname(tree), part)
+            if free is None:
+                print(f"{host}: refuse (cannot read the target's free space)"); bad = 1; continue
+            ok, after = room_after_copy(free, size, have, max(REPL_FLOOR_GB, int(os.environ.get("OT_REPL_FLOOR_GB", REPL_FLOOR_GB))))
+            if not ok:
+                print(f"{host}: refuse (free {free:.0f} GB + part {have:.0f} - tree {size:.0f} = {after:.0f} GB after the copy < floor {REPL_FLOOR_GB} + {REPL_MARGIN_GB} GB)")
+                bad = 1
+                continue
+            # a stale .part of an earlier copy is read-only: directories get u+w first (never the files), then it goes
+            if subprocess.run(SSH + [host, f"test ! -e {shlex.quote(tree)} && {{ [ ! -d {shlex.quote(part)} ] || find {shlex.quote(part)} -type d -exec chmod u+w {{}} + ; }} && rm -rf {shlex.quote(part)} && mkdir -p {shlex.quote(os.path.dirname(tree))}"]).returncode:
                 print(f"{host}: refuse (target exists or not writable)")
                 bad = 1
                 continue
