@@ -88,3 +88,26 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
 3. Calibration: asked S81-TYPES-R3 (post 53b299df) for t22 GRT on the C4r3 floor, OT_PG_TRACK_TRUTH_MODE=region, no early stop.
    No placed t22 / t2 kit exists. The result sets tracks/um for region mode; if under 45.6 use the 0.60 variant (r9ta form).
 4. Not covered: the 5-6 inherited over-length core links per type (core_place base_violations) are as bound in C4r3.
+
+## 2026-11-17 11:0x PST candidate built, bind running (replaces "Running / next" above)
+- Branch claude/s81-ft-channel-route-1117 @02e762e464cb350c23a4c623e4fc8594701e307d PUSHED, gate GREEN 1/1 (main c9716823ec6,
+  ~/merge-queue/gates/02e762e464cb350c23a4c623e4fc8594701e307d.json). READY not posted yet (waits for the bind).
+- Candidate A (gate 0.70 at 45.6 tracks/um, --add): W/cand/plan_d7_strip.json sha c80a518b6299, rows W/cand/rows_d7_strip.json
+  (31f6efed9e7a: ft_slots of 20 types, 90 slots; latency.lanes dn_s_7S_L3 stations 5 -> 6, cycles 13 -> 14 = t67 ft9 +1 station).
+  Census (main check) 0 channels over, worst 0.695 (W/cand/census.json). core_place same flags as base (W/cand/event_same_flags.json):
+  new timing_over 0; +1-register stations 9 and over-length links 66, both identical to C4r3 (inherited, internal stations / core links).
+- Work tree epyc10 kw45/src_s81_pin_3c913dbdfb23_d7strip_1117_work (C4r3 c538c514 + this plan, manifest 1ed95f196850, link tree).
+  G0 (tree check.py): 5 errors, identical to the C4r3 baseline (5 cuts rows), W/d7/g0/g0_report.json.
+  Strict bind + LATCHECK + PRE + census: W/bind_d7strip_resume.sh, ot-run --priority plan, log ~/fable-fix-s81-strip/bind_d7strip_resume.log
+  (first try failed only because the cached C4r3 elaboration was not staged; RTL is unchanged, so the resume copies asbuilt*.json in).
+- Region-mode capacity: PG region mode cuts whole gcells of M5 (2 of 7.6 per 4.32 pitch) and M7 (2-3 of 15.2 per 8.64); from the strip
+  pdn.tcl this gives about 41.9 usable vertical tracks/um against 45.6 (estimate, not measured). At --per-um 41.9 (W/r10_reg/ledger.json):
+  24 types flagged (adds t10, t47, t74, t75), 22 fixed, +5 lane cycles (t73 +3, t9 +1, t67 +1), t75 and t8 not fixed. Not bound.
+- Design target 0.60 at 45.6 (W/r9ta): 20 of 20, +11 lane cycles. Not bound.
+
+### Next
+1. Bind result: if strict bind 0 / LATCHECK PASS / PRE PASS -> post READY (branch + rows + tree) to COORD and S81-DIE-R3 for D7.
+   If LATCHECK flags dn_s_7S_L3: drop --add for t67 (leaves t67 over 0.70) or pair the lane; report.
+2. t22 calibration GRT (S81-TYPES-R3, asked twice, no answer by 11:00): decides 45.6 vs about 41.9; then re-run cand.sh with
+   ARGS="--add --per-um <measured>" and re-bind. t75 / t8 need a look at that capacity.
+3. First re-slotted kit to GRT: t22 or t34 (bundles crossing M5 cores on M7 are priced by the model, not yet shown by a GRT).
