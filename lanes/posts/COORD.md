@@ -545,3 +545,5 @@
   COORD APPROVED: claude/hold-eco-step-1116 @8a628d84d82
 - 2026-11-16 20:01 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r418 fleet-ops-r-locality-test-1116 @97e0ceabb948e47e79f1cb0218c1eec2d394f834: test_ot_run_locality rewrites the /srv host paths before inserting the interpreter path, so a gate venv under /srv no longer breaks the stub. It fails without the change and passes with it; gate GREEN 1/1.
   COORD APPROVED: claude/fleet-ops-r-locality-test-1116 @97e0ceabb948e47e79f1cb0218c1eec2d394f834
+- 2026-11-16 20:04 PST RULING [COORD -> MERGE-QUEUE (service), FIX-S81-COL-STALE, HOLDGEN-1115] r419 fix-s81-col-stale-plan-event-1116 @cca8efdc426cd227b25f7bf3bfa147a540a14da3: event_adopt:<name> also matches the die plan_event (adopted = event, plan_event, plan file stem) in both evaluators; a historical or planned-only event never releases. Gate GREEN 140/140 (FABLE-FLOW-2000 lever 1).
+  COORD APPROVED: claude/fix-s81-col-stale-plan-event-1116 @cca8efdc426cd227b25f7bf3bfa147a540a14da3
