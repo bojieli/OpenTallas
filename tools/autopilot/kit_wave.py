@@ -619,6 +619,13 @@ def pilot_passed_map(st, cfg):
     return out
 
 
+def release_pilot_passed(rows, die, item, t0):
+    """FABLE-FLOW-2200: the release pilot's attempt that started at or after the release is past GEN (PILOT_PASS_STATUS: PASS, ENQUEUED,
+    ROUTE-HELD, SIGNED); a FAIL or a running attempt is not a pass."""
+    return any(r.get("die") == die and r.get("item") == item and r.get("status") in PILOT_PASS_STATUS
+               and float(r.get("started") or 0) >= float(t0) - 60 for r in rows or [])
+
+
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
@@ -628,7 +635,8 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   cells_fn=lambda die, item: cells.get((die, item)),
                   proof_fn=proof_pass_fn(proofs),
                   tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item),
-                  pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []))
+                  pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []),
+                  release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0))
 
 
 RESULT_POST = r"^\s*-?\s*\d{4}-\d\d-\d\d\s+\S+\s+[A-Za-z]{2,4}\s+RESULT\s*\["        # a post OF TYPE RESULT: "- 2026-11-16 07:18 PST RESULT [LANE ->"
@@ -730,7 +738,23 @@ def hold_audit_step(AP, cfg, st, t0):
     found = HR.audit(cfg, launched)
     summ = HR.summarize(found)
     AP.log("KIT-WAVE HOLD-AUDIT " + " ".join(f"{c}={summ.get(c, 0)}" for c in
-           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD")))
+           ("HELD-BUT-LAUNCHED", "TERM-UNREACHABLE", "TERM-VARIANT", "HOLD-SUPERSEDED", "HOLD-ZERO-MATCH", "PROOF-HELD")))
+    # HOLD-FLOW-R 11-16 (FABLE-FLOW-2000): a held release term with no producer for 12 h is a wave alert line
+    try:
+        _ctx = hold_ctx(cfg)
+        _seen = st.setdefault("hold_term_seen", {})
+        _al = HR.term_alerts(cfg, _seen, hours=12.0, is_met=lambda term, die, rec: HR.term_met(term, rec, die, "", cfg, _ctx))
+        if _al:
+            AP.log("KIT-WAVE HOLD-TERMS no producer for 12 h: " + "; ".join(f"{a['die']}/{a['id']} {a['term'][:60]} ({a['why']})" for a in _al)[:1500])
+            _sig2 = hashlib.sha1(json.dumps([(a["die"], a["id"], a["term"]) for a in _al]).encode()).hexdigest()[:12]
+            if st.get("hold_term_alert_sig") != _sig2:
+                st["hold_term_alert_sig"] = _sig2
+                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [HOLD-FLOW-R -> COORD, WAVE-HOLDS-1115] hold terms with no producer for 12 h: "
+                                + "; ".join(f"{a['die']}/{a['id']} {a['term'][:70]} x{a['n']} held: {a['why']}" for a in _al)[:1700])
+        else:
+            st.pop("hold_term_alert_sig", None)
+    except Exception as _e:
+        AP.log(f"KIT-WAVE HOLD-TERMS check failed: {type(_e).__name__}: {_e}")
     sig = hashlib.sha1(json.dumps([(f["code"], f["die"], f["id"], f["detail"], f["n"], sorted(map(str, f["items"]))[:50]) for f in found],
                                   default=str).encode()).hexdigest()[:12]
     if found and st.get("hold_audit_sig") != sig:
@@ -745,7 +769,7 @@ def hold_audit_step(AP, cfg, st, t0):
 
 def _hold_term_met(term, die_cfg, is_merged):
     """one typed release_on term -> True / False.  Auto-checkable types: event_adopt:<name> (the die's current event, or the
-    plan file name, carries <name> as a whole token; names of 1-2 characters, e.g. 'Event F', are not checkable), merge:<ref>
+    plan_event or plan file name, carries <name> as a whole token; names of 1-2 characters, e.g. 'Event F', are not checkable), merge:<ref>
     (<ref> is an ancestor of origin/main).  lane_ready / lane_result / anything else is a human post: never auto-released."""
     kind, _, val = str(term).strip().partition(":")
     kind, val = kind.strip(), val.strip()
@@ -754,9 +778,7 @@ def _hold_term_met(term, die_cfg, is_merged):
         import hold_records as _HR
         if not _HR.event_name_ok(name):                  # r252: one trailing * = prefix (B6gG3* = B6gG3, B6gG3b)
             return False
-        hay = [str(die_cfg.get("event") or "").lower(), os.path.basename(str(die_cfg.get("plan") or "")).lower()]
-        pat = _HR.event_re(name)
-        return any(pat.search(h) for h in hay)
+        return _HR._event_token_in(name, _HR.adopted_events(die_cfg))
     if kind == "merge":
         ref = val.split()[0] if val else ""
         try:
@@ -4704,6 +4726,21 @@ def waiter_guard(cfg, die, hs, stt, hub):
     return over or hs
 
 
+LOAD_RANK_STEP = 0.05
+
+
+def load_rank(cfg, h, v):
+    """FLEET-OPS-R (COORD 11-16, owner 'never pin, spread by load'): the gen-host order among hosts that fit = the LEAST LOADED first
+    (load1 / cores, in steps of 5 % so that noise does not decide), ties broken by the MOST free memory (admit GB minus GB already waiting),
+    then the host_share weight, then the configured order.  Returns a tuple where smaller is better.  Replaces WAVE-BALANCE-1's
+    free-cores x free-admits product, which let a big host at 80 % load beat a small host at 5 %."""
+    v = v or {}
+    cores = max(1, int(v.get("cores") or 0))
+    frac = float(v.get("load", 0)) / cores
+    free_mem = max(0.0, float(v.get("admit", 0)) - float(v.get("wait_gb", 0)))
+    return (round(frac / LOAD_RANK_STEP), -free_mem * host_share(cfg, h))
+
+
 def pick_gen_host(cfg, die, take=0, threads=0, item=None):
     """the gen host for a new attempt (see gen_hosts); with no cached ot-run status the configured gen_host.  take =
     GB charged to the picked host's cached admits so one tick's burst spreads once that host's headroom is used.
@@ -4737,7 +4774,7 @@ def pick_gen_host(cfg, die, take=0, threads=0, item=None):
         # (and never onto a host under the die's gen disk floor: with no room anywhere the old score order decides)
         uncapped = [h for h in hs if key(h) and not over_load_cap(key(h)) and not die_disk_low(cfg, die, h, key(h))
                     and die not in low.get(h, {})]
-        best = (max(fits, key=lambda h: (host_capacity(key(h)) * host_share(cfg, h), -hs.index(h))) if fits
+        best = (min(fits, key=lambda h: load_rank(cfg, h, key(h)) + (-hs.index(h),)) if fits
                 else max(room or uncapped or hs, key=lambda h: (sc(h) * host_share(cfg, h), -hs.index(h))))
     if key(best) is not None and len(hs) >= 2 and take:
         charge(key(best), take)
@@ -10915,16 +10952,65 @@ def step(AP, ap_dir=None):
         AP.log(f"KW-STEP-TIMES total={time.time() - t_step:.0f}s " + " ".join(f"{k}={v[0]}x/{v[1]:.0f}s" for k, v in top))
 
 
+def read_config_text(AP):
+    """WAVE-CONFIG 11-16 (FABLE-FLOW-2000 class D): the wave runs on the COMMITTED kit_wave.json, `git show HEAD:autopilot/kit_wave.json` of the
+    hub checkout, never on the working file, so a lane's uncommitted edit has no effect.  Edit through tools/autopilot/kit_wave_edit.py (patch + commit
+    in one step).  No git checkout (tests, AP_COORD_FILES) or an unreadable HEAD blob: AP.read_coord (origin/coord/state, also committed)."""
+    if getattr(AP, "CONFIG_OVERRIDE", None) is not None:          # `step --config FILE` (manual dry run)
+        return AP.CONFIG_OVERRIDE
+    coord = getattr(AP, "COORD", None)
+    if coord and not getattr(AP, "COORD_FILES", None):
+        try:
+            p = subprocess.run(["git", "-C", str(coord), "show", "HEAD:" + CFG_REL], capture_output=True, text=True, timeout=60)
+            if p.returncode == 0 and p.stdout.strip():
+                return p.stdout
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    return AP.read_coord(CFG_REL)
+
+
+def lock_owner_text(path):
+    """the 'pid=N cmd=...' line a lock holder wrote into its lock file, or 'unknown (no owner line)'"""
+    try:
+        t = Path(path).read_text(errors="replace").strip()
+    except OSError:
+        t = ""
+    return t.splitlines()[-1] if t else "unknown (no owner line)"
+
+
+def lock_take(path, wait_s=0):
+    """non-blocking flock on `path` (kept open, never truncated while another process holds it); on success the file names this process
+    (pid + command line).  Returns the open file, or None when another process holds the lock."""
+    import fcntl
+    lk = open(path, "a+")
+    for i in range(max(1, int(wait_s / 5) + 1) if wait_s else 1):
+        try:
+            fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            break
+        except OSError:
+            if wait_s and i < int(wait_s / 5):
+                time.sleep(5)
+    else:
+        lk.close()
+        return None
+    try:
+        cmd = " ".join(Path("/proc/self/cmdline").read_text().split("\0")).strip()[:300]
+    except OSError:
+        cmd = " ".join(sys.argv)[:300]
+    lk.seek(0)
+    lk.truncate()
+    lk.write(f"pid={os.getpid()} cmd={cmd}\n")
+    lk.flush()
+    return lk
+
+
 def _step_locked(AP, ap_dir):
     import fcntl
     if os.environ.get("KW_LOCK_HELD") == "1":           # reload_step child: the parent pass holds kit_wave.lock
         return _step(AP, ap_dir)
-    lk = open(Path(ap_dir) / "kit_wave.lock", "w")
-    try:
-        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        AP.log("KIT-WAVE step skipped: another wave pass holds kit_wave.lock")
-        lk.close()
+    lk = lock_take(Path(ap_dir) / "kit_wave.lock")
+    if lk is None:
+        AP.log(f"KIT-WAVE step skipped: another wave pass holds kit_wave.lock (owner {lock_owner_text(Path(ap_dir) / 'kit_wave.lock')})")
         return None
     try:
         return _step(AP, ap_dir)
@@ -11005,7 +11091,7 @@ def log_hold_releases(AP, ap_dir, entries, text, reset=False):
 def _step(AP, ap_dir):
     if not scheduler_current(AP):
         return reload_step(AP, ap_dir)
-    cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
+    cfg = load_config(read_config_text(AP))
     _t0 = time.time()
     log_hold_releases(AP, ap_dir, cfg.get("_hold_auto_released") or [], "release_on met", reset=True)
     WJ.set_fleet(WJ.fleet_from_cfg(cfg, AP.HUB_NAME))    # WAVE-LONGRUN-1: stop / probe the hosts the wave uses, not a stale default
@@ -11023,10 +11109,31 @@ def _step(AP, ap_dir):
                 _names.setdefault(_r["die"], set()).add(_r["item"])
         cfg["_item_names"] = {d_: sorted(v) for d_, v in _names.items()}
         cfg["_pilot_passed"] = pilot_passed_map(st, cfg)
+        _act = {}
+        for _r in (st.get("items") or {}).values():
+            if _r.get("die") and _r.get("item") and _r.get("status") in ("RUNNING", "ENQUEUED", "PASS", "ROUTE-HELD", "SIGNED"):
+                _act.setdefault(_r["die"], set()).add(_r["item"])
+        cfg["_item_active"] = {d_: sorted(v) for d_, v in _act.items()}
+        cfg["_item_rows"] = list((st.get("items") or {}).values())       # FABLE-FLOW-2200 release pilot: attempts since the release
+        _rp = st.setdefault("hold_release_pilot", {})                     # persistent per record: {pilot, t, passed}
+        for _k, _v in (cfg.get("_release_pilot") or {}).items():
+            _rp.setdefault(_k, _v)
+        cfg["_release_pilot"] = _rp
         cfg["_lint_fail"] = lint_failures(cfg, (st.get("items") or {}).values())
         _q = result_posts(AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines())
         cfg["_result_lines"] = _q[-4000:]
         cfg["_proof_lines"] = _q[-3000:]
+        try:                                             # HOLD-FLOW-R 11-16: lane registry + activity for the dead-term guard
+            import hold_records as _HRL
+            _all = AP.read_coord("lanes/COORD-REVIEW-QUEUE.md").splitlines()
+            cfg["_registry_lanes"] = _HRL.registry_lanes(AP.read_coord("lanes/agent_ids.tsv"), AP.read_coord("autopilot/OWNERS.tsv"))
+            if not cfg["_registry_lanes"]:               # nothing readable: lanes are not checkable this tick (never refuse on a blind read)
+                cfg.pop("_registry_lanes")
+            cfg["_lane_activity"] = _HRL.lane_activity(_all)
+            _cut = time.time() - 12 * 3600
+            cfg["_queue_recent"] = [ln for ln in _all if (lambda m: m and time.mktime(time.strptime(m.group(1) + " " + m.group(2), "%Y-%m-%d %H:%M")) >= _cut)(re.match(r"^\s*-?\s*(\d{4}-\d\d-\d\d)\s+(\d\d:\d\d)\s", ln))]
+        except Exception as _e:
+            AP.log(f"KIT-WAVE HOLD-TERMS lane registry unreadable: {type(_e).__name__}: {_e}")
         import pending_actions as _PA                    # LIMIT-GUARD-1116: release steps as data, run here with no lane
         _PA.step_cfg(AP, cfg, ap_dir)
         _before = len(cfg.get("_hold_auto_released") or [])
@@ -11583,15 +11690,9 @@ def cmd_reclassify(a):
     ap_dir = Path(a.ap_dir or AP_DIR)
     lk = None
     if a.write:
-        lk = open(ap_dir / "kit_wave.lock", "w")
-        for _ in range(120):                          # wait for a running wave pass (never write under it)
-            try:
-                fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                break
-            except OSError:
-                time.sleep(5)
-        else:
-            print("reclassify: kit_wave.lock held for 10 min; nothing written")
+        lk = lock_take(ap_dir / "kit_wave.lock", wait_s=600)       # wait for a running wave pass (never write under it)
+        if lk is None:
+            print(f"reclassify: kit_wave.lock held for 10 min by {lock_owner_text(ap_dir / 'kit_wave.lock')}; nothing written")
             return 2
     try:
         st = load_state(ap_dir)
@@ -11742,12 +11843,9 @@ def rejudge_geom(AP, cfg, st, ap_dir, write=False, include_old=False):
     if not write:
         return rows
     import fcntl
-    lk = open(Path(ap_dir) / "kit_wave.lock", "w")
-    try:
-        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        print("rejudge-geom --write: kit_wave.lock held by a wave pass; nothing written (rerun after the tick)")
-        lk.close()
+    lk = lock_take(Path(ap_dir) / "kit_wave.lock")
+    if lk is None:
+        print(f"rejudge-geom --write: kit_wave.lock held by {lock_owner_text(Path(ap_dir) / 'kit_wave.lock')}; nothing written (rerun after the tick)")
         return rows
     try:
         st = load_state(ap_dir)                          # fresh copy under the lock
@@ -12237,7 +12335,7 @@ def main(argv=None):
     if a.cmd == "unchanged":
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import autopilot as AP
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         cfg["_hub"] = AP.HUB_NAME
         rows = redesign_rows(cfg, load_state())
         import collections as _c
@@ -12258,7 +12356,7 @@ def main(argv=None):
     import autopilot as AP
     if a.cmd == "reap-dead":
         AP.DRY = True
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         rows = reap_dead_scan(AP, cfg, load_state(), minutes=a.minutes)
         import collections as _c
         for key, kind, why in rows:
@@ -12267,12 +12365,12 @@ def main(argv=None):
         return 0
     if a.cmd == "rejudge-geom":
         AP.DRY = not a.write
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         rejudge_geom(AP, cfg, load_state(), AP_DIR, write=a.write, include_old=a.include_old)
         return 0
     if a.cmd == "prov-census":
         AP.DRY = True
-        cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
         print(json.dumps(prov_census(AP, cfg, load_state()), indent=1) if a.json else "\n".join(
             f"{die}: {r.get('error') or ''}WAIT-DEP types {r.get('types', 0)} -> routed child abstract {r.get('routed', 0)}, "
             f"plan-contract abstract {r.get('contract', 0)} (children {r.get('children', 0)}, routed {r.get('children_routed', 0)})"
@@ -12283,6 +12381,7 @@ def main(argv=None):
         if a.config:
             real = AP.read_coord
             text = Path(a.config).read_text()
+            AP.CONFIG_OVERRIDE = text
             AP.read_coord = lambda rel: text if rel == "autopilot/kit_wave.json" else real(rel)
         if a.owners:
             Path(AP.AP_DIR).mkdir(parents=True, exist_ok=True)
@@ -12293,7 +12392,7 @@ def main(argv=None):
             __import__("collections").Counter(r.get("status") for r in st["items"].values()).items())))
         return 0
     AP.DRY = True
-    cfg = load_config(Path(a.config).read_text() if a.config else AP.read_coord("autopilot/kit_wave.json"))
+    cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
     merge_auto_views(cfg, AP_DIR)                # KW-FIX-35-CV: the plan reads the views the pass reads
     owners = parse_owners(Path(a.owners or AP_DIR / "OWNERS.tsv").read_text())
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)

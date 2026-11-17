@@ -1057,3 +1057,16 @@ if {[info commands ot_mcc_cts_orig] eq ""} {
   }
   if {[file isfile $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
 }
+
+# CTS-TRUNK-RESEAT (2026-11-16): opt-in (OT_CTS_TRUNK_RESEAT=1) clock_tree_synthesis wrapper that seats every CTS trunk
+# buffer at the centroid of its loads (physical/common_flow/cts_trunk_reseat.tcl; S81 rom_q half: TritonCTS left trunk
+# buffers at the macro edge driving 10-15 leaf buffers through one 100-150 um net).  Asked for and missing = error.
+if {[info exists ::env(OT_CTS_TRUNK_RESEAT)] && $::env(OT_CTS_TRUNK_RESEAT) eq "1" && [info commands ot_ctr_cts_orig] eq ""} {
+  set ot_ctr_dir [file dirname [file normalize [info script]]]
+  set ot_ctr_file [file join $ot_ctr_dir cts_trunk_reseat.tcl]
+  if {![file isfile $ot_ctr_file]} {
+    set ot_ctr_file [file join [file dirname $ot_ctr_dir] physical common_flow cts_trunk_reseat.tcl]
+  }
+  if {![file isfile $ot_ctr_file]} { error "OT_CTS_RESEAT: OT_CTS_TRUNK_RESEAT=1 but $ot_ctr_file is missing" }
+  source $ot_ctr_file
+}

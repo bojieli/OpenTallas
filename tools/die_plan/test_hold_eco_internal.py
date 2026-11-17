@@ -84,6 +84,14 @@ def test_bad_inputs_are_refused():
         H.read_plan("u/a/D\t0\n")
     with pytest.raises(ValueError):
         H.read_plan("u/a/CLK\t1\n")
+    with pytest.raises(ValueError, match="time unit"):            # x1e12 unit error of the old dump
+        H.read_endpoints(HDR + "u/a/D\ts\treg\treg\t-15545000000000.000\t3\n")
+    assert H.read_endpoints(HDR + "u/a/D\ts\treg\treg\t-15.545\t1000000.000\n")[0]["tt"] == 1e6
+
+
+def test_dump_writes_slack_without_scale_factor():
+    txt = (HERE / "post_route_drv" / "hold_eco_internal_dump.tcl").read_text()
+    assert "* 1e12" not in txt and txt.count("[get_property $pe slack]") == 2
 
 
 def test_gate_is_drc0_tt_minus42_internal_hold_zero():

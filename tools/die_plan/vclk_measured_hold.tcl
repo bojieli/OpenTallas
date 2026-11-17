@@ -38,10 +38,25 @@ proc ot_vmh_pinreg_mean {} {
   # Without those declarations the legacy census is unchanged. Keep every
   # declared core root in multi-root kits; never infer ownership from names.
   set fwd_roots {}
+  # FABLE-FIX-HEAD-SERDES 11-16 (hd_serdes sd9c: samples 1669, clocks 2): native pad inputs (golden SDC tag
+  # # OT_NATIVE_PAD_INPUT <clock> <selector> <min> <max>, e.g. pma_rx[*] on pma_rck) keep their golden eye on their own
+  # clock and are never timed against the IO virtual clock (hold_gate.tcl, signoff._native_pad_tcl drop them from the
+  # vclk inputs), so the registers they alone reach are no vclk boundary registers.  Fail closed on a malformed tag.
+  set native_in {}
   set sdcp [file join $::ot_vmh_dir constraint.sdc]
   if {[file isfile $sdcp]} {
     set fh [open $sdcp]; set sdct [read $fh]; close $fh
     foreach line [split $sdct "\n"] {
+      if {[string match {# OT_NATIVE_PAD_INPUT*} $line]} {
+        set w [regexp -all -inline {\S+} $line]
+        if {[llength $w] != 6 || [lindex $w 1] ne "OT_NATIVE_PAD_INPUT"} {
+          error "OT_VCLK_MEASURED_HOLD: malformed native pad declaration"
+        }
+        set ps [get_ports -quiet [lindex $w 3]]
+        if {![llength $ps]} { error "OT_VCLK_MEASURED_HOLD: empty native pad selector [lindex $w 3]" }
+        foreach q $ps { dict set native_in [get_full_name $q] 1 }
+        continue
+      }
       if {![string match {# OT_FWD_RING_INPUTS *} $line]} continue
       if {![regexp {^# OT_FWD_RING_INPUTS\s+(\S+)\s+\S+} $line -> name]} {
         error "OT_VCLK_MEASURED_HOLD: malformed forwarded-ring declaration"
@@ -63,6 +78,9 @@ proc ot_vmh_pinreg_mean {} {
       }
     }
     dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p
+  }
+  if {[dict size $native_in]} {
+    set din [lmap p $din {if {[dict exists $native_in [get_full_name $p]]} continue; set p}]
   }
   set async {}
   foreach p [all_registers -async_pins] { dict set async [get_full_name $p] 1 }

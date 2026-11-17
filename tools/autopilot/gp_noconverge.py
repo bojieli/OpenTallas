@@ -26,8 +26,16 @@ row is still above --overflow (0.1, the ORFS target), the run ends at place: exi
 and DPL steps never run on a placement that did not converge (HBM kv_line vC: 0.370 at the cap, then +459k buffers and
 DPL-0038 at 153%).  A run that reached the cap at or below the overflow limit, or never reached it, passes.
 
+PLACE-HPWL gate (FABLE-PD-S81-STRIP 11-16, acting where the kit sets OT_GPL_HPWL_RATIO): --hpwl-gate LOG --exit-hpwl UM
+compares the measured half-perimeter wirelength of the GPL result (gp_noconverge_gate.tcl sums it on the database
+before resize) with the lowest HPWL the same run printed in its Nesterov table.  S81 strip leaves t47 / t75 / t8fix left
+GPL at 2.36 / 1.91 / 1.81 x that minimum after the non-virtual timing-driven pass (t47: 1.10e7 -> 2.58e7 um, combinational
+cells 250-700 um from their FIRM flops, 15,893 failing CTS paths) while PLACE-NOCONVERGE passed; the good leaves left at
+1.01-1.05 (t28 1.959e7 / 1.944e7, t34 7.62e6 / 7.28e6).  Above --ratio: exit 3, verdict line, --marker FILE.
+
 Usage: gp_noconverge.py [--hosts a,b,c] [--out FILE]
        gp_noconverge.py --gate LOG [--overflow 0.1] [--marker FILE]
+       gp_noconverge.py --hpwl-gate LOG --exit-hpwl UM [--ratio 1.3] [--marker FILE]
 """
 import argparse, json, os, re, subprocess, sys
 from concurrent.futures import ThreadPoolExecutor
@@ -41,6 +49,9 @@ DEFAULT_HOSTS = "intel1,intel2,epyc2,epyc4,epyc7"
 HUB = os.environ.get("OT_HUB_NAME", "intel2")                  # the hub cannot ssh to its own name
 ROW = re.compile(r"^\s*(\d+) \|\s+([0-9.]+) \|")
 ROW_OLD = re.compile(r"Iter:\s*(\d+)\s+overflow:\s*([0-9.]+)", re.I)
+ROW_HPWL = re.compile(r"^\s*\d+ \|\s+[0-9.]+ \|\s+([0-9.]+(?:e[+-]?\d+)?) \|", re.I)
+HPWL_CLASS = "PLACE-HPWL"
+HPWL_RATIO = 1.3
 
 
 def overflows(lines):
@@ -85,6 +96,42 @@ def gate(text, overflow=NOCONV_OVERFLOW):
     if not capped:
         return "OK", "no GPL-1010: placement converged before the Nesterov iteration cap"
     return "OK", f"{capped} capped pass(es), none above overflow {overflow:g}"
+
+
+def hpwl_min(text):
+    """lowest HPWL (um) printed in the Nesterov tables of one global-place log (every pass), or None"""
+    vals = [float(m.group(1)) for m in map(ROW_HPWL.match, (text or "").splitlines()) if m]
+    return min(vals) if vals else None
+
+
+def hpwl_gate(text, exit_hpwl, ratio=HPWL_RATIO):
+    """(verdict, why): STOP when the measured GPL-exit HPWL exceeds ratio x the run's own table minimum"""
+    lo = hpwl_min(text)
+    if not lo or exit_hpwl is None or exit_hpwl <= 0:
+        return "OK", "no HPWL table or no exit HPWL: not judged"
+    r = exit_hpwl / lo
+    if r > ratio:
+        return "STOP", (f"{HPWL_CLASS}: global placement left at HPWL {exit_hpwl:.4e} um = {r:.2f} x the run minimum "
+                        f"{lo:.4e} um (limit {ratio:g}); the placement diverged after it had converged")
+    return "OK", f"exit HPWL {exit_hpwl:.4e} um = {r:.3f} x run minimum {lo:.4e} um (limit {ratio:g})"
+
+
+def hpwl_gate_main(log, exit_hpwl, ratio, marker=None):
+    try:
+        with open(log, errors="replace") as f:
+            text = f.read()
+    except OSError as e:
+        print(f"{HPWL_CLASS} gate NOT RUN: {e}")
+        return 0
+    verdict, why = hpwl_gate(text, exit_hpwl, ratio)
+    if verdict == "STOP":
+        print(why)
+        if marker:
+            with open(marker, "a") as f:
+                f.write(why + "\n")
+        return 3
+    print(f"{HPWL_CLASS} gate OK: {why}")
+    return 0
 
 
 def gate_main(log, overflow, marker=None):
@@ -160,8 +207,13 @@ def main(argv=None):
     ap.add_argument("--out")
     ap.add_argument("--gate", metavar="LOG", help="PLACE-NOCONVERGE verdict on one finished 3_3_place_gp.log")
     ap.add_argument("--overflow", type=float, default=NOCONV_OVERFLOW)
-    ap.add_argument("--marker", help="with --gate: append the STOP line to this file")
+    ap.add_argument("--marker", help="with --gate / --hpwl-gate: append the STOP line to this file")
+    ap.add_argument("--hpwl-gate", metavar="LOG", help="PLACE-HPWL verdict on one finished 3_3_place_gp.log")
+    ap.add_argument("--exit-hpwl", type=float, help="with --hpwl-gate: measured GPL-exit HPWL in um")
+    ap.add_argument("--ratio", type=float, default=HPWL_RATIO)
     a = ap.parse_args(argv)
+    if a.hpwl_gate:
+        return hpwl_gate_main(a.hpwl_gate, a.exit_hpwl, a.ratio, a.marker)
     if a.gate:
         return gate_main(a.gate, a.overflow, a.marker)
     with ThreadPoolExecutor(8) as ex:

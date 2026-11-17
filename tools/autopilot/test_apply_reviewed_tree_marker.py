@@ -42,7 +42,7 @@ class Apply(unittest.TestCase):
         c = mk()
         r = apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
-        self.assertEqual(d["src"], "/x/new"); self.assertEqual(d["superseded_trees"], ["/x/old"])
+        self.assertEqual(d["src"], "/x/new"); self.assertEqual(d["rollback_tree"], "/x/old")
         rec = [x for x in d["hold_records"] if x.get("auto_pilot")][0]
         self.assertEqual(rec["release"], ["gen_pilot:kv:13f758a4fe34"]); self.assertEqual(rec["pilot_items"], ["t1"])
         self.assertEqual(r["pilot"]["item"], "t1"); self.assertTrue(r["pilot"]["hold_added"])

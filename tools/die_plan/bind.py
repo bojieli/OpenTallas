@@ -5740,18 +5740,71 @@ def kit_landed_ports(btxt):
     return out
 
 
-def kit_rebase_path(p, old_base, new_tree):
-    """an absolute path inside the bind's recorded source base -> the same relative path in the kit's own tree (else unchanged)"""
+KIT_STAGED_PREFIX = re.compile(r"^(?P<root>.*?/kit-store/snaps/[0-9a-f]+/root|.*?/kit_inputs)(?P<orig>/.+)$")
+KIT_SRC_TOP = ("rtl", "physical")      # repository top-level dirs a bound RTL source lives under
+
+
+def kit_staged_original(p):
+    """a kit-store staged copy (<scratch>/kit-store/snaps/<id>/root/<abs> or <W>/kit_inputs/<abs>) -> the original absolute
+    path it stands for; any other path unchanged.  kit_store rewrites bind.f to the staged paths but keeps the json
+    (asbuilt base) byte-identical, so the bind's recorded base must be compared with the original path."""
+    m = KIT_STAGED_PREFIX.match(str(p))
+    return Path(m.group("orig")) if m else Path(p)
+
+
+def _rel_under(q, root):
+    for a, b in ((q, Path(root)), (q.resolve(), Path(root).resolve())):
+        try:
+            return a.relative_to(b)
+        except ValueError:
+            pass
+    return None
+
+
+def kit_rebase_path(p, old_base, new_tree, keep=(), moved=None):
+    """an absolute source path the bind recorded -> the same repository-relative path in the kit's own tree (else unchanged).
+    KITRTL-PATHS 11-16: (1) a kit-store staged copy is matched by its original path; (2) a path in ANOTHER source tree
+    (asbuilt_sources.json lib/full of the bind whose as-built netlist this bind reused: tapfix1 listed 100 files of
+    run/b/B6gF2s4/src) maps by its repository-relative part (from the first rtl/ or physical/ component) when the kit tree
+    has that file.  Paths under `keep` (bind out, kit dir) are generated files and never move.  `moved` collects the
+    foreign-tree rebases {recorded path: kit path}."""
     q = Path(p)
     if not q.is_absolute():
         return str(p)
-    try:
-        return str(Path(new_tree) / q.resolve().relative_to(Path(old_base).resolve()))
-    except ValueError:
-        try:
-            return str(Path(new_tree) / q.relative_to(Path(old_base)))
-        except ValueError:
+    orig = kit_staged_original(q)
+    for cand in (q, orig):
+        r = _rel_under(cand, old_base)
+        if r is not None:
+            return str(Path(new_tree) / r)
+    for k in keep:
+        if _rel_under(q, k) is not None or _rel_under(orig, kit_staged_original(k)) is not None:
             return str(p)
+    if _rel_under(orig, new_tree) is not None:
+        return str(p)
+    parts = orig.parts
+    for i, c in enumerate(parts[2:], 2):
+        if c in KIT_SRC_TOP:
+            tgt = Path(new_tree).joinpath(*parts[i:])
+            if tgt.is_file():
+                if moved is not None:
+                    moved[str(q)] = str(tgt)
+                return str(tgt)
+            break
+    return str(p)
+
+
+def kit_src_moved_rows(moved, fl):
+    """the foreign-tree rebases (kit_rebase_path moved=) that reached the kit filelist, for kit_rtl.json: recorded path,
+    original path, kit path and whether the bytes match (None when the recorded copy is gone)."""
+    import filecmp
+    used = {str(Path(x).resolve()) for x in fl}
+    rows = []
+    for rec, kit in sorted(moved.items()):
+        if str(Path(kit).resolve()) not in used:
+            continue
+        same = filecmp.cmp(rec, kit, shallow=False) if Path(rec).is_file() else None
+        rows.append(dict(recorded=rec, source=str(kit_staged_original(rec)), kit=kit, same_bytes=same))
+    return rows
 
 
 def kit_filelist_outside(files, roots):
@@ -6062,12 +6115,13 @@ def cmd_kit_rtl(a):
     src_tree = getattr(a, "src_tree", None) or os.environ.get("OT_KIT_SRC_TREE")
     old_base = base
     rebase = lambda p: p
+    src_moved = {}
     if src_tree:
         st = Path(src_tree).resolve()
         if not (st / "rtl").is_dir():
             raise BindError(f"kit-rtl {tn}: --src-tree {st} has no rtl/")
         base = str(st)
-        rebase = lambda p: kit_rebase_path(p, old_base, st)       # absolute paths the bind recorded in the old tree (bind.f, extra_lib)
+        rebase = lambda p: kit_rebase_path(p, old_base, st, keep=(out, kd), moved=src_moved)   # bind.f, extra_lib, asbuilt files
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
     prefer = [rebase(str(Path(base) / f) if not Path(f).is_absolute() else f) for f in ab0.get("prefer", [])] + \
@@ -6166,6 +6220,11 @@ def cmd_kit_rtl(a):
         if outside:
             raise BindError(f"kit-rtl {tn}: {len(outside)} filelist path(s) outside the kit source tree {base} (and the bind "
                             f"out / kit dir): {outside[:5]}")
+        src_moved = kit_src_moved_rows(src_moved, fl)
+        if src_moved:
+            ndiff = sum(1 for r in src_moved if r["same_bytes"] is False)
+            print(f"kit-rtl {tn}: {len(src_moved)} bind source(s) of another source tree taken from the kit tree {base} "
+                  f"({ndiff} with different bytes)", file=sys.stderr)
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
     tree_mix = kit_tree_mix(tn, kd)
     # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
@@ -6185,6 +6244,7 @@ def cmd_kit_rtl(a):
                **({"native_glue": native_glue} if native_glue else {}),
                **({"library_profile": lib_profile, "library_profile_selected": lib_selected} if lib_profile else {}),
                tree_mix=tree_mix,
+               **({"src_rebased_foreign": src_moved} if src_moved else {}),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")

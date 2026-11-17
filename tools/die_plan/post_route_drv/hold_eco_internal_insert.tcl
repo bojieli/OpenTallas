@@ -20,8 +20,11 @@ proc ot_hei_run {} {
   set radius [expr {[info exists ::env(OT_HOLD_SLOT_RADIUS_UM)] && $::env(OT_HOLD_SLOT_RADIUS_UM) ne "" ? $::env(OT_HOLD_SLOT_RADIUS_UM) : 7.2}]
   set blk [ord::get_db_block]
   set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+  # a two-mode session loads the cell twice (TC and BC libraries): several handles, ONE cell name.  unset/set_dont_use take all handles.
   set cells [get_lib_cells -quiet */HB4xp67_ASAP7_75t_R]
-  if {[llength $cells] != 1} { error "OT_HEI HB4 source is not unique" }
+  set cnames {}
+  foreach c $cells { lappend cnames [get_name $c] }
+  if {![llength $cells] || [llength [lsort -unique $cnames]] != 1} { error "OT_HEI HB4 source is not unique: [lsort -unique $cnames]" }
   unset_dont_use $cells
   set master [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]
   if {$master eq "NULL"} { error "OT_HEI no HB4xp67 master in the DB" }

@@ -73,9 +73,14 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             if not pilot:
                 raise SystemExit("PILOT: no pilot item for die %s (--pilot-item ITEM, die.pilot_item, or --no-pilot); nothing applied" % die)
         HR._deep_set(d, mc)
+        # FABLE-FLOW-2200: keep the CURRENT tree and ONE rollback (the tree just replaced); the rollback of the previous switch is now two versions back
+        # and becomes superseded (retired whole through the guard by retire_superseded.py)
         sup = d.setdefault("superseded_trees", [])
-        if old["src"] and old["src"] != tree and old["src"] not in sup:
-            sup.append(old["src"])
+        rb = d.get("rollback_tree")
+        if rb and rb != tree and rb != old["src"] and rb not in sup:
+            sup.append(rb)
+        if old["src"] and old["src"] != tree:
+            d["rollback_tree"] = old["src"]
         d.update(src=tree, src_manifest=True, src_manifest_hash=want, plan=marker["plan"], plan_sha256=marker["plan_sha256"], gen_hosts=hosts,
                  gen_host=mc.get("gen_host") or (d.get("gen_host") if keep and d.get("gen_host") in hosts else hosts[0]),
                  cancel_superseded=False)
