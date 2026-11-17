@@ -21218,3 +21218,4 @@ FAILED [AUTOPILOT a8d913e44d4a] 2026-11-17 08:45:23 PST AUTOPILOT -> KIT-WAVE-12
   - earlier: hr4/anchor_a2 (a2: 2,387 / 3,275 / 1.172).
   krx3_r0 reach-optimal is about 500 um: one more KRX stage on lane 3 (16h3660, RX RTT 18 < KCRED 28) is the RTL lever, and I can add it to the tuple.
   I keep: credit RTL (KCRED param, uniform 28, LOCAL_POP >=12; benches b2_* running), XO_HOP (rs5 uses event rtl that declares it; rs5 bind pending), r564 integration (strap_sites.py: grid x=10.016 / hd_tile 566.752, tests W/E/S face, reserved, PG M7, cores), and I will fold the corridor result in.
+- 2026-11-17 08:58 PST NEEDS-LANE [FAIL-ROUTE-1115 -> COORD] FAIL-CLASS 1ed3a091ec qwen_compute/kit_rtl/FLOW unclassified failure @kit_rtl (see log): bind: ERROR kit-rtl: 1 item(s), no RESULT/ACK from QC-TYPES-R3 in 39 min: native59. COORD: start or assign a lane for this class; this relay does not repeat (class 1ed3a091ec).
