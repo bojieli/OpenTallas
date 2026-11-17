@@ -169,15 +169,17 @@ def test_kit_preflight_prefers_measured_over_flat_plan_estimate(tmp_path):
     over = tmp_path / 'over'
     over.mkdir()
     kit = mk_kit(over, 450_000, pins=8903, outline=(1036.8, 1520.64), macros=12)
-    rec = KP.check(kit, pd)                                    # an over-cap measured netlist is recorded, not failed
-    assert rec['checks']['cell_budget']['verdict'] == 'PASS' and rec['checks']['cell_budget']['estimate']['verdict'] == 'OVER'
+    rec = KP.check(kit, pd)                                    # WAVE-FLOW-R2 (FABLE-FLOW-1500 D): an over-limit measured netlist is refused, SPLIT-NEEDED
+    assert rec['checks']['cell_budget']['verdict'] == 'FAIL' and rec['checks']['cell_budget']['estimate']['verdict'] == 'OVER'
+    (kit / 'CELL_WAIVER').write_text('r590\n')                 # ... unless a ruling id waives it
+    assert KP.check(kit, pd)['checks']['cell_budget']['verdict'] == 'PASS'
     soft = tmp_path / 'soft'
     soft.mkdir()
     pd2 = _pc_plan(soft, hard_cores=False)
     kit = mk_kit(soft, pins=8903, outline=(1036.8, 1520.64))
     (kit / 'budget.json').write_text(json.dumps(dict(type='t', outline_um=[1036.8, 1520.64], pins=8903)))
     row = KP.check(kit, pd2)['checks']['cell_budget']          # no hard cores: the plan row is its movable logic
-    assert row["verdict"] == "PASS" and row['estimate']['verdict'] == 'OVER'
+    assert row["verdict"] == "FAIL" and row["estimate"]["verdict"] == "OVER"      # over the one limit, no waiver: SPLIT-NEEDED
     assert row['estimate']['synth_basis'].startswith('plan estimate (cells.py by_type')
 
 
