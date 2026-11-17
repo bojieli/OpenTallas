@@ -62,3 +62,11 @@ FABLE-FIX-S81-GUNIT writes delta rows (bf back to the signed 432x216 shape + pre
 
 ## Next steps
 1. Read G0 t51e. 2. Compose CA R4d on the 819 lineage (fallback_land compose; check the 38 deeper rings fit their bands), regenerate lanes, estimate before build. 3. F2s5 = 819 + T51 + CA (+ SVC stage 9 if delivered): source cohort with the overlay and the ca planner hunks from TOOLS-CONVERGE, fresh elab, strict bind, LATCHECK, G0; Fable review in parallel. 4. R2 ruling and census.
+
+## 2026-11-16 18:4x PST S81-DIE-R2 (Opus successor; Fable weekly limit) - state
+- B6gF2s5 (A3 83511ebe) chain was terminated (exit 143) after Fable F2s5b Q0: 15 schema errors (t43 stations key). Kept, not reused.
+- Candidate C = 819 + gunit 40 + t34 + t43 (stations key dropped) + t8 E-face rows (S81-TYPES-R 18:24, expected-before checked, 0 taps/pins left at x 1440.736) + lanes dn/up_s_4N_L1 +1. E/cand/plan_C_819_gunit_t34_t43_t8.json 608f5dceccac, schema 0 errors. Sidecar E/cand/sidecar_C_t8.json = sidecar_new + only t8 band edits (34 leaf diffs, all collector.types.ot_s81sl_leaf__t8). Builder E/tools/build_cands_c.py.
+- G0 C: E/g0/C, intel2 ~/s81-die-r/g0_C.log. Bind chain B6gF2s5c: M/chain_f2s5c.sh via E/tools/run_chain_f2s5c.sh, logs intel2 ~/s81-die-r/chain_f2s5c.log, epyc10 M/log/B6gF2s5c.log.
+- Opus self-review S81-F2s5c-REVIEW running in parallel (posts under that lane).
+- Carried OUT of this event (with reason): (a)+(c) new CA K table + svc_0 +20..32 ECO (svc_2 earlier not buildable): recompose on 819 lineage fails (new start tree; post-compose rows dropped) -> next clock event with full recompose or in-place refresh tool; hbmrd_i0 growth goes with it. (d) done: 9 lat-0 crossings all back at 1. (e) T51 dropped: parent kit cannot be generated (native_w child has no lib). (g) bksel g_bank[0] early tap: conditional, CORES-R confirms after fx7 routed FF; joins the clock event. (h) t48 answer posted (t13 measured window + <=1.81/1.43 ps bound).
+- Open ask to TYPES-R: t43 unrowed bits centroid inside u_lf.u_vn.u_b (~529 dn bits) + 99-FF site 1.48 um below ft5 bank -> site-only rows.
