@@ -1,3 +1,5 @@
+# S81-COL-PRD-OBS: per-layer obstruction seed BEFORE any PG-track-truth / keepout add (prd_obs_check.tcl, checked in eco_post.tcl).
+if {[file exists /work/prd_obs_check.tcl]} { source /work/prd_obs_check.tcl; ot_prd_obs_seed }
 # PRD seeds may already carry detailed clock/signal wires. FlexPA rejects any
 # attached dbWire (DRT-0415), even though the repair must preserve that wire.
 # Detach the original objects only while pin_access runs; restore on success

@@ -413,3 +413,15 @@ def test_grt_gate_layer_mismatch_stops_before_openroad(tmp_path):
     def forbidden(*a, **kw): raise AssertionError('OpenROAD should not run')
     assert gate.run(k, 'grt', execute=forbidden) == 6
     assert 'GRT-0021 Max routing layer M6 != config.mk MAX_ROUTING_LAYER M7' in (k / 'FAIL_POSTCTS').read_text()
+
+
+def test_grt_frames_reports_both_numbers(tmp_path):
+    """WAVE-FLOW-R2 11-17: the GRT setup number in the kit ORFS frame and in the sign-off frame (policy session)"""
+    rpt = tmp_path / "run/reports/asap7/d/base"
+    rpt.mkdir(parents=True)
+    (rpt / "5_global_route.rpt").write_text("report_tns\n----\ntns max 0.00\n\nreport_worst_slack\n----\nworst slack max 89.51\n")
+    res = {"checks": {"setup_tt": {"wns_ps": -16.3, "tns_ps": -42.4, "vclk_reference": "applied"}, "hold_ff": {"wns_ps": 3.0}}}
+    fr = gate.grt_frames(tmp_path, res)
+    assert fr["kit_orfs"]["worst_slack_ps"] == 89.51
+    assert fr["signoff_frame"]["setup_tt_wns_ps"] == -16.3 and fr["delta_ps"] == -105.81
+    assert gate.grt_frames(tmp_path / "none", res)["kit_orfs"] is None

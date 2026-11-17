@@ -422,7 +422,15 @@ def guard_ps(t):
 
 def config_lines(t):
     """config.mk lines of the build; [] when the type opts out."""
-    return [CONFIG, f"export OT_PREGRT_HOLD_GUARD = {guard_ps(t):g}"] if enabled(t) else []
+    if not enabled(t):
+        return []
+    lines = [CONFIG, f"export OT_PREGRT_HOLD_GUARD = {guard_ps(t):g}"]
+    # S81-COL-HOLD-MARGIN 11-17 (COORD): per-item knob OT_PREGRT_HOLD_PORT_MARGIN_PS (kit_wave item_env) sets the pre-GRT same-tap /
+    # port hold margin (tcl default 5 ps) of THIS kit only; unset or empty = today's behaviour (no line, the tcl default applies).
+    pm = os.environ.get("OT_PREGRT_HOLD_PORT_MARGIN_PS", "").strip()
+    if pm:
+        lines.append(f"export OT_PREGRT_HOLD_PORT_MARGIN = {float(pm):g}")
+    return lines
 
 
 def tcl_text(hold_gate_text, amin=-1, *, rc_basis="placement"):

@@ -19,7 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "die_plan"))
 import face_guard as FG  # noqa: E402
 
-CELL_CAP = 150_000
+# WAVE-FLOW-R2 11-17: no cell stop here; the one limit is the plan-time SPLIT-NEEDED check (die_plan/cell_cap.py)
 SETUP_FRAC = 0.10
 STAGE_FRAC = 0.70
 RESET_LANDING_MAX = 8
@@ -93,7 +93,7 @@ def main(out):
     wns = s.get("wns")
     checks["timing"] = {"ok": wns is not None and wns >= SETUP_FRAC * per and s.get("sta_stage") == "place_resized",
                         "wns": wns, "sta_stage": s.get("sta_stage")}
-    checks["cells"] = {"ok": s.get("cells") is not None and s["cells"] <= CELL_CAP, "cells": s.get("cells")}
+    checks["cells"] = {"ok": s.get("cells") is not None, "cells": s.get("cells")}
     mx = int(cfg.get("SYNTH_MEMORY_MAX_BITS", "4096"))
     mems = memories(w / "gate_mem.json", mx)
     checks["memory"] = {"ok": not any(m["over"] for m in mems), "max_bits": mx, "largest": max([m["bits"] for m in mems], default=0),

@@ -94,7 +94,6 @@ if HUB_NAME == "epyc1":
 else:
     MIRROR = {"localhost": "intel1", HUB_NAME: "intel1"}   # the hub's own archives mirror to intel1
     MIRROR_DEFAULT = "localhost"                        # every other host's archives mirror to the hub
-CELL_CAP = 517_000   # COORD 11-04 06:00 (2): 400k is advisory up to the largest closed run; the kit's native_cell_cap.tcl keeps 400k unless the kit opts in
 NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
 RENDER_MEM_GB = 8
@@ -341,8 +340,6 @@ def validate_row(r):
         c = float(r["cells"])
     except ValueError:
         return "cells not a number (expected std cells required)"
-    if c > CELL_CAP:
-        return f"cells {int(c)} > {CELL_CAP} (OpenROAD cap per run)"
     if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt"):
         return "goal must be route|finish|auto|cts|grt"
     if r["goal"] in ("cts", "grt") and not r["runner"]:
@@ -1154,9 +1151,6 @@ def classify(c, client):
     # KW-RELAUNCH-2 11-05: the cap is judged after the infra outcomes (sle_ctl a7630b8a28e2 was NOT RUN on a disk floor
     # and filed as cell-cap), on the kit's own pre-floorplan native count when it has one (the post-place stdcell
     # count adds TAPCELL/endcaps: 522k placed = 316k native), the basis kit_wave.after_place and native_cell_cap.tcl use.
-    cells = c.get("native_cells", c.get("cells", 0)) or 0
-    if cells > CELL_CAP:
-        return "STRUCTURAL", "cell-cap", f"{cells} std cells > {CELL_CAP}"
     if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
         if c.get("grt_overflow") not in (None, 0):
             return "FAIL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"

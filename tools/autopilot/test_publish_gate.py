@@ -214,3 +214,21 @@ class Gate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_static_step_budget_covers_a_long_g0():
+    """QC M5 11-17: check.py G0 on the QC plan runs ~48 min; the static step budget must not fail it on time."""
+    import inspect
+    import publish_gate as PG
+    assert PG.STEP_TIMEOUT_S >= 3 * 3600
+    assert inspect.signature(PG._sub).parameters["timeout"].default == PG.STEP_TIMEOUT_S
+    seen = {}
+
+    class R:
+        stdout, stderr, returncode = "PG_STATIC {}", "", 0
+
+    def runner(argv, **kw):
+        seen.update(kw)
+        return R()
+    PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner)
+    assert seen["timeout"] >= 3 * PG.STEP_TIMEOUT_S

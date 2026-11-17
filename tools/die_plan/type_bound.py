@@ -39,8 +39,9 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import route_supply as RS  # noqa: E402
 import street_rule as SR  # noqa: E402
+from cell_cap import SPLIT_CELLS  # noqa: E402
 
-CELL_CAP = 400_000
+CELL_CAP = SPLIT_CELLS            # the single plan-time limit (cell_cap.py)
 LAY = dict(RS.PITCH)
 LAY.update(M8=0.080, M9=0.080)
 DER = dict(RS.DERATE)
@@ -200,7 +201,7 @@ def cut_check(rec, W, H, rects, room, top="M9", ceiling="M5"):
 
 def classify(cells, cuts, faces):
     if cells and cells > CELL_CAP:
-        return "NEEDS-SPLIT", "cells %d > %d" % (cells, CELL_CAP)
+        return "NEEDS-SPLIT", "SPLIT-NEEDED: cells %d > %d" % (cells, CELL_CAP)
     bad_face = [f for f, v in faces.items() if v["fixed"] and v["ratio_at_limit"] > 1.0]
     if bad_face:
         return "NEEDS-BANDWIDTH", "fixed face %s pins over capacity (%s)" % (

@@ -5561,6 +5561,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
+    # S81-COL-HOLD-MARGIN 11-17 (COORD, FABLE-PD-S81-0720 B2): per-item knob.  OT_HOLD_FF_MARGIN_PS (kit_wave item_env) replaces the
+    # GRT-stage FF hold margin of THIS kit only; unset or empty = the caller's value (today's behaviour).
+    _hm = os.environ.get("OT_HOLD_FF_MARGIN_PS", "").strip()
+    if _hm:
+        hold_ff_margin = float(_hm)
+    # S81-COL-GRT-PORT 11-17 (COORD): OT_GRT_PORT_HOLD_MARGIN_PS (kit_wave item_env) includes the input-port starts in the GRT hold repair
+    # (OT_GRT_PORT_HOLD_INCLUDE = 1, tools/grt_nonport_hold.tcl) and floors the GRT hold margin at that value; unset = today's behaviour.
+    _pm = os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip()
+    if _pm:
+        hold_ff_margin = max(float(_pm), hold_ff_margin if hold_ff_margin is not None else 0.0)
     margins = rflow_margins(margins, P.name)    # R-FLOW defaults per kit class (explicit arguments win)
     max_wire_um = rflow_max_wire_um(max_wire_um, P.name)
     macro_moves = macro_move_table(t, tn)
@@ -5974,6 +5984,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # route / finish / abstract on the native corners; TT setup is checked unchanged by signoff.py.
            *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
              if hold_ff_margin is not None else []),
+           *(["export OT_S81_SSTN_M5_BLOCK = 1"] if os.environ.get("OT_S81_SSTN_M5_BLOCK") == "1" else []),
+           *(["export OT_GRT_PORT_HOLD_INCLUDE = 1"] if os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
@@ -6135,8 +6147,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += pgcap_cfg()         # DRT0255 C3b opt-in (gen env OT_PGCAP=1)
     cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
-    shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
-    shutil.copyfile(Path(__file__).with_name("hold_sdc_guard.tcl"), kd / "hold_sdc_guard.tcl")      # HOLD-SDC-1116
+    import kit_common_files; kit_common_files.stage(kd)   # KIT-COMMON-1117: hold_pad_hb4 / hold_sdc_guard (HOLD-SDC-1116) / ... (one list, core_flow reads it too)
     cfg.append("export OT_SIGNOFF_SDC_SHA = " + _hashlib.sha256((kd / "constraint.sdc").read_bytes()).hexdigest()[:16])
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
@@ -6185,7 +6196,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "pinreg_pad.tcl",
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "sstn_m5_block.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
@@ -6578,8 +6589,6 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
-    shutil.copyfile(Path(__file__).with_name("native_bb.py"), kd / "native_bb.py")
-    shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
     # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
     shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
     # GENBUG-5 (11-15): merged-replica census after synth, placed-database hop census before CTS; both OFF unless the
@@ -6602,15 +6611,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if _hc in ("1", "warn"):
         shutil.copyfile(Path(__file__).with_name("hop_census.py"), kd / "hop_census.py")
         (kd / "hop_census.on").write_text(_hc + "\n")
-    for helper in ("port_bind_gate.py", "hold_gate.tcl"):
-        shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
+    shutil.copyfile(Path(__file__).with_name("hold_gate.tcl"), kd / "hold_gate.tcl")
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
     shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
-    shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
-    shutil.copyfile(Path(__file__).with_name("lec_completed_reference.py"), kd / "lec_completed_reference.py")
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)

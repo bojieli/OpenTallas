@@ -103,10 +103,16 @@ def check_limits(endpoints_tsv, plan_tsv, max_worst_ps=15.0, max_ends=100, min_r
             worst = ff if worst is None else min(worst, ff)
     if worst is not None and worst < -abs(max_worst_ps):
         viol.append("worst_internal_ff_hold %.2f ps < -%g" % (worst, abs(max_worst_ps)))
-    rows, summary = [], {}
+    rows, summary, skipped_internal = [], {}, []
     for line in Path(plan_tsv).read_text().splitlines():
         if line.startswith("# summary"):
             summary = json.loads(line[len("# summary"):])
+        elif line.startswith("# skipped "):
+            # "# skipped <endpoint>: <reason>".  A port path (start or end at a port) is the parent's: advisory under R-MINIMAL, never padded and
+            # never a limit (S81 col_pg3 had 110 of them and exited 4); only an INTERNAL end the plan could not pad counts.
+            end, _, why = line[len("# skipped "):].partition(": ")
+            if not why.startswith("port path"):
+                skipped_internal.append((end, why))
         elif line and not line.startswith("#"):
             rows.append(line.split("\t"))
     if len(rows) > max_ends:
@@ -115,9 +121,10 @@ def check_limits(endpoints_tsv, plan_tsv, max_worst_ps=15.0, max_ends=100, min_r
         room = setup.get(pin, 1e6) - int(n) * hb4_tt_ps
         if room < min_room_ps:
             viol.append("setup_room %s %.1f ps < %g (TT setup %.1f, %s x %.1f)" % (pin, room, min_room_ps, setup.get(pin, 1e6), n, hb4_tt_ps))
-    if summary.get("partial") or summary.get("skipped") or summary.get("nets_left_unpadded"):
-        viol.append("plan could not pad every end (partial %s skipped %s unpadded %s)" % (
-            summary.get("partial"), summary.get("skipped"), summary.get("nets_left_unpadded")))
+    for end, why in skipped_internal:
+        viol.append("internal end not padded: %s (%s)" % (end, why))
+    if summary.get("partial") or summary.get("nets_left_unpadded"):
+        viol.append("plan could not pad every internal end (partial %s unpadded %s)" % (summary.get("partial"), summary.get("nets_left_unpadded")))
     return viol
 
 
