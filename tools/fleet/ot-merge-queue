@@ -333,7 +333,30 @@ def is_test(p):
     return os.path.basename(p).startswith("test_") and p.endswith(".py")
 
 
-def select_tests(changed, all_tests, read):
+def evidence_copies(wt, base, tip, changed):
+    # Only new results files whose Git blob is identical to an unchanged
+    # production authority qualify. Existing/mutated golden files do not.
+    added = set(git("diff", "--name-only", "--diff-filter=A", base, tip, "--", "results", cwd=wt).stdout.splitlines())
+    wanted = added.intersection(changed)
+    if not wanted:
+        return {}
+    entries = {}
+    for line in git("ls-files", "--stage", "-z", cwd=wt).stdout.split("\0"):
+        if "\t" not in line:
+            continue
+        meta, path = line.split("\t", 1)
+        mode, oid, stage = meta.split()
+        if stage == "0":
+            entries[path] = oid
+    sources = {}
+    for path, oid in entries.items():
+        if path not in changed and path.startswith(("rtl/", "tools/", "physical/")):
+            sources.setdefault((os.path.basename(path), oid), path)
+    return {path: sources[(os.path.basename(path), entries[path])]
+            for path in wanted if path in entries and (os.path.basename(path), entries[path]) in sources}
+
+
+def select_tests(changed, all_tests, read, copies=None):
     """changed: repo paths the candidate changes; all_tests: every test file in the worktree; read(path) -> text.
     -> (sorted test files, {test: reason}).  Rules (OWNER 11-14): tools/autopilot -> test_kit_wave.py; tools/die_plan -> the
     die_plan tests named after or referencing the module; ot-run / ot-heavy -> their tests; otherwise the branch's own (new or
@@ -356,9 +379,14 @@ def select_tests(changed, all_tests, read):
         return cache[t]
 
     for f in changed:
-        if is_test(f):
+        if is_test(f) and f not in (copies or {}):
             add(f, "changed test")
     for f in changed:
+        if f in (copies or {}):
+            for t in all_tests:
+                if f in text(t):
+                    add(t, f"references exact evidence path {f}")
+            continue
         if is_test(f) or f.endswith((".md", ".txt", ".json", ".tsv", ".csv")) and not f.startswith("tools/"):
             continue
         d, base = os.path.dirname(f), os.path.basename(f)
@@ -755,7 +783,9 @@ def gate(it, wt, base):
     if bad:
         return "RED", f"static check: {'; '.join(bad[:6])}"
     alltests = all_test_files(wt)
-    tests, why = select_tests(ch, alltests, lambda t: (wt / t).read_text(errors="replace"))
+    copies = evidence_copies(wt, base, tip, ch)
+    it["evidence_copies"] = copies
+    tests, why = select_tests(ch, alltests, lambda t: (wt / t).read_text(errors="replace"), copies=copies)
     it["tests"] = tests
     if not tests:
         return "GREEN", f"no tests select for {len(ch)} changed file(s); static check only"

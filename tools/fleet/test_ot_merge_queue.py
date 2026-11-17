@@ -95,6 +95,29 @@ class Select(unittest.TestCase):
         self.assertEqual(self.sel(["tools/fleet/ot-mem-grow", "tools/fleet/test_ot_mem_grow.py"]), ["tools/fleet/test_ot_mem_grow.py"])
         self.assertEqual(self.sel(["physical/common_flow/grt183_make.sh"]), ["tools/fleet/test_grt.py"])
 
+    def test_proved_new_evidence_copy_keeps_exact_consumer_not_basenames(self):
+        f = "results/component/copied_operator.sv"
+        tests = ["tools/test_real.py", "tools/test_record.py", "tools/test_new.py"]
+        texts = {tests[0]: "copied_operator.sv", tests[1]: f}
+        got, _ = M.select_tests([f, tests[2]], tests, lambda t: texts.get(t, ""), copies={f: "rtl/copied_operator.sv"})
+        self.assertEqual(got, [tests[2], tests[1]])
+        ordinary, _ = M.select_tests([f], tests, lambda t: texts.get(t, ""))
+        self.assertEqual(ordinary, [tests[0], tests[1]])
+        copied_test = "results/component/test_real.py"
+        got, _ = M.select_tests([copied_test], [copied_test] + tests, lambda t: texts.get(t, ""), copies={copied_test: tests[0]})
+        self.assertEqual(got, [])
+
+    def test_copy_proof_requires_added_path_identical_blob_and_unchanged_authority(self):
+        from unittest.mock import patch
+        old = "results/old/operator.sv"; new = "results/new/operator.sv"; bad = "results/bad/operator.sv"
+        index = ("100644 abc 0\trtl/operator.sv\0" + "100644 abc 0\t" + old + "\0" +
+                 "100644 abc 0\t" + new + "\0" + "100644 xyz 0\t" + bad + "\0")
+        def g(*a, **kw):
+            return subprocess.CompletedProcess([], 0, new + "\n" + bad if a[0] == "diff" else index, "")
+        with patch.object(M, "git", side_effect=g):
+            self.assertEqual(M.evidence_copies(Path("/unused"), "base", "tip", [old, new, bad]), {new: "rtl/operator.sv"})
+            self.assertEqual(M.evidence_copies(Path("/unused"), "base", "tip", [old, new, bad, "rtl/operator.sv"]), {})
+
     def test_docs_select_nothing(self):
         self.assertEqual(self.sel(["docs/X.md"]), [])
 
