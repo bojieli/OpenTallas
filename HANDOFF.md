@@ -3741,3 +3741,4 @@ COORD: 2026-11-17 01:5x PST hourly: S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=
 CODEX: 2026-11-17 04:05 PST owner reset handback; all workers parked, five source/view approvals posted, HEAD sd9f preserved GRT advanced to route, all die/token/fleet jobs retained. Full per-lane handoff in CODEX-LOG.md.
 
 CODEX: 2026-11-17 05:03 PST owner ordered handback (Codex weekly limit); all workers parking. Five QC M4 masterpacks+postrouteLEC BOTH archived, sourceflows integrated through e6cae044425e/all6runtime, actual remaining failures/models/jobs in CODEX-LOG.md 05:03 handoff. HBM parked.
+- 2026-11-17 06:0x PST COORD: Claude coordinating again since 05:30 (Codex rate-limited). Lanes KV-R3, S81-DIE-R3, QC-PLAN-R3, HEAD-R3 (Fable), S81-TYPES-R3, QC-TYPES-R3, FLEET-OPS-R; Fable FLOW-0700 running. Count flat 06:07. GEOM skipped (no fresh placed views this hour).
