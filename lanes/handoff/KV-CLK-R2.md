@@ -40,3 +40,14 @@ KV-R owns the D4/D5 trees, views, C bind and pilots.
 ## Next (lever 2)
 1. e8 CHAIN_DONE: GRT overflow 0 both corners, SPEF tol readout (expect hg/pc <= ~15), CA. Then rows_kv.py on e8 -> rows for the event after HG3b.
 2. Branch GREEN -> READY post; KV-R composes rows into the event after HG3b (fresh bind + LATCHECK + Fable review).
+
+## 11-17 later (supersedes the "Next (lever 2)" list above)
+- Codex covered my limit gap in this lane dir: it committed xmirror (44f4a1d0f5), built compound template 264823d689 (claude/kv-clk-r2-compound-1117),
+  ran e8 (xmirror, HG3b) -> HG4 2a08e83f4369 (rows_e8_hg3b) and e9 (xmirror + compound, HG3b). e8 is retired by COORD.
+  My accidental e8 relaunch (e8run/) was stopped at GRT; runs/e8 grt_TT/FF were partly rewritten (e8 is retired, the HG4 packet is intact).
+- Third xtap DB: kv3_hub_Eo (kvN2, W 120): cross-tap 18,318 worst -254.5, 90.4 % window-only; same-tap 652 (worst -106.5) = real local hold for kit repair.
+- HG5 packet (posted 182776e3): rows_e9_hg3b/HG5_rows.json 3ec72ddb1e41 on HG3b 5c15509230ca, candidate plan_hg5.json 340b90be33dd,
+  tol max 26.1, seam 100, 56 types / 6,202 ports, walls 0. Script e9fin/finish_e9_hg3b.sh (copy of finish_e8_hg3b.sh).
+- START/reset: 80-stage selected_contract_e8 UNADOPTED, FAIL 74+74 hops > 405 um (max 2,995.9); relay_e8/relay_need.tsv 6cff114352a4 (317 relays/wave). Carry in HG6.
+## Next
+1. KV-R applies HG5_rows.json on its D14/HG5 base; answer row questions. 2. HG6: reach-scripted START/reset relay rows from relay_need.tsv.
