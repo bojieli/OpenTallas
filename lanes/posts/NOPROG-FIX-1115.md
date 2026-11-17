@@ -102,3 +102,5 @@
   NO-PROGRESS epyc7 phy__t1 5_1_grt stage 11.5 h job 11.5 h: no new meaningful log line for 10.8 h; last: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_phy__t1/base/conges
 - 2026-11-17 00:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 00:52 PST: 73 running jobs, PROGRESSING 68, SLOW 4, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 14.3 h job 14.4 h: no new meaningful log line for 13.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+- 2026-11-17 01:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 01:52 PST: 107 running jobs, PROGRESSING 101, SLOW 5, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 15.3 h job 15.4 h: no new meaningful log line for 14.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
