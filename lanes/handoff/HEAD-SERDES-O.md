@@ -1,4 +1,16 @@
 # HEAD-SERDES-O handoff (Opus successor of FABLE-FIX-HEAD-SERDES) 11-16 ~04:05 PST
+
+## RESET ACTIVE STATE — 2026-11-16 Codex park
+
+All HEAD children parked on explicit Claude reset. NO A/B GRT or SPE PRD3 has launched. Running he12h/HW4/p16g fleet jobs continue. Full final resumed-shift details, exact source/paths/model corrections and failures are consolidated at lanes/handoff/HEAD-TYPES-O.md (RESET HANDOFF section).
+
+Authoritative sd9 result: A DNGB12/RMRPC32/DKREG1/DOREG1/DDX2, two recovered pma_rck833ps RXedges versuszero; notzero latency. Actual added banks DK323FF/94.230540um2 +DO557FF/166.314060um2 =880FF/260.544600um2. This supersedes earlier554/~161.55estimate. TOKEN received exactcensus beforepark; canonicalmodelpatch stillpending and mustprecede A GRT. DOREG2 earlierbench label meant B.
+Both CTS terminalexit0 at E7 .../fable-fix-head-serdes/sd9{a,b}_guard1/hd_serdes, clients3124596/3124598. Successfulclosedreads E2 diag_sd9{a,b}_cts2 withexactfe839 helper, logs~/head-serdes-o-logs/sd9{a,b}_cts_paths3.log. A principalstages+159.87/+247.70/+493.01/+110.92/+566.53ps; all queriedwrites/resetpositive. B DKREG->Chien-51.16; notselected/routed. TXpma_tck actualrootclk_t8 inboth(17/16buffers), separateRXpma_rck. E7 physicalkitsunchanged.
+A28RTLmanifest40fec6ae5f6da2ec98e5f2862e7b863738d47e340c79d6d7997bacef9a4d0819; link8615ed86807ef4510eae632521e8fccc8c42016026be80463feb7d55134c9de3, decoder55d938a8904dbd55cb220cda50eb75cbeed87ca7294efa8002e78e4ba99462ea.
+fe839e11dc9a9acdb50c067e4bb10e4effaa1e92 normalGREEN62/r375 merged674fa. Fullsixhostsyncd0ee4a2afb10 includes coherent e7/88/d2f/fe/3725. No oldwholebranch sourceoverlay.
+sd8g DPL prospectiveee571 fixedsourceapproved/merged but no newphysicalproof. sd7 RSZ0074 remains nativeguide-restore diagnosis, notPG/DPLcure; originalGRT/failurepreserved. Complete failure/scope/nextdiagnostic in HEAD-TYPES resetsection. No newclone/livekitpatch.
+
+
 Goal: sign off hd_serdes (s81_head): DRC 0, TT setup >= -42 ps, FF non-port hold >= 0, LEC.
 
 ## Where things are (epyc10 /srv/opentallas-scratch2/claude/fable-fix-head-serdes = W)
