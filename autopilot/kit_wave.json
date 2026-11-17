@@ -49765,59 +49765,6 @@
      "carry": true
     },
     {
-     "id": "qwen_compute-kf-clock-l2-1116",
-     "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "carry": true,
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:0x PST (COORD resume item 3, with QC-PLAN-R; source lanes/handoff/QC_KF_hold_coverage_1116.json 7e7381cb3ddd): inherited r344 clock finding (FABLE-DIE-QC clock_c types_changed): 27 of 52 clock types had no typed hold; the l2 event carries their clock rows. Held through the selective Kf pilot; release on the S4q9l2 lineage (l2 / l2d) adopt + lint_clean. Running attempts finish.",
-     "release": [
-      "event_adopt:S4q9l2*",
-      "lint_clean:qwen_compute"
-     ],
-     "keys": [
-      "cbf_q00__cl1b5a6458",
-      "cbf_q00__cl870de686",
-      "cbf_q01",
-      "cbf_q11",
-      "cbn_q00__cl622f65d2",
-      "cbn_q01__clab6e67f2",
-      "cbn_q01__cld9ff4c40",
-      "cbn_q11__cl49ae4555",
-      "cbn_q11__cl5cc92dfe",
-      "cbx_q10__cl89936551",
-      "cbx_q10__cl89936551_h",
-      "cbx_q10__cl94a12200",
-      "cbx_q10__cl94a12200_h",
-      "sle_fe_v1__cl8210183c",
-      "sle_fe_v2",
-      "sle_fe_v3",
-      "sle_hc0__cl929603c0__cl4baa7c9c",
-      "sle_hc1__cl7d360508",
-      "sle_sc_v1__cl115da35f",
-      "sle_sc_v1__cl7479a5ec",
-      "sle_sc_v2",
-      "sle_su_l0__cl7a55c676",
-      "slw_hc1__cl68f9248e__cle683a076",
-      "slw_sc_v2",
-      "slw_su_l0__cl1e5219ea",
-      "slw_su_l0__cl76fb247e",
-      "slw_su_l1__cla2a78701"
-     ]
-    },
-    {
-     "id": "qwen_compute-kf-face-m-1116",
-     "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "carry": true,
-     "reason": "FIX-S81-COL-STALE 2026-11-16 20:0x PST (COORD resume item 3, with QC-PLAN-R; source lanes/handoff/QC_KF_hold_coverage_1116.json 7e7381cb3ddd): faces slw_fw_v3, coll_ftc (G0 inherited faces; coll_ftc had no hold): m carries the l2d geometry. Release on S4q9m adopt + lint_clean. Running attempts finish.",
-     "release": [
-      "event_adopt:S4q9m*",
-      "lint_clean:qwen_compute"
-     ],
-     "keys": [
-      "coll_ftc",
-      "slw_fw_v3"
-     ]
-    },
-    {
      "id": "pilot-qwen_compute-c8e63f164faa",
      "plan_sha": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
      "reason": "PILOT after Kf tree switch (COORD): one GEN pilot sle_fe_v1__cl1cbb7497 from tree c8e63f164faa must pass GEN + preflight first",
