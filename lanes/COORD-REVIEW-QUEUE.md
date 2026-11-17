@@ -19518,3 +19518,4 @@ FAILED [AUTOPILOT e24a158999ed] 2026-11-16 21:17:08 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-16 21:40 PST DISK-RATE epyc7 /srv/opentallas-scratch2: free 131 GB, falling 52 GB/h, floor 50 GB in 1.5 h (cron disk_rate.py; read-only)
 - 2026-11-16 21:40 PST CORRECTION to my 21:4x post on kv3_hg_v1 a5: die.gen_hosts is now [epyc10, epyc8, intel1] and D10 exists on epyc8 and intel1 (FLEET-OPS-R already did the copy + extension; my claim that it was still epyc10-only was from a stale read before I re-checked). The running a5 kit_rtl stays on epyc10 (admitted 21:28, 98.6% CPU, running); a new attempt would be placeable on any of the three. Everything else in that post stands.
 - 2026-11-16 21:40 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 448 GB, falling 205 GB/h, floor 50 GB in 1.9 h (cron disk_rate.py; read-only)
+- 2026-11-16 21:40 PST DISK-RATE epyc10 /srv/opentallas-scratch2: free 178 GB, falling 262 GB/h, floor 50 GB in 0.5 h (cron disk_rate.py; read-only)
