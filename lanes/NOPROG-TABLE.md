@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 21:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-16 21:45 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 16, 'NO-DATA': 2, 'EXCLUDED': 12, 'PROGRESS': 4}. Hosts without report: none.
 
@@ -33,7 +33,7 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 16, 'NO-DATA
 | intel1 | dpkit-cbn_q11__cl5cc92dfe-3365622 | cbn_q11 | 5_1_grt | 8.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-slice_station__t42__clcf44e680-3277913 | slice_station__t42 | 5_2_route | 1.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261116_023111_238129-i1t-2308651 | eco_20261116_023111_238129-i1t | 5_2_route | 18.9 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | pregrt_ff_hold | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | pregrt_ff_hold | 0.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 43.3 | last meaningful line 1.1 h ago (1566/1566 lines) | PROGRESS: log still growing |  |
 | epyc2 | ffqcdieclk-wiB | ffqcdieclk-wiB | 4_1_cts | 0.6 | repair_Violations best 0 last 0 rows 1 | PROGRESS: repair_Violations reached 0 |  |
 | epyc7 | gplcts-t75_ov20-2717777 | gplcts-t75_ov20 | 4_1_cts | 0.3 | repair_Violations best 0 last 0 rows 1 | PROGRESS: repair_Violations reached 0 |  |
