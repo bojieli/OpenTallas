@@ -2805,6 +2805,7 @@ def place_rc0_no_odb(text):
 
 
 RULES = [
+    ("INFRA", r"^geom_tools$", r"KW_GEOM_TOOLS", "geometry tool closure could not be staged on the checkpoint host"),
     # KITRTL-FAIL-1115: a die src tree's own (older) bind.py lacks a flag the wave passes: tool skew, one stable reason
     ("FLOW", r"^kit_rtl$", r"bind\.py: error: unrecognized arguments", "kit_rtl tool skew (the die src tree's bind.py predates a wave flag; the wave falls back to the scheduler's bind.py)"),
     ("INFRA", r"^place$", place_rc0_no_odb, PLACE_NO_ODB_WHY),
@@ -6366,6 +6367,41 @@ def ensure_future_lec(out, meta):
     return ""
 
 
+GEOM_TOOL_FILES = ("geom_check.sh", "geom_dump.tcl", "geom_grt.tcl", "geom_rules.py", "geom_png.py", "placed_scan.py", "geom_memory.py")
+
+
+def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None):
+    """Put the scheduler's complete tool closure beside the actual checkpoint, never move the checkpoint's host."""
+    root = Path(tool_root or Path(__file__).resolve().parent)
+    blobs = {name: (root / name).read_bytes() for name in GEOM_TOOL_FILES}
+    hashes = {name: hashlib.sha256(blob).hexdigest() for name, blob in blobs.items()}
+    digest = hashlib.sha256(json.dumps(hashes, sort_keys=True).encode()).hexdigest()
+    local = Path(out) / (".geom-tools-" + digest[:16])
+    local.mkdir(exist_ok=True)
+    for name, blob in blobs.items():
+        f = local / name
+        if f.exists() and f.read_bytes() != blob:
+            raise OSError(f"KW_GEOM_TOOLS local snapshot differs: {f}")
+        if not f.exists():
+            f.write_bytes(blob)
+    target = str(Path(geom_dir) / local.name)
+    rc, txt = run("geom_tools_dir", remote_argv(host, hub, f"mkdir -p {q(target)}"), idempotent=True)
+    if rc:
+        raise OSError(f"KW_GEOM_TOOLS {host}: mkdir failed: {txt[-500:]}")
+    dest = f"{host}:{target}/" if _ssh(host, hub) else target + "/"
+    rc, txt = run("geom_tools_copy", ["rsync", "-a", "-e", "ssh -o BatchMode=yes -o ControlPath=none", str(local) + "/", dest], idempotent=True)
+    if rc:
+        raise OSError(f"KW_GEOM_TOOLS {host}: copy failed: {txt[-500:]}")
+    check = ("import hashlib,json,pathlib; r=pathlib.Path(" + repr(target) + "); "
+             "w=json.loads(" + repr(json.dumps(hashes)) + "); "
+             "bad=[n for n,h in w.items() if not (r/n).is_file() or hashlib.sha256((r/n).read_bytes()).hexdigest()!=h]; "
+             "assert not bad, 'KW_GEOM_TOOLS hash mismatch: '+str(bad); print('KW_GEOM_TOOLS_OK " + digest[:16] + "')")
+    rc, txt = run("geom_tools_verify", remote_argv(host, hub, "python3 -I -c " + q(check)), idempotent=True)
+    if rc or "KW_GEOM_TOOLS_OK " + digest[:16] not in txt:
+        raise OSError(f"KW_GEOM_TOOLS {host}: verification failed: {txt[-500:]}")
+    return target
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     spec_bytes = Path(spec_path).read_bytes()
@@ -6529,20 +6565,13 @@ def run_item(spec_path):
         rc, txt = run("geom_cfg", idempotent=True, argv=rem(f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"))
         if rc:
             return fail("geom_cfg", txt)
-        # KW-FIX-45 11-12 geom host has the src tree (COORD: hbm/hnx_fused_lane_c geom_run failed on a host without the HBM tree after
-        # gen_hosts was widened): geom_check.sh runs from the src tree, so run geom on a host that HAS it: the kit host if it does,
-        # else the gen host.  The kit's physical copy lives on the gen host after the place hand-off.
-        _gh = kh
+        # The physical checkpoint decides the host.  A missing old source tree
+        # requires staging tools there, never falling back to a host without the DB.
         try:
-            _r, _t = run("geom_src_" + kh, remote_argv(kh, hub, f"test -e {q(src)}/tools/autopilot/geom_check.sh && echo KW_SRC_OK || echo KW_SRC_MISSING"), idempotent=True)
-            if "KW_SRC_OK" not in _t and G != kh:
-                _gh = G
-                print(f"KW_GEOM_HOST src tree missing on {kh}: geom runs on the gen host {G}", flush=True)
-        except Exception as _e:
-            print(f"KW_GEOM_HOST check skipped: {_e}", flush=True)
-        if _gh != kh:                                    # the check config the stage wrote on the kit host must exist on the geom host too
-            run("geom_cfg_gh", remote_argv(_gh, hub, f"mkdir -p {q(gd)} && cat > {q(gd)}/check.json <<'EOF'\n{json.dumps(chk)}\nEOF"), idempotent=True)
-        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", [_gh]))
+            geom_tools = stage_geom_tools(out, gd, kh, hub, run)
+        except OSError as e:
+            return fail("geom_tools", f"KW_GEOM_TOOLS {kh}: {e}", f"{kh}:{gd}")
+        rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(geom_tools)}/geom_check.sh {q(gd)}", [kh], roam=False))
         line = geom_result_line(txt)
         res.update(geom_dir=f"{kh}:{gd}", geom_line=line[:600], odb=odb, kit=f"{kh}:{K}")
         ps_line = placed_scan_line(txt)      # PLACED-SCAN-1115: advisory early-fail diagnostic, names the matched group
