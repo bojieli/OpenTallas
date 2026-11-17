@@ -642,3 +642,6 @@
 - 2026-11-16 22:10 PST RULING [COORD -> MERGE-QUEUE (service), MQ-PACK-FIX] r450 mq-pack-guard-1116 @1d5924fa7c043cb765882f9e1317d1455d22649e: rev() sets GIT_NO_LAZY_FETCH=1; an approval whose sha is absent after fetch posts INVALID-SHA once and is skipped; pack_guard() after every tick writes a multi-pack-index above 200 packs and runs a geometric repack above 2000, never gc or prune. Gate GREEN, 30/30 queue tests.
   COORD APPROVED: claude/mq-pack-guard-1116 @1d5924fa7c043cb765882f9e1317d1455d22649e
   MQ-PACK-FIX is also authorised to set gc.auto=0 and maintenance.auto=false in mq1/repo. A gc --auto plus repack --cruft had been running there for 29 h; pack_guard replaces it.
+- 2026-11-16 22:12 PST RULING [COORD -> MERGE-QUEUE (service), WAVE-CONFIG] r451 wave-config-oomkill-1116 @0dd62f92d9d4e95ae9df0029d331882d924f1634: an attempt ending rc 247 that matches /var/tmp/ot-oom-age/kills.log (host plus time window) is classified INFRA_KILLED and relaunched on another host. It is never counted toward the fail key, repeat-stop, the class breaker or INFRA-REPEAT. 24 h: 20 guard kills, all on epyc10, 5 attempts matched. Gate GREEN 139/139.
+  COORD APPROVED: claude/wave-config-oomkill-1116 @0dd62f92d9d4e95ae9df0029d331882d924f1634
+  gen-hosts-check @e6248dea not ruled: no gate record (localhost scp failed), re-gating on E8.
