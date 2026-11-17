@@ -52,3 +52,7 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 ## 19:5x PST (resumed after limit; Codex 19:51 handoff read)
 - H2 post-GRT (5_1_grt, in-flow repair): setup ws -57.76 / tns -71.35, 3 violations, ALL the reset-relay hop u_rrl_33/q (fall) -> u_rrl_38/state (rise); hold ws -5.38 = port path ft2_i -> u_ft_ft2_o_0 (advisory), internal FF hold +0.17 after GRT hold repair (+19 buffers); overflow 0, antenna 0. DRV: boot_release.released_n slew. H (E2) same picture (-58.63). => per COORD, H3p is the sign-off form. H2/H DRT continue as information.
 - H3p at place (3_1); Codex real LEC on H3p live E8 unit oth-ubuntu-439937 (probes H3p_real_lec/). J5 CTS done; Codex J5 census live E8 unit oth-ubuntu-546825 (probes J5_cts/).
+
+## 20:1x PST - J5 PARKED
+- J5 post-CTS census (probes J5_cts/): TT -1138.95, 817 ep < -42; FF -521.7. Moving rd.q to its mux put the whole span on rd.q -> u_bout_coll_o0 (399 ep, -1139), and rd.q landed on clk_t28 whose tree is deep (launch arrival 1206 ps vs t15 capture 996); also rt_d -> rd.q -242 (240 ep), txl t21 -> t28 FF -482.
+- Conclusion: the J floorplan puts rm.mem ~1150 um from the east output face; one register cannot split that span with these trees. J family needs a floorplan move of rm toward the output face or an added rd.q -> bout_coll stage (RTL). Not pursued now; H3p is the sign-off form.
