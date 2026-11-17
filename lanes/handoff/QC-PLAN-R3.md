@@ -34,3 +34,8 @@
 - M5 portable payload READY: E2 tools-converge/qc/m_closure_1116/M5_spec_1117b.json, manifest ed92c7213e0e; E8 copy /srv/opentallas-scratch2/claude/qc-plan-r3-m5pub-1117 (m5pub.sh = guarded publish_m + relocate_m_bind). The publish waits on E8 disk (needs >= 115 GB free; 93 now). D2 is in superseded_trees; FLEET-OPS was asked to retire it (ot-delete refuses: receipts).
 - After publish: tree_check guard -> candidate (template lanes/handoff/QC_S4Q9KF_ADOPT_candidate_v2_1116.json; event s29q103S4Q9M5, sidecar runtime/zz_sidecar_s29q103S4Q9M5BR.json, asbuilt runtime/asbuilt_m5_portable.json, bind_out kw45/qcbind_pin_eb1e73448bd0_s4q9m5/bind_s29q103S4Q9M5BR) -> publish_gate.py run -> apply_reviewed_tree_marker.py --keep-gen-hosts.
 - Event N: a child fork is composing N tools (D4 + 97381d83ed/r547/r553/r560) and the N plan (M5 + latch_except tap[0] + hb4 {tap[0]:3} + N START + SC reset + R-REACH-4 + NB slot), then binds NBR on E2.
+
+## 11:2x update
+- M5 publish_gate rerun (item sle_st_a_v2__pv4242de79) FAILED only on G0 timing out at the 1800 s _sub cap (PRE/schema/hashes/contained PASS). Fix branch claude/pubgate-g0-timeout-1117 @51d95eed6645 (6 h step budget), gate log ~/qc-plan-r3/gate-pubgate.log. After merge: rerun publish_gate (same args as ~/qc-plan-r3/pgate_m5b.log), then apply_reviewed_tree_marker --pilot-item sle_st_a_v2__pv4242de79 --keep-gen-hosts.
+- N1 (child agent a6461d475489c5b55): s29q103S4Q9N1BR plan 8446d84fecda; needs r572 in tools + RTL 68 pads/68 W(507)/0 W(508).
+- N2 scope adds MPL-0034 (slw_st_a_v1 cland 12 nm outside core): census 11 st_a, snap rows.
