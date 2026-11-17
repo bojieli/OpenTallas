@@ -1,3 +1,15 @@
+# CRITICAL: inherited 604-clock hook is UNQUALIFIED (2026-11-16 Codex actual ODB finding)
+
+Actual frozen3_place clock ancestry:57 of604 first-sequential input owners are on ungated clk;547 are on dynamic ICG output `u_h.u_e.g_mac[0].g_ch3.u_c0.clk`, driven by `u_h.u_e.genblk7.g_cg.u_cg.u_icg` (ICGx1). All512 immediate IR q0/q1 capture FFs are originally ungated clk. The inherited `ifn0_face_branch.tcl` / appended `face_capture_release.tcl` moved ALL604 clocks to a new ungated root branch, bypassing the ICG for547 architectural input-cone registers. They must not be treated as independent boundary flops merely because they are the first sequential input sinks.
+
+**ALL old604-bypass forms hw1/he1/hw1p/he1p and hw1p_asbuilt_IFN0_OLAT1_1116 (including their ECO continuations) remain UNQUALIFIED: NO SIGNED view/export, NO adoption, NO reuse of copied source-only LEC as physical-clock equivalence.** Old reports/source/checkpoints remain immutable. The final HE continuation actually measured TT+11.24, DRC0/ANT0, one internal FFhold−2.15; HW single ECO stopped DRT-1231 on valid FAx1 `_204660_/CON`. Neither was SIGNED and no export occurred. Fresh routed LEC never ran after the clock rewire.
+
+Protected QBIR candidate stopped BEFORE CTS because original clock!=root; actual alias walk correctly found the ICG. Artifact ep7 `s81-ifn0-halves/he_qbirclk1/review/clock_alias/probe.log`. Full shared-root draft `he_sharedclk1` is explicitly SUPERSEDED_UNSTARTED: prior old shared604 tree had605 input-port hold misses(~−137ps) and1763 internal misses(~−82.5ps), so a blind revert is rejected.
+
+Current authorized next form preserves exact clock ancestry:57 ungated input owners+512 ungated IR may share a transparent root child;547 gated owners must use a transparent child of their SAME original ICG output, preserving ICG identity/ENA/SE/polarity/activity. Canonical per-FF ancestry proof before/after is required, with actual new604 TT/FF input profile and fresh CTS/geometry review before route.0 addedFF/missioncycles; no second timing ECO on old forms. Parent `/root/s81_plans` owns review; Codex start_reset owns implementation and valid-FA CON diagnostic. All historical sections below are retained as history, superseded by this warning.
+
+---
+
 # S81-IFN0-HALVES handoff (11-16, lane Sonnet)
 Goal: IFN=0 half cores hw/he for the 84 r0/h10_r1 col types (fallback for col-wave2).
 ## State
