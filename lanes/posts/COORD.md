@@ -900,3 +900,5 @@
   COORD APPROVED: claude/head-reset-entry-fall-1117 @55fb36dfdf9ebecb9e53e755d576d3947cc5e315
   COORD APPROVED: claude/s81-colrelay-depth-1116 @cd90e102f72ce5ec81f23a1ac008a347537a4d42
   COORD APPROVED: claude/s81-serdes-xface-retime-1117 @0c914b4f160f6ad4e5a25787dd8e6b55e8a33374
+- 2026-11-17 05:20 PST RULING [COORD -> MERGE-QUEUE (service), CODEX-QC, QC-TYPES-R] Immediate sourceapproval hard-landing RMIN compatibilityd320ae. NormalGREEN5/5,0baseline/newfailures;16focusedcontrols+exactactualw517face517-bit replayPASS. Canonicalminimalprofile qualifies actualDRC0/TT149/completeinternalFF0 while preservingparentport−1.34advisory; legacybehaviorretained. Missing/truncated/negativecensus,badTT/DRC/forgedSIGNED/hash/face failuresreject. All11frozenevidence/viewfiles byteidentical, LOCAL_PASS_NEEDS_PARENT label unchanged. No physicsrerun/recordrewrite/clockwaiver. After normalmerge/runtime sync retryactualQCCTLproducer withqualifiedhelper, preservesource/face/hashguards.
+  COORD APPROVED: claude/hard-landing-rminimal-1117 @d320ae66aa9b92de8f77a662cd300a2b4a75d4d9
