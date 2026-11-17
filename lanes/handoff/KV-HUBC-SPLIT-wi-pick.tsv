@@ -1,0 +1,13 @@
+# kv3_hub_Wi ring pick list (KV-HUBC-SPLIT 11-17). ESTIMATE, confirm by size_wi / size_wi2. rings >= 250 bits, params from the bound part (u_bound.<inst>)
+inst	W	params_extra	master	master_state	axis
+u_cland_ft4_i	257	WREG1 DSREP8 WRITE_CHUNK16 RSTREP11	kv_cland_w257_ew_aee53	SIGNED (CLAND-MACRO-1 status)	ew
+u_cland_ft5_i	1119	WREG1 DSREP8 WRITE_CHUNK16 RSTREP37	kv_cland_w1119_ew_86ca8	SIGNED	ew
+u_cland_ft6_i	1119	same	kv_cland_w1119_ew_86ca8	SIGNED	ew
+u_cland_i_kvs_hroot_EN_o_emb	300	WREG1 DSREP8 WRITE_CHUNK16 RSTREP11	kv_cland_w300_ew_ebc75	SIGNED	ew
+u_cland_i_kvs_hroot_ES_o_emb	300	same	kv_cland_w300_ew_ebc75	SIGNED	ew
+u_cland_i_kvs_hroot_WN_o_emb	300	same	kv_cland_w300_ew_ebc75	SIGNED	ew
+u_cland_i_kvs_hroot_WS_o_emb	300	same	kv_cland_w300_ew_ebc75	SIGNED	ew
+u_cland_i_dNd_kv_rec_rx	553	WREG1 DSREP8 WRITE_CHUNK16 RSTREP19	kv_cland_w553_ew_f7795	BUILDING epyc10 unit oth-ubuntu-2961922..24	ew
+u_cland_i_serdes_E_rx_flit	523	same RSTREP19 (no PLACEREP)	kv_cland_w523_ew_54d79	BUILDING	ew
+u_cland_i_serdes_W_rx_flit	524	same RSTREP19	kv_cland_w524_ew_5cd31	BUILDING	ew
+# total 10 rings, 5,295 bits (the 9-ring figure 5,340 in the COORD note missed the 257 ring and mis-summed: 4x300+523+524+553+2x1119 = 5,038 + 257 = 5,295)
