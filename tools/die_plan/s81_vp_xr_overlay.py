@@ -6,7 +6,9 @@ the placer puts vpw among the lanes, far from the writers.  XR = 1 adds ONE regi
 (all writers and their payloads, xwd included), so the write port lands exactly one clk later for every writer: store
 order, writer priority and collision (wcol) behaviour are unchanged; vpw(XR=1)(t) == vpw(XR=0)(t-1).  XR also adds one
 per-lane HI station (effective CS_HI_D + 1; shared depth unchanged; every derived vp timeline uses the effective depth)
-and one VP reset relay stage (TREE_STAGES 1 -> 2).  XR = 0 is the source exactly (no cycle, no cell).
+and one VP reset relay stage (TREE_STAGES 1 -> 2).  With XR the dswp row-swap select of the hw_d / wl_d / lo_d output
+registers is also 16 kept flop copies (DSR, 0 cycles; t62 dswp -> hw_d -548 ps at CTS).  XR = 0 is the source exactly
+(no cycle, no cell).
 
 Latency contract (S81-DIE-R2 bind + LATCHECK): vp write availability +1 clk (SU x_w and sw/cw writes), hc_post
 write-back +1 clk, VP boot reset release +1 edge; vp read port latency unchanged.
@@ -67,6 +69,22 @@ def patch_vp(s):
         s = s.replace(a, a.replace("CS_HI_D", "CS_HI_E"))
     if m < 1:
         raise SystemExit("XR_OVERLAY_MISS hc_post timeline HPL + .. CS_HI_D + CS_HO_D + SRO")
+    s = sub_exact(s, "    wire [127:0] qe = dswp ? q1 : q0, qo = dswp ? q0 : q1;",
+                  f"    // {TAG} DSR (FABLE-PD-S81-STRIP fix 3, t62 dswp -> hw_d -548 ps): dswp selects all 3 x 256 output\n"
+                  "    // register bits (hw_d / wl_d / lo_d).  With XR the select is DSR kept copies of the dswp flop, one per\n"
+                  "    // 128 / DSR bits of qe / qo, loaded from dswp1 like dswp itself: dswp_q[g](t) == dswp(t), cycle-exact.\n"
+                  "    localparam integer DSR = (XR != 0) ? 16 : 1;\n"
+                  "    wire [127:0] qe, qo;\n"
+                  "    generate if (DSR > 1) begin : g_dsr\n"
+                  "        (* keep *) reg [DSR-1:0] dswp_q;\n"
+                  "        always @(posedge clk) dswp_q <= {DSR{dswp1}};\n"
+                  "        for (genvar g = 0; g < DSR; g = g + 1) begin : g_g\n"
+                  "            assign qe[g * (128 / DSR) +: 128 / DSR] = dswp_q[g] ? q1[g * (128 / DSR) +: 128 / DSR] : q0[g * (128 / DSR) +: 128 / DSR];\n"
+                  "            assign qo[g * (128 / DSR) +: 128 / DSR] = dswp_q[g] ? q0[g * (128 / DSR) +: 128 / DSR] : q1[g * (128 / DSR) +: 128 / DSR];\n"
+                  "        end\n"
+                  "    end else begin : g_ndsr\n"
+                  "        assign qe = dswp ? q1 : q0; assign qo = dswp ? q0 : q1;\n"
+                  "    end endgenerate", 1, "vp dswp select")
     s = sub_exact(s, "ot_s81sl_vpw u_w (", "ot_s81sl_vpw #(.XR(XR)) u_w (", 1, "vpw instance")
     s = sub_exact(s, "module ot_s81sl_vpw #(parameter integer REP = 8)",
                   "module ot_s81sl_vpw #(parameter integer REP = 8, parameter integer XR = 0)", 1, "vpw header")

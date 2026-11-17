@@ -47,6 +47,12 @@ def test_overlay_forwards_mask_and_activates_only_t34_t62(tree):
     assert ".TREE_STAGES(1 + XR)) u_rr" in vp
     assert ".D(CS_HI_E - CS_HI_GS + HIM)" in vp and ".D(CS_HI_D - CS_HI_GS + HIM)" not in vp
     assert "ot_s81sl_vpw #(.XR(XR)) u_w (" in vp
+    # DSR: dswp select = 16 kept copies loaded from dswp1 (like dswp, so cycle-exact); XR 0 keeps the single select
+    assert "localparam integer DSR = (XR != 0) ? 16 : 1;" in vp
+    assert "(* keep *) reg [DSR-1:0] dswp_q;" in vp and "always @(posedge clk) dswp_q <= {DSR{dswp1}};" in vp
+    assert "assign qe = dswp ? q1 : q0; assign qo = dswp ? q0 : q1;" in vp
+    assert "wire [127:0] qe = dswp" not in vp
+    assert "dswp <= dswp1;" in vp                               # the original stage is unchanged
     vpw = vp[vp.index("module ot_s81sl_vpw"):]
     for n, _ in X.WRITERS:                       # every writer and payload goes through the stage
         assert f"assign {n}_i = {n}_q;" in vpw and f"assign {n}_i = {n};" in vpw
