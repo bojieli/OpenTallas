@@ -37430,7 +37430,9 @@
             "col_h9_r2__t1__clce45cab5__pvf9c773d5",
             "col_h9_r2__t1__clce45cab5__pvfb42a1ad",
             "col_h9_r2__t1__clce45cab5__pvfd79e8b6"
-          ]
+          ],
+          "cause": "the d5e tree lacks r579 (prd obstruction fix), r584 (GRT port hold) and r588; col kits generated there carry OT_HOLD_FF_MARGIN 0, no port margin, no sstn M5 block (config.mk of the 10:28 kit)",
+          "owner": "S81-DIE-R3"
         },
         {
           "id": "s81-serdes-rail-gen-1117",
@@ -37453,7 +37455,9 @@
             "serdes__t2",
             "serdes__t3",
             "serdes__t4"
-          ]
+          ],
+          "cause": "std-cell rows beside the PHY lot get no M1/M2 followpin rails (2046 of 6664 rows on H17), measured on the shared serdes generator",
+          "owner": "FABLE-FIX-S81-SERDES2"
         }
       ],
       "planned_events": [
