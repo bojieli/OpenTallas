@@ -37,3 +37,10 @@ Status script (localhost scratchpad snap.sh) = newest stage log per kit + client
 - rm2 col_h10_r2: GRT TT -172.0 = 2 endpoints u_t7/so[1:0] -> ist_frame_int_o0_0 q[383:382] rank0 (1,320/1,131 um). Site class; fix = rm3 per-bit sites. NOT retried. Posted.
 - rm3 col_h10_r2: GRT gate crashed on pair_skew ambiguity (u_e15/rs), TT setup_est -9.55. Patched pair_skew 430397f by copy+mv, FAIL_POSTCTS -> .psambig1, route resumed (intel2 ~/fable-fix-s81-coltap/pilot5rm3_col_h10_r2_route.log).
 - gen/ h9_r2, h9_r1, h10_r2 routes running (evidence on D3 kits); rm4 h9_r0_p2 at GRT (evidence only, 16 unfitted relays; do not sign).
+
+## 21:5x update (FABLE-CLOSURE-STRATEGY 21:40)
+- COL: FABLE-FIX-S81-COL owns col closure. Col volume stays held by result:S81-TYPES-R2:col-wave1/col-wave2; do NOT post those results unless FABLE-FIX-S81-COL says so. My D3 evidence kits (gen/ h9_r2 h9_r1 h10_r2, gen_rm3 h10_r2, gen_rm4 h9_r0_p2) are theirs to read/stop.
+- D5 (in flight): dir intel2+E8+E10 /srv/opentallas-scratch2/claude/tools-converge/s81/d5_1116 (pack/, publish.sh, publish_epyc{8,10}.log, finish_d5.py -> finish_d5.log, DONE when applied).
+  Content = D4 + r437 bind.py/test (3d763393b48) + form B tool r431/r432 (d1645b7afcd+1a183f5a920, 9 files) + event plan 819037bb + h2_2249/landed_sidecar_h2_psplit_all.json at in-tree paths; die plan path -> D5 tree.
+  Apply: pilot gunit__t1; hold s81-strip-gpl-d5 keys ot_s81sl_leaf__* release result:S81-TYPES-R2:strip-gpl-tree; D4 pilot record retired (unreachable).
+- NEXT: D6 = D5 + strip GPL sparse exit (39ef73a234f on 588ce81; tree face_flops.tcl already = 588ce81 version, gen_phys needs the 39ef73 hunk on the D5 gen_phys) once FABLE-FIX-S81-STRIP posts READY; then post RESULT strip-gpl-tree to release the leaves. Watch that gunit__t1 pilot GENs on D5.
