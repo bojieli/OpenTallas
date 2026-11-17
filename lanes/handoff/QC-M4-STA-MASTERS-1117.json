@@ -1,0 +1,17 @@
+{
+ "schema": "qc_plan_r.new_param_masters.v1",
+ "event": "S4q9m (M4: zz_s29_qc103_s4q9m4.json, tags s29q103S4Q9M4BR/BQ)",
+ "why": "M count re-frame (QC-CLK-R2) moved st_a arrivals via clock_landing only (rs_s far bf_00__rsf 14->13, near bn_00__rsn 8->7, c16 trees +1..-2); QFT st_a values final under the re-derived R8 c66ea4c01d38 (288/288 equal M3BR). Restoring L2 needs +1/+2 cycles + c16 reshape (~240 lanes) and voids CB16 e2f94854 -> option (a), pre-approved by COORD.",
+ "unchanged_params": "all other params of the base; NB_IN_PAD/NB_PAD/RD_PAD 0",
+ "masters": [
+  {"name": "qfd_dv_s8_station_tail1_h17_n7_s8", "base": "qfd_dv_s8_station_tail1", "HI_PAD": 17, "SKEW_N": 7, "SKEW_S": 8, "instances": 8, "where": "sl_E2_st_a u_r0-3 (sle_st_a_v1__cl989804f6__cl18eece69, was h16_n9_s10); sl_E4_st_a u_r0-3 (sle_st_a_v1__cl989804f6__cled3c1d7b, was h15_n9_s10)"},
+  {"name": "sta_region_nb0_h17_n7_s8", "base": "qfd_dv_s8_station_tail1_nb0", "HI_PAD": 17, "SKEW_N": 7, "SKEW_S": 8, "instances": 8, "where": "sl_E1_st_a u_r0-3 (sle_st_a_v2__pv30dda31f, was nb0_h16_n9_s10); sl_E3_st_a u_r0-3 (sle_st_a_v2__pv4242de79, was nb0_h15_n9_s10)"},
+  {"name": "sta_region_nb0_h18_n7_s8", "base": "qfd_dv_s8_station_tail1_nb0", "HI_PAD": 18, "SKEW_N": 7, "SKEW_S": 8, "instances": 4, "where": "sl_E5_st_a u_r0-3 (new split type off sle_st_a_v2__pv30dda31f; 131 -> 132 types)"},
+  {"name": "qfd_dv_s8_station_tail1_h15_n9_s11", "base": "qfd_dv_s8_station_tail1", "HI_PAD": 15, "SKEW_N": 9, "SKEW_S": 11, "instances": 4, "where": "sl_W4_st_a u_r0-3 (slw_st_a_v1__clfc5867a6__pvdf8e5ca4, was h16_n9_s11)"},
+  {"name": "sta_region_nb0_h15_n9_s11", "base": "qfd_dv_s8_station_tail1_nb0", "HI_PAD": 15, "SKEW_N": 9, "SKEW_S": 11, "instances": 12, "where": "sl_W1_st_a + sl_W3_st_a u_r0-3 (slw_st_a_v2__cl9f076a5c), sl_W5_st_a u_r0-3 (slw_st_a_v2__clf4365a62); all were nb0_h16_n9_s11"}
+ ],
+ "unchanged_masters": ["E0 tail1_h17_n9_s10", "W0/W2 tail1_h16_n9_s11"],
+ "unused_after_M4": ["tail1_h16_n9_s10", "tail1_h15_n9_s10", "nb0_h16_n9_s10", "nb0_h15_n9_s10", "nb0_h16_n9_s11"],
+ "gates": "R-MINIMAL: DRC 0, TT WNS >= -42, internal reg-to-reg FF hold >= 0; export view with provenance + landing_evidence; archive AGIdock + rtx-pro",
+ "reference_build": "the QC-TYPES-R tail1 param masters signed 11-16 (lanes/handoff/QC-TAIL1-PARAM-rows.json) are the same recipe with other param values"
+}
