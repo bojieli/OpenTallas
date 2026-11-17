@@ -169,3 +169,19 @@ I took the H lineage over at H12 and never generated the base kit, so (1) and (2
   emits plain relays for them. So: it is a PLAN change and it is already in B6gF2s5f; no generator rule and no bound_reset_edit are needed for a
   kit generated from an s5f-or-later bind. I did not open the s5f plan myself: check reset.relay_lockup.types there, and check that the generated
   bound RTL sha equals e55e8d12... (or differs only by the later events) before placing.
+
+## State 15:35 PST
+- Branch 2 final tip READY: claude/s81-serdes-pad-pg-rails-1117 @0b5eafc9c4b70307df969daaa57ab699c2497d46, gate GREEN 62/62 on main 329e30c85ae
+  (supersedes c8ce59b7a01 and e7b3e941690). Rail check: FAIL on PHY-supply-region kits, ADVISORY elsewhere (pg_rail_check.json in the kit).
+- Samples (epyc9 drtx/rail_sample/summary.txt, drtx/phy_sample_*/summary.txt): 17 kits without a PHY region PASS; every PHY-region kit FAILS as
+  built with bad rows == region-overlapping rows: serdes t13/t4 2000, t2/t3/t14/t1__clfe 2004 of 6656; HEAD hd_serdes 3047 of 5672; KV kv3_sys_c
+  5840 of 7818. Not sampled: serdes t12, t15 x2, t16, t1__clb45 (no floorplan left), QC coll_ucie (QC-TYPES-R3).
+- Notch v2 PG diff (drtx/pgchk3_E2 vs pgchk_base, VDD): all unconnected entries still in the north band, none south (report capped 10000+10000).
+- H17 route-only rerun reached the PRE_DETAIL_ROUTE hooks at 15:31: OT_PAD_IN_DIRECT 544 pads / 1557 buffers; notch + guide move + DRT follow.
+  Read: K/run/logs/asap7/dp_serdes__t13/base/5_2_route*.log (violations per iteration), then the kit sign-off lines in H17_run_route.out.
+  MEASUREMENT ONLY. If it ends DRC 0: post routed TT (gate -42) and internal FF hold (gate 0) by class for levers 5b/5c; run the IR sidecar only
+  after a rail-clean rebuild.
+- After branch 2 merges: post `RESULT result:FABLE-FIX-S81-SERDES2:rail-gen` so S81-TYPES-R3 can release the hold on the 11 serdes items
+  (they still need the generated H form from S81-SERDES-GEN before they are worth launching).
+- COORD decisions 15:2x: clk_t42 -> four taps = plan row to S81-DIE-R3 after D6z/D7z; H-form port = lane S81-SERDES-GEN (answers in the
+  section above).
