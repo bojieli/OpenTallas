@@ -263,3 +263,58 @@ in 6 h (87 GB/h), 117 GB new in the last hour.
 epyc7 root disk reached 0 MB at 06:21. The S81-TYPES-R3 checkout got to 47 GB in
 /srv/opentallas-scratch3/claude/s81-types-r3/wt, failed, and the lane started it again
 (`git checkout -q -f -B rck-depth-balance-1117 origin/main`, pid 960862). Nothing was stopped by me.
+
+## Class F (added on COORD request, 06:30 PST): lane code clones are slow or come out empty
+
+Share: no fleet compute; lane wall time. About 10-30 min per restarted lane before its first job, so roughly
+2 lane-hours for the 6 lanes of the 05:30 restart, and it is the direct cause of the epyc7 fill in class A.
+
+Measured (clones whose .git was created in the last 8 h, 5 build hosts, 06:25 PST):
+
+| Host | Clone | Kind | Created -> index written | State |
+|---|---|---|---|---|
+| epyc7 | qc-plan-r3-hlemit-1117 | raw, no filter, full tree | 28 min | whole, 50 GB |
+| epyc7 | qc-plan-r3-hlemit-sparse-1117 | blob:none, sparse | 2 min | whole |
+| epyc2 | qc-types-r/repo (QC-TYPES-R3) | blob:none, cone physical rtl tools | 12 min (05:55-06:07) | whole, 36 GB |
+| epyc9 | kv-r3/repo | blob:none, sparse | 9 min | whole |
+| epyc2 | tokr-own/repo | blob:none, sparse | 1 min | whole |
+| epyc10 | s81-die-r2-defcheck | blob:none, sparse | at most 79 min | whole |
+| epyc7 | wave-flow-r/wfr | blob:none, sparse | at most 122 min | whole |
+| epyc7 | s81-types-r3/wt | raw, full, on the root disk | - | HEAD unset, 0 files (disk full) |
+| epyc7 | wave-pilot-fix/src | `--depth 50`, no filter | over 7 min, no data yet | HEAD unset, 0 files, running |
+| epyc8 | fable-fix-s81-cong/clone_depth | blob:none | - | HEAD unset, 0 files, 38 GB left on disk since 00:49 PST |
+
+"At most" rows: the index time is the last index write, which a later git command also moves. 3 of 10 are
+empty. No git process was running on epyc2 at 06:23, so the QC-TYPES-R3 checkout ended at 06:07.
+
+Root causes:
+1. Size. main is 328,239 files and 50.2 GB: physical/ 33.3 GB, results/ 15.4 GB, tools/ 0.35 GB, rtl/ 0.92 GB,
+   other 0.22 GB. A cone with physical/ is 36 GB even for a pytest run. Everything a code lane edits is 1.5 GB.
+2. No local objects. ot-lane-clone expects a shared object store per host
+   (/srv/opentallas-scratch2/git/shared/OpenTallas.git); it is missing on 6 of 6 build hosts, and 0 of the 10
+   clones have an alternates file. Every blob comes from intel2 at 20-30 MB/s (measured 20 MB/s on the
+   QC-PLAN-R3 checkout).
+3. Shallow clones are served the slow way. The `--depth 50` clone has had `pack-objects --shallow` on the hub
+   for 437 s at 166% CPU and 7.5 GB memory; a shallow request cannot use the pack bitmap. The mirror has
+   33 packs with gc.auto 0.
+4. Lanes do not use the tool. 3 of 10 are raw `git clone` or `git checkout` with no filter.
+5. Failure is silent. A clone that dies leaves HEAD unset and its partial data (38 GB on epyc8). Lanes wait
+   with `until ! pgrep -f "git clone ..."`, which matches the waiting shell itself: 9 such loops are still
+   alive on epyc2, epyc7, epyc8, epyc10 and intel1, the oldest 23 days.
+
+Fix (owner FLEET-OPS-R; MQ-PACK-FIX for the mirror):
+1. One warm bare repository per host with full objects for tools/, rtl/ and the top level, fetched from the
+   mirror by the 30 s main timer, listed in the guard list as a structured entry (the 11-13 cleanup deleted
+   bare repositories). `ot-lane-clone DIR -b branch` becomes `git worktree add` from it with the cone
+   tools/ rtl/: 29,000 files, 1.5 GB, no network, seconds. Each lane keeps its own worktree and branch.
+2. For tests on main, use /srv/opentallas-scratch2/claude/rt/current: it is already a tools checkout of main
+   on every host, synced at each merge (16 times in this window).
+3. physical/ and results/ are not checked out from git on build hosts. A lane reads them from the die's
+   current published tree (or the base-plus-delta view of class A item 2). `--with physical` stays for the
+   cases that edit plan files and first checks free space.
+4. ot-lane-clone refuses `--depth`, checks free space and that the target is not the root disk, prints
+   elapsed time and size, verifies HEAD at the end, and removes its own partial directory on failure. The
+   lane-side hook of class A item 3 sends raw clones to it.
+5. Mirror: repack to one pack with a bitmap after each batch of merges (MQ-PACK-FIX).
+6. Lanes wait on the clone's exit status, not on `pgrep -f`. COORD: the 9 stale wait loops and the empty
+   38 GB clone on epyc8 have no owner.
