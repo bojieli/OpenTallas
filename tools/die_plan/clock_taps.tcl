@@ -726,7 +726,9 @@ set ct_hlu {}; set ct_hcap {}
 if {[llength $ct_taps] >= 2} {
   set ct_hl 0; set ct_hlm 0; set ct_hlx 0
   foreach ct_i [$ct_blk getInsts] {
-    if {![regexp {(^|[./])u_f[lx]_} [$ct_i getName]]} continue
+    # QC-MCLK lever 2 11-16 (FABLE-PD-QC-MCLK, cbn_q01: 1,187 of 21,467 FF hold endpoints): the NK core-input lockup latches
+    # u_lk_nk_* ride the tap of the u_pc_nk_* register that drives their D, like the ft hop latches (same DLL/DHL master test)
+    if {![regexp {(^|[./])u_(f[lx]|lk_nk)_} [$ct_i getName]]} continue
     set ct_m [[$ct_i getMaster] getName]
     # HBM-VSN-XTAP 11-11: a cross-tap hop FLOP u_fx_* (schema.ft_hop_xtap) also rides its launch station's tap: the
     # station -> flop check shares one tap and the flop -> capture leg crosses the port with a full cycle (T - W - skew)
