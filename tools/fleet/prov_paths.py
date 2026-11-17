@@ -33,12 +33,13 @@ def scan_and_check(tree):
     return {p: {"by": by[:3], "exists": os.path.lexists(p)} for p, by in scan_tree(tree).items()}
 
 
-REMOTE = "import json,sys; sys.path.insert(0,'/tmp'); exec(open('/tmp/_prov_paths_remote.py').read()); print(json.dumps(scan_and_check(sys.argv[1])))"
+REMOTE_FILE = "/tmp/_prov_paths_remote.py"
+REMOTE = ("import json,sys; g={'__name__':'prov_remote'}; exec(open('%s').read(), g); print(json.dumps(g['scan_and_check'](sys.argv[1])))" % REMOTE_FILE)
 
 
 def remote_scan(host, tree, script_text, run=subprocess.run):
     """ship this file to /tmp on host and scan there"""
-    cmd = f"cat > /tmp/_prov_paths_remote.py && python3 -I -c {shlex.quote(REMOTE)} {shlex.quote(tree)}"
+    cmd = f"cat > {REMOTE_FILE} && python3 -I -c {shlex.quote(REMOTE)} {shlex.quote(tree)}"
     r = run(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", "-o", "ConnectTimeout=20", host, cmd], input=script_text, capture_output=True, text=True, timeout=900)
     try:
         return json.loads(r.stdout.strip().splitlines()[-1])

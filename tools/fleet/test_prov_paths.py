@@ -32,3 +32,14 @@ class Prov(unittest.TestCase):
         out = set(); B.prov_cache_paths(c + "/prov.json", out, os.path.normpath)
         self.assertEqual(out, {R + "count-archive-2/s81views/x/6_final.odb"})
         out = set(); B.prov_cache_paths(c + "/nope.json", out, os.path.normpath); self.assertEqual(out, set())
+
+
+class Remote(unittest.TestCase):
+    def test_the_remote_command_runs_the_scan_without_running_main(self):
+        import subprocess, sys
+        t = Prov.tree(Prov())
+        f = tempfile.mktemp(suffix=".py"); open(f, "w").write(open(P.__file__).read())
+        code = P.REMOTE.replace(P.REMOTE_FILE, f)
+        r = subprocess.run([sys.executable, "-I", "-c", code, t], capture_output=True, text=True)
+        got = json.loads(r.stdout.strip().splitlines()[-1])
+        self.assertEqual(sorted(got), [R + "count-archive-2/s81views/x/6_final.odb", R + "kw45/src_other/a/b/c.json"]); self.assertFalse(got[R + "count-archive-2/s81views/x/6_final.odb"]["exists"])
