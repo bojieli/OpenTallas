@@ -267,7 +267,7 @@ def dry_gen(cfg_text, die, item, kind, work_root, hub, gen_host, run_unit=True, 
         out["verdict"] = "PASS"
         out["preflight_fail_advisory"] = res.get("preflight_fail_advisory")
     else:
-        out["why"] = ("stage %s: %s" % (res.get("stage"), "; ".join(res.get("errors") or []) or str(res.get("tail") or "")[-600:]))[:1500]
+        out["why"] = ("stage %s: %s" % (res.get("stage"), "; ".join([res["errors"]] if isinstance(res.get("errors"), str) else (res.get("errors") or [])) or str(res.get("tail") or "")[-600:]))[:1500]
     return out
 
 
