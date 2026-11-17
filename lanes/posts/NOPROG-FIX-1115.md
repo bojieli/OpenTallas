@@ -132,3 +132,6 @@
   NO-PROGRESS intel1 cbf_q00__cl870de686 5_1_grt stage 18.4 h job 21.6 h: repair_Viol best 145 last 145 rows 341 window-gain 0.0%; stagnant 8.3 h; last event 0.1 h ago, log write 0.0 h ago (1097 lines)
   NO-PROGRESS epyc8 gen_rm4 5_1_grt stage 13.6 h job 15.0 h: repair_Remaining best 179322 last 179322 rows 26 window-gain 0.0%; stagnant 10.8 h; last event 11.0 h ago, log write 11.0 h ago (974 lines)
   NO-PROGRESS epyc8 serdes__t13 5_2_route stage 10.1 h job 14.1 h: no new meaningful log line for 8.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
+- 2026-11-17 10:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 10:52 PST: 106 running jobs, PROGRESSING 98, SLOW 6, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS intel1 cbf_q00__cl870de686 5_1_grt stage 19.4 h job 22.6 h: repair_Viol best 145 last 145 rows 371 window-gain 0.0%; stagnant 9.3 h; last event 0.1 h ago, log write 0.0 h ago (1127 lines)
+  NO-PROGRESS epyc8 serdes__t13 5_2_route stage 11.1 h job 15.1 h: no new meaningful log line for 9.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
