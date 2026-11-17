@@ -15,3 +15,8 @@
 
 ## S4q9m: COORD 17:4x scope: FABLE-DIE-QC-R owns die clock design (feed, per-type trees, need+10, serdes proof) and hands rows; QC-PLAN-R composes + binds S4q9m. Child QC-PLAN-M narrowed to item (d) only (72-pin window sl_W5_fw.W / coll_f4.E) -> zz_s29_qc103_s4q9l2d.json. Template form (2bed6a4) not adopted: cb tol 129->104 only.
 ## io_serdes_2 -> c_W5_bf_01: CONFIRMED. dec8cc442a in main; gate_main (before) CA TT/FF fail 3 (-107.1/-67.0), gate_main3 (after) fail 0 (lo 109.9/105.1), 2993 PASS. No +1K plan row: fixed planner picks it in C; native N43 maps both same-region (delta 0).
+
+## 19:2x PST
+- S4q9l2 bind S4Q9L2BQ: errors 0, r8rc 0, LATCHECK 1921/1921, hcparam 0 (20 param_wrap types, 0 mismatches), G0 = 2 inherited faces only. Fable verdict pending. Adopt after Kf.
+- CM helper + producer MERGED (cfe4802327f / fcd8d406457). Kf publication + atomic apply delegated to child QC-KF-PUB (running).
+- (d) COMPOSED by QC-PLAN-M: zz_s29_qc103_s4q9l2d.json sha a915f1136c27 (coll_ftc +43.2 um, coll_ftn -43.2 um, 22 windows repacked): G0 0 errors, pre PASS, knee 0/988. Rebuild coll_ftc, coll_ftn, slw_fw_v3. Rows epyc2 /srv/opentallas-scratch2/claude/qc-plan-r/m/s4q9l2d.rows.json, image d_before_after.png. S4q9m = l2d + FABLE-DIE-QC-R clock rows (feed tap coll_f4->coll_f5 y 12217.0 -> 12260.16; coll_ftc/ftn tap rows re-derive).
