@@ -36,3 +36,10 @@ Work dir epyc2 /srv/opentallas-scratch3/claude/fable-die-qc-r (same as FABLE-DIE
   round(built leaf TT arrival / T) per region (+ sidecar frame), CA re-run with --frame-plan, then sta --cap-in. Not built yet.
 - Opus self-review (no BLOCK): absolute SPEF offsets are calibrated to the GRT mean (LE 12 -> 16 moves cb clk_c offsets 22.6 ps median);
   next proof = DRT + RCX of one cb region vs SPEF offsets; 4 single-instance cb types carry no same-type evidence.
+
+## CODEX resumed 22:18 PST
+- Exact l2d measured clock rows generated qcclk2/reframe_l2d/clock_rows.json: 130 types / 15386 ports, tol max46.3, minmargin10.05, tap-offset/window table errors0, seam160 (need147.87).
+- New comb frame: qcclk2/reframe_l2d/feed_comb_built_tt.json sha dbdd8008624a49a8. Frame offsets=round(TT median non-core glue leaf late_ps /833), ranges1..13 (old fwd1..19), all313regions/377parts covered. mk_frame.py preserves physical K while changing sched_lat/plan cycles/sidecar added_cycles by new-old frame shift.
+- Reframe pipeline CA --frame-plan then region_form sta --cap-in running from intel2 client373347 log ~/qc-clk-r2/reframe_l2d_retry1.client.log. E2 qcclk2/reframe_l2d/run2.sh, outputs ca_framed.json, plan_m_clock.json, side_m_clock.json, READY.json. Explicit check no negative clock_landing and no region_form post errors.
+- First attempt stopped before CA due python -I sibling import; failure ca.log and reframe_l2d.client.log retained. Retry uses explicit sibling-path bootstrap run_cap.py (no production source modification).
+- Parent composes G/w515 then ONE final strict bind/LATCHECK/G0; do not duplicate final bind here. cap-in dependency remains claude/qc-clk-r2-capin-1116 @060ba63e937.
