@@ -1,4 +1,4 @@
-# HEAD-HW-ECO handoff (child of HEAD-TYPES-R2; owns HEAD hd_host_w forms eco_hw4 + hw5) -- 11-16 20:0x PST
+# HEAD-HW-ECO handoff (child of HEAD-TYPES-R2; owns HEAD hd_host_w forms eco_hw4 + hw5) -- 11-16 21:0x PST
 
 ## RESET section (read first)
 One signed form of hd_host_w is enough: whichever of hw5 / hw4e2 signs first gets exported (ffht_export.sh pattern, rtx-pro scratchpad copy).
@@ -15,3 +15,15 @@ One signed form of hd_host_w is enough: whichever of hw5 / hw4e2 signs first get
   claude/hold-eco-dump-units-1116 @54ee4a41c71 (dump x1e12 unit fix + plan refuses |slack|>1e5 ps): gate running, log intel2 ~/head-hw-eco-logs/gate_54ee4a4.log; post READY when GREEN.
 - Old data: i1t signoff r2 TT -44.24, FF std -31.82 (port), internal -15.54 on 40 ends. hei2 plan: 40 ends, 41 HB4.
 - Tools: own clone intel2 /srv/opentallas-scratch2/claude/head-hw-eco/src (+ worktree dumpfix); so_m516 = main 516226ace43 tools on E10/intel2/epyc8/intel1/epyc7.
+
+## 21:0x update
+- hw4e2 FINISHED: DRC 0 (DRT iter 6), clk_check rc 0, 41 HB4 present (6_final.v HB4 23368 vs i1t 23327; cells tsv 41 rows). LOOK (intel2 eco_hw4/look_e2:
+  wires.png/congestion.png, check_placement rc0): no new defect, macros as before. SIGN-OFF signoff_e2 (main bundle): NOT SIGNED: TT -29.73 PASS, DRC 0,
+  internal FF -10.77 on 4 ends (was -15.54 on 40); port FF -31.91 (444 oports, the parent's).
+- hei3 LIVE: second internal-only insert on hw4e2 (TP2/r417 recipe: dump in signoff_e2 scenes -> plan -> insert -> hold_eco_internal_route.tcl touched nets
+  only -> kit copy fill/finish -> signoff_hei), NO setup repair. epyc8 unit oth-ubuntu-1340499-1794891646, client log intel2 ~/head-hw-eco-logs/hei3.log,
+  dir eco_hw4/hei3 (replicas of hw4e2 on epyc8/epyc7). HEI_ATTEMPTED guards a repeat. intel2 scratch is below the 150 GB ot-run floor.
+- hw5: DRT done, pin audit PASS 2723/2723, signoff_codex running (E8). Staged epyc8 /srv/opentallas-scratch2/claude/head-hw-eco/hw5hei/run_hw5hei.sh
+  (same HEI recipe on signoff_codex scenes; launch with ot-run --dir /srv/opentallas-scratch2/claude --hosts epyc8 only after signoff_codex ends
+  and only if internal FF < 0).
+- STOPPED per COORD/FABLE-PD-HEAD-2045: hw4e1, further hw4 setup repair.
