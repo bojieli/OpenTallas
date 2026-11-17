@@ -4,6 +4,9 @@
 # (132.8 ps per cell); port starts / output ends and non-capture pins never get a cell.
 # ot_hei_size {need hb4_ff double_over cap}  -> cells
 # ot_hei_afford {tt_ps hb4_tt floor}         -> cells the TT slack can pay
+# Selection (HOLD-FLOW-R 11-16, COORD): the endpoints that FAIL (slack < 0) plus a guard band (OT_HEI_SELECT_PS, default 2 ps: a
+# re-extraction flips them), NOT everything under the +10 ps sizing target (1,440 endpoints picked for 1 failing).  Each selected
+# endpoint is still sized to reach +target.
 # ot_hei_auto_plan {ffargs ttargs out}       ffargs / ttargs = extra find_timing_paths args, e.g. {-scenes BC} {-scenes TC}
 proc ot_hei_size {need {hb4_ff 29.8} {double_over 25.0} {cap 4}} {
   if {$need <= 0} { return 0 }
@@ -23,7 +26,7 @@ proc ot_hei_capture_pin {name} {
 }
 proc ot_hei_env {k d} { return [expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d}] }
 proc ot_hei_auto_plan {ffargs ttargs out} {
-  set target [ot_hei_env OT_HEI_TARGET_PS 10.0]; set hb4_ff [ot_hei_env OT_HEI_HB4_FF_PS 29.8]
+  set select [ot_hei_env OT_HEI_SELECT_PS 2.0]; set target [ot_hei_env OT_HEI_TARGET_PS 10.0]; set hb4_ff [ot_hei_env OT_HEI_HB4_FF_PS 29.8]
   set hb4_tt [ot_hei_env OT_HEI_HB4_TT_PS 132.8]; set floor [ot_hei_env OT_HEI_TT_FLOOR_PS -42.0]
   set unit [sta::time_sta_ui 1e-12]          ;# one ps in the session's time unit
   set tt [dict create]
@@ -31,9 +34,10 @@ proc ot_hei_auto_plan {ffargs ttargs out} {
     dict set tt [get_full_name [get_property $pe endpoint]] [expr {[get_property $pe slack] / $unit}]
   }
   set worst [dict create]; set skipped 0; set negint 0
-  foreach pe [find_timing_paths {*}$ffargs -path_delay min -slack_max [expr {$target * $unit}] -group_path_count 1000000 -unique_paths_to_endpoint -sort_by_slack] {
+  foreach pe [find_timing_paths {*}$ffargs -path_delay min -slack_max [expr {$select * $unit}] -group_path_count 1000000 -unique_paths_to_endpoint -sort_by_slack] {
     set en [get_full_name [get_property $pe endpoint]]; set sn [get_full_name [get_property $pe startpoint]]
     set sl [expr {[get_property $pe slack] / $unit}]
+    if {$sl >= $select} continue
     if {[llength [get_ports -quiet $sn]] || [llength [get_ports -quiet $en]] || ![ot_hei_capture_pin $en]} { incr skipped; continue }
     if {$sl < 0} { incr negint }
     if {![dict exists $worst $en] || $sl < [dict get $worst $en]} { dict set worst $en $sl }

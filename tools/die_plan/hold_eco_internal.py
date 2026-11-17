@@ -6,7 +6,7 @@ route ends with internal FF hold of -9 .. -69 ps on 6 .. 858 endpoints (QC coll_
 S81 halves) while those endpoints keep 170-430 ps of TT setup room.  Proven by hand on QC coll_n: 80 HB4 cells at 64 capture
 pins, 144 nets re-routed, DRC 0, TT -1.39, FF hold -58.19 -> +0.47.  This file is the generic form.
 
-  plan  ENDPOINTS.tsv OUT.tsv   size the insert per capture pin (target +10 ps, not 0)
+  plan  ENDPOINTS.tsv OUT.tsv   size the insert per capture pin (selected: slack < 2 ps; sized to +10)
   gate  BEFORE.json AFTER.json  accept / refuse the stage result (DRC 0, TT >= -42, internal FF hold >= 0)
 
 ENDPOINTS.tsv (written by hold_eco_internal_dump.tcl, header line required), tab separated:
@@ -22,7 +22,8 @@ import json
 import math
 import sys
 
-TARGET_PS = 10.0          # hold repair target; the gate stays FF hold >= 0
+TARGET_PS = 10.0          # hold repair target (the size each selected endpoint is repaired to); the gate stays FF hold >= 0
+SELECT_PS = 2.0           # endpoints selected: FF hold slack below this (failing + a 2 ps guard band), not everything under TARGET_PS
 HB4_FF_PS = 29.8         # FF MIN delay of one HB4xp67 (coll_n pilot model 29.81 at the conservative slew domain)
 HB4_TT_MAX_PS = 132.8     # TT max delay of one HB4xp67 at the observed slews (coll_n pilot model: 132.796; 171.24 is the slew <= 320 bound)
 DOUBLE_OVER_PS = 25.0     # need above this gets two cells at least
@@ -70,7 +71,7 @@ def read_endpoints(text):
     return rows
 
 
-def plan(rows, target=TARGET_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_TT_MAX_PS, tt_floor=TT_FLOOR_PS,
+def plan(rows, target=TARGET_PS, select=SELECT_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_TT_MAX_PS, tt_floor=TT_FLOOR_PS,
          double_over=DOUBLE_OVER_PS, cap=MAX_PER_ENDPOINT):
     """-> {cells: [(capture_pin, n)], skipped: [(endpoint, reason)], summary}.  The worst path to a pin sets its need."""
     worst = {}
@@ -83,7 +84,7 @@ def plan(rows, target=TARGET_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_TT_MAX_PS, tt_floo
         if not capture_pin(e):
             skipped.append((e, "not a supported capture pin (D/RESETN/SETN/wd_in*)"))
             continue
-        if r["ff"] >= target:
+        if r["ff"] >= select:
             continue
         cur = worst.get(e)
         if cur is None or r["ff"] < cur["ff"]:
