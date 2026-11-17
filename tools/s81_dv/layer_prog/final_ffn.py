@@ -51,6 +51,39 @@ def source_spans(deal):
     return spans
 
 
+def capture_spans(deal):
+    """Capture-only contiguous ownership; does not admit native RD bursts."""
+    if len(deal) != 16:
+        raise ValueError('FFN capture needs sixteen actual source slices')
+    spans, start = [], 0
+    for rows in deal:
+        rows = list(rows)
+        if (not rows or len(rows) > 320 or any(type(row) is not int for row in rows) or
+                rows != list(range(start, start + len(rows)))):
+            raise ValueError('FFN capture slices must be contiguous and at most320 rows')
+        spans.append((start, len(rows)))
+        start += len(rows)
+    if start != 1280:
+        raise ValueError('FFN capture slices must cover exactly1280 rank rows')
+    return spans
+
+
+def validate_capture_spans(spans):
+    """Validate source start/count pairs without changing the strict RD API."""
+    if not isinstance(spans, (list, tuple)) or len(spans) != 16:
+        raise ValueError('FFN capture spans need sixteen slices')
+    deal = []
+    for entry in spans:
+        if (not isinstance(entry, (list, tuple)) or len(entry) != 2 or
+                any(type(v) is not int for v in entry)):
+            raise ValueError('FFN capture spans need integer start/count pairs')
+        start, count = entry
+        if not 0 <= start < 1280 or not 0 < count <= 320:
+            raise ValueError('FFN capture span out of range')
+        deal.append(range(start, start + count))
+    return capture_spans(deal)
+
+
 def pair_aligned_deal(n, nslice, topology):
     """Keep the physical proportional allocation, in indivisible native RD pairs."""
     if n != 1280 or nslice != 16:
@@ -81,14 +114,16 @@ def validate_source_spans(spans):
     return source_spans(checked)
 
 
-def capture(rank, sid, expert_slot, *, spans=None):
+def capture(rank, sid, expert_slot, *, spans=None, capture_only=False):
     """Cap ABI: rbase is rank-local, obase is a WORD address.
 
     Omitting spans reproduces the historical80-row fixture map only.
     """
     if rank not in range(4) or sid not in range(16) or expert_slot not in range(7):
         raise ValueError('invalid rank/slice/expert slot')
-    start, count = _spans(spans)[sid]
+    selected = (validate_capture_spans(spans) if capture_only and spans is not None
+                else _spans(spans))
+    start, count = selected[sid]
     return dict(obase=4 * (CAPTURE + 16 * expert_slot), ops=0, np=0,
                 fmt=2, rbase=start, rcnt=count, rsplit=0, lo32=0, hi32=0)
 
