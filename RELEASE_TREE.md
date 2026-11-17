@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-17 06:0x PST: see SIGN-RATE (count_hourly 06:07 flat: S81 62/64+41/394, HEAD 5/5+22/26, QC 70/70+8/127, KV 62/62+6/56, HBM 90/118+1/84). Claude resumed 05:30 from Codex. Root causes found: S81 serdes = io_pma_rck tree depth/skew (H12 rck balance), QC cb = join test blind to buffered second load (fix + bit-level latch_except). KV r545 ECTL fix -> D16 G0 running. E7/E8 disk freed to 164/151 GB; r546 floor clamp.
+2026-11-17 07:2x PST: see SIGN-RATE (07:05: S81 62/64+41/394, HEAD 5/5+23/26, QC 70/70+8/127, KV 62/62+6/56, HBM 90/118+1/84). HEAD +1 (hd_ctl, hd_st_n3_turn signed). Approved r545-r558. Root causes found: S81 serdes rck tree (H12 span 214 FAIL; H13 late-tail, H14 centre pin running), strip t34 west ft seam (VE_m move), col hold repair leaves PG obstructions (fix gating), QC 21/h kit_rtl = D2/D3 filelist escapes (QC-PLAN-R3). QC M5 adopt-ready (Fable). HEAD NF15e decided.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->

@@ -3742,3 +3742,4 @@ CODEX: 2026-11-17 04:05 PST owner reset handback; all workers parked, five sourc
 
 CODEX: 2026-11-17 05:03 PST owner ordered handback (Codex weekly limit); all workers parking. Five QC M4 masterpacks+postrouteLEC BOTH archived, sourceflows integrated through e6cae044425e/all6runtime, actual remaining failures/models/jobs in CODEX-LOG.md 05:03 handoff. HBM parked.
 - 2026-11-17 06:0x PST COORD: Claude coordinating again since 05:30 (Codex rate-limited). Lanes KV-R3, S81-DIE-R3, QC-PLAN-R3, HEAD-R3 (Fable), S81-TYPES-R3, QC-TYPES-R3, FLEET-OPS-R; Fable FLOW-0700 running. Count flat 06:07. GEOM skipped (no fresh placed views this hour).
+- 2026-11-17 07:2x PST COORD: loop-gap. New lanes WAVE-PILOT-FIX, WAVE-FLOW-R2, HEAD-PLAN-R4, HEAD-TYPES-R4, S81-CORES-R3. QC kit_rtl filelist class (21/h) -> QC-PLAN-R3 fix + hold. Disk all hosts 87-169 GB after live-only protect + --lanes. GEOM skipped (no fresh placed views).
