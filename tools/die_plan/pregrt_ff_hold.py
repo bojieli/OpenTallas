@@ -276,6 +276,91 @@ if {$pg_fail ne ""} {
 """
 
 
+GRT_CONTEXT = r'''# Explicit closed-GRT hold continuation; native TC/BC modes, not the ORFS MM wrapper.
+if {![info exists ::env(TLIBS)] || ![llength $::env(TLIBS)]} {error "PREGRT_GRT requires real TC setup and BC hold libraries"}
+set pg_grt_dir [file dirname [file normalize [info script]]]
+set pg_grt_cf [open [file join $pg_grt_dir config.mk]]
+foreach pg_grt_line [split [read $pg_grt_cf] "\n"] {
+  if {[regexp {^export\s+(OT_RC_SIGNAL|OT_RC_SIGNAL_SCALE|LAYER_PARASITICS_FILE)\s*=\s*([^#]+)} $pg_grt_line -> k v]} {
+    set ::env($k) [string trim $v]
+  }
+}
+close $pg_grt_cf
+proc pg_refresh_rc {} {
+  estimate_parasitics -global_routing
+  if {[info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1"} {
+    source [file join $::pg_grt_dir rc_signal_adjust.tcl]
+    ot_rc_signal_table
+  }
+}
+proc pg_grt_ff_taps {} {
+  set f [open $::env(SDC)];set txt [read $f];close $f
+  set marks [regexp -all -inline -line {^# OT_CORE_TAP_CORNER_FILE[^\n]*$} $txt]
+  if {[llength $marks]} {
+    if {[llength $marks] != 1 || [string trim [lindex $marks 0]] ne "# OT_CORE_TAP_CORNER_FILE core_taps_ff.sdc"} {error "PREGRT_GRT malformed FF tap marker"}
+    read_sdc -mode ff [file join $::pg_grt_dir core_taps_ff.sdc]
+  }
+}
+proc pg_scope_begin {} {
+  # Save the actual FF mode, including existing exceptions; restore it before reporting.
+  set ::pg_scope_sdc [file join $::pg_grt_dir pregrt_ff_hold_scope.sdc]
+  write_sdc -no_timestamp $::pg_scope_sdc
+  set ::pg_scope_in [all_inputs -no_clocks];set ::pg_scope_out [all_outputs]
+  if {[llength $::pg_scope_in]} {set_false_path -hold -from $::pg_scope_in}
+  if {[llength $::pg_scope_out]} {set_false_path -hold -to $::pg_scope_out}
+}
+proc pg_scope_end {} {
+  if {![info exists ::pg_scope_sdc]} return
+  if {[llength $::pg_scope_in]} {unset_path_exceptions -hold -from $::pg_scope_in}
+  if {[llength $::pg_scope_out]} {unset_path_exceptions -hold -to $::pg_scope_out}
+  read_sdc -mode ff $::pg_scope_sdc
+  set_mode ff
+  unset ::pg_scope_sdc
+}
+'''
+
+
+def grt_text(text):
+    """Opt-in reuse of the same native TC/BC engine after a closed GRT/TT keep.
+
+    The placement form is returned byte-identical by tcl_text's default path.
+    """
+    def once(old, new):
+        nonlocal text
+        if text.count(old) != 1:
+            raise ValueError(f"pregrt_ff_hold GRT anchor not unique: {old!r}")
+        text = text.replace(old, new, 1)
+
+    text = GRT_CONTEXT + text
+    once('  read_sdc -mode ff $::env(SDC)\n',
+         '  read_sdc -mode ff $::env(SDC)\n  pg_grt_ff_taps\n')
+    if text.count('estimate_parasitics -placement') != 2:
+        raise ValueError('pregrt_ff_hold GRT expected exactly two RC refreshes')
+    text = text.replace('estimate_parasitics -placement', 'pg_refresh_rc')
+    once('set pg_w0 [pg_hold];',
+         'puts "OT_PREGRT_GRT_HOLD before full_hold [pg_hold] scope reg2reg rc global_routing"\npg_scope_begin\nset pg_w0 [pg_hold];')
+    once('set pg_i0 [llength [$pg_blk getInsts]]; set pg_t0 [clock seconds]',
+         'set pg_grt_gate -42.0\nif {[info exists ::env(OT_PREGRT_SETUP_GATE)]} {set pg_grt_gate $::env(OT_PREGRT_SETUP_GATE)}\nif {$pg_s0 < $pg_grt_gate} {error "PREGRT_GRT requires setup-passing TT input: $pg_s0"}\nset pg_i0 [llength [$pg_blk getInsts]]; set pg_t0 [clock seconds]')
+    once('if {[catch {\n  # (A)',
+         'set pg_grt_active 0\nif {[catch {\n  source [file join $pg_grt_dir grt_pg_replay.tcl]\n  ot_grt_pg_replay_begin $pg_grt_dir\n  global_route -start_incremental\n  set pg_grt_active 1\n  # (A)')
+    # Internal scope remains active through both legacy phases and final timing guard.
+    once('      if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }\n      if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }',
+         '      # The enclosing internal scope is restored only after the timing guard.')
+    once('  puts "OT_PREGRT_FF_HOLD legalize $pg_legal overlaps $pg_ovl"\n  pg_refresh_rc',
+         '  puts "OT_PREGRT_FF_HOLD legalize $pg_legal overlaps $pg_ovl"\n  if {$pg_legal eq "diamond+overlaps" || $pg_ovl ne "0"} {error "PREGRT_GRT requires legal placement, overlap count $pg_ovl"}\n  set pg_grt_active 0\n  global_route -end_incremental\n  ot_grt_pg_replay_end\n  pg_refresh_rc')
+    once('foreach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }',
+         'if {$pg_grt_active} {puts "OT_PREGRT_GRT_HOLD abandoned unwritten incremental scene after failure"}\ncatch {ot_grt_pg_replay_end}\nforeach pg_i $pg_lock { $pg_i setPlacementStatus PLACED }')
+    once('  set pg_fail [pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]',
+         '  set pg_fail [pg_verdict $pg_w0 $pg_w1 $pg_n0 $pg_s0 $pg_s1]\n  if {$pg_fail eq "" && $pg_s1 < $pg_grt_gate} {set pg_fail "TT setup below gate: $pg_s1"}\n  if {$pg_fail eq "" && $pg_w1 < 0} {set pg_fail "internal FF hold remains negative: $pg_w1"}')
+    once('if {$pg_fail ne ""} {\n  puts "OT_PREGRT_FF_HOLD FALLBACK',
+         'if {[catch {pg_scope_end} pg_scope_err]} {set pg_fail "scope restore failed: $pg_scope_err"}\nif {$pg_fail ne ""} {\n  puts "OT_PREGRT_FF_HOLD FALLBACK')
+    once('  puts "OT_PREGRT_FF_HOLD after wns',
+         '  puts "OT_PREGRT_GRT_HOLD restored full_hold [pg_hold] full_endpoints [sta::endpoint_violation_count min] scope reg2reg"\n  puts "OT_PREGRT_FF_HOLD after wns')
+    once('  write_db $::env(ODB).pg_tmp',
+         '  set pg_guide [file join $pg_grt_dir pregrt_ff_hold.guide]\n  if {[info exists ::env(OT_PREGRT_HOLD_GUIDE)]} {set pg_guide $::env(OT_PREGRT_HOLD_GUIDE)}\n  write_guides $pg_guide\n  write_db $::env(ODB).pg_tmp')
+    return text
+
+
 DIE_CLOCK = {}      # the plan's DIE-level clock block (QC s29 form): a partition type's own clock value wins
 
 
@@ -336,21 +421,24 @@ def config_lines(t):
     return [CONFIG, f"export OT_PREGRT_HOLD_GUARD = {guard_ps(t):g}"] if enabled(t) else []
 
 
-def tcl_text(hold_gate_text, amin=-1):
+def tcl_text(hold_gate_text, amin=-1, *, rc_basis="placement"):
     if hold_gate_text.count(MARK) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl context marker not found exactly once; fails closed")
     head = hold_gate_text.split(MARK)[0]
     if head.count(READ) != 1:
         raise ValueError("pregrt_ff_hold: hold_gate.tcl library / database read not found exactly once; fails closed")
-    return head.replace(READ, READ2) + TAIL.replace("@PG_AUTO_MIN@", str(int(amin)))
+    text = head.replace(READ, READ2) + TAIL.replace("@PG_AUTO_MIN@", str(int(amin)))
+    if rc_basis not in ("placement", "global_routing"):
+        raise ValueError(f"unsupported hold RC basis {rc_basis!r}")
+    return grt_text(text) if rc_basis == "global_routing" else text
 
 
-def install(t, kd):
+def install(t, kd, *, rc_basis="placement"):
     """Kit tcl (run_kit.sh runs it when config.mk says OT_PREGRT_FF_HOLD = 1).  False (no writes) when opted out."""
     if not enabled(t):
         return False
     kd = Path(kd)
-    (kd / "pregrt_ff_hold.tcl").write_text(tcl_text((kd / "hold_gate.tcl").read_text(), auto_min() if _auto_on(t) else -1))
+    (kd / "pregrt_ff_hold.tcl").write_text(tcl_text((kd / "hold_gate.tcl").read_text(), auto_min() if _auto_on(t) else -1, rc_basis=rc_basis))
     return True
 
 

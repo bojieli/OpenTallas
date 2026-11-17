@@ -83,11 +83,43 @@ proc ::ot_hold_sdc_guard {stage {golden ""}} {
   puts "OT_HOLD_SDC $stage sha $sha io_golden [dict size $gio] session_missing [llength $missing] reapplied_lines $n"
   return [llength $missing]
 }
+# Plain FF GRT used the declared insertion while sign-off uses the measured
+# boundary-flop mean.  Apply that same reference before hold repair, only in
+# the FF routing scene. Placement and coupled-mode contexts retain their own
+# existing bindings; no physical clock latency is changed here.
+proc ::ot_hsg_measured_ff {} {
+  if {![info exists ::env(OT_GRT_MEASURED_HOLD)] || $::env(OT_GRT_MEASURED_HOLD) ne "1"} { return }
+  if {[info exists ::ot_mm_active] && $::ot_mm_active} { return }
+  if {![info exists ::env(OT_VCLK_CORNER)] || $::env(OT_VCLK_CORNER) ne "ff"} { return }
+  if {![info exists ::env(CORNER)] || [string toupper $::env(CORNER)] ne "BC"} { return }
+  set helper [file join $::ot_hsg_dir vclk_measured_hold.tcl]
+  if {![file isfile $helper]} { error "OT_HOLD_SDC measured FF helper missing: $helper" }
+  if {![llength [info commands ::ot_vclk_measured_bind]]} { uplevel #0 [list source $helper] }
+  ::ot_vclk_measured_bind
+}
+# Use the already-declared signal table in the actual plain FF GRT scene.
+# Sign-off and TT repair already use this table. Bind the measured IO mean
+# afterward, because the table also changes physical clock parasitics.
+proc ::ot_hsg_signal_ff {} {
+  if {[info exists ::ot_mm_active] && $::ot_mm_active} { return }
+  if {![info exists ::env(OT_VCLK_CORNER)] || $::env(OT_VCLK_CORNER) ne "ff"} { return }
+  if {![info exists ::env(CORNER)] || [string toupper $::env(CORNER)] ne "BC"} { return }
+  if {![info exists ::env(OT_RC_SIGNAL)] || $::env(OT_RC_SIGNAL) ne "1"} { return }
+  set helper [file join $::ot_hsg_dir rc_signal_adjust.tcl]
+  if {![file isfile $helper]} { error "OT_HOLD_SDC configured signal RC helper missing: $helper" }
+  if {![info exists ::env(LAYER_PARASITICS_FILE)] || ![file isfile $::env(LAYER_PARASITICS_FILE)]} { error "OT_HOLD_SDC configured signal RC layer table missing" }
+  uplevel #0 [list source $helper]
+  ::ot_rc_signal_table
+}
 set ::ot_hsg_dir [file dirname [file normalize [info script]]]
 if {![llength [info procs ::ot_hsg_rt_orig]] && [llength [info commands ::repair_timing]]} {
   rename ::repair_timing ::ot_hsg_rt_orig
   proc ::repair_timing {args} {
-    if {[lsearch -exact $args -hold] >= 0 || ([lsearch -exact $args -setup] < 0)} { ::ot_hold_sdc_guard repair_timing }
+    if {[lsearch -exact $args -hold] >= 0 || ([lsearch -exact $args -setup] < 0)} {
+      ::ot_hold_sdc_guard repair_timing
+      ::ot_hsg_signal_ff
+      ::ot_hsg_measured_ff
+    }
     return [uplevel 1 [list ::ot_hsg_rt_orig {*}$args]]
   }
 }

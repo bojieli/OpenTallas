@@ -2434,8 +2434,10 @@ if {[info exists ::env(OT_PGCAP)] && $::env(OT_PGCAP) eq "1"} {
 
 
 def pgcap_install(kd):
-    """OT_PGCAP=1 only: copy pg_pair_cap.tcl into the kit and append PGCAP_HOOK to the kit's grt_pre.tcl (kits without it stay byte-equal)."""
-    if os.environ.get("OT_PGCAP", "").strip() != "1":
+    """Stage dependencies from the final generated OT_PGCAP value (not the caller environment)."""
+    values = re.findall(r"^\s*(?:override\s+)?export\s+OT_PGCAP\s*(?::=|=)\s*([01])\s*$",
+                        (kd / "config.mk").read_text(), re.M)
+    if not values or values[-1] != "1":
         return False
     shutil.copyfile(Path(__file__).with_name("pg_pair_cap.tcl"), kd / "pg_pair_cap.tcl")
     g = kd / "grt_pre.tcl"
@@ -6529,10 +6531,6 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     import pregrt_ff_hold
     pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))
     pregrt_ff_hold.install(t, kd)
-    import hold_sdc_check as _HSC                       # HOLD-SDC-1116: a kit whose hold stages can read another SDC than sign-off fails here
-    _hf = _HSC.kit_findings(kd)
-    if _hf:
-        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     planned_pins = plan_pin_records(P, tn, pins, bump_sites) + private_clock_pins
     # pins.json remains the boundary-flop contract consumed by face_guard.
     # The physical audit also checks all other non-exempt declared ABI pins.
@@ -6546,6 +6544,13 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         import secondary_clock as _SEC
         _f = _sec.split(":")
         _SEC.install(kd, dict(port=_f[1], clock=_f[2], target=int(_f[3]), dmax_um=float(_f[4]), radius_um=float(_f[5])))
+    # Bind repair to the final golden SDC after every native/secondary-clock installer.
+    import hold_flow
+    hold_flow.install(kd)
+    import hold_sdc_check as _HSC
+    _hf = _HSC.kit_findings(kd)
+    if _hf:
+        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
         import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
