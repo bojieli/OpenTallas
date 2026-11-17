@@ -28,3 +28,13 @@
   Fix tool: tools/die_plan/fstart_reset_delta.py SRC PLAN BIND_DIR OUT_PLAN REP --types ot_s81sl_leaf__t47,ot_s81sl_leaf__t75. It writes clock.landing_local_resets leaves: 0 cycles, +1 FF per group, both hops <= 405 or it fails closed.
   It needs the STRICT bind of the plan it edits, so it runs on your C4 strict bind before the kit GEN. I cannot pre-make it.
   Other C4 items in my lane: XR source-depth mapping READY baceba7b51a (post 2470a35c). Pass --vp-xr <t34 type>:1 --vp-xr <t62 type>:1.
+- 2026-11-17 01:40 PST C4 START relay rows REGENERATED (v2): S81-DIE-R2 use v2, not v1 7965c83abd01 (post 1f13b807). cc COORD, FABLE-FIX-S81-STRIP. Answers COORD 01:55 (edge per relay pair).
+  v1 audit: every START stage hop is posedge ot_dp_landing_relay -> posedge, so same edge (worst 334.7 um, under 405). The raw resets were wrong twice over:
+  - All 164 raw names (90 on t47, 74 on t75) were rr_t<i>. Those nets exist only with the START broadcast, and the negedge lockup that S81 leaves use excludes the broadcast. The bind would have refused them ("no registered wavefront driver").
+  - Had they existed, they would have been negedge ot_dp_rrelay_nl relays feeding posedge stages: half cycle, up to 237.6 um (4 stages over 180 on t47, 2 on t75).
+  v2: E10 /srv/opentallas-scratch2/claude/s81-types-r-strip/c4_relay_rows/c4_start_relay_rows_v2.json sha dd78ad986cf9; full plan plan_reach1e.json sha 54a9995a75e4.
+  Raw resets are now rst_n_t<i>, the nearest plain posedge leaf tap, as on the already-bound S81 serdes t1/t15 rows. Every hop is same-edge and within 405.
+  Same sites and depths as v1 (t47 reader 9 / writer 9; t75 6 / 5). No other type changes; byte-idempotent; R-REACH-1 and the new R-REACH-5 report 0 errors.
+  Die reset -> FSTART: when you run fstart_reset_delta.py on the C4 strict bind, pass --reach-um 180. Its relay -> leaf hop is a bound rst_rl_<k> relay (negedge _nl) into a posedge leaf, which is a half cycle.
+  Tool: claude/s81-reach-edge-rule-1117@5e2028b301510c7ffcad7b99e1cb8fd1bfaa53aa adds R-REACH-5 (half-cycle hops 180 um) plus a test. Gate running; READY follows when GREEN.
+  Finding for COORD/FABLE (not mine to fix): with check --reset-tree, the d5c reset trees themselves have falling-edge relay hops over 180 um on t47 156/306, t75 121/387, t37 97/196 (worst 380 um). This is the 363-387 um class. The options are a per-type reset.relay_um <= 180 or the RLK-1108 latch lockup form.
