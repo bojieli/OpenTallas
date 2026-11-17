@@ -67,21 +67,33 @@ def test_pin_without_manifest_falls_back_to_tree_base(tmp_path):
     assert not res["measured"] and "missing" in res["why"]
 
 
-def test_second_identical_failure_closes_the_key_against_tool_changes(monkeypatch):
+def test_tool_change_without_a_named_file_never_releases(monkeypatch):
+    """WAVE-FLOW-R2 11-17: a failure that names no tool file / function is not released by any tool change (sle_ctl 20 attempts on 'changed tools')"""
     seq = {"v": "t1"}
     monkeypatch.setattr(KW, "stage_tools_digest", lambda root=None, group="", files=None: seq["v"])
     monkeypatch.setattr(KW, "failed_tool_files", lambda why, root=None: [])
     st = {}
     KW.note_fail_key(cfg(), st, rec(), "INFRA", WHY)
-    seq["v"] = "t2"                                    # a tools change relaunches the first time (sig_n 1)
-    assert KW.fail_key_gate(cfg(), st, "qc", "sle_sc_v3", "b")[2] == ["tools"]
-    KW.note_fail_key(cfg(), st, rec(), "INFRA", WHY)   # failed again, same stage and error
-    assert st["fail_keys"]["qc|sle_sc_v3"]["sig_n"] == 2
-    seq["v"] = "t3"
+    seq["v"] = "t2"
     bl, why, chg = KW.fail_key_gate(cfg(), st, "qc", "sle_sc_v3", "b")
-    assert bl and chg == []                            # tool change no longer releases
+    assert bl and chg == []                            # first failure too
+    KW.note_fail_key(cfg(), st, rec(), "INFRA", WHY)
+    seq["v"] = "t3"
+    assert KW.fail_key_gate(cfg(), st, "qc", "sle_sc_v3", "b")[0]
     c = cfg(); c["dies"]["qc"]["src_sha"] = "s2"       # a named input does
     assert KW.fail_key_gate(c, st, "qc", "sle_sc_v3", "b")[2] == ["src"]
+
+
+def test_symbols_in_the_message_resolve_to_the_defining_tool_file(tmp_path):
+    (tmp_path / "tools/die_plan").mkdir(parents=True)
+    (tmp_path / "tools/die_plan/gen.py").write_text("import gen_phys\n")
+    (tmp_path / "tools/die_plan/gen_phys.py").write_text("def hard_landing(x):\n    return x\n")
+    (tmp_path / "tools/die_plan/bind.py").write_text("def other():\n    pass\n")
+    why = "Traceback (most recent call last): File \"x.py\", line 3, in hard_landing KeyError: 'a'"
+    assert KW.failed_tool_symbols(why) == ["hard_landing"]
+    KW._CLOSURE_FILES.clear()
+    assert KW.failed_tool_files(why, tmp_path) == ["tools/die_plan/gen_phys.py"]
+    assert KW.failed_tool_files("no names here", tmp_path) == []
 
 
 def test_hub_statvfs_is_replaceable_for_fixed_host_state(monkeypatch):
