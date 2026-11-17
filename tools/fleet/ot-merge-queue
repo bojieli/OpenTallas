@@ -768,7 +768,7 @@ def missing_modules(wt, out):
     names = set(re.findall(r"ModuleNotFoundError: No module named ['\"]([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*)['\"]", out or ""))
     if not names:
         return []
-    tracked = git("ls-tree", "-r", "--name-only", "HEAD", "--", "*.py", cwd=wt).stdout.splitlines()
+    tracked = git("ls-tree", "-r", "--name-only", "HEAD", cwd=wt).stdout.splitlines()
     missing = set()
     for name in names:
         suffix = name.replace(".", "/") + ".py"
