@@ -12,3 +12,7 @@ Base: TP2 hold1 SIGNED (epyc7 /srv/opentallas-scratch2/claude/head-die-r/tp2/hol
   LAND_ATTEMPTED guards a repeat. Do not restart a progressing job.
 - Next: gates (DRC0, TT>=-42, internal FF>=0), LOOK, alias-cycle check of 6_final.v, export s81_head/hd_tile__nf15c_tp2_land1_1116
   (ffht_export.sh from rtx-pro), rerun pair with the new view (pair_tile.py ... VIEW=new base, tag land1), tell HEAD-DIE-R.
+
+## CODEX 2026-11-17 04:14 PST collected
+- land1 SIGNED TT+11.60/internalFF0/DRC0, final image LOOKED. Exported BOTH s81_head/hd_tile__nf15c_tp2_land1_1117; ODB b89c81794768f18b04d2d1afa8790bf9bdacd2c58d3e295955512c997179071d.
+- Actual full-view/SPEF worst pairs pass2272ends each: tE0b8->tE0b7 hold TT+43.39 FF+21.19; tE2b3->tE2b2 TT+43.39 FF+21.20. Logs E7 land1/pair_land1; client ~/htl-logs/pair_land1_codex.log. Ready die STA swap.
