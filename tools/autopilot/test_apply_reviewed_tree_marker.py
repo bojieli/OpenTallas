@@ -136,3 +136,15 @@ class KeepGenHosts(unittest.TestCase):
         apply(c, cand(), "/x/old", "E0", pilot_item="t1", TC=self._tc([]))
         d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
         self.assertEqual(d["gen_hosts"], ["epyc10"])
+
+
+def test_commit_apply_commits_the_written_files_through_coord_commit(tmp_path):
+    import os
+    coord = tmp_path / "coord"; (coord / "bin").mkdir(parents=True); (coord / "lanes/handoff").mkdir(parents=True); (coord / "autopilot").mkdir()
+    (coord / "bin/coord-commit.sh").write_text('#!/bin/bash\necho "$@" > "$(dirname "$0")/../called.txt"\n')
+    receipt = coord / "lanes/handoff/s81_atomic_apply_1.json"; receipt.write_text("{}")
+    out = A.commit_apply(str(coord), {"applied": "s81", "event": "ev1", "receipt": str(receipt)})
+    assert out == "ok"
+    called = (coord / "called.txt").read_text()
+    assert "autopilot/kit_wave.json" in called and "tree_switch_s81.json" in called and "s81_atomic_apply_1.json" in called
+    assert A.commit_apply(str(tmp_path / "nocoord"), {"applied": "s81"}).startswith("skipped")
