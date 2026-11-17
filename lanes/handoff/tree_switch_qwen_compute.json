@@ -1,27 +1,68 @@
 {
  "die": "qwen_compute",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0",
- "smoke": "PASS",
- "smoke_detail": "v2: kit_rtl 10/10 RC0; plan_gate_pre PASS (2 inherited GEOM); tree_smoke_assert OK; tree_skew_check OK; nlink 1",
- "src_manifest_sha": "b5f224c8a61fa2b83953fb3e43639112789aadafc01a0dbcace56241bbfdf01f",
- "tools_sha": "eb1e73448bd0",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf",
+ "manifest_hash": "c8e63f164faa013ba4a9e6b107497a1e3db07d6f0de2b3c0f93e9466b91eb39d",
+ "src_manifest_sha": "c8e63f164faa013ba4a9e6b107497a1e3db07d6f0de2b3c0f93e9466b91eb39d",
+ "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
-  "epyc10",
-  "epyc2",
-  "epyc8",
-  "epyc9",
-  "intel1"
+  "epyc7",
+  "epyc8"
  ],
- "hosts_verified": "hash (src_manifest hosts --expect) + links check OK on epyc2, epyc8, epyc9, intel1 and epyc10; epyc7 pending (KV copy slow, QC applied)",
+ "smoke": "PASS",
+ "smoke_detail": "Producer preflight230 bad[]; raw KFBQ strict0/R8 0/LAT1921; exact portable relocation native contract equal and bind_matches130. No gate rerun.",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9kf.json",
+ "plan_sha256": "a826abb3a3fd7c2a57dc6a83e982da3cdcb9ac4ab47878b65ac32a75e601c69d",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_jkf_portable.json",
+ "asbuilt_sha256": "65000b87450ad40f14c9a178029fdc699dfcc8d15eb2df79897be4af14840f67",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9kf/bind_s29q103S4Q9KFBQ",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9KFBQ.json",
  "die_gen_env": {
+  "OT_PLACE_MAX_FANOUT": "64",
+  "OT_GRT_NONPORT_HOLD": "1",
+  "OT_CORE_TAP_REACH_UM": "0",
+  "OT_PREGRT_FF_HOLD_AUTO": "-1",
+  "OT_MAX_BUFFER_PERCENT": "100",
+  "OT_GRT_POST_MAX_S": "0",
+  "OT_HOLD_STOP_PS": "-1000000",
+  "OT_GRT_ALLOW_CONGESTION": "1",
+  "OT_TT_SETUP_REPAIR": "both",
   "OT_PG_DIE_PHASE": "1",
   "OT_PGCAP": "1",
-  "OT_TT_SETUP_REPAIR": "both",
   "OT_PG_TRACK_TRUTH": "1",
-  "OT_PG_PIN_CHECK": "1"
+  "OT_PG_PIN_CHECK": "1",
+  "OT_GPL_SPARSE_UTIL": "0.10"
  },
- "written_by": "TOOLS-CONVERGE-1115",
- "time": "2026-11-16 06:07:16 PST",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0/bind_s29q103S4Q6DBQ",
- "bind_dir_on_hosts": "epyc2 epyc7 epyc8 epyc9 intel1 epyc10 (rsync, same path)"
+ "config": {
+  "event": "s29q103S4Q9KF",
+  "gen_host": "epyc8",
+  "gen_hosts": [
+   "epyc7",
+   "epyc8"
+  ],
+  "gen_args": [
+   "--hold-ff-margin",
+   "0",
+   "--max-wire-um",
+   "120",
+   "--clock-landing",
+   "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9KFBQ.json"
+  ],
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9kf/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_jkf_portable.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9kf/bind_s29q103S4Q9KFBQ"
+  },
+  "cancel_superseded": false,
+  "planned_events": [
+   "S4q6d",
+   "S4q6e",
+   "S4q7h",
+   "S4q8",
+   "S4q9l2",
+   "S4q9l2d",
+   "S4q9m"
+  ]
+ },
+ "status": "ADOPTED reviewed tuple",
+ "written_by": "root-authorized lane atomic apply"
 }
