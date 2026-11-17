@@ -5520,6 +5520,7 @@ def txl_mid_exports(cfg, kd, env=None, defines=()):
                "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
                "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
             *(["export OT_S81_RCK_AM_COHORT = 1"] if am_clock else []),
+            *(["export OT_S81_RCK_BALANCE = 1"] if env.get("OT_S81_RCK_BALANCE") == "1" else []),
             *(["export OT_SERDES_RM_LOCAL = 1",
                "export OT_SERDES_RM_LOCAL_EMPTY8 = " + ("1" if "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names else "0")] if rm_local else []),
             "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
@@ -6157,7 +6158,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "pinreg_pad.tcl",
               "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
