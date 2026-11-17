@@ -108,9 +108,24 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             pilot_added = HR.add_pilot_hold(cfg, die, d, dict(marker, manifest_hash=want))
         current_ids = {r.get("id") for r in d.get("hold_records") or []}
         retired_pilots = [r for r in prior_pilots if r.get("id") not in current_ids]
+        published_gen_import = {"status": "NORMAL-GEN"}
+        if pilot and PG is not False:
+            try:
+                import published_gen_origin as PGO
+                import kit_wave as KW
+                ref, why = PGO.reference_for_apply(C, cfg, die, pilot, KW, recipe_archive=obj.get("published_gen_recipe_archive"))
+                pilot_record = next((r for r in d.get("hold_records") or []
+                                     if r.get("id") == "pilot-%s-%s" % (die, want[:12]) and r.get("auto_pilot")), None)
+                if ref and pilot_record is not None:
+                    pilot_record["published_gen_proof"] = ref
+                    published_gen_import = {"status": "IMPORTED", "proof": ref}
+                else:
+                    published_gen_import["why"] = why or "no automatic pilot hold"
+            except (ImportError, AssertionError, OSError, ValueError, TypeError, KeyError, AttributeError) as e:
+                published_gen_import["why"] = str(e)
         marker.update(manifest_hash=want, src_manifest_sha=want, status="ADOPTED reviewed tuple", written_by="root-authorized lane atomic apply")
         receipt = C / ("lanes/handoff/" + die + "_atomic_apply_" + str(time.time_ns()) + ".json")
-        atomic(receipt, dict(die=die, prior=old, marker=marker, pilot=dict(item=pilot, hold_added=pilot_added, retired=retired_pilots, release="gen_pilot:%s:%s" % (die, want[:12])) if pilot else "NONE",
+        atomic(receipt, dict(die=die, prior=old, marker=marker, published_gen_import=published_gen_import, pilot=dict(item=pilot, hold_added=pilot_added, retired=retired_pilots, release="gen_pilot:%s:%s" % (die, want[:12])) if pilot else "NONE",
                              guard=str(TC.location(C / "autopilot/tree_checks", ident) / "result.json"), candidate=str(obj.get("_path", ""))))
         atomic(C / HR.tree_marker_rel(die), marker)
         atomic(cfgpath, cfg)

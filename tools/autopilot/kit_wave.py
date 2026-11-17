@@ -670,6 +670,17 @@ def pilot_passed_map(st, cfg):
     """
     out = {}
     for die, d in (cfg.get("dies") or {}).items():
+        for record in d.get("hold_records") or []:
+            if not record.get("auto_pilot") or not record.get("published_gen_proof"):
+                continue
+            try:
+                import published_gen_origin as PGO
+                for pilot in record.get("pilot_items") or []:
+                    proved, _ = PGO.validate_reference(record["published_gen_proof"], cfg, die, pilot, sys.modules[__name__])
+                    if proved:
+                        out.setdefault(die, set()).add(proved[:12])
+            except (ImportError, AssertionError, OSError, ValueError, TypeError, KeyError, AttributeError):
+                pass                            # an unqualified import always leaves normal GEN available
         pilots = {i for r in d.get("hold_records") or [] if r.get("auto_pilot") for i in r.get("pilot_items") or []}
         if not pilots:
             continue
