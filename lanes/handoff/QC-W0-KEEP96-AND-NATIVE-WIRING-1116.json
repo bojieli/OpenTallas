@@ -1,0 +1,36 @@
+{
+  "scope": "Cached native actual component wiring only; full START/QC clock programme remains separate",
+  "component_sha256": "9cbfacdd6a4d521642b6faebc8d154e7cacc241e63ce7513f11c6d095e736bd6",
+  "head_connection": "    qfd_dv_lane_h_su_mem9 #(.MEMORY_ALIGNMENT(3),.MEMORY_READ_EXTRA(44),.SEGMENTED_MEMORY_DELAY(1),.KV_WR_PIPE(1)) u_head0 (.clk(ck), .rst_n(rst_n), .emit0(c0_emit0), .live(c0_live), .i(c0_i), .fin_th(c0_fin_th), .i_last_r(c0_i_last_r), .cura0(c0_cura0), .curb0(c0_curb0), .curc0(c0_curc0), .curd0(c0_curd0), .rrow(c0_rrow), .asi(c0_asi), .bsi(c0_bsi), .csi(c0_csi), .dsi(c0_dsi), .asrc(c0_asrc), .bsrc(c0_bsrc), .csrc(c0_csrc), .mc(c0_mc), .md(c0_md), .redsq(c0_redsq), .ma(c0_ma), .mb(c0_mb), .dst(c0_dst), .red(c0_red), .ad(c0_ad), .imm1(c0_imm1), .imm2(c0_imm2), .cls(c0_cls), .accept(c0_accept), .i_sfu(c0_i_sfu), .va_q(c0_va_q), .vb_q(c0_vb_q), .vc_q(c0_vc_q), .wrom_q(c0_wrom_q), .crom_q(c0_crom_q), .va_re(h0_va_re), .va_addr(h0_va_addr), .vb_re(h0_vb_re), .vb_addr(h0_vb_addr), .vc_re(h0_vc_re), .vc_addr(h0_vc_addr), .wrom_re(h0_wrom_re), .wrom_addr(h0_wrom_addr), .crom_re(h0_crom_re), .crom_addr(h0_crom_addr), .vm_we(h0_vm_we), .vm_waddr(h0_vm_waddr), .vm_wdata(h0_vm_wdata), .kv_we(h0_kv_we), .kv_waddr(h0_kv_waddr), .kv_wdata(h0_kv_wdata), .l_ov(h0_l_ov), .l_out(h0_l_out), .l_red(h0_l_red), .l_redsq(h0_l_redsq), .l_raddr(h0_l_raddr), .l_last(h0_l_last), .retire(h0_retire), .l_fault(h0_l_fault), .sx_exp_v(e0_v), .sx_exp_x(e0_x), .sy_exp_y(e0_y), .sy_exp_vo(e0_vo), .sy_exp_f(e0_f), .sx_rcp_v(r0_v), .sx_rcp_x(r0_x), .sy_rcp_y(r0_y), .sy_rcp_f(r0_f), .sx_rsq_v(q0_v), .sx_rsq_x(q0_x), .sy_rsq_y(q0_y), .sy_rsq_f(q0_f));",
+  "exp_connection": "    ot_hdc_sfu_exp_t u_exp0 (.clk(ck), .rst_n(rst_n), .v(e0_v), .x(e0_x), .y(e0_y), .vo(e0_vo), .fault(e0_f));",
+  "cached_trace": "mode1 op1 fusedSILU cmd21272 emit21286 operand21347 headwrite21499 LRLYwrite21502,16correctvalidoutputs; no cached EXP consumer timestamp",
+  "relation_to_first_use": "Exact protocol theorem permits every arbitrary input-valid stream; actual consumer-valid cannot bypass unchanged vd12. First-use actual2component witness observes real q_accept and consumer directly.",
+  "keep96": {
+    "fields": {
+      "c_dsi": [
+        503,
+        526
+      ],
+      "c_csi": [
+        527,
+        550
+      ],
+      "c_bsi": [
+        551,
+        574
+      ],
+      "c_asi": [
+        575,
+        598
+      ]
+    },
+    "consumer": "MEM44 head safe_head instantiates safe_lane LANE0",
+    "sole_uses": [
+      "cura=cura0+LANE*asi",
+      "curb=curb0+LANE*bsi",
+      "curc=curc0+LANE*csi",
+      "curd=curd0+LANE*dsi"
+    ],
+    "implication": "Literal LANE0 makes all96 strides functionally unobservable; retain KEEP declarations and require final allcomparepoints prove before standard dead-kept exclusion. No padding/waiver claim."
+  }
+}
