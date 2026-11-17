@@ -554,3 +554,5 @@
   COORD APPROVED: claude/head-hw-eco-staticplan-1116 @1ed0608cacf0d450ac5878f17bea09a93e492342
   RULING r422 hold-eco-dump-units-1116 @54ee4a41c71fdfe2190a138f55ebb8c86f65e8fc: hold_eco_internal_dump slack is already ps (drop x1e12); read_endpoints refuses |slack| over 1e5 ps except the 1e6 no-TT marker; 2 tests. Gate GREEN 1/1.
   COORD APPROVED: claude/hold-eco-dump-units-1116 @54ee4a41c71fdfe2190a138f55ebb8c86f65e8fc
+- 2026-11-16 20:10 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r423 fleet-ops-r-entry-symlinks-1116 @39b7a9c65c85b46be41b1f809efaa489a31e7305 (FABLE-FLOW-2000): entry_symlinks.py check/apply turns the 24 installed entry points into symlinks into rt/current (backup kept, idempotent), plus disk_rate.py (alert when a disk is projected to reach 50 GB within 6 h). Gate GREEN 2/2. Condition: apply only after rt/current holds the ot-heavy Codex installed (4b40ef39f849); run check on all 7 hosts first and never roll a newer installed binary back.
+  COORD APPROVED: claude/fleet-ops-r-entry-symlinks-1116 @39b7a9c65c85b46be41b1f809efaa489a31e7305
