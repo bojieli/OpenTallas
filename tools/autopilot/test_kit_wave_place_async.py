@@ -1,6 +1,7 @@
 """FLOW-21 11-01 (COORD 08:2x): kit-wave PLACE as a detached service released by the fresh PLACE receipt while the
 async pre-route LEC proof owner keeps running; terminal rc / lost client / resume / sync fallback"""
 import json
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -21,7 +22,9 @@ class Fake:
         s = " ".join(argv)
         self.calls.append(s)
         out, rc = "", 0
-        if "KW_ASYNC_OK" in s:
+        if "KW_GEOM_TOOLS_OK" in s:
+            out = re.search(r"KW_GEOM_TOOLS_OK [0-9a-f]{16}", s).group(0) + "\n"
+        elif "KW_ASYNC_OK" in s:
             out = "KW_ASYNC_OK\n" if self.async_ok else "KW_ASYNC_NO\n"
         elif argv[0] == "systemd-run":
             if self.client_rc is not None:
