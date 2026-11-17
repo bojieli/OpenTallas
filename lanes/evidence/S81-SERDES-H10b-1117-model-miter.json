@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.structural-prune-model.v1",
+  "candidate": "H10b ONE experiment",
+  "status": "MODEL_AND_EXHAUSTIVE_MITER_PASS_BEFORE_PHYSICAL",
+  "parent_input": "H10 isolatedTT snapshot36b9f405f17e35442dfbfdd96a0046aa0cac8b622c37b8133f6988506cd718c1",
+  "removed_cells": [
+    "place109678",
+    "place109677",
+    "place109676",
+    "place109675",
+    "place109674"
+  ],
+  "removed_cell_count": 5,
+  "added_ff": 0,
+  "added_cycles": 0,
+  "data_area_delta_um2": -0.7290000000000001,
+  "clock_changes": 0,
+  "memory_ports_delta": 0,
+  "boundary_bits_per_cycle_delta": 0,
+  "token_latency_cycle_delta": 0,
+  "critical_prefix_original_cell_plus_wire_ps": 86.587,
+  "expected_gain": "same-path positive setup gain from removing86.587ps compactBUFprefix, adjusted by measuredCq/load/wire; no wholeformPASS or guarantee",
+  "source_QN_pin_load_cap_fF": {
+    "TT": {
+      "before_BUFx6f_A": 1.20287,
+      "after_INVx1_A": 0.619928,
+      "delta": -0.5829420000000001
+    },
+    "FF": {
+      "before_BUFx6f_A": 1.33316,
+      "after_INVx1_A": 0.683716,
+      "delta": -0.6494439999999999
+    }
+  },
+  "network_sha256": "fab8ff171ccbed964e8069054fd9beba1d40836357409d5f83e9f10f91313d09",
+  "library_models_sha256": "e31493b39eef6a2d6a73a76160c491f4de382bb2db87274391ab9a73d78963e9",
+  "checks": [
+    {
+      "corner": "TT",
+      "arbitrary_inputs": 12,
+      "input_combinations": 4096,
+      "boundary_outputs": 21,
+      "output_comparisons": 86016,
+      "prune_mismatches": 0,
+      "INV_bypass_mutant_mismatches": 10752
+    },
+    {
+      "corner": "FF",
+      "arbitrary_inputs": 12,
+      "input_combinations": 4096,
+      "boundary_outputs": 21,
+      "output_comparisons": 86016,
+      "prune_mismatches": 0,
+      "INV_bypass_mutant_mismatches": 10752
+    }
+  ],
+  "scope": "exact5positiveY=A single-fanoutprefixBUFs only. PreserveINV/FA/XNOR, all12externalbranchvalues, clocks, SDC and allretainedcellpositions. Physicalgraphallowlist andfullTTFF stillrequired. No furtherpruneloop onfailure."
+}

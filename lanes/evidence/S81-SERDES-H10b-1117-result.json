@@ -1,0 +1,601 @@
+{
+  "schema": "opentallas.component-physical-experiment.v1",
+  "candidate": "S81 SerDes H10b EXACT5positiveBUFprefixprune",
+  "verdict": "MECHANISM_GAIN_CONFIRMED_WHOLEFORM_FAIL_NO_ENABLE",
+  "runtime": "/srv/opentallas-scratch2/claude/fable-fix-s81-serdes/probes_codex_h10_1117",
+  "parent_H10_sha256": "36b9f405f17e35442dfbfdd96a0046aa0cac8b622c37b8133f6988506cd718c1",
+  "pruned_snapshot_sha256": "fb34c09d4005596e322c557446b48a52334de38cb89fa5ba9887a3e57d4c90c4",
+  "unit_initial_flow_failure": "oth-ubuntu-3134360-1794920284",
+  "flow_failure_cause": "Bad escaped-array STA selector after completedphysicalmutation/graphisolation/ODBsave; no timingverdict. OriginalTT.log preserved.",
+  "unit_report_only_successor": "oth-ubuntu-3177269-1794920459",
+  "report_only_correction": "Literal name match after backslash normalization; reads already-pruned SAMEsnapshot, no furthermutation/variant/tuning",
+  "removed_cells": [
+    "place109678",
+    "place109677",
+    "place109676",
+    "place109675",
+    "place109674"
+  ],
+  "removed_area_um2": 0.729,
+  "added_ff_cycles": 0,
+  "retained_positions_unchanged": 585273,
+  "retained_iterms_unchanged_except_one_INV_A": 2263471,
+  "source_QN_fanout_before_after": [
+    1,
+    1
+  ],
+  "clock_and_SDC_changes": 0,
+  "lib_function_proof": "Actual TT andFF BUFx6f.Y=A; INV.Y=!A preserved",
+  "miter": [
+    {
+      "corner": "TT",
+      "arbitrary_inputs": 12,
+      "input_combinations": 4096,
+      "boundary_outputs": 21,
+      "output_comparisons": 86016,
+      "prune_mismatches": 0,
+      "INV_bypass_mutant_mismatches": 10752
+    },
+    {
+      "corner": "FF",
+      "arbitrary_inputs": 12,
+      "input_combinations": 4096,
+      "boundary_outputs": 21,
+      "output_comparisons": 86016,
+      "prune_mismatches": 0,
+      "INV_bypass_mutant_mismatches": 10752
+    }
+  ],
+  "library_models_sha256": "e31493b39eef6a2d6a73a76160c491f4de382bb2db87274391ab9a73d78963e9",
+  "network_sha256": "fab8ff171ccbed964e8069054fd9beba1d40836357409d5f83e9f10f91313d09",
+  "changed_source_branch_input_cap_fF": {
+    "TT": {
+      "before_BUFx6f_A": 1.20287,
+      "after_INVx1_A": 0.619928,
+      "delta": -0.5829420000000001
+    },
+    "FF": {
+      "before_BUFx6f_A": 1.33316,
+      "after_INVx1_A": 0.683716,
+      "delta": -0.6494439999999999
+    }
+  },
+  "timing_ps": {
+    "exact532_to_part0_TT_before": -62.568394,
+    "exact532_to_part0_TT_after": 17.233326,
+    "exact_TT_gain": 79.80172,
+    "all9_target_TT_before": -62.568394,
+    "all9_target_TT_after": -58.814285,
+    "global_TT_before": -62.56839515960107,
+    "global_TT_after": -58.81428700913288,
+    "all9_target_FF_before_after": [
+      580.900024,
+      580.900024
+    ],
+    "exact532_to_part0_FF_after": 596.933594,
+    "exact532_to_part0_FF_before": "NOTSEPARATELY_RECORDED",
+    "global_FF_before_after": [
+      -290.8266417097782,
+      -290.8266417097782
+    ]
+  },
+  "remaining_failure_count": 7,
+  "remaining_failures": [
+    {
+      "source": "u_bound.u_core.u_rxf_q[533]$_DFF_N_",
+      "sink": "u_bound.u_core.u_dec.u_face_am3.parts[0]$_DFF_P_",
+      "tt_slack_ps": -58.814,
+      "prior_H10_same_path_tt_ps": null,
+      "change_at_printed_precision_ps": null,
+      "CQ_ps": 78.056,
+      "buffer_stages": 8,
+      "buffer_stage_combined_cell_plus_preceding_wire_ps": 154.633,
+      "logic_stages": 3,
+      "logic_stage_combined_cell_plus_preceding_wire_ps": 81.088,
+      "last_net_ps": 0.113,
+      "buffer_cells": [
+        [
+          "place109673/Y",
+          "BUFx6f_ASAP7_75t_R",
+          24.778
+        ],
+        [
+          "place109672/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.439
+        ],
+        [
+          "place109671/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.047
+        ],
+        [
+          "place109670/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.251
+        ],
+        [
+          "place109669/Y",
+          "BUFx6f_ASAP7_75t_R",
+          14.925
+        ],
+        [
+          "place100575/Y",
+          "BUFx3_ASAP7_75t_R",
+          19.699
+        ],
+        [
+          "place94330/Y",
+          "BUFx3_ASAP7_75t_R",
+          29.139
+        ],
+        [
+          "place94329/Y",
+          "BUFx3_ASAP7_75t_R",
+          20.355
+        ]
+      ],
+      "logic_cells": [
+        [
+          "_472245_/Y",
+          "INVx1_ASAP7_75t_R",
+          7.547
+        ],
+        [
+          "_479867_/SN",
+          "FAx1_ASAP7_75t_R",
+          44.081
+        ],
+        [
+          "_286642_/Y",
+          "XNOR2x2_ASAP7_75t_R",
+          29.46
+        ]
+      ]
+    },
+    {
+      "source": "u_bound.u_core.u_rxf_q[533]$_DFF_N_",
+      "sink": "u_bound.u_core.u_dec.u_face_am3.parts[2]$_DFF_P_",
+      "tt_slack_ps": -58.463,
+      "prior_H10_same_path_tt_ps": null,
+      "change_at_printed_precision_ps": null,
+      "CQ_ps": 78.056,
+      "buffer_stages": 9,
+      "buffer_stage_combined_cell_plus_preceding_wire_ps": 171.159,
+      "logic_stages": 3,
+      "logic_stage_combined_cell_plus_preceding_wire_ps": 65.103,
+      "last_net_ps": 0.02,
+      "buffer_cells": [
+        [
+          "place109673/Y",
+          "BUFx6f_ASAP7_75t_R",
+          24.778
+        ],
+        [
+          "place109672/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.439
+        ],
+        [
+          "place109671/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.047
+        ],
+        [
+          "place109670/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.251
+        ],
+        [
+          "place109669/Y",
+          "BUFx6f_ASAP7_75t_R",
+          14.925
+        ],
+        [
+          "place100575/Y",
+          "BUFx3_ASAP7_75t_R",
+          19.699
+        ],
+        [
+          "place94330/Y",
+          "BUFx3_ASAP7_75t_R",
+          29.139
+        ],
+        [
+          "place92245/Y",
+          "BUFx3_ASAP7_75t_R",
+          20.86
+        ],
+        [
+          "place92244/Y",
+          "BUFx3_ASAP7_75t_R",
+          16.021
+        ]
+      ],
+      "logic_cells": [
+        [
+          "_472245_/Y",
+          "INVx1_ASAP7_75t_R",
+          7.547
+        ],
+        [
+          "_479867_/SN",
+          "FAx1_ASAP7_75t_R",
+          44.081
+        ],
+        [
+          "_450437_/Y",
+          "NOR3x1_ASAP7_75t_R",
+          13.475
+        ]
+      ]
+    },
+    {
+      "source": "u_bound.u_core.u_rxf_q[539]$_DFF_N_",
+      "sink": "u_bound.u_core.u_dec.u_face_am3.parts[4]$_DFF_P_",
+      "tt_slack_ps": -56.709,
+      "prior_H10_same_path_tt_ps": -56.709,
+      "change_at_printed_precision_ps": 0.0,
+      "CQ_ps": 73.638,
+      "buffer_stages": 8,
+      "buffer_stage_combined_cell_plus_preceding_wire_ps": 154.001,
+      "logic_stages": 4,
+      "logic_stage_combined_cell_plus_preceding_wire_ps": 86.098,
+      "last_net_ps": 0.097,
+      "buffer_cells": [
+        [
+          "place109643/Y",
+          "BUFx6f_ASAP7_75t_R",
+          25.913
+        ],
+        [
+          "place109642/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.658
+        ],
+        [
+          "place109641/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.183
+        ],
+        [
+          "place109640/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.183
+        ],
+        [
+          "place109639/Y",
+          "BUFx6f_ASAP7_75t_R",
+          14.92
+        ],
+        [
+          "place100580/Y",
+          "BUFx3_ASAP7_75t_R",
+          20.305
+        ],
+        [
+          "place94328/Y",
+          "BUFx3_ASAP7_75t_R",
+          27.28
+        ],
+        [
+          "place94327/Y",
+          "BUFx3_ASAP7_75t_R",
+          19.559
+        ]
+      ],
+      "logic_cells": [
+        [
+          "_472241_/Y",
+          "INVx1_ASAP7_75t_R",
+          6.955
+        ],
+        [
+          "_479868_/SN",
+          "FAx1_ASAP7_75t_R",
+          43.87
+        ],
+        [
+          "_392797_/Y",
+          "OA21x2_ASAP7_75t_R",
+          24.275
+        ],
+        [
+          "_392798_/Y",
+          "NOR2x1_ASAP7_75t_R",
+          10.998
+        ]
+      ]
+    },
+    {
+      "source": "u_bound.u_core.u_rxf_q[533]$_DFF_N_",
+      "sink": "u_bound.u_core.u_dec.u_face_am3.parts[1]$_DFF_P_",
+      "tt_slack_ps": -55.136,
+      "prior_H10_same_path_tt_ps": null,
+      "change_at_printed_precision_ps": null,
+      "CQ_ps": 78.056,
+      "buffer_stages": 8,
+      "buffer_stage_combined_cell_plus_preceding_wire_ps": 156.401,
+      "logic_stages": 4,
+      "logic_stage_combined_cell_plus_preceding_wire_ps": 75.21,
+      "last_net_ps": 0.097,
+      "buffer_cells": [
+        [
+          "place109673/Y",
+          "BUFx6f_ASAP7_75t_R",
+          24.778
+        ],
+        [
+          "place109672/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.439
+        ],
+        [
+          "place109671/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.047
+        ],
+        [
+          "place109670/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.251
+        ],
+        [
+          "place109669/Y",
+          "BUFx6f_ASAP7_75t_R",
+          14.925
+        ],
+        [
+          "place100575/Y",
+          "BUFx3_ASAP7_75t_R",
+          19.699
+        ],
+        [
+          "place94330/Y",
+          "BUFx3_ASAP7_75t_R",
+          28.929
+        ],
+        [
+          "place92245/Y",
+          "BUFx3_ASAP7_75t_R",
+          22.333
+        ]
+      ],
+      "logic_cells": [
+        [
+          "_472245_/Y",
+          "INVx1_ASAP7_75t_R",
+          7.547
+        ],
+        [
+          "_479867_/SN",
+          "FAx1_ASAP7_75t_R",
+          41.654
+        ],
+        [
+          "_450437_/Y",
+          "NOR3x1_ASAP7_75t_R",
+          13.676
+        ],
+        [
+          "_467526_/Y",
+          "NOR2x1_ASAP7_75t_R",
+          12.333
+        ]
+      ]
+    },
+    {
+      "source": "u_bound.u_core.u_rxf_q[543]$_DFF_N_",
+      "sink": "u_bound.u_core.u_dec.u_face_am3.parts[7]$_DFF_P_",
+      "tt_slack_ps": -52.867,
+      "prior_H10_same_path_tt_ps": -52.867,
+      "change_at_printed_precision_ps": 0.0,
+      "CQ_ps": 70.747,
+      "buffer_stages": 7,
+      "buffer_stage_combined_cell_plus_preceding_wire_ps": 136.944,
+      "logic_stages": 4,
+      "logic_stage_combined_cell_plus_preceding_wire_ps": 103.657,
+      "last_net_ps": 0.139,
+      "buffer_cells": [
+        [
+          "place109623/Y",
+          "BUFx6f_ASAP7_75t_R",
+          25.188
+        ],
+        [
+          "place109622/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.68
+        ],
+        [
+          "place109621/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.15
+        ],
+        [
+          "place109620/Y",
+          "BUFx6f_ASAP7_75t_R",
+          14.724
+        ],
+        [
+          "place100582/Y",
+          "BUFx6f_ASAP7_75t_R",
+          19.372
+        ],
+        [
+          "place94332/Y",
+          "BUFx3_ASAP7_75t_R",
+          28.344
+        ],
+        [
+          "place92246/Y",
+          "BUFx3_ASAP7_75t_R",
+          18.486
+        ]
+      ],
+      "logic_cells": [
+        [
+          "_472237_/Y",
+          "INVx1_ASAP7_75t_R",
+          10.529
+        ],
+        [
+          "_479865_/SN",
+          "FAx1_ASAP7_75t_R",
+          45.057
+        ],
+        [
+          "_286048_/Y",
+          "NAND2x1_ASAP7_75t_R",
+          13.563
+        ],
+        [
+          "_286049_/Y",
+          "XNOR2x2_ASAP7_75t_R",
+          34.508
+        ]
+      ]
+    },
+    {
+      "source": "u_bound.u_core.u_rxf_q[539]$_DFF_N_",
+      "sink": "u_bound.u_core.u_dec.u_face_am3.parts[3]$_DFF_P_",
+      "tt_slack_ps": -50.343,
+      "prior_H10_same_path_tt_ps": -50.343,
+      "change_at_printed_precision_ps": 0.0,
+      "CQ_ps": 73.638,
+      "buffer_stages": 8,
+      "buffer_stage_combined_cell_plus_preceding_wire_ps": 154.001,
+      "logic_stages": 3,
+      "logic_stage_combined_cell_plus_preceding_wire_ps": 80.479,
+      "last_net_ps": 0.124,
+      "buffer_cells": [
+        [
+          "place109643/Y",
+          "BUFx6f_ASAP7_75t_R",
+          25.913
+        ],
+        [
+          "place109642/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.658
+        ],
+        [
+          "place109641/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.183
+        ],
+        [
+          "place109640/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.183
+        ],
+        [
+          "place109639/Y",
+          "BUFx6f_ASAP7_75t_R",
+          14.92
+        ],
+        [
+          "place100580/Y",
+          "BUFx3_ASAP7_75t_R",
+          20.305
+        ],
+        [
+          "place94328/Y",
+          "BUFx3_ASAP7_75t_R",
+          27.28
+        ],
+        [
+          "place94327/Y",
+          "BUFx3_ASAP7_75t_R",
+          19.559
+        ]
+      ],
+      "logic_cells": [
+        [
+          "_472241_/Y",
+          "INVx1_ASAP7_75t_R",
+          6.955
+        ],
+        [
+          "_479868_/SN",
+          "FAx1_ASAP7_75t_R",
+          43.87
+        ],
+        [
+          "_286641_/Y",
+          "XNOR2x2_ASAP7_75t_R",
+          29.654
+        ]
+      ]
+    },
+    {
+      "source": "u_bound.u_core.u_rxf_q[543]$_DFF_N_",
+      "sink": "u_bound.u_core.u_dec.u_face_am3.parts[6]$_DFF_P_",
+      "tt_slack_ps": -45.068,
+      "prior_H10_same_path_tt_ps": -45.068,
+      "change_at_printed_precision_ps": 0.0,
+      "CQ_ps": 70.747,
+      "buffer_stages": 7,
+      "buffer_stage_combined_cell_plus_preceding_wire_ps": 137.746,
+      "logic_stages": 3,
+      "logic_stage_combined_cell_plus_preceding_wire_ps": 87.665,
+      "last_net_ps": 0.064,
+      "buffer_cells": [
+        [
+          "place109623/Y",
+          "BUFx6f_ASAP7_75t_R",
+          25.188
+        ],
+        [
+          "place109622/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.68
+        ],
+        [
+          "place109621/Y",
+          "BUFx6f_ASAP7_75t_R",
+          15.15
+        ],
+        [
+          "place109620/Y",
+          "BUFx6f_ASAP7_75t_R",
+          14.724
+        ],
+        [
+          "place100582/Y",
+          "BUFx6f_ASAP7_75t_R",
+          19.372
+        ],
+        [
+          "place94332/Y",
+          "BUFx3_ASAP7_75t_R",
+          28.344
+        ],
+        [
+          "place94331/Y",
+          "BUFx3_ASAP7_75t_R",
+          19.288
+        ]
+      ],
+      "logic_cells": [
+        [
+          "_472237_/Y",
+          "INVx1_ASAP7_75t_R",
+          10.529
+        ],
+        [
+          "_479865_/SN",
+          "FAx1_ASAP7_75t_R",
+          45.057
+        ],
+        [
+          "_391451_/Y",
+          "XOR2x2_ASAP7_75t_R",
+          32.079
+        ]
+      ]
+    }
+  ],
+  "diagnosis": "Authorized5prefixremoval fixesexact532path, but7untouchedhalf-cyclemetadata endpoints remain-58.814..-45.068ps; reported latefall/earlyrise commonclockspread pluscompactbuffer/logicpathcost persists. WholeformTTstillfails-42gate. No additionalprune/clockretry; fullcyclemetadataform ownedbyparentretimeworker. No route, planenable, signoff or adoption.",
+  "scope_limit": "These are placement-RC snapshot TT/FF results. No routedclaim or proofthatallnon-worstFFpathsareunchanged; stated all9targetmin andglobalmin areunchanged."
+}
