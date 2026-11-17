@@ -512,9 +512,9 @@ class ImportedDirectoryInputs(unittest.TestCase):
             root = Path(td)
             (root / 'tools').mkdir()
             (root / 'tools/test_case.py').write_text("import gen_phys\nFIXTURE = 'data/fix'\n")
-            (root / 'tools/gen_phys.py').write_text("OUT = 'physical/ref_tile'\nINPUT = 'data/static/input.txt'\n")
-            kinds = {'data/fix': 'tree', 'physical/ref_tile': 'tree', 'data/static/input.txt': 'blob'}
-            with patch.object(M, '_tops', return_value=['tools', 'physical', 'data']), patch.object(M, '_tree_types', side_effect=lambda rev, paths: {p: kinds[p] for p in paths if p in kinds}):
+            (root / 'tools/gen_phys.py').write_text("OUT = 'unused_outputs/fake_tree'\nINPUT = 'data/static/input.txt'\n")
+            kinds = {'data/fix': 'tree', 'unused_outputs/fake_tree': 'tree', 'data/static/input.txt': 'blob'}
+            with patch.object(M, '_tops', return_value=['tools', 'unused_outputs', 'data']), patch.object(M, '_tree_types', side_effect=lambda rev, paths: {p: kinds[p] for p in paths if p in kinds}):
                 self.assertEqual(M.test_deps(root, 'main', ['tools/test_case.py']), {'data/fix', 'data/static'})
 
     def test_incomplete_baseline_cannot_mask_candidate_failure(self):
