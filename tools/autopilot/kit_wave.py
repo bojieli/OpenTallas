@@ -8543,16 +8543,38 @@ def tools_lag_rows(AP, cfg, ttl=1800):
         spec = _ilu.spec_from_file_location("tools_lag", str(Path(__file__).resolve().parents[1] / "tools_lag.py"))
         TL = _ilu.module_from_spec(spec)
         spec.loader.exec_module(TL)
-        rows = {die: TL.line(die, r) for die, r in TL.measure(cfg, repo=cfg.get("tools_lag_repo") or TL.DEFAULT_REPO,
-                                                              main_ref=cfg.get("tools_lag_main") or "main").items()}
+        raw = TL.measure(cfg, repo=cfg.get("tools_lag_repo") or TL.DEFAULT_REPO, main_ref=cfg.get("tools_lag_main") or "main")
+        rows = {die: TL.line(die, r) for die, r in raw.items()}
     except Exception as e:                       # advisory: never stops the wave
         AP.log(f"KIT-WAVE TOOLS-LAG not measured: {type(e).__name__}: {e}")
         return TOOLS_LAG_CACHE["rows"]
     for die, ln in rows.items():
         if TOOLS_LAG_CACHE["rows"].get(die) != ln:
             AP.log("KIT-WAVE " + ln)
-    TOOLS_LAG_CACHE.update(t=now, rows=rows)
+    TOOLS_LAG_CACHE.update(t=now, rows=rows, raw=raw)
     return rows
+
+
+def tools_refresh_tick(AP, cfg, st):
+    """WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 A): for every die with dies.<die>.tools_refresh (true = apply, "dry") whose TOOLS-LAG names a die-tool ruling
+    missing from its current tree, start tools_refresh.py (tools-only delta tree -> guard -> strict bind -> apply, or NEEDS-LANE when bind changes) once
+    per (pin, main, rulings); the unit records its result in tools_refresh_state.json"""
+    raw = TOOLS_LAG_CACHE.get("raw") or {}
+    started = st.setdefault("tools_refresh_started", {})
+    script = str(Path(__file__).resolve().with_name("tools_refresh.py"))
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("enabled") or d.get("tools_refresh") not in (True, "dry"):
+            continue
+        lag = raw.get(die) or {}
+        if not lag.get("missing") or lag.get("n_commits") is None:
+            continue
+        key = f"{die}|{lag.get('pin')}|{','.join(lag['missing'])}"
+        if key in started or AP.DRY:
+            continue
+        started[key] = int(time.time())
+        unit = f"kw-toolsrefresh-{die}-{int(time.time())}"
+        AP.log(f"KIT-WAVE TOOLS-REFRESH {die}: starting {unit} for {', '.join(lag['missing'][:12])}")
+        AP.launch_unit(unit, Path(AP.AP_DIR) / f"tools_refresh_{die}.log", [sys.executable, "-I", script, "--die", die] + (["--dry"] if d.get("tools_refresh") == "dry" else []))
 
 
 def tool_skew_measure_all(AP, cfg, st, ap_dir):
@@ -8568,6 +8590,7 @@ def tool_skew_measure_all(AP, cfg, st, ap_dir):
         rows[die] = dict(mode=str(opt(cfg, die, "tool_skew")), tree=d.get("src"), measured=res["measured"], n_differ=len(res["refused"]),
                          n_closure=res.get("n_closure", 0), pin=res.get("pin"), modules=sorted(res["refused"])[:60])
     lag_rows = tools_lag_rows(AP, cfg)
+    tools_refresh_tick(AP, cfg, st)
     for die, ln in lag_rows.items():
         rows.setdefault(die, {})["tools_lag"] = ln
     if rows and not AP.DRY:
