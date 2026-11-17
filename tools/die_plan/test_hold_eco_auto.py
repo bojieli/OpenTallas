@@ -145,7 +145,8 @@ class Selection(unittest.TestCase):
     def test_tcl_planner_uses_the_same_selection(self):
         txt = PLAN.read_text()
         self.assertIn("OT_HEI_SELECT_PS 2.0", txt)
-        self.assertIn("-slack_max [expr {$select * $unit}]", txt)
+        # Positive siblings must remain visible for shared-net reroute risk; selection is applied per endpoint below.
+        self.assertIn("unmodified_touched_siblings", txt)
         self.assertIn("if {$sl >= $select} continue", txt)
         self.assertEqual(H.SELECT_PS, 2.0)
 
