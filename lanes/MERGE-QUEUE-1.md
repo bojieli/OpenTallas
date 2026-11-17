@@ -865,3 +865,9 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN
   File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
     raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
 RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-17 12:00 PST MERGED [MERGE-QUEUE -> QC-PLAN-R3] claude/pubgate-g0-timeout-1117@51d95eed664 -> main be66cd6f6b6 -> db5ba5f3266, no-ff merge, tags flow-20261113-yk-*. Gate: gate record from dear-crayfish 2026-11-17 11:55 PST on main be66cd6f6b6: 4 test file(s) pass; tests: test_kit_wave.py test_publish_gate.py test_publish_gate_g0_baseline.py test_published_gen_origin.py. Lane QC-PLAN-R3.
+- 2026-11-17 12:00 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main db5ba5f3266 failed rc=1: runtime activation state not reported; stderr context: ine 349, in sync
+    d = materialize(full)
+  File "/srv/opentallas-scratch2/claude/rt/24c7347cc887/tools/fleet/ot-tools-sync", line 260, in materialize
+    raise RuntimeError(f"{RT}: {fg:.0f} GB free < {MIN_FREE_GB:g} GB (OT_RT_MIN_FREE_GB); nothing written (pruned {len(pruned)})")
+RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
