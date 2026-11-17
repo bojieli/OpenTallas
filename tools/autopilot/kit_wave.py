@@ -745,7 +745,7 @@ def hold_audit_step(AP, cfg, st, t0):
 
 def _hold_term_met(term, die_cfg, is_merged):
     """one typed release_on term -> True / False.  Auto-checkable types: event_adopt:<name> (the die's current event, or the
-    plan file name, carries <name> as a whole token; names of 1-2 characters, e.g. 'Event F', are not checkable), merge:<ref>
+    plan_event or plan file name, carries <name> as a whole token; names of 1-2 characters, e.g. 'Event F', are not checkable), merge:<ref>
     (<ref> is an ancestor of origin/main).  lane_ready / lane_result / anything else is a human post: never auto-released."""
     kind, _, val = str(term).strip().partition(":")
     kind, val = kind.strip(), val.strip()
@@ -754,9 +754,7 @@ def _hold_term_met(term, die_cfg, is_merged):
         import hold_records as _HR
         if not _HR.event_name_ok(name):                  # r252: one trailing * = prefix (B6gG3* = B6gG3, B6gG3b)
             return False
-        hay = [str(die_cfg.get("event") or "").lower(), os.path.basename(str(die_cfg.get("plan") or "")).lower()]
-        pat = _HR.event_re(name)
-        return any(pat.search(h) for h in hay)
+        return _HR._event_token_in(name, _HR.adopted_events(die_cfg))
     if kind == "merge":
         ref = val.split()[0] if val else ""
         try:
