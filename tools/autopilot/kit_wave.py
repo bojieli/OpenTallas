@@ -3967,6 +3967,28 @@ def prov_resign_run(spec_path):
     return done("PASS" if p.returncode == 0 else "FAIL", txt)
 
 
+def gen_floor(cfg):
+    """the gen disk floor for this tick: measured kit peak (kit_peak_disk.floor) when a fresh measurement is in cfg, else cfg gen_disk_min_gb"""
+    try:
+        import kit_peak_disk
+        return kit_peak_disk.floor(cfg, 60)
+    except ImportError:
+        return int(cfg.get("gen_disk_min_gb", 60))
+
+
+def _du_dirs(host, dirs, AP):
+    """{dir: bytes} for existing dirs on host (one ssh; a missing dir is left out)"""
+    import shlex
+    cmd = "for d in %s; do [ -d \"$d\" ] && du -sk \"$d\"; done" % " ".join(shlex.quote(d) for d in dirs)
+    rc, out, _ = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, cmd], timeout=300)
+    res = {}
+    for ln in (out or "").splitlines():
+        k, _, d = ln.partition("\t")
+        if k.isdigit() and d:
+            res[d] = int(k) * 1024
+    return res
+
+
 GEN_DISK_MIN_GB = 60      # KW-FIX-24 11-06 (COORD 16:2x): cfg gen_disk_min_gb; 0 turns it off
 
 
@@ -4616,7 +4638,7 @@ def workroot_low(AP, cfg, run=None):
     S81/QC lane root /srv/opentallas-scratch3/claude/kw26-wave-1106 is the ROOT disk on most hosts (epyc6 root 94 GB
     gave gens while scratch2 looked fine).  One ssh per host: df of the lane root, or of its nearest existing parent.
     An unreachable host or unreadable df is unknown, never low.  Global or die option workroot_probe: false = off."""
-    floor = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB))
+    floor = gen_floor(cfg)
     # KW-FIX-35 11-08 (COORD 08:4x; OWNER 11-05 all disks are scratch, 11-06 root floor 150): a lane on the ROOT fs
     # ('/') must keep root_floor_gb free beyond the gen room: low there below root_floor_gb + root_gen_room_gb
     rfloor = int(cfg.get("root_floor_gb", 150)) + int(cfg.get("root_gen_room_gb", 40))
@@ -4917,7 +4939,7 @@ def alt_charge(cfg, h):
     if not alt:
         return
     need, free = int(cfg.get("gen_alt_charge_gb", GEN_ALT_CHARGE_GB)), cfg.setdefault("_workroot_free", {}).get(h) or {}
-    lim = int(cfg.get("gen_disk_min_gb", GEN_DISK_MIN_GB)) + need              # entry needed +gen_need_gb; the burst may use it down to one kit above the floor
+    lim = gen_floor(cfg) + need              # entry needed +gen_need_gb; the burst may use it down to one kit above the floor
     for die in list(alt):
         free[die] = int(free.get(die, lim)) - need
         if free[die] < lim:
@@ -11525,7 +11547,13 @@ def _step(AP, ap_dir):
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
     global GEN_DISK_MIN_GB
-    GEN_DISK_MIN_GB = int(cfg.get("gen_disk_min_gb", 60))
+    try:      # FABLE-FLOW-0300 11-17: the floor follows the MEASURED kit disk (p90 of the newest finished kits), cfg gen_disk_min_gb is the fallback
+        import kit_peak_disk
+        kit_peak_disk.refresh(ap_dir, st, lambda h, ds: _du_dirs(h, ds, AP))
+        cfg["_gen_peak_gb"] = kit_peak_disk.load(ap_dir)
+    except Exception as e:
+        AP.log(f"KIT-WAVE GEN-PEAK skipped: {type(e).__name__}: {e}")
+    GEN_DISK_MIN_GB = gen_floor(cfg)
     low = sorted(h for h, v in status.items() if gen_disk_low(v))
     if low:
         txt = " ".join("%s=%s" % (h, status[h]["scratch_gb"]) for h in low)
