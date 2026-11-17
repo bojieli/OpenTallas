@@ -24,7 +24,8 @@ def run(cfg):
         out = Path(td)
         (out / "config.mk").write_text(cfg)
         p = subprocess.run(["bash", "-euo", "pipefail", "-c", block()], capture_output=True, text=True,
-                           env=dict(V="m10", OUT=str(out), ML_TT="/work/macros/x_tt.lib", ML_FF="/work/macros/x_ff.lib", PATH="/usr/bin:/bin"))
+                           env=dict(V="m10", OUT=str(out), ML_TT="/work/macros/x_tt.lib", ML_FF="/work/macros/x_ff.lib",
+                                    BC_RHS="$(BC_NLDM_LIB_FILES) /work/macros/x_ff.lib", PATH="/usr/bin:/bin"))
         assert p.returncode == 0, p.stderr
         return (out / "config.mk").read_text().splitlines()
 
