@@ -204,7 +204,27 @@ while :; do
     done
     _mt="${OT_HEAVY_THREADS:-8}"; case "$_mt" in ''|*[!0-9]*) _mt=8;; esac
     _tcap=$(awk -v f="$_thread_cap_factor" -v n="$(nproc)" 'BEGIN{printf "%d", f * n}')
-    if [ "$_ct" -gt 0 ] && [ $(( _ct + _mt )) -gt "$_tcap" ]; then
+    # WAVE-FLOW-R2 11-17 (COORD urgent): 14 nested `ot-heavy -- docker run dpkit-*-lec` children of place jobs ALREADY admitted waited up to 7 h on the declared-thread cap
+    # at load 50/112: an admitted parent was stalled by its own child.  A child of a live admitted unit (OT_HEAVY_PARENT_UNIT = the unit the parent exported at
+    # admission, and res.<parent> still exists here) is not held by the declared-thread cap; it passes on measured CPU with a ceiling ABOVE the thread count:
+    # load1 + fresh + job < THREAD_CHILD_FACTOR (default 1.5) x nproc.  Memory admission above is unchanged.  THREAD_CHILD_FACTOR=0 = children obey the cap too.
+    _child=0
+    # fallback (parents admitted before the env token existed): walk this process's ancestry; the first ancestor inside an oth-*.scope other than our own whose
+    # res.<unit> is live on this host is the parent.  /proc/<pid>/cgroup carries the scope; PPid chain from /proc/<pid>/status.
+    if [ -z "${OT_HEAVY_PARENT_UNIT:-}" ]; then
+      _p=$PPID; _n=0
+      while [ -n "$_p" ] && [ "$_p" -gt 1 ] 2>/dev/null && [ "$_n" -lt 40 ]; do
+        _u=$(grep -o 'oth-[^/]*\.scope' "/proc/$_p/cgroup" 2>/dev/null | head -n1); _u=${_u%.scope}
+        if [ -n "$_u" ] && [ "$_u" != "$UNIT" ] && [ -e "$D/res.$_u" ]; then OT_HEAVY_PARENT_UNIT=$_u; break; fi
+        _p=$(awk '/^PPid:/{print $2}' "/proc/$_p/status" 2>/dev/null); _n=$((_n + 1))
+      done
+      unset _p _n _u
+    fi
+    if [ -n "${OT_HEAVY_PARENT_UNIT:-}" ] && [ -e "$D/res.${OT_HEAVY_PARENT_UNIT}" ] && [ "${THREAD_CHILD_FACTOR:-1.5}" != 0 ]; then
+      _child=$(awk -v m="$_mt" -v n="$(nproc)" -v k="${THREAD_CHILD_FACTOR:-1.5}" 'NR==1{print ($1 + m < k * n) ? 1 : 0}' /proc/loadavg)
+      [ "$_child" = 1 ] && echo "$(date -Is) child of admitted ${OT_HEAVY_PARENT_UNIT}: thread cap skipped, measured CPU under ${THREAD_CHILD_FACTOR:-1.5} x nproc" >> "$D/admit.log"
+    fi
+    if [ "$_child" != 1 ] && [ "$_ct" -gt 0 ] && [ $(( _ct + _mt )) -gt "$_tcap" ]; then
       # FABLE-FLOW-0300 11-17 (COORD): intel1 held 41 waiters at load 14/112 because the DECLARED threads were 112/112 (jobs declare 8-32 threads and
       # mostly idle).  Admission is on measured CPU too: load1 + the threads of jobs admitted in the last LOAD_FRESH_S (not in load1 yet) + this job
       # must stay under THREAD_MEASURED_FACTOR (default 0.6) x nproc to pass the declared-thread ceiling.  THREAD_MEASURED_FACTOR=0 restores the
@@ -243,6 +263,7 @@ while :; do
     # the ot-heavy-docker shim (installed as /usr/local/lib/ot-heavy/bin/docker) gives every `docker run` the same
     # declared cap (--memory = --memory-swap = MEM).  A job that needs more must declare more.
     export OT_HEAVY_MEM_GB="$MEM"
+    export OT_HEAVY_PARENT_UNIT="$UNIT"      # WAVE-FLOW-R2: nested ot-heavy calls inside this job name their admitted parent
     # v12 (FLEET-OOM 2026-10-18): every job gets the fleet's pinned tools first on PATH (Verilator 5.050, yosys 0.68),
     # the ones the closure-loop daemon's bench stages use; /usr/bin/verilator is Debian 5.032 (none on PVE1), so lane
     # benches run through ot-run and the daemon's job benches disagreed.  OT_HEAVY_SYSTEM_TOOLS=1 opts out.
