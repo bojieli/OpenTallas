@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS_CONDITIONAL_ANALYTICAL_PLACEMENT",
+ "image": "placement.svg",
+ "findings": [
+  "Two real SRAM macro outlines plus10.8um halos fit near east service seam; complete mapped logic fits86.4um square at32.57pct utilization.",
+  "Macro cluster sits in open corridor with no hardcore/FT/clockreservation overlap; six proposed clock branches are unqualified.",
+  "East service output293.056um direct fits one reach; west join inputs up to1845.888um and north payload up to1016um require registered transport.",
+  "No route/STA/build authorization or timing credit; macro-to-logic357.072um is direct Manhattan envelope only."
+ ],
+ "required_next": "Trace existing register chains and propose uniform compensated transport, then model+consumer+exactness qualification before physical build."
+}

@@ -1,0 +1,223 @@
+{
+ "schema": "opentallas.qwen-kv-context-placement-candidate.v1",
+ "status": "GEOMETRY_FIT_ONLY_NOT_BUILD_READY",
+ "selected": false,
+ "source_plan_sha256": "e89b1a2db7d7b1437fcecc48abff8e342f6af9544d4c57aa13dc20e992961f5f",
+ "partition": "hub_Wi",
+ "partition_type": "kv3_hub_Wi",
+ "frame": "local type um",
+ "exact_macro_master": "ot_sram_1r1w_64x512_m1_r2c2",
+ "macro_LEF_outline_um": [
+  171.288,
+  77.784
+ ],
+ "macro_halo_um": 10.8,
+ "macros": [
+  {
+   "inst": "u_context.g_rope.u_rowtx.u_row",
+   "orientation": "R0",
+   "halo_rect_um": [
+    1058.4,
+    950.4000000000001,
+    1251.288,
+    1049.784
+   ],
+   "body_rect_um": [
+    1069.2,
+    961.2,
+    1240.488,
+    1038.9840000000002
+   ]
+  },
+  {
+   "inst": "u_context.g_rope.u_rowtx.u_rope",
+   "orientation": "R90",
+   "halo_rect_um": [
+    928.8000000000001,
+    810.0,
+    1028.184,
+    1002.888
+   ],
+   "body_rect_um": [
+    939.6,
+    820.8,
+    1017.384,
+    992.0880000000001
+   ]
+  }
+ ],
+ "logic_region_um": [
+  1069.2,
+  853.2,
+  1155.6000000000001,
+  939.6
+ ],
+ "mapped_logic_area_um2": 2431.22958,
+ "logic_util": 0.32568554687499995,
+ "mapped_FF": 5502,
+ "tested_obstacles": {
+  "hard_cores": 21,
+  "clock_rects": 166,
+  "ft_station_envelopes": 181
+ },
+ "macro_to_logic_all_corners_Manhattan_max_um": 357.0720000000001,
+ "internal_geometry_required_additional_cycles": 0,
+ "internal_route_required_additional_cycles": null,
+ "external_endpoint_relay_budget": {
+  "i_kvs_ctl_o_emb": {
+   "bits": 74,
+   "worst_direct_um": 488.96000000000004,
+   "face": "E",
+   "required_segments_at_380um": 2,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_px_tep": {
+   "bits": 17,
+   "worst_direct_um": 884.2239999999999,
+   "face": "E",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_px_tok": {
+   "bits": 19,
+   "worst_direct_um": 882.1119999999999,
+   "face": "E",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_rowtx__emb_tx_payload": {
+   "bits": 549,
+   "worst_direct_um": 998.184,
+   "face": "N",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "o_kvs_emb_rowtx__emb_tx_v": {
+   "bits": 2,
+   "worst_direct_um": 1016.0,
+   "face": "N",
+   "required_segments_at_380um": 3,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_EN_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 433.89599999999996,
+   "face": "E",
+   "required_segments_at_380um": 2,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_ES_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 407.648,
+   "face": "E",
+   "required_segments_at_380um": 2,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_WN_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 1845.8880000000001,
+   "face": "W",
+   "required_segments_at_380um": 5,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "i_kvs_hroot_WS_o_emb": {
+   "bits": 300,
+   "worst_direct_um": 1803.864,
+   "face": "W",
+   "required_segments_at_380um": 5,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  },
+  "L2416_o": {
+   "bits": 175,
+   "worst_direct_um": 293.0559999999999,
+   "face": "E",
+   "required_segments_at_380um": 1,
+   "existing_usable_register_edges": null,
+   "new_relay_cycles": null
+  }
+ },
+ "proposed_clock_branches": [
+  {
+   "name": "ctx_clk_0",
+   "xy_um": [
+    1083.6000000000001,
+    874.8000000000001
+   ],
+   "FF_sinks": 917,
+   "TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_1",
+   "xy_um": [
+    1112.4,
+    874.8000000000001
+   ],
+   "FF_sinks": 917,
+   "TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_2",
+   "xy_um": [
+    1141.2,
+    874.8000000000001
+   ],
+   "FF_sinks": 917,
+   "TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_3",
+   "xy_um": [
+    1083.6000000000001,
+    918.0000000000001
+   ],
+   "FF_sinks": 917,
+   "TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_4",
+   "xy_um": [
+    1112.4,
+    918.0000000000001
+   ],
+   "FF_sinks": 917,
+   "TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  },
+  {
+   "name": "ctx_clk_5",
+   "xy_um": [
+    1141.2,
+    918.0000000000001
+   ],
+   "FF_sinks": 917,
+   "TT_CLK_load_fF": 433.6540308333333,
+   "qualified": false
+  }
+ ],
+ "macro_clock_load_fF_each": 9.3458,
+ "fixed_boundary_lane": "L2416",
+ "fixed_boundary_cycles": 2,
+ "timing_claim": false,
+ "route_claim": false,
+ "exactness_claim": false,
+ "open_requirements": [
+  "Trace each actual mapped D/Q net through existing input-delay/join registers before assigning added cycles; boundary distance alone must not become an added-cycle claim.",
+  "Place named register banks and route around clock/tree/FT obstacles; direct Manhattan fit is not a routed reach proof.",
+  "Real context99 HOST source path originates inside hard-host hierarchy and needs exact source-pin tracing, not a partition-edge assumption.",
+  "Proposed six clock branches and two macro clock sinks must be composed into the exact selected tree and recut rows.",
+  "Qualify full component with adjusted dates if any new relay edge is introduced; no old-calendar reuse."
+ ]
+}
