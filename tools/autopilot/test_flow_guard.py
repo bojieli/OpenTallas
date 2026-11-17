@@ -254,6 +254,30 @@ class Preflight(unittest.TestCase):
         self.assertIn("count-frame", r["bad"]["b"])
         self.assertEqual(r["ok"], ["a"])
 
+    def test_plan_naming_its_count_frames_is_checked_on_those_names_only(self):
+        # QC N1B 11-17: the plan names feed_s4q9m.json + regions_s29.json; the unpaired feed must not refuse every row
+        tmp = tempfile.mkdtemp()
+        a = Path(tmp) / "A"
+        d = a / "plan_of_record"
+        d.mkdir(parents=True)
+        (d / "plan.json").write_text(json.dumps({"count_frame": {"feed": {"path": "plan_of_record/feed_s4q9m.json"},
+                                                                 "regions": {"path": "plan_of_record/regions_s29.json"}}}))
+        for n in ("feed_s29.json", "feed_s4q9m.json", "regions_s29.json"):
+            (d / n).write_text("{}")
+        b = Path(str(a) + "_b")
+        import shutil
+        shutil.copytree(a, b)
+        it = {"t": {"paths": [], "trees": [], "plans": [str(d / "plan.json")]}}
+        r = FG.preflight_items(FG.fg_state({}), it, {"t": ["a", "b"]}, two_hosts(a), now=1)["t"]
+        self.assertEqual((r["ok"], r["bad"]), (["a", "b"], {}))
+        (b / "plan_of_record/feed_s4q9m.json").unlink()            # a NAMED frame file missing on one host still refuses there
+        r = FG.preflight_items(FG.fg_state({}), it, {"t": ["a", "b"]}, two_hosts(a), now=1)["t"]
+        self.assertEqual(r["ok"], ["a"])
+        self.assertIn("feed_s4q9m.json", r["bad"]["b"])
+        (d / "feed_s4q9m.json").unlink()                            # ... and everywhere: no host can serve
+        r = FG.preflight_items(FG.fg_state({}), it, {"t": ["a", "b"]}, two_hosts(a), now=1)["t"]
+        self.assertEqual(r["ok"], [])
+
 
 class Breaker(unittest.TestCase):
     WHY = "kit-RTL bind of record names HDL sources that are gone @kit_rtl: bind: ERROR preferred HDL source missing: /srv/a/b%d.sv"
