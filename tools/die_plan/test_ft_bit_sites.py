@@ -23,3 +23,22 @@ def test_legacy_has_no_explicit_slots():
 def test_rejects_incomplete_or_nonphysical_sites(change):
     slot=copy.deepcopy(GOOD);change(slot)
     with pytest.raises(ValueError):validate_slot(slot)
+
+
+def test_explicit_stage_zero_serializes_all_payload_and_epoch_sites():
+    slot = copy.deepcopy(GOOD)
+    slot.update(explicit_stage0=True)
+    slot['bit_sites_um'].insert(0, [[8.64, 4.32], [10.8, 4.32]])
+    text = table([slot])
+    assert 'dict set ff_bit_sites {ft0,0,0} {8.64 4.32}' in text
+    assert 'dict set ff_bit_sites {ft0,0,1} {10.8 4.32}' in text
+    assert 'dict set ff_bit_sites {ft0,1,0} {4.32 4.32}' in text
+    slot['explicit_stage0'] = False
+    with pytest.raises(ValueError, match='explicit_stage0'):
+        validate_slot(slot)
+
+
+def test_explicit_stage_zero_keeps_legacy_internal_only_table_identical():
+    slot = copy.deepcopy(GOOD)
+    slot['explicit_stage0'] = True
+    assert table([slot]) == table([GOOD])

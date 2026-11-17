@@ -1,4 +1,4 @@
-"""Serialize optional FT per-bit cell lower-left sites, internal stage first (j=1).
+"""Serialize optional FT per-bit cell lower-left sites (internal j=1 by default).
 
 Each stage has width+1 sites: payload bits then the epoch bit.  Cell footprints
 are allocation envelopes, checked against each real master by face_flops.tcl.
@@ -15,8 +15,9 @@ def validate_slot(slot):
     cell = slot.get('bit_site_cell_um')
     if not cell or len(cell) != 2 or any(not math.isfinite(v) or v <= 0 for v in cell):
         raise ValueError('bit_sites_um requires positive bit_site_cell_um footprint')
-    if len(sites) != slot.get('stations', 1) - 1:
-        raise ValueError('bit_sites_um must contain stations-1 internal stages')
+    count = slot.get('stations', 1)
+    if len(sites) != count - 1 and not (slot.get('explicit_stage0') is True and len(sites) == count):
+        raise ValueError('bit_sites_um must contain stations-1 internal stages, or stations with explicit_stage0')
     for stage in sites:
         if len(stage) != slot['width'] + 1:
             raise ValueError('each bit_sites_um stage must contain width+1 payload/epoch sites')
@@ -34,7 +35,9 @@ def table(slots):
         name = slot['name']
         w, h = slot['bit_site_cell_um']
         lines.append(f'dict set ff_bit_site_cells {{{name}}} {{{w:.9g} {h:.9g}}}')
-        for j, stage in enumerate(slot['bit_sites_um'], 1):
+        # A complete stage0 table is accepted only through the existing opt-in.
+        first = 0 if len(slot['bit_sites_um']) == slot.get('stations', 1) else 1
+        for j, stage in enumerate(slot['bit_sites_um'], first):
             for bit, (x, y) in enumerate(stage):
                 lines.append(f'dict set ff_bit_sites {{{name},{j},{bit}}} {{{x:.9g} {y:.9g}}}')
     return '\n'.join(lines) + '\n'
