@@ -45,3 +45,22 @@ Branch claude/hold-cts-scope-1116 @36f8f872e51 on main 9b0fa68ec7f, GATE 37/37 G
 Affected = two-mode kits (override export OT_HOLD_MM = 1) whose CTS repair is not skipped: core kits via core_flow (no SKIP_CTS_REPAIR_TIMING)
 and hand-driven ref_tile / abi3 / closure_loop builds like headseg44. gen_phys type kits with a hold_ff_margin skip CTS repair (unaffected).
 Live count NOT measured: fleet find scans of config.mk returned nothing within limits.
+
+## CODEX explicit BC library source fix (2026-11-16 23:0x PST)
+Inherited clone /home/ubuntu/wt/hold-flow-internal-1116 (rtx-pro), new same-clone branch claude/hold-prd-explicit-bc-1116.
+Final29e7dd25e6b8052a066e7ed804ae4d8c40173243 pushedGitHub+intel2bare, cloneclean. Root may reclaim clone after source handback.
+Only owned3files: prd_mk.sh, test_post_route_drv.py, test_prd_mk_marker.py; inheritede2d47macroplanner5files unchanged.
+
+Cause: prd_mk synthesized ML_FF from ADDITIONAL_LIBS TT suffix, ignoring explicit correct BC_LIB_FILES. Custom pk2_tc.lib stayedTT in appendedBCrow despite pk2_BC.lib alreadydeclared.
+Actualbksel source line36 correct BC_NLDM+3FFlibs+ot_s81ph_hq_pk2_BC.lib; oldgeneratedline142 wrong. S81owner restoredsignedconfig before sign/export, so all actual signed evidence/archives alreadycorrect and untouched.
+
+Fix preserves explicit declaredBC RHS/list exactly, validates literal/work declaredFFfiles, refusesmissingBC even whenTCexists.
+Only absentBC uses old suffixfallback. No corner/timing waiver, no hardware or model latency change (0cycles).
+Focused actualmk6PASS (customRHS with/withoutBC_NLDM, missingBC refusal, legacyfallback tests); extractedmarker4PASS.
+Originalscript negativecontrols catch both customwrongTTrow and missingdeclaredBC falsepass.
+Firstf867normalRED4 was extractedmarkerfixture missingnew precomputedBC_RHS; successor fixesfixtureenvonly, failedoutputretained E7slot2/mq/failure-output/gc-f867*.log.
+
+FINALnormalGREEN15/15 onmain419279e2843, E7unit3914954-1794898814 DONE0.
+Record intel2 ~/merge-queue/gates/29e7dd25e6b8052a066e7ed804ae4d8c40173243.json.
+Log intel2 /srv/opentallas-scratch2/claude/mq1/tmp/rg/hold-prd-bc-final-codex-1116-2300.out.
+Rootapproval/mergeowned. No livejob modified and no component proof rerun.
