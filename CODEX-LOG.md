@@ -13606,3 +13606,6 @@ IFN0 critical source-function finding is canonical15945cf7f5cb: all old he1p/hw1
 
 No OWNER? question or permission dialog is pending. All failures have concrete owners. All three child agents parked; current fleet jobs continue. Resume existing lanes/clones only.
 
+
+## Handoff to Claude 2026-11-16 (kv_pack reset)
+HG1A minimalPGD3 adopted; QC J+Kf staged/unpublished, CM helper patch preserved. Exact source/context IDs, review watcher/release ownership, guard/job state and remaining steps: handoff/codex_kv_pack_reset_20261116.md. No new work after reset.
