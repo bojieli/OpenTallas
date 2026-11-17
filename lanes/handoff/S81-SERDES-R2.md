@@ -30,3 +30,9 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - H2 hold packet (inherited from H, sdc f364d75fa1d07751, checker clean). H2 route launched E8 (unit oth-ubuntu-4059268, ~/s81-serdes-r2/h2-route.out).
 - J5 (E8 L/J5/serdes__t14/gen/serdes__t14) = J4 + rdq_local.tcl (POST_GLOBAL_PLACE wrapper: runs rck_transport_mid.tcl, then puts each u_rm.g_rd[k].q at its D-side mux driver like H). Place+CTS launched (unit oth-ubuntu-4079683, j5-cts.out).
 - Next for H family: if routed rrl hops still < -42, H3 = capture relay cohort on the launch tap (OT_TAP_GROUP_FIXED) or a tighter half-cycle hop (<= ~250 um).
+
+## 19:2x PST - H3 (reset-relay boundary form)
+- Cause (H2 census): every remaining TT relay failure is a half-cycle hop q(fall) -> next state(rise) of ot_dp_rrelay_nl that CROSSES taps (lck/cck 297/182 etc. + early source window) with a ~250-450 ps hop wire. Same-tap nl hops of 375 um pass. H2 bind has 127 hops; 34 nl hops cross taps (actual H2 CTS taps, probes H2_cts/clk_all.txt), 25 launchers.
+- Form fix (cycle-neutral): launcher of a cross-tap hop = plain ot_dp_rrelay (posedge q, full-cycle hop). nl: state@k, q@k+0.5, next@k+1; plain: q@k, next@k+1 -> same latency, LATCHECK unchanged. Hold across taps on a >= 250 ps hop is easy; hold repair covers the rest.
+- H3 = H2 kit + rtl/s81p_serdes__t13_bound.sv with u_rrl_{0,7,11,17,23,30,33,42,45,49,57,58,62,72,86,93,96,101,115,117,118,123,125,130,132} nl -> plain (orig .H2), resynth (OT_ALLOW_RESYNTH=1), goal cts. E8 L/H3/serdes__t13/gen/serdes__t13, ~/s81-serdes-r2/h3-cts.out. lec_async.sh not copied (LEC skipped, advisory).
+- To count H3 the die bind generator must emit the same rule (owner: S81-DIE-R2 / reset plan). Posted.
