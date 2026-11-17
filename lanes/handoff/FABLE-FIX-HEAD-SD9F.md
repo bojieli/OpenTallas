@@ -47,3 +47,16 @@ Gates R-MINIMAL: DRC 0, routed TT >= -42, internal FF hold >= 0 (port hold advis
   If TT is short: rerun run_paths.sh on the fin2 signoff, regenerate the list from the new census, one more ECO round on eco2's DB.
 - fin (xa, no timing ECO) is the route-only baseline record: LANE/fin/hd_serdes (expected NOT SIGNED on TT).
 - FLOW branch still local (E7 LANE/repo, claude/head-clksite-tap-escape-1117: 60c22e5730d + db7b25b131a); push + READY now due (route proof done).
+## 11-17 12:20 PST -- SIGNED
+- ECO2 route (LANE/eco2): DRT 0 violations, 0 unrouted (1135 -> 367 -> 7 -> 0); 352 new cells, 0 existing cells moved; render
+  LANE/render_eco2/site_t8_m4up.png LOOKED (tap wire leaves the site down the carved M7 column).
+- fin2 (LANE/fin2/hd_serdes, run_fin.sh eco2 fin2): signoff_fable/signoff.json = R-MINIMAL SIGNED: DRC 0 (5_route_drc.rpt), TT setup -20.79
+  (achieved 853.79 ps), internal FF hold 0 violators (complete census), check_antennas 0 nets (fable_fin.log; record field NOT RUN, advisory),
+  sdc_lint PASS.  Advisory: port hold -22.57 (die STA), pin audit extra 1088 = pma_rx pads (declared 1057/1057 ok), drv.
+- Route-only baseline (LANE/fin/hd_serdes, xa, no timing ECO): NOT SIGNED, TT -105.61, internal FF hold -15.79 -- kept.
+- Export: el s81_head/hd_serdes__sd9f_fable_us_1117 on rtx-pro /home/ubuntu/signed-export-1114 and AGIdock /archive/opentallas-signed-1114,
+  INDEX rows keyed hd_serdes (ffht_export.sh).  See the RESULT post for the ODB sha.
+- OPEN for the die owner (HEAD-DIE-R): (1) swap the hd_serdes view; (2) the die clock cell stack must keep off the M7 escape columns;
+  (3) 202 capture flops carry +20..+107 ps clock delay (useful skew) -- inside the type only, port timing unchanged.
+- OPEN flow: branch claude/head-clksite-tap-escape-1117 @db7b25b131a READY posted (MERGE-OPS gate).  Not built: a GRT-stage derate for signal
+  nets in >90% gcells (the -16 vs -106 gap was +12% data wire delay), and a flow form of the capture-skew ECO (us_eco.tcl / mk_eco_list.py).
