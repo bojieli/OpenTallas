@@ -1,0 +1,17 @@
+{
+  "runtime": "/srv/opentallas-scratch2/claude/rt/800d3f3a9c44",
+  "results": {
+    "intel2": 1,
+    "intel1": 0,
+    "epyc2": 0,
+    "epyc7": 0,
+    "epyc8": 0,
+    "epyc9": 0,
+    "epyc10": 0
+  },
+  "enabled": true,
+  "time": 1794897929.293018,
+  "hub_classification": "N/A no kw45 source root, no deletion possible; original rc1 retained",
+  "initial_failures": "worker rc127: hub runtime flip preceded worker replica publication; exact same code retry rc0",
+  "cron_script": "/srv/opentallas-scratch2/claude/fleet-ops-r/disk_rate.py"
+}
