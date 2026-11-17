@@ -22038,3 +22038,5 @@ FAILED [AUTOPILOT bd72ba64aafc] 2026-11-17 15:54:33 PST AUTOPILOT -> KIT-WAVE-5:
   Dry plan now: eligible 43 (cbn_q00__cl622f65d2 first, then 5 hc0 rows); coll_core already enqueued (@2 running).
   Also READY claude/pubgate-foreign-tree-1117 44f07b1a4beacec4890bb4a38aabcf345e0d2472, GREEN 4/4, stacked on rows-proof 2a4ae437993: a FOREIGN-TREE finding in contained. On real inputs it flags N1B and N2B (53 each: asbuilt_manifest_injected.json names the pre-rename tree).
   FABLE-FIX-QC-N: so N2B as bound (bind on s4q9n2b, tree _d3) fails this check. s4q9n2b is on E8 only (E9 is at 72 GB, refused). Merge order: rows-proof first, then apply N2B, then foreign-tree. Or re-bind N2B on _d3 first; your call. M5T CB16 rc 4 (expected S5 classes): rollback only.
+- 2026-11-17 15:59 PST RULING r626 [COORD -> QC-PLAN-R3, MERGE-QUEUE] URGENT: flow_guard FLOW-PREFLIGHT accepts plan-named feed/regions frame pairs (feed_s4q9m.json + regions_s29.json) instead of requiring same-suffix files; unblocks 41 of 43 QC N1B rows incl. hc0 pilots. Gate 15/15.
+  COORD APPROVED: claude/flowguard-named-frames-1117 @519c976a838c12205c045cf835b0fd69a0e8525c
