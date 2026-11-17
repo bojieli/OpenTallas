@@ -42295,6 +42295,91 @@
             "dir": "/srv/opentallas-scratch3/claude/qc-tail1-param/views_1116/qfd_dv_s8_station_tail1_h17_n9_s10",
             "job": "SIGNED qfd_dv_s8_station_tail1_h17_n9_s10 QC-TYPES-R 11-16 param master; complete=true own routedLEC EQUIVALENT; BOTH archives; CODEX 11-17 registers omitted source to release WAIT-CHILD L2 parents"
           }
+        ],
+        "qfd_dv_s8_station_tail1_h15_n9_s11": [
+          {
+            "host": "epyc7",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/qfd_dv_s8_station_tail1_h15_n9_s11",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1_h15_n9_s11 immutablepackSHA 1c7f4766a7e4290b44d1ed39c8d45724944195ab02ff2ce5a97e6974e03ccca3; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "epyc8",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/qfd_dv_s8_station_tail1_h15_n9_s11",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1_h15_n9_s11 immutablepackSHA 1c7f4766a7e4290b44d1ed39c8d45724944195ab02ff2ce5a97e6974e03ccca3; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/qfd_dv_s8_station_tail1_h15_n9_s11",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1_h15_n9_s11 immutablepackSHA 1c7f4766a7e4290b44d1ed39c8d45724944195ab02ff2ce5a97e6974e03ccca3; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          }
+        ],
+        "qfd_dv_s8_station_tail1_h17_n7_s8": [
+          {
+            "host": "epyc7",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/qfd_dv_s8_station_tail1_h17_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1_h17_n7_s8 immutablepackSHA 09f0030db6a649d343f14647a6b4539acd973e79a9ca2029249dbc961319a19d; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "epyc8",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/qfd_dv_s8_station_tail1_h17_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1_h17_n7_s8 immutablepackSHA 09f0030db6a649d343f14647a6b4539acd973e79a9ca2029249dbc961319a19d; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/qfd_dv_s8_station_tail1_h17_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/qfd_dv_s8_station_tail1_h17_n7_s8 immutablepackSHA 09f0030db6a649d343f14647a6b4539acd973e79a9ca2029249dbc961319a19d; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          }
+        ],
+        "sta_region_nb0_h15_n9_s11": [
+          {
+            "host": "epyc7",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h15_n9_s11",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h15_n9_s11 immutablepackSHA 77d228986b165ba02de334c5b5dbcd681d7ea63e9754ad91ed73141e7d15b5ca; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "epyc8",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h15_n9_s11",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h15_n9_s11 immutablepackSHA 77d228986b165ba02de334c5b5dbcd681d7ea63e9754ad91ed73141e7d15b5ca; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h15_n9_s11",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h15_n9_s11 immutablepackSHA 77d228986b165ba02de334c5b5dbcd681d7ea63e9754ad91ed73141e7d15b5ca; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          }
+        ],
+        "sta_region_nb0_h17_n7_s8": [
+          {
+            "host": "epyc7",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h17_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h17_n7_s8 immutablepackSHA 6c8975718790107e2b3928084f59c47b5b4fe2dc209dfa0fd2c3d58b19d8b1e1; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "epyc8",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h17_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h17_n7_s8 immutablepackSHA 6c8975718790107e2b3928084f59c47b5b4fe2dc209dfa0fd2c3d58b19d8b1e1; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h17_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h17_n7_s8 immutablepackSHA 6c8975718790107e2b3928084f59c47b5b4fe2dc209dfa0fd2c3d58b19d8b1e1; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          }
+        ],
+        "sta_region_nb0_h18_n7_s8": [
+          {
+            "host": "epyc7",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h18_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h18_n7_s8 immutablepackSHA fe8347f25eb225b86d9dc0878ad370352c4fc0af738c3ed3ea439553b325e0b8; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "epyc8",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h18_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h18_n7_s8 immutablepackSHA fe8347f25eb225b86d9dc0878ad370352c4fc0af738c3ed3ea439553b325e0b8; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          },
+          {
+            "host": "intel1",
+            "dir": "/srv/opentallas-scratch2/claude/qc-m4-views-1117/sta_region_nb0_h18_n7_s8",
+            "job": "SIGNED M4 param master complete=true actualpostECO ETMs; BOTH archives/index /archive/opentallas-signed-1114/qwen_compute/sta_region_nb0_h18_n7_s8 immutablepackSHA fe8347f25eb225b86d9dc0878ad370352c4fc0af738c3ed3ea439553b325e0b8; actualmatchingroutedLEC EQUIVALENT archivedadditively"
+          }
         ]
       },
       "src_prev_kw32b": "/srv/opentallas-scratch2/claude/kw32/src_6a7e5",
@@ -50834,7 +50919,8 @@
         "epyc7",
         "epyc8"
       ],
-      "note_codex_tail1_1117": "Registered four already-SIGNED complete param master views (E2 qc-tail1-param/views_1116); no source, plan, or physical change. All four own routed LEC EQUIVALENT; TT36.64..44.91 FF5.01..5.41."
+      "note_codex_tail1_1117": "Registered four already-SIGNED complete param master views (E2 qc-tail1-param/views_1116); no source, plan, or physical change. All four own routed LEC EQUIVALENT; TT36.64..44.91 FF5.01..5.41.",
+      "note_qc_m4_providers_1117": "Five real M4 views on activegenhosts, botharchive/indexreceipt QC-M4-ARCHIVED-BOTH-1117.json; zero source/plan/cyclechange."
     },
     "hbm": {
       "enabled": true,
