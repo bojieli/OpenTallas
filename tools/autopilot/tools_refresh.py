@@ -102,24 +102,40 @@ class Ops:
             return 255, f"{type(e).__name__}: {e}"
         return r.returncode, (r.stdout + r.stderr).strip()
 
-    def compose_cmds(self, old, new):
+    def pack_cmd(self, old, new):
+        """hub side: the gen host has no git store of main, so the pack is built on the hub from the tree's manifest alone (delta-make reads only
+        OLD/.src-manifest.json) and rsynced to the gen host"""
         q = shlex.quote
-        pack = f"{new}.pack"
+        work = os.path.expanduser("~/.cache/tools-refresh/" + os.path.basename(new))
         paths = " ".join(q(p) for p in TOOL_PATHS)
         sm = f"python3 -I {q(SM)}"
+        ssh = "ssh -n -o ControlPath=none -o BatchMode=yes"
+        cmd = (f"rm -rf {q(work)} && mkdir -p {q(work)}/stub && {ssh} {q(self.host)} {q('cat ' + old + '/.src-manifest.json')} > {q(work)}/stub/.src-manifest.json "
+               f"&& {sm} delta-make {q(work)}/stub --repo {q(self.repo)} --sha {q(self.sha)} --paths {paths} --out {q(work)}/pack "
+               f"&& rsync -a -e 'ssh -o ControlPath=none -o BatchMode=yes' {q(work)}/pack/ {q(self.host)}:{q(new + '.pack')}/ ; rc=$?; rm -rf {q(work)}/stub; exit $rc")
+        return cmd
+
+    def compose_cmds(self, old, new):
+        """gen-host side commands after the pack arrived"""
+        q = shlex.quote
+        pack = f"{new}.pack"
+        sm = f"python3 -I {q(SM)}"
         others = [h for h in (self.d.get("gen_hosts") or []) if h != self.host]
-        cmds = [f"{sm} delta-make {q(old)} --repo {q(self.repo)} --sha {q(self.sha)} --paths {paths} --out {q(pack)}",
-                f"{sm} delta-apply {q(pack)} --old {q(old)} --out {q(new)} --link",
+        cmds = [f"{sm} delta-apply {q(pack)} --old {q(old)} --out {q(new)} --link",
                 f"{sm} verify {q(new)}", f"{sm} publish {q(new)}"]
         if others:
             cmds.append(f"{sm} replicate {q(new)} --hosts {q(','.join(others))} --link-from {q(os.path.basename(old))}")
         return cmds
 
     def compose(self, old, new):
+        rc, out = self.run(None, self.pack_cmd(old, new))
+        if rc:
+            return False, f"delta-make (hub): rc {rc}: {out[-400:]}", ""
         for c in self.compose_cmds(old, new):
             rc, out = self.run(self.host, c)
             if rc:
                 return False, f"{c.split()[3] if len(c.split()) > 3 else c}: rc {rc}: {out[-400:]}", ""
+        self.run(self.host, f"rm -rf {shlex.quote(new + '.pack')}")
         rc, h = self.run(self.host, f"cat {shlex.quote(new)}/.src-manifest.sha256")
         return rc == 0, "composed", h.strip()
 
@@ -167,6 +183,12 @@ def refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.t
     rec = dict(key=key, old=old, new=new, missing=lag["missing"], ts=int(now()), owner=d.get("owner_lane", ""))
     state.setdefault("done", {})[key] = rec
     good, detail, h = ops.compose(old, new)
+    if not good and "overlaid by the tree" in detail:
+        # the tree carries overlay copies of tools files that main also changed: dropping them silently could undo a private patch -> the die owner decides
+        rec.update(status="OVERLAY-CLASH", why=detail)
+        post(f"NEEDS-LANE [TOOLS-REFRESH -> {rec['owner'] or die}] {die}: tools-only refresh of {old} is blocked, the tree overlays files main changed "
+             f"(main rulings {', '.join(lag['missing'][:12])}): {detail[detail.find('overlaid by the tree'):][:500]}; re-derive the overlay (delta-make --drop-overlay) or say which entries main wins")
+        return rec
     if not good:
         rec.update(status="COMPOSE-FAIL", why=detail)
         return rec
