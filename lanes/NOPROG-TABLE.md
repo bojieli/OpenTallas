@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 08:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 08:45 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 8, 'NO-DATA': 6, 'EXCLUDED': 39, 'PROGRESS': 1}. Hosts without report: none.
 
@@ -56,5 +56,5 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 8, 'NO-DATA'
 | intel1 | dpkit-slw_su_l1__cla2a78701-311708 | slw_su_l1 | 5_1_grt | 6.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | dpkit-slw_su_l1__clcc9d0155-2367146 | slw_su_l1 | tt_setup_repair_grt | 4.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261116_023111_238129-i1g-692412 | eco_20261116_023111_238129-i1g | 5_2_route | 1.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 11.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 11.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | klegacy-dsdv_bksel_c_rfdq-1132557-lec | dsdv_bksel_c_rfdq | 4_1_cts | 0.7 | repair_Violations best 0 last 0 rows 1 | PROGRESS: repair_Violations reached 0 |  |
