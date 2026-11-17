@@ -401,6 +401,42 @@ def ring_ff(kit, min_bits=RING_FF_MIN_BITS):
     return errors
 
 
+def reset_tree_coherence(kit):
+    """Match generated relay placement keys to the actual staged wrapper q nets.
+
+    A moved macro can change reset-tree numbering while --kit-rtl retains an
+    older wrapper. Matching instance counts alone cannot detect that mismatch.
+    """
+    tree = kit / 'reset_tree.tcl'
+    if not tree.is_file():
+        return []
+    rows = re.findall(r'^rtr_place\s+(\w+)\s+\{\*(u_[rs]rl_\d+)\[\./\]\*\}',
+                      tree.read_text(), re.M)
+    if not rows:
+        return []
+    cfg = rtl_lint.config(kit)
+    top = cfg.get('DESIGN_NAME', [])
+    if len(top) != 1:
+        return ['relay placement requires exactly one DESIGN_NAME']
+    bodies = []
+    for path in rtl_lint._kit_sources(kit):
+        if not path.is_file():
+            continue  # staged_inputs/module_closure report missing sources
+        text = _strip_src(path.read_text())
+        bodies += re.findall(r'\bmodule\s+' + re.escape(top[0]) + r'\b(.*?)\bendmodule\b',
+                             text, re.S)
+    if len(bodies) != 1:
+        return [f'relay placement requires one staged top {top[0]}, found {len(bodies)}']
+    errors = []
+    for key, inst in rows:
+        matches = re.findall(r'\b[A-Za-z_]\w*\s+' + re.escape(inst) + r'\s*\((.*?);',
+                             bodies[0], re.S)
+        q = re.findall(r'\.q\s*\(\s*(\w+)\s*\)', matches[0]) if len(matches) == 1 else []
+        if q != [key]:
+            errors.append(f'{inst}: reset_tree.tcl key {key}, staged RTL q {q or "MISSING/AMBIGUOUS"}; regenerate a coherent wrapper/tree')
+    return errors
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -441,6 +477,7 @@ def check(kit, plan_dir=None, contract=False):
                 for line, rule, snippet in entries]
     run('yosys_cast_forms', cast_forms)
     run('module_closure', lambda: unresolved_modules(kit))
+    run('reset_tree_coherence', lambda: reset_tree_coherence(kit))
     run('plan_pins_source', lambda: plan_pins_source(kit, plan_dir))
     # R-CAP (RULES-CAP-1, RULEBOOK 11-13): projected movable cells after place resize against the 400k place budget,
     # before any allocation.  Synth count, best first: a MEASURED count of the kit's synthesized top
