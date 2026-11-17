@@ -145,6 +145,58 @@ proc nc_headhop_plan {lc hx hy route hops} {
   }
   return $out
 }
+# join cone of candidate cell c (FLOW-QC-CB 11-17): every terminal load reached THROUGH buffers/inverters must be a member or a
+# flop (a block or other logic = not joinable); returns {c + the movable pass-through buffers} or {} when c cannot join.
+proc nc_join_cone {c nx_in} {
+  set cone [list $c]; set seen [dict create [$c getName] 1]; set front [list $c]; set nterm 0
+  for {set d 0} {$d < 40 && [llength $front]} {incr d} {
+    set nf {}
+    foreach f $front { foreach o [$f getITerms] {
+      if {![$o isOutputSignal] || [$o getNet] eq "NULL"} continue
+      foreach l [[$o getNet] getITerms] {
+        if {![$l isInputSignal]} continue
+        set li [$l getInst]; set ln [$li getName]
+        if {[dict exists $nx_in $ln]} { incr nterm; continue }
+        if {[[$li getMaster] isBlock]} { return {} }
+        if {[nc_isbuf $li]} {
+          if {![nc_mov $li]} { return {} }
+          if {![dict exists $seen $ln]} { dict set seen $ln 1; lappend cone $li; lappend nf $li }
+        } elseif {[string match "DFF*" [[$li getMaster] getName]]} { incr nterm } else { return {} }
+      }
+    } }
+    set front $nf
+  }
+  if {!$nterm || [llength $front]} { return {} }
+  return $cone
+}
+# stretched = built path over 3x the direct distance AND more than 100 um longer (pure; lengths in dbu)
+proc nc_stretched {built direct dbu} { return [expr {$direct > 0 && $built > 3.0*$direct && ($built-$direct) > 100.0*$dbu}] }
+# every b_d-rooted buffer/inverter tree, to ALL its terminal loads: {paths stretched heads_with_stretch}
+proc nc_tree_stretch {} {
+  global nc_blk nc_dbu
+  set paths 0; set bad 0; set heads 0
+  foreach i [$nc_blk getInsts] {
+    if {![regexp {[.]u_st[.]b_d} [$i getName]] || ![string match "DFF*" [[$i getMaster] getName]]} continue
+    lassign [nc_ctr $i] hx hy; set hb 0
+    foreach t [$i getITerms] { if {![$t isOutputSignal] || [$t getNet] eq "NULL"} continue
+      set front [list [list [$t getNet] $hx $hy 0]]
+      for {set d 0} {$d < 40 && [llength $front]} {incr d} { set nf {}
+        foreach f $front { lassign $f net px py len
+          foreach x [$net getITerms] { if {![$x isInputSignal]} continue
+            set xi [$x getInst]; lassign [nc_ctr $xi] cx cy
+            set l [expr {$len + abs($cx-$px) + abs($cy-$py)}]
+            if {![[$xi getMaster] isBlock] && [nc_isbuf $xi]} {
+              foreach o [$xi getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend nf [list [$o getNet] $cx $cy $l] } }
+            } else {
+              incr paths
+              if {[nc_stretched $l [expr {abs($cx-$hx)+abs($cy-$hy)}] $nc_dbu]} { incr bad; set hb 1 }
+            } } }
+        set front $nf }
+    }
+    incr heads $hb
+  }
+  return [list $paths $bad $heads]
+}
 set nc_hh_moved 0; set nc_hh_shared 0; set nc_hh_shared_moved 0; set nc_hh_stretch 0; set nc_hh_seen 0
 set nc_corefix 0; set nc_chains 0; set nc_moved 0; set nc_l0 {}; set nc_l1 {}; set nc_rc {}
 proc nc_cluster {inst} { if {[regexp {^(.*)\.u_st\.} [string map {\\ {}} [$inst getName]] -> c]} { return $c }; return "" }
@@ -303,10 +355,11 @@ foreach nx_cl [lsort [dict keys $nx_sinks]] {
           set c [$u getInst]; set cn [$c getName]
           if {[dict exists $nx_in $cn] || [[$c getMaster] isBlock] || ![nc_mov $c]} continue
           if {![nc_isbuf $c] && ![regexp {^_[0-9]+_$} $cn]} continue
-          set ok 1; set nl 0
-          foreach o [$c getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} {
-            foreach l [[$o getNet] getITerms] { if {[$l isInputSignal]} { incr nl; set li [$l getInst]; if {![dict exists $nx_in [$li getName]] && ![string match "DFF*" [[$li getMaster] getName]]} { set ok 0 } } } } }
-          if {$ok && $nl} { dict set nx_in $cn 1; lappend nx_add $c }
+          # FLOW-QC-CB 11-17 (FABLE-PD-QC-0600, cbn_q01 tap_d[431/442]): the test looked at DIRECT loads only.  A trunk buffer
+          # with a second branch (place164208 -> place164207 -> INV -> FIRM istation flop) failed it because its second load
+          # is a buffer, and that stranded the whole relay behind it (42 heads / 81 paths).  nc_join_cone looks through
+          # buffers/inverters to the terminal loads and returns the cell plus the pass-through cells that join with it.
+          foreach z [nc_join_cone $c $nx_in] { set zn [$z getName]; if {![dict exists $nx_in $zn]} { dict set nx_in $zn 1; lappend nx_add $z } }
         }
       }
     }
@@ -389,6 +442,17 @@ if {[dict size $nx_moved]} {
 }
 puts "OT_XSTN_SITE xstn $nx_seen kept $nx_kept kept_external $nx_keep_ext moved [dict size $nx_moved] cells_moved $nx_cells p90_um_from_face_strip_before [format %.0f $nx_before] after [format %.0f $nx_after] reach_um $nx_reach_um a_d_chains_spread $nx_spread faces [dict values $nx_moved]"
 catch {puts "OT_NK_HEADHOP_RESITE shared_hops $nc_hh_shared shared_hop_cells_resited $nc_hh_shared_moved shared_hops_checked $nc_hh_seen path_over_3x_direct_after $nc_hh_stretch"}
+# FLOW-QC-CB 11-17 (FABLE-PD-QC-0600): the check above counts shared head hops only and printed 0 with 81 stretched b_d paths
+# present.  Count every b_d-rooted buffer tree to all its terminal loads and stop at 3_4 (before repair_design) when the count is
+# above OT_NK_STRETCH_MAX (default 0).  OT_NK_STRETCH_STOP=0 reports without stopping.
+if {[dict size $nx_moved] || [info exists ::env(OT_NK_STRETCH_ALWAYS)]} {
+  lassign [nc_tree_stretch] nx_sp nx_sb nx_sh
+  puts "OT_XSTN_STRETCH b_d_paths $nx_sp stretched_over_3x_and_100um $nx_sb heads $nx_sh"
+  set nx_smax 0; if {[info exists ::env(OT_NK_STRETCH_MAX)]} { set nx_smax $::env(OT_NK_STRETCH_MAX) }
+  if {$nx_sb > $nx_smax && (![info exists ::env(OT_NK_STRETCH_STOP)] || $::env(OT_NK_STRETCH_STOP) ne "0")} {
+    error "OT_XSTN_STRETCH stretched b_d paths $nx_sb > $nx_smax (heads $nx_sh of $nx_sp paths): a b_d buffer tree is longer than 3x its direct distance; fix the siting, do not repair"
+  }
+}
 }
 # CBF-R8-CORRIDOR: an INNER strap bank has a fixed common prefix, a selectable count bank and a final NK pipe.
 # The mux is not a register chain: discover it by the kept bank identity, then verify ALL dynamic cone roots.
