@@ -32,3 +32,11 @@ Then kp_inject.py make FINAL_N_PLAN BASE_MANIFEST true; run normal guarded CM/KP
 - Station fixture failures (filename contract then missing leaf_um) retained; successful r3 proves actual emitter.
 
 No current wave/holds/source tuple edited by this worker. No owner questions. No live worker jobs remain from G at this checkpoint.
+
+## 23:2x private N source preparation
+- DONE cp-a event source E2 `/srv/opentallas-scratch3/claude/qc-plan-r/n1116/event_tree_N1116`; admitted unit2596099-1794899702 exit0 in115s, intel2 client1202278, log ~/qc-plan-g-codex-logs/n_event_copy.log.
+- Source actual inventory63,266,750,464B, scratch3 free813GB before copy (>750GB after). Scratch2 had111GB, so not used.
+- Actual M plan copy `plan_of_record/zz_s29_qc103_s4q9m_d8.json` SHAbeaa07b778ce233b9608c48ee0c843c59e03a1490ae57a0e917e4091d27702ad. Source M treeJ and its helper unchanged. N-only exact authored helper patchd6a00 input2c1aa ->163ad applied; engineRTL0. Receipt n1116/N_BASE_COPY.json.
+- Source is private experimental, NOT published/adopted/bound. No final N composition until first valid actual M report plus explicit runtime R8 seed; never borrow L2 RTL proof.
+- Prepared `n1116/prepare_n_from_actual_m.py` (NOT run). Required --m-bind-dir ACTUAL_S4Q9M_BIND --m-r8 EXPLICIT_ACTUAL_M_SEED. It checks report errors0/unbound0, plan/helper hashes, reads actual M RTL explicitly, copies R8 to N-only unique seed, calls full v7 with Ntree and FT seed while OMITTING reset seed, and records actual M-to-N lane/boot deltas. It never binds or adopts. Launch through ot-run on E2; declare source Mbind/R8 and scratch2 qc-plan-r/g as --stage.
+- Actual final M gate chain is parent QC-PLAN-R scope; unit2541142-1794899426. As of last check no valid M bind_report existed. All G/N jobs from this worker finished; awaiting M prerequisite, no watcher consuming admission.
