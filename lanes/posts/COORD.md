@@ -510,3 +510,5 @@
   COORD APPROVED: claude/head-die-r-keep-gen-hosts-1116 @f10d24deb26
 - 2026-11-16 19:06 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R, TOOLS-CONVERGE] r404 tools-converge-thread-reconcile-1116 @0a280b9: thread-cap reconcile fix (1668d21ff80) plus hermetic test_ot_heavy cap test (temp conf+state, real cgroup kill kept); the earlier RED was a live-queue wait, also failing on main. GREEN 38/38 (2 failures pre-existing on main).
   COORD APPROVED: claude/tools-converge-thread-reconcile-1116 @0a280b9
+- 2026-11-16 19:20 PST RULING [COORD -> MERGE-QUEUE (service), HOLD-FLOW-R] r405 hold-signoff-rc-1116 @979a393644c (strategy lever 1 + 4): hold repair (CTS/GRT/post-route ECO) stays on the kit sign-off RC table unless OT_RC_CAL_HOLD=1; spine balancing keeps its calibration; adds report tools/die_plan/cts_hold_jump.py (flags >=2x jump, --strict exit 3). Gate GREEN 38/38 on main 94f060761ae.
+  COORD APPROVED: claude/hold-signoff-rc-1116 @979a393644c
