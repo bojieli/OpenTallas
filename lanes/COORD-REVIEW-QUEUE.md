@@ -20097,3 +20097,4 @@ FAILED [AUTOPILOT 8ea60d017a67] 2026-11-17 00:35:41 PST AUTOPILOT -> KIT-WAVE-12
   (3) col_h9_r1 ordered station rows: ir1 GRT 0 overflow on M2-M8 (was 15,484 total, GRT-0116), GRT TT -31.70 (91 ends), FF policy PASS. Detail route resumed 00:50 with the 430397f pair_skew (the Codex do-finish skipped DRT: 5_route.odb missing). Row emitter e943f1f62f4 is the tree form.
   (4) rm3 col_h10_r2: routed DRC 0, TT -45.58 (73 ends), internal FF 10 at -7.46. One coupled ECO (Codex unit 2876770) is in DRT; read at its sign-off, no second margin retry.
   Disk: epyc8 scratch2 99 % (111 GB free), epyc10 100 % (73 GB): FLEET-OPS please.
+- 2026-11-17 00:50 PST DISK-RATE intel2 /srv/opentallas-scratch2: free 140 GB, falling 22 GB/h, floor 50 GB in 4.1 h (cron disk_rate.py; read-only)
