@@ -1,4 +1,5 @@
 """WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 A): automatic tools-only refresh; bind unchanged -> applied, bind changed -> NEEDS-LANE."""
+import json
 import sys
 from pathlib import Path
 
@@ -97,7 +98,8 @@ def test_real_command_text():
     cmds = o.compose_cmds(OLD, new)
     assert "delta-apply" in cmds[0] and "--link" in cmds[0] and "verify" in cmds[1] and "publish" in cmds[2]
     assert "replicate" in cmds[3] and "--hosts epyc8" in cmds[3] and "--link-from src_kv_pin_abc_d16" in cmds[3]
-    assert "bind.py bind" in o.bind_cmd(new, "/o") and "--strict" in o.bind_cmd("/n", "/o")
+    ob = TR.Ops(die(tools_refresh_bind_cmd="python3 tools/die_plan/bind.py bind {plan} --out {out} --strict"), "/repo.git", SHA)   # the recipe is per die: no default any more
+    assert "bind.py bind" in ob.bind_cmd(new, "/o") and "--strict" in ob.bind_cmd("/n", "/o") and ob.bind_cmd("/n", "/o").startswith("cd /n && ")
 
 
 def test_ops_compose_stops_at_the_first_failing_step(monkeypatch):
@@ -230,3 +232,37 @@ def test_cli_starts_under_isolated_mode():
     import subprocess
     r = subprocess.run([sys.executable, "-I", str(HERE / "tools_refresh.py"), "--help"], capture_output=True, text=True, cwd="/")
     assert r.returncode == 0 and "--die" in r.stdout, r.stderr
+
+
+def test_bind_gate_without_a_recipe_uses_the_bind_closure(monkeypatch):
+    """KV dry run 15:30: the guessed `bind.py bind --asbuilt` command was wrong for KV (needs per-die env / packaged elaboration). Without dies.<die>.tools_refresh_bind_cmd
+    the bind of record is unchanged only when the tools delta touches nothing bind.py imports; otherwise the owner supplies the recipe"""
+    import flow_guard as FG
+    monkeypatch.setattr(FG, "closure_files", lambda read, entry=(): ["tools/die_plan/bind.py", "tools/die_plan/bind_helper.py"])
+    o = TR.Ops(die(), "/r", SHA, run=lambda *a, **k: (0, ""))
+    o.delta_paths = ["tools/die_plan/gen_phys.py", "tools/autopilot/kit_wave.py"]
+    assert o.bind("/n") == (True, True, "bind closure untouched: none of the 2 delta files is in bind.py's import closure")
+    o.delta_paths = ["tools/die_plan/bind_helper.py", "tools/die_plan/gen_phys.py"]
+    ran, unchanged, why = o.bind("/n")
+    assert not ran and not unchanged and "bind_helper.py" in why and "tools_refresh_bind_cmd" in why
+    o.delta_paths = None
+    assert not o.bind("/n")[0]
+    d = die(tools_refresh_bind_cmd="python3 tools/die_plan/bind.py bind {plan} --out {out} --strict")
+    seen = []
+    o2 = TR.Ops(d, "/r", SHA, run=lambda host, cmd, timeout=0: (seen.append(cmd) or (0, "aa\naa")))
+    assert o2.bind("/n")[:2] == (True, True) and "bind.py bind" in seen[0] and "--strict" in seen[0]
+
+
+def test_compose_reads_the_delta_paths():
+    import overlay_classify as OC
+    calls = []
+
+    def run_(host, cmd, timeout=0):
+        calls.append(cmd)
+        if "delta.json" in cmd and cmd.startswith("cat"):
+            return 0, json.dumps({"add": {"tools/die_plan/a.py": {}}, "delete": ["tools/die_plan/b.py"]})
+        return 0, "hash"
+    o = TR.Ops(die(), "/r", SHA, run=run_)
+    OC.classify_die = lambda repo, d, main, prefixes=None: {}
+    ok, detail, h = o.compose(OLD, "/n")
+    assert ok and o.delta_paths == ["tools/die_plan/a.py", "tools/die_plan/b.py"]
