@@ -599,24 +599,43 @@ PILOT_PASS_STATUS = ("PASS", "ENQUEUED", "ROUTE-HELD", "SIGNED")
 
 
 def pilot_passed_map(st, cfg):
-    """{die: [manifest sha[:12], ...]}: a pilot item's attempt whose spec pinned that tree manifest and whose result is past GEN + preflight
-    (collected PASS, or later in the queue).  Used by the typed release term gen_pilot:<die>:<sha12> (PILOT wave mode)."""
+    """Source-specific pilot passes, including retained successful prior attempts.
+
+    A mutable item row can point to a later running/failed attempt after its
+    pilot passed. Its earlier immutable PASS result and matching spec still
+    prove that source; another attempt never changes the source it proved.
+    """
     out = {}
     for die, d in (cfg.get("dies") or {}).items():
         pilots = {i for r in d.get("hold_records") or [] if r.get("auto_pilot") for i in r.get("pilot_items") or []}
         if not pilots:
             continue
         for r in (st.get("items") or {}).values():
-            if r.get("die") != die or r.get("item") not in pilots or r.get("status") not in PILOT_PASS_STATUS:
+            if r.get("die") != die or r.get("item") not in pilots:
                 continue
-            try:
-                sp = json.loads((Path(r["dir"]) / "spec.json").read_text())
-            except (OSError, ValueError, KeyError, TypeError):
-                continue
-            sha = str(sp.get("src_manifest_hash") or "")[:12].lower()
-            if sha:
-                out.setdefault(die, []).append(sha)
-    return out
+            attempt = Path(r.get("dir") or "")
+            candidates = [(attempt, r.get("status") in PILOT_PASS_STATUS)]
+            if re.fullmatch(r"a[0-9]+", attempt.name):
+                try:
+                    candidates.extend((p, False) for p in attempt.parent.iterdir()
+                                      if p != attempt and re.fullmatch(r"a[0-9]+", p.name) and p.is_dir())
+                except OSError:
+                    pass
+            for path, row_pass in candidates:
+                try:
+                    sp = json.loads((path / "spec.json").read_text())
+                    if not row_pass:
+                        result = json.loads((path / "result.json").read_text())
+                        if (result.get("verdict") != "PASS" or result.get("stage") != "geom"
+                                or result.get("die") != die or result.get("item") != r["item"]
+                                or sp.get("die") != die or sp.get("item") != r["item"]):
+                            continue
+                except (OSError, ValueError, KeyError, TypeError):
+                    continue
+                sha = str(sp.get("src_manifest_hash") or "")[:12].lower()
+                if re.fullmatch(r"[0-9a-f]{12}", sha):
+                    out.setdefault(die, set()).add(sha)
+    return {die: sorted(shas) for die, shas in out.items()}
 
 
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):

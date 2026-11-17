@@ -116,3 +116,26 @@ class Pilot(unittest.TestCase):
         self.assertEqual(KW.pilot_passed_map(st, cfg), {"s81": ["35eaaa5d65da"]})
         st["items"]["a"]["status"] = "FAIL"
         self.assertEqual(KW.pilot_passed_map(st, cfg), {})
+
+    def test_prior_immutable_pass_survives_current_running_or_failed_attempt(self):
+        from pathlib import Path
+        root = Path(tempfile.mkdtemp())
+        old, current = root / "a1", root / "a2"
+        old.mkdir(); current.mkdir()
+        item = "t1"
+        (old / "spec.json").write_text(json.dumps({"die": "s81", "item": item, "src_manifest_hash": SHA}))
+        (old / "result.json").write_text(json.dumps({"die": "s81", "item": item, "verdict": "PASS", "stage": "geom"}))
+        (current / "spec.json").write_text(json.dumps({"die": "s81", "item": item, "src_manifest_hash": "deadbeefdead" + "0" * 52}))
+        cfg = cfg0(pilot_item=item)
+        HR.apply_tree_switches(cfg, ctx())
+        for status in ("RUNNING", "FAIL", "CANCELLED"):
+            st = {"items": {"x": {"die": "s81", "item": item, "status": status, "dir": str(current)}}}
+            self.assertEqual(KW.pilot_passed_map(st, cfg), {"s81": [SHA[:12]]})
+        # The result's own source and identity must match; a failed or foreign
+        # result never proves a source merely because the directory is nearby.
+        for result in ({"verdict": "FAIL", "stage": "geom", "die": "s81", "item": item},
+                       {"verdict": "PASS", "stage": "geom", "die": "s81", "item": "t9"},
+                       {"verdict": "PASS", "stage": "gen", "die": "s81", "item": item}):
+            (old / "result.json").write_text(json.dumps(result))
+            self.assertEqual(KW.pilot_passed_map(st, cfg), {})
+
