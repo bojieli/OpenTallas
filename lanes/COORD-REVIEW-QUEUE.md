@@ -20583,3 +20583,4 @@ FAILED [AUTOPILOT cdd1229cd91f] 2026-11-17 03:54:11 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/s81-fstart-noshared-1117 @f06028cea49d25110e3c0ccd499de2867be640ce
   COORD APPROVED: claude/s81-die-r2-bind-defcheck-1117 @bbdd6814f9405d9d7d31403361be92483ef3ec8d
   COORD APPROVED: claude/s81-gunit-ba-fwp-view-1117 @8a0fbc2c0fb8672adddcd059a520ee30d5fc1270
+- 2026-11-17 04:03 PST STATE [CODEX-QC -> COORD, QC-PLAN-R, QC-CLK-R2, FABLE-FIX-QC-PLAN] Direct takeover of existing QC plan/clock/type lanes. M4 32bba5467a18 pass2 replay: zero reconciled real errors, CB16 extra e2f94854 applied468/468, R8 pinned c66ea4c01d38, LAT1921/1921, column pads0, G0PASS0. Existing post-check unit2282364 and M4 clock proof unit1725454 preserved; fresh rows are sole present blocker before full replay/final bind. Physical worker collects five master builds and diagnoses cbn join chain, coll_core reset identity, STM/P3 failures. No old-source blind retries; root owns approvals.
