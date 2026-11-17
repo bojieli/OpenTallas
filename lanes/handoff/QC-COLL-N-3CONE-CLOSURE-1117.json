@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.lec.supplemental_exact_three_cones.v1",
+  "verdict": "ALL_23127_COMPARE_POINTS_COVERED_BY_ORIGINAL_PLUS_EXACT_SUPPLEMENT",
+  "original_verdict": "UNPROVEN",
+  "original_counts": {
+    "compare_points": 23127,
+    "proved": 23124,
+    "differs": 0,
+    "undecided": 3
+  },
+  "original_reset_contract": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/work/reset_contract.json",
+      "die": "qwen_compute",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/work/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  },
+  "original_failure_unchanged": true,
+  "composition": {
+    "original_normal_proved": 23124,
+    "exact_same_miter_supplement_proved": 3,
+    "total": 23127,
+    "differs": 0,
+    "undecided": 0,
+    "scope": "Same immutable lec5 miter outputs13676,13684,16032. Existing original reset/hypothesis context retained. Original UNPROVEN JSON not rewritten."
+  },
+  "supplement_status": {
+    "epoch_abort": "proved",
+    "fault_cause[0]": "proved",
+    "rx_v": "proved"
+  },
+  "mechanism": {
+    "actual_source": "FW546/DW565/CW32 CRC predicates feed epoch_abort,fault_cause0,rx_v",
+    "default_cap": "all32CRC rows266..296support exceed256; cap512 restores affine structure but alone doesNOTclose3cones",
+    "normalization": "Exact existing Aig Boolean rewrites on only three saved output cones, no RTL changes",
+    "joint_basis": {
+      "actual_affine_cuts": 169,
+      "rank": 167,
+      "constants": "Fixed literal bits; NOT free basis inputs",
+      "outer_pi": "All retained nonlinear/header/slot PI unit vectors adjoined to SAME jointbasis; CRC/header correlations retained",
+      "certificate": "Every cut row expressed exactly in independent RREF linear basis; zero-remainder asserted. All original nonlinear Boolean gates imported unchanged.",
+      "fresh_crc_symbol": false
+    },
+    "proof": "Normal small ABC on exact joint-basis three-cone AIG, no full23127CP retry and no5Mconflict escalation",
+    "source_or_arithmetic_changes": false
+  },
+  "units": {
+    "normalize512": "oth-ubuntu-3479275-1794903378",
+    "joint_basis": "oth-ubuntu-3758129-1794904690",
+    "joint_prove": "oth-ubuntu-3771971-1794904731",
+    "crc_identity_mutant": "oth-ubuntu-3701569-1794904462"
+  },
+  "negative_control": {
+    "identity": {
+      "actual_crc_bad_equivalence": "proved"
+    },
+    "actual_pi_bit_mutant": {
+      "one_actual_input_bit_flip_in_left_crc_only": "differs"
+    },
+    "mutation": {
+      "real_original_pi_index": 11450,
+      "scope": "Invert one existing saved-miter physical-input coordinate only within the left actual CRC predicate; every affine leaf toggles precisely when its exact row includes that PI",
+      "affected_affine_cuts": 13,
+      "root": 8005
+    },
+    "scope": "One actual existing saved-miter PI11450 inverted only in one actual CRC predicate branch. CRCbasisidentity PASS; mutant SAT/DIFFERS asrequired."
+  },
+  "preserved_diagnostic": "Fresh independent CRC-symbol outer abstraction proved2/3 but epoch differed because correlations to header/slot fields were freed. That overapproxFAIL is preserved separately; jointbasis resolves3/3 without relaxation.",
+  "artifact_sha256": {
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5/lec.json": "1497164eff4df15482b7d10cdde57692e94bd79eaaa80971bf95a05ac0533975",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5/miter.aig": "13a137ec7b363f3bc49aec5bdfb80cc1205ef545f349c474a9d912eb8b1e0b8c",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec_kit/lec.py": "fc66b89ecdde2f0429137a737e48c6e19b330929d6a7316e76ece305347a5adf",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117/joint_basis_certificate.json": "ec3c5142044799efd7874e3b6c321779e70e7b3c26c82175adf7fc4a7875ad5e",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117/joint_three.aig": "8b9e622e796a7d11048c38140ebd8f2dc328f128dc842c0402bf76bca45946fb",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117/joint_proof.log": "d9544f7e65d61c370f8d858a05c7ddd1b1e6b0a164b19a42e0d7bac7151e1e95",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117/crc_basis_certificate.json": "a095cebd9097cc08ad872ad133dad4798beb30d3ec3479020968296c7adbdeb1",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117/crc_basis_identity.aig": "868d6727e25b3d8e60f260ee1df5bbb55c215d7413cca356bf79cabfdfbc3bd5",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117/crc_basis_mutant.aig": "50518d8930f1a464f0cfa41b982105f22acae3c84300b31d3c1ede2f33704217",
+    "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117/small_proofs.log": "7727012cad5c2ea1ca781f1b17e10adb62ab7c0d232fad482dc3166207c7330c"
+  },
+  "runtime": "/srv/opentallas-scratch2/claude/qc-pinaccess-o/coll_n_hold80_1116/lec5_diag3_512_1117",
+  "next": "Archive additive supplement with original immutable lec5 record; no fullLEC rerun required for these exact same3miter outputs. Parent review/integration of complete certificate remains distinct from rewriting original verdict."
+}
