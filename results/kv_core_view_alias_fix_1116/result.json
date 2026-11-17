@@ -1,0 +1,27 @@
+{
+  "schema": "kv_core_view_alias_accounting/1",
+  "scope": "Static signed core view accounting only; no RTL, tap placement, clock uncertainty or physical change",
+  "old_report": "epyc10:fable-fix-kv-pvhub/hg1/runs/c1/sta_finalphysical20_v1/die_sta_related.json",
+  "old_evidence": {
+    "early_core_tap_instances_excluded": 0,
+    "four_ectlk_nearest_generic_duplicates": 128,
+    "signed_explicit_reader_clock_endpoints_falsely_missing": 412,
+    "early_core_taps_from_signed_views": 540
+  },
+  "fix": {
+    "physical_alias": "Use existing content_physical_identity for the same instance before deciding whether an explicit early tap excludes nearest-tap fallback",
+    "clock_name": "Recognize exactly core:module:requested_pin as well as unchanged single-root core:module; wrong clock and unsigned endpoints remain missing"
+  },
+  "tests": {
+    "result": "2 passed",
+    "log": "intel2:~/tmp/ffkph/codex_core_alias_tests_ep10_v3_1116.log",
+    "controls": [
+      "different physical instance not excluded",
+      "wrong fclk does not satisfy clk",
+      "unsigned endpoint stays missing",
+      "single-root legacy name retained"
+    ],
+    "old_fixture_failures": "Preserved v1/v2 logs; test fixture first lacked full Plan and then physical_master, corrected without source behavior changes"
+  },
+  "corrected_composition": "PENDING one static C1 analysis; no physical or hold pass inferred"
+}

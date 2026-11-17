@@ -2572,9 +2572,16 @@ def build_views(plan, taps, corner, reg, lat, core_views, kits, load_ff, part_de
     why = defaultdict(int)
     how = defaultdict(int)
     olines, plan_pins = core_outlines(plan), sorted({v[3] for v in cmap.values() if v[3]})
+    physical_alias = {}
+    if exclude:
+        import gen_phys as G
+        types = plan.get("partition_types") or {}
+        for part in plan.get("partitions", []):
+            for h in types.get(part["type"], {}).get("hard_cores", []):
+                physical_alias[(part["name"], h["inst"])] = G.content_physical_identity(h)[0]
     n_excl = 0
     for (n, inst), (mod, port, dist, pins) in cmap.items():
-        if (n, inst) in exclude:
+        if (n, inst) in exclude or (n, physical_alias.get((n, inst))) in exclude:
             n_excl += 1
             continue
         if match_pins and mod in cmodels:
@@ -2765,8 +2772,12 @@ def missing_views(views, taps, plan, ecm=None):
         if ecm and p in ecm:
             have = {m["name"] for m in ms if m.get("real") and not _unsigned(m)}
             for cm in ecm[p]:
-                if f"core:{cm['module']}" not in have:
-                    lab.add(f"core:{cm['module']}")
+                name = f"core:{cm['module']}"
+                expected = {name}
+                if cm.get("pin"):
+                    expected.add(f"{name}:{cm['pin']}")
+                if not (expected & have):
+                    lab.add(name)
         for m in ms:
             if not m.get("real"):
                 if not (ecm and p in ecm):
