@@ -57,3 +57,11 @@ claude/fable-die-qc-r-1116 @d57188aede6 (= old branch 2bed6a4 + 6d932e7e0b + mer
 - Pre-route image LOOKED d_before_after.png; PASS-COND, recorded lane results/geom_review/qc_clock_l2d_20261116.md: longer coll_ftc abutment, freed empty strip only, no macro wall, face peak72->64. Need new tap/feed/STA on regenerated outlines before adopting.
 - Launch correction: initial nested E2 client2012222 did NOT RUN (ot-run tried self-alias epyc2, DNS unavailable there). Exact failure log preserved as chain_l2d.client.log. Successful launcher is direct intel2 ot-run client2026554, unit E2 oth-ubuntu-4106679-1794887119, log ~/fable-die-qc-r/chain_l2d_retry1.client.log; admitted19:45, stage abstracts. Existing original run untouched.
 - Prepared bin/finalize_l2d_rows.sh: call after CHAIN_DONE to derive exact geometry offsets/windows need+10 into run s4q9m_l2d.clock_rows.json + plan/report. No adoption or guard mutation.
+
+## Handoff back to Claude 2026-11-16 19:5x (CODEX)
+- No RTL/tool-source changes or wave/adopt edits.
+- Original baseline s4q9m_r kit PASS 19:45:53, template198copied/0refused/42embedded; TT/FF GRT active. Preserve it.
+- New exact l2d proof s4q9m_l2d ADMITTED E2 oth-ubuntu-4106679-1794887119, chain bash4106745; intel2 client2026554 log ~/fable-die-qc-r/chain_l2d_retry1.client.log. Stage abstracts. Source script bin/chain_l2d.sh differs only exact treeJ l2d plan/mount. No old C proof claim for l2d geometry.
+- E2 lightweight finalizer PID4170674 waits on chain bash4106745 then calls bin/finalize_l2d_rows.sh; log /srv/opentallas-scratch3/claude/fable-die-qc-r/chain_l2d_finalize.log. Writes proposed run clock_rows.json, with_rows.json, report only after CHAIN_DONE; no adoption.
+- Initial nested launcher DNS FAIL did not start work; exact failure log retained chain_l2d.client.log.
+- Next: read both CHAIN.log; exact l2d rows need+10 from finalizer; CA/serdes3 and TT/FF read, then hand rows/feed/template2 to QC-PLAN-R for S4q9m composition/bind. Fable review remains FOR-CLAUDE, no impersonated review.
