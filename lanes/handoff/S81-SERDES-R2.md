@@ -46,3 +46,5 @@ Gate: DRC 0, routed TT >= -42, internal FF >= 0; visual review before sign-off; 
 - H3 (hand-edited bound.sv, 25 relays) STOPPED by me (unit oth-ubuntu-4181890, exact cmdline checked) after synth: hand edit left rtl/bound_reset.json bound_rtl_sha256 stale. Tree L/H3 superseded (delete later via ot_delete_guard; contains root-owned docker files).
 - H3p = H2 kit + the sanctioned tool tools/die_plan/bound_reset_edit.py --plain (copy at E8 L/probes_serdes_r_1116/die_plan_tools/): all 90 ot_dp_rrelay_nl -> ot_dp_rrelay, relay_lockup removed from the tree, depth map unchanged (134 relays), hashes restaged (H3p_plain_edit.json, bound sha e55e8d12...). Resynth -> CTS running E8 (~/s81-serdes-r2/h3p-cts.out). lec_async.sh kept.
 - Die-bind side: this is plan event "relay_lockup.types minus the serdes types" (results/die_s81_85_serdes_plainrelay_1109). Asked S81-DIE-R2 to apply it to s81 reset.relay_lockup so the bind emits plain relays for serdes types.
+
+- 19:3x J5 rdq_local: 512 rd.q moved to their mux driver (mean 755.1 um, max 980.0 um), 5967 D-side buffers moved, 0 skipped; J5 continuing to CTS.
