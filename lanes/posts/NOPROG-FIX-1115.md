@@ -143,3 +143,5 @@
 - 2026-11-17 12:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 12:52 PST: 99 running jobs, PROGRESSING 92, SLOW 5, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
   NO-PROGRESS epyc8 serdes__t13 5_2_route stage 13.1 h job 17.1 h: no new meaningful log line for 11.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
   NO-PROGRESS intel1 slw_st_a_v2__cl9f076a5c 5_1_grt stage 9.9 h job 10.5 h: repair_Viol best 2186 last 2186 rows 1632 window-gain 0.0%; stagnant 7.9 h; last event 0.0 h ago, log write 0.0 h ago (2595 lines)
+- 2026-11-17 13:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 13:52 PST: 94 running jobs, PROGRESSING 89, SLOW 4, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 serdes__t13 5_2_route stage 14.1 h job 18.1 h: no new meaningful log line for 12.5 h; last: Elapsed time: 1:17:54.38[h:]min:sec. CPU time: user 59004.96 sys 965.81 (1282%). Peak memory: 528858
