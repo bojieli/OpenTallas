@@ -6301,6 +6301,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             f.write("\nsource /work/reset_physical_stages.tcl\n")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
+    if os.environ.get("OT_S81_VPW_BANK") == "1":
+        # Strip form B: physical bank-end clustering only; RTL and cycles come from the bound XR source.
+        import s81_vpw_bank
+        s81_vpw_bank.install(kd)
     if region_guide:
         # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D, opt-in gen phys --region-guide TYPE=SPEC): soft GPL region
         # guides per failing r2r bit slice (tools/die_plan/region_guide.py plan of the kit's last AUTO-GEOM), sourced
