@@ -21825,3 +21825,5 @@ FAILED [AUTOPILOT 52d49035f9a0] 2026-11-17 13:55:54 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/wave-flow-r2-cellcap-1117 @24c494a4e7529f788c9001a671086cd8b12a8160
 - 2026-11-17 14:08 PST RULING r605 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] autopilot/tools_refresh.py: tools-only delta tree (plan+RTL byte-identical) when TOOLS-LAG names a missing die-tool ruling; guard + strict bind must reproduce native_topology of record, else NEEDS-LANE. Opt-in per die (dies.<die>.tools_refresh true|dry). Roll out dry first on one die. Gate 156/156.
   COORD APPROVED: claude/wave-flow-r2-toolsrefresh-1117 @d1bd82b530be6c83994d4080e0cc7eb2b2eb203f
+- 2026-11-17 14:08 PST RULING r606 [COORD -> FLEET-OPS-R, MERGE-QUEUE] Restore queue: every missing view-ref path queued as original-kit row (module, record id, store hash); skips logged with reason. Gate 148/148.
+  COORD APPROVED: claude/fleet-ops-r-restore-all-paths-1117 @74dd10adb0b915460c11c4335c5579d448644d58
