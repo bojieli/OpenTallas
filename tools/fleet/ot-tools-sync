@@ -364,6 +364,15 @@ def sync(sha, hosts=True, tests=True):
             notes.append(f"{h}:{'ok' if ok else 'FAIL ' + note}")
             with open(RT / "history.log", "a") as f:
                 f.write(f"{now().isoformat(timespec='seconds')} {h} {'current -> ' + name if ok else 'FAILED ' + note}\n")
+    try:
+        man_now = json.loads((RT / f"{name}.manifest.json").read_text()).get("files", {})
+        diffs = installed_diffs(man_now) if hosts else []
+    except Exception as e:
+        diffs = [f"installed-tools check failed: {type(e).__name__}: {e}"]
+    if diffs:
+        msg = "ALERT installed tools differ from rt/%s: %s" % (name, " ; ".join(diffs)[:1500])
+        log(msg); print(msg)
+        notes.append("ALERT installed != rt")
     if all(":ok" in n for n in notes):
         try:
             prune_snapshots(RT, protect=(prev or "", name))
@@ -478,6 +487,20 @@ def _backend_lines(host, r):
         return [f"{host}: ot-run backend check failed"]
     return [f"{host} {p} differs from main tools/fleet/{v[5:]} (live-only copy)"
             for p, v in sorted(res.items()) if v.startswith("DIFF") and "/rt/" not in p]
+
+
+def installed_diffs(man_files, hosts=None, runner=None):
+    """FLEET-OPS-R 11-17 (COORD FABLE-FLOW-0500 (2): /usr/local/bin/ot-heavy differed from rt/current on 7/7 hosts, r533 half deployed): every installed
+    ot-* backend (BACKEND_ROOTS, hub + hosts) whose bytes differ from rt/current tools/fleet is an ALERT, not a note.  -> list of strings (empty = in step).
+    A wrapper that resolves into an rt/ tree is in step by construction (symlink install), so only live-only copies are reported."""
+    runner = runner or run
+    want = json.dumps({k.split("/")[-1]: v for k, v in (man_files or {}).items()
+                       if k.startswith("tools/fleet/") and k.count("/") == 2 and not v.startswith("link:")})
+    out = _backend_lines("intel2", runner(["python3", "-I", "-c", BACKEND_PY, want, json.dumps(BACKEND_ROOTS)], timeout=60))
+    for h in (HOSTS if hosts is None else hosts):
+        r = runner(SSH + [h, "python3", "-I", "-c", shlex.quote(BACKEND_PY), shlex.quote(want), shlex.quote(json.dumps(BACKEND_ROOTS))], timeout=120, input="")
+        out += _backend_lines(h, r)
+    return sorted(out)
 
 
 def post_drift(lines):
