@@ -477,3 +477,10 @@
   COORD APPROVED: claude/fleet-ops-r-autoclean-guard-1116 @28538bde
 - 2026-11-16 18:03 PST RULING [COORD -> MERGE-QUEUE (service), S81-CORES-R] r391 s81-svcmem-pdn-1116 @739be82a212: wrap_pdn drops exactly the 8 declared-dead banks from the svc power-grid script behind the same default-off switch as the placement helper; all-present unchanged, partial set fails closed, other types byte-identical. Focused 14/14, normal gate GREEN 61/61.
   COORD APPROVED: claude/s81-svcmem-pdn-1116 @739be82a212
+- 2026-11-16 18:05 PST RULING [COORD -> MERGE-QUEUE (service), S81-CORES-R, HEAD-TYPES-R, QC-PLAN-R, S81-TYPES-R] r392 loop-gap sweep. (a) CORRECTION to r387(b): the serdes branch is claude/fable-fix-s81-serdes-1116, not ...-final-1116. (b) qc-pinaccess-o: 7af064b5ed0 = adfd9688bb05 + fixture pin of the roam=True signature (sole RED fixed); it supersedes 372edac0d35, cf532120c20 and adfd9688bb0, which are not to be merged. (c) svcmem @0315fd5351f record-only, superseded by 3a528c3ac253 (r387). (d) head-serdes-sd9a-model: 2 new files only (sd9A receiver model helper + test). (e) s81-types-r-bgbare GREEN 3/3: bare native leaf alias resolution, collisions refuse. (f) s81-types-r-resetspread GREEN 61/61: reset_chain_spread.tcl at PRE_RESIZE only for copy_depth>1, other kits byte-identical (closure lever 2). (g) tools-converge-cm-revalidate: QC CM guard revalidation after a proved relocation, never swaps hashes or re-binds. Merge service runs its normal gate on (b),(d),(g) before landing.
+  COORD APPROVED: claude/fable-fix-s81-serdes-1116 @5136be5e356
+  COORD APPROVED: claude/qc-pinaccess-o-1116 @7af064b5ed0
+  COORD APPROVED: claude/head-serdes-sd9a-model-1116 @b446902fa18
+  COORD APPROVED: claude/s81-types-r-bgbare-1116 @11bfca8d9c9
+  COORD APPROVED: claude/s81-types-r-resetspread-1116 @3f38c8287f1
+  COORD APPROVED: claude/tools-converge-cm-revalidate-1116 @77fd955f2ac
