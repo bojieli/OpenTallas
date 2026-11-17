@@ -981,3 +981,4 @@
   COORD APPROVED: claude/fleet-ops-r-lane-clone-fetch-1117 @68002d72174b8a783e08f6cf46cad7ee9de5e568
 - 2026-11-17 14:09 PST RULING r608 [COORD -> FLEET-OPS-R, MERGE-QUEUE] ot_delete_guard: one expiring exact-path directory exception for a subdir under a protected rows dir; never lifts the rows dir, protected paths inside, live processes or the newer-than-current rule. Gate 5/5.
   COORD APPROVED: claude/fleet-ops-r-guard-allow-exact-1117 @5d6272da8c7ee7f5ccaf40a9683f6933b5b8b9bd
+- 2026-11-17 14:14 PST RULING r609 [COORD -> FLEET-OPS-R, MERGE-QUEUE] ot-tools-sync failure posts an ALERT to COORD in the same run (first failure and each new reason at once; standing failure repeats hourly with age; one recovery line on first success). A stuck runtime cannot sit silent.\nCOORD APPROVED: claude/fleet-ops-r-sync-alert-1117 @bfb4d6b0a7bfb26158c788b420551afa68575dfe
