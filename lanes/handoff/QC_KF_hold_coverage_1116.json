@@ -1,0 +1,202 @@
+{
+ "source": "FABLE-DIE-QC clock_c report types_changed, r344 split; no new qualification rule",
+ "clock52": [
+  "cbf_q00__cl1b5a6458",
+  "cbf_q00__cl870de686",
+  "cbf_q01",
+  "cbf_q11",
+  "cbn_q00__cl622f65d2",
+  "cbn_q00__cldbcda913",
+  "cbn_q01__clab6e67f2",
+  "cbn_q01__cld9ff4c40",
+  "cbn_q11__cl49ae4555",
+  "cbn_q11__cl5cc92dfe",
+  "cbx_q10__cl89936551",
+  "cbx_q10__cl89936551_h",
+  "cbx_q10__cl94a12200",
+  "cbx_q10__cl94a12200_h",
+  "sle_ctl__cl503337ff",
+  "sle_ctl__cl67434795",
+  "sle_fe_v1__cl8210183c",
+  "sle_fe_v2",
+  "sle_fe_v3",
+  "sle_fw_v1__clf58b4dfb",
+  "sle_hc0__cl929603c0__cl4baa7c9c",
+  "sle_hc1__cl7d360508",
+  "sle_hc2__cl9c4c4509__cl3edce1b8",
+  "sle_hc2__cl9c4c4509__clf60c5152",
+  "sle_sc_v1__cl115da35f",
+  "sle_sc_v1__cl7479a5ec",
+  "sle_sc_v2",
+  "sle_sc_v3",
+  "sle_stm_v1__cl27746664",
+  "sle_su_c",
+  "sle_su_l0__cl7a55c676",
+  "sle_su_l1__clc6d66f5b",
+  "slw_fe_v1__clfe325744__cl08d14f0d",
+  "slw_fe_v2__cle312294d",
+  "slw_fe_v2__clf110fab2",
+  "slw_hc0__cl4f54b7a3",
+  "slw_hc1__cl3449ea95",
+  "slw_hc1__cl68f9248e__cle683a076",
+  "slw_hc3__clccfc3e6b",
+  "slw_hc3__cld86a7ad4",
+  "slw_sc_v1__cl63e5a7a2",
+  "slw_sc_v1__cl64543eaf__cl4590432d",
+  "slw_sc_v1__cl64543eaf__cl5e017c6f",
+  "slw_sc_v2",
+  "slw_sc_v3",
+  "slw_st_a_v2__cl9f076a5c",
+  "slw_st_b_v2__pva66d0f22",
+  "slw_su_c__cl19bb38ef",
+  "slw_su_c__cl92142dac",
+  "slw_su_l0__cl1e5219ea",
+  "slw_su_l0__cl76fb247e",
+  "slw_su_l1__cla2a78701"
+ ],
+ "clock52_uncovered": [
+  "cbf_q00__cl1b5a6458",
+  "cbf_q00__cl870de686",
+  "cbf_q01",
+  "cbf_q11",
+  "cbn_q00__cl622f65d2",
+  "cbn_q01__clab6e67f2",
+  "cbn_q01__cld9ff4c40",
+  "cbn_q11__cl49ae4555",
+  "cbn_q11__cl5cc92dfe",
+  "cbx_q10__cl89936551",
+  "cbx_q10__cl89936551_h",
+  "cbx_q10__cl94a12200",
+  "cbx_q10__cl94a12200_h",
+  "sle_fe_v1__cl8210183c",
+  "sle_fe_v2",
+  "sle_fe_v3",
+  "sle_hc0__cl929603c0__cl4baa7c9c",
+  "sle_hc1__cl7d360508",
+  "sle_sc_v1__cl115da35f",
+  "sle_sc_v1__cl7479a5ec",
+  "sle_sc_v2",
+  "sle_su_l0__cl7a55c676",
+  "slw_hc1__cl68f9248e__cle683a076",
+  "slw_sc_v2",
+  "slw_su_l0__cl1e5219ea",
+  "slw_su_l0__cl76fb247e",
+  "slw_su_l1__cla2a78701"
+ ],
+ "coverage": {
+  "cbf_q00__cl1b5a6458": [],
+  "cbf_q00__cl870de686": [],
+  "cbf_q01": [],
+  "cbf_q11": [],
+  "cbn_q00__cl622f65d2": [],
+  "cbn_q00__cldbcda913": [
+   "qwen_compute-mig-023"
+  ],
+  "cbn_q01__clab6e67f2": [],
+  "cbn_q01__cld9ff4c40": [],
+  "cbn_q11__cl49ae4555": [],
+  "cbn_q11__cl5cc92dfe": [],
+  "cbx_q10__cl89936551": [],
+  "cbx_q10__cl89936551_h": [],
+  "cbx_q10__cl94a12200": [],
+  "cbx_q10__cl94a12200_h": [],
+  "sle_ctl__cl503337ff": [
+   "qwen_compute-mig-024"
+  ],
+  "sle_ctl__cl67434795": [
+   "qwen_compute-mig-008-k3"
+  ],
+  "sle_fe_v1__cl8210183c": [],
+  "sle_fe_v2": [],
+  "sle_fe_v3": [],
+  "sle_fw_v1__clf58b4dfb": [
+   "qwen_compute-mig-007-k2"
+  ],
+  "sle_hc0__cl929603c0__cl4baa7c9c": [],
+  "sle_hc1__cl7d360508": [],
+  "sle_hc2__cl9c4c4509__cl3edce1b8": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "sle_hc2__cl9c4c4509__clf60c5152": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "sle_sc_v1__cl115da35f": [],
+  "sle_sc_v1__cl7479a5ec": [],
+  "sle_sc_v2": [],
+  "sle_sc_v3": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "sle_stm_v1__cl27746664": [
+   "qwen_compute-mig-020-k14"
+  ],
+  "sle_su_c": [
+   "qwen_compute-mig-010-k5",
+   "qwen_compute-mig-015-k10"
+  ],
+  "sle_su_l0__cl7a55c676": [],
+  "sle_su_l1__clc6d66f5b": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "slw_fe_v1__clfe325744__cl08d14f0d": [
+   "qwen_compute-mig-020-k14"
+  ],
+  "slw_fe_v2__cle312294d": [
+   "qwen_compute-mig-020-k14"
+  ],
+  "slw_fe_v2__clf110fab2": [
+   "qwen_compute-mig-020-k14"
+  ],
+  "slw_hc0__cl4f54b7a3": [
+   "qwen_compute-mig-011-k6"
+  ],
+  "slw_hc1__cl3449ea95": [
+   "qwen_compute-mig-011-k6"
+  ],
+  "slw_hc1__cl68f9248e__cle683a076": [],
+  "slw_hc3__clccfc3e6b": [
+   "qwen_compute-mig-020-k14"
+  ],
+  "slw_hc3__cld86a7ad4": [
+   "qwen_compute-mig-020-k14"
+  ],
+  "slw_sc_v1__cl63e5a7a2": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "slw_sc_v1__cl64543eaf__cl4590432d": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "slw_sc_v1__cl64543eaf__cl5e017c6f": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "slw_sc_v2": [],
+  "slw_sc_v3": [
+   "qwen_compute-mig-019-k13"
+  ],
+  "slw_st_a_v2__cl9f076a5c": [
+   "qwen_compute-mig-021"
+  ],
+  "slw_st_b_v2__pva66d0f22": [
+   "qwen_compute-mig-007-k2"
+  ],
+  "slw_su_c__cl19bb38ef": [
+   "qwen_compute-mig-015-k10"
+  ],
+  "slw_su_c__cl92142dac": [
+   "qwen_compute-mig-014-k9",
+   "qwen_compute-mig-015-k10"
+  ],
+  "slw_su_l0__cl1e5219ea": [],
+  "slw_su_l0__cl76fb247e": [],
+  "slw_su_l1__cla2a78701": []
+ },
+ "st_a6": "existing mig009/013/016 cover all 6 and stay active",
+ "face_types": [
+  "slw_fw_v3",
+  "coll_ftc"
+ ],
+ "proposal": {
+  "clock_release": "event_adopt:S4q9l2",
+  "face_release": "event_adopt:S4q9m",
+  "reason": "materialize inherited r344 physical findings; l2 carries clock rows; m carries l2d geometry"
+ }
+}
