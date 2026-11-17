@@ -152,19 +152,19 @@ class InfraKillRetry(unittest.TestCase):
 
 class Select(unittest.TestCase):
     def test_pilot_first_caps_unproven_class(self):
-        # OWNER 12.27a: an unproven die x kit class has at most 2 kits in flight; in-flight kits count, none killed
+        # OWNER 12.27a: an unproven die x kit class has at most 3 kits in flight (WAVE-PILOT-FIX 11-17); in-flight kits count, none killed
         own = OWN + "".join(f"qwen_kvsys\tkv3_st_t{i}\ttype\tNEEDS-KIT\tKV-PLAN\tnone\t999m\tkit it\t\tKV-PLAN\t1\t\n"
                             for i in range(1, 6))
         rows = KW.parse_owners(own)
         plan = PLAN | {f"kv3_st_t{i}" for i in range(1, 6)}
         picks, skip = KW.select(rows, cfg(), "qwen_kvsys", {"items": {}}, plan)
         st_p = [p["item"] for p in picks if p["item"].startswith("kv3_st")]
-        self.assertEqual(st_p, ["kv3_st_t1", "kv3_st_t2"])
-        self.assertEqual(len(skip["PILOT-FIRST 12.27a: class qwen_kvsys|type|kv#_st_t# unproven, 2 pilot(s) in flight"]), 3)
+        self.assertEqual(st_p, ["kv3_st_t1", "kv3_st_t2", "kv3_st_t3"])
+        self.assertEqual(len(skip["PILOT-FIRST 12.27a: class qwen_kvsys|type|kv#_st_t# unproven, 3 pilot(s) in flight"]), 2)
         self.assertIn("kv3_hg_v1", [p["item"] for p in picks])                 # other classes still pilot
         run = {"items": {"x": {"die": "qwen_kvsys", "item": "kv3_st_t9", "kind": "type", "status": "RUNNING"}}}
         picks, _ = KW.select(rows, cfg(), "qwen_kvsys", run, plan)
-        self.assertEqual([p["item"] for p in picks if p["item"].startswith("kv3_st")], ["kv3_st_t1"])
+        self.assertEqual([p["item"] for p in picks if p["item"].startswith("kv3_st")], ["kv3_st_t1", "kv3_st_t2"])
         run["items"]["y"] = {"die": "qwen_kvsys", "item": "kv3_st_t8", "kind": "type", "status": "ENQUEUED",
                              "q_status": "SIGNED"}
         picks, _ = KW.select(rows, cfg(), "qwen_kvsys", run, plan)               # signed pilot -> volume
@@ -566,8 +566,8 @@ class QueueFill(unittest.TestCase):
         picks, skip = KW.select(rows, cfg(pilot_mode="queue"), "qwen_kvsys", {"items": {}}, plan)
         names = [p["item"] for p in picks]
         vol = [p["item"] for p in picks if p.get("volume")]
-        self.assertEqual(vol, ["kv3_st_t3", "kv3_st_t4", "kv3_st_t5"])
-        self.assertEqual(names[-3:], vol)                                       # volume after every pilot
+        self.assertEqual(vol, ["kv3_st_t4", "kv3_st_t5"])
+        self.assertEqual(names[-2:], vol)                                       # volume after every pilot
         self.assertFalse(any(k.startswith("PILOT-FIRST") for k in skip))
         self.assertEqual({p["volume"] for p in picks if p.get("volume")}, {"qwen_kvsys|type|kv#_st_t#"})
 

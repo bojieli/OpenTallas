@@ -123,7 +123,8 @@ def git(coord, *args, check=True):
 def edit(coord, ops, message, dry=False, commit_cmd=None):
     """patch the committed config and commit it; returns the new text.  commit_cmd(message, rel) overrides coord-commit.sh (tests)"""
     coord = Path(coord)
-    lock = open(coord / ".git" / "kit_wave_edit.lock", "a+")
+    gd = git(coord, "rev-parse", "--absolute-git-dir").stdout.strip()      # ~/coord is a linked worktree: .git is a file there
+    lock = open(Path(gd) / "kit_wave_edit.lock", "a+")
     try:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except OSError:

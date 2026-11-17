@@ -122,7 +122,9 @@ def _event_token_in(name, hay):
 # (a) a record is refused unless every term resolves to a planned or adopted plan event, a LIVE lane (agent_ids / OWNERS /
 #     active in the queue) by EXACT name, or a known system check;  (b) term_alerts() names any held term with no producer for 12 h.
 POST_HEAD = re.compile(r"^\s*-?\s*(\d{4}-\d\d-\d\d)\s+(\d\d:\d\d)\s+\S+\s+[A-Za-z]{2,5}\s+\[([A-Za-z0-9_.-]+)\s*->")
-LANE_ACTIVE_H = 48
+LANE_ACTIVE_H = 6            # WAVE-PILOT-FIX 11-17: a lane is live when it posted within 6 h (a registry row alone proves nothing: dead lanes keep theirs)
+HOLD_TTL_H = 6               # a hold record whose owner lane is silent for HOLD_TTL_H hours (and was not renewed) expires
+OWNER_SINCE = re.compile(r"(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d)")
 SYSTEM_CHECKS = ("lint_clean", "kit_snap", "digest_changed", "input_staged", "tree_ready", "gen_pilot", "census_lt", "merge")
 
 
@@ -169,13 +171,13 @@ def lane_known(cfg, lane, now=None):
     if reg is None:
         return True, ""
     act = cfg.get("_lane_activity") or {}
-    now = now or time.time()
-    if lane in reg or now - act.get(lane, 0) <= LANE_ACTIVE_H * 3600:
+    now = now or float(cfg.get("_now") or time.time())
+    if lane in (cfg.get("_live_lanes") or ()) or now - act.get(lane, 0) <= LANE_ACTIVE_H * 3600:
         return True, ""
     same = sorted({n for n in set(reg) | set(act) if n.lower() == lane.lower()})
     if same:
         return False, f"lane {lane!r} is not a live lane by exact name (did you mean {same[0]!r}?)"
-    return False, f"lane {lane!r} is in neither agent_ids / OWNERS nor posted in {LANE_ACTIVE_H} h: nothing will produce this term"
+    return False, f"lane {lane!r} has no post in {LANE_ACTIVE_H} h (and is not a listed live lane): nothing will produce this term; name the live successor lane"
 
 
 def event_variants(name, d):
@@ -277,7 +279,7 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None, pilot_fn=None, release_pilot_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None, pilot_fn=None, release_pilot_fn=None, release_pilot_failed_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
@@ -288,6 +290,7 @@ class Ctx:
         self.result_fn = result_fn or (lambda lane, tag: False)    # (lane, tag) -> a RESULT line of that lane says '<tag> PASS'
         self.lint_fn = lint_fn                                      # (die, item-or-pattern) -> True when no sdc_lint failure is known; None = old _lint_clean list
         self.release_pilot_fn = release_pilot_fn or (lambda die, item, t0: False)    # (die, pilot item, release time) -> the pilot's attempt since then passed GEN
+        self.release_pilot_failed_fn = release_pilot_failed_fn    # (die, pilot item, release time) -> the pilot's attempt since then FAILed INFRA / FLOW / per-instance; None = not known
         self.pilot_fn = pilot_fn or (lambda die, sha12: False)    # (die, tree manifest sha[:12]) -> one GEN pilot from that tree passed GEN + preflight
         self.tree_fn = tree_fn or (lambda die, path: False)       # (die, tree) -> marker + smoke + replication on all gen hosts
         self.marker_fn = marker_fn or (lambda die: None)          # die -> parsed lanes/handoff/tree_switch_<die>.json or None
@@ -404,6 +407,18 @@ def validate_record(rec, cfg):
     elif not (rec.get("items") or rec.get("patterns") or rec.get("keys")):
         errs.append("record selects nothing")
     mig = bool(rec.get("migrated"))
+    if not mig and not rec.get("switch_only") and not rec.get("auto_pilot"):
+        # WAVE-PILOT-FIX 11-17 (OWNER 06:1x): a hold names its SHARED structural cause and an owner lane that is alive; it expires
+        # after HOLD_TTL_H hours of owner silence unless renewed.  Infra / flow / per-instance causes never hold (rules 1-2).
+        if not str(rec.get("cause") or "").strip():
+            errs.append("a hold needs 'cause': the measured SHARED structural cause (not an infra / flow / per-instance failure)")
+        own = str(rec.get("owner") or "").strip()
+        if not own:
+            errs.append("a hold needs 'owner': the live lane that will lift or renew it (expires after %g h of silence)" % HOLD_TTL_H)
+        else:
+            ok, why = lane_known(cfg, own)
+            if not ok:
+                errs.append(f"owner {own!r}: {why}")
     ex = proof_exclusions(rec, d)
     for k in list(rec.get("items") or []) + list(rec.get("keys") or []):
         if k in ex:
@@ -437,6 +452,17 @@ def add_record(cfg, die, rec):
 RELEASE_PILOT_MIN = 3        # a release of MORE than this many items launches ONE pilot first (FABLE-FLOW-2200)
 
 
+RELEASE_PILOTS = 3           # WAVE-PILOT-FIX 11-17: three pilots launch in parallel; the first that passes GEN releases the rest
+
+
+def release_pilot_picks(cfg, die, d, ready, n=RELEASE_PILOTS):
+    """up to N items of READY (explicit names only) that launch first: die.pilot_item when among them, then the smallest known cell counts"""
+    names = sorted(k for k in ready if not GLOB.search(str(k)))
+    cells = cfg.get("_item_cells") or {}
+    names.sort(key=lambda k: (k != d.get("pilot_item"), cells.get((die, k)) if cells.get((die, k)) is not None else 10 ** 12, k))
+    return names[:max(1, int(n))]
+
+
 def release_pilot_pick(cfg, die, d, ready):
     """the one item of READY (explicit names only) that launches first: die.pilot_item when it is among them, else the one with the
     fewest known cells, else the first by name.  '' = none usable (glob keys only): the gate fails open"""
@@ -447,6 +473,53 @@ def release_pilot_pick(cfg, die, d, ready):
         return str(d["pilot_item"])
     cells = cfg.get("_item_cells") or {}
     return sorted(names, key=lambda k: (cells.get((die, k)) if cells.get((die, k)) is not None else 10 ** 12, k))[0]
+
+
+def rec_owner(rec):
+    """the lane that owns a hold record: its 'owner' field, else the lane of its first result: term, else '' (a legacy record with no owner never expires)"""
+    if rec.get("owner"):
+        return str(rec["owner"]).strip()
+    for t in rec.get("release") or []:
+        kind, val = split_term(str(t))
+        if kind == "result":
+            return split_result(val)[0]
+    return ""
+
+
+def rec_renewed(rec):
+    """epoch of the last renewal: rec['renewed_at'] (epoch, or 'YYYY-MM-DD HH:MM'), else the timestamp in rec['owner_since'], else 0"""
+    best = 0.0
+    for key in ("renewed_at", "owner_since"):
+        v = rec.get(key)
+        if isinstance(v, (int, float)):
+            best = max(best, float(v))
+        elif v:
+            m = OWNER_SINCE.search(str(v))
+            if m:
+                try:
+                    best = max(best, time.mktime(time.strptime(m.group(1) + " " + m.group(2), "%Y-%m-%d %H:%M")))
+                except ValueError:
+                    pass
+    return best
+
+
+def record_expired(rec, cfg, now=None, hours=None):
+    """WAVE-PILOT-FIX 11-17 (OWNER 06:1x): '' when the hold stands, else why it expired.  A record with an owner lane expires when that lane
+    has posted nothing for HOLD_TTL_H hours and the record was not renewed in that time (renewed_at / owner_since).  Fails safe: no
+    owner, or no readable lane activity this tick (a blind queue read), never expires."""
+    if rec.get("no_expiry") is True:
+        return ""
+    owner = rec_owner(rec)
+    act = cfg.get("_lane_activity")
+    if not owner or not act:
+        return ""
+    now = now or float(cfg.get("_now") or time.time())
+    ttl = float(hours or HOLD_TTL_H) * 3600
+    last = max(float(act.get(owner, 0) or 0), rec_renewed(rec))
+    if now - last <= ttl:
+        return ""
+    since = "no post seen" if not last else f"last post/renewal {(now - last) / 3600:.1f} h ago"
+    return f"EXPIRED: owner lane {owner} silent > {HOLD_TTL_H:g} h ({since}); renew with owner/renewed_at"
 
 
 def compile_holds(cfg, ctx=None):
@@ -504,33 +577,38 @@ def compile_holds(cfg, ctx=None):
             # launches first and the rest stay held until it passes GEN (the pilot rule the tree switch uses).  S81 11-16: a hold on 34
             # types released, all 34 launched on an unfixed tree, 33 failed kit_rtl in 11 minutes.  State per record in
             # cfg['_release_pilot'] (kit_wave persists it): {pilot, t, passed}.  Fails open: glob-only keys, no state store.
-            ready = [k for k in keys if rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel)]
+            exp = record_expired(rec, cfg) if rel is not None else ""
+            ready = [k for k in keys if exp or (rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel))]
             gate = {}
             store = cfg.get("_release_pilot")
             sid = f"{die}|{rec.get('id')}"
-            if store is not None and rel and rec.get("pilot_release") is not False and not rec.get("auto_pilot"):
+            if store is not None and (rel or exp) and rec.get("pilot_release") is not False and not rec.get("auto_pilot"):
                 st_ = store.get(sid)
                 if st_ is None:
                     launched = set((cfg.get("_item_active") or {}).get(die) or [])      # live attempts only: a FAIL / CANCELLED row is not a launch
                     if len(ready) > RELEASE_PILOT_MIN and not (launched & set(ready)):
-                        pk = release_pilot_pick(cfg, die, d, ready)
-                        if pk:
-                            st_ = store[sid] = {"pilot": pk, "t": float(cfg.get("_now") or time.time()), "passed": False, "n": len(ready)}
+                        pks = release_pilot_picks(cfg, die, d, ready)
+                        if pks:
+                            st_ = store[sid] = {"pilot": pks[0], "pilots": pks, "t": float(cfg.get("_now") or time.time()), "passed": False, "n": len(ready)}
                     elif len(ready) > RELEASE_PILOT_MIN:       # some of them already launched: this release happened before the gate existed
                         store[sid] = {"pilot": "", "t": 0.0, "passed": True, "n": len(ready)}
                 if st_ is not None and not st_.get("passed"):
-                    if ctx.release_pilot_fn(die, st_["pilot"], st_["t"]):
-                        st_["passed"] = True
-                    elif st_["pilot"] in ready:
-                        gate = {"pilot": st_["pilot"], "n": len(ready)}
+                    pl = list(st_.get("pilots") or [st_["pilot"]])
+                    if any(ctx.release_pilot_fn(die, p, st_["t"]) for p in pl):
+                        st_["passed"] = True                            # the first pilot that passes GEN releases the family
+                    elif ctx.release_pilot_failed_fn is not None and all(ctx.release_pilot_failed_fn(die, p, st_["t"]) for p in pl):
+                        st_["passed"] = True                            # every pilot failed INFRA / FLOW / per-instance: that never holds a family
+                        st_["note"] = "pilots failed per-instance or infra: released (WAVE-PILOT-FIX rules 1-2)"
+                    elif any(p in ready for p in pl):
+                        gate = {"pilot": st_["pilot"], "pilots": [p for p in pl if p in ready], "n": len(ready)}
             for k in keys:
-                if rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel):
-                    if not gate or k == gate["pilot"]:
-                        released.append((die, k, " + ".join(rel) + (" (release pilot)" if gate else "")))
+                if exp or (rel and all(term_met(t, rec, die, k, cfg, ctx) for t in rel)):
+                    if not gate or k in gate["pilots"]:
+                        released.append((die, k, (exp or " + ".join(rel)) + (" (release pilot)" if gate else "")))
                         continue
                     # held until the pilot passes GEN
                     if k not in hold:
-                        hold[k] = f"RELEASE PILOT: {gate['pilot']} launches first, {gate['n'] - 1} more held until it passes GEN. " + str(rec.get("reason", ""))
+                        hold[k] = f"RELEASE PILOT: {', '.join(gate['pilots'])} launch first (3 in parallel), {gate['n'] - len(gate['pilots'])} more held until one passes GEN. " + str(rec.get("reason", ""))
                         added.setdefault(die, []).append((tname, k))
                     comp.setdefault(die, {})[k] = rec.get("id")
                     held += 1
@@ -541,7 +619,7 @@ def compile_holds(cfg, ctx=None):
                 comp.setdefault(die, {})[k] = rec.get("id")
                 held += 1
             info.setdefault(die, []).append({"id": rec.get("id"), "plan_sha": sha, "stale": stale, "rebound": rebound,
-                                             "zero": zero, "keys": len(keys), "held": held, "release": rel,
+                                             "zero": zero, "keys": len(keys), "held": held, "release": rel, "expired": exp,
                                              "migrated": bool(rec.get("migrated"))})
     cfg["_hold_compiled"], cfg["_hold_rec_info"], cfg["_hold_rec_dies"] = comp, info, rec_dies
     cfg["_hold_proof_stuck"] = stuck_all
@@ -620,9 +698,9 @@ def producer_why(term, die, cfg, now, hours=12.0):
         reg, act = cfg.get("_registry_lanes"), cfg.get("_lane_activity") or {}
         if reg is None:
             return None
-        if lane in reg or now - act.get(lane, 0) <= hours * 3600:
+        if lane in (cfg.get("_live_lanes") or ()) or now - act.get(lane, 0) <= hours * 3600:
             return None
-        return f"lane {lane!r} is not registered and has not posted in {hours:g} h"
+        return f"lane {lane!r} has not posted in {hours:g} h (a registry row is not a producer)"
     if kind == "proof":
         recent = [ln for ln in cfg.get("_queue_recent") or [] if val in ln]
         return None if recent or cfg.get("_queue_recent") is None else f"no queue post names proof {val!r} in {hours:g} h"

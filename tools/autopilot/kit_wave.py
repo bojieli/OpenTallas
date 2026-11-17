@@ -752,6 +752,23 @@ def release_pilot_passed(rows, die, item, t0, cfg=None):
     return False
 
 
+def release_pilot_failed(rows, die, item, t0):
+    """WAVE-PILOT-FIX 11-17: True when the pilot's attempt started after the release T0 has FAILed and the failure is not a shared design class
+    (infra / flow / per-instance): such a pilot never keeps the family held"""
+    last = None
+    for row in rows or []:
+        try:
+            if row.get("die") == die and row.get("item") == item and float(row.get("started") or 0) >= float(t0):
+                if last is None or float(row.get("started") or 0) >= float(last.get("started") or 0):
+                    last = row
+        except (TypeError, ValueError):
+            continue
+    if last is None:
+        return False
+    failed = last.get("status") == "FAIL" or (last.get("status") == "ENQUEUED" and last.get("q_status") == "FAIL")
+    return bool(failed) and pilot_fail_scope(last) != "shared"
+
+
 def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
     import hold_records as HR
     cells = cfg.get("_item_cells") or {}
@@ -762,7 +779,8 @@ def hold_ctx(cfg, is_merged=None, tree_fn=None, marker_fn=None):
                   proof_fn=proof_pass_fn(proofs),
                   tree_fn=tree_fn, marker_fn=marker_fn, result_fn=result_pass_fn(cfg.get("_result_lines") or []), lint_fn=lambda die, item: lint_clean_item(cfg, die, item),
                   pilot_fn=lambda die, sha12: sha12 in ((cfg.get("_pilot_passed") or {}).get(die) or []),
-                  release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0, cfg))
+                  release_pilot_fn=lambda die, item, t0: release_pilot_passed(cfg.get("_item_rows") or [], die, item, t0, cfg),
+                  release_pilot_failed_fn=lambda die, item, t0: release_pilot_failed(cfg.get("_item_rows") or [], die, item, t0))
 
 
 RESULT_POST = r"^\s*-?\s*\d{4}-\d\d-\d\d\s+\S+\s+[A-Za-z]{2,4}\s+RESULT\s*\["        # a post OF TYPE RESULT: "- 2026-11-16 07:18 PST RESULT [LANE ->"
@@ -2664,13 +2682,16 @@ def pilot_queue_mode(d, cfg=None):
     return str(d.get("pilot_mode") or (cfg or {}).get("pilot_mode") or "") == "queue"
 
 
+PILOT_PARALLEL = 3          # WAVE-PILOT-FIX 11-17: a class launches 3 pilots in parallel; the first sign-off releases the volume
+
+
 def pilot_gate(picked, skip, d, die, state):
     """OWNER 12.27a PILOT FIRST (default on): a die x kit class with no signed-off kit has at most pilot_max (default 2,
     the 12.17 parallel variants) kits in flight, counting the ones already running; new launches past that wait.  Classes
     with a signed pilot keep full volume.  In-flight kits are never touched.  pilot_gate false only by COORD ruling."""
     if d.get("pilot_gate") is False:
         return picked
-    cap = int(d.get("pilot_max", 2))
+    cap = int(d.get("pilot_max", PILOT_PARALLEL))
     signed, live = pilot_classes_state(d, die, state)
     out, volume = [], []
     for r in picked:
@@ -10892,7 +10913,36 @@ def follow_queue(st, ap_dir, notices, stops=None):
 
 
 ADMITTED = "ot-heavy: admitted on"            # ot-run echoes the host's admission line (OT_RUN_START stripped)
-PILOT_FAIL_CLASSES = ("PLAN", "RTL", "FLOW", "TIMING", "ROUTING")
+PILOT_FAIL_CLASSES = ("PLAN", "RTL", "TIMING", "ROUTING")        # WAVE-PILOT-FIX 11-17: FLOW is a tool / flow failure, never a class-wide verdict
+PILOT_INFRA_CLASSES = ("INFRA", "INFRA-SSH", "FLOW")             # OWNER 06:1x rule 1: these never hold a family
+# rule 1 text markers (a design class whose log names a tool crash / host fault is not a design verdict)
+PILOT_INFRA_RE = re.compile(r"DRT-0073|DRT-0255|access point|No space left|disk (?:full|floor)|Disk quota|timed? ?out|exit 143|exit 137|"
+                            r"\bOOM\b|out of memory|Connection (?:refused|reset|closed)|ssh: |not staged|missing source|No such file|"
+                            r"tool input file missing|launch (?:error|failed)|stopped from outside", re.I)
+# rule 2: per-instance-fixable design classes (each member runs its own repair)
+PILOT_INSTANCE_DRC_MAX = 50
+PILOT_SETUP_REPAIR = (-80.0, -42.0)                               # ps: setup repair closes this band
+PILOT_INTERNAL_HOLD_RE = re.compile(r"\binternal\b[^\n|]{0,40}\bhold\b|\bhold\b[^\n|]{0,40}\binternal\b|\bhold (?:repair|fix)", re.I)
+PILOT_DRC_RE = re.compile(r"(?:\bDRC\b[^0-9\n]{0,30}|\bviolations?\D{0,12}|\bshorts?\D{0,12})(\d+)|(\d+)\s+(?:DRC|violations?|shorts?|M\d shorts?)\b", re.I)
+PILOT_SETUP_RE = re.compile(r"\b(?:setup|TT|WNS)\b[^\n|]{0,40}?(-\d+(?:\.\d+)?)", re.I)
+
+
+def pilot_fail_scope(r):
+    """WAVE-PILOT-FIX 11-17 (OWNER 06:1x: one failing test build must not hold a whole family).  A pilot FAIL row -> 'infra' (INFRA / FLOW /
+    tool crash / disk / launch / timeout / missing source), 'instance' (per-instance design class: internal hold, DRC <= 50, setup -42..-80
+    that repair closes) or 'shared' (a design class with no such reading: it may stop the class volume).  Only 'shared' counts."""
+    q = r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL"
+    cls = str((r.get("q_class") if q else r.get("class")) or "")
+    text = " ".join(str(r.get(k) or "") for k in (("q_reason", "q_stage") if q else ("reason", "stage")))
+    if cls in PILOT_INFRA_CLASSES or PILOT_INFRA_RE.search(text):
+        return "infra"
+    drc = [int(a or b) for a, b in PILOT_DRC_RE.findall(text)]
+    setup = [float(x) for x in PILOT_SETUP_RE.findall(text)]
+    hold = bool(PILOT_INTERNAL_HOLD_RE.search(text))
+    if (hold or drc or setup) and all(n <= PILOT_INSTANCE_DRC_MAX for n in drc) \
+            and all(PILOT_SETUP_REPAIR[0] <= x <= PILOT_SETUP_REPAIR[1] for x in setup):
+        return "instance"
+    return "shared"
 
 
 def is_wait_dep(r):
@@ -10927,6 +10977,8 @@ def pilot_fail_times(d, die, state, src_sha=""):
             t = float(r.get("updated") or 0)
         elif r.get("status") == "ENQUEUED" and r.get("q_status") == "FAIL":
             t = float(r.get("q_updated") or r.get("updated") or 0)
+        if t is not None and pilot_fail_scope(r) != "shared":
+            t = None                                 # WAVE-PILOT-FIX: an infra / flow / per-instance failure never holds a class
         # KW-FIX-4 11-03 (I2 RESET-CORE batch: old-src col_h9 attempts failing OT_RESET_CORE at 17:21 cancelled the
         # class-fix volume just launched on the fixed src): with src_sha given, only a pilot FAIL generated from that
         # same source counts -- a failure on a superseded source says nothing about volume on the current one
