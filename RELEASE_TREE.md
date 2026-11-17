@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-16 19:0x PST: see SIGN-RATE. S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=5/5 HEAD.TYPES=20/26 QC.CORES=67/67 QC.TYPES=7/127 KV.CORES=62/62 KV.TYPES=6/56 HBM.CORES=90/118 HBM.TYPES=1/84. gunit_l1f_bf signed (TT -16.44) but plan819 reshaped it -> 40-row plan fix folded into next S81 event (r389); bksel fx6 hold pass 2 +14.7 + fx7 fallback in GRT; QC coll_n signed after count; KV D4 (provenance) building, KV wave pilots-only; Fable lanes 6 (+QC/KV die clock); E10 980 / E7 344 GB freed; r387-r392
+2026-11-16 20:0x PST: see SIGN-RATE. S81.CORES=62/64 S81.TYPES=41/394 HEAD.CORES=5/5 HEAD.TYPES=20/26 QC.CORES=67/67 QC.TYPES=8/127 KV.CORES=62/62 KV.TYPES=6/56 HBM.CORES=90/118 HBM.TYPES=1/84. QC coll_n counted (QC types 8); QC headseg44 hf rebuild DRT 0 (CTS hold scope fix, 16494->2403 hold bufs) -> sign-off next; HEAD on NF15c, die GRT0, 7 stand-ins block die clock gate; KV D5 applied (pilot kv3_hg_v1), D6 (28 clock contracts) built; Fable weekly limit 20:2x -> 6 Opus -R2 successors; r393-r402 incl PILOT wave, repeat-key, CTS hold scope; epyc2 51 GB
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
