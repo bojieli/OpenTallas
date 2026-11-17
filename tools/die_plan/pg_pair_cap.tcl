@@ -18,6 +18,54 @@ proc ot_pgcap_finite_region {reg die gc eps} {
   }
   return [list [expr {max($a,$dx0)}] [expr {max($b,$dy0)}] [expr {min($c,$dx1)}] [expr {min($d,$dy1)}]]
 }
+# Count surviving parallel tracks in every gcell touched by a stripe. Guards
+# include all M5 PG stripes intersecting the finite longitudinal span, so a real
+# tight pair remains a zero-capacity reservation. Three tracks are required;
+# the DRT0255 zero/one-track pair case is never reopened.
+proc ot_pgcap_min_free_tracks {tracks x0 x1 y0 y1 gc guards} {
+  set first [expr {int(floor(double($x0)/$gc))}]
+  set last [expr {int(floor(double($x1-1)/$gc))}]
+  set least 1000000
+  for {set i $first} {$i <= $last} {incr i} {
+    set lo [expr {$i*$gc}]; set hi [expr {($i+1)*$gc}]
+    set k0 [expr {[lsearch -sorted -integer -bisect $tracks [expr {$lo-1}]]+1}]
+    set k1 [lsearch -sorted -integer -bisect $tracks [expr {$hi-1}]]
+    set free 0
+    foreach t [lrange $tracks $k0 $k1] {
+      set blocked 0
+      foreach r $guards {
+        lassign $r a b c d
+        if {$b >= $y1 || $d <= $y0} continue
+        if {$a < $t && $t < $c} {set blocked 1; break}
+      }
+      if {!$blocked} {incr free}
+    }
+    if {$free < $least} {set least $free}
+  }
+  return $least
+}
+proc ot_pgcap_tight_pair {own guards} {
+  lassign $own a b c d
+  foreach r $guards {
+    if {$r eq $own} continue
+    lassign $r x y z w
+    if {$a<$z && $c>$x && $b<$w && $d>$y} {return 1}
+  }
+  return 0
+}
+proc ot_pgcap_guard_tracks {blk L tracks x0 y0 x1 y1 guard} {
+  set k0 [expr {[lsearch -sorted -integer -bisect $tracks [expr {$x0-$guard}]]+1}]
+  set k1 [lsearch -sorted -integer -bisect $tracks [expr {$x1+$guard-1}]]
+  if {$k1 < $k0} {return 0}
+  set hw [expr {[$L getWidth]/2}]
+  set a [expr {[lindex $tracks $k0]-$hw}]; set c [expr {[lindex $tracks $k1]+$hw}]
+  set die [$blk getDieArea]
+  set b [expr {max([$die yMin],$y0-$guard)}]; set d [expr {min([$die yMax],$y1+$guard)}]
+  set o [odb::dbObstruction_create $blk $L $a $b $c $d]
+  # Existing PG-truth POST_GLOBAL_ROUTE cleanup owns these temporary guards too.
+  lappend ::ot_pgtt_obs $o
+  return [expr {$k1-$k0+1}]
+}
 proc ot_pgcap_add {} {
   set blk [ord::get_db_block]; set tech [ord::get_db_tech]
   set layers {M5 M6 M7}; if {[info exists ::env(OT_PGCAP_LAYERS)] && $::env(OT_PGCAP_LAYERS) ne ""} { set layers $::env(OT_PGCAP_LAYERS) }
@@ -26,6 +74,29 @@ proc ot_pgcap_add {} {
   set gcum 0.57; if {[info exists ::env(OT_PGCAP_GCELL_UM)] && $::env(OT_PGCAP_GCELL_UM) ne ""} { set gcum $::env(OT_PGCAP_GCELL_UM) }
   set die [$blk getDieArea]; set dx0 [$die xMin]; set dy0 [$die yMin]; set dx1 [$die xMax]; set dy1 [$die yMax]
   set finite [expr {[info exists ::env(OT_PGCAP_FINITE_EXTENT)] && $::env(OT_PGCAP_FINITE_EXTENT) eq "1"}]
+  set local_tracks [expr {[info exists ::env(OT_PGCAP_M5_LEGAL_TRACKS)] && $::env(OT_PGCAP_M5_LEGAL_TRACKS) eq "1"}]
+  set m5guards {}; set m5tracks {}; set m5skip 0; set m5guarded 0
+  if {$local_tracks} {
+    if {!$finite || ![info exists ::env(OT_PG_TRACK_TRUTH)] || $::env(OT_PG_TRACK_TRUTH) ne "1" || ![info exists ::ot_pgtt_obs]} {
+      error "OT_PGCAP_M5_LEGAL_TRACKS requires finite extent and active PG-track-truth cleanup"
+    }
+    set ML [$tech findLayer M5]; set tg [$blk findTrackGrid $ML]
+    if {$tg eq "NULL"} {error "M5 legal-track model needs the actual track grid"}
+    set m5tracks [lsort -integer -unique [$tg getGridX]]
+    foreach nn [$blk getNets] {
+      if {![$nn isSpecial] || [$nn getSigType] ni {POWER GROUND}} continue
+      foreach ss [$nn getSWires] {foreach ww [$ss getWires] {
+        if {[$ww isVia]} continue
+        set ll [$ww getTechLayer]; if {$ll eq "NULL" || [$ll getName] ne "M5"} continue
+        set aa [$ww xMin];set bb [$ww yMin];set cc [$ww xMax];set dd [$ww yMax]
+        if {($dd-$bb) <= ($cc-$aa)} continue
+        set sp [$ll getSpacing]
+        if {![catch {$ll getSpacing [expr {$cc-$aa}] [expr {$dd-$bb}]} wsp] && $wsp>$sp} {set sp $wsp}
+        set guard [expr {$sp+([$ll getWidth]+1)/2}]
+        lappend m5guards [list [expr {$aa-$guard}] [expr {$bb-$guard}] [expr {$cc+$guard}] [expr {$dd+$guard}]]
+      }}
+    }
+  }
   array set seen {}; array set n {}
   foreach net [$blk getNets] {
     if {![$net isSpecial]} continue
@@ -66,6 +137,17 @@ proc ot_pgcap_add {} {
         } else {set reg [list [expr {$x0-$mg}] [expr {$y0-$end_guard}] [expr {$x1+$mg}] [expr {$y1+$end_guard}]]}
         lassign [ot_pgcap_finite_region $reg [list $dx0 $dy0 $dx1 $dy1] $gc $eps] a b c d
       }
+      if {$local_tracks && $ln eq "M5"} {
+        set free [ot_pgcap_min_free_tracks $m5tracks $x0 $x1 [expr {$y0-$end_guard}] [expr {$y1+$end_guard}] $gc $m5guards]
+        set own_guard [list [expr {$x0-$end_guard}] [expr {$y0-$end_guard}] [expr {$x1+$end_guard}] [expr {$y1+$end_guard}]]
+        if {$free >= 3 && ![ot_pgcap_tight_pair $own_guard $m5guards]} {
+          # Reopen only genuinely legal tracks. Exact wide-PG spacing and EOL
+          # guards remain physical routing obstructions until PG-truth cleanup.
+          incr m5guarded [ot_pgcap_guard_tracks $blk $L $m5tracks $x0 $y0 $x1 $y1 $end_guard]
+          incr m5skip
+          continue
+        }
+      }
       # clamp to the die (GRT-0067: region must lie inside the die area)
       if {$a < $dx0} {set a $dx0}; if {$b < $dy0} {set b $dy0}; if {$c > $dx1} {set c $dx1}; if {$d > $dy1} {set d $dy1}
       # microns for the Tcl command
@@ -76,6 +158,7 @@ proc ot_pgcap_add {} {
       if {![info exists n($ln)]} { set n($ln) 0 }; incr n($ln)
     } }
   }
+  if {$local_tracks} {puts "OT_PGCAP legal_m5_straps $m5skip guarded_tracks $m5guarded min_free 3"}
   if {[info exists nerr]} {puts "OT_PGCAP errors $nerr"}
   puts "OT_PGCAP region adjustments (adj $adj margin $mg dbu gcell_um $gcum eps_dbu $eps) by layer [array get n]"
 }
