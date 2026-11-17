@@ -49,6 +49,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+# Isolated Python omits the script directory; resolve adjacent clock helpers explicitly.
+sys.path.insert(0, str(HERE))
 REPO = HERE.parent.parent
 DIE_TRIAL = REPO / "tools" / "die_plan" / "die_trial.py"
 REGISTRY = HERE / "stage_registry.json"
