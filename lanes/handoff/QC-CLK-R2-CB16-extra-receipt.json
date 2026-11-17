@@ -1,0 +1,113 @@
+{
+ "qualified": false,
+ "status": "PROPOSED_COMPONENT_TABLE_REQUIRES_ACTUAL_CALLBACK_JOIN_CHECK",
+ "producer": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/bind/cb16_pads.py",
+ "command": [
+  "/usr/bin/python3",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/bind/cb16_pads.py",
+  "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/cb16_extra_fresh_1117/base_view",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/gates/r8_s29q103S4Q9MBR_BOOTSTRAP_DIAGNOSTIC_1116.json",
+  "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/cb16_extra_fresh_1117/cb16_extra_M_fresh.json"
+ ],
+ "returncode": 0,
+ "inputs": {
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/gates/coll_calendar_MBR_diagnostic_1116/fresh_actual_bus_groups.json": "ac412f8f0089a51ae245e43809b98d5a0ec205b2d3636842c637994f3388d918",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/gates/r8_s29q103S4Q9MBR_BOOTSTRAP_DIAGNOSTIC_1116.json": "027d6945bc91b9b56608dc91d18932ac757cce3cdb8f69df914bb77edcf470be",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_extra_s29q103S4Q9MBR_0.json": "60098047954a26b90a4134d19906fb998b42df1cb1ec5eaab4847c85c598c9b1",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/bind/bind_s29q103S4Q9MBR/bind_sinks.json": "132437d48a14523952b6fb5e358ee81c09ccd55d92bec545d5298a7cc2718321",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/bind/bind_s29q103S4Q9MBR/bus_groups.json": "5b92d8a3c3d14d39042eaff8c32be94442d800c1d09e4b226ec63705cb185d19",
+  "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/bind/cb16_pads.py": "c5be5c4fed2de45db3779b11e19184dc238aaef818fa24bb88a7c13e1f7349e2"
+ },
+ "source_inventory_equal": true,
+ "CB16_bound_and_asbuilt_equal": true,
+ "crossing_member_count": 624,
+ "inner_bits_restored_to_pre_extra": 143920,
+ "projection": "Exact source-derived base view: unchanged actual CB16 source/bound inventory; fresh R8 landed values minus original explicit registered-hard correction; old extra INNER reverted to recorded asbuilt. No gate claim. Actual callback must confirm joins.",
+ "output": "/srv/opentallas-scratch3/claude/fable-die-qc-r/qcclk2/cb16_extra_fresh_1117/cb16_extra_M_fresh.json",
+ "output_sha256": "e2f94854580ffc6ab88ac61c08631ffe63d252d9358f3318fc035b8dd68bea00",
+ "summary": {
+  "members": 468,
+  "inner": 344,
+  "clusters": 48,
+  "pad_flops": 841932,
+  "sites": {
+   "u_t_0_0.n_a": [
+    10,
+    11,
+    12
+   ],
+   "u_t_0_1.n_a": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "u_t_0_1.n_b": [
+    1
+   ],
+   "u_t_0_2.n_a": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "u_t_0_2.n_b": [
+    1
+   ],
+   "u_t_0_3.n_a": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "u_t_0_3.n_b": [
+    1
+   ],
+   "u_t_1_0.n_a": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "u_t_1_0.n_b": [
+    1
+   ],
+   "u_t_1_2.n_b": [
+    5,
+    6,
+    7,
+    8
+   ],
+   "u_t_2_0.n_b": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "u_t_2_2.n_a": [
+    1
+   ],
+   "u_t_2_2.n_b": [
+    1
+   ],
+   "u_t_3_1.n_b": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "u_t_3_2.n_b": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "u_t_3_3.n_b": [
+    1,
+    2,
+    3,
+    4
+   ]
+  }
+ }
+}

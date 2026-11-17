@@ -1,0 +1,27 @@
+{
+ "qualified": false,
+ "scope": "READ_ONLY_ACTUAL_LEF_ACCESS_AT_EMITTED_LAYER_ONLY",
+ "kit": "epyc8:/srv/opentallas-scratch2/claude/fable-fix-qc-dieclk/pilot2/items/cbn_q01__clab6e67f2/attempt_1/gen/cbn_q01__clab6e67f2",
+ "pilot_unit": "3164095-1794902020",
+ "active_job_preserved": true,
+ "budget_signal_max": "M8",
+ "emitted_clock_pin_layer": "M7",
+ "clock_pins": 146,
+ "actual_access_results": {
+  "clk_c0": "PASS_at_M7_macro0_MY",
+  "clk_c1": "PASS_at_M7_macro1_MY",
+  "clk_c2": "PASS_at_M7_macro2_MY",
+  "clk_c3": "PASS_at_M7_macro3_R0"
+ },
+ "actual_staged_lef_sha256": "978152b232163ae7509612a6f76d677a43d5d44a3f00248c25e7b78c2cabc913",
+ "source_lib_sha256": "fd32d49a8c8883aa8f0e7d62ef928bd1060f767c8ca734504ad624051c292913",
+ "cause": "gen_phys.io_tcl uses plan layer_budget.partition_signal_max=M7; budget signal_max raised to M8 for per-type routing ceiling. kit_contract compares all clock pins to budgetM8 and calls actual static LEF entry check withtopM8, rejecting emittedM7 beforegeometry. All4 unchanged actual LEF access checks pass when explicit read-only function argument matches emittedM7.",
+ "unchanged": [
+  "io.tcl",
+  "clock_entry_lef.json",
+  "clock_entry_pg_cut.json",
+  "preflight failure artifacts",
+  "all plan/source/LEF/Lib bytes"
+ ],
+ "next": "Reviewed explicit clock entry-layer contract or actual producer migration plus reproof before new Mpilot. Do not suppress gate, claim fullPASS or reuse result for changed geometry."
+}

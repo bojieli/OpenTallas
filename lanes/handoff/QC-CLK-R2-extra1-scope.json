@@ -1,0 +1,44 @@
+{
+ "qualified": false,
+ "scope": "ACTUAL_CURRENT_CALLBACK_INNER_EDGE_MATCH_ONLY",
+ "extra": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/treeJ/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_extra_s29q103S4Q9MBR_1.json",
+ "sha256": "46a62e7f659782425c9cb050fabc9e853b61f3cf553846ab9684901e478ef0a3",
+ "member": {
+  "id": "INNER:glue:sys_face.prog_witness_slot<-d2d_rom.prog_witness_slot@4",
+  "kind": "intra",
+  "sink": "sys_face",
+  "sink_port": "prog_witness_slot",
+  "source": "d2d_rom",
+  "source_port": "prog_witness_slot",
+  "asbuilt": 4,
+  "bound": 4,
+  "landed": 8,
+  "pad": 4,
+  "sink_part": "glue",
+  "src_part": "glue",
+  "sink_bits": [
+   [
+    0,
+    0
+   ]
+  ],
+  "source_bits": [
+   [
+    0,
+    0
+   ]
+  ],
+  "lane": "INNER:glue"
+ },
+ "checks": [
+  "Same pinned BR asbuilt.json used by current callback",
+  "_apply_inner matches exact sink/source/asbuilt4 or emits R8_STALE",
+  "Current actual regen callback reports no prog_witness_slot stale",
+  "Original actual BR sink is exact one-bit sys_face.prog_witness_slot[0] from d2d_rom.prog_witness_slot[0] at8",
+  "New plan changes only collective latency rows/groups; no sys_face/glue source shape change"
+ ],
+ "callback": "/srv/opentallas-scratch3/claude/fable-fix-qc-knee-hc/gates/coll_calendar_MBR_diagnostic_1116/callback_receipt.json",
+ "callback_sha256": "b9483a14b1713b8a489cf74cbfa7d71162aa81e28ed44d2bde96d627a981105d",
+ "source_rule": "bind.py _apply_inner2106 exact(ci,port,sci,d[4]) lookup",
+ "not_claimed": "No global bind/P&R/timing or numerical signoff; source-changing next event must recheck"
+}
