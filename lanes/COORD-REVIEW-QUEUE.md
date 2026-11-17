@@ -21829,3 +21829,5 @@ FAILED [AUTOPILOT 52d49035f9a0] 2026-11-17 13:55:54 PST AUTOPILOT -> KIT-WAVE-12
   COORD APPROVED: claude/fleet-ops-r-restore-all-paths-1117 @74dd10adb0b915460c11c4335c5579d448644d58
 - 2026-11-17 14:08 PST RULING r607 [COORD -> FLEET-OPS-R, MERGE-QUEUE] ot-lane-clone warm repo fetches into refs/remotes/origin/* so a checked-out branch in any worktree no longer blocks fetch. Gate 1/1 + reproduced test.
   COORD APPROVED: claude/fleet-ops-r-lane-clone-fetch-1117 @68002d72174b8a783e08f6cf46cad7ee9de5e568
+- 2026-11-17 14:09 PST RULING r608 [COORD -> FLEET-OPS-R, MERGE-QUEUE] ot_delete_guard: one expiring exact-path directory exception for a subdir under a protected rows dir; never lifts the rows dir, protected paths inside, live processes or the newer-than-current rule. Gate 5/5.
+  COORD APPROVED: claude/fleet-ops-r-guard-allow-exact-1117 @5d6272da8c7ee7f5ccaf40a9683f6933b5b8b9bd
