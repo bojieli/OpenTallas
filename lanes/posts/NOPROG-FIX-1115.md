@@ -71,3 +71,9 @@
   NO-PROGRESS epyc9 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 8.4 h job 8.4 h: no new meaningful log line for 8.0 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
   NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 8.3 h job 8.4 h: no new meaningful log line for 7.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
   NO-PROGRESS epyc10 hd_lep0N pregrt_ff_hold stage 6.4 h job 8.1 h: no new meaningful log line for 6.4 h; last: 0 |       0 |       0 |            0 |    +0.0% | -194.538 | -2108990.750 | u_core.u.g_pp[2].u_pair/
+- 2026-11-16 19:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-16 19:52 PST: 78 running jobs, PROGRESSING 69, SLOW 4, NO-PROGRESS 5 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc2 kit drt_TT stage 41.7 h job 41.7 h: drt_violations best 14445 last 14445 rows 3 window-gain 0.0%; stagnant 20.7 h; last event 2.8 h ago, log write 1.1 h ago (1564 lines)
+  NO-PROGRESS epyc9 svc_hi_dsdv_svc_rs__t3 1_2_yosys stage 9.4 h job 9.4 h: no new meaningful log line for 9.0 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+  NO-PROGRESS epyc9 svc_lo_dsdv_svc_rs__t7 1_2_yosys stage 9.3 h job 9.4 h: no new meaningful log line for 8.3 h; last: 3.15. Executing SHARE pass (SAT-based resource sharing).
+  NO-PROGRESS epyc7 phy__t1 5_1_grt stage 7.5 h job 7.5 h: no new meaningful log line for 6.8 h; last: global_route -end_incremental -congestion_report_file /work/run/reports/asap7/dp_phy__t1/base/conges
+  NO-PROGRESS epyc10 hd_lep0N pregrt_ff_hold stage 7.4 h job 9.1 h: no new meaningful log line for 7.4 h; last: 0 |       0 |       0 |            0 |    +0.0% | -194.538 | -2108990.750 | u_core.u.g_pp[2].u_pair/
