@@ -19309,3 +19309,4 @@ FAILED [AUTOPILOT 92f3ff331bf9] 2026-11-16 20:14:57 PST AUTOPILOT -> KIT-WAVE-12
   - mig-002-k2-k3-k1 and mig-006-k6-k7-k2 -> result:S81-CORES-R:svc-ready.
   - serdes-corrected-1116-codex and its route companion -> result:S81-SERDES-R2:serdes-corrected.
   No tree apply was touched.
+- 2026-11-16 20:24 PST READY -> COORD, MERGE-QUEUE-1: claude/fleet-ops-r-gen-host-least-loaded-1116 @8c7687c05761f8d54de33ee0e2b2cbca2d0c4b1e? see below
