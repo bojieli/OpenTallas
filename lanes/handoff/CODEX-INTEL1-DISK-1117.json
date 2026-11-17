@@ -1,0 +1,60 @@
+{
+  "kind": "opentallas.cleanup_preservation.v1",
+  "at": "2026-11-17T04:33:25.214218-08:00",
+  "reason": "Restore measured intel1 scratch headroom for the paused active KV D14 replication, preserving all unique inactive state",
+  "records": [
+    {
+      "source_host": "intel1",
+      "source": "/srv/opentallas-scratch2/claude/type-safe-5",
+      "source_inode": 90309108,
+      "source_device": 66307,
+      "source_retired": true,
+      "archive_host": "epyc10",
+      "archive": "/srv/opentallas-scratch2/claude/fleet-ops-r-preserve-1117/type-safe-5.tar.zst",
+      "archive_sha256": "52ba3171f736af033a137ad46200b596669dfe5b0cd852e3727cc1f70ac3b2c1",
+      "archive_integrity": "zstd -t PASS; source tar pipefail and archive job exit 0",
+      "archive_unit": "oth-ubuntu-4096733-1794918062",
+      "unique_state": "full tree retained, including sources, failed verdicts, scripts and hardlinks; no .git found",
+      "guard": "ALLOW; fresh protected references plus process scan; realpath/inode/device checked before retirement",
+      "signed_units": 300,
+      "signed_not_in_store": 0,
+      "free_bytes_before": 58707484672,
+      "free_bytes_after": 85510467584,
+      "reclaimed_bytes": 26802982912
+    },
+    {
+      "source_host": "intel1",
+      "source": "/srv/opentallas-scratch2/claude/variants-1",
+      "source_inode": 3449749,
+      "source_device": 66307,
+      "source_retired": true,
+      "archive_host": "epyc10",
+      "archive": "/srv/opentallas-scratch2/claude/fleet-ops-r-preserve-1117/variants-1.tar.zst",
+      "archive_sha256": "72e3c9be00f8da0594c5552ff954433aa7495d98b4805dc02d2ca19753be8cd2",
+      "archive_integrity": "zstd -t PASS; source tar pipefail and archive job exit 0",
+      "archive_unit": "oth-ubuntu-82644-1794918571",
+      "unique_state": "full tree retained, including sources, failed verdicts, scripts and hardlinks; no .git found",
+      "guard": "ALLOW; fresh protected references plus process scan; realpath/inode/device checked before retirement",
+      "signed_units": 0,
+      "signed_not_in_store": 0,
+      "free_bytes_before": 89099292672,
+      "free_bytes_after": 109706981376,
+      "reclaimed_bytes": 20607688704
+    }
+  ],
+  "protection_commits": [
+    "09587e1d3b86a0c5784dd4fec591fedde77a8fa5",
+    "1a78ae8481b997f0e7ed6d3ce491221cafe8975a"
+  ],
+  "protection": "Both archives and SHA files are named in lanes/PROTECTED-DBS.txt; standard structured list rebuilt and installed on epyc10",
+  "stage_sweep": {
+    "result": "PASS",
+    "files_removed": 16,
+    "reported_gib_removed": 4.2,
+    "kits": 4,
+    "unit": "oth-ubuntu-2345854-1794917646",
+    "kept": "synth/floorplan/place/CTS/GRT/final anchors, open or active ECO/resume files and protected kits"
+  },
+  "final_free_bytes": 109706981376,
+  "stop": "No further directories retired; parent owns D14 final capacity check and SIGCONT"
+}
