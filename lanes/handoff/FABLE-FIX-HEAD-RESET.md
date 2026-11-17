@@ -64,3 +64,6 @@ Launch when epyc10 admits again (one attempt per directory, marker RS1_ATTEMPTED
 5. Duty: the falling capture rides the clock duty. Read duty at the entry taps of the NF15f GEN; 9 parts sit under 150 ps.
 6. Superseded if this lands: BUF4/HB4 phase classes (33 view classes) and the N30 clock fork + handoff for the 13
    (pin_entry_handoff, branch claude/head-reset-entry-fall-1117 @98308db8). pin_entry_fall stays valid (it is h = 1 fixed per type).
+
+## 7. Gate
+GREEN 146/146 (GATE main=e251fda2da5), record intel2 ~/merge-queue/gates/671942fabfd0206a4f38e113c6b34f2a7c67e569.json. READY posted 2026-11-17.
