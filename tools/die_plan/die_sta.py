@@ -1766,6 +1766,8 @@ def cmd_run(a):
 def part_netlist_alias(parts, mods):
     """re-read every part netlist: an assign/alias cycle (SPEPRD3 11-16: 566 padded outputs aliased back onto
     themselves through their delay buffers) makes the stitched STA meaningless -> verdict FAIL"""
+    if str(Path(__file__).resolve().parent) not in sys.path:     # python3 -I drops the script dir (also io_hold_qualification)
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
     import netlist_alias_check as NAC
     out = {}
     for m in sorted(mods):
