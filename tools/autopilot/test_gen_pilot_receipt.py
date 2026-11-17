@@ -67,3 +67,26 @@ class GenPilotReceipt(unittest.TestCase):
         self.assertFalse(K.publish_gen_pilot_receipt(file, digest, stages))
         self.assertFalse((path / "gen_pilot.json").exists())
         self.assertEqual(K.pilot_passed_map(state, cfg), {})
+
+    def test_kit_rtl_canary_failed_stage_never_publishes(self):
+        path, file, sp, digest, stages, cfg, state = self.setup_case()
+        stages["kit_rtl"] = 3
+        self.assertFalse(K.publish_gen_pilot_receipt(file, digest, stages))
+        self.assertFalse((path / "gen_pilot.json").exists())
+
+    def test_kit_rtl_canary_receipt_carries_the_verdict(self):
+        path, file, sp, digest, stages, cfg, state = self.setup_case()
+        stages["kit_rtl"] = 0
+        self.assertTrue(K.publish_gen_pilot_receipt(file, digest, stages))
+        rec = json.loads((path / "gen_pilot.json").read_text())
+        self.assertEqual((rec["stages"]["kit_rtl"], rec["canary"]), (0, "kit_rtl_v1"))
+
+    def test_canary_mark_without_kit_rtl_stage_fails_for_a_kit_rtl_recipe_only(self):
+        rec = {"canary": "kit_rtl_v1", "stages": {"gen": 0}}
+        self.assertFalse(K.kit_rtl_canary_ok(rec, {"kit_rtl": {"mode": "bind"}}))
+        self.assertFalse(K.kit_rtl_canary_ok(rec, {"kit_rtl": {"script": "/x.sh"}}))
+        self.assertTrue(K.kit_rtl_canary_ok(rec, {"kit_rtl": {}}))                      # no kit_rtl stage in this recipe
+        self.assertTrue(K.kit_rtl_canary_ok({"stages": {"gen": 0}}, {"kit_rtl": {"mode": "bind"}}))   # legacy receipt: grandfathered
+        self.assertFalse(K.kit_rtl_canary_ok({"stages": {"kit_rtl": 2}}, {}))
+        self.assertTrue(K.kit_rtl_canary_ok({"stages": {"kit_rtl": 0}}, {}))
+
