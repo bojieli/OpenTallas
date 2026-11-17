@@ -57,6 +57,16 @@ class MirrorSync(unittest.TestCase):
         f.sync(fetch_only=True)
         self.assertNotEqual(S.run(["git", "-C", str(f.up), "rev-parse", "-q", "--verify", "refs/heads/claude/good-1"], capture_output=True).returncode, 0)
 
+    def test_fetch_main_refreshes_only_main(self):
+        f = Fixture()
+        w2 = f.d / "w2"; sh("git", "clone", "-q", str(f.w), str(w2))
+        sh("git", "push", "-q", str(f.up), "HEAD:refs/heads/main", cwd=w2)
+        S.run(["git", "-C", str(f.up), "update-ref", "refs/heads/claude/other-1", "refs/heads/main"], check=True)
+        self.assertEqual(f.m.fetch_main(), 0)
+        refs = S.run(["git", "-C", str(f.mirror), "for-each-ref", "--format=%(refname)", "refs/heads/"], capture_output=True, text=True).stdout.split()
+        self.assertIn("refs/heads/main", refs)
+        self.assertNotIn("refs/heads/claude/other-1", refs)
+
     def test_budget_stops_the_per_ref_loop(self):
         f = Fixture(); f.m.BUDGET_S = -1
         self.assertNotIn("re-forward", f.sync().replace("budget", ""))
