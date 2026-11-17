@@ -127,6 +127,24 @@ class MacroParamBB(unittest.TestCase):
         bb.write_text("(* blackbox *) module m_pair #(parameter CHB=1)(input clk, output [3:0] q); endmodule\n")
         self.assertEqual(G.macro_param_blackboxes(self.macros, [self.top, bb], self.t / "kit"), [])
 
+    def test_root_multimodule_header_when_macro_rtl_is_not_staged(self):
+        source = self.t / "root/rtl/sc2_ce_leaf.sv"
+        source.parent.mkdir(parents=True)
+        source.write_text("module other(); endmodule\n" + HDR + "\nendmodule\n")
+        (self.t / "src/m_pair.sv").unlink()
+        out = G.macro_param_blackboxes(self.macros, [self.top], self.t / "kit", self.t / "root")
+        self.assertIn("output wire [3:0] q", out[0].read_text())
+        self.assertNotIn("module other", out[0].read_text())
+
+    def test_root_multimodule_ambiguous_header_refuses(self):
+        source = self.t / "root/rtl"
+        source.mkdir(parents=True)
+        for name in ("ce_leaf.sv", "other_leaf.sv"):
+            (source / name).write_text(HDR.replace("CHB=1", "CHB=0" if name == "ce_leaf.sv" else "CHB=1") + "\nendmodule\n")
+        (self.t / "src/m_pair.sv").unlink()
+        with self.assertRaisesRegex(ValueError, "different headers"):
+            G.macro_param_blackboxes(self.macros, [self.top], self.t / "kit", self.t / "root")
+
     def test_root_rtl_fallback_and_missing_header(self):
         root = self.t / "root"
         (root / "rtl" / "x").mkdir(parents=True)
