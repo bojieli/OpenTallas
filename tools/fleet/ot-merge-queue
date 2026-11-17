@@ -165,13 +165,46 @@ def run(cmd, cwd=None, timeout=600, env=None, check=False):
     return p
 
 
-def git(*a, cwd=REPO, check=True, timeout=600):
-    return run(["git", *a], cwd=cwd, timeout=timeout, check=check)
+def git(*a, cwd=REPO, check=True, timeout=600, env=None):
+    return run(["git", *a], cwd=cwd, timeout=timeout, check=check, env=env)
 
 
 def rev(ref, cwd=REPO):
-    p = git("rev-parse", "-q", "--verify", f"{ref}^{{commit}}", cwd=cwd, check=False)
+    # MQ-PACK-FIX 11-16: a sha that is not in the object store must fail fast: no lazy fetch (partial clone), and the
+    # lookup then costs one midx probe, not a scan of every pack index.
+    p = git("rev-parse", "-q", "--verify", f"{ref}^{{commit}}", cwd=cwd, check=False, env=dict(os.environ, GIT_NO_LAZY_FETCH="1"))
     return p.stdout.strip() if p.returncode == 0 else ""
+
+
+PACK_LIMIT = int(os.environ.get("MQ_PACK_LIMIT", "200"))       # packs before the guard consolidates
+PACK_REPACK = int(os.environ.get("MQ_PACK_REPACK", "2000"))    # packs before it also repacks geometrically
+
+
+def pack_count(repo=REPO):
+    try:
+        return sum(1 for n in os.listdir(Path(repo) / ".git" / "objects" / "pack") if n.endswith(".pack"))
+    except OSError:
+        return 0
+
+
+def pack_guard(repo=REPO):
+    """MQ-PACK-FIX 11-16: lazy blob fetches leave one pack each (105k files once); keep the count bounded after every tick.
+    multi-pack-index write makes object lookup one probe; above PACK_REPACK a geometric repack merges the small packs.
+    Never gc/prune; a failure only logs."""
+    if DRY:
+        return 0
+    n = pack_count(repo)
+    if n <= PACK_LIMIT:
+        return n
+    try:
+        if n > PACK_REPACK:
+            r = git("repack", "-d", "-q", "--geometric=2", "--write-midx", cwd=repo, check=False, timeout=3000)
+            log(f"pack guard: {n} packs, geometric repack rc={r.returncode} -> {pack_count(repo)} packs")
+        r = git("multi-pack-index", "write", cwd=repo, check=False, timeout=900)
+        log(f"pack guard: {n} packs, multi-pack-index write rc={r.returncode}")
+    except Exception as e:                                  # noqa: BLE001 - maintenance never stops the train
+        log(f"pack guard error: {e}")
+    return pack_count(repo)
 
 
 def is_ancestor(a, b, cwd=REPO):
@@ -1070,6 +1103,8 @@ def prepare(it, base, remote=True):
     try:
         full = fetch_sha(it["branch"], it["sha"])
         if not full:
+            if it["branch"] and (rev(f"refs/mq/{REMOTE}/{it['branch']}") or rev(f"refs/mq/{FALLBACK}/{it['branch']}")):
+                return "WAIT", f"INVALID-SHA: sha {it['sha']} is not in branch {it['branch']} (branch fetched, sha absent); check the approval"
             return "WAIT", f"sha {it['sha']} not fetchable from {REMOTE}/{FALLBACK} (branch {it['branch'] or '-'})"
         it["sha_full"] = full
         if it["branch"]:
@@ -1250,6 +1285,9 @@ def tick(args):
         log(f"{it['key']}: {status}: {detail if isinstance(detail, str) else detail}")
         if status == "WAIT":
             it["status"] = "WAIT"
+            if str(detail).startswith("INVALID-SHA") and not it.get("invalid_posted"):
+                it["invalid_posted"] = True
+                queue_post(st, "INVALID-SHA", "COORD", f"{it['key']}: {detail}")
             if it["tries"] >= WAIT_TICKS:
                 fail(st, it, text, "UNFETCHABLE", detail, base)
         elif status == "INFRA":
@@ -1330,7 +1368,10 @@ def main():
             print(f"{x['key']:60} line {x['line']:6} lane {lane_for(text, x['branch'], x['sha']):20} "
                   f"{'REVOKED ' if x['revoked'] else ''}{st.get(x['key'], {}).get('status', 'NEW')}")
         return 0
-    return tick(a)
+    try:
+        return tick(a)
+    finally:
+        pack_guard()
 
 
 if __name__ == "__main__":
