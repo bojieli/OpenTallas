@@ -166,3 +166,16 @@ G4 CTS r5 exit 0 (E8); post-CTS census running: E8 unit oth-ubuntu-763446-179490
 1. Read H5/H6 GPL density (run_dens.sh on 3_place.odb), CTS TT, GRT TT, DRT. Do not route H4 (density 0.5).
 2. G4 census -> if local entries fix the G class, post the scoped-keepout delta (exact rects per lot) to S81-DIE-R2.
 3. On the first routed PASS: visual review, export AGIdock + rtx-pro, INDEX rows, then the 4 sibling H-class kits.
+
+## 02:2x PST 11-17
+- H5 attempt 1 failed at the post-GPL hook (OT_BOOT_RELEASE tail 550.87 um > 405). R2 patched the kit script (tail pull to 380 um) and relaunched H5
+  (epyc2 unit 637956-1794909388). Same patched file copied into running H6 before the hook (backup .H6_before_tailpull); H6 passed the hook
+  (four rs_r/rs_t tails 554-559 -> 380 um). H6 GPL: max 10-um bin 0.189, HPWL 9.09e9 (+41 % vs H3p 6.44e9); H5 HPWL 7.37e9 (+14 %).
+- Branch claude/fable-fix-s81-serdes-sparse-1117@056ad948eaba6c7828deb01a852eb5999e576370 (epyc7 L/wt): OT_GPL_SPARSE_DENSITY / OT_GPL_SPARSE_PAD
+  (face_flops.tcl) + generator tail pull (serdes_boot_release_local.tcl, proc ot_serdes_boot_tail_pull) + tests 23/23 in the clone.
+  Gate: INFRA twice on epyc2 slot0 (missing asap7_memory_macros_v2 sources in the gate tree). Posted READY-PENDING-GATE; rerun when the slot is repaired:
+  ot-run --mem 48 --threads 16 --hosts epyc2,epyc9 --dir /srv/opentallas-scratch2/claude/mq-gate -- bash /srv/opentallas-scratch2/claude/mq-gate/ot-gate-remote claude/fable-fix-s81-serdes-sparse-1117@<sha> 16
+- G4 census: TT -656.66 / 817 endpoints, FF -789.04: local entries do not close the G class. Proposal posted (01:4x): G/J lots (t1 x2, t2, t14) to the
+  t13 shore-band form (keepout bottom 681.372, SRAM pair re-placed under it, taps in y 238..681); NEEDS-LANE under S81-DIE-R2.
+- Watch: H5/H6 4_cts.odb -> run_cts_worst.sh census (copy probes to epyc2 probes_fable_1117; h_worst.tcl + h_parse.py live in E8 probes_serdes_r_1116),
+  then GRT TT (grt_policy.json, never 5_1_grt.json), DRT. Not sure yet which of 0.30 / 0.20 keeps TT; kit config lines for the siblings follow the winner.
