@@ -920,6 +920,16 @@ SCHEMA = {
                         "local_taps_um": {"type": "array", "items": _xy},
                         # Measured J=1 synchronous entry window only: one falling pre-capture per input.
                         "pin_entry_fall": {"type": "boolean"},
+                        # Exact physical input-to-capture technology chain; no new FF/cycle.
+                        "pin_entry_delay": {"type": "object", "additionalProperties": False,
+                            "required": ["cell", "reset", "start", "reset_sites_um", "start_sites_um", "max_hop_um"],
+                            "properties": {
+                                "cell": {"enum": ["BUFx4_ASAP7_75t_R"]},
+                                "reset": {"type": "integer", "minimum": 0},
+                                "start": {"type": "integer", "minimum": 0},
+                                "reset_sites_um": {"type": "array", "items": _xy},
+                                "start_sites_um": {"type": "array", "items": _xy},
+                                "max_hop_um": {"type": "number", "exclusiveMinimum": 0}}},
                         "pin_root_copies": {"type": "object", "additionalProperties": False,
                             "required": ["max_loads", "sites_um"], "properties": {
                                 "max_loads": {"type": "integer", "minimum": 1, "maximum": 48},

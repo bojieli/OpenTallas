@@ -4784,6 +4784,59 @@
        "pin_entry_fall": {
         "type": "boolean"
        },
+       "pin_entry_delay": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "cell",
+         "reset",
+         "start",
+         "reset_sites_um",
+         "start_sites_um",
+         "max_hop_um"
+        ],
+        "properties": {
+         "cell": {
+          "enum": [
+           "BUFx4_ASAP7_75t_R"
+          ]
+         },
+         "reset": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "start": {
+          "type": "integer",
+          "minimum": 0
+         },
+         "reset_sites_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          }
+         },
+         "start_sites_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          }
+         },
+         "max_hop_um": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         }
+        }
+       },
        "pin_root_copies": {
         "type": "object",
         "additionalProperties": false,
