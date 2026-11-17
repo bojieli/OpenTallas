@@ -1,13 +1,12 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 13:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 13:45 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 8, 'NO-DATA': 3, 'EXCLUDED': 46}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 7, 'NO-DATA': 3, 'EXCLUDED': 46}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
-| epyc2 | ap-ageom-kw-ot-s81sl-leaf--t13-grt-1404892 | ot-s81sl-leaf--t13-grt | 3_5_place_dp | 0.1 | last meaningful line 0.1 h ago (131/131 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc2 | ap-ageom-kw-ot-s81sl-leaf--t14-grt-1410772 | ot-s81sl-leaf--t14-grt | 3_5_place_dp | 0.1 | last meaningful line 0.1 h ago (131/131 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
-| epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 5.7 | last meaningful line 0.6 h ago (1375/1375 lines) | YOUNG: evidence 5.7 h < 7.5 h |  |
-| epyc2 | dpkit-ot_s81sl_kv_leaf__t5-1036025 | ot_s81sl_kv_leaf__t5 | 3_3_place_gp | 0.6 | overflow best 0.8935 last 0.8935 rows 4 | YOUNG: evidence 0.1 h < 7.5 h |  |
+| epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 6.0 | last meaningful line 0.1 h ago (1377/1377 lines) | YOUNG: evidence 6.0 h < 7.5 h |  |
+| epyc2 | dpkit-iqf__t1-1645848 | iqf__t1 | 3_1_place_gp_skip_io | 0.1 | last meaningful line 0.0 h ago (16/16 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| epyc2 | dpkit-ot_s81sl_kv_leaf__t5-1036025 | ot_s81sl_kv_leaf__t5 | 3_5_place_dp | 0.8 | last meaningful line 0.0 h ago (73/73 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | epyc7 | cs_dump_ff_616508 | cs_dump_ff_616508 | - | 0.0 |  | NO-DATA: no log found |  |
 | epyc7 | cs_dump_tt_616508 | cs_dump_tt_616508 | - | 0.0 |  | NO-DATA: no log found |  |
 | epyc7 | otc-520164-13029 | 520164 | - | 0.2 |  | NO-DATA: no log found |  |
@@ -15,9 +14,9 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 8, 'NO-DATA'
 | epyc7 | so_617213_tt_43588 | so_617213_tt_43588 | generate_abstract | 0.0 | last meaningful line 0.0 h ago (458/458 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | intel1 | dpkit-kit-2538957 | kit | 5_1_grt | 67.4 | repair_TNS best 252025 last 252025 rows 4 | YOUNG: series started inside the last 6 h |  |
 | intel1 | dpkit-kit-2546869 | kit | 5_1_grt | 67.4 | repair_TNS best 320169 last 320169 rows 4 | YOUNG: series started inside the last 6 h |  |
-| epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 35.2 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 25.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 59.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 35.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 26.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 59.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-kv3_pc__cl254f2e73-3798670 | kv3_pc | pregrt_ff_hold | 1.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-kv3_pc__cl5a95b461-3753749 | kv3_pc | pregrt_ff_hold | 1.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc7 | dpkit-kv3_pc_v1__cl23f6a148-3798940 | kv3_pc_v1 | tt_setup_repair | 1.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -60,4 +59,4 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 8, 'NO-DATA'
 | intel1 | otc-607828-17775 | 607828 | gen_lint_yosys | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261116_023111_238129-i1g-692412 | eco_20261116_023111_238129-i1g | 5_2_route | 6.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261117_084547_311459-i1t-1920177 | eco_20261117_084547_311459-i1t | 5_2_route | 4.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 16.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 16.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
