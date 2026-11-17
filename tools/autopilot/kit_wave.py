@@ -9707,7 +9707,11 @@ def repeat_queue_outcomes(AP, cfg, st):
         try:
             if status == "SIGNED":
                 RS.record(st, rec["die"], rec["item"], rec.get("attempt"), "signoff", "", "", ok=True)
-            elif rec.get("kill_kind") == "guard":
+            elif rec.get("kill_kind") == "guard" or (cls == "INFRA" and guard_kill_for(
+                    AP, dict(rec, started=float(rec.get("q_updated") or 0) - 1800), why,
+                    list(rec.get("q_hosts") or []) + [rec.get("gen_host")], now=float(rec.get("q_updated") or 0) or None)):
+                # INFRA_KILLED at the route stage too: the job ended in the last 30 min on a host whose kills.log has a plan-guard line
+                rec["kill_kind"] = "guard"
                 continue                                 # INFRA_KILLED (plan guard SIGKILL): says nothing about the design, never a repeat-stop input
             elif not is_host_fail(cls, why) or RS.is_oom(cls, why):
                 ev = RS.record(st, rec["die"], rec["item"], rec.get("attempt"), stage, cls, why, inputs=repeat_inputs(cfg, rec, why))

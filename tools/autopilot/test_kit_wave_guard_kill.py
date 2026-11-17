@@ -74,5 +74,21 @@ class Step(unittest.TestCase):
         self.assertTrue(st.get("repeat_ledger"), "control: an unmatched kill IS recorded for repeat-stop, so the empty ledger above means something")
 
 
+class QueueRoute(unittest.TestCase):
+    def outcome(self, hit):
+        rec = {"die": "qwen_compute", "item": "slw_st_b_v1", "attempt": 3, "q_updated": time.time(), "q_hosts": ["epyc10"], "block_sha": "b1"}
+        st = {}
+        KW.QUEUE_OUTCOMES[:] = [(rec, "FAIL", "route", "INFRA", "OOM (earlyoom) @route: make[1]: *** [x] Error 247")]
+        with mock.patch.object(KW, "guard_kill_for", return_value=hit):
+            KW.repeat_queue_outcomes(T.FakeAP(tempfile.mkdtemp(), "{}"), T.cfg(), st)
+        return rec, st
+
+    def test_route_stage_guard_kill_is_not_a_repeat_stop_input(self):
+        rec, st = self.outcome(("epyc10", time.time(), 1, "openroad"))
+        self.assertEqual((rec.get("kill_kind"), st.get("repeat_ledger") or {}), ("guard", {}))
+        rec, st = self.outcome(None)
+        self.assertTrue(st.get("repeat_ledger"), "control: an unmatched OOM kill is a repeat-stop input")
+
+
 if __name__ == "__main__":
     unittest.main()
