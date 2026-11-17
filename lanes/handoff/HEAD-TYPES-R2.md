@@ -6,3 +6,11 @@ Logs: intel2 ~/head-types-r2-logs/. Children: HEAD-HE12H-DRC (handoff HEAD-HE12H
 - hw5 (hd_host_w): epyc8 GRT goal still running (unit oth-ubuntu-3191148-1794878585). NEXT as HEAD-TYPES-R.md.
 - SPEPRD3 (hd_spn_end): epyc8 DRT running (unit oth-ubuntu-3251096-1794878769), OT_PRD_POST=1 auto sign-off. NEXT as HEAD-TYPES-R.md.
 - TP2 (hd_tile): tp2 tree replicated E10->E7/E8/E9 same path; launched run_kit.sh route 96/16 via ot-run --dir tp2 -> epyc7 unit oth-ubuntu-1157129-1794883329, client ~/head-types-r2-logs/tp2.log. (first try refused: run_kit.sh outside --dir.)
+
+## STATE 11-16 20:0x PST (after Codex 19:42-19:51 cover)
+- SIGNED+exported: hd_spn_end SPEPRD3 (s81_head/hd_spn_end__nf15_speprd3_1116; exported V has 566 cyclic output aliases -> child HEAD-SPE-EXPORT fixes exporter + fail-closed seam checker on claude/head-speprd3-export-1116, re-exports as a new entry, then NF15c real-view integration). he12h v2 SIGNED+exported s81_head/hd_host_e__he12h_drc2 (child HEAD-HE12H-DRC done; e9post.stop touched).
+- READY posted claude/head-reset-tree-coherence-1116@b56e08e96e1 (GREEN 15/15, baseline 1).
+- HEAD-HW-ECO child resumed: hw4e2 (localhost unit oth-ubuntu-2066093-1794887221), hw5 DRT (E8 unit oth-ubuntu-473593-1794887144), gate of claude/head-hw-eco-staticplan-1116@1ed0608cac.
+- HEAD-SD9A child resumed: sd9c E8 unit oth-ubuntu-4115587-1794884149; plan-delta (u_chn 1548.0,109.44) request to HEAD-DIE-R.
+- TP2 hd_tile: original NOT SIGNED (DRC0 TT+12.06 internal FF -6.46/34). hold1 insert DONE (34 HB4, 46 fillers removed, check_placement ok). Route-only-touched-nets + successor kit hold1/kit_hd_tile fill/finish + signoff: E7 hold1/run_route_signoff.sh, unit oth-ubuntu-1972223-1794887897, client ~/head-types-r2-logs/tp2_hold_route.log; logs hold1/{route,finish,signoff_hei}.log. ROUTE_ATTEMPTED guard.
+- NF15c hd_mesh/hd_lep0N/hd_ctl: E9 route goal live (units oth-ubuntu-2687523/2687522/2687529-1794885716), logs ~/head-types-r2-logs/route_<type>.log.
