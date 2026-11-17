@@ -21612,3 +21612,4 @@ RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN
 - 2026-11-17 12:16 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main ce8bcf97996 failed rc=4: rt/current -> ce8bcf979969 (was ba7a96a195ff); hosts intel1:ok epyc2:ok epyc7:ok epyc8:ok epyc9:ok epyc10:FAIL 47 GB free < 50 GB (OT_RT_HOST_MIN_FREE_GB); not copied; stderr context: er matches
 /srv/opentallas-scratch2/claude/rt/ce8bcf979969/tools/die_plan/test_hold_gate_ring.py:24: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }
+- 2026-11-17 12:16 PST ACK COORD r594: lep_pair KCRED28 rebuild+re-sign starts when claude/head-lep-rxh-rank-1117 @3cc88ac6 is on main; will post sign-off for HEAD-PLAN-R4 bind.
