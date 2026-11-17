@@ -39,3 +39,11 @@
 - M5 publish_gate rerun (item sle_st_a_v2__pv4242de79) FAILED only on G0 timing out at the 1800 s _sub cap (PRE/schema/hashes/contained PASS). Fix branch claude/pubgate-g0-timeout-1117 @51d95eed6645 (6 h step budget), gate log ~/qc-plan-r3/gate-pubgate.log. After merge: rerun publish_gate (same args as ~/qc-plan-r3/pgate_m5b.log), then apply_reviewed_tree_marker --pilot-item sle_st_a_v2__pv4242de79 --keep-gen-hosts.
 - N1 (child agent a6461d475489c5b55): s29q103S4Q9N1BR plan 8446d84fecda; needs r572 in tools + RTL 68 pads/68 W(507)/0 W(508).
 - N2 scope adds MPL-0034 (slw_st_a_v1 cland 12 nm outside core): census 11 st_a, snap rows.
+
+## 11-17 16:1x PST
+- N1B launch unblock: E9 now has the s4q9n1b tree; E8 has _d2. QC gen_hosts are [epyc9, epyc8]. The 21 lineage holds were re-pointed to N1B (helper ~/qc-plan-r3/lineage_holds.py, --back restores). proof_items cb-ready is set. The rawall item kit_rtl overrides were dropped (~/qc-plan-r3/drop_rawall.py; saved under kit_rtl_prev_qcplanr3_n1b).
+- OPEN: FLOW-PREFLIGHT frame false positive on 41 rows. Fix READY claude/flowguard-named-frames-1117 519c976a838 (GREEN). After the merge, verify QC launches with the dry plan: python3 -c runpy kit_wave.py plan --probe (sys.path = rt/current/tools/autopilot), output in ~/qc-plan-r3/kwplan2.txt.
+- READY, not merged: claude/pubgate-rows-proof-1117 2a4ae437993 (N2B PRE) and claude/pubgate-foreign-tree-1117 44f07b1a4be, which is stacked on it. Merged: src-manifest-linkbase 89f8f465b39.
+- N2B: FABLE-FIX-QC-N runs gate+apply after the rows-proof merge. Note that its bind names s4q9n2b, which is on E8 only.
+- M5T chain done: bind 0, LATCHECK 1921/1921, CB16 rc 4. Rollback only.
+- Lane scratch: E8/E9 /srv/opentallas-scratch2/claude/qc-plan-r3-n1brepl-1117 (replicate scripts, src_manifest_lb.py, pg_ft.py, frame.py).
