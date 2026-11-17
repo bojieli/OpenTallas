@@ -49,6 +49,55 @@ class T(unittest.TestCase):
         self.assertGreater(st["obs_rects_out"], 2)
         self.assertIn("RECT 0.0000 0.0000 1.0000 100.0000", txt)
 
+    # CLKSITE-TAP-ESCAPE-1117
+    def test_tap_escape_pieces(self):
+        site = (1361.56, 117.72, 1365.34, 119.34)                       # sd9f clk_t8 site + pin
+        pin = (1362.64, 117.92, 1362.672, 118.688)
+        pieces, k = gen_phys.tap_escape_pieces(site, [pin, (10, 10, 11, 11)])
+        self.assertEqual(k, 1)
+        self.assertEqual(len(pieces), 2)
+        self.assertAlmostEqual(pieces[0][2], 1362.54); self.assertAlmostEqual(pieces[1][0], 1362.772)
+        self.assertEqual((pieces[0][1], pieces[0][3], pieces[1][1], pieces[1][3]), (117.72, 119.34, 117.72, 119.34))
+        self.assertEqual(gen_phys.tap_escape_pieces(site, [(10, 10, 11, 11)]), ([site], 0))
+        # pin at the site edge: one piece; two pins closer than 2 x clear: one merged column
+        self.assertEqual(len(gen_phys.tap_escape_pieces((0, 0, 4, 2), [(0.05, 0.5, 0.082, 1.2)])[0]), 1)
+        p2, k2 = gen_phys.tap_escape_pieces((0, 0, 4, 2), [(1.0, 0.5, 1.032, 1.2), (1.15, 0.5, 1.182, 1.2)])
+        self.assertEqual((len(p2), k2), (2, 1))
+
+    def test_route_obstruction_escape_only_on_pin_layer(self):
+        site = (10.0, 10.0, 14.0, 12.0)
+        pins = {"M7": [(11.0, 10.5, 11.032, 11.268)]}
+        L = gen_phys.route_obstruction_lines([(site, ["M6", "M7"])], pins)
+        self.assertEqual(sum("findLayer M6" in l for l in L), 1)
+        self.assertEqual(sum("findLayer M7" in l for l in L), 2)
+        self.assertIn('puts "OT_RESERVED_SITES route_obstructions=3"', L)
+        self.assertTrue(any("tap_escape_columns=1" in l for l in L))
+        # no pin on the site / escape off / legacy 2-tuple item: bytes of the old emitter
+        old = gen_phys.route_obstruction_lines([(site, ["M6", "M7"])])
+        self.assertEqual(gen_phys.route_obstruction_lines([(site, ["M6", "M7"], False)], pins), old)
+        self.assertEqual(gen_phys.route_obstruction_lines([(site, ["M6", "M7"], True)], {"M7": [(1, 1, 2, 2)]}), old)
+        self.assertEqual(len(old), 3)
+
+    def test_edge_pad_is_placement_only(self):
+        tap = [("clk_t1", 12.0, 11.0)]
+        orig = gen_phys.interior_tap_pin_rects
+        gen_phys.interior_tap_pin_rects = lambda P, tn: {"M7": [(11.984, 10.616, 12.016, 11.384)]}
+        try:
+            P = FakeP([{"rect_um": [10, 10, 20, 12], "kind": "die_clock_tree", "route_layers": "M1-M7"}])
+            pre, _, _ = gen_phys.reserved_sites_tcl(P, "t")
+            self.assertIn("dbBlockage_create $rs_b [expr {round(9.838*$rs_u)}] [expr {round(10*$rs_u)}] [expr {round(20.162*$rs_u)}]", pre)
+            self.assertIn("findLayer M1] [expr {round(10*$rs_u)}] [expr {round(10*$rs_u)}] [expr {round(20*$rs_u)}]", pre)
+            self.assertEqual(pre.count("findLayer M7"), 2)            # escape column over the tap pin
+            self.assertEqual(pre.count("dbObstruction_create"), 8)
+            P0 = FakeP([{"rect_um": [10, 10, 20, 12], "kind": "die_clock_tree", "route_layers": "M1-M7",
+                         "edge_pad_sites": 0, "tap_escape": False}])
+            pre0, _, _ = gen_phys.reserved_sites_tcl(P0, "t")
+            self.assertEqual(pre0.count("dbObstruction_create"), 7)
+            self.assertIn("dbBlockage_create $rs_b [expr {round(10*$rs_u)}]", pre0)
+            self.assertNotIn("edge_pad_sites", pre0)
+        finally:
+            gen_phys.interior_tap_pin_rects = orig
+
 
 if __name__ == "__main__":
     unittest.main()

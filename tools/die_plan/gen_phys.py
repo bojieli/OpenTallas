@@ -4067,17 +4067,88 @@ def route_layer_names(spec):
     return [spec] if isinstance(spec, str) else list(spec)
 
 
-def route_obstruction_lines(items):
+# CLKSITE-TAP-ESCAPE-1117 (FABLE-FIX-HEAD-SD9F; hd_serdes sd9f 19 M7 Short + 9 M2 Metal Spacing, hd_host_e he12h drc2 same class):
+# (1) the type's own interior clock tap pin (M7 BPIN at the die clock-tree cell) sits INSIDE a route-obstructed reserved site,
+#     so the M7 obstruction covered the pin and its only exit (DRT shorted through it or detoured over die-reserved M8).  The
+#     pin-layer obstruction is emitted as pieces that leave a full-height escape column (pin metal + TAP_ESCAPE_CLEAR_UM each
+#     side; M7 is vertical, so the tap wire leaves the site N or S on the pin's own track).
+# (2) a std cell abutting the E/W edge of a route-obstructed site has no legal M2 pin access (M2 is horizontal; its via
+#     enclosure ends inside the obstruction spacing).  The hard PLACEMENT blockage of such a site is padded SITE_EDGE_PAD_SITES
+#     placement sites E and W; the routing obstruction stays the plan rectangle (the die cell keeps the whole site).
+# Both proven on the sd9f ECO DB (column carve 0.10 + 3-site pad: DRT 0 violations).  Per-site opt-outs: "tap_escape": false,
+# "edge_pad_sites": 0.  A site without route_layers or without a tap pin on an obstructed layer emits the same bytes as before.
+TAP_ESCAPE_CLEAR_UM = 0.10
+SITE_EDGE_PAD_SITES = 3
+PLACE_SITE_W_UM = 0.054
+
+
+def _um_exact(v):
+    """Derived coordinate (escape column edge, padded blockage edge) at 0.1 nm; plan rectangles keep the legacy :g bytes."""
+    return f"{round(v, 4):.4f}".rstrip("0").rstrip(".")
+
+
+def tap_escape_pieces(rect, pins):
+    """rect (x0,y0,x1,y1) minus the full-height escape columns of pins [(xlo, ylo, xhi, yhi)] that overlap it ->
+    (pieces, n_columns).  No overlapping pin -> ([rect], 0)."""
+    x0, y0, x1, y1 = rect
+    cols = sorted((max(x0, a - TAP_ESCAPE_CLEAR_UM), min(x1, c + TAP_ESCAPE_CLEAR_UM))
+                  for a, b, c, d in pins if a < x1 and x0 < c and b < y1 and y0 < d)
+    if not cols:
+        return [rect], 0
+    merged = [list(cols[0])]
+    for a, c in cols[1:]:
+        if a <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], c)
+        else:
+            merged.append([a, c])
+    pieces, x = [], x0
+    for a, c in merged:
+        if a - x > 1e-9:
+            pieces.append((x, y0, a, y1))
+        x = c
+    if x1 - x > 1e-9:
+        pieces.append((x, y0, x1, y1))
+    return pieces, len(merged)
+
+
+def route_obstruction_lines(items, pins_by_layer=None):
     """CLKSITE-RESERVE-1115: M1-M7 routing obstructions over the reserved die clock-tree cell sites, so the type's own
-    routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])]."""
-    out = []
-    for (x0, y0, x1, y1), lays in items:
-        q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+    routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])] or
+    [(rect, [layers], tap_escape)].  pins_by_layer {layer: [(xlo, ylo, xhi, yhi)]}: the type's own interior tap pins;
+    CLKSITE-TAP-ESCAPE-1117 leaves an escape column over each on its own layer."""
+    out, n, ncol = [], 0, 0
+    for it in items:
+        (x0, y0, x1, y1), lays = it[0], it[1]
+        escape = it[2] if len(it) > 2 else True
         for ln in lays:
-            out.append(f"odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer {ln}] {q}")
+            pieces, k = tap_escape_pieces((x0, y0, x1, y1), (pins_by_layer or {}).get(ln, []) if escape else [])
+            ncol += k
+            for a, b, c, d in pieces:
+                # site edges keep the legacy :g bytes (same edge as the other layers); only column edges are derived
+                a, b, c, d = (f"{v:g}" if v in (x0, y0, x1, y1) else _um_exact(v) for v in (a, b, c, d))
+                q = f"[expr {{round({a}*$rs_u)}}] [expr {{round({b}*$rs_u)}}] [expr {{round({c}*$rs_u)}}] [expr {{round({d}*$rs_u)}}]"
+                out.append(f"odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer {ln}] {q}")
+                n += 1
     if items:
-        out.append(f'puts "OT_RESERVED_SITES route_obstructions={sum(len(l) for _, l in items)}"')
+        out.append(f'puts "OT_RESERVED_SITES route_obstructions={n}"')
+    if ncol:
+        out.append(f'puts "OT_RESERVED_SITES tap_escape_columns={ncol} clear_um={TAP_ESCAPE_CLEAR_UM:g}"')
     return out
+
+
+def interior_tap_pin_rects(P, tn):
+    """{layer: [(xlo, ylo, xhi, yhi)]} of the type's interior tap pins exactly as io_tcl places them (clock taps incl. core
+    and PHY-edge clock pins: actual height; reset / start taps: 4 x PIN_LEN_UM), on layer_budget.partition_signal_max."""
+    if not hasattr(P, "layer_budget"):          # bare plan stand-ins (unit tests): no pins to place
+        return {}
+    top = P.layer_budget["partition_signal_max"]
+    lw = LAYER_W.get(top, 0.04)
+    heights = P.types[tn].get("clock", {}).get("tap_pin_heights_um", {})
+    out = []
+    for name, x, y in tap_pins(P, tn):
+        hh = (tap_pin_height(P, tn, name) if name in heights else 4 * PIN_LEN_UM) / 2
+        out.append((x - lw / 2, y - hh, x + lw / 2, y + hh))
+    return {top: out}
 
 
 def reserved_sites_tcl(P, tn):
@@ -4095,22 +4166,34 @@ def reserved_sites_tcl(P, tn):
     if not rows:
         return "", "", ""
     w, h = t["outline_um"]
-    hard, bank, hard_route = [], [], []
+    hard, bank, hard_route, npad, padded = [], [], [], 0, set()
     for r in rows:
         x0, y0, x1, y1 = r["rect_um"]
         if r.get("kind") not in RESERVED_KINDS:
             raise ValueError(f"{tn}: reserved site kind {r.get('kind')} not in {RESERVED_KINDS}")
         if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
             raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
-        (hard if r["kind"] in ("die_clock_tree", "channel_keepout") else bank).append((x0, y0, x1, y1))
+        px0, px1 = x0, x1
         if r["kind"] == "die_clock_tree" and r.get("route_layers"):   # CLKSITE-RESERVE-1115 opt-in
-            hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"])))
+            hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"]), r.get("tap_escape", True)))
+            pad = r.get("edge_pad_sites", SITE_EDGE_PAD_SITES)         # CLKSITE-TAP-ESCAPE-1117 (2)
+            if not isinstance(pad, int) or isinstance(pad, bool) or pad < 0:
+                raise ValueError(f"{tn}: reserved site edge_pad_sites must be an integer >= 0: {pad!r}")
+            if pad:
+                px0, px1 = max(0.0, x0 - pad * PLACE_SITE_W_UM), min(float(w), x1 + pad * PLACE_SITE_W_UM)
+                npad += 1
+        if (px0, px1) != (x0, x1):
+            x0, x1 = round(px0, 4), round(px1, 4)
+            padded.add((x0, y0, x1, y1))
+        (hard if r["kind"] in ("die_clock_tree", "channel_keepout") else bank).append((x0, y0, x1, y1))
+    tap_rects = interior_tap_pin_rects(P, tn) if any(it[2] for it in hard_route) else {}
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
     # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
     def create(rects, var):
         out = []
         for x0, y0, x1, y1 in rects:
-            q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+            a, b, c, d = (_um_exact(v) if (x0, y0, x1, y1) in padded else f"{v:g}" for v in (x0, y0, x1, y1))
+            q = f"[expr {{round({a}*$rs_u)}}] [expr {{round({b}*$rs_u)}}] [expr {{round({c}*$rs_u)}}] [expr {{round({d}*$rs_u)}}]"
             out += [f"set rs_k [odb::dbBlockage_create $rs_b {q}]", f"lappend {var} $rs_k", f"lappend rs_rects [list {q}]"]
         return out
     head = ["uplevel #0 {", "set rs_b [ord::get_db_block]", "set rs_u [[ord::get_db_tech] getDbUnitsPerMicron]",
@@ -4120,7 +4203,8 @@ def reserved_sites_tcl(P, tn):
         pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
                           *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
                           "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
-                          *route_obstruction_lines(hard_route),
+                          *route_obstruction_lines(hard_route, tap_rects),
+                          *([f'puts "OT_RESERVED_SITES edge_pad_sites: {npad} route-obstructed sites padded E/W in placement"'] if npad else []),
                           # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
                           "set ::cland_avoid_rects $rs_rects",
                           f'puts "OT_RESERVED_SITES kind=die_clock_tree rects={len(hard)} area_um2={sum((c-a)*(d-b) for a,b,c,d in hard):.3f}"',
