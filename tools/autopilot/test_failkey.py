@@ -86,12 +86,16 @@ def test_p4_family_breaker_holds_unfailed_siblings_and_releases_by_probe():
     # inputs change: probe window, ONE item of the family may launch
     rel = FG.breaker_tick(st, now=6000, inputs={"s81": "digest-2"})
     assert rel and "PROBE" in rel[0][1]
-    assert FG.held_key(st, "s81", "slice_station__t7", claim=True) == ""             # the probe
-    assert FG.held_key(st, "s81", "slice_station__t8", claim=True)                   # the rest of the family waits (PROBE-ONE-1116: and every other family of the class)
-    assert FG.held_key(st, "s81", "serdes__t4") == ""
-    # the probe fails again at the same stage: shut until the inputs change again
-    out = FG.probe_result(st, "s81", "slice_station__t7", "gen", passed=False)
-    assert out and FG.held_key(st, "s81", "slice_station__t8")
+    assert FG.held_key(st, "s81", "slice_station__t7", claim=True) == ""             # probe 1 of 3 (WAVE-PILOT-FIX: three probes per class)
+    assert FG.held_key(st, "s81", "slice_station__t8", claim=True) == ""             # probe 2
+    assert FG.held_key(st, "s81", "slice_station__t5", claim=True) == ""             # probe 3
+    assert FG.held_key(st, "s81", "serdes__t4") == ""                                # another family: free
+    assert FG.held_key(st, "s81", "slice_station__t6", claim=True)                   # the rest of the family waits
+    # every claimed probe fails again at the same stage: shut until the inputs change again
+    FG.probe_result(st, "s81", "slice_station__t7", "gen", passed=False)
+    FG.probe_result(st, "s81", "slice_station__t8", "gen", passed=False)
+    out = FG.probe_result(st, "s81", "slice_station__t5", "gen", passed=False)
+    assert out and FG.held_key(st, "s81", "slice_station__t6")
     assert FG.breaker_tick(st, now=7000, inputs={"s81": "digest-2"}) == []           # same inputs as the failed probe: still shut
     FG.breaker_tick(st, now=8000, inputs={"s81": "digest-3"})
     assert FG.held_key(st, "s81", "slice_station__t9", claim=True) == ""

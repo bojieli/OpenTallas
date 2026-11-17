@@ -36,7 +36,7 @@ class Probes(unittest.TestCase):
             FG.held_key(st, "qwen_compute", f"{f}__t1", claim=True)
         FG.probe_result(st, "qwen_compute", "a__t1", "kit_rtl", passed=False, failed_stage=True)
         FG.probe_result(st, "qwen_compute", "b__t1", "kit_rtl", passed=False, failed_stage=True)
-        self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "probe")
+        self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "probe")        # c__t1 still runs
         FG.probe_result(st, "qwen_compute", "c__t1", "kit_rtl", passed=False, failed_stage=True)
         self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "shut")
         self.assertEqual(FG.held_key(st, "qwen_compute", "d__t1", claim=True), KEY)

@@ -627,7 +627,7 @@ def probe_result(st, die, item, stage, passed, failed_stage=False, required_stag
     g = fg_state(st)
     out = []
     for key, e in list(g["open"].items()):
-        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or item not in probe_items(e):
+        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or (item != probe_item(e) and item not in probe_items(e)):
             continue
         if required_stage is not None and e.get("stage") != required_stage:
             continue
@@ -644,12 +644,12 @@ def probe_result(st, die, item, stage, passed, failed_stage=False, required_stag
             failed = e.setdefault("probes_failed", [])
             if item not in failed:
                 failed.append(item)
-            if len(failed) >= PROBES_PER_CLASS:               # all three probes failed: shut until the inputs change again
+            if all(i in failed for i in probe_items(e)):     # every claimed probe failed (none left running): shut until the inputs change again
                 e["state"], e["probe"], e["probes"], e["probes_failed"], e["probe_t"] = "shut", {}, [], [], {}
                 e["inp"] = e.get("inp_probe") or e.get("inp")
-                out.append((key, f"probe {item} failed again at {stage} ({PROBES_PER_CLASS} of {PROBES_PER_CLASS} probes failed): class stays shut until the inputs change again"))
+                out.append((key, f"probe {item} failed again at {stage} (all {len(failed)} claimed probe(s) failed): class stays shut until the inputs change again"))
             else:
-                out.append((key, f"probe {item} failed at {stage}: {len(failed)} of {PROBES_PER_CLASS} probes failed, the class stays in PROBE state for the next probe"))
+                out.append((key, f"probe {item} failed at {stage}: {len(failed)} of {len(probe_items(e))} claimed probes failed, the others still run"))
     return out
 
 
