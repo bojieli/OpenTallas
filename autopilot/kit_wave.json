@@ -744,7 +744,8 @@
    "gen_hosts": [
     "epyc8",
     "intel1",
-    "epyc10"
+    "epyc10",
+    "epyc7"
    ],
    "place_prefer": [
     "intel1",
@@ -6043,6 +6044,11 @@
    ],
    "rollback_tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg2c_d10",
    "gen_hosts_prev_wpf1117": [
+    "epyc10"
+   ],
+   "prev_gen_hosts_fleetopsr1117b": [
+    "epyc8",
+    "intel1",
     "epyc10"
    ]
   },
