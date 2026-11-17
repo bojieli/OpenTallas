@@ -11,7 +11,8 @@ pins, 144 nets re-routed, DRC 0, TT -1.39, FF hold -58.19 -> +0.47.  This file i
 
 ENDPOINTS.tsv (written by hold_eco_internal_dump.tcl, header line required), tab separated:
   endpoint  startpoint  start_kind  end_kind  ff_hold_slack_ps  tt_setup_slack_ps
-kind is reg | port | macro.  Only reg/macro starts to a reg capture pin (D, RESETN, SETN, wd_in*) are internal; a path that
+kind is reg | port | macro. Timed signal inputs of macros are capture pins too. Optional seventh field `net` identifies
+the original capture net, so unmodified siblings of a selected sink can be reported for post-route review. A path that
 starts at an input port or ends at an output port is the parent's and never gets a cell (no port-only padding).
 OUT.tsv (read by hold_eco_internal_insert.tcl via OT_PRD_HOLD_PLAN): capture_pin<TAB>n_hb4, then a comment trailer.
 Sizing: need = target - slack.  One HB4 covers need <= DOUBLE_OVER_PS (25), else ceil(need / HB4_FF_PS) and at least two.
@@ -35,10 +36,10 @@ MAX_ABS_SLACK_PS = 1e5      # a row beyond this is a unit error (seconds x1e12 t
 NO_TT_PATH_PS = 1e6         # hold_eco_internal_dump.tcl writes this when the endpoint has no TT path
 
 
-def capture_pin(endpoint):
-    """True for a flop capture pin the inserter supports"""
+def capture_pin(endpoint, kind="reg"):
+    """A known flop capture pin or an STA-proven macro signal capture."""
     pin = endpoint.rsplit("/", 1)[-1]
-    return pin in CAPTURE_PINS or pin.startswith("wd_in")
+    return (kind == "macro" and "/" in endpoint) or pin in CAPTURE_PINS or pin.startswith("wd_in")
 
 
 def need_to_cells(need, hb4_ff=HB4_FF_PS, double_over=DOUBLE_OVER_PS, cap=MAX_PER_ENDPOINT):
@@ -57,9 +58,9 @@ def read_endpoints(text):
         raise ValueError("endpoints file needs the header line: endpoint startpoint start_kind end_kind ff_hold_slack_ps tt_setup_slack_ps")
     for ln in lines[1:]:
         f = ln.split("\t")
-        if len(f) != 6:
-            raise ValueError(f"bad endpoint row (6 tab fields): {ln!r}")
-        e, s, sk, ek, ff, tt = f
+        if len(f) not in (6, 7):
+            raise ValueError(f"bad endpoint row (6 or 7 tab fields): {ln!r}")
+        e, s, sk, ek, ff, tt = f[:6]
         if sk not in KINDS or ek not in KINDS:
             raise ValueError(f"bad kind in {ln!r}")
         ffv, ttv = float(ff), float(tt)
@@ -67,7 +68,8 @@ def read_endpoints(text):
             raise ValueError(f"non finite slack in {ln!r}")
         if abs(ffv) > MAX_ABS_SLACK_PS or (abs(ttv) > MAX_ABS_SLACK_PS and ttv != NO_TT_PATH_PS):
             raise ValueError(f"slack outside +-{MAX_ABS_SLACK_PS:g} ps (wrong time unit?) in {ln!r}")
-        rows.append(dict(endpoint=e, startpoint=s, start_kind=sk, end_kind=ek, ff=ffv, tt=ttv))
+        rows.append(dict(endpoint=e, startpoint=s, start_kind=sk, end_kind=ek, ff=ffv, tt=ttv,
+                         net=f[6] if len(f) == 7 else ""))
     return rows
 
 
@@ -81,7 +83,7 @@ def plan(rows, target=TARGET_PS, select=SELECT_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_
         if r["start_kind"] == "port" or r["end_kind"] == "port":
             skipped.append((e, "port path: the parent's, no cell"))
             continue
-        if not capture_pin(e):
+        if not capture_pin(e, r["end_kind"]):
             skipped.append((e, "not a supported capture pin (D/RESETN/SETN/wd_in*)"))
             continue
         if r["ff"] >= select:
@@ -102,9 +104,21 @@ def plan(rows, target=TARGET_PS, select=SELECT_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_
             partial += 1
             n = afford
         cells.append((e, n))
+    selected = {e for e, _ in cells}
+    touched = {r.get("net") for r in rows if r["endpoint"] in selected and r.get("net")}
+    siblings = {}
+    for r in rows:
+        e = r["endpoint"]
+        if (r.get("net") in touched and e not in selected and r["start_kind"] != "port"
+                and r["end_kind"] != "port" and capture_pin(e, r["end_kind"])):
+            if e not in siblings or r["ff"] < siblings[e]["ff"]:
+                siblings[e] = r
     total = sum(n for _, n in cells)
-    return dict(cells=cells, skipped=skipped, summary=dict(
+    return dict(cells=cells, skipped=skipped, siblings=list(siblings.values()),
+                capture_kinds={r["endpoint"]: r["end_kind"] for r in rows if r["endpoint"] in selected}, summary=dict(
         endpoints=len(cells), hb4=total, partial=partial, skipped=len(skipped), target_ps=target,
+        unmodified_touched_siblings=len(siblings),
+        touched_net_coverage="reported" if all(r.get("net") for r in rows if r["endpoint"] in selected) else "not_measured",
         worst_ff_ps=min([r["ff"] for r in worst.values()] or [0.0]),
         selected_over_negative=f"{len(cells)} of {sum(1 for r in rows if r['ff'] < 0 and r['start_kind'] != 'port' and r['end_kind'] != 'port')}"))
 
@@ -113,7 +127,10 @@ def write_plan(p, out):
     with open(out, "w") as f:
         f.write("# hold_eco_internal plan: capture_pin\tn_hb4\n")
         for e, n in p["cells"]:
-            f.write(f"{e}\t{n}\n")
+            tag = "\tmacro" if p.get("capture_kinds", {}).get(e) == "macro" else ""
+            f.write(f"{e}\t{n}{tag}\n")
+        for r in p.get("siblings", []):
+            f.write(f"# reroute sibling {r['endpoint']} net={r['net']} ff_ps={r['ff']:.3f}; post-route hold must be measured\n")
         for e, why in p["skipped"]:
             f.write(f"# skipped {e}: {why}\n")
         f.write("# summary " + json.dumps(p["summary"], sort_keys=True) + "\n")
@@ -124,8 +141,11 @@ def read_plan(text):
     for ln in text.splitlines():
         if not ln.strip() or ln.startswith("#"):
             continue
-        e, n = ln.split("\t")
-        if int(n) < 1 or not capture_pin(e):
+        fields = ln.split("\t")
+        if len(fields) not in (2, 3) or (len(fields) == 3 and fields[2] != "macro"):
+            raise ValueError(f"bad plan row {ln!r}")
+        e, n = fields[:2]
+        if int(n) < 1 or not capture_pin(e, fields[2] if len(fields) == 3 else "reg"):
             raise ValueError(f"bad plan row {ln!r}")
         out.append((e, int(n)))
     return out

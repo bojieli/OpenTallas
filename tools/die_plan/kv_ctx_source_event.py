@@ -57,6 +57,19 @@ def host_port_map(source_map, parent_text, old_module, new_module):
     return result
 
 
+
+FAULT_MERGE_MODULE = """// Same local two-input fault OR as the former top-level expression; no state/cycles.
+(* keep_hierarchy *)
+module qkd_kv_ctx_fault_merge (
+    input wire base_fault,
+    input wire ctx_fault,
+    output wire fault
+);
+    assign fault = base_fault | ctx_fault;
+endmodule
+"""
+
+
 def emit(a):
     root = Path(a.root).resolve()
     native = Path(a.native).resolve()
@@ -128,11 +141,11 @@ def emit(a):
     new_ctl = ctl.group().replace(old_svc.group(), '.d2d__svc(kv_ctx_svc)')
     text = text[:ctl.start()]+new_ctl+text[ctl.end():]
     text = once(text, r'^(\s*wire \[551:0\] n_hrec_rx__pinfix1;)$',
-                lambda m: m.group(1)+'\n  wire [173:0] kv_ctx_svc;\n  wire kv_ctx_fault;\n  wire kv_ctx_host_fault;\n  assign kv_ctx_host_fault = '+old_fault+' | kv_ctx_fault;', 'context declarations')
+                lambda m: m.group(1)+'\n  wire [173:0] kv_ctx_svc;\n  wire kv_ctx_fault;\n  wire kv_ctx_host_fault;\n  qkd_kv_ctx_fault_merge u_kv_ctx_fault_merge (.base_fault('+old_fault+'), .ctx_fault(kv_ctx_fault), .fault(kv_ctx_host_fault));', 'context declarations')
     out = Path(a.out).resolve()
     out.relative_to(root)  # final artifacts must be portable members of this source event
     out.mkdir(parents=True, exist_ok=False)
-    (out/'qkd_kvs_emb_rope.sv').write_text(wrapper+'\n')
+    (out/'qkd_kvs_emb_rope.sv').write_text(wrapper+'\n'+FAULT_MERGE_MODULE)
     with gzip.GzipFile(filename=str(out/'die_bound_native_ctx_hr4.v.gz'), mode='wb', mtime=0) as f:
         f.write(('// Source successor emitted by tools/die_plan/kv_ctx_source_event.py; source_event.json records inputs and pending physical/model qualification.\n// The original generated-input header below is retained as history.\n'+text).encode())
     ab = json.loads(ab_path.read_text())
@@ -165,6 +178,12 @@ def emit(a):
     ab['port_names'] = str(port_map_out.relative_to(root))
     ab['base'] = os.path.relpath(root, out)
     ab['map_file'] = 'asbuilt_map_base.json'
+    # This exact local leaf replaces the former anonymous Yosys $or; keep its
+    # ownership explicit rather than adding a catch-all glue mapping rule.
+    parts = ab.setdefault('map', {}).setdefault('parts', {})
+    if 'u_kv_ctx_fault_merge' in parts:
+        raise ValueError('context fault merge already mapped')
+    parts['u_kv_ctx_fault_merge'] = ['hub_Wi', 'ctx_fault_merge']
     ab['netlist'] = [str((out/'die_bound_native_ctx_hr4.v.gz').relative_to(root))]
     for key in ('files','prefer'):
         ab[key] = list(dict.fromkeys(ab.get(key, [])+new_sources))
