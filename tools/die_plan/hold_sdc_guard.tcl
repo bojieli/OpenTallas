@@ -97,12 +97,27 @@ proc ::ot_hsg_measured_ff {} {
   if {![llength [info commands ::ot_vclk_measured_bind]]} { uplevel #0 [list source $helper] }
   ::ot_vclk_measured_bind
 }
+# Use the already-declared signal table in the actual plain FF GRT scene.
+# Sign-off and TT repair already use this table. Bind the measured IO mean
+# afterward, because the table also changes physical clock parasitics.
+proc ::ot_hsg_signal_ff {} {
+  if {[info exists ::ot_mm_active] && $::ot_mm_active} { return }
+  if {![info exists ::env(OT_VCLK_CORNER)] || $::env(OT_VCLK_CORNER) ne "ff"} { return }
+  if {![info exists ::env(CORNER)] || [string toupper $::env(CORNER)] ne "BC"} { return }
+  if {![info exists ::env(OT_RC_SIGNAL)] || $::env(OT_RC_SIGNAL) ne "1"} { return }
+  set helper [file join $::ot_hsg_dir rc_signal_adjust.tcl]
+  if {![file isfile $helper]} { error "OT_HOLD_SDC configured signal RC helper missing: $helper" }
+  if {![info exists ::env(LAYER_PARASITICS_FILE)] || ![file isfile $::env(LAYER_PARASITICS_FILE)]} { error "OT_HOLD_SDC configured signal RC layer table missing" }
+  uplevel #0 [list source $helper]
+  ::ot_rc_signal_table
+}
 set ::ot_hsg_dir [file dirname [file normalize [info script]]]
 if {![llength [info procs ::ot_hsg_rt_orig]] && [llength [info commands ::repair_timing]]} {
   rename ::repair_timing ::ot_hsg_rt_orig
   proc ::repair_timing {args} {
     if {[lsearch -exact $args -hold] >= 0 || ([lsearch -exact $args -setup] < 0)} {
       ::ot_hold_sdc_guard repair_timing
+      ::ot_hsg_signal_ff
       ::ot_hsg_measured_ff
     }
     return [uplevel 1 [list ::ot_hsg_rt_orig {*}$args]]
