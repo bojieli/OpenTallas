@@ -34,13 +34,21 @@ def test_missing_path_is_not_a_reason():
 def test_gate_posts_once_and_stops_launches(monkeypatch):
     ap, st, cfg = AP(), {}, {"enabled": True, "dies": {"d": {"enabled": True}}}
     monkeypatch.setattr(KW, "hub_disk_low", lambda cfg, **k: "hub disk low: / 10 GB free < 64 GB")
-    KW.hub_disk_gate(ap, cfg, st)
+    monkeypatch.setattr(KW, "hub_top_writers", lambda *a, **k: "x 1 GB")
     KW.hub_disk_gate(ap, cfg, st)
     assert len(ap.q) == 1 and "STATE" in ap.q[0]
-    assert KW.stop_reason(cfg, "d", "/nonexistent") == "hub disk low: / 10 GB free < 64 GB"
+    KW.hub_disk_gate(ap, cfg, st)                    # WAVE-FLOW-R: the 2nd refused tick is an ALERT, once
+    KW.hub_disk_gate(ap, cfg, st)
+    assert len(ap.q) == 2 and "ALERT" in ap.q[1] and "x 1 GB" in ap.q[1]
+    # the hub floor no longer stops build-host launches
+    assert KW.stop_reason(cfg, "d", "/nonexistent") is None
+    monkeypatch.setattr(KW, "gen_hosts", lambda c, d, i: ["epyc7"])
+    assert KW.hub_launch_held(cfg, "d", "i") == ""
+    monkeypatch.setattr(KW, "gen_hosts", lambda c, d, i: ["localhost"])
+    assert KW.hub_launch_held(cfg, "d", "i").startswith("hub disk low")
     monkeypatch.setattr(KW, "hub_disk_low", lambda cfg, **k: "")
     KW.hub_disk_gate(ap, cfg, st)
-    assert len(ap.q) == 2 and "resume" in ap.q[1] and KW.stop_reason(cfg, "d", "/nonexistent") is None
+    assert len(ap.q) == 3 and "resume" in ap.q[2]
 
 
 def test_alternating_text_same_stage_is_one_signature():
