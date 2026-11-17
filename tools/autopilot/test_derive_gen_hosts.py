@@ -39,3 +39,20 @@ class Room(unittest.TestCase):
         self.assertEqual(SM.room_after_copy(118, 49)[0], False)       # 69 left
         self.assertEqual(SM.room_after_copy(95, 49, part_gb=30)[0], True)   # 95 + 30 already written - 49 = 76 left
         self.assertEqual(SM.room_after_copy(100, 57, floor_gb=80)[0], False)
+
+
+class Log(unittest.TestCase):
+    def test_main_logs_every_die_and_marks_applied_changes(self):
+        c = tempfile.mkdtemp(); os.makedirs(c + "/autopilot"); os.makedirs(c + "/bin")
+        json.dump(cfg(["a", "b"]), open(c + "/autopilot/kit_wave.json", "w")); open(c + "/bin/coord-commit.sh", "w").write("#!/bin/bash\nexit 0\n"); os.chmod(c + "/bin/coord-commit.sh", 0o755)
+        G.probe = lambda h, t, run=None: ("h1", False, 200.0) if h == "a" else ("", False, 200.0)
+        orig = G.derive.__defaults__
+        G.derive.__defaults__ = (G.HOSTS, G.probe, None)
+        try:
+            lg = c + "/derive.log"
+            G.main(["--coord", c, "--hosts", "a,b", "--apply", "--log", lg])
+        finally:
+            G.derive.__defaults__ = orig
+        txt = open(lg).read()
+        self.assertIn("kv a,b -> a APPLIED", txt); self.assertIn("b: tree missing or other hash", txt)
+        self.assertEqual(json.load(open(c + "/autopilot/kit_wave.json"))["dies"]["kv"]["gen_hosts"], ["a"])
