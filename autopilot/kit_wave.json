@@ -50929,6 +50929,19 @@
       "tt_ctlm"
      ],
      "carry": false
+    },
+    {
+     "id": "qc-d3-kitrtl-paths-1117",
+     "plan_sha": "19be3f0a3bb42d8ea1a388412843e1d80e98563041d169899e54c22a47dffe82",
+     "owner": "QC-PLAN-R3",
+     "carry": false,
+     "keys": [
+      "*"
+     ],
+     "reason": "COORD URGENT 11-17 07:1x, named cause: D2/D3 pin bind.py (049b2db8 = main eb1e7344) predates main 3d763393b4 KITRTL-PATHS, so kit-rtl --src-tree does not rebase the 50 bind.f paths of the L2BQ bind that name the OLD pin tree src_qc_pin_eb1e73448bd0_s4q9l2 -> \"N filelist path(s) outside the kit source tree\". Hold every QC launch (each starts at kit_rtl) on D3; running attempts finish. Owner QC-PLAN-R3; expires 6 h (about 13:20 PST 11-17): release at the D4 apply (D3 + bind.py = pin + 3d763393b4) by RESULT qc-d4-kitrtl-paths, or by hand at expiry.",
+     "release": [
+      "result:QC-PLAN-R3:qc-d4-kitrtl-paths"
+     ]
     }
    ],
    "planned_events": [
