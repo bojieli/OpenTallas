@@ -741,7 +741,9 @@
     "intel2"
    ],
    "gen_hosts": [
-    "epyc10"
+    "epyc10",
+    "epyc8",
+    "intel1"
    ],
    "place_prefer": [
     "intel1",
@@ -6061,7 +6063,10 @@
     "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d3",
     "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg1A_pgr1_d5"
    ],
-   "pilot_item": "kv3_hg_v1"
+   "pilot_item": "kv3_hg_v1",
+   "prev_gen_hosts_fleetopsr1116d": [
+    "epyc10"
+   ]
   },
   "s81": {
    "enabled": true,
