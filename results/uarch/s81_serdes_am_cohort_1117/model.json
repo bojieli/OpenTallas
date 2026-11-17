@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.structural-clock-model.v1",
+  "status": "MODEL_BEFORE_BUILD",
+  "mechanism": "AM-only alternate existing member clock leaf fallback on majority-leaf radius failure",
+  "vehicle": "S81 serdes__t13 immutable H5 CTS fullshape",
+  "clock_target_ps": 833,
+  "added_cells": 0,
+  "added_ff": 0,
+  "added_cycles": 0,
+  "added_clock_buffers": 0,
+  "data_path_changes": 0,
+  "area_delta_um2": 0,
+  "token_latency_cycles_delta": 0,
+  "boundary_bits_per_cycle_delta": 0,
+  "memory_port_bytes_per_cycle_delta": 0,
+  "replicas": 1,
+  "affected_ff": 21,
+  "groups": 3,
+  "common_clock_root": "port:io_pma_rck[0]:0",
+  "same_clock_gating_and_inverter_parity": "read-only fullshape actual ancestry proved all21",
+  "fixed_register_positions": true,
+  "routing": "existing short local clock wires only; original generic30um radius and fanout cap retained",
+  "leaf_choices": [
+    "clknet_leaf_731_io_pma_rck[0]_regs",
+    "clknet_leaf_730_io_pma_rck[0]_regs",
+    "clknet_leaf_733_io_pma_rck[0]_regs"
+  ],
+  "conservative_new_fanouts": [
+    14,
+    23,
+    7
+  ],
+  "before_fanouts": [
+    8,
+    24,
+    4
+  ],
+  "expected_added_steady_latency": 0,
+  "qualification": "unqualified until exact leaf fallback guard and fullshape TT/FF snapshot measured; source default-off retained"
+}

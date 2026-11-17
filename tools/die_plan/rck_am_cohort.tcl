@@ -24,6 +24,46 @@ proc ot_rck_am_root {net} {
  }
 }
 
+# S81-SERDES-R2 G3 (11-16): la_try picks the leaf with most members; when that leaf's driver is > OT_LEAF_AFF_UM
+# from a member ("far", G3 CTS 11-16) try every member leaf, nearest driver to the cohort centroid first, with the
+# same clock/gating/cap and unchanged OT_LEAF_AFF_UM radius checks. Only clock leaf connections change.
+proc ot_rck_am_near {mem} {
+ global la_ck la_fo la_cap la_ronly la_moved la_blk la_um la_dbu la_maxg
+ if {![la_same_clock $mem]} {return clock}
+ if {[llength $mem]>$la_maxg} {return big}
+ set r [expr {$la_um * $la_dbu}]
+ set sx 0; set sy 0
+ foreach m $mem { lassign [la_xy [[dict get $la_ck $m] getInst]] x y; set sx [expr {$sx+$x}]; set sy [expr {$sy+$y}] }
+ set cx [expr {$sx/[llength $mem]}]; set cy [expr {$sy/[llength $mem]}]
+ set cand {}
+ foreach m $mem {
+  set net [la_leaf $m]; if {$net eq "NULL"} continue
+  set drv [la_drv $net]; if {$drv eq "" || [$net getSigType] ne "CLOCK"} continue
+  lassign [la_xy $drv] dx dy
+  lappend cand [list [expr {abs($dx-$cx)+abs($dy-$cy)}] [$net getName] $dx $dy]
+ }
+ set cand [lsort -unique -index 1 $cand]
+ foreach c [lsort -real -index 0 $cand] {
+  lassign $c dc nn dx dy
+  set net [$la_blk findNet $nn]; set g0 [la_groot $net]; set mv {}; set worst 0; set bad ""
+  foreach m $mem {
+   set it [dict get $la_ck $m]
+   lassign [la_xy [$it getInst]] x y; set d [expr {abs($x-$dx)+abs($y-$dy)}]; if {$d>$worst} { set worst $d }
+   if {[[$it getNet] getName] eq $nn} continue
+   if {$d > $r} { set bad far; break }
+   if {[la_groot [$it getNet]] ne $g0} { set bad gate; break }
+   lappend mv $it
+  }
+  if {$bad eq "" && [dict get $la_fo $nn] + [llength $mv] > $la_cap} { set bad cap }
+  puts "OT_RCK_AM_NEAR leaf $nn driver_to_centroid [format %.1f [expr {double($dc)/$la_dbu}]] um worst_member [format %.1f [expr {double($worst)/$la_dbu}]] um verdict [expr {$bad eq "" ? "ok" : $bad}]"
+  if {$bad ne ""} continue
+  if {!$la_ronly} {
+   foreach it $mv { set old [$it getNet]; dict incr la_fo [$old getName] -1; $it disconnect; $it connect $net; dict incr la_fo $nn; incr la_moved }
+  }
+  return moved
+ }
+ return far
+}
 set am_hdr {}; set am_parts {}
 foreach n [dict keys $la_ck] {
  if {[regexp {u_rxf_q\\?\[([0-9]+)\\?\]} $n _ bit] && $bit>=532 && $bit<=543} { dict set am_hdr $bit $n }
@@ -52,6 +92,7 @@ for {set g 0} {$g<3} {incr g} {
  dict for {leaf root} $leaves { dict set la_groot_c $leaf $root }
  puts "OT_RCK_AM_COHORT group $g actual_root [lindex [dict keys $roots] 0]"
  set verdict [la_try $members]
+ if {$verdict eq "far"} {set verdict [ot_rck_am_near $members]}
  if {$verdict ni {moved ok}} { error "OT_RCK_AM_COHORT group $g rejected by baseline clock/gating/radius/cap check: $verdict" }
  incr am_groups
  puts "OT_RCK_AM_COHORT group $g FF [llength $members] status $verdict"
