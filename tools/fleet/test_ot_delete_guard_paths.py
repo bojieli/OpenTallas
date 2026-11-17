@@ -26,3 +26,32 @@ class AnyKeyPaths(unittest.TestCase):
         p = G.build_protected(c)
         self.assertIn(WS + "/20261113/s81", p)
         self.assertNotIn("/srv/opentallas-scratch2/claude/kw45", p)                       # a bare lane root in prose is not a root
+
+
+class RetirementQueuePaths(unittest.TestCase):
+    OLD = "/srv/opentallas-scratch2/claude/kw45/src_kv_old"
+    LIVE = "/srv/opentallas-scratch2/claude/kw45/src_kv_live"
+
+    def protected(self, extra=None):
+        d = {"src": self.LIVE, "superseded_trees": [self.OLD]}
+        d.update(extra or {})
+        c = coord({"qwen_kvsys": d})
+        self.addCleanup(__import__("shutil").rmtree, c)
+        return G.build_protected(c)
+
+    def test_queue_only_is_not_protected_but_manual_and_live_proofs_still_win(self):
+        p = self.protected()
+        self.assertNotIn(self.OLD, p)
+        self.assertIn(self.LIVE, p)
+        self.assertIsNone(G.refuse(self.OLD, protected=p, ptext=""))
+        self.assertIn("protected", G.refuse(self.OLD, protected=p | {self.OLD}, ptext=""))
+        self.assertIn("live process", G.refuse(self.OLD, protected=p, ptext=self.OLD))
+
+    def test_other_direct_nested_and_current_references_are_preserved(self):
+        for extra in ({"src": self.OLD}, {"rollback_tree": self.OLD}, {"PROTECTEDDBS": [self.OLD]},
+                      {"item_inputs": {"x": {"superseded_trees": [self.OLD]}}}):
+            self.assertIn(self.OLD, self.protected(extra), extra)
+
+    def test_unrecognized_queue_value_is_not_filtered(self):
+        for value in (self.OLD, {"path": self.OLD}, [{"path": self.OLD}]):
+            self.assertIn(self.OLD, self.protected({"superseded_trees": value}))
