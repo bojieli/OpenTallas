@@ -10307,3 +10307,14 @@ Full lane takeover in inherited Claude clones; no duplicate lane worktrees.
 - Fleet/tools/wave/merge: /root/fleet; merge service + r408/r409, source propagation, disk/admission and source drift. TOKEN child covers TOK-VERIFY-3/TOKEN-R and all model/token scopes.
 - HBM: parked by latest owner handoff; no new HBM work.
 Root: coordinator approvals, cross-lane decisions and uncovered failures. Review-before-route remains required. Owner questions plain text in CODEX-LOG.md.
+
+## CODEX takeover 2026-11-16 22:20 PST (22:18 owner request)
+Read current role/full handoff/2218 handoff and canonical live queue; stale17:45 snapshot superseded by current lane posts. Direct inherited lanes, no duplicate codexworktrees.
+- S81 /root/s81: D5applied c076, missing external kit_topology landed_sidecar -> contained successor; strip ov25td30 two live pilots (do NOT adopt39ef alone), formB/col/core/bksel/IFN0 all covered by existing specialists.
+- HEAD /root/head: NF15d2 gates0/LAT329 and pendingcopy/review/apply; real4 landedring timing class and22standinseams; sd9c/sd9d andalltype jobs collect+act.
+- QC /root/qc: L2adopted/pilotlive; M clock/frame/count pipeline andproductionphysical tasks resumed, cbn oldfailure structural owned.
+- KV /root/kv: D12HG3b PRE/G00 bindliveE10/intel1, adopt earliestqualifiedgate+dryGEN; D10pathfail preserved, no exception. Offset/window physicalclass andXMIRROR structuralnext covered.
+- Fleet/tools/merge/token /root/fleet: soleMQrecovery+22approvalbacklog, gates, sourcepropagation, auto-retireapprovedr446, intel1space andallTOKENprogrammes resumed.
+- Holds /root/holds: currenttypedrelease andr447 pilot/sourceconditions, no blindoldretypes.
+- Failure/PUBLISH-GATE /root/failure_router: crossdie realfailures andpackageclass support, no duplicategens.
+Root: approvals, planadoption rulings, crosslane failures/ownerquestions. HBMparked. Reviewbeforeroute mandatory. Keepworkinguntil explicitresetnotice.
