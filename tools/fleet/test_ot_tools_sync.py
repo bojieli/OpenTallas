@@ -106,7 +106,7 @@ class Guard(unittest.TestCase):
         self.assertEqual(m.prune_snapshots(d, keep=0, text=""), [])
         m.in_use = lambda p: [1] if pathlib.Path(p).name == names[0] else []
         gone = m.prune_snapshots(d, keep=1, text="")
-        self.assertNotIn(names[0], gone); self.assertEqual(len(gone), 3)
+        self.assertNotIn(names[0], gone); self.assertEqual(len(gone), 1)          # keep=1 is raised to the minimum 3: only names[1] goes (names[0] is in use)
 
     def test_low_disk_refuses_to_write(self):
         m = self.load(); d = pathlib.Path(tempfile.mkdtemp())
@@ -143,7 +143,7 @@ class HostPrune(unittest.TestCase):
         r = subprocess.run([sys.executable, "-I", P, "prune"], input="pinned " + names[0], env=env, capture_output=True, text=True, timeout=120)
         self.assertEqual(r.returncode, 0, r.stderr)
         left = sorted(x.name for x in d.iterdir() if x.is_dir() and not x.is_symlink() and len(x.name) == 12)
-        self.assertEqual(left, sorted([names[0], names[5], names[6]]))        # newest 2 (6,7), pinned 1
+        self.assertEqual(left, sorted([names[0], names[4], names[5], names[6]]))   # newest 3 (the minimum), pinned 1
 
 
 class SyncAlert(unittest.TestCase):
@@ -167,3 +167,36 @@ class SyncAlert(unittest.TestCase):
         m.sync_alert = lambda ok, reason, *a, **k: posted.append((ok, reason))
         self.assertEqual(m.sync_guarded("", True, False), 1)
         self.assertEqual(posted[0][0], False); self.assertIn("93 GB free", posted[0][1])
+
+
+class PruneRefs(unittest.TestCase):
+    def load(self):
+        return Guard.load(Guard())
+
+    def fake_proc(self, procs):
+        d = tempfile.mkdtemp()
+        for pid, (cmd, cwd) in procs.items():
+            os.makedirs(f"{d}/{pid}"); open(f"{d}/{pid}/cmdline", "wb").write(cmd.replace(" ", "\0").encode())
+            if cwd: os.symlink(cwd, f"{d}/{pid}/cwd")
+        return d
+
+    def test_reference_text_has_cmdlines_script_bodies_and_the_admission_log(self):
+        m = self.load(); t = tempfile.mkdtemp(); sc = t + "/launch.sh"; open(sc, "w").write("python3 /srv/x/rt/24c7347cc887/tools/autopilot/src_manifest.py delta-apply\n")
+        lg = t + "/admit.log"; open(lg, "w").write("2026-11-17 unit1 mem 8G: bash /srv/x/rt/aaaaaaaaaaaa/tools/fleet/ot-run\n")
+        proc = self.fake_proc({101: ("bash " + sc, None), 102: ("bash -c while pgrep -f x; do sleep 5; done; python3 /srv/x/rt/bbbbbbbbbbbb/tools/y.py", None), 103: ("sleep 1", t)})
+        txt = m.live_reference_text(proc=proc, admit_logs=(lg,))
+        for sha in ("24c7347cc887", "aaaaaaaaaaaa", "bbbbbbbbbbbb"):
+            self.assertIn(sha, txt)                       # script body, admission log, armed waiter cmdline
+
+    def test_prune_keeps_snapshots_named_by_a_live_script_or_waiter_and_the_last_three(self):
+        m = self.load(); names = ["%012x" % i for i in range(1, 10)]
+        d = pathlib.Path(tempfile.mkdtemp())
+        for i, n in enumerate(names):
+            (d / n).mkdir(); os.utime(d / n, (1000 + i, 1000 + i))
+        os.symlink(names[-1], d / "current")
+        sc = tempfile.mktemp(suffix=".sh"); open(sc, "w").write("run /srv/x/rt/%s/tools/z\n" % names[1])
+        m.live_reference_text = lambda *a, **k: "bash " + sc + " " + open(sc).read()
+        gone = m.prune_snapshots(d, keep=1, text="")
+        self.assertNotIn(names[1], gone)                                          # named by the launch script body
+        self.assertEqual({n for n in names[-3:]} & set(gone), set())               # OT_RT_KEEP=1 still keeps the newest three
+        self.assertIn(names[0], gone)

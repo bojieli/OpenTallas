@@ -63,6 +63,47 @@ def free_gb(path):
     return st.f_bavail * st.f_frsize / 2**30
 
 
+SCRIPT_RE = re.compile(r"(?:^|\s)(/[^\s'\"]+\.(?:sh|py|tcl|json|cfg))(?=\s|$)")
+
+
+def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",), max_script=2_000_000, tail_lines=800):
+    """COORD 11-17 (S81-DIE-R3's D6z launch died: the epyc8 prune removed rt/24c7347cc887, which its launch script pinned): everything that can still NAME an rt/<sha> and run later --
+    every process command line (queued ot-run clients, armed waiters `bash -c 'while pgrep ..; do sleep; done; python3 rt/<sha>/..'`, running jobs), their working directories, the
+    targets of their open files, the CONTENT of the script files their command lines name (<= 2 MB), and the recent admission log (commands of ot-heavy units admitted or queued).
+    Same reference rule as the cleaners' live-process check, widened to script bodies."""
+    out = []
+    for d in os.listdir(proc):
+        if not d.isdigit():
+            continue
+        base = os.path.join(proc, d)
+        try:
+            cmd = open(os.path.join(base, "cmdline"), "rb").read().replace(b"\0", b" ").decode(errors="replace")
+        except OSError:
+            continue
+        out.append(cmd)
+        try: out.append(os.readlink(os.path.join(base, "cwd")))
+        except OSError: pass
+        try:
+            for f in os.listdir(os.path.join(base, "fd")):
+                try: out.append(os.readlink(os.path.join(base, "fd", f)))
+                except OSError: pass
+        except OSError:
+            pass
+        for m in SCRIPT_RE.finditer(cmd):
+            try:
+                if os.path.getsize(m.group(1)) <= max_script:
+                    out.append(open(m.group(1), errors="replace").read())
+            except OSError:
+                pass
+    for lg in admit_logs:
+        try: out += open(lg, errors="replace").read().splitlines()[-tail_lines:]
+        except OSError: pass
+    return "\n".join(out)
+
+
+MIN_KEEP = 3          # the newest three snapshots stay whatever OT_RT_KEEP says (a rollback of the runtime must always be possible)
+
+
 def names_in_use_text():
     """text in which a snapshot sha may be named: coord autopilot / handoff json, the crontab, user units (read-only, best effort)"""
     t = ""
@@ -73,6 +114,8 @@ def names_in_use_text():
     for cmd in (["crontab", "-l"], ["systemctl", "--user", "cat", "*"]):
         try: t += S.run(cmd, capture_output=True, text=True, timeout=30).stdout
         except Exception: pass
+    try: t += "\n" + live_reference_text()       # the hub's own queued / armed ot-run clients name the rt/<sha> a build host will run: sent to the hosts with the pins
+    except Exception: pass
     return t
 
 
@@ -81,11 +124,14 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
     keep = KEEP if keep is None else keep
     if keep <= 0:
         return []
+    keep = max(keep, MIN_KEEP)
     snaps = sorted((d for d in Path(root).iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink()),
                    key=lambda d: d.stat().st_mtime, reverse=True)
     cur = current(root)
     stay = {d.name for d in snaps[:keep]} | {cur, *protect}
     text = names_in_use_text() if text is None else text
+    try: text = text + "\n" + live_reference_text()                    # this host's own processes, queued units and armed waiters too (on a build host `text` came from the hub)
+    except Exception: pass
     gone = []
     for d in snaps:
         if d.name in stay or d.name in text or in_use(d):
