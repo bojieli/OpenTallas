@@ -44,6 +44,20 @@ Client logs intel2 ~/fable-fix-qc-dieclk/. Lanes directed by posts: QC-CLK-R2 (r
 - The pilot run goes on to GRT / route; it will fail sign-off on setup (-300) unless the fix lands; read its GRT/routed FF hold.
 - E8 scratch2 was at 100 % (37-108 GB free); ot-run refuses E8 under 50 GB. Delete src_l2cb3 (through the guard) after the pilot.
 
+## Retired 2026-11-17 01:1x PST (COORD order)
+- Pilot stopped at 01:03 PST (kit logs end 09:03:32 UTC, in route): docker stop/kill of the exact container name, then exact PIDs
+  intel2 172958 / 1605552 and E8 3164183 / 3165194 / 3165206. The docker daemon was stalled by the full disk; verify with
+  docker ps on E8 that dpkit-cbn_q01__clab6e67f2-3164183 is gone.
+- src_l2cb3 (57 GB): ot_delete_guard check REFUSED for me (lane root in protected.txt, built 1794906001); the tree was removed
+  by another actor at 09:09 UTC while I was checking (not by me). df E8 scratch2: 0-67 GB free before, 145-150 GB after.
+- Re-siting script FOUND: kit core_input_chain.tcl (gen_phys core_input_place), sourced by gp_noconverge_gate.tcl = PRE_RESIZE_TCL,
+  i.e. between 3_3_place_gp and 3_4_place_resized. Pilot log: OT_XSTN_SITE xstn 4 moved 3 cells_moved 14292 a_d_chains_spread 1032;
+  OT_NK_CHAIN stages_moved 15420 head_hop_cells_moved 3598. The xstn block (file lines about 204-356) moves the b_d/cap/cnt registers
+  and spreads the D6 a_d chain but leaves the b_d -> a_d.r[0] hop cells (QN inverter _N_, GPL place* buffers) where GPL put them.
+  OT_XSTN_KEEP u_fab_u_x_0_2 (external nets, plan event needed) is a separate line of the same log.
+- Other lanes wrote into my E8 lane dir (dd226_on_eb1e_L2_exact.patch/.json, results/): not mine, left untouched.
+- Stage DBs for the proof: E2 fable-fix-qc-dieclk/stages (3_1, 3_3, 3_4, 3_5 of the pilot), posout/pos.log, setupP/, coords/.
+
 ## Open / next
 1. s4q9m_l2d chain (E2 fable-die-qc-r/chain/qc/s4q9m_l2d, kit started 19:45, about 3 h): QC-CLK-R2 posts l2d rows; QC-PLAN-R
    composes S4q9m = l2d a915f1136c27 + rows + G rows + tool files, bind / LATCHECK / G0, publish E7/E8, atomic apply.
