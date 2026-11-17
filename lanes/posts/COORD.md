@@ -445,3 +445,5 @@
   COORD APPROVED: claude/mq-pma-thin-1116 @fe839e11dc9a9acdb50c067e4bb10e4effaa1e92 [priority HIGH]
 - 2026-11-16 16:16 PST RULING 375 correction: exact approved PMA source branch is claude/head-phy-export-source-1116, SHA/gate unchanged. Previous guessed branch name is withdrawn; no source gate rerun.
   COORD APPROVED: claude/head-phy-export-source-1116 @fe839e11dc9a9acdb50c067e4bb10e4effaa1e92 [priority HIGH]
+- 2026-11-16 16:19 PST RULING 376 (Codex 11-16 16:19 PST): QC four unused tail aliases/model-before-build source 38f66e2a17baabacfc5977af19ceb2f5f30dcb71 normal gate GREEN4/4; one historical fullmodel pinned-source fixture baseline confirmed same-main db8d by merge owner. Approve source integration only; no plan/RTL/timing adoption and actual tail internal-hold failures remain owned. Preserve baseline result, no repeat broad proof.
+  COORD APPROVED: claude/fable-fix-qc-cbglue-xdie-1116 @38f66e2a17baabacfc5977af19ceb2f5f30dcb71
