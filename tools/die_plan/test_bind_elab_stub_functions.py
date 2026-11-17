@@ -45,3 +45,13 @@ def test_yosys_parses_nonansi_function_stub(tmp_path):
     r = subprocess.run([os.environ["OT_BIND_YOSYS"], "-q", "-p", f"read_verilog -sv -lib {tmp_path / 'lib_stubs.sv'}"],
                        capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
+
+
+def test_nonansi_stub_with_yosys_source_attributes(tmp_path):
+    # Actual fixed-shape HR parent uses non-ANSI ports annotated by write_verilog.
+    text = NONANSI.replace("  input clk;", '  (* src = "host.sv:10.1-10.5" *)\n  input clk;')
+    text = text.replace("  input [7:0] x;", '  (* src = "host.sv:11.1-11.5" *)\n  input [7:0] x;')
+    text = text.replace("  output [7:0] y;", '  (* src = "host.sv:12.1-12.5" *)\n  output [7:0] y;')
+    stub = _stub(tmp_path, text)
+    assert sorted(_decls(stub)) == ["clk", "x", "y"]
+    assert "u_guard" not in stub and "endtask" not in stub
