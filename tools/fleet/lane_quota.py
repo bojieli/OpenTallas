@@ -49,6 +49,7 @@ def hub(hosts, coord, run=subprocess.run, state=None, now=None):
             line = "ALERT [FLEET-OPS-R -> COORD] lane quota: %s on %s wrote %.0f GB in the last %g h (quota %g GB/lane/%g h; alert only, nothing stopped); owner please prune or confirm" % (lane, h, gb, WINDOW_H, QUOTA_GB, WINDOW_H)
             run(["bash", os.path.join(coord, "bin/post.sh"), "FLEET-OPS-R", line], capture_output=True, text=True)
             posted.append(line)
+    os.makedirs(os.path.dirname(state), exist_ok=True)
     json.dump(seen, open(state, "w"))
     return posted
 
