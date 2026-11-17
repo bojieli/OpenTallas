@@ -1,0 +1,82 @@
+{
+  "records": [
+    {
+      "module": "sta_region_nb0_h15_n9_s11",
+      "source": "/srv/opentallas-scratch3/claude/qc-sta-m4/eco_closure_hc_h15_n9_s11_u4/i1/lec_postroute_gutu1x1e/lec.json",
+      "archive_relative": "sta_region_nb0_h15_n9_s11/lec_postroute/lec.json",
+      "receipt_sha256": "60fad7c656f4ca668506d8cf9e9b7e76f25113955dd858d6426afb266a08d34a",
+      "counts": {
+        "compare_points": 20797,
+        "proved": 20797,
+        "differs": 0,
+        "undecided": 0
+      },
+      "odb_sha256": "54371e709dc97f30a9ab383637a843ac0177e9ce59cc0aa37cea7dbe3fc25be4",
+      "original_pack_sha256": "77d228986b165ba02de334c5b5dbcd681d7ea63e9754ad91ed73141e7d15b5ca",
+      "verdict": "EQUIVALENT"
+    },
+    {
+      "module": "sta_region_nb0_h17_n7_s8",
+      "source": "/srv/opentallas-scratch3/claude/qc-sta-m4/eco_closure_hc_h17_n7_s8_u4/i1/lec_postroute_xop28z1n/lec.json",
+      "archive_relative": "sta_region_nb0_h17_n7_s8/lec_postroute/lec.json",
+      "receipt_sha256": "37cb2dd5c1fe5385a23ed80df3cf3cc16189d2234d455d9cce307dd39f7ce28d",
+      "counts": {
+        "compare_points": 20886,
+        "proved": 20886,
+        "differs": 0,
+        "undecided": 0
+      },
+      "odb_sha256": "ce32cbb78c116cb42d9726db5bc5d5eee65e0472315bed3cde3f3add3b2b5e96",
+      "original_pack_sha256": "6c8975718790107e2b3928084f59c47b5b4fe2dc209dfa0fd2c3d58b19d8b1e1",
+      "verdict": "EQUIVALENT"
+    },
+    {
+      "module": "sta_region_nb0_h18_n7_s8",
+      "source": "/srv/opentallas-scratch3/claude/qc-sta-m4/eco_closure_hc_h18_n7_s8_u5/i1/lec_postroute_7d4ap0uv/lec.json",
+      "archive_relative": "sta_region_nb0_h18_n7_s8/lec_postroute/lec.json",
+      "receipt_sha256": "9da01ea4cd0f93cd0d6460a2cb80cd96fe1b436eb0710c2ad6e91ca36951ad40",
+      "counts": {
+        "compare_points": 20939,
+        "proved": 20939,
+        "differs": 0,
+        "undecided": 0
+      },
+      "odb_sha256": "7ce62555f63b45a82ff426c97e38f935196ade7e468dba7c1cb0f8a965472696",
+      "original_pack_sha256": "fe8347f25eb225b86d9dc0878ad370352c4fc0af738c3ed3ea439553b325e0b8",
+      "verdict": "EQUIVALENT"
+    },
+    {
+      "module": "qfd_dv_s8_station_tail1_h15_n9_s11",
+      "source": "/srv/opentallas-scratch3/claude/qc-sta-m4/eco_closure_t1_h15_n9_s11_u5/i1/lec_postroute_y2vxwd7x/lec.json",
+      "archive_relative": "qfd_dv_s8_station_tail1_h15_n9_s11/lec_postroute/lec.json",
+      "receipt_sha256": "9a4aacd02d7ca8be03b9f24a69c0a42e1808b148ea7e14248b1adf8df38462d4",
+      "counts": {
+        "compare_points": 20450,
+        "proved": 20450,
+        "differs": 0,
+        "undecided": 0
+      },
+      "odb_sha256": "6bf72e1ee14dfffba9581a23dff3d936b187d39790516cdd94809677ce071fae",
+      "original_pack_sha256": "1c7f4766a7e4290b44d1ed39c8d45724944195ab02ff2ce5a97e6974e03ccca3",
+      "verdict": "EQUIVALENT"
+    },
+    {
+      "module": "qfd_dv_s8_station_tail1_h17_n7_s8",
+      "source": "/srv/opentallas-scratch3/claude/qc-sta-m4/eco_closure_t1_h17_n7_s8_u5/i1/lec_postroute_1ha3575k/lec.json",
+      "archive_relative": "qfd_dv_s8_station_tail1_h17_n7_s8/lec_postroute/lec.json",
+      "receipt_sha256": "c793c37ebede2f7883facf16d1096361da3491b2e5d14209d71788669c195ca5",
+      "counts": {
+        "compare_points": 20487,
+        "proved": 20487,
+        "differs": 0,
+        "undecided": 0
+      },
+      "odb_sha256": "b1fb9b86c2cce62bd38736a67e5fbc8b122a4ec5d055d4ca615671d4d1a4f7a3",
+      "original_pack_sha256": "09f0030db6a649d343f14647a6b4539acd973e79a9ca2029249dbc961319a19d",
+      "verdict": "EQUIVALENT"
+    }
+  ],
+  "supplement": "/srv/opentallas-scratch3/claude/qc-sta-m4/M4_CHOSEN_LEC_SUPPLEMENTS_1117.tar.gz",
+  "sha256": "7fc262fa2e0466ed19dafc1abf1005b6325b9b2a0d049742f74e4dd80c96f6e3",
+  "original_packs_unchanged": true
+}
