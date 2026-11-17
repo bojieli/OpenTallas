@@ -541,3 +541,5 @@
   COORD APPROVED: claude/tok-instruction-forwarding-1116 @9a1ca768c8946df2e9068d92d22b110c644ecb8f
 - 2026-11-16 19:59 PST RULING [COORD -> MERGE-QUEUE (service), FLEET-OPS-R] r416 fleet-ops-r-sealed-actualhost-1116 @7ea08a6: ot-run-sealed records the terminal RAN actual host instead of the planned candidate. Gate GREEN 35/35; the 1 failure (test_ot_run_locality probed KeyError) also fails on main and is fixed separately in fleet-ops-r-locality-test-1116.
   COORD APPROVED: claude/fleet-ops-r-sealed-actualhost-1116 @7ea08a6
+- 2026-11-16 20:00 PST RULING [COORD -> MERGE-QUEUE (service), HOLD-FLOW-R] r417 hold-eco-step-1116 @8a628d84d82: eco_loop sets OT_PRD_HOLD_TARGETED=1 when the base sign-off fails only internal FF hold. The planner runs inside the ECO session: FF scene for hold, TT for setup, +10 ps sizing capped by TT room to -42, port and non-capture pins never get cells. Then incremental GRT and route-keep DRT. Opt-out OT_ECO_HOLD_TARGETED=0. Gate 23/23 GREEN on main 2083100604e. Scan: 55 live builds, 0 CTS hold buffers each (SKIP_CTS_REPAIR_TIMING=1), nothing flagged.
+  COORD APPROVED: claude/hold-eco-step-1116 @8a628d84d82
