@@ -5862,9 +5862,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # HOLD-MARGIN-FAMILY 11-17 (COORD, FABLE-CLOSURE-STRATEGY lever 1): reg-to-reg hold repair target per die family (QC / KV / HEAD 40 ps;
     # die.hold_ff_margin_ps / type hold_ff_margin_ps override); an explicit per-item OT_HOLD_FF_MARGIN_PS above wins; OT_HOLD_FAMILY_MARGIN=0 = off
     import hold_margin_family as _HMF
-    _fam = None if _hm else _HMF.family_margin(P.name, getattr(P, "die", None), t)
-    if hold_ff_margin is not None and _fam is not None:
-        hold_ff_margin = max(float(hold_ff_margin), _fam)
+    _fam = _HMF.family_margin(P.name, getattr(P, "die", None), t)       # floor: an item_env OT_HOLD_FF_MARGIN_PS may raise the margin, never lower it below it
+    if hold_ff_margin is not None and _fam is not None:       # max(--hold-ff-margin (even 0), item_env OT_HOLD_FF_MARGIN_PS, family floor, die.hold_ff_margin_ps)
+        hold_ff_margin = _HMF.grt_margin(hold_ff_margin, P.name, getattr(P, "die", None), t)
     margins = rflow_margins(margins, P.name)    # R-FLOW defaults per kit class (explicit arguments win)
     max_wire_um = rflow_max_wire_um(max_wire_um, P.name)
     macro_moves = macro_move_table(t, tn)
@@ -6476,6 +6476,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import pregrt_ff_hold as _pregrt_ff_hold
     _pregrt_ff_hold.set_die_clock(getattr(P, "clock", None))      # QC s29 overlay: die-level default, type-level wins
     cfg += _pregrt_ff_hold.config_lines(t)
+    if hold_ff_margin is not None and os.environ.get("OT_HOLD_AFTER_TT", "").strip() == "1" and os.environ.get("OT_TT_SETUP_REPAIR", "").strip() in ("grt", "both"):
+        cfg.append("export OT_HOLD_AFTER_TT = 1")       # HOLD-AFTER-TT: run_kit.sh runs hold_after_tt.sh after the GRT TT setup repair
     if hold_ff_margin is not None:
         cfg += _HMF.config_lines(_fam, pregrt=_pregrt_ff_hold.enabled(t))     # HOLD-MARGIN-FAMILY: evidence + pre-route r2r target + setup guard
     cfg += tap_chain_affinity_exports(t)
@@ -6927,6 +6929,9 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("grt_pg_replay.tcl"), kd / "grt_pg_replay.tcl")
         shutil.copyfile(Path(__file__).with_name("tt_setup_keep.py"), kd / "tt_setup_keep.py")
         (kd / "tt_setup_repair.on").write_text(_tt + "\n")
+        if _tt in ("grt", "both") and os.environ.get("OT_HOLD_AFTER_TT", "").strip() == "1":     # HOLD-AFTER-TT 11-17: hold repair after the GRT TT setup repair
+            shutil.copyfile(Path(__file__).with_name("hold_after_tt.sh"), kd / "hold_after_tt.sh")
+            shutil.copyfile(Path(__file__).with_name("hold_after_tt_keep.py"), kd / "hold_after_tt_keep.py")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
     if _mc in ("1", "warn"):
         shutil.copyfile(Path(__file__).with_name("merged_replica_census.py"), kd / "merged_replica_census.py")
@@ -7676,6 +7681,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && [ -f /work/tt_setup_repair.tcl ] && grep -Eq '^(grt|both)' /work/tt_setup_repair.on 2>/dev/null; then TG5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb 2>/dev/null | head -1); \
     if [ -n \"\$TG5\" ]; then cp -p \"\$TG5\" /work/5_1_grt_pre_tt.odb; OT_TT_SETUP_RC=grt OT_TT_SETUP_GUIDE=\"\$(dirname \"\$TG5\")/route.guide.tt\" ODB=\"\$TG5\" OUT=\"\$TG5.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_repair_grt.log 2>&1; trc=\$?; grep -h 'OT_TT_SETUP_REPAIR' /work/tt_setup_repair_grt.log | tail -3; \
       if [ \$trc = 0 ] && [ -s \"\$TG5.tt\" ] && OT_TT_SETUP_RC=grt OT_TT_SETUP_MEASURE=1 ODB=\"\$TG5.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_measure_grt.log 2>&1 && python3 -I /work/tt_setup_keep.py /work/tt_setup_repair_grt.log /work/tt_setup_measure_grt.log | tee -a /work/tt_setup_keep.log; then mv -f \"\$TG5.tt\" \"\$TG5\"; [ ! -s \"\$(dirname \"\$TG5\")/route.guide.tt\" ] || mv -f \"\$(dirname \"\$TG5\")/route.guide.tt\" \"\$(dirname \"\$TG5\")/route.guide\"; else rm -f \"\$TG5.tt\" \"\$(dirname \"\$TG5\")/route.guide.tt\"; echo \"OT_TT_SETUP_REPAIR FALLBACK grt step rc \$trc (tt_setup_repair_grt.log): 5_1_grt.odb unchanged\" | tee -a /work/tt_setup_repair_fallback.log; fi; fi; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && [ -f /work/hold_after_tt.sh ] && grep -q '^export OT_HOLD_AFTER_TT = 1' /work/config.mk && grep -Eq '^(grt|both)' /work/tt_setup_repair.on 2>/dev/null; then M=\"\$M\" MF=\"\${MF:-\$M}\" HM=\"\$HM\" bash /work/hold_after_tt.sh; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
     for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \

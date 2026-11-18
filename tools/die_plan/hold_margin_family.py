@@ -51,11 +51,20 @@ def family_margin(die, plan_die=None, type_cfg=None, env=None):
     (key hold_ff_margin_ps); type_cfg: the type dict (key hold_ff_margin_ps wins over the die)."""
     if not enabled(env):
         return None
-    if type_cfg and type_cfg.get("hold_ff_margin_ps") is not None:
-        return _num(type_cfg["hold_ff_margin_ps"], "type.hold_ff_margin_ps")
+    vals = [FAMILY_PS.get(die)]
     if plan_die and plan_die.get("hold_ff_margin_ps") is not None:
-        return _num(plan_die["hold_ff_margin_ps"], "die.hold_ff_margin_ps")
-    return FAMILY_PS.get(die)
+        vals.append(_num(plan_die["hold_ff_margin_ps"], "die.hold_ff_margin_ps"))
+    if type_cfg and type_cfg.get("hold_ff_margin_ps") is not None:
+        vals.append(_num(type_cfg["hold_ff_margin_ps"], "type.hold_ff_margin_ps"))
+    vals = [v for v in vals if v is not None]
+    return max(vals) if vals else None       # table, die key and type key are FLOORS: the largest wins
+
+
+def explicit(plan_die=None, type_cfg=None, env=None):
+    """True when the family value comes from a plan key (die.hold_ff_margin_ps / type hold_ff_margin_ps): then it is the value, not a floor"""
+    if not enabled(env):
+        return False
+    return bool((type_cfg and type_cfg.get("hold_ff_margin_ps") is not None) or (plan_die and plan_die.get("hold_ff_margin_ps") is not None))
 
 
 def core_margin(env=None):
@@ -63,11 +72,14 @@ def core_margin(env=None):
 
 
 def grt_margin(caller, die=None, plan_die=None, type_cfg=None, env=None, core=False):
-    """effective GRT FF repair margin: the caller's value raised to the family value (never lowered); None stays None (two-mode kits)"""
+    """effective GRT FF repair margin = max(caller, per-item OT_HOLD_FF_MARGIN_PS, family table, die.hold_ff_margin_ps, type key); None stays None
+    (two-mode kits).  The caller's value (gen.py --hold-ff-margin, even 0) and a per-item value may RAISE the margin, never lower it below the floor."""
     if caller is None:
         return None
     fam = core_margin(env) if core else family_margin(die, plan_die, type_cfg, env)
-    return caller if fam is None else max(float(caller), fam)
+    if fam is None:
+        return caller
+    return max(float(caller), fam)
 
 
 def config_lines(fam, setup_guard=SETUP_GUARD_PS, pregrt=True):
