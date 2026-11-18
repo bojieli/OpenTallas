@@ -264,5 +264,32 @@ class CellBig(unittest.TestCase):
         self.assertIn("a, b", logs[0])
 
 
+class FailedRowsRelaunchOnTheirOwn(unittest.TestCase):
+    """COORD 11-18: S81 FAIL rows and queue-FAIL rows were never re-armed; under stops_off a failed row relaunches unless its full input hash equals the failed attempt's"""
+
+    def row(self, **k):
+        r = {"die": "s81", "item": "x", "status": "FAIL", "attempt": 3, "block_sha": "blk"}
+        r.update(k)
+        return r
+
+    def cfg(self, **die):
+        d = {"event": "E", "gen_host": "h", "gen_hosts": ["h"], "src_manifest_hash": "snap1", "_plan_sha": "p1"}
+        d.update(die)
+        return {"dies": {"s81": d}, "stops_off": True}
+
+    def test_failed_helper(self):
+        self.assertTrue(KW.so_failed(self.row()))
+        self.assertTrue(KW.so_failed(self.row(status="ENQUEUED", q_status="FAIL")))
+        self.assertFalse(KW.so_failed(self.row(status="ENQUEUED", q_status="RUNNING")))
+        self.assertFalse(KW.so_failed(self.row(status="CANCELLED")))
+
+    def test_same_hash_skips_other_relaunches(self):
+        c = self.cfg()
+        h = KW.full_input_hash(c, "s81", "x", "blk")
+        self.assertTrue(KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, self.row(full_hash=h)))
+        self.assertFalse(KW.so_same_input(self.cfg(src_manifest_hash="snap2"), "s81", {"item": "x", "block_sha": "blk"}, self.row(full_hash=h)))   # a code / plan / env change releases it
+        self.assertFalse(KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, self.row()))                                                 # no stored hash: relaunches once
+
+
 if __name__ == "__main__":
     unittest.main()

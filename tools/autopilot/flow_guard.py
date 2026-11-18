@@ -410,12 +410,14 @@ print("AP_JSON " + json.dumps(out))
 
 # ---------------------------------------------------------------- state
 
+STOPS_OFF_DEFAULT = True          # the CODE default (OWNER r703, FABLE-FLOW-0600 class A): a config without the key runs with the stops off; cfg stops_off false opts out
 STOPS_OFF_EXCLUDE = ("hbm",)     # OWNER 11-18 (via COORD): HBM is parked; the stops_off switch never releases it
 
 
 def stops_off_die(cfg, die):
-    """WAVE-PILOT-FIX 11-18: True when the global stops_off switch applies to DIE (cfg stops_off true, DIE not in cfg stops_off_exclude, default hbm)"""
-    if (cfg or {}).get("stops_off") is not True:
+    """WAVE-PILOT-FIX 11-18 (OWNER r703, FABLE-FLOW-0600 class A): True when the safety stops are off for DIE.  The DEFAULT is ON (a config without the key behaves as
+    stops_off true); cfg stops_off false is the explicit opt-out; DIE in cfg stops_off_exclude (default hbm, parked by the OWNER) keeps every stop"""
+    if (cfg or {}).get("stops_off", STOPS_OFF_DEFAULT) is not True:
         return False
     excl = (cfg or {}).get("stops_off_exclude")
     return str(die) not in tuple(STOPS_OFF_EXCLUDE if excl is None else excl)

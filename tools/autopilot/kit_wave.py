@@ -2876,8 +2876,10 @@ def select(rows, cfg, die, state, plan_types=None):
         elif rec and rec.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
             # SIGNED-TERMINAL-1115: a signed R-MINIMAL record on this plan block is terminal, flow tag or not, retry key or not
             why = "signed off on this plan block (terminal; a missing flow tag is bookkeeping, never a build)"
+        elif rec and FG.stops_off_die(cfg, die) and so_failed(rec) and so_same_input(cfg, die, r, rec):
+            why = "SKIP-SAME-INPUT: full input hash equals the attempt that failed (rt sha, design snapshot, spec digest, env keys); any code / plan / env change releases it"
         elif rec and rec.get("status") == "ENQUEUED" and not (
-                rec.get("q_status") == "FAIL" and f"{r['item']}@{rec.get('attempt')}" in retry):
+                rec.get("q_status") == "FAIL" and (f"{r['item']}@{rec.get('attempt')}" in retry or (FG.stops_off_die(cfg, die) and so_failed(rec)))):
             # KIT-TRIAGE-1 11-01: a kit that FAILED in the autopilot queue (route / sign-off) stays ENQUEUED in the
             # wave; once a class fix lands, COORD (retry) or a merged kit_wave_pending.tsv row releases that attempt
             # and the wave builds a fresh kit (attempt + 1) on the current source -- the batch relaunch path
@@ -2888,11 +2890,11 @@ def select(rows, cfg, die, state, plan_types=None):
             pass        # queued volume cancelled by a failed pilot: class now proven, or no class FAIL stands any more
         elif rec and is_wait_dep(rec) and not rec.get("provisional") and prov_item(d, r["item"]):
             pass        # KW-PROV-1: a gen-time WAIT-DEP stop (child view missing) relaunches on provisional child views
-        elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
+        elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry and not (FG.stops_off_die(cfg, die) and so_failed(rec)):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
-        elif rec and needs_lane(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+        elif rec and not FG.stops_off_die(cfg, die) and needs_lane(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = NEEDS_LANE                         # WAVE-RECIPE-1: design FAIL, same kit inputs -> a lane, not a re-key
-        elif rec and cfg.get("hold_unchanged") and not minimal_profile() and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
+        elif rec and not FG.stops_off_die(cfg, die) and cfg.get("hold_unchanged") and not minimal_profile() and unchanged_fail(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = HOLD_UNCHANGED
         elif rec and not FG.stops_off_die(cfg, die) and cfg.get("form_gate", True) and not minimal_profile() and form_wait(cfg, state, die, r["item"], rec, r.get("parent_item"), r.get("kind")):
             why = WAIT_FORM
@@ -11027,6 +11029,21 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
             "views": hashlib.sha1(json.dumps(view_inputs(cfg, die, (rec or {}).get("item")), sort_keys=True).encode()).hexdigest()[:16]
             if view_inputs(cfg, die, (rec or {}).get("item")) else "",
             "env": gen_env_digest(d, sp, (rec or {}).get("item"))}
+
+
+def so_failed(rec):
+    """WAVE-PILOT-FIX 11-18 (OWNER r705 (2), COORD: S81 FAIL rows / queue-FAIL rows were never re-armed): a row whose attempt failed in the tool (FAIL, or ENQUEUED with a queue FAIL)"""
+    return rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL")
+
+
+def so_same_input(cfg, die, r, rec):
+    """under stops_off a failed row relaunches on its own (no retry key, no NEEDS-LANE) unless the full input hash equals the hash its failed attempt launched on.  An attempt with no
+    stored hash (launched before the hash existed) relaunches once; its new attempt then records the hash"""
+    fh = rec.get("full_hash") or ""
+    if not fh:
+        return False
+    now = full_input_hash(cfg, die, r.get("item"), r.get("block_sha") or rec.get("block_sha"))
+    return bool(now) and now == fh
 
 
 def full_input_hash(cfg, die, item, block_sha=None):
