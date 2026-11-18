@@ -120,6 +120,12 @@ def emit(t, land, kit, root):
         if spec != {'D': depth, 'form': 'hold_mux'} or (base != PLAIN_BASE and params.get('WREG') != 1):
             raise ValueError(f'{inst}: selected hard landing does not match declared ring')
         master = c.get('physical_master', c['module'])
+        # QC-PLAN-R3 11-17: a raw plan row carries no view; kit_wave.prov_stage fills the signed provider lef/lib
+        # before GEN.  Name the missing view instead of a bare KeyError (D2 st_a smoke ran GEN on the raw POR).
+        missing = [k for k in ('lef', 'lib') if not c.get(k)]
+        if missing:
+            raise ValueError(f'{inst}: selected hard landing {master} has no {"/".join(missing)} view; resolve its '
+                             'signed provider view (kit_wave prov_stage) before GEN')
         lef, lib = (cores.resolve(c[k], root) for k in ('lef', 'lib'))
         dest = Path(kit) / 'macros' / 'landing' / master
         portable = lef.parent / 'landing_evidence'
