@@ -332,7 +332,7 @@ def materialize(full):
 
 GEN_SMOKE_SH = r'''
 set -u
-R="$1"; T=$(mktemp -d "${TMPDIR:-/tmp}/rt-gen-smoke.XXXXXX") || exit 2
+R="$1"; T=$(mktemp -d "${R%/*}/.rt-gen-smoke.XXXXXX") || exit 2      # same filesystem as rt (a kit's launch tree hardlinks rt)
 trap 'chmod -R u+w "$T" 2>/dev/null; rm -rf "$T"' EXIT
 bad=0
 for f in $(find "$R/tools" "$R/physical/common_flow" -name "*.sh" -type f 2>/dev/null); do bash -n "$f" 2>/dev/null || { echo "RED bash -n ${f#$R/}"; bad=1; }; done
@@ -763,6 +763,9 @@ def auto_revert(cur_full, full, hosts=True):
     the smoke and push a REVERT commit of each (never a force push; a merge is reverted with -m 1), post it to the author lane.  A running kit keeps its
     old rt/<sha>; the next follow materializes the reverted main."""
     rng = f"{cur_full}..{full}" if cur_full else full
+    if hosts and cur_full and gen_red(sha12(cur_full)):    # the running version is red too: the gen host / smoke is at fault, not a commit
+        log(f"auto-revert: gen smoke is red on the running rt {sha12(cur_full)} as well; environment, not reverting")
+        return []
     commits = git("rev-list", "--first-parent", "--reverse", rng).split()
     bad = []
     for c in commits:

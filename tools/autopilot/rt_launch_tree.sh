@@ -17,7 +17,7 @@ exec 8>"$L.lock"
 flock 8
 [ -f "$L/.rt_launch_ok" ] && exit 0
 T="$L.tmp.$$"
-rm -rf "$T" "$L"                      # an L without .rt_launch_ok was never complete, so nothing runs from it
+chmod -R u+w "$T" "$L" 2>/dev/null; rm -rf "$T" "$L"   # an L without .rt_launch_ok was never complete, so nothing runs from it
 mkdir -p "$T/physical" || exit 97
 for e in "$S"/* "$S"/.[!.]*; do
   [ -e "$e" ] || [ -L "$e" ] || continue
@@ -33,7 +33,7 @@ if [ -d "$S/physical" ]; then
     ln -s "$e" "$T/physical/$b" || exit 97
   done
 fi
-link_tree() { cp -al "$1" "$2" 2>/dev/null || { rm -rf "$2"; cp -a "$1" "$2"; }; }
+link_tree() { cp -al "$1" "$2" 2>/dev/null || { chmod -R u+w "$2" 2>/dev/null; rm -rf "$2"; cp -a "$1" "$2"; }; }   # cp -a keeps rt's a-w dir modes
 link_tree "$RT/tools" "$T/tools" || exit 97
 if [ -d "$RT/physical/common_flow" ]; then
   link_tree "$RT/physical/common_flow" "$T/physical/common_flow" || exit 97
