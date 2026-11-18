@@ -90,8 +90,8 @@ def test_stall_stops_with_marker():
 
 def test_time_cap():
     out = run("0.5", {"OT_HOLD_MAX_HOURS": "0", "OT_HOLD_STALL_WINDOW_S": "99999"})
-    assert "reason=hold repair over 0 h" in out
-    assert len(calls(out)) == 2
+    # WAVE-FRICTION-1: the wall cap no longer ends the repair; it logs once and continues
+    assert "OT_HOLD_TIMELOG" in out and "NO CAP" in out
 
 
 def test_hold_met_margin_chase_stalls():
@@ -133,3 +133,9 @@ def test_hooks_source_guard():
     assert "hold_guard_grt.tcl" in (HERE / "grt_pre.tcl").read_text()
     for f in ("gen_phys.py", "core_flow.py"):
         assert '"hold_guard_grt.tcl"' in (HERE / f).read_text(), f
+
+
+def test_first_chunk_is_buffer_min():
+    # HOLD-CHUNK-1: the first chunk is OT_HOLD_CHUNK_BUF_MIN buffers, not 0.25 % of the instances
+    out = run("0.0001", {"OT_HOLD_CHUNK_BUF_MIN": "7", "OT_HOLD_MIN_GAIN_PCT": "0", "OT_HOLD_STALL_WINDOW_S": "99999"})
+    assert "(cap 7)" in out

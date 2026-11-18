@@ -54,7 +54,10 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
     set win [::ot_hg_num OT_HOLD_STALL_WINDOW_S 3600]
     set mingain [::ot_hg_num OT_HOLD_MIN_GAIN_PCT 2.0]
     set maxs [expr {[::ot_hg_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
-    set nb [expr {max($bmin, 0.0025 * $inst0)}]
+    # HOLD-CHUNK-1 11-18 (FABLE-PD-QC-1240 R4): the first chunk is OT_HOLD_CHUNK_BUF_MIN (200) buffers, not 0.25 % of the instances (1,100-1,350):
+    # at 3-5 buffers/min that chunk took 1 h on hc and 4 h+ on sc, and hold was already >= 0 after ~280 buffers, so the "ws >= 0 and gain < 1 ps"
+    # stop could not act.  OT_HOLD_FIRST_CHUNK_PCT (default 0) restores a percent-of-instances first chunk.
+    set nb [expr {max($bmin, [::ot_hg_num OT_HOLD_FIRST_CHUNK_PCT 0.0] * $inst0 / 100.0)}]
     set t0 [clock seconds]; set wt $t0; set wstat $prev; set capped 0
     # HOLD-MARGIN-FAMILY 11-17: setup guard of the raised reg-to-reg target.  OT_HOLD_SETUP_GUARD_PS (config.mk, family kits) = floor G: the repair
     # stops when the worst setup slack falls below min(setup before the repair, G).  Unset = no check (kits without a family value).
