@@ -308,3 +308,4 @@
 - 2026-11-17 19:30 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays d9bbb638fa79: RuntimeError: /srv/opentallas-scratch2/claude/rt: 66 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
 - 2026-11-17 19:41 PST DISK-RATE intel1 /srv/opentallas-scratch2: free 101 GB, falling 276 GB/h, floor 50 GB in 0.2 h AUTO-RETIRE rc 0: df before:   94G / df after:  115G; deleted 4, REFUSED: protected (kit_wave.json src/bind of record/marker/prov): /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_h; REFUSED: protected (kit_wave.json src/bind of record/marker/prov): /s (cron disk_rate.py; read-only)
 - 2026-11-17 19:41 PST DISK-RATE epyc2 /srv/opentallas-scratch2: free 133 GB, falling 15 GB/h, floor 50 GB in 5.5 h (cron disk_rate.py; read-only)
+- 2026-11-17 19:41 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 164 GB, falling 160 GB/h, floor 50 GB in 0.7 h (cron disk_rate.py; read-only)
