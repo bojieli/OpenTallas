@@ -23,8 +23,8 @@ class Cap(unittest.TestCase):
         d = mk(FULL)
         got = self.names(d)
         self.assertEqual(got, ["2_1_floorplan.odb", "2_4_floorplan_pdn.odb", "3_1_place_gp_skip_io.odb", "3_5_place_dp.odb", "4_1_cts.odb",
-                               "5_2_route.odb", "5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb"])
-        for keep in ("1_synth.odb", "2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "6_final.odb", "6_final.v", "6_final.def"):
+                               "5_3_fillcell.odb", "5_route.odb", "6_1_fill.odb"])
+        for keep in ("1_synth.odb", "2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "6_final.odb", "6_final.v", "6_final.def"):
             self.assertNotIn(keep, got)
 
     def test_nothing_goes_before_its_successor_is_written(self):
@@ -41,8 +41,8 @@ class Cap(unittest.TestCase):
         self.assertNotIn("5_3_fillcell.odb", self.names(d, open_files={os.path.join(d, "5_3_fillcell.odb")}))
 
     def test_hardlinked_file_is_never_deleted(self):
-        d = mk(FULL); os.link(os.path.join(d, "5_2_route.odb"), os.path.join(d, "x_link"))
-        self.assertNotIn("5_2_route.odb", self.names(d))
+        d = mk(FULL); os.link(os.path.join(d, "5_3_fillcell.odb"), os.path.join(d, "x_link"))
+        self.assertNotIn("5_3_fillcell.odb", self.names(d))
 
     def test_opt_out_env_and_keep_file_and_busy_eco_process(self):
         d = mk(FULL); log = []
@@ -60,7 +60,7 @@ class Cap(unittest.TestCase):
     def test_real_pass_deletes_and_dry_pass_does_not(self):
         d = mk(FULL, age=100000)
         dry = C.once(d, d, dry=True, log=lambda m: None, scan=lambda p: (set(), []))
-        self.assertEqual(len(dry), 9); self.assertTrue(os.path.exists(os.path.join(d, "6_1_fill.odb")))
+        self.assertEqual(len(dry), 8); self.assertTrue(os.path.exists(os.path.join(d, "6_1_fill.odb")))
         real = C.once(d, d, log=lambda m: None, scan=lambda p: (set(), []))
-        self.assertEqual(len(real), 9); self.assertFalse(os.path.exists(os.path.join(d, "6_1_fill.odb")))
-        self.assertTrue(all(os.path.exists(os.path.join(d, k)) for k in ("2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "6_final.odb")))
+        self.assertEqual(len(real), 8); self.assertFalse(os.path.exists(os.path.join(d, "6_1_fill.odb")))
+        self.assertTrue(all(os.path.exists(os.path.join(d, k)) for k in ("2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb", "5_2_route.odb", "6_final.odb")))

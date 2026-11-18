@@ -35,6 +35,12 @@ test -n "$SPEF" || SPEF=$RS/6_final.spef
 FROM=${OT_PRD_FROM:-grt}
 case $FROM in grt) SRC=5_1_grt.odb ;; route) SRC=5_2_route.odb ;; final) SRC=6_final.odb ;;
   *) echo "prd_mk: OT_PRD_FROM=$FROM: want grt|route|final"; exit 2 ;; esac
+# LATE-ECO 11-18 (COORD: 11 of 12 late ECOs died here): a kit whose stage_odb_cap (11-17 rule, now removed) deleted 5_2_route.odb keeps the
+# signed 6_final.odb: the route-keeping seed falls back to it (OT_PRD_FROM=final, the same route-keeping repair, fillers removed in the hook).
+if [ $FROM = route ] && [ ! -f $RS/5_2_route.odb ] && [ -f $RS/6_final.odb ]; then
+  echo "prd_mk: $RS has no 5_2_route.odb; seeding the route-keeping ECO from 6_final.odb (OT_PRD_FROM=final)"
+  FROM=final; SRC=6_final.odb; export OT_PRD_FROM=final
+fi
 test -f $RS/$SRC -a -f "$SPEF" || { echo "prd_mk: $RS lacks $SRC / $SPEF"; exit 2; }
 # FLOW-24 11-03 (stale-seed class, before the session; with DIE-S81-50's in-hook stage check as the backstop): the
 # routed SPEF and the seed must carry ONE netlist.  A kit whose 6_final.{odb,spef} were rewritten by a later post-route

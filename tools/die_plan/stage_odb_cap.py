@@ -2,10 +2,10 @@
 """stage_odb_cap: bound the stage-ODB checkpoints a running kit leaves behind (FLEET-OPS-R, FABLE-FLOW-2200; COORD rule 11-17).
 A route kit at S81 slice scale writes about 19 GB of stage ODBs, 8 GB of them identical-size final stages (5_3_fillcell, 5_route, 6_1_fill, 6_final).
 Rule, applied to NEW stage writes only (a watcher inside the kit; never a sweep of old results):
-  KEPT always: 1_synth, the step boundaries kit_resume reads (2_floorplan, 3_place, 4_cts, 5_1_grt = the diagnosis anchors post-CTS / GRT) and the latest final (6_final.odb, .def, .spef, .v).
+  KEPT always: 1_synth, the step boundaries kit_resume reads (2_floorplan, 3_place, 4_cts, 5_1_grt = the diagnosis anchors post-CTS / GRT), 5_2_route (the late-ECO seed) and the latest final (6_final.odb, .def, .spef, .v).
   DELETED once the SUCCESSOR stage is written, non-empty, older than MIN_AGE_S and nothing has the file open:
     2_[1-4]_*.odb after 2_floorplan.odb | 3_[1-5]_*.odb after 3_place.odb | 4_1_cts.odb after 4_cts.odb |
-    5_2_route.odb after 5_3_fillcell.odb | 5_3_fillcell.odb after 5_route.odb | 5_route.odb and 6_1_fill.odb after 6_final.odb (+ 6_final.v).
+    5_3_fillcell.odb after 5_route.odb | 5_route.odb and 6_1_fill.odb after 6_final.odb (+ 6_final.v).
   SKIPPED: OT_KEEP_STAGE_ODBS=1 (ECO / debug lanes), a .keep_stage_odbs file in the kit, a file any process has open, a kit while an ECO / resume process
   has its directory as cwd or open file.  Every deletion is logged (name, size) to stderr; nothing outside <base>/<stage>.odb names is touched.
 usage: stage_odb_cap.py --watch RESULTS_ROOT [--kit DIR] [--interval 60] [--max-hours 36]      (RESULTS_ROOT = <kit>/run/results/asap7)
@@ -17,7 +17,8 @@ RULES = (  # (regex of the victim, successor file that must exist)
     (re.compile(r"^2_[1-4]_.*\.odb$"), "2_floorplan.odb"),
     (re.compile(r"^3_[1-5]_.*\.odb$"), "3_place.odb"),
     (re.compile(r"^4_1_cts\.odb$"), "4_cts.odb"),
-    (re.compile(r"^5_2_route\.odb$"), "5_3_fillcell.odb"),
+    # LATE-ECO 11-18 (COORD: 11 of 12 late ECOs died in prd_mk.sh "lacks 5_2_route.odb"): 5_2_route.odb is the route-keeping ECO seed
+    # (prd_mk OT_PRD_FROM=route, eco_loop's default for R-MINIMAL near misses) and is KEPT like the other step anchors.
     (re.compile(r"^5_3_fillcell\.odb$"), "5_route.odb"),
     (re.compile(r"^5_route\.odb$"), "6_final.odb"),
     (re.compile(r"^6_1_fill\.odb$"), "6_final.odb"),
