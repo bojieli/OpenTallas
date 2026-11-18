@@ -54,6 +54,28 @@ if [ -f "$W/clk_leaf_repeat_default.tcl" ]; then
     else echo "OT_CLK_LEAF_REPEAT grt inactive: no estimate_parasitics -global_routing in $S"; fi
   fi
 fi
+# S81-COL-FLOW-1118 (COORD; S81 leaf t25_ns2 pilot + wave t51 a6 DPL-0033): repair_design / repair_timing inside the GRT stage
+# legalize through the negotiation legalizer, which can leave a few overlapping buffers; nothing in the stage repaired them.
+# Disposable global_route.tcl copy: right before 'source_step_tcl POST GLOBAL_ROUTE', only when check_placement fails, one diamond
+# legalization inside an incremental route, then the mandatory check_placement -verbose.  A legal design is untouched (no gate,
+# margin or repair change).  'export OT_GRT_POST_DPL = 0' in config.mk opts out.
+if [ -f "$S" ] && ! grep -qF "OT_GRT_POST_DPL" "$S" && ! grep -Eq '^export OT_GRT_POST_DPL[[:space:]]*=[[:space:]]*0[[:space:]]*$' "$W/config.mk" 2>/dev/null; then
+  if grep -q '^ *source_step_tcl POST GLOBAL_ROUTE' "$S"; then
+    python3 - "$S" <<'OT_GRT_POST_DPL_PY'
+import re, sys
+from pathlib import Path
+p = Path(sys.argv[1])
+line = ('if {[catch {check_placement}]} { puts "OT_DPL_RESIDUAL: GRT post-repair check failed, diamond legalization in an incremental route"; '
+        'global_route -start_incremental; detailed_placement -use_diamond_legalizer; global_route -end_incremental; '
+        'estimate_parasitics -global_routing; check_placement -verbose } ;# OT_GRT_POST_DPL')
+s = p.read_text()
+s, n = re.subn(r'(?m)^( *)(source_step_tcl POST GLOBAL_ROUTE)', lambda m: m.group(1) + line + '\n' + m.group(1) + m.group(2), s, count=1)
+assert n == 1
+p.write_text(s)
+OT_GRT_POST_DPL_PY
+    [ "$?" = 0 ] || exit 2
+  else echo "OT_GRT_POST_DPL inactive: no POST GLOBAL_ROUTE step in $S"; fi
+fi
 # OT_GRT_EST_FALLBACK begin
 # WF-1 11-14 (COORD class fix, TYPE-KVHGI3 fC): the -allow_congestion GRT forms (S81 col / slice / leaf, KV hgi) ended GRT with a small
 # overflow (GRT-0115, 39) and then ORFS global_route.tcl's 'estimate_parasitics -global_routing' aborted with GRT-0232 'Routing

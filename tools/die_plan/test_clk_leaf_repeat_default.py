@@ -210,7 +210,7 @@ def test_grt_long_branch_repeated_on_routed_length(tmp_path):
     assert len(ins) == 1 and "-load_pins lb/A" in ins[0] and "-buffer_cell BUFx4_ASAP7_75t_R" in ins[0]
     # inside an incremental GRT, then the GRT parasitics are re-estimated
     i = log.index(ins[0])
-    assert log[i - 2:i] == ["global_route -start_incremental", "dpl"]
+    assert log[i - 3:i] == ["global_route -start_incremental", "dpl", "check_placement"]   # S81-COL-FLOW-1118: entry check
     # the new net (found through the moved load pin) is a CLOCK net; then DPL + incremental GRT + GRT parasitics
     assert log[i + 1:i + 7] == ["setSigType lb_a CLOCK", "dpl", "check_placement", "check_placement", "global_route -end_incremental", "est -global_routing"]
     assert "OT_CLK_LEAF_REPEAT grt done: 1 nets repeated, 1 repeaters" in out
@@ -377,7 +377,10 @@ def test_grt_clean_legalization_precedes_route_commit(tmp_path):
 
 
 def test_grt_residual_gets_bounded_diamond_before_route_commit(tmp_path):
-    out, log = tcl(tmp_path, FAIL_ONCE % 1 + GRT_RUN, design=DESIGN)
+    # the first plain check is now the GRT entry check; fail the SECOND one (after the repeaters)
+    fail_second = ("set ::cp_n 0\nproc check_placement {args} { L check_placement {*}$args; "
+                   "if {$args eq {}} { incr ::cp_n; if {$::cp_n == 2} { error DPL-0033 } } }\n")
+    out, log = tcl(tmp_path, fail_second + GRT_RUN, design=DESIGN)
     end = log.index("global_route -end_incremental")
     assert log[end-4:end] == ["dpl", "check_placement", "dpl -use_diamond_legalizer", "check_placement -verbose"]
     assert out.count("OT_DPL_RESIDUAL") == 1
@@ -388,4 +391,66 @@ def test_grt_illegal_residue_cannot_commit_incremental_route(tmp_path):
     out, log = tcl(tmp_path, pre + 'set rc [catch {\n' + GRT_RUN + '} msg]; puts "RESULT $rc $msg"\n', design=DESIGN)
     assert "RESULT 1 DPL-0033" in out
     assert "global_route -end_incremental" not in log
-    assert log.count("dpl -use_diamond_legalizer") == 1
+    assert log.count("dpl -use_diamond_legalizer") == 2      # entry residual pass + post-repeater residual pass
+
+
+# S81-COL-FLOW-1118 (S81 leaf t25_ns2 pilot, wave t51 a6 DPL-0033): the design entering the GRT pass carried overlaps (t51: 294
+# violations at the grid-build DPL, 36 left); that DPL is now the kit legalizer plus one diamond pass on a failed check.
+def test_grt_entry_residual_repaired_before_repeaters(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 1 + GRT_RUN, design=DESIGN)
+    st = log.index("global_route -start_incremental")
+    ins = next(i for i, x in enumerate(log) if x.startswith("insert_buffer"))
+    assert log[st + 1:ins] == ["dpl", "check_placement", "dpl -use_diamond_legalizer"]
+    assert "OT_DPL_RESIDUAL: GRT entry check failed" in out
+
+
+def test_grt_entry_clean_no_extra_pass(tmp_path):
+    out, log = tcl(tmp_path, FAIL_ONCE % 0 + GRT_RUN, design=DESIGN)
+    assert "dpl -use_diamond_legalizer" not in log and "OT_DPL_RESIDUAL" not in out
+
+
+ORFS_GRT_TAIL = ("  repair_design_helper\n  log_cmd estimate_parasitics -global_routing\n"
+                 "  source_step_tcl POST GLOBAL_ROUTE\n  orfs_write_db x\n")
+
+
+def test_wrapper_post_repair_dpl_before_post_grt_once(tmp_path):
+    w, s_ = wrap_kit(tmp_path)
+    (s_ / "global_route.tcl").write_text(GRT + ORFS_GRT_TAIL)
+    for _ in range(2):
+        p = run_wrap(w, s_)
+        assert p.returncode == 0, p.stdout + p.stderr
+    g = (s_ / "global_route.tcl").read_text().splitlines()
+    i = g.index("  source_step_tcl POST GLOBAL_ROUTE")
+    assert g[i - 1].startswith("  if {[catch {check_placement}]} {") and g[i - 1].endswith(";# OT_GRT_POST_DPL")
+    assert sum("OT_GRT_POST_DPL" in x for x in g) == 1
+
+
+def test_wrapper_post_repair_dpl_opt_out(tmp_path):
+    w, s_ = wrap_kit(tmp_path, "export OT_GRT_POST_DPL = 0\n")
+    (s_ / "global_route.tcl").write_text(GRT + ORFS_GRT_TAIL)
+    assert run_wrap(w, s_).returncode == 0
+    assert "OT_GRT_POST_DPL" not in (s_ / "global_route.tcl").read_text()
+
+
+@pytest.mark.parametrize("fail", [0, 1])
+def test_post_repair_dpl_line_behaviour(tmp_path, fail):
+    if not shutil.which("tclsh"):
+        pytest.skip("tclsh unavailable")
+    w, s_ = wrap_kit(tmp_path)
+    (s_ / "global_route.tcl").write_text(GRT + ORFS_GRT_TAIL)
+    assert run_wrap(w, s_).returncode == 0
+    line = next(x for x in (s_ / "global_route.tcl").read_text().splitlines() if "OT_GRT_POST_DPL" in x)
+    t = tmp_path / "p.tcl"
+    t.write_text("set ::log {}; proc L {args} { lappend ::log [join $args] }\n"
+                 + FAIL_ONCE % fail
+                 + "proc detailed_placement {args} { L [string trim \"dpl $args\"] }\n"
+                 + "proc global_route {args} { L global_route {*}$args }\nproc estimate_parasitics {args} { L est {*}$args }\n"
+                 + line + "\nputs LOG=[join $::log |]\n")
+    p = subprocess.run(["tclsh", str(t)], capture_output=True, text=True)
+    assert p.returncode == 0, p.stdout + p.stderr
+    log = [x for x in p.stdout.splitlines() if x.startswith("LOG=")][0][4:].split("|")
+    if fail:
+        assert log == ["check_placement", "global_route -start_incremental", "dpl -use_diamond_legalizer",
+                       "global_route -end_incremental", "est -global_routing", "check_placement -verbose"]
+    else:
+        assert log == ["check_placement"]

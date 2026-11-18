@@ -347,8 +347,15 @@ uplevel #0 {
     if {![llength $clr_todo] || $clr_pass > $clr_gpasses} break
     global_route -start_incremental
     # the GRT stage process has not run detailed_placement yet: insert_buffer legalises through dpl (Opendp grid),
-    # which segfaults uninitialised (OpenROAD 26Q3 pointOffMacro); the design is legal, so this DPL only builds the grid
-    detailed_placement
+    # which segfaults uninitialised (OpenROAD 26Q3 pointOffMacro); this DPL builds the grid.
+    # S81-COL-FLOW-1118 (DPL-0033 on S81 leaf t25_ns2 pilot and wave t51 a6): the design entering GRT is not always legal
+    # (t51: 294 violations at this call, 36 left by the negotiation legalizer; t25: 2 BUFx6f overlaps), so the residual
+    # survived into the repeater check.  Same overlap-aware policy as CTS: kit legalizer, then one diamond pass on a failed check.
+    detailed_placement {*}[clr_dpl_args]
+    if {[catch {check_placement}]} {
+      puts "OT_DPL_RESIDUAL: GRT entry check failed, legalization once more with [clr_dpl_args 1]"
+      detailed_placement {*}[clr_dpl_args 1]
+    }
     foreach clr_g_job $clr_todo {
       lassign $clr_g_job clr_g_net clr_g_drv clr_g_loads
       lassign [clr_xy $clr_g_drv] clr_g_dx clr_g_dy
