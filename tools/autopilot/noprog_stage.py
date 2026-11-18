@@ -425,7 +425,6 @@ def hub(now=None, post=True, force_post=False):
         open(ap, "w").write(old)
         files.append("lanes/NOPROG-ACTIONS.tsv")
     new = tsv(rows, stamp, missing)
-    open(path, "w").write(new)
     seen_path = os.path.join(STATE_DIR, "stage_hub.json")
     try:
         seen = json.load(open(seen_path))
@@ -433,8 +432,14 @@ def hub(now=None, post=True, force_post=False):
         seen = {}
     sig = json.dumps(sorted(f"{r['host']}|{r['container']}|{r['cls']}" for r in rows if r["cls"] != "PROGRESSING"))
     if sig != seen.get("sig") or now - seen.get("commit_t", 0) >= 3600 or len(files) > 1:
-        coord_commit("NOPROG-FIX-1115: NOPROG.tsv refresh", files)
-        seen.update(sig=sig, commit_t=now)
+        # FABLE-FLOW-1900 (E): lanes/NOPROG.tsv is a tracked file; it is written only together with its commit (it used to be rewritten every tick and
+        # committed hourly, so the hub checkout carried local edits between commits -> HUB-SYNC-FAILED).  A failed commit puts the old text back.
+        open(path, "w").write(new)
+        r = coord_commit("NOPROG-FIX-1115: NOPROG.tsv refresh", files)
+        if getattr(r, "returncode", 0) not in (0, None):
+            open(path, "w").write(old)
+        else:
+            seen.update(sig=sig, commit_t=now)
     if post and (force_post or now - seen.get("post_t", 0) >= 3500):
         subprocess.run(["bash", os.path.join(COORD, "bin/post.sh"), POST_LANE, summary(rows, stamp, missing)],
                        capture_output=True, text=True, timeout=600)

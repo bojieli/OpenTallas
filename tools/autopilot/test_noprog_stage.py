@@ -271,10 +271,26 @@ def test_hub_writes_tsv_and_posts_through_post_sh_only(monkeypatch=None):
     assert "NO-PROGRESS" in t.splitlines()[2]
     posts = [c for c in calls if c[0] == "run"]
     assert len(posts) == 1 and posts[0][1] == "post.sh" and posts[0][2] == "NOPROG-FIX-1115" and "NO-PROGRESS 1" in posts[0][3]
-    ns.hub(now=NOW + 900)                              # 15 min later: refreshed, no second post
+    before = open(os.path.join(d, "lanes/NOPROG.tsv")).read()
+    ns.hub(now=NOW + 900)                              # 15 min later: nothing to commit -> the tracked file is NOT rewritten (no dirty checkout), no second post
+    assert open(os.path.join(d, "lanes/NOPROG.tsv")).read() == before
     assert len([c for c in calls if c[0] == "run"]) == 1
     ns.hub(now=NOW + 3700)
     assert len([c for c in calls if c[0] == "run"]) == 2
+
+
+def test_failed_commit_restores_the_tracked_table():
+    d = tempfile.mkdtemp()
+    os.makedirs(os.path.join(d, "lanes")); os.makedirs(os.path.join(d, "state"))
+    open(os.path.join(d, "lanes/NOPROG.tsv"), "w").write("# committed text\n")
+    ns.COORD, ns.STATE_DIR = d, os.path.join(d, "state")
+    ns.push_and_scan = lambda h: (h, [])
+
+    class F:
+        returncode = 1
+    ns.coord_commit = lambda msg, files: F()
+    ns.hub(now=NOW, post=False)
+    assert open(os.path.join(d, "lanes/NOPROG.tsv")).read() == "# committed text\n"
 
 
 def test_old_action_log_is_kept_under_new_name():

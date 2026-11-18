@@ -5,6 +5,16 @@
 # Prints the gate output; GREEN ends with `GATE main=<sha> pass=N/N`.  Clone slots: /srv/opentallas-scratch2/claude/mq-gate/slot<i>.
 set -u
 cd /
+# FABLE-FLOW-1900 (E): a gate runs on a BUILD host only.  `ot-gate-remote --help` once started a real gate on the hub and a second hub gate ran at 17:43.
+usage() { echo "usage: ot-gate-remote claude/<branch>@<sha> [threads]   (build host only, normally via ot-run; refuses on the hub intel2 and on localhost)" >&2; exit 2; }
+HN=${OT_GATE_HOSTNAME:-$(hostname -s)}
+case "$HN" in
+  tolerant-swine|ubuntu|intel2|localhost|rtx-pro) echo "ot-gate-remote: REFUSED on $HN: gates run on build hosts (epyc2, epyc7..epyc10, intel1) through ot-run, never on the hub or localhost" >&2; exit 64;;
+esac
+[ $# -ge 1 ] && [ $# -le 2 ] || usage
+printf '%s' "$1" | grep -Eq '^claude/[A-Za-z0-9._/-]+@[0-9a-f]{7,40}$' || { echo "ot-gate-remote: bad branch@sha: '$1'" >&2; usage; }
+[ $# -lt 2 ] || printf '%s' "$2" | grep -Eq '^[0-9]{1,3}$' || { echo "ot-gate-remote: bad thread count: '$2'" >&2; usage; }
+[ "${OT_GATE_CHECK_ONLY:-}" = 1 ] && exit 0
 B=/srv/opentallas-scratch2/claude/mq-gate
 # the mirror is reached by the hub's IP (fleet hosts and localhost do not resolve the alias "intel2": the clone failed there, exit 3)
 M=ubuntu@185.8.106.226:/srv/opentallas-scratch2/git/OpenTallas.git

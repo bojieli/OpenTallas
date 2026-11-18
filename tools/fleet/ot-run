@@ -291,7 +291,9 @@ SCRATCH_FREE_SH = ("rd=$(stat -c %d /); for r in " + " ".join(SCRATCH_ROOTS) + "
                    "echo OT_ROOTFS $(df --output=pcent / | tail -1 | tr -dc 0-9) $(df -BG --output=avail / | tail -1 | tr -dc 0-9); "
                    "echo OT_DIR_ONROOT $([ \"$(stat -L -c %d \"$t\" 2>/dev/null)\" = \"$rd\" ] && echo 1 || echo 0); "
                    # KW-FIX-43 11-09 ROOTREAL: the real path of the --dir (symlinked scratch2 lane -> scratch3)
-                   "echo OT_DIR_REAL $(readlink -f \"$t\" 2>/dev/null); ")
+                   "echo OT_DIR_REAL $(readlink -f \"$t\" 2>/dev/null); "
+                   # FABLE-FLOW-1900 (C): the measured scratch2 fall rate (GB/h, epoch) that disk_rate.py pushes every 10 min
+                   "echo OT_DISK_ETA $(cat $HOME/.local/state/disk_eta 2>/dev/null); ")
 SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
 # v13: on a host with a separate scratch disk, new work goes ONLY there; below this free space the host admits nothing
 # (NOT RUN / placed elsewhere) instead of falling back to the root fs.
@@ -367,6 +369,11 @@ def scratch_disk(row, d, out, host=None):
             extra["dir_onroot"] = f[1] == "1"
         elif len(f) == 2 and f[0] == "OT_DIR_REAL":
             extra["dir_real"] = f[1]
+        elif len(f) == 3 and f[0] == "OT_DISK_ETA":
+            try:
+                extra["disk_rate_gb_h"], extra["disk_rate_t"] = float(f[1]), float(f[2])
+            except ValueError:
+                pass
     # ROOTSCR_1101: second roots (root fs, named in ROOT_SCRATCH_ROOTS) count with root free - ROOT_SCRATCH_FLOOR_GB
     rfl = root_floor(host)                                    # ROOTSCR-INTEL: per-host root floor
     second = {r: max(0, roots.pop(r) - rfl) for r in list(roots) if r in onroot and r in second_roots(host)}
@@ -740,6 +747,37 @@ def die_disk_reserved(host, dev=None):
                            if dev is None or not devs.get(u) or any(x in (dev, "unknown") for x in devs[u]))
     except (subprocess.SubprocessError, OSError, ValueError):
         return None
+
+
+ETA_HORIZON_H = float(os.environ.get("OT_RUN_ETA_HORIZON_H", "1"))     # FABLE-FLOW-1900 (C): hours of the measured fall that must still fit above the floor
+ETA_MAX_AGE_S = 2700
+
+
+def eta_refusal(row, need_gb, now=None):
+    """disk-ETA admission hold: '' or why this host admits nothing now.  The host's scratch free GB minus what it is measured to write over the next ETA_HORIZON_H
+    hours (disk_rate.py, GB/h) minus this job's own peak writes (--disk; 20 GB default) would cross the scratch floor -> hold (the quota alert alone stopped nothing: 11 fails on a full epyc9)."""
+    if not isinstance(row, dict) or "disk_gb" not in row:
+        return ""
+    rate, t = row.get("disk_rate_gb_h"), row.get("disk_rate_t")
+    if not rate or rate <= 0 or t is None or (now or time.time()) - t > ETA_MAX_AGE_S:
+        return ""
+    free, fl = row["disk_gb"], max(SCRATCH_DISK_FLOOR_GB, HARD_SCRATCH_FLOOR_GB)
+    left = free - rate * ETA_HORIZON_H - need_gb
+    if left < fl:
+        return f"disk-ETA: {free} GB free falling {rate:.0f} GB/h, minus {need_gb} GB this job's peak writes, leaves {left:.0f} GB < floor {fl} GB within {ETA_HORIZON_H:g} h"
+    return ""
+
+
+def drop_eta(ok, need_gb, say=None, now=None):
+    """-> (hosts that stay, {host: why held})"""
+    out, held = dict(ok), {}
+    for h, r in ok.items():
+        why = eta_refusal(r, need_gb, now)
+        if why:
+            out.pop(h); held[h] = why
+            if say:
+                say(f"ot-run: HOLD {h}: {why}")
+    return out, held
 
 
 def drop_low_disk(ok, die, need, say=None):
@@ -1755,6 +1793,17 @@ def main():
             hosts = gate_hosts(cmd, [h for h in HOSTS if h not in held]) or hosts
         raw = place(hosts, d, disk, mem, quiet=not first)
         ok = drop_low_disk(raw, die, disk, say if first else None)
+        ok, eta_held = drop_eta(ok, disk, say if first else None)
+        if eta_held and not ok:
+            # every candidate would cross its floor within the horizon: a HOLD, not a failure -- wait and re-place (NOT-RUN only when --max-wait ends)
+            _el = time.time() - t0
+            if max_wait is not None and _el >= max_wait:
+                not_run("disk-ETA hold: " + "; ".join(f"{h}: {w}" for h, w in eta_held.items()))
+            if first:
+                say("ot-run: HOLD: no new admission until the scratch fall rate allows it; re-placing every %d s" % REQUEUE_S)
+            time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - _el)))
+            first = False
+            continue
         previously_qualified.update(ok)
         if raw and not ok:              # DISK: every host with --dir lacks scratch for this die job -- spill, else wait
             best = max(raw, key=lambda h: raw[h].get("disk_gb", 0))
