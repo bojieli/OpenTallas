@@ -1,6 +1,6 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 22:00 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 22:15 PST)
 
-Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 5, 'NO-DATA': 3, 'EXCLUDED': 14, 'PROGRESS': 1}. Hosts without report: none.
+Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 10, 'NO-DATA': 3, 'EXCLUDED': 14, 'PROGRESS': 1}. Hosts without report: none.
 
 | host | container | type | stage | age h | metric trend | verdict | action |
 |---|---|---|---|---|---|---|---|
@@ -12,6 +12,11 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 5, 'NO-DATA'
 | intel1 | dpkit-kit-2546869 | kit | 5_1_grt | 75.9 | repair_TNS best 290556 last 290556 rows 7 | YOUNG: series started inside the last 6 h |  |
 | intel1 | so_1006480_ff_43204 | so_1006480_ff_43204 | signoff | 1.0 |  | NO-DATA: empty log |  |
 | intel1 | so_1006480_tt_43204 | so_1006480_tt_43204 | signoff | 1.0 |  | NO-DATA: empty log |  |
+| intel2 | dpkit-col_h9_r0_p1__t1__pv8c197f8e-3287923 | col_h9_r0_p1__t1 | 2_1_floorplan | 0.1 | last meaningful line 0.0 h ago (1418/1418 lines) | YOUNG: evidence 0.1 h < 7.5 h |  |
+| intel2 | dpkit-col_h9_r0_p2__t1__cl9f71e63d__pv291547b4-3348416 | col_h9_r0_p2__t1 | 2_1_floorplan | 0.0 | last meaningful line 0.0 h ago (712/712 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| intel2 | dpkit-col_h9_r0_p2__t1__cl9f71e63d__pva4376595-3358233 | col_h9_r0_p2__t1 | 2_1_floorplan | 0.0 | last meaningful line 0.0 h ago (466/466 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| intel2 | dpkit-col_h9_r0_p2__t1__cl9f71e63d__pvef55eb84-3343346 | col_h9_r0_p2__t1 | 2_1_floorplan | 0.1 | last meaningful line 0.0 h ago (886/886 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
+| intel2 | dpkit-col_h9_r0_p3__t1__cl0cd90c0e__pv13474472-3365784 | col_h9_r0_p3__t1 | stage_odb_cap | 0.0 | last meaningful line 0.0 h ago (2/2 lines) | YOUNG: evidence 0.0 h < 7.5 h |  |
 | epyc2 | dpkit-cbn_q11__cl49ae4555-2230510 | cbn_q11 | 5_1_grt | 43.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-cbn_q11__cl5cc92dfe-3740733 | cbn_q11 | 5_1_grt | 34.1 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dpkit-phy__t1-746475 | phy__t1 | 5_1_grt | 67.8 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
@@ -25,5 +30,5 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 5, 'NO-DATA'
 | intel1 | dpkit-slw_stm_v2__cl1ca9c415-576862 | slw_stm_v2 | 5_2_route | 19.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | otc-3050876-24009 | 3050876 | gen_lint_yosys | 0.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261117_195705_746226-i1-3867644 | eco_20261117_195705_746226-i1 | 5_2_route | 2.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-ot_s81sl_leaf__t39-2631694 | ot_s81sl_leaf__t39 | stage_odb_cap | 0.7 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-ot_s81sl_leaf__t39-2631694 | ot_s81sl_leaf__t39 | tt_setup_repair | 1.0 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 14.0 | last meaningful line 0.6 h ago (1436/1436 lines) | PROGRESS: log still growing |  |
