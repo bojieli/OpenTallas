@@ -3780,8 +3780,8 @@ def die_islands_tcl(P, tn):
     return "\n".join(lines) + "\n"
 
 
-# KV-PC-DELTA-1115: channel_keepout = a hard placement blockage over a routing channel between hard cores (no std cell
-# or repeater there; the pins on the channel edge are reached from outside it), same mechanism as die_clock_tree
+# KV-PC-DELTA-1115: channel_keepout = a GPL-only placement blockage over a routing channel between hard cores (no std cell
+# or repeater there; the pins on the channel edge are reached from outside it), GPL-only like landing_ring_bank (FIRM landing cells in the channel are placed first; released before DPL)
 RESERVED_KINDS = ("die_clock_tree", "landing_ring_bank", "channel_keepout")
 
 
@@ -3828,7 +3828,7 @@ def reserved_sites_tcl(P, tn):
             raise ValueError(f"{tn}: reserved site kind {r.get('kind')} not in {RESERVED_KINDS}")
         if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
             raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
-        (hard if r["kind"] in ("die_clock_tree", "channel_keepout") else bank).append((x0, y0, x1, y1))
+        (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
         if r["kind"] == "die_clock_tree" and r.get("route_layers"):   # CLKSITE-RESERVE-1115 opt-in
             hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"])))
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
