@@ -85,3 +85,23 @@ Gates R-MINIMAL: DRC 0, routed TT >= -42, internal FF hold >= 0 (port hold advis
 - sd9g3 census on E9 (run_paths.sh -> LANE9/g3_paths_{tt,ff}) is still HELD by the E9 disk-ETA rule (waiters re-place every 120 s).
 - Mistake noted: I stopped two of my own held ot-run waiters on intel2 with a pgrep -f loop (only my lane's two clients + my own shell
   matched); exact PIDs only from now on.
+## 11-18 00:10 PST -- four forms, SPCYC delay defect, branch pushed
+- COORD asked for parallel forms (a) enc PPCYC=1, (b) syn SPCYC=1 + OT_S81_RCK_RX_SPCYC, (c) both; (d) = my zero-cycle PW16/PW8.
+  Plumbing by defines: OT_S81_KP4_ENC_PPCYC (ot_pdie_serdes u_enc), OT_S81_RCK_RX_SPCYC (ot_s81_kp4_dec u_syn).
+- DEFECT found by the link gate: base form (no OT_S81_KP4_SYN_LOCAL) ot_s81_kp4_ddly kept DD 55 under OT_S81_RCK_RX_SPCYC ->
+  tb_s81_pdie_link got=5002 bad=5002.  Fixed (DD 56).  The first (b)/(c) builds (E10 sd9pb_gen_BAD_dd55, sd9pc_gen_BAD_dd55; units
+  2231658 / 2231671 stopped by ot-heavy-stop --unit) are INVALID: never read results from them; delete with ot-delete when convenient.
+- Gates: KP4_PW_BENCH PASS (E10 LANE10=/srv/opentallas-scratch2/claude/fable-fix-head-sd9h bench_b.log); KP4_FORMS_GATE PASS
+  (forms_b.log: off / LA / a / b / c / d PASS 6000/6000; c DMUT, d DMUT, d split mutant FAIL as required).
+- Branch claude/head-serdes-kp4-pw-1118 PUSHED @fb361b03fa0e (7d884647bf6 PW splits + bench; fb361b03 plumbing + ddly fix + forms gate).
+  READY posted.  Base main 412abaca79.
+- RUNNING on E10 (all = R4 sd9g3 recipe + kit-local RTL; kit dirs LANE10/<tag>_gen/hd_serdes, wrapper LANE10/run_form.sh <tag> /
+  run_sd9h.sh = run_kit.sh route + signoff.py -> signoff_fable; client logs intel2 ~/fable-fix-head-sd9f-logs/<tag>_route.log):
+  (d) sd9h unit oth-ubuntu-1975906-1794984130; (a) sd9pa unit oth-ubuntu-2231662-1794984698;
+  (c) sd9pc2 unit oth-ubuntu-2693658-1794986035; (b) sd9pb2 unit oth-ubuntu-2693657-1794986035.
+  Gen dirs on E9 LANE9/<tag> (gen_form2.sh TAG DEFINES...; patch_rtl.py, patch_plumb.py, patch_ddly.py, split_kp4_window_n.py).
+  NEXT per form: at GRT read <kit>/tt_setup_repair_grt.log + postcts_gate_tt.json, LOOK run/layout_review renders; after route read
+  signoff_fable.log.  First R-MINIMAL pass: export with scratchpad ffht_export.sh (host epyc10, el hd_serdes__<tag>_1118, base
+  <kit>/run/results/asap7/dp_hd_serdes/base, sig <kit>/signoff_fable/signoff.json) + post SIGNED; stop the other forms by unit.
+  Internal hold short only: tools/die_plan/hold_eco_internal_run.py (r583).  TT short < 60: capture-skew ECO (r614 or us_eco.tcl).
+  Expectation: (a)/(b) alone leave the other family failing; (c) and (d) are the candidates; (d) adds no latency.
