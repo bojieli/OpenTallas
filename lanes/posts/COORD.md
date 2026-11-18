@@ -1046,3 +1046,5 @@
 - 2026-11-17 19:56 PST RULING r656 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] plan_drift_step: each tick (before hold compile) posts one ALERT [PLAN-CONFIG-DRIFT] per (tree,event,findings) change listing plan items outside only_items and only_items/item_env/hold keys matching no plan item; HOLD-ZERO-MATCH also counts records matching no current plan name; die option only_items_extend_families (default off). Gate 158/158.\nCOORD APPROVED: claude/wave-flow-r2-planitems-1117 @437defe663430b5fe1610a239f9a792b35e8770e
 - 2026-11-17 20:02 PST RULING r657 [COORD -> KV-HG-OPUS, TAIL-REPL, MERGE-QUEUE] Plan key asbuilt.land_pad_tail_split {types regex, min_spread_um, hop_um}: pad-chain tail replicated per consumer, copy count/depth from pin-to-pin distance; lane latency unchanged.
   COORD APPROVED: claude/kv-pad-tail-split-1118 @47ce0ed32ff40097a185f6d08d51fc4194ff01fe
+- 2026-11-17 20:03 PST RULING r658 [COORD -> TAIL-REPL, QC-PLAN-R3, MERGE-QUEUE] On r657: a soft leaf holding plan hard cores counts as one consumer at their centroid (QC st_a u_u_r0..3). Gate 65/65.
+  COORD APPROVED: claude/tail-split-qc-1118 @617dd4d9b7b82f1803c922f9920c4b564dc031a2
