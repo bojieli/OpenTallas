@@ -123,9 +123,10 @@ def marker_sweep(fails, cache=None):
     known = {'%s:%s' % (r['host'], r['dir'].rstrip('/')) for r in rtp.dnc_rows()}
     add = []
     for h, ds in sorted(need.items()):
-        if h not in rtp.HOSTS: continue      # a retired host (epyc4/5/6) has no ssh: its marker sweep failed every hour (INGEST-FIX 11-17)
         try:
             r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(MARKER_PY)), '\n'.join(sorted(ds)) + '\n', 600)
+            if r.returncode != 0 or not r.stdout.strip():          # a terminated / unreachable host has no markers to read
+                say('marker sweep skipped, host unreachable:', h, 'rc', r.returncode, (r.stderr or '')[-80:].strip()); continue
             found = json.loads(r.stdout)
         except Exception as e:
             fails.append([h, '*', 'marker sweep', str(e)[:200]]); continue
@@ -183,6 +184,16 @@ def host_tool(h):
     return SHIP_TOOL
 
 
+# OWNER split 11-18: the full routed DB lives on rtx-pro only; AGIdock gets metadata (sign-off, provenance, logs, reports).  OT_INGEST_FULL_DB=1 restores the old full copy.
+DB_FILE = re.compile(r'\.(odb|def|gds|gds2|oas)(\.(zst|gz))?$')
+
+
+def metadata_only(files):
+    """[(path, size, ...)] without the routed-DB files, unless OT_INGEST_FULL_DB is set"""
+    if os.environ.get('OT_INGEST_FULL_DB'): return list(files)
+    return [f for f in files if not DB_FILE.search(f[0])]
+
+
 def archive_host(h, cands, fails):
     """-> {path: {file: sha}} for the records whose every file is on the archive and equal to the host copy"""
     try:
@@ -192,7 +203,9 @@ def archive_host(h, cands, fails):
     r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(PROBE) + ' ' + tool), '\n'.join(sorted({c[0]['path'] for c in cands})) + '\n', 1800)
     P = {}
     for ln in r.stdout.splitlines():
-        o = json.loads(ln); P[o['path']] = o
+        o = json.loads(ln)
+        if 'files' in o: o['files'] = metadata_only(o['files'])
+        P[o['path']] = o
     files = {}
     for c in cands:
         o = P.get(c[0]['path'])
@@ -214,6 +227,69 @@ def archive_host(h, cands, fails):
     bad = [p for p in files if p not in good]
     if bad: say(h, 'hash differs on', len(bad), 'files, first', bad[0])
     return good, P
+
+
+class _ArchiveRtp:
+    """the counter's scan code (SCAN_PY) with no host to ask for pins: an archive copy has no routed DEF to fetch pins from (entry pins stay None)"""
+    def __init__(self):
+        self.SCAN_PY = rtp.SCAN_PY
+        self.HOSTS = []
+
+    def fetch_rec_pins(self, recs):
+        return {}
+
+
+def sandbox_runner(local_dir):
+    """run a command with <local_dir>/srv bind-mounted at /srv: the archive copy looks exactly like the fleet host's original paths"""
+    def run_(cmd, inp=None):
+        argv = ['bwrap', '--ro-bind', '/', '/', '--dev-bind', '/dev', '/dev', '--proc', '/proc', '--bind', os.path.join(local_dir, 'srv'), '/srv', 'bash', '-c', cmd]
+        return subprocess.run(argv, input=inp, capture_output=True, text=True, timeout=1800)
+    return run_
+
+
+def archive_unit_paths(local_dir):
+    """original absolute paths of every sign-off record file (signoff.json / *.signoff.json) of an archive copy rooted at <local_dir>/srv"""
+    out = []
+    for r, ds, fs in os.walk(os.path.join(local_dir, 'srv')):
+        for f in fs:
+            if f == 'signoff.json' or f.endswith('.signoff.json'):
+                out.append('/' + os.path.relpath(os.path.join(r, f), local_dir))
+    return sorted(out)
+
+
+def sha_file(path):
+    h = ss.hashlib.sha256()
+    with open(path, 'rb') as fh:
+        for b in iter(lambda: fh.read(1 << 24), b''):
+            h.update(b)
+    return h.hexdigest()
+
+
+def from_archive(local_dir, host, archive_base, fails, runner=None, ingest=None, tool=None):
+    """--from-archive: ingest the SIGNED records of an archive-only copy (e.g. _wave-recovery-1117/<host>).  Same validation as the host path
+    (the counter's own scan + collect, the unit = ot-autoclean unit_files, every file sha256-hashed, unsigned records and known ids skipped); the
+    entry's origin is host:<original path>, archive = archive_base, ingest.kind = archive-recovery, ingest.source = archive.  -> [new ids]"""
+    runner = runner or sandbox_runner(local_dir)
+    ingest = ingest or (lambda sh: ss.ingest(host, sh, archive_base, runner=runner, rtp=_ArchiveRtp(), kind='archive-recovery'))
+    paths = archive_unit_paths(local_dir)
+    if not paths:
+        return []
+    r = runner('python3 -I -c ' + shlex.quote(PROBE) + ' ' + (tool or LOCAL_TOOL), '\n'.join(paths) + '\n')
+    new = []
+    for ln in r.stdout.splitlines():
+        o = json.loads(ln)
+        if 'files' not in o:
+            fails.append([host, o['path'], 'probe', o.get('err', 'no answer')]); continue
+        sh, bad = {}, []
+        for f in o['files']:
+            lp = os.path.join(local_dir, f[0].lstrip('/'))
+            if not os.path.isfile(lp):
+                bad.append(f[0]); continue
+            sh[f[0]] = [os.path.getsize(lp), sha_file(lp)]
+        if bad:
+            fails.append([host, o['path'], 'archive copy lacks %d unit files, first %s' % (len(bad), bad[0])]); continue
+        new += ingest(sh)
+    return new
 
 
 def select_late(recs, manifest):
@@ -295,6 +371,22 @@ def main():
         add = marker_sweep(fails)
         say('marker sweep: new holds', len(add), 'fails', fails)
         return 1 if fails else 0
+    if '--from-archive' in sys.argv:                        # FLEET-OPS-R (COORD 11-16): count archive-only SIGNED records
+        a = sys.argv
+        arg = lambda k: a[a.index(k) + 1] if k in a else None
+        local_dir, host, base = arg('--from-archive'), arg('--host'), arg('--archive-base')
+        if not (local_dir and host and base):
+            say('usage: --from-archive LOCAL_DIR --host ORIGIN_HOST --archive-base ARCHIVE_DIR [--dry]'); return 2
+        fails = []
+        new = [] if '--dry' in a else from_archive(local_dir, host, base, fails)
+        if '--dry' in a:
+            say('dry: sign-off files', len(archive_unit_paths(local_dir)))
+        if new:
+            rel = [str(pathlib.Path(ss.entry_path(e)).relative_to(COORD)) for e in new]
+            c = run([str(COORD / 'bin/coord-commit.sh'), 'signed-store: archive-recovery ingest %s, %d new entries' % (host, len(rel))] + rel, None, 280)
+            if c.returncode: fails.append(['coord', host, 'store commit rc %d' % c.returncode])
+        say('from-archive', host, 'new', len(new), 'fails', fails)
+        return 1 if fails else 0
     dry = '--dry' in sys.argv
     # FLOW-HEALTH-1 11-15 (COORD): the ingest runs where the AGIdock key lives (localhost rtx-pro).  On a host without the key every archive
     # step used to die with a JSONDecodeError after a 7-minute scan, hourly, for three days (the store did not grow after 11-12 19:40).
@@ -313,11 +405,6 @@ def main():
             try: recs += f.result()
             except Exception as e:
                 unreachable.append(futs[f]); say('SCAN FAILED', futs[f], str(e)[:200])
-    try:
-        dr = rtp.new_direct(recs, say)        # the counter's own direct reads (INGEST-FIX 11-17): same discovery as the count
-        say('direct records not in the walk:', len(dr)); recs += dr
-    except Exception as e:
-        fails.append(['coord', '*', 'direct read', str(e)[:200]])
     have = {identity(r) for r in ss.load_records()[0]}
     sel = select(recs, have, time.time())
     say('scanned', len(recs), 'records, store has', len(have), 'identities, new inside %.0f h:' % WINDOW_H, len(sel))
