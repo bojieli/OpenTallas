@@ -1,0 +1,78 @@
+{
+ "die": "s81_head",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r3c",
+  "event": "head_rp21z20NF15f_r3",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r3c/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+  "plan_sha256": "c087d8fa944752a34d7b0496a23123cce52c35c74edfab13157fbd87367c2632",
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+   "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+  }
+ },
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1",
+  "manifest_hash": "e1a536dfe2ae1f6bc19ea488b1d1c0a6285473998bf25d638f0e12598b258847",
+  "src_manifest_sha": "e1a536dfe2ae1f6bc19ea488b1d1c0a6285473998bf25d638f0e12598b258847",
+  "tools_sha": "385f61b5582a91e3bf52d3bd494eebc6a64b21bb",
+  "hosts": [
+   "epyc10",
+   "epyc9"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "HEAD-PLAN-R4 r3 on r2: hd_serdes verilog_defines OT_S81_KP4_ENC_PW16 + OT_S81_KP4_SYN_PW8 and the 8 KP4 PW RTL files from main (= head-serdes-kp4-pw-1118@fb361b03, the RTL of SIGNED s81_head/hd_serdes__sd9he_pw_1118); native release proof re-run on this RTL (same 5 verdicts) and receipt re-issued. Smoke on this exact tree (ot-run epyc9 oth-ubuntu-2856560): static gate all PASS, G0 PASS, bind PASS, cohort 26/26, LATCHECK 329/329, hd_serdes kit_rtl PASS with both defines. Replicated epyc10; intel1 refused by disk floor (67 GB).",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+  "plan_sha256": "551e7072f3c5d8924ac3c3265d28e042d9c7d94a1f54074bfb6b33ad2e790f16",
+  "plan_canonical_sha256": "8878e583eb07681200401b9ebe1fbd3c4253c6402b19b342032c0c76c7c99c0d",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
+  "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
+  "physical_qualified": false,
+  "preserve_holds": "all inherited s81_head hold_records kept; HEAD-PLAN-R4 one plan revision (COORD r706)",
+  "config": {
+   "event": "head_rp21z20NF15f_r3",
+   "tools_sha": "385f61b5582a91e3bf52d3bd494eebc6a64b21bb",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc9",
+    "epyc10"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ]
+  },
+  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/results/head_native_release_nf15f_r3c/native_release_receipt.json",
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply",
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  },
+  "live_tree": {
+   "snapshot": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r3c_s1",
+   "made": "2026-11-18 14:09:46 UTC",
+   "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"
+  },
+  "optimistic": true,
+  "_path": "/home/ubuntu/hpr4/cand_live_s1.json"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/11574cfef86d0543642980e2a1baa6a7fe44a1019e1552290c0f3e3f716c281a/result.json",
+ "candidate": "/home/ubuntu/hpr4/cand_live_s1.json",
+ "optimistic": true,
+ "warnings": [
+  "ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/s81_head/e1a536dfe2ae1f6bc19ea488b1d1c0a6285473998bf25d638f0e12598b258847.json (run tools/autopilot/publish_gate.py run on this candidate first)",
+  "ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}"
+ ]
+}
