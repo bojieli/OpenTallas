@@ -407,18 +407,31 @@ def run_gate(C, obj, expect_source, expect_event, item=None, kind="type", work=N
         baseline = load_g0_baseline(marker.get("g0_baseline") or obj.get("g0_baseline"))
         rows_proofs = list(marker.get("rows_proofs") or obj.get("rows_proofs") or [])
         rec["rows_proofs"] = rows_proofs
-        st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
-                                                                   rows_proofs=rows_proofs)))(
-            static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
-        rec["checks"].update(st)
-        if all((st.get(c) or {}).get("verdict") == "PASS" for c in ("schema", "pre_g0", "hashes", "contained")):
-            rec["checks"]["dry_gen"] = (dry_fn or (lambda t, d, i, k, h, w: dry_gen(t, d, i, k, work, hub, h, run_unit, w)))(
-                text, die, pick, kind, hosts[0], want)
-        else:
-            rec["checks"]["dry_gen"] = {"verdict": "SKIP", "why": "an earlier check failed (the dry gen would only repeat it)"}
+        # LATENCY-R 11-18: the static checks (PRE + G0: 13-39 min) and the dry gen (13-53 min) ran one after the other (QC M5 gate 92 min, S81 D7w 34 min).
+        # They read the same published tree and write separate dirs, so they now run at the same time; the gate takes the longer of the two.  A failed
+        # static check no longer skips the dry gen: both verdicts are recorded (the verdict rule is unchanged: every check must PASS).
+        import concurrent.futures as CF
+
+        def _dry():
+            try:
+                return (dry_fn or (lambda t, d, i, k, h, w: dry_gen(t, d, i, k, work, hub, h, run_unit, w)))(text, die, pick, kind, hosts[0], want)
+            except Exception as e:                 # a dry gen that cannot run is a FAIL of that check, never a pass
+                return {"verdict": "FAIL", "why": f"dry gen did not run: {type(e).__name__}: {e}"[:600]}
+        with CF.ThreadPoolExecutor(max_workers=1) as ex:
+            fut = ex.submit(_dry)
+            t0 = time.time()
+            st = (static_fn or (lambda h, t, p, ab, ps: static_remote(h, wr + "/pubgate", t, p, ab, ps, hub_names=("localhost", hub), g0_baseline=baseline,
+                                                                       rows_proofs=rows_proofs)))(
+                static_host or hosts[0], tree, plan, marker.get("asbuilt"), plan_sha)
+            rec["checks"].update(st)
+            rec["static_s"] = round(time.time() - t0, 1)
+            rec["checks"]["dry_gen"] = fut.result()
+            rec["gate_s"] = round(time.time() - t0, 1)
     except Exception as e:                         # a gate that cannot run is a FAIL, never a pass
         rec["checks"].setdefault("gate", {"verdict": "FAIL", "why": f"{type(e).__name__}: {e}"[:600]})
     rec["verdict"] = "PASS" if all((rec["checks"].get(c) or {}).get("verdict") == "PASS" for c in CHECKS) else "FAIL"
+    # COORD 11-18 (optimistic launch): the gate is advisory for an optimistic apply; the record lists what a reader should look at
+    rec["advisory"] = sorted(c for c, v in rec["checks"].items() if (v or {}).get("verdict") != "PASS")
     write_record(C, rec, commit)
     return rec
 

@@ -41,23 +41,36 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
             return run(cmd)
         r = subprocess.run(["bash", "-c", cmd], capture_output=True, text=True, timeout=3600)
         return r.returncode, (r.stdout + r.stderr).strip()
-    csv = ",".join(extra)
-    rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(csv)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else "")
-    rc, out = sh(rep)
-    if rc:
-        raise SystemExit(f"REPLICATE: the tree is not on every current gen host and replication to {csv} failed (rc {rc}: {out[-300:]}); nothing applied")
-    rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(csv)} --expect {shlex.quote(want)}")
-    if rc:
-        raise SystemExit(f"REPLICATE: verification of the tree on {csv} failed (rc {rc}: {out[-300:]}); nothing applied")
-    return list(hosts) + extra, [f"replicated and verified on {csv}"]
+    # LATENCY-R 11-18 (QC N3 sat ready ~1 h+ because intel1 scratch2 was full): one extra host that cannot take the tree (disk floor, down) no longer refuses the
+    # whole apply.  Each extra host is replicated + verified on its own; a host that fails is DROPPED from the die's gen_hosts for this tree (named in the detail
+    # lines; derive_gen_hosts adds it back hourly once it holds the tree).  The candidate's own hosts are kept: their guard already covered them.
+    kept, notes = [], []
+    for h in extra:
+        rep = f"python3 -I {shlex.quote(sm)} replicate {shlex.quote(tree)} --hosts {shlex.quote(h)}" + (f" --link-from {shlex.quote(link_from)}" if link_from else "")
+        rc, out = sh(rep)
+        if not rc:
+            rc, out = sh(f"python3 -I {shlex.quote(sm)} hosts {shlex.quote(tree)} --hosts {shlex.quote(h)} --expect {shlex.quote(want)}")
+        if rc:
+            notes.append(f"DROPPED {h}: replicate/verify rc {rc}: {out[-200:]}")
+        else:
+            kept.append(h)
+    if kept:
+        notes.insert(0, f"replicated and verified on {','.join(kept)}")
+    return list(hosts) + kept, notes
 
 
 def marker_event_of(mc, d):
     return mc.get("event") or d.get("event")
 
 
-def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None):
+def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None, optimistic=None):
+    """optimistic (COORD 11-18, OWNER "build all types directly from the latest plan"; candidate key optimistic: true or --optimistic): the publish gate record,
+    the normal source guard and the smoke flag are ADVISORY (logged in the receipt as warnings, never a refusal) and no pilot hold is added (every type of the
+    plan launches at once) unless --pilot-item names one.  Strict bind + LATCHECK, run in parallel by the lane, are the only blocking plan checks: a failure
+    holds just the types it names (publish_apply.py bind-fail)."""
     C = Path(C)
+    optimistic = bool(obj.get("optimistic")) if optimistic is None else bool(optimistic)
+    warnings = []
     marker = dict(obj.get("marker", obj))
     die = marker["die"]
     tree = marker["tree"]
@@ -71,28 +84,41 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         assert hosts, "keep_gen_hosts: the die has no current gen_hosts"
         mc.pop("gen_hosts", None)
         mc.pop("gen_host", None)
-    assert hosts and marker.get("smoke") == "PASS" and marker.get("plan") and marker.get("plan_sha256")
+    assert hosts and marker.get("plan") and marker.get("plan_sha256")
+    if marker.get("smoke") != "PASS":
+        assert optimistic, "candidate smoke is not PASS"
+        warnings.append(f"ADVISORY smoke={marker.get('smoke')!r}")
+    if optimistic and not pilot_item:
+        no_pilot = True
     replicated = []
     if not keep:
         _cfg0 = json.loads((C / "autopilot/kit_wave.json").read_text())
         _cur = [h for h in (_cfg0["dies"][die].get("gen_hosts") or []) if h not in (_cfg0.get("retired_hosts") or [])]
         hosts, replicated = ensure_tree_on_hosts(tree, want, _cur, hosts, rt or HERE, link_from=os.path.basename(str(_cfg0["dies"][die].get("src") or "")))
         mc.pop("gen_hosts", None) if replicated else None
+        warnings += [x for x in replicated if x.startswith("DROPPED")]
     # PUBLISH-GATE-1116: no switch without a PASS record of the pre-apply gate (schema, PRE/G0, provenance hashes, dry gen) keyed to
     # this tree manifest sha.  PG=False is only publish_gate.project_cfg() projecting the apply on a scratch copy.
     if PG is not False:
         if PG is None:
             import publish_gate as PG
         why = PG.require_pass(C, die, tree, want, marker["plan_sha256"])
-        assert not why, why
+        if why and optimistic:
+            warnings.append("ADVISORY publish_gate: " + str(why)[:300])
+        else:
+            assert not why, why
     if TC is None:
         import tree_check as TC
     rt = rt or HERE
     ident = TC.identity(die, tree, want, hosts, str(rt / "src_manifest.py"))
     guard = TC.read(C / "autopilot/tree_checks", ident)
-    assert guard and guard.get("state") == "ok" and guard.get("full_ok") and not guard.get("running"), "exact current normal source guard is not ready"
-    main = guard["main_sha"]
-    assert len(main) == 40
+    if optimistic and not (guard and guard.get("state") == "ok" and guard.get("full_ok") and not guard.get("running")):
+        warnings.append("ADVISORY source guard not ready: " + str({k: (guard or {}).get(k) for k in ("state", "full_ok", "running")}))
+        main = str((guard or {}).get("main_sha") or marker.get("main_sha") or "")
+    else:
+        assert guard and guard.get("state") == "ok" and guard.get("full_ok") and not guard.get("running"), "exact current normal source guard is not ready"
+        main = guard["main_sha"]
+        assert len(main) == 40
     assert not any(k in mc for k in ["hold_records", "hold_items", "route_hold_items"]), "preserve inherited holds; add approved records explicitly"
     with (C / ".coord.lock").open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
@@ -133,12 +159,13 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             ge = list(d.get("gate_events_extra") or [])
             if d["event"] not in ge:
                 d["gate_events_extra"] = ge + [d["event"]]
-        d.setdefault("src_sha", main)
-        d.setdefault("queue_src", "main@" + main)
-        if "src_sha" not in mc:
-            d["src_sha"] = main
-        if "queue_src" not in mc:
-            d["queue_src"] = "main@" + main
+        if main:
+            d.setdefault("src_sha", main)
+            d.setdefault("queue_src", "main@" + main)
+            if "src_sha" not in mc:
+                d["src_sha"] = main
+            if "queue_src" not in mc:
+                d["queue_src"] = "main@" + main
         HR._deep_set(d.setdefault("die_gen_env", {}), marker.get("die_gen_env") or {})
         if marker.get("asbuilt") and marker.get("bind_out"):
             HR._deep_set(d.setdefault("kit_rtl", {}), dict(mode="bind", asbuilt=marker["asbuilt"], bind_out=marker["bind_out"]))
@@ -175,10 +202,11 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
         marker.update(manifest_hash=want, src_manifest_sha=want, status="ADOPTED reviewed tuple", written_by="root-authorized lane atomic apply")
         receipt = C / ("lanes/handoff/" + die + "_atomic_apply_" + str(time.time_ns()) + ".json")
         atomic(receipt, dict(die=die, prior=old, marker=marker, published_gen_import=published_gen_import, pilot=dict(item=pilot, hold_added=pilot_added, retired=retired_pilots, release="gen_pilot:%s:%s" % (die, want[:12])) if pilot else "NONE",
-                             guard=str(TC.location(C / "autopilot/tree_checks", ident) / "result.json"), candidate=str(obj.get("_path", ""))))
+                             guard=str(TC.location(C / "autopilot/tree_checks", ident) / "result.json"), candidate=str(obj.get("_path", "")),
+                             optimistic=optimistic, warnings=warnings))
         atomic(C / HR.tree_marker_rel(die), marker)
         atomic(cfgpath, cfg)
-        return dict(applied=die, event=d.get("event"), source=tree, receipt=str(receipt), holds_preserved=True,
+        return dict(applied=die, event=d.get("event"), source=tree, receipt=str(receipt), holds_preserved=True, optimistic=optimistic, warnings=warnings, gen_hosts=hosts,
                     pilot=(dict(item=pilot, release="gen_pilot:%s:%s" % (die, want[:12]), hold_added=pilot_added) if pilot else "NONE"))
 
 
@@ -209,10 +237,11 @@ def main(argv=None):
     P.add_argument("--keep-gen-hosts", action="store_true", help="keep the die's current gen_hosts (guard must cover exactly them)")
     P.add_argument("--coord", default="/home/ubuntu/coord")
     P.add_argument("--no-commit", action="store_true", help="leave the written files uncommitted (the caller commits)")
+    P.add_argument("--optimistic", action="store_true", help="COORD 11-18: gate record, source guard and smoke are advisory; no pilot hold unless --pilot-item")
     a = P.parse_args(argv)
     obj = json.loads(Path(a.candidate).read_text())
     obj["_path"] = a.candidate
-    res = apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts)
+    res = apply_marker(a.coord, obj, a.expect_source, a.expect_event, a.pilot_item, a.no_pilot, keep_gen_hosts=a.keep_gen_hosts, optimistic=True if a.optimistic else None)
     if not a.no_commit:
         res["commit"] = commit_apply(a.coord, res)
     print(json.dumps(res))
