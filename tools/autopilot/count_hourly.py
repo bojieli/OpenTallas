@@ -32,17 +32,21 @@ DIES = (("s81", "s81"), ("s81_head", "head"), ("qwen_compute", "qc"), ("qwen_kvs
 
 
 def rate_row(cache, stamp):
-    """'YYYY-MM-DD HH:MM total s81=37 head=4+5t qc=12 kv=20 hbm=12 auto': designs + directly signed types per die"""
-    total, parts = 0, []
+    """'YYYY-MM-DD HH:MM total s81=37 head=4+5t ... any=NNN auto'.  total = designs + directly signed types per die that MATCH THE CURRENT PLAN
+    (the counter matches type names against the counted plan and keeps a renamed type whose plan block digest is unchanged, the same
+    real-inputs test as WAVE-FLOW-R2 row_inputs_unchanged).  any=N adds the signed modules whose records exist but whose pins/outline no longer
+    match a current plan design (design_unmatched): signed on some plan.  COORD r711 11-18: both numbers on every run and in every row."""
+    total, any_extra, parts = 0, 0, []
     for die, short in DIES:
         d = t = 0
         for e in (cache.get("plans") or {}).values():
             if e.get("die") == die:
                 d += len(e.get("signed_designs") or {})
                 t += len(e.get("signed_types") or {})
+                any_extra += len(e.get("design_unmatched") or {})
         total += d + t
         parts.append("%s=%d%s" % (short, d, "+%dt" % t if t else ""))
-    return "%s %d %s auto" % (stamp, total, " ".join(parts))
+    return "%s %d %s any=%d auto" % (stamp, total, " ".join(parts), total + any_extra)
 
 
 def counts_of(row):
@@ -97,6 +101,7 @@ def run(now=None, scan=None, commit=None):
     with open(p, "a") as f:
         f.write(row + "\n")
     print(row)
+    print("count_hourly: signed matching the current plan %s, signed on any plan %s" % (row.split(" ")[2], re.search(r"any=(\d+)", row).group(1)))
     return (commit or _commit)()
 
 

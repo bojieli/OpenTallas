@@ -41,7 +41,7 @@ def put(env, gen):
 
 
 def test_row_shape_matches_the_hand_rows():
-    assert CH.rate_row(cache(0), "2026-11-04 05:36") == "2026-11-04 05:36 90 s81=37 head=4+5t qc=12 kv=20 hbm=12 auto"
+    assert CH.rate_row(cache(0), "2026-11-04 05:36") == "2026-11-04 05:36 90 s81=37 head=4+5t qc=12 kv=20 hbm=12 any=90 auto"
 
 
 def test_stale_cache_is_scanned_then_row_committed(env):
@@ -53,7 +53,7 @@ def test_stale_cache_is_scanned_then_row_committed(env):
         put(env, NOW - 1)
         return 0
     assert CH.run(NOW, scan, lambda: calls.append(2) or 0) == 0
-    assert calls == [1, 2] and rows(env) == ["2026-11-04 07:05 90 s81=37 head=4+5t qc=12 kv=20 hbm=12 auto"]
+    assert calls == [1, 2] and rows(env) == ["2026-11-04 07:05 90 s81=37 head=4+5t qc=12 kv=20 hbm=12 any=90 auto"]
 
 
 def test_fresh_cache_no_second_scan(env):
@@ -71,14 +71,14 @@ def test_failed_or_silent_scan_leaves_a_true_gap(env, rc, refresh):
 
 def test_same_counts_in_the_hour_is_not_a_new_row(env):
     put(env, NOW - 60)
-    (env / CH.RATE).write_text("2026-11-04 07:01 90 s81=37 head=4+5t qc=12 kv=20 hbm=12\n")
+    (env / CH.RATE).write_text("2026-11-04 07:01 90 s81=37 head=4+5t qc=12 kv=20 hbm=12 any=90\n")
     assert CH.run(NOW, None, lambda: pytest.fail("committed")) == 0
     assert len(rows(env)) == 1
 
 
 def test_changed_counts_in_the_hour_is_a_new_row(env):
     put(env, NOW - 60)
-    (env / CH.RATE).write_text("2026-11-04 07:01 89 s81=36 head=4+5t qc=12 kv=20 hbm=12\n")
+    (env / CH.RATE).write_text("2026-11-04 07:01 89 s81=36 head=4+5t qc=12 kv=20 hbm=12 any=90\n")
     assert CH.run(NOW, None, lambda: 0) == 0
     assert len(rows(env)) == 2
 
