@@ -134,3 +134,8 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
 2. First route results of the 25: read DRC, TT (gate -42), internal FF hold; class table per failure; sign-off + export AGIdock + rtx-pro.
 3. Wave t22 (and t34): geom GRT then route GRT; over-core bundles on M7 -> OVER_USE if overflow.
 4. t37 image, then decide (setting vs structure).
+
+## 2026-11-17 23:5x PST HPWL gate READY; t25 first route FAIL
+- READY claude/s81-place-hpwl-segments-1118 @1e569598d0c (gate 4/4): growth per netlist segment, repair step not counted, limit 1.3. kv_leaf t3 1.32 -> 1.286 PASS; t37 1.40 -> 1.36 STILL STOP (1.196 pre-repair x 1.133 post; buffers +3.1 pct). Asked S81-TYPES-R3 for ONE t37 attempt with item_env OT_GPL_HPWL_RATIO=1.5 to the CTS census (calibration of the 1.07-1.8 band). baseline-1118 @4eeee568 stays withdrawn.
+- t25__cl431c660f route FAIL GRT-0116 (M6 568 + M8 347): 101 gcells all at x 360-480 y 0-7 (south face row), nets u_bin_leafdn_i0; epyc8 kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t25__cl431c660f/attempt_5 (reports congestion.rpt). NEW family class: leafdn_i0 bin logic on the face pin row. Next: same read on the other 24 routing rows; find where gen places u_bin_leafdn_i0 (face_flops / bin placement) and move it off the pin row.
+- ROUTE-HELD strip 13 -> 2. Lane clone back on claude/s81-ft-channel-route-1117.
