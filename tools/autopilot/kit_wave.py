@@ -2245,10 +2245,22 @@ def adopt_rows_tick(AP, cfg, st, now=None, alert_after=2):
         if not rec.get("switched") or rec.get("done"):
             continue
         types = set(d.get("_plan_types") or [])
-        if not types or not d.get("event"):
+        if not d.get("event"):
             continue
         rec["ticks"] = int(rec.get("ticks") or 0) + 1
         mine = [r for r in items if r.get("die") == die]
+        if not types:                                    # FABLE-FLOW-2200 A: a die the wave never probes (OFF: event not a plan of record) still gets the check
+            if not any(r.get("event") == d["event"] for r in mine) and rec["ticks"] >= alert_after and not rec.get("alerted") and not AP.DRY:
+                rec["alerted"] = True
+                try:
+                    _ok, _why = gate(cfg, die, None)
+                except Exception as _e:
+                    _ok, _why = False, f"gate unreadable: {_e}"
+                AP.log(f"KIT-WAVE ADOPT-ROWS {die}: no row on the current event {d['event']} {rec['ticks']} ticks after the switch; gate: {_why[:200]}")
+                AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [ADOPT-ROWS -> {d.get('owner_lane') or die}] {die}: {rec['ticks']} ticks after the tree / event switch "
+                                f"no item has a row on {d['event']} and the plan is not probed. Gate: {'ok' if _ok else 'OFF'} ({_why[:300]}). If OFF for 'not a COORD plan of record' add the label to "
+                                f"dies.{die}.gate_events_extra (the apply tool does this itself since 11-17); else check holds / only_items / pilot")
+            continue
         have = {r.get("item") for r in mine if r.get("event") == d["event"]}
         old_only = {r.get("item") for r in mine if r.get("event") != d["event"] and r.get("class") == "SUPERSEDED"} - have
         missing = sorted(types - have)
@@ -3702,6 +3714,28 @@ def topology_env_prefix(sp):
             raise ValueError("producer context must be an absolute file path")
         prefix += "OT_NATIVE_PRODUCER_CONTEXT=" + shlex.quote(capture) + " "
     return prefix
+
+
+GEN_ENV_SYSTEM_PREFIXES = ("/work/", "/OpenROAD-flow-scripts/", "/usr/", "/opt/", "/etc/", "/dev/", "/proc/", "/tmp/")
+
+
+def gen_env_outside_tree(d, item):
+    """FABLE-FLOW-2200 C (COORD): a gen env value is a path outside the die's own src tree (KV: OT_SIGNED_VIEW_SHA -> /srv/.../kit-ops-6/signed_view_sha_kv.json, a file that
+    changes under a published tree; HEAD fixed it in-tree 21:25).  -> sorted [(KEY, path)] for die_gen_env + item_env[item] values that are absolute paths under neither the die src
+    tree nor a container/system prefix.  Die option gen_env_outside_ok: true = off; gen_env_outside_allow: [keys] = those keys pass."""
+    if d.get("gen_env_outside_ok") is True or not d.get("src"):
+        return []
+    src = str(d["src"]).rstrip("/") + "/"
+    allow = set(d.get("gen_env_outside_allow") or [])
+    env = dict(d.get("die_gen_env") or {})
+    env.update((d.get("item_env") or {}).get(item) or {})
+    out = []
+    for key, v in env.items():
+        for p in re.findall(r"(?<![\w.-])(/[A-Za-z0-9_.][A-Za-z0-9_./+-]*)", v if isinstance(v, str) else ""):
+            if key in allow or (p + "/").startswith(src) or p.startswith(GEN_ENV_SYSTEM_PREFIXES) or p in ("/work", "/tmp"):
+                continue
+            out.append((key, p))
+    return sorted(set(out))
 
 
 def item_env(d, item):
@@ -8995,6 +9029,16 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
         _pe = []
     if _pe:
         AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}: PUBTREE {_pe[0][:200]}")
+        return None
+    _go = gen_env_outside_tree(cfg["dies"][die], r.get("item"))
+    if _go:                                                 # FABLE-FLOW-2200 C: gen env paths must live in the die's own published tree
+        _led = st.setdefault("refused_once", {})
+        _gk = f"genenv|{die}|{r.get('item')}"
+        _sig = ";".join(f"{a}={b}" for a, b in _go)
+        if (_led.get(_gk) or {}).get("key") != _sig:
+            _led[_gk] = {"key": _sig, "n": 1, "ts": time.time()}
+            AP.log(f"KIT-WAVE LAUNCH-REFUSED {die}/{r.get('item')}: gen env path outside the die src tree: {_sig[:300]} "
+                   f"(move the file into the tree and apply it; or dies.{die}.gen_env_outside_allow for a key; recorded once)")
         return None
     if cfg["dies"][die].get("flow_guard") is not False:                                            # FLOW-HEALTH-1: open class / same fail key, any launch path
         _hk = FG.held_key(st, die, r.get("item"), claim=True)
