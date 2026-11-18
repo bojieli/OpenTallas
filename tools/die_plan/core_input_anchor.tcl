@@ -125,5 +125,60 @@ foreach inst [$nka_blk getInsts] {
   incr nka_reg
 
 }
+# FABLE-FIX-QC-N 11-17 (cbn_q01 3_4 RSZ-3006): the latch_except_hb4 pad chain u_hdly_lk_<leaf>_<port>_<bit>.g_b[0].g_k[k].u_hb (N kept HB4)
+# sits at its GPL position, so two dont_touch HB4 cells of one chain were 73.2 um apart.  Site each chain at its core pin like the latch
+# (nothing else leaves that pin: the latch of that bit is dropped): the last HB4 2 um outside the pin, every earlier one 4 um further
+# out, the pipe register that feeds the first one after them.  Names go to ot_face_flops.txt (FIRM now, PLACED for DPL later).
+# Pure helper (tested with tclsh): {prefix {inst_in_chain_order_first_to_last}} from {{name k inst} ...}.
+proc nka_pad_groups {rows} {
+  set g [dict create]
+  foreach r $rows { lassign $r name k inst
+    if {![regexp {^(.*u_hdly_lk_[^.]*)[.]g_b} $name -> pre]} continue
+    dict lappend g $pre [list $k $inst] }
+  set out [dict create]
+  dict for {pre l} $g { set o {}; foreach e [lsort -integer -index 0 $l] { lappend o [lindex $e 1] }; dict set out $pre $o }
+  return $out
+}
+proc nka_out_pos {pin dist_um} {
+  global nka_blk
+  set mac [$pin getInst]; set mb [$mac getBBox]; set pb [$pin getBBox]
+  set px [expr {([$pb xMin] + [$pb xMax]) / 2}]; set py [expr {([$pb yMin] + [$pb yMax]) / 2}]
+  set dx0 [expr {$px - [$mb xMin]}]; set dx1 [expr {[$mb xMax] - $px}]
+  set dy0 [expr {$py - [$mb yMin]}]; set dy1 [expr {[$mb yMax] - $py}]
+  set m [lindex [lsort -integer [list $dx0 $dx1 $dy0 $dy1]] 0]
+  set g [expr {round($dist_um * [$nka_blk getDbUnitsPerMicron])}]
+  if {$m == $dx0} { return [list [expr {[$mb xMin] - $g}] $py]
+  } elseif {$m == $dx1} { return [list [expr {[$mb xMax] + $g}] $py]
+  } elseif {$m == $dy0} { return [list $px [expr {[$mb yMin] - $g}]]
+  } else { return [list $px [expr {[$mb yMax] + $g}]] }
+}
+set nka_padrows {}
+foreach inst [$nka_blk getInsts] {
+  set nm [string map {\\ {}} [$inst getName]]
+  if {[regexp {u_hdly_lk_.*[.]g_k\[([0-9]+)\][.]u_hb$} $nm -> k]} { lappend nka_padrows [list $nm $k $inst] }
+}
+set nka_pad 0; set nka_pad_miss 0
+dict for {pre cells} [nka_pad_groups $nka_padrows] {
+  set last [lindex $cells end]
+  set yn ""
+  foreach it [$last getITerms] { if {[[$it getMTerm] getName] eq "Y"} { set yn [$it getNet] } }
+  if {$yn eq "" || $yn eq "NULL"} { incr nka_pad_miss; continue }
+  set path [nka_macro_path $yn]
+  if {![llength $path]} { incr nka_pad_miss; continue }
+  lassign $path pin qchain
+  set j 0
+  foreach c [lreverse $cells] {
+    lassign [nka_out_pos $pin [expr {2 + 4 * $j}]] x y
+    nka_place $c $x $y; puts $nka_out [$c getName]; incr j
+  }
+  foreach qc $qchain { lassign [nka_out_pos $pin 2] x y; nka_place $qc $x $y; puts $nka_out [$qc getName] }
+  set first [lindex $cells 0]; set an ""
+  foreach it [$first getITerms] { if {[[$it getMTerm] getName] eq "A"} { set an [$it getNet] } }
+  if {$an ne "" && $an ne "NULL"} {
+    foreach drv [nka_pipe_chain $an] { lassign [nka_out_pos $pin [expr {2 + 4 * $j}]] x y; nka_place $drv $x $y; puts $nka_out [$drv getName] }
+  }
+  incr nka_pad
+}
+puts "OT_NK_PAD_ANCHOR chains $nka_pad unresolved $nka_pad_miss (HB4 pad chains FIRM at their core pin)"
 close $nka_out
 puts "OT_NK_ANCHOR latches $nka_lat pipe_regs $nka_reg unresolved $nka_miss pipe_unresolved $nka_pipe_miss (FIRM outside their NK pin; released for DPL)"

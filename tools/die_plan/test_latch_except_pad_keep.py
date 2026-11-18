@@ -57,3 +57,10 @@ def test_the_hook_is_per_type_only_types_that_bind_a_lockup_module(tmp_path):
     assert hooked == ["fb"], hooked
     raw["partition_types"]["fb"]["hard_cores"] = [{"inst": "u_t", "module": "other"}]
     assert not [t for t in types if gen_phys.hold_pad_dont_touch_tcl(schema.Plan(raw), t)]
+
+
+def test_the_pad_chain_nets_are_dont_touch_too():
+    """N1B cbn_q01 3_4: repair_design failed with RSZ-3006 'Failed to insert buffer before loads for net ...u_hdly_lk_..c[2]' (a net into a dont_touch
+    HB4 load, fatal).  The keep hook must mark the nets on the pad cells' pins dont_touch as well as the cells."""
+    tcl = gen_phys.hold_pad_dont_touch_tcl(schema.Plan(_raw(3)), "fb")
+    assert "$i setDoNotTouch 1" in tcl and "$n setDoNotTouch 1" in tcl and "getITerms" in tcl

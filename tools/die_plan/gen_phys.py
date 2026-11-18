@@ -3178,8 +3178,9 @@ def hold_pad_dont_touch_tcl(P, tn):
                 "  if {[string match *u_hdly_lk_* [$i getName]] && [string match HB*xp67* [[$i getMaster] getName]]} "
                 "{ lappend ot_hb $i }\n"
                 "}\n"
-                "foreach i $ot_hb { $i setDoNotTouch 1 }\n"
-                "puts \"OT_HOLDPAD_LK dont_touch [llength $ot_hb] latch_except_hb4 pad cells\"\n"
+                "foreach i $ot_hb { $i setDoNotTouch 1\n"
+                "  foreach it [$i getITerms] { set n [$it getNet]; if {$n ne \"NULL\" && [$n getSigType] eq \"SIGNAL\"} { $n setDoNotTouch 1 } } }\n"
+                "puts \"OT_HOLDPAD_LK dont_touch [llength $ot_hb] latch_except_hb4 pad cells (and their nets: repair_design RSZ-3006 on a net into a dont_touch load)\"\n"
                 "if {![llength $ot_hb]} { error \"OT_HOLDPAD_LK: plan declares latch_except_hb4 for this type but the netlist has no pad cell\" }\n")
     if not hb:
         return ""
