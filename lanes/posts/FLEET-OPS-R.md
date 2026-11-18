@@ -372,3 +372,4 @@
 - 2026-11-17 23:05 PST HOST-REPORT 2026-11-17 23:05 | tolera L17.36/112 units0 free134G | key-ca L44.90/112 units201 free200G | dear-c L31.37/128 units406 free99G | loved- L42.53/96 units34 free225G | outgoi L85.66/96 units217 free17G | renewe L92.97/96 units125 free91G | civil- L90.41/96 units90 free120G
 - 2026-11-17 23:09 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc9 wrote 220 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-17 23:09 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc9 wrote 208 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-17 23:11 PST STATE tools sync recovered after 34 min (rt/current 296faa094abb)
