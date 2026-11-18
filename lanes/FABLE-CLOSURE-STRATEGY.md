@@ -1,153 +1,151 @@
-# FABLE-CLOSURE-STRATEGY 2026-11-17 15:20 PST (1520): delta on 13:20
+# FABLE-CLOSURE-STRATEGY 2026-11-17 17:20 PST (1720): delta on 15:20
 
-Reviewer: FABLE-CLOSURE-STRATEGY-1520 (Fable). Read-only, no jobs launched. Technical PD only. HBM parked.
+Reviewer: FABLE-CLOSURE-STRATEGY-1720 (Fable). Read-only, no jobs launched, nothing killed. Technical PD only. HBM parked.
 Blocking gates: DRC 0, routed TT setup >= -42 ps, internal reg-to-reg FF hold >= 0 (port hold advisory), die bind + LATCHECK.
 
 Marking: **V** = I opened the log or file this round. **R** = reported by the named lane, not opened. **P** = my proposal, not measured.
 
 ## 0. Headline
 
-1. **No svc core is routing, and sml has no -96 ps (V).** Five of the six split-core builds exited 1 at CTS between 14:16 and 14:55 on one recipe error: `cts.tcl, 83 OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable; enable multi-mode FF timing before hold repair`. The sixth (smc, intel1) is still waiting for admission. Post-CTS setup: sml, smd, smr `RSZ-0098 No setup violations found`; hslice -25.87 repaired to +0.19; merge_x -103.99 on 16 ends, all at output port `of_[10]`, not repaired. The only core timing problem is an unregistered output on merge_x.
-2. **The first placed svc timing (hi3 flat, `4_cts_final.rpt`, 14:15) shows the structural problems are in the shell, not in the cores (V).** Worst setup -3404.03, clk period_min 4237 ps. Four separate causes, section 2 lever 4. The largest is new and has a one-line fix: the 1,024 `ot_s81c_hcore_load_stage.out_w` flops of tiles t_0, t_1, t_2 were merged into tile t_3's (netlist count 0 / 0 / 0 / 1024), so one register bank drives the hcores of all four tiles through 39 buffers and 2,448 ps of wire.
-3. **The serdes rail defect is not S81-only: HEAD `hd_serdes` has it (V).** Rail check in report mode on the hd_serdes NF13a floorplan: 3,047 of 5,672 rows without a rail. hd_serdes sd9f was signed today from the same generator. 17 other sampled families pass, but the sample took one kit per name prefix and missed every other PHY type (QC `coll_ucie`, signed 08:20, is one).
-4. **QC and KV have no dominant measured technical failure class, because nothing has routed on their current trees.** QC: 0 rows on N1B have reached CTS. KV: 12 HG5 rows are placed, none routed. The placed rows do share one advisory signature that the serdes and svc measurements say matters: taps far over the sink size that lands at the insertion target.
-5. **H17 routed TT is still not measured.** The route-only rerun was at 50 % of iteration 0 (58,030 violations) at 15:15. The census crashed twice in OpenSTA.
+1. **There is routed data on QC, and it shows one dominant class: internal FF hold after route (V).** Not on N1B (0 of 43 N1B rows are past placement), but 12 kits of the same QC families on the previous event (L2) finished route and sign-off STA today. All 12: DRC 0, GRT overflow 0, NOT SIGNED. All 12 fail reg-to-reg FF hold by -10 to -41 ps on 42 to 456 ends. 3 of 12 also fail TT setup (-62, -72, -165). The same hold class is on the 5 routed S81 svc cores (-5 to -11 ps) and on HEAD. Cause is the recipe: GRT hold repair stops at margin 0.
+2. **KV PC / PV kits are at -871 to -1,360 ps TT after CTS and cannot close by route (V).** The worst paths have 0 to 2 gates: a pad-chain or boundary register drives a hard-core pin over 1.7 to 2.1 ns of buffered wire. The pad chain is there (37 stages on the worst PV bit) but placement stacks it and `OT_RELAY_MID` handles 0 groups. The same class at smaller size is what fails QC setup. This is a generator siting fix, not relay rows.
+3. **HEAD hd_lep0N has an unaddressed structural path (V).** Post-CTS TT -3,897 ps (-2,872 after repair) on a fault flag that crosses the type unpipelined; 76,299 hold cells (17 % of instances); GRT has run for about 29 h. This kit cannot decide the 367 unassigned nets.
+4. **Oversized taps: measured, and tap sink count is not the cause (V).** 45 kits with a CTS tap table: taps of 1,650 to 14,081 sinks land within 50 ps of target in 43 of them. Two kits are hurt: S81 serdes t13 (clk_t42, 554 ps) and QC coll_core (four taps at 536 to 782 ps, spread 552, TT -700). In both the tap's sinks are spread over a large area.
+5. **No kit has an `OT_TAP_INSERTION` line.** No die tree carries r622 yet, and failure_breakdown at 17:10 prints none. I used the `OT_TAP_BALANCE` tables, which hold the same per-tap numbers.
+6. **Not finished at 17:20:** H17 route-only rerun (iteration 1, 32,530 violations at 80 %), merge_x (GRT), sd9g3 (GRT done, in route).
 
 ## 1. Evidence I opened
 
-| item | host, path | result |
-|---|---|---|
-| svc core builds | epyc2 `/srv/opentallas-scratch3/claude/s81-svc-split/build/{sml,hslice,smr}_h16/{STATUS,flow.log,sta.log}`, epyc8 same dir `{mergex,smd}_h16`, `*.exit` | all five `EXIT=1`, `flow_rc=1`, stop at `do-4_1_cts` with the `OT_HOLD_STRUCTURAL ... scene BC unavailable` error. Recipe line in the same log: `OT_ORFS_CORNER=TC (tt_overlay v2) ... hold corners WC,BC`. No file newer than 14:56 in any build dir; intel1 has only the queued `route_core.sh smc` |
-| svc core CTS numbers | same `flow.log` | sml: util 51.8 %, 79,311 cells, 140 input pin flops, insertion 205-262 ps, no setup violation. smr 45.2 %, smd 40.5 %, none. hslice: `ko_key[413]` -25.874 / 56 ends -> +0.186. merge_x: `of_[10]` WNS -103.988, TNS -668.1, 16 ends, 2 buffers + 55 resizes, `RSZ-0062 Unable to repair all setup violations`. Link budget on all: T 770, in / out max 487 |
-| hi3 flat CTS final | epyc8 `/srv/opentallas-scratch2/claude/fable-fix-s81-svc/f2s3_mpl8/svc_hi_dsdv_svc_rs__t3/gen/svc_hi_dsdv_svc_rs__t3/run/reports/asap7/dp_svc_hi_dsdv_svc_rs__t3/base/4_cts_final.rpt` | wns max -3404.03, tns -185,676,272, clk period_min 4237.03. Clock clk setup skew 1944.37 = 1878.42 at `...g_t_3_..._u_hc_u_load_stage.out_w[969]/CLK` against 65.94 at hcore `...g_t_0_..._g_h_12_u_c/clk`, CRPR 0. Groups (max): asynchronous -3355.61, path delay -877.46, fclk_in_attn_i2 -437.99, fclk_in_attnh_i0 -176.06, vclk -636.24. Groups (min): clk -1620.78, vclk -292.66, attnh_i0 -284.13 |
-| hi3 worst clk path | same report, lines 1599-1871 | launch `g_t_3 ... load_stage.out_w[121]` on `clk_t34`, CLK at 1877.10 through 44 clock buffer levels; data = 1 INVx4 + 39 buffers (BUFx6f / BUFx16f), no logic, 1937.52 -> 4385.83; end pin `g_t_0 ... g_h_0_u_c/ld_w[121]` (slew 152 ps); capture hcore `clk` at 767.06, 0.06 ps from tap pin `clk_t10`; setup 214.74 |
-| hi3 register merge | same kit `run/results/.../1_2_yosys.v`, `config.mk` | `load_stage.out_w[*]` flops per tile: t_0 0, t_1 0, t_2 0, t_3 1024. `OT_KEEP_WIRES` lists `ot_s81c_hcore_load_stage:bad_w2v`, `:out_mode`, `:out_v` and not `:out_w`. `SYNTH_ARGS = -noshare`, `SYNTH_HIERARCHICAL = 0` |
-| hi3 CTS tap load | same kit `run/logs/.../4_1_cts.tmp.log` line 189-194 | `OT_TAP_PAIR registers on taps 605921, taps 53 ... taps above cap 1500 at start 34 ... groups moved 0 clock pins moved 0 cross-tap short pairs 11209` |
-| rail sample | intel2 `~/fable-fix-s81-serdes2/rail-sample.out`; list epyc9 `.../fable-fix-s81-serdes2/drtx/rail_sample/list.txt` | 19 floorplans. FAIL: `s81/serdes` 2000 of 6656, `s81_head/hd` 3047 of 5672 (= `hd_serdes` attempt_8, event NF13a; first rows y 399.87, x 4.32-2881.44). PASS (0 bad): HBM PHY_NC, PHY_NW, q, vsN1, vsN4; QC cbf, cbn, cbx, coll (= coll_core), sle_su; KV kv3_io_ft; S81 col_h10, col_h9, col_h9_r0, ot_s81sl; HEAD hd_spn_wshim, hd_turn |
-| serdes PG, H17 | intel2 `~/fable-fix-s81-serdes2/{pgchk3-E2-VDD.out, H17-route-1117-r2.out, ttsk-H17-r2.out}`; epyc9 H17 kit `5_2_route.tmp.log`, `grt_policy/tt/pair_skew.tsv` | E2 (notch v2) still `PSM-0069` on VDD (rail defect present, as expected). H17 r2 in iteration 0. Census: `rc 139`, `TSK wns -34.42`, 2 ends, then signal 11. pair_skew: 51,361 regs, 546,030 pairs, 10,419 inter-clock, max_worst 509.42 |
-| QC wave rows | intel2 `autopilot/kit_wave_state.json` 15:10 | No item on event `s29q103S4Q9N1B` yet. L2: 63 rows = 32 placed (3 route-held), 26 kit_rtl, 2 gen, 1 src_manifest, 1 MPL-0034, 1 cancelled. Auto-geom on the 32 placed: `r2r` 32, `pin_reg_max` 32, `fill` 29, `relay_collapse` 25, `col_v` 24, `clock_tap_sinks` 17, `channel_v` 12. `grt=ok(0)` where read |
-| KV wave rows | same file | HG5: 12 placed (enqueued), kv3_hroot band FAIL, kv3_hub_Wi prov_views, kv3_hub_C stopped, kv3_hub_Wo placing. Auto-geom on the 12: `r2r` 12 (count 14 to 16,352), `col_v` 12, `relay_collapse` 12, `clock_tap_sinks` 10, `channel_h` 9, `clock_on_macro` 7, `clock_reach` 4, `grt` 3. kv3_hub_C attempt 2 repair table at place: WNS -2480.6, 14,726 ends, endpoint `u_kvs_attn.u_core.u_attn_face.res_t[0]/SETN` (reset recovery, before the reset tree) |
-| failure_breakdown | intel2 `tools/failure_breakdown.py` 15:10 | technical rows only. S81: macro placement 2, congestion 1 (phy__t1), place error 1 (serdes__t3), hold after CTS 1 (serdes__t4), route held 14. QC: macro placement 1, route held 4. KV: CLAND ring band 1. HEAD: none |
+Job dirs are `<host>:/srv/opentallas-scratch2/claude/ot-jobs/<item>-route-*/work` unless a path is given. `W` = that work dir.
 
-Not opened: D6z / D7z builds, pg3 and ir1 sign-off reports, the N1B gate records, the D21 gate result (client log shows exit 0 only), rs8b, the lep_pair hold ECO, the sd9f signed DB, hub_Wi stat, c1x_C t7 / t9 logs, phy__t1.
+| item | file | result |
+|---|---|---|
+| QC routed kits, event L2 (12) | `W/signoff.log`, `W/signoff/signoff.json` on intel1, epyc7, epyc8 | all DRC 0, antenna 0, NOT SIGNED. Internal FF hold (`std_min_start.nonport_wns` / reg-start ends): slw_fe_v2__cle312294d -40.6 / 324; slw_hc2 -33.6 / 456; sle_hc2 -32.2 / 208; slw_stm_v1 -28.3 / 212; slw_fe_v1 -26.2 / 104; sle_su_l1 -20.9 / 106; sle_st_b_v2 (2) -18.6 / 194 and -10.3 / 120; slw_sc_v2 -14.1 / 82; slw_fw_v1 -11.4 / 56; slw_sc_v1 -10.2 / 42. TT setup: +20.6, +3.7, -1.2, -6.1, -9.3, -14.1, -24.5, -25.5, then slw_sc_v1 -62.1, sle_su_l1 -72.3, slw_fw_v1 -165.0 |
+| QC kit hold recipe | `W/config.mk`; `5_1_grt.log` of slw_fw_v2__cl8537f156 | `OT_HOLD_FF_MARGIN = 0`, `HOLD_SLACK_MARGIN = 5`; GRT hold repair ends at `hold ws 0.06 ... margin 0` |
+| QC post-route ECO | `W/eco_*/i1/{variant.env,run_prd.log}` (slw_hc2, sle_su_l1) | every one of the 12 has an ECO dir. slw_hc2: 684 HB4 at 650 capture pins for 456 ends, then ECO route, running about 2 h. sle_su_l1: ECO route at 20,679 violations at 80 % after 1 h 12 min |
+| QC worst setup paths | `run/reports/.../6_finish.rpt` | slw_fw_v1: `u_pd3_rd_wi_32.q` -> `u_bout_x_st_a_o/q[30]`, 35 buffers, 0 gates, 938 ps data. sle_su_l1: `u_lpad_flt_su_c_i.q[0]` -> `u_ist_flt_su_c_i__u_lane7_3_0/q`, 33 buffers, 0 gates, 862 ps. slw_sc_v1: `u_cland_collect_rst_n_t13/ready_o` -> port `cland_up_ready[0]`, 22 buffers, 715 ps |
+| QC GRT (9 kits with a policy file) | `W/grt_policy.json` | `failed: setup_tt`, TT -68.6 to -136.4 before the route-stage repair; overflow 0 / 0 / 0 on all but cbf_q00 (4 / 2 / 4,864) and slw_su_l1__cla2a78701 (4 / 2 / 46) |
+| QC N1B wave rows | intel2 `autopilot/kit_wave_state.json` 17:08; epyc8 / epyc9 item and ot-jobs dirs | 33 rows: 30 running, all at or before `3_5_place_dp`; 3 FAIL at place (2 x MPL-0034 st_a, fixed only in N2B; 1 kit self-containment). No CTS log exists for the event |
+| QC N1B pilot cbn_q01__clab6e67f2 | epyc9 `/srv/opentallas-scratch2/claude/qc-types-r3-lane/n1b_cbn_q01/run_route.log` | **dead at 16:15 in `3_4_place_resized`**: `OT_XSTN_STRETCH stretched b_d paths 1 > 0 (heads 1 of 2832 paths)`; before it `OT_XSTN_KEEP u_bound.u_u_fab_u_x_1_2 face W external_nets 1000000 > 20 boundary_reg_um 866 (... plan event needed)`. No lane has posted it |
+| QC coll_core (L2) | epyc8 `W` logs `4_1_cts.log`, `tt_setup_measure.log`, `pregrt_ff_hold.log` | taps: clk 20,911 sinks 677 ps (651-766); clk_t6 1,955 at 782 (627-943); clk_t8 6,200 at 615; clk_t7 6,311 at 536; clk_t3 3,461 at 439; clk_t4 3,579 at 257; clk_t5 3,471 at 238. Spread 552 for a 250 target. TT setup -699.7, tns -1.12 M. Hold before repair: cross-tap 4,186 ends at -453.8; 18,477 hold cells; 52 ends left at -17.2 |
+| KV HG5 kits after CTS | epyc10 `W/tt_setup_measure.log`, `tt_setup_repair.log`, `pregrt_ff_hold.log`, `run/reports/.../4_cts_final.rpt` | TT setup after repair, placement RC: kv3_pc_v1__cl23f6a148 -1,360.2 (tns -468 k); kv3_pv_v1 -1,019.7 (tns -1.83 M); kv3_pv_v12 -871.1 (tns -2.89 M); kv3_hub_Eo -624.8 (tns -15 k); kv3_io_cor +156.2. Hold cells added before GRT: pv_v1 54,334 of 680,992; hub_Eo 46,152; pc_v1 16,570. pv_v12 before repair: 23,772 ends, cross-tap 7,892 at -217.6 |
+| KV worst paths | same `4_cts_final.rpt` | pc_v1: `u_bin_i_idpc_Q_N_y/q[5]` -> core `u_kvpc1`, 44 buffers + NAND2 + NOR2, arrival 2,342 against launch 267. pv_v12: `u_pd37_i_vport_W_N_vo_d2_110.q` -> core `u_pvg3_p2` (kv3_pv_pair), 13 buffers, arrival 1,984 against launch 300 |
+| KV pad chain | pv_v12 `W/1_synth_odb.v`; `3_*.log` | `u_pd37_i_vport_W_N_vo_d2_110` has stage flops `r[0]`..`r[35]` + `q` (37 stages). Place log: `OT_RELAY_MID placed 0 relay flops of 0 stations (0 relay groups)`. Wave geom on the same rows: relay_collapse 109 (pc_v1), 133 (pv_v12); r2r 1,649 um / 16,249 pairs and 2,376 um / 8,030 pairs |
+| KV kv3_io_cor | epyc10 `5_1_grt.log`, `5_2_route.tmp.log` | GRT overflow 7 / 11 / 501 (M3 313), TT +74.1, hold +2.7; route 47,968 -> 9,480 -> 7,351 -> 943 -> 702, iteration 5 running |
+| Tap tables | `OT_TAP_BALANCE` last iteration in `4_1_cts.log`, 45 kits, 6 hosts | see lever 4 |
+| HEAD hd_lep0N (NF15d2r1 kit) | epyc10 `W` reports `4_cts_final.rpt` (11-16 10:56 PST), `tt_setup_repair.log`, `pregrt_ff_hold.log`, `5_1_grt.tmp.log` | clk max -3,897.06, tns -2.70 M, period_min 4,730; after TT repair -2,872.08, tns -2.28 M. Worst: `u_cland_coll_i0/u_fault_port/q` -> `u_cland_up_coll_o1/fault_o`, 53 buffers + OR3 + OA21, arrival 4,732. Hold before repair: -451.8 at `u_core.u.g_pp[2].u_pair` (lep_pair pin) and -389.8 on `coll_o1[398]`. After: 76,299 hold cells of 459,525 instances. Reset recovery -105.2 (`g_reset_balanced.u_rstr.root_r` -> `group_r`). GRT started 11-16 12:11 PST, still in its third set of extra iterations (12 of 30) at 17:12 |
+| HEAD hd_serdes sd9g3 | epyc9 `/srv/opentallas-scratch2/claude/head-types-r4/sd9g3/gen/hd_serdes/run/logs/.../{4_1_cts,5_1_grt}.log` | `OT_PHY_REGION_ROWS ... 3047 overlapping rows replaced by 0 pieces`; `OT_PG_RAIL_CHECK rows 2624 bad 0 PASS`; taps 400-461 ps (spread 61, target 450); GRT hold -20.2 / 14 ends -> +0.09 with 63 buffers; 263,337 non-tap cells |
+| HEAD others | epyc10 / epyc9 | hd_spn_end: DRC 0, TT +25.6, internal hold -5.7 on 1 end, ECO running. hd_mesh at CTS: 83 taps, largest 2,216, all 429-491 for a 450 target |
+| S81 svc cores `_mm2` | epyc2 / epyc8 `/srv/opentallas-scratch3/claude/s81-svc-split/build/<core>_mm2/{STATUS,corner_sta.json,work/orfs/config.mk}` | hslice, sml, smr, smc, smd: `done flow=0 sta=0`, DRC 0, GRT overflow 0. TT setup +115.9 / +128.1 / +89.6 (hslice / sml / smr). FF reg-to-reg hold -9.5 (629 pins), -7.0 (240), -6.5 (148), -10.6 (smc), -5.2 (smd). `HOLD_SLACK_MARGIN = 0`. SS setup -199 to -254 (information only). merge_x with pin_regs: no setup violation at CTS, GRT overflow 0, in GRT repair at 17:22 |
+| S81 serdes H17 r2 | epyc9 H17 kit `5_2_route.tmp.log` | iteration 0 ended at 88,333; iteration 1 at 32,530 (80 %) at 17:12. No routed TT yet |
+| S81 D6z G0 | epyc8 `/srv/opentallas-scratch2/claude/s81-die-r3-e8/d6z/r2/g0/g0_report.json` | 30 errors = 25 `ft_channel_tracks` on 20 types (worst leaf__t22 3,427 bit sites in a 34.56-um channel = 2.17 against 0.7; t2 2.09; t9 1.50) + 5 `cuts`: s_4N_L1 3,750 bits on 4,064 tracks = 0.92 against 0.6; s_0S_L0 0.67; s_0S_L1 0.66 and 0.61; s_6S_L0 0.63 |
+| S81 D7z kits | intel2 `~/s81-die-r/build_d7z_i1.log`; intel1 `.../s81-die-r3-i1/d7z/r1/kits/slice_station__t51/gen.log` | bind, LATCHECK 873 / 873, PRE pass. **slice_station__t51 GEN_RC=1 (17:17)**: `macros have LEF but no timing liberty: s81p_slice_station__t51_ot_s81_station_t51_native_w` |
+| failure_breakdown | intel2, 17:10 | technical rows. S81: macro placement 2 (kv_leaf t1, t3), congestion 1 (phy__t1), place error 1, hold after CTS 1, route held 14, c1x_C t7 / t9 GRTM edge_outline. QC: macro placement 2. KV: CLAND ring band 1 (hroot), route error 1 (io_cor_v1), SPLIT-NEEDED hub_Wo 528,113 cells. HEAD: none |
+
+Not opened: the N2B tree, rs8b gate result, lep_pair signed DB, kv3_sys_c rebuild, D21b gate, the serdes generator port, phy__t1, any die GRT / die STA run.
 
 ## 2. Levers, ranked by types unblocked
 
 | # | die | lever | unblocks | owner |
 |---|---|---|---|---|
-| 1 | S81 | D6z applied, col released with the per-kit GRT frame read | 78 col types now, 203 in the family | S81-DIE-R3, S81-TYPES-R3 |
-| 2 | QC | one pilot per family to sign-off on N1B, with per-tap insertion read at CTS | 117 open types | QC-TYPES-R3, FABLE-FIX-QC-N |
-| 3 | KV | D21 applied; D22 = hub_C rows + hub_Wi host clusters; reset and tap read on the first routed kit | 50 open types | FABLE-FIX-KV-HG |
-| 4 | S81 | svc: keep `load_stage:out_w`, hcore clock, ring macros, core recipe | the svc family (lo7, hi3, t6, pvso; count not read) | FABLE-FIX-S81-SVC2, S81-SVC-SPLIT |
-| 5 | S81, HEAD, QC, KV | PHY-region rows: rail check on every PHY type, signed ones included | 11 S81 serdes + hd_serdes + unsampled PHY types | FABLE-FIX-S81-SERDES2, HEAD-TYPES-R4 |
-| 6 | all | tap size: print per-tap insertion at CTS; split taps that pair with others | S81 serdes (clk_t42), svc shell, first QC / KV kits | FABLE-FIX-S81-SERDES2, S81-DIE-R3, WAVE-FLOW-R2 |
-| 7 | HEAD | rs8b gate, lep_pair 7-end hold ECO | hd_lep0N, hd_mesh | HEAD-PLAN-R4, HEAD-TYPES-R4 |
-| 8 | S81 | strip: t22 to GRT on D7z | 20 flagged, then 75 leaf types | S81-DIE-R3, S81-TYPES-R3 |
+| 1 | all | reg-to-reg hold margin at GRT instead of a post-route ECO on every kit | every routed kit: 12 of 12 QC, 5 of 5 svc cores, HEAD | WAVE-FLOW-R2, QC-TYPES-R3, S81-SVC-SPLIT |
+| 2 | KV, QC, HEAD | site pad / relay chain stages along their source-sink line | KV PC + PV families, QC fw / su / st_b / sc | WAVE-FLOW-R2 (generator), FABLE-FIX-KV-HG, FABLE-FIX-QC-N |
+| 3 | HEAD | hd_lep0N fault-flag path and hard-core hold before NF15f releases it | hd_lep0N, then hd_mesh | HEAD-PLAN-R4, HEAD-TYPES-R4 |
+| 4 | QC, S81 | split taps by sink extent, not count: coll_core, serdes clk_t42 | coll family, 11 serdes | FABLE-FIX-QC-N, S81-DIE-R3 |
+| 5 | S81 | D6z col release; D7z t51 view; the 5 baseline cut errors | 78 col now, 20 ft-channel types | S81-DIE-R3 |
+| 6 | QC | cb family: cbn_q01 N1B pilot dead at placement | cb types (count not read) | FABLE-FIX-QC-N, QC-TYPES-R3 |
+| 7 | S81 | svc shell with (a)-(d); cores are closed | svc family | FABLE-FIX-S81-SVC2 |
+| 8 | S81, HEAD, KV | PHY types: H form port, sd9g3, kv3_sys_c | 11 serdes, hd_serdes, kv3_sys_c | S81-SERDES-GEN, HEAD-TYPES-R4, KV-R3 |
 
-### Lever 1. S81 col (78 now)
+### Lever 1. Internal hold after route (all dies)
 
-Evidence. D6x / D7x bind failed on two tap-legality rows (kv_leaf__t1 tap `clk_t29` under the moved SRAM; t51 shared tap `clk_t19` 0.020 um off its first landing); fitter now checks tap legality, TAPBAD 0; D6z apply about 18:15 (R, S81-DIE-R3 14:40-14:42). pg3 signed TT -39.22 (R). ir1 not signed, TT -181.27, FF hold -58.3, on the old tree without the col knobs (R).
-Fix. Unchanged from 13:20: per-kit `OT_GRT_FRAMES` read, hold a member under -30. Add:
-1. ir1 is not evidence against col_h9_r1. It is the only routed r1 number, so the first r1 kit on the ordered-rows tree goes to sign-off as a pilot before the r1 members.
-2. kv_leaf__t3 (MPL-0041) is the same SRAM pair D6z moves: first D6z kit list must include t1 and t3 place.
-3. c1x_C t7 / t9 `GRTM edge_outline` is plan geometry and is not released by D6z or by the dup-bb merge. It needs an owner row today (S81-DIE-R3).
-
-### Lever 2. QC (117 types)
-
-Is there a dominant technical class? **No measured one.** N1B was applied at 14:40 (R); the wave state holds no N1B row at 15:10 (V). On L2, 0 rows failed at CTS, GRT, route or timing; all 31 failures are tree or kit input classes, plus one MPL-0034 (V).
-What the placed L2 rows say (V, advisory metrics at 3_place):
-- `clock_tap_sinks` fails on 17 of 32: coll_core 20,901; slw_hc0 5,538; slw_hc3 4,248; sle_hc2 3,722; slw_hc2 3,286; slw_hc1 2,470; slw_fw_v1 1,948. Over all QC rows with a value, 87 of 130 are over 1,650 and 41 over 4,000.
-- `r2r` fails on 32 of 32 (pairs over the distance limit: 4 to 5,530).
-- No congestion signal: `grt=ok(0)`, fill 0.03 to 0.12.
-So the QC risk is clock insertion spread and long register pairs, not routability. It is a prediction until a kit routes.
+Evidence (V): section 1 rows 1-3, svc row, HEAD rows. 18 of 18 routed kits read today end with reg-to-reg FF hold between -3 and -41 ps. HEAD lep_pair needed three ECO rounds for 7 ends (R).
+Root cause. The kit repairs hold at GRT to margin 0 (`OT_HOLD_FF_MARGIN = 0`; svc `HOLD_SLACK_MARGIN = 0`) on GRT parasitics. Detailed-route RC then moves the zero-logic station and relay pairs by tens of ps. The worst pairs are station chains on two taps (`u_ft_x_fw_fe_o_1/q[80]` -> `_2/q[80]`, hold pair skew 109 to 343 ps). Each kit then takes a post-route pass of HB4 insertion plus ECO route (2 h and more; sle_su_l1 re-opened 20,679 route violations).
 Fix.
-1. QC-TYPES-R3: the three cb pilots plus one kit per family, straight to sign-off. At CTS read the per-tap insertion (lever 6). `hc0` (351k cells, tap 5,538) and `coll_core` (tap 20,901) first: they are the largest taps.
-2. FABLE-FIX-QC-N: the cb kit gen log says `TAP_WINDOW FALLBACK for cbn_q01__clab6e67f2 (no clock.tap_window.per_port_ps entry, flat 482.9 ps)` (R). A flat window on the type that carries the 68 lockup pads: check the four `tap[0]` pins on the pilot's CTS before route, not after.
-3. N2B after the pilots launch: st_a move (2 types), `HI_PAD` hold (R, bind 0 errors).
-4. cbn_q00 core-outside: fixed in N1B by the NB slot delta (census 0, R). Confirm on the cbn_q00__cldbcda913 kit place.
+1. WAVE-FLOW-R2: reg-to-reg FF hold margin at GRT repair = 40 ps for QC, KV and HEAD type kits (covers the measured worst -40.6), in the die `item_env`; ports unchanged. S81 col already runs 10 (R): compare with its first routed number and raise if it lands negative.
+2. S81-SVC-SPLIT: 15 ps on the core recipe, then rerun route on the five cores from their GRT DB (worst measured -10.6).
+3. QC-TYPES-R3: the 43 N1B rows are still in placement. Put the margin in before they reach GRT (new `config.mk` by copy and rename, never an in-place edit of a running stage).
+4. Check on the first kit with the margin: HB4 count, TT setup on the padded ends (they have no logic, so setup room is large), routed internal hold >= 0 without an ECO.
+The post-route ECO stays as the fallback for a few ends; it should not be the normal path.
 
-### Lever 3. KV (50 types)
+### Lever 2. Collapsed pad and relay chains (KV, QC, HEAD)
 
-Is there a dominant technical class? **Not a failure class; one shared risk signature.** 12 HG5 rows are placed and none routed (V).
-- `clock_tap_sinks` fails on 10 of 12; over all KV rows 47 of 52 are over 1,650, 32 over 4,000 (kv3_hub_Wo 41,359; pv_v4 28,043; hg_v1p6 20,433).
-- `r2r_count`: pc_v1 16,249 and 16,352; pc_v3 10,139; pv_v12 8,030; pc 7,721; pv_v7 6,860; pv_v1 5,535; sys_c 4,407. `r2r` up to 2,697 um. These are register pairs with no relay between them at type level.
-- `clock_on_macro` 7 of 12, `clock_reach` 4 of 12 (pv_v12 270 um).
-- Reset: kv3_hub_C at place reads -2,480 on 14,726 SETN ends before its reset tree (V).
+Evidence (V): section 1 KV rows and QC setup rows. Routed QC setup fails are all one path shape: register -> 22 to 35 buffers -> register or port, no logic.
+Root cause. The count-aligned pad chains (`u_pd*`, `u_lpad_*`, `u_bin_*`) are in the netlist but are not handed to the relay siting step: `OT_RELAY_MID` reports 0 groups. Global placement stacks the stages (relay_collapse 109 to 517) and leaves one hop of 1.2 to 2.4 mm. The cb kits already do the right thing for one chain class: `OT_NK_CHAIN ... max_hop_um before p50 435 p90 889 max 963 after p50 114 p90 126 max 127` (V, cbn_q01 pilot log).
 Fix.
-1. FABLE-FIX-KV-HG: apply D21 on PASS. First PC kit (`kv3_pc_v1__cl23f6a148`) and first PV kit (`kv3_pv_v12`) to sign-off without waiting for volume: they have the largest pair counts. Read at CTS: per-tap insertion. Read at GRT: frame TT split by class (station pairs against the rest). If the 16k pairs show as one class under -42, the fix is relay rows in the plan (D22), not a kit retry.
-2. D22 hub_C: the 17 ring rows + pvfin pair (R, rows written against D21; placement cleared against hard-core halos only). G0 must place-check them against ft stations, taps and reset sites. After the split, re-read the SETN recovery on the shell: the 14,726 ends must sit behind per-region relays.
-3. D22 hub_Wi: `u_host` is 902,681 flat because the 22 `qkd_hr_*` clusters exist only through the opt-in `kv_core_rtl.py --hr-wrappers --split` step and their rows have no lef / lib (R, FABLE-FIX-KV-HG 13:28). The split is a kit_rtl wiring step plus views for 13 modules. Do not launch any Wi shell before the hierarchical count exists (unchanged).
-4. kv3_hroot: v6 moves the one zero-band stage 7.99 um (R). Next smallest band is kv3_pv_v6n raw:o:4 with 1.17 um2 free for about 0.9: watch it on the first PV kit.
+1. WAVE-FLOW-R2: in the generator, register every pad chain whose source and sink are more than one hop apart as a relay group; stage i of N is placed at i / N on the source-sink line, held through placement. No RTL change, no latency change. Read after it: max hop per chain in the place log, TT setup after CTS.
+2. FABLE-FIX-KV-HG: where a chain has fewer stages than the distance needs (bin register direct to core, as on pc_v1 `u_bin_i_idpc_Q_N_y` -> `u_kvpc1`), that bus needs stages in the plan (D22 row, latency row). Count these buses first; do not add relay rows where a 37-stage chain already exists.
+3. KV PC / PV kits now in GRT are measurement only (overflow map, hold-cell count). No sign-off can come from them and none should be relaunched unchanged.
+4. FABLE-FIX-QC-N: same step on QC fw, su, st_b; sc needs the `ready_o` port path (output delay 166.6 ps leaves 416 ps for a 715 ps wire): move the collect flop to the port face or add a face register.
+5. The hold-cell load follows from the same thing (pv_v1 54 k cells, 8 %): cross-tap pairs between stacked stages. Re-read `hold_cells` after the siting fix before touching taps.
 
-### Lever 4. S81 svc family
+### Lever 3. HEAD hd_lep0N
 
-Do the split outlines and the -96 ps point to a structural timing problem? **The cores do not. The shell does, in four places, all measured on hi3 flat at CTS (V).**
-
-| # | class | number | root cause | fix |
-|---|---|---|---|---|
-| a | hcore load bus | -3404.03; data 2,448 ps, 39 buffers, 0 logic | `load_stage.out_w` flops of four tiles merged into one bank (0 / 0 / 0 / 1024); `out_w` missing from `OT_KEEP_WIRES` | add `ot_s81c_hcore_load_stage:out_w` to the keep list in the svc generator; check `out_grp` / `out_bank` style outputs of the same module with the same grep; each tile's load stage placed with its 16 hcores |
-| b | clock | setup skew 1944.37; hold (min) -1620.78 hcore -> `r_iy[511]` | 605,921 registers on 53 taps (11.4k per tap, 34 taps over the 1,500 cap), 44 buffer levels, 1,877 ps insertion; hcore `clk` pins sit on the tap pin with no tree | after the split the shell keeps about 0.6M cells: size taps to <= about 1,650 sinks (lever 6); give the 64 hcores their own tap group and delay it to the shell insertion (the hcore view must state its internal insertion) |
-| c | reset | recovery -3355.61, arrival 4,238 ps | one source flop fans out through a buffer chain to the merge flops | goes away for sinks inside cores (own reset entry register); the shell needs per-region relays, checked on the shell CTS |
-| d | landing rings | path delay -877.46 (`u_cland_attn_i2/u_ring.ctl_w[0]` -> `rv`, max_delay 416.5); ring inputs -437.99 / -176.06; outputs vclk -636.24 | soft rings spread by placement. The handoff's "+178.53 MET, not a long cone" was read on the unplaced floorplan | make the 14 landing rings hard ring macros in the first shell, not as a later cut (KV masters sign at +75 to +146) |
-
-Cores (V): no data-cone problem. merge_x needs output registers on `of_` (16 ends at -104 against a 487 ps port budget; +1 cycle, latency row). hslice `ko_key` closes by sizing.
-Fix order.
-1. S81-SVC-SPLIT: relaunch the five cores with the hold scene fixed. The recipe sets hold corners `WC,BC` under the TT overlay and the BC scene is not loaded. Use the kit route env that the signed S81-SVCRS-3 providers used; this is the recipe, not the design.
-2. FABLE-FIX-S81-SVC2: item (a) into the generator now. It applies to lo7 and to the split shell equally, and it is one keep-list entry.
-3. FABLE-FIX-S81-SVC2: stop treating hi3 flat as a data point to wait for. Its CTS report already answers the open question: there is no single -2.57 ns data cone; there are (a) to (d). The run can go on to GRT for the congestion map only.
-4. Outline: core utilisation at +12.5 % area is 40 to 52 % at CTS. No outline change is justified by timing. Fix the outline from routed cores.
-
-### Lever 5. PHY-region rows (S81 serdes 11, HEAD hd_serdes, others unsampled)
-
-Does the rail fix generalise? **Yes, to HEAD at least (V).** `hd_serdes` NF13a floorplan: 3,047 of 5,672 rows without rails. The S81 number on the wave kit is 2,000 of 6,656 (2,046 of 6,664 on H17).
-Root cause (R, FABLE-FIX-S81-SERDES2 14:47): rows that overlap a PHY supply region get no CORE followpin rails from pdngen; tapcell cuts rows at macros only. Fix on READY branch `claude/s81-serdes-pad-pg-rails-1117` @c8ce59b7: rows replaced by their pieces outside the region before tapcell (F2: 6,726 rows, 0 bad), and the rail check as the last POST_PDN step of every kit.
+Is a die-level structural risk unaddressed? **Yes, this one (V); I could not confirm whether rs8b / NF15f changes it.**
+Evidence: section 1 hd_lep0N row. The -3,897 ps path is a fault sideband from the `coll_i0` landing to the `up_coll_o1` landing with two gates and 4.63 ns of wire. tns -2.28 M after repair says it is not one path. 17 % of instances are hold cells, with the worst pre-repair hold at the `lep_pair` hard-core pin (-452) and at `coll_o1` output registers (-390).
 Fix.
-1. HEAD-TYPES-R4: run `pg_rail_check.tcl` in report mode on the **signed sd9f** `6_final.odb` (not the NF13a floorplan). If rows are bad, count the instances on them that are not tap cells. S81 had about 480 logic cells incl. 56 flops on 2,108 rows. Unpowered flops are a functional defect, so this is not an advisory PG item; hd_serdes then needs a rebuild from the fixed generator and sd9f's ECO replayed with `capskew_eco_run.py` (replay proven, R).
-2. FABLE-FIX-S81-SERDES2: the sample missed PHY types because it took one kit per prefix. Run the check on every type whose plan has a PHY supply region or a macro_pin pad: QC `coll_ucie` (signed 08:20) and the serdes / UCIe face types, KV io types with `qkd_hr_phy_adp`, HBM PHY_NE. List from the plan (`phy_pg_pdn` users), not from kit names.
-3. After merge the check fails kits at floorplan. Before that, the same check in report mode on the three first-wave floorplans of QC N1B and KV D21 costs minutes.
-4. Serdes placement form: the DRC-0 / TT -27 result is the hand lineage H3p -> H5 -> H17 (about 40 stage files, density 0.30) and gen_phys cannot reproduce it (R, 15:09). The other 10 types cannot go through the wave until it is ported. Port first (option 1); the rail fix alone releases nothing.
+1. HEAD-PLAN-R4: before the NF15f apply releases hd_lep0N, read `4_cts_final.rpt` of the dry-gen or first kit for (i) the `u_fault_port` -> `fault_o` group, (ii) hold at `g_pp[*].u_pair`, (iii) tns. If (i) is still there, the fault flags get relay registers along the landing path (about 6 stages for 4.6 ns; status signal, no lane latency), as a plan row.
+2. HEAD-TYPES-R4: the kit must bind the signed KCRED 28 lep_pair view with its measured clock insertion, so the pair pins sit in their own tap group at that insertion (same rule as S81 svc (b)). -452 ps at a hard-core pin is an insertion mismatch, not a data problem.
+3. The running NF15d2r1 GRT (29 h) is not a verdict on the 367 unassigned nets in x 880-1160 and 1230-1472: its netlist carries 76 k hold cells and unrepaired -2.9 ns paths that load the same windows. Decide the 367 on the NF15f kit.
+4. hd_mesh (NF15d2r1 kit) at CTS looks sound (taps 429-491). hd_serdes sd9g3: 3,047 rows removed with 0 pieces put back; placement and GRT went through, so read routed TT and the DRC count when it ends, and compare cell density with sd9f.
 
-### Lever 6. Tap size and per-tap insertion (all dies)
+### Lever 4. Tap size (answer to "do oversized taps hurt")
 
-Evidence.
-- S81 serdes H17 (R, 15:09): taps of 716 to 1,649 sinks land at 247 to 327 ps for a 250 target; `clk_t42` with 6,502 sinks lands at 554 (538-715). Result: 509 ps pair skew, the worst `clk` setup path.
-- S81 svc hi3 (V): 11.4k registers per tap, 1,877 ps insertion, 1,944 ps skew against macro pins.
-- Wave rows with a tap over 1,650 sinks (V): QC 87 of 130, KV 47 of 52, S81 278 of 332, HEAD 7 of 27.
-Limit of the evidence: HEAD has signed types with large taps (hd_host 22,847 on an older event). A large tap fails only where its registers pair with registers on another tap or on a macro clock pin. The count alone is not a gate.
-Fix (P).
-1. WAVE-FLOW-R2: print per-tap mean / min / max insertion and the cross-tap pair count at CTS in every kit (the serdes lane reads it from the CTS log already; `OT_TAP_PAIR` prints the pair count). Advisory line, no gate.
-2. Plan owners: where a tap is over 300 ps TT and has cross-tap pairs, split it in the plan to <= about 1,650 sinks per tap. First: S81 serdes `clk_t42` into four taps (R, numbers above), with S81-DIE-R3.
-3. Not a new rule for signed types and not a re-floor of taps without cross-tap pairs.
+Evidence (V), 45 kits with a tap table (QC 33, KV 12 incl. hubs, HEAD 5 separately at target 450):
+- Taps over 1,650 sinks in 30 kits. Mean insertion of those taps: 234 to 278 ps for a 250 target. Examples: sle_hc2 `clk` 13,638 sinks at 181 (167-263); kv3_hub_Eo `clk_t49` 14,081 at 262 (248-289); kv3_pc `clk_t4` 9,086-11,598 at 267-294; slw_su_l1 `clk_t8` 7,031 at 235.
+- Taps more than 50 ps over target: 1 large tap in 2 kits (kv3_pc, max 381) against 3 to 24 small taps in 20 kits. The worst single insertions are on small taps (kv3_pv_v12 505, cbn_q11 497, kv3_pc_v1 474).
+- Hurt: coll_core (above) and serdes t13 `clk_t42` 6,502 at 554 (R, 15:09). In coll_core `clk_t6` with 1,955 sinks is the worst tap (782), while `clk_t4` with 3,579 lands at 257.
+Root cause. Insertion follows the area the tap's sinks cover (coll_core fill 0.066; serdes `u_enc` group pinned to one tap), not the sink count.
+Fix.
+1. S81-DIE-R3: keep TAP-GROUP-CAP-1 for serdes (u_enc group dropped, cap 1,700) (R). Do not extend the 1,700 cap to other families.
+2. FABLE-FIX-QC-N: coll_core tap split by extent: `clk`, `clk_t6`, `clk_t7`, `clk_t8`, `clk_t3` each cut so that no tap's sink box is larger than the box of `clk_t4` / `clk_t5` (plan row for N2B or the next event). coll_core's route is not worth reading before that.
+3. KV: 47 of 52 taps over 1,650 sinks needs no re-floor; the 10 KV kits with large taps balance at CTS. KV's clock problem is cross-tap hold between stacked chain stages (lever 2).
+4. Per-tap criterion for plan owners (P): split a tap when its `OT_TAP_BALANCE` mean is more than 100 ps over target after the last iteration.
 
-### Lever 7. HEAD (2 types)
+### Lever 5. S81 die
 
-rs8b (rs7 + c3 stage rects, r597 tools) admitted on epyc9 after a lost first launch (R). lep_pair KCRED 28: LEC equivalent, DRC 0, TT +7.68, internal hold -3.33 on 7 ends; `hold_eco_internal_run.py` running (R). Both are execution. Technical read still owed from 13:20: hd_lep0N first to GRT with no early stop, per-layer overflow in y 665-846; c3 leaves 367 of 59,089 nets unassigned in x 880-1160 and 1230-1472 (R), so read those two x windows first.
+1. D6z (R: bind, LATCHECK, PRE pass; apply about 18:15): the 25 `ft_channel_tracks` errors are 20 types at 0.73 to 2.17 of a 0.7 limit, covered by the D7 hold (V). Releasing 78 col types on it is sound. Add lever 1's margin check to the first routed col kit.
+2. **Unaddressed: the 5 `cuts` errors sit in the accepted baseline (V).** s_4N_L1 carries 3,750 bits on 4,064 tracks (0.92). That is a die-level routing statement, and neither D6z nor D7z changes it. S81-DIE-R3: run the die GRT prototype on the s_4N_L1 and s_0S_L0 / L1 segments (or show the track count excludes layers that are in fact free) before the event after D7z. A 0.92 cut found at die GRT costs a floorplan event.
+3. D7z: slice_station__t51 kit generation fails on a missing liberty for the `native_w` core view (V, 17:17). The repoint covered `native_e` only. The view needs its lib (same r1116 archive export) before D7z's kit stage can pass; t22 and t34 are not affected by this error.
+4. Still without a fix on any event: c1x_C t7 / t9 `GRTM edge_outline`; kv_leaf t1 / t3 MPL-0041 until D6z applies.
 
-### Lever 8. S81 strip
+### Lever 6. QC cb family
 
-Unchanged: t22 to GRT from D7z (apply about 18:45, R). No new number since 11:20.
+cbn_q01__clab6e67f2 on N1B stopped at placement on its own siting check (V): one b_d buffer tree longer than 3 times its direct distance, next to an xstn (`u_x_1_2`, face W) whose output leaves across the tile (866 um to the boundary register). The L2 variant `cbn_q01__cld9ff4c40` passed this stage and is in GRT, so compare the two kits' xstn sites before calling it an N1B effect. FABLE-FIX-QC-N: read the stretched head (the log names 1 of 2,832), then either re-site that xstn at its face in the plan or register the crossing output. The tap[0] pad acceptance (TT >= +60, hold >= +50 at four pins) has no data until this kit places.
+N2B: st_a MPL-0034 (2 types) unchanged since 15:20.
 
-## 3. Stop list (changes; the 13:20 list otherwise stands)
+### Lever 7. S81 svc
 
-1. svc: relaunching the cores with the same TC hold recipe; any pipeline or outline change on sml / smd / smr (they meet at CTS); a shell kit without `load_stage:out_w` kept; waiting for hi3 sign-off; quoting the unplaced +178.53 ring number.
-2. Serdes: sign-off or export of any PHY-region type before its rail check; rail ECO on H17; generating the other 10 from gen_phys before the H form is ported.
-3. HEAD: counting hd_serdes sd9f as clean before the rail check on its signed DB.
-4. QC / KV: volume routing of a family before its first kit shows per-tap insertion and GRT frame TT; calling the kit_rtl and prov_views rows design failures; a hub_Wi shell before the host clusters are instances.
-5. All: a tap-sink gate from the advisory count alone; a family-wide GRT derate (unchanged).
-6. S81 col: reading ir1 (-181) as a verdict on col_h9_r1.
+Cores are done as a design question (V): 5 routed, DRC 0, TT +90 to +128, overflow 0; merge_x with pin registers has no setup violation at CTS. Open on cores: hold -5 to -11 (lever 1) and merge_x route. No outline or pipeline change is supported by these numbers. All remaining risk is the shell: out_w keep, hcore tap group at 329-376 ps, per-region reset stages, ring macros (R, in the form; none built). First shell CTS must show: load-stage flops per tile 256 x 4 (not 0 / 0 / 0 / 1024), hcore pair skew, recovery, ring max_delay.
 
-## 4. Corrections to the 13:20 report and to the 15:05 state
+### Lever 8. PHY types
 
-1. **"svc split cores routing; sml at CTS about -96 ps" does not match the disk.** All five launched cores are dead at CTS on a recipe error; sml has no setup violation. The nearest number is merge_x -103.99 on an output port.
-2. **13:20 lever 5 item 1 called the serdes west-edge PG failure an advisory item outside the gates.** It is rows without rails under logic and flops. That was wrong; it also exists on HEAD.
-3. **13:20 section 6 left "whether other types share it" unchecked.** One does (hd_serdes); the sample that says the rest are clean did not cover the PHY types.
-4. **13:20 lever 2 said QC's 117 are "unmeasured".** Still true after the N1B apply; the placed-row advisories are the only data and they point at clock taps and register distance, not congestion.
+- H17 route-only: not finished. Its trajectory matches the E1 proof (97,585 -> 18,313 at iteration 1) (V / R).
+- S81-SERDES-GEN has not posted since 15:20 (V); the 11 serdes types have no generated form until it does.
+- kv3_sys_c: rebuild on r620 pending (R).
+
+## 3. Stop list (changes; the 15:20 list otherwise stands)
+
+1. Treating the post-route hold ECO as the normal path: 18 of 18 kits need it today.
+2. KV: relaunching PC / PV kits unchanged; relay rows in D22 for buses that already have a pad chain; tap splits on the 47-of-52 count.
+3. QC: routing coll_core before its taps are split; reading "no N1B data" as "no QC data"; a second cbn pilot before the xstn stretch is read.
+4. HEAD: reading the 29-h hd_lep0N GRT as the verdict on the 367 nets; releasing hd_lep0N on NF15f without the CTS read in lever 3.
+5. S81: counting the 5 baseline `cuts` errors as harmless; outline or pipeline changes on svc cores; waiting for H17 before the generator port.
+6. All: a tap gate or cap from sink count; a family-wide GRT derate (unchanged).
+
+## 4. Corrections to the 15:20 report
+
+1. **"QC and KV have no measured failure class because nothing has routed" was wrong for QC and incomplete for KV.** 12 QC kits finished route today on L2 and KV kits had post-CTS TT numbers from 14:35 on. The 15:20 review read the wave state and not the job directories.
+2. **15:20 lever 6 proposed splitting taps at about 1,650 sinks wherever they pair with other taps.** The data do not support a count: 43 of 45 kits balance taps up to 14 k sinks. Extent is the variable.
+3. **15:20 lever 3 item 1 said the 16 k KV pairs would need relay rows in the plan.** The pad stages exist on the worst PV bus; the first fix is siting.
+4. 15:20 headline 1 (svc cores dead at CTS) is superseded: the recipe fix worked, 5 cores routed.
 
 ## 5. Not checked
 
-- Whether the signed sd9f DB has the bad rows: I read the NF13a attempt_8 floorplan only.
-- The svc lo7 netlist for the same `out_w` merge (same generator and keep list, so expected; hi3 only was counted).
-- Whether `ot_s81c_hcore` has internal clock insertion; lever 4 (b) depends on it.
-- The distance limit behind `r2r` and the exact meaning of `clock_tap_sinks` (I read it as the largest tap).
-- The exact hold-scene setting that makes the core recipe pass.
-- D21 gate verdict, D6z progress, rs8b result, H17 routed TT.
+- Whether the NF15f / rs8b hd_lep0N netlist still has the fault-flag path and the lep_pair hold.
+- How many KV buses have a pad chain and how many go bin register direct to core (lever 2 item 2 depends on it). I counted one PV bus and one PC bus.
+- That a 40 ps GRT hold margin closes routed hold without an ECO; it is sized from the measured worst case, not tried.
+- Whether the QC L2 routed numbers carry over to N1B kits unchanged (N1B adds lockup rows and one slot move; same families).
+- Buffer counts in section 1 are from report lines (clock buffers excluded by halving the launch / capture lines); they are within a few cells.
+- Internal versus port split of hold on hd_spn_end beyond the one reg end; sd9g3 routed result; H17 routed TT; merge_x routed STA.
+- The `cuts` check's track model (which layers it counts).
