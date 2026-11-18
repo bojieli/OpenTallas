@@ -225,3 +225,14 @@ def test_cur_ref_finds_reference_shipped_with_tools(monkeypatch, tmp_path):
     bound = lambda g: 'y  // structural_full/%s_dsdv_svc_att.sv:9.1-9.2\n' % g
     assert c.cur_ref(bound('b' * 12))[1] == dict(tag='ref_b_main')
     assert c.cur_ref(bound('a' * 12))[1] == dict(tag='ref_a_main')
+
+
+def test_bound_at_accepts_a_linked_spelling(tmp_path):
+    """S81-KITRTL-NETMAP-1118: kit dir spelled via a link (scratch2 -> scratch3) in kit_rtl.f, apply_kit resolves it"""
+    real = tmp_path / 'real'; real.mkdir(); (real / 'b_bound.sv').write_text('x')
+    link = tmp_path / 'link'; link.symlink_to(real)
+    bound = (link / 'b_bound.sv').resolve()
+    assert c._bound_at(['a.sv', str(link / 'b_bound.sv'), 'c.sv'], bound) == 1
+    assert c._bound_at([str(bound)], bound) == 0
+    with pytest.raises(ValueError):
+        c._bound_at(['a.sv'], bound)

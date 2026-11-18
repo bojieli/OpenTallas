@@ -335,6 +335,15 @@ def kit_has_native_helpers(rtl_dir):
     return applies(bound.read_text())
 
 
+def _bound_at(lines, bound):
+    """index of the kit file-list entry naming `bound`.  S81-KITRTL-NETMAP-1118: apply_kit resolves the kit dir, but the lists spell it
+    as the wave wrote it (a scratch2 dir that is a link to scratch3 on epyc2: ValueError list.index), so a spelling that resolves to
+    the same file counts; exactly one entry must."""
+    hits = [i for i, x in enumerate(lines) if x == str(bound) or (x.strip() and Path(x).name == Path(bound).name and Path(x).resolve() == Path(bound).resolve())]
+    if len(hits) != 1: raise ValueError('kit file list names the bound %d times: %s' % (len(hits), bound))
+    return hits[0]
+
+
 def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     """Kit-RTL application (same recipe as the T7 canary3): replace s81p_<type>_bound.sv by its closure and list the
     three capture children right after it in kit_rtl.f / kit_rtl_sim.f / kit_rtl.json files. Writes
@@ -384,14 +393,14 @@ def apply_kit(rtl_dir, ref_s=None, closed=None, form='v2', rm=None):
     for fl in ('kit_rtl.f', 'kit_rtl_sim.f'):
         p = rtl / fl
         if not p.exists(): continue
-        L = p.read_text().split('\n'); i = L.index(str(bound))
+        L = p.read_text().split('\n'); i = _bound_at(L, bound)
         for x in drop: i -= L.index(x) < i; L.remove(x)
         L[i + 1:i + 1] = kids + (models if fl == 'kit_rtl_sim.f' else bbs); edits[p] = '\n'.join(L)
     for x in drop: kr['files'].remove(x)
     if 'sim_files' in kr: kr['sim_files'] = [x for x in kr['sim_files'] if x not in drop]
-    i = kr['files'].index(str(bound)); kr['files'][i + 1:i + 1] = kids + bbs
-    if 'sim_files' in kr and str(bound) in kr['sim_files']:
-        i = kr['sim_files'].index(str(bound)); kr['sim_files'][i + 1:i + 1] = kids + models
+    i = _bound_at(kr['files'], bound); kr['files'][i + 1:i + 1] = kids + bbs
+    if 'sim_files' in kr and any(Path(x).name == bound.name for x in kr['sim_files']):
+        i = _bound_at(kr['sim_files'], bound); kr['sim_files'][i + 1:i + 1] = kids + models
     edits[rtl / 'kit_rtl.json'] = json.dumps(kr, indent=1)
     for p, t in edits.items(): p.write_text(t)
     bound.write_text(closed)
