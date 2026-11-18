@@ -169,3 +169,6 @@
   NO-PROGRESS epyc8 svc_hi_dsdv_svc_rs__t3 4_1_cts stage 20.5 h job 33.9 h: no new meaningful log line for 6.1 h; last: [WARNING STA-0450] virtual clock vclk can not be propagated.
   NO-PROGRESS epyc8 sle_st_a_v1__cl989804f6__cled3c1d7b 5_1_grt stage 9.9 h job 10.6 h: repair_Viol best 2143 last 2143 rows 1551 window-gain 0.0%; stagnant 6.7 h; last event 0.0 h ago, log write 0.0 h ago (2621 lines)
   NO-PROGRESS epyc8 sle_st_a_v1__cl989804f6__cl18eece69 5_1_grt stage 8.8 h job 9.5 h: repair_Viol best 2151 last 2151 rows 1452 window-gain 0.0%; stagnant 6.5 h; last event 0.0 h ago, log write 0.0 h ago (2421 lines)
+- 2026-11-18 04:53 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-18 04:52 PST: 133 running jobs, PROGRESSING 122, SLOW 9, NO-PROGRESS 2 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 sle_st_a_v1__cl989804f6__cled3c1d7b 5_1_grt stage 10.9 h job 11.6 h: repair_Viol best 2143 last 2143 rows 1726 window-gain 0.0%; stagnant 7.7 h; last event 0.0 h ago, log write 0.0 h ago (2796 lines)
+  NO-PROGRESS epyc8 sle_st_a_v1__cl989804f6__cl18eece69 5_1_grt stage 9.8 h job 10.5 h: repair_Viol best 2151 last 2151 rows 1672 window-gain 0.0%; stagnant 7.5 h; last event 0.0 h ago, log write 0.0 h ago (2641 lines)
