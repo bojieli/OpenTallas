@@ -1,0 +1,77 @@
+{
+ "advisory": [],
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/home/ubuntu/.local/state/publish-gate/s81_head/81aad766ebb4/hd_lep0N",
+   "gen_host": "epyc9",
+   "item": "hd_lep0N",
+   "kind": "type",
+   "origin": "/home/ubuntu/.local/state/publish-gate/s81_head/81aad766ebb4/hd_lep0N/published_gen_origin.json",
+   "origin_sha256": "6feec1f13fcca622e9f54ad8db48da0849292faad15e138c3485a7166bc4b582",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "76cefe6209c6820df29879b83b0bd9261c98b0419e934f9fe4629712e4852802",
+   "spec_sha256": "1d2ea14640acdfb0a88b2605bc665d9b545ee10260a63603347654f1cc719cf4",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0",
+   "stage": "preflight",
+   "unit_log_sha256": "31fb945925090374bc667877e90a0bc2e1adcfcfadb33a37b54be04ecd8ab253",
+   "verdict": "PASS"
+  },
+  "foreign_tree": {
+   "advisory": true,
+   "findings": [],
+   "n": 0,
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "verdict": "PASS",
+   "views": 31
+  },
+  "pre_g0": {
+   "baseline": {
+    "inherited": false,
+    "verdict": "PASS"
+   },
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/s81_head/kit-wave/pubgate/g0-ukm4o_4_/g0_report.json",
+   "pre_rc": 0,
+   "tail": "PRE: PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0 plan=/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json findings=0\n\nG0: IMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t8 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t10 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t12 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t13 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t14 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t20 load=5940/1000, radius=329.356/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t21 load=1817/1000, radius=487.614/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t3 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t4 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t5 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t6 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t7 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t8 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t10 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t12 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t13 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t14 load=0/1000, radius=0/200.0, empty=True (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t20 load=5940/1000, radius=329.356/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\nTAP-LIMIT-INFO hd_serdes: explicit tap clk_t21 load=1817/1000, radius=487.614/200.0, empty=False (info, LIMIT-BIND-1: not blocking)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "s81_head",
+ "foreign_tree_scan": {
+  "asbuilts": [],
+  "bind_out": null,
+  "files": [
+   "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json"
+  ]
+ },
+ "gate_s": 952.3,
+ "hosts": [
+  "epyc9",
+  "epyc10"
+ ],
+ "item": "hd_lep0N",
+ "manifest_hash": "81aad766ebb41c013ccdd175d6f9de68f3a6b42dd3738a0669aa3f7bf2d0b73c",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+ "plan_sha256": "37c183cd2ce7f0f726b55736d33db25237606b824f6a25f50988e08aec211930",
+ "rows_proofs": [],
+ "schema": "opentallas.publish_gate.v1",
+ "static_s": 97.8,
+ "t": 1795018839.30212,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/snap_s81_head/s81_head_r4_s0",
+ "verdict": "PASS"
+}
