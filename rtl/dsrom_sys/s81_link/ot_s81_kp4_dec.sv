@@ -101,8 +101,14 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NGB0 = 4, p
     end else begin : g_onone
         assign cw_o = cw; assign apply_o = apply; assign o_ne_o = o_ne; assign o_unc_o = o_unc; assign fs_o = fs;
     end endgenerate
+    // OT_S81_RCK_RX_SPCYC (COORD 11-17; undefined = unchanged): syndrome window partials registered (SPCYC 1), ddly DD +1
+`ifdef OT_S81_RCK_RX_SPCYC
+    localparam integer DSPC = 1;
+`else
+    localparam integer DSPC = 0;
+`endif
 `ifndef OT_KP4_DEC_HARD
-    ot_s81_kp4_dsyn #(.MUT(MUT), .NGB0(NGB0)) u_syn (.clk(clk), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
+    ot_s81_kp4_dsyn #(.MUT(MUT), .NGB0(NGB0), .SPCYC(DSPC)) u_syn (.clk(clk), .rst_n(rst_n), .p_v(p_v), .p_d(p_d), .x_q(x_q), .k_v(k_v), .k_lo(k_lo),
         .k_L(k_L), .k_any(k_any), .lock(lock), .n_relock(n_relock));
 `else
     // hardened 2x2 parent (s81lk_kp4_dec): the closed child views carry MUT = 0

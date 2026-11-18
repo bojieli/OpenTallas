@@ -22,7 +22,13 @@
 `define OT_S81_KP4_DD_DEFAULT 57
 `endif
 `else
+// FABLE-FIX-HEAD-SD9F 11-18: the BASE form (no OT_S81_KP4_SYN_LOCAL) under OT_S81_RCK_RX_SPCYC kept DD 55 while k_* came one
+// rck later: tb_s81_pdie_link got=5002 bad=5002.  Words wait 1 more, as in the SYN_LOCAL branch.
+`ifdef OT_S81_RCK_RX_SPCYC
+`define OT_S81_KP4_DD_DEFAULT 56
+`else
 `define OT_S81_KP4_DD_DEFAULT 55
+`endif
 `endif
 // RQ (opt-in, default 0; S81-TYPES-9-RCK 11-08 RX-BACK vE): a read-data register right at the macro read port.  The macro
 // is read one word EARLIER (address ptr - (DD - RQ)) and r_d is that read registered, so r_d carries the same word on the
