@@ -256,3 +256,16 @@ NEXT
   types (zero-cycle fix for lpl_r.rc -> o; exists on main since 89ff4780ef7, proofs results/s81_rck_10_vj_1107). No confirmation seen yet.
 - Rebalance insert step PAUSED (COORD) until the owner rules on option 2. Slack-aware plan not started.
 - Pilot rebuild after D8e: t13 from generated kit (S81-SERDES-GEN), then route with the hooks, sign-off, exports. Nothing exported.
+
+## State 04:35 PST 11-18 (after a limit; clock times in the 06:15 / 07:05 blocks above were wrong, real order is this block last)
+- H18 RUNNING (COORD r706): H17 recipe + -DOT_S81_LPL_CHUNK, full rebuild from synth to routed sign-off. epyc9 kit
+  /srv/opentallas-scratch2/claude/fable-fix-s81-serdes2/H18/serdes__t13/gen/serdes__t13, unit oth-ubuntu-1824335-1795004470,
+  log intel2 ~/fable-fix-s81-serdes2/H18-route-1118.out. Kit also has PRE_TAPCELL row cut + blocking rail check (post_pdn_h18.tcl),
+  the 3 pre-route hooks, pad_abut_wire (post-route), pad_abut_strip (pre-report). 32 threads, 96 GB.
+  First launch failed preflight: rsync exclude signoff* dropped signoff.py / signoff_profile.py / lec_async.on; restored.
+  Checkpoints to read: synth cell census (400k advisory), OT_PHY_REGION_ROWS + OT_PG_RAIL_CHECK at floorplan, OT_STB_SPAN at CTS,
+  GRT policy, DRT violations per iteration, signoff lines in H18_run_route.out. Expect ~6-7 h end to end.
+- r708 (OWNER 11-18): sign-off uses nominal input-pin load for clock buffers and register CLK pins. NOMCAP-1118 wires it; no post from it yet.
+  I asked for its lib paths / switch. If it does not land in the flow before H18 reaches CTS, re-run signoff.py on the H18 6_final with
+  its libs (my copies: epyc9 drtx/nr_{tt,ff}/) and report both numbers.
+- Rows at S81-DIE-R3 for D8e: cmem read register, centre rck trunk, OT_S81_LPL_CHUNK. Rebalance insert step paused.
