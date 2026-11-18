@@ -87,7 +87,8 @@ class SrcHeal(unittest.TestCase):
         calls = []
         done = KW.sync_die_inputs(FakeAP(), self.cfg(), run=lambda argv, inp=None: calls.append(argv[-1]) or 0)
         self.assertEqual(done, [("epyc9", DIE, 2, "epyc2")])         # epyc2 is whole for the die; sorted first
-        self.assertEqual(len(calls), 1)
+        self.assertEqual(len(calls), 2)                               # the copy, then the verification that the files exist on the target
+        self.assertIn("test -e", calls[1])
         self.assertIn("bind_cells.sv", calls[0])
         self.assertIn("--keep-old-files", calls[0])
         self.assertNotIn("package", calls[0])
