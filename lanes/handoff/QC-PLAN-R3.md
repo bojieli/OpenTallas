@@ -47,3 +47,7 @@
 - N2B: FABLE-FIX-QC-N runs gate+apply after the rows-proof merge. Note that its bind names s4q9n2b, which is on E8 only.
 - M5T chain done: bind 0, LATCHECK 1921/1921, CB16 rc 4. Rollback only.
 - Lane scratch: E8/E9 /srv/opentallas-scratch2/claude/qc-plan-r3-n1brepl-1117 (replicate scripts, src_manifest_lb.py, pg_ft.py, frame.py).
+
+## 11-17 16:2x PST
+- r626 merged and synced; QC launched at 16:16 (33 N1B rows RUNNING at 16:18, pilots first). r627 (rows-proof) is in the queue, and N2B gates and applies on it (FABLE-FIX-QC-N).
+- Foreign-tree check 44f07b1a is held by COORD until N2B is applied. Next: relocate the N2B bind on E8 (relocate_bind.py OLD=s4q9n2b NEW=s4q9n2b_d3), switch the live kit_rtl.bind_out to the relocated bind, check FOREIGN 0, then re-post READY 44f07b1a. The N1B relocated bind is ready: qcbind_pin_eb1e73448bd0_s4q9n1b/bind_s29q103S4Q9N1BBR_d2 (E8 and E9).
