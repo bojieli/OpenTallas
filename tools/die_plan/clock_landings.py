@@ -727,6 +727,36 @@ def pick_local_reset_raw(raw, xy, need_depth, relays, ported, reach_um):
     return raw, None
 
 
+RING_LITE_KEYS = {"max_width", "monitors"}
+
+
+def ring_lite_cfg(t, tn):
+    """RING-LITE-1 (KV-RING2-LIGHT 11-18) type key clock.landing_ring_lite = {"max_width": W, "monitors": N}: narrow
+    count-aligned rings of the type (bound ring width <= max_width, default 4) that land from the SAME source partition
+    with the SAME K, depth and start depths on every instance of the type form a group; N rings per group (default 1)
+    stay full and keep the group's lap / guard / ready / fault monitor, the others are built with LITE(1) = the data
+    path only (rtl/common/ot_dp_clk_landing_ca.sv; same pins, same K, same q at every edge, 0 cycles).
+    -> (max_width, monitors) or None (key absent: byte-identical output)."""
+    cfg = t.get("clock", {}).get("landing_ring_lite")
+    if cfg is None:
+        return None
+    if not isinstance(cfg, dict) or set(cfg) - RING_LITE_KEYS:
+        raise LandingError(f"{tn}: landing_ring_lite must be a dict with keys {sorted(RING_LITE_KEYS)}")
+    mw, mon = cfg.get("max_width", 4), cfg.get("monitors", 1)
+    for name, v, lo, hi in (("max_width", mw, 1, 64), ("monitors", mon, 1, 1 << 20)):
+        if isinstance(v, bool) or not isinstance(v, int) or not lo <= v <= hi:
+            raise LandingError(f"{tn}: landing_ring_lite.{name} must be an integer in [{lo}, {hi}]")
+    return mw, mon
+
+
+def _natural(name):
+    return [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", name)]
+
+
+def mask_inputs(cmask):
+    return sorted(cmask["inputs"])
+
+
 class LandingError(ValueError):
     pass
 
@@ -1534,6 +1564,39 @@ class Landings:
             qualification="local raw-reset release and actual placed hops require plan timing")
         return prev
 
+    def _ring_lite(self, tn, key, head, cat, cmask, status_copy):
+        """RING-LITE-1: {bus: dict(lite, monitors, group)} for the grouped narrow rings of type `key` (see ring_lite_cfg).
+        Candidates: soft count-aligned rings (no signed hard child, no dataflow status bits, not a start-tree port, no
+        private status bank) of bound width <= max_width.  A group = the buses whose (source partition, K, depth, reader
+        and writer start depth) agree on EVERY instance of the type; groups of one stay full.  The monitors are spread
+        evenly over the group in natural name order.  Empty without the key."""
+        cfg = ring_lite_cfg(self.types[key], tn)
+        if cfg is None or not cat or self.dataflow or status_copy:
+            return {}
+        mw, mon = cfg
+        parts = sorted(p for p, v in self.parts.items() if v["type"] == key)
+        groups = defaultdict(list)
+        for b in mask_inputs(cmask):
+            decl = re.search(r"input\s+wire\s*\[(\d+):0\]\s+" + re.escape(b) + r"\b", head)
+            if not decl or int(decl.group(1)) + 1 > mw or hard_ring_params(self.plan, tn, b, key) is not None:
+                continue
+            rows = [self.ins[p].get(b) for p in parts]
+            if any(r is None or r.get("start_tree_port") or r.get("module") not in
+                   ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas") for r in rows):
+                continue
+            groups[tuple((r["src"], r.get("ring_k"), r.get("ring_depth"), r.get("reader_start_depth"),
+                          r.get("writer_start_depth")) for r in rows)].append(b)
+        out = {}
+        for sig, buses in groups.items():
+            buses.sort(key=_natural)
+            n, m = len(buses), min(mon, len(buses))
+            if n < 2:
+                continue
+            keep = {buses[((2 * i + 1) * n) // (2 * m)] for i in range(m)}
+            for b in buses:
+                out[b] = dict(lite=b not in keep, monitors=sorted(keep, key=_natural), group=n)
+        return out
+
     def type_rtl(self, tn, text, base=None, inst=None, depth=None):
         """Emit actual landing hardware before each incoming boundary/station.
 
@@ -1677,6 +1740,7 @@ class Landings:
                 else:
                     logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
         part = next(p for p, v in self.parts.items() if v["type"] == key)
+        lite = self._ring_lite(tn, key, head, cat, cmask, status_copy)
         for b in mask["inputs"]:
             r = self.ins[part][b]
             # Plan width excludes the in-band epoch bit; physical binding has
@@ -1893,6 +1957,14 @@ class Landings:
                 if narrow:
                     ring_mod = ring_mod[:-1] + ", .NARROW(1))"
                     self.reset_placements[tn][b].update(ring_narrow=True, ring_narrow_added_cycles=0)
+                # RING-LITE-1: a narrow soft ring whose (source, K) group keeps a full monitor ring is the data path only
+                if b in lite:
+                    if lite[b]["lite"]:
+                        ring_mod = ring_mod[:-1] + ", .LITE(1))"
+                        self.reset_placements[tn][b].update(ring_lite=True, ring_lite_added_cycles=0,
+                                                            ring_lite_monitors=lite[b]["monitors"])
+                    else:
+                        self.reset_placements[tn][b].update(ring_lite_monitor_of=lite[b]["group"])
                 if hard is not None:
                     # fail at bind, not at kit-rtl: the bound ring must be the signed child's exact paramod
                     got = ring_mod.format(w=w + 2 if self.dataflow else w)

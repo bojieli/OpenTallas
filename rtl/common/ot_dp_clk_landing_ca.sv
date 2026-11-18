@@ -67,7 +67,16 @@ module ot_dp_clk_landing_ca #(
     // and never reach q (q = ring_q[W-1:0]), so q / ready / fault are identical at every edge, 0 added cycles, same
     // K / strap / guards / window; only the dead slot, read-select and readout flops of the pad are not built
     // (W = 2: about 1,079 -> ~320 cells).  W > 64 is unchanged.  Default 0 = identical logic (bench rtl/test/meso/narrow).
-    parameter bit NARROW = 0
+    parameter bit NARROW = 0,
+    // RING-LITE-1 (KV-RING2-LIGHT 11-18, kv3_hub_C: 168 two-bit rings, ~95% of each is its private monitor): 1 = the
+    // DATA PATH ONLY of this ring: writer slot index, slot flops, read select and readout flop, all unchanged (same
+    // fclk / t_rst_n / rst_n / strap_k, same K, same window), so q is the same word at EVERY clk edge for every input
+    // (bench rtl/test/meso/lite: formal q equivalence + lock-step).  NOT built: written/lap/tag flags, their rclk status
+    // capture, the lap guards and the ready/arm/timeout/fault monitor.  ready = rst_n one clk later, fault = 0.
+    // The generator (clock_landings.py, type key clock.landing_ring_lite) gives this form only to narrow rings that
+    // share source partition and K with a FULL ring of the same type, which keeps the monitor for that group.
+    // Implies the NARROW ring width at W <= 64.  Not with CONTROL_STATUS_COPY.  Default 0 = identical logic.
+    parameter bit LITE = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -82,7 +91,7 @@ module ot_dp_clk_landing_ca #(
     input  wire [W+3:0]     fv_any
 `endif
 );
-    localparam integer RW = (NARROW && W <= 64) ? ((W + DSREP - 1) / DSREP) * DSREP : ((W + 63) / 64) * 64;
+    localparam integer RW = ((NARROW || LITE) && W <= 64) ? ((W + DSREP - 1) / DSREP) * DSREP : ((W + 63) / 64) * 64;
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(ARM + 1);
     localparam integer TCW = $clog2(TIMEOUT + 2);
@@ -112,10 +121,12 @@ module ot_dp_clk_landing_ca #(
     wire tmo = (TIMEOUT > 0) && !armed && (tmo_cnt == TCW'(TIMEOUT));
 `endif
     wire trip = (armed && (!rv || !lap_ok || !glo_ok || !ghi_ok)) || tmo;
-    wire fault_next = fault_state || trip;
+    wire fault_next = LITE ? 1'b0 : (fault_state || trip);   // RING-LITE-1: no monitor, fault port stays 0
     ot_dp_landing_fault_port u_fault_port (.clk(clk), .rst_n(rst_n), .d(fault_next), .q(fault));
     always @(posedge clk) begin
-        if (!rst_n) begin
+        if (LITE) begin
+            ready <= rst_n;             // RING-LITE-1: no monitor state; ready = receiver start, one clk later
+        end else if (!rst_n) begin
             seen <= 0; arm_cnt <= 0; ready <= 0; fault_state <= 0; tmo_cnt <= 0;
         end else begin
             if (!armed && tmo_cnt != TCW'(TIMEOUT)) tmo_cnt <= tmo_cnt + 1'b1;
@@ -136,7 +147,7 @@ module ot_dp_clk_landing_ca #(
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
                       .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .STATUS_REG(STATUS_REG), .GUARD_REG(GUARD_REG),
-                      .DSREP(DSREP)) u_ring (
+                      .DSREP(DSREP), .LITE(LITE)) u_ring (
         .tclk(wclk), .wen_clk(1'b0), .t_rst_n(t_rst_n), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(1'b1), .k_s(KTW'(KM)),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -148,6 +159,7 @@ module ot_dp_clk_landing_ca #(
         if (W < 1) $fatal(1, "count-aligned landing requires a nonempty bundle");
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $fatal(1, "DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_HI > DEPTH || GUARD_HI < GUARD_LO + 2) $fatal(1, "need 0 <= GUARD_LO, GUARD_LO+2 <= GUARD_HI <= DEPTH");
+        if (LITE && CONTROL_STATUS_COPY) $fatal(1, "LITE ring has no status flags: CONTROL_STATUS_COPY must be 0");
         if (TIMEOUT != 0 && TIMEOUT < (K > 0 ? K : 0) + ARM + 3) $fatal(1, "TIMEOUT below max(K,0) + ARM + 3 would fire in the window");
     end
 `endif
@@ -224,7 +236,16 @@ module ot_dp_clk_landing_cas #(
     // and never reach q (q = ring_q[W-1:0]), so q / ready / fault are identical at every edge, 0 added cycles, same
     // K / strap / guards / window; only the dead slot, read-select and readout flops of the pad are not built
     // (W = 2: about 1,079 -> ~320 cells).  W > 64 is unchanged.  Default 0 = identical logic (bench rtl/test/meso/narrow).
-    parameter bit NARROW = 0
+    parameter bit NARROW = 0,
+    // RING-LITE-1 (KV-RING2-LIGHT 11-18, kv3_hub_C: 168 two-bit rings, ~95% of each is its private monitor): 1 = the
+    // DATA PATH ONLY of this ring: writer slot index, slot flops, read select and readout flop, all unchanged (same
+    // fclk / t_rst_n / rst_n / strap_k, same K, same window), so q is the same word at EVERY clk edge for every input
+    // (bench rtl/test/meso/lite: formal q equivalence + lock-step).  NOT built: written/lap/tag flags, their rclk status
+    // capture, the lap guards and the ready/arm/timeout/fault monitor.  ready = rst_n one clk later, fault = 0.
+    // The generator (clock_landings.py, type key clock.landing_ring_lite) gives this form only to narrow rings that
+    // share source partition and K with a FULL ring of the same type, which keeps the monitor for that group.
+    // Implies the NARROW ring width at W <= 64.  Not with CONTROL_STATUS_COPY.  Default 0 = identical logic.
+    parameter bit LITE = 0
 ) (
     input  wire         fclk,
     input  wire         t_rst_n,     // sender start, forwarded with fclk (synchronous to fclk)
@@ -241,7 +262,7 @@ module ot_dp_clk_landing_cas #(
     input  wire [W+3:0]     fv_any
 `endif
 );
-    localparam integer RW = (NARROW && W <= 64) ? ((W + DSREP - 1) / DSREP) * DSREP : ((W + 63) / 64) * 64;
+    localparam integer RW = ((NARROW || LITE) && W <= 64) ? ((W + DSREP - 1) / DSREP) * DSREP : ((W + 63) / 64) * 64;
     localparam integer AW = $clog2(DEPTH);
     localparam integer CW = $clog2(ARM + 1);
     localparam integer TCW = $clog2(TIMEOUT + 2);
@@ -285,10 +306,12 @@ module ot_dp_clk_landing_cas #(
     wire tmo = (TIMEOUT > 0) && !armed && (tmo_cnt == TCW'(TIMEOUT));
 `endif
     wire trip = (armed && (!rv || !lap_ok || !glo_ok || !ghi_ok)) || tmo;
-    wire fault_next = fault_state || trip;
+    wire fault_next = LITE ? 1'b0 : (fault_state || trip);   // RING-LITE-1: no monitor, fault port stays 0
     ot_dp_landing_fault_port u_fault_port (.clk(clk), .rst_n(rst_n), .d(fault_next), .q(fault));
     always @(posedge clk) begin
-        if (!rst_n) begin
+        if (LITE) begin
+            ready <= rst_n;             // RING-LITE-1: no monitor state; ready = receiver start, one clk later
+        end else if (!rst_n) begin
             seen <= 0; arm_cnt <= 0; ready <= 0; fault_state <= 0; tmo_cnt <= 0;
         end else begin
             if (!armed && tmo_cnt != TCW'(TIMEOUT)) tmo_cnt <= tmo_cnt + 1'b1;
@@ -311,7 +334,7 @@ module ot_dp_clk_landing_cas #(
     wire [W-1:0] d_r = d_w;
 `endif
     ot_meso_ring_ca #(.W(RW), .DEPTH(DEPTH), .GUARD_LO(GUARD_LO), .GUARD_HI(GUARD_HI),
-                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP)) u_ring (
+                      .CONTROL_STATUS_COPY(CONTROL_STATUS_COPY), .WREG(WREG), .WEN_NEG(WFALL), .DSREP(DSREP), .WRITE_CHUNK(WRITE_CHUNK), .STATUS_REG(STATUS_REG), .WRITE_TAIL(WRITE_TAIL), .READ_CHUNK(READ_CHUNK), .WLIVE(W), .RSTN(RSTREP), .GUARD_REG(GUARD_REG), .PLACEREP(PLACEREP), .LITE(LITE)) u_ring (
         .tclk(wclk), .wen_clk(WFALL ? fclk : wclk), .t_rst_n(t_rst_w), .t_d(RW'(d_r)), .rclk(clk), .r_rst_n(rst_n), .r_rst_x(rst_x), .k_s(strap_k),
         .r_d(ring_q), .r_v(rv), .r_lap_ok(lap_ok), .r_glo_ok(glo_ok), .r_ghi_ok(ghi_ok)
 `ifdef OT_MESO_CA_FV
@@ -323,6 +346,7 @@ module ot_dp_clk_landing_cas #(
         if (W < 1) $fatal(1, "count-aligned landing requires a nonempty bundle");
         if (DEPTH < 4 || (DEPTH & (DEPTH - 1)) != 0) $fatal(1, "DEPTH must be a power of two >= 4");
         if (GUARD_LO < 0 || GUARD_HI > DEPTH || GUARD_HI < GUARD_LO + 2) $fatal(1, "need 0 <= GUARD_LO, GUARD_LO+2 <= GUARD_HI <= DEPTH");
+        if (LITE && CONTROL_STATUS_COPY) $fatal(1, "LITE ring has no status flags: CONTROL_STATUS_COPY must be 0");
         if (TIMEOUT != 0 && TIMEOUT < (1 << ($clog2(DEPTH) + 4)) - 1 + ARM + 3) $fatal(1, "strap TIMEOUT below 2^KW - 1 + ARM + 3 would fire in the window");
     end
 `endif
@@ -373,7 +397,12 @@ module ot_meso_ring_ca #(
     // bench rtl/test/meso/guard_reg).  Default 0 = identical logic.
     parameter bit GUARD_REG = 0,
     // PLACEREP-1: per-chunk kept copy of the placement value RP0 (needs more than one read chunk); see ot_dp_clk_landing_cas
-    parameter bit PLACEREP = 0
+    parameter bit PLACEREP = 0,
+    // RING-LITE-1: 1 = data path only (see ot_dp_clk_landing_cas LITE).  Every flag / tag / status / guard / pointer
+    // register below is then never assigned (constant-false guard on its process: no flop is built, names unchanged
+    // at LITE 0) and r_v / r_lap_ok / r_glo_ok / r_ghi_ok are not driven with meaning (the wrapper ignores them).
+    // Built: tc (only its slot bits have loads), s_d, the WREG enables, and the dch read select + readout.
+    parameter bit LITE = 0
 ) (
     input  logic         tclk,
     input  logic         wen_clk,    // WREG write-enable clock: tclk, or the raw fclk with WEN_NEG; unused when !WREG
@@ -443,11 +472,11 @@ module ot_meso_ring_ca #(
             if (!t_go) s_w <= '0; else s_w[tc[AW-1:0]] <= 1'b1;
         end
 `else
-        if (!t_go) begin tc <= '0; if (!CONTROL_STATUS_COPY) s_w <= '0; end
-        else begin tc <= tc + 1'b1; if (!CONTROL_STATUS_COPY) s_w[tc[AW-1:0]] <= 1'b1; end
+        if (!t_go) begin tc <= '0; if (!CONTROL_STATUS_COPY && !LITE) s_w <= '0; end
+        else begin tc <= tc + 1'b1; if (!CONTROL_STATUS_COPY && !LITE) s_w[tc[AW-1:0]] <= 1'b1; end
 `endif
         if (t_go) begin
-            if (!CONTROL_STATUS_COPY) s_lap[tc[AW-1:0]] <= tc[AW];
+            if (!CONTROL_STATUS_COPY && !LITE) s_lap[tc[AW-1:0]] <= tc[AW];
             if (!WREG) s_d[tc[AW-1:0]] <= t_d;
         end
     end
@@ -493,11 +522,11 @@ module ot_meso_ring_ca #(
     logic [TW-1:0] rp;
     logic [NS-1:0] oh;
     wire r_rst_oh = RSTN > 0 ? r_rst_x[0] : r_rst_n;   // RSTREP-1: equal copy of r_rst_n
-    always_ff @(posedge rclk) begin
+    always_ff @(posedge rclk) if (!LITE) begin
         if (!r_rst_n) rp <= RP0T;
         else rp <= rp + 1'b1;
     end
-    always_ff @(posedge rclk) begin
+    always_ff @(posedge rclk) if (!LITE) begin
         if (!r_rst_oh) oh <= NS'(1) << RP0;
         else oh <= {oh[NS-2:0], oh[NS-1]};
     end
@@ -513,7 +542,7 @@ module ot_meso_ring_ca #(
     if (STATUS_REG) begin : g_status_reg
         logic [DEPTH-1:0] w_q, lap_q;
         logic rst_q;
-        always_ff @(posedge rclk) begin w_q <= ctl_w; lap_q <= ctl_lap; rst_q <= r_rst_n; end
+        always_ff @(posedge rclk) if (!LITE) begin w_q <= ctl_w; lap_q <= ctl_lap; rst_q <= r_rst_n; end
         assign st_w = w_q; assign st_lap = lap_q; assign st_rst = rst_q;
 `ifdef OT_MESO_CA_MUTANT_SR_OH
         assign st_oh = oh;                  // MUTANT: selects the next slot from last edge's capture
@@ -558,7 +587,11 @@ module ot_meso_ring_ca #(
         if (PLACEREP && NCH > 1) begin : g_pl
             ot_meso_place_rep #(.N(AW)) u_pl (.clk(rclk), .d(RP0[AW-1:0]), .q(pl_c));
         end else begin : g_pl0
+`ifdef OT_MESO_CA_MUTANT_LITE
+            assign pl_c = RP0[AW-1:0] + AW'(LITE);   // MUTANT: the lite ring reads one slot late
+`else
             assign pl_c = RP0[AW-1:0];
+`endif
         end
         ot_meso_dsel #(.W(WCH), .DEPTH(DEPTH), .REG(1), .SPLIT(0), .SREP(DSREP), .NR(RH)) u_dsel (.clk(rclk),
             .align(~r_rst_cv), .on(r_rst_cv), .place(pl_c), .sd(sd_c), .y(rd_q[c*RSTEP +: WCH]));
@@ -569,13 +602,13 @@ module ot_meso_ring_ca #(
     if (LAPX > 0) begin : g_tag
         // extended lap tag of every slot (written with the word); the consumed slot's tag must equal rp's upper bits
         (* mem2reg *) logic [LAPX-1:0] s_tag [DEPTH];
-        always_ff @(posedge tclk) if (t_go) s_tag[tc[AW-1:0]] <= tc[TW-1:PW];
+        always_ff @(posedge tclk) if (t_go && !LITE) s_tag[tc[AW-1:0]] <= tc[TW-1:PW];
         wire [LAPX-1:0] st_tag [DEPTH];
         wire [LAPX-1:0] st_rp;
         if (STATUS_REG) begin : g_status_tag
             (* mem2reg *) logic [LAPX-1:0] tag_q [DEPTH];
             logic [LAPX-1:0] rp_q;
-            always_ff @(posedge rclk) begin
+            always_ff @(posedge rclk) if (!LITE) begin
                 for (int i = 0; i < DEPTH; i++) tag_q[i] <= s_tag[i];
 `ifdef OT_MESO_CA_MUTANT_SR_TAG
                 rp_q <= rp[TW-1:PW] + 1'b1;     // MUTANT: compares the tag against the wrong count
@@ -640,7 +673,7 @@ module ot_meso_ring_ca #(
     assign r_d = fv_dx_q ? fv_any_q : rd_q;
     always_ff @(posedge rclk) begin fv_dx_q <= fv_dx; fv_any_q <= W'(fv_any >> 4); end
 `else
-    always_ff @(posedge rclk) begin
+    always_ff @(posedge rclk) if (!LITE) begin
         r_v_q   <= r_v_c && st_rst;
         r_lap_q <= r_lap_c || !st_rst;
     end
@@ -659,13 +692,13 @@ module ot_meso_ring_ca #(
 `ifdef OT_MESO_CA_MUTANT_SR_GUARD
         always_ff @(posedge rclk) begin w_n <= s_w; lap_n <= s_lap; end   // MUTANT: guard samples the wrong edge
 `else
-        always_ff @(negedge rclk) begin w_n <= s_w; lap_n <= s_lap; end
+        always_ff @(negedge rclk) if (!LITE) begin w_n <= s_w; lap_n <= s_lap; end
 `endif
         if (GUARD_REG) begin : g_gpos
             // GUARD-REG-1: the falling-edge sample, re-registered at the next rising edge with that edge's select
             (* async_reg = "true" *) logic [DEPTH-1:0] w_p, lap_p;
             logic [NS-1:0] oh_q;
-            always_ff @(posedge rclk) begin w_p <= w_n; lap_p <= lap_n; oh_q <= oh; end
+            always_ff @(posedge rclk) if (!LITE) begin w_p <= w_n; lap_p <= lap_n; oh_q <= oh; end
             assign gs_w = w_p; assign gs_lap = lap_p;
 `ifdef OT_MESO_CA_MUTANT_GR_OH
             assign g_oh = oh;               // MUTANT: selects with the next edge's one-hot (one slot late)
@@ -694,7 +727,7 @@ module ot_meso_ring_ca #(
         ghi0 <= fv_now[fv_hi_s] ? fv_any[3] : ghi_c;
     end
 `else
-    always_ff @(negedge rclk) begin
+    always_ff @(negedge rclk) if (!LITE) begin
         glo0 <= STATUS_REG ? 1'b0 : glo_c;
         ghi0 <= STATUS_REG ? 1'b0 : ghi_c;
     end
@@ -704,12 +737,13 @@ module ot_meso_ring_ca #(
 `else
     localparam bit GR = GUARD_REG;          // GUARD-REG-1: the compare (one edge later) replaces the glo1/ghi1 stage
 `endif
-    always_ff @(posedge rclk) begin
+    always_ff @(posedge rclk) if (!LITE) begin
         glo1 <= STATUS_REG ? glo_c : glo0; glo2 <= GR ? glo_c : glo1; glo3 <= glo2;
         ghi1 <= STATUS_REG ? ghi_c : ghi0; ghi2 <= GR ? ghi_c : ghi1; ghi3 <= ghi2;
     end
 `ifndef SYNTHESIS
     initial if (GUARD_REG && !STATUS_REG) $fatal(1, "GUARD_REG needs STATUS_REG");
+    initial if (LITE && CONTROL_STATUS_COPY) $fatal(1, "LITE ring has no status flags");
 `endif
 `ifdef OT_MESO_CA_MUTANT_NO_GUARD
     assign r_glo_ok = 1'b1;
