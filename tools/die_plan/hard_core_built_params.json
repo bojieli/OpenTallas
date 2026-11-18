@@ -850,6 +850,15 @@
    "source": "actual SIGNED eco3 kit config.mk VERILOG_TOP_PARAMS = OLL 2 RFH 2 HLAT 1, epyc2:/srv/opentallas-scratch2/claude/fable-fix-bksel/fx6/hei_fable/eco3/i1/config.mk line8; config SHA256 d77b25fdd3dca2fb4abf8c98960536252b9399aeae0af93006bbbffb68911535; signoff/ODB SHA256 in records; both archives s81/dsdv_bksel_q; no allowlist waiver",
    "config_sha256": "d77b25fdd3dca2fb4abf8c98960536252b9399aeae0af93006bbbffb68911535",
    "lib_contains": "cores/views/bksel_eco3_1117/"
+  },
+  {
+   "module": "qkd_pv_fin_s8_pin",
+   "die": "qwen_kvsys",
+   "params": {},
+   "records": [
+    "91bf0827f206c31d7d6175e4e35a24111248144b3cf41d4c40a6921a7dfb00e0"
+   ],
+   "source": "KV-D23-COMPOSE 11-18 (hub_C pvfin pair, KV-D23-HUBC rows): signed s8pin2 (signoff.json verdict SIGNED 2026-11-14T07:01Z, design opentallas_qkd_pv_fin_s8_pin_asap7_ref_s8pin2; INDEX.tsv odb sha256 in records; both archives qwen_kvsys/qkd_pv_fin_s8_pin). The kit host is retired, so params come from the design itself: the top module qkd_pv_fin_s8_pin has NO parameters (fixed profile ADD_LAT 7 MUL_LAT 6 SKEW 1 MUT 0 NL 8 IN_STAGE 1 inside rtl/qwen_sys/split_20261014/qkd_pv_fin_s8_pin_physical_model.sv; the signed 6_final.v top is the unmangled `module qkd_pv_fin_s8_pin (`), so it can only have been built with {}"
   }
  ]
 }
