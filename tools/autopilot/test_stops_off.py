@@ -481,3 +481,30 @@ class ExecutedFileHash(unittest.TestCase):
         c = self.cfg()
         rec = {"status": "FAIL", "stage": "route", "reason": "x", "input_parts": {"noenv": "abc", "env": {}}}
         self.assertFalse(KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, rec))
+
+
+class StaleEnqueued(unittest.TestCase):
+    """COORD / FLEET-OPS-R 11-18: an ENQUEUED row of a superseded event idle > 24 h whose queue job is not live is cancelled by the wave (SIGNED rows pinned ~145 GB)"""
+
+    def cfg(self):
+        return {"stops_off": True, "dies": {"s81": {"event": "NEW", "enabled": True}, "hbm": {"event": "NEW", "enabled": True}}}
+
+    def row(self, die="s81", ev="OLD", q="SIGNED", age_h=100, status="ENQUEUED"):
+        t = 1_000_000.0 - age_h * 3600
+        return {"die": die, "item": "t", "event": ev, "status": status, "q_status": q, "q_signoff": True, "updated": t, "started": t}
+
+    def run_it(self, r, cfg=None):
+        st = {"items": {"k": r}}
+        KW.retire_superseded_rows(None, cfg or self.cfg(), st, now=1_000_000.0)
+        return st["items"]["k"]
+
+    def test_old_signed_row_on_a_dead_event_is_cancelled(self):
+        r = self.run_it(self.row())
+        self.assertEqual((r["status"], r["class"], r["retire"]), ("CANCELLED", "SUPERSEDED", "stale-enqueued"))
+
+    def test_young_live_current_event_and_hbm_rows_are_kept(self):
+        self.assertEqual(self.run_it(self.row(age_h=3))["status"], "ENQUEUED")
+        self.assertEqual(self.run_it(self.row(q="RUNNING"))["status"], "ENQUEUED")
+        self.assertEqual(self.run_it(self.row(ev="NEW"))["status"], "ENQUEUED")
+        self.assertEqual(self.run_it(self.row(die="hbm"))["status"], "ENQUEUED")
+        self.assertEqual(self.run_it(self.row(status="ROUTE-HELD"))["status"], "ROUTE-HELD")

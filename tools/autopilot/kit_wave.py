@@ -2223,6 +2223,19 @@ def retire_superseded_rows(AP, cfg, st, now=None):
             r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="relaunch", updated=now,
                      reason=f"SUPERSEDED: event {r.get('event')} is not current ({d['event']}); relaunched on the current event")
             relaunched += 1
+    stale_enq = 0
+    for r in items.values():                             # WAVE-PILOT-FIX 11-18 (COORD / FLEET-OPS-R): an ENQUEUED row of a superseded event idle > 24 h whose queue job is not live (SIGNED, FAIL ...) pins its kit dir
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("status") != "ENQUEUED" or not d.get("event") or not r.get("event") or r.get("event") == d["event"] or not FG.stops_off_die(cfg, r.get("die")):
+            continue
+        if str(r.get("q_status") or "").upper() in REAP_LIVE_Q or r.get("q_status") in (None, ""):
+            continue
+        idle_h = (now - max(float(r.get("updated") or 0), float(r.get("started") or 0))) / 3600.0
+        if idle_h <= float(d.get("retire_stale_enqueued_h", cfg.get("retire_stale_enqueued_h", 24))):
+            continue
+        r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="stale-enqueued", updated=now,
+                 reason=f"SUPERSEDED: ENQUEUED row of event {r.get('event')} (die is on {d['event']}), queue job {r.get('q_status')}, idle {idle_h:.0f} h: no longer a live attempt, its kit dir is free to delete once exported")
+        stale_enq += 1
     dedup = 0
     for r in items.values():                             # DEDUP-RETIRE-1116 (FABLE-FLOW-1113 #8: 173 unowned S81 DEDUP rows from the old plan line)
         d = (cfg.get("dies") or {}).get(r.get("die")) or {}
@@ -2269,8 +2282,8 @@ def retire_superseded_rows(AP, cfg, st, now=None):
                  reason=f"SUPERSEDED: FAIL on event {r.get('event')} (die is on {d['event']}); was: " + str(r.get("reason"))[:200])
         old_ev += 1
     stale += old_ev
-    if (retired or relaunched or dedup or stale) and AP is not None:
-        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}, dedup members {dedup}, stale-plan FAIL rows {stale}")
+    if (retired or relaunched or dedup or stale or stale_enq) and AP is not None:
+        AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}, dedup members {dedup}, stale-plan FAIL rows {stale}, stale ENQUEUED (>24 h, superseded event) {stale_enq}")
     return retired, relaunched
 
 
