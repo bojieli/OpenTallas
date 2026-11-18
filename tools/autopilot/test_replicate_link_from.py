@@ -36,3 +36,18 @@ class LinkFrom(unittest.TestCase):
 
     def test_a_linked_copy_is_budgeted_small(self):
         self.assertFalse(SM.room_after_copy(60, 49)[0]); self.assertTrue(SM.room_after_copy(90, 8)[0])
+
+
+def test_remote_free_gb_uses_the_nearest_existing_ancestor_for_a_missing_target_dir():
+    import types
+    seen = []
+    def fake_run(cmd, **k):
+        seen.append(cmd[-1])
+        return types.SimpleNamespace(stdout="2048\n123\n", stderr="", returncode=0)
+    orig = SM.subprocess.run
+    SM.subprocess.run = fake_run
+    try:
+        free, have = SM.remote_free_gb("h", "/srv/x/claude/kw45/snap_new", "/srv/x/claude/kw45/snap_new/t.part")
+    finally:
+        SM.subprocess.run = orig
+    assert free == 2.0 and "dirname" in seen[0] and "while [ ! -d" in seen[0]

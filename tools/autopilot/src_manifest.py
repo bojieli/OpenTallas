@@ -828,7 +828,9 @@ def tree_gb(path):
 
 def remote_free_gb(host, directory, part):
     """(free GB of the target's disk, GB already in <part>) over ssh; (None, 0) when the host does not answer"""
-    cmd = f"df -BM --output=avail {shlex.quote(directory)} | tail -n1 | tr -dc 0-9; echo; du -sb {shlex.quote(part)} 2>/dev/null | cut -f1"
+    # 11-18: the target dir may not exist yet (a snap_<die>/ parent): df the nearest existing ancestor instead of reporting "cannot read the target's free space"
+    cmd = (f"d={shlex.quote(directory)}; while [ ! -d \"$d\" ] && [ \"$d\" != / ]; do d=$(dirname \"$d\"); done; "
+           f"df -BM --output=avail \"$d\" | tail -n1 | tr -dc 0-9; echo; du -sb {shlex.quote(part)} 2>/dev/null | cut -f1")
     p = subprocess.run(SSH + [host, cmd], capture_output=True, text=True)
     ls = [x.strip() for x in p.stdout.splitlines()]
     try:
