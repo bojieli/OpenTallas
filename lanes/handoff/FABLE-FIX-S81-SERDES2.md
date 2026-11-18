@@ -185,3 +185,12 @@ I took the H lineage over at H12 and never generated the base kit, so (1) and (2
   (they still need the generated H form from S81-SERDES-GEN before they are worth launching).
 - COORD decisions 15:2x: clk_t42 -> four taps = plan row to S81-DIE-R3 after D6z/D7z; H-form port = lane S81-SERDES-GEN (answers in the
   section above).
+
+## State 17:15 PST
+- Branch 2 MERGED: main fdce0e6ec4 (r620 @0b5eafc9c4b). RESULT [FABLE-FIX-S81-SERDES2] rail-gen PASS posted 17:1x.
+- Before posting I added a second release term (S81-TYPES-R3 silent since 15:11): dies/s81 hold_records s81-serdes-rail-gen-1117 (11) and
+  s81-serdes-source-1116-codex (6) now release on [result:FABLE-FIX-S81-SERDES2:rail-gen, result:S81-SERDES-GEN:h-form]. Backup
+  autopilot/kit_wave.json.bak-serdes-hform-1117. The 11 serdes release only when S81-SERDES-GEN posts `RESULT [S81-SERDES-GEN] h-form PASS`.
+- S81-SERDES-GEN silent since 15:20 (branch claude/s81-serdes-gen-1117, clone epyc9 /srv/opentallas-scratch2/claude/s81-serdes-gen/wt).
+- H17 route-only rerun (3 hooks, notch v2: 544 pads, 44 boxes / 42 vias, 97 guides): iteration 0 = 98632 violations, in iteration 1 at 17:10,
+  16 threads. MEASUREMENT ONLY. Next reader: violations per iteration, then routed TT / internal FF hold from the kit sign-off lines.
