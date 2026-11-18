@@ -194,3 +194,13 @@ I took the H lineage over at H12 and never generated the base kit, so (1) and (2
 - S81-SERDES-GEN silent since 15:20 (branch claude/s81-serdes-gen-1117, clone epyc9 /srv/opentallas-scratch2/claude/s81-serdes-gen/wt).
 - H17 route-only rerun (3 hooks, notch v2: 544 pads, 44 boxes / 42 vias, 97 guides): iteration 0 = 98632 violations, in iteration 1 at 17:10,
   16 threads. MEASUREMENT ONLY. Next reader: violations per iteration, then routed TT / internal FF hold from the kit sign-off lines.
+
+## State 18:05 PST
+- H17 route-only r2 (3 hooks, notch v2, kit flow): DRC 0 at iteration 5 (98632, 17862, 11810, 191, 2, 0), antenna 0, then ORFS
+  "Design has unrouted nets" (exit 2; no routed DB). Cause: 1089 pad-on-macro-pin nets (rx 544, tx 544, tck 1) have no wire.
+- Branch 3 READY, gate GREEN 61/61 on main a248cf63d83: claude/s81-serdes-pad-abut-wire-1117 @63b5676fe5352312cd642a1402269e1920445d4c
+  (pad_abut_wire.tcl POST_DETAIL_ROUTE; gen_phys for every macro_pin pad kit). Proof: H15 routed DB design_is_routed 0 -> 1 (drtx/paw).
+- H17 route-only r3 with that hook, 32 threads: unit oth-ubuntu-1440356-1794966603, log intel2 ~/fable-fix-s81-serdes2/H17-route-1117-r3.out.
+  This is the first run that can reach the kit finish / sign-off steps: expect further latent blockers there. MEASUREMENT ONLY.
+- S81-SERDES-GEN is alive: r638 (part 1) merged, part 2 READY claude/s81-serdes-gen2-1117 @e5e787f0642d; it has NOT posted h-form PASS.
+  Asked it to wait for branch 3.
