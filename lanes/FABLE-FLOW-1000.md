@@ -1,250 +1,91 @@
-# FABLE-FLOW-1000: procedural and flow failures, ranked by fleet time wasted
+# FABLE-FLOW-1000: procedural and flow failure review (Fable, advisory, 11-18 09:43-09:55 PST)
 
-Reviewer: FABLE FLOW (read-only). Measured 2026-11-15 09:49-10:12 PST on hub intel2.
-Window: autopilot/log.txt 07:50-10:06 PST, `ot-run --status`, kit_wave.json, kit_wave_state.json, failure_breakdown.py,
-df / loadavg / ps on the 6 gen hosts, queue posts and rulings r121-r124.
-Scope: process and tooling only. No physical-design judgement.
-Fleet basis: 6 gen hosts, 624 threads. Load at 10:00: 458 of 624 (73%). Waste shares are estimates unless a count is given.
+Read-only review of 07:40-09:45 PST. Sources (intel2): autopilot/log.txt, autopilot/jobs/*/a1.log, kit_wave.json, lanes/FLOW-HEALTH.tsv,
+tools/failure_breakdown.py, `ot-run --status`, ~/merge-queue/log, lanes/posts/, and a glob probe (no find) of kits and launch trees on 6 hosts.
+No new holds or gates are proposed (r703). Host rails stay (r709). Counts are measured; "share" is my estimate of kit-hours lost of about 1,200 in the window.
 
-## Kit wave, last 2 h
+## Headline
+- Kit FAILs 216 in 2 h (79 / 96 / 41 by hour 07:40-, 08, 09-:45); 147 in the previous window. Launches 344, stage SUBMITs 100.
+- 115 of the 216 FAILs (53%) are two stale-copy classes: RESET "refuses empty explicit buffer set" 104 (46 / 53 / 5 by hour) and relay_mid
+  hook coverage 11. Both were fixed on main before most of the fails. The rate fell to about 3/h after 09:20 only because S81-COL-FLOW-1118
+  patched 1,297 kit copies and 21 launch trees by hand on 7 hosts.
+- The per-stage flow refresh (2757cb783bb) is on main and in rt, but it has NEVER RUN. 41 stage jobs carried the new chain; 0 printed
+  KIT_FLOW_REFRESH; 0 flow_refresh.jsonl exist on any host. Cause: the stage job runs under bwrap, where /srv is empty except declared inputs,
+  so rt/current/tools/autopilot/kit_flow_refresh.py is not a file there and flow_refresh() returns None without a line.
+  The tool itself is right: a dry run on live kits would replace 4 files (epyc8) and 31 files (epyc9), tt_setup_repair.tcl among them.
+- epyc2 scratch2 (880 GB disk) went 200 GB (08:11) -> 0 GB (09:3x). 30 stage jobs died "OSError: [Errno 28] No space left on device" in the
+  09 hour, all on epyc2, all recorded "CRASH -> structural.tsv". epyc2 and epyc10 (33 GB) are refused by ot-run and skipped by rt sync, so they
+  hold old runtimes: epyc2 c860f199a9c6, epyc10 edd8d74c3b0d; the rest 0c3fb152c30a. Every sync still ends "SYNC FAILED exit 4".
+- Tick is longer again: 696, 790, 859, 1274, 1328, 754, 907 s (median 859 s; 640 s at 0800).
 
-| Window | FAIL | LAUNCH | FAIL/LAUNCH |
-|---|---|---|---|
-| 2 h (07:50-09:50) | 194 | 265 | 0.73 |
-| 1 h | 95 | 102 | 0.93 |
-| 30 min | 27 | 18 | 1.50 |
-| 09:35-10:06 | 27 | 33 | 0.82 |
+## Did the fixes take?
+| fix | verdict |
+|---|---|
+| per-stage flow refresh from rt (TOOLS-DECOUPLE 2757cb783bb) | NOT LIVE. Never executes (bwrap hides rt/current; silent skip). Also by design it covers only autopilot stage jobs (route/finish). The wave gen + place stage is not covered at all, and that is where all 115 stale-copy FAILs happened. |
+| tt_setup_repair.tcl line 134 (922c27887ac, 09:26) | On main and in rt 0c3fb152c30a. Reaches no existing kit: 1,965 of 2,476 kit attempt dirs touched in the last 6 h hold a copy other than the fixed one (intel1 233/283, epyc2 194/652, epyc7 64/64, epyc8 665/666, epyc9 199/201, epyc10 610/610); 134 of 139 launch trees hold the pre-fix blob e2363090. The bug lived on main 03:36-09:26. The setup-repair step is silent when it dies, so there is no FAIL count; the cost shows as timing misses at sign-off. |
+| orphan units stopped on own FAIL (b516b6f7bac) | NOT SEEN FIRING. 2 ORPHAN lines in the window, both the old reason ("older than attempt 7"). The 61 units were stopped by hand by WAVE-FLOW-R2. 5 S81 leaf jobs still print "kit busy (container: False, logs 517-621 min old)", 29 lines. |
+| stage-scoped SKIP-SAME-INPUT (c3e97ccccf) | NOT SEEN: 0 lines. REPEAT "unchanged relaunch after a repeated failure" rose 21 -> 50 lines. The 53 RESET fails of the 08 hour were relaunches released by hand retry keys onto kits that still held the old Tcl. |
+| reap_dead off the tick path | TOOK. reap_dead is gone from the step timers (was 386-740 s); REAP-PROBE runs in the background. The tick did not get shorter: collect 116-170 s, poll_running rose 17 -> 134-191 s, reap_stale_attempts 123 s (2 ticks), wave_balance 253 s (1 tick), and "kit_wave_step+admit" exceeds the step total by 37-665 s (08:47: 1,158 s against 492 s) with no timer. |
+| stale admission lock (7c54d9c198c) | In rt since 09:23 on 5 hosts; NOT on epyc2 and epyc10 (sync skipped; "ot-heavy differs from main" alert). The epyc7 stall (16 waiters, 70 min, dead holder pid) ended 09:07, before the fix arrived; no stall after it. Unproven. |
+| host lists from gen_hosts | PARTLY. 15 GEN-HOST-TREE re-picks work ("epyc7 lacks tree; launching on epyc8"). KW_RT_TOOLS "die tree missing on tolerant-swine" still fails KV place: 7 at 07:42, 2 at 09:19. The place stage still lands on the hub, which is not in the KV gen_hosts. |
+| epyc7 docker/IO hang | Diagnosed (overlay unmount waits on the fs journal under IO pressure from two metadata scans). docker ps answers in 0.07 s now, but IO pressure "full" is still 10% avg60. Cause class (fleet-wide scans of 3 TB) is not removed. |
+| disk: KIT-SLIM, bind_sinks not copied (53f46fcb3c) | TOOK where run: intel1 +591 GB (572 free), epyc9 +334 GB. Not run on epyc2/7/8. epyc10 3 -> 51 -> 33 GB: it refills faster than the pass frees. epyc8 175 GB, falling 209 GB/h at 08:10. |
+| export split | TOOK. 3 records RTX-FULL-AGI-META since 08:17; archive_gate.py now accepts the status. Open: signed-store-ingest.timer is still active and still copies whole units to AGIdock. |
+| kit_wave.json "dirty edit" | Clean at 09:50, but the cause is unchanged: 12 lane commits to the file in 45 min, retry lists S81 336 / QC 251 / KV 59 keys, 257 RETRY-IGNORED and 106 RETRY-RELEASE lines, one reported uncommitted wave edit at 09:01 that dropped 21 keys. |
 
-Per hour today: 05h 39/29, 06h 246/303, 07h 103/113, 08h 146/199, 09h 48/66 (to 09:50).
-The 0815 review measured 0.84. The ratio has not improved; launches fell (303/h -> about 100/h).
+## Classes
 
-2 h by class and stage (procedural classes marked P):
+### A. Fix on main does not reach kits - 115 FAILs, share about 11%, plus the silent setup-repair loss
+- Root cause: three copy layers (rt -> launch tree chosen at launch -> gen dir -> attempt dir), and relaunch restores from items/<item>/gen.
+  No layer is refreshed; the one refresh that exists cannot see rt.
+- Structural fix: kits stop holding copies of main flow scripts. gen writes a link (or a one-line `source $OT_RT_FLOW/<file>`) and each stage
+  job gets rt/<sha>/tools/die_plan as a declared read-only input, the way preflight and lec are staged today. Then a fixed file reaches every
+  stage that has not started, including place, with nothing to patch. Until then: stage kit_flow_refresh.py + the blob index through
+  admission_tools, call it from the wave place launcher too, and print a line when it is skipped.
+- Owner: TOOLS-DECOUPLE (staging, place stage), WAVE-FLOW-R2 (launcher call). S81-COL-FLOW-1118 keeps hand patching until it is live.
 
-| Count | Stage | Class | P | State at 10:06 |
-|---|---|---|---|---|
-| 58 | gen | S81 STALE-CORE-VIEW cfg7 55 / vsw 3 | P | stopped 09:00, post-fix gens pass |
-| 58 | place | false place fail: 27 "PLAN GRTM edge_outline" + 20 "unclassified KW_PLACE_RC=0" + 11 "INFRA no 3_place.odb" | P | still firing: 11 at 09:57 |
-| 22 | kit_rtl | HEAD "bootstrap GEN failed" (phy_pg_floor_um schema skew) | P | stopped 08:40 (hand patch, see class 5) |
-| 22 | gen_lint | S81 `defparam LOCAL` (stale baked asbuilt.base src) | P | still firing: 13 after the r122 hold |
-| 7 | gen/place | QC units killed by a lane script (signal 15 from /tmp/s4q2sw.py) | P | one event at 08:0x |
-| 7 | gen/kit_rtl | KIT_NOT_SELF_CONTAINED | P | flat, 1-3 per hour all day |
-| 7 | disk | no host qualifies / disk floor | P | one burst at 08:00 |
-| 4 | kit_topology | captured source cohort lacks topology prep (file missing) | P | open |
-| about 30 | gen_lint, place, LEC | module not in design 2, clock-landing band 7, Tcl cland_col_cursor 5, sim/yosys killed 10, other | design or mixed | out of scope |
+### B. Disk floor on tree hosts - 30 job deaths, epyc2 and epyc10 out, share about 5% and rising
+- Root cause: epyc2 scratch2 is 880 GB and received 440 units; cleanup frees less than the wave writes (238 GB/h at 08:10). A host under the
+  floor keeps its running jobs, which then die mid-write. ot-auto-clean has not completed a pass on epyc2 ("for ever"), epyc10 (100 min), epyc7 (92 min).
+- Structural fix: job output size is known per type from earlier attempts; the launcher subtracts in-flight bytes per disk (LAUNCH-DISK-CAP does
+  this for the wave, not for stage SUBMITs, which went to epyc2 at 170 GB free with 105 running). ENOSPC must class INFRA with a free retry on
+  another host, never "CRASH -> structural.tsv". rt sync: a host under the floor is "skipped", exit 0 (asked at 0800, not done).
+  KIT-SLIM as a timer on every host, not a one-off lane pass.
+- Owner: FLEET-OPS-R (epyc2/epyc10 now, cleanup timers), WAVE-FLOW-R2 (ENOSPC class, SUBMIT disk accounting), TOOLS-DECOUPLE (sync exit).
 
-About 185 of the 194 fails are procedural. No class circuit breaker fired (0 CLASS-HOLD lines): it is in
-claude/flow-health-1, which is still not merged.
+### C. Relaunch onto an unchanged failing input - 50 REPEAT lines, 53 re-fails, share about 4%
+- Root cause: hand retry keys override the input comparison, and the comparison does not include the kit's flow-script copies, so "fixed on
+  main" looks like a changed input while the kit is byte-identical.
+- Structural fix: the input hash of a stage is the hash of the files that stage will execute in the kit. Class A makes that equal to the rt sha.
+  Then delete dies.*.retry: a relaunch is a state command (rearm), not a config key.
+- Owner: WAVE-PILOT-FIX.
 
-## Summary, ranked by waste
+### D. Wave writes the config file that lanes edit - the kit_wave.json confusion
+- Root cause: the wave consumes retry keys by editing kit_wave.json; lanes edit the same file under git through kit_wave_edit.
+- Structural fix: the wave never writes kit_wave.json. Consumed keys go to kit_wave_state.json; with C done the keys disappear entirely.
+- Owner: WAVE-PILOT-FIX.
 
-| # | Class | Count | Trend | Fleet share wasted | Owner |
-|---|---|---|---|---|---|
-| 1 | False place fail, fix not reaching in-flight items | 58 in 2 h; 67+ today | not falling yet | about 3-6% CPU; 2-4.5 h calendar per hit | WAVE-COPYBACK-1115 |
-| 2 | Long-running P&R with no owner | 49 openroad over 6 h (was 76) | falling | about 10% (65 cores) | WAVE-PREPNR-1115 (reaper), KIT-OPS-5 |
-| 3 | Hub and scratch disks at the floor | intel2 scratch2 100% (28 GB), root 94%; epyc2 64-118 GB | intel2 worse, epyc2 marginal | 0 now; epyc2 = 20% of threads at risk; hub full stops everything | CLEAN-INTEL2-1115, CLEAN-EPYC2-1115 |
-| 4 | In-place edit of shared source trees (hardlink) | 58 fails, 233 paths, 4 hosts | stopped 09:00 | under 1% CPU; S81 gens dead 08:38-09:00 | KIT-OPS-5 |
-| 5 | Die src and tools versioned apart; live hand patches | 22 + 22 + 4 fails; 23 + 3 files patched live; kw38/rt drift 48 files | rotating | under 1% CPU; 1-2 h per die | KIT-OPS-5, FLOW-HEALTH-1 |
-| 6 | Holds ruled but not applied; retries on an unfixed cause | 13 LOCAL fails after r122; 9 items each failed 2-3 times | open | under 1% CPU | KIT-OPS-5 |
-| 7 | Flow-fix branches bounce in the merge queue | 40 MERGE-FAIL, 68 MERGED, 3 BOUNCE today; flow-health-1 failed 2 times | rising (14 at 07:45) | none; every class above waits on it | MERGE-QUEUE-1, FLOW-HEALTH-1 |
-| 8 | Lane clones use the owner checkout as origin | 24 clones on 3 hosts; 68 claude/* refs pushed there today | open, barred by r124 | none; 2 bad gate stamps today | MERGE-QUEUE-1 |
-| 9 | Lane kills units by script | 7 QC units | one event | under 0.5% | KIT-OPS-5 |
-| 10 | Bookkeeping: STALE, log repeats, time stamps | STALE 295 (139 S81 unowned); 1,791 repeat lines of 3,023; 48 wrong stamps | flat | none; hides real rows | FLOW-HEALTH-1 |
+### E. Tick length - median 859 s, multiplies every class
+- Structural fix (unchanged from 0800, not built): one per-host snapshot per tick read by collect, poll_running, wave_balance and under-use;
+  an "other" timer for the 37-665 s outside the step.
+- Owner: WAVE-FLOW-R2.
 
-## 1. False place fail (about 3-6% CPU, the largest calendar loss)
+### F. Dead attempts keep units; place lands on a host without the tree
+- 5 "kit busy" jobs at 517-621 min; own-FAIL orphan stop not observed. KV place on the hub: 9 INFRA fails.
+- Structural fix: the collect call that writes FAIL stops that unit in the same call; the place job declares the die tree as an ot-run input,
+  so ot-run itself can only pick a host that has it (stage SUBMITs already do: "INPUT HOLD: spec inputs exist only on ...").
+- Owner: WAVE-FLOW-R2.
 
-Measured:
-- 58 fails in 2 h under three labels for one cause: place exits 0, the probe looks on the wrong host, the row fails.
-- WAVE-COPYBACK merged at 09:38 (main 1faf0c24936); rt/current is b89ba8df4f0a on the hub and all 6 gen hosts.
-- It still fired 11 times at 09:57. "3_place.odb found on" appears 0 times in the wave log.
-- Cause of the lag: each run-item process is pinned to the rt/<sha> tree of its launch. Of 202 live run-item
-  processes, 20 run on 1faf0c249364 or later. 178 run on 9 older trees (82 on f87021159086) and 4 on legacy kw38/rt.
-  Every one of those that reaches place can still false-fail.
-- The tick does run new code: auto-rejudge at 09:50 reclassified 29 rows.
-- Sampled attempts ran 149-276 min at 2-8 threads before the false fail. That is the basis of the share.
+### G. STALE and non-design rows
+- STALE 57, all HBM (parked; 9 unowned), unchanged. S81 "no host" 46 rows (disk, class B). QC cancelled (superseded) 16, up from 9.
+- 5 dies show TOOLS-LAG against the pinned trees (hbm 2,259 commits, QC 1,162, S81 350); it no longer matters for tools taken from rt, and the
+  line should be dropped or it will be read as a real lag.
 
-Root cause in the process: a wave fix applies only to items launched after it. Nothing re-judges or restarts in-flight
-items, and the same event is logged under three class names, so its size was hidden until 09:2x.
-
-Structural fix:
-- The judge step (after_place, copy-back) runs from rt/current, not from the launch-pinned tree. Only the kit recipe
-  stays pinned. Then a merged judge fix covers every in-flight item at once.
-- Until then: the tick re-judges every place FAIL of an old-tree process before charging it (the 09:50 rejudge shows
-  the path exists; make it run each tick, not once).
-- One class name for "RC=0, no odb". WAVE-COPYBACK posts the after-fix rate split by launch tree.
-
-## 2. Long-running P&R with no owner (about 10%)
-
-Measured: openroad over 6 h: epyc2 14, intel1 8, epyc7 6, epyc8 2, epyc9 10, epyc10 9 = 49, using 65 cores.
-26 are over 12 h. At 07:46 it was 76 processes and 83 cores.
-RUNNING rows on a non-current event: 4 (QC 2, S81 2). At 07:46 it was 21.
-REAP-DEAD lines: 112 in 2.2 h (was 398 in 2.7 h).
-wave-longrun-1 merged 09:00 and oldplan-block merged 08:50. Both worked in part.
-
-Root cause: unchanged from 0815. The reaper still only reports. I did not check which of the 49 make progress.
-
-Structural fix: the reaper reads unit CPU time; zero CPU for 30 min is dead and is reaped. One live attempt per
-item. The 4 old-event rows are re-keyed or cancelled at adoption, in the same tick.
-
-## 3. Disks at the floor
-
-Measured at 10:00:
-- intel2 (hub): scratch2 100% used, 28 GB free of 3.5 TB. Root and scratch3 are one disk, 94%, 29 GB free.
-  ot-run refuses intel2 (floor 150). The wave state, the queue, rt/ and the merge-queue clone all live there.
-- epyc2: scratch2 118 GB by df, 64 GB by ot-run status. It admits now. It was refused at 48 GB at 09:4x.
-  Its root has 1.8 TB free, 46% used.
-- epyc8 scratch2 97% (268 GB free), epyc7 95% (376 GB), intel1 90% (365 GB).
-- claude/epyc2-scratch3-1115 MERGE-FAILed at 08:59 (its test timed out at 600 s). Not merged.
-  alert-nonsticky: no merge, no post today.
-- No post today from CLEAN-INTEL2-1115 or CLEAN-EPYC2-1115 in the queue.
-
-Root cause: one fixed scratch path per host, and cleanup is the only lever. The hub has no alarm of its own: a full
-hub disk stops the wave state write, and that looks like a quiet fleet.
-
-Structural fix:
-- ot-run picks the scratch disk with the most free space per host (the epyc2-scratch3 branch; fix its test timeout).
-- Hub disk is a tick precondition: below 20 GB the tick posts one ALERT and stops launching, instead of failing writes.
-- rt/<sha> trees and kit_wave/<item>/a<N> dirs with no live process are pruned by the tick that retires them.
-
-## 4. In-place edit of shared source trees (58 fails)
-
-Measured: 08:38-09:00, 55 cfg7 and 3 vsw STALE-CORE-VIEW fails. One lib inode was shared by 192 paths on epyc7
-and 41 on epyc8/9/10, across 19 lanes. One in-place write changed all of them. No signed dir was hit (DIE-S81-92).
-The gate that caught it is correct. Each item failed once: the gate is deterministic, so cost was low.
-
-Root cause: source trees are cloned with hardlinks (cp -al), and any lane may write through a link.
-
-Structural fix: published src trees and views are read-only (chmod a-w at publish, by the replication step).
-A change is a new directory plus a pointer switch. The tools' install step uses copy+mv only. With that, a write
-through a link fails at the writer, not 20 lanes later.
-
-## 5. Die src and tools versioned apart; live hand patches
-
-Measured:
-- HEAD phy_pg_floor_um: 22 kit_rtl fails 08:20-08:40. The key existed in a lane overlay tree, not in main.
-  KIT-OPS-5 patched 3 files by hand into src_head_rp21z_pgcaplec_c327.
-- S81 `defparam LOCAL`: 22 fails. kit-rtl took one file from the stale baked asbuilt.base. The fix
-  kit-rtl-src-tree-1115-2 MERGE-FAILed at 09:33 (2 new red tests). Not merged.
-- WAVE-COPYBACK class B: 23 die-src copies patched live on 6 hosts.
-- Hub legacy tree kw38/rt: 48 files differ from its HEAD, 4 live processes (MERGE-QUEUE DRIFT 08:52).
-- SRC-INCOMPLETE: 46 lines. S81 B6gsl is missing a ROM file on epyc8/9/10 (same as 0815, still open).
-  HEAD pgcaplec_c327 is missing bind.py on epyc2/8/9.
-- The src skew check does not exist on the hub: no "skew" tool under tools/fleet or tools/autopilot in rt/current,
-  no lanes/FLOW-HEALTH.tsv, 0 SKEW lines in the log. It is in the unmerged flow-health-1 branch.
-
-Root cause: a die's src tree is a hand-made copy that drifts from main, and each fix is hand-applied to N copies.
-Adoption verifies the plan json, not the tree the kits read.
-
-Structural fix:
-- A die src tree is built by one command from (main sha + named overlay list) and carries a manifest with both.
-  kit_wave refuses a src tree with no manifest or with a file that differs from it.
-- Adoption switches the event only after the manifest verifies on every gen host (0815 class 4, not done).
-- A live patch is a new overlay entry, not an edit. kw38/rt is retired once its 4 processes end.
-
-## 6. Holds ruled but not applied; retries on an unfixed cause
-
-Measured: r122 (09:26) ordered a hold on the 9 S81 LOCAL items. At 10:05 none of the 9 is in s81 hold_items.
-13 of the 22 fails came after the ruling. All 9 items failed 2 or 3 times. The item block at 3 is the only stop.
-hold_items now: S81 316, HBM 107, QC 56, KV 36, HEAD 9. Nothing lists which of these have a live release condition.
-
-Root cause: a ruling is text. A hold becomes real only when a lane edits kit_wave.json by hand, and the same
-gen_lint signature may relaunch because gen_lint fails are charged per item, not per signature.
-
-Structural fix:
-- A hold is posted as a machine line ("HOLD die class-signature until <branch> merged"). The tick applies it and
-  releases it when the named branch is on main. No hand edit, no forgotten release.
-- Same deterministic signature on 3 items in 30 min holds the signature (the flow-health-1 breaker).
-- Each hold_items entry carries owner, reason and release condition. Entries without one are listed hourly.
-
-## 7. Flow-fix branches bounce in the merge queue
-
-Measured today: 68 MERGED, 40 MERGE-FAIL, 3 BOUNCE. Since 08:00: 9 MERGE-FAIL, 2 BOUNCE.
-- flow-health-1 failed at 08:31 (7 tests) and 09:00 (1 test). It has been READY since before 07:45.
-- kit-rtl-src-tree-1115-2 (r122) failed at 09:33. epyc2-scratch3 failed at 08:59 on a 600 s test timeout.
-- The gate-stamp check had a live bug (.strip() on a CompletedProcess) that stopped the check for every valid
-  stamp. It also bounced an already-merged branch at 09:08. Both fixed by mq-ready-gate-skip, merged 09:56.
-- 11 test_kit_wave* tests fail on main (26 baseline failures in the 09:38 gate). r122 gave them to FLOW-HEALTH-1.
-
-Root cause: the gate a lane runs (its touched test files) is narrower than the gate the queue runs (140 files),
-and a red baseline makes "same failures as main" a manual comparison.
-
-Structural fix:
-- One command, `ot-merge-queue gate <branch>`, runs the queue's own gate on origin/main and writes the stamp.
-  READY without that stamp is rejected. Lanes stop choosing their own test list.
-- Main baseline goes to 0 red: fix or quarantine the 26 with a reason. Then any red is new.
-- Flow fixes (wave, ot-run, kit-rtl) get the front of each train by rule, as r123 did by hand.
-
-## 8. Lane clones use the owner checkout as origin (added at COORD request, r124)
-
-Measured:
-- Clones under scratch2/claude with `origin = hub:OpenTallas`: epyc7 18, intel1 3 (+1 intel2:), epyc10 2. None
-  sampled uses GitHub. `Host hub` is intel2; the path is /home/ubuntu/OpenTallas, the OWNER checkout.
-- That checkout's main is 22c217df54. GitHub origin/main was fb7cf95840 at 09:16 and is b89ba8df4f0 now.
-- It holds 4,765 branch refs. 68 claude/* refs have a commit dated today, pushed by lanes.
-- Two cases today: S81-LEAF-T14 (bounce at 09:08, pushed tmp/s81t14-main-fb7cf958 there) and S81-SEAM-RST.
-- MERGE-QUEUE-1 (10:02) made the queue clone take main from GitHub only. Lane clones are unchanged.
-
-Root cause: no standard way to make a lane clone. Lanes copy an older clone, whose origin is the hub, and "origin/main"
-then means a frozen main. The gate stamp records a sha but nothing checks that the sha is on the real main.
-
-Structural fix:
-- One helper, `ot-lane-clone <lane> <dir>`: origin = git@github.com:bojieli/OpenTallas.git, no hub remote,
-  fetch, branch from origin/main. Lane briefs name it as the only way to create a clone.
-- Queue gate: reject a READY when the stamp's main sha is not an ancestor of GitHub origin/main, or when the
-  branch's merge base with origin/main is more than N merges behind (N = 20). The message names the helper.
-- The owner checkout refuses pushes: `receive.denyAll`-style pre-receive hook, or remove the `hub` ssh alias path.
-  This needs an owner-approved change to that checkout; I did not touch it.
-- One sweep rewrites origin in the 24 existing clones (git remote set-url), with a list posted.
-
-Owner: MERGE-QUEUE-1 (helper, gate, sweep). The pre-receive hook needs COORD and owner consent first.
-
-## 9. Lane kills units by script
-
-7 QC units (4 place, 3 gen) got signal 15 from `python3 -I /tmp/s4q2sw.py` at 08:0x, the S4q2 event switch.
-ot-run reported the commands still running on epyc7/epyc10, so the rows failed while the work went on.
-Root cause: the event switch is a private script. Fix: the switch is the one adoption command of class 5, which
-re-keys or cancels rows through the wave, never with a signal from a lane shell. Owner: KIT-OPS-5.
-
-## 10. Bookkeeping
-
-- STALE 295 (S81 233: unowned 139). Nearly all are DEDUP or CANCELLED SUPERSEDED rows of old events, as at 0815
-  (291). The 0815 fix (count only the current event) is not done. Live check NOT SEEN: intel2, epyc4.
-- Repeat lines since 07:55: RETRY-IGNORED 913, DEDUP RELEASE 766, REAP-DEAD 112 = 59% of 3,023 lines.
-  ARCHIVE FAILED 13.
-- Queue stamps: 48 of today's posts carry an hour of 10-29 written before 10:00 PST (UTC hour with a PST label or
-  a UTC label; DIE-QC-103 15, DIE-KV-ROUTE-1 6, also 7 RULING lines). 11 posts carry no time.
-  Fix: lanes post only through bin/post.sh, which stamps the time itself; queue_view rejects a hand-written stamp
-  that is in the future. Owner FLOW-HEALTH-1.
-- Unowned in failure_breakdown: QC 3 cores and HBM 8 cores with no kit-wave row; S81 dsdv_gunit_l1f_bf no row.
-
-## Did the 0815 fixes land, and did they work
-
-| 0815 item | Landed | Worked |
-|---|---|---|
-| Merge flow-health-1 (preflight, class breaker, skew check, FLOW-HEALTH.tsv) | NO, 2 MERGE-FAILs | not live; fail ratio unchanged 0.73-0.93 |
-| Supersede at adoption / old-plan block | oldplan-block merged 08:50 | yes in part: old-event RUNNING rows 21 -> 4 |
-| Long-run watchdog | wave-longrun-1 merged 09:00 | in part: over-6-h openroad 76 -> 49 |
-| epyc2 scratch choice or ot-store move | NO, MERGE-FAIL 08:59 | epyc2 admits by cleanup only, 64 GB over a 50 floor |
-| alert-nonsticky | no merge found | unknown |
-| epyc9 oversubscription | host choice not changed | epyc9 load 72 now; epyc7 is the hot host, load 143 on 96 |
-| Closure manifest at adoption | NO | SRC-INCOMPLETE on the same S81 ROM file, 36 lines |
-| Config drift alert | coord-commit prints PUSHED | HEAD = origin/coord/state at 10:04, only state file dirty |
-| READY gate stamp | merged 08:31, bug fixed 09:56 | yes from the 10:00 tick |
-| STALE counts current event only | NO | 291 -> 295 |
-| Deny pushes into the owner checkout | NO | 68 refs pushed today (class 8) |
-
-## Order of work
-
-1. WAVE-COPYBACK: judge from rt/current, or re-judge every tick (class 1). It is the only class still burning P&R.
-2. FLOW-HEALTH-1: get flow-health-1 green and merged (classes 5, 6, 10); then the 26 red baseline tests.
-3. KIT-OPS-5: apply the r122 hold now; GENBUG-IMPL fixes the 2 red tests of kit-rtl-src-tree.
-4. CLEAN-INTEL2-1115: hub scratch2 and root above 100 GB free. CLEAN-EPYC2-1115: epyc2-scratch3 test fix and merge.
-5. MERGE-QUEUE-1: lane clone helper, base-on-origin gate, origin sweep (class 8).
-
-## Not checked
-
-- Whether each of the 49 long-running openroad processes is making progress. Only age and CPU share were read.
-- The CPU share of class 1 rests on 4 sampled attempts (14-276 min, 2-8 threads), not on a full count.
-- The after-fix false-fail rate: too few place completions on the new tree by 10:06.
-- Clone origins were read on epyc7, epyc10 and intel1 only, two directory levels deep.
-- localhost (rtx-pro) and epyc4 were not probed. S81-SEAM-RST's posts were not read; the case is as COORD stated it.
-- `ot-run --status` prints "localhost REFUSED" for the hub itself (intel2), not for rtx-pro.
+## Do now (ranked)
+1. TOOLS-DECOUPLE: make the refresh run (stage it through admission_tools or declare rt tools as a job input), cover the place stage, print on skip. Proof = flow_refresh.jsonl count > 0.
+2. FLEET-OPS-R: free epyc2 and epyc10 above the floor; get ot-auto-clean passing on epyc2/7/10; KIT-SLIM on epyc2/7/8.
+3. WAVE-FLOW-R2: ENOSPC = INFRA free retry (30 rows sit in structural.tsv as CRASH: re-class and relaunch); SUBMIT uses the disk cap.
+4. TOOLS-DECOUPLE: rt sync exit 0 on skipped hosts; push the admission-lock fix to epyc2/epyc10 once they have room.
+5. WAVE-PILOT-FIX: stage input hash from executed kit files; delete retry lists; the wave stops writing kit_wave.json.
+6. WAVE-FLOW-R2: per-host snapshot and "other" timer; KV place declares the tree as input.
+7. AUTO-EXPORT-1118: turn off signed-store-ingest.timer (the gate accepts RTX-FULL-AGI-META now).
