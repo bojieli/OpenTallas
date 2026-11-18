@@ -426,3 +426,4 @@
 - 2026-11-18 04:07 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 530eea8764ef: RuntimeError: /srv/opentallas-scratch2/claude/rt: 97 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
 - 2026-11-18 04:08 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 530eea8764ef: RuntimeError: /srv/opentallas-scratch2/claude/rt: 96 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
 - 2026-11-18 04:09 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 530eea8764ef: RuntimeError: /srv/opentallas-scratch2/claude/rt: 96 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 0)
+- 2026-11-18 04:10 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays 7bf66d3c64c2: RuntimeError: /srv/opentallas-scratch2/claude/rt: 99 GB free < 100 GB (OT_RT_MIN_FREE_GB); nothing written (pruned 1)
