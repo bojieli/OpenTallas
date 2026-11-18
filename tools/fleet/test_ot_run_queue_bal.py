@@ -234,12 +234,12 @@ class RefusedSource(unittest.TestCase):
 
     def test_permanent_refusal_still_not_run(self):
         code, _, srun, err = self.main(True, (None, "command names /srv/y outside the --stage paths", True))
-        self.assertIn("no host qualifies", str(code))
+        self.assertEqual(code, 78)
         self.assertFalse(srun.called)
 
     def test_pinned_job_is_not_spilled(self):
         code, splan, srun, _ = self.main(True, (("epyc5", [self.D], 2.7), "", False), argv_extra=("--hosts", "epyc4"))
-        self.assertIn("no host qualifies", str(code))
+        self.assertEqual(code, 78)
         self.assertFalse(splan.called or srun.called)
 
     def test_too_little_room_for_back_copy_waits(self):
@@ -248,8 +248,9 @@ class RefusedSource(unittest.TestCase):
         self.assertIn("for the back-copy", err)
 
     def test_no_refused_host_keeps_old_not_run(self):
-        code, splan, _, _ = self.main(False, (("epyc5", [self.D], 2.7), "", False))
-        self.assertIn("no host qualifies", str(code))
+        code, splan, _, err = self.main(False, (("epyc5", [self.D], 2.7), "", False))
+        self.assertEqual(code, 78)
+        self.assertIn("NOT-RUN no host qualifies", err)
         self.assertFalse(splan.called)
 
 
