@@ -2218,6 +2218,17 @@ def retire_superseded_rows(AP, cfg, st, now=None):
         r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="stale-plan", updated=now,
                  reason=f"SUPERSEDED: {r.get('item')} is not an item of the current plan ({cur[:12]}) and the row's plan block is {old[:12]}; the type relaunches under its current name")
         stale += 1
+    old_ev = 0
+    for r in items.values():                             # STALE-EVENT-1117 (COORD failure_breakdown 22:30): a FAIL row on an event that is not the die's current one is history, not a type failure:
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}          # the item launches on the current event on its own key; the breakdown counted 40+ such rows per die as open failures
+        if r.get("status") != "FAIL" or not d.get("enabled") or not d.get("event") or not r.get("event") or r.get("event") == d["event"]:
+            continue
+        if d.get("retire_stale_event_fails") is False or str(r.get("class")) == "SUPERSEDED":
+            continue
+        r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, retire="stale-event", updated=now,
+                 reason=f"SUPERSEDED: FAIL on event {r.get('event')} (die is on {d['event']}); was: " + str(r.get("reason"))[:200])
+        old_ev += 1
+    stale += old_ev
     if (retired or relaunched or dedup or stale) and AP is not None:
         AP.log(f"KIT-WAVE RETIRE-SUPERSEDED retired {retired} (type has a current-event row), relaunch-on-current {relaunched}, dedup members {dedup}, stale-plan FAIL rows {stale}")
     return retired, relaunched
