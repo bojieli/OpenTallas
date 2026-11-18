@@ -5592,6 +5592,11 @@ def cmd_bind(a):
                                   leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"])
                              for p, bs in sorted(bumps.items()) for b in bs]
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
+    try:
+        import bind_share
+        bind_share.share_identical(str(out / "bind_sinks.json"))   # KIT-SLIM-1118: identical per-attempt copies share one inode
+    except ImportError:
+        pass
     if getattr(B, "core_input_pipe", None):      # QC-NK-HOLD A+P: declared added cycles (bind_verify / compiler / TOK)
         (out / "bind_core_input_pipe.json").write_text(json.dumps(B.core_input_pipe, indent=1, sort_keys=True) + "\n")
     if getattr(B, "bin_copy_sinks", None):       # BIN-COPY (N4.1): sinks re-pointed past a pure-wiring leaf (bind_verify)
