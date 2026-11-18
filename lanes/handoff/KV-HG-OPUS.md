@@ -17,3 +17,11 @@ so no r697 tree refresh is needed. 05:31 wave REKEYed 17 HG6 rows (block unchang
   hub_Eo, io_cor_v1, pc__cl5a95b461), rt_tools on KV kits, CLAND watch on pv_v2/v4/v6.
 - Still running from before: KV-D23-REACH (epyc7 kv-d23-reach mirror binds), KV-D23-HUBC (epyc7 kv-d23-hubc bind_b; clock node move
   BLOCKED: e9 clock tree source deleted).
+
+## 11-18 09:4x update
+- D23/D23b FAIL (hub_Wo split breaks reset tree: 309 relays, rst_rl_214 gone). Lane KV-HUBWO-RESET (Opus) re-derives on D22 base (epyc8/9/10).
+- Gating epyc7 (--crit, due ~10:40 PST): D23e 30211ff42943, D23f e21a54aebe16, D23g 03d1a0605350 (+reach + lite/narrow ring 5 hubs); D23h = D23g + relay_mid siting keys (main 0c3fb152c30). Apply first green of g/f/e, then h.
+- hub_Wo 406,241 -> ~392k projected with lite+narrow (D23g). hub_C 773,818 -> D24 split rows3 (shell ~275-293k, pvfin slices ~133k, rings 7-28k). KV-D23-HUBC dead: its work (rows3, masters, pvfin stations) now owned by KV-D23-COMPOSE.
+- kv3_io_cor (intel1, +25 ps) and kv3_hroot (epyc7, -137..-167 ps in GRT repair, may miss -42) in GRT; KV-D22-ROWS carries to sign-off + export.
+- AGIdock: ssh -i ~/.ssh/agidock_ot -o IdentitiesOnly=yes -o ControlPath=none -o BatchMode=yes ubuntu@155.103.253.53 (max 3 sessions).
+- epyc7: docker create hangs; admit.lock stale-holder stall 70 min (NEEDS posted).
