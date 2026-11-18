@@ -1,4 +1,4 @@
-# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-17 20:03:47 PST by intel2 ~/tmp/head100_utable.sh
+# HEAD die route units, recipe run nf13s (NF13a plan, SIGNED hd_tile view 717.12 b54b ECO i1, plan abstract hd_st_n4 993.6) (cut-abstracts-under-clock + tap snap + DROP_GRT_OBS), auto-updated 2026-11-17 20:18:57 PST by intel2 ~/tmp/head100_utable.sh
 # DONE 31, DONE with DRC>0: 0, DONE with RSS>20 GB: 1; fields: host unit state drc rss_mb(DRT hwm) wall; independent per-unit run (earlier-pass nets fixed, unrouted), unstamped NC tree
 key-cardinal u085_b DONE drc=0 rss_mb=11331 wall=34:26.72 [INFO DRT-0199]   Number of violations =
 key-cardinal u086_b DONE drc=0 rss_mb=11047 wall=45:51.03 [INFO DRT-0199]   Number of violations =
