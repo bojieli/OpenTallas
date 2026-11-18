@@ -1,0 +1,53 @@
+type n_tracks old_die new_die old_type lock_bad(new die on old type tracks) freed(old die not in new)
+
+hd_ctl             M8   6480   3117   3117   3363      0      0
+
+hd_ctl_e           M8   1296    521    521    775      0      0
+
+hd_ctl_n           M8   8856   3154   3154   5702      0      0
+
+hd_host_e          M8   7128   2503   2503   4625      0      0
+
+hd_host_n          M8   8208   2858   2848   5350      0     10
+
+hd_host_w          M8   7128   2983   2983   4145      0      0
+
+hd_lep0N           M8  17604   9118   9040   8486   1296   1374
+
+hd_mesh            M8  15336   8581   8639   6755    512    454
+
+hd_mesh_e          M8   1080    612    592    468     16     36
+
+hd_serdes          M8  15336  13811  14147   1525    336      0
+
+hd_spn             M8  25920  10176  10097  15744     65    144
+
+hd_spn_end         M8  25920   9688   9688  16232      0      0
+
+hd_spn_eshim_rx    M8  12960   4026   4056   8934     55     25
+
+hd_spn_eshim_tx    M8  12960   4058   4073   8902     65     50
+
+hd_spn_wshim_rx    M8  12960   5206   5237   7754     45     14
+
+hd_spn_wshim_tx    M8  12960   4456   4326   8504      9    139
+
+hd_st_k5           M8  10908   4349   4344   6559      0      5
+
+hd_st_m            M8   1620   1033   1004    587      0     29
+
+hd_st_n3_transit   M8   5940   2066   2066   3874      0      0
+
+hd_st_n3_turn      M8   7560   2746   2746   4814      0      0
+
+hd_st_n4           M8  12420   4522   4522   7898      0      0
+
+hd_st_str          M8   5940   3182   3187   2758    167    162
+
+hd_st_turn         M8  14148   7233   7243   6915    361    351
+
+hd_tile            M8  12960   5751   6775   7209   1069     45
+
+hd_turn_a          M8  12960   4171   4316   8789    150      5
+
+hd_turn_b          M8   8748   2753   2928   5995    175      0
