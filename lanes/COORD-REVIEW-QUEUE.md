@@ -23302,3 +23302,10 @@ FAILED [AUTOPILOT d67c8ccff4cf] 2026-11-17 23:44:34 PST AUTOPILOT -> KIT-WAVE-3:
   Cause: bind_matches compares native_topology.json asbuilt_sha256 with kit_rtl.asbuilt. The N3 bind recorded the sha of the E2 iso manifest (85566c0a). At relocation I aliased that manifest to the in-tree asbuilt_n2b_portable.json (1a1a4f80), which the candidate names as kit_rtl.asbuilt. The other checks match: transport, reset and all types are equal.
   Fix: the relocated bind's native_topology.asbuilt_sha256 is set to the portable sha on all 4 hosts (write+rename), with the alias recorded in RELOCATED.json.
   The cached preflight verdict expires within 30 min (TTL 1800 s), so the 26 rows launch on the first tick after about 00:25. WAVE-FLOW-R2: if you can drop st.bind_preflight for qwen_compute under the state lock, they launch on the next tick.
+- 2026-11-17 23:57 PST NEEDS-LANE [TOOLS-REFRESH -> S81 die owner (DIE-S81-92)] s81: tools-only tree /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d7w_1117_work_t6433206 could not be composed or replicated: replicate: rc 1: epyc9: linked from src_s81_pin_3c913dbdfb23_d7w_1117_work
+  epyc9: OK
+  intel1: linked from src_s81_pin_3c913dbdfb23_d7w_1117_work
+  intel1: OK
+  epyc7: linked from src_s81_pin_3c913dbdfb23_d7w_1117_work
+  epyc7: OK
+  epyc2: refuse (free 42 GB + part 0 - tree 53 = 34 GB after the copy < floor 50 + 20 GB); stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
