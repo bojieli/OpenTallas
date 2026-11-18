@@ -40647,7 +40647,11 @@
         "hcut1111",
         "head_rp18_1112",
         "head_rp21z20NF15d2r1"
-      ]
+      ],
+      "tools_refresh": true,
+      "tools_refresh_bind_cmd": "python3 -I tools/s81_head/head_die_portbind.py {plan} --clock-landing {tree}/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json --out {out_rel}",
+      "tools_refresh_bind_pass": "HEAD_DIE_PORTBIND PASS module_missing=0 port_bind_rc=0 tie_audit=PASS nested=PASS",
+      "note_tools_refresh_1117": "HEAD-PLAN-R4 11-17 (COORD/FABLE-CLOSURE-STRATEGY 19:2x): tools-only refresh of nf15f_d2 to main (r641/r644/r650 + r618..) before the NF15f pilots launch; bind = the rs8/_d2 smoke strict bind (head_die_portbind, PASS line), plan + RTL byte-identical"
     },
     "qwen_compute": {
       "enabled": true,
