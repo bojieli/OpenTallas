@@ -1,0 +1,1288 @@
+{
+ "schema": "kv_d23_hubwi_rows.v1",
+ "lane": "KV-HUBWI-O (successor of KV-D23-HUBWI)",
+ "to": "KV-HG-OPUS; cc COORD, KV-D23-COMPOSE",
+ "type": "kv3_hub_Wi",
+ "status": "DO_NOT_COUNT; proposal, applied only to a private mirror",
+ "base": {
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22",
+  "plan_sha256": "23c87c42a4e9b78d44123bd65aaa4b2c3a75d02870d566a7e0f82a993817d58b",
+  "asbuilt_sha256": "efad37e95d459cbb4e0fdd1c8f21a0bdacb1f1ff2d9be51796aaf43f8fa0fed9"
+ },
+ "result": {
+  "plan_sha256": "4cf7246f1510970e6c7c31e9e2d6e48f2712afd8a6339fc89644dda215fea9c2",
+  "asbuilt_sha256": "cc713020e084a1f201be119ff204abb03ce387a20771f40beebe2dea2cfe79da",
+  "mirror": "epyc9+epyc7:/srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi",
+  "asbuilt_file": "epyc9:/srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi/physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_pb3.json",
+  "plan_file": "epyc9:/srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json"
+ },
+ "writer": {
+  "branch": "main@04df4c77f065 (ot-push-main; branch claude/kv-hubwi-host-cluster-1118 superseded); tool tools/die_plan/kv_hubwi_host_rows.py adds plan lef/lib, files/prefer swap, portbind_files/prefer += 14 wrappers + LEAF_PREFER",
+  "tool": "tools/die_plan/kv_hubwi_host_rows.py",
+  "test": "tools/die_plan/test_kv_hubwi_host_rows.py",
+  "cmd": "python3 tools/die_plan/kv_hubwi_host_rows.py --tree TREE --plan PLAN --asbuilt ASBUILT --views physical/die_plan/qwen_kvsys/kvd23_hr_views_1118 --out-plan P --out-asbuilt A"
+ },
+ "plan_rows": [
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_ingest_eng",
+   "module": "qkd_hr_ingest_eng",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_ingest_eng/qkd_hr_ingest_eng.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_ingest_eng/qkd_hr_ingest_eng_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_order",
+   "module": "qkd_hr_core_order",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_order/qkd_hr_core_order.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_order/qkd_hr_core_order_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_ch",
+   "module": "qkd_hr_cdc_ch",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ch/qkd_hr_cdc_ch.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ch/qkd_hr_cdc_ch_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_pc",
+   "module": "qkd_hr_cdc_pc",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_pc/qkd_hr_cdc_pc.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_pc/qkd_hr_cdc_pc_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_peer",
+   "module": "qkd_hr_core_peer",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_peer/qkd_hr_core_peer.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_peer/qkd_hr_core_peer_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_tx",
+   "module": "qkd_hr_core_tx",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_tx/qkd_hr_core_tx.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_tx/qkd_hr_core_tx_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_rx",
+   "module": "qkd_hr_core_rx",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_rx/qkd_hr_core_rx.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_rx/qkd_hr_core_rx_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_guard",
+   "module": "qkd_hr_core_guard",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_guard/qkd_hr_core_guard.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_guard/qkd_hr_core_guard_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_queue",
+   "module": "qkd_hr_core_queue",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_queue/qkd_hr_core_queue.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_queue/qkd_hr_core_queue_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_prompt",
+   "module": "qkd_hr_core_prompt",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_prompt/qkd_hr_core_prompt.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_prompt/qkd_hr_core_prompt_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_hi",
+   "module": "qkd_hr_cdc_hi",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_hi/qkd_hr_cdc_hi.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_hi/qkd_hr_cdc_hi_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_cdc_ci",
+   "module": "qkd_hr_cdc_ci",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ci/qkd_hr_cdc_ci.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ci/qkd_hr_cdc_ci_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_pad",
+   "module": "qkd_hr_phy_pad",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_pad/qkd_hr_phy_pad.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_pad/qkd_hr_phy_pad_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_0",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_1",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_2",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_3",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_4",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_5",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_6",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_phy_adp_7",
+   "module": "qkd_hr_phy_adp",
+   "set": {
+    "lef": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef",
+    "lib": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib"
+   },
+   "note_append": "KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master (kvd23_hr_views_1118); bound u_host = clustered form-S parent (bind/kv_host_wi/parent.sv)"
+  }
+ ],
+ "asbuilt_delta": {
+  "files_replace": [
+   "physical/die_plan/qwen_kvsys/bind/kv45/qkd_host_root_admission_obsx_bo1_c45.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/parent.sv"
+  ],
+  "prefer_replace": [
+   "physical/die_plan/qwen_kvsys/bind/kv45/qkd_host_root_admission_obsx_bo1_c45.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/parent.sv"
+  ],
+  "portbind_files_add": [
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_ingest_eng/qkd_hr_ingest_eng.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_order/qkd_hr_core_order.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ch/qkd_hr_cdc_ch.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_pc/qkd_hr_cdc_pc.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_peer/qkd_hr_core_peer.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_tx/qkd_hr_core_tx.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_rx/qkd_hr_core_rx.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_guard/qkd_hr_core_guard.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_queue/qkd_hr_core_queue.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_prompt/qkd_hr_core_prompt.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_hi/qkd_hr_cdc_hi.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ci/qkd_hr_cdc_ci.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_pad/qkd_hr_phy_pad.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_adp/qkd_hr_phy_adp.sv"
+  ],
+  "portbind_prefer_add": [
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_ingest_eng/qkd_hr_ingest_eng.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_order/qkd_hr_core_order.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ch/qkd_hr_cdc_ch.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_pc/qkd_hr_cdc_pc.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_peer/qkd_hr_core_peer.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_tx/qkd_hr_core_tx.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_rx/qkd_hr_core_rx.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_guard/qkd_hr_core_guard.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_queue/qkd_hr_core_queue.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_prompt/qkd_hr_core_prompt.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_hi/qkd_hr_cdc_hi.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ci/qkd_hr_cdc_ci.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_pad/qkd_hr_phy_pad.sv",
+   "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_adp/qkd_hr_phy_adp.sv"
+  ],
+  "note_key": "kv_host_wi_note",
+  "portbind_prefer_add_leaf": [
+   "rtl/qwen_sys/mu_qwen_20261018/hr_tx_predecode/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+   "rtl/qwen_sys/host_20261013/fault_dreg/qkd_host_rx_class_admission.sv"
+  ],
+  "leaf_note": "the 2 host leaves defined twice with different ports; the hr_tx_predecode / fault_dreg files are the ones the D22 elaboration and the 53962-cell equivalence used; without them die_port_bind strict = AMBIGUOUS x2"
+ },
+ "add_files": {
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/parent.sv": "3b1b89ee3a90cd5856cefb33c1de4aa72c42ca3f7bfd67bdf74acfa5073e633a",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/check_cdc_clk_tie.py": "da9686a17c46f95c483f5c30cf8a931900ee2e71dd42bb4c728eeecc9705bf89",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/physical_inst_21.json": "0aada7b59686b6a494bd618bb00583cc8a39bea4edc515df3ffbb7d3a34c0307",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_ingest_eng/qkd_hr_ingest_eng.sv": "bac09a6b7e0fc58dddf46d20362389548a5062739a1242893327c8b74ab0dc19",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_ingest_eng/qkd_hr_ingest_eng_core.json": "1d328bfcb88abc91380ab7b9f786071eee0556b5d79a04527620ab0d94a58f91",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_order/qkd_hr_core_order.sv": "30ffc31acaaf3f84478abdcf3bd583a6f0d169555ae31214ba7ed9bb6d63398f",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_order/qkd_hr_core_order_core.json": "88733305b133d8b7e0315cc0964f9de5784d503e740d1f892d0a1a4f91016235",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ch/qkd_hr_cdc_ch.sv": "d618b4b7b9f6a065b653af676754e82d175d60f16aaca2405c3cc4658bc2f329",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ch/qkd_hr_cdc_ch_core.json": "82ee60f881d14c0c9bcbb8822ad623995de3e975c9412247aab874cb8228f0aa",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_pc/qkd_hr_cdc_pc.sv": "e232fe6f927a1098bf83309303d401235f3cf3f492eebf98536ea21c37ea9a5f",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_pc/qkd_hr_cdc_pc_core.json": "24c22d9504972e85590da11b08cdc64728a88e4ebd726e218a353054c599d25f",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_peer/qkd_hr_core_peer.sv": "1fbb11090e7c2384f1ce10962936a48649426d33de7cda5bf772c055dec10c3d",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_peer/qkd_hr_core_peer_core.json": "dc1d1f3e093c8a71b4d96e6c6d81bda8d4a2a9ff708856b97e9a1ebc094415bb",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_tx/qkd_hr_core_tx.sv": "946cf1db7e827996f5e82e34ebbbf7cd8a79793bf16ed97ef924c53ab1206ac4",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_tx/qkd_hr_core_tx_core.json": "254780545d637cf38911f117cb73deafcb9c1f7c8025d8903ce1dfa745241b6a",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_rx/qkd_hr_core_rx.sv": "937bc26a888dad0dd3f8fba5141dfbaf018b5f235a0a2dd9684852374f7477d4",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_rx/qkd_hr_core_rx_core.json": "292c17c31d85f8de31c47baf311cd17a71981f271181e2d804474131cef1e5d3",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_guard/qkd_hr_core_guard.sv": "ca582d2b978d2440948ed096c98609d124b3a70c5f8f314852a748d8f67e5f3a",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_guard/qkd_hr_core_guard_core.json": "d6c8c2294a2fc067f27484fe1f8bfd294d67944605738a6780110cb7872e7b9b",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_queue/qkd_hr_core_queue.sv": "c105bb8ecd28ab8441a62d98ccad838174bec95b725d1f7f38788d6baebddeab",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_queue/qkd_hr_core_queue_core.json": "e1203ba9daf5ebf616de82b9e42e83a968fa7ce9b78f23343d8b6f39e2cea4f0",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_prompt/qkd_hr_core_prompt.sv": "dbe8f2f11162a72faef3c654f91c4e40120b8bb7c877f1d7f85e7096d5dc4987",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_core_prompt/qkd_hr_core_prompt_core.json": "0c0ef72ea162ccae5e50823df3b8f8f02fa98a39707b75882293fc8a1f7eff27",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_hi/qkd_hr_cdc_hi.sv": "26c9a936e09c4e0cf637e90d68a06aa77e78d63a9408fc5cd7b6290519722e57",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_hi/qkd_hr_cdc_hi_core.json": "c5b28dc54e2c3e65d4ec8fc6d9248d4e5e100a5bc239015b526dc0d5ad0c93e2",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ci/qkd_hr_cdc_ci.sv": "1318eca18bdb3bb4aba94ceca23801e807713d45d1bafd4bd44bf7835a60ce3d",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_cdc_ci/qkd_hr_cdc_ci_core.json": "43fb71ae234589df4648d1a7231ed18329f2744ae0427d108f9c8e948bff3462",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_pad/qkd_hr_phy_pad.sv": "e8b4954d34dd6bca2d6d9681d6e686eeafb819e8fa983922276b0429a272e989",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_pad/qkd_hr_phy_pad_core.json": "1da14a7c0842b1bafab2dabc3c893aa1928f43be9acf72034cd3878d9b6070f4",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_adp/qkd_hr_phy_adp.sv": "a30cf8f7a3003a8482585d9271d5e8d00096fb077a78c3bdfc4b3db66c61591f",
+  "physical/die_plan/qwen_kvsys/bind/kv_host_wi/wrappers_s/qkd_hr_phy_adp/qkd_hr_phy_adp_core.json": "94b4225ef70aa07c17ee201d80cabc0d9335594a7d33119bb8c8dd257df8e4c6",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_ingest_eng/qkd_hr_ingest_eng.lef": "f3b30b4c6e3cc337a51f269564b811f83b7edece06085db601654532a322f894",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_ingest_eng/qkd_hr_ingest_eng_tt.lib": "8683a10119cc703a71f5de3736910105174154c7119457b38792634f82ff33f1",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_ingest_eng/qkd_hr_ingest_eng_ff.lib": "7a67f490e5873d7df97f396e2689c2ed28904722feaa3472c9dc0b083b34317b",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_order/qkd_hr_core_order.lef": "ad2672c0e43ef26ed7291f01897a52d90e04fafe60489cf2d0c26f5a5efa9ed8",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_order/qkd_hr_core_order_tt.lib": "ad3b04d2dad1186147766f2dd60b433924645c93d82079ef6c4729e1c9778a40",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_order/qkd_hr_core_order_ff.lib": "59f8e6fa46be30339181646521cd38411954c914a7b824f492ed33a6972053f9",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ch/qkd_hr_cdc_ch.lef": "aa51b6714687097b9c04f832db1022acc95550b501ee861ad4b3706c574193bb",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ch/qkd_hr_cdc_ch_tt.lib": "380b56537958d58f731ac82a565c487a4e3193ef6e2dfa389bab9e154f019d9b",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ch/qkd_hr_cdc_ch_ff.lib": "91fea65624ae0bc30207d7c5ac1eb69cd65d24a012baa1dc6bf807bb2e56db21",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ch/provenance.json": "95dffc350232aca861284c7cf93041787383a6abbbee0de03b6bbd24beec19d1",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_pc/qkd_hr_cdc_pc.lef": "b917f366a8c22c51ea0f496bc9947cd49705a0233f221ceaf168617623fade42",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_pc/qkd_hr_cdc_pc_tt.lib": "9a4c3b6d7afd3449a363d8931eb2b8d253be6e732417aecde57fcb24a1a053f4",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_pc/qkd_hr_cdc_pc_ff.lib": "4c23f8082d7136e782405b204c4b42e078812af960ad5b132030fabd9d25bdfc",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_pc/provenance.json": "e25ec04fa2b66991995961c97c360124e712e650cd548dbe731045df7559a03d",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_peer/qkd_hr_core_peer.lef": "a7f9664e5f840273a5ca1bad33895cc47e7a53273977355df0ea96cdfe04f443",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_peer/qkd_hr_core_peer_tt.lib": "77d09eb56c9716a9cbdd37ae282a185bda940e92d03052bced3f8f08cbe29e74",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_peer/qkd_hr_core_peer_ff.lib": "8cd32a64b796a70bec1695582635bc102883dfe32f5776f3a92b508d363ca3e6",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_tx/qkd_hr_core_tx.lef": "dc95ad3ee59e15d77e40308dfb415593ed6c5582bdfad2443e3fec9ed795181b",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_tx/qkd_hr_core_tx_tt.lib": "68e90873800f3c784268f6826eaf7588a91296f43fcdc2a2a740236c8c441abd",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_tx/qkd_hr_core_tx_ff.lib": "8acb765e3ffd6a84846e62be72bb93ba6d93956eed8140c7a6f1b51baaaef64c",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_tx/provenance.json": "4746e8d9d4b5bc86df985662f4d806ebc65914ddce43d77887f3ada4f7cd18b3",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_rx/qkd_hr_core_rx.lef": "02aefcb4bee081543c4fc26b1e320cb990952cc7309b25fb4da9735a7ce5e863",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_rx/qkd_hr_core_rx_tt.lib": "c8b66be4f4194506189e12cb1cdd04456542954aa7072c4ace4fc3094ff9d5f5",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_rx/qkd_hr_core_rx_ff.lib": "8654f2c9b8b72141c81aa6a47fe72c6f437af57cdd992e51186462098b3941a0",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_rx/provenance.json": "865d9baf8f510882cd42fccaa37dac688e6a8d4643043d14e265db4fe8010e40",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_guard/qkd_hr_core_guard.lef": "a921e32bc0e23773b0a815e22e75d1aa24f49ce5faf4c663daa98aaed32af5d9",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_guard/qkd_hr_core_guard_tt.lib": "05d1f1123a80592b28623d8e45f50dd3a00773c8277462a761710b54a37dc591",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_guard/qkd_hr_core_guard_ff.lib": "eba301bb52262ccdbdbe35a9f03bdf0ab819ee463adbaced832faf5cdfc04d40",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_guard/provenance.json": "253d9d4d56622bc61717950b277d25bbe6b914ec7d76c801ae07699f447b3a68",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_queue/qkd_hr_core_queue.lef": "d5f5a29b7c506da39b39683eef0d9faa45788ec7598b3c9910e128ca67dd8fe4",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_queue/qkd_hr_core_queue_tt.lib": "11d6e4d95ba4d2644259736662b017ea8b89fac9e5299d82ca944f592feaa832",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_queue/qkd_hr_core_queue_ff.lib": "2b686b048c2d58f65cb75a0b38a83f013c9c3dd2ce631ae0627a7e92fbf91f9f",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_queue/provenance.json": "f2dd649bc3abc547bf3c30f3bbbd0dc2c109c9a48d8c9fdb9228936b56da0627",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_prompt/qkd_hr_core_prompt.lef": "2028c943eddb101f4d483e62db9deebaef2cc98b8413f2854913fb401e7914da",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_prompt/qkd_hr_core_prompt_tt.lib": "1c40d7abc1e007705294d1a1644dd648119ac20b329ed4945b97ed3dd59f7973",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_prompt/qkd_hr_core_prompt_ff.lib": "aa591786345bf6e8474ff21c11a50d221ba99acd87a71f31cb47d21aa31778ce",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_hi/qkd_hr_cdc_hi.lef": "e982bb62d96b84b188e228c9f4d6d135ec49ea24681f4c024cb653e41d318d7b",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_hi/qkd_hr_cdc_hi_tt.lib": "6d3aae8fb7c6205a7269eacf4a7cc975622777867d912bb79b43d5c25758491c",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_hi/qkd_hr_cdc_hi_ff.lib": "e7a3d342f8a71a8f7807ad34a1647c3f2cf69bd56fb3617cee8be81f0c5fc6c2",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_hi/provenance.json": "68473d92955767b54f9b0c6d9d9d5e9ccfaa7c50e4b52552de3f248c724df001",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ci/qkd_hr_cdc_ci.lef": "8f77a7339c80a677b427a867a4e803d528157254191d2af334d5cffa53247cdf",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ci/qkd_hr_cdc_ci_tt.lib": "43f3f589e8e33046d91c3919fa2b6dec640dafea955ed6c561329a415fc9716a",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ci/qkd_hr_cdc_ci_ff.lib": "40af6e72e28e392342148dd431bff17e756cc36d63111d6c578fb2ac88928d16",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ci/provenance.json": "d36f68b750ed23a97f55f55416edd4c4686ebcac7aa41c5a4a601fe3cf51ae56",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_pad/qkd_hr_phy_pad.lef": "948e211aaec9f7a7ecda5d7fe16eecc119d229838f45385099df9d9c5f7cd63e",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_pad/qkd_hr_phy_pad_tt.lib": "45bdf5f971b3b688d8f6d3a23dd9153f83fdbfc2f22b97c2591bab74ee8f12f3",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_pad/qkd_hr_phy_pad_ff.lib": "35c48920aaf11387d0bb156bf4cceee762731fdecff91b8dae33eb56fcaba7b5",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_pad/provenance.json": "e6f1ae5970e346bf024993430e33734f1e9cbb1786b757a2e9f7ff3185649054",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp.lef": "2eb451ac68c0c930f2f8b2ef310b6d8f24f3e030da5ec04f250e5ea238ad02d7",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib": "6ab6be09e06d22f2535a1e63f07fa874a50a146e25fd01ceab36f6a5c7fbf654",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/qkd_hr_phy_adp_ff.lib": "3eb199df3b80885f5a06f7fd6b9635737154ddd114d8e9f3a4b37cccfb85caba",
+  "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp/provenance.json": "03957fe0c6388b5288cfbccccda1d6af51adb9de329b5fdfdcf991e32a143d57"
+ },
+ "add_files_source": {
+  "kv_host_wi": "branch claude/kv-hubwi-host-cluster-1118 (= claude/kv-host-wi-1110@b636c4b48e76 cherry-picked): physical/die_plan/qwen_kvsys/bind/kv_host_wi/",
+  "views": "epyc9+epyc7:/srv/opentallas-scratch2/claude/kv-d23-hubwi/views_src/<module>/ (copied from the KV-HG6 kv3_hub_Wi attempt_4 wave prov views; sha below)"
+ },
+ "views": {
+  "qkd_hr_ingest_eng": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_ingest_eng",
+   "lef_sha256": "f3b30b4c6e3cc337a51f269564b811f83b7edece06085db601654532a322f894",
+   "tt_sha256": "8683a10119cc703a71f5de3736910105174154c7119457b38792634f82ff33f1",
+   "ff_sha256": "7a67f490e5873d7df97f396e2689c2ed28904722feaa3472c9dc0b083b34317b",
+   "source": "routed",
+   "final": false,
+   "job": "COUNTED qkd_hr_ingest_eng epyc2:/srv/opentallas-scratch2/claude/codex-kv0615/fo8_y_qualification/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)"
+  },
+  "qkd_hr_core_order": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_order",
+   "lef_sha256": "ad2672c0e43ef26ed7291f01897a52d90e04fafe60489cf2d0c26f5a5efa9ed8",
+   "tt_sha256": "ad3b04d2dad1186147766f2dd60b433924645c93d82079ef6c4729e1c9778a40",
+   "ff_sha256": "59f8e6fa46be30339181646521cd38411954c914a7b824f492ed33a6972053f9",
+   "source": "routed",
+   "final": false,
+   "job": "KV-CLK-R2 takeover: existing signed view; normal prov_view qualification; no new physical claim"
+  },
+  "qkd_hr_cdc_ch": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ch",
+   "lef_sha256": "aa51b6714687097b9c04f832db1022acc95550b501ee861ad4b3706c574193bb",
+   "tt_sha256": "380b56537958d58f731ac82a565c487a4e3193ef6e2dfa389bab9e154f019d9b",
+   "ff_sha256": "91fea65624ae0bc30207d7c5ac1eb69cd65d24a012baa1dc6bf807bb2e56db21",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_cdc_ch intel2:/srv/opentallas-scratch2/claude/kvhead-kits-3/cdc319/kit/kvhk3_tag/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_cdc_pc": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_pc",
+   "lef_sha256": "b917f366a8c22c51ea0f496bc9947cd49705a0233f221ceaf168617623fade42",
+   "tt_sha256": "9a4c3b6d7afd3449a363d8931eb2b8d253be6e732417aecde57fcb24a1a053f4",
+   "ff_sha256": "4c23f8082d7136e782405b204c4b42e078812af960ad5b132030fabd9d25bdfc",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_cdc_pc epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cpc_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_core_peer": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_peer",
+   "lef_sha256": "a7f9664e5f840273a5ca1bad33895cc47e7a53273977355df0ea96cdfe04f443",
+   "tt_sha256": "77d09eb56c9716a9cbdd37ae282a185bda940e92d03052bced3f8f08cbe29e74",
+   "ff_sha256": "8cd32a64b796a70bec1695582635bc102883dfe32f5776f3a92b508d363ca3e6",
+   "source": "routed",
+   "final": false,
+   "job": "KV-CLK-R2 takeover: existing signed view; normal prov_view qualification; no new physical claim"
+  },
+  "qkd_hr_core_tx": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_tx",
+   "lef_sha256": "dc95ad3ee59e15d77e40308dfb415593ed6c5582bdfad2443e3fec9ed795181b",
+   "tt_sha256": "68e90873800f3c784268f6826eaf7588a91296f43fcdc2a2a740236c8c441abd",
+   "ff_sha256": "8acb765e3ffd6a84846e62be72bb93ba6d93956eed8140c7a6f1b51baaaef64c",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_core_tx intel2:/srv/opentallas-scratch2/claude/signoff-sprint-16/coretx/rsC_k/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_core_rx": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_rx",
+   "lef_sha256": "02aefcb4bee081543c4fc26b1e320cb990952cc7309b25fb4da9735a7ce5e863",
+   "tt_sha256": "c8b66be4f4194506189e12cb1cdd04456542954aa7072c4ace4fc3094ff9d5f5",
+   "ff_sha256": "8654f2c9b8b72141c81aa6a47fe72c6f437af57cdd992e51186462098b3941a0",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_core_rx intel1:/srv/opentallas-scratch2/claude/die-kv-49/rx_bkv/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_core_guard": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_guard",
+   "lef_sha256": "a921e32bc0e23773b0a815e22e75d1aa24f49ce5faf4c663daa98aaed32af5d9",
+   "tt_sha256": "05d1f1123a80592b28623d8e45f50dd3a00773c8277462a761710b54a37dc591",
+   "ff_sha256": "eba301bb52262ccdbdbe35a9f03bdf0ab819ee463adbaced832faf5cdfc04d40",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_core_guard epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cg_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_core_queue": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_queue",
+   "lef_sha256": "d5f5a29b7c506da39b39683eef0d9faa45788ec7598b3c9910e128ca67dd8fe4",
+   "tt_sha256": "11d6e4d95ba4d2644259736662b017ea8b89fac9e5299d82ca944f592feaa832",
+   "ff_sha256": "2b686b048c2d58f65cb75a0b38a83f013c9c3dd2ce631ae0627a7e92fbf91f9f",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_core_queue epyc2:/srv/opentallas-scratch3/claude/ss24/kv_cq_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_core_prompt": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_core_prompt",
+   "lef_sha256": "2028c943eddb101f4d483e62db9deebaef2cc98b8413f2854913fb401e7914da",
+   "tt_sha256": "1c40d7abc1e007705294d1a1644dd648119ac20b329ed4945b97ed3dd59f7973",
+   "ff_sha256": "aa591786345bf6e8474ff21c11a50d221ba99acd87a71f31cb47d21aa31778ce",
+   "source": "routed",
+   "final": false,
+   "job": "COUNTED qkd_hr_core_prompt intel1:/srv/opentallas-scratch2/claude/codex-kv-prompt-resign-0222/vR_eco_ds_dkv92/signoff/signoff.json (KW-FIX-32 export_view) + DIE-HBM-97 M6 OBS detail (DRT-0073 clk access, same signed ODB)"
+  },
+  "qkd_hr_cdc_hi": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_hi",
+   "lef_sha256": "e982bb62d96b84b188e228c9f4d6d135ec49ea24681f4c024cb653e41d318d7b",
+   "tt_sha256": "6d3aae8fb7c6205a7269eacf4a7cc975622777867d912bb79b43d5c25758491c",
+   "ff_sha256": "e7a3d342f8a71a8f7807ad34a1647c3f2cf69bd56fb3617cee8be81f0c5fc6c2",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_cdc_hi epyc2:/srv/opentallas-scratch3/claude/ss24/kv_chi_s_kv/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_cdc_ci": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_cdc_ci",
+   "lef_sha256": "8f77a7339c80a677b427a867a4e803d528157254191d2af334d5cffa53247cdf",
+   "tt_sha256": "43f3f589e8e33046d91c3919fa2b6dec640dafea955ed6c561329a415fc9716a",
+   "ff_sha256": "40af6e72e28e392342148dd431bff17e756cc36d63111d6c578fb2ac88928d16",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_cdc_ci intel1:/srv/opentallas-scratch2/claude/dkv66/hr/resign/cci_x/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_phy_pad": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_pad",
+   "lef_sha256": "948e211aaec9f7a7ecda5d7fe16eecc119d229838f45385099df9d9c5f7cd63e",
+   "tt_sha256": "45bdf5f971b3b688d8f6d3a23dd9153f83fdbfc2f22b97c2591bab74ee8f12f3",
+   "ff_sha256": "35c48920aaf11387d0bb156bf4cceee762731fdecff91b8dae33eb56fcaba7b5",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_phy_pad epyc2:/srv/opentallas-scratch2/claude/die-kv-56/phy/grtB_flow-20261031-b-kv/signoff/signoff.json (KW-FIX-32 export_view)"
+  },
+  "qkd_hr_phy_adp": {
+   "dir": "physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/qkd_hr_phy_adp",
+   "lef_sha256": "2eb451ac68c0c930f2f8b2ef310b6d8f24f3e030da5ec04f250e5ea238ad02d7",
+   "tt_sha256": "6ab6be09e06d22f2535a1e63f07fa874a50a146e25fd01ceab36f6a5c7fbf654",
+   "ff_sha256": "3eb199df3b80885f5a06f7fd6b9635737154ddd114d8e9f3a4b37cccfb85caba",
+   "source": "signed",
+   "final": true,
+   "job": "COUNTED qkd_hr_phy_adp intel1:/srv/opentallas-scratch2/claude/dkv67/hr/resign/adp_l/signoff/signoff.json (KW-FIX-32 export_view) + OBS-SYNC-1 11-12 exact M6/M7 detail of the same signed ODB (PDN-0006 class: blanket M6/M7 over M5 PG)"
+  }
+ },
+ "pins": {
+  "qkd_hr_ingest_eng": {
+   "pins_file": "pins/qkd_hr_ingest_eng_pins_r26q5.json",
+   "wrapper_port_bits": 1396,
+   "plan_pin_bits": 1396,
+   "view_lef_pin_bits": 1396,
+   "signed_def_pin_bits": 1396,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    362.88,
+    362.88
+   ],
+   "plan_outline": [
+    362.88,
+    362.88
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 1396,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/Qwen_ROM/qkd_hr_ingest_eng",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_ingest_eng__362_88x362_88",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_core_order": {
+   "pins_file": "pins/qkd_hr_core_order_pins_r26q5.json",
+   "wrapper_port_bits": 2282,
+   "plan_pin_bits": 2282,
+   "view_lef_pin_bits": 2282,
+   "signed_def_pin_bits": 2282,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    328.32,
+    328.32
+   ],
+   "plan_outline": [
+    328.32,
+    328.32
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 2282,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_hr_core_order",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_core_order__328_32x328_32",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_cdc_ch": {
+   "pins_file": "pins/qkd_hr_cdc_ch_pins_r26q5.json",
+   "wrapper_port_bits": 1205,
+   "plan_pin_bits": 1205,
+   "view_lef_pin_bits": 1205,
+   "signed_def_pin_bits": 1205,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    319.68,
+    319.68
+   ],
+   "plan_outline": [
+    319.68,
+    319.68
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 1205,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/Qwen_ROM/qkd_hr_cdc_ch",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_cdc_ch__319_68x319_68",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": [
+    "u_ing",
+    "u_done"
+   ]
+  },
+  "qkd_hr_cdc_pc": {
+   "pins_file": "pins/rf_kv1/qkd_hr_cdc_pc_pins_rfkv1.json",
+   "wrapper_port_bits": 2165,
+   "plan_pin_bits": 2165,
+   "view_lef_pin_bits": 2165,
+   "signed_def_pin_bits": 2165,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    181.44,
+    181.44
+   ],
+   "plan_outline": [
+    181.44,
+    181.44
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 2165,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_hr_cdc_pc",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_cdc_pc__181_44x181_44",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": [
+    "u_rx",
+    "u_tx"
+   ]
+  },
+  "qkd_hr_core_peer": {
+   "pins_file": "pins/qkd_hr_core_peer_pins_r26q5.json",
+   "wrapper_port_bits": 3844,
+   "plan_pin_bits": 3844,
+   "view_lef_pin_bits": 3844,
+   "signed_def_pin_bits": 3844,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    311.04,
+    311.04
+   ],
+   "plan_outline": [
+    311.04,
+    311.04
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 3844,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/Qwen_ROM/qkd_hr_core_peer",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_core_peer__311_04x311_04",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_core_tx": {
+   "pins_file": "pins/qkd_hr_core_tx_pins_r26q14.json",
+   "wrapper_port_bits": 3627,
+   "plan_pin_bits": 3627,
+   "view_lef_pin_bits": 3627,
+   "signed_def_pin_bits": 3627,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    164.16,
+    164.16
+   ],
+   "plan_outline": [
+    164.16,
+    164.16
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 3627,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_hr_core_tx",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_core_tx__164_16x164_16",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_core_rx": {
+   "pins_file": "pins/qkd_hr_core_rx_pins_r26q5d.json",
+   "wrapper_port_bits": 2137,
+   "plan_pin_bits": 2137,
+   "view_lef_pin_bits": 2137,
+   "signed_def_pin_bits": 2137,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    259.2,
+    259.2
+   ],
+   "plan_outline": [
+    259.2,
+    259.2
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 2137,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/Qwen_ROM/qkd_hr_core_rx",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_core_rx__259_2x259_2",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_core_guard": {
+   "pins_file": "pins/rf_kv1/qkd_hr_core_guard_pins_rfkv1.json",
+   "wrapper_port_bits": 1175,
+   "plan_pin_bits": 1175,
+   "view_lef_pin_bits": 1175,
+   "signed_def_pin_bits": 1175,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    120.96,
+    120.96
+   ],
+   "plan_outline": [
+    120.96,
+    120.96
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 1175,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_hr_core_guard",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_core_guard__120_96x120_96",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_core_queue": {
+   "pins_file": "pins/rf_kv1/qkd_hr_core_queue_pins_rfkv1.json",
+   "wrapper_port_bits": 1470,
+   "plan_pin_bits": 1470,
+   "view_lef_pin_bits": 1470,
+   "signed_def_pin_bits": 1470,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    138.24,
+    138.24
+   ],
+   "plan_outline": [
+    138.24,
+    138.24
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 1470,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_hr_core_queue",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_core_queue__138_24x138_24",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_core_prompt": {
+   "pins_file": "pins/qkd_hr_core_prompt_pins_r26q5_g255t.json",
+   "wrapper_port_bits": 5124,
+   "plan_pin_bits": 5124,
+   "view_lef_pin_bits": 5124,
+   "signed_def_pin_bits": 5124,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    254.88,
+    254.88
+   ],
+   "plan_outline": [
+    254.88,
+    254.88
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 5124,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_hr_core_prompt",
+   "signed_verdict": "LOCAL_PASS_NEEDS_PARENT",
+   "signed_name": "hc_qkd_hr_core_prompt__233_28x233_28",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_cdc_hi": {
+   "pins_file": "pins/rf_kv1/qkd_hr_cdc_hi_pins_rfkv1.json",
+   "wrapper_port_bits": 1174,
+   "plan_pin_bits": 1174,
+   "view_lef_pin_bits": 1174,
+   "signed_def_pin_bits": 1174,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    138.24,
+    138.24
+   ],
+   "plan_outline": [
+    138.24,
+    138.24
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 1174,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/Qwen_ROM/qkd_hr_cdc_hi",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_cdc_hi__138_24x138_24",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": [
+    "u_hx",
+    "u_cx"
+   ]
+  },
+  "qkd_hr_cdc_ci": {
+   "pins_file": "pins/rf_kv1/qkd_hr_cdc_ci_pins_rfkv1.json",
+   "wrapper_port_bits": 1103,
+   "plan_pin_bits": 1103,
+   "view_lef_pin_bits": 1103,
+   "signed_def_pin_bits": 1103,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    129.6,
+    129.6
+   ],
+   "plan_outline": [
+    129.6,
+    129.6
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 1103,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/qwen_kvsys/qkd_hr_cdc_ci",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_cdc_ci__129_6x129_6",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": [
+    "u_ox",
+    "u_rx"
+   ]
+  },
+  "qkd_hr_phy_pad": {
+   "pins_file": "pins/qkd_hr_phy_pad_pins_r26q9.json",
+   "wrapper_port_bits": 1577,
+   "plan_pin_bits": 1577,
+   "view_lef_pin_bits": 1577,
+   "signed_def_pin_bits": 1577,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    86.4,
+    95.04
+   ],
+   "plan_outline": [
+    86.4,
+    95.04
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 1577,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/Qwen_ROM/qkd_hr_phy_pad",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_phy_pad__86_4x95_04",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  },
+  "qkd_hr_phy_adp": {
+   "pins_file": "pins/qkd_hr_phy_adp_pins_mfv1.json",
+   "wrapper_port_bits": 560,
+   "plan_pin_bits": 560,
+   "view_lef_pin_bits": 560,
+   "signed_def_pin_bits": 560,
+   "wrapper_not_plan": 0,
+   "plan_not_wrapper": 0,
+   "wrapper_not_lef": 0,
+   "lef_not_wrapper": 0,
+   "wrapper_not_signed_def": 0,
+   "signed_def_not_wrapper": 0,
+   "direction_mismatch": 0,
+   "lef_size": [
+    51.84,
+    207.36
+   ],
+   "plan_outline": [
+    51.84,
+    207.36
+   ],
+   "size_ok": true,
+   "plan_xy_vs_lef": {
+    "n": 560,
+    "off_gt_0p3um": 0,
+    "layer_diff": 0,
+    "max_off_um": 0.0
+   },
+   "signed_record": "/home/ubuntu/signed-export-1114/Qwen_ROM/qkd_hr_phy_adp",
+   "signed_verdict": "SIGNED",
+   "signed_name": "hc_qkd_hr_phy_adp__51_84x207_36",
+   "regenerated_on_d22_identical": true,
+   "sameclk_members": []
+  }
+ },
+ "equivalence": {
+  "wrappers_regenerated": "kv_core_rtl.py --hr-elab on the D22 tree elaboration (kit closure of KV-HG6 attempt_4, 107 closure files byte-equal to the D22 tree): 14/14 wrapper .sv byte-identical to wrappers_s (header line aside), pins MATCH 14/14",
+  "glue": {
+   "method": "yosys equiv_make/equiv_struct/equiv_simple -seq 2/equiv_induct -seq 4; gold = D22 kv45 host, gate = parent.sv + wrappers_s; 37 member cells black-boxed and everted in both; all host ck_* tied to one clk (as kv3_hub_Wi_part_bound); async2sync",
+   "boundary_ports": {
+    "renamed_occurrences": 21870,
+    "gold_ports": 998,
+    "gate_ports": 998,
+    "gold_port_bits": 65008,
+    "gate_port_bits": 65008,
+    "only_gold": [],
+    "only_gate": [],
+    "dir_or_width_diff": []
+   },
+   "equiv_cells": 53962,
+   "proven": 53962,
+   "unproven": 0,
+   "mutant_control": "invert assign kv45_paced_up in parent.sv -> 1 unproven (caught)"
+  },
+  "not_proven": "member bodies at SAMECLK=1 (8 crossings in the 4 cdc cores) are NOT equal to kv45 SAMECLK=0 by construction: rests on KV-TOK-8 11-10 8/8 PASS and check_cdc_clk_tie.py"
+ },
+ "size": {
+  "kit_rtl_files": {
+   "before": 111,
+   "after": 20
+  },
+  "shell_generic_cells": {
+   "by_width": {
+    "11": [
+     1,
+     1130
+    ],
+    "553": [
+     1,
+     8862
+    ],
+    "300": [
+     4,
+     20312
+    ],
+    "524": [
+     1,
+     8862
+    ],
+    "257": [
+     1,
+     5078
+    ],
+    "145": [
+     2,
+     6372
+    ],
+    "1119": [
+     2,
+     34752
+    ],
+    "94": [
+     1,
+     2240
+    ],
+    "4": [
+     1,
+     1130
+    ],
+    "33": [
+     25,
+     28250
+    ],
+    "175": [
+     1,
+     3186
+    ],
+    "49": [
+     2,
+     2260
+    ],
+    "7": [
+     1,
+     1130
+    ],
+    "74": [
+     1,
+     2240
+    ],
+    "2": [
+     28,
+     31640
+    ],
+    "44": [
+     2,
+     2260
+    ],
+    "523": [
+     1,
+     8862
+    ],
+    "129": [
+     4,
+     12744
+    ],
+    "36": [
+     2,
+     2260
+    ],
+    "29": [
+     1,
+     1130
+    ],
+    "3": [
+     1,
+     1130
+    ],
+    "34": [
+     1,
+     1130
+    ]
+   },
+   "picked_cells": 86728,
+   "ring_cells": 186960,
+   "rings_100_249": 22302,
+   "total": 290622
+  },
+  "note": "yosys synth generic cells, qkd_hr_* + SRAM black-boxed; flat before = 1,155,115 (FABLE-FIX-KV-HG)",
+  "shell_generic_cells_gate_bind": {
+   "by_width": {
+    "11": [
+     1,
+     1130
+    ],
+    "553": [
+     1,
+     8862
+    ],
+    "300": [
+     4,
+     20312
+    ],
+    "524": [
+     1,
+     8862
+    ],
+    "257": [
+     1,
+     5078
+    ],
+    "145": [
+     2,
+     6372
+    ],
+    "1119": [
+     2,
+     34752
+    ],
+    "94": [
+     1,
+     2240
+    ],
+    "4": [
+     1,
+     1130
+    ],
+    "33": [
+     25,
+     28250
+    ],
+    "175": [
+     1,
+     3186
+    ],
+    "49": [
+     2,
+     2260
+    ],
+    "7": [
+     1,
+     1130
+    ],
+    "74": [
+     1,
+     2240
+    ],
+    "2": [
+     28,
+     31640
+    ],
+    "44": [
+     2,
+     2260
+    ],
+    "523": [
+     1,
+     8862
+    ],
+    "129": [
+     4,
+     12744
+    ],
+    "36": [
+     2,
+     2260
+    ],
+    "29": [
+     1,
+     1130
+    ],
+    "3": [
+     1,
+     1130
+    ],
+    "34": [
+     1,
+     1130
+    ]
+   },
+   "picked_cells": 86728,
+   "ring_cells": 186960,
+   "rings_100_249": 22302,
+   "total": 290622
+  },
+  "shell_cells_yosys_stat_incl_submodules": 299999,
+  "cell_cap": "deleted (r-remove-limits 11-14); 299,999 vs flat 1,155,115"
+ },
+ "gate": {
+  "out": [
+   "START 2026-11-18T12:15:49Z tree /srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi plan 4cf7246f1510 asbuilt c610f9a43e1b r8 57bb66595819",
+   "RC_PRE 0 PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi plan=/srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi/physical/die_plan/qwen_kvsys/plan_of_record/pla",
+   "RC_BIND 0 {\"partitions\": 160, \"types\": 56, \"crossings\": 2545, \"crossing_bits\": 429530, \"errors\": 0, \"unbound\": 0, \"tied\": 0, \"undriven\": 0, \"multiply_bound\": 0, \"straps\": 3094, \"plan_driven\": 1935}",
+   "BIND_ERRORS 0 {} [] crossings 2545 bits 429530",
+   "R8_RECHECK changed 0",
+   "RC_R8CHECK 1 R8 FAIL {\"groups\": 3001, \"groups_unequal\": 64, \"inversions\": 2, \"landed_bundles\": 0, \"landed_over_margin\": 0, \"replica_sets\": 234, \"replica_unequal\": 0, \"types_conflicting\": 6, \"replica_mode\": \"type\", \"bus_mode\": \"leaf\", \"async_skipped\": 6477, \"depth_source\": \"landing file\"}",
+   "R8_VS_D16_DIFF_LINES 0",
+   "RC_LATCHECK 0 LANE_ASBUILT {\"lanes\": 2404, \"passed\": 2404, \"failed\": 0, \"unobserved\": 0, \"delta\": {}, \"classes\": {}, \"verdict\": \"PASS\", \"bind_dir\": \"/srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record\", \"plan\": \"physical/die_plan/qwen_kvsys/plan",
+   "TAIL_SPLIT {\"schema\": \"opentallas.die_plan.bind_pad_tail_split.v1\", \"option\": 3, \"types\": 1}",
+   "RC_G0 0 G0 PASS: 0 errors, 0 pending-view, 2403 warnings; 56 types / 160 partitions (21 in near-duplicate groups); worst cut {'ratio': 0.1629, 'at': 'vertical@6750'}, worst partition segment {'ratio': 0.5195,",
+   "{",
+   " \"verdict\": \"PASS\",",
+   " \"severity\": null,",
+   " \"checked_bits\": 580,",
+   " \"errors\": [],",
+   " \"reason\": null",
+   "}",
+   "",
+   "RC_CLKTIE 0 PASS 11/11 crossing clock ports tied to clk",
+   "ALL_DONE"
+  ],
+  "note": "R8 FAIL rows identical to D16 baseline (R8_VS_D16_DIFF_LINES 0): pre-existing, none new from hub_Wi"
+ },
+ "kit": {
+  "probe": [
+   "START 2026-11-18T12:44:14Z bind /srv/opentallas-scratch2/claude/kv-d23-hubwi/probe/bind",
+   "REUSED_KIT_RTL",
+   "RC_KIT_RTL 0",
+   "RC_CLKTIE 0 PASS 11/11 crossing clock ports tied to clk",
+   "RC_GEN 0 /srv/opentallas-scratch2/claude/kv-d23-hubwi/kitq/gen/kv3_hub_Wi",
+   "RC_PREFLIGHT 0 KIT_PREFLIGHT PASS issues 0",
+   "ALL_DONE",
+   "RC_GEN_LINT 0 GEN_LINT PASS issues 0 pins_vs_plan=PASS clock_export_form=PASS macro_tcl=PASS kit_rtl_paths=PASS rtl_check=PASS memory_bits=PASS",
+   "LINT_DONE"
+  ],
+  "from_gate_bind": [
+   "START 2026-11-18T13:19:16Z bind /srv/opentallas-scratch2/claude/kv-d23-hubwi/src_kv_d22_hubwi/physical/die_plan/qwen_kvsys/plan_of_record/bind_of_record",
+   "RC_KIT_RTL 0 {\"kit\": \"/srv/opentallas-scratch2/claude/kv-d23-hubwi/kit1/rtl\", \"module\": \"kv3_hub_Wi_part\", \"bound\": \"kv3_hub_Wi_part_bound\", \"variants\": 1, \"files\": 20, \"spare_out\": 0, \"narrow\": 0, \"unbound\": 0, \"bound_only\": [\"io_pad_die_id\", \"rst_o_0\", \"start_i\", \"start_o_0\", \"rs_host_die_rst_n__0\", \"rs_host_d",
+   "RC_CLKTIE 0 PASS 11/11 crossing clock ports tied to clk",
+   "RC_GEN 0 /srv/opentallas-scratch2/claude/kv-d23-hubwi/kit1/gen/kv3_hub_Wi",
+   "RC_PREFLIGHT 0 KIT_PREFLIGHT PASS issues 0",
+   "ALL_DONE",
+   "RC_GEN_LINT 0 GEN_LINT PASS issues 0 pins_vs_plan=PASS clock_export_form=PASS macro_tcl=PASS kit_rtl_paths=PASS rtl_check=PASS memory_bits=PASS",
+   "LINT_DONE"
+  ],
+  "from_gate_bind_rtl": "/srv/opentallas-scratch2/claude/kv-d23-hubwi/kit1/rtl (20 files)"
+ },
+ "apply_recipe": [
+  "1. copy physical/die_plan/qwen_kvsys/bind/kv_host_wi/ (main, from claude/kv-host-wi-1110@b636c4b48e76; sha in add_files) into the D23 tree",
+  "2. copy views: epyc9 or epyc7 /srv/opentallas-scratch2/claude/kv-d23-hubwi/views_src/<module>/ -> TREE/physical/die_plan/qwen_kvsys/kvd23_hr_views_1118/<module>/ (14 modules, sha in add_files)",
+  "3. python3 -I tools/die_plan/kv_hubwi_host_rows.py --tree TREE --plan PLAN --asbuilt ASBUILT --views physical/die_plan/qwen_kvsys/kvd23_hr_views_1118 --out-plan PLAN --out-asbuilt ASBUILT --report R.json  (fail closed; no cycle/outline/pin change)",
+  "4. gate: PRE, G0, strict bind, R8 (diff vs D16 = 0 expected), LATCHECK, portbind --strict, check_cdc_clk_tie.py on kv3_hub_Wi_part.sv"
+ ],
+ "portbind": {
+  "run1": [
+   "FAIL child qkd_host_ctrl_token_service_packet_collected_mu AMBIGUOUS: took /srv/opentallas-scratch2/claude/kv-d23-hubwi/pb/bind/portbind_root/rtl/qwen_sys/mu_qwen_20261018/hr_tx_predecode/qkd_host_ctrl_token_service_packet_collected_mu.sv, ports/parameters differ in /srv/opentallas-scratch2/claude/kv-d23-hubwi/pb/bind/portbind_root/rtl/qwen_sys/mu_qwen_20261018/qkd_host_ctrl_token_service_packet_c",
+   "FAIL child qkd_host_rx_class_admission AMBIGUOUS: took /srv/opentallas-scratch2/claude/kv-d23-hubwi/pb/bind/portbind_root/rtl/qwen_sys/host_20261013/fault_dreg/qkd_host_rx_class_admission.sv, ports/parameters differ in /srv/opentallas-scratch2/claude/kv-d23-hubwi/pb/bind/portbind_root/rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+   "FAIL child qkd_kvs_pcc (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461,kv3_pc_v1__cl23f6a148,kv3_pc_v1__cl4ea58a5c,kv3_pc_v1__cl7f648944,kv3_pc_v3_part",
+   "FAIL child qkd_kvs_pcc_h_head_p (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461",
+   "FAIL child qkd_kvs_pcf (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461,kv3_pc_v1__cl23f6a148,kv3_pc_v1__cl4ea58a5c,kv3_pc_v1__cl7f648944,kv3_pc_v3_part",
+   "FAIL child qkd_kvs_pcf_h_head_p (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461",
+   "DIE_PORT_BIND FAIL masters=56 instances=160 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=2081 pad_bits=0 spare_out_bits=32 unresolved_children=4"
+  ],
+  "run3": [
+   "FAIL child qkd_kvs_pcc (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461,kv3_pc_v1__cl23f6a148,kv3_pc_v1__cl4ea58a5c,kv3_pc_v1__cl7f648944,kv3_pc_v3_part",
+   "FAIL child qkd_kvs_pcc_h_head_p (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461",
+   "FAIL child qkd_kvs_pcf (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461,kv3_pc_v1__cl23f6a148,kv3_pc_v1__cl4ea58a5c,kv3_pc_v1__cl7f648944,kv3_pc_v3_part",
+   "FAIL child qkd_kvs_pcf_h_head_p (no RTL) instantiated in kv3_pc__cl254f2e73,kv3_pc__cl5a95b461",
+   "DIE_PORT_BIND FAIL masters=56 instances=160 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=2081 pad_bits=0 spare_out_bits=32 unresolved_children=4"
+  ],
+  "note": "qkd_kvs_pcc/pcf(_h_head_p) no-RTL children of the 6 kv3_pc types are pre-existing (no module in D22 tree either; pc no-view rows), not hub_Wi"
+ }
+}
