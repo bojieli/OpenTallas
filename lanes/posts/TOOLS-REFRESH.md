@@ -36,3 +36,4 @@
   epyc9: OK
   intel1: linked from src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b_t2509079
   intel1: OK; stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
+- 2026-11-17 21:42 PST TOOLS-REFRESH s81_head: switched to /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4 (rulings r656, r657, r658, r659, r660, r661, r662, r663, r664, r665, r666, r667); plan and RTL byte-identical, strict bind unchanged
