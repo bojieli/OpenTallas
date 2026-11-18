@@ -537,6 +537,8 @@ def _bundle_bytes():
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
         for n, p in bundle_sources().items():
             tf.add(p, arcname=n)
+        if (HERE / "nomcap_libs" / "MANIFEST.json").is_file():       # NOMCAP-1118 r708 liberty copies
+            tf.add(HERE / "nomcap_libs", arcname="nomcap_libs")
     return buf.getvalue()
 
 

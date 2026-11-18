@@ -236,7 +236,8 @@ NATIVE_PDK_LIB = re.compile(
     r'(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_[^/]+\.lib(?:\.gz)?')
 
 
-NOMCAP_DIRS = (HERE / "nomcap_libs", Path("/srv/opentallas-scratch2/claude/rt/current/tools/die_plan/nomcap_libs"))
+# repo / bundle copy (copy_signoff_bundle ships nomcap_libs), then a kit's own staged copy (gen_phys KIT/nomcap)
+NOMCAP_DIRS = (HERE / "nomcap_libs", HERE / "nomcap", HERE.parent / "nomcap")
 
 
 def nomcap_dir():
@@ -248,7 +249,8 @@ def nomcap_dir():
     for d in NOMCAP_DIRS:
         if (d / "MANIFEST.json").is_file():
             return d.resolve()
-    raise ValueError("signoff: OT_NOMCAP is on (r708) but no nomcap_libs/MANIFEST.json beside signoff.py or in rt/current")
+    raise ValueError("signoff: OT_NOMCAP is on (r708) but no nomcap_libs/ or nomcap/ MANIFEST.json beside signoff.py "
+                     "(copy_signoff_bundle ships it; OT_NOMCAP=0 = stock libraries)")
 
 
 def nomcap_label(receipt):
@@ -476,6 +478,11 @@ def copy_signoff_bundle(destination, source=HERE, extra=()):
         target = destination / name
         if path.resolve() != target.resolve():
             shutil.copyfile(path, target)
+    # NOMCAP-1118 r708: the nominal clock-pin-cap liberty copies travel with the sign-off tool (nomcap_dir())
+    nsrc = source / "nomcap_libs"
+    if (nsrc / "MANIFEST.json").is_file() and not (destination / "nomcap" / "MANIFEST.json").is_file() \
+            and nsrc.resolve() != (destination / "nomcap_libs").resolve():
+        shutil.copytree(nsrc, destination / "nomcap_libs", dirs_exist_ok=True)
     return list(paths)
 
 

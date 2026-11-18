@@ -313,4 +313,6 @@ def test_remote_bundle_is_complete():
         assert n in src and src[n].is_file(), n
     import io, tarfile
     names = tarfile.open(fileobj=io.BytesIO(MR._bundle_bytes()), mode="r:gz").getnames()
-    assert set(names) == set(src)
+    # NOMCAP-1118 r708: the nominal clock-pin-cap liberty copies travel with the bundle
+    assert {n for n in names if not n.startswith("nomcap_libs")} == set(src)
+    assert "nomcap_libs/MANIFEST.json" in names
