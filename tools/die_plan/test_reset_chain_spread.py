@@ -74,7 +74,8 @@ def test_tcl_removes_only_the_reset_data_buffers():
     # v5: timing-driven GPL has already buffered the 2-pin chain nets (r2: 468 BUF, a 1,606 ps tree); only BUF cells reached
     # from a chain / common flop Q are removed, polarity inverters and every clock net and clock pin are checked unchanged
     assert "remove_buffers {*}[dict keys $rc_bufs]" in TCL
-    assert "RESET v5 refuses empty explicit buffer set" in TCL
+    assert "refuses empty explicit buffer set" not in TCL                  # no buffer reached = nothing to prune, not an error
+    assert "nothing to prune" in TCL and "  if {[dict size $rc_bufs]} {\n    set selected" in TCL
     assert "RESET v5 removed INV" in TCL and "RESET v5 changed clock net" in TCL and "RESET v5 changed clock connectivity" in TCL
     assert "RESET v3 removed unrelated buffer" in TCL
     assert "proc rc_joint" in TCL                                          # stage sites follow the real neighbours around macros

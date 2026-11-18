@@ -84,7 +84,9 @@ if {[info exists ::env(OT_RESET_CHAIN_SPREAD)] && $::env(OT_RESET_CHAIN_SPREAD) 
       }
     }
   }
-  if {![dict size $rc_bufs]} {error "RESET v5 refuses empty explicit buffer set"}
+  # S81-COL-FLOW-1118 (COORD: 27 col kits failed place on d8t): GPL inserted no reset-data buffer, so there is nothing to prune;
+  # the resite below still runs (the removal and its count checks are guarded by the set size)
+  if {![dict size $rc_bufs]} {puts "OT_RESET_V5 no reset data buffers reached from the chain flops: nothing to prune"}
   set rc_inv_names {}; set rc_clock_nets {}; set rc_clk_pins {}
   foreach i [$rc_blk getInsts] {
     foreach it [$i getITerms] {
