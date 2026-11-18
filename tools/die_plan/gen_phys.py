@@ -7145,7 +7145,9 @@ def gpl_hpwl_ratio(die=None):
         if r != 0 and r <= 1:
             raise ValueError(f"OT_GPL_HPWL_RATIO must be 0 (off) or > 1, got {v!r}")
         return r or None
-    return 1.3 if str(die or "").split("_")[0] == "s81" else None
+    # HEAD-PLAN-R4 11-17: the S81 die by exact name; the old prefix test (split("_")[0] == "s81") also matched s81_head,
+    # whose hd_tile stopped at 2.26 x a clustered-start minimum (the unmeasured-die case this docstring keeps off)
+    return 1.3 if str(die or "") == "s81" else None
 
 
 def place_max_fanout(die=None):
