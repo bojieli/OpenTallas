@@ -361,6 +361,34 @@ def load_bind_dir(bd, plan, plan_path=None):
     return rows, module_of, ptype_of, types, land.get, part_mod
 
 
+def internal_pipe_digest(rec):
+    """sha256[:16] of the canonical bind_core_input_pipe.json record ({"<leaf>.<port>[bit]": D})"""
+    import hashlib
+    return hashlib.sha256(json.dumps(rec, sort_keys=True, separators=(",", ":")).encode()).hexdigest()[:16]
+
+
+def internal_pipe_check(plan, bind_dir):
+    """S81-COLGEN-3 11-17 (COORD: lane latency is a blocking gate).  The S81 compiler / token sim do not read
+    bind_core_input_pipe.json (only bind.py / bind_verify.py and the QC s25 event do), so relay_depth stages (internal cycles
+    on a frame wire, invisible to the boundary lane count above) would silently break the static schedule.  When the plan carries
+    any partition_types[*].relay_depth row, the declared record must be acknowledged: plan latency.internal_pipe_ack.digest ==
+    internal_pipe_digest(record), written by the S81 event only after the token sim / compiler ran WITH those cycles.
+    No relay_depth row = no check (byte-identical behaviour).  Returns (errors, info)."""
+    has = any(t.get("relay_depth") for t in (plan.get("partition_types") or {}).values())
+    if not has:
+        return [], {}
+    f = Path(bind_dir) / "bind_core_input_pipe.json"
+    rec = json.loads(f.read_text()) if f.is_file() else {}
+    dig = internal_pipe_digest(rec)
+    ack = ((plan.get("latency") or {}).get("internal_pipe_ack") or {}).get("digest")
+    info = dict(sink_bits=len(rec), cycles=sum(int(v) for v in rec.values()), digest=dig, ack=ack)
+    if ack == dig:
+        return [], info
+    return [f"LANE_ASBUILT INTERNAL_PIPE_UNACKED: {len(rec)} declared internal-pipe sink bits (+{info['cycles']} cycles summed over "
+            f"bits) in bind_core_input_pipe.json, digest {dig}, plan latency.internal_pipe_ack = {ack}: the token sim / compiler must "
+            "run with these cycles and the event record the digest"], info
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("bind_dir")
@@ -384,7 +412,11 @@ def main(argv=None):
         else:
             mode = a.pricing
     recs, errs = check(plan, rows, module_of, ptype_of, types, landing_of, pricing=mode)
+    ip_errs, ip_info = internal_pipe_check(plan, a.bind_dir)
+    errs = list(errs) + ip_errs
     sm = summary(recs)
+    if ip_info:
+        sm["internal_pipe"] = ip_info
     sm.update(bind_dir=str(a.bind_dir), plan=str(a.plan), pricing=a.pricing, bound_pricing=bound_sel if a.asbuilt else "unknown",
               modules_indexed=len(set(part_mod.values())))
     if a.json:

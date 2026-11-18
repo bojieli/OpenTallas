@@ -100,3 +100,41 @@ def test_depth_arithmetic_rule():
         need = max(0, math.ceil(path / 405) - 1)
         assert max(0, need - existing) == extra
         assert path / (existing + max(0, need - existing) + 1) <= 405 + 1e-9
+
+
+def test_latcheck_internal_pipe_gate(tmp_path):
+    """relay_depth rows -> bind_core_input_pipe.json must be acknowledged (compiler / TOK do not read it); no rows = no check"""
+    import lane_asbuilt_latency as LAL
+    rec = {"x.u_sink.i[0]": 2, "x.u_sink.i[1]": 2}
+    (tmp_path / "bind_core_input_pipe.json").write_text(json.dumps(rec))
+    off = {"partition_types": {"t": {}}}
+    assert LAL.internal_pipe_check(off, tmp_path) == ([], {})
+    on = {"partition_types": {"t": {"relay_depth": [{"inst": "u_y_a", "D": 2}]}}}
+    errs, info = LAL.internal_pipe_check(on, tmp_path)
+    assert len(errs) == 1 and "INTERNAL_PIPE_UNACKED" in errs[0] and info["cycles"] == 4 and info["sink_bits"] == 2
+    on["latency"] = {"internal_pipe_ack": {"digest": LAL.internal_pipe_digest(rec)}}
+    assert LAL.internal_pipe_check(on, tmp_path)[0] == []
+    rec["x.u_sink.i[2]"] = 1                                           # a changed record is no longer acknowledged
+    (tmp_path / "bind_core_input_pipe.json").write_text(json.dumps(rec))
+    assert LAL.internal_pipe_check(on, tmp_path)[0]
+    import jsonschema
+    jsonschema.validate(on["latency"], schema.SCHEMA["properties"]["latency"])
+
+
+def test_sink_side_rows_direct_wire_and_fail_closed():
+    b, part = vehicle([{"inst": "u_sink", "port": "i", "side": "sink", "bits": [0, 1], "D": 2}])
+    text, _ = b.emit_type("src", part)
+    assert len(re.findall(r"ot_dp_dly #\(\.W\(2\), \.D\(1\)\) u_y_xd_u_sink_i_0_\d ", text)) == 2     # bits 0..1 only
+    assert re.search(r"\.i\(\{?lp_\w+\[1:0\], ?w_u_y_rt_1_o\[2\]\}?\)|\.i\(\{lp_\w+\[1\], lp_\w+\[0\], w_u_y_rt_1_o\[2\]\}\)", text) \
+        or "lp_u_sink_i_0" in text
+    assert sorted(b.core_input_pipe) == ["x.u_sink.i[0]", "x.u_sink.i[1]"]
+    b2, part2 = vehicle([{"inst": "u_nope", "port": "i", "side": "sink", "D": 1}])
+    with pytest.raises(bind.BindError, match="matched no internal sink"):
+        b2.emit_type("src", part2)
+    b3, part3 = vehicle([{"inst": "u_y_rt_1", "D": 1}, {"inst": "u_sink", "port": "i", "side": "sink", "D": 1}])
+    with pytest.raises(bind.BindError, match="also has a source-level pipe"):
+        b3.emit_type("src", part3)
+    p = {"partition_types": {"t": {"relay_depth": [{"inst": "s", "port": "i", "side": "sink", "bits": [0, 3], "D": 1},
+                                                   {"inst": "s", "port": "i", "side": "sink", "bits": [3, 5], "D": 2}]}}}
+    with pytest.raises(bind.BindError, match="overlap"):
+        bind.relay_depth_sink_map(p, "t")

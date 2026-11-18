@@ -1347,7 +1347,11 @@ SCHEMA = {
                                "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
                                "clock_landing": {"type": "integer", "minimum": 0},   # landed +3k (schema.lane_latency)
                                "beats": {"type": "integer", "minimum": 2}, "word_cycles": {"type": "integer"},
-                               "param": {"type": "string"}}}}}},
+                               "param": {"type": "string"}}}},
+            # S81-COLGEN-3 11-17: acknowledgement that the token sim / compiler consumed the internal pipe cycles declared in
+            # bind_core_input_pipe.json (relay_depth stages); digest = lane_asbuilt_latency.internal_pipe_digest of that record
+            "internal_pipe_ack": {"type": "object", "additionalProperties": False, "required": ["digest"],
+                                  "properties": {"digest": {"type": "string", "minLength": 8}, "note": {"type": "string"}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
         # METHODOLOGY 12.7c (OWNER 10-26): the die master plan the kits consume, set at the plan freeze through COORD;
@@ -1517,6 +1521,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_depth"] = {
     "type": "array", "items": {"type": "object", "additionalProperties": False, "required": ["inst", "D"],
         "properties": {"inst": {"type": "string", "minLength": 1}, "port": {"type": "string"},
+                       "side": {"enum": ["source", "sink"]},     # sink = a direct core-to-core wire (no relay on it)
+                       "bits": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}},
                        "D": {"type": "integer", "minimum": 1, "maximum": 4}, "path_um": {"type": "number"},
                        "stages_existing": {"type": "integer", "minimum": 0}, "note": {"type": "string"}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.

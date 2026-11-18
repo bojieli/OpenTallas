@@ -12,13 +12,16 @@ What this does, per plan type (read-only on the bound module and the plan; write
   2. the route length L between the two core PINS (bit-wise, the longest bit of the bundle): shortest 4-neighbour path on a
      GRID_UM grid round every hard core grown by PAD_UM (relay_mid: 6.5 um, the stations avoid the same halos);
   3. stations needed = ceil(L / LIMIT) - 1  (every one of the stations + 1 hops <= LIMIT); extra = needed - stages_existing;
-  4. extra > 0: row {"inst": the relay leaf nearest the sink on that path, "port": "o", "D": extra} -> plan
+  4. extra > 0 on a path with a relay: row {"inst": the relay leaf nearest the sink, "port": "o", "D": extra}; on a DIRECT
+     core-to-core wire (nothing relay-like on it): row {"inst": sink leaf, "port": its input, "side": "sink", "bits": [lo, hi],
+     "D": extra} (bind puts the stages in front of those sink bits) -> plan
      partition_types[T].relay_depth, realised by bind.py as D relay-named stages (u_y_xd_*) after that output, declared per sink
      bit in bind_core_input_pipe.json (bind_verify, compiler / TOK).  Several paths through one relay: the largest D.
 Cycles are the owner's pre-approved cost (S81-TYPES-R3 / COORD 11-17).  A path whose nearest-sink stage is not a relay leaf
 (only seams / kept delays on it) is listed as `unfixed` -- never silently dropped.
 usage: relay_depth.py PLAN.json TYPE_RE BOUND_DIR [--repo REPO] [--limit 405] [--out-plan OUT.json] [--report REPORT.json]
-       BOUND_DIR holds <TYPE>_bound.sv (a bind out/rtl).  Without --out-plan nothing is written."""
+       BOUND_DIR holds <TYPE>_bound.sv or <TYPE>.sv (a bind out/rtl).  Without --out-plan nothing is written.
+       relay_depth.py merge PLAN.json OUT.json REPORT.json ...   (rows of several --report runs, e.g. one per family, into a plan)"""
 import json
 import math
 import re
@@ -118,7 +121,7 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
     pins = {}
     router = Router(t)
     # one candidate per (partner pair, via): the longest bit
-    rows, unfixed, seen = {}, [], 0
+    rows, unfixed, seen, direct = {}, [], 0, {}
     for p in res["paths"]:
         if p["dir"] != "in" or "partner" not in p:
             continue
@@ -151,8 +154,18 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
             continue
         relay = [v for v in p["via"] if _is_relay_inst(text, v)]
         if not relay:
-            unfixed.append(dict(core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1),
-                                stages_existing=p["stages_existing"], extra=extra, via=p["via"]))
+            # a DIRECT core-to-core wire (nothing relay-like on it): stages in front of the sink input bits (side "sink"),
+            # placed between the two pins by relay_mid.tcl like a relay chain
+            rel = p["core"].split(".", 1)[1] if "." in p["core"] else p["core"]
+            if not re.search(r"\n\s*\w+\s*(?:#\([^;]*?\))?\s*u_" + re.escape(re.sub(r"[^A-Za-z0-9_]", "_", rel)) + r"\s*\(", text):
+                unfixed.append(dict(core=p["core"], port=p["port"], partner=p["partner"], path_um=round(worst, 1),
+                                    extra=extra, reason="sink is not a bound leaf of this type (sub-core): no row"))
+                continue
+            for lo, hi in p["bit_ranges"]:
+                for bit in range(lo, hi + 1):
+                    cur = direct.setdefault((rel, p["port"]), {})
+                    if extra > cur.get(bit, (0, 0))[0]:
+                        cur[bit] = (extra, round(worst, 1))
             continue
         rel = relay[0][2:] if relay[0].startswith("u_") else relay[0]       # via[0] = nearest the sink
         key = (rel, "o")
@@ -160,6 +173,16 @@ def type_rows(plan, tn, text, repo=None, plan_dir=None, limit=LIMIT):
         if extra > r["D"]:
             r.update(D=extra, path_um=round(worst, 1), stages_existing=int(p["stages_existing"]))
     out = sorted(rows.values(), key=lambda r: r["inst"])
+    for (rel, port), per in sorted(direct.items()):
+        runs, bits = [], sorted(per)
+        for b in bits:
+            d, L = per[b]
+            if runs and runs[-1]["bits"][1] == b - 1 and runs[-1]["D"] == d:
+                runs[-1]["bits"][1] = b
+                runs[-1]["path_um"] = max(runs[-1]["path_um"], L)
+            else:
+                runs.append(dict(inst=rel, port=port, side="sink", bits=[b, b], D=d, path_um=L, stages_existing=0))
+        out += runs
     for r in out:
         if r["D"] > 4:
             unfixed.append(dict(inst=r["inst"], reason=f"D={r['D']} > 4 (schema max)", path_um=r["path_um"]))
@@ -173,7 +196,24 @@ def _is_relay_inst(text, inst):
     return bool(m and RELAY_MOD.match(m.group(1)))
 
 
+def apply_reports(plan, reports):
+    """merge the rows_data of one or more --report files into plan (partition_types[T].relay_depth); returns rows written"""
+    n = 0
+    for rep in reports:
+        for r in rep:
+            if r.get("rows_data"):
+                plan["partition_types"][r["type"]]["relay_depth"] = [dict(x) for x in r["rows_data"]]
+                n += len(r["rows_data"])
+    return n
+
+
 def main(argv):
+    if len(argv) > 1 and argv[1] == "merge":          # relay_depth.py merge PLAN.json OUT.json REPORT.json [REPORT.json ...]
+        plan = json.loads(Path(argv[2]).read_text())
+        n = apply_reports(plan, [json.loads(Path(f).read_text()) for f in argv[4:]])
+        Path(argv[3]).write_text(json.dumps(plan, indent=1))
+        print(f"relay_depth merge: {n} rows into {argv[3]}")
+        return 0
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("plan")
