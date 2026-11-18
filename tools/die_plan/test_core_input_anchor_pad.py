@@ -36,5 +36,16 @@ dict for {k v} [nka_pad_groups $rows] { puts "G $k $v" }
 def test_the_anchor_places_the_chain_outward_from_the_pin_and_the_pipe_register_last():
     i = SRC.index("OT_NK_PAD_ANCHOR")
     blk = SRC[SRC.index("set nka_padrows"):i]
-    assert "lreverse $cells" in blk and "2 + 4 * $j" in blk and "nka_pipe_chain $an" in blk
+    assert "lreverse $cells" in blk and "1.5 + 2.0 * $j" in blk and "nka_pipe_chain $an" in blk
     assert "puts $nka_out [$c getName]" in blk            # released to PLACED for DPL with the other FIRM anchors
+
+
+def test_a_three_pad_chain_and_its_pipe_register_stay_inside_the_xstn_halo():
+    """core_input_chain.tcl keeps the xstn strip 9 um (nc_halo) off the macro edge (wx0 = edge + nc_halo).  The chain sited at 2 + 4 j put the
+    third HB4 at 10 um and the pipe register at 14 um: inside the strip, on the sites the xstn fill uses (r650 vs r648).  At 1.5 + 2.0 j the three
+    HB4 are at 1.5 / 3.5 / 5.5 um and the pipe register at 7.5 um (cell widths about 1.4 um), all below the 9 um halo."""
+    halo = float(re.search(r"set nc_halo \[expr \{round\(([0-9.]+) \* ", (Path(__file__).resolve().parent / "core_input_chain.tcl").read_text()).group(1))
+    assert halo == 9.0
+    last = 1.5 + 2.0 * 3                                  # the pipe register after N = 3 pad cells
+    assert last + 1.4 / 2 < halo
+    assert "1.5 + 2.0 * $j" in SRC

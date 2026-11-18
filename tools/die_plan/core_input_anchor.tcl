@@ -168,14 +168,14 @@ dict for {pre cells} [nka_pad_groups $nka_padrows] {
   lassign $path pin qchain
   set j 0
   foreach c [lreverse $cells] {
-    lassign [nka_out_pos $pin [expr {2 + 4 * $j}]] x y
+    lassign [nka_out_pos $pin [expr {1.5 + 2.0 * $j}]] x y
     nka_place $c $x $y; puts $nka_out [$c getName]; incr j
   }
   foreach qc $qchain { lassign [nka_out_pos $pin 2] x y; nka_place $qc $x $y; puts $nka_out [$qc getName] }
   set first [lindex $cells 0]; set an ""
   foreach it [$first getITerms] { if {[[$it getMTerm] getName] eq "A"} { set an [$it getNet] } }
   if {$an ne "" && $an ne "NULL"} {
-    foreach drv [nka_pipe_chain $an] { lassign [nka_out_pos $pin [expr {2 + 4 * $j}]] x y; nka_place $drv $x $y; puts $nka_out [$drv getName] }
+    foreach drv [nka_pipe_chain $an] { lassign [nka_out_pos $pin [expr {1.5 + 2.0 * $j}]] x y; nka_place $drv $x $y; puts $nka_out [$drv getName] }
   }
   incr nka_pad
 }
