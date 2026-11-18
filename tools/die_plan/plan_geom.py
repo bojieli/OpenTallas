@@ -112,7 +112,10 @@ def landing_groups(P, tn):
             continue
         m = _GROUP_RE.match(ln) if on else None
         if m:
-            out.append((m.group(1), [float(v) for v in m.group(2).split()], m.group(3)))
+            p = m.group(1)
+            if p.startswith("{") and p.endswith("}"):   # braced non-plain prefix (landing_place._group_line)
+                p = p[1:-1]
+            out.append((p, [float(v) for v in m.group(2).split()], m.group(3)))
     return out
 
 

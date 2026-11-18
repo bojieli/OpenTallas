@@ -93,6 +93,20 @@ proc cland_native_sp {tag} {
     return groups + added, check
 
 
+_PLAIN_GROUP_WORD = re.compile(r'[A-Za-z0-9_]+')
+
+
+def _group_line(p, r, tag):
+    r"""One cland_groups entry.  HEAD-LEP0N-OPUS 11-17: a non-plain prefix (a native_stage_groups regex such as
+    u_core\.u\.g_plw\.g_s\\\[0\\\][/.].*) is written as a braced Tcl word.  Unbraced, the placement loop's lassign
+    backslash-substituted it (\. -> ., \\ -> \, \[ -> [), so it no longer equalled its braced ::cland_native_leaf_regex
+    key and fell to the generic regexp, which matches nothing: hd_lep0N NF15f GPL stopped at "OT_CLAND no mapped cells
+    found under u_core.u.g_plw.g_s\[0\][/.].*" with the 11 stage flops present.  Plain names are emitted unchanged."""
+    rect = '{' + ' '.join(f'{v:.5f}' for v in r) + '}'
+    word = p if _PLAIN_GROUP_WORD.fullmatch(p) else '{' + p + '}'
+    return '  {' + word + ' ' + rect + ' ' + tag + '}'
+
+
 def _native_stage_placement_source(t, source):
     cfg = (t or {}).get('clock', {}).get('landing_contract', {}).get('native_stage_groups', {})
     if not any(row.get('match') == 'cell' for row in cfg.get('groups', [])):
@@ -878,10 +892,10 @@ def tcl(P,tn,macro_moves=None):
     for p,r,tag in groups:
         # Optional raw copies only exist when the original START tap is gated.
         if tag=='raw-copy-optional':continue
-        out.append('  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}')
+        out.append(_group_line(p,r,tag))
     out+=['}','set cland_optional_groups {']
     for p,r,tag in groups:
-        if tag=='raw-copy-optional':out.append('  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}')
+        if tag=='raw-copy-optional':out.append(_group_line(p,r,tag))
     out+=['}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
@@ -903,7 +917,7 @@ def _dataflow_tcl(tn,c,t=None):
     groups, override_check = _group_rect_overrides(t or {}, groups)
     groups, native_check = _native_stage_groups(t or {}, groups)
     out=[f'puts "OT_CLAND face-window {_tcl_quote(n)}"' for n in FACE_WINDOW_NOTES]+['set cland_groups {']
-    out+=['  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}' for p,r,tag in groups]
+    out+=[_group_line(p,r,tag) for p,r,tag in groups]
     out+=['}','set cland_optional_groups {','}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
