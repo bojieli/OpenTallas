@@ -237,3 +237,13 @@ NEXT
 - Decision 2a (per-flop clock ECO) withdrawn. Needed: branch-level rck rebalance on extracted arrivals (tool does not exist) + centre trunk.
 - Pilot waits for the S81 event: cmem read register (+1 cycle), centre rck trunk, t42 four-tap split, D8d defines/RTL.
 - Not run: forced ECO (--min-gain-frac 0) to count what remains after the 306 flops; ~3 h on epyc9, command in capskew/run_dry.sh.
+
+## State 06:15 PST 11-18
+- Tool on main cb3950ce5d2: tools/die_plan/rck_tree_dump.tcl + rck_rebalance.py plan (dry run only; insert step not written).
+  Run recipe: epyc9 rebal/run_dump2.sh CORNER spef|grt -> rebal/tree_<c>_<m>.tsv; then rck_rebalance.py plan TREE --paths CENSUS --out DIR.
+- H17 rck: GRT span 88.8, routed 174.8; routed-GRT per sink -126..-13. Early/late ~100 ps per sink at both (liberty pin cap RANGE:
+  INVBUF lib rise_capacitance_range; signoff.py 1004-1008 derate is info-only; no derate on gate numbers).
+- Class truth: hold lpl_w.wc->b = clock divergence (rebalance); setup lpl_r.rc->o = DATA 129 ps slower routed (rc fanout), not clock.
+- Dry run: 293 pairs, span -> 49; FF hold <0 182 -> 498 (worst -55.85 -> -38.81); TT setup < -42 284 -> 206. Not a closure.
+- Running: nominal-pin-cap census (option 2 for the owner question): epyc9 drtx/census/{tt,ff}_spef_nr.tsv, logs census-nr-*.out.
+- Next: slack-aware plan; data fix for lpl_r.rc->o (row for S81-DIE-R3); insert step.
