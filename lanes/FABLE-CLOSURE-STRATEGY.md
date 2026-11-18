@@ -1,3 +1,169 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-18 13:20 PST (1320): delta on 09:30
+
+Reviewer: FABLE-CLOSURE-STRATEGY-1320. Read-only: no jobs launched, nothing killed, deleted or patched. Technical PD only. HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal reg-to-reg FF hold >= 0.
+Marking: **V** = I opened the file or log this round (13:10 to 13:20 PST). **R** = reported by the named lane, not opened. **P** = my proposal or estimate. **I** = inferred from V data.
+
+Signed (V, failure_breakdown 13:10): S81 43/394, HEAD 24/26, QC 26/130, KV 6/56.
+Method (V): the eight lanes' posts since 09:30; one scan of the 239 live `ot-jobs/*-route-*/work` dirs on the six build hosts; then the sign-off STA logs, CTS reports and congestion reports named in section 2.
+
+## 0. Headline
+
+1. **The first routed QC N3 kit fails internal FF hold, and every QC kit in flight stops its hold repair at the same point (V).** sle_hc0__cl929603c0__cl38badc56: detailed route 0 violations, routed TT -29.85, but routed FF internal hold -21.57 on 152 ends (TT corner -16.58 on 13). The GRT hold repair had stopped at +6.56 against an asked margin of 40 (`margin chase stalled, stop`). The route cost 28 ps of hold and 43 ps of TT setup (GRT estimate +12.81).
+2. **D8e r6 is the one event that carries four S81 fixes (about 290 types), and its tools need three commits that were made after the plan was composed (R + I).** XR HI rows (77 leaf / kv_leaf), col_h9_r1 frame stations (60), 5 um halos (216 col types), serdes star + boot path (11). A 5 um halo without `macro_halo_carve` stops every kit at 3_5 (DPL-0004), as it did on QC st_a today.
+3. **col_h9_r1 is being rebuilt unchanged (V).** Five more kits ended `GRT-0116` between 10:10 and 11:05, and at least 9 new kits are in place / CTS with all 354 `frame_int` station sites still at y 1226.88. The allow-congestion test is not a cheap path: 3.7 h in, it has not reached detailed route.
+4. **KV hgi_v1 closes setup, and its next blocker is already visible (V).** Kit k3 at GRT iteration 5: overflow 44,172 in 17,057 gcells, all in the west band x 0 to 200, y 400 to 1200, on the `u_hst2_t1.u_reg.ti_b` and `cland_ft2_i` buses. The base kits had the same band (0930). The 172 hold ends at -102 are all `port_in`, so they do not block.
+5. **col_h10_r1 (12 types) is held by a single-bit path, not by a family problem (V).** wns -138.57 with tns -252: `u_lpad_frame_int_i1.q[819]` -> 9 wire buffers -> `u_d1_11_Y.q`, 792 ps of data. Setup repair gains 0.
+6. **S81 routed FF hold is not a problem (V).** The negative FF numbers on today's S81 exports are port-start paths: col_h9_r2 pilot `STD_MIN_NONPORT n 0` (340 port ends at -61.39), slice_station t28 n 0. The col pilot is signed at TT -38.29. This closes 0930 stop-list item 8.
+
+## 1. Levers ranked by types unblocked
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | D8e r6 apply with tools at or after de34662bfb5, bd76ec2856c, dc9b82ef5b5 | leaf 77, col_h9_r1 60, col halo 216, serdes 11 | S81-DIE-R3 |
+| 2 | QC (HEAD next) | Hold and setup repair at GRT must cover the measured route loss (hold 28 ps, TT 31 to 43 ps) | about 90 QC rows in flight; hd_mesh | QC-TYPES-R3, FABLE-FIX-HEAD-MESH |
+| 3 | S81 | col_h9_r1: stop unchanged rebuilds; frame rows come with lever 1 | col_h9_r1 60 | S81-COL-FLOW-1118, S81-DIE-R3 |
+| 4 | KV | D23h2 apply (relay keys + reset tail); west-band rows for hg / hgi in D24; e0 re-harden for the kt stages | hg / hgi 17, then pv 16 | KV-D23-COMPOSE, FABLE-FIX-KV-HG, KV-KT-E0 |
+| 5 | S81 | col_h10_r1 / r2: site the `u_d1_*_Y` single-bit flops at their landing-pad bit | col_h10_r1 12, r2 12 (r2 not read) | S81-GEOM-OPUS |
+| 6 | QC | Structural rows: cbx_q10 strap pins, stm_v3 so_e pins, hc1 wep copies, st_a tail hops over 380 um | cbx_q10 4, stm 1 to 3, hc1 1, st_a 11 | QC-PLAN-R3, QC-TYPES-R3, FABLE-FIX-QC-STA |
+| 7 | S81 | Serdes: H21 to sign-off as evidence; countable kits from D8e with the star row | serdes 11 | FABLE-FIX-S81-SERDES |
+
+### Lever 1. D8e r6: one event, four fixes, three tool commits
+
+**Evidence.**
+- R (S81-DIE-R3 12:39): r5 was red on one class, 77 `LF_CS_DEPTH hi` errors. XR adds one per-lane HI stage in `ot_s81sl_vp`, so the bound depth is plan + 1 on the 77 types that had no XR. r6 plan df7446e48ba9 appends one HI reg per lane (11,214 rows). Prechecks with tree tools 8efd33fb: 0 errors.
+- V: epyc8 `s81-die-r3-e8/d8e/r6`: `elab.log` 1.0 MB and still written at 13:14, `bind.log` empty. No result yet.
+- R (S81-GEOM-OPUS 12:33): the plan carries the col_h9_r1 `frame_int_o0 / i0` stations 27 to 42 um inside the north edge, and `halo_um 5` on 1,368 sstn / cfifo cores in 216 col types. The halo needs main 8958d3e8a4e.
+- R (FABLE-FIX-QC-STA 12:57): on QC st_a a 4.32 um halo put 1,344 endcaps and 152 tapcells inside the blockage ring, and both kits stopped at 3_5 with `DPL-0004 (1496)`. Fix on main de34662bfb5 (`macro_halo_carve.tcl`), proven on k4.
+- R (FABLE-FIX-S81-SERDES 12:35, 12:43): star key on main bd76ec2856c; boot path export on main dc9b82ef5b5.
+
+**Root cause of the risk (I).** The prechecks ran with tree tools 8efd33fb. Nothing in the posts says that the r6 tree carries 8958d3e8a4e or de34662bfb5. A 5 um halo is wider than the 2.05 um row cut, so 216 col types would repeat the st_a stop.
+
+**Fix (S81-DIE-R3).**
+1. Before the apply, check that the D8e tools hold all of: 8958d3e8a4e (HALO-1), de34662bfb5 (halo carve), bd76ec2856c (star), dc9b82ef5b5 (boot path), 922c27887ac (TT setup repair). If the tree is older, refresh the tools; do not drop the halo rows.
+2. First kits to read after the apply, one each:
+   - a leaf with XR: `OT_VPW_BANK placed N` (about 1,219 = XR at the bank) and post-CTS TT;
+   - col_h9_r1: GRT residual in x 660 to 780, y 1200 to 1227;
+   - col_h9_r0_p6 with halo: passes 3_5, then M5 shorts at the cf macro west end (was 21 of 25);
+   - serdes__t13: `OT_RCK_STAR` lines and the boot recovery endpoint.
+3. XR-MID (58 far types) stays the delta after this event.
+
+### Lever 2. Repair at GRT must cover the route loss
+
+**Evidence (V, epyc9 `ot-jobs/sle_hc0__cl929603c0__cl38badc56-route-*/work`).**
+- `run_route.log`: `OT_HOLD_GUARD_GRT start: hold ws -24.53 viol 140, margin 40`; chunk 1 +4.69 (1,110 buffers, 3,269 s); chunk 2 +6.15 (306 buffers); chunk 3 +6.56 (202 buffers); `hold met (ws >= 0), margin chase stalled, stop`.
+- Same log: `OT_TT_SETUP_REPAIR ... wns -84.95 -> 12.81` at GRT.
+- `signoff/tt/sta.log`: `STD_WNS_MAX -29.85` (105 ends), `STD_MIN_NONPORT n 13 wns -16.58`.
+- `signoff/ff/sta.log`: `STD_MIN_NONPORT n 152 wns -21.57 core_n 152`.
+- Worst hold path: `u_u_xl0_0.wd[394]` (tap clk_t90, source latency -9.6, insertion 171 ps) -> INV -> buffer -> OA21 -> `u_u_xl0_0.g_t[1].g_e[24].m[10]` (tap clk_t104, source latency +20.6, insertion 250 ps), plus 25 ps uncertainty. The kit has `OT_TAP_PAIR_AFFINITY = 1`, and the pair is still cut.
+- Sister kit cl4baa7c9c: GRT hold +6.63, sign-off STA still running (SDC-level FF min -45.53; the non-port line is not out).
+- R: hc1 routed -59.5 from a GRT estimate of -28.6 (31 ps). Every finished QC kit ends its GRT hold repair at +5.0 to +8.2 (FABLE-PD-QC-1240).
+- R (QC-TYPES-R3 12:49): main b5bdd3347e1 cuts the first hold chunk to 200 buffers. The 10 ps pad is not applied.
+
+**Root cause.** The guard treats "ws >= 0 and gain under 1 ps per chunk" as done, and the chunk cap shrinks (1,110 -> 306 -> 202), so the gain per chunk falls below 1 ps although only 1,618 buffers were spent. The repair therefore ends 34 ps short of its own margin, and the route takes 28 ps. With a 200-buffer first chunk the stop comes earlier.
+
+**Fix.**
+1. QC-TYPES-R3, `hold_guard_grt.tcl`: apply the stall stop only once ws >= 30 ps (the measured loss), and keep the chunk cap at 1,000 or more until then. Do not apply the 10 ps pad. This is the check the 12:40 review asked for, and it came out negative.
+2. QC-TYPES-R3, the two routed hc0 kits: post-route hold ECO on the 152 ends, with the TT corner loaded so setup is seen. Buffer the `wd` branch, not the `m` D pin: the same endpoint is the TT-critical `wep` enable path (I: that is why the hc1 ECO cost 82 ps of setup).
+3. Structural, P: the `wd -> m` bank pairs need the HEAD rule (`OT_TAP_PAIR_MACRO` form: the register array follows the tap of its `wd` flops). On hd_mesh it cut internal hold ends 11,163 -> 5,251 and hold buffers about 35,000 -> 9,629 (R).
+4. TT side: a kit whose GRT TT estimate is under 0 will land outside -42 after a 31 to 43 ps loss. FABLE-FIX-HEAD-MESH: mesh_pa is at GRT TT -32.92 (V), so expect about -65 to -75 routed (P). Keep mesh_w1 alive and prepare a routed TT repair on the mesh_pa DB now.
+
+### Lever 3. col_h9_r1
+
+**Evidence (V).**
+- `GRT-0116` again on epyc9 pv2f96c04f, pv4593e8e5, pv5ffbfb8b and epyc10 pvd9381c1d, pvee46d7b8 (logs last written 10:10 to 11:05).
+- epyc8 pv15cef3f7 (launched after 09:30, in CTS): `istations.tcl` has 354 sites at y 1226.88. TT -277.6 before repair.
+- Allow-congestion test (epyc7 `lanes/s81-col-flow-1118-grtac`): GRT 6,300 s, `GRT-0115`; then `OT_MAXWIRE` at 100 um added 79,494 cells (257,455 -> 336,949) in 5,642 s; hold repair is flat at -64.39 with 183 ends at `u_bn6/e_r0[1]`. Not in detailed route at 13:15.
+- S81-COL-FLOW-1118 has not posted since 09:30.
+
+**Fix.** S81-COL-FLOW-1118: no further col_h9_r1 builds on the d8t plan; the frame rows arrive with lever 1. Read the test's DRT only if it gets there; do not copy the hook to other kits. One read is owed: whether `OT_MAXWIRE` adds 30 % cells on a normal col_h9_r2 kit too, or only after congested routing (hc0 at 120 um: +2,510 cells in 118 s).
+
+### Lever 4. KV
+
+**Evidence.**
+- R: k3 (hgi_v1 with relay keys, reset tail, 28 x 2 parent kt stages) TT +0.43 after CTS; tap spread 96 ps.
+- V, k3 `run_route.log`: `OT_PREGRT_FF_HOLD class after port_in 172 ws -101.93 same_tap 0 cross_tap 0`; `cross-tap guard not applied (no tap window lines in the kit SDC)`.
+- V, k3 `congestion-5.rpt`: 17,057 of the 20,000 listed gcells lie in x 0 to 200, y 400 to 1200 (H 8,614, V 8,443), overflow 44,172; peak column x 80 to 140. Top nets: `u_hst2_t1.u_reg.ti_b[*]`, `cland_ft2_i[*]`. 2,759 pins sit on the west face. GRT was at extra iteration 9 of 30.
+- R (KV-D23-COMPOSE 13:00): D23f applied without the keys; D23h2 (keys + reset rsync / rtail) sealed and green; fix #2 needs e0 RTL + re-harden + calendar +2 (NEEDS-LANE KV-KT-E0).
+
+**Root cause (I).** The hst2_t1 bus and the ft2 landing bus share a 200 um band behind the west face, and the relay stations are FIRM on source-to-sink lines inside it. Both directions overflow equally, so it is local density, not one bundle.
+
+**Fix.**
+1. KV-D23-COMPOSE: apply D23h2 now. It closes setup on 17 types apart from the kt class.
+2. FABLE-FIX-KV-HG: post the k3 GRT end (residual and box). If it ends with `GRT-0116` or a residual over about 500, write D24 rows that move the hst2_t1 relay line out of x 80 to 140 and stagger it against the ft2 landing rows (P, 0 cycles).
+3. KV-KT-E0: start the e0 source change today; it is the long pole (re-harden at the frozen 216 x 216 outline).
+
+### Lever 5. col_h10_r1 / r2
+
+**Evidence (V, epyc9 pv86f5e3b9 `4_cts_final.rpt`).** wns -138.57, tns -251.99, so 2 to 4 ends. Path: `u_lpad_frame_int_i1.q[819]` (tap clk_t12, CLK 339 ps) -> INV -> 9 buffers -> `u_d1_11_Y.q` D at 1,220.5 (tap clk_t22, CLK 307 ps). `OT_TT_SETUP_REPAIR cells 8 added; wns -145.99 -> -145.99`. The first report path (reset recovery, `u_d11_11_Y_r119`) is met at +240.8. Tap spread 79 ps.
+
+**Root cause (I).** `u_d1_11_Y` is a single-bit delay flop with no site row. Global placement puts it at its loads, about 1 mm from the landing-pad bit (P from 355 ps of wire delay).
+
+**Fix (S81-GEOM-OPUS).** A relay-site row that puts each `u_d1_*_Y` flop within 100 um of its landing-pad bit, or one station on that bit. Read the same report on one col_h10_r2 kit (-128.1 at 0930) before writing its row.
+
+### Lever 6. QC structural rows
+
+- cbx_q10 x4 (R): QC-PLAN-R3 cancelled the four kits at 13:09 after a strict-bind failure. The strap-pin move (sidx pins to their stations, 1,450 um -> local) must be in the next plan change, or the relaunch repeats -1 ns.
+- sle_stm_v3 (R): so_e pin band to the stream core. Unowned in the posts since 12:40.
+- sle_hc1 (R): 8 `wep` copies are in RTL and wait for the next source pin. This is also the endpoint class of lever 2.
+- st_a (V, intel2 `fable-fix-qc-sta/kit/{k3,k4}`): `OT_TAIL_SITE copies 156 of 156 sited ... max_hop 524.4 um ... over_380 66` (k4: 148 of 148, 507.1 um, 66 over). 66 hops over the 380 um rule will show at CTS. If they are negative, add one K stage on those groups (FABLE-FIX-QC-STA). N4 st_a kits generated between 10:03 and the tools refresh with de34662bfb5 stop at 3_5.
+
+### Lever 7. Serdes
+
+R: matched-leg star trunk gives rck p1..p99 40 ps before balance (single tree 172) and span 65.2 with 689 pads. The boot-release stop was a private chain placed 544 um off its line; path-local seating moves it from -134.8 to +398.2. V: H20 post-CTS TT -147.83 (the boot endpoint, expected); H21 (both fixes) has no CTS line yet. Not shown yet: routed pair skew and hold cell count. No action beyond lever 1.
+
+## 2. Evidence I opened this round
+
+| item | file | result |
+|---|---|---|
+| hc0 routed | epyc9 `ot-jobs/sle_hc0__cl929603c0__cl38badc56-route-*/work/{run_route.log,signoff/tt/sta.log,signoff/ff/sta.log}` | DRT 0; TT -29.85; FF internal -21.57 / 152 ends; GRT hold +6.56, GRT TT +12.81 |
+| S81 routed hold | epyc9 `fable-fix-s81-col/p774/s2/so_out/ff/sta.log`; epyc2 `autopilot/closed/s81/slice_station__t28__3c913dbdfb/kit/signoff` | non-port n 0 on both; port-start 340 / 191 ends |
+| col_h9_r1 rebuild | epyc8 `ot-jobs/col_h9_r1__t1__cl49d7a23e__pv15cef3f7-route-*/work/istations.tcl` | 354 sites at y 1226.88 |
+| col_h9_r1 AC test | epyc7 `lanes/s81-col-flow-1118-grtac/.../run_route.log` | GRT-0115, +79,494 cells, hold flat at -64.39 |
+| col_h10_r1 | epyc9 `ot-jobs/col_h10_r1__t1__cl95b37463__pv86f5e3b9-route-*/work/run/reports/.../4_cts_final.rpt` | -138.57, one-bit path to `u_d1_11_Y` |
+| KV k3 | epyc9 `fable-fix-kv-hg3/k3/gen/kv3_hgi_v1__cl141fc26e/{run_route.log,run/reports/.../congestion-5.rpt}` | hold ends all port_in; west band overflow 44,172 |
+| D8e r6 | epyc8 `s81-die-r3-e8/d8e/r6` | elaboration running, bind.log empty at 13:14 |
+| mesh_pa | epyc9 `fable-fix-head-mesh/mesh_pa/hd_mesh/run_route.log` | GRT gate TT -32.92, FF hold_est -3.21 (all paths), no DRT line yet |
+| st_a k3 / k4 | intel2 `fable-fix-qc-sta/kit/{k3,k4}/gen/*/run_route.log` | tail copies all sited, 66 hops over 380 um |
+
+## 3. The 0930 levers: status
+
+| 0930 # | status | note |
+|---|---|---|
+| 1 col_h9_r1 | **NOT DONE** | Rows written and in the r6 plan (R). Unchanged kits still launch and fail (V). AC test not at DRT (V). |
+| 2 tt_setup_repair | **DONE on main**, patch pass open on epyc7 | 922c27887ac; epyc8 patched (R). |
+| 3 D8e + XR | **NOT DONE** | r5 red on 77 `LF_CS_DEPTH`; r6 in elaboration (V). About 50 leaf kits are again in CTS on the d8t form (V). |
+| 4 col r0 | **IN PROGRESS** | p6 shorts named: 21 of 25 on the cf macro OBS, fix = halo (R). Bank proof kit in GRT (R). |
+| 5 col_h9_r2 | **DONE** | Pilot signed, TT -38.29, internal hold clean (V). The nominal-cap question is closed: wave kits carry NOMCAP r708 in `config.mk` (V). |
+| 6 KV | **HALF** | Setup closed on the proof kit (R). Keys not applied yet; west-band congestion open (V). |
+| 7 QC | **HALF** | N4 applied as n4_s1, 57 launches since 13:00 (R). First routed kit fails hold (V). |
+| 8 HEAD | **IN PROGRESS** | mesh_pa GRT overflow 0, TT -32.92 (V); in detailed route. |
+
+## 4. Stop list (the 09:30 and 12:40 lists stand, plus these)
+
+1. QC: no 10 ps hold pad, and no stall stop below ws 30 at GRT. Do not judge a QC kit as closed on `hold_ws` +5 to +8.
+2. QC: no post-route hold ECO that buffers the `m` D pin of the xl banks, and none with only the FF corner loaded.
+3. S81: no D8e apply with halo rows on tools older than de34662bfb5. Do not answer a 3_5 `DPL-0004` on col kits one by one.
+4. S81: no col_h9_r1 build on the d8t plan, and no roll-out of the allow-congestion hook to that family.
+5. S81: no hold work on S81 kits because of a negative FF number in an export line; read `STD_MIN_NONPORT` first.
+6. S81 col_h10_r1: no setup repair passes, tap changes or family rows. It is one bit.
+7. KV: no hold padding for the 172 k3 ends (port_in). No more GRT iterations on hg / hgi as the answer to the west band.
+8. HEAD: do not stop mesh_w1 on the mesh_pa GRT number. Wait for the routed TT.
+9. Serdes: no relaunch of H19 or H20 for the boot endpoint; H21 carries the fix.
+
+## 5. Not checked
+
+- The other 151 hc0 hold ends by class: only the worst path was read. The routed TT -29.85 path was not read.
+- The sign-off of the sister hc0 kit, hd_ctl (6_final), mesh_pa in DRT, H21 past place.
+- Whether the D8e r6 tree tools already carry the three commits (lever 1 is a check to make, not a found defect).
+- k3 GRT at its last iteration; the 3,000 gcells outside the west band; hg (non-i) and pc kits.
+- col_h10_r2, slice_station (several kits near TT 0 at GRT), dsdv_slice place stops, hd_lep0N (in CTS).
+- The distance in lever 5 is from wire delay, not from coordinates.
+- The `OT_MAXWIRE` cell count on a normal col kit.
+- The live scan read stage and error lines only; its TT pattern did not match most kits, so no fleet-wide TT table this round.
+
+---
+
 # FABLE-CLOSURE-STRATEGY 2026-11-18 09:30 PST (0930): delta on 07:10
 
 Reviewer: FABLE-CLOSURE-STRATEGY-0930. Read-only: no jobs launched, nothing killed, deleted or patched. Technical PD only. HBM parked.
