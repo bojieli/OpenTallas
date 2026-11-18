@@ -73,3 +73,52 @@ type keep-outs already cover bands when enabled (test_die_trial_type_keepouts ex
 - Body-aware component evidence:17/18 PASS with cda; node19 PASS after4aa (7repeaters,max343.43um,+13.2um wire). Combined18 mechanisms at reach_codex/replay_body_composed.json, max343.43um. No new RTL cycles. Earlier failed logs preserved. A sparse-corner prototype was unnecessary once the padding bug was identified; retained as corner_uncommitted_codex.patch in epyc9 lane dir, never adopted.
 - Fresh pinned candidate source epyc2 src_reach3_codex = real tools copy with cda+4aa +inherited private band patch; physical symlink points to same immutable src_v2/physical inputs. No report-all exception catch: it fails closed. Do not edit candidate after launch.
 - Visual body-path review LOOKED/PASS-COND at reach_codex/results/geom_review/reach18_body_{paths.png,review.txt}. Launcher run_reach3_codex.sh -> F2s2kr3 is prepared, not yet launched pending4aa normal GREEN. Follow fulltree body/band/reach census, then R2 site rows +R4 K/strap regeneration. Inherited private band patch still needs source/test integration before release; no R2 adoption or R3 PASS yet.
+
+---
+
+# FABLE-DIE-S81 2026-11-17 22:5x PST: D8d (plan_d8f e291d6a8) whole-die review + first die STA read on D7w
+
+V = file or run I read myself. I = inference. Work dir: epyc10 `/srv/opentallas-scratch2/claude/fable-die-s81-1117/d7w_r2`
+(my CA rerun, unit oth-ubuntu-1788849-1794983541). Sources: epyc2 `s81-die-r3-proto/s81/d7w_r2` (R3 proto), epyc8
+`s81-die-r3-e8/d8/{plan_d7w,plan_d8d,plan_d8d_nudge,plan_d8e,plan_d8f}.json`, `g0_d8e/`, epyc10 `fable-die-s81/s81/F2s4currentECOv3`.
+
+## Verdict
+
+- **D8d may go on to bind/G0 as built** (plan in the build is plan_d8f e291d6a8, not be8d565e). No die-level reason to stop it.
+- **Die route: no blocker.** D7w GRT (V, combo_TT.log): overflow 0 on M4-M9, 550,358 nets, usage M4 2.73 / M5 4.04 / M6 4.42 / M7 2.15 %.
+  Caveat (V): M4-M6 run at 25 % capacity (ADJ 0.75) but M7 at 100 % (ADJ7=0). At 0.6 of M7 the die-wide M7 use is 3.6 %, and
+  the s_4N_L1 window 17.2 % becomes 29 %: still no blocker. The cut moves are optional; keeping only 9 of them is right.
+- **Die STA with the real clock: NOT measured yet.** The proto does not time the S81 clock of record (blocker B1).
+
+## What D8f is (V, full JSON diff against D7w: 35 entries)
+
+9 rigid y moves (t3 x3, t43 x4, t14, t32, t52; every dy a multiple of 8.64), 3 flips (t3 u_vsw MX->R0, t3 u_rxsf MY->R0,
+t43 u_vs MX->R180), `die.hold_ff_margin_ps` 25, and the 4 serdes defines on all 11 serdes types. No outline, w/h or tap change.
+Standalone G0 on d8e (same geometry; V): 2 ERRORs, both cuts already in the D7w baseline (s_0S_L0@10500 0.67, s_6S_L0@10750 0.63);
+geometry ERRORs 0 (D8c had 8); R-REACH-5 not judged there (needs the bind).
+
+Not in D8f, against what was announced:
+1. **TAP-GROUP-CAP-1 is dropped** (serdes clock blocks = D7w). This removes the D8c reset-name break. serdes__t13 keeps one
+   6,502-flop u_enc group on clk_t42. FABLE-FIX-S81-SERDES2 decides from the H17 routed timing whether the split returns.
+2. **The t53/t7 station site snap is dropped** (V). plan_d8f still has t7 ft3 at [82.9376, 176.8544] and t53 ft0 at
+   [9.3393, 1032.3389], off the 0.054 x 0.27 site grid. These are the two "explicit FT site is not on a row/site" place stops.
+
+## Blockers and fix rows
+
+| # | blocker (numbers) | fix |
+|---|---|---|
+| B1 | **The proto clock is not the die clock.** proto_die.sh builds a generic H-tree (12 levels, 18,870 cells; V tree.json meta). The clock of record is the ECOv3 cohort feed tree (43 levels, 93,626 cells, reach 405). On the H-tree: tap spread inside one partition is over 250 ps on 115 of 398 partitions (worst fE0_p4_b2 1,006 ps); related-pair TT setup -1,066.8 intra / -1,164.7 seam (legacy droop form). On ECOv3 (819 plan, V): intra +340.6 / seam +270.1, 0 negative; 7 partitions over 250 ps (eng 612, bk_sel 389). So the H-tree numbers are an artefact of the vehicle, not a design failure. | Rerun the die STA on the ECOv3 kit: `KITSRC=<ECOv3>/tree/kit proto_die.sh s81 plan_d7w.json d7w_eco` after refreshing 9 taps. D7w differs from the ECOv3 tree in 9 of 21,687 taps (V): 8 `t_gunit__*` and `t_s_3S_L3__clk_c4` (43.2 um). ECO those 9 legs, do not rebuild the tree. |
+| B2 | **Count-align fails on proto defaults: 66 of 2,330 crossings have no K/DEPTH** (V ca_plan.log, ca_bind.log BindError). All 66 are neighbour pairs with d of 11 to 102 ps (s_3S..s_7S L1<->C 54, s_2N/s_3N 9, s_7S_x19<->LP 3). Cause: 3 to 5 ambiguous start cycles on the path (L width 4,930 to 5,913 ps against the depth-8 window), not skew. 50 of 397 start edges are ambiguous. | Use the recipe of record, not defaults: `CA_PLAN_ARGS="--start-tree clock --start-retime-up --start-lift --start-retime-max 16 --max-depth 16 --depth-guard-ps 0 --start-native-clocks --start-partition-origins --strap-window --min-lat-cycles 1"` (epyc10 `fable-die-s81/reach_codex/run_current_r4_ca_phase.sh`; on ECOv3 it gives 993 crossings, fail 0, 376/376 clean). |
+| B3 | **The adopted K table does not belong to the clock of record** (carried since 11-16). `clock.landing_network.count_aligned_cycles` is the B6gsh table; the tree is ECOv3. LATCHECK 873/873 proves lane cycles, not landed phase margin. Also unexplained (V): `r4j/ca_plan.log` prints worst_margin_lo -310.4 ps (sid_s_0S_C__s_0N_C__1) and 447 crossings below 100 ps, while the handoff quotes +106.2. | S81-DIE-R3: state which number is the landed margin of r4j. Then one clock event after D8d: in-place K refresh that keeps the adopted start network (r4g/r4j form: 33 depth-ups on 14 types, svc_0 +32 ps on leg 11401 = two inverter pairs). No recompose. |
+| B4 | **t7 / t53 station sites off grid** (2 leaf types cannot place). | Copy two rows from `plan_d8d_nudge.json`: `partition_types.ot_s81sl_leaf__t7.ft_slots[ft3].bit_sites_um` (277 bits, shift +0.0064/-0.0044) and `...leaf__t53__clb66fa5cb.ft_slots[ft0].bit_sites_um` (669 bits, +0.0027/-0.1289). I checked both land on the grid (82.944 = 1536 x 0.054, 176.85 = 655 x 0.27). Do not restart d8dr2 for it: next row event. |
+| B5 | **93,626 die clock cell sites are reserved by no type** (R2, open since 11-16). Every type signed before the reservation needs an occupancy check. 42 of 394 are signed, so the cost is still small. | Adopt `clock.reserved_sites_um` in the same clock event as B3, with a read-only census of the signed DBs first; ECO only the hits. |
+
+## Reset and the 780 hops
+
+- Reset reach: D8f has no tap change, so the two D8c R-REACH-5 errors should not return; the build's bind -> local_reset_writeback -> rebind fixpoint is the right check. The new serdes RTL (BOOT_RELEASE3) can re-pick names once; expect NWB > 0 on pass 1 and 0 on pass 2.
+- Insertion skew (V, ECOv3 TT tap arrivals): 1,449 to 12,262 ps, 24 to 196 stages, i.e. 13 cycles from the s_3S/s_4S centre to the fW5 corner. It is covered by K (K -10..+9 in r4j) and must not be floorplanned away. It costs margin only through unshared-path OCV, which is why B3 has to be measured, not assumed.
+
+## Not checked
+
+Hold on signed views (0 measured pairs, 41 core views missing); PG; the D8f bind, LATCHECK and G0 in-tree (build d8dr2 is in elab);
+STA_LEGACY of my CA run (still running when I wrote this, `ca/sta_legacy.log`); ECOv3 arrivals on the D7w plan (B1 rerun).
