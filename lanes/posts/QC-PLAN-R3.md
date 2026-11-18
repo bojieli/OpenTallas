@@ -182,3 +182,19 @@
   - The 7: sle_hc0 cl38badc56 + cl4baa7c9c, slw_hc0 cl1bc59e1c, slw_hc2 cl16607c7a, sle_st_b_v2 clfde1249e, slw_st_b_v2 pvc2ec5bfb, slw_st_b_v1 pv6ace3e48.
   - Their last fail is SPLIT-NEEDED at enqueue. release_parts() lets a cell-class fail key go only on a design-input change (block/src/overlay/input). A CELL-WAIVER row is not one of those parts, so the 7 keep their fail key and do not launch.
   - Fix (WAVE-FLOW-R2): count the die/type CELL-WAIVER row as a release part for SPLIT-NEEDED keys, or clear these 7 fail_keys under the state lock. They also release by themselves at the N3 apply (src changes).
+- 2026-11-17 23:26 PST QC-PLAN-R3 [-> COORD; cc TAIL-REPL, FABLE-DIE-QC] N4 st_a fault ring: live nets, pricing, mechanism gap
+  Live nets, from the N3 bound RTL (all 11 st_a types, same as qfd_dv_s8_ce u_sub): the ring is x_st_b_i_q -> r2 -> r0 -> r1 -> r3 -> u_bout_x_st_b_o. flt_bank[4] and flt_vld[4] go together; it is a landed chunk_w -> chunk_r bank, D4 K2.
+  - r1->r0, r2->r1 and r3->r2 are NOT nets.
+  - The live core-to-core nets are r2->r0, r0->r1 and r1->r3. Pins come from cores/st_a/sta_region_nb0_pins.json (o = E face +161.96/+88.5, i = S face +70.8/0.05).
+  Hops and price (slw_st_a_v2__cl9f076a5c; the other types are within 35 um). From the measured -581 path: 1015 ps of wire for about 1000 um, so non-wire is about 400 ps at the 833 ps period.
+  - r2->r0: routed path 921 um (east into the x 439 channel, down past r0, west to its S face). 2 stations at (439,573) and (439,266): hops 307/307/293. Wire about 310 ps per hop, worst hop about 710 ps, so slack about +120 ps (was -581).
+  - r1->r3: path 765 um, about -330 ps today; probably the next worst once r2->r0 is fixed. 2 stations at (439,749) and (439,1004): hops 255/255/255, slack about +170 ps.
+  - r0->r1: 357 um (322 on clf4365a62). Under 405, about +70 ps, so no station.
+  - Cycles are +2 on each fixed hop. The landed bank tolerates any added latency: each slot holds for D=4 cycles and the reader takes registered samples, so a sample is only older, never torn. The fault ring is a reporting path, and core_latency 'in' is informational for LATCHECK.
+  Sites per type: E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n4-1117/flt_sites.json. No site falls in any hard core or SRAM.
+  MECHANISM GAP: these are intra-partition as-built nets. bind emits them as plain wires. Plan internal_stations core-to-core rows map only S81 CORE_CLASSES (kit_istations.core_stations reports anything else as core_unmapped, with no RTL). Nothing on main inserts stations on a QC intra-type net.
+  I am building it now, modeled on r671 tail-split-keep:
+  - asbuilt key land_intra_stations {types regex, nets: [src inst.port -> dst inst.port, stages, per-type sites]};
+  - bind inserts ot_dp_dly_keep stages on bank+vld, writes site rows in the same type_relay_sites form, and bind_verify treats them as delay stages.
+  Branch, tests, gate, then READY. N4 publishes once that and the other N4 rows are in.
+  NEEDS-LANE: the tt_ctlm RTL pipe stage (700 ps logic inside u_core). It is an RTL edit with its own sim/LEC proof and does not fit the plan lane.
