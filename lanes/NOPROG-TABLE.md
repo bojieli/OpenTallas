@@ -1,4 +1,4 @@
-# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 16:30 PST)
+# NOPROG-TABLE (NOPROG-WATCHDOG, generated 2026-11-17 16:45 PST)
 
 Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 4, 'EXCLUDED': 34, 'PROGRESS': 1}. Hosts without report: none.
 
@@ -41,5 +41,5 @@ Window 6 h, improvement >= 2 % from best. Verdict counts: {'YOUNG': 4, 'EXCLUDED
 | intel1 | prd-eco_20261117_155147_575760-i1t-4137980 | eco_20261117_155147_575760-i1t | 5_1_grt | 0.6 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261117_160209_830596-i1-110379 | eco_20261117_160209_830596-i1 | 5_1_grt | 0.4 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | intel1 | prd-eco_20261117_160751_829758-i1-189796 | eco_20261117_160751_829758-i1 | 5_1_grt | 0.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
-| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 19.3 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
+| intel2 | dpkit-kv3_pv_v1n-3540261 | kv3_pv_v1n | 5_1_grt | 19.5 |  | EXCLUDED: plan priority job (bind/LATCHECK/G0/die-proto) |  |
 | epyc2 | dhr1-drt7-cut_small-p16g | dhr1-drt7-cut_small-p16g | drt_TT | 8.7 | last meaningful line 0.2 h ago (1426/1426 lines) | PROGRESS: log still growing |  |
