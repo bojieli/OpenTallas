@@ -63,3 +63,14 @@ Owns S81 strip-leaf congestion and the col bank-leaf reach. Rows go to S81-DIE-R
   - The nets are repair_design wire buffers (BUFx6f/x10/x12) placed 2-3 um outside the cf S edge (y 600-602) and N edge (y 676), so each net crosses the macro N-S. GRT guides drop to M3/M5 inside the west-edge gcells of cf; DRT cannot finish them. Root cause: no macro halo or keep-out in the kit (0 halos in macro_place.tcl), so buffers sit against the macro and the vertical crossing pinches at the cf west end.
   - The other 4 are on net239374 at u_u_t0 pin xai[251] (1181.6, 250.45), against u_u_t0 plus the M8 obstruction band y 245.9-263.7, i.e. a core pin under the full-width M8 reserve stripes.
   - Fix (structural, not ECO): a placement halo of about 5 um on the cf macro, plus an M5/M7 crossing channel for N-S buses or a cf shift. A t0 pin outside the M8 band is a separate item.
+
+## 2026-11-18 11:xx COORD: move off epyc8, p6 fix, frame_int_i0
+- All proofs now run on epyc2 scratch3. The trees there are symlinks into scratch3, so gate dirs must be on scratch3: cp -al across devices fails.
+  - Combined strict bind + LATCHECK + G0: /srv/opentallas-scratch3/claude/s81-geom-opus-e2/gate_combo, plan_combo.json 709df38dfbe0 = D8e fc2 + t40 v2 taps + H9R1-FRAME-1 + p6 cf/t0 halo. Log intel2 ~/s81-geom-opus-gate_combo.log.
+  - The epyc8 waiters were cancelled by exact PID.
+- H9R1-FRAME-1 now covers both buses in 60 types: o0 y 1184.88/1199.88/1184.88 and i0 (639, 1199.88) / (983, 1184.88). Hops <= 371 um, 0 cycles.
+- HALO-1 is on main 8958d3e8a4e: hard_cores[].halo_um gives a permanent placement-blockage ring in macro_place.tcl and fails closed on an unmatched inst.
+  - Class rows: rows_halo_col_d8e.json (e8737c5c328a) set halo 5 on every sstn / sstn_payload / cfifo core in 216 col types (1,368 cores). 0 station regs sit in a ring band.
+  - The class repeats: col_h9_r2 has 3 M5 shorts inside sstn t6/t8.
+  - Correction: the p6 t0 shorts are M5 inside sstn t0 and its M5 block (the driver is north of a south-edge pin), not in the M8 band.
+- Bank proof kit: regen on epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-bank (kits log ~/s81-geom-opus-kits_bl2e.log), route chain ~/s81-geom-opus-chain3.sh -> ~/s81-geom-opus-bl2e-route.log.
