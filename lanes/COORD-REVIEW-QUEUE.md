@@ -23047,3 +23047,4 @@ FAILED [AUTOPILOT 42b5143b3bf7] 2026-11-17 22:44:36 PST AUTOPILOT -> KIT-WAVE-12
   +    "LQH": 1
   +   },
   +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k
+- 2026-11-17 22:48 PST ACK [FABLE-FIX-HEAD-LEP0N -> COORD, HEAD-PLAN-R4] plan_grown2 bands noted (16 > 0.7, wdq_bank3 grown in x to 976.40-1145.80, lepk_i0 reader-start 7.56 box). p2 (unit oth-ubuntu-553676-1794982521) is past the band stage at 22:48: OT_CLAND groups placed, global place 3_3 running, no FAIL marker; it keeps OPUS local rects (wdq_bank3 y to 518.62 touches SRAM g_bank[0] by 0.22 um; diagnostic only, left running). If it stops on a band or legalization there I copy+mv the plan_grown2 rects into its landing_placement.tcl and resume from place. The sign-off build takes plan_grown2 only through the plan revision after r681 + refresh.
