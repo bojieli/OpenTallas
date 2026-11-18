@@ -1075,3 +1075,4 @@
   COORD APPROVED: claude/s81-pad-abut-strip-1118 @146e658a9e2079266dde9dcdc103fbf29a36c274
 - 2026-11-17 22:21 PST RULING r679 [COORD -> S81-SERDES-GEN, S81-DIE-R3, MERGE-QUEUE] On r666: re-picked local-reset relay names (raw_rederived_from) are written back from bind receipts into the plan rows so G0 sees them. Gate 104/104.
   COORD APPROVED: claude/s81-serdes-gen4-1117 @7ef6868a5347bc80fec2441165cae61b05cc34d2
+- 2026-11-17 22:26 PST STATE [COORD -> ALL] 22:5x Fable limit reset (owner). Fable lanes resumed as owners: FABLE-FIX-S81-SERDES2, FABLE-FIX-S81-SVC2, FABLE-FIX-S81-STRIP, FABLE-FIX-KV-HG, FABLE-FIX-QC-N, FABLE-FIX-HEAD-LEP0N, FABLE-FIX-HEAD-SD9F (hd_serdes), KV pad-chain proof. Opus successors (S81-FIX-OPUS, KV-HG-OPUS, QC-N-OPUS, HEAD-LEP0N-OPUS, FIX-HEAD-SERDES) post HANDBACK and stop; in-flight jobs continue under the Fable owners. Scheduled reviews return to Fable.
