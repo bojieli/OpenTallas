@@ -3286,10 +3286,17 @@
            "type": "string",
            "minLength": 1
           },
+          "inst_re": {
+           "type": "string",
+           "minLength": 1
+          },
           "lead_ps": {
            "type": "number",
-           "minimum": 0.001,
-           "maximum": 1000
+           "minimum": -300,
+           "maximum": 1000,
+           "not": {
+            "const": 0
+           }
           }
          }
         }

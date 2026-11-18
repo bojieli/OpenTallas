@@ -1610,7 +1610,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["core_pin_lead_ps"] = {
     "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["module_re", "pin", "lead_ps"],
     "properties": {"module_re": {"type": "string", "minLength": 1}, "pin": {"type": "string", "minLength": 1},
-                   "lead_ps": {"type": "number", "minimum": 0.001, "maximum": 1000}}}}
+                   # USKEW-1 11-18: inst_re (optional) = only these instances; lead_ps < 0 = a declared capture LAG (useful skew)
+                   "inst_re": {"type": "string", "minLength": 1},
+                   "lead_ps": {"type": "number", "minimum": -300, "maximum": 1000, "not": {"const": 0}}}}}
 # FABLE-FIX-S81-COLTAP 11-16 (default absent = byte-identical): clock.core_tap_lead_ps L = the in-type run every EARLY core tap of the
 # type is given between its port clk_c<k> and the core clock pin: the spine delivers the tap L ps earlier (core_tap_early_ps + L, FF
 # FF_TT_INSERTION_RATIO x L) and the kit's tap_balance pads the pin back to the type target.  Without it an override type (450) prices

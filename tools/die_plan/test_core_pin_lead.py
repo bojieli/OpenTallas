@@ -79,3 +79,22 @@ def test_etap_src_export_is_gated_on_etap_and_tree():
     i = src.index('cfg.append("export OT_TAP_CORE_ETAP = 1")')
     blk = src[i:i + 400]
     assert 'tap_core_src") == "tree"' in blk and 'cfg.append("export OT_TAP_CORE_SRC = tree")' in blk
+
+
+def test_inst_re_negative_lag_hits_named_instance_only():
+    # USKEW-1 (S81-GEOM-OPUS 11-18): late capture on col_h9_r2 bank bn11 only, by plan or physical name
+    rows = [dict(inst='u_bound.u_u_bn11', logical_inst='u_r2.u_bn11', module='dsfd_qbank_N', pin='ck[0]', rise_ps=268.66,
+                 tap='grid'),
+            dict(inst='u_bound.u_u_bn10', logical_inst='u_r2.u_bn10', module='dsfd_qbank_N', pin='ck[0]', rise_ps=268.66,
+                 tap='grid')]
+    spec = [{'module_re': 'dsfd_qbank_N', 'pin': 'ck[0]', 'lead_ps': -45, 'inst_re': r'u_r2\.u_bn1[12]'}]
+    out = G.apply_core_pin_lead(_p({'core_pin_lead_ps': spec}), 'T', rows)
+    assert out[0]['rise_ps'] == pytest.approx(223.66) and out[1] == rows[1]
+
+
+def test_schema_accepts_lag_rejects_zero():
+    import jsonschema
+    sch = S.SCHEMA['properties']['partition_types']['additionalProperties']['properties']['clock']['properties']['core_pin_lead_ps']
+    jsonschema.validate([{'module_re': 'm', 'pin': 'ck[0]', 'lead_ps': -45, 'inst_re': 'u_x'}], sch)
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate([{'module_re': 'm', 'pin': 'ck[0]', 'lead_ps': 0}], sch)

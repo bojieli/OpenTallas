@@ -4963,8 +4963,12 @@ def apply_core_pin_lead(P, tn, rows):
     ratio = None
     out = []
     for r in rows:
+        # USKEW-1 (S81-GEOM-OPUS 11-18): optional inst_re narrows a row to named instances (plan or physical name), and a
+        # negative lead_ps is a declared LAG: tap_balance pads that pin later by |lead| (useful skew on a capture pin)
         lead = sum(float(sp["lead_ps"]) for sp in spec
-                   if re.fullmatch(sp["module_re"], str(r.get("module", ""))) and sp["pin"] == r["pin"])
+                   if re.fullmatch(sp["module_re"], str(r.get("module", ""))) and sp["pin"] == r["pin"]
+                   and ("inst_re" not in sp or any(re.fullmatch(sp["inst_re"], str(v))
+                                                    for v in (r.get("logical_inst"), r.get("inst")) if v)))
         if not lead:
             out.append(r)
             continue
