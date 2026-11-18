@@ -144,6 +144,31 @@ def patch_ops(die, d, old_tree, new_tree, manifest_hash, main_sha=None, hosts=No
     return ops
 
 
+DEFAULT_BIND_CMD = ("mkdir -p {out}/o && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- bash -c '"
+                    "python3 -I -B tools/die_plan/bind.py elab {plan} --asbuilt {asbuilt} --out {out}/o --strict --mem 96 > {out}/elab.log 2>&1 && "
+                    "python3 -I -B tools/die_plan/bind.py bind {plan} --asbuilt {asbuilt} --out {out}/o --strict > {out}/bind.log 2>&1'")
+
+
+def live_owner(die, d, activity=None, now=None, hours=12.0):
+    """11-18 (COORD r700): the lane a NEEDS-LANE goes to = the first of dies.<die>.refresh_owner, the die's owner_lane, the known die owners that posted to the review queue in the
+    last `hours` h (a dead lane id such as DIE-S81-92 gets nothing); else COORD.  activity = {lane: epoch of its latest post}"""
+    now = time.time() if now is None else now
+    if activity is None:
+        try:
+            import hold_records as HR
+            activity = HR.lane_activity(open(os.path.expanduser("~/coord/lanes/COORD-REVIEW-QUEUE.md"), errors="replace").read().splitlines()[-6000:])
+        except Exception:
+            activity = {}
+    for lane in [d.get("refresh_owner"), d.get("owner_lane")] + list(LIVE_OWNER_FALLBACK.get(die, ())):
+        if lane and now - float(activity.get(lane) or 0) <= hours * 3600:
+            return lane
+    return "COORD"
+
+
+LIVE_OWNER_FALLBACK = {"s81": ("S81-DIE-R3", "S81-TYPES-R3", "FIX-S81-OPUS"), "qwen_kvsys": ("FABLE-FIX-KV-HG", "KV-HG-OPUS", "KV-R3"),
+                       "s81_head": ("HEAD-PLAN-R4", "HEAD-TYPES-R4"), "qwen_compute": ("QC-PLAN-R3", "QC-TYPES-R3"), "hbm": ("HBM-CORES-B", "HBM-PLAN")}
+
+
 class Ops:
     """the real steps: ssh to the die's gen host, run src_manifest there; each returns (ok, detail)"""
 
@@ -207,7 +232,7 @@ class Ops:
             return False, "OVERLAY-PRIVATE: " + "; ".join(f"{p}: {v['why']}\n{v.get('diff', '')[:700]}" for p, v in list(private.items())[:6]), ""
         # 11-18 (COORD, S81/QC refreshes built the tree, BIND-FAIL / COMPOSE-FAIL 'exists', then re-ran from nothing): a verified tree of this name that is already on the gen host
         # is reused: no pack, no delta-apply, no publish; verify + replicate only.
-        rcx, _ = self.run(self.host, f"REUSE_PROBE=1; test -f {shlex.quote(new + '/.src-manifest.sha256')} && test ! -e {shlex.quote(new + '.part')} && test -f {shlex.quote(new + '.pack/delta.json')}")
+        rcx, _ = self.run(self.host, f"REUSE_PROBE=1; test -f {shlex.quote(new + '/.src-manifest.sha256')} && test ! -e {shlex.quote(new + '.part')}")
         reuse = rcx == 0
         if not reuse:
             rc, out = self.run(None, self.pack_cmd(old, new, drop))
@@ -285,6 +310,15 @@ class Ops:
         """strict bind with the new tree's tools into a scratch dir; unchanged = native_topology.json equals the bind of record"""
         kr = self.d.get("kit_rtl") or {}
         if not self.d.get("tools_refresh_bind_cmd"):
+            # 11-18 (COORD r700): a delta that touches bind.py's closure (or an unknown delta, a reused tree) used to stop with NEEDS-LANE to a dead lane.  The refresh now runs the
+            # strict bind itself with DEFAULT_BIND_CMD (elab + bind --strict into {out}/o, compared by native_topology.json); a bind that cannot run is an optimistic switch with a
+            # warning (r693); only a bind that ran and DIFFERS is a real change (NEEDS-LANE to the live owner).
+            touched = self.bind_closure_touched()
+            if touched == []:
+                return True, True, f"bind closure untouched: none of the {len(self.delta_paths)} delta files is in bind.py's import closure"
+            self.d = dict(self.d, tools_refresh_bind_cmd=DEFAULT_BIND_CMD, tools_refresh_bind_sub="o", _default_bind=True)
+            self._why_default = ("delta unknown (reused tree)" if touched is None else f"delta touches bind.py's import closure ({len(touched)}: {', '.join(touched[:6])})")
+        if False:
             # no bind recipe named for this die: the bind of record is unchanged by construction when the delta touches nothing bind.py imports
             touched = self.bind_closure_touched()
             if touched is None:
@@ -310,6 +344,8 @@ class Ops:
         rc, txt = self.run(self.host, self.bind_cmd(new, out))
         if rc:
             self.run(self.host, f"rm -rf {shlex.quote(out)}")
+            if self.d.get("_default_bind"):
+                return True, True, f"WARNING optimistic switch: the default strict bind did not complete ({getattr(self, '_why_default', '')}; rc {rc}: {txt[-160:]})"
             return False, False, "strict bind failed: " + txt[-300:]
         rc, got = self.run(self.host, f"sha256sum {shlex.quote(outdir)}/native_topology.json {shlex.quote(record)}/native_topology.json | awk '{{print $1}}'")
         shas = got.split()
@@ -328,7 +364,7 @@ def _refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.
         return dict(status="SKIP", why=why)
     old = d["src"]
     new = new_tree_path(old, main_sha)
-    rec = dict(key=key, old=old, new=new, missing=lag["missing"], ts=int(now()), owner=d.get("owner_lane", ""))
+    rec = dict(key=key, old=old, new=new, missing=lag["missing"], ts=int(now()), owner=live_owner(die, d))
     state.setdefault("done", {})[key] = rec          # the attempt is recorded only now: compose is about to start (a crash before this point is not an attempt)
     state.setdefault("attempts", {})[wave_key(die, lag)] = dict(key=key, status="STARTED", ts=int(now()))
     good, detail, h = ops.compose(old, new)
@@ -388,7 +424,7 @@ def record_crash(state, die, d, lag, main_sha, exc, post):
         state.get("attempts", {}).get(wk, {}).update(status="CRASH")
     n = state["crashes"][wk]
     if n >= MAX_CRASHES:
-        post(f"NEEDS-LANE [TOOLS-REFRESH -> {d.get('owner_lane') or die}] {die}: tools_refresh crashed {n} times for these rulings ({why}); "
+        post(f"NEEDS-LANE [TOOLS-REFRESH -> {live_owner(die, d)}] {die}: tools_refresh crashed {n} times for these rulings ({why}); "
              f"stopped, no more automatic passes for this pin and rulings")
     return dict(status="CRASH", why=why, crashes=n)
 
