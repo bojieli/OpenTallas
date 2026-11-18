@@ -484,6 +484,29 @@ def cland_band_sites(kit, family_w=CLAND_FAMILY_W_UM, row_h=CLAND_ROW_H_UM):
     return errors
 
 
+RETIRED_GRT_STOP = re.compile(r"gstop=timecap|OT_GRT_TIMECAP|OT_GRT_EARLY(?!_SETTLE)|GRT_NO_PROGRESS|grt_early_stop")
+
+
+def retired_grt_stop(kit):
+    """COORD 11-17 (KV-ABSPIN kv3_hgi_v2 kit GRT killed by an OT_GRT_STOP timecap, rc 137): GRT early stops and the post-route time cap were DELETED 11-14 (OWNER); a kit
+    carries its own copy of grt183_make.sh, so one generated from an older tree still stops GRT.  A kit whose copy still has a retired stop, or whose config.mk sets a positive
+    OT_GRT_POST_MAX_S / any OT_GRT_STOP*, fails: regenerate it with current tools (tools_refresh the die tree).  A hung GRT is the 2 h hung-job watchdog's (CPU-checked)."""
+    errors = []
+    f = kit / 'grt183_make.sh'
+    if f.is_file():
+        for n, ln in enumerate(f.read_text(errors='replace').splitlines(), 1):
+            if ln.strip() and not ln.lstrip().startswith('#') and RETIRED_GRT_STOP.search(ln):
+                errors.append(f'grt183_make.sh:{n}: retired GRT stop in a kit copy ({ln.strip()[:90]}); regenerate the kit with current tools')
+                break
+    cfgmk = kit / 'config.mk'
+    if cfgmk.is_file():
+        for ln in cfgmk.read_text(errors='replace').splitlines():
+            m = re.match(r'\s*export\s+(OT_GRT_STOP\w*|OT_GRT_POST_MAX_S)\s*[:?]?=\s*(\S+)', ln)
+            if m and (m.group(1) != 'OT_GRT_POST_MAX_S' or m.group(2) not in ('0', '')):
+                errors.append(f'config.mk sets {m.group(1)} = {m.group(2)}: GRT stops are retired')
+    return errors
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -518,6 +541,7 @@ def check(kit, plan_dir=None, contract=False):
         return errors
     run('staged_inputs', staged_inputs)
     run('sdc_and_ff_binding', lambda: sdc_lint.lint_kit_files(kit))
+    run('retired_grt_stop', lambda: retired_grt_stop(kit))
     def cast_forms():
         hits = rtl_lint.yosys_cast_scan(rtl_lint._kit_sources(kit))
         return [f'{path}:{line}: {rule}: {snippet}' for path, entries in hits.items()
