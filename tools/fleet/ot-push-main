@@ -9,6 +9,7 @@ tests of the touched files (touched test_*.py, plus test_<stem>*.py next to a to
 Non-fast-forward (someone pushed first): fetch, rebase, retry (up to --max, default 8); the tests rerun only when the new upstream
 commits touched files this push touches.  A rebase conflict aborts the rebase (clone unchanged) and exits 3: resolve by hand,
 `git rebase origin/main`, then run again.  Failing tests exit 4 and push nothing.  Exit 0 = main contains your commits.
+Lane line: bash+python3 -I ot-push-main, nothing else (no branch, gate record, READY or APPROVED line).
 origin is the lane mirror on the hub: it relays the push to GitHub before accepting it, so a GitHub refusal is reported here."""
 import argparse
 import os
