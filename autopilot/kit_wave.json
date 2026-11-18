@@ -6072,7 +6072,9 @@
     "col_h9_r2__t1__clce45cab5__pvd2454d1a@5",
     "col_h9_r2__t1__clce45cab5__pvdc7d4221@4",
     "col_h9_r2__t1__clce45cab5__pve0bffaf8@4",
-    "col_h9_r2__t1__clce45cab5__pvf390b1f5@5"
+    "col_h9_r2__t1__clce45cab5__pvf390b1f5@5",
+    "col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079@3",
+    "col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5@4"
    ],
    "take_states": [
     "*"
@@ -7301,7 +7303,8 @@
     "serdes__t16@6": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases",
     "serdes__t2@6": "Future coherent F2s3mainref + TXPIPEhook source replaces old7073 profile; freshgen only after typedtreehold releases",
     "__batch_s81colflow_resetempty_0750": "46 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD",
-    "__batch_s81colflow_resetempty_0810": "45 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD"
+    "__batch_s81colflow_resetempty_0810": "45 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD",
+    "__batch_s81colflow_resetempty_0830": "2 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
