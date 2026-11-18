@@ -449,3 +449,4 @@
 - 2026-11-18 04:45 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 103 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
 - 2026-11-18 04:45 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc7 wrote 262 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
 - 2026-11-18 05:00 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for 117 min (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
+- 2026-11-18 05:05 PST HOST-REPORT 2026-11-18 05:05 | tolera L8.72/112 units0 free1088G | key-ca L69.49/112 units216 free67G | dear-c L27.32/128 units409 free201G | loved- L43.96/96 units58 free2273G | outgoi L30.21/96 units214 free1003G | renewe L59.42/96 units143 free1804G | civil- L29.97/96 units94 free848G
