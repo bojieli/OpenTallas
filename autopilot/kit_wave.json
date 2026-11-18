@@ -6139,28 +6139,7 @@
     "col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5@4",
     "col_h9_r0_p3__t1__cl0cd90c0e__pvcb7f0079@3",
     "col_h9_r0_p3__t1__cl8ce97bcb__pvc11684b5@4",
-    "col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a@5",
-    "col_h10_r0_p1__t1__cl911743eb@6",
-    "col_h10_r0_p4__t1__pvd11cc58b@4",
-    "col_h10_r2__t1__cl1f5d6c2a__pv0c1de895@10",
-    "col_h10_r2__t1__cl1f5d6c2a__pvcd889288@3",
-    "col_h10_r2__t1__cl1f5d6c2a__pvf1512c16@3",
-    "col_h10_r2__t1__cl99efd374__pv7a8a5452@3",
-    "col_h9_r0_p1__t1__pvb3e2a60a@5",
-    "col_h9_r0_p1__t1__pvf9acce4c@4",
-    "col_h9_r0_p3__t1__cl8ce97bcb__pvcd8810ba@4",
-    "col_h9_r0_p4__t1__cl8ef405e8__pv89bf360c@3",
-    "col_h9_r0_p5__t1__pvc6e5797f@3",
-    "col_h9_r0_p5__t1__pvc93af856@3",
-    "col_h9_r0_p5__t1__pvf731e6ec@3",
-    "col_h9_r0_p6__t1__pv082a7609@7",
-    "col_h9_r1__t1__cl49d7a23e__pv11dcdcd2@3",
-    "col_h9_r1__t1__cl49d7a23e__pvadbd1880@4",
-    "col_h9_r1__t1__cl49d7a23e__pvafa6f454@5",
-    "col_h9_r2__t1__cl774acf45__pv11b6518d@5",
-    "col_h9_r2__t1__clce45cab5__pv8b5a5980@6",
-    "col_h9_r2__t1__clce45cab5__pvb3f647ea@5",
-    "col_h9_r2__t1__clce45cab5__pve0486b40@6"
+    "col_h9_r0_p2__t1__cl0045af7b__pvd86cb19a@5"
    ],
    "take_states": [
     "*"
@@ -7405,15 +7384,14 @@
     "svc_lo_dsdv_svc_rs__t6@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
     "svc_lo_dsdv_svc_rs__t7@8": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
     "svc_lo_dsdv_svc_rs_w__t1@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
-    "ot_s81sl_leaf__t56@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind",
-    "__batch_s81colflow_resetempty_0910": "21 col rows FAIL place reset_chain_spread 'RESET v5 refuses empty explicit buffer set' -> fixed 235d4be8301 (no buffer = nothing to prune), in rt/current; S81-COL-FLOW-1118 per COORD"
+    "ot_s81sl_leaf__t56@6": "FLOW-FIX: S81-KITRTL-NETMAP-1118 main 06497d041d2 (svc per-bind reference shipped in tools/die_plan/s81_svc_refs, ref_1117_d7w_main for d233b310c719) and c2c35717a15 (kit_ln_copies word-masked native + replicated-bus lane reset, t56); verified on the d8t bound/bind"
    },
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
     "epyc8",
-    "epyc2",
-    "epyc10"
+    "epyc10",
+    "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 20:4x: intel1 scratch2 2 GB free (restage epyc4->intel1 + INFRA churn: mkdir ENOSPC) -> S81 gen/restage epyc4 only until intel1 >300 GB | KW-FIX-4 11:1x (COORD 11:00 + FLEET-BAL-1): S81 gen inputs on epyc4 + intel2 at the same paths (wt/kw-fix-4-s81g17 d7a13f9fef6, wt/kit-wave-15-s81b, die-s81-47/bind_ev2/out, kit-wave/s81/{bind_kw15d,asbuilt_kw15d.json,kit_rtl_kw15d.sh}); intel1 added 11:4x (FLEET-BAL-1 STAGED intel1 11:46, worktree verified); epyc2 skipped (scratch2 96 GB free, root under the 500 GB floor). place_spill true; restage_waiters moves unstarted epyc4 waiters.",
    "note_gen_hosts_1103": "2026-11-03 16:36 KW-FIX-4 (COORD 16:3x: epyc4 0 waiters at load 78/256, localhost 19/858 GB, intel1 12): s81 gen_hosts [epyc4,intel1,intel2] -> [epyc4] (interim, new + restaged s81 attempts gen/stage/queue on epyc4) until epyc4 holds >=10 waiters; restore [epyc4,intel1,intel2] then (code fix host fill targets follows). | 16:46 place_spill false (interim): spillable PLACE waiters of epyc4-gen kits queued on intel2 (ot-run queues on the most planned-free host), so s81 PLACE is pinned to its gen host epyc4 until epyc4 holds >=10 waiters; restore place_spill true with gen_hosts. | 17:03 COORD 17:0x (epyc2 admits 154 GB, intel1 103 GB, 0 waiters): gen_hosts [intel1, epyc4, intel2] + place_spill true restored (PLACE spills to epyc2/intel1 when they admit). | 17:58 COORD 17:5x intel2 scratch2 95% (191 GB free): gen_hosts [epyc4, intel1] (no new intel2 gen/run dirs) until intel2 > 300 GB free.",
@@ -37229,8 +37207,7 @@
    "prev_gen_hosts_derive": [
     "epyc8",
     "epyc2",
-    "epyc10",
-    "intel1"
+    "epyc10"
    ],
    "event_lineage": [
     "B6gF2s3",
@@ -40540,7 +40517,6 @@
    "gen_hosts": [
     "epyc9",
     "epyc8",
-    "epyc2",
     "intel1"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
@@ -50419,7 +50395,8 @@
    "prev_gen_hosts_derive": [
     "epyc9",
     "epyc8",
-    "epyc2"
+    "epyc2",
+    "intel1"
    ],
    "tools_refresh": true,
    "plan_event": "s29q103S4Q9N1B",
