@@ -93,6 +93,29 @@ def repoint(obj, old, new):
     return obj
 
 
+def rekey_holds(die, recs, old_tree, new_tree, old_hash, new_hash):
+    """r647 follow-up (HEAD-PLAN-R4): plan and RTL are byte-identical, so a pilot / tree-manifest hold stays valid for the new tree.  Re-key, in one record list:
+    the 12-hex manifest in the record id, release terms (gen_pilot:<die>:<sha12>) and reason, and the old tree path in tree_ready / tree_has terms.  Proof fields
+    (published_gen_proof) and every other record stay verbatim.  -> (new list, number of records changed)"""
+    o12, n12 = str(old_hash or "")[:12].lower(), str(new_hash or "")[:12].lower()
+    out, n = [], 0
+    for r in recs or []:
+        s = json.dumps(r, sort_keys=True)
+        keep = {k: r[k] for k in ("published_gen_proof",) if k in r}
+        nr = dict(r)
+        for k in ("id", "reason"):
+            if isinstance(nr.get(k), str) and o12 and n12 and o12 in nr[k]:
+                nr[k] = nr[k].replace(o12, n12)
+        if isinstance(nr.get("release"), list):
+            nr["release"] = [t.replace(o12, n12) if isinstance(t, str) and t.startswith("gen_pilot:") and o12 and n12 else
+                             (t.replace(old_tree, new_tree) if isinstance(t, str) and t.startswith(("tree_ready:", "tree_has")) else t) for t in nr["release"]]
+        nr.update(keep)
+        if json.dumps(nr, sort_keys=True) != s:
+            n += 1
+        out.append(nr)
+    return out, n
+
+
 def patch_ops(die, d, old_tree, new_tree, manifest_hash):
     """the kit_wave_edit JSON patch that switches the die to the new tree: src, src_manifest_hash, every die key naming the old tree repointed, old tree queued"""
     ops = [{"op": "replace", "path": f"/dies/{die}/src", "value": new_tree}]
@@ -106,6 +129,9 @@ def patch_ops(die, d, old_tree, new_tree, manifest_hash):
         nv = repoint(v, old_tree, new_tree)
         if nv != v:
             ops.append({"op": "replace", "path": f"/dies/{die}/{k}", "value": nv})
+    recs, n = rekey_holds(die, d.get("hold_records"), old_tree, new_tree, d.get("src_manifest_hash"), manifest_hash)
+    if n:
+        ops.append({"op": "replace", "path": f"/dies/{die}/hold_records", "value": recs})          # one patch = one atomic kit_wave_edit commit with the src switch
     ops.append({"op": "add", "path": f"/dies/{die}/superseded_trees" + ("/-" if d.get("superseded_trees") else ""),
                 "value": old_tree if d.get("superseded_trees") else [old_tree]})
     return ops
