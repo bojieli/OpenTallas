@@ -51551,10 +51551,9 @@
     {
      "id": "qwen_compute-mig-010-k5",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x) | 11-18 03:2x QC-PLAN-R3: gen_pilot term dropped (r693 no pilot; class proven past by QC-TYPES-R3 kit-rtl rc 0 on N1B d2)",
      "release": [
-      "event_adopt:s29q103S4Q9N1B",
-      "gen_pilot:qwen_compute:c8e63f164faa"
+      "event_adopt:s29q103S4Q9N1B"
      ],
      "migrated": true,
      "keys": [
@@ -51578,10 +51577,9 @@
     {
      "id": "qwen_compute-mig-011-k6",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): GENLINT class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class GENLINT; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): GENLINT class on the old tree; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class GENLINT; held until class proven past its step (COORD 07:3x) | 11-18 03:2x QC-PLAN-R3: gen_pilot term dropped (r693 no pilot; class proven past by QC-TYPES-R3 kit-rtl rc 0 on N1B d2)",
      "release": [
-      "event_adopt:s29q103S4Q9N1B",
-      "gen_pilot:qwen_compute:c8e63f164faa"
+      "event_adopt:s29q103S4Q9N1B"
      ],
      "migrated": true,
      "keys": [
@@ -51607,10 +51605,9 @@
     {
      "id": "qwen_compute-mig-012-k7",
      "plan_sha": "9982b4d5f1d842edbcda35d7f913d9ea2abe5fc907ed510e8930cc78de46dab0",
-     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x)",
+     "reason": "QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): PRUNEDHDL class; proven by the Kf GEN pilot | WAVE-QCFIX-0715 hold: last fail class PRUNEDHDL; held until class proven past its step (COORD 07:3x) | 11-18 03:2x QC-PLAN-R3: gen_pilot term dropped (r693 no pilot; class proven past by QC-TYPES-R3 kit-rtl rc 0 on N1B d2)",
      "release": [
-      "event_adopt:s29q103S4Q9N1B",
-      "gen_pilot:qwen_compute:c8e63f164faa"
+      "event_adopt:s29q103S4Q9N1B"
      ],
      "migrated": true,
      "keys": [
