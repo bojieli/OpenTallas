@@ -105,3 +105,9 @@ B DONE to READY: branch claude/s81-svc-ref-d7w-1117 @a8c35455519f20cbd80f4657eb6
  - NOT run: pytest (sparse cone lacks physical/common_flow), Verilator fit gate, kit-rtl mode on a live kit, svc_hi/pvso/lo t1,t4,t5 D7w bounds. The four kits are NOT relaunched: the D7w wave tree (epyc7 kw45/src_s81_pin_3c913dbdfb23_d7w_1117_work) needs the merged tool + ref dir (tools_refresh / new tree); I do not patch a published tree.
  - D8d: when its bind lands, run the two README commands -> ref_<d8d>_main, same branch pattern. A hook that runs them inside the bind event is NOT written.
 A: hold ECO hslice_mm4 passed the limits (plan made, ECO route running); mergex_mm3b still at first sign-off. CAPSKEW-ECO branch claude/hold-margin-fam-1117 @01a27575bf93 (r692) = third form if mm6/mm7/ECO all fail (kit-local orfs_hold_mm.tcl, 30 ps); not launched.
+
+## 11-18 00:1x PST: closure-reference branch gated
+- a8c35455519 gate was RED (test mocked cur_ref() without the new argument). Head is now claude/s81-svc-ref-d7w-1117 @7f25f4677d30e8e9a3eb1637a44c194d3d0165e0: + tools/die_plan/s81_svc_ref_bind.py (per-bind hook: HAVE / regenerate ref_<tag>_main), + ref_old_src (old svc sources), test fix + new digest-selection test. GATE main=376943de348 pass=1/1 GREEN, record intel2 ~/merge-queue/gates/7f25f4677d30e8e9a3eb1637a44c194d3d0165e0.json.
+- Hook proved on the D7w T7 bound in overlay trees (epyc7 fable-fix-s81-svc2/ref_d7w/tree, tree2): HAVE path, and regenerate path = byte-identical ref_map.json. NOT proved: the kit-rtl step inside the hook (run with --bound), and nobody CALLS the hook yet: S81-DIE-R3 runs it in each bind event (D8d: --tag d8d) until it is wired into the event script.
+- Still open: tools_refresh of the D7w tree + relaunch of the four svc_lo kits (WAVE-FLOW-R2), Verilator fit gate not rerun.
+- Overlay/test dirs epyc7 fable-fix-s81-svc2/ref_d7w (300 MB) are deletable after the merge (ot-delete).
