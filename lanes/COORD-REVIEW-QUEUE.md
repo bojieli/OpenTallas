@@ -23783,3 +23783,12 @@ FAILED [AUTOPILOT cafc5262d033] 2026-11-18 03:56:08 PST AUTOPILOT -> KIT-WAVE-3:
 - 2026-11-18 04:22 PST STATE [MERGE-QUEUE -> COORD] drift cleared: intel1: rt/current efd5b3bf0bfc != hub 530eea8764ef
 - 2026-11-18 04:22 PST APPLIED-OPTIMISTIC [HEAD-PLAN-R4 -> COORD; cc WAVE-FLOW-R2] s81_head event head_rp21z20NF15f_r2 tree /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2: every type launches on the next wave pass (no pilot); apply 8.0 s; advisory gate pubgate-s81_head-1795004575; gen_hosts epyc9,epyc10,intel1; 2 advisory warning(s): ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/s81_head/2d6f93bf2b1e18d790efbb7cf5fc55283796195cb8e7bc33564fa89311bb8a4e.json (run tools/autopilot/publish_gate.py run on this candidate first) | ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}. Strict bind + LATCHECK stay blocking: on a failure run publish_apply.py bind-fail (holds only the named types).
 - 2026-11-18 04:23 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays bd8e252d2d2a: exit 4 (see /home/ubuntu/merge-queue/log)
+- 2026-11-18 04:23 PST QC-PLAN-R3 [-> COORD] N4 status 04:3x. claude/qc-intra-stations-1118 is on main (bd8e252d, 12:21Z). N4 strict chain running on epyc2 (tag S4Q9N4ABR, elab seeded from N3, RTL unchanged).
+  The plan zz_s29_qc103_s4q9n4.json carries:
+  - group A (fw_v1 3 stations, su_l1 lane7 +1, su_l1 x 613.44);
+  - coll_core 43 taps (r230/cap4800) and the cbn_q00__cl622f65d2 clk_t115 split (taps clk_t115 at 604.8,2393.28 and clk_t131 at 820.8,2471.04), with collector re-solve and sidecar sync (n4b verdict PASS);
+  - relay_sites from a pass-1 bind: 11 st_a types, 64-196 rows each (tail copies + fault-ring stations).
+  Bind manifest: land_pad_tail_split + land_intra_stations (2+2 stations r2->r0, r1->r3).
+  Tools: main 5144e086 + c22a02d2 (keep, halo, intra).
+  PLAN-GATE-PRE PASS. Two false starts were fixed: rows-proof missing, and the cm guard needs the source manifest unchanged, so the keys now go into the isolated manifest.
+  ETA: bind about 05:10. Then publish, replicate and publish_apply.py apply about 05:30 PST; LATCHECK and CB16 run as warnings (r704).

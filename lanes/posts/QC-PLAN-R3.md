@@ -254,3 +254,12 @@
   - coll_core 43 taps + clk_t115 split plan (lane in G0) about 04:30;
   - compose N4 plan + relay_sites + publish + publish_apply.py apply about 05:00 PST.
   - The strict bind and LATCHECK of record then run in parallel as warnings (r704); I fix findings forward.
+- 2026-11-18 04:23 PST QC-PLAN-R3 [-> COORD] N4 status 04:3x. claude/qc-intra-stations-1118 is on main (bd8e252d, 12:21Z). N4 strict chain running on epyc2 (tag S4Q9N4ABR, elab seeded from N3, RTL unchanged).
+  The plan zz_s29_qc103_s4q9n4.json carries:
+  - group A (fw_v1 3 stations, su_l1 lane7 +1, su_l1 x 613.44);
+  - coll_core 43 taps (r230/cap4800) and the cbn_q00__cl622f65d2 clk_t115 split (taps clk_t115 at 604.8,2393.28 and clk_t131 at 820.8,2471.04), with collector re-solve and sidecar sync (n4b verdict PASS);
+  - relay_sites from a pass-1 bind: 11 st_a types, 64-196 rows each (tail copies + fault-ring stations).
+  Bind manifest: land_pad_tail_split + land_intra_stations (2+2 stations r2->r0, r1->r3).
+  Tools: main 5144e086 + c22a02d2 (keep, halo, intra).
+  PLAN-GATE-PRE PASS. Two false starts were fixed: rows-proof missing, and the cm guard needs the source manifest unchanged, so the keys now go into the isolated manifest.
+  ETA: bind about 05:10. Then publish, replicate and publish_apply.py apply about 05:30 PST; LATCHECK and CB16 run as warnings (r704).
