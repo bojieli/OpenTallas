@@ -40449,22 +40449,6 @@
       "proof:head-serdes-fanout"
      ],
      "reason": "HOLDGEN-1115 2026-11-16 (COORD stop list): the wave relaunched hd_serdes at 03:04 on unchanged RTL after a -261 ps read. No unchanged relaunch until HEAD-SERDES-O posts a RESULT PASS naming head-serdes-fanout. Running attempts finish."
-    },
-    {
-     "id": "pilot-s81_head-cb7690ed7003",
-     "plan_sha": "de6c7105afeff824b4029ebf66e02255ca31294b29d243544a7d77e08b422e0e",
-     "reason": "PILOT after tree switch: one GEN pilot (hd_mesh) from tree cb7690ed7003 must pass GEN + preflight first | HEAD-PLAN-R4 (COORD 22:0x): hd_mesh is the only release pilot; hd_lep0N removed (known GPL stop OT_CLAND no mapped cells until r668 is in HEAD tools); gen only, never sign-off",
-     "release": [
-      "gen_pilot:s81_head:cb7690ed7003"
-     ],
-     "items": [
-      "*"
-     ],
-     "pilot_items": [
-      "hd_mesh"
-     ],
-     "follow_plan": true,
-     "auto_pilot": true
     }
    ],
    "proof_items": {
