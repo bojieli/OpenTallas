@@ -406,6 +406,11 @@ proc ot_hm_decide {hm worst n_in buffers core_um2 buf_area max_ep max_pts floor}
   if {![llength $why]} { return [list $hm $pts "within limits"] }
   set viol [expr {$worst < 0 ? -$worst : 0.0}]
   set new [expr {max($floor, $viol + $floor)}]
+  # HOLD-MARGIN-FAMILY 11-17 (COORD, svc cores smc / hslice _mm3b: margin 30 cut to 19, repair ended at FF hold -10.6): the area guard may lower
+  # the margin but never below the level needed for FF hold >= 0 -- the worst real violation plus OT_HM_GUARD_MIN_CUSHION_PS (default 1 ps,
+  # i.e. strictly met) -- and never above the asked margin.  (viol + floor is above that whenever floor >= the cushion; this makes the bound explicit.)
+  set cushion [expr {[info exists ::env(OT_HM_GUARD_MIN_CUSHION_PS)] && [string is double -strict $::env(OT_HM_GUARD_MIN_CUSHION_PS)] ? $::env(OT_HM_GUARD_MIN_CUSHION_PS) : 1.0}]
+  set new [expr {max($new, $viol + $cushion)}]
   set new [expr {min($hm, ceil($new * 10.0) / 10.0)}]
   return [list $new $pts [join $why "; "]]
 }
@@ -780,6 +785,12 @@ proc ot_cts_hold_pad {body} {
   if {[llength $pad]} { set_dont_use $pad }
   return -options $opts $out
 }
+proc ot_hold_pass_retry {rt_args0} {
+  # the unguarded-helper form (one repair_timing call, margin possibly lowered by ot_hm_guard): bounded re-repair at the asked margin
+  set asked 0.0
+  set i [lsearch -exact $rt_args0 -hold_margin]; if {$i >= 0} { set asked [lindex $rt_args0 [expr {$i + 1}]] }
+  ot_hold_final_retry $rt_args0 $asked $asked
+}
 proc ot_repair_timing {rt_args} {
   set setup [expr {[lsearch -exact $rt_args -setup] >= 0}]
   set hold [expr {[lsearch -exact $rt_args -hold] >= 0}]
@@ -788,7 +799,7 @@ proc ot_repair_timing {rt_args} {
     if {![ot_hold_guard_on]} {
       return [ot_rc_cal_hold {
         ot_hold_structural_gate
-        ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args] } }
+        ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args]; ot_hold_pass_retry $rt_args } }
       }]
     }
     # The guarded helper appends -hold itself. Explicit hold-only callers need
@@ -806,10 +817,35 @@ proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on]} {
     return [ot_rc_cal_hold {
       ot_hold_structural_gate
-      ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold } }
+      ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold; ot_hold_pass_retry $rt_args } }
     }]
   }
   return [ot_rc_cal_hold { ot_hold_repair_scope { ot_cts_hold_pad { ot_repair_hold_guarded $rt_args } } }]
+}
+# HOLD-MARGIN-FAMILY 11-17 (COORD): a hold pass that ends with FF hold < 0 repairs again, bounded, at the ORIGINAL (asked) margin with the
+# area guard off (area growth is pre-approved; the asked margin was never applied when the guard cut it and the flood path repaired at 0).
+# OT_HOLD_REPAIR_RETRIES (default 2) passes at most; stops when hold is met, when a pass gains < 0.5 ps, or at 0.  Logs OT_HOLD_MARGINS.
+proc ot_hold_final_retry {rt_args0 asked applied_first} {
+  set tries [expr {int([ot_env_num OT_HOLD_REPAIR_RETRIES 2])}]
+  set args {}
+  foreach a $rt_args0 { if {$a ne "-hold"} { lappend args $a } }
+  set i [lsearch -exact $args -hold_margin]
+  if {$i >= 0} { set args [lreplace $args [expr {$i + 1}] [expr {$i + 1}] $asked] } else { lappend args -hold_margin $asked }
+  set applied [list $applied_first]
+  if {[catch {set cur [ot_hold_stats]} msg]} { puts "OT_HOLD_MARGINS asked $asked applied $applied (hold stats unavailable: $msg)"; return }
+  for {set k 1} {$k <= $tries && [lindex $cur 0] < 0} {incr k} {
+    puts [format "OT_HOLD_RETRY pass %d at the asked margin %g (area guard off; was %s): hold ws %.2f tns %.1f viol %d" $k $asked [join $applied ,] {*}$cur]
+    if {[catch {log_cmd repair_timing {*}$args -hold} err opts]} {
+      if {![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
+      puts "OT_HOLD_RETRY pass $k: buffer cap reached (RSZ-0060), continuing"
+    }
+    lappend applied $asked
+    set nxt [ot_hold_stats]
+    set gain [expr {[lindex $nxt 0] - [lindex $cur 0]}]
+    set cur $nxt
+    if {[lindex $cur 0] < 0 && $gain < 0.5} { puts [format "OT_HOLD_RETRY pass %d gained %.2f ps: stop" $k $gain]; break }
+  }
+  puts [format "OT_HOLD_MARGINS asked %g applied %s final hold ws %.2f (%s)" $asked [join $applied ,] [lindex $cur 0] [expr {[lindex $cur 0] >= 0 ? "met" : "NOT MET after the bounded re-repair"}]]
 }
 proc ot_repair_hold_guarded {rt_args} {
   set hm 0.0
@@ -820,9 +856,11 @@ proc ot_repair_hold_guarded {rt_args} {
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 0.0] * 3600}]
   ot_hold_structural_gate
   set hm_asked $hm
+  set rt_args0 $rt_args
   set rt_args [ot_hm_guard $rt_args]
   if {[ot_hold_stop $rt_args]} { return }
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
+  if {$hm < $hm_asked} { puts "OT_HOLD_MARGINS guard applied: asked $hm_asked, first pass $hm" }
   if {[catch {set prev [ot_hold_stats]} msg]} {
     puts "OT_HOLD_GUARD: hold stats unavailable ($msg); unguarded hold repair"
     return [log_cmd repair_timing {*}$rt_args -hold]
@@ -838,6 +876,7 @@ proc ot_repair_hold_guarded {rt_args} {
       puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (met-first at HM 0 after a margin flood; asked $hm_asked, auto $hm)"
       log_cmd repair_timing {*}[lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] 0.0] -hold
       set prev [ot_hold_stats]
+      puts "OT_HOLD_MARGINS met-first pass applied margin 0 (asked $hm_asked, guard $hm)"
     }
     if {[lindex $prev 0] >= 0} {
       puts [format "OT_HOLD_GUARD: hold met (ws %.2f >= 0) at HM 0 after a margin flood (asked %g, auto %g); margin chase skipped, stop" [lindex $prev 0] $hm_asked $hm]
@@ -896,6 +935,7 @@ proc ot_repair_hold_guarded {rt_args} {
   }
   # tolerate_flow_errors zeroes the chunk-cap RSZ-0060 errors only when this line follows the last one
   if {$capped} { puts "OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing" }
+  ot_hold_final_retry $rt_args0 $hm_asked $hm
 }
 
 # BEGIN GRT-CLK-LOCK
