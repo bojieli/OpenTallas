@@ -41,14 +41,15 @@ class Probes(unittest.TestCase):
         self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "shut")
         self.assertEqual(FG.held_key(st, "qwen_compute", "d__t1", claim=True), KEY)
 
-    def test_probe_running_60_min_counts_as_a_pass(self):
+    def test_probe_running_60_min_is_not_a_pass(self):
         st = state()
         FG.held_key(st, "qwen_compute", "a__t1", claim=True)
         t0 = st["flow_guard"]["open"][KEY]["probe_t"]["a__t1"]
-        self.assertEqual(FG.breaker_tick(st, t0 + 3000, {"qwen_compute": "i2"}), [])
-        rel = FG.breaker_tick(st, t0 + 3601, {"qwen_compute": "i2"})
-        self.assertIn("counts as a pass", rel[0][1])
-        self.assertEqual(st["flow_guard"]["open"], {})
+        self.assertEqual(FG.breaker_tick(st, t0 + 7200, {"qwen_compute": "i2"}), [])
+        self.assertIn(KEY, st["flow_guard"]["open"])                                    # a timeout never closes the class
+        self.assertEqual(FG.held_key(st, "qwen_compute", "d__t1", claim=True), "")       # still within the three probe slots
+        self.assertEqual(FG.held_key(st, "qwen_compute", "b__t1", claim=True), "")
+        self.assertEqual(FG.held_key(st, "qwen_compute", "c__t1", claim=True), KEY)      # the fourth waits
 
     def test_failed_probe_does_not_count_as_a_pass(self):
         st = state()
@@ -60,15 +61,15 @@ class Probes(unittest.TestCase):
 
 
 class TreeSwitch(unittest.TestCase):
-    def test_switch_resets_classes_of_that_die_only(self):
+    def test_switch_opens_the_probe_window_of_that_die_only_and_closes_nothing(self):
         st = state(state="shut")
         st["flow_guard"]["open"]["CLASS s81|x"] = dict(st["flow_guard"]["open"][KEY], die="s81")
         self.assertEqual(FG.breaker_tick(st, 5000.0, {}, {"qwen_compute": "/t/d3", "s81": "/s/a"}), [])   # first sight: recorded only
-        self.assertEqual(len(st["flow_guard"]["open"]), 2)
-        rel = FG.breaker_tick(st, 5100.0, {}, {"qwen_compute": "/t/d4", "s81": "/s/a"})
+        rel = FG.breaker_tick(st, 5100.0, {"qwen_compute": "i9"}, {"qwen_compute": "/t/d4", "s81": "/s/a"})
         self.assertEqual([k for k, _ in rel], [KEY])
-        self.assertEqual(list(st["flow_guard"]["open"]), ["CLASS s81|x"])
-        self.assertIn(KEY, st["flow_guard"]["probation"])
+        self.assertEqual(sorted(st["flow_guard"]["open"]), sorted([KEY, "CLASS s81|x"]))                # nothing closed
+        self.assertEqual(st["flow_guard"]["open"][KEY]["state"], "probe")
+        self.assertEqual(st["flow_guard"]["open"]["CLASS s81|x"]["state"], "shut")
 
 
 class TreeHost(unittest.TestCase):

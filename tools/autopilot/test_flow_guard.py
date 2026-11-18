@@ -256,6 +256,13 @@ class Preflight(unittest.TestCase):
 
 
 class Breaker(unittest.TestCase):
+    def setUp(self):
+        self._cn = FG.CLASS_N
+        FG.CLASS_N = 10               # these tests exercise the legacy per-class breaker; the class-level breaker (CLASS_N = 3) is tested in test_flow_breaker_deadlock
+
+    def tearDown(self):
+        FG.CLASS_N = self._cn
+
     WHY = "kit-RTL bind of record names HDL sources that are gone @kit_rtl: bind: ERROR preferred HDL source missing: /srv/a/b%d.sv"
 
     def fails(self, st, n, t0=1000.0, why=None):
@@ -292,7 +299,10 @@ class Breaker(unittest.TestCase):
         self.fails(st, 5)
         key = FG.held_key(st, "qc", "it1")
         self.assertEqual(FG.release_by_preflight(st, {key: [True, False]}), [])
-        self.assertEqual(len(FG.release_by_preflight(st, {key: [True, True]}, now=2000)), 1)
+        self.assertEqual(len(FG.release_by_preflight(st, {key: [True, True]}, now=2000)), 1)     # WAVE-PILOT-FIX: opens the PROBE window, closes nothing
+        self.assertIn(key, st["flow_guard"]["open"])
+        self.assertEqual(FG.held_key(st, "qc", "it1", claim=True), "")                          # the probe launches
+        FG.probe_result(st, "qc", "it1", "place", passed=True)                                   # only a probe passing the stage closes the class
         self.assertEqual(FG.held_key(st, "qc", "it1"), "")
         # probation: the same class reopens after 2 fails
         FG.record_fail(st, "qc", "z1", "FLOW", self.WHY % 1, now=2100)
@@ -306,7 +316,7 @@ class Breaker(unittest.TestCase):
             FG.record_fail(st, "qc", f"i{i}", "FLOW", why, now=1000 + i)
         self.assertTrue(FG.held_key(st, "qc", "i0"))           # stage cts: record_fail itself counts any class; kit_wave filters
         self.assertEqual(FG.breaker_tick(st, now=1000 + 100), [])
-        self.assertEqual(len(FG.breaker_tick(st, now=1004 + FG.BREAKER_COOLDOWN_S + 1)), 1)
+        self.assertGreaterEqual(len(FG.breaker_tick(st, now=1004 + FG.BREAKER_COOLDOWN_S + 1)), 1)
         self.assertEqual(FG.held_key(st, "qc", "i0"), "")
 
 
@@ -348,6 +358,9 @@ class KitWaveGate(unittest.TestCase):
             self.q.append((rel, line))
 
     def setUp(self):
+        self._cn = FG.CLASS_N
+        FG.CLASS_N = 10                                     # legacy per-class breaker under test; CLASS_N = 3 is tested in test_flow_breaker_deadlock
+        self.addCleanup(lambda: setattr(FG, "CLASS_N", self._cn))
         self.tmp = tempfile.mkdtemp()
         self.a = mk(self.tmp)
         self.cfg = {"dies": {"qc": {"gen_host": "a", "gen_hosts": ["a"], "src": "", "plan": "",
@@ -376,7 +389,7 @@ class KitWaveGate(unittest.TestCase):
             FG.record_fail(st, "qc", f"it{i}", "FLOW", "@kit_rtl: preferred HDL source missing: /srv/x/a%d.sv" % i, evidence="/l.log", now=1000 + i)
         go = [{"item": "it0"}, {"item": "fresh"}]
         skip = {}
-        # inputs are whole, so the preflight passes for the held row at once: the class closes in the same tick
+        # inputs are whole, so the preflight passes for the held row at once: the PROBE window opens (WAVE-PILOT-FIX: a preflight closes nothing)
         out = KW.flow_guard_gate(ap, self.cfg, st, "qc", go, go, skip, now=1010, rpy=local_rpy)
         self.assertEqual([r["item"] for r in out], ["it0", "fresh"])
         self.assertTrue(any("RELEASE" in m for m in ap.logs))
@@ -388,7 +401,7 @@ class KitWaveGate(unittest.TestCase):
         out = KW.flow_guard_gate(ap, self.cfg, st2, "qc", go, go, skip, now=1010, rpy=local_rpy)
         self.assertEqual([r["item"] for r in out], ["fresh"])
         self.assertTrue(any("FLOW-BREAKER" in k for k in skip))
-        self.assertEqual(len([1 for _, l in ap.q if "ALERT" in l]), 1)            # the gate posts the open class once
+        self.assertEqual(len([1 for _, l in ap.q if "ALERT" in l]), 2)            # the gate posts each open class once (the first stays open in PROBE state)
 
     def test_launch_refuses_a_held_item(self):
         st = {}

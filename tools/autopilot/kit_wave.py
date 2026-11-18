@@ -2866,7 +2866,14 @@ def place_rc0_no_odb(text):
     return ""
 
 
+# WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-1900 C): a missing container image / PDK / docker tool / full disk on ONE host is host infrastructure, never a design
+# verdict: class INFRA (retries elsewhere, never counts in the breaker, no same-fail-key refusal), and infra_key carries the host.
+HOST_ENV_RE = re.compile(r"No such image|Unable to find image|image not found|pull access denied|manifest unknown|"
+                         r"\.local/bin/ot-job-docker|docker: Error response from daemon|No space left on device|"
+                         r"(?:PDK|platform) \S+ (?:is )?(?:missing|not found) on", re.I)
+
 RULES = [
+    ("INFRA", None, lambda s: (HOST_ENV_RE.search(s).group(0) if HOST_ENV_RE.search(s) else None), "host environment (image / PDK / docker tool missing, disk full): retry on another host"),
     ("INFRA", r"^geom_tools$", r"KW_GEOM_TOOLS", "geometry tool closure could not be staged on the checkpoint host"),
     # KITRTL-FAIL-1115: a die src tree's own (older) bind.py lacks a flag the wave passes: tool skew, one stable reason
     ("FLOW", r"^kit_rtl$", r"bind\.py: error: unrecognized arguments", "kit_rtl tool skew (the die src tree's bind.py predates a wave flag; the wave falls back to the scheduler's bind.py)"),
@@ -8472,6 +8479,52 @@ def tree_host_for(AP, cfg, die, sp, item):
     return ""
 
 
+RETRY_PROBES = 3         # WAVE-PILOT-FIX 11-17 (owner r556): retried attempts of a die launch 3 in parallel; the first that passes place releases the rest
+
+
+def retry_cohort(cfg, st, die):
+    """the die's retry cohort: attempts relaunched since the die's inputs last changed (breaker_inputs).  A new digest = a fix = a new cohort"""
+    rp = st.setdefault("retry_probe", {}).setdefault(die, {})
+    inp = breaker_inputs(cfg, die)
+    if rp.get("inp") != inp:
+        rp.clear()
+        rp.update(inp=inp, since=time.time(), proven=False)
+    return rp
+
+
+def retry_probe_defer(cfg, st, die, r):
+    """WAVE-PILOT-FIX 11-17 (COORD, 14:20-15:03: 11 S81 dsdv_slice_*_C items failed the same KIT_PREFLIGHT class in one batch): the breaker counts
+    FAILs, and a place-stage verdict arrives ~2 h after the launch, so a batch launched at once is all in flight before the class opens.  A
+    RETRY (a row whose last attempt FAILed or was CANCELLED) of a die launches at most RETRY_PROBES at a time until one attempt of the cohort
+    gets past place (ENQUEUED / signed).  '' = launch; else why it waits.  A first attempt is never limited.  Die option retry_probe false = off."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if d.get("retry_probe") is False or cfg.get("retry_probe") is False:
+        return ""
+    items = st.get("items") or {}
+    prev = [x for x in items.values() if x.get("die") == die and x.get("item") == r.get("item")]
+    if not prev:
+        return ""
+    last = max(prev, key=lambda x: (int(x.get("attempt") or 0), float(x.get("started") or 0)))
+    if last.get("status") not in ("FAIL", "CANCELLED"):
+        return ""
+    rp = retry_cohort(cfg, st, die)
+    if rp.get("proven"):
+        return ""
+    since = float(rp.get("since") or 0)
+    inflight = 0
+    for x in items.values():
+        if x.get("die") != die or float(x.get("started") or 0) < since or int(x.get("attempt") or 0) < 2:
+            continue
+        if x.get("status") == "ENQUEUED" and x.get("q_status") != "FAIL" or x.get("q_status") == "SIGNED":
+            rp["proven"] = True                       # a retried attempt got past place: the cohort is proven
+            return ""
+        if x.get("status") in ("RUNNING", "LAUNCHING"):
+            inflight += 1
+    if inflight >= RETRY_PROBES:
+        return f"RETRY-PROBE: {inflight} retried attempts of {die} are in flight since the inputs changed; waits for one to pass place ({RETRY_PROBES} probes, owner r556)"
+    return ""
+
+
 def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
     """KW-FIX-7 11-04: one row's launch error never ends the pass.  06:28 a merge changed kit_resume.py under a reload pass:
     launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
@@ -9828,7 +9881,7 @@ def collect(AP, cfg, st, notices):
         try:                                             # FLOW-HEALTH-1: class circuit-breaker input (pre-P&R and import / missing-file classes)
             _stg = FG.fail_stage(why) or str(res.get("stage") or "")
             _key = FG.norm_class(cls, why)
-            if rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
+            if rec.get("stage_class") != "stopped" and rec.get("kill_kind") != "guard" and not (cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_ENV_RE.search(why or ""))):     # INFRA counts: 56 S81 + 24 KV same-class fails never opened the breaker
                 FG.record_fail(st, rec["die"], rec["item"], cls, why, evidence=str(Path(rec.get("dir") or ".") / f"{_stg or 'result'}.log"),
                                legacy=bool(_stg in PRE_PR_STAGES or FG.pf_kind(_key)), stage=_stg,
                                inp=breaker_inputs(cfg, rec["die"]))
@@ -10150,7 +10203,8 @@ def fail_key(parts, cls, why):
 
 def is_host_fail(cls, why):
     """HOST (disk, OOM, ssh, copy-back, admission) and STOPPED (signal, cancel) fails retry on their own and never make a key"""
-    return bool(cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_FAIL_RE.search(why or "") or KILL_RE.search(why or "")))
+    return bool(cls == "INFRA" and (NO_HOST.search(why or "") or _TRANSIENT_INFRA.search(why or "") or HOST_FAIL_RE.search(why or "") or KILL_RE.search(why or "")
+                                    or HOST_ENV_RE.search(why or "")))
 
 
 def note_fail_key(cfg, st, rec, cls, why):
@@ -10478,6 +10532,8 @@ def infra_key(cfg, rec, cls, why):
         pass
     body = [sp.get("src_sha") or d.get("src_sha"), sp.get("src_overlay") or d.get("_src_overlay"), sp.get("plan") if False else None,
             rec.get("block_sha") or rec.get("plan_sha") or d.get("_plan_sha") or d.get("plan_sha"), FG.norm_class(cls, why)]
+    if HOST_ENV_RE.search(why or ""):
+        body.append(rec.get("gen_host") or sp.get("gen_host"))      # a host-environment fail is per host: the same fail on another host is a new key
     return hashlib.sha1(json.dumps(body, default=str).encode()).hexdigest()[:16]
 
 
@@ -12138,6 +12194,11 @@ def _step(AP, ap_dir):
             held[die] = held.get(die, 0) + n
     for die, r in todo:
         if load_hold(cfg, die, r["item"], r.get("parent_item"), core_module(r["item"])):  # this tick's launches filled the hosts
+            held[die] = held.get(die, 0) + 1
+            continue
+        _why = retry_probe_defer(cfg, st, die, r)
+        if _why:
+            AP.log(f"KIT-WAVE LAUNCH-DEFER {die}/{r['item']}: {_why}")
             held[die] = held.get(die, 0) + 1
             continue
         rec = launch_safe(AP, cfg, st, die, r, AP.HUB_NAME, delay_s=nl * stagger)

@@ -519,7 +519,8 @@ def refusal_key(kind, bad):
 
 # ---------------------------------------------------------------- circuit breaker
 
-CLASS_N = 10                 # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1350): fails per hour of one (die, stage, class), counted across items
+CLASS_N = 3  # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 B): 3 fails per (die, stage, class) open the class breaker (was 10)
+#                # FLOW-HEALTH-1 11-15 (FABLE-FLOW-1350): fails per hour of one (die, stage, class), counted across items
 CLASS_WINDOW_S = 3600
 
 
@@ -555,7 +556,7 @@ def record_fail(st, die, item, cls, why, evidence="", now=None, legacy=True, sta
         g["open"][key]["last_fail"] = now
     elif len(mine) >= need:
         g["open"][key] = {"t": now, "n": len(mine), "first": mine[0][3] or evidence, "posted": 0, "kind": pf_kind(key),
-                          "last_fail": now}
+                          "last_fail": now, "die": die}              # die: a probe of this die can close it (WAVE-PILOT-FIX)
         g["probation"].pop(key, None)
     return key
 
@@ -602,6 +603,8 @@ def held_key(st, die, item, claim=False):
     op = g.get("open") or {}
     k = (g.get("last") or {}).get(f"{die}/{item}")
     if k and k in op:
+        if op[k].get("state") == "probe":
+            return _blocks(op[k], k, item, claim)
         return k
     k2 = (g.get("last2") or {}).get(f"{die}/{item}")
     if k2 and k2 in op:
@@ -627,7 +630,7 @@ def probe_result(st, die, item, stage, passed, failed_stage=False, required_stag
     g = fg_state(st)
     out = []
     for key, e in list(g["open"].items()):
-        if e.get("kind") or e.get("die") != die or e.get("state") != "probe" or (item != probe_item(e) and item not in probe_items(e)):
+        if (e.get("kind") and e.get("state") != "probe") or e.get("die") != die or e.get("state") != "probe" or (item != probe_item(e) and item not in probe_items(e)):
             continue
         if required_stage is not None and e.get("stage") != required_stage:
             continue
@@ -681,7 +684,8 @@ def breaker_tick(st, now=None, inputs=None, trees=None):
     g = fg_state(st)
     rel = []
     closed = []
-    # WAVE-PILOT-FIX 11-17 (COORD): a tree switch IS the fix: failures that predate the die's current src tree reset at the switch.
+    # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-1700): NOTHING closes a class except a probe passing place.  A die src tree switch or an input
+    # change only opens the PROBE window (three probes); a probe that runs long without a result is NOT a pass.
     # trees = {die: the die's current src tree identity}; the first sight of a die only records it.
     seen = g.setdefault("tree_seen", {})
     switched = set()
@@ -693,17 +697,11 @@ def breaker_tick(st, now=None, inputs=None, trees=None):
     for key, b in list(g["open"].items()):
         if b.get("kind"):
             continue
-        if b.get("die") in switched:
-            rel.append((key, "the die's src tree switched: its failures predate the tree, class reset"))
-            closed.append(key)
+        if b.get("die") in switched and b.get("state", "shut") == "shut":
+            b["state"], b["probe"], b["probes"], b["probes_failed"], b["probe_t"] = "probe", {}, [], [], {}
+            b["inp_probe"] = (inputs or {}).get(b.get("die")) or b.get("inp_probe") or b.get("inp")
+            rel.append((key, "the die's src tree switched: PROBE window open (three probes), the class closes only when a probe passes place"))
             continue
-        if b.get("state") == "probe":                     # a probe running PROBE_PASS_AFTER_S without a result counts as a pass
-            slow = [i for i in probe_items(b) if i not in (b.get("probes_failed") or [])
-                    and now - float((b.get("probe_t") or {}).get(i, now)) >= PROBE_PASS_AFTER_S]
-            if slow:
-                rel.append((key, f"probe {slow[0]} ran {PROBE_PASS_AFTER_S // 60} min without a result: counts as a pass, class released"))
-                closed.append(key)
-                continue
         if b.get("inp"):
             cur = (inputs or {}).get(b.get("die"))
             if cur and cur != b["inp"] and b.get("state", "shut") == "shut":
@@ -732,10 +730,11 @@ def release_by_preflight(st, held_pf, now=None):
     rel = []
     for key, res in held_pf.items():
         b = g["open"].get(key)
-        if b and b.get("kind") and res and all(res):
-            rel.append((key, f"preflight passes again for all {len(res)} held item(s)"))
-    for key, _ in rel:
-        close(st, key, now)
+        if b and b.get("kind") and res and all(res) and b.get("state") != "probe":
+            # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-1900 C): a preflight that passes may not see the cause, so it closes nothing; it opens the PROBE
+            # window and the class closes only when a probe (a real launch) gets past the stage that failed.
+            b["state"], b["probe"], b["probes"], b["probes_failed"], b["probe_t"] = "probe", {}, [], [], {}
+            rel.append((key, f"preflight passes again for all {len(res)} held item(s): PROBE window open; the class closes only when a probe passes"))
     return rel
 
 
