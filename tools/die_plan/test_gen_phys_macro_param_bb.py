@@ -66,6 +66,21 @@ class MacroParamBB(unittest.TestCase):
         self.assertEqual(len(out), 1)
         self.assertIn("module m_ext", out[0].read_text())
 
+    def test_two_bind_headers_spec_source_decides(self):
+        # S81 LP 13:2x: two source_modules files declare m_ext with different headers; the core spec's sources pick one
+        sm = self.t / "root" / "physical/die_plan/s81/bind/source_modules"
+        (sm / "pf").mkdir(parents=True)
+        (sm / "ext.sv").write_text("module m_ext #(parameter integer MUT = 0) (input wire ck);\nendmodule\n")
+        (sm / "pf" / "m.sv").write_text("module m_ext #(parameter integer MUT = 0, B = 0) (input wire ck);\nendmodule\n")
+        cd = self.t / "root" / "physical/die_plan/s81/cores/h2/m_ext"
+        cd.mkdir(parents=True)
+        (cd / "spec.json").write_text('{"top": "m_ext", "params": {"MUT": 0}, "sources": ["physical/die_plan/s81/bind/source_modules/pf/m.sv"]}')
+        (self.t / "root" / "rtl").mkdir(parents=True, exist_ok=True)
+        top = self.t / "src" / "t5.sv"
+        top.write_text("module t5(input wire c); m_ext #(.MUT(1)) u_e(.ck(c)); endmodule\n")
+        out = G.macro_param_blackboxes([("u_e", "m_ext", "", "", 0, 0, "N")], [top], self.t / "kit", self.t / "root")
+        self.assertIn("B = 0", out[0].read_text())
+
     def test_nonliteral_override_takes_built_spec_value(self):
         # FORM-IDX 11-05 bk_sel__t2: .SRAM_MACRO(TX_SRAM) said nothing, header stayed 0 against a view built with 1
         top = self._spec_kit(".V(V), .SRAM(TS)")

@@ -5423,6 +5423,28 @@ def _module_header(text, mod):
     return None
 
 
+def _spec_source_headers(root, mod):
+    """[(header, file)] from the hard core's own spec.json 'sources' (physical/die_plan/*/cores/*/<mod>/spec.json): the
+    exact files its view was built from.  S81-COL-FLOW-1118 13:2x: ot_s81_mu72_lnland_nst is declared in two bind
+    source_modules files with different headers (portfix178/ot_s81_mu72_lnland.sv with KN/NK_EPOCH_BIAS, the view's
+    source, and mu72_abi_extensions.sv); the view's own source decides."""
+    out = []
+    for sp in sorted(Path(root).glob(f"physical/die_plan/*/cores/*/{mod}/spec.json")):
+        try:
+            srcs = json.loads(sp.read_text()).get("sources") or []
+        except (OSError, ValueError):
+            continue
+        for rel in srcs:
+            c = Path(root) / rel
+            if c.suffix in (".sv", ".v") and c.is_file():
+                h = _module_header(c.read_text(errors="replace"), mod)
+                if h:
+                    out.append((h, c))
+        if out:
+            return out[:1]
+    return out
+
+
 def _tree_module_headers(rtl_root, mod):
     """[(header, file)] for every .sv/.v under rtl_root that declares module mod, in sorted path order."""
     out, key = [], mod.encode()
@@ -5709,7 +5731,7 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
             # ot_qwen_tp8_pv_join_t #(.RESET_PIN(1)), and that module is declared in ot_qwen_tp8_pv_wide_pair.sv, a
             # multi-module source that the kit does not stage (every module in it is a hard core) and that is not named
             # after the module.  Last resort: the tree file that declares it.  Two different headers stop the kit.
-            found = _tree_module_headers(Path(root) / "rtl", mod)
+            found = _spec_source_headers(Path(root), mod) or _tree_module_headers(Path(root) / "rtl", mod)
             # S81-COL-FLOW-1118 (COORD: S81 LP types gen 'ot_s81_mu72_lnland_nst ... no RTL header'): the bind keeps the
             # wrapper modules it adds in physical/die_plan/<die>/bind/source_modules (mu72_abi_extensions.sv), outside rtl/
             if not found:
