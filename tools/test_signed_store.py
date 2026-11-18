@@ -196,3 +196,21 @@ if __name__ == "__main__":
     for k, v in list(globals().items()):
         if k.startswith("test_"):
             v(); print("ok", k)
+
+
+def test_new_direct_is_the_counters_discovery_and_dedups():
+    import release_tree_plan as rtp
+    walk = [dict(scan_host='epyc7', path='/a/signoff.json')]
+    direct = [dict(scan_host='epyc7', path='/a/signoff.json'), dict(scan_host='epyc7', path='/b/signoff_eco_1/signoff.json', direct=True),
+              dict(scan_host='epyc7', path='/b/signoff_eco_1/signoff.json', direct=True)]
+    got = rtp.new_direct(walk, reader=lambda log: direct)
+    assert [x['path'] for x in got] == ['/b/signoff_eco_1/signoff.json']
+
+
+def test_ingest_select_takes_a_direct_record_the_walk_missed():
+    import time, release_tree_plan as rtp, signed_store_ingest as si
+    now = time.time()
+    r = dict(scan_host='epyc7', path='/b/signoff_eco_1/signoff.json', direct=True, name='dp_x', top=None,
+             generated=time.strftime('%Y-%m-%dT%H:%M:%S+00:00', time.gmtime(now - 3600)))
+    recs = [] + rtp.new_direct([], reader=lambda log: [r])
+    assert si.select(recs, set(), now) == {si.identity(r): [r]}

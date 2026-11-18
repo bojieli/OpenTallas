@@ -123,6 +123,7 @@ def marker_sweep(fails, cache=None):
     known = {'%s:%s' % (r['host'], r['dir'].rstrip('/')) for r in rtp.dnc_rows()}
     add = []
     for h, ds in sorted(need.items()):
+        if h not in rtp.HOSTS: continue      # a retired host (epyc4/5/6) has no ssh: its marker sweep failed every hour (INGEST-FIX 11-17)
         try:
             r = run(host_cmd(h, 'python3 -I -c ' + shlex.quote(MARKER_PY)), '\n'.join(sorted(ds)) + '\n', 600)
             found = json.loads(r.stdout)
@@ -312,6 +313,11 @@ def main():
             try: recs += f.result()
             except Exception as e:
                 unreachable.append(futs[f]); say('SCAN FAILED', futs[f], str(e)[:200])
+    try:
+        dr = rtp.new_direct(recs, say)        # the counter's own direct reads (INGEST-FIX 11-17): same discovery as the count
+        say('direct records not in the walk:', len(dr)); recs += dr
+    except Exception as e:
+        fails.append(['coord', '*', 'direct read', str(e)[:200]])
     have = {identity(r) for r in ss.load_records()[0]}
     sel = select(recs, have, time.time())
     say('scanned', len(recs), 'records, store has', len(have), 'identities, new inside %.0f h:' % WINDOW_H, len(sel))
