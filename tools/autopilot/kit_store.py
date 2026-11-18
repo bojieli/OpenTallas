@@ -607,9 +607,17 @@ def view_refs(plan_path, typ, roots, store=None):
                     refs.append(os.path.join(j["src"], n[6:]) if n.startswith("/work/") else n)
             except (OSError, ValueError, AttributeError):
                 pass
+        so = str((j.get("export") or {}).get("signoff") or "")
+        own = os.path.isfile(os.path.join(vd, "signoff.json")) and os.path.isabs(so)
+        # S81-COL-FLOW-1118 (LP views ot_s81_mu72_lnland_nst_signed_1107): a view that carries its own receipt also carries
+        # the record beside it (PROVENANCE.json byte-identical, lec); the original record dir (<rec>/signoff/signoff.json ->
+        # <rec>) may be cleaned off every host.  A file of that record that is gone is not a kit input; a present one is still taken.
+        rec = os.path.dirname(os.path.dirname(os.path.normpath(so))) if own else None
         for r in refs:
-            if os.path.isfile(os.path.join(vd, "signoff.json")) and r == str((j.get("export") or {}).get("signoff")):
+            if own and r == so:
                 continue                              # the view carries its own receipt: the original is not read
+            if rec and os.path.normpath(r).startswith(rec + os.sep) and not os.path.exists(r):
+                continue                              # ... nor the rest of its original record, once that is gone
             take(r, pv)
     return out
 

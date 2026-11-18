@@ -311,6 +311,28 @@ class Snap(unittest.TestCase):
         c = KS.snap(dict(self.spec(), view_refs_type="T2"), self.snaps, log=lambda *x: None)
         self.assertEqual(len(c["view_refs_missing"]), 1)
 
+    def test_view_with_own_receipt_does_not_need_its_cleaned_original_record(self):
+        """S81 LP views: provenance names the original record (signoff, lec, PROVENANCE.json); the view carries the receipt"""
+        rec = os.path.join(self.t, "scratch/claude/die/sign/x/sign_m0")
+        kit = put(os.path.join(self.t, "scratch/claude/die/sign/x/eco/i3/run/6_final.odb"), "odb")
+        vd = os.path.join(self.src, "physical/views/lp")
+        put(os.path.join(vd, "x.lef"), "MACRO x")
+        put(os.path.join(vd, "signoff.json"), "{}")
+        put(os.path.join(vd, "PROVENANCE.json"), "{}")
+        put(os.path.join(vd, "provenance.json"), json.dumps({"src": os.path.dirname(kit), "export": {
+            "odb": kit, "signoff": os.path.join(rec, "signoff/signoff.json"), "lec": os.path.join(rec, "lec/lec.json"),
+            "note": "from the record " + os.path.join(rec, "PROVENANCE.json")}}))
+        put(self.plan, json.dumps({"partition_types": {"T": {"hard_cores": [{"lef": "physical/views/lp/x.lef"}]}}}))
+        vr = KS.view_refs(self.plan, "T", [self.src])
+        self.assertEqual(vr["missing"], [])
+        self.assertIn(kit, vr["present"])                                 # other originals still count
+        lec = put(os.path.join(rec, "lec/lec.json"), "{}")                # a record file still present is taken
+        self.assertIn(lec, KS.view_refs(self.plan, "T", [self.src])["present"])
+        os.unlink(os.path.join(vd, "signoff.json"))                       # without its own receipt the record is needed
+        miss = [m["path"] for m in KS.view_refs(self.plan, "T", [self.src])["missing"]]
+        self.assertIn(os.path.join(rec, "signoff/signoff.json"), miss)
+        self.assertIn(os.path.join(rec, "PROVENANCE.json"), miss)
+
     def test_ordinary_child_keeps_provenance_without_historical_netlist(self):
         vd = os.path.join(self.src, "physical/views/ordinary")
         put(os.path.join(vd, "x.lef"), "MACRO x")
