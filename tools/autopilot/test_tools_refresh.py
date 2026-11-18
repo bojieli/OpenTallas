@@ -80,7 +80,7 @@ def test_failures_never_apply():
     for kw, st in ((dict(compose=False), "COMPOSE-FAIL"), (dict(guard=False), "GUARD-FAIL"), (dict(bind=(False, False, "boom")), "BIND-FAIL")):
         rec, posts, edits, _ = run(ops=FakeOps(**kw))
         assert rec["status"] == st and not edits
-    assert run(ops=FakeOps(compose=False))[1] == []                       # a compose failure is retried next tick, no lane noise
+    assert len(run(ops=FakeOps(compose=False))[1]) == 1                   # FABLE-FLOW-1900 B: a compose failure is structural: one NEEDS-LANE, no retry loop
 
 
 def test_dry_mode_reports_only():
@@ -287,3 +287,60 @@ def test_bind_recipes_kv_style_subdir_and_head_style_pass_line():
     assert "--out ../n.bindcheck" in seen[0] and any("rm -rf /tree/n.bindcheck" in c for c in seen)
     bad = TR.Ops(head, "/r", SHA, run=lambda host, cmd, timeout=0: (0, "HEAD_DIE_PORTBIND FAIL"))
     assert not bad.bind("/tree/n")[0]
+
+
+def test_a_structural_exit_stops_the_die_until_the_tree_or_recipe_changes():
+    """FABLE-FLOW-1900 B: KV ran 9 passes, 7 exited 1 (the same compose / bind failures every time a ruling merged)"""
+    d = die()
+    state = {}
+    rec, posts, edits, _ = run(d=d, ops=FakeOps(bind=(False, False, "no recipe")), state=state)
+    assert rec["status"] == "BIND-FAIL" and state["stopped"]["kv"]["status"] == "BIND-FAIL" and len(posts) == 1
+    for new_lag in (LAG, dict(LAG, missing=["r535", "r554", "r637"])):                  # a new main / new ruling does not retry
+        rec2, posts2, _, _ = run(d=d, ops=FakeOps(), lag=new_lag, state=state)
+        assert rec2["status"] == "SKIP" and "stopped on BIND-FAIL" in rec2["why"] and not posts2
+    d2 = dict(d, tools_refresh_bind_cmd="x")                                              # the owner gave a recipe: resumes
+    assert run(d=d2, ops=FakeOps(), lag=dict(LAG, missing=["r535", "r554", "r637"]), state=state)[0]["status"] == "APPLIED"
+    d3 = dict(d, src="/x/new_tree")                                                       # or a new tree was applied
+    assert TR.stop_fp(d3) != TR.stop_fp(d) and TR.stop_fp(dict(d, event="e2")) == TR.stop_fp(d)
+
+
+def test_compose_failure_posts_needs_lane_and_stops():
+    rec, posts, edits, state = run(ops=FakeOps(compose=False))
+    assert rec["status"] == "COMPOSE-FAIL" and state["stopped"]["kv"]["status"] == "COMPOSE-FAIL"
+    assert posts and posts[0].startswith("NEEDS-LANE [TOOLS-REFRESH -> KV-R3]") and "stopped (no retry)" in posts[0]
+
+
+def test_single_flight_and_exit_codes(tmp_path, monkeypatch):
+    import fcntl
+    cfgp, st = tmp_path / "kit_wave.json", tmp_path / "state.json"
+    cfgp.write_text(json.dumps({"dies": {"kv": {"tools_refresh": True, "src": "/x/t"}}}))
+    held = open(tmp_path / "tools_refresh_kv.lock", "a")
+    fcntl.flock(held, fcntl.LOCK_EX)                                                      # a pass is running
+    out = []
+    monkeypatch.setattr("builtins.print", lambda *a, **k: out.append(" ".join(map(str, a))))
+    assert TR.main(["--die", "kv", "--cfg", str(cfgp), "--state", str(st), "--repo", "/nonexistent"]) == 0
+    assert json.loads(out[-1])["status"] == "BUSY" and not st.exists()                 # the second pass exits at once and writes nothing
+
+
+def test_wave_does_not_start_a_stopped_die():
+    import kit_wave as KW
+    d = die()
+    assert KW.tools_refresh_stop_fp(d) == TR.stop_fp(d)
+    seen = []
+
+    class AP:
+        DRY = False
+        AP_DIR = "/tmp/nodir_stop"
+        log = staticmethod(lambda m: None)
+        coord_append = staticmethod(lambda *a: None)
+        launch_unit = staticmethod(lambda *a: seen.append(a))
+    KW.TOOLS_LAG_CACHE["raw"] = {"kv": dict(LAG)}
+    import pathlib, tempfile
+    ap = pathlib.Path(tempfile.mkdtemp())
+    (ap / "tools_refresh_state.json").write_text(json.dumps({"stopped": {"kv": {"fp": TR.stop_fp(d), "status": "BIND-FAIL"}}}))
+    AP.AP_DIR = str(ap)
+    KW.tools_refresh_tick(AP, {"dies": {"kv": dict(d, enabled=True)}}, {})
+    assert not seen
+    (ap / "tools_refresh_state.json").write_text(json.dumps({"stopped": {"kv": {"fp": "other", "status": "BIND-FAIL"}}}))
+    KW.tools_refresh_tick(AP, {"dies": {"kv": dict(d, enabled=True)}}, {})
+    assert len(seen) == 1

@@ -8669,6 +8669,13 @@ def tools_lag_rows(AP, cfg, ttl=1800):
     return rows
 
 
+def tools_refresh_stop_fp(d):
+    """same fingerprint as tools_refresh.stop_fp (test_tools_refresh keeps them equal)"""
+    import hashlib
+    keys = ("src", "tools_refresh", "tools_refresh_bind_cmd", "tools_refresh_bind_sub", "tools_refresh_bind_pass")
+    return hashlib.sha1(json.dumps({x: d.get(x) for x in keys}, sort_keys=True, default=str).encode()).hexdigest()[:16]
+
+
 def tools_refresh_decide(ent, attempt, crashes, now, unit_alive, in_flight_s=900, max_crashes=3):
     """WAVE-FLOW-R2 11-17 (COORD r615): -> (action, why, new_ent), action spawn | skip | stop.  ent = the wave's record of the last start ({t, unit, crashes} or None),
     attempt = the unit's own record once compose started (tools_refresh_state.json attempts[key]), crashes = the crash count the unit wrote.
@@ -8709,6 +8716,9 @@ def tools_refresh_tick(AP, cfg, st):
         if not lag.get("missing") or lag.get("n_commits") is None or AP.DRY:
             continue
         key = f"{die}|{lag.get('pin')}|{','.join(lag['missing'])}"
+        stp = (ustate.get("stopped") or {}).get(die)
+        if stp and stp.get("fp") == tools_refresh_stop_fp(d):       # stopped on a structural exit: no start until the tree or the bind recipe changes
+            continue
         ent = started.get(key)
         alive = False
         if isinstance(ent, dict) and ent.get("unit"):

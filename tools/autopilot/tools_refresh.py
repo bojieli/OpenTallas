@@ -35,6 +35,14 @@ STATE_REL = "tools_refresh_state.json"
 
 
 MAX_CRASHES = 3
+STRUCTURAL = ("COMPOSE-FAIL", "GUARD-FAIL", "BIND-FAIL", "BIND-CHANGED", "OVERLAY-PRIVATE", "APPLY-FAIL")
+
+
+def stop_fp(d):
+    """what must change before a die that stopped on a structural exit may try again: its tree and its bind recipe settings (a new apply, or a recipe from the owner)"""
+    import hashlib
+    keys = ("src", "tools_refresh", "tools_refresh_bind_cmd", "tools_refresh_bind_sub", "tools_refresh_bind_pass")
+    return hashlib.sha1(json.dumps({k: d.get(k) for k in keys}, sort_keys=True, default=str).encode()).hexdigest()[:16]
 
 
 def wave_key(die, lag):
@@ -59,6 +67,9 @@ def should_refresh(d, lag, state, key):
         return False, "no tree"
     if lag.get("n_commits") is None or not lag.get("missing"):
         return False, "no die-tool ruling missing"
+    stopped = (state.get("stopped") or {}).get(d.get("_die", ""))
+    if stopped and stopped.get("fp") == stop_fp(d):
+        return False, f"stopped on {stopped.get('status')} ({str(stopped.get('why'))[:120]}): NEEDS-LANE was posted; a new tree or a changed bind recipe resumes it"
     n = int((state.get("crashes") or {}).get(wave_key(d.get("_die", ""), lag), 0))
     if n >= MAX_CRASHES:
         return False, f"crash stop: {n} crashed passes for this pin and rulings, a lane must look"
@@ -243,7 +254,7 @@ class Ops:
         return True, shas[0] == shas[1], "bind native_topology unchanged" if shas[0] == shas[1] else "bind native_topology CHANGED"
 
 
-def refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.time):
+def _refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.time):
     """one refresh pass -> record dict (status: SKIP | GUARD-FAIL | BIND-FAIL | BIND-CHANGED | COMPOSE-FAIL | DRY-OK | APPLIED | APPLY-FAIL); stored in state['done'][key]"""
     key = refresh_key(die, lag, main_sha)
     d = dict(d, _die=die)
@@ -314,6 +325,19 @@ def record_crash(state, die, d, lag, main_sha, exc, post):
     return dict(status="CRASH", why=why, crashes=n)
 
 
+def refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.time):
+    """one pass (see _refresh).  r-FABLE-FLOW-1900 B: the first STRUCTURAL exit (compose / guard / bind / overlay / apply) stops the die: NEEDS-LANE once, recorded in
+    state['stopped'][die] with a fingerprint of its tree and bind recipe; nothing retries until that fingerprint changes"""
+    rec = _refresh(die, d, lag, main_sha, ops, state, post, edit, dry=dry, now=now)
+    if rec.get("status") in STRUCTURAL:
+        d2 = dict(d, _die=die)
+        state.setdefault("stopped", {})[die] = dict(status=rec["status"], why=str(rec.get("why"))[:400], fp=stop_fp(d2), ts=int(now()))
+        if rec["status"] == "COMPOSE-FAIL":            # the other structural statuses post their own NEEDS-LANE
+            post(f"NEEDS-LANE [TOOLS-REFRESH -> {rec.get('owner') or die}] {die}: tools-only tree {rec.get('new')} could not be composed or replicated: {str(rec.get('why'))[:500]}; "
+                 f"stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume")
+    return rec
+
+
 def load_state(p):
     try:
         return json.loads(Path(p).read_text())
@@ -330,6 +354,13 @@ def main(argv=None):
     ap.add_argument("--state", default=os.path.expanduser("~/coord/autopilot/" + STATE_REL))
     ap.add_argument("--dry", action="store_true")
     a = ap.parse_args(argv)
+    import fcntl
+    lock = open(str(Path(a.state).with_name(f"tools_refresh_{a.die}.lock")), "a")      # single flight per die: a second pass exits at once, touching nothing
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print(json.dumps({"status": "BUSY", "why": "another tools_refresh pass of this die holds the lock"}))
+        return 0
     cfg = json.loads(Path(a.cfg).read_text())
     d = (cfg.get("dies") or {}).get(a.die) or {}
     lag = TL.lag(a.repo, TL.pin_of(d), a.main)
@@ -354,7 +385,7 @@ def main(argv=None):
             state["attempts"][wk]["status"] = rec.get("status")
     Path(a.state).write_text(json.dumps(state, indent=1, sort_keys=True))
     print(json.dumps({k: v for k, v in rec.items() if k != "key"}))
-    return 0 if rec.get("status") in ("SKIP", "APPLIED", "DRY-OK") else 1
+    return 0 if rec.get("status") in ("SKIP", "APPLIED", "DRY-OK") or rec.get("status") in STRUCTURAL else 1       # a structural stop is handled (NEEDS-LANE posted): exit 0; 1 = a crash
 
 
 if __name__ == "__main__":
