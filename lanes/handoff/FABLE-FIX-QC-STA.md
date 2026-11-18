@@ -16,3 +16,18 @@
   -> gen must run from a launch tree; (3) cland views need landing_evidence or the child build dir on the gen host.
 - Family facts (real reports): st_b has no design blocker on N3 (CTS TT +21.9 / +6.9 / -4.1 / -67.7; sle_st_b_v2__clfde1249e after GRT: setup +10.5,
   hold +5.05, vclk measured band PASS); its only fails were the old vclk file. st_a on N3: CTS TT -236 / -242 / -461.5, GRT -109 (stations missing).
+
+## 11-18 14:5x PST
+- Fixes on main today: de34662bfb5 (HALO-1 rings re-cut round fixed cells POST_TAPCELL: st_a DPL-0004 at 3_5), 4815c737fdb
+  (tail_copy_anchor: macro-fed K=1 copies at 0.6 of source -> pin; cland_fclk_target: write clock follows measured d-pin slack).
+  Lane clone: intel2 /srv/opentallas-scratch2/claude/fable-fix-qc-sta-main (sparse tools + rtl + physical/common_flow).
+- CTS results (placement RC): k3 sle (pre-fix) -153.8 / 4 ends; k4 slw v2 (pre-fix, stopped) -232.0 / 1,897; k5 sle (fixed) +10.78 / 0;
+  k6 slw v2 (fixed) -133.7 / 2 ends (u_u_r3/rs_s_c_p[0..1], 668 um unbuffered wire into the core pin; expect about +95 after the GRT max-wire pass).
+- Running: k3, k5, k6 to route + sign-off (ot-run localhost = intel2, logs runlogs/kit_k{3,5,6}.otrun.log). W/autopost.sh k{3,5,6} are
+  detached watchers that post an "AUTO kit ended" line with RUN_KIT_RC + signoff.json fields when each kit ends.
+- Kits k5/k6 gen: W/gen_route_main.sh TYPE TAG (launch tree W/launch/n41@main4815c737 from the lane clone); kit-rtl reused from k3/k4.
+- Rows for QC-PLAN-R3: lanes/handoff/FABLE-FIX-QC-STA-rows-n41.json (72 plan rows + land keys + sites), posted 14:4x. N4.1 fold waits for COORD.
+- NEXT: on SIGNED: export (full DB -> rtx-pro, metadata -> AGIdock; tools/autopilot/auto_export.py / signed_store.py), post. On a setup miss
+  read the GRT/route DB with W/census2.sh KIT OUT 5_1_grt.odb 5_1_grt.sdc grt. census2.sh STA_PATH needs unescaped pin names (bug, paths
+  were read with W/dbg/*/dbg.tcl instead).
+- Status scripts: bash W/st.sh k3 k5 k6.
