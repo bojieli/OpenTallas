@@ -109,3 +109,10 @@ def test_degraded_scan_writes_no_row(env):
     (env / CH.RATE).write_text("2026-11-04 06:05 390 s81=64+42t head=5+23t qc=70+24t kv=62+6t hbm=90+4t auto\n")
     assert CH.run(NOW, None, lambda: pytest.fail("committed")) == 1
     assert len(rows(env)) == 1
+
+
+def test_any_plan_extra_counts_old_plan_names_not_variants():
+    c = {"plans": {"q": {"die": "qwen_compute", "plan_types": {"coll_ucie": "qfd_coll"}, "hard_cores": ["m1"], "signed_types": {"coll_ucie": ["r"]}}}}
+    rows = [("qwen_compute", "coll_ucie__legalrows_1117", "t"), ("qwen_compute", "sta_old_a", "t"), ("qwen_compute", "sta_old_a__a2_1117", "t"),
+            ("qwen_compute", "m1", "c"), ("s81", "ot_s81_svc_x", "c")]
+    assert CH.any_plan_extra(c, rows) == 2
