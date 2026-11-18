@@ -59,3 +59,7 @@ Work dirs: E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n-1117 (handed over; my
 ## 18:1x PST
 - READY posted: claude/qc-xstn-fill-keep-1117 @6e151414139f (core_input_chain.tcl fill + keep rule; gate 5/5, test selected). Re-run on the cbn_q01 copy: 4 of 4 stations moved, stretched 0.
 - NEXT FAILURE of cbn_q01 (same 3_4 step, after the stretch check): repair_design RSZ-3006 on net u_bound.u_hdly_lk_u_t_1_2_tap_0.g_b[0].c[2], 73.2 um between two dont_touch HB4 pads (tap[0] pad chain placed apart by global placement). Fix handed to QC-TYPES-R3 (pad chain siting at the capture pin + pad nets protected at place). Not fixed. Proof files epyc9 fable-fix-qc-n/stretch_dbg (r34.out, hd.log).
+
+## 18:3x PST sle_sc_v1__cl115da35f 44 x Lef58EolKeepOut M5
+- Decision posted: no sc core abstract change. Reason: slw_sc_v2 and slw_sc_v1__cl63e5a7a2 route DRC 0 with the SAME abstract (qfd_dv_s5_sc2_leaf, cores/sc/qfd_dv_s5_sc2_leaf_h1_pins.json) at the SAME origin (302.4, 984.96). S-face row: 107 M5 input pins at local y 0.048 (red_data 32, red_addr 24, dn_i 48, red_we, ck, rst_n), pitch 0.288 (56 gaps) and 0.144 (47 gaps, dn_i). Shared by 7 types (h1) + slw_sc_v3 (up0, same row); sle_sc_v3 (dn0) has no dn_i (59 pins, 0.288 only).
+- Open: the 22 net names and the two M5 shapes of one violation (asked QC-TYPES-R3); the type is rebuilt on N2B (sc ft sites change) before any route-side fix.
