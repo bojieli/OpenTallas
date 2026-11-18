@@ -1,3 +1,168 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-18 09:30 PST (0930): delta on 07:10
+
+Reviewer: FABLE-CLOSURE-STRATEGY-0930. Read-only: no jobs launched, nothing killed, deleted or patched. Technical PD only. HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal reg-to-reg FF hold >= 0. r708: nominal clock pin cap at sign-off.
+Marking: **V** = I opened the file or log this round (09:10 to 09:25 PST hub time). **R** = reported by the named lane, not opened. **P** = my proposal or estimate.
+
+Signed (V, failure_breakdown 09:10): S81 42/394, HEAD 24/26, QC 26/130, KV 6/56. Count 393 (R).
+Method (V): one scan of every live `ot-jobs/*-route-*/work` dir on intel1, epyc2, epyc7, epyc8, epyc9, epyc10 (176 live route jobs): last stage log, tap spread, post-CTS TT, hold gate, pre-GRT hold pass, GRT congestion report, DRT violations.
+
+## 0. Headline
+
+1. **col_h9_r1 (60 types) cannot pass global route as built: every kit ends on the same hot spot (V).** 9 kits on epyc7 have a final congestion report with a residual of 179 to 288 after 30 extra iterations, and the 7 whose job log I opened end `GRT-0116`; 26 more in GRT show 344 to 775 at iterations 10 to 20. Every one has its overflow in one box, x 660 to 780, y 1200 to 1227 (the die top is 1226.88). Timing on these kits is clean: TT +0.2 to +0.6 (worst -6.0), pre-GRT hold 0 ends, 142k cells. This family is the nearest block of sign-offs on S81 and it is blocked by one station row.
+2. **`tt_setup_repair.tcl` has a Tcl error in every runtime tree since 04:19, so new kits lose TT setup repair at CTS and at GRT (V).** Line 134 carries a trailing `# comment` after the closing brace of an `if`. When `OT_TT_SETUP_GUIDE` is unset the `if` raises `wrong # args: extra words after "else" clause`, the step returns rc 1 and the flow keeps the unrepaired DB. 121 live kit copies carry the line (S81 79, QC 26, HEAD 13, KV 3); 27 kits have already logged the fallback.
+3. **30 leaf kits are in route on the d8t form with no XR stage and TT -79 to -919 (V).** They cannot sign. Each spends 10k to 71k hold cells and up to 2.7 h in the pre-GRT hold pass.
+4. **KV has timing numbers now, and they are all structural (V).** 21 KV kits are in GRT at TT -268 to -1,486. Only io_cor (+156) and hroot (-3) can sign from this wave.
+5. **QC: the vclk fix works.** sle_hc0 x2 are the first N3 kits through GRT, now in detailed route (V).
+
+## 1. Levers ranked by types unblocked
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | col_h9_r1: `frame_int_o0` station line off the north die edge; meanwhile re-route with allow-congestion | col_h9_r1 60 | S81-COL-FLOW-1118 (re-route), S81-GEOM-OPUS (row), S81-DIE-R3 (delta) |
+| 2 | all | Fix `tt_setup_repair.tcl` line 134 and patch the live kit copies | 121 live kits; every kit generated from now (N4, D8e, D23) | WAVE-FLOW-R2 (main + test), S81-COL-FLOW-1118 (kit copies, as for the reset fix) |
+| 3 | S81 | D8e apply, then XR mid-wire proof on t3 / t16, then the 58-type key | leaf 74 + kv_leaf 5 | S81-DIE-R3, S81-GEOM-OPUS |
+| 4 | S81 | col r0: bank-leaf + relay_sites rows; DRC names on col_h9_r0_p6 | col_h9_r0 60 + col_h10_r0 12 | S81-GEOM-OPUS, S81-COL-FLOW-1118 |
+| 5 | S81 | col_h9_r2 to sign-off (pilot ECO + first in-flow route); class table for col_h10_r1 / r2 | col_h9_r2 60; col_h10_r1 / r2 24 | S81-COL-FLOW-1118 |
+| 6 | KV | Relay chain keys on hg / hgi after the p2 CTS number; D23g apply; D24 rows for kp and reset | hg / hgi 17, pc 6, pv 16 | FABLE-FIX-KV-HG, KV-HG-OPUS, KV-D23-COMPOSE |
+| 7 | QC | N4 apply (st_a stations); class tables for stm_v3 and st_b_v2; first routed sc / hc0 read | st_a 11; sc / hc / fw / fe about 30; 21 provisional | QC-PLAN-R3, QC-N-OPUS, QC-TYPES-R3 |
+| 8 | HEAD | hd_mesh: TT setup repair on mesh_pa; SDC sha on mesh_w1; patched script on lep_p3 | hd_mesh, hd_lep0N | FABLE-FIX-HEAD-MESH, HEAD-TYPES-OPUS |
+
+### Lever 1. col_h9_r1: one bus, three stations on the die edge
+
+**Evidence (V).**
+- epyc7 `.../3fa87b84b18/items/col_h9_r1__t1__cl49d7a23e__pv87d52780/attempt_2/gen/<type>`: `5_1_grt.log` total congestion 11,632 (M6 5,822, M8 5,227, both horizontal) at 12.9 % usage, 30 of 30 extra iterations, `GRT-0116`. `congestion.rpt`: 239 gcells, overflow 288, all in x 660 to 780, y 1200 to 1240.
+- Nets in those gcells: `frame_int_o0_is0_q` 1,165 hits, `frame_int_o0_is1_q` 1,041, `u_ist_frame_int_o0_1` 987, `_2` 822, `_0` 533, `u_u_lpl_11_w.q` 420, clk_t22 leaves about 60.
+- `istations.tcl` sites the three stations of `frame_int_o0` (1,168 bits) on one line at y 1227, which is the die edge: station 0 x 979 to 1159, station 1 x 667 to 847, station 2 x 355 to 535. The pins are on the north face at x 6 to 260 (M5 / M7). `OT_ISTATIONS placed 11029 flops FIRM`.
+- Same box on all kits I binned: cl49d7a23e 179 / 288 final (9 kits, epyc7), 379 to 775 in flight (20 kits, epyc9 / epyc10); clf32cde8d 344 to 397 (6 kits, epyc10).
+- Cost of one attempt: place about 20 min, pre-GRT hold pass 0.9 to 1.1 h (6,239 to 7,395 cells), GRT about 1.3 h.
+
+**Root cause (I).** The bus runs 900 um west along the top row band with all three station blocks pinned to the edge. Each block is 1,168 flops in 180 um, so it stacks about 7 rows deep. At station 1 the incoming bundle from station 0 and the outgoing bundle to station 2 overlap above the block, with only the half-plane south of the edge to use. Horizontal demand is twice the bus where the supply is one edge strip. Not checked: whether a macro or halo south of x 660 to 780 narrows the strip further at station 1.
+
+**Fix.**
+1. Now (S81-COL-FLOW-1118): re-run route from the existing `4_cts.odb` of the col_h9_r1 kits with the allow-congestion hook. The hook exists (`OT_GRT_ALLOW_CONGESTION=1` read by `gen_phys.py` line 6385 at gen time; it writes `grt_allow_cong.tcl`, which QC kits already carry). P: for the kits on disk, copy that file and its hook block into the kit instead of a regen. Take one kit first and read DRT at iteration 3: 179 gcells of overflow 1 at 0.57 um is within what detailed route usually absorbs, but the block sits on PG pair rows (P).
+2. Structural, 0 cycles (S81-GEOM-OPUS, row via S81-DIE-R3 in the delta after D8e): site the `frame_int_o0` stations at y = 1227 - 45 um or deeper, and step stations 0 / 1 / 2 by 10 um in y so in and out bundles do not share tracks. Widen each block from 180 to about 254 um so the bit pitch equals the pin pitch. Class rule for `kit_istations.py`: a station line parallel to a face sits at least one bus width (bits x track pitch / 4 H layers, about 30 um here) inside it.
+3. Check the same rule on `frame_int_o1` (stations at y 0 for stages 2 and 3, x 528 to 1038): 28 site groups, so a narrower bus; col_h9_r2 shows residual 15 to 16 at (700, 0) (V).
+
+### Lever 2. TT setup repair is lost in every new kit
+
+**Evidence (V).**
+- `rt/current/tools/die_plan/tt_setup_repair.tcl` (rt c860f199a9c6), line 134: `if {$ot_tt_rc eq "grt" && [info exists ::env(OT_TT_SETUP_GUIDE)] && ...} { write_guides ... }     # after any re-route, ...`. All 28 rt trees from 528751c159c8 (04:19) on carry it; 5144e086700c (11-17 23:45) and older do not.
+- epyc8 `slice_station__t18` `tt_setup_repair.log`: `Error: tt_setup_repair.tcl, 135 wrong # args: extra words after "else" clause in "if" command`; run_route.log: `OT_TT_SETUP_REPAIR FALLBACK step rc 1: 4_cts.odb unchanged`.
+- GRT stage too: hd_spn_wshim_tx `FALLBACK grt step rc 1 ... 5_1_grt.odb is the UNREPAIRED DB`.
+- Kits that logged the fallback: slice_station 14, leaf 3, HEAD 10 (hd_ctl, hd_host_n, hd_host_w, hd_mesh x2, hd_spn, hd_st_str x2, hd_turn_a, hd_spn_wshim_tx). The wave hd_mesh kit sits at TT -92.64 unrepaired.
+- What the step is worth where the old script ran: col_h9_r1 -9.00 -> +0.64; mesh_w2 -54.94 -> -1.45; leaf t61 -191 -> -80; leaf t2 -379 -> -274.
+- Spread: 121 live work dirs hold the bad copy (epyc2 73, epyc9 16, epyc10 12, epyc8 11, intel1 5, epyc7 4). The 08:09 job-start flow refresh replaces old kit copies by rt/current, so it carries the error into older kits at their next stage job.
+
+**Root cause.** A comment after a closing brace on the same line is an argument in Tcl. The `if` only raises when its condition is false, which is every run without a guide file, so both rc bases fail.
+
+**Fix.**
+1. WAVE-FLOW-R2: move the comment to its own line on main. Add a test that sources the script body with `OT_TT_SETUP_GUIDE` unset for both `placement` and `grt` (a Tcl parse of the `if` word count is enough).
+2. S81-COL-FLOW-1118 pattern: copy + mv of the fixed file into every live work dir and every per-item gen dir (`items/<item>/gen/<item>/`), all 7 hosts. Not `sed -i`.
+3. Kits that already passed CTS with the fallback keep an unrepaired DB. For types within 60 ps of the gate, re-run the step on `4_cts.odb` before judging them (slice_station t48 -163 and hd_mesh are outside that; read after repair).
+
+### Lever 3. Leaf: D8e, then XR mid-wire
+
+**Evidence (V).**
+- 21 leaf kits in GRT: TT -79.5 (t61), -97 (t62), -192 (t57), -250 (t28, t40), -274 (t2), -298 to -395 (t59, t70, t22, t5, t47, t46), -457 to -529 (t21, t42, t54), -639 to -919 (t60, t67, t23, t52, t72, t54__cl501e5681).
+- t52: `OT_VPW_BANK placed 317 FFs` = no XR in the netlist (0855 rule: 317 no XR, about 1,219 XR at the bank).
+- Hold on the same kits: gate WNS -150 to -253 on 4k to 20k ends; pre-GRT pass adds 9.7k to 71k cells (t22 71,211, t28 68,813, t72 64,149 on 386,687) in 0.1 to 2.7 h; t22 / t28 / t61 / t70 still end with open ends.
+- Tap spread 129 to 389 ps (t52: 287 to 601, core clock `clk_c1` 601 against target 450).
+- R: D8e r4 crashed on the t40 taps; r5 on plan a30d6c6f (t40 back on rd2) was moving to epyc2. I found no r5 bind log on epyc2 or epyc8 at 09:20 (V). XR-MID-1 is on main (c4f44b2c1d2), rows for 58 types, unbuilt.
+
+**Root cause.** As 0855 fix 2: the VS-to-bank wire is in one cycle. Second class (I): the hold cell count follows the tap spread, and the spread follows core clock pins whose pin + internal insertion is above the tap target.
+
+**Fix.**
+1. S81-DIE-R3: r5 bind, apply D8e. Run `reset_anchor.resolve_plan` and `taps.grid_explicit_sites` first (13 s, already done on a30d6c6f, R).
+2. S81-GEOM-OPUS: t3 and t16 proof kits on the D8e tree with `budgets.vpw_xr_mid_types` + `OT_S81_VPW_BANK=1`. Read `OT_VPW_BANK placed N`, post-CTS TT and the tap spread. Then the 58-type row file as one delta.
+3. P, after the first XR kit: if the spread stays above 150 ps, set the tap target per type to the slowest core clock pin (pin + internal) instead of 450, so the taps are delayed up to it; the hold cells then fall with the spread.
+
+### Lever 4. col r0 (72 types)
+
+**Evidence.**
+- V: 38 of 72 rows are place FAIL in the stage table: 47 S81 rows on `RESET v5 refuses empty explicit buffer set`, 8 on `OT_HOOK_COVERAGE relay_mid`. R (S81-COL-FLOW-1118 08:22 to 09:05): both fixed on main (235d4be8301, 096be78133f) and in the kit copies, including the per-item gen dirs; retry keys in.
+- V: the only r0 kits past CTS: p1 TT -46.8 (10,530 hold cells, 7,290 s), p5 -11.9, p6 -1.2 at CTS but **-88.89 after GRT** (the GRT setup repair made it -133.97 and was restored). p6 is in detailed route at iteration 25+, flat at 32 to 39 violations since iteration 17 (29 M5 shorts, 2 M4 spacing).
+- R (S81-GEOM-OPUS): r0 has macro-to-macro paths up to 1,740 um with 0 stages; RELAYSITE-1 row proven at placement (127 / 128 FIRM).
+
+**Fix.** S81-GEOM-OPUS: bank-leaf rows + relay_sites on both cl0045af7b and cl9f71e63d into the delta after D8e; route the bank proof kit to sign-off. S81-COL-FLOW-1118: on p6 name the 29 M5 shorts (nets and whether they sit on PG M5 stripes) before any ECO; the TT -88.89 means this kit is a DRC probe only.
+
+### Lever 5. col_h9_r2 and col_h10
+
+**Evidence (V).**
+- col_h9_r2 pvea45273b: TT +0.1, pre-GRT hold 0 ends (3,738 cells), GRT residual 1, `hold_ws 25.19 margin 25 OK`. Cleanest S81 kit in flight.
+- Pilot pv11b6518d ECO started 09:07 on epyc7 (`s81-col-flow-1118-pilot/eco_1118`); R: DRC 2, TT -46.9, FF hold -62 on 345 ends under r708.
+- col_h10_r1 (7 kits): TT -87.6 to -146.0 at CTS, setup repair gains 0; GRT iteration 5 overflow 56k around x 800 to 1100, y 200 to 300. col_h10_r2: TT -128.1.
+- `failure_breakdown` TOOLS-LAG still lists the s81 tree as missing fixes; in-flow hold repair runs on range clock pin caps (I).
+
+**Root cause (I).** The 345 hold ends at -62 on a kit that had 5 ends at -5 in flow are the range-cap / nominal-cap difference, not a design change.
+
+**Fix.** S81-COL-FLOW-1118: let pvea45273b route and re-sign under r708; if hold fails the same way, the class fix is nominal clock pin caps in the in-flow hold passes (r708 into the kit libs), not an ECO per type. col_h10_r1 / r2: one class table of the TT ends at `4_cts.odb` (start, end, wire um) before any row.
+
+### Lever 6. KV
+
+**Evidence (V).** TT after the pre-GRT pass: hg -502 (kv3_hg), -805 to -864 (hg_v1, v1p2 to v1p5); hgi -268 to -340 (v1 x2, v2, v3), -705 (v4), -792 (v7); pc -468, -815, -1,069, -1,360, -1,486 (pc_v3); hroot -3.2; io_cor +156.2. GRT overflow in flight: hg 42k to 52k, hgi_v1 40k to 44k around x 0 to 200, y 1000 to 1100, pc_v1 17k to 20k. Hold pass: pc_v3 18,678 cells in 15,353 s. Proof kit p2 (relay chain keys): last log `2_1_floorplan` at 09:20, no CTS number yet. R: D23 / D23b failed on one hub_Wo EMIT; D23e / f / g gates due about 10:40.
+
+**Root cause (R, FABLE-FIX-KV-HG).** Unregistered 1.0 to 3.2 mm wires in every failing class; the hst / ftg relay flops were not placed (0 of 9,450).
+
+**Fix.** FABLE-FIX-KV-HG: p2 CTS ends table. KV-HG-OPUS: if hst and lpad classes clear, item_env keys on the 17 hg / hgi types and relaunch. KV-D23-COMPOSE: apply g > f > e. D24 rows for what p2 leaves (kp core to core -239, reset to core -309) and for pc. Route io_cor and hroot to sign-off now; hroot needs TT setup repair to work (lever 2: 3 KV kits carry the bad script).
+
+### Lever 7. QC
+
+**Evidence (V).**
+- sle_hc0 x2 passed GRT (`hold_ws 6.56 / 6.63`, TT +18.4 / +11.9 before GRT, 408,738 / 394,442 cells), in detailed route.
+- In GRT: sle_sc_v1 TT +9.2; slw_sc_v1 x3 -17.4 to +11.6; slw_fw_v1 x2 +2.2 / +54.1; slw_fe_v1 +55.4 (28,001 hold cells).
+- Outside the gate before route: sle_st_a_v1 -654, slw_st_a_v2 -462, slw_st_a_v1 x2 -235 / -242, sle_stm_v3 -203, sle_st_b_v2 -67.7.
+- The pre-GRT pass in these kits still pads port_in (517 to 2,742 ends left at -49 to -165); ee7566bd8b7 reaches only kits generated after 08:04.
+- 26 QC kit copies carry the bad setup-repair script.
+
+**Fix.** QC-PLAN-R3: N4 apply (st_a stations). QC-N-OPUS: k2 routed. QC-TYPES-R3: read routed TT and internal hold on sle_hc0 first; class tables for stm_v3 and st_b_v2 (no row exists for either). N4 kits must be generated after the lever 2 fix.
+
+### Lever 8. HEAD
+
+**Evidence (V).**
+- mesh_w1: `5_1_grt.log` ended 09:12 with `HOLD-SDC-MISMATCH stage repair_timing: golden SDC /work/constraint.sdc sha 9de86b68 != kit OT_SIGNOFF_SDC_SHA ae5020a4`, after the 35,109-cell hold pass. A GRT-only relaunch started 09:16.
+- mesh_pa: CTS done, taps 401 to 462, hold gate -131.42 on 9,462 ends. The kit has no `tt_setup_repair.tcl`, so TT -28.36 (R) is unrepaired; the same step took mesh_w2 from -54.94 to -1.45.
+- lep_p3: in CTS; its kit copy has the bad script.
+
+**Fix.** FABLE-FIX-HEAD-MESH: run the fixed setup-repair step on the mesh_pa `4_cts.odb` before the hold pass result is used (hold padding on an unrepaired DB fixes the wrong slack). HEAD-TYPES-OPUS: if the 09:16 GRT run stops on the same sha, set `OT_SIGNOFF_SDC_SHA` to the kit SDC that the hold pass used; patch lep_p3 by copy + mv before its CTS ends.
+
+## 2. Stop list (the 07:10 and 08:55 lists stand, plus these)
+
+1. No unchanged relaunch of col_h9_r1 from kit_rtl. It ends at the same box after about 2.7 h. No more GRT iterations either: 30 were flat.
+2. No triage of a near-gate TT number from a kit whose log says `OT_TT_SETUP_REPAIR FALLBACK`. Repair first.
+3. No reading, ECO or hold work on the 30 leaf route kits of the d8t form (`OT_VPW_BANK placed 317`).
+4. No ECO on col_h9_r0_p6: TT -88.89 after GRT. Use it for the M5 short names only.
+5. KV: no hold padding or ECO on a kit with TT under -250; no hg / hgi keys on wave rows before the p2 CTS number.
+6. hd_mesh: no sign-off attempt on mesh_pa without setup repair; no second padding round (07:10 item stands).
+7. QC: no port_in hold cells; no N4 kit gen before the setup-repair fix is in rt/current.
+8. Do not raise the per-type hold margin to clear the col pilot's 345 ends before the nominal-cap question is answered.
+
+## 3. The 0710 levers: status
+
+| 0710 # | status | note |
+|---|---|---|
+| 1 D8e bind | **NOT DONE** | r3 error fixed by tools (R). r4 crashed 08:37 on 8 t40 added taps (R, 0855). r5 on a30d6c6f not finished; no bind log found at 09:20 (V). t40 taps re-sited, gate queued (R). XR-MID-1 on main, unbuilt. |
+| 2 RESET v5 empty set | **DONE** | main 235d4be8301 + kit copies and per-item gen dirs patched by 09:05 (R). 47 rows still show the old FAIL until the retry tick (V). |
+| 3 col_h9_r2 ECO, bank proof | **IN PROGRESS** | ECO dir created 09:07 (V). Bank proof kit: relay_sites proven at placement, route restarted after the reset fix (R). |
+| 4 QC N4 / measured hold | **HALF** | vclk fix proven: sle_hc0 x2 through GRT (V). N4 publish / apply still running (R). n41d bind 0 errors, k2 kit running (R). |
+| 5 hd_mesh | **MECHANISM FOUND** | R: -141.74 = declared tap window 76 + uncertainty 25 + guard 45 on zero-logic cross-tap pairs. mesh_pa cuts internal ends 11,163 -> 5,251 (R). mesh_w1 lost its GRT to an SDC sha check (V). |
+| 6 KV first evidence | **DONE, premise corrected** | KV kits do reach CTS in the sealed ot-jobs dirs; 21 TT numbers above (V). D23 / D23b failed; e / f / g binding (R). hub_C node move not checked. |
+| 7 serdes H18 | **SUPERSEDED** | 0855: H18 is recipe evidence. H19 (16 rck roots, north taps on the strip) is at floorplan (V). H18 in GRT: TT -159.87 after CTS, 415k non-tap cells (V). |
+| 8 mergex | **DONE** | mm6 signed under r708: TT +161.22, FF +16.18 (R). mm15r stopped. |
+| r708 in the die trees | **OPEN** | TOOLS-LAG 09:10 still lists r708 missing on qwen_kvsys and s81_head, and 93 fixes missing on s81 (V). |
+
+## 4. Not checked
+
+- Whether detailed route absorbs the col_h9_r1 residual with allow-congestion; what lies south of x 660 to 780 at the north edge.
+- D8e r5 bind result; any XR kit.
+- The path classes of col_h10_r1 / r2, QC stm_v3 / st_b_v2, slice_station t18 / t46 / t6 (-917 / -577 / -419, all with the setup-repair fallback).
+- Routed numbers of any QC N3 kit, of mesh_pa, lep_p3, H19 and the col pilot ECO.
+- KV p2 beyond floorplan; PV CLAND on v2 / v6; D23e / f / g.
+- Why the pre-GRT hold pass takes 0.9 to 4.3 h (single thread, R) on col, leaf and kv3_pc.
+- Die STA on the real clock (S81, HEAD): unchanged.
+
+---
+
 # FABLE-CLOSURE-STRATEGY 2026-11-18 07:10 PST (0710): delta on 05:10
 
 Reviewer: CLOSURE-STRATEGY-0710 (Opus; Fable is at its weekly limit). Read-only: no jobs launched, nothing killed or deleted. Technical PD only. HBM parked.
