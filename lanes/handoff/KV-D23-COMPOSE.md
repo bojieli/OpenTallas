@@ -20,3 +20,10 @@ writer main 04df4c77f065), pc core RTL for qkd_kvs_pcc/pcf(+_h_head_p) (portbind
 D23 + D23b strict binds running on epyc7 (ot-run plan bind). ot-push-main of reach squash (wt branch kvd23-reach 440bf7477b6) running tests (push3.log).
 D23c staged inputs: in/plan_d23c.json (band + reach + ring2 lite/narrow keys on hub C/Wi/Wo/Ei/Eo), in/asbuilt_extra_d23c.json.
 Apply order (KV-HG-OPUS): D23 when green -> D23b -> D23c. Rider rows (kv-pv-rider) not yet in any candidate.
+## Status 16:45Z (after D23/D23b FAIL)
+BASE FOR MIRRORS (live, applied): /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22
+  manifest d988db9486e2, plan 23c87c42a4e9, asbuilt efad37e95d45, r8 57bb66595819 (event KV-D22). Updated here when D23e/f/g applies.
+D23/D23b FAIL: 1 EMIT kv3_hub_Wo raw Q rst_rl_214 (hub_Wo cores change the solved reset tree; lane KV-HUBWO-RESET).
+In flight (epyc7, no hub_Wo, NO_WO=1 build_d23.py): D23e (D23 minus hub_Wo, tools eefb7e3), D23f (band + rider), D23g (band + rider + reach + ring2 keys, main e8731b01bcf).
+D24 prep on main: 05f7de74d0c (hard RSTREP rings keep reach reader START), db1854527ce (clksite_resite.py; hub_C S 68.31 um).
+hub_C pre-proof gate: epyc7 kv-d23-compose/hubc/gate_c (rows4 = KV-D23-HUBC rows3 + resite, D22 mirror, tools main e8731b01bcf).
