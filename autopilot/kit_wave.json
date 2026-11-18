@@ -5824,7 +5824,8 @@
    ],
    "tools_refresh_bind_cmd": "mkdir -p {out}/bind {out}/tmp {out}/home && zcat physical/die_plan/qwen_kvsys/plan_of_record/inputs/bind9_asbuilt.json.gz > {out}/bind/asbuilt.json && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- env OT_HCPARAM_ALL=1 PYTHONDONTWRITEBYTECODE=1 TMPDIR={out}/tmp HOME={out}/home python3 -I -B tools/die_plan/bind.py bind physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json --out {out}/bind --asbuilt physical/die_plan/qwen_kvsys/plan_of_record/asbuilt_vN.json --mem 48 --strict --all-gaps > {out}/bind.log 2>&1",
    "tools_refresh_bind_sub": "bind",
-   "gen_env_outside_allow": []
+   "gen_env_outside_allow": [],
+   "breaker_fix": "OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18"
   },
   "s81": {
    "enabled": true,
@@ -36998,7 +36999,7 @@
      "note": "WAVE-HOLDS-1115 2026-11-15 13:32 PST S81 B6gE (DIE-S81-92 READY+ADOPT 12:51, COORD r121: bind RC 0, LATCHECK 873/873, G0 68 vs 176 new 0; 395 CHANGED types; M8 grant restored). Revert: dies.s81.prev_wavehold1115_b6ge | KIT-OPS-5 S81 B6gsl release (COORD, FABLE-PD-S81 F: non-landed types minus 3 excluded, plan ev/B6gsl.json d80fb2fe6408 adopted by DIE-S81-92 06:4x, source B6gsh/src_rel2 by GENBUG-IMPL) | KIT-OPS-3 08:49 PST S81 B3x2 (DIE-S81-92 READY+ADOPT: strict bind 0, LATCHECK 873/873; R-COL-1/2, FT snap, phy origin) src B3x2b/src + train-L/LIMIT/GRT/lint/fatal/landing/relay overlays + ovl_b3 schema | KIT-OPS-3 03:27 PST S81 B3v (DIE-S81-91 READY+ADOPT 03:05; S81-B3-CLK): strict bind 0, LATCHECK 873/873, OT_S81_SERDES_RST_TREE; src = B3v/src + LIMIT-BIND-1 + "
     }
    },
-   "breaker_fix": "COORD r334 e2e31d8fc41d deployed c4b966: source/CAS inode isolation and snapshot closure; D2 aed3 readonly/unshared fresh both-host full receipt bb0b455. Normal source-class probe only; all physical holds retained.",
+   "breaker_fix": "OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18; prior: COORD r334 e2e31d8fc41d",
    "prev_cleanall1116": {
     "gen_hosts": [
      "epyc10",
@@ -39298,7 +39299,8 @@
    "tools_refresh_bind_cmd": "python3 -I tools/s81_head/head_die_portbind.py {plan} --clock-landing {tree}/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json --out {out_rel}",
    "tools_refresh_bind_pass": "HEAD_DIE_PORTBIND PASS module_missing=0 port_bind_rc=0 tie_audit=PASS nested=PASS",
    "note_tools_refresh_1117": "HEAD-PLAN-R4 11-17 (COORD/FABLE-CLOSURE-STRATEGY 19:2x): tools-only refresh of nf15f_d2 to main (r641/r644/r650 + r618..) before the NF15f pilots launch; bind = the rs8/_d2 smoke strict bind (head_die_portbind, PASS line), plan + RTL byte-identical",
-   "note_t86a9d26_d1": "HEAD-PLAN-R4 11-17 21:xx (COORD KIT_NOT_SELF_CONTAINED class): tree t86a9d26_d1 = t86a9d26 + physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json (KIT-OPS-6 table, was only on epyc10/intel1/epyc7 kit-ops-6); OT_SIGNED_VIEW_SHA points into the tree (tools_refresh repoints it). OT_GPL_HPWL_RATIO=0: r430 PLACE-HPWL is S81-only, gen_phys matched s81_head by the s81 prefix (hd_tile 2.26x); main fix claude/gpl-hpwl-s81-exact-1117."
+   "note_t86a9d26_d1": "HEAD-PLAN-R4 11-17 21:xx (COORD KIT_NOT_SELF_CONTAINED class): tree t86a9d26_d1 = t86a9d26 + physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json (KIT-OPS-6 table, was only on epyc10/intel1/epyc7 kit-ops-6); OT_SIGNED_VIEW_SHA points into the tree (tools_refresh repoints it). OT_GPL_HPWL_RATIO=0: r430 PLACE-HPWL is S81-only, gen_phys matched s81_head by the s81 prefix (hd_tile 2.26x); main fix claude/gpl-hpwl-s81-exact-1117.",
+   "breaker_fix": "OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18"
   },
   "qwen_compute": {
    "enabled": true,
@@ -50078,7 +50080,7 @@
     "s29q103S4Q9M5",
     "s29q103S4Q9N1B"
    ],
-   "breaker_fix": "TOOLS-DECOUPLE aed901b rt mirror (rt/5bbf3df456f1 pushes tools+common_flow to the gen hosts)"
+   "breaker_fix": "QC-TYPES-R3 11-18: OWNER r703 removed all class breakers (stops_off not in code yet): probe window reopened for every open class of this die, COORD 11-18; rt_tools: TOOLS-DECOUPLE aed901b rt mirror"
   },
   "hbm": {
    "enabled": true,
