@@ -1107,6 +1107,54 @@ def check_tap_sink_cap(P, R, max_msgs=20, severity="warn"):
                 top_types=sorted(by.items(), key=lambda kv: -kv[1])[:5], **st)
 
 
+def read_measured_sinks(path):
+    """[(x, y, 1.0)] clk-tap sinks of a placed/CTS netlist: an OpenROAD sink dump (one line per clocked pin:
+    `<root port> <x um> <y um> <master> <inst>`; only roots `clk` / `clk_t<i>` are kept, so early core taps clk_c*,
+    forwarded fclk_in_* and PHY-edge domains, which clock_taps.tcl does not split, stay out) or a taps.py bins JSON
+    ({"bins": [[x, y, n], ...]}, weights n)."""
+    import re
+    text = Path(path).read_text()
+    if text.lstrip().startswith("{"):
+        return [(float(b[0]), float(b[1]), float(b[2]) if len(b) > 2 else 1.0) for b in json.loads(text)["bins"]]
+    tap = re.compile(r"^clk(_t\d+)?$")
+    out = []
+    for ln in text.splitlines():
+        f = ln.split()
+        if len(f) >= 3 and tap.match(f[0]):
+            out.append((float(f[1]), float(f[2]), 1.0))
+    return out
+
+
+def check_tap_sink_measured(P, R, specs, severity="error"):
+    """KV-D23-PC 11-18 (FABLE-PD-KV-2200 finding 2): opt-in G0 tap load on MEASURED sinks.  specs = ["TYPE=FILE", ...]
+    (read_measured_sinks).  The type's taps (grid+explicit: taps.grid_explicit_sites, else schema.tap_grid) take the
+    sinks by the kit's split (taps.assign = clock_taps.tcl: nearest tap, then cap re-assignment within the reach
+    clock.tap_radius_um, default 200); a tap holding more than gen_phys._tap_cap (clock.tap_max_sinks) is an ERROR
+    (severity "warn": WARN).  The plan's planned-sink count (check_tap_sink_cap) is a lower bound; this is the netlist."""
+    import gen_phys
+    import taps as TP
+    out = {}
+    for spec in specs:
+        tn, _, path = spec.partition("=")
+        if tn not in P.types or not path:
+            R.err("tap_sink_measured", f"[tapload] bad --tap-sinks {spec!r} (TYPE=FILE, TYPE in the plan)")
+            continue
+        t = P.types[tn]
+        ck = t.get("clock", {}) or {}
+        sites = TP.grid_explicit_sites(P, tn) if ck.get("tap_mode") == "grid+explicit" else S.tap_grid(P, tn)
+        sinks = read_measured_sinks(path)
+        cap = gen_phys._tap_cap(t)
+        reach = float(ck.get("tap_radius_um", 200.0))
+        load, far, _ = TP.assign(sites, sinks, cap, reach, max_distance_um=reach)
+        over = [(n, int(round(v))) for (n, _x, _y), v in zip(sites, load) if v > cap]
+        for n, v in over:
+            (R.err if severity == "error" else R.warn)("tap_sink_measured", f"[tapload] type {tn} tap {n}: {v} measured "
+                                                       f"clock sinks > cap {cap} (reach {reach:g} um)", type=tn)
+        out[tn] = dict(file=str(path), sinks=len(sinks), taps=len(sites), cap=cap, max_load=int(round(max(load, default=0))),
+                       over=len(over), empty=sum(1 for v in load if v == 0), max_reach_um=round(max(far, default=0.0), 1))
+    return out
+
+
 def check_ft_s0_window(P, R, max_msgs=40):
     """ft_s0_window (COORD 11-11 03:0x, explorer hop audit HBM q_b010 L1259x2 2004 um): an ft slot whose plan
     station 0 (regs_um[0]) is more than one reach (ft_station_max_um, <= 405) from its own in window is an ERROR: the
@@ -2826,7 +2874,7 @@ def _plan_geom_default():
 def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, core_conns=None, completeness=False,
         clock_builds=None, core_macros=None, strict_core_pg=False, plan_geom=None, native_reset_receipt=None,
         seam_hop="warn", core_shape_index=None, m8_grant_lock=None, m8_grant_guide=None, full_cut="verdict", tap_sink_cap="warn",
-        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None):
+        street_rule="off", r8_strap_pads=False, timing_audit="warn", repo_root=None, tap_sinks=()):
     R = Report(completeness)
     io_src = "plan" if raw.get("die", {}).get("io") else None
     sc = Path(plan_dir) / "die_io.json" if plan_dir else None
@@ -2901,6 +2949,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["xtap_latency"] = check_xtap_latency(P, R)
     if tap_sink_cap != "off":
         summ["tap_sink_cap"] = check_tap_sink_cap(P, R, severity=tap_sink_cap)
+    if tap_sinks:
+        summ["tap_sink_measured"] = check_tap_sink_measured(P, R, tap_sinks)
     summ["cuts"] = check_cuts(P, R, geo, full_cut)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing, strap_pads=r8_strap_pads)
@@ -3014,6 +3064,10 @@ def main(argv=None):
     ap.add_argument("--tap-sink-cap", choices=("warn", "error", "off"), default="warn",
                     help="XTAP-SWEEP-1: a tap whose PLAN sink count exceeds gen_phys._tap_cap: WARN (default until validated "
                          "against built tap loads), ERROR (COORD ruling), off")
+    ap.add_argument("--tap-sinks", action="append", default=[], metavar="TYPE=FILE",
+                    help="KV-D23-PC: ERROR when a tap of TYPE holds more than clock.tap_max_sinks of the MEASURED sinks in FILE "
+                         "(OpenROAD sink dump `root x y master inst`, clk/clk_t<i> roots, or a taps.py bins JSON) under the kit's "
+                         "nearest + cap split (taps.assign, reach clock.tap_radius_um); repeatable, opt-in")
     ap.add_argument("--full-cut", choices=("verdict", "band"), default="verdict",
                     help="full-line cut over cut_ratio_max: verdict (default) = ERROR; band = GRT-CALIB-1 die-band WARN "
                          "[cuts_full_band], advisory, ignored by --strict (partition-segment cuts stay ERRORs)")
@@ -3044,7 +3098,7 @@ def main(argv=None):
                   groups=a.groups, landing=a.landing, r8_strap_pads=a.r8_strap_pads,
                   evidence=a.cells_evidence, core_conns=a.core_conns,
                   completeness=a.completeness, clock_builds=a.clock_build,
-                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, core_shape_index=a.core_shape_index,
+                  core_macros=a.core_macros, strict_core_pg=a.strict_core_pg, native_reset_receipt=a.native_reset_receipt, seam_hop=a.seam_hop, tap_sink_cap=a.tap_sink_cap, tap_sinks=a.tap_sinks, core_shape_index=a.core_shape_index,
                   m8_grant_lock=a.m8_grant_lock, m8_grant_guide=a.m8_grant_guide,
                   full_cut=a.full_cut, street_rule=a.street_rule, timing_audit=a.timing_audit, repo_root=a.repo_root,
                   plan_geom=(a.plan_geom or _plan_geom_default()) if a.completeness else None)
