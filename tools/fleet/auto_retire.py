@@ -149,6 +149,36 @@ def signed_not_in_store(tree, ids):
     return n, miss
 
 
+def git_unsafe(path, timeout=60):
+    """clean3 lesson (CLEAN-3 11-13 deleted .git of idle clones with unpushed work + bare repos): a tree that holds a git work tree with uncommitted changes or commits on no remote, or a
+    bare repo, is never an idle-lane candidate.  -> reason or ''.  Looks for .git / bare repos to depth 3."""
+    import subprocess
+    cands = []
+    for r, ds, fs in os.walk(path):
+        if r[len(path):].count(os.sep) >= 3:
+            ds[:] = []
+        if ".git" in ds or ".git" in fs:
+            cands.append(r); ds[:] = [d for d in ds if d != ".git"]
+        elif {"HEAD", "objects", "refs"} <= set(fs + ds):
+            return "bare git repo at " + r
+    for r in cands:
+        try:
+            dirty = subprocess.run(["git", "-C", r, "status", "--porcelain"], capture_output=True, text=True, timeout=timeout).stdout.strip()
+            ahead = subprocess.run(["git", "-C", r, "log", "--branches", "--not", "--remotes", "--oneline", "-n", "1"], capture_output=True, text=True, timeout=timeout).stdout.strip()
+        except Exception as e:
+            return "git state unreadable at %s (%s)" % (r, type(e).__name__)
+        if dirty:
+            return "git work tree with uncommitted changes at " + r
+        if ahead:
+            return "git commit on no remote at " + r
+    return ""
+
+
+def post_text_hit(path, posts):
+    """a lane tree named in a hub post of the last 24 h (the posts file is built by the hub driver) is in use by somebody"""
+    return bool(posts) and re.search(re.escape(path.rstrip("/")) + r"(?![A-Za-z0-9_.-])", posts) is not None
+
+
 def free_gb(path):
     s = os.statvfs(path)
     return s.f_bavail * s.f_frsize / 1e9
@@ -231,7 +261,7 @@ def lane_candidates(claude, now=None, idle_h=24.0, skip=LANE_SKIP, mtime=newest_
     return res
 
 
-def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime):
+def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, free=None, now=None, idle_h=24.0, mtime=newest_mtime, posts="", git_check=git_unsafe):
     """retire idle lane dirs (and claude/wt children) through the guard, ingest-first, oldest first, stop at target_gb free.  A parent already removed or
     refused as a whole is retried through its children (level 2 is in the candidate list)."""
     free = free or (lambda: free_gb(claude)); res = []; gone = []
@@ -242,6 +272,10 @@ def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, fre
             continue
         rec = dict(tree=p, t=time.strftime("%F %T"), idle_h=round(idle / 3600, 1), kind="lane")
         why = refuse(p)
+        if not why and post_text_hit(p, posts):
+            why = "named in a hub post of the last 24 h"
+        if not why:
+            why = git_check(p) if git_check else ""
         if not why:
             sn, miss = signed_not_in_store(p, ids)
             rec.update(signed_units=sn, signed_not_in_store=miss)
@@ -260,13 +294,126 @@ def run_lanes(claude, ids, refuse, log, target_gb, apply=False, delete=None, fre
     return res
 
 
+LIVE_ROW = frozenset({"RUNNING", "ENQUEUED", "ROUTE-HELD", "DEDUP", "DEDUP-WAIT", "LAUNCHING", "RETRY-INFRA", "RETRY", "QUEUED", "STARTING"})
+ATTEMPT_GLOB = "*/runs/*/kit-wave/*/*/items/*/attempt_*"
+ATTEMPT_QUIET_S = 1800            # FAIL / CANCELLED attempts go once nothing in them changed for 30 min ("at once")
+OLD_EVENT_IDLE_H = 12.0
+
+
+def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET_S, old_idle_h=OLD_EVENT_IDLE_H, mtime=newest_mtime, globber=None):
+    """COORD 11-18 (owner aggressive rules): kit-wave attempt dirs of a finished work.  -> [(path, why)]
+      * state row FAIL / CANCELLED / class SUPERSEDED (same die, event, item, attempt) and the item has a newer attempt or its event is not the die's current one: quiet >= quiet_s.
+      * no state row, event != the die's current event, a higher attempt dir of the item exists: idle >= old_idle_h.
+      * event != the die's current event (latest attempt too): idle >= old_idle_h, not named in refs (auto-resign state, COUNT-DIRECT ...), no q_signoff / carry-over row.
+    Never: a live row of the item, the latest attempt of a current-event item, a hold-ECO marker < 7 d, anything named in refs, anything modified within the quiet / idle window."""
+    now = now or time.time()
+    items = (state or {}).get("items") or {}
+    cur = {d: str(v.get("event")) for d, v in ((cfg or {}).get("dies") or {}).items() if isinstance(v, dict)}
+    by = {}
+    for v in items.values():
+        if isinstance(v, dict):
+            by.setdefault((v.get("die"), str(v.get("event")), v.get("item")), []).append(v)
+    out = []
+    for p in sorted((globber or (lambda: glob.glob(os.path.join(claude, ATTEMPT_GLOB))))()):
+        if not os.path.isdir(p) or os.path.islink(p):
+            continue
+        parts = p.split("/runs/", 1)[1].split("/")           # <die>/kit-wave/<die>/<event>/items/<item>/attempt_N
+        if len(parts) < 7:
+            continue
+        die, event, item = parts[0], parts[3], parts[5]
+        tail = parts[6].split("_", 1)
+        n = int(tail[1]) if len(tail) == 2 and tail[1].isdigit() else -1
+        cand = by.get((die, event, item), [])
+        if any(str(v.get("status")) in LIVE_ROW for v in cand):
+            continue
+        mine = [v for v in cand if v.get("attempt") == n]
+        sib = [int(x.split("_", 1)[1]) for x in os.listdir(os.path.dirname(p)) if x.startswith("attempt_") and x.split("_", 1)[1].isdigit()]
+        newer = any((v.get("attempt") or 0) > n for v in cand) or (sib and max(sib) > n)
+        incur = cur.get(die) == event
+        if mine:
+            row = mine[0]
+            if "q_signoff" in json.dumps(row) or "carry" in json.dumps(row).lower():
+                continue
+            failed = str(row.get("status")) in ("FAIL", "CANCELLED") or row.get("class") == "SUPERSEDED"
+            if failed and (newer or not incur):
+                why, win = "failed/cancelled/superseded attempt, %s" % ("newer attempt exists" if newer else "event not current"), quiet_s
+            elif not incur:
+                why, win = "old-event attempt", old_idle_h * 3600
+            else:
+                continue
+        else:
+            if incur:
+                continue
+            if newer:
+                why, win = "no state row, old event, newer attempt dir", old_idle_h * 3600
+            else:
+                why, win = "no state row, old event", old_idle_h * 3600
+        if re.search(re.escape(p.split("/runs/", 1)[1].rsplit("/attempt_", 1)[0]) + r"/attempt_%d(?![0-9])" % n, refs or ""):
+            continue
+        if mtime(p, now - win) > now - win:
+            continue
+        out.append((p, why))
+    return out
+
+
+def eco_marker(p):
+    import subprocess
+    r = subprocess.run(["find", p, "-maxdepth", "3", "(", "-iname", "*hold*eco*", "-o", "-iname", "eco_hold*", ")", "-mtime", "-7", "-print", "-quit"], capture_output=True, text=True)
+    return bool(r.stdout.strip())
+
+
+def run_attempts(claude, cfg, state, refs, ids, g, prot, log, apply=False, delete=None, free=None, now=None, **kw):
+    """delete attempt_candidates through the guard.  The kit_wave work root (runs/<die>/kit-wave) is a protected ANCESTOR of every attempt, so each listed attempt gets an exact
+    allow entry (1 h, written here, reason cites COORD 11-18): it skips protected ancestors only, never a protected path inside, a live process or the signed-store check."""
+    free = free or (lambda: free_gb(claude)); res = []
+    cands = attempt_candidates(claude, cfg, state, refs, now, **kw)
+    exp = int((now or time.time()) + 3600)
+    allow = getattr(g, "ALLOW_EXACT", None)
+    if apply and allow and cands:
+        os.makedirs(os.path.dirname(allow), exist_ok=True)
+        with open(allow, "a") as f:
+            for p, _ in cands:
+                f.write("%s\t%d\tauto_retire attempts (COORD 11-18 aggressive cleanup)\n" % (p, exp))
+    for p, why0 in cands:
+        rec = dict(tree=p, t=time.strftime("%F %T"), kind="attempt", why=why0)
+        why = refuse_attempt(g, p, prot)
+        if not why and eco_marker(p):
+            why = "hold ECO marker < 7 d"
+        if not why:
+            sn, miss = signed_not_in_store(p, ids)
+            rec.update(signed_units=sn, signed_not_in_store=miss)
+            if miss:
+                why = "%d SIGNED unit(s) not in the signed store" % miss
+        if why:
+            rec["result"] = "REFUSED: " + str(why)[:120]
+        elif not apply:
+            rec["result"] = "WOULD-DELETE"
+        else:
+            b = free()
+            (delete or (lambda q: (os.system("find " + q + " -type d -exec chmod u+w {} +"), shutil.rmtree(q, ignore_errors=True))))(p)
+            rec.update(result="DELETED" if not os.path.exists(p) else "FAILED", free_before=round(b, 1), free_after=round(free(), 1))
+        log(rec); res.append(rec)
+    return res
+
+
+def refuse_attempt(g, p, prot):
+    try:
+        return g.refuse(p, prot)
+    except TypeError:
+        return g.refuse(p)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for k in ("--kit-wave", "--state", "--markers", "--store-ids", "--guard-module", "--list", "--log"):
         ap.add_argument(k, required=True)
     ap.add_argument("--root", default="/srv/opentallas-scratch2/claude/kw45"); ap.add_argument("--target", type=float, default=350.0)
     ap.add_argument("--apply", action="store_true")
-    ap.add_argument("--lanes", action="store_true", help="also retire idle (24 h) lane dirs and claude/wt children, after the source trees")
+    ap.add_argument("--lanes", action="store_true", help="also retire idle lane dirs and claude/wt children, after the source trees (idle window --idle-h, default 12)")
+    ap.add_argument("--idle-h", type=float, default=12.0)
+    ap.add_argument("--attempts", action="store_true", help="retire finished kit-wave attempt dirs (failed/cancelled/superseded at once, old-event attempts after --idle-h)")
+    ap.add_argument("--refs", default="", help="file: AUTO-RESIGN state + COUNT-DIRECT + ... text; an attempt named there is kept")
+    ap.add_argument("--posts", default="", help="file: hub post text of the last 24 h; a lane tree named there is kept")
     a = ap.parse_args(argv)
     sp = importlib.util.spec_from_file_location("g", a.guard_module); g = importlib.util.module_from_spec(sp); sp.loader.exec_module(g)
     prot, err = g.load_list(a.list)
@@ -277,8 +424,13 @@ def main(argv=None):
     ids = {l.strip() for l in open(a.store_ids) if l.strip()}
     with open(a.log, "a") as lf:
         res = run(a.root, json.loads(cfgt), texts, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply)
+        claude = os.path.dirname(a.root.rstrip("/"))
+        posts = open(a.posts, errors="replace").read() if a.posts else ""
+        if a.attempts:                                  # attempts first (the biggest, most certain dead weight), then idle lanes
+            res += run_attempts(claude, json.loads(cfgt), json.loads(texts[1]), open(a.refs, errors="replace").read() if a.refs else "", ids, g, prot,
+                                lambda r: lf.write(json.dumps(r) + "\n"), a.apply, old_idle_h=a.idle_h)
         if a.lanes:
-            res += run_lanes(os.path.dirname(a.root.rstrip("/")), ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply)
+            res += run_lanes(claude, ids, lambda t: g.refuse(t, prot), lambda r: lf.write(json.dumps(r) + "\n"), a.target, a.apply, idle_h=a.idle_h, posts=posts)
     for r in res:
         print(r.get("result") or r)
     return 0
