@@ -53,6 +53,17 @@ def counts_of(row):
     return re.sub(r"\s+auto\s*$", "", row.split(" ", 2)[2]) if row.count(" ") >= 2 else ""
 
 
+DROP_FRAC = 0.85
+
+
+def last_total(text):
+    for r in reversed((text or "").splitlines()):
+        m = re.match(r"^\d{4}-\d\d-\d\d \d\d:\d\d\s+(\d+)\s+s81=", r)
+        if m:
+            return int(m.group(1))
+    return 0
+
+
 def same_hour_same_counts(text, row):
     hour = row[:13]
     return any(r.startswith(hour) and counts_of(r) == counts_of(row) for r in (text or "").splitlines())
@@ -62,7 +73,7 @@ def read_cache():
     return json.loads(CACHE.read_text())
 
 
-def run(now=None, scan=None, commit=None):
+def run(now=None, scan=None, commit=None, force=None):
     """-> process exit code"""
     now = now or time.time()
     if (STATE / "count_hourly.stop").exists():
@@ -80,7 +91,9 @@ def run(now=None, scan=None, commit=None):
         before = float(read_cache().get("generated") or 0)
     except (OSError, ValueError) as e:
         print("count_hourly: cache unreadable before the scan: %s" % e)
-    if before is None or now - before >= FRESH_S:
+    if force is None:
+        force = "--force" in sys.argv[1:]   # COUNT-DIAG-1118: --force used to be ignored, a cache under 30 min old was read as is
+    if force or before is None or now - before >= FRESH_S:
         rc = (scan or _scan)()
         if rc:
             print("count_hourly: scan rc %s, no row" % rc, file=sys.stderr)
@@ -95,6 +108,13 @@ def run(now=None, scan=None, commit=None):
         return 1
     row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)))
     p = COORD / RATE
+    last = last_total(p.read_text() if p.exists() else "")
+    total = int(row.split(" ")[2])
+    if last and total < DROP_FRAC * last:
+        print("count_hourly: total %d is more than %d%% under the last row %d: a degraded scan, no row (cache generated %s)"
+              % (total, round((1 - DROP_FRAC) * 100), last, time.strftime("%H:%M:%S", time.localtime(float(cache.get("generated") or 0)))), file=sys.stderr)
+        print(row)
+        return 1
     if same_hour_same_counts(p.read_text() if p.exists() else "", row):
         print("count_hourly: this hour already holds these counts: " + row)
         return 0

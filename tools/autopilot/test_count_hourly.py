@@ -95,3 +95,17 @@ def test_older_free_text_rows_do_not_break_it(env):
     (env / CH.RATE).write_text("time\tdie\tsigned_types\tsigned_cores\n2026-11-03 18:34 PST\tS81 0/205\n")
     assert CH.run(NOW, None, lambda: 0) == 0
     assert len(rows(env)) == 3
+
+
+def test_force_scans_even_a_fresh_cache(env):
+    put(env, NOW - 60)
+    calls = []
+    assert CH.run(NOW, lambda: calls.append(1) or 0, lambda: 0, force=True) == 0
+    assert calls == [1]
+
+
+def test_degraded_scan_writes_no_row(env):
+    put(env, NOW - 60)
+    (env / CH.RATE).write_text("2026-11-04 06:05 390 s81=64+42t head=5+23t qc=70+24t kv=62+6t hbm=90+4t auto\n")
+    assert CH.run(NOW, None, lambda: pytest.fail("committed")) == 1
+    assert len(rows(env)) == 1
