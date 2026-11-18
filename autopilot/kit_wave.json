@@ -40371,7 +40371,7 @@
     {
      "id": "pilot-s81_head-c1250e2ea4fe",
      "plan_sha": "de6c7105afeff824b4029ebf66e02255ca31294b29d243544a7d77e08b422e0e",
-     "reason": "PILOT after tree switch: one GEN pilot (hd_lep0N) from tree c1250e2ea4fe must pass GEN + preflight first | HEAD-PLAN-R4 (COORD): two GEN pilots hd_lep0N + hd_mesh launch in parallel; the first gen_pilot pass releases the rest (gen only, never sign-off)",
+     "reason": "PILOT after tree switch: one GEN pilot (hd_mesh) from tree c1250e2ea4fe must pass GEN + preflight first | HEAD-PLAN-R4 (COORD 22:0x): hd_mesh is the only release pilot; hd_lep0N removed (known GPL stop OT_CLAND no mapped cells until r668 is in HEAD tools); gen only, never sign-off",
      "release": [
       "gen_pilot:s81_head:c1250e2ea4fe"
      ],
@@ -40379,7 +40379,6 @@
       "*"
      ],
      "pilot_items": [
-      "hd_lep0N",
       "hd_mesh"
      ],
      "follow_plan": true,
