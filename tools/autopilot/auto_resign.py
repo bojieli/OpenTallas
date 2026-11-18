@@ -611,7 +611,9 @@ def stage_tools(AP, host, root, tag, shas):
     them); the driver is main's, since a tag older than this stage has none with --auto.
     FLEET-OPS-R 11-17 (COORD): content-addressed.  The tag bytes are extracted ONCE per content key into tools/by-content/<key>; every tag dir is a hardlink copy
     (`cp -al`: real files, so --stage copies stay correct, no data blocks) plus its own tag_manifest.json / resign_driver.py / READY.  A tag whose tools bytes equal an
-    earlier tag's costs a few KB instead of ~80 MB (a new tag every ~10 min used to write a full tree each)."""
+    earlier tag's costs a few KB instead of ~80 MB (a new tag every ~10 min used to write a full tree each).
+    The shared files are READ-ONLY (chmod a-w on files only: ot-delete must still unlink entries in the tag dirs) and nothing writes through them: the per-tag
+    manifest, driver and READY are separate files (tmp + mv), the tools run from a tag dir only read their own tree (COORD 11-17: a hardlinked in-place edit would change every tag)."""
     d = "%s/claude/auto-resign/tools/%s" % (root, tag)
     h = AP.ssh_host(host)
     # a READY export is never rewritten: a running sign-off may be reading it
@@ -624,7 +626,7 @@ def stage_tools(AP, host, root, tag, shas):
     # one ssh: extract into the content dir unless it is complete, then hardlink-copy it into the tag dir
     extract = ("git -C %s archive %s -- %s | ssh -o BatchMode=yes -o ControlPath=none %s %s"
                % (q(str(AP.REPO)), q(tag), " ".join(q(r) for r in rels), q(h),
-                  q("mkdir -p %s && tar -C %s -xf - && touch %s/.content-ready" % (c, c, c))))
+                  q("mkdir -p %s && tar -C %s -xf - && touch %s/.content-ready && find %s -type f -exec chmod a-w {} +" % (c, c, c, c))))
     have = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "test -f %s/.content-ready" % q(c)], timeout=60)[0] == 0 if key else False
     if not have:
         rc, _, err = AP.sh(["bash", "-c", "set -o pipefail; " + extract], timeout=600)
@@ -641,8 +643,8 @@ def stage_tools(AP, host, root, tag, shas):
     payload = json.dumps(man, indent=1) + "\n"
     drv = DRIVER.read_text()
     for name, text in (("tag_manifest.json", payload), ("resign_driver.py", drv)):
-        rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "cat > %s/%s" % (q(d), name)],
-                           timeout=120, input=text)
+        rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "cat > %s/.%s.new && mv -f %s/.%s.new %s/%s" % (q(d), name, q(d), name, q(d), name)],
+                           timeout=120, input=text)       # a NEW file renamed over the name: never a write through a hardlink shared with another tag dir
         if rc:
             return None, "%s to %s: %s" % (name, host, err.strip()[-200:])
     rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "touch %s/READY" % q(d)], timeout=60)
