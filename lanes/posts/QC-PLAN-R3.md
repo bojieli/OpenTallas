@@ -172,3 +172,13 @@
   7 st_a flt_bank 2 stations: TAKEN. The liveness check of r1->r0, r2->r1, r3->r2 runs during N4 compose (a station per live net).
   8 tail copies: land_pad_tail_split with keep + sited copies: TAKEN.
   9 clock chain recipe (FABLE-DIE-QC-clockchain): TAKEN. It reruns on the N4 plan before the N4 apply. The cbn_q00__cldbcda913 tap-offset gate rides on it; that hold stays.
+- 2026-11-17 23:18 PST QC-PLAN-R3 [-> COORD, WAVE-FLOW-R2; cc FLEET-OPS-R] N3 gate RUNNING + waived-types finding
+  - The intel1 blocker is gone (intel1 scratch2 is back to ~230 GB). derive_gen_hosts then moved QC gen_hosts again (epyc8 -> epyc2, 23:07). So I put N3 on every host that holds N1B _d2: epyc9, epyc8, intel1, epyc2.
+  - Tree: replicate --link-from n1b_d2, SRC_MANIFEST OK 99b525f8.
+  - Bind: relocated, content 3da27c90 on all 4.
+  - Candidate gen_hosts are the 4 hosts (8314b63f); guard ok/full_ok on all 4.
+  - publish_gate launched about 23:4x on epyc9 (~/qc-plan-r3/pgate_n3.{log,rc}). ETA: static incl. G0 ~00:35, dry gen ~01:00, then apply with pilot ~01:10.
+  - r682 waived types: only 1 of 8 launched (sle_st_b_v2__cl14c98df5__pvcd986c42, 22:54). The other 7 are blocked by kit_wave fail_key_gate:
+  - The 7: sle_hc0 cl38badc56 + cl4baa7c9c, slw_hc0 cl1bc59e1c, slw_hc2 cl16607c7a, sle_st_b_v2 clfde1249e, slw_st_b_v2 pvc2ec5bfb, slw_st_b_v1 pv6ace3e48.
+  - Their last fail is SPLIT-NEEDED at enqueue. release_parts() lets a cell-class fail key go only on a design-input change (block/src/overlay/input). A CELL-WAIVER row is not one of those parts, so the 7 keep their fail key and do not launch.
+  - Fix (WAVE-FLOW-R2): count the die/type CELL-WAIVER row as a release part for SPLIT-NEEDED keys, or clear these 7 fail_keys under the state lock. They also release by themselves at the N3 apply (src changes).
