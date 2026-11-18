@@ -1,0 +1,35 @@
+{
+ "schema": "kv-ring2-light.keys-d24.v1",
+ "lane": "KV-RING2-LIGHT-O",
+ "date": "2026-11-18",
+ "code_on_main": "8d32316ad46 (merge of claude/ring-light-narrow-1118 @d22b3cd0d31, RING-LITE-1; byte-identical RTL without the key)",
+ "ruling": "KV-HG-OPUS: declared difference accepted (lite ring fault = 0, ready = reader START + 1 clk; one full monitor ring per (source, K, depth, start depths) group)",
+ "apply_first": {
+  "kv3_hub_C": {"clock": {"landing_ring_lite": {"max_width": 4, "monitors": 1}, "landing_ring_narrow": true}}
+ },
+ "apply_optional_same_event": {
+  "kv3_hub_Ei": {"clock": {"landing_ring_lite": {"max_width": 4, "monitors": 1}, "landing_ring_narrow": true}},
+  "kv3_hub_Eo": {"clock": {"landing_ring_lite": {"max_width": 4, "monitors": 1}, "landing_ring_narrow": true}},
+  "kv3_hub_Wi": {"clock": {"landing_ring_lite": {"max_width": 4, "monitors": 1}, "landing_ring_narrow": true}},
+  "kv3_hub_Wo": {"clock": {"landing_ring_lite": {"max_width": 4, "monitors": 1}, "landing_ring_narrow": true}}
+ },
+ "merge_rule": "add the keys into the existing partition_types.<type>.clock dict; keep existing keys (kv3_hub_Ei landing_ring_wreg stays)",
+ "proof_d22_mirror": {
+  "base": "kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22 (plan 23c87c42a4e9, asbuilt efad37e95d45, r8 57bb66595819)",
+  "trees": {
+   "a": "hub_C lite only",
+   "b": "hub_C lite + narrow",
+   "c": "all 5 hub types lite + narrow"
+  },
+  "each_tree": "strict bind RC 0: 160 partitions / 56 types / 2545 crossings / 429530 bits / 0 errors; LATCHECK 2404/2404 PASS; R8 recheck 0 changed, r8 check findings identical to reference (0 diff lines); bus_groups, bind_latency, bind_lane_asbuilt, count_strap_audit, r8pad_strap_audit JSON byte-identical to D22; only the keyed *_part.sv differ",
+  "gates": "epyc7 /srv/opentallas-scratch2/claude/kv-ring2-light/gate_{a,b,c}/gate.out"
+ },
+ "measured_ring_cells_flat_asap7_rvt_tt": {
+  "method": "every distinct ring paramod of the bound part synthesized once (yosys synth -flatten, ASAP7 RVT TT map), x instance count; epyc7 .../kv-ring2-light/s3/*.flat.out",
+  "kv3_hub_C": {"d22": 357873, "lite": 246518, "lite_narrow": 238112, "rings": "248: 164 W2 + 2 W3 lite (83 / 104 cells), 4 W2 monitors (440 narrow), 74 others narrow"},
+  "kv3_hub_Ei": {"d22": 228924, "lite_narrow": 203099},
+  "kv3_hub_Eo": {"d22": 180150, "lite_narrow": 165913},
+  "kv3_hub_Wi": {"d22": 217271, "lite_narrow": 214025},
+  "kv3_hub_Wo": {"d22": 180150, "lite_narrow": 166270}
+ }
+}
