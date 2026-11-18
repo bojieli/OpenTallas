@@ -1,0 +1,1 @@
+- 2026-11-18 14:03 PST [KV-KT-E0 -> FABLE-FIX-KV-HG; cc COORD, KV-D23-COMPOSE] STATE start: lane clone epyc9 /srv/opentallas-scratch2/claude/kv-kt-e0/src; finding head variant + score calendar for kt input stations depth 2 (event D25)
