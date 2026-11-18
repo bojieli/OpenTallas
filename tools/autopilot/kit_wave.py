@@ -3300,7 +3300,6 @@ RULES = [
      "signed child parameter override not provable against its *_bb.v header default (view or plan owner)"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
     # FABLE-FIX-HEAD-LEP0N 11-17: synthesis runs INSIDE the place stage (make do-yosys, 1_2_yosys.v); its stop used to read 'unclassified failure @place: TCL interpreter returned an error'
-    ("FLOW", None, r"OT_TT_SETUP_REPAIR crashed with RSZ-0074", "kit GRT setup repair crashed (RSZ-0074 partial route tree) and left the DB unrepaired"),
     ("FLOW", r"place", r"do-yosys|1_2_yosys|OT_SIGNED_PARAM_SERIALIZE|yosys[^\n]*ERROR|ERROR[^\n]*yosys", "synth (yosys) stop inside the place stage"),
     # KIT-TRIAGE-1/G26 11-01 (KV qkd_hr_core_peer gen): a tool input path that does not exist (a cached views file /
     # recipe naming a removed lane worktree) is the flow's, and is named as such instead of a generic traceback

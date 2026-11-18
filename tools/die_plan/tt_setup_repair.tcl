@@ -69,6 +69,27 @@ proc ot_tt_est {} {
   global ot_tt_rc
   if {$ot_tt_rc eq "grt"} { estimate_parasitics -global_routing } else { estimate_parasitics -placement }
 }
+# FABLE-FIX-S81-STRIP / OWNER r703 11-18 (RSZ-0074 on t15 / t16 / t26): after repair_timing + detailed_placement the incremental global route can leave a partial tree on a net it
+# changed ('found route to N pins, expected M') and the estimate that follows dies, so the kit kept the UNREPAIRED DB.  The step now repairs the ROUTE and keeps the repaired DB:
+# (1) route the dirty nets again (start / end incremental), (2) a full global_route, each followed by the estimate.  Only when both fail does the error propagate (the run_kit step then
+# keeps the old DB with a logged WARNING).
+proc ot_tt_est_after_repair {} {
+  global ot_tt_rc
+  if {$ot_tt_rc ne "grt"} { ot_tt_est; return }
+  if {![catch {ot_tt_est} err]} { return }
+  if {![string match "*RSZ-0074*" $err]} { error $err }
+  puts "OT_TT_SETUP_REPAIR WARNING RSZ-0074 after the repair ($err): re-routing the repaired nets"
+  if {![catch {global_route -start_incremental -allow_congestion; global_route -end_incremental -allow_congestion; ot_tt_est} err2]} {
+    puts "OT_TT_SETUP_REPAIR RSZ-0074 cleared by an incremental re-route"
+    return
+  }
+  puts "OT_TT_SETUP_REPAIR WARNING incremental re-route did not clear it ($err2): full global_route"
+  if {![catch {global_route -allow_congestion; ot_tt_est} err3]} {
+    puts "OT_TT_SETUP_REPAIR RSZ-0074 cleared by a full global_route"
+    return
+  }
+  error "RSZ-0074 persists after incremental and full global_route: $err3"
+}
 ot_tt_est
 # r222 (opt-in OT_RC_SIGNAL=1, GRT basis only): signal nets at the routed-RCX signal unit C (rc_signal_adjust.tcl)
 if {$ot_tt_rc eq "grt" && [info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1" && [file exists /work/rc_signal_adjust.tcl]} { source /work/rc_signal_adjust.tcl; ot_rc_signal_table }
@@ -108,9 +129,9 @@ if {$w0 < $mg || $ot_tt_design} {
   if {$ot_tt_rc eq "grt"} {
     global_route -end_incremental -allow_congestion
     ot_grt_pg_replay_end
-    if {[info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }
   }
-  ot_tt_est
+  ot_tt_est_after_repair
+  if {$ot_tt_rc eq "grt" && [info exists ::env(OT_TT_SETUP_GUIDE)] && $::env(OT_TT_SETUP_GUIDE) ne ""} { write_guides $::env(OT_TT_SETUP_GUIDE) }     # after any re-route, so the guide holds the final routes
 }
 lassign [ot_tt_wns after] w1 t1
 puts "OT_TT_SETUP_REPAIR cells [expr {[llength [get_cells *]] - $n0}] added; wns [format %.2f $w0] -> [format %.2f $w1] tns [format %.2f $t0] -> [format %.2f $t1]"

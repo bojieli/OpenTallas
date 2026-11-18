@@ -54,8 +54,14 @@ def test_do_yosys_stop_inside_place_is_synth():
     assert "synth" not in KW.classify("place", "ERROR: TCL interpreter returned an error: child process exited abnormally")[1]
 
 
-def test_grt_setup_repair_rsz0074_is_a_flow_error_and_the_kit_labels_ff():
-    cls, why = KW.classify("place", "ERROR: OT_TT_SETUP_REPAIR crashed with RSZ-0074 (x): the kit GRT setup repair did NOT run and 5_1_grt.odb is UNREPAIRED\n")
-    assert cls == "FLOW" and "RSZ-0074" in why
-    gen = (Path(__file__).resolve().parents[1] / "die_plan" / "gen_phys.py").read_text()
-    assert "FAIL_TT_SETUP_REPAIR" in gen and "rc=7" in gen and "OT_GRT_REPORT_CORNER FF" in gen
+def test_grt_setup_repair_reroutes_on_rsz0074_and_never_fails_the_stage():
+    root = Path(__file__).resolve().parents[1] / "die_plan"
+    tcl = (root / "tt_setup_repair.tcl").read_text()
+    assert "proc ot_tt_est_after_repair" in tcl and "RSZ-0074" in tcl
+    i = tcl.index("proc ot_tt_est_after_repair")
+    body = tcl[i:tcl.index("\n}\n", i)]
+    assert body.index("global_route -start_incremental") < body.index("global_route -allow_congestion;")       # incremental re-route first, then a full global_route
+    assert "ot_tt_est_after_repair\n" in tcl[tcl.index("lassign [ot_tt_wns before]"):]                        # the final estimate goes through it
+    gen = (root / "gen_phys.py").read_text()
+    assert "rc=7" not in gen and "FAIL_TT_SETUP_REPAIR" not in gen                                            # the stage is not failed (OWNER r703)
+    assert "WARNING: OT_TT_SETUP_REPAIR GRT step failed" in gen and "OT_GRT_REPORT_CORNER FF" in gen
