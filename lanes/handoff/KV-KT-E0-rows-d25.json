@@ -1,0 +1,115 @@
+{
+ "schema": "opentallas.kv.kt_stations_rows.v1",
+ "lane": "KV-KT-E0",
+ "for_lane": "KV-D23-COMPOSE",
+ "owner": "FABLE-FIX-KV-HG",
+ "event": "D25 (on top of D24)",
+ "main_commit": "4e588e5fda1a08b62870623bb9e1d05747a11dab",
+ "depth": 2,
+ "summary": "Uniform kt input stations of depth 2 on all 16 lanes of every KV head, between each lane's ot_qkh_head_stk_native and the head K-tree (ot_qkh_ktree_lk in eighth core e0). Lanes 2..15: two register leaves a lane in the hg / hgi PARENT; lanes 0, 1: the same two leaves INSIDE kv3_head_eighth_e0. The head score (sc_d / sc_f / g_f) leaves 2 edges later; ECTL HXK 13 -> 15 and the attention calendar D_QK + 2 take them.",
+ "why_not_a_head_parameter": "the KV bind does not instantiate a head module: the as-built netlist bind/kv45/die_bound_native_mission_lc.v.gz is flat (leaves head_<st>_<e>_<h>__g_t_<t>__u_stk ... __u_kt, 128 heads). The head parameter KT_ST exists on the generated heads ot_qkh_head_native_r4*_kst (lock-step reference); the die takes the SAME leaves through the derived netlist below.",
+ "asbuilt_keys": {
+  "netlist": [
+   "physical/die_plan/qwen_kvsys/bind/kv45/die_bound_native_mission_lc_kst2.v.gz"
+  ],
+  "map_file": "inputs/asbuilt_map_binder2_kst2.json",
+  "compose": "physical/die_plan/qwen_kvsys/plan_of_record/inputs/composition_heads_astk_pv_1103_kst2.json.gz",
+  "how": "netlist is committed on main (kv_head_kst_netlist.py --check). map_file and compose are derived in the event tree by `python3 -I physical/die_plan/qwen_kvsys/bind/kv45/kv_head_kst_netlist.py --depth 2 --event` (6 MB composition, not committed on main): map = as-built map + 4,096 station leaves, each in the partition of its lane's stk (local name head<h>__g_t_<t>__u_kst<k>, bound instance u_head<h>_g_t_<t>_u_kst<k>); compose = every kv3_head_eighth_e0 core gets members head_X__g_t_{0,1}__u_kst{0,1} (ports string unchanged: both nets of an in-core station are core-internal). If the event composition is not composition_heads_astk_pv_1103 any more, apply derive_compose() to the current one.",
+  "leaf_rtl": "rtl/qwen_sys/split_20261014/ot_qkh_head_kst.sv (module ot_qkh_head_kst_native #(.D(1)); under rtl_roots 'rtl', no prefer entry needed)",
+  "netlist_delta": {
+   "stk_lines_rewired": 2048,
+   "station_leaves": 4096,
+   "in_e0_cores": 512,
+   "parent_cells": 3584,
+   "parent_flops": 121856,
+   "ectl_instances_HXK_13_to_15": 32,
+   "other_lines": "byte-identical"
+  }
+ },
+ "bound_names": {
+  "parent_cells": "u_head<h>_g_t_<t>_u_kst0 / _u_kst1, t = 2..15, h = 0, 1 (56 cells, 1,904 flops a partition); flops <inst>.g_r.r[33:0] (keep)",
+  "chain": "core u_head<h>_e<e> pin g_t_<t>_u_stk__{kp,kpv,gf}_o -> u_kst0 -> u_kst1 -> core u_head<h>_e0 pin u_kt__{kp,kpv,gf}_in",
+  "clock": "the lane stk's clock net (partition core clock)",
+  "reset": "none (unreset stage, as the ot_dp_dly of the k3 timing proof)"
+ },
+ "siting": {
+  "key": "budgets.relay_mid_re_types",
+  "types": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3",
+   "kv3_hgi",
+   "kv3_hgi_v1",
+   "kv3_hgi_v2",
+   "kv3_hgi_v3",
+   "kv3_hgi_v4",
+   "kv3_hgi_v5",
+   "kv3_hgi_v6",
+   "kv3_hgi_v7",
+   "kv3_hgi_v8"
+  ],
+  "types_note": "the 17 keys D23h2 already carries (unsplit base names)",
+  "regex": "^(.*[._]u_y_[A-Za-z0-9_]+|.*[._]u_hst[0-9]+_(?:g|t[0-9]+)|.*[._]u_head[0-9]+_u_ftg|.*[._]u_head[0-9]+_g_t_[0-9]+_u_kst[0-9]+)[.]",
+  "note": "= main tools/die_plan/gen_phys.py RELAY_MID_RE_KV + the alternative tools/qwen_kv_die/kv_head_kst.py RELAY_MID_RE_ALT. First capture = one station cell = one relay group; relay_mid.tcl traces u_kst0 -> u_kst1 as a 2-stage chain between two FIXED hard-core pin sets, so both stages go FIRM on the source-sink line at 1/3 and 2/3 (legs ~0.37 - 0.6 mm for 1.1 - 1.8 mm). Chains under OT_RELAY_MID_MIN_UM (200 um: e1 -> e0 neighbours) are left to GPL. Not verified by this lane in a kit: the k3 proof sited by plan regs_um; a placed-view check of the 56 clusters is still owed.",
+  "plan_rows": "the existing internal_stations DEMAND rows conn 'core:u_head<h>_e<e>.kp_o,kpv_o,gf_o|core:u_head<h>_e0.u_kt__kp_in,kpv_in,gf_in' (2 regs_um) are now realized by these cells. Either drop them or keep them as the site record; they must not ALSO be materialized or priced (kit_istations reports them core_unmapped today)."
+ },
+ "cores_to_reharden": [
+  {
+   "module": "kv3_head_eighth_e0",
+   "instances": 128,
+   "why": "lanes 0, 1 need the same +2 inside the core (else their scores and lane 0's valid are 2 edges early)",
+   "how": "gen_core_kit_kv.py --head-kst 2 (new; physical/die_plan/qwen_kvsys/cores/harden/head_kst_core.py): ot_qkh_head_kst_native u_g_t_{0,1}_u_kst{0,1} between the two in-core stk and u_u_kt; +136 flops; NO port / pin / LEF pin change (pins file and parent bind untouched); kit writes head_kst_delta.json. Core RTL source: results/kv_cores_r5/rtl/kv3_head_eighth_e0 (strap-pin form) with --head-port-regs --head-lane-ltcopy --head-strap-direct",
+   "started": {
+    "host": "epyc9",
+    "kit": "/srv/opentallas-scratch2/claude/kv-kt-e0/kit_e0/kv3_head_eighth_e0__216x216",
+    "goal": "finish",
+    "ot_run_log": "intel2:/tmp/kv-kt-e0-kit-e0.log",
+    "gen": "kv_core_wave.py gen --views kit_e0/views.json --view kv3_head_eighth_e0@bd911eea70ca --plan <D23h2 plan_c.json> --head-port-regs --head-lane-ltcopy --head-strap-direct --head-kst 2 (OT_GEN_M8_GRANT=1)",
+    "flags_note": "the generator flags of the signed 10-30 view (Codex e0_invx2) are not recorded anywhere; these are the ones the strap-pin core RTL requires (strap-direct needs ltcopy + port-regs)",
+    "tree": "main 4e588e5fda"
+   }
+  },
+  {
+   "modules": [
+    "qkd_ectlk_q0",
+    "qkd_ectlk_q1",
+    "qkd_ectlk_q2",
+    "qkd_ectlk_q3"
+   ],
+   "instances": 128,
+   "why": "the score tag depth HXK is hard inside the quarter cores (ot_qkd_ectl_part SCD = KDEPTH(HXK) + 8: u_tag 11 b + u_scv 1 b delay lines). 13 -> 15 = two more stages on those lines",
+   "how": "HXK is now a parameter of qkd_ectlk_reference / qkd_ectlk_q0..q3 (default 13, like QK_ISSUE_AGE / RESPONSE_LAT). Rebuild the four quarters with -GHXK=15 (core.json params / VERILOG_TOP_PARAMS), then in the event that adopts the signed views run `python3 -I physical/die_plan/qwen_kvsys/cores/harden/ectlk_hxk.py --set 15` (rewrites the five defaults + CORE_HXK in qkd_ectl3_kiss_st_cols.sv; until then a parent HXK 15 fails elaboration by design). No pin change expected (interface is unchanged); which quarters actually differ after synthesis was not measured.",
+   "started": null,
+   "status": "NOT STARTED: ordered by COORD 15:3x, but no kit input exists. The quarter core jsons (qkd_ectlk_q<k>_core.json, Codex ectlk_quarter_cores.py output, input of ectlk_q_corejson.py) are in no repo tree and on no fleet host (find on intel2 / epyc8 / epyc9 / epyc10), and the 37/26 kit dirs (intel2 kv-ectlk-rl-cores37/q0,q1,q3; fable-fix-kv-pv-ectlk) keep only run/ + views. Needs the owner of the 37/26 kits (KV-ECTLK-RL / FABLE-FIX-KV-PV) or the AGIdock archive of those kits; then VERILOG_TOP_PARAMS += HXK 15 on the same kit."
+  }
+ ],
+ "latency_delta": {
+  "lane_table": "no row changes: every station is intra-partition (stk, stations and e0 of a head sit in one hg / hgi partition); LATCHECK prices crossing lanes only",
+  "rtl_parameter": "qkd_ectl3_kiss_st HXK 13 -> 15 on all 32 ectl_<st>_<e> (already in the derived netlist; kv_regen does not touch HXK)",
+  "compiler": "attention calendar D_QK + 2 (boot word cfg_cal; QK half LMAX .. HUB_PUB moves with the score). With the bound QK_ISSUE_AGE 37: D_QK 3 -> 5",
+  "how": "export OT_KV_HEAD_KST=2 for every tool that compiles the programme / boot image (kv_static_programme.py, kv_bootage.py, kv_static_die.py, kv_static_attn_join.py read kv_qkh_safe32.capture_hxk() / calendar_d_qk(), which now add kv_head_kst.depth()). tools/die_plan/regen_constants.py QK_D_QK (informational 'compiler' row) still prints QK_ISSUE_AGE - 34 without the +2.",
+  "token": "+2 edges on the K-pass score of every attention step (report to the uarch model with the event)"
+ },
+ "proof": {
+  "head_lock_step": "forms 0 (_s_lk) and 1 (_ft_s_lk): PASS, 28 runs a form 0 mismatches (7 seeds x default + 3 random power-ups), KT_ST 0 == source, KT_ST 2 / 1 == source 2 / 1 edges earlier, 5/5 negative controls a form; sc_d reset transient <= 18 edges after release is reset-aligned (untagged)",
+  "consumer_lock_step": "PASS 8/8 (4 head ids x 2 seeds): control tile HXK 8 -> 10 with KT_ST 2: sc_valid / sc_addr / sc_data under valid / lmax / lmax_any exactly 2 edges later, t / e / rq / k_done same edge, no fault; controls (no HXK move; 14-lane form) off the law on 256 edges each",
+  "benches": [
+   "tools/qwen_kv_die/head_kst_bench.sh (rtl/test/qwen_kv_die/tb_qkh_head_kst.sv)",
+   "tools/qwen_kv_die/head_kst_ectl_bench.sh (rtl/test/qwen_kv_die/tb_qkh_kst_ectl.sv)"
+  ],
+  "structural": "tools/qwen_kv_die/head_kst_struct_eq.py: KT_ST 0 == source head, same cells and same driver on every sink bit, 4/4 heads (epyc9 run/eq/result.txt)",
+  "logs": "epyc7:/srv/opentallas-scratch2/claude/kv-kt-e0/run/{lk2_f0,lk2_f1,ec3} (result*.txt, run_*.log)",
+  "not_proven": [
+   "KV die token vehicle (physical/die_plan/qwen_kvsys/tok/RECIPE): needs the D25 re-bind + boot image at D_QK + 2; not run",
+   "D_QK + 2 itself: by law and the kv_qkh_safe32 precedent (same +2 lane -> score edges), not simulated here",
+   "strict bind with the derived netlist / map / composition: not run by this lane",
+   "relay_mid siting of the 56 parent station cells a partition: regex only, no placed view",
+   "ECTLK q0..q3 at HXK 15: RTL parameter + tile lock-step (HXK 8 -> 10 on the same ot_qkd_ectl_part), no kit"
+  ]
+ }
+}
