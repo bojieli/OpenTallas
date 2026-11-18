@@ -2138,11 +2138,12 @@ def adopt_rows_tick(AP, cfg, st, now=None, alert_after=2):
         if not isinstance(d, dict) or not d.get("enabled") or not d.get("src"):
             continue
         rec, src = seen.get(die), d["src"]
+        sig = [d.get("event"), d.get("plan_event")]
         if rec is None:
-            seen[die] = dict(src=src, t=now, switched=False)
+            seen[die] = dict(src=src, sig=sig, t=now, switched=False)
             continue
-        if rec.get("src") != src:
-            seen[die] = dict(src=src, was=rec.get("src"), t=now, switched=True, ticks=0, alerted=False)
+        if rec.get("src") != src or (rec.get("sig") is not None and rec.get("sig") != sig):
+            seen[die] = dict(src=src, sig=sig, was=rec.get("src"), t=now, switched=True, ticks=0, sup_ticks=0, alerted=False)
             AP.log(f"KIT-WAVE ADOPT-ROWS {die}: tree switched {os.path.basename(str(rec.get('src')))} -> {os.path.basename(str(src))}")
             continue
         if not rec.get("switched") or rec.get("done"):
@@ -2166,6 +2167,78 @@ def adopt_rows_tick(AP, cfg, st, now=None, alert_after=2):
                             f"only {n}/{m} plan types have a row on {d['event']}; missing e.g. {', '.join(missing[:12])}; {len(old_only & set(missing))} of them were superseded "
                             f"on the old tree. Check the pilot hold, the hold records' event terms and the fail keys of these items")
     return out
+
+
+def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
+    """WAVE-FLOW-R2 11-17 (COORD, HEAD NF15f pilots could not launch: the wave allows ONE live attempt per item and an NF13a hd_lep0N in GRT for 29 h and an NF15d2r1 hd_mesh
+    were still running): when a die's tree or event / plan_event switches (apply), every live attempt (wave unit RUNNING / LAUNCHING, queue job of an ENQUEUED row) whose
+    kit event is not the die's new event is stopped and marked CANCELLED class SUPERSEDED, for `window_ticks` ticks after the switch, so the new pilots launch on the next tick.
+    Kept (logged once): an item in the die's hold_items that protects a running row, and a row whose own plan block is the item's block in the current plan (its result still
+    counts).  The stop is the existing one: the unit, then the host scopes of the attempt.  die option supersede_on_switch false = off.  -> number stopped"""
+    cur_blocks = current_blocks(cfg, st)
+    jobs = {}
+    if ap_dir:
+        try:
+            jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+        except (OSError, ValueError):
+            jobs = {}
+    seen = st.get("adopt_seen") or {}
+    cap = int(cfg.get("supersede_max_per_tick", DEFAULTS.get("supersede_max_per_tick", 20)))
+    n, roots = 0, []
+    for die, d in (cfg.get("dies") or {}).items():
+        rec = seen.get(die) or {}
+        if not isinstance(d, dict) or not rec.get("switched") or d.get("supersede_on_switch") is False or not d.get("event"):
+            continue
+        rec["sup_ticks"] = int(rec.get("sup_ticks") or 0) + 1
+        if rec["sup_ticks"] > window_ticks:
+            continue
+        for key, r in (st.get("items") or {}).items():
+            if r.get("die") != die or r.get("status") not in ("RUNNING", "LAUNCHING", "ENQUEUED") or not r.get("event") or r.get("event") == d["event"]:
+                continue
+            item = r.get("item") or ""
+            held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
+                         if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
+            same = bool(r.get("block_sha")) and cur_blocks.get(die, {}).get(item) == r.get("block_sha")
+            if held is not None or same:
+                why = f"hold_items: {held[:120]}" if held is not None else f"own plan block {str(r.get('block_sha'))[:12]} is the item's block in the current plan"
+                if r.get("switch_kept") != why:
+                    r["switch_kept"] = why
+                    AP.log(f"KIT-WAVE SWITCH-SUPERSEDE-KEEP {die}/{item}@{r.get('attempt')} (event {r.get('event')}): {why}")
+                continue
+            units = []
+            if r.get("status") in ("RUNNING", "LAUNCHING"):
+                units.append(r.get("unit"))
+                try:
+                    units.append(json.loads((Path(r["dir"]) / "place_service.json").read_text())["unit"])
+                except (OSError, ValueError, KeyError, TypeError):
+                    pass
+                what = f"wave {r.get('stage') or r.get('status')}"
+            elif r.get("q_id"):
+                j = jobs.get(r["q_id"]) or {}
+                if j.get("status") != "RUNNING" or not j.get("unit"):
+                    continue
+                units.append(j["unit"])
+                what = f"queue job {r['q_id']}"
+            else:
+                continue
+            if n >= cap:
+                AP.log(f"KIT-WAVE SWITCH-SUPERSEDE cap {cap} reached; {die}/{item} waits for the next tick")
+                break
+            if not AP.DRY:
+                for u in units:
+                    if u:
+                        AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+                roots.append(attempt_root(r))
+            r.update(status="CANCELLED", **{"class": "SUPERSEDED"}, updated=time.time(),
+                     reason=f"{what} on event {r.get('event')}: the die switched to {d['event']} (tree / event apply); one live attempt per item would block the new pilots")
+            notices.setdefault(die, []).append(f"{item}@{r.get('attempt')} SUPERSEDED on switch: {what} stopped")
+            AP.log(f"KIT-WAVE SWITCH-SUPERSEDE {die}/{item}@{r.get('attempt')} event {r.get('event')} -> {d['event']}: {what} stopped, units {units}")
+            n += 1
+    if roots:
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, roots)
+        AP.log(f"KIT-WAVE SWITCH-SUPERSEDE remote stop: {' '.join(WJ.stopped_names(res))[:600] or 'none running'}"
+               + "".join(f"; {h} not checked: {v['error']}" for h, v in res.items() if v.get("error")))
+    return n
 
 
 def name_stuck_retry_infra(AP, cfg, st, now=None, grace_s=1200):
@@ -12125,6 +12198,7 @@ def _step(AP, ap_dir):
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    supersede_on_switch(AP, cfg, st, notices, ap_dir)
     try:
         rekey_adopted(AP, cfg, st)                           # WAVE-LONGRUN-1 (a): adoption re-keys unchanged live rows
     except Exception as e:
