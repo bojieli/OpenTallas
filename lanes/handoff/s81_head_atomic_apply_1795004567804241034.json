@@ -1,0 +1,75 @@
+{
+ "die": "s81_head",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r1n",
+  "event": "head_rp21z20NF15f_r1",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r1n/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+  "plan_sha256": "0a15d480c27d9ad9bee245337928eb3e6ab7f1b38a40d812ef7166bc94188161",
+  "kit_rtl": {
+   "mode": "script",
+   "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh",
+   "note": "KIT-OPS-5 HEAD NF13a (HEAD-100 READY+ADOPT 19:00 (COORD r206 ADOPT-OK, per-family kit_rtl smoke 8/8 PASS): G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 810a66fa536a; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF12 (HEAD-100 READY+ADOPT 17:42: G0 1 info, bind PASS, cohort 26/26, LATCHECK 329/329; plan 129319e1cb0b; wave_prepare.json republished for the edited plan) | KIT-OPS-5 HEAD NF6 (HEAD-100 READY+ADOPT 08:10, COORD r109: G0 1 info error, bind PASS, cohort 26/26, LATCHECK 329/329; plan c7d50e195bdc, tree head-99/prep21z20NF6/prep; la300 rides in the die clock run) | HEAD-98 11-13 rp21z4 FINAL event: snapshot of epyc7 wt/head-97-rp20 @fb5f5a8 (main + REACH-TOOL-3 + head-97-xohop + rules-flow-1), prepared tree head-98/prep21z4/prep"
+  }
+ },
+ "marker": {
+  "die": "s81_head",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2",
+  "manifest_hash": "2d6f93bf2b1e18d790efbb7cf5fc55283796195cb8e7bc33564fa89311bb8a4e",
+  "src_manifest_sha": "2d6f93bf2b1e18d790efbb7cf5fc55283796195cb8e7bc33564fa89311bb8a4e",
+  "tools_sha": "385f61b5582a91e3bf52d3bd494eebc6a64b21bb",
+  "hosts": [
+   "epyc9",
+   "epyc10",
+   "intel1"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "HEAD-PLAN-R4 r2 on r1n: SIGNED lep_pair vE28 (ve28_hold2 SIGNED, record s81_head/ot_s81hd_lep_pair__ve28_hei_1118) with the vE detail-LEF splice (M6/M7, bloat 1, check PASS, pins equal), signed clock_contract TT 553.42 / FF 446.66 pin-register means on the 4 pair taps; open-type M8 re-grant hd_lep0N/hd_mesh/hd_serdes from the tree2 die clock guide 8d0b6462 (type_guides, main 8a19aa3; lock 1296/512/336 -> 0); tools m8_grant/schema from main. Smoke on this exact tree (ot-run epyc9 oth-ubuntu-1646162): static gate schema/pre_g0/hashes/contained PASS, G0 0 errors, strict bind PASS, cohort 26/26, LATCHECK 329/329, kit_rtl hd_lep0N PASS (KCRED 28 BB, m8_grant type_tracks 8564 guide 8d0b6462). Replicated epyc10 + intel1 OK.",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/physical/die_plan/s81_head/prep/NF15f/prep/source_plan.json",
+  "plan_sha256": "8b6f826a15c9dd936ffaa72f76c520fc465b31bc4dc3b65c016f729970b00fcd",
+  "plan_canonical_sha256": "4cc14f2e0acdefb1e37c3462efb12a402f3c0aa8bcabe247a12f887a8bae17ee",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+  "sidecar_sha256": "6fcd1d3dfc43434bcbf774528cbaefa2ccb2fce156d0ada588297637fb793f0e",
+  "frozen_kit_tree": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/physical/die_plan/s81_head/prep/NF15f/die_clock/kit_tree.json",
+  "physical_qualified": false,
+  "preserve_holds": "all inherited s81_head hold_records kept; HEAD-PLAN-R4 one plan revision (COORD r706)",
+  "config": {
+   "event": "head_rp21z20NF15f_r2",
+   "tools_sha": "385f61b5582a91e3bf52d3bd494eebc6a64b21bb",
+   "gen_host": "epyc9",
+   "gen_hosts": [
+    "epyc9",
+    "epyc10",
+    "intel1"
+   ],
+   "kit_rtl": {
+    "mode": "script",
+    "script": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/physical/die_plan/s81_head/kit_wave/kit_rtl.sh"
+   },
+   "gen_args": [
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/physical/die_plan/s81_head/prep/NF15f/prep/source_sidecar.json",
+    "--hold-ff-margin",
+    "0"
+   ]
+  },
+  "native_reset_receipt": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/results/head_native_release_nf15f_r2/native_release_receipt.json",
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply",
+  "die_gen_env": {
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206_t5144e08_t385f61b_r2/physical/die_plan/s81_head/kit_wave/signed_view_sha_head.json"
+  },
+  "optimistic": true,
+  "_path": "/home/ubuntu/hpr4/cand_r2.json"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/04dbdc01718d95150dfcc7108f3ed4b992b5dd5a52f05ad3d96d62da3afea4e9/result.json",
+ "candidate": "/home/ubuntu/hpr4/cand_r2.json",
+ "optimistic": true,
+ "warnings": [
+  "ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/s81_head/2d6f93bf2b1e18d790efbb7cf5fc55283796195cb8e7bc33564fa89311bb8a4e.json (run tools/autopilot/publish_gate.py run on this candidate first)",
+  "ADVISORY source guard not ready: {'state': None, 'full_ok': None, 'running': None}"
+ ]
+}
