@@ -247,10 +247,21 @@ def test_bind_gate_without_a_recipe_uses_the_bind_closure(monkeypatch):
     o.delta_paths = ["tools/die_plan/gen_phys.py", "tools/autopilot/kit_wave.py"]
     assert o.bind("/n") == (True, True, "bind closure untouched: none of the 2 delta files is in bind.py's import closure")
     o.delta_paths = ["tools/die_plan/bind_helper.py", "tools/die_plan/gen_phys.py"]
-    ran, unchanged, why = o.bind("/n")
-    assert not ran and not unchanged and "bind_helper.py" in why and "tools_refresh_bind_cmd" in why
+    ob = TR.Ops(die(), "/r", SHA, run=lambda host, cmd, timeout=0: (1, "bind boom"))           # the default strict bind cannot run: optimistic switch with a warning (r693 / r700)
+    ob.delta_paths = list(o.delta_paths)
+    ran, unchanged, why = ob.bind("/n")
+    assert ran and unchanged and why.startswith("WARNING optimistic switch") and "bind_helper.py" in why
+    seen0 = []
+
+    def run2(host, cmd, timeout=0):
+        seen0.append(cmd)
+        return (0, "aa\nbb") if "sha256sum" in cmd else (0, "")
+    o2 = TR.Ops(die(), "/r", SHA, run=run2)
+    o2.delta_paths = list(o.delta_paths)
+    ran, unchanged, why = o2.bind("/n")                                                          # it ran and the native_topology hashes differ: a REAL change
+    assert ran and not unchanged and any("bind.py elab" in c and "--strict" in c for c in seen0)
     o.delta_paths = None
-    assert not o.bind("/n")[0]
+    assert o.bind_closure_touched() is None
     d = die(tools_refresh_bind_cmd="python3 tools/die_plan/bind.py bind {plan} --out {out} --strict")
     seen = []
     o2 = TR.Ops(d, "/r", SHA, run=lambda host, cmd, timeout=0: (seen.append(cmd) or (0, "aa\naa")))
@@ -493,3 +504,13 @@ def test_tick_starts_at_most_one_pass_per_die_per_30_minutes(monkeypatch, tmp_pa
     st["tools_refresh_last"]["kv"] -= 1900
     KW.tools_refresh_tick(AP, cfg, st)
     assert len(launched) == 2 and "r1,r2" in " ".join(st["tools_refresh_started"])
+
+
+def test_needs_lane_goes_to_a_live_owner_never_a_dead_lane():
+    import time
+    now = time.time()
+    act = {"S81-DIE-R3": now - 3600, "DIE-S81-92": now - 40 * 3600}
+    assert TR.live_owner("s81", {"owner_lane": "DIE-S81-92"}, act, now) == "S81-DIE-R3"
+    assert TR.live_owner("s81", {"owner_lane": "DIE-S81-92", "refresh_owner": "DIE-S81-92"}, {}, now) == "COORD"
+    assert TR.live_owner("s81", {"owner_lane": "S81-DIE-R3"}, {"S81-DIE-R3": now - 100}, now) == "S81-DIE-R3"
+    assert TR.live_owner("qwen_compute", {}, {"QC-PLAN-R3": now}, now) == "QC-PLAN-R3"
