@@ -8,7 +8,8 @@
   "hosts": [
    "epyc9",
    "epyc8",
-   "intel1"
+   "intel1",
+   "epyc2"
   ],
   "smoke": "PASS",
   "smoke_detail": "N3 = N2B plan 25f88097 (byte-identical) + main d9bbb638fa79 tools/ + physical/common_flow (r641 r644 r648 r649 r650). Strict bind s29q103S4Q9N3BR on the E2 event tree (fresh elab, bind.py 22aaef86): 0 errors, CM 0, KP 0; LATCHECK, hcparam 0 mismatches; G0 PASS 0 err; PRE PASS; CB16 S2-S4 0. Published as data_pack+delta_apply --link of _d3 + 136 checksum-differing files; bind relocated E2 tree -> published tree (relocate_bind_x.py, byte-checked).",
@@ -40,7 +41,8 @@
    "gen_hosts": [
     "epyc9",
     "epyc8",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "gen_host": "epyc9",
    "gen_args": [
@@ -80,5 +82,5 @@
   }
  },
  "keep_gen_hosts": false,
- "note": "QC-PLAN-R3 N3 adopt (COORD 19:2x / FABLE-CLOSURE-STRATEGY (1)): N2B folded into N3 (N2B never applied). Event s29q103S4Q9N3 releases the N3 holds (cb tap0 also needs qc-n3-halo-refresh, st_a mpl0034, nb-slot, sc street); plan_event N1B keeps the N1B releases. | 23:1x: intel1 added to gen_hosts (current derive_gen_hosts set; tree replicated --link-from n1b_d2 + bind copied, guard ok on all 3)"
+ "note": "QC-PLAN-R3 N3 adopt (COORD 19:2x / FABLE-CLOSURE-STRATEGY (1)): N2B folded into N3 (N2B never applied). Event s29q103S4Q9N3 releases the N3 holds (cb tap0 also needs qc-n3-halo-refresh, st_a mpl0034, nb-slot, sc street); plan_event N1B keeps the N1B releases. | 23:1x: intel1 added to gen_hosts (current derive_gen_hosts set; tree replicated --link-from n1b_d2 + bind copied, guard ok on all 3) | 23:2x: + epyc2 (derive_gen_hosts moves between epyc8/epyc2): the tree and bind are on all 4 hosts that hold N1B _d2"
 }
