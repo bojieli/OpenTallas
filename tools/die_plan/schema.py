@@ -1367,6 +1367,7 @@ SCHEMA = {
             # (core_conns.json); no default: unset = those types keep ft_station_max_um (check.py R3-INTERNAL)
             core_internal_reach_um=_pos,
             # Explicit NS face-register geometry; per exact/unsplit type, default unchanged.
+            face_flop_ns_dense_pins_per_um={"type": "number", "minimum": 0},
             face_flop_ns_types={"type": "object", "additionalProperties": {
                 "type": "object", "additionalProperties": False, "properties": {
                     "row_stride": {"type": "integer", "minimum": 1, "maximum": 16},

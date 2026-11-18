@@ -338,12 +338,41 @@ def _cland_strip_density(budgets, tn):
     return float(v) if v and float(v) > 0 else None
 
 
-def _face_flop_ns_config(budgets, tn):
-    """Opt-in NS pin-register row geometry. No environment override; absent keeps legacy kits."""
+FACE_NS_DENSE_PINS_PER_UM = 4.0     # FACE-NS-DENSE-1 reference value (not a default): S81 strip t25 leafdn_i0, 598 pins / 124.3 um = 4.8 on the south face
+FACE_NS_DENSE_MIN_PINS = 256
+
+
+def face_ns_dense(pins, per_um=FACE_NS_DENSE_PINS_PER_UM, min_pins=FACE_NS_DENSE_MIN_PINS):
+    """[(port, face, pins, pins/um)] of the N/S bus windows of one type (type_pins rows) at or above per_um with at
+    least min_pins pins: their pin registers fill every row behind the pins when the bank is solid."""
+    xs = {}
+    for name, _bit, _layer, x, _y, face in pins:
+        if face in ("N", "S"):
+            xs.setdefault((name, face), []).append(float(x))
+    out = []
+    for (name, face), v in sorted(xs.items()):
+        span = max(v) - min(v)
+        if len(v) >= min_pins and span > 0 and len(v) / span >= per_um:
+            out.append((name, face, len(v), round(len(v) / span, 2)))
+    return out
+
+
+def _face_flop_ns_config(budgets, tn, pins=None):
+    """NS pin-register row geometry.  budgets.face_flop_ns_types {type or base: {row_stride, inset_rows}} wins.
+    FACE-NS-DENSE-1 (FABLE-FIX-S81-STRIP 11-18, COORD ruling (a)): OPT-IN, default off.  Only when the plan sets
+    budgets.face_flop_ns_dense_pins_per_um > 0, a type without an entry that has an N/S bus window of at least that many
+    pins/um and >= 256 pins takes row stride 2 (on S81 every bus is planned at 4.6-4.8 pins/um: 4.0 fires on 387 of 395
+    types, so the family row face_flop_ns_types is the normal form).
+    Measured on S81 leaf t25__cl431c660f: the solid bank (595 flops in 12 full rows on 598 pins) ended GRT with 1,022
+    overflow after 30 extra iterations (M6 568, M8 347, all 101 gcells on the bank); stride 2 (24 rows, 24-31 flops
+    per row) ended at 0 after 21.  No environment override."""
     per = budgets.get("face_flop_ns_types") or {}
     v = per.get(tn, per.get(tn.split("__")[0]))
     if v is None:
-        return []
+        lim = budgets.get("face_flop_ns_dense_pins_per_um")
+        if pins is None or not lim or float(lim) <= 0 or not face_ns_dense(pins, float(lim)):
+            return []
+        v = {"row_stride": 2, "inset_rows": 0}
     return [f"export OT_FF_NS_ROW_STRIDE = {int(v.get('row_stride', 1))}",
             f"export OT_FF_NS_INSET_ROWS = {int(v.get('inset_rows', 0))}"]
 def _face_flop_ew(budgets, tn):
@@ -6299,7 +6328,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn, cland_pinslot) else []),
            # DIE-KV-62/stations 11-02 opt-in budgets.cland_pinslot_dense_types: y-column pinslot rows body to body
            *(["export OT_CLAND_PINSLOT_DENSE = 1"] if _cland_pinslot_dense(P.budgets, tn) else []),
-           *_face_flop_ns_config(P.budgets, tn),
+           *_face_flop_ns_config(P.budgets, tn, type_pins(P, tn)),
            # DIE-QC-97 11-09 opt-in budgets.cland_strip_rows(_types): thin the N/S ring_ff face strip (conservative kit wins)
            *([f"export OT_CLAND_STRIP_ROWS = {_cland_strip_rows(P.budgets, tn)}"] if _cland_strip_rows(P.budgets, tn) else []),
            # LAND-RING-2 11-12 opt-in budgets.cland_strip_density(_types): strip rows from each ring's own flop density

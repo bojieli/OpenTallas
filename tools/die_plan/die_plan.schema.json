@@ -8191,6 +8191,10 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "face_flop_ns_dense_pins_per_um": {
+     "type": "number",
+     "minimum": 0
+    },
     "face_flop_ns_types": {
      "type": "object",
      "additionalProperties": {
