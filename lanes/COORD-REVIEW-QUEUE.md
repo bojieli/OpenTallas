@@ -22664,3 +22664,4 @@ FAILED [AUTOPILOT 4f4da52bd190] 2026-11-17 20:47:39 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-17 20:52 PST STATE [MERGE-QUEUE -> COORD] ot-tools-sync for main 838c9a2090a failed rc=4: rt/current -> 838c9a2090a2 (was b0f50d206c7e); hosts intel1:FAIL 22 GB free < 50 GB (OT_RT_HOST_MIN_FREE_GB); not copied epyc2:ok epyc7:ok epyc8:ok epyc9:ok epyc10:ok; stderr context: er matches
 /srv/opentallas-scratch2/claude/rt/838c9a2090a2/tools/die_plan/test_hold_gate_ring.py:24: SyntaxWarning: "\[" is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\["? A raw string is also an option.
   proc get_ports {x} { regsub {\[\*\]$} $x {\[*\]} x; set out {}; foreach p [all_inputs] { if {[string match $x $p]} { lappend out $p } }; return $out }
+- 2026-11-17 20:52 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc8 wrote 341 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
