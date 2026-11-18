@@ -175,7 +175,7 @@ def main(argv):
     g = importlib.util.module_from_spec(sp); sp.loader.exec_module(g)
     s = build(coord, markers, g.canon)
     event_paths(coord, s, g.canon)
-    prose_paths(glob.glob(os.path.join(coord, "lanes/handoff/*.md")), s, g.canon)
+    # COORD 11-18: NO protection from handoff prose (a lane's handoff note kept a dead 17 GB kit protected, sd9h_gen); prose_paths() stays as a library function, main() does not call it.
     live_cmd_paths(s, g.canon)
     prov_cache_paths(os.environ.get("OT_PROV_PATHS_CACHE", PROV_CACHE), s, g.canon)
     post_trees(os.path.join(coord, "lanes/COORD-REVIEW-QUEUE.md"), s, g.canon)

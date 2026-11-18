@@ -64,3 +64,14 @@ class Superseded(unittest.TestCase):
     def test_superseded_marker_protects_nothing_but_a_live_one_does(self):
         d = mk({"dies": {}}, markers=[{"status": "SUPERSEDED by D16 (COORD)", "tree": R + "kw45/src_dead/a/b"}, {"status": "PENDING CANDIDATE NOT ADOPTED", "tree": R + "kw45/src_live/a/b"}])
         self.assertEqual(B.build(d, [d + "/lanes/handoff"]), {R + "kw45/src_live/a/b"})
+
+
+class MainIgnoresProse(unittest.TestCase):
+    def test_main_does_not_protect_a_path_quoted_only_in_a_handoff_note(self):
+        import os, subprocess, sys, tempfile
+        R = "/srv/opentallas-scratch2/claude/"
+        d = mk({"dies": {}}, prose="BUILD RUNNING kit at " + R + "lane-x/sd9h_gen NEXT export")
+        out = tempfile.mkdtemp() + "/list.txt"
+        r = subprocess.run([sys.executable, "-I", os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_protected_live.py"), d, out], capture_output=True, text=True, env=dict(os.environ, OT_PROV_PATHS_CACHE="/nonexistent"))
+        txt = open(out).read() if os.path.exists(out) else ""
+        self.assertNotIn("sd9h_gen", txt, r.stdout + r.stderr)
