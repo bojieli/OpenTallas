@@ -38096,6 +38096,41 @@
      ],
      "cause": "measured shared place-stage defects in the S81 leaf kits: VPW bank site selection (OT_VPW_BANK >100 um) and FT sites off the row/site grid",
      "owner": "FIX-S81-VPW"
+    },
+    {
+     "plan_sha": "1698c515003deb5469521f7811ef6d644438c10f741ceef7c4bbacf72e8876c9",
+     "reason": "FABLE-FIX-S81-STRIP 11-18 04:5x (COORD): the strip setup stops are structural (VPW write data, coefficient regs and reset into the hard cores at -300..-515 ps); fixed by XR + CFR + reset relays in D8e. No strip relaunch / route on the pre-XR tree until D8e applies. t25_ns2 pilot and FABLE-FIX-S81-STRIP private runs are not wave rows and are unaffected.",
+     "release": [
+      "result:FABLE-FIX-S81-STRIP:d8e-applied"
+     ],
+     "migrated": true,
+     "carry": true,
+     "follow_plan": true,
+     "owner": "FABLE-FIX-S81-STRIP",
+     "cause": "strip setup -300..-515 ps (XR/CFR/reset relays, D8e)",
+     "owner_since": "2026-11-18 03:31 PST WAVE-PILOT-FIX (COORD order)",
+     "id": "s81-strip-xr-d8e-1118",
+     "keys": [
+      "ot_s81sl_leaf__*"
+     ]
+    },
+    {
+     "plan_sha": "1698c515003deb5469521f7811ef6d644438c10f741ceef7c4bbacf72e8876c9",
+     "reason": "FABLE-FIX-S81-STRIP 11-18 04:5x (COORD): the strip setup stops are structural (VPW write data, coefficient regs and reset into the hard cores at -300..-515 ps); fixed by XR + CFR + reset relays in D8e. No strip relaunch / route on the pre-XR tree until D8e applies. t25_ns2 pilot and FABLE-FIX-S81-STRIP private runs are not wave rows and are unaffected.",
+     "release": [
+      "result:FABLE-FIX-S81-STRIP:d8e-applied"
+     ],
+     "migrated": true,
+     "carry": true,
+     "follow_plan": true,
+     "owner": "FABLE-FIX-S81-STRIP",
+     "cause": "strip setup -300..-515 ps (XR/CFR/reset relays, D8e)",
+     "owner_since": "2026-11-18 03:31 PST WAVE-PILOT-FIX (COORD order)",
+     "id": "s81-strip-xr-d8e-route-1118",
+     "keys": [
+      "ot_s81sl_leaf__*"
+     ],
+     "route": true
     }
    ],
    "planned_events": [
