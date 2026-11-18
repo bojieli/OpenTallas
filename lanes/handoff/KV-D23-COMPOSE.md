@@ -43,3 +43,14 @@ D24 recipe (base = applied D23 tree): hub_C rows (re-run kv-d23-hubc/d23_hubc_ro
 + hub_Wi host rows (KV-HUBWI-HOST-rows-d23.json apply_recipe, writer main 04df4c77f065, views epyc9 kv-d23-hubwi/views_src)
 + 4 pc portbind_files + hub_Wo (KV-HUBWO-RESET-d23.json when green) + pvfin (KV-PVFIN-CAL-d24.json) last.
 HUBC leftovers now mine: 6 exported ring/dly masters, kv_dly_w512_d46_b4fbd in GRT (KV-D23-HUBC dead).
+## Status 19:05Z -- KV-D23 APPLIED (D23f)
+LIVE BASE (for mirrors / D24): /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_e21a54ae_teefb7e3_d23f
+  manifest ec75f13b9d2b, plan e21a54aebe16, asbuilt da56e1cd818c, event KV-D23, hosts epyc7/epyc9/epyc10 (epyc8 disk floor, not replicated).
+  receipt lanes/handoff/qwen_kvsys_atomic_apply_1795034096412178751.json.
+Next on top (expect-source = D23f tree, expect-event KV-D23): D23h2 (= D23g2 + FABLE-FIX-KV-HG relay_mid keys on 17 hg/hgi types;
+  tree kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2, gate epyc7 d23h2gate) or D23g2 if h2 fails.
+  D23g/D23h: NOT to apply (ring RTL without LITE; D23g bind BIND_PARAM_UNKNOWN). build_d23.py EXTRA_PATHS adds the ring RTL.
+D24: epyc8 kv-d23-compose8/build_d24.py BASE EVENT MAIN TAG (inputs d24in/); needs the HCPARAM entry (main 61164324139e) in tools.
+pc portbind proof: epyc9 kv-d23-compose8/pcpb (epyc8 below disk floor). d46 dly rebuild: epyc10 kv-d23-compose/dly_h1.
+BOUND-PARAM-1 (main 60fe7ab5499): run tools/die_plan/bound_param_check.py --tree T --rtl-dir T/.../bind_of_record/rtl after each gate.
+After the first D23 hub/pv kits: post native hub_Wo cell count (hub_Wo split held, so from D24) and NEED-STATION counts on pv v2/v6 kits.
