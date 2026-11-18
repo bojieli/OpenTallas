@@ -166,3 +166,21 @@ def test_a_permission_error_inside_an_attempt_never_ends_the_pass(tmp_path):
 def test_runner_covers_scratch3_and_never_overlaps():
     r = (H / "ot-auto-retire-run.sh").read_text()
     assert "/srv/opentallas-scratch3/claude" in r and "--root \"$R/kw45\"" in r and "flock -n 8" in r and "scratch3_free_gb" in r
+
+
+def test_newest_failed_attempt_of_a_type_keeps_its_db_for_24h_older_ones_go(tmp_path):
+    c = str(tmp_path)
+    cfg = {"dies": {"s81": {"event": "NEW"}}}
+    r = "kw/runs/s81/kit-wave/s81/OLDE/items/%s/attempt_%d"                        # a dead (non-current) event: every failed attempt is a candidate
+    # type T has two items; failed 2-6 h ago; type U's attempts failed 40 h ago
+    mk(c, r % ("T__a", 1), NOW - 5 * 3600); mk(c, r % ("T__a", 2), NOW - 2 * 3600)
+    mk(c, r % ("T__b", 1), NOW - 6 * 3600); mk(c, r % ("T__b", 2), NOW - 3 * 3600)
+    mk(c, r % ("U", 1), NOW - 40 * 3600); mk(c, r % ("U", 2), NOW - 40 * 3600)
+    st = {"items": {}}
+    for it, par in (("T__a", "T"), ("T__b", "T"), ("U", "U")):
+        for n in (1, 2):
+            st["items"]["s81|%s|%d" % (it, n)] = A("s81", "OLDE", it, n, status="FAIL", parent_item=par)
+    got = names(AR.attempt_candidates(c, cfg, st, "", now=NOW))
+    kept = [x for x in ("T__a/attempt_1", "T__a/attempt_2", "T__b/attempt_1", "T__b/attempt_2") if x not in got]
+    assert kept == ["T__a/attempt_2"]                       # ONE attempt for the whole type T: its newest failed attempt (2 h ago) keeps its DB; the others are listed
+    assert "U/attempt_1" in got and "U/attempt_2" in got    # type U's newest failed attempt is older than 24 h: no longer kept
