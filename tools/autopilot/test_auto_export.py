@@ -43,6 +43,8 @@ def test_probe_scan_spool_hash(tmp_path):
     base.mkdir(parents=True)
     (base / '6_final.odb').write_bytes(b'\0' * (2 << 20))
     (base / '6_final.v').write_text('module m; endmodule\n')
+    (base / 'm.lef').write_text('MACRO m\n')
+    (base / 'render.png').write_bytes(b'png')
     kit = tmp_path / 'claude' / 'fable-fix-s81-x' / 'work'
     (kit / 'config.mk').write_text('export DESIGN_NAME = ot_top_m\n')
     sod = tmp_path / 'claude' / 'fable-fix-s81-x' / 'signoff'
@@ -57,6 +59,8 @@ def test_probe_scan_spool_hash(tmp_path):
         return [json.loads(l) for l in r.stdout.splitlines() if l.startswith('{')]
     u, = run('scan', dict(hours=1, roots=[str(tmp_path / 'claude')]))
     assert u['top'] == 'ot_top_m' and [f for _, f in u['files']] == ['6_final.odb', '6_final.v', 'lec.json', 'signoff.json']
+    assert sorted(os.path.basename(f) for _, f in u['display']) == ['m.lef', 'render.png']
+    assert [f for _, f in AE.meta_files(u)] == ['lec.json', 'signoff.json']     # AGIdock never gets the 6_final.* DB files
     h, = run('hash', dict(paths=[str(base / '6_final.odb')]))
     assert h[str(base / '6_final.odb')][1] == 2 << 20
     os.environ['OT_AUTO_EXPORT_SPOOL'] = str(home / AE.SPOOL_REL)
@@ -84,3 +88,6 @@ def test_infer_order_and_row():
     u = dict(die='s81', unit='m__ax_0123456789', element='m', kind='t', record='r' * 64, odb_size=5, odb_sha='a' * 64, src='s')
     c = AE.index_row(u).rstrip('\n').split('\t')
     assert len(c) == 12 and c[4] == '/archive/opentallas-signed-1114/s81/m__ax_0123456789/6_final.odb' and c[10] == 'ARCHIVED-BOTH'
+    c = AE.index_row(dict(u, state='meta', display=[('d', 'm.lef')])).rstrip('\n').split('\t')
+    assert c[4] == '' and c[5].startswith('/home/ubuntu/signed-export-1114/s81/') and c[8] == 's81/m__ax_0123456789/display'
+    assert c[10] == 'RTX-FULL-AGI-META'

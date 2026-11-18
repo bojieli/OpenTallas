@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """auto_export.py: every R-MINIMAL sign-off goes to both signed stores with no lane step (AUTO-EXPORT-1118, OWNER r711).
 
-Stores (the count reads only these; same relative layout, INDEX.tsv append-only on both):
-  AGIdock  /archive/opentallas-signed-1114/<die>/<unit>/   + INDEX.tsv     (reached from the hub, key ~/.ssh/agidock_ot)
-  rtx-pro  /home/ubuntu/signed-export-1114/<die>/<unit>/   + INDEX.tsv     (pulls from AGIdock; the fleet has no route to it)
+Stores (OWNER export split 11-18: full records on rtx-pro only, AGIdock metadata + web-display export only):
+  rtx-pro  /home/ubuntu/signed-export-1114/<die>/<unit>/   + INDEX.tsv   full record: 6_final.{odb,def,spef,v,sdc} + sign-off
+           json; pulled by rtx-pro straight from the build host (the hub has no route to rtx-pro)
+  AGIdock  /archive/opentallas-signed-1114/<die>/<unit>/   + INDEX.tsv   metadata only: signoff.json and the other sign-off
+           json, MANIFEST.json (size + sha256 of every full-record file), display/ (renders + view pack: png/svg/webp,
+           LEF, libs, pins/abstract json, layout_dump.json); no DB copy.  Reached from the hub, key ~/.ssh/agidock_ot.
 
 Flow:
   1. hook   signoff.py cmd_run, after signoff.json is written: profile minimal + verdict SIGNED -> one spool file on the
@@ -12,13 +15,14 @@ Flow:
   2. drain  hub (intel2) systemd --user timer every 5 min, flock: reads every build host's spool (and, every
             OT_AUTO_EXPORT_SCAN_H hours, a scan of the host's scratch roots for R-MINIMAL SIGNED signoff.json of the last
             OT_AUTO_EXPORT_WINDOW_H hours, which catches kits whose bundled signoff.py predates the hook), hashes the files
-            on the host, skips any record whose ODB sha256 is already an INDEX row, streams host -> AGIdock
-            <unit>.partial (no fleet staging), verifies every sha256 there, renames to <unit> (never over an existing dir),
-            and lists the unit for rtx-pro.
-  3. rtx    rtx-pro cron */5 (`rtx-pull --hub intel2`): copies each listed unit AGIdock -> rtx-pro, verifies every sha256,
-            appends its INDEX row, reports back to the hub.
-  4. index  next drain: appends the AGIdock INDEX row (ARCHIVED-BOTH: both copies verified), posts
-            `AUTO-EXPORT <die>/<element>` via ~/coord/bin/post.sh, removes the host spool file.
+            on the host, skips any record whose ODB sha256 is already an INDEX row, streams the metadata + display files
+            host -> AGIdock <unit>.meta-partial-<ts> (no fleet staging), verifies every sha256 there, renames to <unit>
+            (never over an existing dir, never deletes on AGIdock), and lists the unit for rtx-pro.
+  3. rtx    rtx-pro cron */5 (`rtx-pull --hub intel2`): streams each listed unit's full record host -> rtx-pro,
+            verifies every sha256 against the hub's hashes, appends its INDEX row, reports back to the hub.
+  4. index  next drain: appends the AGIdock INDEX row (status RTX-FULL-AGI-META), posts `AUTO-EXPORT <die>/<element>`
+            via ~/coord/bin/post.sh, removes the host spool file.
+  Units exported before the split (ledger state 'agi': full copy already on AGIdock) finish the old way, ARCHIVED-BOTH.
 Idempotent: an ODB sha already in the AGIdock INDEX is skipped at every step; the hub ledger keeps per-unit state.
 Never modifies or deletes an existing archive file: new units only, <unit>.partial staging, append-only INDEX.
 
@@ -117,10 +121,24 @@ def unit(so, hint=None):
         p = os.path.join(sod, f)
         if f.endswith(".json") and os.path.isfile(p) and os.path.getsize(p) < 20 << 20 and f not in [x[1] for x in files]:
             files.append((sod, f))
+    disp, taken, tot = [], set(), 0
+    DISP = re.compile(r"\.(png|svg|webp|jpe?g|lef|lib|lib\.gz)$|(^|_)(pins|abstract|layout_dump|bb)\.(json|v)$|_bb\.v$")
+    roots = [sod, os.path.dirname(sod), dbd, inp.get("kit"), os.path.join(os.path.dirname(sod), "view"), os.path.join(os.path.dirname(sod), "views"),
+             os.path.join(os.path.dirname(dbd), "view")]
+    for r in [r for i, r in enumerate(roots) if r and os.path.isdir(r) and r not in roots[:i]]:
+        for dp, dn, fn in os.walk(r):
+            dn[:] = [d for d in dn if d not in ("objects", "logs", "results", "work", "tmp", ".git", "__pycache__")] if dp.count("/") - r.count("/") < 2 else []
+            for f in fn:
+                q = os.path.join(dp, f); rel = os.path.relpath(q, r)
+                rq = os.path.realpath(q)
+                if not DISP.search(f) or rel in taken or rq in taken or not os.path.isfile(q): continue
+                z = os.path.getsize(q)
+                if z > 50 << 20 or tot + z > 300 << 20: continue
+                taken.update((rel, rq)); tot += z; disp.append((r, rel))
     tt = ((rec.get("checks") or {}).get("setup_tt") or {}).get("wns_ps")
     ff = ((rec.get("checks") or {}).get("hold_ff") or {}).get("wns_ps")
     o.update(odb=os.path.realpath(odb), odb_size=os.path.getsize(odb), odb_mtime=os.path.getmtime(odb), files=files,
-             top=top_of(rec, so), tt=tt, ff=ff, drc=((rec.get("route") or {}).get("drc")))
+             display=disp, top=top_of(rec, so), tt=tt, ff=ff, drc=((rec.get("route") or {}).get("drc")))
     return o
 def sha(p, cache):
     st = os.stat(p); k = "%%s|%%d|%%d" %% (p, st.st_size, int(st.st_mtime))
@@ -261,44 +279,74 @@ def save_ledger(L):
     with open(tmp, 'w') as f:
         json.dump(L, f, indent=1)
     os.replace(tmp, p)
-    pend = [dict(key=k, **{x: u[x] for x in ('die', 'unit', 'element', 'kind', 'record', 'odb_sha', 'odb_size', 'shas', 'src', 'bytes') if x in u})
-            for k, u in L['units'].items() if u.get('state') == 'agi']
+    pend = [dict(key=k, mode='host' if u['state'] == 'meta' else 'agidock',
+                 **{x: u[x] for x in ('die', 'unit', 'element', 'kind', 'record', 'odb_sha', 'odb_size', 'shas', 'src', 'bytes',
+                                      'host', 'files', 'display') if x in u})
+            for k, u in L['units'].items() if u.get('state') in ('agi', 'meta')]
     tmp = os.path.join(STATE, 'pending_rtx.json.tmp')
     with open(tmp, 'w') as f:
         json.dump(pend, f, indent=1)
     os.replace(tmp, os.path.join(STATE, 'pending_rtx.json'))
 
 
-def index_row(u, status='ARCHIVED-BOTH'):
+SPLIT_STATUS = 'RTX-FULL-AGI-META'   # full record on rtx-pro, metadata + display on AGIdock (OWNER export split 11-18)
+
+
+def index_row(u):
+    """one INDEX row, the same on both stores.  Split units: db (the AGIdock DB column) is empty, pack = display dir."""
     k = '%s/%s' % (u['die'], u['unit'])
     meta = '%s/%s/signoff.json' % (AGI_ROOT, k)
-    return '\t'.join([u['die'], u['element'], u['kind'], u['record'], '%s/%s/6_final.odb' % (AGI_ROOT, k),
-                      '%s/%s/6_final.odb' % (RTX_ROOT, k), str(u['odb_size']), u['odb_sha'], '', meta, status, u['src']]) + '\n'
+    split = u.get('state') == 'meta' or u.get('mode') == 'host'
+    db = '' if split else '%s/%s/6_final.odb' % (AGI_ROOT, k)
+    pack = '%s/display' % k if split and u.get('display') else ''
+    return '\t'.join([u['die'], u['element'], u['kind'], u['record'], db, '%s/%s/6_final.odb' % (RTX_ROOT, k),
+                      str(u['odb_size']), u['odb_sha'], pack, meta, SPLIT_STATUS if split else 'ARCHIVED-BOTH', u['src']]) + '\n'
 
 
-def export_agi(u):
-    """stream host -> AGIdock <unit>.partial, verify, rename.  -> None or error text."""
+def meta_files(u):
+    """the AGIdock share of a unit: the sign-off json (not the 6_final.* DB files)."""
+    return [(d, f) for d, f in u['files'] if not f.startswith('6_final.')]
+
+
+def export_agi_meta(u):
+    """AGIdock gets metadata + display only: stream them host -> <unit>.meta-partial-<ts>, add MANIFEST.json, verify every
+    sha256, rename to <unit>.  Never deletes or overwrites on AGIdock.  -> None or error text."""
     k = '%s/%s' % (u['die'], u['unit'])
-    dest, part = '%s/%s' % (AGI_ROOT, k), '%s/%s.partial' % (AGI_ROOT, k)
+    dest, part = '%s/%s' % (AGI_ROOT, k), '%s/%s.meta-partial-%d' % (AGI_ROOT, k, int(time.time()))
     chk = agi('test -e %s && echo EXISTS; true' % shlex.quote(dest))
     if 'EXISTS' in chk.stdout:
         return 'AGIdock %s already exists (never overwritten)' % dest
-    groups = collections.OrderedDict()
-    for d, f in u['files']:
-        groups.setdefault(d, []).append(f)
-    tar = 'tar cf - ' + ' '.join('-C %s %s' % (shlex.quote(d), ' '.join(map(shlex.quote, fs))) for d, fs in groups.items())
-    src = subprocess.Popen(SSH + [u['host'], 'nice -n 10 ' + tar], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    dst = subprocess.run(AGI + ['rm -rf %s && mkdir -p %s && tar xf - -C %s' % (shlex.quote(part), shlex.quote(part), shlex.quote(part))],
-                         stdin=src.stdout, capture_output=True, timeout=6 * 3600)
-    src.stdout.close()
-    src.wait()
-    if src.returncode or dst.returncode:
-        return 'stream failed host rc %s agi rc %s %s' % (src.returncode, dst.returncode, (dst.stderr or b'')[-200:])
-    v = agi('cd %s && sha256sum %s' % (shlex.quote(part), ' '.join(shlex.quote(f) for f in u['shas'])), timeout=3600)
-    got = dict((l.split()[1], l.split()[0]) for l in v.stdout.splitlines() if len(l.split()) == 2)
-    bad = [f for f, s in u['shas'].items() if got.get(f) != s]
-    if bad:
-        return 'sha mismatch on AGIdock: %s' % bad[:5]
+    mk = agi('mkdir -p %s/display' % shlex.quote(part))
+    if mk.returncode:
+        return 'mkdir failed: %s' % mk.stderr[-200:]
+    for files, sub in ((meta_files(u), ''), ([tuple(x) for x in u.get('display') or ()], '/display')):
+        groups = collections.OrderedDict()
+        for d, f in files:
+            groups.setdefault(d, []).append(f)
+        for d, fs in groups.items():
+            src = subprocess.Popen(SSH + [u['host'], 'nice -n 10 tar cf - -C %s %s' % (shlex.quote(d), ' '.join(map(shlex.quote, fs)))],
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            dst = subprocess.run(AGI + ['tar xf - --skip-old-files -C %s%s' % (shlex.quote(part), sub)], stdin=src.stdout,
+                                 capture_output=True, timeout=3600)
+            src.stdout.close()
+            src.wait()
+            if src.returncode or dst.returncode:
+                return 'stream failed host rc %s agi rc %s %s' % (src.returncode, dst.returncode, (dst.stderr or b'')[-200:])
+    manifest = dict(schema='opentallas.auto_export.manifest.v1', split='full record on rtx-pro only (OWNER 11-18)', die=u['die'],
+                    element=u['element'], unit=u['unit'], record=u['record'], host=u['host'], signoff=u['signoff'],
+                    rtx_dir='%s/%s' % (RTX_ROOT, k), odb_sha256=u['odb_sha'], odb_size=u['odb_size'], files=u['shas'],
+                    sizes=u.get('sizes'), display=u.get('display_shas'))
+    w = agi('cat > %s/MANIFEST.json' % shlex.quote(part), input=json.dumps(manifest, indent=1) + '\n')
+    if w.returncode:
+        return 'MANIFEST write failed: %s' % w.stderr[-200:]
+    want = {f: u['shas'][f] for _, f in meta_files(u)}
+    want.update({'display/' + f: s_ for f, s_ in (u.get('display_shas') or {}).items()})
+    if want:
+        v = agi('cd %s && sha256sum %s' % (shlex.quote(part), ' '.join(shlex.quote(f) for f in want)), timeout=3600)
+        got = dict((l.split(None, 1)[1].strip(), l.split()[0]) for l in v.stdout.splitlines() if len(l.split()) >= 2)
+        bad = [f for f, s_ in want.items() if got.get(f) != s_]
+        if bad:
+            return 'sha mismatch on AGIdock: %s' % bad[:5]
     mv = agi('test -e %s || mv -T %s %s && test -d %s' % ((shlex.quote(dest),) + (shlex.quote(part), shlex.quote(dest), shlex.quote(dest))))
     return None if mv.returncode == 0 else 'rename failed: %s' % mv.stderr[-200:]
 
@@ -354,12 +402,13 @@ def finish(L, have):
             except ValueError:
                 continue
             u = L['units'].get(d.get('key'))
-            if u and u.get('state') == 'agi' and d.get('ok'):
+            if u and u.get('state') in ('agi', 'meta') and d.get('ok'):
                 if append_agi_index(index_row(u), u['odb_sha']):
                     have.add(u['odb_sha'])
+                u['how_stored'] = SPLIT_STATUS if u['state'] == 'meta' else 'ARCHIVED-BOTH'
                 u['state'], u['done'] = 'done', time.strftime('%Y-%m-%dT%H:%M:%S%z')
                 done.append(u)
-            elif u and u.get('state') == 'agi' and not d.get('ok'):
+            elif u and u.get('state') in ('agi', 'meta') and not d.get('ok'):
                 u['rtx_err'] = d.get('err')
         os.replace(rp, rp + '.%d' % int(t0))
     if done:
@@ -368,9 +417,10 @@ def finish(L, have):
                 probe(h, 'rmspool', dict(files=[u['spool'] for u in done if u['host'] == h and u.get('spool')]))
             except Exception as e:
                 say('rmspool %s: %s' % (h, e))
-        lines = ['AUTO-EXPORT %s/%s (%s %s:%s) ARCHIVED-BOTH AGIdock+rtx-pro %s/%s, ODB sha %s, record %s, TT %s FF %s, INDEX rows on both'
-                 % (u['die'], u['element'], u['via'], u['host'], u['signoff'], u['die'], u['unit'], u['odb_sha'][:12],
-                    u['record'][:12], u.get('tt'), u.get('ff')) for u in done]
+        lines = ['AUTO-EXPORT %s/%s (%s %s:%s) %s %s/%s (%s), ODB sha %s, record %s, TT %s FF %s, INDEX rows on both'
+                 % (u['die'], u['element'], u['via'], u['host'], u['signoff'], u['how_stored'], u['die'], u['unit'],
+                    'full record rtx-pro, metadata+display AGIdock' if u['how_stored'] == SPLIT_STATUS else 'full record both stores',
+                    u['odb_sha'][:12], u['record'][:12], u.get('tt'), u.get('ff')) for u in done]
         post('\n'.join(lines))
     save_ledger(L)
 
@@ -403,7 +453,7 @@ def drain(a):
             continue
         key = '%s:%s' % (u['host'], u['odb'])
         prev = L['units'].get(key, {})
-        if key in seen or prev.get('state') in ('agi', 'done', 'skip') or prev.get('tries', 0) >= 3:
+        if key in seen or prev.get('state') in ('agi', 'meta', 'done', 'skip') or prev.get('tries', 0) >= 3:
             continue
         seen.add(key)
         todo.append(u)
@@ -415,18 +465,22 @@ def drain(a):
             say('budget reached; rest next tick')
             break
         try:
-            hs = probe(u['host'], 'hash', dict(paths=[os.path.join(d, f) for d, f in u['files']]), timeout=3600)[0]
+            hs = probe(u['host'], 'hash', dict(paths=[os.path.join(d, f) for d, f in u['files']] +
+                                                [os.path.join(d, f) for d, f in u.get('display') or ()]), timeout=3600)[0]
         except Exception as e:
             say('hash %s: %s' % (u['odb'], e))
             continue
         shas = {f: hs[os.path.join(d, f)][0] for d, f in u['files']}
         u['bytes'] = sum(hs[os.path.join(d, f)][1] or 0 for d, f in u['files'])
+        u['sizes'] = {f: hs[os.path.join(d, f)][1] for d, f in u['files']}
+        u['display_shas'] = {f: hs[os.path.join(d, f)][0] for d, f in u.get('display') or () if hs[os.path.join(d, f)][0]}
+        u['display'] = [(d, f) for d, f in u.get('display') or () if f in u['display_shas']]
         if None in shas.values():
             say('hash failed %s' % u['odb'])
             continue
         osha = shas['6_final.odb']
         key = '%s:%s' % (u['host'], u['odb'])
-        if osha in have or any(x.get('odb_sha') == osha and x.get('state') in ('agi', 'done') for x in L['units'].values()):
+        if osha in have or any(x.get('odb_sha') == osha and x.get('state') in ('agi', 'meta', 'done') for x in L['units'].values()):
             L['units'][key] = dict(state='skip', odb_sha=osha, why='ODB sha already in INDEX / ledger', signoff=u['signoff'])
             continue
         die, el, kind, how = infer(u, rows)
@@ -436,14 +490,14 @@ def drain(a):
         if a.list_only:
             continue
         say('export %s/%s from %s:%s' % (die, u['unit'], u['host'], u['signoff']))
-        err = export_agi(u)
+        err = export_agi_meta(u)
         if err:
             say('  FAIL', err)
             L['units'][key] = dict(u, state='err', err=err, at=time.time(), tries=L['units'].get(key, {}).get('tries', 0) + 1)
             save_ledger(L)
             continue
         have.add(osha)
-        L['units'][key] = dict(u, state='agi', agi_at=time.strftime('%Y-%m-%dT%H:%M:%S%z'))
+        L['units'][key] = dict(u, state='meta', agi_at=time.strftime('%Y-%m-%dT%H:%M:%S%z'))
         save_ledger(L)
         finish(L, have)
     if a.list_only:
@@ -479,11 +533,29 @@ def rtx_pull(a):
                 say('DISK HOLD %s: %.0f GB free, unit %.1f GB, reserve %d GB; stays pending' % (k, free / 1e9, u.get('bytes', 0) / 1e9, RESERVE_GB))
                 continue
             os.makedirs(part, exist_ok=True)
-            c = subprocess.run(['rsync', '-a', '-e', ' '.join(AGI[:-1]), '%s:%s/%s/' % (AGI[-1], AGI_ROOT, k), part + '/'],
-                               capture_output=True, text=True, timeout=6 * 3600)
-            if c.returncode:
-                reports.append(dict(key=u['key'], ok=False, err='rsync rc %d %s' % (c.returncode, c.stderr[-200:])))
-                continue
+            if u.get('mode') == 'host':     # OWNER split 11-18: the full record comes straight from the build host
+                err = None
+                groups = collections.OrderedDict()
+                for d, f in u['files']:
+                    groups.setdefault(d, []).append(f)
+                for d, fs in groups.items():
+                    src = subprocess.Popen(SSH + [u['host'], 'nice -n 10 tar cf - -C %s %s' % (shlex.quote(d), ' '.join(map(shlex.quote, fs)))],
+                                           stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    dst = subprocess.run(['tar', 'xf', '-', '-C', part], stdin=src.stdout, capture_output=True, timeout=6 * 3600)
+                    src.stdout.close()
+                    src.wait()
+                    if src.returncode or dst.returncode:
+                        err = 'host stream rc %s/%s %s' % (src.returncode, dst.returncode, (dst.stderr or b'')[-200:])
+                        break
+                if err:
+                    reports.append(dict(key=u['key'], ok=False, err=err))
+                    continue
+            else:                           # units exported before the split: their full copy is on AGIdock
+                c = subprocess.run(['rsync', '-a', '-e', ' '.join(AGI[:-1]), '%s:%s/%s/' % (AGI[-1], AGI_ROOT, k), part + '/'],
+                                   capture_output=True, text=True, timeout=6 * 3600)
+                if c.returncode:
+                    reports.append(dict(key=u['key'], ok=False, err='rsync rc %d %s' % (c.returncode, c.stderr[-200:])))
+                    continue
             os.rename(part, dest)
         bad = []
         for f, s in u['shas'].items():
