@@ -3756,3 +3756,4 @@ CODEX: 2026-11-17 05:03 PST owner ordered handback (Codex weekly limit); all wor
 - 2026-11-17 18:1x PST COORD: loop-gap. Approved through r647. Held: pubgate-foreign-tree 44f07b1a until N2B applies. Unapproved (no gate): tok-ds-relative-phase-events 04f76a77508, superseded db7b25b131a. Next: D6z apply, KV D21b, QC N2B, HEAD pilots, lep_pair re-sign in vE form. GEOM skipped.
 - 2026-11-17 19:1x PST COORD: loop-gap. Approved through r651. D6z applied. Wave launch rate low (WAVE-FLOW-R2). Held: pubgate-foreign-tree 44f07b1a until N2B applies. GEOM skipped.
 - 2026-11-17 20:2x PST COORD: loop-gap. Approved through r659. Fable limited until 11-24 01:00: Opus successors (see agent_ids). Held: pubgate-foreign-tree 44f07b1a until QC N3 applies. GEOM skipped.
+- 2026-11-17 21:2x PST COORD: loop-gap. Approved through r666. Unapproved: head-clksite-tap-escape db7b25b (superseded), tok-ds-relative-phase 04f76a77 (no gate). GEOM skipped. Disk URGENT to FLEET-OPS-R.
