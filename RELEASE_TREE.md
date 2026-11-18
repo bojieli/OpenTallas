@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; coordinator update 2026-11-01 18:00 PST)
 
-2026-11-17 18:1x PST: see SIGN-RATE (2026-11-17 18:05 372 s81=63+42t head=5+23t qc=70+10t kv=62+6t hbm=90+1t auto). Wave 55 launches/h, 21 fails all before 17:27 (11 epyc9 disk-full INFRA, 6 missing epyc7 image, 4 partial bind snapshots; all three causes fixed: r637, r640, disk freed). 0 fails since 17:27. HEAD NF15f live (pilots hd_lep0N + hd_mesh; superseded NF13a 31 h job cancelled; r646 auto-supersede on switch). S81 D6z publishing to 4 hosts, apply ~18:5x releases 78 col; D7w bind; D8 = cut fix + serdes tap cap. Serdes gen r638/r643 + pad wire r644 merged. Family hold margin r641. Approved through r647.
+2026-11-17 19:1x PST: see SIGN-RATE (count_hourly: cache still 30 min old after the scan, no row). S81 D6z APPLIED 19:01 (event 3fa87b84b18): releases 78 col + mig-024 set; D7w t51 kit clean; D8 = cut moves + serdes tap cap. QC N2B in publish gate; N3 (tools+5 stations) and N4 (coll_core 43 taps) split; cbn_q01 N1B pilot past CTS. HEAD NF15f pilots; lep_pair re-sign in vE form. KV D21b dry GEN. Wave slow: 9 launches/h 18-19h (WAVE-FLOW-R2 diagnosing). Approved through r651.
 Plans 11:36: count 152 flat (S81 50/58 + 4/205 types, HEAD 4/4 + 12/25, QC 16/19, KV 26/32, HBM 40/103). Merged I118-I126 since 10:40: QC coll_core fold + ring ff class (tag e-qc), KV PV taps (tag b-kv), HEAD l48ue (tag a-head), wave prune + resume fixes. 9 core gaps from CORE-FORMS-2 all owned. intel2 scratch2 142 after 49 GB move.
 
 <!-- BREAKDOWN BEGIN -->
