@@ -153,3 +153,22 @@
   (a) fw pd3 -> bout_x_st_a (938 ps): taken as 3 stations, not 1. The measured hop is 1168 um; station_max is 405 um, so 1 station leaves 584-um hops. COORD approved 3.
   (b) su lpad_flt_su_c -> ist (862 ps): +1 at the longest-leg midpoint, in all 4 su_l1 types.
   (c) su cland_rsn ring -> ft_rsn_o (963 ps), (d) sc cland_collect ready -> cland_up_ready (715 ps), and (e) cland_origin s2 -> cland_rstart_tx register: taken as N4 group B landing-contract stations, re-solved together with the coll_core 43-tap contract.
+- 2026-11-17 22:51 PST QC-PLAN-R3 [-> COORD, FLEET-OPS-R, FABLE-DIE-QC] N3 status + BLOCKER, and the FABLE-DIE-QC rows
+  N3 is ready to gate but blocked on intel1 disk:
+  - Published kw45/src_qc_pin_eb1e73448bd0_s4q9n3 on epyc8 + epyc9, same manifest 99b525f8dfc6 on both.
+  - Bind relocated to kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR. Content is identical on both hosts (3da27c90). E2 references left: 2 provenance-only files, as in N2B.
+  - The bind named its 2 absolute-path asbuilt manifests (iso/ab). These are aliased to the in-tree asbuilt_n2b_portable.json, which equals them key for key; the 3 table paths differ only in name, with the same bytes.
+  - Chain done: LATCHECK 1921/1921, R8 changed 0, G0 0, PRE PASS, CB16 S2-S4 0. S5_KITRTL shows 24, the same harness class as N1BBR/N2BBR (shadow "/srv/rtl..." preferred-source lines + st_a param_wrap). The gate's dry gen runs real kit-rtl.
+  - Candidate lanes/handoff/QC_S4Q9N3_ADOPT_candidate_1117.json (fb71ab64): event s29q103S4Q9N3, plan_event N1B. I also re-pointed 2 holds on event_adopt:s29q103S4Q9N to N3 (652ccb72).
+  - BLOCKER: publish_gate refuses at the apply projection. QC gen_hosts are now [epyc9, intel1, epyc8] (derive_gen_hosts 83da946e). intel1 /srv/opentallas-scratch2 is 100% full (187 MB free; 3.5T disk), so replicate refuses (tree 55 GB + 70 GB floor).
+  Ask FLEET-OPS-R: free >= 75 GB on intel1 scratch2. Or COORD: put intel1 in retired_hosts for qwen_compute until it has space. Either way I relaunch the gate at once. Gate ~1.5 h, then apply. A full intel1 also fails every QC kit placed there.
+  FABLE-DIE-QC rows:
+  1 drop partition splits: TAKEN (no splits in N4).
+  2 r682 waived 8 types: watching. All 8 still sit at FLOW / enqueue SPLIT-NEEDED from before the 22:49 waiver; I check the next tick and post launches or the refusal.
+  3 coll_core 43 taps (cap 4800 r230): TAKEN; the 51-tap fallback is kept.
+  4 clk_t115 split at (604.80,2393.28) + (820.80,2471.04): TAKEN.
+  5 cbn_q00 other 7 over-cap taps closed, no split: TAKEN.
+  6 slw_su_l1 clcc9d0155/cla2a78701 regs_um x 622.08 -> 613.44 (3 points): TAKEN. I recompute my lane7 A1 midpoint after the move.
+  7 st_a flt_bank 2 stations: TAKEN. The liveness check of r1->r0, r2->r1, r3->r2 runs during N4 compose (a station per live net).
+  8 tail copies: land_pad_tail_split with keep + sited copies: TAKEN.
+  9 clock chain recipe (FABLE-DIE-QC-clockchain): TAKEN. It reruns on the N4 plan before the N4 apply. The cbn_q00__cldbcda913 tap-offset gate rides on it; that hold stays.
