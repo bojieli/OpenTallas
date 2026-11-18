@@ -23,6 +23,9 @@ def _tree(tmp_path, lef_pins=("ck", "d[0]", "d[1]"), size=(10.0, 20.0)):
     pdir = tree / "physical/die_plan/qwen_kvsys/plan_of_record"
     (pdir / "pins").mkdir(parents=True)
     hd = tree / R.HOST_DIR
+    for f in R.LEAF_PREFER:
+        (tree / f).parent.mkdir(parents=True, exist_ok=True)
+        (tree / f).write_text("module leaf(); endmodule\n")
     rows, inst_txt = [], []
     for m, insts in MODS.items():
         (hd / "wrappers_s" / m).mkdir(parents=True)
@@ -52,7 +55,7 @@ def test_rows_applied(tmp_path):
     new = R.HOST_DIR + "/parent.sv"
     assert a["files"] == ["a.sv", new] and a["prefer"] == [new, "b.sv"]
     wr = [f"{R.HOST_DIR}/wrappers_s/{m}/{m}.sv" for m in MODS]
-    assert a["portbind_files"] == wr and a["portbind_prefer"] == ["c.sv"] + wr
+    assert a["portbind_files"] == wr and a["portbind_prefer"] == ["c.sv"] + wr + list(R.LEAF_PREFER)
     assert rep["cycles_changed"] == 0 and len(rep["rows"]) == 3
     # geometry of a hard core is never touched
     for h0, h1 in zip(plan["partition_types"]["kv3_hub_Wi"]["hard_cores"], hcs):
@@ -70,6 +73,7 @@ def test_rows_applied(tmp_path):
     (lambda tree, plan, ab: (tree / VIEWS / "qkd_hr_phy_adp/qkd_hr_phy_adp_tt.lib").unlink(), "view missing"),
     (lambda tree, plan, ab: (tree / R.HOST_DIR / "wrappers_s/qkd_hr_cdc_ch/qkd_hr_cdc_ch.sv").unlink(), "wrapper missing"),
     (lambda tree, plan, ab: ab["files"].remove(R.HOST_OLD), "asbuilt.files"),
+    (lambda tree, plan, ab: (tree / R.LEAF_PREFER[1]).unlink(), "leaf prefer missing"),
     (lambda tree, plan, ab: plan["partition_types"]["kv3_hub_Wi"]["hard_cores"][0].update(lef="x.lef"), "already binds"),
 ])
 def test_fail_closed(tmp_path, break_it, word):

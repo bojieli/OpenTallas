@@ -8,7 +8,9 @@ parent.sv: same module name, 21 qkd_hr_* leaf instances, flat glue) with wrapper
 each master.  This writer applies the smallest change, fail closed:
 
   plan     partition_types.kv3_hub_Wi.hard_cores[qkd_hr_*]: lef/lib = <views>/<module>/<module>.lef / _tt.lib
-  asbuilt  files + prefer: the kv45 host file -> parent.sv; portbind_files + portbind_prefer += the 14 wrappers
+  asbuilt  files + prefer: the kv45 host file -> parent.sv; portbind_files + portbind_prefer += the 14 wrappers;
+           portbind_prefer += LEAF_PREFER (the definitions of the two twice-defined host leaves that the D22 elaboration
+           and the 53962-cell glue equivalence used; without a rule die_port_bind takes the first file = AMBIGUOUS)
 
 Checked before anything is written: every row has physical_inst u_bound.u_host.<inst> and physical_master = module and no
 view yet; parent.sv instantiates <module> <inst> exactly once per row; every wrapper and view file exists; the view LEF
@@ -26,6 +28,8 @@ from pathlib import Path
 
 HOST_OLD = "physical/die_plan/qwen_kvsys/bind/kv45/qkd_host_root_admission_obsx_bo1_c45.sv"
 HOST_DIR = "physical/die_plan/qwen_kvsys/bind/kv_host_wi"
+LEAF_PREFER = ("rtl/qwen_sys/mu_qwen_20261018/hr_tx_predecode/qkd_host_ctrl_token_service_packet_collected_mu.sv",
+               "rtl/qwen_sys/host_20261013/fault_dreg/qkd_host_rx_class_admission.sv")
 NOTE = ("KV-D23-HUBWI 11-18: lef/lib = view of the signed qkd_hr master; bound u_host = clustered form-S parent "
         "(bind/kv_host_wi/parent.sv)")
 
@@ -93,6 +97,9 @@ def apply(plan, asbuilt, tree, views, plan_dir, tname="kv3_hub_Wi"):
             if want != pins:
                 errs.append(f"{h['inst']}: LEF pins != plan pins_file ({len(pins - want)} only in LEF, "
                             f"{len(want - pins)} only in plan; e.g. {sorted(pins ^ want)[:3]})")
+    for f in LEAF_PREFER:
+        if not (tree / f).is_file():
+            errs.append(f"leaf prefer missing: {f}")
     for key in ("files", "prefer"):
         if list(asbuilt.get(key) or []).count(HOST_OLD) != 1:
             errs.append(f"asbuilt.{key}: {HOST_OLD} not listed exactly once")
@@ -107,10 +114,11 @@ def apply(plan, asbuilt, tree, views, plan_dir, tname="kv3_hub_Wi"):
         asbuilt[key] = [new if f == HOST_OLD else f for f in asbuilt[key]]
     for key in ("portbind_files", "portbind_prefer"):
         asbuilt[key] = list(asbuilt.get(key) or []) + [w for w in wrappers if w not in (asbuilt.get(key) or [])]
+    asbuilt["portbind_prefer"] += [f for f in LEAF_PREFER if f not in asbuilt["portbind_prefer"]]
     asbuilt["kv_host_wi_note"] = ("KV-D23-HUBWI 11-18: kv3_hub_Wi u_host = KV-HOST-WI form-S clustered parent (21 qkd_hr_* "
                                   "leaf instances, flat glue); wrappers_s = port-bind sources of the qkd_hr masters")
     report = dict(schema="kv_hubwi_host_rows.v1", type=tname, rows=[h["inst"] for h in rows], modules=mods,
-                  host_old=HOST_OLD, host_new=new, portbind_added=wrappers, views=views, cycles_changed=0)
+                  host_old=HOST_OLD, host_new=new, portbind_added=wrappers, leaf_prefer=list(LEAF_PREFER), views=views, cycles_changed=0)
     return plan, asbuilt, report
 
 
