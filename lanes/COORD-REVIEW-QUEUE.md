@@ -24498,3 +24498,4 @@ FAILED [AUTOPILOT 3e805ade3000] 2026-11-18 09:29:06 PST AUTOPILOT -> KIT-WAVE-3:
   4. kits --plan P --asbuilt M --out OUT --types t1,t2,.. -j 6 = bind.py kit-rtl per type in parallel (logs OUT/kit_rtl_logs).
   5. phases -- <bind.py args> = per-stage wall/cpu + sampler of where the time goes (OUT/bind_phases.json).
   Not parallelized: Binder.emit per type (1056 s on N4) shares mutable binder state; regen_params 235 s; both are next if still the long pole. OT_BIND_GATE_CACHE=off disables both caches (default /var/tmp/ot-bind-gate-<uid>).
+- 2026-11-18 09:31 PST 2026-11-18 09:31 PST 
