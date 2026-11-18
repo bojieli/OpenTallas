@@ -2313,10 +2313,45 @@ def adopt_rows_tick(AP, cfg, st, now=None, alert_after=2):
     return out
 
 
-def row_inputs_unchanged(cfg, die, r, item, cur_blocks):
-    """OWNER 11-18 (why does each apply cancel all builds?): a live row keeps running when ITS inputs are unchanged on the new tree: the item's plan block sha equals the row's and its staged
-    views digest equals what a launch would use now.  The tree path, tools sha and die-global bind / event keys are deliberately NOT inputs (they do not change the type's netlist or geometry)."""
-    if not r.get("block_sha") or cur_blocks.get(die, {}).get(item) != r.get("block_sha"):
+def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
+    """rows launched before norm_blocks existed carry only the raw block sha: probe the plan file each live old-event row was built from (spec.json plan, once per plan path, cached in
+    st['plans_norm']) and store the item's normalized sha on the row when the probe's raw sha still equals the row's block_sha"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    cache = st.setdefault("plans_norm", {})
+    probes = 0
+    for r in (st.get("items") or {}).values():
+        if r.get("die") != die or r.get("norm_block") or r.get("status") not in ("RUNNING", "LAUNCHING", "ENQUEUED") or not r.get("block_sha") or r.get("event") == d.get("event"):
+            continue
+        try:
+            plan = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("plan")
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        if not plan:
+            continue
+        key = f"{d.get('gen_host')}:{plan}"
+        if key not in cache:
+            if probes >= max_probes or AP.DRY:
+                continue
+            probes += 1
+            try:
+                p = AP.rpy(d["gen_host"], PROBE_PLAN, {"plan": plan, "core_views": bool(d.get("core_kit")), "cells_max": 0, "block_ignore": d.get("block_ignore")}, timeout=600)
+            except Exception:
+                p = {}
+            cache[key] = {"blocks": p.get("blocks") or {}, "norm": p.get("norm_blocks") or {}} if not p.get("error") else {"blocks": {}, "norm": {}}
+        c = cache[key]
+        if c["blocks"].get(r.get("item")) == r.get("block_sha") and c["norm"].get(r.get("item")):
+            r["norm_block"] = c["norm"][r["item"]]
+
+
+def row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm=None):
+    """OWNER 11-18: a live row keeps running when ITS inputs are unchanged on the new tree: the item's plan block equals the row's (raw sha, or the path-normalized sha with file contents hashed
+    in place of tree paths: a tree rename moves the raw hash through clock.sink_bins_file-style absolute paths), and its staged views digest is what a launch would use now.  Tree path,
+    tools sha and die-global bind / event keys are not inputs."""
+    same = bool(r.get("block_sha")) and cur_blocks.get(die, {}).get(item) == r.get("block_sha")
+    if not same:
+        cn = (cur_norm or {}).get(die, {}).get(item)
+        same = bool(cn) and r.get("norm_block") == cn
+    if not same:
         return False
     try:
         old = kit_digest_parts(cfg, die, r).get("views")
@@ -2333,6 +2368,7 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
     Kept (logged once): an item in the die's hold_items that protects a running row, and a row whose own plan block is the item's block in the current plan (its result still
     counts).  The stop is the existing one: the unit, then the host scopes of the attempt.  die option supersede_on_switch false = off.  -> number stopped"""
     cur_blocks = current_blocks(cfg, st)
+    cur_norm = current_norm_blocks(cfg, st)
     jobs = {}
     if ap_dir:
         try:
@@ -2354,13 +2390,14 @@ def supersede_on_switch(AP, cfg, st, notices, ap_dir=None, window_ticks=3):
         rec["sup_ticks"] = int(rec.get("sup_ticks") or 0) + 1
         if rec["sup_ticks"] > window_ticks:
             continue
+        backfill_norm_blocks(AP, cfg, st, die)
         for key, r in (st.get("items") or {}).items():
             if r.get("die") != die or r.get("status") not in ("RUNNING", "LAUNCHING", "ENQUEUED") or not r.get("event") or r.get("event") == d["event"]:
                 continue
             item = r.get("item") or ""
             held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
-            same = row_inputs_unchanged(cfg, die, r, item, cur_blocks)
+            same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm)
             if held is not None or same:
                 why = f"hold_items: {held[:120]}" if held is not None else f"own plan block {str(r.get('block_sha'))[:12]} is the item's block in the current plan"
                 if r.get("switch_kept") != why:
@@ -8194,7 +8231,7 @@ def _descends(AP):
     return f
 
 
-PROBE_V = 7   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
+PROBE_V = 8   # DIE-KV-62/types 11-02: bump when the probe output changes (a cached older probe is re-run); 3 = KW-FIX-4 lint
 #              4 = KW-PROV-1 prov_deps (every planned + noview child of a type) + bound (signed lef/lib per module)
 #              5 = DIE-HBM-89-TGEN unbound (plan buses with no leaf binding: the plan-wrapper gen cannot bind them)
 PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + f"\nPROBE_V = {PROBE_V}\n" + r'''
@@ -8216,6 +8253,37 @@ try:
                     del v[sec]
     ids = identities(p, a["plan"], mode)
     blocks = {name: value["block_sha"] for name, value in ids.items()}
+    # OWNER 11-18: a type node holds absolute paths WITH the tree name (clock.sink_bins_file ...), so every tree rename changes the raw hash.  norm_blocks = the same profiles hashed with every
+    # path under a src_* tree rewritten to a tree-relative path plus the sha1 of the referenced file's CONTENT.  The raw block_sha (row identity / item key) is unchanged.
+    _TR = re.compile(r"(/[^\"\s]*?/)(src_[A-Za-z0-9_.+-]+)(/[^\"\s]*)?")
+    _FH = {}
+    def _norm_s(s):
+        def rep(m):
+            rest = m.group(3) or ""
+            out = "<tree>" + rest
+            if rest:
+                f = m.group(1) + m.group(2) + rest
+                if f not in _FH:
+                    try:
+                        _FH[f] = hashlib.sha1(open(f, "rb").read()).hexdigest() if os.path.isfile(f) and os.path.getsize(f) < (64 << 20) else ""
+                    except OSError:
+                        _FH[f] = ""
+                if _FH[f]:
+                    out += "#" + _FH[f]
+            return out
+        return _TR.sub(rep, s)
+    def _norm(o):
+        if isinstance(o, str):
+            return _norm_s(o)
+        if isinstance(o, dict):
+            return {kk: _norm(v) for kk, v in o.items()}
+        if isinstance(o, list):
+            return [_norm(v) for v in o]
+        return o
+    try:
+        norm_blocks = {name: H(_norm(prof["legacy_node"])) for name, prof in profiles(p).items()}
+    except Exception:
+        norm_blocks = {}
     baseline = None
     if mode != "raw" and a.get("identity_baseline_plan"):
         baseline_path = a["identity_baseline_plan"]
@@ -8315,7 +8383,7 @@ try:
     for t in split:
         flags.setdefault(t, "split")
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
-           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V,
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks, "norm_blocks": norm_blocks, "deps": deps, "lint": lint, "probe_v": PROBE_V,
            "prov_deps": pdeps, "prov_keys": pkeys, "bound": bound, "plan_dir": os.path.dirname(os.path.abspath(a["plan"])),
            "unbound": unbound}
     if a.get("core_views"):
@@ -9668,6 +9736,9 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
     if prev.get("restage_n") and prev.get("class") == "INFRA":      # a design verdict in between starts the count again
         rec["restage_n"] = prev["restage_n"]
     rec["item_disk_gb"] = sp.get("item_disk_gb") or 0
+    _nb = current_norm_blocks(cfg, st).get(die, {}).get(r["item"])
+    if _nb:
+        rec["norm_block"] = _nb
     st["items"][key] = rec
     # KW-FIX-46 11-12 (COORD: 'event e9eda32d41c' read as the old S81 plan after the ready12 switch): the event is the row
     # identity key (work dir, item key), not the plan; the line names the plan file and its sha so the log is honest
@@ -12479,6 +12550,7 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
     event label or another item moved).  Each keep is logged once per row and reason (KIT-WAVE SUPERSEDED-KEEP)."""
     cur = current_keys(cfg, st)
     cur_blocks = current_blocks(cfg, st)
+    cur_norm = current_norm_blocks(cfg, st)
     jobs = {}
     if ap_dir:
         try:
@@ -12498,7 +12570,7 @@ def cancel_superseded(AP, cfg, st, notices, ap_dir=None):
             item = r.get("item") or ""
             held = next((str(w) for pat, w in (d.get("hold_items") or {}).items()
                          if fnmatch.fnmatchcase(item, pat) and hold_protects_running(cfg, d, r, str(w))), None)
-            same = row_inputs_unchanged(cfg, die, r, item, cur_blocks)
+            same = row_inputs_unchanged(cfg, die, r, item, cur_blocks, cur_norm)
             if held is not None or same:
                 why = (f"hold_items: {held[:160]}" if held is not None else
                        f"own plan block {str(r.get('block_sha'))[:12]} unchanged in the current plan")
@@ -13384,6 +13456,18 @@ def current_blocks(cfg, st):
         p = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d['plan']}|{d['event']}")
         if p and p.get("blocks"):
             out[die] = dict(core_view_names(dict(p["blocks"]), p.get("core_views")))
+    return out
+
+
+def current_norm_blocks(cfg, st):
+    """{die: {item: path-normalized block sha}} of the current plan (probe norm_blocks); absent for a die whose cached probe predates PROBE_V 8"""
+    out = {}
+    for die, d in ((cfg or {}).get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("plan") or not d.get("event"):
+            continue
+        p = (st.get("plans") or {}).get(f"{d.get('gen_host')}:{d['plan']}|{d['event']}")
+        if p and p.get("norm_blocks"):
+            out[die] = dict(core_view_names(dict(p["norm_blocks"]), p.get("core_views")))
     return out
 
 
