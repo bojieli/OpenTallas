@@ -37305,7 +37305,8 @@
      "plan_sha": "ccc4744caa15c834c4f265cf47d165caafa513425e83c298a8e8b88d9e1a0f7a",
      "reason": "Six old nonrunning serdes kits lack TXPIPE placement hook and correct die PGphase; await coherent F2s3/mainref source and regenerate before route; old kit history retained | S81-TYPES-R3 11-17: release repointed to rail-gen (COORD)",
      "release": [
-      "result:FABLE-FIX-S81-SERDES2:rail-gen"
+      "result:FABLE-FIX-S81-SERDES2:rail-gen",
+      "result:S81-SERDES-GEN:h-form"
      ],
      "keys": [
       "serdes__t12",
@@ -37444,7 +37445,8 @@
      "plan_sha": "ccc4744caa15c834c4f265cf47d165caafa513425e83c298a8e8b88d9e1a0f7a",
      "reason": "FIX-S81-SERDES-RAILS: std-cell rows beside the PHY lot get no M1/M2 followpin rails (2,046 of 6,664 rows on H17): any sign-off now carries an unpowered-cell defect. Released by FABLE-FIX-S81-SERDES2 RESULT rail-gen PASS (COORD 11-17 14:5x).",
      "release": [
-      "result:FABLE-FIX-S81-SERDES2:rail-gen"
+      "result:FABLE-FIX-S81-SERDES2:rail-gen",
+      "result:S81-SERDES-GEN:h-form"
      ],
      "migrated": true,
      "carry": true,
