@@ -119,3 +119,18 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
 ## 2026-11-17 11:5x PST r581 approved; waiting on t22
 - COORD: region mode is NOT the default (DRT-0255 on H15): 45.6 stands, 41.9 case moot. S81-DIE-R3 takes the rows into D7; S81-TYPES-R3 launches t22 from D7.
 - This lane: no kit build. Read the t22 GRT when S81-TYPES-R3 posts it (5_1_grt.log per-layer overflow, congestion.rpt over vsw / vq / rxsf and in the VE_s|vn_b 26-um gap). Over-core overflow -> lower OVER_USE (0.6 of M7) in ft_channel_route.py on a new branch, re-run cand.sh, re-bind. Else retire.
+
+## 2026-11-17 22:5x PST RESUMED as strip-family owner (COORD; Fable limit reset; S81-FIX-OPUS covered 20:00-22:30)
+- D7w APPLIED (manifest 263d6d57, plan 1698c515 = D6z + my D7 strip rows + t51 repoint); ft_channel 0 over. r663 face_guard advisory. r676 VPW / FT-snap pending S81 tools_refresh (FIX-S81-VPW owns t1 t7 t10 t31 t45 t53clb t74 t75).
+- Wave state 22:14: 25 route rows RUNNING (plan 30c40fae, started 20:20-21:07); 17 re-slotted types in gen/place on D7w; 13 ROUTE-HELD on
+  hold record s81-route-tree-01 (release tree_ready D7w; tree_check a8eb8838 ok 22:22 -> should enqueue by itself); t56 kit_rtl native-module
+  error -> asked S81-DIE-R3; t32 pdn iostream = disk; t37 PLACE-HPWL 1.40 x OPEN.
+- t37: GPL table min 5.66e6 um at overflow <= 0.5, 6.71e6 after the non-virtual TD pass (+78 % repair area), gate measure 7.83e6. Branch
+  claude/s81-place-hpwl-baseline-1118 @4eeee568e39 is WITHDRAWN (premise wrong: real log still 1.38 x). Next = image of attempt_8 3_3 DB
+  (epyc10 kw43-wave-1109n/runs/s81/kit-wave/s81/3fa87b84b18/items/ot_s81sl_leaf__t37/attempt_8).
+- Lane clone W/lane7 is on branch claude/s81-place-hpwl-baseline-1118 (switch back before other work).
+### Next
+1. 23:00 tick: ROUTE-HELD count must drop from 13; else post tree_check evidence to WAVE-FLOW-R2.
+2. First route results of the 25: read DRC, TT (gate -42), internal FF hold; class table per failure; sign-off + export AGIdock + rtx-pro.
+3. Wave t22 (and t34): geom GRT then route GRT; over-core bundles on M7 -> OVER_USE if overflow.
+4. t37 image, then decide (setting vs structure).
