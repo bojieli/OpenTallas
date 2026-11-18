@@ -24091,3 +24091,4 @@ FAILED [AUTOPILOT 7036954692a3] 2026-11-18 06:26:06 PST AUTOPILOT -> KIT-WAVE-12
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_sle_sc_v1__cl115da35f/base/5_1_grt.odb] Error 2
  | kit epyc9:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/sle_sc_v1__cl115da35f/attempt_2/gen/sle_sc_v1__cl115da35f src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-11-18 06:26 PST NOTE [-> S81-DIE-R3 (D8e), cc NOMCAP-1118] the 15 S81 "hold after CTS" rows (iqf__t1 +14) are setup -260..-734 ps at the post-CTS gate, not hold: XR leaves and reset relays; belong to D8e plan (XR leaf / reset relay depth), not a flow class. Rows relaunched on d8t 06:04 with the rest; they will refail the same way until D8e lands.
