@@ -11107,6 +11107,60 @@
           "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
           "OT_S81_SSTN_M5_BLOCK": "1",
           "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+        },
+        "col_h9_r2__t1": {
+          "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+          "OT_RELAY_MID_FIT": "1",
+          "OT_RELAY_POLY": "1",
+          "OT_HOLD_FF_MARGIN_PS": "10",
+          "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+          "OT_S81_SSTN_M5_BLOCK": "1",
+          "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+        },
+        "col_h10_r2__t1": {
+          "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+          "OT_RELAY_MID_FIT": "1",
+          "OT_RELAY_POLY": "1",
+          "OT_HOLD_FF_MARGIN_PS": "10",
+          "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+          "OT_S81_SSTN_M5_BLOCK": "1",
+          "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+        },
+        "col_h10_r0_p1__t1": {
+          "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+          "OT_RELAY_MID_FIT": "1",
+          "OT_RELAY_POLY": "1",
+          "OT_HOLD_FF_MARGIN_PS": "10",
+          "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+          "OT_S81_SSTN_M5_BLOCK": "1",
+          "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+        },
+        "col_h9_r0_p2__t1": {
+          "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+          "OT_RELAY_MID_FIT": "1",
+          "OT_RELAY_POLY": "1",
+          "OT_HOLD_FF_MARGIN_PS": "10",
+          "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+          "OT_S81_SSTN_M5_BLOCK": "1",
+          "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+        },
+        "col_h9_r0_p3__t1": {
+          "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+          "OT_RELAY_MID_FIT": "1",
+          "OT_RELAY_POLY": "1",
+          "OT_HOLD_FF_MARGIN_PS": "10",
+          "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+          "OT_S81_SSTN_M5_BLOCK": "1",
+          "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
+        },
+        "col_h9_r0_p4__t1": {
+          "OT_RELAY_MID_RE": "^(.*[._]u_y_[A-Za-z0-9_]+)[.]",
+          "OT_RELAY_MID_FIT": "1",
+          "OT_RELAY_POLY": "1",
+          "OT_HOLD_FF_MARGIN_PS": "10",
+          "OT_PREGRT_HOLD_PORT_MARGIN_PS": "25",
+          "OT_S81_SSTN_M5_BLOCK": "1",
+          "OT_GRT_PORT_HOLD_MARGIN_PS": "10"
         }
       },
       "note_work_root_1105": "KW-FIX-9 01:0x COORD disk ruling: epyc4 scratch2 109 GB; new attempts go to scratch3 via symlink at this scratch2 path on epyc4, ordinary dir on other hosts. Back to scratch2 at >=250 GB; stop new epyc4 attempts at root 540.",
