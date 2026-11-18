@@ -1,3 +1,24 @@
+# FABLE-FIX-KV-HG handoff (third instance, started 2026-11-18 07:35 PST; KV-HG-OPUS owns D23/D24)
+
+Work dir epyc9 /srv/opentallas-scratch2/claude/fable-fix-kv-hg3 (sc/ = STA dumps, rm/ = relay proof kits, wt/ = lane clone). Hub logs intel2 ~/tmp/ffkhg3.
+
+## STATE 11-18 08:40 PST
+- 0710 headline 6 is wrong: KV kits reach CTS. Route-goal jobs run in sealed dirs <host>:/srv/opentallas-scratch2/claude/ot-jobs/kv3_*-route-*/work.
+  23 HG6 kits past CTS, in GRT. Post-CTS TT setup: io_cor +156, hroot +3; hgi -268..-792; hg -502..-864; pc -468..-1486.
+- Cause: unregistered 1.0-3.2 mm wires in every failing class (rows file: lanes/handoff/FABLE-FIX-KV-HG-rows-d24.json).
+- Fix on main a572716aa09: relay chain siting keys (budgets.relay_mid_re[_types], relay_mid_tail[_types], relay_mid_soft_frac[_types],
+  GEN env OT_RELAY_MID_RE / _TAIL / _SOFT_FRAC; gen_phys.RELAY_MID_RE_KV). Absent = byte-identical.
+- Proof kit p2 (hgi_v1__cl141fc26e, HG6 kit + the keys): epyc9 rm/p2, place -> CTS via ot-run, log intel2 ~/tmp/ffkhg3/p2_cts.log;
+  chain_p2.sh then writes sc/p2/out/ends.tsv (compare with sc/hgi_v1/out/ends.tsv: 1,450 ends, wns -309, tns -123,329).
+  Class tools: scratch copies in sc/ (run.sh TAG, tail.tcl), classifier cls.py / fine.py in the session scratchpad (not kept).
+
+## Open
+1. Read p2: OT_RELAY_MID lines in 3_3_place_gp.log (both chains placed, tail at centroid), then ends.tsv classes hst_t2->head, lpad->hst_g.
+2. If p2 holds: KV-HG-OPUS puts section A keys on the 17 hg/hgi types (item_env = no plan event), relaunch only after the HG6 route jobs gave their GRT numbers.
+3. Section B rows are plan rows with cycles (D24): eN stations, kp core stations realized, ring->bin, writer-start reach, idpc.
+4. io_cor / hroot: wave route jobs; on sign-off export full DB to rtx-pro /home/ubuntu/signed-export-1114 and metadata to AGIdock /archive/opentallas-signed-1114.
+
+---
 # FABLE-FIX-KV-HG handoff (KV HG plan event owner; second instance started 2026-11-17 09:25 PST)
 
 Work dir: epyc10 /srv/opentallas-scratch2/claude/fable-fix-kv-hg2. Hub logs intel2 ~/tmp/ffkhg2. Runners intel2 /srv/opentallas-scratch2/claude/tools-converge/ffkhg2.
