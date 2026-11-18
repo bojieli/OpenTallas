@@ -54,3 +54,20 @@ D24: epyc8 kv-d23-compose8/build_d24.py BASE EVENT MAIN TAG (inputs d24in/); nee
 pc portbind proof: epyc9 kv-d23-compose8/pcpb (epyc8 below disk floor). d46 dly rebuild: epyc10 kv-d23-compose/dly_h1.
 BOUND-PARAM-1 (main 60fe7ab5499): run tools/die_plan/bound_param_check.py --tree T --rtl-dir T/.../bind_of_record/rtl after each gate.
 After the first D23 hub/pv kits: post native hub_Wo cell count (hub_Wo split held, so from D24) and NEED-STATION counts on pv v2/v6 kits.
+
+## Status 21:50Z -- KV-D23H APPLIED (D23h2 on D23f)
+LIVE BASE: /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg8_aa3f08ac_t0c3fb15_d23h2  manifest dd671e408127, plan aa3f08ac4159,
+  tools 0c3fb152c30a, event KV-D23H, hosts epyc7/8/9/10 (tree_check full_ok), receipt lanes/handoff/qwen_kvsys_atomic_apply_1795037429350356690.json.
+  Content: D23f + reach rows (reset_replicate rsync copy_depth 3 = FABLE fix #3) + ring-lite keys + FABLE fix #1 relay_mid keys (17 hg/hgi).
+  D23f (KV-D23) re-replicated to epyc8, tree_check full_ok 4 hosts. Candidate maker for stacked events: epyc7 W/mk_candidate_stack.py.
+  Seal lesson: seal_rep_d23.sh continues after RC_VERIFY 1 (it replicated anyway); h2 bind_sinks.json had nlink 2 from outside -> cp -p + mv.
+D24 (building epyc8 kv-d23-compose8/build_d24a.log, TAG d24a, base D23h2, main 795a5223111):
+  1 hub_C split  2 hub_Wi host  3 pc portbind_files (+ portbind_prefer mu_qwen_20261018 collected_mu: pc proof AMBIGUOUS fix, rerun epyc9 pcpb)
+  4 PVFIN-CAL: asbuilt.land_intra_stations 6 nets ahub.fr_* -> pvfin_{lo,hi} k=2 (bind_intra_stations.py; plan core rows get NO RTL on KV),
+    sites d24in/pvfin/pvfin_intra_sites_d24.json (2 stages re-sited off pvfin_hi / pll, hops <= 398.7), FR_LEAD derived by
+    r8/kv_pv_col_regen_d24.py (declare qkd_kvs_attn_fl FR_LEAD 0). RTL qkd_kvs_attn_fl_r17 + qkd_kvs_attn_r17 from main.
+  D_RL caveat: real boot image boot_v36/boot_ages_asbuilt.json D_RL 93 / D_QK 57 / F_DLY 55 / FIA 113 (lane scanned 235/3/95/255): KV-PVFIN-CAL re-scan asked.
+  Next: gate D24 (bind_fast precheck -> strict bind -> LATCHECK -> G0 + bound_param_check + bind_intra_stations.json / param_regen FR_LEAD 2 read-back).
+Not in D24: FABLE fix #2 (28x2 parent kt + 2 e0-local + astk calendar +2): NEEDS-LANE KV-KT-E0 (head RTL ot_qkh_head_native_r4 kst D=2 x16
+  lanes, astk cal +2 + sim, e0 re-harden 216x216, bind_intra_stations bit-slice net form); hub_Wo split (KV-HUBWO-RESET).
+d46 dly (epyc10 dly_h1): still NOT SIGNED, FF hold -5.75 ps even with margins 30/25.
