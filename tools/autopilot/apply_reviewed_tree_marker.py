@@ -11,6 +11,7 @@ replica FLEET-OPS added after the candidate was written) instead of the candidat
 exactly those hosts, and the apply refuses when gen_hosts changed between that guard read and the locked write.
 The pilot item is --pilot-item, else die.pilot_item, else the smallest item of the die's hold_event_items; none resolvable = refuse
 (--no-pilot is the explicit opt-out; the output then says PILOT NONE)."""
+import os
 import argparse, fcntl, json, os, sys, time
 from pathlib import Path
 
@@ -57,6 +58,29 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
     if kept:
         notes.insert(0, f"replicated and verified on {','.join(kept)}")
     return list(hosts) + kept, notes
+
+
+def repoint_gen_env(d, old_tree, new_tree, exists=os.path.exists):
+    """11-18 (third time tonight: OT_SIGNED_VIEW_SHA left outside the new tree, every launch refused): every die_gen_env / item_env string naming a path inside the OLD tree is rewritten to the
+    same relative path in the NEW tree; a repointed file missing there fails the apply (SystemExit, nothing written)."""
+    if not old_tree or not new_tree or old_tree == new_tree:
+        return []
+    old, new, missing, done = old_tree.rstrip("/"), new_tree.rstrip("/"), [], []
+
+    def fix(env, where):
+        for k, v in list((env or {}).items()):
+            if isinstance(v, str) and old + "/" in v + "/" and v.startswith(old):
+                nv = new + v[len(old):]
+                env[k] = nv
+                done.append(f"{where}{k}")
+                if not exists(nv):
+                    missing.append(f"{where}{k} -> {nv}")
+    fix(d.get("die_gen_env"), "die_gen_env.")
+    for it, env in (d.get("item_env") or {}).items():
+        fix(env, f"item_env.{it}.")
+    if missing:
+        raise SystemExit("APPLY REFUSED: gen env file missing in the new tree: " + "; ".join(missing[:6]) + " (add it to the tree manifest); nothing applied")
+    return done
 
 
 def marker_event_of(mc, d):
@@ -167,6 +191,7 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             if "queue_src" not in mc:
                 d["queue_src"] = "main@" + main
         HR._deep_set(d.setdefault("die_gen_env", {}), marker.get("die_gen_env") or {})
+        repoint_gen_env(d, old["src"], tree)
         if marker.get("asbuilt") and marker.get("bind_out"):
             HR._deep_set(d.setdefault("kit_rtl", {}), dict(mode="bind", asbuilt=marker["asbuilt"], bind_out=marker["bind_out"]))
         additions = list(obj.get("hold_records_add") or [])

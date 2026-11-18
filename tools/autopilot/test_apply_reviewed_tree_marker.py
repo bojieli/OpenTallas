@@ -224,3 +224,16 @@ def test_optimistic_apply_is_advisory_and_launches_every_type():
         raise SystemExit("strict apply passed without a gate record")
     except AssertionError:
         pass
+
+
+class RepointEnv(unittest.TestCase):
+    def test_gen_env_paths_into_the_old_tree_follow_the_new_tree_and_a_missing_file_fails(self):
+        import apply_reviewed_tree_marker as A
+        d = {"die_gen_env": {"OT_SIGNED_VIEW_SHA": "/k/old/physical/sv.json", "OT_X": "/k/other/f", "OT_N": "4"}, "item_env": {"i": {"OT_Y": "/k/old/a"}}}
+        done = A.repoint_gen_env(d, "/k/old", "/k/new", exists=lambda p: True)
+        self.assertEqual(d["die_gen_env"]["OT_SIGNED_VIEW_SHA"], "/k/new/physical/sv.json")
+        self.assertEqual((d["die_gen_env"]["OT_X"], d["item_env"]["i"]["OT_Y"]), ("/k/other/f", "/k/new/a"))
+        self.assertEqual(len(done), 2)
+        d2 = {"die_gen_env": {"OT_SIGNED_VIEW_SHA": "/k/old/physical/sv.json"}}
+        with self.assertRaises(SystemExit):
+            A.repoint_gen_env(d2, "/k/old", "/k/new", exists=lambda p: False)
