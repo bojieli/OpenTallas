@@ -341,20 +341,10 @@ def collect(hosts, scan):
         return [u for part in ex.map(one, hosts) for u in part]
 
 
-def drain(a):
-    os.makedirs(STATE, exist_ok=True)
-    lk = open(os.path.join(STATE, 'drain.lock'), 'w')
-    try:
-        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        say('another drain holds the lock')
-        return 0
+def finish(L, have):
+    """4. units rtx-pro has verified: append the AGIdock INDEX row, drop the host spool file, post AUTO-EXPORT.
+    Runs at the start of every drain and after every export, so a long backfill still indexes as it goes."""
     t0 = time.time()
-    L = load_ledger()
-    rows = agi_index()
-    have = {r[7] for r in rows}
-    hosts = a.hosts.split(',') if a.hosts else HOSTS
-    # 4. index + post units that rtx-pro finished
     done = []
     rp = os.path.join(STATE, 'rtx_done.jsonl')
     if os.path.isfile(rp):
@@ -382,6 +372,23 @@ def drain(a):
                  % (u['die'], u['element'], u['via'], u['host'], u['signoff'], u['die'], u['unit'], u['odb_sha'][:12],
                     u['record'][:12], u.get('tt'), u.get('ff')) for u in done]
         post('\n'.join(lines))
+    save_ledger(L)
+
+
+def drain(a):
+    os.makedirs(STATE, exist_ok=True)
+    lk = open(os.path.join(STATE, 'drain.lock'), 'w')
+    try:
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        say('another drain holds the lock')
+        return 0
+    t0 = time.time()
+    L = load_ledger()
+    rows = agi_index()
+    have = {r[7] for r in rows}
+    hosts = a.hosts.split(',') if a.hosts else HOSTS
+    finish(L, have)
     # 2. collect new candidates
     scan = a.scan or (time.time() - L.get('last_scan', 0) > SCAN_H * 3600)
     cands = collect(hosts, scan)
@@ -438,6 +445,7 @@ def drain(a):
         have.add(osha)
         L['units'][key] = dict(u, state='agi', agi_at=time.strftime('%Y-%m-%dT%H:%M:%S%z'))
         save_ledger(L)
+        finish(L, have)
     if a.list_only:
         for u in listed:
             print('\t'.join([u['die'], u['element'], u['kind'], u['host'], u['signoff'], u['odb_sha'][:12], u['how']]))
