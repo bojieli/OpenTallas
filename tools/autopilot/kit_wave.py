@@ -7074,11 +7074,35 @@ def stage_geom_tools(out, geom_dir, host, hub, run, tool_root=None):
     return target
 
 
+def repick_stage_hosts(sp, cfg_path=None):
+    """COORD 11-18 (resumed stages landed on the hub: KW_RT_TOOLS FAIL die tree missing on tolerant-swine): a spec is frozen when the attempt starts, but a stage may run much later (resume, restage).
+    A frozen host that is no longer in the die's CURRENT gen_hosts (live kit_wave.json) is dropped from hosts / place_prefer / roam_hosts and the current gen hosts take its place, exactly as a new
+    attempt would pick.  Unreadable config or an empty result leaves the spec unchanged."""
+    try:
+        p = Path(cfg_path) if cfg_path else Path(os.path.expanduser("~/coord")) / CFG_REL
+        cur = [h for h in ((json.loads(p.read_text()).get("dies") or {}).get(sp.get("die")) or {}).get("gen_hosts") or [] if h]
+    except (OSError, ValueError):
+        return sp
+    if not cur:
+        return sp
+    old = [h for h in (sp.get("hosts") or []) if h not in ("localhost", sp.get("hub"))]
+    stale = [h for h in sp.get("hosts") or [] if h not in cur]
+    if not stale:
+        return sp
+    sp = dict(sp)
+    sp["hosts"] = [h for h in sp.get("hosts") or [] if h in cur] + [h for h in cur if h not in (sp.get("hosts") or [])]
+    sp["place_prefer"] = [h for h in sp.get("place_prefer") or [] if h in cur]
+    sp["roam_hosts"] = [h for h in sp.get("roam_hosts") or [] if h in cur]
+    print(f"KW_HOSTS re-picked: frozen host(s) {','.join(stale)} are not in the die's current gen_hosts; stage hosts now {','.join(sp['hosts'])}", flush=True)
+    return sp
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     spec_bytes = Path(spec_path).read_bytes()
     spec_sha256 = hashlib.sha256(spec_bytes).hexdigest()
     sp = json.loads(spec_bytes)
+    sp = repick_stage_hosts(sp)
     out = Path(spec_path).parent
     completed_stages = {}
     res = {"stage": "start", "verdict": "FAIL", "die": sp["die"], "item": sp["item"], "t0": time.time()}
