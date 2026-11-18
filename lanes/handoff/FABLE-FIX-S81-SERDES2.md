@@ -220,3 +220,12 @@ NEXT
    -format json or the signoff session.tcl frame instead): classes, counts, launch/capture clock arrivals; compare the same paths at GRT.
 2. Per class: capture-skew ECO (CAPSKEW-ECO tools/die_plan/capskew_eco_run.py), GRT hold margin, or plan (D8d t42 split).
 3. Rebuild t13 from D8d generated kits (rail clean), then the other 10; sign-off, export AGIdock + rtx-pro + INDEX. Nothing exported so far.
+
+## State 00:55 PST 11-18: census + decisions posted
+- Census files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes2/drtx/census/{tt,ff}_{spef,grt}.{tsv,log}, aggregator drtx/cen.py.
+- Cause of GRT optimism: rck clock tree. Data nets routed-GRT median -14 ps; rck sink arrivals in u_dec spread 1848..2051 routed
+  (GRT read them balanced); lpl_0_r.rc vs .o 144 ps, lpl_2_w.wc vs .b 179 ps. Balance pads were sized on placement RC.
+- Routed TT setup < 0: 408 ends (343 lpl_r.rc->o, 29 enc.rem_q, 22 rm, 11 syn, 3 cmem->bsrc). FF hold < 0: 258 internal + 1273 ports.
+- Decisions: register stage after u_cmem read (+1 cycle, LATCHECK); rck: post-route clock ECO on extracted arrivals (CAPSKEW-ECO tool)
+  + centre-root trunk plan row with the t42 four-tap split; r692 hold repair after; SRAM-write hold open.
+- Pilot rebuild only after the S81 event carries: cmem register, centre trunk, t42 split, the 4 defines + RTL files (D8d).
