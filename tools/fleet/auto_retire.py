@@ -298,6 +298,7 @@ LIVE_ROW = frozenset({"RUNNING", "ENQUEUED", "ROUTE-HELD", "DEDUP", "DEDUP-WAIT"
 ATTEMPT_GLOB = "*/runs/*/kit-wave/*/*/items/*/attempt_*"
 ATTEMPT_QUIET_S = 1800            # FAIL / CANCELLED attempts go once nothing in them changed for 30 min ("at once")
 OLD_EVENT_IDLE_H = 12.0
+KEEP_FAILED_H = 24.0              # the newest failed attempt of a type keeps its final DB this long
 
 
 def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET_S, old_idle_h=OLD_EVENT_IDLE_H, mtime=newest_mtime, globber=None):
@@ -313,7 +314,7 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
     for v in items.values():
         if isinstance(v, dict):
             by.setdefault((v.get("die"), str(v.get("event")), v.get("item")), []).append(v)
-    out = []
+    out, allf = [], {}
     for p in sorted((globber or (lambda: glob.glob(os.path.join(claude, ATTEMPT_GLOB))))()):
         if not os.path.isdir(p) or os.path.islink(p):
             continue
@@ -335,6 +336,11 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
             if "q_signoff" in json.dumps(row) or "carry" in json.dumps(row).lower():
                 continue
             failed = str(row.get("status")) in ("FAIL", "CANCELLED") or row.get("class") == "SUPERSEDED"
+            if failed:
+                try:
+                    allf.setdefault((die, event, row.get("parent_item") or item), []).append((os.lstat(p).st_mtime, n, p))
+                except OSError:
+                    pass
             if failed and (newer or not incur):
                 why, win = "failed/cancelled/superseded attempt, %s" % ("newer attempt exists" if newer else "event not current"), quiet_s
             elif not incur:
@@ -353,7 +359,15 @@ def attempt_candidates(claude, cfg, state, refs, now=None, quiet_s=ATTEMPT_QUIET
         if mtime(p, now - win) > now - win:
             continue
         out.append((p, why))
-    return out
+    # COORD 11-18 (the Fable lane could diagnose 1 of 11 setup-stopped strip DBs): the NEWEST failed attempt of each TYPE (over ALL its failed attempts, retired or not) keeps its final DB
+    # (the whole attempt dir) for KEEP_FAILED_H after it last changed; older attempts of the type go as before.  Type = state parent_item, else the item.
+    keep_cut = now - KEEP_FAILED_H * 3600
+    keep = set()
+    for grp in allf.values():
+        m, n, p = max(grp)
+        if m > keep_cut:
+            keep.add(p)
+    return [(p, why) for p, why in out if p not in keep]
 
 
 KEEP_NAMES = ("reports", "logs", "REPORTS-KEPT.txt")      # COORD 11-18: reports/ (and bind inputs, via the guard's protected list) survive a cleanup

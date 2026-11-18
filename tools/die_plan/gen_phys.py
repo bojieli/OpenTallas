@@ -218,6 +218,16 @@ def _relay_mid_fit(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _relay_hop_fail(budgets, tn):
+    """S81-COLGEN-3 11-17 (S81-TYPES-R3): relay_mid.tcl fails on a relay chain hop above 405 um (OT_RELAY_POLY_FAIL) -- plan-wide
+    budgets.relay_hop_fail, per type budgets.relay_hop_fail_types (types or unsplit base names), or GEN env
+    OT_RELAY_POLY_FAIL=1.  Off by default: it is switched on once relay_depth.py rows cover every chain of the type."""
+    if os.environ.get("OT_RELAY_POLY_FAIL") == "1" or budgets.get("relay_hop_fail"):
+        return True
+    on = list(budgets.get("relay_hop_fail_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
 def _ft_polarity_local(budgets, tn):
     """S81-STRIP 11-16 (t47 ft2_o/ft6_o CTS -3956 ps: the QN inverter + port buffer of a face-edge FT station landed ~1000 um
     from the station): ft_polarity_local.tcl keeps the polarity inverter beside its station.  Opt-in three ways like
@@ -6421,6 +6431,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
              if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
            *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
+           *(["export OT_RELAY_POLY_FAIL = 1"] if macros and _relay_hop_fail(P.budgets, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
            *([f"export OT_GUTTER_BLOCK_UM = {_gutter_block_um(P.budgets, tn)}"] if macros and _gutter_block_um(P.budgets, tn) else []),
            *([f"export OT_GUTTER_BLOCK_MIN_SPAN_UM = {_gutter_block_min_span_um(P.budgets)}"]

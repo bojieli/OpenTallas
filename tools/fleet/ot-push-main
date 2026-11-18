@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+"""ot-push-main: land the commits of this lane clone on main in ONE command (OWNER 11-18: one shared version, no branches, no gate
+records, no READY / APPROVED lines).
+
+  cd <lane clone> && python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/ot-push-main [--no-test] [--dry-run] [--max N]
+
+Steps: fetch origin main -> rebase the clone's commits onto it (never a merge of main into the lane, never a force push) -> run only the
+tests of the touched files (touched test_*.py, plus test_<stem>*.py next to a touched source; seconds) -> push HEAD to origin main.
+Non-fast-forward (someone pushed first): fetch, rebase, retry (up to --max, default 8); the tests rerun only when the new upstream
+commits touched files this push touches.  A rebase conflict aborts the rebase (clone unchanged) and exits 3: resolve by hand,
+`git rebase origin/main`, then run again.  Failing tests exit 4 and push nothing.  Exit 0 = main contains your commits.
+Lane line: bash+python3 -I ot-push-main, nothing else (no branch, gate record, READY or APPROVED line).
+origin is the lane mirror on the hub: it relays the push to GitHub before accepting it, so a GitHub refusal is reported here."""
+import argparse
+import os
+import shlex
+import subprocess as S
+import sys
+from pathlib import Path
+
+VENV_PY = "/srv/opentallas-scratch2/claude/mq-gate/venv/bin/python"
+
+
+def git(*a, check=False, timeout=900):
+    return S.run(["git", *a], capture_output=True, text=True, timeout=timeout, check=check)
+
+
+def out(*a):
+    return git(*a).stdout.strip()
+
+
+def touched(base):
+    return [l for l in out("diff", "--name-only", "--no-renames", f"{base}..HEAD").splitlines() if l]
+
+
+def select_tests(files, root="."):
+    """touched test files + test_<stem>*.py in the dir of a touched source (and its tests/ dir); only files that exist"""
+    found = []
+    for f in files:
+        p = Path(root, f)
+        if not f.endswith((".py", ".sh", ".sv", ".v")) and "/ot-" not in "/" + f:
+            continue
+        name = p.name
+        if name.startswith("test_") and name.endswith(".py"):
+            cands = [p]
+        else:
+            stem = name[:-3] if name.endswith(".py") else name
+            cands = sorted(p.parent.glob(f"test_{stem}*.py")) + sorted((p.parent / "tests").glob(f"test_{stem}*.py")) \
+                + sorted(p.parent.glob(f"test_{stem.replace('-', '_')}*.py"))
+        for c in cands:
+            if c.is_file() and str(c) not in found:
+                found.append(str(c))
+    return found
+
+
+def run_tests(tests, timeout):
+    py = VENV_PY if os.access(VENV_PY, os.X_OK) else sys.executable
+    if S.run([py, "-c", "import pytest"], capture_output=True).returncode:
+        print("ot-push-main: no pytest here; tests SKIPPED (run them where pytest exists)")
+        return 0
+    cmd = [py, "-m", "pytest", "-q", "-x", "-p", "no:cacheprovider", *tests]
+    print("ot-push-main: " + shlex.join(cmd[2:]))
+    try:
+        return S.run(cmd, timeout=timeout).returncode
+    except S.TimeoutExpired:
+        print(f"ot-push-main: tests timed out after {timeout} s")
+        return 124
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--no-test", action="store_true")
+    ap.add_argument("--dry-run", action="store_true", help="rebase + test, no push")
+    ap.add_argument("--max", type=int, default=8)
+    ap.add_argument("--test-timeout", type=int, default=900)
+    a = ap.parse_args()
+    top = out("rev-parse", "--show-toplevel")
+    if not top:
+        print("ot-push-main: not in a git clone"); return 2
+    os.chdir(top)
+    if out("status", "--porcelain", "--untracked-files=no"):
+        print("ot-push-main: uncommitted changes to tracked files; commit them first (no stash)"); return 2
+    tested_files = None
+    for attempt in range(1, a.max + 1):
+        f = git("fetch", "-q", "origin", "+refs/heads/main:refs/remotes/origin/main", timeout=900)
+        if f.returncode:
+            print("ot-push-main: fetch failed: " + (f.stderr or f.stdout).strip()[-300:]); return 1
+        base = out("rev-parse", "refs/remotes/origin/main")
+        head = out("rev-parse", "HEAD")
+        if git("merge-base", "--is-ancestor", head, base).returncode == 0:
+            print(f"ot-push-main: nothing to push; main {base[:11]} already contains HEAD {head[:11]}"); return 0
+        old_base = out("merge-base", "HEAD", base)
+        if old_base != base:
+            r = git("rebase", "--rebase-merges", base, timeout=1800)
+            if r.returncode:
+                files = out("diff", "--name-only", "--diff-filter=U")
+                git("rebase", "--abort")
+                print(f"ot-push-main: REBASE CONFLICT on main {base[:11]} in: {files.replace(chr(10), ' ')}\n"
+                      f"  clone unchanged; resolve by hand: git rebase origin/main, fix, git rebase --continue, run again"); return 3
+        files = touched(base)
+        if not files:
+            print("ot-push-main: no file differs from main; nothing to push"); return 0
+        moved = set(out("diff", "--name-only", f"{old_base}..{base}").split()) if old_base != base else set()
+        need = tested_files is None or bool(moved & (set(files) | set(tested_files)))
+        if need and not a.no_test:
+            tests = select_tests(files)
+            tested_files = tests
+            if tests:
+                rc = run_tests(tests, a.test_timeout)
+                if rc:
+                    print(f"ot-push-main: TESTS FAILED rc={rc}; nothing pushed"); return 4
+            else:
+                print(f"ot-push-main: no test file selects for {len(files)} touched file(s); pushing")
+                tested_files = []
+        if a.dry_run:
+            print(f"ot-push-main: dry run ok; would push {out('rev-parse', 'HEAD')[:11]} onto main {base[:11]}"); return 0
+        p = git("push", "origin", "HEAD:refs/heads/main", timeout=1800)
+        msg = ((p.stderr or "") + (p.stdout or "")).strip()
+        if p.returncode == 0:
+            print(f"ot-push-main: PUSHED main @{out('rev-parse', 'HEAD')} (on main {base[:11]}, attempt {attempt})"); return 0
+        print(f"ot-push-main: push refused (attempt {attempt}/{a.max}): {msg[-400:]}")
+        if "NOT pushed" not in msg and "non-fast-forward" not in msg and "rejected" not in msg and "fetch first" not in msg:
+            return 1
+    print("ot-push-main: main kept moving; gave up after %d attempts, run again" % a.max)
+    return 5
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -917,6 +917,44 @@ def core_link_src_depth(plan, tn, module, port, bit):
     return 0
 
 
+def relay_depth_map(plan, tn):
+    """S81-COLGEN-3 11-17 (S81-TYPES-R3: polyline relay chains over hard macros with hops above the 405-um reach): plan
+    partition_types[tn].relay_depth = [{"inst": <source leaf name inside the partition, e.g. u_y_rt_20a_3>, "port": "o",
+    "D": 1..4, "path_um": .., "note": ..}] -> {(inst, port): D}.  Every internal sink the port feeds gets D extra register
+    stages (one ot_dp_dly D=1 per stage, instance u_y_xd_*: a relay-named flop group, so relay_mid.tcl spreads each stage along
+    the chain's polyline), DECLARED per sink bit in bind_core_input_pipe.json like core_link_pipe (bind_verify, compiler / TOK).
+    Absent = no stage, byte-identical RTL."""
+    t = ((plan or {}).get("partition_types") or {}).get(tn) or {}
+    out = {}
+    for row in t.get("relay_depth") or []:
+        if row.get("side") == "sink":
+            continue
+        k = (row["inst"], row.get("port", "o"))
+        if k in out:
+            raise BindError(f"relay_depth {tn}: {k[0]}.{k[1]} listed twice")
+        out[k] = int(row["D"])
+    return out
+
+
+def relay_depth_sink_map(plan, tn):
+    """relay_depth rows with "side": "sink" (a DIRECT core-to-core wire, no relay on it): {(sink leaf name, input port):
+    [(D, lo, hi)]} -- D new relay-named stages (u_y_xd_*) in front of those bits of the sink's input port, whatever drives them.
+    relay_mid.tcl places them between the fixed source pin and the fixed sink pin like a relay chain.  bits [lo, hi] (inclusive,
+    absent = the whole port); overlapping runs are an error."""
+    t = ((plan or {}).get("partition_types") or {}).get(tn) or {}
+    out = {}
+    for row in t.get("relay_depth") or []:
+        if row.get("side") != "sink":
+            continue
+        lo, hi = (row.get("bits") or [0, None])
+        runs = out.setdefault((row["inst"], row.get("port", "i")), [])
+        for d0, l0, h0 in runs:
+            if lo <= (10 ** 9 if h0 is None else h0) and l0 <= (10 ** 9 if hi is None else hi):
+                raise BindError(f"relay_depth {tn}: sink {row['inst']}.{row.get('port', 'i')} bit runs overlap")
+        runs.append((int(row["D"]), int(lo), None if hi is None else int(hi)))
+    return out
+
+
 def ft_hop_lockup_cell():
     """gen_rtl's ot_dp_lk module text, verbatim (keep attributes included)."""
     import gen_rtl
@@ -4458,12 +4496,26 @@ class Binder:
                             e = [lk]
                     lpd = core_link_pipe_bits(self.plan, tn, c.module, pn, len(bits)) \
                         if core_link_pipe(self.plan, tn, c.module, pn) else None
-                    if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources"):
+                    rdm = relay_depth_map(self.plan, tn)
+                    rds = relay_depth_sink_map(self.plan, tn).get((r, pn), [])
+                    rdo = [0] * len(bits)               # S81-COLGEN-3: bits whose depth comes from relay_depth (instance-level)
+                    if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources") or rdm or rds:
                         sd = []
                         for i_ in range(len(bits)):
                             dd_ = self.sinks[(ci, pn, i_)]
-                            sd.append(core_link_src_depth(self.plan, tn, F.cells[dd_[1]].module, dd_[2], dd_[3])
-                                      if dd_[0] == "int" else 0)
+                            x_ = core_link_src_depth(self.plan, tn, F.cells[dd_[1]].module, dd_[2], dd_[3]) \
+                                if dd_[0] == "int" else 0
+                            y_ = rdm.get((self.rel_of(dd_[1]), dd_[2]), 0) if dd_[0] == "int" else 0
+                            if x_ and y_:
+                                raise BindError(f"relay_depth {tn}: {self.rel_of(dd_[1])}.{dd_[2]} also has a core_link_pipe source depth")
+                            z_ = next((d_ for d_, l_, h_ in rds if i_ >= l_ and (h_ is None or i_ <= h_)), 0)
+                            if z_ and (x_ or y_):
+                                raise BindError(f"relay_depth {tn}: sink {r}.{pn}[{i_}] also has a source-level pipe")
+                            self.__dict__.setdefault("_rd_used", set()).add((tn, r, pn)) if z_ else None
+                            sd.append(x_ or y_ or z_)
+                            rdo[i_] = 1 if (y_ or z_) else 0
+                            if y_:
+                                self.__dict__.setdefault("_rd_used", set()).add((tn, self.rel_of(dd_[1]), dd_[2]))
                         if any(sd):
                             lpd = lpd or [0] * len(bits)
                             for i_, x_ in enumerate(sd):
@@ -4473,14 +4525,28 @@ class Binder:
                                 lpd[i_] = lpd[i_] or x_
                     if lpd and any(lpd):
                         e = list(e)
-                        for k_, depth in enumerate(sorted(set(lpd) - {0})):
-                            idx = [i_ for i_, x_ in enumerate(lpd) if x_ == depth]
+                        for k_, (depth, rd_) in enumerate(sorted({(x_, rdo[i_]) for i_, x_ in enumerate(lpd) if x_})):
+                            idx = [i_ for i_, x_ in enumerate(lpd) if x_ == depth and rdo[i_] == rd_]
                             lp = short_id(f"lp_{sv_id(r)}_{pn}_{k_}", 100)
                             decl.append(f"    wire [{len(idx) - 1}:0] {lp};")
-                            body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
-                                        f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
-                                        f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
-                                        f"// core_link_pipe: +{depth} DECLARED cycle(s) on bits {idx[0]}..{idx[-1]}")
+                            if rd_:
+                                # relay_depth: D separate single-stage instances (u_y_xd_*), each its own relay_mid group
+                                prev = _concat([e[i_] for i_ in idx])
+                                for s_ in range(depth):
+                                    last = s_ == depth - 1
+                                    qn = lp if last else short_id(f"{lp}_s{s_}", 100)
+                                    if not last:
+                                        decl.append(f"    wire [{len(idx) - 1}:0] {qn};")
+                                    body.append(f"    ot_dp_dly #(.W({len(idx)}), .D(1)) "
+                                                f"{short_id('u_y_xd_' + sv_id(r) + '_' + pn + '_' + str(k_) + '_' + str(s_), 100)} "
+                                                f"(.clk(clk), .d({prev}), .q({qn}));  "
+                                                f"// relay_depth: stage {s_ + 1}/{depth} DECLARED on bits {idx[0]}..{idx[-1]}")
+                                    prev = qn
+                            else:
+                                body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
+                                            f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
+                                            f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
+                                            f"// core_link_pipe: +{depth} DECLARED cycle(s) on bits {idx[0]}..{idx[-1]}")
                             for j_, i_ in enumerate(idx):
                                 e[i_] = f"{lp}[{j_}]"
                                 self.declare_core_input_pipe(tn, p, ci, pn, depth + int(core_input_pipe(
@@ -4557,6 +4623,12 @@ class Binder:
                    "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n") +
                 "`timescale 1ns/1ps\n`default_nettype none\n")
         pblock = (" #(\n" + ",\n".join(pdecl) + "\n)") if pdecl else ""
+        if t.get("relay_depth"):
+            used = getattr(self, "_rd_used", set())
+            miss = [f"{row['inst']}.{row.get('port', 'i' if row.get('side') == 'sink' else 'o')}" for row in t["relay_depth"]
+                    if (tn, row["inst"], row.get("port", "i" if row.get("side") == "sink" else "o")) not in used]
+            if miss:      # a row that names no leaf / drives no internal sink would silently leave a hop over the reach
+                raise BindError(f"relay_depth {tn}: {len(miss)} row(s) matched no internal sink: {miss[:6]}")
         text = head + f"module {mod}{pblock} (\n" + "\n".join(_strip_comment_comma(ports)) + "\n);\n" + "\n".join(decl) + \
             "\n" + "\n".join(body) + "\n" + "\n".join(insts) + f"\nendmodule\n`default_nettype wire\n"
         if t.get("reset_replicate"):
@@ -5206,6 +5278,10 @@ def cmd_bind(a):
         (out / "bind_lane_asbuilt.json").write_text(json.dumps(dict(summary=la_sum, lanes=la_recs), indent=1) + "\n")
         rep["lane_asbuilt"] = la_sum
         B.errors.extend(la_errs)
+        ip_warn, ip_info = LAL.internal_pipe_check(raw, out)      # S81-COLGEN-3: relay_depth cycles: WARNING naming S81-DIE-R3
+        if ip_info:
+            rep["lane_asbuilt"]["internal_pipe"] = ip_info
+        B.warns.extend(ip_warn)
         if la_errs:
             B.errors.append(f"LANE_ASBUILT_TOTAL {len(la_errs)} of {la_sum['lanes']} lanes deliver off the latency table "
                             f"(classes {la_sum['classes']}; full list bind_lane_asbuilt.json)")

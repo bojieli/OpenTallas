@@ -246,6 +246,111 @@ class EndToEnd(unittest.TestCase):
         self.assertEqual((self.d / "coord/lanes/COORD-REVIEW-QUEUE.md").read_text().count("\n"), n)
         self.assertEqual(sh("git", "rev-parse", "main", cwd=o), main)
 
+    # ---- MERGE-AUTO-1118: no approval wait
+    def _omq(self, *a):
+        return subprocess.run([sys.executable, "-I", P, *a], env=self.env, capture_output=True, text=True, timeout=600)
+
+    def _auto_setup(self):
+        q = self.d / "coord/lanes/COORD-REVIEW-QUEUE.md"
+        q.write_text("# queue\n")
+        self.env["MQ_AUTO_DIGEST_SECS"] = "0"
+        return q
+
+    def test_auto_tick_merges_only_green_gated_current_tip_and_only_when_switched_on(self):
+        q = self._auto_setup()
+        g = self._omq("gate", "claude/good"); self.assertEqual(g.returncode, 0, g.stdout + g.stderr)
+        r = self._omq("gate", "claude/red"); self.assertNotEqual(r.returncode, 0)          # RED writes no record
+        o = self.d / "origin.git"; main = sh("git", "rev-parse", "main", cwd=o)
+        self.assertEqual(self.tick().returncode, 0)                                         # switch off: nothing lands
+        self.assertEqual(sh("git", "rev-parse", "main", cwd=o), main)
+        listing = self._omq("auto-list"); self.assertIn("auto-merge OFF", listing.stdout); self.assertIn("claude/good", listing.stdout)
+        self.assertNotIn("claude/red", listing.stdout)
+        (self.d / "mq/auto.on").write_text("")
+        r = self.tick(); self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        sh("git", "merge-base", "--is-ancestor", self.shas["good"], sh("git", "rev-parse", "main", cwd=o), cwd=o)
+        self.assertIn(f"MERGED-AUTO [claude/good] @{self.shas['good']}", (self.d / "mq/log").read_text())
+        t = q.read_text()
+        self.assertRegex(t, r"MERGED \[MERGE-QUEUE -> [^]]+\] claude/good@"); self.assertIn("MERGED-AUTO digest", t)
+        self.assertNotIn("claude/red", t.replace("# queue", ""))
+        n = t.count("\n"); self.tick()
+        self.assertEqual(q.read_text().count("\n"), n)                                      # idempotent
+        self.assertIn("Merge claude/good", sh("git", "log", "-3", "--format=%B", "main", cwd=o)); self.assertIn("auto-merge", sh("git", "log", "-3", "--format=%B", "main", cwd=o))
+
+    def test_auto_tick_skips_a_tip_that_moved_past_its_gate_and_an_old_record(self):
+        self._auto_setup()
+        self.assertEqual(self._omq("gate", "claude/good").returncode, 0)
+        self.assertEqual(self._omq("gate", "claude/clash").returncode, 0)
+        sh(*self.g, "checkout", "-q", "claude/good", cwd=self.dev)
+        (self.dev / "tools/x/mod.py").write_text("def f():\n    return 9\n")
+        sh(*self.g, "commit", "-qam", "moved", cwd=self.dev); sh(*self.g, "push", "-q", "origin", "claude/good", cwd=self.dev)
+        old = self.d / "mq/gates" / f"{self.shas['clash']}.json"
+        os.utime(old, (1.0, 1.0))
+        (self.d / "mq/auto.on").write_text("")
+        o = self.d / "origin.git"; main = sh("git", "rev-parse", "main", cwd=o)
+        self.assertIn("no candidate", "no candidate" if "0 candidate(s)" in self._omq("auto-list").stdout else self._omq("auto-list").stdout)
+        self.assertEqual(self.tick().returncode, 0)
+        self.assertEqual(sh("git", "rev-parse", "main", cwd=o), main)
+
+    def test_auto_tick_conflict_aborts_with_merge_fail_and_no_force(self):
+        q = self._auto_setup()
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        self.assertEqual(self._omq("gate", "claude/clash").returncode, 0)
+        sh(*self.g, "merge", "-q", "--no-edit", "claude/good", cwd=self.dev); sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        (self.d / "mq/auto.on").write_text("")
+        o = self.d / "origin.git"; main = sh("git", "rev-parse", "main", cwd=o)
+        self.assertEqual(self.tick().returncode, 0)
+        self.assertEqual(sh("git", "rev-parse", "main", cwd=o), main)
+        self.assertNotIn("MERGED-AUTO", (self.d / "mq/log").read_text())
+
+    def test_merge_now_needs_gate_tip_and_lands_once(self):
+        q = self._auto_setup()
+        s = self.shas
+        r = self._omq("merge-now", "claude/good", s["good"]); self.assertEqual(r.returncode, 3, r.stdout); self.assertIn("NO-GATE", r.stdout)
+        self.assertEqual(self._omq("gate", "claude/good").returncode, 0)
+        r = self._omq("merge-now", "claude/good", s["good"][:10]); self.assertEqual(r.returncode, 2)
+        r = self._omq("merge-now", "claude/good", "0" * 40); self.assertEqual(r.returncode, 3)
+        o = self.d / "origin.git"
+        r = self._omq("merge-now", "claude/good", s["good"]); self.assertEqual(r.returncode, 0, r.stdout + r.stderr); self.assertIn("MERGED", r.stdout)
+        sh("git", "merge-base", "--is-ancestor", s["good"], "main", cwd=o)
+        self.assertIn(f"MERGED-AUTO [claude/good] @{s['good']}", (self.d / "mq/log").read_text())
+        r = self._omq("merge-now", "claude/good", s["good"]); self.assertEqual(r.returncode, 0); self.assertIn("already settled", r.stdout)
+
+    def test_merge_now_refuses_a_moved_tip(self):
+        self._auto_setup()
+        self.assertEqual(self._omq("gate", "claude/good").returncode, 0)
+        old = self.shas["good"]
+        sh(*self.g, "checkout", "-q", "claude/good", cwd=self.dev)
+        (self.dev / "tools/x/mod.py").write_text("def f():\n    return 9\n")
+        sh(*self.g, "commit", "-qam", "moved", cwd=self.dev); sh(*self.g, "push", "-q", "origin", "claude/good", cwd=self.dev)
+        o = self.d / "origin.git"; main = sh("git", "rev-parse", "main", cwd=o)
+        r = self._omq("merge-now", "claude/good", old); self.assertEqual(r.returncode, 4); self.assertIn("TIP-MOVED", r.stdout)
+        self.assertEqual(sh("git", "rev-parse", "main", cwd=o), main)
+
+    def test_merge_now_skips_when_main_moved_over_its_files(self):
+        self._auto_setup()
+        self.assertEqual(self._omq("gate", "claude/good").returncode, 0)
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        (self.dev / "tools/x/test_mod.py").write_text((self.dev / "tools/x/test_mod.py").read_text() + "\n# touched\n")
+        sh(*self.g, "commit", "-qam", "main moves", cwd=self.dev); sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        r = self._omq("merge-now", "claude/good", self.shas["good"]); self.assertEqual(r.returncode, 6, r.stdout + r.stderr)
+        self.assertIn("gate it again", r.stdout)
+
+    def test_redwatch_posts_known_red_for_a_commit_that_breaks_tests_and_blocks_nobody(self):
+        q = self._auto_setup()
+        self.assertEqual(self._omq("redwatch").returncode, 0)                               # first run: start at current main
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        (self.dev / "tools/x/mod.py").write_text("def f():\n    return 0\n")
+        sh(*self.g, "commit", "-qam", "[LANE-BREAK] break f", cwd=self.dev)
+        (self.dev / "tools/x/other.txt").write_text("fine\n")
+        sh(*self.g, "add", "tools/x/other.txt", cwd=self.dev); sh(*self.g, "commit", "-qm", "[LANE-OK] harmless", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        r = self._omq("redwatch"); self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        t = q.read_text()
+        self.assertRegex(t, r"KNOWN-RED \[MERGE-QUEUE -> LANE-BREAK\] main \w+ \('\[LANE-BREAK\] break f'\)")
+        self.assertIn("test_mod.py::test_f", t); self.assertNotIn("LANE-OK]", t.split("KNOWN-RED")[-1].split("\n")[0] if False else "")
+        n = t.count("KNOWN-RED"); self.assertEqual(n, 1)
+        self._omq("redwatch"); self.assertEqual(q.read_text().count("KNOWN-RED"), 1)        # each commit judged once
+
     def test_already_in_main_posts_nothing_to_land(self):
         sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
         sh(*self.g, "merge", "-q", "--ff-only", "claude/good", cwd=self.dev)

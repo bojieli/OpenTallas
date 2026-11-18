@@ -5053,8 +5053,18 @@ def sync_die_inputs(AP, cfg, run=None):
                 except Exception as e:
                     AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: skipped: {e}")
                     continue
-                if rc in (0, 2):                                 # tar --keep-old-files returns 2 when a file already exists
-                    ok += len(part)
+                # 11-18 (FABLE-FLOW-0010 F): rc 2 is also what tar prints when the destination write fails (epyc2's root was full): "229 files copied" three times with no
+                # directory there.  rc 0 or 2 only counts after every path of the batch is verified to EXIST on the target.
+                if rc in (0, 2):
+                    vcmd = f"{' '.join(ssh)} {h} 'cd / && for f in {names}; do test -e \"$f\" || exit 1; done'"
+                    try:
+                        vrc = run(["bash", "-c", vcmd])
+                    except Exception:
+                        vrc = 1
+                    if vrc == 0:
+                        ok += len(part)
+                    else:
+                        AP.log(f"KIT-WAVE SRC-SYNC {src}->{h} {die}: copy rc={rc} but the files are NOT on {h} (destination write failed? disk full?); not counted")
             heal_count(tries, hk)
             if ok:
                 AP.log(f"KIT-WAVE SRC-SYNC {die}: {ok} missing input file(s) copied {src}->{h} (self-heal SRC-HEAL-1116: its probe is whole there); re-probe follows")
