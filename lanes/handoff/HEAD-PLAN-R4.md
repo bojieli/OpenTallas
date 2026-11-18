@@ -107,3 +107,10 @@ Read lanes/handoff/HEAD-R3.md for the NF15e -> NF15f decision (hop halving + cor
   - die STA on tree2;
   - XO_HOP rtl should be merged to main;
   - ot_wait .scope FAILED false negative (reported).
+
+## (9) 11-17 17:2x-18:0x: Fable lever 3, lep_pair KCRED28, XO_HOP to main
+- Fable hd_lep0N -3,897 ps / 76,299 hold cells: that kit is NF13a (epyc10 ot-jobs/hd_lep0N-route-civil-redfish-2363933-1794854605), not NF15d2r1. NF13a feeds landing faults straight into u_cland_up_coll_o* (0 stations). NF15d2r1/NF15f have 174 registered ot_dp_landing_collect stations on those chains, so no follow-on event is needed. Hold classes before repair (NF13a): cross_tap 25,840 ends -194.5, port_in 12,571 -83.6, port_out 3,235 -105.9, same_tap 418; +40 ps cross-tap pass added 21,737 cells. Next: compare the NF15f pilot pregrt_ff_hold class line and the 4_cts_final u_fault_port group.
+- Pilot launch BLOCKED by LAUNCH-KEEP: the old NF13a hd_lep0N attempt 3 (kw-s81hea-hdlep0N-3-47709) and the NF15d2r1 hd_mesh row bb7589f7825a0 still run; asked COORD/WAVE-FLOW-R2 to reap them.
+- lep_pair KCRED28 signed record s81_head/ot_s81hd_lep_pair__kcred28_hei3_1117 is 388.8x432 (other pin geometry, same 2,144 names), and the NF15f core is 777.6x492.48 (vE). It can't be bound without a reshape; HEAD-TYPES-R4 is asked to re-sign in the vE form.
+- XO_HOP: claude/head-xo-hop-1117 @6932d71e443 (tile, tile_native, tb + tools/s81_head/tests/test_hd_tile_xo_hop.py), GATE main=41129805aac pass=2/2. Bench evidence: epyc9 /srv/opentallas-scratch2/claude/head-plan-r4/xoh_bench.
+- Superseded trees posted for FLEET-OPS-R (24 h): kw45 ..._nf15f (all 4 hosts, the _d2 link base) and ..._nf15f_d1 (epyc9).
