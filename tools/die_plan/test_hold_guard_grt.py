@@ -95,8 +95,8 @@ def test_time_cap():
 
 
 def test_hold_met_margin_chase_stalls():
-    out = run("($::ws >= 0 ? 0.0 : 50.0)")             # -50 -> 0, then no gain: stop at ws >= 0
-    assert "hold met (ws >= 0)" in out and len(calls(out)) == 3
+    out = run("($::ws >= 3 ? 0.0 : 53.0)", {"OT_HOLD_STALL_MIN_WS": "3"})   # -50 -> 3, then no gain: stop at ws >= the stall floor
+    assert "hold met (ws >= stall floor)" in out and len(calls(out)) == 3
 
 
 def test_native_finish_ends_guard():

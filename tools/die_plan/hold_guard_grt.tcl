@@ -93,7 +93,9 @@ if {[llength [info procs ::repair_timing_helper]] && ![llength [info procs ::ot_
         }
       }
       if {[lindex $cur 0] >= $hm} { break }
-      if {[lindex $cur 0] >= 0 && $dw < 1.0} { puts "OT_HOLD_GUARD_GRT: hold met (ws >= 0), margin chase stalled, stop"; break }
+      # HOLD-STALL-30 11-18 (FABLE-CLOSURE-STRATEGY 1320, COORD): the stall stop acts only once ws >= OT_HOLD_STALL_MIN_WS (30 ps).  It used to act at ws >= 0:
+      # sle_hc0__cl38badc56 stopped at +6.56 vs the 40 ps target and route then cost 28 ps of hold (routed internal FF hold -21.57 on 152 ends).
+      if {[lindex $cur 0] >= [::ot_hg_num OT_HOLD_STALL_MIN_WS 30.0] && $dw < 1.0} { puts "OT_HOLD_GUARD_GRT: hold met (ws >= stall floor), margin chase stalled, stop"; break }
       if {$added <= 0} { puts "OT_HOLD_GUARD_GRT: chunk added no buffer, stop"; break }
       # the chunk ended below its buffer cap = the native repair finished on its own: same end as an unchunked call
       if {!$hit} { puts "OT_HOLD_GUARD_GRT: native hold repair finished inside the chunk, stop"; break }
