@@ -2540,13 +2540,13 @@ def gen_hooks(s: dict, kd: str) -> dict:
     pre_grt = ["# ref_tile PRE_GLOBAL_ROUTE: io_ref boundary + pin-access keepout (the layer ABOVE the outer face-pin",
                "# column; created here, removed by post_drt.tcl, so the abstract carries only real metal: DRT-0073 at the parent)",
                ("estimate_parasitics -placement" if multi else f"source /src/{QDM}/pre_ref_skew.tcl"),
-               "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+               pk_source(kd),
                # el1011-ds-mtp-cbw 2026-10-12: with MAX_ROUTING_LAYER as GRT's top layer FastRoute zeroes that layer over
                # every hard macro (M5 cap + SRAM OBS M1-M4 = full wall; hrow5_cbw-r5b / hgi_seq v2.4 GRT-0116); GRT to
                # MAX+1 at zero capacity restores it, detailed route still stops at MAX (no-op without macros)
                "source /src/physical/common_flow/grt_macro_top_layer.tcl"] + btcl
     post_drt = ["# ref_tile POST_DETAIL_ROUTE: remove the pin-access keepout, restore the plain boundary SDC",
-                "source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+                pk_source(kd),
                 * ([] if multi else [f"source /src/{QDM}/post_plain.tcl"])] + btcl
     if macro_edge_guard(s):
         # add before GRT, remove after DRT (the wrapper picks the mode from its caller); the hold ECO re-applies it
@@ -2893,6 +2893,13 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
             f"export OT_PIN_BALANCE_H={shq(pb.get('h', dh))}", f"export OT_PIN_BALANCE_V={shq(pb.get('v', dv))}"]
 
 
+def pk_source(kd: str) -> str:
+    """WAVE-FLOW-R2 11-17 (COORD, S81-SVC-SPLIT): the face-pin keepout toggle is sourced from the KIT (staged by kit_common_files into physical/ref_tile/<name>/), guarded: the
+    old direct read of the hbm_accel_die_views copy under /src failed GRT in a sparse lane clone.  The same file runs in pre_grt (adds) and post_drt (removes): both lines use this."""
+    f = f"/src/{kd}/stn_pin_keepout.tcl"
+    return f'if {{[file exists {f}]}} {{ source {f} }} else {{ puts "REF_TILE WARNING: {f} is not in the kit: the face-pin keepout toggle is skipped" }}'
+
+
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
     out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
@@ -2900,7 +2907,7 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
-           "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
+           f"{kd}/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
     if multiport_spine(s):
         out += ["physical/common_flow/clock_spine.tcl", "physical/common_flow/native_pg_binding.tcl"]
