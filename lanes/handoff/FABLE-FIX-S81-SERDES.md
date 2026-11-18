@@ -219,3 +219,14 @@ LOCAL_RESET_RAW 2 on serdes t15 / t1. The countable kits need: D8e applied, the 
 
 Files: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/{E (harness, sta18, sta19, dump), H20}; lane clone intel2
 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/wt (cone tools, physical/common_flow, rtl, physical/die_plan/s81).
+
+## State 2026-11-18 12:55 PST
+- Boot-release stop root cause (H20 4_cts.odb fan-out walk, epyc9 E/fan/fan.log): stage 0 -> stage 1 is ONE private chain with no fan-out,
+  but its inverter _341715_ sat at (1113, 511), 544 um west of both flops: chain about 1.37 mm for 363 um. The fix already existed as an
+  opt-in (serdes_boot_release_local.tcl ot_serdes_boot_path_local, OT_SERDES_BOOT_PATH_LOCAL); it was never exported and the H kits carried
+  an older copy of the hook. Main dc9b82ef5b5: the generator exports it with OT_SERDES_BOOT_RELEASE_LOCAL. S81-CORES-OPUS task withdrawn.
+- H21 RUNNING: epyc9 /srv/opentallas-scratch2/claude/fable-fix-s81-serdes3/H21/serdes__t13/gen/serdes__t13 (H20 kit + main hook copy +
+  OT_SERDES_BOOT_PATH_LOCAL 1 + star; stage resume at PLACE, goal route), client intel2 ~/fable-fix-s81-serdes3/H21-route-1118.out.
+  Read: OT_BOOT_PATH line at global place, OT_RCK_STAR + OT_STB_SPAN at CTS, OT_POSTCTS_GATE, route DRC, sign-off line; then r708 re-sign.
+  Evidence only (H18 pin/taps): no export. Expect about 6-7 h.
+- H20 (no boot fix) keeps running to its GRT gate as the star-only comparison; a background watch in my session reports it.
