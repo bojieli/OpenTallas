@@ -44,7 +44,7 @@ def index_rows(index_json):
     rows = []
     for ln in (a.get("agidock_index_tsv") or "").splitlines()[1:]:
         f = ln.split("\t")
-        if len(f) > 10 and f[0] in INDEX_DIES and f[10].startswith("ARCHIVED"):
+        if len(f) > 10 and f[0] in INDEX_DIES and f[10].startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
             rows.append((f[0], f[1], f[2]))
     return rows
 
