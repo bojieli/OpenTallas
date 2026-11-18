@@ -52,3 +52,16 @@ def test_do_yosys_stop_inside_place_is_synth():
     cls, why = KW.classify("place", txt)
     assert cls == "FLOW" and "synth (yosys)" in why
     assert "synth" not in KW.classify("place", "ERROR: TCL interpreter returned an error: child process exited abnormally")[1]
+
+
+def test_grt_setup_repair_reroutes_on_rsz0074_and_never_fails_the_stage():
+    root = Path(__file__).resolve().parents[1] / "die_plan"
+    tcl = (root / "tt_setup_repair.tcl").read_text()
+    assert "proc ot_tt_est_after_repair" in tcl and "RSZ-0074" in tcl
+    i = tcl.index("proc ot_tt_est_after_repair")
+    body = tcl[i:tcl.index("\n}\n", i)]
+    assert body.index("-allow_congestion -start_incremental") < body.index("global_route -allow_congestion;")       # incremental re-route first, then a full global_route
+    assert "ot_tt_est_after_repair\n" in tcl[tcl.index("lassign [ot_tt_wns before]"):]                        # the final estimate goes through it
+    gen = (root / "gen_phys.py").read_text()
+    assert "FAIL_TT_SETUP_REPAIR" not in gen                                            # the stage is not failed (OWNER r703)
+    assert "WARNING: OT_TT_SETUP_REPAIR GRT step failed" in gen and "OT_GRT_REPORT_CORNER FF" in gen
