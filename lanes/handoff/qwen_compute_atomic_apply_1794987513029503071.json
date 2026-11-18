@@ -1,0 +1,111 @@
+{
+ "die": "qwen_compute",
+ "prior": {
+  "src": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2",
+  "event": "s29q103S4Q9N1B",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n1b.json",
+  "plan_sha256": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
+  "kit_rtl": {
+   "mode": "bind",
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n2b_portable.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
+   "note": "KIT-OPS-5 QC s29q103S4Q6D (DIE-QC-103 READY+ADOPT: bind S29Q103S4Q6DBQ errors 0, R8 0, LATCHECK 1921/1921; delta over S4q3c, 4 st_a_v2 held by exact key) | WAVE-HOLDS-1115 2026-11-15 13:06 PST QC s29q103S4Q3C (DIE-QC-103 READY+ADOPT 20:0x UTC, COORD r139 GO; bind S29Q103S4Q3CBQ errors 0, LATCHECK 1921/1921; delta over S4q3b: 4 st_a_v2 rows renamed to signed n9 masters). Revert: dies.qwen_compute.prev_wavehold1115_s4q3b | WAVE-HOLDS-1115 2026-11-15 10:52 PST QC s29q103S4Q3B (DIE-QC-103 READY+ADOPT 18:0x UTC, COORD r97: bind S29Q103S4Q3BBQ errors 0, LATCHECK 1921/1921, hard_core_param 0 mismatches; delta over S4q2: 4 st_a_v2 param_wrap rows + budgets.r_dly_spread cb; 35 S4q2 types unchanged). 15 cb types released; the 4 st_a_v2 types stay held (FAB",
+   "note_codex_qc4": "Exact cached-asbuilt strict bind replay --strict RC0 01:31:36 PST,377parts119types1921crossings790393bits,n_errors0/unbound0/undriven0; no verify/elab rerun. Fresh output /srv/opentallas-scratch2/claude/codex-watch-qc-1107/bind_strict. Compound private assembly base main0290971a0fd + approved overlayee1cea45f143; resulting tree661bf2ad9c. Branch pin identifies approved event, not entire assembly. Type/module AUTO-RESIGN holds enforce uncredited status until integration/current-tag re-sign/source qualification.",
+   "note_kvbr1": "KV-BIND-REGEN-1 2026-11-12 03:06 PST: kit asbuilt -> runtime/asbuilt_sw2_pv_bound5ef1.json = byte copy of the manifest the s27 bind was made with (kw43/src_qcsw2_hc0_por15c asbuilt_sw2_pv.json sha 5ef173b0f491, the s25/s26 manifest), placed in the s27 tree so the clock table resolves to sidecar 27b0eca895ef; bind_matches 123/123. The tree's asbuilt_sw2_pv.json (ad39098247af, + DIE-QC-97 st_b substitute_inst) does NOT bind strictly: rebind kw45/qcs27in/bind_s27_ab27 RC 1, 30 R8_STALE on dvs_W5 (land_r8 table depth 10 vs bound 11 after the mrep substitution). Revert: kit_rtl_prev_kvbr1."
+  }
+ },
+ "marker": {
+  "die": "qwen_compute",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3",
+  "manifest_hash": "99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d",
+  "src_manifest_sha": "99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d",
+  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
+  "hosts": [
+   "epyc9",
+   "epyc8",
+   "intel1",
+   "epyc2"
+  ],
+  "smoke": "PASS",
+  "smoke_detail": "N3 = N2B plan 25f88097 (byte-identical) + main d9bbb638fa79 tools/ + physical/common_flow (r641 r644 r648 r649 r650). Strict bind s29q103S4Q9N3BR on the E2 event tree (fresh elab, bind.py 22aaef86): 0 errors, CM 0, KP 0; LATCHECK, hcparam 0 mismatches; G0 PASS 0 err; PRE PASS; CB16 S2-S4 0. Published as data_pack+delta_apply --link of _d3 + 136 checksum-differing files; bind relocated E2 tree -> published tree (relocate_bind_x.py, byte-checked).",
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json",
+  "plan_sha256": "25f8809745530334726e14f4ea9086542a539b974a7024b4d96c92d055842e1b",
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n2b_portable.json",
+  "asbuilt_sha256": "1a1a4f80f298d6cf620a3e70e0f9ab62ccd04c220cb8ebdde116b1942f7bf077",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N3BR.json",
+  "die_gen_env": {
+   "OT_PLACE_MAX_FANOUT": "64",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_CORE_TAP_REACH_UM": "0",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_GRT_ALLOW_CONGESTION": "1",
+   "OT_TT_SETUP_REPAIR": "both",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PGCAP": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_PIN_CHECK": "1",
+   "OT_GPL_SPARSE_UTIL": "0.10"
+  },
+  "config": {
+   "event": "s29q103S4Q9N3",
+   "plan_event": "s29q103S4Q9N1B",
+   "gen_hosts": [
+    "epyc9",
+    "epyc8",
+    "intel1",
+    "epyc2"
+   ],
+   "gen_host": "epyc9",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "120",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N3BR.json"
+   ],
+   "kit_rtl": {
+    "mode": "bind",
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n2b_portable.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR"
+   },
+   "cancel_superseded": false,
+   "planned_events": [
+    "S4q6d",
+    "S4q6e",
+    "S4q7h",
+    "S4q8",
+    "S4q9l2",
+    "S4q9l2d",
+    "S4q9m",
+    "s29q103S4Q9L2",
+    "s29q103S4Q9M",
+    "s29q103S4Q9N1B"
+   ]
+  },
+  "rows_proofs": [
+   "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+  ],
+  "bind_out_relocation": {
+   "from": "epyc2:/srv/opentallas-scratch3/claude/qc-plan-r3-n3-1117/bind/bind_s29q103S4Q9N3BR",
+   "to": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
+   "receipt": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR/RELOCATED.json"
+  },
+  "status": "ADOPTED reviewed tuple",
+  "written_by": "root-authorized lane atomic apply"
+ },
+ "published_gen_import": {
+  "status": "NORMAL-GEN"
+ },
+ "pilot": "NONE",
+ "guard": "/home/ubuntu/coord/autopilot/tree_checks/1973d80125a0a422559b954503915b1b78c4070b372909843efccb304bff6ca8/result.json",
+ "candidate": "/home/ubuntu/coord/lanes/handoff/QC_S4Q9N3_ADOPT_candidate_1117.json",
+ "optimistic": true,
+ "warnings": [
+  "ADVISORY publish_gate: publish gate: no PASS record /home/ubuntu/coord/autopilot/publish_gate/qwen_compute/99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d.json (run tools/autopilot/publish_gate.py run on this candidate first)"
+ ]
+}

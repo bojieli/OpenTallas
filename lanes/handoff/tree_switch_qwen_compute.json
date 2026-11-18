@@ -1,20 +1,23 @@
 {
  "die": "qwen_compute",
- "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2",
- "manifest_hash": "c961ac70ceb9338ce4267fbc9036a7e1255f2a3a6892aeb0feed7a877f8960e6",
- "src_manifest_sha": "c961ac70ceb9338ce4267fbc9036a7e1255f2a3a6892aeb0feed7a877f8960e6",
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3",
+ "manifest_hash": "99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d",
+ "src_manifest_sha": "99b525f8dfc6f02828cfada6e49f9e21e3db0d08505d509895b500bff85cb42d",
  "tools_sha": "eb1e73448bd042684261a13c50cd0fb5ce21a513",
  "hosts": [
-  "epyc9"
+  "epyc9",
+  "epyc8",
+  "intel1",
+  "epyc2"
  ],
  "smoke": "PASS",
- "smoke_detail": "N1B = M5 cf3ee3ca + cb lockup rows (latch_except tap[0] + latch_except_hb4 {tap[0]:3}) keyed on the bound cell qfd_tile_nk_rp2_romleaf_rr + NB slot d99a1840f308 (cbn_q00__cldbcda913 cl_nb_i00 x -43.2 um). Bind S4Q9N1BBR (pin tools + r572): errors 0, CM/KP 0, R8 changed 0, LATCHECK 1921/1921, hcparam 0 (22 param_wrap), G0 0 errors; bound RTL 68 pads / 68 W(507) / 0 W(508). Same plan bound on main tools rt 24c7347cc887: errors 0, 143 RTL files byte-equal. Tree = link delta of M5 4a6fbfa3: 132 payload files + tools/ and physical/common_flow of main rt 1e0504fe8f44 (r588 kit_common_files, r572, r573, r547/r553/r560/r566; 628 tool files changed or new). Portable manifest ca6b2dec2508 CM/KP PASS; bind context relocated, native contract equal, bind_matches 133/133. Wave-form kit-rtl on this tree (epyc9, main bind.py): 9/9 rc 0; cb kits 4 pads, 0 W(508).",
- "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n1b.json",
- "plan_sha256": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
- "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n1b_portable.json",
- "asbuilt_sha256": "ca6b2dec2508a02e13fe7ead2d5c71e12c5de7fa90de9a1d495c3eeb765252be",
- "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n1b/bind_s29q103S4Q9N1BBR",
- "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N1BBR.json",
+ "smoke_detail": "N3 = N2B plan 25f88097 (byte-identical) + main d9bbb638fa79 tools/ + physical/common_flow (r641 r644 r648 r649 r650). Strict bind s29q103S4Q9N3BR on the E2 event tree (fresh elab, bind.py 22aaef86): 0 errors, CM 0, KP 0; LATCHECK, hcparam 0 mismatches; G0 PASS 0 err; PRE PASS; CB16 S2-S4 0. Published as data_pack+delta_apply --link of _d3 + 136 checksum-differing files; bind relocated E2 tree -> published tree (relocate_bind_x.py, byte-checked).",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.json",
+ "plan_sha256": "25f8809745530334726e14f4ea9086542a539b974a7024b4d96c92d055842e1b",
+ "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n2b_portable.json",
+ "asbuilt_sha256": "1a1a4f80f298d6cf620a3e70e0f9ab62ccd04c220cb8ebdde116b1942f7bf077",
+ "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
+ "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N3BR.json",
  "die_gen_env": {
   "OT_PLACE_MAX_FANOUT": "64",
   "OT_GRT_NONPORT_HOLD": "1",
@@ -32,10 +35,13 @@
   "OT_GPL_SPARSE_UTIL": "0.10"
  },
  "config": {
-  "event": "s29q103S4Q9N1B",
-  "plan_event": "s29q103S4Q9M5",
+  "event": "s29q103S4Q9N3",
+  "plan_event": "s29q103S4Q9N1B",
   "gen_hosts": [
-   "epyc9"
+   "epyc9",
+   "epyc8",
+   "intel1",
+   "epyc2"
   ],
   "gen_host": "epyc9",
   "gen_args": [
@@ -44,12 +50,12 @@
    "--max-wire-um",
    "120",
    "--clock-landing",
-   "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N1BBR.json"
+   "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/zz_sidecar_s29q103S4Q9N3BR.json"
   ],
   "kit_rtl": {
    "mode": "bind",
-   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n1b_portable.json",
-   "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n1b/bind_s29q103S4Q9N1BBR"
+   "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n3/physical/die_plan/qwen_compute/qc_start_1106/runtime/asbuilt_n2b_portable.json",
+   "bind_out": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR"
   },
   "cancel_superseded": false,
   "planned_events": [
@@ -62,8 +68,16 @@
    "S4q9m",
    "s29q103S4Q9L2",
    "s29q103S4Q9M",
-   "s29q103S4Q9N"
+   "s29q103S4Q9N1B"
   ]
+ },
+ "rows_proofs": [
+  "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
+ ],
+ "bind_out_relocation": {
+  "from": "epyc2:/srv/opentallas-scratch3/claude/qc-plan-r3-n3-1117/bind/bind_s29q103S4Q9N3BR",
+  "to": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
+  "receipt": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR/RELOCATED.json"
  },
  "status": "ADOPTED reviewed tuple",
  "written_by": "root-authorized lane atomic apply"
