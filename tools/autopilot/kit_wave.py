@@ -3188,9 +3188,24 @@ RULES = [
     ("INFRA", r"^(?:kit_rtl|gen)$", r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|"
                                     r"gen phys: ERROR plan invalid",
      "infra (python exception / plan-schema refusal in the kit tool: tool or source skew)"),
+    # RETRY-GUIDE (QC slw_st_b_v1__cle6023ec2 11-17, COORD): RePlAce diverged (GPL-0305, an Inf/NaN step) on a kit that carries region guides
+    # (the log lists OT_REGION_GUIDE regions).  The same kit without guides placed, so this is the guide retry's, not the design's: class INFRA
+    # (uncharged relaunch, never a design verdict) and region_guide_geom() gives an INFRA relaunch no guide -> ONE retry without guides.  A
+    # second GPL-0305 on the guide-less kit has no OT_REGION_GUIDE line and falls through to the plain tool error below.
+    ("INFRA", r"^place$", lambda s: guide_divergence_hit(s),
+     "RETRY-GUIDE: RePlAce diverged on region guides, relaunch the kit without guides once"),
     ("FLOW", None, r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|invalid command name|"
                    r"can't read \"|Error: .*\.tcl, \d+", "tool / Tcl error"),
 ]
+
+
+def guide_divergence_hit(text):
+    """the GPL-0305 line when the same log shows region guides (OT_REGION_GUIDE), else None"""
+    s = text or ""
+    if "OT_REGION_GUIDE" not in s:
+        return None
+    m = re.search(r"[^\n]*GPL-0305[^\n]*", s)
+    return m.group(0)[:300] if m else None
 
 
 ERROR_LINE = re.compile(r"Traceback \(most recent|^\w*(?:Error|Exception)\b|Error[: ]|ERROR|FAIL|KitError|S81_KIT_RTL|"
