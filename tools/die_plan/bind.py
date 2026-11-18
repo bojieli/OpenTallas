@@ -2217,6 +2217,47 @@ class Binder:
                     seen.add(k)
                     st["pad_flops"] += d[7]
 
+    def _tail_repl_plan(self, p, tn, t):
+        """asbuilt.tail_repl (tail_repl.py): {(in-bus name, bit, pad): {sink cell: cluster}} for the landing pads of
+        partition p (type tn) whose hard-core consumers are spread over more than the plan's min_spread_um."""
+        import tail_repl
+        cfg = tail_repl.config(self.ab).get(tn)
+        if cfg is None or getattr(self, "ptree", None) is not None:
+            return {}
+        ctr = tail_repl.centers(t.get("hard_cores"))
+        core_of = {}
+        for ci in self.members[p]:
+            r = self.rel_of(ci)
+            for nm in (r, r.removeprefix("u_")):
+                if nm in ctr:
+                    core_of[ci] = nm
+                    break
+        users = defaultdict(dict)
+
+        def walk(ci, d):
+            if not d:
+                return
+            if d[0] == "x" and len(d) > 7 and d[7] and ci in core_of:
+                L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                users[(L["iname"], j, d[7])][ci] = ctr[core_of[ci]]
+            elif d[0] in ("or", "and"):
+                for u in d[1]:
+                    walk(ci, u)
+        for (ci, _pn, _i), d in self.sinks.items():
+            if self.cpart.get(ci) == p:
+                walk(ci, d)
+        out = {}
+        st = self.__dict__.setdefault("tail_repl_stats", dict(chains=0, replicated=0, copies=0, max_spread_um=0.0))
+        for key, cons in users.items():
+            st["chains"] += 1
+            dec = tail_repl.decide(cons, *cfg)
+            if dec is not None:
+                out[key] = dec
+                st["replicated"] += 1
+                st["copies"] += len(set(dec.values()))
+                st["max_spread_um"] = max(st["max_spread_um"], tail_repl.spread(list(cons.values())))
+        return out
+
     def _apply_inner(self, inner, cidx, st):
         """INNER:<part>:<sink>.<port><-<source leaf>@<as-built> members of an extra pad table: every intra-partition sink
         bit of that edge (top-level or inside an OR) gets `landed` kept stages instead of the as-built count (0 = direct);
@@ -4028,6 +4069,7 @@ class Binder:
         orn = {}
         pads = {}
         PT = getattr(self, "ptree", None)
+        tail_dec = self._tail_repl_plan(p, tn, t)      # TAIL-REPL: per-cluster copies of a landing pad's last stage
         taps = {}                            # (line src expr, name stem) -> {position: wire}
 
         def tap(src, stem, x):
@@ -4117,6 +4159,29 @@ class Binder:
                                     "bare macro lacks")
                 if len(d) > 7 and PT is not None:      # PAD_TREE: tap of the in-lane bit's line
                     return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)])
+                if len(d) > 7 and (L["iname"], j, d[7]) in tail_dec and ci in tail_dec[(L["iname"], j, d[7])]:
+                    # TAIL-REPL: stages 1..D-1 shared, last stage one copy per consumer-core cluster (same latency)
+                    cl = tail_dec[(L["iname"], j, d[7])][ci]
+                    key = (L["iname"], j, d[7], cl)
+                    if key not in pads:
+                        pre = d[7] - 1
+                        if pre:
+                            pk = (L["iname"], j, pre)
+                            if pk not in pads:
+                                pn_ = short_id(f"pd{pre}_{L['iname']}_{j}", 100)
+                                pads[pk] = pn_
+                                decl.append(f"    wire [0:0] {pn_};")
+                                body.append(f"    ot_dp_dly #(.W(1), .D({pre})) u_{pn_} (.clk(clk), .d({L['iname']}_q[{j}]), "
+                                            f".q({pn_}));  // landing pad: as-built relative timing")
+                            src = f"{pads[pk]}[0]"
+                        else:
+                            src = f"{L['iname']}_q[{j}]"
+                        nm = short_id(f"pd{d[7]}_{L['iname']}_c{cl}_{j}", 100)
+                        pads[key] = nm
+                        decl.append(f"    wire [0:0] {nm};")
+                        body.append(f"    ot_dp_dly #(.W(1), .D(1)) u_{nm} (.clk(clk), .d({src}), "
+                                    f".q({nm}));  // TAIL-REPL: last pad stage copy, consumer cluster {cl}")
+                    return f"{pads[key]}[0]"
                 if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
                     key = (L["iname"], j, d[7])
                     sp = tsplit.get(key)
@@ -4702,6 +4767,7 @@ class Binder:
                               unplanned_bit_list=self.unplanned_bits,
                               reset_spine_bits=dict(self.spine_bits),
                               landing_alignment=self.pad_stats,
+                              **({'tail_repl': self.tail_repl_stats} if getattr(self, 'tail_repl_stats', None) else {}),
                               ft_hops=sum(len(L["ft"]) for L in self.links),
                               forwarded_bits=sum(self.forwarded.values()),
                               forwarding_partitions=dict(sorted(self.fwd_parts.items(), key=lambda kv: -kv[1])[:60]),
