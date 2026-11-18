@@ -57,6 +57,7 @@ Per tick (autopilot.py tick calls step() after admit_new; off unless the config 
 import argparse
 import hashlib
 import fnmatch
+import math
 import json
 import os
 import random
@@ -2996,7 +2997,10 @@ def parse_otrun_status(text):
 SCRATCH_REFUSE_GB = {"localhost": 150}      # ot-run's per-host scratch floor (default 50, localhost 150): a host below it is refused for new jobs
 
 
-def place_prefer_live(pref, stt, mem_gb, hub="intel2", floors=None):
+FALL_MAX_GB_H = 50.0         # WAVE-DISK-CAP 11-17 (COORD / FLEET-OPS-R): a host whose scratch falls faster than this is not preferred
+
+
+def place_prefer_live(pref, stt, mem_gb, hub="intel2", floors=None, fall=None, fall_max=FALL_MAX_GB_H):
     """FABLE-FLOW-1500 (E2): place_prefer is an ORDER from the config, but a host that ot-run would REFUSE right now (its scratch free is under its floor) or cannot admit the job
     is dropped from it, computed from the live status each time (intel1 at 21 GB, epyc10 at 44 GB and localhost kept being preferred and placing on them).  -> [host]"""
     floors = SCRATCH_REFUSE_GB if floors is None else floors
@@ -3008,6 +3012,8 @@ def place_prefer_live(pref, stt, mem_gb, hub="intel2", floors=None):
         sc = row.get("scratch_gb")
         if sc is not None and sc < floors.get("localhost" if h == hub else h, 50):
             continue
+        if fall and float((fall or {}).get(h) or (fall or {}).get("localhost" if h == hub else h) or 0) > fall_max:
+            continue                                   # disk_eta shows a fall faster than fall_max GB/h
         out.append(h)
     return out
 
@@ -5432,7 +5438,7 @@ INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", 
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
-              "src_manifest", "src_manifest_hash"}
+              "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h"}
 
 
 def input_hash(sp, prov_key=None):
@@ -6446,7 +6452,8 @@ def heavy_args(sp):
     """KW-FIX-45 11-12: ot-run flags of every heavy kit-wave stage: never the hub (--exclude-hosts) + crit_args"""
     # 11-12: opt-in.  ot-run-lane-declare and ot-run-sealed (in front of ot-run on the hub) reject --exclude-hosts: usage text, NOT RUN
     # (28 QC kit_rtl attempts 11-11 23:25-23:46).  Default off; the host lists and otrun()/place_async refusals keep the hub out.
-    return (["--exclude-hosts", ",".join(hub_names(sp))] if sp.get("ot_run_exclude_hosts") else []) + crit_args(sp)
+    disk = ["--disk", str(int(sp["item_disk_gb"]))] if sp.get("item_disk_gb") else []             # WAVE-DISK-CAP 11-17: the item's own disk budget, not ot-run's default
+    return (["--exclude-hosts", ",".join(hub_names(sp))] if sp.get("ot_run_exclude_hosts") else []) + crit_args(sp) + disk
 
 
 def _ssh(host, hub):
@@ -7568,7 +7575,7 @@ def run_item(spec_path):
         if pref and not rs:                                             # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
             p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
             stt = parse_otrun_status(p.stdout if p.returncode == 0 else "")
-            ok = place_prefer_live(pref, stt, m, hub)
+            ok = place_prefer_live(pref, stt, m, hub, fall=sp.get("host_fall_gb_h"))
             if ok:
                 # KW-FIX-45 11-12 place_prefer is an ORDER, not a pin: pinning --hosts to the preferred hosts alone made ot-run
                 # answer NOT RUN when the preferred host refused (epyc2 scratch2 dipping under its 50 GB floor: 9 HBM rows
@@ -8878,11 +8885,76 @@ def retry_probe_defer(cfg, st, die, r):
     return ""
 
 
+DISK_ITEM_MIN_GB = 3
+DISK_RESERVE_GB = 150
+
+
+def item_disk_gb(cfg, die, item, replicas=1):
+    """WAVE-DISK-CAP 11-17 (COORD, FLEET-OPS-R post 4db4880): the item's scratch budget = max(measured peak, 3 GB) x replicas.  The measured peak is the p90 of the newest finished kit dirs
+    (kit_peak_disk, cfg['_gen_peak_gb']); die option item_disk_gb {glob: GB} overrides it per item.  The replica factor is capped by disk_replicas_max (default 1): the replicas of a
+    wave item share ONE kit work dir, a count of 60 is the die's instance count, not 60 copies on disk.  Option disk_cap false = 0 (no budget)."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if cfg.get("disk_cap") is False or d.get("disk_cap") is False:
+        return 0
+    peak = None
+    for pat, gb in (d.get("item_disk_gb") or {}).items():
+        if fnmatch.fnmatchcase(str(item), pat):
+            peak = float(gb)
+            break
+    if peak is None:
+        p = cfg.get("_gen_peak_gb")
+        peak = float(p) if isinstance(p, (int, float)) else 0.0
+    try:
+        n = int(replicas or 1)
+    except (TypeError, ValueError):
+        n = 1
+    n = max(1, min(n, int(d.get("disk_replicas_max") or cfg.get("disk_replicas_max") or 1)))
+    return int(math.ceil(max(peak, DISK_ITEM_MIN_GB) * n))
+
+
+def inflight_disk_gb(st, host):
+    """sum of the disk budgets (rec item_disk_gb) of the live attempts (RUNNING / LAUNCHING / ENQUEUED) generating on host"""
+    tot = 0.0
+    for r in (st.get("items") or {}).values():
+        if r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED") and r.get("gen_host") == host:
+            tot += float(r.get("item_disk_gb") or 0)
+    return tot
+
+
+def disk_cap_refusal(cfg, st, die, need_gb, hub="intel2"):
+    """'' or why no gen host of the die can take the item: in-flight disk + need_gb > host free - reserve (150 GB) on EVERY gen host with a known scratch figure"""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if not need_gb or cfg.get("disk_cap") is False or d.get("disk_cap") is False:
+        return ""
+    reserve = int(d.get("disk_reserve_gb") or cfg.get("disk_reserve_gb") or DISK_RESERVE_GB)
+    stt = cfg.get("_otrun_status") or {}
+    hosts = list(d.get("gen_hosts") or ([d["gen_host"]] if d.get("gen_host") else []))
+    why = []
+    for h in hosts:
+        row = stt.get("localhost" if h == hub else h) or {}
+        free = row.get("scratch_gb")
+        if free is None:
+            return ""                                   # a host with no reading is not a reason
+        used = inflight_disk_gb(st, h)
+        if used + need_gb <= free - reserve:
+            return ""
+        why.append(f"{h}: in flight {used:.0f} + {need_gb} GB > free {free} - {reserve}")
+    return "disk cap: " + "; ".join(why) if why else ""
+
+
 def launch_safe(AP, cfg, st, die, r, hub, delay_s=0.0):
     """KW-FIX-7 11-04: one row's launch error never ends the pass.  06:28 a merge changed kit_resume.py under a reload pass:
     launch raised, the pass died before save_state, and 5 units already launched were in no state record (a next pass would
     relaunch the same attempt dirs).  The row stays as it was and is taken again on a later pass."""
     try:
+        _need = item_disk_gb(cfg, die, r.get("item"), r.get("replicas"))
+        _dw = disk_cap_refusal(cfg, st, die, _need, hub)
+        if _dw:                                         # WAVE-DISK-CAP: retried next tick, never a failure row
+            _once = st.setdefault("disk_cap_logged", {})
+            if time.time() - float(_once.get(die) or 0) > 900:
+                _once[die] = time.time()
+                AP.log(f"KIT-WAVE LAUNCH-DISK-CAP {die}/{r.get('item')}: {_dw[:300]} (waits; one line per die per 15 min)")
+            return None
         note_unblock_launch(cfg, st, die, r.get("item"))
         return launch(AP, cfg, st, die, r, hub, delay_s=delay_s)
     except Exception as e:
@@ -9193,6 +9265,8 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                                                   and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
+    sp["item_disk_gb"] = item_disk_gb(cfg, die, r["item"], r.get("replicas"))
+    sp["host_fall_gb_h"] = dict(cfg.get("_disk_fall") or {})
     _ret = spec_retired(cfg, sp)
     if _ret:                    # KW-FIX-46: raised before any dir or unit exists; the caller logs LAUNCH-SKIP
         raise ValueError(f"SRC_RETIRED: {_ret} is under cfg src_retired (do not use); repoint {die}/{r['item']} item_inputs")
@@ -9301,6 +9375,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
             st["leafslew"][ls_key]["hooked_attempt"] = attempt
     if prev.get("restage_n") and prev.get("class") == "INFRA":      # a design verdict in between starts the count again
         rec["restage_n"] = prev["restage_n"]
+    rec["item_disk_gb"] = sp.get("item_disk_gb") or 0
     st["items"][key] = rec
     # KW-FIX-46 11-12 (COORD: 'event e9eda32d41c' read as the old S81 plan after the ready12 switch): the event is the row
     # identity key (work dir, item key), not the plan; the line names the plan file and its sha so the log is honest
@@ -9487,6 +9562,56 @@ def grt_arm_reclaim(AP, rec, hosts):
         k = re.search(r"KW_RECLAIM_SKIP ([^\n]+)", o or "")
         out.append(f"{h}: {m.group(1)}->{m.group(2)} MB" if m else f"{h}: skip {k.group(1)}" if k else f"{h}: rc {rc}")
     return "; ".join(out) or "no host"
+
+
+def host_disk_fall(AP, cfg, st, ttl=600):
+    """WAVE-DISK-CAP: {host: GB/h falling} from each host's ~/.local/state/disk_eta (disk_rate.py, '<GB/h> <epoch>'); one ssh per host, cached ttl s in state, a stale (> 30 min) or
+    unreadable figure counts as 0"""
+    cache = st.setdefault("disk_fall_cache", {})
+    out, now = {}, time.time()
+    hub = getattr(AP, "HUB_NAME", "localhost")
+    for h in {x for d in (cfg.get("dies") or {}).values() if isinstance(d, dict) for x in (d.get("gen_hosts") or []) + list(d.get("place_prefer") or [])}:
+        c = cache.get(h)
+        if not c or now - float(c.get("at") or 0) > ttl:
+            try:
+                rc, o, _ = AP.sh(_ssh(h, hub) + ["cat $HOME/.local/state/disk_eta"] if _ssh(h, hub) else ["bash", "-c", "cat $HOME/.local/state/disk_eta"], timeout=30)
+                f = (o or "").split()
+                c = {"at": now, "rate": float(f[0]) if rc == 0 and len(f) >= 2 and now - float(f[1]) < 1800 else 0.0}
+            except Exception:
+                c = {"at": now, "rate": 0.0}
+            cache[h] = c
+        out[h] = c["rate"]
+    return out
+
+
+RECLAIM_SWEEP_MAX = 12
+
+
+def reclaim_terminal_sweep(AP, cfg, st, now=None):
+    """WAVE-DISK-CAP 11-17 (item 3): the run data of a FAIL (not INFRA) or CANCELLED attempt is reaped at once, not at the 24 h idle rule, through the same fail-closed ot-delete
+    guard path as the FAIL result reclaim (grt_arm_reclaim: own attempt_<n> dir, attempt >= 2, no signoff.json, db files only, reports / logs / bind inputs stay).  A row is
+    swept once (rec['reclaim']), at most RECLAIM_SWEEP_MAX per tick, newest 24 h, never while another attempt of the item is live.  option reclaim_failed false = off."""
+    if cfg.get("reclaim_failed") is False or AP.DRY:
+        return 0
+    now = time.time() if now is None else now
+    live = {(r.get("die"), r.get("item")) for r in (st.get("items") or {}).values() if r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED")}
+    n = 0
+    for r in sorted((st.get("items") or {}).values(), key=lambda x: -float(x.get("updated") or 0)):
+        if n >= RECLAIM_SWEEP_MAX:
+            break
+        d = (cfg.get("dies") or {}).get(r.get("die")) or {}
+        if r.get("reclaim") or d.get("reclaim_failed") is False or int(r.get("attempt") or 0) < 2:
+            continue
+        if not ((r.get("status") == "FAIL" and r.get("class") != "INFRA") or r.get("status") == "CANCELLED"):
+            continue
+        if now - float(r.get("updated") or 0) > 24 * 3600 or now - float(r.get("updated") or 0) < 300 or (r.get("die"), r.get("item")) in live:
+            continue
+        hosts = [d.get("gen_host"), str(r.get("kit") or "").partition(":")[0]] + list(r.get("ran_hosts") or [])
+        r["reclaim"] = grt_arm_reclaim(AP, r, hosts)
+        n += 1
+    if n:
+        AP.log(f"KIT-WAVE RECLAIM-SWEEP {n} terminal attempt(s) reaped through the delete guard")
+    return n
 
 
 def reclaim_at_result(AP, cfg, rec, cls):
@@ -12552,6 +12677,15 @@ def _step(AP, ap_dir):
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
+    try:
+        cfg["_disk_fall"] = host_disk_fall(AP, cfg, st)
+    except Exception as _e:                              # the fall rate never stops the tick
+        cfg["_disk_fall"] = {}
+        AP.log(f"KIT-WAVE DISK-FALL unreadable: {type(_e).__name__}: {_e}")
+    try:
+        reclaim_terminal_sweep(AP, cfg, st)
+    except Exception as _e:
+        AP.log(f"KIT-WAVE RECLAIM-SWEEP skipped: {type(_e).__name__}: {_e}")
     global GEN_DISK_MIN_GB
     try:      # FABLE-FLOW-0300 11-17: the floor follows the MEASURED kit disk (p90 of the newest finished kits), cfg gen_disk_min_gb is the fallback
         import kit_peak_disk
