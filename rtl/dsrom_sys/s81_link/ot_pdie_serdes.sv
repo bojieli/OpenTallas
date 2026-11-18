@@ -53,7 +53,13 @@ module ot_pdie_serdes #(parameter integer PMA_LAT = 4, parameter integer EMUT = 
 `endif
     // ---- transmit: FEC encoder (ck) -> PMA TX model
     wire e_v; wire [543:0] e_d; wire e_flt;
-    ot_s81_kp4_enc #(.MUT(EMUT)) u_enc (.clk(clk), .rst_n(rn_t_enc), .tx_v(rn_t_enc), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
+    // OT_S81_KP4_ENC_PPCYC (opt-in define, COORD 11-17; undefined = unchanged): encoder window partials registered, TX +1 ck
+`ifdef OT_S81_KP4_ENC_PPCYC
+    localparam integer EPPC = 1;
+`else
+    localparam integer EPPC = 0;
+`endif
+    ot_s81_kp4_enc #(.MUT(EMUT), .PPCYC(EPPC)) u_enc (.clk(clk), .rst_n(rn_t_enc), .tx_v(rn_t_enc), .tx_d(tx), .p_v(e_v), .p_d(e_d), .fault(e_flt));
     ot_s81_pma_bm #(.W(544), .LAT(PMA_LAT)) u_ptx (.clk(clk), .d_v(e_v), .d(e_d), .q(pma_tx));
     assign pma_tck = clk;
     // ---- receive: PMA RX model (recovered clock) -> FEC decoder -> rate matcher -> ck

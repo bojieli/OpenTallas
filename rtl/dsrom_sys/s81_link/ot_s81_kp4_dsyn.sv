@@ -105,8 +105,10 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
     wire [299:0] s_ar, s_p0, s_p1;
     reg  [299:0] S_q, sp0, sp1;
 `include "ot_s81_kp4_syn_mat.svh"
+    wire [299:0] sp_x;                   // the window part of the S_q update (sp0 ^ sp1, or the XOR of the PW8 partials)
     generate if (SPCYC != 0) begin : g_spc
         // +1 pin cycle: four registered partial products, one per 138-bit sc_q select copy
+        assign sp_x = sp0 ^ sp1;
         wire [299:0] s_q0, s_q1, s_q2, s_q3;
 `include "ot_s81_kp4_syn_mat_q4.svh"
         reg  [299:0] sq0, sq1, sq2, sq3;
@@ -118,7 +120,33 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
             sp0 <= sq0 ^ sq1; sp1 <= sq2 ^ sq3;
 `endif
         end
+`ifdef OT_S81_KP4_SYN_PW8
+    // OT_S81_KP4_SYN_PW8 (opt-in define, FABLE-FIX-HEAD-SD9F 11-18; undefined = netlist unchanged; SPCYC 0 only): the
+    // window rank sc_q -> sp0/sp1 (two 275-input rows = an 8-level XOR tree; hd_serdes routed pma_rck setup -73.1 / -42.9)
+    // is cut into 8 registered partials sw[k] (sc_q[69 k +: 69], <= 47 inputs = 6 levels; ot_s81_kp4_syn_mat_w8.svh,
+    // tools/s81_link/split_kp4_window_n.py); their XOR joins s_ar in the S_q stage.  Same stages: NO extra latency.
+    // Bench mutant RCKRF_MUT_SPW8 (partial 3 dropped).
+    end else if (1) begin : g_sw
+        wire [8*300-1:0] s_w;
+`include "ot_s81_kp4_syn_mat_w8.svh"
+        reg  [8*300-1:0] sw;
+        always @(posedge clk) sw <= s_w;
+        genvar gw;
+        for (gw = 0; gw < 300; gw = gw + 1) begin : g_sx
+            wire [7:0] t;
+            genvar gp;
+            for (gp = 0; gp < 8; gp = gp + 1) begin : g_t
+`ifdef RCKRF_MUT_SPW8
+                assign t[gp] = (gp == 3) ? 1'b0 : sw[gp * 300 + gw];        // bench mutant: partial 3 dropped
+`else
+                assign t[gp] = sw[gp * 300 + gw];
+`endif
+            end
+            assign sp_x[gw] = ^t;
+        end
+`endif
     end else begin : g_sp
+        assign sp_x = sp0 ^ sp1;
         always @(posedge clk) begin sp0 <= s_p0; sp1 <= s_p1; end
     end endgenerate
     reg  [3:0] g0, g9;                   // chunk-0 / chunk-9 flags: [0] sc stage (T + c + 1), [1+P] sp stage, [2+P] S final
@@ -155,7 +183,7 @@ module ot_s81_kp4_dsyn #(parameter integer MUT = 0, parameter integer NBM = 3, p
             if (g9[1 + SPCYC]) bsel <= {bsel[NBM-2:0], bsel[NBM-1]};
         end
     generate for (gb = 0; gb < 300; gb = gb + 1) begin : g_S
-        always @(posedge clk) S_q[gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp0[gb] ^ sp1[gb];  // MUT 3: no restart
+        always @(posedge clk) S_q[gb] <= ((MUT != 3 && g0s[gb / 75]) ? 1'b0 : s_ar[gb]) ^ sp_x[gb];  // MUT 3: no restart
     end endgenerate
     // ================= key equation: NBM RiBM units
     wire [159:0] u_lam [0:NBM-1];
