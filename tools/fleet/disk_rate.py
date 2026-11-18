@@ -5,7 +5,7 @@ Read-only by default: it deletes and changes nothing.
 AUTO-RETIRE (FABLE-FLOW-2200): when a disk is projected to hit the floor within AUTO_HOURS (2 h) and the switch file ~/.config/ot-auto-retire/ON exists
 (created only after COORD approval), the alert also runs ot-auto-retire-run.sh apply on that host: superseded source trees only, reference proof +
 guard + signed-store check, stops at the target, df before / after in the post.  Without the switch file the post says what it would have done."""
-import json, os, subprocess, sys, time
+import json, os, shlex, subprocess, sys, time
 HOSTS = ["intel1", "epyc2", "epyc7", "epyc8", "epyc9", "epyc10", "intel2"]
 DISKS = ["/srv/opentallas-scratch2", "/srv/opentallas-scratch"]
 HIST = os.path.expanduser("~/.local/state/disk-rate.json")
@@ -58,7 +58,66 @@ def auto_retire(host, disk, hours, switch=None, run=None):
     return ' AUTO-RETIRE rc %s: %s; deleted %d, %s' % (r.returncode, ' / '.join(l for l in out if l.startswith('df ')), n, '; '.join(l for l in out if l.startswith('REFUSED'))[:200])
 
 
-def main(post=True, now=None):
+ETA_FILE = ".local/state/disk_eta"                 # per host: "<GB/h falling> <epoch>"; ot-run's probe reads it (disk-ETA admission hold)
+LANE_HOLD_FILE = ".local/state/disk_eta_lanes"
+STOP_HOURS = 1.0                                   # FABLE-FLOW-1900 (C): floor within 1 h at the current rate -> stop the top writer's lane
+STOP_OFF = os.path.expanduser("~/.config/ot-disk-eta/OFF")
+STOP_KEEP = {"rt", "git", "signed-store", "hub-coord", "mq1", "mq-gate", "autopilot", "kw45", "fleet-ops-r", "ot-jobs", "kit-store", "hub"}
+LANE_ROOT = "/srv/opentallas-scratch2/claude"
+LANE_SCAN = "python3 -I /srv/opentallas-scratch2/claude/rt/current/tools/fleet/lane_quota.py scan --root %s --window-h 1 --quota-gb 0"
+
+
+def sh_host(host, cmd, run=None, timeout=120):
+    run = run or subprocess.run
+    argv = ["bash", "-c", cmd] if host == "intel2" else ["ssh", "-n", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", host, cmd]
+    return run(argv, capture_output=True, text=True, timeout=timeout)
+
+
+def push_eta(host, rate_gb_h, now, run=None):
+    """write the measured fall rate where ot-run's probe finds it (0 = not falling); best effort"""
+    try:
+        sh_host(host, "mkdir -p ~/.local/state && printf '%%.1f %%d\\n' %.1f %d > ~/%s" % (rate_gb_h, int(now), ETA_FILE), run, 60)
+    except Exception:
+        pass
+
+
+def top_writer_lane(host, run=None, root=LANE_ROOT):
+    """-> (lane, GB written in the last hour) of the biggest writer lane that is not infrastructure, or None"""
+    try:
+        r = sh_host(host, LANE_SCAN % root, run, 600)
+        rows = json.loads((r.stdout or "").strip().splitlines()[-1])
+    except Exception:
+        return None
+    rows = {k: v for k, v in rows.items() if k.split(":")[-1] not in STOP_KEEP}
+    return max(rows.items(), key=lambda kv: kv[1]) if rows else None
+
+
+def hold_top_lane(host, run=None, switch_off=None):
+    """-> post text.  COORD 11-17: NEVER cancel a running unit.  ALERT naming the top writer lane + its directory, and a per-host lane hold file
+    (~/.local/state/disk_eta_lanes: '<epoch> <dir>') that ot-run's probe reads: no NEW admission under that directory on that host (not --priority plan) until
+    the hold is cleared (free space recovered: every run rewrites the file) or ~/.config/ot-disk-eta/OFF exists."""
+    if os.path.exists(switch_off or STOP_OFF):
+        return " LANE-HOLD disabled (OFF file)"
+    top = top_writer_lane(host, run)
+    if not top:
+        return " LANE-HOLD: no writer lane found"
+    lane, gb = top
+    path = os.path.join(LANE_ROOT, lane.split(":")[-1])
+    try:
+        sh_host(host, "mkdir -p ~/.local/state && printf '%%d %%s\\n' $(date +%%s) %s > ~/%s" % (shlex.quote(path), LANE_HOLD_FILE), run, 60)
+    except Exception as e:
+        return " LANE-HOLD %s failed to write: %s" % (lane, str(e)[:80])
+    return " ALERT top writer lane %s (%s, %.0f GB written in the last hour): no new admission under it on %s until space recovers; running units untouched" % (lane, path, gb, host)
+
+
+def clear_lane_hold(host, run=None):
+    try:
+        sh_host(host, ": > ~/%s 2>/dev/null; true" % LANE_HOLD_FILE, run, 60)
+    except Exception:
+        pass
+
+
+def main(post=True, now=None, pusher=None, stopper=None, clearer=None):
     now = now or time.time()
     try:
         h = json.load(open(HIST))
@@ -70,9 +129,14 @@ def main(post=True, now=None):
             k = host + "|" + disk
             h["pts"].setdefault(k, []).append((now, free)); h["pts"][k] = [(t, f) for t, f in h["pts"][k] if now - t < 3 * 3600]
             pr = project(h["pts"][k], now)
+            if disk.endswith("scratch2"):
+                (pusher or push_eta)(host, pr[1] if pr else 0.0, now)
+                if not (pr and pr[0] <= STOP_HOURS):
+                    (clearer or clear_lane_hold)(host)        # recovered (or never held): the lane hold ends
             if pr and pr[0] <= HORIZON_H and now - h["alerted"].get(k, 0) >= ALERT_EVERY_S:
                 h["alerted"][k] = now
-                alerts.append("DISK-RATE %s %s: free %.0f GB, falling %.0f GB/h, floor 50 GB in %.1f h" % (host, disk, free / 1e9, pr[1], pr[0]) + auto_retire(host, disk, pr[0]))
+                alerts.append("DISK-RATE %s %s: free %.0f GB, falling %.0f GB/h, floor 50 GB in %.1f h" % (host, disk, free / 1e9, pr[1], pr[0]) + auto_retire(host, disk, pr[0])
+                              + ((stopper or hold_top_lane)(host) if pr[0] <= STOP_HOURS and disk.endswith("scratch2") else ""))
     os.makedirs(os.path.dirname(HIST), exist_ok=True)
     json.dump(h, open(HIST, "w"))
     for a in alerts:
