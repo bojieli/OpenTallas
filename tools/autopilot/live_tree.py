@@ -21,6 +21,10 @@ copied to every host and applied there in parallel (no 49 GB replication), and e
   live_tree.py snap  --die D --hosts h1,h2 [--name N] ...       a snapshot of the live tree as it is (an empty change)
 Then the die owner runs publish_apply.py apply --candidate NEW.json (unchanged tool); strict bind / LATCHECK run after it as warnings.
 
+  live_tree.py reloc-pack --tree LIVE --old PREFIX --new SNAP --files rel,... [--digest PLAN:WAVE_PREPARE] --out PACK
+        a pack rewriting the absolute PREFIX (e.g. the published tree the live tree was seeded from) to the snapshot path SNAP in the named
+        text files (a plan names its own inputs by absolute path), re-issuing wave_prepare.json prepared_plan_sha256 / sidecar_sha256
+        (as data_pack.py --digest).  Then apply it with --name = SNAP's basename.
 Host side (shipped over ssh stdin, stdlib only): host-seed, host-apply.
 """
 import argparse
@@ -166,6 +170,40 @@ def host_apply(live, pack, snaps, name):
     print(f"LIVE_TREE SNAP {final} {m['manifest_hash']}")
 
 
+def reloc_pack(tree, old, new, files, out, digest=""):
+    m = json.load(open(os.path.join(tree, MANIFEST)))
+    if os.path.exists(out):
+        raise SystemExit(f"LIVE_TREE refuse: {out} exists")
+    add = {}
+    for rel in files:
+        if rel not in m["files"]:
+            raise SystemExit(f"LIVE_TREE refuse: {rel} is not in the tree manifest")
+        b = open(os.path.join(tree, rel), "rb").read().replace(old.rstrip("/").encode(), new.rstrip("/").encode())
+        dst = os.path.join(out, "files", rel)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        open(dst, "wb").write(b)
+        add[rel] = {"sha256": hashlib.sha256(b).hexdigest(), "exec": False}
+    if digest:
+        plan_rel, wave_rel = digest.split(":")
+        side_rel = os.path.join(os.path.dirname(plan_rel), "source_sidecar.json")
+        def cur(rel):
+            p = os.path.join(out, "files", rel)
+            return p if os.path.exists(p) else os.path.join(tree, rel)
+        w = json.load(open(cur(wave_rel)))
+        w["prepared_plan_sha256"] = sha256_file(cur(plan_rel))
+        w["sidecar_sha256"] = sha256_file(cur(side_rel))
+        dst = os.path.join(out, "files", wave_rel)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        b = (json.dumps(w, indent=1, sort_keys=True)).encode()
+        open(dst, "wb").write(b)
+        add[wave_rel] = {"sha256": hashlib.sha256(b).hexdigest(), "exec": False}
+    json.dump({"old_manifest_hash": m["manifest_hash"], "old_main": m["main_sha"], "new_main": m["main_sha"], "scope": m["scope"],
+               "add": add, "delete": [], "overlay_add": {k: v["sha256"] for k, v in add.items()}},
+              open(os.path.join(out, "delta.json"), "w"), indent=0, sort_keys=True)
+    print(f"LIVE_TREE RELOC-PACK {out}: {len(add)} files")
+    return add
+
+
 # ------------------------------------------------------------------ hub side
 def on_host(host, argv, timeout=7200):
     """run this script's host-side subcommand on host (script on stdin, nothing installed there)"""
@@ -195,7 +233,7 @@ def snap_name(die, pack):
     return f"{die}_{time.strftime('%Y%m%dT%H%M%SZ', time.gmtime())}_{tag}"
 
 
-def rewrite_candidate(old, old_tree, new_tree, new_hash, event=""):
+def rewrite_candidate(old, old_tree, new_tree, new_hash, event="", pack_shas=None):
     """every string naming old_tree points at new_tree; the manifest fields carry the snapshot's hash"""
     def walk(v):
         if isinstance(v, dict):
@@ -208,6 +246,9 @@ def rewrite_candidate(old, old_tree, new_tree, new_hash, event=""):
     c["manifest_hash"] = c["src_manifest_sha"] = new_hash
     if event:
         c.setdefault("config", {})["event"] = event
+    for k, rel_k in (("plan", "plan_sha256"), ("sidecar", "sidecar_sha256")):
+        if pack_shas and isinstance(c.get(k), str) and c[k].startswith(new_tree + "/") and os.path.relpath(c[k], new_tree) in pack_shas:
+            c[rel_k] = pack_shas[os.path.relpath(c[k], new_tree)]          # a relocated plan: its new bytes
     c["live_tree"] = {"snapshot": new_tree, "made": time.strftime("%Y-%m-%d %H:%M:%S %Z"), "tool": "live_tree.py (TOOLS-DECOUPLE phase 2)"}
     return c
 
@@ -240,7 +281,8 @@ def hub_apply(a, pack):
     print(f"LIVE_TREE OK {new_tree} hash {new_hash} hosts {','.join(ok)}" + (f" (FAILED: {','.join(bad)}: drop them from gen_hosts)" if bad else ""))
     if a.candidate:
         old = json.load(open(a.candidate))
-        c = rewrite_candidate(old, old["tree"], new_tree, new_hash, a.event)
+        shas = {k: v["sha256"] for k, v in (json.load(open(os.path.join(pack, "delta.json"))).get("add") or {}).items()} if pack else {}
+        c = rewrite_candidate(old, old["tree"], new_tree, new_hash, a.event, shas)
         c["hosts"] = ok
         if isinstance(c.get("config"), dict) and c["config"].get("gen_hosts"):
             c["config"]["gen_hosts"] = [h for h in c["config"]["gen_hosts"] if h in ok]
@@ -262,6 +304,13 @@ def main(argv=None):
     ha.add_argument("pack")
     ha.add_argument("snaps")
     ha.add_argument("name")
+    rp = sp.add_parser("reloc-pack")
+    rp.add_argument("--tree", required=True)
+    rp.add_argument("--old", required=True)
+    rp.add_argument("--new", required=True)
+    rp.add_argument("--files", required=True)
+    rp.add_argument("--digest", default="")
+    rp.add_argument("--out", required=True)
     for n in ("seed", "apply", "snap"):
         p = sp.add_parser(n)
         p.add_argument("--die", required=True)
@@ -277,6 +326,9 @@ def main(argv=None):
             p.add_argument("--out", default="")
             p.add_argument("--event", default="")
     a = ap.parse_args(argv)
+    if a.cmd == "reloc-pack":
+        reloc_pack(a.tree, a.old, a.new, [f for f in a.files.split(",") if f], a.out, a.digest)
+        return 0
     if a.cmd == "host-seed":
         return host_seed(a.src, a.live)
     if a.cmd == "host-apply":

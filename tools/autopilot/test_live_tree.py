@@ -114,6 +114,27 @@ class LiveTree(unittest.TestCase):
         errs, _ = SM.verify(self.pub, ro=True, full=True)
         self.assertTrue(any("NOT-READY" in e for e in errs))
 
+    def test_reloc_pack_rewrites_self_paths_and_digest(self):
+        LT.host_seed(self.pub, self.live)
+        pk = os.path.join(self.t, "rp")
+        os.chmod(self.live + "/physical", 0o755)
+        LT.write_new(os.path.join(self.live, "physical/plan.json"), json.dumps({"f": self.pub + "/physical/keep.v"}))
+        LT.write_new(os.path.join(self.live, "physical/source_sidecar.json"), "{}")
+        LT.write_new(os.path.join(self.live, "physical/wave_prepare.json"), "{}")
+        m = json.load(open(os.path.join(self.live, SM.MANIFEST)))
+        for r in ("physical/plan.json", "physical/source_sidecar.json", "physical/wave_prepare.json"):
+            m["files"][r] = LT.sha256_file(os.path.join(self.live, r))
+        m["manifest_hash"] = SM.manifest_hash(m)
+        LT.write_new(os.path.join(self.live, SM.MANIFEST), json.dumps(m))
+        new = os.path.join(self.snaps, "s1")
+        add = LT.reloc_pack(self.live, self.pub, new, ["physical/plan.json"], pk, "physical/plan.json:physical/wave_prepare.json")
+        LT.host_apply(self.live, pk, self.snaps, "s1")
+        self.assertEqual(json.load(open(os.path.join(new, "physical/plan.json")))["f"], new + "/physical/keep.v")
+        w = json.load(open(os.path.join(new, "physical/wave_prepare.json")))
+        self.assertEqual(w["prepared_plan_sha256"], add["physical/plan.json"]["sha256"])
+        m1 = json.load(open(os.path.join(new, SM.MANIFEST)))
+        self.assertEqual(SM.verify(new, expect=m1["manifest_hash"], ro=True, full=True)[0], [])
+
     def test_rewrite_candidate(self):
         old = {"tree": "/k/src_r3c", "manifest_hash": "x", "src_manifest_sha": "x", "plan": "/k/src_r3c/physical/p.json",
                "config": {"event": "e3", "gen_args": ["--c", "/k/src_r3c/s.json"], "gen_hosts": ["h1", "h2"], "gen_host": "h1"}}
