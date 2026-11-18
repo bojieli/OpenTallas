@@ -38,6 +38,6 @@ def test_no_pre_grt_refuses(tmp_path):
         chain(kd, tool_dir=tmp_path)
 
 
-def test_only_called_under_the_opt_in():
-    assert 'if os.environ.get("OT_GRT_NONPORT_HOLD") == "1":' in src
-    assert src.count("grt_nonport_hold_chain(kd)") == 1
+def test_called_once_default_on_with_opt_out():
+    assert 'if os.environ.get("OT_GRT_NONPORT_HOLD", "1") == "1":' in src          # 11-18: default on for every die, =0 opts out
+    assert src.count("grt_nonport_hold_chain(kd, required") == 1

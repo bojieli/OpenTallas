@@ -5111,7 +5111,7 @@ def _corner_libs(mlib, kd, corner):
     return out
 
 
-def grt_nonport_hold_chain(kd, tool_dir=None):
+def grt_nonport_hold_chain(kd, tool_dir=None, required=True):
     """KW-FIX-45 11-11 (DIE-HBM-100, opt-in OT_GRT_NONPORT_HOLD=1 in the gen environment / item_env): chain tools/grt_nonport_hold.tcl
     (input-start hold exclusion during the FF GRT repair only) at the END of the kit's effective PRE_GLOBAL_ROUTE_TCL.
     Reads the written config.mk, takes the LAST PRE_GLOBAL_ROUTE_TCL assignment as the base, writes /work/grt_pre_nonport.tcl
@@ -5125,6 +5125,8 @@ def grt_nonport_hold_chain(kd, tool_dir=None):
         if m:
             base = m.group(1)
     if base is None:
+        if not required:                  # default-on: a kit with no PRE_GLOBAL_ROUTE_TCL to chain keeps its old behaviour
+            return None
         raise SystemExit("OT_GRT_NONPORT_HOLD=1: the kit config.mk sets no PRE_GLOBAL_ROUTE_TCL to chain")
     hook = Path(tool_dir or Path(__file__).resolve().parent.parent) / "grt_nonport_hold.tcl"
     shutil.copyfile(hook, kd / "grt_nonport_hold.tcl")
@@ -6108,7 +6110,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         hold_ff_margin = float(_hm)
     # S81-COL-GRT-PORT 11-17 (COORD): OT_GRT_PORT_HOLD_MARGIN_PS (kit_wave item_env) includes the input-port starts in the GRT hold repair
     # (OT_GRT_PORT_HOLD_INCLUDE = 1, tools/grt_nonport_hold.tcl) and floors the GRT hold margin at that value; unset = today's behaviour.
-    _pm = os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip()
+    # FABLE-CLOSURE-STRATEGY-1530 lever 3 (11-18): port hold belongs to the parent.  The input-port inclusion (and its margin floor) now needs the explicit opt-in OT_GRT_PORT_HOLD_PORTS=1;
+    # OT_GRT_PORT_HOLD_MARGIN_PS alone (237 S81 col item_env entries) no longer pulls ports into the GRT hold repair (1,170 port ends: 440 buffers, 1,917 s, +15.6 ps, then the cap).
+    _pm = os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() if os.environ.get("OT_GRT_PORT_HOLD_PORTS") == "1" else ""
     if _pm:
         hold_ff_margin = max(float(_pm), hold_ff_margin if hold_ff_margin is not None else 0.0)
     # HOLD-MARGIN-FAMILY 11-17 (COORD, FABLE-CLOSURE-STRATEGY lever 1): reg-to-reg hold repair target per die family (QC / KV / HEAD 40 ps;
@@ -6553,7 +6557,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
              if hold_ff_margin is not None else []),
            *(["export OT_S81_SSTN_M5_BLOCK = 1"] if os.environ.get("OT_S81_SSTN_M5_BLOCK") == "1" else []),
-           *(["export OT_GRT_PORT_HOLD_INCLUDE = 1"] if os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() else []),
+           *(["export OT_GRT_PORT_HOLD_INCLUDE = 1"] if os.environ.get("OT_GRT_PORT_HOLD_PORTS") == "1" and os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
@@ -6776,8 +6780,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
-    if os.environ.get("OT_GRT_NONPORT_HOLD") == "1":      # opt-in; chained after any macro-FF wrapper written above
-        grt_nonport_hold_chain(kd)
+    if os.environ.get("OT_GRT_NONPORT_HOLD", "1") == "1":      # DEFAULT ON for every die (lever 3, 11-18; OT_GRT_NONPORT_HOLD=0 opts out); chained after any macro-FF wrapper written above
+        grt_nonport_hold_chain(kd, required=os.environ.get("OT_GRT_NONPORT_HOLD") == "1")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
               "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "tap_insertion.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "sstn_m5_block.tcl", "pinreg_pad.tcl",
