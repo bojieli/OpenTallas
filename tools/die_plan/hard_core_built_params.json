@@ -834,6 +834,22 @@
     "QRX": 1
    },
    "source": "S81-CORES-R3 11-17 (COORD r561/r563/r582): QRX 1 control for the eco3 (RFH 2) quarters; kit epyc2:/srv/opentallas-scratch2/claude/s81-cores-r3/kits/dsdv_bksel_c_rfdq, recipe physical/die_plan/s81/cores/legacy/profiles/rfc_bk_1103/recipes_rfdq.json, RTL main 4bc02f0a010 (st fsm_encoding none); R-MINIMAL SIGNED TT +2.37 FF +2.39 DRC 0; pre-route LEC EQUIVALENT 30876/30876; records = sha256 of the signed 6_final.odb"
+  },
+  {
+   "die": "s81",
+   "module": "dsdv_bksel_q",
+   "records": [
+    "3a374028043fd3728b8a24c547f47166811584827191f0238c07baa1d11bc2dc",
+    "ac34039bf1b1d98894b9777d4a8a6c4368e9408136a96b880c572ccd59bb3993"
+   ],
+   "params": {
+    "OLL": 2,
+    "RFH": 2,
+    "HLAT": 1
+   },
+   "source": "actual SIGNED eco3 kit config.mk VERILOG_TOP_PARAMS = OLL 2 RFH 2 HLAT 1, epyc2:/srv/opentallas-scratch2/claude/fable-fix-bksel/fx6/hei_fable/eco3/i1/config.mk line8; config SHA256 d77b25fdd3dca2fb4abf8c98960536252b9399aeae0af93006bbbffb68911535; signoff/ODB SHA256 in records; both archives s81/dsdv_bksel_q; no allowlist waiver",
+   "config_sha256": "d77b25fdd3dca2fb4abf8c98960536252b9399aeae0af93006bbbffb68911535",
+   "lib_contains": "cores/views/bksel_eco3_1117/"
   }
  ]
 }
