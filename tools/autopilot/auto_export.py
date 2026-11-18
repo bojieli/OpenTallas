@@ -41,6 +41,7 @@ DIES = ('s81_head', 's81', 'qwen_compute', 'qwen_kvsys', 'hbm')
 WINDOW_H = float(os.environ.get('OT_AUTO_EXPORT_WINDOW_H', 72))
 SCAN_H = float(os.environ.get('OT_AUTO_EXPORT_SCAN_H', 6))
 LANE = 'AUTO-EXPORT'
+RESERVE_GB = float(os.environ.get('OT_RTX_RESERVE_GB', 100))   # rtx-pro root disk: never copy below this free space
 SRC_TAG = 'AUTO-EXPORT-1118'
 
 
@@ -260,7 +261,7 @@ def save_ledger(L):
     with open(tmp, 'w') as f:
         json.dump(L, f, indent=1)
     os.replace(tmp, p)
-    pend = [dict(key=k, **{x: u[x] for x in ('die', 'unit', 'element', 'kind', 'record', 'odb_sha', 'odb_size', 'shas', 'src')})
+    pend = [dict(key=k, **{x: u[x] for x in ('die', 'unit', 'element', 'kind', 'record', 'odb_sha', 'odb_size', 'shas', 'src', 'bytes') if x in u})
             for k, u in L['units'].items() if u.get('state') == 'agi']
     tmp = os.path.join(STATE, 'pending_rtx.json.tmp')
     with open(tmp, 'w') as f:
@@ -409,6 +410,7 @@ def drain(a):
             say('hash %s: %s' % (u['odb'], e))
             continue
         shas = {f: hs[os.path.join(d, f)][0] for d, f in u['files']}
+        u['bytes'] = sum(hs[os.path.join(d, f)][1] or 0 for d, f in u['files'])
         if None in shas.values():
             say('hash failed %s' % u['odb'])
             continue
@@ -460,6 +462,11 @@ def rtx_pull(a):
             reports.append(dict(key=u['key'], ok=True, note='already in rtx INDEX'))
             continue
         if not os.path.exists(dest):
+            st = os.statvfs(RTX_ROOT)
+            free = st.f_bavail * st.f_frsize
+            if free - u.get('bytes', 0) < RESERVE_GB * 1e9:
+                say('DISK HOLD %s: %.0f GB free, unit %.1f GB, reserve %d GB; stays pending' % (k, free / 1e9, u.get('bytes', 0) / 1e9, RESERVE_GB))
+                continue
             os.makedirs(part, exist_ok=True)
             c = subprocess.run(['rsync', '-a', '-e', ' '.join(AGI[:-1]), '%s:%s/%s/' % (AGI[-1], AGI_ROOT, k), part + '/'],
                                capture_output=True, text=True, timeout=6 * 3600)
