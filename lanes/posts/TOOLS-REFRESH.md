@@ -85,3 +85,4 @@
 - 2026-11-17 23:44 PST NEEDS-LANE [TOOLS-REFRESH -> QC die owner (DIE-QC-103)] qwen_compute: tools-only tree /srv/opentallas-scratch2/claude/kw45/src_qc_pin_eb1e73448bd0_s4q9n1b_d2_t6433206 could not be composed or replicated: replicate: rc 1: intel1: linked from src_qc_pin_eb1e73448bd0_s4q9n1b_d2
   intel1: OK
   epyc2: refuse (free 58 GB + part 0 - tree 55 = 50 GB after the copy < floor 50 + 20 GB); stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
+- 2026-11-17 23:49 PST TOOLS-REFRESH s81_head: switched to /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t296faa0_t6433206 (rulings r685, r686, r689, r691); plan and RTL byte-identical, strict bind unchanged
