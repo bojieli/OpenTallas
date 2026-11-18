@@ -30,3 +30,17 @@ def test_proof_clock_tree():
 
 def test_proof_arrivals():
     assert "cp $D/grt_st_$C/arr_$C.txt $D/proof/out_$C/" in SRC
+
+
+def test_chain_ca_write_fall():
+    ca = (SH.parent / "die_chain_ca.sh").read_text()
+    assert "C.ring_write_fall(" in ca and "--count-align-key part $WF" in ca
+    assert subprocess.run(["bash", "-n", str(SH.parent / "die_chain_ca.sh")]).returncode == 0
+
+
+def test_ring_write_fall_probe(tmp_path):
+    import json, sys
+    sys.path.insert(0, str(SH.parent))
+    import clock_landings as C
+    assert C.ring_write_fall({"clock": {"ring_hold": {"write_edge": "fall"}}})
+    assert not C.ring_write_fall({"clock": {}})
