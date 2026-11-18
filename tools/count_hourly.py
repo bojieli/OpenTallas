@@ -31,19 +31,58 @@ SCAN_TIMEOUT_S = 25 * 60
 DIES = (("s81", "s81"), ("s81_head", "head"), ("qwen_compute", "qc"), ("qwen_kvsys", "kv"), ("hbm", "hbm"))
 
 
-def rate_row(cache, stamp):
+VARIANT = re.compile(r"__(a\d+_\d{4}|legalrows_\d+)$")   # AUTO-EXPORT / re-sign name suffixes: the same type as the bare name, not a new unit
+INDEX_DIES = {die for die, _ in DIES}
+
+
+def index_rows(index_json):
+    """-> [(die, element, kind)] of the ARCHIVED rows of the AGIdock INDEX.tsv the counter mirrored in agidock_archive_index.json"""
+    try:
+        a = json.loads(Path(index_json).read_text())
+    except (OSError, ValueError):
+        return []
+    rows = []
+    for ln in (a.get("agidock_index_tsv") or "").splitlines()[1:]:
+        f = ln.split("\t")
+        if len(f) > 10 and f[0] in INDEX_DIES and f[10].startswith(("ARCHIVED", "RTX-FULL-AGI-META")):
+            rows.append((f[0], f[1], f[2]))
+    return rows
+
+
+def any_plan_extra(cache, rows):
+    """signed units on SOME plan that the current plan does not hold: distinct archived (die, element) whose name is no plan type / type module /
+    hard core / counted type / core of that die's counted plan, and not a suffix variant of one that is.  COUNT-DIAG-1118: the last 80 INDEX rows
+    were old-plan names (QC sta_region_nb0_*, S81 ot_s81_svc_*, KV hub-C split children) that count for no current plan but are signed."""
+    known = {}
+    for e in (cache.get("plans") or {}).values():
+        k = known.setdefault(e.get("die"), set())
+        for t, m in (e.get("plan_types") or {}).items():
+            k.add(t); k.add(m)
+        for x in (e.get("hard_cores") or []):
+            k.add(x)
+        for x in list(e.get("signed_types") or {}) + list(e.get("signed_cores") or {}):
+            k.add(x)
+    seen = set()
+    for die, el, kind in rows:
+        k = known.get(die, set())
+        if el in k or VARIANT.sub("", el) in k:
+            continue
+        seen.add((die, VARIANT.sub("", el)))
+    return len(seen)
+
+
+def rate_row(cache, stamp, extra=0):
     """'YYYY-MM-DD HH:MM total s81=37 head=4+5t ... any=NNN auto'.  total = designs + directly signed types per die that MATCH THE CURRENT PLAN
     (the counter matches type names against the counted plan and keeps a renamed type whose plan block digest is unchanged, the same
     real-inputs test as WAVE-FLOW-R2 row_inputs_unchanged).  any=N adds the signed modules whose records exist but whose pins/outline no longer
     match a current plan design (design_unmatched): signed on some plan.  COORD r711 11-18: both numbers on every run and in every row."""
-    total, any_extra, parts = 0, 0, []
+    total, any_extra, parts = 0, extra, []
     for die, short in DIES:
         d = t = 0
         for e in (cache.get("plans") or {}).values():
             if e.get("die") == die:
                 d += len(e.get("signed_designs") or {})
                 t += len(e.get("signed_types") or {})
-                any_extra += len(e.get("design_unmatched") or {})
         total += d + t
         parts.append("%s=%d%s" % (short, d, "+%dt" % t if t else ""))
     return "%s %d %s any=%d auto" % (stamp, total, " ".join(parts), total + any_extra)
@@ -51,6 +90,17 @@ def rate_row(cache, stamp):
 
 def counts_of(row):
     return re.sub(r"\s+auto\s*$", "", row.split(" ", 2)[2]) if row.count(" ") >= 2 else ""
+
+
+DROP_FRAC = 0.85
+
+
+def last_total(text):
+    for r in reversed((text or "").splitlines()):
+        m = re.match(r"^\d{4}-\d\d-\d\d \d\d:\d\d\s+(\d+)\s+s81=", r)
+        if m:
+            return int(m.group(1))
+    return 0
 
 
 def same_hour_same_counts(text, row):
@@ -62,7 +112,7 @@ def read_cache():
     return json.loads(CACHE.read_text())
 
 
-def run(now=None, scan=None, commit=None):
+def run(now=None, scan=None, commit=None, force=None):
     """-> process exit code"""
     now = now or time.time()
     if (STATE / "count_hourly.stop").exists():
@@ -80,7 +130,9 @@ def run(now=None, scan=None, commit=None):
         before = float(read_cache().get("generated") or 0)
     except (OSError, ValueError) as e:
         print("count_hourly: cache unreadable before the scan: %s" % e)
-    if before is None or now - before >= FRESH_S:
+    if force is None:
+        force = "--force" in sys.argv[1:]   # COUNT-DIAG-1118: --force used to be ignored, a cache under 30 min old was read as is
+    if force or before is None or now - before >= FRESH_S:
         rc = (scan or _scan)()
         if rc:
             print("count_hourly: scan rc %s, no row" % rc, file=sys.stderr)
@@ -93,8 +145,15 @@ def run(now=None, scan=None, commit=None):
     if now - float(cache.get("generated") or 0) >= FRESH_S:
         print("count_hourly: cache still %d min old after the scan, no row" % ((now - float(cache.get("generated") or 0)) / 60), file=sys.stderr)
         return 1
-    row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)))
+    row = rate_row(cache, time.strftime("%Y-%m-%d %H:%M", time.localtime(now)), any_plan_extra(cache, index_rows(CACHE.with_name("agidock_archive_index.json"))))
     p = COORD / RATE
+    last = last_total(p.read_text() if p.exists() else "")
+    total = int(row.split(" ")[2])
+    if last and total < DROP_FRAC * last:
+        print("count_hourly: total %d is more than %d%% under the last row %d: a degraded scan, no row (cache generated %s)"
+              % (total, round((1 - DROP_FRAC) * 100), last, time.strftime("%H:%M:%S", time.localtime(float(cache.get("generated") or 0)))), file=sys.stderr)
+        print(row)
+        return 1
     if same_hour_same_counts(p.read_text() if p.exists() else "", row):
         print("count_hourly: this hour already holds these counts: " + row)
         return 0
