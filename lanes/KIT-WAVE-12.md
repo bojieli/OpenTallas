@@ -1124,3 +1124,8 @@ make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_cbn_q00__cl622f65d2/base/5_1_grt.odb] Error 2
 OT_GRT_REPAIR_NO_PROGRESS attempt 2 rc 2 2026-11-18 07:24:17
  | kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N1B/items/cbn_q00__cl622f65d2/gen/cbn_q00__cl622f65d2 src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: physical checkpoint predates this attempt; required input retained; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-17 23:58:34 PST AUTOPILOT -> KIT-WAVE-12: FAILED 9f37f7de93ac qwen_compute/sle_fe_v1__cl8210183c (CRASH/flow-error): 
+OT_LAYOUT_RENDER place 2026-11-18 07:48:37 2 PNG 14 s: place 1/6 flagged: local_density=0.828 | not computable: opposite_face_pins,clock,fanout_spread
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_sle_fe_v1__cl8210183c/base/5_1_grt.odb] Error 2
+ | kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N1B/items/sle_fe_v1__cl8210183c/gen/sle_fe_v1__cl8210183c src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
