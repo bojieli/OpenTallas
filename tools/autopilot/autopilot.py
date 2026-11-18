@@ -1873,12 +1873,26 @@ def apply_evac(st):
     return n
 
 
+def stage_disk_args():
+    """FABLE-FLOW-1000 (1) / WAVE-DISK-CAP: a stage SUBMIT declares its scratch need = max(measured p90 kit peak (kit_peak_gb.json, written by the wave), 3 GB) as ot-run --disk, so ot-run's disk admission
+    counts it (30 jobs died ENOSPC in one hour).  No fresh measurement: no flag (ot-run's own default).  AP_STAGE_DISK=0 turns it off."""
+    if os.environ.get("AP_STAGE_DISK") == "0":
+        return []
+    try:
+        d = json.loads((AP_DIR / "kit_peak_gb.json").read_text())
+        if time.time() - float(d["at"]) > 72 * 3600 or int(d["n"]) < 5:
+            return []
+        return ["--disk", str(max(3, int(-(-float(d["p90_gb"]) // 1))))]
+    except (OSError, ValueError, KeyError, TypeError):
+        return []
+
+
 def submit(st, j, attempt_note=""):
     n = j.get("attempts", 0) + 1
     unit = f"ap-{j['id']}-a{n}"
     logf = AP_DIR / "jobs" / j["id"] / f"a{n}.log"
     kit, runner, mem, thr = j["path"], j["runner"], j["mem_gb"], j["threads"]
-    argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit]
+    argv = [OT_RUN, "--mem", str(mem), "--threads", str(thr), "--dir", kit, "--stage", kit] + stage_disk_args()
     # NEAR-COUNT (COORD 11-01): a core/type listed in lanes/NEAR-COUNT.tsv is admitted as a die-priority crit job
     argv += near_count_args(parse_near_count(read_coord(NEAR_COUNT_FILE)), j.get("die"), j.get("type"),
                             j.get("module"), j.get("item"))

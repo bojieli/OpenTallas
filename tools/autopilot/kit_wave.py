@@ -13479,6 +13479,18 @@ def _step(AP, ap_dir):
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
     status = parse_otrun_status(out if rc == 0 else "")
     cfg["_otrun_status"], cfg["_hub"], cfg["_ap_dir"] = {h: dict(v) for h, v in status.items()}, AP.HUB_NAME, ap_dir
+    try:                                                 # FABLE-FLOW-1000 (3): one per-host snapshot row per tick (ot-run admit / load / run / scratch / waiters), appended to autopilot/tick_hosts.tsv
+        if not AP.DRY:
+            with open(Path(ap_dir) / "tick_hosts.tsv", "a") as _f:
+                _t = time.strftime("%F %T")
+                for _h, _v in sorted(status.items()):
+                    _f.write("\t".join(str(x) for x in (_t, _h, _v.get("admit"), _v.get("load"), _v.get("cores"), _v.get("run"), _v.get("scratch_gb"), _v.get("wait_n"), _v.get("wait_gb"))) + "\n")
+            _p = Path(ap_dir) / "tick_hosts.tsv"
+            if _p.stat().st_size > 2_000_000:             # keep the newest half
+                _ls = _p.read_text().splitlines()[-8000:]
+                _p.write_text("\n".join(_ls) + "\n")
+    except OSError:
+        pass
     try:
         cfg["_disk_fall"] = host_disk_fall(AP, cfg, st)
     except Exception as _e:                              # the fall rate never stops the tick
