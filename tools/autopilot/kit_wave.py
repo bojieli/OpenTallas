@@ -3299,6 +3299,8 @@ RULES = [
     ("PLAN", None, r"OT_SIGNED_PARAM_SERIALIZE ERROR",
      "signed child parameter override not provable against its *_bb.v header default (view or plan owner)"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
+    # FABLE-FIX-HEAD-LEP0N 11-17: synthesis runs INSIDE the place stage (make do-yosys, 1_2_yosys.v); its stop used to read 'unclassified failure @place: TCL interpreter returned an error'
+    ("FLOW", r"place", r"do-yosys|1_2_yosys|OT_SIGNED_PARAM_SERIALIZE|yosys[^\n]*ERROR|ERROR[^\n]*yosys", "synth (yosys) stop inside the place stage"),
     # KIT-TRIAGE-1/G26 11-01 (KV qkd_hr_core_peer gen): a tool input path that does not exist (a cached views file /
     # recipe naming a removed lane worktree) is the flow's, and is named as such instead of a generic traceback
     ("FLOW", None, r"FileNotFoundError|No such file or directory", "tool input file missing (stale path / pruned worktree)"),
@@ -12040,12 +12042,19 @@ def attempt_root(r):
         return (r.get("kit") or "").partition(":")[2]
 
 
+def hold_cancel_running(cfg, die, item):
+    """LATENCY-R 11-17: the item is a key of a hold record with cancel_running: true (cfg['_hold_cancel_running'][die] = keys / globs, set by compile_holds)"""
+    return any(fnmatch.fnmatchcase(str(item), pat) for pat in ((cfg.get("_hold_cancel_running") or {}).get(die) or ()))
+
+
 def hold_protects_running(cfg, d, rec, text):
     """WAVE-LONGRUN-1 11-15: does this hold_items text keep a RUNNING attempt of its item?  Always yes, except under the option
     supersede_pending_plan_holds (global or die, default false): the "PENDING-PLAN ... Running attempts finish" clause (OWNER via
     COORD r50) was written for the period BEFORE the new plan was adopted.  Once the die's event moved on (the row's event is not the
     die's current event) that clause alone no longer protects a row whose block is gone from the current plan: the result can never
     count and each such type regenerates on the new plan.  Another clause that names running attempts (finish / keeps running) still protects."""
+    if hold_cancel_running(cfg, rec.get("die"), rec.get("item")):       # LATENCY-R: a hold record with cancel_running does not protect a running build
+        return False
     on = d.get("supersede_pending_plan_holds", cfg.get("supersede_pending_plan_holds"))
     if on is not True:
         return True
@@ -12055,6 +12064,59 @@ def hold_protects_running(cfg, d, rec, text):
     if not ev or not cur or ev == cur or len(rest) == len(clauses):
         return True
     return any("running" in c.lower() and ("finish" in c.lower() or "keeps running" in c.lower()) for c in rest)
+
+
+def cancel_held_running(AP, cfg, st, notices, ap_dir=None):
+    """LATENCY-R 11-17 (cut 'cancel running rows of held types'): a hold record with cancel_running: true stops the live attempts (wave unit / PLACE client, the running queue
+    job of an ENQUEUED row) of the items it holds, marks them CANCELLED class HELD-STOP and reclaims nothing else.  Without the flag a hold never stops a running build (the
+    old rule: Running attempts finish).  At most supersede_max_per_tick per tick.  -> number stopped"""
+    cap = int(cfg.get("supersede_max_per_tick", DEFAULTS.get("supersede_max_per_tick", 20)))
+    jobs = {}
+    if ap_dir:
+        try:
+            jobs = json.loads((Path(ap_dir) / "state.json").read_text()).get("jobs") or {}
+        except (OSError, ValueError):
+            jobs = {}
+    n, roots = 0, []
+    for key, r in (st.get("items") or {}).items():
+        die, item = r.get("die"), r.get("item") or ""
+        if r.get("status") not in ("RUNNING", "LAUNCHING", "ENQUEUED") or not hold_cancel_running(cfg, die, item):
+            continue
+        d = (cfg.get("dies") or {}).get(die) or {}
+        if not any(fnmatch.fnmatchcase(item, pat) for pat in (d.get("hold_items") or {})):
+            continue                                        # the hold is not in force (released): nothing to stop
+        units = []
+        if r.get("status") in ("RUNNING", "LAUNCHING"):
+            units.append(r.get("unit"))
+            try:
+                units.append(json.loads((Path(r["dir"]) / "place_service.json").read_text())["unit"])
+            except (OSError, ValueError, KeyError, TypeError):
+                pass
+            what = f"wave {r.get('stage') or r.get('status')}"
+        elif r.get("q_id"):
+            j = jobs.get(r["q_id"]) or {}
+            if j.get("status") != "RUNNING" or not j.get("unit"):
+                continue
+            units.append(j["unit"])
+            what = f"queue job {r['q_id']}"
+        else:
+            continue
+        if n >= cap:
+            break
+        if not AP.DRY:
+            for u in units:
+                if u:
+                    AP.sh(["systemctl", "--user", "stop", u], timeout=180)
+            roots.append(attempt_root(r))
+        r.update(status="CANCELLED", **{"class": "HELD-STOP"}, updated=time.time(),
+                 reason=f"{what} stopped: the item is held by a hold record with cancel_running (LATENCY-R)")
+        notices.setdefault(die, []).append(f"{item}@{r.get('attempt')} HELD-STOP: {what} stopped")
+        AP.log(f"KIT-WAVE HELD-STOP {die}/{item}@{r.get('attempt')} {what} units {units}")
+        n += 1
+    if roots:
+        res = WJ.stop_on_fleet(AP.sh, AP.HUB_NAME, [x for x in roots if x])
+        AP.log(f"KIT-WAVE HELD-STOP remote stop: {' '.join(WJ.stopped_names(res))[:400] or 'none running'}")
+    return n
 
 
 def rekey_adopted(AP, cfg, st):
@@ -12677,6 +12739,10 @@ def _step(AP, ap_dir):
         AP.log(f"KIT-WAVE FAIL-STALE skipped: {type(_e).__name__}: {_e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
+    try:
+        cancel_held_running(AP, cfg, st, notices, ap_dir)     # LATENCY-R: hold records with cancel_running stop their running builds
+    except Exception as _e:
+        AP.log(f"KIT-WAVE HELD-STOP skipped: {type(_e).__name__}: {_e}")
     supersede_on_switch(AP, cfg, st, notices, ap_dir)
     try:
         rekey_adopted(AP, cfg, st)                           # WAVE-LONGRUN-1 (a): adoption re-keys unchanged live rows
