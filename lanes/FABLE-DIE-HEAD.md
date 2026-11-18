@@ -68,8 +68,10 @@ Signed hd_tile really uses M8: 173 segments on 107 tracks, 13.2 mm (`6_final.def
 are tracks tree2 claims in at least one of the 264 instances. The die GRT cannot see this: the hd_tile view LEF has no
 M8 OBS. The plan still names guide a8dcf2f5, so every kit built today (hd_mesh, hd_lep0N, hd_serdes) gets the old grant.
 Decision: the die keeps the contract. The die clock route must stay on the die's own tracks; types do not re-sign.
-Proof run t2g (combo GRT with the granted type tracks as M8 obstructions over all 358 instances, then the lock again)
-is running; result in the next post.
+Proof run t2g (combo GRT with the granted type tracks as 165,298 M8 obstructions over all 358 instances): INCONCLUSIVE.
+The guide is byte-identical to t2 (sha 8d0b6462), so the obstructions did not move one clock leg: a 10.8-um gcell holds
+135 M8 tracks and GRT cannot enforce a track contract. The lock FAIL stands unresolved. Next test: per instance, tree2
+M8 clock boxes against the signed M8 shapes (hd_tile first, 62 tracks), or a die clock detailed route on the real views.
 
 ## 5 hd_lep0N bands (r681)
 
