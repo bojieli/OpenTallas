@@ -2002,6 +2002,10 @@ def plan_drift_step(AP, cfg, st):
         if not names:
             continue
         cfg["_plan_item_names"][die] = names
+        try:
+            backfill_norm_blocks(AP, cfg, st, die)
+        except Exception as _e:
+            AP.log(f"KIT-WAVE NORM-BACKFILL {die} skipped: {type(_e).__name__}: {_e}")
         added = only_items_extend(d, names)
         if added:
             AP.log(f"KIT-WAVE ONLY-ITEMS-EXTEND {die}: {len(added)} plan item(s) of a listed family added in memory: " + " ".join(added[:20]))
@@ -2319,6 +2323,18 @@ def adopt_rows_tick(AP, cfg, st, now=None, alert_after=2):
     return out
 
 
+def signed_equivalent(cfg, st, die, item, cur_norm=None):
+    """a SIGNED row of (die, item) whose path-normalized plan block equals the current plan's: the signed record is the answer for this block even though a tree rename gave it another raw
+    sha (the wave relaunched signed hd_serdes twice on r3).  -> the row or None"""
+    cn = (cur_norm if cur_norm is not None else current_norm_blocks(cfg, st)).get(die, {}).get(item)
+    if not cn:
+        return None
+    for r in (st.get("items") or {}).values():
+        if r.get("die") == die and r.get("item") == item and str(r.get("q_status") or "").upper() in ("SIGNED", "SIGNED-LINKED") and r.get("norm_block") == cn:
+            return r
+    return None
+
+
 def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
     """rows launched before norm_blocks existed carry only the raw block sha: probe the plan file each live old-event row was built from (spec.json plan, once per plan path, cached in
     st['plans_norm']) and store the item's normalized sha on the row when the probe's raw sha still equals the row's block_sha"""
@@ -2326,7 +2342,8 @@ def backfill_norm_blocks(AP, cfg, st, die, max_probes=3):
     cache = st.setdefault("plans_norm", {})
     probes = 0
     for r in (st.get("items") or {}).values():
-        if r.get("die") != die or r.get("norm_block") or r.get("status") not in ("RUNNING", "LAUNCHING", "ENQUEUED") or not r.get("block_sha") or r.get("event") == d.get("event"):
+        signed = str(r.get("q_status") or "").upper() in ("SIGNED", "SIGNED-LINKED")
+        if r.get("die") != die or r.get("norm_block") or not r.get("block_sha") or not (signed or (r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED") and r.get("event") != d.get("event"))):
             continue
         try:
             plan = json.loads((Path(r["dir"]) / "spec.json").read_text()).get("plan")
@@ -2888,6 +2905,8 @@ def select(rows, cfg, die, state, plan_types=None):
         elif prov_predecessor(d, die, state, r["item"], rec):
             why = ("PROV-RESIGN: the PROVISIONAL kit of this type re-signs (STA only, no re-route) on the signed child "
                    "views (KW-PROV-1)")
+        elif not rec and signed_equivalent(cfg, state, die, r["item"]):
+            why = "signed off on an equivalent plan block (same path-normalized block; a tree rename only moved the raw sha)"
         elif rec and rec.get("q_status") in ("SIGNED", "SIGNED-LINKED"):
             # SIGNED-TERMINAL-1115: a signed R-MINIMAL record on this plan block is terminal, flow tag or not, retry key or not
             why = "signed off on this plan block (terminal; a missing flow tag is bookkeeping, never a build)"

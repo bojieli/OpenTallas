@@ -93,3 +93,14 @@ def test_remote_stop_is_detached_and_config_autocommit_commits_a_dirty_valid_fil
     (tmp_path / KW.CFG_REL).write_text("{bad")
     calls.clear()
     assert KW.auto_commit_config(A, run=run).startswith("skipped") and not any("coord-commit.sh" in str(c) for c in calls)
+
+
+def test_signed_row_on_an_equivalent_normalized_block_is_not_relaunched():
+    cfg, st = mk({"a": "bNEW"})
+    st["plans"]["h:/p.json|e2"]["norm_blocks"] = {"a": "n1"}
+    st["items"] = {"s": {"die": "s", "item": "a", "event": "e1", "status": "ENQUEUED", "q_status": "SIGNED", "block_sha": "bOLD", "norm_block": "n1"}}
+    assert KW.signed_equivalent(cfg, st, "s", "a") is st["items"]["s"]
+    st["items"]["s"]["norm_block"] = "n2"
+    assert KW.signed_equivalent(cfg, st, "s", "a") is None
+    st["items"]["s"].update(norm_block="n1", q_status="FAIL")
+    assert KW.signed_equivalent(cfg, st, "s", "a") is None
