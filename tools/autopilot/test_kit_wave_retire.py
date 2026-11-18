@@ -38,3 +38,34 @@ class Retire(unittest.TestCase):
         st = {"items": {"b1": row("b", "e1")}}
         KW.retire_superseded_rows(None, CFG, st)
         self.assertEqual(KW.retire_superseded_rows(None, CFG, st), (0, 0))
+
+
+class StalePlan(unittest.TestCase):
+    def test_fail_rows_of_names_the_current_plan_lacks_are_retired(self):
+        cfg = {"dies": {"s": {"enabled": True, "event": "ev", "plan": "/p/plan.json", "gen_host": "h", "plan_sha256": "c" * 64}}}
+        st = {"plans": {"h:/p/plan.json|ev": {"types": ["col_a__t1", "keep__t1"]}}, "items": {
+            "x1": {"die": "s", "item": "col_a__t1__cl1__pv2", "status": "FAIL", "event": "ev", "plan_sha": "a" * 64},     # not in plan, old plan sha: retired
+            "x2": {"die": "s", "item": "col_a__t1", "status": "FAIL", "event": "ev", "plan_sha": "a" * 64},                # in the plan: kept
+            "x3": {"die": "s", "item": "gone__t1", "status": "FAIL", "event": "ev", "plan_sha": "c" * 64},                 # current plan sha: kept (a real failure of this plan)
+            "x4": {"die": "s", "item": "gone__t2", "status": "FAIL", "event": "ev", "plan_sha": ""},                       # unknown block: kept
+            "x5": {"die": "s", "item": "gone__t3", "status": "SIGNED", "event": "ev", "plan_sha": "a" * 64}}}               # not a FAIL: untouched
+        KW.retire_superseded_rows(None, cfg, st, now=7)
+        got = {k: (r["status"], r.get("retire")) for k, r in st["items"].items()}
+        self.assertEqual(got["x1"], ("CANCELLED", "stale-plan"))
+        self.assertEqual([got[k][0] for k in ("x2", "x3", "x4", "x5")], ["FAIL", "FAIL", "FAIL", "SIGNED"])
+        self.assertEqual(st["items"]["x1"]["class"], "SUPERSEDED")
+        cfg["dies"]["s"]["enabled"] = False                      # unknown plan names: nothing retired
+        st2 = {"plans": {}, "items": {"y": {"die": "s", "item": "z", "status": "FAIL", "plan_sha": "a" * 64}}}
+        KW.retire_superseded_rows(None, cfg, st2)
+        self.assertEqual(st2["items"]["y"]["status"], "FAIL")
+
+
+class ResultHeader(unittest.TestCase):
+    def test_result_without_the_arrow_releases_but_a_cc_does_not(self):
+        f = KW.result_pass_fn(["- 2026-11-17 19:01 PST RESULT [S81-DIE-R3] d6b-applied PASS: D6z APPLIED",
+                               "- 2026-11-17 19:17 PST RESULT [S81-TYPES-R3 -> COORD] col-wave2 PASS: ok",
+                               "- 2026-11-17 19:20 PST RESULT [OTHER -> COORD; cc S81-FOO] foo-tag PASS"])
+        self.assertTrue(f("S81-DIE-R3", "d6b-applied"))
+        self.assertTrue(f("S81-TYPES-R3", "col-wave2"))
+        self.assertFalse(f("S81-FOO", "foo-tag"))                # a cc'd lane is not the sender
+        self.assertFalse(f("S81-DIE-R3", "col-wave2"))
