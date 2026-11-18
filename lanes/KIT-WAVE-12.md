@@ -1192,3 +1192,11 @@ OT_LAYOUT_RENDER place 2026-11-18 14:22:04 2 PNG 14 s: place 3/6 flagged: opposi
 make[1]: *** [Makefile:585: do-5_1_grt] Error 1
 make: *** [Makefile:585: /work/run/results/asap7/dp_sle_st_a_v1__cl989804f6__cled3c1d7b/base/5_1_grt.odb] Error 2
  | kit epyc8:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N1B/items/sle_st_a_v1__cl989804f6__cled3c1d7b/gen/sle_st_a_v1__cl989804f6__cled3c1d7b src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data kept: cleanup deferred; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 07:11:24 PST AUTOPILOT -> KIT-WAVE-12: FAILED d2f2efc04904 qwen_compute/slw_st_b_v2__pvc2ec5bfb (CRASH/flow-error): place 2026-11-18 15:09:05 2 PNG 184 s: place 1/6 flagged: local_density=0.982 | not computable: opposite_face_pins,channel_tracks,clock,fanout_spread
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_slw_st_b_v2__pvc2ec5bfb/base/5_1_grt.odb] Error 2
+ | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/slw_st_b_v2__pvc2ec5bfb/attempt_3/gen/slw_st_b_v2__pvc2ec5bfb src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+2026-11-18 07:11:26 PST AUTOPILOT -> KIT-WAVE-12: FAILED e35f575b443e qwen_compute/slw_sc_v1__cl64543eaf__cl4590432d (CRASH/flow-error): 6-11-18 15:10:09 2 PNG 29 s: place 1/6 flagged: local_density=0.793 | not computable: opposite_face_pins,channel_tracks,clock,fanout_spread
+make[1]: *** [Makefile:585: do-5_1_grt] Error 1
+make: *** [Makefile:585: /work/run/results/asap7/dp_slw_sc_v1__cl64543eaf__cl4590432d/base/5_1_grt.odb] Error 2
+ | kit intel1:/srv/opentallas-scratch2/claude/kw43-wave-1109n/runs/qwen_compute/kit-wave/qwen_compute/s29q103S4Q9N3/items/slw_sc_v1__cl64543eaf__cl4590432d/gen/slw_sc_v1__cl64543eaf__cl4590432d src main@eb1e73448bd042684261a13c50cd0fb5ce21a513 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
