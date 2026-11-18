@@ -332,6 +332,7 @@ if {$rm_poly} {
 }
 set rm_station {}
 set rm_seg {}
+set rm_polybad {}
 dict for {g inf} $rm_info {
   lassign $inf sp sg kp kg soft
   # a few soft endpoints (<= 2% of the fixed ones: status / debug taps) do not move the station
@@ -366,7 +367,10 @@ dict for {g inf} $rm_info {
   if {$rm_pts ne {}} {
     set rm_tot [lindex $rm_pts end]
     set rm_tn [expr {$n + 1}]
-    if {$rm_tot / double($rm_tn) > 405.0 * $rm_dbu} { puts "OT_RELAY_POLY WARN $g path [expr {$rm_tot / $rm_dbu}] um, $rm_tn hops > 405 um" }
+    if {$rm_tot / double($rm_tn) > 405.0 * $rm_dbu} {
+      puts "OT_RELAY_POLY WARN $g path [expr {$rm_tot / $rm_dbu}] um, $rm_tn hops > 405 um"
+      lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {$rm_tot / $rm_dbu}] $rm_tn]
+    }
     set j 0
     foreach c $chain {
       incr j
@@ -374,6 +378,11 @@ dict for {g inf} $rm_info {
     }
     puts "OT_RELAY_POLY chain [lindex $chain 0]..[lindex $chain end] ($n stations): path [expr {$rm_tot / $rm_dbu}] um, hop [expr {$rm_tot / $rm_dbu / $rm_tn}] um"
     continue
+  }
+  # S81-COLGEN-3: the straight-line chain's hop is the Manhattan span / (n + 1)
+  if {(abs($bx - $ax) + abs($by - $ay)) / double($n + 1) > 405.0 * $rm_dbu} {
+    puts "OT_RELAY_POLY WARN $g straight path [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_dbu}] um, [expr {$n + 1}] hops > 405 um"
+    lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_dbu}] [expr {$n + 1}]]
   }
   set j 0
   foreach c $chain {
@@ -507,6 +516,11 @@ if {$rm_fit} {
   if {[info exists ::env(OT_RELAY_FALLBACK_MAX_FRAC)] && $rm_cov > 0 && double($rm_nold) / $rm_cov > $::env(OT_RELAY_FALLBACK_MAX_FRAC)} {
     error "OT_HOOK_COVERAGE relay_mid: $rm_nold of $rm_cov stations on the old fallback (> $::env(OT_RELAY_FALLBACK_MAX_FRAC)); unfitted group:even_hop_um [join $rm_nofit { }]"
   }
+}
+# S81-COLGEN-3 11-17: OT_RELAY_POLY_FAIL=1 (plan budgets.relay_hop_fail, gen_phys) fails the hook on every relay chain whose hop
+# exceeds the 405-um reach once the generator has covered the chains (relay_depth.py rows: stations = ceil(path / 405) - 1).
+if {[info exists ::env(OT_RELAY_POLY_FAIL)] && $::env(OT_RELAY_POLY_FAIL) eq "1" && [llength $rm_polybad] > 0} {
+  error "OT_RELAY_POLY relay_mid: [llength $rm_polybad] relay chain(s) with a hop > 405 um (relay_depth rows missing?): [join [lrange $rm_polybad 0 11] { }]"
 }
 puts "OT_RELAY_MID placed $rm_n relay flops of [dict size $rm_station] stations ([dict size $rm_grp] relay groups) FIRM on their source-sink lines"
 }
