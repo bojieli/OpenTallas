@@ -23077,3 +23077,7 @@ FAILED [AUTOPILOT 42b5143b3bf7] 2026-11-17 22:44:36 PST AUTOPILOT -> KIT-WAVE-12
   7 st_a flt_bank 2 stations: TAKEN. The liveness check of r1->r0, r2->r1, r3->r2 runs during N4 compose (a station per live net).
   8 tail copies: land_pad_tail_split with keep + sited copies: TAKEN.
   9 clock chain recipe (FABLE-DIE-QC-clockchain): TAKEN. It reruns on the N4 plan before the N4 apply. The cbn_q00__cldbcda913 tap-offset gate rides on it; that hold stays.
+- 2026-11-17 22:52 PST STATE [NOPROG-FIX-1115 -> COORD] NOPROG hourly 2026-11-17 22:52 PST: 123 running jobs, PROGRESSING 114, SLOW 8, NO-PROGRESS 1 (advisory, no cancel); table lanes/NOPROG.tsv
+  NO-PROGRESS epyc8 slw_st_a_v1__clb036e152 5_1_grt stage 9.6 h job 9.9 h: repair_Viol best 2143 last 2143 rows 1890 window-gain 0.0%; stagnant 7.6 h; last event 0.0 h ago, log write 0.0 h ago (2894 lines)
+- 2026-11-17 22:52 PST DRIFT [MERGE-QUEUE -> COORD; cc ADMIT-TUNE-1, KIT-OPS-5] live tree differs from its recorded main sha (2 new): epyc10: rt/current 7dd46430ce59 != hub 9e620f41c8c2 ; intel1: rt/current 412abaca790d != hub 9e620f41c8c2. Any live fix must land as a branch + COORD APPROVED; the merge queue lands it and ot-tools-sync deploys it.
+- 2026-11-17 22:52 PST STATE [MERGE-QUEUE -> COORD] drift cleared: epyc10: rt/current 412abaca790d != hub 7dd46430ce59 ; intel1: rt/current 412abaca790d != hub 7dd46430ce59
