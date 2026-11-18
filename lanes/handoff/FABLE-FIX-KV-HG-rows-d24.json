@@ -1,39 +1,176 @@
 {
  "schema": "fable-fix-kv-hg.rows.v1",
- "from": "FABLE-FIX-KV-HG 2026-11-18", "to": "KV-HG-OPUS (D23c / D24)", "status": "DO_NOT_COUNT (proposal; proof kit running)",
+ "from": "FABLE-FIX-KV-HG 2026-11-18",
+ "to": "KV-HG-OPUS (D23c / D24)",
+ "status": "DO_NOT_COUNT (proposal; proof kit running)",
  "evidence": "epyc9:/srv/opentallas-scratch2/claude/fable-fix-kv-hg3/sc/<hg_v1|hg|hgi_v1|hgi_v4|pc_v1>/out/{ends.tsv,trace.txt} = per-endpoint TT setup on the HG6 4_cts.odb (placement RC)",
  "A_flow_keys_0_cycles": {
   "tools": "main >= a572716aa09 (gen_phys _relay_mid_re/_relay_mid_tail/_relay_mid_soft_frac, relay_mid.tcl OT_RELAY_MID_TAIL / OT_RELAY_MID_SOFT_FRAC / OT_RELAY_MID_DEBUG; absent keys = byte-identical kits)",
-  "plan_form": {"budgets": {
+  "plan_form": {
+   "budgets": {
     "relay_mid_re_types": "{<each hg / hgi type or base name>: gen_phys.RELAY_MID_RE_KV}",
-    "relay_mid_tail_types": "[same types]", "relay_mid_soft_frac_types": "{same types: 0.05}"}},
+    "relay_mid_tail_types": "[same types]",
+    "relay_mid_soft_frac_types": "{same types: 0.05}"
+   }
+  },
   "no_plan_event_form": "kit_wave item_env on the same rows: OT_RELAY_MID_RE=<RELAY_MID_RE_KV> OT_RELAY_MID_TAIL=1 OT_RELAY_MID_SOFT_FRAC=0.05 (read at GEN)",
   "RELAY_MID_RE_KV": "^(.*[._]u_y_[A-Za-z0-9_]+|.*[._]u_hst[0-9]+_(?:g|t[0-9]+)|.*[._]u_head[0-9]+_u_ftg)[.]",
-  "types": ["kv3_hg", "kv3_hg_v1", "kv3_hg_v1p2", "kv3_hg_v1p3", "kv3_hg_v1p4", "kv3_hg_v1p5", "kv3_hg_v1p6", "kv3_hg_v3",
-            "kv3_hgi", "kv3_hgi_v1", "kv3_hgi_v2", "kv3_hgi_v3", "kv3_hgi_v4", "kv3_hgi_v5", "kv3_hgi_v6", "kv3_hgi_v7", "kv3_hgi_v8"],
+  "types": [
+   "kv3_hg",
+   "kv3_hg_v1",
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hg_v3",
+   "kv3_hgi",
+   "kv3_hgi_v1",
+   "kv3_hgi_v2",
+   "kv3_hgi_v3",
+   "kv3_hgi_v4",
+   "kv3_hgi_v5",
+   "kv3_hgi_v6",
+   "kv3_hgi_v7",
+   "kv3_hgi_v8"
+  ],
   "covers": "lpad/ectl tN -> hst_g, hst_g -> t1 -> t2, hst_t2 -> head e0/e2 front pins: 1,150 of 1,450 failing ends on hgi_v1, 1,639 of 1,948 on hgi_v4, about 1,500 of 3,238 on hg_v1",
   "dry_run": "hgi_v1 pre-GPL ODB: without keys 0 flops placed; with keys head-3 chain g/ftg/t2 FIRM at (352,970) (614,775) (791,581) = sink centroid; head-2 chain needs soft_frac (32 soft pd1 bits of 1,575 = 2.07 % > 2 %)"
  },
  "B_plan_rows_with_cycles": [
-  {"class": "hg: ectl q0 eN -> u_bout_o_ectl_Q_N_eN", "types": "all 8 hg", "ends": 32, "wns_ps": -837, "wire_um": 2540,
-   "now": "0 stations; o_ectl_Q_N_rq (same source, W face) has 3", "row": "internal_stations conn bus:o_ectl_Q_N_eN, capture face:E, 6 regs at <= 380 um from ectl_q0 (60,1322) down the W channel and along the S edge to (1272,18); +6 cycles on the eN lane"},
-  {"class": "hg: ectl q0/q2 -> u_bout_o_ectl_Q_N_tN", "types": "all 8 hg", "ends": 32, "wns_ps": -499, "row": "same form, 1-2 regs"},
-  {"class": "hg + hgi: head e5/e6/e7 kp_o,kpv_o,gf_o -> head e0 u_kt kp_in", "types": "hg 8 + hgi 11", "ends": 236, "wns_ps": -329, "wire_um": 1768,
+  {
+   "class": "hg: ectl q0 eN -> u_bout_o_ectl_Q_N_eN",
+   "types": "all 8 hg",
+   "ends": 32,
+   "wns_ps": -837,
+   "wire_um": 2540,
+   "now": "0 stations; o_ectl_Q_N_rq (same source, W face) has 3",
+   "row": "internal_stations conn bus:o_ectl_Q_N_eN, capture face:E, 6 regs at <= 380 um from ectl_q0 (60,1322) down the W channel and along the S edge to (1272,18); +6 cycles on the eN lane"
+  },
+  {
+   "class": "hg: ectl q0/q2 -> u_bout_o_ectl_Q_N_tN",
+   "types": "all 8 hg",
+   "ends": 32,
+   "wns_ps": -499,
+   "row": "same form, 1-2 regs"
+  },
+  {
+   "class": "hg + hgi: head e5/e6/e7 kp_o,kpv_o,gf_o -> head e0 u_kt kp_in",
+   "types": "hg 8 + hgi 11",
+   "ends": 236,
+   "wns_ps": -329,
+   "wire_um": 1768,
    "now": "plan has 16 core:... internal_stations rows per type with 2 regs_um each, but the kit istations.tcl realizes only ist:i_ectl_Q_N_tN: the path is one unregistered wire in the netlist",
-   "row": "realize the 16 core: stations in bind (2 regs each, uniform +2 on every eighth), or decide they are priced and missing"},
-  {"class": "hg + hgi: reset rs_ri_* -> hard core rst_n", "ends": 35, "wns_ps": -466, "wire_um": 1606, "row": "D23c reset_replicate rsync rows (KV-D23-REACH) = this class; check after D23c"},
-  {"class": "hgi: u_rrl_52 -> u_cland_writer_start_ft0_o_{6,7}", "types": "hgi_v4, hgi_v7", "ends": 2, "wns_ps": -705, "wire_um": 2241, "row": "writer-start reach stage(s) for ft0_o (2 more hops), same law as reader_start_reach"},
-  {"class": "hg: cland ring dsel -> u_bin_i_{head,hst}_Q_N_N_*_s_b", "ends": 68, "wns_ps": -550, "wire_um": 1826, "row": "ring->bin stations as on the 3 kv3_pc_v1 types (KV-R3 composer)"},
-  {"class": "hg: astk ep sq_q/eo_q -> er owner response_data (soft to soft)", "ends": 256, "wns_ps": -705, "wire_um": 1657,
-   "row": "no station: place the astk ep and er-owner soft logic in one region (ep at (333,1115), owner at (1232,780)); region guide or a hardened astk ep/owner core"},
-  {"class": "pc: u_bin_i_idpc_Q_N_y -> kvpc1/kvpc2 pc__pc, -> u_bout_o_idpc_Q_N_y, -> hsl", "ends": 35, "wns_ps": -1360, "wire_um": 3201, "row": "idpc stations (8 hops) + per-core tail"},
-  {"class": "pc: u_bin_i_phy_Q__sN_piN_d1/d2 -> kvpc pc__pi", "ends": 570, "wns_ps": -533, "wire_um": 2156, "row": "D23c tail split pipes:true + copy siting covers ot_dp_dly pipes; the bin itself needs 4 more hops"},
-  {"class": "pc: hsl boot/test internal (soft)", "ends": 1991, "wns_ps": -436, "wire_um": 1317, "row": "start (627,934) and end (634,934) are 7 um apart; the path leaves and returns: region guide for u_hslN.u_slice.u_boot"},
-  {"class": "pc: kvpc1 o_next -> kvpc2 i_prev (core to core)", "ends": 132, "wns_ps": -103, "wire_um": 760, "row": "1 station"}
+   "row": "realize the 16 core: stations in bind (2 regs each, uniform +2 on every eighth), or decide they are priced and missing"
+  },
+  {
+   "class": "hg + hgi: reset rs_ri_* -> hard core rst_n",
+   "ends": 35,
+   "wns_ps": -466,
+   "wire_um": 1606,
+   "row": "D23c reset_replicate rsync rows (KV-D23-REACH) = this class; check after D23c"
+  },
+  {
+   "class": "hgi: u_rrl_52 -> u_cland_writer_start_ft0_o_{6,7}",
+   "types": "hgi_v4, hgi_v7",
+   "ends": 2,
+   "wns_ps": -705,
+   "wire_um": 2241,
+   "row": "writer-start reach stage(s) for ft0_o (2 more hops), same law as reader_start_reach"
+  },
+  {
+   "class": "hg: cland ring dsel -> u_bin_i_{head,hst}_Q_N_N_*_s_b",
+   "ends": 68,
+   "wns_ps": -550,
+   "wire_um": 1826,
+   "row": "ring->bin stations as on the 3 kv3_pc_v1 types (KV-R3 composer)"
+  },
+  {
+   "class": "hg: astk ep sq_q/eo_q -> er owner response_data (soft to soft)",
+   "ends": 256,
+   "wns_ps": -705,
+   "wire_um": 1657,
+   "row": "no station: place the astk ep and er-owner soft logic in one region (ep at (333,1115), owner at (1232,780)); region guide or a hardened astk ep/owner core"
+  },
+  {
+   "class": "pc: u_bin_i_idpc_Q_N_y -> kvpc1/kvpc2 pc__pc, -> u_bout_o_idpc_Q_N_y, -> hsl",
+   "ends": 35,
+   "wns_ps": -1360,
+   "wire_um": 3201,
+   "row": "idpc stations (8 hops) + per-core tail"
+  },
+  {
+   "class": "pc: u_bin_i_phy_Q__sN_piN_d1/d2 -> kvpc pc__pi",
+   "ends": 570,
+   "wns_ps": -533,
+   "wire_um": 2156,
+   "row": "D23c tail split pipes:true + copy siting covers ot_dp_dly pipes; the bin itself needs 4 more hops"
+  },
+  {
+   "class": "pc: hsl boot/test internal (soft)",
+   "ends": 1991,
+   "wns_ps": -436,
+   "wire_um": 1317,
+   "row": "start (627,934) and end (634,934) are 7 um apart; the path leaves and returns: region guide for u_hslN.u_slice.u_boot"
+  },
+  {
+   "class": "pc: kvpc1 o_next -> kvpc2 i_prev (core to core)",
+   "ends": 132,
+   "wns_ps": -103,
+   "wire_um": 760,
+   "row": "1 station"
+  },
+  {
+   "class": "pv: reset relay u_rs_ri_pv_u_g0_j_rst_n.b[0].r[1] -> kv3_pv_pair rst_n",
+   "types": "16 kv3_pv*",
+   "ends": 22,
+   "wns_ps": -737,
+   "wire_um": "1,200-1,500",
+   "source": "COORD 11-18, pv_v12 siting proof epyc9:/srv/opentallas-scratch2/claude/kv-site-read/out/",
+   "row": "same form as hgi: D23c reset_replicate rsync row (ot_dp_rsync S=2 + ot_dp_rtail D=K per pv_pair core, K 4 per the KV-D23-REACH census) + sink_stages; release moves +K clocks, inside the rst_n >= 64 clk hold. Needs tools >= e788528ae26 (tail_copy_anchor re-site) or the kit stops at 3_3 with ODB-0359."
+  },
+  {
+   "class": "pv: u_d60_vport_*_out_v_hi.q -> s1__pv2",
+   "types": "kv3_pv_v12 measured; check all pv",
+   "ends": 924,
+   "wns_ps": -447,
+   "row": "the D=60 pipe exists: tail split pipes:true (K stages per consumer core, sited by tail_copy_anchor) is the 0-cycle form; if the pin spread per core is still > 380 um after the split, raise K"
+  },
+  {
+   "class": "pv: u_vport_W.fault -> u_bout_o_vport_W_N_f.q",
+   "types": "kv3_pv_v12 measured",
+   "wns_ps": -1009,
+   "wire_um": 2590,
+   "row": "internal_stations conn bus:o_vport_W_N_f, capture face, 6 regs at <= 380 um (+6 cycles on a fault lane; fault lanes are latency-tolerant, confirm in LATCHECK)"
+  }
  ],
  "C_other_families": {
   "hub": "kv3_hub_C 773,818 and kv3_hub_Wo 406,241 std cells stop at floorplan OT_NATIVE_CELL_CAP 400,000: Wo passes with the lite+narrow ring (392 k, D23c); hub_C needs the D24 split",
   "pv": "v2/v2n/v4/v6 OT_CLAND literal-local-reset band (D23b); the 9 other PV kits passed place on HG6 and were cancelled by the D22 switch before CTS: no PV CTS number exists yet",
   "sign_off_candidates_running": "kv3_io_cor (post-CTS TT +156.16) intel1 ot-jobs/kv3_io_cor-route-key-cardinal-767024-1794991296, kv3_hroot (+3.15) epyc7 ot-jobs/kv3_hroot-route-loved-redfish-556512-1794991945: both in GRT repair at 08:10 PST"
+ },
+ "D_proof_k3": {
+  "kit": "epyc9:/srv/opentallas-scratch2/claude/fable-fix-kv-hg3/k3/gen/kv3_hgi_v1__cl141fc26e",
+  "content": "fix 1 relay chain keys + fix 3 reach mirror reset rtail + fix 2 parent kt stages (28 x 2)",
+  "post_cts_tt_setup": {
+   "before_tt_repair": [
+    -8.02,
+    -41.5
+   ],
+   "after": [
+    0.43,
+    0.0
+   ],
+   "base_hg6_kit": [
+    -309.01,
+    -123835.79
+   ],
+   "fix1_only": [
+    -401.5,
+    -24581
+   ]
+  },
+  "hooks": "OT_ISTATIONS 3463 FIRM 0 missing; OT_RELAY_MID 9450 flops / 6 stations; OT_TAIL_SITE 16 of 18 copies sited (bad_out 2), max_hop 324.6 um",
+  "status": "in GRT 12:30 PST; DO_NOT_COUNT until kv3_head_eighth_e0 carries +2 kt stages on its 2 local lanes"
  }
 }
