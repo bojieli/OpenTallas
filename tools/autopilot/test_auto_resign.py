@@ -637,6 +637,118 @@ def test_stage_tools_leaves_a_ready_export_alone(ap, monkeypatch):
     assert len(calls) == 1 and "test -f" in calls[0][-1]
 
 
+def test_stage_tools_is_content_addressed_one_extract_for_equal_bytes(ap, monkeypatch):
+    monkeypatch.undo()
+    state = {"content": set()}
+    cmds = []
+
+    def sh(cmd, timeout=300, input=None):
+        last = cmd[-1]
+        cmds.append(last)
+        if "test -f" in last and "/READY" in last:
+            return (1, "", "")
+        if "test -f" in last and ".content-ready" in last:
+            return (0 if "by-content" in last and state["content"] else 1, "", "")
+        if "git -C" in last and "archive" in last:
+            state["content"].add("x")
+        return (0, "", "")
+    ap.sh = sh
+    monkeypatch.setattr(AR, "hub_git", lambda AP, *a, **k: (0, "treeid_same\n", ""))
+    shas = {"tools/die_plan/signoff.py": "a", "tools/die_plan/lec.py": "b"}
+    d1, e1 = AR.stage_tools(ap, "h1", "/r", "flow-20261117-a-kv", shas)
+    d2, e2 = AR.stage_tools(ap, "h1", "/r", "flow-20261117-b-kv", shas)
+    assert not e1 and not e2 and d1.endswith("flow-20261117-a-kv") and d2.endswith("flow-20261117-b-kv")
+    assert sum("archive" in c for c in cmds) == 1                      # the tag bytes were extracted once
+    assert sum("cp -al" in c and "/by-content/" in c for c in cmds) == 2   # both tag dirs are hardlink copies of it
+    ex = [c for c in cmds if "archive" in c][0]
+    assert "find" in ex and "-type f" in ex and "chmod a-w" in ex          # the shared files are read-only once extracted (files only: ot-delete must unlink dir entries)
+    wr = [c for c in cmds if "tag_manifest.json" in c or "resign_driver.py" in c]
+    assert wr and all(".new" in c and "mv -f" in c for c in wr)            # per-tag files are new files renamed into place, never written through a link
+
+
+def test_a_different_tree_id_is_a_different_content_dir(ap, monkeypatch):
+    monkeypatch.undo()
+    ids = iter(["t1", "t2", "t1", "t2"])
+    monkeypatch.setattr(AR, "hub_git", lambda AP, *a, **k: (0, next(ids) + "\n", ""))
+    k1 = AR.content_key(ap, "tag-a", ["tools/die_plan", "x"])
+    k2 = AR.content_key(ap, "tag-b", ["tools/die_plan", "x"])
+    assert k1 and k1 == k2
+
+
+def test_retire_scan_keeps_young_referenced_and_current_tags(tmp_path):
+    import os
+    base = tmp_path / "tools"
+    old = time.time() - 72 * 3600
+
+    def tagdir(n, ready_t):
+        d = base / n
+        d.mkdir(parents=True)
+        (d / "READY").write_text("")
+        os.utime(d / "READY", (ready_t, ready_t))
+    for n, t in (("t-old", old), ("t-young", time.time()), ("t-keep", old), ("t-cur", old)):
+        tagdir(n, t)
+    c1, c2 = base / "by-content" / "k1", base / "by-content" / "k2"
+    for c in (c1, c2):
+        c.mkdir(parents=True)
+        (c / ".content-ready").write_text("")
+        os.utime(c / ".content-ready", (old, old))
+        (c / "f").write_text("x")
+    os.link(c2 / "f", base / "t-keep" / "f")                           # k2 is still linked by a kept tag
+    r = rpy_local("h", AR.RETIRE_SCAN, dict(base=str(base), age_h=48, keep=["t-keep", "t-cur"]))
+    assert [os.path.basename(x) for x in r["tags"]] == ["t-old"]
+    assert [os.path.basename(x) for x in r["content"]] == ["k1"]       # nothing links k1; k2 is in use
+
+
+def test_retire_tools_deletes_through_ot_delete_only(ap, monkeypatch):
+    seen = []
+    ap.rpy = lambda host, code, args, timeout=0: dict(tags=["/r/claude/auto-resign/tools/t-old"], content=[])
+    ap.sh = lambda cmd, timeout=0, input=None: (seen.append(cmd[-1]) or (0, "DELETED /r/x\n", ""))
+    out = AR.retire_tools(ap, "h1", "/r", {"t-cur"})
+    assert out[0][0].endswith("t-old") and seen == ["ot-delete /r/claude/auto-resign/tools/t-old"]
+
+
+def test_shared_files_are_read_only_and_a_per_tag_write_never_reaches_the_other_tag(tmp_path):
+    import os, stat, subprocess
+    if os.geteuid() == 0:
+        pytest.skip("root ignores file modes")
+    c = tmp_path / "by-content" / "k"
+    (c / "tools").mkdir(parents=True)
+    f = c / "tools" / "signoff.py"
+    f.write_text("tag bytes\n")
+    (c / "tools" / "tag_manifest.json").write_text("shared-name\n")          # worst case: a shared file that has a per-tag name
+    subprocess.run(["find", str(c), "-type", "f", "-exec", "chmod", "a-w", "{}", "+"], check=True)
+    d1, d2 = tmp_path / "t1", tmp_path / "t2"
+    for d in (d1, d2):
+        d.mkdir()
+        subprocess.run(["cp", "-al", str(c) + "/.", str(d) + "/"], check=True)
+    assert f.stat().st_nlink == 3 and not (f.stat().st_mode & stat.S_IWUSR)
+    with pytest.raises(PermissionError):
+        open(d1 / "tools" / "signoff.py", "w")                                  # an in-place edit through a tag dir is refused
+    # the per-tag write the stage uses: new file + rename, so the other tag and the content tree keep their bytes
+    subprocess.run(["bash", "-c", "cat > %s/tools/.tag_manifest.json.new && mv -f %s/tools/.tag_manifest.json.new %s/tools/tag_manifest.json" % (d1, d1, d1)], input=b"tag-1\n", check=True)
+    assert (d1 / "tools" / "tag_manifest.json").read_text() == "tag-1\n"
+    assert (d2 / "tools" / "tag_manifest.json").read_text() == "shared-name\n" and (c / "tools" / "tag_manifest.json").read_text() == "shared-name\n"
+
+
+def test_ot_delete_of_a_tag_dir_leaves_the_other_links_and_their_mode(tmp_path):
+    import importlib.machinery, importlib.util, os, stat, subprocess
+    loader = importlib.machinery.SourceFileLoader("ot_delete_cli", str(Path(__file__).resolve().parents[1] / "fleet" / "ot-delete"))
+    spec = importlib.util.spec_from_loader("ot_delete_cli", loader)
+    D = importlib.util.module_from_spec(spec); loader.exec_module(D)
+    c = tmp_path / "by-content" / "k"
+    (c / "tools").mkdir(parents=True)
+    (c / "tools" / "signoff.py").write_text("tag bytes\n")
+    subprocess.run(["find", str(c), "-type", "f", "-exec", "chmod", "a-w", "{}", "+"], check=True)
+    d = tmp_path / "t1"
+    d.mkdir()
+    subprocess.run(["cp", "-al", str(c) + "/.", str(d) + "/"], check=True)
+    g = SimpleNamespace(refuse=lambda t, protected=None: None, load_list=lambda p: (set(), None))
+    assert D.main([str(d)], guard=g) == 0 and not d.exists()
+    f = c / "tools" / "signoff.py"
+    assert f.read_text() == "tag bytes\n" and f.stat().st_nlink == 1
+    assert not (f.stat().st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH))   # ot-delete chmods directories only: the shared file stays read-only
+
+
 # ---------------------------------------------------------------- one row's error never ends the pass (ROOT-MERGE-30 07:05)
 def rows(ap, tmp_path, *names, kit=make_kit):
     text = "# die name host dir build lane note\n"

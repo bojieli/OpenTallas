@@ -510,6 +510,7 @@ try:
             out["odb_sha"] = h.hexdigest()
     need = a.get("free_gb", 40) << 30
     roots = [r for r in a.get("roots") or [] if os.path.isdir(os.path.join(r, "claude")) and shutil.disk_usage(r).free > need]
+    roots.sort(key=lambda r: os.stat(r).st_dev == os.stat("/").st_dev)      # the root fs is the last choice (hub root hit 0 B, 11-17)
     out["root"] = roots[0] if roots else None
 except Exception as e:
     out["error"] = "%s: %s" % (type(e).__name__, e)
@@ -594,32 +595,120 @@ def bin_show(AP, tag, rel):
     return p.returncode, p.stdout, p.stderr
 
 
+def content_key(AP, tag, rels):
+    """address of the exported bytes: sha256 over `<rel> <git object id of tag:rel>` (a tree id for tools/die_plan covers every file in it) -> 16 hex, or '' when a rel cannot be resolved"""
+    ids = []
+    for r in rels:
+        rc, out, _ = hub_git(AP, "rev-parse", "%s:%s" % (tag, r))
+        if rc:
+            return ""
+        ids.append("%s %s" % (r, out.strip()))
+    return hashlib.sha256("\n".join(ids).encode()).hexdigest()[:16]
+
+
 def stage_tools(AP, host, root, tag, shas):
     """export the tag's tools on the host + a sha manifest + the recording driver.  Tools are tag bytes (resign.py checks
-    them); the driver is main's, since a tag older than this stage has none with --auto."""
+    them); the driver is main's, since a tag older than this stage has none with --auto.
+    FLEET-OPS-R 11-17 (COORD): content-addressed.  The tag bytes are extracted ONCE per content key into tools/by-content/<key>; every tag dir is a hardlink copy
+    (`cp -al`: real files, so --stage copies stay correct, no data blocks) plus its own tag_manifest.json / resign_driver.py / READY.  A tag whose tools bytes equal an
+    earlier tag's costs a few KB instead of ~80 MB (a new tag every ~10 min used to write a full tree each).
+    The shared files are READ-ONLY (chmod a-w on files only: ot-delete must still unlink entries in the tag dirs) and nothing writes through them: the per-tag
+    manifest, driver and READY are separate files (tmp + mv), the tools run from a tag dir only read their own tree (COORD 11-17: a hardlinked in-place edit would change every tag)."""
     d = "%s/claude/auto-resign/tools/%s" % (root, tag)
     h = AP.ssh_host(host)
     # a READY export is never rewritten: a running sign-off may be reading it
     if AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "test -f %s/READY" % shlex.quote(d)], timeout=60)[0] == 0:
         return d, ""
     rels = ["tools/die_plan"] + [r for r in CLOCK_FAMILY_RELS if r in shas and not r.startswith("tools/die_plan")]
-    cmd = ("git -C %s archive %s -- %s | ssh -o BatchMode=yes -o ControlPath=none %s %s"
-           % (shlex.quote(str(AP.REPO)), shlex.quote(tag), " ".join(shlex.quote(r) for r in rels), shlex.quote(h),
-              shlex.quote("mkdir -p %s && tar -C %s -xf - && touch %s/.extracted" % (d, d, d))))
-    rc, _, err = AP.sh(["bash", "-c", "set -o pipefail; " + cmd], timeout=600)
-    if rc:
-        return None, "tools export to %s: %s" % (host, err.strip()[-200:])
+    key = content_key(AP, tag, rels)
+    c = "%s/claude/auto-resign/tools/by-content/%s" % (root, key) if key else d
+    q = shlex.quote
+    # one ssh: extract into the content dir unless it is complete, then hardlink-copy it into the tag dir
+    extract = ("git -C %s archive %s -- %s | ssh -o BatchMode=yes -o ControlPath=none %s %s"
+               % (q(str(AP.REPO)), q(tag), " ".join(q(r) for r in rels), q(h),
+                  q("mkdir -p %s && tar -C %s -xf - && touch %s/.content-ready && find %s -type f -exec chmod a-w {} +" % (c, c, c, c))))
+    have = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "test -f %s/.content-ready" % q(c)], timeout=60)[0] == 0 if key else False
+    if not have:
+        rc, _, err = AP.sh(["bash", "-c", "set -o pipefail; " + extract], timeout=600)
+        if rc:
+            return None, "tools export to %s: %s" % (host, err.strip()[-200:])
+    if key:
+        rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "mkdir -p %s && cp -al %s/. %s/ && touch %s/.extracted" % (q(d), q(c), q(d), q(d))], timeout=300)
+        if rc:
+            return None, "hardlink tools %s -> %s on %s: %s" % (c, d, host, err.strip()[-200:])
+    else:
+        rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "touch %s/.extracted" % q(d)], timeout=60)
     commit = hub_git(AP, "rev-parse", tag + "^{commit}")[1].strip()
     man = dict(schema="opentallas.resign_tag_manifest.v1", tag=tag, commit=commit, files=shas)
     payload = json.dumps(man, indent=1) + "\n"
     drv = DRIVER.read_text()
     for name, text in (("tag_manifest.json", payload), ("resign_driver.py", drv)):
-        rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "cat > %s/%s" % (shlex.quote(d), name)],
-                           timeout=120, input=text)
+        rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "cat > %s/.%s.new && mv -f %s/.%s.new %s/%s" % (q(d), name, q(d), name, q(d), name)],
+                           timeout=120, input=text)       # a NEW file renamed over the name: never a write through a hardlink shared with another tag dir
         if rc:
             return None, "%s to %s: %s" % (name, host, err.strip()[-200:])
-    rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "touch %s/READY" % shlex.quote(d)], timeout=60)
+    rc, _, err = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", h, "touch %s/READY" % q(d)], timeout=60)
     return (d, "") if rc == 0 else (None, "READY on %s: %s" % (host, err.strip()[-200:]))
+
+
+RETIRE_AGE_H = 48
+RETIRE_EVERY_S = 6 * 3600
+
+RETIRE_SCAN = r'''
+import json, os, sys, time
+a = json.loads(sys.argv[1]); base = a["base"]; cut = time.time() - a["age_h"] * 3600; keep = set(a["keep"])
+cmd = ""
+for p in os.listdir("/proc"):
+    if p.isdigit():
+        try:
+            cmd += open("/proc/%s/cmdline" % p, "rb").read().replace(b"\0", b" ").decode("utf-8", "replace") + "\n"
+        except OSError:
+            pass
+tags, content = [], []
+try:
+    names = sorted(os.listdir(base))
+except OSError:
+    names = []
+for n in names:
+    p = os.path.join(base, n)
+    if n == "by-content" or not os.path.isdir(p):
+        continue
+    try:
+        age_ok = os.stat(os.path.join(p, "READY")).st_mtime < cut
+    except OSError:
+        age_ok = False
+    if age_ok and n not in keep and (base + "/" + n) not in cmd and ("/tools/" + n + "/") not in cmd and ("/tools/" + n + " ") not in cmd:
+        tags.append(p)
+bc = os.path.join(base, "by-content")
+for n in (sorted(os.listdir(bc)) if os.path.isdir(bc) else []):
+    p = os.path.join(bc, n)
+    try:
+        old = os.stat(os.path.join(p, ".content-ready")).st_mtime < cut
+    except OSError:
+        continue
+    links = 0
+    for r, ds, fs in os.walk(p):
+        for f in fs:
+            try:
+                links = max(links, os.lstat(os.path.join(r, f)).st_nlink - 1)
+            except OSError:
+                pass
+    if old and links == 0 and p not in cmd:
+        content.append(p)
+print("AP_JSON " + json.dumps(dict(tags=tags, content=content)))
+'''
+
+
+def retire_tools(AP, host, root, keep_tags, age_h=RETIRE_AGE_H):
+    """tag exports older than age_h (READY mtime) that no running process names and no live re-sign / current tag keeps, then by-content trees no tag dir links to any more.
+    Deleted through ot-delete on the host (ot_delete_guard).  -> [(path, ot-delete first output line)]"""
+    base = "%s/claude/auto-resign/tools" % root
+    r = AP.rpy(host, RETIRE_SCAN, dict(base=base, age_h=age_h, keep=sorted(keep_tags)), timeout=300)
+    out = []
+    for p in list(r.get("tags") or []) + list(r.get("content") or []):
+        rc, so, se = AP.sh(["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", AP.ssh_host(host), "ot-delete %s" % shlex.quote(p)], timeout=900)
+        out.append((p, ((so or se or "").strip().splitlines() or [""])[-1][:160]))
+    return out
 
 
 # KW-FIX-32 11-07 (COORD 21:4x (3), DIE-KV-91: no dd-kv tools under auto-resign/tools when a lane re-signed by hand):
@@ -635,6 +724,8 @@ PROBE_ROOT = r'''
 import json, os, shutil, sys
 a = json.loads(sys.argv[1]); need = a.get("free_gb", 5) << 30
 roots = [r for r in a.get("roots") or [] if os.path.isdir(os.path.join(r, "claude")) and shutil.disk_usage(r).free > need]
+# FLEET-OPS-R 11-17 (COORD): a root on the ROOT filesystem (the hub's /srv/opentallas-scratch3, /home/ubuntu/scratch-root) is the last choice: the hub root filled to 0 B
+roots.sort(key=lambda r: os.stat(r).st_dev == os.stat("/").st_dev)
 print("AP_JSON " + json.dumps(dict(root=roots[0] if roots else None)))
 '''
 
@@ -674,6 +765,20 @@ def prestage(AP, st, ctx, hosts=None):
             out.append((host, tag, d or err))
     for host, tag, what in out:
         AP.log("AUTO-RESIGN PRESTAGE %s %s: %s" % (host, tag, what))
+    keep = {it["tag"] for it in st.get("items", {}).values() if it.get("status") in ("RUNNING", "ECO", "WAIT", "QUEUED")}
+    keep |= {ctx["tag"](die) for die in PRESTAGE_DIES if ctx["tag"](die)}
+    ra, now = st.setdefault("retired_at", {}), time.time()
+    for host in hosts:
+        if now - ra.get(host, 0) < RETIRE_EVERY_S:
+            continue
+        ra[host] = now
+        r = AP.rpy(host, PROBE_ROOT, dict(roots=ROOTS, free_gb=0), timeout=120)
+        if not r.get("root"):
+            continue
+        for p, what in retire_tools(AP, host, r["root"], keep):
+            AP.log("AUTO-RESIGN RETIRE %s %s: %s" % (host, p, what))
+            for k in [k for k, v in done.items() if v == p]:
+                done.pop(k)
     return out
 
 
