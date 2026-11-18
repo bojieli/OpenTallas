@@ -33,6 +33,7 @@ import hashlib
 import json
 import os
 import shlex
+import socket
 import shutil
 import stat
 import subprocess
@@ -277,6 +278,9 @@ def replicate(hosts, live):
     size = max(st[h][2] or 0 for h in have)
     src = have[0]
     todo = [h for h in hosts if st[h][0] is False]
+    for h in hosts:
+        if st[h][0] is None:                                # loud: an unreachable host is named, never silently dropped
+            print(f"[{h}] replicate SKIPPED: host not reachable over ssh from {socket.gethostname()} (run from the hub or another host)")
 
     def copy(h):
         free = st[h][1]
