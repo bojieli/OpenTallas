@@ -5111,6 +5111,14 @@ def cmd_bind(a):
         rep["landing_phase_sign"] = dict(gate="ADVISORY", verdict="ERROR", error=str(exc)[:300])
     rep["errors"], rep["n_errors"] = B.errors[:2000], len(B.errors)
     (out / "bus_groups.json").write_text(json.dumps(bg, indent=0))
+    # LOCAL-RESET-RAW-1: landing_local_resets raw names re-picked on this bind's relay set (clock_landings._local_resets); the plan
+    # write-back is local_reset_writeback.py PLAN bind_local_reset_rederived.json OUT.  No re-pick = no file.
+    _lr = getattr(getattr(B, "clock_landings", None), "local_reset_rederived", None)
+    if _lr:
+        (out / "bind_local_reset_rederived.json").write_text(json.dumps(_lr, indent=1) + "\n")
+        for _k, _rows in sorted(_lr.items()):
+            for _r in _rows:
+                print(f"   LOCAL_RESET_RAW {_k}: {_r['name']} {_r['was']} -> {_r['raw']}")
     (out / "bind_report.json").write_text(json.dumps(rep, indent=1))
     if not B.errors:
         import kit_topology
