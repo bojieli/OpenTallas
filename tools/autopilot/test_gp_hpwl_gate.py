@@ -60,6 +60,7 @@ def test_gen_phys_ratio_default_s81_only(monkeypatch):
     monkeypatch.delenv("OT_GPL_HPWL_RATIO", raising=False)
     assert P.gpl_hpwl_ratio("s81") == 1.3
     assert P.gpl_hpwl_ratio("qwen_kvsys") is None and P.gpl_hpwl_ratio(None) is None
+    assert P.gpl_hpwl_ratio("s81_head") is None          # HEAD-PLAN-R4 11-17: S81 by exact name, not the s81 prefix
     monkeypatch.setenv("OT_GPL_HPWL_RATIO", "1.5")
     assert P.gpl_hpwl_ratio("hbm") == 1.5
     monkeypatch.setenv("OT_GPL_HPWL_RATIO", "0")

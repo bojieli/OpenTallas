@@ -868,14 +868,14 @@ CORE_INPUT_PLACE_CHAIN = "\n# QC-NK-HOLD A+P: feeding register chains spread to 
 
 TAIL_COPY_SITE_HOOK = ("\n# KV-HG-OPUS-SITE 11-18: bind tail-split copies (land_pad_tail_split) FIRM on the trunk-end -> core-pin line\n"
                        "uplevel #0 {source /work/tail_copy_anchor.tcl}\n")
-_TAIL_COPY_RE = re.compile(r"\bot_dp_dly\s*#\(\s*\.W\(1\)\s*,\s*\.D\((\d+)\)\s*\)\s+(u_pd\w+)\s*\(\s*\.clk\(\w+\)\s*,\s*"
+_TAIL_COPY_RE = re.compile(r"\bot_dp_dly(?:_keep)?\s*#\(\s*\.W\(1\)\s*,\s*\.D\((\d+)\)\s*\)\s+(u_pd\w+)\s*\(\s*\.clk\(\w+\)\s*,\s*"
                            r"\.d\(([^()]*)\)\s*,\s*\.q\(\w+\)\s*\)\s*;\s*//\s*landing pad tail copy for core (\S+?):")
 
 
 def tail_copy_rows(rtl_dir):
     """[(copy inst, K, group, core tag)] of every bind tail-split copy in the kit RTL; group = <d source>/<K> (the copies of one
     pad: same trunk, or same in-flop and K = pad when the trunk is empty).  bind.py emits each one
-    as `ot_dp_dly #(.W(1), .D(K)) u_pd<K>_.. (.clk, .d(<trunk q or in-flop q>), .q(..));  // landing pad tail copy for core <tag>:`)."""
+    as `ot_dp_dly_keep #(.W(1), .D(K)) u_pd<K>_.. (.clk, .d(<trunk q or in-flop q>), .q(..));  // landing pad tail copy for core <tag>:`)."""
     rows = {}
     for f in sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v")):
         for m in _TAIL_COPY_RE.finditer(f.read_text(errors="replace")):
@@ -7181,7 +7181,9 @@ def gpl_hpwl_ratio(die=None):
         if r != 0 and r <= 1:
             raise ValueError(f"OT_GPL_HPWL_RATIO must be 0 (off) or > 1, got {v!r}")
         return r or None
-    return 1.3 if str(die or "").split("_")[0] == "s81" else None
+    # HEAD-PLAN-R4 11-17: the S81 die by exact name; the old prefix test (split("_")[0] == "s81") also matched s81_head,
+    # whose hd_tile stopped at 2.26 x a clustered-start minimum (the unmeasured-die case this docstring keeps off)
+    return 1.3 if str(die or "") == "s81" else None
 
 
 def place_max_fanout(die=None):

@@ -10,7 +10,7 @@
 #   interior targets are pushed out of the macro boxes + 9 um halo, clamped into the core and snapped to a row/site.
 # Every placed cell is FIRM through GPL and listed in ot_face_flops.txt, so face_flops_release.tcl releases it to PLACED for
 # DPL.  A copy is sited only when its stages are intact (K flops in one chain, each stage feeding only the next, the last one
-# reaching the pins of ONE hard macro): a copy Yosys folded into another (bind emits keep_hierarchy to prevent it) is
+# reaching the pins of ONE hard macro): a copy Yosys folded into another (bind emits ot_dp_dly_keep to prevent it) is
 # reported as merged and left alone.  No tail_copies.tsv or no listed copy in the netlist = nothing happens.
 # Pure helpers (tcs_*) are tested with tclsh (test_tail_copy_anchor.py).
 

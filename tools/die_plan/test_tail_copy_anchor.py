@@ -94,8 +94,8 @@ foreach n [list {u_bound.u_pd3_a_0_pvg0_p0_29/r[0]$_DFF_P_} {\u_bound.u_pd3_a_0_
 
 BOUND = """module ts_bound(input clk);
     ot_dp_dly #(.W(1), .D(26)) u_pd26_i_a_cmd_0_t_29 (.clk(clk), .d(i_a_cmd_q[0]), .q(pd26_i_a_cmd_0_t_29));  // landing pad trunk: shared stages of pad 29 (tail split)
-    (* keep_hierarchy *) ot_dp_dly #(.W(1), .D(3)) u_pd3_i_a_cmd_0_pvg0_p0_29 (.clk(clk), .d(pd26_i_a_cmd_0_t_29[0]), .q(pd3_i_a_cmd_0_pvg0_p0_29));  // landing pad tail copy for core pvg0_p0: as-built relative timing
-    (* keep_hierarchy *) ot_dp_dly #(.W(1), .D(3)) u_pd3_i_a_cmd_0_pvg2_p0_29 (.clk(clk), .d(pd26_i_a_cmd_0_t_29[0]), .q(pd3_i_a_cmd_0_pvg2_p0_29));  // landing pad tail copy for core pvg2_p0: as-built relative timing
+    ot_dp_dly_keep #(.W(1), .D(3)) u_pd3_i_a_cmd_0_pvg0_p0_29 (.clk(clk), .d(pd26_i_a_cmd_0_t_29[0]), .q(pd3_i_a_cmd_0_pvg0_p0_29));  // landing pad tail copy for core pvg0_p0: as-built relative timing
+    ot_dp_dly_keep #(.W(1), .D(3)) u_pd3_i_a_cmd_0_pvg2_p0_29 (.clk(clk), .d(pd26_i_a_cmd_0_t_29[0]), .q(pd3_i_a_cmd_0_pvg2_p0_29));  // landing pad tail copy for core pvg2_p0: as-built relative timing
     ot_dp_dly #(.W(1), .D(2)) u_pd2_i_a_cmd_1_c1_2 (.clk(clk), .d(i_a_cmd_q[1]), .q(pd2_i_a_cmd_1_c1_2));  // landing pad tail copy for core c1: as-built relative timing
     ot_dp_dly #(.W(1), .D(4)) u_pd4_i_a_cmd_2 (.clk(clk), .d(i_a_cmd_q[2]), .q(pd4_i_a_cmd_2));  // landing pad: as-built relative timing
 endmodule

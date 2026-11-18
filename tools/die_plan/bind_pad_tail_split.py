@@ -29,6 +29,40 @@ import re
 
 KEY = "land_pad_tail_split"
 
+# Tail copies of one pad share D and clk, so synthesis (yosys opt_merge) folds them back into ONE flop (measured: QC st_a
+# 140 copies -> 35 survive; KV PV 7,040 -> 3,155).  The copies are therefore a separate delay module whose stage registers
+# carry (* keep *); same ports and same r[] / q register names as ot_dp_dly, so the relay siting tools still match them.
+KEEP_MODULE = "ot_dp_dly_keep"
+KEEP_CELL = """// ot_dp_dly_keep (TAIL-SPLIT): ot_dp_dly with (* keep *) stage registers, for pad tail copies that must not be merged.
+module ot_dp_dly_keep #(parameter integer W = 1, parameter integer D = 1) (
+    input  wire         clk,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    (* keep *) reg [W-1:0] r [0:D-1];
+    integer i;
+    always @(posedge clk) begin
+        r[0] <= d;
+        for (i = 1; i < D; i = i + 1) r[i] <= r[i-1];
+    end
+    assign q = r[D-1];
+endmodule
+"""
+
+
+def site_rows(inst, k, xy):
+    """plan relay_sites rows (type_relay_sites.py key form) for the k-stage tail copy `inst`, all stages at xy: the
+    pre-GPL anchor at the consumer cluster (r[0..k-2] and q)"""
+    xy = [round(float(xy[0]), 3), round(float(xy[1]), 3)]
+    rows = {f"{inst}.r[{i}]": list(xy) for i in range(k - 1)}
+    rows[f"{inst}.q"] = list(xy)
+    return rows
+
+
+def centroids(by_core):
+    """{core inst: [(x, y)..]} -> {core inst: centroid}"""
+    return {c: (sum(p[0] for p in v) / len(v), sum(p[1] for p in v) / len(v)) for c, v in by_core.items()}
+
 
 def config(ab):
     """the checked option, or None when the key is absent"""
