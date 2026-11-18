@@ -52202,7 +52202,7 @@
      "id": "qc-cb-tap0-r650-n3-1117",
      "plan_sha": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
      "owner": "QC-PLAN-R3",
-     "renewed_at": "2026-11-17 19:31",
+     "renewed_at": "2026-11-17 20:16",
      "carry": false,
      "keys": [
       "cbn_*",
@@ -52210,9 +52210,10 @@
       "cbx_*"
      ],
      "release": [
-      "event_adopt:s29q103S4Q9N3"
+      "event_adopt:s29q103S4Q9N3",
+      "result:QC-PLAN-R3:qc-n3-halo-refresh"
      ],
-     "reason": "QC-PLAN-R3 11-17 20:0x (COORD): cb/cbn/cbf/cbx core tap[0] pad chains are unsited on N1B tools (cbn_q01 N1B pilot CTS -200 ps: u_pc_nk_u_t_0_2_tap.q[0] -> 3 HB4 487 ps -> u_t02/tap[0]); r650 (pad siting) fixes this and lands only with N3 (N2B plan + main d9bbb638 tools). No new cb launch on N1B; running attempts finish. Releases at the N3 apply (event s29q103S4Q9N3). All other families keep launching on N1B."
+     "reason": "QC-PLAN-R3 11-17 20:0x (COORD): cb/cbn/cbf/cbx core tap[0] pad chains are unsited on N1B tools (cbn_q01 N1B pilot CTS -200 ps: u_pc_nk_u_t_0_2_tap.q[0] -> 3 HB4 487 ps -> u_t02/tap[0]); r650 (pad siting) fixes this and lands only with N3 (N2B plan + main d9bbb638 tools). No new cb launch on N1B; running attempts finish. Releases at the N3 apply (event s29q103S4Q9N3). All other families keep launching on N1B. | 11-17 (COORD r660): ALSO waits for the tools_refresh of N3 to main with the pad-chain halo fix (claude/qc-pad-chain-halo-1117; not in d9bbb638); QC-PLAN-R3 writes result qc-n3-halo-refresh when that refresh is applied"
     },
     {
      "id": "qc-cldbcda913-tapoff-n3-1117",
