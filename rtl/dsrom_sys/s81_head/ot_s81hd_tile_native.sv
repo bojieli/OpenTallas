@@ -61,7 +61,13 @@ module ot_s81hd_tile_native #(
     parameter integer TEN_HOP = 0,
     parameter integer FLT_XHOP = 0,
     parameter integer BST = 2,
-    parameter integer KEY_HOP = 0
+    parameter integer KEY_HOP = 0,
+    // HEAD-97 rp21 F1c (COORD 11-13, R-REACH-2 reach_pairs x_xo: x_q -> u_xo/q is ~988 um round elemB, > 405 um):
+    //   XO_HOP:     kept 512-b x stages g_xoh[k].u_xoh between the W pin register x_q and the E-face register u_xo (the
+    //               plan's internal_stations reg:x_q|reg:u_xo/q sites, k = 0 nearest x_q), with go / xv forwarded through
+    //               the same stages (g_xoh[k].go_h / xv_h): go travels with x, +XO_HOP cycles a tile on the x / go chain
+    //               (the next tile's own result and the chain best follow it; 0 = unchanged)
+    parameter integer XO_HOP = 0
 ) (
     input wire hci0_ck0_i,
     input wire hci0_ck1_i,
@@ -131,14 +137,30 @@ module ot_s81hd_tile_native #(
     // (same D, same clock), so one flop served the E face and the hub 700 um apart (l48x: 578 pairs over 405 um).
     wire [511:0] xo_q;
     reg         goo_q, xvo_q;
+    // XO_HOP stages (see the parameter): xch / gch / vch [k] = x / go / xv after k stages
+    wire [512*(XO_HOP+1)-1:0] xch;
+    wire [XO_HOP:0] gch, vch;
+    assign xch[511:0] = x_q;
+    assign gch[0] = go_q;
+    assign vch[0] = xv_q;
+    genvar xk;
+    generate for (xk = 0; xk < XO_HOP; xk = xk + 1) begin : g_xoh
+        reg go_h, xv_h;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) begin go_h <= 1'b0; xv_h <= 1'b0; end
+            else begin go_h <= gch[xk]; xv_h <= vch[xk]; end
+        assign gch[xk+1] = go_h;
+        assign vch[xk+1] = xv_h;
+        ot_s81hd_kreg #(.W(512)) u_xoh (.clk(ck), .d(xch[512*xk +: 512]), .q(xch[512*(xk+1) +: 512]));
+    end endgenerate
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin goo_q <= 1'b0; xvo_q <= 1'b0; end
 `ifdef OT_S81HD_MUT_GO_DROP
-        else begin goo_q <= 1'b0; xvo_q <= xv_q; end                  // MUTANT: go not forwarded
+        else begin goo_q <= 1'b0; xvo_q <= vch[XO_HOP]; end                  // MUTANT: go not forwarded
 `else
-        else begin goo_q <= go_q; xvo_q <= xv_q; end
+        else begin goo_q <= gch[XO_HOP]; xvo_q <= vch[XO_HOP]; end
 `endif
-    ot_s81hd_kreg #(.W(512)) u_xo (.clk(ck), .d(x_q), .q(xo_q));
+    ot_s81hd_kreg #(.W(512)) u_xo (.clk(ck), .d(xch[512*XO_HOP +: 512]), .q(xo_q));
 
     // ---------------- bundle -----------------------------------------------------------------------------------------
     wire        ten_m;                       // TEN_HOP: kept hop register next to the control / compare logic
