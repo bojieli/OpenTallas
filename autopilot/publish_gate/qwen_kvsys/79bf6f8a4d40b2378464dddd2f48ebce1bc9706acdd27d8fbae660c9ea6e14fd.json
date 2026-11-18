@@ -1,0 +1,57 @@
+{
+ "checks": {
+  "contained": {
+   "findings": [],
+   "verdict": "PASS"
+  },
+  "dry_gen": {
+   "dir": "/srv/opentallas-scratch2/claude/tools-converge/ffkhg2/d21b_publish_work_kv3_hg_v1/qwen_kvsys/79bf6f8a4d40/kv3_hg_v1",
+   "gen_host": "epyc10",
+   "item": "kv3_hg_v1",
+   "kind": "type",
+   "origin": "/srv/opentallas-scratch2/claude/tools-converge/ffkhg2/d21b_publish_work_kv3_hg_v1/qwen_kvsys/79bf6f8a4d40/kv3_hg_v1/published_gen_origin.json",
+   "origin_sha256": "ff78411247a46e3d2c7bbe3dee82ba1267877a4ec4449ff1efaeaf047b136370",
+   "preflight_fail_advisory": null,
+   "proof_kind": "published-gen",
+   "rc": 0,
+   "result": "DRY-PASS",
+   "result_sha256": "db3c9d698aaa91ae8b2fe8b5c68470d5c6a72de93f1ed342b2fd855657b6a8ed",
+   "spec_sha256": "7b8a634d11910555c14f5c47396836294eebe5183e4ebf1c19620f0a56746259",
+   "spec_src": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b",
+   "stage": "preflight",
+   "unit_log_sha256": "213a1868b239df8327486fa259e5127debb627448ad84c072ce96e9bcfde828d",
+   "verdict": "PASS"
+  },
+  "hashes": {
+   "findings": [],
+   "plan_sha256": "2433b9c21c2686bc2c8eb32b931da9b14c100ed882cff41361e2ad1023c8b262",
+   "verdict": "PASS",
+   "views": 59
+  },
+  "pre_g0": {
+   "basis": "Fresh actual D21b PRE/G0; reused exact original receipt, no duplicate sweep",
+   "g0_rc": 0,
+   "g0_report": "/srv/opentallas-scratch2/claude/fable-fix-kv-hg2/d21bgate/g0/g0_report.json",
+   "pre_rc": 0,
+   "tail": "START 2026-11-17T23:26:02Z tree /srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b plan 2433b9c21c26 r8 ad024d0bb7d3 manifest 79bf6f8a4d40\nRC_PRE 0 PLAN-GATE-PRE PASS tree=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b plan=/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347\nRC_BIND 0 {\"partitions\": 160, \"types\": 56, \"crossings\": 2545, \"crossing_bits\": 429530, \"errors\": 0, \"unbound\": 0, \"tied\": 0, \"undriven\": 0, \"multiply_bound\": 0, \"straps\": 3094, \"plan_driven\": 1935}\nBIND_ERRORS 0 {} [] crossings 2545 bits 429530\nR8_RECHECK changed 0\nRC_R8CHECK 1 R8 FAIL {\"groups\": 3001, \"groups_unequal\": 64, \"inversions\": 2, \"landed_bundles\": 0, \"landed_over_margin\": 0, \"replica_sets\": 234, \"replica_unequal\": 0, \"types_conflicting\": 6, \"replica_mode\": \"type\", \"bus_mode\": \"leaf\", \"async_skipped\": 6477, \"depth_source\": \"landing file\"}\nR8_VS_D16_DIFF_LINES 0\nRC_LATCHECK 0 LANE_ASBUILT {\"lanes\": 2404, \"passed\": 2404, \"failed\": 0, \"unobserved\": 0, \"delta\": {}, \"classes\": {}, \"verdict\": \"PASS\", \"bind_dir\": \"/srv/opentallas-scratch2/claude/fable-fix-kv-hg2/d21bgate/bind\", \"plan\": \"physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json\", \"pricing\": \"as-bound\", \"bound_pri\nRC_G0 0 G0 PASS: 0 errors, 0 pending-view, 2403 warnings; 56 types / 160 partitions (21 in near-duplicate groups); worst cut {'ratio': 0.1629, 'at': 'vertical@6750'}, worst partition segment {'ratio': 0.5195,\n{\n \"verdict\": \"PASS\",\n \"severity\": null,\n \"checked_bits\": 580,\n \"errors\": [],\n \"reason\": null\n}\n\nALL_DONE\n",
+   "verdict": "PASS"
+  },
+  "schema": {
+   "rc": 0,
+   "tail": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json: PASS (0 errors)\n",
+   "verdict": "PASS"
+  }
+ },
+ "die": "qwen_kvsys",
+ "hosts": [
+  "epyc10"
+ ],
+ "item": "kv3_hg_v1",
+ "manifest_hash": "79bf6f8a4d40b2378464dddd2f48ebce1bc9706acdd27d8fbae660c9ea6e14fd",
+ "plan": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b/physical/die_plan/qwen_kvsys/plan_of_record/plan_c.json",
+ "plan_sha256": "2433b9c21c2686bc2c8eb32b931da9b14c100ed882cff41361e2ad1023c8b262",
+ "schema": "opentallas.publish_gate.v1",
+ "t": 1794965274.0212252,
+ "tree": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg6_2433b9c2_t24c7347c_d21b",
+ "verdict": "PASS"
+}
