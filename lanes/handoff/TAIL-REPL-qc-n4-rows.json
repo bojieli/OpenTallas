@@ -1,0 +1,13 @@
+{
+ "schema": "TAIL-REPL-qc-n4-rows.v1",
+ "from": "TAIL-REPL", "for": "QC-PLAN-R3 (N4)",
+ "code": "r657 (claude/kv-pad-tail-split-1118) + r658 (claude/tail-split-qc-1118 @617dd4d9b7b8, soft-leaf consumer)",
+ "asbuilt_manifest_key": {
+  "land_pad_tail_split": {"types": ["(sle|slw)_st_a.*"], "min_spread_um": 400, "hop_um": 380}
+ },
+ "where": "add to the QC asbuilt manifest (asbuilt_sw2_pv.json / the tagged isolated copy) before the N4 bind; no plan change, no new stage (sink depth unchanged, LATCHECK input unchanged)",
+ "effect": "st_a pad tail (e.g. u_pd5_x_hc1_i_3 -> rs_n_c_p of u_u_r0..r3) becomes shared trunk + one tail copy per station row u_r0..u_r3, each sited at its row's SRAM cores",
+ "facts": "all st_a hard cores carry pins_file; st_a consumers are soft leaves, hence r658",
+ "check_after_bind": "bind_pad_tail_split.json (split_pads, copies, extra_flops per type); bind verify PASS; LATCHECK unchanged",
+ "proof_run_note": "proof binds use OT_PLAN_GATE_PRE=warn (override, proof run only, not a bind of record)"
+}
