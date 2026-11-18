@@ -74,3 +74,9 @@ Owns S81 strip-leaf congestion and the col bank-leaf reach. Rows go to S81-DIE-R
   - The class repeats: col_h9_r2 has 3 M5 shorts inside sstn t6/t8.
   - Correction: the p6 t0 shorts are M5 inside sstn t0 and its M5 block (the driver is north of a south-edge pin), not in the M8 band.
 - Bank proof kit: regen on epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-bank (kits log ~/s81-geom-opus-kits_bl2e.log), route chain ~/s81-geom-opus-chain3.sh -> ~/s81-geom-opus-bl2e-route.log.
+
+## 2026-11-18 12:xx control result + hand-off
+- Control bind on plain D8e fc2 (a30d6c6f), epyc2 gate_ctlfc2: BIND_RC=1 with exactly the same error lines as gate_combo (sorted diff empty): LF_CS_DEPTH 30, RESET_ANCHOR 10 lines (2 types), LOCAL_RESET_RAW 2. LATCHECK 873/873 on both; G0 0 NEW on both. So my rows add 0 bind errors, and the D8e base itself fails the strict bind (S81-DIE-R3 owns that).
+- Rows handed to S81-DIE-R3 (epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-e2/): plan_combo.json 709df38dfbe0 (fc2 + all rows), rows_h9r1_p6halo_d8e.json 9f7e40e70f45 (H9R1-FRAME-1 o0+i0 in 60 types, p6 cf/t0 halo), rows_halo_col_d8e.json e8737c5c328a (class halo in 216 col types). The t40 v2 type entry is in plan_combo; epyc8 rows_face_clear_d8e_v2.json is c654144fe132.
+- p6 halo route proof is blocked: bind.py kit-rtl refuses a kit from a failing global bind ("needs an explicit verified LOCAL component proof"). Kit gen script epyc2 .../s81-geom-opus-e2/kits_combo.sh; the gate_combo/src tools carry the HALO-1 patch. Rerun it on the first D8e bind with BIND_RC=0.
+- Bank proof kit (epyc2 /srv/opentallas-scratch3/claude/s81-geom-opus-bank): place OK (RELAY_SITES 127/128, MID_FIT 3, RESET_V5 nothing to prune), CTS done, in GRT now; route chain ~/s81-geom-opus-chain3.sh.
