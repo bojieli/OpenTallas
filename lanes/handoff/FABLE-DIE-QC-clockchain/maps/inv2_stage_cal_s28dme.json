@@ -1,0 +1,28 @@
+{
+ "scope": "HOLD-TAP-1 11-13 refit of the DIE-QC-21 inv2 DME stage model on QC s28 s28dme routed COMBO GRT legs (mk_combo_kv NDR; 43,486 DME legs, validate.py): leg = n*d0 + k1*L + k2*sum(Ls^2) + kf*(fanout-1); tap leg = k1*d + k2*d^2",
+ "source": {
+  "trial": "epyc7:/srv/opentallas-scratch2/claude/qc-clkgate-1/s28dme",
+  "fit": "results/die_qc21_1028/validate.py"
+ },
+ "leg": [
+  15.516961,
+  0.184998,
+  0.000258,
+  8.006538
+ ],
+ "tap": [
+  0.035314,
+  0.000283
+ ],
+ "leg_FF": [
+  13.25372,
+  0.171557,
+  0.000231,
+  5.545429
+ ],
+ "tap_FF": [
+  0.03405,
+  0.00028
+ ],
+ "ff_over_tt_glue_minus_core": 0.8695
+}

@@ -1,3 +1,69 @@
+# FABLE-DIE-QC: whole-die review of N3 and the N4 scope, QC die (qwen_compute)
+
+2026-11-17 23:2x PST, FABLE-DIE-QC. V = I read the file or ran the check myself. R = reported by another lane, not re-checked.
+The 11-16 report follows below, unchanged.
+
+## A. Decisions for N4 (QC-PLAN-R3: apply these rows)
+
+| # | item | decision | number behind it |
+|---|---|---|---|
+| 1 | partition split of six st_a_v1 + one st_b_v1 | **WITHDRAWN. No split in N4.** | (V) The 385-394k cell counts are from old events (hcut1111, efdb36e864, S4Q6D). On the current event the st_a_v1 rows have 54,031-54,942 cells (`kit_wave_state` items, event s29q103S4Q9N1B): u_r0..u_r3 are hard cores now. The wave does not refuse any of the seven. |
+| 2 | the 8 rows the wave does refuse (SPLIT-NEEDED) | **Waive, do not split.** COORD: ruling id for `lanes/CELL-WAIVER.tsv`. | (V) Refused on N1B: sle_hc0__cl929603c0__cl38badc56 (351,252 cells, estimate 456,627), sle_hc0__cl929603c0__cl4baa7c9c (350,980), slw_hc0__cl1bc59e1c (350,582), slw_hc2__cla3497502__cl16607c7a (348,679), sle_st_b_v2__cl14c98df5__pvcd986c42 (367,452), sle_st_b_v2__clfde1249e (366,956), slw_st_b_v2__pvc2ec5bfb (357,415), slw_st_b_v1__cl6357f1cc__pv6ace3e48 (374,415). Three hc types of the same size are SIGNED R-MINIMAL (R, QC-N-OPUS 20:13): sle_hc2__cl9c4c4509__cl3edce1b8 348,842 cells, slw_hc3__clccfc3e6b 351,355, slw_hc3__cld86a7ad4 350,388. The limit counts about 105k tap/endcap cells. |
+| 3 | st_b at 357-374k | Waive with the others. Split st_b (cut between u_r5 and u_r6) only if a waived st_b kit stops in GPL or CTS for a size cause, with its log line. | No st_b of this size has a sign-off yet. |
+| 4 | coll_core taps | **43 taps, cap 4800, radius 230 (QC-PLAN-R3 rows) accepted.** | (V) Radius 200 is infeasible: `sink (5.4, 1323.0) has no legal clock tap within 200.0 um`. Max load 3,529 (clk_t6, far 118.8 um). 5 taps have far > 200 um; only clk_t27 is loaded (1,735 sinks, 226.8 um). Accept on the first kit: OT_TAP_BALANCE it0 every tap mean <= 290 and max <= 300. Fallback rows ready: cap 3300 / radius 230 = 51 taps, max load 2,935 (epyc8 `/srv/opentallas-scratch2/claude/fable-die-qc-clk/cc/taps_sweep_fdq.json`, key `3300_230`). |
+| 5 | cbn_q00 clk_t115 | Split into two taps at (604.80, 2393.28) and (820.80, 2471.04), replacing (652.8, 2449.4). 8.64 grid; FABLE-FIX-QC-N checks the sites in the gen_phys tap table. | (V) `4_1_cts.log` of cbn_q00__cl622f65d2 N1B a2, last OT_TAP_BALANCE: clk_t115 mean 330 (316-402), 1,200 sinks. |
+| 6 | the seven other cbn_q00 taps over the 1,200 cap | **No split. Closed.** | (V) Same log line: clk_t101 262 (249-292, 2,556 sinks), t19 261 (252-268, 1,487), t38 245 (231-272, 3,265), t42 244 (225-280, 1,856), t43 237 (219-270, 2,651), t95 253 (236-279, 1,785), t97 267 (254-288, 1,552). All inside 250 +- 40. Load up to 3,265 sinks is fine when the extent is <= 200 um; extent is what made t115 late. |
+| 7 | clk_t50 | No split (R, one hop latch). | |
+| 8 | group A rows (`n4a_plan.json` 1b7519eb) | fw_v1 `bus:x_st_a_o` 3 stations: PASS, 4 hops of 292 um. su_l1 lane7 +1 point: PASS on hop length (<= 304 um). | (V) One check for QC-PLAN-R3: in slw_su_l1__clcc9d0155 and __cla2a78701 three regs_um points sit at x 622.08, which is the type outline width. Move them to x 613.44 unless the generator already snaps them inside. |
+| 9 | st_a flt_bank r2 -> r0 | 2 stations at about (425, 560) and (425, 300): accepted (R: hops 310 / 260 / 330 um). | Not checked by me: whether r1->r0 (482 um) and r2->r1 / r3->r2 (516 um) are live nets. Each live one needs 1 station. |
+| 10 | tail copies | Carry `land_pad_tail_split` with the keep module and sited copies. Without a split this is the only fix for the -901 ps net. | (R) TAIL-REPL: unsited split -901 -> -912. |
+
+## B. Whole-die review of N3 (plan 25f880974553, 377 partitions, 133 types, 2,993 ports, 1,921 lanes)
+
+- (V) Strict bind 0 errors; LATCHECK 1,921 / 1,921; hard-core params 22 wraps, 0 mismatches; G0 0 errors, 491 warnings.
+- (V) Channels: worst die cut 0.237 of capacity (horizontal @ 13,750); worst partition segment 0.534 (sl_W3_su_l1). No channel is a blocker.
+- (V) Clock of record (M4 tree, comb feed): 313 regions, feed depth 12, fan-out 3, 42,253 taps; die GRT overflow 0 / 0 / 0; count-aligned crossings 2,993, fail 0, worst margins 105.1 / 112.5 ps; insertion max 10.57 ns TT. N3 keeps all 377 partition names, so the region map is unchanged.
+- Not measured on N3: the tap-offset gate (section C). cbn_q00__cldbcda913 stays held until it reports.
+
+## C. Clock-chain inputs: restored and proven
+
+The deleted inputs are rebuilt. Durable copy: `lanes/handoff/FABLE-DIE-QC-clockchain/` (coord). Also on epyc2 at the old path `/srv/opentallas-scratch2/claude/fable-die-qc/{maps,m}` (QC-PLAN-R3's `chain_n3clk.sh` finds them unchanged) and on epyc9 `/srv/opentallas-scratch2/claude/fable-die-qc-clk/in`.
+
+| file | source | proof |
+|---|---|---|
+| `maps/regions_s3d.json` | rebuilt from the M4 kit `tree.json` (tap -> region root) | 377 partitions, 313 regions, 0 conflicts; equal to the surviving `regions_plain.json` on all 377 |
+| `m/feed_comb_fw_3.json` | rebuilt from the `feed_edge` nodes of the same tree | root sl_E0_fw, 312 edges, depth 12, fan-out 3; all 312 edges use the midpoint tap, so `tap` is empty |
+| `maps/c_regions.txt`, `su_regions.txt`, `early_other_regions.txt` | epyc8 `die-qc-103/clk` | 192 + 12 + 36 = the 240 `dme_regions` of the M4 tree, exactly |
+| `maps/inv2_stage_cal_s28dme.json`, `edge_readout_patch.py`, `mk_combo_kv.py` | epyc8 `die-qc-103/clk` | replay on the M4 kit gives `combo.tcl` and `combo.v` byte-identical to the M4 run |
+
+The file hashes differ from the old ones (key order); content is proven as above. Not proven: a full kit re-run on the M4 plan reproducing its `tree.json`.
+
+Recipe (in the same folder):
+1. `clockchain_inputs.py PLAN BASE OUT`: checks a plan against the map, the feed and the lists. A new partition name is mapped to the region whose box holds its centre. N3: 377 mapped, 0 new.
+2. `chain_clk.sh NAME` with `R`, `E` (event tree), `P` (plan): the same steps as `chain_n.sh`, with no host paths. It runs in the tree of the plan, not in treeJ.
+3. Read `CHAIN.log`, `reg/sta.log` (TAP-OFFSET-GATE), `reg/kitoffs.json`. Rewrite a row only where the gate fails.
+
+N3 proof: **queued, not running.** Client intel2 pid 3992632, log `~/fable-die-qc/n3clk.client2.log`, output epyc9 `/srv/opentallas-scratch2/claude/fable-die-qc-clk/chain/qc/s4q9n3`. ot-run holds it: epyc9 scratch has 72 GB free and falls 102 GB/h (floor 50 GB). It starts by itself when the fall stops; the run takes about 2.5 h.
+
+N4: run the chain again on the N4 plan after rows 4 and 5 are in. The 43 coll_core taps and the two t115 taps start at offset 0, and coll_core is `clock.source`.
+
+## D. Die-level blockers
+
+1. **Tap-offset gate on N3 is unmeasured** until the queued chain runs. Blocks: release of hold `qc-cldbcda913-tapoff-n3-1117`, and the N4 coll_core offsets.
+2. **epyc9 scratch: 72 GB free, falling 102 GB/h.** It is a QC gen host. The N3 kits and my chain both need it. FLEET-OPS-R.
+3. **8 QC types cannot launch** (row 2) until the waiver ruling exists. The N4 split list would not have unblocked any of them.
+4. No floorplan, region or channel blocker found on N3.
+
+## E. Not checked
+
+- The st_b_v1 type on the split list (sle_st_b_v1__pvc5a85fd4__pv7b7fafb4): its current cell count (its N1B row failed at place with no count).
+- Group B landing-contract stations and the coll_core contract re-solve: no draft exists yet.
+- clk_c0..c3 of cbn_q00 read 398-493 ps in the same log line (core clock pins, 1 sink each); I did not compare them with the declared core insertion.
+- clk_t130 max 316 ps (1,108 sinks) and clk_t47 mean 196 ps (173-275) in cbn_q00: advisory, one kit only.
+- The tt_ctlm pipe stage (FABLE-FIX-QC-N).
+
+---
+
 # FABLE-DIE-QC: whole-die verdict and plan event, QC die (qwen_compute)
 
 2026-11-16, FABLE-DIE-QC. MEASURED = computed by me from the files named. Work dir epyc9
