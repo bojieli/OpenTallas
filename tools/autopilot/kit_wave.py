@@ -11651,11 +11651,11 @@ def orphan_rows(st, now=None, window_h=48):
 
 def orphan_sweep(AP, cfg, st):
     """WAVE-LONGRUN-1 11-15: stop the host scopes of attempts the wave replaced (see wave_jobs.ORPHAN_SCAN).  Options: orphan_sweep
-    false = off; orphan_sweep_live true = stop (default: log the would-stop list only, staged enable like reap_stale_attempts);
+    false = off; orphan_sweep_live false = log the would-stop list only (default since 11-17: stop);
     orphan_max_per_tick (default 40) per host.  -> number of orphan scopes found"""
     if cfg.get("orphan_sweep") is False:
         return 0
-    live = cfg.get("orphan_sweep_live") is True and not AP.DRY
+    live = cfg.get("orphan_sweep_live") is not False and not AP.DRY      # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 E): the orphan stop is ENFORCED by default; orphan_sweep_live false = log only
     rows = orphan_rows(st)
     if not rows:
         return 0
@@ -11844,15 +11844,40 @@ def lock_take(path, wait_s=0):
     """non-blocking flock on `path` (kept open, never truncated while another process holds it); on success the file names this process
     (pid + command line).  Returns the open file, or None when another process holds the lock."""
     import fcntl
+    import signal
+    import threading
     lk = open(path, "a+")
-    for i in range(max(1, int(wait_s / 5) + 1) if wait_s else 1):
+    got = False
+    try:
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        got = True
+    except OSError:
+        pass
+    if not got and wait_s and threading.current_thread() is threading.main_thread():
+        # WAVE-PILOT-FIX 11-17 (COORD): a BLOCKING flock queues behind the holder and wakes when it is released; the old 5-second LOCK_NB poll lost
+        # to every tick that re-took the lock between two polls (S81-TYPES-R3 starved 25 min).  Bounded by SIGALRM.
+        def _timeout(signum, frame):
+            raise TimeoutError("lock wait over")
+        old = signal.signal(signal.SIGALRM, _timeout)
+        signal.setitimer(signal.ITIMER_REAL, float(wait_s))
         try:
-            fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
-            break
-        except OSError:
-            if wait_s and i < int(wait_s / 5):
-                time.sleep(5)
-    else:
+            fcntl.flock(lk, fcntl.LOCK_EX)
+            got = True
+        except (TimeoutError, OSError):
+            got = False
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+            signal.signal(signal.SIGALRM, old)
+    elif not got and wait_s:                              # not the main thread: SIGALRM is unavailable, keep the poll
+        for i in range(int(wait_s / 5)):
+            time.sleep(5)
+            try:
+                fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                got = True
+                break
+            except OSError:
+                pass
+    if not got:
         lk.close()
         return None
     try:
@@ -11883,7 +11908,16 @@ def _step_locked(AP, ap_dir):
 CFG_REL = "autopilot/kit_wave.json"
 
 
-def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=None):
+def drift_dies(work, orig):
+    """the dies whose section differs between the working kit_wave.json and origin's (bytes); [] when unreadable or only top-level keys differ"""
+    try:
+        w, o = json.loads(work).get("dies") or {}, json.loads(orig).get("dies") or {}
+    except (ValueError, AttributeError):
+        return []
+    return sorted(d for d in set(w) | set(o) if w.get(d) != o.get(d))
+
+
+def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=None, cfg=None):
     """FLOW-HEALTH-1 11-15 (FABLE-FLOW-0815 item 5): the working kit_wave.json is what this wave runs on, origin/coord/state is what the
     coordinator and the other hosts see.  A working copy that differs from origin for more than one tick is unpushed config (a failed
     coord-commit): one ALERT per drifting content, a RESOLVED line when it matches again.  Returns the drift state or None."""
@@ -11917,7 +11951,10 @@ def config_drift(AP, st, now=None, origin_ref="origin/coord/state", read_origin=
         dr["alerted"] = now
         age = int((now - dr["first"]) / 60)
         AP.log(f"KIT-WAVE CONFIG-DRIFT {CFG_REL} differs from {origin_ref} for {dr['ticks']} ticks ({age} min), content {sha}")
-        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [FLOW-HEALTH-1 -> COORD] kit_wave.json DRIFT: the working {CFG_REL} (sha1 {sha}) differs from "
+        dd = drift_dies(work, orig)                           # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 F): the alert names the die owner of every drifting die
+        owners = sorted({die_owner(cfg, d)[0] for d in dd if die_owner(cfg, d)[0]}) if cfg else []
+        to = "COORD" + "".join(f", {o}" for o in owners)
+        AP.coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} ALERT [FLOW-HEALTH-1 -> {to}] kit_wave.json DRIFT" + (f" in die(s) {','.join(dd)}" if dd else "") + f": the working {CFG_REL} (sha1 {sha}) differs from "
                         f"{origin_ref} for {dr['ticks']} ticks ({age} min): the edit is unpushed (failed coord-commit?) and invisible to everything that reads origin. "
                         f"Fix: bash ~/coord/bin/coord-commit.sh \"kit_wave.json\" {CFG_REL}")
     return dr
@@ -12032,7 +12069,7 @@ def _step(AP, ap_dir):
     except Exception as e:                                       # unknown = launch
         AP.log(f"KIT-WAVE hub disk check skipped: {type(e).__name__}: {e}")
     try:
-        config_drift(AP, st)
+        config_drift(AP, st, cfg=cfg)
     except Exception as e:
         AP.log(f"KIT-WAVE config drift check skipped: {type(e).__name__}: {e}")
     import source_follow

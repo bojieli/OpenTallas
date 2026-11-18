@@ -235,5 +235,65 @@ class UnreachableHoldAtAdopt(unittest.TestCase):
         self.assertEqual(list(cfg["dies"]["s81"]["hold_items"]), ["b"])
 
 
+class OrphanStopAndDriftOwner(unittest.TestCase):
+    def test_orphan_stop_is_live_by_default_and_opt_out_is_log_only(self):
+        seen = []
+
+        class FakeWJ:
+            @staticmethod
+            def orphan_scopes(sh, hub, rows, dry, cap):
+                seen.append(dry)
+                return {"epyc8": {"orphans": [{"unit": "u1", "age_h": 1.7, "why": "older attempt of a replaced row"}]}}
+        st = {"items": {"a": {"die": "s81", "event": "E", "item": "x", "attempt": 1, "started": KW.time.time(), "status": "RUNNING"},
+                        "b": {"die": "s81", "event": "E", "item": "x", "attempt": 2, "started": KW.time.time(), "status": "RUNNING"}}}
+        ap = type("AP", (), {"DRY": False, "HUB_NAME": "hub", "sh": staticmethod(lambda *a, **k: (0, "", "")), "log": staticmethod(lambda m: None)})()
+        with unittest.mock.patch.object(KW, "WJ", FakeWJ):
+            self.assertEqual(KW.orphan_sweep(ap, {}, st), 1)
+            self.assertEqual(KW.orphan_sweep(ap, {"orphan_sweep_live": False}, st), 1)
+            self.assertEqual(KW.orphan_sweep(ap, {"orphan_sweep": False}, st), 0)
+        self.assertEqual(seen, [False, True])                                   # live by default (dry False); option false = dry
+
+    def test_drift_alert_names_the_die_owner(self):
+        import json as _j, tempfile
+        coord = Path(tempfile.mkdtemp())
+        (coord / "autopilot").mkdir()
+        work = _j.dumps({"dies": {"s81": {"x": 2}, "qwen_kvsys": {"y": 1}}}).encode()
+        orig = _j.dumps({"dies": {"s81": {"x": 1}, "qwen_kvsys": {"y": 1}}}).encode()
+        (coord / KW.CFG_REL).write_bytes(work)
+        out = []
+        ap = type("AP", (), {"COORD": str(coord), "log": staticmethod(lambda m: None), "coord_append": staticmethod(lambda f, line: out.append(line))})()
+        cfg = {"dies": {"s81": {"die_owner": "S81-DIE-R3"}, "qwen_kvsys": {"die_owner": "KV-R3"}}}
+        st = {}
+        KW.config_drift(ap, st, now=100.0, read_origin=lambda: orig, cfg=cfg)
+        KW.config_drift(ap, st, now=200.0, read_origin=lambda: orig, cfg=cfg)   # second tick: alert
+        self.assertEqual(len(out), 1)
+        self.assertIn("-> COORD, S81-DIE-R3]", out[0])
+        self.assertIn("die(s) s81", out[0])
+        self.assertNotIn("KV-R3", out[0])                                       # the die that did not drift is not addressed
+
+    def test_lock_take_waits_blocking_and_gets_it_when_released(self):
+        import subprocess, tempfile, time as _t
+        p = Path(tempfile.mkdtemp()) / "l.lock"
+        holder = subprocess.Popen([sys.executable, "-c", "import fcntl,time,sys;f=open(sys.argv[1],'a+');fcntl.flock(f,fcntl.LOCK_EX);print('held',flush=True);time.sleep(2)", str(p)],
+                                  stdout=subprocess.PIPE, text=True)
+        holder.stdout.readline()
+        t0 = _t.time()
+        lk = KW.lock_take(p, wait_s=20)
+        self.assertIsNotNone(lk)
+        self.assertLess(_t.time() - t0, 6)                                      # woke when the holder released, not after a 5 s poll cycle
+        lk.close()
+        holder.wait()
+
+    def test_lock_take_times_out_when_held(self):
+        import subprocess, tempfile
+        p = Path(tempfile.mkdtemp()) / "l.lock"
+        holder = subprocess.Popen([sys.executable, "-c", "import fcntl,time,sys;f=open(sys.argv[1],'a+');fcntl.flock(f,fcntl.LOCK_EX);print('held',flush=True);time.sleep(5)", str(p)],
+                                  stdout=subprocess.PIPE, text=True)
+        holder.stdout.readline()
+        self.assertIsNone(KW.lock_take(p, wait_s=1))
+        holder.terminate()
+        holder.wait()
+
+
 if __name__ == "__main__":
     unittest.main()
