@@ -153,5 +153,87 @@ class CompareAndSwap(unittest.TestCase):
         self.assertEqual(self.json.loads(self.f.read_text())["max_inflight"], 77)
 
 
+class StaleFailEntries(unittest.TestCase):
+    """COORD: four QC items never relaunched on N1B because fail_keys / fail_sigs still held their event-L2 failures."""
+
+    def cfg(self):
+        return {"dies": {"qwen_compute": {"event": "N1B"}, "s81": {"event": "E1"}}}
+
+    def st(self):
+        return {"items": {"a": {"die": "qwen_compute", "item": "slw_fw_v1", "event": "L2", "status": "FAIL", "updated": 5.0},
+                          "b": {"die": "qwen_compute", "item": "slw_hc1", "event": "N1B", "status": "FAIL", "updated": 5.0}},
+                "fail_keys": {"qwen_compute|slw_fw_v1": {"key": "k", "n": 2},                       # old entry: event from the latest FAIL row (L2)
+                              "qwen_compute|slw_hc1": {"key": "k2", "n": 1},                        # failure on the current event: kept
+                              "qwen_compute|x": {"key": "k3", "event": "L2"},                       # event recorded in the entry
+                              "s81|y": {"key": "k4", "event": "E1"}},
+                "fail_sigs": {"qwen_compute|slw_fw_v1": {"attempts": ["L2@11", "L2@12"], "n": 2},
+                              "qwen_compute|slw_hc1": {"attempts": ["L2@11", "N1B@12"], "n": 2},      # includes the current event: kept
+                              "s81|y": {"attempts": ["E1@3"]}}}
+
+    def test_entries_of_an_old_event_are_dropped_and_current_ones_kept(self):
+        st = self.st()
+        self.assertEqual(KW.prune_stale_fail_entries(self.cfg(), st), (2, 1))
+        self.assertEqual(sorted(st["fail_keys"]), ["qwen_compute|slw_hc1", "s81|y"])
+        self.assertEqual(sorted(st["fail_sigs"]), ["qwen_compute|slw_hc1", "s81|y"])
+
+    def test_idempotent_and_safe_without_state(self):
+        st = self.st()
+        KW.prune_stale_fail_entries(self.cfg(), st)
+        self.assertEqual(KW.prune_stale_fail_entries(self.cfg(), st), (0, 0))
+        self.assertEqual(KW.prune_stale_fail_entries({"dies": {}}, {}), (0, 0))
+
+    def test_a_new_fail_key_records_its_event(self):
+        import tempfile
+        st, cfg = {"items": {}}, {"dies": {"qwen_compute": {"event": "N1B", "src": "", "plan": ""}}}
+        rec = {"die": "qwen_compute", "item": "z", "event": "N1B", "stage": "gen", "dir": tempfile.mkdtemp()}
+        KW.note_fail_key(cfg, st, rec, "FLOW", "unclassified failure @gen (see log): x")
+        self.assertEqual(st["fail_keys"]["qwen_compute|z"]["event"], "N1B")
+
+
+class SyncBackoff(unittest.TestCase):
+    """COORD FABLE-FLOW-2200 E: a QC file sync to epyc2 failed every 2 min (epyc2 root full): back off by (host, path)."""
+
+    def run_tick(self, rc, now):
+        import tempfile
+        cfg = {"dies": {"qwen_compute": {"gen_hosts": ["intel1", "epyc8"]}},
+               "_item_incomplete": {"epyc2": {"qwen_compute": {"a": "/srv/opentallas-scratch2/claude/x/bind_L2 missing", "b": "/srv/opentallas-scratch2/claude/x/bind_L2 missing"}},
+                                    "intel1": {"qwen_compute": {}}}}
+        runs = []
+        ap = type("AP", (), {"log": staticmethod(lambda m: None)})()
+        with unittest.mock.patch.object(KW.time, "sleep"), unittest.mock.patch.object(KW.time, "time", return_value=now), \
+                unittest.mock.patch.object(KW, "_heal_path", return_value=self.path):
+            done = KW.sync_item_inputs(ap, cfg, run=lambda argv, inp=None: runs.append(1) or rc)
+        return runs, done
+
+    def setUp(self):
+        import tempfile
+        self.path = str(Path(tempfile.mkdtemp()) / "heal.json")
+
+    def test_a_failing_host_path_is_not_retried_every_tick(self):
+        runs, _ = self.run_tick(2, 10_000.0)
+        first = len(runs)
+        self.assertGreaterEqual(first, 1)
+        self.assertEqual(len(self.run_tick(2, 10_120.0)[0]), 0)             # 2 min later: backed off (items a and b share the host + path)
+        self.assertEqual(len(self.run_tick(2, 10_000.0 + 400)[0]), first)    # after 5 min it tries once more
+        self.assertEqual(len(self.run_tick(2, 10_400.0 + 300)[0]), 0)        # the next wait doubles (10 min)
+
+    def test_success_clears_the_backoff(self):
+        self.run_tick(2, 10_000.0)
+        self.assertGreaterEqual(len(self.run_tick(0, 10_400.0)[0]), 1)
+        self.assertGreaterEqual(len(self.run_tick(0, 10_401.0)[0]), 0)
+
+
+class UnreachableHoldAtAdopt(unittest.TestCase):
+    def test_a_hold_on_an_event_that_does_not_exist_is_dropped_and_a_real_one_kept(self):
+        import hold_records as HR
+        plan = "p" * 64
+        cfg = {"_now": 1000.0, "dies": {"s81": {"event": "EVT9", "plan_sha256": plan, "planned_events": ["EVT10"],
+               "hold_event_items": {plan: ["a", "b"]},
+               "hold_records": [{"id": "dead", "plan_sha": plan, "reason": "x", "release": ["event_adopt:EVT1"], "keys": ["a"], "migrated": True},
+                                {"id": "live", "plan_sha": plan, "reason": "y", "release": ["event_adopt:EVT10"], "keys": ["b"], "migrated": True}]}}}
+        HR.compile_holds(cfg)
+        self.assertEqual(list(cfg["dies"]["s81"]["hold_items"]), ["b"])
+
+
 if __name__ == "__main__":
     unittest.main()

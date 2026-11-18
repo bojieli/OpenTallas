@@ -4648,6 +4648,10 @@ def sync_item_inputs(AP, cfg, run=None):
                         continue
                     hk = "item|%s|%s|%s|%s" % (h, die, item, p)
                     live.add(hk)
+                    bk = "itembo|%s|%s" % (h, p)               # WAVE-PILOT-FIX 11-17 (COORD FABLE-FLOW-2200 E): back off by cause, per (host, path), not per item
+                    live.update((bk, bk + "#n"))
+                    if float(tries.get(bk) or 0) > time.time():
+                        continue
                     if heal_blocked(tries, hk):
                         heal_stop_note(AP, tries, hk, "ITEM-SYNC %s/%s %s on %s" % (die, item, p, h))
                         continue
@@ -4670,6 +4674,12 @@ def sync_item_inputs(AP, cfg, run=None):
                         AP.log(f"KIT-WAVE ITEM-SYNC {src}->{h} {p}: skipped: {e}")
                         continue
                     AP.log(f"KIT-WAVE ITEM-SYNC {die}/{item}: {p} {src}->{h} rc={rc} (item input missing on {h}; self-heal FIX-SELFCONT)")
+                    if rc != 0:                                  # the same host + path failed (disk full, no route): every item waits 5 min, then 10, 20 ... 2 h
+                        _n = int(tries.get(bk + "#n") or 0) + 1
+                        tries[bk + "#n"], tries[bk] = _n, time.time() + min(7200, 300 * 2 ** (_n - 1))
+                    else:
+                        tries.pop(bk, None)
+                        tries.pop(bk + "#n", None)
                     heal_count(tries, hk)
                     done.append((h, p, src))
     heal_prune(tries, live)
@@ -5723,6 +5733,38 @@ def note_fail_sig(st, rec, cls, why, now=None, inp=None):
     if inp is not None:
         c["inp"], c["block"] = inp, rec.get("block_sha") or ""
     return c
+
+
+def prune_stale_fail_entries(cfg, st):
+    """WAVE-PILOT-FIX 11-17 (COORD, QC slw_fw/slw_hc1 never relaunched on N1B): fail_keys / fail_sigs hold the failure of an OLD event whose source paths are
+    gone for good, so the input digest never changes and the no-unchanged-relaunch rule never re-arms.  An entry whose recorded failure events are
+    all different from the die's current event is dropped (on adopt and every tick).  fail_sigs record 'event@attempt'; fail_keys record 'event'
+    (older entries: the event of the item's latest FAILed row).  -> (n fail_keys dropped, n fail_sigs dropped)"""
+    dies = cfg.get("dies") or {}
+    nk = ns = 0
+    fs = st.get("fail_sigs") or {}
+    for k in list(fs):
+        die = k.split("|", 1)[0]
+        cur = (dies.get(die) or {}).get("event")
+        evs = {str(a).rsplit("@", 1)[0] for a in (fs[k].get("attempts") or [])}
+        if cur and evs and str(cur) not in evs:
+            fs.pop(k, None)
+            ns += 1
+    fk = st.get("fail_keys") or {}
+    latest = {}
+    for r in (st.get("items") or {}).values():
+        if r.get("status") == "FAIL" or r.get("q_status") == "FAIL":
+            key = f"{r.get('die')}|{r.get('item')}"
+            if key not in latest or float(r.get("updated") or 0) >= float(latest[key].get("updated") or 0):
+                latest[key] = r
+    for k in list(fk):
+        die = k.split("|", 1)[0]
+        cur = (dies.get(die) or {}).get("event")
+        ev = fk[k].get("event") or (latest.get(k) or {}).get("event")
+        if cur and ev and str(ev) != str(cur):
+            fk.pop(k, None)
+            nk += 1
+    return nk, ns
 
 
 def clear_fail_sig(st, rec):
@@ -10221,7 +10263,7 @@ def note_fail_key(cfg, st, rec, cls, why):
     n = int(prev.get("n") or 0) + 1 if prev.get("key") == key else 1
     sig = hashlib.sha1(f"{stage}|{FG.norm_class(cls, why)}".encode()).hexdigest()[:12]
     sig_n = int(prev.get("sig_n") or 1) + 1 if prev.get("sig") == sig else 1
-    store[k] = {"key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
+    store[k] = {"event": rec.get("event"), "key": key, "dig": dig, "parts": parts, "cls": cls, "stage": rec.get("stage") or FG.fail_stage(why), "n": n, "ts": time.time(), "why": (why or "")[:160],
                 "tools_group": group, "tool_files": tfiles, "sig": sig, "sig_n": sig_n,
                 "type": typed_class(cls, rec.get("stage"), why), "missing": missing_paths(why),
                 "read_sha": {p: file_sha(cfg, rec["die"], p) for p in stage_reads(why)}}
@@ -12045,6 +12087,12 @@ def _step(AP, ap_dir):
     except Exception as e:                               # a sign-off log read never blocks the wave
         AP.log(f"KIT-WAVE LEAFSLEW step skipped: {type(e).__name__}: {e}")
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
+    try:
+        _nk, _ns = prune_stale_fail_entries(cfg, st)
+        if _nk or _ns:
+            AP.log(f"KIT-WAVE FAIL-STALE dropped {_nk} fail_keys and {_ns} fail_sigs whose failure event is not the die's current event (the digest re-arms)")
+    except Exception as _e:
+        AP.log(f"KIT-WAVE FAIL-STALE skipped: {type(_e).__name__}: {_e}")
     cancel_class_volume(AP, cfg, st, notices)
     cancel_superseded(AP, cfg, st, notices, ap_dir)
     try:
