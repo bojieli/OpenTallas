@@ -1,5 +1,14 @@
 # QC-PLAN-R3 handoff (QC die plan owner; succeeds QC-PLAN-R / FABLE-FIX-QC-PLAN / QC-CLK-R2)
 
+## 2026-11-18 08:3x PST (N4 publish in flight)
+- N4 work dir epyc2:/srv/opentallas-scratch2/claude/qc-plan-r3-n4 (W). Event tree W/event_tree_N4. Final bind W/bind/bind_s29q103S4Q9N4DBQ (R8 pass 2): BIND_ERRORS 0, LANE_ASBUILT 1921/1921, hcparam 0. N4C failed on LANE_ASBUILT (W fw->st_a +3 priced in latency only); fixed by plan lanes[].fixed_cycles 3.
+- Published plan = W/plan_n4e.json sha 488b62fe = bound plan + ft_site_dedupe (9 types) + 33 signed child views bound (n4e_views.py, views_n4). native_contract equal on all 133 types -> N4D bind matches.
+- W/post_n4.sh (log W/post_n4.log, rc W/post_n4.rc): pub_n4.py -> kw45/src_qc_pin_eb1e73448bd0_s4q9n4; relocate_bind.py tree+self -> kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N4DBQ; native_topology asbuilt_sha256 := asbuilt_n4_portable (4690dd11); check-receipts; replicate to epyc9/epyc8/intel1 + rsync bind.
+- G0 + CB16 on the in-tree N4E plan: intel2 ~/qc-plan-r3/g0_n4e.{log,rc} (W/g0_n4e.sh). Advisory (r704/r706).
+- Candidate: intel2 ~/qc-plan-r3/mk_cand_n4.py N3_CAND OUT MANIFEST PLAN_SHA ASBUILT_SHA epyc9,epyc8,epyc2,intel1 -> ~/coord/lanes/handoff/QC_S4Q9N4_ADOPT_candidate_1118.json; apply: /srv/opentallas-scratch2/claude/rt/current/tools/autopilot/publish_apply.py apply --candidate C --expect-source kw45/src_qc_pin_eb1e73448bd0_s4q9n3 --expect-event s29q103S4Q9N3 --lane QC-PLAN-R3. Then tell TOOLS-DECOUPLE (QC moves to live tree after N4; no more src_* trees).
+- Done today: shared tools/die_plan/relocate_bind.py on main 8efd33fb (HDL comment-only bytes kept, receipts re-hashed/checked); N3 live bind receipts repaired 17 -> 0 on all 4 hosts; only_items + 7 split children (762c7316); holds already gone (cfbab024).
+- Open: qfd_dv_s8x_btab / _prog views (archived DBs rtx-pro signed-export-1114/qwen_compute/<m>) need export_view -> bind in N4.1 (NEEDS-LANE posted). N4.1 rows from QC-N-OPUS, only after a routed st_a kit (COORD). clk_t131 empty tap on cbn_q00__cl622f65d2 (info).
+
 ## 2026-11-17 05:4x PST
 - M4 clock chain (E2 fable-die-qc-r/chain/qc/s4q9m4) REG_DONE 05:12. REG_STA: TT intra setup +403.6 at 833.0; CA_C/CA_D 2993 crossings FAIL 0 (MC 300 chips 0 viol); tap-offset gate on M4 rows FAIL 55 (the 3 sle_st_b_v1 types: expected, fixed by the M5 rows); landed single-cycle FAIL is INFO for plan landed hops; die clock gate BLOCKED(kits) (hold views unsigned) -> no die clock PASS claimed.
 - Combo readout 833.333 verified: reg/spef_*/combo.tcl uses vclk 833.333 with input/output delay 0, arr_late = 833.333 - slack_max (same constant) -> period-neutral arrival readout, not a setup sign-off. Die STA period_ps 833.0. No re-extract needed.
