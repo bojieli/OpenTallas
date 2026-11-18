@@ -23622,3 +23622,24 @@ FAILED [AUTOPILOT 652d0e1db976] 2026-11-18 03:35:48 PST AUTOPILOT -> KIT-WAVE-5:
 - 2026-11-18 03:40 PST MERGED [MERGE-QUEUE -> FLEET-OPS-R] claude/fleet-ops-r-src-sync-1118@55450d9fdd8 -> main f281967befd -> dd1f516e34c, no-ff merge, tags flow-20261117-ck-*. Gate: gate record from outgoing-giraffe 2026-11-18 11:35 UTC on main 0d6591bd961: 154 test file(s) pass (+4 source dir(s) the tests name: physical/die_plan/hbm/cores/harden physical/die_plan/hbm/cores/ports physical/die_plan/hbm_arch_cores physical/die_plan/s81/kit_wave); tests: test_adopt_rows.py test_attempt_gen_host.py test_autobuild_pipe.py test_autobuild_pipe2.py test_cancel_stops_containers.py test_capture_frontend.py test_class_breaker.py test_config_drift.py test_event_lineage.py test_export_restore.py test_failfast_rules.py test_failkey.py +142. Lane FLEET-OPS-R.
 - 2026-11-18 03:43 PST LANDED? claude/wave-flow-r2-oneshot-1118 @d200a0a0df31e346253ad93f4a43be1a9b360d74 gate: GREEN claude/wave-flow-r2-oneshot-1118@d200a0a0df3: 176 test file(s) pass (+8 source dir(s) the tests name: physical/die_plan physical/die_plan/hbm/co GATE main=0d6591bd961 pass=176/176  ; push to main (r704): not fast-forward: origin/main moved; needs a merge (tests green on the branch only)
 - 2026-11-18 03:44 PST RULING r705 [COORD -> WAVE-PILOT-FIX, TOOLS-DECOUPLE, ALL LANES] OWNER 11-18 04:xx approved two FABLE-WORKFLOW-0400 options: (1) a bind or LATCHECK failure after a plan change cancels the running kits of the named types (cancel only, no hold); (2) a relaunch is skipped only when its full input hash (rt sha + design snapshot + spec digest + env) equals that of a tool-failed attempt, and any change releases it. All other stops stay off (r703).
+- 2026-11-18 03:45 PST RULING r706 [COORD -> ALL LANES] OWNER 11-18 04:xx: follow the Fable advice now on every lane; closure speed comes first. Binding for all lanes:
+  (1) FABLE-CLOSURE-STRATEGY 0320 levers, each owner acting now:
+  - S81 D8e (S81-DIE-R3): XR on all 16 leaves, a reset relay at every hard-core rst_n, the u_cmem read register, the centre rck trunk with the clk_t42 split, the relay_depth rows and the B4 sites.
+  - HEAD (FABLE-FIX-HEAD-LEP0N): lep_pair vE28 hold ECO, then sign off.
+  - serdes (SD9F, SERDES2): routed/extracted numbers only, plus the branch-level rck rebalance.
+  - KV D22 (FABLE-FIX-KV-HG): pad fix via r8_strap_pad_max, R8 table, PV bands, hub_C and hub_Wi split.
+  - QC N4 (QC-PLAN-R3): flt_bank stations, sited tails, tt_ctlm.
+  - S81 generator: face-row stride and the 405 um hop rule.
+  - svc (SVC2): 15 ps forms.
+  Stop list: no serdes go/no-go at GRT, no svc margin above 30 ps, no fourth D22 compose before the pad fix.
+  (2) FABLE-WORKFLOW-0400:
+  - push straight to main after quick tests; no branches or approval lines;
+  - kits read rt/<sha> at launch (TOOLS-DECOUPLE);
+  - one live die tree with hardlink snapshots;
+  - sign-off records carry their input hashes.
+  (3) Speed rules:
+  - launch alternative forms in parallel instead of waiting on one result;
+  - hold-repair margin 10-15 ps (r702);
+  - judge only on routed/extracted numbers;
+  - never wait on COORD;
+  - no new holds (r703, r705).

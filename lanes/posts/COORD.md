@@ -1117,3 +1117,24 @@
 - 2026-11-18 03:33 PST RULING r703 [COORD -> ALL LANES, WAVE-PILOT-FIX, WAVE-FLOW-R2, TOOLS-DECOUPLE] OWNER 11-18 03:5x: remove all safety stops. Wave holds, class breakers, dedupe blocking, pilot gating, retry probes, tree-switch markers and the tools-refresh strict-bind gate are removed, both live and in code. Lanes do not add new holds. Kept: ot-run memory admission, disk floors, the delete guard and OOM protection (host survival only). The S81 strip hold request is withdrawn.
 - 2026-11-18 03:34 PST RULING r704 [COORD -> ALL LANES] OWNER 11-18 03:5x: avoid versioning and merging; fix on one shared version. (1) Code: lanes push directly to main after quick tests on the touched files. MERGE-AUTO is building ot-push-main and rt/current fast-forwarding every 1-2 min, and the merge queue is no longer a gate. Until the helper lands, self-merge per r700. (2) Builds take their tools from rt at launch (TOOLS-DECOUPLE). (3) Design: one shared live tree per die replaces versioned trees and event chains (TOOLS-DECOUPLE phase 2). Bind and LATCHECK become post-change warnings.
 - 2026-11-18 03:44 PST RULING r705 [COORD -> WAVE-PILOT-FIX, TOOLS-DECOUPLE, ALL LANES] OWNER 11-18 04:xx approved two FABLE-WORKFLOW-0400 options: (1) a bind or LATCHECK failure after a plan change cancels the running kits of the named types (cancel only, no hold); (2) a relaunch is skipped only when its full input hash (rt sha + design snapshot + spec digest + env) equals that of a tool-failed attempt, and any change releases it. All other stops stay off (r703).
+- 2026-11-18 03:45 PST RULING r706 [COORD -> ALL LANES] OWNER 11-18 04:xx: follow the Fable advice now on every lane; closure speed comes first. Binding for all lanes:
+  (1) FABLE-CLOSURE-STRATEGY 0320 levers, each owner acting now:
+  - S81 D8e (S81-DIE-R3): XR on all 16 leaves, a reset relay at every hard-core rst_n, the u_cmem read register, the centre rck trunk with the clk_t42 split, the relay_depth rows and the B4 sites.
+  - HEAD (FABLE-FIX-HEAD-LEP0N): lep_pair vE28 hold ECO, then sign off.
+  - serdes (SD9F, SERDES2): routed/extracted numbers only, plus the branch-level rck rebalance.
+  - KV D22 (FABLE-FIX-KV-HG): pad fix via r8_strap_pad_max, R8 table, PV bands, hub_C and hub_Wi split.
+  - QC N4 (QC-PLAN-R3): flt_bank stations, sited tails, tt_ctlm.
+  - S81 generator: face-row stride and the 405 um hop rule.
+  - svc (SVC2): 15 ps forms.
+  Stop list: no serdes go/no-go at GRT, no svc margin above 30 ps, no fourth D22 compose before the pad fix.
+  (2) FABLE-WORKFLOW-0400:
+  - push straight to main after quick tests; no branches or approval lines;
+  - kits read rt/<sha> at launch (TOOLS-DECOUPLE);
+  - one live die tree with hardlink snapshots;
+  - sign-off records carry their input hashes.
+  (3) Speed rules:
+  - launch alternative forms in parallel instead of waiting on one result;
+  - hold-repair margin 10-15 ps (r702);
+  - judge only on routed/extracted numbers;
+  - never wait on COORD;
+  - no new holds (r703, r705).
