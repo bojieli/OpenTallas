@@ -536,15 +536,16 @@ def _chain_clear_of_hard_cores(t, origin_xy, stages, margin=4.32):
     options = []
     for st in stages:
         x, y = st['xy_um']
-        r = [x - 2.16, y - 2.16, x + 2.16, y + 2.16]
+        bw, bh = st.get('box_um') or (4.32, 4.32)     # BAND-CAP 11-17: opt-in box for a stage holding many relay flops
+        r = [x - bw / 2, y - bh / 2, x + bw / 2, y + bh / 2]
         near = _clear_of_hard_cores(t, r, margin)
         opts = [near]
         for a, b, c, d in cores:
             if near is not r and r[0] < c + margin and r[2] > a - margin and r[1] < d + margin and r[3] > b - margin:
-                opts += [q for q in ([a - margin - 4.32, r[1], a - margin, r[3]],
-                                     [c + margin, r[1], c + margin + 4.32, r[3]],
-                                     [r[0], b - margin - 4.32, r[2], b - margin],
-                                     [r[0], d + margin, r[2], d + margin + 4.32]) if free(q)]
+                opts += [q for q in ([a - margin - bw, r[1], a - margin, r[3]],
+                                     [c + margin, r[1], c + margin + bw, r[3]],
+                                     [r[0], b - margin - bh, r[2], b - margin],
+                                     [r[0], d + margin, r[2], d + margin + bh]) if free(q)]
         options.append(opts)
     hop = lambda p, q: abs(p[0] - q[0]) + abs(p[1] - q[1])
     states = [((0.0, 0.0), origin_xy, [])] if origin_xy is not None else None

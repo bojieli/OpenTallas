@@ -67,6 +67,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               cut_lines / reach / face_tracks / ft_budget (xdie.py, per-layer reach table reach.py)
   xtap_latency (WARN only, XTAP-SWEEP-1 11-11) ft hops between taps whose modeled source latency differs > 50 ps and no
               clock.ft_hop_lockup (xtap flop / latch); one [xtap-count] line
+  band_capacity (HEAD-PLAN-R4 11-17) landing band fill from PLANDIR/band_fill/<type>.json (band_capacity.py measure on the
+              synthesized netlist), band area from the plan's current native_stage_groups rect: WARN > 0.7, ERROR > 1.0
   tap_sink_cap (WARN default / --tap-sink-cap error, XTAP-SWEEP-1 11-11) a clock tap whose plan sink count exceeds gen_phys._tap_cap (3000 grid /
               1500 density; lower bound without a sink inventory); one [tapcap-count] line
 Outputs in --out (default: next to the plan): g0_report.json and, with --png, die_plan.png (the G1 render).
@@ -2876,6 +2878,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     summ["kit_fit"] = check_kit_core_fit(P, R)          # KITFIT-1116: boxes at the kit's real offsets, every type
+    import band_capacity as BCAP                        # HEAD-PLAN-R4 11-17: landing band fill (PLANDIR/band_fill/*.json)
+    summ["band_capacity"] = BCAP.check(P, R, plan_dir)  # WARN fill > 0.7, ERROR > 1.0; silent when unmeasured
     summ["clock_entry_macro"] = check_clock_entry_macro(P, R, plan_dir, core_macros)
     summ["merged_clock_view"] = check_merged_clock_view(P, R)
     import landing_islands as LI

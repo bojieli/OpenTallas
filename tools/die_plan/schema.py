@@ -1615,7 +1615,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "type": "object", "additionalProperties": False, "required": ["xy_um", "raw_reset"],
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
-                               "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+                               "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
+                               # BAND-CAP (HEAD-PLAN-R4 11-17): opt-in landing box w x h um for a stage holding many
+                               # relay flops (shared trunk); absent = the 4.32 x 4.32 box, byte-identical
+                               "box_um": {"type": "array", "minItems": 2, "maxItems": 2,
+                                          "items": {"type": "number", "minimum": 4.32}}}}}}}}}}
 # KV R8 maximum-capacity static pad bank: opt-in type-local hardware depth/count width, default 15 / four bits.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["r8_strap_pad_max"] = {
     "type": "integer", "minimum": 15,
@@ -1654,7 +1658,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "type": "object", "additionalProperties": False, "required": ["xy_um", "raw_reset"],
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
-                               "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+                               "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
+                               # BAND-CAP (HEAD-PLAN-R4 11-17): opt-in landing box w x h um for a stage holding many
+                               # relay flops (shared trunk); absent = the 4.32 x 4.32 box, byte-identical
+                               "box_um": {"type": "array", "minItems": 2, "maxItems": 2,
+                                          "items": {"type": "number", "minimum": 4.32}}}}}}}}}}
 # R1-NARROW: opt-in per-type narrow soft CA rings; default leaves every generated kit unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_ring_narrow"] = {"type": "boolean"}
 # WREG-1 (DIE-HEAD-58 TURNB 11-03, opt-in, default absent = byte-identical): receiver rings on the listed buses take

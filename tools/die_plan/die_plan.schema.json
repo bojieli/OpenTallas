@@ -3305,6 +3305,15 @@
                "raw_reset": {
                 "type": "string",
                 "pattern": "^[A-Za-z_]\\w*$"
+               },
+               "box_um": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                 "type": "number",
+                 "minimum": 4.32
+                }
                }
               }
              }
@@ -3361,6 +3370,15 @@
                "raw_reset": {
                 "type": "string",
                 "pattern": "^[A-Za-z_]\\w*$"
+               },
+               "box_um": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                 "type": "number",
+                 "minimum": 4.32
+                }
                }
               }
              }
