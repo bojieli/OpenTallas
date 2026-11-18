@@ -370,3 +370,77 @@ class StaleCancel(unittest.TestCase):
         src = open(KW.__file__).read()
         self.assertIn("(so_failed(rec) or stale_cancel(rec, d))", src)
         self.assertIn("stale_cancel(its[item_key(die, ev, c, blk(c))], d)", src)
+
+
+class StageScopedInput(unittest.TestCase):
+    """COORD FABLE-FLOW-0800 class C: SKIP-SAME-INPUT compares the env of the stage that failed, not the die-wide env"""
+
+    def cfg(self, **env):
+        d = {"event": "E", "gen_host": "h", "gen_hosts": ["h"], "src_manifest_hash": "snap1", "gen_env": dict({"OT_PLACE_X": "1", "OT_CTS_Y": "1"}, **env), "_plan_sha": "p1"}
+        return {"dies": {"s81": d}, "stops_off": True}
+
+    def failed(self, cfg, stage="place"):
+        return {"status": "FAIL", "stage": stage, "reason": "x", "block_sha": "blk", "input_parts": KW.input_parts(cfg, "s81", "x", "blk")}
+
+    def run_with_scope(self, scope, old, new):
+        orig = KW.stage_env_scope
+        KW.stage_env_scope = lambda stage, why, root=None: scope
+        try:
+            return KW.so_same_input(new, "s81", {"item": "x", "block_sha": "blk"}, self.failed(old))
+        finally:
+            KW.stage_env_scope = orig
+
+    def test_env_of_another_stage_does_not_rearm(self):
+        self.assertTrue(self.run_with_scope("uses OT_PLACE_X only", self.cfg(), self.cfg(OT_CTS_Y="2")))
+
+    def test_env_of_the_failing_stage_rearms(self):
+        self.assertFalse(self.run_with_scope("uses OT_PLACE_X only", self.cfg(), self.cfg(OT_PLACE_X="2")))
+
+    def test_unknown_stage_scope_means_all_env(self):
+        self.assertFalse(self.run_with_scope(None, self.cfg(), self.cfg(OT_CTS_Y="2")))
+
+    def test_snapshot_change_rearms_whatever_the_stage(self):
+        new = self.cfg()
+        new["dies"]["s81"]["src_manifest_hash"] = "snap2"
+        self.assertFalse(self.run_with_scope("uses OT_PLACE_X only", self.cfg(), new))
+
+
+class ReapProbeAsync(unittest.TestCase):
+    """COORD class F: the fleet probe of REAP-DEAD runs detached; the tick reads a cache"""
+
+    def ap(self, tmp):
+        logs = []
+        return type("AP", (), {"DRY": False, "HUB_NAME": "hub", "AP_DIR": tmp, "log": staticmethod(logs.append)})(), logs
+
+    def test_no_cache_means_unreadable_and_a_background_refresh(self):
+        import tempfile, subprocess
+        with tempfile.TemporaryDirectory() as tmp:
+            ap, logs = self.ap(tmp)
+            started = []
+            orig = KW.subprocess.Popen
+            KW.subprocess.Popen = lambda *a, **k: started.append(a[0]) or None
+            try:
+                res, ts = KW.fleet_probe(ap, "live", ["/srv/a"], ["h"])
+            finally:
+                KW.subprocess.Popen = orig
+            self.assertIsNone(res)
+            self.assertEqual(len(started), 1)
+            self.assertIn("probe-bg", started[0])
+            self.assertTrue(any("REAP-PROBE" in m for m in logs))
+
+    def test_fresh_cache_is_used_and_uncovered_root_is_pending(self):
+        import tempfile, json as _j, time as _t
+        with tempfile.TemporaryDirectory() as tmp:
+            ap, logs = self.ap(tmp)
+            Path(tmp, "reap_probe_live.json").write_text(_j.dumps({"ts": _t.time(), "roots": ["/srv/a"], "result": {"/srv/a": ["h:1"]}, "unreadable": []}))
+            res, ts = KW.fleet_probe(ap, "live", ["/srv/a"], ["h"])
+            self.assertEqual(res.get("/srv/a"), ["h:1"])
+            self.assertEqual(res.unreadable, ())
+            orig = KW.subprocess.Popen
+            KW.subprocess.Popen = lambda *a, **k: None
+            try:
+                res, ts = KW.fleet_probe(ap, "live", ["/srv/a", "/srv/b"], ["h"])
+            finally:
+                KW.subprocess.Popen = orig
+            self.assertIn("probe-pending", res.unreadable)
+            self.assertNotIn("/srv/b", res)

@@ -9459,6 +9459,9 @@ def tool_skew_refuse(AP, cfg, st, die):
 def _fk_same(cfg, st, die, r):
     """the full input hash when this launch is byte-identical to the attempt that last failed in the tool (stored fail_keys.full_hash), else ''"""
     prev = (st.get("fail_keys") or {}).get(f"{die}|{r.get('item')}") or {}
+    if (prev.get("input_parts") or {}).get("noenv"):          # COORD class C: stage-scoped env comparison
+        pseudo = {"input_parts": prev["input_parts"], "stage": prev.get("stage"), "reason": prev.get("why"), "block_sha": r.get("block_sha")}
+        return prev["input_parts"]["noenv"] if so_same_input(cfg, die, r, pseudo) else ""
     fh = prev.get("full_hash") or ""
     if not fh:
         return ""
@@ -9671,6 +9674,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
            "gen_host": sp.get("gen_host"), "work": sp.get("work"),        # GENHOST-REC-1116: the host this attempt generated on; later stages / controllers read it, never the die's current gen_host
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
            "full_hash": full_input_hash(cfg, die, r["item"], r.get("block_sha")),
+           "input_parts": input_parts(cfg, die, r["item"], r.get("block_sha")),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time(),
            # INFRA budget counts INFRA attempts since the last design verdict (KIT-TRIAGE-1 11-01): an item that had
            # design FAILs before must still get its infra_attempts after a class fix relaunch
@@ -10410,6 +10414,75 @@ def unit_active_many(AP, units, workers=16):
         return dict(ex.map(one, units))
 
 
+PROBE_FRESH_S = 300.0          # a cached fleet probe younger than this needs no refresh
+PROBE_MAX_AGE_S = 1800.0       # an older cache is not used at all (the row stays 'probe unreadable (reported only)')
+PROBE_RUN_S = 900.0            # a refresh marker younger than this means a refresh is already running
+
+
+def _probe_paths(AP, kind):
+    base = Path(AP.AP_DIR)
+    return base / f"reap_probe_{kind}.json", base / f"reap_probe_{kind}.run"
+
+
+def fleet_probe(AP, kind, roots, hosts, now=None):
+    """WAVE-PILOT-FIX 11-18 (COORD FABLE-FLOW-0800 class F): the whole-fleet ssh probe of REAP-DEAD (live_on_fleet 'live', progress_on_fleet 'prog'; 386-740 s inline) no longer runs
+    in the tick.  A detached process (kit_wave.py probe-bg) refreshes autopilot/reap_probe_<kind>.json; the tick reads it.  -> (result, probed_at): result is a FleetMap of the cached
+    roots (a root the cache does not cover is absent and the map is marked unreadable 'probe-pending': never judged dead / hung), or None when there is no usable cache.
+    Without an AP_DIR (unit tests, bare tools) or with KW_PROBE_INLINE=1 the probe runs inline as before."""
+    fn = live_on_fleet if kind == "live" else progress_on_fleet
+    roots = sorted({r for r in roots if r})
+    call = (lambda: fn(AP, roots, hosts)) if kind == "prog" else (lambda: fn(AP, roots, hosts))
+    if not roots or not hasattr(AP, "AP_DIR") or os.environ.get("KW_PROBE_INLINE") == "1":
+        return call(), (now or time.time())
+    cache, run = _probe_paths(AP, kind)
+    data = {}
+    try:
+        data = json.loads(cache.read_text())
+    except (OSError, ValueError):
+        data = {}
+    ts = float(data.get("ts") or 0)
+    got = data.get("result") if isinstance(data.get("result"), dict) else None
+    covered = set(data.get("roots") or [])
+    age = time.time() - ts
+    if not (got is not None and age <= PROBE_FRESH_S and set(roots) <= covered) and not AP.DRY:
+        try:
+            fresh_run = run.exists() and (time.time() - run.stat().st_mtime) < PROBE_RUN_S
+            if not fresh_run:
+                run.write_text(str(os.getpid()))
+                subprocess.Popen([sys.executable, "-I", str(Path(__file__).resolve()), "probe-bg", kind, json.dumps(roots), json.dumps(list(hosts or [])), str(AP.HUB_NAME)],
+                                 stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True,
+                                 env=dict(os.environ, AP_DIR=str(AP.AP_DIR)))
+                AP.log(f"KIT-WAVE REAP-PROBE {kind}: refresh started in the background for {len(roots)} root(s) (cache age {age:.0f} s)")
+        except OSError as e:
+            AP.log(f"KIT-WAVE REAP-PROBE {kind} refresh not started: {e}")
+    if got is None or age > PROBE_MAX_AGE_S:
+        return None, 0.0
+    out = FleetMap({r: v for r, v in got.items() if r in roots and r in covered})
+    pending = any(r not in covered for r in roots)
+    out.unreadable = tuple(data.get("unreadable") or ()) + (("probe-pending",) if pending else ())
+    return out, ts
+
+
+def probe_bg(argv):
+    """python3 -I kit_wave.py probe-bg <live|prog> <json roots> <json hosts> <hub>: refresh one cached fleet probe (detached from the tick)"""
+    kind, roots, hosts, hub = argv[0], json.loads(argv[1]), json.loads(argv[2]) or None, argv[3]
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import autopilot as AP
+    AP.HUB_NAME = hub if hasattr(AP, "HUB_NAME") else hub
+    cache, run = _probe_paths(AP, kind)
+    try:
+        res = (live_on_fleet(AP, roots, hosts) if kind == "live" else progress_on_fleet(AP, roots, hosts or list(WJ.FLEET)))
+        if res is not None:
+            tmp = cache.with_suffix(".tmp")
+            tmp.write_text(json.dumps({"ts": time.time(), "roots": roots, "result": dict(res), "unreadable": list(getattr(res, "unreadable", ()) or ())}))
+            os.replace(tmp, cache)
+    finally:
+        try:
+            run.unlink()
+        except OSError:
+            pass
+
+
 def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
     """-> [(key, kind, why)] (read-only; watch_out, a dict, receives each judged row's new hung_watch mark)"""
     now = now or time.time()
@@ -10452,11 +10525,11 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
                 h = AP.HUB_NAME if h == "localhost" else h
                 if h not in hosts:
                     hosts.append(h)
-        live = live_on_fleet(AP, list(roots.values()), hosts)
-        prog = None
+        live, _live_ts = fleet_probe(AP, "live", list(roots.values()), hosts, now)
+        prog, _prog_ts = None, now
         if hm > 0 and live:
             alive = [roots[k] for k, _, _ in silent if roots[k] and live.get(roots[k])]
-            prog = progress_on_fleet(AP, alive, hosts) if alive else {}
+            prog, _prog_ts = fleet_probe(AP, "prog", alive, hosts, now) if alive else ({}, now)
         for key, rec, m in silent:
             if live is not None and live.get(roots[key]) and hm > 0:
                 p = (prog or {}).get(roots[key])
@@ -10465,7 +10538,7 @@ def reap_dead_scan(AP, cfg, st, now=None, minutes=None, watch_out=None):
                         out.append((key, "SILENT", f"unit active, no output for {m:.0f} min; alive: "
                                                    f"{','.join(live[roots[key]][:3])}; progress probe unreadable (reported only)"))
                     continue
-                hung, w, why = hung_judge(rec.get("hung_watch"), p, now - m * 60.0, now, hm, dead_min=dm)
+                hung, w, why = hung_judge(rec.get("hung_watch"), p, _prog_ts - m * 60.0, _prog_ts or now, hm, dead_min=dm)
                 if watch_out is not None:
                     watch_out[key] = dict(w, containers=list(p.get("containers") or [])) if hung else w
                 if hung:
@@ -11168,11 +11241,89 @@ def stale_cancel(rec, d):
 def so_same_input(cfg, die, r, rec):
     """under stops_off a failed row relaunches on its own (no retry key, no NEEDS-LANE) unless the full input hash equals the hash its failed attempt launched on.  An attempt with no
     stored hash (launched before the hash existed) relaunches once; its new attempt then records the hash"""
+    ip = rec.get("input_parts") or {}
+    if ip.get("noenv"):                                # COORD class C: the env is compared for the failing stage only, never the whole die-wide env
+        now = input_parts(cfg, die, r.get("item"), r.get("block_sha") or rec.get("block_sha"))
+        if not now or now.get("noenv") != ip["noenv"]:
+            return False
+        stage = rec.get("stage") or FG.fail_stage(rec.get("reason") or "")
+        why = rec.get("reason") or ""
+        return stage_env(now.get("env"), stage, why) == stage_env(ip.get("env"), stage, why)
     fh = rec.get("full_hash") or ""
     if not fh:
         return False
     now = full_input_hash(cfg, die, r.get("item"), r.get("block_sha") or rec.get("block_sha"))
     return bool(now) and now == fh
+
+
+def input_parts(cfg, die, item, block_sha=None):
+    """WAVE-PILOT-FIX 11-18 (COORD class C): the full input hash split in two: 'noenv' = rt exec tools + design snapshot + spec digest without its env part, 'env' = the merged env
+    (die gen_env, die_gen_env, item_env) an attempt launches with.  {} when it cannot be computed.  The env is compared per stage (so_same_input), the rest as a whole"""
+    try:
+        d = (cfg.get("dies") or {}).get(die) or {}
+        spec = dict(kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {}))))
+        spec.pop("env", None)
+        env = {}
+        for k in ("gen_env", "die_gen_env"):
+            env.update({str(a): str(b) for a, b in (d.get(k) or {}).items()})
+        env.update({str(a): str(b) for a, b in (item_env(d, item) or {}).items()})
+        body = {"rt": exec_tools_digest(), "snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec}
+        return {"noenv": hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20], "env": env}
+    except Exception:
+        return {}
+
+
+_STAGE_TEXT = {}
+
+
+def stage_env_scope(stage, why, root=None):
+    """the text the failing stage can read env keys from: the failure text, the tool files it names, the generation / bind closure for stage gen / bind, and the tcl / sh files of
+    the physical flow whose name carries the stage name.  None when the stage is unknown or no file carries it (then every env key counts, as before)"""
+    stage = str(stage or "").strip().lower()
+    if not stage:
+        return None
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    k = str(root) + "|" + stage
+    if k not in _STAGE_TEXT:
+        texts = []
+        group = tools_group(stage)
+        files = []
+        if group:
+            entry = {"bind": ("tools/die_plan/bind.py",), "gen": ("tools/die_plan/gen.py", "tools/die_plan/gen_phys.py")}[group]
+            def read(rel):
+                try:
+                    return (root / rel).read_text()
+                except (OSError, UnicodeDecodeError):
+                    return None
+            try:
+                files += [root / rel for rel in FG.closure_files(read, entry=entry)]
+            except Exception:
+                return None
+        files += [f for f in exec_tools_files(root) if stage in f.name.lower()]
+        for f in files:
+            try:
+                texts.append(f.read_text(errors="replace"))
+            except OSError:
+                pass
+        _STAGE_TEXT[k] = "\n".join(texts) if (texts and files) else None
+    base = _STAGE_TEXT[k]
+    if base is None:
+        return None
+    extra = []
+    for f in failed_tool_files(why, root):
+        try:
+            extra.append((root / f).read_text(errors="replace"))
+        except OSError:
+            pass
+    return base + "\n" + "\n".join(extra) + "\n" + str(why or "")
+
+
+def stage_env(env, stage, why):
+    """the part of an attempt's env the failing stage can read: the keys named in the stage's scope text; all of it when the scope is unknown"""
+    scope = stage_env_scope(stage, why)
+    if scope is None:
+        return dict(env or {})
+    return {k: v for k, v in (env or {}).items() if k in scope}
 
 
 def full_input_hash(cfg, die, item, block_sha=None):
@@ -11222,6 +11373,8 @@ def note_fail_key(cfg, st, rec, cls, why):
     rec["fail_key"] = key
     if rec.get("full_hash"):                         # WAVE-PILOT-FIX 11-18: the full input hash of the attempt that failed (stored at launch)
         store[k]["full_hash"] = rec["full_hash"]
+    if rec.get("input_parts"):
+        store[k]["input_parts"] = rec["input_parts"]
     return key
 
 
@@ -12809,7 +12962,11 @@ STEP_TIMED = ("load_config", "merge_auto_views", "merge_src_overlay", "load_stat
               "leafslew_step", "cancel_class_volume", "cancel_superseded", "reap_stale_attempts", "grt_arm_step", "parse_otrun_status",
               "gen_disk_low", "workroot_low", "spill_marked", "src_incomplete", "load_counter_signed", "restage_waiters",
               "reap_orphan_waiters", "save_state", "write_stages", "infra_relaunch_due", "launch_safe", "ensure_plan_view", "plan_dies",
-              "auto_views_step", "write_redesign", "write_blocked", "grt_arm_launches", "prov_resign_step", "protect_sources")
+              "auto_views_step", "write_redesign", "write_blocked", "grt_arm_launches", "prov_resign_step", "protect_sources",
+              # WAVE-PILOT-FIX 11-18 (COORD class F: ~200 s of the step untimed): the setup and per-tick sweeps that had no timer
+              "tree_gate", "plan_drift_step", "compile_hold_records", "hub_disk_gate", "auto_commit_config", "config_drift", "tool_skew_measure_all",
+              "repeat_queue_outcomes", "dedup_step", "name_stuck_retry_infra", "retire_superseded_rows", "adopt_rows_tick", "config_key_check",
+              "rejudge_place_nodb", "cancel_held_running", "orphan_sweep", "fleet_probe")
 STEP_T = {}
 STEP_START = [0.0]
 STEP_BUDGET_S = float(os.environ.get("KW_STEP_BUDGET_S", "300"))     # FLOW-2200 G: the wave step should not take more than this; the heavy fleet-wide reaps are deferred past it
@@ -13164,8 +13321,7 @@ def _step(AP, ap_dir):
     prune_stale_retries(cfg, st, notices, AP.log)
     collect(AP, cfg, st, notices)
     try:                                                 # KW-FIX-46 REAP-DEAD: under the wave lock, right after collect
-        if heavy_due(st, "reap_dead"):
-            reap_dead(AP, cfg, st, notices)
+        reap_dead(AP, cfg, st, notices)                  # WAVE-PILOT-FIX 11-18: the fleet probes run detached (fleet_probe), so this is cheap: every tick
     except Exception as e:                              # a sweep never stops the tick
         AP.log(f"KIT-WAVE REAP-DEAD skipped: {type(e).__name__}: {e}")
     retry_enqueue(AP, cfg, st, notices)
@@ -14331,6 +14487,9 @@ def _merged(AP, cfg):
 
 # ------------------------------------------------------------------------------------------------ CLI
 def main(argv=None):
+    if (argv if argv is not None else sys.argv[1:])[:1] == ["probe-bg"]:
+        probe_bg((argv if argv is not None else sys.argv[1:])[1:])
+        return 0
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("plan")
