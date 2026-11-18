@@ -333,3 +333,4 @@
 - 2026-11-17 20:47 PST ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays b0f50d206c7e: exit 4 (see /home/ubuntu/merge-queue/log)
 - 2026-11-17 20:50 PST DISK-RATE epyc9 /srv/opentallas-scratch2: free 229 GB, falling 48 GB/h, floor 50 GB in 3.7 h (cron disk_rate.py; read-only)
 - 2026-11-17 20:52 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw43-wave-1109n on epyc8 wrote 341 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
+- 2026-11-17 20:53 PST ALERT [FLEET-OPS-R -> COORD] lane quota: kw45 on epyc8 wrote 279 GB in the last 6 h (quota 150 GB/lane/6 h; alert only, nothing stopped); owner please prune or confirm
