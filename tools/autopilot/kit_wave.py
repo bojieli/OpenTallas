@@ -5440,7 +5440,7 @@ INPUT_SKIP = {"kit_self_contained", "src_base", "die", "item", "kind", "event", 
               "place_threads", "geom_mem_gb", "geom_grt_wall_s", "gen_mem_gb", "lint_mem_gb", "bind_mem_gb", "ot_run", "crit",
               "start_delay_s", "resume_from", "future_lec", "src", "plan", "queue_src", "region_guide_geom", "leafslew_form",
               "prov_views", "geom_advisory", "place_spill", "hold_items", "route_hold_items", "dedup_group",
-              "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h"}
+              "src_manifest", "src_manifest_hash", "item_disk_gb", "host_fall_gb_h", "tools_rt", "tools_sha"}
 
 
 def input_hash(sp, prov_key=None):
@@ -6906,7 +6906,7 @@ def run_item(spec_path):
         if not hosts:
             raise RuntimeError("heavy stage refused: every target host is the hub (KW-FIX-45 hub guard)")
         argv = [sp["ot_run"], "--mem", str(mem), "--threads", str(thr), "--dir", d, "--hosts", ",".join(hosts)] \
-            + heavy_args(sp) + ["--", "bash", "-c", cmd]
+            + heavy_args(sp) + ["--", "bash", "-c", rt_tree_cmd(sp) + cmd]      # TOOLS-DECOUPLE-1118: the launch tree on whichever host runs it
         if roam and d == W and hosts == [G] and not allow_hub and roamer.others:     # WAVE-BALANCE-1: any synced host may run it
             return ROAM.RoamArgv(argv)
         return argv
@@ -6954,7 +6954,7 @@ def run_item(spec_path):
                 res["cells"] = count["stdcells"]
                 res["cells_basis"] = "actual synthesized top standard cells, excluding block macros"
         if sp.get("cell_check") and res["cells"]:
-            cc_cmd = (f"cd / && python3 -I {q(src)}/tools/die_plan/cell_check.py --plan {q(sp['plan'])} --type {q(T)} "
+            cc_cmd = (f"cd / && python3 -I {q(tsrc if tsrc == src else sp['tools_rt'])}/tools/die_plan/cell_check.py --plan {q(sp['plan'])} --type {q(T)} "
                       f"--cells {int(res['cells'])} --stat \"$(ls {q(K)}/run/reports/asap7/*/base/synth_stat.txt | head -1)\"")
             _, cct = run("cell_check", rem(cc_cmd), idempotent=True)
             m = re.search(r"(?m)^CELL_CHECK (\{.*\})$", cct)
@@ -7142,6 +7142,9 @@ def run_item(spec_path):
 
     q = shlex.quote
     src, plan = sp["src"], sp["plan"]
+    # TOOLS-DECOUPLE-1118: tsrc = where the tools run (cwd + tool paths): the composed rt launch tree when the spec carries tools_rt, else the
+    # die tree.  Design roots (--rtl-root, --src-tree, the kit-RTL closure source, the manifest) stay on the die tree src.
+    tsrc = rt_launch_path(src, sp["tools_rt"]) if sp.get("tools_rt") else src
     gh = [G]
     if sp.get("future_lec"):                             # KW-FIX-44 11-10: before any queue wait, not at lec_tools_copy
         why = ensure_future_lec(out, sp["future_lec"])
@@ -7174,6 +7177,11 @@ def run_item(spec_path):
         if _why:
             return fail("src_manifest", _why, f"{G}:{src}")
         print("KW_SRC_MANIFEST ok " + (_mtxt or "")[-200:].strip(), flush=True)
+    if sp.get("tools_rt"):
+        rc, txt = run("rt_tools", remote(rt_tree_cmd(sp) + f"cat {q(tsrc)}/.rt_launch_ok"), idempotent=True)
+        if rc:
+            return fail("rt_tools", "KW_RT_TOOLS FAIL: launch tree of rt snapshot not composed\n" + txt, f"{G}:{tsrc}")
+        print(f"KW_RT_TOOLS {sp.get('tools_sha')} {tsrc}", flush=True)
     plan0 = plan                                          # the die's plan of record (shared die bind prep, kit RTL)
     kr = sp["kit_rtl"]
     kit_rtl_arg = ""
@@ -7216,16 +7224,16 @@ def run_item(spec_path):
     if core:
         # AUTOBUILD-PIPE-2: hard core = the die's own core generator (HBM gen_core_kit_hbm.py) on the plan's views
         # inventory (built once per event under flock, like the die bind); kit = W/gen/<module>_<sha12>
-        views, vcmd, gcmd, kfind, runner = core_kit_cmds(sp["core_kit"], src, plan, sp["root"], W, T)
+        views, vcmd, gcmd, kfind, runner = core_kit_cmds(sp["core_kit"], tsrc, plan, sp["root"], W, T)
         if vcmd:
-            prep = (f"cd {q(src)} && exec 9>{q(sp['root'])}/.views.lock && flock 9 && "
+            prep = (f"cd {q(tsrc)} && exec 9>{q(sp['root'])}/.views.lock && flock 9 && "
                     f"if [ ! -s {q(views)} ]; then {vcmd} > {q(sp['root'])}/views.log 2>&1 || "
                     f"{{ rm -f {q(views)}; tail -40 {q(sp['root'])}/views.log; exit 3; }}; fi")
             rc, txt = run("views", otrun(8, 2, sp["root"], prep, gh))
             if rc:
                 return fail("views", txt, f"{G}:{sp['root']}/views.log")
         rgp, rga = region_guide_cmd(sp, True)
-        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(src)} && {rgp}{gcmd}{rga}", gh))
+        rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, f"cd {q(tsrc)} && {rgp}{gcmd}{rga}", gh))
         if rc:
             return fail("gen", txt)
         rc, kt = run("gen_kit", idempotent=True, argv=remote(kfind))
@@ -7255,10 +7263,10 @@ def run_item(spec_path):
             # strict bind recipe (config prep_cmd, e.g. asbuilt copies + bind --strict) from the wave's own source
             # checkout, so kit-rtl never reads a removed lane worktree; must end with bind_report errors 0
             cmd = (kr.get("prep_cmd") or "python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict")
-            cmd = cmd.format(plan=q(plan0), bind=q(bind), asbuilt=q(a), src=q(src))
+            cmd = cmd.format(plan=q(plan0), bind=q(bind), asbuilt=q(a), src=q(tsrc))
             ok = (f"python3 -c \"import json,sys;r=json.load(open('{bind}/bind_report.json'));e=r.get('errors');"
                   f"n=len(e) if isinstance(e,list) else e;print('BIND errors', n);sys.exit(0 if n == 0 else 3)\"")
-            prep = (f"cd {q(src)} && exec 9>{q(sp['root'])}/.bind.lock && flock 9 && "
+            prep = (f"cd {q(tsrc)} && exec 9>{q(sp['root'])}/.bind.lock && flock 9 && "
                     f"if [ ! -f {q(bind)}/.kw_bind_ok ]; then mkdir -p {q(bind)} && {{ {cmd} ; }} > {q(sp['root'])}/bind.log 2>&1 "
                     f"&& {ok} && touch {q(bind)}/.kw_bind_ok || {{ tail -40 {q(sp['root'])}/bind.log; exit 3; }}; fi")
             rc, txt = run("bind", otrun(sp["bind_mem_gb"], 4, sp["root"], prep, gh))
@@ -7269,7 +7277,7 @@ def run_item(spec_path):
         # W/kit_tools repo root = the tree's own tools/die_plan (its overlays win: the S81 tree's taps.py is newer than main's) plus
         # main's modules the tree lacks plus main's bind.py, and symlinks to the tree's other top-level entries.
         kt = f"{W}/kit_tools"
-        probe = f"cd {q(src)} && python3 -I tools/die_plan/bind.py kit-rtl -h 2>&1 | grep -q -e --src-tree"
+        probe = rt_tree_cmd(sp) + f"cd {q(tsrc)} && python3 -I tools/die_plan/bind.py kit-rtl -h 2>&1 | grep -q -e --src-tree"
         rcp, _tp = run("kit_rtl_probe", remote(probe), idempotent=True)
         kbind = "tools/die_plan/bind.py"
         if rcp:
@@ -7291,7 +7299,7 @@ def run_item(spec_path):
             if rc:
                 return fail("kit_rtl", txt)
             kbind = f"{kt}/tools/die_plan/bind.py"
-        krb_cmd = lambda bnd, flag: (f"cd {q(src)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
+        krb_cmd = lambda bnd, flag: (f"cd {q(tsrc)} && python3 {q(bnd)} kit-rtl {q(plan)} --out {q(bind)} --asbuilt {q(a)} --type {q(T)} "
                                     f"{flag}--kit {q(W)}/rtl" + kit_rtl_post_cmd(T, W, plan) + kit_rtl_closure_cmd(W, src))
         rc, txt = run("kit_rtl", otrun(8, 2, W, krb_cmd(kbind, f"--src-tree {q(src)} "), gh, roam=False))
         # KITRTL-FAIL-1115 (KV 7u: TypeError core_tap_early_ps, AttributeError reset_tree.pin_root_copies): the staged set mixes the
@@ -7300,7 +7308,8 @@ def run_item(spec_path):
         # (exactly how every kit_rtl ran before the flag existed).
         if rc and rcp and API_SKEW.search(strip_admission(txt)):
             print("KW_KITRTL_LEGACY_BIND: staged set has API skew; retrying with the tree's own bind.py (no --src-tree)", flush=True)
-            rc, txt = run("kit_rtl_legacy", otrun(8, 2, W, krb_cmd("tools/die_plan/bind.py", ""), gh, roam=False))
+            rc, txt = run("kit_rtl_legacy", otrun(8, 2, W, krb_cmd(f"{src}/tools/die_plan/bind.py" if tsrc != src else "tools/die_plan/bind.py", ""),
+                                                  gh, roam=False))
         if rc:
             return fail("kit_rtl", txt)
         if ks_on:
@@ -7311,7 +7320,7 @@ def run_item(spec_path):
             res["kit_store_fl"] = (txt.strip().splitlines() or [""])[-1][:400]
         kit_rtl_arg = f"--kit-rtl {q(T + '=' + W + '/rtl/kit_rtl.f')}"
     elif kr.get("mode") == "script":
-        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(src)} && TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
+        rc, txt = run("kit_rtl", otrun(8, 2, W, f"cd {q(tsrc)} && TYPE={q(T)} OUT={q(W)}/rtl PLAN={q(plan)} bash {q(kr['script'])}"
                                        + kit_rtl_closure_cmd(W, src), gh, roam=False))
         if rc:
             return fail("kit_rtl", txt)
@@ -7335,7 +7344,7 @@ def run_item(spec_path):
         # KIT-OVERLAY-1: fail closed on a source without the flag; the overlaid plan (type-scoped validation, EQ projection)
         # feeds prepare-stations so the FIRM station sites match the placement; gen phys applies the same overlay itself.
         ovp = q(sp["type_overlay"])
-        rc, txt = run("type_overlay", otrun(8, 2, W, f"cd {q(src)} && python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --type-overlay "
+        rc, txt = run("type_overlay", otrun(8, 2, W, f"cd {q(tsrc)} && python3 tools/die_plan/gen.py phys --help 2>/dev/null | grep -q -- --type-overlay "
                                                      f"&& python3 -I tools/die_plan/type_overlay.py apply {q(plan)} {ovp} --out {q(W)}/plan_overlaid.json "
                                                      f"|| {{ echo 'KW_TYPE_OVERLAY source has no --type-overlay or the overlay is rejected'; exit 1; }}", gh))
         if rc:
@@ -7345,9 +7354,9 @@ def run_item(spec_path):
     if not core and kit_rtl_arg and sp.get("canonical_topology_prepare"):
         # One canonical implementation for both bind and script callers, after
         # the actual typed overlay and before any physical generation.
-        helper = f"{src}/tools/die_plan/kit_topology.py"
+        helper = f"{tsrc}/tools/die_plan/kit_topology.py"
         context_args = f" --asbuilt {q(kr['asbuilt'])}" if kr.get("asbuilt") else ""
-        prep = (f"cd {q(src)} && {topology_env_prefix(sp)}python3 -I {q(helper)} prepare-stations {q(plan_ov)} {q(T)} {q(W)}/rtl "
+        prep = (f"cd {q(tsrc)} && {topology_env_prefix(sp)}python3 -I {q(helper)} prepare-stations {q(plan_ov)} {q(T)} {q(W)}/rtl "
                 f"--native-plan {q(plan0)}{context_args}")
         rc, txt = run("kit_topology", otrun(8, 2, W, prep, gh, roam=False))
         if rc:
@@ -7366,7 +7375,7 @@ def run_item(spec_path):
                if ps and re.fullmatch(r"[A-Za-z0-9_,]+", ps) else "PS=; ")
         rgp, rga = region_guide_cmd(sp, False)
         genv = "".join(f"export {k}={q(v)}; " for k, v in sorted((sp.get("gen_env") or {}).items()))
-        gen = (f"cd {q(src)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
+        gen = (f"cd {q(tsrc)} && {genv}{pin}{rgp}python3 tools/die_plan/gen.py phys {q(plan)} --out {q(W)}/gen --types {q(T)} "
                f"--rtl-root {q(src)} {kit_rtl_arg} $PS {' '.join(q(x) for x in sp['gen_args'])}{rga}{ov_arg}")
         if kit_rtl_arg:
             gen = kit_rtl_closure_cmd(W, src, "relocate", chain=False, guard=True) + gen
@@ -7460,7 +7469,7 @@ def run_item(spec_path):
     # AUTOBUILD-PIPE-4 10-31 OWNER 12.27 (d): generation-time lint, before preflight / synth / place (BUILD check, not
     # sign-off): pins vs plan, clock export form, macro tcl, yosys undriven / multi-driven, memory bits vs limit.
     # A wave source older than the lint skips it with a note (the class rule applies from the merge on).
-    gl = (f"{pstage}cd {q(src)} && if [ -f tools/die_plan/kit_gen_lint.py ]; then python3 tools/die_plan/kit_gen_lint.py "
+    gl = (f"{pstage}cd {q(tsrc)} && if [ -f tools/die_plan/kit_gen_lint.py ]; then python3 tools/die_plan/kit_gen_lint.py "
           f"{q(K)} --plan-dir {q(pdir)} --mem {int(sp.get('lint_mem_gb') or 8)}; else echo 'KW_NOTE no kit_gen_lint.py in this source'; fi")
     if kit_rtl_arg:
         gl = kit_rtl_closure_cmd(W, src, "relocate", chain=False, guard=True) + gl
@@ -7468,7 +7477,7 @@ def run_item(spec_path):
     if rc:
         return fail("gen_lint", txt, f"{G}:{K}/gen_lint.json")
     pstage = ""                                           # the plan dir of links is staged once (above)
-    pf = (f"{pstage}cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(pdir)} "
+    pf = (f"{pstage}cd {q(tsrc)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(pdir)} "
           f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/{pfo}")
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
     if rc and minimal_profile():
@@ -9031,6 +9040,57 @@ def tool_skew_measure(AP, cfg, st, die):
     return res
 
 
+# TOOLS-DECOUPLE-1118 (OWNER via COORD; FABLE-WORKFLOW-0400 do-now 1): a kit runs tools/ and physical/common_flow from the rt/<sha12>
+# snapshot this scheduler runs from (immutable, replicated to every host by ot-tools-sync), resolved ONCE at launch and recorded in
+# spec.json (tools_rt, tools_sha).  The die tree (src_*) keeps plan, RTL, bound netlists and every other input.  On the stage host
+# rt_launch_tree.sh composes <src parent>/rt_tools_launch/<src name>@<sha12>: hardlinks of the rt tools + symlinks to the die tree's
+# other entries, so a tool's repo root (parents of its own file) is that composed tree and every design path still reads the die tree.
+# A merged tools fix therefore reaches the next launch with no tools_refresh, no new src tree and no bind gate.  Die / global
+# option tools_from_rt false = the old behaviour (the tree's own tools).
+RT_NAME_RE = re.compile(r"[0-9a-f]{12}")
+
+
+def scheduler_rt(root=None):
+    """(rt dir, full sha) of the rt/<sha12> snapshot this code runs from; (None, None) outside an rt snapshot (a lane checkout, tests)"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    if not RT_NAME_RE.fullmatch(root.name):
+        return None, None
+    full = root.name
+    try:
+        full = str(json.loads((root.parent / f"{root.name}.manifest.json").read_text()).get("sha") or full)
+    except (OSError, ValueError, AttributeError):
+        pass
+    return str(root), full
+
+
+def rt_tools_fields(cfg, die, root=None):
+    """{tools_rt, tools_sha} for a launch on die, {} when the die opted out or this scheduler is not an rt snapshot"""
+    if opt(cfg, die, "tools_from_rt") is False:
+        return {}
+    rt, full = scheduler_rt(root)
+    return {"tools_rt": rt, "tools_sha": full} if rt else {}
+
+
+def rt_launch_path(src, rt):
+    """the composed launch tree of (die tree, rt snapshot) on a host: same path on every host"""
+    s = str(src).rstrip("/")
+    return f"{os.path.dirname(s)}/rt_tools_launch/{os.path.basename(s)}@{os.path.basename(str(rt).rstrip('/'))}"
+
+
+def rt_tree_cmd(sp):
+    """shell prefix that makes sure the launch tree exists on the host running the command ('' when the spec has no tools_rt).  Waits up to
+    10 min for the rt snapshot (ot-tools-sync lag after a flip); exit 97 when it never arrives"""
+    if not sp.get("tools_rt"):
+        return ""
+    q = shlex.quote
+    rt = str(sp["tools_rt"]).rstrip("/")
+    sh = f"{rt}/tools/autopilot/rt_launch_tree.sh"
+    L = rt_launch_path(sp["src"], rt)
+    # a made tree needs nothing from rt any more (hardlinks): a later stage still runs after ot-tools-sync pruned rt/<sha>
+    return (f"[ -f {q(L + '/.rt_launch_ok')} ] || {{ for _i in $(seq 60); do [ -f {q(sh)} ] && break; sleep 10; done; "
+            f"bash {q(sh)} {q(str(sp['src']).rstrip('/'))} {q(rt)} {q(L)} || exit 97; }}; ")
+
+
 TOOLS_LAG_CACHE = {"t": 0.0, "rows": {}}
 
 
@@ -9121,6 +9181,11 @@ def tools_refresh_tick(AP, cfg, st):
     for die, d in (cfg.get("dies") or {}).items():
         if not isinstance(d, dict) or not d.get("enabled") or d.get("tools_refresh") not in (True, "dry"):
             continue
+        if rt_tools_fields(cfg, die):           # TOOLS-DECOUPLE-1118: the die's kits run rt/<sha> tools; no tools-only tree is composed
+            if not (st.setdefault("tools_refresh_retired", {})).get(die):
+                st["tools_refresh_retired"][die] = time.time()
+                AP.log(f"KIT-WAVE TOOLS-REFRESH RETIRED {die}: kits take tools from rt/<sha> at launch (TOOLS-DECOUPLE-1118); no refresh pass")
+            continue
         lag = raw.get(die) or {}
         if not lag.get("missing") or lag.get("n_commits") is None or AP.DRY:
             continue
@@ -9179,7 +9244,10 @@ def tool_skew_measure_all(AP, cfg, st, ap_dir):
 
 def tool_skew_refuse(AP, cfg, st, die):
     """True = refuse to launch on this die this tick (mode true / "refuse" and a measured skew outside the allowlist; "warn" logs
-    and launches; false = off; an unreadable tree is unmeasured, refused only in "refuse")"""
+    and launches; false = off; an unreadable tree is unmeasured, refused only in "refuse").  TOOLS-DECOUPLE-1118: never on a die
+    whose kits take their tools from rt (the tree's own tools are not run, so their skew is moot)"""
+    if rt_tools_fields(cfg, die):
+        return False
     res = tool_skew_measure(AP, cfg, st, die)
     return bool(res) and not res["ok"] and opt(cfg, die, "tool_skew") != "warn"
 
@@ -9267,6 +9335,7 @@ def launch(AP, cfg, st, die, r, hub, delay_s=0.0):
                                                   and v.get("item") == r["item"]]) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
     sp = spec_for(cfg, die, r["item"], hub, r.get("parent_item") or prev.get("parent_item"), kind=r.get("kind") or "type")
+    sp.update(rt_tools_fields(cfg, die))                   # TOOLS-DECOUPLE-1118: tools = this scheduler's rt/<sha>, fixed for the attempt
     sp["item_disk_gb"] = item_disk_gb(cfg, die, r["item"], r.get("replicas"))
     sp["host_fall_gb_h"] = dict(cfg.get("_disk_fall") or {})
     _ret = spec_retired(cfg, sp)
@@ -9497,7 +9566,7 @@ def grt_arm_pin(st, arm, sp):
 
 def grt_arm_src_check(AP, cfg, sp):
     """'' when the arm's gen host has a die src whose gen_phys.py writes K/grt_transition_mode, else why not (cached per tick)"""
-    h, src = sp.get("gen_host") or "", str(sp.get("src") or "")
+    h, src = sp.get("gen_host") or "", str(sp.get("tools_rt") or sp.get("src") or "")     # TOOLS-DECOUPLE-1118: the tools the arm runs
     cache = cfg.setdefault("_grt_arm_src", {})
     if (h, src) not in cache:
         f = shlex.quote(src.rstrip("/") + "/tools/die_plan/gen_phys.py")
