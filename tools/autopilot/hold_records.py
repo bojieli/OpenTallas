@@ -912,6 +912,13 @@ def apply_tree_switches(cfg, ctx):
                 if td != die or not ctx.tree_fn(td, tp):
                     continue
                 m = ctx.marker_fn(die) or {}
+                # FABLE-FLOW-0010 B (11-18): a marker is ONE-SHOT.  When the die is already on the marker's tree (the atomic apply wrote src, manifest, plan, gen_host, tools_sha into
+                # kit_wave.json) or has moved off it (the tree is in superseded_trees: tools_refresh / a later apply replaced it), re-applying the marker every tick forced gen_host over
+                # derive_gen_hosts and would write the old tools_sha back over a refresh.  Only a marker whose tree the die has not yet adopted (file src != tree) switches, in memory.
+                if d.get("src") == tp and (not m.get("manifest_hash") or d.get("src_manifest_hash") == m["manifest_hash"]):
+                    continue
+                if tp in (d.get("superseded_trees") or []) or str(tp).rstrip("/") == str(d.get("rollback_tree") or "").rstrip("/"):
+                    continue
                 ch = []
                 _switched = d.get("src") != tp
                 if d.get("src") != tp:

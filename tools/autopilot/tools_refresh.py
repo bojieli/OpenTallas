@@ -205,11 +205,33 @@ class Ops:
             return False, f"overlay classification failed: {type(e).__name__}: {e}"[:400], ""
         if private:
             return False, "OVERLAY-PRIVATE: " + "; ".join(f"{p}: {v['why']}\n{v.get('diff', '')[:700]}" for p, v in list(private.items())[:6]), ""
-        rc, out = self.run(None, self.pack_cmd(old, new, drop))
-        if rc:
-            return False, f"delta-make (hub): rc {rc}: {out[-400:]}", ""
-        for c in self.compose_cmds(old, new):
-            rc, out = self.run(self.host, c)
+        # 11-18 (COORD, S81/QC refreshes built the tree, BIND-FAIL / COMPOSE-FAIL 'exists', then re-ran from nothing): a verified tree of this name that is already on the gen host
+        # is reused: no pack, no delta-apply, no publish; verify + replicate only.
+        rcx, _ = self.run(self.host, f"REUSE_PROBE=1; test -f {shlex.quote(new + '/.src-manifest.sha256')} && test ! -e {shlex.quote(new + '.part')} && test -f {shlex.quote(new + '.pack/delta.json')}")
+        reuse = rcx == 0
+        if not reuse:
+            rc, out = self.run(None, self.pack_cmd(old, new, drop))
+            if rc:
+                return False, f"delta-make (hub): rc {rc}: {out[-400:]}", ""
+        steps = [c for c in self.compose_cmds(old, new) if not (reuse and (" delta-apply " in c or " publish " in c))]
+        # per-host replicate in PARALLEL (FABLE-FLOW-0010 C): one command per host, each --link-from the old tree (deltas only)
+        rep = [c for c in steps if " replicate " in c]
+        if rep:
+            q = shlex.quote
+            others = [h for h in (self.d.get("gen_hosts") or []) if h != self.host]
+            sm = f"python3 -I {q(SM)}"
+            per = [f"{sm} replicate {q(new)} --hosts {q(h)} --link-from {q(os.path.basename(old))}" for h in others]
+            steps = [c for c in steps if " replicate " not in c] + ["__PARALLEL_REPLICATE__"]
+        for c in steps:
+            if c == "__PARALLEL_REPLICATE__":
+                from concurrent.futures import ThreadPoolExecutor
+                with ThreadPoolExecutor(max_workers=max(1, len(per))) as ex:
+                    results = list(ex.map(lambda x: self.run(self.host, x), per))
+                rc = max(r[0] for r in results)
+                out = "\n".join(r[1] for r in results)
+                c = per[0] + " replicate "
+            else:
+                rc, out = self.run(self.host, c)
             if rc and " replicate " in c:
                 # LATENCY-R 11-18: one gen host short of disk (epyc8/epyc10/intel1, 19:36-22:19) stopped KV and HEAD refreshes for hours (COMPOSE-FAIL is a
                 # structural stop).  The hosts that took the tree keep it; the others are dropped from the die's gen_hosts by the apply patch.
