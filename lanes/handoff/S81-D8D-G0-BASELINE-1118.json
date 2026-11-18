@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.publish_gate.g0_baseline.v1",
+ "accepted_errors": [
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10500: s_0S_L0 segment carries 4464 bits on 6686 tracks = 0.67 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10750: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "part": "s_6S_L0"
+  }
+ ],
+ "review": "S81-DIE-R3 2026-11-18: D8d (plan e291d6a8 = D7w + die.hold_ff_margin_ps 25 + 9 rigid y cut moves in t3/t14/t32/t43/t52 on the 8.64 lattice + 3 core flips for faces + 4 serdes defines on all 11 serdes types; serdes RTL of main c5294f3737; tools 2446dcb04c). G0 ERROR set = 2, both carried in the D7w baseline (s_0S_L0@10500, s_6S_L0@10750); s_0S_L1@12500/12750 and s_4N_L1@20000 are gone; 0 new identities. D7w die GRT 0 overflow, so the 2 cuts are no route blocker.",
+ "reviewed_g0_sha256": "099435d3a52d075b6fef1b04cbe029a39b0696a11c45b1cc8bbaafe40bf6ab33",
+ "reviewed_g0_source": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d8dr2/r1/g0/g0_report.json",
+ "reviewed_plan_sha256": "e291d6a8e74097b823a588a8cb7a916930ffcdc13c71a7ac6656eb1c4df02612"
+}
