@@ -83,8 +83,9 @@ class ProbeRows(unittest.TestCase):
                 mock.patch.object(m, 'held_hosts', return_value={}), mock.patch.object(sys, 'argv', argv), \
                 contextlib.redirect_stderr(err), self.assertRaises(SystemExit) as cm:
             m.main()
-        self.assertIn('NOT RUN', str(cm.exception))
-        self.assertIn('ROOT FS 96%', str(cm.exception))
+        self.assertEqual(cm.exception.code, 78)
+        self.assertIn('NOT-RUN', err.getvalue())
+        self.assertIn('ROOT FS 96%', err.getvalue())
 
 
 def fake_bin(base, devs, avail, pcent):

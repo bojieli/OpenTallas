@@ -159,15 +159,13 @@ SYNC_SLOTS = 64          # workers QUEUED/SYNC jobs may hold at once (the rest k
 # declared threads of own running stages count at 0.6 against the cap: full declared threads blocked EPYC2 at load1 40
 # (7 calibrates in synth/place, ~1 core each), load1 alone let EPYC3 reach 342 (27 routes ramping into DRT together)
 OWN_RUNNING_WEIGHT = 0.6
-HM_DEFAULT_SINCE = "2026-10-06T20:40"
-HM_LOW_SINCE = "2026-10-07T04:17"      # new jobs from here: route hold margin 10 ps, hold closed by the post-route ECO
+from route_env import HM_DEFAULT_SINCE, HM_LOW_SINCE, MM_SINCE, OPTB_SINCE, HM_MM  # noqa: E402  (WAVE-FLOW-R2 11-17: one definition, shared with tools/ref_tile job.json)
+import route_env as RE  # noqa: E402
 # FLOW-HOLD (2026-10-07): jobs created from here route with multi-mode hold repair (OT_ROUTE_HOLD_CORNERS=mm: SS setup +
 # FF hold under the FF sign-off constraints at CTS / global route) and HM_MM route hold margin (applies at FF only)
-MM_SINCE = "2026-10-07T21:00"
 # OWNER OPTION B (2026-10-07 20:45): closure = setup at TT + hold at FF + DRC 0.  Every calibrate / route launched from
 # here routes with CORNER=TC (setup repair at TT; with mm, hold at FF) unless spec "route_corner" names another corner;
 # hold ECOs time the setup scene at TT.  SS setup is recorded as a sensitivity (ss_sensitivity_ps).
-OPTB_SINCE = "2026-10-07T20:20"
 # CALIB-CORNER (2026-10-08, orphans-2 finding): jobs created from here calibrate at the ROUTE corner and reference the
 # route-time IO SDC to the route-corner insertion.  Every recipe builds its route IO SDC from CK_SS_* (io_vclk_m_$CK_SS_MEAN,
 # make_sdc.py --l-ss-*, budget SDCs); a TC route signs off at the routed TT reference, so with CK_SS_* at the SS insertion
@@ -193,7 +191,6 @@ VTSWAP_CAP_PCT = 2.0
 # (The manual /tmp/sc/combo_eco.py launches, made automatic.)  spec hold_eco.combo: false turns it off.
 COMBO_TT_FLOOR = -45.0
 COMBO_FF_FLOOR = -30.0
-HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
 STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (1, 1), "export": (1, 1),
@@ -3795,9 +3792,8 @@ def launch_stage(j, st, cmd):
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
     env += IEC.pinned_env(j)
-    env += f"export OT_PG_JOB_STRICT={int(pg_strict(j))}\n"
-    if not pg_strict(j):
-        env += "export OT_PG_STRICT=0\n"
+    rx = RE.route_exports(j["spec"], st["kind"], j.get("created", ""), pg_strict(j), now_iso())        # the one function job.json is generated from too
+    env += "".join(f"export {k}={shlex.quote(v)}\n" for k, v in rx.items() if k in ("OT_PG_JOB_STRICT", "OT_PG_STRICT"))
     if pg_strict(j):
         env += ("export OT_PG_STRICT=1\nexport OT_PG_HELPER={CL}/native_pg_binding.tcl\n"
                 "export OT_PG_RUNNER={CL}/pg_receipt.py\nexport OT_PG_COLLECTOR={CL}/audit_native_pg.tcl\n")
@@ -3887,11 +3883,11 @@ def launch_stage(j, st, cmd):
             # recipes); the verdict re-STA and ECO sessions never see this variable
             env += "export OT_IOREF_INPUT_PF=1\n"
             j["pinflop_ref_applied"] = True       # LOOP-AUTO class c: this job's route used the pin-flop reference
-        if j["spec"].get("macro_cts") is False:
+        if "OT_CTS_MACRO_CLUSTER" in rx:
             # MACRO-CLK (macro-clk-1010 2026-10-10): the macro clock clustering default (physical/common_flow/
             # macro_cts_cluster.tcl via tools/orfs_hold_mm.tcl) is on for every block with 2+ clocked macros; spec
             # "macro_cts": false keeps TritonCTS's own macro clustering
-            env += "export OT_CTS_MACRO_CLUSTER=0\n"
+            env += f"export OT_CTS_MACRO_CLUSTER={rx['OT_CTS_MACRO_CLUSTER']}\n"
         if j["spec"].get("sliver_block"):
             # LOOP-AUTO class d (auto-react successor of a sliver-only FLOORPLAN_MARGIN): the macro-to-macro and
             # macro-to-core-edge sliver hard placement blockages run at ORFS PRE GLOBAL_PLACE, before the floorplan lint
@@ -3906,10 +3902,7 @@ def launch_stage(j, st, cmd):
         # coordinator 2026-10-07: jobs created from HM_LOW_SINCE default to 10 ps -- 35 ps + the 50 ps FF IO hold
         # uncertainty overloaded CTS/GRT hold repair (RSZ-0060 buffer-cap deaths, hours-long GRT hold); the post-route
         # hold ECO (rev 2: setup-preserving) carries hold to +18.  Earlier jobs keep 35 ps (same flow on a retry).
-        hm_default = 0.010 if j.get("created", "") >= HM_LOW_SINCE else 0.035
-        if j.get("created", "") >= MM_SINCE and j["spec"].get("route_hold_corners", "mm") == "mm":
-            hm_default = HM_MM
-        env += f"export HM={j['spec'].get('route_hold_margin_ns', hm_default)}\n"
+        env += f"export HM={shlex.quote(rx['HM'])}\n"
     if is_local(j["host"]):
         env += f"export OPENTALLAS_ORFS_IMAGE={LOCAL_ORFS_REF}\n"
     # bench-track views carry a string attempt ("1b2"): their outputs are not the stage dir, never move them aside
@@ -3921,7 +3914,7 @@ def launch_stage(j, st, cmd):
             log(f"{j['name']}: CALIB-CORNER WARNING route cmd names fixed IO SDC(s) {', '.join(fixed)}: not referenced to "
                 f"the TT insertion (generate them from $CK_SS_MEAN in sdc_cmd)")
     if st["kind"] == "route" and now_iso() >= OPTB_SINCE and j["spec"].get("route_corner", "TC") != "keep":
-        env += f"export OT_ORFS_CORNER={shlex.quote(str(j['spec'].get('route_corner', 'TC')))}\n"
+        env += f"export OT_ORFS_CORNER={shlex.quote(rx['OT_ORFS_CORNER'])}\n"
     if st["kind"] in ("calibrate", "route"):
         # (calibrate too, 2026-10-07: its CTS-only run repairs hold at CTS and died on RSZ-0060, hbm_stn_r38 / _ck80)
         # ROUTE HOLD CORNERS (2026-10-07, hold_corners_patch.py): place-and-route repairs hold at the primary corner only
@@ -3932,7 +3925,7 @@ def launch_stage(j, st, cmd):
         # scene WC (SS libs, the route SDC: setup) + scene BC (FF libs, the route SDC refreshed + the FF sign-off SDCs:
         # hold), tools/orfs_hold_mm.tcl.  The FF SDCs are spec "route_ff_sdc" (list), else verdict.post_sdc; a file outside
         # the snapshot is copied into {SRC}/.ot_mm/ (the flow container mounts only the snapshot).
-        rhc = j["spec"].get("route_hold_corners", "mm" if j.get("created", "") >= MM_SINCE else "primary")
+        rhc = rx.get("OT_ROUTE_HOLD_CORNERS", "keep")
         if rhc != "keep":
             ship_helpers(j["host"], j["run"], j)
             env += f"export OT_ROUTE_HOLD_CORNERS={shlex.quote(str(rhc))}\n" \

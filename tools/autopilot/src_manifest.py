@@ -547,7 +547,7 @@ def derive(live, repo, sha, scope):
 
 # ---- delta (v2 trees without a rebuild or a 48 GB network copy) --------------------------------------------------------------
 
-def delta_make(repo, old_tree, new_sha, out, drop_overlay=()):
+def delta_make(repo, old_tree, new_sha, out, drop_overlay=(), paths=None):
     """pack = the paths whose content differs between the tree's main sha and new_sha inside the tree's scope (typically 40-80 files):
     out/delta.json + out/files/<path>.  A changed path that the tree's overlay carries is refused (the overlay wins; re-derive it)."""
     m = load_manifest(old_tree)
@@ -555,7 +555,10 @@ def delta_make(repo, old_tree, new_sha, out, drop_overlay=()):
         raise SystemExit(f"{old_tree} has no manifest")
     new_sha = subprocess.run(["git", "-C", repo, "rev-parse", new_sha + "^{commit}"], capture_output=True, text=True,
                              check=True).stdout.strip()
-    nm = subprocess.run(["git", "-C", repo, "diff", "--name-status", "-z", "--no-renames", m["main_sha"], new_sha, "--"] + list(m["scope"]),
+    spec = list(paths) if paths else list(m["scope"])          # WAVE-FLOW-R2: --paths restricts the pack (tools-only refresh: plan and RTL stay byte-identical)
+    if paths and not all(any(x == sc or x.startswith(sc + "/") for sc in m["scope"]) for x in spec):
+        raise SystemExit("refuse: --paths outside the tree scope " + ",".join(m["scope"]))
+    nm = subprocess.run(["git", "-C", repo, "diff", "--name-status", "-z", "--no-renames", m["main_sha"], new_sha, "--"] + spec,
                         capture_output=True, text=True, check=True).stdout.split("\0")
     recs = [(nm[i], nm[i + 1]) for i in range(0, len(nm) - 1, 2)]
     drop = set(drop_overlay)
@@ -829,6 +832,7 @@ def main(argv=None):
     dm.add_argument("--sha", required=True)
     dm.add_argument("--out", required=True)
     dm.add_argument("--drop-overlay", nargs="*", default=[], help="overlay paths whose copy is an OLDER main version: main wins")
+    dm.add_argument("--paths", nargs="*", default=None, help="restrict the pack to these paths inside the tree scope (e.g. tools physical/common_flow)")
     da = sp.add_parser("delta-apply", help="OUT = cp -a of TREE + the pack (run on each host, then publish)")
     da.add_argument("pack")
     da.add_argument("--old", required=True)
@@ -881,7 +885,7 @@ def main(argv=None):
             return 1
         print(json.dumps(info, sort_keys=True))
     elif a.cmd == "delta-make":
-        n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out, a.drop_overlay)
+        n, dl = delta_make(a.repo, os.path.abspath(a.tree), a.sha, a.out, a.drop_overlay, a.paths)
         print(f"SRC_MANIFEST DELTA {a.out}: {n} changed/added, {dl} deleted")
     elif a.cmd == "delta-apply":
         nm = delta_apply(a.pack, os.path.abspath(a.old), a.out, a.link, a.expect)

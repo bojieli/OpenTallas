@@ -67,7 +67,14 @@ def test_collected_unit_uses_the_client_log_or_fails():
     none = W.wait(unit="u", run=fake(gone, log="nothing\n"), once=True)
     assert none["state"] == "FAILED" and "no exit status" in none["reason"]
     nr = W.wait(unit="u", run=fake(props("inactive", "dead", "success", "0", "0"), log="ot-run: NOT RUN on x: no host\n"), once=True)
-    assert nr["state"] == "FAILED"
+    assert nr["state"] == "NOT-RUN" and nr["rc"] is None
+
+
+def test_not_run_line_is_its_own_state_and_exit_78():
+    gone = props(load="not-found", act="inactive", sub="dead", pid="0")
+    log = "ot-run: REFUSED (ISOLATION step 3): root fs\nNOT-RUN on epyc2: actual directory is on the ROOT filesystem (ot-run status 255)\n"
+    r = W.wait(unit="u", run=fake(gone, log=log), once=True)
+    assert r["state"] == "NOT-RUN" and "ROOT filesystem" in r["reason"]
 
 
 def test_kit_mode():
@@ -87,3 +94,22 @@ def test_real_systemd_unit_exit_status():
         pytest.skip("no systemd --user")
     res = W.wait(unit=name + ".service", timeout=30, poll=1)
     assert res["state"] in ("FAILED", "DONE") and res["state"] != "RUNNING"
+
+
+def test_a_failed_scope_with_result_success_takes_its_exit_status_from_the_client_log():
+    import ot_wait as W
+    props = {"Id": "oth-ubuntu-1-2.scope", "LoadState": "loaded", "ActiveState": "failed", "SubState": "failed", "Result": "success", "ExecMainStatus": "0"}
+    ok = W.classify_unit(props, [], ["ot-run: RAN on epyc8 (unit oth-ubuntu-1-2): exit 0"])
+    assert ok[0] == "DONE" and ok[1] == 0
+    bad = W.classify_unit(props, [], ["ot-run: RAN on epyc8 (unit oth-ubuntu-1-2): exit 3"])
+    assert bad[0] == "FAILED" and bad[1] == 3
+    none = W.classify_unit(props, [], [])
+    assert none[0] == "FAILED" and "no exit status" in none[2]                                  # nothing recorded: still FAILED, never DONE by guess
+
+
+def test_a_service_failure_and_a_non_success_scope_result_stay_failed():
+    import ot_wait as W
+    svc = {"Id": "x.service", "LoadState": "loaded", "ActiveState": "failed", "SubState": "failed", "Result": "exit-code", "ExecMainStatus": "1"}
+    assert W.classify_unit(svc, [], ["ot-run: RAN on h (unit x): exit 0"])[0] == "FAILED"
+    oom = {"Id": "oth-a.scope", "LoadState": "loaded", "ActiveState": "failed", "SubState": "failed", "Result": "oom-kill"}
+    assert W.classify_unit(oom, [], ["ot-run: RAN on h (unit x): exit 0"])[0] == "FAILED"

@@ -151,6 +151,16 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
+NOTRUN_EXIT = 78   # FLOW-1700: every refusal before the unit starts ends with "NOT-RUN <reason>" on stderr and this status
+
+
+def not_run(reason, code=NOTRUN_EXIT):
+    """one loud, greppable last line for a request that never started; ot_wait and lane scripts key on it"""
+    print(f"NOT-RUN {reason}", file=sys.stderr, flush=True)
+    sys.exit(code)
+
+
+
 HOSTS = ["epyc2", "intel1", "localhost", "epyc4", "epyc7", "epyc8", "epyc9", "epyc10"]   # ONBOARD-EPYC10 11-13: epyc10 (Cherry 1062383 civil-redfish, 2x EPYC 7443 96T/1 TB). ONBOARD-4 11-10: epyc8 (Cherry 1058642 outgoing-giraffe, EPYC 7443 Zen 3, 96T/1 TB). KW-FIX-44 11-09 17:2x: epyc6 removed (terminated 17:17, Cherry DELETE 204; revert ot-run.bak-kw44-e6gone-1109). # KW-FIX-43 11-09: epyc5 removed (terminated 11:13). ONBOARD-4 11-09: epyc7 (Cherry 1058886 loved-redfish, EPYC 7443 Zen 3, 96T/1 TB). ONBOARD-2 11-05: epyc5 + epyc6 (EPYC 9554P, OWNER-rented). HUB_SELF_1101 (FLOW-21): the hub is intel2 = localhost; listing intel2 too made a second, unreachable copy of the hub (ssh intel2 from intel2 fails: "intel2 unreachable" in --status, 11-01 13:19). FLEET-NEW3 2026-10-24: new fleet after the rtx-pro coordinator loss (ssh aliases; measured in docs/FLEET.md).  Before: ["ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"] (all gone 2026-10-23). ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
@@ -1509,6 +1519,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     why = state["refused"] if state["refused"] else f"cannot cd to {d}" if state["nocd"] else f"ot-heavy exit {state['rc']}" if state["rc"] is not None \
         else f"ssh ended with status {ssh_rc} before the command was admitted"
     LAST_RUN["connfail"] = state["connfail"] and ssh_rc == 255 and state["rc"] is None
+    LAST_RUN["why"] = f"on {host}: {why}"
     if not (quiet_notrun and state["rc"] == 75):
         say(f"ot-run: NOT RUN on {host}: {why}")
     return (state["rc"] or ssh_rc or 255), False
@@ -1686,7 +1697,7 @@ def main():
         if not kept:
             print(f"ot-run: NOT RUN: every requested host is held ({'; '.join(f'{h}: {held[h]}' for h in hosts)}); "
                   f"edit {HELD_FILE} to release", file=sys.stderr)
-            sys.exit(75 if pick else 1)
+            not_run(f"every requested host is held ({'; '.join(f'{h}: {held[h]}' for h in hosts)}); edit {HELD_FILE} to release")
         hosts = kept
     if os.environ.get("OT_RUN_PRIO_ENV") is None and die_like(cmd, d):
         os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
@@ -1727,7 +1738,7 @@ def main():
         if not _kept:
             print("ot-run: NOT RUN: no candidate host has the job's input paths (" + "; ".join(f"{h}: {m[0]}" for h, m in _miss.items())
                   + "); stage them with --replicate DIR or --stage, or set OT_RUN_NO_NEEDS_CHECK=1", file=sys.stderr)
-            sys.exit(78)
+            not_run("no candidate host has the job's input paths")
         hosts = _kept
     if _pin_only and len(hosts) == 1 and STAGE and not job and OVERLOAD_RATIO > 0:
         spill, PIN_SPILL[0] = True, True      # OVERLOAD_1114: a pinned job with declared --stage inputs may spill off an overloaded host
@@ -1759,7 +1770,7 @@ def main():
                     say(f"ot-run: SPILL not possible: {why}")
             if max_wait is not None and time.time() - t0 >= max_wait:
                 say(f"ot-run: NOT RUN: no host with --dir has {disk} GB of scratch for this die job after {max_wait} s")
-                sys.exit(75)
+                not_run(f"no host with --dir has {disk} GB of scratch for this die job after {max_wait} s")
             if first:
                 say(f"ot-run: every host with --dir ({', '.join(raw)}) lacks scratch for this die job; re-placing every {REQUEUE_S} s")
             time.sleep(REQUEUE_S if max_wait is None else max(1, min(REQUEUE_S, max_wait - (time.time() - t0))))
@@ -1797,7 +1808,7 @@ def main():
                     say(f"ot-run: SPILL not possible: {why}")
                 if os.environ.get("OT_RUN_SPILL_ONLY"):      # move tool: never queue a second waiter
                     say("ot-run: NOT RUN (OT_RUN_SPILL_ONLY and no spill)")
-                    sys.exit(75)
+                    not_run("OT_RUN_SPILL_ONLY and no spill")
                 spill = spill and not permanent
         if not best and REFUSED_SRC and spill and d:    # QUEUE-BAL-2 REFUSED-SOURCE SPILL
             src = max(REFUSED_SRC, key=lambda h: REFUSED_SRC[h].get("disk_gb", 0))
@@ -1835,7 +1846,8 @@ def main():
                 first = False
                 continue
             why = "; ".join(f"{h}: {PLACE_NOTES[h]}" for h in hosts if PLACE_NOTES.get(h)) or "no reachable host"
-            sys.exit(f"ot-run: NOT RUN: no host qualifies ({why})")
+            print(f"ot-run: NOT RUN: no host qualifies ({why})", file=sys.stderr)
+            not_run(f"no host qualifies ({why})")
         print(f"ot-run: -> {best}" + (f" (will queue: admits {ok[best].get('admit_gb', ok[best]['free_gb'])} GB < {mem} GB)" if queue else ""),
               file=sys.stderr)
         if pick:
@@ -1857,7 +1869,9 @@ def main():
             first = False
             continue
         if ran or rc != 75 or wait == left:
-            sys.exit(rc if ran else (rc or 255))
+            if not ran:
+                not_run(f"{LAST_RUN.get('why') or 'the unit did not start'} (ot-run status {rc or 255})")
+            sys.exit(rc)
         print(f"ot-run: REBALANCE: not admitted on {best} within {wait} s; placing again", file=sys.stderr)
         first = False
 

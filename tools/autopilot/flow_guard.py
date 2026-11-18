@@ -369,14 +369,39 @@ for plan in a["plans"]:
     if not os.path.isfile(plan):
         miss.append(plan)
     else:
-        # count-frame sidecars beside a plan_of_record: feed_<s>.json and regions_<s>.json come in pairs
-        feeds = {os.path.basename(p)[5:-5] for p in glob.glob(os.path.join(d, "feed_*.json"))}
-        regs = {os.path.basename(p)[8:-5] for p in glob.glob(os.path.join(d, "regions_*.json"))}
-        have = sorted(["feed_" + s + ".json" for s in feeds] + ["regions_" + s + ".json" for s in regs])
-        for s in sorted(feeds - regs):
-            miss.append(os.path.join(d, "regions_" + s + ".json"))
-        for s in sorted(regs - feeds):
-            miss.append(os.path.join(d, "feed_" + s + ".json"))
+        # QC N1B 11-17: a plan that NAMES its count-frame files (e.g. feed_s4q9m.json with regions_s29.json) is checked on
+        # exactly those names; the feed/regions pairing below is only the fallback for a plan that names none
+        named = set()
+        try:
+            stack = [json.load(open(plan))]
+        except (OSError, ValueError):
+            stack = []
+        while stack:
+            o = stack.pop()
+            if isinstance(o, dict):
+                stack.extend(o.values())
+            elif isinstance(o, list):
+                stack.extend(o)
+            elif isinstance(o, str) and o.endswith(".json") and os.path.basename(o).startswith(("feed_", "regions_")) and len(o) < 4096:
+                named.add(o)
+        if named:
+            for n in sorted(named):
+                cands = [n] if os.path.isabs(n) else [os.path.join(os.path.dirname(d), n), os.path.join(d, n), os.path.join(d, os.path.basename(n))]
+                hit = next((c for c in cands if os.path.isfile(c)), None)
+                if hit:
+                    have.append(os.path.basename(hit))
+                else:
+                    miss.append(cands[0] if os.path.isabs(n) else os.path.join(d, os.path.basename(n)))
+            have = sorted(set(have))
+        else:
+            # count-frame sidecars beside a plan_of_record: feed_<s>.json and regions_<s>.json come in pairs
+            feeds = {os.path.basename(p)[5:-5] for p in glob.glob(os.path.join(d, "feed_*.json"))}
+            regs = {os.path.basename(p)[8:-5] for p in glob.glob(os.path.join(d, "regions_*.json"))}
+            have = sorted(["feed_" + s + ".json" for s in feeds] + ["regions_" + s + ".json" for s in regs])
+            for s in sorted(feeds - regs):
+                miss.append(os.path.join(d, "regions_" + s + ".json"))
+            for s in sorted(regs - feeds):
+                miss.append(os.path.join(d, "feed_" + s + ".json"))
     out[plan] = {"hard": miss[:4], "soft": [], "have": have}
 print("AP_JSON " + json.dumps(out))
 '''

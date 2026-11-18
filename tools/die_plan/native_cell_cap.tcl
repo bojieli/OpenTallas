@@ -4,9 +4,19 @@
 # Default 400k. COORD 11-04 06:00 (2), OWNER targets-not-gates: a kit generated
 # with gen.py phys --native-cell-cap N runs up to N, never above 517k, the largest
 # closed run on record (0.53-1.31M all failed).
-set ot_cap_limit 400000
-if {[info exists ::ot_native_cell_limit]} {
- set ot_cap_limit [expr {min(int($::ot_native_cell_limit), 517000)}]
+# WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): the ONE limit is die_plan/cell_cap.py SPLIT_CELLS (test_cell_cap_everywhere keeps this number equal).  A kit
+# over it stops here, whatever launched it, unless a ruling id waives it: env OT_CELL_WAIVER=rNNN or the first line of /work/CELL_WAIVER.
+set ot_cap_split 400000
+set ot_cap_waiver ""
+if {[info exists ::env(OT_CELL_WAIVER)] && [regexp {^r[0-9]{3,4}$} [string trim $::env(OT_CELL_WAIVER)]]} {
+ set ot_cap_waiver [string trim $::env(OT_CELL_WAIVER)]
+} elseif {[file exists /work/CELL_WAIVER]} {
+ set ot_cap_wf [open /work/CELL_WAIVER r]; set ot_cap_wl [string trim [gets $ot_cap_wf]]; close $ot_cap_wf
+ if {[regexp {^r[0-9]{3,4}$} $ot_cap_wl]} { set ot_cap_waiver $ot_cap_wl }
+}
+set ot_cap_limit $ot_cap_split
+if {[info exists ::ot_native_cell_limit] && $ot_cap_waiver ne ""} {
+ set ot_cap_limit [expr {int($::ot_native_cell_limit)}]
 }
 set ot_cap_std 0
 set ot_cap_macros 0
@@ -17,11 +27,11 @@ set ot_cap_receipt [open /work/native_cell_count.json w]
 puts $ot_cap_receipt [format {{"schema":"opentallas.native_cell_count.v1","stage":"pre_floorplan","stdcells":%d,"macros":%d,"limit":%d}} $ot_cap_std $ot_cap_macros $ot_cap_limit]
 close $ot_cap_receipt
 puts "OT_NATIVE_CELL_CAP actual_std=$ot_cap_std macros=$ot_cap_macros limit=$ot_cap_limit"
-if {$ot_cap_std > $ot_cap_limit} {
- puts "OT_NATIVE_CELL_CAP INFO actual standard cell count $ot_cap_std above $ot_cap_limit (LIMIT-BIND-1 11-14: R-CAP removed, not stopped)"
-}
-if {$ot_cap_std > 400000} {
- puts "OT_NATIVE_CELL_CAP ADVISORY actual_std=$ot_cap_std above the 400000 target, within kit limit $ot_cap_limit"
+if {$ot_cap_std > $ot_cap_split} {
+ if {$ot_cap_waiver eq ""} {
+  error "OT_NATIVE_CELL_CAP SPLIT-NEEDED actual standard cell count $ot_cap_std above $ot_cap_split run cap (r576 limit): split the type, or waive with a ruling id (OT_CELL_WAIVER=rNNN or /work/CELL_WAIVER)"
+ }
+ puts "OT_NATIVE_CELL_CAP WAIVED by $ot_cap_waiver: actual standard cell count $ot_cap_std above $ot_cap_split"
 }
 # R-CAP (RULES-CAP-1, RULEBOOK 11-13): project the movable count after place resize from the synthesized top, before
 # any floorplan repair runs.  Same model and constants as tools/die_plan/cap_estimate.py (test_cap_estimate.py keeps

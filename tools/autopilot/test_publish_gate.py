@@ -232,3 +232,70 @@ def test_static_step_budget_covers_a_long_g0():
         return R()
     PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner)
     assert seen["timeout"] >= 3 * PG.STEP_TIMEOUT_S
+
+
+class RowsProof(unittest.TestCase):
+    """QC N2B 11-17: candidate.rows_proofs reaches plan_gate_pre as --rows-proof (ROWS-NO-PROOF otherwise) and must lie in the tree"""
+    def setUp(self):
+        self.td = tempfile.mkdtemp(prefix="pgrp-")
+        self.tree = Path(self.td) / "tree"; self.tree.mkdir()
+        self.plan = self.tree / "plan.json"; self.plan.write_text("{}")
+        (self.tree / "por").mkdir(); (self.tree / "por/rows_proof.json").write_text("{}")
+
+    def static(self, proofs):
+        seen = []
+        orig = PG._sub
+        PG._sub = lambda argv, cwd, timeout=None: (seen.append(argv), (0, ""))[1]
+        try:
+            res = PG.run_static(self.tree, self.plan, None, "0" * 64, tempfile.mkdtemp(prefix="pgrpw-"), rows_proofs=proofs)
+        finally:
+            PG._sub = orig
+        pre = [a for a in seen if any(str(x).endswith("plan_gate_pre.py") for x in a)][0]
+        return res, pre
+
+    def test_rows_proof_is_forwarded_to_pre_and_contained(self):
+        res, pre = self.static(["por/rows_proof.json"])
+        i = pre.index("--rows-proof")
+        self.assertEqual(pre[i + 1], str(self.tree / "por/rows_proof.json"))
+        self.assertEqual(res["contained"]["verdict"], "PASS", res["contained"])
+
+    def test_no_rows_proof_keeps_the_old_pre_call(self):
+        _res, pre = self.static(None)
+        self.assertNotIn("--rows-proof", pre)
+
+    def test_rows_proof_outside_the_tree_or_missing_fails_contained(self):
+        out = Path(self.td) / "lane_proof.json"; out.write_text("{}")
+        res, _pre = self.static([str(out), "por/nope.json"])
+        self.assertEqual(res["contained"]["verdict"], "FAIL")
+        f = " ".join(res["contained"]["findings"])
+        self.assertIn("outside the tree", f); self.assertIn("missing", f)
+
+    def test_static_remote_ships_every_proof(self):
+        got = {}
+
+        class R:
+            stdout, stderr, returncode = "PG_STATIC {}", "", 0
+
+        def runner(argv, **kw):
+            got["cmd"] = argv[-1]
+            return R()
+        PG.static_remote("hostx", "/tmp/w", "/t", "/t/p.json", None, "0" * 64, runner=runner, rows_proofs=["/t/a.json", "/t/b.json"])
+        self.assertIn("--rows-proof /t/a.json", got["cmd"]); self.assertIn("--rows-proof /t/b.json", got["cmd"])
+
+    def test_run_gate_takes_rows_proofs_from_the_candidate(self):
+        c = mk_coord(self.td)
+        tree, plan = mk_tree(tempfile.mkdtemp(prefix="pgrpt-"))
+        seen = {}
+        orig = PG.static_remote
+
+        def fake(host, work_dir, t, p, ab, ps, **kw):
+            seen.update(kw)
+            return {k: {"verdict": "FAIL", "why": "stub"} for k in ("schema", "pre_g0", "hashes", "contained")}
+        PG.static_remote = fake
+        try:
+            obj = dict(cand(tree, plan), rows_proofs=["plan_of_record/zz.rows_proof.json"])
+            rec = PG.run_gate(c, obj, "/x/old", "E0", dry_fn=dry_must_not_run, TC=TC)
+        finally:
+            PG.static_remote = orig
+        self.assertEqual(seen.get("rows_proofs"), ["plan_of_record/zz.rows_proof.json"])
+        self.assertEqual(rec["rows_proofs"], ["plan_of_record/zz.rows_proof.json"])

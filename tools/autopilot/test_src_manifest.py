@@ -364,6 +364,32 @@ class SharedInodes(Base):
 
 
 class Delta(Base):
+    def test_delta_make_paths_restricts_the_pack_to_tools(self):
+        """WAVE-FLOW-R2 11-17: a tools-only refresh packs only tools/ + physical/common_flow; plan / RTL changes on main stay out"""
+        os.makedirs(self.repo + "/rtl", exist_ok=True)
+        open(self.repo + "/rtl/a.sv", "w").write("module a; endmodule\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "rtl")
+        sha1 = git(self.repo, "rev-parse", "HEAD")
+        old = self.t + "/old_t"
+        SM.build(self.repo, sha1, None, ["tools", "rtl"], old, main_ref="")
+        SM.publish(old)
+        open(self.repo + "/tools/die_plan/a.py", "w").write("A=9\n")
+        open(self.repo + "/rtl/a.sv", "w").write("module a2; endmodule\n")
+        git(self.repo, "add", "-A")
+        git(self.repo, "commit", "-qm", "both")
+        sha2 = git(self.repo, "rev-parse", "HEAD")
+        full = self.t + "/pack_full"
+        self.assertEqual(SM.delta_make(self.repo, old, sha2, full)[0], 2)
+        only = self.t + "/pack_tools"
+        self.assertEqual(SM.delta_make(self.repo, old, sha2, only, paths=["tools"]), (1, 0))
+        new = self.t + "/new_t"
+        SM.delta_apply(only, old, new)
+        self.assertEqual(open(new + "/rtl/a.sv").read(), "module a; endmodule\n")          # RTL byte-identical to the old tree
+        self.assertEqual(open(new + "/tools/die_plan/a.py").read(), "A=9\n")
+        with self.assertRaises(SystemExit):
+            SM.delta_make(self.repo, old, sha2, self.t + "/pack_bad", paths=["plans"])      # outside the tree scope
+
     def test_delta_tree_equals_a_fresh_build_of_the_new_sha(self):
         old = self.t + "/old"
         m0 = SM.build(self.repo, self.sha, None, ["tools"], old, main_ref="")

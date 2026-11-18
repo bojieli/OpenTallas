@@ -63,6 +63,47 @@ def free_gb(path):
     return st.f_bavail * st.f_frsize / 2**30
 
 
+SCRIPT_RE = re.compile(r"(?:^|\s)(/[^\s'\"]+\.(?:sh|py|tcl|json|cfg))(?=\s|$)")
+
+
+def live_reference_text(proc="/proc", admit_logs=("/var/tmp/ot-heavy/admit.log",), max_script=2_000_000, tail_lines=800):
+    """COORD 11-17 (S81-DIE-R3's D6z launch died: the epyc8 prune removed rt/24c7347cc887, which its launch script pinned): everything that can still NAME an rt/<sha> and run later --
+    every process command line (queued ot-run clients, armed waiters `bash -c 'while pgrep ..; do sleep; done; python3 rt/<sha>/..'`, running jobs), their working directories, the
+    targets of their open files, the CONTENT of the script files their command lines name (<= 2 MB), and the recent admission log (commands of ot-heavy units admitted or queued).
+    Same reference rule as the cleaners' live-process check, widened to script bodies."""
+    out = []
+    for d in os.listdir(proc):
+        if not d.isdigit():
+            continue
+        base = os.path.join(proc, d)
+        try:
+            cmd = open(os.path.join(base, "cmdline"), "rb").read().replace(b"\0", b" ").decode(errors="replace")
+        except OSError:
+            continue
+        out.append(cmd)
+        try: out.append(os.readlink(os.path.join(base, "cwd")))
+        except OSError: pass
+        try:
+            for f in os.listdir(os.path.join(base, "fd")):
+                try: out.append(os.readlink(os.path.join(base, "fd", f)))
+                except OSError: pass
+        except OSError:
+            pass
+        for m in SCRIPT_RE.finditer(cmd):
+            try:
+                if os.path.getsize(m.group(1)) <= max_script:
+                    out.append(open(m.group(1), errors="replace").read())
+            except OSError:
+                pass
+    for lg in admit_logs:
+        try: out += open(lg, errors="replace").read().splitlines()[-tail_lines:]
+        except OSError: pass
+    return "\n".join(out)
+
+
+MIN_KEEP = 3          # the newest three snapshots stay whatever OT_RT_KEEP says (a rollback of the runtime must always be possible)
+
+
 def names_in_use_text():
     """text in which a snapshot sha may be named: coord autopilot / handoff json, the crontab, user units (read-only, best effort)"""
     t = ""
@@ -73,6 +114,8 @@ def names_in_use_text():
     for cmd in (["crontab", "-l"], ["systemctl", "--user", "cat", "*"]):
         try: t += S.run(cmd, capture_output=True, text=True, timeout=30).stdout
         except Exception: pass
+    try: t += "\n" + live_reference_text()       # the hub's own queued / armed ot-run clients name the rt/<sha> a build host will run: sent to the hosts with the pins
+    except Exception: pass
     return t
 
 
@@ -81,11 +124,14 @@ def prune_snapshots(root=RT, keep=None, protect=(), text=None, rm=None):
     keep = KEEP if keep is None else keep
     if keep <= 0:
         return []
+    keep = max(keep, MIN_KEEP)
     snaps = sorted((d for d in Path(root).iterdir() if re.fullmatch(r"[0-9a-f]{12}", d.name) and d.is_dir() and not d.is_symlink()),
                    key=lambda d: d.stat().st_mtime, reverse=True)
     cur = current(root)
     stay = {d.name for d in snaps[:keep]} | {cur, *protect}
     text = names_in_use_text() if text is None else text
+    try: text = text + "\n" + live_reference_text()                    # this host's own processes, queued units and armed waiters too (on a build host `text` came from the hub)
+    except Exception: pass
     gone = []
     for d in snaps:
         if d.name in stay or d.name in text or in_use(d):
@@ -549,6 +595,55 @@ def status():
         print(f"{h} -> {r.stdout.strip() or r.stderr.strip()[:80]}")
 
 
+POST = os.environ.get("MQ_POST", str(COORD / "bin/post.sh"))
+ALERT_LANE = os.environ.get("OT_SYNC_ALERT_LANE", "FLEET-OPS-R")
+ALERT_REPEAT_S = float(os.environ.get("OT_SYNC_ALERT_REPEAT_S", "3600"))
+
+
+def sync_alert(ok, reason, state_file=None, poster=None, now=None):
+    """COORD FABLE-FLOW-1300 (3): a failing tools sync must not sit silent (it did for 2 h: the hub disk floor refused every sync from 10:55).  The FIRST failure and every CHANGE of reason post an
+    ALERT at once, a standing failure repeats hourly with its age, and the first success afterwards posts one STATE line.  -> the line posted or ''"""
+    import hashlib, time
+    now = time.time() if now is None else now
+    sf = Path(state_file or (MQ / "sync-alert.json"))
+    try: st = json.loads(sf.read_text())
+    except (OSError, ValueError): st = {}
+    line = ""
+    if ok:
+        if st.get("since"):
+            line = f"STATE tools sync recovered after {int((now - st['since']) / 60)} min (rt/current {current() or '-'})"
+            st = {}
+    else:
+        key = hashlib.sha1(reason.encode()).hexdigest()[:10]
+        if not st.get("since") or st.get("key") != key:
+            st = {"since": st.get("since") or now, "key": key, "last": now}
+            line = "ALERT [OT-TOOLS-SYNC -> COORD] runtime sync FAILED, rt/current stays %s: %s" % (current() or "-", reason[:600])
+        elif now - st.get("last", 0) >= ALERT_REPEAT_S:
+            st["last"] = now
+            line = "ALERT [OT-TOOLS-SYNC -> COORD] runtime sync still failing for %d min, rt/current %s: %s" % (int((now - st["since"]) / 60), current() or "-", reason[:400])
+    if line:
+        (poster or (lambda l: run(["bash", POST, ALERT_LANE, l], timeout=120)))(line)
+    try:
+        MQ.mkdir(parents=True, exist_ok=True)
+        sf.write_text(json.dumps(st))
+    except OSError:
+        pass
+    return line
+
+
+def sync_guarded(sha, hosts, tests):
+    """sync() with the alert: an exception or a non-zero result (smoke failed, a host did not flip, no disk) posts"""
+    try:
+        rc = sync(sha, hosts=hosts, tests=tests)
+        reason = "exit %s (see %s)" % (rc, MQ / "log")
+    except Exception as e:
+        rc, reason = 1, "%s: %s" % (type(e).__name__, str(e)[:500])
+    sync_alert(rc == 0, reason)
+    if rc != 0 and not isinstance(rc, int):
+        rc = 1
+    return rc
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("cmd", choices=["sync", "drift", "status", "prune"])
@@ -558,7 +653,7 @@ def main():
     ap.add_argument("--post", action="store_true")
     a = ap.parse_args()
     if a.cmd == "sync":
-        return sync(a.sha, hosts=not a.no_hosts, tests=not a.no_tests)
+        return sync_guarded(a.sha, not a.no_hosts, not a.no_tests)
     if a.cmd == "prune":                       # run ON a build host: prune its rt/ (text naming pinned snapshots arrives on stdin from the hub)
         gone = prune_snapshots(RT, protect=(current() or "",), text=sys.stdin.read())
         print(f"pruned {len(gone)}")

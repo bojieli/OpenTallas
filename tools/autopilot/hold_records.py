@@ -32,7 +32,7 @@ import re
 import sys
 import time
 
-TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready", "result", "gen_pilot")
+TYPED = ("event_adopt", "lint_clean", "input_staged", "kit_snap", "digest_changed", "proof", "census_lt", "tree_ready", "tree_has", "tree_has_sha", "result", "gen_pilot")
 LEGACY_OK = ("merge",)          # still evaluated (ancestor of origin/main); accepted in new records too
 GLOB = re.compile(r"[*?\[]")
 PROOF_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*$")
@@ -87,10 +87,24 @@ def adopted_events(d):
             os.path.splitext(os.path.basename(str(d.get("plan") or "")))[0]) if v}
 
 
+def lineage_events(d):
+    """WAVE-FLOW-R2 11-17 (COORD r631): the die's recorded event lineage = the events the current event was composed from (dies.<die>.event_lineage, written by the
+    atomic apply when the event changes, or set explicitly), e.g. QC N1B: S4q6d, L2, M"""
+    d = d or {}
+    v = d.get("event_lineage")
+    return {str(x).lower() for x in (v if isinstance(v, (list, tuple)) else [v] if v else []) if x}
+
+
+def released_events(d):
+    """the events an `event_adopt:<X>` term is met by: the current adopted identities AND every ancestor in the recorded lineage (a hold waiting for an event the die
+    already builds on is released; a descendant or a sibling that is not in the lineage is not)"""
+    return adopted_events(d) | lineage_events(d)
+
+
 def known_events(d):
     """Event names current or declared: adopted identities, *_prev events, planned_events."""
     d = d or {}
-    out = adopted_events(d)
+    out = adopted_events(d) | lineage_events(d)
     for k, v in d.items():
         if k.startswith("event_prev") and isinstance(v, str):
             out.add(v.lower())
@@ -125,7 +139,7 @@ POST_HEAD = re.compile(r"^\s*-?\s*(\d{4}-\d\d-\d\d)\s+(\d\d:\d\d)\s+\S+\s+[A-Za-
 LANE_ACTIVE_H = 6            # WAVE-PILOT-FIX 11-17: a lane is live when it posted within 6 h (a registry row alone proves nothing: dead lanes keep theirs)
 HOLD_TTL_H = 6               # a hold record whose owner lane is silent for HOLD_TTL_H hours (and was not renewed) expires
 OWNER_SINCE = re.compile(r"(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d)")
-SYSTEM_CHECKS = ("lint_clean", "kit_snap", "digest_changed", "input_staged", "tree_ready", "gen_pilot", "census_lt", "merge")
+SYSTEM_CHECKS = ("lint_clean", "kit_snap", "digest_changed", "input_staged", "tree_ready", "tree_has", "tree_has_sha", "gen_pilot", "census_lt", "merge")
 
 
 def lane_activity(lines):
@@ -220,6 +234,10 @@ def term_error(term, die, cfg, migrated=False):
         if not tp.startswith("/") or tp.endswith("/") or ".." in tp.split("/"):
             return f"{term!r}: tree_ready needs <die>:<absolute tree path without trailing slash>"
         return None
+    if kind == "tree_has":
+        return None if re.fullmatch(r"r\d{3,4}", val) else f"{term!r}: tree_has needs a ruling id rNNN (true only when the die's current tree tools contain it)"
+    if kind == "tree_has_sha":
+        return None if re.fullmatch(r"[0-9a-f]{7,40}", val) else f"{term!r}: tree_has_sha needs a commit sha (7-40 hex)"
     if kind == "gen_pilot":
         pd, ps = split_pilot(val)
         if pd != die or not PILOT_SHA.match(ps):
@@ -261,6 +279,10 @@ def unreachable_why(term, die, cfg):
     if kind == "tree_ready":
         td, tp = split_tree(val)
         return None if td == die and tp.startswith("/") else "tree_ready die or path malformed"
+    if kind == "tree_has":
+        return None if re.fullmatch(r"r\d{3,4}", val) else "tree_has needs rNNN"
+    if kind == "tree_has_sha":
+        return None if re.fullmatch(r"[0-9a-f]{7,40}", val) else "tree_has_sha needs a commit sha"
     if kind == "gen_pilot":
         pd, ps = split_pilot(val)
         return None if pd == die and PILOT_SHA.match(ps) else "gen_pilot die or manifest sha malformed"
@@ -279,7 +301,7 @@ def unreachable_why(term, die, cfg):
 class Ctx:
     """evaluation inputs; kit_wave passes its own (is_merged, legacy event_adopt check, input_digest, kit_snap option)"""
 
-    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None, pilot_fn=None, release_pilot_fn=None, release_pilot_failed_fn=None):
+    def __init__(self, is_merged=None, event_met=None, digest_fn=None, kit_snap_fn=None, exists_fn=None, proof_fn=None, cells_fn=None, tree_fn=None, marker_fn=None, lint_fn=None, result_fn=None, pilot_fn=None, release_pilot_fn=None, release_pilot_failed_fn=None, tree_has_fn=None):
         base, memo = is_merged or (lambda ref: False), {}
         self.is_merged = lambda ref: memo[ref] if ref in memo else memo.setdefault(ref, bool(base(ref)))
         self.event_met = event_met
@@ -293,6 +315,7 @@ class Ctx:
         self.release_pilot_failed_fn = release_pilot_failed_fn    # (die, pilot item, release time) -> the pilot's attempt since then FAILed INFRA / FLOW / per-instance; None = not known
         self.pilot_fn = pilot_fn or (lambda die, sha12: False)    # (die, tree manifest sha[:12]) -> one GEN pilot from that tree passed GEN + preflight
         self.tree_fn = tree_fn or (lambda die, path: False)       # (die, tree) -> marker + smoke + replication on all gen hosts
+        self.tree_has_fn = tree_has_fn or (lambda die, token: False)   # (die, rNNN | sha) -> the die's CURRENT tree tools contain that ruling / commit (FABLE-FLOW-1700 item 2)
         self.marker_fn = marker_fn or (lambda die: None)          # die -> parsed lanes/handoff/tree_switch_<die>.json or None
         self.cells_fn = cells_fn or (lambda die, item: None)      # (die, item) -> measured cell count or None (unknown = held)
 
@@ -307,7 +330,7 @@ def term_met(term, rec, die, item, cfg, ctx):
             name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
             if not event_name_ok(name):
                 return False
-            return _event_token_in(name, adopted_events(d))
+            return _event_token_in(name, released_events(d))
         if kind == "merge":
             ref = val.split()[0] if val else ""
             return bool(ref) and bool(ctx.is_merged(ref))
@@ -323,6 +346,8 @@ def term_met(term, rec, die, item, cfg, ctx):
         if kind == "tree_ready":
             td, tp = split_tree(val)
             return td == die and bool(ctx.tree_fn(td, tp))
+        if kind in ("tree_has", "tree_has_sha"):
+            return bool(val) and bool(ctx.tree_has_fn(die, val))
         if kind == "gen_pilot":
             pd, ps = split_pilot(val)
             return pd == die and bool(ctx.pilot_fn(pd, ps))

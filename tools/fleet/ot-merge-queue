@@ -362,7 +362,7 @@ def evidence_copies(wt, base, tip, changed):
 def select_tests(changed, all_tests, read, copies=None):
     """changed: repo paths the candidate changes; all_tests: every test file in the worktree; read(path) -> text.
     -> (sorted test files, {test: reason}).  Rules (OWNER 11-14): tools/autopilot -> test_kit_wave.py; tools/die_plan -> the
-    die_plan tests named after or referencing the module; ot-run / ot-heavy -> their tests; otherwise the branch's own (new or
+    die_plan tests named after or referencing the module; physical/die_plan -> every test_*.py in the changed file's directory; ot-run / ot-heavy -> their tests; otherwise the branch's own (new or
     changed) tests plus the tests named after / referencing each changed file."""
     have = set(all_tests)
     pick = {}
@@ -390,9 +390,13 @@ def select_tests(changed, all_tests, read, copies=None):
                 if f in text(t):
                     add(t, f"references exact evidence path {f}")
             continue
+        d, base = os.path.dirname(f), os.path.basename(f)
+        if f.startswith("physical/die_plan/"):                # every test next to a changed die_plan file (same directory, or its tests/ dir), named after it or not
+            for t in all_tests:
+                if os.path.dirname(t) in (d, d + "/tests"):
+                    add(t, f"physical/die_plan test next to {base}")
         if is_test(f) or f.endswith((".md", ".txt", ".json", ".tsv", ".csv")) and not f.startswith("tools/"):
             continue
-        d, base = os.path.dirname(f), os.path.basename(f)
         stem = base.rsplit(".", 1)[0] if "." in base else base
         variants = {stem, stem.replace("-", "_")}
         if f.startswith("tools/autopilot/"):
@@ -600,7 +604,8 @@ def static_check(wt, files):
 
 
 def all_test_files(wt):
-    out = git("ls-files", "--", "tools", cwd=wt).stdout.split("\n")
+    # WAVE-FLOW-R2 11-17 (COORD): physical/die_plan tests count too (r619 changed physical/die_plan/qwen_compute/bind/ and the gate selected no test, "static only")
+    out = git("ls-files", "--", "tools", "physical/die_plan", cwd=wt).stdout.split("\n")
     return [f for f in out if is_test(f) and (wt / f).is_file()]
 
 

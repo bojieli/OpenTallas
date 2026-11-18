@@ -17810,6 +17810,12 @@ def s81_head_lep_vf_stage_calendar_model():
                       'native timing and parent pin/clock/reset joins remain required')
 
 
+def qwen_pc_ring_to_bin_candidate_model(**kwargs):
+    """Unqualified transport sizing from the full-shape PC physical witness."""
+    from uarch_model_qwen_pc_ring_to_bin import model
+    return model(**kwargs)
+
+
 def s81_head_lep_nf15f_stage_calendar_model():
     """HEAD-PLAN-R4 11-17 NF15f: hop-halving tuple + RX head rank (RXH) register legs, priced per traversal.
 

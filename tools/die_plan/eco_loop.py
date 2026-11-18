@@ -1144,6 +1144,17 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold
     res["route_hold_form"] = dict(requested=bool(route_hold_form), declared=declared)
 
     def done(verdict, reason):
+        if (capskew_enabled() and verdict not in ("PASS", "ABORTED", "ECO_OOM", "ERROR") and capskew_case(base_rec)
+                and "capskew" not in res):
+            root.mkdir(parents=True, exist_ok=True)
+            r = capskew_fallback(res, kit, base_signoff, base_rec, root, run, tools)
+            if r.get("exit") == 0 and (r.get("result") or {}).get("final_routed_db"):
+                so = Path(r["out"]) / "so_out" / "signoff.json"
+                m = metrics(load(so), so) if so.is_file() else None
+                res["best"] = dict(n=0, dir=r["out"], signoff=str(so), base=str(Path(r["result"]["final_routed_db"]).parent), metrics=m)
+                verdict, reason = "PASS", "signed off by the OT_CAPSKEW_ECO capture-skew fallback (capskew_eco_run.py)"
+            else:
+                reason += " | capskew fallback exit %s" % r.get("exit")
         res.update(verdict=verdict, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
         if root.is_dir():
             (root / "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
@@ -1245,6 +1256,44 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold
                 best.setdefault("trimmed", []).extend(gone)
                 res["best_trimmed"] = len(gone)
     return done(verdict, stop)
+
+
+def capskew_enabled(env=None):
+    """CAPSKEW-ECO 11-17: the opt-in post-route capture-skew fallback (tools/die_plan/capskew_eco_run.py); OT_CAPSKEW_ECO=1, default off"""
+    return str((os.environ if env is None else env).get("OT_CAPSKEW_ECO", "0")).strip() == "1"
+
+
+def capskew_case(rec):
+    """True: the routed record fails ONLY TT setup (DRC passes, FF hold passes or is the tool's own pad work): the capture-skew class"""
+    c = (rec or {}).get("checks") or {}
+    return ((c.get("setup_tt") or {}).get("verdict") == "FAIL" and (c.get("drc") or {}).get("verdict") != "FAIL"
+            and int((c.get("drc") or {}).get("count") or 0) == 0)
+
+
+def capskew_fallback(res, kit, base_signoff, base_rec, root, run=subprocess.call, tools=HERE):
+    """run capskew_eco_run.py on the base routed DB when the ECO loop did not sign it; records res['capskew'] and, on exit 0, adopts the
+    signed DB as the best result (verdict PASS).  Never raises: a failed stage leaves the loop's own verdict."""
+    odb = (base_rec.get("inputs") or {}).get("odb")
+    if not odb:
+        return res.setdefault("capskew", dict(exit=None, why="no routed odb in the base sign-off record"))
+    out = Path(root) / "capskew"
+    cmd = [sys.executable, "-I", str(Path(tools) / "capskew_eco_run.py"), "--base", str(Path(odb).parent), "--kit", str(kit),
+           "--name", "capskew_" + Path(kit).name, "--out", str(out), "--first-signoff", str(Path(base_signoff).parent),
+           "--rt", str(Path(tools).parent.parent)]
+    try:
+        rc = run(cmd)
+    except Exception as e:  # noqa: BLE001
+        rc = -1
+        res["capskew_error"] = repr(e)
+    r = dict(exit=rc, out=str(out), cmd=cmd)
+    rj = out / "RESULT.json"
+    if rj.is_file():
+        try:
+            r["result"] = json.loads(rj.read_text())
+        except ValueError:
+            pass
+    res["capskew"] = r
+    return r
 
 
 def max_iter_refusal(n):
