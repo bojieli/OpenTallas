@@ -7140,6 +7140,8 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
             "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"] + (
         [f"# PLACE-HPWL (FABLE-PD-S81-STRIP): GPL exit HPWL > {hr} x the run minimum ends the run before resize",
          f"export OT_GPL_HPWL_RATIO = {hr}"] if (hr := gpl_hpwl_ratio(die)) else []) + (
+        [f"# GPL-OVERFLOW (FABLE-PD-S81-STRIP pilot): global placement stops at overflow {ov:g}, not 0.1",
+         f"export GLOBAL_PLACEMENT_ARGS = -overflow {ov:g}"] if (ov := gpl_overflow(die)) else []) + (
         [f"# KW-FIX-45 PLACE-FANOUT: place-stage repair_design limit (gp_noconverge_gate.tcl set_max_fanout)",
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
 
@@ -7186,6 +7188,26 @@ def gpl_hpwl_ratio(die=None):
     # HEAD-PLAN-R4 11-17: the S81 die by exact name; the old prefix test (split("_")[0] == "s81") also matched s81_head,
     # whose hd_tile stopped at 2.26 x a clustered-start minimum (the unmeasured-die case this docstring keeps off)
     return 1.3 if str(die or "") == "s81" else None
+
+
+def gpl_overflow(die=None):
+    """GPL-OVERFLOW (FABLE-PD-S81-STRIP 11-16): global placement target overflow for the kit (ORFS GLOBAL_PLACEMENT_ARGS
+    -overflow).  Gen env OT_GPL_OVERFLOW (0 < v < 1; 0 = off, ORFS default 0.1) wins, else 0.2 on the S81 die, off
+    elsewhere.  S81 strip leaves at 0.7 % movable util spent the last Nesterov phase (overflow 0.2 -> 0.1) pushing logic out
+    of the bins that FIRM ring / station flops fill: HPWL x1.6-2.4.  Place-only pilot from the same 3_2 (gpl_pilot):
+    t47 exit/min 2.36 -> 1.26, DPL HPWL 2.59e7 -> 1.40e7 um, CTS read (x1.45) -3956 ps / 15,893 paths -> -1320 / 1,773;
+    t75 1.91 -> 1.06, 2.66e7 -> 1.51e7, -1454 / 10,091 -> -1191 / 1,324 (ring class gone).  timing-driven off, keep 0
+    and density 0.65 / 0.9 did not converge (1.30-2.07)."""
+    v = os.environ.get("OT_GPL_OVERFLOW", "").strip()
+    if v:
+        try:
+            r = float(v)
+        except ValueError:
+            raise ValueError(f"OT_GPL_OVERFLOW must be a number (0 = off, else 0 < v < 1), got {v!r}") from None
+        if r != 0 and not 0 < r < 1:
+            raise ValueError(f"OT_GPL_OVERFLOW must be 0 (off) or 0 < v < 1, got {v!r}")
+        return r or None
+    return 0.2 if str(die or "").split("_")[0] == "s81" else None
 
 
 def place_max_fanout(die=None):

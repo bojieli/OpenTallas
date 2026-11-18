@@ -78,3 +78,19 @@ def test_install_emits_ratio_for_s81(tmp_path, monkeypatch):
     assert "export OT_GPL_HPWL_RATIO = 1.3" in cfg
     assert (tmp_path / "gp_noconverge.py").is_file() and (tmp_path / "gp_noconverge_gate.tcl").is_file()
     assert not any("OT_GPL_HPWL_RATIO" in c for c in P.install_gp_noconverge_gate(tmp_path, [], "qwen_kvsys"))
+
+
+def test_gpl_overflow_default_s81_only(tmp_path, monkeypatch):
+    import gen_phys as P
+    for k in ("OT_GPL_OVERFLOW", "OT_GPL_HPWL_RATIO", "OT_PLACE_MAX_FANOUT"):
+        monkeypatch.delenv(k, raising=False)
+    assert P.gpl_overflow("s81") == 0.2 and P.gpl_overflow("qwen_kvsys") is None
+    assert "export GLOBAL_PLACEMENT_ARGS = -overflow 0.2" in P.install_gp_noconverge_gate(tmp_path, [], "s81")
+    assert not any("GLOBAL_PLACEMENT_ARGS" in c for c in P.install_gp_noconverge_gate(tmp_path, [], "hbm"))
+    monkeypatch.setenv("OT_GPL_OVERFLOW", "0")
+    assert P.gpl_overflow("s81") is None
+    monkeypatch.setenv("OT_GPL_OVERFLOW", "0.15")
+    assert P.gpl_overflow("hbm") == 0.15
+    monkeypatch.setenv("OT_GPL_OVERFLOW", "1.5")
+    with pytest.raises(ValueError):
+        P.gpl_overflow("s81")
