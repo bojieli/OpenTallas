@@ -344,3 +344,25 @@ def test_wave_does_not_start_a_stopped_die():
     (ap / "tools_refresh_state.json").write_text(json.dumps({"stopped": {"kv": {"fp": "other", "status": "BIND-FAIL"}}}))
     KW.tools_refresh_tick(AP, {"dies": {"kv": dict(d, enabled=True)}}, {})
     assert len(seen) == 1
+
+
+def test_apply_rekeys_pilot_and_tree_manifest_holds_atomically():
+    old_h, new_h = "06dc15683502" + "0" * 4, "aabbccddeeff" + "1" * 4
+    pilot = {"id": "pilot-kv-06dc15683502", "reason": "PILOT after tree 06dc15683502", "release": ["gen_pilot:kv:06dc15683502"], "items": ["*"],
+             "pilot_items": ["it1"], "auto_pilot": True, "published_gen_proof": {"tree": OLD, "sha": "06dc15683502"}}
+    tree = {"id": "t1", "release": ["tree_ready:kv:" + OLD, "result:L:tag"], "items": ["a"]}
+    other = {"id": "other", "release": ["result:L:x"], "items": ["b"]}
+    d = die(src_manifest_hash=old_h, hold_records=[pilot, tree, other])
+    ops = FakeOps()
+    ops.compose = lambda old, new: (True, "ok", new_h)
+    rec, posts, edits, state = run(d=d, ops=ops)
+    assert rec["status"] == "APPLIED" and len(edits) == 1               # one edit call = one atomic commit
+    byp = {o["path"]: o for o in edits[0][0]}
+    recs = byp["/dies/kv/hold_records"]["value"]
+    new = TR.new_tree_path(OLD, SHA)
+    assert recs[0]["id"] == "pilot-kv-aabbccddeeff" and recs[0]["release"] == ["gen_pilot:kv:aabbccddeeff"] and "aabbccddeeff" in recs[0]["reason"]
+    assert recs[0]["pilot_items"] == ["it1"] and recs[0]["published_gen_proof"] == pilot["published_gen_proof"]
+    assert recs[1]["release"] == ["tree_ready:kv:" + new, "result:L:tag"]
+    assert recs[2] == other
+    # no tree-keyed record: no hold_records op
+    assert "/dies/kv/hold_records" not in {o["path"] for o in run(d=die(hold_records=[other]))[2][0][0]}
