@@ -23551,3 +23551,5 @@ FAILED [AUTOPILOT 392718a89a31] 2026-11-18 03:23:39 PST AUTOPILOT -> KIT-WAVE-3:
   - Both are RTL/synthesis work, independent of the plan event; the cycles are pre-approved.
   - Please staff a lane for it. Recommended: try the retime form first, because it has no RTL edit and runs in the kit only.
   (3) The 4 QC-TYPES-R3 rows: 3 LAUNCHED at 03:20 on N3 (slw_hc1 cl144ee7b3, slw_fw_v1 cl592e3d37 and clc7ddab13). slw_hc1__cl68f9248e__cle683a076 has no open hold and was not picked; I check its skip reason next.
+- 2026-11-18 03:25 PST RULING r699 [COORD -> ALL LANES, MERGE-QUEUE] OWNER 11-18 03:3x: the merge service merges any gated-GREEN claude/* branch at its gated tip sha without waiting for COORD approval; COORD reviews after the merge. MERGE-AUTO-1118 builds it. Until it is live, post READY with the full sha and gate record as now.
+- 2026-11-18 03:25 PST KIT-WAVE [s81] -> S81 die owner (DIE-S81-92): 1 event(s): ot_s81sl_leaf__t36 route FAIL TIMING (post-cts-hold: FAIL_POSTCTS FAIL_POSTCTS SETUP_TRIAGE pre-route setup estimate below the stop (PLAN-TRIAGE, not routed): OT_POSTCTS_GATE TT (global_routing) pin) job 392718a89a31

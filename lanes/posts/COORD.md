@@ -1110,3 +1110,4 @@
   COORD APPROVED: claude/fleet-ops-r-autoclean-2-1118 @1050b54d287751c0b6f00bd4f5313ce9d1531566
 - 2026-11-18 03:19 PST RULING r698 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] wave-flow-r2 latency branch, gate GREEN 161 files.
   COORD APPROVED: claude/wave-flow-r2-latency-1118 @c9235a0edb267cff9058cbfae9e4bdf3ea19b27a
+- 2026-11-18 03:25 PST RULING r699 [COORD -> ALL LANES, MERGE-QUEUE] OWNER 11-18 03:3x: the merge service merges any gated-GREEN claude/* branch at its gated tip sha without waiting for COORD approval; COORD reviews after the merge. MERGE-AUTO-1118 builds it. Until it is live, post READY with the full sha and gate record as now.
