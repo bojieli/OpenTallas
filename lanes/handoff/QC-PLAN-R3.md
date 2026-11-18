@@ -51,3 +51,9 @@
 ## 11-17 16:2x PST
 - r626 merged and synced; QC launched at 16:16 (33 N1B rows RUNNING at 16:18, pilots first). r627 (rows-proof) is in the queue, and N2B gates and applies on it (FABLE-FIX-QC-N).
 - Foreign-tree check 44f07b1a is held by COORD until N2B is applied. Next: relocate the N2B bind on E8 (relocate_bind.py OLD=s4q9n2b NEW=s4q9n2b_d3), switch the live kit_rtl.bind_out to the relocated bind, check FOREIGN 0, then re-post READY 44f07b1a. The N1B relocated bind is ready: qcbind_pin_eb1e73448bd0_s4q9n1b/bind_s29q103S4Q9N1BBR_d2 (E8 and E9).
+
+## 11-17 18:xx PST: event N3 (plan posted 17:5x, bins 18:xx)
+- N3 = N2B + r641 (on rt 6aac35833ae8) + r648 + coll_core sink bins (radius 230, cap 4800, 43 taps) + 5 one-cycle stations (fw_v1 pd3_rd_wi_32, su_l1 lpad_flt_su_c, su_l1 cl5ea486db cland_rsn, sc_v1 cland_collect_rst_n_t13, shared cland_origin -> cland_rstart_tx) + LATCHECK update. Hold margin: no gen_args change (r641 takes max(CLI, 40)).
+- Work dir: epyc8 /srv/opentallas-scratch2/claude/qc-plan-r3-n3-1117. Contents: dump.tcl/dump.sh (ORFS docker dump of 3_place.odb), coll_core.json (bins), n3_taps2/3.py sweeps, taps_sweep*.json.
+- Next: compose N3 on E2 from N2B_d3. Then the renumber of coll_core tap names and the station rows, then the M5T-style chain, then publish with tree-relative paths, then gate and apply.
+- Foreign-tree: the N1B relocated bind is ready (qcbind_..._s4q9n1b/bind_s29q103S4Q9N1BBR_d2, E8+E9, relocate_bind.py). N2B: relocate after its apply. Then re-post READY 44f07b1a.
