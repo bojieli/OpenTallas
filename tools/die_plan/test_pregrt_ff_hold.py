@@ -66,13 +66,13 @@ def test_two_scene_read_replaces_the_single_read_once(tmp_path):
 def test_route_guard_is_cross_tap_only(tmp_path):
     _kit(tmp_path, {"pregrt_ff_hold": True})
     t = (tmp_path / "pregrt_ff_hold.tcl").read_text()
-    assert "foreach pg_tag {all xt}" in t and "set pg_dg [expr {$pg_guard - $pg_pm}]" in t
+    assert "foreach pg_tag {all rr xt}" in t and "set pg_dg [expr {$pg_guard - $pg_pm}]" in t
     # the guard pass: port hold excepted, every tap port early latency widened, repair, then both restored
-    a = t.index("set_false_path -hold -from $pg_in")
+    a = t.index("set_false_path -hold -from $pg_in", t.index('if {$pg_tag eq "xt"} {'))     # the xt pass (the rr pass has its own, HOLD-MARGIN-FAMILY)
     w = t.index("set_clock_latency -source -early -clock $pg_ck [expr {$pg_e - $pg_dg}] [get_ports $pg_p]")
-    r = t.index("repair_timing -hold -hold_margin $pg_pm -max_buffer_percent 100")
+    r = t.index("repair_timing -hold -hold_margin $pg_mrg -max_buffer_percent 100")
     z = t.index("set_clock_latency -source -early -clock $pg_ck $pg_e [get_ports $pg_p]")
-    b = t.index("unset_path_exceptions -hold -from $pg_in")
+    b = t.rindex("unset_path_exceptions -hold -from $pg_in")
     assert a < w < r < z < b
     assert "set_false_path -hold -to $pg_out" in t and "unset_path_exceptions -hold -to $pg_out" in t
     assert "OT_PREGRT_HOLD_PORT_MARGIN" in t and "OT_PREGRT_HOLD_GUARD" in t

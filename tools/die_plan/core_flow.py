@@ -235,6 +235,10 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     grt_nonport_hold opts a NEW kit into the shared input-start exclusion during FF GRT repair only;
     TT setup and final full-path sign-off are unchanged. Default keeps the original generated files."""
     kd = Path(kd)
+    # HOLD-MARGIN-FAMILY 11-17 (lever 1): core kits (svc and hard cores) repair reg-to-reg hold to >= 15 ps; a recipe value above it stays
+    import hold_margin_family as _HMF
+    _fam = _HMF.core_margin()
+    hold_ff_margin = _HMF.grt_margin(hold_ff_margin, core=True)
     import kit_common_files; kit_common_files.stage(kd)   # KIT-COMMON-1117: the helpers gen_phys type kits carry (hold_sdc_guard.tcl, ...), one shared list
     stage_grt183(kd)
     for f in ("rtl_lint.py", "vclk_corner.tcl", "grt_pre.tcl", "grt_maxwire.tcl", "hold_guard_grt.tcl","grt_layers.tcl", "grt_post.tcl", "pg_connect.tcl", "pg_track_truth.tcl", "unplaced_setup_guard.tcl", "native_cell_cap.tcl") + KIT_MODE_FILES:
@@ -274,6 +278,7 @@ def apply(kd, b, design, time_unit_ps=1.0, rc_cal=True, hold_ff_margin=HOLD_FF_M
     cfg = [f"export OT_VCLK_TT = {b['tt'] / time_unit_ps:.4f}",
            f"export OT_VCLK_FF = {b['ff'] / time_unit_ps:.4f}",
            f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}",
+           *_HMF.config_lines(_fam, pregrt=False),
            "export OT_CORE_PRE_FLOORPLAN_TCL := $(PRE_FLOORPLAN_TCL)",
            "export PRE_FLOORPLAN_TCL = /work/pre_floorplan_core.tcl",
            "override export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre_core.tcl",
