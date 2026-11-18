@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""kit_slim.py [--apply] [--link ROOT...] [--strip ROOT...] [--state kit_wave_state.json --ids store_ids.txt] [--min-age-s N]
+"""kit_slim.py [--apply] [--link ROOT...] [--strip ROOT...] [--state kit_wave_state.json --ids store_ids.txt [--agi-index INDEX.tsv]] [--min-age-s N]
 KIT-SLIM-1118 (OWNER: live kit builds took 2.2 TB on epyc10; COORD 11-18 decision: the delete guard stays as it is).
 
 Measured: 55-70% of a kit attempt is bind_sinks.json (2.36 GB, one fresh copy per attempt), then identical final ODBs, 2_x/3_x sub-stage ODBs, eco copies.
@@ -327,6 +327,18 @@ def run_strip(state_items, ctx, allow_file=None):
         strip_files(p, kind, ctx)
 
 
+def agi_records(path):
+    out = set()
+    with open(path) as f:
+        head = f.readline().rstrip("\n").split("\t")
+        i = head.index("record") if "record" in head else 3
+        for ln in f:
+            c = ln.rstrip("\n").split("\t")
+            if len(c) > i and re.fullmatch(r"[0-9a-f]{64}", c[i]):
+                out.add(c[i])
+    return out
+
+
 def main(argv):
     ctx_args = {"apply": "--apply" in argv}
     opts, link, strip, cur = {}, [], [], None
@@ -357,6 +369,8 @@ def main(argv):
         run_link(link, ctx)
     if strip:
         ctx.ids = {l.strip() for l in open(opts["--ids"]) if l.strip()}
+        if opts.get("--agi-index"):                         # AGIdock INDEX.tsv (read-only copy): its "record" column is the signoff sha256 too
+            ctx.ids |= agi_records(opts["--agi-index"])
         run_strip(json.load(open(opts["--state"]))["items"], ctx)
     for p, why in ctx.skipped[:40]:
         print("SKIP %s: %s" % (p, why))
