@@ -116,15 +116,17 @@ def rekey_holds(die, recs, old_tree, new_tree, old_hash, new_hash):
     return out, n
 
 
-def patch_ops(die, d, old_tree, new_tree, manifest_hash):
+def patch_ops(die, d, old_tree, new_tree, manifest_hash, main_sha=None):
     """the kit_wave_edit JSON patch that switches the die to the new tree: src, src_manifest_hash, every die key naming the old tree repointed, old tree queued"""
     ops = [{"op": "replace", "path": f"/dies/{die}/src", "value": new_tree}]
     if d.get("src_manifest_hash") is not None:
         ops.append({"op": "replace", "path": f"/dies/{die}/src_manifest_hash", "value": manifest_hash})
     else:
         ops.append({"op": "add", "path": f"/dies/{die}/src_manifest_hash", "value": manifest_hash})
+    if main_sha:                          # COORD 11-17: the tools-lag check and the tool-skew pin read dies.<die>.tools_sha first; left at the old pin, every tick saw the same lag and started another refresh
+        ops.append({"op": "replace" if d.get("tools_sha") is not None else "add", "path": f"/dies/{die}/tools_sha", "value": main_sha})
     for k, v in d.items():
-        if k in ("src", "src_manifest_hash", "superseded_trees", "hold_records"):
+        if k in ("src", "src_manifest_hash", "superseded_trees", "hold_records", "tools_sha"):
             continue
         nv = repoint(v, old_tree, new_tree)
         if nv != v:
@@ -324,7 +326,7 @@ def _refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.
         rec.update(status="DRY-OK", why="guard ok, bind unchanged; dry mode: not applied")
         return rec
     try:
-        edit(die, patch_ops(die, d, old, new, h), f"TOOLS-REFRESH {die}: tools-only tree {os.path.basename(new)} (rulings {', '.join(lag['missing'][:12])}); guard + strict bind unchanged")
+        edit(die, patch_ops(die, d, old, new, h, main_sha), f"TOOLS-REFRESH {die}: tools-only tree {os.path.basename(new)} (rulings {', '.join(lag['missing'][:12])}); guard + strict bind unchanged")
     except Exception as e:                       # the edit tool refused: nothing changed
         rec.update(status="APPLY-FAIL", why=f"{type(e).__name__}: {e}"[:300])
         post(f"NEEDS-LANE [TOOLS-REFRESH -> {rec['owner'] or die}] {die}: tree {new} is verified but the config edit failed: {rec['why']}")

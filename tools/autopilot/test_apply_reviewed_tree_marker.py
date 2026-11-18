@@ -80,6 +80,16 @@ class Apply(unittest.TestCase):
         apply(c3, cand(), "/x/old", "E0", pilot_item="t1", TC=TC)                      # the event did not change: no lineage entry
         self.assertNotIn("event_lineage", json.loads((c3 / "autopilot/kit_wave.json").read_text())["dies"]["kv"])
 
+    def test_apply_adds_the_event_to_gate_events_extra(self):
+        """the wave gate refuses an event that is not a plan of record: the apply must add its label atomically (HEAD NF15f was OFF 3 h)"""
+        c = mk()
+        apply(c, dict(cand(), config={"event": "E1"}), "/x/old", "E0", pilot_item="t1", TC=TC)
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual(d["gate_events_extra"], ["E1"])
+        apply(c, dict(cand(), tree="/x/new2", config={"event": "E2"}, manifest_hash="aa" * 32), "/x/new", "E1", pilot_item="t1", TC=TC)
+        d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+        self.assertEqual(d["gate_events_extra"], ["E1", "E2"])
+
     def test_default_pilot_item_is_the_smallest_known_item(self):
         c = mk()
         apply(c, cand(), "/x/old", "E0", TC=TC)
