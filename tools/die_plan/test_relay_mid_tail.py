@@ -76,3 +76,10 @@ def test_tcl_soft_frac_default_unchanged():
     s = open(os.path.join(HERE, "relay_mid.tcl")).read()
     assert "double($::env(OT_RELAY_MID_SOFT_FRAC)) : 0.02}]" in s
     assert s.count("$rm_softf * (") == 2 and "0.02 * (" not in s
+
+
+def test_tcl_tail_law_also_on_a_polyline():
+    s = open(os.path.join(HERE, "relay_mid.tcl")).read()
+    # the tail decision is taken before the polyline branch, and the polyline spreads over n hops when it fired
+    assert s.index('::env(OT_RELAY_MID_TAIL) eq "1"') < s.index("set rm_pts [rm_polyline $g $ax $ay $bx $by]")
+    assert "set rm_tn [expr {$rm_den == $n ? $n : $n + 1}]" in s

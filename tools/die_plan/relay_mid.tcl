@@ -373,11 +373,27 @@ dict for {g inf} $rm_info {
   set n [llength $chain]
   # OT_RELAY_POLY=1 (FIX-RELAYPOLY, R-COL-4): when the straight source-sink line crosses a hard macro (or a sub-12-um gap
   # between macros) the n stations are spread evenly along a polyline that avoids them, not on the line
+  # OT_RELAY_MID_TAIL=1 (FABLE-FIX-KV-HG 11-18, opt-in, default off = byte-identical): a tail that broadcasts to fixed sinks spread
+  # wider than the even hop (KV hst_t2 -> the front pins of 4 head eighths over 1.2 mm: with the tail at L*n/(n+1) the far core
+  # stays 750-1000 um from it, kv3_hgi_v4 1,170 ends at -255 ps) sits AT the sink centroid: stations at L*j/n.
+  # Also on a polyline (plan relay_polylines / OT_RELAY_POLY): the tail then sits at the END of the polyline.
+  set rm_den [expr {$n + 1.0}]
+  if {[info exists ::env(OT_RELAY_MID_TAIL)] && $::env(OT_RELAY_MID_TAIL) eq "1"} {
+    set rm_spr 0
+    foreach rm_p [lindex [dict get $rm_info [lindex $chain end]] 2] {
+      set rm_d [expr {abs([lindex $rm_p 0] - $bx) + abs([lindex $rm_p 1] - $by)}]
+      if {$rm_d > $rm_spr} { set rm_spr $rm_d }
+    }
+    if {$rm_spr > (abs($bx - $ax) + abs($by - $ay)) / ($n + 1.0)} {
+      set rm_den [expr {double($n)}]
+      puts "OT_RELAY_MID_TAIL chain [lindex $chain 0]..[lindex $chain end] ($n stations): sink spread [expr {$rm_spr / double($rm_dbu)}] um > even hop [expr {(abs($bx - $ax) + abs($by - $ay)) / ($n + 1.0) / $rm_dbu}] um, tail at the sink centroid [expr {$bx / double($rm_dbu)}] [expr {$by / double($rm_dbu)}]"
+    }
+  }
   set rm_pts {}
   if {$rm_poly} { set rm_pts [rm_polyline $g $ax $ay $bx $by] }
   if {$rm_pts ne {}} {
     set rm_tot [lindex $rm_pts end]
-    set rm_tn [expr {$n + 1}]
+    set rm_tn [expr {$rm_den == $n ? $n : $n + 1}]
     if {$rm_tot / double($rm_tn) > 405.0 * $rm_dbu} {
       puts "OT_RELAY_POLY WARN $g path [expr {$rm_tot / $rm_dbu}] um, $rm_tn hops > 405 um"
       lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {$rm_tot / $rm_dbu}] $rm_tn]
@@ -394,21 +410,6 @@ dict for {g inf} $rm_info {
   if {(abs($bx - $ax) + abs($by - $ay)) / double($n + 1) > 405.0 * $rm_dbu} {
     puts "OT_RELAY_POLY WARN $g straight path [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_dbu}] um, [expr {$n + 1}] hops > 405 um"
     lappend rm_polybad [format "%s:%.0fum/%dhops" $g [expr {(abs($bx - $ax) + abs($by - $ay)) / $rm_dbu}] [expr {$n + 1}]]
-  }
-  # OT_RELAY_MID_TAIL=1 (FABLE-FIX-KV-HG 11-18, opt-in, default off = byte-identical): a tail that broadcasts to fixed sinks spread
-  # wider than the even hop (KV hst_t2 -> the front pins of 4 head eighths over 1.2 mm: with the tail at L*n/(n+1) the far core
-  # stays 750-1000 um from it, kv3_hgi_v4 1,170 ends at -255 ps) sits AT the sink centroid: stations at L*j/n.
-  set rm_den [expr {$n + 1.0}]
-  if {[info exists ::env(OT_RELAY_MID_TAIL)] && $::env(OT_RELAY_MID_TAIL) eq "1"} {
-    set rm_spr 0
-    foreach rm_p [lindex [dict get $rm_info [lindex $chain end]] 2] {
-      set rm_d [expr {abs([lindex $rm_p 0] - $bx) + abs([lindex $rm_p 1] - $by)}]
-      if {$rm_d > $rm_spr} { set rm_spr $rm_d }
-    }
-    if {$rm_spr > (abs($bx - $ax) + abs($by - $ay)) / ($n + 1.0)} {
-      set rm_den [expr {double($n)}]
-      puts "OT_RELAY_MID_TAIL chain [lindex $chain 0]..[lindex $chain end] ($n stations): sink spread [expr {$rm_spr / double($rm_dbu)}] um > even hop [expr {(abs($bx - $ax) + abs($by - $ay)) / ($n + 1.0) / $rm_dbu}] um, tail at the sink centroid [expr {$bx / double($rm_dbu)}] [expr {$by / double($rm_dbu)}]"
-    }
   }
   set j 0
   foreach c $chain {
