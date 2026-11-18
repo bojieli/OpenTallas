@@ -3916,7 +3916,7 @@
    "plan_sha256": "23c87c42a4e9b78d44123bd65aaa4b2c3a75d02870d566a7e0f82a993817d58b",
    "note_plan_sha256": "WAVE-POR 11-12 (CORES-S81-1, COORD approved): sha256 of dies.qwen_kvsys.plan; the release-tree counter counts the origin/main plan with this sha. UPDATE IT ON EVERY REPOINT.",
    "die_gen_env": {
-    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kit-ops-6/signed_view_sha_kv.json",
+    "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_kv_pin_eb1e73448bd0_hg7_23c87c42_t5144e08_d22/physical/die_plan/qwen_kvsys/plan_of_record/signed_view_sha_kv.json",
     "OT_PLACE_MAX_FANOUT": "64",
     "OT_GRT_NONPORT_HOLD": "1",
     "OT_CORE_TAP_REACH_UM": "0",
@@ -35677,7 +35677,6 @@
     "slice_station__t49@4",
     "ot_s81sl_leaf__t23@13"
    ],
-   "auto_rearm": false,
    "auto_rearm_note_wavehold1115": "WAVE-HOLDS-1115 2026-11-15 21:14 PST (COORD r223, FABLE-FLOWCLASS-HOLDS-2030 5.3): auto_rearm false until G3b adopts (the adopt gives new plan blocks, rows launch fresh); revert = delete this key or set true.",
    "src_manifest": true,
    "prev_dies81_92_g3b": {
@@ -37068,7 +37067,9 @@
    "tools_refresh_bind_sub": "o",
    "gen_host_min_free_gb": {
     "intel1": 150
-   }
+   },
+   "auto_rearm_prev_s81colflow1118": false,
+   "auto_rearm_note_s81colflow1118": "S81-COL-FLOW-1118 2026-11-18: auto_rearm restored (key deleted) - WAVE-HOLDS-1115 held it false 'until G3b adopts'; trees since G3b are adopted (src d8t).  234 S81 FAIL rows had sat > 1 h with changed inputs (src f2s4/d7w -> d8t, restored count-archive-2 view inputs, tools fixes) and never re-armed.  Per-item fail key still refuses identical relaunches."
   },
   "s81_head": {
    "enabled": true,
