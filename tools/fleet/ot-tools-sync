@@ -12,6 +12,8 @@
                                    the hub tree against git, the legacy kw38/rt tree against its own HEAD while a unit still
                                    runs it, and each host's active ot-run backend against tools/fleet/ot-run of RT/current.
                                    --post appends DRIFT lines to the review queue when the drift set changes.
+  ot-tools-sync follow             (1-2 min timer, OWNER 11-18) fetch origin/main; when it moved and RT/current is an ancestor of it, run `sync`
+                                   (fast-forward only: a main that does not contain RT/current is logged and skipped); no-op otherwise.
   ot-tools-sync status             current version per host.
 Called by ot-merge-queue after every push to main (MQ_SYNC_HOOK).  Log: ~/merge-queue/log (prefix SYNC).
 """
@@ -646,9 +648,35 @@ def sync_guarded(sha, hosts, tests):
     return rc
 
 
+def follow(hosts=True):
+    """rt/current follows origin/main, fast-forward only; one follower at a time, nothing to do when already there"""
+    import fcntl
+    RT.mkdir(parents=True, exist_ok=True)
+    lockf = open(RT / ".follow.lock", "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return 0
+    git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
+    full = git("rev-parse", "origin/main^{commit}").strip()
+    cur = current()
+    if cur == sha12(full):
+        return 0
+    cur_full = ""
+    if cur:
+        try:
+            cur_full = git("rev-parse", f"{cur}^{{commit}}").strip()
+        except Exception:                                  # noqa: BLE001 - a current the clone does not know: treated as not an ancestor
+            cur_full = ""
+        if not cur_full or S.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", cur_full, full]).returncode != 0:
+            log(f"follow: origin/main {sha12(full)} does not contain rt/current {cur}; not fast-forward, skipped")
+            return 0
+    return sync_guarded(full, hosts, False)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune"])
+    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune", "follow"])
     ap.add_argument("--sha", default="")
     ap.add_argument("--no-hosts", action="store_true")
     ap.add_argument("--no-tests", action="store_true", help="smoke without the wave test suite")
@@ -656,6 +684,8 @@ def main():
     a = ap.parse_args()
     if a.cmd == "sync":
         return sync_guarded(a.sha, not a.no_hosts, not a.no_tests)
+    if a.cmd == "follow":
+        return follow(not a.no_hosts)
     if a.cmd == "prune":                       # run ON a build host: prune its rt/ (text naming pinned snapshots arrives on stdin from the hub)
         gone = prune_snapshots(RT, protect=(current() or "",), text=sys.stdin.read())
         print(f"pruned {len(gone)}")

@@ -335,6 +335,22 @@ class EndToEnd(unittest.TestCase):
         r = self._omq("merge-now", "claude/good", self.shas["good"]); self.assertEqual(r.returncode, 6, r.stdout + r.stderr)
         self.assertIn("gate it again", r.stdout)
 
+    def test_redwatch_posts_known_red_for_a_commit_that_breaks_tests_and_blocks_nobody(self):
+        q = self._auto_setup()
+        self.assertEqual(self._omq("redwatch").returncode, 0)                               # first run: start at current main
+        sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
+        (self.dev / "tools/x/mod.py").write_text("def f():\n    return 0\n")
+        sh(*self.g, "commit", "-qam", "[LANE-BREAK] break f", cwd=self.dev)
+        (self.dev / "tools/x/other.txt").write_text("fine\n")
+        sh(*self.g, "add", "tools/x/other.txt", cwd=self.dev); sh(*self.g, "commit", "-qm", "[LANE-OK] harmless", cwd=self.dev)
+        sh(*self.g, "push", "-q", "origin", "main", cwd=self.dev)
+        r = self._omq("redwatch"); self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        t = q.read_text()
+        self.assertRegex(t, r"KNOWN-RED \[MERGE-QUEUE -> LANE-BREAK\] main \w+ \('\[LANE-BREAK\] break f'\)")
+        self.assertIn("test_mod.py::test_f", t); self.assertNotIn("LANE-OK]", t.split("KNOWN-RED")[-1].split("\n")[0] if False else "")
+        n = t.count("KNOWN-RED"); self.assertEqual(n, 1)
+        self._omq("redwatch"); self.assertEqual(q.read_text().count("KNOWN-RED"), 1)        # each commit judged once
+
     def test_already_in_main_posts_nothing_to_land(self):
         sh(*self.g, "checkout", "-q", "main", cwd=self.dev)
         sh(*self.g, "merge", "-q", "--ff-only", "claude/good", cwd=self.dev)

@@ -31,12 +31,27 @@ BUDGET_S = int(os.environ.get("OT_GIT_MIRROR_BUDGET_S", "100"))   # a sync run s
 REJECT_LIMIT = int(os.environ.get("OT_GIT_MIRROR_REJECT_LIMIT", "2"))   # pushes GitHub rejects this often for the same sha are skipped
 
 PRE_RECEIVE = r"""#!/bin/bash
-# ot-git-mirror: lanes push claude/* branches only; main moves only through the merge queue on GitHub
+# lanes push claude/* branches AND fast-forward main (OWNER 11-18: one shared version, no branches/gates/approvals).  A push to main is
+# relayed to GitHub (no force) inside this hook; only if GitHub accepts does the mirror's main move, so the two never diverge.
 rc=0
 while read -r old new ref; do
   case "$ref" in
     refs/heads/claude/*) ;;
-    *) echo "ot-git-mirror: REFUSED $ref: push claude/* branches only (main lands through the merge queue)"; rc=1; continue;;
+    refs/heads/main)
+      if [ "$new" = 0000000000000000000000000000000000000000 ]; then echo "ot-git-mirror: REFUSED delete of main"; rc=1; continue; fi
+      exec 8> main-push.lock; flock -w 300 8
+      if out=$(env -u GIT_DIR timeout 600 git push -q origin "$new:refs/heads/main" 2>&1); then
+        echo "ot-git-mirror: main -> ${new:0:11} on GitHub"
+        echo "$(date '+%F %T') OK main $new" >> forward.log
+      else
+        env -u GIT_DIR -u GIT_QUARANTINE_PATH -u GIT_OBJECT_DIRECTORY -u GIT_ALTERNATE_OBJECT_DIRECTORIES timeout 120 git fetch -q origin +refs/heads/main:refs/heads/main >/dev/null 2>&1
+        echo "ot-git-mirror: main NOT pushed: GitHub refused (main moved or a size/secret rule): $(echo "$out" | tail -2 | tr '\n' ' ')"
+        echo "ot-git-mirror: fetch origin main, rebase on it and push again (ot-push-main does this)."
+        echo "$(date '+%F %T') FAIL main $new $(echo "$out" | tail -1)" >> forward.log
+        rc=1
+      fi
+      continue;;
+    *) echo "ot-git-mirror: REFUSED $ref: push claude/* branches or main only"; rc=1; continue;;
   esac
   if [ "$new" = 0000000000000000000000000000000000000000 ]; then
     echo "ot-git-mirror: REFUSED delete of $ref"; rc=1

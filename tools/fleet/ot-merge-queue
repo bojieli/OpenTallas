@@ -28,7 +28,10 @@ else it is skipped until a new gate.  Switch: file ~/merge-queue/auto.on (or MQ_
 digest goes to ~/coord.  (b) `merge-now <branch> <fullsha>` (called by `ot-gate-remote --merge`) lands one such sha at once under the same
 lock.  COORD APPROVED lines keep working.  Same conflict / red / no-force rules.
 
-usage: ot-merge-queue [tick] [--dry-run] [--only SHA] | status | parse | gate <branch>[@<sha>] | known-red | auto-list | merge-now <branch> <fullsha>
+usage: ot-merge-queue [tick] [--dry-run] [--only SHA] | status | parse | gate <branch>[@<sha>] | known-red | auto-list | merge-now <branch> <fullsha> | redwatch
+
+OWNER 11-18 (later): lanes commit straight to main (ot-push-main); `redwatch` (own timer) replaces the gate: it only posts KNOWN-RED for a commit that
+makes the tests of its touched files fail.  tick / approvals / auto / merge-now stay for the old branch path and are not needed.
 """
 import argparse
 import concurrent.futures as CF
@@ -1616,6 +1619,68 @@ def process_todo(st, todo, text, args):
     save_state(st)
 
 
+def commit_lane(c):
+    """the lane a main commit belongs to: a leading `[LANE]` / `LANE:` of the subject, else the author name"""
+    subj = git("log", "-1", "--format=%s", c, check=False).stdout.strip()
+    m = re.match(r"\[?([A-Za-z0-9][\w.-]{1,40})[\]:]", subj)
+    if m and m.group(1).lower() not in ("merge", "fix", "revert", "add", "update"):
+        return m.group(1).upper()
+    return git("log", "-1", "--format=%an", c, check=False).stdout.strip() or "COORD"
+
+
+def redwatch():
+    """OWNER 11-18: the queue is no gate any more.  Alarm only: for each NEW commit on main (first-parent, newest MQ_REDWATCH_MAX), run the
+    tests its touched files select (the same gate() run, against the commit's first parent, so a failure main already had is baseline); a
+    NEW failure posts one KNOWN-RED line naming the commit to its author lane.  Nobody is blocked."""
+    MQ.mkdir(parents=True, exist_ok=True)
+    lockf = open(MQ / "redwatch.lock", "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return 0
+    f = MQ / "redwatch.json"
+    try:
+        rs = json.loads(f.read_text())
+    except (OSError, ValueError):
+        rs = {}
+    base = fetch_main()
+    seen = rs.get("seen", "")
+    if not seen or not rev(seen) or not is_ancestor(seen, base):
+        rs["seen"] = base
+        f.write_text(json.dumps(rs, indent=1))
+        log(f"redwatch: start at main {base[:11]}")
+        return 0
+    commits = git("rev-list", "--first-parent", "--reverse", f"{seen}..{base}").stdout.split()
+    cap = int(os.environ.get("MQ_REDWATCH_MAX", "4"))
+    if len(commits) > cap:
+        log(f"redwatch: {len(commits)} new commits, checking the newest {cap}")
+        commits = commits[-cap:]
+    st = {"posts": []}
+    for c in commits:
+        par = rev(f"{c}^1")
+        if not par:
+            continue
+        it = {"id": f"rw-{c[:10]}", "key": f"main@{c[:11]}"}
+        try:
+            wt_make(it["id"], c)
+            res, note = gate(it, wt_make(it["id"], c, it.get("extra", ())), par)
+        except Exception as e:                                # noqa: BLE001 - an alarm never fails the timer
+            res, note = "INFRA", f"{type(e).__name__}: {str(e)[:300]}"
+        finally:
+            wt_drop(it["id"])
+        log(f"redwatch {c[:11]}: {res}: {note[:300]}")
+        if res == "RED":
+            lane = commit_lane(c)
+            subj = git("log", "-1", "--format=%s", c).stdout.strip()[:100]
+            queue_post(st, "KNOWN-RED", lane, f"main {c[:11]} ('{subj}') made test(s) red: {note[:900]}. Not blocking anyone; "
+                                              f"fix on main (ot-push-main) or revert.")
+            rs.setdefault("red", {})[c] = note[:300]
+    flush_posts(st)
+    rs["seen"] = base
+    f.write_text(json.dumps(rs, indent=1))
+    return 0
+
+
 def auto_list():
     st = load_state()
     base = fetch_main()
@@ -1678,7 +1743,7 @@ def status():
 def main():
     global DRY
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red", "auto-list", "merge-now"])
+    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red", "auto-list", "merge-now", "redwatch"])
     ap.add_argument("target", nargs="?", default="", help="gate: <branch>[@<sha>]")
     ap.add_argument("sha", nargs="?", default="", help="merge-now: the full sha")
     ap.add_argument("--dry-run", action="store_true", help="test only: no push, no tag, no post, no state write")
@@ -1690,6 +1755,11 @@ def main():
         return status()
     if a.cmd == "known-red":
         return known_red_cmd()
+    if a.cmd == "redwatch":
+        try:
+            return redwatch()
+        finally:
+            pack_guard()
     if a.cmd == "auto-list":
         return auto_list()
     if a.cmd == "merge-now":
