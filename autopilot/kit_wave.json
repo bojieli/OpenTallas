@@ -52113,9 +52113,9 @@
       "slw_st_a_v1__clfc5867a6__pvf82a6c28"
      ],
      "release": [
-      "event_adopt:s29q103S4Q9N"
+      "event_adopt:s29q103S4Q9N3"
      ],
-     "reason": "QC-PLAN-R3 11-17 16:5x (COORD): MPL-0034 on N1B (pvdf8e5ca4 failed 16:46): hard core cl_b_hw_ctl_hc0_i sits 12 nm past the core edge in N1B; the st_a core-edge move (x 570.24 -> 561.6) is only in N2B. No N1B attempt can pass. Releases at the N2B apply (event s29q103S4Q9N, FABLE-FIX-QC-N). Running attempts finish."
+     "reason": "QC-PLAN-R3 11-17 16:5x (COORD): MPL-0034 on N1B (pvdf8e5ca4 failed 16:46): hard core cl_b_hw_ctl_hc0_i sits 12 nm past the core edge in N1B; the st_a core-edge move (x 570.24 -> 561.6) is only in N2B. No N1B attempt can pass. Releases at the N2B apply (event s29q103S4Q9N, FABLE-FIX-QC-N). Running attempts finish. | 11-17 20:0x: N2B folded into N3 (never applied) -> release re-pointed to N3"
     },
     {
      "id": "qc-sta-tail-repl-n4-1117",
@@ -52131,6 +52131,22 @@
       "result:QC-PLAN-R3:qc-sta-tail-repl-n4"
      ],
      "reason": "QC-PLAN-R3 11-17 19:3x (COORD / FABLE-CLOSURE-STRATEGY 19:2x (2)): st_a boundary nets, 6 of 6 kits fail TT -266..-671 ps at CTS: ONE pad tail drives all four hard rows (fan-out structure, not a flow setting). No unchanged relaunch. Release (QC-PLAN-R3 writes result qc-sta-tail-repl-n4) when BOTH land: TAIL-REPL generator feature (tail copy per core, TAIL-REPL lane) AND the N4 station on the st_a core-to-core buses. Running attempts finish."
+    },
+    {
+     "id": "qc-cb-tap0-r650-n3-1117",
+     "plan_sha": "cefb89af5f81983063bf53d1aeaabfba3b476e79a95e01469604cd5efe7002d1",
+     "owner": "QC-PLAN-R3",
+     "renewed_at": "2026-11-17 19:31",
+     "carry": false,
+     "keys": [
+      "cbn_*",
+      "cbf_*",
+      "cbx_*"
+     ],
+     "release": [
+      "event_adopt:s29q103S4Q9N3"
+     ],
+     "reason": "QC-PLAN-R3 11-17 20:0x (COORD): cb/cbn/cbf/cbx core tap[0] pad chains are unsited on N1B tools (cbn_q01 N1B pilot CTS -200 ps: u_pc_nk_u_t_0_2_tap.q[0] -> 3 HB4 487 ps -> u_t02/tap[0]); r650 (pad siting) fixes this and lands only with N3 (N2B plan + main d9bbb638 tools). No new cb launch on N1B; running attempts finish. Releases at the N3 apply (event s29q103S4Q9N3). All other families keep launching on N1B."
     }
    ],
    "planned_events": [
