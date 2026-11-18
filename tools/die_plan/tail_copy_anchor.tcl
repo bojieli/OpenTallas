@@ -4,7 +4,8 @@
 # alone does nothing: GPL leaves the copy flops where it likes (QC st_a proof: worst copy -> pin wire 1585 ps, wns -901 ->
 # -912).  Here, PRE_GLOBAL_PLACE (end of face_flops.tcl), like core_input_anchor.tcl's HB4 pad chains (r650/r660):
 #   trunk end T  = L1 centre of every consumer pin of the copies that share one trunk (the point bind's K was sized from);
-#   copy stage K = 1.5 um outside its core pin (its output BUF/INV cells with it), stages 1..K-1 evenly on the line T -> pin;
+#   copy stage K = 1.5 um outside its core pin (its output BUF/INV cells with it), stages 1..K-1 at equal length on a Manhattan
+#   route T -> pin that goes around the hard cores (L shape, else a Z through the channel beside a blocking core);
 #   trunk last stage (the flop that feeds the copies) at T; earlier trunk stages are left to GPL (dly_spread anchors on T);
 #   interior targets are pushed out of the macro boxes + 9 um halo, clamped into the core and snapped to a row/site.
 # Every placed cell is FIRM through GPL and listed in ot_face_flops.txt, so face_flops_release.tcl releases it to PLACED for
@@ -24,15 +25,6 @@ proc tcs_l1_centre {pts} {
   }
   set u [expr {($u0 + $u1) / 2.0}]; set v [expr {($v0 + $v1) / 2.0}]
   return [list [expr {round(($u + $v) / 2.0)}] [expr {round(($u - $v) / 2.0)}]]
-}
-# K stage targets on the straight line T -> L: stage s (1..K) at T + (L - T) * s / K (stage K = L)
-proc tcs_line {t l k} {
-  lassign $t tx ty; lassign $l lx ly
-  set out {}
-  for {set s 1} {$s <= $k} {incr s} {
-    lappend out [list [expr {round($tx + ($lx - $tx) * double($s) / $k)}] [expr {round($ty + ($ly - $ty) * double($s) / $k)}]]
-  }
-  return $out
 }
 # push a point out of every box {x0 y0 x1 y1} it falls in: the nearest box edge (+ step) that lands in no other box, a few
 # rounds when every edge of an abutted row lands in a neighbour; returns {x y clear}
@@ -60,6 +52,71 @@ proc tcs_snap {x y core ox oy sw sh} {
   set x [expr {$ox + round(double($x - $ox) / $sw) * $sw}]; set y [expr {$oy + round(double($y - $oy) / $sh) * $sh}]
   if {$x > $cx1 - $sw} { set x [expr {$x - $sw}] }; if {$y > $cy1 - $sh} { set y [expr {$y - $sh}] }
   return [list $x $y]
+}
+# Manhattan route T -> L around the hard cores (kv3_pv_pair: OBS M1-M7, signal ceiling M7, so a hop cannot fly over a core).
+# Candidates: the two L shapes, then Z shapes through a channel next to each core the L shapes hit (x = x0 - step / x1 + step,
+# or y = y0 - step / y1 + step).  The shortest candidate that enters no core wins; if none is free, the one with the fewest
+# entries.  Returns {length hits {x y} ...} (polyline incl. both ends).
+proc tcs_seg_hits {a b boxes} {
+  lassign $a ax ay; lassign $b bx by
+  set n 0; set hit {}
+  foreach bx_ $boxes {
+    lassign $bx_ x0 y0 x1 y1
+    if {$ay == $by} {
+      if {$ay > $y0 && $ay < $y1 && max($ax, $bx) > $x0 && min($ax, $bx) < $x1} { incr n; lappend hit $bx_ }
+    } elseif {$ax == $bx} {
+      if {$ax > $x0 && $ax < $x1 && max($ay, $by) > $y0 && min($ay, $by) < $y1} { incr n; lappend hit $bx_ }
+    }
+  }
+  return [list $n $hit]
+}
+proc tcs_path_hits {pts boxes} {
+  set n 0; set hit {}
+  for {set i 1} {$i < [llength $pts]} {incr i} {
+    lassign [tcs_seg_hits [lindex $pts [expr {$i - 1}]] [lindex $pts $i] $boxes] m h
+    incr n $m; foreach b $h { if {[lsearch -exact $hit $b] < 0} { lappend hit $b } }
+  }
+  return [list $n $hit]
+}
+proc tcs_path_len {pts} {
+  set d 0
+  for {set i 1} {$i < [llength $pts]} {incr i} { set d [expr {$d + [tcs_md [lindex $pts [expr {$i - 1}]] [lindex $pts $i]]}] }
+  return $d
+}
+proc tcs_route {t l boxes step} {
+  lassign $t tx ty; lassign $l lx ly
+  set cands [list [list $t [list $lx $ty] $l] [list $t [list $tx $ly] $l]]
+  set hit {}
+  foreach c $cands { foreach b [lindex [tcs_path_hits $c $boxes] 1] { if {[lsearch -exact $hit $b] < 0} { lappend hit $b } } }
+  foreach b $hit {
+    lassign $b x0 y0 x1 y1
+    foreach xc [list [expr {$x0 - $step}] [expr {$x1 + $step}]] { lappend cands [list $t [list $xc $ty] [list $xc $ly] $l] }
+    foreach yc [list [expr {$y0 - $step}] [expr {$y1 + $step}]] { lappend cands [list $t [list $tx $yc] [list $lx $yc] $l] }
+  }
+  set best ""
+  foreach c $cands {
+    set n [lindex [tcs_path_hits $c $boxes] 0]; set len [tcs_path_len $c]
+    if {$best eq "" || $n < [lindex $best 1] || ($n == [lindex $best 1] && $len < [lindex $best 0])} { set best [list $len $n {*}$c] }
+  }
+  return $best
+}
+# K stage targets at equal path length along a route {length hits pts..}: stage s at length * s / K (stage K = the end)
+proc tcs_along {route k} {
+  set len [lindex $route 0]; set pts [lrange $route 2 end]
+  set out {}
+  for {set s 1} {$s <= $k} {incr s} {
+    set want [expr {double($len) * $s / $k}]; set acc 0.0
+    for {set i 1} {$i < [llength $pts]} {incr i} {
+      set a [lindex $pts [expr {$i - 1}]]; set b [lindex $pts $i]; set d [tcs_md $a $b]
+      if {$acc + $d >= $want - 1e-6 || $i == [llength $pts] - 1} {
+        set f [expr {$d > 0 ? min(1.0, ($want - $acc) / $d) : 1.0}]
+        lappend out [list [expr {round([lindex $a 0] + ([lindex $b 0] - [lindex $a 0]) * $f)}] [expr {round([lindex $a 1] + ([lindex $b 1] - [lindex $a 1]) * $f)}]]
+        break
+      }
+      set acc [expr {$acc + $d}]
+    }
+  }
+  return $out
 }
 proc tcs_md {a b} { return [expr {abs([lindex $a 0] - [lindex $b 0]) + abs([lindex $a 1] - [lindex $b 1])}] }
 # copy instance name of an odb cell name (`<path>.u_pdK_..._<pad>/<leaf>` kept, `<path>.u_pdK_..._<pad>.<leaf>` flat), or ""
@@ -156,9 +213,9 @@ proc tcs_run {} {
   set row [lindex [$blk getRows] 0]
   lassign [$row getOrigin] ox oy
   set sw [[$row getSite] getWidth]; set sh [[$row getSite] getHeight]
-  set boxes {}
+  set boxes {}; set raw {}
   foreach i [$blk getInsts] {
-    if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend boxes [list [expr {[$b xMin] - $halo}] [expr {[$b yMin] - $halo}] [expr {[$b xMax] + $halo}] [expr {[$b yMax] + $halo}]] }
+    if {[[$i getMaster] isBlock]} { set b [$i getBBox]; lappend raw [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]; lappend boxes [list [expr {[$b xMin] - $halo}] [expr {[$b yMin] - $halo}] [expr {[$b xMax] + $halo}] [expr {[$b yMax] + $halo}]] }
   }
   # flops of every listed copy (by name; the chain itself is checked by connectivity below)
   set cff [dict create]
@@ -199,7 +256,7 @@ proc tcs_run {} {
     foreach it $s { dict lappend gpins $g [tcs_pin_xy $it] }
   }
   set out [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
-  set ncopy 0; set ncell 0; set ntrunk 0; set maxhop 0; set over 0; set inside 0
+  set ncopy 0; set ncell 0; set ntrunk 0; set maxhop 0; set over 0; set inside 0; set maxrhop 0; set rover 0; set crossing 0
   set tends [dict create]
   dict for {g pts} $gpins {
     lassign [tcs_l1_centre $pts] tx ty
@@ -216,7 +273,11 @@ proc tcs_run {} {
     foreach it $s { set dd [tcs_md [tcs_pin_xy $it] $t]; if {$dd < $best} { set best $dd; set pin $it } }
     set l [tcs_out_pos $pin 1.5 $dbu]
     set k [llength $chain]
-    set tg [tcs_line $t $l $k]
+    set route [tcs_route $t $l $raw $halo]
+    if {[lindex $route 1]} { incr crossing }
+    set tg [tcs_along $route $k]
+    set rh [expr {[lindex $route 0] / double($k) / $dbu}]
+    if {$rh > $maxrhop} { set maxrhop $rh }; if {$rh > $hop_um} { incr rover }
     set pts {}
     for {set s_ 0} {$s_ < $k} {incr s_} {
       set f [lindex $chain $s_]
@@ -254,7 +315,7 @@ proc tcs_run {} {
     }
   }
   close $out
-  puts [format "OT_TAIL_SITE copies %d of %d sited (%d cells, %d trunk ends, %d groups) merged %d no_cells %d bad_out %d max_hop %.1f um over_%g %d in_halo %d (FIRM, released for DPL)" \
-          $ncopy [dict size $copies] $ncell $ntrunk [dict size $gpins] $merged $nocell $badout $maxhop $hop_um $over $inside]
+  puts [format "OT_TAIL_SITE copies %d of %d sited (%d cells, %d trunk ends, %d groups) merged %d no_cells %d bad_out %d max_hop %.1f um routed_hop %.1f um over_%g %d core_crossing %d in_halo %d (FIRM, released for DPL)" \
+          $ncopy [dict size $copies] $ncell $ntrunk [dict size $gpins] $merged $nocell $badout $maxhop $maxrhop $hop_um $rover $crossing $inside]
 }
 tcs_run

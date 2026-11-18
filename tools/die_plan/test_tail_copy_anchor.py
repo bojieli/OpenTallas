@@ -48,10 +48,20 @@ def test_trunk_end_is_the_l1_centre_so_the_longest_branch_is_half_the_spread(tmp
 
 
 @needs_tclsh
-def test_stages_are_even_on_the_line_and_the_last_one_is_the_pin_target(tmp_path):
-    out = tcl(tmp_path, ["tcs_line"], "foreach p [tcs_line {0 0} {900 300} 3] { puts [join $p ,] }")
-    assert out == ["300,100", "600,200", "900,300"]
-    assert tcl(tmp_path, ["tcs_line"], "puts [join [lindex [tcs_line {5 5} {7 9} 1] 0] ,]") == ["7,9"]
+def test_hops_go_around_a_hard_core_and_stages_are_even_on_the_route(tmp_path):
+    """kv3_pv_pair has OBS on M1-M7 (the signal ceiling): the straight / L route through the core is refused, the Z through the
+    channel beside it is taken, and the K stages sit at equal routed length (hop = length / K)."""
+    names = ["tcs_md", "tcs_seg_hits", "tcs_path_hits", "tcs_path_len", "tcs_route", "tcs_along"]
+    out = tcl(tmp_path, names, """
+set r [tcs_route {0 0} {300 0} {{100 -100 200 100}} 2]
+puts [lindex $r 0]; puts [lindex $r 1]
+foreach p [tcs_along $r 3] { puts [join $p ,] }
+set r [tcs_route {0 0} {300 400} {{1000 1000 1100 1100}} 2]
+puts [lindex $r 0]; puts [lindex $r 1]; puts [llength [lrange $r 2 end]]
+foreach p [tcs_along $r 2] { puts [join $p ,] }
+""")
+    assert out[:5] == ["504", "0", "66,-102", "234,-102", "300,0"]
+    assert out[5:8] == ["700", "0", "3"] and out[8:] == ["300,50", "300,400"]       # free L shape: plain Manhattan length
 
 
 @needs_tclsh
@@ -104,9 +114,9 @@ def test_gen_phys_lists_the_bind_copies_and_sources_the_hook(tmp_path):
     kd = _kit(tmp_path, BOUND)
     assert G.tail_copy_place(kd) == 3
     rows = [ln.split("\t") for ln in (kd / "tail_copies.tsv").read_text().splitlines() if not ln.startswith("#")]
-    assert rows == [["u_pd3_i_a_cmd_0_pvg0_p0_29", "3", "pd26_i_a_cmd_0_t_29[0]", "pvg0_p0"],
-                    ["u_pd3_i_a_cmd_0_pvg2_p0_29", "3", "pd26_i_a_cmd_0_t_29[0]", "pvg2_p0"],
-                    ["u_pd2_i_a_cmd_1_c1_2", "2", "i_a_cmd_q[1]", "c1"]]        # trunk and plain pad are not copies
+    assert rows == [["u_pd3_i_a_cmd_0_pvg0_p0_29", "3", "pd26_i_a_cmd_0_t_29[0]/3", "pvg0_p0"],
+                    ["u_pd3_i_a_cmd_0_pvg2_p0_29", "3", "pd26_i_a_cmd_0_t_29[0]/3", "pvg2_p0"],
+                    ["u_pd2_i_a_cmd_1_c1_2", "2", "i_a_cmd_q[1]/2", "c1"]]        # trunk and plain pad are not copies
     ff = (kd / "face_flops.tcl").read_text()
     assert ff.endswith(G.TAIL_COPY_SITE_HOOK) and ff.index("landing_placement") < ff.index("tail_copy_anchor")
     assert (kd / "tail_copy_anchor.tcl").read_text() == SRC
@@ -128,8 +138,8 @@ def test_hook_reads_the_gen_phys_table(tmp_path):
 set d [tcs_read_tsv {kd / 'tail_copies.tsv'}]
 dict for {{c v}} $d {{ puts "$c|[join $v |]" }}
 """)
-    assert out == ["u_pd3_i_a_cmd_0_pvg0_p0_29|3|pd26_i_a_cmd_0_t_29[0]", "u_pd3_i_a_cmd_0_pvg2_p0_29|3|pd26_i_a_cmd_0_t_29[0]",
-                   "u_pd2_i_a_cmd_1_c1_2|2|i_a_cmd_q[1]"]
+    assert out == ["u_pd3_i_a_cmd_0_pvg0_p0_29|3|pd26_i_a_cmd_0_t_29[0]/3", "u_pd3_i_a_cmd_0_pvg2_p0_29|3|pd26_i_a_cmd_0_t_29[0]/3",
+                   "u_pd2_i_a_cmd_1_c1_2|2|i_a_cmd_q[1]/2"]
 
 
 def test_kit_writer_wiring_and_hook_contract():
@@ -137,7 +147,7 @@ def test_kit_writer_wiring_and_hook_contract():
     i = gp.index("    tail_copy_place(kd)\n")
     assert gp.rindex("if core_input_place(P.raw, tn):", 0, i) > gp.rindex("def ", 0, i)     # same kit writer, after the NK anchor
     run = SRC[SRC.index("proc tcs_run"):]
-    assert "tcs_out_pos $pin 1.5 $dbu" in run and "tcs_line $t $l $k" in run
+    assert "tcs_out_pos $pin 1.5 $dbu" in run and "tcs_route $t $l $raw $halo" in run and "tcs_along $route $k" in run
     assert "setPlacementStatus FIRM" in run and "ot_face_flops.txt" in run          # FIRM at GPL, released for DPL
     assert "/work/tail_copies.tsv" in run and run.rstrip().endswith("tcs_run")
     assert "[llength $macs] != 1" in run and "[llength $ffs] != $k" in run          # merged / shared copies are left alone

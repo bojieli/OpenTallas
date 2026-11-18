@@ -873,12 +873,13 @@ _TAIL_COPY_RE = re.compile(r"\bot_dp_dly\s*#\(\s*\.W\(1\)\s*,\s*\.D\((\d+)\)\s*\
 
 
 def tail_copy_rows(rtl_dir):
-    """[(copy inst, K, group = its d source, core tag)] of every bind tail-split copy in the kit RTL (bind.py emits each one
+    """[(copy inst, K, group, core tag)] of every bind tail-split copy in the kit RTL; group = <d source>/<K> (the copies of one
+    pad: same trunk, or same in-flop and K = pad when the trunk is empty).  bind.py emits each one
     as `ot_dp_dly #(.W(1), .D(K)) u_pd<K>_.. (.clk, .d(<trunk q or in-flop q>), .q(..));  // landing pad tail copy for core <tag>:`)."""
     rows = {}
     for f in sorted(Path(rtl_dir).glob("*.sv")) + sorted(Path(rtl_dir).glob("*.v")):
         for m in _TAIL_COPY_RE.finditer(f.read_text(errors="replace")):
-            rows.setdefault(m.group(2), (m.group(2), int(m.group(1)), m.group(3).strip(), m.group(4)))
+            rows.setdefault(m.group(2), (m.group(2), int(m.group(1)), f"{m.group(3).strip()}/{m.group(1)}", m.group(4)))
     return list(rows.values())
 
 
@@ -894,7 +895,7 @@ def tail_copy_place(kd):
         return 0
     kd = Path(kd)
     shutil.copyfile(Path(__file__).with_name("tail_copy_anchor.tcl"), kd / "tail_copy_anchor.tcl")
-    (kd / "tail_copies.tsv").write_text("# copy\tK\tgroup (d source)\tcore\n" + "".join(f"{c}\t{k}\t{g}\t{t}\n" for c, k, g, t in rows))
+    (kd / "tail_copies.tsv").write_text("# copy\tK\tgroup (d source/K)\tcore\n" + "".join(f"{c}\t{k}\t{g}\t{t}\n" for c, k, g, t in rows))
     with (kd / "face_flops.tcl").open("a") as f_:
         f_.write(TAIL_COPY_SITE_HOOK)
     return len(rows)
