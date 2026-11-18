@@ -723,7 +723,9 @@ SCHEMA = {
                                            "overfull_grow": {"type": "number", "minimum": 0, "maximum": 0.5},
                                            "chains": {"type": "boolean"},
                                            "ring_depth": {"type": "integer", "minimum": 0, "maximum": 4},
-                                           "ring_pair_um": _pos}},
+                                           "ring_pair_um": _pos,
+                                           "macro_follow": {"type": "boolean"},
+                                           "pair_cap": {"type": "integer", "minimum": 2}}},
                         # Default-off (QC-EVENT-S26 11-11): a tap left with fewer sinks after the affinity passes
                         # merges whole into its nearest tap within tap_radius_um (clock_taps.tcl POST_MIN).
                         "tap_post_merge_min_sinks": {"type": "integer", "minimum": 1, "maximum": 1200},

@@ -437,3 +437,25 @@ def test_ring_keys_are_in_the_schema():
         'tap_pair_affinity']
     assert spec['properties']['ring_depth'] == {'type': 'integer', 'minimum': 0, 'maximum': 4}
     assert spec['properties']['ring_pair_um'] == {'type': 'number', 'exclusiveMinimum': 0}
+
+
+# ---------------- FABLE-FIX-HEAD-MESH 11-18: macro_follow / pair_cap exports ----------------
+def test_macro_follow_and_pair_cap_exports_are_opt_in_and_bounded():
+    sys.path.insert(0, str(Path(__file__).parent))
+    from gen_phys import tap_pair_affinity_exports
+    base = {'tap_radius_um': 200, 'tap_max_sinks': 1500}
+    off = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={})})
+    assert not any('MACRO' in x or 'PAIR_CAP' in x or 'CAP_RECHECK' in x for x in off)
+    assert tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'macro_follow': False})}) == off
+    on = tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity={'macro_follow': True, 'pair_cap': 1900})})
+    assert on == off + ['export OT_TAP_PAIR_MACRO = 1', 'export OT_TAP_PAIR_CAP = 1900', 'export OT_TAP_CAP_RECHECK = 0']
+    for bad in ({'macro_follow': 1}, {'pair_cap': 1500}, {'pair_cap': 3001}, {'pair_cap': True}, {'pair_cap': 1900.0}):
+        with pytest.raises(ValueError):
+            tap_pair_affinity_exports({'clock': dict(base, tap_pair_affinity=bad)})
+
+
+def test_macro_follow_and_pair_cap_are_in_the_tool():
+    text = Path(__file__).with_name('tap_pair_affinity.tcl').read_text()
+    assert 'proc macro_follow' in text and 'OT_TAP_PAIR_MACRO' in text and 'OT_TAP_PAIR_CAP' in text
+    # default off: the follow pass runs only under its own switch, after the pair pass
+    assert 'if {[info exists ::env(OT_TAP_PAIR_MACRO)] && $::env(OT_TAP_PAIR_MACRO) eq "1"} { ::ot_tap_pair::macro_follow }' in text

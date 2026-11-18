@@ -3733,6 +3733,19 @@ def tap_pair_affinity_exports(t):
         if not 0 < ru <= 200:
             raise ValueError("tap_pair_affinity ring_pair_um out of range")
         ring.append(f"export OT_TAP_PAIR_RING_UM = {ru:g}")
+    # FABLE-FIX-HEAD-MESH 11-18 (HEAD hd_mesh zero-logic pipelines cut by location taps): macro_follow (default false) = a hard
+    # macro clock pin joins the tap of the flops driving the inputs it captures (tap_pair_affinity.tcl MACRO FOLLOW); pair_cap
+    # (default absent) = the receive capacity of the pair planner alone, in (tap capacity, 2 x tap capacity]; with it the
+    # post-pass cap recheck only reports (it would shed the joined components again)
+    macro = spec.get("macro_follow", False)
+    if not isinstance(macro, bool):
+        raise ValueError("tap_pair_affinity macro_follow must be a boolean")
+    extra = ["export OT_TAP_PAIR_MACRO = 1"] if macro else []
+    if "pair_cap" in spec:
+        pc = spec["pair_cap"]
+        if isinstance(pc, bool) or not isinstance(pc, int) or not _tap_cap(t) < pc <= 2 * _tap_cap(t):
+            raise ValueError("tap_pair_affinity pair_cap must be an integer in (tap capacity, 2 x tap capacity]")
+        extra += [f"export OT_TAP_PAIR_CAP = {pc}", "export OT_TAP_CAP_RECHECK = 0"]
     cap = min(1200, _tap_cap(t))
     if not 0 <= grow <= 0.5:
         raise ValueError("tap_pair_affinity overfull_grow must be in [0, 0.5]")
@@ -3749,7 +3762,7 @@ def tap_pair_affinity_exports(t):
             f"export OT_TAP_PAIR_UM = {pair_um:g}",
             f"export OT_TAP_PAIR_DEPTH = {depth}"] + \
         ([f"export OT_TAP_PAIR_OVERFULL_GROW = {grow:g}"] if grow > 0 else []) + \
-        (["export OT_TAP_PAIR_CHAINS = 1"] if chains else []) + ring
+        (["export OT_TAP_PAIR_CHAINS = 1"] if chains else []) + ring + extra
 
 
 def tap_post_merge_exports(t):

@@ -13,6 +13,10 @@ namespace eval ::ot_tap_pair {
   set depth [expr {[info exists ::env(OT_TAP_PAIR_DEPTH)] ? $::env(OT_TAP_PAIR_DEPTH) : 2}]
   set gmax [expr {[info exists ::env(OT_TAP_PAIR_GROUP)] ? $::env(OT_TAP_PAIR_GROUP) : 64}]
   set cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINKS) : 1200}]
+  # FABLE-FIX-HEAD-MESH 11-18 (OT_TAP_PAIR_CAP, opt-in): the receive capacity of the pair planner alone.  hd_mesh: 20 of 83 taps sat
+  # exactly at the nearest-sink cap (1500), so no pair component could join them; the planner cap is the tree-size bound, the
+  # nearest-sink cap only spreads the first assignment.  Unset = OT_TAP_MAX_SINKS as before.
+  if {[info exists ::env(OT_TAP_PAIR_CAP)] && [string is integer -strict $::env(OT_TAP_PAIR_CAP)] && $::env(OT_TAP_PAIR_CAP) > $cap} { set cap $::env(OT_TAP_PAIR_CAP) }
   set rad_um [expr {[info exists ::env(OT_TAP_REASSIGN_UM)] && $::env(OT_TAP_REASSIGN_UM) ne "" ? $::env(OT_TAP_REASSIGN_UM) : 200.0}]
   if {[info exists ::env(OT_TAP_PAIR_RADIUS_UM)]} { set rad_um $::env(OT_TAP_PAIR_RADIUS_UM) }
   set pair [expr {$pair_um*$dbu}]; set rad [expr {$rad_um*$dbu}]
@@ -114,6 +118,14 @@ namespace eval ::ot_tap_pair {
   set mlim [expr {[info exists ::env(OT_TAP_PAIR_MERGE)] ? $::env(OT_TAP_PAIR_MERGE) : 128}]
   set shp [expr {[info exists ::env(OT_TAP_PAIR_SHIFT)] ? $::env(OT_TAP_PAIR_SHIFT) : 10}]
   set grow [expr {[info exists ::env(OT_TAP_PAIR_OVERFULL_GROW)] ? $::env(OT_TAP_PAIR_OVERFULL_GROW) : 0}]
+  # FABLE-FIX-HEAD-MESH 11-18 (OT_TAP_PAIR_DUMP=<file>, diagnosis only): the planner input, one row per tap / register / pair
+  if {[info exists ::env(OT_TAP_PAIR_DUMP)] && $::env(OT_TAP_PAIR_DUMP) ne ""} {
+   set df [open $::env(OT_TAP_PAIR_DUMP) w]
+   dict for {t xy} $tapxy { puts $df "T\t$t\t[lindex $xy 0]\t[lindex $xy 1]\t[dict get $load $t]" }
+   dict for {n row} $regs { puts $df "R\t$n\t[lindex $row 1]\t[lindex $row 2]\t[lindex $row 3]" }
+   foreach e $pairs { puts $df "P\t[lindex $e 1]\t[lindex $e 2]\t[lindex $e 0]" }
+   close $df
+  }
   set result [plan $regs $pairs $tapxy $load $cap $rad $gmax $maxp $mlim $shp $grow]
   puts "OT_TAP_PAIR coherent components [dict get $result components], largest [dict get $result largest], frozen oversized [dict get $result frozen], taps above cap $cap at start [dict get $result overfull] (donate only unless overfull grow $grow)"
   foreach row [dict get $result passes] {
@@ -135,6 +147,90 @@ namespace eval ::ot_tap_pair {
   return $changed
  }
 }
+# FABLE-FIX-HEAD-MESH 11-18 MACRO FOLLOW (OT_TAP_PAIR_MACRO=1, default off).  The pair graph above holds flops only, so a
+# zero-logic register -> hard-macro input pair (hd_mesh mesh_w2: wdata[i] -> SRAM wd_in[i], about 2,100 of the 10,130 cross-tap
+# FF hold violators, the tap window 46-83 ps on a 45-ps data path) kept whatever boundary the nearest-PIN rule gave the macro.
+# After the pair pass each macro clock pin moves to the tap that clocks most of the flops driving the inputs it captures
+# (through at most OT_TAP_PAIR_DEPTH combinational cells), when that tap lies within the pair radius of the pin.  One clock
+# pin per macro: all inputs; several (wclk / rclk): the inputs whose name starts with the first letter of the clock pin.
+# Clock pins only; a macro is one sink, so no tap capacity changes materially.
+namespace eval ::ot_tap_pair {
+ proc macro_follow {} {
+  global ct_taps
+  set blk [ord::get_db_block]
+  set dbu [expr {double([[ord::get_db_tech] getDbUnitsPerMicron])}]
+  set depth [expr {[info exists ::env(OT_TAP_PAIR_DEPTH)] ? $::env(OT_TAP_PAIR_DEPTH) : 2}]
+  set rad_um [expr {[info exists ::env(OT_TAP_REASSIGN_UM)] && $::env(OT_TAP_REASSIGN_UM) ne "" ? $::env(OT_TAP_REASSIGN_UM) : 200.0}]
+  if {[info exists ::env(OT_TAP_PAIR_RADIUS_UM)]} { set rad_um $::env(OT_TAP_PAIR_RADIUS_UM) }
+  set rad [expr {$rad_um*$dbu}]
+  set tapxy {}; set ftap {}; set mpins {}
+  foreach tp $ct_taps {
+   set net [lindex $tp 1]; set nm [$net getName]
+   dict set tapxy $nm [list [lindex $tp 2] [lindex $tp 3]]
+   foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    set inst [$it getInst]
+    if {[[$inst getMaster] isBlock]} { lappend mpins [list $it $nm] } else { dict set ftap [$inst getName] $nm }
+   }
+  }
+  set seen 0; set moved 0; set far 0; set cross0 0; set cross1 0
+  foreach row $mpins {
+   lassign $row it old
+   set inst [$it getInst]; set ck [[$it getMTerm] getName]
+   set ncl 0
+   foreach t [$inst getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL" && [dict exists $tapxy [[$t getNet] getName]]} { incr ncl } }
+   set votes {}
+   foreach t [$inst getITerms] {
+    if {$t eq $it || ![$t isInputSignal] || [$t getNet] eq "NULL"} continue
+    if {[dict exists $tapxy [[$t getNet] getName]]} continue
+    if {$ncl > 1 && [string index [[$t getMTerm] getName] 0] ne [string index $ck 0]} continue
+    set front [list [$t getNet]]; set vis {}
+    for {set d 0} {$d <= $depth && [llength $front]} {incr d} {
+     set next {}
+     foreach net $front {
+      if {[dict exists $vis [$net getName]]} continue
+      dict set vis [$net getName] 1
+      foreach s [$net getITerms] {
+       if {![$s isOutputSignal]} continue
+       set si [$s getInst]; set sm [$si getMaster]
+       if {[$sm isBlock]} continue
+       if {[$sm isSequential]} {
+        if {[dict exists $ftap [$si getName]]} { dict incr votes [dict get $ftap [$si getName]] }
+        continue
+       }
+       if {$d < $depth} { foreach o [$si getITerms] { if {[$o isInputSignal] && [$o getNet] ne "NULL" && [[$o getNet] getSigType] eq "SIGNAL"} { lappend next [$o getNet] } } }
+      }
+     }
+     set front $next
+    }
+   }
+   if {![dict size $votes]} continue
+   incr seen
+   if {[info exists ::env(OT_TAP_PAIR_DUMP)] && $::env(OT_TAP_PAIR_DUMP) ne ""} {
+    set df [open $::env(OT_TAP_PAIR_DUMP) a]; set axy0 [$it getAvgXY]
+    puts $df "M\t[$inst getName]/$ck\t[lindex $axy0 1]\t[lindex $axy0 2]\t$old\t$votes"; close $df
+   }
+   set tot 0; dict for {tap c} $votes { incr tot $c }
+   set cur [expr {[dict exists $votes $old] ? [dict get $votes $old] : 0}]
+   incr cross0 [expr {$tot - $cur}]
+   set axy [$it getAvgXY]
+   if {![lindex $axy 0]} { set loc [$inst getLocation]; set x [lindex $loc 0]; set y [lindex $loc 1] } else { set x [lindex $axy 1]; set y [lindex $axy 2] }
+   set best $old; set bc $cur
+   foreach tap [lsort [dict keys $votes]] {
+    set c [dict get $votes $tap]
+    if {$c <= $bc} continue
+    lassign [dict get $tapxy $tap] tx ty
+    if {abs($x-$tx)+abs($y-$ty) > $rad} { incr far; continue }
+    set best $tap; set bc $c
+   }
+   incr cross1 [expr {$tot - $bc}]
+   if {$best ne $old} { $it disconnect; $it connect [$blk findNet $best]; incr moved }
+  }
+  puts "OT_TAP_PAIR macro follow: macro clock pins with register-driven inputs $seen, moved $moved, cross-tap register->macro pairs $cross0 -> $cross1, better tap beyond radius $far"
+  return $moved
+ }
+}
 if {[info exists ::env(OT_TAP_PAIR_AFFINITY)] && $::env(OT_TAP_PAIR_AFFINITY) eq "1" && [info exists ct_taps] && [llength $ct_taps] >= 2} {
  ::ot_tap_pair::run
+ if {[info exists ::env(OT_TAP_PAIR_MACRO)] && $::env(OT_TAP_PAIR_MACRO) eq "1"} { ::ot_tap_pair::macro_follow }
 }
