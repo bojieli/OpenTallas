@@ -406,3 +406,36 @@ def test_apply_moves_the_tools_pin_so_the_lag_check_stops_seeing_the_same_lag():
     assert TL.pin_of(dict(d, tools_sha=byp["/dies/kv/tools_sha"]["value"])) == SHA          # the reader returns the new pin
     d2 = die()
     assert {o["path"]: o for o in run(d=d2)[2][0][0]}["/dies/kv/tools_sha"]["op"] == "add"     # a die with no pin gets one
+
+
+def test_a_host_short_of_disk_is_dropped_not_a_compose_fail(monkeypatch):
+    """LATENCY-R 11-18: replicate refused on one gen host (disk floor) -> the tree applies on the hosts that hold it; gen_hosts narrows in the same patch"""
+    import overlay_classify as OC
+    monkeypatch.setattr(OC, "classify_die", lambda repo, d, main, prefixes=None: {})
+    d = die(gen_hosts=["epyc10", "epyc8", "epyc9"])
+
+    def run_(host, cmd, timeout=0):
+        if " replicate " in cmd:
+            return 1, "epyc8: refuse (free 57 GB + part 0 - tree 47 = 49 GB after the copy < floor 50 + 20 GB)\nepyc9: linked from x\nepyc9: OK"
+        if "delta.json" in cmd:
+            return 0, json.dumps({"add": {"tools/a.py": 1}, "delete": []})
+        return 0, "h"
+    o = TR.Ops(d, "/r", SHA, run=run_)
+    ok, detail, h = o.compose(OLD, "/n")
+    assert ok and o.hosts == ["epyc10", "epyc9"] and list(o.dropped) == ["epyc8"] and "refuse" in o.dropped["epyc8"]
+    seen = []
+    o.run = lambda host, cmd, timeout=0: (seen.append(cmd) or (0, "ok"))
+    o.guard("/n", "h")
+    assert "--hosts epyc10,epyc9" in seen[0]
+    ops = TR.patch_ops("kv", d, OLD, "/n", "h", SHA, hosts=o.hosts)
+    assert {"op": "replace", "path": "/dies/kv/gen_hosts", "value": ["epyc10", "epyc9"]} in ops
+    assert not [x for x in ops if x["path"] == "/dies/kv/gen_host"]                      # epyc10 still holds it
+
+
+def test_refresh_records_dropped_hosts_and_narrows():
+    class Drop(FakeOps):
+        hosts = ["epyc10"]
+        dropped = {"epyc8": "refuse"}
+    rec, posts, edits, _ = run(ops=Drop())
+    assert rec["status"] == "APPLIED" and rec["dropped_hosts"] == {"epyc8": "refuse"}
+    assert {"op": "replace", "path": "/dies/kv/gen_hosts", "value": ["epyc10"]} in edits[0][0]

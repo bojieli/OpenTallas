@@ -189,3 +189,38 @@ def test_commit_apply_commits_the_written_files_through_coord_commit(tmp_path):
     called = (coord / "called.txt").read_text()
     assert "autopilot/kit_wave.json" in called and "tree_switch_s81.json" in called and "s81_atomic_apply_1.json" in called
     assert A.commit_apply(str(tmp_path / "nocoord"), {"applied": "s81"}).startswith("skipped")
+
+
+def test_ensure_tree_drops_a_host_that_cannot_take_the_tree():
+    """LATENCY-R 11-18 (QC N3 blocked on a full intel1): per-host replicate; a refusal drops that host, the rest apply"""
+    cmds = []
+
+    def run(cmd):
+        cmds.append(cmd)
+        return (1, "intel1: refuse (free 0 GB)") if "intel1" in cmd else (0, "OK")
+    hosts, notes = A.ensure_tree_on_hosts("/t", "h", ["epyc9", "intel1", "epyc8"], ["epyc9"], "/rt", run=run)
+    assert hosts == ["epyc9", "epyc8"]
+    assert any(n.startswith("DROPPED intel1") for n in notes) and notes[0].startswith("replicated and verified on epyc8")
+
+
+def test_optimistic_apply_is_advisory_and_launches_every_type():
+    """COORD 11-18: no gate record, guard not ready, smoke not PASS -> applied with warnings; no pilot hold"""
+    class NoPG:
+        @staticmethod
+        def require_pass(*a): return "no PASS record"
+
+    class TCbad(TC):
+        @staticmethod
+        def read(d, ident): return dict(state="running", full_ok=False, running=True)
+    c = mk()
+    r = A.apply_marker(c, dict(cand(), smoke="NOTRUN", optimistic=True), "/x/old", "E0", TC=TCbad, PG=NoPG)
+    d = json.loads((c / "autopilot/kit_wave.json").read_text())["dies"]["kv"]
+    assert d["src"] == "/x/new" and r["pilot"] == "NONE" and r["optimistic"]
+    assert not [x for x in d.get("hold_records") or [] if x.get("auto_pilot")]
+    assert any("publish_gate" in w for w in r["warnings"]) and any("guard" in w for w in r["warnings"]) and any("smoke" in w for w in r["warnings"])
+    c2 = mk()
+    try:
+        A.apply_marker(c2, cand(), "/x/old", "E0", pilot_item="t1", TC=TC, PG=NoPG)          # the strict path is unchanged
+        raise SystemExit("strict apply passed without a gate record")
+    except AssertionError:
+        pass

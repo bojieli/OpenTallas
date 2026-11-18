@@ -116,9 +116,14 @@ def rekey_holds(die, recs, old_tree, new_tree, old_hash, new_hash):
     return out, n
 
 
-def patch_ops(die, d, old_tree, new_tree, manifest_hash, main_sha=None):
-    """the kit_wave_edit JSON patch that switches the die to the new tree: src, src_manifest_hash, every die key naming the old tree repointed, old tree queued"""
+def patch_ops(die, d, old_tree, new_tree, manifest_hash, main_sha=None, hosts=None):
+    """the kit_wave_edit JSON patch that switches the die to the new tree: src, src_manifest_hash, every die key naming the old tree repointed, old tree queued.
+    hosts (LATENCY-R 11-18): the gen hosts that hold the new tree when replication left some out; gen_hosts (and gen_host) narrow to them"""
     ops = [{"op": "replace", "path": f"/dies/{die}/src", "value": new_tree}]
+    if hosts and list(hosts) != list(d.get("gen_hosts") or []):
+        ops.append({"op": "replace" if d.get("gen_hosts") is not None else "add", "path": f"/dies/{die}/gen_hosts", "value": list(hosts)})
+        if d.get("gen_host") and d.get("gen_host") not in hosts:
+            ops.append({"op": "replace", "path": f"/dies/{die}/gen_host", "value": hosts[0]})
     if d.get("src_manifest_hash") is not None:
         ops.append({"op": "replace", "path": f"/dies/{die}/src_manifest_hash", "value": manifest_hash})
     else:
@@ -126,7 +131,7 @@ def patch_ops(die, d, old_tree, new_tree, manifest_hash, main_sha=None):
     if main_sha:                          # COORD 11-17: the tools-lag check and the tool-skew pin read dies.<die>.tools_sha first; left at the old pin, every tick saw the same lag and started another refresh
         ops.append({"op": "replace" if d.get("tools_sha") is not None else "add", "path": f"/dies/{die}/tools_sha", "value": main_sha})
     for k, v in d.items():
-        if k in ("src", "src_manifest_hash", "superseded_trees", "hold_records", "tools_sha"):
+        if k in ("src", "src_manifest_hash", "superseded_trees", "hold_records", "tools_sha") or (hosts and k in ("gen_hosts", "gen_host")):
             continue
         nv = repoint(v, old_tree, new_tree)
         if nv != v:
@@ -148,6 +153,8 @@ class Ops:
         self.delta_paths = None            # the files the tools-only pack changes (read from delta.json before the pack is removed)
         self.run = run or self._run
         self.host = d.get("gen_host") or (d.get("gen_hosts") or [None])[0]
+        self.hosts = [self.host] + [h for h in (d.get("gen_hosts") or []) if h != self.host]    # the hosts that hold the new tree (narrowed by compose)
+        self.dropped = {}                                                                     # host -> why replication left it out
 
     @staticmethod
     def _run(host, cmd, timeout=3600):
@@ -203,6 +210,14 @@ class Ops:
             return False, f"delta-make (hub): rc {rc}: {out[-400:]}", ""
         for c in self.compose_cmds(old, new):
             rc, out = self.run(self.host, c)
+            if rc and " replicate " in c:
+                # LATENCY-R 11-18: one gen host short of disk (epyc8/epyc10/intel1, 19:36-22:19) stopped KV and HEAD refreshes for hours (COMPOSE-FAIL is a
+                # structural stop).  The hosts that took the tree keep it; the others are dropped from the die's gen_hosts by the apply patch.
+                ok = [h for h in self.hosts[1:] if re.search(rf"^{re.escape(h)}: OK\s*$", out or "", re.M)]
+                self.dropped = {h: next((ln for ln in (out or "").splitlines() if ln.startswith(h + ":") and not ln.endswith("OK")), "no OK line")[:200]
+                                for h in self.hosts[1:] if h not in ok}
+                self.hosts = [self.host] + ok
+                continue
             if rc:
                 return False, f"{c.split()[3] if len(c.split()) > 3 else c}: rc {rc}: {out[-400:]}", ""
         rc, dj = self.run(self.host, f"cat {shlex.quote(new + '.pack')}/delta.json")
@@ -216,7 +231,7 @@ class Ops:
         return rc == 0, "composed", h.strip()
 
     def guard(self, new, manifest_hash):
-        hosts = ",".join(self.d.get("gen_hosts") or [self.host])
+        hosts = ",".join(getattr(self, "hosts", None) or self.d.get("gen_hosts") or [self.host])
         rc, out = self.run(None, f"python3 -I {shlex.quote(SM)} hosts {shlex.quote(new)} --hosts {shlex.quote(hosts)} --expect {shlex.quote(manifest_hash)}")
         if rc:
             return False, "guard hosts verify: " + out[-300:]
@@ -326,7 +341,10 @@ def _refresh(die, d, lag, main_sha, ops, state, post, edit, dry=False, now=time.
         rec.update(status="DRY-OK", why="guard ok, bind unchanged; dry mode: not applied")
         return rec
     try:
-        edit(die, patch_ops(die, d, old, new, h, main_sha), f"TOOLS-REFRESH {die}: tools-only tree {os.path.basename(new)} (rulings {', '.join(lag['missing'][:12])}); guard + strict bind unchanged")
+        dropped = getattr(ops, "dropped", None) or {}
+        if dropped:
+            rec["dropped_hosts"] = dropped
+        edit(die, patch_ops(die, d, old, new, h, main_sha, hosts=(list(ops.hosts) if dropped else None)), f"TOOLS-REFRESH {die}: tools-only tree {os.path.basename(new)} (rulings {', '.join(lag['missing'][:12])}); guard + strict bind unchanged")
     except Exception as e:                       # the edit tool refused: nothing changed
         rec.update(status="APPLY-FAIL", why=f"{type(e).__name__}: {e}"[:300])
         post(f"NEEDS-LANE [TOOLS-REFRESH -> {rec['owner'] or die}] {die}: tree {new} is verified but the config edit failed: {rec['why']}")

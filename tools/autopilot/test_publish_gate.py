@@ -78,7 +78,7 @@ def dry_pass(text, die, item, kind, host, want):
 
 
 def dry_must_not_run(*a):
-    raise AssertionError("dry gen must not run after a failed static check")
+    raise AssertionError("dry gen stub: raises (LATENCY-R 11-18: it runs alongside the static checks, a raise is a recorded FAIL)")
 
 
 class Gate(unittest.TestCase):
@@ -113,7 +113,7 @@ class Gate(unittest.TestCase):
         self.assertEqual(rec["checks"]["schema"]["verdict"], "FAIL")
         self.assertIn("die_tree", rec["checks"]["schema"]["tail"])
         self.assertEqual(rec["checks"]["pre_g0"]["verdict"], "FAIL")
-        self.assertEqual(rec["checks"]["dry_gen"]["verdict"], "SKIP")
+        self.assertEqual(rec["checks"]["dry_gen"]["verdict"], "FAIL")           # LATENCY-R 11-18: runs alongside the static checks (here it raises: recorded FAIL)
         with self.assertRaises(AssertionError) as cm:
             self.apply(tree, plan)
         self.assertIn("publish gate", str(cm.exception))
@@ -210,6 +210,22 @@ class Gate(unittest.TestCase):
         self.gate(tree, plan)
         self.assertEqual((self.c / "autopilot/kit_wave.json").read_text(), before)
         self.assertFalse(list((self.c / "lanes/handoff").iterdir()))
+
+
+class Concurrent(unittest.TestCase):
+    def test_static_and_dry_gen_run_at_the_same_time(self):
+        import threading
+        td = tempfile.mkdtemp(prefix="pgconc-"); c = mk_coord(td); tree, plan = mk_tree(td)
+        both = threading.Barrier(2, timeout=20)
+
+        def static(*a):
+            both.wait(); return {k: {"verdict": "PASS"} for k in ("schema", "pre_g0", "hashes", "contained")}
+
+        def dry(*a):
+            both.wait(); return {"verdict": "PASS"}
+        rec = PG.run_gate(c, cand(tree, plan), "/x/old", "E0", static_fn=static, dry_fn=dry, TC=TC)   # serial calls would break the barrier
+        self.assertEqual(rec["verdict"], "PASS"); self.assertEqual(rec["advisory"], [])
+        self.assertIn("gate_s", rec)
 
 
 if __name__ == "__main__":
