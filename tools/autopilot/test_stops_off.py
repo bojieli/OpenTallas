@@ -552,3 +552,31 @@ class StructStop(unittest.TestCase):
         self.assertEqual(KW.struct_stop_gate(ap, cfg, st, "s81", "col_h9_r1__t1", "ABCDEF123456", consume=True), "")   # the launch spends it
         self.assertTrue(any("STRUCT-FORCE" in m for m in logs))
         self.assertIn("STRUCT-STOP", KW.struct_stop_gate(None, cfg, st, "s81", "col_h9_r1__t1", "ABCDEF123456"))     # and the next launch is refused again
+
+
+class CancelRowsCore(unittest.TestCase):
+    """COORD 11-18: stops first, then exact cancels of the live rows; other items and finished rows untouched"""
+
+    def test_stops_placed_before_cancel_and_only_live_matching_rows(self):
+        order = []
+        st = {"items": {
+            "a": {"die": "s81", "item": "col_h9_r1__t1", "block_sha": "AAAAAAAAAAAAAA", "status": "RUNNING", "attempt": 1},
+            "b": {"die": "s81", "item": "col_h9_r1__t2", "block_sha": "BBBBBBBBBBBBBB", "status": "ENQUEUED", "attempt": 2},
+            "c": {"die": "s81", "item": "col_h9_r2__t1", "block_sha": "CCCCCCCCCCCCCC", "status": "RUNNING", "attempt": 1},
+            "d": {"die": "s81", "item": "col_h9_r1__t3", "block_sha": "DDDDDDDDDDDDDD", "status": "FAIL", "attempt": 1}}}
+        orig = KW.grt_arm_cancel
+        KW.grt_arm_cancel = lambda AP, cfg, rec, why, cls, jobs, notices, reclaim=True: order.append((rec["item"], cls, reclaim, bool(st["struct_stops"])))
+        try:
+            stops, done = KW.cancel_rows_core(object(), {}, st, "s81", "col_h9_r1__*", "GRT overflow", "S81-DIE-R3", "GEOMETRY", {})
+        finally:
+            KW.grt_arm_cancel = orig
+        self.assertEqual(stops, 2)
+        self.assertEqual(sorted(x[1] for x in done), ["col_h9_r1__t1", "col_h9_r1__t2"])
+        self.assertTrue(all(o[1] == "STRUCT-STOP" and o[2] is False and o[3] for o in order))      # stop stored before each cancel, run data kept
+        self.assertIsNotNone(KW.struct_stop_for(st, "s81", "col_h9_r1__t1", "AAAAAAAAAAAAAA")[0])
+        self.assertIsNone(KW.struct_stop_for(st, "s81", "col_h9_r2__t1", "CCCCCCCCCCCCCC")[0])
+
+    def test_dry_run_changes_nothing(self):
+        st = {"items": {"a": {"die": "s81", "item": "col_h9_r1__t1", "block_sha": "A" * 14, "status": "RUNNING", "attempt": 1}}}
+        stops, done = KW.cancel_rows_core(object(), {}, st, "s81", "col_h9_r1__*", "x", "o", "GEOMETRY", {}, dry=True)
+        self.assertEqual((stops, len(done), st.get("struct_stops")), (0, 1, None))

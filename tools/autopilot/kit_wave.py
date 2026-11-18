@@ -9548,6 +9548,28 @@ def struct_stop_gate(AP, cfg, st, die, item, block_sha, consume=False):
             f"released by a changed block, or one launch by `kit_wave.py struct-force`)")
 
 
+def cancel_rows_core(AP, cfg, st, die, item_glob, why, owner, verdict, jobs, dry=False):
+    """COORD 11-18 (cbx_q10 / col_h9_r1): place the structural stop for the plan block of every live row of die/item_glob FIRST (a CANCELLED row relaunches by itself under stops_off), then cancel
+    each live row through the wave's own API (grt_arm_cancel: exact wave unit + PLACE client, the running route job's unit or the withdrawal of an unstarted queue row, exact container names
+    under the attempt root; run data kept).  -> (stops placed, [(key, item, attempt, status)] cancelled)"""
+    live = [(k, r) for k, r in sorted((st.get("items") or {}).items())
+            if r.get("die") == die and fnmatch.fnmatchcase(str(r.get("item")), item_glob) and r.get("status") in ("RUNNING", "LAUNCHING", "ENQUEUED")]
+    stops, notices = 0, {}
+    done = []
+    for k, r in live:
+        b12 = str(r.get("block_sha") or "")[:12]
+        if b12 and not dry:
+            key = f"{die}|{r['item']}|b{b12}"
+            if key not in st.setdefault("struct_stops", {}):
+                st["struct_stops"][key] = {"die": die, "item": r["item"], "block": b12, "verdict": verdict, "owner": owner, "why": why, "ts": time.time(), "force_once": False}
+                stops += 1
+    for k, r in live:
+        done.append((k, r["item"], r.get("attempt"), r.get("status")))
+        if not dry:
+            grt_arm_cancel(AP, cfg, r, f"STRUCT-STOP {verdict} [owner {owner}]: {why}", "STRUCT-STOP", jobs, notices, reclaim=False)
+    return stops, done
+
+
 def struct_cmd(a):
     """kit_wave.py struct-stop / struct-force / struct-release / struct-list: edit state struct_stops under kit_wave.lock (blocking wait)"""
     ap_dir = Path(a.ap_dir or AP_DIR)
@@ -14746,6 +14768,10 @@ def main(argv=None):
     rc_.add_argument("--write", action="store_true", help="update the state + kit_wave_stages.tsv (under kit_wave.lock)")
     rc_.add_argument("--ap-dir", help="state dir (default AP_DIR)")
     rc_.add_argument("--quiet", action="store_true", help="histogram only")
+    cr_ = sub.add_parser("cancel-rows", help="COORD: place structural stops for the plan blocks of the live rows of die/item-glob, then cancel those rows by exact unit (grt_arm_cancel)")
+    cr_.add_argument("--die", required=True); cr_.add_argument("--item", required=True); cr_.add_argument("--owner", required=True)
+    cr_.add_argument("--verdict", default="STRUCTURAL", choices=STRUCT_VERDICTS); cr_.add_argument("--why", required=True)
+    cr_.add_argument("--config"); cr_.add_argument("--ap-dir"); cr_.add_argument("--dry-run", action="store_true")
     for _nm in ("struct-stop", "struct-force", "struct-release", "struct-list"):
         sp_ = sub.add_parser(_nm, help="COORD FLOW-1400 (3): structural verdict stops keyed by plan block (state struct_stops)")
         sp_.add_argument("--ap-dir"); sp_.add_argument("--config", help="kit_wave.json (needed to pick the current event for --block current)")
@@ -14805,6 +14831,29 @@ def main(argv=None):
         return struct_cmd(a)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import autopilot as AP
+    if a.cmd == "cancel-rows":
+        ap_dir = Path(a.ap_dir or AP_DIR)
+        cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
+        lk = lock_take(ap_dir / "kit_wave.lock", wait_s=900)
+        if lk is None:
+            print("cancel-rows: kit_wave.lock busy for 15 min; nothing done")
+            return 1
+        try:
+            st = load_state(ap_dir)
+            try:
+                jobs = json.loads((ap_dir / "state.json").read_text()).get("jobs") or {}
+            except (OSError, ValueError):
+                jobs = {}
+            AP.DRY = bool(a.dry_run)
+            stops, done = cancel_rows_core(AP, cfg, st, a.die, a.item, a.why, a.owner, a.verdict, jobs, dry=a.dry_run)
+            if not a.dry_run:
+                save_state(st, ap_dir)
+            for x in done:
+                print("CANCEL" if not a.dry_run else "WOULD-CANCEL", *x)
+            print(f"cancel-rows: {len(done)} live row(s), {stops} new struct stop(s)" + (" (dry run)" if a.dry_run else ""))
+        finally:
+            lk.close()
+        return 0
     if a.cmd == "reap-dead":
         AP.DRY = True
         cfg = load_config(Path(a.config).read_text() if a.config else read_config_text(AP))
