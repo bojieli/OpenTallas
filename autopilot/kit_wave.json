@@ -37061,7 +37061,7 @@
     "B6gF2s3",
     "B6gF2s4tapfix1"
    ],
-   "tools_refresh": false,
+   "tools_refresh": true,
    "tools_refresh_bind_cmd": "mkdir -p {out}/o && OT_HEAVY_PRIO=die ot-heavy --mem 96 -- bash -c 'python3 -I -B tools/die_plan/bind.py elab {plan} --asbuilt {asbuilt} --out {out}/o --strict --mem 96 > {out}/elab.log 2>&1 && python3 -I -B tools/die_plan/bind.py bind {plan} --asbuilt {asbuilt} --out {out}/o --strict > {out}/bind.log 2>&1'",
    "tools_refresh_bind_sub": "o",
    "gen_host_min_free_gb": {
