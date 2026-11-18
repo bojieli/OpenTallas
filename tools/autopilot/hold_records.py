@@ -87,10 +87,24 @@ def adopted_events(d):
             os.path.splitext(os.path.basename(str(d.get("plan") or "")))[0]) if v}
 
 
+def lineage_events(d):
+    """WAVE-FLOW-R2 11-17 (COORD r631): the die's recorded event lineage = the events the current event was composed from (dies.<die>.event_lineage, written by the
+    atomic apply when the event changes, or set explicitly), e.g. QC N1B: S4q6d, L2, M"""
+    d = d or {}
+    v = d.get("event_lineage")
+    return {str(x).lower() for x in (v if isinstance(v, (list, tuple)) else [v] if v else []) if x}
+
+
+def released_events(d):
+    """the events an `event_adopt:<X>` term is met by: the current adopted identities AND every ancestor in the recorded lineage (a hold waiting for an event the die
+    already builds on is released; a descendant or a sibling that is not in the lineage is not)"""
+    return adopted_events(d) | lineage_events(d)
+
+
 def known_events(d):
     """Event names current or declared: adopted identities, *_prev events, planned_events."""
     d = d or {}
-    out = adopted_events(d)
+    out = adopted_events(d) | lineage_events(d)
     for k, v in d.items():
         if k.startswith("event_prev") and isinstance(v, str):
             out.add(v.lower())
@@ -316,7 +330,7 @@ def term_met(term, rec, die, item, cfg, ctx):
             name = re.sub(r"^event\s+", "", val, flags=re.I).strip().lower()
             if not event_name_ok(name):
                 return False
-            return _event_token_in(name, adopted_events(d))
+            return _event_token_in(name, released_events(d))
         if kind == "merge":
             ref = val.split()[0] if val else ""
             return bool(ref) and bool(ctx.is_merged(ref))

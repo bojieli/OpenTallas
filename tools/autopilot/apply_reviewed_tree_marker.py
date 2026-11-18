@@ -52,6 +52,10 @@ def ensure_tree_on_hosts(tree, want, current_hosts, hosts, rt, run=None, link_fr
     return list(hosts) + extra, [f"replicated and verified on {csv}"]
 
 
+def marker_event_of(mc, d):
+    return mc.get("event") or d.get("event")
+
+
 def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=False, TC=None, rt=None, keep_gen_hosts=False, PG=None):
     C = Path(C)
     marker = dict(obj.get("marker", obj))
@@ -114,6 +118,12 @@ def apply_marker(C, obj, expect_source, expect_event, pilot_item=None, no_pilot=
             sup.append(rb)
         if old["src"] and old["src"] != tree:
             d["rollback_tree"] = old["src"]
+        # WAVE-FLOW-R2 11-17 (COORD r631): the event this apply replaces joins the die's recorded lineage (event_adopt terms of any ancestor stay met)
+        if old["event"] and old["event"] != d.get("event") and old["event"] != marker_event_of(mc, d):
+            lin = list(d.get("event_lineage") or [])
+            if old["event"] not in lin:
+                lin.append(old["event"])
+            d["event_lineage"] = lin
         d.update(src=tree, src_manifest=True, src_manifest_hash=want, plan=marker["plan"], plan_sha256=marker["plan_sha256"], gen_hosts=hosts,
                  gen_host=mc.get("gen_host") or (d.get("gen_host") if keep and d.get("gen_host") in hosts else hosts[0]),
                  cancel_superseded=False)
