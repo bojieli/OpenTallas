@@ -13,3 +13,8 @@
 - 2026-11-18 08:50 PST S81 0/0/0/8 (U/F/S/D); QC 5/2/11/0; KV 0/0/4/1; HEAD 0
   vs 07:50: S81 +8 DEAD-OWNER (col_h10_r0_p4__t1, col_h9_r0_p1__t1 pv variants); QC U+1 F0 S+1
   KV +1 DEAD (kv3_pc__cl5a95b461); rows no flag 474/497
+- 2026-11-18 09:50 PST 09:50 S81 5 unowned/46 failed-no-relaunch/11 stale (30+11+5 FAILED); QC 2/0/9/0; KV 0; HEAD 0
+  S81 NEW: FAILED-NO-RELAUNCH 46 (s81sl_leaf__t44__clf4ea6d4b, s81sl_kv_leaf__t3, s81sl_kv_leaf__t4)
+  S81 unowned: svc_hi_dsdv_svc_rs__t1, __t5, svc_lo_dsdv_svc_rs__t2
+  no kit-wave row: S81 1, QC 14, KV 0, HEAD 0 (not reported)
+  rows 493, no flag 436
