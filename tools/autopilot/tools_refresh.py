@@ -159,6 +159,8 @@ def live_owner(die, d, activity=None, now=None, hours=12.0):
             activity = HR.lane_activity(open(os.path.expanduser("~/coord/lanes/COORD-REVIEW-QUEUE.md"), errors="replace").read().splitlines()[-6000:])
         except Exception:
             activity = {}
+    if not activity:                                     # no queue readable (a gate host): keep the configured owner, never invent one
+        return d.get("refresh_owner") or d.get("owner_lane") or die
     for lane in [d.get("refresh_owner"), d.get("owner_lane")] + list(LIVE_OWNER_FALLBACK.get(die, ())):
         if lane and now - float(activity.get(lane) or 0) <= hours * 3600:
             return lane

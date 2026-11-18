@@ -202,27 +202,23 @@ class Publish(Base):
 
 
 class LinkedChild(Base):
-    def test_a_link_published_tree_may_have_a_child_linked_from_it(self):
-        """COORD 11-18: d7w (.link-base d6z) on a host gained a refresh child linked from it: nlink 3, same manifest, read-only: not drift; an unlinked tree keeps the strict check"""
+    def test_a_file_shared_with_a_tree_linked_from_this_one_is_intended_a_stray_copy_is_not(self):
+        """COORD 11-18: d7w on a host gained a refresh child linked from it (nlink 3, same manifest, read-only): not drift; a copy elsewhere still is"""
         self.build()
         SM.publish(self.out, "")
         a = self.out + "/tools/die_plan/a.py"
-        child = self.t + "/child_a.py"
-        os.link(a, child)
+        os.makedirs(self.t + "/tree1_t1")
+        open(self.t + "/tree1_t1/.src-manifest.json", "w").write("{}")
+        os.link(a, self.t + "/tree1_t1/a.py") if False else None
+        os.makedirs(self.t + "/tree1_t1/tools/die_plan")
+        os.link(a, self.t + "/tree1_t1/tools/die_plan/a.py")
         errs, _ = SM.verify(self.out, ro=True, full=True)
-        self.assertTrue(any("hardlinked" in e for e in errs), errs)                    # unlinked tree: still refused
-        self.assertTrue(SM.shared_inodes(self.out))
-        base = self.t + "/basetree"
-        os.makedirs(base)
-        open(base + "/.src-manifest.json", "w").write("{}")
-        os.chmod(self.out, 0o755)
-        SM.write_link_base(self.out, base)                                              # now a link-published tree
-        os.chmod(self.out, 0o555)
+        self.assertTrue(any("hardlinked" in e for e in errs), errs)                    # the child does not declare this tree as its base yet
+        open(self.t + "/tree1_t1/" + SM.LINKBASE, "w").write(os.path.realpath(self.out))
         errs, _ = SM.verify(self.out, ro=True, full=True)
         self.assertFalse(any("hardlinked" in e for e in errs), errs)
         self.assertEqual([x for x in SM.shared_inodes(self.out) if x[0].endswith("a.py")], [])
-        os.chmod(self.out + "/tools/die_plan", 0o755)
-        os.chmod(a, 0o644)                                                             # a writable shared file is still reported
+        os.link(a, self.t + "/stray.py")                                               # a cp -al copy outside any linked child is a violation
         self.assertTrue([x for x in SM.shared_inodes(self.out) if x[0].endswith("a.py")])
 
 

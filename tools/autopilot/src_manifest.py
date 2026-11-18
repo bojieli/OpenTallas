@@ -116,6 +116,32 @@ def write_link_base(root, base):
     os.replace(tmp, dst)
 
 
+def linked_children(root):
+    """COORD 11-18: published sibling trees whose .link-base is this tree (a tools refresh child linked from it): their files are intended extra names of this tree's inodes"""
+    parent, me, out = os.path.dirname(os.path.realpath(root)), os.path.realpath(root), []
+    try:
+        names = os.listdir(parent)
+    except OSError:
+        return out
+    for n in names:
+        c = os.path.join(parent, n)
+        if c != me and os.path.isfile(os.path.join(c, LINKBASE)) and link_base(c) == me:
+            out.append(c)
+    return out
+
+
+def links_accounted(path, rel, st, base, children):
+    """every extra name of a read-only file is the same inode at rel in the declared base or in a tree linked from this one: nlink <= 1 + those"""
+    names = 1
+    for t in ([base] if base else []) + list(children):
+        try:
+            if os.lstat(os.path.join(t, rel)).st_ino == st.st_ino:
+                names += 1
+        except OSError:
+            pass
+    return st.st_nlink <= names
+
+
 def shares_with_base(path, rel, base):
     """True when the file is the same inode as the file at rel in the declared base (an intended link, not a cp -al copy elsewhere)"""
     if not base:
@@ -165,6 +191,7 @@ def verify(root, expect="", ro=False, full=False):
     want = m.get("files") or {}
     have = walk_tree(root)
     lbase = link_base(root)
+    kids = linked_children(root)
     for rel in sorted(want):
         p = have.get(rel)
         if p is None:
@@ -173,7 +200,8 @@ def verify(root, expect="", ro=False, full=False):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (modified: not the manifest content)")
         elif ro and writable(p):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (writable: published trees are read-only)")
-        elif ro and not lbase and not os.path.islink(p) and os.lstat(p).st_nlink > 1 and not shares_with_base(p, rel, lbase):   # a link-published tree (.link-base) shares inodes with its base and with children linked from it; content hash matched above and the file is read-only (COORD 11-18)
+        elif ro and not os.path.islink(p) and os.lstat(p).st_nlink > 1 and not shares_with_base(p, rel, lbase) \
+                and not links_accounted(p, rel, os.lstat(p), lbase, kids):
             errs.append(f"SRC_MANIFEST DRIFT {rel} (hardlinked, nlink {os.lstat(p).st_nlink}: a write or chmod elsewhere reaches this file)")
     nshared = sum(1 for e in errs if "hardlinked, nlink" in e)
     if nshared:
@@ -263,16 +291,7 @@ def shared_inodes(root, limit=0):
     occurrence: S81 cmp_B6gF2s, HEAD fable-fix-head-serdes/tree5)."""
     out = []
     lbase = link_base(root)
-    # COORD 11-18 (S81 D7w on epyc10 / intel1: nlink 3 files, same manifest): the link FORM is not the question.  A file with other names is accepted when it is read-only and its CONTENT
-    # hash equals the manifest's; the hash is computed once per (inode, size, mtime) and remembered in ~/.cache/src-manifest/linkok_<md5(root)>.json, so later checks stay stat-only.
-    # A writable shared file, or one whose content differs from the manifest, is still reported.
-    man = (load_manifest(root) or {}).get("files") or {}
-    cf = os.path.join(CACHE_DIR, "linkok_" + hashlib.md5(os.path.realpath(root).encode()).hexdigest() + ".json")
-    try:
-        ok_cache = json.load(open(cf))
-    except (OSError, ValueError):
-        ok_cache = {}
-    dirty = False
+    kids = linked_children(root)      # COORD 11-18: extra names that are the same inode in the base or in a tree linked FROM this one are intended (a tools refresh child)
     for dp, dn, fn in os.walk(root):
         dn[:] = [d for d in dn if d not in SKIP_DIRS]
         for f in fn:
@@ -283,28 +302,11 @@ def shared_inodes(root, limit=0):
                 continue
             if stat.S_ISREG(st.st_mode) and st.st_nlink > 1 and not shares_with_base(p, os.path.relpath(p, root), lbase):
                 rel = os.path.relpath(p, root)
-                if lbase and not st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH) and rel in man:
-                    sig = f"{st.st_ino}:{st.st_size}:{st.st_mtime_ns}"
-                    if ok_cache.get(rel) == sig:
-                        continue
-                    try:
-                        if sha256_file(p) == man[rel]:
-                            ok_cache[rel] = sig
-                            dirty = True
-                            continue
-                    except OSError:
-                        pass
+                if not st.st_mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH) and links_accounted(p, rel, st, lbase, kids):
+                    continue
                 out.append((rel, st.st_nlink))
                 if limit and len(out) >= limit:
                     return out
-    if dirty:
-        try:
-            os.makedirs(CACHE_DIR, exist_ok=True)
-            tmp = cf + f".{os.getpid()}.tmp"
-            json.dump(ok_cache, open(tmp, "w"))
-            os.replace(tmp, cf)
-        except OSError:
-            pass
     return out
 
 
