@@ -4252,10 +4252,45 @@ def src_inputs(cfg, die):
         # KW-FIX-45 11-12 (COORD fail class KIT_NOT_SELF_CONTAINED at the bind stage): the bind step reads bind_out/bind_report.json
         # itself; a gen host without the bind dir (S81 s87bind/out_r11p2 on epyc4) must not be chosen
         files.append(os.path.join(str(kr["bind_out"]), "bind_report.json"))
-    return trees, files
+        # KV-R3 11-17 (COORD loop-gap, 6 KV kits KIT_NOT_SELF_CONTAINED .../d16gate/bind/provenance_bind.json): the
+        # kit snapshot takes bind_out as ONE required directory, but this list required only bind_report.json + the
+        # bind.f sources, so intel1 / epyc8 passed the probe with a 2-entry partial bind dir and kit_snap froze it.
+        # Every top-level file of the bind output (as listed where bind.f exists) is required on a gen host.
+        files += [os.path.join(str(kr["bind_out"]), n) for n in bind_out_files(str(kr["bind_out"]), d.get("gen_hosts") or [])]
+    return trees, sorted(set(files), key=files.index)
 
 
 _BIND_NAMED_CACHE = {}
+_BIND_FILES_CACHE = {}
+
+
+def bind_out_files(bind_out, hosts):
+    """top-level regular file names of a strict-bind output dir: read on the hub, else over ssh from the first gen host
+    whose copy holds bind.f (a partial copy never defines the list).  Cached 10 min; unreadable anywhere -> []."""
+    now = time.time()
+    hit = _BIND_FILES_CACHE.get(bind_out)
+    if hit and now - hit[0] < 600:
+        return hit[1]
+    names = []
+    try:
+        names = sorted(e.name for e in os.scandir(bind_out) if e.is_file())
+    except OSError:
+        pass
+    if "bind.f" not in names:
+        names = []
+        for h in hosts:
+            try:
+                p = subprocess.run(["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=15", "-o", "ControlPath=none", h,
+                                    "find " + shlex.quote(bind_out) + " -maxdepth 1 -type f -printf '%f\\n'"],
+                                   capture_output=True, text=True, timeout=60)
+            except (OSError, subprocess.TimeoutExpired):
+                continue
+            got = sorted(ln.strip() for ln in (p.stdout or "").splitlines() if ln.strip() and "/" not in ln)
+            if "bind.f" in got:
+                names = got
+                break
+    _BIND_FILES_CACHE[bind_out] = (now, names)
+    return names
 
 
 def bind_named_sources(bind_out, hosts):

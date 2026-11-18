@@ -75,3 +75,19 @@ def test_bind_sources_required(tmp_path):
     bad = K.src_incomplete(FakeAP(), c, run=fake({"epyc5": (4000, 158, []), "intel2": (4000, 158, ["/x/src/rtl/b.sv"]),
                                                   "intel1": (4000, 158, [])}))
     assert set(bad) == {"intel2"} and "/x/src/rtl/b.sv missing" in bad["intel2"]["qwen_kvsys"]
+
+
+def test_bind_out_whole_dir_required(tmp_path):
+    # KV-R3 11-17: a gen host holding only bind_report.json + rtl (no provenance_bind.json) is incomplete
+    b = tmp_path / "bind"; b.mkdir(); (b / "rtl").mkdir()
+    (b / "bind.f").write_text("/x/src/rtl/a.sv\n")
+    for n in ("bind_report.json", "provenance_bind.json", "bus_groups.json"):
+        (b / n).write_text("{}")
+    c = cfg(); c["dies"]["qwen_kvsys"]["kit_rtl"] = {"mode": "bind", "bind_out": str(b), "asbuilt": "/x/asb.json"}
+    K._BIND_FILES_CACHE.clear()
+    trees, files = K.src_inputs(c, "qwen_kvsys")
+    want = {str(b / n) for n in ("bind.f", "bind_report.json", "provenance_bind.json", "bus_groups.json")}
+    assert want <= set(files) and str(b / "rtl") not in files and len(files) == len(set(files))
+    prov = str(b / "provenance_bind.json")
+    bad = K.src_incomplete(FakeAP(), c, run=fake({"epyc5": (4000, 158, []), "intel1": (4000, 158, [prov])}))
+    assert set(bad) == {"intel1"} and prov + " missing" in bad["intel1"]["qwen_kvsys"]
