@@ -22,12 +22,13 @@ def test_apply_replicates_to_the_current_gen_hosts_the_candidate_drops():
     assert AM.ensure_tree_on_hosts("/t/new", "h", ["epyc9"], ["epyc9", "epyc8"], "/rt", run=run) == (["epyc9", "epyc8"], [])      # nothing dropped: no work
 
 
-def test_apply_refuses_when_replication_or_verification_fails():
-    with pytest.raises(SystemExit, match="replication to epyc10 failed"):
-        AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: (1, "disk full"))
+def test_apply_drops_a_host_whose_replication_or_verification_fails():
+    # LATENCY-R 11-18: a host that cannot take the tree is dropped from the die (named DROPPED), not a refusal of the whole apply
+    hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: (1, "disk full"))
+    assert hosts == ["epyc9"] and notes and notes[0].startswith("DROPPED epyc10") and "disk full" in notes[0]
     seq = iter([(0, ""), (1, "hash differs")])
-    with pytest.raises(SystemExit, match="verification of the tree on epyc10 failed.*nothing applied"):
-        AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: next(seq))
+    hosts, notes = AM.ensure_tree_on_hosts("/t/n", "h", ["epyc10"], ["epyc9"], "/rt", run=lambda c: next(seq))
+    assert hosts == ["epyc9"] and "hash differs" in notes[0]
 
 
 class AP:
