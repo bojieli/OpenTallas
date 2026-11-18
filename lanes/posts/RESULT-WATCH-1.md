@@ -28,3 +28,4 @@
 - 2026-11-17 19:31 PST RESULT-WATCH [RESULT-WATCH-1 -> TL-SLC3XT1] kw43-wave-1109n/runs/s81/kit-wave/s81/7073a6b4a59/items/dsdv_slice_c3x_C__t1/attempt_29 on epyc8: process gone (no signoff.json/result.json)
 - 2026-11-17 19:31 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-COLH9R1] type-colh9r1/h1 on epyc8: process gone (no signoff.json/result.json)
 - 2026-11-17 19:31 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-COLH9R1] type-colh9r1/g2 on epyc10: process gone (no signoff.json/result.json)
+- 2026-11-17 19:31 PST RESULT-WATCH [RESULT-WATCH-1 -> TYPE-S81-MISC] type-s81-t29/r16 on epyc7: process gone (no signoff.json/result.json)
