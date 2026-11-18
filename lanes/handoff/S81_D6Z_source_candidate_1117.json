@@ -51,8 +51,9 @@
    ],
    "gen_host": "epyc8",
    "gen_hosts": [
-    "epyc10",
     "epyc8",
+    "epyc2",
+    "epyc10",
     "intel1"
    ],
    "kit_rtl": {
@@ -91,10 +92,12 @@
    "sha256": "6f412682602ddc66ba6b7244997c9c307ecfb3cb789dbfa6d80199b270e37696"
   },
   "hosts": [
-   "epyc10",
    "epyc8",
+   "epyc2",
+   "epyc10",
    "intel1"
   ],
+  "keep_gen_hosts": true,
   "latcheck": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/latcheck.json",
   "latcheck_passed": 873,
   "manifest_hash": "0ce242a95176a332df5e26d747ee9d492b015bc02f9295768d170b775534715d",
@@ -109,7 +112,7 @@
   "source_causal_bound_qualified": false,
   "src_manifest_sha": "0ce242a95176a332df5e26d747ee9d492b015bc02f9295768d170b775534715d",
   "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
-  "status": "D6z = D6b successor (supersedes D6b/D6c/D6x): D5c + D6 plan 0126890b re-planned to 30c40fae: (a) t51 native_e repointed to the r1116 recon view (own provenance, REPOINT_1117.json; parents bound to the rphase1116 pins; shared e/w taps on their first landing); (b) KITFIT-1116: kv_leaf__t1/__t3 VP SRAM pair moved rigidly (-98.28,-88.56)/(-124.2,+136.08), tap-legal; (c) bksel eco3 (OT_BKQ_ECO3): quarters cores/views/bksel_eco3_1117 OLL2/RFH2/HLAT1, control cores/views/bksel_c_qrx_1117 (r599) OLL2/SELOH1/RNF1/LQH1/QRX1, ledger bd1dc957, dead-input re-proof reprove31_eco3 PASS. Tools = main 53e4ff8612. Fresh elab, strict bind 0 / 395 types / 873 crossings, LATCHECK 873/873, PRE PASS, G0 30 = 5 inherited cuts + 25 held ft_channel_tracks. Kits GEN+lint PASS: bk_sel__t2 (config.mk OT_BKQ_ECO3), kv_leaf__t1, kv_leaf__t3, col_h10_r2 (config.mk OT_HOLD_FF_MARGIN 10 / OT_S81_SSTN_M5_BLOCK 1 / OT_GRT_PORT_HOLD_INCLUDE 1 / OT_PREGRT_HOLD_PORT_MARGIN 25; hold_sdc_guard.tcl, sstn_m5, grt_nonport in every kit). slice_station__t51 NOT released here (native_w PENDING abstract has no lib; signed rc51f repoint lands with D7w).",
+  "status": "D6z = D6b successor (supersedes D6b/D6c/D6x): D5c + D6 plan 0126890b re-planned to 30c40fae: (a) t51 native_e repointed to the r1116 recon view (own provenance, REPOINT_1117.json; parents bound to the rphase1116 pins; shared e/w taps on their first landing); (b) KITFIT-1116: kv_leaf__t1/__t3 VP SRAM pair moved rigidly (-98.28,-88.56)/(-124.2,+136.08), tap-legal; (c) bksel eco3 (OT_BKQ_ECO3): quarters cores/views/bksel_eco3_1117 OLL2/RFH2/HLAT1, control cores/views/bksel_c_qrx_1117 (r599) OLL2/SELOH1/RNF1/LQH1/QRX1, ledger bd1dc957, dead-input re-proof reprove31_eco3 PASS. Tools = main 53e4ff8612. Fresh elab, strict bind 0 / 395 types / 873 crossings, LATCHECK 873/873, PRE PASS, G0 30 = 5 inherited cuts + 25 held ft_channel_tracks. Kits GEN+lint PASS: bk_sel__t2 (config.mk OT_BKQ_ECO3), kv_leaf__t1, kv_leaf__t3, col_h10_r2 (config.mk OT_HOLD_FF_MARGIN 10 / OT_S81_SSTN_M5_BLOCK 1 / OT_GRT_PORT_HOLD_INCLUDE 1 / OT_PREGRT_HOLD_PORT_MARGIN 25; hold_sdc_guard.tcl, sstn_m5, grt_nonport in every kit). slice_station__t51 NOT released here (native_w PENDING abstract has no lib; signed rc51f repoint lands with D7w). Replicas: epyc8 (built), epyc10 + intel1 (D5c pack), epyc2 (D5e pack 20ee0959 -> 0ce242a9), all link-published, hash checked.",
   "tools_note": "tools = main 53e4ff86122a (incl r572/r573 hold_eco, r579/r584 col, r581 ft_channel, r585/r588 shared kit files incl hold_sdc_guard.tcl, KITFIT-1116, r599 QRX) + registry hard_core_built_params.json eco3 quarter entry (scoped by lib_contains)",
   "tools_sha": "53e4ff86122acde7ce93821917724f95219503c2",
   "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work",
