@@ -64,6 +64,7 @@ import signoff_profile as SP  # noqa: E402  (OWNER 11-13 R-MINIMAL; OT_SIGNOFF_P
 import wave_balance as WB  # noqa: E402
 import auto_resign as AR  # noqa: E402
 import wave_jobs as WJ  # noqa: E402
+import under_use as UU  # noqa: E402  (FABLE-FLOW-0445 #2: one UNDER-USE log line per tick)
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -93,13 +94,12 @@ if HUB_NAME == "epyc1":
 else:
     MIRROR = {"localhost": "intel1", HUB_NAME: "intel1"}   # the hub's own archives mirror to intel1
     MIRROR_DEFAULT = "localhost"                        # every other host's archives mirror to the hub
-CELL_CAP = 517_000   # COORD 11-04 06:00 (2): 400k is advisory up to the largest closed run; the kit's native_cell_cap.tcl keeps 400k unless the kit opts in
 NEAR_WNS_PS = -30.0
 NEAR_DRC_MAX = 50
 RENDER_MEM_GB = 8
 ORPHAN_IDLE_S = 3 * 3600
 CHAIN_VERSION = 2
-MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "12"))
+MAX_SUBMIT_PER_TICK = int(os.environ.get("AP_MAX_SUBMIT", "100000"))   # LAUNCH-ALL-1116 (OWNER 11-13: no per-tick caps); was 12
 MAX_NOTRUN = 3                                          # 'NOT RUN' (never admitted) resubmits
 # KW-FIX-46 11-12 (COORD, hbm q_mcb_ne 58ab1566e512): a container memory-cgroup OOM is the kit's --mem request, not the
 # host: q_mcb_ne route peaked > 75 GB, killed at --mem 48 and again at 72 (one x1.5 step), then filed as a final CRASH.
@@ -154,7 +154,31 @@ def now_s():
     return time.strftime("%Y-%m-%d %H:%M:%S %Z")
 
 
+_LOG_SEEN = {}                 # message -> [last written time, suppressed count]
+LOG_DEDUP_S = float(os.environ.get("AP_LOG_DEDUP_S", "900"))
+
+
+def log_dedup(msg, now=None):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-1000 class 10: 1,791 of 3,023 log lines were repeats): a message identical to one written in the last
+    LOG_DEDUP_S seconds is not written again; the next write of it carries '(+N identical suppressed)'.  -> the text to write, or None"""
+    now = time.time() if now is None else now
+    if LOG_DEDUP_S <= 0 or len(msg) > 2000:
+        return msg
+    e = _LOG_SEEN.get(msg)
+    if e and now - e[0] < LOG_DEDUP_S:
+        e[1] += 1
+        return None
+    n = e[1] if e else 0
+    if len(_LOG_SEEN) > 5000:
+        _LOG_SEEN.clear()
+    _LOG_SEEN[msg] = [now, 0]
+    return msg + (f" (+{n} identical suppressed)" if n else "")
+
+
 def log(msg):
+    msg = log_dedup(msg)
+    if msg is None:
+        return
     line = f"{now_s()} AUTOPILOT: {msg}"
     print(("[dry] " if DRY else "") + line, flush=True)
     if DRY:
@@ -207,6 +231,25 @@ def read_queue_text():
     sh(["git", "-C", str(COORD), "fetch", "-q", "origin", "coord/state"], timeout=120)
     rc, out, _ = sh(["git", "-C", str(COORD), "show", QUEUE_REF], timeout=60)
     return out if rc == 0 else ""
+
+
+import importlib.util as _ilu_cc
+_cc_spec = _ilu_cc.spec_from_file_location("cell_cap", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "die_plan", "cell_cap.py"))
+_cc = _ilu_cc.module_from_spec(_cc_spec)
+_cc_spec.loader.exec_module(_cc)
+SPLIT_CELLS = _cc.SPLIT_CELLS          # WAVE-FLOW-R2 11-17: the ONE cell limit
+
+
+def cell_waiver_for(die, typ):
+    """the ruling id lanes/CELL-WAIVER.tsv names for this die / type ('' = none); only rNNN counts"""
+    try:
+        for ln in read_coord("lanes/CELL-WAIVER.tsv").splitlines():
+            f = ln.split("\t")
+            if len(f) >= 3 and f[0] == die and f[1] == typ and re.fullmatch(r"r\d{3,4}", f[2].strip()):
+                return f[2].strip()
+    except (OSError, ValueError, AttributeError):
+        pass
+    return ""
 
 
 def read_coord(rel):
@@ -316,8 +359,10 @@ def validate_row(r):
         c = float(r["cells"])
     except ValueError:
         return "cells not a number (expected std cells required)"
-    if c > CELL_CAP:
-        return f"cells {int(c)} > {CELL_CAP} (OpenROAD cap per run)"
+    # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): the one cell limit (die_plan/cell_cap.py) is enforced at enqueue, whatever launched the kit; waiver = a
+    # ruling id in lanes/CELL-WAIVER.tsv (die<TAB>type<TAB>rNNN)
+    if c > SPLIT_CELLS and not cell_waiver_for(r.get("die"), r.get("type")):
+        return f"SPLIT-NEEDED: cells {int(c)} > {SPLIT_CELLS} (the one cell limit); split the type or waive with a ruling id in lanes/CELL-WAIVER.tsv"
     if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt"):
         return "goal must be route|finish|auto|cts|grt"
     if r["goal"] in ("cts", "grt") and not r["runner"]:
@@ -628,6 +673,27 @@ txt = "\n".join(rd(p, 200000) for p in logs if os.path.getmtime(p) >= since)
 runlog = rd(os.path.join(K, "run_%s.log" % goal), 400000)
 alltxt = txt + "\n" + runlog
 out["runlog_tail"] = runlog[-600:]
+# HOLD-FLOW-R 11-16 (closure lever 4, WARNING ONLY, never a verdict): the CTS hold-buffer count of this run against the kit's
+# previous form (tools/die_plan/cts_hold_jump.py, same sum of RSZ-0032 "Inserted N hold buffers" and the same 2x / 200 rule).
+# The previous count lives in K/cts_hold_count.json, advanced only when the CTS log is a new file (mtime), so re-probing the
+# same run never compares it with itself.
+try:
+    _c = [p for p in logs if os.path.basename(p).startswith("4_1_cts")]
+    if _c:
+        _n = sum(int(x.replace(",", "")) for x in re.findall(r"Inserted\s+([0-9][0-9,]*)\s+hold\s+buffers?", rd(_c[-1], 4000000), re.I))
+        _m = os.path.getmtime(_c[-1]); _pf = os.path.join(K, "cts_hold_count.json"); _st = (jl(_pf) or {}) if os.path.isfile(_pf) else {}
+        _prev = _st.get("previous") if _st.get("mtime") == _m else _st.get("current")
+        out["cts_hold"] = {"current": _n, "previous": _prev}
+        if _prev and _n >= 200 and _n >= 2 * _prev:
+            out["cts_hold_jump"] = "OT_CTS_HOLD_JUMP FLAG: %d CTS hold buffers vs %d in the previous form (%.1fx >= 2x): read the CTS hold scope / margin before detail route" % (_n, _prev, _n / float(_prev))
+            sys.stderr.write("WARN " + out["cts_hold_jump"] + " kit=" + K + "\n")
+        if _st.get("mtime") != _m:
+            try:
+                json.dump({"current": _n, "previous": _prev, "mtime": _m}, open(_pf, "w"))
+            except OSError:
+                pass
+except Exception as _e:
+    out["cts_hold_error"] = str(_e)[:120]
 # A legacy gate can write a PASS receipt, then throw in its clock-source census.
 # This is a tool failure, not a timing verdict. Require all three current-run
 # witnesses; PASS/exit 1 alone must never override a real setup/hold failure.
@@ -655,7 +721,7 @@ if marker:
     if marker and _lost:
         out["gate_lost"] = "; ".join(_lost)
 # KW-FIX-44 11-10 (COORD (3)): grt183_make.sh OT_GRT_CONGESTED_FAIL (full GRT ended congested, overflow over the floor)
-# is the congestion class; OT_GRT_TIMECAP (post-route repair over the stage cap) is its own TIMING kind
+# is the congestion class; historical OT_GRT_TIMECAP is a retired FLOW limit, not a hardware timing verdict
 pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[^\n]*|[Rr]outing congestion too high[^\n]*|OT_GRT_CONGESTED_FAIL[^\n]*",
        # FAILFAST-1 11-11: failfast_rules.py progress stops (GRT / DRT no progress); a hold stop prints OT_HOLD_STRUCTURAL
        "grt_no_progress": r"OT_GRT_NO_PROGRESS[^\n]*", "drt_no_progress": r"OT_DRT_NO_PROGRESS[^\n]*",
@@ -1081,8 +1147,9 @@ def classify(c, client):
         # OWNER 11-14: GRT overflow is just a FAIL with the numbers, not a STRUCTURAL verdict
         return "FAIL", "grt-overflow", c["congestion"]
     if c.get("grt_timecap"):
-        # KW-FIX-44 11-10 (COORD (3)): GRT stage stopped at its post-route time cap; the line carries the last slack
-        return "STRUCTURAL", "grt-timecap", c["grt_timecap"]
+        # Old pinned wrappers could stop a progressing repair on elapsed time.
+        # Preserve the failure line, but do not call that a hardware verdict.
+        return "FAIL", "grt-timecap", c["grt_timecap"]
     if c.get("gate_fail"):
         # CRASH-TRIAGE 10-25: 8 rows (CORE_PREFLIGHT shared, RP1_GATE FF hold, SDC_LINT) were design verdicts
         # filed as CRASH because the runner printed the gate line without a FAIL_* marker file
@@ -1107,9 +1174,6 @@ def classify(c, client):
     # KW-RELAUNCH-2 11-05: the cap is judged after the infra outcomes (sle_ctl a7630b8a28e2 was NOT RUN on a disk floor
     # and filed as cell-cap), on the kit's own pre-floorplan native count when it has one (the post-place stdcell
     # count adds TAPCELL/endcaps: 522k placed = 316k native), the basis kit_wave.after_place and native_cell_cap.tcl use.
-    cells = c.get("native_cells", c.get("cells", 0)) or 0
-    if cells > CELL_CAP:
-        return "STRUCTURAL", "cell-cap", f"{cells} std cells > {CELL_CAP}"
     if client.get("exit") == 0 and c.get("goal") == "grt" and c.get("grt_odb"):
         if c.get("grt_overflow") not in (None, 0):
             return "FAIL", "grt-overflow", f"GRT-only overflow {c['grt_overflow']}"
@@ -1596,6 +1660,7 @@ def late_eco_on():
 
 
 NEAR_COUNT_FILE = "lanes/NEAR-COUNT.tsv"
+CELL_WAIVER_FILE = "lanes/CELL-WAIVER.tsv"
 
 
 def parse_near_count(text):
@@ -2892,7 +2957,32 @@ def after_class(st, j):
             record_failure(st, j)
 
 
+ARCHIVE_PERMANENT_RE = re.compile(r"FileNotFoundError|No such file or directory|NotADirectoryError")
+
+
+def archive_backoff(j, err, now=None):
+    """FLOW-HEALTH-1 11-15 (FABLE-FLOW-2000 d): 'ARCHIVE FAILED 3054c87a89d6: probe rc 1: FileNotFoundError' was retried every tick, 243 times on one job
+    whose kit path no longer existed.  From the 3rd consecutive failure the retry backs off (3 min x 2^n, at most 6 h); a permanent error
+    (the kit / sign-off path is gone) is posted once as NEEDS-LANE.  -> True when this failure is the one to post"""
+    now = time.time() if now is None else now
+    n = int(j.get("archive_fail_n") or 0) + 1
+    j["archive_fail_n"] = n
+    j["archive_fail_err"] = str(err)[:300]
+    if n >= 3:
+        j["archive_retry_at"] = now + min(180 * 2 ** (n - 3), 6 * 3600)
+    if ARCHIVE_PERMANENT_RE.search(str(err)) and n >= 3 and not j.get("archive_posted"):
+        j["archive_posted"] = now
+        return True
+    return False
+
+
+def archive_due(j, now=None):
+    return (time.time() if now is None else now) >= float(j.get("archive_retry_at") or 0)
+
+
 def archive(st, j):
+    if not archive_due(j):                                           # backed off after repeated failures (archive_backoff)
+        return
     host = ssh_host(j.get("probe") or j["host"])
     so = j["signoff"]
     sha = j["src"].split("@")[1][:10]
@@ -2922,8 +3012,15 @@ def archive(st, j):
                                   "signoff_dir": os.path.dirname(so["path"]), "record": rec, "view": view},
             timeout=3600)
     if r.get("error") or r.get("errors"):
-        log(f"ARCHIVE FAILED {j['id']}: {r.get('error') or r.get('errors')}; retry next tick")
-        set_status(st, j, "SIGNED", "archive pending")
+        err = r.get("error") or r.get("errors")
+        post = archive_backoff(j, err)
+        log(f"ARCHIVE FAILED {j['id']} (x{j.get('archive_fail_n')}): {err}; " + ("retry next tick" if int(j.get("archive_fail_n") or 0) < 3 else "backed off until %s" % time.strftime("%H:%M", time.localtime(j["archive_retry_at"]))))
+        if post:
+            set_status(st, j, "SIGNED-NOT-ARCHIVED", "archive path gone (permanent): " + str(err)[-160:])      # terminal: archive() only handles SIGNED
+            coord_append("lanes/COORD-REVIEW-QUEUE.md", f"- {now_s()} NEEDS-LANE [AUTOPILOT -> COORD] archive of {j['die']}/{j['type']} ({j['id']}) fails permanently: {str(err)[-200:]}; "
+                                                         "the kit path is gone, so the signed record cannot be archived from the host; archive from the AGIdock copy or re-sign")
+        if j.get("status") != "SIGNED-NOT-ARCHIVED":
+            set_status(st, j, "SIGNED", "archive pending")
         return
     mhost = MIRROR.get(host, MIRROR_DEFAULT)
     pdir = os.path.dirname(dest)
@@ -3263,6 +3360,8 @@ def tick(args):
     except Exception as e:                             # the gap report must never stop the chain
         log(f"LOOP-GAPS failed: {type(e).__name__}: {e}")
     _mark("loop_gaps")
+    UU.step(sys.modules[__name__])                     # never raises; one UNDER-USE line (idle threads per host + top hold reasons)
+    _mark("under_use")
     log("TICK-TIMES total=%.0fs " % (time.time() - _t0) + " ".join(f"{k}={v}s" for k, v in _ph.items()))
     counts = {}
     for j in st["jobs"].values():

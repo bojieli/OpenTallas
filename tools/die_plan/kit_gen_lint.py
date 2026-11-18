@@ -181,6 +181,23 @@ yosys hierarchy -top @TOP@
 """
 
 
+KIT_SNAP_ROOT = re.compile(r"^.*/snaps/[0-9a-f]{40}/root(/.*)$")
+
+
+def unstage(p, kd):
+    """KV-102 r266 11-16: the wave's kit store (KIT-INPUT-STORE-1 / kit_snap) localizes every kit_rtl.f source to
+    <W>/kit_inputs/<original abs path>, and a snapshot input further to .../snaps/<sha40>/root/<original abs path>;
+    the source-tree check judges the ORIGINAL path, so both staging prefixes are stripped (a path outside them is unchanged)."""
+    s = str(p)
+    for w in [kd] + list(Path(kd).parents)[:3]:
+        ki = str(Path(w).resolve() / "kit_inputs")
+        if s.startswith(ki + "/"):
+            s = s[len(ki):]
+            break
+    m = KIT_SNAP_ROOT.match(s)
+    return Path(m.group(1)) if m else Path(s)
+
+
 def kit_rtl_paths(kd):
     """-> (errors, applies): kit_rtl_paths.json (written by gen_phys.write_phys for a --kit-rtl type) names the kit source tree
     and the filelist; every file must resolve inside the source tree, the bind out dir (kit_rtl.json bind_out) or the filelist dir"""
@@ -188,15 +205,59 @@ def kit_rtl_paths(kd):
     if not f.is_file():
         return [], False
     d = json.loads(f.read_text())
+    closure = d.get("input_closure")
+    if closure:
+        if not closure.get("sealed"):
+            return ["kit RTL closure is not sealed after source preparation"], True
+        import hashlib
+        roots = [Path(r) for r in closure["roots"]]
+        errs = []
+        files = d.get("files", [])
+        if not files:
+            return ["kit RTL closure has no source files"], True
+        # A copy-back may rewrite .f path prefixes while leaving JSON untouched.
+        # Recover only the current package prefix from a unique exact relative
+        # manifest path; never infer a new permitted source/bind root.
+        first = Path(files[0])
+        matches = [Path(k) for k in closure["files"]
+                   if str(first).endswith("/" + k) and not Path(k).is_absolute()
+                   and ".." not in Path(k).parts]
+        if len(matches) != 1:
+            return [f"kit RTL closure cannot identify current package root: {first}"], True
+        package_root = first.parents[len(matches[0].parts) - 1]
+        for x in files:
+            p = Path(x)
+            try:
+                rel = str(p.relative_to(package_root))
+            except ValueError:
+                errs.append(f"kit RTL closure path outside package: {p}")
+                continue
+            entry = closure["files"].get(rel)
+            if not entry or not any(Path(entry["original"]).is_relative_to(r) for r in roots):
+                errs.append(f"kit RTL closure has no permitted origin: {p}")
+            elif not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != entry["sha256"]:
+                errs.append(f"kit RTL closure content mismatch: {p}")
+        checked = {str(Path(x).relative_to(package_root)) for x in files if Path(x).is_relative_to(package_root)}
+        for rel, entry in closure["files"].items():
+            rp = Path(rel)
+            if rp.is_absolute() or ".." in rp.parts:
+                errs.append(f"kit RTL closure has an invalid relative metadata path: {rel}")
+                continue
+            if rel in checked:
+                continue
+            p = package_root / rp
+            if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != entry["sha256"]:
+                errs.append(f"kit RTL closure metadata content mismatch: {p}")
+        return errs, True
     roots = [Path(d["src_tree"]).resolve(), Path(d["filelist"]).resolve().parent]
     kj = Path(d["filelist"]).with_name("kit_rtl.json")
     if kj.is_file():
         bo = json.loads(kj.read_text()).get("bind_out")
         if bo:
-            roots.append(Path(bo).resolve())
+            roots.append(unstage(Path(bo).resolve(), kd))
     errs = []
     for x in d.get("files", []):
-        p = Path(x).resolve()
+        p = unstage(Path(x).resolve(), kd)
         if not any(p == r or r in p.parents for r in roots):
             errs.append(f"kit_rtl.f source {p} is outside the kit source tree {roots[0]} (bind out / kit-rtl dir allowed)")
     return errs, True

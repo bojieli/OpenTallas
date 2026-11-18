@@ -187,6 +187,18 @@ class HubSync(unittest.TestCase):
         self.assertEqual((self.hub / "RELEASE_TREE.md").read_text(), "t1\ncoordinator body\n")
         self.assertIn("discarded local edit of generated RELEASE_TREE.md", r.stdout)
 
+    def test_timer_written_lane_tsv_is_generated_not_a_failure(self):
+        # FABLE-FLOW-2000 (d): lanes/NOPROG.tsv dirty between the stage timer's write and its commit raised HUB-SYNC-FAILED 494 times
+        (self.hub / "lanes/NOPROG.tsv").write_text("v1\n")
+        self.git(self.hub, "add", "lanes/NOPROG.tsv")
+        self.git(self.hub, "commit", "-qm", "noprog v1")
+        self.assertEqual(self.sync().returncode, 0)
+        self.append(self.hub, "lanes/NOPROG.tsv", "v2 written, not yet committed")
+        r = self.sync()
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertFalse((self.hub / "autopilot/HUB-SYNC-FAILED").exists())
+        self.assertIn("discarded local edit of generated lanes/NOPROG.tsv", r.stdout)
+
     def test_generated_conflict_takes_origin(self):
         self.append(self.hub, "RELEASE_TREE.md", "committed on the hub")
         self.git(self.hub, "commit", "-qam", "hub tree")

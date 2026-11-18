@@ -260,6 +260,10 @@ module dsfd_selt_c #(
     parameter integer MRG_PIPE = 0,
     parameter integer RQPIPE = 0,
     parameter integer SLAT = 0,
+    // LQH (DIE-S81-52 11-03, bksel_c rfd5 GRT lc -> HA/OR3/AND3 decode -> lpop/write select -> lq[][] -71 ps, 562 endpoints):
+    // 1 = landing FIFO count as a rotating one-hot register (1 flop per count value; 0 cycles, same count every edge,
+    // wraps as the binary lc does): lv / write selects come straight from flops.  0 = binary decode of lc.
+    parameter integer LQH = 0,
     parameter integer XDX = 0                // extra control <-> quarter edges each way (QIO quarter tiles: 1)
 ) (
     input  wire [0:0]                ck,
@@ -381,8 +385,25 @@ module dsfd_selt_c #(
     wire [Q-1:0]  lv;
     integer l, e, lr;                       // lr: loop index of the credit-count block (one integer per always block:
                                             // a shared loop integer is multi-driven, rtl_lint check -assert, KITS-SPARE 10-25)
+    localparam integer LCV = 1 << CW;
+    wire [LCV-1:0] lch [0:Q-1];               // LQH: lch[l][k] == (lc[l] == k)
     generate for (g = 0; g < Q; g = g + 1) begin : g_l
-        assign lv[g] = lc[g] != 0;
+        if (LQH != 0) begin : g_h
+            reg [LCV-1:0] h;
+            always @(posedge ck[0] or negedge rst_n)
+                if (!rst_n) h <= {{(LCV-1){1'b0}}, 1'b1};
+`ifdef OT_RFD_MUT_LQH   // bench mutant: a simultaneous push + pop moves the count
+                else if (oq[OB * g]) h <= {h[LCV-2:0], h[LCV-1]};
+                else if (lpop[g]) h <= {h[0], h[LCV-1:1]};
+`else
+                else if (oq[OB * g] != lpop[g]) h <= oq[OB * g] ? {h[LCV-2:0], h[LCV-1]} : {h[0], h[LCV-1:1]};
+`endif
+            assign lch[g] = h;
+            assign lv[g] = !h[0];
+        end else begin : g_b
+            assign lch[g] = {LCV{1'b0}};
+            assign lv[g] = lc[g] != 0;
+        end
     end endgenerate
     always @(posedge ck[0] or negedge rst_n)
         if (!rst_n) for (lr = 0; lr < Q; lr = lr + 1) lc[lr] <= {CW{1'b0}};
@@ -391,9 +412,9 @@ module dsfd_selt_c #(
         for (l = 0; l < Q; l = l + 1)
             for (e = 0; e < DM; e = e + 1) begin
                 if (lpop[l]) begin
-                    if (oq[OB * l] && e == lc[l] - 1) begin lq[l][e] <= oq[OB * l + 1 +: DW]; lqp[l][e] <= pop16(oq[OB * l + 1 + 320 +: 16]); end
+                    if (oq[OB * l] && (LQH != 0 ? lch[l][e + 1] : e == lc[l] - 1)) begin lq[l][e] <= oq[OB * l + 1 +: DW]; lqp[l][e] <= pop16(oq[OB * l + 1 + 320 +: 16]); end
                     else if (e + 1 < DM) begin lq[l][e] <= lq[l][(e + 1) % DM]; lqp[l][e] <= lqp[l][(e + 1) % DM]; end
-                end else if (oq[OB * l] && e == lc[l]) begin lq[l][e] <= oq[OB * l + 1 +: DW]; lqp[l][e] <= pop16(oq[OB * l + 1 + 320 +: 16]); end
+                end else if (oq[OB * l] && (LQH != 0 ? lch[l][e] : e == lc[l])) begin lq[l][e] <= oq[OB * l + 1 +: DW]; lqp[l][e] <= pop16(oq[OB * l + 1 + 320 +: 16]); end
             end
     reg [Q-1:0] crq;
     always @(posedge ck[0] or negedge rst_n) if (!rst_n) crq <= {Q{1'b0}}; else crq <= lpop;

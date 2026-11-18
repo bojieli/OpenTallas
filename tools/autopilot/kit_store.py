@@ -118,43 +118,36 @@ class Store:
         return sha
 
     def ingest(self, path):
-        """content of path -> blob (hardlink when same fs and already read-only, else copy) -> sha"""
+        """Copy source into CAS; only CAS-to-snapshot links may share inodes.
+
+        Published read-only sources require nlink=1. Detach legacy CAS aliases
+        without replacing the source or any already-running snapshot alias.
+        """
         st = os.stat(path)
         sha = self.file_sha(path, st)
         b = self.blob(sha)
-        if os.path.exists(b):
+        if os.path.exists(b) and not os.path.samestat(st, os.stat(b)):
             return sha, st.st_size
         os.makedirs(os.path.dirname(b), exist_ok=True)
         tmp = os.path.join(self.root, "tmp", f"{sha}.{os.getpid()}")
-        linked = False
-        if st.st_dev == self.dev and not (st.st_mode & 0o222):
-            try:
-                os.link(path, tmp)
-                linked = True
-            except OSError:
-                linked = False
-        if not linked:
-            shutil.copyfile(path, tmp)
-            if sha256_file(tmp) != sha:
-                os.unlink(tmp)
-                raise StoreError(f"content changed while copying {path}")
-            os.chmod(tmp, 0o444)
-            self.bytes_copied += st.st_size
-            ts = os.stat(tmp)
-            self.db.execute("insert or replace into ino values (?,?,?,?,?)",
-                            (ts.st_dev, ts.st_ino, ts.st_size, ts.st_mtime_ns, sha))
-        try:
-            os.rename(tmp, b) if not os.path.exists(b) else os.unlink(tmp)
-        except OSError:
-            if os.path.exists(tmp):
-                os.unlink(tmp)
+        shutil.copyfile(path, tmp)
+        if sha256_file(tmp) != sha:
+            os.unlink(tmp)
+            raise StoreError(f"content changed while copying {path}")
+        os.chmod(tmp, 0o444)
+        self.bytes_copied += st.st_size
+        ts = os.stat(tmp)
+        self.db.execute("insert or replace into ino values (?,?,?,?,?)",
+                        (ts.st_dev, ts.st_ino, ts.st_size, ts.st_mtime_ns, sha))
+        os.replace(tmp, b)
         self.files_new += 1
         return sha, st.st_size
 
     def linkable(self, path):
-        """a source the store can hardlink (no bytes): same fs, already read-only"""
+        """No copy needed only when an independent CAS blob already exists."""
         st = os.stat(path)
-        return st.st_dev == self.dev and not (st.st_mode & 0o222)
+        b = self.blob(self.file_sha(path, st))
+        return os.path.exists(b) and not os.path.samestat(st, os.stat(b))
 
     def put_bytes(self, data):
         sha = hashlib.sha256(data).hexdigest()
@@ -309,6 +302,25 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print, dry=False, m
     def under_src(p):
         return any(p == r or p.startswith(r + "/") for r in in_place)
     queue = [(dict(x), 0) for x in spec.get("inputs") or []]
+    # native_contract reads this table relative to the asbuilt base. A moved
+    # asbuilt needs its exact table in the mirrored source path, not a new JSON.
+    for inp in spec.get("inputs") or []:
+        if inp.get("role") != "asbuilt" or not os.path.isfile(inp["path"]):
+            continue
+        ab = jload(inp["path"])
+        table, base = ab.get("clock_landing_table"), ab.get("base")
+        if not table or not isinstance(base, str):
+            continue
+        moved = not os.path.isabs(base) and not under_src(os.path.normpath(inp["path"]))
+        base = os.path.realpath(base if os.path.isabs(base) else os.path.join(os.path.dirname(inp["path"]), base))
+        table = os.path.realpath(os.path.join(base, table))
+        if os.path.commonpath([base, table]) != base:
+            raise StoreError("KIT-STORE clock_landing_table must be inside asbuilt base")
+        # Process active closure before optional/generic inputs. The same table
+        # may already be named by --clock-landing; its in-place visit must not
+        # win seen-dedup and suppress the required mirrored copy (KV eW).
+        queue.insert(0, ({"role": "clock_landing_table", "path": table, "kind": "file",
+                          "required": True, "deep": False, "copy_in_place": moved}, 0))
     # floor guard: copies (writable or foreign-fs sources) count against the host root floor when the store is on '/'
     root_dev = os.stat("/").st_dev
     on_root = os.stat(store.root).st_dev == root_dev
@@ -318,7 +330,9 @@ def snapshot(spec, kit_inputs, store_root=None, depth=2, log=print, dry=False, m
         if p in seen:
             continue
         seen.add(p)
-        if under_src(p):
+        if under_src(p) and not inp.get("copy_in_place"):
+            if inp.get("role") == "clock_landing_table" and not os.path.isfile(p):
+                raise StoreError(f"KIT-STORE MISSING clock_landing_table {p}")
             try:
                 kept_in_place[p] = store.file_sha(p, os.stat(p)) if os.path.isfile(p) else "dir"
             except OSError:
@@ -534,8 +548,8 @@ VIEW_REF_MAX_BYTES = 600 << 20
 
 def view_refs(plan_path, typ, roots, store=None):
     """KIT-FIX-F follow-up (QC slw_su_l1 canary): gen reads, for each child view the plan type names (<view dir>/x.lef),
-    <view dir>/provenance.json and follows its absolute paths to the ORIGINAL signed kit (provenance.src/face_guard.json,
-    the netlist that names, the sign-off receipt).  Those paths sit in json inside the pinned src tree, are read at
+    <view dir>/provenance.json and follows signed receipt paths. Actual hard landing children without portable
+    evidence also need original face_guard synthesis inputs. Those paths sit inside pinned JSON and are read at
     their original place and so cannot be remapped; they must exist on the gen host.
     -> {present: {path: sha | 'dir'}, missing: [{path, by}]} for the views of ONE type (other types' views never block)."""
     out = {"present": {}, "missing": []}
@@ -543,6 +557,11 @@ def view_refs(plan_path, typ, roots, store=None):
         t = (jload(plan_path).get("partition_types") or {}).get(typ)
     except (OSError, ValueError):
         return out
+    # Only hard_landing.emit reads original synthesis evidence. Ordinary
+    # child views retain historical receipts without needing that netlist.
+    landing_lefs = {c.get("lef") for c in (t or {}).get("hard_cores", [])
+                    if (c.get("param_wrap") or {}).get("base") in
+                    ("ot_dp_clk_landing_ca", "ot_dp_clk_landing_cas", "ot_dp_clk_landing")}
     lefs, todo = set(), [t]
     while todo:
         v = todo.pop()
@@ -578,13 +597,14 @@ def view_refs(plan_path, typ, roots, store=None):
         except (OSError, ValueError):
             continue
         refs = [r for r in scan_refs(pv) if os.path.normpath(r) != os.path.normpath(str(j.get("src") or "/"))]
-        if isinstance(j.get("src"), str) and j["src"].startswith("/"):
+        if (lef in landing_lefs and not os.path.isdir(os.path.join(vd, "landing_evidence"))
+                and isinstance(j.get("src"), str) and j["src"].startswith("/")):
             fg = os.path.join(j["src"], "face_guard.json")
             refs.append(fg)
             try:
                 n = jload(fg).get("netlist")
                 if isinstance(n, str) and n.startswith("/"):
-                    refs.append(n)
+                    refs.append(os.path.join(j["src"], n[6:]) if n.startswith("/work/") else n)
             except (OSError, ValueError, AttributeError):
                 pass
         for r in refs:
@@ -633,7 +653,7 @@ def snap(spec, snap_root, store_root=None, log=print):
             "bytes_copied": 0 if reused else man.get("bytes_copied", 0), "store": store_root}
 
 
-def verify(snap_dir, mark=True):
+def verify(snap_dir, mark=True, final_dir=None):
     """re-hash every file of a snapshot against its MANIFEST.json; write .verified only when all match.
     Run after the snapshot is built and again on every host it is copied to.  -> {id, n_files}"""
     d = snap_dir.rstrip("/")
@@ -642,10 +662,11 @@ def verify(snap_dir, mark=True):
     except (OSError, ValueError) as e:
         raise StoreError(f"KIT-SNAP VERIFY {d}: MANIFEST.json unreadable ({e})")
     sid = snap_id(man)
-    if sid != os.path.basename(d) or man.get("snap_id") != sid:
+    identity_dir = (final_dir or d).rstrip("/")
+    if sid != os.path.basename(identity_dir) or man.get("snap_id") != sid:
         raise StoreError(f"KIT-SNAP VERIFY {d}: manifest content id {sid} is not the directory name")
     root = os.path.join(d, "root")
-    if man.get("kit_inputs") != root:
+    if man.get("kit_inputs") != os.path.join(identity_dir, "root"):
         raise StoreError(f"KIT-SNAP VERIFY {d}: built for {man.get('kit_inputs')}; a snapshot must sit at the same "
                          "absolute path on every host (its recipes name that path)")
     bad = []
@@ -672,6 +693,59 @@ def verify(snap_dir, mark=True):
             f.write(json.dumps({"id": sid, "host": socket.gethostname(), "t": now_s(), "n_files": len(man["files"])}))
         _touch(os.path.join(d, ".used"))
     return {"id": sid, "dir": d, "n_files": len(man["files"]), "host": socket.gethostname()}
+
+
+def fetch(snap_dir, from_host, copy=None):
+    """One destination-host writer per snapshot; publish only verified content.
+
+    The OS lock is shared with local snap construction. Existing legacy partial
+    destinations are preserved and refused: they may still have active writers.
+    Failed unique transfer directories remain as immutable failure evidence.
+    """
+    import fcntl
+    import shlex
+    import subprocess
+    import tempfile
+    d = os.path.abspath(snap_dir).rstrip("/")
+    if not re.fullmatch(r"[0-9a-f]{40}", os.path.basename(d)):
+        raise StoreError(f"KIT-SNAP FETCH invalid snapshot directory {d}")
+    if not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.@-]*", from_host):
+        raise StoreError("KIT-SNAP FETCH invalid donor host")
+    os.makedirs(os.path.dirname(d), exist_ok=True)
+    with open(d + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        # A peer may have completed while this caller waited. Do not start a
+        # second transfer, and never trust a stale marker over actual content.
+        if os.path.exists(d):
+            if not os.path.isfile(os.path.join(d, ".verified")):
+                raise StoreError(f"KIT-SNAP FETCH existing unverified destination retained (may have a legacy writer): {d}")
+            return dict(verify(d), reused=True)
+        partial = tempfile.mkdtemp(prefix="." + os.path.basename(d) + ".partial.", dir=os.path.dirname(d))
+        try:
+            if copy is None:
+                subprocess.run(["rsync", "-a", "--exclude", ".verified", "--exclude", ".used",
+                                "-e", "ssh -o BatchMode=yes -o ControlPath=none",
+                                from_host + ":" + shlex.quote(d + "/"), partial + "/"], check=True)
+            else:
+                copy(from_host, d, partial)
+            result = verify(partial, final_dir=d)
+            # The lock covers future writers. If an old unlocked writer created
+            # a destination meanwhile, rename fails; preserve both directories.
+            if os.path.exists(d):
+                raise StoreError("destination appeared during transfer; existing writer left untouched")
+            # Linux atomic no-replace also protects a legacy destination that
+            # appears after the check above, including an empty directory.
+            import ctypes
+            libc = ctypes.CDLL(None, use_errno=True)
+            rename = getattr(libc, "renameat2", None)
+            if rename is None:
+                raise StoreError("atomic no-replace rename unavailable; destination left untouched")
+            if rename(-100, os.fsencode(partial), -100, os.fsencode(d), 1):
+                err = ctypes.get_errno()
+                raise OSError(err, os.strerror(err), d)
+            return dict(result, dir=d, reused=False)
+        except Exception as exc:
+            raise StoreError(f"KIT-SNAP FETCH failed; partial retained at {partial}: {exc}") from exc
 
 
 def snap_gc(snap_root, keep_days=SNAP_KEEP_DAYS, apply=False, now=None, log=print):
@@ -795,6 +869,9 @@ def main(argv=None):
     s.add_argument("--store-root")
     s = sp.add_parser("verify", help="re-hash a snapshot against its manifest; writes .verified when it matches")
     s.add_argument("snap_dir")
+    s = sp.add_parser("fetch", help="coalesced verified atomic snapshot transfer to this host")
+    s.add_argument("snap_dir")
+    s.add_argument("--from-host", required=True)
     s = sp.add_parser("snap-gc")
     s.add_argument("--snap-root", required=True)
     s.add_argument("--keep-days", type=float, default=SNAP_KEEP_DAYS)
@@ -813,6 +890,8 @@ def main(argv=None):
             print("KW_KIT_SNAP " + json.dumps(snap(json.loads(base64.b64decode(a.spec_b64)), a.snap_root, a.store_root)))
         elif a.cmd == "verify":
             print("KW_KIT_SNAP_VERIFY " + json.dumps(verify(a.snap_dir)))
+        elif a.cmd == "fetch":
+            print("KW_KIT_SNAP_VERIFY " + json.dumps(fetch(a.snap_dir, a.from_host)))
         elif a.cmd == "snap-gc":
             print("KW_KIT_SNAP_GC " + json.dumps(snap_gc(a.snap_root, a.keep_days, a.apply)))
         elif a.cmd == "localize-filelist":

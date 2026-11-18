@@ -296,3 +296,33 @@ def test_unnamed_same_region_pairs_stay_seam_and_default_is_unchanged():
     p1, _ = D.build_pairs(plan, taps, other)
     p0, _ = D.build_pairs(plan, taps)
     assert len(p1["seam"]) == len(p0["seam"]) == 1 and not p1["landed"] and not p0["landed"]
+
+
+def test_planner_null_partition_fields_keep_same_region_interval():
+    """Planner row_ports emits explicit None; it must name the same pair the bind names after dropping None."""
+    rows = [_tap("phy", "clk_t1", 300.0, 290.0, "r1"), _tap("phy", "clk_t2", 305.0, 295.0, "r1"),
+            _tap("pc", "clk_t1", 310.0, 300.0, "r1"), _tap("pc", "clk_t2", 312.0, 302.0, "r1")]
+    taps = {r["port"]: r for r in rows}
+    plan = {"ports": [{"id": "p0", "src": {"part": "phy", "bus": "b"},
+                       "dst": {"part": "pc", "bus": "b"}, "width": 4}]}
+    ports, part_region = CAP.row_ports([dict(port="p0", src="phy", dst="pc")])
+    assert ports["p0"]["src_part"] is None and ports["p0"]["dst_part"] is None
+    bound_ports = {pid: {k: v for k, v in row.items() if v is not None} for pid, row in ports.items()}
+    assert D.ca_named_pairs(ports) == D.ca_named_pairs(bound_ports) == {("phy", "pc")}
+    pairs, _ = D.build_pairs(plan, taps, D.ca_named_pairs(ports))
+    assert len(pairs["landed"]) == 4 and pairs["seam"] == []
+    iv, unbound, counts = D.count_align_port_intervals(ports, pairs["landed"], taps, {"r1": 1.0}, part_region)
+    bound_iv, bound_unbound, bound_counts = D.count_align_port_intervals(
+        bound_ports, pairs["landed"], taps, {"r1": 1.0})
+    assert counts == bound_counts == {"p0": 4} and not unbound and not bound_unbound
+    assert iv == bound_iv
+
+
+@pytest.mark.parametrize("row, expected", [
+    (dict(src="s", dst="d", src_part=None, dst_part=None), ("s", "d")),
+    (dict(src="s", dst="d", src_part="sp", dst_part=None), ("sp", "d")),
+    (dict(src="s", dst="d", src_part=None, dst_part="dp"), ("s", "dp")),
+    (dict(src="s", dst="d", src_part="sp", dst_part="dp"), ("sp", "dp")),
+])
+def test_named_pair_optional_parts_fall_back_independently(row, expected):
+    assert D.ca_named_pairs({"p": row}) == {expected}

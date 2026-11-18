@@ -183,9 +183,24 @@ def export(kit, signoff, out_root, die, base=None, lec=None, src_commit=None, fl
         (vd / f"{mod}.core.json").write_text(json.dumps(view["core"], indent=1))
     (vd / "provenance.json").write_text(json.dumps(prov, indent=1))
     (vd / "gates.json").write_text(json.dumps(gates, indent=1))
+    closure, cprob = close_view(vd, kit, mod, signoff)
+    prov["export"]["closed"] = closure
+    if cprob:
+        problems.extend(cprob)
+        prov["views_status"] = "incomplete: " + "; ".join(problems)
+        gates.update(view_complete=False, view_problems=problems)
+    (vd / "provenance.json").write_text(json.dumps(prov, indent=1))
+    (vd / "gates.json").write_text(json.dumps(gates, indent=1))
     return dict(module=mod, view=str(vd), complete=not problems, problems=problems,
                 pins_sha256=kitblk.get("pins_sha256"), pins_canon_sha256=kitblk.get("pins_canon_sha256"),
                 child_clock_witness=prov.get("child_clock_witness"))
+
+
+def close_view(vd, kit, mod, signoff):
+    """KITPACK-CLOSE-1115 (COORD r221, F1): close the exported view (signoff copy + landing_evidence); see hard_landing.close_view"""
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    import hard_landing as HL
+    return HL.close_view(vd, kit, mod, signoff)
 
 
 def main(argv=None):

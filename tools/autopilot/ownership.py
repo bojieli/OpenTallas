@@ -107,6 +107,24 @@ def parse_ts(line):
         return None
 
 
+# FLEET-OPS-R (COORD 11-16): retired lane name -> current -R lane.  Applied to the owner a row shows (live job lane, run lane, lane file naming it);
+# a lane that is not in the table keeps its name (KIT-WAVE-1 stays).  Longest exact match first, then the prefix rules.
+OWNER_ALIAS = {
+    "FAIL-S81-1": "S81-TYPES-R", "CORE-ROWS-1115": "S81-CORES-R", "KV-PVHG-O": "KV-R",
+    "QC-PLAN-M": "QC-PLAN-R", "QC-PINACCESS-O": "QC-PLAN-R",
+}
+OWNER_ALIAS_PREFIX = (("DIE-S81-", "S81-DIE-R"),)
+
+
+def current_lane(name):
+    if name in OWNER_ALIAS:
+        return OWNER_ALIAS[name]
+    for pre, to in OWNER_ALIAS_PREFIX:
+        if str(name).startswith(pre):
+            return to
+    return name
+
+
 def default_owner(die, kind, item):
     if kind == "macro":
         return "ROM-MACRO"
@@ -630,6 +648,7 @@ def build(inp, now=None):
             live = "; ".join(x[0] for x in e["live"][:2]) + (f" (+{len(e['live']) - 2})" if len(e["live"]) > 2 else "") \
                 if e["live"] else "none"
             age = f"{(now - last) / 60:.0f}m" if last else "never"
+            owner = current_lane(owner)
             nxt = NEXT[state]
             if state == "PLAN-STRUCTURAL" or (state == "NEEDS-KIT" and skey):
                 why = why or struct.get(skey, "")

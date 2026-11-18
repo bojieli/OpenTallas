@@ -21,6 +21,11 @@
 #           the route seed does not match the SPEF (prd_hook.tcl OT_PRD STAGE_MISMATCH; eco_loop.py retries with final).
 # OT_PRD_PROTECT_NETS = Tcl list of exact measured data nets to preserve during
 # repair; persisted through both passes. Does not waive any signoff checks.
+# OT_PRD_PRECLEAN_FINAL=1: stage an immutable filled final seed; prd_run removes typed PG-only fillers
+# in a separate admitted OpenDB session before DRT initialization, verifies its manifest, then routes normally.
+# Default 0 and non-final seeds keep the prior staging; every physical/signoff check remains required.
+# OT_PRD_CLOCK_INVENTORY=1: route/final seeds register existing CLOCK layers in GRT resources,
+# reject above-ceiling data wires, and retain the signal range and frozen clock metal. Default off.
 set -euo pipefail
 KIT=$(cd "$1" && pwd -P); OUT=$2; V=$3; SO=$(cd "$4" && pwd); SPEF=${5:-}
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -47,6 +52,22 @@ if [ -f $RS/6_final.odb ] && [ $FROM != final ] && [ "${OT_PRD_SEED_CHECK:-1}" !
     *) echo "prd_mk: seed check failed rc $src: $SEEDCHK"; exit 2 ;;
   esac
 fi
+# Cold final-seed removal runs later inside prd_run's admitted memory envelope,
+# before OpenROAD initializes DRT callbacks. The default staging stays unchanged.
+PRECLEAN_FINAL=0
+case ${OT_PRD_PRECLEAN_FINAL:-0} in
+  0) ;;
+  1) [ "$FROM" != final ] || PRECLEAN_FINAL=1 ;;
+  *) echo "prd_mk: OT_PRD_PRECLEAN_FINAL: want 0|1"; exit 2 ;;
+esac
+# Existing routed CLOCK wires can extend above the signal ceiling. Opt-in
+# inventory covers those frozen layers without authorizing higher data routes.
+CLOCK_INVENTORY=0
+case ${OT_PRD_CLOCK_INVENTORY:-0} in
+  0) ;;
+  1) if [ "$FROM" = route ] || [ "$FROM" = final ]; then CLOCK_INVENTORY=1; fi ;;
+  *) echo "prd_mk: OT_PRD_CLOCK_INVENTORY: want 0|1"; exit 2 ;;
+esac
 # Stage policies distinguish GRT from CTS by the ORIGINAL CTS checkpoint (orfs_hold_mm.tcl ot_hold_stage: file EXISTENCE
 # only, the content is never read).  Preserve it through every PRD pass.  DIE-QC-66 11-03 (class fix, tool-input): a
 # routed kit whose 4_1_cts.odb was pruned (scratch reaper / resume-derived kits) still IS past CTS when its 5_1_grt.odb
@@ -85,7 +106,12 @@ rsync -a "${OUT_EXCLUDE[@]}" --exclude .ot-run-spill-copy --exclude /run --exclu
 chmod -R u+w "$OUT"
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
-cp $RS/$SRC $B/4_cts.odb
+if [ "$PRECLEAN_FINAL" = 1 ]; then
+  cp "$RS/$SRC" "$B/4_cts_filled.odb"
+  for f in prd_filler_preclean.py prd_filler_seed_check.py; do cp --remove-destination "$HERE/$f" "$OUT/"; done
+else
+  cp $RS/$SRC $B/4_cts.odb
+fi
 cp "$RS/$CTS_ID" "$B/4_1_cts.odb"
 cp "$SPEF" $B/6_final.spef
 # DIE-S81-50 11-03: the logic instances the SPEF connects; prd_hook.tcl checks them against the seed (stale staging)
@@ -94,9 +120,17 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py; do cp --remove-destination $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_grt_pre.tcl eco_drt_pre.tcl prd_route_keep.tcl prd_targeted.tcl prd_local_branches.tcl prd_tiesplit.tcl prd_autofo.tcl prd_spef_insts.py hold_eco_internal_insert.tcl hold_eco_internal_plan.tcl output_net_identity.tcl; do cp --remove-destination $HERE/$f $OUT/; done
+# S81-COL-PRD-OBS: the temporary-obstruction guard (separate from the copy list above, other tests pin that list)
+cp --remove-destination $HERE/prd_obs_check.tcl $OUT/
 # An explicitly selected pass hook stays pinned across subsequent passes.
 if [ -n "${OT_PRD_HOOK:-}" ]; then cp --remove-destination "$OT_PRD_HOOK" "$OUT/prd_hook.tcl"; fi
+if [ "$CLOCK_INVENTORY" = 1 ]; then
+  cp --remove-destination "$HERE/prd_clock_inventory.tcl" "$OUT/"
+  # Append after the kit's chained pre-GRT hook. This executes before the first
+  # global_route; the default hook remains byte-identical when the opt-in is off.
+  printf '\nsource /work/prd_clock_inventory.tcl\n' >> "$OUT/eco_grt_pre.tcl"
+fi
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl pg_connect.tcl; do cp --remove-destination "$SO/tools/die_plan/$f" $OUT/; done
 chmod u+w "$OUT"/*.tcl "$OUT"/*.py "$OUT"/*.sh 2>/dev/null || true
 MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' $OUT/config.mk | tail -n 1)
@@ -111,10 +145,18 @@ python3 -I "$HERE/post_grt_chain.py" "$OUT"
 # ECO hook, then the kit's own post-GRT IO / PG / reset checks.
 { echo 'source /work/kit_modes_eco.tcl'; echo 'source /work/prd_hook.tcl'; echo 'kit_modes_eco_done';
   echo 'source /work/prd_post_grt_chain.tcl'
+  # S81-COL-PRD-OBS (FABLE-PD-S81-0720 B1): the kit grt_post.tcl is replaced here, so its temporary-obstruction removal must run here:
+  # PG-track-truth GRT obstructions and PG-cell keepout blockages come off before 5_1_grt.odb is written, then the per-layer check.
+  echo 'if {[llength [info procs ot_pgtt_remove]]} { ot_pgtt_remove }'
+  echo 'if {[llength [info procs ot_pgcko_remove]]} { ot_pgcko_remove }'
+  echo 'if {[llength [info procs ot_prd_obs_check]]} { ot_prd_obs_check }'
   # PRD replaces the kit post-GRT hook, including its supply binding. Reconnect ECO-created cells before saving GRT.
   echo 'source /work/pg_connect.tcl'
   echo 'if {(![info exists ::env(OT_PG_STRICT)] || $::env(OT_PG_STRICT) ne "1") && [llength [[ord::get_db_block] getGlobalConnects]]} {ot_pg_connect_all post_route_drv}'
-  echo 'ot_pg_require_bound post_route_drv'; } > $OUT/eco_post.tcl
+  echo 'ot_pg_require_bound post_route_drv'
+  echo 'source /work/output_net_identity.tcl'
+  echo 'ot_output_net_identity'
+  echo 'if {[llength [info commands ot_clk_freeze_assert]]} {ot_clk_freeze_assert post_chain}'; } > $OUT/eco_post.tcl
 python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk | tail -n 1)
 # FLOW-19 10-31 (HBM-CORES-KITS-37): kits that list their macro libs directly in TC_LIB_FILES (HBM SRAM kits:
@@ -125,15 +167,30 @@ if [ -z "$(echo $ML_TT)" ]; then
   ML_TT=$(sed -n 's/^\(override \)\{0,1\}export TC_LIB_FILES *[?:+]\{0,1\}= *//p' $OUT/config.mk | tail -n 1 |
           tr ' ' '\n' | { grep -v -e '^\$(' -e '^$' || true; } | tr '\n' ' ' | sed 's/ $//')
 fi
-# macro libs: *_tt.lib -> *_ff.lib; explicit ASAP7 standard-cell libs (e.g. INVBUF_LVT of an LVT clock context, platform
-# path or a /work copy): <group>_<VT>_TT_nldm_ -> _FF_nldm_ (same release dates in the PDK); platform paths live in the
-# image, not in the kit (DIE-KV-46 10-30: the TT LVT lib was taken as a missing FF macro lib)
-ML_FF=$(echo "$ML_TT" | sed -E 's/_tt\.lib/_ff.lib/g; s/(asap7sc7p5t_[A-Z]+_(RVT|LVT|SLVT))_TT_nldm_/\1_FF_nldm_/g')
-for f in $ML_FF; do
-  case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
-  test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
-done
-if ! grep -q '^# OT_PRD post-route drive repair' $OUT/config.mk; then
+# A declared BC list owns the corner mapping, including custom names such as
+# pk2_tc.lib -> pk2_BC.lib. Keep its RHS; guessing from ADDITIONAL_LIBS would
+# silently append the TT macro back into the BC session.
+BC_LINE=$(sed -n '/^\(override \)\{0,1\}export BC_LIB_FILES *[?:+]\{0,1\}=/p' "$OUT/config.mk" | tail -n 1)
+if [ -n "$BC_LINE" ]; then
+  BC_RHS=$(printf '%s\n' "$BC_LINE" | sed 's/^[^=]*= *//')
+  for f in $BC_RHS; do
+    case "$f" in
+      /work/*) test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing declared FF macro lib $f"; exit 2; } ;;
+    esac
+  done
+else
+  # No explicit BC list: retain the established macro / ASAP7 suffix fallback.
+  # Platform standard-cell libraries live in the image, not in the kit.
+  ML_FF=$(echo "$ML_TT" | sed -E 's/_tt\.lib/_ff.lib/g; s/(asap7sc7p5t_[A-Z]+_(RVT|LVT|SLVT))_TT_nldm_/\1_FF_nldm_/g')
+  for f in $ML_FF; do
+    case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
+    test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
+  done
+  BC_RHS='$(BC_NLDM_LIB_FILES)'" $ML_FF"
+fi
+# KV-ECTLK-RL 11-15: the marker is the block's own PRE_GLOBAL_ROUTE_TCL line, not the comment: a kit that carries the
+# comment text (KV-50 / KV-51 note) made prd_mk skip the whole block (eco_grt_pre.tcl, eco_post.tcl): NO-OP ECO, no clk_freeze_pre.tsv
+if ! grep -q '^override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl$' $OUT/config.mk; then
 cat >> $OUT/config.mk <<CFG
 # OT_PRD post-route drive repair (tools/die_plan/post_route_drv, variant $V)
 override export POST_GLOBAL_ROUTE_TCL = /work/eco_post.tcl
@@ -149,11 +206,12 @@ echo 'override export PRE_GLOBAL_ROUTE_TCL = /work/eco_grt_pre.tcl' >> $OUT/conf
 # FLOW-9 10-30: DRT of the ECO'd GRT DB clears stale special-net guides / a mixed pin-access catalog (no-op otherwise);
 # a kit's own PRE_DETAIL_ROUTE hook still runs after it (OT_ECO_DRT_PRE_CHAIN).
 KPRE=$(sed -n 's/^\(override \)\{0,1\}export PRE_DETAIL_ROUTE_TCL *?\{0,1\}= *//p' $OUT/config.mk | tail -n 1)
-test -z "$KPRE" || echo "override export OT_ECO_DRT_PRE_CHAIN = $KPRE" >> $OUT/config.mk
+# KV-ECTLK-RL 11-15: a kit that already routes through eco_drt_pre.tcl must not chain it to itself (detail_route.tcl: too many nested evaluations)
+test -z "$KPRE" -o "$KPRE" = /work/eco_drt_pre.tcl || echo "override export OT_ECO_DRT_PRE_CHAIN = $KPRE" >> $OUT/config.mk
 cat >> $OUT/config.mk <<CFG
 override export PRE_DETAIL_ROUTE_TCL = /work/eco_drt_pre.tcl
 export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES) $ML_TT
-export BC_LIB_FILES = \$(BC_NLDM_LIB_FILES) $ML_FF
+export BC_LIB_FILES = $BC_RHS
 override export PWR_NETS_VOLTAGES =
 override export GND_NETS_VOLTAGES =
 CFG
@@ -164,6 +222,26 @@ fi
 # KW-ECO-1 11-01: t<N> = TT-only setup + DRV pass of a single-mode kit (no hold repair; the b<N> pass repairs FF hold)
 if [[ ${V:0:1} = t ]] && ! grep -q '^override export CORNERS = tc' $OUT/config.mk; then
   printf 'override export OT_HOLD_MM = 0\noverride export CORNERS = tc\n' >> $OUT/config.mk
+fi
+# S81-T51-RECUT-2 11-07 (opt-in: kit has native_clock_drt.tcl = native M7 clock root pins): a route seed holds M7 clock
+# wires, and DRT refuses a net with wires above the odb top routing layer ("DRT-0415 Net clk_t1 already has routes")
+# once the signal range is M2-M6.  Measured on t51 W 5_2_route.odb: range 2-7 reads, range 2-6 stops.  Only the GRT
+# stage pin_access read needs M7, so it runs with M7 in range and M2-M6 comes back; GRT and data wires stay <=M6.
+if [ -f "$OUT/native_clock_drt.tcl" ] && [ -f "$OUT/grt_pre_core.tcl" ] && ! grep -q ot_ncd_pa_orig "$OUT/grt_pre_core.tcl"; then
+cat >> "$OUT/grt_pre_core.tcl" <<'TCL'
+if {[info commands ot_ncd_pa_orig] eq ""} {
+  rename pin_access ot_ncd_pa_orig
+  proc pin_access {args} {
+    set b [ord::get_db_block]
+    set hi [$b getMaxRoutingLayer]
+    set m7 [[[ord::get_db_tech] findLayer M7] getRoutingLevel]
+    if {$hi < $m7} { $b setMaxRoutingLayer $m7; puts "OT_NATIVE_CLOCK_ECO pin_access read range top $hi -> $m7" }
+    set rc [catch {uplevel 1 [list ot_ncd_pa_orig {*}$args]} res opts]
+    $b setMaxRoutingLayer $hi
+    return -options $opts $res
+  }
+}
+TCL
 fi
 # FLOW-CLOCK-R8: no fanout limit by default.  Sign-off limits are liberty max_transition/max_capacitance; fanout is
 # WARN-only there (64) and ASAP7 liberty has no max_fanout.  The R7 KV-recipe basis 24 split bdring's 56-load bs[*]
@@ -190,6 +268,9 @@ done
 [ -z "${OT_PRD_PROTECT_NETS:-}" ] || printf 'OT_PRD_PROTECT_NETS=%q\n' "$OT_PRD_PROTECT_NETS" >> $OUT/variant.env
 [ -z "${OT_PRD_NARROW_PINS:-}" ] || printf 'OT_PRD_NARROW_PINS=%q\n' "$OT_PRD_NARROW_PINS" >> $OUT/variant.env
 [ -z "${OT_PRD_UNFOLD_CHAINS:-}" ] || printf 'OT_PRD_UNFOLD_CHAINS=%q\n' "$OT_PRD_UNFOLD_CHAINS" >> $OUT/variant.env
+# HOLD-FLOW-R 11-16: targeted internal hold insert plan (hold_eco_internal.py plan), staged beside the hook
+if [ -n "${OT_PRD_HOLD_PLAN:-}" ]; then cp --remove-destination "$OT_PRD_HOLD_PLAN" $OUT/hold_plan.tsv && echo 'OT_PRD_HOLD_PLAN=/work/hold_plan.tsv' >> $OUT/variant.env; fi
+[ "${OT_PRD_HOLD_TARGETED:-0}" != 1 ] || echo 'OT_PRD_HOLD_TARGETED=1' >> $OUT/variant.env
 [ -z "${OT_PRD_TARGETED:-}" ] || printf 'OT_PRD_TARGETED=%q\n' "$OT_PRD_TARGETED" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_SLEW_PS:-}" ] || printf 'OT_PRD_TARGET_SLEW_PS=%q\n' "$OT_PRD_TARGET_SLEW_PS" >> $OUT/variant.env
 [ -z "${OT_PRD_TARGET_FANOUT:-}" ] || [ "${OT_PRD_TARGET_FANOUT}" = 0 ] || printf 'OT_PRD_TARGET_FANOUT=%q\n' "$OT_PRD_TARGET_FANOUT" >> $OUT/variant.env
@@ -227,5 +308,27 @@ fi
 if [ $CTS_ID != 4_1_cts.odb ]; then
   python3 -I -c 'import json,sys; p=sys.argv[1]; d=json.load(open(p)); d["cts_identity"]=sys.argv[2]; open(p,"w").write(json.dumps(d)+"\n")' \
     $OUT/PRD.json "$RS/$CTS_ID (original 4_1_cts.odb absent)"
+fi
+if [ "$PRECLEAN_FINAL" = 1 ]; then
+  echo 'OT_PRD_PRECLEAN_FINAL=1' >> "$OUT/variant.env"
+  python3 -I - "$OUT/PRD.json" "$B" <<'PY_PRECLEAN_REQUEST'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);b=Path(sys.argv[2]);x=json.loads(p.read_text())
+x['filler_preclean']={'requested':True,'source':str(b/'4_cts_filled.odb'),
+    'output':str(b/'4_cts.odb'),'manifest':str(p.parent/'prd_filler_preclean.json')}
+p.write_text(json.dumps(x,indent=1)+'\n')
+PY_PRECLEAN_REQUEST
+fi
+if [ "$CLOCK_INVENTORY" = 1 ]; then
+  echo 'OT_PRD_CLOCK_INVENTORY=1' >> "$OUT/variant.env"
+  python3 -I - "$OUT/PRD.json" <<'PY_CLOCK_INVENTORY_REQUEST'
+import json,sys
+from pathlib import Path
+p=Path(sys.argv[1]);x=json.loads(p.read_text())
+x['clock_inventory']={'requested':True,'hook':'prd_clock_inventory.tcl',
+    'rule':'register preserved CLOCK layers; signal ceiling and clock metal unchanged'}
+p.write_text(json.dumps(x,indent=1)+'\n')
+PY_CLOCK_INVENTORY_REQUEST
 fi
 echo "prd pass dir ready $OUT ($(du -sh $OUT | cut -f1))"

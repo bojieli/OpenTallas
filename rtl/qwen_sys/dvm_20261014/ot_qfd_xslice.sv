@@ -340,7 +340,7 @@ module ot_qfd_xs_leaf #(
         integer loads;
         begin
             loads = w << (ln - 1 - lv);
-            ot_qfd_xs_nrep = (loads + 255) / 256;
+            ot_qfd_xs_nrep = (loads + 39) / 40;      // HCSEL-1115 (r228): <= 40 select loads per copy (was 256)
             if (ot_qfd_xs_nrep < 1) ot_qfd_xs_nrep = 1;
         end
     endfunction
@@ -473,7 +473,7 @@ module ot_qfd_xs_leaf #(
                     assign sr[OF + c] = f;
                 end
             end
-            ot_qfd_xs_mux_rep #(.W(17), .LN(7), .SW(RSW)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
+            ot_qfd_xs_mux_rep #(.W(17), .LN(7), .SW(RSW), .LPC(40)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
             assign asv=sv; assign ael=el; assign aen=hp[7*el+6];
         end else begin : g_banked
             // Complete local modules keep data masking beside storage. ABC
@@ -1286,7 +1286,7 @@ endmodule
 
 // Replicated-select mux tree: level lv (0 = the 2^(LN-1) muxes next to the data) takes nrep(lv) copies of select bit
 // lv; mux k of the level uses copy k * nrep / nodes, so no select copy drives more than ~256 mux bits.
-module ot_qfd_xs_mux_rep #(parameter integer W = 16, parameter integer LN = 9, parameter integer SW = 64) (
+module ot_qfd_xs_mux_rep #(parameter integer W = 16, parameter integer LN = 9, parameter integer SW = 64, parameter integer LPC = 256) (
     input  wire [(W << LN)-1:0] d,
     input  wire [SW-1:0]        s,      // SW = ot_qfd_xs_mux_rep_sw(W, LN), checked below
     output wire [W-1:0]         q
@@ -1295,7 +1295,7 @@ module ot_qfd_xs_mux_rep #(parameter integer W = 16, parameter integer LN = 9, p
         integer loads;
         begin
             loads = w << (ln - 1 - lv);
-            ot_qfd_xs_nrep = (loads + 255) / 256;
+            ot_qfd_xs_nrep = (loads + LPC - 1) / LPC;      // HCSEL-1115 (r228): LPC select loads per copy (flat leaf passes 40, default 256)
             if (ot_qfd_xs_nrep < 1) ot_qfd_xs_nrep = 1;
         end
     endfunction

@@ -4,6 +4,11 @@
 if {![info exists ::env(OT_GRT_NONPORT_HOLD)] || $::env(OT_GRT_NONPORT_HOLD) in {"" 0 false}} { return }
 if {$::env(OT_GRT_NONPORT_HOLD) ne "1"} { error "OT_GRT_NONPORT_HOLD requires 0 or 1" }
 if {[info exists ::ot_grt_nonport_installed]} { return }
+# S81-COL-GRT-PORT 11-17 (COORD, FABLE-PD-S81-1100 B3): opt-in OT_GRT_PORT_HOLD_INCLUDE=1 keeps the adapter installed but stops excluding the
+# input-port DATA starts: the GRT hold repair then sees them (at the kit's OT_HOLD_FF_MARGIN, which gen_phys floors at
+# OT_GRT_PORT_HOLD_MARGIN_PS), so a family stops relying on the pre-GRT port margin alone (port hold lost 18.6 ps placement RC -> route).
+# Native session: no set_false_path -hold -from inputs.  Two-mode session: OT_HOLD_REPAIR_SCOPE is the explicit empty value (all paths).
+set ::ot_grt_port_include [expr {[info exists ::env(OT_GRT_PORT_HOLD_INCLUDE)] && $::env(OT_GRT_PORT_HOLD_INCLUDE) eq "1"}]
 
 # Native FF scope follows ot_prd_hold_scope's full-precision SDC restoration.
 # Only input DATA starts are excluded; no output/internal/macro exception.
@@ -23,10 +28,10 @@ proc ot_grt_nonport_native_scope {body} {
   }
   puts "OT_GRT_NONPORT begin native_ff input_ports=[llength $inputs] excluded_output_ports=0"
   try {
-    if {[llength $inputs]} { set_false_path -hold -from $inputs }
+    if {[llength $inputs] && !$::ot_grt_port_include} { set_false_path -hold -from $inputs }
     return [uplevel 1 $body]
   } finally {
-    if {[llength $inputs]} { unset_path_exceptions -hold -from $inputs }
+    if {[llength $inputs] && !$::ot_grt_port_include} { unset_path_exceptions -hold -from $inputs }
     # Replay the complete original SDC: removing an overlapping temporary
     # exception may split an original one, and clock/IO precision must survive.
     read_sdc $before
@@ -46,7 +51,7 @@ proc ot_grt_nonport_mm_call {args} {
   }
   set had [info exists ::env(OT_HOLD_REPAIR_SCOPE)]
   if {$had} { set previous $::env(OT_HOLD_REPAIR_SCOPE) }
-  set ::env(OT_HOLD_REPAIR_SCOPE) nonport
+  set ::env(OT_HOLD_REPAIR_SCOPE) [expr {$::ot_grt_port_include ? "" : "nonport"}]
   try {
     # Existing ot_repair_timing separates untouched TT setup from scoped FF
     # hold and uses ot_hold_repair_scope's exact FF SDC/mode restoration.
@@ -78,4 +83,5 @@ if {[info exists ::ot_mm_active] && $::ot_mm_active} {
   set ::ot_grt_nonport_installed native_ff
 }
 puts "OT_GRT_NONPORT installed $::ot_grt_nonport_installed; hold input starts only; reg-to-output/internal retained"
+if {$::ot_grt_port_include} { puts "OT_GRT_PORT_HOLD input-port starts INCLUDED in the GRT hold repair (OT_GRT_PORT_HOLD_INCLUDE=1)" }
 

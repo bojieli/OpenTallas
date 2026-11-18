@@ -41,9 +41,27 @@ def native_contract(raw,asbuilt=None,plan_path=None):
             context = asbuilt or plan_path
             if context is None:raise ValueError('native clock table requires explicit full plan context')
             base=Path(context).parent/base
+        # An explicit asbuilt manifest inside a kit-store snapshot owns the mirrored
+        # absolute base too. Reading a surviving live base here would mix epochs.
+        if asbuilt and base.is_absolute():
+            context=Path(asbuilt).resolve()
+            root=next((a for a in context.parents
+                       if a.name=='root' and a.parent.parent.name=='snaps'),None)
+            if root is not None and not base.resolve().is_relative_to(root):
+                base=(root/base.relative_to(base.anchor)).resolve()
+                if not base.is_relative_to(root):
+                    raise ValueError('native base must remain inside its manifest snapshot')
         path=Path(ab['clock_landing_table'])
-        if not path.is_absolute():path=base/path
+        absolute=path.is_absolute()
+        if not absolute:path=base/path
         base,path=base.resolve(),path.resolve()
+        if absolute and not path.is_relative_to(base):
+            # QC-PINACCESS-O 11-16: a kit snapshot (kit-store/snaps/<sha>/root/<live path>) moves the base but not an
+            # absolute live table path. Re-root the table under the ancestor of base that mirrors the live tree; it is
+            # accepted only when that copy exists inside base, so tables outside the native base stay refused.
+            for anc in base.parents:
+                cand=(anc/path.relative_to(path.anchor)).resolve()
+                if cand.is_relative_to(base) and cand.is_file():path=cand;break
         try:path.relative_to(base)
         except ValueError as error:raise ValueError('native clock table must resolve inside its declared native base') from error
         payload=path.read_bytes();table=json.loads(payload);table_sha=hashlib.sha256(payload).hexdigest()
@@ -284,11 +302,34 @@ def verify_component_source(receipt_path, *, context_plan,prepared_plan,bind_out
     return report
 
 
+def remap_under_root(path,kd):
+    """WAVE-PREPNR-1115: a path that no longer exists but lies under this kit's own work root (recorded through a symlinked
+    work root: realpath/logical spelling differ per host) -> the same relative file under the local kit dir kd; else the path."""
+    p=Path(path);kd=Path(kd)
+    if p.exists():return p
+    kp,pp=kd.parts,p.parts
+    for i in range(1,len(kp)-3):
+        s=kp[i:]
+        for j in range(1,len(pp)-len(s)+1):
+            if pp[j:j+len(s)]==s:
+                return kd.joinpath(*pp[j+len(s):])
+    return p
+
+
 def localize_bound(kd):
     """Give the kit a local copy of a bound module that bind kit-rtl left at the bind output (a variant bound type whose
     text it did not rewrite, e.g. QC sle_fe_v2).  kit_istations edits only kit-local copies, and the bind output is never
-    touched.  Same bytes; only the kit's paths change.  Refuses a different file already at the local path."""
+    touched.  Same bytes; only the kit's paths change.  Refuses a different file already at the local path.
+    WAVE-PREPNR-1115: every path of the manifest / filelists under this kit's work root is first mapped onto the local kit
+    dir (kit_rtl.json written on a host whose work root is a symlink names the realpath spelling)."""
     kd=Path(kd);mfile=kd/'kit_rtl.json';man=json.loads(mfile.read_text())
+    fixed={f:str(remap_under_root(f,kd)) for f in man['files']}
+    if any(k!=v for k,v in fixed.items()):
+        for fl in kd.glob('kit_rtl*.f'):
+            fl.write_text(''.join((fixed[ln.strip()]+'\n') if ln.strip() in fixed else ln
+                                  for ln in fl.read_text().splitlines(keepends=True)))
+        man['files']=[fixed[f] for f in man['files']]
+        mfile.write_text(json.dumps(man,indent=1))
     bound=next((Path(f) for f in man['files'] if Path(f).stem==man.get('bound_module')),None)
     if bound is None or bound.resolve().parent==kd.resolve():return None
     local=kd/bound.name

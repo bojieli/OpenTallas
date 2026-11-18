@@ -115,3 +115,26 @@ set ::case error;set ::ot_ps_nonlaunch_cache {}
 puts [catch {ot_ps_capture_only_input mem/wd} message]
 puts [string match {*report_edges failed*} $message]
 ''') == ['0', '0', '1', '1']
+
+
+def test_same_edge_multi_clock_takes_worst_capture():
+    out = run('''
+set ::ot_ps_method tag
+rename report_edges original_report_edges
+proc report_edges {args} {set ::report "ck -> rs setup\\n  ^ -> ^ 1:2\\nio_e -> rs setup\\n  ^ -> ^ 1:2\\nck -> rs hold\\n  ^ -> ^ 1:2\\nio_e -> rs hold\\n  ^ -> ^ 1:2\\n"}
+proc ot_ps_ckarr {p clk which {rf rise}} {return [lindex [dict get [dict create m/ck {400 390} m/io_e {420 380}] $p] [expr {$which eq "max" ? 0 : 1}]]}
+puts [ot_ps_clock_role m/rs setup]
+puts [ot_ps_clock_role m/rs hold]
+''')
+    assert [l for l in out if not l.startswith("OT_PS_WARN")] == ["m/io_e rise", "m/io_e rise"]
+    assert any(l.startswith('OT_PS_WARN multi-clock setup role') for l in out)
+
+
+def test_mixed_edge_multi_clock_still_fails_closed():
+    assert run('''
+set ::ot_ps_method tag
+rename report_edges original_report_edges
+proc report_edges {args} {set ::report "ck -> rs setup\\n  ^ -> ^ 1:2\\nio_e -> rs setup\\n  v -> ^ 1:2\\n"}
+puts [catch {ot_ps_clock_role m/rs setup} message]
+puts [string match {*ambiguous setup clock/edge*} $message]
+''') == ['1', '1']

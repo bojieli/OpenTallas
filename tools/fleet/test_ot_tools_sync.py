@@ -27,7 +27,7 @@ class Sync(unittest.TestCase):
         sh(*g, "clone", "-q", str(d / "origin.git"), str(d / "repo"))
         sh("git", "config", "extensions.worktreeConfig", "true", cwd=d / "repo")
         self.env = dict(os.environ, OT_RT_ROOT=str(d / "rt"), MQ_REPO=str(d / "repo"), MQ_HOME=str(d / "mq"), OT_RT_HOSTS="",
-                        OT_RT_SMOKE_TESTS="", OT_RT_LEGACY="", OT_RT_BACKEND_ROOTS="", MQ_COORD=str(d / "coord"), MQ_PYTHON=sys.executable)
+                        OT_RT_SMOKE_TESTS="", OT_RT_MIN_FREE_GB="0", OT_RT_LEGACY="", OT_RT_BACKEND_ROOTS="", MQ_COORD=str(d / "coord"), MQ_PYTHON=sys.executable)
 
     def run_(self, *a):
         return subprocess.run([sys.executable, "-I", P, *a], env=self.env, capture_output=True, text=True, timeout=300)
@@ -77,3 +77,126 @@ class Sync(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Guard(unittest.TestCase):
+    def load(self):
+        loader = importlib.machinery.SourceFileLoader("ots", P)
+        m = importlib.util.module_from_spec(importlib.util.spec_from_loader("ots", loader)); loader.exec_module(m)
+        return m
+
+    def mk(self, names):
+        d = pathlib.Path(tempfile.mkdtemp())
+        for i, n in enumerate(names):
+            (d / n).mkdir(); os.utime(d / n, (1000 + i, 1000 + i)); (d / f"{n}.manifest.json").write_text("{}")
+        os.symlink(names[-1], d / "current")
+        return d
+
+    def test_prune_keeps_newest_current_protected_and_named(self):
+        m = self.load(); names = ["%012x" % i for i in range(1, 9)]
+        d = self.mk(names)
+        gone = m.prune_snapshots(d, keep=3, protect=(names[1],), text="x " + names[2] + " y")
+        self.assertEqual(sorted(gone), sorted([names[0], names[3], names[4]]))   # newest 3 = 6,7,8; protect 2; named 3
+        self.assertTrue((d / names[2]).is_dir() and (d / names[1]).is_dir() and (d / names[7]).is_dir())
+        self.assertFalse((d / f"{names[0]}.manifest.json").exists())
+
+    def test_prune_off_and_in_use_untouched(self):
+        m = self.load(); names = ["%012x" % i for i in range(1, 6)]
+        d = self.mk(names)
+        self.assertEqual(m.prune_snapshots(d, keep=0, text=""), [])
+        m.in_use = lambda p: [1] if pathlib.Path(p).name == names[0] else []
+        gone = m.prune_snapshots(d, keep=1, text="")
+        self.assertNotIn(names[0], gone); self.assertEqual(len(gone), 1)          # keep=1 is raised to the minimum 3: only names[1] goes (names[0] is in use)
+
+    def test_low_disk_refuses_to_write(self):
+        m = self.load(); d = pathlib.Path(tempfile.mkdtemp())
+        m.RT = d; m.MIN_FREE_GB = 10 ** 9
+        with self.assertRaises(RuntimeError) as c:
+            m.materialize("a" * 40)
+        self.assertIn("OT_RT_MIN_FREE_GB", str(c.exception)); self.assertEqual(list(d.iterdir()), [])
+
+
+class InstalledDiff(unittest.TestCase):
+    def test_a_live_only_copy_that_differs_is_an_alert_a_symlinked_one_is_not(self):
+        m = Guard.load(Guard())
+        import types
+        def runner(cmd, **kw):
+            return types.SimpleNamespace(stdout=json.dumps({"/usr/local/bin/ot-heavy": "DIFF ot-heavy", "/srv/x/rt/abc/tools/fleet/ot-run": "DIFF ot-run", "/usr/local/bin/ot-ok": "OK"}) + "\n")
+        out = m.installed_diffs({"tools/fleet/ot-heavy": "aa"}, hosts=["h1"], runner=runner)
+        self.assertEqual(len(out), 2)                       # intel2 + h1, once each: the /rt/ path is in step by construction
+        self.assertTrue(all("/usr/local/bin/ot-heavy differs" in l for l in out), out)
+
+    def test_in_step_is_empty(self):
+        m = Guard.load(Guard())
+        import types
+        out = m.installed_diffs({"tools/fleet/ot-heavy": "aa"}, hosts=["h1"], runner=lambda c, **k: types.SimpleNamespace(stdout=json.dumps({"/usr/local/bin/ot-heavy": "OK"}) + "\n"))
+        self.assertEqual(out, [])
+
+
+class HostPrune(unittest.TestCase):
+    def test_prune_subcommand_prunes_the_local_rt_and_reads_pins_from_stdin(self):
+        d = pathlib.Path(tempfile.mkdtemp()); names = ["%012x" % i for i in range(1, 8)]
+        for i, n in enumerate(names):
+            (d / n).mkdir(); os.utime(d / n, (1000 + i, 1000 + i))
+        os.symlink(names[-1], d / "current")
+        env = dict(os.environ, OT_RT_ROOT=str(d), OT_RT_KEEP="2", MQ_HOME=str(d / "mq"), OT_RT_HOSTS="", MQ_COORD=str(d / "coord"))
+        r = subprocess.run([sys.executable, "-I", P, "prune"], input="pinned " + names[0], env=env, capture_output=True, text=True, timeout=120)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        left = sorted(x.name for x in d.iterdir() if x.is_dir() and not x.is_symlink() and len(x.name) == 12)
+        self.assertEqual(left, sorted([names[0], names[4], names[5], names[6]]))   # newest 3 (the minimum), pinned 1
+
+
+class SyncAlert(unittest.TestCase):
+    def load(self):
+        return Guard.load(Guard())
+
+    def test_first_failure_posts_at_once_repeats_hourly_changes_post_and_recovery_posts_once(self):
+        m = self.load(); sf = tempfile.mktemp(); posted = []
+        pst = posted.append
+        m.current = lambda root=None: "abc123"
+        self.assertTrue(m.sync_alert(False, "disk 93 GB < 100", sf, pst, now=1000).startswith("ALERT"))        # first failure: immediately
+        self.assertEqual(m.sync_alert(False, "disk 93 GB < 100", sf, pst, now=1300), "")                       # same reason inside the hour: quiet
+        self.assertIn("still failing for 60 min", m.sync_alert(False, "disk 93 GB < 100", sf, pst, now=1000 + 3600))
+        self.assertTrue(m.sync_alert(False, "smoke failed", sf, pst, now=5000).startswith("ALERT"))             # a new reason posts
+        self.assertIn("recovered after", m.sync_alert(True, "", sf, pst, now=7000))
+        self.assertEqual(m.sync_alert(True, "", sf, pst, now=7100), ""); self.assertEqual(len(posted), 4)
+
+    def test_sync_guarded_turns_an_exception_into_an_alert_and_a_failing_exit(self):
+        m = self.load(); posted = []
+        m.sync = lambda *a, **k: (_ for _ in ()).throw(RuntimeError("/rt: 93 GB free < 100 GB (OT_RT_MIN_FREE_GB)"))
+        m.sync_alert = lambda ok, reason, *a, **k: posted.append((ok, reason))
+        self.assertEqual(m.sync_guarded("", True, False), 1)
+        self.assertEqual(posted[0][0], False); self.assertIn("93 GB free", posted[0][1])
+
+
+class PruneRefs(unittest.TestCase):
+    def load(self):
+        return Guard.load(Guard())
+
+    def fake_proc(self, procs):
+        d = tempfile.mkdtemp()
+        for pid, (cmd, cwd) in procs.items():
+            os.makedirs(f"{d}/{pid}"); open(f"{d}/{pid}/cmdline", "wb").write(cmd.replace(" ", "\0").encode())
+            if cwd: os.symlink(cwd, f"{d}/{pid}/cwd")
+        return d
+
+    def test_reference_text_has_cmdlines_script_bodies_and_the_admission_log(self):
+        m = self.load(); t = tempfile.mkdtemp(); sc = t + "/launch.sh"; open(sc, "w").write("python3 /srv/x/rt/24c7347cc887/tools/autopilot/src_manifest.py delta-apply\n")
+        lg = t + "/admit.log"; open(lg, "w").write("2026-11-17 unit1 mem 8G: bash /srv/x/rt/aaaaaaaaaaaa/tools/fleet/ot-run\n")
+        proc = self.fake_proc({101: ("bash " + sc, None), 102: ("bash -c while pgrep -f x; do sleep 5; done; python3 /srv/x/rt/bbbbbbbbbbbb/tools/y.py", None), 103: ("sleep 1", t)})
+        txt = m.live_reference_text(proc=proc, admit_logs=(lg,))
+        for sha in ("24c7347cc887", "aaaaaaaaaaaa", "bbbbbbbbbbbb"):
+            self.assertIn(sha, txt)                       # script body, admission log, armed waiter cmdline
+
+    def test_prune_keeps_snapshots_named_by_a_live_script_or_waiter_and_the_last_three(self):
+        m = self.load(); names = ["%012x" % i for i in range(1, 10)]
+        d = pathlib.Path(tempfile.mkdtemp())
+        for i, n in enumerate(names):
+            (d / n).mkdir(); os.utime(d / n, (1000 + i, 1000 + i))
+        os.symlink(names[-1], d / "current")
+        sc = tempfile.mktemp(suffix=".sh"); open(sc, "w").write("run /srv/x/rt/%s/tools/z\n" % names[1])
+        m.live_reference_text = lambda *a, **k: "bash " + sc + " " + open(sc).read()
+        gone = m.prune_snapshots(d, keep=1, text="")
+        self.assertNotIn(names[1], gone)                                          # named by the launch script body
+        self.assertEqual({n for n in names[-3:]} & set(gone), set())               # OT_RT_KEEP=1 still keeps the newest three
+        self.assertIn(names[0], gone)

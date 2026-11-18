@@ -1128,6 +1128,9 @@ def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
         for gi, e in enumerate(bes):
             chains.append([f"u_ist_{tags[gi]}_{j}" for j in range(k)])
         if b["dir"] == "in":
+            # A canonical packed receiver drives q/eq; its output connection is not a reader.
+            # Validate the whole instance before exempting it from the reader audit below.
+            packed = packed_input_delay(tn, b, txt, W, k)
             q, eq = (f"{n}_p{pads[-1]}_q", f"{n}_p{pads[-1]}_eq") if pads else (f"{n}_q", f"{n}_eq")
             lines = txt.split("\n")
             for gi, e in enumerate(bes):
@@ -1169,6 +1172,7 @@ def core_pin_stations(tn, t, txt, man, tcl, rep, plan_dir=None, pins=None):
             for ln in txt.split("\n"):      # every reader must now be a core chain
                 if (re.search(rf"\b{re.escape(q)}(?:\[\d+\]|(?![\w$\[]))", ln)
                         and not re.search(rf"\bu_ist_{re.escape(n)}__|\bu_bin_{re.escape(n)}(_pad\d+)?\s*\(", ln)
+                        and not (packed and re.search(rf"\b{re.escape(packed['instance'])}\s*\(", ln))
                         and not re.match(r"^\s*(wire|reg|logic)\b", ln)):
                     raise SystemExit(f"kit_istations: {tn} {bus}: {q} still read outside the core chains: {ln.strip()[:120]}")
         else:
@@ -1510,6 +1514,31 @@ def bus_entries(t):
     return out
 
 
+
+def ordered_station_row(name, width, x, y, bus, face, outline):
+    """Wide N/S station ranks: ten adjacent bits per site across the measured 180 um row.
+
+    FABLE-FIX-S81-COL IR1: point packing a 1168-bit rank congested the north strip;
+    this same-depth form reached zero GRT overflow. Explicit route/site forms take
+    precedence at the caller. Keep the scalar epoch at the original station site.
+    """
+    if width <= 256 or face not in ("N", "S"):
+        return [f"is_place {{*{name}[./]*}} {x} {y} ist:{bus}"]
+    groups = (width + 9) // 10
+    lo, hi = x - 90.0, x + 90.0
+    if outline:
+        lo, hi = max(2.0, lo), min(float(outline[0]) - 2.0, hi)
+    if hi < lo:
+        raise ValueError("wide station row has no legal horizontal outline span")
+    lines = [f"# ordered station row: {name}, {width} bits, {groups} sites, zero cycle delta"]
+    for group in range(groups):
+        pattern = r"q\[[0-9]\]" if group == 0 else rf"q\[{group}[0-9]\]"
+        at = lo + (hi - lo) * group / (groups - 1)
+        lines.append(f"is_place {{*{name}[./]{pattern}*}} {at:.3f} {y} ist:{bus}:bit")
+    lines.append(f"is_place {{*{name}[./]eq*}} {x} {y} ist:{bus}")
+    return lines
+
+
 def main(argv):
     apply = "--apply" in argv
     # KIT-ISTATIONS 11-11: per-bit-group station sites of a multi-core bus (kit_bus_bitgroups); auto = only when the merged
@@ -1725,7 +1754,7 @@ def main(argv):
             print(f"kit_istations: {tn} {bus}: sites=float, {len(names)} stages left to placement")
         else:
             for (x, y), nm in zip(regs, names):
-                tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
+                tcl.extend(ordered_station_row(nm, W, x, y, bus, b.get("face"), t.get("outline_um")))
         rep.append(dict(conn=conn, planned=len(regs), bound_pads=have, inserted=need, stations=names,
                         plan_width=b["width"], bound_width=W,
                         **({"bit_groups": bgrp["groups"]} if bgrp is not None and exact is None else {}),

@@ -159,3 +159,105 @@ def test_default_threshold_covers_the_silent_blowup_band():
     out = _run(six)
     assert "GPL modes unchanged" in out and "CALLS=1 RD=1 TD=1" in out, out
     assert "CALLS=1 RD=1 TD=1" in _run(pc, env="set ::env(OT_GPL_SPARSE_UTIL) 0.02")   # old default still selectable
+
+
+# ---- rule 3 (FABLE-FIX-S81-STRIP 11-16): sparse exit overflow, opt-in OT_GPL_SPARSE_OVERFLOW ----
+OVF = "set ::env(OT_GPL_SPARSE_OVERFLOW) 0.25"
+# timing-driven call at exit 0.25: second pass at 0.30, buffers kept below 0.35 (the kit's 0.3 is raised)
+NOROUTE_X = (NOROUTE.replace("-keep_resize_below_overflow 0.3", "-keep_resize_below_overflow 0.35")
+             + " -timing_driven_net_reweight_overflow {64 30} -overflow 0.25")
+
+
+@needs_tcl
+def test_sparse_exit_overflow_added_to_sparse_kit_only():
+    out = _run(SPARSE, env=OVF)
+    assert f"CALL 1: {NOROUTE_X}\n" in out and "OT_GPL_SPARSE exit overflow 0.25" in out, out
+    assert "RC=0 RES=done CALLS=1 RD=0 TD=1" in out, out
+    out = _run(DENSE, env=OVF)                                              # 10 %: not sparse, call unchanged
+    assert f"CALL 1: {ARGS}\n" in out and "-overflow" not in out and "RD=1 TD=1" in out, out
+
+
+@needs_tcl
+def test_sparse_exit_overflow_off_is_the_old_call():
+    for env in ("", "set ::env(OT_GPL_SPARSE_OVERFLOW) 0", 'set ::env(OT_GPL_SPARSE_OVERFLOW) ""'):
+        out = _run(SPARSE, env=env)
+        assert f"CALL 1: {NOROUTE}\n" in out and "-overflow" not in out, (env, out)
+
+
+@needs_tcl
+def test_sparse_exit_overflow_keeps_an_explicit_overflow():
+    out = _run(SPARSE, env=OVF, call=ARGS + " -overflow 0.15")
+    assert f"CALL 1: {NOROUTE} -overflow 0.15\n" in out and "exit overflow 0.25" not in out, out
+
+
+@needs_tcl
+def test_sparse_exit_keeps_the_second_timing_driven_pass():
+    td = "-density 0.5 -timing_driven -keep_resize_below_overflow %s -min_phi_coef 0.95"
+    out = _run(SPARSE, env=OVF, call=td % "0.25")                           # the S81 leaf kit call
+    assert ("CALL 1: " + td % "0.35" + " -timing_driven_net_reweight_overflow {64 30} -overflow 0.25\n") in out, out
+    out = _run(SPARSE, env=OVF, call=td % "0.5")                            # a higher keep threshold is not lowered
+    assert ("CALL 1: " + td % "0.5" + " -timing_driven_net_reweight_overflow {64 30} -overflow 0.25\n") in out, out
+    out = _run(SPARSE, env=OVF, call="-density 0.5 -timing_driven")         # no keep threshold named: one is added
+    assert "CALL 1: -density 0.5 -timing_driven -keep_resize_below_overflow 0.35 -timing_driven_net_reweight_overflow {64 30} -overflow 0.25\n" in out, out
+    own = td % "0.25" + " -timing_driven_net_reweight_overflow {79 40}"     # the kit's own list is kept
+    out = _run(SPARSE, env=OVF, call=own)
+    assert ("CALL 1: " + own.replace("0.25", "0.35") + " -overflow 0.25\n") in out, out
+    out = _run(SPARSE, env="set ::env(OT_GPL_SPARSE_OVERFLOW) 0.3", call=td % "0.25")
+    assert "-keep_resize_below_overflow 0.4 " in out and "{64 35} -overflow 0.3\n" in out, out
+
+
+@needs_tcl
+def test_sparse_exit_overflow_reaches_plain_call_and_fallback_retry():
+    out = _run(SPARSE, env=OVF, call=PLAIN)                                 # gen phys --gpl-plain kit
+    assert f"CALL 1: {PLAIN} -overflow 0.25\n" in out and "RC=0 RES=done CALLS=1" in out, out
+    out = _run(SPARSE, "diverge_all", env=OVF, call=PLAIN)                  # a plain call is never retried
+    assert "RC=1 RES=GPL-0305 CALLS=1" in out, out
+    out = _run(SPARSE, "diverge_modal", env=OVF)
+    assert f"CALL 2: {PLAIN} -overflow 0.25\n" in out and "RC=0 RES=done CALLS=2 RD=0 TD=0" in out, out
+    out = _run(DENSE, "diverge_modal", env=OVF)                             # dense fallback: no exit change
+    assert f"CALL 2: {PLAIN}\n" in out, out
+
+
+@needs_tcl
+def test_sparse_exit_overflow_bad_value_is_an_error():
+    for bad in ("abc", "1.0", "-0.1"):
+        out = _run(SPARSE, env=f"set ::env(OT_GPL_SPARSE_OVERFLOW) {bad}")
+        assert "RC=1" in out and "OT_GPL_SPARSE_OVERFLOW must be" in out and "CALLS=0" in out, (bad, out)
+
+
+def test_gen_phys_sparse_overflow_default_s81_only(monkeypatch):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import gen_phys as P
+    monkeypatch.delenv("OT_GPL_SPARSE_OVERFLOW", raising=False)
+    assert P.gpl_sparse_overflow("s81") == 0.25
+    assert P.gpl_sparse_overflow("qwen_kvsys") is None and P.gpl_sparse_overflow(None) is None
+    assert "export OT_GPL_SPARSE_OVERFLOW = 0.25" in P.gpl_sparse_overflow_cfg("s81")
+    assert P.gpl_sparse_overflow_cfg("hbm") == []
+    monkeypatch.setenv("OT_GPL_SPARSE_OVERFLOW", "0.3")
+    assert P.gpl_sparse_overflow("hbm") == 0.3 and "export OT_GPL_SPARSE_OVERFLOW = 0.3" in P.gpl_sparse_overflow_cfg("hbm")
+    monkeypatch.setenv("OT_GPL_SPARSE_OVERFLOW", "0")
+    assert P.gpl_sparse_overflow("s81") is None and P.gpl_sparse_overflow_cfg("s81") == []
+    for bad in ("1", "-0.2", "x"):
+        monkeypatch.setenv("OT_GPL_SPARSE_OVERFLOW", bad)
+        with pytest.raises(ValueError):
+            P.gpl_sparse_overflow("s81")
+
+
+@needs_tcl
+def test_sparse_spread_caps_density_and_raises_pad_only_on_sparse_kits():
+    # FABLE-FIX-S81-SERDES 11-17: S81 serdes__t13 H3p packed 1.4 % of movable cells to the 0.5 target (DRT-0255)
+    env = "set ::env(OT_GPL_SPARSE_DENSITY) 0.3; set ::env(OT_GPL_SPARSE_PAD) 2"
+    out = _run(SPARSE, env=env)
+    want = NOROUTE.replace("-density 0.5 -pad_left 1 -pad_right 1", "-density 0.3 -pad_left 2 -pad_right 2")
+    assert "OT_GPL_SPARSE spread" in out and f"CALL 1: {want}\n" in out, out
+    out = _run(DENSE, env=env)                                   # a dense kit keeps its arguments
+    assert "OT_GPL_SPARSE spread" not in out and f"CALL 1: {ARGS}\n" in out, out
+    out = _run(SPARSE, env="set ::env(OT_GPL_SPARSE_DENSITY) 0.6")     # never raises a lower target, pad untouched
+    assert f"CALL 1: {NOROUTE}\n" in out, out
+    out = _run(SPARSE, "diverge_modal", env=env)                  # the plain retry is spread too
+    assert "CALL 2: " + PLAIN.replace("-density 0.5 -pad_left 1 -pad_right 1", "-density 0.3 -pad_left 2 -pad_right 2") in out, out
+    out = _run(SPARSE, call=PLAIN, env=env)                       # an already-plain call on a sparse kit is spread
+    assert "CALL 1: " + PLAIN.replace("-density 0.5 -pad_left 1 -pad_right 1", "-density 0.3 -pad_left 2 -pad_right 2") in out, out
+    out = _run(SPARSE, env="set ::env(OT_GPL_SPARSE_DENSITY) x")
+    assert "RC=1" in out and "OT_GPL_SPARSE_DENSITY must be a number" in out, out

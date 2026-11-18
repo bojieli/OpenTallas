@@ -49,6 +49,8 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+# Isolated Python omits the script directory; resolve adjacent clock helpers explicitly.
+sys.path.insert(0, str(HERE))
 REPO = HERE.parent.parent
 DIE_TRIAL = REPO / "tools" / "die_plan" / "die_trial.py"
 REGISTRY = HERE / "stage_registry.json"
@@ -336,6 +338,8 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a += ["--rep-off-leg-max", _fmt(top["rep_off_leg_max"])]
     if top.get("rep_reach_max") is not None:    # CLK-TOOL-4: re-place any non-snake leg (global FEED incl.) whose
         a += ["--rep-reach-max", _fmt(top["rep_reach_max"])]   # snapped span > UM; priced record meta.reach_fix
+    if top.get("rep_reach_report"):             # report mode: list every leg with no placement within reach (JSON lines)
+        a += ["--rep-reach-report", str(top["rep_reach_report"])]
     if top.get("rep_actual_max") is not None:   # post-build guard: every actual cell/tap hop <= UM (actual_reach.json)
         a += ["--rep-actual-max", _fmt(top["rep_actual_max"])]
     if top.get("detour_seam_pass"):             # CLKLOC-3 lane: A* wire routes may cross partition seam slivers
@@ -344,6 +348,8 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a.append("--clock-body-sites")
     if top.get("type_keepouts"):                # opt-in: clock sites avoid type clock.keepouts_um (bare PHY bodies)
         a.append("--clock-type-keepouts")
+    if top.get("point_keepouts_um") is not None:  # opt-in: clock sites avoid planned register points (FT cells, START, stations)
+        a += ["--clock-point-keepouts", _fmt(float(top["point_keepouts_um"]))]
     if top.get("chain_hop_max") is not None:    # CLK-TOOL-7: DME chain candidates with a hop > UM are rejected
         a += ["--chain-hop-max", _fmt(top["chain_hop_max"])]
     det = top.get("detour", "astar")

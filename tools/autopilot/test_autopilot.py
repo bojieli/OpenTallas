@@ -83,9 +83,9 @@ class TestQueue(Base):
     def test_cell_cap_and_mem_and_paths(self):
         bad = {6: "517001", 5: "lots"}
         r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["517001"] + ROW[8:])).values())[0]
-        self.assertIn("517000", r["error"])
-        r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["517000"] + ROW[8:])).values())[0]
-        self.assertEqual(r["error"], "")
+        self.assertIn("SPLIT-NEEDED", r["error"])  # WAVE-FLOW-R2 (FABLE-FLOW-1500 D): the one cell limit is enforced at enqueue unless a ruling id waives it
+        r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["400000"] + ROW[8:])).values())[0]
+        self.assertEqual(r["error"], "")           # at the limit: allowed
         r = list(self.ap.parse_queue("\t".join(ROW[:6] + ["lots"] + ROW[7:])).values())[0]
         self.assertIn("mem_gb", r["error"])
         r = list(self.ap.parse_queue("\t".join(ROW[:2] + ["epyc2:/home/ubuntu/kit"] + ROW[3:])).values())[0]
@@ -343,7 +343,7 @@ class TestClassify(Base):
         self.assertEqual(self.ap.classify({"hold_structural": "OT_HOLD_STRUCTURAL stage=grt"}, {"exit": 2})[0],
                          "STRUCTURAL")
         self.assertEqual(self.ap.classify({"congestion": "GRT-0116"}, {"exit": 2})[1], "grt-overflow")
-        self.assertEqual(self.ap.classify({"cells": 517001}, {"exit": 2})[1], "cell-cap")
+        self.assertNotEqual(self.ap.classify({"cells": 517001}, {"exit": 2})[1], "cell-cap")
 
     def test_cell_cap_after_infra_and_on_native_count(self):
         C = self.ap.classify
@@ -352,7 +352,7 @@ class TestClassify(Base):
         self.assertEqual(C({"cells": 522340}, {"not_run": True, "msg": "NOT RUN"})[1], "infra-notrun")
         # placed count incl. TAPCELL/endcaps above the cap, native count below: no cell-cap
         self.assertNotEqual(C({"cells": 522340, "native_cells": 315910}, {"exit": 2})[1], "cell-cap")
-        self.assertEqual(C({"cells": 100, "native_cells": 517001}, {"exit": 2})[1], "cell-cap")
+        self.assertNotEqual(C({"cells": 100, "native_cells": 517001}, {"exit": 2})[1], "cell-cap")
 
     def test_crash_kinds(self):
         C = self.ap.classify

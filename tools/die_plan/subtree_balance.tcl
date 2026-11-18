@@ -25,6 +25,13 @@ set ::stb::rounds [expr {[info exists ::env(OT_STB_ROUNDS)] ? $::env(OT_STB_ROUN
 set ::stb::cell   [expr {[info exists ::env(OT_STB_CELL)]   ? $::env(OT_STB_CELL)   : "BUFx4_ASAP7_75t_R"}]
 set ::stb::est    [expr {[info exists ::env(OT_STB_EST)]    ? $::env(OT_STB_EST)    : "grt"}]
 set ::stb::maxbuf [expr {[info exists ::env(OT_STB_MAX_BUF)] ? $::env(OT_STB_MAX_BUF) : 4000}]
+# S81-RCK-BALANCE 11-17 (FABLE-PD-S81-0600): OT_STB_PAIR=1 pads with an INVERTER PAIR (OT_STB_CELL must then be an inverter, e.g.
+# INVx4_ASAP7_75t_R) instead of one same-polarity BUF, so the pad adds no rise/fall (duty) distortion on a long clock tree.
+# OT_STB_SPAN_MAX=<ps>: after balancing, every balanced tree reports its sink insertion span (latest - earliest rise sink arrival);
+# OT_STB_SPAN_FAIL=1 turns a span over the limit into an error (the hook output then says OT_STB_SPAN FAIL).
+set ::stb::pair [expr {[info exists ::env(OT_STB_PAIR)] ? $::env(OT_STB_PAIR) : 0}]
+set ::stb::span_max [expr {[info exists ::env(OT_STB_SPAN_MAX)] && $::env(OT_STB_SPAN_MAX) ne "" ? $::env(OT_STB_SPAN_MAX) : ""}]
+set ::stb::span_fail [expr {[info exists ::env(OT_STB_SPAN_FAIL)] ? $::env(OT_STB_SPAN_FAIL) : 0}]
 set ::stb::blk_sinks [expr {[info exists ::env(OT_STB_BLOCK_SINKS)] ? $::env(OT_STB_BLOCK_SINKS) : "sink"}]
 if {![info exists ::stb::n]} { set ::stb::n 0 }
 
@@ -123,12 +130,24 @@ proc stb::insert {sink x y} {
   set dt_n [$n0 isDoNotTouch]
   $n0 setDoNotTouch 0
   set k [incr ::stb::n]
-  set b [odb::dbInst_create $blk [[ord::get_db] findMaster $::stb::cell] delaybuf_otstb_$k]
+  set master [[ord::get_db] findMaster $::stb::cell]
+  set b [odb::dbInst_create $blk $master delaybuf_otstb_$k]
   $b setLocation $x $y; $b setPlacementStatus PLACED
   set n1 [odb::dbNet_create $blk otstb_net_$k]; $n1 setSigType CLOCK
   $sink disconnect
-  [$b findITerm A] connect $n0
-  [$b findITerm Y] connect $n1
+  if {$::stb::pair} {
+    # inverter pair: n0 -> INV a -> mid -> INV b -> n1 -> sink (two cells, same polarity, symmetric rise/fall)
+    set b2 [odb::dbInst_create $blk $master delaybuf_otstb_${k}_b]
+    $b2 setLocation $x $y; $b2 setPlacementStatus PLACED
+    set nm [odb::dbNet_create $blk otstb_mid_$k]; $nm setSigType CLOCK
+    [$b findITerm A] connect $n0
+    [$b findITerm Y] connect $nm
+    [$b2 findITerm A] connect $nm
+    [$b2 findITerm Y] connect $n1
+  } else {
+    [$b findITerm A] connect $n0
+    [$b findITerm Y] connect $n1
+  }
   $sink connect $n1
   $n0 setDoNotTouch $dt_n
 }
@@ -157,6 +176,10 @@ proc stb::balance {} {
       set st $::stb::kids($p,PORT)
       while {[llength $st]} {
         set n [lindex $st end]; set st [lrange $st 0 end-1]
+        # A forwarded-clock output branch has no local sequential sink. Its
+        # measure sentinel is not an early arrival: padding it would add the
+        # per-round cap forever (HEAD n3_turn: 12 * 8 = 96 needless buffers).
+        if {$::stb::hi($p,$n) == -1e9} { continue }
         set gap [expr {$Tp - $::stb::hi($p,$n) - $::stb::tol}]
         set k [expr {$gap >= $::stb::stage ? max(1, int(floor(0.75 * $gap / $::stb::stage))) : 0}]
         if {$k > 12} { set k 12 }
@@ -204,7 +227,21 @@ proc stb::balance {} {
   }
   set ::stb::added [expr {$::stb::n - $n0}]
   if {$::stb::added} { check_placement -verbose }
-  puts "OT_STB done: $::stb::added delay buffers ($::stb::cell, $::stb::est RC) on [dict size $T] clock trees"
+  puts "OT_STB done: $::stb::added delay buffers ($::stb::cell, $::stb::est RC[expr {$::stb::pair ? {, inverter pairs} : {}}]) on [dict size $T] clock trees"
+  if {$::stb::span_max ne ""} {
+    stb::rc
+    set bad 0
+    dict for {p Tp} $T {
+      lassign [stb::build $p] nn ns
+      set m [stb::measure $p]
+      if {$m eq ""} continue
+      set span [expr {[lindex $m 4] - [lindex $m 0]}]
+      set ok [expr {$span <= $::stb::span_max}]
+      if {!$ok} { incr bad }
+      puts [format "OT_STB_SPAN %s sinks %d min %.1f max %.1f span %.1f limit %.1f %s" $p [lindex $m 5] [lindex $m 0] [lindex $m 4] $span $::stb::span_max [expr {$ok ? "PASS" : "FAIL"}]]
+    }
+    if {$bad && $::stb::span_fail} { error "OT_STB_SPAN FAIL: $bad tree(s) over $::stb::span_max ps" }
+  }
 }
 set ::stb::added 0; set ::stb::inc 0
 if {$::stb::mode ne "0"} {

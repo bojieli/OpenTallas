@@ -7,8 +7,10 @@ that child's corresponding input and its declared forwarded clock.
 import copy
 import hashlib
 import json
+import os
 import re
 import shutil
+import sys
 from pathlib import Path
 
 # Proofs depend only on these exact captured bytes. Every call still verifies
@@ -19,6 +21,10 @@ CA_BASES = ('ot_dp_clk_landing_ca', 'ot_dp_clk_landing_cas')
 # no START port (t_rst_n), no strap; its land_slots declaration is d {D 4, hold_mux} only.
 PLAIN_BASE = 'ot_dp_clk_landing'
 PLAIN_DEPTH = 4
+# KITPACK-CLOSE-1115 (COORD r221 F1): what gen does with a landing child view that is not closed (no landing_evidence/).
+# 'warn' = log VIEW_NOT_CLOSED and fall back to following provenance.src (never blocks a launch);
+# 'strict' = refuse.  Flip to strict (this one line) once backfill_views.py reports 0 open.  OT_VIEW_CLOSED_MODE overrides.
+VIEW_CLOSED_MODE = 'warn'
 
 
 def digest(path):
@@ -32,6 +38,7 @@ def read(path):
 def prove(directory):
     """Validate a staged, self-contained child receipt and re-prove its faces."""
     import face_guard as F
+    import signoff_profile as SP
     d = Path(directory)
     m = read(d / 'manifest.json')
     if m.get('schema') != 'hard_landing/1':
@@ -43,8 +50,15 @@ def prove(directory):
     master = m['master']
     if p.get('kit', {}).get('module') != master or old.get('top') != master:
         raise ValueError('hard landing evidence master mismatch')
-    if s.get('verdict') != 'SIGNED' or old.get('verdict') != 'PASS':
-        raise ValueError('hard landing requires SIGNED child and PASS face evidence')
+    # Older frozen signers retain LOCAL_PASS_NEEDS_PARENT for boundary hold.
+    # Re-judge the immutable receipt using the same canonical profile as the
+    # sign-off chain: a label alone never proves internal FF closure.
+    qualification = SP.judge(s) if SP.is_minimal() else None
+    signed = qualification['verdict'] == 'SIGNED' if qualification else s.get('verdict') == 'SIGNED'
+    if not signed or old.get('verdict') != 'PASS':
+        reason = '; '.join(qualification['reasons']) if qualification and not signed else ''
+        raise ValueError('hard landing requires profile-qualified SIGNED child and PASS face evidence'
+                         + (': ' + reason if reason else ''))
     if digest(d / 'signoff.json') != p['export']['signoff_sha256']:
         raise ValueError('hard landing signoff is not the exported view signoff')
     # Freeze *_sha256 fields identify tool scripts, not result JSON files.
@@ -72,7 +86,8 @@ def prove(directory):
     if key in _PROOFS:
         return m, _PROOFS[key]
     result = F.guard((d / 'netlist.v').read_text(), top=master,
-                     clocks=['clk', 'fclk'], straps=[] if plain else ['strap_k'], land=land)
+                     clocks=['clk', 'fclk'], straps=[] if plain else ['strap_k'], land=land,
+                     ring_reset=bool(re.search(r"\brst_xn\b", (d / 'netlist.v').read_text())))
     ring = result.get('ring_start', {}).get('t_rst_n', {})
     if (result['verdict'] != 'PASS' or result.get('land_mux_bits') != m['width']
             or (not plain and (ring.get('ring_clock') != ['fclk'] or not ring.get('writer_flops')))):
@@ -116,6 +131,10 @@ def emit(t, land, kit, root):
                     raise ValueError('invalid portable hard landing evidence path')
                 shutil.copyfile(portable / name, dest / name)
         else:
+            mode = os.environ.get('OT_VIEW_CLOSED_MODE') or VIEW_CLOSED_MODE
+            if mode == 'strict':
+                raise ValueError(f'VIEW_NOT_CLOSED {lef.parent}: no landing_evidence/ (run backfill_views.py or re-export with export_view.py)')
+            print(f'VIEW_NOT_CLOSED (warn) {lef.parent}: no landing_evidence/; following provenance.src', file=sys.stderr)
             capture(lef, lib, master, depth, params['W'], dest, base=base)
         # These are already staged by gen_phys; also support the standalone
         # contract emission used to diagnose an immutable parent kit.
@@ -173,3 +192,32 @@ def capture(lef, lib, master, depth, width, dest, base='ot_dp_clk_landing_cas'):
                     sha256={name: digest(dest / name) for name in paths})
     (dest / 'manifest.json').write_text(json.dumps(manifest, indent=1) + '\n')
     return manifest
+
+
+def close_view(vd, kit, mod, signoff):
+    """KITPACK-CLOSE-1115: make view dir `vd` CLOSED from its build dir `kit`: copy `signoff` into it as signoff.json and, for a
+    hard landing child (kit has face_guard.json + land_slots.json with a d ring), the receipt into <vd>/landing_evidence/.
+    Used by export_view (new views) and backfill_views (existing ones).  -> (closure {name: sha}, [problems])"""
+    vd, kit = Path(vd), Path(kit)
+    closure, problems = {'signoff.json': digest(signoff)}, []
+    if Path(signoff).resolve() != (vd / 'signoff.json').resolve():
+        shutil.copy2(signoff, vd / 'signoff.json')
+    fg, ls = kit / 'face_guard.json', kit / 'land_slots.json'
+    if not (fg.is_file() and ls.is_file()):
+        return closure, problems
+    try:
+        land = read(ls).get('buses') or {}
+        d = land.get('d')
+        depth = d.get('D') if isinstance(d, dict) else d
+        width = read(fg).get('land_mux_bits')
+        if depth is None or width is None:
+            return closure, problems
+        base = PLAIN_BASE if set(land) == {'d'} else 'ot_dp_clk_landing_cas'
+        ev = vd / 'landing_evidence'
+        if ev.exists():
+            shutil.rmtree(ev)
+        man = capture(vd / f'{mod}.lef', vd / f'{mod}_tt.lib', mod, depth, width, ev, base=base)
+        closure['landing_evidence'] = sorted(man['sha256'])
+    except Exception as e:
+        problems.append(f'VIEW_NOT_CLOSED {vd}: {type(e).__name__}: {e}')
+    return closure, problems

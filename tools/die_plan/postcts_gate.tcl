@@ -11,7 +11,7 @@ set C $::env(OT_CORNER)
 if {[file exists /work/config.mk]} {
   set fh [open /work/config.mk]
   foreach ln [split [read $fh] "\n"] {
-    if {[regexp {^export\s+(OT_VCLK_TT|OT_VCLK_FF|LAYER_PARASITICS_FILE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} {
+    if {[regexp {^export\s+(OT_VCLK_TT|OT_VCLK_FF|LAYER_PARASITICS_FILE|OT_RC_SIGNAL|OT_RC_SIGNAL_SCALE)\s*\??=\s*(\S+)} $ln -> k v] && ![info exists ::env($k)]} {
       set ::env($k) $v
     }
   }
@@ -198,6 +198,8 @@ if {$ot_pg_frozen_rc} {
 set ot_pg_mode placement
 if {[info exists ::env(OT_POSTCTS_GRT)] && $::env(OT_POSTCTS_GRT) && ![catch {estimate_parasitics -global_routing}]} {
   set ot_pg_mode global_routing
+  # r222 (opt-in OT_RC_SIGNAL=1): signal nets priced at the routed-RCX signal unit C (rc_signal_adjust.tcl); clock nets untouched
+  if {[info exists ::env(OT_RC_SIGNAL)] && $::env(OT_RC_SIGNAL) eq "1" && [file exists /work/rc_signal_adjust.tcl]} { source /work/rc_signal_adjust.tcl; ot_rc_signal_table }
 } else {
   estimate_parasitics -placement
 }

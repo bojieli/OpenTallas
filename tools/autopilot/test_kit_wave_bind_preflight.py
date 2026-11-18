@@ -45,8 +45,9 @@ def test_cached_until_ttl():
     assert len(p.calls) == 4
 
 
-def test_probe_error_fails_open_and_opt_out():
-    assert KW.bind_preflight(None, cfg(), {}, "kv", ROWS, now=1.0, rpy=Probe(error="boom")) == {}
+def test_probe_error_fails_closed_and_opt_out():
+    r = KW.bind_preflight(None, cfg(), {}, "kv", ROWS, now=1.0, rpy=Probe(error="boom"))
+    assert r and all("BIND_PREFLIGHT_UNKNOWN" in v for v in r.values())
     p = Probe(stale={("/b/vD", "t_old")})
     assert KW.bind_preflight(None, cfg(bind_preflight=False), {}, "kv", ROWS, now=1.0, rpy=p) == {} and not p.calls
     assert KW.bind_preflight(None, cfg(canonical_topology_prepare=False), {}, "kv", ROWS, now=1.0, rpy=p) == {}

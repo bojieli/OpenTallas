@@ -55,7 +55,9 @@ class Heavy(unittest.TestCase):
         s = (HERE / "ot-heavy").read_text()
         self.assertLess(s.index("LOADCAP_1101 (FLOW-21"), s.index('if [ "${OT_HEAVY_DIRECT:-}" = 1 ]'))
         self.assertLess(s.index('if [ "${OT_HEAVY_DIRECT:-}" = 1 ]'), s.index('if [ "$V" = OK ]; then\n    echo "$UNIT $RES"'))
-        self.assertIn('-ge $(( MEM + 32 ))', s)
+        # DIRECTFLOOR_1114: the floor is MAX(32, INV_HEADROOM_GB), not a literal 32
+        self.assertIn('-ge $(( MEM + _dfloor ))', s)
+        self.assertIn('_dfloor=${INV_HEADROOM_GB:-32}', s)
 
 
 class FreshOnly(unittest.TestCase):

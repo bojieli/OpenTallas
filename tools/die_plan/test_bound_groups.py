@@ -119,3 +119,51 @@ def test_register_masters_records_successor_head_source_only(tmp_path):
     rep0,_,_=C.cut(src,0)
     G.register_masters(b2,src,rep0)
     assert b2.extra_lib==[]                       # no memory_read_extra: nothing new, default unchanged
+
+
+def test_input_abi_loader_selects_exact_partition_and_explicit_module_retarget(tmp_path):
+    import hashlib,json
+    from test_qc_su_lane_cut import abi_vehicle
+    _,abi=abi_vehicle(); old='qfd_qc_su_lane_w_l0'; new=old+'_m44s1'
+    (tmp_path/'ref.sv').write_text(abi['reference_rtl'])
+    group=abi['aliases'][0];group.update(type='type0',partition='partition0')
+    (tmp_path/'aliases.json').write_text(json.dumps(dict(schema='opentallas.qc.explicit_group_input_aliases.v1',groups=[group])))
+    spec=dict(reference_rtl='ref.sv',reference_sha256=abi['reference_sha256'],aliases_file='aliases.json',
+              source_type='type0',source_partition='partition0',reference_module=old,retarget_module=new)
+    out=G.input_abi_contract(tmp_path,'type0',new,spec)
+    assert out['reference_rtl']==abi['reference_rtl'] and out['aliases']==[group]
+    for mutation in ('partition','type','retarget'):
+        bad=deepcopy(spec)
+        if mutation=='partition':bad['source_partition']='other'
+        if mutation=='type':bad['source_type']='other'
+        if mutation=='retarget':bad['retarget_module']='other'
+        with pytest.raises(G.BoundGroupError):G.input_abi_contract(tmp_path,'type0',new,bad)
+
+
+def test_segmented_group_registers_only_exact_native_dependency_and_fails_closed(tmp_path):
+    import qc_su_lane_cut as C
+    from test_qc_su_lane_cut import fixture
+    src=fixture().replace('leaf u_u_head0 (','qfd_dv_lane_h_safe2 #(.MEMORY_ALIGNMENT(3), .MEMORY_READ_EXTRA(0)) u_u_head0 (')
+    grouped,_,_=C.cut(src,0,memory_read_extra=44,segmented_memory_delay=1)
+    head=tmp_path/'rtl/physical/qfd_dv_lane_h_su_mem9.sv'
+    head.parent.mkdir(parents=True);head.write_text('module qfd_dv_lane_h_su_mem9(); endmodule\n')
+    native=tmp_path/'physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v'
+    b=N(base=str(tmp_path),extra_lib=[])
+    with pytest.raises(G.BoundGroupError,match='ot_sram_1r1w_32x64_m1'):
+        G.register_masters(b,src,grouped,segmented_memory_delay=1)
+    assert b.extra_lib==[]
+    native.parent.mkdir(parents=True);native.write_text('module ot_sram_1r1w_32x64_m1(); endmodule\n')
+    G.register_masters(b,src,grouped,segmented_memory_delay=1)
+    G.register_masters(b,src,grouped,segmented_memory_delay=1)
+    assert b.extra_lib==[str(head),str(native)]
+    # Even when the head was already present in the as-built module inventory,
+    # its newly selected opt-in native SRAM dependency is still necessary.
+    b2=N(base=str(tmp_path),extra_lib=[])
+    source_mem9=src.replace('qfd_dv_lane_h_safe2', 'qfd_dv_lane_h_su_mem9')
+    G.register_masters(b2,source_mem9,grouped,segmented_memory_delay=1)
+    assert b2.extra_lib==[str(native)]
+    ordinary,_,_=C.cut(src,0,memory_read_extra=9)
+    with pytest.raises(G.BoundGroupError,match='exact enabled mem9 head'):
+        G.register_masters(N(base=str(tmp_path),extra_lib=[]),src,ordinary,segmented_memory_delay=1)
+    with pytest.raises(G.BoundGroupError,match='explicit 0 or 1'):
+        G.register_masters(N(base=str(tmp_path),extra_lib=[]),src,grouped,segmented_memory_delay=2)

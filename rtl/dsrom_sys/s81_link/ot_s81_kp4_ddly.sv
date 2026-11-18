@@ -35,7 +35,21 @@
 `else
 `define OT_S81_KP4_DD_FACE 0
 `endif
-module ot_s81_kp4_ddly #(parameter integer DD = `OT_S81_KP4_DD_DEFAULT + `OT_S81_KP4_DD_FACE, parameter integer RQ = 0) (
+// DDX (HEAD-SERDES-O 11-16, default 0 = unchanged): extra word delay asked by the parent ot_s81_kp4_dec when it registers
+// the k_* seam in front of u_chn (DKREG): corrections come DDX cycles later, so the words wait DDX more.
+// XPIPE1 moves one word-delay edge into the dsyn output wire. The SRAM
+// address distance shrinks by one; complete receiver mission latency is unchanged.
+`ifdef OT_S81_RCK_XPIPE1
+`ifdef RCKRF_MUT_XPIPE_DD
+`define OT_S81_KP4_DD_XPIPE 0
+`else
+`define OT_S81_KP4_DD_XPIPE 1
+`endif
+`else
+`define OT_S81_KP4_DD_XPIPE 0
+`endif
+module ot_s81_kp4_ddly #(parameter integer DDX = 0,
+    parameter integer DD = `OT_S81_KP4_DD_DEFAULT + `OT_S81_KP4_DD_FACE + DDX - `OT_S81_KP4_DD_XPIPE, parameter integer RQ = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [543:0]  w_d,

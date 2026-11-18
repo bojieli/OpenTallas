@@ -120,7 +120,8 @@ module ot_s81_engram_lookup_ra640_hx #(
 
     // ---- state ------------------------------------------------------------------------
     localparam [2:0] S_IDLE = 3'd0, S_FEED = 3'd1, S_HASH = 3'd2, S_ADDR = 3'd3, S_ISSUE = 3'd4, S_EMIT = 3'd5;
-    reg [2:0] st;
+    // S81-CORES-R3 11-17 (COORD r580): binary state kept (no yosys FSM_RECODE) to match the signed netlist; synthesis attribute only, no function change.
+    (* fsm_encoding = "none" *) reg [2:0] st;
     reg [1:0] fcnt;
     wire [4*ENG_ID_W-1:0] ids;
     reg [SLW-1:0] slot;

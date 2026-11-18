@@ -263,6 +263,7 @@ def macro_libs(kit, corner):
     kit = root
     txt = cfg.read_text(errors="replace").replace("\\\n", " ")
     libs, missing = [], []
+    unscoped_missing, scoped_stems = [], set()
     field = {"tt": "TC_LIB_FILES", "ff": "BC_LIB_FILES", "ss": "WC_LIB_FILES"}[corner]
     for m in re.finditer(r"^[ \t]*(?:export[ \t]+)?(ADDITIONAL_LIBS|TC_LIB_FILES|BC_LIB_FILES|WC_LIB_FILES)[ \t]*[:+?]?=[ \t]*(.*)$", txt, re.M):
         if m.group(1) not in ("ADDITIONAL_LIBS", field):
@@ -284,24 +285,81 @@ def macro_libs(kit, corner):
                 continue
             p = Path(kit) / w[len("/work/"):]
             cand = None
-            mm = re.match(r"^(.*)_(ss|tt|ff|typ)(\.lib(?:\.gz)?)$", p.name)
+            # ORFS abstract suffixes: _tc = TT, _BC = FF, _WC = SS (S81-CORES-1115: ot_s81ph_hq_pk2_tc.lib / _BC.lib)
+            mm = re.match(r"^(.*)_(ss|tt|ff|typ|tc|bc|wc)(\.lib(?:\.gz)?)$", p.name, re.I)
             if mm:
-                for suf in ([corner] if corner != "tt" else ["tt", "typ"]):
-                    q = p.with_name(f"{mm.group(1)}_{suf}{mm.group(3)}")
-                    if q.is_file():
-                        cand = q
+                alias = {"tt": ("tt", "typ", "tc"), "ff": ("ff", "bc"), "ss": ("ss", "wc")}[corner]
+                for suf in alias:
+                    for sx in (suf, suf.upper()):
+                        q = p.with_name(f"{mm.group(1)}_{sx}{mm.group(3)}")
+                        if q.is_file():
+                            cand = q
+                            break
+                    if cand is not None:
                         break
-            elif p.is_file() and (corner == "tt" or scoped):
-                cand = p
+                stem = mm.group(1)
+            else:
+                stem = p.name
+                if p.is_file() and (corner == "tt" or scoped):
+                    cand = p
             if cand is None:
                 missing.append(f"{p.name} ({corner})")
+                if not scoped:
+                    unscoped_missing.append((stem, f"{p.name} ({corner})"))
             else:
                 libs.append(str(cand))
+                if scoped:
+                    scoped_stems.add(stem)
+    # An unscoped ADDITIONAL_LIBS entry is not missing for a corner whose corner-scoped field supplies a lib for the same master.
+    for stem, entry in unscoped_missing:
+        if stem in scoped_stems and entry in missing:
+            missing.remove(entry)
     return list(dict.fromkeys(libs)), missing
 
 
+CONTAINER_MOUNTS = ("/work", "/base", "/sdc", "/out")      # the only host trees run_corner mounts into the sign-off container
+CONTAINER_IMAGE_ROOTS = ("/OpenROAD-flow-scripts/",)         # files that live in the image itself (platform libs / LEFs)
+
+
+def container_path_preflight(libconfig, work, corner):
+    """FLOW-2000 11-17 (headseg44 SRAM-libs failure): every library, LEF and macro path the ORFS config names must be
+    reachable from INSIDE the sign-off container.  Before the container starts, return the list of problems:
+      * a path outside /work and the image platform tree is not mounted (a host path such as <src>/physical/... named
+        by a config whose /src prefix was rewritten to the host tree);
+      * a /work path whose file is missing from the kit directory the container mounts as /work;
+    Make variable references ($(TC_NLDM_LIB_FILES) etc.) are the image's own libraries and are not checked here."""
+    problems = []
+    cfg = Path(libconfig)
+    if not cfg.is_file():
+        return [f"config {cfg} does not exist"]
+    root = Path(work) if work else cfg.parent
+    txt = cfg.read_text(errors="replace").replace("\\\n", " ")
+    fields = ("ADDITIONAL_LEFS", "ADDITIONAL_LIBS", "ADDITIONAL_GDS", {"tt": "TC_LIB_FILES", "ff": "BC_LIB_FILES", "ss": "WC_LIB_FILES"}[corner])
+    seen = set()
+    for m in re.finditer(r"^[ \t]*(?:export[ \t]+)?([A-Z_]+)[ \t]*[:+?]?=[ \t]*(.*)$", txt, re.M):
+        field = m.group(1)
+        if field not in fields:
+            continue
+        for w in m.group(2).split():
+            w = w.replace("$(KIT)", "/work").replace("${KIT}", "/work")
+            if "$(" in w or "${" in w:
+                continue            # a make variable (the image's own standard-cell lists)
+            if (field, w) in seen:
+                continue
+            seen.add((field, w))
+            if w.startswith(CONTAINER_IMAGE_ROOTS):
+                continue
+            if w.startswith("/work/"):
+                if not (root / w[len("/work/"):]).is_file():
+                    problems.append(f"{field}: {w} is missing from the kit mounted as /work ({root})")
+            elif w.startswith("/"):
+                problems.append(f"{field}: {w} is not mounted in the sign-off container (only {', '.join(CONTAINER_MOUNTS)} and the image are); copy it under the kit and name it /work/...")
+    return problems
+
+
 SIGNOFF_BUNDLE = ("signoff.py", "sdc_lint.py", "face_guard.py", "io_hold_qualification.py", "pair_skew.tcl", "clock_family.tcl",
-                  "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py")
+                  "kit_modes.py", "data_droop.py", "core_io_reference.py", "signoff_profile.py",
+                  "netlist_alias_check.py", "fwd_pad_check.py")
 OPTIONAL_SIGNOFF_BUNDLE = ("child_clock_witness.py", "parent_boundary.py", "hard_landing.py")
 
 
@@ -343,6 +401,7 @@ KIT_TOOL_DEPENDENCIES = {
     "hhp_clock_mesh_role.py": ("ft_ports.py", "sdc_lint.py"),
     "orfs_hold_mm.tcl": ("macro_cts_cluster.tcl",),
     "die_sta_related.py": ("clock_components.py", "data_droop.py", "pair_slack_gate.py", "die_sta.py"),
+    "die_sta.py": ("netlist_alias_check.py",),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py", "cap_estimate.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
@@ -896,8 +955,7 @@ puts "SO_PATH_END"
 # ---- KW-FIX-24 11-06: STD hold violators by startpoint kind (OWNER: a hold miss only on io ports is NEEDS_PARENT).
 # port = violating endpoints whose worst min path starts at a non-clock top input port; other = any other start;
 # reg = violating min paths launched from any register clock pin (a reg path hidden behind a worse port path counts).
-# Read-only (no constraint change); runs only when there are min violators. ----
-if {[sta::endpoint_violation_count min] > 0} {
+# Read-only complete internal census even when all hold paths meet: R-MINIMAL must not infer internal closure from a boundary-only scalar. ----
   set so_hs_port 0; set so_hs_other 0; set so_hs_reg 0; set so_hs_trunc 0; set so_hs_err 0; set so_hs_ports {}
   set so_hs_oport 0; set so_hs_oports {}
   if {[catch {
@@ -963,7 +1021,6 @@ if {[sta::endpoint_violation_count min] > 0} {
       so STD_MIN_NONPORT n [dict size $so_np] wns [format %.2f $so_np_w] core_n [dict size $so_np_core] core_wns [format %.2f $so_np_cw]
     }
   }
-}
 # ---- DRV ----
 so SLEW_VIOL [sta::max_slew_violation_count]
 so CAP_VIOL [sta::max_capacitance_violation_count]
@@ -1748,6 +1805,9 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
         raise ValueError("signoff: exact corner libraries require --kit/config.mk (or an ECO dir's config_eco.mk) or explicit --library-config")
     mounts.append(("work", work or str(libconfig.parent)))
     mounts.append(("work/config.mk", str(libconfig)))
+    pre = container_path_preflight(libconfig, work, corner)
+    if pre:
+        raise ValueError("signoff: container preflight FAILED (" + corner + "): " + "; ".join(pre[:12]) + (f"; +{len(pre) - 12} more" if len(pre) > 12 else ""))
     core_overlay = copy_core_tap_overlay(Path(disc["sdc"]), od / "sdcdir")
     ptf = pair_target_file(disc, corner)
     if ptf is not None:
@@ -2399,6 +2459,23 @@ def evaluate(rec, insertion_target=None):
         n = max(int(x["pg_open"]) for x in pgc.values())
         put("pg", "PASS" if n == 0 else "FAIL", open_terms=n, pg_terms=int(max(x["pg_terms"] for x in pgc.values())),
             first=next((x.get("pg_first_open") for x in pgc.values() if x.get("pg_first_open")), None))
+    # SPEPRD3 11-16: re-read the exported netlist; an assign/alias cycle or an output alias that resolves back to
+    # itself (write_verilog over a moved output BTerm) is an unusable view even when the ODB is correct
+    fv = (rec.get("inputs") or {}).get("final_v")
+    if fv and Path(fv).is_file():
+        import netlist_alias_check as NAC
+        probs, nst = NAC.check(Path(fv).read_text(errors="replace"))
+        if not nst["modules"]:
+            probs = probs + [dict(kind="no_module", net=None)]
+        put("netlist_alias", "FAIL" if probs else "PASS", problems=len(probs), first=probs[:5], netlist=fv, **nst)
+        # HEAD-DIE-R 11-17: subtree-balance pads on forwarded-clock outputs (blocking in both profiles)
+        try:
+            import fwd_pad_check as FPC
+        except ImportError:
+            FPC = None
+        if FPC is not None:
+            fr = FPC.check(Path(fv).read_text(errors="replace"))
+            put("fwd_pads", fr["verdict"], **{k: v for k, v in fr.items() if k != "verdict"})
     reasons = []
     fm = rec.get("ft_interface")
     if fm is not None:                        # 12.2a1 declared ft arcs (only kits with ft_ports.json)
@@ -2418,7 +2495,8 @@ def evaluate(rec, insertion_target=None):
     if tm is not None:
         put("timing_modes", tm.get("verdict", "NOT RUN"), **{k: v for k, v in tm.items() if k != "verdict"})
     for k in BLOCKING + (("macro_libs",) if "macro_libs" in ch else ()) + (("ft_interface",) if "ft_interface" in ch else ()) + \
-            (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()):
+            (("lec_superset",) if "lec_superset" in ch else ()) + (("timing_modes",) if "timing_modes" in ch else ()) + \
+            (("netlist_alias",) if "netlist_alias" in ch else ()) + (("fwd_pads",) if "fwd_pads" in ch else ()):
         v = ch[k]["verdict"]
         if v != "PASS":
             reasons.append(f"{k}: {v}" + _detail(k, ch[k]))

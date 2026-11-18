@@ -5,6 +5,7 @@ Runs the existing SDC/FF-binding, cast-form, master-slice and staged-file checks
 This is a static gate; RTL elaboration, netlist LEC/face/fanout, PG and routed
 corner checks remain mandatory later stages, and are not reported as passed here.
 """
+import math
 import argparse
 import bisect
 import functools
@@ -368,6 +369,121 @@ def core_tap_reach(kit, limit=None):
     return out
 
 
+# FABLE-FIX-S81-RINGS 11-16 (FABLE-PD-S81-0117 lever 3b, COORD r268): an S81 kit whose landing ring of >= 256 bits is not
+# flops-only (plan band without ring_place=ff, or a landing_placement.tcl tag without +ff) packs the whole ring FIRM in
+# netlist order and fails GRT inside the band (13 of 13 leaf kits, 38k-250k overflow).  A certain tool failure, so it
+# is an error here.  Only S81 kits are judged (freeze.json die s81): KV still has hub types on the old form (KV-102 rows).
+RING_FF_MIN_BITS = 256
+def ring_ff(kit, min_bits=RING_FF_MIN_BITS):
+    kit = Path(kit)
+    lc_path, tcl_path = kit/'landing_contract.json', kit/'landing_placement.tcl'
+    if not lc_path.is_file():
+        return []
+    freeze = kit/'freeze.json'
+    if not freeze.is_file() or json.loads(freeze.read_text()).get('die') != 's81':
+        return []
+    bands = (json.loads(lc_path.read_text()).get('bands') or {})
+    tags = {}
+    if tcl_path.is_file():
+        for m in re.finditer(r'\{\S+\s+\{[^}]*\}\s+ring:([^@+}\s]+)([^}\s]*)\}', tcl_path.read_text()):
+            tags.setdefault(m.group(1), []).append(m.group(2))
+    errors = []
+    for bus, b in sorted(bands.items()):
+        if bus.startswith('monitor_') or not isinstance(b, dict) or not b.get('rect_um') or b.get('hard_core'):
+            continue
+        width = int(b.get('width') or 0)
+        if width < min_bits:
+            continue
+        if b.get('ring_place') != 'ff':
+            errors.append(f'landing ring {bus} ({width} bits) has no ring_place=ff in landing_contract.json: the whole '
+                          f'ring would be placed FIRM in netlist order (compose --band-ring ff)')
+        elif bus in tags and not all('+ff' in t for t in tags[bus]):
+            errors.append(f'landing ring {bus} ({width} bits): landing_placement.tcl tag ring:{bus}{tags[bus][0]} has no +ff')
+    return errors
+
+
+def reset_tree_coherence(kit):
+    """Match generated relay placement keys to the actual staged wrapper q nets.
+
+    A moved macro can change reset-tree numbering while --kit-rtl retains an
+    older wrapper. Matching instance counts alone cannot detect that mismatch.
+    """
+    tree = kit / 'reset_tree.tcl'
+    if not tree.is_file():
+        return []
+    rows = re.findall(r'^rtr_place\s+(\w+)\s+\{\*(u_[rs]rl_\d+)\[\./\]\*\}',
+                      tree.read_text(), re.M)
+    if not rows:
+        return []
+    cfg = rtl_lint.config(kit)
+    top = cfg.get('DESIGN_NAME', [])
+    if len(top) != 1:
+        return ['relay placement requires exactly one DESIGN_NAME']
+    bodies = []
+    for path in rtl_lint._kit_sources(kit):
+        if not path.is_file():
+            continue  # staged_inputs/module_closure report missing sources
+        text = _strip_src(path.read_text())
+        bodies += re.findall(r'\bmodule\s+' + re.escape(top[0]) + r'\b(.*?)\bendmodule\b',
+                             text, re.S)
+    if len(bodies) != 1:
+        return [f'relay placement requires one staged top {top[0]}, found {len(bodies)}']
+    errors = []
+    for key, inst in rows:
+        matches = re.findall(r'\b[A-Za-z_]\w*\s+' + re.escape(inst) + r'\s*\((.*?);',
+                             bodies[0], re.S)
+        q = re.findall(r'\.q\s*\(\s*(\w+)\s*\)', matches[0]) if len(matches) == 1 else []
+        if q != [key]:
+            errors.append(f'{inst}: reset_tree.tcl key {key}, staged RTL q {q or "MISSING/AMBIGUOUS"}; regenerate a coherent wrapper/tree')
+    return errors
+
+
+# ---- landing band legal-site preflight (KV-R 11-16, KV-HUB-WO class f5fa4d600f) ---------------------------------------
+CLAND_FAMILY_W_UM = 1.188   # widest master of the drive family the placer reserves per landing cell (cland_family_w)
+CLAND_ROW_H_UM = 0.27
+
+
+def cland_band_sites(kit, family_w=CLAND_FAMILY_W_UM, row_h=CLAND_ROW_H_UM):
+    """Fail when a literal-local-reset landing band has no row with a free x gap >= the placer's family width once the FIRM ft-station
+    cells (ft_bit_sites.tcl explicit sites) are in place.  A comb of ft flops landed FIRM first (1.08 um DFF every 2.16 um) leaves
+    1.08 um gaps, no 1.188 um cell fits, and global_place dies with 'OT_CLAND no legal nonoverlapping row/site in reserved band'
+    (kv3_hub_Wo, 8 min into place).  Static twin of the place-time dry pass: rows are assumed full width (only FIRM ft cells
+    block), so a band that passes here can still fail on a macro, but a band that fails here always fails at place."""
+    kit = Path(kit)
+    lp, fs = kit/'landing_placement.tcl', kit/'ft_bit_sites.tcl'
+    if not lp.is_file() or not fs.is_file():
+        return []
+    sizes = {m.group(1): (float(m.group(2)), float(m.group(3)))
+             for m in re.finditer(r'dict set ff_bit_site_cells \{(\w+)\} \{([\d.]+) ([\d.]+)\}', fs.read_text())}
+    cells = []
+    for m in re.finditer(r'dict set ff_bit_sites \{(\w+),\d+,\d+\} \{(-?[\d.]+) (-?[\d.]+)\}', fs.read_text()):
+        w, h = sizes.get(m.group(1), (None, None))
+        if w:
+            cells.append((float(m.group(2)), float(m.group(3)), w, h))
+    errors = []
+    seen = set()
+    for m in re.finditer(r'\{(u_cland_\S+)\s+\{(-?[\d.]+) (-?[\d.]+) (-?[\d.]+) (-?[\d.]+)\}\s+literal-local-reset\}', lp.read_text()):
+        name, (x0, y0, x1, y1) = m.group(1), map(float, m.groups()[1:])
+        if name in seen:
+            continue
+        seen.add(name)
+        near = [c for c in cells if c[0] < x1 and c[0] + c[2] > x0 and c[1] < y1 and c[1] + c[3] > y0]
+        r0, r1 = int(math.ceil(y0 / row_h - 1e-6)), int(math.floor(y1 / row_h + 1e-6))
+        best = 0.0
+        for r in range(r0, r1):
+            blocked = sorted((max(x0, c[0]), min(x1, c[0] + c[2])) for c in near if c[1] < (r + 1) * row_h - 1e-6 and c[1] + c[3] > r * row_h + 1e-6)
+            at = x0
+            for lo, hi in blocked:
+                best = max(best, lo - at)
+                at = max(at, hi)
+            best = max(best, x1 - at)
+        if best < family_w - 1e-6:
+            errors.append(f'{name}: landing band {x0:g},{y0:g} {x1:g},{y1:g} has no free gap >= {family_w:g} um in any of its '
+                          f'{max(0, r1 - r0)} rows after {len(near)} FIRM ft-station cells (best gap {best:.3f} um): the placer would '
+                          f'die with "no legal nonoverlapping row/site in reserved band"; move the raw-branch stage to a comb-free strip')
+    return errors
+
+
 def check(kit, plan_dir=None, contract=False):
     kit = Path(kit).resolve()
     issues, checks = [], {}
@@ -408,7 +524,9 @@ def check(kit, plan_dir=None, contract=False):
                 for line, rule, snippet in entries]
     run('yosys_cast_forms', cast_forms)
     run('module_closure', lambda: unresolved_modules(kit))
+    run('reset_tree_coherence', lambda: reset_tree_coherence(kit))
     run('plan_pins_source', lambda: plan_pins_source(kit, plan_dir))
+    run('cland_band_legal_site', lambda: cland_band_sites(kit))
     # R-CAP (RULES-CAP-1, RULEBOOK 11-13): projected movable cells after place resize against the 400k place budget,
     # before any allocation.  Synth count, best first: a MEASURED count of the kit's synthesized top
     # (cap_estimate.measured_synth: native_cell_count.json, cap_projection.json, run/logs/.../1_synth.json), a staged
@@ -447,10 +565,11 @@ def check(kit, plan_dir=None, contract=False):
             if plan is not None:
                 estimate['synth_basis'] = f'plan estimate (cells.py {plan[1]})'
             cap_record.update(estimate)
-        return []      # LIMIT-BIND-1 11-14 (OWNER: R-CAP removed): recorded as info, never a preflight error
+        return list(errors)      # WAVE-FLOW-R2 11-17: only SPLIT-NEEDED (over the one limit, no ruling-id waiver) is an error; the projection stays info
     run('cell_budget', cell_budget)
     if cap_record:
         checks['cell_budget']['estimate'] = cap_record
+    run('ring_ff', lambda: ring_ff(kit))
     # WF-1 11-14 (OWNER: delete the conservative limits; S81 leaf t17 clk_c4 at 382 um was stopped): the core tap reach is ADVISORY.  The
     # rows are reported in checks['core_tap_reach']['advisory'] (and logged); CTS and STA judge the real effect.  Never an issue.
     def core_tap_advisory():

@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+"""ot-delete TREE... : the one way to delete a whole tree under /srv/opentallas-scratch* (FLEET-OPS-R, COORD 11-17).
+Wraps ot_delete_guard.refuse(): a tree the guard refuses (protected by kit_wave.json / markers / receipts, a live process under it, a symlink,
+a partial delete inside a source tree) is SKIPPED, not an error (exit 0, 'SKIP <path>: <reason>').  An allowed tree is removed whole
+(directories made writable first, never files: a hardlinked file shares its inode with the base tree) and df before/after is printed.  --dry lists what would go.  Needs the guard list
+fleet-ops-r/protected_struct.txt or OT_GUARD_LIST (fail-closed: no list = every source tree is skipped)."""
+import importlib.util, os, shutil, subprocess, sys
+
+HERE = os.path.dirname(os.path.realpath(__file__))
+
+
+def load_guard():
+    for c in (os.path.join(HERE, "ot_delete_guard.py"), os.environ.get("OT_DELETE_GUARD", "")):
+        if c and os.path.isfile(c):
+            sp = importlib.util.spec_from_file_location("ot_delete_guard", c)
+            m = importlib.util.module_from_spec(sp); sp.loader.exec_module(m)
+            return m
+    raise SystemExit("ot-delete: ot_delete_guard.py not found next to this tool")
+
+
+def avail(path):
+    try:
+        s = os.statvfs(path if os.path.exists(path) else os.path.dirname(path))
+        return s.f_bavail * s.f_frsize
+    except OSError:
+        return -1
+
+
+def main(argv, guard=None, rmtree=None):
+    dry = "--dry" in argv
+    targets = [a for a in argv if a != "--dry"]
+    if not targets:
+        print(__doc__); return 2
+    g = guard or load_guard()
+    rm = rmtree or (lambda t: (subprocess.run(["find", t, "-type", "d", "-exec", "chmod", "u+w", "{}", "+"], check=False), shutil.rmtree(t)))
+    lst = os.environ.get("OT_GUARD_LIST")
+    protected = None
+    if lst:
+        protected, err = g.load_list(lst)
+        if protected is None:
+            print("SKIP all: guard list unreadable: %s" % err); return 0
+    rc = 0
+    for t in targets:
+        t = os.path.abspath(t)
+        if not os.path.lexists(t):
+            print("SKIP %s: does not exist" % t); continue
+        why = g.refuse(t, protected) if protected is not None else g.refuse(t)
+        if why:
+            print("SKIP %s: %s" % (t, why)); continue
+        before = avail(t)
+        if dry:
+            print("WOULD-DELETE %s" % t); continue
+        try:
+            rm(t)
+        except OSError as e:
+            print("FAILED %s: %s" % (t, e)); rc = 1; continue
+        print("DELETED %s  df before %.1f GB after %.1f GB" % (t, before / 2**30, avail(os.path.dirname(t)) / 2**30))
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))

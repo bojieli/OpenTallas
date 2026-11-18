@@ -219,6 +219,19 @@ def test_reused_proof_refuses_changed_synth_before_physical(tmp_path):
     assert not (k / "lec_async.stop").exists()  # Original proof remains its own valid scope.
 
 
+def test_missing_proof_reference_degrades_to_lec_pending(tmp_path):
+    """FLOW-HEALTH-1 11-15: a resumed kit whose lec_async.runs/<name>.json is missing (QC CTS probes sle_fw_v2 / sle_st_b_v2) used to
+    exit 11 right after launch; async LEC is advisory (R-MINIMAL), so check-synth warns 'LEC pending' and exits 0"""
+    k, env = _kit(tmp_path, 0)
+    (k / "lec_async.runs").mkdir(exist_ok=True)
+    for body in (None, "{not json"):
+        if body is not None:
+            (k / "lec_async.runs/dpkit-gone.json").write_text(body)
+        p = subprocess.run(["bash", str(TOOL), "check-synth", str(k), "dpkit-gone"], env=env, capture_output=True, text=True)
+        assert p.returncode == 0, p.stderr
+        assert "LEC pending" in p.stderr and "dpkit-gone.json" in p.stderr
+
+
 def _long_ready(k, tmp_path):
     # The fake docker cannot kill the exec when the container's main process ends, so the LEC watches for that here.
     (k / "lec_async.ready").write_text("1\nuntil [ -f /work/lec_async.abort ]; do sleep 0.1; done; exit 137\n")

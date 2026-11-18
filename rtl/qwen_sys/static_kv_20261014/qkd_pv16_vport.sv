@@ -1,3 +1,4 @@
+// KV-PVGEN 11-15: also run by tools/die_plan/test_pvgen_vport_selrep.py (comment only; touching this file puts its directory in the merge-queue sparse set).
 `timescale 1ns/1ps
 // Q-ATTN-RATE 2026-10-16: PV16 V port of the KV die (one per stack lane; 16 per die = 2 pairs x 8 ports).
 //

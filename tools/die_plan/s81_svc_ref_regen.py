@@ -164,8 +164,23 @@ def main():
     for k, v in um['procmux'].items(): names.add('procmux_%s_Y' % v)
     for k, v in um['hash'].items(): names.add('src_' + v)
     touched = sorted(n for n in names if any(n in l for l in ra + rb))
+    # S81-SVCMEM-1116 (B6 binds set -DOT_SVC_ATT_MEM_MACRO: sw/qmem natives -> dsdv_svc_mem_* form A): a src_<hash>
+    # REGISTER token may sit in the residual as a READ operand only -- every occurrence is <tok>_Q[..] (the register
+    # output) and none of its driver lines (reg declaration, always, Q assign) is in the residual, so the register is
+    # the same on both sides.  Such a line cannot change what the token is; the transforms only read it too, and
+    # proof (b) below still decides.  Any other use keeps the refusal.
+    read_only = []
+    for n in list(touched):
+        if not n.startswith('src_'):
+            continue
+        occ = [l for l in ra + rb if n in l]
+        drv = [l for l in occ if re.search(r'^reg\b|' + n + r'_q\s*<=|assign\s+w_\w*' + n + r'_Q\s*=', l)]
+        rest = [re.sub(r'\bw_u_rsv_14_\w*?' + n + r'_Q\[', '', l) for l in occ]
+        if not drv and not any(n in l for l in rest):
+            touched.remove(n)
+            read_only.append(dict(token=n, lines=len(occ)))
     rep = dict(reference=hashlib.sha256(C.encode()).hexdigest(), t7_original=CL.T7_ORIG,
-               paired=len(fw), renamed=sum(u != v for u, v in fw.items()), residual=[len(ra), len(rb)], tokens_in_residual=touched,
+               paired=len(fw), renamed=sum(u != v for u, v in fw.items()), residual=[len(ra), len(rb)], tokens_in_residual=touched, read_only_in_residual=read_only,
                tokens={k: len(v) for k, v in um.items()})
     print(json.dumps({k: v for k, v in rep.items() if k != 'reference'}), flush=True)
     (out / 'residual.txt').write_text('\n'.join(['- ' + l for l in ra] + ['+ ' + l for l in rb]) + '\n')

@@ -303,6 +303,15 @@ def _partition_clock_pin_geometry(kd, bud):
             continue
         taps[name] = want
     top = bud.get("signal_max")
+    # Physical clock pins remain on their planned layer when a signal grant
+    # raises the route ceiling. Old budgets retain their original interpretation.
+    physical = clk.get("pin_layer", top)
+    if ("pin_layer" in clk and (not isinstance(physical, str) or not re.fullmatch(r"M[1-9]\d*", physical)
+            or not isinstance(top, str) or not re.fullmatch(r"M[1-9]\d*", top)
+            or int(physical[1:]) > int(top[1:]))):
+        err.append("budget.json: invalid clock.pin_layer")
+        physical = top
+    declared_layers = {}
     landing_file = Path(kd) / "landing_contract.json"
     if landing_file.is_file():
         try:
@@ -316,7 +325,11 @@ def _partition_clock_pin_geometry(kd, bud):
                                for v in xy)):
                     err.append("landing_contract.json: invalid physical clock pin declaration")
                     continue
-                if pin.get("layer") != top:
+                # QC-CB-GEN-1115 L6 (FABLE-PD-QC-1115 point 4): an N/S-face fclk_in_* entry is a VERTICAL pin; the partition top layer
+                # (M8) is horizontal, so the by-design layer is the top vertical layer one below it (M7).  Accepted only for a
+                # landing-contract clock pin whose layer is exactly one below the top; anything else still fails.
+                top_n = int(top[1:]) if isinstance(top, str) and re.fullmatch(r"M\d+", top) else None
+                if pin.get("layer") != top and not (top_n and pin.get("layer") == f"M{top_n - 1}"):
                     err.append(f"landing_contract.json: clock {name} on {pin.get('layer')}, not {top}")
                     continue
                 want = tuple(float(v) for v in xy)
@@ -324,6 +337,7 @@ def _partition_clock_pin_geometry(kd, bud):
                     err.append(f"landing_contract.json: clock {name} conflicts with budget plan tap")
                     continue
                 taps[name] = want
+                declared_layers[_base(name)] = pin["layer"]
         except (OSError, ValueError, TypeError, AttributeError):
             err.append("landing_contract.json: invalid physical clock pin metadata")
     pad_file = Path(kd) / 'pad_clock.json'
@@ -334,12 +348,13 @@ def _partition_clock_pin_geometry(kd, bud):
                 raise ValueError('invalid typed pad clock schema')
             for pin in pad['pins']:
                 name, xy = pin['name'], pin['xy_um']
-                if pin['dir'] not in ('in', 'out') or pin['layer'] != top or not isinstance(xy, list) or len(xy) != 2 or any(not math.isfinite(float(v)) for v in xy):
+                if pin['dir'] not in ('in', 'out') or pin['layer'] != physical or not isinstance(xy, list) or len(xy) != 2 or any(not math.isfinite(float(v)) for v in xy):
                     raise ValueError('invalid typed pad clock geometry')
                 ports.add(name)
                 if name in taps and any(abs(a-b) > TOL for a, b in zip(taps[name], xy)):
                     err.append(f'pad_clock.json: clock {name} conflicts with budget plan tap')
                 taps[name] = tuple(map(float, xy))
+                declared_layers[_base(name)] = pin['layer']
         except (OSError, ValueError, KeyError, TypeError, AttributeError):
             err.append('pad_clock.json: invalid physical pad clock metadata')
     if not top:
@@ -360,8 +375,9 @@ def _partition_clock_pin_geometry(kd, bud):
             sm = re.search(r"-pin_size\s+\{\s*" + _NUM + r"\s+" + _NUM + r"\s*\}", line)
             layer = lm.group(1) if lm else None
             src = f.name
-            if layer != top:
-                err.append(f"{src}: partition clock {n} on {layer}, not the partition top layer {top} (12.7 on-ramp)")
+            want_layer = declared_layers.get(_base(n), physical)
+            if layer != want_layer:
+                err.append(f"{src}: partition clock {n} on {layer}, not the partition top layer {want_layer} (12.7 on-ramp)")
             if not sm or min(float(sm.group(1)), float(sm.group(2))) < PARTITION_CLOCK_MIN[0] - 1e-6 or \
                     max(float(sm.group(1)), float(sm.group(2))) < PARTITION_CLOCK_MIN[1] - 1e-6:
                 err.append(f"{src}: partition clock {n} pin_size {sm.groups() if sm else None} < "
@@ -376,7 +392,7 @@ def _partition_clock_pin_geometry(kd, bud):
                 err.append(f"{src}: partition clock {n} is not a plan tap (budget.json clock.taps_snapped / edge_clocks / landing_contract.json clock pins)")
             elif abs(want[0] - x) > TOL or abs(want[1] - y) > TOL:
                 err.append(f"{src}: partition clock {n} at ({x:g}, {y:g}) != plan tap ({want[0]:g}, {want[1]:g}) (12.8a)")
-            if layer == top and layer:
+            if layer == want_layer and layer:
                 try:
                     if not MS.on_track(kd, layer, x, y):
                         err.append(f"{src}: partition clock {n} centre ({x:g}, {y:g}) off the {layer} track")

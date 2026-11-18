@@ -1,0 +1,53 @@
+import importlib.machinery, importlib.util, os, sys, tempfile, unittest, io, contextlib
+H = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, H)
+import block_raw_rm as B
+loader = importlib.machinery.SourceFileLoader("ot_delete_cli", os.path.join(H, "ot-delete"))
+spec = importlib.util.spec_from_loader("ot_delete_cli", loader); D = importlib.util.module_from_spec(spec); loader.exec_module(D)
+
+
+class FakeGuard:
+    def __init__(self, refuse): self.r = refuse
+    def refuse(self, t, protected=None): return self.r.get(os.path.basename(t))
+    def load_list(self, p): return set(), None
+
+
+def run(args, guard, rm):
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        rc = D.main(args, guard=guard, rmtree=rm)
+    return rc, out.getvalue()
+
+
+class Cap(unittest.TestCase):
+    def test_hook_blocks_raw_rm_on_scratch(self):
+        for c in ("rm -rf /srv/opentallas-scratch2/claude/kw45/src_x", "cd /; rm -r -f /srv/opentallas-scratch3/claude/a", "sudo rm -fr /srv/opentallas-scratch/x",
+                  "ssh e8 'rm -rf /srv/opentallas-scratch2/claude/x'", "find /srv/opentallas-scratch2/claude/x -type f -delete",
+                  "python3 -c 'import shutil; shutil.rmtree(\"/srv/opentallas-scratch2/x\")'", "ls && rm --recursive --force /srv/opentallas-scratch2/q"):
+            self.assertTrue(B.blocked(c), c)
+
+    def test_hook_allows_everything_else(self):
+        for c in ("ot-delete /srv/opentallas-scratch2/claude/kw45/src_x", "rm -f /tmp/x", "rm -rf /tmp/build", "rm /srv/opentallas-scratch2/claude/a/file.log",
+                  "ls /srv/opentallas-scratch2", "git rm -r tools/x", "du -sh /srv/opentallas-scratch2/claude"):
+            self.assertFalse(B.blocked(c), c)
+
+    def test_guard_refusal_is_a_skip_not_an_error(self):
+        d = tempfile.mkdtemp(); a = os.path.join(d, "keep"); b = os.path.join(d, "go"); os.mkdir(a); os.mkdir(b)
+        gone = []
+        rc, out = run([a, b], FakeGuard({"keep": "protected (kit_wave.json)"}), lambda t: gone.append(t))
+        self.assertEqual(rc, 0); self.assertEqual(gone, [b])
+        self.assertIn("SKIP %s: protected" % a, out); self.assertIn("DELETED %s" % b, out)
+
+    def test_dry_and_missing_and_failure(self):
+        d = tempfile.mkdtemp(); a = os.path.join(d, "t"); os.mkdir(a); gone = []
+        rc, out = run(["--dry", a, os.path.join(d, "nope")], FakeGuard({}), lambda t: gone.append(t))
+        self.assertEqual((rc, gone), (0, [])); self.assertIn("WOULD-DELETE", out); self.assertIn("does not exist", out)
+        def boom(t): raise OSError("busy")
+        rc, out = run([a], FakeGuard({}), boom)
+        self.assertEqual(rc, 1); self.assertIn("FAILED", out)
+
+    def test_real_delete_of_readonly_tree(self):
+        d = tempfile.mkdtemp(); a = os.path.join(d, "t"); os.makedirs(os.path.join(a, "sub")); open(os.path.join(a, "sub", "f"), "w").close()
+        os.chmod(os.path.join(a, "sub"), 0o555)
+        rc, out = run([a], FakeGuard({}), None)
+        self.assertEqual(rc, 0); self.assertFalse(os.path.exists(a))

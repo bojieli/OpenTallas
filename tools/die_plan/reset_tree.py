@@ -1155,7 +1155,7 @@ def for_type(P, tn, reach=None):
     if native:
         import copy
         tree = copy.deepcopy(native["tree"])
-        configured = _type_pin_root_copies(P, tn, tree)
+        configured = _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, tree))))
         if configured != tree:
             raise ResetError(f"type {tn}: pin root copies require regenerated bound RTL and a fresh native source contract")
         return tree
@@ -1196,7 +1196,7 @@ def for_type(P, tn, reach=None):
             if boot_buses or boot_contents:
                 T.update(bootstrap_buses=boot_buses, bootstrap_contents=boot_contents,
                          bootstrap_taps=list(range(nck)))
-        return _type_pin_root_copies(P, tn, T)
+        return _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T))))
     if pipelined(P):
         K = part_depth(P)
         T = _type_tree(P, tn, K, reach)
@@ -1213,13 +1213,15 @@ def for_type(P, tn, reach=None):
         T["relay_lockup"] = relay_lockup_form(P)
     if T["relay_driver"]:
         T["relay_pair_boxes"] = blockages(P.types[tn])
-    return _type_pin_root_copies(P, tn, T)
+    return _type_pin_entry_phase(P, tn, _type_pin_entry_delay(P, tn, _type_pin_entry_fall(P, tn, _type_pin_root_copies(P, tn, T))))
 
 
 def entry_stages(T):
     """pin -> release of the entry: the root synchroniser (+ the PLL lock qualifier ot_dp_lockq when declared) or one
     pin register."""
-    return T["sync_stages"] + int((T.get("lock") or {}).get("stages", 0)) if T["entry"] == "sync" else 1
+    if T["entry"] == "sync":
+        return T["sync_stages"] + int((T.get("lock") or {}).get("stages", 0))
+    return 2 if T.get("pin_entry_phase") else 1      # pin_entry_phase nominal (h = 0): rising capture + local handoff
 
 
 def release_clocks(T):
@@ -1932,8 +1934,13 @@ def core_reset_targets(P, tn):
                 # its declared module, and refuse differing candidates instead of silently choosing another die.
                 base = HERE.parents[1] / "physical" / "die_plan"
                 paths = list(base.glob("*/" + c["pins_file"])) + list(base.glob("*/*/" + c["pins_file"]))
-                paths = [p for p in paths if isinstance((j := json.loads(p.read_text())), dict)
-                         and (j.get("module") or j.get("core")) == c.get("module")]
+                tabs = [(p, json.loads(p.read_text())) for p in paths]
+                keyed = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) == c.get("module")]
+                # QC-CLK-R2 11-17: a bare pin list (no module / core key, e.g. qwen_compute cores/su/signed/*_pins.json)
+                # cannot name its module; it is a candidate only when no table at that path names another module, and
+                # the byte-equality rule below still refuses differing copies.
+                other = [p for p, j in tabs if isinstance(j, dict) and (j.get("module") or j.get("core")) not in (None, c.get("module"))]
+                paths = keyed or ([p for p, j in tabs if isinstance(j, list)] if not other else [])
                 if paths and len({p.read_bytes() for p in paths}) == 1:
                     pd = paths[0]
                     for _ in Path(c["pins_file"]).parts:
@@ -2026,6 +2033,7 @@ def wf_plan(P):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     if "wf_plan" in cache:
         return cache["wf_plan"]
+    import pin_entry_phase as PH
     sol = wf_solve(P)
     N = sync_stages(P)
     types = {}
@@ -2059,9 +2067,12 @@ def wf_plan(P):
             rel = base + sol["hard_depth"][p]
             ent, K = 1, sol["hard_depth"][p] - 1
         else:
-            rel = base + types[tn]["release_after_pin"]
-            ent, K = types[tn]["entry_stages"], types[tn]["depth_K"]
+            shift = PH.part_delta(P, p)          # declared capture-edge label of this instance (0 unless opted in)
+            rel = base + types[tn]["release_after_pin"] + shift
+            ent, K = types[tn]["entry_stages"] + shift, types[tn]["depth_K"]
         row = dict(type=tn, parent=None if pr is None else pr[0], entry_stages=ent, depth_K=K, release=rel)
+        if p not in sol["hard"] and PH.enabled(P.types[tn]):
+            row["entry_phase_half_cycles"] = PH.half_cycles(P.parts[p])
         if tn in types:
             row["core_release"] = {}
             for c in types[tn].get("core_resets", []):
@@ -2521,6 +2532,52 @@ def _pin_copy_entry_lines(T, ind, src, signal='reset'):
     return out
 
 
+def _type_pin_entry_phase(P, tn, T):
+    import pin_entry_phase as PH
+    return PH.configure(P, tn, T, ResetError)
+
+
+def _type_pin_entry_delay(P, tn, T):
+    import pin_entry_delay as D
+    result = D.configure(P, tn, T, ResetError)
+    if result is not T:
+        result['pin_entry_delay_blockages'] = blockages(P.types[tn])
+    return result
+
+
+def pin_entry_cell(T, signal):
+    import pin_entry_delay as D
+    if T.get('pin_entry_phase'):
+        return 'ot_dp_rrelay_ph'
+    return D.entry_cell(T, signal)
+
+
+def pin_entry_ports(T):
+    """extra entry-cell port text (the strap-selected capture phase), empty for every other entry form."""
+    import pin_entry_phase as PH
+    return PH.port_text(T)
+
+
+def _type_pin_entry_fall(P, tn, T):
+    """Measured optional negedge pre-capture, followed by the original rising entry.
+
+    It preserves the plan's whole-cycle entry count only in the separately priced
+    J=1 input window.  It cannot qualify an arbitrary wavefront phase or bootstrap
+    an independent count origin.  The default emits the old entry byte for byte.
+    """
+    flag = P.types[tn].get("reset", {}).get("pin_entry_fall", False)
+    if type(flag) is not bool:
+        raise ResetError(f"type {tn}: reset.pin_entry_fall must be boolean")
+    if not flag:
+        return T
+    if T.get("entry") != "relayed":
+        raise ResetError(f"type {tn}: pin_entry_fall requires a synchronous relayed entry")
+    if T.get("pin_root_copies") or T.get("pin_start_copies"):
+        raise ResetError(f"type {tn}: pin_entry_fall copies need their own measured entry window")
+    T = dict(T, pin_entry_fall=True, pin_entry_added_flops=1 + int(bool(T.get("start"))))
+    return T
+
+
 def _type_pin_root_copies(P, tn, T):
     spec = P.types[tn].get('reset', {}).get('pin_root_copies')
     return with_pin_root_copies(T, spec, P.types[tn]['outline_um'])
@@ -2629,7 +2686,7 @@ def rtl_lines(T, ind="    ", src="arst_n", start_src="start_i", lock_src=LOCK_SR
     elif T.get('pin_root_copies'):
         out += _pin_copy_entry_lines(T, ind, src)
     else:
-        out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
+        out.append(f"{ind}{pin_entry_cell(T, 'reset')} u_rst_in (.clk(clk), .d({src}), .q(rst_root_n){pin_entry_ports(T)});  "
                    "// pin register of the SYNCHRONOUS reset input (die reset tree)")
     out += [f"{ind}" + ("(* keep = 1 *) " if T.get("local_reset_taps") else "") + f"wire rst_n_t{i};" for i in taps]
     nck = consumer_count(T)
@@ -2692,13 +2749,13 @@ def _rtl_lines_start(T, ind, src, start_src, lock_src=LOCK_SRC):
     elif T.get('pin_root_copies'):
         out += _pin_copy_entry_lines(T, ind, src)
     else:
-        out.append(f"{ind}ot_dp_rrelay u_rst_in (.clk(clk), .d({src}), .q(rst_root_n));  "
+        out.append(f"{ind}{pin_entry_cell(T, 'reset')} u_rst_in (.clk(clk), .d({src}), .q(rst_root_n){pin_entry_ports(T)});  "
                    "// pin register of the SYNCHRONOUS reset input (neighbour's rst_o)")
     if T["entry"] != "sync":
         if T.get('pin_start_copies'):
             out += _pin_copy_entry_lines(T, ind, start_src, 'start')
         else:
-            out.append(f"{ind}ot_dp_rrelay u_run_in (.clk(clk), .d({start_src}), .q(run_root));  "
+            out.append(f"{ind}{pin_entry_cell(T, 'start')} u_run_in (.clk(clk), .d({start_src}), .q(run_root){pin_entry_ports(T)});  "
                        "// pin register of the SYNCHRONOUS START input (neighbour's start_o)")
     nck = consumer_count(T)
     outs = set(range(nck, nck + len(T.get("outs", []))))
@@ -3016,6 +3073,9 @@ def tcl_text(T, native_paths=None, native_nodes=None, native_sites=None, unused_
     else:
         edges += " " + " ".join(f"{r['q']} {r['run']}" for r in native_nodes if r.get('run'))
         t.append("# NATIVE RESET: core connections remain exactly as bound; no core rewiring or claimed core-hop check.")
+    if T.get('pin_entry_delay'):
+        import pin_entry_delay as D
+        t.append(D.placement_tcl(T))
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",
           f"set rtr_hmax 0; set rtr_hbad 0; set rtr_lim [expr {{{T['reach_um']:g} * $ff_dbu}}]",
@@ -3048,7 +3108,10 @@ def summary(T):
                 entry_stages=entry_stages(T), release_clocks=release_clocks(T), outs=len(T.get("outs", [])),
                 note="OWNER DECISION 13: one root synchroniser per die + neighbour wavefront (registered reset in / out "
                      "per partition, relays <= reach, equal depth inside the partition)" if T.get("outs") is not None
-                else "OWNER RESET RULE 10-24: one root synchroniser per die region + equal-depth synchronous relays")
+                else "OWNER RESET RULE 10-24: one root synchroniser per die region + equal-depth synchronous relays") | (
+                    dict(pin_entry_fall=True, pin_entry_added_flops=T['pin_entry_added_flops'],
+                         pin_entry_added_whole_cycles=0, pin_entry_count_window='measured J=1 required')
+                    if T.get('pin_entry_fall') else {}) | __import__('pin_entry_delay').summary(T) | __import__('pin_entry_phase').summary(T)
 
 
 # ----------------------------------------------------------------------------------------------- G0

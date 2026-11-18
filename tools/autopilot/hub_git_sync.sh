@@ -34,7 +34,9 @@ URL=git@github.com:bojieli/OpenTallas.git
 # COORD-COMMIT-SPEED-1 11-13: lanes/handoff/<LANE>.md is lane-appended text like lanes/*.md; three dirty handoffs made the sync
 # FAIL 07:05-08:22 ("non-log local edits") while the autopilot read a stale checkout.
 APPEND_RE='^(HANDOFF\.md|CODEX-LOG\.md|CODEX-HANDOFF\.md|lanes/[^/]+\.md|lanes/handoff/[^/]+\.md|lanes/SIGN-RATE\.tsv|autopilot/(queue|resolved|auto_resign)\.tsv)$'
-GENERATED_RE='^RELEASE_TREE\.md$'
+# FLOW-HEALTH-1 11-15 (FABLE-FLOW-2000 d): lanes/NOPROG*.tsv, FLOW-HEALTH.tsv, STALE.tsv, VISUAL-QUEUE.tsv are rewritten on the hub by timers that commit them
+# themselves; a dirty copy between the write and the commit raised HUB-SYNC-FAILED 494 times (19:02-20:22), so they are generated files too
+GENERATED_RE='^(RELEASE_TREE\.md|lanes/(NOPROG|NOPROG-ACTIONS|FLOW-HEALTH|STALE|VISUAL-QUEUE)\.tsv|lanes/NOPROG-TABLE\.md)$'
 LIVE_RE='^autopilot/kit_wave_state\.json$'
 FLEET_AFTER_MIN=${HUB_SYNC_FLEET_AFTER_MIN:-30}
 say() { echo "hub-git-sync $1: $2"; }

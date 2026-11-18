@@ -13,6 +13,7 @@ preflight still reports it.
 """
 import copy
 import json
+import os
 import re
 from pathlib import Path
 
@@ -220,6 +221,9 @@ def project(raw, kit_rtl):
             continue
         bound_text = bf.read_text(errors="replace")
         rows = resolve(t, bound_text)
+        if os.environ.get("OT_S81_SVC_PVSO_PATHS") == "1":
+            import s81_svc_pvso_paths
+            rows += s81_svc_pvso_paths.resolve(tn, t, bound_text)
         kr = json.loads(Path(fl).with_name("kit_rtl.json").read_text())
         manifest = kr.get("asbuilt_manifest")
         man = (json.loads(Path(manifest).read_text())

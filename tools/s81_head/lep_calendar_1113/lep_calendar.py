@@ -15,6 +15,8 @@ class Stages:
     plw: int = 0
     col0: int = 0
     pair: int = 1
+    rxh: int = 0      # HEAD-PLAN-R4 NF15f: RX head rank (u_lep g_rxh) before ri / ml_wd
+    kcred: int = 12   # FABLE-PLAN-HEAD-NF15F 1: K-link credit depth, both ends (u_lep DR / CRED, lane CORE_CRED)
 
     def __post_init__(self):
         if self.pair not in (0,1):
@@ -25,6 +27,23 @@ class Stages:
         for name in ('pin', 'pout', 'plw', 'col0'):
             if not 0 <= getattr(self, name) <= 15:
                 raise ValueError(f'{name} stage depth outside 0..15')
+        if self.rxh not in (0, 1):
+            raise ValueError('RXH is one RX head rank (0 or 1)')
+        if not 2 <= self.kcred <= 32:
+            raise ValueError('KCRED outside the credit SRAM shape 2..32 (ot_link_credit_rx_b64)')
+
+    # K-link credit round trip in edges, MEASURED by tb_head_lepk_stages LEPK_RTT at the u_lep boundary (11-17): RX = credit
+    # out -> next beat in (exact while credit-bound: KRX 6 lanes 21 at D 12) + beat in -> credit out; TX = beat out -> credit
+    # back + turnaround (upper bound, the bench never starves TX).  Per lane at 0 stages: RX 14 / 12 / 12 / 17, TX 15; each
+    # K stage +2.  A link of depth D runs at D / RTT beats per cycle; the pre-R4 tuples run RX lanes 1 / 2 at 12 / 16 = 0.75,
+    # under the 0.764 off-die lane cap, so they pass; NF15f needs D >= 24 (bench: 16 FAIL, 24 / 28 PASS).
+    TX_RTT0, RX_RTT0 = 15, (14, 12, 12, 17)
+
+    def credit_rtt(self, lane):
+        return dict(tx=self.TX_RTT0 + 2 * self.lane('ktx', lane), rx=self.RX_RTT0[lane] + 2 * self.lane('krx', lane))
+
+    def credit_ok(self):
+        return all(self.kcred >= max(self.credit_rtt(i).values()) for i in range(4))
 
     def lane(self, field, lane):
         if field not in ('ktx', 'krx', 'txi') or lane not in range(4):
@@ -46,6 +65,8 @@ class Stages:
             answer[f'lane{i}.tx_k.reverse.credit'] = self.lane('ktx', i)
             answer[f'lane{i}.rx_k.forward.valid+data+rxv+fault'] = self.lane('krx', i)
             answer[f'lane{i}.rx_k.reverse.credit'] = self.lane('krx', i)
+        # RXH: shared by the four lanes (pair release -> ri / mu_rt / ml_w); forward only, no credit leg
+        answer['rx_head.ri+mu_rt+ml_w'] = self.rxh
         return answer
 
     def shift_events(self, events):
@@ -77,14 +98,18 @@ class Stages:
                 + (514+512)*self.col0
                 + 555*sum(self.lane('ktx',i) for i in lanes)
                 + 559*sum(self.lane('krx',i) for i in lanes)
-                + 572*sum(self.lane('txi',i) for i in lanes))
+                + 572*sum(self.lane('txi',i) for i in lanes)
+                + (4*552 + 44)*self.rxh)       # RXH: 2,208 head-word bits + 44 ring-side control copies
 
     def params(self):
         return dict(CH_B="4'b1111", PAIR=self.pair, KTX=f"16'h{self.ktx:04x}",
                     KRX=f"16'h{self.krx:04x}", TXI=f"16'h{self.txi:04x}",
-                    PIN=self.pin, POUT=self.pout, PLW=self.plw, COL0=self.col0)
+                    PIN=self.pin, POUT=self.pout, PLW=self.plw, COL0=self.col0,
+                    **({'RXH': self.rxh} if self.rxh else {}),   # RXH 0: the pre-R4 parameter set, unchanged
+                    **({'KCRED': self.kcred} if self.kcred != 12 else {}))   # KCRED 12: unchanged
 
 VF = Stages(ktx=0x0000, krx=0x1220, txi=0x1221, pin=2, pout=3, plw=3, col0=2)
+NF15F = Stages(ktx=0x1111, krx=0x2660, txi=0x2442, pin=6, pout=8, plw=3, col0=2, rxh=1, kcred=28)   # HEAD-PLAN-R4 11-17
 STRESS = Stages(ktx=0x3333, krx=0x4444, txi=0x4444, pin=4, pout=4, plw=4, col0=2, pair=0)
 
 
@@ -148,7 +173,7 @@ def provider_port_contract(plan, stages=VF, part='lep0N'):
                 die_lane_added_cycles={lane:0 for lane in sorted(selected)},
                 die_lane_fixed_cycles_before={lane:lanes[lane].get('fixed_cycles',0)
                                               for lane in sorted(selected)},
-                internal_lane_legs={k:v for k,v in stages.legs().items() if k.startswith('lane')},
+                internal_lane_legs={k:v for k,v in stages.legs().items() if k.startswith(('lane','rx_head'))},
                 consumption_rule='keep external lane fixed_cycles unchanged; compose each '
                                  'traversed provider leg once; coherent port depths are not summed',
                 programme_qualified=False)

@@ -62,17 +62,17 @@ if mode=='b':
     blk.setDieArea(odb.Rect(x0,y0,x1,y1)); blk.setCoreArea(odb.Rect(x0,y0,x1,y1))
     print(f'CROP box_um=[{x0/dbu:.2f} {y0/dbu:.2f} {x1/dbu:.2f} {y1/dbu:.2f}] area_mm2={(x1-x0)*(y1-y0)/dbu/dbu/1e6:.3f} kept_insts={len(keep)} dropped={len(drop)} nets_deleted={ndel} pdn={psb}',flush=True)
 # DIE-ROUTE-ABS-1: SNAP_TAP_PINS=1 puts the die tap terminals (t_*__clk_tN, M9) on the M9 x / M8 y track grid (7 nm M8 min-step stubs).
-if os.environ.get(SNAP_TAP_PINS):
+if os.environ.get("SNAP_TAP_PINS"):
     sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
     import die_unit_obs
-    print(TAP_PIN_SNAP,die_unit_obs.snap_tap_pins(blk,odb,dbu),flush=True)
+    print("TAP_PIN_SNAP",die_unit_obs.snap_tap_pins(blk,odb,dbu),flush=True)
 # DIE-ROUTE-ABS-1: GRT-only die obstructions (grt/obs.tcl: PG duplicates + clock-leg reservations) are fixed shapes in detail route.
 # DROP_GRT_OBS=<obs.tcl> deletes exactly those (layer + rectangle match); real PG special wires stay.
-if os.environ.get(DROP_GRT_OBS):
+if os.environ.get("DROP_GRT_OBS"):
     sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
     import die_unit_obs
-    _r=die_unit_obs.parse_obs_tcl(open(os.environ[DROP_GRT_OBS]).read(),dbu)
-    print(GRT_OBS_DROP,die_unit_obs.drop_grt_obstructions(blk,_r,odb.dbObstruction.destroy),flush=True)
+    _r=die_unit_obs.parse_obs_tcl(open(os.environ["DROP_GRT_OBS"]).read(),dbu)
+    print("GRT_OBS_DROP",die_unit_obs.drop_grt_obstructions(blk,_r,odb.dbObstruction.destroy),flush=True)
 # guides: the DB's own guides are what DRT misread (DRT-0218 'guide not connected'); write the unit's own-net guides as a guide file and drop the DB guides (as the HBM cutter does)
 nw=0
 with open(os.path.dirname(os.environ['OUT_ODB'])+'/route.guide','w') as f:

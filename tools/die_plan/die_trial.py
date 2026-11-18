@@ -317,13 +317,15 @@ def _snap_out(v, g, up):
     return round((math.ceil(k - 1e-6) if up else math.floor(k + 1e-6)) * g, 4)
 
 
-def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
+def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM, native_origins=False):
     """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
     rects = {n: P.rect(n) for n in P.parts}
     by_type, recs = defaultdict(set), []
     for site in sites:
         (x, y), src = site[0], site[1]
         c = site[2] if len(site) > 2 else cell      # per-site body size (opt-in), else the planned clock body
+        if native_origins:                       # physical tree sites are native lower-left origins
+            x, y = x + c[0] / 2, y + c[1] / 2
         hx = c[0] / 2 + snap + margin
         hy = c[1] + snap + margin          # the cell row may lie above or below the site's row line
         w = (x - hx, y - hy, x + hx, y + hy)
@@ -510,6 +512,62 @@ def snap_track_y(v, rails=(2.16, 0.24, 0.06)):
     return t
 
 
+def fixed_ft_rects(t):
+    """Union explicit fixed FT cell envelopes into contiguous column rectangles.
+
+    bit_sites_um are lower-left coordinates; bit_site_cell_um is the checked
+    allocation envelope. Coalescing touching vertical cells preserves their
+    exact occupied region and avoids millions of repeated spatial-index rows.
+    """
+    from ft_bit_sites import validate_slot
+    columns = defaultdict(list)
+    for slot in t.get("ft_slots", []) or []:
+        if "bit_sites_um" not in slot:
+            continue
+        validate_slot(slot)
+        width, height = slot["bit_site_cell_um"]
+        for stage in slot["bit_sites_um"]:
+            for x, y in stage:
+                columns[(x, width)].append((y, y + height))
+    rects = []
+    for (x, width), intervals in sorted(columns.items()):
+        lo, hi = None, None
+        for a, b in sorted(intervals):
+            if lo is None:
+                lo, hi = a, b
+            elif a <= hi + 1e-8:
+                hi = max(hi, b)
+            else:
+                rects.append((x, lo, x + width, hi))
+                lo, hi = a, b
+        if lo is not None:
+            rects.append((x, lo, x + width, hi))
+    return rects
+
+
+FT_CELL_KEEPOUT_UM = 0.54     # 2 rows: clock.reserved_sites_um rects carry a 0.25-um margin round the clock cell body
+
+
+def planned_point_rects(t, halo):
+    """Type-frame rects no die clock cell may sit in (--clock-point-keepouts UM, FABLE-PD-KV-HG1 B-2): the type build turns
+    every die clock cell site into a placement blockage, so a cell on a planned register point moves that register.
+    -> fixed FT bit cells grown by FT_CELL_KEEPOUT_UM, and a +-halo box round every count-aligned START reader / writer
+    stage and every ft / internal station centre that is not on the type face."""
+    w, h = t["outline_um"]
+    g = FT_CELL_KEEPOUT_UM
+    rects = [(x0 - g, y0 - g, x1 + g, y1 + g) for x0, y0, x1, y1 in fixed_ft_rects(t)]
+    pts = []
+    for s in list(t.get("ft_slots", []) or []) + list(t.get("internal_stations", []) or []):
+        pts += [q for q in s.get("regs_um") or [] if 1e-6 < q[0] < w - 1e-6 and 1e-6 < q[1] < h - 1e-6]
+    ck = t.get("clock") or {}
+    for key in ("landing_reader_start", "landing_writer_start"):
+        for br in ((ck.get(key) or {}).get("branches") or {}).values():
+            pts += [sg["xy_um"] for sg in br.get("stages") or [] if isinstance(sg.get("xy_um"), (list, tuple))]
+    for x, y in sorted(set((round(q[0], 3), round(q[1], 3)) for q in pts)):
+        rects.append((x - halo, y - halo, x + halo, y + halo))
+    return rects
+
+
 class SiteMap:
     """Legal sites for die clock-tree cells (FALLBACK-HEAD 10-26, 12.2a1): inside a partition, never inside a planned
     hard-core outline (+halo) and never inside a reserved PHY power domain (die.pg.domains with VDDPHY).  Geometry only:
@@ -532,13 +590,50 @@ class SiteMap:
         # outlines. Keep those sites legal; core and PHY exclusions below still
         # apply, including wherever a channel rectangle crosses either one.
         self.parts.extend(tuple(ch["rect_um"]) for ch in P.die.get("channels", []) or []
-                          if ch.get("rect_um"))
+                          if ch.get("rect_um") and ch.get("clock_channel") is not False)
+        # A reserved gap (seal ring / ESD) is not a clock placement island.
+        # The existing explicit flag also excludes native bodies that cross it.
+        for ch in P.die.get("channels", []) or []:
+            if ch.get("clock_channel") is False and ch.get("rect_um"):
+                self.forb.append((*ch["rect_um"], "reserved_channel"))
         if CLOCK_TYPE_KEEPOUTS:                 # DIE-QC-47 opt-in: a type's clock.keepouts_um (e.g. a bare PHY body)
             for n, p in P.parts.items():        # is no die clock-cell site either (same halo as a hard core)
                 for x0, y0, x1, y1 in (P.types[p["type"]].get("clock", {}) or {}).get("keepouts_um", []) or []:
                     a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
                     self.forb.append((min(a[0], b[0]) - halo, min(a[1], b[1]) - halo,
                                       max(a[0], b[0]) + halo, max(a[1], b[1]) + halo, "keepout"))
+        if CLOCK_TYPE_KEEPOUTS:                 # FABLE-DIE-S81: landing band rects of every
+            bh = 0.54                           # type are no die clock-cell site (ring-ff fills them); 2-row halo
+            for n, p in P.parts.items():
+                lc = ((P.types[p["type"]].get("clock", {}) or {}).get("landing_contract") or {})
+                for bd in (lc.get("bands") or {}).values():
+                    rs = [bd["rect_um"]] if bd.get("rect_um") else []
+                    for k in ("rects_um", "band_fixed_um", "multi_rect_um"):
+                        v = bd.get(k)
+                        rs += [r for r in (v.values() if isinstance(v, dict) else v or []) if isinstance(r, list) and len(r) == 4]
+                    for x0, y0, x1, y1 in rs:
+                        a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                        self.forb.append((min(a[0], b[0]) - bh, min(a[1], b[1]) - bh,
+                                          max(a[0], b[0]) + bh, max(a[1], b[1]) + bh, "band"))
+        if CLOCK_TYPE_KEEPOUTS:
+            fixed = {}
+            for n, p in P.parts.items():
+                tn = p["type"]
+                if tn not in fixed:
+                    fixed[tn] = fixed_ft_rects(P.types[tn])
+                for x0, y0, x1, y1 in fixed[tn]:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]), min(a[1], b[1]),
+                                      max(a[0], b[0]), max(a[1], b[1]), "ft_fixed"))
+        if CLOCK_POINT_KEEPOUT_UM:              # FABLE-DIE-KV opt-in: planned register points are no die clock-cell site
+            ph, fixed = float(CLOCK_POINT_KEEPOUT_UM), {}
+            for n, p in P.parts.items():
+                tn = p["type"]
+                if tn not in fixed:
+                    fixed[tn] = planned_point_rects(P.types[tn], ph)
+                for x0, y0, x1, y1 in fixed[tn]:
+                    a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x1, y1))
+                    self.forb.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]), "plan_point"))
         for d in P.die.get("pg", {}).get("domains", []) or []:
             if any("PHY" in str(v) for v in d.get("nets", [])) and d.get("rect_um"):
                 x0, y0, x1, y1 = d["rect_um"]
@@ -646,6 +741,10 @@ SEAM_PROBE_UM = 2.7
 #   rectangle (+ the hard-core halo) for die clock cells. QC bare PHY slots carry no hard_cores, so without this the die
 #   tree placed 89 cells inside native SerDes/UCIe bodies (Codex reach_safe phy_window_census). Default off: byte-identical.
 CLOCK_TYPE_KEEPOUTS = False
+# CLOCK_POINT_KEEPOUT_UM (--clock-point-keepouts UM, FABLE-DIE-KV): SiteMap also forbids planned_point_rects of every type
+#   (fixed FT bit cells, START reader / writer stages, station centres). KV HG1: 223 planned points and 2,958 FT bit cells lay
+#   in die clock cell sites. Default None: byte-identical.
+CLOCK_POINT_KEEPOUT_UM = None
 CHAIN_HOP_MAX_UM = None
 DETOUR_ADAPTIVE = False
 DETOUR_STATS = []
@@ -829,6 +928,18 @@ def _wall_components(site):
     cc = getattr(site, "_wall_cc", None)
     if cc is None:
         rects = list(site.forb)
+        # Fixed FT envelopes can contribute hundreds of thousands of small
+        # rectangles. Discover the same touching/overlapping edges locally,
+        # rather than scanning every pending rectangle for each wall member.
+        bucket = getattr(site, "b", 250.0) / 4.0
+        spatial = defaultdict(list)
+        def buckets(r):
+            for x in range(math.floor(r[0] / bucket), math.floor(r[2] / bucket) + 1):
+                for y in range(math.floor(r[1] / bucket), math.floor(r[3] / bucket) + 1):
+                    yield x, y
+        for i, r in enumerate(rects):
+            for key in buckets(r):
+                spatial[key].append(i)
         pending = set(range(len(rects)))
         cc = []
         while pending:
@@ -836,8 +947,9 @@ def _wall_components(site):
             ids, todo = [first], [first]
             while todo:
                 u = rects[todo.pop()]
-                hit = [i for i in pending if u[0] <= rects[i][2] and rects[i][0] <= u[2] and u[1] <= rects[i][3]
-                       and rects[i][1] <= u[3]]
+                nearby = {i for key in buckets(u) for i in spatial[key]} & pending
+                hit = [i for i in sorted(nearby) if u[0] <= rects[i][2] and rects[i][0] <= u[2] and
+                       u[1] <= rects[i][3] and rects[i][1] <= u[3]]
                 for i in hit:
                     pending.remove(i)
                     ids.append(i)
@@ -856,7 +968,8 @@ def _detour_wall(site, a, b, step, margin, turn_um):
     if not blockers:
         return None
     rects, cc = _wall_components(site)
-    seed = {i for i, r in enumerate(rects) if r in blockers}
+    blocker_set = {tuple(r) for r in blockers}
+    seed = {i for i, r in enumerate(rects) if tuple(r) in blocker_set}
     blockers = [box for ids, box in cc if ids & seed]
     escape = []
     for r in blockers:      # a wall crossing the direct box is bypassed above/below or left/right: nearest outward face
@@ -1030,6 +1143,10 @@ def straight_leg_span(site, p, nd, nrep):
 # Every changed leg records nd['reach_fix'] (before/after spans, repeaters, wire) and meta.reach_fix the totals, so the
 # added stages/wire are visible to the planner, CA regeneration and the die STA (which measures the routed result).
 REP_REACH_MAX_UM = None
+# --rep-reach-report FILE (FABLE-DIE-S81 11-16, with --rep-reach-max): a leg with no legal placement within reach is
+# appended to FILE as one JSON line (node, a, b, span_um, span, error) and keeps its default chain, so one kit run lists
+# EVERY such leg instead of stopping at the first.  Default None = fail closed, as before.
+REP_REACH_REPORT = None
 
 
 def chain_spans(chain):
@@ -1081,11 +1198,18 @@ def reach_place(site, poly, reach, nmin=0, even=False, step=0.54):
     best = list(best)
     while len(best) < need:             # split the largest span at the legal point nearest its middle
         ch = [0.0] + best + [L]
-        k = max(range(len(ch) - 1), key=lambda i: ch[i + 1] - ch[i])
-        m = (ch[k] + ch[k + 1]) / 2
-        inside = [t for t in ok if ch[k] + 1e-9 < t < ch[k + 1] - 1e-9]
-        if not inside:
+        # The longest span may be an unavoidable macro overflight with no
+        # legal interior site. Add parity/minimum-count stages to the largest
+        # splittable span instead of rejecting a physically legal chain.
+        split = []
+        for k in range(len(ch) - 1):
+            inside = ok[bisect.bisect_right(ok, ch[k] + 1e-9):bisect.bisect_left(ok, ch[k + 1] - 1e-9)]
+            if inside:
+                split.append((ch[k + 1] - ch[k], k, inside))
+        if not split:
             return None
+        _, k, inside = max(split, key=lambda item: (item[0], -item[1]))
+        m = (ch[k] + ch[k + 1]) / 2
         best = sorted(best + [min(inside, key=lambda t: abs(t - m))])
     q = [(round(pts[t][0], 3), round(pts[t][1], 3)) for t in best]
     if max(chain_spans([poly[0]] + q + [poly[-1]])) > reach + 1e-6:
@@ -1175,10 +1299,16 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
     own = [poly] if poly is not None else (
         [[a, b]] if abs(a[0] - b[0]) < 1e-6 or abs(a[1] - b[1]) < 1e-6 else [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]])
     tried = []
-    for kind, cands in (("on_path", own), ("reach_detour", None)):
+    searches = [("on_path", own), ("reach_detour", None)]
+    if DETOUR_ADAPTIVE:
+        # The jump-grid search may miss a legal path, and its fixed local box
+        # cannot escape a wide PHY wall. Reuse the existing site-legal wall
+        # detour, then require the same reach/parity placement proof below.
+        searches.append(("site_detour", None))
+    for kind, cands in searches:
         if cands is None:
-            d = reach_detour(site, a, b, reach)
-            cands = [d] if d is not None else []
+            route = legal_detour(site, a, b) if kind == "site_detour" else reach_detour(site, a, b, reach)
+            cands = [route] if route is not None else []
         res = []
         for q in cands:
             Lq = polyline_points(q, [])[1]
@@ -1189,10 +1319,14 @@ def reach_fix_leg(site, p, nd, poly, chain, reach, rep_um, even):
         if res:
             nrep, Lq, r, q = min(res, key=lambda t: (t[1], t[0]))
             after = max(chain_spans([a] + r + [b]))
-            return r, q, dict(kind=kind, span_before_um=round(before, 3), span_after_um=round(after, 3),
-                              nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
-                              wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
-                              added_stages=nrep - (len(chain) - 2))
+            info = dict(kind="reach_detour" if kind == "site_detour" else kind,
+                        span_before_um=round(before, 3), span_after_um=round(after, 3),
+                        nrep_before=len(chain) - 2, nrep_after=nrep, wire_before_um=round(L0, 3),
+                        wire_after_um=round(Lq, 3), added_wire_um=round(Lq - L0, 3),
+                        added_stages=nrep - (len(chain) - 2))
+            if kind == "site_detour":
+                info["route_source"] = "site_legal_adaptive"
+            return r, q, info
     raise ValueError(f"--rep-reach-max {reach:g}: leg to node {nd.get('id')} ({a} -> {b}, span {before:.2f} um) has no "
                      f"legal repeater placement within reach on its path or a reach detour ({tried})")
 
@@ -1856,6 +1990,165 @@ def feed_edge_pol(nodes, extra_load=None):
                 feed_edge_max=round(max((abs(E[i]) for i in feed), default=0.0), 3))
 
 
+# FABLE-DIE-QC 11-16 opt-in OT_CLK_DME_TEMPLATE=1 (per-type region clock tree): a region that is ONE partition takes the DME
+# tree of the first region of the same type (same options, same per-port early values), moved by the partition transform
+# (translation; y mirror for an MX / R0 pair), instead of its own embedding.  Every instance of a type then has the same
+# tree topology, leg lengths and stage counts, so its tap offsets differ only by routed RC (QC S4q9c: +-129 ps between
+# the 10 instances of cbn_q01 with one embedding per instance).  A copy is used only if every cell site of the moved
+# tree is legal where the template's was; otherwise the region keeps its own embedding (counted in the stats).
+DME_TEMPLATE = os.environ.get("OT_CLK_DME_TEMPLATE", "0") not in ("", "0")
+DME_TEMPLATE_TYPES = None      # {partition: type}, set by clock_kit
+# FABLE-DIE-QC-R 11-16 OT_CLK_DME_TEMPLATE=2: the template tree is embedded on the sites that are legal in EVERY instance
+# (_dme_template_site), so no copy is refused for an illegal site (S4q9m comb_t: 17 regions of cbn_q00 / cbx_q10_h / cbf_q11
+# kept their own tree and those three types kept a 55..69 ps instance spread while every fully copied type was under 5 ps).
+DME_TEMPLATE_COMMON = os.environ.get("OT_CLK_DME_TEMPLATE", "0") == "2"
+# KV-CLK-R2 11-17 opt-in OT_CLK_DME_TEMPLATE_XMIRROR=1: the template also copies onto an x-mirrored instance (MY / R180 of an
+# R0 / MX template; x' = -x + dx), returned as the 4-tuple (dx, sy, cy, -1.0).  KV e7: every hg / pc type sits R0 / MX / MY /
+# R180, so only the MX copy was taken and the MY / R180 pair kept its own embedding (tol up to 66 ps on kv3_pc_v1, 50 on kv3_hg).
+DME_TEMPLATE_XMIRROR = os.environ.get("OT_CLK_DME_TEMPLATE_XMIRROR", "0") not in ("", "0")
+# Compound PC+PHY regions retain their logical CA ID while copying repeated physical subtrees.
+DME_TEMPLATE_COMPOUND = os.environ.get("OT_CLK_DME_TEMPLATE_COMPOUND", "0") not in ("", "0")
+
+
+def _xf4(xf):
+    """(dx, sy, cy, sx) of a template xform (3-tuple = sx +1)"""
+    return (xf[0], xf[1], xf[2], xf[3] if len(xf) > 3 else 1.0)
+
+
+def _dme_template_site(site, ctaps, xfs, pad=5.0):
+    """SiteMap copy for a template region: a point is legal iff it is legal for the template and, moved by every copy's xf,
+    legal for that copy.  parts = the template partition rect cut to every copy's own rect (moved back); forb = the keep-outs
+    near the template plus every copy's keep-outs moved back.  None when a partition rect cannot be found."""
+    import copy
+
+    groups = defaultdict(list)
+    for t in ctaps:
+        groups[t[0]].append(t)
+    if DME_TEMPLATE_COMPOUND and len(groups) > 1:
+        pieces = [_dme_template_site(site, ts, xfs, pad) for ts in groups.values()]
+        if any(q is None for q in pieces):
+            return None
+        ts = copy.copy(site)
+        ts.parts = sorted({tuple(r) for q in pieces for r in q.parts})
+        ts.forb = sorted({tuple(r) for q in pieces for r in q.forb})
+        ts.idx = {}
+        for k, r in enumerate(ts.forb):
+            for i in range(int(r[0] // ts.b), int(r[2] // ts.b) + 1):
+                for j in range(int(r[1] // ts.b), int(r[3] // ts.b) + 1):
+                    ts.idx.setdefault((i, j), []).append(k)
+        ts.__dict__.pop("_pidx", None)
+        ts.__dict__.pop("_pidx_n", None)
+        return ts
+    if not hasattr(site, "parts") or not hasattr(site, "forb"):
+        return None
+    cx = sum(t[2] for t in ctaps) / len(ctaps)
+    cy0 = sum(t[3] for t in ctaps) / len(ctaps)
+    area = lambda r: (r[2] - r[0]) * (r[3] - r[1])
+    own = lambda x, y: min((r for r in site.parts if r[0] <= x <= r[2] and r[1] <= y <= r[3]), key=area, default=None)
+    near = lambda r, q: r[0] < q[2] + pad and r[2] > q[0] - pad and r[1] < q[3] + pad and r[3] > q[1] - pad
+    rect = own(cx, cy0)
+    if rect is None:
+        return None
+    rect = tuple(rect[:4])
+    forb = [r for r in site.forb if near(r, rect)]
+    for xf in xfs:
+        dx, sy, cy, sx = _xf4(xf)
+        q = own(sx * cx + dx, sy * cy0 + cy)
+        if q is None:
+            return None
+        back = lambda r: (min(sx * (r[0] - dx), sx * (r[2] - dx)), min(sy * (r[1] - cy), sy * (r[3] - cy)),
+                          max(sx * (r[0] - dx), sx * (r[2] - dx)), max(sy * (r[1] - cy), sy * (r[3] - cy)))
+        b = back(q)
+        rect = (max(rect[0], b[0]), max(rect[1], b[1]), min(rect[2], b[2]), min(rect[3], b[3]))
+        forb += [back(r) + tuple(r[4:]) for r in site.forb if near(r, q)]
+    if rect[2] <= rect[0] or rect[3] <= rect[1]:
+        return None
+    ts = copy.copy(site)
+    ts.parts = [rect]
+    ts.forb = sorted(set(forb))
+    ts.idx = {}
+    for k, r in enumerate(ts.forb):
+        for i in range(int(r[0] // ts.b), int(r[2] // ts.b) + 1):
+            for j in range(int(r[1] // ts.b), int(r[3] // ts.b) + 1):
+                ts.idx.setdefault((i, j), []).append(k)
+    ts.__dict__.pop("_pidx", None)
+    ts.__dict__.pop("_pidx_n", None)
+    return ts
+
+
+def _dme_template_part_roles(taps):
+    """Unique type -> partition roles of a compound region; ambiguity forbids copying."""
+    if not DME_TEMPLATE_TYPES:
+        return None
+    parts = {t[0] for t in taps}
+    roles = {DME_TEMPLATE_TYPES.get(p): p for p in parts}
+    return roles if None not in roles and len(roles) == len(parts) else None
+
+
+def _dme_template_tap_key(t, compound):
+    return (DME_TEMPLATE_TYPES[t[0]], t[1]) if compound else t[1]
+
+
+def _dme_template_xform(ctaps, itaps, tol=2e-3):
+    """taps [(part, port, x, y)] of the template and of the instance -> (dx, sy, cy) with x' = x + dx, y' = sy * y + cy,
+    or None when the port sets differ or the instance is not a translate / y-mirror image of the template"""
+    compound = len({t[0] for t in ctaps}) > 1 or len({t[0] for t in itaps}) > 1
+    if compound:
+        cr, ir = _dme_template_part_roles(ctaps), _dme_template_part_roles(itaps)
+        if not DME_TEMPLATE_COMPOUND or cr is None or ir is None or set(cr) != set(ir):
+            return None
+    c = {_dme_template_tap_key(t, compound): t for t in ctaps}
+    i = {_dme_template_tap_key(t, compound): t for t in itaps}
+    if set(c) != set(i) or len(c) != len(ctaps) or len(i) != len(itaps):
+        return None
+    k0 = sorted(c)[0]
+    for sx in ((1.0, -1.0) if DME_TEMPLATE_XMIRROR else (1.0,)):
+        dx = i[k0][2] - sx * c[k0][2]
+        if any(abs(i[k][2] - sx * c[k][2] - dx) > tol for k in c):
+            continue
+        for sy in (1.0, -1.0):
+            cy = i[k0][3] - sy * c[k0][3]
+            if all(abs(i[k][3] - sy * c[k][3] - cy) <= tol for k in c):
+                return (dx, sy, cy) if sx > 0 else (dx, sy, cy, sx)
+    return None
+
+
+def _dme_template_copy(site, tree, ctaps, itaps, xf):
+    """the template tree (dme_region_tree result) moved by xf onto the instance taps; None if a moved cell site is illegal"""
+    dn, droot, dst = tree
+    dx, sy, cy, sx = _xf4(xf)
+    compound = len({t[0] for t in ctaps}) > 1
+    cpart, ipart = ctaps[0][0], itaps[0][0]
+    if compound:
+        cr, ir = _dme_template_part_roles(ctaps), _dme_template_part_roles(itaps)
+        if not DME_TEMPLATE_COMPOUND or cr is None or ir is None or set(cr) != set(ir):
+            return None
+        pmap = {p: ir[ty] for ty, p in cr.items()}
+    else:
+        pmap = {cpart: ipart}
+    imap = {_dme_template_tap_key(t, compound): t for t in itaps}
+    mv = lambda x, y: (round(sx * x + dx, 3), round(sy * y + cy, 3))
+    out = []
+    for d in dn:
+        q = mv(d["x"], d["y"])
+        if site.legal((d["x"], d["y"])) and not site.legal(q):
+            return None
+        n = dict(d, x=q[0], y=q[1], kids=list(d["kids"]), taps=[imap[_dme_template_tap_key(t, compound)] for t in d["taps"]])
+        if d.get("part_root") in pmap:
+            n["part_root"] = pmap[d["part_root"]]
+        if d.get("snakes"):
+            n["snakes"] = {k: [list(mv(*pt)) for pt in v] for k, v in d["snakes"].items()}
+            if any(not site.legal(tuple(pt)) for k, v in n["snakes"].items() for pt in v[1:-1]):
+                return None
+        out.append(n)
+    st = json.loads(json.dumps(dst, default=str))
+    for et in st.get("early_taps") or []:
+        if isinstance(et, dict) and et.get("part") in pmap:
+            et["part"] = pmap[et["part"]]
+    st["template_of"] = cpart
+    return out, droot, st
+
+
 def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None, route_um=480.0, only=None, early=None,
                       snake=None, early_mode="hang", merge_only=None):
     """DIE-QC-3 opt-in (--tree-form link_htree --region-dme): hang one legal-site DME tree (dme_region_tree) under every
@@ -1897,25 +2190,73 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
     # DIE-QC-20 opt-in DME_WORKERS > 1: dme_region_tree is a pure function of (site, region taps, options), so the region
     # trees are computed in a fork pool and attached below in the same order (same nodes / ids as the serial loop)
     global _DME_POOL_JOBS
-    if DME_WORKERS > 1 and len(jobs) > 1:
+    # FABLE-DIE-QC opt-in DME_TEMPLATE: jobs whose region is one partition of a type seen before copy that template
+    tmpl = {}                # job index -> (template job index, xform)
+    if DME_TEMPLATE and DME_TEMPLATE_TYPES:
+        npart = defaultdict(int)
+        for _pn, _rn in regions.items():
+            npart[_rn] += 1
+        first = {}
+        for jk, (e, rn, sn, kw) in enumerate(jobs):
+            pn = rt[rn][0][0]
+            ty = DME_TEMPLATE_TYPES.get(pn)
+            compound = npart[rn] != 1 or any(t[0] != pn for t in rt[rn])
+            if ty is None:
+                continue
+            if compound:
+                roles = _dme_template_part_roles(rt[rn])
+                if not DME_TEMPLATE_COMPOUND or roles is None or len(roles) != npart[rn]:
+                    continue
+                ty = ("compound", tuple(sorted(roles)))
+            ev = tuple(sorted((_dme_template_tap_key(t, compound), (early or {}).get((t[0], t[1])))
+                              for t in rt[rn])) if isinstance(early, dict) else None
+            key = (ty, ev, json.dumps({k: v for k, v in kw.items() if k != "early"}, sort_keys=True, default=str))
+            if key not in first:
+                first[key] = jk
+                continue
+            xf = _dme_template_xform(rt[jobs[first[key]][1]], rt[rn])
+            if xf is not None:
+                tmpl[jk] = (first[key], xf)
+    own = [jk for jk in range(len(jobs)) if jk not in tmpl]
+    trees = {}
+    tsite = {}               # template job index -> site common to the template and its copies (DME_TEMPLATE_COMMON)
+    if DME_TEMPLATE_COMMON and tmpl:
+        grp = defaultdict(list)
+        for jk, (cj, xf) in tmpl.items():
+            grp[cj].append(xf)
+        for cj, xfs in grp.items():
+            ts = _dme_template_site(site, rt[jobs[cj][1]], xfs)
+            if ts is not None:
+                tsite[cj] = ts
+    if DME_WORKERS > 1 and len(own) > 1:
         import multiprocessing as mp
-        _DME_POOL_JOBS = [(site, rt[rn], kw, rn) for _, rn, _, kw in jobs]
+        _DME_POOL_JOBS = [(tsite.get(jk, site), rt[jobs[jk][1]], jobs[jk][3], jobs[jk][1]) for jk in own]
         try:
-            with mp.get_context("fork").Pool(min(DME_WORKERS, len(jobs))) as pool:
+            with mp.get_context("fork").Pool(min(DME_WORKERS, len(own))) as pool:
                 # DIE-QC-63/CLK: imap (ordered, chunksize 1) = the same list as pool.map, with one line per collected tree
-                trees = []
                 t0 = time.time()
-                for tr in pool.imap(_dme_pool_job, range(len(jobs)), chunksize=1):
-                    trees.append(tr)
+                for k, tr in enumerate(pool.imap(_dme_pool_job, range(len(own)), chunksize=1)):
+                    trees[own[k]] = tr
                     if dme_log_on():
-                        print(f"[dme] collected {len(trees)}/{len(jobs)} sec={time.time() - t0:.0f}",
+                        print(f"[dme] collected {len(trees)}/{len(own)} sec={time.time() - t0:.0f}",
                               file=sys.stderr, flush=True)
         finally:
             _DME_POOL_JOBS = None
-    else:
-        trees = None
+    tstat = dict(copied=0, illegal=0)
     for jk, (e, rn, sn, kw) in enumerate(jobs):
-        dn, droot, dst = trees[jk] if trees is not None else _dme_timed(site, rt[rn], kw, rn)
+        if jk in tmpl and jk not in trees:
+            cj, xf = tmpl[jk]
+            if cj not in trees:
+                trees[cj] = _dme_timed(tsite.get(cj, site), rt[jobs[cj][1]], jobs[cj][3], jobs[cj][1])
+            cp = _dme_template_copy(site, trees[cj], rt[jobs[cj][1]], rt[rn], xf)
+            if cp is None:
+                tstat["illegal"] += 1
+            else:
+                tstat["copied"] += 1
+                trees[jk] = cp
+        if jk not in trees:
+            trees[jk] = _dme_timed(tsite.get(jk, site), rt[rn], kw, rn)
+        dn, droot, dst = trees[jk]
 
         def attach(j, parent, snake_pts=None):
             d = dn[j]
@@ -1953,7 +2294,11 @@ def attach_region_dme(nodes, site, taps, regions, rep_um=None, delay_rep_um=None
                       **({"early_taps": dst["early_taps"]} if dst.get("early_taps") else {}),
                       **({k: dst[k] for k in ("snakes", "snake_wire_um", "snake_buffers")} if sn else {}),
                       **({k: dst[k] for k in ("snake_max_leg_um", "snake_legs_over_cap", "snake_cap_rebuilt") if k in dst}
-                         if sn else {}))
+                         if sn else {}),
+                      **({"template_of": dst["template_of"]} if dst.get("template_of") else {}))
+    if DME_TEMPLATE and DME_TEMPLATE_TYPES and dme_log_on():
+        print(f"[dme] template: {tstat['copied']} regions copied, {tstat['illegal']} kept their own tree (illegal site), "
+              f"{len(jobs) - len(tmpl)} embedded", file=sys.stderr, flush=True)
     return st
 
 
@@ -2378,11 +2723,16 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=
                 if not all(0 <= x <= site.W and 0 <= y <= site.H for x, y in raw):
                     continue
                 pts, snap = [pa], 0.0
-                for x in raw[1:-1]:
-                    y = x if site.legal(x) else site.nearest(x)
-                    y = round_legal(site, y)
-                    snap += _man(x, y)
-                    pts.append(y)
+                try:
+                    for x in raw[1:-1]:
+                        y = x if site.legal(x) else site.nearest(x)
+                        y = round_legal(site, y)
+                        snap += _man(x, y)
+                        pts.append(y)
+                except ValueError:
+                    # An optional snake may enter a continuous legal sliver with no native row site.
+                    # Reject this candidate just as physical_leg below rejects an unplaceable chain.
+                    continue
                 pts.append(q)
                 if EVEN_LEGS and (len(pts) - 1) % 2 != _LEG_PAR:
                     continue            # inv2: odd stage count would flip polarity (EDGE_ALT: the leg's parity)
@@ -2520,6 +2870,7 @@ DME_STREET_GAP_UM = 200.0
 # M7, ~2x the modelled leg delay).  DME_STREET_VGAPS = sorted gap centres (set from the plan in clock_kit).
 DME_STREET_COLUMN = False
 DME_STREET_VLAYER = None
+STAMPED_TREE_JSON = None      # CLKSITE-RESERVE-1115 opt-in (kit --tree-json): replace the built die clock tree by a stamped tree.json
 DME_STREET_VGAPS = None
 # HBM-CLKLOC-5: half width of the narrowest PG-free gap of DME_STREET_VLAYER (M9 on HBM d44f: 17.28-um stripe pitch,
 # 12.96-um stripes -> 4.32-um gaps, half 2.16).  A snake on a vertical leg that runs ON a gap column keeps every buffer
@@ -3439,8 +3790,20 @@ def _leg_layout0(i, nd, p, site, rep_um, even):
             dry.append((x, y))
         chain = [(p["x"], p["y"])] + dry + [(nd["x"], nd["y"])]
         if max(chain_spans(chain)) > REP_REACH_MAX_UM + 1e-6:
-            fix_pts, fix_poly, info = reach_fix_leg(site, p, dict(nd, id=i), poly, chain, REP_REACH_MAX_UM,
-                                                    rep_um, even)
+            try:
+                fix_pts, fix_poly, info = reach_fix_leg(site, p, dict(nd, id=i), poly, chain, REP_REACH_MAX_UM,
+                                                        rep_um, even)
+            except ValueError as exc:
+                if not REP_REACH_REPORT:        # default: fail closed at the first leg
+                    raise
+                sp = chain_spans(chain)         # --rep-reach-report: list every such leg, keep its default chain
+                k = max(range(len(sp)), key=sp.__getitem__)
+                row = dict(node=i, a=[p["x"], p["y"]], b=[nd["x"], nd["y"]], span_um=round(sp[k], 2),
+                           span=[list(chain[k]), list(chain[k + 1])], error=str(exc))
+                nd["reach_unfixed"] = row
+                with open(REP_REACH_REPORT, "a") as fh:
+                    fh.write(json.dumps(row) + "\n")
+                return L, nrep, poly, pts, None, chain
             nrep = len(fix_pts)
             nd["reach_fix"] = {**(nd.get("reach_fix") or {}), **info}   # keeps the reach_balance price
             if info["kind"] == "reach_detour":
@@ -3696,11 +4059,55 @@ def clock_edge_readout(verilog, path, period=str(die_sta.PERIOD_PS), cells="b*",
             "close $fh"]
 
 
+def legalize_stamped_nodes(nodes, site):
+    """the kit's own legal-site map decides: an illegal node moves to the nearest legal site and every leg with an illegal
+    point (or ends that no longer meet its parent / node) loses its chain, so the kit lays the leg out itself"""
+    st = dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    for i, v in nodes.items():
+        if not site.legal((v["x"], v["y"])):
+            q = site.nearest((v["x"], v["y"]))
+            v["x"], v["y"] = round(q[0], 3), round(q[1], 3)
+            v["req_xy"] = [v["x"], v["y"]]
+            st["moved"] += 1
+    for i, v in nodes.items():
+        pl = v.get("physical_leg")
+        if not pl:
+            continue
+        p = nodes.get(v.get("parent"))
+        ends_ok = (p is not None and _man(pl["chain"][0], (p["x"], p["y"])) < 1e-6 and
+                   _man(pl["chain"][-1], (v["x"], v["y"])) < 1e-6)
+        if not ends_ok or any(not site.legal(tuple(q)) for q in pl["chain"]):
+            v.pop("physical_leg", None); v.pop("detour", None)
+            st["chains_dropped"] += 1
+    return st
+
+
+def load_stamped_tree(path, site=None, rep_um=150.0):
+    """CLKSITE-RESERVE-1115: tree.json (tools/die_plan/clksite_stamp_native.py) -> (nodes {int id: node}, taps [(part, port, x, y)]),
+    the shape tree_netlist takes.  Names are re-derived by tree_netlist from the node ids (b<id>, r<id>_<k>, q<id>_<tap>)."""
+    T = json.loads(Path(path).read_text())
+    nodes = {int(k): dict(v) for k, v in T["nodes"].items()}
+    by = {}
+    for t in T["taps"]:
+        by.setdefault(t["node"], []).append((t["part"], t["tap"], t["xy"][0], t["xy"][1]))
+    for i, v in nodes.items():
+        v["taps"] = by.get(i, [])
+        v["kids"] = list(v.get("kids", []))
+    st = legalize_stamped_nodes(nodes, site) if site is not None else dict(nodes=len(nodes), moved=0, chains_dropped=0)
+    if site is not None:          # exact parity fix on the kit's own site map (clksite_stamp_native.fix_parity)
+        import clksite_stamp_native as _csn
+        st["parity"] = _csn.fix_parity(nodes, rep_um, site)["stats"]
+    print("STAMPED-TREE", json.dumps(st))
+    return nodes, [(t["part"], t["tap"], t["xy"][0], t["xy"][1]) for t in T["taps"]]
+
+
 def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_slide=False, regions=None, tree_form="htree",
               tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None, clock_rc="ndr",
               slice_balance=False, region_dme=False, region_dme_only=None, region_dme_early=None,
               region_dme_early_ff=None, region_dme_snake=None, clock_cell="buf", region_dme_early_mode="hang",
               cell_paths=False, region_dme_early_merge_only=None, rep_actual_max=None):
+    global DME_TEMPLATE_TYPES
+    DME_TEMPLATE_TYPES = {n: q["type"] for n, q in P.parts.items()} if DME_TEMPLATE else None
     global EVEN_LEGS, DME_STREET_VGAPS, DME_STREET_VGAP_HALF
     EVEN_LEGS = clock_cell == "inv2"
     if DME_STREET_VLAYER:       # CLKLOC-4 --region-dme-street-vlayer: PG-free vertical gap centres of that layer
@@ -3869,6 +4276,8 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                 raise ValueError(f"--tap-pad sites {port}: count does not match pad buffers")
     elif tap_pad and "sites" in tap_pad:
         tap_pad = {k: v for k, v in tap_pad.items() if k != "sites"}
+    if STAMPED_TREE_JSON:        # CLKSITE-RESERVE-1115: the stamped tree replaces the one built above (same node/tap shape)
+        nodes, taps = load_stamped_tree(STAMPED_TREE_JSON, locals().get("site"), rep_um)
     v, place, tap_ports, node_buf, parent_of = tree_netlist(nodes, taps, rep_um, site, tap_pad, pad_sites,
                                                             **({"clock_cell": clock_cell} if clock_cell != "buf" else {}))
     if tap_pad:
@@ -5287,6 +5696,31 @@ exit $rc
 """
 
 
+VIEW_SIZE_TOL_UM = 1e-3
+
+
+def closed_view_candidates(P, views):
+    """({type: view LEF path}, {type: refusal record}) for the closed views under `views`.  HEAD-MYTILE-1115 (COORD r206):
+    a closed view whose LEF SIZE differs from the plan outline is REFUSED and the kit falls back to the plan abstract.
+    ot_place puts a master lower-left at the plan origin, so a view narrower/wider than the outline mirrors (MY/MX/R180)
+    about its own size while every plan-frame tool mirrors about the outline: HEAD hd_tile view 708.48 vs outline 717.12
+    (stale pre-11-13 tile) left 132 MY tiles 8.64 um off (13 clock cells per tile over real cores, u042 u046 u065 u068
+    u131 u134 u156 = 218-262 DRC each).  Re-sign the type at the outline size to use its view again."""
+    ok, refused = {}, {}
+    for tn, t in P.types.items():
+        v = Path(views) / tn / f"{t['module']}.lef" if views else None
+        if not (v and v.is_file()):
+            continue
+        m = re.search(r"\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;", v.read_text())
+        W, H = t["outline_um"]
+        if m and (abs(float(m.group(1)) - W) > VIEW_SIZE_TOL_UM or abs(float(m.group(2)) - H) > VIEW_SIZE_TOL_UM):
+            refused[tn] = dict(view=str(v), view_size_um=[float(m.group(1)), float(m.group(2))], outline_um=[W, H],
+                               why="closed view SIZE differs from the plan outline: plan abstract used")
+        else:
+            ok[tn] = v
+    return ok, refused
+
+
 def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.72, density=0.15, island_sites=None,
               island_margin=ISLAND_MARGIN_UM, full_depth=False, site_legal=False, site_slide=False, regions=None,
               tree_form="htree", tree_opts=None, slice_spine=False, spine_top_leaf_um=50.0, slice_rows=None, tap_pad=None,
@@ -5343,14 +5777,18 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     rsv = {tn: reserved_windows(P, tn) for tn in P.types}
     rsv = {k: v for k, v in rsv.items() if v}
     iw = {tn: sorted(set(list(iw.get(tn, [])) + rsv.get(tn, []))) for tn in set(iw) | set(rsv)}
+    view_ok, view_refused = closed_view_candidates(P, views)
+    for tn_, r_ in sorted(view_refused.items()):
+        print(f"CLOSED_VIEW_REFUSED {tn_}: view SIZE {r_['view_size_um']} != outline {r_['outline_um']}: plan abstract used", flush=True)
+    meta["closed_views_refused"] = view_refused
     _abs_calls = [(tn, (abstract_lef, (P, tn), dict(islands=iw.get(tn), module_name=smod[tn], landing_infra=landing_infra,
                                                    reset_infra=reset_infra)))
                   for tn, t in sorted(P.types.items())
-                  if not (views and (Path(views) / tn / f"{t['module']}.lef").is_file())]
+                  if tn not in view_ok]
     _abs = dict(zip([tn for tn, _ in _abs_calls], kit_map([c for _, c in _abs_calls])))
     for tn, t in sorted(P.types.items()):
-        v = Path(views) / tn / f"{t['module']}.lef" if views else None
-        if v and v.is_file():
+        v = view_ok.get(tn)
+        if v:
             txt = retarget_lef_macro(v.read_text(), t["module"], smod[tn])
             if iw.get(tn):      # CLKSITE-RESERVE-1115: closed view gets the same windows (M1-M7 OBS, implants, M7 PG)
                 import abstract_cutout
@@ -6051,6 +6489,9 @@ def main(argv=None):
     k.add_argument("--rep-reach-no-balance", action="store_true",
                    help="with --rep-reach-max: do NOT pad the other branches for the added reach-fix delay "
                         "(geometry diagnosis only; the default balances so relative arrivals stay as built)")
+    k.add_argument("--rep-reach-report", default=None, metavar="FILE",
+                   help="with --rep-reach-max: do not stop at the first leg without a legal placement within reach; "
+                        "append each one to FILE (JSON lines) and keep its default chain. Default off = fail closed")
     k.add_argument("--rep-actual-max", type=float, default=None, metavar="UM",
                    help="opt-in: reject actual cell-to-cell and final-tap Manhattan hops over UM after legal snapping; "
                         "write actual_reach.json, default off; re-run clock_reach.py after any later clock overlay")
@@ -6185,6 +6626,10 @@ def main(argv=None):
     k.add_argument("--clock-type-keepouts", action="store_true",
                    help="DIE-QC-47 opt-in: die clock cell sites also avoid every partition type clock.keepouts_um "
                         "rectangle (+2.16 um halo), e.g. bare PHY bodies. Default off (byte-identical)")
+    k.add_argument("--clock-point-keepouts", type=float, default=None, metavar="UM",
+                   help="FABLE-DIE-KV opt-in: die clock cell sites also avoid every planned register point of the types "
+                        "(fixed FT bit cells + 0.54 um, START reader / writer stages and station centres +- UM, e.g. 3). "
+                        "Default off (byte-identical)")
     k.add_argument("--chain-hop-max", type=float, default=None, metavar="UM",
                    help="CLK-TOOL-7 opt-in: the DME chain model rejects (prices as infinite) any candidate chain with a "
                         "repeater hop > UM (HBM street_body: 450). Default: no limit")
@@ -6205,6 +6650,8 @@ def main(argv=None):
                         "construction, no tap parity inverters. Default buf")
     k.add_argument("--coarse-um", type=float, default=0.72)
     k.add_argument("--density", type=float, default=0.15, help="die power density W/mm2 for PDNSim")
+    k.add_argument("--tree-json", help="CLKSITE-RESERVE-1115 opt-in: use this stamped tree.json (clksite_stamp_native.py) as the die "
+                   "clock tree instead of the built one; the clock kit netlist, placement and tree.json follow it")
     k.add_argument("--island-sites", nargs="+", help="CLOCK-128-R7 opt-in: die_tree_plan.json / ot_clock_sites/1 / "
                    "mesh.json (derived trunk sites): open plan-computed island windows (no M1-M3 OBS, M7 PG cut) in "
                    "every partition abstract, identical per type; island_windows.json lists them")
@@ -6348,12 +6795,15 @@ def main(argv=None):
     REP_ON_LEG = bool(getattr(a, "rep_on_leg", False))
     REP_OFF_LEG_MAX_UM = getattr(a, "rep_off_leg_max", None)
     REP_REACH_MAX_UM = getattr(a, "rep_reach_max", None)
+    global REP_REACH_REPORT
+    REP_REACH_REPORT = getattr(a, "rep_reach_report", None)
     global REP_REACH_BALANCE
     REP_REACH_BALANCE = not getattr(a, "rep_reach_no_balance", False)
-    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS
+    global CLOCK_BODY_SITES, CHAIN_HOP_MAX_UM, DETOUR_ADAPTIVE, CLOCK_TYPE_KEEPOUTS, DETOUR_SEAM_PASS, CLOCK_POINT_KEEPOUT_UM
     DETOUR_SEAM_PASS = bool(getattr(a, "detour_seam_pass", False))
     CLOCK_BODY_SITES = bool(getattr(a, "clock_body_sites", False))
     CLOCK_TYPE_KEEPOUTS = bool(getattr(a, "clock_type_keepouts", False))
+    CLOCK_POINT_KEEPOUT_UM = getattr(a, "clock_point_keepouts", None)
     CHAIN_HOP_MAX_UM = getattr(a, "chain_hop_max", None)
     if CHAIN_HOP_MAX_UM is not None and not (math.isfinite(CHAIN_HOP_MAX_UM) and CHAIN_HOP_MAX_UM > 0):
         raise SystemExit("--chain-hop-max must be finite and positive")
@@ -6409,6 +6859,7 @@ def main(argv=None):
     if a.cmd == "kit":
         globals()["BAND_SHARE_FORM"] = a.band_share_form
         globals()["TAP_PIN_SNAP"] = a.snap_tap_pins
+        globals()["STAMPED_TREE_JSON"] = a.tree_json
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density, a.island_sites,
                       a.island_margin_um, full_depth=a.htree_full_depth, site_legal=a.tree_site_legal,
                       site_slide=a.tree_site_slide, regions=a.region_trees, landing_infra=a.landing_infra,

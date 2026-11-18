@@ -71,8 +71,15 @@ module dsdv_hbc1_loader #(
    shadow[511:500]==0&&shadow[163:100]==expected_programme&&
    first_header>seed+COMMIT_DELTA+4&&ks_capture>end_header_wide[47:0]&&
    prev_input>ks_capture&&status_sample<return_send&&return_send<prev_input;
-  wire body_check=dated&&boot_edge==body_date+1&&body_seen;
-  wire body_good=body_check&&actual_crc==expected_crc&&body_shape&&f==0;
+  // HEAD-HOST-CLOSE-1115 (hd_host_w -195 ps TT setup, 28-gate CRC512 + body_shape cone into owner/ready): the shadow is
+  // stable from body_date+1 (pending clears and shadow loads at body_date), so the CRC and schema compares are registered
+  // once and the body decision is taken at body_date+2.  ready is then set one cycle later (visible at body_date+3);
+  // VALID_PROFILE already requires BOOT_COMMIT_EDGE > BODY_EDGE+2 (commit_date >= body_date+3), so commit_permit
+  // (&ready at boot_edge==commit_date) still sees ready.
+  reg crc_ok_q,shape_ok_q;
+  always @(posedge ck)begin crc_ok_q<=actual_crc==expected_crc;shape_ok_q<=body_shape;end
+  wire body_check=dated&&boot_edge==body_date+2&&body_seen;
+  wire body_good=body_check&&crc_ok_q&&shape_ok_q&&f==0;
   wire commit_permit=header_shape&&p[65:50]==1&&p[81:66]==0&&
    dated&&p[289:242]==commit_date&&boot_edge==commit_date&&p[113:82]==expected_crc&&
    p[241:178]==expected_programme&&(&ready)&&!valid&&!job_active&&f==0&&VALID_PROFILE;

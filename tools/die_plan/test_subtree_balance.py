@@ -21,8 +21,20 @@ def test_core_kits_balance_before_final_repair(tmp_path):
     post = (tmp_path / "grt_post_core.tcl").read_text().splitlines()
     src = [ln for ln in post if ln.startswith("source ")]
     assert src == ["source /work/kit_post.tcl", "source /work/grt_post.tcl", "source /work/subtree_balance.tcl",
-                   "source /work/core_final_repair.tcl"], post
+                   "source /work/core_drv_repair.tcl", "source /work/core_final_repair.tcl"], post
     assert (tmp_path / "subtree_balance.tcl").read_text() == HOOK.read_text()
+
+
+def test_core_kits_run_repair_design_once_when_incremental_repair_skipped(tmp_path):
+    """S81-CORES-1115: the POST override replaced post_grt_drv.tcl; core_drv_repair.tcl is the one repair_design, self-gated on
+    SKIP_INCREMENTAL_REPAIR=1, staged next to the final repair."""
+    core_flow.apply(tmp_path, core_flow.binding(500.0), "x", rc_cal=False)
+    t = (tmp_path / "core_drv_repair.tcl").read_text()
+    assert t == (HERE / "core_drv_repair.tcl").read_text()
+    assert t.count("repair_design -slew_margin 40 -cap_margin 20") == 1 and t.count("global_route -start_incremental") == 1
+    assert 'SKIP_INCREMENTAL_REPAIR) ne "1"' in t and "repair_timing" not in t.replace("# ", "")
+    post = (tmp_path / "grt_post_core.tcl").read_text().splitlines()
+    assert post.index("source /work/core_drv_repair.tcl") < post.index("source /work/core_final_repair.tcl")
 
 
 def test_partition_pre_pass_sources_it():
@@ -38,7 +50,7 @@ namespace eval sta {}
 proc ord::get_db_block {} { return blk }
 proc ord::get_db {} { return db }
 proc db {m args} { if {$m eq "findMaster"} { return M_[lindex $args 0] } }
-foreach {m blk} {M_BUFx4_ASAP7_75t_R 0 M_BUFx2_ASAP7_75t_R 0 M_DFFHQNx1_ASAP7_75t_R 0 M_SRAM 1} {
+foreach {m blk} {M_BUFx4_ASAP7_75t_R 0 M_INVx4_ASAP7_75t_R 0 M_BUFx2_ASAP7_75t_R 0 M_DFFHQNx1_ASAP7_75t_R 0 M_SRAM 1} {
   proc $m {op args} "switch \$op { isBlock { return $blk } getName { return [string range $m 2 end] } }"
 }
 # objects: A(obj,attr)
@@ -128,11 +140,11 @@ set ::env(OT_STB_PORTS) {clk ck2}
 '''
 
 
-def _run(env=""):
+def _run(env="", *, hook=HOOK, after=""):
     if not shutil.which("tclsh"):
         pytest.skip("no tclsh")
-    body = (MOCK + TREE + env + f"\nproc wrap {{}} {{ source {{{HOOK}}} }}\nwrap\n"
-            + 'foreach p {f1 f2 f3 g1 g2 u_mem} { puts "ARR $p [get_property $p.CLK arrival_max_rise]" }\n')
+    body = (MOCK + TREE + env + f"\nproc wrap {{}} {{ source {{{hook}}} }}\nwrap\n"
+            + 'foreach p {f1 f2 f3 g1 g2 u_mem} { puts "ARR $p [get_property $p.CLK arrival_max_rise]" }\n' + after)
     r = subprocess.run(["tclsh"], input=body, text=True, capture_output=True)
     assert r.returncode == 0 and not r.stderr, r.stdout + r.stderr
     arr = {ln.split()[1]: float(ln.split()[2]) for ln in r.stdout.splitlines() if ln.startswith("ARR ")}
@@ -162,3 +174,48 @@ def test_report_and_off_modes_change_nothing():
     for env, word in (("set ::env(OT_STB) report\n", "OT_STB before"), ("set ::env(OT_STB) 0\n", "OT_STB skipped")):
         out, arr = _run(env)
         assert word in out and arr == {"f1": 20, "f2": 20, "f3": 80, "g1": 20, "g2": 60, "u_mem": 20}, (env, arr, out)
+
+
+def test_forwarded_output_without_local_sinks_is_not_padded(tmp_path):
+    # A real sink-bearing tree also forks into an output-only clock buffer.
+    # No receiver is present during partition hardening, so that fork has no
+    # local sequential sink. The positive case runs the real balancing hook.
+    env = "set ::env(OT_STB_EST) placement\ncell fwd M_BUFx2_ASAP7_75t_R n_b0 n_fwd\n"
+    after = 'puts "ARR fwd [get_property fwd.A arrival_max_rise]"\n'
+    out, arr = _run(env, after=after)
+    assert "OT_STB ERROR" not in out
+    assert arr["fwd"] == 10, out
+    # Mutant reproduces the measured silicon defect: twelve gratuitous stages
+    # on each of eight rounds, even though legitimate local sinks still close.
+    mutant = tmp_path / "sinkless_mutant.tcl"
+    text = HOOK.read_text()
+    guard = "        if {$::stb::hi($p,$n) == -1e9} { continue }\n"
+    assert guard in text
+    mutant.write_text(text.replace(guard, "", 1))
+    _, bad = _run(env, hook=mutant, after=after)
+    assert bad["fwd"] == 10 + 96 * 20
+
+
+def test_inverter_pair_pads_and_span_acceptance():
+    """S81-RCK-BALANCE: OT_STB_PAIR=1 pads with two inverters per stage (mock: +20 ps each), the span line reports PASS/FAIL."""
+    env = ("set ::env(OT_STB_EST) placement\nset ::env(OT_STB_PORTS) clk\nset ::env(OT_STB_PAIR) 1\n"
+           "set ::env(OT_STB_CELL) INVx4_ASAP7_75t_R\nset ::env(OT_STB_STAGE) 40\nset ::env(OT_STB_SPAN_MAX) 30\n")
+    out, arr = _run(env, after='puts "NINV [llength [lsearch -all -inline -not [info commands delaybuf_otstb_*] *.*]]"\n')
+    assert "OT_STB ERROR" not in out, out
+    assert arr["f1"] == 60 and arr["f3"] == 80, (arr, out)               # one pair (+40) on b1's subtree
+    assert "NINV 2" in out, out                                             # exactly two inverters for one pair
+    assert "OT_STB_SPAN clk sinks 3 min 60.0 max 80.0 span 20.0 limit 30.0 PASS" in out, out
+    tight = env.replace("SPAN_MAX) 30", "SPAN_MAX) 10") + "set ::env(OT_STB_SPAN_FAIL) 1\n"
+    out2, _ = _run(tight)
+    assert "OT_STB_SPAN clk" in out2 and "FAIL" in out2 and "OT_STB ERROR" in out2, out2
+
+
+def test_rck_balance_hook_is_opt_in_after_leaf_repeat_and_staged():
+    post = (HERE / "cts_post.tcl").read_text()
+    assert 'OT_S81_RCK_BALANCE) eq "1"' in post and "rck_balance.tcl" in post
+    assert post.index("leaf_affinity.tcl") < post.index("rck_balance.tcl")
+    rb = (HERE / "rck_balance.tcl").read_text()
+    for need in ("OT_STB_PAIR) 1", "OT_STB_EST) placement", "INVx4_ASAP7_75t_R", "OT_STB_SPAN_MAX", "io_pma_rck[0]", "subtree_balance.tcl"):
+        assert need in rb, need
+    gp = (HERE / "gen_phys.py").read_text()
+    assert '"rck_balance.tcl"' in gp and "OT_S81_RCK_BALANCE" in gp

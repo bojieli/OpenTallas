@@ -372,6 +372,34 @@ def compile_ops(die, sl, fixd, layer, periods=None, allow_below_floor=False, ite
                 field_phases=len(rec['phases']))
 
 
+def compiled_phase_events(cal, *, layer=None, slice_id=None):
+    """Expose emitted per-op ROM dates; never promote them to mission/CAP dates."""
+    phases = cal['phases']
+    issuer = ''.join(f'{t} {v:040x}\n' for t, v in sorted(cal['iss'].items()))
+    events = []
+    for phase in phases:
+        ident = dict(phase=phase['phase'], tag=phase['tag'])
+        for field in ('accept', 'cfg', 'launch'):
+            events.append(dict(ident, kind=field, relative_cycle=phase[field]))
+        events.append(dict(ident, kind='calendar_slot_retire_NOT_CAP_commit',
+                           relative_cycle=phase['retire']))
+    return dict(schema='opentallas.s81.xs.compiled-relative-phase-events.v1',
+        op=cal['op'], layer=layer, slice=slice_id,
+        scope='per-op emitted calendar; not an absolute/shared mission schedule',
+        epoch=None, cycle_unit='rising_core_edges', qualified=False,
+        CAP_ready_qualified=False, row_leases_qualified=False,
+        selected_CAP_descriptors=None,
+        missing='production selected CAP descriptors, frame return/CAP joins and mission epoch',
+        compiler_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        phases_sha256=hashlib.sha256(json.dumps(phases, sort_keys=True).encode()).hexdigest(),
+        issuer_text_sha256=hashlib.sha256(issuer.encode()).hexdigest(),
+        issuer_rows=[dict(relative_cycle=t, word_hex=f'{v:040x}')
+                     for t, v in sorted(cal['iss'].items())],
+        events=sorted(events, key=lambda e: (e['relative_cycle'], e['phase'], e['kind'])),
+        period=cal['period'], span_tail=cal.get('span_tail'),
+        period_tail_current_source_qualified=False)
+
+
 def emit_files(die, op, ctx, sl):
     """lower_placed / lower_placed_bf hook: the op's pipelined calendar (compiled with the layer's whole frame field so
     the phase indices / stream bases are the die-true global ones) -> {file: text}, nphases; None when the op has no
@@ -397,6 +425,8 @@ def emit_files(die, op, ctx, sl):
              f'prog/xs/{op["id"]}/pq_calendar_action.viamap.hex': viamap([w & ((1 << 72) - 1) for w in cw] + [0] * (4096 - len(cw))),
              f'prog/xs/{op["id"]}/pq_calendar_time.viamap.hex': viamap([w >> 72 for w in cw] + [0] * (4096 - len(cw))),
              f'prog/xs/{op["id"]}/is_d.txt': ''.join(f'{t} {v:040x}\n' for t, v in sorted(cal['iss'].items()))}
+    files[f'prog/xs/{op["id"]}.phase_events.json'] = json.dumps(
+        compiled_phase_events(cal, layer=ctx.get('layer'), slice_id=sl), indent=1) + '\n'
     if XO.on('OT_XS_CAL_SEGMENT'):
         if not lc['PASS']:
             raise CalendarFault(('shared layer calendar not admitted', lfault))

@@ -799,8 +799,9 @@ def cmd_verify(a):
             for i, b in enumerate(bits):
                 key = f"{ap}.{pn}[{i}]"
                 want = sinks.get(key)
-                if want and want[0] == "pin" and core_pipe.get(f"{ap}.{pn}"):
-                    want = list(want[:2]) + [want[2] + int(core_pipe[f"{ap}.{pn}"])] + list(want[3:])
+                dpipe = core_pipe.get(f"{ap}.{pn}[{i}]") or core_pipe.get(f"{ap}.{pn}")    # KV-PVGEN: per-bit records
+                if want and want[0] == "pin" and dpipe:
+                    want = list(want[:2]) + [want[2] + int(dpipe)] + list(want[3:])
                     cnt_pipe += 1
                 original=landing_verify.observer_input(c,pn,i) if landing_verify else None
                 s = G.source(original if original is not None else b)

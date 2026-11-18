@@ -197,6 +197,22 @@ endmodule
 # reset_tree.relay_cell uses it ONLY for internal relays (q = rst_rl_*): leaf taps rst_n_t<k>, out relays,
 # entry pin registers and START-gated relays stay ot_dp_rrelay / ot_dp_rgate (consumer recovery keeps a full cycle).
 # Kept out of CELLS: only plans that opt in emit it, so every other kit's cell file is byte-identical.
+# HEAD entry-phase coupon: negedge pre-capture before the original posedge
+# entry. Only plans explicitly enabling reset.pin_entry_fall get this cell.
+ENTRY_FALL_CELLS = """(* keep_hierarchy, keep *)
+module ot_dp_rrelay_fn (input wire clk, input wire d, output reg q);
+    (* keep *) reg pre;
+    always @(negedge clk) pre <= d;
+    always @(posedge clk) q <= pre;
+endmodule
+"""
+
+
+def uses_entry_fall(raw):
+    return any(t.get("reset", {}).get("pin_entry_fall") is True
+               for t in (raw.get("partition_types") or {}).values())
+
+
 LOCKUP_CELLS = """(* keep_hierarchy, keep *)
 module ot_dp_rrelay_nl (input wire clk, input wire d, output reg q);
     (* keep *) reg state;
@@ -663,6 +679,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
             raise GenError(f"type {tn}: bus {b['name']} is not bound to any leaf port (open {'input' if b['dir'] == 'in' else 'output'})")
         if b["dir"] == "out" and len(use[k]) != 1:
             raise GenError(f"type {tn}: out bus {b['name']} driven by {len(use[k])} leaf ports {use[k]}")
+    if (rtree or {}).get("pin_entry_phase"):       # the entry cells' static capture-phase select
+        use.setdefault("strap:strap_rst_ph", []).extend(["u_rst_in.ph"] + (["u_run_in.ph"] if rtree.get("start") else []))
     for sp in t.get("id_straps", []):
         if not use.get(f"strap:{sp['name']}"):
             raise GenError(f"type {tn}: id strap {sp['name']} is not bound to any leaf port")
@@ -885,7 +903,12 @@ def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None, landing=None,
                 L.validate_observer_native(lambda tn: leaf_headers(P.types[tn], rtl_root), parse_leaf_ports)
         except CL.LandingError as e:
             raise GenError(f"clock landing: {e}") from e
-    (out / "ot_dp_cells.sv").write_text(CELLS + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
+    import pin_entry_delay as PED
+    import pin_entry_phase as PEP
+    (out / "ot_dp_cells.sv").write_text(CELLS + (PED.CELL_RTL if PED.uses(P.raw) else "")
+                                        + (PEP.CELL_RTL if PEP.uses(P.raw) else "")
+                                        + (ENTRY_FALL_CELLS if uses_entry_fall(P.raw) else "")
+                                        + (LOCKUP_CELLS if uses_relay_lockup(P.raw, "negedge") else "")
                                         + (HOLD_CELLS if uses_hold_hb4(P.raw) else ""))
     files = [out / "ot_dp_cells.sv"]
     for tn, t in sorted(P.types.items()):

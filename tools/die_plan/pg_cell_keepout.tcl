@@ -76,13 +76,37 @@ proc ot_pgcko_index {xs} {
 }
 proc ot_pgcko_hit {idx b} {
   # 1 when box b (dbBox) overlaps a crossing of the index
+  return [ot_pgcko_box_hit $idx [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
+}
+proc ot_pgcko_box_hit {idx bx0 by0 bx1 by1} {
+  # 1 when the box overlaps a box of the index (plain numbers: unit-testable without OpenROAD)
   set g 4000
-  set bx0 [$b xMin]; set by0 [$b yMin]; set bx1 [$b xMax]; set by1 [$b yMax]
   for {set ix [expr {$bx0/$g}]} {$ix <= $bx1/$g} {incr ix} { for {set iy [expr {$by0/$g}]} {$iy <= $by1/$g} {incr iy} {
     if {![dict exists $idx "$ix,$iy"]} continue
     foreach c [dict get $idx "$ix,$iy"] { lassign $c x0 y0 x1 y1
       if {$bx0 < $x1 && $bx1 > $x0 && $by0 < $y1 && $by1 > $y0} { return 1 } } } }
   return 0
+}
+proc ot_pgcko_drop_covered {xs fixed_boxes} {
+  # DPL-0004 fix (DRT0255-PROOF-1115, k_t49 3,861 TAP cells, kv io_cor 4,071): a placement blockage over a FIXED cell (tapcell, hard
+  # row fill) makes ORFS check_placement fail "Placed in rows" after the GRT repair.  Such a cell cannot move, so a crossing it overlaps
+  # gets NO blockage (the keepout still covers every crossing over a movable cell).  -> {kept dropped}
+  set idx [ot_pgcko_index $fixed_boxes]
+  set kept {}; set dropped 0
+  foreach c $xs { lassign $c x0 y0 x1 y1
+    if {[ot_pgcko_box_hit $idx $x0 $y0 $x1 $y1]} { incr dropped } else { lappend kept $c } }
+  return [list $kept $dropped]
+}
+proc ot_pgcko_fixed_boxes {blk} {
+  # boxes of every instance that cannot be moved by detailed_placement: FIXED / LOCKED / FIRM / COVER status, and every tap cell
+  set out {}
+  foreach i [$blk getInsts] {
+    set ms [$i getMaster]; if {[$ms isBlock]} continue
+    if {[$i getPlacementStatus] in {FIXED LOCKED FIRM COVER}} { set fx 1 } elseif {[string match CORE_TAPCELL* [$ms getType]]} { set fx 1 } else { set fx 0 }
+    if {!$fx} continue
+    set b [$i getBBox]; lappend out [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
+  }
+  return $out
 }
 proc ot_pgcko_add {} {
   if {![info exists ::env(OT_PG_CELL_KEEPOUT)] || $::env(OT_PG_CELL_KEEPOUT) ne "1"} { return }
@@ -101,8 +125,14 @@ proc ot_pgcko_add {} {
     lassign $c x0 y0 x1 y1
     if {$x1 <= $rx0 || $x0 >= $rx1 || $y1 <= $ry0 || $y0 >= $ry1} continue
     lappend xs $c
+  }
+  # a crossing over a fixed cell (tapcells) gets no blockage: check_placement would fail DPL-0004 on it after the GRT repair
+  lassign [ot_pgcko_drop_covered $xs [ot_pgcko_fixed_boxes $blk]] xs ndrop
+  foreach c $xs {
+    lassign $c x0 y0 x1 y1
     lappend ::ot_pgcko_blk [odb::dbBlockage_create $blk $x0 $y0 $x1 $y1]
   }
+  puts "OT_PG_CELL_KEEPOUT skipped $ndrop crossings that lie over fixed cells (tapcells etc.: DPL-0004 'Placed in rows')"
   set idx [ot_pgcko_index $xs]
   # cells that now overlap a blockage: count (movable only; FIXED/LOCKED/FIRM cells stay where they are)
   set n 0; set nfix 0

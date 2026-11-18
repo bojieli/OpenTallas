@@ -293,8 +293,11 @@ def trace(plan, tn, text, repo=None):
     for mod, inst, ports, D in insts:
         relay = mod=='ot_s81_rly' or bool(re.fullmatch(r'dsfd_rly_\d+_(SN|SW|WS)',mod))
         seam = mod=='ot_pl_seam_r_plq'
-        if mod in ('ot_dp_st','ot_dp_dly') or relay or seam:
-            qport,dport=('o','i') if relay else ('o','d') if seam else ('q','d')
+        # DIE-S81-92 r228: seam WRITE sides are wiring to the out face flop: ot_pl_seam_w_pl = per-chunk AND gate
+        # (0 stages, i->q), ot_pl_seam_w_plr = one ot_pl_seam_cq register (1 stage, ir->q)
+        seamw = mod in ('ot_pl_seam_w_pl', 'ot_pl_seam_w_plr')
+        if mod in ('ot_dp_st','ot_dp_dly') or relay or seam or seamw:
+            qport,dport=('o','i') if relay else ('o','d') if seam else ('q','i') if mod=='ot_pl_seam_w_pl' else ('q','ir') if seamw else ('q','d')
             q,_ = bits(ports.get(qport,''), inst+'.'+qport)
             d,sgn = bits(ports.get(dport,''), inst+'.'+dport)
             if mod == 'ot_dp_st' and inst.startswith('u_bin_'):
@@ -317,6 +320,7 @@ def trace(plan, tn, text, repo=None):
                     if D is None and '.D' in params.get(inst,''):
                         warnings.append(dict(where=inst,reason='nonliteral delay D'));continue
                     stages=D if D is not None else 1
+                elif mod=='ot_pl_seam_w_pl': stages=0
                 else: stages=1
                 for a,b in align_bits(q,d,sgn):
                     if a is not None: producers[a].append((b,stages,inst))

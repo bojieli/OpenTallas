@@ -1541,7 +1541,36 @@ module ot_s81ph_coll_lane_safe4_hd #(
     // core -> link: credit landing on bank64 SRAM
     wire iv, ir, il; wire [W-1:0] id;
     reg  lk1, up;
+`ifdef OT_HE_EPC_ISLICE
+    // HEAD-EPC-RTL-1 form B (FABLE-PD-HKQ H2): one register slice between the u_ski head (SRAM bank 5-8 read data) and the
+    // endpoint / u_epc in_data bus, +1 cycle on the core -> link data path.
+    // FABLE-FIX-HEAD-TYPES 11-16 (he3 routed TT -160 ps: isl_rp -> 2 select buffers (24 + 34 loads) -> OA21 -> 68.7 fF of
+    // wire into u_epc in_data, macro setup 244 ps): registered-output skid form of the same 2-entry slice.  isl_od drives
+    // the u_epc pins directly (no read pointer, no output mux); isl_sd holds the one word that arrives while the endpoint
+    // stalls.  Cycle-exact with the pointer form (same ep_v / ep_d / ep_l / ir_g streams: occupancy = isl_ov + isl_sv, the
+    // head word is always in isl_od), so the lane latency is unchanged.  ir_g still comes from registered state only.
+    reg  isl_ov, isl_sv;
+    (* keep="true" *) reg [W:0] isl_od, isl_sd;
+    wire ir_g = up && !isl_sv;
+    wire isl_take = iv && ir_g;
+    wire isl_adv = !isl_ov || ir;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin isl_ov <= 1'b0; isl_sv <= 1'b0; end
+        else if (isl_adv) begin isl_ov <= isl_sv || isl_take; isl_sv <= 1'b0; end
+        else if (isl_take) isl_sv <= 1'b1;
+    always @(posedge clk) begin
+        if (isl_adv) isl_od <= isl_sv ? isl_sd : {il, id};
+        if (!isl_sv) isl_sd <= {il, id};  // HEAD-TYPES-O he5: free-load while empty (cycle-exact, tb_skid2), takes in_ready off the isl_sd enable
+    end
+    wire        ep_v = isl_ov;
+    wire [W-1:0] ep_d = isl_od[W-1:0];
+    wire        ep_l = isl_od[W];
+`else
     wire ir_g = ir && up;
+    wire        ep_v = iv && up;
+    wire [W-1:0] ep_d = id;
+    wire        ep_l = il;
+`endif
     wire lcf;
     wire lo_vl; wire [W:0] lo_dl;
     generate if (REACH != 0) begin : g_lo2
@@ -1556,7 +1585,7 @@ module ot_s81ph_coll_lane_safe4_hd #(
     end else begin : g_lo1
         assign lo_vl = lo_v; assign lo_dl = lo_d;
     end endgenerate
-    ot_link_credit_rx_b64 #(.W(W + 1), .DEPTH(CORE_CRED), .WFREE(1), .LOCAL_HIT(1), .LOCAL_POP((CORE_CRED==12)||(RBL!=0))) u_ski (
+    ot_link_credit_rx_b64 #(.W(W + 1), .DEPTH(CORE_CRED), .WFREE(1), .LOCAL_HIT(1), .LOCAL_POP((CORE_CRED>=12)||(RBL!=0))) u_ski (
         .clk(clk), .rst_n(rr[R_CRX]), .head_rst_n(head_rst_n), .l_valid(lo_vl), .l_data(lo_dl),
         .l_credit(lo_r), .o_valid(iv), .o_ready(ir_g), .o_data({il, id}), .fault(lcf));
     // link -> core: credit tx with registered ready copies
@@ -1579,7 +1608,7 @@ module ot_s81ph_coll_lane_safe4_hd #(
     end endgenerate
 `ifdef OT_HE_EPC
     ot_s81hd_he_epc u_epc (.clk(clk), .rst_n(rs_n), .ch_b(ch_b),
-        .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
+        .in_valid(ep_v), .in_ready(ir), .in_data(ep_d), .in_last(ep_l),
         .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv0), .r_tx(rt0), .r_rx_v(rrv), .r_rx(rrf),
         .fault(ep_f), .rr_lo(epc_rr_lo), .rr_gb(epc_rr_gb));
@@ -1588,7 +1617,7 @@ module ot_s81ph_coll_lane_safe4_hd #(
         .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(1), .PIPE(2), .RXPIPE(1), .TOREG(1), .MWR(1),
         .DNR(1), .OLDREAD(1), .RN(EP_RN), .ORN(3), .FCOPY(REACH != 0 ? 1 : 0), .WRL(REACH >= 2 ? 2 : 0), .RBL(RBL)) u_ep (
         .clk(clk), .rst_v(rr[R_EP +: EP_RN]), .mem_rst_n(rr[R_MEM +: MEM_RST]), .ch_b(ch_b),
-        .in_valid(iv && up), .in_ready(ir), .in_data(id), .in_last(il),
+        .in_valid(ep_v), .in_ready(ir), .in_data(ep_d), .in_last(ep_l),
         .out_valid(ov), .out_ready_v(orr), .out_data(od), .out_last(ol),
         .f_tx_v(ftv), .f_tx(ft), .f_rx_v(frv), .f_rx(fr), .r_tx_v(rtv0), .r_tx(rt0), .r_rx_v(rrv), .r_rx(rrf),
         .credit_stalls(), .fault(ep_f), .fault_code(), .st_flits_tx(), .st_flits_rx_ok(), .st_crc_err(),

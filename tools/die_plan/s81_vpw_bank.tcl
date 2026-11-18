@@ -1,0 +1,108 @@
+# Opt-in S81 form-B VPW bank-end placement. Source AFTER face_flops.tcl,
+# before GPL. No netlist edits. All matched FFs stay within 100um of the
+# two real SRAM boxes, and blocked/occupied sites are excluded explicitly.
+uplevel #0 {
+set vb_b [ord::get_db_block]
+set vb_u [[ord::get_db_tech] getDbUnitsPerMicron]
+set vb_core [$vb_b getCoreArea]
+set vb_banks {}; set vb_ffs {}; set vb_blocks {};set vb_groups {}
+foreach i [$vb_b getInsts] {
+  set m [$i getMaster]; set n [$i getName]
+  if {[$m isBlock]} {
+    set bb [$i getBBox]
+    lappend vb_blocks [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+    if {[regexp {(^|[._/])vp[._/]u_b[01]$} $n]} {lappend vb_banks $i}
+  }
+  if {[regexp {(^|[._/])vp[._/]g_wr1[._/]u_w[._/]} $n] && [string match *DFF* [$m getName]]} {
+    lappend vb_ffs $i
+    regexp {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]} $n -> group
+    dict set vb_groups $group 1
+  }
+}
+if {[llength $vb_banks] != 2} {error "OT_VPW_BANK needs exactly two real VP SRAM macros, got [llength $vb_banks]"}
+if {![llength $vb_ffs]} {error "OT_VPW_BANK found no VPW FFs; hierarchy/RTL mismatch"}
+if {[dict size $vb_groups]!=1} {error "OT_VPW_BANK needs one leaf write-port group"}
+set vb_group [lindex [dict keys $vb_groups] 0]
+set vb_x0 1e30;set vb_y0 1e30;set vb_x1 -1e30;set vb_y1 -1e30
+foreach i $vb_banks {
+  set q [$i getBBox]
+  set vb_x0 [expr {min($vb_x0,[$q xMin])}];set vb_x1 [expr {max($vb_x1,[$q xMax])}]
+  set vb_y0 [expr {min($vb_y0,[$q yMin])}];set vb_y1 [expr {max($vb_y1,[$q yMax])}]
+}
+set vb_cx [expr {($vb_x0+$vb_x1)/2.0}];set vb_cy [expr {($vb_y0+$vb_y1)/2.0}]
+set vb_margin [expr {40*$vb_u}]
+set vb_rx0 [expr {max([$vb_core xMin],$vb_x0-$vb_margin)}]
+set vb_rx1 [expr {min([$vb_core xMax],$vb_x1+$vb_margin)}]
+set vb_ry0 [expr {max([$vb_core yMin],$vb_y0-$vb_margin)}]
+set vb_ry1 [expr {min([$vb_core yMax],$vb_y1+$vb_margin)}]
+set vb_own {};foreach i $vb_ffs {dict set vb_own $i 1}
+# Real placement obstructions and fixed cells, including die-clock reserves.
+foreach q [$vb_b getBlockages] {set r [$q getBBox];lappend vb_blocks [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]]}
+foreach i [$vb_b getInsts] {
+  if {[dict exists $vb_own $i] || [$i getPlacementStatus] ni {FIRM LOCKED}} continue
+  if {[[$i getMaster] isBlock]} continue
+  set q [$i getBBox];lappend vb_blocks [list [$q xMin] [$q yMin] [$q xMax] [$q yMax]]
+}
+set vb_keep {}
+foreach q $vb_blocks {
+  lassign $q a b c d
+  if {$a<$vb_rx1 && $c>$vb_rx0 && $b<$vb_ry1 && $d>$vb_ry0} {lappend vb_keep $q}
+}
+set vb_blocks $vb_keep
+set vb_rows {};set vb_maxw 0;set vb_maxh 0
+foreach i $vb_ffs {set m [$i getMaster];set vb_maxw [expr {max($vb_maxw,[$m getWidth])}];set vb_maxh [expr {max($vb_maxh,[$m getHeight])}]}
+foreach r [$vb_b getRows] {
+  lassign [$r getOrigin] x y
+  set st [$r getSite];set sw [$st getWidth];set rh [$st getHeight]
+  if {$y<$vb_ry0 || $y+$vb_maxh>$vb_ry1 || $rh!=$vb_maxh} continue
+  set rr [$r getBBox]
+  set x0 [expr {max([$rr xMin],$vb_rx0)}];set x1 [expr {min([$rr xMax],$vb_rx1)}]
+  set pitch [expr {int(ceil(2.0*$vb_maxw/$sw))*$sw}]
+  set x0 [expr {$x+int(ceil(double($x0-$x)/$sw))*$sw}]
+  for {set px $x0} {$px+$vb_maxw<=$x1} {incr px $pitch} {
+    set blocked 0
+    foreach q $vb_blocks {
+      lassign $q a b c d
+      if {$px<$c && $a<$px+$vb_maxw && $y<$d && $b<$y+$vb_maxh} {set blocked 1;break}
+    }
+    if {$blocked} continue
+    set dist [expr {abs($px+$vb_maxw/2.0-$vb_cx)+abs($y+$vb_maxh/2.0-$vb_cy)}]
+    lappend vb_rows [list $dist $px $y [$r getOrient]]
+  }
+}
+set vb_rows [lsort -real -index 0 $vb_rows]
+if {[llength $vb_rows]<[llength $vb_ffs]} {error "OT_VPW_BANK insufficient legal bank sites [llength $vb_rows] for [llength $vb_ffs] FFs"}
+set vb_out [open /work/vpw_bank_sites.tsv w];puts $vb_out "inst\tx_um\ty_um\tbank_distance_um"
+set vb_n 0;set vb_worst 0
+foreach i [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $vb_ffs] {
+  lassign [lindex $vb_rows $vb_n] dist x y orient
+  set bd 1e30
+  foreach bi $vb_banks {
+    set q [$bi getBBox]
+    set d [expr {max(0,[$q xMin]-$x,$x-[$q xMax])+max(0,[$q yMin]-$y,$y-[$q yMax])}]
+    set bd [expr {min($bd,$d)}]
+  }
+  if {$bd>100*$vb_u} {close $vb_out;error "OT_VPW_BANK distance exceeds100um at [$i getName]"}
+  $i setPlacementStatus PLACED;$i setOrient $orient;$i setLocation $x $y;$i setPlacementStatus FIRM
+  puts $vb_out "[$i getName]\t[expr {$x/double($vb_u)}]\t[expr {$y/double($vb_u)}]\t[expr {$bd/double($vb_u)}]"
+  set vb_worst [expr {max($vb_worst,$bd)}];incr vb_n
+}
+close $vb_out
+# Persist a standard-tap group for the later CTS process. Core taps clk_c*
+# have early hard-macro contracts and are never candidates.
+set vb_tap {};set vb_td 1e30
+foreach bt [$vb_b getBTerms] {
+  if {![regexp {^clk(_t[0-9]+)?$} [$bt getName]]} continue
+  set bb [$bt getBBox]
+  set dd [expr {abs(([$bb xMin]+[$bb xMax])/2.0-$vb_cx)+abs(([$bb yMin]+[$bb yMax])/2.0-$vb_cy)}]
+  if {$dd<$vb_td} {set vb_td $dd;set vb_tap [$bt getName]}
+}
+if {$vb_tap eq ""} {error "OT_VPW_BANK no standard clock tap"}
+set vb_clk [open /work/vpw_bank_clock.tcl w]
+puts $vb_clk {if {[info exists ::env(OT_TAP_GROUP_RE)] && $::env(OT_TAP_GROUP_RE) ne "" && $::env(OT_TAP_GROUP_RE) ne {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]}} {error "OT_VPW_BANK conflicts with an existing clock group; combine groups explicitly"}}
+puts $vb_clk {set ::env(OT_TAP_GROUP_RE) {^(.*[._/]vp[._/]g_wr1[._/]u_w)[._/]}}
+puts $vb_clk "set ::env(OT_TAP_GROUP_FIXED) {$vb_group:$vb_tap}"
+close $vb_clk
+puts "OT_VPW_BANK_CLOCK $vb_tap at [expr {$vb_td/double($vb_u)}]um from bank centroid"
+puts "OT_VPW_BANK placed $vb_n FFs FIRM, nearest-bank max [expr {$vb_worst/double($vb_u)}]um; legal sites [llength $vb_rows]; bounds [list [expr {$vb_rx0/$vb_u}] [expr {$vb_ry0/$vb_u}] [expr {$vb_rx1/$vb_u}] [expr {$vb_ry1/$vb_u}]]"
+}

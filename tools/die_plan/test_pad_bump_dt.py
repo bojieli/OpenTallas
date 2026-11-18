@@ -1,4 +1,4 @@
-"""S81-PMATX-DT 11-09 (DIE-S81-85): macro_pin OUTPUT pads keep their direct net (dont_touch before buffer_ports).
+"""S81-PMATX-DT 11-09 (DIE-S81-85): macro_pin pads (output, and since PAD-IN-DIRECT-1 11-17 input) keep their direct net (dont_touch before buffer_ports).
 The hook rows come from gen_phys.pad_bumps, and the names they use exist in the serdes column RTL / PMA abstract."""
 import re
 import shutil
@@ -22,12 +22,14 @@ def _bumps():
     return G.pad_bumps(SimpleNamespace(types={"t": t}), "t")
 
 
-def test_rows_are_the_output_pads_only():
-    out = [b for b in _bumps() if b["dir"] == "output"]
-    tcl = G.pad_bump_dt_tcl(out)
+def test_rows_are_every_macro_pin_pad_with_its_direction():
+    # PAD-IN-DIRECT-1 11-17: input macro_pin pads (io_pma_rx) are rows too, checked as the macro INPUT pin
+    tcl = G.pad_bump_dt_tcl(_bumps())
     rows = re.search(r"set pdt_rows \{(.*)\}\n", tcl).group(1)
-    assert rows == "{io_pma_tx ot_s81_pma_txm pma_tx 544} {io_pma_tck ot_s81_pma_txm pma_tck 1}"
-    assert "io_pma_rx" not in tcl and "setDoNotTouch 1" in tcl and "@ROWS@" not in tcl
+    assert "{io_pma_tx ot_s81_pma_txm pma_tx 544 output}" in rows and "{io_pma_tck ot_s81_pma_txm pma_tck 1 output}" in rows
+    assert "{io_pma_rx ot_s81_pma_rxm pma_rx 544 input}" in rows
+    assert all(r.rstrip("}").split()[-1] in ("input", "output") for r in rows.split("} {"))
+    assert "setDoNotTouch 1" in tcl and "@ROWS@" not in tcl
 
 
 def test_names_exist_in_serdes_column_netlist():
@@ -43,12 +45,12 @@ def test_tcl_parses():
     tclsh = shutil.which("tclsh")
     if not tclsh:
         return
-    tcl = G.pad_bump_dt_tcl([b for b in _bumps() if b["dir"] == "output"])
+    tcl = G.pad_bump_dt_tcl(_bumps())
     r = subprocess.run([tclsh], input=f"puts [info complete {{{tcl}}}]\n", capture_output=True, text=True)
     assert r.stdout.strip() == "1", r.stderr
 
 
 def test_gen_wires_hook_into_face_flops():
     src = Path(G.__file__).read_text()
-    assert 'bump_out = [b for b in pad_bumps(P, tn) if b["dir"] == "output"]' in src
+    assert 'bump_out = pad_bumps(P, tn)' in src
     assert 'hook.write_text("source /work/pad_bump_dt.tcl\\n" + hook.read_text())' in src

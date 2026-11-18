@@ -138,6 +138,40 @@ def plan_sha_check(cfg, die, hosts, run=sh, log=print):
     return ok
 
 
+def prepare_check(cfg, die, hosts, check=False, run=sh, log=print):
+    """KIT-OPS-5 11-15 (COORD): head_wave_kit_rtl raises 'prepared plan changed' when the prep tree's plan was edited after prepare
+    (NF10/NF12) and wave_prepare.json was not republished.  For a die whose plan sits in a prepared tree, every wave host's
+    wave_prepare.json must match the plan/sidecar on disk; without --check a stale receipt is refreshed in place
+    (wave_prepare_refresh.py, copy+replace) and re-verified.  -> True when current everywhere (or not a prepared tree)"""
+    plan = str((cfg["dies"][die].get("plan")) or "")
+    if not plan:
+        return True
+    prep = os.path.dirname(plan)
+    mod = Path(__file__).resolve().parent / "wave_prepare_refresh.py"
+    code = mod.read_text().split('if __name__ == "__main__":')[0]      # the functions only, not the CLI block
+
+    def remote(h, flag):
+        body = code + "\nimport sys\n" + (f"ok,m=status({prep!r});print(m);sys.exit(0 if ok else 1)" if flag == "--status" else f"rc,m=refresh({prep!r});print(m);sys.exit(rc)")
+        full = ["bash", "-c", f"python3 -I -c {shlex.quote(body)}"] if h == "localhost" else SSH + [h, f"python3 -I -c {shlex.quote(body)}"]
+        return run(full)
+
+    ok = True
+    for h in hosts:
+        rc, out = remote(h, "--status")
+        if rc == 0:
+            continue
+        log(f"ADOPT-GUARD PREPARE STALE {die} {h}: {out.strip()[:200]}")
+        if check:
+            ok = False
+            continue
+        rc2, out2 = remote(h, "--refresh")
+        rc3, out3 = remote(h, "--status")
+        log(f"ADOPT-GUARD PREPARE REFRESH {die} {h}: {out2.strip()[:160]} -> {'OK' if rc3 == 0 else 'STILL STALE'}")
+        ok = ok and rc3 == 0
+    log(f"ADOPT-GUARD prepare {die}: {'OK' if ok else 'FAIL closed'}")
+    return ok
+
+
 def guard_tree(cfg, die, hosts, check=False, run=sh, log=print):
     src = str((cfg["dies"][die].get("src")) or "")
     if not src or len(hosts) < 2:
@@ -157,6 +191,28 @@ def guard_tree(cfg, die, hosts, check=False, run=sh, log=print):
         log(f"ADOPT-GUARD TREE GAP {h}:{src} {' '.join(ds)}")
     log(f"ADOPT-GUARD tree {die}: {'OK' if not gaps else 'FAIL closed'}")
     return not gaps
+
+
+def published_tree_check(cfg, die, handoff=None):
+    """PUBTREE-1116 (COORD r284/r285 structural): a die that pins src_manifest "require" may only run on a PUBLISHED tree: the die's
+    tree_switch_<die>.json marker (TOOLS-CONVERGE) names exactly dies.<die>.src, and its src_manifest_sha is dies.<die>.src_manifest_hash.
+    A lane run copy (cp -al, shared inodes, drifting from main + overlay) never has a marker, so no adopt can point the wave at one again.
+    -> list of error strings ([] = ok or the die is not "require")."""
+    d = (cfg.get("dies") or {}).get(die) or {}
+    if str(d.get("src_manifest") or "") != "require":
+        return []
+    h = Path(handoff) if handoff else Path(os.path.expanduser("~/coord/lanes/handoff"))
+    mk = h / f"tree_switch_{die}.json"
+    try:
+        m = json.loads(mk.read_text())
+    except (OSError, ValueError):
+        return [f"{die}: no readable published-tree marker {mk} (src {d.get('src')} is not a published tree)"]
+    errs = []
+    if str(m.get("tree") or "") != str(d.get("src") or ""):
+        errs.append(f"{die}: src {d.get('src')} is not the published marker tree {m.get('tree')}")
+    if str(m.get("src_manifest_sha") or "") != str(d.get("src_manifest_hash") or ""):
+        errs.append(f"{die}: src_manifest_hash {str(d.get('src_manifest_hash'))[:12]} != marker {str(m.get('src_manifest_sha'))[:12]}")
+    return errs
 
 
 def manifest_check(cfg, die, hosts, run=sh, log=print):
@@ -182,11 +238,50 @@ def manifest_check(cfg, die, hosts, run=sh, log=print):
     return ok
 
 
+def tool_smoke(cfg, die, hosts, run=sh, log=print):
+    """TOOLSMOKE-1115 (COORD r152): the wave's first commands on the NEW tree, as a flag-level dry run on EACH gen host: bind.py bind /
+    kit-rtl and gen.py phys must accept every flag the wave passes (kit kit_wave.WAVE_TREE_TOOL_FLAGS) and kit_topology.py must
+    compile.  B6gE passed every other check and then failed 50 kit_rtl: its bind.py lacked --src-tree.  A failure refuses the switch."""
+    import kit_wave as K
+    src = str(cfg["dies"][die].get("src") or "")
+    if not src or cfg["dies"][die].get("tool_smoke") is False:
+        return True
+    cmd = K.tree_tool_smoke_cmd(src)
+    ok = True
+    for h in hosts:
+        rc, txt = run(["bash", "-c", cmd] if h == "localhost" else SSH + [h, "bash -c " + shlex.quote(cmd)], 300)
+        for ln in [l for l in (txt or "").splitlines() if l.startswith("TOOL_SMOKE FAIL")][:10]:
+            log(f"ADOPT-GUARD TOOL-SMOKE {h}:{src} {ln}")
+        if rc != 0 and "TOOL_SMOKE" not in (txt or ""):
+            log(f"ADOPT-GUARD TOOL-SMOKE {h}:{src} no verdict (rc {rc}): {(txt or '')[-200:]}")
+        ok = ok and rc == 0
+    log(f"ADOPT-GUARD tool-smoke {die}: {'OK' if ok else 'FAIL closed (nothing switched)'}")
+    return ok
+
+
+def preflight_all(cfg, die, hosts, files, run=sh, log=print):
+    """KITPACK-CLOSE-1115 (COORD r221, F3): after the per-file copy pass, resolve EVERY kit input (src inputs + the closed child
+    views the plan names + candidate hosts) on every gen host and refuse with the complete named list, not the first miss"""
+    import kit_input_preflight as KP
+    ents = KP.preflight(cfg, die, hosts, run, src_files=files)
+    for ln in (KP.refusal(die, ents).splitlines() if ents else []):
+        log("ADOPT-GUARD " + ln)
+    bad = KP.errors(ents)
+    log(f"ADOPT-GUARD preflight {die}: {'OK' if not bad else 'FAIL closed (' + str(len(bad)) + ' unresolved inputs, listed above)'}"
+        + (f" ({len(ents) - len(bad)} unclosed-view warnings)" if len(ents) > len(bad) else ""))
+    return not bad
+
+
 def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
     import kit_wave as K
     d = cfg["dies"][die]
     hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
+    for e in published_tree_check(cfg, die):
+        log(f"ADOPT-GUARD PUBTREE {e}")
+        return False
     if not manifest_check(cfg, die, hosts, run, log):
+        return False
+    if not tool_smoke(cfg, die, hosts, run, log):
         return False
     _trees, files = K.src_inputs(cfg, die)
     files = sorted(set(files))
@@ -201,9 +296,11 @@ def guard(cfg, die, check=False, run=sh, log=print, no_tree=False):
         for f in v:
             log(f"ADOPT-GUARD MISSING {h}:{f}")
     log(f"ADOPT-GUARD {die}: {'OK' if not left_n else 'FAIL closed: ' + str(left_n) + ' still missing'}")
+    pre_ok = preflight_all(cfg, die, hosts, files, run, log)
     tree_ok = True if no_tree else guard_tree(cfg, die, hosts, check, run, log)
     sha_ok = plan_sha_check(cfg, die, hosts, run, log)
-    return left_n == 0 and tree_ok and sha_ok
+    prep_ok = prepare_check(cfg, die, hosts, check, run, log)
+    return left_n == 0 and pre_ok and tree_ok and sha_ok and prep_ok
 
 
 if __name__ == "__main__":
@@ -218,5 +315,8 @@ if __name__ == "__main__":
     if a.plan_only:
         d = cfg["dies"][a.die]
         hosts = list(d.get("gen_hosts") or cfg.get("gen_hosts") or d.get("hosts") or cfg.get("hosts") or [])
-        sys.exit(0 if plan_sha_check(cfg, a.die, hosts) else 1)
+        pub = published_tree_check(cfg, a.die)
+        for e in pub:
+            print(f"MISMATCH PUBTREE {e}")
+        sys.exit(0 if (not pub and plan_sha_check(cfg, a.die, hosts) and prepare_check(cfg, a.die, hosts, True)) else 1)
     sys.exit(0 if guard(cfg, a.die, a.check, no_tree=a.no_tree) else 1)

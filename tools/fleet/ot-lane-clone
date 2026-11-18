@@ -1,132 +1,69 @@
 #!/usr/bin/env python3
-"""ot-lane-clone: the ONE way a lane gets a git clone (FABLE-FLOW-1000 class 8, COORD 11-15).
+"""ot-lane-clone [--ref REF] [--cone PATH,...] DEST   (FLEET-OPS-R, COORD FABLE-FLOW-0700 (3))
+A lane's working checkout of main as a sparse git worktree of ONE warm bare repo per host, not a raw checkout: two raw 49 GB checkouts filled epyc7
+(41 -> 1 GB in 12 min).  Default cone = tools + rtl (about 1.5 GB).  Steps: (1) warm bare repo $OT_WARM (default <scratch2>/claude/warm/OpenTallas.git; made once with
+git clone --bare --filter=blob:none from OT_LANE_ORIGIN, then only fetched), (2) `git worktree add --no-checkout --detach DEST REF`, (3) sparse-checkout cone, (4) checkout.
+Refuses DEST on a disk with less than OT_LANE_MIN_FREE_GB (default 100) free, DEST outside /srv/opentallas-scratch*, an existing non-empty DEST.  --dry prints the plan.
+To widen the cone later: git -C DEST sparse-checkout add <dir>   (never a full checkout)."""
+import argparse, os, subprocess, sys
 
-origin = the lane mirror on intel2 (/srv/opentallas-scratch2/git/OpenTallas.git, see ot-git-mirror), on every host.  Never
-the owner checkout ~/OpenTallas (hub:OpenTallas): 24 lane clones used it as origin and pushed 68 claude/* refs into it on
-11-15.  The mirror takes claude/* pushes only and forwards them to GitHub; main lands only through the merge queue.
-
-usage:
-  ot-lane-clone DIR [-b claude/<lane>-<date>] [--base main] [--sparse PATH ...]
-      partial clone (blob:none) of the mirror; -b creates the lane branch on origin/<base>
-  ot-lane-clone --fix DIR ...      repoint an existing clone's origin to the mirror (old origin kept as remote 'old-origin')
-  ot-lane-clone --audit ROOT ...   list git clones under ROOTs (depth 4) whose origin is not the mirror
-Each clone gets a pre-push hook that refuses any ref but refs/heads/claude/* and any remote but the mirror.
-"""
-import argparse
-import os
-import socket
-import subprocess as S
-import sys
-from pathlib import Path
-
-MIRROR_HOST = os.environ.get("OT_LANE_MIRROR_HOST", "intel2")
-MIRROR_PATH = "/srv/opentallas-scratch2/git/OpenTallas.git"
+DEFAULT_CONE = "tools,rtl"
+ORIGIN = os.environ.get("OT_LANE_ORIGIN", "ubuntu@185.8.106.226:/srv/opentallas-scratch2/git/OpenTallas.git")
+WARM = os.environ.get("OT_WARM", "/srv/opentallas-scratch2/claude/warm/OpenTallas.git")
+MIN_FREE_GB = float(os.environ.get("OT_LANE_MIN_FREE_GB", "100"))
 
 
-def mirror_url():
-    if os.environ.get("OT_LANE_MIRROR"):
-        return os.environ["OT_LANE_MIRROR"]
-    if socket.gethostname().split(".")[0] == MIRROR_HOST and Path(MIRROR_PATH).is_dir():
-        return MIRROR_PATH
-    return f"{MIRROR_HOST}:{MIRROR_PATH}"
+def free_gb(path):
+    p = path
+    while not os.path.exists(p) and p != "/":
+        p = os.path.dirname(p)
+    s = os.statvfs(p)
+    return s.f_bavail * s.f_frsize / 2**30
 
 
-PRE_PUSH = r"""#!/bin/bash
-# ot-lane-clone: lanes push claude/* branches to the lane mirror only (never main, never the owner checkout)
-want=%(url)s
-if [ "$2" != "$want" ]; then
-  echo "ot-lane-clone: REFUSED push to $2: lanes push only to the lane mirror $want (ot-lane-clone --fix this clone)"; exit 1
-fi
-while read -r lref lsha rref rsha; do
-  case "$rref" in refs/heads/claude/*) ;; *) echo "ot-lane-clone: REFUSED $rref: push claude/* branches only"; exit 1;; esac
-done
-exit 0
-"""
+def plan(dest, ref, cone, warm=WARM, origin=ORIGIN):
+    """-> [argv] the commands, in order (pure: tests check it)"""
+    steps = []
+    if not os.path.isdir(warm):
+        steps.append(["git", "clone", "--bare", "--filter=blob:none", origin, warm])
+    # COORD 11-17 (epyc2: the fetch refused to update a branch a retired lane's worktree still had checked out): the warm repo fetches into refs/remotes/origin/*, which no worktree can
+    # have checked out, never into refs/heads/*.  A lane clone is a DETACHED worktree of origin/<ref>, so no lane ever holds a branch of the warm repo either.
+    steps.append(["git", "-C", warm, "fetch", "-q", "origin", "+refs/heads/*:refs/remotes/origin/*"])
+    if not ref.startswith(("refs/", "origin/")) and len(ref) < 40:
+        ref = "refs/remotes/origin/" + ref
+    steps += [["git", "-C", warm, "worktree", "add", "--no-checkout", "--detach", dest, ref],
+              ["git", "-C", dest, "sparse-checkout", "init", "--cone"],
+              ["git", "-C", dest, "sparse-checkout", "set", *cone],
+              ["git", "-C", dest, "checkout", "-q"]]
+    return steps
 
 
-def git(*a, cwd=None, check=True):
-    p = S.run(["git", *a], cwd=str(cwd) if cwd else None, capture_output=True, text=True)
-    if check and p.returncode:
-        raise SystemExit(f"git {' '.join(a)[:160]}: {(p.stderr or p.stdout).strip()[-400:]}")
-    return p.stdout.strip()
+def check(dest, min_free=None):
+    """-> '' or why not"""
+    dest = os.path.abspath(dest); min_free = MIN_FREE_GB if min_free is None else min_free
+    if not dest.startswith("/srv/opentallas-scratch"):
+        return "DEST must be under /srv/opentallas-scratch*"
+    if os.path.exists(dest) and os.listdir(dest):
+        return "DEST exists and is not empty"
+    if free_gb(dest) < min_free:
+        return "only %.0f GB free < OT_LANE_MIN_FREE_GB %g" % (free_gb(dest), min_free)
+    return ""
 
 
-def hook(d, url):
-    gd = Path(git("rev-parse", "--absolute-git-dir", cwd=d))
-    h = gd / "hooks" / "pre-push"
-    h.parent.mkdir(parents=True, exist_ok=True)
-    tmp = h.with_suffix(".tmp")
-    tmp.write_text(PRE_PUSH % {"url": "'" + url.replace("'", "'\\''") + "'"})
-    tmp.chmod(0o755)
-    os.replace(tmp, h)
-
-
-def clone(a):
-    url, d = mirror_url(), Path(a.dir)
-    if d.exists() and any(d.iterdir()):
-        raise SystemExit(f"{d} exists and is not empty (use --fix for an existing clone)")
-    git("clone", "-q", "--filter=blob:none", "--no-checkout", url, str(d))
-    git("config", "remote.origin.pushurl", url, cwd=d)
-    git("config", "push.default", "current", cwd=d)
-    if a.sparse:
-        git("sparse-checkout", "set", "--cone", *a.sparse, cwd=d)
-    if a.branch:
-        if not a.branch.startswith("claude/"):
-            raise SystemExit("lane branches are claude/<lane>-<date>")
-        git("checkout", "-q", "--no-track", "-b", a.branch, f"origin/{a.base}", cwd=d)
-    else:
-        git("checkout", "-q", a.base, cwd=d)
-    hook(d, url)
-    print(f"{d}: origin {url}, branch {a.branch or a.base} @{git('rev-parse', '--short=11', 'HEAD', cwd=d)}")
-    return 0
-
-
-def fix(dirs):
-    url = mirror_url()
-    for d in map(Path, dirs):
-        old = git("remote", "get-url", "origin", cwd=d, check=False)
-        if old != url:
-            if old and "old-origin" not in git("remote", cwd=d).split():
-                git("remote", "add", "old-origin", old, cwd=d)
-                git("config", "remote.old-origin.pushurl", "DISABLED", cwd=d)
-            git("remote", "set-url", "origin", url, cwd=d)
-        git("config", "--unset-all", "remote.origin.pushurl", cwd=d, check=False)
-        git("config", "remote.origin.pushurl", url, cwd=d)
-        hook(d, url)
-        print(f"{d}: origin {old or '-'} -> {url}")
-    return 0
-
-
-def audit(roots):
-    url, bad = mirror_url(), 0
-    for r in map(Path, roots):
-        for g in sorted(set(r.glob(".git")) | set(r.glob("*/.git")) | set(r.glob("*/*/.git")) | set(r.glob("*/*/*/.git"))):
-            d = g.parent
-            o = git("remote", "get-url", "origin", cwd=d, check=False)
-            if o != url:
-                bad += 1
-                print(f"{d}\torigin={o or '-'}")
-    print(f"{bad} clone(s) whose origin is not {url}")
-    return 1 if bad else 0
-
-
-def main():
+def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("dir", nargs="*")
-    ap.add_argument("-b", "--branch", default="")
-    ap.add_argument("--base", default="main")
-    ap.add_argument("--sparse", nargs="+", default=[])
-    ap.add_argument("--fix", action="store_true")
-    ap.add_argument("--audit", action="store_true")
-    a = ap.parse_args()
-    if not a.dir:
-        ap.error("DIR required")
-    if a.fix:
-        return fix(a.dir)
-    if a.audit:
-        return audit(a.dir)
-    a.dir = a.dir[0]
-    return clone(a)
+    ap.add_argument("dest"); ap.add_argument("--ref", default="main"); ap.add_argument("--cone", default=DEFAULT_CONE)
+    ap.add_argument("--dry", action="store_true")
+    a = ap.parse_args(argv)
+    dest = os.path.abspath(a.dest); why = check(dest)
+    if why:
+        print("ot-lane-clone: refused: " + why, file=sys.stderr); return 2
+    steps = plan(dest, a.ref, [c for c in a.cone.split(",") if c])
+    for s in steps:
+        print("+ " + " ".join(s), file=sys.stderr)
+        if not a.dry and subprocess.run(s).returncode:
+            print("ot-lane-clone: step failed", file=sys.stderr); return 1
+    return 0
 
 
 if __name__ == "__main__":

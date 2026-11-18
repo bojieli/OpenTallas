@@ -583,7 +583,19 @@ def main():
                     help='(k) element cores take the partition rst_n (wavefront); also usable alone with --from')
     ap.add_argument('--from', dest='from_sv', help='with --core-reset-wavefront: apply (k) only to this generated '
                     'plan contents file (e.g. the checked-in *_plan_kit.sv) and write --out')
+    ap.add_argument('--colrelay-p1', action='store_true',
+                    help='with --from and --master col_h10: emit opt-in COLRELAY_P1 depths, coherent control/tag stages and per-sink cycle ledger')
     a = ap.parse_args()
+    if a.colrelay_p1:
+        if not a.from_sv or a.master != 'col_h10':
+            ap.error('--colrelay-p1 needs --from and --master col_h10')
+        from frame_colrelay_depth import transform
+        txt, ledger = transform(Path(a.from_sv).read_text())
+        ledger['source'] = a.from_sv
+        Path(a.out).write_text(txt)
+        Path(a.map).write_text(json.dumps(ledger, indent=2) + '\n')
+        print('COLRELAY_P1', len(ledger['groups']), 'sink entries; default parameter remains zero')
+        return
     if a.from_sv and a.qb_pin_cycle:
         src = Path(a.from_sv).read_text()
         log = []

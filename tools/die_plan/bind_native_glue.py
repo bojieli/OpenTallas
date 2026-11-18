@@ -10,6 +10,8 @@ import re
 from pathlib import Path
 import bind_elab as E
 from native_mem2reg import mark_mem2reg
+from native_memwr_merge import merge_memwr
+import os
 
 # $mem_v2 / $shiftx (Codex 861); TOK-SCHED 10-25 adds the remaining combinational word-level primitives that the
 # current S81 dissolved parents (ot_s81sl_vp, dsdv_svc_att, dsdv_svc_rs_c, ot_hdc_v41x_attn_s) carry and _glue does not
@@ -101,11 +103,21 @@ class NativeGlue:
                             [self.directory], mem_gb=2)
             except E.ElabError as exc:
                 raise NativeGlueError(str(exc)) from exc
+            merged = []
             if cell.ytype == "$mem_v2":
                 # write_verilog expands every per-bit write enable into its own statement (S81 svc hi: 4096 $memwr on one
                 # 256 x 40 memory); register-ise such arrays before Yosys's superlinear memory passes (exact, see native_mem2reg)
                 text, marked = mark_mem2reg(sv.read_text())
-                if marked:
+                # S81-SVC-SYNTH 11-15: the same per-bit statements stall canonicalize (PROC_PRUNE/PROC_DFF, hours) even as
+                # registers; merge each run of one port into chunk-wide read-modify-write statements (exact, see native_memwr_merge).
+                # mem2reg is decided on the per-bit count BEFORE the merge: a 262144-bit memory left as $mem fails ORFS
+                # SYNTH_MEMORY_MAX_BITS (svc_hi t3, 37 min into 1_2_yosys), the register form is what the kits have always had.
+                if os.environ.get("OT_NATIVE_MEMWR_MERGE", "1") != "0":
+                    text, merged = merge_memwr(text)
+                    if merged:
+                        (self.directory / (module + ".memwr_merge.txt")).write_text(
+                            "".join(f"{m} {b} -> {a}\n" for m, b, a in merged))
+                if marked or merged:
                     sv.write_text(text)
             self.cache[key] = module
             self.files.append(sv)

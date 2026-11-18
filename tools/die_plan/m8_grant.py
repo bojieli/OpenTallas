@@ -230,12 +230,13 @@ def _runs(ks):
     return out
 
 
-def _pick(free, want, pg, n):
+def _pick(free, want, pg, n, shift=0):
     """`want` tracks from `free`, the ones nearest a PG-blocked track first (die tracks hug the stripes: one shielded
-    side, type tracks stay in contiguous runs); ties by index."""
+    side, type tracks stay in contiguous runs); ties by index.  shift (tracks, default 0): the reference PG tracks are moved by
+    this much (r153 fix 4 grant phase: the die tracks then hug the shifted band, so the type tracks do not sit over the M6 pair)."""
     if want <= 0:
         return set()
-    pgs = sorted(pg)
+    pgs = sorted(k + shift for k in pg)
 
     def dist(k):
         if not pgs:
@@ -247,21 +248,22 @@ def _pick(free, want, pg, n):
     return set(sorted(free, key=lambda k: (dist(k), k))[:want])
 
 
-def grant(P, tn, guides=None, ndr="4w", guide_sha=None, pg_rects=None, layer=LAYER):
+def grant(P, tn, guides=None, ndr="4w", guide_sha=None, pg_rects=None, layer=LAYER, phase_um=0.0):
     p, off = _layer(P, layer)
+    shift = int(round(float(phase_um) / p)) if phase_um else 0
     w, h = P.types[tn]["outline_um"]
     n = n_tracks(P, tn, layer)
     pg = pg_tracks(P, tn, pg_rects, layer)
     free = [k for k in range(n) if k not in pg]
     ca = float((P.layer_budget.get("cut_avail") or {}).get(layer, 0.0))
-    die = set(_pick(free, int(math.ceil(ca * len(free) - 1e-9)), pg, n))
+    die = set(_pick(free, int(math.ceil(ca * len(free) - 1e-9)), pg, n, shift))
     kinds = {}
     route = 0
     if guides:
         dem, kinds = route_demand(P, tn, guides, ndr, layer=layer)
         for (t0, t1), v in sorted(dem.items()):
             band = [k for k in range(n) if t0 - 1e-9 <= off + k * p <= t1 + 1e-9 and k not in pg and k not in die]
-            take = set(_pick(band, v, pg | die, n))
+            take = set(_pick(band, v, pg | die, n, shift))
             route += len(take)
             die |= take
     blocked = pg | die
@@ -271,6 +273,8 @@ def grant(P, tn, guides=None, ndr="4w", guide_sha=None, pg_rects=None, layer=LAY
              die_route_tracks=route, type_tracks=len(typ), free_frac=round(len(typ) / n, 4) if n else 0.0,
              cut_avail=ca, ndr=ndr, route_kinds=kinds, guide_sha=guide_sha,
              die_runs=_runs(blocked), type_runs=_runs(typ))
+    if shift:
+        g["phase_um"] = float(phase_um)        # only a shifted grant carries the key (default grants stay byte-identical)
     if not _horiz(layer):
         g["dir"] = "V"               # M8 grants carry no dir key (byte-identical to the v1 grants already in kits)
     g["sha"] = hashlib.sha256(json.dumps({k: v for k, v in g.items() if k != "sha"}, sort_keys=True).encode()).hexdigest()[:16]
@@ -388,7 +392,8 @@ def grant_config(P, layer=LAYER):
         return None
     if c is True:
         c = {}
-    c = dict(enable=c.get("enable", True), types=c.get("types"), guide=c.get("guide"), ndr=c.get("ndr", "4w"))
+    c = dict(enable=c.get("enable", True), types=c.get("types"), guide=c.get("guide"), ndr=c.get("ndr", "4w"),
+             phase_um=float(c.get("phase_um", 0.0)))
     return c if c["enable"] else None
 
 
@@ -441,7 +446,7 @@ def kit_grant(P, tn, layer=LAYER, force=False):
         if not gp.is_file():
             raise FileNotFoundError(f"type {tn}: layer_budget.{GRANT_KEY[layer]}.guide {gp} missing")
         G, gsha = _guides(str(gp))
-    g = grant(P, tn, G, c["ndr"], gsha, layer=layer)
+    g = grant(P, tn, G, c["ndr"], gsha, layer=layer, phase_um=c.get("phase_um", 0.0))
     if layer == "M9":
         check_m9_clock(P, tn, G, g, c["ndr"])
     return g

@@ -268,6 +268,9 @@ SCHEMA = {
                     "type_m8_grant": {"type": ["boolean", "object"], "additionalProperties": False, "properties": {
                         "enable": {"type": "boolean"}, "types": {"type": "array", "items": {"type": "string"}},
                         "guide": {"type": "string"}, "ndr": {"enum": ["2w", "4w", "8w"]},
+                        # r153 fix 4 (FABLE-PD-DRT-1350): shift of the die-track reference (um, a multiple of the layer pitch is
+                        # best; rounded to tracks): the die tracks hug the PG band moved by this much; absent / 0 = unchanged
+                        "phase_um": {"type": "number"},
                         "note": {"type": "string"}}},
                     # WAVE-RECIPE-1 11-14 (OWNER ruling: types may use the remaining M8/M9, die infra shapes imported as
                     # obstructions): the same grant on M9 (vertical tracks); an M9 kit also carries the M8 grant
@@ -407,6 +410,8 @@ SCHEMA = {
                     "phy_pg_west_notch_um": {"type": "number", "minimum": 0},
                     # S81-RCK-3 11-06: same for the south edge (lowest macro edge minus this halo, row grid)
                     "phy_pg_south_notch_um": {"type": "number", "minimum": 0},
+                    # HEAD-99 rp21z19 (FIX-HEAD-SERDES-BAND): PHY PG region floor (type y, um): region starts at max(domain, this)
+                    "phy_pg_floor_um": {"type": "number", "minimum": 0},
                     # S81-TYPES-6 11-07 (gen_phys.phy_pg_clip, COORD 23:0x (a)): PHY PG region + hard blockage clipped to
                     # the PHY macro bounding box grown by this PG landing margin (um) on all four sides
                     "phy_pg_clip_um": {"type": "number", "minimum": 0},
@@ -492,6 +497,9 @@ SCHEMA = {
                     # DIE-HEAD-5 PGCUT 10-28 (DRT-TRIAL-1, opt-in): cut the kit M6 PG straps over the interior M5
                     # signal pins (in-core island pins) of every hard core whose LEF is known (gen_phys.pg_island_cuts)
                     "pg_island_cut": {"type": "boolean"},
+                    # PG-AWARE-1: force the landing-pin PG access rule on (true) or off (false) for this type, overriding
+                    # the signed-type exemption list pg_pin_rule_signed.json (landing_contract.pg_rule_applies)
+                    "pg_pin_rule": {"type": "boolean"},
                     # DIE-HEAD-17 10-28 (opt-in): register clock spine + local trees + core early-tap branches in PRE_CTS
                     # (gen_phys copies reg_spine.json/.py/.tcl into the kit; spec documented in reg_spine.py)
                     "reg_spine": {"type": "object", "required": ["trunk"], "properties": {
@@ -575,6 +583,8 @@ SCHEMA = {
                                        "width": {"type": "integer", "minimum": 1},
                                        "stations": {"type": "integer", "minimum": 1},
                                        "regs_um": {"type": "array", "items": _xy},   # station sites, type frame
+                                       "explicit_stage0": {"type": "boolean"},  # opt-in consumer of planned station0
+                                       "keep_firm": {"type": "boolean"},  # opt-in preserve FT sites through DPL
                                        "bit_sites_um": {"type": "array", "items": {"type": "array", "items": _xy}},
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
@@ -606,10 +616,26 @@ SCHEMA = {
                         "die_islands_um": {"type": "array", "items": _rect},
                         # FALLBACK-HEAD-2 (opt-in): reserved site rectangles in the type frame (gen_phys
                         # reserved_sites_tcl): die_clock_tree = hard, landing_ring_bank = GPL-only after the rings
+                        "tap_clear_um": _pos,
+                        "tap_reserved_um": {"type": "array", "items": _rect},
+                        # S81-BANDTAP-1115: tap windows - rects no ring band may cover, so a legal tap site exists for sinks no tap reaches
+                        "band_keepout_um": {"type": "array", "items": _rect},
+                        # S81-BANDTAP-1115 opt-in: ring band points within this L1 reach of a planned tap / band_tap_sites_um
+                        "band_tap_reach_um": _pos,
+                        # S81-BANDTAP-1115: frozen landing bands {bus: band dict with rect_um[/rects_um]}, used verbatim by compose
+                        "band_fixed_um": {"type": "object"},
+                        # S81-BANDTAP-1115 r186: {bus: {region_um: rect, min_area_um2: n, no_reach: bool}} band placement for one bus
+                        "band_place_um": {"type": "object"},
+                        # S81-BANDTAP-1115: tap windows (holes) cut in frozen bands: where S81-PHYT1 puts taps for uncovered band points
+                        "band_tap_windows_um": {"type": "array", "items": _rect},
+                        "band_tap_sites_um": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}},
                         "reserved_sites_um": {"type": "array", "items": {"type": "object", "required": ["rect_um", "kind"],
                             "properties": {"rect_um": _rect, "kind": {"enum": ["die_clock_tree", "landing_ring_bank", "channel_keepout"]},
                                            "ref": {"type": "string"},
-                                           "route_layers": {"type": "string"}}}},
+                                           "route_layers": {"type": "string"},
+                                           # CLKSITE-TAP-ESCAPE-1117: per-site opt-outs of the tap escape column / E-W placement pad
+                                           "tap_escape": {"type": "boolean"},
+                                           "edge_pad_sites": {"type": "integer", "minimum": 0}}}},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
@@ -668,7 +694,18 @@ SCHEMA = {
                         # CLOCK-RESET group form): every sink matching re goes with its group (capture 1 = key) to the
                         # tap nearest the group centroid.  KW-FIX-45 11-12: the key was emitted but not in the schema.
                         "tap_group": {"type": "object", "additionalProperties": False, "required": ["re"],
-                            "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"}}},
+                            "properties": {"re": {"type": "string", "minLength": 3}, "note": {"type": "string"},
+                                "fixed_taps": {"type": "object", "propertyNames": {"pattern": "^[A-Za-z0-9_./-]+$"},
+                                    "additionalProperties": _name}}},
+                        # Default-off (HEAD-SERDES-1115 11-15, gen_phys.private_leaf_exports -> OT_PRIVATE_LEAF_LIKE/RE,
+                        # private_leaf.tcl, run_kit.sh post-CTS step): clone the leaf clock buffer that drives the anchor
+                        # instance's clock pin (a macro) and move only the sinks matching re onto the clone: they get the
+                        # anchor's clock arrival on a leaf of their own.  One row per type.
+                        "private_leaf": {"type": "array", "minItems": 1, "maxItems": 1,
+                            "items": {"type": "object", "additionalProperties": False, "required": ["like", "re"],
+                                "properties": {"like": {"type": "string", "minLength": 1},
+                                               "re": {"type": "string", "minLength": 3},
+                                               "note": {"type": "string"}}}},
                         # Default-off: short reg-to-reg pair tap affinity before CTS (QC-TYPES-6 11-07).
                         "tap_pair_affinity": {"type": "object", "additionalProperties": False,
                             "properties": {"radius_um": _pos,
@@ -884,6 +921,21 @@ SCHEMA = {
                                            for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
+                        # Measured J=1 synchronous entry window only: one falling pre-capture per input.
+                        "pin_entry_fall": {"type": "boolean"},
+                        # FABLE-FIX-HEAD-RESET 11-17: strap-selected rising/falling capture + local handoff
+                        # (pin_entry_phase.py); needs the 1-bit id_strap strap_rst_ph; instances give reset_entry_phase.
+                        "pin_entry_phase": {"type": "boolean"},
+                        # Exact physical input-to-capture technology chain; no new FF/cycle.
+                        "pin_entry_delay": {"type": "object", "additionalProperties": False,
+                            "required": ["cell", "reset", "start", "reset_sites_um", "start_sites_um", "max_hop_um"],
+                            "properties": {
+                                "cell": {"enum": ["BUFx4_ASAP7_75t_R"]},
+                                "reset": {"type": "integer", "minimum": 0},
+                                "start": {"type": "integer", "minimum": 0},
+                                "reset_sites_um": {"type": "array", "items": _xy},
+                                "start_sites_um": {"type": "array", "items": _xy},
+                                "max_hop_um": {"type": "number", "exclusiveMinimum": 0}}},
                         "pin_root_copies": {"type": "object", "additionalProperties": False,
                             "required": ["max_loads", "sites_um"], "properties": {
                                 "max_loads": {"type": "integer", "minimum": 1, "maximum": 48},
@@ -1016,6 +1068,9 @@ SCHEMA = {
                            # HEAD-BIND-4 10-27 (OWNER 10-25 option B): this INSTANCE's values of its type's declared
                            # partition ID straps (partition_types.<t>.id_straps), tied at the die top (gen_rtl.die_top)
                            "id_straps": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+                           # reset/START entry capture edge of this instance, in half cycles EARLIER than the nominal
+                           # next rising edge (type reset.pin_entry_phase); strap_rst_ph = value mod 2
+                           "reset_entry_phase": {"type": "integer", "minimum": -8, "maximum": 8},
                            "note": {"type": "string"}}}},
         "ports": {"type": "array", "items": {
             "type": "object", "required": ["id", "src", "dst", "width"],   # face/layers/window: or from the type
@@ -1125,6 +1180,7 @@ SCHEMA = {
                                    "type": "object", "additionalProperties": False, "required": ["TT", "FF", "tol"],
                                    "properties": {"TT": {"type": "number"}, "FF": {"type": "number"}, "tol": _nonneg}}}},
                                           "source": {"type": "string"}, "proof": {"type": "string"},
+                                          "schema": {"type": "string"}, "status": {"type": "string"},   # TOOLS-CONVERGE-1116: QC s29 plan carries both (old tree schema was an open object)
                                           "note": {"type": "string"}}},
             # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
             # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
@@ -1401,6 +1457,30 @@ SCHEMA["properties"]["clock"]["properties"]["core_input_lockup"] = {
                    "types": {"type": "array", "uniqueItems": True, "items": _name},
                    "pipe": {"type": "integer", "minimum": 0, "maximum": 4},
                    "pipe_except": {"type": "array", "uniqueItems": True, "items": _name},
+                   # r541 latch_except (bind.core_input_latch: "<port>" = port-wide, "<port>[<bit>]" = one bit) and the explicit
+                   # pad latch_except_hb4 (bind.core_input_latch_except_hb4): the code read the keys, the schema refused them
+                   # (plan_gate_pre SCHEMA-UNKNOWN-KEY), so no plan row could use them.
+                   "latch_except": {"type": "object", "additionalProperties": {
+                       "type": "array", "uniqueItems": True, "items": _name}},
+                   "latch_except_hb4": {"type": "object", "additionalProperties": {
+                       "type": "object", "additionalProperties": {"type": "integer", "minimum": 1, "maximum": 8}}},
+                   "note": {"type": "string"}}}
+# KV-PVGEN 11-15: plan clock.core_link_pipe, read by bind.core_link_pipe (absent = off, byte-identical RTL): D register
+# stages (ot_dp_dly u_pc_lp_*) on named input ports of bound leaves/cores of the listed types; cycles DECLARED in
+# bind_core_input_pipe.json.
+_LP_D = {"type": "integer", "minimum": 1, "maximum": 4}
+_LP_RUN = {"type": "object", "additionalProperties": False, "required": ["D", "bits"], "properties": {
+    "D": _LP_D, "bits": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}}}}
+SCHEMA["properties"]["clock"]["properties"]["core_link_pipe"] = {
+    "type": "object", "additionalProperties": False, "anyOf": [{"required": ["modules"]}, {"required": ["sources"]}],
+    "properties": {"modules": {"type": "object", "minProperties": 1, "additionalProperties": {
+                       "type": "object", "minProperties": 1, "additionalProperties": {"anyOf": [
+                           _LP_D, _LP_RUN, {"type": "array", "minItems": 1, "items": _LP_RUN}]}}},
+                   "sources": {"type": "object", "minProperties": 1, "additionalProperties": {
+                       "type": "object", "minProperties": 1, "additionalProperties": {"anyOf": [
+                           _LP_D, _LP_RUN, {"type": "array", "minItems": 1, "items": _LP_RUN}]}}},
+                   "all": {"type": "boolean"}, "except": {"type": "array", "uniqueItems": True, "items": _name},
+                   "types": {"type": "array", "uniqueItems": True, "items": _name},
                    "note": {"type": "string"}}}
 # DIE-KV-61/pc 11-02 (COORD ruling): authoritative die clock cohort record (e.g. KV tree_kv58); clock.mesh stays as
 # historical metadata when the cohort says mesh_status "historical".
@@ -1423,7 +1503,9 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["reset_replicate"] = {
     "type": "array", "items": {"type": "object", "additionalProperties": False,
         "properties": {"driver": {"type": "string"}, "driver_re": {"type": "string"}, "region_re": {"type": "string"},
-                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0}}}}
+                       "grid_um": {"type": "number", "exclusiveMinimum": 0}, "optional": {"type": "boolean"}, "min_loads": {"type": "integer", "minimum": 0},
+                       # FABLE-DIE-S81 11-16: private k-flop copy chain per region out of the driver's own depth (0 added cycles)
+                       "copy_depth": {"type": "integer", "minimum": 1}}}}
 # Opt-in: realize the already priced internal stations in logical and physical source alike.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["realize_internal_stations"] = {"type": "boolean"}
 # TYPE-SAFE-2 11-06: gen-time ft station spread opt-out (ft_spread.py; absent = on)
@@ -1483,6 +1565,22 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
 # the placement-basis FF hold repair before the first GRT (pregrt_ff_hold.py).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_etap"] = {"type": "boolean"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_ff_hold"] = {"type": "boolean"}
+# S81-COL-CLK-1116 (Spec 0, both opt-in): tap_core_src "tree" (with tap_core_etap) exports OT_TAP_CORE_SRC = tree; core_pin_lead_ps
+# declares a physical clock-pin arrival lead per hard-core module/pin (ROM clock pins), applied to the core_latency rows.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_core_src"] = {"enum": ["tree"]}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["core_pin_lead_ps"] = {
+    "type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": False, "required": ["module_re", "pin", "lead_ps"],
+    "properties": {"module_re": {"type": "string", "minLength": 1}, "pin": {"type": "string", "minLength": 1},
+                   "lead_ps": {"type": "number", "minimum": 0.001, "maximum": 1000}}}}
+# FABLE-FIX-S81-COLTAP 11-16 (default absent = byte-identical): clock.core_tap_lead_ps L = the in-type run every EARLY core tap of the
+# type is given between its port clk_c<k> and the core clock pin: the spine delivers the tap L ps earlier (core_tap_early_ps + L, FF
+# FF_TT_INSERTION_RATIO x L) and the kit's tap_balance pads the pin back to the type target.  Without it an override type (450) prices
+# early = insertion - 450 (COORD r104), i.e. zero run: the port-to-pin wire and any view latency above the declared insertion land the
+# core late with nothing to trim (col_h9_r2: element halves declared 465.39, view 533 / 553 -> effective 520 / 542 against 450).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["core_tap_lead_ps"] = {
+    "type": "number", "minimum": 0, "maximum": 450}
+# S81-SEAM-RST-1115 (default off): the last reset stage of an async clear takes the clock tap of its sinks (tap_reset_affinity.tcl).
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["tap_reset_affinity"] = {"type": "boolean"}
 # R-CLOCK (HOLD-TAP-1 11-13): the build is opt-in, pregrt_ff_hold true (COORD 07:2x); pregrt_hold_guard_ps = the
 # cross-tap route guard (default 45 ps).
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pregrt_hold_guard_ps"] = {
@@ -1739,6 +1837,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["params"] = {"type": "object", "minProperties": 1, "additionalProperties": {"type": ["integer", "string"]}}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells"] = {"type": "integer", "minimum": 0}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["cells_basis"] = {"type": "string"}
+# CORE-LAT-1 (DIE-QC-103 11-14): declared hard-core cycles {out:{bus:n}, in:{pin:n}, note}; tools/die_plan/core_latency.py
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["core_latency"] = {"type": "object"}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 # SUL0-PINFACE-1 (DIE-QC-97 11-10): per-hard-core pin-face chain (kit_istations.core_pin_stations)
@@ -1998,7 +2098,11 @@ def _id_strap_errors(obj):
         for n, x in v.items():
             if x >= 1 << d[n]:
                 errs.append(f"partition {p.get('name')}: id_strap {n}={x} does not fit {d[n]} bits")
-    return errs
+    try:
+        from .pin_entry_phase import plan_errors
+    except ImportError:
+        from pin_entry_phase import plan_errors
+    return errs + plan_errors(obj)
 
 
 # ------------------------------------------------------------------------------------------------------- loader
@@ -2574,11 +2678,19 @@ def core_tap_insertion_ps(tp, corner="TT"):
     return float(tp.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
 
 
+def core_tap_lead_ps(t, corner="TT"):
+    """the declared in-type run of the type's early core taps at a corner (clock.core_tap_lead_ps; FF = FF_TT_INSERTION_RATIO x
+    TT: it is a buffer chain); 0 when the type has no key."""
+    lead = float(((t or {}).get("clock") or {}).get("core_tap_lead_ps", 0.0) or 0.0)
+    return lead if _corner(corner) == "TT" else round(FF_TT_INSERTION_RATIO * lead, 3)
+
+
 def core_tap_early_ps(P, tp, corner="TT", t=None):
     """how early the spine delivers a core tap at a corner: max(0, core insertion - the common latency), both
     at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number).  `t` = the tap's type:
-    an override type (450) is priced against its own budget, not the die 250 (COORD r104)."""
-    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner, t))
+    an override type (450) is priced against its own budget, not the die 250 (COORD r104), plus the type's declared in-type
+    run clock.core_tap_lead_ps (core_tap_lead_ps; col: 200 -> 465.39 - 450 + 200 = 215.39)."""
+    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner, t) + core_tap_lead_ps(t, corner))
 
 
 def full_area_hard_ip(t):
@@ -2678,13 +2790,21 @@ TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step of
 TAP_STEP_UM = 2.16
 
 
-def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False, *, pin_snap=None, legal_axes=None):
+def type_tap_clear(t):
+    """S81-PHYT1 11-15 (FABLE-PD-S81-0850 lever 3): per-type clock.tap_clear_um (default TAP_CLEAR_UM 8.64).  A type whose
+    macro channels are 10.8-17.28 um wide fits no tap with an 8.64 um clear on each side; 4.32 does."""
+    v = (t.get("clock") or {}).get("tap_clear_um")
+    return TAP_CLEAR_UM if v is None else float(v)
+
+
+def tap_clear(t, x, y, taken=(), clear=None, strict=False, *, pin_snap=None, legal_axes=None):
     """S81-P8 10-23 (GEOM-REVIEW5 15:14 condition (b)): an R4 grid tap at a cell centre landed ON a ROM / hard-core
     macro in 4-10 of 10 interior pins of the S81 frame kits (h9_r1: all), so its root buffer sat on a macro.  Move the
     tap to the nearest point (rings of 2.16 um) that is >= `clear` from every hard_cores box of the type (a channel),
     inside the outline by `clear`, and >= `clear` from the taps already placed.  Types without hard cores, or whose
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
+    clear = type_tap_clear(t) if clear is None else clear
     w, h = t["outline_um"]
     # Density clock pins are consumed on PG-safe routing tracks. Their legal
     # candidate axes come from gen_phys, rather than an anchor lattice that
@@ -3294,6 +3414,19 @@ SCHEMA["properties"]["core_shape_exceptions"] = {"type": "array", "items": {
     "type": "object", "additionalProperties": False, "required": ["core", "old", "new", "reason", "measured_by"],
     "properties": {"core": {"type": "string", "minLength": 1}, "old": _wh, "new": _wh,
                    "reason": {"type": "string", "minLength": 1}, "measured_by": {"type": "string", "minLength": 1}}}}
+
+
+# DIE-S81-92 / FIX-RELAYPOLY 11-14: per-type relay waypoint polylines (opt-in, absent = unchanged kits); gen_phys._relay_polylines reads it
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["relay_polylines"] = {
+    "type": "array", "items": {"type": "object", "required": ["group_re", "polyline_um"], "additionalProperties": False,
+    "properties": {"group_re": {"type": "string", "minLength": 1}, "sink": {"type": "string", "minLength": 1},
+                   "polyline_um": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}},
+                   "max_hop_um": {"type": "number"}}}}
+
+# DIE-S81-92 R-COL-2 (B3x2): plan budgets that gen_phys already reads (gutter_block.tcl) were not in the schema -> G0 schema ERROR x3
+SCHEMA["properties"]["budgets"]["properties"]["gutter_block_um"] = {"type": "number", "exclusiveMinimum": 0}
+SCHEMA["properties"]["budgets"]["properties"]["gutter_block_min_span_um"] = {"type": "number", "exclusiveMinimum": 0}
+SCHEMA["properties"]["budgets"]["properties"]["gutter_block_types"] = {"type": "array", "items": {"type": "string", "minLength": 1}}
 
 
 def main(argv):

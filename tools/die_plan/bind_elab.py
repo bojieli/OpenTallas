@@ -421,6 +421,9 @@ def lib_stubs(lib, out_path, hard_params=None):
             # blocks, so scan the body with them blanked.
             body_decl = re.sub(r"\bfunction\b.*?\bendfunction\b|\btask\b.*?\bendtask\b|\bgenerate\b.*?\bendgenerate\b",
                                ";", body, flags=re.S)
+            # Yosys write_verilog annotates non-ANSI ports with (* src = ... *).
+            # Attributes are not declarations; blank them before the semicolon-anchored scan.
+            body_decl = re.sub(r"\(\*.*?\*\)", " ", body_decl, flags=re.S)
             for st in re.finditer(r"(?:^|(?<=;))\s*((?:parameter|localparam|input|output|inout)\b[^;]*;)", body_decl):
                 txt = st.group(1)
                 if txt.startswith("localparam"):

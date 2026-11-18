@@ -606,13 +606,15 @@ module qfd_sys_face_lctx3_core #(
     reg  [31:0] tcyc;
     reg         armed_fault;
     wire        face_fault;
+    // QC-CBGLUE-1116: the token go's own copy of the face fault (face_fault_go == face_fault every cycle; see cal_fault_go)
+    wire        face_fault_go;
     // Anchor: the first token starts first_ofs edges after the forwarded epoch strobe (both dies count from the same
     // strobe, so their token starts align without a per-token handshake); every later token starts on the edge of the
     // token calendar's END (the compiled token period).  A go that finds the program not installed faults (no wait).
     reg  [31:0] ecnt; reg ewait, fe_q;
     wire        e_go = ewait && ecnt == 32'd1;
     wire        loop_go = ev_end && !halt;
-    assign t_go = (e_go || loop_go) && !face_fault;
+    assign t_go = (e_go || loop_go) && !face_fault_go;
     reg         go_fault, aborted;
     always @(posedge ck or negedge rst_loop)
         if (!rst_loop) aborted <= 1'b0; else if (halt) aborted <= 1'b1; else if (fwd_epoch && !fe_q) aborted <= 1'b0;
@@ -711,6 +713,7 @@ module qfd_sys_face_lctx3_core #(
 
     // ================================================================ STATUS / RESULT (D2D kind 15) + fab
     reg cal_fault;
+    wire cal_fault_set;
     // the sequencer's per-epoch ADMISSION start (layer 63, D2D_ADM_OFS after fwd_epoch) is not a T-calendar event;
     // every token / layer start must still coincide with the T image
     // DIE-QC-59Q: the sequencer's own start (cs_start, same edge as cs_layer), not the landing-padded output
@@ -736,9 +739,7 @@ module qfd_sys_face_lctx3_core #(
                 result_tag <= host_tag; result_gen <= host_generation; result_token <= seq_dc[49:32];
                 result_value <= seq_dc[31:0]; result_cycles <= tcyc;
             end
-            if (t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
-                (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
-                (cal_adm && t_running_q))
+            if (cal_fault_set)
                 cal_fault <= 1'b1;
             tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | face_fault;
         end
@@ -757,6 +758,19 @@ module qfd_sys_face_lctx3_core #(
     always @(posedge ck or negedge rst_obs)
         if (!rst_obs) obs_fault_q <= 1'b0;
         else if (obs_fault) obs_fault_q <= 1'b1;
+    assign cal_fault_set = t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
+                           (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
+                           (cal_adm && t_running_q);
+    // QC-CBGLUE-1116 (2026-11-16): duplicate of the sticky cal_fault for the token go only.  Measured on glue (post-CTS
+    // TT GRT RC): cal_fault -> face_fault -> t_go -> u_cal_t start / calendar state, ~170 endpoints, worst -436 ps,
+    // ~450 ps of buffering: the one cal_fault flop sits with its status consumers, far from the calendars.  Same D, same
+    // reset, same edge as cal_fault, so cal_fault_go == cal_fault and face_fault_go == face_fault in every cycle
+    // (0 added cycles); the copy is free to sit beside the go / calendar logic.
+    (* keep *) reg cal_fault_go;
+    always @(posedge ck or negedge rst_st)
+        if (!rst_st) cal_fault_go <= 1'b0;
+        else if (cal_fault_set) cal_fault_go <= 1'b1;
+    assign face_fault_go = boot_fault | prog_fault | cal_fault_go | emb_fault | prov_fault_q | rp_fault | head_tx_fault | head_mux_fault | armed_fault | go_fault | mu_hc_fault | obs_fault_q;
     assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | head_tx_fault | head_mux_fault | armed_fault | go_fault | mu_hc_fault | obs_fault_q;
     assign fault = face_fault;
 endmodule

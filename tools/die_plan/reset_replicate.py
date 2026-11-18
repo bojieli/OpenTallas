@@ -9,7 +9,8 @@ What: plan `partition_types[T].reset_replicate` = [{"driver": "u_d7_6_Y"        
                                                     "region_re": "^u_(.*?)(?:_\\d+|_sk)?$",   optional, group 1 = region
                                                     "grid_um": 300,                  optional, see below
                                                     "optional": true,                a type without the driver is a no-op
-                                                    "min_loads": 20}]                drivers with fewer loads are left alone
+                                                    "min_loads": 20,                 drivers with fewer loads are left alone
+                                                    "copy_depth": 3}]                optional, FABLE-DIE-S81 11-16, see below
 The driver `ot_dp_dly #(.W(1), .D(n)) u_x (.clk, .d(S), .q(x))` becomes
 
     ot_dp_dly #(.W(1), .D(n-1)) u_x (.clk, .d(S), .q(x))          common part (absent when n == 1: S feeds the copies)
@@ -20,6 +21,12 @@ and every load of x is re-pointed to the copy of ITS region.  Total stages from 
 gets the region "rest".  Region of a sink instance: with grid_um and a position for the instance (hard core origin from the
 plan, `positions`) the grid cell "g<ix>_<iy>" = core-tap neighbourhood; else the regex group (default: the instance name
 without its trailing relay index _<n> / _sk, so the legs u_y_rt_24a_0.._5 of one relay group share one copy).
+copy_depth k > 1 (FABLE-DIE-S81 11-16, col reset-copy class: the common flop -> region copy hop was 780..1,246 um in ONE
+cycle, -100..-151 ps routed on col_h9_r2): each region gets a private CHAIN of k kept flops u_x_r<i>_s0 .. _s<k-2>, u_x_r<i>
+taken from the driver's own depth (common part D(n-k); k is capped at n-1 so one common stage stays), so the way from the
+common flop to the loads of a region is k + 1 hops instead of 2.  Total stages stay n: 0 added cycles, same LATCHECK.  The
+chain flops are 2-pin nets end to end, so placement spreads them along the way (no site needed, works for regions
+without a plan position).  Absent or 1 = one copy per region, byte-identical to before.
 W must be 1 (a reset / flush level).  Pure text transform of the module `emit_type` returns; nothing happens unless the plan
 type carries the key (absent = byte-identical).
 usage: reset_replicate.py BOUND.sv SPEC.json [--positions POS.json] [-o OUT.sv]   (smoke / kit use)
@@ -152,6 +159,10 @@ def _one(lines, di, m, spec, positions):
     names = {r: f"{inst}_r{k}" for k, r in enumerate(sorted(allr))}
     wire = {r: (names[r].replace("u_", "", 1) if names[r].startswith("u_") else names[r]) for r in names}
     src = f"{q}[0]" if D > 1 else dexpr
+    kk = int(1 if spec.get("copy_depth") is None else spec["copy_depth"])           # FABLE-DIE-S81: stages of each region's private copy chain
+    if kk < 1:
+        raise ReplicateError(f"{inst}: copy_depth {kk} < 1")
+    kk = max(1, min(kk, D - 1))                         # keep one common stage (D == 1: single copy, S feeds the copies)
     new, leaf, made, blank = [], {r: 0 for r in allr}, set(), set()
 
     def clone(x, r, xr, skip):
@@ -198,18 +209,25 @@ def _one(lines, di, m, spec, positions):
     cells = []
     for r in sorted(allr):
         cells.append(f"    wire [0:0] {wire[r]};")
-        cells.append(f"    {CELL} {names[r]} (.clk({clk}), .d({src}), .q({wire[r]}[0]));  // S81-COLGEN-1 C2: region {r}"
+        prev = src
+        for j in range(kk - 1):
+            cells.append(f"    wire {wire[r]}_s{j};")
+            cells.append(f"    {CELL} {names[r]}_s{j} (.clk({clk}), .d({prev}), .q({wire[r]}_s{j}));  // FABLE-DIE-S81: chain"
+                         f" stage {j + 1} of {kk}, region {r}")
+            prev = f"{wire[r]}_s{j}"
+        cells.append(f"    {CELL} {names[r]} (.clk({clk}), .d({prev}), .q({wire[r]}[0]));  // S81-COLGEN-1 C2: region {r}"
                      f" ({leaf[r]} load(s)); {D} stage(s) total")
     new = cells + new
     if D > 1:
-        lines[di] = (f"{m['ind']}ot_dp_dly #(.W(1), .D({D - 1})) {inst} (.clk({clk}), .d({dexpr}), .q({q}));"
+        lines[di] = (f"{m['ind']}ot_dp_dly #(.W(1), .D({D - kk})) {inst} (.clk({clk}), .d({dexpr}), .q({q}));"
                      f"{m['tail']}  // S81-COLGEN-1: common part, last stage replicated per region")
     else:
         lines[di] = f"{m['ind']}// S81-COLGEN-1: {inst} replaced by {len(allr)} region copies (1 stage, same d)"
         if di_decl is not None:
             lines[di_decl] = ""
     lines[di + 1:di + 1] = new
-    row = dict(driver=inst, depth=D, common_depth=D - 1, copy_depth=1, regions=len(allr), copies=len(allr),
+    row = dict(driver=inst, depth=D, common_depth=D - kk if D > 1 else 0, copy_depth=kk, regions=len(allr), copies=len(allr),
+               chain_flops=len(allr) * kk,
                loads=len(uses), assign_splits=len(top) - len(dead), dead_assigns=len(dead), region_names=sorted(allr),
                loads_per_region=dict(sorted(leaf.items())), shared_rest=("rest" in allr))
     return lines, row
@@ -247,9 +265,11 @@ def main(argv):
         ap.add_argument("--region-re")
         ap.add_argument("--optional", action="store_true")
         ap.add_argument("--min-loads", type=int)
+        ap.add_argument("--copy-depth", type=int)
         a = ap.parse_args(argv[1:])
         spec = {"driver_re": a.driver_re}
-        for k, v in (("grid_um", a.grid_um), ("region_re", a.region_re), ("optional", a.optional or None), ("min_loads", a.min_loads)):
+        for k, v in (("grid_um", a.grid_um), ("region_re", a.region_re), ("optional", a.optional or None), ("min_loads", a.min_loads),
+                     ("copy_depth", a.copy_depth)):
             if v is not None:
                 spec[k] = v
         plan = json.load(open(a.plan))

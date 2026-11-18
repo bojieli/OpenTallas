@@ -35,7 +35,7 @@ def exercise(module, rows, extra=(), override=False, mem=80):
     run = Mock(return_value=(0, True))
     logs = io.StringIO()
     env = {'OT_RUN_NO_LOAD_HOLD': '1'} if override else {}
-    with patch.object(module, 'HOSTS', list(rows)), patch.object(module, 'probe', side_effect=lambda h,d: (h,rows[h])), \
+    with patch.object(module, 'HOSTS', list(rows)), patch.object(module, 'probe', side_effect=lambda h,d,spill_ok=False: (h,rows[h])), \
          patch.object(module, 'run', run), patch.object(module.sys, 'argv', ['ot-run','--mem',str(mem),'--threads','4',*extra,'--','true']), \
          patch.object(module.time, 'sleep', side_effect=Held), patch.dict(os.environ,env,clear=True), \
          contextlib.redirect_stderr(logs), contextlib.redirect_stdout(io.StringIO()):
@@ -90,7 +90,7 @@ class Rebalance(unittest.TestCase):
         module = load(Path(__file__).with_name('ot-run'))
         seq = [dict(a=row(40,10,128),b=row(10,10,128)), dict(a=row(40,10,128),b=row(200,10,128))]
         calls = []
-        def probe(h, d):
+        def probe(h, d, spill_ok=False):
             return h, seq[min(len(calls), 1)][h]
         def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, disk=None):
             calls.append((host, max_wait))
@@ -116,7 +116,7 @@ class Rebalance(unittest.TestCase):
                  patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(io.StringIO()):
                 with self.assertRaises(SystemExit) as ex:
                     module.main()
-            self.assertEqual(ex.exception.code, 75)
+            self.assertEqual(ex.exception.code, 78)     # FLOW-1700: a request that never started ends NOT-RUN / 78
             self.assertEqual(calls, want)
 
     def test_die_like_commands_get_die_priority(self):
@@ -134,7 +134,7 @@ class PickEligibility(unittest.TestCase):
             output = io.StringIO()
             env = {'OT_RUN_INCLUDE_HELD': '1'} if override else {}
             with patch.object(module, 'held_hosts', return_value={'agi': 'unstable host'}), \
-                 patch.object(module, 'probe', side_effect=lambda h,d: (h,rows[h])), \
+                 patch.object(module, 'probe', side_effect=lambda h,d,spill_ok=False: (h,rows[h])), \
                  patch.dict(os.environ, env, clear=True), contextlib.redirect_stdout(output):
                 module.status(list(rows))
             self.assertIn('job -> ' + expected, output.getvalue())
@@ -154,7 +154,7 @@ class PickEligibility(unittest.TestCase):
         module = load(Path(__file__).with_name('ot-run'))
         rows = dict(epyc=row(20, 70, 128), pve=row(104, 43, 28))
         output = io.StringIO()
-        with patch.object(module, 'probe', side_effect=lambda h,d: (h,rows[h])), \
+        with patch.object(module, 'probe', side_effect=lambda h,d,spill_ok=False: (h,rows[h])), \
              patch.dict(os.environ, {}, clear=True), contextlib.redirect_stdout(output):
             module.status(list(rows))
         self.assertIn('-> pve', output.getvalue())
@@ -180,7 +180,8 @@ class PickEligibility(unittest.TestCase):
         module = load(Path(__file__).with_name('ot-run'))
         result = exercise(module, dict(agi={**row(28, 10, 64), 'total_gb':126, 'floor_gb':25}), mem=168)
         self.assertIsNone(result['host'], result)
-        self.assertIn('no host qualifies', result['status'])
+        self.assertEqual(result["status"], 78)
+        self.assertIn("no host qualifies", result["log"])
 
     def test_mandatory_headroom_boundary_and_old_probe_compatibility(self):
         module = load(Path(__file__).with_name('ot-run'))
@@ -237,7 +238,7 @@ class LoadSpill(unittest.TestCase):
         rows = dict(e6=row(300, 289, 128))
         run = Mock(return_value=(0, True)); srun = Mock(return_value=0); splan = Mock(return_value=plan)
         neg = tempfile.mkdtemp()
-        with patch.object(module, 'HOSTS', ['e6', 'e5']), patch.object(module, 'probe', side_effect=lambda h, d: (h, rows[h]) if h in rows else (h, None)), \
+        with patch.object(module, 'HOSTS', ['e6', 'e5']), patch.object(module, 'probe', side_effect=lambda h, d, spill_ok=False: (h, rows[h]) if h in rows else (h, None)), \
              patch.object(module, 'run', run), patch.object(module, 'spill_plan', splan), patch.object(module, 'spill_run', srun), \
              patch.object(module, 'LOAD_SPILL_NEG', neg), patch.object(module, 'trigger_sweep', lambda: None), \
              patch.object(module.sys, 'argv', ['ot-run', '--mem', '32', '--threads', threads, '--dir', '/srv/opentallas-scratch/claude/x/src', '--', 'true']), \

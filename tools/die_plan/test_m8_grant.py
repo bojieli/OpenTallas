@@ -400,3 +400,20 @@ def test_m8_grant_needs_no_clock_guides(_no_m9_env):
 def test_kit_m9_off_by_default_byte_identical(_no_m9_env):
     with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
         assert _files(_kit(a)) == _files(_kit(b, OT_GEN_M9_GRANT="0"))
+
+
+def test_grant_phase_moves_the_die_tracks_and_default_is_unchanged():
+    """r153 fix 4 (FABLE-PD-DRT-1350): layer_budget.type_m8_grant.phase_um shifts the reference band the die tracks hug; absent = byte-identical"""
+    def mut(p):
+        p["die"]["layer_budget"] = dict(p["die"].get("layer_budget", {}), cut_avail={"M8": 0.4})
+    P = plan(mut)
+    tn = sorted(P.types)[0]
+    g0 = MG.grant(P, tn)
+    assert "phase_um" not in g0 and MG.grant(P, tn, phase_um=0.0) == g0
+    pitch = g0["pitch_um"]
+    g1 = MG.grant(P, tn, phase_um=pitch * 5)
+    assert g1["phase_um"] == pitch * 5 and g1["sha"] != g0["sha"]
+    assert g1["die_runs"] != g0["die_runs"]                       # the die tracks hug the shifted band
+    assert g1["pg_tracks"] == g0["pg_tracks"] and len(g1["die_runs"] and tracks(g1["die_runs"])) >= g1["pg_tracks"]
+    P2 = plan(lambda p: (mut(p), p["die"]["layer_budget"].update(type_m8_grant={"enable": True, "phase_um": pitch * 5})))
+    assert MG.grant_config(P2)["phase_um"] == pitch * 5 and MG.grant_config(plan(mut)) is None

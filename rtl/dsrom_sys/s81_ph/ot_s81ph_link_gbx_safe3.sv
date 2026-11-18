@@ -136,7 +136,8 @@ module ot_s81ph_link_gbx_safe3 #(
     // ============================================================== RX
     reg            bv, bm, bi;
     reg  [G-1:0]   bg;
-    reg  [1:0]     hunt;
+    // S81-CORES-R3 11-17 (COORD r580): binary state kept (no yosys FSM_RECODE) to match the signed netlist; synthesis attribute only, no function change.
+    (* fsm_encoding = "none" *) reg  [1:0]     hunt;
     reg  [1:0]     mc;
     reg  [G-1:0]   hold;
     wire           gb  = bv && !bi;

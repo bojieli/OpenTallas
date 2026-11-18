@@ -32,4 +32,17 @@ run mut_txiskew FAIL -DOT_S81HD_LEPK_MUT_TXISKEW $P
 run plan_c0   PASS $P -DCOL0_DUT=2
 run c0_only   PASS -DKTX_DUT=16\'h0000 -DKRX_DUT=16\'h0000 -DTXI_DUT=16\'h0000 -DPIN_DUT=0 -DPOUT_DUT=0 -DPLW_DUT=0 -DCOL0_DUT=4
 run mut_c0bit FAIL -DOT_S81HD_LEPK_MUT_C0BIT $P -DCOL0_DUT=2
+# HEAD-PLAN-R4 11-17 NF15f: the hop-halving tuple + the RX head rank (RXH), RXH alone, and two RXH mutants (must FAIL)
+F="-DKTX_DUT=16'h1111 -DKRX_DUT=16'h2660 -DTXI_DUT=16'h2442 -DPIN_DUT=6 -DPOUT_DUT=8 -DPLW_DUT=3 -DCOL0_DUT=2"
+# FABLE-PLAN-HEAD-NF15F 1: the NF15f tuple needs K-link credit depth >= the measured round trip (lanes 1/2 RX ~24):
+# KCRED 28 = production (slack on lanes 1/2), 24 = floor, 12 = the old depth (pair A/B release collision, FAIL).
+# The bench peer e-lane stays CORE_CRED 12 in every case (the peer type does not change).
+K="-DKCRED_DUT=28"
+run nf15f       PASS $F $K -DRXH_DUT=1
+run nf15f_norxh PASS $F $K
+run nf15f_k24   PASS $F -DKCRED_DUT=24 -DRXH_DUT=1
+run nf15f_k12   FAIL $F -DKCRED_DUT=12 -DRXH_DUT=1
+run rxh_only    PASS -DKTX_DUT=16\'h0000 -DKRX_DUT=16\'h0000 -DTXI_DUT=16\'h0000 -DPIN_DUT=0 -DPOUT_DUT=0 -DPLW_DUT=0 -DRXH_DUT=1
+run mut_rxhbit  FAIL -DOT_S81HD_LEPK_MUT_RXHBIT  $F $K -DRXH_DUT=1
+run mut_rxhskew FAIL -DOT_S81HD_LEPK_MUT_RXHSKEW $F $K -DRXH_DUT=1
 echo BENCH_DONE

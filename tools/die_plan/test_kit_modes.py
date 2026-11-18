@@ -205,3 +205,41 @@ def test_kit_copy_imports_outside_repo():
     ns = {"__name__": "kit_modes_copy", "__file__": "/work/kit_modes.py"}
     exec(compile(src, "/work/kit_modes.py", "exec"), ns)
     assert ns["HERE"] == Path("/work") and ns["main"](["check", "/nonexistent-kit", "--step", "grt"]) == 2
+
+
+@pytest.mark.parametrize("plan,no_hold,corner,ok", [
+    ("/work/hold_plan.tsv", "0", "", True),
+    ("", "0", "", False),
+    (None, "0", "", False),
+    (None, "1", "", True),
+    ("/work/hold_plan.tsv", "0", "ff", False),
+])
+def test_tc_eco_static_hold_plan_keeps_corner_guard(plan, no_hold, corner, ok):
+    import subprocess
+    script = "set ::env(CORNERS) tc\n"
+    script += "set ::env(OT_PRD_NO_HOLD) {" + no_hold + "}\n"
+    script += "set ::env(OT_VCLK_CORNER) {" + corner + "}\n"
+    if plan is not None:
+        script += "set ::env(OT_PRD_HOLD_PLAN) {" + plan + "}\n"
+    script += "proc all_clocks {} {return vclk}\nproc get_property {args} {return {}}\n"
+    script += "if {[catch {source {" + str(HERE / "kit_modes_eco.tcl") + "}} err]} {puts $err; exit 2}\n"
+    result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert (result.returncode == 0) == ok, result.stdout + result.stderr
+    if not ok:
+        assert "KIT_MODES FAIL" in result.stdout
+
+
+def test_static_hold_plan_dispatch_cannot_call_timing_driven_hold(tmp_path):
+    import subprocess
+    text = (HERE / "post_route_drv/prd_hook.tcl").read_text()
+    start = text.index("if {[info exists ::env(OT_PRD_HOLD_PLAN)]")
+    end = text.index("# Verify the entire RC-calibration dispatch", start)
+    # Execute the actual dispatch with a static-plan insert stub; any global hold call is fatal.
+    (tmp_path / "hold_eco_internal_insert.tcl").write_text("puts STATIC_INSERT\n")
+    script = "set ::env(OT_PRD_HOLD_PLAN) /work/hold_plan.tsv\nset ::env(OT_PRD_NO_HOLD) 0\n"
+    script += "set _here {" + str(tmp_path) + "}\nset _pass 1\nset args {}\n"
+    script += "proc repair_timing {args} {error WRONG_CORNER_HOLD}\n"
+    script += text[start:end]
+    result = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert result.returncode == 0 and not result.stderr, result.stdout + result.stderr
+    assert "STATIC_INSERT" in result.stdout

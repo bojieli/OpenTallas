@@ -1169,7 +1169,7 @@ def test_stage_so_read_only_tag_tools_with_kit_override(tmp_path):
 
 def test_hold_repair_target_default_is_5():
     """COORD 11-09 stopgap: the repair aims 5 ps above 0; the gate (FF hold slack >= 0) does not use this number."""
-    assert E.HOLD_MARGIN_PS == 5
+    assert E.HOLD_MARGIN_PS == 10
 
 
 

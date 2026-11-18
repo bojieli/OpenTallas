@@ -246,6 +246,7 @@ proc ot_mm_ws {check scene} {
 # parasitics): set_wire_rc -clock, and only when a clock spine was built in this session (a TritonCTS tree's low-layer
 # clock wiring is NOT over-estimated: the clock-wide value moved hcoll -16 ps the wrong way).  Data wires on M6 / M7
 # also get the lower C, which only makes them faster under a min-delay check (conservative for hold).
+# HOLD-FLOW-R 11-16: the HOLD repair uses this table only with OT_RC_CAL_HOLD=1 (default: the kit's sign-off table); spine balancing is unchanged.
 # Knobs: OT_RC_CAL=0 off; OT_RC_CAL_R / OT_RC_CAL_C in setRC.tcl units (defaults 1.40E-02 = 14 ohm/um, 1.05E-01 fF/um),
 # OT_RC_CAL_LAYERS (default "M6 M7").  asap7 only.  The spine balancing (clock_spine.tcl) uses the same procs.
 proc ot_rc_cal_on {} {
@@ -270,6 +271,10 @@ proc ot_rc_cal_spine {} {
 # calls ot_rc_cal_restore)
 proc ot_rc_cal_apply {kind} {
   if {![ot_rc_cal_on]} { return 0 }
+  # HOLD-FLOW-R 11-16 (CLOSURE-STRATEGY-2100 lever 1): every hold repair pass (CTS, GRT, post-route ECO) is timed on the kit's
+  # SIGN-OFF RC table.  The calibrated repair table read +6.92 where the kit table reads -28.38 on the same bksel netlist, so a
+  # repair on it closes to a number sign-off never sees.  The calibrated hold table is now opt-in: OT_RC_CAL_HOLD=1.
+  if {$kind eq "hold" && (![info exists ::env(OT_RC_CAL_HOLD)] || $::env(OT_RC_CAL_HOLD) ne "1")} { return 0 }
   lassign [ot_rc_cal_rc] r c
   set mode [ot_rc_cal_mode]
   if {$mode eq "-global_routing"} {
@@ -322,9 +327,9 @@ proc ot_rc_cal_hold {body} {
 # CTS / GRT hold repair (it 10k-65k, ~2 buffers per iteration, WNS frozen for thousands of iterations; BF: 48k endpoints at
 # -200 ps).  A window that wide is an RTL / constraint problem (missing pin register, wrong input-min / H1 SDC), not a
 # buffering problem.  ot_repair_timing (called by the patched repair_timing_helper) keeps a setup-only or hold-only call
-# unchanged; a combined call runs setup exactly as before, then hold in chunks of OT_HOLD_CHUNK iterations (default 1000)
+# unchanged; a combined call runs setup exactly as before, then hold in buffer-capped chunks (native iteration options unchanged unless OT_HOLD_CHUNK is explicitly positive)
 # and stops when a chunk improves hold TNS by < OT_HOLD_MIN_GAIN_PCT % (default 2) and WNS by < 1 ps, when hold is
-# already >= 0 and a chunk gains < 1 ps (chasing the margin only), or after OT_HOLD_MAX_HOURS (default 3) of hold repair.
+# already >= 0 and a chunk gains < 1 ps (chasing the margin only). OT_HOLD_MAX_HOURS is informational only, off by default.
 # After an HM-AUTO flood reduction the hold repair first runs at HM 0 and stops once real hold is met (MET-FIRST below).
 # A stall with hold < 0 writes REPORTS_DIR/ot_hold_stall_<stage>.rpt (path classes, pin groups) and logs OT_HOLD_STALL:
 # the closure loop reports it as NEEDS_RTL with that window instead of crawling.  OT_HOLD_GUARD=0 restores the old call.
@@ -707,7 +712,8 @@ proc ot_hold_scope_default {} {
 proc ot_hold_repair_scope {body} {
   set scope [ot_hold_scope_default]
   if {$scope ni {reg2reg nonport} ||
-      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+      ![info exists ::ot_mm_synced] || ![info exists ::ot_mm_stage] || $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} {
+    # HOLD-FLOW-R 11-16: the CTS repair runs in the 3_place.sdc stage and was never scoped (headseg44: 16,494 hold BUFx2 in port paths)
     return [uplevel 1 $body]
   }
   set entry [sta::cmd_mode_name]
@@ -758,15 +764,38 @@ proc ot_hold_repair_scope {body} {
   }
 }
 
+# HOLD-FLOW-R 11-16 (COORD): OT_CTS_HOLD_PAD = HB2 | HB4 | HB2,HB4 lets the CTS-stage hold repair (stage 3_place.sdc) pad with the
+# slow delay cells instead of BUFx2 chains (fewer cells and M1 pins per ps; ORFS DONT_USE '*xp*' bars them).  The cells are lifted
+# only around the scoped hold repair and put back afterwards, so setup repair and CTS never see them.  Unset = unchanged.
+proc ot_cts_hold_pad {body} {
+  set pad {}
+  if {[info exists ::env(OT_CTS_HOLD_PAD)] && $::env(OT_CTS_HOLD_PAD) ne "" && [info exists ::ot_mm_stage] && $::ot_mm_stage eq "3_place.sdc"} {
+    foreach k [split $::env(OT_CTS_HOLD_PAD) ,] {
+      if {$k ni {HB2 HB4}} { error "OT_CTS_HOLD_PAD: $k is not HB2 or HB4" }
+      foreach c [get_lib_cells -quiet */${k}xp67_ASAP7_75t_R] { lappend pad $c }
+    }
+    if {[llength $pad]} { unset_dont_use $pad; puts "OT_CTS_HOLD_PAD: [llength $pad] delay cell(s) usable for the CTS hold repair" }
+  }
+  set rc [catch {uplevel 1 $body} out opts]
+  if {[llength $pad]} { set_dont_use $pad }
+  return -options $opts $out
+}
 proc ot_repair_timing {rt_args} {
   set setup [expr {[lsearch -exact $rt_args -setup] >= 0}]
   set hold [expr {[lsearch -exact $rt_args -hold] >= 0}]
   if {$setup && !$hold} { return [log_cmd repair_timing {*}$rt_args] }
   if {$hold && !$setup} {
-    return [ot_rc_cal_hold {
-      ot_hold_structural_gate
-      ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }
-    }]
+    if {![ot_hold_guard_on]} {
+      return [ot_rc_cal_hold {
+        ot_hold_structural_gate
+        ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args] } }
+      }]
+    }
+    # The guarded helper appends -hold itself. Explicit hold-only callers need
+    # the same existing chunk/progress handling as the combined repair path.
+    set args {}
+    foreach arg $rt_args { if {$arg ne "-hold"} { lappend args $arg } }
+    return [ot_rc_cal_hold { ot_hold_repair_scope { ot_cts_hold_pad { ot_repair_hold_guarded $args } } }]
   }
   # Explicit -setup -hold and the no-flag form both request combined repair.
   # Keep setup on normal RC, then gate/repair hold on calibrated FF clock RC.
@@ -777,17 +806,18 @@ proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on]} {
     return [ot_rc_cal_hold {
       ot_hold_structural_gate
-      ot_hold_repair_scope { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold }
+      ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold } }
     }]
   }
-  return [ot_rc_cal_hold { ot_hold_repair_scope { ot_repair_hold_guarded $rt_args } }]
+  return [ot_rc_cal_hold { ot_hold_repair_scope { ot_cts_hold_pad { ot_repair_hold_guarded $rt_args } } }]
 }
 proc ot_repair_hold_guarded {rt_args} {
   set hm 0.0
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
-  set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 1000])}]
+  set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 0])}]
+  set iter_args {}; if {$chunk > 0} { set iter_args [list -max_iterations $chunk] }
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
-  set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
+  set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 0.0] * 3600}]
   ot_hold_structural_gate
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
@@ -830,7 +860,7 @@ proc ot_repair_hold_guarded {rt_args} {
   set j [lsearch -exact $rt_args -max_buffer_percent]; if {$j >= 0} { set tot_pct [lindex $rt_args [expr {$j + 1}]] }
   set capped 0
   set t0 [clock seconds]; set hist [list [lmap x $prev {format %.1f $x}]]
-  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it[expr {$inst0 > 0 ? [format ", <= %.0f buffers of %d instances" [expr {max($cbp * $inst0 / 100.0, $cbmin)}] $inst0] : ""}])"
+  puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, native iteration option [expr {$chunk > 0 ? $chunk : "unchanged"}][expr {$inst0 > 0 ? [format ", <= %.0f buffers of %d instances" [expr {max($cbp * $inst0 / 100.0, $cbmin)}] $inst0] : ""}])"
   for {set k 1} {1} {incr k} {
     if {[lindex $prev 0] >= $hm} { break }
     if {$inst0 > 0} {
@@ -840,13 +870,13 @@ proc ot_repair_hold_guarded {rt_args} {
       set last [expr {$nb >= $left}]
       if {$nb < 1} { set nb 1 }
       set pct [format %.6f [expr {100.0 * $nb / $inst}]]
-      if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold -max_iterations $chunk} err opts]} {
+      if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold {*}$iter_args} err opts]} {
         if {$last || ![regexp {RSZ-0060|Max buffer count} $err]} { return -options $opts $err }
         set capped 1
         puts [format "OT_HOLD_GUARD chunk %d: buffer cap %.0f reached (RSZ-0060), continuing" $k $nb]
       }
     } else {
-      log_cmd repair_timing {*}$rt_args -hold -max_iterations $chunk
+      log_cmd repair_timing {*}$rt_args -hold {*}$iter_args
     }
     set cur [ot_hold_stats]
     lappend hist [lmap x $cur {format %.1f $x}]
@@ -857,7 +887,7 @@ proc ot_repair_hold_guarded {rt_args} {
     if {$w1 >= $hm} { break }
     if {$w1 >= 0 && $dw < 1.0} { puts "OT_HOLD_GUARD: hold met (ws [format %.2f $w1] >= 0); margin chase stalled, stop"; break }
     if {$dw < 1.0 && $gain < $mingain} { ot_hold_window_report "stalled: chunk $k gained [format %.2f $dw] ps / [format %.1f $gain]% TNS" $hist; break }
-    if {[clock seconds] - $t0 > $maxs && ![info exists ::ot_hold_timelogged]} {
+    if {$maxs > 0 && [clock seconds] - $t0 > $maxs && ![info exists ::ot_hold_timelogged]} {
       # WF-1 11-14 (OWNER: delete the conservative limits): the hold repair wall cap no longer ends the repair; logged once
       set ::ot_hold_timelogged 1
       puts "OT_HOLD_TIMELOG hold repair over [expr {$maxs / 3600.0}] h: NO CAP, repair continues"
@@ -1026,4 +1056,17 @@ if {[info commands ot_mcc_cts_orig] eq ""} {
     set ot_mcc_file [file join [file dirname $ot_mcc_dir] physical common_flow macro_cts_cluster.tcl]
   }
   if {[file isfile $ot_mcc_file]} { source $ot_mcc_file } else { puts "OT_MACRO_CTS unavailable: $ot_mcc_file missing" }
+}
+
+# CTS-TRUNK-RESEAT (2026-11-16): opt-in (OT_CTS_TRUNK_RESEAT=1) clock_tree_synthesis wrapper that seats every CTS trunk
+# buffer at the centroid of its loads (physical/common_flow/cts_trunk_reseat.tcl; S81 rom_q half: TritonCTS left trunk
+# buffers at the macro edge driving 10-15 leaf buffers through one 100-150 um net).  Asked for and missing = error.
+if {[info exists ::env(OT_CTS_TRUNK_RESEAT)] && $::env(OT_CTS_TRUNK_RESEAT) eq "1" && [info commands ot_ctr_cts_orig] eq ""} {
+  set ot_ctr_dir [file dirname [file normalize [info script]]]
+  set ot_ctr_file [file join $ot_ctr_dir cts_trunk_reseat.tcl]
+  if {![file isfile $ot_ctr_file]} {
+    set ot_ctr_file [file join [file dirname $ot_ctr_dir] physical common_flow cts_trunk_reseat.tcl]
+  }
+  if {![file isfile $ot_ctr_file]} { error "OT_CTS_RESEAT: OT_CTS_TRUNK_RESEAT=1 but $ot_ctr_file is missing" }
+  source $ot_ctr_file
 }

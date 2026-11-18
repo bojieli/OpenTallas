@@ -458,6 +458,8 @@ def run_kit(modern):
     # FLOW-21: host-side async-LEC hooks only in the modern runner (legacy bytes unchanged)
     t = t.replace("@LECA_START@\n", LECA_START if modern else "").replace("@LECA_FINISH@\n", LECA_FINISH if modern else "")
     if modern:
+        # ORFS finish already runs final_report (RCX/IR); keep frozen legacy bytes.
+        t = t.replace('  if [ \\$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \\$M do-finish && \\$M do-generate_abstract; rc=\\$?; fi; \\\n', '  if [ \\$rc = 0 ] && [ $GOAL = route ]; then \\$M do-finish; rc=\\$?; fi; \\\n  if [ \\$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \\$M do-generate_abstract; rc=\\$?; fi; \\\n', 1)
         t = t.replace("; rc=0; ", "; rc=0; " + "if [ -f /work/orfs_hold_mm.py ] && grep -q 'def patch_intermediate_power' /work/orfs_hold_mm.py; then python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts --metrics-only > /work/orfs_metrics.log 2>&1 || { cat /work/orfs_metrics.log; echo 'INTERMEDIATE_POWER optimization unavailable: full power reporting retained'; }; fi; ", 1)
         t = t.replace("  chown -R ", "  if [ -f /work/lec_async.sh ] && { [ -f /work/lec_async.on ] || [ -f /work/lec_async.identity ]; }; then bash /work/lec_async.sh wait /work '$NAME' '$GOAL' \\$rc; fi; chown -R ", 1)
     if not modern:   # the old first step had no rc guard
@@ -596,6 +598,9 @@ def native_m7_phase(native_roots, hc, plan):
         d = (ph - cx) % pn
         if d:
             bad[name] = (d if d <= pn // 2 else d - pn) / 1000.0
+    if bad and __import__("os").environ.get("OT_T51_M7_PHASE_DEFER") == "1":
+        print(f"WARNING {hc['module']}: {len(bad)} native M7 clock root pins off the die M7 lattice; shift deferred to tools/die_plan/pin_track_snap.py on the kit (S81-CORES-1115)", file=sys.stderr)
+        return ph / 1000.0
     if bad:
         ex = ", ".join(f"{k} {v:+.3f}" for k, v in sorted(bad.items())[:6])
         raise SystemExit(f"{hc['module']}: {len(bad)} native M7 clock root pins off the die M7 lattice "

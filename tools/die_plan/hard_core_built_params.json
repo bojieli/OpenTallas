@@ -294,8 +294,12 @@
   {
    "die": "qwen_kvsys",
    "module": "ot_qwen_tp8_pv_join_t",
-   "params": {},
-   "source": "signed kit config.mk VERILOG_TOP_PARAMS, agidock:/archive/opentallas-signed-1106/epyc2/srv/opentallas-scratch3/claude/dkv61/pvjoin/R0_A/prd_w60_p2/config.mk (signoff verdict SIGNED, 8 signed kit(s) agree, harvested 2026-11-15, AGIdock + fleet)",
+   "params": {
+    "J_LAT": 7,
+    "MUT": 0,
+    "RESET_PIN": 1
+   },
+   "source": "signed kit wrapper rtl/ot_qwen_tp8_pv_join_t.sv (sha256 60808253cc28; parameterless top, l.537 instantiates ot_qwen_tp8_pv_join_t__leaf #(.J_LAT(7), .MUT(0), .RESET_PIN(1)) u_leaf), identical in both signed kits agidock:/archive/opentallas-signed-1106/epyc2/srv/opentallas-scratch3/claude/dkv61/pvjoin/R0_A/prd_w60_p2 and R0_B/prd_w80_p2 (kit provenance commit 0d672a1dcbdf); both signed 6_final.v hold u_leaf.g_reset_pin.rst_q (43 refs) and the signed view pvview_1103 _tt/_ff.lib carry setup_rising/hold_rising arcs on rst_n. config.mk VERILOG_TOP_PARAMS is empty because the parameters sit in the kit wrapper; the 11-15 harvest read {} from it (KV-102 r137 correction 2026-11-16)",
    "records": [
     "ce849299a035d91f3691c6372d0e4cb7828bd1b093ff005c9ab31bf16fe74249",
     "ceda73b2ce306242fb26a3f230863561f0a4680677e905a911b1fcb1960be3d7"
@@ -799,6 +803,37 @@
     "a878cad77fcead02ba0592a79a44cc5212b6e2e4b7e61335cb505e854a8dec9b",
     "af825197966cd7665e5c9b95b34011d680e709998038d683b464039ff8987321"
    ]
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "die": "s81",
+   "lib_contains": "cores/views/bksel_c3_1104/",
+   "records": [
+    "11f32154a3702de62b26f106d0d699aa23f926ba256e0c77d618653047684c89"
+   ],
+   "params": {
+    "OLL": 2,
+    "SELOH": 1,
+    "RNF": 1,
+    "LQH": 1
+   },
+   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k/lecrun/lec/gold.ys read_slang -G OLL=2 -G SELOH=1 -G RNF=1 -G LQH=1; build_commit 06c38ca5736 (LQH = 47046ce95e0, folded into main by S81-CORES-R3 11-17); kit dir since cleaned"
+  },
+  {
+   "module": "dsdv_bksel_c",
+   "die": "s81",
+   "lib_contains": "cores/views/bksel_c_qrx_1117/",
+   "records": [
+    "e1f3b821e2ab8dfd9e4bfac2b27794de9892e3393ce2318fbce85183a4afc3ca"
+   ],
+   "params": {
+    "OLL": 2,
+    "SELOH": 1,
+    "RNF": 1,
+    "LQH": 1,
+    "QRX": 1
+   },
+   "source": "S81-CORES-R3 11-17 (COORD r561/r563/r582): QRX 1 control for the eco3 (RFH 2) quarters; kit epyc2:/srv/opentallas-scratch2/claude/s81-cores-r3/kits/dsdv_bksel_c_rfdq, recipe physical/die_plan/s81/cores/legacy/profiles/rfc_bk_1103/recipes_rfdq.json, RTL main 4bc02f0a010 (st fsm_encoding none); R-MINIMAL SIGNED TT +2.37 FF +2.39 DRC 0; pre-route LEC EQUIVALENT 30876/30876; records = sha256 of the signed 6_final.odb"
   }
  ]
 }

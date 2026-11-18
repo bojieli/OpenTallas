@@ -12,6 +12,12 @@
 `ifndef OT_BKSEL_RLN
 `define OT_BKSEL_RLN 0
 `endif
+// S81-CORES-R3 11-17 (S81-DIE-R3 NEEDS-LANE (a)): the hardened quarter parameter set of the dsdv_bksel_q view the die binds,
+// written as literals (tools/die_plan/hard_core_param_all.py resolves `ifdef against the bind defines, not macro values).
+//   default         = the hq3 view (dsdv_bksel_q defaults: OLL 0, RFH 0, HLAT 0), control QRX 0 (as built)
+//   OT_BKQ_ECO3     = the signed eco3 view (kit VERILOG_TOP_PARAMS OLL 2 RFH 2 HLAT 1); RFH 2 adds one input edge in every
+//                     quarter, so the control takes QRX 1 (dsdv_bksel_c XDX + ceil(1 / 2): fixed waits +2 edges)
+//   OT_BKQ_QRX_MUT  = bench mutant only: eco3 quarters, control left at QRX 0 (under-counts the round trip by 1 edge)
 // ---------------------------------------------------------------------------------------------------------------------
 // S81U-BK2 / S81U-BK3 (2026-10-17): dsdv_bk_sel, the S81-DV index selector unit (plan p4h block bk_sel, column 4 V
 // rung), as a WIRES-ONLY hardened cluster (no flops of its own) of hard children, each with its own clock tree.
@@ -100,10 +106,26 @@ module dsdv_bk_sel #(
     dsdv_bk_stn #(.W(4*OB), .D(`OT_BKSEL_RO)) u_stn_o (.ck(clk), .d(fo), .q(fo_c));
     dsdv_bk_stn #(.W(4*515), .D(`OT_BKSEL_RLN)) u_stn_l (.ck(clk), .d(ln), .q(ln_q));
     generate for (g = 0; g < 4; g = g + 1) begin : g_q       // quarter 0 SW, 1 SE, 2 NW, 3 NE
+`ifdef OT_BKQ_ECO3
+        dsdv_bksel_q #(.OLL(2), .RFH(2), .HLAT(1)) u_q (.ck(clk), .rst(rst_n), .lane(ln_q[515 * g +: 515]), .f_c(tc_q[CB * g +: CB]),
+            .f_cr(tcr_q[g]), .t_s(fs[SB * g +: SB]), .t_o(fo[OB * g +: OB]));
+`else
         dsdv_bksel_q u_q (.ck(clk), .rst(rst_n), .lane(ln_q[515 * g +: 515]), .f_c(tc_q[CB * g +: CB]), .f_cr(tcr_q[g]),
             .t_s(fs[SB * g +: SB]), .t_o(fo[OB * g +: OB]));
+`endif
     end endgenerate
-    dsdv_bksel_c u_c (.ck(clk), .rst(rst_n),
+    // S81-CORES-R3 11-17: the control is bound with the parameter set of its SIGNED view (bksel_c3_1104 rfd6, odb 11f32154:
+    // -G OLL=2 SELOH=1 RNF=1 LQH=1, ss29 LEC gold.ys); before this the die took the module defaults (SEARCH_PIPE 1 instead of
+    // the hardened 4) and HCPARAM-ALL allowlisted the core.  OT_BKQ_ECO3 adds QRX 1 (the re-signed QRX view).
+`ifdef OT_BKQ_ECO3
+`ifdef OT_BKQ_QRX_MUT
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_n),
+`else
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1), .QRX(1)) u_c (.ck(clk), .rst(rst_n),
+`endif
+`else
+    dsdv_bksel_c #(.OLL(2), .SELOH(1), .RNF(1), .LQH(1)) u_c (.ck(clk), .rst(rst_n),
+`endif
         .f_s_s(fs_c[0 +: 2*SB]), .f_s_n(fs_c[2*SB +: 2*SB]), .f_o_s(fo_c[0 +: 2*OB]), .f_o_n(fo_c[2*OB +: 2*OB]),
         .t_c_s(tc[0 +: 2*CB]), .t_c_n(tc[2*CB +: 2*CB]), .t_cr_s(tcr[1:0]), .t_cr_n(tcr[3:2]), .vd(vd));
 endmodule

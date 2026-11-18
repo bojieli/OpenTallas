@@ -281,7 +281,8 @@ def export_one(die, name, p, log):
     out = (f"/tmp/kw32-views-relay/{die}/{rid}" if on_hub else f"{VIEWS_ROOT}/{die}/{rid}")
     tool = HUB_TOOL_DIR if on_hub else TOOL_DIR
     cmd = (f"cd / && mkdir -p {shlex.quote(out)} && python3 -I {tool}/tools/autopilot/export_view.py "
-           f"--kit {shlex.quote(p['kit'])} --signoff {shlex.quote(p['signoff'])} --base {shlex.quote(p['base'])} "
+           f"--kit {shlex.quote(p['kit'])} --signoff {shlex.quote(p['signoff'])} "
+           + (f"--base {shlex.quote(p['base'])} " if p.get("base") else "") +
            f"--out {shlex.quote(out)} --die {shlex.quote(die)} --note {shlex.quote('KW-FIX-32 counted child ' + name)}"
            + (f" --flow-tag {shlex.quote(p['flow_tag'])}" if p.get("flow_tag") else ""))
     argv = ["bash", "-c", cmd] if on_hub else SSH + [host, cmd]

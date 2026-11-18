@@ -38,6 +38,8 @@ FINAL_REPAIR_TAIL = ['write_db /work/pre_final_state.odb', 'write_sdc -no_timest
 # then only 'source /work/core_final_repair.tcl', e.g. S81 sstn_base566 bodyA): the same final data repair without the
 # state dump, skipped alike.  Any other tail still refuses.
 FINAL_REPAIR_TAILS = (FINAL_REPAIR_TAIL, FINAL_REPAIR_TAIL[-1:])
+# generated data repairs that must not run after the PRD hook's own repair (second incremental GRT outside the clock freeze)
+DROP_REPAIR_FILES = ('core_final_repair.tcl', 'core_drv_repair.tcl')
 
 
 # ECO-CLOCK-HOOK (KW-FIX-44 11-09, COORD ruling): a post-route ECO re-runs the post-GRT chain on a routed, signed clock
@@ -58,6 +60,13 @@ def clock_hook(line):
     w = line.split()
     return w[1].rsplit('/', 1)[-1] if len(w) == 2 and w[0] == 'source' and w[1].rsplit('/', 1)[-1] in CLOCK_EDIT_HOOKS \
         else None
+
+
+def _droppable(kit, lines):
+    """generated repair files to drop from a chain that has the gate chain (grt_post.tcl); a final repair only when the kit holds it"""
+    if not any(x.split()[-1:] == ['/work/grt_post.tcl'] for x in lines):
+        return ()
+    return tuple(r for r in DROP_REPAIR_FILES if r != 'core_final_repair.tcl' or (kit / r).is_file())
 
 
 def stage(kit):
@@ -89,7 +98,8 @@ def stage(kit):
                            final_repair_sha256=hashlib.sha256((kit / 'core_final_repair.tcl').read_bytes()).hexdigest())
             chain = 'source /work/grt_post.tcl\n'
         else:
-            chain = ('\n'.join(lines) + '\n' if lines else '') if clk else 'source /work/grt_post_core.tcl\n'
+            repairs_inside = bool(_droppable(kit, lines))
+            chain = ('\n'.join(lines) + '\n' if lines else '') if (clk or repairs_inside) else 'source /work/grt_post_core.tcl\n'
             # DIE-KV-67/CL 11-04: the form core_flow.py writes on kits with NO post_grt_drv.tcl (kit hooks, grt_post.tcl,
             # final repair; every native KV core).  The final repair's own global_route -end_incremental runs after
             # ot_clk_freeze_post_grt and after route-keep re-attached the parked wires, so it destroys clock wires nothing
@@ -105,6 +115,16 @@ def stage(kit):
                                wrapper_sha256=hashlib.sha256(core.read_bytes()).hexdigest(),
                                final_repair_sha256=hashlib.sha256((kit / 'core_final_repair.tcl').read_bytes()).hexdigest())
                     break
+    # S81-CORES-1115 (FABLE-PD-S81CORES-1915 2.4): core_final_repair.tcl anywhere in the chain (a private line after it, e.g.
+    # gf5_grt_measure.tcl, defeated the tail test) opens a second incremental GRT after ot_clk_freeze_post_grt; the same holds for
+    # core_drv_repair.tcl (generated repair_design, the PRD hook already did it).  Drop both wherever they stand, refuse if one stays.
+    drop = _droppable(kit, chain.splitlines()) or ()
+    kept = [x for x in chain.splitlines() if not any(r in x for r in drop)]
+    if len(kept) != len(chain.splitlines()):
+        rec.update(skipped_final_repair=True, final_repair_dropped_anywhere=True)
+        chain = '\n'.join(kept) + '\n'
+    if any(r in chain for r in drop):
+        raise ValueError('post-GRT chain still sources a generated repair (core_final_repair.tcl / core_drv_repair.tcl)')
     (kit / 'prd_post_grt_chain.tcl').write_text(chain)
     (kit / 'PRD_POST_GRT_CHAIN.json').write_text(json.dumps(rec, indent=1) + '\n')
     return rec

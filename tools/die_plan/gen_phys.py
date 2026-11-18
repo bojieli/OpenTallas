@@ -192,13 +192,40 @@ def _cland_pinslot(budgets, tn, extra=()):
 
 
 
+def _is_col_type(tn):
+    return tn is not None and tn.split("__")[0].startswith("col_")
+
+
+def _relay_fallback_max_frac(budgets, tn):
+    """S81-TYPES-R2 11-16 (COORD CLOSURE-STRATEGY-2100 lever 2): a col kit fails closed at place when ANY relay group
+    takes the old nearest-free fallback (relay_mid.tcl OT_RELAY_FALLBACK_MAX_FRAC = 0): an unfitted group means a hop
+    over OT_RELAY_MID_MAX_HOP_UM (405) or no site, i.e. a plan relay-depth row, never a routable kit (col_h10_r0_p1:
+    18 of 95 unfitted, hops 1,118-1,561 um, CTS -508.5).  budgets.relay_fallback_max_frac overrides (null = advisory)."""
+    if "relay_fallback_max_frac" in budgets:
+        return budgets["relay_fallback_max_frac"]
+    return 0 if _is_col_type(tn) else None
+
+
 def _relay_mid_fit(budgets, tn):
     """S81-TYPES-5 11-07 CHANNEL class (relay_mid.tcl FIT), opt-in three ways, absent = unchanged kits: plan-wide
     budgets.relay_mid_fit, per type budgets.relay_mid_fit_types (types or unsplit base names), or per kit-wave row
     through item_env (GEN env OT_RELAY_MID_FIT=1), so a pilot or a class batch needs no plan event."""
     if os.environ.get("OT_RELAY_MID_FIT") == "1" or budgets.get("relay_mid_fit"):
         return True
+    if _is_col_type(tn) and budgets.get("relay_mid_fit") is not False:
+        return True       # S81-TYPES-R2 11-16 (COORD lever 2): col types always FIT, so the fail-closed count below exists
     on = list(budgets.get("relay_mid_fit_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
+def _ft_polarity_local(budgets, tn):
+    """S81-STRIP 11-16 (t47 ft2_o/ft6_o CTS -3956 ps: the QN inverter + port buffer of a face-edge FT station landed ~1000 um
+    from the station): ft_polarity_local.tcl keeps the polarity inverter beside its station.  Opt-in three ways like
+    relay_mid_fit, absent = unchanged kits: GEN env OT_FT_POLARITY_LOCAL=1, plan-wide budgets.ft_polarity_local, or per
+    type budgets.ft_polarity_local_types (types or unsplit base names)."""
+    if os.environ.get("OT_FT_POLARITY_LOCAL") == "1" or budgets.get("ft_polarity_local"):
+        return True
+    on = list(budgets.get("ft_polarity_local_types") or [])
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
@@ -576,6 +603,7 @@ def reset_relay_full(rtl_dir):
 
 CHAIN_EVEN_HOOK = "source /work/chain_even_cfg.tcl\nsource /work/chain_even.tcl"
 DLY_SPREAD_HOOK = "source /work/dly_spread.tcl"
+MACRO_CROSS_HOOK = "source /work/macro_cross_check.tcl"
 
 
 def dly_spread_mode(budgets, tn):
@@ -838,6 +866,21 @@ CORE_INPUT_PLACE_ANCHOR = "\n# QC-NK-HOLD A+P: core-input lockup latches + pipe 
 CORE_INPUT_PLACE_CHAIN = "\n# QC-NK-HOLD A+P: feeding register chains spread to the pipe register (macro-avoiding route)\nsource /work/core_input_chain.tcl\n"
 
 
+LP_EVEN_HOOK = "\n# KV-PVGEN: core_link_pipe stages (u_pc_lp_*) spread to equal hops between their driver and loads\nsource /work/lp_even.tcl\n"
+
+
+def core_link_pipe_place(raw, tn):
+    """KV-PVGEN 11-15 (COORD 11-16): True when plan clock.core_link_pipe puts u_pc_lp_* stages in type tn (bind.core_link_pipe_spec on
+    any module / source).  Then lp_even.tcl (PRE_RESIZE, after GPL) spreads every stage chain evenly between its driver and its
+    loads, so GPL cannot bunch them at one end (R-RTL-6: registers added for reach are sited, never left to wirelength)."""
+    cfg = ((raw or {}).get("clock") or {}).get("core_link_pipe") or {}
+    if not cfg:
+        return False
+    if cfg.get("all"):
+        return tn not in set(cfg.get("except") or [])
+    return tn in set(cfg.get("types") or [])
+
+
 def core_input_place(raw, tn):
     """QC-NK-HOLD 11-11 A+P placement hooks (OWNER 07:39 pipeline cycle, COORD 07:5x APPROVED): True when type tn gets
     declared pipe registers before its core-input lockup latches (bind.core_input_pipe > 0 on any listed module).
@@ -962,7 +1005,9 @@ def io_tcl(P, tn, pins):
 
 # soft relay instances placed by relay_mid.tcl: the kept ot_s81_rly relays of the S81 frame bands (u_r<k>.u_y_<lane>);
 # a plan may override it with budgets.relay_mid_re (first capture = the relay group)
-RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
+# S81-TYPES-R2 11-16: [._] before u_y_ -- synthesis flattens u_r0.u_y_xo0_0 to u_u_r0_u_y_xo0_0 (col types); the [.]-only
+# form matched 5 of 80 relay groups on col_h10_r2 (CTS 14 endpoints under -42 -> 2 with [._], 7,014 relay flops placed)
+RELAY_MID_RE = r"^(.*[._]u_y_[A-Za-z0-9_]+)[.]"
 
 
 def _snap_tap(P, x, y, pg_legal=True):
@@ -997,13 +1042,14 @@ def _snap_tap(P, x, y, pg_legal=True):
 
 
 
-def clock_legal_axes(P, tn, clear=S.TAP_CLEAR_UM):
+def clock_legal_axes(P, tn, clear=None):
     """PG-safe track centres for local clock pins, inside the existing outline clearance.
 
     The axes use exactly _snap_tap's layers, four-decimal track coordinates,
     and both PG stripe phases. A mathematical zero-width street therefore
     contributes a clock site only if an actual consumed track exists there.
     """
+    clear = S.type_tap_clear(P.types[tn]) if clear is None else clear
     top = P.layer_budget['partition_signal_max']
     below = f'M{int(top[1:]) - 1}'
     layers = (top, below) if P.layers[top]['dir'] == 'V' else (below, top)
@@ -1059,7 +1105,7 @@ def core_tap_pins(P, tn):
     out = []
     for n, x, y, _ in taps:
         explicit = any(c.get("clock_entry_access") and any(
-            q == n and i == c["inst"] and pin == c["clock_entry_access"]["pin"]
+            q == n and _core_is(c, i) and pin == c["clock_entry_access"]["pin"]
             for q, i, pin, _, _ in core_tap_rows(P, tn)) for c in P.types[tn].get("hard_cores", []))
         if explicit:
             # An interior real-pin stack must not be shifted away by generic PG
@@ -1078,6 +1124,12 @@ def core_tap_pins(P, tn):
             sx, sy = _clear_core_tap(P, tn, n, x, y, (sx, sy), port_blocks, pg)
         out.append((n, sx, sy))
     return out
+
+
+def _core_is(core, inst):
+    """QC-CB-GEN-1115 L4/L6: True when `inst` names the hard core by its logical plan inst (u_t22) or its kit-physical inst
+    (u_bound.u_t22): core_tap_rows returns the physical name once physical_inst is declared."""
+    return inst is not None and inst in (core.get("inst"), core.get("physical_inst"))
 
 
 ENTRY_CLEAR_MAX_UM = 2.0       # an entry is moved off a macro edge by snapping distance only, never re-planned
@@ -1181,7 +1233,7 @@ def entry_block_boxes(P, tn, root=None, port=None, entry_xy=None):
         access = c.get("clock_entry_access")
         if access and port is not None:
             matched = [(n, i, pin) for n, i, pin, _, _ in core_tap_rows(P, tn)
-                       if n == port and i == c["inst"] and pin == access["pin"]]
+                       if n == port and _core_is(c, i) and pin == access["pin"]]
             if matched:
                 from lef_clock_entry import validate_access
                 # DIE-QC-97: judged on the access abstract the kit stages (stage_clock_entry_lefs), not the blanket
@@ -1280,7 +1332,7 @@ def view_core_tap_values(P, tp, view_tt_ps, corner="TT", t=None):
     c = "FF" if str(corner).upper().startswith("F") else "TT"
     ins = view_tt_ps if c == "TT" else round(S.FF_TT_INSERTION_RATIO * view_tt_ps, 3)
     lat = S.common_latency_ps(P, c, t)
-    return max(0.0, min(ins - lat, lat)), ins
+    return max(0.0, min(ins - lat + S.core_tap_lead_ps(t, c), lat)), ins
 
 
 def core_tap_view_report(P, tn):
@@ -1298,7 +1350,7 @@ def core_tap_view_report(P, tn):
                 out.append(dict(port=n, inst=c, plan_pin=plan_pin, view_pin=pin,
                                 plan_insertion_ps=S.core_tap_insertion_ps(tp), view_insertion_ps=ins,
                                 plan_early_ps=S.core_tap_early_ps(P, tp, 'TT', P.types[tn]), early_ps=early,
-                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) > early))
+                                clamped=ins - S.common_latency_ps(P, "TT", P.types[tn]) + S.core_tap_lead_ps(P.types[tn]) > early))
             break
     return out
 
@@ -1719,21 +1771,23 @@ def pad_bumps(P, tn, kit_rtl_filelist=None):
 
 
 def pad_bump_dt_tcl(bumps):
-    """S81-PMATX-DT: PRE_GLOBAL_PLACE Tcl marking the nets of the output macro_pin pads dont_touch.  A marked net must be
-    the direct pad net (its port BTerm + exactly one output ITerm of the pad's macro master, nothing else); any other
-    shape is an error, and so is a pad whose bit count differs from its width."""
-    rows = " ".join("{%s %s %s %d}" % (b["port"], b["module"], b["pin"], b["width"]) for b in bumps)
+    """S81-PMATX-DT: PRE_GLOBAL_PLACE Tcl marking the nets of the macro_pin pads dont_touch.  A marked net must be
+    the direct pad net (its port BTerm + exactly one ITerm of the pad's macro master, an output for an output pad and an
+    input for an input pad, nothing else); any other shape is an error, and so is a pad whose bit count differs from its
+    width.  PAD-IN-DIRECT-1 11-17: input pads are rows too (serdes__t13 io_pma_rx: buffer_ports put a buffer chain between
+    the die pin and the macro pin it lies on, 544 M5 shorts at detail route)."""
+    rows = " ".join("{%s %s %s %d %s}" % (b["port"], b["module"], b["pin"], b["width"], b["dir"]) for b in bumps)
     return PAD_BUMP_DT_TCL.replace("@ROWS@", rows)
 
 
-PAD_BUMP_DT_TCL = r"""# GENERATED by tools/die_plan/gen_phys.py (S81-PMATX-DT 11-09): macro_pin OUTPUT pads (die pin == macro pin) keep
-# their direct net: dont_touch before buffer_ports / repair_design.  Rows: port macro_master macro_pin width.
+PAD_BUMP_DT_TCL = r"""# GENERATED by tools/die_plan/gen_phys.py (S81-PMATX-DT 11-09, PAD-IN-DIRECT-1 11-17): macro_pin pads (die pin == macro pin)
+# keep their direct net: dont_touch before buffer_ports / repair_design.  Rows: port macro_master macro_pin width dir.
 uplevel #0 {
 set pdt_rows {@ROWS@}
 set pdt_blk [ord::get_db_block]
 set pdt_total 0
 foreach pdt_r $pdt_rows {
-  lassign $pdt_r pdt_port pdt_master pdt_pin pdt_w
+  lassign $pdt_r pdt_port pdt_master pdt_pin pdt_w pdt_dir
   set pdt_n 0
   foreach pdt_b [$pdt_blk getBTerms] {
     set pdt_nm [$pdt_b getName]
@@ -1743,7 +1797,8 @@ foreach pdt_r $pdt_rows {
     if {$pdt_net eq "NULL"} { error "OT_PADBUMP_DT: pad $pdt_nm has no net" }
     set pdt_it [$pdt_net getITerms]
     if {[llength $pdt_it] != 1 || [[[[lindex $pdt_it 0] getInst] getMaster] getName] ne $pdt_master
-        || ![[lindex $pdt_it 0] isOutputSignal] || ![string match "${pdt_pin}*" [[[lindex $pdt_it 0] getMTerm] getName]]} {
+        || !($pdt_dir eq "input" ? [[lindex $pdt_it 0] isInputSignal] : [[lindex $pdt_it 0] isOutputSignal])
+        || ![string match "${pdt_pin}*" [[[lindex $pdt_it 0] getMTerm] getName]]} {
       error "OT_PADBUMP_DT: pad $pdt_nm net [$pdt_net getName] is not the direct $pdt_master/$pdt_pin pad net"
     }
     $pdt_net setDoNotTouch 1
@@ -1752,7 +1807,7 @@ foreach pdt_r $pdt_rows {
   if {$pdt_n != $pdt_w} { error "OT_PADBUMP_DT: pad $pdt_port marked $pdt_n of $pdt_w bits" }
   incr pdt_total $pdt_n
 }
-puts "OT_PADBUMP_DT dont_touch $pdt_total macro_pin output pad nets (no port buffer, no repair)"
+puts "OT_PADBUMP_DT dont_touch $pdt_total macro_pin pad nets (no port buffer, no repair)"
 }
 """
 
@@ -1871,6 +1926,28 @@ def pg_pin_check_mode():
     return os.environ.get("OT_PG_PIN_CHECK", "").strip() in ("1", "warn")
 
 
+def pg_rail_check_on():
+    """PG-RAIL-CHECK-1 (COORD 11-17): runs on every kit (blocking or advisory: pg_rail_check_blocking); gen env OT_PG_RAIL_CHECK=0 off."""
+    return os.environ.get("OT_PG_RAIL_CHECK", "").strip() != "0"
+
+
+def pg_rail_check_blocking(phy_region):
+    """1 = a row without rails fails the kit, 0 = advisory (ADVISORY_FAIL line + pg_rail_check.json, kit goes on).
+    COORD 11-17 (owner R-MINIMAL: new checks are advisory outside the blocking set): blocking only on kits with a PHY supply
+    region, where PHY-REGION-ROWS-1 applies and the defect was measured; advisory everywhere else.  Gen env
+    OT_PG_RAIL_CHECK=warn makes it advisory everywhere, =fail blocking everywhere."""
+    mode = os.environ.get("OT_PG_RAIL_CHECK", "").strip()
+    return 0 if mode == "warn" else 1 if mode == "fail" else int(bool(phy_region))
+
+
+def phy_region_rows_tcl(rects):
+    """PRE_TAPCELL Tcl: the region rects (type um) + phy_region_rows.tcl, which replaces every row that overlaps a PHY supply
+    region by its pieces outside the region before tap / endcap insertion."""
+    body = Path(__file__).with_name("phy_region_rows.tcl").read_text()
+    return ("# GENERATED by tools/die_plan/gen.py phys (PHY-REGION-ROWS-1): region rects of phy_pg.json\n"
+            "set prr_rects {" + " ".join("{" + " ".join(f"{v:g}" for v in r) + "}" for r in rects) + "}\n" + body)
+
+
 def pg_pin_check_hook_tcl():
     return "\n".join([
         "# GENERATED (OT_PG_PIN_CHECK, PG-PINBAND-1): pin-access check on the open DB right after pdngen",
@@ -1954,15 +2031,20 @@ def pg_island_cuts(P, tn, root=None):
     t = P.types[tn]
     selected = {(c.get("physical_inst") or c["inst"]): c["clock_entry_access"]["pin"]
                 for c in t.get("hard_cores", []) if c.get("clock_entry_access")}
-    if not t.get("pg_island_cut") and not selected:
+    island = bool(t["pg_island_cut"]) if "pg_island_cut" in t else macro_pin_pad_type(t)
+    if not island and not selected:
         return []
     import cores as C
     cuts = []
+    # default mode (no explicit type key): only the placed hard cores, never the PHY / memory macros
+    hard = {(c.get("physical_inst") or c["inst"]) for c in t.get("hard_cores", [])}
     for inst, _mod, lef, _lib, ox, oy, o in type_macros(P, tn):
-        if not t.get("pg_island_cut") and inst not in selected:
+        if not island and inst not in selected:
+            continue
+        if island and "pg_island_cut" not in t and inst not in hard and inst not in selected:
             continue
         pins, (w, h) = lef_interior_pins(C.resolve(lef, root))
-        if not t.get("pg_island_cut"):
+        if not island:
             pins = [(pin, r) for pin, r in pins if pin == selected[inst]]
             if not pins:
                 raise ValueError(f"{tn}.{inst}: actual clock entry has no interior M5 target pin")
@@ -2050,8 +2132,18 @@ FACE_PIN_TOL_UM = 0.5                         # a face pin starts within this of
 FACE_CUT_LAYERS = {"M5": "NS", "M6": "WE", "M7": "NS"}   # layer: faces its partition stripes run into
 
 
+def macro_pin_pad_type(t):
+    """A type with a line-side macro_pin pad (the serdes PMA types).  PG-PIN-CUT-DEFAULT 11-17: these get the PG face cut and
+    the island cut by default: serdes__t13 ended detail route with 63 violations at the dchn hard core (36 shorts + 21 EOL
+    where cw_q top-face M5 pins run beside the M5 VDD strap, 6 M6 spacing at clk / rst_n under the M6 pair).  A type key
+    pg_face_cut / pg_island_cut: false opts out."""
+    return any(p.get("macro_pin") for p in t.get("pads", []) or [])
+
+
 def pg_face_cut_on(t):
-    return bool(t.get("pg_face_cut")) or os.environ.get("OT_PG_FACE_CUT", "").strip() == "1"
+    if "pg_face_cut" in t:
+        return bool(t["pg_face_cut"])
+    return os.environ.get("OT_PG_FACE_CUT", "").strip() == "1" or macro_pin_pad_type(t)
 
 
 def lef_face_pins(path, layers=tuple(FACE_CUT_LAYERS), tol=FACE_PIN_TOL_UM):
@@ -2280,6 +2372,160 @@ def rflow_cfg(gpl_plain=False, die=None):
             f"export OT_PG_CELL_KEEPOUT = {pg_cell_keepout_value():d}"]
 
 
+def explicit_pg_cfg(cfg):
+    """Carry explicitly requested PG booleans even when R-FLOW/CONS defaults are off.
+
+    Unset keys add no lines and retain the existing generation fast path/defaults.
+    Do not duplicate values already emitted by the selected kit profile.
+    """
+    keys = ("OT_PG_TRACK_TRUTH", "OT_PG_TRACK_TRUTH_WIDE_SPACING", "OT_PG_CELL_KEEPOUT")
+    requested = {k: os.environ.get(k, "").strip() for k in keys
+                 if os.environ.get(k, "").strip() in ("0", "1")}
+    if not requested:
+        return []
+    import re
+    emitted = {}
+    for line in cfg:
+        m = re.match(r"^export\s+(\w+)\s*=\s*(.*?)\s*$", line)
+        if m:
+            emitted[m[1]] = m[2]
+    out = [f"export {k} = {v}" for k, v in requested.items() if emitted.get(k) != v]
+    return (["# Explicit PG gen intent (independent of R-FLOW/CONS defaults)."] + out) if out else []
+
+
+def tt_setup_repair_mode():
+    """effective OT_TT_SETUP_REPAIR of this kit: cts | grt | both | off (the mapping of the step files in write_type_kit)"""
+    return {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip(), "off")
+
+
+def kit_effective_env():
+    """KIT-OPS-5 11-15 (COORD r228): the generation-time env a reviewer needs to audit a kit: OT_TT_SETUP_REPAIR (cts|grt|both|off) and
+    every OT_PG_* / OT_PGCAP_* variable set in the gen env (they act at gen time, e.g. OT_PG_DIE_PHASE changes pdn.tcl, so they never
+    appear in config.mk).  Sorted; only variables that are set are listed."""
+    out = {"OT_TT_SETUP_REPAIR": tt_setup_repair_mode()}
+    for k in sorted(os.environ):
+        if (k == "OT_PGCAP" or k.startswith(("OT_PG_", "OT_PGCAP_"))) and os.environ[k].strip() != "":
+            out[k] = os.environ[k].strip()
+    return out
+
+
+def tt_setup_repair_cfg():
+    """KIT-OPS-5 11-15 (COORD r214): the effective TT setup repair mode in EVERY kit's config.mk, so a reviewer can tell which kits
+    carry it (the gen env alone is not in the kit).  Exported as cts|grt|both|off; the step files stay gated by their .on flag."""
+    out = ["# TT setup repair mode this kit was generated with (OT_TT_SETUP_REPAIR; off = no step)",
+           f"export OT_TT_SETUP_REPAIR = {tt_setup_repair_mode()}"]
+    if tt_setup_repair_mode() == "off":
+        return out
+    # FABLE-FIX-QC-HCFE 11-15 (r228 item 1): opt-in keys of the step, carried in config.mk because tt_setup_repair.tcl reads them there.
+    # OT_TT_SETUP_CSCALE = signal C factor of the GRT-basis session (routed signal nets read 1.4-1.5 x the clock-fit layer table on
+    # QC sle_hc2 / S81 bksel); OT_TT_SETUP_DESIGN=1 = TT repair_design before repair_timing; OT_TT_SETUP_MARGIN ps;
+    # OT_TT_SETUP_CLAYERS = comma list of the scaled layers (default M2..M7 in the step).  Unset = byte-equal kit.
+    checks = {"OT_TT_SETUP_CSCALE": lambda v: float(v) > 0, "OT_TT_SETUP_DESIGN": lambda v: v in ("0", "1"),
+              "OT_TT_SETUP_MARGIN": lambda v: float(v) == float(v),
+              "OT_TT_SETUP_CLAYERS": lambda v: all(x and x.replace("_", "").isalnum() for x in v.split(","))}
+    for k, ok in checks.items():
+        v = os.environ.get(k, "").strip()
+        if v == "":
+            continue
+        try:
+            good = ok(v)
+        except ValueError:
+            good = False
+        if not good:
+            raise ValueError(f"{k}={v!r}: not a valid value")
+        out.append(f"export {k} = {v}")
+    return out
+
+
+def rc_signal_cfg(P_name, flow="type"):
+    """r222/r228 (GENBUG-IMPL): config.mk lines that turn on the signal-net RC table (rc_signal_adjust.tcl) for this kit.  The scale is
+    per die and flow (rc_signal_scales.json, validated populations only); gen env OT_RC_SIGNAL=0 turns it off, OT_RC_SIGNAL_SCALE overrides.
+    A die with no entry gets nothing (kit table, byte-equal)."""
+    import re
+    if os.environ.get("OT_RC_SIGNAL", "").strip() == "0":
+        return []
+    tab = json.loads(Path(__file__).with_name("rc_signal_scales.json").read_text())
+    sc = tab["core"] if flow == "core" else tab["type"].get(P_name)
+    ov = os.environ.get("OT_RC_SIGNAL_SCALE", "").strip()
+    if ov:
+        if not re.fullmatch(r"\d+(\.\d+)?", ov):
+            raise SystemExit(f"OT_RC_SIGNAL_SCALE={ov!r}: not a number")
+        sc = float(ov)
+    if sc is None:
+        return []
+    return ["# r222/r228: signal-net unit C x scale in the GRT estimate (postcts_gate.tcl, tt_setup_repair.tcl); rc_signal_scales.json",
+            "export OT_RC_SIGNAL = 1", f"export OT_RC_SIGNAL_SCALE = {sc:g}",
+            "export OT_TT_SETUP_DESIGN = 1"]   # r249: repair_design before repair_timing in the TT repair (main's OT_TT_SETUP_DESIGN)
+
+
+def pg_drt0255_cfg():
+    """DRT0255 (FABLE-PD-DRT-1350) opt-in config.mk lines, from the gen environment: OT_PG_TRACK_TRUTH_MODE=region (GRT per-gcell
+    capacity cut on the PG pair rows / columns instead of per-track obstructions) and OT_PG_PAIR_ROW_KEEPOUT=1 (ring / station / face-flop
+    sites skip the std rows under the M6 pair).  Nothing is written without the variable (kits stay byte-equal)."""
+    out = []
+    if os.environ.get("OT_PG_TRACK_TRUTH_MODE", "").strip() == "region":
+        out += ["# DRT0255: GRT capacity cut per gcell over the PG pair rows/columns (pg_track_truth.tcl region mode)",
+                "export OT_PG_TRACK_TRUTH_MODE = region"]
+    if os.environ.get("OT_PG_PAIR_ROW_KEEPOUT", "").strip() == "1":
+        out += ["# DRT0255: ring / ft-station / face-flop sites skip the std rows under the M6 PG pair (face_flops.tcl ff_put_near)",
+                "export OT_PG_PAIR_ROW_KEEPOUT = 1"]
+    return out
+
+
+PG_ROW_GUIDES_LINES = ["# PG-ROW-GUIDES-1: move M6 guides off the PG pair rows before detail route (DRT-0255 class A, pg_row_guides.tcl)",
+                       "export PRE_DETAIL_ROUTE_TCL = /work/pg_row_guides.tcl"]
+
+
+def pg_row_guides_lines(cfg):
+    """The PRE_DETAIL_ROUTE hook lines, unless the kit config already has a PRE_DETAIL_ROUTE_TCL (its own hook is kept)."""
+    if any(re.match(r"(override\s+)?export\s+PRE_DETAIL_ROUTE_TCL\b", c) for c in cfg):
+        return []
+    return list(PG_ROW_GUIDES_LINES)
+
+
+def pgcap_cfg():
+    """DRT0255-PROOF-1115 C3b opt-in config.mk lines from the gen environment: OT_PGCAP=1 turns on pg_pair_cap.tcl in grt_pre.tcl
+    (GRT per-gcell capacity cut over every M5/M7 stripe column and M6 stripe row); OT_PGCAP_LAYERS (M-layer names), OT_PGCAP_ADJ
+    (0..1), OT_PGCAP_GCELL_UM / OT_PGCAP_EPS_DBU / OT_PGCAP_MARGIN_DBU (numbers) are passed through when set and valid.
+    Nothing is written without OT_PGCAP=1 (kits stay byte-equal)."""
+    import re
+    if os.environ.get("OT_PGCAP", "").strip() != "1":
+        return []
+    out = ["# DRT0255 C3b: GRT per-gcell capacity cut on the PG pair rows/columns (pg_pair_cap.tcl, sourced last in grt_pre.tcl)",
+           "export OT_PGCAP = 1"]
+    pats = {"OT_PGCAP_LAYERS": r"M[1-9]( M[1-9])*", "OT_PGCAP_ADJ": r"(0(\.\d+)?|1(\.0+)?)",
+            "OT_PGCAP_GCELL_UM": r"\d+(\.\d+)?", "OT_PGCAP_EPS_DBU": r"\d+", "OT_PGCAP_MARGIN_DBU": r"\d+", "OT_PGCAP_FINITE_EXTENT": r"[01]", "OT_PGCAP_M5_LEGAL_TRACKS": r"[01]"}
+    for k, pat in pats.items():
+        v = os.environ.get(k, "").strip()
+        if v:
+            if not re.fullmatch(pat, v):
+                raise SystemExit(f"{k}={v!r}: not a valid value")
+            out.append(f'export {k} = {v}' if " " not in v else f'export {k} = "{v}"')
+    return out
+
+
+PGCAP_HOOK = """# DRT0255-PROOF-1115 C3b (class A, internal M6 pair rows; gen env OT_PGCAP=1): per-gcell GRT capacity cut on every M5/M7 stripe
+# column and M6 stripe row, snapped outward to whole gcells and clamped to the die (pg_pair_cap.tcl; OT_PGCAP_LAYERS / _ADJ /
+# _GCELL_UM / _EPS_DBU / _MARGIN_DBU).  Appended LAST, after pg_track_truth, so every earlier hook sees the kit unchanged.
+if {[info exists ::env(OT_PGCAP)] && $::env(OT_PGCAP) eq "1"} {
+  source [file join [file dirname [file normalize [info script]]] pg_pair_cap.tcl]; ot_pgcap_add
+}
+"""
+
+
+def pgcap_install(kd):
+    """Stage dependencies from the final generated OT_PGCAP value (not the caller environment)."""
+    values = re.findall(r"^\s*(?:override\s+)?export\s+OT_PGCAP\s*(?::=|=)\s*([01])\s*$",
+                        (kd / "config.mk").read_text(), re.M)
+    if not values or values[-1] != "1":
+        return False
+    shutil.copyfile(Path(__file__).with_name("pg_pair_cap.tcl"), kd / "pg_pair_cap.tcl")
+    g = kd / "grt_pre.tcl"
+    if "ot_pgcap_add" not in g.read_text():
+        g.write_text(g.read_text() + PGCAP_HOOK)
+    return True
+
+
 def pg_cell_keepout_value():
     """OT_PG_CELL_KEEPOUT of an R-FLOW kit: gen environment OT_PG_CELL_KEEPOUT (0/1, the rollout switch), else RFLOW."""
     v = os.environ.get("OT_PG_CELL_KEEPOUT", "").strip()
@@ -2486,7 +2732,8 @@ def tap_offset_table(P, tn):
         row = {k: float(v[k]) for k in ("TT", "FF", "tol")}
         res = {}
         for c in ("TT", "FF"):
-            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, getattr(P, "types", {}).get(tn))) if n in core else 0.0)
+            ty = getattr(P, "types", {}).get(tn)
+            res[c] = row[c] + ((S.core_tap_insertion_ps(core[n], c) - S.common_latency_ps(P, c, ty) + S.core_tap_lead_ps(ty, c)) if n in core else 0.0)
         if row["tol"] < 0 or abs(res["TT"]) > per / 2 or abs(res["FF"]) > per / 2:
             raise ValueError(f"clock.tap_offset.per_port_ps[{tn}][{n}] {row} (residual {res}) outside tol >= 0, |o| <= T/2")
         out[n] = row
@@ -2888,12 +3135,39 @@ def die_sta_sdc_lines(P, tn, side):
     return "\n".join(out) + "\n"
 
 
+def _lockup_pad_type(P, tn):
+    """True when clock.core_input_lockup lists type tn and declares a latch_except_hb4 pad."""
+    cfg = ((P.raw or {}).get("clock") or {}).get("core_input_lockup") or {}
+    if cfg.get("all"):                      # same type rule as bind.core_input_lockup: "all" minus "except", else "types"
+        if tn in set(cfg.get("except") or ()):
+            return False
+    elif tn not in set(cfg.get("types") or ()):
+        return False
+    # FABLE-PLAN-QC-N 11-17: "all": true lists every type (133), but only a type that BINDS a lockup module can have a pad; the keep
+    # hook errors when no pad cell exists, so emitting it for the other 115 types stopped them at PRE_FLOORPLAN.
+    mods = set((cfg.get("modules") or {}))
+    if not any(h.get("module") in mods for h in ((P.types.get(tn) or {}).get("hard_cores") or [])):
+        return False
+    return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
+
+
 def hold_pad_dont_touch_tcl(P, tn):
     """HOLDFORM-1 (DIE-QC-97 11-10): PRE_FLOORPLAN text keeping the gen_rtl.ot_dp_hd hold-pad cells (u_hdly_<bus>
     HB4xp67) through floorplan remove_buffers, timing-driven unbuffering and every repair / resizer pass, and failing the
     kit when the netlist lost any (N x width per bus, + N for an epoch bit).  "" for a type without hold_hb4 buses (byte-same)."""
     hb = [(int(b["hold_hb4"]), int(b["width"])) for b in P.types[tn].get("buses", [])
           if b.get("dir") == "in" and int(b.get("hold_hb4") or 0) > 0]
+    lk = _lockup_pad_type(P, tn)
+    if not hb and lk:
+        return ("# latch_except_hb4 (clock.core_input_lockup): keep the bit-level lockup hold pads (u_hdly_lk_*, HB4xp67)\n"
+                "set ot_hb {}\n"
+                "foreach i [[ord::get_db_block] getInsts] {\n"
+                "  if {[string match *u_hdly_lk_* [$i getName]] && [string match HB*xp67* [[$i getMaster] getName]]} "
+                "{ lappend ot_hb $i }\n"
+                "}\n"
+                "foreach i $ot_hb { $i setDoNotTouch 1 }\n"
+                "puts \"OT_HOLDPAD_LK dont_touch [llength $ot_hb] latch_except_hb4 pad cells\"\n"
+                "if {![llength $ot_hb]} { error \"OT_HOLDPAD_LK: plan declares latch_except_hb4 for this type but the netlist has no pad cell\" }\n")
     if not hb:
         return ""
     lo, hi = sum(n * w for n, w in hb), sum(n * (w + 1) for n, w in hb)     # without / with the epoch bit
@@ -3136,7 +3410,7 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10 ps for NEW kits (the shared core_flow.HOLD_FF_MARGIN_DEFAULT; 15 where a measured
 # GRT->final RC hold loss > 10 ps is documented); signed views stay valid.
-HOLD_FF_MARGIN_DEFAULT = 0.0   # OWNER 11-02 (FLOW-22): no +10 ps hold margin; every hold gate is FF hold slack >= 0 (25 ps FF hold uncertainty stays); was 10 (12.19)
+HOLD_FF_MARGIN_DEFAULT = 10.0   # HOLD-FLOW-R 11-16 (closure strategy lever 1): 10 ps repair target on INTERNAL endpoints only (the in-flow repair scope is reg2reg: input starts and output ends are excluded), never 20; GRT repair closes to 0 on the estimate and extraction then moves short paths by 9-17 ps; the GATE stays FF hold >= 0; was 0 (OWNER 11-02)
 # HOLD-REPAIR 10-26 (plan_demand kits only): repair_timing buffer cap and the HB4 hold-pad hook
 HOLD_REPAIR_MAX_BUFFER_PERCENT = 100.0
 HOLD_PAD_HB4 = Path(__file__).resolve().parents[2] / "physical" / "common_flow" / "hold_pad_hb4.tcl"
@@ -3195,7 +3469,55 @@ def tap_group_exports(t):
         raise ValueError("clock.tap_group.re must be a non-empty capture regex without '#', '$' or whitespace")
     import re as _re
     _re.compile(rx)
-    return [f"export OT_TAP_GROUP_RE = {rx}"]
+    out = [f"export OT_TAP_GROUP_RE = {rx}"]
+    fixed = clock["tap_group"].get("fixed_taps", {})
+    if not isinstance(fixed, dict):
+        raise ValueError("clock.tap_group.fixed_taps must be a group-to-port map")
+    for group, port in fixed.items():
+        if not _re.fullmatch(r"[A-Za-z0-9_./-]+", str(group)) or not _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", str(port)):
+            raise ValueError("clock.tap_group.fixed_taps uses unsafe group or port name")
+    if fixed:
+        out.append("export OT_TAP_GROUP_FIXED = " + ",".join(f"{g}:{fixed[g]}" for g in sorted(fixed)))
+    return out
+
+
+def ft_stage0_exports(t):
+    """Default-off explicit stage0 placement for selected unlanded FT slots."""
+    slots = []
+    import re as _re
+    for slot in t.get("ft_slots", []):
+        flag = slot.get("explicit_stage0", False)
+        if not isinstance(flag, bool):
+            raise ValueError("ft_slots.explicit_stage0 must be boolean")
+        if not flag:
+            continue
+        name = slot["name"]
+        k = int(slot.get("stations", 1))
+        if not _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+            raise ValueError("explicit stage0 slot has unsafe name")
+        if len(slot.get("regs_um", [])) < k:
+            raise ValueError("explicit stage0 needs all stage waypoints")
+        slots.append(name)
+    return ["export OT_FT_EXPLICIT_STAGE0 = " + " ".join(slots)] if slots else []
+
+
+def private_leaf_exports(t):
+    """HEAD-SERDES-1115 11-15: default-off clock.private_leaf [{"like": <anchor instance>, "re": <sink regex>}] ->
+    OT_PRIVATE_LEAF_LIKE / OT_PRIVATE_LEAF_RE (private_leaf.tcl, post-CTS kit step).  The step clones the leaf clock buffer
+    that drives the anchor's clock pin and moves only the sinks matching re onto the clone (clock pins only; fail-open).
+    like = exact instance name (no '#', '$' or whitespace); re = sink regex without '#', '$' or whitespace (config.mk / make)."""
+    rows = t.get("clock", {}).get("private_leaf")
+    if not rows:
+        return []
+    if len(rows) != 1:
+        raise ValueError("clock.private_leaf: exactly one row per type")
+    like, rx = rows[0].get("like", ""), rows[0].get("re", "")
+    for k, v in (("like", like), ("re", rx)):
+        if not v or any(c in v for c in "#$ \t\n"):
+            raise ValueError(f"clock.private_leaf.{k} must be non-empty without '#', '$' or whitespace")
+    import re as _re
+    _re.compile(rx)
+    return [f"export OT_PRIVATE_LEAF_LIKE = {like}", f"export OT_PRIVATE_LEAF_RE = {rx}"]
 
 
 def tap_pair_affinity_exports(t):
@@ -3694,6 +4016,9 @@ def phy_pg_domains(P, tn):
             # failed the per-instance identity below on the sign of zero alone)
             rt = [round(min(u[0], v[0]), 4) + 0.0, round(min(u[1], v[1]), 4) + 0.0, round(max(u[0], v[0]), 4) + 0.0,
                   round(max(u[1], v[1]), 4) + 0.0]
+            if t.get("phy_pg_floor_um") is not None:   # HEAD-99 rp21z19: PHY region floor raised to this type y; macros below it are CORE macros
+                rt[1] = max(rt[1], float(t["phy_pg_floor_um"]))
+                if rt[1] >= rt[3] - 1e-6: continue
             mac, mac_x0, mac_y0, mac_box = [], [], [], []
             placed = pg_placed_blocks(t)
             for c in placed:
@@ -3793,17 +4118,88 @@ def route_layer_names(spec):
     return [spec] if isinstance(spec, str) else list(spec)
 
 
-def route_obstruction_lines(items):
+# CLKSITE-TAP-ESCAPE-1117 (FABLE-FIX-HEAD-SD9F; hd_serdes sd9f 19 M7 Short + 9 M2 Metal Spacing, hd_host_e he12h drc2 same class):
+# (1) the type's own interior clock tap pin (M7 BPIN at the die clock-tree cell) sits INSIDE a route-obstructed reserved site,
+#     so the M7 obstruction covered the pin and its only exit (DRT shorted through it or detoured over die-reserved M8).  The
+#     pin-layer obstruction is emitted as pieces that leave a full-height escape column (pin metal + TAP_ESCAPE_CLEAR_UM each
+#     side; M7 is vertical, so the tap wire leaves the site N or S on the pin's own track).
+# (2) a std cell abutting the E/W edge of a route-obstructed site has no legal M2 pin access (M2 is horizontal; its via
+#     enclosure ends inside the obstruction spacing).  The hard PLACEMENT blockage of such a site is padded SITE_EDGE_PAD_SITES
+#     placement sites E and W; the routing obstruction stays the plan rectangle (the die cell keeps the whole site).
+# Both proven on the sd9f ECO DB (column carve 0.10 + 3-site pad: DRT 0 violations).  Per-site opt-outs: "tap_escape": false,
+# "edge_pad_sites": 0.  A site without route_layers or without a tap pin on an obstructed layer emits the same bytes as before.
+TAP_ESCAPE_CLEAR_UM = 0.10
+SITE_EDGE_PAD_SITES = 3
+PLACE_SITE_W_UM = 0.054
+
+
+def _um_exact(v):
+    """Derived coordinate (escape column edge, padded blockage edge) at 0.1 nm; plan rectangles keep the legacy :g bytes."""
+    return f"{round(v, 4):.4f}".rstrip("0").rstrip(".")
+
+
+def tap_escape_pieces(rect, pins):
+    """rect (x0,y0,x1,y1) minus the full-height escape columns of pins [(xlo, ylo, xhi, yhi)] that overlap it ->
+    (pieces, n_columns).  No overlapping pin -> ([rect], 0)."""
+    x0, y0, x1, y1 = rect
+    cols = sorted((max(x0, a - TAP_ESCAPE_CLEAR_UM), min(x1, c + TAP_ESCAPE_CLEAR_UM))
+                  for a, b, c, d in pins if a < x1 and x0 < c and b < y1 and y0 < d)
+    if not cols:
+        return [rect], 0
+    merged = [list(cols[0])]
+    for a, c in cols[1:]:
+        if a <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], c)
+        else:
+            merged.append([a, c])
+    pieces, x = [], x0
+    for a, c in merged:
+        if a - x > 1e-9:
+            pieces.append((x, y0, a, y1))
+        x = c
+    if x1 - x > 1e-9:
+        pieces.append((x, y0, x1, y1))
+    return pieces, len(merged)
+
+
+def route_obstruction_lines(items, pins_by_layer=None):
     """CLKSITE-RESERVE-1115: M1-M7 routing obstructions over the reserved die clock-tree cell sites, so the type's own
-    routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])]."""
-    out = []
-    for (x0, y0, x1, y1), lays in items:
-        q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+    routing keeps the site metal-free (the die cell's M1 pins and via stack to M8 need it).  items [(rect, [layers])] or
+    [(rect, [layers], tap_escape)].  pins_by_layer {layer: [(xlo, ylo, xhi, yhi)]}: the type's own interior tap pins;
+    CLKSITE-TAP-ESCAPE-1117 leaves an escape column over each on its own layer."""
+    out, n, ncol = [], 0, 0
+    for it in items:
+        (x0, y0, x1, y1), lays = it[0], it[1]
+        escape = it[2] if len(it) > 2 else True
         for ln in lays:
-            out.append(f"odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer {ln}] {q}")
+            pieces, k = tap_escape_pieces((x0, y0, x1, y1), (pins_by_layer or {}).get(ln, []) if escape else [])
+            ncol += k
+            for a, b, c, d in pieces:
+                # site edges keep the legacy :g bytes (same edge as the other layers); only column edges are derived
+                a, b, c, d = (f"{v:g}" if v in (x0, y0, x1, y1) else _um_exact(v) for v in (a, b, c, d))
+                q = f"[expr {{round({a}*$rs_u)}}] [expr {{round({b}*$rs_u)}}] [expr {{round({c}*$rs_u)}}] [expr {{round({d}*$rs_u)}}]"
+                out.append(f"odb::dbObstruction_create $rs_b [[ord::get_db_tech] findLayer {ln}] {q}")
+                n += 1
     if items:
-        out.append(f'puts "OT_RESERVED_SITES route_obstructions={sum(len(l) for _, l in items)}"')
+        out.append(f'puts "OT_RESERVED_SITES route_obstructions={n}"')
+    if ncol:
+        out.append(f'puts "OT_RESERVED_SITES tap_escape_columns={ncol} clear_um={TAP_ESCAPE_CLEAR_UM:g}"')
     return out
+
+
+def interior_tap_pin_rects(P, tn):
+    """{layer: [(xlo, ylo, xhi, yhi)]} of the type's interior tap pins exactly as io_tcl places them (clock taps incl. core
+    and PHY-edge clock pins: actual height; reset / start taps: 4 x PIN_LEN_UM), on layer_budget.partition_signal_max."""
+    if not hasattr(P, "layer_budget"):          # bare plan stand-ins (unit tests): no pins to place
+        return {}
+    top = P.layer_budget["partition_signal_max"]
+    lw = LAYER_W.get(top, 0.04)
+    heights = P.types[tn].get("clock", {}).get("tap_pin_heights_um", {})
+    out = []
+    for name, x, y in tap_pins(P, tn):
+        hh = (tap_pin_height(P, tn, name) if name in heights else 4 * PIN_LEN_UM) / 2
+        out.append((x - lw / 2, y - hh, x + lw / 2, y + hh))
+    return {top: out}
 
 
 def reserved_sites_tcl(P, tn):
@@ -3821,22 +4217,34 @@ def reserved_sites_tcl(P, tn):
     if not rows:
         return "", "", ""
     w, h = t["outline_um"]
-    hard, bank, hard_route = [], [], []
+    hard, bank, hard_route, npad, padded = [], [], [], 0, set()
     for r in rows:
         x0, y0, x1, y1 = r["rect_um"]
         if r.get("kind") not in RESERVED_KINDS:
             raise ValueError(f"{tn}: reserved site kind {r.get('kind')} not in {RESERVED_KINDS}")
         if not (0 <= x0 < x1 <= w and 0 <= y0 < y1 <= h):
             raise ValueError(f"{tn}: reserved site outside outline or empty: {[x0, y0, x1, y1]}")
-        (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
+        px0, px1 = x0, x1
         if r["kind"] == "die_clock_tree" and r.get("route_layers"):   # CLKSITE-RESERVE-1115 opt-in
-            hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"])))
+            hard_route.append(((x0, y0, x1, y1), route_layer_names(r["route_layers"]), r.get("tap_escape", True)))
+            pad = r.get("edge_pad_sites", SITE_EDGE_PAD_SITES)         # CLKSITE-TAP-ESCAPE-1117 (2)
+            if not isinstance(pad, int) or isinstance(pad, bool) or pad < 0:
+                raise ValueError(f"{tn}: reserved site edge_pad_sites must be an integer >= 0: {pad!r}")
+            if pad:
+                px0, px1 = max(0.0, x0 - pad * PLACE_SITE_W_UM), min(float(w), x1 + pad * PLACE_SITE_W_UM)
+                npad += 1
+        if (px0, px1) != (x0, x1):
+            x0, x1 = round(px0, 4), round(px1, 4)
+            padded.add((x0, y0, x1, y1))
+        (hard if r["kind"] == "die_clock_tree" else bank).append((x0, y0, x1, y1))
+    tap_rects = interior_tap_pin_rects(P, tn) if any(it[2] for it in hard_route) else {}
     # A die clock-tree hole inside a ring bank is legal: landing_placement.tcl packs the ring around it
     # (cland_avoid_rects) and fails closed when the bank no longer holds the ring.
     def create(rects, var):
         out = []
         for x0, y0, x1, y1 in rects:
-            q = f"[expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] [expr {{round({y1:g}*$rs_u)}}]"
+            a, b, c, d = (_um_exact(v) if (x0, y0, x1, y1) in padded else f"{v:g}" for v in (x0, y0, x1, y1))
+            q = f"[expr {{round({a}*$rs_u)}}] [expr {{round({b}*$rs_u)}}] [expr {{round({c}*$rs_u)}}] [expr {{round({d}*$rs_u)}}]"
             out += [f"set rs_k [odb::dbBlockage_create $rs_b {q}]", f"lappend {var} $rs_k", f"lappend rs_rects [list {q}]"]
         return out
     head = ["uplevel #0 {", "set rs_b [ord::get_db_block]", "set rs_u [[ord::get_db_tech] getDbUnitsPerMicron]",
@@ -3846,7 +4254,8 @@ def reserved_sites_tcl(P, tn):
         pre = "\n".join(["# Generated (gen_phys reserved_sites_um): die clock-tree cell sites, permanent hard blockages.",
                           *head, "source /work/keepout_phys.tcl", "set rs_hard {}", *create(hard, "rs_hard"),
                           "ot_clear_keepout_physical $rs_b $rs_rects reserved_die_clock_tree",
-                          *route_obstruction_lines(hard_route),
+                          *route_obstruction_lines(hard_route, tap_rects),
+                          *([f'puts "OT_RESERVED_SITES edge_pad_sites: {npad} route-obstructed sites padded E/W in placement"'] if npad else []),
                           # landing_placement.tcl packs ring/status cells around these (opt-in variable, default unset)
                           "set ::cland_avoid_rects $rs_rects",
                           f'puts "OT_RESERVED_SITES kind=die_clock_tree rects={len(hard)} area_um2={sum((c-a)*(d-b) for a,b,c,d in hard):.3f}"',
@@ -4305,6 +4714,41 @@ def core_physical_rows(P, tn, rows):
             for r in rows]
 
 
+def apply_core_pin_lead(P, tn, rows):
+    """S81-COL-CLK-1116 (Spec 0 part 2, default off): clock.core_pin_lead_ps [{module_re, pin, lead_ps}] declares a physical
+    clock pin arrival LEAD for matching hard-core pins (S81 col ROMs: 255 ps; the ROM has no internal tree and its read side
+    launches 270-370 ps after its capture pin).  tap_balance.tcl then hangs the pin at target - lead.  rise_ps/fall_ps (and the
+    mean-contract TT/FF corner means) rise by the lead; FF scales by the type's bound FF/TT insertion ratio.  The SDC is
+    unchanged.  Rows are returned as copies; an absent key leaves the rows (and the kit) byte-identical."""
+    spec = P.types[tn].get("clock", {}).get("core_pin_lead_ps")
+    if not spec or not rows:
+        return rows
+    ratio = None
+    out = []
+    for r in rows:
+        lead = sum(float(sp["lead_ps"]) for sp in spec
+                   if re.fullmatch(sp["module_re"], str(r.get("module", ""))) and sp["pin"] == r["pin"])
+        if not lead:
+            out.append(r)
+            continue
+        if ratio is None:
+            ib = insertion_binding(P, tn)
+            ratio = ib["ff"] / ib["tt"]
+        r = dict(r, rise_ps=round(r["rise_ps"] + lead, 2), lead_ps=lead)
+        if "fall_ps" in r:
+            r["fall_ps"] = round(r["fall_ps"] + lead, 2)
+        if "corners" in r:
+            c = {k: dict(v) for k, v in r["corners"].items()}
+            c["tt"]["mean_ps"] = round(c["tt"]["mean_ps"] + lead, 2)
+            c["ff"]["mean_ps"] = round(c["ff"]["mean_ps"] + lead * ratio, 2)
+            r["corners"] = c
+            r["lead_basis"] = "declared_lead"
+        else:
+            r["basis"] = "declared_lead"
+        out.append(r)
+    return out
+
+
 def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
     """Write authoritative TT/FF boundary-register mean contracts for hard cores.
 
@@ -4355,6 +4799,7 @@ def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed
             matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]
             if not matching or any(abs(r["rise_ps"] - insertion) > .01 for r in matching):
                 raise CC.ContractError(f"{tn}/{inst}.{pin}: planned early core tap does not match selected TT mean; regenerate from means")
+    rows = apply_core_pin_lead(P, tn, rows)
     if rows:
         (kd / "core_latency.json").write_text(json.dumps(dict(type=tn, edge="rise", target_ps=P.clock["insertion_ps"],
                                                               rows=rows), indent=1) + "\n")
@@ -4729,6 +5174,21 @@ def _module_header(text, mod):
     return None
 
 
+def _tree_module_headers(rtl_root, mod):
+    """[(header, file)] for every .sv/.v under rtl_root that declares module mod, in sorted path order."""
+    out, key = [], mod.encode()
+    for c in sorted(set(Path(rtl_root).rglob("*.sv")) | set(Path(rtl_root).rglob("*.v"))):
+        try:
+            if not c.is_file() or key not in c.read_bytes():
+                continue
+        except OSError:
+            continue
+        h = _module_header(c.read_text(errors="replace"), mod)
+        if h:
+            out.append((h, c))
+    return out
+
+
 def _header_localparams(text, mod, hdr):
     """DIE-HBM-92-GEN 11-08 (HBM q_b002 GEN_LINT "Identifier NKT is implicitly declared" in ot_hbm_idx_tail_native_bb.v):
     the module-scope `localparam ...;` statements of mod's body (text = its source) that the header's port list uses
@@ -4911,9 +5371,53 @@ def strip_module_definition(text, mod):
     return "".join(out), cnt
 
 
+def fixed_bb_default_parameters(mod, bb_text, rtl_files, root=None, staged=None):
+    """Preserve a fixed physical ABI while restoring omitted numeric default metadata.
+
+    A signed fixed-port blackbox can omit parameters that its logical caller still
+    sets. The defaults come from the unambiguous native declaration, never from
+    caller overrides; native_bb still rejects an elaborated value that differs.
+    """
+    import native_bb
+    if staged is None:
+        staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files if Path(f).is_file())
+    requested = set(_macro_instance_overrides(staged, mod))
+    present = native_bb.header_params(bb_text).get(mod, {})
+    missing = requested - set(present)
+    if not missing:
+        return None
+    headers = [(h, Path(f)) for f in rtl_files if Path(f).is_file()
+               and not Path(f).name.endswith(("_bb.v", "_bb.sv"))
+               and (h := _module_header(Path(f).read_text(errors="replace"), mod))]
+    if not headers and root:
+        headers = _tree_module_headers(Path(root) / "rtl", mod)
+    choices = []
+    for header, path in headers:
+        if "`" in header:
+            continue  # no guessing an inactive conditional declaration
+        params = native_bb.header_params(header + "\nendmodule").get(mod, {})
+        if missing <= set(params) and all(params[k][0] == "int" for k in missing):
+            choices.append({k: params[k][1] for k in missing})
+    if not choices or any(c != choices[0] for c in choices):
+        raise ValueError(f"macro {mod}: fixed blackbox lacks {sorted(missing)}; numeric native defaults are not unique")
+    declarations = "".join(f"    parameter {k} = {v};\n" for k, v in sorted(choices[0].items()))
+    if len(re.findall(r"\bendmodule\b", bb_text)) != 1:
+        raise ValueError(f"macro {mod}: fixed blackbox must contain exactly one module")
+    return re.sub(r"\bendmodule\b", declarations + "endmodule", bb_text, count=1)
+
+
+def append_new_src(srcs, entry):
+    """S81-KIT-DUPBB 11-17 (LOOP-GAP: 11 S81 dsdv_slice_*_C kits KIT_PREFLIGHT FAIL issues 4 duplicate_modules): macro_param_blackboxes
+    rewrites an EXISTING _bb view in place (numeric default parameters), so its file is already in the source list; appending it again
+    listed ot_s81sl_egn_bb.v / ot_s81sl_egg_bb.v twice.  Append only when the path is not listed yet."""
+    if entry not in srcs:
+        srcs.append(entry)
+    return srcs
+
+
 def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=(), plan_dir=None):
     """Write rtl_dir/<module>_bb.v for every macro module that the staged RTL instantiates with a parameter override
-    and that has no _bb view yet; header copied from the module's own RTL (exact staged files, their dirs, then
+    and that has no _bb view yet (or lacks numeric default metadata); header copied from the module's own RTL (exact staged files, their dirs, then
     <root>/rtl).  Returns the new files.  Macros without overrides are untouched (byte-identical kits)."""
     rtl_dir = Path(rtl_dir)
     staged = "\n".join(Path(f).read_text(errors="replace") for f in rtl_files
@@ -4929,6 +5433,14 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
         if f"{mod}_bb.v" in have or f"{mod}_bb.sv" in have:
             if mod in declared_ft:
                 raise ValueError(f"macro {mod}: explicit FT header conflicts with existing blackbox")
+            if not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
+                continue
+            bb = next(Path(f) for f in rtl_files if Path(f).name in (f"{mod}_bb.v", f"{mod}_bb.sv"))
+            enriched = fixed_bb_default_parameters(mod, bb.read_text(), rtl_files, root, staged)
+            if enriched is not None:
+                dst = rtl_dir / bb.name
+                dst.write_text(enriched)
+                out.append(dst)
             continue
         if mod not in declared_ft and not re.search(r"(?<![\w$])" + re.escape(mod) + r"\s*#\s*\(", staged):
             continue
@@ -4943,6 +5455,17 @@ def macro_param_blackboxes(macros, rtl_files, rtl_dir, root=None, physical_ft=()
             cands += sorted((Path(root) / "rtl").rglob(f"{mod}.sv")) + sorted((Path(root) / "rtl").rglob(f"{mod}.v"))
         hit = next(((h, c) for h, c in ((_module_header(c.read_text(errors="replace"), mod), c) for c in cands
                                         if c.is_file()) if h), None)
+        if hit is None and root:
+            # FABLE-FIX-KV-PVHUB 11-16 (KV pv types with OT_HCPARAM_ALL=1): the bound wrapper instantiates
+            # ot_qwen_tp8_pv_join_t #(.RESET_PIN(1)), and that module is declared in ot_qwen_tp8_pv_wide_pair.sv, a
+            # multi-module source that the kit does not stage (every module in it is a hard core) and that is not named
+            # after the module.  Last resort: the tree file that declares it.  Two different headers stop the kit.
+            found = _tree_module_headers(Path(root) / "rtl", mod)
+            if len({" ".join(h.split()) for h, _c in found}) > 1:
+                raise ValueError(f"macro {mod}: {len(found)} tree files declare it with different headers "
+                                 f"({', '.join(str(c) for _h, c in found[:4])}); stage the one the view was built from")
+            hit = found[0] if found else None
+            cands += [c for _h, c in found]
         hdr = hit[0] if hit else None
         if hdr is None:
             raise ValueError(f"macro {mod} is instantiated with parameters but no RTL header was found for its "
@@ -5050,19 +5573,132 @@ def macro_move_table(t, tn, env=None):
     return out
 
 
-def txl_mid_exports(cfg, kd, env=None):
+# SERDES-TXPIPE 11-14: a serdes pipe form brings its own placement (txl_mid.tcl face mode), so a type that sets the define
+# in its plan verilog_defines gets the hook without a generation env (wave kits, private kits alike).
+SERDES_PIPE_CHAINS = {"OT_S81_SERDES_TXPIPE": ("u_txl",), "OT_S81_SERDES_RXPIPE": ("u_rxf", "u_dec.u_face_p_d"),
+                     "OT_S81_SERDES_RXNEG": ("u_rxf", "u_dec.u_face_p_d")}
+
+
+def s81_rck4_source_contract(cfg, kd, names):
+    """Refuse the observed stale native closure before emitting the opt-in RCK4 hook.
+    These are source-shape checks, not a replacement for actual synthesized FF inventory.
+    """
+    required = {"OT_S81_KP4_AM_FACE3", "OT_S81_SERDES_RXNEG"}
+    missing = sorted(required - names)
+    assert not missing, "S81 RCK4: missing required source defines " + ", ".join(missing)
+    entries = [line.split("=", 1)[1].split() for line in cfg if line.startswith("export VERILOG_FILES =")]
+    assert len(entries) == 1, "S81 RCK4: actual VERILOG_FILES missing or ambiguous"
+    files = [Path(kd) / path.removeprefix("/work/") for path in entries[0]]
+    body = "\n".join(re.sub(r"/\*.*?\*/|//[^\n]*", "", path.read_text(), flags=re.S) for path in files)
+    native = re.search(r"\bmodule\s+ot_s81_kp4_dec_native_flat_lp\b.*?\bendmodule\b", body, re.S)
+    assert native, "S81 RCK4: actual native LP module absent (stale frozen capsule)"
+    for width, inst in ((554, "u_rck_transport4"), (1, "u_rck_reset4")):
+        pattern = (r"\bot_pl_pad\s*#\s*\(\s*\.W\s*\(\s*" + str(width) +
+                   r"\s*\)\s*,\s*\.N\s*\(\s*4\s*\)\s*\)\s*" + inst + r"\b")
+        assert re.search(pattern, native[0]), (
+            f"S81 RCK4: actual {inst} W={width} N=4 absent (stale frozen capsule)")
+    am = re.search(r"\bmodule\s+ot_s81_kp4_am_face3\b.*?\bendmodule\b", body, re.S)
+    assert am and re.search(r"\boutput\s+reg\s*\[\s*8\s*:\s*0\s*\]\s*parts\b", am[0]), (
+        "S81 RCK4: actual 9-bit AM_FACE3 register module absent")
+    if re.search(r"\bot_pdie_pma_release_chain\s*#", body):
+        assert re.search(r"\bmodule\s+ot_pdie_pma_release_chain\b", body), (
+            "S81 RCK4: actual default0 boot release module absent; stage current locksafe dependency")
+    empty = "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names
+    rpc = "OT_S81_SERDES_RM_RPC8" in names
+    assert not empty or rpc, "S81 LOCAL_EMPTY8 requires RPC8"
+    if empty:
+        assert re.search(r"\bg_empty_local\b", body) and re.search(r"\breg\s+rpw\b", body), (
+            "S81 LOCAL_EMPTY8: actual kept local wrap/empty mechanism absent")
+    if rpc:
+        assert "OT_S81_SERDES_RST_TREE" in names and "OT_S81_RM_STAGED" not in names, (
+            "S81 RCK4 RPC8: requires RST_TREE native _rt caller and no RM_STAGED")
+        rm = re.search(r"\bmodule\s+ot_s81_rate_match_rt\b.*?\bendmodule\b", body, re.S)
+        assert rm and all(re.search(pattern, rm[0]) for pattern in (
+            r"\bOT_S81_SERDES_RM_RPC8\b", r"\bg_local\b", r"\breg\s*\[\s*2\s*:\s*0\s*\]\s*rpq\b")), (
+            "S81 RCK4 RPC8: actual native local read-pointer mechanism absent")
+    chunk = "OT_S81_LPL_CHUNK" in names
+    if chunk:
+        assert all(re.search(r"\bmodule\s+" + module + r"\b", body) for module in
+                   ("ot_pl_land_local_w", "ot_pl_land_local_r")), (
+            "S81 LPL_CHUNK: actual local writer/reader modules absent")
+        assert re.search(r"\bCB\s*=\s*24\b", body), "S81 LPL_CHUNK: actual24-bit chunk shape absent"
+    record = {"source_defines": sorted(names), "source_sha256": {
+        str(path.relative_to(kd)): _hashlib.sha256(path.read_bytes()).hexdigest() for path in files},
+        "expected_actual_synth_ff": {"transport": 2216, "reset": 4, "AM": 9, "RPC": 24 if rpc else 0, "LOCAL_EMPTY": 8 if empty else 0},
+        "scope": "Actual emitted source guard; synthesized inventory remains required before P&R",
+        "RX_added_edges": 4, "TX_added_edges": 0, "RPC_added_edges": 0}
+    if chunk:
+        record["expected_actual_synth_ff"].update(LPL_read_onehot=356, LPL_write_onehot=356)
+        record["expected_local_ring_instances"] = {"read": 89, "write": 89}
+    (Path(kd) / "rck4_source_contract.json").write_text(json.dumps(record, indent=2) + "\n")
+
+
+def ft_keep_firm_exports(t):
+    names = []
+    for slot in t.get("ft_slots", []):
+        enabled = slot.get("keep_firm", False)
+        if not isinstance(enabled, bool):
+            raise ValueError("ft_slots.keep_firm must be boolean")
+        if enabled:
+            name = slot.get("name", "")
+            if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+                raise ValueError("unsafe FT keep_firm slot name")
+            names.append(name)
+    return ["export OT_FT_KEEP_FIRM = " + " ".join(names)] if names else []
+
+
+def txl_mid_exports(cfg, kd, env=None, defines=()):
     """KW-FIX-43 11-10 (DIE-S81-85 serdes TXL4, COORD): opt-in at generation (OT_TXL_MID=1; OT_TXL_MID_CHAINS = instance
     chains, spaces or commas, default u_txl in the hook): copy txl_mid.tcl into the kit and run it as POST_GLOBAL_PLACE_TCL
     (each relay row and its hop buffers / inverters placed evenly from source to sink; placement only, no netlist change).
+    SERDES-TXPIPE 11-14: the type defines OT_S81_SERDES_TXPIPE / OT_S81_SERDES_RXPIPE (defines: the kit VERILOG_DEFINES,
+    bare or -D) turn it on by themselves with their chains (SERDES_PIPE_CHAINS, after any env chains) and the macro-face
+    rule OT_TXL_MID_FACE = 1 (the row next to the PMA macro sits at its pin).
+    RCK_RELAY4 additionally requires the actual current native/AM source and emits the joint RX+4 hook.
     Unset = no lines, the kit is byte-identical."""
     env = os.environ if env is None else env
-    if env.get("OT_TXL_MID") != "1":
+    names = {(d[2:] if d.startswith("-D") else d).split("=", 1)[0] for d in defines}
+    rck4 = "OT_S81_RCK_RELAY4" in names
+    am_clock = env.get("OT_S81_RCK_AM_COHORT") == "1"
+    rm_local = env.get("OT_SERDES_RM_LOCAL") == "1"
+    assert not rm_local or rck4, "S81 RM locality requires the actual RCK4 native source profile"
+    assert not am_clock or rck4, "S81 AM cohort requires the actual RCK4 source profile"
+    if rck4:
+        s81_rck4_source_contract(cfg, kd, names)
+    pipe = [c for d, cs in SERDES_PIPE_CHAINS.items() if d in names for c in cs]
+    if env.get("OT_TXL_MID") != "1" and not pipe:
         return []
     assert not any(c.startswith("export POST_GLOBAL_PLACE_TCL") for c in cfg), "OT_TXL_MID: POST_GLOBAL_PLACE_TCL in use"
-    chains = " ".join(env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split())
+    chains = env.get("OT_TXL_MID_CHAINS", "").replace(",", " ").split() if env.get("OT_TXL_MID") == "1" else []
+    if pipe:
+        chains = list(dict.fromkeys(chains + pipe))
+    chains = " ".join(chains)
     shutil.copyfile(Path(__file__).with_name("txl_mid.tcl"), Path(kd) / "txl_mid.tcl")
+    if rck4:
+        shutil.copyfile(Path(__file__).with_name("rck_transport_mid.tcl"), Path(kd) / "rck_transport_mid.tcl")
+    post_gpl = "rck_transport_mid.tcl" if rck4 else "txl_mid.tcl"
+    if rm_local:
+        shutil.copyfile(Path(__file__).with_name("serdes_rm_local.tcl"), Path(kd) / "serdes_rm_local.tcl")
+        (Path(kd) / "serdes_post_gpl.tcl").write_text(
+            "source /work/rck_transport_mid.tcl\nsource /work/serdes_rm_local.tcl\n")
+        post_gpl = "serdes_post_gpl.tcl"
+    if am_clock:
+        shutil.copyfile(Path(__file__).with_name("rck_am_cohort.tcl"), Path(kd) / "rck_am_cohort.tcl")
     return ["# DIE-S81-85 serdes TXL4: per-hop spacing of the relay rows (txl_mid.tcl)", "export OT_TXL_MID = 1",
-            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []), "export POST_GLOBAL_PLACE_TCL = /work/txl_mid.tcl"]
+            *([f"export OT_TXL_MID_CHAINS = {chains}"] if chains else []),
+            *(["# SERDES-TXPIPE: macro-face rows at their PMA pins", "export OT_TXL_MID_FACE = 1"] if pipe else []),
+            *(["# S81 RCK4: source-qualified RX+4 coherent transport; no netlist/clock change",
+               "export OT_TXL_MID_RXNEG_PAIR = 1", "export OT_S81_RCK4_FACE = 1",
+               "export OT_LEAF_AFF_DEPTH = 12"] if rck4 else []),
+            *(["export OT_S81_RCK_AM_COHORT = 1"] if am_clock else []),
+            # S81 serdes family default (FABLE-FIX-S81-SERDES2 11-17): rck depth balance on every RCK4 kit, 16 rounds (8 rounds stop
+            # at span 214 ps, 16 reach 70-75 ps on serdes__t13); gen env OT_S81_RCK_BALANCE=0 opts out, =1 forces it on other kits
+            *(["export OT_S81_RCK_BALANCE = 1", "export OT_STB_ROUNDS = 16"]
+              if env.get("OT_S81_RCK_BALANCE") == "1" or (rck4 and env.get("OT_S81_RCK_BALANCE") != "0") else []),
+            *(pg_row_guides_lines(cfg) if env.get("OT_PG_ROW_GUIDES") != "0" else []),
+            *(["export OT_SERDES_RM_LOCAL = 1",
+               "export OT_SERDES_RM_LOCAL_EMPTY8 = " + ("1" if "OT_S81_SERDES_RM_LOCAL_EMPTY8" in names else "0")] if rm_local else []),
+            "export POST_GLOBAL_PLACE_TCL = /work/" + post_gpl]
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
@@ -5073,6 +5709,16 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     """land_slots (opt-in, DIE-HEAD-21): face_guard declaration {"schema", "buses": {bus: {D, form}}} written as
     kit land_slots.json beside pins.json (clock_landings.Landings.land_slots); None: no file (byte-identical kits)."""
     t = P.types[tn]
+    # S81-COL-HOLD-MARGIN 11-17 (COORD, FABLE-PD-S81-0720 B2): per-item knob.  OT_HOLD_FF_MARGIN_PS (kit_wave item_env) replaces the
+    # GRT-stage FF hold margin of THIS kit only; unset or empty = the caller's value (today's behaviour).
+    _hm = os.environ.get("OT_HOLD_FF_MARGIN_PS", "").strip()
+    if _hm:
+        hold_ff_margin = float(_hm)
+    # S81-COL-GRT-PORT 11-17 (COORD): OT_GRT_PORT_HOLD_MARGIN_PS (kit_wave item_env) includes the input-port starts in the GRT hold repair
+    # (OT_GRT_PORT_HOLD_INCLUDE = 1, tools/grt_nonport_hold.tcl) and floors the GRT hold margin at that value; unset = today's behaviour.
+    _pm = os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip()
+    if _pm:
+        hold_ff_margin = max(float(_pm), hold_ff_margin if hold_ff_margin is not None else 0.0)
     margins = rflow_margins(margins, P.name)    # R-FLOW defaults per kit class (explicit arguments win)
     max_wire_um = rflow_max_wire_um(max_wire_um, P.name)
     macro_moves = macro_move_table(t, tn)
@@ -5182,7 +5828,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # header-only blackbox <module>_bb.v (the native_bb form, read -lib -overwrite like the SRAM _bb views).
     for f in macro_param_blackboxes(macros, rtl_files, kd / "rtl", root, t.get("hard_cores", []),
                                     Path(P.path).parent if getattr(P, "path", None) else None):
-        srcs.append(f"/work/rtl/{f.name}")
+        append_new_src(srcs, f"/work/rtl/{f.name}")
     rom_bits = max(declared_rom_bits(kd / "rtl"), declared_flop_mem_bits(kd / "rtl"))   # + DIE-KV-60/hubeo flop FIFOs
     landing_ff = defines_landing_ring(kd / "rtl")
     fsm_wires = fsm_none_wires(kd / "rtl", os.environ.get("OT_FSM_NONE_WIRES"))
@@ -5253,6 +5899,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                          core_grids=core_pg_on(P, tn)) + pdn[len(PDN):]
         (kd / "phy_pg.json").write_text(json.dumps([dict(name=d[0], power=d[1], ground=d[2], rect_type_um=d[3],
                                                           macros=d[4]) for d in phy_doms], indent=1) + "\n")
+        # PHY-REGION-ROWS-1 11-17: no core row may overlap a PHY supply region (pdngen gives such a row no CORE followpins)
+        (kd / "phy_region_rows.tcl").write_text(phy_region_rows_tcl([d[3] for d in phy_doms]))
     elif core_pg_on(P, tn):
         cg = core_pg_grids(P, tn, macros, root)
         if cg:
@@ -5265,6 +5913,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
             raise ValueError(f"type {tn}: core_pg_connect leaves macro PG pins unconnected: {bad[:4]}")
     if pg_die_phase_on():
         pdn = pdn_die_phase(pdn, kit_core_area(t))
+    if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
+        import s81_svc_live_sites
+        pdn = s81_svc_live_sites.wrap_pdn(tn, pdn, enabled=True)
     (kd / "pdn.tcl").write_text(pdn)
     if m8g is not None:
         # WAVE-RECIPE-1: an M9 kit's M9 grant rides in the same file (extra_grants), so the kit's existing fixlef step (run_kit
@@ -5294,6 +5945,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).with_name("pg_cell_keepout.tcl"), kd / "pg_cell_keepout.tcl")
         (kd / "pg_pin_check_hook.tcl").write_text(pg_pin_check_hook_tcl())
         post_pdn.append("/work/pg_pin_check_hook.tcl")
+    if pg_rail_check_on():      # PG-RAIL-CHECK-1: every row has connected VDD/VSS rails (very last POST_PDN step)
+        shutil.copyfile(Path(__file__).with_name("pg_rail_check.tcl"), kd / "pg_rail_check.tcl")
+        (kd / "pg_rail_check_hook.tcl").write_text(
+            "# GENERATED (PG-RAIL-CHECK-1): ORFS sources POST_PDN_TCL inside a proc: run at global scope\n"
+            f"set ::env(OT_PG_RAIL_CHECK_FAIL) {pg_rail_check_blocking(bool(phy_doms))}\n"
+            "uplevel #0 {source /work/pg_rail_check.tcl}\n")
+        post_pdn.append("/work/pg_rail_check_hook.tcl")
     if len(post_pdn) > 1:
         (kd / "post_pdn.tcl").write_text("# GENERATED by tools/die_plan/gen.py phys: POST_PDN_TCL steps in order.\n" +
                                          "".join(f"source {f}\n" for f in post_pdn))
@@ -5380,6 +6038,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
            *([f"export POST_PDN_TCL = {post_pdn[0] if len(post_pdn) == 1 else '/work/post_pdn.tcl'}"] if post_pdn else []),
+           *(["export PRE_TAPCELL_TCL = /work/phy_region_rows.tcl"] if phy_doms else []),
            # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
            # export, which silently replaced the plan tracks (M7 offset 0.016, not 0.032) -> every plan pin off-track
            "override export MAKE_TRACKS = /work/make_tracks.tcl",
@@ -5483,6 +6142,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # route / finish / abstract on the native corners; TT setup is checked unchanged by signoff.py.
            *(["export SKIP_CTS_REPAIR_TIMING = 1", f"export OT_HOLD_FF_MARGIN = {hold_ff_margin:g}"]
              if hold_ff_margin is not None else []),
+           *(["export OT_S81_SSTN_M5_BLOCK = 1"] if os.environ.get("OT_S81_SSTN_M5_BLOCK") == "1" else []),
+           *(["export OT_GRT_PORT_HOLD_INCLUDE = 1"] if os.environ.get("OT_GRT_PORT_HOLD_MARGIN_PS", "").strip() else []),
            # pin registers FIRM at their faces through GPL, released for DPL (CP1 10-23: GPL left them ~1 mm inside)
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
            "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl",
@@ -5506,6 +6167,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # with the registers they release (async pins), one leaf per group; unset = unchanged
            *(["export OT_HOOK_COVERAGE = warn"] if os.environ.get("OT_HOOK_COVERAGE", "").strip() == "warn" else []),
            *(["export OT_LEAF_AFF_ASYNC = 1"] if os.environ.get("OT_LEAF_AFF_ASYNC", "").strip() == "1" else []),
+           # KV-Q2-CLK-1115: opt-in clock tap-buffer centroid rule (cts_tap_centroid.tcl, sourced by cts_post.tcl); unset = unchanged
+           *(["export OT_CTS_TAP_CENTROID = 1"] if os.environ.get("OT_CTS_TAP_CENTROID", "").strip() == "1" else []),
            # DIE-HEAD-17 reg_spine: the plan balances the spine taps and sizes the core early-tap branches, so the
            # flow tap_balance pass (incl. its core re-hang pass) only reports
            *(["export OT_TAP_REPORT_ONLY = 1"] if reg_spine_spec(P, tn) else []),
@@ -5565,6 +6228,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
+           *(["export OT_FT_POLARITY_LOCAL = 1"] if _ft_polarity_local(P.budgets, tn) else []),
+           *([f"export OT_RELAY_FALLBACK_MAX_FRAC = {_relay_fallback_max_frac(P.budgets, tn):g}"]
+             if macros and _relay_mid_fit(P.budgets, tn) and _relay_fallback_max_frac(P.budgets, tn) is not None else []),
            # FIX-RELAYPOLY 11-14: wall-avoiding relay polylines (plan relay_polylines, or item_env OT_RELAY_POLY=1 = auto path)
            *(["export OT_RELAY_POLY = 1"] if macros and _relay_poly_on(P, tn) else []),
            *(["export OT_RELAY_POLY_FILE = /work/relay_polylines.txt"] if macros and _relay_polylines(P, tn) else []),
@@ -5586,7 +6252,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else []),
            *(["export PRE_MACRO_PLACE_TCL = /work/macro_skip_rtlmp.tcl"] if macros and _macros_all_plan_fixed(t) else [])]
     if macros:
-        (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+        macro_script = "\n".join(mplace) + "\n"
+        if os.environ.get("OT_S81_SVC_LIVE_SITES") == "1":
+            import s81_svc_live_sites
+            macro_script = s81_svc_live_sites.wrap(tn, macro_script, enabled=True)
+        (kd / "macro_place.tcl").write_text(macro_script)
         if _macros_all_plan_fixed(t):       # KW-FIX-45 11-12: plan-fixed macros: rtl_macro_placer skipped
             shutil.copyfile(Path(__file__).with_name("macro_skip_rtlmp.tcl"), kd / "macro_skip_rtlmp.tcl")
         if macro_moves:
@@ -5598,6 +6268,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import fully_fixed_macros as FFM
     cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
     cfg += install_gp_noconverge_gate(kd, cfg, P.name)
+    cfg += gpl_sparse_overflow_cfg(P.name)
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -5629,8 +6300,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg[cfg.index("export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl")] = "export PRE_GLOBAL_ROUTE_TCL = /work/hold_repair_pre.tcl"
     cfg += [f"export OT_MAX_BUFFER_PERCENT = {HOLD_REPAIR_MAX_BUFFER_PERCENT:g}"]
     cfg += rflow_cfg(gpl_plain, P.name)
+    cfg += pg_drt0255_cfg()    # DRT0255 opt-in (gen env OT_PG_TRACK_TRUTH_MODE=region, OT_PG_PAIR_ROW_KEEPOUT=1)
+    if os.environ.get("OT_PG_ROW_GUIDES", "").strip() == "1":     # any family, opt-in at generation; serdes kits get it by default below
+        cfg += pg_row_guides_lines(cfg)
+    cfg += rc_signal_cfg(P.name)   # r222/r228 signal-net RC table (per die; OT_RC_SIGNAL=0 off)
+    cfg += pgcap_cfg()         # DRT0255 C3b opt-in (gen env OT_PGCAP=1)
+    cfg += tt_setup_repair_cfg()   # r214: effective OT_TT_SETUP_REPAIR in config.mk
     shutil.copyfile(Path(__file__).with_name("hold_repair_pre.tcl"), kd / "hold_repair_pre.tcl")
-    shutil.copyfile(_common_flow_file(HOLD_PAD_HB4.name, HOLD_PAD_HB4.parents[2]), kd / "hold_pad_hb4.tcl")
+    import kit_common_files; kit_common_files.stage(kd)   # KIT-COMMON-1117: hold_pad_hb4 / hold_sdc_guard (HOLD-SDC-1116) / ... (one list, core_flow reads it too)
+    cfg.append("export OT_SIGNOFF_SDC_SHA = " + _hashlib.sha256((kd / "constraint.sdc").read_bytes()).hexdigest()[:16])
     if _tap_grt_pre(P, t):
         # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
         # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
@@ -5644,6 +6322,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if t.get("clock", {}).get("tap_core_etap"):
         # HEAD-TILE-ETAP as a plan form (DH59-TILE 11-03, opt-in clock.tap_core_etap): tap_balance.tcl early-source core re-hang
         cfg.append("export OT_TAP_CORE_ETAP = 1")
+        if t["clock"].get("tap_core_src") == "tree":
+            # S81-COL-CLK-1116 (Spec 0 part 3): the early-source core re-hang may also take tree buffer outputs
+            cfg.append("export OT_TAP_CORE_SRC = tree")
     # R-CLOCK HOLD BUILD (HOLD-TAP-1 11-13; was HEAD-TILE-PREGRT-HOLD): opt-in, plan clock.pregrt_ff_hold true
     # (COORD 11-13 07:2x, default-preserving); pregrt_ff_hold.py, run_kit.sh step below
     import pregrt_ff_hold as _pregrt_ff_hold
@@ -5651,8 +6332,13 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cfg += _pregrt_ff_hold.config_lines(t)
     cfg += tap_chain_affinity_exports(t)
     cfg += tap_pair_affinity_exports(t)
+    if t.get("clock", {}).get("tap_reset_affinity") is True:        # S81-SEAM-RST-1115, opt-in, clock pin only
+        cfg.append("export OT_TAP_RESET_AFFINITY = 1")
     cfg += tap_post_merge_exports(t)
     cfg += tap_group_exports(t)
+    cfg += ft_stage0_exports(t)
+    cfg += ft_keep_firm_exports(t)
+    cfg += private_leaf_exports(t)
     cfg += rck_band_exports(P, tn)
     cfg += rck_island_exports(P, tn)
     cfg += rck_early_exports(P, tn)
@@ -5661,16 +6347,17 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     cons = cons_kit_settings()
     if cons:
         cons_kit_apply(cfg, kd, cons, io_text, top, mlef)
-    cfg += txl_mid_exports(cfg, kd)
+    cfg += explicit_pg_cfg(cfg)  # Explicit PG intent survives an ordinary RFLOW=0 profile.
+    cfg += txl_mid_exports(cfg, kd, defines=type_verilog_defines(t, kit_defines))
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     if macros and hold_ff_margin is not None:
         macro_ff_repair_stage(kd, macros, mlib)
     if os.environ.get("OT_GRT_NONPORT_HOLD") == "1":      # opt-in; chained after any macro-FF wrapper written above
         grt_nonport_hold_chain(kd)
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "ft_polarity_local.tcl",
-              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "pinreg_pad.tcl",
-              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl"):
+              "clock_taps.tcl", "cell_census.tcl", "tap_chain_affinity.tcl", "tap_pair_affinity.tcl", "tap_reset_affinity.tcl", "tap_pair_plan.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "core_clock_band.py", "partition_clock_binding.py", "grt_pre.tcl",
+              "grt_post.tcl", "cts_post.tcl", "tap_insertion.tcl", "leaf_affinity.tcl", "cts_tap_centroid.tcl", "tapbal_grt.tcl", "subtree_balance.tcl", "rck_balance.tcl", "sstn_m5_block.tcl", "pinreg_pad.tcl",
+              "pinreg_measure.tcl", "keepout_phys.tcl", "cts_repair_protect.tcl", "pg_connect.tcl", "hold_guard_grt.tcl", "grt_layers.tcl", "pg_track_truth.tcl", "pg_cell_keepout.tcl", "rc_signal_adjust.tcl", "pg_row_guides.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
@@ -5680,6 +6367,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                 reset_prefix += "set rt_consumer_taps_um {" + " ".join(
                     f"{{{i} {x:.5f} {y:.5f}}}" for i, (_, x, y) in enumerate(RT.consumer_taps(P, tn))) + "}\n"
             hook.write_text(reset_prefix + hook.read_text())
+    pgcap_install(kd)          # DRT0255 C3b (OT_PGCAP=1 only): pg_pair_cap.tcl + hook line at the end of grt_pre.tcl
     if edge_split_ports(P, tn):
         for f in ("clock_edge_split.tcl", "clock_edge_balance.tcl"):
             shutil.copyfile(Path(__file__).with_name(f), kd / f)
@@ -5773,7 +6461,7 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         hook.write_text(hook.read_text() + "\nuplevel #0 {source /work/serdes_lanes_release.tcl}\n")
     if rck_early_exports(P, tn):
         shutil.copyfile(Path(__file__).with_name("rck_early_report.tcl"), kd / "rck_early_report.tcl")
-    bump_out = [b for b in pad_bumps(P, tn) if b["dir"] == "output"]
+    bump_out = pad_bumps(P, tn)       # PAD-IN-DIRECT-1 11-17: output AND input macro_pin pads
     if bump_out:
         # S81-PMATX-DT 11-09 (DIE-S81-85, serdes__t14 a11 G2 u_ptx -> io_pma_tx -249 ps): a macro_pin output pad's die pin
         # IS the macro pin (0 um), but ORFS buffer_ports put its port buffer outside the PMA stack (~270 um down + back,
@@ -5803,12 +6491,15 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         shutil.copyfile(Path(__file__).with_name("dly_spread.tcl"), kd / "dly_spread.tcl")
         hook = kd / "face_flops_release.tcl"
         hook.write_text(hook.read_text() + "\n" + DLY_SPREAD_HOOK + "\n")
+        # MACRO-CROSS (QC-CB-GEN-1115, FABLE-PD-QC-1115 L3): advisory count of 2-pin nets > 300 um over a macro, after the spread
+        shutil.copyfile(Path(__file__).with_name("macro_cross_check.tcl"), kd / "macro_cross_check.tcl")
+        hook.write_text(hook.read_text() + MACRO_CROSS_HOOK + "\n")
         if dly_mode == "warn":
             # list form: the listed types keep the stage-shortfall chains they have (plan item) as a log line, not a stop
             mk = (kd / "config.mk").read_text()
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport OT_DLY_SPREAD = warn\n")
     if core_input_place(P.raw, tn):
-        for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl"):
+        for f_ in ("core_input_anchor.tcl", "core_input_chain.tcl", "place_wire_ratio.tcl"):
             shutil.copyfile(Path(__file__).with_name(f_), kd / f_)
         with (kd / "face_flops.tcl").open("a") as f_:
             f_.write(CORE_INPUT_PLACE_ANCHOR)
@@ -5824,8 +6515,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             raise ValueError(f"core_input_place: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
         else:
             (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/core_input_chain.tcl\n")
+    if core_link_pipe_place(P.raw, tn):
+        shutil.copyfile(Path(__file__).with_name("lp_even.tcl"), kd / "lp_even.tcl")
+        mk = (kd / "config.mk").read_text()
+        m_ = re.search(r"^export PRE_RESIZE_TCL = /work/(\S+)\s*$", mk, re.M)
+        if m_ and (kd / m_.group(1)).is_file():
+            with (kd / m_.group(1)).open("a") as f_:
+                f_.write(LP_EVEN_HOOK)
+        elif m_:
+            raise ValueError(f"core_link_pipe_place: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
+        else:
+            (kd / "config.mk").write_text(mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/lp_even.tcl\n")
     if t.get("reset_relay_full"):
         reset_relay_full(kd / "rtl")
+    install_reset_chain_spread(kd, t)
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): the type's slice -> master_slice.json/.tcl, sourced at
     # PRE_GLOBAL_PLACE (face_flops.tcl: after io placement, before GPL); refused without a slice once required
     import master_slice as MS
@@ -5853,6 +6556,10 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
             f.write("\nsource /work/reset_physical_stages.tcl\n")
         with (kd / "face_flops_release.tcl").open("a") as f:
             f.write("\nsource /work/reset_physical_stages_release.tcl\n")
+    if os.environ.get("OT_S81_VPW_BANK") == "1":
+        # Strip form B: physical bank-end clustering only; RTL and cycles come from the bound XR source.
+        import s81_vpw_bank
+        s81_vpw_bank.install(kd)
     if region_guide:
         # FLOW-23 (COORD 11-02 23:0x, GEOM-111 class D, opt-in gen phys --region-guide TYPE=SPEC): soft GPL region
         # guides per failing r2r bit slice (tools/die_plan/region_guide.py plan of the kit's last AUTO-GEOM), sourced
@@ -5989,9 +6696,15 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
                core_latency=clat["rows"],
                pin_reg_p90_um=P.budgets["pin_reg_p90_um"], io_budget=IO_BUDGET,
                instances=[n for n, p in P.parts.items() if p["type"] == tn])
+    # Signal grants/CONS may raise routing above the unchanged physical clock-pin layer.
+    # No extra metadata for ordinary kits: preserve their existing budget bytes.
+    if top != P.layer_budget["partition_signal_max"]:
+        bud["clock"]["pin_layer"] = P.layer_budget["partition_signal_max"]
     # Private explicit actual-LEF entry access. Default budget bytes remain unchanged.
     for row in bud["clock"]["core_taps"]:
-        core = next((c for c in t.get("hard_cores", []) if c["inst"] == row["inst"]), None)
+        # QC-CB-GEN-1115 L4/L6: core_tap_rows names the PHYSICAL instance (u_bound.u_t22) once the kit declares physical_inst, the plan core the
+        # logical one (u_t22): a lookup on c["inst"] alone dropped clock_entry_access from budget.json and the pin snapped 0.45 um off the access footprint
+        core = next((c for c in t.get("hard_cores", []) if _core_is(c, row["inst"])), None)
         if core and core.get("clock_entry_access"):
             if row["pin"] != core["clock_entry_access"]["pin"]:
                 raise ValueError("clock entry access pin differs from core tap")
@@ -6036,13 +6749,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("hard_landing.py"), kd / "hard_landing.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
-    shutil.copyfile(Path(__file__).with_name("native_bb.py"), kd / "native_bb.py")
-    shutil.copyfile(Path(__file__).resolve().parents[1] / "orfs_hold_mm.py", kd / "orfs_hold_mm.py")
     # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
     shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
     # GENBUG-5 (11-15): merged-replica census after synth, placed-database hop census before CTS; both OFF unless the
     # generator env OT_MERGE_CENSUS / OT_HOP_CENSUS is 1 (fail) or warn (log only).  The flag file is read by run_kit.sh.
     # (kits without an opt-in key stay byte-equal: the helpers are copied only with their flag)
+    if t.get("clock", {}).get("private_leaf"):       # HEAD-SERDES-1115: post-CTS private leaf step (run_kit.sh), only with the row
+        shutil.copyfile(Path(__file__).with_name("private_leaf.tcl"), kd / "private_leaf.tcl")
+    _tt = {"1": "cts", "cts": "cts", "grt": "grt", "both": "both"}.get(os.environ.get("OT_TT_SETUP_REPAIR", "0").strip())
+    (kd / "kit_effective_env.json").write_text(json.dumps(kit_effective_env(), indent=1) + "\n")   # r214 audit
+    if _tt:     # FABLE-PD-HEAD-1650 f1: TT setup repair after CTS (placement RC) and/or after GRT (GRT RC, the gate basis)
+        shutil.copyfile(Path(__file__).with_name("tt_setup_repair.tcl"), kd / "tt_setup_repair.tcl")
+        shutil.copyfile(Path(__file__).with_name("grt_pg_replay.tcl"), kd / "grt_pg_replay.tcl")
+        shutil.copyfile(Path(__file__).with_name("tt_setup_keep.py"), kd / "tt_setup_keep.py")
+        (kd / "tt_setup_repair.on").write_text(_tt + "\n")
     _mc = os.environ.get("OT_MERGE_CENSUS", "0").strip()
     if _mc in ("1", "warn"):
         shutil.copyfile(Path(__file__).with_name("merged_replica_census.py"), kd / "merged_replica_census.py")
@@ -6051,14 +6771,12 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     if _hc in ("1", "warn"):
         shutil.copyfile(Path(__file__).with_name("hop_census.py"), kd / "hop_census.py")
         (kd / "hop_census.on").write_text(_hc + "\n")
-    for helper in ("port_bind_gate.py", "hold_gate.tcl"):
-        shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
+    shutil.copyfile(Path(__file__).with_name("hold_gate.tcl"), kd / "hold_gate.tcl")
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
     # FLOW-21 / COORD 11-01: the pre-route LEC runs beside place/CTS/route (lec_async.sh, OT_LEC_ASYNC=0 = inline)
     shutil.copyfile(Path(__file__).with_name("lec_async.sh"), kd / "lec_async.sh")
-    shutil.copyfile(Path(__file__).with_name("lec_completed_transfer.py"), kd / "lec_completed_transfer.py")
-    shutil.copyfile(Path(__file__).with_name("lec_completed_reference.py"), kd / "lec_completed_reference.py")
+    shutil.copyfile(Path(__file__).with_name("stage_odb_cap.py"), kd / "stage_odb_cap.py")   # STAGE-CAP 11-17
     import core_flow; core_flow.stage_grt183(kd)   # FLOW-28 11-04: GRT-0183 fresh-process re-run (run_kit.sh)
     shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
@@ -6149,6 +6867,20 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
     audit_pins = audit_pin_records(json.loads((kd / "pins.json").read_text()), planned_pins)
     (kd / "audit_pins.json").write_text(json.dumps(audit_pins, indent=1) + "\n")
     prepare_signed_parent_source(P, tn, kd, macros, root)
+    # HEAD-SERDES-SECONDARY 11-14: OT_GEN_SECONDARY_CLOCK="<type>:<port>:<clock>:<target>:<dmax_um>:<radius_um>" installs the
+    # explicit pad-source density tree (secondary_clock.install) on that type only; unset = kit unchanged.
+    _sec = os.environ.get("OT_GEN_SECONDARY_CLOCK", "")
+    if _sec and _sec.split(":")[0] == tn:
+        import secondary_clock as _SEC
+        _f = _sec.split(":")
+        _SEC.install(kd, dict(port=_f[1], clock=_f[2], target=int(_f[3]), dmax_um=float(_f[4]), radius_um=float(_f[5])))
+    # Bind repair to the final golden SDC after every native/secondary-clock installer.
+    import hold_flow
+    hold_flow.install(kd)
+    import hold_sdc_check as _HSC
+    _hf = _HSC.kit_findings(kd)
+    if _hf:
+        raise ValueError(f"type {tn}: hold stages do not see the sign-off SDC ({len(_hf)}): " + "; ".join(_hf[:4]))
     write_partition_freeze(P, tn, kd, planned_pins, private_clock_mesh=private_clock_info)
     if os.environ.get("OT_HOOK_MANIFEST", "0").strip() == "1":   # GENBUG-4 opt-in: hooks.manifest (kits stay byte-equal without it)
         import hook_manifest   # sha of every hook copied into the kit vs the generating tree (check vs main in the wave preflight)
@@ -6179,6 +6911,40 @@ def type_verilog_defines(t, kit_defines=None):
     return list(dict.fromkeys(["-DSYNTHESIS"] + ["-D" + v for v in values]))
 
 
+RESET_CHAIN_SPREAD_HOOK = "\n# FABLE-FIX-S81-COLTAP 11-16: reset_replicate copy_depth chains on the line common flop -> region copy\nsource /work/reset_chain_spread.tcl\n"
+
+
+def reset_chain_depth(t):
+    """the deepest reset_replicate copy_depth of a type (0 = no key, 1 = one copy per region: no chain flops)."""
+    return max([int(sp.get("copy_depth") or 1) for sp in (t or {}).get("reset_replicate") or []] or [0])
+
+
+def install_reset_chain_spread(kd, t):
+    """FABLE-FIX-S81-COLTAP 11-16: a type with a reset_replicate copy_depth > 1 gets reset_chain_spread.tcl at PRE_RESIZE
+    (after global placement, before repair_design buffers the hops).  GPL puts every chain flop u_x_r<k>_s<j> next to the
+    loads of its region, so the way from the common flop was one hop (col_h9_r2, copy_depth 3: 836..1,174 um, -181 ps at
+    CTS; with the hook the longest hop is 315 um).  Appended to the kit's PRE_RESIZE hook (the PLACE-NOCONVERGE gate runs
+    first), or the hook itself when the kit has none.  No copy_depth > 1: the kit is byte-identical.  Returns True when
+    installed."""
+    if reset_chain_depth(t) < 2:
+        return False
+    kd = Path(kd)
+    shutil.copyfile(Path(__file__).with_name("reset_chain_spread.tcl"), kd / "reset_chain_spread.tcl")
+    mk = (kd / "config.mk").read_text()
+    m_ = re.search(r"^export PRE_RESIZE_TCL = /work/(\S+)\s*$", mk, re.M)
+    if m_ and (kd / m_.group(1)).is_file():
+        with (kd / m_.group(1)).open("a") as f_:
+            f_.write(RESET_CHAIN_SPREAD_HOOK)
+        mk = mk.rstrip("\n") + "\n"
+    elif m_:
+        raise ValueError(f"reset_chain_spread: PRE_RESIZE_TCL {m_.group(1)} is not a kit file")
+    else:
+        mk = mk.rstrip("\n") + "\nexport PRE_RESIZE_TCL = /work/reset_chain_spread.tcl\n"
+    (kd / "config.mk").write_text(mk + "# reset_replicate copy_depth chains are spread after global placement (reset_chain_spread.tcl)\n"
+                                       "export OT_RESET_CHAIN_SPREAD = 1\n")
+    return True
+
+
 def install_gp_noconverge_gate(kd, cfg, die=None):
     """KW-FIX-44 PLACE-NOCONVERGE (COORD 11-10): PRE_RESIZE_TCL gate that ends the run at place when global placement
     stopped at the Nesterov iteration cap (GPL-1010) above overflow 0.1, before resize and DPL spend hours on it.
@@ -6189,10 +6955,55 @@ def install_gp_noconverge_gate(kd, cfg, die=None):
     shutil.copyfile(here / "gp_noconverge_gate.tcl", kd / "gp_noconverge_gate.tcl")
     fo = place_max_fanout(die)
     shutil.copyfile(here.parent / "autopilot" / "gp_noconverge.py", kd / "gp_noconverge.py")
+    shutil.copyfile(here / "place_wire_ratio.tcl", kd / "place_wire_ratio.tcl")      # lever 7: post-place zero-logic wire check (report-only)
     return ["# KW-FIX-44 PLACE-NOCONVERGE: GPL at its iteration cap with overflow > 0.1 ends the run before resize",
             "export PRE_RESIZE_TCL = /work/gp_noconverge_gate.tcl"] + (
+        [f"# PLACE-HPWL (FABLE-PD-S81-STRIP): GPL exit HPWL > {hr} x the run minimum ends the run before resize",
+         f"export OT_GPL_HPWL_RATIO = {hr}"] if (hr := gpl_hpwl_ratio(die)) else []) + (
         [f"# KW-FIX-45 PLACE-FANOUT: place-stage repair_design limit (gp_noconverge_gate.tcl set_max_fanout)",
          f"export OT_PLACE_MAX_FANOUT = {fo}"] if fo else [])
+
+
+def gpl_sparse_overflow(die=None):
+    """SPARSE EXIT (FABLE-FIX-S81-STRIP 11-16): the gen environment's OT_GPL_SPARSE_OVERFLOW (0 = off, else a number in
+    (0, 1)) -> the Nesterov exit overflow of a sparse kit (face_flops.tcl OT_GPL_GUARD rule 3), else 0.25 on the S81 die
+    and off elsewhere.  S81 strip leaves (movable util < 1 %): the phase from overflow 0.25 to the 0.10 default moved the
+    median cell 98 um on t75 and left t47 / t75 / t8fix at 1.8-2.4 x the HPWL the run had reached; exit at 0.25 is
+    1.026 x with 2.0 um average detailed-placement displacement.  Not measured on the other dies."""
+    v = os.environ.get("OT_GPL_SPARSE_OVERFLOW", "").strip()
+    if v:
+        try:
+            r = float(v)
+        except ValueError:
+            raise ValueError(f"OT_GPL_SPARSE_OVERFLOW must be a number (0 = off, else in (0, 1)), got {v!r}") from None
+        if not 0 <= r < 1:
+            raise ValueError(f"OT_GPL_SPARSE_OVERFLOW must be 0 (off) or in (0, 1), got {v!r}")
+        return r or None
+    return 0.25 if str(die or "").split("_")[0] == "s81" else None
+
+
+def gpl_sparse_overflow_cfg(die=None):
+    """config.mk lines of the sparse exit (none when it is off)."""
+    v = gpl_sparse_overflow(die)
+    return [f"# SPARSE EXIT (FABLE-FIX-S81-STRIP): a sparse kit leaves global placement at overflow {v:g}, before the die-scale drift",
+            f"export OT_GPL_SPARSE_OVERFLOW = {v:g}"] if v else []
+
+
+def gpl_hpwl_ratio(die=None):
+    """PLACE-HPWL (FABLE-PD-S81-STRIP 11-16): the gen environment's OT_GPL_HPWL_RATIO (a number > 1; 0 = off) -> the kit's
+    PLACE-HPWL limit, else 1.3 on the S81 die (strip leaves t47 / t75 / t8fix diverged to 1.8-2.4 x, good leaves 1.01-1.05)
+    and off elsewhere: other dies' exit / minimum ratio is not yet measured (their table minimum can sit at a clustered
+    initial placement)."""
+    v = os.environ.get("OT_GPL_HPWL_RATIO", "").strip()
+    if v:
+        try:
+            r = float(v)
+        except ValueError:
+            raise ValueError(f"OT_GPL_HPWL_RATIO must be a number (0 = off, else > 1), got {v!r}") from None
+        if r != 0 and r <= 1:
+            raise ValueError(f"OT_GPL_HPWL_RATIO must be 0 (off) or > 1, got {v!r}")
+        return r or None
+    return 1.3 if str(die or "").split("_")[0] == "s81" else None
 
 
 def place_max_fanout(die=None):
@@ -6248,6 +7059,13 @@ if [ "$GOAL" != synth ] && [ "${OT_ALLOW_RESYNTH:-0}" != 1 ] && [ ! -f "$K/resum
       exit 12
     fi
   fi
+fi
+# KWRS-END
+# STAGE-CAP block (COORD 11-17, FLEET-OPS-R): bounds the stage ODBs this kit writes from now on; refusal-free, no physical step  # KWRS-BEGIN
+# Keeps 1_synth, the step boundaries (2_floorplan 3_place 4_cts 5_1_grt = diagnosis anchors) and the latest final; drops the
+# other intermediates once the successor stage is written (stage_odb_cap.py).  OT_KEEP_STAGE_ODBS=1 or K/.keep_stage_odbs opts out.
+if [ "${OT_KEEP_STAGE_ODBS:-0}" != 1 ] && [ ! -f "$K/.keep_stage_odbs" ] && [ -f "$K/stage_odb_cap.py" ]; then
+  nohup python3 -I "$K/stage_odb_cap.py" --watch "$K/run/results/asap7" --kit "$K" --max-hours 36 >>"$K/stage_odb_cap.log" 2>&1 </dev/null &
 fi
 # KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then
@@ -6656,6 +7474,12 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
         mv -f /work/4_cts_pretapbal.odb \"\$TB\"; echo \"OT_TAPBAL_FALLBACK tapbal_grt.tcl tool crash (rc \$rc: \$(grep -Em1 'Signal [0-9]+ received' \"\$TL\"); \$(grep -Eom1 'sta::[A-Za-z_]+::[A-Za-z_]+' \"\$TL\" | head -1)): 4_cts.odb restored to the CTS result, plain GRT path (no GRT-RC tap pre-pass; crash log kept as /work/4_2_tapbal_grt_crash.log)\" | tee -a /work/tapbal_fallback.log; mv -f \"\$TL\" /work/4_2_tapbal_grt_crash.log; rc=0; fi; \
       rm -f /work/4_cts_pretapbal.odb; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
+    if [ \$rc = 0 ] && [ -f /work/private_leaf.tcl ] && [ $GOAL != cts ]; then PL4=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
+      if [ -n \"\$PL4\" ]; then cp -p \"\$PL4\" /work/4_cts_pre_leaf.odb; ODB=\"\$PL4\" OUT=\"\$PL4.pl\" openroad -exit /work/private_leaf.tcl > /work/private_leaf.log 2>&1; plrc=\$?; grep -h 'OT_PRIVATE_LEAF' /work/private_leaf.log | tail -6; \
+        if [ \$plrc = 0 ] && [ -s \"\$PL4.pl\" ]; then mv -f \"\$PL4.pl\" \"\$PL4\"; else rm -f \"\$PL4.pl\"; if [ \$plrc != 0 ]; then echo \"OT_PRIVATE_LEAF FALLBACK step rc \$plrc (private_leaf.log): 4_cts.odb unchanged\" | tee -a /work/private_leaf_fallback.log; else grep -h 'OT_PRIVATE_LEAF FALLBACK' /work/private_leaf.log | tee -a /work/private_leaf_fallback.log; fi; fi; fi; fi; \
+    if [ \$rc = 0 ] && [ -f /work/tt_setup_repair.tcl ] && grep -Eq '^(cts|both)' /work/tt_setup_repair.on 2>/dev/null && [ $GOAL != cts ]; then TC4=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
+      if [ -n \"\$TC4\" ]; then cp -p \"\$TC4\" /work/4_cts_pre_tt.odb; ODB=\"\$TC4\" OUT=\"\$TC4.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_repair.log 2>&1; trc=\$?; grep -h 'OT_TT_SETUP_REPAIR' /work/tt_setup_repair.log | tail -3; \
+        if [ \$trc = 0 ] && [ -s \"\$TC4.tt\" ] && OT_TT_SETUP_MEASURE=1 ODB=\"\$TC4.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_measure.log 2>&1 && python3 -I /work/tt_setup_keep.py /work/tt_setup_repair.log /work/tt_setup_measure.log | tee -a /work/tt_setup_keep.log; then mv -f \"\$TC4.tt\" \"\$TC4\"; else rm -f \"\$TC4.tt\"; echo \"OT_TT_SETUP_REPAIR FALLBACK step rc \$trc (tt_setup_repair.log): 4_cts.odb unchanged\" | tee -a /work/tt_setup_repair_fallback.log; fi; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
@@ -6681,6 +7505,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       if [ -n \"\$HM\" ] && ! python3 -c 'import math,re,sys; s=sys.argv[1].strip(); valid=re.fullmatch(r\"[+-]?(?:[0-9]+(?:[.][0-9]*)?|[.][0-9]+)(?:[eE][+-]?[0-9]+)?\",s); x=float(s) if valid else float(\"nan\"); sys.exit(not math.isfinite(x))' \"\$HM\" > /work/hold_margin_value.log 2>&1; then \
         echo \"FAIL_POSTCTS invalid OT_HOLD_FF_MARGIN [\$HM]: expected a finite number\" | tee -a /work/FAIL_POSTCTS; rc=9; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then MF=\$M; if [ -f /work/macro_ff_repair.mk ]; then MF=\"\$M DESIGN_CONFIG=/work/macro_ff_repair.mk\"; fi; OT_VCLK_CORNER=ff \$MF grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; } && [ -f /work/tt_setup_repair.tcl ] && grep -Eq '^(grt|both)' /work/tt_setup_repair.on 2>/dev/null; then TG5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb 2>/dev/null | head -1); \
+    if [ -n \"\$TG5\" ]; then cp -p \"\$TG5\" /work/5_1_grt_pre_tt.odb; OT_TT_SETUP_RC=grt OT_TT_SETUP_GUIDE=\"\$(dirname \"\$TG5\")/route.guide.tt\" ODB=\"\$TG5\" OUT=\"\$TG5.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_repair_grt.log 2>&1; trc=\$?; grep -h 'OT_TT_SETUP_REPAIR' /work/tt_setup_repair_grt.log | tail -3; \
+      if [ \$trc = 0 ] && [ -s \"\$TG5.tt\" ] && OT_TT_SETUP_RC=grt OT_TT_SETUP_MEASURE=1 ODB=\"\$TG5.tt\" openroad -exit /work/tt_setup_repair.tcl > /work/tt_setup_measure_grt.log 2>&1 && python3 -I /work/tt_setup_keep.py /work/tt_setup_repair_grt.log /work/tt_setup_measure_grt.log | tee -a /work/tt_setup_keep.log; then mv -f \"\$TG5.tt\" \"\$TG5\"; [ ! -s \"\$(dirname \"\$TG5\")/route.guide.tt\" ] || mv -f \"\$(dirname \"\$TG5\")/route.guide.tt\" \"\$(dirname \"\$TG5\")/route.guide\"; else rm -f \"\$TG5.tt\" \"\$(dirname \"\$TG5\")/route.guide.tt\"; echo \"OT_TT_SETUP_REPAIR FALLBACK grt step rc \$trc (tt_setup_repair_grt.log): 5_1_grt.odb unchanged\" | tee -a /work/tt_setup_repair_fallback.log; fi; fi; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = grt ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     BG=\$(grep -c '^export OT_POSTCTS_BAND_GATE = 1' /work/config.mk); rm -f /work/postcts_advisory.log; \
     for c in TT FF; do OT_POSTCTS_BAND_GATE=\$BG OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
@@ -7323,10 +8150,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
                                        "have no bound RTL (landing kits use the landed wrapper)")
         else:
             gtypes = None          # the landed emitter checks every copy of every type
-    if kit_rtl and gtypes == [] and landing is None:
+    if kit_rtl and gtypes == []:
         # Every selected kit already has its complete bound RTL filelist.
         # Keep the same plan validation, but do not build an unused whole-die
         # top/pad map (including every unrelated partition and reset relay).
+        # With a declaration-only landing sidecar, Landings and the bound RTL
+        # land-slot/collector checks below still validate that exact contract.
         errs = (S.scope_errors_typed(S.validate(raw), types, raw) if overlay_receipt else
                 S.scope_errors(S.validate(raw), types))
         if errs:
@@ -7412,9 +8241,12 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             # GENBUG (COORD r107): the kit records the source tree it was generated from and the kit-rtl filelist, so
             # kit_gen_lint can reject a source path outside that tree (a stale B6gsl/src beside the kit's own src_rel2 copy)
             Path(kits[-1]).mkdir(parents=True, exist_ok=True)       # trial mode has not created the kit dir yet
+            closure_meta = Path(kit_rtl[tn]).with_name("kit_rtl.json")
+            closure = json.loads(closure_meta.read_text()).get("input_closure") if closure_meta.is_file() else None
             (Path(kits[-1]) / "kit_rtl_paths.json").write_text(json.dumps(dict(
-                schema="opentallas.kit_rtl_paths.v1", src_tree=str(Path(root).resolve()), filelist=str(Path(kit_rtl[tn]).resolve()),
-                files=[str(x) for x in mine]), indent=1) + "\n")
+                schema="opentallas.kit_rtl_paths.v1", src_tree=str(Path(root).resolve()), filelist=str(Path(kit_rtl[tn]).absolute()),
+                files=[str(x) for x in mine],
+                input_closure=closure), indent=1) + "\n")
         if kit_rtl and tn in kit_rtl and (Path(kit_rtl[tn]).parent/'kit_topology.json').is_file():
             import kit_topology
             kit_topology.stage_inventory(Path(kit_rtl[tn]).parent,kits[-1],top=t['module'])

@@ -41,8 +41,10 @@ def place(pins_y, env):
     end = SRC.index("    } else {", start)
     branch = SRC[start:end] + "    }\n"
     rows = " ".join("r" for _ in range(4000))
+    row_ys = " ".join(str(i * 270) for i in range(4000))
+    row_proc = re.search(r"proc ff_row_index \{row_ys pin_y\} \{\n.*?\n\}", SRC, re.S).group(0)
     script = ("set ff_sw 54;set ff_x0 0;set ff_x1 622080;set ff_y0 0;set ff_rh 270;set w 1080;set ff_occ {};set face E\n"
-              f"set ff_rows [list {rows}]\n" + "".join(f"set ::env({k}) {v}\n" for k, v in env.items()) + setup +
+              f"set ff_rows [list {rows}];set ff_row_ys [list {row_ys}]\n" + row_proc + "\n" + "".join(f"set ::env({k}) {v}\n" for k, v in env.items()) + setup +
               "foreach py {" + " ".join(map(str, pins_y)) + "} {\n" + branch +
               "if {!$placed} {error unplaced}\nputs \"LOC $c $cx $cy\"\n}\n")
     cp = subprocess.run(["tclsh"], input=script, capture_output=True, text=True, check=True)

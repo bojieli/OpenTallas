@@ -103,7 +103,7 @@ class PastGeom(unittest.TestCase):
         self.assertEqual(Q(job("ARCHIVED", archive="intel2:/a", flow_tag="flow-20261030-a-s81"))[:3], ("count", "SIGNED", ""))
         self.assertEqual(Q(job("RUNNING"))[:3], ("route", "RUNNING", ""))
         self.assertEqual(Q(job("WAIT-PATH-GATE"))[:3], ("queue", "WAIT-PATH-GATE", ""))
-        self.assertEqual(Q(job("SIGNED-UNVERSIONED", prov_error="no flow tag"))[2], "FLOW")
+        self.assertEqual(Q(job("SIGNED-UNVERSIONED", prov_error="no flow tag"))[1:3], ("SIGNED", ""))   # SIGNED-TERMINAL-1115
         self.assertEqual(Q(job("DONE-CRASH", kind="infra-oom"))[2], "INFRA")
         self.assertEqual(Q(job("DONE-CRASH", kind="tool-segfault"))[2], "FLOW")
         so = {"fails": ["setup_tt"], "tt_wns": -42.0, "ff_wns": 3.0, "drc": 0}

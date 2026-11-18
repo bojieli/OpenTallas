@@ -19,6 +19,14 @@ set ff_site [[lindex $ff_rows 0] getSite]
 set ff_sw [$ff_site getWidth]; set ff_rh [$ff_site getHeight]
 set ff_orient {}
 foreach r $ff_rows { dict set ff_orient [lindex [$r getOrigin] 1] [$r getOrient] }
+# Macro obstructions can remove whole row ranges. getRows count is not the
+# coordinate of the last legal row (coll_ucie: 3176 rows start at y=779.76 um).
+# Keep the actual Y coordinates so an east/west pin never clamps to a fictitious
+# row at core_y0 + (row_count-1)*height.
+set ff_row_ys [lsort -integer -unique [dict keys $ff_orient]]
+proc ff_row_index {row_ys pin_y} {
+  return [expr {max(0, min([llength $row_ys] - 1, [lsearch -bisect -integer $row_ys $pin_y]))}]
+}
 set ff_skip_re {^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$}   ;# rst_o: reset wavefront outs, placed by reset_tree.tcl
 # ft slots: name -> {k in_face regs}
 set ff_ft {}
@@ -230,16 +238,16 @@ foreach pass {INPUT OUTPUT} {
       continue
     }
     if {$face in {E W}} {
-      set row [expr {max(0, min(([llength $ff_rows] - 1), ($py - $ff_y0) / $ff_rh))}]
+      set row [ff_row_index $ff_row_ys $py]
       # nearest free (row, column) slot: columns inward, alternate rows around the pin row
       set placed 0
       for {set c 0} {$c < 400 && !$placed} {incr c} {
         foreach dr {0 1 -1 2 -2} {
           set r [expr {$row + $dr}]
-          if {$r < 0 || $r >= [llength $ff_rows] || [dict exists $ff_occ "$face,$r,$c"]} continue
+          if {$r < 0 || $r >= [llength $ff_row_ys] || [dict exists $ff_occ "$face,$r,$c"]} continue
           if {$ff_ew_stride > 1 && ($r + $c) % $ff_ew_stride} continue
           dict set ff_occ "$face,$r,$c" 1
-          set cy [expr {$ff_y0 + $r * $ff_rh}]
+          set cy [lindex $ff_row_ys $r]
           set cx [expr {$face eq "W" ? $ff_x0 + $c * $ff_ew_cpitch : $ff_x1 - $c * $ff_ew_cpitch - $w}]
           set placed 1; break
         }
@@ -529,6 +537,45 @@ if {[info exists ff_full_targets]} {
     ff_reserve_explicit [expr {round($x*$ff_dbu)}] [expr {round($y*$ff_dbu)}] [expr {round($w*$ff_dbu)}] [expr {round($h*$ff_dbu)}]
   }
 }
+# DRT0255 (FABLE-PD-DRT-1350 fix 3, opt-in OT_PG_PAIR_ROW_KEEPOUT=1): the landing-ring / ft-station / face-flop sites come from ff_put_near;
+# a std row under an M6 PG pair (pair + min spacing) makes the cell's straight hop run in a gcell row with 0-1 DRT-legal M6 tracks
+# (class A).  The pair rows are skipped, so a one-row hop is never a pair row; cells move by at most 2-3 rows, no plan event.
+# ff_pair_rows_build y0 rh stripes sp -> {row index ...}: pure function of the geometry (tested with tclsh).
+proc ff_pair_rows_build {y0 rh stripes sp} {
+  set blocked {}
+  foreach s $stripes {
+    lassign $s lo hi
+    set r0 [expr {int(floor(double($lo - $sp - $y0) / $rh))}]
+    set r1 [expr {int(floor(double($hi + $sp - $y0 - 1) / $rh))}]
+    for {set r $r0} {$r <= $r1} {incr r} { dict set blocked $r 1 }
+  }
+  return $blocked
+}
+proc ff_pair_row_blocked {r} {
+  global ff_pair_rows ff_pair_rows_ready ff_y0 ff_rh
+  if {![info exists ::env(OT_PG_PAIR_ROW_KEEPOUT)] || $::env(OT_PG_PAIR_ROW_KEEPOUT) ne "1"} { return 0 }
+  if {![info exists ff_pair_rows_ready]} {
+    set ff_pair_rows_ready 1; set ff_pair_rows {}
+    set blk [ord::get_db_block]; set tech [ord::get_db_tech]
+    set L [$tech findLayer [expr {[info exists ::env(OT_PG_PAIR_ROW_LAYER)] ? $::env(OT_PG_PAIR_ROW_LAYER) : "M6"}]]
+    if {$L ne "NULL" && [$L getDirection] eq "HORIZONTAL"} {
+      set st {}
+      foreach net [$blk getNets] {
+        if {![$net isSpecial]} continue
+        foreach sw [$net getSWires] { foreach w [$sw getWires] {
+          if {[$w isVia]} continue
+          set wl [$w getTechLayer]
+          if {$wl eq "NULL" || [$wl getName] ne [$L getName]} continue
+          if {([$w xMax] - [$w xMin]) <= ([$w yMax] - [$w yMin])} continue
+          lappend st [list [$w yMin] [$w yMax]]
+        } }
+      }
+      set ff_pair_rows [ff_pair_rows_build $ff_y0 $ff_rh [lsort -unique $st] [$L getSpacing]]
+      puts "OT_PG_PAIR_ROW_KEEPOUT [dict size $ff_pair_rows] std rows under [llength $st] [$L getName] stripes (+ min spacing) skipped by the ring / station / face-flop site search"
+    }
+  }
+  return [dict exists $ff_pair_rows $r]
+}
 proc ff_put_near {f x y} {
   # nearest free (column, row) cell of the global station grid around (x, y), spiral search
   global ff_gocc ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_cpitch ff_orient
@@ -546,7 +593,7 @@ proc ff_put_near {f x y} {
     for {set depth $ff_ns_inset} {$depth < 120} {incr depth} {
       foreach dc {0 1 -1} {
         set c [expr {$c0+$dc}];set r [expr {$nsface eq "N" ? $rmax-$depth : $depth}]
-        if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_ns_stride || [dict exists $ff_gocc "$c,$r"]} continue
+        if {$c<0 || $c>$cmax || $r<0 || $r>$rmax || ($depth-$ff_ns_inset+$c)%$ff_ns_stride || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
         set cx [expr {$ff_x0+$c*$ff_cpitch}];set cy [expr {$ff_y0+$r*$ff_rh}]
         if {abs($x-($cx+$w/2))+abs($y-($cy+$ff_rh/2))>27*$ff_dbu} continue
         if {[llength [info commands ff_hits_explicit]] && [ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
@@ -563,7 +610,7 @@ proc ff_put_near {f x y} {
     for {set dr [expr {-$rad}]} {$dr <= $rad} {incr dr} {
       foreach dc [lsort -unique [list [expr {$rad - abs($dr)}] [expr {abs($dr) - $rad}]]] {
         set c [expr {$c0 + $dc}]; set r [expr {$r0 + $dr}]
-        if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"]} continue
+        if {$c < 0 || $r < 0 || $c > $cmax || $r > $rmax || [dict exists $ff_gocc "$c,$r"] || [ff_pair_row_blocked $r]} continue
         set cx [expr {$ff_x0 + $c * $ff_cpitch}]; set cy [expr {$ff_y0 + $r * $ff_rh}]
         if {[ff_hits_explicit $cx $cy $w [[$f getMaster] getHeight]]} continue
         dict set ff_gocc "$c,$r" 1
@@ -610,6 +657,31 @@ proc ff_put_stage {f slot j nm xy} {
     return [list $cx $cy]
   }
   return [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+}
+# Opt-in endpoint-biased unlanded slots may explicitly own station0 too.
+# Default off leaves the original pin-face register and every legacy slot unchanged.
+proc ff_place_explicit_stage0 {f slot nm bt ob k regs} {
+  global ff_dbu ff_bit_site_cells ff_bit_sites
+  if {![info exists ::env(OT_FT_EXPLICIT_STAGE0)] || $slot ni $::env(OT_FT_EXPLICIT_STAGE0)} {return {}}
+  if {[llength $regs] >= 2*$k} {
+    set xy [list [expr {round([lindex $regs 0]*$ff_dbu)}] [expr {round([lindex $regs 1]*$ff_dbu)}]]
+    set xy [ff_lane_xy $slot $bt $ob $xy 0.0]
+  } else {
+    error "FT explicit stage0 lacks complete waypoints/sites: $slot"
+  }
+  # Legacy ft_bit_sites tables own internal stages1..k-1 only. Their existence
+  # must not make the newly planned stage0 look like a missing explicit site.
+  set own0 0
+  if {[regexp {\[([0-9]+)\]$} $nm -> bit] && [info exists ff_bit_sites]} {
+    set own0 [dict exists $ff_bit_sites "$slot,0,$bit"]
+  }
+  if {[info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot] && !$own0} {
+    set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+  } else {
+    set got [ff_put_stage $f $slot 0 $nm $xy]
+  }
+  if {![llength $got]} {error "FT explicit stage0 placement failed: $slot $nm"}
+  return $got
 }
 # RELAY-PLACE-1 11-12 (FT-LANE, default on; OT_FT_LANE=0 restores the slot-point form): plan regs_um are ONE site per
 # slot stage (the slot centre line), so every bit of a W-bit slot took ff_put_near around the same point and the spiral
@@ -723,6 +795,11 @@ foreach bt [$ff_blk getBTerms] {
   for {set i 0} {$i + 3 < [llength $pts]} {incr i 2} { set L [expr {$L + abs([lindex $pts $i] - [lindex $pts $i+2]) + abs([lindex $pts $i+1] - [lindex $pts $i+3])}] }
   # station 0 = the in-face register placed by the face pass (its location when the db has it)
   if {[catch {$f getLocation} lprev] || [llength $lprev] != 2} { set lprev "" }
+  set ff_exp0 [ff_place_explicit_stage0 $f $slot $nm $bt $ob $k $regs]
+  if {[llength $ff_exp0]} {
+    set lprev $ff_exp0
+    puts $ff_out "[$f getName]\tst0_explicit\t[expr {[lindex $lprev 0]/double($ff_dbu)}]\t[expr {[lindex $lprev 1]/double($ff_dbu)}]\t$nm"
+  }
   incr ff_lane_bits
   for {set j 1} {$j < $k} {incr j} {
     set q [ff_next_station $f]
@@ -817,6 +894,8 @@ if {[file exists /work/ft_polarity_local.tcl]} {source /work/ft_polarity_local.t
 if {[file exists [file join [file dirname [file normalize [info script]]] cell_census.tcl]]} {
   uplevel #0 [list source [file join [file dirname [file normalize [info script]]] cell_census.tcl]]; ot_cell_census floorplan
 } else { puts "OT_CELL_CENSUS WARN stage=floorplan: cell_census.tcl is not in the kit, no recount" }
+# S81-COL-SSTN-M5 11-17 (opt-in OT_S81_SSTN_M5_BLOCK=1): M5 routing block over every ot_s81_sstn_* core before the first route.
+if {[info exists ::env(OT_S81_SSTN_M5_BLOCK)] && $::env(OT_S81_SSTN_M5_BLOCK) eq "1" && [file exists /work/sstn_m5_block.tcl]} { source /work/sstn_m5_block.tcl }
 # OT_GPL_GUARD begin -- KIT-TRIAGE-1/G4 11-01 (FLOW, default-on class fix for GPL-0305, every kit whose PRE_GLOBAL_PLACE
 # hook is this shared face_flops.tcl: gen_phys type kits AND the per-die core kit generators that copy it).  It runs
 # after every FIRM face / ring / station placement above and BEFORE ORFS global_place.tcl reads GPL_ROUTABILITY_DRIVEN /
@@ -841,6 +920,20 @@ if {[file exists [file join [file dirname [file normalize [info script]]] cell_c
 #      / -virtual_cts* removed) instead of failing the kit (HBM ot_hfd_coll_q3_vm_core util 4.9 %, +85 %, GPL-0305 after
 #      47 m; ot_hgi_sfu_programme_store_r10 util 12.8 %, +115 %, GPL-0305 after 37 m).  Any other error, or a
 #      divergence of plain GPL itself, still fails the stage.  OT_GPL_FALLBACK=0 disables the retry.
+#  (3) SPARSE EXIT (FABLE-FIX-S81-STRIP 11-16, opt-in OT_GPL_SPARSE_OVERFLOW=V, gen_phys sets 0.25 on S81): a sparse kit
+#      (rule 1) whose call names no -overflow exits Nesterov at overflow V instead of the 0.10 default.  At < 1 % movable
+#      utilisation the last phase (overflow 0.25 -> 0.10) is not local spreading: on S81 strip leaf t75 (0.82 %, timing-
+#      driven off, same DB) the median movable cell moved 98 um in it, 61,962 of 125,066 cells > 100 um, and landing-ring
+#      logic left its FIRM flops by 150-300 um (HPWL 1.43e7 -> 2.20e7 um, minimum 1.39e7).  Target density 0.65 / 0.9,
+#      timing-driven off and keep-resize 0 all end the same way (1.30-2.07 x the minimum on t47 / t75); exit at 0.20 is
+#      on the knee (t47 1.26 x).  Exit at 0.25: 1.026 x, detailed placement average displacement 2.0 um, max 91.6 um.
+#      A timing-driven call keeps its second, non-virtual pass: OpenROAD fires it at overflow 0.20, which an exit at
+#      0.25 never reaches, and it is the pass that buffers by wire length (t47: 26,196 long wires; without it flop ->
+#      lane-pin nets keep one 812 um unbuffered segment, -986 ps at the CTS read against -167).  So the call also gets
+#      -timing_driven_net_reweight_overflow {64 R} with R = 100 x (V + 0.05), and -keep_resize_below_overflow is raised
+#      to V + 0.10 (pass at 0.30, buffers kept, then Nesterov settles them down to 0.25).  A call that names its own
+#      reweight list keeps it.
+#      The plain FALLBACK retry and an already plain call of a sparse kit get the same exit.  Unset / 0 = unchanged.
 # Placement quality is judged downstream as for every kit (DPL, CTS, GRT, STA, sign-off gates are unchanged).
 proc ot_gpl_sparse_util {blk} {
  set core [$blk getCoreArea]
@@ -899,17 +992,76 @@ proc ot_gpl_noroute_args {argl} {
  }
  return $out
 }
+# rule 3: the sparse exit overflow (0 = off); a value that is not a number in (0, 1) is an error, never a silent default
+proc ot_gpl_sparse_overflow_value {} {
+ if {![info exists ::env(OT_GPL_SPARSE_OVERFLOW)] || $::env(OT_GPL_SPARSE_OVERFLOW) eq ""} { return 0 }
+ set v $::env(OT_GPL_SPARSE_OVERFLOW)
+ if {![string is double -strict $v] || $v < 0 || $v >= 1} { error "OT_GPL_SPARSE_OVERFLOW must be 0 (off) or a number in (0, 1), got '$v'" }
+ return $v
+}
+proc ot_gpl_exit_args {argl v} {
+ if {$v <= 0 || [lsearch -exact $argl -overflow] >= 0} { return $argl }
+ set out $argl
+ if {[lsearch -exact $out -timing_driven] >= 0} {
+  set keep [format %g [expr {$v + 0.10}]]
+  set k [lsearch -exact $out -keep_resize_below_overflow]
+  if {$k < 0} { lappend out -keep_resize_below_overflow $keep } elseif {[lindex $out [expr {$k+1}]] < $keep} { lset out [expr {$k+1}] $keep }
+  if {[lsearch -exact $out -timing_driven_net_reweight_overflow] < 0} {
+   lappend out -timing_driven_net_reweight_overflow [list 64 [expr {int(round(100.0*($v + 0.05)))}]]
+  }
+ }
+ return [concat $out [list -overflow $v]]
+}
+# SPARSE SPREAD (FABLE-FIX-S81-SERDES 11-17, opt-in): on a sparse kit GPL has no force below its target density, so the
+# cells pack to the target however empty the die is.  S81 serdes__t13 H3p: movable util 1.4 %, -density 0.5 -pad 0 ->
+# 585 10-um bins at 0.40-0.65 holding 52 % of the cell area (247k XOR cells of the KP4 encoder / syndrome), detail route
+# 176,457 violations at iteration 0 and DRT-0255.  OT_GPL_SPARSE_DENSITY caps the target density and OT_GPL_SPARSE_PAD
+# raises the GPL cell padding (sites) of a call the SPARSE rule judges sparse; unset / empty / 0 = unchanged.
+proc ot_gpl_spread_value {name} {
+ if {![info exists ::env($name)] || $::env($name) eq ""} { return 0 }
+ if {![string is double -strict $::env($name)] || $::env($name) < 0} { error "$name must be a number >= 0, got $::env($name)" }
+ return $::env($name)
+}
+proc ot_gpl_spread_args {argl dens pad} {
+ set out $argl
+ if {$dens > 0} {
+  set k [lsearch -exact $out -density]
+  if {$k >= 0 && [lindex $out [expr {$k+1}]] > $dens} { set out [lreplace $out [expr {$k+1}] [expr {$k+1}] $dens] }
+ }
+ if {$pad > 0} {
+  foreach key {-pad_left -pad_right} {
+   set k [lsearch -exact $out $key]
+   if {$k < 0} { lappend out $key $pad } elseif {[lindex $out [expr {$k+1}]] < $pad} { set out [lreplace $out [expr {$k+1}] [expr {$k+1}] $pad] }
+  }
+ }
+ return $out
+}
 # global_placement as called by ORFS global_place.tcl (the decision is taken at call time, after every hook above)
 proc ot_gpl_guarded {args} {
  set plain [ot_gpl_plain_args $args]
- if {[llength $plain] == [llength $args]} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
+ set ovf [ot_gpl_sparse_overflow_value]
+ set sdens [ot_gpl_spread_value OT_GPL_SPARSE_DENSITY]
+ set spad [ot_gpl_spread_value OT_GPL_SPARSE_PAD]
+ set modal [expr {[llength $plain] != [llength $args]}]
+ if {!$modal && $ovf <= 0 && $sdens <= 0 && $spad <= 0} { return [uplevel 1 [list ::ot_gpl_native {*}$args]] }
  set call $args
  if {[ot_gpl_sparse]} {
-  set ::env(GPL_ROUTABILITY_DRIVEN) 0
-  set call [ot_gpl_noroute_args $args]
+  if {$modal} {
+   set ::env(GPL_ROUTABILITY_DRIVEN) 0
+   set call [ot_gpl_noroute_args $args]
+   if {[llength $call] == [llength $plain]} { set ::env(GPL_TIMING_DRIVEN) 0 }
+  }
+  if {$ovf > 0 && [lsearch -exact $call -overflow] < 0} { puts "OT_GPL_SPARSE exit overflow $ovf (OT_GPL_SPARSE_OVERFLOW)" }
+  set call [ot_gpl_exit_args $call $ovf]
+  set plain [ot_gpl_exit_args $plain $ovf]
+  if {$sdens > 0 || $spad > 0} {
+   puts "OT_GPL_SPARSE spread: density cap $sdens, pad >= $spad (OT_GPL_SPARSE_DENSITY / OT_GPL_SPARSE_PAD; 0 = unchanged)"
+   set call [ot_gpl_spread_args $call $sdens $spad]
+   set plain [ot_gpl_spread_args $plain $sdens $spad]
+  }
   puts "OT_GPL_SPARSE global_placement $call"
-  if {[llength $call] == [llength $plain]} { set ::env(GPL_TIMING_DRIVEN) 0 }
  }
+ if {!$modal} { return [uplevel 1 [list ::ot_gpl_native {*}$call]] }
  if {![catch {uplevel 1 [list ::ot_gpl_native {*}$call]} res opts]} { return $res }
  if {[llength $call] == [llength $plain]} { return -options $opts $res }
  if {([info exists ::env(OT_GPL_FALLBACK)] && $::env(OT_GPL_FALLBACK) eq "0") || ![regexp {GPL-0305} $res]} {

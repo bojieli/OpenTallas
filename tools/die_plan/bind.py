@@ -759,6 +759,81 @@ def ft_hop_latched(plan, tn, slot, k):
     return schema.ft_hop_latched(plan, tn, slot, k)
 
 
+def core_input_latch(plan, tn, module, port):
+    """QC cb setup class 11-17 (FABLE-CLOSURE-STRATEGY 03:20, cbn_q01 u_lk_nk_u_t_0_3_tap -> u_t03/tap -108 .. -87 after r534):
+    True when the clock.core_input_lockup port keeps its negative-level lockup latch.  latch_except lists ports that keep
+    the lockup pipe register (core_input_pipe) but get NO latch: a latch 3 um from a core pin whose tap is delivered
+    413 ps early launches on the falling edge (T/2) into it, while the register alone has +313 ps setup and about +50 ps hold
+    at TT.  0 cycles (the latch is cycle-neutral).  Opt-in (absent = every port keeps its latch, byte-identical RTL);
+    the FF hold of the register-only path is read on the first build before the key is adopted for a family:
+      {"modules": {...}, "types": [...], "pipe": 1, "latch_except": {"<module>": ["<port>", ...]}}"""
+    if port not in core_input_lockup(plan, tn, module):
+        return False
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    return port not in set((cfg.get("latch_except") or {}).get(module) or ())
+
+
+def core_input_latch_except_bits(plan, tn, module, port):
+    """Bit-level latch_except (FABLE-PD-QC-0600 11-17): entries of the form "<port>[<bit>]" in the same latch_except list drop the
+    lockup latch of THAT bit only (the pipe register stays, 0 cycles); the other bits of the port keep their latch.  The
+    port-wide entry "<port>" stays as it was.  cbn_q01 qfd_tile_nk_a0c: only tap[0] (the go bit, its own core arc) may drop its
+    latch, port-wide the row failed hold on 1,744 of 1,776 tap pins.  Returns a set of bit indices (empty = none)."""
+    if port not in core_input_lockup(plan, tn, module):
+        return set()
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    out = set()
+    for ent in (cfg.get("latch_except") or {}).get(module) or ():
+        m = re.fullmatch(re.escape(port) + r"\[(\d+)\]", str(ent))
+        if m:
+            out.add(int(m.group(1)))
+    return out
+
+
+def core_input_latch_except_hb4(plan, tn, module, port, bit):
+    """Explicit hold pad of a latch-less bit (FABLE-CLOSURE-STRATEGY 11-17): clock.core_input_lockup.latch_except_hb4
+    {"<module>": {"<port>[<bit>]": N}} puts N kept HB4xp67 (gen_rtl.ot_dp_hd, instance u_hdly_*, ~37 ps FF each) between the
+    pipe register and the core pin of that bit.  Only meaningful for a bit in latch_except; bit-level, never port-wide.
+    cbn_q01 tap[0]: N = 3 (120-170 ps TT; t12 FF hold -14.0 without it).  0 = none (absent key, byte-identical RTL)."""
+    if port not in core_input_lockup(plan, tn, module):
+        return 0
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    return int(((cfg.get("latch_except_hb4") or {}).get(module) or {}).get(f"{port}[{bit}]") or 0)
+
+
+def core_input_uses_pad(plan):
+    """any module of clock.core_input_lockup declares a latch_except_hb4 pad (the cell file then carries ot_dp_hd)."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    return any(int(n or 0) > 0 for m in (cfg.get("latch_except_hb4") or {}).values() for n in (m or {}).values())
+
+
+def lockup_key_errors(plan, seen):
+    """LATCH_EXCEPT_MODULE (FABLE-PLAN-QC-N 11-17): every module named in clock.core_input_lockup.latch_except / latch_except_hb4 must be a
+    BOUND lockup module (the leaf module the emitter really saw, e.g. qfd_tile_nk_rp2_romleaf_rr, not the plan hard-core name
+    qfd_tile_nk_a0c).  A key that matches nothing silently did nothing in the cbn_q01 pilot: 68/68 tiles kept the 508 latch, 0 pads."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_input_lockup") or {}
+    keys = sorted(set(cfg.get("latch_except") or {}) | set(cfg.get("latch_except_hb4") or {}))
+    return [f"LATCH_EXCEPT_MODULE {m}: matches no bound lockup module (bound lockup modules: {sorted(seen)}); "
+            "key the row on the bound leaf module" for m in keys if m not in seen]
+
+
+def rebase_lib_paths(paths, base):
+    """asbuilt_sources.json `lib` holds the absolute paths of the tree that was elaborated; a bind run on a copy of that tree (another host or
+    directory) finds none of them and bind.f then lacks every library module (strict bind: BIND_GROUP_MASTER).  A path that does not exist
+    is rebased onto `base` at its first /rtl/ or /physical/ component when that file exists there; anything else is kept as it was."""
+    import os
+    out = []
+    for p in paths:
+        p = str(p)
+        if not os.path.exists(p) and base:
+            for marker in ("/rtl/", "/physical/"):
+                i = p.find(marker)
+                if i >= 0 and os.path.exists(os.path.join(str(base), p[i + 1:])):
+                    p = os.path.join(str(base), p[i + 1:])
+                    break
+        out.append(p)
+    return out
+
+
 def core_input_pipe(plan, tn, module, port=None):
     """QC-NK-HOLD 11-11 A+P (OWNER 07:39 "use a pipeline cycle", COORD APPROVED 07:5x): extra register stages D (int,
     default 0) on every clock.core_input_lockup port, BEFORE its lockup latch: ot_dp_dly #(W, D) u_pc_nk_<leaf>_<port>
@@ -775,6 +850,70 @@ def core_input_pipe(plan, tn, module, port=None):
     if port is not None and port in set(cfg.get("pipe_except") or ()):
         return 0
     return int(cfg.get("pipe") or 0)
+
+
+def core_link_pipe_spec(plan, tn, module, port, key="modules"):
+    """KV-PVGEN 11-15 (OWNER pre-approved added cycles): the plan's register stages on the named INPUT port of a bound
+    leaf/core of type tn, as a list of (D, lo, hi) bit runs (hi None = to the top bit); [] = none.  This is the
+    generator stage for core<->core hops the plan cannot station (KV kv3_pv_v1n pair -> join, join -> T relay): each run is
+    ONE ot_dp_dly #(W, D) u_pc_lp_<leaf>_<port>_<k> on the fabric clock, without the NK lockup latch; every stage is a
+    named flop of the type, so the plan can FIRM it (R-RTL-6).  The added cycles are DECLARED per bit in the same
+    bind_core_input_pipe.json as the NK pipe, so bind_verify, LATCHECK and the compiler/TOK see them.
+    Plan clock.core_link_pipe (absent = off, byte-identical RTL):
+      {"types": [type, ...] | "all": true, "except": [type, ...],
+       "modules": {"<leaf module>": {"<input port>": D | {"D": D, "bits": [lo, hi]} | [{"D": D, "bits": [lo, hi]}, ...]}}}
+    D in 1..4.  A port that mixes lane-timed bits with other nets (a relay y word carrying the epoch bit) names the bit
+    ranges it delays; bits outside every run are untouched."""
+    cfg = ((plan or {}).get("clock") or {}).get("core_link_pipe")
+    if not cfg:
+        return []
+    if cfg.get("all"):
+        if tn in set(cfg.get("except") or []):
+            return []
+    elif tn not in set(cfg.get("types") or []):
+        return []
+    v = ((cfg.get(key) or {}).get(module) or {}).get(port)
+    if not v:
+        return []
+    rows = v if isinstance(v, list) else [v]
+    out = []
+    for r in rows:
+        if isinstance(r, int):
+            out.append((int(r), 0, None))
+        else:
+            lo, hi = (r.get("bits") or [0, None])
+            out.append((int(r["D"]), int(lo), None if hi is None else int(hi)))
+    return out
+
+
+def core_link_pipe(plan, tn, module, port):
+    """Deepest declared link pipe D on that port (0 = none); see core_link_pipe_spec."""
+    return max((d for d, _, _ in core_link_pipe_spec(plan, tn, module, port)), default=0)
+
+
+def core_link_pipe_bits(plan, tn, module, port, width):
+    """Per-bit link pipe depth list (len width); overlapping runs are an error."""
+    d = [0] * width
+    for depth, lo, hi in core_link_pipe_spec(plan, tn, module, port):
+        hi = width - 1 if hi is None else hi
+        if lo < 0 or hi >= width or lo > hi:
+            raise BindError(f"core_link_pipe {tn}/{module}.{port}: bits [{lo},{hi}] outside width {width}")
+        for b in range(lo, hi + 1):
+            if d[b]:
+                raise BindError(f"core_link_pipe {tn}/{module}.{port}: bit {b} listed twice")
+            d[b] = depth
+    return d
+
+
+def core_link_src_depth(plan, tn, module, port, bit):
+    """KV-PVGEN family 4: depth of the SOURCE-side link pipe on output bit `bit` of a bound leaf port (plan
+    clock.core_link_pipe.sources {leaf module: {output port: D | {D, bits} | [runs]}}), 0 = none.  Applied at every
+    internal sink the bit feeds (the sink gets its own ot_dp_dly, declared per sink bit), so a source net that
+    several cores read needs no port-level pipe on the readers (whose port also carries other lane-timed nets)."""
+    for depth, lo, hi in core_link_pipe_spec(plan, tn, module, port, "sources"):
+        if bit >= lo and (hi is None or bit <= hi):
+            return depth
+    return 0
 
 
 def ft_hop_lockup_cell():
@@ -862,7 +1001,7 @@ def instance_path_params(cells, defaults, rules):
 
 
 class Binder:
-    def declare_core_input_pipe(self, tn, p, ci, pn, npipe):
+    def declare_core_input_pipe(self, tn, p, ci, pn, npipe, bit=None):
         """Record the declared +npipe core-input cycles of leaf ci / port pn for EVERY die instance of type tn.
 
         emit_type writes a type's module once, from its first partition p, and every partition of the type instantiates
@@ -877,7 +1016,7 @@ class Binder:
             if len(hit) != 1:
                 raise BindError(f"core_input_lockup pipe {tn}: leaf {r} found {len(hit)}x in partition {q} "
                                 f"(type members must match its first partition {p})")
-            rec[f"{self.F.cells[hit[0]].path}.{pn}"] = npipe
+            rec[f"{self.F.cells[hit[0]].path}.{pn}" + ("" if bit is None else f"[{bit}]")] = npipe
 
     def sub_core_leaf_of(self, hc):
         """The bound leaf holding plan sub-core hc, or None (not a sub-core, or not in asbuilt.sub_core_leaf)."""
@@ -3237,8 +3376,8 @@ class Binder:
         if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
                 and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
             cells += "\n" + wavefront_cells_text_only(["ot_dp_rrelay"])
-        if gen_rtl.uses_hold_hb4(self.plan):     # HOLDFORM-1 hold pads (absent = byte-identical cell file)
-            cells += "\n" + gen_rtl.HOLD_CELLS
+        if (gen_rtl.uses_hold_hb4(self.plan) or core_input_uses_pad(self.plan)) and "module ot_dp_hd " not in cells:
+            cells += "\n" + gen_rtl.HOLD_CELLS     # HOLDFORM-1 hold pads / latch_except_hb4 (absent = byte-identical cell file)
         (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
         self._native_glue = None
@@ -4055,8 +4194,14 @@ class Binder:
                     if pn in core_gate_ports.get(c.module, ()):
                         e = [core_reset_gate(x, c, r, pn) for x in e]
                     if pn in core_input_lockup(self.plan, tn, c.module):
+                        self.__dict__.setdefault("lockup_seen", set()).add(c.module)
+                        has_latch = core_input_latch(self.plan, tn, c.module, pn)
+                        xbits = {i_ for i_ in core_input_latch_except_bits(self.plan, tn, c.module, pn) if i_ < len(bits)} if has_latch else set()
+                        if xbits:
+                            has_latch = False  # bit-level exception: the latch is emitted below for the other bits only
                         lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
-                        decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
+                        if has_latch:
+                            decl.append(f"    wire [{len(bits) - 1}:0] {lk};")
                         npipe = core_input_pipe(self.plan, tn, c.module, pn)
                         if npipe:
                             pq = short_id(f"pq_{sv_id(r)}_{pn}", 100)
@@ -4066,9 +4211,61 @@ class Binder:
                                         f".q({pq}));  // core_input_lockup pipe: +{npipe} DECLARED cycle(s)")
                             self.declare_core_input_pipe(tn, p, ci, pn, npipe)
                             e = [pq]
-                        body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
-                                    f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
-                        e = [lk]
+                        if xbits:
+                            keep_ = [i_ for i_ in range(len(bits)) if i_ not in xbits]
+                            if len(e) == 1 and len(bits) > 1:
+                                e = [f"{e[0]}[{i_}]" for i_ in range(len(bits))]
+                            e = list(e)
+                            if keep_:
+                                lk = short_id(f"lk_{sv_id(r)}_{pn}", 100)
+                                decl.append(f"    wire [{len(keep_) - 1}:0] {lk};")
+                                body.append(f"    ot_dp_lk #(.W({len(keep_)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
+                                            f"(.clk(clk), .d({_concat([e[i_] for i_ in keep_])}), .q({lk}));  "
+                                            f"// core_input_lockup (NK hold class), bits {sorted(xbits)} keep the pipe register only")
+                                for j_, i_ in enumerate(keep_):
+                                    e[i_] = f"{lk}[{j_}]"
+                            for i_ in sorted(xbits):
+                                npad = core_input_latch_except_hb4(self.plan, tn, c.module, pn, i_)
+                                if npad:
+                                    pw = short_id(f"lkpad_{sv_id(r)}_{pn}_{i_}", 100)
+                                    decl.append(f"    wire {pw};")
+                                    body.append(f"    ot_dp_hd #(.W(1), .N({npad})) "
+                                                f"{short_id('u_hdly_lk_' + sv_id(r) + '_' + pn + '_' + str(i_), 100)} "
+                                                f"(.a({e[i_]}), .y({pw}));  // latch_except_hb4: {npad} x HB4, no cycle")
+                                    e[i_] = pw
+                        if has_latch:
+                            body.append(f"    ot_dp_lk #(.W({len(bits)})) {short_id('u_lk_nk_' + sv_id(r) + '_' + pn, 100)} "
+                                        f"(.clk(clk), .d({_concat(e)}), .q({lk}));  // core_input_lockup (NK hold class)")
+                            e = [lk]
+                    lpd = core_link_pipe_bits(self.plan, tn, c.module, pn, len(bits)) \
+                        if core_link_pipe(self.plan, tn, c.module, pn) else None
+                    if (self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources"):
+                        sd = []
+                        for i_ in range(len(bits)):
+                            dd_ = self.sinks[(ci, pn, i_)]
+                            sd.append(core_link_src_depth(self.plan, tn, F.cells[dd_[1]].module, dd_[2], dd_[3])
+                                      if dd_[0] == "int" else 0)
+                        if any(sd):
+                            lpd = lpd or [0] * len(bits)
+                            for i_, x_ in enumerate(sd):
+                                if x_ and lpd[i_]:
+                                    raise BindError(f"core_link_pipe {tn}/{c.module}.{pn}[{i_}]: port-level and source-level "
+                                                    "pipe on the same sink")
+                                lpd[i_] = lpd[i_] or x_
+                    if lpd and any(lpd):
+                        e = list(e)
+                        for k_, depth in enumerate(sorted(set(lpd) - {0})):
+                            idx = [i_ for i_, x_ in enumerate(lpd) if x_ == depth]
+                            lp = short_id(f"lp_{sv_id(r)}_{pn}_{k_}", 100)
+                            decl.append(f"    wire [{len(idx) - 1}:0] {lp};")
+                            body.append(f"    ot_dp_dly #(.W({len(idx)}), .D({depth})) "
+                                        f"{short_id('u_pc_lp_' + sv_id(r) + '_' + pn + '_' + str(k_), 100)} (.clk(clk), "
+                                        f".d({_concat([e[i_] for i_ in idx])}), .q({lp}));  "
+                                        f"// core_link_pipe: +{depth} DECLARED cycle(s) on bits {idx[0]}..{idx[-1]}")
+                            for j_, i_ in enumerate(idx):
+                                e[i_] = f"{lp}[{j_}]"
+                                self.declare_core_input_pipe(tn, p, ci, pn, depth + int(core_input_pipe(
+                                    self.plan, tn, c.module, pn) or 0), bit=i_)
                     conns.append((pn, _concat(e)))
             conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
@@ -4682,6 +4879,8 @@ def cmd_bind(a):
                                                                    B.out_bus.get(p, [])))
                                   for p, v in sorted(B._reg_hard.items())}
     srcs = json.loads((out / "asbuilt_sources.json").read_text()) if (out / "asbuilt_sources.json").exists() else {}
+    srcs["lib"] = rebase_lib_paths(srcs.get("lib", []), B.base)
+    B.errors.extend(lockup_key_errors(B.plan, getattr(B, "lockup_seen", set())))
     fl = [str(f) for f in srcs.get("lib", [])] + B.extra_lib + [str(f) for f in files]
     (out / "bind.f").write_text("\n".join(fl) + "\n")
     # HCPARAM-ALL 11-15: every hard core, built parameters vs the parameters the bound RTL really instantiates (nested + defaults)
@@ -4699,6 +4898,11 @@ def cmd_bind(a):
         strict_info["allowed_roots"] = [str(r) for r in roots]
         strict_info["allow_src_root_flag"] = list(getattr(a, "allow_src_root", None) or [])
         B.errors.extend(serrs)
+        # VIEW-DEFINES (COORD r535, S81 D5c 11-17): the die elab blackboxes hard cores, so a view built under another
+        # define set than the die one (for a define its RTL reads) is invisible here; compare each view bind_defines
+        import view_define_check
+        verrs, strict_info["view_defines"] = view_define_check.gate(raw, B.ab, B.base)
+        B.errors.extend(verrs)
     rep["files"] = [str(f) for f in files]
     rep["findings"] = B.findings
     rep["extra_lib"] = B.extra_lib
@@ -5004,6 +5208,22 @@ def macro_views(base):
         for lef in sorted(rp.glob("*/*.lef")):
             if lef.stem == lef.parent.name and lef.stem not in out:
                 out[lef.stem] = lef.parent
+    return out
+
+
+def plan_row_views(hard_cores, base):
+    """DIE-KV-67 11-04: {module: view dir} of the plan's hard_cores rows that bind a view (<dir>/<module>.lef).
+    KV-102 r249 11-16: a plan row may name its view relative to the die source tree (kv3_hub_C ahub ->
+    physical/die_plan/qwen_kvsys/kvgeom7q_views/qkd_ahub/qkd_ahub.lef); it resolves against base, as plan_base does."""
+    out = {}
+    for hc in hard_cores or []:
+        if not isinstance(hc, dict) or not hc.get("lef"):
+            continue
+        lef = Path(str(hc["lef"]))
+        if not lef.is_absolute():
+            lef = Path(base) / lef
+        if lef.stem == hc.get("module") and lef.is_file():
+            out.setdefault(lef.stem, lef.parent)
     return out
 
 
@@ -5631,18 +5851,71 @@ def kit_landed_ports(btxt):
     return out
 
 
-def kit_rebase_path(p, old_base, new_tree):
-    """an absolute path inside the bind's recorded source base -> the same relative path in the kit's own tree (else unchanged)"""
+KIT_STAGED_PREFIX = re.compile(r"^(?P<root>.*?/kit-store/snaps/[0-9a-f]+/root|.*?/kit_inputs)(?P<orig>/.+)$")
+KIT_SRC_TOP = ("rtl", "physical")      # repository top-level dirs a bound RTL source lives under
+
+
+def kit_staged_original(p):
+    """a kit-store staged copy (<scratch>/kit-store/snaps/<id>/root/<abs> or <W>/kit_inputs/<abs>) -> the original absolute
+    path it stands for; any other path unchanged.  kit_store rewrites bind.f to the staged paths but keeps the json
+    (asbuilt base) byte-identical, so the bind's recorded base must be compared with the original path."""
+    m = KIT_STAGED_PREFIX.match(str(p))
+    return Path(m.group("orig")) if m else Path(p)
+
+
+def _rel_under(q, root):
+    for a, b in ((q, Path(root)), (q.resolve(), Path(root).resolve())):
+        try:
+            return a.relative_to(b)
+        except ValueError:
+            pass
+    return None
+
+
+def kit_rebase_path(p, old_base, new_tree, keep=(), moved=None):
+    """an absolute source path the bind recorded -> the same repository-relative path in the kit's own tree (else unchanged).
+    KITRTL-PATHS 11-16: (1) a kit-store staged copy is matched by its original path; (2) a path in ANOTHER source tree
+    (asbuilt_sources.json lib/full of the bind whose as-built netlist this bind reused: tapfix1 listed 100 files of
+    run/b/B6gF2s4/src) maps by its repository-relative part (from the first rtl/ or physical/ component) when the kit tree
+    has that file.  Paths under `keep` (bind out, kit dir) are generated files and never move.  `moved` collects the
+    foreign-tree rebases {recorded path: kit path}."""
     q = Path(p)
     if not q.is_absolute():
         return str(p)
-    try:
-        return str(Path(new_tree) / q.resolve().relative_to(Path(old_base).resolve()))
-    except ValueError:
-        try:
-            return str(Path(new_tree) / q.relative_to(Path(old_base)))
-        except ValueError:
+    orig = kit_staged_original(q)
+    for cand in (q, orig):
+        r = _rel_under(cand, old_base)
+        if r is not None:
+            return str(Path(new_tree) / r)
+    for k in keep:
+        if _rel_under(q, k) is not None or _rel_under(orig, kit_staged_original(k)) is not None:
             return str(p)
+    if _rel_under(orig, new_tree) is not None:
+        return str(p)
+    parts = orig.parts
+    for i, c in enumerate(parts[2:], 2):
+        if c in KIT_SRC_TOP:
+            tgt = Path(new_tree).joinpath(*parts[i:])
+            if tgt.is_file():
+                if moved is not None:
+                    moved[str(q)] = str(tgt)
+                return str(tgt)
+            break
+    return str(p)
+
+
+def kit_src_moved_rows(moved, fl):
+    """the foreign-tree rebases (kit_rebase_path moved=) that reached the kit filelist, for kit_rtl.json: recorded path,
+    original path, kit path and whether the bytes match (None when the recorded copy is gone)."""
+    import filecmp
+    used = {str(Path(x).resolve()) for x in fl}
+    rows = []
+    for rec, kit in sorted(moved.items()):
+        if str(Path(kit).resolve()) not in used:
+            continue
+        same = filecmp.cmp(rec, kit, shallow=False) if Path(rec).is_file() else None
+        rows.append(dict(recorded=rec, source=str(kit_staged_original(rec)), kit=kit, same_bytes=same))
+    return rows
 
 
 def kit_filelist_outside(files, roots):
@@ -5899,7 +6172,9 @@ def cmd_kit_rtl(a):
     else:
         pset = next(iter(pinst.values()), "")
     mod = t["module"]
-    kd = (Path(a.kit) if a.kit else out / "kit_rtl" / tn).resolve()
+    # WAVE-PREPNR-1115: the LOGICAL work-root path (absolute, symlinks kept). realpath here wrote scratch3 paths into kit_rtl.json /
+    # kit_rtl*.f on a host whose work root is a symlink; a roam host has no such path (kit_topology FileNotFoundError).
+    kd = Path(os.path.abspath(a.kit)) if a.kit else (out / "kit_rtl" / tn).resolve()
     kd.mkdir(parents=True, exist_ok=True)
     native_geometry = kit_native_station_geometry(out, key, btxt, kd)
     import hbm_spb_native
@@ -5951,12 +6226,13 @@ def cmd_kit_rtl(a):
     src_tree = getattr(a, "src_tree", None) or os.environ.get("OT_KIT_SRC_TREE")
     old_base = base
     rebase = lambda p: p
+    src_moved = {}
     if src_tree:
         st = Path(src_tree).resolve()
         if not (st / "rtl").is_dir():
             raise BindError(f"kit-rtl {tn}: --src-tree {st} has no rtl/")
         base = str(st)
-        rebase = lambda p: kit_rebase_path(p, old_base, st)       # absolute paths the bind recorded in the old tree (bind.f, extra_lib)
+        rebase = lambda p: kit_rebase_path(p, old_base, st, keep=(out, kd), moved=src_moved)   # bind.f, extra_lib, asbuilt files
     # The bind's own extra library (the clock-landing cells ot_dp_clk_landing / ot_dp_landing_collect added when a
     # landing table is selected) is a source of the bound leaves too, not only a tie-breaker.
     prefer = [rebase(str(Path(base) / f) if not Path(f).is_absolute() else f) for f in ab0.get("prefer", [])] + \
@@ -5984,10 +6260,8 @@ def cmd_kit_rtl(a):
         views.setdefault(m, d)
     # DIE-KV-67 11-04: a plan row that binds a view (a provisional overlay row) is a hard macro of this kit even when the
     # module has no source under the manifest's RTL roots (KV PCC / PCF live in results/kv_host_regen_1/rtl_rf3)
-    for hc in t.get("hard_cores") or []:
-        lef = Path(str(hc.get("lef") or ""))
-        if isinstance(hc, dict) and lef.stem == hc.get("module") and lef.is_absolute() and lef.is_file():
-            views.setdefault(lef.stem, lef.parent)
+    for m, d in plan_row_views(t.get("hard_cores"), base).items():
+        views.setdefault(m, d)
     if kit_wrap_srcs:   # QC-SLECTL-B: generated wrapper masters (a hardened view in `views` still wins: black box)
         wf = kd / "param_wrap_cores.sv"
         wf.write_text("".join(kit_wrap_srcs[m] for m in sorted(kit_wrap_srcs)))
@@ -6057,6 +6331,11 @@ def cmd_kit_rtl(a):
         if outside:
             raise BindError(f"kit-rtl {tn}: {len(outside)} filelist path(s) outside the kit source tree {base} (and the bind "
                             f"out / kit dir): {outside[:5]}")
+        src_moved = kit_src_moved_rows(src_moved, fl)
+        if src_moved:
+            ndiff = sum(1 for r in src_moved if r["same_bytes"] is False)
+            print(f"kit-rtl {tn}: {len(src_moved)} bind source(s) of another source tree taken from the kit tree {base} "
+                  f"({ndiff} with different bytes)", file=sys.stderr)
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in fl) + "\n")
     tree_mix = kit_tree_mix(tn, kd)
     # simulation view of the same kit: the hard macros' behavioural models instead of their black boxes
@@ -6076,6 +6355,7 @@ def cmd_kit_rtl(a):
                **({"native_glue": native_glue} if native_glue else {}),
                **({"library_profile": lib_profile, "library_profile_selected": lib_selected} if lib_profile else {}),
                tree_mix=tree_mix,
+               **({"src_rebased_foreign": src_moved} if src_moved else {}),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
@@ -6148,6 +6428,52 @@ def _plan_expect(B, p, a):
     return None
 
 
+def _plan_gate_pre(a):
+    """PLAN-GATE-PRE-1115 (COORD r213): before a die elab/bind, run tools/die_plan/plan_gate_pre.py on THIS tree (schema keys,
+    as-built inputs, tool vintage; rows and station-in-core overlaps only when OT_PLAN_GATE_BASELINE names the adopted plan) and refuse on FAIL, in seconds,
+    with a named reason.  OT_PLAN_GATE_PRE=off skips it, =warn prints and continues.  Result stamp out/plan_gate_pre.json lets
+    `bind` after `elab` of the same plan and tools skip the repeat.  Returns 0 or the exit code to refuse with."""
+    mode = os.environ.get("OT_PLAN_GATE_PRE", "refuse")
+    if mode == "off":
+        return 0
+    try:
+        import plan_gate_pre as G
+    except ImportError:
+        print("bind: plan_gate_pre.py not in this tree, pre-bind closure check skipped")
+        return 0
+    base = os.environ.get("OT_PLAN_GATE_BASELINE") or None
+    try:
+        blob = Path(a.plan).read_bytes() + (Path(a.asbuilt).read_bytes() if a.asbuilt else b"") + str(base).encode()
+        key = hashlib.sha256(blob).hexdigest()[:16]
+    except OSError:
+        key = None
+    stamp = Path(a.out) / "plan_gate_pre.json"
+    try:
+        if key and json.loads(stamp.read_text()).get("key") == key:
+            return 0
+    except (OSError, ValueError):
+        pass
+    try:
+        fs = G.check(E.REPO, a.plan, asbuilt=a.asbuilt, baseline=base, skip=() if base else ("ROWS", "GEOM"))
+    except (OSError, ValueError) as e:
+        print(f"bind: plan_gate_pre could not read its inputs: {e}")
+        return 0 if mode == "warn" else 2
+    fails = [x for x in fs if x.startswith("FAIL")]
+    for x in fs:
+        print(f"bind: plan_gate_pre {x}")
+    if fails and mode != "warn":
+        print(f"bind: REFUSED by plan_gate_pre ({len(fails)} findings; OT_PLAN_GATE_PRE=warn or off to override, "
+              f"tools/die_plan/plan_gate_pre.py check --tree . --plan {a.plan} to re-run)")
+        return 2
+    if not fails and key:
+        try:
+            Path(a.out).mkdir(parents=True, exist_ok=True)
+            stamp.write_text(json.dumps({"key": key, "result": "pass"}) + "\n")
+        except OSError:
+            pass
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -6204,6 +6530,10 @@ def main(argv=None):
             return 2
     _AB_OVERRIDE["path"] = a.asbuilt
     _AB_OVERRIDE["allow_external_paths"] = bool(getattr(a, "allow_external_paths", False))
+    if a.cmd in ("elab", "bind", "all") and "PYTEST_CURRENT_TEST" not in os.environ:   # tests call main() on toy plans
+        rc = _plan_gate_pre(a)
+        if rc:
+            return rc
     try:
         if a.cmd == "component-proof":
             import bind_component

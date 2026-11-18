@@ -61,7 +61,7 @@ HERE = Path(__file__).resolve().parent
 PRD = HERE / "post_route_drv"
 SCHEMA = "opentallas.eco_loop.v1"
 MAX_ITER = 1                  # OWNER 11-07 05:3x: one late-stage iteration per routed form; was 3
-HOLD_MARGIN_PS = 5            # COORD 11-09 04:4x (KW-FIX-42): hold REPAIR TARGET 5 ps for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
+HOLD_MARGIN_PS = 10           # HOLD-FLOW-R 11-16 (lever 1): hold REPAIR TARGET 10 ps on internal (reg2reg) endpoints, was 5 (COORD 11-09 KW-FIX-42): a repair to +0..+5 lands negative after re-extraction (9-17 ps) for every wave ECO (ECOs aimed at 0 ps landed at -0.0x..-1.4 ps under sign-off uncertainty + calibrated RC); the GATE is unchanged: FF hold slack >= 0 (OWNER 11-02 FLOW-22, 25 ps FF hold uncertainty stays); was 0 (11-02), 10 (12.19)
 MIN_WNS_GAIN_PS = 1.0         # stop rule: < 1 ps gain and DRV/DRC not falling = no improvement
 DRC_SMALL = 50                # = autopilot NEAR_DRC_MAX: above it the route is a ROUTING problem, not an ECO
 ECO_FAILS = {"setup_tt", "hold_ff", "drv", "drc", "fanout"}
@@ -77,7 +77,8 @@ ECO_TOOL_FILES = ("clk_freeze.tcl", "clk_dump_db.tcl", "clk_geom_diff.py", "clk_
 FLOW_FILES = ("post_route_drv/prd_mk.sh", "post_route_drv/prd_run.sh", "post_route_drv/prd_hook.tcl",
               "post_route_drv/prd_route_keep.tcl", "post_route_drv/eco_grt_pre.tcl", "post_route_drv/eco_drt_pre.tcl", "post_route_drv/prd_targeted.tcl", "post_route_drv/prd_autofo.tcl",
               "post_route_drv/prd_count.tcl", "post_route_drv/post_grt_chain.py", "post_route_drv/prd_seed.py",
-              "post_route_drv/prd_spef_insts.py", "eco_loop.py") + ECO_TOOL_FILES
+              "post_route_drv/prd_spef_insts.py", "post_route_drv/prd_filler_preclean.py",
+              "post_route_drv/prd_filler_seed_check.py", "post_route_drv/prd_clock_inventory.tcl", "eco_loop.py") + ECO_TOOL_FILES
 POST_RUNNERS = ("run_kit_hbm.sh", "run_kit_kv.sh", "run_kit.sh")
 # ECO-OOM-1 (DIE-S81-48 11-02, VEs autopilot 246986099dc1): the late ECO inherited the kit runner's ot-run memory (24 GB)
 # as its docker cap, but the ECO session holds the routed DB + the routed SPEF in TWO scenes + repair + DRT on top of what
@@ -166,6 +167,7 @@ def eco_vclk_frame(pass_dir, variant, prev):
 
 
 _LATE_HOLD_SCOPE = ContextVar("late_eco_hold_scope", default=None)
+_HOLD_TARGETED = ContextVar("late_eco_hold_targeted", default=False)
 
 
 def hold_scope():
@@ -173,6 +175,18 @@ def hold_scope():
     if "OT_HOLD_REPAIR_SCOPE" in os.environ:
         return (os.environ.get("OT_HOLD_REPAIR_SCOPE") or "").strip().lower()
     return _LATE_HOLD_SCOPE.get() or ""
+
+
+def targeted_hold_case(base_signoff):
+    """HOLD-FLOW-R 11-16: the standard hold_eco step.  A routed kit whose sign-off fails ONLY internal FF hold (DRC and TT
+    pass, R-MINIMAL) gets the targeted internal HB4 insert sized for +10 ps (OT_PRD_HOLD_TARGETED=1 -> hold_eco_internal_plan.tcl
+    + hold_eco_internal_insert.tcl in prd_hook.tcl) instead of the global repair_timing -hold.  OT_ECO_HOLD_TARGETED=0 opts out."""
+    if os.environ.get("OT_ECO_HOLD_TARGETED", "1").strip() == "0":
+        return False
+    try:
+        return bool(minimal_hold_only(load(Path(base_signoff))))
+    except Exception:
+        return False
 
 
 def late_hold_scope(kit):
@@ -869,6 +883,8 @@ def iterate(n, src, root, kit, runner, so, mode, hm, mem, cpus, run, image=IMAGE
             env["OT_BUSFIT_PY"] = str(Path(kit) / "kwrs_busfit.py")
         if repair_rc:
             env["OT_PRD_REPAIR_RC"] = repair_rc
+        if _HOLD_TARGETED.get() and v[0] in "mb":
+            env["OT_PRD_HOLD_TARGETED"] = "1"      # the hold pass of a hold-only case: targeted internal insert (HOLD-FLOW-R)
         # KIT-OPS-4: no OT_VCLK_CORNER override here: a TT-only pass must not see ff (kit_modes), the b pass gets ff from variant.env (prd_mk.sh)
         stag = "" if len(vs) == 1 else "_" + v[0]
         if step("prd_mk" + stag, ["bash", PRD / "prd_mk.sh", s, pd, v, so], env=env):
@@ -1067,9 +1083,11 @@ def run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold_
     if route_hold_form:
         return _run_loop(**options)
     token = _LATE_HOLD_SCOPE.set(late_hold_scope(kit))
+    t2 = _HOLD_TARGETED.set(targeted_hold_case(base_signoff))
     try:
         return _run_loop(**options)
     finally:
+        _HOLD_TARGETED.reset(t2)
         _LATE_HOLD_SCOPE.reset(token)
 
 
@@ -1126,6 +1144,17 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold
     res["route_hold_form"] = dict(requested=bool(route_hold_form), declared=declared)
 
     def done(verdict, reason):
+        if (capskew_enabled() and verdict not in ("PASS", "ABORTED", "ECO_OOM", "ERROR") and capskew_case(base_rec)
+                and "capskew" not in res):
+            root.mkdir(parents=True, exist_ok=True)
+            r = capskew_fallback(res, kit, base_signoff, base_rec, root, run, tools)
+            if r.get("exit") == 0 and (r.get("result") or {}).get("final_routed_db"):
+                so = Path(r["out"]) / "so_out" / "signoff.json"
+                m = metrics(load(so), so) if so.is_file() else None
+                res["best"] = dict(n=0, dir=r["out"], signoff=str(so), base=str(Path(r["result"]["final_routed_db"]).parent), metrics=m)
+                verdict, reason = "PASS", "signed off by the OT_CAPSKEW_ECO capture-skew fallback (capskew_eco_run.py)"
+            else:
+                reason += " | capskew fallback exit %s" % r.get("exit")
         res.update(verdict=verdict, reason=reason, finished=time.time(), wall_s=round(time.time() - t0, 1))
         if root.is_dir():
             (root / "eco_loop.json").write_text(json.dumps(res, indent=1) + "\n")
@@ -1227,6 +1256,44 @@ def _run_loop(kit, base_signoff, root=None, runner=None, max_iter=MAX_ITER, hold
                 best.setdefault("trimmed", []).extend(gone)
                 res["best_trimmed"] = len(gone)
     return done(verdict, stop)
+
+
+def capskew_enabled(env=None):
+    """CAPSKEW-ECO 11-17: the opt-in post-route capture-skew fallback (tools/die_plan/capskew_eco_run.py); OT_CAPSKEW_ECO=1, default off"""
+    return str((os.environ if env is None else env).get("OT_CAPSKEW_ECO", "0")).strip() == "1"
+
+
+def capskew_case(rec):
+    """True: the routed record fails ONLY TT setup (DRC passes, FF hold passes or is the tool's own pad work): the capture-skew class"""
+    c = (rec or {}).get("checks") or {}
+    return ((c.get("setup_tt") or {}).get("verdict") == "FAIL" and (c.get("drc") or {}).get("verdict") != "FAIL"
+            and int((c.get("drc") or {}).get("count") or 0) == 0)
+
+
+def capskew_fallback(res, kit, base_signoff, base_rec, root, run=subprocess.call, tools=HERE):
+    """run capskew_eco_run.py on the base routed DB when the ECO loop did not sign it; records res['capskew'] and, on exit 0, adopts the
+    signed DB as the best result (verdict PASS).  Never raises: a failed stage leaves the loop's own verdict."""
+    odb = (base_rec.get("inputs") or {}).get("odb")
+    if not odb:
+        return res.setdefault("capskew", dict(exit=None, why="no routed odb in the base sign-off record"))
+    out = Path(root) / "capskew"
+    cmd = [sys.executable, "-I", str(Path(tools) / "capskew_eco_run.py"), "--base", str(Path(odb).parent), "--kit", str(kit),
+           "--name", "capskew_" + Path(kit).name, "--out", str(out), "--first-signoff", str(Path(base_signoff).parent),
+           "--rt", str(Path(tools).parent.parent)]
+    try:
+        rc = run(cmd)
+    except Exception as e:  # noqa: BLE001
+        rc = -1
+        res["capskew_error"] = repr(e)
+    r = dict(exit=rc, out=str(out), cmd=cmd)
+    rj = out / "RESULT.json"
+    if rj.is_file():
+        try:
+            r["result"] = json.loads(rj.read_text())
+        except ValueError:
+            pass
+    res["capskew"] = r
+    return r
 
 
 def max_iter_refusal(n):

@@ -56,4 +56,8 @@ module dsdv_idx_fit_mem #(
         end
         assign q = qr;
     end endgenerate
+    // S81-CORES-R 11-16 (COORD): a 23-bit macro memory is only the 128x23 master, never the 1024x256 fallback.
+    generate if (SRAM_MACRO && BITS == 23 && WORDS != 128) begin : g_no_wide23
+        initial $fatal(1, "dsdv_idx_fit_mem: %0dx23 has no macro; a 23-bit macro memory must be 128 deep", WORDS);
+    end endgenerate
 endmodule

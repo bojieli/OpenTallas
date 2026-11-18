@@ -24,13 +24,14 @@ if {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1"} {
 } else {
   set km_cs [string tolower [expr {[info exists ::env(CORNERS)] ? $::env(CORNERS) : ""}]]
   # KW-ECO-1 11-01: TT-only setup/DRV pass of a single-mode kit (post_route_drv variant t<N>, OT_PRD_NO_HOLD=1): the
-  # TT vclk is the setup frame and no hold repair runs in it (hold stays in the FF-only b<N> pass)
-  if {$km_cs eq "tc" && [info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1"} {
+  # TT vclk is the setup frame. A targeted static HB4 plan is also legal: its cell counts were priced in the FF
+  # sign-off scene, and prd_hook dispatches it before either timing-driven hold branch. No FF timing is evaluated at TC.
+  if {$km_cs eq "tc" && (([info exists ::env(OT_PRD_NO_HOLD)] && $::env(OT_PRD_NO_HOLD) eq "1") || ([info exists ::env(OT_PRD_HOLD_PLAN)] && $::env(OT_PRD_HOLD_PLAN) ne ""))} {
     if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq "ff"} {
       error "KIT_MODES FAIL: TT-only ECO with OT_VCLK_CORNER=ff (setup against the FF vclk)"
     }
     kit_modes_vclk_latency
-    puts "KIT_MODES eco TT-only (setup + DRV, no hold repair), vclk = TT"
+    puts "KIT_MODES eco TT-only (setup + DRV, static hold plan or no hold repair), vclk = TT"
   } else {
     if {[llength $km_cs] != 1 || [lindex $km_cs 0] ne "bc"} {
       error "KIT_MODES FAIL: single-mode ECO over corners '$km_cs' (two corners need OT_HOLD_MM=1, kit_modes.py stage)"
