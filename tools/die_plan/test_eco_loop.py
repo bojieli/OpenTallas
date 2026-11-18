@@ -187,6 +187,16 @@ def test_eligibility_classes():
     assert E.metrics(rec(5, 2, verdict="LOCAL_PASS_NEEDS_PARENT", local="SIGNED"))["signed"]
 
 
+def test_minimal_small_drc_with_misses_ignores_advisory_checks(monkeypatch):
+    """S81-COL-FLOW-1118: col_h9_r2 pilot (R-MINIMAL) DRC 2, TT -46.87, FF hold -62.46, advisory unconstrained 102 FAIL"""
+    monkeypatch.setenv("OT_SIGNOFF_PROFILE", "minimal")
+    r = rec(-46.87, -62.46, slew=39, drc=2, extra_fail="unconstrained")
+    ok, why = E.eligible(r)
+    assert ok and "R-MINIMAL" in why
+    ok, why = E.eligible(rec(-46.87, -62.46, drc=E.DRC_SMALL + 1, extra_fail="unconstrained"))
+    assert not ok                                                           # a large DRC count stays a ROUTING problem
+
+
 def test_stop_rules():
     p = E.metrics(rec(-10, -5, slew=10))
     assert E.improved(p, E.metrics(rec(-9, -5, slew=10)))                  # +1 ps

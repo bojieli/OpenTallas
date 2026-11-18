@@ -262,7 +262,12 @@ def minimal_eco_case(rec):
         g = mod.judge(rec)["gates"]
     except Exception:
         return False
-    return g.get("drc") == "PASS" and (g.get("setup_tt") == "FAIL" or g.get("hold_ff") == "FAIL")
+    # S81-COL-FLOW-1118 (COORD: col_h9_r2 pilot DRC 2, TT -46.87, FF hold -62.46 refused as 'structural gate FAIL unconstrained'):
+    # a small routed DRC count (<= DRC_SMALL) with or without a setup / hold miss is the same ECO case (passes() routes from the GRT
+    # DB when DRC > 0); the advisory checks (unconstrained, drv, fanout) never refuse it under R-MINIMAL
+    drc_n = int(((rec.get("checks") or {}).get("drc") or {}).get("count") or (rec.get("route") or {}).get("drc") or 0)
+    small_drc = g.get("drc") == "PASS" or (g.get("drc") == "FAIL" and drc_n <= DRC_SMALL)
+    return small_drc and "FAIL" in (g.get("drc"), g.get("setup_tt"), g.get("hold_ff"))
 
 
 def metrics(rec, signoff_path=None):
@@ -325,7 +330,7 @@ def eligible(rec, signoff_path=None):
     if minimal_hold_only(rec):
         return True, "ECO class: R-MINIMAL only internal FF hold fails (auto hold-buffer ECO, no near-miss window)"
     if minimal_eco_case(rec):
-        return True, "ECO class: R-MINIMAL routed DRC 0 and setup / internal hold misses (auto ECO, no near-miss limit)"
+        return True, "ECO class: R-MINIMAL routed DRC <= %d and setup / internal hold / DRC misses (auto ECO, no near-miss limit)" % DRC_SMALL
     if not m["fails"]:
         return False, "no FAIL gate (NOT RUN / parent-only reasons are not an ECO case)"
     other = sorted(set(m["fails"]) - ECO_FAILS)
