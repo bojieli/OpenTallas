@@ -683,7 +683,6 @@
    ],
    "gen_hosts": [
     "epyc7",
-    "epyc8",
     "epyc9",
     "epyc10"
    ],
@@ -5744,8 +5743,8 @@
    ],
    "prev_gen_hosts_derive": [
     "epyc7",
+    "epyc8",
     "epyc9",
-    "intel1",
     "epyc10"
    ],
    "tools_refresh": true,
@@ -7444,7 +7443,6 @@
    "place_spill": true,
    "place_spill_note": "KW-FIX-4 08:5x: S81 generates on epyc4 (the emptiest host); unpinned async PLACE let ot-run SPILL epyc4 kits to intel2 (epyc4 memory admission dipped on fresh reservations) where they wait on the intel2 load cap -> pin PLACE to the gen host",
    "gen_hosts": [
-    "epyc8",
     "epyc10",
     "intel1",
     "epyc2"
@@ -37269,7 +37267,8 @@
    "prev_gen_hosts_derive": [
     "epyc8",
     "epyc10",
-    "intel1"
+    "intel1",
+    "epyc2"
    ],
    "event_lineage": [
     "B6gF2s3",
@@ -40625,9 +40624,9 @@
    },
    "gen_hosts": [
     "epyc9",
-    "epyc8",
     "epyc2",
-    "intel1"
+    "intel1",
+    "epyc10"
    ],
    "gen_hosts_note": "KW-FIX-4 14:5x (COORD 14:2x INFRA class 2): epyc4 dropped from gen_hosts. epyc4 holds an ot-run SPILL marker at this lane root (/srv/opentallas-scratch2/claude/<lane>/.ot-run-spill-copy, written by localhost spills 07:17-08:47), so ot-run probe() treats every --dir under it as a stale copy and reports \"no <dir>\" (NODIR), although mkdir made the attempt dir. The marker is ot-run data-safety and is left in place. | KW-FIX-4 08:5x (COORD 08:45 restage intel2 waiters to epyc4): src/plan/kit_rtl/bind inputs staged to epyc4 at the same paths (git worktree same sha + sparse set + working-file overlay; dirty counts equal); new attempts and unstarted waiters go to the host with the most ot-run admits (kit_wave gen_hosts / restage_waiters, cd3296d2054)",
    "hosts": [
