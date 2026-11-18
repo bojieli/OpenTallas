@@ -4060,6 +4060,7 @@ class Binder:
             ps_isp = getattr(self, "isp", {})
             ps_srcpipe = bool((self.plan.get("clock") or {}).get("core_link_pipe", {}).get("sources"))
             ps_bad = defaultdict(set)
+            ps_rdm, ps_rds = relay_depth_map(self.plan, tn), relay_depth_sink_map(self.plan, tn)   # S81-COLGEN-3 stages
             for ci in self.members[p]:
                 if self.rel_of(ci) in invalid_id_leaves:
                     continue
@@ -4067,7 +4068,8 @@ class Binder:
                 for pn, bits in F.cells[ci].ports.items():
                     if G.dirs[ci].get(pn) != "input":
                         continue
-                    piped = pn in core_input_lockup(self.plan, tn, cm) or bool(core_link_pipe(self.plan, tn, cm, pn))
+                    piped = pn in core_input_lockup(self.plan, tn, cm) or bool(core_link_pipe(self.plan, tn, cm, pn)) \
+                        or (self.rel_of(ci), pn) in ps_rds
                     for i in range(len(bits)):
                         d = self.sinks[(ci, pn, i)]
                         if d[0] != "int" or not d[4]:
@@ -4076,6 +4078,7 @@ class Binder:
                         ps_all[pk] += 1
                         why = ("registered" if reg else "inner_strap" if (ci, pn, i) in ps_isp else "port_pipe" if piped
                                or (ps_srcpipe and core_link_src_depth(self.plan, tn, F.cells[d[1]].module, d[2], d[3]))
+                               or (self.rel_of(d[1]), d[2]) in ps_rdm
                                else "depth1" if d[4] < 2 else None)
                         if why is None:
                             ps_cons[pk + (d[3],)].append((ci, pn, i))
