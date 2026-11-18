@@ -207,6 +207,14 @@ proc tcs_out_pos {pin dist_um dbu} {
   }
 }
 
+# FABLE-FIX-KV-HG 11-18: a copy stage an earlier PRE_GLOBAL_PLACE hook already made FIRM (the reset spine relay copies ot_dp_rtail
+# u_rs_ri_*_r<k>.r[j] of the KV-D23-REACH reset rows: reset_tree.tcl / reset_taps.tcl site reset flops first), or a repeater shared by
+# two copies, cannot be moved: "[ERROR ODB-0359] Attempt to change the origin of FIRM instance" stopped 3_3 on kv3_hgi_v1.  The tail
+# site is the later, consumer-side decision, so it wins: release, move, FIRM again (counted in ::tcs_refix).
+set ::tcs_refix 0
+proc tcs_unfix {cell} {
+  if {[$cell getPlacementStatus] in {FIRM LOCKED}} { $cell setPlacementStatus PLACED; incr ::tcs_refix }
+}
 proc tcs_run {} {
   if {![file exists /work/tail_copies.tsv]} { return }
   set copies [tcs_read_tsv /work/tail_copies.tsv]
@@ -298,7 +306,7 @@ proc tcs_run {} {
       lappend pts $p
       lassign [tcs_follow $f] reps _
       foreach cell [concat [list $f] $reps] {
-        $cell setLocation {*}$p; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell
+        tcs_unfix $cell; $cell setLocation {*}$p; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell
       }
     }
     set q $t
@@ -313,7 +321,7 @@ proc tcs_run {} {
         if {[tcs_is_trunk [$tf getName]] &&
             [$tf getPlacementStatus] ni {FIRM LOCKED COVER}} {
           foreach cell [concat [list $tf] $treps] {
-            $cell setLocation {*}$t; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell
+            tcs_unfix $cell; $cell setLocation {*}$t; $cell setPlacementStatus FIRM; puts $out [$cell getName]; incr ncell
           }
           incr ntrunk
         }
@@ -321,6 +329,7 @@ proc tcs_run {} {
     }
   }
   close $out
+  if {$::tcs_refix} { puts "OT_TAIL_SITE re-sited $::tcs_refix cell(s) an earlier hook had FIRM" }
   puts [format "OT_TAIL_SITE copies %d of %d sited (%d cells, %d trunk ends, %d groups) merged %d no_cells %d bad_out %d max_hop %.1f um routed_hop %.1f um over_%g %d core_crossing %d in_halo %d (FIRM, released for DPL)" \
           $ncopy [dict size $copies] $ncell $ntrunk [dict size $gpins] $merged $nocell $badout $maxhop $maxrhop $hop_um $rover $crossing $inside]
 }
