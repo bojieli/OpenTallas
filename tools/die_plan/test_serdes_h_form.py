@@ -31,6 +31,7 @@ def test_h_form_lines_match_h17_knobs():
     assert "export OT_CLK_LEAF_SLEW_PS = 165" in out
     assert "export PRE_RESIZE_TCL = /work/h4_meta_reflow.tcl" in out
     assert "export OT_SERDES_BOOT_RELEASE_LOCAL = 1" in out
+    assert "export OT_SERDES_BOOT_PATH_LOCAL = 1" in out
     assert (Path(kd) / "h4_meta_reflow.tcl").read_bytes() == (HERE / "h4_meta_reflow.tcl").read_bytes()
 
 

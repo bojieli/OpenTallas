@@ -5992,6 +5992,10 @@ def serdes_h_lines(cfg, kd, names, env, post_gpl):
         out.append("export PRE_RESIZE_TCL = /work/h4_meta_reflow.tcl")
     if "OT_S81_SERDES_BOOT_RELEASE3" in names:
         out.append("export OT_SERDES_BOOT_RELEASE_LOCAL = 1")
+        # FABLE-FIX-S81-SERDES 11-18: the private BUF/INV chain between two release stages is seated on the line between them
+        # (serdes_boot_release_local.tcl ot_serdes_boot_path_local).  the H18 / H19 pilots stopped on exactly this path: stage 0 ->
+        # stage 1 is 363 um apart but its inverter sat 544 um west, about 1.37 mm of chain, recovery -135 (CTS) / -192 (GRT gate).
+        out.append("export OT_SERDES_BOOT_PATH_LOCAL = 1")
         # corridor correction (authority input + boot transport) at PRE_DETAIL_PLACE: opt-in until proven on a clean generated DB
         if env.get("OT_SERDES_CORRIDOR") == "1":
             for f in SERDES_CORRIDOR_FILES:
