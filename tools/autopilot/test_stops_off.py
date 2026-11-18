@@ -229,5 +229,40 @@ class SameInputSkip(unittest.TestCase):
         self.assertFalse(any("SKIP-SAME-INPUT" in m for m in logs))
 
 
+class CellBig(unittest.TestCase):
+    """OWNER r703 (via COORD): the plan-time SPLIT-NEEDED flag (est. cells > 400k) does not block a launch under stops_off (hbm excluded)"""
+
+    def test_plan_entry_block(self):
+        d = {"_plan_flags": {"big": "split", "hard1": "hard"}}
+        self.assertIn("SPLIT-NEEDED", KW.plan_entry_block(d, "big"))
+        d["_stops_off"] = True
+        self.assertIsNone(KW.plan_entry_block(d, "big"))
+        self.assertIn("hard type", KW.plan_entry_block(d, "hard1"))                  # the other plan blocks are untouched
+
+    def test_compile_holds_marks_the_dies(self):
+        c = cfg(True)
+        c["dies"]["hbm"] = {"event": "E"}
+        HR.compile_holds(c)
+        self.assertTrue(c["dies"]["s81"]["_stops_off"])
+        self.assertFalse(c["dies"]["hbm"]["_stops_off"])
+
+    def test_the_in_kit_cap_gets_the_owner_ruling_waiver_under_stops_off(self):
+        on = {"stops_off": True, "dies": {"qwen_compute": {}, "hbm": {}}}
+        self.assertEqual(KW.stops_off_cell_env(on, "qwen_compute", {"OT_X": "1"}), {"OT_X": "1", "OT_CELL_WAIVER": "r703"})
+        self.assertEqual(KW.stops_off_cell_env(on, "qwen_compute", {"OT_CELL_WAIVER": "r500"}), {"OT_CELL_WAIVER": "r500"})     # a die's own ruling wins
+        self.assertEqual(KW.stops_off_cell_env(on, "hbm", {}), {})                                                         # hbm excluded
+        self.assertEqual(KW.stops_off_cell_env({"dies": {}}, "qwen_compute", {}), {})                                      # option off: unchanged
+
+    def test_cell_big_line_once_per_change(self):
+        logs = []
+        ap = type("AP", (), {"log": staticmethod(logs.append)})()
+        c = {"dies": {"qwen_compute": {"_stops_off": True, "_plan_flags": {"a": "split", "b": "split", "c": "hard"}}}}
+        st = {}
+        KW.cell_big_note(ap, c, st)
+        KW.cell_big_note(ap, c, st)
+        self.assertEqual(len([m for m in logs if "CELL-BIG" in m]), 1)
+        self.assertIn("a, b", logs[0])
+
+
 if __name__ == "__main__":
     unittest.main()

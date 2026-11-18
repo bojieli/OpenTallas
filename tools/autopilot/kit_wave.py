@@ -1470,6 +1470,21 @@ NEEDS_BIND = ("NEEDS-BIND: plan type has buses with no leaf binding and the die 
               "gen would fail 'bus ... is not bound to any leaf port'")
 
 
+def cell_big_note(AP, cfg, st):
+    """one CELL-BIG log line per die and set of types per tick-change: plan types estimated over the 400k cell limit that stops_off lets through"""
+    seen = st.setdefault("cell_big_logged", {})
+    for die, d in (cfg.get("dies") or {}).items():
+        if not isinstance(d, dict) or not d.get("_stops_off"):
+            continue
+        big = sorted(t for t, f in (d.get("_plan_flags") or {}).items() if f == "split")
+        sig = ",".join(big)
+        if big and seen.get(die) != sig:
+            seen[die] = sig
+            AP.log(f"KIT-WAVE CELL-BIG {die}: {len(big)} type(s) estimated over the {SPLIT_CELLS} cell limit launch anyway (stops_off): {', '.join(big)[:400]}")
+        elif not big:
+            seen.pop(die, None)
+
+
 def plan_entry_block(d, item, kind=None):
     """plan-entry kit preflight from the plan probe flags; hard_wrappers opt a hard type back in"""
     if item in (d.get("_identity_holds") or {}):
@@ -1489,6 +1504,8 @@ def plan_entry_block(d, item, kind=None):
         return None
     if prov_item(d, item):
         return None                 # KW-PROV-1: builds on provisional child views (never counted until re-signed)
+    if f == "split" and d.get("_stops_off"):
+        return None                      # WAVE-PILOT-FIX 11-18 (r703): stops_off: est. cells over 400k is a CELL-BIG note (see cell_big_note), never a SPLIT-NEEDED launch block
     if PLAN_BLOCK.get(f):
         return PLAN_BLOCK[f]
     li = (d.get("_lint") or {}).get(item)
@@ -3887,6 +3904,17 @@ def roam_hosts(cfg, die, item=None):
             and lane not in marked.get(h, ())]
 
 
+CELL_WAIVER_RULING = "r703"       # the OWNER ruling 'remove all safety stops' (via COORD, 11-18): the waiver id the in-kit cell cap (native_cell_cap.tcl) accepts
+
+
+def stops_off_cell_env(cfg, die, env):
+    """WAVE-PILOT-FIX 11-18: under stops_off the kit runs past the 400k in-kit cell cap too: OT_CELL_WAIVER=r703 (an item_env / die value of its own wins)"""
+    env = dict(env or {})
+    if FG.stops_off_die(cfg, die):
+        env.setdefault("OT_CELL_WAIVER", CELL_WAIVER_RULING)
+    return env
+
+
 def spec_for(cfg, die, item, hub, parent=None, kind="type"):
     d = cfg["dies"][die]
     root = f"{opt(cfg, die, 'work_root')}/{die}/{d['event']}"
@@ -3925,7 +3953,7 @@ def spec_for(cfg, die, item, hub, parent=None, kind="type"):
             # (e.g. OT_IO_HOLD=sender_min, a die-owner input-hold contract ruling on one type; plan clock.io_hold wins)
             # KW-FIX-30 11-07 (COORD 15:01 (b)): die option flow_tag -> OT_FLOW_TAG in the gen env (gen.py phys writes K/flow_tag,
             # run_kit.sh passes it to the GRT clock gate); an item_env OT_FLOW_TAG wins.  Unset = as before.
-            "gen_env": ({"OT_FLOW_TAG": str(d["flow_tag"])} if d.get("flow_tag") else {}) | item_env(d, item),
+            "gen_env": stops_off_cell_env(cfg, die, ({"OT_FLOW_TAG": str(d["flow_tag"])} if d.get("flow_tag") else {}) | item_env(d, item)),
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
                         + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
             # default --contract; an explicit [] (die config) = the plain kit preflight the autopilot submit runs
@@ -13028,6 +13056,10 @@ def _step(AP, ap_dir):
     except Exception as e:                               # a sign-off log read never blocks the wave
         AP.log(f"KIT-WAVE LEAFSLEW step skipped: {type(e).__name__}: {e}")
     prune_stale_retries(cfg, st, notices, AP.log)          # KW-FIX-23: pending / LEAFSLEW entries too
+    try:
+        cell_big_note(AP, cfg, st)
+    except Exception as _e:
+        AP.log(f"KIT-WAVE CELL-BIG note skipped: {type(_e).__name__}: {_e}")
     try:
         close_removed_key_classes(AP, cfg, st)
     except Exception as _e:

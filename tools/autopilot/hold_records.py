@@ -641,6 +641,9 @@ def compile_holds(cfg, ctx=None):
     cfg["_pilot_deadlock"] = []
     # OWNER 11-18 (via COORD, 'remove all safety stops'): on a die where stops_off applies (every die but hbm) no hold record blocks anything; the records stay in the file
     skip_dies = {x for x in (cfg.get("dies") or {}) if stops_off_die(cfg, x)}
+    for _x, _dd in (cfg.get("dies") or {}).items():          # the per-die mark the plan-entry check reads (kit_wave.plan_entry_block, CELL-BIG instead of SPLIT-NEEDED)
+        if isinstance(_dd, dict):
+            _dd["_stops_off"] = _x in skip_dies
     if cfg.get("_hold_auto_released"):
         cfg["_hold_auto_released"] = [r for r in cfg["_hold_auto_released"] if r[0] not in (cfg.get("_hold_rec_dies") or ())]
     rec_dies = set()

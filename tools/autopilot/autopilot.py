@@ -252,6 +252,16 @@ def cell_waiver_for(die, typ):
     return ""
 
 
+def stops_off_for(die):
+    """WAVE-PILOT-FIX 11-18 (COORD / OWNER r703: remove all safety stops): True when the committed kit_wave.json has stops_off true and DIE is not excluded (hbm is)"""
+    try:
+        cfg = json.loads((AP_DIR / "kit_wave.json").read_text())
+    except (OSError, ValueError):
+        return False
+    import flow_guard as _FG
+    return _FG.stops_off_die(cfg, die)
+
+
 def read_coord(rel):
     """a coord/state file (lanes/GEOM-REVIEW.md ...) as of the last fetch; '' if missing (read-only)"""
     if COORD_FILES:
@@ -361,7 +371,9 @@ def validate_row(r):
         return "cells not a number (expected std cells required)"
     # WAVE-FLOW-R2 11-17 (COORD FABLE-FLOW-1500 D): the one cell limit (die_plan/cell_cap.py) is enforced at enqueue, whatever launched the kit; waiver = a
     # ruling id in lanes/CELL-WAIVER.tsv (die<TAB>type<TAB>rNNN)
-    if c > SPLIT_CELLS and not cell_waiver_for(r.get("die"), r.get("type")):
+    if c > SPLIT_CELLS and stops_off_for(r.get("die")):
+        log(f"KIT-WAVE CELL-BIG {r.get('die')}/{r.get('type')}: {int(c)} cells > {SPLIT_CELLS} (the one cell limit): enqueued anyway (stops_off); the owner may split the type")
+    elif c > SPLIT_CELLS and not cell_waiver_for(r.get("die"), r.get("type")):
         return f"SPLIT-NEEDED: cells {int(c)} > {SPLIT_CELLS} (the one cell limit); split the type or waive with a ruling id in lanes/CELL-WAIVER.tsv"
     if r["goal"] not in ("", "auto", "route", "finish", "cts", "grt"):
         return "goal must be route|finish|auto|cts|grt"

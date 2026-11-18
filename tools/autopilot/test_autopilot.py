@@ -80,6 +80,26 @@ class TestQueue(Base):
         pos = seen[0].index("--")
         self.assertEqual(seen[0][pos + 4], "cts")
 
+    def test_cell_cap_is_a_cell_big_line_under_stops_off(self):
+        """WAVE-PILOT-FIX 11-18 (COORD / OWNER r703): no SPLIT-NEEDED refusal at enqueue when stops_off applies to the die (hbm is excluded)"""
+        import json as _j
+        row = "\t".join(ROW[:7] + ["517001"] + ROW[8:])
+        orig = self.ap.AP_DIR
+        d = __import__("pathlib").Path(tempfile.mkdtemp())
+        (d / "kit_wave.json").write_text(_j.dumps({"stops_off": True, "dies": {}}))
+        logs = []
+        olog, self.ap.log = self.ap.log, logs.append
+        self.ap.AP_DIR = d
+        try:
+            r = list(self.ap.parse_queue(row).values())[0]
+            die = r["die"]
+            self.assertEqual(r["error"], "")
+            self.assertTrue(any("CELL-BIG" in m for m in logs))
+            (d / "kit_wave.json").write_text(_j.dumps({"stops_off": True, "stops_off_exclude": [die], "dies": {}}))     # an excluded die keeps the refusal
+            self.assertIn("SPLIT-NEEDED", list(self.ap.parse_queue(row).values())[0]["error"])
+        finally:
+            self.ap.AP_DIR, self.ap.log = orig, olog
+
     def test_cell_cap_and_mem_and_paths(self):
         bad = {6: "517001", 5: "lots"}
         r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["517001"] + ROW[8:])).values())[0]
