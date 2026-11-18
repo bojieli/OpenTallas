@@ -1678,6 +1678,16 @@ SCHEMA["properties"]["budgets"]["properties"]["r_reach"] = {"enum": ["error", "w
 SCHEMA["properties"]["budgets"]["properties"]["routed_reach"] = {"enum": ["error", "warn", "off"]}
 SCHEMA["properties"]["budgets"]["properties"]["r_reach_even"] = {"type": "boolean"}   # R-REACH-5 default chains (gen_phys)
 SCHEMA["properties"]["budgets"]["properties"]["r_dly_spread"] = {"anyOf": [{"type": "boolean"}, {"type": "array", "items": {"type": "string", "minLength": 1}}]}   # DLY-SPREAD G8: true | [type base names] (gen_phys dly_spread.tcl)
+# FABLE-FIX-KV-HG 11-18 (gen_phys _relay_mid_re / _relay_mid_tail / _relay_mid_soft_frac, relay_mid.tcl): the opt-in plan
+# form of the KV hst g/t1/t2 pipeline siting keys (0 cycles, kit-side).  Absent = byte-identical kits.
+_B = SCHEMA["properties"]["budgets"]["properties"]
+_B["relay_mid_re"] = {"type": "string", "minLength": 1}
+_B["relay_mid_re_types"] = {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}}
+_B["relay_mid_tail"] = {"type": "boolean"}
+_B["relay_mid_tail_types"] = {"type": "array", "uniqueItems": True, "items": {"type": "string", "minLength": 1}}
+_B["relay_mid_soft_frac"] = {"type": "number", "minimum": 0, "maximum": 1}
+_B["relay_mid_soft_frac_types"] = {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}}
+del _B
 # W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;
 # every receiving crossing binds K+W-R. Default absent = byte-identical.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_writer_start"] = {

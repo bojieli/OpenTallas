@@ -8431,6 +8431,41 @@
       }
      ]
     },
+    "relay_mid_re": {
+     "type": "string",
+     "minLength": 1
+    },
+    "relay_mid_re_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "relay_mid_tail": {
+     "type": "boolean"
+    },
+    "relay_mid_tail_types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string",
+      "minLength": 1
+     }
+    },
+    "relay_mid_soft_frac": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1
+    },
+    "relay_mid_soft_frac_types": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+     }
+    },
     "gutter_block_um": {
      "type": "number",
      "exclusiveMinimum": 0
