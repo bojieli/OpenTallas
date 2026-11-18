@@ -31,6 +31,9 @@ DOUBLE_OVER_PS = 25.0     # need above this gets two cells at least
 MAX_PER_ENDPOINT = 4
 TT_FLOOR_PS = -42.0       # gate: routed TT WNS >= -42
 CAPTURE_PINS = ("D", "RESETN", "SETN")
+# SRAM signal capture pins of the ot_sram_1r1w* macros (the dump labels macro pins "reg"): write data, mask, address and enables.
+# lep_pair vE KCRED28 11-18: one of 12 internal ends was u_m/w_addr_in[3] (-2.3 ps) and the whole ECO was refused on it.
+SRAM_CAPTURE_PREFIXES = ("wd_in", "w_addr_in", "r_addr_in", "w_mask_in", "w_ce_in", "r_ce_in")
 KINDS = ("reg", "port", "macro")
 MAX_ABS_SLACK_PS = 1e5      # a row beyond this is a unit error (seconds x1e12 twice), never a real slack
 NO_TT_PATH_PS = 1e6         # hold_eco_internal_dump.tcl writes this when the endpoint has no TT path
@@ -39,7 +42,7 @@ NO_TT_PATH_PS = 1e6         # hold_eco_internal_dump.tcl writes this when the en
 def capture_pin(endpoint, kind="reg"):
     """A known flop capture pin or an STA-proven macro signal capture."""
     pin = endpoint.rsplit("/", 1)[-1]
-    return (kind == "macro" and "/" in endpoint) or pin in CAPTURE_PINS or pin.startswith("wd_in")
+    return (kind == "macro" and "/" in endpoint) or pin in CAPTURE_PINS or pin.startswith(SRAM_CAPTURE_PREFIXES)
 
 
 def need_to_cells(need, hb4_ff=HB4_FF_PS, double_over=DOUBLE_OVER_PS, cap=MAX_PER_ENDPOINT):
@@ -84,7 +87,7 @@ def plan(rows, target=TARGET_PS, select=SELECT_PS, hb4_ff=HB4_FF_PS, hb4_tt=HB4_
             skipped.append((e, "port path: the parent's, no cell"))
             continue
         if not capture_pin(e, r["end_kind"]):
-            skipped.append((e, "not a supported capture pin (D/RESETN/SETN/wd_in*)"))
+            skipped.append((e, "not a supported capture pin (D/RESETN/SETN/SRAM signal inputs)"))
             continue
         if r["ff"] >= select:
             continue

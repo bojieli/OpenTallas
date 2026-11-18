@@ -59,9 +59,10 @@ def test_tt_room_is_kept_inside_the_gate():
 
 
 def test_reset_pins_and_wd_in_are_supported():
-    for pin in ("RESETN", "SETN", "D", "wd_in3"):
+    for pin in ("RESETN", "SETN", "D", "wd_in3", "w_addr_in[3]", "r_addr_in[0]", "w_mask_in[5]", "w_ce_in", "r_ce_in"):
         assert H.capture_pin(f"u/ff/{pin}")
     assert not H.capture_pin("u/ff/CLK") and not H.capture_pin("u/m/ADDR")
+    assert not H.capture_pin("u/m/wclk") and not H.capture_pin("u/m/rclk") and not H.capture_pin("u/m/rd_out[1]")
 
 
 def test_plan_file_roundtrip_and_cli(tmp_path):
