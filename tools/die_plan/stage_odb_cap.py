@@ -98,7 +98,7 @@ def plan(base, now=None, open_files=(), min_age=MIN_AGE_S):
     return out
 
 
-def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs):
+def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs, alive=lambda: True):
     why = kept_by_env(kit or base)
     if why:
         return []
@@ -108,6 +108,8 @@ def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs):
         return []
     done = []
     for p, size in plan(base, now, files):
+        if not alive():      # the kit's run_kit.sh has ended: the job's publish may be walking this tree, never delete under it
+            log("STAGE-CAP parent gone: no more deletions"); break
         if dry:
             log("STAGE-CAP would delete %s %d" % (p, size)); done.append((p, size)); continue
         try:
@@ -117,11 +119,27 @@ def once(base, kit=None, dry=False, now=None, log=print, scan=open_procs):
     return done
 
 
-def watch(root, kit, interval, max_hours, log=print):
+def parent_alive(pid):
+    """True while pid (the run_kit.sh that started this watcher) is running; None = no parent given"""
+    if not pid:
+        return True
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+def watch(root, kit, interval, max_hours, log=print, parent=None):
     t0 = time.time()
     while time.time() - t0 < max_hours * 3600:
+        if not parent_alive(parent):
+            log("STAGE-CAP parent %s gone: watcher ends without deleting (the job's publish walks the tree)" % parent)
+            return
         for base in glob.glob(os.path.join(root, "*", "base")):
-            once(base, kit, False, log=log)
+            once(base, kit, False, log=log, alive=lambda: parent_alive(parent))
             # finished: the final is old and everything beyond it is gone -> nothing more to do for this kit
         time.sleep(interval)
 
@@ -130,12 +148,13 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--watch"); ap.add_argument("--once"); ap.add_argument("--kit"); ap.add_argument("--interval", type=float, default=60)
     ap.add_argument("--max-hours", type=float, default=36); ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--parent", type=int, default=0, help="pid of the run_kit.sh that started this watcher: the watcher stops deleting when it ends")
     a = ap.parse_args(argv)
     lg = lambda m: print(time.strftime("%F %T"), m, file=sys.stderr, flush=True)
     if a.once:
         once(a.once, a.kit, a.dry, log=lg)
     elif a.watch:
-        watch(a.watch, a.kit, a.interval, a.max_hours, lg)
+        watch(a.watch, a.kit, a.interval, a.max_hours, lg, a.parent)
     else:
         ap.error("--watch or --once")
     return 0

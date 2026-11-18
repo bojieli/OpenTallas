@@ -7206,7 +7206,7 @@ fi
 # Keeps 1_synth, the step boundaries (2_floorplan 3_place 4_cts 5_1_grt = diagnosis anchors) and the latest final; drops the
 # other intermediates once the successor stage is written (stage_odb_cap.py).  OT_KEEP_STAGE_ODBS=1 or K/.keep_stage_odbs opts out.
 if [ "${OT_KEEP_STAGE_ODBS:-0}" != 1 ] && [ ! -f "$K/.keep_stage_odbs" ] && [ -f "$K/stage_odb_cap.py" ]; then
-  nohup python3 -I "$K/stage_odb_cap.py" --watch "$K/run/results/asap7" --kit "$K" --max-hours 36 >>"$K/stage_odb_cap.log" 2>&1 </dev/null &
+  nohup python3 -I "$K/stage_odb_cap.py" --watch "$K/run/results/asap7" --kit "$K" --max-hours 36 --parent $$ >>"$K/stage_odb_cap.log" 2>&1 </dev/null &
 fi
 # KWRS-END
 if [ -f "$K/signed_parent_source.json" ]; then
