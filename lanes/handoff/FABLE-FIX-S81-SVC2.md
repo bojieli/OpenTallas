@@ -133,3 +133,9 @@ A: hold ECO hslice_mm4 passed the limits (plan made, ECO route running); mergex_
   hslice_mm4/work/orfs (results/asap7/opentallas_ot_hdc_v41x_idx_hslice_asap7_ref_hslice_mm4/base/6_final.odb; sdc hslice_mm4/signoff.sdc; sign-off TT +175.5 / FF -6.15, routed sta r2r -3.27) = best hslice; hslice_mm3b (r2r -5.92) second.
   mergex_mm3b/work/orfs (…attn_merge_x_asap7_ref_mergex_mm3b/base/6_final.odb; sdc mergex_mm3b/signoff.sdc; TT +97.83, r2r -6.93) = only finished mergex.
 - If NOMCAP signs one under r708: export it as s81/ot_s81_svc_<core>__h16<run>_1118 (rtx-pro + AGIdock + INDEX row) and stop the remaining runs of that core by exact unit (ot-heavy-stop --match <run dir> after a dry run).
+
+## 11-18 05:1x PST: hslice SIGNED + exported; cores 5 of 6
+- hslice_mm3r (r692 hold fix, HM 30, guards on; epyc7 fable-fix-s81-svc2/svc_r692/hslice_mm3r): routed DRC 0, ant 0, sta TT +70.61, FF r2r +12.14. signoff.py tt,ff: SIGNED, TT +130.61, internal FF hold census complete 0 violators, port FF hold -5.48 advisory (unit oth-ubuntu-34485-1795006439).
+- Export s81/ot_s81_svc_hslice__h16mm3r_1118 on rtx-pro + AGIdock, hashes equal (odb ff6847e18317, record b6c0ed37be6c), INDEX rows on both.
+- hslice_mm15r (HM 15) also finished: DRC 0, TT +101.34, FF r2r -0.00 (on the edge; NOT signed, kept as evidence that 15 ps leaves no room). hslice_mm6 stopped by ot-heavy-stop --unit oth-ubuntu-1836395-1794983787 after a dry run (52+ route iterations, redundant).
+- mergex still open: mm6 (epyc10) now in GRT; mm3r + mm15r (epyc7) in CTS hold repair. NOMCAP-1118 may re-sign mergex_mm3b under r708; hslice needs no re-sign any more.
