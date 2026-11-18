@@ -218,6 +218,35 @@ def _relay_mid_fit(budgets, tn):
     return tn is not None and (tn in on or tn.split("__")[0] in on)
 
 
+def _relay_mid_re(budgets, tn):
+    """FABLE-FIX-KV-HG 11-18: the relay-station name regex of relay_mid.tcl (group = first capture), in order: GEN env
+    OT_RELAY_MID_RE (kit-wave item_env: a pilot or a class batch needs no plan event), per type
+    budgets.relay_mid_re_types {type or unsplit base name: regex}, plan-wide budgets.relay_mid_re, else RELAY_MID_RE.
+    Why: the default only knows the S81 u_y_* relays, so every KV kit logged "OT_RELAY_MID placed 0 relay flops" and GPL
+    left the hst g/t1/t2 pipeline of the hg / hgi types bunched (kv3_hgi_v4: hst_t2 -> head e0 1,000 um, 1,170 ends at
+    -255 ps; lpad -> hst_g 957 um, 469 ends at -305 ps).  RELAY_MID_RE_KV is the regex of those chains."""
+    e = os.environ.get("OT_RELAY_MID_RE")
+    if e:
+        return e
+    per = budgets.get("relay_mid_re_types") or {}
+    if tn is not None:
+        for k in (tn, tn.split("__")[0]):
+            if k in per:
+                return per[k]
+    return budgets.get("relay_mid_re", RELAY_MID_RE)
+
+
+def _relay_mid_tail(budgets, tn):
+    """FABLE-FIX-KV-HG 11-18 (relay_mid.tcl OT_RELAY_MID_TAIL), opt-in three ways, absent = unchanged kits: plan-wide
+    budgets.relay_mid_tail, per type budgets.relay_mid_tail_types (types or unsplit base names), or GEN env
+    OT_RELAY_MID_TAIL=1 (item_env).  A chain tail that broadcasts to fixed sinks spread wider than the even hop sits at
+    the sink centroid (stations at L*j/n, not L*j/(n+1))."""
+    if os.environ.get("OT_RELAY_MID_TAIL") == "1" or budgets.get("relay_mid_tail"):
+        return True
+    on = list(budgets.get("relay_mid_tail_types") or [])
+    return tn is not None and (tn in on or tn.split("__")[0] in on)
+
+
 def _relay_hop_fail(budgets, tn):
     """S81-COLGEN-3 11-17 (S81-TYPES-R3): relay_mid.tcl fails on a relay chain hop above 405 um (OT_RELAY_POLY_FAIL) -- plan-wide
     budgets.relay_hop_fail, per type budgets.relay_hop_fail_types (types or unsplit base names), or GEN env
@@ -1089,6 +1118,9 @@ def io_tcl(P, tn, pins):
 # S81-TYPES-R2 11-16: [._] before u_y_ -- synthesis flattens u_r0.u_y_xo0_0 to u_u_r0_u_y_xo0_0 (col types); the [.]-only
 # form matched 5 of 80 relay groups on col_h10_r2 (CTS 14 endpoints under -42 -> 2 with [._], 7,014 relay flops placed)
 RELAY_MID_RE = r"^(.*[._]u_y_[A-Za-z0-9_]+)[.]"
+# KV hg / hgi head-station pipeline (qkh_head_gather_stage u_hst<h>_g / _t<k>, u_head<h>_u_ftg) next to the S81 relays; the
+# 34-bit qkh_head_sstage side chain (u_hst<h>_s<k>) stays a soft endpoint (< 2 % of a group) so each chain keeps ONE successor
+RELAY_MID_RE_KV = r"^(.*[._]u_y_[A-Za-z0-9_]+|.*[._]u_hst[0-9]+_(?:g|t[0-9]+)|.*[._]u_head[0-9]+_u_ftg)[.]"
 
 
 def _snap_tap(P, x, y, pg_legal=True):
@@ -6476,7 +6508,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export CORNERS = tc bc",
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
-           *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           *([f"export OT_RELAY_MID_RE = {_relay_mid_re(P.budgets, tn)}"] if macros else []),
+           *(["export OT_RELAY_MID_TAIL = 1"] if macros and _relay_mid_tail(P.budgets, tn) else []),
            # S81-TYPES-5 11-07 (opt-in plan budgets, absent = unchanged kits): relay clusters fit outside narrow
            # channels (relay_mid.tcl FIT) and macro gaps < gutter_block_um get placement blockages (gutter_block.tcl)
            *(["export OT_RELAY_MID_FIT = 1"] if macros and _relay_mid_fit(P.budgets, tn) else []),
