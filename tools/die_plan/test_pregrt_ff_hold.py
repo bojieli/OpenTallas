@@ -255,3 +255,11 @@ def test_legalize_failure_keeps_the_repair(tmp_path):
     # the residue branch sets no pg_fail: only the outer tool-error catch and the setup/hold gain checks can fall back
     assert "set pg_fail" not in seg
     assert "check_placement -verbose\n  estimate_parasitics" not in tcl
+
+
+def test_pregrt_nonport_scope_default():
+    """PREGRT-NONPORT 11-18: the pass excepts hold from input ports by default (same scope as the GRT repair)."""
+    from pathlib import Path
+    t = (Path(__file__).with_name("pregrt_ff_hold.py")).read_text()
+    assert "OT_PREGRT_HOLD_PORTS" in t and "pg_np_apply" in t and "pg_np_end" in t
+    assert t.index("pg_np_apply\n") < t.index("foreach pg_tag {all rr xt}")

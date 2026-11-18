@@ -203,6 +203,14 @@ if {[info exists hg_txt]} {
 set pg_pm [expr {[info exists ::env(OT_PREGRT_HOLD_PORT_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_PORT_MARGIN)] ? $::env(OT_PREGRT_HOLD_PORT_MARGIN) : 5.0}]
 set pg_in [all_inputs -no_clocks]; set pg_out [all_outputs]
 set pg_dg [expr {$pg_guard - $pg_pm}]
+# PREGRT-NONPORT 11-18 (COORD): same scope as the GRT repair (grt_nonport_hold.tcl): hold from input ports is excepted.  The kit SDC
+# launches port data early by construction (set_input_delay -min -135 on a 250 ps vclk vs ~300 ps capture insertion), so a port_in hold pad
+# (4-12k cells on the sc family) only spends setup; R-MINIMAL gates internal FF hold and port-boundary hold is a die-level check.
+# OT_PREGRT_HOLD_PORTS=1 restores the old all-paths behaviour.
+set pg_np_scope [expr {![info exists ::env(OT_PREGRT_HOLD_PORTS)] || $::env(OT_PREGRT_HOLD_PORTS) ne "1"}]
+proc pg_np_apply {} { if {$::pg_np_scope && [llength $::pg_in]} { set_false_path -hold -from $::pg_in } }
+proc pg_np_end {} { if {$::pg_np_scope && ![info exists ::pg_scope_sdc] && [llength $::pg_in]} { unset_path_exceptions -hold -from $::pg_in } }
+pg_np_apply
 # HOLD-MARGIN-FAMILY 11-17: extra REG-TO-REG pass to OT_PREGRT_HOLD_R2R_MARGIN (die family value, 0 = off); ports excepted, so the port seam
 # margin above is unchanged.  Same fail-safe as the rest of the build (TT setup is judged after the whole build, pg_verdict).
 set pg_rm [expr {[info exists ::env(OT_PREGRT_HOLD_R2R_MARGIN)] && [string is double -strict $::env(OT_PREGRT_HOLD_R2R_MARGIN)] ? $::env(OT_PREGRT_HOLD_R2R_MARGIN) : 0.0}]
@@ -251,7 +259,9 @@ if {[catch {
       if {[llength $pg_in]} { unset_path_exceptions -hold -from $pg_in }
       if {[llength $pg_out]} { unset_path_exceptions -hold -to $pg_out }
     }
+    pg_np_apply
   }
+  pg_np_end
   # repair_timing seats a hold cell at its driver, on a macro in a macro-dominated tile (V1: 23 cells): legalize all of them
   set pg_nh 0
   foreach pg_i [$pg_blk getInsts] {
