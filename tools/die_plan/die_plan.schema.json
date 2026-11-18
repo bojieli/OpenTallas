@@ -5928,6 +5928,21 @@
         "port": {
          "type": "string"
         },
+        "side": {
+         "enum": [
+          "source",
+          "sink"
+         ]
+        },
+        "bits": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 2,
+         "items": {
+          "type": "integer",
+          "minimum": 0
+         }
+        },
         "D": {
          "type": "integer",
          "minimum": 1,
@@ -8066,6 +8081,22 @@
        "param": {
         "type": "string"
        }
+      }
+     }
+    },
+    "internal_pipe_ack": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "digest"
+     ],
+     "properties": {
+      "digest": {
+       "type": "string",
+       "minLength": 8
+      },
+      "note": {
+       "type": "string"
       }
      }
     }
