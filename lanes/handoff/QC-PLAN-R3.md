@@ -57,3 +57,9 @@
 - Work dir: epyc8 /srv/opentallas-scratch2/claude/qc-plan-r3-n3-1117. Contents: dump.tcl/dump.sh (ORFS docker dump of 3_place.odb), coll_core.json (bins), n3_taps2/3.py sweeps, taps_sweep*.json.
 - Next: compose N3 on E2 from N2B_d3. Then the renumber of coll_core tap names and the station rows, then the M5T-style chain, then publish with tree-relative paths, then gate and apply.
 - Foreign-tree: the N1B relocated bind is ready (qcbind_..._s4q9n1b/bind_s29q103S4Q9N1BBR_d2, E8+E9, relocate_bind.py). N2B: relocate after its apply. Then re-post READY 44f07b1a.
+
+## 11-17 19:xx PST (COORD split: N3 = tools + stations, N4 = coll_core contract)
+- N2B: publish_gate running on intel2 (log ~/qc-plan-r3/pgate_n2b.log, rc ~/qc-plan-r3/pgate_n2b.rc). Candidate lanes/handoff/QC_S4Q9N2B_ADOPT_candidate_d3_1117.json, guard helper ~/qc-plan-r3/n2b_guard.py. On PASS: apply_reviewed_tree_marker with the same expects (--expect-source .../src_qc_pin_eb1e73448bd0_s4q9n1b_d2 --expect-event s29q103S4Q9N1B) and --pilot-item sle_st_a_v2__pv4242de79.
+- N3 tree: E2 /srv/opentallas-scratch3/claude/qc-plan-r3-n3-1117/event_tree_N3 = N2B _d3 + rt d9bbb638fa79 tools/common_flow (r641/648/649/650).
+- Stations: R8 is sink pads only. Mid-hop stations go in partition_types.<t>.internal_stations[] (regs_um). Mechanism A (internal_stations): su_l1 lane7 flt_su_c_i (+1 regs_um point), fw_v1 rd_wi->x_st_a_o (new conn bus:x_st_a_o entry; pd3 site from the routed L2 kit). Mechanism B (landing contract): su_l1 cland_rsn ring, sc_v1 cland_collect_rst_n_t13 -> cland_up_ready, shared cland_origin -> cland_rstart_tx. Proposed: B moves to N4 with coll_core (posted 19:xx; default if no answer).
+- N4: coll_core bins epyc8 qc-plan-r3-n3-1117/coll_core.json, radius 230 / cap 4800 / 43 taps. Re-solve collector_tree with reset_tree, republish into plan + sidecar collector.types[coll_core].tree, renumber the consumers (see added_tap_recentre.py GUARD_KEYS).
