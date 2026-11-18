@@ -375,3 +375,4 @@
 - 2026-11-17 23:11 PST STATE tools sync recovered after 34 min (rt/current 296faa094abb)
 - 2026-11-17 23:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] intel1: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on intel1
 - 2026-11-17 23:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc7: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc7
+- 2026-11-17 23:15 PST ALERT [AUTO-CLEAN -> FLEET-OPS-R, COORD] epyc8: the automatic cleanup timer has not completed a pass for ever (limit 90 min): check `systemctl --user status ot-auto-clean.timer` on epyc8
