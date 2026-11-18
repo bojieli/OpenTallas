@@ -107,3 +107,5 @@
 - N4 clock rows: subagent writes E2 qc-plan-r3-n4-1117/n4b.py / n4b_plan.json.
 - tt_ctlm: blocker posted (anonymous flat u_core cells; needs generator RTL or synth retime lane) -> COORD staffs.
 - Posted gaps: 6 types (glue coll_core coll_s native59 slw_fw_v3 tt_ctlm) stuck as CANCELLED SUPERSEDED no-blind-retry after the N3 switch; asked WAVE-FLOW-R2.
+
+- 11-18 09:5x N3 work dir epyc2 scratch3/qc-plan-r3-n3-1117 DELETED (55.7 GB; N3 candidate relocation key marked superseded, coord 9539b30f). N3 tree+bind kept. CB16 skipped. Open: N4 G0 on epyc9 (rc ~/qc-plan-r3/g0_n4.rc) -> fix findings forward; N4.1 after a routed st_a kit (QC-N-OPUS rows + btab/prog lef/lib from W/n41_views); W/n4_select* leftovers to ot-delete.
