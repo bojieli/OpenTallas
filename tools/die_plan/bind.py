@@ -3373,6 +3373,8 @@ class Binder:
         if ((self.plan.get("clock") or {}).get("ft_hop_lockup") or (self.plan.get("clock") or {}).get("core_input_lockup")) \
                 and "module ot_dp_lk " not in cells:
             cells += "\n" + ft_hop_lockup_cell()
+        if self.ab.get(TS.KEY) is not None and f"module {TS.KEEP_MODULE} " not in cells:
+            cells += "\n" + TS.KEEP_CELL                  # tail copies must survive opt_merge
         import gen_rtl
         if any(t.get("reset_replicate") for t in (self.plan.get("partition_types") or {}).values()) \
                 and "module ot_dp_rrelay " not in cells:      # S81-COLGEN-1: the kept 1-bit copy cell
@@ -4099,7 +4101,10 @@ class Binder:
                             nm = short_id(f"pd{kd}_{L['iname']}_{j}_{sv_id(tag)}_{d[7]}", 100)
                             pads[bkey] = nm
                             decl.append(f"    wire [0:0] {nm};")
-                            body.append(f"    ot_dp_dly #(.W(1), .D({kd})) u_{nm} (.clk(clk), .d({src}), "
+                            ts_rec = self.__dict__.setdefault("_pad_tail_split", {}).get(tn)
+                            if ts_rec is not None and tag in ts_cent.get(key, {}):
+                                ts_rec.setdefault("sites", {}).update(TS.site_rows(f"u_{nm}", kd, ts_cent[key][tag]))
+                            body.append(f"    {TS.KEEP_MODULE} #(.W(1), .D({kd})) u_{nm} (.clk(clk), .d({src}), "
                                         f".q({nm}));  // landing pad tail copy for core {tag}: as-built relative timing")
                         return f"{pads[bkey]}[0]"
                     if key not in pads:
@@ -4211,6 +4216,7 @@ class Binder:
         # (in-bus bit, pad) -> (K, {consumer leaf ci: hard core inst}) for the pads whose consumer pins sit on several
         # plan hard cores more than min_spread_um apart.  Only the emitted pad instances change; self.sinks is not touched.
         tsplit = {}
+        ts_cent = {}
         try:
             ts_cfg = TS.config(self.ab)
         except ValueError as exc:
@@ -4261,6 +4267,7 @@ class Binder:
                 if ks is None:
                     continue
                 tsplit[key] = (ks[0], per)
+                ts_cent[key] = TS.centroids(by)
                 ts_row["split_pads"] += 1
                 ts_row["copies"] += len(by)
                 ts_row["extra_flops"] += (len(by) - 1) * ks[0]
@@ -6337,7 +6344,7 @@ def cmd_kit_rtl(a):
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), [rebase(x) for x in ab0.get("files", [])] + [rebase(x) for x in rep.get("extra_lib", [])], base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_dly_keep", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rrelay_nl", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
     if spb_geometry:
         leafm = [name for name in leafm if name != 'ot_hbm_spb0_regs']
     picks = {}
