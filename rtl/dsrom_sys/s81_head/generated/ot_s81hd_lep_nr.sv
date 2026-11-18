@@ -536,17 +536,27 @@ module ot_s81hd_lep_core_nr #(
                   assign wr_update=wr_group[c];assign rd_update=rd_group[c];
                   assign wr_pointer=wr_group[c];assign rd_pointer=rd_group[c];
                 end
+                wire [AT:0] count_nx; wire [AT-1:0] wp_nx;
+                if(TXI[4*t+:4]!=0) begin:g_late_sel   // HEAD-TYPES-OPUS 11-18: late push select (0 added cycles)
+                  (* keep=1 *) ot_s81hd_lep_late_sel #(.W(AT+1)) u_count(.s(wr_update),
+                    .a(count_r+(AT+1)'(1)-(AT+1)'(rd_update)),.b(count_r-(AT+1)'(rd_update)),.y(count_nx));
+                  (* keep=1 *) ot_s81hd_lep_late_sel #(.W(AT)) u_wp(.s(wr_pointer),
+                    .a((wp_r==AT'(DT-1))?AT'(0):wp_r+AT'(1)),.b(wp_r),.y(wp_nx));
+                end else begin:g_add_sel
+                  assign count_nx=count_r+(AT+1)'(wr_update)-(AT+1)'(rd_update);
+                  assign wp_nx=(wp_r==AT'(DT-1) && wr_pointer)?AT'(0):wp_r+AT'(wr_pointer);
+                end
                 wire pointer_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c];
                 wire state_reset=rr[TX_RSTBASE+t*TX_RST_STRIDE+TX_NS+2*c+1];
                 always @(posedge clk or negedge state_reset)
                     if(!state_reset) begin count_r<=0;credit_r<=CW'(CRED);credit_pin_r<=0; end else begin
                         credit_pin_r<=lo_r[t];
                         credit_r<=credit_r+CW'(credit_pin_r)-CW'(rd_update);
-                        count_r<=count_r+(AT+1)'(wr_update)-(AT+1)'(rd_update);
+                        count_r<=count_nx;
                     end
                 always @(posedge clk or negedge pointer_reset)
                     if(!pointer_reset) begin wp_r<=0;rp_r<=0; end else begin
-                        wp_r<=(wp_r==AT'(DT-1) && wr_pointer)?AT'(0):wp_r+AT'(wr_pointer);
+                        wp_r<=wp_nx;
                         rp_r<=(rp_r==AT'(DT-1) && rd_pointer)?AT'(0):rp_r+AT'(rd_pointer);
                     end
 `ifdef OT_S81SL_TX_GROUP_ASSERT
@@ -1577,6 +1587,13 @@ module ot_s81hd_lep_txi_st #(parameter integer W = 553, parameter integer NV = 1
     // one TXI stage: the pushes clear on the lane reset, the word is reset-free
     always @(posedge clk or negedge rn) if (!rn) v_o <= '0; else v_o <= v_i;
     always @(posedge clk) d_o <= d_i;
+endmodule
+
+// HEAD-TYPES-OPUS 11-18: the late push select of the TXI address-group state (kept leaf: the select stays the last
+// gate before the count_r / wp_r D pins; flattened, ABC folds the push back into the adder carry chain).
+(* keep_hierarchy, keep *)
+module ot_s81hd_lep_late_sel #(parameter integer W = 10) (input wire s, input wire [W-1:0] a, b, output wire [W-1:0] y);
+    assign y = s ? a : b;
 endmodule
 
 // HEAD-PLAN-R4 11-17: the RXH rank leaves (kept: lanes 0 / 2 and 1 / 3 can hold equal head words; flattened (* keep *) regs
