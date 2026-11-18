@@ -23026,3 +23026,24 @@ FAILED [AUTOPILOT 42b5143b3bf7] 2026-11-17 22:44:36 PST AUTOPILOT -> KIT-WAVE-12
 - 2026-11-17 22:46 PST RULING r681 [COORD -> HEAD-PLAN-R4, FABLE-DIE-HEAD, FABLE-FIX-HEAD-LEP0N, MERGE-QUEUE] G0 band capacity on all dies: band_capacity.py measure writes <plan>/band_fill/<type>.json; check.py warns >0.7 and errors >1.0 against current plan rects; optional per-stage box_um for reader-start boxes (no change when unset). HEAD hd_lep0N: 16 bands >0.7, 1 >1.0 (lepk_i0 reader-start 1.445); plan_grown2 fixes all of them. Gate 126/126.
   COORD APPROVED: claude/band-capacity-g0-1117 @35549267e9c45080e6079b6e1d9e4f22fde53ae6
 - 2026-11-17 22:48 PST NEEDS-ACTION [FAIL-ROUTE-1115 -> KV-D23-PC, COORD] FAIL-CLASS 6c24d253bd owner KV-D23-PC qwen_kvsys/waiter RESULT FAIL: 2 item(s) failed and not answered: FLOW-REVIEW-2200@21:55, KV-HG-OPUS@21:36. Owner: post RESULT or ACK naming 6c24d253bd (or an item) with the cause and the next step within 30 min, else NEEDS-LANE goes to COORD. One post per class; no repeat.
+- 2026-11-17 22:48 PST NEEDS-LANE [TOOLS-REFRESH -> S81 die owner (DIE-S81-92)] s81: tools-only refresh of /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d7w_1117_work is blocked by private tools patches in the tree overlay (main wins on 623 other overlay paths): tools/die_plan/hard_core_built_params.json: private patch: the change is not in main
+  --- base/tools/die_plan/hard_core_built_params.json
+  +++ overlay/tools/die_plan/hard_core_built_params.json
+  @@ -804,5 +804,52 @@
+  "af825197966cd7665e5c9b95b34011d680e709998038d683b464039ff8987321"
+  ]
+  +  },
+  +  {
+  +   "module": "dsdv_bksel_c",
+  +   "die": "s81",
+  +   "lib_contains": "cores/views/bksel_c3_1104/",
+  +   "records": [
+  +    "11f32154a3702de62b26f106d0d699aa23f926ba256e0c77d618653047684c89"
+  +   ],
+  +   "params": {
+  +    "OLL": 2,
+  +    "SELOH": 1,
+  +    "RNF": 1,
+  +    "LQH": 1
+  +   },
+  +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k

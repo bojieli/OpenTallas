@@ -60,3 +60,24 @@
   +   },
   +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k
 - 2026-11-17 22:22 PST NEEDS-LANE [TOOLS-REFRESH -> HEAD die owner (HEAD-100)] s81_head: tools-only tree /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2_t86a9d26_d1_t58211f4_t30393b4_t3979750 could not be composed or replicated: replicate: rc 1: intel1: refuse (free 67 GB + part 0 - tree 47 = 59 GB after the copy < floor 50 + 20 GB); stopped (no retry); free the host named or exclude it, then change the die tree or recipe settings to resume
+- 2026-11-17 22:48 PST NEEDS-LANE [TOOLS-REFRESH -> S81 die owner (DIE-S81-92)] s81: tools-only refresh of /srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d7w_1117_work is blocked by private tools patches in the tree overlay (main wins on 623 other overlay paths): tools/die_plan/hard_core_built_params.json: private patch: the change is not in main
+  --- base/tools/die_plan/hard_core_built_params.json
+  +++ overlay/tools/die_plan/hard_core_built_params.json
+  @@ -804,5 +804,52 @@
+  "af825197966cd7665e5c9b95b34011d680e709998038d683b464039ff8987321"
+  ]
+  +  },
+  +  {
+  +   "module": "dsdv_bksel_c",
+  +   "die": "s81",
+  +   "lib_contains": "cores/views/bksel_c3_1104/",
+  +   "records": [
+  +    "11f32154a3702de62b26f106d0d699aa23f926ba256e0c77d618653047684c89"
+  +   ],
+  +   "params": {
+  +    "OLL": 2,
+  +    "SELOH": 1,
+  +    "RNF": 1,
+  +    "LQH": 1
+  +   },
+  +   "source": "signed rfd6 / ECO bksel_c3 (SS29-RESIGN flow-20261104-y-s81, routed_db_sha256 11f32154 = AGIdock s81/dsdv_bksel_c INDEX): LEC gold epyc2:/srv/opentallas-scratch2/claude/ss29/resign/bksel_c_k
