@@ -51836,9 +51836,9 @@
     {
      "id": "qwen_compute-mig-019-k13-scstreet",
      "plan_sha": "19be3f0a3bb42d8ea1a388412843e1d80e98563041d169899e54c22a47dffe82",
-     "reason": "COORD inherited exact-two SC street failures: cl4590432d/cl5e017c6f unchanged in M without-SC subset. Release on corrected SC event N plus actual corrected-production GEN street/hop preflight, placed relay/pinhalo legality and GRT overflow0; no full DRT wait. QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key.",
+     "reason": "COORD inherited exact-two SC street failures: cl4590432d/cl5e017c6f unchanged in M without-SC subset. Release on corrected SC event N plus actual corrected-production GEN street/hop preflight, placed relay/pinhalo legality and GRT overflow0; no full DRT wait. QC-PLAN-R 20:3x: Kf event term carried to S4q9l2 (L2 = Kf + clock tol + tail1 only; the S4q6d/Kf condition is unchanged in L2) | FIX-S81-COL-STALE 2026-11-16 20:4x PST (COORD retype order, like r414): DRT0255-PROOF-1115 21:33 PST 11-15: die-phase PG (keep-out off) routes DRC 0, 0 DRT-0255; OT_PG_DIE_PHASE=1 is in this die's gen env (keep-out opt-in, off) -> proof landed; current event | WAVE-HOLDS-1115 2026-11-15 17:25 PST (COORD r193, FABLE-CLOSURE-STRATEGY lever 1): type family stopped with DRT-0255 (24 types). No unchanged relaunch until DRT0255-PROOF-1115 posts a verdict and the proven PG form is in gen env. Running attempts finish. Lift = delete this key. | 11-17 23:xx QC-PLAN-R3: N2B (s29q103S4Q9N) folded into N3, never applied -> term re-pointed to event_adopt:s29q103S4Q9N3",
      "release": [
-      "event_adopt:s29q103S4Q9N",
+      "event_adopt:s29q103S4Q9N3",
       "result:QC-PLAN-R3:qc-sc-street-ready"
      ],
      "migrated": true,
@@ -51886,10 +51886,10 @@
       "cbn_q00__cldbcda913"
      ],
      "release": [
-      "event_adopt:s29q103S4Q9N",
+      "event_adopt:s29q103S4Q9N3",
       "result:QC-PLAN-R3:qc-nb-slot-ready"
      ],
-     "reason": "COORD r502: exact inherited NB 34.572um east overhang. Corrected N must prove production GEN macrofit/halo/reach and clockentry/collector bindings, placed macro/relay pin legality, post-CTS reloaded GRT overflow0 and TT>=-42/internalFF>=0 on changed clk_c6 actual RC. Generic cb-ready does not qualify this geometry; no full DRT wait.",
+     "reason": "COORD r502: exact inherited NB 34.572um east overhang. Corrected N must prove production GEN macrofit/halo/reach and clockentry/collector bindings, placed macro/relay pin legality, post-CTS reloaded GRT overflow0 and TT>=-42/internalFF>=0 on changed clk_c6 actual RC. Generic cb-ready does not qualify this geometry; no full DRT wait. | 11-17 23:xx QC-PLAN-R3: N2B (s29q103S4Q9N) folded into N3, never applied -> term re-pointed to event_adopt:s29q103S4Q9N3",
      "owner": "QC-PLAN-R3",
      "owner_since": "2026-11-17 06:30 PST WAVE-PILOT-FIX re-own (dead lane)"
     },
