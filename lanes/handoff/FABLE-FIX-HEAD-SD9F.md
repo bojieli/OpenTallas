@@ -119,3 +119,11 @@ Gates R-MINIMAL: DRC 0, routed TT >= -42, internal FF hold >= 0 (port hold advis
   NOTE: the q4 what-if uses set_assigned_delay, which REPLACES the net arc delay; hold pads on long nets read pessimistic in the what-if.
   NEXT: first signoff_fable.log with SIGNED -> ffht_export.sh epyc10 hd_serdes__<tag>_1118 <kit>/run/results/asap7/dp_hd_serdes/base
   <kit>/signoff_fable/signoff.json + SIGNED post.  A few hold ends left: rerun q3 on the new signoff, second list, run_eco_h.sh on the ECO kit.
+## 11-18 05:10 PST -- SIGNED sd9he + exported
+- sd9he (E10 LANE10/sd9he_gen/hd_serdes/signoff_fable/signoff.json): R-MINIMAL SIGNED, standard frame (no r708 needed): DRC 0, 0 unrouted,
+  TT -27.16, internal FF hold 0 (complete), antenna 0 (eco.log), 0 added cycles.  ARCHIVED-BOTH s81_head/hd_serdes__sd9he_pw_1118,
+  ODB sha e70a832e6bff6346bbec13a85cb796887e0b819b7f553148fc79ef94f432dc01, INDEX rows keyed hd_serdes on rtx-pro + AGIdock.
+- sd9pae (spare, +1 TX cycle): also R-MINIMAL SIGNED, TT -17.46, internal hold 0; NOT exported.
+- Open: RTL branch claude/head-serdes-kp4-pw-1118@fb361b03 must merge + HEAD plan must carry defines OT_S81_KP4_ENC_PW16 OT_S81_KP4_SYN_PW8
+  for hd_serdes (HEAD-PLAN-R4); rail check not rerun post-ECO (PG bound 0 open); no LEC of ECO buffers; pin audit extra 1088 pma pads.
+  sd9pb2 / sd9pc2 / sd9h / sd9pa kits on E10 can be deleted via ot-delete once HEAD-DIE-R has the view.
