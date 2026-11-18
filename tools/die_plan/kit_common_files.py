@@ -33,6 +33,9 @@ FILES = {
     "native_bb.py": "tools/die_plan/native_bb.py",
     "lec_completed_transfer.py": "tools/die_plan/lec_completed_transfer.py",
     "lec_completed_reference.py": "tools/die_plan/lec_completed_reference.py",
+    # WAVE-FLOW-R2 11-17 (COORD): the face-pin keepout toggle the GRT hooks source (grt_drv_maxwire.tcl, OT_PK_FRAC); read from /src it was missing in a sparse lane clone and
+    # all 6 svc cores failed GRT.  The kit carries it and the hook prefers the kit copy.
+    "stn_pin_keepout.tcl": "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
 }
 
 
@@ -53,7 +56,26 @@ def source(name, repo=REPO):
     rel = FILES[name]
     if rel.startswith("physical/common_flow/"):
         return _common_flow_file(Path(rel).name, repo)
-    return Path(repo) / rel
+    p = Path(repo) / rel
+    if p.is_file():
+        return p
+    return _git_file(rel, repo) or p                  # a sparse lane clone does not check the directory out: read it from git HEAD
+
+
+def _git_file(rel, repo):
+    """rel from git HEAD of repo (partial / sparse clones fetch the blob on demand) into a cache file; None when git has no such path"""
+    import hashlib
+    import os
+    import subprocess
+    try:
+        blob = subprocess.run(["git", "-C", str(repo), "show", "HEAD:" + rel], capture_output=True, timeout=120, check=True).stdout
+    except (OSError, subprocess.SubprocessError):
+        return None
+    cache = Path(os.environ.get("OT_KIT_COMMON_CACHE", str(Path.home() / ".cache" / "kit-common"))) / hashlib.sha1(blob).hexdigest()[:16]
+    cache.mkdir(parents=True, exist_ok=True)
+    out = cache / Path(rel).name
+    out.write_bytes(blob)
+    return out
 
 
 def stage(kd, repo=REPO):
