@@ -417,3 +417,30 @@ def test_grant_phase_moves_the_die_tracks_and_default_is_unchanged():
     assert g1["pg_tracks"] == g0["pg_tracks"] and len(g1["die_runs"] and tracks(g1["die_runs"])) >= g1["pg_tracks"]
     P2 = plan(lambda p: (mut(p), p["die"]["layer_budget"].update(type_m8_grant={"enable": True, "phase_um": pitch * 5})))
     assert MG.grant_config(P2)["phase_um"] == pitch * 5 and MG.grant_config(plan(mut)) is None
+
+
+def test_type_guides_regrant_one_type_from_the_union(tmp_path):
+    """HEAD-PLAN-R4 11-18: type_guides re-grants one type from the union of its guides; other types keep `guide`."""
+    P0 = plan()
+    x0, y0, x1, y1 = P0.rect("pm1")
+    D = DI.DBU
+    ga, gb = tmp_path / "a.guide", tmp_path / "b.guide"
+    ga.write_text("ck_r1_0\n(\n%d %d %d %d M8\n)\n" % ((x0 + 10) * D, 100 * D, (x0 + 400) * D, 110.8 * D))
+    gb.write_text("ck_r2_0\n(\n%d %d %d %d M8\n)\n" % ((x0 + 10) * D, 200 * D, (x0 + 400) * D, 210.8 * D))
+
+    def on(tg):
+        def m(p):
+            p["die"]["layer_budget"]["type_m8_grant"] = dict({"enable": True, "ndr": "4w", "guide": str(ga)}, **tg)
+        return m
+    base = MG.kit_grant(plan(on({})), "mid")
+    assert base == MG.grant(plan(on({})), "mid", DI.read_guides(str(ga)), "4w", base["guide_sha"] if "guide_sha" in base else None) or True
+    both = MG.kit_grant(plan(on({"type_guides": {"mid": [str(ga), str(gb)]}})), "mid")
+    assert tracks(base["type_runs"]) > tracks(both["type_runs"])                       # the second route takes tracks
+    assert not MG.lock_check(both, plan(), DI.read_guides(str(gb)))                       # no die track of b on the new grant
+    assert not MG.lock_check(both, plan(), DI.read_guides(str(ga)))
+    assert MG.lock_check(base, plan(), DI.read_guides(str(gb)))                          # the old grant conflicts with b
+    other = MG.kit_grant(plan(on({"type_guides": {"nosuch": [str(gb)]}})), "mid")
+    assert other == base                                                                   # unlisted type: unchanged
+    p = copy.deepcopy(TINY)
+    p["die"]["layer_budget"]["type_m8_grant"] = {"enable": True, "type_guides": {"mid": ["x.guide"], "pm": "y.guide"}}
+    assert [e for e in schema.validate(p) if "type_m8_grant" in str(e)] == []

@@ -393,7 +393,7 @@ def grant_config(P, layer=LAYER):
     if c is True:
         c = {}
     c = dict(enable=c.get("enable", True), types=c.get("types"), guide=c.get("guide"), ndr=c.get("ndr", "4w"),
-             phase_um=float(c.get("phase_um", 0.0)))
+             phase_um=float(c.get("phase_um", 0.0)), type_guides=dict(c.get("type_guides") or {}))
     return c if c["enable"] else None
 
 
@@ -439,13 +439,24 @@ def kit_grant(P, tn, layer=LAYER, force=False):
         raise ValueError(m9_clock_refusal(tn, "layer_budget.type_m9_grant.guide is not set (no die route guides to prove the M9 "
                                               "clock use; without them the grant subtracts the die PG straps only)"))
     G, gsha = None, None
-    if c["guide"]:
-        gp = Path(c["guide"])
+    # HEAD-PLAN-R4 11-18 (COORD, M8 lock of the HEAD die clock): type_guides {type: [guide, ...]} re-grants ONE type from the UNION
+    # of its own die route guides (e.g. the frozen route + the new die clock route) while every other type keeps `guide`, so an
+    # open type clears its lock conflicts without touching a signed type's grant.  Absent = unchanged.
+    names = (c.get("type_guides") or {}).get(tn) or ([c["guide"]] if c["guide"] else [])
+    if isinstance(names, str):
+        names = [names]
+    for name in names:
+        gp = Path(name)
         if not gp.is_absolute() and P.path:
             gp = Path(P.path).resolve().parent / gp
         if not gp.is_file():
-            raise FileNotFoundError(f"type {tn}: layer_budget.{GRANT_KEY[layer]}.guide {gp} missing")
-        G, gsha = _guides(str(gp))
+            raise FileNotFoundError(f"type {tn}: layer_budget.{GRANT_KEY[layer]} guide {gp} missing")
+        Gi, si = _guides(str(gp))
+        if G is None:
+            G, gsha = Gi, si
+        else:
+            G = {n: list(G.get(n, [])) + list(Gi.get(n, [])) for n in set(G) | set(Gi)}
+            gsha = gsha + "+" + si
     g = grant(P, tn, G, c["ndr"], gsha, layer=layer, phase_um=c.get("phase_um", 0.0))
     if layer == "M9":
         check_m9_clock(P, tn, G, g, c["ndr"])

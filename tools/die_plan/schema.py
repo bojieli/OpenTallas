@@ -274,6 +274,9 @@ SCHEMA = {
                         # r153 fix 4 (FABLE-PD-DRT-1350): shift of the die-track reference (um, a multiple of the layer pitch is
                         # best; rounded to tracks): the die tracks hug the PG band moved by this much; absent / 0 = unchanged
                         "phase_um": {"type": "number"},
+                        # HEAD-PLAN-R4 11-18: per-type die route guides (union), m8_grant.kit_grant; absent = `guide`
+                        "type_guides": {"type": "object", "additionalProperties": {
+                            "anyOf": [{"type": "string"}, {"type": "array", "items": {"type": "string"}, "minItems": 1}]}},
                         "note": {"type": "string"}}},
                     # WAVE-RECIPE-1 11-14 (OWNER ruling: types may use the remaining M8/M9, die infra shapes imported as
                     # obstructions): the same grant on M9 (vertical tracks); an M9 kit also carries the M8 grant
