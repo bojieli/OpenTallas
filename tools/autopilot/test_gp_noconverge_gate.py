@@ -121,3 +121,17 @@ def test_gen_installs_the_gate_once(tmp_path):
     other = tmp_path / "o"; other.mkdir()
     assert gen_phys.install_gp_noconverge_gate(other, ["export PRE_RESIZE_TCL = /work/mine.tcl"]) == []
     assert not (other / "gp_noconverge_gate.tcl").exists()
+
+
+def test_hpwl_baseline_ignores_unspread_rows():
+    """S81 leaf t37: row 0 (overflow 0.75, centre clump) is not the baseline; the rows after spreading are."""
+    import gp_noconverge as G
+    rows = ["        0 |   0.7515 |  5.578922e+06 |   +0.00% |  1.09e-12 |      ",
+            "      250 |   0.6944 |  5.760012e+06 |   +1.43% |  8.71e-11 |      ",
+            "      340 |   0.4100 |  6.500000e+06 |   +2.00% |  4.82e-08 |      ",
+            "      360 |   0.2900 |  6.700000e+06 |   +1.00% |  4.82e-08 |      "]
+    log = "\n".join(rows) + "\n"
+    assert G.hpwl_min(log) == 6.5e6
+    assert G.hpwl_gate(log, 7.8347e6)[0] == "OK"              # 1.205 x
+    assert G.hpwl_gate(log, 9.0e6)[0] == "STOP"               # 1.38 x: still a drift
+    assert G.hpwl_gate("\n".join(rows[:2]) + "\n", 7.8e6)[0] == "OK"      # nothing spread yet: not judged

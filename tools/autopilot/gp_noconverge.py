@@ -98,9 +98,18 @@ def gate(text, overflow=NOCONV_OVERFLOW):
     return "OK", f"{capped} capped pass(es), none above overflow {overflow:g}"
 
 
-def hpwl_min(text):
-    """lowest HPWL (um) printed in the Nesterov tables of one global-place log (every pass), or None"""
-    vals = [float(m.group(1)) for m in map(ROW_HPWL.match, (text or "").splitlines()) if m]
+HPWL_BASE_OVERFLOW = 0.5        # rows above it are the unspread start (centre-initial clump), not a converged placement
+
+
+def hpwl_min(text, max_overflow=HPWL_BASE_OVERFLOW):
+    """lowest HPWL (um) printed in the Nesterov tables of one global-place log (every pass) among the rows at or under
+    max_overflow, or None.  S81 leaf t37 (movable use 0.27 %): the table minimum was row 0 at overflow 0.75, the clump
+    before any spreading, so a sound exit (1.2 x the rows after spreading) read 1.40 x and stopped the type."""
+    vals = []
+    for line in (text or "").splitlines():
+        m, o = ROW_HPWL.match(line), ROW.match(line)
+        if m and o and float(o.group(2)) <= max_overflow:
+            vals.append(float(m.group(1)))
     return min(vals) if vals else None
 
 
@@ -108,7 +117,7 @@ def hpwl_gate(text, exit_hpwl, ratio=HPWL_RATIO):
     """(verdict, why): STOP when the measured GPL-exit HPWL exceeds ratio x the run's own table minimum"""
     lo = hpwl_min(text)
     if not lo or exit_hpwl is None or exit_hpwl <= 0:
-        return "OK", "no HPWL table or no exit HPWL: not judged"
+        return "OK", "no HPWL row at overflow <= 0.5 or no exit HPWL: not judged"
     r = exit_hpwl / lo
     if r > ratio:
         return "STOP", (f"{HPWL_CLASS}: global placement left at HPWL {exit_hpwl:.4e} um = {r:.2f} x the run minimum "
