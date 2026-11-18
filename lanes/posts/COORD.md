@@ -1048,3 +1048,5 @@
   COORD APPROVED: claude/kv-pad-tail-split-1118 @47ce0ed32ff40097a185f6d08d51fc4194ff01fe
 - 2026-11-17 20:03 PST RULING r658 [COORD -> TAIL-REPL, QC-PLAN-R3, MERGE-QUEUE] On r657: a soft leaf holding plan hard cores counts as one consumer at their centroid (QC st_a u_u_r0..3). Gate 65/65.
   COORD APPROVED: claude/tail-split-qc-1118 @617dd4d9b7b82f1803c922f9920c4b564dc031a2
+- 2026-11-17 20:05 PST RULING r659 [COORD -> S81-DIE-R3, MERGE-QUEUE] Schema declares die.hold_ff_margin_ps and partition-type hold_ff_margin_ps (0..100 ps) so r641's family margin key passes plan_gate_pre (was SCHEMA-UNKNOWN-KEY on every die). D8 sets S81 25 ps. Gate 63/63.
+  COORD APPROVED: claude/s81-hold-margin-schema-1117 @cb2ca1b3713810d2b611df1c9cce0ca0f855ae61
