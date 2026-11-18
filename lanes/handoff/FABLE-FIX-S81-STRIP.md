@@ -163,3 +163,8 @@ E = epyc10 /srv/opentallas-scratch2/claude/s81-b3-clk/rows/f2s5_S81-DIE-R (S81-D
 - main @d4d7438dc78: FACE-NS-DENSE-1 opt-in (budgets.face_flop_ns_dense_pins_per_um, unset = off) + schema file; pushed with ot-push-main from W/lane7 (cone now tools + physical/common_flow + rtl). Old branch claude/s81-face-ns-dense-1118 @3bab6c734a3 (default-on) is superseded, do not merge.
 - D8e row (S81-DIE-R3): budgets.face_flop_ns_types {ot_s81sl_leaf: {row_stride 2, inset_rows 0}}.
 - NEXT on the first XR wave with the row in: (1) t29 GRT (u_cland_ft2_i ring at the south face, x 107-235 y 0-64, M5/M7): if still over, opt-in fix in the same form (cland_strip_density_types / cland_strip_rows_types for the leaf base name); (2) t25 vs t27: compare ot_face_flops.txt bank rows + congestion.rpt of both; (3) per-type class table with gate_cls.sh (needs 5_1_grt.odb kept); (4) t22 calibration; (5) t37 at ratio 1.5.
+
+## 2026-11-18 06:1x PST interior congestion class
+- t40: window x128-401 trapped under ln0/ln6/vn_b (34-43 um off S face), exit gap x290-334; t29 same class small. t25cl55: VP soft logic + SRAM pocket (x210-300,y390-450). t24/t68: no evidence left.
+- core_place --window-clear / --slot-clear (W/wc1, wc2) REJECTED: rule binds moved cores only. RUNNING W/fc1 (--face-clear S:86.4:u_vn|u_vp.g_ln|u_ve --block-shift --take-regs on t40,t29; log ~/fable-fix-s81-strip/fc1.log, script W/wc.sh). Accept only if cores over the window >= 86.4 off face + timing_over 0; then private t40 kit to GRT (copy pattern of t25_ns2, needs gen from the new rows: ask S81-DIE-R3 for a gen or use gen.py phys in the D7w tree).
+- phy__t1 / t29 handover from S81-COL-FLOW-1118: nothing on hub yet.
