@@ -1,5 +1,11 @@
 # QC-PLAN-R3 handoff (QC die plan owner; succeeds QC-PLAN-R / FABLE-FIX-QC-PLAN / QC-CLK-R2)
 
+## 2026-11-18 (N4 APPLIED)
+- N4 APPLIED: event s29q103S4Q9N4, receipt lanes/handoff/qwen_compute_atomic_apply_1795022519140881757.json, candidate lanes/handoff/QC_S4Q9N4_ADOPT_candidate_1118.json, tree kw45/src_qc_pin_eb1e73448bd0_s4q9n4 (056d4e67), plan zz_s29_qc103_s4q9n4.json 488b62fe, bind kw45/qcbind_pin_eb1e73448bd0_s4q9n4/bind_s29q103S4Q9N4DBQ (receipts 0/130 on epyc9/epyc8/epyc2/intel1). Post 408984dc.
+- G0+CB16 on N4 plan still running: intel2 ~/qc-plan-r3/g0_n4e.{log,rc} (outputs epyc2 W/gates/g0_S4Q9N4E, cb16_qual_N4E.txt). Advisory; fix findings forward.
+- relocate_bind.py main cb676167: writes given paths (not realpath), --also prefixes. Leftover partial dir epyc2 W/n4_select (first publish try) can go via ot-delete when W is retired.
+- NEXT: QC moves to TOOLS-DECOUPLE live tree (live_tree.py apply packs; no more src_* trees). N4.1 = QC-N-OPUS rows (after a routed st_a kit, COORD) + btab/prog lef/lib (views staged epyc2 W/n41_views; outline/pins == plan, lef/lib only).
+
 ## 2026-11-18 08:3x PST (N4 publish in flight)
 - N4 work dir epyc2:/srv/opentallas-scratch2/claude/qc-plan-r3-n4 (W). Event tree W/event_tree_N4. Final bind W/bind/bind_s29q103S4Q9N4DBQ (R8 pass 2): BIND_ERRORS 0, LANE_ASBUILT 1921/1921, hcparam 0. N4C failed on LANE_ASBUILT (W fw->st_a +3 priced in latency only); fixed by plan lanes[].fixed_cycles 3.
 - Published plan = W/plan_n4e.json sha 488b62fe = bound plan + ft_site_dedupe (9 types) + 33 signed child views bound (n4e_views.py, views_n4). native_contract equal on all 133 types -> N4D bind matches.
