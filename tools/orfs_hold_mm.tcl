@@ -789,7 +789,7 @@ proc ot_hold_pass_retry {rt_args0} {
   # the unguarded-helper form (one repair_timing call, margin possibly lowered by ot_hm_guard): bounded re-repair at the asked margin
   set asked 0.0
   set i [lsearch -exact $rt_args0 -hold_margin]; if {$i >= 0} { set asked [lindex $rt_args0 [expr {$i + 1}]] }
-  ot_hold_final_retry $rt_args0 $asked $asked
+  if {[llength [info commands ot_hold_final_retry]]} { ot_hold_final_retry $rt_args0 $asked $asked }
 }
 proc ot_repair_timing {rt_args} {
   set setup [expr {[lsearch -exact $rt_args -setup] >= 0}]
@@ -799,7 +799,7 @@ proc ot_repair_timing {rt_args} {
     if {![ot_hold_guard_on]} {
       return [ot_rc_cal_hold {
         ot_hold_structural_gate
-        ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args]; ot_hold_pass_retry $rt_args } }
+        ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args]; if {[llength [info commands ot_hold_pass_retry]]} { ot_hold_pass_retry $rt_args } } }
       }]
     }
     # The guarded helper appends -hold itself. Explicit hold-only callers need
@@ -817,7 +817,7 @@ proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on]} {
     return [ot_rc_cal_hold {
       ot_hold_structural_gate
-      ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold; ot_hold_pass_retry $rt_args } }
+      ot_hold_repair_scope { ot_cts_hold_pad { log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold; if {[llength [info commands ot_hold_pass_retry]]} { ot_hold_pass_retry $rt_args } } }
     }]
   }
   return [ot_rc_cal_hold { ot_hold_repair_scope { ot_cts_hold_pad { ot_repair_hold_guarded $rt_args } } }]
@@ -935,7 +935,7 @@ proc ot_repair_hold_guarded {rt_args} {
   }
   # tolerate_flow_errors zeroes the chunk-cap RSZ-0060 errors only when this line follows the last one
   if {$capped} { puts "OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing" }
-  ot_hold_final_retry $rt_args0 $hm_asked $hm
+  if {[llength [info commands ot_hold_final_retry]]} { ot_hold_final_retry $rt_args0 $hm_asked $hm }
 }
 
 # BEGIN GRT-CLK-LOCK

@@ -166,7 +166,7 @@ def test_area_guard_never_goes_below_the_level_needed_for_hold_met():
 def test_hold_retry_runs_at_the_asked_margin_with_the_guard_off_and_is_bounded():
     t = (HERE.parent / "orfs_hold_mm.tcl").read_text()
     assert "proc ot_hold_final_retry" in t and "OT_HOLD_REPAIR_RETRIES" in t and "OT_HOLD_MARGINS asked" in t
-    assert "ot_hold_final_retry $rt_args0 $hm_asked $hm" in t                      # after the chunk loop, with the unreduced args
+    assert "ot_hold_final_retry $rt_args0 $hm_asked $hm }" in t                      # after the chunk loop, with the unreduced args
     r = t[t.index("proc ot_hold_final_retry"):t.index("proc ot_repair_hold_guarded")]
     assert "ot_hm_guard" not in r and "lreplace $args" in r and "$gain < 0.5" in r  # asked margin, no area guard, stops on no gain
     assert "OT_HOLD_MARGINS guard applied" in t and "OT_HOLD_MARGINS met-first pass applied margin 0" in t
