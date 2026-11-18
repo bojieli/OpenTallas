@@ -11031,6 +11031,72 @@ def kit_digest_parts(cfg, die, rec=None, group="", files=None):
             "env": gen_env_digest(d, sp, (rec or {}).get("item"))}
 
 
+_EXEC_TOOLS = {}
+_EXEC_SKIP_DIRS = (".git", "__pycache__", "tests", "test_data", "testdata", "fixtures", "examples", "bench")
+_NAME_LIT = re.compile(r"""["']([A-Za-z0-9_][A-Za-z0-9_./-]*\.(?:py|tcl|sh|sdc))["']""")
+
+
+def exec_tools_files(root=None):
+    """WAVE-PILOT-FIX 11-18 (COORD): the tool files a kit actually executes, not the whole tools tree: every non-test .tcl / .sh under tools/die_plan and physical/common_flow
+    (the run_kit steps and the hooks they source), the kit_rtl_post.d hooks, tools/autopilot/kit_*.py except kit_wave.py (the kit_rtl steps), tools/die_plan/nomcap_libs, and the
+    die_plan / common_flow files the generator names by literal file name (the python scripts staged into the kit).  A test, a doc or an unrelated planner is none of these"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    out = set()
+    bases = (root / "tools" / "die_plan", root / "physical" / "common_flow")
+    for base in bases:
+        for dp, dn, fn in os.walk(base):
+            dn[:] = sorted(x for x in dn if x not in _EXEC_SKIP_DIRS)
+            for f in fn:
+                if f.endswith((".tcl", ".sh")) and not f.startswith("test_") and ".bak" not in f and not f.endswith(".orig"):
+                    out.add(Path(dp, f))
+    for p in (root / "tools" / "die_plan" / "nomcap_libs").rglob("*"):
+        if p.is_file():
+            out.add(p)
+    for p in (root / "tools" / "autopilot" / "kit_rtl_post.d").glob("*.sh"):
+        out.add(p)
+    ap = root / "tools" / "autopilot"
+    for p in ap.glob("kit_*.py"):
+        if p.name != "kit_wave.py" and not p.name.startswith("test_"):
+            out.add(p)
+    def read(rel):
+        try:
+            return (root / rel).read_text()
+        except (OSError, UnicodeDecodeError):
+            return None
+    try:
+        srcs = list(FG.closure_files(read, entry=FG.ENTRY_FILES)) + ["tools/die_plan/core_flow.py", "tools/die_plan/nomcap.py"]
+    except Exception:
+        srcs = ["tools/die_plan/gen.py", "tools/die_plan/gen_phys.py", "tools/die_plan/core_flow.py", "tools/die_plan/nomcap.py"]
+    names = set()
+    for rel in srcs:
+        txt = read(rel)
+        if txt:
+            names.update(m.group(1).rsplit("/", 1)[-1] for m in _NAME_LIT.finditer(txt))
+    for nm in names:
+        for base in bases:
+            p = base / nm
+            if p.is_file() and not nm.startswith("test_"):
+                out.add(p)
+    return sorted(out)
+
+
+def exec_tools_digest(root=None):
+    """content digest of exec_tools_files (cached per tools tree): moves only when a file the kit executes changes"""
+    root = Path(root) if root else Path(__file__).resolve().parents[2]
+    key = str(root)
+    if key in _EXEC_TOOLS:
+        return _EXEC_TOOLS[key]
+    h = hashlib.sha1()
+    for p in exec_tools_files(root):
+        try:
+            h.update(str(p.relative_to(root)).encode())
+            h.update(p.read_bytes())
+        except OSError:
+            h.update(b"unreadable")
+    _EXEC_TOOLS[key] = h.hexdigest()[:20]
+    return _EXEC_TOOLS[key]
+
+
 def so_failed(rec):
     """WAVE-PILOT-FIX 11-18 (OWNER r705 (2), COORD: S81 FAIL rows / queue-FAIL rows were never re-armed): a row whose attempt failed in the tool (FAIL, or ENQUEUED with a queue FAIL)"""
     return rec.get("status") == "FAIL" or (rec.get("status") == "ENQUEUED" and rec.get("q_status") == "FAIL")
@@ -11054,7 +11120,7 @@ def full_input_hash(cfg, die, item, block_sha=None):
         d = (cfg.get("dies") or {}).get(die) or {}
         spec = kit_digest_parts(cfg, die, dict(item=item, **({"block_sha": block_sha} if block_sha else {})))
         env = {"gen_env": d.get("gen_env") or {}, "die_gen_env": d.get("die_gen_env") or {}, "item_env": item_env(d, item) or {}}
-        body = {"rt": rt_tools_digest(), "snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec, "env": env}
+        body = {"rt": exec_tools_digest(), "snapshot": str(d.get("src_manifest_hash") or ""), "spec": spec, "env": env}
         return hashlib.sha1(json.dumps(body, sort_keys=True, default=str).encode()).hexdigest()[:20]
     except Exception:
         return ""

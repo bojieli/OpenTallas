@@ -189,13 +189,13 @@ class SameInputSkip(unittest.TestCase):
         self.assertNotEqual(base, KW.full_input_hash(self.cfg(src_manifest_hash="snap2"), "s81", "x", "blk"))
         self.assertNotEqual(base, KW.full_input_hash(self.cfg(gen_env={"OT_A": "2"}), "s81", "x", "blk"))
         self.assertNotEqual(base, KW.full_input_hash(self.cfg(), "s81", "x", "blk2"))
-        old = KW._TOOLS_DIGEST.copy()
+        old = KW._EXEC_TOOLS.copy()
         try:
-            KW._TOOLS_DIGEST["v"] = "another-rt"
+            KW._EXEC_TOOLS[str(Path(KW.__file__).resolve().parents[2])] = "another-exec-digest"
             self.assertNotEqual(base, KW.full_input_hash(self.cfg(), "s81", "x", "blk"))
         finally:
-            KW._TOOLS_DIGEST.clear()
-            KW._TOOLS_DIGEST.update(old)
+            KW._EXEC_TOOLS.clear()
+            KW._EXEC_TOOLS.update(old)
 
     def launch_logs(self, cfg, stored):
         logs = []
@@ -289,6 +289,59 @@ class FailedRowsRelaunchOnTheirOwn(unittest.TestCase):
         self.assertTrue(KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, self.row(full_hash=h)))
         self.assertFalse(KW.so_same_input(self.cfg(src_manifest_hash="snap2"), "s81", {"item": "x", "block_sha": "blk"}, self.row(full_hash=h)))   # a code / plan / env change releases it
         self.assertFalse(KW.so_same_input(c, "s81", {"item": "x", "block_sha": "blk"}, self.row()))                                                 # no stored hash: relaunches once
+
+
+class ExecToolsDigest(unittest.TestCase):
+    """COORD 11-18: the tools part of the input hash covers only the files a kit executes; an unrelated merge must not relaunch a failed row"""
+
+    def tree(self):
+        import tempfile
+        r = Path(tempfile.mkdtemp())
+        files = {"tools/die_plan/gen.py": "import gen_phys\n", "tools/die_plan/gen_phys.py": "X = 'staged_tool.py'\nY = 'run_step.tcl'\n",
+                 "tools/die_plan/core_flow.py": "", "tools/die_plan/nomcap.py": "", "tools/die_plan/staged_tool.py": "a=1\n", "tools/die_plan/run_step.tcl": "puts a\n",
+                 "tools/die_plan/hook.sh": "echo a\n", "tools/die_plan/nomcap_libs/a.lib.gz": "LIB1", "physical/common_flow/clock.tcl": "puts c\n",
+                 "tools/autopilot/kit_rtl_post.d/s.sh": "true\n", "tools/autopilot/kit_rtl_closure.py": "z=1\n",
+                 # not executed by a kit:
+                 "tools/die_plan/test_gen.py": "t=1\n", "tools/die_plan/other_planner.py": "p=1\n", "tools/die_plan/README.md": "doc\n", "tools/die_plan/tests/t.tcl": "x\n",
+                 "tools/autopilot/kit_wave.py": "w=1\n", "tools/autopilot/test_kit_wave.py": "t=1\n", "tools/fleet/ot-run": "f\n", "docs/x.md": "d\n"}
+        for rel, txt in files.items():
+            p = r / rel
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(txt)
+        return r
+
+    def digest(self, r):
+        KW._EXEC_TOOLS.pop(str(r), None)
+        return KW.exec_tools_digest(r)
+
+    def test_unrelated_changes_keep_the_digest(self):
+        r = self.tree()
+        base = self.digest(r)
+        for rel in ("tools/die_plan/test_gen.py", "tools/die_plan/other_planner.py", "tools/die_plan/README.md", "tools/die_plan/tests/t.tcl",
+                    "tools/autopilot/kit_wave.py", "tools/autopilot/test_kit_wave.py", "tools/fleet/ot-run", "docs/x.md"):
+            (r / rel).write_text("changed\n")
+            self.assertEqual(self.digest(r), base, rel)
+
+    def test_every_executed_file_class_moves_it(self):
+        for rel in ("tools/die_plan/run_step.tcl", "tools/die_plan/hook.sh", "tools/die_plan/staged_tool.py", "tools/die_plan/gen_phys.py", "physical/common_flow/clock.tcl",
+                    "tools/die_plan/nomcap_libs/a.lib.gz", "tools/autopilot/kit_rtl_post.d/s.sh", "tools/autopilot/kit_rtl_closure.py"):
+            r = self.tree()
+            base = self.digest(r)
+            (r / rel).write_text("changed\n")
+            self.assertNotEqual(self.digest(r), base, rel)
+
+    def test_a_new_tcl_moves_it(self):
+        r = self.tree()
+        base = self.digest(r)
+        (r / "physical/common_flow/new_step.tcl").write_text("puts n\n")
+        self.assertNotEqual(self.digest(r), base)
+
+    def test_the_real_tree_digest_is_stable_and_smaller_than_the_whole_tools_tree(self):
+        a, b = KW.exec_tools_digest(), KW.exec_tools_digest()
+        self.assertEqual(a, b)
+        files = KW.exec_tools_files()
+        self.assertTrue(files)
+        self.assertFalse(any(p.name.startswith("test_") for p in files))
 
 
 if __name__ == "__main__":
