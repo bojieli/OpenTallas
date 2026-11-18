@@ -1,0 +1,156 @@
+"""tests for the opt-in landing-pad tail split (bind_pad_tail_split.py, asbuilt.land_pad_tail_split):
+python3 -m pytest tools/die_plan/test_bind_pad_tail_split.py
+
+bind_tiny_lanes with a sink partition of TWO leaves (u_s0 / u_s1, declared plan hard cores with pin xy) that read the
+same bus: 5 bits of d0 ride a 2-cycle lane and get 3 pad stages (test_bind.test_land_align).  Key absent = the bound RTL
+and every record are byte-identical to a bind without the option; key on = shared trunk + one tail copy per core, the
+same traced depth per sink (bind verify PASS, same bind_sinks / bind_latency)."""
+import json
+import os
+import re
+import shutil
+import sys
+from pathlib import Path
+
+import pytest
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import bind  # noqa: E402
+import bind_pad_tail_split as TS  # noqa: E402
+
+EX = HERE / "examples" / "bind_tiny"
+HAVE_YOSYS = bool(os.environ.get("OT_BIND_YOSYS")) or bool(shutil.which("docker"))
+needs_yosys = pytest.mark.skipif(not HAVE_YOSYS, reason="no Yosys (OT_BIND_YOSYS) and no docker")
+
+SPAR = """`timescale 1ns/1ps
+module spar (input wire ck, input wire flt, input wire [7:0] a, input wire [7:0] b, output wire [8:0] q0,
+             output wire [8:0] q1);
+    lf_sink u_s0 (.clk(ck), .flt(flt), .d0(a), .d1(b), .q(q0));
+    lf_sink u_s1 (.clk(ck), .flt(flt), .d0(a), .d1(b), .q(q1));
+endmodule
+"""
+
+
+def _pins(x0):
+    return ([dict(name=f"d0[{i}]", layer="M4", xy=[x0 + i, 10.0]) for i in range(8)]
+            + [dict(name=f"d1[{i}]", layer="M4", xy=[x0 + i, 20.0]) for i in range(8)])
+
+
+def _plan(tmp_path, split, gap=1000.0):
+    src = tmp_path / "src"
+    if not src.exists():
+        shutil.copytree(EX, src)
+        die = (src / "die.v").read_text()
+        die = die.replace("wire [8:0] sq;", "wire [8:0] sq; wire [8:0] sq1;")
+        die = die.replace("lf_sink snk (.clk(ck), .flt(fo), .d0(y0), .d1(y1), .q(sq));",
+                          "spar snk (.ck(ck), .flt(fo), .a(y0), .b(y1), .q0(sq), .q1(sq1));")
+        assert "spar snk" in die
+        (src / "die.v").write_text(die)
+        (src / "spar.sv").write_text(SPAR)
+    p = json.loads((EX / "die_plan_lanes.json").read_text())
+    ab = p["asbuilt"]
+    ab["base"] = str(src)
+    ab["files"] = ab["files"] + ["spar.sv"]
+    ab["dissolve"] = ab["dissolve"] + ["spar"]
+    ab["land_align"] = "cell"
+    for x in p["ports"]:
+        if x["id"] == "a0s__0":
+            x["width"] = 5
+        if x["id"] == "a1s__0":
+            x["width"] = 16
+    for b in p["partition_types"]["ta"]["buses"]:
+        if b["name"] == "ys_o":
+            b["width"] = 16
+    ts = p["partition_types"]["ts"]
+    for b in ts["buses"]:
+        if b["name"] == "d1_i":
+            b["width"] = 16
+        b["leaf"] = b["leaf"].replace("core.", "u_s0.")
+    ts["outline_um"] = [2000.0, 100.0]
+    ts["hard_cores"] = [dict(inst="u_s0", module="lf_sink", origin_um=[0.0, 0.0], outline_um=[20.0, 40.0], pins=_pins(1.0)),
+                        dict(inst="u_s1", module="lf_sink", origin_um=[gap, 0.0], outline_um=[20.0, 40.0], pins=_pins(1.0))]
+    if split:
+        ab["land_pad_tail_split"] = dict(types=["ts"], min_spread_um=400, hop_um=380)
+    f = tmp_path / ("plan_split.json" if split else "plan_base.json")
+    f.write_text(json.dumps(p))
+    return f
+
+
+def _bind(plan, out, *cmds):
+    for c in cmds:
+        rc = bind.main([c, str(plan), "--out", str(out), "--mem", "4"])
+        if rc:
+            return rc
+    return 0
+
+
+def _files(out):
+    return {str(f.relative_to(out)): f.read_bytes() for f in sorted(Path(out).rglob("*")) if f.is_file()}
+
+
+def test_rule_and_names():
+    cfg = TS.config({"land_pad_tail_split": {"types": ["kv3_pv.*"], "min_spread_um": 400, "hop_um": 380}})
+    assert TS.config({}) is None and TS.selected(cfg, "kv3_pv_v12") and not TS.selected(cfg, "kv3_pc_v1")
+    assert TS.spread([(0, 0), (300, 400), (-100, 50)]) == 750
+    two = {"a": [(0.0, 0.0)], "b": [(1000.0, 0.0)]}
+    assert TS.tail_depth(3, two, cfg) == (2, 1000.0)            # ceil(500 / 380) = 2
+    assert TS.tail_depth(1, two, cfg) == (1, 1000.0)            # never deeper than the pad: no trunk
+    assert TS.tail_depth(37, {"a": [(0.0, 0.0)], "b": [(2464.0, 0.0)]}, cfg)[0] == 4
+    assert TS.tail_depth(3, {"a": [(0.0, 0.0), (1000.0, 0.0)]}, cfg) is None       # one core: nothing to split
+    assert TS.tail_depth(3, {"a": [(0.0, 0.0)], "b": [(400.0, 0.0)]}, cfg) is None  # inside the spread limit
+    assert TS.tail_depth(0, two, cfg) is None
+    with pytest.raises(ValueError):
+        TS.config({"land_pad_tail_split": {"types": []}})
+    with pytest.raises(ValueError):
+        TS.config({"land_pad_tail_split": {"types": ["x"], "hop": 1}})
+
+
+@needs_yosys
+def test_key_absent_identical_and_key_on_splits(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")     # the tiny cores have no signed parameter record (unrelated gate)
+    base, split = tmp_path / "base", tmp_path / "split"
+    assert _bind(_plan(tmp_path, False), base, "elab", "bind", "verify") == 0
+    assert _bind(_plan(tmp_path, True), split, "elab", "bind", "verify") == 0
+    rtl_b = (base / "rtl" / "bt_ts.sv").read_text()
+    rtl_s = (split / "rtl" / "bt_ts.sv").read_text()
+    pad_b = re.findall(r"ot_dp_dly #\(\.W\(1\), \.D\((\d+)\)\) u_(pd\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);", rtl_b)
+    pad_s = re.findall(r"ot_dp_dly #\(\.W\(1\), \.D\((\d+)\)\) u_(pd\w+) \(\.clk\(clk\), \.d\((\S+?)\), \.q\((\w+)\)\);", rtl_s)
+    # base: one shared 3-stage pad per padded bit, read by both cores
+    assert len(pad_b) == 5 and {d for d, *_ in pad_b} == {"3"} and "bind_pad_tail_split.json" not in _files(base)
+    for _d, nm, _src, _q in pad_b:
+        assert rtl_b.count(f"{nm}[0]") == 2
+    # split: per bit a 1-stage trunk + a 2-stage copy per core (K = ceil(500 / 380) = 2), each read by one core
+    trunk = [x for x in pad_s if "_t_" in x[1]]
+    tails = [x for x in pad_s if "_t_" not in x[1]]
+    assert len(trunk) == 5 and {d for d, *_ in trunk} == {"1"} and all(src.endswith("]") and "_q[" in src for _d, _n, src, _q in trunk)
+    assert len(tails) == 10 and {d for d, *_ in tails} == {"2"}
+    assert {src for _d, _n, src, _q in tails} == {f"{q}[0]" for _d, _n, _s, q in trunk}
+    assert sum("_u_s0_" in n for _d, n, *_ in tails) == 5 and sum("_u_s1_" in n for _d, n, *_ in tails) == 5
+    for _d, nm, _src, _q in tails:
+        assert rtl_s.count(f"{nm}[0]") == 1 and re.fullmatch(r"pd\d+_\w+_\d+", nm)   # still a pad-stage name (R-REACH-5)
+    rec = json.loads((split / "bind_pad_tail_split.json").read_text())["types"]["ts"]
+    assert rec["split_pads"] == 5 and rec["copies"] == 10 and rec["extra_flops"] == 10 and rec["tail_depths"] == {"2": 5}
+    assert rec["not_covered"] == dict(r8_strap=0, registered=0, pad_tree=0, position_bank=0) and rec["shared_readers"] == 0
+    # same traced depth per sink: the proof passes on both and every record but the split RTL / record is identical
+    vb = json.loads((base / "verify_report.json").read_text())
+    vs = json.loads((split / "verify_report.json").read_text())
+    assert vb["verdict"] == "PASS" and vs["verdict"] == "PASS"
+    fb, fs = _files(base), _files(split)
+    for k in ("bind_sinks.json", "bind_latency.json", "bus_groups.json"):
+        assert k in fb and fb[k] == fs[k], k
+    sinks = json.loads(fs["bind_sinks.json"])
+    assert {sinks[f"snk.u_s{n}.d0[{i}]"][2] for n in (0, 1) for i in range(8)} == {5}
+    changed = {k for k in set(fb) | set(fs) if fb.get(k) != fs.get(k)}
+    assert "rtl/bt_ts.sv" in changed and "bind_pad_tail_split.json" in changed
+    assert all(not k.startswith("rtl/") or k == "rtl/bt_ts.sv" for k in changed), changed
+
+
+@needs_yosys
+def test_cores_inside_the_spread_keep_the_shared_pad(tmp_path, monkeypatch):
+    monkeypatch.setenv("OT_HCPARAM_ALL", "0")
+    base, near = tmp_path / "base", tmp_path / "near"
+    assert _bind(_plan(tmp_path, False, gap=100.0), base, "elab", "bind") == 0
+    assert _bind(_plan(tmp_path, True, gap=100.0), near, "elab", "bind") == 0
+    assert (base / "rtl" / "bt_ts.sv").read_bytes() == (near / "rtl" / "bt_ts.sv").read_bytes()
+    assert json.loads((near / "bind_pad_tail_split.json").read_text())["types"]["ts"]["split_pads"] == 0

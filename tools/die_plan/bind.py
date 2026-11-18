@@ -57,6 +57,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import bind_elab as E  # noqa: E402
 import bind_position_bank as PB  # noqa: E402
+import bind_pad_tail_split as TS  # noqa: E402
 
 SCHEMA = "opentallas.die_plan.bind.v1"
 
@@ -3545,6 +3546,11 @@ class Binder:
             if rva["verdict"] != "PASS":
                 raise BindError(f"R8 pad-strap tie-value audit (G0 ERROR): {rva['reason']}")
             rows = [r for r in rows if not r[1].startswith("strap_r8pad_")] + STR.count_strap_rows(r8v)
+        if self.ab.get(TS.KEY) is not None:
+            # KV-PAD-TAIL-SPLIT record: per type the split pads, tail copies and extra flops (= sum (copies - 1) x K)
+            (out.parent / "bind_pad_tail_split.json").write_text(json.dumps(dict(
+                schema="opentallas.die_plan.bind_pad_tail_split.v1", option=self.ab[TS.KEY],
+                types=dict(sorted(getattr(self, "_pad_tail_split", {}).items()))), indent=1) + "\n")
         if rows:
             (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(rows))
         return files
@@ -4073,6 +4079,29 @@ class Binder:
                     return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)])
                 if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
                     key = (L["iname"], j, d[7])
+                    sp = tsplit.get(key)
+                    if sp is not None and ci in sp[1]:
+                        # KV-PAD-TAIL-SPLIT (opt-in asbuilt.land_pad_tail_split): shared trunk + one K-stage tail copy per
+                        # consumer hard core; trunk + copy = d[7] stages, so the sink's depth is the shared pad's
+                        kd, tag = sp[0], sp[1][ci]
+                        bkey = key + (tag,)
+                        if bkey not in pads:
+                            src = f"{L['iname']}_q[{j}]"
+                            if d[7] > kd:
+                                tkey = key + (None,)
+                                if tkey not in pads:
+                                    nm = short_id(f"pd{d[7] - kd}_{L['iname']}_{j}_t_{d[7]}", 100)
+                                    pads[tkey] = nm
+                                    decl.append(f"    wire [0:0] {nm};")
+                                    body.append(f"    ot_dp_dly #(.W(1), .D({d[7] - kd})) u_{nm} (.clk(clk), .d({src}), "
+                                                f".q({nm}));  // landing pad trunk: shared stages of pad {d[7]} (tail split)")
+                                src = f"{pads[tkey]}[0]"
+                            nm = short_id(f"pd{kd}_{L['iname']}_{j}_{sv_id(tag)}_{d[7]}", 100)
+                            pads[bkey] = nm
+                            decl.append(f"    wire [0:0] {nm};")
+                            body.append(f"    ot_dp_dly #(.W(1), .D({kd})) u_{nm} (.clk(clk), .d({src}), "
+                                        f".q({nm}));  // landing pad tail copy for core {tag}: as-built relative timing")
+                        return f"{pads[bkey]}[0]"
                     if key not in pads:
                         nm = short_id(f"pd{d[7]}_{L['iname']}_{j}", 100)
                         pads[key] = nm
@@ -4178,6 +4207,68 @@ class Binder:
                             f"// PC reset safe form: lane & wavefront tap")
             return gates[key]
 
+        # KV-PAD-TAIL-SPLIT (opt-in asbuilt.land_pad_tail_split, bind_pad_tail_split.py; absent = nothing here runs):
+        # (in-bus bit, pad) -> (K, {consumer leaf ci: hard core inst}) for the pads whose consumer pins sit on several
+        # plan hard cores more than min_spread_um apart.  Only the emitted pad instances change; self.sinks is not touched.
+        tsplit = {}
+        try:
+            ts_cfg = TS.config(self.ab)
+        except ValueError as exc:
+            raise BindError(str(exc)) from exc
+        if ts_cfg is not None and TS.selected(ts_cfg, tn):
+            ts_tab = TS.pin_table(t.get("hard_cores"), self.plan_dir)
+            ts_r8 = getattr(self, "r8sp", {})
+            ts_cons, ts_other = defaultdict(list), defaultdict(list)
+
+            def ts_walk(d, ci, pn, i):
+                if d[0] in ("or", "and"):
+                    for x in d[1]:
+                        ts_walk(x, ci, pn, i)
+                elif d[0] == "x" and (len(d) > 7 or (ci, pn, i) in ts_r8):
+                    L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                    cls = ("r8_strap" if (ci, pn, i) in ts_r8 else "registered" if reg else "pad_tree" if PT is not None
+                           else "position_bank" if PB.spec(self, ci, pn) else None)
+                    if cls is None:
+                        ts_cons[(L["iname"], j, d[7])].append((ci, pn, i))
+                    else:
+                        ts_other[(cls, L["iname"], j)].append((ci, pn, i))
+
+            for ci in self.members[p]:
+                if self.rel_of(ci) in invalid_id_leaves:
+                    continue
+                for pn, bits in F.cells[ci].ports.items():
+                    if G.dirs[ci].get(pn) == "input":
+                        for i in range(len(bits)):
+                            ts_walk(self.sinks[(ci, pn, i)], ci, pn, i)
+
+            def ts_cores(us):
+                by, per = {}, {}
+                for ci, pn, i in us:
+                    inst, xy = TS.pin_xy(ts_tab, self.rel_of(ci), pn, i, len(F.cells[ci].ports[pn]))
+                    if inst is not None:
+                        by.setdefault(inst, []).append(xy)
+                        per[ci] = inst
+                return by, per
+
+            ts_row = dict(pads=len(ts_cons), split_pads=0, copies=0, extra_flops=0, max_spread_um=0.0, tail_depths={},
+                          shared_readers=0, not_covered=dict(r8_strap=0, registered=0, pad_tree=0, position_bank=0))
+            for key in sorted(ts_cons):
+                by, per = ts_cores(ts_cons[key])
+                ks = TS.tail_depth(key[2], by, ts_cfg)
+                if ks is None:
+                    continue
+                tsplit[key] = (ks[0], per)
+                ts_row["split_pads"] += 1
+                ts_row["copies"] += len(by)
+                ts_row["extra_flops"] += (len(by) - 1) * ks[0]
+                ts_row["max_spread_um"] = max(ts_row["max_spread_um"], round(ks[1], 3))
+                ts_row["tail_depths"][str(ks[0])] = ts_row["tail_depths"].get(str(ks[0]), 0) + 1
+                ts_row["shared_readers"] += sum(1 for ci, _pn, _i in ts_cons[key] if ci not in per)
+            for key in sorted(ts_other):
+                by, _per = ts_cores(ts_other[key])
+                if TS.tail_depth(1, by, ts_cfg) is not None:
+                    ts_row["not_covered"][key[0]] += 1
+            self.__dict__.setdefault("_pad_tail_split", {})[tn] = ts_row
         insts = []
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
             c = F.cells[ci]
@@ -4304,6 +4395,8 @@ class Binder:
                 conns = [(pn, e) for pn, e in conns if pn not in hide]
             cs = ",\n".join(f"        .{pn}({e})" for pn, e in conns)
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
+        if tsplit and len(set(pads.values())) != len(pads):
+            raise BindError(f"land_pad_tail_split {tn}: landing pad wire names collide")
         if core_reset_rows:
             self.__dict__.setdefault("_bound_core_resets", {})[tn] = [
                 dict(inst=i, leaf=short_id("u_" + self.rel_of(k[0]), 90), pin=k[1], reset=core_reset[k])
