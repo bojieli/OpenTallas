@@ -39,6 +39,50 @@ class Fixture:
         return buf.getvalue()
 
 
+def wrap_local_upstream(f):
+    """the upstream here is a local path, whose receive-pack / upload-pack would inherit the hook's GIT_DIR / quarantine env (a real
+    upstream is ssh and does not): run them with a clean environment"""
+    for n, cfg in (("git-receive-pack", "remote.origin.receivepack"), ("git-upload-pack", "remote.origin.uploadpack")):
+        w = f.d / ("wrap-" + n)
+        w.write_text("#!/bin/sh\nunset GIT_DIR GIT_OBJECT_DIRECTORY GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_QUARANTINE_PATH\nexec %s \"$@\"\n" % n)
+        w.chmod(0o755)
+        sh("git", "-C", str(f.mirror), "config", cfg, str(w))
+
+
+class MainPush(unittest.TestCase):
+    """a lane pushes main to the mirror: relayed to GitHub (upstream) first; a stale main push is refused and the mirror main refreshed"""
+    def test_lane_main_push_reaches_upstream_and_stale_push_is_refused(self):
+        f = Fixture(); wrap_local_upstream(f)
+        w = f.d / "w"
+        sh("git", "-C", str(f.up), "symbolic-ref", "HEAD", "refs/heads/main")
+        sh("git", "push", "-q", str(f.mirror), "HEAD:refs/heads/main", cwd=w)       # first main: relayed
+        self.assertEqual(sh("git", "-C", str(f.up), "rev-parse", "main"), sh("git", "rev-parse", "HEAD", cwd=w))
+        (w / "f").write_text("2"); sh("git", "commit", "-qam", "c2", cwd=w)
+        sh("git", "push", "-q", str(f.mirror), "HEAD:refs/heads/main", cwd=w)
+        c2 = sh("git", "rev-parse", "HEAD", cwd=w)
+        self.assertEqual(sh("git", "-C", str(f.up), "rev-parse", "main"), c2)
+        self.assertEqual(sh("git", "-C", str(f.mirror), "rev-parse", "main"), c2)
+        # GitHub moves ahead (e.g. a legacy merge); the mirror is stale
+        o = f.d / "o"; sh("git", "clone", "-q", str(f.up), str(o)); (o / "g").write_text("x"); sh("git", "add", "g", cwd=o); sh("git", "commit", "-qm", "gh", cwd=o)
+        sh("git", "push", "-q", "origin", "HEAD:main", cwd=o); gh = sh("git", "rev-parse", "HEAD", cwd=o)
+        (w / "f").write_text("3"); sh("git", "commit", "-qam", "c3", cwd=w)
+        p = S.run(["git", "push", str(f.mirror), "HEAD:refs/heads/main"], cwd=w, env=ENV, capture_output=True, text=True)
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn("NOT pushed", p.stderr)
+        self.assertEqual(sh("git", "-C", str(f.up), "rev-parse", "main"), gh)        # nothing forced
+        self.assertEqual(sh("git", "-C", str(f.mirror), "rev-parse", "main"), gh)    # mirror refreshed: the lane can rebase now
+        sh("git", "fetch", "-q", str(f.mirror), "main", cwd=w); sh("git", "rebase", "-q", "FETCH_HEAD", cwd=w)
+        sh("git", "push", "-q", str(f.mirror), "HEAD:refs/heads/main", cwd=w)
+        self.assertEqual(sh("git", "-C", str(f.up), "rev-parse", "main"), sh("git", "rev-parse", "HEAD", cwd=w))
+
+    def test_main_delete_and_other_refs_are_refused(self):
+        f = Fixture(); wrap_local_upstream(f); w = f.d / "w"
+        sh("git", "push", "-q", str(f.mirror), "HEAD:refs/heads/main", cwd=w)
+        for spec in (":refs/heads/main", "HEAD:refs/heads/other", "HEAD:refs/tags/t"):
+            p = S.run(["git", "push", str(f.mirror), spec], cwd=w, env=ENV, capture_output=True, text=True)
+            self.assertNotEqual(p.returncode, 0, spec)
+
+
 class MirrorSync(unittest.TestCase):
     def test_rejected_twice_is_skipped_then_retried_when_the_ref_moves(self):
         f = Fixture()

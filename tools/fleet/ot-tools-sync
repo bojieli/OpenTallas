@@ -12,6 +12,8 @@
                                    the hub tree against git, the legacy kw38/rt tree against its own HEAD while a unit still
                                    runs it, and each host's active ot-run backend against tools/fleet/ot-run of RT/current.
                                    --post appends DRIFT lines to the review queue when the drift set changes.
+  ot-tools-sync follow             (1-2 min timer, OWNER 11-18) fetch origin/main; when it moved and RT/current is an ancestor of it, run `sync`
+                                   (fast-forward only: a main that does not contain RT/current is logged and skipped); no-op otherwise.
   ot-tools-sync status             current version per host.
 Called by ot-merge-queue after every push to main (MQ_SYNC_HOOK).  Log: ~/merge-queue/log (prefix SYNC).
 """
@@ -646,9 +648,103 @@ def sync_guarded(sha, hosts, tests):
     return rc
 
 
+def follow(hosts=True):
+    """rt/current follows origin/main, fast-forward only; one follower at a time, nothing to do when already there"""
+    import fcntl
+    RT.mkdir(parents=True, exist_ok=True)
+    lockf = open(RT / ".follow.lock", "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return 0
+    git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
+    full = git("rev-parse", "origin/main^{commit}").strip()
+    cur = current()
+    if cur == sha12(full):
+        return 0
+    cur_full = ""
+    if cur:
+        try:
+            cur_full = git("rev-parse", f"{cur}^{{commit}}").strip()
+        except Exception:                                  # noqa: BLE001 - a current the clone does not know: treated as not an ancestor
+            cur_full = ""
+        if not cur_full or S.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", cur_full, full]).returncode != 0:
+            log(f"follow: origin/main {sha12(full)} does not contain rt/current {cur}; not fast-forward, skipped")
+            return 0
+    rc = sync_guarded(full, hosts, False)
+    if rc == 3 and not (RT / f".reverted-{sha12(full)}").exists():
+        (RT / f".reverted-{sha12(full)}").write_text("")
+        try:
+            auto_revert(cur_full, full)
+        except Exception as e:                             # noqa: BLE001 - reported, never raised into the timer
+            log(f"auto-revert failed: {type(e).__name__}: {str(e)[:300]}")
+    return rc
+
+
+def commit_lane(c):
+    subj = git("log", "-1", "--format=%s", c).strip()
+    m = re.match(r"\[?([A-Za-z0-9][\w.-]{1,40})[\]:]", subj)
+    if m and m.group(1).lower() not in ("merge", "fix", "revert", "add", "update"):
+        return m.group(1).upper()
+    return git("log", "-1", "--format=%an", c).strip() or ALERT_LANE
+
+
+def auto_revert(cur_full, full):
+    """OWNER 11-18 / FABLE-WORKFLOW-0400: the smoke of a new main failed.  Find the commits (first-parent, after the running rt/current) whose own tree fails
+    the smoke and push a REVERT commit of each (never a force push; a merge is reverted with -m 1), post it to the author lane.  A running kit keeps its
+    old rt/<sha>; the next follow materializes the reverted main."""
+    rng = f"{cur_full}..{full}" if cur_full else full
+    commits = git("rev-list", "--first-parent", "--reverse", rng).split()
+    bad = []
+    for c in commits:
+        d = materialize(c)
+        if smoke(d, tests=False):
+            bad.append(c)                                  # the FIRST failing commit is the offender; later ones fail by inheriting its tree
+            break
+    if not bad:
+        log(f"auto-revert: smoke of {sha12(full)} failed but no single commit of {len(commits)} fails alone; not reverting")
+        return []
+    wt = RT / f".revert-wt-{os.getpid()}"
+    git("fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main", timeout=300)
+    git("worktree", "add", "-q", "--detach", str(wt), "origin/main", timeout=900)
+    done = []
+    try:
+        for c in reversed(bad):                            # newest first
+            par = git("rev-list", "--parents", "-n", "1", c).split()
+            args = ["revert", "--no-edit"] + (["-m", "1"] if len(par) > 2 else []) + [c]
+            p = run(["git", "-c", "user.name=OT-TOOLS-SYNC", "-c", "user.email=tools-sync@opentallas.invalid", *args], cwd=wt, timeout=600)
+            if p.returncode:
+                run(["git", "revert", "--abort"], cwd=wt)
+                log(f"auto-revert of {c[:11]} failed: {(p.stderr or p.stdout).strip()[-200:]}")
+                continue
+            msg = run(["git", "log", "-1", "--format=%B"], cwd=wt).stdout.rstrip() + \
+                "\n\nAuto-revert: the tools smoke of this commit failed (ot-tools-sync follow).\n\nCo-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>\n"
+            run(["git", "-c", "user.name=OT-TOOLS-SYNC", "-c", "user.email=tools-sync@opentallas.invalid", "commit", "-q", "--amend", "-m", msg], cwd=wt)
+            ok = False
+            for _ in range(3):
+                if run(["git", "push", "-q", REMOTE, "HEAD:refs/heads/main"], cwd=wt, timeout=900).returncode == 0:
+                    ok = True
+                    break
+                run(["git", "fetch", "-q", REMOTE, "+refs/heads/main:refs/remotes/origin/main"], cwd=wt, timeout=300)
+                if run(["git", "rebase", "origin/main"], cwd=wt, timeout=300).returncode:
+                    run(["git", "rebase", "--abort"], cwd=wt)
+                    break
+            lane = commit_lane(c)
+            line = (f"STATE [OT-TOOLS-SYNC -> {lane}] AUTO-REVERT main commit {c[:11]} ('{git('log', '-1', '--format=%s', c).strip()[:80]}'): tools smoke failed on it; "
+                    + (f"revert pushed to main @{git('-C', str(wt), 'rev-parse', 'HEAD').strip()[:11]}" if ok else "revert could NOT be pushed")
+                    + ". Fix and push again with ot-push-main. Running kits keep their old rt/<sha>.")
+            log(line)
+            run(["bash", POST, ALERT_LANE, line], timeout=120)
+            if ok:
+                done.append(c)
+    finally:
+        run(["git", "worktree", "remove", "--force", str(wt)], cwd=REPO, timeout=300)
+    return done
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune"])
+    ap.add_argument("cmd", choices=["sync", "drift", "status", "prune", "follow"])
     ap.add_argument("--sha", default="")
     ap.add_argument("--no-hosts", action="store_true")
     ap.add_argument("--no-tests", action="store_true", help="smoke without the wave test suite")
@@ -656,6 +752,8 @@ def main():
     a = ap.parse_args()
     if a.cmd == "sync":
         return sync_guarded(a.sha, not a.no_hosts, not a.no_tests)
+    if a.cmd == "follow":
+        return follow(not a.no_hosts)
     if a.cmd == "prune":                       # run ON a build host: prune its rt/ (text naming pinned snapshots arrives on stdin from the hub)
         gone = prune_snapshots(RT, protect=(current() or "",), text=sys.stdin.read())
         print(f"pruned {len(gone)}")

@@ -56,6 +56,40 @@ class Sync(unittest.TestCase):
         self.assertEqual((rt / v1[:12] / "tools/die_plan/gen_phys.py").read_bytes(), old_bytes)
         self.assertIn(f"-> {v2[:12]}", (rt / "history.log").read_text())
 
+    def test_follow_fast_forwards_only_and_is_a_noop_when_current(self):
+        v1 = sh("git", "rev-parse", "HEAD", cwd=self.dev)
+        self.assertEqual(self.run_("follow", "--no-hosts").returncode, 0)          # no current yet: materializes origin/main
+        self.assertEqual(os.readlink(self.d / "rt/current"), v1[:12])
+        n = (self.d / "rt/history.log").read_text().count("\n")
+        self.assertEqual(self.run_("follow", "--no-hosts").returncode, 0)
+        self.assertEqual((self.d / "rt/history.log").read_text().count("\n"), n)
+        v2 = self.commit("tools/die_plan/gen_phys.py", "X = 2\n")
+        self.assertEqual(self.run_("follow", "--no-hosts").returncode, 0)
+        self.assertEqual(os.readlink(self.d / "rt/current"), v2[:12])
+        sh(*self.g, "checkout", "-q", "-b", "other", v1, cwd=self.dev)                # a main that does not contain current
+        (self.dev / "tools/die_plan/gen_phys.py").write_text("X = 7\n")
+        sh(*self.g, "commit", "-qam", "fork", cwd=self.dev)
+        sh("git", "push", "-q", "-f", "origin", "other:main", cwd=self.dev)
+        r = self.run_("follow", "--no-hosts")
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertEqual(os.readlink(self.d / "rt/current"), v2[:12])               # stays
+
+    def test_follow_reverts_the_commit_whose_smoke_fails_without_force(self):
+        v1 = sh("git", "rev-parse", "HEAD", cwd=self.dev)
+        self.assertEqual(self.run_("follow", "--no-hosts").returncode, 0)
+        self.commit("tools/die_plan/gen_phys.py", "X = 2\n")
+        bad = self.commit("tools/autopilot/kit_wave.py", "def broken(:\n")
+        self.commit("tools/die_plan/gen_phys.py", "X = 3\n")
+        r = self.run_("follow", "--no-hosts"); self.assertEqual(r.returncode, 3, r.stdout + r.stderr)
+        self.assertEqual(os.readlink(self.d / "rt/current"), v1[:12])                 # running version untouched
+        o = self.d / "origin.git"
+        self.assertEqual(sh("git", "show", "main:tools/autopilot/kit_wave.py", cwd=o), "print('wave')")
+        self.assertIn("Revert", sh("git", "log", "-1", "--format=%s", "main", cwd=o))
+        self.assertEqual(subprocess.run(["git", "merge-base", "--is-ancestor", bad, "main"], cwd=o).returncode, 0)   # history kept
+        self.assertEqual(sh("git", "show", "main:tools/die_plan/gen_phys.py", cwd=o), "X = 3")                       # later good commit kept
+        self.assertEqual(self.run_("follow", "--no-hosts").returncode, 0)
+        self.assertEqual(os.readlink(self.d / "rt/current"), sh("git", "rev-parse", "main", cwd=o)[:12])
+
     def test_smoke_failure_keeps_current(self):
         v1 = sh("git", "rev-parse", "HEAD", cwd=self.dev)
         self.assertEqual(self.run_("sync", "--no-hosts").returncode, 0)

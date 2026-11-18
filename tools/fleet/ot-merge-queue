@@ -20,7 +20,18 @@ Run every 5 minutes by the systemd user timer ot-merge-queue.timer on the hub (i
   6. after a push, the sync hook (MQ_SYNC_HOOK, default ot-tools-sync) materializes main@sha as the pinned tools tree rt/<sha>.
 Log ~/merge-queue/log; lock ~/merge-queue/lock (a tick that finds it held exits 0).
 
-usage: ot-merge-queue [tick] [--dry-run] [--only SHA] | status | parse | gate <branch>[@<sha>] | known-red
+
+MERGE-AUTO-1118 (OWNER 11-18: nobody's approval is awaited): (a) the tick also lands every claude/* branch whose CURRENT remote tip has a
+GREEN gate record (~/merge-queue/gates/<fullsha>.json, written only on GREEN) younger than MQ_AUTO_HOURS (48), not in main, not already
+settled and not REVOKED; the gate must be valid on current main (same rule as an approved item: main since then touched none of its files),
+else it is skipped until a new gate.  Switch: file ~/merge-queue/auto.on (or MQ_AUTO=1).  Log line `MERGED-AUTO [branch] @sha`; an hourly
+digest goes to ~/coord.  (b) `merge-now <branch> <fullsha>` (called by `ot-gate-remote --merge`) lands one such sha at once under the same
+lock.  COORD APPROVED lines keep working.  Same conflict / red / no-force rules.
+
+usage: ot-merge-queue [tick] [--dry-run] [--only SHA] | status | parse | gate <branch>[@<sha>] | known-red | auto-list | merge-now <branch> <fullsha> | redwatch
+
+OWNER 11-18 (later): lanes commit straight to main (ot-push-main); `redwatch` (own timer) replaces the gate: it only posts KNOWN-RED for a commit that
+makes the tests of its touched files fail.  tick / approvals / auto / merge-now stay for the old branch path and are not needed.
 """
 import argparse
 import concurrent.futures as CF
@@ -69,6 +80,9 @@ DIES = ("head", "qc", "kv", "s81", "hbm")
 ME = "MERGE-QUEUE"
 CO_AUTHOR = "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 TERMINAL = {"MERGED", "ALREADY", "FAIL", "REVOKED"}
+AUTO_HOURS = float(os.environ.get("MQ_AUTO_HOURS", "48"))
+AUTO_DIGEST_SECS = int(os.environ.get("MQ_AUTO_DIGEST_SECS", "3600"))
+MERGE_NOW_WAIT = int(os.environ.get("MQ_MERGE_NOW_WAIT", "1800"))
 
 APPROVE_RE = re.compile(r"COORD (APPROVED|REVOKED):\s*(?:branch\s+)?(?:([A-Za-z0-9][\w./+-]*)\s*)?@\s*([0-9a-f]{7,40})\b")
 # ("branch " before the name is accepted: COORD wrote 'COORD APPROVED: branch claude/kit-ops-5-curplan-1114 @4c696027e0ef' 11-15)
@@ -540,7 +554,7 @@ def _fetch_sha(branch, sha):
 
 # ---------------------------------------------------------------- apply / check / test
 
-def apply(wt, base, full, branch):
+def apply(wt, base, full, branch, how="COORD APPROVED"):
     """-> (status, detail) status: OK / ALREADY / CONFLICT / ERROR; HEAD of wt is the candidate tip on OK"""
     if is_ancestor(full, base, cwd=wt):
         return "ALREADY", f"{full[:11]} is an ancestor of main {base[:11]}"
@@ -550,7 +564,7 @@ def apply(wt, base, full, branch):
     if not plus:
         return "ALREADY", f"every commit of {full[:11]} is already in main {base[:11]} (patch-equal)"
     if not minus:
-        msg = f"Merge {branch or full[:11]} @{full[:11]} (MERGE-QUEUE, COORD APPROVED)\n\n{CO_AUTHOR}"
+        msg = f"Merge {branch or full[:11]} @{full[:11]} (MERGE-QUEUE, {how})\n\n{CO_AUTHOR}"
         p = git("merge", "--no-ff", "-q", "-m", msg, full, cwd=wt, check=False)
         mode = "no-ff merge"
         if p.returncode:
@@ -1096,7 +1110,7 @@ def land(it, text, st):
             moved = changed_files(wt, it["base"], cur) if is_ancestor(it["base"], cur, cwd=wt) else ["<main rewritten>"]
             it["extra"] = sorted({os.path.dirname(f) for f in it.get("changed", [])})
             wt_make(it["id"], cur, it["extra"])
-            status, detail = apply(wt, cur, it["sha_full"], it["branch"])
+            status, detail = apply(wt, cur, it["sha_full"], it["branch"], HOW(it))
             if status == "ALREADY":
                 return finish(st, it, "ALREADY", f"landed meanwhile: {detail}", cur)
             if status != "OK":
@@ -1133,6 +1147,9 @@ def finish(st, it, status, detail, main_before, tip=None):
     br = f"{it['branch']}@{it['sha_full'][:11]}" if it["branch"] else it["sha_full"][:11]
     if status == "MERGED":
         st["last_merge_ts"] = time.time()
+        if it.get("auto"):
+            log(f"MERGED-AUTO [{it['branch']}] @{it['sha_full']}")
+            st.setdefault("auto_pending", []).append(f"{it['branch']}@{it['sha_full'][:11]}")
         body = (f"{br} -> main {main_before[:11]} -> {tip[:11]}, {it.get('mode')}, tags {it.get('tags')}. "
                 f"Gate: {it.get('note')}; tests: {' '.join(os.path.basename(t) for t in it.get('tests', [])[:12]) or 'none'}"
                 f"{' +' + str(len(it['tests']) - 12) if len(it.get('tests', [])) > 12 else ''}. Lane {it['lane']}.")
@@ -1155,6 +1172,65 @@ def fail(st, it, text, status, detail, base):
     queue_post(st, "MERGE-FAIL", it["lane"], f"{br} NOT landed, skipped: {what}. Rebase onto main, fix, push a new head and "
                                              f"ask COORD for a new 'COORD APPROVED: <branch> @<sha>'.")
     return ""
+
+
+def HOW(it):
+    return "auto-merge, GREEN gate record, no approval wait" if it.get("auto") else "COORD APPROVED"
+
+
+def auto_enabled():
+    return os.environ.get("MQ_AUTO", "") == "1" or (MQ / "auto.on").exists()
+
+
+def remote_tip(branch):
+    """-> the branch's tip sha on the remote now (GitHub first, the hub checkout when GitHub has no such branch), or ''"""
+    for r in (REMOTE, FALLBACK):
+        if not r:
+            continue
+        o = git("ls-remote", r, f"refs/heads/{branch}", check=False, timeout=300)
+        rows = [l.split() for l in o.stdout.splitlines() if l.strip()]
+        if o.returncode == 0 and rows:
+            return rows[0][0]
+    return ""
+
+
+def auto_candidates(text, items, base, hours=None):
+    """-> [(age_h, branch, fullsha)] claude/* branches with a gate record < hours old, whose remote tip IS the gated sha, not in main,
+    not settled in the state file, not REVOKED by COORD"""
+    hours = AUTO_HOURS if hours is None else hours
+    revoked = [a["sha"] for a in parse_approvals(text) if a["revoked"]]
+    settled = {(v.get("sha_full") or v.get("sha", "")) for v in items.values() if v.get("status") in TERMINAL}
+    out = []
+    for f in sorted((MQ / "gates").glob("*.json")):
+        full = f.stem
+        age = (time.time() - f.stat().st_mtime) / 3600
+        try:
+            r = json.loads(f.read_text())
+        except (OSError, ValueError):
+            continue
+        br = r.get("branch", "")
+        if age > hours or not br.startswith("claude/") or not re.fullmatch(r"[0-9a-f]{40}", full) or full in settled:
+            continue
+        if any(full.startswith(x) or x.startswith(full) for x in revoked):
+            continue
+        if f"{br}@{full}" in items and items[f"{br}@{full}"].get("status") in TERMINAL:
+            continue
+        if remote_tip(br) != full:
+            continue                                         # tip moved past the gate, or branch gone: wait for a new gate
+        if rev(full) and is_ancestor(full, base):
+            continue
+        out.append((age, br, full))
+    return sorted(out)
+
+
+def auto_digest(st, force=False):
+    pend = st.get("auto_pending", [])
+    if pend and (force or time.time() - st.get("auto_digest_ts", 0) >= AUTO_DIGEST_SECS):
+        queue_post(st, "STATE", "COORD", f"MERGED-AUTO digest: {len(pend)} branch(es) merged without approval since the last digest "
+                                         f"(COORD reviews after the merge): " + "; ".join(pend[:30]))
+        st["auto_pending"] = []
+        st["auto_digest_ts"] = time.time()
+        flush_posts(st)
 
 
 # ---------------------------------------------------------------- tick
@@ -1267,7 +1343,7 @@ def prepare(it, base, remote=True):
         mb = git("merge-base", base, full).stdout.strip()
         it["extra"] = changed_checkout_entries(changed_files(REPO, mb, full))
         wt = wt_make(it["id"], base, it["extra"])
-        status, detail = apply(wt, base, full, it["branch"])
+        status, detail = apply(wt, base, full, it["branch"], HOW(it))
         if status != "OK":
             return status, detail
         it["mode"] = detail
@@ -1275,6 +1351,8 @@ def prepare(it, base, remote=True):
         if rec:
             it["note"] = rec                                 # the MERGED post quotes it (drt0255 16:19 quoted its old INFRA)
             return "GREEN", rec
+        if it.get("auto"):                                   # auto / merge-now never gates: a new gate (ot-gate-remote) is the lane's step
+            return "SKIP", "no GREEN gate record valid on current main (missing, or main since touched its files): gate it again"
         if remote and GATE_REMOTE and not DRY:
             got = gate_remote(it, full, base)
             if got:
@@ -1439,10 +1517,38 @@ def tick(args):
         it["high"] = a.get("high", False)
         it["lane"] = lane_for(text, a["branch"], a["sha"])
         todo.append(it)
+    if not args.only and auto_enabled():
+        try:
+            base0 = fetch_main()
+            for age, br, full in auto_candidates(text, items, base0):
+                key = f"{br}@{full}"
+                it = items.get(key)
+                if it and it.get("status") in TERMINAL:
+                    continue
+                if not it:
+                    it = items[key] = {"key": key, "branch": br, "sha": full, "status": "NEW", "first_seen": stamp(), "tries": 0,
+                                       "line": 0, "auto": True}
+                it["auto"] = it.get("auto", True)
+                it["id"] = re.sub(r"[^\w.-]", "_", full[:12])
+                it["high"] = False
+                it["lane"] = lane_for(text, br, full)
+                if it not in todo:
+                    todo.append(it)
+        except Exception as e:                            # noqa: BLE001 - the auto scan never stops approved items
+            log(f"auto scan error: {type(e).__name__}: {e}")
     if not todo:
+        auto_digest(st)
         save_state(st)
         log(f"tick: {len(apps)} approval(s) in queue, none new")
         return 0
+    process_todo(st, todo, text, args)
+    auto_digest(st)
+    save_state(st)
+    return 0
+
+
+def process_todo(st, todo, text, args):
+    items = st["items"]
     base = fetch_main()
     log(f"tick: main {base[:11]}, {len(todo)} new approval(s): {', '.join(i['key'] for i in todo)}")
     # gates run in parallel; each item LANDS as soon as its own gate and every gate before it are done (COORD 11-15 08:4x:
@@ -1454,6 +1560,12 @@ def tick(args):
     landed = ""
     for it in todo:                                          # serial: priority HIGH approvals first, then queue order
         status, detail = await_item(st, it, futs[it["key"]], len(todo))
+        if status == "SKIP":                                 # auto item without a usable gate: not recorded, looked at again next tick
+            log(f"{it['key']}: SKIP: {detail}")
+            it["skip"] = detail
+            if it.get("status") == "NEW":
+                items.pop(it["key"], None)
+            continue
         it["tries"] = int(it.get("tries", 0)) + 1
         it["base"] = base
         log(f"{it['key']}: {status}: {detail if isinstance(detail, str) else detail}")
@@ -1505,7 +1617,118 @@ def tick(args):
                                              f"rows ~/merge-queue/src-refresh.tsv)")
     flush_posts(st)
     save_state(st)
+
+
+def commit_lane(c):
+    """the lane a main commit belongs to: a leading `[LANE]` / `LANE:` of the subject, else the author name"""
+    subj = git("log", "-1", "--format=%s", c, check=False).stdout.strip()
+    m = re.match(r"\[?([A-Za-z0-9][\w.-]{1,40})[\]:]", subj)
+    if m and m.group(1).lower() not in ("merge", "fix", "revert", "add", "update"):
+        return m.group(1).upper()
+    return git("log", "-1", "--format=%an", c, check=False).stdout.strip() or "COORD"
+
+
+def redwatch():
+    """OWNER 11-18: the queue is no gate any more.  Alarm only: for each NEW commit on main (first-parent, newest MQ_REDWATCH_MAX), run the
+    tests its touched files select (the same gate() run, against the commit's first parent, so a failure main already had is baseline); a
+    NEW failure posts one KNOWN-RED line naming the commit to its author lane.  Nobody is blocked."""
+    MQ.mkdir(parents=True, exist_ok=True)
+    lockf = open(MQ / "redwatch.lock", "w")
+    try:
+        fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        return 0
+    f = MQ / "redwatch.json"
+    try:
+        rs = json.loads(f.read_text())
+    except (OSError, ValueError):
+        rs = {}
+    base = fetch_main()
+    seen = rs.get("seen", "")
+    if not seen or not rev(seen) or not is_ancestor(seen, base):
+        rs["seen"] = base
+        f.write_text(json.dumps(rs, indent=1))
+        log(f"redwatch: start at main {base[:11]}")
+        return 0
+    commits = git("rev-list", "--first-parent", "--reverse", f"{seen}..{base}").stdout.split()
+    cap = int(os.environ.get("MQ_REDWATCH_MAX", "4"))
+    if len(commits) > cap:
+        log(f"redwatch: {len(commits)} new commits, checking the newest {cap}")
+        commits = commits[-cap:]
+    st = {"posts": []}
+    for c in commits:
+        par = rev(f"{c}^1")
+        if not par:
+            continue
+        it = {"id": f"rw-{c[:10]}", "key": f"main@{c[:11]}"}
+        try:
+            wt_make(it["id"], c)
+            res, note = gate(it, wt_make(it["id"], c, it.get("extra", ())), par)
+        except Exception as e:                                # noqa: BLE001 - an alarm never fails the timer
+            res, note = "INFRA", f"{type(e).__name__}: {str(e)[:300]}"
+        finally:
+            wt_drop(it["id"])
+        log(f"redwatch {c[:11]}: {res}: {note[:300]}")
+        if res == "RED":
+            lane = commit_lane(c)
+            subj = git("log", "-1", "--format=%s", c).stdout.strip()[:100]
+            queue_post(st, "KNOWN-RED", lane, f"main {c[:11]} ('{subj}') made test(s) red: {note[:900]}. Not blocking anyone; "
+                                              f"fix on main (ot-push-main) or revert.")
+            rs.setdefault("red", {})[c] = note[:300]
+    flush_posts(st)
+    rs["seen"] = base
+    f.write_text(json.dumps(rs, indent=1))
     return 0
+
+
+def auto_list():
+    st = load_state()
+    base = fetch_main()
+    text = (COORD / QUEUE_REL).read_text(errors="replace")
+    c = auto_candidates(text, st.get("items", {}), base)
+    print(f"auto-merge {'ON' if auto_enabled() else 'OFF'}; main {base[:11]}; {len(c)} candidate(s) (gate < {AUTO_HOURS:g} h, remote tip == gated sha)")
+    for age, br, full in c:
+        print(f"{age:5.1f} h  {br} @{full[:11]}")
+    return 0
+
+
+def merge_now(branch, sha):
+    """land <branch>@<fullsha> NOW under the tick lock; needs a GREEN gate record valid on current main and sha == remote tip"""
+    if not re.fullmatch(r"[0-9a-f]{40}", sha) or not branch.startswith("claude/"):
+        print("merge-now: need claude/<branch> and the FULL 40-hex sha"); return 2
+    if not (MQ / "gates" / f"{sha}.json").exists():
+        print(f"NO-GATE {branch}@{sha[:11]}: no GREEN gate record; run ot-gate-remote first"); return 3
+    tip = remote_tip(branch)
+    if tip != sha:
+        print(f"TIP-MOVED {branch}: remote tip {tip[:11] or 'none'} != gated {sha[:11]}; push done? gate the new tip"); return 4
+    lockf = open(MQ / "lock", "w")
+    t0 = time.time()
+    while True:
+        try:
+            fcntl.flock(lockf, fcntl.LOCK_EX | fcntl.LOCK_NB); break
+        except OSError:
+            if time.time() - t0 > MERGE_NOW_WAIT:
+                print("BUSY: the merge-queue lock is held > %d min; the 5-min tick will pick it up" % (MERGE_NOW_WAIT // 60)); return 5
+            time.sleep(5)
+    st = load_state()
+    flush_posts(st)
+    items = st.setdefault("items", {})
+    key = f"{branch}@{sha}"
+    it = items.get(key)
+    if it and it.get("status") in TERMINAL:
+        print(f"{it['status']} {key} already settled: {it.get('reason', '')}"); return 0 if it["status"] in ("MERGED", "ALREADY") else 1
+    text = (COORD / QUEUE_REL).read_text(errors="replace")
+    if not it:
+        it = items[key] = {"key": key, "branch": branch, "sha": sha, "status": "NEW", "first_seen": stamp(), "tries": 0, "line": 0}
+    it.update(auto=True, id=re.sub(r"[^\w.-]", "_", sha[:12]), high=True, lane=lane_for(text, branch, sha))
+    process_todo(st, [it], text, argparse.Namespace(only="", keep=False))
+    auto_digest(st)
+    save_state(st)
+    s = items.get(key) or it
+    if s.get("skip"):
+        print(f"SKIP {key}: {s['skip']}"); return 6
+    print(f"{s.get('status', '?')} {key} {s.get('tip', '')} {s.get('reason', '')}")
+    return 0 if s.get("status") in ("MERGED", "ALREADY") else 1
 
 
 def status():
@@ -1520,8 +1743,9 @@ def status():
 def main():
     global DRY
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red"])
+    ap.add_argument("cmd", nargs="?", default="tick", choices=["tick", "status", "parse", "gate", "known-red", "auto-list", "merge-now", "redwatch"])
     ap.add_argument("target", nargs="?", default="", help="gate: <branch>[@<sha>]")
+    ap.add_argument("sha", nargs="?", default="", help="merge-now: the full sha")
     ap.add_argument("--dry-run", action="store_true", help="test only: no push, no tag, no post, no state write")
     ap.add_argument("--only", default="", help="only the approval of this sha")
     ap.add_argument("--keep", action="store_true", help="keep worktrees of finished items")
@@ -1531,6 +1755,18 @@ def main():
         return status()
     if a.cmd == "known-red":
         return known_red_cmd()
+    if a.cmd == "redwatch":
+        try:
+            return redwatch()
+        finally:
+            pack_guard()
+    if a.cmd == "auto-list":
+        return auto_list()
+    if a.cmd == "merge-now":
+        try:
+            return merge_now(a.target, a.sha)
+        finally:
+            pack_guard()
     if a.cmd == "gate":
         if not a.target:
             ap.error("gate needs <branch>[@<sha>]")
