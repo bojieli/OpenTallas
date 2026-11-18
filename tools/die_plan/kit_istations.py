@@ -37,6 +37,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import gen_rtl  # noqa: E402
 import kit_bus_bitgroups as BG  # noqa: E402
+import ist_rows as IR  # noqa: E402  S81-COL-ROWS: ordered station rows for a wide rank (opt-in OT_IST_ROWS=1)
 
 
 def bound_bus_width(tn, bus, txt, manifest):
@@ -1610,6 +1611,7 @@ def main(argv):
         if b is None:
             raise SystemExit(f"kit_istations: {tn}: internal station on unknown bus {bus}")
         W = bound_bus_width(tn, b, txt, man)
+        e = IR.apply_ordered_rows(e, W)      # S81-COL-ROWS: ordered rows (opt-in OT_IST_ROWS=1), else e unchanged
         exact = exact_banks(e, W)
         floating = chain_floats(t, conn)
         if floating and (exact is not None or e.get("bit_route") or "bit_sites_um" in e or "face_bit_sites_um" in e):
