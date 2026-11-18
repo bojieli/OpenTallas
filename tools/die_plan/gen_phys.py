@@ -4921,6 +4921,18 @@ def clock_phase_tcl(P, tn, before_cts=False):
 
 
 
+def _nomcap_cfg(kd):
+    """NOMCAP-1118 (OWNER r708): stage tools/die_plan/nomcap_libs into KIT/nomcap and return the config.mk lines that
+    point the platform TC/BC/WC_NLDM_LIB_FILES at them (the design config is read before platforms/asap7/config.mk,
+    whose *_NLDM_LIB_FILES are ?= defaults; every ORFS stage and kit STA reads those lists).  OT_NOMCAP=0 in the
+    generator environment keeps the stock libraries."""
+    import nomcap
+    if not nomcap.enabled():
+        return []
+    nomcap.stage(Path(kd) / "nomcap")
+    return nomcap.config_mk_lines("/work/nomcap")
+
+
 def _corner_libs(mlib, kd, corner):
     """kit macro timing views of CORNER (tt/ff) for the gate/sign-off lib lists; FAIL when a macro lacks that view."""
     out = []
@@ -6410,6 +6422,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *(["export OT_CORE_TAPS = /work/core_taps.txt"] if clat["taps"] else []),
            # signoff setup corner (TT); ORFS asap7 defaults to BC = FF libs, i.e. kit synth / CTS / repair at FF
            "export CORNER = TC",
+           # NOMCAP-1118 (OWNER r708, default ON; OT_NOMCAP=0 at generation = stock libraries): nominal input-pin load
+           # on clock buffer/inverter inputs + sequential CLK pins in synth, placement, CTS, hold repair, GRT and STA
+           *_nomcap_cfg(kd),
            # Native TT/FF repair for macro-free kits. Macro parents need their
            # child timing libraries separated explicitly by corner.
            *(["export CORNERS = tc bc",
@@ -8701,6 +8716,7 @@ def write_assembly(raw, out, views, rtl_root=None, plan_path=None, pg_map=None):
            "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl",
            "export MACRO_PLACE_HALO = 0 0",
            "export CORNER = TC",
+           *_nomcap_cfg(kd),                      # NOMCAP-1118 r708: nominal clock-pin load at die level too
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
            # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain

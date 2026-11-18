@@ -384,7 +384,10 @@ def core_notes(rec):
 
 # ------------------------------------------------------------------------------------------------------- core runner
 def _docker_cmd(docker, image, memory, name, mounts, tcl):
+    ncd = SO.nomcap_dir()                                 # NOMCAP-1118 r708: same clock-pin load as signoff.py
+    mounts = list(mounts) + ([("nomcap", str(ncd))] if ncd is not None else [])
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c in ("out", "sdc") else ":ro") for c, h in mounts)
+    vol += " -e OT_NOMCAP_DIR=/nomcap" if ncd is not None else " -e OT_NOMCAP=0"
     return (f"{docker} run --rm --memory {memory} --name {name} {vol} {image} {SO.OPENROAD} -no_init -exit {tcl}")
 
 

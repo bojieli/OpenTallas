@@ -236,6 +236,35 @@ NATIVE_PDK_LIB = re.compile(
     r'(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_[^/]+\.lib(?:\.gz)?')
 
 
+NOMCAP_DIRS = (HERE / "nomcap_libs", Path("/srv/opentallas-scratch2/claude/rt/current/tools/die_plan/nomcap_libs"))
+
+
+def nomcap_dir():
+    """NOMCAP-1118 (OWNER r708, default ON; OT_NOMCAP=0 = stock libraries): host dir of the r708 liberty copies
+    (tools/die_plan/nomcap.py: no rise/fall_capacitance_range on clock buffer/inverter input pins and sequential CLK
+    pins).  Mounted at /nomcap; the exact-library selector swaps the stock INVBUF/SEQ RVT files for them."""
+    if os.environ.get("OT_NOMCAP", "1").strip().lower() in ("0", "off", "no", "false"):
+        return None
+    for d in NOMCAP_DIRS:
+        if (d / "MANIFEST.json").is_file():
+            return d.resolve()
+    raise ValueError("signoff: OT_NOMCAP is on (r708) but no nomcap_libs/MANIFEST.json beside signoff.py or in rt/current")
+
+
+def nomcap_label(receipt):
+    """what a corner was timed with, from its libraries.json receipt: 'nominal-r708' (the /nomcap copies),
+    'kit-nominal-r708' (the kit config names its own /work/nomcap copies), 'range' (stock libraries) or 'unknown'."""
+    try:
+        paths = [r["path"] for r in json.loads(Path(receipt).read_text())["libraries"]]
+    except (OSError, ValueError, KeyError, TypeError):
+        return "unknown"
+    if any(x.startswith("/nomcap/") for x in paths):
+        return "nominal-r708"
+    if any("/nomcap/" in x for x in paths):
+        return "kit-nominal-r708"
+    return "range"
+
+
 def kit_config(kit):
     """KW-FIX-17 11-05 (COORD 17:0x, AUTO-RESIGN ECO-dir class): -> (library config file or None, kit root its /work paths
     name).  A normal kit: (KIT/config.mk, KIT).  A post-route ECO iteration dir (eco_*/iN: config_eco.mk = the parent
@@ -822,6 +851,25 @@ proc ot_lib_validate {corner files} {
   }
   return $files
 }
+# NOMCAP-1118 (OWNER r708): nominal input-pin load on clock buffer/inverter cells and sequential CLK pins.  A container
+# that mounts the repo copies (tools/die_plan/nomcap_libs, MANIFEST.json) names them in OT_NOMCAP_DIR; the stock ORFS
+# INVBUF/SEQ RVT libraries a kit config selects are then replaced by the copy of the same base name (SEQ gains .gz).
+# OT_NOMCAP=0 keeps the stock libraries.  Kits generated with the switch on already name /work/nomcap in config.mk.
+proc ot_lib_nomcap {files} {
+  if {![info exists ::env(OT_NOMCAP_DIR)] || $::env(OT_NOMCAP_DIR) eq ""} {return $files}
+  if {[info exists ::env(OT_NOMCAP)] && [string tolower $::env(OT_NOMCAP)] in {0 off no false}} {return $files}
+  set out {}; set n 0
+  foreach f $files {
+    set t [file tail $f]
+    if {[string match /OpenROAD-flow-scripts/* $f] && [regexp {^asap7sc7p5t_(INVBUF|SEQ)_RVT_(TT|FF|SS)_nldm_[0-9]+\.lib(\.gz)?$} $t]} {
+      set c [file join $::env(OT_NOMCAP_DIR) [expr {[string match *.gz $t] ? $t : "$t.gz"}]]
+      if {![file isfile $c]} {error "OT_NOMCAP: $c missing (OT_NOMCAP_DIR mounted without the r708 copies)"}
+      lappend out $c; incr n
+    } else {lappend out $f}
+  }
+  puts "OT_NOMCAP r708 replaced $n stock INVBUF/SEQ libraries from $::env(OT_NOMCAP_DIR)"
+  return $out
+}
 proc ot_lib_resolve {corner {config /work/config.mk}} {
   if {![file isfile $config]} {error "OT_TIMING_LIBS: missing exact ORFS config $config"}
   set field [dict get {TT TC_LIB_FILES FF BC_LIB_FILES SS WC_LIB_FILES} $corner]
@@ -831,7 +879,7 @@ proc ot_lib_resolve {corner {config /work/config.mk}} {
     if {[regexp "^${field}\\s*\[:=\]\\s*(.*)$" $line -> value]} {lappend records $value}
   }
   if {[llength $records] != 1} {error "OT_TIMING_LIBS: missing or ambiguous make $field result"}
-  set files [regexp -all -inline {\S+} [lindex $records 0]]
+  set files [ot_lib_nomcap [regexp -all -inline {\S+} [lindex $records 0]]]
   return [ot_lib_validate $corner $files]
 }
 proc ot_lib_load {corner receipt {config /work/config.mk}} {
@@ -1834,7 +1882,11 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 parent_boundary_std_limit=parent_boundary_std_limit,
                                                 static_straps=declared_static_straps(disc.get("kit"), Path(disc["sdc"]).read_text()),
                                                 tt_vclk=disc.get("tt_vclk", "sdc")))
+    ncd = nomcap_dir()
+    if ncd is not None:                                  # NOMCAP-1118 r708: nominal clock-pin load (ot_lib_nomcap)
+        mounts.append(("nomcap", str(ncd)))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
+    vol += " -e OT_NOMCAP_DIR=/nomcap" if ncd is not None else " -e OT_NOMCAP=0"
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
     (od / "cmd.sh").write_text(cmd + "\n")
@@ -1844,7 +1896,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
         rc = subprocess.call(cmd, shell=True, stdout=lf, stderr=subprocess.STDOUT)
     text = (od / "sta.log").read_text(errors="replace")
     res = corner_result(parse_session(text))
-    res.update(corner=corner, rc=rc, macro_libs=mlibs, macro_missing=mmiss,
+    res.update(corner=corner, rc=rc, macro_libs=mlibs, macro_missing=mmiss, clock_pin_cap=nomcap_label(od / "libraries.json"),
                errors=re.findall(r"\[ERROR[^\n]*", text)[:5])
     if ftd:
         res["ft_arcs"] = ft_parse(text)
@@ -2585,7 +2637,8 @@ def summary_line(rec):
     return (f"{rec.get('name')}: {rec.get('verdict')}{prof} | TT setup {g('setup_tt', 'wns_ps')} | FF hold "
             f"{g('hold_ff', 'wns_ps')} (sdc {g('hold_ff', 'sdc_wns_ps')}) | SS setup (info) {g('ss', 'setup_wns_ps')} | "
             f"pair skew TT/FF {ps['tt']:.1f}/{ps['ff']:.1f} (spread info {pf['tt']}/{pf['ff']}) | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "
-            f"sdc_lint {g('sdc_lint', 'verdict')} face_guard {g('face_guard', 'verdict')}")
+            f"sdc_lint {g('sdc_lint', 'verdict')} face_guard {g('face_guard', 'verdict')}"
+            f" | clock pin cap {(rec.get('policy') or {}).get('clock_pin_cap', 'range')}")
 
 
 # ---- CLI -----------------------------------------------------------------------------------------------------------
@@ -2676,6 +2729,10 @@ def cmd_run(a):
                                "routed TT pin-register mean (COORD 11-08 02:06, OWNER 11-03 insertion band -> die STA)"}
                               if disc.get("tt_vclk") == "rebind" else {}),
                            hold_overlay="set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+                           clock_pin_cap=("nominal-r708" if nomcap_dir() is not None else "range"),
+                           clock_pin_cap_rule=("OWNER r708 (NOMCAP-1118): nominal input-pin load, no rise/fall_capacitance_range, on "
+                                               "clock buffer/inverter input pins and sequential CLK pins (tools/die_plan/nomcap.py, "
+                                               "nomcap_libs/MANIFEST.json); data pins keep the range; per corner: corners.<c>.clock_pin_cap"),
                            derate="none in the verdict (OWNER 12.24b/c: setup uncertainty 0, no spice clock factor; "
                                   "hold uncertainty per policy); ocv5_* = flat late 1.05 / early 0.95, information only",
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",

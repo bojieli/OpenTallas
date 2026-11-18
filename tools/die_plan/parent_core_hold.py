@@ -333,6 +333,8 @@ def run(a):
         script.write_text(make_session(corner,parent,top,expanded,st,'/work/constraint.sdc',a.receiver,master,bits,out))
         command = [*a.docker.split(), 'run','--rm','--memory',str(a.mem)+'g','--memory-swap',str(a.mem)+'g']
         for host,container in mounts.items(): command += ['-v',host+':'+container+('' if host==str(out) else ':ro')]
+        ncd = SO.nomcap_dir()  # NOMCAP-1118 r708: nominal clock-pin load, as signoff.py
+        command += ['-v',str(ncd)+':/nomcap:ro','-e','OT_NOMCAP_DIR=/nomcap'] if ncd is not None else ['-e','OT_NOMCAP=0']
         # OpenROAD's database linker flattens hierarchy and requires a loaded
         # technology.  The same pinned image ships standalone OpenSTA, whose
         # hierarchical network preserves the exact receiver boundary pins.

@@ -66,6 +66,25 @@ proc ot_lib_validate {corner files} {
   }
   return $files
 }
+# NOMCAP-1118 (OWNER r708): nominal input-pin load on clock buffer/inverter cells and sequential CLK pins.  A container
+# that mounts the repo copies (tools/die_plan/nomcap_libs, MANIFEST.json) names them in OT_NOMCAP_DIR; the stock ORFS
+# INVBUF/SEQ RVT libraries a kit config selects are then replaced by the copy of the same base name (SEQ gains .gz).
+# OT_NOMCAP=0 keeps the stock libraries.  Kits generated with the switch on already name /work/nomcap in config.mk.
+proc ot_lib_nomcap {files} {
+  if {![info exists ::env(OT_NOMCAP_DIR)] || $::env(OT_NOMCAP_DIR) eq ""} {return $files}
+  if {[info exists ::env(OT_NOMCAP)] && [string tolower $::env(OT_NOMCAP)] in {0 off no false}} {return $files}
+  set out {}; set n 0
+  foreach f $files {
+    set t [file tail $f]
+    if {[string match /OpenROAD-flow-scripts/* $f] && [regexp {^asap7sc7p5t_(INVBUF|SEQ)_RVT_(TT|FF|SS)_nldm_[0-9]+\.lib(\.gz)?$} $t]} {
+      set c [file join $::env(OT_NOMCAP_DIR) [expr {[string match *.gz $t] ? $t : "$t.gz"}]]
+      if {![file isfile $c]} {error "OT_NOMCAP: $c missing (OT_NOMCAP_DIR mounted without the r708 copies)"}
+      lappend out $c; incr n
+    } else {lappend out $f}
+  }
+  puts "OT_NOMCAP r708 replaced $n stock INVBUF/SEQ libraries from $::env(OT_NOMCAP_DIR)"
+  return $out
+}
 proc ot_lib_resolve {corner {config /work/config.mk}} {
   if {![file isfile $config]} {error "OT_TIMING_LIBS: missing exact ORFS config $config"}
   set field [dict get {TT TC_LIB_FILES FF BC_LIB_FILES SS WC_LIB_FILES} $corner]
@@ -75,7 +94,7 @@ proc ot_lib_resolve {corner {config /work/config.mk}} {
     if {[regexp "^${field}\\s*\[:=\]\\s*(.*)$" $line -> value]} {lappend records $value}
   }
   if {[llength $records] != 1} {error "OT_TIMING_LIBS: missing or ambiguous make $field result"}
-  set files [regexp -all -inline {\S+} [lindex $records 0]]
+  set files [ot_lib_nomcap [regexp -all -inline {\S+} [lindex $records 0]]]
   return [ot_lib_validate $corner $files]
 }
 proc ot_lib_load {corner receipt {config /work/config.mk}} {

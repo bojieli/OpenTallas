@@ -31,6 +31,7 @@ A violation prints OT_LIMIT <name> ..., is written to RESULT.json and the exit c
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -133,7 +134,14 @@ def libs_from_receipt(path):
     libs = [x["path"] for x in json.loads(Path(path).read_text())["libraries"]]
     if not libs:
         raise SystemExit("empty library list in %s" % path)
-    return libs, [x for x in libs if x.startswith("/OpenROAD-flow-scripts/")]
+    # NOMCAP-1118 r708: /nomcap/ = the sign-off's nominal-clock-pin-cap copies of the stock INVBUF/SEQ libraries
+    return libs, [x for x in libs if x.startswith(("/OpenROAD-flow-scripts/", "/nomcap/"))]
+
+
+def nomcap_mount(cmd_sh):
+    """the sign-off corner's /nomcap mount (r708 liberty copies), reused by every container that reads its libraries"""
+    m = re.search(r"-v (\S+):/nomcap:ro", Path(cmd_sh).read_text()) if Path(cmd_sh).is_file() else None
+    return ["-v", "%s:/nomcap:ro" % m.group(1)] if m else []
 
 
 def patch_session(text, corner):
@@ -279,7 +287,7 @@ def main(argv=None):
     (out / "ins" / "obs.tcl").write_text(OBS)
 
     # 3. insert, 4. incremental route of the touched nets only
-    common = ["docker", "run", "--rm"] + user
+    common = ["docker", "run", "--rm"] + user + nomcap_mount(so1 / "tt" / "cmd.sh")
     if run(common + ["-v", "%s:/in:ro" % (out / "in"), "-v", "%s:/out" % (out / "ins"), "-v", "%s:/ro:ro" % ro, "-v", "%s:/work:ro" % kit,
                      a.image, OPENROAD, "-no_init", "-exit", "/out/drv.tcl"], out / "ins" / "drv.log"):
         return finish(3, "insert failed (ins/drv.log)")

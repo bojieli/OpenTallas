@@ -222,6 +222,13 @@ def lib_dir(arg=None):
 def corner_libs(corner, libdir=None, extra=()):
     d = lib_dir(libdir)
     out = [str(d / f.format(c=corner)) for f in ORFS_LIBS]
+    # NOMCAP-1118 (OWNER r708, default ON, OT_NOMCAP=0 = stock): INVBUF + SEQ from the nominal clock-pin-cap copies
+    if os.environ.get("OT_NOMCAP", "1").strip().lower() not in ("0", "off", "no", "false"):
+        nd = Path(__file__).resolve().parent / "nomcap_libs"
+        if not (nd / "MANIFEST.json").is_file():
+            raise SystemExit(f"die_sta: OT_NOMCAP on (r708) but {nd}/MANIFEST.json is missing")
+        out = [str(nd / (Path(x).name + ("" if x.endswith(".gz") else ".gz")))
+               if re.match(r"asap7sc7p5t_(INVBUF|SEQ)_RVT_", Path(x).name) else x for x in out]
     out += [x.format(c=corner, corner=corner, cl=corner.lower()) for x in extra]
     missing = [x for x in out if not Path(x).is_file()]
     if missing:
