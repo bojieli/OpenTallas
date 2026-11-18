@@ -78,6 +78,8 @@ CAP = 96          # depth cap: a data path deeper than this is a loop (reported)
 ELEMS = ('ot_v41_rom_elem_q_qxpq_w10', 'ot_v41_rom_elem_q_qxpq_w10_gb', 'ot_v41_rom_elem_q_qxpq_w10_gb_split')
 BOUND_EXTRA = {}  # --bound-plan: plan-derived stages per seam (never perturbed by a control); expectation side
 SEAM_EXTRA = {}  # --bound-plan: as-built seam instance (u_s01, ...) -> register stages added after its 2 flops
+RD_NET = {}      # --schedule-relay-depth: net bit -> stages a relay_depth relay row adds after that relay output
+RD_PIN = {}      # --schedule-relay-depth: (end-point cell, port, bit index) -> stages a relay_depth sink row adds at that pin
 SROOT = [None]   # selected-source root (--source-root: the bind's own frame root, layer_prog/frame_root.py); None = ROOT
 
 
@@ -323,9 +325,83 @@ def relay_depth_rows(plan, master, frame_parts=None):
     return [(t, r) for t in sorted(types) for r in (plan.get('partition_types', {}).get(t, {}).get('relay_depth') or [])]
 
 
-def trace(yjs, top, seam_extra=None):
+def _san(name):
+    """bind's leaf-name form of an instance path (tools/die_plan/bind.py sv_id): u_r0.u_t0__payload -> u_r0_u_t0_payload"""
+    return re.sub(r'_+', '_', re.sub(r'[^A-Za-z0-9_]', '_', name)).strip('_')
+
+
+def relay_depth_extra(rows, master):
+    """FABLE-FIX-S81-BANKLEAF 11-18 (--schedule-relay-depth, opt-in): [(type, row)] of relay_depth_rows() ->
+    {band 'u_r<k>': {(leaf, port, side, lo, hi): D}}.  The rows of every type of one band must be the same set (the leaf name
+    with or without the content instance u_r<k>_ is the same leaf): one schedule per master cannot carry depths that differ
+    between frame instances (tools/die_plan/relay_depth.py merge --equalise makes them equal)."""
+    per = collections.defaultdict(dict)
+    for t, r in rows:
+        k = re.match(re.escape(master) + r'_r(\d)', t).group(1)
+        leaf = re.sub(r'^u_r%s_' % k, '', r['inst'])
+        side = r.get('side', 'relay')
+        lo, hi = (r.get('bits') or [0, None]) if side == 'sink' else (0, None)
+        key = (leaf, r.get('port', 'i' if side == 'sink' else 'o'), side, lo, hi)
+        per[(f'u_r{k}', t)][key] = int(r['D'])
+    out = {}
+    for (band, t), d in sorted(per.items()):
+        if band in out and out[band] != d:
+            raise ValueError(f'relay_depth rows of {master} band {band} differ between its types (at {t}); one schedule per '
+                             'master cannot carry them (relay_depth.py merge --equalise)')
+        out[band] = d
+    return out
+
+
+def relay_depth_index(mod, extra):
+    """-> (net bit -> D, bit -> [(cell-name prefix, D)], (cell, port, bit index) -> D) of relay_depth_extra() on a traced frame.
+    A relay row delays every load of the relay's o net; a sink row on a flattened station delays the port's bits into the
+    cells of that station only; a sink row on an end point (black box) delays that pin.  A row that names nothing raises."""
+    cells = mod['cells']
+    nn = {k.lstrip('\\'): v for k, v in mod['netnames'].items()}
+    cn_of = {k.lstrip('\\'): k for k in cells}
+    paths = {}
+    for name in list(cn_of) + list(nn):
+        parts = name.split('.')
+        for i in range(2, len(parts) + 1):
+            p = '.'.join(parts[:i])
+            paths.setdefault((parts[0], _san('.'.join(parts[1:i]))), p)
+    net, edge, pin = {}, collections.defaultdict(list), {}
+    for band, rows in extra.items():
+        for (leaf, port, side, lo, hi), d in rows.items():
+            p = paths.get((band, leaf))
+            if p is None:
+                raise ValueError(f'relay_depth row {band}.{leaf}.{port}: no such instance in the traced frame')
+            if p in cn_of:                               # an end point (black box): the stages sit at its pin
+                if side != 'sink':
+                    raise ValueError(f'relay_depth relay row on the end point {p}')
+                bits = cells[cn_of[p]]['connections'].get(port)
+                if bits is None:
+                    raise ValueError(f'relay_depth row {p}.{port}: no such pin')
+                for k in range(lo, (len(bits) - 1 if hi is None else hi) + 1):
+                    pin[(cn_of[p], port, k)] = d
+                continue
+            w = nn.get(f'{p}.{port}')
+            if w is None:
+                raise ValueError(f'relay_depth row {p}.{port}: no such net in the traced frame')
+            if side == 'sink':
+                for b in w['bits'][lo:(len(w['bits']) if hi is None else hi + 1)]:
+                    if isinstance(b, int):
+                        edge[b].append((p + '.', d))
+            else:
+                for b in w['bits']:
+                    if isinstance(b, int):
+                        net[b] = d
+    return net, edge, pin
+
+
+def trace(yjs, top, seam_extra=None, rd_extra=None):
     mod = yjs['modules'][top]
     xbits = seam_extra_bits(mod, seam_extra) if seam_extra else {}
+    rd_net, rd_edge, rd_pin = relay_depth_index(mod, rd_extra) if rd_extra else ({}, {}, {})
+    RD_NET.clear()
+    RD_NET.update(rd_net)
+    RD_PIN.clear()
+    RD_PIN.update(rd_pin)
     fanout = collections.defaultdict(list)       # bit -> [(cell, port, index)]
     cells = mod['cells']
     dirs = {}
@@ -384,6 +460,9 @@ def trace(yjs, top, seam_extra=None):
             c = cells[cn]
             t = c['type']
             con = c['connections']
+            if rd_extra:                         # relay_depth stages between this bit and this load (dep is local below)
+                dep = dist[(bit, lab)] + rd_net.get(bit, 0) + rd_pin.get((cn, port, k), 0) + \
+                    sum(d_ for pre, d_ in rd_edge.get(bit, ()) if cn.lstrip('\\').startswith(pre))
             if t in FF:
                 if port == 'D':
                     q = con['Q'][k]
@@ -436,13 +515,17 @@ def pin_labels(cells, labels, cn, port, which=None):
     if which is not None:
         bits = [bits[which]]
     out = set()
-    for b in bits:
-        out |= labels.get(b, set()) if isinstance(b, int) else set()
+    base = 0 if which is None else (which % len(cells[cn]['connections'][port]))
+    for k, b in enumerate(bits):
+        if not isinstance(b, int):
+            continue
+        x = RD_NET.get(b, 0) + RD_PIN.get((cn, port, base + k), 0)     # relay_depth stages in front of this end-point pin
+        out |= {(lab, d + x) for lab, d in labels.get(b, set())} if x else labels.get(b, set())
     return out
 
 
-def measure(yjs, top, seam_extra=None):
-    mod, cells, kind, labels = trace(yjs, top, seam_extra)
+def measure(yjs, top, seam_extra=None, rd_extra=None):
+    mod, cells, kind, labels = trace(yjs, top, seam_extra, rd_extra)
     by = collections.defaultdict(list)
     for cn, m in kind.items():
         by[m.split('$')[0]].append(cn)
@@ -782,6 +865,10 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--work', type=Path)
     ap.add_argument('--mem-gb', type=int, default=24)
+    ap.add_argument('--schedule-relay-depth', action='store_true',
+                    help='opt-in (FABLE-FIX-S81-BANKLEAF 11-18): trace the bound plan relay_depth rows as stages (rows equal '
+                         'over the types of a band, else refused) instead of the RELAY_DEPTH_UNSCHEDULED fail; the frame '
+                         'bench on that schedule is still required before it is used')
     ap.add_argument('--frame-instance', help='exact selected die instance; requires --bound-plan and binder map')
     ap.add_argument('--bound-plan', type=Path, default=None,
                     help='trace at this plan\'s bound fint seam depths and check against it (relay/type-safe event)')
@@ -867,7 +954,12 @@ def main():
     die_text = '\n'.join((sroot() / f).read_text() for f in netlists)
     selected_json, selected_variants = selected_station_variants(selected_json, ab_top, ab, die_text, HARD_PARAMS(), a.frame_instance)
     (work / f'{ab_top}.selected.json').write_text(json.dumps(selected_json))
-    meas_ab = measure(selected_json, ab_top, dict(SEAM_EXTRA) or None)
+    rd_extra = relay_depth_extra(rd_rows, m) if (a.schedule_relay_depth and bound is not None and rd_rows) else None
+    meas_ab = measure(selected_json, ab_top, dict(SEAM_EXTRA) or None, rd_extra)
+    RD_NET.clear()
+    RD_PIN.clear()
+    if rd_extra:
+        bound['relay_depth_scheduled'] = {b_: len(r_) for b_, r_ in rd_extra.items()}
     internal_profile = None
     if a.internal_visibility_profile is not None:
         if a.bound_plan is None or not a.frame_cohort:
@@ -906,7 +998,7 @@ def main():
     if a.source_root is not None:
         sched['source_root'] = str(sroot())
     fails += pf
-    if bound is not None and bound['relay_depth_rows']:
+    if bound is not None and bound['relay_depth_rows'] and not bound.get('relay_depth_scheduled'):
         fails.append(f"RELAY_DEPTH_UNSCHEDULED {bound['relay_depth_rows']} relay_depth rows (+{bound['relay_depth_cycles']} "
                      f"stages) on {m} band types are in the bound plan but not in the traced as-built frame: the frame "
                      "schedule does not carry them (S81-D8E-LAT 11-18)")
