@@ -22,7 +22,7 @@ What a positions-only delta may touch (and nothing else; every other key is REJE
     partition_types[T].contents[*].{origin_um, orient}
     partition_types[T].internal_stations[i].{regs_um, bit_sites_um, leaf_um}   (same number of stations and banks)
     partition_types[T] clock.tap_um, reset.tap_um, clock.taps[i].xy, clock.edge_clocks[i].tap_um, collector relay xy,
-      count_straps[i].sites_um, ft_slots[i].regs_um (key "type_positions": {dotted path: value}; same shape, inside the outline)
+      count_straps[i].sites_um, ft_slots[i].regs_um / bit_sites_um (key "type_positions": {dotted path: value}; same shape, inside the outline)
 These feed only physical code (gen_phys placement/pins/clock taps, kit_istations FIRM sites, G0 geometry, the reset
 relay SITES).  bind.py / gen_rtl.py read hard_cores[].origin_um in one place (the CORE_SPLIT reset gate picks the
 wavefront tap nearest the core centre) and reset_tree.for_type reads core boxes as obstacles; `rtl_projection` therefore
@@ -50,8 +50,9 @@ TOP_KEYS = {"format", "type", "base_plan_sha256", "hard_cores", "contents", "int
 # check proves the bind inputs derived from them (reset tree incl. relay names, tap names, gate taps) did not move.
 import re  # noqa: E402
 POS_PATHS = re.compile(r"^(clock\.tap_um|reset\.tap_um|clock\.edge_clocks\.\d+\.tap_um|clock\.taps\.\d+\.xy"
-                       r"|clock\.landing_contract\.collector_tree\.relays\.\d+\.xy|count_straps\.\d+\.sites_um|ft_slots\.\d+\.regs_um)$")
-POS_LEAF = ("tap_um", "xy", "sites_um", "regs_um")
+                       r"|clock\.landing_contract\.collector_tree\.relays\.\d+\.xy|count_straps\.\d+\.sites_um|ft_slots\.\d+\.regs_um"
+                       r"|ft_slots\.\d+\.bit_sites_um)$")      # S81-GEOM-OPUS 11-18: ft bit sites ride with their regs
+POS_LEAF = ("tap_um", "xy", "sites_um", "regs_um", "bit_sites_um")
 HC_KEYS = ("origin_um", "orient", "track_offset_um")
 CONTENT_KEYS = ("origin_um", "orient")
 STATION_KEYS = ("regs_um", "bit_sites_um", "leaf_um")
@@ -177,7 +178,7 @@ def apply_overlay(raw, ov):
     for dotted, val in sorted((ov.get("type_positions") or {}).items()):
         if not POS_PATHS.match(dotted):
             errs.append(f"type_positions {dotted!r} rejected (allowed: tap_um / taps[].xy / edge_clocks[].tap_um / collector "
-                        "relay xy / count_straps[].sites_um / reset.tap_um)")
+                        "relay xy / count_straps[].sites_um / reset.tap_um / ft_slots[].regs_um|bit_sites_um)")
             continue
         node, ok = t, True
         parts = [int(x) if x.isdigit() else x for x in dotted.split(".")]

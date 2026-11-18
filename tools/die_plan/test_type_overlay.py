@@ -227,6 +227,22 @@ def test_ft_slots_regs_um_positions_roundtrip_and_shape_guard(plan, tmp_path):
     assert set(b) - set(a) == {"mid/type_overlay.json"} and all(k.startswith("mid/") for k in a if a[k] != b[k])
 
 
+
+def test_ft_slots_bit_sites_um_positions_roundtrip_and_shape_guard(plan):
+    """S81-GEOM-OPUS 11-18: a core move re-sites ft registers AND their bit sites (core_place --ft-resite); both are
+    positions of the same slot with the same shape, so the overlay carries them; a changed bit count stays a plan event"""
+    slot = plan["partition_types"]["mid"]["ft_slots"][0]
+    slot["regs_um"] = [[100.0, 100.0], [200.0, 100.0]]
+    slot["bit_sites_um"] = [[[100.0, 104.32], [100.0, 108.64]], [[200.0, 104.32], [200.0, 108.64]]]
+    moved = [[[x + 8.64, y] for x, y in run] for run in slot["bit_sites_um"]]
+    new = TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid", "type_positions": {"ft_slots.0.bit_sites_um": moved}})
+    assert new["partition_types"]["mid"]["ft_slots"][0]["bit_sites_um"] == moved
+    ov = TO.overlay_from_plans(plan, new, "mid")
+    assert ov["type_positions"] == {"ft_slots.0.bit_sites_um": moved} and "ft_slots" not in ov
+    with pytest.raises(TO.OverlayError, match="shape"):
+        TO.apply_overlay(plan, {"format": TO.FORMAT, "type": "mid",
+                                "type_positions": {"ft_slots.0.bit_sites_um": [moved[0], moved[1][:1]]}})
+
 def test_missing_check_modules_warn_and_are_recorded(plan, monkeypatch, capsys):
     import builtins
     real = builtins.__import__
