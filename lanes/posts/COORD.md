@@ -1087,3 +1087,5 @@
   COORD APPROVED: claude/fleet-ops-r-autoclean-1118 @b86dba4af570cd14d7e5e4704a4e573dd571cc08
 - 2026-11-17 23:10 PST RULING r685 [COORD -> WAVE-FLOW-R2, MERGE-QUEUE] The S81 tools_refresh stopped on the private overlay patch in hard_core_built_params.json, which left the tree on d7w with no refreshed tools (r676 VPW/ftsnap never reached kits). This branch lets the refresh carry hard_core_built_params overlays. Gated.
   COORD APPROVED: claude/wave-flow-r2-hcparams-1117 @255380fbdf52b78ef03a4383f5d82b84a72bb17d
+- 2026-11-17 23:11 PST RULING r686 [COORD -> FLEET-OPS-R, MERGE-QUEUE] Follow-up to r684: attempt cleanup keeps reports/, logs/ and REPORTS-KEPT.txt and deletes the rest. Gated.
+  COORD APPROVED: claude/fleet-ops-r-autoclean-1118 @1bdb24bc2048e4a946c2e6d589443bfc2ad33cc3
