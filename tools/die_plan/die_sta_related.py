@@ -224,9 +224,26 @@ IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 REG_CELL = "DFFHQNx1_ASAP7_75t_R"
 DIE_PART = "die"
 
+def reg_seq_lib(corner, d):
+    """NOMCAP-1118 (OWNER r708, default ON): the SEQ liberty the register characterisation reads -> (container path, nomcap?).
+    The nominal clock-pin-cap copy is staged into the mounted dir d, as the kit flow and sign-off read it."""
+    stock = f"/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_{corner}_nldm_220123.lib"
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import nomcap
+    if not nomcap.enabled():
+        return stock, False
+    name = nomcap.replacement(Path(stock).name)
+    src = nomcap.LIB_DIR / name if name else None
+    if not src or not src.is_file():
+        raise SystemExit(f"die_sta_related: OT_NOMCAP on (r708) but {src} is missing")
+    import shutil
+    shutil.copyfile(src, Path(d) / name)
+    return f"/w/{name}", True
+
+
 REG_TCL = r"""
 set C $::env(C)
-read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_${C}_nldm_220123.lib
+read_liberty $::env(SEQLIB)
 read_verilog /w/reg.v
 link_design t
 create_clock -name clk -period %(period)s [get_ports clk]
@@ -256,7 +273,8 @@ def characterise(out, corner, slew, load_ff, mem="4g"):
     d = out / "regchar"
     d.mkdir(parents=True, exist_ok=True)
     cache = d / f"{corner}.json"
-    key = dict(corner=corner, slew_ps=round(slew, 3), load_ff=round(load_ff, 4), cell=REG_CELL, image=IMAGE)
+    seqlib, nom = reg_seq_lib(corner, d)
+    key = dict(corner=corner, slew_ps=round(slew, 3), load_ff=round(load_ff, 4), cell=REG_CELL, image=IMAGE, nomcap=nom)
     if cache.exists():
         c = json.loads(cache.read_text())
         if c.get("key") == key:
@@ -264,7 +282,7 @@ def characterise(out, corner, slew, load_ff, mem="4g"):
     (d / "reg.v").write_text(REG_V % dict(c=REG_CELL))
     (d / "reg.tcl").write_text(REG_TCL % dict(period=PERIOD_PS))
     dk = ["docker"] if os.access("/var/run/docker.sock", os.W_OK) else ["sudo", "docker"]
-    cmd = dk + ["run", "--rm", "--memory", mem, "-e", f"C={corner}", "-e", f"SLEW={slew:.3f}", "-e", f"LOAD={load_ff:.4f}",
+    cmd = dk + ["run", "--rm", "--memory", mem, "-e", f"C={corner}", "-e", f"SEQLIB={seqlib}", "-e", f"SLEW={slew:.3f}", "-e", f"LOAD={load_ff:.4f}",
                 "-v", f"{d.resolve()}:/w", IMAGE, "bash", "-c",
                 "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; "
                 "S=$(ls /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/sta 2>/dev/null || which sta); "
