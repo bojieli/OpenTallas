@@ -472,3 +472,4 @@
 - 2026-11-18 08:02 PST STATE tools sync recovered after 19 min (rt/current e8731b01bcf7)
 - 2026-11-18 08:05 PST HOST-REPORT 2026-11-18 08:05 | tolera L20.08/112 units0 free1189G | key-ca L57.62/112 units202 free100G | dear-c L83.61/128 units452 free35G | loved- L68.37/96 units50 free1976G | outgoi L286.82/96 units293 free721G | renewe L232.57/96 units169 free1353G | civil- L234.16/96 units131 free287G
 - 2026-11-18 08:10 PST DISK-RATE epyc2 /srv/opentallas-scratch: free 445 GB, falling 238 GB/h, floor 50 GB in 1.7 h (cron disk_rate.py; read-only)
+- 2026-11-18 08:10 PST DISK-RATE epyc8 /srv/opentallas-scratch2: free 726 GB, falling 209 GB/h, floor 50 GB in 3.2 h (cron disk_rate.py; read-only)
