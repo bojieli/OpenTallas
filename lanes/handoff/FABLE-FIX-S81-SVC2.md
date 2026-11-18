@@ -139,3 +139,4 @@ A: hold ECO hslice_mm4 passed the limits (plan made, ECO route running); mergex_
 - Export s81/ot_s81_svc_hslice__h16mm3r_1118 on rtx-pro + AGIdock, hashes equal (odb ff6847e18317, record b6c0ed37be6c), INDEX rows on both.
 - hslice_mm15r (HM 15) also finished: DRC 0, TT +101.34, FF r2r -0.00 (on the edge; NOT signed, kept as evidence that 15 ps leaves no room). hslice_mm6 stopped by ot-heavy-stop --unit oth-ubuntu-1836395-1794983787 after a dry run (52+ route iterations, redundant).
 - mergex still open: mm6 (epyc10) now in GRT; mm3r + mm15r (epyc7) in CTS hold repair. NOMCAP-1118 may re-sign mergex_mm3b under r708; hslice needs no re-sign any more.
+- 11-18 05:2x PST: waiters re-armed on mergex_mm6 (epyc10) and mergex_mm15r (epyc7); mergex_mm3r waiter was already armed. Order for mergex sign-off: 30 ps forms first (mm3r, mm6), 15 ps (mm15r) only if both fail.
