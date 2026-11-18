@@ -93,3 +93,17 @@ Read lanes/handoff/HEAD-R3.md for the NF15e -> NF15f decision (hop halving + cor
   7. publish_gate.py run (dry gen on the pilot).
   8. apply_reviewed_tree_marker.py --expect-source <NF15d2 tree> --expect-event head_rp21z20NF15d2r1.
   9. Release hd_lep0N and hd_mesh.
+
+## (8) 11-18 night: NF15f APPLIED
+- Live HEAD tree: /srv/opentallas-scratch2/claude/kw45/src_head_pin_8569788b0328_nf15f_d2, manifest 06dc1568, main 8569788b, event head_rp21z20NF15f, gen_hosts epyc9/epyc8/epyc10/intel1. Plan prep/NF15f/prep/source_plan.json de6c7105 (= rs8 65606a72 with tree paths renamed to _d2); receipt results/head_native_release_nf15f (digest 5108da57).
+- How it was built: delta from NF15d2, hardlinked (tree_nf15f/mk_overlay.py, mk_pack.py, mk_pack_d2.py, build_tree2.sh, build_d2.sh). Overlay: HEAD prep/data carried; tools from main; XO_HOP rtl (tile, tile_native, tb_mini) kept because main lacks it. Intermediate trees _nf15f (link base, replicated) and _nf15f_d1 (contained FAIL, unused; retire via ot-delete when convenient).
+- Gates on _d2: static schema/PRE/G0/hashes/contained PASS; strict bind PASS; cohort 26/26; LATCHECK 329/329; kit_rtl lep0N/mesh/serdes PASS; publish_gate run PASS incl. dry gen hd_lep0N (record autopilot/publish_gate/s81_head/06dc1568...json); tree_check guard ok/full_ok.
+- Apply receipt lanes/handoff/s81_head_atomic_apply_1794965012010366819.json. Pilot record pilot-s81_head-06dc15683502: pilot_items [hd_lep0N, hd_mesh], release gen_pilot:s81_head:06dc15683502 (first gen pass releases the rest; gen only).
+- Open:
+  - real hd_lep0N GRT is the verdict on the 367 allocator nets (x 880-1160 / 1230-1472); post the gcell map if it overflows;
+  - HEAD-TYPES-R4 rebuilds ot_s81hd_lep_pair at KCRED 28;
+  - final r564 labels from the NF15f clock census;
+  - reset-seam timing;
+  - die STA on tree2;
+  - XO_HOP rtl should be merged to main;
+  - ot_wait .scope FAILED false negative (reported).
