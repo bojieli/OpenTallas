@@ -827,6 +827,14 @@ try:
         out["errors"].append("refused: a running container mounts the kit"); done()
 except Exception as e:
     out["errors"].append("refused: docker check failed %s" % e); done()
+# ROUTED-KEEP 11-18 (COORD; QC-TYPES-R3 sle_hc0__cl929603c0 cl38badc56 / cl4baa7c9c, the S81 late-ECO near misses): a ROUTED attempt is the
+# input of the late ECO, a re-sign and the export.  Its results (6_final.odb / .spef, 5_2_route.odb, config.mk) stay until it is SIGNED and
+# exported or a newer routed attempt of the same type supersedes it (kit_slim strip owns that cleanup); a failed verdict never deletes them.
+routed = glob.glob(os.path.join(K, "run", "results", "asap7", "*", "base", "6_final.odb"))
+if routed and a.get("keep_routed", True):
+    out["preserved"] = sorted(routed)
+    out["reason"] = "routed attempt (6_final.odb): kept for the late ECO / re-sign / export until SIGNED+exported or superseded"
+    done()
 # A re-admission can fail before touching a prior GRT/CTS/route checkpoint.
 # That physical input is not failed output of this attempt and must survive.
 cutoff = a.get("preserve_before")
