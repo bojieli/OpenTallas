@@ -1,3 +1,175 @@
+# FABLE-CLOSURE-STRATEGY 2026-11-18 03:20 PST (0320): delta on 23:20
+
+Reviewer: FABLE-CLOSURE-STRATEGY-0320 (Fable). Read-only: no jobs launched, nothing killed or deleted. Technical PD only. HBM parked.
+Gate (R-MINIMAL): DRC 0, routed TT >= -42 ps, internal reg-to-reg FF hold >= 0, die bind + LATCHECK.
+Marking: **V** = I opened the log or file this round (03:14 to 03:40 PST). **R** = reported by the named lane, not opened. **P** = my proposal or estimate.
+All lanes were stopped 00:30 to 03:10; most "running" items below are builds that kept going with no reader.
+
+## 0. Headline
+
+1. **S81 strip leaves: 14 of the first 21 route verdicts are a pre-route setup stop of -244 to -734 ps, and it is structure, not settings (V).** Worst classes in the kits: VS core `x_wa` -> `u_vp_g_wr1_u_w.wdo_q` (t16 -715 / 1,025 ends; t50 -684 at CTS), and reset into hard-core `rst_n` pins (`u_vsw/rst_n` -298 to -425 on t15 t26 t38 t50). The XR stage that was decided for this family on 11-17 is not in any of these kits (t50: 0 `ot_s81sl_xr` instances, `VERILOG_DEFINES = -DSYNTHESIS`). The other 7 verdicts are GRT congestion (t25 class).
+2. **The GRT optimism is a serdes rck-tree problem on both dies, not a fleet problem (V).** hd_serdes, three forms routed overnight: sd9h GRT TT -0.24 -> routed -45.34; sd9pa -10.89 -> -49.62; sd9pb2 -0.89 -> -92.27. Over 85 other kits with both a `grt_policy.json` and a later `signoff.json` (epyc7/9/10), TT moves mostly within +-25 ps and FF hold within +-10 ps; the bad outliers are QC sle_fe_v3 (+39 -> -29), S81 col_h9_r2 (-19 -> -47) and QC slw_hc1 (-14 -> -41).
+3. **hd_serdes sd9h is 3.3 ps from the gate (V):** DRC 0, TT -45.34 / 119 ends, FF hold -31.02 / 169 ends. sd9pa: DRC 0, TT -49.62 / 8 ends. Both are ECO-sized on setup.
+4. **lep_pair vE28 is 12 flops from sign-off (V):** DRC 0, TT -0.66, internal FF hold -9.7 on 12 ends (the other 2,739 hold ends start at ports). No ECO has been started on it. It is the only thing hd_lep0N waits for.
+5. **KV D22s failed its strict bind at 23:58 (V); this is the third D22 plan.** `R8_STRAP_PAD kv3_pc_v1__cl7f648944 slg.vreq: pad 18 > strap capacity 15`, `TYPE_SPLIT` 12 instances -> 7 variants, `EMIT clock landing`; R8 recheck 64 unequal groups, 2 inversions. Rider gate3: 30 `R8_STALE`, LATCHECK 2,404 / 2,404. Meanwhile the wave ran PV kits on KV-HG6 with no tail copies (pv_v6: 0 `ot_dp_dly_keep`), and 4 of them tripped the CLAND band breaker.
+6. **The svc hold misses are not ECO-sized (R, SVC2 03:14).** hslice_mm4 ECO failed (1,092 negative ends, incremental route failed); mergex_mm3b refused (1,567 ends); hslice_mm7 at 50 ps died at CTS (53,294 hold buffers, utilisation over 100 %). My 23:20 lever 4 item 1 was wrong for these two cores. V: hslice_mm6 is in detailed route (471 violations in the current iteration), mergex_mm6 in CTS hold repair at 30.9 k buffers.
+
+## 1. Levers ranked by closure impact
+
+| # | die | lever | unblocks | owner |
+|---|---|---|---|---|
+| 1 | S81 | Strip leaf: XR stage on the VS -> VPW write, registered reset at the core `rst_n` pins, in one plan/RTL event | 14 stopped strip types now; the same class sits in all 75 leaves | FABLE-FIX-S81-STRIP, S81-DIE-R3 |
+| 2 | HEAD | lep_pair vE28 hold ECO (12 ends) -> sign -> view pack -> hd_lep0N | hd_lep0N, then the HEAD die | FABLE-FIX-HEAD-LEP0N, HEAD-PLAN-R4 |
+| 3 | HEAD, S81 | Serdes rck: close sd9h / sd9pa by post-route clock ECO; size rck pads on extracted arrivals; never decide these types at GRT | hd_serdes; 11 S81 serdes types | FABLE-FIX-HEAD-SD9F, FABLE-FIX-S81-SERDES2, CAPSKEW-ECO |
+| 4 | KV | D22: fix the `slg.vreq` pad (18 > 15) before a fourth bind; regenerate the rider R8 table from that bind; PV bands by `band_capacity`; hold PV kits | PV 16, pc 6, the die event | FABLE-FIX-KV-HG, KV-R3 |
+| 5 | S81 | Strip south-face pin-row congestion (t25 class, 7 types) and col relay reach, as generator rules | 7 strip types; col 216 | FABLE-FIX-S81-STRIP, S81-TYPES-R3 |
+| 6 | QC | N4 with flt_bank stations + sited tail copies; own tt_ctlm | st_a 11 types; tt_ctlm types | QC-PLAN-R3, TAIL-REPL |
+| 7 | S81 | svc hslice / mergex: sign mm6 if it passes; if not, cut the hold demand at its source instead of adding buffers | 2 cores, then the svc shell | FABLE-FIX-S81-SVC2 |
+| 8 | KV | Hub types over the size OpenROAD closes: split hub_C and hub_Wi on signed ring cores; waive hub_Wo | 3 hub types | KV-HUBWO-SPLIT rows, FABLE-FIX-KV-HG |
+
+### Lever 1. S81 strip leaf: the stops are two structural paths
+
+**Evidence (V).**
+- `kit_wave_stages.tsv`, current plan, strip route rows: 14 `FAIL_POSTCTS SETUP_TRIAGE` (iqf__t1 -537, kv_leaf t4 -260, t11 -289, t15 -350, t16 -734, t26 -483, t27 -515, t30 -315, t38 -463, t44 -288, t50 -445, t54 -471, t55 -450; last one t55 at 02:55), 7 GRT congestion (t25 t29 t35 t4 t40 t41 t68), t51 DPL-0033.
+- epyc8 `.../items/ot_s81sl_leaf__t50/attempt_7`, `4_cts_final.rpt`: wns -684.45, tns -336,321. Path `u_bound.u_u_vs/clk` -> `x_wa[0]` leaves the core at 401.7 ps, then 38 cells (31 buffers, 7 gates) in three long hops (401 -> 911, 951 -> 1,288, 1,351 -> 1,576) to `wdo_q[0][82]`, arrival 1,603 against 919 required.
+- Same kit: `OT_VPW_BANK placed 317 FFs FIRM, nearest-bank max 11.328um`. So the bank placement works and does not close the path: the capture flops sit at the bank, the source core and the arbiter logic do not.
+- Same kit: asynchronous group, `u_lpad_leafdn_i0.q[0]` -> 22 buffers -> recovery at a `_DFF_PN0_`, -41.42.
+- `tt_setup_repair_grt.log` last line per kit: t16 -714.4 `wdo_q`; t15 -297.8, t26 -329.4, t38 -420.2, t50 -424.7 all `u_*vsw/rst_n`; kv_leaf t4 -243.4 `u_vp_g_ln_7_u_l/rst_n`; t55 -291.1 `g_u_lf4_u_vp_cf.native_memory`. t16 then crashes: `[ERROR RSZ-0074] Failed to build tree from global routes`.
+- All these kits: `OT_HOLD_FF_MARGIN = 0` (plan 30c40fae, before the D8d key).
+
+**Root cause.** The VS core spends 383 ps clk-to-`x_wa` inside the core (R, 11-16 review; V 401.7 at the pin). The five-writer arbiter then has about 430 ps for 400 to 1,000 um of wire plus 7 gates. No placement can close that. The reset class is the same shape: a relay flop far from the core pin it drives. The repair cannot help either path and spends its time (and crashes) trying.
+
+**Fix.**
+1. S81-DIE-R3 + FABLE-FIX-S81-STRIP: put the XR form (r432 `ot_s81sl_xr`, +1 cycle on `x_w` and `x_wd` together, pre-approved) into the next S81 event for every leaf type, with bank placement kept. I did not find XR in D8d (P: it is not there; the 03:13 D8d result does not name it). If D8d is already bound, make it D8e, not a per-type patch.
+2. Reset: one `ot_dp_rrelay` stage sited within 50 um of each hard-core `rst_n` pin (vsw, vp_g_ln), from the existing relay-site rows; the 64-cycle reset hold makes the cycle free.
+3. FABLE-FIX-S81-STRIP: class table of the 14 kits from `4_cts_final.rpt` (not from the gate estimate) before anything is relaunched. t15 shows kit GRT -17.6 against an estimate of -350 (R); find what the estimate adds, but that question does not change t16 / t50, which are real at CTS.
+4. WAVE-FLOW-R2: `tt_setup_repair.tcl` must catch RSZ-0074 and keep the pre-repair DB; today the crash hides the real number.
+
+### Lever 2. HEAD: sign lep_pair vE28 by ECO
+
+**Evidence (V).** epyc9 `head-lep0n-opus/lep_ve28/kit/ot_s81hd_lep_pair_kit/signoff/signoff.json` (23:27): NOT SIGNED, DRC 0, antenna and PG PASS, `setup_tt -0.66 / 1`, `hold_ff -177.0 / 2751` of which `std_min_start.port 2739`, `nonport_n 12`, `nonport_wns -9.7`. TT insertion 517 to 528 ps; pair skew min 87.3. No ECO directory exists in the kit. hd_lep0N p2 (diagnostic, old windows) is at CTS wns -379.62, tns -97,009: not a verdict.
+
+**Fix.**
+1. FABLE-FIX-HEAD-LEP0N: `hold_eco_internal_run.py` (r583) with the top-layer route fix b6e97307 on the routed vE28 DB now; hei3 closed 7 -> 0 pads in three rounds the same way. Sign, export.
+2. HEAD-PLAN-R4: one pack = vE28 views (`bb.v` KCRED 28) + plan_grown2 bands + related-pair windows; take the four pair tap offsets from the signed core's `clock_contract.json` (insertion about 527, not the 450 target).
+3. M8 grant (R): track-level lock 4,321 -> 3,178; hd_tile (signed) 1,069. Types do not re-sign; if the shape test shows real overlap the die clock legs move. Still open with FABLE-DIE-HEAD.
+4. hd_mesh `mesh_w1` (related windows) is in CTS (V 03:20); read its cross-tap hold class against 11,732 ends / -125.74.
+
+### Lever 3. Serdes rck trees: decide on extraction, close by clock ECO
+
+**Evidence.**
+- S81 H17 (R census; V the eight census files exist, epyc9 `fable-fix-s81-serdes2/drtx/census/`): GRT -27.17 / +0.12, routed -117.47 / -55.85; data nets median -14 ps; rck sinks spread 1,848 to 2,051 routed; lpl_r.rc -> o 144 ps, lpl_2_w.wc -> b 179 ps.
+- HEAD hd_serdes (V, epyc10 `fable-fix-head-sd9h/<form>/hd_serdes/{grt_policy.json,signoff_fable/signoff.json}`):
+
+| form | GRT TT / ends | routed TT / ends | GRT FF hold | routed FF hold / ends | DRC |
+|---|---|---|---|---|---|
+| sd9h (PW16 + PW8) | -0.24 / 1 | -45.34 / 119 | -24.34 | -31.02 / 169 | 0 |
+| sd9pa (PPCYC) | -10.89 / 1 | -49.62 / 8 | -17.77 | -33.68 / 432 | 0 |
+| sd9pb2 (SPCYC) | -0.89 / 2 | -92.27 / 228 | -35.12 | -46.66 / 107 | 0 |
+| sd9pc2 (both) | +0.67 / 0 | none: `DRT-0255` | -21.12 | none | - |
+
+- sd9h vclk reference latency 488.8 at GRT, 446.4 routed: the tree is 42 ps faster under extraction, as on H17 (74 to 94).
+- Fleet (V, 85 kit pairs): the effect is small elsewhere. HEAD types (insertion 478 to 521) move TT by -9 to +11 typically; S81 slice_station (280 to 350) by -44 to +90; QC by -68 to +61.
+
+**Root cause.** The rck balance pads are sized on placement RC and confirmed on GRT RC. A 2 ns, 63-stage tree turns a few percent of clock RC error into 50 to 180 ps between branches (R, SERDES2). Ordinary CTS trees of 300 to 520 ps do not show it.
+
+**Fix.**
+1. FABLE-FIX-HEAD-SD9F: sd9h needs 3.3 ps on 119 ends; sd9pa needs 7.6 ps on 8 ends. Run `capskew_eco_run.py` on both routed DBs, then the internal hold ECO. The 100-pad hold limit will refuse 169 / 432 ends: split by rck branch and run two rounds rather than raise the limit blind. First to pass signs. sd9pb2 is out.
+2. I withdraw my 23:20 line "stop PPCYC/SPCYC once sd9h shows TT >= -42 at GRT". No rck-tree type is decided at GRT.
+3. CAPSKEW-ECO + WAVE-FLOW-R2: for kits with `OT_S81_RCK_BALANCE` (S81 serdes 11, hd_serdes), make the flow: route -> extract -> rck pad re-size on SPEF sink arrivals -> incremental route -> hold ECO. The GRT policy stays as a triage only.
+4. FABLE-FIX-S81-SERDES2 / S81-DIE-R3 (R, agreed): cmem read register, centre-root trunk, t42 four-tap split in the S81 event; pilot t13 only after that.
+5. sd9pc2: `DRT-0255` is the M6 pair-row class; hd_serdes kits need the `pg_row_guides.tcl` hook (r598) that S81 serdes has. Do not rerun unchanged.
+6. Triage margin elsewhere (P): a type with GRT TT between -42 and +30 is not safe; plan the CAPSKEW ECO for it rather than a rebuild (col_h9_r2, slw_hc1, sle_fe_v3 are this case).
+
+### Lever 4. KV D22
+
+**Evidence (V).** epyc7 `kv-hg-opus/d22s/gate/gate.out` (07:58Z): PRE PASS, G0 PASS (0 errors, 2,403 warnings), `RC_BIND 1` with 3 errors as in headline 5, `RC_R8CHECK 1`, LATCHECK not run (no `*_bound_top.sv`). `kv-pv-rider/gate3/gate.out`: `BIND_ERRORS 30 {'R8_STALE': 30}` (`pvw_0__u_T0Q0_45_r0.b as-built 2 bound 9, table ... bound 5`), LATCHECK PASS. Wave 01:37 to 01:48: `OT_CLAND no legal nonoverlapping row/site in reserved band` for `u_cland_fstart_ft0_o` (pv_v6), `ft26_o` (pv_v2, pv_v2n), `u_cland_raw_fs_o_pvw...` (pv_v4, literal-local-reset). Sited proof epyc9 `kv-hg-opus-site/proof/kv3_pv_v12`: placed; `OT_TAIL_SITE copies 7009 of 7040 sited ... max_hop 441.3 um over_380 1205 core_crossing 0 in_halo 0`; no timing number yet.
+
+**Root cause.** The pc `slg.vreq` pad needs depth 18 and the R8 strap carries 15, so instances of one type bind differently and the emit inventory changes. The rider's R8 table was built from an older bind. The PV writer-start bands are sized for the pre-split flop count.
+
+**Fix (FABLE-FIX-KV-HG).**
+1. One plan station on `slg.vreq` for pc_EN / pc_ES so no pad exceeds 15 (or a 5-bit strap for that bus only). Then the bind; G0 cannot see this class, so do not compose again before it.
+2. Rebuild the rider R8 table from the passing bind; R8_STALE is a stale input, not a design error.
+3. Run `band_capacity.py measure` (r681, all dies) on the 16 PV types and grow the writer-start and raw-reset bands in the same plan (HEAD needed 11 rects).
+4. Hold all `^kv3_pv` items on KV-HG6: they have no tail copies, so their timing is the unsplit -1,197 class and 4 already fail the band.
+5. Sited proof: read CTS reg-to-core on pv_v12. The 1,205 copies over 380 um need one more stage (K+1) in D22; decide that from the CTS number, not before.
+
+### Lever 5. S81 generator rules: face pin row and relay reach
+
+**Evidence.** Strip (R, STRIP 03:4x; V the 7 GRT rows): t25 has 595 `leafdn_i0` input regs in 12 full rows at y 4.32 to 7.29 on 598 pins in 124 um; 101 congested gcells at x 360 to 480, y 0 to 7; M6 568 + M8 347. Pilot `t25_ns2` (row stride 2) is running. Col (R, S81-TYPES-R3 23:21): poly relay hops 446 to 746 um in every col family (limit 405); col_h9_r0_p2 stops on 2 unfitted groups (252 / 206 um). 22 direct wires of 412 to 640 um (R, COORD brief; I found no generator post). Col after the marker fix (V): 10 rows running, none past place yet, 87 old place FAIL rows; col_h9_r2 reached sign-off with DRC 2, TT -46.87, hold_ff -62.46, `unconstrained` FAIL.
+
+**Fix.**
+1. FABLE-FIX-S81-STRIP: if `t25_ns2` gives GRT 0, make the stride a generator default from pins/um on the face window (no per-type plan rows), and apply to the 6 other types in one relaunch. t29 is the landing-ring variant (`cland_strip_rows`).
+2. S81-TYPES-R3: gate `OT_RELAY_POLY` max hop over 405 um at generation, and insert stations so every poly hop is <= 405 um (+1 cycle each). The 22 direct wires get the same rule. Otherwise all 216 col types pass place and stop at CTS.
+3. col_h9_r2: name the 2 DRCs and the unconstrained endpoints first; the 4.9 ps of TT is a CAPSKEW case.
+
+### Lever 6. QC N4
+
+**Evidence.** (R, TAIL-REPL 23:19; V the keep kit exists on epyc9) st_a split + keep + sited: CTS wns -901.4 -> -580.7, tns -160,939 -> -123,092; `rs_n_c_p` gone; new worst `u_r2.flt_bank_o -> u_r0.flt_bank_i` (819 to 1,000 um, R). (R, QC-PLAN-R3 03:15) N4: flt_bank 2 + 2 stations need `claude/qc-intra-stations-1118` (proof bind running, READY about 05:00); coll_core 43 taps + t115 split composing; tt_ctlm stage unowned.
+
+**Fix.**
+1. QC-PLAN-R3: N4 carries tail split + keep + sites, flt_bank stations and the tap rows in one event, as planned. Before the apply, place ONE st_a kit to CTS from the N4 bind and read wns; the acceptance is better than -250 with no path over 380 um unregistered.
+2. COORD: tt_ctlm (31 cells in `u_core`, about 253 ps wire + 700 ps logic, R) needs an RTL stage and has no lane; without it those types fail N4 as they failed N3.
+3. Routed QC rows already inside TT (V: sle_st_b_v1 +7.0 and -32.3, slw_st_b_v1 -25.4 and +9.5, slw_stm_v3 -4.8, slw_hc1 -41.1): their open item is internal hold; give them the r692 hold repair and the r583 ECO, not a rebuild.
+
+### Lever 7. S81 svc hslice / mergex
+
+**Evidence.** Headline 6. mergex_mm6 CTS hold repair: 36,993 endpoints under margin (R), 30.9 k buffers at +10.6 % area and still running (V).
+
+**Root cause (P).** Tens of thousands of short paths cannot be a skew accident; the cores are built with a 30 ps margin on top of the 25 ps hold uncertainty in the SDC, so the repair is asked for 55 ps on every zero-logic stage.
+
+**Fix (FABLE-FIX-S81-SVC2).**
+1. Read hslice_mm6 at route end; sign it if DRC 0 and internal hold >= 0.
+2. If mm6 fails: do not go to 50 ps (mm7 proved it does not fit). Check whether sign-off measures internal hold with the 25 ps uncertainty; if it does, build at margin 0 to 10 with r692 (worst + 1 ps floor, bounded re-repair), which removes most of the 30 k buffers and the route pressure that broke the mm4 ECO.
+3. Count the endpoints per launch-capture clock-leaf pair in mm4; if a few leaf pairs carry most of the 1,092, a leaf-level clock pad is the ECO, not 1,092 data pads.
+
+### Lever 8. KV hub types
+
+**Evidence (V, wave).** kv3_hub_Wo 406,241 cells, kv3_hub_C 773,818: `OT_NATIVE_CELL_CAP SPLIT-NEEDED`. kv3_hub_Wi: `FAIL_PREFLOOR kit_preflight PROVISIONAL[qkd_hr_core_order, _peer, _prompt, qkd_hr_ingest_eng :routed]` and 1.155 M cells (R).
+
+**Fix.** Waive hub_Wo (1.5 % over; QC signed 351 k and r696 waived 500 k). hub_C and hub_Wi are in the range where every past run failed (0.53 to 1.31 M): split on signed ring masters plus dly cores as KV-HUBWO-SPLIT measured for hub_Wo (rows exist for D23; 419,971 -> 199,876 synth cells). hub_Wi also needs its four qkd_hr cores signed, not routed-provisional. These belong in D23, not in D22.
+
+## 2. Evidence I opened this round
+
+| item | file | result |
+|---|---|---|
+| failure_breakdown 03:14 | intel2 | S81 42/394, HEAD 23/26, QC 24/130, KV 6/56 (unchanged since 23:10) |
+| strip route verdicts | intel2 `autopilot/kit_wave_stages.tsv`; epyc8 / epyc10 / intel1 / epyc2 kits `FAIL_POSTCTS`, `tt_setup_repair_grt.log`, t50 `4_cts_final.rpt`, `config.mk`, `1_synth_odb.v` | lever 1 |
+| hd_serdes four forms | epyc10 `fable-fix-head-sd9h/*/hd_serdes/{grt_policy.json,signoff_fable/signoff.json,run_route.log}` | lever 3 table |
+| GRT vs routed, 85 kit pairs | epyc7 / epyc9 / epyc10 wave kits, `grt_policy.json` + later `signoff.json` | headline 2 |
+| lep_pair vE28 | epyc9 `head-lep0n-opus/lep_ve28/kit/.../signoff/signoff.json` | lever 2 |
+| hd_lep0N p2, hd_mesh mesh_w1 | epyc9 `4_cts_final.rpt`; `4_1_cts.tmp.log` | -379.62 at CTS; in CTS |
+| KV D22s, rider | epyc7 `kv-hg-opus/d22s/gate/gate.out`, `kv-pv-rider/gate3/gate.out` | lever 4 |
+| KV PV kit | epyc7 KV-HG6 `kv3_pv_v6/attempt_5` bound RTL | 0 keep copies |
+| KV sited proof | epyc9 `kv-hg-opus-site/proof/kv3_pv_v12/run_place.log` | OT_TAIL_SITE line; placed |
+| svc reruns | epyc10 `fable-fix-s81-svc2/svc/build/{hslice_mm6,mergex_mm6}` | DRT; CTS hold repair |
+| H17 census | epyc9 `fable-fix-s81-serdes2/drtx/census/` | 8 files present, not re-aggregated |
+| VPW marker | intel2 `tree_switch_s81.json` | key gone; last VPW fail 00:32 |
+
+## 3. Stop list (the 23:20 list stands, plus these)
+
+1. S81 strip: no relaunch of the 14 SETUP_TRIAGE types on a plan without the XR stage and the core-pin reset relay. No gate-threshold change for them.
+2. Serdes (both dies): no go / no-go from `grt_policy.json`. No new H-form or sd9 route before the clock ECO on the routed DBs in hand.
+3. hd_serdes: no sd9pb2 follow-up (-92). No unchanged sd9pc2 route.
+4. lep_pair vE28: no rebuild; ECO the routed DB. No hd_lep0N judgement from p2.
+5. KV: no fourth D22 compose before the `slg.vreq` pad is 15 or less. No PV kit on KV-HG6. No cell waiver for hub_C or hub_Wi.
+6. svc: no hslice or mergex run above 30 ps margin; no post-route data-pad ECO on a DB with more than about 100 negative ends.
+7. Col: no mass launch before the 405 um hop rule is in the generator; the first col past place must be read at CTS.
+
+## 4. Not checked
+
+- Whether D8d (plan e291d6a8) carries the XR form or a reset relay at the core pins; lever 1 item 1 assumes not.
+- The cause of the t15 estimate gap (-17.6 kit GRT against -350 gate estimate); the endpoint classes of 9 of the 14 strip kits (only last repair lines read).
+- Whether sign-off internal hold includes the 25 ps SDC uncertainty (lever 7 rests on it).
+- The 2 DRCs and the unconstrained endpoints of col_h9_r2. Any col kit past place. The col direct-wire generator (no post found).
+- `t25_ns2` result. hslice_mm6 / mergex_mm6 final results.
+- KV: the CLAND band logs themselves (wave lines only); pv_v12 timing after place; band fill numbers for PV.
+- QC: every N3 route result beyond the six rows in the GRT/routed table; the N3 clock-chain proof; the intra-station proof bind.
+- HEAD: hd_host_e route FAIL (GRT-0116 at 01:48 on NF15f) was not opened; the M8 per-instance shape test; die hold on real views (0 measured pairs on HEAD and S81).
+- The H17 census numbers are FABLE-FIX-S81-SERDES2's; I confirmed the files, not the aggregation.
+
+---
+
 # FABLE-CLOSURE-STRATEGY 2026-11-17 23:20 PST (2320): delta on 21:20
 
 Reviewer: FABLE-CLOSURE-STRATEGY-2320 (Fable). Read-only: no jobs launched, nothing killed or deleted. Technical PD only. HBM parked.
