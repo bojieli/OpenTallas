@@ -364,6 +364,9 @@ module ot_qfd_xs_leaf #(
     // (the read request's pins are registered per tile: its held request and its select registers)
     reg          wv, cv;
     reg          wep, cep;
+    // WEP-FANOUT 11-18 (FABLE-PD-QC-1240 R3, sle_hc1__cl7d360508 routed -59.5 ps): one wep register fed the write enables of 256 entries
+    // x 16 bits.  wep_f = 8 kept copies of the same register, one per (tile, 32 entries); wep itself still drives wo_ep / the pin chain.
+    (* keep *) reg [7:0] wep_f;
     reg [5:0]    woff;
     reg [63:0]   wm;
     reg [1023:0] wd;
@@ -377,7 +380,7 @@ module ot_qfd_xs_leaf #(
         if (!rst_n) begin wv <= 1'b0; cv <= 1'b0; end
         else begin wv <= w_v; cv <= c_v; end
     always @(posedge clk) begin
-        wep <= w_ep; woff <= w_off; wm <= w_m; wctl <= w_ctl; cep <= c_ep;
+        wep <= w_ep; wep_f <= {8{w_ep}}; woff <= w_off; wm <= w_m; wctl <= w_ctl; cep <= c_ep;
     end
     generate if(FILL_PIPE==0)begin : g_fill_one_edge
     assign wo_v = wv; assign wo_ep = wep; assign wo_off = woff; assign wo_m = wm; assign wo_d = wd;
@@ -432,7 +435,7 @@ module ot_qfd_xs_leaf #(
             localparam integer EE = ge >> 6, EP = ge & 63;
             wire cond = (dd == 2'b00) ? (tf[EP] == tw[EP]) : (dd == 2'b01) ? (tf[EP] && !tw[EP]) :
                         (dd == 2'b10) ? (!tf[EP] && tw[EP]) : 1'b0;
-            wire we   = wv && (wep == EE) && en && cond && wm[EP];
+            wire we   = wv && (wep_f[gt*4 + (ge >> 5)] == EE) && en && cond && wm[EP];
             reg [15:0] m;
             reg        v;
             always @(posedge clk) if (we) m <= wd[16*EP +: 16];
