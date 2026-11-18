@@ -75,12 +75,13 @@
   "rows_proofs": [
    "physical/die_plan/qwen_compute/plan_of_record/zz_s29_qc103_s4q9n2b.rows_proof.json"
   ],
-  "bind_out_relocation": {
+  "bind_out_relocation_superseded_n4": {
    "from": "epyc2:/srv/opentallas-scratch3/claude/qc-plan-r3-n3-1117/bind/bind_s29q103S4Q9N3BR",
    "to": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR",
    "receipt": "/srv/opentallas-scratch2/claude/kw45/qcbind_pin_eb1e73448bd0_s4q9n3/bind_s29q103S4Q9N3BR/RELOCATED.json"
   }
  },
  "keep_gen_hosts": false,
- "note": "QC-PLAN-R3 N3 adopt (COORD 19:2x / FABLE-CLOSURE-STRATEGY (1)): N2B folded into N3 (N2B never applied). Event s29q103S4Q9N3 releases the N3 holds (cb tap0 also needs qc-n3-halo-refresh, st_a mpl0034, nb-slot, sc street); plan_event N1B keeps the N1B releases. | 23:1x: intel1 added to gen_hosts (current derive_gen_hosts set; tree replicated --link-from n1b_d2 + bind copied, guard ok on all 3) | 23:2x: + epyc2 (derive_gen_hosts moves between epyc8/epyc2): the tree and bind are on all 4 hosts that hold N1B _d2"
+ "note": "QC-PLAN-R3 N3 adopt (COORD 19:2x / FABLE-CLOSURE-STRATEGY (1)): N2B folded into N3 (N2B never applied). Event s29q103S4Q9N3 releases the N3 holds (cb tap0 also needs qc-n3-halo-refresh, st_a mpl0034, nb-slot, sc street); plan_event N1B keeps the N1B releases. | 23:1x: intel1 added to gen_hosts (current derive_gen_hosts set; tree replicated --link-from n1b_d2 + bind copied, guard ok on all 3) | 23:2x: + epyc2 (derive_gen_hosts moves between epyc8/epyc2): the tree and bind are on all 4 hosts that hold N1B _d2",
+ "status": "SUPERSEDED by s29q103S4Q9N4 (applied 11-18, receipt qwen_compute_atomic_apply_1795022519140881757.json); the relocation source work dir is history. marker.tree / bind_out (live N3 kits) stay current."
 }
