@@ -1,0 +1,189 @@
+{
+ "accepted_errors": [
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type dsdv_slice_c1x_C__t8: 1646 ft bit sites in the 34.67-um channel x 0.00-34.67 y 34.57-449.29 = 1.04 of 45.6 tracks/um > 0.7",
+   "type": "dsdv_slice_c1x_C__t8"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type dsdv_slice_c1x_C__t9: 1369 ft bit sites in the 34.67-um channel x 0.00-34.67 y 34.57-449.29 = 0.87 of 45.6 tracks/um > 0.7",
+   "type": "dsdv_slice_c1x_C__t9"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type dsdv_slice_iq_C__t1: 1376 ft bit sites in the 34.67-um channel x 0.00-34.67 y 769.00-1183.72 = 0.87 of 45.6 tracks/um > 0.7",
+   "type": "dsdv_slice_iq_C__t1"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t13: 2534 ft bit sites in the 43.33-um channel x 0.00-43.33 y 838.09-1183.69 = 1.28 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t13"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t14: 297 ft bit sites in the 8.64-um channel x 337.07-345.71 y 673.96-898.60 = 0.75 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t14"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t17: 1549 ft bit sites in the 25.92-um channel x 535.81-561.73 y 838.09-1183.69 = 1.31 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t17"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t2: 3299 ft bit sites in the 34.56-um channel x 509.89-544.45 y 838.09-1183.69 = 2.09 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t2"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t2: 3190 ft bit sites in the 34.56-um channel x 509.89-544.45 y 829.45-1175.05 = 2.02 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t2"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t22: 3427 ft bit sites in the 34.56-um channel x 509.89-544.45 y 838.09-1183.69 = 2.17 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t22"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t22: 3302 ft bit sites in the 34.56-um channel x 509.89-544.45 y 829.45-1175.05 = 2.10 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t22"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t23: 1486 ft bit sites in the 25.92-um channel x 535.81-561.73 y 34.60-380.20 = 1.26 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t23"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t28: 669 ft bit sites in the 15.12-um channel x 296.03-311.15 y 34.60-149.08 = 0.97 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t28"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t34: 1768 ft bit sites in the 34.69-um channel x 0.00-34.69 y 77.80-423.40 = 1.12 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t34"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t43: 2490 ft bit sites in the 69.23-um channel x 0.00-69.23 y 69.16-414.76 = 0.79 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t43"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t44__clf6cf8492: 1439 ft bit sites in the 43.31-um channel x 0.00-43.31 y 337.00-451.48 = 0.73 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t44__clf6cf8492"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t46: 2514 ft bit sites in the 60.50-um channel x 345.71-406.21 y 838.09-1183.69 = 0.91 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t46"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t57: 2803 ft bit sites in the 60.50-um channel x 345.71-406.21 y 838.09-1183.69 = 1.02 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t57"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t57: 2499 ft bit sites in the 60.50-um channel x 345.71-406.21 y 622.09-846.73 = 0.91 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t57"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t67: 1486 ft bit sites in the 25.92-um channel x 535.81-561.73 y 34.60-380.20 = 1.26 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t67"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t71: 2098 ft bit sites in the 34.69-um channel x 0.00-34.69 y 829.45-1175.05 = 1.33 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t71"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t73: 1693 ft bit sites in the 34.56-um channel x 509.89-544.45 y 34.60-380.20 = 1.07 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t73"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t73: 1693 ft bit sites in the 34.56-um channel x 509.89-544.45 y 43.24-388.84 = 1.07 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t73"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t8: 598 ft bit sites in the 17.28-um channel x 872.77-890.05 y 423.94-553.54 = 0.76 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t8"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t9: 2362 ft bit sites in the 34.56-um channel x 509.89-544.45 y 34.60-380.20 = 1.50 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t9"
+  },
+  {
+   "check": "ft_channel_tracks",
+   "level": "ERROR",
+   "msg": "type ot_s81sl_leaf__t9: 2362 ft bit sites in the 34.56-um channel x 509.89-544.45 y 43.24-388.84 = 1.50 of 45.6 tracks/um > 0.7",
+   "type": "ot_s81sl_leaf__t9"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10500: s_0S_L0 segment carries 4464 bits on 6686 tracks = 0.67 > 0.6",
+   "part": "s_0S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 10750: s_6S_L0 segment carries 4186 bits on 6672 tracks = 0.63 > 0.6",
+   "part": "s_6S_L0"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 12500: s_0S_L1 segment carries 3654 bits on 5560 tracks = 0.66 > 0.6",
+   "part": "s_0S_L1"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 12750: s_0S_L1 segment carries 3654 bits on 5965 tracks = 0.61 > 0.6",
+   "part": "s_0S_L1"
+  },
+  {
+   "check": "cuts",
+   "level": "ERROR",
+   "msg": "horizontal cut at 20000: s_4N_L1 segment carries 3750 bits on 4064 tracks = 0.92 > 0.6",
+   "part": "s_4N_L1"
+  }
+ ],
+ "review": "S81-DIE-R3 2026-11-17: D6z (plan 30c40fae) on main 53e4ff8612 tools. G0 ERROR set = 30: the 5 die-cut identities of the reviewed D6 baseline (S81-D6R3-G0-BASELINE-1117, C4r3 588c4714), unchanged, plus 25 ft_channel_tracks identities. The ft_channel_tracks check came with main tools (r581). Those 25 are exactly the 25 channels of the 20 types held by hold_record s81-ft-channel-d6z-1117; D7 (strip rows) clears them, and D7z shows ft_channel_tracks 0. Cut fix = D8 (rigid macro moves, COORD-approved). 0 new identities otherwise.",
+ "reviewed_g0_sha256": "d8756ddc436db57f50eb3c1e0ab6b642fe43c7ba7f9a483d46d3150e2c4e7278",
+ "reviewed_g0_source": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d6z/r2/g0/g0_report.json",
+ "reviewed_plan_sha256": "30c40fae8ab285d621fec957020b73e8ea4087ffa6eb08625b703e23df10c91b",
+ "schema": "opentallas.publish_gate.g0_baseline.v1"
+}

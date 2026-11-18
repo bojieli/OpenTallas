@@ -1,0 +1,118 @@
+{
+ "hold_record": {
+  "cause": "ft-channel: N/S ft station bits over 0.70 of the vertical tracks in a channel beside a hard core (check.py ft_channel_tracks, 45.6 tracks/um, Fable t34 calibration); 25 channels in these 20 types on plan 0126890b and D6z 30c40fae (G0 ft_channel_tracks, main tools) (census epyc10 rows/f2s5_S81-DIE-R/d6/ft_channel_census_c4r3.json; t34 old-form GRT-0116 overflow 3516)",
+  "id": "s81-ft-channel-d6z-1117",
+  "items": [
+   "ot_s81sl_leaf__t22",
+   "ot_s81sl_leaf__t2",
+   "ot_s81sl_leaf__t9",
+   "ot_s81sl_leaf__t71",
+   "ot_s81sl_leaf__t17",
+   "ot_s81sl_leaf__t13",
+   "ot_s81sl_leaf__t23",
+   "ot_s81sl_leaf__t67",
+   "ot_s81sl_leaf__t34",
+   "ot_s81sl_leaf__t73",
+   "dsdv_slice_c1x_C__t8",
+   "ot_s81sl_leaf__t57",
+   "ot_s81sl_leaf__t28",
+   "ot_s81sl_leaf__t46",
+   "dsdv_slice_iq_C__t1",
+   "dsdv_slice_c1x_C__t9",
+   "ot_s81sl_leaf__t43",
+   "ot_s81sl_leaf__t8",
+   "ot_s81sl_leaf__t14",
+   "ot_s81sl_leaf__t44__clf6cf8492"
+  ],
+  "owner": "S81-DIE-R3",
+  "plan_sha": "30c40fae8ab285d621fec957020b73e8ea4087ffa6eb08625b703e23df10c91b",
+  "reason": "COORD dispatch FABLE-PD-S81-1100 A + r581: no GEN/GRT for strip/slice types over 0.70 on D6; FABLE-FIX-S81-STRIP re-slot (rows_d7_strip, every channel <= 0.70) lands as D7; S81-DIE-R3 posts RESULT ft-channel-d7 at D7 apply",
+  "release": [
+   "result:S81-DIE-R3:ft-channel-d7"
+  ]
+ },
+ "marker": {
+  "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+  "asbuilt_sha256": "1456eca70f1e91a0de4a855723ee7f12dd88b8b87d56f329bb76f29dbfc0170d",
+  "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
+  "bind_passed": true,
+  "bind_run": "epyc8:/srv/opentallas-scratch2/claude/s81-die-r3-e8/d6z/r2",
+  "bind_types": 395,
+  "config": {
+   "cancel_superseded": false,
+   "event": "3fa87b84b18",
+   "gen_args": [
+    "--hold-ff-margin",
+    "0",
+    "--max-wire-um",
+    "100",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json"
+   ],
+   "gen_host": "epyc8",
+   "gen_hosts": [
+    "epyc10",
+    "epyc8",
+    "intel1"
+   ],
+   "kit_rtl": {
+    "asbuilt": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/native_bind/asbuilt_run.json",
+    "bind_out": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/native_bind/out",
+    "mode": "bind",
+    "note": "S81-DIE-R3 2026-11-17 D6z on 0ce242a95176: strict bind 0 / LATCHECK 873/873 / G0 30 (5 cuts + 25 held ft). Revert: rollback_tree D5e 20ee09596c16"
+   },
+   "plan_event": "D6z",
+   "queue_src": "main@3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+   "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+   "tools_sha": "53e4ff86122acde7ce93821917724f95219503c2"
+  },
+  "die": "s81",
+  "die_gen_env": {
+   "OT_CLAND_STRIP_DENS": "1.0",
+   "OT_GRT_NONPORT_HOLD": "1",
+   "OT_GRT_POST_MAX_S": "0",
+   "OT_HOLD_STOP_PS": "-1000000",
+   "OT_MAX_BUFFER_PERCENT": "100",
+   "OT_PGCAP": "1",
+   "OT_PG_CELL_KEEPOUT": "0",
+   "OT_PG_DIE_PHASE": "1",
+   "OT_PG_PIN_CHECK": "1",
+   "OT_PG_TRACK_TRUTH": "1",
+   "OT_PG_TRACK_TRUTH_WIDE_SPACING": "1",
+   "OT_PLACE_MAX_FANOUT": "64",
+   "OT_PREGRT_FF_HOLD_AUTO": "-1",
+   "OT_S81_VPW_BANK": "1",
+   "OT_SIGNED_VIEW_SHA": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_inputs/signed_view_sha_s81.json",
+   "OT_TT_SETUP_REPAIR": "both"
+  },
+  "event": "3fa87b84b18",
+  "g0_baseline": {
+   "path": "/home/ubuntu/coord/lanes/handoff/S81-D6Z-G0-BASELINE-1117.json",
+   "sha256": "6f412682602ddc66ba6b7244997c9c307ecfb3cb789dbfa6d80199b270e37696"
+  },
+  "hosts": [
+   "epyc10",
+   "epyc8",
+   "intel1"
+  ],
+  "latcheck": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/latcheck.json",
+  "latcheck_passed": 873,
+  "manifest_hash": "0ce242a95176a332df5e26d747ee9d492b015bc02f9295768d170b775534715d",
+  "physical_qualified": false,
+  "plan": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_h2_2249.json",
+  "plan_event": "D6z",
+  "plan_sha256": "30c40fae8ab285d621fec957020b73e8ea4087ffa6eb08625b703e23df10c91b",
+  "preserve_holds": "All inherited holds preserved (strip-leaf s81-strip-gpl-d5, col waves, SerDes, t37 station-start); event key kept 3fa87b84b18 per FABLE-PLAN-S81-B6gF2s5f s7 (only plan_event changes), so no event-term carry",
+  "sidecar": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work/physical/die_plan/s81/plan_of_record/sidecar_new.json",
+  "sidecar_sha256": "98aa35e5a944ceba9dd92c7c7232143a29ef3fdbcbf216c37a20b58b054239ff",
+  "smoke": "PASS",
+  "source_causal_bound_qualified": false,
+  "src_manifest_sha": "0ce242a95176a332df5e26d747ee9d492b015bc02f9295768d170b775534715d",
+  "src_sha": "3c913dbdfb23d46e6efd5c985186c2b0f3b2a0e6",
+  "status": "D6z = D6b successor (supersedes D6b/D6c/D6x): D5c + D6 plan 0126890b re-planned to 30c40fae: (a) t51 native_e repointed to the r1116 recon view (own provenance, REPOINT_1117.json; parents bound to the rphase1116 pins; shared e/w taps on their first landing); (b) KITFIT-1116: kv_leaf__t1/__t3 VP SRAM pair moved rigidly (-98.28,-88.56)/(-124.2,+136.08), tap-legal; (c) bksel eco3 (OT_BKQ_ECO3): quarters cores/views/bksel_eco3_1117 OLL2/RFH2/HLAT1, control cores/views/bksel_c_qrx_1117 (r599) OLL2/SELOH1/RNF1/LQH1/QRX1, ledger bd1dc957, dead-input re-proof reprove31_eco3 PASS. Tools = main 53e4ff8612. Fresh elab, strict bind 0 / 395 types / 873 crossings, LATCHECK 873/873, PRE PASS, G0 30 = 5 inherited cuts + 25 held ft_channel_tracks. Kits GEN+lint PASS: bk_sel__t2 (config.mk OT_BKQ_ECO3), kv_leaf__t1, kv_leaf__t3, col_h10_r2 (config.mk OT_HOLD_FF_MARGIN 10 / OT_S81_SSTN_M5_BLOCK 1 / OT_GRT_PORT_HOLD_INCLUDE 1 / OT_PREGRT_HOLD_PORT_MARGIN 25; hold_sdc_guard.tcl, sstn_m5, grt_nonport in every kit). slice_station__t51 NOT released here (native_w PENDING abstract has no lib; signed rc51f repoint lands with D7w).",
+  "tools_note": "tools = main 53e4ff86122a (incl r572/r573 hold_eco, r579/r584 col, r581 ft_channel, r585/r588 shared kit files incl hold_sdc_guard.tcl, KITFIT-1116, r599 QRX) + registry hard_core_built_params.json eco3 quarter entry (scoped by lib_contains)",
+  "tools_sha": "53e4ff86122acde7ce93821917724f95219503c2",
+  "tree": "/srv/opentallas-scratch2/claude/kw45/src_s81_pin_3c913dbdfb23_d6z_1117_work",
+  "written_by": "S81-DIE-R3"
+ }
+}
