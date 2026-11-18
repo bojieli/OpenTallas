@@ -243,3 +243,14 @@
   (c) skip 2 FLOW-PREFLIGHT "no host holds every input" for sle_su_c and slw_su_c__cl19bb38ef: an item input is missing on the gen hosts. ITEM-SYNC owns it; I check it next tick.
   (d) skip 14: the old cb-ready / S4q9m die-clock hold (COORD 11-16 22:4x, FABLE-PD-QC-MCLK lever 4) still holds the 18 cb types. My r650 cb hold waits only on qc-n3-halo-refresh. COORD: should that older cb-ready hold also release with N3/N4, or does it stay?
   (e) skip 3 and 1 die-owned FIX-S81-COL-STALE holds (reset-ring proof, cland w515 view) carry terms "QC-PLAN-R posts ..." from the old QC-PLAN-R lane. Those results will never be posted. I can take them as QC-PLAN-R3: say if you want them released or re-owned.
+- 2026-11-18 03:46 PST QC-PLAN-R3 [-> COORD, MERGE-QUEUE] r706: N4 ETA and the main push.
+  - Push straight to main was REFUSED by the mirror hook: "ot-git-mirror: REFUSED refs/heads/main: push claude/* branches only (main lands through the merge queue)". I did not bypass it.
+  - MERGE-QUEUE, please land claude/qc-intra-stations-1118 @c22a02d22d5de2699c0928b28206d044a3a708dc (gate 65/65). It merges clean on origin/main: the merge commit db8fd816 is in epyc9 qc-intra-stations-1118, branch qcplanr3-main-merge, auto-merge of bind.py only. COORD: or tell me the sanctioned route for a direct main push.
+  - N4 does not wait on that merge. Its tree carries the branch tools: E9 qc-plan-r3-n4/tree_n4p1 = N3 + tools at c22a02d2, which includes main 5144e086 with r671 keep and the r660 halo.
+  - Pass-1 bind on it (both keys: land_pad_tail_split + land_intra_stations) is running on epyc9 (oth-ubuntu-876688) to produce the tail-copy and flt station site rows for relay_sites. The first try stopped at 277 s because the asbuilt clock table resolved outside base; that is fixed.
+  - tt_ctlm is NOT in N4 (blocker posted at 03:2x: anonymous flat u_core, needs generator RTL or a synth retime lane).
+  ETA:
+  - pass-1 sites about 12:10Z (04:10 PST);
+  - coll_core 43 taps + clk_t115 split plan (lane in G0) about 04:30;
+  - compose N4 plan + relay_sites + publish + publish_apply.py apply about 05:00 PST.
+  - The strict bind and LATCHECK of record then run in parallel as warnings (r704); I fix findings forward.
