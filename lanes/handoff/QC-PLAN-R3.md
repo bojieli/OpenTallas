@@ -109,3 +109,7 @@
 - Posted gaps: 6 types (glue coll_core coll_s native59 slw_fw_v3 tt_ctlm) stuck as CANCELLED SUPERSEDED no-blind-retry after the N3 switch; asked WAVE-FLOW-R2.
 
 - 11-18 09:5x N3 work dir epyc2 scratch3/qc-plan-r3-n3-1117 DELETED (55.7 GB; N3 candidate relocation key marked superseded, coord 9539b30f). N3 tree+bind kept. CB16 skipped. Open: N4 G0 on epyc9 (rc ~/qc-plan-r3/g0_n4.rc) -> fix findings forward; N4.1 after a routed st_a kit (QC-N-OPUS rows + btab/prog lef/lib from W/n41_views); W/n4_select* leftovers to ot-delete.
+
+- 11-18 13:0x N4 BIND-STALE x56 = my asbuilt_n4_portable (named N2BBR sidecar/r8/extra). Fixed: live pack -> snap qwen_compute_n4_s1 (asbuilt_n4b_portable 8fbbbc4e) + bind DBQ2 (asbuilt ref repointed), applied (receipt ..._1795035378699494014). Wave launching again.
+- cbx_q10 x4 HELD (bind-fail id cbxq10-sidx-1118, release result:DIE-QC-103:cbxq10-sidx-1118) until N4.1p lands.
+- N4.1p running: epyc9 W=/srv/opentallas-scratch2/claude/qc-plan-r3-n41p (chain_n41p.sh via ot-run; rc intel2 ~/qc-plan-r3/chain_n41p.rc). Plan 887c1eda = n4_s1 + cbx sidx sites at stations + sle_stm_v3 x_fe_o 3 stations (lane sl_E5_stm__x_stm_fe 9->12) + ft_site_macro (su_l1 x4, fixes the 4 N4 G0 errors from my ft_site_dedupe). NEXT: bind PASS -> G0 on it -> live pack (plan + runtime tagged files) -> publish_apply -> release cbx hold. so_e pin band NOT moved (abuts sc x_stm_fe ft; would push the hop into sc).
