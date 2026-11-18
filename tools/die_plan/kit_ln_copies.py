@@ -93,7 +93,8 @@ def parse_native(text):
         decl[nm] = (d, int(w) + 1 if w else 1)
     if set(decl) != set(ports):
         raise LnCopyError(f"native ports {ports} vs declared {sorted(decl)}")
-    mems = re.findall(r"^\s*reg\s+\[(\d+):0\]\s+(\S+)\s+\[(\d+):0\]\s*;", text, re.M)
+    # S81-KITRTL-NETMAP-1118: newer yosys writes the array as `(* mem2reg *) reg [W:0] \\native_memory [N:0];`
+    mems = re.findall(r"^\s*(?:\(\*[^*]*\*\)\s*)?reg\s+\[(\d+):0\]\s+(\S+)\s+\[(\d+):0\]\s*;", text, re.M)
     if len(mems) != 1:
         raise LnCopyError("native module must declare exactly one memory array")
     ww, mname, depth = int(mems[0][0]) + 1, mems[0][1], int(mems[0][2]) + 1
@@ -114,7 +115,10 @@ def parse_native(text):
     stm = re.compile(r"\s*if\s*\(WR_EN\[(\d+)\]\)\s*" + me +
                      r"\s*\[(32'd\d+|WR_ADDR\[\d+:\d+\])\]\[(\d+):(\d+)\]\s*<=\s*(WR_DATA\[\d+\])\s*;")
     writes, i, body = [], 0, blocks[0][1]
-    while True:
+    if re.search(r"<=\s*\(+" + me, body):
+        writes = _masked_writes(body, mname, ww, depth)
+        i = len(body)
+    while i < len(body):
         m = stm.match(body, i)
         if not m:
             if body[i:].strip():
@@ -129,6 +133,53 @@ def parse_native(text):
     if not writes:
         raise LnCopyError("native module has no write statements")
     return dict(module=mm.group(1), ports=ports, decl=decl, ww=ww, depth=depth, reads=reads, writes=writes)
+
+
+def _masked_writes(body, mname, ww, depth):
+    """Word-masked constant-address write form of newer yosys (S81-KITRTL-NETMAP-1118, t56 vp_cf): one statement per write port
+        M[w][0 +: W] <= (((M[w][0 +: W] & ~m0) | (D0 & m0)) & ~m1) | (D1 & m1) ...;
+    with m_k = WR_EN[e +: W] or ({W{(32'dA) == (32'dw)}} & WR_EN[e +: W]) and D_k = WR_DATA[o +: W].  The chain is re-built from the
+    parsed terms and must equal the statement text exactly (fail closed).  A term whose constant address A differs from w drops out;
+    a kept term k writes bit b of word w when WR_EN[e + b], with WR_DATA[o + b], later terms and statements winning: exactly the
+    per-bit `if (WR_EN[i]) M[w][b:b] <= WR_DATA[j]` list of the older form, in the same order."""
+    me = re.escape(mname)
+    st = re.compile(r"\s*" + me + r"\s*\[32'd(\d+)\]\[0 \+: (\d+)\]\s*<=\s*(.*?);[ \t]*\n?", re.S)
+    term = re.compile(r"\(WR_DATA\[(\d+) \+: (\d+)\] & (\(\{(\d+)\{\(32'd(\d+)\) == \(32'd(\d+)\)\}\} & WR_EN\[(\d+) \+: (\d+)\]\)|WR_EN\[(\d+) \+: (\d+)\])\)")
+    writes, i = [], 0
+    while i < len(body):
+        if not body[i:].strip():
+            break
+        m = st.match(body, i)
+        if not m:
+            raise LnCopyError(f"unsupported native write statement: {body[i:i + 120].strip()!r}")
+        w, W, rhs = int(m.group(1)), int(m.group(2)), m.group(3).strip()
+        if W != ww or w >= depth:
+            raise LnCopyError(f"masked write of word {w}: not one full word")
+        ref, expr, kept = f"{mname} [32'd{w}][0 +: {W}]", None, []
+        for t in term.finditer(rhs):
+            o, tw, mask = int(t.group(1)), int(t.group(2)), t.group(3)
+            if mask.startswith("("):
+                rep, a, b, e, ew = (int(t.group(k)) for k in (4, 5, 6, 7, 8))
+                if rep != W or b != w:
+                    raise LnCopyError("masked write: gate is not a constant-address compare to the written word")
+                live = a == b
+            else:
+                e, ew, live = int(t.group(9)), int(t.group(10)), True
+            if tw != W or ew != W:
+                raise LnCopyError("masked write: slice is not one full word")
+            dd = f"WR_DATA[{o} +: {W}]"
+            expr = f"({ref} & ~{mask}) | ({dd} & {mask})" if expr is None else f"(({expr}) & ~{mask}) | ({dd} & {mask})"
+            if live:
+                kept.append((e, o))
+        if expr is None or expr != rhs:
+            raise LnCopyError(f"masked write of word {w}: chain does not match the supported form")
+        for e, o in kept:
+            for b in range(W):
+                writes.append(dict(en=e + b, addr=w, bit=b, data=f"WR_DATA[{o + b}]"))
+        i = m.end()
+    if not writes:
+        raise LnCopyError("native module has no write statements")
+    return writes
 
 
 def copy_module(nat, words, name):
@@ -251,8 +302,34 @@ def copy_relay(btxt, cfg):
     dm = list(dre.finditer(btxt))
     if len(dm) != 1 or int(dm[0].group(2)) + 1 != R:
         raise LnCopyError(f"declaration of {rw} ({R} bits) not found exactly once")
-    # aliases a = rw[k] (the bind's per-bit glue wires) -> k
-    alias = {a: int(k) for a, k in re.findall(r"^\s*assign\s+(\w+)\s*=\s*" + re.escape(rw) + r"\[(\d+)\]\s*;", btxt, re.M)}
+    # S81-KITRTL-NETMAP-1118: lane reset nets are glue wires: `assign a = rw[k]`, `assign a = b[0]`, or (newer bind, t56) a
+    # replicated bus `assign bus = {a, a, ..., a}` read as bus[i]; each resolves to ONE relay bit k or the kit is refused
+    assigns = {a: r for a, r in re.findall(r"^\s*assign\s+(\w+)\s*=\s*(.*?);[ \t]*$", btxt, re.M)}
+
+    def resolve(x, depth=0):
+        x = (x or "").strip()
+        m = re.fullmatch(re.escape(rw) + r"\[(\d+)\]", x)
+        if m:
+            return int(m.group(1))
+        m = re.fullmatch(r"(\w+)(?:\[(\d+)(?::\d+)?\])?", x)
+        if not m or depth > 8 or m.group(1) not in assigns:
+            return None
+        rhs = assigns[m.group(1)].strip()
+        if rhs.startswith("{") and rhs.endswith("}"):
+            parts, d, cur = [], 0, ""
+            for ch in rhs[1:-1]:
+                d += {"{": 1, "}": -1, "(": 1, ")": -1, "[": 1, "]": -1}.get(ch, 0)
+                if ch == "," and d == 0:
+                    parts.append(cur); cur = ""
+                else:
+                    cur += ch
+            parts.append(cur)
+            ks = {resolve(q, depth + 1) for q in parts}
+            return ks.pop() if len(ks) == 1 else None
+        if m.group(2) not in (None, "0") and not re.fullmatch(r"\w+\[\d+\]", rhs):
+            return None
+        return resolve(rhs, depth + 1)
+
     lane_rx = re.compile(r"^[ \t]*(\w+)\s*(#\((?:[^()]|\([^()]*\))*\))?\s*(" + cfg["lane_re"] + r")\s*\(", re.M)
     lanes = sorted(((int(m.group(4)), m.group(3)) for m in lane_rx.finditer(btxt)))
     if not lanes:
@@ -261,15 +338,9 @@ def copy_relay(btxt, cfg):
     for idx, (l, name) in enumerate(lanes):
         ls, le, lmod, lpar, lc = _instance(btxt, name)
         x = lc.get("rst_n")
-        m = re.fullmatch(r"(\w+)\[0\]|(\w+)", x or "")
-        w = (m.group(1) or m.group(2)) if m else None
-        if w in alias:
-            k = alias[w]
-        else:
-            m2 = re.fullmatch(re.escape(rw) + r"\[(\d+)\]", x or "")
-            if not m2:
-                raise LnCopyError(f"{name}.rst_n = {x!r} is not a bit of {rw}")
-            k = int(m2.group(1))
+        k = resolve(x)
+        if k is None:
+            raise LnCopyError(f"{name}.rst_n = {x!r} is not a bit of {rw}")
         bits.add(k)
         edits.append((ls, le, name, x, R + idx, l))
     if len(bits) != 1:

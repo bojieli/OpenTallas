@@ -163,3 +163,57 @@ def test_lockstep_bench(tmp_path, mut):
     out = subprocess.run(["vvp", str(exe)], capture_output=True, text=True, check=True).stdout
     bad = int(out.split("BAD ")[1].split()[0])
     assert (bad == 0) == (mut is None), out
+
+
+def _masked_native(ports, ww=4, depth=4):
+    """a native in the newer yosys form: one statement per write port (const address, word-masked enable), later ports gated by an
+    address compare, built the way yosys prints it"""
+    M = "\\\\native_memory "
+    L = [f"module ot_bind_native_{H}(RD_DATA, WR_CLK, WR_DATA, WR_EN);",
+         f"  output [{ww * depth - 1}:0] RD_DATA;", f"  input [1:0] WR_CLK;",
+         f"  input [{ww * len(ports) - 1}:0] WR_DATA;", f"  input [{ww * len(ports) - 1}:0] WR_EN;",
+         f"  (* mem2reg *) reg [{ww - 1}:0] {M} [{depth - 1}:0];", "  always @(posedge WR_CLK[0]) begin"]
+    for i, (w, o) in enumerate(ports):
+        expr = None
+        for j in range(i + 1):
+            mask = f"WR_EN[{ww * j} +: {ww}]" if j == i else f"({{{ww}{{(32'd{ports[j][0]}) == (32'd{w})}}}} & WR_EN[{ww * j} +: {ww}])"
+            dd = f"WR_DATA[{ports[j][1]} +: {ww}]"
+            ref = f"{M}[32'd{w}][0 +: {ww}]"
+            expr = f"({ref} & ~{mask}) | ({dd} & {mask})" if expr is None else f"(({expr}) & ~{mask}) | ({dd} & {mask})"
+        L.append(f"    {M}[32'd{w}][0 +: {ww}] <= {expr};")
+    L += ["  end"] + [f"  assign RD_DATA[{ww * k + ww - 1}:{ww * k}] = {M}[32'd{k}];" for k in range(depth)] + ["endmodule", ""]
+    return "\n".join(L)
+
+
+def test_parse_native_word_masked_form():
+    """S81-KITRTL-NETMAP-1118: t56 vp_cf is `(* mem2reg *) reg ...` with word-masked constant-address writes (not per-bit ifs)"""
+    ports = [(2, 0), (1, 4), (2, 8)]                       # ports 0 and 2 write word 2: port 2 wins
+    nat = K.parse_native(_masked_native(ports))
+    assert nat["ww"] == 4 and nat["depth"] == 4 and sorted(nat["reads"].values()) == [0, 1, 2, 3]
+    w = nat["writes"]
+    assert [x for x in w if x["addr"] == 1] == [dict(en=4 + b, addr=1, bit=b, data=f"WR_DATA[{4 + b}]") for b in range(4)]
+    w2 = [(x["en"], x["data"]) for x in w if x["addr"] == 2 and x["bit"] == 0]
+    assert w2 == [(0, "WR_DATA[0]"), (0, "WR_DATA[0]"), (8, "WR_DATA[8]")]      # statement of port 0, then port 2's chain (port 0, port 2)
+    mod = K.copy_module(nat, [2], "ot_lnc_t")
+    assert "w2[0] <= WR_DATA[8];" in mod and "WR_EN[8]" in mod
+
+
+def test_parse_native_word_masked_fail_closed():
+    t = _masked_native([(2, 0), (1, 4)])
+    for old, new in (("& ~WR_EN[4 +: 4]", "& WR_EN[4 +: 4]"), ("(32'd2) == (32'd1)", "(32'd2) == (32'd3)")):
+        assert old in t
+        with pytest.raises(K.LnCopyError):
+            K.parse_native(t.replace(old, new))
+
+
+def test_relay_lane_reset_through_replicated_bus(tmp_path):
+    """S81-KITRTL-NETMAP-1118: the newer bind drives lanes from bus[i] of `assign bus = {a, a, ...}` (t56 w_u_vp_4_Y)"""
+    b = BOUND.replace("    wire [0:0] w_u_vp_2_Y;", "    wire [0:0] w_u_vp_2_Y;\n    wire [1:0] w_u_vp_4_Y;\n    assign w_u_vp_4_Y = {w_u_vp_2_Y[0], w_u_vp_2_Y[0]};")
+    b = b.replace(".rst_n(w_u_vp_2_Y[0])", ".rst_n(w_u_vp_4_Y[1])", 1).replace(".rst_n(w_u_vp_2_Y[0])", ".rst_n(w_u_vp_4_Y[0])", 1)
+    assert "w_u_vp_4_Y[1]" in b and "w_u_vp_4_Y[0]" in b
+    t, m, r = K.apply(b, True, _dir(tmp_path))
+    assert r["relay"]["shared_bit"] == 1 and r["relay"]["regions"] == 4
+    assert ".rst_n(w_u_vp_u_rr_rst_n[3])" in t.split("u_u_vp_g_ln_1_u_l")[1].split(");")[0]
+    bad = b.replace("{w_u_vp_2_Y[0], w_u_vp_2_Y[0]}", "{w_u_vp_2_Y[0], rst_in}")
+    with pytest.raises(K.LnCopyError):
+        K.apply(bad, True, _dir(tmp_path))
